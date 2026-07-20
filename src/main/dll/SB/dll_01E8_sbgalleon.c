@@ -188,7 +188,7 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
         int v2 = gSbGalleonSkyColorAStart[2];
         gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
     }
-    skyFn_800895e0(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0], gSbGalleonSkyColorA[1],
+    skySetBaseColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0], gSbGalleonSkyColorA[1],
                    gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
         int v0 = lbl_803DC078[0];
@@ -202,7 +202,7 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
         int v2 = lbl_803DC078[2];
         gSbGalleonSkyColorB[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[2] - v2);
     }
-    fn_80089510(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0],
+    skySetLightColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0],
                 gSbGalleonSkyColorB[1], gSbGalleonSkyColorB[2]);
     {
         int v0 = gSbGalleonSkyColorCStart[0];
@@ -216,7 +216,7 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
         int v2 = gSbGalleonSkyColorCStart[2];
         gSbGalleonSkyColorC[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[2] - v2);
     }
-    fn_80089578(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0],
+    skySetAmbientColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0],
                 gSbGalleonSkyColorC[1], gSbGalleonSkyColorC[2]);
     lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
@@ -224,11 +224,11 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
                                  lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
     if (state->skyFlag == 0)
     {
-        skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, a.x, a.y, a.z);
+        skySetLightDirection(SBGALLEON_SKY_LIGHT_SLOT, a.x, a.y, a.z);
     }
     else
     {
-        skyFn_800894a8(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
+        skySetLightDirection(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
     }
     model = Obj_GetActiveModel(obj);
     i = 0;

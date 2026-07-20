@@ -4,22 +4,22 @@
 
 extern u8 salTimeOffset;
 
-void hwBreak(int slot)
+void hwBreak(int voiceIndex)
 {
     u8* entry;
     u32 offset;
     u32 channel;
 
-    offset = slot * 0xf4;
+    offset = voiceIndex * sizeof(DSPvoice);
     entry = (u8*)dspVoice + offset;
-    if ((entry[0xec] == 1) && (salTimeOffset == 0))
+    if ((((DSPvoice*)entry)->state == 1) && (salTimeOffset == 0))
     {
-        entry[0xee] = 1;
+        ((DSPvoice*)entry)->startupBreak = 1;
     }
     entry = (u8*)dspVoice;
     channel = salTimeOffset;
     channel <<= 2;
     entry += offset;
     entry += channel;
-    *(u32*)(entry + 0x24) |= 0x20;
+    *(u32*)(entry + offsetof(DSPvoice, changed)) |= 0x20;
 }

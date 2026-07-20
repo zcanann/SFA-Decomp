@@ -481,30 +481,31 @@ void* fn_8006F388(u32 i)
     }
 }
 
-/* Per-iteration byte decrement of two parallel arrays. */
+/* Per-frame alpha decrement of the two water-effect pools. */
 void timeFn_8006f400(f32 step)
 {
     int i;
-    u8* a;
-    u8* b;
+    SplashQuad* quads;
+    RippleEntry* ripples;
+
+    quads = (SplashQuad*)gWaterSplashQuads;
+    ripples = (RippleEntry*)gWaterRipples;
 
     for (i = 0; i < 256; i++)
     {
-        a = &gWaterSplashQuads[i * 0x38];
-        b = &gWaterRipples[i * 0x10];
-        if (a[0x33] != 0)
+        if (quads[i].alpha != 0)
         {
-            if (a[0x33] - step <= lbl_803DEE20)
-                a[0x33] = 0;
+            if (quads[i].alpha - step <= lbl_803DEE20)
+                quads[i].alpha = 0;
             else
-                a[0x33] -= step;
+                quads[i].alpha -= step;
         }
-        if (b[0x0E] != 0)
+        if (ripples[i].alpha != 0)
         {
-            if (b[0x0E] - step <= lbl_803DEE20)
-                b[0x0E] = 0;
+            if (ripples[i].alpha - step <= lbl_803DEE20)
+                ripples[i].alpha = 0;
             else
-                b[0x0E] -= step;
+                ripples[i].alpha -= step;
         }
     }
 }

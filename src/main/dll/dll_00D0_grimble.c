@@ -495,8 +495,19 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     grimble_getExtraSize,
 };
 
-void* gCannonClawObjDescriptor[14] = {(void*)0x00000000,          (void*)0x00000000,      (void*)0x00000000,
-                                      (void*)0x00090000,          cannonclaw_initialise,  cannonclaw_release,
-                                      (void*)0x00000000,          cannonclaw_init,        cannonclaw_update,
-                                      cannonclaw_hitDetect,       cannonclaw_render,      cannonclaw_free,
-                                      cannonclaw_getObjectTypeId, cannonclaw_getExtraSize};
+ObjectDescriptor gCannonClawObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cannonclaw_initialise,
+    (ObjectDescriptorCallback)cannonclaw_release,
+    0,
+    (ObjectDescriptorCallback)cannonclaw_init,
+    (ObjectDescriptorCallback)cannonclaw_update,
+    (ObjectDescriptorCallback)cannonclaw_hitDetect,
+    (ObjectDescriptorCallback)cannonclaw_render,
+    (ObjectDescriptorCallback)cannonclaw_free,
+    (ObjectDescriptorCallback)cannonclaw_getObjectTypeId,
+    cannonclaw_getExtraSize,
+};

@@ -388,9 +388,9 @@ void worldobj_update(GameObject* obj)
         {
             for (i = 0; i < 0x16; i++)
             {
-                char* pathPoint = WorldObj_GetPathPointWork(state, i);
-                ObjPath_GetPointWorldPosition(obj, i, (f32*)(pathPoint + 0x10), (f32*)(pathPoint + 0x14),
-                                              (f32*)(pathPoint + 0x18), 0);
+                WorldObjPathSegmentWork* pathSegment = WorldObj_GetPathSegmentWork(state, i);
+                ObjPath_GetPointWorldPosition(obj, i, &pathSegment->start.x, &pathSegment->start.y,
+                                              &pathSegment->start.z, 0);
             }
         }
         break;
