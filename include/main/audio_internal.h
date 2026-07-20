@@ -75,8 +75,16 @@ typedef struct StreamEntry {
 typedef struct MusicTrigger {
     u16 id;
     u16 track;
-    u8 pad[0xc];
+    u16 fadeTime;
+    u16 speed;
+    u8 pad08[4];
+    u8 volume;
+    u8 priority;
+    u8 pad0E;
+    u8 flags;
 } MusicTrigger;
+
+STATIC_ASSERT(sizeof(MusicTrigger) == 0x10);
 
 typedef struct SfxLoopedObjectSoundTable {
     u8 flags[0x80];
@@ -108,16 +116,23 @@ typedef struct SfxObjectChannel {
 typedef SynthPlayParams MusicSeqStartParams;
 
 typedef struct MusicChannel {
-    u32 field_0;
+    s32 trackId;
     u32 seqHandle;
     void* bankData;
     int status;
     u8 voiceId;
-    u8 pad11;
-    u16 field_12;
-    u8 pad14[0xc];
-    f32 field_20;
+    u8 priorityGroup;
+    u16 priority;
+    u16 volume;
+    u8 pad16[2];
+    u32 order;
+    MusicTrigger* trigger;
+    f32 fadeTimer;
 } MusicChannel;
+
+STATIC_ASSERT(sizeof(MusicChannel) == 0x24);
+STATIC_ASSERT(offsetof(MusicChannel, volume) == 0x14);
+STATIC_ASSERT(offsetof(MusicChannel, trigger) == 0x1C);
 
 typedef struct SfxTriggerFull {
     u16 id;

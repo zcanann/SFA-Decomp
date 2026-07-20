@@ -5012,16 +5012,15 @@ void pathSearchExpandNode(int* q, int* elem, int idx)
         p += 4;
     }
 }
-void* pathSearchGetNextPoint(PathSearch* search)
+PathPoint* pathSearchGetNextPoint(PathSearch* search)
 {
-    int* p = (int*)search;
-    void** arr;
-    int idx = *(s16*)((char*)p + 0x2c);
-    if (idx < *(s16*)((char*)p + 0x2a))
+    PathPoint** path;
+    int index = search->pathIndex;
+    if (index < search->pathCount)
     {
-        arr = *(void***)((char*)p + 8);
-        (*(s16*)((char*)p + 0x2c))++;
-        return arr[idx];
+        path = search->path;
+        search->pathIndex++;
+        return path[index];
     }
     return NULL;
 }

@@ -18,7 +18,7 @@
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/dll/dll_00FE_magicplant.h"
+#include "main/dll/dll_0100_trickywarp.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/dll_0014_api.h"
@@ -150,7 +150,7 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state)
         {
             return 1;
         }
-        for (i = 0; i < 0x18; i++)
+        for (i = 0; i < TRICKYWARP_CURVE_NODE_CAPACITY; i++)
         {
             if (state->curveNodeIds[i] == 0)
             {
@@ -187,13 +187,13 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state)
     return getPatchGroup(&player->anim.localPosX, state->patchGroup);
 }
 
-void TrickyWarp_init(GameObject* obj, u8* placement)
+void TrickyWarp_init(GameObject* obj, TrickyWarpPlacement* placement)
 {
     u32 flags;
     flags = obj->objectFlags;
-    flags |= 0x4000;
+    flags |= OBJECT_OBJFLAG_HIDDEN;
     obj->objectFlags = flags;
-    obj->anim.rotX = (s16)((u32)placement[0x1a] << 8);
+    obj->anim.rotX = (s16)((u32)placement->rotXByte << 8);
 }
 
 ObjectDescriptor gTrickyWarpObjDescriptor = {

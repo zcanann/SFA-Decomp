@@ -117,183 +117,184 @@ int getLActions(void* source, void* target, u16 index, int arg3, int arg4, int a
     return 0;
 }
 
-u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int gap, u8 bw)
+u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
+                           u8 encodedBitWidth)
 {
-    int acc;
-    int bitWidth = bw;
-    int idx;
-    int initialBit;
-    int sh16;
-    int shamt = bitWidth - 4;
-    int hi = (*p >> 4) & 0xf;
+    int predictor;
+    int bitWidth = encodedBitWidth;
+    int stepIndex;
+    int initialOutputBit;
+    int packedShift;
+    int headerShift = bitWidth - 4;
+    int predictorHeader = (*compressed >> 4) & 0xf;
     int i;
-    u8 nib;
-    int delta;
-    int base;
-    int nibValue;
-    u32 packed;
-    int curBit;
-    int bo;
-    u8* dp;
+    u8 code;
+    int difference;
+    int step;
+    int codeValue;
+    u32 packedSample;
+    int outputBit;
+    int outputByte;
+    u8* outputBytes;
 
-    if (shamt < 0)
+    if (headerShift < 0)
     {
-        shamt = 0;
+        headerShift = 0;
     }
-    hi = hi << shamt;
-    acc = hi;
+    predictorHeader = predictorHeader << headerShift;
+    predictor = predictorHeader;
     {
-        int lo = *(u8*)p;
-        p = p + 1;
-        idx = (lo & 0xf) << 3;
+        int header = *(u8*)compressed;
+        compressed = compressed + 1;
+        stepIndex = (header & 0xf) << 3;
     }
-    initialBit = modelRenderInstrsState_getBit(state);
-    gap = gap - bitWidth;
-    sh16 = 0x10 - bitWidth;
+    initialOutputBit = modelRenderInstrsState_getBit(output);
+    bitStride = bitStride - bitWidth;
+    packedShift = 0x10 - bitWidth;
 
-    for (i = count / 2; i > 0; i--)
+    for (i = sampleCount / 2; i > 0; i--)
     {
-        nib = *p & 0xf;
-        base = lbl_802C18C0[idx];
-        delta = 0;
-        nibValue = nib;
-        if (nibValue & 1)
+        code = *compressed & 0xf;
+        step = lbl_802C18C0[stepIndex];
+        difference = 0;
+        codeValue = code;
+        if (codeValue & 1)
         {
-            delta = base >> 2;
+            difference = step >> 2;
         }
-        if (nibValue & 2)
+        if (codeValue & 2)
         {
-            delta += base >> 1;
+            difference += step >> 1;
         }
-        if (nibValue & 4)
+        if (codeValue & 4)
         {
-            delta += base;
+            difference += step;
         }
-        if (nibValue & 8)
+        if (codeValue & 8)
         {
-            delta = -delta;
+            difference = -difference;
         }
-        acc += delta;
-        idx += lbl_802C1A24[nib];
-        if (idx < 0)
+        predictor += difference;
+        stepIndex += lbl_802C1A24[code];
+        if (stepIndex < 0)
         {
-            idx = 0;
+            stepIndex = 0;
         }
-        else if (idx > 0x58)
+        else if (stepIndex > 0x58)
         {
-            idx = 0x58;
+            stepIndex = 0x58;
         }
         {
-            packed = (u16)acc;
-            curBit = state->bit;
-            bo = curBit >> 3;
-            packed <<= ((8 - (curBit & 7)) + sh16);
-            dp = state->instrs;
-            dp[bo] |= (packed >> 16) & 0xff;
-            dp = state->instrs;
-            dp[bo + 1] |= (packed >> 8) & 0xff;
-            dp = state->instrs;
-            dp[bo + 2] |= packed & 0xff;
-            state->bit += bitWidth;
-            state->bit += gap;
+            packedSample = (u16)predictor;
+            outputBit = output->bit;
+            outputByte = outputBit >> 3;
+            packedSample <<= ((8 - (outputBit & 7)) + packedShift);
+            outputBytes = output->instrs;
+            outputBytes[outputByte] |= (packedSample >> 16) & 0xff;
+            outputBytes = output->instrs;
+            outputBytes[outputByte + 1] |= (packedSample >> 8) & 0xff;
+            outputBytes = output->instrs;
+            outputBytes[outputByte + 2] |= packedSample & 0xff;
+            output->bit += bitWidth;
+            output->bit += bitStride;
         }
 
-        nib = (*p++ >> 4) & 0xf;
-        base = lbl_802C18C0[idx];
-        delta = 0;
-        nibValue = nib;
-        if (nibValue & 1)
+        code = (*compressed++ >> 4) & 0xf;
+        step = lbl_802C18C0[stepIndex];
+        difference = 0;
+        codeValue = code;
+        if (codeValue & 1)
         {
-            delta = base >> 2;
+            difference = step >> 2;
         }
-        if (nibValue & 2)
+        if (codeValue & 2)
         {
-            delta += base >> 1;
+            difference += step >> 1;
         }
-        if (nibValue & 4)
+        if (codeValue & 4)
         {
-            delta += base;
+            difference += step;
         }
-        if (nibValue & 8)
+        if (codeValue & 8)
         {
-            delta = -delta;
+            difference = -difference;
         }
-        acc += delta;
-        idx += lbl_802C1A24[nib];
-        if (idx < 0)
+        predictor += difference;
+        stepIndex += lbl_802C1A24[code];
+        if (stepIndex < 0)
         {
-            idx = 0;
+            stepIndex = 0;
         }
-        else if (idx > 0x58)
+        else if (stepIndex > 0x58)
         {
-            idx = 0x58;
+            stepIndex = 0x58;
         }
         {
-            packed = (u16)acc;
-            curBit = state->bit;
-            bo = curBit >> 3;
-            packed <<= ((8 - (curBit & 7)) + sh16);
-            dp = state->instrs;
-            dp[bo] |= (packed >> 16) & 0xff;
-            dp = state->instrs;
-            dp[bo + 1] |= (packed >> 8) & 0xff;
-            dp = state->instrs;
-            dp[bo + 2] |= packed & 0xff;
-            state->bit += bitWidth;
-            state->bit += gap;
+            packedSample = (u16)predictor;
+            outputBit = output->bit;
+            outputByte = outputBit >> 3;
+            packedSample <<= ((8 - (outputBit & 7)) + packedShift);
+            outputBytes = output->instrs;
+            outputBytes[outputByte] |= (packedSample >> 16) & 0xff;
+            outputBytes = output->instrs;
+            outputBytes[outputByte + 1] |= (packedSample >> 8) & 0xff;
+            outputBytes = output->instrs;
+            outputBytes[outputByte + 2] |= packedSample & 0xff;
+            output->bit += bitWidth;
+            output->bit += bitStride;
         }
     }
-    if (count & 1)
+    if (sampleCount & 1)
     {
-        nib = *p++ & 0xf;
-        base = lbl_802C18C0[idx];
-        delta = 0;
-        nibValue = nib;
-        if (nibValue & 1)
+        code = *compressed++ & 0xf;
+        step = lbl_802C18C0[stepIndex];
+        difference = 0;
+        codeValue = code;
+        if (codeValue & 1)
         {
-            delta = base >> 2;
+            difference = step >> 2;
         }
-        if (nibValue & 2)
+        if (codeValue & 2)
         {
-            delta += base >> 1;
+            difference += step >> 1;
         }
-        if (nibValue & 4)
+        if (codeValue & 4)
         {
-            delta += base;
+            difference += step;
         }
-        if (nibValue & 8)
+        if (codeValue & 8)
         {
-            delta = -delta;
+            difference = -difference;
         }
-        acc += delta;
-        idx += lbl_802C1A24[nib];
-        if (idx < 0)
+        predictor += difference;
+        stepIndex += lbl_802C1A24[code];
+        if (stepIndex < 0)
         {
-            idx = 0;
+            stepIndex = 0;
         }
-        else if (idx > 0x58)
+        else if (stepIndex > 0x58)
         {
-            idx = 0x58;
+            stepIndex = 0x58;
         }
         {
-            packed = (u16)acc;
-            curBit = state->bit;
-            bo = curBit >> 3;
-            packed <<= ((8 - (curBit & 7)) + sh16);
-            dp = state->instrs;
-            dp[bo] |= (packed >> 16) & 0xff;
-            dp = state->instrs;
-            dp[bo + 1] |= (packed >> 8) & 0xff;
-            dp = state->instrs;
-            dp[bo + 2] |= packed & 0xff;
-            state->bit += bitWidth;
+            packedSample = (u16)predictor;
+            outputBit = output->bit;
+            outputByte = outputBit >> 3;
+            packedSample <<= ((8 - (outputBit & 7)) + packedShift);
+            outputBytes = output->instrs;
+            outputBytes[outputByte] |= (packedSample >> 16) & 0xff;
+            outputBytes = output->instrs;
+            outputBytes[outputByte + 1] |= (packedSample >> 8) & 0xff;
+            outputBytes = output->instrs;
+            outputBytes[outputByte + 2] |= packedSample & 0xff;
+            output->bit += bitWidth;
         }
     }
-    if (gap != 0)
+    if (bitStride != 0)
     {
-        modelRenderInstrsState_setBit(state, initialBit + bitWidth);
+        modelRenderInstrsState_setBit(output, initialOutputBit + bitWidth);
     }
-    return p;
+    return compressed;
 }
 
 int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth)

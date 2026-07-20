@@ -53,7 +53,7 @@ STATIC_ASSERT(sizeof(PathHeapEntry) == 0x8);
 STATIC_ASSERT(sizeof(PathSearch) == 0x30);
 
 void trickyVoxAllocFn_8004b5d4(PathSearch* search);
-void* pathSearchGetNextPoint(PathSearch* search);
+PathPoint* pathSearchGetNextPoint(PathSearch* search);
 int pathSearchBuildPath(PathSearch* search);
 int pathSearchStep(PathSearch* search, u32 timeout);
 int pathSearchBegin(PathSearch* search, PathPoint* startPoint, f32* targetPosition, int pathId, u32 routeFlags);

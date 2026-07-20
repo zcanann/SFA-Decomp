@@ -161,17 +161,17 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
         break;
     }
 
-    updateConstrainedChaseVelocity((GameObject*)(obj), targetX, targetY, targetZ, chaseScale);
+    landedarwing_updateConstrainedChaseVelocity((GameObject*)(obj), targetX, targetY, targetZ, chaseScale);
 
     if (sub->surfaceMode == LANDED_ARWING_SCRIPT_MODE)
     {
         if ((u32)((sub->flags92 >> 2) & 1) != 0)
         {
-            fn_80165B3C((GameObject*)(obj), (int)sub);
+            landedarwing_updateAirborneMotion((GameObject*)(obj), (int)sub);
         }
         else
         {
-            fn_80166444(obj, (int)sub);
+            landedarwing_moveAlongSurface(obj, (int)sub);
         }
     }
     else

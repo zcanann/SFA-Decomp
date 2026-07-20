@@ -58,7 +58,6 @@
 #include "main/track_dolphin_api.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe
 
-#define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SMALLBASKET_OBJGROUP                   0x10
 #define SMALLBASKET_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the basket */
 #define PAD_BUTTON_A                           0x100
@@ -97,23 +96,7 @@ typedef struct SmallBasketThrowSetup
    header in the import skeleton; declared locally. */
 
 f32 gSmallBasketHitVelocity[4];
-void SmallBasket_init(GameObject* obj, int def);
-void SmallBasket_update(GameObject* obj);
-void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 void* gSmallBasketResource;
-
-typedef struct SmallbasketObjectDef
-{
-    ObjPlacement head; /* 0x00 */
-    s8 rotX;
-    u8 subtype;
-    s16 unk1A;
-    s16 respawnMinutes;
-    s16 enableGameBit;
-    s16 leashRange;
-    u8 pad22[0x24 - 0x22];
-    f32 unk24;
-} SmallbasketObjectDef;
 typedef struct
 {
     s16 h0;
@@ -987,7 +970,7 @@ void SmallBasket_update(GameObject* obj)
     }
 }
 
-void SmallBasket_init(GameObject* obj, int def)
+void SmallBasket_init(GameObject* obj, SmallBasketPlacement* placement)
 {
     CfperchState* state;
     s16 v1c;
@@ -997,7 +980,7 @@ void SmallBasket_init(GameObject* obj, int def)
     ObjHits_DisableObject(obj);
     ObjGroup_AddObject((int)obj, SMALLBASKET_OBJGROUP);
 
-    v1c = ((SmallbasketObjectDef*)def)->respawnMinutes;
+    v1c = placement->respawnMinutes;
     if (v1c == 0)
     {
         state->respawnDelay = 0;
@@ -1009,17 +992,17 @@ void SmallBasket_init(GameObject* obj, int def)
 
     gSmallBasketResource = Resource_Acquire(SMALLBASKET_RESOURCE_ID, 1);
     state->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
-    state->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
-    (obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
-    state->enableGameBit = ((SmallbasketObjectDef*)def)->enableGameBit;
-    state->leashRange = ((SmallbasketObjectDef*)def)->leashRange;
+    state->unk1F = (u8)placement->unk1A;
+    (obj)->anim.rotX = (s16)(placement->rotX << 8);
+    state->enableGameBit = placement->enableGameBit;
+    state->leashRange = placement->leashRange;
     if (state->leashRange == 0)
     {
         state->leashRange = 0x14;
     }
     state->respawnTimer = 0x320;
-    (obj)->objectFlags |= SMALLBASKET_OBJFLAG_HITDETECT_DISABLED;
-    state->subtype = ((SmallbasketObjectDef*)def)->subtype;
+    (obj)->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    state->subtype = placement->subtype;
     (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
     (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
     (obj)->anim.previousLocalPosX = (obj)->anim.localPosZ;
