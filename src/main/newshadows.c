@@ -565,7 +565,8 @@ static inline void fillDiskTexture(void)
             int off;
             f32 dx, dz, d2;
             base = (u8*)gNewShadowDiskTexture;
-            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60;
+            off = lowoff + (j & 3) * 8;
+            off += (j >> 2) * 0x80 + 0x60;
             dx = cy * lbl_803DEDD0;
             dz = (f32)j - lbl_803DEDEC;
             dz = dz * lbl_803DEDD0;
@@ -596,7 +597,8 @@ static inline void fillSmallDiskTexture(void)
             int off;
             f32 dx, dz, d2;
             base = (u8*)gNewShadowSmallDiskTexture;
-            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x40 + 0x60;
+            off = lowoff + (j & 3) * 8;
+            off += (j >> 2) * 0x40 + 0x60;
             dx = cy * lbl_803DED40;
             dz = (f32)j - lbl_803DED10;
             dz = dz * lbl_803DED40;
@@ -657,7 +659,8 @@ static inline void fillFalloffTexture(void)
             int off;
             f32 cx, d2;
             base = (u8*)gNewShadowFalloffTexture;
-            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
+            off = lowoff + (j & 3) * 8;
+            off += (j >> 2) * 0x200 + 0x60;
             cx = ((f32)j - lbl_803DED1C) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy * cy);
             base[off] =
@@ -691,7 +694,8 @@ static inline void fillTextureCFB4(void)
             int off;
             f32 v;
             base = (u8*)lbl_803DCFB4;
-            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60;
+            off = lowoff + (j & 3) * 8;
+            off += (j >> 2) * 0x80 + 0x60;
             v = sqrtf(c0);
             v = sqrtf(v);
             base[off] = 255.0f * (1.0f - v);
@@ -720,7 +724,8 @@ static inline void fillRingTexture(void)
             int off;
             f32 cx, d2;
             base = (u8*)gNewShadowRingTexture;
-            off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
+            off = lowoff + (j & 3) * 8;
+            off += (j >> 2) * 0x200 + 0x60;
             cx = ((f32)j - 64.0f) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f)
