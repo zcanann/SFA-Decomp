@@ -554,12 +554,10 @@ static inline void fillDiskTexture(void)
     u8* base;
     for (i = 0; i < 0x20; i++)
     {
-        int rowoff, lowoff;
+        int lowoff;
         j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
+        lowoff = (i >> 3) * 0x20 + (i & 7);
         cy = i - lbl_803DEDEC;
-        lowoff += rowoff;
         for (; j < 0x20; j++)
         {
             int off;
@@ -586,12 +584,10 @@ static inline void fillSmallDiskTexture(void)
     u8* base;
     for (i = 0; i < 0x10; i++)
     {
-        int rowoff, lowoff;
+        int lowoff;
         j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
+        lowoff = (i >> 3) * 0x20 + (i & 7);
         cy = i - lbl_803DED10;
-        lowoff += rowoff;
         for (; j < 0x10; j++)
         {
             int off;
@@ -647,12 +643,10 @@ static inline void fillFalloffTexture(void)
     u8* base;
     for (i = 0; i < 0x80; i++)
     {
-        int rowoff, lowoff;
+        int lowoff;
         j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
+        lowoff = (i >> 3) * 0x20 + (i & 7);
         cy = i - lbl_803DED1C;
-        lowoff += rowoff;
         cy = cy * lbl_803DEDE0;
         for (; j < 0x80; j++)
         {
@@ -680,13 +674,11 @@ static inline void fillTextureCFB4(void)
     u8* base;
     for (i = 0; i < 0x20; i++)
     {
-        int rowoff, lowoff;
+        int lowoff;
         f32 c0;
         j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
+        lowoff = (i >> 3) * 0x20 + (i & 7);
         c0 = i - 16.0f;
-        lowoff += rowoff;
         c0 = c0 * 0.0625f;
         c0 = __fabsf(c0);
         for (; j < 4; j++)
@@ -711,14 +703,12 @@ static inline void fillRingTexture(void)
     u8* base;
     for (i = 0; i < 0x80; i++)
     {
-        int rowoff, lowoff;
+        int lowoff;
         f32 cy2;
         cy = ((f32)i - 64.0f) * lbl_803DEDE0;
         j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
+        lowoff = (i >> 3) * 0x20 + (i & 7);
         cy2 = cy * cy;
-        lowoff += rowoff;
         for (; j < 0x80; j++)
         {
             int off;
@@ -1801,12 +1791,10 @@ void allocLotsOfTextures(void)
     gNewShadowRadialTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++)
     {
-        int rowoff, lowoff;
+        int lowoff;
         j = 0;
-        rowoff = (i >> 3) * 0x20;
-        lowoff = i & 7;
+        lowoff = (i >> 3) * 0x20 + (i & 7);
         cy = i - lbl_803DED1C;
-        lowoff += rowoff;
         cy = cy * lbl_803DEDE0;
         cy = __fabsf(cy);
         for (; j < 0x80; j++)
