@@ -84,13 +84,13 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
             }                                                                         \
         }                                                                             \
     }
-extern u8 gModelJointScratchBuffer[0x140];
+extern s16 gModelJointScratchBuffer[0xa0];
 #define BLENDTBL_ENTRY(K, OFF)                              \
     if (poseWeights[K] != 0) {                                        \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = (s16)(offA + (OFF));     \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = (s16)(offB + (OFF));     \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = poseWeights[K];                  \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = poseWeights[K];                  \
+        gModelJointScratchBuffer[outPos++] = (s16)(offA + (OFF));     \
+        gModelJointScratchBuffer[outPos++] = (s16)(offB + (OFF));     \
+        gModelJointScratchBuffer[outPos++] = poseWeights[K];                  \
+        gModelJointScratchBuffer[outPos++] = poseWeights[K];                  \
     }
 extern char sModelAnimationBufferOverflowWarning[];
 extern f32 lbl_803DE850;
@@ -415,7 +415,7 @@ void modelAnimEvalSlotPair(u8* dst, u8* model, u8* channel, f32 t, int flags, in
         }
     }
     lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
-                 gModelJointScratchBuffer, flags, (u8)mode);
+                 (u8*)gModelJointScratchBuffer, flags, (u8)mode);
 }
 void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
@@ -474,7 +474,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
             outFlags |= 0x20;
         }
         lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
-                     gModelJointScratchBuffer, flags, outFlags | 0x40);
+                     (u8*)gModelJointScratchBuffer, flags, outFlags | 0x40);
     }
     else
     {
@@ -529,7 +529,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
                 *(u16*)(stk + 0x58) = slotEvent;
                 modelAnimUpdateChannels(hdr, stk, 2);
                 lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData,
-                             ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, blendMask);
+                             ((ModelFileHeader*)hdr)->jointCount, (u8*)gModelJointScratchBuffer, flags, blendMask);
                 if (blendMask != 0)
                 {
                     outFlags |= 1 << i;
@@ -573,7 +573,7 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
                 outFlags |= 0x20;
             }
             lbl_80006C6C(&mtxBuf, dst, stk, ((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount,
-                         gModelJointScratchBuffer, flags, outFlags);
+                         (u8*)gModelJointScratchBuffer, flags, outFlags);
         }
     }
 }
@@ -2490,7 +2490,7 @@ ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int r
     return &model->textureRefs[renderOpIndex];
 }
 
-u8 gModelJointScratchBuffer[0x140];
+s16 gModelJointScratchBuffer[0xa0];
 void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object)
 {
     int i;
@@ -2559,8 +2559,8 @@ void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
         defOff += modelDef->modelCount + 1;
         poseOff += 0x12;
     }
-    ((s16*)gModelJointScratchBuffer)[outPos++] = 0x1000;
-    ((s16*)gModelJointScratchBuffer)[outPos] = 0x1000;
+    gModelJointScratchBuffer[outPos++] = 0x1000;
+    gModelJointScratchBuffer[outPos] = 0x1000;
 }
 
 extern s16 gModelRootRotX;
