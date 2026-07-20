@@ -56,29 +56,29 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 u8 groundanimator_modelMtxFn(int* obj)
 {
-    return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b);
+    return ((GroundAnimatorState*)((GameObject*)obj)->extra)->modelVariant;
 }
 
 u8 groundanimator_isFullySunk(int* obj)
 {
     GroundAnimatorState* state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
     f32 depth = state->sinkDepth;
-    int* placement = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
-    u8 maxDepth = ((GroundanimatorPlacement*)placement)->maxSinkDepth;
+    GroundanimatorPlacement* placement = (GroundanimatorPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
+    u8 maxDepth = placement->maxSinkDepth;
     return depth > (100.0f) * maxDepth;
 }
 
 
 f32 groundanimator_setScale(int* obj, int* target)
 {
-    int* r31;
+    GroundanimatorPlacement* r31;
     GroundAnimatorState* g;
     f32 dy;
     f32 dx;
     f32 dz;
     f32 rangeSq;
     g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    r31 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
+    r31 = (GroundanimatorPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
     dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
     if (dy < (-20.0f) || dy > (20.0f))
     {
@@ -92,12 +92,12 @@ f32 groundanimator_setScale(int* obj, int* target)
     {
         return (-1.0f);
     }
-    if (g->sinkDepth >= (100.0f) * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth)
+    if (g->sinkDepth >= (100.0f) * (f32)(u32)r31->maxSinkDepth)
     {
         if (*(void**)&g->linkedObj != NULL)
         {
             int* e;
-            g->sinkDepth = (100.0f) * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth;
+            g->sinkDepth = (100.0f) * (f32)(u32)r31->maxSinkDepth;
             e = (int*)g->linkedObj;
             switch (((GameObject*)e)->anim.seqId)
             {
@@ -112,10 +112,10 @@ f32 groundanimator_setScale(int* obj, int* target)
     }
     g->sinkDepth = (5.0f) * timeDelta + g->sinkDepth;
     g->flags = g->flags | 4;
-    return g->radius * (g->sinkDepth / ((100.0f) * (f32)(u32)((GroundanimatorPlacement*)r31)->maxSinkDepth));
+    return g->radius * (g->sinkDepth / ((100.0f) * (f32)(u32)r31->maxSinkDepth));
 }
 
-void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
+void fn_801932C8(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* placement)
 {
     void* entry;
     void* vtx;
@@ -153,7 +153,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
     {
         entry = mapBlockFn_800606ec(block, blkIdx);
-        if (((GroundanimatorPlacement*)placement)->blockId == mapBlockFn_80060678(entry))
+        if (placement->blockId == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
             fallMid = off[0];
@@ -210,12 +210,12 @@ void groundanimator_free(int* obj, int flag)
     int inner;
     MapBlockData* block;
     GroundAnimatorState* w;
-    int* r21;
+    GroundanimatorPlacement* r21;
     void* nv;
     s16* cell;
     f32 local[4];
     w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    r21 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
+    r21 = (GroundanimatorPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
     if (flag == 0)
     {
         block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
@@ -226,7 +226,7 @@ void groundanimator_free(int* obj, int flag)
             for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec(block, blkIdx);
-                if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
+                if (r21->blockId == mapBlockFn_80060678(entry))
                 {
                     for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {
@@ -275,7 +275,7 @@ void groundanimator_update(int* obj)
     int mid;
     int inner;
     GroundAnimatorState* g;
-    int* r20;
+    GroundanimatorPlacement* r20;
     void* entry;
     void* near;
     int hoffEntry;
@@ -289,8 +289,8 @@ void groundanimator_update(int* obj)
     f32 vbuf[3];
     Obj_GetPlayerObject();
     g = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    r20 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
-    if (((GroundanimatorPlacement*)r20)->blockId == 0)
+    r20 = (GroundanimatorPlacement*)*(int*)&((GameObject*)obj)->anim.placementData;
+    if (r20->blockId == 0)
     {
         return;
     }
@@ -317,7 +317,7 @@ void groundanimator_update(int* obj)
     {
         int p;
         block = mapGetBlock(bi);
-        g->vertCount = (s16)(fn_80060688((GameObject*)block, ((GroundanimatorPlacement*)r20)->blockId) * 3);
+        g->vertCount = (s16)(fn_80060688((GameObject*)block, r20->blockId) * 3);
         if (g->vertCount > 0)
         {
             p = (int)mmAlloc(g->vertCount * 6, 5, 0);
@@ -330,7 +330,7 @@ void groundanimator_update(int* obj)
     {
         return;
     }
-    if (((GroundanimatorPlacement*)r20)->disableAutoLink == 0)
+    if (r20->disableAutoLink == 0)
     {
         if (*(void**)&g->linkedObj == NULL)
         {
@@ -377,7 +377,7 @@ void groundanimator_update(int* obj)
         {
             g->flags = g->flags & ~4;
         }
-        else if (g->sinkDepth < (100.0f) * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth)
+        else if (g->sinkDepth < (100.0f) * (f32)(u32)r20->maxSinkDepth)
         {
             g->sinkDepth = g->sinkDepth - timeDelta;
             if (g->sinkDepth < (0.0f))
@@ -394,11 +394,11 @@ void groundanimator_update(int* obj)
         {
             f32 lim;
             g->dirtyFrames -= 1;
-            if (g->lastDepth > (lim = (100.0f) * (f32)(u32)((GroundanimatorPlacement*)r20)->maxSinkDepth))
+            if (g->lastDepth > (lim = (100.0f) * (f32)(u32)r20->maxSinkDepth))
             {
                 g->lastDepth = lim;
                 g->sinkDepth = lim;
-                if (*(void**)&g->linkedObj != NULL && *(void**)((char*)g->linkedObj + 0xb8) != NULL)
+                if (*(void**)&g->linkedObj != NULL && ((GameObject*)g->linkedObj)->extra != NULL)
                 {
                     switch (((GameObject*)g->linkedObj)->anim.seqId)
                     {
@@ -411,9 +411,9 @@ void groundanimator_update(int* obj)
                         break;
                     }
                 }
-                mainSetBits(((GroundanimatorPlacement*)r20)->sunkGameBit, 1);
+                mainSetBits(r20->sunkGameBit, 1);
                 g->flags = g->flags | 2;
-                Sfx_PlayFromObject((u32)obj, (lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
+                Sfx_PlayFromObject((u32)obj, (lbl_803DBDF0)[r20->sfxIndex]);
             }
             off2[0] = 0;
             off2[1] = off2[0];
@@ -451,8 +451,8 @@ void groundanimator_update(int* obj)
             DCStoreRangeNoSync((void*)((MapBlockData*)block)->vertices, ((MapBlockData*)block)->vertexCount * 6);
         }
     }
-    if (((GroundanimatorPlacement*)r20)->enableGameBit == -1 ||
-        mainGetBit(((GroundanimatorPlacement*)r20)->enableGameBit) != 0)
+    if (r20->enableGameBit == -1 ||
+        mainGetBit(r20->enableGameBit) != 0)
     {
         allow = 1;
     }
@@ -488,24 +488,24 @@ void groundanimator_update(int* obj)
     objRenderFn_80041018((GameObject*)obj);
 }
 
-void groundanimator_init(int* obj, int* desc)
+void groundanimator_init(int* obj, WaveanimatorObjectDef* desc)
 {
     GroundAnimatorState* vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    vstate->modelVariant = (u8)((WaveanimatorObjectDef*)desc)->modelVariant;
-    vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
+    vstate->modelVariant = (u8)desc->modelVariant;
+    vstate->yOffset = (f32)desc->yOffset;
     vstate->lastDepth = (-1.0f);
-    vstate->radius = (f32)((WaveanimatorObjectDef*)desc)->radius;
-    if (((WaveanimatorObjectDef*)desc)->sinkEnable != 0)
+    vstate->radius = (f32)desc->radius;
+    if (desc->sinkEnable != 0)
     {
-        if (mainGetBit(((WaveanimatorObjectDef*)desc)->originX) != 0)
+        if (mainGetBit(desc->originX) != 0)
         {
-            vstate->sinkDepth = (100.0f) * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
+            vstate->sinkDepth = (100.0f) * (f32) * (u8*)&desc->sinkDepthScale;
             vstate->flags |= 2;
         }
         ObjGroup_AddObject((int)obj, GROUNDANIMATOR_OBJGROUP);
-        if (*(u8*)&((WaveanimatorObjectDef*)desc)->period > 1)
+        if (*(u8*)&desc->period > 1)
         {
-            *(u8*)&((WaveanimatorObjectDef*)desc)->period = 0;
+            *(u8*)&desc->period = 0;
         }
     }
 }

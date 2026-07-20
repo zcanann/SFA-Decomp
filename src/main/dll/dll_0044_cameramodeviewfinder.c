@@ -289,7 +289,7 @@ void CameraModeViewfinder_free(int camObj)
     GameObject* viewObj;
     GameObject* outBuf[3];
 
-    *(s16*)((int)((GameObject*)camObj)->anim.targetObj + 6) &= ~0x4000;
+    ((GameObject*)((GameObject*)camObj)->anim.targetObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     Rcp_SetViewFinderHudEnabled(0);
     viewObj = (GameObject*)((CameraObject*)camObj)->anim.targetObj;
     if (viewObj != NULL)
@@ -329,13 +329,13 @@ void CameraModeViewfinder_update(s16* obj)
     GameObject* shadow2;
     GameObject* shadow;
 
-    camObj = *(int*)&((GameObject*)obj)->anim.targetObj;
+    camObj = (int)((GameObject*)obj)->anim.targetObj;
     getButtonsJustPressed(0);
     firstPersonPlaceCamera((GameObject*)camObj, 0);
     switch (lbl_803DD548->mode)
     {
     case VIEWFINDER_MODE_ENTER_BLEND:
-        lbl_803DD548->mode = firstPersonEnter((u8*)obj, (s16*)*(int*)&((GameObject*)obj)->anim.targetObj);
+        lbl_803DD548->mode = firstPersonEnter((u8*)obj, (s16*)((GameObject*)obj)->anim.targetObj);
         break;
     case VIEWFINDER_MODE_YAW_SETTLE:
         if (Curve_AdvanceAlongPath(&lbl_803DD548->viewCurve, lbl_803E1820) != 0)
@@ -378,8 +378,7 @@ void CameraModeViewfinder_update(s16* obj)
             lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
             lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
             curvesMove(&lbl_803DD548->viewCurve);
-            *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) =
-                *(s16*)(*(int*)&((GameObject*)obj)->anim.targetObj + 6) & ~0x4000;
+            ((GameObject*)((GameObject*)obj)->anim.targetObj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             firstPersonZoomOutOnExit(0xf, 0xfe);
             lbl_803DD548->mode = VIEWFINDER_MODE_FADE_BACK;
             if (lbl_803DD548->flags.sfxEnabled)
@@ -478,7 +477,7 @@ void CameraModeViewfinder_update(s16* obj)
     case VIEWFINDER_MODE_IDLE:
         break;
     }
-    if (ObjHits_GetPriorityHit((GameObject*)(*(int*)&((GameObject*)obj)->anim.targetObj), 0, 0, 0) != 0)
+    if (ObjHits_GetPriorityHit((GameObject*)((GameObject*)obj)->anim.targetObj, 0, 0, 0) != 0)
     {
         firstPersonExit((CameraObject*)obj);
         ((GameObject*)obj)->anim.worldPosX = lbl_803DD548->posXCurve.end;
@@ -489,7 +488,7 @@ void CameraModeViewfinder_update(s16* obj)
     logPrintf(sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                    ((GameObject*)obj)->anim.worldPosZ, (f32*)(obj + 6), (f32*)(obj + 8),
-                                   (f32*)(obj + 10), *(int*)&((GameObject*)obj)->anim.parent);
+                                   (f32*)(obj + 10), (int)((GameObject*)obj)->anim.parent);
 }
 
 void CameraModeViewfinder_init(s16* obj, int mode, int* args)

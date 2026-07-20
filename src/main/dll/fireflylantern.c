@@ -89,9 +89,9 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
     flag = playerGetFlags3F0Bit5((GameObject*)(Obj_GetPlayerObject()));
-    dvec[0] = *(f32*)(state[0xa7] + 0xc) - (obj)->anim.localPosX;
+    dvec[0] = ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX - (obj)->anim.localPosX;
     dvec[1] = 0.0f;
-    dvec[2] = *(f32*)(state[0xa7] + 0x14) - (obj)->anim.localPosZ;
+    dvec[2] = ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ - (obj)->anim.localPosZ;
     if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
@@ -104,8 +104,8 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
         fval = 0.0f;
         (obj)->anim.velocityX = fval;
         (obj)->anim.velocityZ = fval;
-        curve = (RomCurveWalker*)state[0xa7];
-        baddieTurnTowardPoint(obj, (int)state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
+        baddieTurnTowardPoint(obj, (int)state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
+                              ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 10, 0);
     }
     else
     {
@@ -132,12 +132,12 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
             else if ((obj)->anim.currentMoveProgress > 0.5)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
-                *(f32*)(state + 0xc2) = -0.02f;
+                ((BaddieState*)state)->unk308 = -0.02f;
             }
             else
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_death);
-                *(f32*)(state + 0xc2) = 0.02f;
+                ((BaddieState*)state)->unk308 = 0.02f;
             }
         }
         else
@@ -149,12 +149,12 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
                 if ((obj)->anim.currentMoveProgress > 0.5)
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
-                    *(f32*)(state + 0xc2) = -0.02f;
+                    ((BaddieState*)state)->unk308 = -0.02f;
                 }
                 else
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_death);
-                    *(f32*)(state + 0xc2) = 0.1f;
+                    ((BaddieState*)state)->unk308 = 0.1f;
                 }
             }
         }

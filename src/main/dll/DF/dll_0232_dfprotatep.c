@@ -50,8 +50,6 @@ STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, gameBit) == 0x24);
 STATIC_ASSERT(offsetof(SfxplayerRingVisualSetup, unk2A) == 0x2A);
 STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 
-#define SFXPLAYER_OBJECT_FLAGS_OFFSET     0xB0
-#define SFXPLAYER_OBJECT_STATE_OFFSET     0xB8
 #define SFXPLAYER_EFFECT_RING_COUNT       4
 #define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
 #define SFXPLAYER_MODE_SEQUENCE           2
@@ -65,7 +63,6 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #define SFXPLAYER_RING_SETUP_MODE         5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP    0x3FFF
 
-#define SFXPLAYER_OBJECT_CALLBACK_OFFSET  0xBC
 #define SFXPLAYER_CONFIG_MAP_ID_OFFSET    0x18
 #define SFXPLAYER_CONFIG_MODE_OFFSET      0x19
 #define SFXPLAYER_CONFIG_EVENT_ID_OFFSET  0x1E
@@ -115,7 +112,7 @@ void TrickyCurve_updateEffectHandleRing(GameObject* obj)
         f32 baseVec[4];
     } buf;
     int* handles;
-    SfxplayerState* state = *(SfxplayerState**)((char*)obj + SFXPLAYER_OBJECT_STATE_OFFSET);
+    SfxplayerState* state = (SfxplayerState*)obj->extra;
     s16 i;
 
     if (state->flags.bit10 != 0 && state->flags.bit20 == 0 && state->variantSfxTimer > 0x32)
@@ -123,11 +120,11 @@ void TrickyCurve_updateEffectHandleRing(GameObject* obj)
         Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXPLAYER_RING_START_SFX);
         if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == SFXPLAYER_MODE_SEQUENCE)
         {
-            *(s16*)obj += (int)((lbl_803E6458 + state->ringCount) * (lbl_803E645C * timeDelta));
+            obj->anim.rotX += (int)((lbl_803E6458 + state->ringCount) * (lbl_803E645C * timeDelta));
         }
         else
         {
-            *(s16*)obj += (int)(lbl_803E645C * timeDelta);
+            obj->anim.rotX += (int)(lbl_803E645C * timeDelta);
         }
     }
 
@@ -231,7 +228,7 @@ int sfxplayer_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
 
 int TrickyCurve_activateEffectHandleRing(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    SfxplayerState* state = *(SfxplayerState**)((char*)obj + SFXPLAYER_OBJECT_STATE_OFFSET);
+    SfxplayerState* state = (SfxplayerState*)obj->extra;
     int i;
 
     state->flags.bit80 = 1;
@@ -313,7 +310,7 @@ void sfxplayer_update(GameObject* obj)
     SfxplayerStateFlags* flags;
     u32 hitObj;
 
-    state = *(SfxplayerState**)((char*)obj + SFXPLAYER_OBJECT_STATE_OFFSET);
+    state = (SfxplayerState*)obj->extra;
     flags = &state->flags;
     if ((flags->bit20 == 0) && (mainGetBit(state->eventId) == 0))
     {
@@ -385,7 +382,7 @@ void sfxplayer_update(GameObject* obj)
                     if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET)
                     {
                         mode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
-                        if ((mode == SFXPLAYER_MODE_SINGLE) || (*(int*)((int)hitObj + 0xf4) == i))
+                        if ((mode == SFXPLAYER_MODE_SINGLE) || (((GameObject*)hitObj)->userData1 == i))
                         {
                             if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                             {
@@ -412,9 +409,9 @@ void sfxplayer_init(int obj, int config)
 {
     SfxplayerState* state;
 
-    state = *(SfxplayerState**)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
-    *(s16*)obj = (s16)((s8) * (u8*)(config + SFXPLAYER_CONFIG_MAP_ID_OFFSET) << 8);
-    *(void (**)(void))(obj + SFXPLAYER_OBJECT_CALLBACK_OFFSET) = (void (*)(void))TrickyCurve_activateEffectHandleRing;
+    state = (SfxplayerState*)((GameObject*)obj)->extra;
+    ((GameObject*)obj)->anim.rotX = (s16)((s8) * (u8*)(config + SFXPLAYER_CONFIG_MAP_ID_OFFSET) << 8);
+    ((GameObject*)obj)->animEventCallback = (void*)TrickyCurve_activateEffectHandleRing;
     state->config19 = *(u8*)(config + SFXPLAYER_CONFIG_MODE_OFFSET);
     state->eventId = *(s16*)(config + SFXPLAYER_CONFIG_EVENT_ID_OFFSET);
     state->config20 = *(s16*)(config + SFXPLAYER_CONFIG_FIELD20_OFFSET);
@@ -432,8 +429,7 @@ void sfxplayer_init(int obj, int config)
     {
         state->flags.bit20 = 1;
     }
-    *(u16*)(obj + SFXPLAYER_OBJECT_FLAGS_OFFSET) =
-        *(u16*)(obj + SFXPLAYER_OBJECT_FLAGS_OFFSET) | SFXPLAYER_OBJECT_FLAGS;
+    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | SFXPLAYER_OBJECT_FLAGS;
 }
 
 void sfxplayer_release(void)
