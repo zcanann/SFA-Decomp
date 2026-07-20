@@ -2167,6 +2167,21 @@ void gameTextLoadForCurMap(int sourceId)
     testAndSet_onlyUseHeap3(oldHeap);
 }
 
+static inline u32 lookupSjisGlyph(int c)
+{
+    int i = 0xfe;
+    u16* p = gGameTextSjisGlyphTable;
+    while (i--)
+    {
+        if (p[0] == c)
+        {
+            return p[1];
+        }
+        p++;
+    }
+    return 0;
+}
+
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     int wbytes;
@@ -2240,25 +2255,12 @@ void gameTextLoadGraphicsFn_8001a918(void)
     {
         if (lbl_803DC968)
         {
-            u16* p[1];
-            int i;
             int c;
             u32 val;
             int hi;
             u8 lo;
             c = glyph->key;
-            p[0] = gGameTextSjisGlyphTable;
-            val = 0;
-            i = 0xfe;
-            while (i--)
-            {
-                if (p[0][0] == c)
-                {
-                    val = p[0][1];
-                    break;
-                }
-                p[0]++;
-            }
+            val = lookupSjisGlyph(c);
             hi = (val >> 8) & 0xff;
             lo = val;
             if (hi == 0)
@@ -2314,12 +2316,14 @@ void gameTextLoadGraphicsFn_8001a918(void)
         glyph->lang = 6;
         glyph->page = 0;
         {
-            u32* src;
             int ty;
-            int tx;
             int tyEnd;
+            int tx;
             int txEnd;
             int row;
+            u8* dst;
+            u32* src;
+            int j2;
 
             src = (u32*)buf;
             tx = glyph->u >> 3;
@@ -2329,11 +2333,10 @@ void gameTextLoadGraphicsFn_8001a918(void)
             tyEnd = ty + 3;
             for (; row < tyEnd; row++)
             {
-                int j2 = tx;
-                for (; j2 < txEnd; j2++)
+                for (j2 = tx; j2 < txEnd; j2++)
                 {
-                    u8* dst = (u8*)charset->textures[0] + (j2 << 5);
                     int k;
+                    dst = (u8*)charset->textures[0] + (j2 << 5);
                     dst += row * lbl_803DB3C4;
                     for (k = 0; k < 8; k++)
                     {
