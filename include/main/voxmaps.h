@@ -134,7 +134,7 @@ extern char sVoxmapsRouteNodesListOverflow[];
 extern f32 gVoxMapsHCostScale;
 extern char sVoxMapsDebugStrings[];
 
-int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ);
+u8* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ);
 void voxmaps_freeRouteWork(RouteState* state);
 void voxmaps_allocRouteWork(RouteState* state);
 void voxmaps_updateTimers(void);

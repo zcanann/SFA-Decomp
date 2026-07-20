@@ -162,7 +162,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
         }
         if (((map->bitmap[(ySlot << 5) | bitmapCol] >> shift) & 1) != 0u)
         {
-            u8* node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, ySlot, voxZ);
+            u8* node = voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, ySlot, voxZ);
             p[0] = (node[z6lo] >> shiftLo) & 3;
             p[1] = (node[z6lo] >> shiftHi) & 3;
             p[2] = (node[z6hi] >> shiftLo) & 3;
@@ -492,7 +492,7 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 }
                 if (((map->bitmap[(slot << 5) | bitmapCol] >> voxXand7) & 1u) != 0u)
                 {
-                    node = (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
+                    node = voxmaps_getRouteNode(map->header, map->nodeBase, map->bitmap, voxX, slot, voxZ);
                     p[0] = (node[z6lo] >> shiftLo) & 3;
                     p[1] = (node[z6lo] >> shiftHi) & 3;
                     p[2] = (node[z6hi] >> shiftLo) & 3;
@@ -1018,7 +1018,7 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
                         if (routeNodeDirty != 0)
                         {
                             routeNode =
-                                (u8*)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, tileX, ySlot, tileZ);
+                                voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, tileX, ySlot, tileZ);
                             routeNodeDirty = 0;
                         }
                         occ = (routeNode[localZ64 & 3] >> ((localX64 & 3) << 1)) & 3;
@@ -1166,7 +1166,7 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
  * (tileX, tileZ), then index nodeBase by that running count. The per-row base count
  * is packed into the header (low/high nibble depending on which 8-tile half tileZ is
  * in), then popcount adds every occupied cell before the target column. */
-int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ)
+u8* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int ySlot, int tileZ)
 {
     int count;
     int hdrRow = ySlot * 2 + ySlot;
@@ -1207,7 +1207,7 @@ int* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int 
         bits &= bits - 1;
         count++;
     }
-    return nodeBase + count;
+    return (u8*)(nodeBase + count);
 }
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
