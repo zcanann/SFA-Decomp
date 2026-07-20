@@ -4546,7 +4546,7 @@ int ObjSeq_update(u8* obj, f32 t)
     int opcode;
     int found;
     int pressed;
-    s8 restart;
+    int restart;
     s8 rewindStep;
     u8 conditionOpcode;
     int aInt;
@@ -4962,7 +4962,7 @@ int ObjSeq_update(u8* obj, f32 t)
                 state->prevFrame = state->curFrame;
             }
             state->sequenceControlFlags = 0;
-            ((u8*)(base + 0x3cf4))[state->slot] = restart;
+            ((s8*)(base + 0x3cf4))[state->slot] = restart;
         }
 
         state->eventCount = 0;
