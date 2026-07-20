@@ -1,6 +1,6 @@
 /* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_api.h"
 #include "main/camera.h"
 #include "main/camera_interface.h"

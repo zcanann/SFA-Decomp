@@ -125,32 +125,31 @@ static void PlayControl(u32 retraceCount)
 
     if ((lbl_803A5D60.internalState == 0) || (lbl_803A5D60.internalState == 4))
     {
-        if ((lbl_803A5D60.playFlags & THP_PLAY_EVEN_FIELD) != 0)
+        do
         {
-            if (VIGetNextField() == 0)
+            if ((lbl_803A5D60.playFlags & THP_PLAY_EVEN_FIELD) != 0)
             {
-                allowPop = 1;
+                if (VIGetNextField() == 0)
+                {
+                    allowPop = 1;
+                    break;
+                }
+            }
+            else if ((lbl_803A5D60.playFlags & THP_PLAY_ODD_FIELD) != 0)
+            {
+                if (VIGetNextField() == 1)
+                {
+                    allowPop = 1;
+                    break;
+                }
             }
             else
             {
-                allowPop = 0;
-            }
-        }
-        else if ((lbl_803A5D60.playFlags & THP_PLAY_ODD_FIELD) != 0)
-        {
-            if (VIGetNextField() == 1)
-            {
                 allowPop = 1;
+                break;
             }
-            else
-            {
-                allowPop = 0;
-            }
-        }
-        else
-        {
-            allowPop = 1;
-        }
+            allowPop = 0;
+        } while (0);
 
         if (allowPop != 0)
         {

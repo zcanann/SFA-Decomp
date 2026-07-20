@@ -28,7 +28,7 @@
 #include "main/textrender_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
-#include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "track/intersect_hud_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render.h"
