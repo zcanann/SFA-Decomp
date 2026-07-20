@@ -1654,7 +1654,7 @@ typedef struct MapBlockCleanup
 
 void doPendingMapLoads(void)
 {
-    int cnt;
+    MapLoadRec* cellCursor;
     int* aBase;
     int* cBase;
     char* base;
@@ -1671,7 +1671,7 @@ void doPendingMapLoads(void)
     int colIdx;
     int i;
     MapLoadRec* recsCursor;
-    MapLoadRec* cellCursor;
+    int cnt;
     f32 dz;
     int gx, gz;
     int row;
