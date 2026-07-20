@@ -2892,7 +2892,6 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         f32 dx, dy, dz;
         s8 hit;
         int* e;
-        s16 k;
 
         if ((GameObject*)o == self)
             continue;
@@ -2928,13 +2927,10 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         }
         if (hit == 0)
             continue;
+        e = NULL;
         if ((u8)slot != 0xff)
         {
             e = trackFindDynamicSlot(self, o, slot);
-        }
-        else
-        {
-            e = NULL;
         }
         if (e != NULL)
         {
