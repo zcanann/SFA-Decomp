@@ -275,11 +275,8 @@ void doNothing_endOfFrame(void)
 }
 void padUpdate(void)
 {
-    u32* padStateBlock;
-    PADStatus* readPad;
+    u32* padStateBlock[1];
     PADStatus* rp;
-    PADStatus* statuses;
-    PADStatus* prevPad;
     s8* prevStickY;
     s8* prevStickX;
     s8* repeatY;
@@ -294,21 +291,23 @@ void padUpdate(void)
     u16* triggers;
     u16* triggersReleased;
     u16* triggersPressed;
+    PADStatus* readPad;
+    PADStatus* prevPad;
+    s32 i;
+    PADStatus* statuses;
     u32* buttonMask;
     int sx;
     int sy;
     u8 toggle;
     u8 other;
     u8 useprev;
-    u8 stickReload;
-    s32 i;
 
-    padStateBlock = gPadStateBlock;
+    padStateBlock[0] = gPadStateBlock;
     toggle = gPadStatusToggle;
-    prevPad = (PADStatus*)((u8*)padStateBlock + toggle * 0x30 + 0x40);
+    prevPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + toggle * 0x30);
     other = toggle ^ 1;
     gPadStatusToggle = other;
-    readPad = (PADStatus*)((u8*)padStateBlock + other * 0x30 + 0x40);
+    readPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + other * 0x30);
     if (PADRead(readPad) == PAD_ERR_TRANSFER)
     {
         return;
@@ -340,15 +339,15 @@ void padUpdate(void)
     repeatX = (s8*)&gPadRepeatX;
     analogY = &gPadAnalogY;
     analogX = &gPadAnalogX;
-    heldRaw = padStateBlock;
-    curBtn = padStateBlock + 4;
-    released = padStateBlock + 8;
-    pressed = padStateBlock + 12;
+    heldRaw = padStateBlock[0];
+    curBtn = padStateBlock[0] + 4;
+    released = padStateBlock[0] + 8;
+    pressed = padStateBlock[0] + 12;
     prevTriggers = &gPadPrevTriggers;
     triggers = &gPadTriggers;
     triggersReleased = &gPadTriggersReleased;
     triggersPressed = &gPadTriggersPressed;
-    statuses = (PADStatus*)((u8*)padStateBlock + 0x40);
+    statuses = (PADStatus*)((u8*)padStateBlock[0] + 0x40);
     buttonMask = gPadButtonMask;
 
     for (; i < 4; i++)
@@ -370,7 +369,7 @@ void padUpdate(void)
             *triggersReleased = 0;
             *triggersPressed = 0;
             memset(statuses, 0, sizeof(PADStatus));
-            memset((i + 4) * 0xc + 0x40 + (u8*)padStateBlock, 0, sizeof(PADStatus));
+            memset((u8*)(padStateBlock[0] + 0x10) + (i + 4) * 0xc, 0, sizeof(PADStatus));
             gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
             rp->err = PAD_ERR_NO_CONTROLLER;
         }
@@ -440,12 +439,12 @@ void padUpdate(void)
                 *repeatY = 0;
             }
             *prevStickY = sy;
-            stickReload = *prevStickY;
-            if ((s8)stickReload < -35)
+            sy = *prevStickY;
+            if (sy < -35)
             {
                 (*repeatY)++;
             }
-            else if ((s8)stickReload > 35)
+            else if (sy > 35)
             {
                 (*repeatY)++;
             }
@@ -459,12 +458,12 @@ void padUpdate(void)
                 *repeatY = 0;
             }
             *prevStickX = sx;
-            stickReload = *prevStickX;
-            if ((s8)stickReload < -35)
+            sx = *prevStickX;
+            if (sx < -35)
             {
                 (*repeatX)++;
             }
-            else if ((s8)stickReload > 35)
+            else if (sx > 35)
             {
                 (*repeatX)++;
             }
