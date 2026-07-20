@@ -74,6 +74,17 @@ typedef struct
 
 typedef struct
 {
+    void* freeList;
+    void* end;
+    u32 unk8;
+    s16 itemSize;
+    s16 itemCount;
+    u16 usedCount;
+    u8 pad12[0xe];
+} StackPool;
+
+typedef struct
+{
     void* stores[0x20];
     DeferredFree deferred[2000];
     MmRegion regions[8];
@@ -1001,7 +1012,7 @@ void AtomicSList_Push(void** list, void* node)
 
 void* stackCreate(int count, int size)
 {
-    u8* s;
+    StackPool* stack;
     int prev;
     void** first;
     void** cur;
@@ -1010,13 +1021,13 @@ void* stackCreate(int count, int size)
 
     n = testAndSet_onlyUseHeaps1and2(2);
     prev = n;
-    s = mmAlloc(size * count + 0x20, 0x11, 0);
+    stack = mmAlloc(size * count + sizeof(StackPool), 0x11, 0);
     testAndSet_onlyUseHeaps1and2(prev);
-    *(s16*)(s + 0xc) = size;
-    *(s16*)(s + 0xe) = count;
-    *(u16*)(s + 0x10) = 0;
-    *(int*)(s + 4) = (int)s + *(s16*)(s + 0xe) * *(s16*)(s + 0xc) + 0x20;
-    first = (void**)(s + 0x20);
+    stack->itemSize = size;
+    stack->itemCount = count;
+    stack->usedCount = 0;
+    stack->end = (u8*)stack + stack->itemCount * stack->itemSize + sizeof(StackPool);
+    first = (void**)(stack + 1);
     cur = first;
     next = (u8*)first + size;
     n = count - 2;
@@ -1027,12 +1038,12 @@ void* stackCreate(int count, int size)
         next += size;
     }
     *cur = 0;
-    *(void**)s = first;
-    cur = *(void***)s;
+    stack->freeList = first;
+    cur = stack->freeList;
     while (cur != 0)
     {
         int ok = 0;
-        if (cur >= first && cur < *(void***)(s + 4))
+        if (cur >= first && cur < stack->end)
         {
             ok = 1;
         }
@@ -1042,7 +1053,7 @@ void* stackCreate(int count, int size)
         }
         cur = (void**)*cur;
     }
-    return s;
+    return stack;
 }
 
 int testAndSet_onlyUseHeaps1and2(int v)

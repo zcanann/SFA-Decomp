@@ -46,8 +46,11 @@ typedef struct LargeCrateState {
 } LargeCrateState;
 
 STATIC_ASSERT(offsetof(LargeCrateState, hitSfxId) == 0x14);
+STATIC_ASSERT(offsetof(LargeCrateState, slidePhase) == 0x1C);
+STATIC_ASSERT(offsetof(LargeCrateState, slideOffset) == 0x20);
 STATIC_ASSERT(offsetof(LargeCrateState, homeX) == 0x24);
 STATIC_ASSERT(offsetof(LargeCrateState, damageThreshold) == 0x28);
+STATIC_ASSERT(sizeof(LargeCrateState) == 0x2C);
 
 /* largecrate (DLL 0x105) tuning constants and entry points. */
 
@@ -80,14 +83,14 @@ STATIC_ASSERT(offsetof(LargeCrateState, damageThreshold) == 0x28);
 #define LARGECRATE_VARIANT_B_SFX_B 0x4A
 
 int largecrate_spawnDropContents(GameObject* obj, int player, int state);
-int LargeCrate_SeqFn(int* obj);
-void largecrate_updateConveyorSlide(GameObject* obj, int def);
+int LargeCrate_SeqFn(GameObject* obj);
+void largecrate_updateConveyorSlide(GameObject* obj, LargeCrateState* state);
 int largecrate_getExtraSize(void);
 int largecrate_getObjectTypeId(void);
 void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState);
 void largecrate_hitDetect(int obj);
 void largecrate_update(GameObject* obj);
-void largecrate_free(int obj);
+void largecrate_free(GameObject* obj);
 void largecrate_init(GameObject* obj, u8* initData);
 void largecrate_release(void);
 void largecrate_initialise(void);
