@@ -1469,42 +1469,9 @@ void walkgroupFindExitPointFn_800dc398(void)
         curveList = (ObjfsaWalkCurveDef**)(*gRomCurveInterface)->getCurves(&curveCount);
         memset((char*)patchBase[0] + OBJFSA_ACTIVE_WALKGROUPS_OFFSET, 0, OBJFSA_WALKGROUP_COUNT);
         sp = patchBase[0];
-        zid = 0;
-        for (pi = 8; pi != 0; pi--)
+        for (pi = 0; pi < 256; pi++)
         {
-            sp[0].groupId = zid;
-            sp[1].groupId = zid;
-            sp[2].groupId = zid;
-            sp[3].groupId = zid;
-            sp[4].groupId = zid;
-            sp[5].groupId = zid;
-            sp[6].groupId = zid;
-            sp[7].groupId = zid;
-            sp[8].groupId = zid;
-            sp[9].groupId = zid;
-            sp[10].groupId = zid;
-            sp[11].groupId = zid;
-            sp[12].groupId = zid;
-            sp[13].groupId = zid;
-            sp[14].groupId = zid;
-            sp[15].groupId = zid;
-            sp[16].groupId = zid;
-            sp[17].groupId = zid;
-            sp[18].groupId = zid;
-            sp[19].groupId = zid;
-            sp[20].groupId = zid;
-            sp[21].groupId = zid;
-            sp[22].groupId = zid;
-            sp[23].groupId = zid;
-            sp[24].groupId = zid;
-            sp[25].groupId = zid;
-            sp[26].groupId = zid;
-            sp[27].groupId = zid;
-            sp[28].groupId = zid;
-            sp[29].groupId = zid;
-            sp[30].groupId = zid;
-            sp[31].groupId = zid;
-            sp += 32;
+            sp[pi].groupId = 0;
         }
 
         gObjfsaPatchCount = 1;
