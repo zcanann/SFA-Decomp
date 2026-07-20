@@ -8,6 +8,7 @@
 #include "ghidra_import.h"
 
 extern PartFxSpawnParams gDim2IcicleDustFxSource;
+extern const s16 lbl_802C2338[7];
 extern int lbl_80325AA0[6];
 extern s16 gDim2LiftFarMoveChoices[30];
 

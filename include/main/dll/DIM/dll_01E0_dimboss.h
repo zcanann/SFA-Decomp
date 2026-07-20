@@ -8,6 +8,7 @@
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
 #include "main/objanim_update.h"
+#include "main/dll/dll_002E_moveLib.h"
 
 #define DIMBOSS_RUNTIME_SIZE 0x4C8
 #define DIMBOSS_OBJECT_TYPE_ID 0x49
@@ -389,6 +390,7 @@ void DIMboss_initialiseAnimTables(void);
 extern ObjectDescriptor12 gDIM_BossObjDescriptor;
 extern DIMbossAnimHandlerTable gDIMbossAnimTable;
 extern DIMbossHitDetectAnimHandlerTable gDIMbossHitDetectAnimTable;
+extern MoveLibState gDIMbossAnimController;
 extern f32 gDIMbossAnimScratchBase[3];
 extern u8 gDim2IcicleHitFxBuffer[];
 

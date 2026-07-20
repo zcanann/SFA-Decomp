@@ -65,8 +65,6 @@ extern f32 lbl_803E4BFC;
 extern f32 lbl_803E4C28;
 extern f32 lbl_803E4C2C;
 extern f32 lbl_803E4C30;
-extern u8 gDIMbossAnimController[];
-
 typedef struct DIM2icicleBlueWhiteEffectPlacement
 {
     ObjPlacement base;
@@ -135,11 +133,11 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
     mode = ((BaddieState*)runtime)->controlMode;
     if (mode != 1 && mode != 4 && mode != 5)
     {
-        gDIMbossAnimController[0x611] |= 1;
+        gDIMbossAnimController.modeBits |= 1;
     }
     else
     {
-        gDIMbossAnimController[0x611] &= ~1;
+        gDIMbossAnimController.modeBits &= ~1;
     }
     DIM2icicle_updateHitResponse(obj, (BaddieState*)runtime);
     return 0;
