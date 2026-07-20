@@ -1092,7 +1092,7 @@ int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s
         ((ObjSeqTurnState*)state)->turnAmount = turn;
         {
             f32* dp = d;
-            f32* ovr = *(f32**)((int)obj + 0x74);
+            ObjHitVolumeRuntimeTransform* ovr = obj->anim.hitVolumeTransforms;
             if (ovr == NULL)
             {
                 dp[0] = ((GameObject*)player)->anim.localPosX - obj->anim.localPosX;
@@ -1101,9 +1101,9 @@ int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s
             }
             else
             {
-                dp[0] = ((GameObject*)player)->anim.localPosX - ovr[0];
-                dp[1] = ((GameObject*)player)->anim.localPosY - ovr[1];
-                dp[2] = ((GameObject*)player)->anim.localPosZ - ovr[2];
+                dp[0] = ((GameObject*)player)->anim.localPosX - ovr->jointX;
+                dp[1] = ((GameObject*)player)->anim.localPosY - ovr->jointY;
+                dp[2] = ((GameObject*)player)->anim.localPosZ - ovr->jointZ;
             }
             dp[1] += 30.0f;
             dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
@@ -1277,7 +1277,7 @@ void endObjSequence(int seq)
         }
         if (((GameObject*)obj)->anim.classId == 0x10)
         {
-            ObjSeqTurnState* st = (ObjSeqTurnState*)*(int*)&((GameObject*)obj)->extra;
+            ObjSeqTurnState* st = (ObjSeqTurnState*)((GameObject*)obj)->extra;
             if ((s8)st->seqId == seq)
             {
                 if ((void*)obj == lbl_803DD0B8)

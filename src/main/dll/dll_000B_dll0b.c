@@ -794,7 +794,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     n131 = 0;
     if (a4 != NULL)
     {
-        getAmbientColor(*(u8*)((char*)a4 + 0xf2), &ar, &ag, &ab);
+        getAmbientColor(((GameObject*)a4)->lightColorSlot, &ar, &ag, &ab);
     }
     else
     {
@@ -857,9 +857,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             {
                 if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
                 {
-                    xf.rotX = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
-                    xf.rotY = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-                    xf.rotZ = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+                    xf.rotX = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotX;
+                    xf.rotY = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotY;
+                    xf.rotZ = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotZ;
                     vecRotateZXY(&xf.rotX, &pos[0]);
                 }
             }
@@ -871,9 +871,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                rot[0] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
-                rot[1] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x1c);
-                rot[2] = *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
+                rot[0] = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosX;
+                rot[1] = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosY;
+                rot[2] = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosZ;
             }
             else
             {
@@ -910,18 +910,18 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x80000)
         {
-            xf.rotZ = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
-            xf.rotY = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-            xf.rotX = *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+            xf.rotZ = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotZ;
+            xf.rotY = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotY;
+            xf.rotX = ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotX;
         }
         else if (aligned && ((PartfxEffectState*)p[slot])->sourceObject != NULL)
         {
             xf.rotZ = ((PartfxEffectState*)p[slot])->rotOffsetZ +
-                        *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 4);
+                        ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotZ;
             xf.rotY = ((PartfxEffectState*)p[slot])->rotOffsetY +
-                        *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 2);
-            xf.rotX =
-                ((PartfxEffectState*)p[slot])->rotOffsetX + *(s16*)((char*)((PartfxEffectState*)p[slot])->sourceObject);
+                        ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotY;
+            xf.rotX = ((PartfxEffectState*)p[slot])->rotOffsetX +
+                        ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.rotX;
         }
         else if (aligned)
         {
@@ -939,9 +939,9 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         {
             if (((PartfxEffectState*)p[slot])->sourceObject != NULL)
             {
-                dirX = view->worldX - *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x18);
+                dirX = view->worldX - ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosX;
                 dirZ = view->worldZ -
-                       *(f32*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x20);
+                       ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosZ;
                 dscale = sqrtf(dirX * dirX + dirZ * dirZ);
                 if (dscale != lbl_803DF430)
                 {

@@ -707,13 +707,13 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
         {
             ((BaddieState*)state)->prevControlMode = ((BaddieState*)state)->controlMode;
             ((BaddieState*)state)->controlMode = (s16)(result - 1);
-            exitFn = *(void (**)(char*, char*))(state + 0x304);
+            exitFn = *(void (**)(char*, char*))&((BaddieState*)state)->unk304;
             if (exitFn != NULL)
             {
                 exitFn(pos, state);
-                *(void**)(state + 0x304) = 0;
+                *(void**)&((BaddieState*)state)->unk304 = 0;
             }
-            *(void**)(state + 0x304) = *(void**)(state + 0x308);
+            *(void**)&((BaddieState*)state)->unk304 = *(void**)&((BaddieState*)state)->unk308;
             ((BaddieState*)state)->moveJustStartedA = 1;
             *(s16*)(state + 0x338) = 0;
             ((BaddieState*)state)->stateTag = 0;
@@ -732,13 +732,13 @@ void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
             if (result != currentState)
             {
                 ((BaddieState*)state)->prevControlMode = (s16)(int)currentState;
-                exitFn = *(void (**)(char*, char*))(state + 0x304);
+                exitFn = *(void (**)(char*, char*))&((BaddieState*)state)->unk304;
                 if (exitFn != NULL)
                 {
                     exitFn(pos, state);
-                    *(void**)(state + 0x304) = 0;
+                    *(void**)&((BaddieState*)state)->unk304 = 0;
                 }
-                *(void**)(state + 0x304) = *(void**)(state + 0x308);
+                *(void**)&((BaddieState*)state)->unk304 = *(void**)&((BaddieState*)state)->unk308;
                 ((BaddieState*)state)->moveJustStartedA = 1;
                 *(s16*)(state + 0x338) = 0;
                 ((BaddieState*)state)->stateTag = 0;
@@ -806,7 +806,7 @@ void player_setState(void* ctx, void* p, int new_state)
         ((BaddieState*)p)->prevControlMode = ((BaddieState*)p)->controlMode;
         ((BaddieState*)p)->controlMode = new_state;
         {
-            void (*fn)(void) = *(void (**)(void))((char*)p + 0x304);
+            void (*fn)(void) = *(void (**)(void))&((BaddieState*)p)->unk304;
             if (fn != 0)
             {
                 fn();

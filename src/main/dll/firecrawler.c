@@ -1281,7 +1281,7 @@ void crawler_update(int* obj, u8* state)
  * shared state floats and computes obj[0x8] from params[0x28]. */
 void crawler_initModelVariant(s16* obj, u8* state)
 {
-    u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
+    u8* params = (u8*)((GameObject*)obj)->anim.placementData;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0xb;
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x400b0LL;
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x40001040LL;
