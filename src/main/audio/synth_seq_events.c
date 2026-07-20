@@ -37,6 +37,7 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
         {
             if (pattern->noteData == 0)
             {
+            process_track_command:
                 if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END)
                 {
                     track->current = 0;
@@ -78,12 +79,16 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
             for (;;)
             {
                 patternTime = *(u16*)pattern->noteData + pattern->lastTime;
-                if (patternTime < pitchTime && patternTime < modTime)
+                if (patternTime < pitchTime)
                 {
+                    if (patternTime >= modTime)
+                    {
+                        goto modulation_event;
+                    }
                     if (pattern->noteData[2] == 0xFF && pattern->noteData[3] == 0xFF)
                     {
                         pattern->noteData = 0;
-                        break;
+                        goto process_track_command;
                     }
 
                     ev->data = pattern->noteData;
@@ -112,6 +117,7 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel)
                 }
                 else
                 {
+                modulation_event:
                     ev->time = modTime + pattern->baseTime;
                     ev->type = 1;
                 }
