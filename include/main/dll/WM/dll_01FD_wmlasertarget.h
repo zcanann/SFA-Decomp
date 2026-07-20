@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_DLL_01FD_WMLASERTARGET_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 
 typedef struct WmLaserTargetPlacement
@@ -28,15 +29,17 @@ typedef struct WmLaserTargetState
     u8 pad3;
 } WmLaserTargetState;
 
+STATIC_ASSERT(offsetof(WmLaserTargetState, cooldown) == 0x0);
+STATIC_ASSERT(offsetof(WmLaserTargetState, toggleQueued) == 0x2);
 STATIC_ASSERT(sizeof(WmLaserTargetState) == 0x4);
 
 int WM_LaserTarget_getExtraSize(void);
 int WM_LaserTarget_getObjectTypeId(void);
 void WM_LaserTarget_free(void);
-void WM_LaserTarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void WM_LaserTarget_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void WM_LaserTarget_hitDetect(void);
-void WM_LaserTarget_update(int* obj);
-void WM_LaserTarget_init(char* obj, s8* def);
+void WM_LaserTarget_update(GameObject* obj);
+void WM_LaserTarget_init(GameObject* obj, WmLaserTargetPlacement* placement);
 void WM_LaserTarget_release(void);
 void WM_LaserTarget_initialise(void);
 

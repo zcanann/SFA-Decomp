@@ -61,6 +61,13 @@ typedef struct VfpFlamePointMapData
     s16 checkGameBit; /* 0x20 */
 } VfpFlamePointMapData;
 
+typedef struct VfpLavaPoolMapData
+{
+    ObjPlacement base;
+    u8 pad18[2];
+    s16 amplitudeDivisor; /* 0x1a: inverse scale for the randomized wave amplitude */
+} VfpLavaPoolMapData;
+
 typedef struct VfpLavaPoolState
 {
     u8 pad00[4];
@@ -89,6 +96,7 @@ STATIC_ASSERT(offsetof(VfpFlamePointMapData, counterInit) == 0x1A);
 STATIC_ASSERT(offsetof(VfpFlamePointMapData, noCheck) == 0x1C);
 STATIC_ASSERT(offsetof(VfpFlamePointMapData, showGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(VfpFlamePointMapData, checkGameBit) == 0x20);
+STATIC_ASSERT(offsetof(VfpLavaPoolMapData, amplitudeDivisor) == 0x1A);
 STATIC_ASSERT(sizeof(VfpLavaPoolState) == 0x18);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, timerA) == 0x04);
 STATIC_ASSERT(offsetof(VfpLavaPoolState, timerB) == 0x06);
@@ -192,7 +200,7 @@ void VFP_flamepoint_init(int* obj, s8* def)
 void fn_801FD6B4(GameObject* obj)
 {
     VfpLavaPoolState* state;
-    int def;
+    VfpLavaPoolMapData* mapData;
     f32 speed;
     f32 phase;
     ObjTextureRuntimeSlot* tex;
@@ -206,13 +214,13 @@ void fn_801FD6B4(GameObject* obj)
     } parm;
 
     state = obj->extra;
-    def = *(int*)&obj->anim.placementData;
+    mapData = (VfpLavaPoolMapData*)obj->anim.placementData;
     speed = (f32)(u32)obj->anim.alpha;
     state->phase += timeDelta * ((lbl_803E6160 * state->speedFactor) / lbl_803E6160);
     if (state->phase > lbl_803E6164)
     {
         state->speedFactor = (f32)(int)randomGetRange(0x32, 100);
-        state->amplitude = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(0x15e, 800));
+        state->amplitude = lbl_803E6168 / ((f32)(int)mapData->amplitudeDivisor / (f32)(int)randomGetRange(0x15e, 800));
         state->phase = lbl_803E616C;
         Sfx_PlayFromObject((u32)obj, SFXTRIG_id_111);
         speed = 255.0f;
@@ -301,7 +309,7 @@ void VFP_lavapool_update(GameObject* obj)
     fn_801FD6B4(obj);
 }
 
-void VFP_lavapool_init(GameObject* obj, int def)
+void VFP_lavapool_init(GameObject* obj, VfpLavaPoolMapData* mapData)
 {
     VfpLavaPoolState* state;
 
@@ -309,11 +317,12 @@ void VFP_lavapool_init(GameObject* obj, int def)
     obj->animEventCallback = return1_801FDA08;
     state->timerA = 7000;
     state->timerB = 2000;
-    if (*(s16*)(def + 0x1a) == 0)
+    if (mapData->amplitudeDivisor == 0)
     {
-        *(s16*)(def + 0x1a) = 500;
+        mapData->amplitudeDivisor = 500;
     }
-    obj->anim.rootMotionScale = lbl_803E6168 / ((f32)(int)*(s16*)(def + 0x1a) / (f32)(int)randomGetRange(600, 1000));
+    obj->anim.rootMotionScale =
+        lbl_803E6168 / ((f32)(int)mapData->amplitudeDivisor / (f32)(int)randomGetRange(600, 1000));
     state->amplitude = obj->anim.rootMotionScale;
     state->speedFactor = (f32)(int)randomGetRange(0x32, 100);
 }
