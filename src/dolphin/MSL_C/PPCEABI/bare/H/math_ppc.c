@@ -1,5 +1,4 @@
-double acos(double);
-double pow(double, double);
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
 
 float acosf(float x)
 {

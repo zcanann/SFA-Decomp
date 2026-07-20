@@ -1,14 +1,12 @@
 #include <__ppc_eabi_linker.h>
 #include <dolphin/PPCArch.h>
 #include <dolphin/db.h>
-#include <dolphin/os.h>
+#include "dolphin/os/__os.h"
 
 #define OS_BI2_DEBUG_ADDRESS 0x800000F4
 #define DEBUGFLAG_ADDR 0x800030E8
 #define OS_DEBUG_ADDRESS_2 0x800030E9
 #define OS_CURRENTCONTEXT_PADDR 0x00C0
-
-extern char *__OSResetSWInterruptHandler[];
 
 vu16 __OSDeviceCode : (OS_BASE_CACHED | 0x30E6);
 static DVDDriveInfo DriveInfo ATTRIBUTE_ALIGN(32);
@@ -257,7 +255,7 @@ void OSInit(void)
         OSInitAlarm();
         __OSModuleInit();
         __OSInterruptInit();
-        __OSSetInterruptHandler(__OS_INTERRUPT_PI_RSW, (void *)__OSResetSWInterruptHandler);
+        __OSSetInterruptHandler(__OS_INTERRUPT_PI_RSW, __OSResetSWInterruptHandler);
         __OSContextInit();
         __OSCacheInit();
         EXIInit();
@@ -576,7 +574,6 @@ entry __OSEVEnd
     nop
 }
 
-void __OSUnhandledException(__OSException exception, OSContext *context, u32 dsisr, u32 dar);
 asm void OSDefaultExceptionHandler(register __OSException exception, register OSContext *context)
 {
     nofralloc

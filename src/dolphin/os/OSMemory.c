@@ -18,8 +18,6 @@ static BOOL OnReset(BOOL final) {
     return TRUE;
 }
 
-void (*__OSErrorTable[])(u16, OSContext*, ...);
-
 static void MEMIntrruptHandler(__OSInterrupt interrupt, OSContext* context) {
     u32 addr;
     u32 cause;
