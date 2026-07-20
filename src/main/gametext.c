@@ -864,9 +864,9 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
-            SpecialGlyph* sp = lbl_802C86F0;
             int n;
             int k;
+            SpecialGlyph* sp = lbl_802C86F0;
             int sel;
             for (k = 46; k-- != 0 || (n = 0, 0);)
             {
