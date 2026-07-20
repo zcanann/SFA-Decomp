@@ -235,7 +235,7 @@ void cclightfoot_update(int obj)
             }
             else
             {
-                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o1)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                valid = mainGetBit(((GameObject*)o1)->anim.placementData[0xC]) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {
@@ -246,7 +246,7 @@ void cclightfoot_update(int obj)
                 }
                 else
                 {
-                    valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                    valid = mainGetBit(((GameObject*)o2)->anim.placementData[0xC]) != 0 ? 0 : 1;
                 }
                 if (valid != 0)
                 {
@@ -307,7 +307,7 @@ void cclightfoot_update(int obj)
             }
             else
             {
-                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                valid = mainGetBit(((GameObject*)o2)->anim.placementData[0xC]) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {
@@ -320,7 +320,7 @@ void cclightfoot_update(int obj)
             }
             else
             {
-                valid = mainGetBit(*(s16*)(*(int*)&((GameObject*)o2)->anim.placementData + 0x18)) != 0 ? 0 : 1;
+                valid = mainGetBit(((GameObject*)o2)->anim.placementData[0xC]) != 0 ? 0 : 1;
             }
             if (valid != 0)
             {

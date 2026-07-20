@@ -70,10 +70,10 @@ void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, in
 {
     if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
     {
-        u8 saved = *(u8*)((char*)src + 0x37);
-        *(u8*)((char*)src + 0x37) = opacity;
+        u8 saved = src->anim.renderAlpha;
+        src->anim.renderAlpha = opacity;
         (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
-        *(u8*)((char*)src + 0x37) = saved;
+        src->anim.renderAlpha = saved;
     }
     dst->anim.previousWorldPosX = dst->anim.worldPosX;
     dst->anim.previousWorldPosY = dst->anim.worldPosY;
@@ -147,7 +147,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         extra->snapX = extra->pathPointX;
         extra->snapY = extra->pathPointY;
         extra->snapZ = extra->pathPointZ;
-        (*(void (**)(GameObject*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 2);
+        (*(void (**)(GameObject*, int))(**(int**)&linkedObj->anim.dll + 0x3c))(linkedObj, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, (0.0f), 1);
         if (obj->anim.modelState != NULL)
         {
@@ -158,13 +158,13 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     else if (linkedObj != NULL && animUpdate->triggerCommand == 1)
     {
-        (*(void (**)(GameObject*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 0);
+        (*(void (**)(GameObject*, int))(**(int**)&linkedObj->anim.dll + 0x3c))(linkedObj, 0);
         animUpdate->triggerCommand = 0;
     }
 
     if (linkedObj != NULL)
     {
-        if ((*(int (**)(GameObject*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
+        if ((*(int (**)(GameObject*))(**(int**)&linkedObj->anim.dll + 0x38))(linkedObj) == 2)
         {
             animUpdate->hitVolumePair &= ~3;
         }
@@ -207,7 +207,7 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
         hit = 0;
         if (linkedObj != NULL)
         {
-            if ((*(int (**)(GameObject*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
+            if ((*(int (**)(GameObject*))(**(int**)&linkedObj->anim.dll + 0x38))(linkedObj) == 2)
             {
                 hit = 1;
             }
@@ -224,14 +224,14 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
         }
         if (visible != 0 && extra->opacity != 0)
         {
-            u8 saved = *(u8*)((char*)obj + 0x37);
+            u8 saved = obj->anim.renderAlpha;
             if (hit != 0)
             {
-                *(u8*)((char*)obj + 0x37) = extra->opacity;
+                obj->anim.renderAlpha = extra->opacity;
             }
             objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
             ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
-            *(u8*)((char*)obj + 0x37) = saved;
+            obj->anim.renderAlpha = saved;
         }
     }
     else
@@ -246,7 +246,7 @@ void dll_16C_hitDetect(GameObject* obj)
     GameObject* p = extra->linkedObj;
     if (p != NULL)
     {
-        if ((*(int (**)(void*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
+        if ((*(int (**)(void*))(**(int**)&p->anim.dll + 0x38))(p) == 2)
         {
             dll_16C_syncSubObjectTransform(obj, extra->linkedObj, 0, 0, 0, 0, 0, 0, 0);
         }
@@ -324,9 +324,9 @@ void dll_16C_update(GameObject* obj)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x100, (0.0f), 0);
         }
-        (*(void (**)(GameObject*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
+        (*(void (**)(GameObject*, f32*))(**(int**)&sub->anim.dll + 0x44))(sub, &blend);
         blend = (0.01f);
-        (*(void (**)(GameObject*, f32*, f32*))(**(int**)((char*)sub + 0x68) + 0x40))(sub, &a, &b);
+        (*(void (**)(GameObject*, f32*, f32*))(**(int**)&sub->anim.dll + 0x40))(sub, &a, &b);
         ObjAnim_AdvanceCurrentMove((int)obj, blend, (f32)(u32)framesThisStep, NULL);
         if (extra->linkedObj != NULL)
         {
