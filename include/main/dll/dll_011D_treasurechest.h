@@ -20,12 +20,12 @@ typedef struct TreasureChestSetup
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int TreasureChest_getExtraSize(void);
 int TreasureChest_getObjectTypeId(void);
-void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TreasureChest_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void TreasureChest_free(void);
 void TreasureChest_hitDetect(GameObject* obj);
 void TreasureChest_update(GameObject* obj);
 void TreasureChest_release(void);
 void TreasureChest_initialise(void);
-void TreasureChest_init(int* obj);
+void TreasureChest_init(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_011D_TREASURECHEST_H_ */

@@ -33,7 +33,7 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/dll/dll_015D_slidingdoor.h"
 
 
-int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
+int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     register int playerNear;
     register int trickyNear;
@@ -50,7 +50,7 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
     if (player != NULL)
     {
         playerNear =
-            Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 130.0f;
+            Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 130.0f;
     }
     else
     {
@@ -59,15 +59,15 @@ int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (tricky != NULL)
     {
-        trickyNear = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)tricky + 0x18)) < 130.0f;
+        trickyNear = Vec_xzDistance(&obj->anim.worldPosX, (f32*)((u8*)tricky + 0x18)) < 130.0f;
     }
     else
     {
         trickyNear = 0;
     }
 
-    state = ((GameObject*)obj)->extra;
-    params = *(u8**)&((GameObject*)obj)->anim.placementData;
+    state = obj->extra;
+    params = *(u8**)&obj->anim.placementData;
     mode = ((u32)state[0] >> 5) & 7;
 
     if (mode == SLIDINGDOOR_MODE_CLOSED)
@@ -147,14 +147,14 @@ void SlidingDoor_hitDetect(void)
 {
 }
 
-void SlidingDoor_update(u8* obj)
+void SlidingDoor_update(GameObject* obj)
 {
     u8* sub;
     u8* data;
-    if (((GameObject*)obj)->userData1 != 0)
+    if (obj->userData1 != 0)
         return;
-    sub = ((GameObject*)obj)->extra;
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
+    sub = obj->extra;
+    data = *(u8**)&obj->anim.placementData;
     if (((SlidingdoorPlacement*)data)->preemptEvent != 0)
     {
         u32 mode = (u32)((sub[0] >> 5) & 7);
@@ -170,22 +170,22 @@ void SlidingDoor_update(u8* obj)
             (*gObjectTriggerInterface)->runSequence(id, obj, -1);
         }
     }
-    *(u32*)&((GameObject*)obj)->userData1 = 1;
+    *(u32*)&obj->userData1 = 1;
 }
 
-void SlidingDoor_init(u8* obj, u8* data)
+void SlidingDoor_init(GameObject* obj, u8* data)
 {
     u8* sub;
     f32 scale;
     u32 doorState = 0;
-    *(u32*)&((GameObject*)obj)->userData1 = doorState;
-    ((GameObject*)obj)->anim.rotX = (s16)(data[0x1f] << 8);
-    ((GameObject*)obj)->animEventCallback = SlidingDoor_SeqFn;
+    *(u32*)&obj->userData1 = doorState;
+    obj->anim.rotX = (s16)(data[0x1f] << 8);
+    obj->animEventCallback = SlidingDoor_SeqFn;
     scale = (f32)(u32)data[0x21] / 64.0f;
-    ((GameObject*)obj)->anim.rootMotionScale = scale;
-    ((GameObject*)obj)->anim.rootMotionScale =
-        ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    sub = ((GameObject*)obj)->extra;
+    obj->anim.rootMotionScale = scale;
+    obj->anim.rootMotionScale =
+        obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+    sub = obj->extra;
     ((SlidingdoorState*)sub)->mode = doorState;
 }
 

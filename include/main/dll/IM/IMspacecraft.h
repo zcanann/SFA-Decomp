@@ -109,7 +109,7 @@ void fn_801A5D88(GameObject* obj, int explosionVariant);
 int RollingBarrel_getExtraSize(void);
 int RollingBarrel_getObjectTypeId(void);
 void RollingBarrel_free(int obj);
-void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
+void RollingBarrel_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 void RollingBarrel_hitDetect(void);
 void RollingBarrel_update(GameObject* obj);
 void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params);

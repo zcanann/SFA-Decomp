@@ -82,18 +82,18 @@ void Lock_DoorLock_free(int obj)
     ObjGroup_RemoveObject(obj, DOORLOCK_OBJGROUP);
 }
 
-void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void Lock_DoorLock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible == 0 || ((GameObject*)obj)->userData2 != 0)
+    if (visible == 0 || obj->userData2 != 0)
     {
-        if (((GameObject*)obj)->userData2 == 0)
+        if (obj->userData2 == 0)
         {
             return;
         }
-        objRenderFn_80041018((GameObject*)obj);
+        objRenderFn_80041018(obj);
         return;
     }
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void Lock_DoorLock_update(GameObject* obj)
