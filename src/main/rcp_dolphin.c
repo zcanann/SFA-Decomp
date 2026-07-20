@@ -2008,7 +2008,6 @@ void turnOnDistortionFilter(f32* vec, f32 angle2, u32* color, f32 angle1)
 }
 
 extern char lbl_803822C8[];
-extern void* gLoadedRomListPages[];
 
 void timeOfDayFn_80055000(void)
 {

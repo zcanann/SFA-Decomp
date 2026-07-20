@@ -87,12 +87,10 @@ s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
 f32 lbl_803DB62C = 0.5f;
 extern int lbl_803822A0[5];
 extern f32 lbl_803DEBCC;
-#define ROM_LIST_PAGE_COUNT 120
 
 /* the ice-mountain snowbike; its map-block residency is tracked separately so the
    ride streams blocks ahead. retail OBJECTS.bin name "IMSnowBike" (DLL 0x255) */
 #define SHADER_SNOWBIKE_OBJ 0x72
-extern void* gLoadedRomListPages[];
 void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern f32 gShaderLoadCenterZ;
 extern f32 gShaderLoadCenterY;
@@ -3074,5 +3072,5 @@ u8 lbl_8038228C[0x14];
 int lbl_803822A0[5];
 int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 
-void* gLoadedRomListPages[0x78];
+void* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 u8 lbl_80386648[0x290];

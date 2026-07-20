@@ -261,8 +261,6 @@ void* mapGetBlockAtPos(int x, int y, int layer)
     return gMapBlocks[idx];
 }
 
-extern u8 gLoadedRomListPages[0x1e0];
-
 void* RomList_GetLoadedPages(void)
 {
     return gLoadedRomListPages;
@@ -363,7 +361,7 @@ extern void* lbl_803DCEA0;
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
 {
     int* page;
-    int** pp;
+    void** pp;
     int inner_idx;
     int outer;
     int total_offset;
@@ -371,7 +369,7 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     u16 limit;
     int sz;
 
-    for (outer = 0, pp = (int**)gLoadedRomListPages; outer < 0x78; pp++, outer++)
+    for (outer = 0, pp = gLoadedRomListPages; outer < ROM_LIST_PAGE_COUNT; pp++, outer++)
     {
         page = *pp;
         if (page == NULL) continue;

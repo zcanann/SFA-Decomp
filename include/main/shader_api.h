@@ -6,8 +6,11 @@
 struct GameObject;
 struct MapBlockData;
 
+#define ROM_LIST_PAGE_COUNT 120
+
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+extern void* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 
 typedef struct MapRomList
 {
