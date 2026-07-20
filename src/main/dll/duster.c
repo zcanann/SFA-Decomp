@@ -3,10 +3,10 @@
  * drive the shared BaddieState control record (obj+0xB8 extra block,
  * accessed via gBaddieControlInterface). Each creature contributes its
  * own init/update/freeze-event handlers:
- *   - rachnop (rachnopInit / rachnopUpdateIdle / rachnopUpdateApproach / rachnopUpdateAttack /
- *     rachnopUpdateWhileFrozen): wall-crawling spider; rachnopFindWallPlane probes
+ *   - rachnop: wall-crawling spider; rachnopFindWallPlane probes
  *     the surrounding geometry (objBboxFn_800640cc) to find a wall face,
- *     then drives roll/charge moves toward the tracked player.
+ *     then drives roll/charge moves toward the tracked player. Its state
+ *     handlers live in duster_80155770.c (a separate translation unit).
  *   - spitting Eba: see spittingeba.c (a separate translation unit).
  *   - whirlpool/water creature (wbInit / wbUpdateEngaged / wbUpdateIdle /
  *     wbUpdateWhileFrozen): path-following (RomCurveWalker) flyer/swimmer
@@ -57,7 +57,6 @@ int lbl_803DBCD8[2] = {2, 3};
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 lbl_803E2A00;
-extern const f32 lbl_803E2A30;
 extern f32 lbl_803E2A04;
 
 void wallPlaneClampMoveTarget(float* outPos, float* anchor, float lateral, float height)
@@ -192,141 +191,6 @@ void rachnopFindWallPlane(int* obj, int state)
     }
 }
 
-void rachnopUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
-{
-    if (eventKind == 0x10)
-    {
-        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
-    }
-    else if (eventKind != 0x11)
-    {
-        ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
-        Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_lash_254);
-        ((BaddieState*)state)->hitCounter = 0;
-    }
-    return;
-}
-
-void rachnopUpdateIdle(int* obj, int state)
-{
-    int cond;
-
-    if (((BaddieState*)state)->userData1 == 0)
-    {
-        rachnopFindWallPlane(obj, state);
-    }
-    else
-    {
-        if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
-            (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
-        {
-            *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
-        }
-        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
-            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_253);
-            Baddie_SetMove((int)obj, state, 2, lbl_803E2A04, 0, 0);
-        }
-    }
-    return;
-}
-
-void rachnopUpdateApproach(int* obj, int state)
-{
-    int cond;
-
-    if (((BaddieState*)state)->userData1 == 0)
-    {
-        rachnopFindWallPlane(obj, state);
-    }
-    else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
-             (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
-    {
-        fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)(0.5f));
-        if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
-            Baddie_SetMove((int)obj, state, 0, (0.5f), 0, 0);
-            Sfx_PlayFromObject((u32)obj, SFXTRIG_id_252);
-        }
-    }
-    else
-    {
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-    }
-    return;
-}
-
-void rachnopUpdateAttack(int* obj, int state)
-{
-    short move;
-    int cond;
-    u16 outIds[2];
-    float outVec[3];
-
-    if (((BaddieState*)state)->userData1 == 0)
-    {
-        rachnopFindWallPlane(obj, state);
-    }
-    else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
-             (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
-    {
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DUSTER_HIT_VOLUME_SLOT, 1, 0);
-        move = ((GameObject*)obj)->anim.currentMove;
-        if (move == 3)
-        {
-            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)lbl_803E2A00);
-        }
-        else if ((move == 0) || (move == 1))
-        {
-            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)lbl_803E2A30);
-        }
-        fn_80154D0C((int)obj, state, outIds, outVec);
-        if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
-            ((outIds[0] < 0x5dc && (((GameObject*)obj)->anim.currentMove != 1))))
-        {
-            if (outIds[0] < 0x5dc)
-            {
-                Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_251);
-                Baddie_SetMove((int)obj, state, 1, lbl_803E2A30, 0, 0);
-            }
-            else
-            {
-                Baddie_SetMove((int)obj, state, 3, lbl_803E2A30, 0, 0);
-            }
-        }
-    }
-    else
-    {
-        *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-    }
-    return;
-}
-
-void rachnopInit(u32 unused, int state)
-{
-    float fa;
-    float fb;
-
-    ((BaddieState*)state)->speedScale = (25.0f);
-    *(u32*)&((BaddieState*)state)->unk2E4 = 1;
-    fa = (0.1f);
-    ((BaddieState*)state)->unk308 = (0.1f);
-    ((BaddieState*)state)->animDeltaScale = fa;
-    ((BaddieState*)state)->unk304 = (0.97f);
-    ((BaddieState*)state)->unk320 = 0;
-    fb = 1.5f;
-    *(float*)&((BaddieState*)state)->eventFlags = 1.5f;
-    ((BaddieState*)state)->unk321 = 4;
-    fa = lbl_803E2A04;
-    ((BaddieState*)state)->unk318 = lbl_803E2A04;
-    ((BaddieState*)state)->unk322 = 0;
-    ((BaddieState*)state)->unk31C = fb;
-    ((DusterState*)state)->phaseTimer = lbl_803E2A00;
-    ((BaddieState*)state)->userData1 = 0;
-    ((BaddieState*)state)->userData2 = 0;
-    ((BaddieState*)state)->pathStep = fa;
-    return;
-}
 
 f32 gDusterWallProbeOffsets[] = {
     50.0f, 0.0f, -50.0f, 0.0f, 0.0f, 50.0f, 0.0f, -50.0f,
