@@ -1359,11 +1359,11 @@ inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base)
 
 inline int objfsaExitOutside(ObjfsaWalkGroup* g, s16 ex, s16 ez)
 {
-    f32 exitFx;
     f32 exitFz;
+    f32 exitFx;
     f32 zero;
-    u8 normalIdx;
     u8 edge;
+    u8 normalIdx;
 
     zero = 0.0f;
     exitFz = (f32)ez;
@@ -1389,7 +1389,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 pairs[364];
     f32 z1;
     f32 x1;
-    int back;
     f32* po;
     ObjfsaPatch* np;
     u8 groupB;
@@ -1397,10 +1396,11 @@ void walkgroupFindExitPointFn_800dc398(void)
     int flagIndex;
     int found;
     int curveCount;
+    char* slotPtr;
     ObjfsaWalkCurveDef** listWalk;
     u8* pp;
     int listIndex;
-    char* slotPtr;
+    int back;
     int slot;
     ObjfsaWalkCurveDef* curve;
     ObjfsaWalkCurveDef* linked;
@@ -1446,8 +1446,9 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkGroup* wgBT;
     s32* linkId;
     s8* edgeCoords;
-    s16 sx;
     s16 sz;
+    s16 sx;
+    ObjfsaPatch* ep;
     patchBase[0] = gObjfsaPatches;
     mapBlockFn_80059c2c(blockFlags);
 
@@ -1599,9 +1600,9 @@ void walkgroupFindExitPointFn_800dc398(void)
                             {
                                 f32 sm;
                                 sm = x2 + x3;
-                                OBJFSA_NEWPATCH.exit1X = (s16)(sm * lbl_803E0608);
+                                (ep = &OBJFSA_NEWPATCH)->exit1X = (s16)(sm * lbl_803E0608);
                                 sm = z2 + z3;
-                                OBJFSA_NEWPATCH.exit1Z = (s16)(sm * lbl_803E0608);
+                                ep->exit1Z = (s16)(sm * lbl_803E0608);
                             }
 
                             OBJFSA_SET_NEWPATCH_PLANE(2, z3 - z2, x2 - x3, x2, z2);
