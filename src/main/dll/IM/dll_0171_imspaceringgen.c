@@ -8,7 +8,7 @@
  * pieces (object 0x301) with randomised spin/tilt, and continuously
  * snaps its own position to ring A so the swarm stays attached.
  *
- * The generator publishes itself in gSpaceRingLeader (lbl_803DDB48) so
+ * The generator publishes itself in gSpaceRingLeader so
  * the individual imspacering objects can track it; free() clears that
  * pointer.
  */
@@ -26,30 +26,30 @@
 #define SEQID_RING_A 0x164
 #define SEQID_RING_B 0x168
 
-/* loose ring-piece object spawned (x10) as ImSpaceRingSetup with random spin/tilt */
+/* loose ring-piece object spawned (x10) with random spin/tilt */
 #define IMSPACERINGGEN_CHILD_OBJ_RING_PIECE 0x301
+#define IMSPACERINGGEN_HAS_SPAWNED(obj) ((obj)->userData1)
 
-extern GameObject* lbl_803DDB48;
 int IMSpaceRingGen_getExtraSize(void)
 {
-    return 0xc;
+    return sizeof(RingGenState);
 }
 int IMSpaceRingGen_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void IMSpaceRingGen_free(void)
+void IMSpaceRingGen_free(GameObject* obj)
 {
-    lbl_803DDB48 = NULL;
+    gSpaceRingLeader = NULL;
 }
 
-void IMSpaceRingGen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void IMSpaceRingGen_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    u8* state = ((GameObject*)obj)->extra;
-    if (visible != 0 && (state[8] != 0 || ((GameObject*)obj)->anim.alpha != 0))
+    RingGenState* state = obj->extra;
+    if (visible != 0 && (state->visible != 0 || obj->anim.alpha != 0))
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 
@@ -60,20 +60,20 @@ void IMSpaceRingGen_hitDetect(void)
 void IMSpaceRingGen_update(GameObject* obj)
 {
     int i;
-    int ring;
-    u8* setup;
+    IMSpaceRingPlacement* ring;
+    ObjPlacement* setup;
     RingGenState* state;
     int objIndex;
     int objCount;
 
-    setup = *(u8**)&obj->anim.placementData;
+    setup = obj->anim.placement;
     state = obj->extra;
     if (state->ringA == NULL || state->ringB == NULL)
     {
-        int* objs = ObjList_GetObjects(&objIndex, &objCount);
+        GameObject** objs = (GameObject**)ObjList_GetObjects(&objIndex, &objCount);
         for (objIndex = 0; objIndex < objCount; objIndex++)
         {
-            GameObject* candidate = (GameObject*)objs[objIndex];
+            GameObject* candidate = objs[objIndex];
             if (candidate->anim.seqId == SEQID_RING_A)
             {
                 state->ringA = candidate;
@@ -87,8 +87,7 @@ void IMSpaceRingGen_update(GameObject* obj)
     else
     {
         int alpha;
-        state->visible =
-            ((int (*)(GameObject*))((void**)*(void**)*(int*)((char*)state->ringB + 0x68))[9])(state->ringB);
+        state->visible = (*(IMSpaceRingInterfaceVTable**)state->ringB->anim.dll)->isVisible(state->ringB);
         if (state->visible != 0)
         {
             alpha = obj->anim.alpha + framesThisStep * 8;
@@ -106,48 +105,48 @@ void IMSpaceRingGen_update(GameObject* obj)
             }
         }
         obj->anim.alpha = alpha;
-        if (obj->userData1 == 0 && Obj_IsLoadingLocked() != 0)
+        if (IMSPACERINGGEN_HAS_SPAWNED(obj) == 0 && Obj_IsLoadingLocked() != 0)
         {
             for (i = 0; i < 10; i++)
             {
-                ring = (int)Obj_AllocObjectSetup(0x24, IMSPACERINGGEN_CHILD_OBJ_RING_PIECE);
-                ((ImSpaceRingSetup*)ring)->base.posX = obj->anim.localPosX;
-                ((ImSpaceRingSetup*)ring)->base.posY = obj->anim.localPosY;
-                ((ImSpaceRingSetup*)ring)->base.posZ = obj->anim.localPosZ;
-                ((ImSpaceRingSetup*)ring)->spinPhase = randomGetRange(0, 0xffff);
-                ((ImSpaceRingSetup*)ring)->spinSpeed = randomGetRange(200, 400);
+                ring = (IMSpaceRingPlacement*)Obj_AllocObjectSetup(sizeof(IMSpaceRingPlacement),
+                                                                  IMSPACERINGGEN_CHILD_OBJ_RING_PIECE);
+                ring->base.posX = obj->anim.localPosX;
+                ring->base.posY = obj->anim.localPosY;
+                ring->base.posZ = obj->anim.localPosZ;
+                ring->initialRotX = randomGetRange(0, 0xffff);
+                ring->spinSpeed = randomGetRange(200, 400);
                 if ((int)randomGetRange(0, 1) == 0)
                 {
-                    ((ImSpaceRingSetup*)ring)->spinSpeed = -((ImSpaceRingSetup*)ring)->spinSpeed;
+                    ring->spinSpeed = -ring->spinSpeed;
                 }
-                ((ImSpaceRingSetup*)ring)->tiltSpeed = randomGetRange(200, 400);
+                ring->tiltSpeed = randomGetRange(200, 400);
                 if ((int)randomGetRange(0, 1) == 0)
                 {
-                    ((ImSpaceRingSetup*)ring)->tiltSpeed = -((ImSpaceRingSetup*)ring)->tiltSpeed;
+                    ring->tiltSpeed = -ring->tiltSpeed;
                 }
-                ((ImSpaceRingSetup*)ring)->base.color[0] = setup[4];
-                ((ImSpaceRingSetup*)ring)->base.color[2] = setup[6];
-                ((ImSpaceRingSetup*)ring)->base.color[1] = 1;
-                ((ImSpaceRingSetup*)ring)->base.color[3] = 0xff;
-                Obj_SetupObject((ObjPlacement*)ring, 5, obj->anim.mapEventSlot, -1,
-                                (void*)*(int*)&obj->anim.parent);
+                ring->base.color[0] = setup->color[0];
+                ring->base.color[2] = setup->color[2];
+                ring->base.color[1] = 1;
+                ring->base.color[3] = 0xff;
+                Obj_SetupObject(&ring->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
             }
-            obj->userData1 = 1;
+            IMSPACERINGGEN_HAS_SPAWNED(obj) = 1;
         }
-        objMove((GameObject*)obj, state->ringA->anim.localPosX - obj->anim.localPosX,
+        objMove(obj, state->ringA->anim.localPosX - obj->anim.localPosX,
                 (9.0f + state->ringA->anim.localPosY) - obj->anim.localPosY,
                 state->ringA->anim.localPosZ - obj->anim.localPosZ);
         obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x100;
         obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x20;
         obj->anim.rotZ = obj->anim.rotZ + framesThisStep * 0x40;
-        *(int*)&obj->anim.parent = 0;
+        obj->anim.parent = NULL;
     }
 }
 
 void IMSpaceRingGen_init(GameObject* obj)
 {
-    obj->userData1 = 0;
-    lbl_803DDB48 = obj;
+    IMSPACERINGGEN_HAS_SPAWNED(obj) = 0;
+    gSpaceRingLeader = obj;
 }
 
 void IMSpaceRingGen_release(void)

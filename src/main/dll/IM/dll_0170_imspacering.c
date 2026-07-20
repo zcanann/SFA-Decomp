@@ -16,7 +16,7 @@
 #include "main/dll/IM/dll_0170_imspacering.h"
 #include "main/object_descriptor.h"
 
-extern GameObject* lbl_803DDB48;
+#define IMSPACERING_SPIN_AXIS(obj) ((obj)->userData1)
 
 int IMSpaceRing_getExtraSize(void)
 {
@@ -27,15 +27,15 @@ int IMSpaceRing_getObjectTypeId(void)
     return 0x0;
 }
 
-void IMSpaceRing_free(void)
+void IMSpaceRing_free(GameObject* obj)
 {
 }
 
-void IMSpaceRing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void IMSpaceRing_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void IMSpaceRing_hitDetect(void)
@@ -44,28 +44,29 @@ void IMSpaceRing_hitDetect(void)
 
 void IMSpaceRing_update(GameObject* obj)
 {
-    s16* placement = *(s16**)&obj->anim.placementData;
-    if (obj->userData1 != 0)
+    IMSpaceRingPlacement* placement = (IMSpaceRingPlacement*)obj->anim.placementData;
+    if (IMSPACERING_SPIN_AXIS(obj) != 0)
     {
-        obj->anim.rotX = (s16)(obj->anim.rotX + placement[0xd] * framesThisStep);
+        obj->anim.rotX = (s16)(obj->anim.rotX + placement->spinSpeed * framesThisStep);
     }
     else
     {
-        obj->anim.rotY = (s16)(obj->anim.rotY + placement[0xd] * framesThisStep);
+        obj->anim.rotY = (s16)(obj->anim.rotY + placement->spinSpeed * framesThisStep);
     }
-    obj->anim.rotZ = (s16)(obj->anim.rotZ + placement[0xe] * framesThisStep);
-    if (lbl_803DDB48 != NULL)
+    obj->anim.rotZ = (s16)(obj->anim.rotZ + placement->tiltSpeed * framesThisStep);
+    if (gSpaceRingLeader != NULL)
     {
-        obj->anim.alpha = lbl_803DDB48->anim.alpha;
-        objMove((GameObject*)obj, lbl_803DDB48->anim.localPosX - obj->anim.localPosX,
-                lbl_803DDB48->anim.localPosY - obj->anim.localPosY, lbl_803DDB48->anim.localPosZ - obj->anim.localPosZ);
+        obj->anim.alpha = gSpaceRingLeader->anim.alpha;
+        objMove(obj, gSpaceRingLeader->anim.localPosX - obj->anim.localPosX,
+                gSpaceRingLeader->anim.localPosY - obj->anim.localPosY,
+                gSpaceRingLeader->anim.localPosZ - obj->anim.localPosZ);
     }
 }
 
-void IMSpaceRing_init(GameObject* obj, s8* placement)
+void IMSpaceRing_init(GameObject* obj, IMSpaceRingPlacement* placement)
 {
-    obj->anim.rotX = (s16)((s32)placement[0x18] << 8);
-    obj->userData1 = randomGetRange(0, 1);
+    obj->anim.rotX = (s16)((s32)placement->initialRotX << 8);
+    IMSPACERING_SPIN_AXIS(obj) = randomGetRange(0, 1);
 }
 
 void IMSpaceRing_release(void)
