@@ -18,33 +18,12 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/object_render.h"
-#include "main/obj_placement.h"
-
-typedef struct TreeBirdState
-{
-    s16 gameBit;          /* 0x00: game bit that arms / fires the trigger */
-    s16 triggerId;        /* 0x02: which trigger sequence to run */
-    s16 immediateTrigger; /* 0x04: preempt trigger id, set if already armed */
-    u8 triggerLatched;    /* 0x06: trigger has fired; stop re-firing */
-    u8 searchDelay;       /* 0x07: frames left to keep searching for target */
-    void* targetObj;      /* 0x08: object dragged along the path each frame */
-} TreeBirdState;
-
-typedef struct NwTreeBirdMapData
-{
-    ObjPlacement head;
-    s8 rotXByte;       /* 0x18: rotX in 1/256 turns */
-    s8 triggerVariant; /* 0x19: selects particle / trigger variant */
-    s16 rotY;          /* 0x1A */
-    s16 rotZ;          /* 0x1C */
-    s16 gameBit;       /* 0x1E */
-} NwTreeBirdMapData;
 
 #define NWTREEBRID_TARGET_OBJGROUP 4
 
 int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    TreeBirdState* state;
+    NwTreeBirdState* state;
     int i;
     int j;
     u8 cmd;
@@ -126,37 +105,37 @@ int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int treebird_getExtraSize(void)
 {
-    return 0xc;
+    return sizeof(NwTreeBirdState);
 }
 
-void treebird_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void treebird_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    TreeBirdState* state;
-    float fx, fy, fz;
+    NwTreeBirdState* state;
+    f32 fx, fy, fz;
 
-    state = ((GameObject*)obj)->extra;
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
-    if (state->targetObj != NULL)
+    state = obj->extra;
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    if (state->pathFollower != NULL)
     {
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &fx, &fy, &fz, 0);
-        ((GameObject*)state->targetObj)->anim.localPosX = fx;
-        ((GameObject*)state->targetObj)->anim.localPosY = fy;
-        ((GameObject*)state->targetObj)->anim.localPosZ = fz;
+        ObjPath_GetPointWorldPosition(obj, 0, &fx, &fy, &fz, 0);
+        state->pathFollower->anim.localPosX = fx;
+        state->pathFollower->anim.localPosY = fy;
+        state->pathFollower->anim.localPosZ = fz;
     }
 }
 
 void treebird_update(GameObject* obj)
 {
-    TreeBirdState* state;
-    int immediateTrigger;
-    float dist;
+    NwTreeBirdState* state;
+    int preemptSequenceId;
+    f32 dist;
 
     state = (obj)->extra;
     dist = 100.0f;
     if (state->searchDelay != 0)
     {
-        state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, obj, &dist);
-        if ((u32)state->targetObj != 0)
+        state->pathFollower = (GameObject*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, obj, &dist);
+        if (state->pathFollower != NULL)
         {
             state->searchDelay = 0;
         }
@@ -167,10 +146,10 @@ void treebird_update(GameObject* obj)
     }
     else if (state->triggerLatched == 0)
     {
-        immediateTrigger = state->immediateTrigger;
-        if (immediateTrigger != 0)
+        preemptSequenceId = state->preemptSequenceId;
+        if (preemptSequenceId != 0)
         {
-            (*gObjectTriggerInterface)->preempt((int)obj, immediateTrigger);
+            (*gObjectTriggerInterface)->preempt((int)obj, preemptSequenceId);
             (*gObjectTriggerInterface)->runSequence((int)state->triggerId, (void*)obj, 1);
             state->triggerLatched = 1;
         }
@@ -182,20 +161,20 @@ void treebird_update(GameObject* obj)
     }
 }
 
-void treebird_init(GameObject* obj, int setup)
+void treebird_init(GameObject* obj, NwTreeBirdPlacement* placement)
 {
-    TreeBirdState* state;
+    NwTreeBirdState* state;
 
     state = obj->extra;
     obj->animEventCallback = TreeBird_SeqFn;
-    obj->anim.rotX = (s16)(((NwTreeBirdMapData*)setup)->rotXByte << 8);
-    obj->anim.rotY = ((NwTreeBirdMapData*)setup)->rotY;
-    obj->anim.rotZ = ((NwTreeBirdMapData*)setup)->rotZ;
-    state->triggerId = ((NwTreeBirdMapData*)setup)->triggerVariant;
-    state->gameBit = ((NwTreeBirdMapData*)setup)->gameBit;
+    obj->anim.rotX = (s16)(placement->initialRotX << 8);
+    obj->anim.rotY = placement->initialRotY;
+    obj->anim.rotZ = placement->initialRotZ;
+    state->triggerId = placement->triggerVariant;
+    state->gameBit = placement->gameBit;
     if (mainGetBit((int)state->gameBit) != 0)
     {
-        state->immediateTrigger = 0x154;
+        state->preemptSequenceId = 0x154;
     }
     state->searchDelay = 4;
 }

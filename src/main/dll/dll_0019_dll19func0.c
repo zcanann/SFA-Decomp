@@ -85,6 +85,7 @@ typedef struct
 
 const IdPair lbl_803E1C18 = {0x02C402CD, 0x02CE02CF};
 const IdPair lbl_803E1C20 = {0x000B000B, 0x000B000B};
+const int gDll19DefaultCurveMode = 2;
 
 
 const Dll19ChildObjectIdTable lbl_802C2190 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
@@ -210,7 +211,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     int curveLocal;
     u8 byteLocal;
 
-    curveLocal = 2;
+    curveLocal = gDll19DefaultCurveMode;
     byteLocal = 1;
     ((GroundBaddieState*)state)->control = (void*)(state + 1040);
     ((GroundBaddieState*)state)->targetState = 0;
