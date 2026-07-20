@@ -9,6 +9,7 @@
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/dll_005A_staffcollisionfunc03.h"
+#include "main/dll/dll_005B_modgfxfunc03.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
@@ -98,7 +99,7 @@ typedef struct DllF7State
 } DllF7State;
 
 StaffCollisionInterface** gDllF7Resource5A;
-void* gDllF7Resource5B;
+ModgfxFunc03Interface** gDllF7Resource5B;
 
 int dll_F7_getExtraSize(void)
 {
@@ -226,7 +227,7 @@ void dll_F7_update(int* obj)
                 *(s16*)near = *(s16*)obj;
             }
         }
-        ((void (*)(int*, int, int, int, int, int))((int*)*(int**)gDllF7Resource5B)[1])(obj, 1, 0, 2, -1, 0);
+        (*gDllF7Resource5B)->spawn(obj, 1, NULL, 2, -1, NULL);
     }
     if (state->bounceOffset > gDllF7BounceRest[0])
     {

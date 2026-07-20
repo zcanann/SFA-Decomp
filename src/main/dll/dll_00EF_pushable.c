@@ -6,6 +6,7 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_005B_modgfxfunc03.h"
 #include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/object_render.h"
@@ -348,8 +349,8 @@ int pushable_updateMagicGem(GameObject* obj, PushableState* state)
                 mainSetBits(0x1c9, 0);
             }
             tex = (ObjTextureRuntimeSlot*)Resource_Acquire(0x5b, 1);
-            ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
-            ((VtableFn*)(*(int*)tex))[1](obj, 0x14, 0, 2, -1, 0);
+            (*(ModgfxFunc03Interface**)tex)->spawn(obj, 0x14, NULL, 2, -1, NULL);
+            (*(ModgfxFunc03Interface**)tex)->spawn(obj, 0x14, NULL, 2, -1, NULL);
             Resource_Release(tex);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_espar5_c);
         }

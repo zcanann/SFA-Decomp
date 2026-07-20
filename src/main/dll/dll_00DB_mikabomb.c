@@ -19,6 +19,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/dll_005B_modgfxfunc03.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/resource.h"
 #include "main/object_render.h"
@@ -46,7 +47,7 @@ typedef struct MikabombState
 {
     int* shadowObj; /* 0x00: spawned shadow-bomb object */
     f32 groundY;    /* 0x04: ground-plane Y sampled at init */
-    void* resource; /* 0x08: Resource_Acquire(0x5b) handle (effect vtable) */
+    ModgfxFunc03Interface** resource; /* 0x08: Resource_Acquire(0x5b) handle */
     u8 exploded;    /* 0x0C: set once the bomb has detonated */
     u8 padD[0x18 - 0xD];
     u8 unk18;
@@ -130,8 +131,8 @@ void MikaBomb_update(int* obj)
 
     if (((GameObject*)obj)->anim.alpha == 0xff || ((MikabombState*)state)->exploded != 0)
     {
-        u32 localB;
-        u32 localA;
+        ModgfxSpawnCountRange localB;
+        ModgfxSpawnCountRange localA;
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MIKABOMB_HIT_VOLUME_SLOT, 1, 0);
         ObjHits_EnableObject((GameObject*)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
@@ -142,11 +143,10 @@ void MikaBomb_update(int* obj)
             {
                 int* st = ((GameObject*)obj)->extra;
                 u32 rnd;
-                localB = lbl_803E31A0;
+                localB.packed = lbl_803E31A0;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
-                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
-                    obj, rnd, 0, 2, -1, &localB);
+                (*((MikabombState*)st)->resource)->spawn(obj, rnd, NULL, 2, -1, &localB);
                 ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           (s32)(gMikaBombHitSphereRadiusScale *
                                                 (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
@@ -165,11 +165,10 @@ void MikaBomb_update(int* obj)
             {
                 int* st = ((GameObject*)obj)->extra;
                 u32 rnd;
-                localA = lbl_803E31A0;
+                localA.packed = lbl_803E31A0;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
-                ((void (*)(int*, u32, int, int, int, u32*))((int*)*(int**)((MikabombState*)st)->resource)[1])(
-                    obj, rnd, 0, 2, -1, &localA);
+                (*((MikabombState*)st)->resource)->spawn(obj, rnd, NULL, 2, -1, &localA);
                 ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           (s32)(gMikaBombHitSphereRadiusScale *
                                                 (f32)(u32)((GameObject*)obj)->anim.modelInstance->primaryHitboxRadius));
