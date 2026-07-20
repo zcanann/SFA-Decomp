@@ -4766,7 +4766,10 @@ dolphin/MSL_C/PPCEABI/bare/H/k_tan.c:
 	.text       start:0x8029312C end:0x80293234
 
 main/trig.c:
-	.text       start:0x80293234 end:0x80294098
+	.text       start:0x80293234 end:0x80293DA4
+
+dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c:
+	.text       start:0x80293DA4 end:0x80294098
 
 dolphin/MSL_C/PPCEABI/bare/H/s_floor.c:
 	.text       start:0x80294098 end:0x80294204
