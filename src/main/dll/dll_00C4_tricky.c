@@ -567,7 +567,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdate->hitVolumePair &= ~0x40;
         characterDoEyeAnims((GameObject*)obj, (void*)(state + 0x378));
-        return (*gObjectTriggerInterface)->func20((void*)obj, (u8*)animUpdate, 1, 0xf, 0x1e, 0, 0);
+        return (*gObjectTriggerInterface)->func20((GameObject*)obj, animUpdate, 1, 0xf, 0x1e, 0, 0);
     }
     return 0;
 }

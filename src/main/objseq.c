@@ -27,6 +27,7 @@
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
 #include "main/shader_api.h"
+#include "main/sky.h"
 #include "main/sky_interface.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -174,7 +175,6 @@ STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, unk24) == 0x24);
 STATIC_ASSERT(sizeof(ObjSeqAnimPlacement) == 0x28);
 STATIC_ASSERT(sizeof(ObjSeqAnimDataHeader) == 8);
 
-extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
 extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode);
@@ -221,7 +221,6 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq);
 void ObjSeq_release(void);
 void ObjSeq_initialise(void);
 void fn_80088730(u8* out);
-void envFxFn_800887cc(void);
 void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode* curve, RomCurveNode* next, f32 t,
                                           int flag);
 void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t);
@@ -291,7 +290,6 @@ extern s8 gObjSeqMsgSendModes[];
 extern int gObjSeqMsgIds[];
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
-extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 
 extern int gObjSeqStreamTableB[];
 extern f32 lbl_803DD0F4;
@@ -2948,7 +2946,7 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
         movementState = (s8)((ObjSeqState*)seq)->movementState;
         if (movementState >= 4)
         {
-            if (ObjSeq_func20(obj, seq, 6, 0x1e, 0x50, -1, -1) != 0)
+            if (ObjSeq_func20((GameObject*)obj, (ObjAnimUpdateState*)seq, 6, 0x1e, 0x50, -1, -1) != 0)
             {
                 actionSlot = ((ObjSeqState*)seq)->slot;
                 if (gObjSeqSlotResults[actionSlot] < 2)

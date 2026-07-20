@@ -1049,7 +1049,8 @@ void objModelResetVecFn_80080548(GameObject* obj)
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
  * vector and animation as it goes. */
-int ObjSeq_func20(GameObject* obj, int state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft)
+int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle,
+                  s16 animRight, s16 animLeft)
 {
     int player;
     s16* modelVec;

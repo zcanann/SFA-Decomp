@@ -21,6 +21,7 @@ void turnOnBlurFilter(f32 x, f32 y, f32 z, u8 useArea, u8 bigger);
 void Rcp_DisableDistortionFilter(void);
 void turnOnDistortionFilter(f32* position, f32 angle2, u32* color, f32 angle1);
 void Rcp_SetSpiritVisionEnabled(u8 enabled);
+void Rcp_SetMonochromeFilterEnabled(u8 enabled);
 void fn_80053ED0(u32 bits);
 void fn_80053EBC(u32 bits);
 void timeOfDayFn_80055000(void);

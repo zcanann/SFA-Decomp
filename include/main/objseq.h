@@ -12,6 +12,11 @@
  * everything else is padded.
  */
 typedef struct ObjSeqState ObjSeqState;
+struct GameObject;
+struct ObjAnimUpdateState;
+
+typedef int (*ObjSeqTurnToPlayerFn)(struct GameObject* obj, struct ObjAnimUpdateState* state, s16 turnDegrees,
+                                    s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft);
 
 typedef struct ObjectTriggerInterface {
     void *unusedSlot02;
@@ -44,8 +49,7 @@ typedef struct ObjectTriggerInterface {
     s16 (*getGlobal2)(void);
     void (*setGlobal2)(s16 value);
     void (*setXrot)(int index, int xrot);
-    int (*func20)(void *obj, u8 *seq, int cmd, int maxCount, int paramOffset, int arg5,
-                  int arg6);
+    ObjSeqTurnToPlayerFn func20;
     int (*setObjects)(int a, int b, int c);
     int (*setOverridePos)(f32 x, f32 y, f32 z);
     int (*setRunSequenceWorldSpace)(int unused, int mode);
