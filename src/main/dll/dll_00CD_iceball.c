@@ -8,10 +8,10 @@
  * a radius-5 hit sphere.
  * On contact it plays an impact effect and goes invisible for 120 frames
  * before freeing:
- *   - fn_8015FCCC runs when the iceball strikes the player or Tricky: it
+ *   - iceBall_handleCharacterImpact runs when the iceball strikes the player or Tricky: it
  *     notifies the owning ChukChuk (vtable msg 0x80) and bursts particles,
  *     keyed by the obj's seqId (0x2cb / 100 / 0x30a).
- *   - fn_8015FBEC runs for any other contact: a Krazoa-impact burst keyed by
+ *   - iceBall_handleSurfaceImpact runs for any other contact: a Krazoa-impact burst keyed by
  *     seqId (0x2cb / 100 / 0x30a).
  * IceBall_init primes the lifetime (0xb4) and full alpha; render/free toggle
  * the camera view-Y offset for the impact shake.
@@ -31,20 +31,23 @@
 #include "main/dll/dll_00CB_dllcb.h"
 
 #define ICEBALL_HIT_VOLUME_SLOT 10
+#define ICEBALL_PARTICLE_COUNT 25
+#define ICEBALL_LIFETIME_FRAMES 180
+#define ICEBALL_IMPACT_FRAMES 120
 
 #define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
 
 
 
 
-static inline u8 scarab_isObjectInList(void* obj)
+static inline u8 iceBall_isOwnerActive(GameObject* owner)
 {
     int i;
     int count;
     int* objs = ObjList_GetObjects(&i, &count);
     while (i < count)
     {
-        if (obj == (void*)objs[i++])
+        if (owner == (GameObject*)objs[i++])
         {
             return 1;
         }
@@ -52,22 +55,22 @@ static inline u8 scarab_isObjectInList(void* obj)
     return 0;
 }
 
-void fn_8015FBEC(GameObject* obj)
+void iceBall_handleSurfaceImpact(GameObject* obj)
 {
 
-    s16 mode = (obj)->anim.seqId;
+    s16 projectileType = obj->anim.seqId;
     int i;
 
-    if (mode == 0x2cb)
+    if (projectileType == 0x2cb)
     {
-        for (i = 0; i < 25; i++)
+        for (i = 0; i < ICEBALL_PARTICLE_COUNT; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 834, NULL, 1, -1, NULL);
         }
     }
-    else if (mode == 100 || mode == 0x30a)
+    else if (projectileType == 100 || projectileType == 0x30a)
     {
-        for (i = 0; i < 25; i++)
+        for (i = 0; i < ICEBALL_PARTICLE_COUNT; i++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 836, NULL, 1, -1, NULL);
         }
@@ -78,57 +81,57 @@ void fn_8015FBEC(GameObject* obj)
     CameraShake_SetAllMagnitudes(1.0f);
 }
 
-void fn_8015FCCC(GameObject* obj)
+void iceBall_handleCharacterImpact(GameObject* obj)
 {
 
-    s16 type;
+    s16 projectileType;
     int n;
 
     Camera_EnableViewYOffset();
     CameraShake_SetAllMagnitudes(1.0f);
     Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
-    type = (obj)->anim.seqId;
-    if (type == 0x2cb)
+    projectileType = obj->anim.seqId;
+    if (projectileType == 0x2cb)
     {
         if ((obj)->ownerObj != NULL)
         {
-            if (scarab_isObjectInList((obj)->ownerObj))
+            if (iceBall_isOwnerActive(obj->ownerObj))
             {
                 (*(void (**)(void*, int))(**(int**)(*(int*)&(obj)->ownerObj + 0x68) + 0x20))((obj)->ownerObj,
                                                                                              ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
-        for (n = 0; n < 25; n++)
+        for (n = 0; n < ICEBALL_PARTICLE_COUNT; n++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 832, NULL, 1, -1, NULL);
         }
     }
-    else if (type == 100)
+    else if (projectileType == 100)
     {
         if ((obj)->ownerObj != NULL)
         {
-            if (scarab_isObjectInList((obj)->ownerObj))
+            if (iceBall_isOwnerActive(obj->ownerObj))
             {
                 (*(void (**)(void*, int))(**(int**)(*(int*)&(obj)->ownerObj + 0x68) + 0x24))((obj)->ownerObj,
                                                                                              ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
-        for (n = 0; n < 25; n++)
+        for (n = 0; n < ICEBALL_PARTICLE_COUNT; n++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 835, NULL, 1, -1, NULL);
         }
     }
-    else if (type == 0x30a)
+    else if (projectileType == 0x30a)
     {
         if ((obj)->ownerObj != NULL)
         {
-            if (scarab_isObjectInList((obj)->ownerObj))
+            if (iceBall_isOwnerActive(obj->ownerObj))
             {
                 (*(void (**)(void*, int, int))(**(int**)(*(int*)&(obj)->ownerObj + 0x68) + 0x24))(
                     (obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER, 0);
             }
         }
-        for (n = 0; n < 25; n++)
+        for (n = 0; n < ICEBALL_PARTICLE_COUNT; n++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 835, NULL, 1, -1, NULL);
         }
@@ -145,23 +148,23 @@ int IceBall_getObjectTypeId(void)
     return 0x0;
 }
 
-void IceBall_free(void)
+void IceBall_free(GameObject* obj)
 {
     Camera_DisableViewYOffset();
 }
 
-void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void IceBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visible32 = visible;
     if (visible32 != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
-void IceBall_hitDetect(void)
+void IceBall_hitDetect(GameObject* obj)
 {
 }
 
-void IceBall_update(u16* obj, int unused)
+void IceBall_update(GameObject* obj)
 {
     int objInt;
 
@@ -192,23 +195,23 @@ void IceBall_update(u16* obj, int unused)
          (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->lastHitObject ==
              (u32)getTrickyObject()))
     {
-        fn_8015FCCC((GameObject*)(objInt));
+        iceBall_handleCharacterImpact((GameObject*)(objInt));
         ((GameObject*)objInt)->anim.alpha = 0;
-        ((GameObject*)objInt)->userData1 = 120;
+        ((GameObject*)objInt)->userData1 = ICEBALL_IMPACT_FRAMES;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
     else if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->contactFlags != 0)
     {
-        fn_8015FBEC((GameObject*)(objInt));
+        iceBall_handleSurfaceImpact((GameObject*)(objInt));
         ((GameObject*)objInt)->anim.alpha = 0;
-        ((GameObject*)objInt)->userData1 = 120;
+        ((GameObject*)objInt)->userData1 = ICEBALL_IMPACT_FRAMES;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
 }
 
 void IceBall_init(GameObject* obj)
 {
-    obj->userData1 = 0xb4;
+    obj->userData1 = ICEBALL_LIFETIME_FRAMES;
     ObjHits_DisableObject(obj);
     obj->anim.alpha = 0xff;
 }

@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav);
+int pinponspike_calculateLaunchAngle(f32* from, f32* to, f32 speed, u8 highArc, f32 gravity);
 
 #endif /* MAIN_DLL_DLL_00D8_PINPONSPIKE_ARC_API_H_ */

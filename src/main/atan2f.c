@@ -38,100 +38,100 @@ static inline u32 float_bits(const float *value) {
 }
 
 float __kernel_cos(float y, float x) {
-    float ax = __fabsf(x);
-    float ay = __fabsf(y);
-    float r;
-    float r2;
-    float value;
-    s32 quadrant;
+    float absX = __fabsf(x);
+    float absY = __fabsf(y);
+    float ratio;
+    float ratioSquared;
+    float angle;
+    s32 signBits;
 
-    if (ax > ay) {
-        r = ay / ax;
-        r2 = r * r;
-        value = r * (lbl_803E7A0C * r2 + lbl_803E7A08);
+    if (absX > absY) {
+        ratio = absY / absX;
+        ratioSquared = ratio * ratio;
+        angle = ratio * (lbl_803E7A0C * ratioSquared + lbl_803E7A08);
     } else {
-        r = ax / ay;
-        r2 = r * r;
-        value = lbl_803E79C8 - r * (lbl_803E7A0C * r2 + lbl_803E7A08);
+        ratio = absX / absY;
+        ratioSquared = ratio * ratio;
+        angle = lbl_803E79C8 - ratio * (lbl_803E7A0C * ratioSquared + lbl_803E7A08);
     }
 
-    quadrant = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
-    switch (quadrant) {
+    signBits = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
+    switch (signBits) {
         case 0x00000000:
-            return value;
+            return angle;
         case 0x80000000:
-            return -value;
+            return -angle;
         case 0x40000000:
-            return lbl_803E79E8 - value;
+            return lbl_803E79E8 - angle;
         default:
-            return value - lbl_803E79E8;
+            return angle - lbl_803E79E8;
     }
 }
 
 float atan2f(float y, float x) {
-    float ax = __fabsf(x);
-    float ay = __fabsf(y);
-    float r;
-    float r2;
-    float value;
-    int quadrant;
+    float absX = __fabsf(x);
+    float absY = __fabsf(y);
+    float ratio;
+    float ratioSquared;
+    float angle;
+    int signBits;
 
-    if (ax > ay) {
-        r = ay / ax;
-        r2 = r * r;
-        value = r * (((lbl_803E7A28 * r2 + lbl_803E7A24) * r2 + lbl_803E7A20) * r2 + lbl_803E7A1C);
+    if (absX > absY) {
+        ratio = absY / absX;
+        ratioSquared = ratio * ratio;
+        angle = ratio * (((lbl_803E7A28 * ratioSquared + lbl_803E7A24) * ratioSquared + lbl_803E7A20) * ratioSquared + lbl_803E7A1C);
     } else {
-        r = ax / ay;
-        r2 = r * r;
-        value = lbl_803E79C8 - r * (((lbl_803E7A28 * r2 + lbl_803E7A24) * r2 + lbl_803E7A20) * r2 + lbl_803E7A1C);
+        ratio = absX / absY;
+        ratioSquared = ratio * ratio;
+        angle = lbl_803E79C8 - ratio * (((lbl_803E7A28 * ratioSquared + lbl_803E7A24) * ratioSquared + lbl_803E7A20) * ratioSquared + lbl_803E7A1C);
     }
 
-    quadrant = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x & 0x80000000) >> 1);
-    switch (quadrant) {
+    signBits = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x & 0x80000000) >> 1);
+    switch (signBits) {
         case 0x00000000:
-            return value;
+            return angle;
         case 0x80000000:
-            return -value;
+            return -angle;
         case 0x40000000:
-            return lbl_803E79E8 - value;
+            return lbl_803E79E8 - angle;
         default:
-            return value - lbl_803E79E8;
+            return angle - lbl_803E79E8;
     }
 }
 
 float fn_802925C4(float y, float x) {
-    float ax = __fabsf(x);
-    float ay = __fabsf(y);
-    double r;
-    double r2;
-    double value;
-    int quadrant;
+    float absX = __fabsf(x);
+    float absY = __fabsf(y);
+    double ratio;
+    double ratioSquared;
+    double angle;
+    int signBits;
 
-    if (ax >= ay) {
-        r = ay / ax;
-        r2 = r * r;
-        value = r * (((((((((((((((lbl_803E7AA8 * r2 + lbl_803E7AA0) * r2 + lbl_803E7A98) * r2 + lbl_803E7A90) * r2
-                       + lbl_803E7A88) * r2 + lbl_803E7A80) * r2 + lbl_803E7A78) * r2 + lbl_803E7A70) * r2
-                    + lbl_803E7A68) * r2 + lbl_803E7A60) * r2 + lbl_803E7A58) * r2 + lbl_803E7A50) * r2
-                 + lbl_803E7A48) * r2 + lbl_803E7A40) * r2 + lbl_803E7A38) * r2 + lbl_803E7A30);
+    if (absX >= absY) {
+        ratio = absY / absX;
+        ratioSquared = ratio * ratio;
+        angle = ratio * (((((((((((((((lbl_803E7AA8 * ratioSquared + lbl_803E7AA0) * ratioSquared + lbl_803E7A98) * ratioSquared + lbl_803E7A90) * ratioSquared
+                       + lbl_803E7A88) * ratioSquared + lbl_803E7A80) * ratioSquared + lbl_803E7A78) * ratioSquared + lbl_803E7A70) * ratioSquared
+                    + lbl_803E7A68) * ratioSquared + lbl_803E7A60) * ratioSquared + lbl_803E7A58) * ratioSquared + lbl_803E7A50) * ratioSquared
+                 + lbl_803E7A48) * ratioSquared + lbl_803E7A40) * ratioSquared + lbl_803E7A38) * ratioSquared + lbl_803E7A30);
     } else {
-        r = ax / ay;
-        r2 = r * r;
-        value = lbl_803E79E0 - r * (((((((((((((((lbl_803E7AA8 * r2 + lbl_803E7AA0) * r2 + lbl_803E7A98) * r2 + lbl_803E7A90) * r2
-                       + lbl_803E7A88) * r2 + lbl_803E7A80) * r2 + lbl_803E7A78) * r2 + lbl_803E7A70) * r2
-                    + lbl_803E7A68) * r2 + lbl_803E7A60) * r2 + lbl_803E7A58) * r2 + lbl_803E7A50) * r2
-                 + lbl_803E7A48) * r2 + lbl_803E7A40) * r2 + lbl_803E7A38) * r2 + lbl_803E7A30);
+        ratio = absX / absY;
+        ratioSquared = ratio * ratio;
+        angle = lbl_803E79E0 - ratio * (((((((((((((((lbl_803E7AA8 * ratioSquared + lbl_803E7AA0) * ratioSquared + lbl_803E7A98) * ratioSquared + lbl_803E7A90) * ratioSquared
+                       + lbl_803E7A88) * ratioSquared + lbl_803E7A80) * ratioSquared + lbl_803E7A78) * ratioSquared + lbl_803E7A70) * ratioSquared
+                    + lbl_803E7A68) * ratioSquared + lbl_803E7A60) * ratioSquared + lbl_803E7A58) * ratioSquared + lbl_803E7A50) * ratioSquared
+                 + lbl_803E7A48) * ratioSquared + lbl_803E7A40) * ratioSquared + lbl_803E7A38) * ratioSquared + lbl_803E7A30);
     }
 
-    quadrant = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x & 0x80000000) >> 1);
-    switch (quadrant) {
+    signBits = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x & 0x80000000) >> 1);
+    switch (signBits) {
         case 0x00000000:
-            return (float)value;
+            return (float)angle;
         case 0x80000000:
-            return (float)-value;
+            return (float)-angle;
         case 0x40000000:
-            return (float)(lbl_803E7A00 - value);
+            return (float)(lbl_803E7A00 - angle);
         default:
-            return (float)(value - lbl_803E7A00);
+            return (float)(angle - lbl_803E7A00);
     }
 }

@@ -67,7 +67,7 @@ void spittingEbaSpawnPollen(u32 obj, int state)
         b[1] = 30.0f + ((GameObject*)ref)->anim.localPosY;
         b[2] = ((GameObject*)ref)->anim.localPosZ;
         spd = (3.25f) * ((0.02f) * (f32)(int)randomGetRange(-10, 10) + (1.0f));
-        ref = fn_80169EF4(a, b, spd, 1, (0.045f));
+        ref = pinponspike_calculateLaunchAngle(a, b, spd, 1, (0.045f));
         fn_80293018(ref, &cosVal, &velXZ);
         velXZ = velXZ * spd;
         cosVal = cosVal * spd;

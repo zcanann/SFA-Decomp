@@ -32,27 +32,9 @@
 
 u32 lbl_80321008[4] = {0x00031ccf, 0x00000522, 0x00031ce0, 0x00000e6e};
 
-int ProjectileSwitch_getExtraSize(void) { return 0x8; }
-
-int ProjectileSwitch_getObjectTypeId(GameObject* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = (int)*(u8*)((char*)*(int**)&obj->anim.placementData + 0x1e) >> 2;
-    int max = objAnim->modelInstance->modelCount;
-    if (modelIndex >= max)
-    {
-        modelIndex = 0;
-    }
-    return ((u32)modelIndex << 11) | 0x400;
-}
-
-void ProjectileSwitch_free(void)
-{
-}
-
 typedef struct ProjectileSwitchPlacement
 {
-    ObjPlacement head; /* 0x00 */
+    ObjPlacement base;
     s16 gameBitId;
     s16 autoResetDelayTenths;
     u8 rotYByte;
@@ -66,10 +48,6 @@ typedef struct ProjectileSwitchPlacement
     u8 pad24[0x28 - 0x24];
 } ProjectileSwitchPlacement;
 
-STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, gameBitId) == 0x18);
-STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, modelIndexAndMode) == 0x1e);
-STATIC_ASSERT(sizeof(ProjectileSwitchPlacement) == 0x28);
-
 typedef struct ProjectileSwitchState
 {
     u8 isOn;
@@ -78,18 +56,43 @@ typedef struct ProjectileSwitchState
     f32 autoResetTimerFrames;
 } ProjectileSwitchState;
 
+STATIC_ASSERT(sizeof(ProjectileSwitchPlacement) == 0x28);
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, base) == 0x0);
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, gameBitId) == 0x18);
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, autoResetDelayTenths) == 0x1A);
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, modelIndexAndMode) == 0x1E);
+STATIC_ASSERT(offsetof(ProjectileSwitchPlacement, renderFlags) == 0x23);
 STATIC_ASSERT(sizeof(ProjectileSwitchState) == 0x8);
+STATIC_ASSERT(offsetof(ProjectileSwitchState, gameBitId) == 0x2);
+STATIC_ASSERT(offsetof(ProjectileSwitchState, autoResetTimerFrames) == 0x4);
+
+int ProjectileSwitch_getExtraSize(void) { return 0x8; }
+
+int ProjectileSwitch_getObjectTypeId(GameObject* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    ProjectileSwitchPlacement* placement = (ProjectileSwitchPlacement*)obj->anim.placementData;
+    int modelIndex = (int)placement->modelIndexAndMode >> 2;
+    int max = objAnim->modelInstance->modelCount;
+    if (modelIndex >= max)
+    {
+        modelIndex = 0;
+    }
+    return ((u32)modelIndex << 11) | 0x400;
+}
+
+void ProjectileSwitch_free(void)
+{
+}
 
 void ProjectileSwitch_render(GameObject *obj, int p2, int p3, int p4, int p5, char flag)
 {
-    int placement = *(int*)&(obj)->anim.placementData;
+    ProjectileSwitchPlacement* placement = (ProjectileSwitchPlacement*)obj->anim.placementData;
     if ((int)(signed char)flag != 0)
     {
-        if ((((ProjectileSwitchPlacement*)placement)->renderFlags & PROJECTILESWITCH_PLACEMENT_CUSTOM_COLOR) != 0)
+        if ((placement->renderFlags & PROJECTILESWITCH_PLACEMENT_CUSTOM_COLOR) != 0)
         {
-            fn_8003B608(((ProjectileSwitchPlacement*)placement)->colorR,
-                        ((ProjectileSwitchPlacement*)placement)->colorG,
-                        ((ProjectileSwitchPlacement*)placement)->colorB);
+            fn_8003B608(placement->colorR, placement->colorG, placement->colorB);
         }
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
@@ -97,16 +100,16 @@ void ProjectileSwitch_render(GameObject *obj, int p2, int p3, int p4, int p5, ch
 
 void ProjectileSwitch_hitDetect(GameObject *obj)
 {
-    int switchState;
-    int switchStateReloaded;
-    int placement;
+    ProjectileSwitchState* switchState;
+    ProjectileSwitchState* switchStateReloaded;
+    ProjectileSwitchPlacement* placement;
     int hitPriority;
     int hitObj;
     ObjTextureRuntimeSlot* tex;
     int rejectFireballHit;
 
-    placement = *(int*)&(obj)->anim.placementData;
-    switchState = *(int*)&(obj)->extra;
+    placement = (ProjectileSwitchPlacement*)obj->anim.placementData;
+    switchState = obj->extra;
     hitPriority = ObjHits_GetPriorityHit(obj, &hitObj, 0x0, 0x0);
     if (hitPriority != PROJECTILESWITCH_HIT_PRIORITY_FIREBALL &&
         hitPriority != PROJECTILESWITCH_HIT_PRIORITY_ALT) return;
@@ -122,11 +125,11 @@ void ProjectileSwitch_hitDetect(GameObject *obj)
     }
     if (rejectFireballHit != 0) return;
 
-    if (((ProjectileSwitchState*)switchState)->isOn != 0)
+    if (switchState->isOn != 0)
     {
-        if (((((ProjectileSwitchPlacement*)placement)->modelIndexAndMode & SWITCH_MODE_MASK)) != SWITCH_MODE_TOGGLE)
+        if ((placement->modelIndexAndMode & SWITCH_MODE_MASK) != SWITCH_MODE_TOGGLE)
             return;
-        switchStateReloaded = *(int*)&(obj)->extra;
+        switchStateReloaded = obj->extra;
         if ((obj)->anim.mapEventSlot == 0x2c)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
@@ -140,12 +143,12 @@ void ProjectileSwitch_hitDetect(GameObject *obj)
         {
             tex->textureId = 0;
         }
-        ((ProjectileSwitchState*)switchStateReloaded)->isOn = 0;
-        mainSetBits((int)((ProjectileSwitchState*)switchState)->gameBitId, 0);
+        switchStateReloaded->isOn = 0;
+        mainSetBits((int)switchState->gameBitId, 0);
     }
     else
     {
-        switchStateReloaded = *(int*)&(obj)->extra;
+        switchStateReloaded = obj->extra;
         if ((obj)->anim.mapEventSlot == 0x2c)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
@@ -159,13 +162,11 @@ void ProjectileSwitch_hitDetect(GameObject *obj)
         {
             tex->textureId = 0x100;
         }
-        ((ProjectileSwitchState*)switchStateReloaded)->isOn = 1;
-        mainSetBits((int)((ProjectileSwitchState*)switchState)->gameBitId, 1);
-        if ((((ProjectileSwitchPlacement*)placement)->modelIndexAndMode & SWITCH_MODE_MASK) == SWITCH_MODE_TIMED_RESET)
+        switchStateReloaded->isOn = 1;
+        mainSetBits((int)switchState->gameBitId, 1);
+        if ((placement->modelIndexAndMode & SWITCH_MODE_MASK) == SWITCH_MODE_TIMED_RESET)
         {
-            ((ProjectileSwitchState*)switchState)->autoResetTimerFrames =
-                60.0f * (0.1f *
-                (f32)((ProjectileSwitchPlacement*)placement)->autoResetDelayTenths);
+            switchState->autoResetTimerFrames = 60.0f * (0.1f * (f32)placement->autoResetDelayTenths);
         }
     }
 }
@@ -173,57 +174,53 @@ void ProjectileSwitch_hitDetect(GameObject *obj)
 void ProjectileSwitch_update(GameObject *obj)
 {
 
-    int switchState;
-    int switchStateReloaded;
+    ProjectileSwitchState* switchState;
+    ProjectileSwitchState* switchStateReloaded;
     ObjTextureRuntimeSlot* tex;
 
-    switchState = *(int*)&(obj)->extra;
-    if (((ProjectileSwitchState*)switchState)->isOn != 0)
+    switchState = obj->extra;
+    if (switchState->isOn != 0)
     {
-        if (mainGetBit((int)((ProjectileSwitchState*)switchState)->gameBitId) == 0)
+        if (mainGetBit((int)switchState->gameBitId) == 0)
         {
-            switchStateReloaded = *(int*)&(obj)->extra;
+            switchStateReloaded = obj->extra;
             tex = objFindTexture(obj, 0, 0);
             if (tex != 0) tex->textureId = 0;
-            ((ProjectileSwitchState*)switchStateReloaded)->isOn = 0;
+            switchStateReloaded->isOn = 0;
         }
     }
     else
     {
-        if (mainGetBit((int)((ProjectileSwitchState*)switchState)->gameBitId) != 0)
+        if (mainGetBit((int)switchState->gameBitId) != 0)
         {
-            switchStateReloaded = *(int*)&(obj)->extra;
+            switchStateReloaded = obj->extra;
             tex = objFindTexture(obj, 0, 0);
             if (tex != 0) tex->textureId = 0x100;
-            ((ProjectileSwitchState*)switchStateReloaded)->isOn = 1;
+            switchStateReloaded->isOn = 1;
         }
     }
-    if (((ProjectileSwitchState*)switchState)->autoResetTimerFrames > 0.0f)
+    if (switchState->autoResetTimerFrames > 0.0f)
     {
-        ((ProjectileSwitchState*)switchState)->autoResetTimerFrames =
-            ((ProjectileSwitchState*)switchState)->autoResetTimerFrames - (f32)(u32)
-        framesThisStep;
-        if (((ProjectileSwitchState*)switchState)->autoResetTimerFrames <= 0.0f)
+        switchState->autoResetTimerFrames = switchState->autoResetTimerFrames - (f32)(u32)framesThisStep;
+        if (switchState->autoResetTimerFrames <= 0.0f)
         {
-            ((ProjectileSwitchState*)switchState)->autoResetTimerFrames = 0.0f;
-            mainSetBits((int)((ProjectileSwitchState*)switchState)->gameBitId, 0);
+            switchState->autoResetTimerFrames = 0.0f;
+            mainSetBits((int)switchState->gameBitId, 0);
         }
     }
 }
 
-void ProjectileSwitch_init(GameObject *obj, u8* initData)
+void ProjectileSwitch_init(GameObject *obj, ProjectileSwitchPlacement* placement)
 {
 
     ObjAnimComponent* objAnim;
-    ProjectileSwitchPlacement* placement;
-    int switchState;
-    u8* linkObj;
-    u8* linkSub;
+    ProjectileSwitchState* switchState;
+    GameObject* linkObj;
+    ObjPlacement* linkPlacement;
     ObjTextureRuntimeSlot* tex;
 
     objAnim = (ObjAnimComponent*)obj;
-    placement = (ProjectileSwitchPlacement*)initData;
-    switchState = *(int*)&(obj)->extra;
+    switchState = obj->extra;
     *(short*)obj = (short)(placement->rotXByte << 8);
     (obj)->anim.rotY = (short)(placement->rotYByte << 8);
     if (placement->scale64 == 0)
@@ -244,39 +241,37 @@ void ProjectileSwitch_init(GameObject *obj, u8* initData)
         objAnim->bankIndex = 0;
     }
 
-    linkObj = (obj)->anim.parent;
+    linkObj = (GameObject*)obj->anim.parent;
     if (linkObj != 0)
     {
-        linkSub = *(u8**)&((GameObject*)linkObj)->anim.placementData;
-        if (linkSub != 0)
+        linkPlacement = (ObjPlacement*)linkObj->anim.placementData;
+        if (linkPlacement != 0)
         {
-            ((ProjectileSwitchState*)switchState)->gameBitId =
-                seqStreamLookupFn_8007fff8(lbl_80321008, 2, *(int*)(linkSub + 0x14));
+            switchState->gameBitId = seqStreamLookupFn_8007fff8(lbl_80321008, 2, linkPlacement->mapId);
         }
         else
         {
-            ((ProjectileSwitchState*)switchState)->gameBitId = -1;
+            switchState->gameBitId = -1;
         }
     }
     else
     {
-        ((ProjectileSwitchState*)switchState)->gameBitId = placement->gameBitId;
+        switchState->gameBitId = placement->gameBitId;
     }
-    ((ProjectileSwitchState*)switchState)->isOn =
-        mainGetBit((int)((ProjectileSwitchState*)switchState)->gameBitId);
-    if (((ProjectileSwitchState*)switchState)->isOn != 0)
+    switchState->isOn = mainGetBit((int)switchState->gameBitId);
+    if (switchState->isOn != 0)
     {
-        switchState = *(int*)&(obj)->extra;
+        switchState = obj->extra;
         tex = objFindTexture(obj, 0, 0);
         if (tex != 0) tex->textureId = 0x100;
-        ((ProjectileSwitchState*)switchState)->isOn = 1;
+        switchState->isOn = 1;
     }
     else
     {
-        switchState = *(int*)&(obj)->extra;
+        switchState = obj->extra;
         tex = objFindTexture(obj, 0, 0);
         if (tex != 0) tex->textureId = 0;
-        ((ProjectileSwitchState*)switchState)->isOn = 0;
+        switchState->isOn = 0;
     }
     if ((placement->renderFlags & PROJECTILESWITCH_PLACEMENT_CUSTOM_COLOR) == 0)
     {

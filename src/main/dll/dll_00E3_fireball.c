@@ -38,69 +38,10 @@ u8 gFireballColorIndexTable[8] = {0, 2, 4, 0, 0, 0, 0, 0};
 /* object group this object joins while active */
 #define FIREBALL_OBJGROUP 2
 
-#define FIREBALL_ROT_COUNT 5
-
-typedef struct FireballPlacement
-{
-    u8 pad0[0x14 - 0x0];
-    s32 unk14;
-    s16 unk18;
-    s16 startupDelayEnabled; /* 0x1A nonzero (and seqId != 2110) => arms FireballState.startupDelay */
-    s16 startDisabled;       /* 0x1C nonzero => fireball starts with FIREBALL_FLAG_DISABLED */
-    s16 unk1E;
-    s16 unk20;
-    u8 pad22[0x2C - 0x22];
-    s16 unk2C;
-    u8 pad2E[0x30 - 0x2E];
-} FireballPlacement;
-
-typedef struct FireballState
-{
-    ModelLightStruct* light;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    u8 pad14[0x18 - 0x14];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-    f32 flightDuration;
-    f32 elapsedTime;
-    f32 fadeoutTimer;
-    f32 startupDelay;
-    s16 unk40;
-    s16 unk42;
-    u8 pad44[0x46 - 0x44];
-    u16 spiralPhase;
-    u16 rotZBase[FIREBALL_ROT_COUNT];  /* 0x48 */
-    u16 rotZDelta[FIREBALL_ROT_COUNT]; /* 0x52 */
-    u16 rotYBase[FIREBALL_ROT_COUNT];  /* 0x5C */
-    u16 rotYDelta[FIREBALL_ROT_COUNT]; /* 0x66 */
-    u8 stateFlags;
-    u8 colorIndex;
-    u8 pad72[0x94 - 0x72];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xE8 - 0xB2];
-    s32 unkE8;
-    u8 padEC[0x114 - 0xEC];
-    s16 unk114;
-    s16 unk116;
-} FireballState;
-
 /* FireballState.stateFlags bits (see file header comment) */
 #define FIREBALL_FLAG_POS_LATCHED 0x1 /* launch position has been latched into posX/Y/Z */
 #define FIREBALL_FLAG_GRAVITY     0x4 /* affected by gravity + ground snap */
 #define FIREBALL_FLAG_DISABLED    0x8 /* disabled / no-update */
-
-#define FIREBALL_OBJFLAG_FREED 0x40
 
 /* anim.seqId of the invisible variant (docblock: "seqId 2110 hides the object"). */
 #define FIREBALL_SEQID_HIDDEN 0x83e
@@ -407,7 +348,8 @@ void Fireball_update(GameObject* obj)
     ((FireballState*)state)->elapsedTime += timeDelta;
     if (((FireballState*)state)->elapsedTime > ((FireballState*)state)->flightDuration)
     {
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREBALL_HIT_VOLUME_SLOT, *(s8*)((char*)params + 0x19) != 0 ? 3 : 1, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREBALL_HIT_VOLUME_SLOT,
+                                ((FireballPlacement*)params)->hitVolumeMode != 0 ? 3 : 1, 0);
     }
     if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_POS_LATCHED) == 0)
     {
@@ -478,7 +420,7 @@ void Fireball_update(GameObject* obj)
         obj->anim.previousLocalPosZ = obj->anim.localPosZ;
         if (other != NULL)
         {
-            if ((((GameObject*)other)->objectFlags & FIREBALL_OBJFLAG_FREED) != 0)
+            if ((((GameObject*)other)->objectFlags & OBJECT_OBJFLAG_FREED) != 0)
             {
                 obj->userData2 = 0;
             }

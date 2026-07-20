@@ -31,9 +31,6 @@ int lbl_803DBC80[2] = {2, 3};
 
 /* object group this object belongs to */
 #define WISPBADDIE_OBJGROUP                   3
-#define WISPBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define WISPBADDIE_OBJFLAG_PARENT_SLACK       0x1000
-
 /*
  * WispBaddieState.flags (u8 at +0x24). Same path/chase pair as the sibling
  * swarmbaddie: the wisp follows its ROM curve until the player comes within
@@ -160,16 +157,16 @@ int wispbaddie_getObjectTypeId(void)
 
 void wispbaddie_free(GameObject* obj)
 {
-    void** state = (obj)->extra;
+    WispBaddieState* state = (obj)->extra;
     ObjGroup_RemoveObject((int)obj, WISPBADDIE_OBJGROUP);
-    if (*state != NULL)
+    if (state->curve != NULL)
     {
-        mm_free(*state);
-        *state = NULL;
+        mm_free(state->curve);
+        state->curve = NULL;
     }
 }
 
-void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void wispbaddie_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
         return;
@@ -286,24 +283,24 @@ void wispbaddie_update(GameObject* obj)
     fn_8014F620((GameObject*)obj, state);
 }
 
-void wispbaddie_init(GameObject* obj, int setup, int initialised)
+void wispbaddie_init(GameObject* obj, WispBaddiePlacement* placement, int initialised)
 {
     WispBaddieState* state;
     f32 value;
 
     state = (obj)->extra;
-    value = (f32) * (s16*)(setup + 0x1a) / 25.0f;
+    value = (f32)placement->maxHitRadiusParam / 25.0f;
     state->maxHitRadius = value;
     state->hitRadius = value;
-    state->triggerDistance = 4.0f * (f32) * (s8*)(setup + 0x19);
+    state->triggerDistance = 4.0f * (f32)placement->triggerDistanceScale;
     state->particleId = 0x337;
 
     if (initialised == 0)
     {
-        state->curve = (RomCurveWalker*)mmAlloc(0x108, 0x1a, 0);
+        state->curve = (RomCurveWalker*)mmAlloc(sizeof(RomCurveWalker), 0x1a, 0);
         if ((void*)state->curve != NULL)
         {
-            memset((void*)state->curve, 0, 0x108);
+            memset((void*)state->curve, 0, sizeof(RomCurveWalker));
         }
         if ((*gRomCurveInterface)
                 ->initCurve((void*)state->curve, (void*)obj, state->triggerDistance, lbl_803DBC80, -1) == 0)
@@ -312,7 +309,7 @@ void wispbaddie_init(GameObject* obj, int setup, int initialised)
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_id_23b);
     }
-    (obj)->objectFlags = (u16)((obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
+    (obj)->objectFlags = (u16)((obj)->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void wispbaddie_release(void)

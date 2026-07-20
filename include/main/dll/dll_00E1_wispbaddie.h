@@ -1,9 +1,10 @@
-#ifndef MAIN_DLL_SEQOBJ_H_
-#define MAIN_DLL_SEQOBJ_H_
+#ifndef MAIN_DLL_DLL_00E1_WISPBADDIE_H_
+#define MAIN_DLL_DLL_00E1_WISPBADDIE_H_
 
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 typedef struct GameObject GameObject;
@@ -26,6 +27,14 @@ typedef struct WispBaddieState
     u8 pad2a[2];
 } WispBaddieState;
 
+typedef struct WispBaddiePlacement
+{
+    ObjPlacement base;
+    u8 unk18;
+    s8 triggerDistanceScale;
+    s16 maxHitRadiusParam;
+} WispBaddiePlacement;
+
 STATIC_ASSERT(offsetof(WispBaddieState, curve) == 0x00);
 STATIC_ASSERT(offsetof(WispBaddieState, playerObj) == 0x04);
 STATIC_ASSERT(offsetof(WispBaddieState, hitRadius) == 0x08);
@@ -39,7 +48,16 @@ STATIC_ASSERT(offsetof(WispBaddieState, flags) == 0x24);
 STATIC_ASSERT(offsetof(WispBaddieState, pathWavePhase) == 0x26);
 STATIC_ASSERT(offsetof(WispBaddieState, hoverWavePhase) == 0x28);
 STATIC_ASSERT(sizeof(WispBaddieState) == 0x2C);
+STATIC_ASSERT(sizeof(WispBaddiePlacement) == 0x1C);
+STATIC_ASSERT(offsetof(WispBaddiePlacement, base) == 0x0);
+STATIC_ASSERT(offsetof(WispBaddiePlacement, triggerDistanceScale) == 0x19);
+STATIC_ASSERT(offsetof(WispBaddiePlacement, maxHitRadiusParam) == 0x1A);
 
+int wispbaddie_getExtraSize(void);
+int wispbaddie_getObjectTypeId(void);
+void wispbaddie_free(GameObject* obj);
+void wispbaddie_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void wispbaddie_hitDetect(void);
 void wispbaddie_update(GameObject* obj);
 void FUN_8014ffa8(u64 param_1, double param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
@@ -50,7 +68,6 @@ void wispbaddie_initialise(void);
 extern ObjectDescriptor gWispBaddieObjDescriptor;
 extern u32 lbl_8031F280[4];
 
-/* extern-cleanup: defining-file public prototypes */
-void wispbaddie_init(GameObject* obj, int setup, int initialised);
+void wispbaddie_init(GameObject* obj, WispBaddiePlacement* placement, int initialised);
 
-#endif /* MAIN_DLL_SEQOBJ_H_ */
+#endif /* MAIN_DLL_DLL_00E1_WISPBADDIE_H_ */
