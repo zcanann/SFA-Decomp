@@ -36,13 +36,6 @@ typedef struct LanternFireFlyState {
   u8 pad71[0x74 - 0x71];
 } LanternFireFlyState;
 
-typedef struct LanternFireFlySpawnDef {
-  u8 pad00[0x08];
-  f32 x;
-  f32 y;
-  f32 z;
-} LanternFireFlySpawnDef;
-
 STATIC_ASSERT(sizeof(LanternFireFlyState) == 0x74);
 STATIC_ASSERT(offsetof(LanternFireFlyState, controlX) == 0x04);
 STATIC_ASSERT(offsetof(LanternFireFlyState, offX) == 0x34);

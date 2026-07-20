@@ -3,13 +3,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
-typedef struct Vec3f {
-    float x;
-    float y;
-    float z;
-} Vec3f;
-
-
 extern float lbl_803E7AB8;
 extern float lbl_803E7BC8;
 extern float lbl_803E7BF4;
@@ -17,25 +10,25 @@ extern float lbl_803E7BF8;
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
-float powfBitEstimate(float x, float y) {
-    u32 x_bits;
+float powfBitEstimate(float base, float exponentValue) {
+    u32 baseBits;
     float result;
-    float frac;
+    float normalizedMantissa;
     s16 exponent;
-    float expFloat;
-    int y_int;
+    float exponentAsFloat;
+    int integerPower;
 
-    if (x != lbl_803E7AB8) {
-        x_bits = *(u32 *)&x;
-        exponent = (s16)(((x_bits >> 23) & 0xFF) - 128);
-        *(u32 *)&frac = (x_bits & 0x7FFFFF) | 0x3F800000;
-        expFloat = fastCastS16ToFloat(&exponent);
-        frac = (lbl_803E7BF4 * y) * (frac + expFloat);
-        *(u32 *)&result = (u32)(int)frac + 0x3F800000;
+    if (base != lbl_803E7AB8) {
+        baseBits = *(u32 *)&base;
+        exponent = (s16)(((baseBits >> 23) & 0xFF) - 128);
+        *(u32 *)&normalizedMantissa = (baseBits & 0x7FFFFF) | 0x3F800000;
+        exponentAsFloat = fastCastS16ToFloat(&exponent);
+        normalizedMantissa = (lbl_803E7BF4 * exponentValue) * (normalizedMantissa + exponentAsFloat);
+        *(u32 *)&result = (u32)(int)normalizedMantissa + 0x3F800000;
 
-        if (x_bits & 0x80000000) {
-            y_int = y;
-            if (y_int & 1) {
+        if (baseBits & 0x80000000) {
+            integerPower = exponentValue;
+            if (integerPower & 1) {
                 *(u32 *)&result ^= 0x80000000;
             }
         }
@@ -43,7 +36,7 @@ float powfBitEstimate(float x, float y) {
         return result;
     }
 
-    if (y != lbl_803E7AB8) {
+    if (exponentValue != lbl_803E7AB8) {
         return lbl_803E7AB8;
     }
 
@@ -54,35 +47,35 @@ float powfBitEstimate(float x, float y) {
 
 #pragma optimization_level 0
 #pragma peephole off
-void Vec_normalize(void* v_in, void* v_out) {
-    Vec_scale(v_in, v_out, invSqrt(Vec_lengthSquared(v_in)));
+void Vec_normalize(void* input, void* output) {
+    Vec_scale(input, output, invSqrt(Vec_lengthSquared(input)));
 }
 #pragma optimization_level reset
 
 #pragma peephole on
-void Vec_scale(void* v_in, void* v_out, float s) {
-    Vec3f* in = v_in;
-    Vec3f* out = v_out;
-    out->x = in->x * s;
-    out->y = in->y * s;
-    out->z = in->z * s;
+void Vec_scale(void* input, void* output, float scale) {
+    const Vec* inputVector = input;
+    Vec* outputVector = output;
+    outputVector->x = inputVector->x * scale;
+    outputVector->y = inputVector->y * scale;
+    outputVector->z = inputVector->z * scale;
 }
 
-float Vec_lengthSquared(void* v) {
-    volatile Vec3f* vec = v;
-    return vec->z * vec->z + (vec->x * vec->x + vec->y * vec->y);
+float Vec_lengthSquared(void* input) {
+    volatile const Vec* vector = input;
+    return vector->z * vector->z + (vector->x * vector->x + vector->y * vector->y);
 }
 
 #pragma optimization_level 0
 #pragma optimize_for_size on
 #pragma peephole off
-float trigReduceQuadrant(u16* p, float x) {
-    float scaled = lbl_803E7BF8 * __fabsf(x);
-    float reduced;
-    fastCastFloatToU16(scaled, p);
-    *p = (*p + 1) & 0xFFFE;
-    reduced = fastCastU16ToFloat(p);
-    return scaled - reduced;
+float trigReduceQuadrant(u16* quadrant, float angle) {
+    float scaledAngle = lbl_803E7BF8 * __fabsf(angle);
+    float roundedQuadrant;
+    fastCastFloatToU16(scaledAngle, quadrant);
+    *quadrant = (*quadrant + 1) & 0xFFFE;
+    roundedQuadrant = fastCastU16ToFloat(quadrant);
+    return scaledAngle - roundedQuadrant;
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset

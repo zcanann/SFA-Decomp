@@ -1,25 +1,25 @@
 #include "dolphin/types.h"
 
-float floorf(float x) {
-    int n = x;
-    float diff = (float)n - x;
-    u32 bits;
+float floorf(float value) {
+    int truncated = value;
+    float difference = (float)truncated - value;
+    u32 valueBits;
 
-    if (*(s32*)&diff != 0) {
-        bits = *(u32*)&x;
-        if ((s32)(bits & 0x7F800000) < 0x4B800000) {
-            goto small;
+    if (*(s32*)&difference != 0) {
+        valueBits = *(u32*)&value;
+        if ((s32)(valueBits & 0x7F800000) < 0x4B800000) {
+            goto small_magnitude;
         }
 
-        return x;
-small:
-        if (bits & 0x80000000) {
-            --n;
-            return (float)n;
+        return value;
+small_magnitude:
+        if (valueBits & 0x80000000) {
+            --truncated;
+            return (float)truncated;
         }
 
-        return (float)n;
+        return (float)truncated;
     }
 
-    return x;
+    return value;
 }

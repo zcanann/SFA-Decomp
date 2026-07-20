@@ -16,7 +16,6 @@
 #include "main/object_api.h"
 #include "main/obj_group.h"
 #include "main/curve.h"
-#include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
 #include "main/gameloop_api.h"
 #include "main/frame_timing.h"
@@ -25,16 +24,6 @@
 #include "main/dll/dll_010C_lanternfirefly.h"
 
 f32 lbl_803DBDD8 = 60.0f;
-
-typedef struct LanternFireFlyPlacement
-{
-    ObjPlacement head; /* 0x00 */
-    s8 wanderRange;
-    u8 stateId;
-    s16 timer;
-    s16 driftRangeZ; /* 0x1C: -> state driftRangeZ (Z drift distance) */
-    u8 pad1E[0x20 - 0x1E];
-} LanternFireFlyPlacement;
 
 typedef struct LanternFireFlyModeBits
 {
@@ -83,28 +72,28 @@ void LanternFireFly_modelMtxFn(GameObject* obj, f32 anchorX, f32 anchorY, f32 an
 void LanternFireFly_func0B(GameObject* obj)
 {
     LanternFireFlyState* state;
-    int setup;
-    int player;
+    LanternFireFlyPlacement* placement;
+    GameObject* player;
     f32 vec[3];
     f32* vp = vec;
     f32 px;
     f32 y2;
 
     state = (obj)->extra;
-    setup = *(int*)&(obj)->anim.placementData;
-    state->wanderRange = ((LanternFireFlyPlacement*)setup)->wanderRange;
-    state->stateId = ((LanternFireFlyPlacement*)setup)->stateId;
+    placement = (LanternFireFlyPlacement*)obj->anim.placementData;
+    state->wanderRange = placement->wanderRange;
+    state->stateId = placement->stateId;
     state->field4C = lbl_803E3AA0;
-    state->driftRangeZ = (f32)(int)((LanternFireFlyPlacement*)setup)->driftRangeZ;
+    state->driftRangeZ = (f32)(int)placement->driftRangeZ;
     state->field6F = 0;
     objHitDetectFn_80062e84(obj, NULL, 1);
-    player = (int)Obj_GetPlayerObject();
-    px = ((GameObject*)player)->anim.worldPosX;
+    player = Obj_GetPlayerObject();
+    px = player->anim.worldPosX;
     vec[0] = px;
-    vec[1] = ((GameObject*)player)->anim.worldPosY;
-    vec[2] = ((GameObject*)player)->anim.worldPosZ;
-    vec[1] = ((GameObject*)player)->anim.worldPosY + lbl_803E3AA4;
-    y2 = lbl_803E3AA8 + ((GameObject*)player)->anim.worldPosY;
+    vec[1] = player->anim.worldPosY;
+    vec[2] = player->anim.worldPosZ;
+    vec[1] = player->anim.worldPosY + lbl_803E3AA4;
+    y2 = lbl_803E3AA8 + player->anim.worldPosY;
     {
         LanternFireFlyState* st = (obj)->extra;
         st->anchorX = px;
@@ -126,7 +115,7 @@ void LanternFireFly_func0B(GameObject* obj)
     LanternFireFly_advanceControlRing(obj);
     LanternFireFly_advanceControlRing(obj);
     ((LanternFireFlyModeBits*)&state->modeFlags)->mode = 1;
-    state->timer = ((LanternFireFlyPlacement*)setup)->timer;
+    state->timer = placement->timer;
     gameBitIncrement(0x698);
 }
 
@@ -201,9 +190,9 @@ void LanternFireFly_advanceControlRing(GameObject* obj)
     state->controlZ[2] = state->controlZ[3];
     if (((LanternFireFlyModeBits*)&state->modeFlags)->mode == 1)
     {
-        int player = (int)Obj_GetPlayerObject();
+        GameObject* player = Obj_GetPlayerObject();
         state->speed =
-            lbl_803E3AC4 * Vec_distance((void*)&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) +
+            lbl_803E3AC4 * Vec_distance((void*)&obj->anim.worldPosX, &player->anim.worldPosX) +
             lbl_803E3AC0;
     }
     else
@@ -248,11 +237,11 @@ void LanternFireFly_free(GameObject* obj, int flag)
 
 
 
-void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void LanternFireFly_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3AA0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3AA0);
 }
 
 void LanternFireFly_hitDetect(void)
@@ -265,7 +254,7 @@ void LanternFireFly_hitDetect(void)
 void LanternFireFly_update(GameObject* obj)
 {
     LanternFireFlyState* state;
-    int player;
+    GameObject* player;
     f32 velocity[3];
     f32* v;
     f32 zz;
@@ -274,7 +263,7 @@ void LanternFireFly_update(GameObject* obj)
     f32 stepScale;
 
     state = (obj)->extra;
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
     (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
     (obj)->anim.previousLocalPosZ = (obj)->anim.localPosZ;
@@ -377,10 +366,10 @@ void LanternFireFly_update(GameObject* obj)
             f32 worldY;
             LanternFireFlyState* st;
 
-            worldZ = ((GameObject*)player)->anim.worldPosZ;
-            worldY = lbl_803E3AA8 + ((GameObject*)player)->anim.worldPosY;
+            worldZ = player->anim.worldPosZ;
+            worldY = lbl_803E3AA8 + player->anim.worldPosY;
             st = (LanternFireFlyState*)(obj)->extra;
-            st->anchorX = ((GameObject*)player)->anim.worldPosX;
+            st->anchorX = player->anim.worldPosX;
             st->anchorY = worldY;
             st->anchorZ = worldZ;
         }
@@ -403,16 +392,14 @@ void LanternFireFly_update(GameObject* obj)
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
 
-void LanternFireFly_init(GameObject* obj, int def)
+void LanternFireFly_init(GameObject* obj, LanternFireFlyPlacement* placement)
 {
     LanternFireFlyState* state;
-    LanternFireFlySpawnDef* spawnDef;
     f32 zero;
     s16 randValue;
     int flagValue;
 
     state = (obj)->extra;
-    spawnDef = (LanternFireFlySpawnDef*)def;
     ObjGroup_AddObject((int)obj, LANTERNFIREFLY_OBJGROUP);
 
     zero = lbl_803E3AB8;
@@ -444,9 +431,9 @@ void LanternFireFly_init(GameObject* obj, int def)
     state->stateId = 4;
     state->field4C = lbl_803E3AB8;
     state->driftRangeZ = lbl_803E3AE0;
-    state->anchorX = spawnDef->x;
-    state->anchorY = spawnDef->y;
-    state->anchorZ = spawnDef->z;
+    state->anchorX = placement->base.posX;
+    state->anchorY = placement->base.posY;
+    state->anchorZ = placement->base.posZ;
     flagValue = 0;
     state->field6F = flagValue;
     ((LanternFireFlyModeBits*)&state->modeFlags)->mode = flagValue;

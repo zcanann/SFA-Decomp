@@ -45,78 +45,78 @@ extern float lbl_803E7BE8;
 extern float lbl_803E7BEC;
 extern float lbl_803E7BF0;
 
-float powfCoreHighPrecision(float x, float y) {
-    register double mantissa;
-    register double frac;
-    register double mantissa2;
-    register double scaleconv;
-    register u32 ix;
-    register int exponent;
-    register int scale;
-    register int ysign;
-    float value;
-    float m;
+float powfCoreHighPrecision(float base, float power) {
+    register double logValue;
+    register double fractionalExponent;
+    register double log2Mantissa;
+    register double resultExponentAsDouble;
+    register u32 baseBits;
+    register int baseExponent;
+    register int resultExponent;
+    register int integerPower;
+    float result;
+    float normalizedBase;
 
-    if (x != lbl_803E7AB8) {
-        ix = *(u32 *)&x;
-        exponent = (s16)(((ix >> 23) & 0xFF) - 127);
-        *(u32 *)&m = (ix & 0x7FFFFF) | 0x3F800000;
-        mantissa = m - lbl_803E7AC0;
-        mantissa2 = mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (mantissa * (lbl_803E7B60 * mantissa + lbl_803E7B58) + lbl_803E7B50) + lbl_803E7B48) + lbl_803E7B40) + lbl_803E7B38) + lbl_803E7B30) + lbl_803E7B28) + lbl_803E7B20) + lbl_803E7B18) + lbl_803E7B10) + lbl_803E7B08) + lbl_803E7B00) + lbl_803E7AF8) + lbl_803E7AF0) + lbl_803E7AE8) + lbl_803E7AE0) + lbl_803E7AD8) + lbl_803E7AD0) + lbl_803E7AC8);
-        mantissa = y * (mantissa2 + (double)exponent);
-        scale = mantissa;
-        scaleconv = (double)scale;
-        frac = mantissa - scaleconv;
+    if (base != lbl_803E7AB8) {
+        baseBits = *(u32 *)&base;
+        baseExponent = (s16)(((baseBits >> 23) & 0xFF) - 127);
+        *(u32 *)&normalizedBase = (baseBits & 0x7FFFFF) | 0x3F800000;
+        logValue = normalizedBase - lbl_803E7AC0;
+        log2Mantissa = logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (logValue * (lbl_803E7B60 * logValue + lbl_803E7B58) + lbl_803E7B50) + lbl_803E7B48) + lbl_803E7B40) + lbl_803E7B38) + lbl_803E7B30) + lbl_803E7B28) + lbl_803E7B20) + lbl_803E7B18) + lbl_803E7B10) + lbl_803E7B08) + lbl_803E7B00) + lbl_803E7AF8) + lbl_803E7AF0) + lbl_803E7AE8) + lbl_803E7AE0) + lbl_803E7AD8) + lbl_803E7AD0) + lbl_803E7AC8);
+        logValue = power * (log2Mantissa + (double)baseExponent);
+        resultExponent = logValue;
+        resultExponentAsDouble = (double)resultExponent;
+        fractionalExponent = logValue - resultExponentAsDouble;
 
-        value = (frac != lbl_803E7B68) ? (float)(frac * (frac * (frac * (frac * (frac * (frac * (frac * (frac * (frac * (lbl_803E7BC0 * frac + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70) : lbl_803E7BC8;
+        result = (fractionalExponent != lbl_803E7B68) ? (float)(fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (fractionalExponent * (lbl_803E7BC0 * fractionalExponent + lbl_803E7BB8) + lbl_803E7BB0) + lbl_803E7BA8) + lbl_803E7BA0) + lbl_803E7B98) + lbl_803E7B90) + lbl_803E7B88) + lbl_803E7B80) + lbl_803E7B78) + lbl_803E7B70) : lbl_803E7BC8;
 
-        if ((int)(ix & 0x80000000)) {
-            ysign = y;
-            if (ysign & 1) {
-                value = -value;
+        if ((int)(baseBits & 0x80000000)) {
+            integerPower = power;
+            if (integerPower & 1) {
+                result = -result;
             }
         }
-        *(u32 *)&value += scale << 23;
-        return value;
+        *(u32 *)&result += resultExponent << 23;
+        return result;
     }
-    if (y != lbl_803E7AB8) {
+    if (power != lbl_803E7AB8) {
         return lbl_803E7AB8;
     }
     return lbl_803E7BC8;
 }
 
-float powfCoreFast(float x, register float y) {
-    float scalef;
-    float expf;
-    register u32 ix;
-    register int ysign;
+float powfCoreFast(float base, register float power) {
+    float resultExponentAsFloat;
+    float baseExponentAsFloat;
+    register u32 baseBits;
+    register int integerPower;
     float result;
-    float value;
-    s16 exponent;
-    s16 scale;
+    float logValue;
+    s16 baseExponent;
+    s16 resultExponent;
 
-    if (x != lbl_803E7AB8) {
-        ix = *(u32 *)&x;
-        exponent = ((ix >> 23) & 0xFF) - 127;
-        *(u32 *)&value = (ix & 0x7FFFFF) | 0x3F800000;
-        value = value - lbl_803E7BC8;
-        value = value * (value * (lbl_803E7BE4 * value + lbl_803E7BE0) + lbl_803E7BDC) + lbl_803E7BD8;
-        expf = fastCastS16ToFloat(&exponent);
-        value = y * (value + expf);
-        fastCastFloatToS16(value, &scale);
-        scalef = fastCastS16ToFloat(&scale);
-        value = value - scalef;
-        result = (value != lbl_803E7AB8) ? (value * (lbl_803E7BF0 * value + lbl_803E7BEC) + lbl_803E7BE8) : lbl_803E7BC8;
-        if ((int)(ix & 0x80000000)) {
-            ysign = y;
-            if (ysign & 1) {
+    if (base != lbl_803E7AB8) {
+        baseBits = *(u32 *)&base;
+        baseExponent = ((baseBits >> 23) & 0xFF) - 127;
+        *(u32 *)&logValue = (baseBits & 0x7FFFFF) | 0x3F800000;
+        logValue = logValue - lbl_803E7BC8;
+        logValue = logValue * (logValue * (lbl_803E7BE4 * logValue + lbl_803E7BE0) + lbl_803E7BDC) + lbl_803E7BD8;
+        baseExponentAsFloat = fastCastS16ToFloat(&baseExponent);
+        logValue = power * (logValue + baseExponentAsFloat);
+        fastCastFloatToS16(logValue, &resultExponent);
+        resultExponentAsFloat = fastCastS16ToFloat(&resultExponent);
+        logValue = logValue - resultExponentAsFloat;
+        result = (logValue != lbl_803E7AB8) ? (logValue * (lbl_803E7BF0 * logValue + lbl_803E7BEC) + lbl_803E7BE8) : lbl_803E7BC8;
+        if ((int)(baseBits & 0x80000000)) {
+            integerPower = power;
+            if (integerPower & 1) {
                 result = -result;
             }
         }
-        *(u32 *)&result += scale << 23;
+        *(u32 *)&result += resultExponent << 23;
         return result;
     }
-    if (y != lbl_803E7AB8) {
+    if (power != lbl_803E7AB8) {
         return lbl_803E7AB8;
     }
     return lbl_803E7BC8;

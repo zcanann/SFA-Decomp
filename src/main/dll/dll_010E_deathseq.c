@@ -34,7 +34,7 @@ int DeathSeq_getObjectTypeId(void)
     return 0x0;
 }
 
-void DeathSeq_free(int* obj)
+void DeathSeq_free(GameObject* obj)
 {
     setScreenTransitionPause(0);
     setPendingMapLoad(0);
@@ -49,11 +49,11 @@ void DeathSeq_hitDetect(void)
 {
 }
 
-void DeathSeq_update(int* obj)
+void DeathSeq_update(GameObject* obj)
 {
 
     CameraViewSlot* cam = Camera_GetCurrentViewSlot();
-    DeathSeqState* state = ((GameObject*)obj)->extra;
+    DeathSeqState* state = obj->extra;
     int ready;
     GameObject* player = Obj_GetPlayerObject();
     ObjTextureRuntimeSlot* tex;
@@ -61,22 +61,22 @@ void DeathSeq_update(int* obj)
     ready = 0;
     if (playerIsDead(player) != 0)
     {
-        state->distTarget = 50.0f;
-        if (((GameObject*)obj)->anim.currentMove != 0x92)
+        state->cameraDistanceTarget = 50.0f;
+        if (obj->anim.currentMove != 0x92)
         {
             AudioStream_StopCurrent();
             AudioStream_Play(0x51e1, AudioStream_StartPrepared);
             ObjAnim_SetCurrentMove((int)obj, 0x92, 0.0f, 0);
         }
         ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
-        if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
+        if (obj->anim.currentMoveProgress > 0.5f)
         {
-            tex = objFindTexture((GameObject*)(obj), 5, 0);
+            tex = objFindTexture(obj, 5, 0);
             tex->textureId = 0;
-            tex = objFindTexture((GameObject*)(obj), 4, 0);
+            tex = objFindTexture(obj, 4, 0);
             tex->textureId = 0;
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress >= 1.0f)
+        if (obj->anim.currentMoveProgress >= 1.0f)
         {
             if (!state->transitionStarted)
             {
@@ -92,7 +92,7 @@ void DeathSeq_update(int* obj)
                 }
                 cutsceneFadeInOut(0);
                 setPendingMapLoad(0);
-                Obj_FreeObject((GameObject*)obj);
+                Obj_FreeObject(obj);
             }
         }
         else
@@ -102,17 +102,17 @@ void DeathSeq_update(int* obj)
     }
     else
     {
-        state->distTarget = 40.0f;
+        state->cameraDistanceTarget = 40.0f;
         if ((*gScreenTransitionInterface)->isFinished() != 0)
         {
             ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
             ready = 1;
         }
-        if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
+        if (obj->anim.currentMoveProgress > 0.5f)
         {
-            tex = objFindTexture((GameObject*)(obj), 5, 0);
+            tex = objFindTexture(obj, 5, 0);
             tex->textureId = 0x200;
-            tex = objFindTexture((GameObject*)(obj), 4, 0);
+            tex = objFindTexture(obj, 4, 0);
             tex->textureId = 0x200;
         }
         state->timer -= timeDelta;
@@ -137,46 +137,47 @@ void DeathSeq_update(int* obj)
         f32 fy;
         f32 fz;
         f32 zTerm;
-        f32 dz = state->dist * cos34;
-        f32 sin34 = state->dist * cosPitch;
+        f32 dz = state->cameraDistance * cos34;
+        f32 sin34 = state->cameraDistance * cosPitch;
         sin30 = sin34 * sin30;
         sin34 = sin34 * cos30;
         cam->yaw = 0x2000;
         cam->pitch = 0x1000;
-        xTerm = 10.0f * -mathSinf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
-        zTerm = (fz = 10.0f) * -mathCosf((gDeathSeqPi * (f32) * (s16*)obj) / gDeathSeqAngleHalfCircle);
-        cam->x = sin30 + (((GameObject*)obj)->anim.worldPosX + xTerm);
-        fy = fz + ((GameObject*)obj)->anim.worldPosY;
+        xTerm = 10.0f * -mathSinf((gDeathSeqPi * (f32)obj->anim.rotX) / gDeathSeqAngleHalfCircle);
+        zTerm = (fz = 10.0f) * -mathCosf((gDeathSeqPi * (f32)obj->anim.rotX) / gDeathSeqAngleHalfCircle);
+        cam->x = sin30 + (obj->anim.worldPosX + xTerm);
+        fy = fz + obj->anim.worldPosY;
         cam->y = fy + dz;
-        cam->z = sin34 + (((GameObject*)obj)->anim.worldPosZ + zTerm);
+        cam->z = sin34 + (obj->anim.worldPosZ + zTerm);
         Camera_SetFovY(gDeathSeqCameraFovY);
         state->camActive = 1;
-        state->dist += interpolate(state->distTarget - state->dist, 0.01f, timeDelta);
+        state->cameraDistance +=
+            interpolate(state->cameraDistanceTarget - state->cameraDistance, 0.01f, timeDelta);
         Rcp_SetViewFinderHudEnabled(0);
     }
     else
     {
-        cam->yaw = state->camRotY;
-        cam->pitch = state->camRotX;
-        cam->x = state->camX;
-        cam->y = state->camY;
-        cam->z = state->camZ;
+        cam->yaw = state->savedYaw;
+        cam->pitch = state->savedPitch;
+        cam->x = state->savedCamX;
+        cam->y = state->savedCamY;
+        cam->z = state->savedCamZ;
         state->camActive = 0;
     }
 
     if (state->camActive)
     {
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
     }
     else
     {
-        ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
     }
 }
 
-void DeathSeq_init(int* obj)
+void DeathSeq_init(GameObject* obj)
 {
-    DeathSeqState* state = ((GameObject*)obj)->extra;
+    DeathSeqState* state = obj->extra;
     CameraViewSlot* cam = Camera_GetCurrentViewSlot();
     f32 dist;
 
@@ -184,16 +185,16 @@ void DeathSeq_init(int* obj)
     (*gScreenTransitionInterface)->start(1, 1);
     ObjAnim_SetCurrentMove((int)obj, 0x8e, 0.0f, 0);
     state->timer = 210.0f;
-    state->camX = cam->x;
-    state->camY = cam->y;
-    state->camZ = cam->z;
-    state->camRotY = cam->yaw;
-    state->camRotX = cam->pitch;
+    state->savedCamX = cam->x;
+    state->savedCamY = cam->y;
+    state->savedCamZ = cam->z;
+    state->savedYaw = cam->yaw;
+    state->savedPitch = cam->pitch;
     dist = 40.0f;
-    state->dist = dist;
-    state->distTarget = dist;
-    addButtonObject(obj);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x400);
+    state->cameraDistance = dist;
+    state->cameraDistanceTarget = dist;
+    addButtonObject((int*)obj);
+    obj->objectFlags = (u16)(obj->objectFlags | 0x400);
 }
 
 void DeathSeq_release(void)
