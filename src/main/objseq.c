@@ -477,6 +477,23 @@ static inline u8* ObjSeq_GetActiveModel(u8* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
+static inline int objSeqIsObjMonitored(u8* walk, u8* obj)
+{
+    int i;
+    int n;
+
+    n = (s8)lbl_803DD124;
+    for (i = 0; i < n; i++)
+    {
+        if (*(u8**)walk == obj)
+        {
+            return 1;
+        }
+        walk += 8;
+    }
+    return 0;
+}
+
 int ObjSeq_start(int seqIdx, u8* obj, int flags)
 {
     u8* base;
@@ -579,18 +596,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     lbl_803DB718 = -1;
 
     mon = base + 0x3d4c;
-    walk = mon;
-    n = (s8)lbl_803DD124;
-    found = 0;
-    for (i = 0; i < n; i++)
-    {
-        if (*(u8**)walk == obj)
-        {
-            found = 1;
-            break;
-        }
-        walk += 8;
-    }
+    found = objSeqIsObjMonitored(mon, obj);
     if (found == 0)
     {
         lbl_803DB714 = seqIdx;
@@ -814,7 +820,8 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
                 ((ObjSeqState*)seq)->movementState = 4;
                 if (camArg == 0)
                 {
-                    camArg = (*(u16*)(walk2 + 4) & 0xf00) >> 8;
+                    camArg = *(u16*)(walk2 + 4) & 0xf00;
+                    camArg >>= 8;
                 }
                 doCam = 1;
             }
