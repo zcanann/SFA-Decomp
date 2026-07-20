@@ -366,8 +366,9 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             }
             break;
         case 1:
-            if ((*(int (**)(short*, u8*, int, void*, void*, int))(*(int*)gBaddieControlInterface + 0x34))(
-                    obj, e, sub, gDllCBMoveHandlers, gDllCBStateHandlers, 0) != 0)
+            if (((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->updateSequenceMovement((GameObject*)obj, (ObjSeqState*)e, (char*)sub, gDllCBMoveHandlers,
+                                             gDllCBStateHandlers, 0) != 0)
             {
                 ((BaddieControlInterface*)*gBaddieControlInterface)
                     ->updateGravity((GameObject*)obj, (void*)sub, 0.17f, 1);

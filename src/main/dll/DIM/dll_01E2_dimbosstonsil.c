@@ -167,9 +167,9 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
             }
             break;
         case 1:
-            animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, DIMbosstonsilStateHandlerTable*,
-                                 DIMbosstonsilSubstateHandlerTable*, int))(
-                *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, &lbl_803DDBB0, &lbl_803DDBA8, 0);
+            animOk = ((BaddieControlInterface*)*gBaddieControlInterface)
+                         ->updateSequenceMovement((GameObject*)obj, (ObjSeqState*)animUpdate, (char*)state,
+                                                  &lbl_803DDBB0, &lbl_803DDBA8, 0);
             if (animOk != 0)
             {
                 ((BaddieControlInterface*)*gBaddieControlInterface)

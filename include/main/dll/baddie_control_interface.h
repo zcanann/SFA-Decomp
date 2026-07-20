@@ -4,6 +4,7 @@
 #include "types.h"
 
 typedef struct GameObject GameObject;
+typedef struct ObjSeqState ObjSeqState;
 
 /* Function-pointer table exported by the baddie-control DLL (0x19); slot K
  * here is the DLL's exported func(K - 4) (releaseState = dll_19_func12,
@@ -23,7 +24,9 @@ typedef struct BaddieControlInterface
                              s16 substate, s16 moveMode, int animMove, s8 physicsActive); /* 0x28 */
     void (*updateGravity)(GameObject* obj, void* state, f32 gravity, s8 physicsActive); /* 0x2C */
     int (*isObjectValid)(GameObject* obj, void* state, u8 checkDead);        /* 0x30 */
-    u8 pad34[0x40 - 0x34];
+    int (*updateSequenceMovement)(GameObject* obj, ObjSeqState* seq, char* state, void* moveHandlers,
+                                  void* stateHandlers, s16 controlMode);     /* 0x34 */
+    u8 pad38[0x40 - 0x38];
     void (*releaseState)(GameObject* obj, void* state, u8 flags);            /* 0x40 */
     int (*shouldDropTarget)(GameObject* obj, void* state, f32 distanceThreshold, int requireFar); /* 0x44 */
     GameObject* (*findAggroTarget)(GameObject* obj, void* state, f32 aggroRange, int angleRange); /* 0x48 */
