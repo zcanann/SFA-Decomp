@@ -34,10 +34,10 @@ u32 lbl_80321008[4] = {0x00031ccf, 0x00000522, 0x00031ce0, 0x00000e6e};
 
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
-int ProjectileSwitch_getObjectTypeId(int* obj)
+int ProjectileSwitch_getObjectTypeId(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    int modelIndex = (int)*(u8*)((char*)*(int**)&((GameObject*)obj)->anim.placementData + 0x1e) >> 2;
+    int modelIndex = (int)*(u8*)((char*)*(int**)&obj->anim.placementData + 0x1e) >> 2;
     int max = objAnim->modelInstance->modelCount;
     if (modelIndex >= max)
     {
