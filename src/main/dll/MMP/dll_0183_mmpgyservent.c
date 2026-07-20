@@ -19,8 +19,15 @@
 #include "main/object_descriptor.h"
 
 #define MMPGYSERVENT_PARTFX_GEYSER              0x724
-#define MMPGYSERVENT_OBJFLAG_HIDDEN             0x4000
-#define MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define MMPGYSERVENT_INITIAL_IDLE_MIN            10
+#define MMPGYSERVENT_INITIAL_IDLE_MAX            200
+#define MMPGYSERVENT_IDLE_MIN                    70
+#define MMPGYSERVENT_IDLE_MAX                    240
+#define MMPGYSERVENT_ACTIVE_MIN                  30
+#define MMPGYSERVENT_ACTIVE_MAX                  60
+
+#define MMPGYSERVENT_IDLE_TIMER(obj)   ((obj)->userData1)
+#define MMPGYSERVENT_ACTIVE_TIMER(obj) ((obj)->userData2)
 
 int mmp_gyservent_getExtraSize(void)
 {
@@ -45,21 +52,21 @@ void mmp_gyservent_hitDetect(void)
 
 void mmp_gyservent_update(GameObject* obj)
 {
-    int def = *(int*)&(obj)->anim.placementData;
-    if (mainGetBit(((MmpGyserventPlacement*)def)->disableBit) != 0)
+    MmpGyserventPlacement* placement = (MmpGyserventPlacement*)obj->anim.placementData;
+    if (mainGetBit(placement->disableBit) != 0)
         return;
-    (obj)->userData1 -= framesThisStep;
-    if ((obj)->userData1 < 0)
+    MMPGYSERVENT_IDLE_TIMER(obj) -= framesThisStep;
+    if (MMPGYSERVENT_IDLE_TIMER(obj) < 0)
     {
-        (obj)->userData1 = randomGetRange(0x46, 0xF0);
-        (obj)->userData2 = randomGetRange(0x1E, 0x3C);
+        MMPGYSERVENT_IDLE_TIMER(obj) = randomGetRange(MMPGYSERVENT_IDLE_MIN, MMPGYSERVENT_IDLE_MAX);
+        MMPGYSERVENT_ACTIVE_TIMER(obj) = randomGetRange(MMPGYSERVENT_ACTIVE_MIN, MMPGYSERVENT_ACTIVE_MAX);
     }
-    if ((obj)->userData2 == 0)
+    if (MMPGYSERVENT_ACTIVE_TIMER(obj) == 0)
         return;
-    (obj)->userData2 -= framesThisStep;
-    if ((obj)->userData2 <= 0)
+    MMPGYSERVENT_ACTIVE_TIMER(obj) -= framesThisStep;
+    if (MMPGYSERVENT_ACTIVE_TIMER(obj) <= 0)
     {
-        (obj)->userData2 = 0;
+        MMPGYSERVENT_ACTIVE_TIMER(obj) = 0;
     }
     else
     {
@@ -70,10 +77,10 @@ void mmp_gyservent_update(GameObject* obj)
 
 void mmp_gyservent_init(GameObject* obj)
 {
-    obj->objectFlags |= (MMPGYSERVENT_OBJFLAG_HIDDEN | MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED);
-    *(u32*)&obj->userData1 = randomGetRange(0xa, 0xc8);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    MMPGYSERVENT_IDLE_TIMER(obj) = randomGetRange(MMPGYSERVENT_INITIAL_IDLE_MIN, MMPGYSERVENT_INITIAL_IDLE_MAX);
     obj->anim.alpha = 0;
-    *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
 }
 
 void mmp_gyservent_release(void)

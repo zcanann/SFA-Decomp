@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 
 typedef struct MmpGyserventPlacement
 {
@@ -18,6 +19,12 @@ typedef struct MmpGyserventPlacement
     u8 rotY;
 } MmpGyserventPlacement;
 
+STATIC_ASSERT(offsetof(MmpGyserventPlacement, disableBit) == 0x1E);
+STATIC_ASSERT(offsetof(MmpGyserventPlacement, reachScale) == 0x3A);
+STATIC_ASSERT(offsetof(MmpGyserventPlacement, speed) == 0x3B);
+STATIC_ASSERT(offsetof(MmpGyserventPlacement, rotX) == 0x3D);
+STATIC_ASSERT(offsetof(MmpGyserventPlacement, rotY) == 0x3E);
+
 int mmp_gyservent_getExtraSize(void);
 int mmp_gyservent_getObjectTypeId(void);
 void mmp_gyservent_free(void);
@@ -27,5 +34,7 @@ void mmp_gyservent_update(GameObject* obj);
 void mmp_gyservent_init(GameObject* obj);
 void mmp_gyservent_release(void);
 void mmp_gyservent_initialise(void);
+
+extern ObjectDescriptor gMMP_gyserventObjDescriptor;
 
 #endif /* MAIN_DLL_MMP_DLL_0183_MMPGYSERVENT_H_ */
