@@ -78,7 +78,7 @@ void spellstone_hitDetect(void)
 void spellstone_update(SpellStoneObject* obj)
 {
     u32 eventActive;
-    void* playerObj;
+    GameObject* playerObj;
     SpellStoneState* state;
     SpellStoneDef* def;
 
@@ -109,7 +109,7 @@ void spellstone_update(SpellStoneObject* obj)
         if (state->state == SPELLSTONE_STATE_ACTIVE)
         {
             playerObj = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->anim.worldPosX, &((GameObject*)playerObj)->anim.worldPosX) < lbl_803E6758)
+            if (Vec_distance(&obj->anim.worldPosX, &playerObj->anim.worldPosX) < lbl_803E6758)
             {
                 mainSetBits(def->completeEvent, 1);
             }
@@ -119,9 +119,9 @@ void spellstone_update(SpellStoneObject* obj)
             ObjHits_DisableObject((GameObject*)obj);
             if (obj->followTarget != NULL)
             {
-                obj->anim.localPosX = ((GameObject*)obj->followTarget)->anim.localPosX;
-                obj->anim.localPosY = ((GameObject*)obj->followTarget)->anim.localPosY;
-                obj->anim.localPosZ = ((GameObject*)obj->followTarget)->anim.localPosZ;
+                obj->anim.localPosX = obj->followTarget->anim.localPosX;
+                obj->anim.localPosY = obj->followTarget->anim.localPosY;
+                obj->anim.localPosZ = obj->followTarget->anim.localPosZ;
             }
         }
         else

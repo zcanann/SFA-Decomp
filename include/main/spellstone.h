@@ -30,7 +30,7 @@ typedef struct SpellStoneObject {
   SpellStoneState *state;
   int (*callback)(void);
   u8 unkC0[4];
-  void *followTarget;
+  GameObject *followTarget;
 } SpellStoneObject;
 
 STATIC_ASSERT(offsetof(SpellStoneObject, anim) == 0x00);
