@@ -123,21 +123,10 @@ void ProximityMine_hitDetect(ProximityMineObject* obj)
     return;
 }
 
-typedef struct MineLaunchParams
-{
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} MineLaunchParams;
-
 void ProximityMine_update(ProximityMineObject* obj)
 {
     f32 groundY;
-    MineLaunchParams params;
+    MatrixTransform params;
     ProximityMineState* state;
 
     state = obj->state;
