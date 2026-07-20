@@ -42,14 +42,14 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
     crcloudrace_getExtraSize,
 };
 
-void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
+void crcloudrace_updateCompletionState(CrCloudRaceObject* obj, CrCloudRaceState* state)
 {
     f32 dist;
-    int player;
-    u32 near;
+    GameObject* player;
+    GameObject* near;
 
     dist = lbl_803E6740;
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     if (mainGetBit(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME) == 0)
     {
         if (mainGetBit(CRCLOUDRACE_GAMEBIT_ABORT_TRIGGER) != 0)
@@ -65,27 +65,25 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState* state)
         mainSetBits(CRCLOUDRACE_GAMEBIT_IN_FINISH_VOLUME, 1);
         setMotionBlur(0, lbl_803E6744);
         if (mainGetBit(CRCLOUDRACE_GAMEBIT_RACE_CAN_FINISH) != 0 &&
-            playerGetFocusObject((GameObject*)player) == NULL)
+            playerGetFocusObject(player) == NULL)
         {
-            near = ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, (GameObject*)obj, &dist);
-            if (near != 0)
+            near = (GameObject*)ObjGroup_FindNearestObject(CRCLOUDRACE_NEARBY_TOTEM_GROUP, (GameObject*)obj, &dist);
+            if (near != NULL)
             {
-                ((SCTotemPoleVtable*)*((GameObject*)near)->anim.dll)->handleEvent(near, 1);
+                ((SCTotemPoleVtable*)*near->anim.dll)->handleEvent((int)near, 1);
             }
             state->phase = CRCLOUDRACE_PHASE_RESET_TO_START;
         }
     }
 }
 
-void crcloudrace_updateRaceState(int obj)
+void crcloudrace_updateRaceState(CrCloudRaceObject* obj)
 {
-    CrCloudRaceObject* raceObj;
     CrCloudRaceState* inner;
-    int player;
+    GameObject* player;
 
-    raceObj = (CrCloudRaceObject*)obj;
-    inner = raceObj->state;
-    player = (int)Obj_GetPlayerObject();
+    inner = obj->state;
+    player = Obj_GetPlayerObject();
     switch (inner->phase)
     {
     case CRCLOUDRACE_PHASE_START:
@@ -93,7 +91,7 @@ void crcloudrace_updateRaceState(int obj)
         {
             mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 1);
         }
-        if (playerGetFocusObject((GameObject*)player) != NULL)
+        if (playerGetFocusObject(player) != NULL)
         {
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_STARTED, 1);
             mainSetBits(CRCLOUDRACE_GAMEBIT_RACE_ACTIVE, 1);
@@ -214,7 +212,7 @@ void crcloudrace_update(CrCloudRaceObject* obj)
         }
         obj->userData1 = 1;
     }
-    crcloudrace_updateRaceState((int)obj);
+    crcloudrace_updateRaceState(obj);
     state->flags &= ~1;
     SCGameBitLatch_Update((SCGameBitLatchState*)state->effect, 1, -1, -1, CRCLOUDRACE_GAMEBIT_START_LATCH_A,
                           CRCLOUDRACE_GAMEBIT_START_LATCH_B);
