@@ -3,53 +3,57 @@
 #include "main/sky.h"
 #include "main/sky_api.h"
 
-extern u8 gWorldPlanetLightFrom[4];
-extern u8 gWorldPlanetLightTo[4];
-extern u8 gWorldPlanetSkyColorFrom[4];
-extern u8 gWorldPlanetSkyColorTo[4];
-extern u8 gWorldPlanetAmbientFrom[4];
-extern u8 gWorldPlanetAmbientTo[8];
+#define WORLDPLANET_SKY_LIGHT_MASK  7
+#define WORLDPLANET_SKY_COLOR_SCALE 0x40
 
-#define WORLDPLANET_LERP_BYTE(dst, from, to, idx, t)                                                                   \
+#define WORLDPLANET_LERP_CHANNEL(dst, from, to, channel, t)                                                            \
     {                                                                                                                  \
-        int v = (from)[idx];                                                                                           \
-        (dst)[idx] = v + (t) * (f32)((to)[idx] - v);                                                                   \
+        int value = (from).channel;                                                                                    \
+        (dst).channel = value + (t) * (f32)((to).channel - value);                                                     \
     }
 
 extern f32 gWorldPlanetLightingLerpT;
 extern u8 gWorldPlanetCurIntensity;
-extern u8 gWorldPlanetCurAmbient[3];
-extern u8 gWorldPlanetCurLight[3];
-extern u8 gWorldPlanetCurSky[3];
-extern f32 lbl_803E65F8;
-extern f32 lbl_803E65FC;
-extern f32 lbl_803E6600;
+extern f32 gWorldPlanetLightingZero;
+extern f32 gWorldPlanetLightingMinIntensity;
+extern f32 gWorldPlanetLightingIntensityRange;
 extern f32 gWorldPlanetLightingSkyDirX;
 extern f32 gWorldPlanetLightingSkyDirZ;
-void worldplanet_updateMapLighting(int a)
+void worldplanet_updateMapLighting(GameObject* obj)
 {
-    skyFn_80089710(7, 1, 0);
+    skyFn_80089710(WORLDPLANET_SKY_LIGHT_MASK, 1, 0);
 
-    gWorldPlanetLightingLerpT = lbl_803E65F8;
+    gWorldPlanetLightingLerpT = gWorldPlanetLightingZero;
 
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 0, lbl_803E65F8)
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 1, lbl_803E65F8)
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 2, lbl_803E65F8)
-    skySetBaseColor(7, gWorldPlanetCurSky[0], gWorldPlanetCurSky[1],
-                   gWorldPlanetCurSky[2], 0x40, 0x40);
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, red,
+                            gWorldPlanetLightingZero)
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, green,
+                            gWorldPlanetLightingZero)
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, blue,
+                            gWorldPlanetLightingZero)
+    skySetBaseColor(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetCurSky.red, gWorldPlanetCurSky.green,
+                    gWorldPlanetCurSky.blue, WORLDPLANET_SKY_COLOR_SCALE, WORLDPLANET_SKY_COLOR_SCALE);
 
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 0, gWorldPlanetLightingLerpT)
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 1, gWorldPlanetLightingLerpT)
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 2, gWorldPlanetLightingLerpT)
-    skySetLightColor(7, gWorldPlanetCurLight[0], gWorldPlanetCurLight[1],
-                gWorldPlanetCurLight[2]);
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, red,
+                            gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, green,
+                            gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, blue,
+                            gWorldPlanetLightingLerpT)
+    skySetLightColor(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetCurLight.red, gWorldPlanetCurLight.green,
+                     gWorldPlanetCurLight.blue);
 
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 0, gWorldPlanetLightingLerpT)
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 1, gWorldPlanetLightingLerpT)
-    WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 2, gWorldPlanetLightingLerpT)
-    skySetAmbientColor(7, gWorldPlanetCurAmbient[0], gWorldPlanetCurAmbient[1],
-                gWorldPlanetCurAmbient[2]);
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, red,
+                            gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, green,
+                            gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, blue,
+                            gWorldPlanetLightingLerpT)
+    skySetAmbientColor(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetCurAmbient.red, gWorldPlanetCurAmbient.green,
+                       gWorldPlanetCurAmbient.blue);
 
-    gWorldPlanetCurIntensity = (u8)(s32)(gWorldPlanetLightingLerpT * lbl_803E6600 + lbl_803E65FC);
-    skySetLightDirection(7, gWorldPlanetLightingSkyDirX, lbl_803E65F8, gWorldPlanetLightingSkyDirZ);
+    gWorldPlanetCurIntensity =
+        (u8)(s32)(gWorldPlanetLightingLerpT * gWorldPlanetLightingIntensityRange + gWorldPlanetLightingMinIntensity);
+    skySetLightDirection(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetLightingSkyDirX, gWorldPlanetLightingZero,
+                         gWorldPlanetLightingSkyDirZ);
 }

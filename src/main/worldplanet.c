@@ -14,6 +14,7 @@
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
 #include "main/worldplanet.h"
+#include "main/worldplanet_lighting.h"
 #include "main/pad.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/stream_api.h"
@@ -38,12 +39,12 @@ u8 gWorldPlanetWarpMapIndices[6] = {0x76, 0x6E, 0x6F, 0x75, 0x74, 0};
 u8 gWorldPlanetLoadMapIndices[6] = {0x3D, 0x3C, 0x3A, 0x3E, 0x3B, 0};
 u8 gWorldPlanetBriefingSpeakerModel[8] = {2, 2, 1, 0, 0, 0, 0, 0};
 int gWorldPlanetSavedSelection = -1;
-u8 gWorldPlanetLightFrom[4] = {0x21, 0x35, 0x3F, 0};
-u8 gWorldPlanetLightTo[4] = {9, 0x0F, 0x1E, 0};
-u8 gWorldPlanetSkyColorFrom[4] = {0xFF, 0xE1, 0x87, 0};
-u8 gWorldPlanetSkyColorTo[4] = {0xC8, 0xE7, 0xFF, 0};
-u8 gWorldPlanetAmbientFrom[4] = {0x74, 0xA2, 0x85, 0};
-u8 gWorldPlanetAmbientTo[8] = {0x13, 0x23, 0x36, 0, 0, 0, 0, 0};
+WorldPlanetColorRGBA8 gWorldPlanetLightFrom = {0x21, 0x35, 0x3F, 0};
+WorldPlanetColorRGBA8 gWorldPlanetLightTo = {9, 0x0F, 0x1E, 0};
+WorldPlanetColorRGBA8 gWorldPlanetSkyColorFrom = {0xFF, 0xE1, 0x87, 0};
+WorldPlanetColorRGBA8 gWorldPlanetSkyColorTo = {0xC8, 0xE7, 0xFF, 0};
+WorldPlanetColorRGBA8 gWorldPlanetAmbientFrom = {0x74, 0xA2, 0x85, 0};
+WorldPlanetPaddedColorRGBA8 gWorldPlanetAmbientTo = {0x13, 0x23, 0x36, 0, {0, 0, 0, 0}};
 
 #define WORLDPLANET_CAMMODE_WORLDMAP 0x4e /* cameramode DLL dll_004E_cameramodeworldmap */
 
@@ -67,7 +68,6 @@ extern int gWorldPlanetObjectIdTable[3][5]; /* [row][WorldPlanetSlot]; see defin
 
 #include "main/fsin16_approx_api.h"
 #include "main/fcos16_approx_api.h"
-#include "main/worldplanet_lighting.h"
 extern f32 gWorldPlanetPfxOffsetX;
 extern f32 gWorldPlanetPfxOffsetY;
 extern f32 gWorldPlanetPfxOffsetZ;
@@ -154,7 +154,7 @@ void worldplanet_update(GameObject* obj)
     {
         state->foxSpawnTimer = 0;
     }
-    worldplanet_updateMapLighting((int)obj);
+    worldplanet_updateMapLighting(obj);
     if (gWorldPlanetInputLockTimer != 0)
     {
         gWorldPlanetInputLockTimer -= 1;

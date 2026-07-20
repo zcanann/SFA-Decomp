@@ -2,10 +2,10 @@
  * dimwooddoor2 (DLL 0x1CB) - a burnable wooden door object.
  *
  * The door advances its current move animation and slowly rises (its Z
- * eased toward rest by riseSpeed). While intact (burnState > 0) and
- * sitting at map-cue 0x338 past a progress threshold it bleeds off its
- * alpha; otherwise it scans the nearby object list and, on finding a key
- * object (move id 0x18F or 0x1D6), snaps open - resetting the wobble,
+ * eased toward rest by riseSpeed). Once burned, object setup 0x338 bleeds
+ * off its alpha past a progress threshold; otherwise the door scans its
+ * proximity list and, on finding a key sequence object (0x18F or 0x1D6),
+ * snaps open - resetting the wobble,
  * ringing the placement's gamebit and playing the open sfx.
  *
  * The dll_1CE hatch-door variant lives in its own TU; only its forward
@@ -21,14 +21,9 @@
 #include "main/dll/DIM/dll_01CB_dimwooddoor2.h"
 #include "main/object_render.h"
 
-STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-
-#define DIMWOODDOOR2_MAP_CUE_OPEN 0x338
-#define DIMWOODDOOR2_KEY_MOVE_A   0x18f
-#define DIMWOODDOOR2_KEY_MOVE_B   0x1d6
-
-#define DIMWOODDOOR2_OBJFLAG_HIDDEN             0x4000
-#define DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DIMWOODDOOR2_FADE_OBJECT_ID 0x338
+#define DIMWOODDOOR2_KEY_SEQ_ID_A   0x18f
+#define DIMWOODDOOR2_KEY_SEQ_ID_B   0x1d6
 
 
 int dimwooddoor2_getExtraSize(void)
@@ -44,54 +39,53 @@ void dimwooddoor2_free(void)
 {
 }
 
-void dimwooddoor2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void dimwooddoor2_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimwooddoor2_hitDetect(void)
 {
 }
 
-void dimwooddoor2_update(int* obj)
+void dimwooddoor2_update(GameObject* obj)
 {
-    int* placement = *(int**)&((GameObject*)obj)->anim.placementData;
-    DimWoodDoor2State* sub = ((GameObject*)obj)->extra;
+    Dimwooddoor2Placement* placement = (Dimwooddoor2Placement*)obj->anim.placementData;
+    DimWoodDoor2State* state = obj->extra;
     ObjHitsPriorityState* hitState;
-    ObjAnim_AdvanceCurrentMove((int)obj, sub->animSpeed, timeDelta, 0);
-    ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.localPosZ + sub->riseSpeed;
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, 0);
+    obj->anim.localPosZ = obj->anim.localPosZ + state->riseSpeed;
     {
-        f32 rs = sub->riseSpeed;
+        f32 rs = state->riseSpeed;
         f32 ceil = 0.0f;
         if (rs != ceil)
         {
-            sub->riseSpeed *= 0.95f;
-            sub->riseSpeed = (sub->riseSpeed < ceil) ? sub->riseSpeed : ceil;
+            state->riseSpeed *= 0.95f;
+            state->riseSpeed = (state->riseSpeed < ceil) ? state->riseSpeed : ceil;
         }
     }
-    if ((s8)sub->burnState <= 0 && *(s16*)placement == DIMWOODDOOR2_MAP_CUE_OPEN &&
-        ((GameObject*)obj)->anim.currentMoveProgress > 0.9f)
+    if (state->burnState <= 0 && placement->base.objectId == DIMWOODDOOR2_FADE_OBJECT_ID &&
+        obj->anim.currentMoveProgress > 0.9f)
     {
-        int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
+        int v = obj->anim.alpha - framesThisStep * 16;
         if (v < 0)
             v = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = v;
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+        obj->anim.alpha = v;
     }
     else
     {
         int found;
         int i;
-        int objAddr = (int)obj;
         found = 0;
-        for (i = 0; i < (int)*(s8*)(*(int*)(objAddr + 0x58) + 0x10f); i++)
+        for (i = 0; i < obj->anim.proximityList->count; i++)
         {
-            int o = *(int*)(*(int*)(objAddr + 0x58) + i * 4 + 0x100);
-            if (((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_A ||
-                ((GameObject*)o)->anim.seqId == DIMWOODDOOR2_KEY_MOVE_B)
+            GameObject* other = obj->anim.proximityList->objects[i];
+            if (other->anim.seqId == DIMWOODDOOR2_KEY_SEQ_ID_A ||
+                other->anim.seqId == DIMWOODDOOR2_KEY_SEQ_ID_B)
             {
                 found = 1;
                 break;
@@ -99,34 +93,33 @@ void dimwooddoor2_update(int* obj)
         }
         if (found)
         {
-            sub->animSpeed = 0.025f;
-            sub->riseSpeed = -4.0f;
-            sub->burnState = 0;
-            mainSetBits(((Dimwooddoor2Placement*)placement)->openedGameBit, 1);
+            state->animSpeed = 0.025f;
+            state->riseSpeed = -4.0f;
+            state->burnState = 0;
+            mainSetBits(placement->openedGameBit, 1);
             Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c);
         }
     }
 }
 
-void dimwooddoor2_init(u8* obj, u8* params)
+void dimwooddoor2_init(GameObject* obj, Dimwooddoor2Placement* placement)
 {
-    DimWoodDoor2State* sub;
+    DimWoodDoor2State* state;
     ObjHitsPriorityState* hitState;
     f32 fz;
-    ((GameObject*)obj)->anim.rotX = (s16)(((s16)(s8)params[0x18]) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags |
-                                            (DIMWOODDOOR2_OBJFLAG_HIDDEN | DIMWOODDOOR2_OBJFLAG_HITDETECT_DISABLED));
-    sub = ((GameObject*)obj)->extra;
-    sub->burnState = 3;
+    obj->anim.rotX = (s16)(((s16)placement->rotX) << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
+    state = obj->extra;
+    state->burnState = 3;
     fz = 0.0f;
-    sub->animSpeed = fz;
-    sub->riseSpeed = fz;
-    if (mainGetBit(((Dimwooddoor2Placement*)params)->openedGameBit) != 0)
+    state->animSpeed = fz;
+    state->riseSpeed = fz;
+    if (mainGetBit(placement->openedGameBit) != 0)
     {
-        sub->burnState = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
+        state->burnState = 0;
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+        obj->anim.alpha = 0;
     }
 }
 
