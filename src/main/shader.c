@@ -1961,34 +1961,35 @@ void doPendingMapLoads(void)
                                 mapMarkRectRows(g3, rectD);
                                 {
                                     int cn2 = 0;
-                                    int zc[2];
+                                    int cellNo;
+                                    int rowNo;
                                     char* gp2;
                                     int cc;
-                                    zc[0] = 0;
-                                    zc[1] = zc[0];
+                                    cellNo = 0;
+                                    rowNo = cellNo;
                                     gp2 = g3;
                                     do
                                     {
                                         for (cc = 0; cc < 16; cc++)
                                         {
                                             int bx = gMapBlockOriginX + cc;
-                                            int bz = gMapBlockOriginZ + zc[1];
+                                            int bz = gMapBlockOriginZ + rowNo;
                                             if (*(s8*)gp2 == -3)
                                             {
-                                                if (mapLoadBlock(cc, zc[1], bx, bz, layer) == 0)
+                                                if (mapLoadBlock(cc, rowNo, bx, bz, layer) == 0)
                                                 {
                                                     *gp2 = -2;
                                                 }
                                                 else
                                                 {
-                                                    gMapLayerCellStates[zc[0]] = (s8)cn2++;
+                                                    gMapLayerCellStates[cellNo] = (s8)cn2++;
                                                 }
                                             }
-                                            zc[0]++;
+                                            cellNo++;
                                             gp2++;
                                         }
-                                        zc[1]++;
-                                    } while (zc[1] < 16);
+                                        rowNo++;
+                                    } while (rowNo < 16);
                                 }
                                 aBase++;
                                 cBase++;
