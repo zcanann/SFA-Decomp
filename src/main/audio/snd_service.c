@@ -1,8 +1,7 @@
 #include "main/audio/snd_service.h"
 #include "main/audio/synth_scale.h"
 
-
-extern u32 sndRandSeed;
+u32 sndRandSeed = 1;
 
 typedef union SndSintab
 {
