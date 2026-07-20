@@ -22,8 +22,8 @@ typedef struct BaddieControlInterface
     u8 pad44[0x48 - 0x44];
     GameObject* (*findAggroTarget)(GameObject* obj, void* state, f32 aggroRange, int angleRange); /* 0x48 */
     GameObject* (*spawnChild)(GameObject* obj, int spawnType, int unused, int alt); /* 0x4C */
-    int (*updateHitReaction)(int obj, int state, int hitReactState, int gameBit, char* sfxTblA, char* sfxTblB,
-                             int mode, char* aux);                           /* 0x50 */
+    int (*updateHitReaction)(GameObject* obj, void* state, void* hitbox, s16 gameBit, int* moveTable,
+                             u8* damageTable, s16 substate, void* hitPosOut); /* 0x50 */
     u8 pad54[4];
     void (*initGroundBaddie)(int* obj, u8* def, u8* state, int hp, int a5, int moveId, u8 mode,
                              f32 radius);                                    /* 0x58 */

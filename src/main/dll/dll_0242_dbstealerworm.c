@@ -2394,9 +2394,10 @@ void dbstealerworm_update(u8* objp)
                         ObjAnim_SetCurrentMove((int)obj, 0xf, 0.0f, 0);
                     }
                 }
-                if (((int (*)(int, int, int, int, char*, char*, int, char*))((void**)*gBaddieControlInterface)[20])(
-                        obj, blob, blob + 0x35c, ((GroundBaddieState*)blob)->gameBitB, tbl + 0x2ac, tbl + 0x324, 1,
-                        (char*)(int)gDbWormEffectSpawnWork) != 0)
+                if (((BaddieControlInterface*)*gBaddieControlInterface)
+                        ->updateHitReaction((GameObject*)obj, (void*)blob, (char*)blob + 0x35c,
+                                            ((GroundBaddieState*)blob)->gameBitB, (int*)(tbl + 0x2ac),
+                                            (u8*)(tbl + 0x324), 1, (void*)(int)gDbWormEffectSpawnWork) != 0)
                 {
                     ((DbWormEffectSpawnWork*)st)->posX = ((GameObject*)obj)->anim.localPosX;
                     ((DbWormEffectSpawnWork*)st)->posY = ((GameObject*)obj)->anim.localPosY;

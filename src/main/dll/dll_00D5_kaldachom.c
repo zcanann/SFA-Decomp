@@ -265,9 +265,10 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
         obj, playerObj, 4, &hitType, &hitAux1, &hitAux2);
     if ((hitType == 1) || (hitType == 2))
     {
-        result = (*(int (**)(void*, int, int, int, int, int, int, void*))(*(int*)gBaddieControlInterface + 0x50))(
-            obj, state, stateWithBaddieData + 0x35c, ((GroundBaddieState*)stateWithBaddieData)->gameBitB, 0, 0, 1,
-            gKaldachomHitLightWork);
+        result = ((BaddieControlInterface*)*gBaddieControlInterface)
+                     ->updateHitReaction(obj, (void*)state, (char*)stateWithBaddieData + 0x35c,
+                                         ((GroundBaddieState*)stateWithBaddieData)->gameBitB, NULL, NULL, 1,
+                                         gKaldachomHitLightWork);
         if (result != 0)
         {
             if ((result != 0x10) && (result != 0x11))
@@ -286,9 +287,10 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
     }
     else
     {
-        result = (*(int (**)(void*, int, int, int, int, int, int, void*))(*(int*)gBaddieControlInterface + 0x50))(
-            obj, state, stateWithBaddieData + 0x35c, ((GroundBaddieState*)stateWithBaddieData)->gameBitB, 0, 0, 1,
-            gKaldachomHitLightWork);
+        result = ((BaddieControlInterface*)*gBaddieControlInterface)
+                     ->updateHitReaction(obj, (void*)state, (char*)stateWithBaddieData + 0x35c,
+                                         ((GroundBaddieState*)stateWithBaddieData)->gameBitB, NULL, NULL, 1,
+                                         gKaldachomHitLightWork);
         if (result != 0)
         {
             if (result != 0x11)

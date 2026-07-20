@@ -316,8 +316,9 @@ void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state
     }
     (*(void (**)(int*, u8*, u8*, int, u8*, int, int, int))(*(int*)gBaddieControlInterface + 0x54))(
         obj, (u8*)state, (u8*)&sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0);
-    stateResult = (*(int (**)(int*, u8*, u8*, int, u8*, u8*, int, int))(*(int*)gBaddieControlInterface + 0x50))(
-        obj, (u8*)state, (u8*)&sub->routeNav, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
+    stateResult = ((BaddieControlInterface*)*gBaddieControlInterface)
+                      ->updateHitReaction((GameObject*)obj, state, &sub->routeNav, sub->gameBitB,
+                                          (int*)lbl_80320008, lbl_80320080, 1, NULL);
     if (stateResult >= 4)
     {
         sub->subMode = 2;

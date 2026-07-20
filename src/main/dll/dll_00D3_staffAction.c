@@ -962,9 +962,10 @@ void dll_D3_update(int* obj)
     hits = (int)((TreasureChestState*)state)->hitPoints;
     if (hits > 0)
     {
-        ((void (*)(int*, int*, int, int, int*, int*, int, int*))((void**)*(int*)gBaddieControlInterface)[0x50 / 4])(
-            obj, state, (int)state + 0x35c, (int)((TreasureChestState*)state)->gameBitB, lbl_803202E8,
-            lbl_80320360, 0, gStaffActionHitLightParams);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->updateHitReaction((GameObject*)obj, state, (void*)((int)state + 0x35c),
+                                ((TreasureChestState*)state)->gameBitB, lbl_803202E8, (u8*)lbl_80320360, 0,
+                                gStaffActionHitLightParams);
         if ((int)((TreasureChestState*)state)->hitPoints < hits)
         {
             (*(void (**)(int))(*(int**)*(int**)(*(int*)&((GameObject*)player)->childObjs[0] + 0x68) + 0x50 / 4))(

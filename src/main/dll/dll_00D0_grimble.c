@@ -412,8 +412,9 @@ void grimble_update(GameObject* obj)
                 (int)obj + 0x14);
             (*(void (**)(void*, char*, char*, int, char*, int, int, int))(*(int*)gBaddieControlInterface + 0x54))(
                 obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB, state + 0x405, 0, 0, 0);
-            r = (*(int (**)(void*, char*, char*, int, int*, int*, int, int))(*(int*)gBaddieControlInterface + 0x50))(
-                obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB, lbl_803200E0, lbl_80320158, 3, 0);
+            r = ((BaddieControlInterface*)*gBaddieControlInterface)
+                    ->updateHitReaction(obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB,
+                                        lbl_803200E0, (u8*)lbl_80320158, 3, NULL);
             if (r == 0xe)
             {
                 ((GroundBaddieState*)state)->subMode = 2;

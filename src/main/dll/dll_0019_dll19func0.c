@@ -97,8 +97,8 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
 void dll_19_func11(void);
 int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
                   s16 substateActive, s16 moveMode);
-int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
-                  u8* hitPosOut);
+int dll_19_func16(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
+                  s16 substate, void* hitPosOut);
 GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
 void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
                    int animMove, s8 field25f);
@@ -434,10 +434,10 @@ int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
     return 0;
 }
 
-int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate,
-                  u8* hitPosOut)
+int dll_19_func16(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
+                  s16 substate, void* hitPosOut)
 {
-    u8* state = (u8*)((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     int player = (int)Obj_GetPlayerObject();
     int hit;
     int v28;
@@ -493,15 +493,15 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
     {
         return 0;
     }
-    hit = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitId, &v28, (u32*)&v24, &posX, &posY, &posZ);
+    hit = ObjHits_GetPriorityHitWithPosition(obj, &hitId, &v28, (u32*)&v24, &posX, &posY, &posZ);
     *(s8*)(state + 1034) = v28;
     if (hit != 0)
     {
         if (hitPosOut != NULL)
         {
-            *(f32*)(hitPosOut + 12) = posX + playerMapOffsetX;
-            *(f32*)(hitPosOut + 16) = posY;
-            *(f32*)(hitPosOut + 20) = posZ + playerMapOffsetZ;
+            *(f32*)((u8*)hitPosOut + 12) = posX + playerMapOffsetX;
+            *(f32*)((u8*)hitPosOut + 16) = posY;
+            *(f32*)((u8*)hitPosOut + 20) = posZ + playerMapOffsetZ;
         }
         if (tableB != NULL)
         {
@@ -546,7 +546,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                         ((BaddieState*)baddieState)->substate = substate;
                     }
                 }
-                *(s8*)(baddieState + 847) = hit;
+                *(s8*)((u8*)baddieState + 847) = hit;
             }
         }
         Sfx_StopObjectChannel((int)obj, 16);

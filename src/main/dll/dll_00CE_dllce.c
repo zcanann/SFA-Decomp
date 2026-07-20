@@ -720,9 +720,10 @@ void chukChuk_updateTargeting(int obj, int state, int target)
     (**(void (**)(int, int, int, int, int, int, int, int))((char*)(*gBaddieControlInterface) + 0x54))(
         obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, 0, 0, 0, 8);
 
-    result = (int)(**(int (**)(int, int, int, int, u8*, u8*, int, u8*))((char*)(*gBaddieControlInterface) + 0x50))(
-        obj, target, state + 0x35c, (s32)((GroundBaddieState*)state)->gameBitB, lbl_8031FEA8, lbl_8031FF20, 1,
-        lbl_803AC580);
+    result = ((BaddieControlInterface*)*gBaddieControlInterface)
+                 ->updateHitReaction((GameObject*)obj, (void*)target, (char*)state + 0x35c,
+                                     ((GroundBaddieState*)state)->gameBitB, (int*)lbl_8031FEA8, lbl_8031FF20, 1,
+                                     lbl_803AC580);
 
     if (result != 0)
     {
