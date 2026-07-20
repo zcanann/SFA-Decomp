@@ -13,7 +13,6 @@
 extern void* dspCmdBuffer;
 extern void* dspITDBuffer;
 extern s32* dspSurround;
-extern void* dspCmdList;
 extern u32 dspARAMZeroBuffer;
 extern DSPstudioinfo dspStudio[8];
 extern u8 salMaxStudioNum;

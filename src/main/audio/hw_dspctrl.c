@@ -1,5 +1,6 @@
 #include "main/audio/hw_dspctrl.h"
 #include "main/audio/hw_init.h"
+#include "main/audio/sal_dsp.h"
 #include "main/audio/adsr_setup.h"
 #include "main/audio/adsr_handle.h"
 #include "main/unknown/autos/musyx_dsp.h"
@@ -21,8 +22,6 @@ extern u16 dspCmdLastSize;
 extern u16* dspCmdCurBase;
 extern u16* dspCmdMaxPtr;
 extern u16* dspCmdPtr;
-extern u16 dspCmdFirstSize;
-extern u16* dspCmdList;
 extern u32 dspHRTFOn;
 extern u32 dspARAMZeroBuffer;
 extern s32* dspSurround;

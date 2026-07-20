@@ -3,6 +3,9 @@
 
 #include "ghidra_import.h"
 
+extern u16 dspCmdFirstSize;
+extern u16* dspCmdList;
+
 int salInitDsp(u32 flags);
 int salStartDsp(void);
 void salCtrlDsp(u32 dest);

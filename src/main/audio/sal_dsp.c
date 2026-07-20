@@ -14,8 +14,6 @@ typedef struct
 extern u16 hwIrqLevel;
 extern u32 oldState;
 extern u32 salLastTick;
-extern u16 dspCmdFirstSize;
-extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
 static SalDspTask lbl_803D4880;
@@ -302,7 +300,7 @@ void salCtrlDsp(u32 dest)
     u32 elapsed = salGetStartDelay();
     salBuildCommandList((s16*)dest, elapsed);
     {
-        u32 saved = dspCmdList;
+        u32 saved = (u32)dspCmdList;
         salDspCallbackEnabled = 0;
         PPCSync();
         DSPSendMailToDSP(((u32)0xbabe << 16) | dspCmdFirstSize);
