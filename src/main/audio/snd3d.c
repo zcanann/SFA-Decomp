@@ -2,7 +2,6 @@
 
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/synth_job_init.h"
-#include "main/audio/vsample_alloc.h"
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"

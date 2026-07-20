@@ -2,7 +2,6 @@
 #include "main/audio/hw_sample.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/aram.h"
-#include "main/audio/vsample_update.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_stream.h"
 

@@ -21,6 +21,7 @@
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_delay.h"
+#include "main/audio/synth_virtual_sample.h"
 #include "main/audio/vid_init.h"
 #include "main/audio/inp_ctrl.h"
 #include "main/audio/snd_service.h"
