@@ -2803,7 +2803,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 }
 
 int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
-                      int slot, int arg8)
+                      int slot, u8 arg8)
 {
     f32 w0[3];
     f32 w1[3];

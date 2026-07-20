@@ -39,6 +39,6 @@ typedef struct TrackBBoxHit
 STATIC_ASSERT(sizeof(TrackBBoxHit) == 0x54);
 
 int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, TrackBBoxHit* hit, GameObject* self, int flags,
-                       int mask, int slot, int arg10);
+                       int mask, int slot, u8 arg10);
 
 #endif /* MAIN_TRACK_BBOX_API_H_ */
