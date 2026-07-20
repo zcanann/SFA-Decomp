@@ -141,8 +141,8 @@ void sc_totempole_update(int obj)
                         break;
                     }
                 }
-                ((int (*)(u16*, int))sc_totempole_sortCompletionGameBits)(
-                    (u16*)&lbl_803DC068, (s32)(fn_8001461C() / 10.0f));
+                sc_totempole_sortCompletionGameBits((u16*)&lbl_803DC068,
+                                                     (s32)(fn_8001461C() / 10.0f));
             }
             if (!playedFanfare)
             {
