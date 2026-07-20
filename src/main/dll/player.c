@@ -16113,12 +16113,12 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
                 if (((PlayerState*)inner)->focusObject != NULL)
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x18);
+                    (*gPlayerInterface)->setState((void*)obj, inner, 0x18);
                     *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))fn_8029F67C;
                 }
                 else
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 1);
+                    (*gPlayerInterface)->setState((void*)obj, inner, 1);
                     *(void (**)(int, int))((char*)inner + 0x304) = (void (*)(int, int))fn_802A514C;
                     ((PlayerState*)inner)->baddie.prevControlMode = 1;
                 }
@@ -16244,7 +16244,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     f32 fz3 = 0.0f;
                     ((PlayerState*)inner)->baddie.moveInputX = fz3;
                     ((PlayerState*)inner)->baddie.moveInputZ = fz3;
-                    (**(void (**)(int))((char*)(*gPlayerInterface) + 0x10))(obj2);
+                    (*gPlayerInterface)->setOverride((u32)obj2);
                     *(int*)&((PlayerState*)inner)->baddie.unk31C = 0;
                     *(int*)&((PlayerState*)inner)->baddie.unk318 = 0;
                     ((GameObject*)obj)->userData1 = 0;
@@ -16268,7 +16268,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
                 ((GameObject*)obj)->anim.localPosX = dist * dx2 + seq->posOffsetX;
                 ((GameObject*)obj)->anim.localPosZ = dist * dz2 + seq->posOffsetZ;
-                (**(void (**)(int))((char*)(*gPlayerInterface) + 0x10))(obj2);
+                (*gPlayerInterface)->setOverride((u32)obj2);
                 *(int*)&((PlayerState*)inner)->baddie.unk31C = 0;
                 *(int*)&((PlayerState*)inner)->baddie.unk318 = 0;
                 ((GameObject*)obj)->userData1 = 0;
@@ -16284,7 +16284,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         }
         if ((s8)seq->movementState == 0)
         {
-            (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 1);
+            (*gPlayerInterface)->setState((void*)obj, inner, 1);
             *(void (**)(int, int))((char*)inner + 0x304) = (void (*)(int, int))fn_802A514C;
             ((PlayerState*)inner)->baddie.prevControlMode = 1;
         }
@@ -16391,12 +16391,12 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     }
                     if (arrayIndexOf((int*)(tbl + 0x160), 4, ((GameObject*)va)->anim.seqId) != -1)
                     {
-                        (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x1a);
+                        (*gPlayerInterface)->setState((void*)obj, inner, 0x1a);
                         *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))fn_8029F67C;
                     }
                     else
                     {
-                        (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x18);
+                        (*gPlayerInterface)->setState((void*)obj, inner, 0x18);
                         *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))fn_8029F67C;
                     }
                 }
