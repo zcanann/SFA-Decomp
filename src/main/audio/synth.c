@@ -90,25 +90,6 @@ extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
 extern u64 synthRealTime;
 
-typedef struct SynthAuxInfo
-{
-    union
-    {
-        struct
-        {
-            s32* left;
-            s32* right;
-            s32* surround;
-        } bufferUpdate;
-        struct
-        {
-            u16 para[4];
-        } parameterUpdate;
-    } data;
-} SynthAuxInfo;
-
-typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
-
 typedef struct SynthVoiceLfo
 {
     s32 time;

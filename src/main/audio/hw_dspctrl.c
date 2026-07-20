@@ -1081,7 +1081,7 @@ void salHandleAuxProcessing(void)
     int i;
     DSPstudioinfo* studio;
     int buf;
-    void* bufs[3];
+    SynthAuxInfo info;
 
     studio = dspStudio;
     for (i = 0; (u8)i < salMaxStudioNum; i++, studio++)
@@ -1091,19 +1091,19 @@ void salHandleAuxProcessing(void)
             if (studio->auxAHandler != NULL)
             {
                 buf = (int)studio->auxA[(salAuxFrame + 2) % 3];
-                bufs[0] = (void*)buf;
-                bufs[1] = (void*)(buf + 0x280);
-                bufs[2] = (void*)(buf + 0x500);
-                ((void (*)(int, void*, int))studio->auxAHandler)(0, bufs, (int)studio->auxAUser);
+                info.data.bufferUpdate.left = (s32*)buf;
+                info.data.bufferUpdate.right = (s32*)(buf + 0x280);
+                info.data.bufferUpdate.surround = (s32*)(buf + 0x500);
+                studio->auxAHandler(0, &info, studio->auxAUser);
                 DCFlushRangeNoSync((void*)buf, 0x780);
             }
             if (studio->type == 0 && studio->auxBHandler != NULL)
             {
                 buf = (int)studio->auxB[(salAuxFrame + 2) % 3];
-                bufs[0] = (void*)buf;
-                bufs[1] = (void*)(buf + 0x280);
-                bufs[2] = (void*)(buf + 0x500);
-                ((void (*)(int, void*, int))studio->auxBHandler)(0, bufs, (int)studio->auxBUser);
+                info.data.bufferUpdate.left = (s32*)buf;
+                info.data.bufferUpdate.right = (s32*)(buf + 0x280);
+                info.data.bufferUpdate.surround = (s32*)(buf + 0x500);
+                studio->auxBHandler(0, &info, studio->auxBUser);
                 DCFlushRangeNoSync((void*)buf, 0x780);
             }
         }

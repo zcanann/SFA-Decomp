@@ -25,10 +25,6 @@
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
 extern u8 gSynthVoiceNotes[];
-extern void* synthAuxAUser[8];
-extern void* synthAuxACallback[8];
-extern void* synthAuxBUser[8];
-extern void* synthAuxBCallback[8];
 extern u8 synthITDDefault[8][2];
 extern u8 synthAuxBMIDISet[8];
 extern u8 synthAuxBMIDI[8];
@@ -188,8 +184,9 @@ void sndOutputMode(int mode)
  * Configure studio AUX A/B processing callbacks and cache the callback
  * routing indices used by synth voice updates.
  */
-void sndSetAuxProcessingCallbacks(u8 studio, void* auxACallback, void* auxAUser, u8 auxAIndex, void* auxAData,
-                                  void* auxBCallback, void* auxBUser, u8 auxBIndex, void* auxBData)
+void sndSetAuxProcessingCallbacks(u8 studio, SynthAuxCallback auxACallback, void* auxAUser, u8 auxAIndex,
+                                  void* auxAData, SynthAuxCallback auxBCallback, void* auxBUser, u8 auxBIndex,
+                                  void* auxBData)
 {
     sndBegin();
     if (auxACallback != 0)

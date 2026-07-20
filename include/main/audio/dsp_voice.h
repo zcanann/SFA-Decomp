@@ -123,8 +123,8 @@ typedef struct DSPstudioinfo {
     u8 numInputs;             /* 0x52 */
     SND_STUDIO_TYPE type;     /* 0x54 */
     DSPinput in[7];           /* 0x58 */
-    void *auxAHandler;        /* 0xac */
-    void *auxBHandler;        /* 0xb0 */
+    SynthAuxCallback auxAHandler; /* 0xac */
+    SynthAuxCallback auxBHandler; /* 0xb0 */
     void *auxAUser;           /* 0xb4 */
     void *auxBUser;           /* 0xb8 */
 } DSPstudioinfo; /* size 0xbc */

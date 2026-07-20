@@ -8,14 +8,17 @@ void salFree(void* ptr)
     salHooks.freeHook(ptr);
 }
 
-void sndAuxCallbackReverbSTD(u8 mode, ReverbParams* params, ReverbState* state)
+void sndAuxCallbackReverbSTD(u8 mode, SynthAuxInfo* info, void* user)
 {
+    ReverbState* state = user;
+
     switch ((int)mode)
     {
     case 0:
         if (state->tempDisableFX == 0)
         {
-            ReverbSTDCallback(params->left, params->right, params->surround, &state->rv);
+            ReverbSTDCallback(info->data.bufferUpdate.left, info->data.bufferUpdate.right,
+                              info->data.bufferUpdate.surround, &state->rv);
         }
         break;
     case 1:

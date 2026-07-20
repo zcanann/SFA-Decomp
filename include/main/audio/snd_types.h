@@ -17,4 +17,19 @@ typedef struct SND_STUDIO_INPUT {
     u8 srcStudio;
 } SND_STUDIO_INPUT;
 
+typedef struct SynthAuxInfo {
+    union {
+        struct {
+            s32* left;
+            s32* right;
+            s32* surround;
+        } bufferUpdate;
+        struct {
+            u16 para[4];
+        } parameterUpdate;
+    } data;
+} SynthAuxInfo;
+
+typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
+
 #endif /* MAIN_AUDIO_SND_TYPES_H_ */

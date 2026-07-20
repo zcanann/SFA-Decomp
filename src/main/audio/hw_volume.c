@@ -93,7 +93,7 @@ void hwOff(s32 slot)
 /*
  * Set the four AUX-mix DSP processing callbacks for a studio.
  */
-void hwSetAUXProcessingCallbacks(u8 studio, void* cb0, void* cb1, void* cb2, void* cb3)
+void hwSetAUXProcessingCallbacks(u8 studio, SynthAuxCallback cb0, void* cb1, SynthAuxCallback cb2, void* cb3)
 {
     DSPstudioinfo* entry = &dspStudio[studio];
     entry->auxAHandler = cb0;
