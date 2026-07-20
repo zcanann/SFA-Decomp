@@ -3,16 +3,8 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
-#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 
-extern ObjectDescriptor gLanternFireFlyObjDescriptor;
-extern ObjectDescriptor gFireFlyLanternObjDescriptor;
-extern ObjectDescriptor gFlammableVineObjDescriptor;
-
-void FireFlyLantern_init(GameObject* param_1, int param_2);
-GameObject* FireFlyLantern_spawnFireFly(int* obj);
-int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int FUN_80187664(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                  u64 param_8, int param_9);
 void FUN_8018795c(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
