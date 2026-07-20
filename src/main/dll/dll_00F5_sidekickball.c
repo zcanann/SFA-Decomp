@@ -357,7 +357,7 @@ typedef struct TrickyBallState
 u8 trickyBallMove(GameObject* obj)
 {
 
-    TrickyBallState* state;
+    int hasCollisionNormal;
     f32 collisionNormal[3];
     f32 dx;
     f32 dy;
@@ -369,7 +369,7 @@ u8 trickyBallMove(GameObject* obj)
     f32 reflectedZ;
     f32 dot;
     f32 restitution;
-    int hasCollisionNormal;
+    TrickyBallState* state;
     int movedFromCache;
     int hasFloorDepth;
 
