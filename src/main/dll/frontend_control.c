@@ -31,12 +31,10 @@ void drawTexture(void* texture, f32 x, f32 y, int alpha, int scale);
 #define SECONDS_PER_MINUTE  60
 
 extern u8 enableDebugText;
-extern u16 saveFileSelect_debugCheatSequence[6];
 extern void* lbl_803A8680[4];
 extern f32 lbl_803E1D58;
 extern f32 lbl_803E1D5C;
 extern f32 lbl_803E1D60;
-extern char sFrontendTimeFormat[];
 
 void saveFileSelect_checkCheatCodes(void)
 {

@@ -782,10 +782,10 @@ SaveSelectPanel gSaveSelectPanels[] = {
 
 u8 lbl_8031A7F8[12] = {0, 0, 5, 213, 0, 0, 5, 214, 0, 0, 5, 212};
 void* lbl_8031A804[4] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000};
-u8 saveFileSelect_debugCheatSequence[12] = {64, 0, 128, 0, 64, 0, 128, 0, 0, 4, 0, 0};
+u16 saveFileSelect_debugCheatSequence[6] = {0x4000, 0x8000, 0x4000, 0x8000, 4, 0};
 u16 saveFileSelect_slotCheatSequence[6] = {0x400, 0x800, 0x8000, 0x8000, 2, 0};
 void* lbl_8031A82C[10] = {(void*)0x00000000,      (void*)0x00000000,           (void*)0x00000000,
                           (void*)0x00050000,      SaveSelectScreen_initialise, SaveSelectScreen_release,
                           (void*)0x00000000,      SaveSelectScreen_run,        SaveSelectScreen_frameEnd_nop,
                           SaveSelectScreen_render};
-u8 sFrontendTimeFormat[14] = {37, 51, 100, 58, 37, 48, 50, 100, 58, 37, 48, 50, 100, 0};
+char sFrontendTimeFormat[14] = "%3d:%02d:%02d";

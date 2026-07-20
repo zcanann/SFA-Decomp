@@ -34,6 +34,7 @@
 #include "main/pad.h"
 #include "main/textrender_api.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0035_saveselectscreen.h"
 #include "string.h"
 
 #define LINK_ITEM_SLOTS 25 /* per-item icon-strip slot capacity */
@@ -54,7 +55,6 @@ s16 gTumbleweedBushSelColorG;
 s16 gTumbleweedBushSelColorB;
 u8 linkIsRotated;
 u8 linkFlag_803dd8f8;
-extern void* saveFileSelect_saveSlots;
 extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error format string */
 extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-range error format strings */
 
