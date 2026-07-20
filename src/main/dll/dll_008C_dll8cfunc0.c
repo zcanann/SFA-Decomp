@@ -29,6 +29,8 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     FbBuf buf;
     u8* base = lbl_80316950;
     FbCmd* e = buf.entries;
+    GameObject* obj = (GameObject*)sourceObj;
+    PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
 
     e[0].layer = 0;
     e[0].flags = 0x15;
@@ -43,9 +45,9 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[1].mode = 2;
     if ((u32)posSource != 0)
     {
-        e[1].x = 0.01f * (0.95f * (f32)((PartFxSpawnParams*)posSource)->unk4);
-        e[1].y = 0.01f * (0.2f * (f32)((PartFxSpawnParams*)posSource)->unk0);
-        e[1].z = 0.01f * (0.95f * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[1].x = 0.01f * (0.95f * (f32)params->unk4);
+        e[1].y = 0.01f * (0.2f * (f32)params->unk0);
+        e[1].z = 0.01f * (0.95f * (f32)params->unk4);
     }
     else
     {
@@ -59,9 +61,9 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[2].mode = 2;
     if ((u32)posSource != 0)
     {
-        e[2].x = 0.01f * (0.95f * (f32)((PartFxSpawnParams*)posSource)->unk4);
-        e[2].y = 0.01f * (0.3f * (f32)((PartFxSpawnParams*)posSource)->unk0);
-        e[2].z = 0.01f * (0.95f * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[2].x = 0.01f * (0.95f * (f32)params->unk4);
+        e[2].y = 0.01f * (0.3f * (f32)params->unk0);
+        e[2].z = 0.01f * (0.95f * (f32)params->unk4);
     }
     else
     {
@@ -91,7 +93,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[5].y = 0.0f;
     if ((u32)posSource != 0)
     {
-        e[5].z = (f32)((PartFxSpawnParams*)posSource)->unk2;
+        e[5].z = (f32)params->unk2;
     }
     else
     {
@@ -112,7 +114,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[7].y = 0.0f;
     if ((u32)posSource != 0)
     {
-        e[7].z = (f32)((PartFxSpawnParams*)posSource)->unk2;
+        e[7].z = (f32)params->unk2;
     }
     else
     {
@@ -133,7 +135,7 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[9].y = 0.0f;
     if ((u32)posSource != 0)
     {
-        e[9].z = (f32)((PartFxSpawnParams*)posSource)->unk2;
+        e[9].z = (f32)params->unk2;
     }
     else
     {
@@ -197,15 +199,15 @@ void dll_8C_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] += ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[0] += obj->anim.worldPosX;
+            buf.pos[1] += obj->anim.worldPosY;
+            buf.pos[2] += obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += params->posX;
+            buf.pos[1] += params->posY;
+            buf.pos[2] += params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, base, 0x18, base + 0xd4, DLL8C_EFFECT_ID, 0);
