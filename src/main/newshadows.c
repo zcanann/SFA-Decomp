@@ -556,8 +556,9 @@ static inline void fillDiskTexture(void)
     {
         int lowoff;
         j = 0;
-        lowoff = (i >> 3) * 0x20 + (i & 7);
+        lowoff = (i >> 3) * 0x20;
         cy = i - lbl_803DEDEC;
+        lowoff += i & 7;
         for (; j < 0x20; j++)
         {
             int off;
@@ -1793,8 +1794,9 @@ void allocLotsOfTextures(void)
     {
         int lowoff;
         j = 0;
-        lowoff = (i >> 3) * 0x20 + (i & 7);
+        lowoff = (i >> 3) * 0x20;
         cy = i - lbl_803DED1C;
+        lowoff += i & 7;
         cy = cy * lbl_803DEDE0;
         cy = __fabsf(cy);
         for (; j < 0x80; j++)
