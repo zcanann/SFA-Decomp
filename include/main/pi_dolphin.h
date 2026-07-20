@@ -53,6 +53,10 @@ void pathSearchEnqueuePoint(int* q, int* elem, int idx, u32 d, char* obj);
 void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
 void* fileLoad(int id, int heap);
 void videoInit(void* rmode, int arg);
+int fileLoadToBuffer(int id, void* buffer);
+u8 initLoadFiles(void);
+void viFn_8004a56c(int val);
+void checkLoadBlock(int a, int* compressedSize, int* decompressedSize);
 
 extern void** lbl_803DCC8C;
 

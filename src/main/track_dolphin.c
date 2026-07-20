@@ -49,7 +49,6 @@
 #include "main/objmodel.h"
 #include "main/newshadows.h"
 #include "main/sky.h"
-#include "main/pi_dolphin_fileload_api.h"
 #include "main/newshadows_texture_api.h"
 #include "main/atan2f_api.h"
 #include "main/sky_texture_api.h"

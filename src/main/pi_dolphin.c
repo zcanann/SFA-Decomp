@@ -24,7 +24,6 @@
 #include "main/pi_data_file_api.h"
 #include "main/pi_flush_api.h"
 #include "main/pi_dolphin_texture_api.h"
-#include "main/pi_dolphin_fileload_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"

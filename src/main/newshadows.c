@@ -30,7 +30,7 @@
 #include "main/sky_api.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_render_api.h"
-#include "main/pi_dolphin_fileload_api.h"
+#include "main/shader_dolphin.h"
 #include "main/dll/modgfx.h"
 #include "dolphin/gx/GXFrameBuffer.h"
 #include "string.h"
