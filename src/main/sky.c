@@ -1785,12 +1785,12 @@ void skyFn_8008aee8(void)
         texC = (u8*)sky[((SkyTimeBlend*)sky)->texSel + 2];
         cam = Camera_GetCurrentViewSlot();
         frac = Camera_GetFovY();
-        frac = frac * 0.5f;
+        frac = frac / 2.0f;
         widthF = (f32)(u32) * (u16*)(texC + 0xc);
         sinProd = widthF * frac / 180.0f;
         sinProd *= 3.0f;
         sinProd *= mathCosf(gSkyPi * (f32)-cam->worldRoll / 32768.0f);
-        ang0 = widthF * 0.5f - 6.0f - 3.0f * (widthF * cam->worldPitch) / 32768.0f;
+        ang0 = widthF / 2.0f - 6.0f - 3.0f * (widthF * cam->worldPitch) / 32768.0f;
         angle = ang0 + sinProd;
         angle *= 32.0f;
         (*gSky2Interface)->applyTextColor(0);
