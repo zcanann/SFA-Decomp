@@ -1750,7 +1750,7 @@ void skyFn_8008aee8(void)
         ((SkyBlendStateFlags*)(gSkyState + 0x255))->unused80 = 1;
         sky = *(int**)&gSkyState;
         blend = ((SkyTimeBlend*)sky)->blend;
-        if (blend != 0.0f)
+        if (blend)
         {
             texHandle = sky[((SkyTimeBlend*)sky)->texSel + 2];
             fn_80069B1C((void*)sky[4], (void*)texHandle, blend, (void*)texHandle);
