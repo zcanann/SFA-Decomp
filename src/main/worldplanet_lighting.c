@@ -10,8 +10,11 @@ extern u8 gWorldPlanetSkyColorTo[4];
 extern u8 gWorldPlanetAmbientFrom[4];
 extern u8 gWorldPlanetAmbientTo[8];
 
-#define WORLDPLANET_LERP_BYTE(from, to, idx, t)                                                                        \
-    ((u8)(s32)((t) * (f32)((s32)(to)[idx] - (s32)(from)[idx]) + (f32)(s32)(from)[idx]))
+#define WORLDPLANET_LERP_BYTE(dst, from, to, idx, t)                                                                   \
+    {                                                                                                                  \
+        int v = (from)[idx];                                                                                           \
+        (dst)[idx] = v + (t) * (f32)((to)[idx] - v);                                                                   \
+    }
 
 extern f32 gWorldPlanetLightingLerpT;
 extern u8 gWorldPlanetCurIntensity;
@@ -29,21 +32,21 @@ void worldplanet_updateMapLighting(int a)
 
     gWorldPlanetLightingLerpT = lbl_803E65F8;
 
-    gWorldPlanetCurSky[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 0, lbl_803E65F8);
-    gWorldPlanetCurSky[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 1, lbl_803E65F8);
-    gWorldPlanetCurSky[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 2, lbl_803E65F8);
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 0, lbl_803E65F8)
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 1, lbl_803E65F8)
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurSky, gWorldPlanetSkyColorFrom, gWorldPlanetSkyColorTo, 2, lbl_803E65F8)
     skyFn_800895e0(7, gWorldPlanetCurSky[0], gWorldPlanetCurSky[1],
                    gWorldPlanetCurSky[2], 0x40, 0x40);
 
-    gWorldPlanetCurLight[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 0, gWorldPlanetLightingLerpT);
-    gWorldPlanetCurLight[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 1, gWorldPlanetLightingLerpT);
-    gWorldPlanetCurLight[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetLightFrom, gWorldPlanetLightTo, 2, gWorldPlanetLightingLerpT);
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 0, gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 1, gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurLight, gWorldPlanetLightFrom, gWorldPlanetLightTo, 2, gWorldPlanetLightingLerpT)
     fn_80089510(7, gWorldPlanetCurLight[0], gWorldPlanetCurLight[1],
                 gWorldPlanetCurLight[2]);
 
-    gWorldPlanetCurAmbient[0] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 0, gWorldPlanetLightingLerpT);
-    gWorldPlanetCurAmbient[1] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 1, gWorldPlanetLightingLerpT);
-    gWorldPlanetCurAmbient[2] = WORLDPLANET_LERP_BYTE(gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 2, gWorldPlanetLightingLerpT);
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 0, gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 1, gWorldPlanetLightingLerpT)
+    WORLDPLANET_LERP_BYTE(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, 2, gWorldPlanetLightingLerpT)
     fn_80089578(7, gWorldPlanetCurAmbient[0], gWorldPlanetCurAmbient[1],
                 gWorldPlanetCurAmbient[2]);
 
