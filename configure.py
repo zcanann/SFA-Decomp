@@ -1811,7 +1811,7 @@ config.libs = [
             Object(NonMatching, "main/worldplanet_lighting.c", cflags=cflags_dll_nosched),
             Object(NonMatching, "main/worldplanet.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/worldobj.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/snowclaw.c", cflags=cflags_dll_noopt_noloopinv_noinline),
+            Object(MatchingFor("GSAE01"), "main/snowclaw.c", cflags=cflags_dll_noopt_noloopinv_noinline),
             Object(MatchingFor("GSAE01"), "main/crcloudrace.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "main/spellstone_idle.c"),
             Object(MatchingFor("GSAE01"), "main/spellstone.c", cflags=cflags_dll_noopt),
