@@ -29,23 +29,24 @@
 #define NWSH_LEVCON_ENVFX_A 0xd1
 #define NWSH_LEVCON_ENVFX_B 0xd6
 #define NWSH_LEVCON_ENVFX_C 0x222
+#define NWSH_LEVCON_INTRO_DELAY(obj) ((obj)->userData1)
 
 extern f32 lbl_803E5150;
 
-int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int NWSH_levcon_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    void* player;
+    GameObject* player;
     int i;
 
     player = Obj_GetPlayerObject();
-    if (player != 0)
+    if (player != NULL)
     {
         for (i = 0; i < animUpdate->eventCount; i++)
         {
             switch (animUpdate->eventIds[i])
             {
             case 1:
-                objSetAnimStateFlags((GameObject*)player, 0x10, 1);
+                objSetAnimStateFlags(player, 0x10, 1);
                 mainSetBits(GAMEBIT_ITEM_Spirit6_Got, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 4, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1d, 1);
@@ -70,29 +71,29 @@ int nwsh_levcon_getObjectTypeId(void)
     return 0x0;
 }
 
-void nwsh_levcon_free(int obj)
+void nwsh_levcon_free(GameObject* obj)
 {
     Music_Trigger(MUSICTRIG_ewt_chase, 0);
     mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 0);
 }
 
-void nwsh_levcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void nwsh_levcon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5150);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5150);
 }
 
 void nwsh_levcon_hitDetect(void)
 {
 }
 
-void nwsh_levcon_update(int* obj)
+void nwsh_levcon_update(GameObject* obj)
 {
-    if (((GameObject*)obj)->userData1 != 0)
+    if (NWSH_LEVCON_INTRO_DELAY(obj) != 0)
     {
-        ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - 1;
-        if (((GameObject*)obj)->userData1 == 0)
+        NWSH_LEVCON_INTRO_DELAY(obj)--;
+        if (NWSH_LEVCON_INTRO_DELAY(obj) == 0)
         {
             skyFn_80088c94(7, 1);
             getEnvfxAct(0, 0, NWSH_LEVCON_ENVFX_A, 0);
@@ -102,12 +103,12 @@ void nwsh_levcon_update(int* obj)
     }
 }
 
-void nwsh_levcon_init(int* obj)
+void nwsh_levcon_init(GameObject* obj)
 {
-    ((GameObject*)obj)->animEventCallback = NWSH_levcon_SeqFn;
+    obj->animEventCallback = NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(MUSICTRIG_ewt_chase, 1);
-    ((GameObject*)obj)->userData1 = 1;
+    NWSH_LEVCON_INTRO_DELAY(obj) = 1;
     mainSetBits(GAMEBIT_K6_Entered, 1);
     mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 1);
 }
