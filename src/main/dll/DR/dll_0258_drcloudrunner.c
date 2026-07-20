@@ -463,7 +463,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
                 ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
     spd = (mag < *(f32*)&lbl_803E83A4) ? lbl_803E83A4 : ((mag > *(f32*)&lbl_803E83C0) ? lbl_803E83C0 : mag);
     ((GameObject*)obj)->anim.velocityY =
-        ((GameObject*)obj)->anim.velocityY + (accel = ((grav = lbl_803E83C4) * spd) / lbl_803E83C0);
+        ((GameObject*)obj)->anim.velocityY + (accel = ((grav = 0.02f) * spd) / lbl_803E83C0);
     ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - grav;
     if (spd > lbl_803E83A4)
     {
