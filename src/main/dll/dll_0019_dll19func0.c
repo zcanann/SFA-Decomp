@@ -87,39 +87,6 @@ const IdPair lbl_803E1C18 = {0x02C402CD, 0x02CE02CF};
 const IdPair lbl_803E1C20 = {0x000B000B, 0x000B000B};
 
 
-int dll_19_func1B(GameObject* obj);
-f32 dll_19_func1A(GameObject* obj);
-void dll_19_func19(u8* cam, u8* ctx);
-void dll_19_func12(GameObject* obj, void* state, u8 flag);
-void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags,
-                   u8 initFlags, f32 pathRadius);
-void dll_19_func11(GameObject* obj, void* state, u16* flags, int modeA, int modeB, s16 soundIdA, s16 soundIdB);
-int dll_19_func17(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
-                  s16 substateActive, s16 moveMode);
-int dll_19_func16(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
-                  s16 substate, void* hitPosOut);
-GameObject* dll_19_func15(GameObject* obj, int spawnType, int unused, int alt);
-void dll_19_func0C(GameObject* obj, void* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode,
-                   int animMove, s8 field25f);
-GameObject* dll_19_func14(GameObject* self, void* state, f32 frange, int halfAngle);
-int dll_19_func13(GameObject* obj, void* state, f32 distThreshold, int requireFar);
-int dll_19_func0E(GameObject* obj, void* state, u8 checkDead);
-void dll_19_func0D(GameObject* obj, void* state, f32 gravity, s8 field25f);
-int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ,
-                  int* reachedOut);
-int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, void* moveHandlers, void* stateHandlers,
-                  s16 controlMode);
-f32 dll_19_func0B(int* obj);
-u16 dll_19_func0A(GameObject* obj);
-void dll_19_func06(GameObject* obj, void* state, void* unusedState, f32 cap, f32 speed);
-f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st);
-void dll_19_func07(GameObject* obj, GameObject* target, int div, u16* outYaw, u16* outDelta, u16* outDist);
-int dll_19_func09_ret_0(void);
-u8 dll_19_func08(GameObject* obj, void* state, f32 dist);
-void dll_19_func04_nop(void);
-void dll_19_func03_nop(void);
-
-
 const Dll19ChildObjectIdTable lbl_802C2190 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern u8 lbl_8031A054[];
 extern u8 lbl_8031A048[];

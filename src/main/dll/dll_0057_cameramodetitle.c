@@ -22,6 +22,7 @@
 #include "main/attract_movie_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
+#include "main/dll/dll_0019_dll19func0.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
 
 u8 gCamTitleCurPose;
@@ -41,30 +42,6 @@ STATIC_ASSERT(sizeof(CameraModeTitlePose) == 0x14);
 
 extern CameraModeTitlePose gCamTitlePoseTable[];
 CameraModeTitlePose gCamTitleStartPose;
-extern void dll_19_func03_nop(void);
-extern void dll_19_func04_nop(void);
-extern f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st);
-extern void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed);
-extern void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist);
-extern u8 dll_19_func08(GameObject* obj, char* st, f32 dist);
-extern int dll_19_func09_ret_0(void);
-extern u16 dll_19_func0A(GameObject* obj);
-extern f32 dll_19_func0B(int* obj);
-extern void dll_19_func0C(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substate, s16 moveMode, int animMove, s8 field25f);
-extern void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f);
-extern int dll_19_func0E(GameObject* obj, int state, u8 checkDead);
-extern int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int moveArg1, s16 controlMode);
-extern int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ, int* reachedOut);
-extern void dll_19_func11(void);
-extern void dll_19_func12(int* obj, int* state, u8 flag);
-extern int dll_19_func13(GameObject* obj, u8* state, f32 distThreshold, int requireFar);
-extern int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle);
-extern int dll_19_func15(u8* obj, int spawnType, int unused, int alt);
-extern int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* tableA, u8* tableB, s16 substate, u8* hitPosOut);
-extern int dll_19_func17(GameObject* obj, u8* state, u8* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle, s16 substateActive, s16 moveMode);
-extern void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam, int initFlags);
-extern void dll_19_func19(u8* cam, u8* ctx);
-extern f32 dll_19_func1A(GameObject* obj);
 
 f32 titleScreenGetCamProgress(void)
 {
