@@ -1384,7 +1384,7 @@ inline int objfsaExitOutside(ObjfsaWalkGroup* g, s16 ex, s16 ez)
 
 void walkgroupFindExitPointFn_800dc398(void)
 {
-    ObjfsaPatch* patchBase[1];
+    char* slotPtr;
     u8 blockFlags[0x78];
     u8 pairs[364];
     f32 z1;
@@ -1396,7 +1396,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     int flagIndex;
     int found;
     int curveCount;
-    char* slotPtr;
+    ObjfsaPatch* patchBase[1];
     ObjfsaWalkCurveDef** listWalk;
     u8* pp;
     int listIndex;
