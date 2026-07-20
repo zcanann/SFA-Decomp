@@ -59,7 +59,7 @@ extern f32 lbl_803E3148;
 
 #define POLLEN_PARTFX_MOTE 0x4ba
 
-void Pollen_burst(GameObject* obj);
+u8 Pollen_burst(GameObject* obj);
 
 
 int Pollen_getExtraSize(void)
@@ -151,16 +151,18 @@ void Pollen_update(int obj)
         Obj_FreeObject((GameObject*)obj);
     }
 }
-void Pollen_burst(GameObject* obj)
+u8 Pollen_burst(GameObject* obj)
 {
     int burstCounter;
     PollenExtra* extra;
     u8* fragment;
+    u8 loadingLocked;
 
     extra = *(PollenExtra**)&(obj)->extra;
-    if (Obj_IsLoadingLocked() == 0)
+    loadingLocked = Obj_IsLoadingLocked();
+    if (loadingLocked == 0)
     {
-        return;
+        return loadingLocked;
     }
     burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
     do
