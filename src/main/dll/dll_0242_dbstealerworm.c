@@ -68,8 +68,6 @@
 #include "string.h"
 #include "main/dll/baddie_control_interface.h"
 
-typedef s16 (*DbStealerWormYawDeltaFn)(GameObject* obj, GameObject* target, f32* distance);
-
 typedef struct DbstealerwormPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -1116,8 +1114,8 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
             sub->linkedObj = 0;
             sub->msgSlotIndex = -1;
         }
-        obj->anim.rotX += ((DbStealerWormYawDeltaFn)Obj_GetYawDeltaToObject)(
-            obj, ((BaddieState*)baddie)->targetObj, 0);
+        obj->anim.rotX = obj->anim.rotX +
+                         Obj_GetYawDeltaToObject(obj, ((BaddieState*)baddie)->targetObj, NULL);
         ((BaddieState*)baddie)->stateTag = 0x11;
         if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
         {
