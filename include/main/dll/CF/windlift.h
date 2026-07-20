@@ -40,9 +40,9 @@ void PortalSpellDoor_init(u8* obj, u8* data);
 void PortalSpellDoor_release(void);
 void PortalSpellDoor_initialise(void);
 
-void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c);
+void LanternFireFly_modelMtxFn(GameObject* obj, f32 a, f32 b, f32 c);
 void LanternFireFly_func0B(GameObject* obj);
-void LanternFireFly_setScale(u8* obj, f32* vec);
+void LanternFireFly_setScale(GameObject* obj, f32* vec);
 void LanternFireFly_pickDriftOffset(GameObject* obj);
 void LanternFireFly_advanceControlRing(GameObject* obj);
 
