@@ -218,7 +218,7 @@ void drakormissile_free(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, DRAKORMISSILE_GROUP_ID);
 }
 
-void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
+void drakormissile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     f32 one = 1.0f;
     s16 savedRotZ;
@@ -244,15 +244,13 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
             (obj)->anim.rotZ = state->trailYaw[i];
             (obj)->anim.rotY = state->trailPitch[i];
             ((ObjModel*)model)->bufferFlags &= ~8;
-            ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
-                obj, p2, p3, p4, p5, (double)one);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, one);
         }
         (obj)->anim.rotZ = savedRotZ;
         (obj)->anim.rotY = savedRotY;
         (obj)->anim.rootMotionScale = savedScale;
         objAnim->bankIndex = 0;
-        ((void (*)(GameObject*, u32, u32, u32, u32, double))objRenderModelAndHitVolumes)(
-            obj, p2, p3, p4, p5, (double)one);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, one);
         if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         {
             queueGlowRender(state->light);

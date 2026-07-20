@@ -53,7 +53,7 @@ int DR_CageWith_toggleRopeStateCallback(GameObject* obj, int unused, ObjAnimUpda
 int DR_CageWith_getExtraSize(void);
 int DR_CageWith_getObjectTypeId(void);
 void DR_CageWith_free(GameObject* obj, int arg);
-void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
+void DR_CageWith_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 void DR_CageWith_hitDetect(GameObject* obj);
 void DR_CageWith_update(void);
 void DR_CageWith_init(GameObject* obj, DrcagewithPlacement* placement);
