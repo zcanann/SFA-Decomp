@@ -63,15 +63,17 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
         e[0].flags = 2;
         e[0].tex = lbl_803DB8F0;
         e[0].mode = 2;
-        e[0].x = 190.0f * *(f32*)(sourceObj + 8);
-        e[0].y = 6.0f * *(f32*)(sourceObj + 8);
+        e[0].x = 190.0f * ((GameObject*)sourceObj)->anim.rootMotionScale;
+        e[0].y = 6.0f * ((GameObject*)sourceObj)->anim.rootMotionScale;
         e[0].z = 1.0f;
         e[1].layer = 0;
         e[1].flags = 2;
         e[1].tex = lbl_803DB8FC;
         e[1].mode = 2;
-        e[1].x = 40.0f * (*(f32*)(sourceObj + 8) / *(f32*)(*(int*)(sourceObj + 0x50) + 4));
-        e[1].y = 6.0f * (*(f32*)(sourceObj + 8) / *(f32*)(*(int*)(sourceObj + 0x50) + 4));
+        e[1].x = 40.0f * (((GameObject*)sourceObj)->anim.rootMotionScale /
+                          ((GameObject*)sourceObj)->anim.modelInstance->rootMotionScaleBase);
+        e[1].y = 6.0f * (((GameObject*)sourceObj)->anim.rootMotionScale /
+                         ((GameObject*)sourceObj)->anim.modelInstance->rootMotionScaleBase);
         e[1].z = 1.0f;
         rv = (f32)(int)randomGetRange(0, 0xfffe);
         e[2].layer = 0;
