@@ -116,19 +116,19 @@ extern const f32 gWaterfxDropDamping;
 extern f32 gWaterfxRippleGrowSpeed;
 
 void waterfx_setupSplashDropPointRender(void);
-void waterfx_drawFn_800953fc(void);
+void waterfx_buildSplashDisplayList(void);
 int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist);
 void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2);
 void waterfx_setRippleScale(int flag, f32 val);
-void waterfx_func08(f32 a, f32 b, f32 c, s16 p1, f32 d);
+void waterfx_spawnSimpleRipple(f32 a, f32 b, f32 c, s16 p1, f32 d);
 void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d);
 int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v);
-void waterfx_func05(int p1, int p2);
+void waterfx_render(int p1, int p2);
 void waterfx_run(int frames);
-void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval);
+void waterfx_spawnImpactSurface(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval);
 void waterfx_onMapSetup(void);
 void waterfx_release(void);
 void waterfx_initialise(void);
-void fn_80095164(WaterParticle* particle);
+void waterfx_drawSplashBurst(WaterParticle* particle);
 
 #endif /* MAIN_DLL_WATERFX_H_ */

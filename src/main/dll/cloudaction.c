@@ -516,10 +516,10 @@ ResourceDescriptorCallbacks11 lbl_8030F830 = {
      (ResourceDescriptorCallback)waterfx_release,
      0x00000000,
      (ResourceDescriptorCallback)waterfx_run,
-     (ResourceDescriptorCallback)waterfx_func04,
-     (ResourceDescriptorCallback)waterfx_func05,
+     (ResourceDescriptorCallback)waterfx_spawnImpactSurface,
+     (ResourceDescriptorCallback)waterfx_render,
      (ResourceDescriptorCallback)waterfx_spawnSplashBurst,
      (ResourceDescriptorCallback)waterfx_spawnRipple,
-     (ResourceDescriptorCallback)waterfx_func08,
+     (ResourceDescriptorCallback)waterfx_spawnSimpleRipple,
      (ResourceDescriptorCallback)waterfx_onMapSetup,
      (ResourceDescriptorCallback)waterfx_setRippleScale}};
