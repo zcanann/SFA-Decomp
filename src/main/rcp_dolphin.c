@@ -2339,7 +2339,7 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
             {
                 flag = 0;
             }
-            else if (v >= 9 && ((*(u8*)(obj + 5) >> (0x10 - v)) & 1))
+            else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
             {
                 flag = 0;
             }
