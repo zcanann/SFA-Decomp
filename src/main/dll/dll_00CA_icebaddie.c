@@ -1301,7 +1301,7 @@ void iceBaddie_free(int* obj)
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }
-    ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 0x20);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, (void*)state, 0x20);
 }
 
 void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible)

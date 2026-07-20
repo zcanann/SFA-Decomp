@@ -144,7 +144,7 @@ void DIM_BossGut2_free(int objArg)
         Obj_FreeObject(childObj);
         ((GameObject*)obj)->childObjs[0] = NULL;
     }
-    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, state, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, (void*)state, 0);
     return;
 }
 

@@ -371,7 +371,7 @@ void kaldachom_free(GameObject* obj)
 
     state = *(u32*)&(obj)->extra;
     ObjGroup_RemoveObject((int)obj, KALDACHOM_OBJGROUP);
-    (*(VtableFn*)(*gBaddieControlInterface + 0x40))(obj, state, 0x20);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState(obj, (void*)state, 0x20);
 }
 
 void kaldachom_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

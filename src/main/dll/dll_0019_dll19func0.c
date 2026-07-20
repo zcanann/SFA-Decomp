@@ -91,7 +91,7 @@ const u32 lbl_803E1C28 = 2;
 int dll_19_func1B(GameObject* obj);
 f32 dll_19_func1A(GameObject* obj);
 void dll_19_func19(u8* cam, u8* ctx);
-void dll_19_func12(int* obj, int* state, u8 flag);
+void dll_19_func12(GameObject* obj, void* state, u8 flag);
 void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1, int pathFlags, f32 fparam,
                    int initFlags);
 void dll_19_func11(void);
@@ -209,7 +209,7 @@ void dll_19_func19(u8* cam, u8* ctx)
     }
 }
 
-void dll_19_func12(int* obj, int* state, u8 flag)
+void dll_19_func12(GameObject* obj, void* state, u8 flag)
 {
     Sfx_StopObjectChannel((int)obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)

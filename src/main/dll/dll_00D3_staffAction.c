@@ -758,7 +758,7 @@ void dll_D3_free(int obj)
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
         *(int*)&((GameObject*)obj)->childObjs[0] = 0;
     }
-    (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, inner, 0);
 }
 
 void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

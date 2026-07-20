@@ -347,7 +347,7 @@ void grimble_free(GameObject* obj)
 {
     int* state = obj->extra;
     ObjGroup_RemoveObject((u32)obj, GRIMBLE_OBJGROUP);
-    (*(void (**)(int, int*, int))(*(int*)gBaddieControlInterface + 0x40))((int)obj, state, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState(obj, state, 0);
 }
 
 void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

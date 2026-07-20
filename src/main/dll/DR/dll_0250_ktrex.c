@@ -1457,7 +1457,7 @@ void ktrex_free(GameObject* obj)
     int i;
     gKTRexRuntime = obj->extra;
     ObjGroup_RemoveObject((int)obj, KTREX_OBJGROUP);
-    (*(void (**)(void*, void*, int))((char*)*gBaddieControlInterface + 0x40))(obj, gKTRexRuntime, 0);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, gKTRexRuntime, 0);
     Stack_Free(gKTRexState->stack);
     if (gKTRexResource != NULL)
     {

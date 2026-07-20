@@ -112,7 +112,7 @@ void lightfoot_free(GameObject* obj, int flag)
             }
         }
     }
-    (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))((int)obj, inner, 0x20);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState(obj, (void*)inner, 0x20);
 }
 
 void lightfoot_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

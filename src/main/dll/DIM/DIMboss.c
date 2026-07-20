@@ -115,7 +115,7 @@ typedef struct DIMbossBaddieControlInterface
                            DIMbossAnimHandlerTable* animTable,
                            int flags);
     u8 pad38[0x40 - 0x38];
-    void (*releaseState)(DIMbossObject* obj, DIMbossRuntime* runtime, int flags);
+    void (*releaseState)(DIMbossObject* obj, DIMbossRuntime* runtime, u8 flags);
     u8 pad44[0x58 - 0x44];
     DIMbossAnimSetupFn setupAnim;
 } DIMbossBaddieControlInterface;

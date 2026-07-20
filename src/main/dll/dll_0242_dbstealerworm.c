@@ -2246,7 +2246,7 @@ void dbstealerworm_free(int* obj)
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
         *(int*)&((GameObject*)obj)->childObjs[0] = 0;
     }
-    ((void (*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, sub, 3);
 }
 
 void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)

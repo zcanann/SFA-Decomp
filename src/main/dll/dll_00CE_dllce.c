@@ -777,7 +777,7 @@ void dll_CE_free(int* obj)
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }
-    ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 32);
+    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 32);
 }
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
