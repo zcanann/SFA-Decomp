@@ -239,8 +239,8 @@ void fn_802A514C(GameObject* obj, int state);
 int playerState00(int obj, int state);
 s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
 void fn_802A81B8(GameObject* obj, int state, f32* out);
-int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag);
-int fn_802A8EE4(int a, int b, int c, int d, int e);
+int fn_802A8680(int p1, int p2, void* src, f32* vec, int out, int flag);
+int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance);
 void fn_802A93F4(GameObject* obj, int p2, int p3);
 void playerCastIceSpell(GameObject* unused);
 int fn_802A97D0(GameObject* obj, int p2);
@@ -431,7 +431,7 @@ extern f32 lbl_803E80A0;
 char sNotOnGroundFailureMessage[] = "FAIL ON NOT ON GROUND\n";
 
 int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
-int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag);
+int player_probeClimbable(GameObject* obj, int p4, void* src, int dst, int flag);
 
 static inline void playerFreeSpawnedObjects(void** p, int i, int hi)
 {
@@ -10493,8 +10493,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             if ((*(int (*)(int)) * (int*)((char*)target->anim.dll[0] + 0x2c))((int)target) != 0 &&
                 ((PlayerState*)state2)->baddie.inputMagnitude > lbl_803E7EFC && hd <= lbl_803E7ED4 + lbl_803DC6C0)
             {
-                switch (
-                    ((int (*)(int, int, void*, int, f32*, f32))fn_802A8EE4)(obj, state, &buf, state + 0x5a8, end, hd))
+                switch (fn_802A8EE4(obj, state, &buf, state + 0x5a8, end, hd))
                 {
                 case 2:
                     return 4;
@@ -10571,8 +10570,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             {
                 continue;
             }
-            if (((int (*)(int, int, void*, int, int))player_probeClimbable)(obj, state, &buf, state + 0x4e4, i == 3) ==
-                0)
+            if (player_probeClimbable((GameObject*)obj, state, &buf, state + 0x4e4, i == 3) == 0)
             {
                 continue;
             }
@@ -10583,8 +10581,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             {
                 continue;
             }
-            if (((int (*)(int, int, void*, f32*, int, int))fn_802A8680)(obj, state, &buf, end, state + 0x548, i == 5) ==
-                0)
+            if (fn_802A8680(obj, state, &buf, end, state + 0x548, i == 5) == 0)
             {
                 continue;
             }
@@ -10610,7 +10607,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             {
                 continue;
             }
-            switch (((int (*)(int, int, void*, int, f32*, f32))fn_802A8EE4)(obj, state, &buf, state + 0x5a8, end, hd))
+            switch (fn_802A8EE4(obj, state, &buf, state + 0x5a8, end, hd))
             {
             case 2:
                 return 4;
@@ -10732,7 +10729,7 @@ void fn_802A81B8(GameObject* obj, int state, f32* out)
     }
 }
 
-int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag)
+int player_probeClimbable(GameObject* obj, int p4, void* src, int dst, int flag)
 {
     TrackGroundHit** hits;
     f32 pos[3];
@@ -10839,7 +10836,7 @@ int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag)
     return 0;
 }
 
-int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
+int fn_802A8680(int p1, int p2, void* src, f32* vec, int out, int flag)
 {
     f32 p48;
     f32 m44;
@@ -11157,7 +11154,7 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     return mode;
 }
 
-int fn_802A8EE4(int a, int b, int c, int d, int e)
+int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance)
 {
     EmitPlane* pl;
     char* cp;
