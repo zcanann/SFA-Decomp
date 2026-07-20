@@ -20,7 +20,11 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int index);
 void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, struct MapShader* shader,
                                                int* bitReader, float (*viewMtx)[4]);
 struct MapShader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, int* bitReader);
+#ifdef TEX_SETSHADER_U8
 struct MapShader* mapBlockRender_setShader(u8 doSetup, struct MapBlockData* blockData, int* bitReader);
+#else
+struct MapShader* mapBlockRender_setShader(int doSetup, struct MapBlockData* blockData, int* bitReader);
+#endif
 void mapBlockRender_callList(u32 passSelect, u32 visArg, struct MapBlockData* block, struct MapShader* shader,
                              int* stream, float* mtx);
 

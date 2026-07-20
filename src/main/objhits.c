@@ -53,9 +53,6 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     float pz2;
     float diameter;
     float cullDist;
-    int idx28;
-    float* pRad;
-    int idx4;
     float* radii;
     int joint;
     int parent;
@@ -74,8 +71,6 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     float len2;
     float inv;
     float d;
-    float jx;
-    float pxv;
     ObjHitsVec3 jointPos;
     ObjHitsVec3 parentPos;
     ObjHitsVec3 axisDir;
@@ -104,14 +99,11 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
     px2 = point[0] + point[0];
     pz2 = point[2] + point[2];
     joint = modelFile->jointCount;
-    idx4 = joint * 4;
-    idx28 = joint * 28;
-    pRad = (float*)((u8*)radii + idx4);
-    while (idx4 -= 4, idx28 -= 28, pRad -= 1, --joint != 0)
+    while (--joint != 0)
     {
-        if (*(float*)((u8*)jointData->jointCullDistances + idx4) > cullDist)
+        if (jointData->jointCullDistances[joint] > cullDist)
         {
-            parent = *(s8*)((u8*)modelFile->joints + idx28);
+            parent = modelFile->joints[joint].parentJoint;
             jointMatrix = ObjModel_GetJointMatrix((u8*)model, joint);
             jointPos.x = jointMatrix->translationX;
             jointPos.y = jointMatrix->translationY;
@@ -122,16 +114,14 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
             parentPos.z = jointMatrix->translationZ;
             jointData->touchedJoints[joint] = 1;
             jointData->touchedJoints[parent] = 1;
-            radJ = *pRad;
+            radJ = radii[joint];
             radP = radii[parent];
             if ((!(jointPos.y - radJ > yMax) || !(parentPos.y - radP > yMax)) &&
                 (!(jointPos.y + radJ < yMin) || !(parentPos.y + radP < yMin)))
             {
-                pxv = parentPos.x;
-                jx = jointPos.x;
-                sumX = (pxv + jx) - px2;
+                sumX = (parentPos.x + jointPos.x) - px2;
                 sumZ = (parentPos.z + jointPos.z) - pz2;
-                limit = *(float*)((u8*)jointData->jointLengths + idx4);
+                limit = jointData->jointLengths[joint];
                 if (radJ > radP)
                 {
                     dbl = radJ + radJ;
@@ -144,10 +134,10 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
                 limit = limit * limit;
                 if (sumX * sumX + gObjHitsScalarZero + sumZ * sumZ < limit)
                 {
-                    axisDir.x = pxv - jx;
+                    axisDir.x = parentPos.x - jointPos.x;
                     axisDir.y = parentPos.y - jointPos.y;
                     axisDir.z = parentPos.z - jointPos.z;
-                    len2 = *(float*)((u8*)jointData->jointLengths + idx4);
+                    len2 = jointData->jointLengths[joint];
                     if (len2 != gObjHitsScalarZero)
                     {
                         inv = gObjHitsScalarOne / len2;
@@ -158,7 +148,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointDa
                     jointData->touchedJoints[joint] = 0;
                     jointData->touchedJoints[parent] = 0;
                     if (ObjHits_TestTaperedCapsuleXZ(point, radius, radJ, radP, &jointPos.x, &axisDir.x, &parentPos.x,
-                                                     *(float*)((u8*)jointData->jointLengths + idx4), &axial, &distSq,
+                                                     jointData->jointLengths[joint], &axial, &distSq,
                                                      &radSum) != 0)
                     {
                         jointData->touchedJoints[joint] = 1;
@@ -212,9 +202,6 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     float pz2;
     float diameter;
     float cullDist;
-    int idx28;
-    float* pRad;
-    int idx4;
     float* radii;
     int joint;
     int parent;
@@ -232,8 +219,6 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     float limit;
     float inv;
     float d;
-    float jx;
-    float pxv;
     ObjHitsVec3 jointPos;
     ObjHitsVec3 parentPos;
     ObjHitsVec3 axisDir;
@@ -262,14 +247,11 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
     px2 = point[0] + point[0];
     pz2 = point[2] + point[2];
     joint = modelFile->jointCount;
-    idx4 = joint * 4;
-    idx28 = joint * 28;
-    pRad = (float*)((u8*)radii + idx4);
-    while (idx4 -= 4, idx28 -= 28, pRad -= 1, --joint != 0)
+    while (--joint != 0)
     {
-        if (*(float*)((u8*)jointData->jointCullDistances + idx4) > cullDist)
+        if (jointData->jointCullDistances[joint] > cullDist)
         {
-            parent = *(s8*)((u8*)modelFile->joints + idx28);
+            parent = modelFile->joints[joint].parentJoint;
             jointMatrix = ObjModel_GetJointMatrix((u8*)model, joint);
             jointPos.x = jointMatrix->translationX;
             jointPos.y = jointMatrix->translationY;
@@ -278,15 +260,13 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
             parentPos.x = jointMatrix->translationX;
             parentPos.y = jointMatrix->translationY;
             parentPos.z = jointMatrix->translationZ;
-            radJ = *pRad;
+            radJ = radii[joint];
             radP = radii[parent];
             jointData->touchedJoints[joint] = 1;
             jointData->touchedJoints[parent] = 1;
-            pxv = parentPos.x;
-            jx = jointPos.x;
-            sumX = (pxv + jx) - px2;
+            sumX = (parentPos.x + jointPos.x) - px2;
             sumZ = (parentPos.z + jointPos.z) - pz2;
-            limit = *(float*)((u8*)jointData->jointLengths + idx4);
+            limit = jointData->jointLengths[joint];
             if (radJ > radP)
             {
                 dbl = radJ + radJ;
@@ -299,15 +279,15 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointDa
             limit = limit * limit;
             if (sumX * sumX + gObjHitsScalarZero + sumZ * sumZ < limit)
             {
-                axisDir.x = pxv - jx;
+                axisDir.x = parentPos.x - jointPos.x;
                 axisDir.y = parentPos.y - jointPos.y;
                 axisDir.z = parentPos.z - jointPos.z;
-                inv = gObjHitsScalarOne / *(float*)((u8*)jointData->jointLengths + idx4);
+                inv = gObjHitsScalarOne / jointData->jointLengths[joint];
                 axisDir.x = axisDir.x * inv;
                 axisDir.y = axisDir.y * inv;
                 axisDir.z = axisDir.z * inv;
                 if (ObjHits_TestTaperedCapsule3D(point, radius, radJ, radP, &jointPos.x, &axisDir.x, &parentPos.x,
-                                                 *(float*)((u8*)jointData->jointLengths + idx4), &axial, &distSq,
+                                                 jointData->jointLengths[joint], &axial, &distSq,
                                                  &radSum) != 0)
                 {
                     jointData->touchedJoints[joint] = 1;

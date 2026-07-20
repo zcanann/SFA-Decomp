@@ -1,3 +1,4 @@
+#define TEX_SETSHADER_U8
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
 #include "main/shader_api.h"

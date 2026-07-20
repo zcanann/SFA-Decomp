@@ -1910,14 +1910,13 @@ void drawViewFinderHud(void)
         f32 angleDivisor, gridSpacing, waveCenterX, angleScale, gridAlpha;
         f32 reticleY = (f32)(lbl_803E1EF0 * ((fovY - lbl_803E1EF8) / lbl_803E1F00) + lbl_803E1EB0);
         f32 reticleTopY = -(lbl_803E1F0C * gViewFinderFadeLevel) + 410.0f;
-        f32 reticleEndY;
         f32 viewScale;
         drawViewFinderSegment(580.0f, reticleTopY, 580.0f, 410.0f,
                               lbl_803E1E3C, 410.0f - reticleTopY, lbl_803E1E68,
                               hudElementOpacity * gViewFinderFadeLevel);
         drawViewFinderSegment(580.0f, reticleY, 580.0f,
-                              (reticleEndY = 8.0f + reticleY), lbl_803E1E3C,
-                              reticleEndY - reticleY, lbl_803E1F18,
+                              8.0f + reticleY, lbl_803E1E3C,
+                              (8.0f + reticleY) - reticleY, lbl_803E1F18,
                               hudElementOpacity * gViewFinderFadeLevel);
         viewScale = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
         sprintf(buf, sTrickyDebugXCoordFormat, viewScale);
