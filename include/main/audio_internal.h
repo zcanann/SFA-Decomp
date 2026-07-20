@@ -275,7 +275,6 @@ extern f32 lbl_803DE554;
 extern f32 lbl_803DE558;
 extern f32 lbl_803DE55C;
 
-u32 sndSeqPlayEx(u16 groupId, u16 songId, void* arrangement, SynthPlayParams* params, u8 studio);
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u16 sfxId, s32 mode);
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel* objectChannel);
 void Music_Update(void);

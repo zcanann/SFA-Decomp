@@ -10,6 +10,7 @@
 #include "main/audio/snd_reverb.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/audio_internal.h"
+#include "main/audio/snd_groups.h"
 #include "main/attract_movie_api.h"
 #include "main/camera.h"
 #include "main/fileio.h"

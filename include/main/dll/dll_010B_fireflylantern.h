@@ -62,6 +62,4 @@ void FireFlyLantern_init(GameObject* obj, int def);
 GameObject* FireFlyLantern_spawnFireFly(int* obj);
 int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
-void pinPon_updateEngaged(GameObject* obj, int* state);
-
 #endif /* MAIN_DLL_DLL_010B_FIREFLYLANTERN_H_ */

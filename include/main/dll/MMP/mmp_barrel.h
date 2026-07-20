@@ -78,8 +78,6 @@ STATIC_ASSERT(offsetof(HitAnimatorObject, state) == 0xB8);
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c);
 void waveanimator_func0B(int* obj);
 void waveanimator_setScale(int* obj, f32 fval);
-u8 wallanimator_func0B(int* obj);
-
 int waveanimator_getExtraSize(void);
 int waveanimator_getObjectTypeId(void);
 void waveanimator_free(int* obj);

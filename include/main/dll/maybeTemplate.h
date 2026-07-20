@@ -9,7 +9,6 @@
 #include "main/dll/player_status.h"
 #include "dolphin/gx/GXCull.h"
 
-void pauseMenuDrawStatus(void);
 void cMenuUpdateAnims(void);
 void hudDrawMagicBar(int alpha, int elementAlpha, u8 flags);
 

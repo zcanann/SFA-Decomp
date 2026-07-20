@@ -15,7 +15,6 @@ struct ObjfsaWalkGroupPatchInfo
     u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
 };
 
-void player_advanceMove(short *moveState, u32 *obj, f32 dt, int flags);
 void FUN_800d9878(u64 param_1,u64 param_2,u32 param_3,u32 param_4,
                  int param_5,int param_6);
 void FUN_800d98fc(u64 param_1,u64 param_2,double param_3,u64 param_4,
