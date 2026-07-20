@@ -135,7 +135,7 @@ void MoonSeedBush_init(GameObject* obj, int data)
     obj->animEventCallback = MoonSeedBush_SeqFn;
     obj->objectFlags |= MOONSEEDBUSH_OBJFLAG_HITDETECT_DISABLED;
     obj->anim.rootMotionScale = (f32)(u32)(placement->scaleByte) * 0.015625f;
-    if (obj->anim.rootMotionScale == 0.0f)
+    if (!obj->anim.rootMotionScale)
     {
         obj->anim.rootMotionScale = 1.0f;
     }
