@@ -19,6 +19,32 @@ Usage:
 
 Gates on EXTRACTED FUNCTION BYTES (never on tool silence or on a build that
 failed): a profile whose compile fails is reported as ERR, never as a match.
+
+Sweep result (wave 92, all 154 units carrying a sub-100 function, 7 profiles):
+42 functions across 22 units reach byte-identical under some profile other than
+the one their unit is configured with.  Every one of those 22 units is a MIXED
+population -- no unit-wide flag flip is a net win, because the profile that
+fixes those functions breaks others in the same unit.  Two flips raise the
+count of byte-identical functions yet LOWER the unit's fuzzy_match_percent
+(the truth metric), so both were rejected:
+
+    main/lightmap.c   -opt nopeephole,noschedule -inline noauto
+                      36 -> 40 functions at 100, unit 99.186 -> 98.528
+    main/objanim.c    -opt nopeephole,noschedule,nocse
+                      10 -> 11 functions at 100, unit 99.405 -> 98.897
+
+So this list is a TU-SPLIT worklist, not a flag worklist.  The units, with the
+number of flag-fixable functions: player 11, lightmap 6, track_dolphin 3,
+objprint_dolphin 2, dll_000F_unk 2, obj_movelib 2, and one each in textrender,
+Hcurves, model, objprint, gametext, dll_0015_curves, objanim, skeetla_80139A8C,
+object, dll_0272_hightop, shader_dolphin, sal_dsp, worldobj,
+dll_0049_cameramodecombat, dll_00C9_enemy, fallladdersgroup.
+
+METHOD WARNING: do not edit the tree or run ninja while a sweep is in flight.
+This tool reads build.ninja and the unit source per unit, so a concurrent
+configure.py or source edit silently changes what a later unit is compiled
+from.  A first pass of this sweep was invalidated that way and reported 1
+flag-fixable function in track_dolphin where a clean re-run found 3.
 """
 from __future__ import annotations
 
