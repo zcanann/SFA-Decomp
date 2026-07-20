@@ -63,12 +63,6 @@ char sSeqBAnimDataTag[] = "SEQB";
 int lbl_803DB744[1] = {0};
 u8 lbl_803DB748[4] = {0x20, 0x20, 0x20, 0xFF};
 
-#define ObjMsg_SendToObjectsLegacy(target, flags, sender, message, param) \
-    ((void (*)(int, int, void*, int, void*))ObjMsg_SendToObjects)((target), (flags), (sender), (message), (param))
-#define ObjMsg_SendToNearbyObjectsLegacy(target, radius, flags, sender, message, param) \
-    ((void (*)(int, f32, int, void*, int, void*))ObjMsg_SendToNearbyObjects)( \
-        (target), (radius), (flags), (sender), (message), (param))
-
 typedef struct ObjSeqBgCmd
 {
     int object;
@@ -2212,10 +2206,10 @@ int seqDoSubCmd0B(u8* obj, u8* sourceObj, u8* seq, u8* cmdsArg, s16 xrot, s16 co
                 switch ((s8)gObjSeqMsgSendModes[arg10])
                 {
                 case 1:
-                    ObjMsg_SendToObjectsLegacy(0, 2, obj, gObjSeqMsgIds[arg10], obj);
+                    ObjMsg_SendToObjects(0, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
                     break;
                 case 2:
-                    ObjMsg_SendToNearbyObjectsLegacy(0, 600.0f, 2, obj, gObjSeqMsgIds[arg10], obj);
+                    ObjMsg_SendToNearbyObjects(0, 600.0f, 2, obj, gObjSeqMsgIds[arg10], (u32)obj);
                     break;
                 default:
                     ObjMsg_SendToObject((GameObject*)sourceObj, gObjSeqMsgIds[arg10], obj, 0);
@@ -3033,8 +3027,7 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
         case 4:
             if ((u8)skipSpawns == 0)
             {
-                ((int (*)(int, int, int, int, int, int, int))return0xFFFF_80008B6C)(cmdObj, 0, 0, 1, -1,
-                                                                                   (u8)cmdParam, 0);
+                return0xFFFF_80008B6C(cmdObj, 0, 0, 1, -1, (u8)cmdParam, 0);
             }
             break;
         case 5:
@@ -4607,7 +4600,7 @@ int ObjSeq_update(u8* obj, f32 t)
             if (*(s16*)(p + 0x30) <= 0)
             {
                 *(s16*)(p + 0x30) = 0;
-                Sfx_RemoveLoopedObjectSoundPtrU16Legacy(obj, *(s16*)(p + 0x38));
+                Sfx_RemoveLoopedObjectSound((u32)obj, *(s16*)(p + 0x38));
             }
         }
     }
