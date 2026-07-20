@@ -5,6 +5,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/DIM/dll_01C4_dimicewall.h"
+#include "main/dll/dll_0120_trickyguardspot.h"
 #include "main/dll/dimicewallstate_struct.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
@@ -23,13 +24,18 @@
 typedef struct DimicewallPlacement
 {
     ObjPlacement head; /* 0x00..0x17 (mapId at 0x14) */
-    u8 pad18[0x19 - 0x18];
+    s8 rotX;
     s8 shatterScale;
-    u8 pad1A[0x1E - 0x1A];
+    s16 hp;
+    u8 pad1C[0x1E - 0x1C];
     s16 shatterGameBit;
 } DimicewallPlacement;
 
-
+STATIC_ASSERT(offsetof(DimicewallPlacement, rotX) == 0x18);
+STATIC_ASSERT(offsetof(DimicewallPlacement, shatterScale) == 0x19);
+STATIC_ASSERT(offsetof(DimicewallPlacement, hp) == 0x1A);
+STATIC_ASSERT(offsetof(DimicewallPlacement, shatterGameBit) == 0x1E);
+STATIC_ASSERT(sizeof(DimicewallState) == 0x2);
 
 
 int dimicewall_countdownCallback(GameObject *obj, int delta)
@@ -41,18 +47,18 @@ int dimicewall_countdownCallback(GameObject *obj, int delta)
 
 int dimicewall_getExtraSize(void) { return 0x2; }
 
-void dimicewall_update(int* obj)
+void dimicewall_update(GameObject* obj)
 {
-    int* extra = ((GameObject*)obj)->extra;
-    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    if (((DimicewallState*)extra)->shattered == 0)
+    DimicewallState* state = obj->extra;
+    DimicewallPlacement* placement = (DimicewallPlacement*)obj->anim.placementData;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+    if (state->shattered == 0)
     {
-        if (((DimicewallState*)extra)->hp <= 0)
+        if (state->hp <= 0)
         {
             PartFxSpawnParams desc;
             int i;
-            desc.scale =(f32)(s8)((DimicewallPlacement*)def)->shatterScale / 50.0f;
+            desc.scale = (f32)placement->shatterScale / 50.0f;
             desc.posZ = 0.0f;
             for (i = 45; i != 0; i--)
             {
@@ -64,7 +70,7 @@ void dimicewall_update(int* obj)
                 randomGetRange(0, 450)
                 )
                 ;
-                (*gPartfxInterface)->spawnObject(obj, 2041, &desc, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((int*)obj, 2041, &desc, 2, -1, NULL);
             }
             for (i = 25; i != 0; i--)
             {
@@ -76,44 +82,45 @@ void dimicewall_update(int* obj)
                 randomGetRange(0, 450)
                 )
                 ;
-                (*gPartfxInterface)->spawnObject(obj, 2042, &desc, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((int*)obj, 2042, &desc, 2, -1, NULL);
             }
-            if ((u32)((DimicewallPlacement*)def)->head.mapId != DIMICEWALL_MAPID_NO_SFX)
+            if ((u32)placement->head.mapId != DIMICEWALL_MAPID_NO_SFX)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_bounce1);
             }
-            ((DimicewallState*)extra)->shattered = 1;
-            if (((DimicewallPlacement*)def)->shatterGameBit != -1)
+            state->shattered = 1;
+            if (placement->shatterGameBit != -1)
             {
-                mainSetBits(((DimicewallPlacement*)def)->shatterGameBit, 1);
+                mainSetBits(placement->shatterGameBit, 1);
             }
         }
         else
         {
-            int* tricky = (int*)getTrickyObject();
+            GameObject* tricky = getTrickyObject();
             if (tricky != NULL)
             {
-                if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
+                if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
                 {
-                    (*(void (**)(int*, int*, int, int))(**(int**)((char*)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                    (*(TrickyGuardSpotInterfaceVTable**)tricky->anim.dll)->setGuardSpotAction(
+                        &tricky->anim, obj, 1, 4);
                 }
-                *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                objRenderFn_80041018((GameObject*)obj);
+                obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+                objRenderFn_80041018(obj);
             }
         }
     }
 }
 
-void dimicewall_init(GameObject *obj, s8* p)
+void dimicewall_init(GameObject* obj, DimicewallPlacement* placement)
 {
-    char* inner = (obj)->extra;
-    ((DimicewallState*)inner)->hp = (s8) * (s16*)(p + 0x1a);
-    if (((DimicewallPlacement*)p)->shatterGameBit != -1)
+    DimicewallState* state = obj->extra;
+    state->hp = (s8)placement->hp;
+    if (placement->shatterGameBit != -1)
     {
-        ((DimicewallState*)inner)->shattered = mainGetBit(((DimicewallPlacement*)p)->shatterGameBit);
+        state->shattered = mainGetBit(placement->shatterGameBit);
     }
-    (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    (obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
+    obj->anim.rotX = (s16)((s32)placement->rotX << 8);
+    obj->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
 }
 
 ObjectDescriptor gDIMIceWallObjDescriptor = {

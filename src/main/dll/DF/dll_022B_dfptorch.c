@@ -24,10 +24,6 @@
 #include "main/object_render.h"
 #include "main/object_descriptor.h"
 
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-#define DFPTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 /* DfpTorchState.mode: torch behaviour selected from placement->mode */
 #define DFPTORCH_MODE_ALWAYS_LIT 0 /* permanently burning, ignited at init */
 #define DFPTORCH_MODE_LIGHTABLE  1 /* player-toggled; burn timer + gamebit latch */
@@ -285,7 +281,7 @@ void DFP_Torch_init(GameObject* obj, DfpTorchPlacement* def)
         break;
     }
     state->colorIdx = (u8)place->colorIdx;
-    obj->objectFlags = obj->objectFlags | DFPTORCH_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags = obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void DFP_Torch_release(void)

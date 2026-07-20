@@ -37,7 +37,6 @@ STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
-#define DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLOGFIRE_HIT_VOLUME_SLOT            0x1f
 /* smoke particle emitted while the smoke-toggle phase is active */
 #define DIMLOGFIRE_PARTFX_SMOKE 215
@@ -129,7 +128,7 @@ void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
         {
             int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
             ((ObjModel*)q)->bufferFlags = (u16)(((ObjModel*)q)->bufferFlags & ~0x8);
-            *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
+            ((GameObject*)state->subObj)->anim.renderAlpha = obj->anim.renderAlpha;
             objRenderModelAndHitVolumes((GameObject*)state->subObj, p2, p3, p4, p5, 1.0f);
         }
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
@@ -276,7 +275,7 @@ void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
         state->mode = DIMLOGFIRE_MODE_LIT;
         state->dousedLatch = 1;
     }
-    ((GameObject*)obj)->objectFlags |= DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED;
+    ((GameObject*)obj)->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     state->flickerTimerA = 10.0f;
     state->flickerTimerB = 1.0f;
     if (state->light == NULL)

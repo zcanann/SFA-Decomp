@@ -4,7 +4,6 @@
  * is clear, allocates a rolling-snowball object (kind 36, id 406) seeded
  * from the placement params and resets the spawn countdown.
  */
-#include "main/dll/dimicewallstate_struct.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
@@ -14,9 +13,6 @@
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
-#define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DIMSNOWBALL1C2_OBJFLAG_HIDDEN 0x4000
-
 /* child object id periodically spawned in dimsnowball1c2_update (role un-pinnable per gate) */
 #define DIMSNOWBALL1C2_CHILD_OBJ 406
 
@@ -24,22 +20,18 @@ typedef struct Dimsnowball1c2State
 {
     s16 countdown;
     s16 spawnPeriod;
-    u8 pad4[0x8 - 0x4];
 } Dimsnowball1c2State;
 
 typedef struct Dimsnowball1c2Placement
 {
-    u8 pad0[0x4 - 0x0];
-    u8 colorR; /* 0x4 -> spawn setup head.unk04[0] */
-    u8 colorG; /* 0x5 -> spawn setup head.unk04[1] */
-    u8 colorB; /* 0x6 -> spawn setup head.unk04[2] */
-    u8 colorA; /* 0x7 -> spawn setup head.unk04[3] */
-    u8 pad8[0x14 - 0x8];
-    s32 mapId;
+    ObjPlacement head;
     s16 initialCountdown; /* init: copied to extra (spawnPeriod + countdown) */
     u8 childRot; /* copied to spawned child placement 0x1A (rotation) */
     u8 childZOffset; /* base for spawned child placement 0x1C (+random) */
-    s8 rotByte; /* 0x1C rotation byte; also -> child placement 0x18 */
+    union {
+        s8 rotX; /* copied to child placement 0x18 */
+        u8 rotXUnsigned; /* shifted into the parent's anim.rotX */
+    };
     u8 pad1D[0x1E - 0x1D];
     s16 unk1E;
 } Dimsnowball1c2Placement;
@@ -50,16 +42,26 @@ typedef struct Dimsnowball1c2Placement
 typedef struct Dimsnowball1c2Setup
 {
     ObjPlacement head; /* 0x00 */
-    s8 rotByte;        /* 0x18 <- def->rotByte */
+    s8 rotX;           /* 0x18 <- placement->rotX */
     u8 pad19[0x1A - 0x19];
     s16 childRot;      /* 0x1A <- def->childRot */
     s16 childZOffset;  /* 0x1C <- def->childZOffset + random */
 } Dimsnowball1c2Setup;
 
+STATIC_ASSERT(sizeof(Dimsnowball1c2State) == 0x4);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Placement, initialCountdown) == 0x18);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Placement, childRot) == 0x1A);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Placement, childZOffset) == 0x1B);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Placement, rotX) == 0x1C);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Placement, unk1E) == 0x1E);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Setup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Setup, childRot) == 0x1A);
+STATIC_ASSERT(offsetof(Dimsnowball1c2Setup, childZOffset) == 0x1C);
+
 
 int dimsnowball1c2_getExtraSize(void)
 {
-    return 4;
+    return sizeof(Dimsnowball1c2State);
 }
 
 int dimsnowball1c2_getObjectTypeId(void) { return 0x0; }
@@ -82,47 +84,46 @@ void dimsnowball1c2_update(GameObject* obj)
 {
     if (Obj_IsLoadingLocked())
     {
-        Dimsnowball1c2State* extra = obj->extra;
-        if ((extra->countdown -= framesThisStep) <= 0)
+        Dimsnowball1c2State* state = obj->extra;
+        if ((state->countdown -= framesThisStep) <= 0)
         {
-    if (playerGetFocusObject(Obj_GetPlayerObject()) == NULL)
+            if (playerGetFocusObject(Obj_GetPlayerObject()) == NULL)
             {
-                ObjPlacement* np;
-                Dimsnowball1c2Placement* def;
-                def = *(Dimsnowball1c2Placement**)&obj->anim.placementData;
-                np = (ObjPlacement*)Obj_AllocObjectSetup(36, DIMSNOWBALL1C2_CHILD_OBJ);
-                np->color[0] = def->colorR;
-                np->color[2] = def->colorB;
-                np->color[1] = def->colorG;
-                np->color[3] = def->colorA;
-                np->posX = obj->anim.localPosX;
-                np->posY = obj->anim.localPosY;
-                np->posZ = obj->anim.localPosZ;
-                np->mapId = def->mapId;
+                Dimsnowball1c2Setup* setup;
+                Dimsnowball1c2Placement* placement;
+                placement = (Dimsnowball1c2Placement*)obj->anim.placementData;
+                setup = (Dimsnowball1c2Setup*)Obj_AllocObjectSetup(36, DIMSNOWBALL1C2_CHILD_OBJ);
+                setup->head.color[0] = placement->head.color[0];
+                setup->head.color[2] = placement->head.color[2];
+                setup->head.color[1] = placement->head.color[1];
+                setup->head.color[3] = placement->head.color[3];
+                setup->head.posX = obj->anim.localPosX;
+                setup->head.posY = obj->anim.localPosY;
+                setup->head.posZ = obj->anim.localPosZ;
+                setup->head.mapId = placement->head.mapId;
                 {
-                    int t1c = def->rotByte;
-                    ((Dimsnowball1c2Setup*)np)->rotByte = t1c;
+                    int rotX = placement->rotX;
+                    setup->rotX = rotX;
                 }
-                ((Dimsnowball1c2Setup*)np)->childRot = def->childRot;
-                ((Dimsnowball1c2Setup*)np)->childZOffset =
-                    (f32)(u32)def->childZOffset +
+                setup->childRot = placement->childRot;
+                setup->childZOffset =
+                    (f32)(u32)placement->childZOffset +
                     (f32)(int)randomGetRange(0, 100) / 100.0f;
-                Obj_SetupObject(np, 5, obj->anim.mapEventSlot, -1, 0);
-                extra->countdown = extra->spawnPeriod;
+                Obj_SetupObject(&setup->head, 5, obj->anim.mapEventSlot, -1, 0);
+                state->countdown = state->spawnPeriod;
             }
         }
     }
 }
 
-void dimsnowball1c2_init(GameObject *obj, u8* p)
+void dimsnowball1c2_init(GameObject* obj, Dimsnowball1c2Placement* placement)
 {
-    Dimsnowball1c2Placement* def = (Dimsnowball1c2Placement*)p;
-    Dimsnowball1c2State* inner;
-    (obj)->anim.rotX = (s16)((u32)p[0x1c] << 8);
-    inner = (obj)->extra;
-    inner->spawnPeriod = def->initialCountdown;
-    inner->countdown = def->initialCountdown;
-    (obj)->objectFlags |= (DIMSNOWBALL1C2_OBJFLAG_HIDDEN | DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED);
+    Dimsnowball1c2State* state;
+    obj->anim.rotX = (s16)((u32)placement->rotXUnsigned << 8);
+    state = obj->extra;
+    state->spawnPeriod = placement->initialCountdown;
+    state->countdown = placement->initialCountdown;
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void dimsnowball1c2_release(void)

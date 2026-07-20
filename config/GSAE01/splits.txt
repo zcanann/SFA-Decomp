@@ -1029,6 +1029,7 @@ main/dll/cutcam.c:
 
 main/dll/dll_0042_unk.c:
 	.text       start:0x801046F4 end:0x80106654
+	.sdata2     start:0x803E16D0 end:0x803E16D8
 
 main/dll/pathcamgroup.c:
 	.text       start:0x80106654 end:0x80107AEC

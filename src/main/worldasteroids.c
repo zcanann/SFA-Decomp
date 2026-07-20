@@ -5,12 +5,12 @@
 #include "main/object_api.h"
 #include "main/vecmath.h"
 
-extern f32 lbl_803E65D0;
-extern f32 lbl_803E65E0;
+extern f32 gWorldAsteroidsRenderScale;
+extern f32 gWorldAsteroidsZero;
 extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;
-extern f32 lbl_803E65EC;
-extern f32 lbl_803E65F0;
+extern f32 gWorldAsteroidsOrbitRadiusVariation;
+extern f32 gWorldAsteroidsOrbitRadiusBase;
 
 typedef f32 (*WorldAsteroidsTrigFn)(u16 angle);
 
@@ -39,7 +39,7 @@ void worldasteroids_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 v
     s32 v = visible;
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E65D0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gWorldAsteroidsRenderScale);
     }
 }
 
@@ -48,9 +48,9 @@ void worldasteroids_hitDetect(void)
     return;
 }
 
-void worldasteroids_update(WorldAsteroidsObject* obj)
+void worldasteroids_update(GameObject* obj)
 {
-    WorldAsteroidsObject* anchor;
+    GameObject* anchor;
     WorldAsteroidsState* state;
     f32 orbitScale;
     f32 orbitSin;
@@ -58,8 +58,8 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
     f32 radius;
     f32 orbitProduct;
 
-    state = obj->state;
-    anchor = (WorldAsteroidsObject*)ObjList_FindObjectById(WORLD_ASTEROIDS_CENTER_OBJECT_ID);
+    state = (WorldAsteroidsState*)obj->extra;
+    anchor = ObjList_FindObjectById(WORLD_ASTEROIDS_CENTER_OBJECT_ID);
     obj->anim.rotX += state->rotStepX;
     obj->anim.rotY += state->rotStepY;
     obj->anim.rotZ += state->rotStepZ;
@@ -81,7 +81,7 @@ void worldasteroids_update(WorldAsteroidsObject* obj)
     return;
 }
 
-void worldasteroids_init(WorldAsteroidsObject* obj)
+void worldasteroids_init(GameObject* obj)
 {
     int baseAngle;
     s16 randomValue;
@@ -89,10 +89,10 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
     WorldAsteroidsState* state;
     f32 orbitShape;
 
-    state = obj->state;
+    state = (WorldAsteroidsState*)obj->extra;
     baseAngle = randomGetRange(-0x7fff, 0x7fff);
     orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
-    if (orbitShape < lbl_803E65E0)
+    if (orbitShape < gWorldAsteroidsZero)
     {
         orbitShape = -((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
@@ -102,7 +102,7 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
     }
     randomGetRange(0, (int)(lbl_803E65E8 * orbitShape + lbl_803E65E4));
     orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
-    if (orbitShape < lbl_803E65E0)
+    if (orbitShape < gWorldAsteroidsZero)
     {
         orbitShape = -((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
@@ -110,7 +110,7 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
     {
         orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
     }
-    radiusSeed = (int)(lbl_803E65EC * orbitShape);
+    radiusSeed = (int)(gWorldAsteroidsOrbitRadiusVariation * orbitShape);
     randomValue = randomGetRange(WORLD_ASTEROIDS_ROTATION_SPEED_MIN, WORLD_ASTEROIDS_ROTATION_SPEED_MAX);
     state->rotStepZ = randomValue;
     randomValue = randomGetRange(WORLD_ASTEROIDS_ROTATION_SPEED_MIN, WORLD_ASTEROIDS_ROTATION_SPEED_MAX);
@@ -119,8 +119,11 @@ void worldasteroids_init(WorldAsteroidsObject* obj)
     state->rotStepX = randomValue;
     randomValue = randomGetRange(-0x7fff, 0x7fff);
     state->orbitAngle = randomValue;
-    state->orbitRadius = worldasteroids_s32AsFloat(radiusSeed) * ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle) + lbl_803E65F0;
-    state->heightOffset = worldasteroids_s32AsFloat(radiusSeed) * ((WorldAsteroidsTrigFn)fcos16Approx)(baseAngle);
+    state->orbitRadius =
+        worldasteroids_s32AsFloat(radiusSeed) * ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle) +
+        gWorldAsteroidsOrbitRadiusBase;
+    state->heightOffset =
+        worldasteroids_s32AsFloat(radiusSeed) * ((WorldAsteroidsTrigFn)fcos16Approx)(baseAngle);
     return;
 }
 

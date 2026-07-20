@@ -41,4 +41,15 @@ typedef struct DfpTorchState
     u8 unk0E[2];
 } DfpTorchState;
 
+STATIC_ASSERT(offsetof(DfpTorchState, gameBit) == 0x00);
+STATIC_ASSERT(offsetof(DfpTorchState, flickerTimer) == 0x04);
+STATIC_ASSERT(offsetof(DfpTorchState, litTimer) == 0x06);
+STATIC_ASSERT(offsetof(DfpTorchState, visibleLatch) == 0x08);
+STATIC_ASSERT(offsetof(DfpTorchState, mode) == 0x09);
+STATIC_ASSERT(offsetof(DfpTorchState, lit) == 0x0A);
+STATIC_ASSERT(offsetof(DfpTorchState, sfxPending) == 0x0B);
+STATIC_ASSERT(offsetof(DfpTorchState, prevLit) == 0x0C);
+STATIC_ASSERT(offsetof(DfpTorchState, colorIdx) == 0x0D);
+STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
+
 #endif
