@@ -206,7 +206,7 @@ void worldobj_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
 
     if (modelId == WORLDOBJ_SKYSCAPE_OBJ)
     {
-        ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E6678);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6678);
         return;
     }
     if (visible == 0)
@@ -220,7 +220,7 @@ void worldobj_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
     case WORLDOBJ_ARWING_OBJ:
         if (state->effectState == 0)
         {
-            ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E6678);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6678);
         }
         break;
     case WORLDOBJ_PEPPER_OBJ:
