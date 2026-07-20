@@ -27,6 +27,7 @@
 #include "main/gametext_show_str_api.h"
 #include "main/gameloop_api.h"
 #include "main/frame_timing.h"
+#include "main/trig.h"
 #include "main/camera.h"
 #include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
@@ -6221,7 +6222,7 @@ void showMemCardError(u8 err)
             }
             if (i == sel)
             {
-                v = (int)(lbl_803DEF94 * fn_80293AC4(timer) + lbl_803DEF90);
+                v = (int)(lbl_803DEF94 * fcos16HighPrecision(timer) + lbl_803DEF90);
                 gameTextSetColor(v, v, v, 0xff);
             }
             else

@@ -35,58 +35,18 @@
 #define MAGICCAVETOP_SUBSTATE_WARPING 2  /* running warp sequence: set dest, lock levels, warpToMap */
 #define MAGICCAVETOP_SUBSTATE_WARP_DONE 3 /* warp handoff complete; wait for player to leave */
 
-typedef struct MagiccavetopPlacement
+#define MAGICCAVETOP_FLAG_RUMBLE_ACTIVE   0x1
+#define MAGICCAVETOP_FLAG_RUMBLE_COMPLETE 0x2
+#define MAGICCAVETOP_FLAG_RUMBLE_DISABLED 0x4
+#define MAGICCAVETOP_FLAG_ALT_EFFECT      0x8
+
+int MagicCaveTop_getExtraSize(void) { return sizeof(MagicCaveTopState); }
+
+
+void MagicCaveTop_free(GameObject* obj)
 {
-    ObjPlacement head; /* 0x00 */
-    u8 rangeOuter;
-    u8 rangeInner;
-    u8 objGroup;
-    u8 mapAct;
-    s16 visibleGameBit;
-    u8 lockDirId;
-    u8 mapId;
-    s8 warpMapId;
-    s8 gameBitValue; /* value written to game bit 0x1B8 on warp transition */
-    u8 noLoad;
-    u8 rotByte;
-    u8 pad24[0x28 - 0x24];
-} MagiccavetopPlacement;
-
-typedef struct MagiccavetopObjectDef
-{
-    ObjPlacement head; /* 0x00 */
-    u8 pad18[0x1C - 0x18];
-    s16 visibleGameBit;
-    u8 pad1E[0x23 - 0x1E];
-    u8 rotByte;
-    s16 swapGameBit;
-    u8 pad26[0x28 - 0x26];
-} MagiccavetopObjectDef;
-
-typedef struct MagiccavetopState
-{
-    u8 subState;
-    u8 flags;
-    u8 rumbleState;
-    u8 pad3[0x4 - 0x3];
-    f32 fadeTimer;
-    f32 timer;
-} MagiccavetopState;
-
-
-
-
-
-
-
-
-int MagicCaveTop_getExtraSize(void) { return 0xc; }
-
-
-void MagicCaveTop_free(int* obj)
-{
-    MagiccavetopState* state = ((GameObject*)obj)->extra;
-    MagiccavetopPlacement* def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
+    MagicCaveTopState* state = obj->extra;
+    MagicCaveTopSetup* setup = (MagicCaveTopSetup*)obj->anim.placementData;
     GameObject* player;
     GameObject* staff;
     stopRumble2();
@@ -99,11 +59,11 @@ void MagicCaveTop_free(int* obj)
             staffSetGlow(staff, 5, 0);
         }
     }
-    if (state->subState == MAGICCAVETOP_SUBSTATE_LOADED)
+    if (state->phase == MAGICCAVETOP_SUBSTATE_LOADED)
     {
-        if (def->noLoad == 0)
+        if (setup->skipMapLoad == 0)
         {
-            mapUnload(mapGetDirIdx(def->mapId), 0x20000000);
+            mapUnload(mapGetDirIdx(setup->mapId), 0x20000000);
         }
     }
 }
@@ -116,13 +76,13 @@ typedef struct MagicCaveTopFxArgs
     f32 z;
 } MagicCaveTopFxArgs;
 
-void MagicCaveTop_update(int* obj)
+void MagicCaveTop_update(GameObject* obj)
 {
 
     MagicCaveTopFxArgs fx;
     GameObject* player;
-    MagiccavetopState* sub;
-    MagiccavetopPlacement* def;
+    MagicCaveTopState* state;
+    MagicCaveTopSetup* setup;
     int gb;
     u8 dirIdx;
     int range;
@@ -131,92 +91,92 @@ void MagicCaveTop_update(int* obj)
     f32 originXZ;
 
     player = Obj_GetPlayerObject();
-    sub = ((GameObject*)obj)->extra;
-    def = *(MagiccavetopPlacement**)&((GameObject*)obj)->anim.placementData;
+    state = obj->extra;
+    setup = (MagicCaveTopSetup*)obj->anim.placementData;
     gb = 0;
     if (player != NULL)
     {
         if (mainGetBit(MAGICCAVE_GAMEBIT_WARP_READY) != 0)
         {
             mainSetBits(MAGICCAVE_GAMEBIT_WARP_READY, 0);
-            (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 0);
+            (*gMapEventInterface)->setObjGroupStatus(setup->mapId, setup->objectGroup, 0);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             unlockLevel(0, 0, 1);
-            sub->subState = MAGICCAVETOP_SUBSTATE_WARP_DONE;
+            state->phase = MAGICCAVETOP_SUBSTATE_WARP_DONE;
             return;
         }
-        dirIdx = mapGetDirIdx(def->mapId);
-        dist = vec3f_distanceSquared(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
-        gb = mainGetBit(def->visibleGameBit);
-        switch (sub->subState)
+        dirIdx = mapGetDirIdx(setup->mapId);
+        dist = vec3f_distanceSquared(&player->anim.worldPosX, &obj->anim.worldPosX);
+        gb = mainGetBit(setup->visibleGameBit);
+        switch (state->phase)
         {
         case MAGICCAVETOP_SUBSTATE_IDLE:
-            range = def->rangeInner * 2;
+            range = setup->innerRange * 2;
             if (dist < (f32)(range * range))
             {
-                if (def->noLoad == 0)
+                if (setup->skipMapLoad == 0)
                 {
-                    loadMapAndParent(def->mapId);
+                    loadMapAndParent(setup->mapId);
                 }
-                sub->subState = MAGICCAVETOP_SUBSTATE_LOADED;
+                state->phase = MAGICCAVETOP_SUBSTATE_LOADED;
             }
             break;
         case MAGICCAVETOP_SUBSTATE_LOADED:
-            range = def->rangeOuter * 2;
+            range = setup->outerRange * 2;
             if (dist > (f32)(range * range))
             {
-                if (def->noLoad == 0)
+                if (setup->skipMapLoad == 0)
                 {
                     mapUnload(dirIdx, 0x20000000);
                 }
-                sub->subState = MAGICCAVETOP_SUBSTATE_IDLE;
+                state->phase = MAGICCAVETOP_SUBSTATE_IDLE;
             }
             else if (dist < 225.0f && gb != 0)
             {
-                sub->subState = MAGICCAVETOP_SUBSTATE_WARPING;
-                (*gMapEventInterface)->setObjGroupStatus(def->mapId, def->objGroup, 1);
-                (*gMapEventInterface)->setMapAct(def->mapId, def->mapAct);
+                state->phase = MAGICCAVETOP_SUBSTATE_WARPING;
+                (*gMapEventInterface)->setObjGroupStatus(setup->mapId, setup->objectGroup, 1);
+                (*gMapEventInterface)->setMapAct(setup->mapId, setup->mapAct);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 (*gCameraInterface)->setMode(MAGICCAVETOP_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
             }
             break;
         case MAGICCAVETOP_SUBSTATE_WARPING:
-            mainSetBits(MAGICCAVE_GAMEBIT_WARP_DEST, def->gameBitValue);
-            if (def->noLoad != 0)
+            mainSetBits(MAGICCAVE_GAMEBIT_WARP_DEST, setup->warpGameBitValue);
+            if (setup->skipMapLoad != 0)
             {
                 unlockLevel(0, 0, 1);
-                lockLevel(def->lockDirId, 0);
-                lockLevel(def->lockDirId, 1);
+                lockLevel(setup->lockDirId, 0);
+                lockLevel(setup->lockDirId, 1);
             }
             else
             {
                 unlockLevel(0, 0, 1);
-                lockLevel(mapGetDirIdx(((GameObject*)obj)->anim.mapEventSlot), 0);
+                lockLevel(mapGetDirIdx(obj->anim.mapEventSlot), 0);
                 lockLevel(dirIdx, 1);
             }
-            if (((GameObject*)obj)->anim.mapEventSlot == 0xd)
+            if (obj->anim.mapEventSlot == 0xd)
             {
                 mainSetBits(MAGICCAVETOP_GAMEBIT_SLOT_D_CLEAR, 0);
             }
-            warpToMap(def->warpMapId, 0);
+            warpToMap(setup->warpMapId, 0);
             break;
         case MAGICCAVETOP_SUBSTATE_WARP_DONE:
             if (dist > 225.0f)
             {
-                sub->subState = MAGICCAVETOP_SUBSTATE_LOADED;
+                state->phase = MAGICCAVETOP_SUBSTATE_LOADED;
             }
             break;
         }
-        if ((sub->flags & 4) == 0)
+        if ((state->flags & MAGICCAVETOP_FLAG_RUMBLE_DISABLED) == 0)
         {
             if (dist >= 14400.0f)
             {
-                sub->timer = 0.0f;
-                sub->flags &= ~2;
+                state->rumbleTimer = 0.0f;
+                state->flags &= ~MAGICCAVETOP_FLAG_RUMBLE_COMPLETE;
             }
-            else if ((sub->flags & 2) == 0)
+            else if ((state->flags & MAGICCAVETOP_FLAG_RUMBLE_COMPLETE) == 0)
             {
-                if ((sub->flags & 1) != 0)
+                if ((state->flags & MAGICCAVETOP_FLAG_RUMBLE_ACTIVE) != 0)
                 {
                     if (dist < 3600.0f)
                     {
@@ -229,11 +189,11 @@ void MagicCaveTop_update(int* obj)
                                 staffSetGlow(staff, 5, 0);
                             }
                         }
-                        sub->rumbleState = 0;
+                        state->rumbleState = 0;
                     }
                     else if (dist < 8100.0f)
                     {
-                        if (sub->rumbleState == 1)
+                        if (state->rumbleState == 1)
                         {
                             stopRumble();
                             if (player != NULL)
@@ -244,7 +204,7 @@ void MagicCaveTop_update(int* obj)
                                     staffSetGlow(staff, 5, 0);
                                 }
                             }
-                            sub->rumbleState = 0;
+                            state->rumbleState = 0;
                         }
                         else
                         {
@@ -257,7 +217,7 @@ void MagicCaveTop_update(int* obj)
                                     staffSetGlow(staff, 5, 0);
                                 }
                             }
-                            sub->rumbleState = 1;
+                            state->rumbleState = 1;
                         }
                     }
                     else
@@ -271,10 +231,10 @@ void MagicCaveTop_update(int* obj)
                                 staffSetGlow(staff, 5, 0);
                             }
                         }
-                        sub->rumbleState = 1;
+                        state->rumbleState = 1;
                     }
-                    sub->flags &= ~1;
-                    sub->timer += timeDelta;
+                    state->flags &= ~MAGICCAVETOP_FLAG_RUMBLE_ACTIVE;
+                    state->rumbleTimer += timeDelta;
                 }
                 else if (dist < 14400.0f)
                 {
@@ -287,45 +247,44 @@ void MagicCaveTop_update(int* obj)
                             staffSetGlow(staff, 5, 2);
                         }
                     }
-                    sub->flags |= 1;
-                    sub->timer += timeDelta;
+                    state->flags |= MAGICCAVETOP_FLAG_RUMBLE_ACTIVE;
+                    state->rumbleTimer += timeDelta;
                 }
-                if (sub->timer > 300.0f)
+                if (state->rumbleTimer > 300.0f)
                 {
-                    sub->flags |= 2;
+                    state->flags |= MAGICCAVETOP_FLAG_RUMBLE_COMPLETE;
                 }
             }
         }
     }
     if (gb != 0)
     {
-        if (0.0f == sub->fadeTimer)
+        if (0.0f == state->fadeTimer)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_door_creak);
         }
-        sub->fadeTimer += timeDelta;
-        if (sub->fadeTimer > 100.0f)
+        state->fadeTimer += timeDelta;
+        if (state->fadeTimer > 100.0f)
         {
-            sub->fadeTimer = 100.0f;
-            ((GameObject*)obj)->anim.alpha = 0xff;
+            state->fadeTimer = 100.0f;
+            obj->anim.alpha = 0xff;
         }
         else
         {
-            ((GameObject*)obj)->anim.alpha =
-                (u8)(int)(255.0f * (sub->fadeTimer / 100.0f));
+            obj->anim.alpha = (u8)(int)(255.0f * (state->fadeTimer / 100.0f));
         }
     }
     else
     {
-        ((GameObject*)obj)->anim.alpha = 0;
+        obj->anim.alpha = 0;
     }
-    if (((GameObject*)obj)->anim.alpha != 0)
+    if (obj->anim.alpha != 0)
     {
         originXZ = 0.0f;
         fx.x = originXZ;
         fx.y = 40.0f;
         fx.z = originXZ;
-        if ((sub->flags & 8) != 0)
+        if ((state->flags & MAGICCAVETOP_FLAG_ALT_EFFECT) != 0)
         {
             objfx_spawnArcedBurst(obj, 1, 0.5f, 5, 2, 0x32, 18.0f, 8.0f, 80.0f, fx.pad, 0);
             fx.y = 5.0f;
@@ -340,27 +299,28 @@ void MagicCaveTop_update(int* obj)
     }
 }
 
-void MagicCaveTop_init(int* obj, s8* def)
+void MagicCaveTop_init(GameObject* obj, MagicCaveTopSetup* setup)
 {
-    MagiccavetopState* state = ((GameObject*)obj)->extra;
+    MagicCaveTopState* state = obj->extra;
     ModelRenderOpTextureRefs* refs;
-    ((GameObject*)obj)->objectFlags = (u16)((u32)((GameObject*)obj)->objectFlags | (MAGICCAVETOP_OBJFLAG_HIDDEN | MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED));
-    if (mainGetBit(((MagiccavetopObjectDef*)def)->visibleGameBit) != 0)
+    obj->objectFlags = (u16)((u32)obj->objectFlags | (MAGICCAVETOP_OBJFLAG_HIDDEN | MAGICCAVETOP_OBJFLAG_HITDETECT_DISABLED));
+    if (mainGetBit(setup->visibleGameBit) != 0)
     {
         state->fadeTimer = 100.0f;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)(u8)((MagiccavetopObjectDef*)def)->rotByte << 8);
-    refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel((GameObject*)obj), 0);
-    if (((MagiccavetopObjectDef*)def)->swapGameBit > 0)
+    obj->anim.rotX = (s16)((s32)(u8)setup->rotation << 8);
+    refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
+    if (setup->textureSwapGameBit > 0)
     {
-        if (mainGetBit(((MagiccavetopObjectDef*)def)->swapGameBit) != 0)
+        if (mainGetBit(setup->textureSwapGameBit) != 0)
         {
-            state->flags = (u8)(state->flags | 0x0c);
+            state->flags =
+                (u8)(state->flags | (MAGICCAVETOP_FLAG_RUMBLE_DISABLED | MAGICCAVETOP_FLAG_ALT_EFFECT));
             refs->unk08 = 23;
         }
         else
         {
-            *(u8*)((char*)refs + 8) = 22;
+            refs->unk08 = 22;
         }
     }
 }

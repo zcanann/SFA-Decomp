@@ -109,7 +109,7 @@ float fsin16Precise(int angle) {
     }
 }
 
-float fn_80293D0C(int angle) {
+float fsin16HighPrecision(int angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float reducedFloat = fastCastS16ToFloat(&reduced);
     double reducedAngle = lbl_803E7CD0 * reducedFloat;
@@ -215,7 +215,7 @@ float fcos16Precise(int angle) {
     }
 }
 
-float fn_80293AC4(int angle) {
+float fcos16HighPrecision(int angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
     float reducedFloat = fastCastS16ToFloat(&reduced);
     double reducedAngle = lbl_803E7CD0 * reducedFloat;

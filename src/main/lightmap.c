@@ -206,8 +206,8 @@ void updateVisibleGeometry(void)
     i = 0;
     pw[i * 5] = dd;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
-    tt = fn_80293AC4(fov);
-    ratio = fn_80293D0C(fov) / tt;
+    tt = fcos16HighPrecision(fov);
+    ratio = fsin16HighPrecision(fov) / tt;
     ratio2 = ratio * ratio;
     ff = lbl_803DEC08.lo;
     tt = ff * ratio2;
