@@ -33,13 +33,13 @@ extern u16 dspSRCCycles[4][3];
 int salSynthSendMessage(int synth, int msg);
 
 
-static void sal_setup_dspvol(u16* dsp_delta, u16* last_vol, u16 vol)
+static inline void sal_setup_dspvol(u16* dsp_delta, u16* last_vol, u16 vol)
 {
     *dsp_delta = ((s16)vol - (s16)*last_vol) / 160;
     *last_vol += (s16)*dsp_delta * 160;
 }
 
-static void sal_update_hostplayinfo(DSPvoice* dsp_vptr)
+static inline void sal_update_hostplayinfo(DSPvoice* dsp_vptr)
 {
     u32 old_lo;
     u32 pitch;
@@ -68,13 +68,13 @@ static void sal_update_hostplayinfo(DSPvoice* dsp_vptr)
     }
 }
 
-static void AddDpop(s32* sum, s16 delta)
+static inline void AddDpop(s32* sum, s16 delta)
 {
     *sum += delta;
     *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
 }
 
-static void DoDepopFade(s32* dspStart, s16* dspDelta, s32* hostSum)
+static inline void DoDepopFade(s32* dspStart, s16* dspDelta, s32* hostSum)
 {
     if (*hostSum <= -160)
     {
