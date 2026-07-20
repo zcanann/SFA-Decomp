@@ -191,7 +191,7 @@ int TrickyCurve_getObjectTypeId(void)
     return 0x0;
 }
 
-void TrickyCurve_free(int obj)
+void TrickyCurve_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -204,13 +204,13 @@ void TrickyCurve_hitDetect(void)
 {
 }
 
-void TrickyCurve_update(int* obj)
+void TrickyCurve_update(GameObject* obj)
 {
-    u8* inner = ((GameObject*)obj)->extra;
+    u8* inner = obj->extra;
     u32 state = inner[0xe];
     if (state == 0)
     {
-        TrickyCurve_updateBurstTrigger((GameObject*)obj);
+        TrickyCurve_updateBurstTrigger(obj);
     }
     else if (state == 1)
     {
@@ -226,9 +226,9 @@ void TrickyCurve_update(int* obj)
     }
 }
 
-void TrickyCurve_init(int* obj, u8* def)
+void TrickyCurve_init(GameObject* obj, u8* def)
 {
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     state[0xc] = def[0x19];
     ((TrickyCurveObjState*)state)->rangeY = (s16)((s32)((TrickyCurveObjectDef*)def)->rangeYRaw << 2);
     *(s16*)state = ((TrickyCurveObjectDef*)def)->rangeX;
@@ -240,7 +240,7 @@ void TrickyCurve_init(int* obj, u8* def)
     ((TrickyCurveObjState*)state)->gateGameBit = ((TrickyCurveObjectDef*)def)->gateGameBit;
     ((TrickyCurveObjState*)state)->triggerGameBit = ((TrickyCurveObjectDef*)def)->triggerGameBit;
     ((TrickyCurveObjState*)state)->cooldown = 0;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = (u16)(obj->objectFlags | DFPFORCEAW_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void TrickyCurve_release(void)

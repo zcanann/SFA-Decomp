@@ -48,11 +48,11 @@ void wcfloortile_free(void)
 {
 }
 
-void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wcfloortile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

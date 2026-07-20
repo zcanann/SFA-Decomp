@@ -35,13 +35,13 @@ void ccgasvent_render(void)
 {
 }
 
-void ccgasvent_update(int* obj)
+void ccgasvent_update(GameObject* obj)
 {
     f32 dist = 3.4028235e38f;
-    u8* state = ((GameObject*)obj)->extra;
+    u8* state = obj->extra;
     if (mainGetBit(CCGASVENT_GAS_GAMEBIT) != 0)
     {
-        ObjGroup_FindNearestObject(CCGASVENT_TARGET_OBJGROUP, (GameObject*)obj, &dist);
+        ObjGroup_FindNearestObject(CCGASVENT_TARGET_OBJGROUP, obj, &dist);
         switch (state[0])
         {
         case CCGASVENT_STATE_IDLE:

@@ -5,7 +5,7 @@
 #include "main/game_object.h"
 
 void DFSH_ObjCreator_update(GameObject* obj);
-void DFSH_LaserBeam_free(int* obj);
+void DFSH_LaserBeam_free(GameObject* obj);
 void FUN_801c40c0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9);
 void DFSH_ObjCreator_release(void);

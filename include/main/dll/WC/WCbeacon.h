@@ -43,7 +43,7 @@ extern f32 lbl_803E6DE8;
 int wcbeacon_aButtonCallback(GameObject* obj);
 int wcbeacon_getExtraSize(void);
 int wcbeacon_getObjectTypeId(GameObject* obj);
-void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void wcbeacon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcbeacon_init(GameObject* obj, WCBeaconSetup* setup);
 void wcbeacon_update(GameObject* obj);
 

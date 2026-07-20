@@ -229,18 +229,18 @@ void DFP_seqpoint_update(GameObject* obj)
     }
 }
 
-void DFP_seqpoint_init(int* obj, u8* init)
+void DFP_seqpoint_init(GameObject* obj, u8* init)
 {
     DfpSeqPointState* sub;
-    sub = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = DFP_seqpoint_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)init[0x18] << 8);
+    sub = obj->extra;
+    obj->animEventCallback = DFP_seqpoint_SeqFn;
+    obj->anim.rotX = (s16)((s8)init[0x18] << 8);
     sub->triggerRadius = (f32)(s32) * (s16*)(init + 0x1a);
     sub->triggerId = *(s16*)(init + 0x1c);
     sub->triggerMode = init[0x19];
     sub->gameBitGate = *(s16*)(init + 0x1e);
     sub->gameBitDone = *(s16*)(init + 0x20);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = (u16)(obj->objectFlags | DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED);
     ((DfpFlags7*)&sub->flags0F)->b80 = 0;
 }
 

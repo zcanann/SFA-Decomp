@@ -30,7 +30,7 @@ int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState
 int wctrexstatu_getExtraSize(void);
 int wctrexstatu_getObjectTypeId(GameObject* obj);
 void wctrexstatu_free(void);
-void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void wctrexstatu_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wctrexstatu_hitDetect(GameObject* obj);
 void wctrexstatu_update(void);
 void wctrexstatu_init(GameObject* obj, WCTrexStatueSetup* setup, int fromLoad);

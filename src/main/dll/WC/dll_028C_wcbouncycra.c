@@ -29,11 +29,11 @@ void WCBouncyCra_free(void)
 {
 }
 
-void WCBouncyCra_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void WCBouncyCra_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E6D38);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D38);
     }
 }
 

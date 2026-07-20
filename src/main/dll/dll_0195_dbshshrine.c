@@ -226,8 +226,7 @@ void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visi
             modelLightStruct_setEnabled(runtime->light, 1, 1.0f);
         }
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
-        objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f,
-                               (ModelLightStruct*)runtime->light);
+        objParticleFn_80099d84(obj, 1.0f, 7, 1.0f, runtime->light);
     }
 }
 

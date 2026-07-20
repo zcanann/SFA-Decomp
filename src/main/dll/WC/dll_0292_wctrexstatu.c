@@ -76,11 +76,11 @@ void wctrexstatu_free(void)
 {
 }
 
-void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wctrexstatu_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E6E10);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E10);
     }
 }
 

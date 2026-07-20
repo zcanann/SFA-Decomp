@@ -35,18 +35,18 @@ typedef struct MagicLightPlacement
     s16 subtypeParam; /* 0x1a */
 } MagicLightPlacement;
 
-int MagicLight_SeqFn(int* obj)
+int MagicLight_SeqFn(GameObject* obj)
 {
     MagicLightState* state;
     int* player;
     f32 dist;
 
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
+    if (obj->anim.seqId == MAGICLIGHT_SEQ_GLOW)
         return 0;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     player = (int*)Obj_GetPlayerObject();
-    dist = Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
+    dist = Vec_distance(&((GameObject*)player)->anim.worldPosX, &obj->anim.worldPosX);
 
     if (dist < state->triggerRadius && state->inRange == 0)
     {
@@ -61,9 +61,9 @@ int MagicLight_SeqFn(int* obj)
     return 0;
 }
 
-int MagicLight_getExtraSize(int* obj)
+int MagicLight_getExtraSize(GameObject* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
+    if (obj->anim.seqId == MAGICLIGHT_SEQ_GLOW)
         return 0x0;
     return 0x14;
 }
@@ -110,22 +110,22 @@ void MagicLight_update(GameObject* obj)
     }
 }
 
-void MagicLight_init(int* obj, u8* params)
+void MagicLight_init(GameObject* obj, u8* params)
 {
     MagicLightState* state;
     MagicLightPlacement* p = (MagicLightPlacement*)params;
-    ((GameObject*)obj)->userData1 = 0;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)p->rotByte << 8);
-    ((GameObject*)obj)->animEventCallback = MagicLight_SeqFn;
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
+    obj->userData1 = 0;
+    obj->anim.rotX = (s16)((s8)p->rotByte << 8);
+    obj->animEventCallback = MagicLight_SeqFn;
+    if (obj->anim.seqId == MAGICLIGHT_SEQ_GLOW)
     {
         return;
     }
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     state->lifetime = randomGetRange(0xc8, 0x258);
     state->subtype = (s8)p->subtypeParam;
     state->inRange = 0;
-    if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_PROXIMITY)
+    if (obj->anim.seqId == MAGICLIGHT_SEQ_PROXIMITY)
     {
         switch (state->subtype)
         {

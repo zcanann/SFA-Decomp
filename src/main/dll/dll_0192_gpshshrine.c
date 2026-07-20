@@ -136,7 +136,7 @@ void gpsh_shrine_updateSpirit(s16* obj)
     }
 }
 
-int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int GPSH_Shrine_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GpshShrineState* sub;
     GameObject* player;
@@ -144,7 +144,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     u8 ev;
     ModelLightStruct* light;
 
-    sub = ((GameObject*)obj)->extra;
+    sub = obj->extra;
     player = Obj_GetPlayerObject();
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
@@ -159,13 +159,13 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 sub->activatedFlag = 1;
                 break;
             case 7:
-                objSetAnimStateFlags((GameObject*)player, 0x80, 1);
+                objSetAnimStateFlags(player, 0x80, 1);
                 mainSetBits(0x12b, 1);
                 mainSetBits(GAMEBIT_ITEM_Spirit5_Got, 1);
                 (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);
                 break;
             case 14:
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 light = sub->light;
                 if (light != NULL)
                 {
@@ -173,7 +173,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 15:
-                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 light = sub->light;
                 if (light != NULL)
                 {
@@ -191,9 +191,9 @@ int gpsh_shrine_getExtraSize(void) { return 0x18; }
 
 int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
-void gpsh_shrine_free(int* obj)
+void gpsh_shrine_free(GameObject* obj)
 {
-    void** state = ((GameObject*)obj)->extra;
+    void** state = obj->extra;
     void* light = state[0];
 
     if (light != NULL)
@@ -474,16 +474,16 @@ void gpsh_shrine_update(GameObject *obj)
     }
 }
 
-void gpsh_shrine_init(int* obj, int* def)
+void gpsh_shrine_init(GameObject* obj, int* def)
 {
     u8* state;
 
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = 0;
-    ((GameObject*)obj)->animEventCallback = GPSH_Shrine_SeqFn;
-    ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
+    state = obj->extra;
+    obj->anim.rotX = 0;
+    obj->animEventCallback = GPSH_Shrine_SeqFn;
+    obj->anim.worldPosX = obj->anim.localPosX;
+    obj->anim.worldPosY = obj->anim.localPosY;
+    obj->anim.worldPosZ = obj->anim.localPosZ;
     state[0x14] = 0;
     ((GpshShrineFlags*)(state + 0x15))->b80 = 0;
     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
@@ -494,7 +494,7 @@ void gpsh_shrine_init(int* obj, int* def)
     mainSetBits(0x14e, 0);
     mainSetBits(0x14a, 0);
     mainSetBits(0x14b, 0);
-    ((GameObject*)obj)->userData1 = 1;
+    obj->userData1 = 1;
     if (*(void**)state == NULL)
     {
         *(void**)state = objCreateLight(0, 1);

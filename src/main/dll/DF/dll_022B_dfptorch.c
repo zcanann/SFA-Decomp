@@ -49,7 +49,7 @@ int DFP_Torch_getObjectTypeId(void)
     return 0x1;
 }
 
-void DFP_Torch_free(int obj)
+void DFP_Torch_free(GameObject* obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -147,17 +147,17 @@ void DFP_Torch_hitDetect(void)
 {
 }
 
-void DFP_Torch_update(int obj)
+void DFP_Torch_update(GameObject* obj)
 {
-    DfpTorchState* state = ((GameObject*)obj)->extra;
+    DfpTorchState* state = obj->extra;
     Dll69Interface** res;
     int i;
     f32 buf[5];
     Dll69EffectParams prm;
 
     prm = gDfpTorchEffectParams;
-    Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
-    objUpdateOpacity((GameObject*)obj);
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_mushdizzylp12);
+    objUpdateOpacity(obj);
     switch (state->mode)
     {
     case DFPTORCH_MODE_ALWAYS_LIT:
@@ -165,7 +165,7 @@ void DFP_Torch_update(int obj)
     case DFPTORCH_MODE_LIGHTABLE:
         buf[4] = -2.0f;
         state->prevLit = state->lit;
-        if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0)
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
             state->lit = 1 - state->lit;
             if (state->lit != 0)
@@ -188,7 +188,7 @@ void DFP_Torch_update(int obj)
         if (state->lit != 0 && state->flickerTimer <= 0 && state->sfxPending != 0)
         {
             state->sfxPending = 0;
-            Sfx_PlayFromObject(obj, SFXTRIG_cvdrip1c);
+            Sfx_PlayFromObject((u32)obj, SFXTRIG_cvdrip1c);
         }
         if (state->lit != state->prevLit)
         {
@@ -197,7 +197,7 @@ void DFP_Torch_update(int obj)
                 res = Resource_Acquire(0x69, 1);
                 prm.param1 = state->colorIdx * 2 + 0x19d;
                 prm.param2 = state->colorIdx * 2 + 0x19e;
-                (*res)->spawn((GameObject*)obj, 1, buf, 0x10004, -1, &prm);
+                (*res)->spawn(obj, 1, buf, 0x10004, -1, &prm);
                 Resource_Release(res);
                 for (i = 0; i < 0x64; i++)
                 {
@@ -224,7 +224,7 @@ void DFP_Torch_update(int obj)
             }
             else
             {
-                Sfx_StopObjectChannel(obj, 0x40);
+                Sfx_StopObjectChannel((int)obj, 0x40);
                 (*gModgfxInterface)->detachSource((void*)obj);
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 if (state->gameBit != -1)
@@ -249,10 +249,10 @@ void DFP_Torch_update(int obj)
     }
 }
 
-void DFP_Torch_init(int obj, int def)
+void DFP_Torch_init(GameObject* obj, DfpTorchPlacement* def)
 {
-    DfpTorchState* state = ((GameObject*)obj)->extra;
-    DfpTorchPlacement* place = (DfpTorchPlacement*)def;
+    DfpTorchState* state = obj->extra;
+    DfpTorchPlacement* place = def;
     Dll69Interface** res;
     struct
     {
@@ -260,15 +260,15 @@ void DFP_Torch_init(int obj, int def)
         f32 val;
     } spawnArg;
     int motionRate;
-    ((GameObject*)obj)->anim.rotX = (s16)((place->rotPitch & 0x3f) << 10);
+    obj->anim.rotX = (s16)((place->rotPitch & 0x3f) << 10);
     motionRate = place->motionRate;
     if (motionRate > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = motionRate / 8192.0f;
+        obj->anim.rootMotionScale = motionRate / 8192.0f;
     }
     else
     {
-        ((GameObject*)obj)->anim.rootMotionScale = 0.1f;
+        obj->anim.rootMotionScale = 0.1f;
     }
     state->mode = place->mode;
     state->gameBit = place->gameBit;
@@ -280,12 +280,12 @@ void DFP_Torch_init(int obj, int def)
         res = Resource_Acquire(0x69, 1);
         if (place->colorIdx == 0)
         {
-            (*res)->spawn((GameObject*)obj, 0, &spawnArg, 0x10004, -1, NULL);
+            (*res)->spawn(obj, 0, &spawnArg, 0x10004, -1, NULL);
         }
         break;
     }
     state->colorIdx = (u8)place->colorIdx;
-    ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | DFPTORCH_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags = obj->objectFlags | DFPTORCH_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void DFP_Torch_release(void)
