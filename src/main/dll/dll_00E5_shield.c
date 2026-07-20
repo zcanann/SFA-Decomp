@@ -198,10 +198,10 @@ void staffFn_80170380(GameObject* obj, int cmd)
         }
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, 0.5f);
         }
         {
-            f32 fade = lbl_803E33AC;
+            f32 fade = 0.0f;
             ((ShieldState*)state)->fadeTarget = fade;
             ((ShieldState*)state)->fadeRate = fade;
             *(f32*)&((ShieldState*)state)->fadeMax = fade;
@@ -215,11 +215,11 @@ void staffFn_80170380(GameObject* obj, int cmd)
     case 0:
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, 0.5f);
         }
-        if (lbl_803E33AC != ((ShieldState*)state)->fadeTarget)
+        if (0.0f != ((ShieldState*)state)->fadeTarget)
         {
-            f32 fade = lbl_803E33B0;
+            f32 fade = 2.0f;
             *(f32*)&((ShieldState*)state)->fadeMax = fade;
             ((ShieldState*)state)->fadeValue = fade;
             if (glow != NULL)
@@ -227,13 +227,13 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 staffSetGlow(glow, 7, 0);
             }
         }
-        ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
-        ((ShieldState*)state)->fadeRate = lbl_803E33B4;
+        ((ShieldState*)state)->fadeTarget = 0.0f;
+        ((ShieldState*)state)->fadeRate = -1.0f;
         Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
         Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
         break;
     case 1:
-        if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
+        if (0.0f == ((ShieldState*)state)->fadeTarget)
         {
             if (glow != NULL)
             {
@@ -247,26 +247,26 @@ void staffFn_80170380(GameObject* obj, int cmd)
             {
                 modelLightStruct_setLightKind((ModelLightStruct*)*(int*)state, MODEL_LIGHT_KIND_POINT);
                 modelLightStruct_setPosition((ModelLightStruct*)*(int*)state, ((GameObject*)obj)->anim.localPosX,
-                                             ((GameObject*)obj)->anim.localPosY - lbl_803E33B8,
+                                             ((GameObject*)obj)->anim.localPosY - 15.0f,
                                              ((GameObject*)obj)->anim.localPosZ);
                 modelLightStruct_setDiffuseColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
                 modelLightStruct_setSpecularColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
-                modelLightStruct_setDistanceAttenuation((ModelLightStruct*)*(int*)state, lbl_803E33BC,
-                                                        lbl_803E33C0);
+                modelLightStruct_setDistanceAttenuation((ModelLightStruct*)*(int*)state, 40.0f,
+                                                        55.0f);
                 lightSetField4D((ModelLightStruct*)*(int*)state, 1);
-                modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 1, lbl_803E33AC);
+                modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 1, 0.0f);
                 modelLightStruct_startColorFade((ModelLightStruct*)*(int*)state, 0, 0);
                 modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)*(int*)state, 1);
             }
             {
-                f32 fade = lbl_803E33AC;
+                f32 fade = 0.0f;
                 if (fade == ((ShieldState*)state)->fadeTarget)
                 {
-                    *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33B0;
+                    *(f32*)&((ShieldState*)state)->fadeMax = 2.0f;
                     ((ShieldState*)state)->fadeValue = fade;
                 }
             }
-            ((ShieldState*)state)->fadeTarget = lbl_803E33B0;
+            ((ShieldState*)state)->fadeTarget = 2.0f;
             {
                 f32 amp;
                 f32 k;
@@ -274,13 +274,13 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 u8* w;
                 f32* t1;
                 int i;
-                amp = lbl_803E33C4;
+                amp = 1.0f;
                 ((ShieldState*)state)->fadeRate = amp;
                 i = 0;
                 hw = state;
                 w = state;
                 t1 = (f32*)((char*)tbl[0] + 0x10);
-                k = lbl_803E33A8;
+                k = 0.5f;
                 for (; i < 4; i++)
                 {
                     f32 wave;
@@ -291,7 +291,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
                     wave = sum * k;
                     *(f32*)(w + 0x24) = *tbl[0] * wave;
                     *(f32*)(w + 0x14) = *t1;
-                    *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
+                    *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + 136.0f;
                     hw += 2;
                     tbl[0] += 1;
                     w += 4;
@@ -307,15 +307,15 @@ void staffFn_80170380(GameObject* obj, int cmd)
         {
             staffSetGlow(glow, 7, 0);
         }
-        if (lbl_803E33AC != ((ShieldState*)state)->fadeTarget)
+        if (0.0f != ((ShieldState*)state)->fadeTarget)
         {
-            *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
+            *(f32*)&((ShieldState*)state)->fadeMax = 60.0f;
         }
-        ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
-        ((ShieldState*)state)->fadeRate = lbl_803E33B4;
+        ((ShieldState*)state)->fadeTarget = 0.0f;
+        ((ShieldState*)state)->fadeRate = -1.0f;
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, 0.5f);
         }
         Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
         Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
@@ -333,21 +333,21 @@ void staffFn_80170380(GameObject* obj, int cmd)
         {
             modelLightStruct_setLightKind((ModelLightStruct*)*(int*)state, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setPosition((ModelLightStruct*)*(int*)state, ((GameObject*)obj)->anim.localPosX,
-                                         ((GameObject*)obj)->anim.localPosY - lbl_803E33B8,
+                                         ((GameObject*)obj)->anim.localPosY - 15.0f,
                                          ((GameObject*)obj)->anim.localPosZ);
             modelLightStruct_setDiffuseColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
             modelLightStruct_setSpecularColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
-            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)*(int*)state, lbl_803E33BC, lbl_803E33C0);
+            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)*(int*)state, 40.0f, 55.0f);
             lightSetField4D((ModelLightStruct*)*(int*)state, 1);
-            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 1, lbl_803E33AC);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 1, 0.0f);
             modelLightStruct_startColorFade((ModelLightStruct*)*(int*)state, 0, 0);
             modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)*(int*)state, 1);
         }
-        if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
+        if (0.0f == ((ShieldState*)state)->fadeTarget)
         {
-            *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
+            *(f32*)&((ShieldState*)state)->fadeMax = 60.0f;
         }
-        ((ShieldState*)state)->fadeTarget = lbl_803E33CC;
+        ((ShieldState*)state)->fadeTarget = 60.0f;
         {
             int i;
             u8* hw;
@@ -356,13 +356,13 @@ void staffFn_80170380(GameObject* obj, int cmd)
             f32* t1;
             f32 k;
             f32 amp;
-            amp = lbl_803E33C4;
+            amp = 1.0f;
             ((ShieldState*)state)->fadeRate = amp;
             i = 0;
             hw = state;
             w = state;
             t1 = (f32*)((char*)tbl[0] + 0x10);
-            k = lbl_803E33A8;
+            k = 0.5f;
             for (; i < 4; i++)
             {
                 f32 wave;
@@ -383,18 +383,18 @@ void staffFn_80170380(GameObject* obj, int cmd)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_lrope_powerup);
         break;
     case 5:
-        ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
-        ((ShieldState*)state)->fadeRate = lbl_803E33B4;
-        *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
+        ((ShieldState*)state)->fadeTarget = 0.0f;
+        ((ShieldState*)state)->fadeRate = -1.0f;
+        *(f32*)&((ShieldState*)state)->fadeMax = 60.0f;
         Sfx_StopFromObject((u32)obj, SFXTRIG_lrope_powerup);
         Sfx_StopFromObject((u32)obj, SFXTRIG_lockon3_on);
         break;
     case 4:
     {
-        f32 fade = lbl_803E33CC;
+        f32 fade = 60.0f;
         f32 amp;
         ((ShieldState*)state)->fadeTarget = fade;
-        amp = lbl_803E33C4;
+        amp = 1.0f;
         ((ShieldState*)state)->fadeRate = amp;
         *(f32*)&((ShieldState*)state)->fadeMax = fade;
         {
@@ -409,7 +409,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
             t0 = (f32*)((char*)tbl[0] + 0x20);
             w = state;
             t1 = (f32*)((char*)tbl[0] + 0x30);
-            k = lbl_803E33A8;
+            k = 0.5f;
             for (; i < 4; i++)
             {
                 f32 wave;
@@ -420,7 +420,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 wave = sum * k;
                 *(f32*)(w + 0x24) = *t0 * wave;
                 *(f32*)(w + 0x14) = *t1;
-                *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + lbl_803E33C8;
+                *(s16*)(hw + 0x3c) = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + 136.0f;
                 hw += 2;
                 t0 += 1;
                 w += 4;
@@ -445,8 +445,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         t0 = (f32*)((char*)tbl[0] + 0x20);
         w = state;
         t1 = (f32*)((char*)tbl[0] + 0x30);
-        amp = lbl_803E33C4;
-        k = lbl_803E33A8;
+        amp = 1.0f;
+        k = 0.5f;
         for (; i < 4; i++)
         {
             f32 wave;
