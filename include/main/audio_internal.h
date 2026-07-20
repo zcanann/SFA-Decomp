@@ -17,12 +17,19 @@
 #define STREAM_VOLBITS_CHANMASK_BIT 7
 #define STREAM_VOLBITS_VOLUME_MASK 0x7F
 
+struct MusicTrackSlot;
+struct MusicChannel;
+struct MusicTrigger;
+
+typedef void (*AudioArqRequestCallback)(struct MusicTrackSlot* slot, struct MusicChannel* channel,
+                                        struct MusicTrigger* trigger);
+
 typedef struct AudioArqRequestEntry {
     ARQRequest request;
-    void (*callback)(int, int, int);
-    int callbackArg1;
-    int callbackArg2;
-    int callbackArg3;
+    AudioArqRequestCallback callback;
+    struct MusicTrackSlot* callbackArg1;
+    struct MusicChannel* callbackArg2;
+    struct MusicTrigger* callbackArg3;
 } AudioArqRequestEntry;
 
 STATIC_ASSERT(sizeof(AudioArqRequestEntry) == 0x30);
@@ -111,20 +118,6 @@ typedef struct MusicChannel {
     u8 pad14[0xc];
     f32 field_20;
 } MusicChannel;
-
-typedef struct MusicTrigParam {
-    u8 pad0[2];
-    u16 field_2;
-    u8 pad4[2];
-    u16 field_6;
-    u8 pad8[4];
-    u8 field_c;
-} MusicTrigParam;
-
-typedef struct MusicBank {
-    u8 pad0[2];
-    u8 field_2;
-} MusicBank;
 
 typedef struct SfxTriggerFull {
     u16 id;
@@ -285,7 +278,7 @@ void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
 void fn_8000D0B4(s32 result, DVDCommandBlock* block);
 void fn_80008EDC(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
-void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger);
+void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, MusicTrigger* trigger);
 u32 audioFlagFn_8000a188(u32 mask);
 void audioFree(void* ptr);
 void* _audioAlloc(u32 size);
@@ -312,8 +305,8 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
 SfxTrigger* Sfx_FindTrigger(u16 id);
 SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
                                          int globalCtrlDisabled);
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 callback, u32 callbackArg1, u32 callbackArg2,
-                          u32 callbackArg3);
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
+                          MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2, MusicTrigger* callbackArg3);
 void audioLoadTriggerData(void);
 void fn_80008F38(void* addr, u32 dest, u32 size);
 

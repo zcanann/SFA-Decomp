@@ -155,7 +155,8 @@ typedef struct AudioMemHookPair
     s32 free;
 } AudioMemHookPair;
 
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cbArg1, u32 cbArg2, u32 cbArg3)
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
+                          MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2, MusicTrigger* callbackArg3)
 {
     int idx;
     void* buf;
@@ -173,10 +174,10 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 cb
     }
     buf = mmAlloc(size, 0, 0);
     *outBuf = buf;
-    entry->callback = (void (*)(int, int, int))cb;
-    entry->callbackArg1 = cbArg1;
-    entry->callbackArg2 = cbArg2;
-    entry->callbackArg3 = cbArg3;
+    entry->callback = callback;
+    entry->callbackArg1 = callbackArg1;
+    entry->callbackArg2 = callbackArg2;
+    entry->callbackArg3 = callbackArg3;
     DCFlushRange(buf, size);
     gAudioArqRequestDone = 0;
     ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
@@ -1419,11 +1420,11 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     *(int*)&channel->pad14[4] = counter;
     *(MusicTrigger**)&channel->pad14[8] = trigger;
     channel->field_20 = lbl_803DE560;
-    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, (u32)Music_ChannelLoadedCallback,
-                          (u32)slot, (u32)channel, (u32)trigger);
+    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, Music_ChannelLoadedCallback, slot,
+                          channel, trigger);
 }
 
-void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTrigParam* trigger)
+void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, MusicTrigger* trigger)
 {
     MusicSeqStartParams params = gMusicSeqStartParamsDefault;
 
@@ -1444,14 +1445,14 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
         {
             int seqHandle;
             u8 voice;
-            if (trigger->field_6 != -1)
+            if (*(u16*)&trigger->pad[2] != -1)
             {
-                params.speed = trigger->field_6;
+                params.speed = *(u16*)&trigger->pad[2];
                 params.flags |= 2;
             }
-            if (trigger->field_c != -1)
+            if (trigger->pad[8] != -1)
             {
-                voice = trigger->field_c;
+                voice = trigger->pad[8];
             }
             else
             {
@@ -1460,7 +1461,7 @@ void Music_ChannelLoadedCallback(MusicBank* bank, MusicChannel* channel, MusicTr
             params.volume.target = 0;
             params.volume.time = 0;
             params.flags |= 4;
-            seqHandle = sndSeqPlayEx(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
+            seqHandle = sndSeqPlayEx(slot->unk2, trigger->track, channel->bankData, &params, 0);
             sndSeqVolume(voice, 0x1f4, seqHandle, 0);
             channel->status = 1;
             channel->seqHandle = seqHandle;
