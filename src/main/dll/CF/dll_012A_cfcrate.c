@@ -13,7 +13,6 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
-#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
