@@ -109,12 +109,12 @@ void WindLift_updateRider(GameObject* obj, GameObject* rider, WindLiftSlot* slot
     u8 fl;
     int fe;
     player = Obj_GetPlayerObject();
-    dy = ((GameObject*)rider)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
+    dy = ((GameObject*)rider)->anim.localPosY - obj->anim.localPosY;
     if (dy < lbl_803E416C)
     {
         return;
     }
-    dist = Vec_xzDistance(&((GameObject*)rider)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
+    dist = Vec_xzDistance(&((GameObject*)rider)->anim.worldPosX, &obj->anim.worldPosX);
     if (dist > lbl_803E4170 + height && (slot->phaseFlags & 0xe0) == 0)
     {
         return;
@@ -306,7 +306,7 @@ int WindLift_getObjectTypeId(void)
     return 0x0;
 }
 
-void WindLift_free(int* obj)
+void WindLift_free(GameObject* obj)
 {
     void* p = Obj_GetPlayerObject();
     if (p == NULL || Player_GetLiftVelocityY((int)p) == lbl_803E416C)
@@ -330,10 +330,10 @@ void WindLift_hitDetect(void)
 /* WindLift_update: fade the lift opacity with its gamebit, spin up
  * over the first second, then assign every nearby group-0x16 object
  * (and the player) to a rider slot and run the lift physics on each. */
-void WindLift_update(int* obj)
+void WindLift_update(GameObject* obj)
 {
     u8* def;
-    WindLiftSub* sub = ((GameObject*)obj)->extra;
+    WindLiftSub* sub = obj->extra;
     int level;
     GameObject* player;
     f32 pull;
@@ -343,10 +343,10 @@ void WindLift_update(int* obj)
     int count;
     int** objs;
     int gb2;
-    def = (u8*)((GameObject*)obj)->anim.placement;
+    def = (u8*)obj->anim.placement;
     if (sub->active)
     {
-        level = (int)(lbl_803E41BC * timeDelta + (f32)(int)((GameObject*)obj)->anim.alpha);
+        level = (int)(lbl_803E41BC * timeDelta + (f32)(int)obj->anim.alpha);
         if (sub->gamebit != -1 && mainGetBit(sub->gamebit) == 0)
         {
             sub->active = 0;
@@ -354,13 +354,13 @@ void WindLift_update(int* obj)
     }
     else
     {
-        level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)((GameObject*)obj)->anim.alpha);
+        level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)obj->anim.alpha);
         if (sub->gamebit != -1 && mainGetBit(sub->gamebit) != 0)
         {
             sub->active = 1;
         }
     }
-    ((GameObject*)obj)->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
+    obj->anim.alpha = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
     /* the fortress lifts (table durations 1-4) stay dead until the
        city's power is restored (0x57, the crystal convergence) */
     if ((mainGetBit(GAMEBIT_CF_PowerOn) != 0 || sub->duration > 0xa) && sub->active)
@@ -369,15 +369,15 @@ void WindLift_update(int* obj)
         sub->timer = ticks + 1;
         if (ticks < 0x3c && mainGetBit(sub->seqId) == 0)
         {
-            ((GameObject*)obj)->anim.rotX -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
-            Obj_SetActiveModelIndex((GameObject*)obj, 0);
+            obj->anim.rotX -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
+            Obj_SetActiveModelIndex(obj, 0);
             return;
         }
-        Obj_SetActiveModelIndex((GameObject*)obj, 1);
+        Obj_SetActiveModelIndex(obj, 1);
         gb2 = mainGetBit(sub->delay);
         {
             int rotStep = framesThisStep * 0xb6;
-            ((GameObject*)obj)->anim.rotX -= rotStep * ((gb2 << 2) + 0xe);
+            obj->anim.rotX -= rotStep * ((gb2 << 2) + 0xe);
         }
         pull = (f32)((WindliftPlacement*)def)->pullStrength;
         player = Obj_GetPlayerObject();
@@ -390,7 +390,7 @@ void WindLift_update(int* obj)
             }
             if (player != NULL)
             {
-                WindLift_updateRider((GameObject*)obj, player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
+                WindLift_updateRider(obj, player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
             }
         }
         else
@@ -466,7 +466,7 @@ void WindLift_update(int* obj)
                 }
                 else if (rider != NULL)
                 {
-                    WindLift_updateRider((GameObject*)obj, (GameObject*)*objs++, &sub->slots[found], pull, gb2, 0,
+                    WindLift_updateRider(obj, (GameObject*)*objs++, &sub->slots[found], pull, gb2, 0,
                                 sub->duration, sub->liftHeight);
                 }
             }
@@ -484,10 +484,10 @@ void WindLift_update(int* obj)
 /* WindLift_init: look up the lift's sequence timings, scale its rise
  * height from the def byte, arm it from the gamebits and clear all 14
  * rider slots. */
-void WindLift_init(int* obj, u8* def)
+void WindLift_init(GameObject* obj, u8* def)
 {
     int i;
-    WindLiftSub* sub = ((GameObject*)obj)->extra;
+    WindLiftSub* sub = obj->extra;
     sub->seqId = ((WindliftObjectDef*)def)->seqId;
     sub->duration = seqStreamLookupFn_8007fff8(gWindLiftSeqDurationTable, 4, sub->seqId);
     sub->gamebit = seqStreamLookupFn_8007fff8(gWindLiftSeqGamebitTable, 3, sub->seqId);
@@ -509,8 +509,8 @@ void WindLift_init(int* obj, u8* def)
     {
         sub->liftHeight = WINDLIFT_DEFAULT_HEIGHT;
     }
-    ((GameObject*)obj)->anim.rootMotionScale =
-        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / WINDLIFT_DEFAULT_HEIGHT;
+    obj->anim.rootMotionScale =
+        (*(f32*)(*(char**)&obj->anim.modelInstance + 4) * sub->liftHeight) / WINDLIFT_DEFAULT_HEIGHT;
     /* skip the rise-in ramp after the convergence cutscene (0x57)
        or for long lifts */
     if (mainGetBit(GAMEBIT_CF_PowerOn) != 0 || sub->duration >= 0xa)
@@ -527,7 +527,7 @@ void WindLift_init(int* obj, u8* def)
         else
         {
             sub->active = 0;
-            ((GameObject*)obj)->anim.alpha = 0;
+            obj->anim.alpha = 0;
         }
     }
     {
