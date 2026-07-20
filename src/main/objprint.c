@@ -167,12 +167,12 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
         ((ObjSoundState*)state)->pitch = 0;
         if (((ObjSoundState*)state)->blendWeight > lbl_803DE9A4)
         {
-            int* pi;
+            ObjModel* pi;
             ((ObjSoundState*)state)->blendWeight = *(f32*)&lbl_803DE9A4;
-            pi = OBJPRINT_ACTIVE_BANK(obj);
-            if (*(u8*)(*pi + 0xf9) != 0)
+            pi = (ObjModel*)OBJPRINT_ACTIVE_BANK(obj);
+            if (pi->file->morphTargetCount != 0)
             {
-                ObjModel_SetBlendChannelTargets((ObjModel*)pi, 2, *(s8*)(*(int*)((char*)pi + 0x28) + 0x2d), -1,
+                ObjModel_SetBlendChannelTargets(pi, 2, pi->blendChannels[2].morphTargetB, -1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
         }
@@ -197,7 +197,7 @@ typedef struct
 void objModelAndSoundFn_80039118(int obj, int state)
 {
     int frame;
-    int model;
+    ObjModel* model;
     int kfval;
     int* kf;
 
@@ -213,11 +213,11 @@ void objModelAndSoundFn_80039118(int obj, int state)
         if (frame >= ((ObjKfAnimState*)state)->frameCount)
         {
             ((ObjKfAnimState*)state)->frame = -1;
-            model = (int)OBJPRINT_ACTIVE_BANK(obj);
-            if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+            model = (ObjModel*)OBJPRINT_ACTIVE_BANK(obj);
+            if (model->file->morphTargetCount != 0)
             {
-                ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
-                                                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), -1,
+                ObjModel_SetBlendChannelTargets(model, 2,
+                                                model->blendChannels[2].morphTargetB, -1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
         }
@@ -231,11 +231,11 @@ void objModelAndSoundFn_80039118(int obj, int state)
             frame = ((ObjKfAnimState*)state)->frame;
             ((ObjKfAnimState*)state)->frame = frame + 1;
             kfval = kf[frame];
-            model = (int)OBJPRINT_ACTIVE_BANK(obj);
-            if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+            model = (ObjModel*)OBJPRINT_ACTIVE_BANK(obj);
+            if (model->file->morphTargetCount != 0)
             {
-                ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
-                                                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), kfval - 1,
+                ObjModel_SetBlendChannelTargets(model, 2,
+                                                model->blendChannels[2].morphTargetB, kfval - 1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
             ((ObjKfAnimState*)state)->timer = ((ObjKfAnimState*)state)->timer + ((ObjKfAnimState*)state)->timerStep;
@@ -266,7 +266,7 @@ void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* sou
     u16 sfx;
     s16 pitch;
     u32 count;
-    int model;
+    ObjModel* model;
     int did;
 
     pitch = soundDef->pitch;
@@ -282,11 +282,11 @@ void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* sou
     count = soundDef->blendCount;
     if (count != 0)
     {
-        model = (int)OBJPRINT_ACTIVE_BANK(obj);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
+        model = (ObjModel*)OBJPRINT_ACTIVE_BANK(obj);
+        if (model->file->morphTargetCount != 0)
         {
-            ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
-                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
+            ObjModel_SetBlendChannelTargets(model, 2,
+                                            model->blendChannels[2].morphTargetB, count - 1,
                                             lbl_803DE99C / lbl_803DB464, 0);
             did = 1;
         }
@@ -371,9 +371,9 @@ void objPosFn_80039510(GameObject* obj, int key, f32* outPosition)
     }
     model = (int)Obj_GetActiveModel(obj);
     model = (int)ObjModel_GetJointMatrix((u8*)model, joint);
-    outPosition[0] = *(f32*)((char*)model + 0xc);
-    outPosition[1] = *(f32*)((char*)model + 0x1c);
-    outPosition[2] = *(f32*)((char*)model + 0x2c);
+    outPosition[0] = ((ObjModelJointMatrix*)model)->translationX;
+    outPosition[1] = ((ObjModelJointMatrix*)model)->translationY;
+    outPosition[2] = ((ObjModelJointMatrix*)model)->translationZ;
     outPosition[0] += playerMapOffsetX;
     outPosition[2] += playerMapOffsetZ;
 }
@@ -845,7 +845,7 @@ void fn_8003A168(GameObject* obj, void* state)
     {
         found[1] = (s16)((s32)found[1] * 3 / 4);
     }
-    *(s16*)((u8*)state + 0x1a) = 0;
+    ((CharacterEyeAnimState*)state)->headTrackMode = 0;
 }
 
 
@@ -1001,9 +1001,9 @@ s16 objMathFn_8003a380(GameObject* obj, GameObject* target, f32* pos, u8* p4, s1
 
         if (p4 != NULL)
         {
-            *(s16*)(p4 + 0x14) = dst[0];
+            ((ObjJointTrackPair*)p4)->yaw.angle = dst[0];
             fn_800399C0((s16*)p4, found[0]);
-            *(s16*)(p4 + 0x44) = dst[1];
+            ((ObjJointTrackPair*)p4)->pitch.angle = dst[1];
             fn_80039834((s16*)(p4 + 0x30), found[0], lbl_803DE9D8, lbl_803DE9DC);
             p4 += 0x60;
         }
@@ -1073,8 +1073,8 @@ void fn_8003A9C0(u8* p, int count, s16 a, s16 b)
 {
     while (count > 0)
     {
-        ((ObjSoundState*)p)->pitch = a;
-        *(s16*)(p + 0x44) = b;
+        ((ObjJointTrackPair*)p)->yaw.angle = a;
+        ((ObjJointTrackPair*)p)->pitch.angle = b;
         p += 0x60;
         count--;
     }
@@ -1162,8 +1162,8 @@ void objFn_8003acfc(GameObject* obj, int* keys, int count, u8* out)
         found = objFindJointVecByKey(obj, *keys);
         if (found != NULL)
         {
-            *(s16*)(out + 0x16) = found[1];
-            *(s16*)(out + 0x46) = found[0];
+            ((ObjJointTrackPair*)out)->yaw.angleStart = found[1];
+            ((ObjJointTrackPair*)out)->pitch.angleStart = found[0];
         }
         keys++;
         idx++;
@@ -1324,7 +1324,7 @@ void fn_8003B228(GameObject* obj, void* state)
     }
     foundA->textureId = val;
     foundB->textureId = val;
-    *((u8*)state + 0x1e) = 1;
+    ((CharacterEyeAnimState*)state)->blinkState = 1;
 }
 
 void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
@@ -1414,7 +1414,7 @@ void fn_8003B500(GameObject* obj, s16* state, f32 value)
             found[0] = (s16)(found[0] * 3 / 4);
         }
         fn_80039DF8(obj, state, found, lbl_803DE9A4);
-        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
+        ((CharacterEyeAnimState*)state)->headTrackMode = (s16)(u16)(u8)((CharacterEyeAnimState*)state)->headTrackMode;
     }
 }
 
@@ -1779,10 +1779,10 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model)
         wi = 1.0f - w;
 
         jd = (char*)def->jointData + grp[0] * 0x1c;
-        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
+        PSMTXTrans(trans, -((ModelBone*)jd)->tail[0], -((ModelBone*)jd)->tail[1], -((ModelBone*)jd)->tail[2]);
         PSMTXConcat(m1, trans, ma);
         jd = (char*)def->jointData + grp[1] * 0x1c;
-        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
+        PSMTXTrans(trans, -((ModelBone*)jd)->tail[0], -((ModelBone*)jd)->tail[1], -((ModelBone*)jd)->tail[2]);
         PSMTXConcat(m2, trans, mb);
 
         out[0][0] = ma[0][0] * w + mb[0][0] * wi;

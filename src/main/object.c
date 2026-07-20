@@ -1000,9 +1000,9 @@ void objFreeObjDef(u8* obj, int flag)
     }
     for (j = 0; j < gObjCount; j++)
     {
-        if (*(s16*)(((u8**)gObjList)[j] + 0x44) == 0x10)
+        if (((GameObject*)((u8**)gObjList)[j])->anim.classId == 0x10)
         {
-            bp = *(int**)(((u8**)gObjList)[j] + 0xb8);
+            bp = (int*)((GameObject*)((u8**)gObjList)[j])->extra;
             if (*(u8**)bp == obj)
             {
                 *bp = 0;
@@ -1293,11 +1293,11 @@ void Obj_UpdateObject(GameObject* obj)
     {
         if (obj->childObjs[0] != NULL)
         {
-            t = *(u8**)((u8*)obj->childObjs[0] + 0x54);
+            t = (u8*)((GameObject*)obj->childObjs[0])->anim.hitReactState;
             if (t != 0)
             {
-                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->lastHitObject = 0;
-                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)((GameObject*)obj->childObjs[0])->anim.hitReactState)->lastHitObject = 0;
+                ((ObjHitsPriorityState*)((GameObject*)obj->childObjs[0])->anim.hitReactState)->priorityHitCount = 0;
             }
         }
         if (object->hitReactState == NULL)
@@ -1366,11 +1366,11 @@ void Obj_UpdateObject(GameObject* obj)
     {
         if (obj->childObjs[0] != NULL)
         {
-            t = *(u8**)((u8*)obj->childObjs[0] + 0x54);
+            t = (u8*)((GameObject*)obj->childObjs[0])->anim.hitReactState;
             if (t != 0)
             {
-                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->lastHitObject = 0;
-                ((ObjHitsPriorityState*)*(u8**)((u8*)obj->childObjs[0] + 0x54))->priorityHitCount = 0;
+                ((ObjHitsPriorityState*)((GameObject*)obj->childObjs[0])->anim.hitReactState)->lastHitObject = 0;
+                ((ObjHitsPriorityState*)((GameObject*)obj->childObjs[0])->anim.hitReactState)->priorityHitCount = 0;
             }
         }
         ((ObjHitsPriorityState*)object->hitReactState)->lastHitObject = 0;
@@ -1607,15 +1607,15 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
     modelDef = (ObjModelInstance*)def;
     size = modelDef->modelCount * 4 + 0x10c;
-    switch (*(s16*)((u8*)tmpl + 0x46))
+    switch (((GameObject*)tmpl)->anim.seqId)
     {
     case 0:
     case 0x1f:
         extra = 0x8e0;
         break;
     default:
-        if (*(int**)((u8*)tmpl + 0x68) != 0 &&
-            (cb = (int (*)(void*, int)) * (int*)(**(int**)((u8*)tmpl + 0x68) + 0x1c)) != 0)
+        if (((GameObject*)tmpl)->anim.dll != 0 &&
+            (cb = (int (*)(void*, int)) * (int*)(*(int*)((GameObject*)tmpl)->anim.dll + 0x1c)) != 0)
         {
             extra = cb(tmpl, size);
         }
@@ -1960,7 +1960,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     }
     max = lbl_803DE8CC;
     i = 0;
-    for (; i < *(s8*)((u8*)obj->def + 0x55); i++)
+    for (; i < ((ObjModelInstance*)obj->def)->modelCount; i++)
     {
         modelPtr = *(int*)((u8*)obj->models + i * 4);
         if (modelPtr != 0)
@@ -2145,13 +2145,14 @@ void Obj_ApplyPendingParentLinks(void)
     for (i = 0; i < gObjCount; i++)
     {
         u8* obj = ((u8**)gObjList)[i];
-        obj[0xaf] &= ~7;
+        ((GameObject*)obj)->anim.resetHitboxFlags &= ~7;
         if (((GameObject*)obj)->pendingParentObj != NULL)
         {
             if (((GameObject*)obj)->anim.parent == NULL &&
-                *(void**)((u8*)((GameObject*)obj)->pendingParentObj + 0x30) != NULL)
+                ((GameObject*)((GameObject*)obj)->pendingParentObj)->anim.parent != NULL)
             {
-                ((GameObject*)obj)->anim.parent = *(void**)((u8*)((GameObject*)obj)->pendingParentObj + 0x30);
+                ((GameObject*)obj)->anim.parent =
+                    ((GameObject*)((GameObject*)obj)->pendingParentObj)->anim.parent;
             }
             ((GameObject*)obj)->pendingParentObj = NULL;
         }
@@ -2356,7 +2357,7 @@ void Obj_UpdateAllObjects(u8 flags)
 
     updateFlags = flags;
     gObjUpdateFlags = updateFlags;
-    off = *(s16*)((u8*)&gObjUpdateList + 2);
+    off = gObjUpdateList.nextOffset;
     timeStop = updateFlags & 1;
     if (timeStop == 0)
     {
@@ -2364,7 +2365,7 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     Obj_UpdateModelBlendStates();
     ObjHitReact_ResetActiveObjects(gObjCount);
-    obj = *(int*)((u8*)&gObjUpdateList + 4);
+    obj = gObjUpdateList.head;
     while (obj != 0 && ((ObjAnimComponent*)obj)->activeHitboxMode == 0x64)
     {
         Obj_UpdateObject((GameObject*)obj);
@@ -2406,13 +2407,13 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     if (obj2 != 0 && (u32)(child = (int)((GameObject*)obj2)->childObjs[0]) != 0)
     {
-        *(int*)((u8*)child + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+        *(int*)&((GameObject*)child)->anim.parent = *(int*)&((GameObject*)obj2)->anim.parent;
         Obj_UpdateObject(((GameObject*)obj2)->childObjs[0]);
     }
     if (timeStop == 0)
     {
         ObjHits_Update(gObjCount);
-        obj3 = *(int*)((u8*)&gObjUpdateList + 4);
+        obj3 = gObjUpdateList.head;
         for (; obj3 != 0; obj3 = *(int*)(obj3 + off))
         {
             if ((((GameObject*)obj3)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
@@ -2444,7 +2445,8 @@ void Obj_UpdateAllObjects(u8 flags)
         obj2 = (count2 != 0) ? *(u8**)obj2 : 0;
         if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
         {
-            *(int*)((u8*)((GameObject*)obj2)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj2)->anim.parent;
+            *(int*)&((GameObject*)((GameObject*)obj2)->childObjs[0])->anim.parent =
+                *(int*)&((GameObject*)obj2)->anim.parent;
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
             if ((((GameObject*)child)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
@@ -2469,7 +2471,8 @@ void Obj_UpdateAllObjects(u8 flags)
                         cb(child);
                         break;
                     }
-                    Obj_GetWorldPosition((u32)child, (f32*)(child + 0x18), (f32*)(child + 0x1c), (f32*)(child + 0x20));
+                    Obj_GetWorldPosition((u32)child, &((GameObject*)child)->anim.worldPosX,
+                                         &((GameObject*)child)->anim.worldPosY, &((GameObject*)child)->anim.worldPosZ);
                 } while (0);
             }
         }
@@ -2640,8 +2643,8 @@ void Obj_RegisterObject(GameObject* obj, int flags)
         if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
             prev = 0;
-            cur = *(int*)((u8*)&gObjUpdateList + 4);
-            off = *(s16*)((u8*)&gObjUpdateList + 2);
+            cur = gObjUpdateList.head;
+            off = gObjUpdateList.nextOffset;
             while (cur != 0 && object->activeHitboxMode < ((GameObject*)cur)->anim.activeHitboxMode)
             {
                 prev = cur;

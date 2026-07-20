@@ -794,7 +794,7 @@ int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id)
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
     ObjfsaPatch* lp;
-    u8* lwg;
+    ObjfsaWalkGroup* lwg;
     ObjfsaWalkGroup* wg;
     u32 lpidx;
     u32 clz;
@@ -874,9 +874,9 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         {
             lidx = (u8)pgid;
         }
-        for (k2 = 0, lwg = (u8*)gObjfsaWalkGroups + (lidx & 0xffff) * OBJFSA_PATCHGROUP_STRIDE; k2 < 4; k2++)
+        for (k2 = 0, lwg = &gObjfsaWalkGroups[lidx & 0xffff]; k2 < 4; k2++)
         {
-            lpidx = lwg[k2 + 0x24];
+            lpidx = lwg->patchIndices[k2];
             if (lpidx == 0)
             {
                 continue;
