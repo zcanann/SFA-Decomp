@@ -39,6 +39,12 @@ BRANCH_MNEM = re.compile(r"^b(?:c|dnz|dz)?(?:l?)(?:a?)(?:[+-]?)$|^b(?:lt|gt|eq|n
 
 REG_RE = re.compile(r"\b([rf])(\d{1,2})\b|\b(cr)(\d)\b")
 
+# Everything the normalizer wrapped in <...> is a branch delta, a relocation
+# target or a <D>/<DATA> marker -- NON-register information that must survive
+# register stripping untouched.
+ANGLE_RE = re.compile(r"<[^>]*>")
+_MASK_RE = re.compile(r"\x00(\d+)\x00")
+
 
 def objdump(obj: Path) -> str:
     tool = REPO / "build" / "binutils" / "powerpc-eabi-objdump"
@@ -120,6 +126,62 @@ def canon_regs(stream: list[str]) -> list[str]:
     return [REG_RE.sub(sub, s) for s in stream]
 
 
+def strip_regs(s: str) -> str:
+    """Erase every register NAME, keeping all other operand information.
+
+    This is the primitive behind the PERM screen.  canon_regs() tries to build
+    ONE bijection over the whole function and therefore fails on a PIECEWISE
+    permutation (a value that lives in r24 in one region and r23 in another);
+    stripping never builds a mapping at all, so it is immune to that.
+
+    What survives: displacements, immediates, shift/mask fields, branch deltas,
+    relocation targets and the <D>/<DATA>/<POOL> markers.  If two instructions
+    agree after stripping, they differ in REGISTER ALLOCATION ONLY.
+    """
+    spans: list[str] = []
+
+    def mask(m: re.Match) -> str:
+        spans.append(m.group(0))
+        return "\x00%d\x00" % (len(spans) - 1)
+
+    t = ANGLE_RE.sub(mask, s)
+    t = REG_RE.sub("?", t)
+    return _MASK_RE.sub(lambda m: spans[int(m.group(1))], t)
+
+
+BANDTOK_RE = re.compile(r"\b([rf])(\d{1,2})\b")
+
+
+def perm_band(tgt, cur) -> str:
+    """Which register band does a permutation live in?  Decides REACHABILITY.
+
+    SCRATCH (r0..r12 / f0..f13) -- a same-length scratch permutation is a
+      per-TU FLAG signature (copy/constant propagation reorders what the
+      allocator sees), not a source defect.
+    SAVED (r14..r31 / f14..f31) -- the allocator law applies: load class is
+      keyed on DECLARATION order, copy class on DEFINITION order.  Reachable
+      IFF a named local backs the value; a compiler temp, spill reload or
+      array base is in neither population and cannot be steered from source.
+    MIXED -- both bands move; the flag and decl-order effects interact.
+    """
+    tm, to = streams(tgt)
+    cm, co = streams(cur)
+    sm = difflib.SequenceMatcher(None, tm, cm, autojunk=False)
+    regs = set()
+    for b in sm.get_matching_blocks():
+        for k in range(b.size):
+            x, y = to[b.a + k], co[b.b + k]
+            if ops_equal(x, y):
+                continue
+            for s in (x, y):
+                regs.update((c, int(n)) for c, n in BANDTOK_RE.findall(s))
+    scratch = any((c == "r" and n <= 12) or (c == "f" and n <= 13) for c, n in regs)
+    saved = any(n >= 14 for c, n in regs)
+    if scratch and saved:
+        return "MIXED"
+    return "SAVED" if saved else "SCRATCH"
+
+
 def streams(insns):
     lo = insns[0][0]
     hi = insns[-1][0] + 4
@@ -139,8 +201,8 @@ def ops_equal(a: str, b: str) -> bool:
 UNALIGN_RATIO = 0.5
 
 
-def classify(tgt, cur) -> tuple[str, int, int, int, float]:
-    """-> (class, mnemonic_delta, operand_delta, operand_delta_after_canon, align)
+def classify(tgt, cur) -> tuple[str, int, int, int, float, int]:
+    """-> (class, mnemonic_delta, operand_delta, odelta_after_canon, align, nrdelta)
 
     `align` is matched_mnemonics / max(len(target), len(ours)).  A low ratio
     means the two bodies barely correspond at all -- that is a LARGE structural
@@ -171,14 +233,23 @@ def classify(tgt, cur) -> tuple[str, int, int, int, float]:
     ct, cc = canon_regs(to_eq), canon_regs(co_eq)
     ocanon = sum(1 for a, b in zip(ct, cc) if not ops_equal(a, b))
 
+    # THE SCREEN: of the operand pairs that diverge, how many still diverge
+    # once register NAMES are erased?  Zero => register allocation only.
+    nrdelta = sum(1 for a, b in zip(to_eq, co_eq)
+                  if not ops_equal(a, b)
+                  and not ops_equal(strip_regs(a), strip_regs(b)))
+
     if mdelta:
         cls = "UNALIGN" if align < UNALIGN_RATIO else "STRUCT"
-        return cls, mdelta, odelta, ocanon, align
+        return cls, mdelta, odelta, ocanon, align, nrdelta
     if odelta == 0:
-        return "NOISE", 0, 0, 0, align
-    if ocanon == 0:
-        return "PERM", 0, odelta, 0, align
-    return "OPS", 0, odelta, ocanon, align
+        return "NOISE", 0, 0, 0, align, 0
+    if nrdelta == 0:
+        # mnemonic streams identical AND no non-register operand differs
+        # anywhere => pure register permutation, whether or not a single
+        # whole-function bijection describes it.
+        return ("PERM" if ocanon == 0 else "PERMPW"), 0, odelta, ocanon, align, 0
+    return "OPS", 0, odelta, ocanon, align, nrdelta
 
 
 def poolswap(tgt, cur):
@@ -295,7 +366,7 @@ def selftest() -> None:
 
     # UNALIGN: break the alignment itself.
     un = [("fmuls", "f1,f2,f3")] * 5 + [("blr", "")]
-    cls, _, _, _, al = classify(_insns(base), _insns(un))
+    cls, _, _, _, al, _ = classify(_insns(base), _insns(un))
     expect("wholly different body -> UNALIGN", cls, "UNALIGN")
     expect("...and align ratio below threshold", al < UNALIGN_RATIO, True)
 
@@ -304,9 +375,57 @@ def selftest() -> None:
     sp = [(m, o.replace("r3", "r6")) for m, o in base[:2]] \
         + [("ori", "r6,r6,1")] \
         + [(m, o.replace("r3", "r6")) for m, o in base[2:]]
-    cls, md, od, oc, _ = classify(_insns(base), _insns(sp))
+    cls, md, od, oc, _, nr = classify(_insns(base), _insns(sp))
     expect("STRUCT + pure-perm residual -> oD>0, oDc==0",
            (cls, od > 0, oc), ("STRUCT", True, 0))
+
+    # ---- the PERM screen: fire on permutation, STAY SILENT on real operands --
+    # PIECEWISE permutation: r3->r6 in the first half, r3->r7 in the second.
+    # NO single bijection describes it, so canon_regs CANNOT unify it; the
+    # non-register screen must still call it a permutation.
+    pw = [(m, o.replace("r3", "r6")) for m, o in base[:3]] \
+        + [(m, o.replace("r3", "r7")) for m, o in base[3:]]
+    cls, md, od, oc, _, nr = classify(_insns(base), _insns(pw))
+    expect("piecewise permutation -> PERMPW", cls, "PERMPW")
+    expect("...canonicalizer FAILS on it (oDc>0)", oc > 0, True)
+    expect("...but non-register delta is zero", nr, 0)
+
+    # NEGATIVE CONTROLS -- each perturbs ONE non-register field on top of a
+    # register permutation.  The screen must refuse every one of them.
+    def neg(label, victim):
+        c, _, _, _, _, n = classify(_insns(base), _insns(victim))
+        expect(label, (c, n > 0), ("OPS", True))
+
+    neg("perm + DISPLACEMENT diff -> OPS, nrD>0",
+        [(m, o.replace("r3", "r6").replace("4(r4)", "8(r4)")) for m, o in base])
+    neg("perm + IMMEDIATE diff -> OPS, nrD>0",
+        [(m, o.replace("r3", "r6").replace(",12", ",20")) for m, o in base])
+    neg("perm + NEGATIVE displacement sign -> OPS, nrD>0",
+        [(m, o.replace("r3", "r6").replace("8(r1)", "-8(r1)")) for m, o in base])
+
+    # A BRANCH-DELTA difference is non-register information and must block the
+    # screen.  (This is exactly what separates ObjSeq_update from a real
+    # permutation -- its body length differs, so every branch delta shifts.)
+    br = [("cmpwi", "r3,0"), ("bne", "<+4>"), ("li", "r4,1"), ("blr", "")]
+    br2 = [("cmpwi", "r6,0"), ("bne", "<+9>"), ("li", "r7,1"), ("blr", "")]
+    c, _, _, _, _, n = classify(_insns(br), _insns(br2))
+    expect("perm + BRANCH-DELTA diff -> OPS, nrD>0", (c, n > 0), ("OPS", True))
+
+    # ...and the same branch WITHOUT the delta change is a permutation.
+    br3 = [("cmpwi", "r6,0"), ("bne", "<+4>"), ("li", "r7,1"), ("blr", "")]
+    expect("perm + SAME branch delta -> permutation",
+           classify(_insns(br), _insns(br3))[0] in ("PERM", "PERMPW"), True)
+
+    # strip_regs must not eat digits that are NOT registers, and must not
+    # touch anything inside a <...> marker.
+    expect("strip_regs keeps displacement",
+           strip_regs("r3,-27176(r26)"), "?,-27176(?)")
+    expect("strip_regs keeps rlwinm mask fields",
+           strip_regs("r3,r4,0,24,31"), "?,?,0,24,31")
+    expect("strip_regs does not enter <...>",
+           strip_regs("r3,<REL:foo_r31>"), "?,<REL:foo_r31>")
+    expect("strip_regs keeps branch delta",
+           strip_regs("<+942>"), "<+942>")
 
     # ---- drop paths: break the JOIN between report.json and the objects ----
     class A:
@@ -384,6 +503,10 @@ def main() -> None:
     ap.add_argument("--absent", metavar="MNEM",
                     help="report fns where the TARGET emits this mnemonic and "
                          "ours does not (deficit-instruction screen)")
+    ap.add_argument("--perm-band", action="store_true",
+                    help="restrict to PURE-PERMUTATION fns and tag each with "
+                         "the register BAND it permutes (SCRATCH / SAVED / "
+                         "MIXED) -- this is the reachability verdict")
     ap.add_argument("--selftest", action="store_true",
                     help="fault-inject every classification and every drop "
                          "path and assert each one fires")
@@ -478,26 +601,30 @@ def scan(report, build, args):
                 n = poolswap(tf[name], cf[name])
                 if n is not None and n > 0:
                     rows.append((unit["name"], name, size, pct,
-                                 "SWAP:%d" % n, 0, 0, 0, 1.0))
+                                 "SWAP:%d" % n, 0, 0, 0, 1.0, 0))
                 continue
             if args.extra:
                 n = surplus(tf[name], cf[name], args.extra)
                 if n:
                     rows.append((unit["name"], name, size, pct,
-                                 "EXTRA:%d" % n, 0, 0, 0, 1.0))
+                                 "EXTRA:%d" % n, 0, 0, 0, 1.0, 0))
                 continue
             if args.absent:
                 n = surplus(cf[name], tf[name], args.absent)
                 if n:
                     rows.append((unit["name"], name, size, pct,
-                                 "ABSENT:%d" % n, 0, 0, 0, 1.0))
+                                 "ABSENT:%d" % n, 0, 0, 0, 1.0, 0))
                 continue
-            cls, md, od, oc, al = classify(tf[name], cf[name])
+            cls, md, od, oc, al, nr = classify(tf[name], cf[name])
+            if args.perm_band:
+                if cls not in ("PERM", "PERMPW"):
+                    continue
+                cls = "%s/%s" % (cls, perm_band(tf[name], cf[name]))
             if args.control:
                 if cls != "NOISE":
                     control_bad.append((unit["name"], name, cls, md, od))
                 continue
-            rows.append((unit["name"], name, size, pct, cls, md, od, oc, al))
+            rows.append((unit["name"], name, size, pct, cls, md, od, oc, al, nr))
 
     return rows, control_bad, dropped, considered
 
@@ -535,13 +662,16 @@ def render(rows, dropped, considered, args):
     perm_only = [r for r in rows if r[6] > 0 and r[7] == 0]
     print("  (of which pure-permutation operand residual: %d fns  %d wB)"
           % (len(perm_only), int(sum(wb(r[2], r[3]) for r in perm_only))))
+    strict = [r for r in rows if r[4] in ("PERM", "PERMPW")]
+    print("  PERM+PERMPW (mΔ==0 and nrΔ==0, register allocation only): "
+          "%d fns  %d wB" % (len(strict), int(sum(wb(r[2], r[3]) for r in strict))))
     print()
-    print("%-34s %-38s %6s %10s %-7s %4s %4s %4s %5s %7s" %
+    print("%-34s %-38s %6s %10s %-7s %4s %4s %4s %4s %5s %7s" %
           ("unit", "function", "size", "fuzzy", "class",
-           "mΔ", "oΔ", "oΔc", "align", "wB"))
-    for u, f, s, p, c, md, od, oc, al in rows[:args.limit]:
-        print("%-34s %-38s %6d %10.4f %-7s %4d %4d %4d %5.2f %7d" %
-              (u, f, s, p, c, md, od, oc, al, wb(s, p)))
+           "mΔ", "oΔ", "oΔc", "nrΔ", "align", "wB"))
+    for u, f, s, p, c, md, od, oc, al, nr in rows[:args.limit]:
+        print("%-34s %-38s %6d %10.4f %-7s %4d %4d %4d %4d %5.2f %7d" %
+              (u, f, s, p, c, md, od, oc, nr, al, wb(s, p)))
 
 
 if __name__ == "__main__":
