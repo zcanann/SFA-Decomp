@@ -23,7 +23,7 @@ float mathSinfHighPrecision(float x) {
     double y2;
 
     y = tan(&n, x);
-    n += (*(u32*)&x >> 29) & 4;
+    n += (*(u32*)&x & 0x80000000) >> 29;
     y2 = y * y;
 
     switch (n & 6) {
