@@ -607,7 +607,7 @@ int iceBaddie_updateCommDownState(GameObject* obj, int state)
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_ARM_ICEBALL;
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_dsmk2_c_cf);
     }
-    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])((int)obj, state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 4);
     return 0;
 }
 
@@ -622,7 +622,7 @@ int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state)
         state->baddie.moveDone = 0;
     }
     state->baddie.stateTag = 1;
-    ((void (*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, (u8*)state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, state, timeDelta, 4);
     return 0;
 }
 
@@ -659,7 +659,7 @@ int iceBaddie_updateHeightBlendState(GameObject* obj, int state)
     {
         ((GroundBaddieState*)state)->baddie.animSpeedA = 4.0f * (1.0f - height);
     }
-    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])((int)obj, state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 4);
     return 0;
 }
 
@@ -714,7 +714,7 @@ int iceBaddie_stateHandlerA06(GameObject* obj, int state)
     {
         ((GroundBaddieState*)state)->baddie.animSpeedA = 0.0f;
     }
-    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])((int)obj, state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 4);
     return 0;
 }
 
@@ -770,7 +770,7 @@ int iceBaddie_stateHandlerA05(GameObject* obj, int state)
     {
         ((GroundBaddieState*)state)->baddie.animSpeedA = 0.0f;
     }
-    ((void (*)(int, int, f32, int))((void**)*gPlayerInterface)[12])((int)obj, state, timeDelta, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, (void*)state, timeDelta, 4);
     return 0;
 }
 

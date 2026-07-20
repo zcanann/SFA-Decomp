@@ -517,7 +517,7 @@ int DIMbossHitDetect_applyForwardMove(int* obj, u8* state, f32 weight)
     }
     ((BaddieState*)state)->moveSpeed = lbl_803E4C24;
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, weight, 1);
-    ((void (*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
+    (*gPlayerInterface)->rotateTowardTarget(obj, state, weight, 4);
     return 0;
 }
 

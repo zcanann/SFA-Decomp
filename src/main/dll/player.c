@@ -17795,7 +17795,7 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState*)inner)->altAnimSoundId = 6;
     ((PlayerState*)inner)->animSoundId = ((PlayerState*)inner)->walkAnimSoundId;
     ((PlayerState*)inner)->unk8BF = 0;
-    (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))(obj, inner, 0x42, 1);
+    (*gPlayerInterface)->init((void*)obj, (void*)inner, 0x42, 1);
     *(int*)((char*)inner + 0x27c) = inner + 0x6f0;
     pathState = (u8*)&((PlayerState*)inner)->baddie + 4;
     (*gPathControlInterface)->init(pathState, 1, 0x400a7, 1);
