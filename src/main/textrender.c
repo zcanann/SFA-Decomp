@@ -301,6 +301,8 @@ extern GameTextBox gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern const f32 lbl_803DE70C;
 extern const f32 lbl_803DE710;
+extern const f32 lbl_803DE714;
+extern const f32 lbl_803DE718;
 extern f32 gSubtitleNoTimeSentinel;
 extern int gGameTextShadowOffsetX;
 extern int gGameTextShadowOffsetY;
@@ -941,12 +943,12 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
         fy1 = e710 * ((f32)(u32)g->height * lbl_803DC9A0) + fy0;
         if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704)
         {
-            u0 = 8.0f * -fx0 + u0;
+            u0 = lbl_803DE714 * -fx0 + u0;
             fx0 = lbl_803DE704;
         }
         if (fy0 < *(f32*)&lbl_803DE704 && fy1 > lbl_803DE704)
         {
-            v0 = 8.0f * -fy0 + v0;
+            v0 = lbl_803DE714 * -fy0 + v0;
             fy0 = lbl_803DE704;
         }
 
@@ -1045,15 +1047,15 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
 
             if (gameTextDrawFunc != NULL)
             {
-                f32 sH = 32.0f * tex->height;
-                f32 sW = 32.0f * tex->width;
+                f32 sH = lbl_803DE718 * tex->height;
+                f32 sW = lbl_803DE718 * tex->width;
                 gameTextDrawFunc(fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
                                  (v0 + (f32)(g->height << 5)) / sH);
             }
             else
             {
-                f32 sH = 32.0f * tex->height;
-                f32 sW = 32.0f * tex->width;
+                f32 sH = lbl_803DE718 * tex->height;
+                f32 sW = lbl_803DE718 * tex->width;
                 textRenderChar((int)fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
                                (v0 + (f32)(g->height << 5)) / sH);
             }
