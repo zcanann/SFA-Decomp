@@ -3,107 +3,85 @@
  * trigger a Tricky companion-pickup sequence: clears bits 0x4E4/0x4E5, then
  * dispatches a vtable call (slot 14 of Tricky's object type at offset
  * 0x68+0x38) to link the companion. */
-#include "main/dll/dimmagicbridge_state.h"
 #include "main/object.h"
-#include "main/dll/dimwooddoor2state_struct.h"
-#include "main/dll/fbwgpipe_struct.h"
-#include "main/dll/dll1cestate_struct.h"
-#include "main/dll/explosionpartfxsource_struct.h"
-#include "main/dll/dim2pathgeneratorstate_struct.h"
-#include "main/dll/dim2snowballstate_struct.h"
-#include "main/dll/truthhornicestate_struct.h"
-#include "main/dll/dim2conveyorstate_struct.h"
-#include "main/dll/dll1d6state_struct.h"
-#include "main/dll/explosion_state.h"
-#include "main/objseq.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
 #include "main/object_render.h"
-
-STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
-STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
-STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
-
-STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
-STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
-
-FbWGPipe GXWGFifo : (0xCC008000);
-
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
-STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
-
-
-#define DIMTRICKY_STATE_WAIT_TRIGGER 0
-#define DIMTRICKY_STATE_HAND_CONTROL 1
-#define DIMTRICKY_STATE_LINK_COMPANION 2
-#define DIMTRICKY_STATE_DONE 3
-
-static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
+enum
 {
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
+    DIMTRICKY_STATE_WAIT_TRIGGER = 0,
+    DIMTRICKY_STATE_HAND_CONTROL = 1,
+    DIMTRICKY_STATE_LINK_COMPANION = 2,
+    DIMTRICKY_STATE_DONE = 3,
+};
 
-int dim_tricky_getExtraSize(void) { return 0x1; }
+#define DIMTRICKY_TRIGGER_GAMEBIT 0xA1B
+
+typedef struct DimTrickyState
+{
+    u8 phase;
+} DimTrickyState;
+
+typedef struct DimTrickyInterfaceVTable
+{
+    void* pad00[14];
+    void (*linkCompanion)(GameObject* tricky, GameObject* controller);
+} DimTrickyInterfaceVTable;
+
+STATIC_ASSERT(sizeof(DimTrickyState) == 0x1);
+STATIC_ASSERT(offsetof(DimTrickyInterfaceVTable, linkCompanion) == 0x38);
+
+int dim_tricky_getExtraSize(void) { return sizeof(DimTrickyState); }
 int dim_tricky_getObjectTypeId(void) { return 0x0; }
 
 void dim_tricky_free(void)
 {
 }
 
-void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f); }
+void dim_tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+}
 
 void dim_tricky_hitDetect(void)
 {
 }
 
-void dim_tricky_update(int* obj)
+void dim_tricky_update(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
-    int* trickyObj = (int*)getTrickyObject();
+    DimTrickyState* state = obj->extra;
+    GameObject* trickyObj = getTrickyObject();
     if (trickyObj == NULL) return;
-    switch (*(u8*)state)
+    switch (state->phase)
     {
     case DIMTRICKY_STATE_WAIT_TRIGGER:
-        if (mainGetBit(0xa1b) != 0)
+        if (mainGetBit(DIMTRICKY_TRIGGER_GAMEBIT) != 0)
         {
             mainSetBits(GAMEBIT_Tricky_Usable, 0);
             mainSetBits(GAMEBIT_IM_DoneRace, 0);
-            *(s8*)state = DIMTRICKY_STATE_HAND_CONTROL;
+            state->phase = DIMTRICKY_STATE_HAND_CONTROL;
         }
         break;
     case DIMTRICKY_STATE_HAND_CONTROL:
-        *(s8*)state = DIMTRICKY_STATE_LINK_COMPANION;
+        state->phase = DIMTRICKY_STATE_LINK_COMPANION;
         break;
     case DIMTRICKY_STATE_LINK_COMPANION:
-        ((void(*)(int*, int*))((void**)*(*(int***)((char*)trickyObj + 104)))[14])(trickyObj, obj);
-        *(s8*)state = DIMTRICKY_STATE_DONE;
+        (*(DimTrickyInterfaceVTable**)trickyObj->anim.dll)->linkCompanion(trickyObj, obj);
+        state->phase = DIMTRICKY_STATE_DONE;
         break;
     case DIMTRICKY_STATE_DONE:
         break;
     }
 }
 
-void dim_tricky_init(int* obj)
+void dim_tricky_init(GameObject* obj)
 {
     u8 v = DIMTRICKY_STATE_WAIT_TRIGGER;
-    *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
+    DimTrickyState* state = obj->extra;
+    state->phase = v;
 }
 
 ObjectDescriptor gDIM_trickyObjDescriptor = {

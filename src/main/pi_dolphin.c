@@ -965,9 +965,6 @@ extern int lbl_803DCCFC;
 extern u8 lbl_803DCCF8;
 extern f32 lbl_803DEA94;
 extern f32 lbl_803DEA98;
-extern u8 lbl_803DCD20[];
-extern u8 lbl_803DCD18[];
-
 void piRomLoadSection(int romOffset, int mapIndex, int destBuf);
 int GXFlush_(u8 visible, int unused);
 void waitNextFrame(void);

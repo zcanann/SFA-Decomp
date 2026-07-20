@@ -23,11 +23,11 @@ const InflateBaseExtra gInflateDistCodes[30] = {
     {513, 8},   {769, 8},   {1025, 9},  {1537, 9},  {2049, 10}, {3073, 10},
     {4097, 11}, {6145, 11}, {8193, 12}, {12289, 12}, {16385, 13}, {24577, 13}};
 
-extern u8 lbl_8030C880[];
-extern u16 lbl_8030C9A0[];
-extern u8 lbl_8030CDA0[];
-extern u8 lbl_8030CDC0[];
-extern u8 lbl_8030CDE0[];
+extern u8 gInflateFixedLiteralCodeLengths[];
+extern u16 gInflateFixedLiteralDecodeTable[];
+extern u8 gInflateFixedDistanceCodeLengths[];
+extern u8 gInflateFixedDistanceDecodeTable[];
+extern u8 gInflateBitReverseTable[];
 
 u8 gInflateLiteralCodeLengths[0x120];
 u16 gInflateLiteralDecodeTable[0x8000];
@@ -40,8 +40,8 @@ u8 gInflateCodeLengthDecodeTable[0x80];
 u16 gInflateLiteralNextCode[0x10];
 u16 gInflateDistanceNextCode[0x16];
 
-u8 lbl_803DCD18[8];
-u8 lbl_803DCD20[8];
+u8 gInflateCodeLengthNextCode[8];
+u8 gInflateCodeLengthCounts[8];
 
 #define ZROT1(b) ((((u32)(b) << sh) | ((u32)(b) >> (32 - sh))) & 1)
 #define ZROT8(b) ((((u32)(b) << sh) | ((u32)(b) >> (32 - sh))) & 0xff)
@@ -50,7 +50,7 @@ u8 lbl_803DCD20[8];
 #define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 32 - pos)
 #define ZROTL(b, m) (((u32)(b) << (m)) | ((u32)(b) >> (32 - (m))))
 
-int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
+int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void *decompressedSize) {
     u8 *src;
     u8 *dst;
     int pos;
@@ -79,10 +79,10 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
     u8 *activeCodeLengths;
     u8 *activeLengthCounts;
 
-    dst = dstv - 1;
+    dst = destination - 1;
     pos = 0;
     sh = 32;
-    src = srcv + 2;
+    src = compressedData + 2;
     do {
         final = ZROT1(src[0]);
         ZADV(1);
@@ -105,11 +105,11 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
             } while (len-- != 0);
         } else {
             if (type == 1) {
-                literalCodeLengths = lbl_8030C880;
-                literalDecodeTable = (u8 *)lbl_8030C9A0;
+                literalCodeLengths = gInflateFixedLiteralCodeLengths;
+                literalDecodeTable = (u8 *)gInflateFixedLiteralDecodeTable;
                 literalMaxBits = 9;
-                distanceCodeLengths = lbl_8030CDA0;
-                distanceDecodeTable = lbl_8030CDC0;
+                distanceCodeLengths = gInflateFixedDistanceCodeLengths;
+                distanceDecodeTable = gInflateFixedDistanceDecodeTable;
                 distanceMaxBits = 5;
             } else {
                 literalCodeLengths = gInflateLiteralCodeLengths;
@@ -117,7 +117,7 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                 distanceCodeLengths = gInflateDistanceCodeLengths;
                 distanceDecodeTable = gInflateDistanceDecodeTable;
                 val = 0;
-                p8 = lbl_803DCD20;
+                p8 = gInflateCodeLengthCounts;
                 for (i = 8; i != 0; i--) {
                     *p8 = val;
                     p8++;
@@ -156,26 +156,26 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                 for (i = 0; i != codeLengthCodeCount; i++) {
                     u32 v = ZGB8() & 7;
                     gInflateCodeLengthCodeLengths[gInflateCodeLengthOrder[i]] = v;
-                    lbl_803DCD20[v] += 1;
+                    gInflateCodeLengthCounts[v] += 1;
                     ZADV(3);
                 }
                 literalMaxBits = 7;
-                while (lbl_803DCD20[literalMaxBits] == 0) {
+                while (gInflateCodeLengthCounts[literalMaxBits] == 0) {
                     literalMaxBits--;
                 }
                 code = 0;
                 for (j = 1; j <= literalMaxBits; j++) {
-                    if (lbl_803DCD20[j] != 0) {
-                        lbl_803DCD18[j] = code;
-                        code += lbl_803DCD20[j] << (literalMaxBits - j);
+                    if (gInflateCodeLengthCounts[j] != 0) {
+                        gInflateCodeLengthNextCode[j] = code;
+                        code += gInflateCodeLengthCounts[j] << (literalMaxBits - j);
                     }
                 }
                 for (i = 0; i < 0x13; i++) {
                     u32 len = gInflateCodeLengthCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (literalMaxBits - len); k++) {
-                            u8 c = lbl_803DCD18[len] + 1;
-                            lbl_803DCD18[len] = c;
+                            u8 c = gInflateCodeLengthNextCode[len] + 1;
+                            gInflateCodeLengthNextCode[len] = c;
                             (gInflateCodeLengthDecodeTable - 1)[c] = i;
                         }
                     }
@@ -193,7 +193,7 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     }
                     v = (ZROT8(src[0]) | extra) & ((1 << literalMaxBits) - 1);
                     m = literalMaxBits + 0x18;
-                    sym = gInflateCodeLengthDecodeTable[ZROTL(lbl_8030CDE0[v], m) & 0xff];
+                    sym = gInflateCodeLengthDecodeTable[ZROTL(gInflateBitReverseTable[v], m) & 0xff];
                     ZADV(gInflateCodeLengthCodeLengths[sym]);
                     if (sym == 0x10) {
                         rep = (ZGB8() & 3) + 3;
@@ -271,9 +271,9 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                 u32 code2;
                 t = ZGB16() & ((1 << literalMaxBits) - 1);
                 m = literalMaxBits - 8;
-                code2 = ZROTL(lbl_8030CDE0[t & 0xff], m) & 0xffff;
+                code2 = ZROTL(gInflateBitReverseTable[t & 0xff], m) & 0xffff;
                 m = literalMaxBits + 0x10;
-                code2 |= ZROTL(lbl_8030CDE0[t >> 8], m) & 0xff;
+                code2 |= ZROTL(gInflateBitReverseTable[t >> 8], m) & 0xff;
                 sym = *(u16 *)(literalDecodeTable + code2 + code2);
                 ZADV(literalCodeLengths[sym]);
                 if ((int)sym < 0x100) {
@@ -293,9 +293,9 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     }
                     dt = ZGB16() & ((1 << distanceMaxBits) - 1);
                     m = distanceMaxBits - 8;
-                    dcode = ZROTL(lbl_8030CDE0[dt & 0xff], m) & 0xffff;
+                    dcode = ZROTL(gInflateBitReverseTable[dt & 0xff], m) & 0xffff;
                     m = distanceMaxBits + 0x10;
-                    dcode |= ZROTL(lbl_8030CDE0[dt >> 8], m) & 0xff;
+                    dcode |= ZROTL(gInflateBitReverseTable[dt >> 8], m) & 0xff;
                     dsym = distanceDecodeTable[dcode];
                     ZADV(distanceCodeLengths[dsym]);
                     dist = gInflateDistCodes[dsym].base;

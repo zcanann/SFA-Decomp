@@ -3679,6 +3679,7 @@ main/dll/dll_029B_arwingandrossstuff.c:
 	.text       start:0x8022E418 end:0x8022EDA4
 	.data       start:0x8032B608 end:0x8032B640
 	.sdata      start:0x803DC3D0 end:0x803DC3E0
+	.sdata2     start:0x803E7020 end:0x803E7028
 
 main/dll/ARW/dll_029C_arwarwingbo.c:
 	.text       start:0x8022EDA4 end:0x8022F1D8
