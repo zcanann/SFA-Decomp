@@ -59,7 +59,7 @@ extern f32 WCBLOCK_PLAYER_CELL_MARGIN;
 int WCBouncyCra_getExtraSize(void);
 int WCBouncyCra_getObjectTypeId(void);
 void WCBouncyCra_free(void);
-void WCBouncyCra_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void WCBouncyCra_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void WCBouncyCra_hitDetect(void);
 void WCBouncyCra_update(GameObject* obj);
 void WCBouncyCra_init(GameObject* obj, ObjPlacement* setup);

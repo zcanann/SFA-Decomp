@@ -25,9 +25,9 @@ int CCTestInfot_getExtraSize(void)
     return sizeof(CctestinfotState);
 }
 
-void CCTestInfot_update(int* obj)
+void CCTestInfot_update(GameObject* obj)
 {
-    CctestinfotState* state = ((GameObject*)obj)->extra;
+    CctestinfotState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
     if (state->disguised != 0)
     {
@@ -43,22 +43,22 @@ void CCTestInfot_update(int* obj)
             state->disguised = 1;
         }
     }
-    objSetHintTextIdx((GameObject*)obj, state->disguised);
-    Obj_SetActiveModelIndex((GameObject*)obj, state->disguised);
+    objSetHintTextIdx(obj, state->disguised);
+    Obj_SetActiveModelIndex(obj, state->disguised);
     if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
     {
         state->holdTimer = CCTESTINFOT_HOLD_TIME_RESET;
     }
     if (state->holdTimer > CCTESTINFOT_HOLD_TIME_FLOOR)
     {
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
         {
             state->holdTimer = CCTESTINFOT_HOLD_TIME_FLOOR;
         }
         else
         {
             state->holdTimer = state->holdTimer - timeDelta;
-            showHelpText(((GameObject*)obj)->anim.modelInstance->helpTextIds[state->disguised]);
+            showHelpText(obj->anim.modelInstance->helpTextIds[state->disguised]);
         }
     }
 }

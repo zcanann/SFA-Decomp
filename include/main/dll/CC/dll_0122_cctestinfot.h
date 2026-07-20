@@ -15,7 +15,7 @@ STATIC_ASSERT(offsetof(CctestinfotState, disguised) == 0x4);
 STATIC_ASSERT(sizeof(CctestinfotState) == 0x8);
 
 int CCTestInfot_getExtraSize(void);
-void CCTestInfot_update(int* obj);
+void CCTestInfot_update(GameObject* obj);
 void CCTestInfot_init(GameObject* obj, s8* def);
 
 #endif /* MAIN_DLL_CC_DLL_0122_CCTESTINFOT_H_ */

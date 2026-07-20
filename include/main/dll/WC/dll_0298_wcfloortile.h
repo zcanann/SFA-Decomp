@@ -44,7 +44,7 @@ extern ObjectDescriptor gWCFloorTileObjDescriptor;
 int wcfloortile_getExtraSize(void);
 int wcfloortile_getObjectTypeId(void);
 void wcfloortile_free(void);
-void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void wcfloortile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wcfloortile_hitDetect(void);
 void wcfloortile_init(GameObject* obj);
 void wcfloortile_release(void);

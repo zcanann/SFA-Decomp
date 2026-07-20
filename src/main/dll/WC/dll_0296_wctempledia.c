@@ -90,11 +90,11 @@ void wctempledia_free(void)
 {
 }
 
-void wctempledia_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void wctempledia_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E6E58);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6E58);
     }
 }
 

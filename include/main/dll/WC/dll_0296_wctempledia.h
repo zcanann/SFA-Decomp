@@ -56,7 +56,7 @@ void wctempledia_syncPartVisibility(GameObject* obj, u8 mask);
 int wctempledia_getExtraSize(void);
 int wctempledia_getObjectTypeId(void);
 void wctempledia_free(void);
-void wctempledia_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void wctempledia_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wctempledia_hitDetect(void);
 int wctempledia_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void wctempledia_update(GameObject* obj);
