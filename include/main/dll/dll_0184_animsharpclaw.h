@@ -31,14 +31,14 @@ typedef struct AnimsharpclawState
     u8 pad9C[0x140 - 0x9C];
 } AnimsharpclawState;
 
-int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate);
+int fn_801A8F88(GameObject* obj, ObjAnimUpdateState* animUpdate);
 int animsharpclaw_getExtraSize(void);
 int animsharpclaw_getObjectTypeId(void);
 void animsharpclaw_free(GameObject* obj);
 void animsharpclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void animsharpclaw_hitDetect(void);
-void animsharpclaw_update(int* obj);
-void animsharpclaw_init(int* obj, u8* init);
+void animsharpclaw_update(GameObject* obj);
+void animsharpclaw_init(GameObject* obj, u8* init);
 void animsharpclaw_release(void);
 void animsharpclaw_initialise(void);
 

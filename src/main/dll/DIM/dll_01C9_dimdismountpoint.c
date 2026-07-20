@@ -69,7 +69,7 @@ void DIMDismountPoint_render(GameObject *obj, int p1, int p2, int p3, int p4, s8
     {
         if ((obj)->userData2 != 0)
         {
-            objRenderFn_80041018((GameObject*)obj);
+            objRenderFn_80041018(obj);
         }
     }
     else
