@@ -1,5 +1,6 @@
 #include "dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/s_tan.h"
 
 extern const double lbl_803E7DB0;
 extern const double lbl_803E7DB8;
@@ -14,8 +15,6 @@ extern const double lbl_803E7DF8;
 extern const double lbl_803E7E00;
 extern const double lbl_803E7E08;
 extern const double lbl_803E7E10;
-
-double tan(int* out_n, float x);
 
 float mathSinfHighPrecision(float x) {
     int n;

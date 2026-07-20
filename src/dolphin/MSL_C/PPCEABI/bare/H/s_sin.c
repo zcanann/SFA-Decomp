@@ -1,6 +1,7 @@
 #include "dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/s_tan.h"
 
 extern float lbl_803E7D74;
 extern float lbl_803E7D78;
@@ -30,8 +31,6 @@ extern double lbl_803E7DF8;
 extern double lbl_803E7E00;
 extern double lbl_803E7E08;
 extern double lbl_803E7E10;
-
-double tan(int* out_n, float x);
 
 float mathCosf(float x) {
     u16 n;

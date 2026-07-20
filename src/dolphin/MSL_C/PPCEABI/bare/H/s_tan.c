@@ -1,4 +1,5 @@
 #include "PowerPC_EABI_Support/Runtime/runtime.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/s_tan.h"
 
 extern double lbl_803E7C00;
 extern double lbl_803E7C08;
