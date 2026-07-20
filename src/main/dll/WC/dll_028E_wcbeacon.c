@@ -30,8 +30,6 @@
 #include "main/object_render.h"
 #include "main/object_descriptor.h"
 
-#define WCBEACON_EXTRA_SIZE 0x8
-
 #define WCBEACON_RENDER_TYPE_BASE  0x400
 #define WCBEACON_RENDER_TYPE_SHIFT 0xb
 
@@ -39,10 +37,6 @@
 #define WCBEACON_PHASE_WAITING_FOR_TRICKY 1
 #define WCBEACON_PHASE_ACTIVATING         2
 #define WCBEACON_PHASE_ACTIVE             3
-
-#define WCBEACON_BLOCK_PLAYER_FLAG   0x8
-#define WCBEACON_TRICKY_PROMPT_FLAG  0x4
-#define WCBEACON_VISIBLE_PARTFX_FLAG 0x800
 
 #define WCBEACON_PARTFX_ACTIVE        0x73a
 #define WCBEACON_PARTFX_KIND          2
@@ -67,14 +61,13 @@ int wcbeacon_aButtonCallback(GameObject* obj)
 
 int wcbeacon_getExtraSize(void)
 {
-    return WCBEACON_EXTRA_SIZE;
+    return sizeof(WCBeaconState);
 }
 
 int wcbeacon_getObjectTypeId(GameObject* obj)
 {
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     int modelIndex = ((WCBeaconSetup*)obj->anim.placementData)->modelIndex;
-    int modelCount = objAnim->modelInstance->modelCount;
+    int modelCount = obj->anim.modelInstance->modelCount;
 
     if (modelIndex >= modelCount)
     {
@@ -87,7 +80,7 @@ void wcbeacon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6DE0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, WCBEACON_RENDER_SCALE);
     }
 }
 
@@ -97,7 +90,7 @@ void wcbeacon_update(GameObject* obj)
     WCBeaconState* state = obj->extra;
     u32 phase;
 
-    *(u8*)&obj->anim.resetHitboxMode |= WCBEACON_BLOCK_PLAYER_FLAG;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     phase = state->phase;
     if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY)
     {
@@ -114,13 +107,11 @@ void wcbeacon_update(GameObject* obj)
         }
         else
         {
-            *(u8*)&obj->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
-            if (tricky != NULL && (*(u8*)&obj->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG))
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+            if (tricky != NULL && (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE))
             {
-                int recv;
-                (*(void (**)(int, int, int, int, int))(recv + 0x28))((int)tricky, (int)obj, WCBEACON_TRIGGER_ACCEPT_ARG,
-                                                                     WCBEACON_TRICKY_PROMPT_FLAG,
-                                                                     (recv = *(int*)(*(int*)((u8*)tricky + 0x68))));
+                (*(WCBeaconTrickyInterfaceVTable**)tricky->anim.dll)->acceptInteraction(
+                    tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG, INTERACT_FLAG_IN_RANGE);
             }
         }
         if (state->acceptedInteraction != 0)
@@ -128,7 +119,7 @@ void wcbeacon_update(GameObject* obj)
             Sfx_PlayFromObject((int)obj, SFXTRIG_en_trpopn_c_9f);
             Sfx_PlayFromObject((int)obj, SFXTRIG_forcecryslp11);
             state->phase = WCBEACON_PHASE_ACTIVATING;
-            state->timer = lbl_803E6DE4;
+            state->timer = WCBEACON_TIMER_INITIAL;
         }
     }
     else if (phase == WCBEACON_PHASE_IDLE)
@@ -143,14 +134,14 @@ void wcbeacon_update(GameObject* obj)
     {
         f32 v = state->timer + timeDelta;
         state->timer = v;
-        if (v >= lbl_803E6DE8)
+        if (v >= WCBEACON_ACTIVATION_DURATION)
         {
             state->phase = WCBEACON_PHASE_ACTIVE;
         }
     }
     else if (phase == WCBEACON_PHASE_ACTIVE)
     {
-        if (obj->objectFlags & WCBEACON_VISIBLE_PARTFX_FLAG)
+        if (obj->objectFlags & OBJECT_OBJFLAG_RENDERED)
         {
             (*gPartfxInterface)
                 ->spawnObject(obj, WCBEACON_PARTFX_ACTIVE, NULL, WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG,
@@ -167,17 +158,16 @@ void wcbeacon_update(GameObject* obj)
 
 void wcbeacon_init(GameObject* obj, WCBeaconSetup* setup)
 {
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCBeaconState* state = obj->extra;
     s16 objType;
 
     (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
     objType = (s16)(setup->type << 8);
     obj->anim.rotX = objType;
-    objAnim->bankIndex = setup->modelIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
+    obj->anim.bankIndex = setup->modelIndex;
+    if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount)
     {
-        objAnim->bankIndex = 0;
+        obj->anim.bankIndex = 0;
     }
     if ((u32)mainGetBit(setup->armBit) != 0)
     {

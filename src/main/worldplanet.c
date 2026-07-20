@@ -108,7 +108,7 @@ void worldplanet_hitDetect(void)
     return;
 }
 
-void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY);
+void worldplanet_readMapInput(GameObject* obj, s8* outX, s8* outY);
 
 void worldplanet_update(GameObject* obj)
 {
@@ -124,8 +124,8 @@ void worldplanet_update(GameObject* obj)
     WorldObjEffectParams pfx;
     struct
     {
-        u8 inY;
-        u8 inX[3];
+        s8 inY;
+        s8 inX[3];
     } in;
 
     tbl = gWorldPlanetObjectIdTable;
@@ -204,7 +204,7 @@ void worldplanet_update(GameObject* obj)
         pfx.offsetY = gWorldPlanetPfxOffsetY;
         pfx.offsetZ = gWorldPlanetPfxOffsetZ;
         (*gPartfxInterface)->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &pfx, 2, -1, NULL);
-        worldplanet_readMapInput(obj, (u8*)in.inX, &in.inY);
+        worldplanet_readMapInput(obj, in.inX, &in.inY);
         (obj)->anim.rotZ -= 10;
         (obj)->anim.rotY = 0x3448;
         (obj)->anim.rotX = 0x4000;
@@ -486,7 +486,7 @@ void worldplanet_update(GameObject* obj)
     }
 }
 
-void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
+void worldplanet_readMapInput(GameObject* obj, s8* outX, s8* outY)
 {
     WorldPlanetState* state = obj->extra;
     s8 stickX;
@@ -556,8 +556,8 @@ void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
             state->prevStickX = 0;
             state->stickXRepeatFrames = 0;
         }
-        *(s8*)outX = resX;
-        *(s8*)outY = resY;
+        *outX = resX;
+        *outY = resY;
     }
     else
     {
