@@ -4717,7 +4717,7 @@ int ObjSeq_update(u8* obj, f32 t)
         }
 
         slot = state->slot;
-        if (base[slot + 0x3590] != 0)
+        if (((u8*)(base + 0x3590))[slot] != 0)
         {
             state->heading = ((s16*)(base + 0x35e8))[slot];
         }
@@ -5025,7 +5025,7 @@ int ObjSeq_update(u8* obj, f32 t)
         else
         {
             slot = state->slot;
-            if ((s8)base[slot + 0x3cf4] != 0)
+            if (((s8*)(base + 0x3cf4))[slot] != 0)
             {
                 ((s16*)(base + 0x3694))[slot] = state->curFrame;
                 ((u8*)(base + 0x338c))[state->slot] = 2;
