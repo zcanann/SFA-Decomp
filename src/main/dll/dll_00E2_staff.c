@@ -789,7 +789,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             f32 k = 255.0f;
                             f32 t = flb - ((SwipeVertex*)vp)[0].life;
                             f32 clamped;
-                            t = k * (t * 0.125f);
+                            t = k * (t / 8.0f);
                             if (t < 0.0f)
                             {
                                 clamped = 0.0f;
@@ -815,7 +815,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             f32 k = 255.0f;
                             f32 t = flb - ((SwipeVertex*)vp)[1].life;
                             f32 clamped;
-                            t = k * (t * 0.125f);
+                            t = k * (t / 8.0f);
                             if (t < 0.0f)
                             {
                                 clamped = 0.0f;
@@ -1203,7 +1203,7 @@ void staff_update(int* obj)
                     f32 k = 255.0f;
                     f32 t = 2.0f * ((StaffState*)state)->progress - vp[0].life;
                     f32 clamped;
-                    t = k * (t * 0.125f);
+                    t = k * (t / 8.0f);
                     if (t < 0.0f)
                     {
                         clamped = 0.0f;
