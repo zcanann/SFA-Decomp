@@ -32,6 +32,30 @@ import difflib
 BRANCH = re.compile(r'^(b|ba|bl|bla|bc|bca|bcl|bdnz|bdz|b[a-z]{1,3}[+-]?)\s')
 
 
+def pool_float_syms(path='config/GSAE01/symbols.txt'):
+    """Names of 4-byte .sdata2 floats -- i.e. pool constants that happen to carry a
+    project-given name (gMoonRockPi) rather than a compiler-style one (lbl_803DF9D0).
+    Folding only the compiler-style spellings still let 13 of 16 named-pool relocs read
+    as structural work and re-promoted a capped function. Classify by SECTION AND TYPE,
+    not by how the name looks."""
+    out = set()
+    try:
+        with open(path) as f:
+            for l in f:
+                if '.sdata2:' not in l or 'data:float' not in l:
+                    continue
+                if not re.search(r'size:0x4\b', l):
+                    continue
+                out.add(l.split('=')[0].strip())
+    except OSError:
+        pass
+    return out
+
+
+POOL_FLOATS = pool_float_syms()
+POOL_FOLDED = []
+
+
 def norm_unit(u):
     """Accept the report.json name ("main/main/shader") or the source path
     ("main/shader.c"). function_objdump.py wants the source-path form."""
@@ -70,8 +94,17 @@ def insns(s, blind):
             # function whose 188 diffs were ALL pool names read as "real
             # structural work" and misdispatching a whole lane at it.
             if blind:
-                sym = re.sub(r'^(@\d+|lbl_[0-9A-Fa-f]{6,}|jumptable_[0-9A-Fa-f]{6,})$',
-                             'POOL', sym)
+                if sym in POOL_FLOATS:
+                    # Folding every named .sdata2 float would also HIDE a genuine
+                    # wrong-constant reference (ours cites gFooScale, retail gBarScale).
+                    # Fold, but count it so the caller is told to confirm against the
+                    # section bytes rather than silently trusting a clean REGBLIND.
+                    POOL_FOLDED.append(sym)
+                    sym = 'POOL'
+                else:
+                    sym = re.sub(
+                        r'^(@\d+|lbl_[0-9A-Fa-f]{6,}|jumptable_[0-9A-Fa-f]{6,})$',
+                        'POOL', sym)
             out.append('RELOC ' + sym)
     return out
 
@@ -101,6 +134,12 @@ def main():
             n += max(i2 - i1, j2 - j1)
             regions.append((tag, T[i1:i2], C[j1:j2]))
         print(('REGBLIND' if blind else 'RAW'), 'target', len(T), 'cur', len(C), 'diff', n)
+        if blind and POOL_FOLDED:
+            u = sorted(set(POOL_FOLDED))
+            print('  note: folded %d named .sdata2 float reloc(s) as pool naming (%s).'
+                  % (len(u), ', '.join(u[:6]) + ('...' if len(u) > 6 else '')))
+            print('  a clean REGBLIND here assumes the pool CONTENT matches -- confirm'
+                  ' the .sdata2 section bytes before calling this function capped.')
         if blind:
             if not regions:
                 print('  (pure register permutation -- no structural work available)')
