@@ -44,7 +44,7 @@ static inline void heapSiftUp(CurveHeapNode* q, int i)
     q[i].value = val;
 }
 
-void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentDir, u16 count, s16* box)
+void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentNodeIndex, u16 count, s16* box)
 {
     int foundIdx;
     int savedFlag;
@@ -95,7 +95,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
             n->z = box[1];
             n->y = box[2];
             n->gCost = count;
-            n->parentDir = (u8)(u16)parentDir;
+            n->parentNodeIndex = (u8)(u16)parentNodeIndex;
             dxh = n->x - state->tgtX;
             dyh = n->y - state->tgtY;
             n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
@@ -287,7 +287,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
         {
             return;
         }
-        n->parentDir = parentDir;
+        n->parentNodeIndex = parentNodeIndex;
         n->gCost = count;
         key = (u16)(n->hCost + n->gCost);
         {
@@ -332,7 +332,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
         n->z = box[1];
         n->y = box[2];
         n->gCost = count;
-        n->parentDir = (u8)(u16)parentDir;
+        n->parentNodeIndex = (u8)(u16)parentNodeIndex;
         dxh = n->x - state->tgtX;
         dyh = n->y - state->tgtY;
         n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
@@ -366,28 +366,26 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentD
     }
 }
 
-void fn_800118EC(RouteState* a1, VoxBoxArg* a2, int a3)
+void fn_800118EC(RouteState* state, VoxBoxArg* box, int parentNodeIndex)
 {
-    s16 box[3];
-    u16 count = a2->cost + 1;
-    box[0] = a2->x;
-    box[1] = a2->z;
-    box[2] = a2->y;
-    box[0] += 2;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
-    box[0] -= 4;
-    box[1] = a2->z;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
-    box[0] += 2;
-    box[2] += 2;
-    box[1] = a2->z;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
-    box[2] -= 4;
-    box[1] = a2->z;
-    voxmapsFn_80010ff4(a1, a2, a3, count, box);
+    s16 neighbor[3];
+    u16 nextCost = box->cost + 1;
+    neighbor[0] = box->x;
+    neighbor[1] = box->z;
+    neighbor[2] = box->y;
+    neighbor[0] += 2;
+    voxmapsFn_80010ff4(state, box, parentNodeIndex, nextCost, neighbor);
+    neighbor[0] -= 4;
+    neighbor[1] = box->z;
+    voxmapsFn_80010ff4(state, box, parentNodeIndex, nextCost, neighbor);
+    neighbor[0] += 2;
+    neighbor[2] += 2;
+    neighbor[1] = box->z;
+    voxmapsFn_80010ff4(state, box, parentNodeIndex, nextCost, neighbor);
+    neighbor[2] -= 4;
+    neighbor[1] = box->z;
+    voxmapsFn_80010ff4(state, box, parentNodeIndex, nextCost, neighbor);
 }
-
-void fn_800118EC(RouteState* a1, VoxBoxArg* a2, int a3);
 
 int fn_800119FC(s16* dest, s16* start, s16* out)
 {
@@ -607,101 +605,101 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
     return 1;
 }
 
-int fn_80011EB0(RouteState* state, int count)
+int fn_80011EB0(RouteState* state, int maxPathPoints)
 {
-    f32 local[3];
+    f32 waypoint[3];
     RouteNode startNode;
-    RouteNode* cur;
-    int idx;
-    RouteNode* cand;
-    RouteNode* lastClear;
-    int j;
-    int i;
-    RouteNode* node;
+    RouteNode* segmentStart;
+    int pathCount;
+    RouteNode* candidate;
+    RouteNode* lastVisibleNode;
+    int parentIndex;
+    int nodeIndex;
+    RouteNode* routeNode;
 
-    if (count < 0)
+    if (maxPathPoints < 0)
     {
-        count = 10;
+        maxPathPoints = 10;
     }
-    i = state->cur;
-    node = &state->nodes[i];
-    node->parentIdx = 0xff;
-    while ((j = node->parentDir) != 0xffu)
+    nodeIndex = state->cur;
+    routeNode = &state->nodes[nodeIndex];
+    routeNode->nextNodeIndex = 0xff;
+    while ((parentIndex = routeNode->parentNodeIndex) != 0xffu)
     {
-        node = &state->nodes[j];
-        node->parentIdx = i;
-        i = j;
+        routeNode = &state->nodes[parentIndex];
+        routeNode->nextNodeIndex = nodeIndex;
+        nodeIndex = parentIndex;
     }
 
     startNode.x = state->startX;
     startNode.z = state->startZ;
     startNode.y = state->startY;
-    startNode.parentIdx = i;
-    if (node->parentIdx == 0xff)
+    startNode.nextNodeIndex = nodeIndex;
+    if (routeNode->nextNodeIndex == 0xff)
     {
-        cand = NULL;
+        candidate = NULL;
     }
     else
     {
-        cand = &state->nodes[node->parentIdx];
+        candidate = &state->nodes[routeNode->nextNodeIndex];
     }
-    lastClear = node;
-    cur = &startNode;
-    idx = 0;
+    lastVisibleNode = routeNode;
+    segmentStart = &startNode;
+    pathCount = 0;
 
-    while (idx < count && cand != NULL)
+    while (pathCount < maxPathPoints && candidate != NULL)
     {
-        if (cur->x != cand->x || cur->y != cand->y)
+        if (segmentStart->x != candidate->x || segmentStart->y != candidate->y)
         {
-            if (fn_800119FC((s16*)cand, (s16*)cur, NULL) == 0)
+            if (fn_800119FC((s16*)candidate, (s16*)segmentStart, NULL) == 0)
             {
-                local[0] = (f32)(lastClear->x * 10 + 5);
-                local[1] = (f32)(lastClear->z * 10 + 5);
-                local[2] = (f32)(lastClear->y * 10 + 5);
+                waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
+                waypoint[1] = (f32)(lastVisibleNode->z * 10 + 5);
+                waypoint[2] = (f32)(lastVisibleNode->y * 10 + 5);
                 if (gVoxMapsTransformObj != 0)
                 {
-                    Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2],
+                    Obj_TransformLocalPointToWorld(waypoint[0], waypoint[1], waypoint[2], &waypoint[0], &waypoint[1], &waypoint[2],
                                                    gVoxMapsTransformObj);
                 }
-                state->pathPoints[idx * 3 + 0] = (f32)((int)local[0] + 5);
-                state->pathPoints[idx * 3 + 1] = (f32)(int)local[1];
-                state->pathPoints[idx++ * 3 + 2] = (f32)((int)local[2] + 5);
-                cur = cand;
+                state->pathPoints[pathCount * 3 + 0] = (f32)((int)waypoint[0] + 5);
+                state->pathPoints[pathCount * 3 + 1] = (f32)(int)waypoint[1];
+                state->pathPoints[pathCount++ * 3 + 2] = (f32)((int)waypoint[2] + 5);
+                segmentStart = candidate;
             }
         }
-        lastClear = cand;
-        if (cand->parentIdx == 0xff)
+        lastVisibleNode = candidate;
+        if (candidate->nextNodeIndex == 0xff)
         {
-            cand = NULL;
+            candidate = NULL;
         }
         else
         {
-            cand = &state->nodes[cand->parentIdx];
+            candidate = &state->nodes[candidate->nextNodeIndex];
         }
     }
 
-    if (idx < count)
+    if (pathCount < maxPathPoints)
     {
-        local[0] = (f32)(lastClear->x * 10 + 5);
-        local[1] = (f32)(lastClear->z * 10 + 5);
-        local[2] = (f32)(lastClear->y * 10 + 5);
+        waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
+        waypoint[1] = (f32)(lastVisibleNode->z * 10 + 5);
+        waypoint[2] = (f32)(lastVisibleNode->y * 10 + 5);
         if (gVoxMapsTransformObj != 0)
         {
-            Obj_TransformLocalPointToWorld(local[0], local[1], local[2], &local[0], &local[1], &local[2],
+            Obj_TransformLocalPointToWorld(waypoint[0], waypoint[1], waypoint[2], &waypoint[0], &waypoint[1], &waypoint[2],
                                            gVoxMapsTransformObj);
         }
-        state->pathPoints[idx * 3 + 0] = (f32)((int)local[0] + 5);
-        state->pathPoints[idx * 3 + 1] = (f32)(int)local[1];
-        state->pathPoints[idx++ * 3 + 2] = (f32)((int)local[2] + 5);
-        if (idx >= 10)
+        state->pathPoints[pathCount * 3 + 0] = (f32)((int)waypoint[0] + 5);
+        state->pathPoints[pathCount * 3 + 1] = (f32)(int)waypoint[1];
+        state->pathPoints[pathCount++ * 3 + 2] = (f32)((int)waypoint[2] + 5);
+        if (pathCount >= 10)
         {
-            idx = 10;
+            pathCount = 10;
         }
     }
 
-    state->pathCount = idx;
+    state->pathCount = pathCount;
     state->pad22 = 0;
-    return idx;
+    return pathCount;
 }
 
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
@@ -754,7 +752,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 node->z = out[1];
                 node->y = out[2];
                 node->gCost = 0;
-                node->parentDir = 0xff;
+                node->parentNodeIndex = 0xff;
                 dx = node->x - state->tgtX;
                 dz = node->y - state->tgtY;
                 d2 = dx * dx + dz * dz;

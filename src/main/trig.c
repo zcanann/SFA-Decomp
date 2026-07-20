@@ -111,43 +111,43 @@ float fsin16Precise(int angle) {
 
 float fn_80293D0C(int angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
-    float cast = fastCastS16ToFloat(&reduced);
-    double y = lbl_803E7CD0 * cast;
-    double y2 = y * y;
+    float reducedFloat = fastCastS16ToFloat(&reduced);
+    double reducedAngle = lbl_803E7CD0 * reducedFloat;
+    double reducedSquared = reducedAngle * reducedAngle;
 
     switch (angle & 0xE000) {
         case 0x0000:
         case 0xE000:
-            return (float)(y * (((((lbl_803E7D00 * y2 + lbl_803E7CF8) * y2 + lbl_803E7CF0) * y2
+            return (float)(reducedAngle * (((((lbl_803E7D00 * reducedSquared + lbl_803E7CF8) * reducedSquared + lbl_803E7CF0) * reducedSquared
                                   + lbl_803E7CE8)
-                                     * y2
+                                     * reducedSquared
                                  + lbl_803E7CE0)
-                                    * y2
+                                    * reducedSquared
                                 + lbl_803E7CD8));
         case 0x2000:
         case 0x4000:
-            return (float)(((((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2 + lbl_803E7D20)
-                              * y2
+            return (float)(((((((lbl_803E7D38 * reducedSquared + lbl_803E7D30) * reducedSquared + lbl_803E7D28) * reducedSquared + lbl_803E7D20)
+                              * reducedSquared
                               + lbl_803E7D18)
-                             * y2
+                             * reducedSquared
                              + lbl_803E7D10)
-                            * y2
+                            * reducedSquared
                             + lbl_803E7D08));
         case 0x6000:
         case 0x8000:
-            return (float)(-(y * (((((lbl_803E7D00 * y2 + lbl_803E7CF8) * y2 + lbl_803E7CF0) * y2
+            return (float)(-(reducedAngle * (((((lbl_803E7D00 * reducedSquared + lbl_803E7CF8) * reducedSquared + lbl_803E7CF0) * reducedSquared
                                     + lbl_803E7CE8)
-                                       * y2
+                                       * reducedSquared
                                    + lbl_803E7CE0)
-                                      * y2
+                                      * reducedSquared
                                   + lbl_803E7CD8)));
         default:
-            return (float)(-(y2
-                                 * (((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2
+            return (float)(-(reducedSquared
+                                 * (((((lbl_803E7D38 * reducedSquared + lbl_803E7D30) * reducedSquared + lbl_803E7D28) * reducedSquared
                                       + lbl_803E7D20)
-                                         * y2
+                                         * reducedSquared
                                      + lbl_803E7D18)
-                                        * y2
+                                        * reducedSquared
                                     + lbl_803E7D10)
                              + lbl_803E7D08));
     }
@@ -217,79 +217,79 @@ float fcos16Precise(int angle) {
 
 float fn_80293AC4(int angle) {
     s16 reduced = (s16)(int)((angle << 2) & 0x3FFFC);
-    float cast = fastCastS16ToFloat(&reduced);
-    double y = lbl_803E7CD0 * cast;
-    double y2 = y * y;
+    float reducedFloat = fastCastS16ToFloat(&reduced);
+    double reducedAngle = lbl_803E7CD0 * reducedFloat;
+    double reducedSquared = reducedAngle * reducedAngle;
 
     switch (angle & 0xE000) {
         case 0x0000:
         case 0xE000:
-            return (float)(((((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2 + lbl_803E7D20)
-                              * y2
+            return (float)(((((((lbl_803E7D38 * reducedSquared + lbl_803E7D30) * reducedSquared + lbl_803E7D28) * reducedSquared + lbl_803E7D20)
+                              * reducedSquared
                               + lbl_803E7D18)
-                             * y2
+                             * reducedSquared
                              + lbl_803E7D10)
-                            * y2
+                            * reducedSquared
                             + lbl_803E7D08));
         case 0x2000:
         case 0x4000:
-            return (float)(-(y * (((((lbl_803E7D00 * y2 + lbl_803E7CF8) * y2 + lbl_803E7CF0) * y2
+            return (float)(-(reducedAngle * (((((lbl_803E7D00 * reducedSquared + lbl_803E7CF8) * reducedSquared + lbl_803E7CF0) * reducedSquared
                                     + lbl_803E7CE8)
-                                       * y2
+                                       * reducedSquared
                                    + lbl_803E7CE0)
-                                      * y2
+                                      * reducedSquared
                                   + lbl_803E7CD8)));
         case 0x6000:
         case 0x8000:
-            return (float)(-(y2
-                                 * (((((lbl_803E7D38 * y2 + lbl_803E7D30) * y2 + lbl_803E7D28) * y2
+            return (float)(-(reducedSquared
+                                 * (((((lbl_803E7D38 * reducedSquared + lbl_803E7D30) * reducedSquared + lbl_803E7D28) * reducedSquared
                                       + lbl_803E7D20)
-                                         * y2
+                                         * reducedSquared
                                      + lbl_803E7D18)
-                                        * y2
+                                        * reducedSquared
                                     + lbl_803E7D10)
                              + lbl_803E7D08));
         default:
-            return (float)(y * (((((lbl_803E7D00 * y2 + lbl_803E7CF8) * y2 + lbl_803E7CF0) * y2
+            return (float)(reducedAngle * (((((lbl_803E7D00 * reducedSquared + lbl_803E7CF8) * reducedSquared + lbl_803E7CF0) * reducedSquared
                                   + lbl_803E7CE8)
-                                     * y2
+                                     * reducedSquared
                                  + lbl_803E7CE0)
-                                    * y2
+                                    * reducedSquared
                                 + lbl_803E7CD8));
     }
 }
 
-void fn_80293C64(float x, float* sin_out, float* cos_out) {
-    u16 n;
-    float y = trigReduceQuadrant(&n, x);
-    float y2 = y * y;
-    float sin_y = y * ((lbl_803E7D4C * y2 + lbl_803E7D48) * y2 + lbl_803E7D44);
-    float cos_y = ((lbl_803E7D5C * y2 + lbl_803E7D58) * y2 + lbl_803E7D54) * y2 + lbl_803E7D50;
+void fn_80293C64(float x, float* outSin, float* outCos) {
+    u16 quadrant;
+    float reducedAngle = trigReduceQuadrant(&quadrant, x);
+    float reducedSquared = reducedAngle * reducedAngle;
+    float sinApprox = reducedAngle * ((lbl_803E7D4C * reducedSquared + lbl_803E7D48) * reducedSquared + lbl_803E7D44);
+    float cosApprox = ((lbl_803E7D5C * reducedSquared + lbl_803E7D58) * reducedSquared + lbl_803E7D54) * reducedSquared + lbl_803E7D50;
 
-    switch (n & 6) {
+    switch (quadrant & 6) {
         case 0:
-            sin_y = (x >= lbl_803E7D40) ? sin_y : -sin_y;
-            *sin_out = sin_y;
-            *cos_out = cos_y;
+            sinApprox = (x >= lbl_803E7D40) ? sinApprox : -sinApprox;
+            *outSin = sinApprox;
+            *outCos = cosApprox;
             break;
         case 2:
-            cos_y = (x >= lbl_803E7D40) ? cos_y : -cos_y;
-            *sin_out = cos_y;
-            *cos_out = -sin_y;
+            cosApprox = (x >= lbl_803E7D40) ? cosApprox : -cosApprox;
+            *outSin = cosApprox;
+            *outCos = -sinApprox;
             break;
         case 4:
             if (x >= lbl_803E7D40) {
-                sin_y = -sin_y;
+                sinApprox = -sinApprox;
             }
-            *sin_out = sin_y;
-            *cos_out = -cos_y;
+            *outSin = sinApprox;
+            *outCos = -cosApprox;
             break;
         default:
             if (x >= lbl_803E7D40) {
-                cos_y = -cos_y;
+                cosApprox = -cosApprox;
             }
-            *sin_out = cos_y;
-            *cos_out = sin_y;
+            *outSin = cosApprox;
+            *outCos = sinApprox;
             break;
     }
 }

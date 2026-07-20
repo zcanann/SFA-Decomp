@@ -3,12 +3,12 @@
  * projectile. Idle ChukChuk ramps a glow texture; when index 10 is reached
  * it arms (flags bit 1) and, if the player crosses triggerDistance inside the
  * facing wedge (+/- arcHalfAngle around rotX), rolls attackChance% to spit an
- * IceBall (fn_8015F5B0 spawns object id 1307 aimed at the player + aimHeightY).
+ * IceBall (chukChuk_spawnAimedIceBall spawns object id 1307 aimed at the player + aimHeightY).
  * Taking priority-hit 14 decrements hitsLeft; on depletion it dies: disables
  * hits, hides, sets gameBit, and starts the steam-fade particle. gameBit set
  * at load means already destroyed -> spawn disabled + hidden.
  *
- * This TU also defines fn_8015F5B0 and the ChukChuk ObjectDescriptor.
+ * This TU also defines chukChuk_spawnAimedIceBall and the ChukChuk ObjectDescriptor.
  */
 #include "main/obj_placement.h"
 #include "main/dll/objfx_api.h"
@@ -27,7 +27,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-/* child object id spawned by fn_8015F5B0 (docblock: IceBall aimed at the player) */
+/* child object id spawned by chukChuk_spawnAimedIceBall (docblock: IceBall aimed at the player) */
 #define CHUKCHUK_CHILD_OBJ_ICEBALL 1307
 
 /* sub->flags bits (see chukchukstate_struct.h) */
@@ -39,17 +39,17 @@ STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 /* glow-texture ramp table */
-u8 lbl_8031FF80[] = {0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0};
+u8 gChukChukGlowTextureRamp[] = {0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0};
 
-void fn_8015F5B0(GameObject* obj)
+void chukChuk_spawnAimedIceBall(GameObject* obj)
 {
-    ChukChukState* sub;
+    ChukChukState* state;
     int setup;
-    u8* o;
-    GameObject* pl;
-    f32 sc;
+    u8* projectile;
+    GameObject* player;
+    f32 travelTime;
 
-    sub = obj->extra;
+    state = obj->extra;
     if (Obj_IsLoadingLocked() != 0)
     {
         setup = (int)Obj_AllocObjectSetup(36, CHUKCHUK_CHILD_OBJ_ICEBALL);
@@ -59,22 +59,22 @@ void fn_8015F5B0(GameObject* obj)
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        o = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
-        if (o != NULL)
+        projectile = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
+        if (projectile != NULL)
         {
-            pl = Obj_GetPlayerObject();
-            ((GameObject*)o)->anim.velocityX =
-                (pl->anim.localPosX - obj->anim.localPosX) / (sc = 42.0f);
-            ((GameObject*)o)->anim.velocityY =
-                (pl->anim.localPosY + (f32)(u32)sub->aimHeightY - obj->anim.localPosY) /
-                sc;
-            ((GameObject*)o)->anim.velocityZ =
-                (pl->anim.localPosZ - obj->anim.localPosZ) / sc;
+            player = Obj_GetPlayerObject();
+            ((GameObject*)projectile)->anim.velocityX =
+                (player->anim.localPosX - obj->anim.localPosX) / (travelTime = 42.0f);
+            ((GameObject*)projectile)->anim.velocityY =
+                (player->anim.localPosY + (f32)(u32)state->aimHeightY - obj->anim.localPosY) /
+                travelTime;
+            ((GameObject*)projectile)->anim.velocityZ =
+                (player->anim.localPosZ - obj->anim.localPosZ) / travelTime;
         }
     }
 }
 
-void ChukChuk_setScale(GameObject* obj, int message)
+void ChukChuk_handleMessage(GameObject* obj, int message)
 {
     switch ((u8)message)
     {
@@ -111,14 +111,14 @@ void ChukChuk_hitDetect(void)
 void ChukChuk_update(GameObject* obj)
 {
 
-    ChukChukState* v;
-    u16 di;
-    GameObject* pl;
+    ChukChukState* state;
+    u16 playerDistance;
+    GameObject* player;
     ObjTextureRuntimeSlot* tex;
-    int ang;
+    int relativeAngle;
     int roll;
-    f32 lim;
-    f32 nv;
+    f32 phaseLimit;
+    f32 nextPhase;
     f32 dx;
     f32 dz;
     struct
@@ -127,81 +127,81 @@ void ChukChuk_update(GameObject* obj)
         int sphereIndex;
         int hitObject;
         f32 toPlayer[3];
-    } hit;
+    } hitResult;
 
-    v = obj->extra;
-    if (v->steamTimer)
+    state = obj->extra;
+    if (state->steamTimer)
     {
-        v->steamTimer -= timeDelta;
-        objParticleFn_80099d84(obj, 1.0f, 1, v->steamTimer / 60.0f, 0);
-        if (v->steamTimer <= 0.0f)
+        state->steamTimer -= timeDelta;
+        objParticleFn_80099d84(obj, 1.0f, 1, state->steamTimer / 60.0f, 0);
+        if (state->steamTimer <= 0.0f)
         {
-            v->steamTimer = 0.0f;
+            state->steamTimer = 0.0f;
         }
     }
-    if ((v->flags & CHUKCHUK_FLAG_DEAD) == 0)
+    if ((state->flags & CHUKCHUK_FLAG_DEAD) == 0)
     {
         tex = objFindTexture(obj, 0, 0);
-        if (v->glowPhase < 16.0f)
+        if (state->glowPhase < 16.0f)
         {
-            if ((int)v->glowPhase == 10)
+            if ((int)state->glowPhase == 10)
             {
-                v->flags |= CHUKCHUK_FLAG_PRIMED;
+                state->flags |= CHUKCHUK_FLAG_PRIMED;
             }
-            tex->textureId = lbl_8031FF80[(int)v->glowPhase] << 8;
-            lim = 16.0f;
-            nv = (v->glowPhase += 1.0f);
-            if (lim == nv)
+            tex->textureId = gChukChukGlowTextureRamp[(int)state->glowPhase] << 8;
+            phaseLimit = 16.0f;
+            nextPhase = (state->glowPhase += 1.0f);
+            if (phaseLimit == nextPhase)
             {
-                v->glowPhase = (f32)(int)randomGetRange(16, 245);
+                state->glowPhase = (f32)(int)randomGetRange(16, 245);
             }
         }
         else
         {
-            if (255.0f - v->glowPhase >= timeDelta)
+            if (255.0f - state->glowPhase >= timeDelta)
             {
-                v->glowPhase = v->glowPhase + timeDelta;
+                state->glowPhase = state->glowPhase + timeDelta;
             }
             else
             {
-                v->glowPhase = 0.0f;
+                state->glowPhase = 0.0f;
             }
             tex->textureId = 0;
         }
-        pl = Obj_GetPlayerObject();
-        dx = pl->anim.localPosX - obj->anim.localPosX;
-        dz = pl->anim.localPosZ - obj->anim.localPosZ;
-        di = sqrtf(dx * dx + dz * dz);
-        if (di < v->triggerDistance)
+        player = Obj_GetPlayerObject();
+        dx = player->anim.localPosX - obj->anim.localPosX;
+        dz = player->anim.localPosZ - obj->anim.localPosZ;
+        playerDistance = sqrtf(dx * dx + dz * dz);
+        if (playerDistance < state->triggerDistance)
         {
-            if (v->prevDistance >= v->triggerDistance)
+            if (state->prevDistance >= state->triggerDistance)
             {
-                v->flags = CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK;
-                v->glowPhase = 0.0f;
+                state->flags = CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK;
+                state->glowPhase = 0.0f;
             }
-            if ((v->flags & (CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK)) != 0)
+            if ((state->flags & (CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK)) != 0)
             {
-                hit.toPlayer[0] = pl->anim.worldPosX - obj->anim.worldPosX;
-                hit.toPlayer[1] = pl->anim.worldPosY - obj->anim.worldPosY;
-                hit.toPlayer[2] = pl->anim.worldPosZ - obj->anim.worldPosZ;
-                ang = getAngle(hit.toPlayer[0], hit.toPlayer[2]) & 0xffff;
-                ang -= obj->anim.rotX & 0xffff;
-                if (ang > 0x8000)
+                hitResult.toPlayer[0] = player->anim.worldPosX - obj->anim.worldPosX;
+                hitResult.toPlayer[1] = player->anim.worldPosY - obj->anim.worldPosY;
+                hitResult.toPlayer[2] = player->anim.worldPosZ - obj->anim.worldPosZ;
+                relativeAngle = getAngle(hitResult.toPlayer[0], hitResult.toPlayer[2]) & 0xffff;
+                relativeAngle -= obj->anim.rotX & 0xffff;
+                if (relativeAngle > 0x8000)
                 {
-                    ang -= 0xffff;
+                    relativeAngle -= 0xffff;
                 }
-                if (ang < -0x8000)
+                if (relativeAngle < -0x8000)
                 {
-                    ang += 0xffff;
+                    relativeAngle += 0xffff;
                 }
-                if (((u32)ang & 0xffff) < v->arcHalfAngle ||
-                    ((u32)ang & 0xffff) > ((0xffff - v->arcHalfAngle) & 0xffff))
+                if (((u32)relativeAngle & 0xffff) < state->arcHalfAngle ||
+                    ((u32)relativeAngle & 0xffff) > ((0xffff - state->arcHalfAngle) & 0xffff))
                 {
                     roll = randomGetRange(0, 99);
-                    if (roll < v->attackChance || (v->flags & CHUKCHUK_FLAG_FORCED_ATTACK) != 0)
+                    if (roll < state->attackChance || (state->flags & CHUKCHUK_FLAG_FORCED_ATTACK) != 0)
                     {
                         Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_lash_268);
-                        fn_8015F5B0(obj);
+                        chukChuk_spawnAimedIceBall(obj);
                     }
                     else
                     {
@@ -214,50 +214,51 @@ void ChukChuk_update(GameObject* obj)
                 }
             }
         }
-        else if ((v->flags & CHUKCHUK_FLAG_PRIMED) != 0)
+        else if ((state->flags & CHUKCHUK_FLAG_PRIMED) != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_call02);
         }
-        v->prevDistance = di;
-        if (ObjHits_GetPriorityHit(obj, &hit.hitObject, &hit.sphereIndex, (u32*)&hit.hitVolume) == 14)
+        state->prevDistance = playerDistance;
+        if (ObjHits_GetPriorityHit(obj, &hitResult.hitObject, &hitResult.sphereIndex,
+                                   (u32*)&hitResult.hitVolume) == 14)
         {
-            v->hitsLeft -= 1;
-            if (v->hitsLeft < 1)
+            state->hitsLeft -= 1;
+            if (state->hitsLeft < 1)
             {
                 ObjHits_DisableObject(obj);
                 obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                v->flags |= CHUKCHUK_FLAG_DEAD;
+                state->flags |= CHUKCHUK_FLAG_DEAD;
                 Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy311_26a);
-                mainSetBits(v->gameBit, 1);
-                v->steamTimer = 60.0f;
+                mainSetBits(state->gameBit, 1);
+                state->steamTimer = 60.0f;
                 Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_zyck_lash);
             }
         }
-        v->flags &= ~(CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK);
+        state->flags &= ~(CHUKCHUK_FLAG_PRIMED | CHUKCHUK_FLAG_FORCED_ATTACK);
     }
 }
 
-void ChukChuk_init(GameObject* obj, u8* params)
+void ChukChuk_init(GameObject* obj, ChukChukPlacement* placement)
 {
-    ChukChukState* sub = obj->extra;
+    ChukChukState* state = obj->extra;
     *(u8*)&obj->anim.resetHitboxMode =
         (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-    sub->gameBit = *(s16*)(params + 0x18);
-    if (sub->gameBit != -1 && mainGetBit(sub->gameBit) != 0)
+    state->gameBit = placement->gameBit;
+    if (state->gameBit != -1 && mainGetBit(state->gameBit) != 0)
     {
         ObjHits_DisableObject(obj);
         obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
-        sub->flags = (u8)(sub->flags | CHUKCHUK_FLAG_DEAD);
+        state->flags = (u8)(state->flags | CHUKCHUK_FLAG_DEAD);
     }
     else
     {
-        sub->triggerDistance = (u16)(params[0x29] << 3);
-        sub->unk08 = *(s16*)(params + 0x22);
-        sub->hitsLeft = params[0x32];
-        sub->arcHalfAngle = (u16)((s8)params[0x28] * 0xb6);
-        sub->attackChance = params[0x2f];
-        sub->aimHeightY = params[0x27];
-        obj->anim.rotX = (s16)((s8)params[0x2a] << 8);
+        state->triggerDistance = (u16)(placement->triggerDistanceScale << 3);
+        state->unk08 = placement->unk22;
+        state->hitsLeft = placement->hitsLeft;
+        state->arcHalfAngle = (u16)(placement->arcHalfAngleScale * 0xb6);
+        state->attackChance = placement->attackChance;
+        state->aimHeightY = placement->aimHeightY;
+        obj->anim.rotX = (s16)(placement->rotX << 8);
     }
 }
 
@@ -285,7 +286,7 @@ ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
         (ObjectDescriptorCallback)ChukChuk_free,
         (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
         ChukChuk_getExtraSize,
-        (ObjectDescriptorCallback)ChukChuk_setScale,
+        (ObjectDescriptorCallback)ChukChuk_handleMessage,
     },
     0,
 };

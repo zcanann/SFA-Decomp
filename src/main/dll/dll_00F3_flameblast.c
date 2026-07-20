@@ -10,6 +10,7 @@
  * Tricky is gone or its free flag (state.freeRequested) is set.
  */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/objfx.h"
 #include "main/object.h"
@@ -36,13 +37,16 @@ STATIC_ASSERT(sizeof(FlameblastState) == 0x14);
 
 typedef struct FlameblastPlacement
 {
-    u8 pad0[0x1a - 0x0];
+    ObjPlacement base;
+    u8 pad18[0x1A - 0x18];
     s16 initialTimer; /* 0x1a: seeds the flight timer (scaled at init) */
 } FlameblastPlacement;
 
-#define FLAMEBLAST_HIT_VOLUME_SLOT 0x1a
+STATIC_ASSERT(sizeof(FlameblastPlacement) == 0x1C);
+STATIC_ASSERT(offsetof(FlameblastPlacement, base) == 0x0);
+STATIC_ASSERT(offsetof(FlameblastPlacement, initialTimer) == 0x1A);
 
-#define FLAMEBLAST_OBJFLAG_RENDERED 0x800
+#define FLAMEBLAST_HIT_VOLUME_SLOT 0x1a
 
 int fn_8017805C(GameObject* obj, FlameblastState* state);
 
@@ -53,7 +57,7 @@ void objSetAnimSpeedTo1(GameObject* obj)
 
 int fn_8017805C(GameObject* obj, FlameblastState* state)
 {
-    s16* tricky = (s16*)getTrickyObject();
+    GameObject* tricky = getTrickyObject();
     f32* origin;
     f32 reach = 0.4f;
     VecRotateZXYArg vec;
@@ -70,17 +74,17 @@ int fn_8017805C(GameObject* obj, FlameblastState* state)
     vec.pos[2] = 0.0f;
     vec.pos[3] = 0.0f;
     vec.pos[0] = 1.0f;
-    vec.dir[2] = tricky[2];
-    vec.dir[1] = tricky[1];
-    vec.dir[0] = tricky[0] + fn_80138F90((GameObject*)tricky);
+    vec.dir[2] = tricky->anim.rotZ;
+    vec.dir[1] = tricky->anim.rotY;
+    vec.dir[0] = tricky->anim.rotX + fn_80138F90(tricky);
     vecRotateZXY(&vec.rotation.x, &obj->anim.velocity.x);
-    if ((((GameObject*)tricky)->objectFlags & FLAMEBLAST_OBJFLAG_RENDERED) != 0)
+    if ((tricky->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
     {
-        origin = trickyGetQueuedPathParticlePos((GameObject*)(tricky));
+        origin = trickyGetQueuedPathParticlePos(tricky);
     }
     else
     {
-        origin = &((GameObject*)tricky)->anim.localPosX;
+        origin = &tricky->anim.localPosX;
     }
     state->launchPosX = -(reach * obj->anim.velocityX - origin[0]);
     state->launchPosY = -(reach * obj->anim.velocityY - origin[1]);
@@ -138,11 +142,11 @@ void flameblast_update(GameObject* obj)
     obj->anim.localPosZ = obj->anim.velocityZ * state->timer + state->launchPosZ;
 }
 
-void flameblast_init(GameObject* obj, FlameblastPlacement* def)
+void flameblast_init(GameObject* obj, FlameblastPlacement* placement)
 {
     FlameblastState* state = obj->extra;
     fn_8017805C(obj, state);
-    state->timer = 3.4285715f * (f32)def->initialTimer;
+    state->timer = 3.4285715f * (f32)placement->initialTimer;
     state->hitVolumeDelay = 2;
 }
 

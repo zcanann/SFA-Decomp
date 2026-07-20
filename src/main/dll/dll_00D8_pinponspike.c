@@ -11,7 +11,7 @@
  * (0x715) and plays the attack03 hit sfx, then frees itself once the
  * countdown elapses or it falls below the kill plane.
  *
- * fn_80169EF4 computes the launch angle that lands a projectile of the
+ * pinponspike_calculateLaunchAngle computes the launch angle that lands a projectile of the
  * given speed under gravity at a target offset (used cross-TU by duster).
  */
 #include "main/dll/partfx_interface.h"
@@ -46,7 +46,7 @@ extern f32 lbl_803E312C;
 
 
 
-int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
+int pinponspike_calculateLaunchAngle(f32* from, f32* to, f32 speed, u8 highArc, f32 gravity)
 {
     f32 sp2;
     f32 dist;
@@ -62,14 +62,14 @@ int fn_80169EF4(f32* from, f32* to, f32 speed, u8 flag, f32 grav)
     dist = sqrtf(dx * dx + dz * dz);
     dy = from[1] - to[1];
     dist = dist * lbl_803E3110;
-    sp2 = lbl_803E3114 * grav;
-    coeff = sp2 * grav;
+    sp2 = lbl_803E3114 * gravity;
+    coeff = sp2 * gravity;
     {
-        f32 vel = -(grav * dy) - (sp2 = speed * speed); /* sp2 is speed^2 */
+        f32 vel = -(gravity * dy) - (sp2 = speed * speed); /* sp2 is speed^2 */
         disc = vel * vel - (lbl_803E3118 * coeff) * (dy * dy + dist * dist);
         if (disc >= lbl_803E311C)
         {
-            if (flag)
+            if (highArc)
             {
                 time = (lbl_803E3120 * (-vel + sqrtf(disc))) / coeff;
             }

@@ -43,8 +43,6 @@ STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 #define SWARMBADDIE_OBJGROUP 3
 #define SWARMBADDIE_PARTFX   0x336
 
-#define SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 #define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
 #define SWARMBADDIE_FLAG_CHASE_PLAYER    0x02
 #define SWARMBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
@@ -141,16 +139,16 @@ int SwarmBaddie_getObjectTypeId(void)
 
 void SwarmBaddie_free(GameObject* obj)
 {
-    void** state = (obj)->extra;
+    SwarmBaddieState* state = (obj)->extra;
     ObjGroup_RemoveObject((int)obj, SWARMBADDIE_OBJGROUP);
-    if (*state != NULL)
+    if (state->curve != NULL)
     {
-        mm_free(*state);
-        *state = NULL;
+        mm_free(state->curve);
+        state->curve = NULL;
     }
 }
 
-void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SwarmBaddie_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
         return;
@@ -178,7 +176,7 @@ void SwarmBaddie_update(GameObject* obj)
     int hitB;
     int hitA;
 
-    state = *(SwarmBaddieState**)&(obj)->extra;
+    state = obj->extra;
     oldTarget = state->curve;
     if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, (u32*)&hitA, (f32*)&hitE, (f32*)&hitC,
                                            (f32*)&hitF) != 0)
@@ -229,27 +227,27 @@ void SwarmBaddie_update(GameObject* obj)
     fn_8014EE8C(obj, state);
 }
 
-void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc)
+void SwarmBaddie_init(GameObject* obj, SwarmBaddiePlacement* placement, int initialised)
 {
     SwarmBaddieState* state = (obj)->extra;
-    state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / 50.0f;
-    state->chaseRadius = 4.0f * (f32)(s32) * (s8*)(data + 0x19);
+    state->curveStep = (f32)(s32)placement->curveStepParam / 50.0f;
+    state->chaseRadius = 4.0f * (f32)(s32)placement->chaseRadiusScale;
     state->hitVolumeEnvelope = (1.0f);
-    if (skip_alloc == 0)
+    if (initialised == 0)
     {
-        state->curve = mmAlloc(0x108, 0x1A, 0);
+        state->curve = mmAlloc(sizeof(RomCurveWalker), 0x1A, 0);
         if (state->curve != NULL)
         {
-            memset(state->curve, 0, 0x108);
+            memset(state->curve, 0, sizeof(RomCurveWalker));
         }
         if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, lbl_803DBC78, -1) ==
             0)
         {
-            *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
+            state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
         }
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_grumb4_c);
     }
-    (obj)->objectFlags |= SWARMBADDIE_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void SwarmBaddie_release(void)
