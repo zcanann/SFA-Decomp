@@ -16,6 +16,7 @@
  * DLLs, not in this object's symbol set.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
@@ -64,38 +65,44 @@ EmitterCfg gEffect2VelocityRangeTable = {
 };
 
 /* --- effect2 .data reconstruction (absorbed 0x80310604-0x80310670) --- */
-void* lbl_80310604[10] = {(void*)0,
-                          (void*)0,
-                          (void*)0,
-                          (void*)0x50000,
-                          (void*)partfx_initialise,
-                          (void*)partfx_release,
-                          (void*)0,
-                          (void*)partfx_onMapSetup,
-                          (void*)partfx_spawnObject,
-                          (void*)partfx_updateFrameState};
+ObjectDescriptor6 lbl_80310604 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)partfx_initialise,
+    (ObjectDescriptorCallback)partfx_release,
+    0,
+    (ObjectDescriptorCallback)partfx_onMapSetup,
+    (ObjectDescriptorCallback)partfx_spawnObject,
+    (ObjectDescriptorCallback)partfx_updateFrameState,
+};
 char sModgfxAlphaDebugFormat[10] = "alpha %d\n";
-void* lbl_80310638[10] = {(void*)0,
-                          (void*)0,
-                          (void*)0,
-                          (void*)0x50000,
-                          (void*)Effect1_initialise,
-                          (void*)Effect1_release,
-                          (void*)0,
-                          (void*)Effect1_func03_nop,
-                          (void*)Effect1_func04,
-                          (void*)Effect1_func05};
+ObjectDescriptor6 lbl_80310638 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect1_initialise,
+    (ObjectDescriptorCallback)Effect1_release,
+    0,
+    (ObjectDescriptorCallback)Effect1_func03_nop,
+    (ObjectDescriptorCallback)Effect1_func04,
+    (ObjectDescriptorCallback)Effect1_func05,
+};
 s32 gEffect2TextureIdTable[4] = {0xDF, 0x1FC, 0x200, 0x1FB};
-void* lbl_80310670[10] = {(void*)0,
-                          (void*)0,
-                          (void*)0,
-                          (void*)0x50000,
-                          (void*)Effect2_initialise,
-                          (void*)Effect2_release,
-                          (void*)0,
-                          (void*)Effect2_func03_nop,
-                          (void*)Effect2_func04,
-                          (void*)Effect2_func05};
+ObjectDescriptor6 lbl_80310670 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect2_initialise,
+    (ObjectDescriptorCallback)Effect2_release,
+    0,
+    (ObjectDescriptorCallback)Effect2_func03_nop,
+    (ObjectDescriptorCallback)Effect2_func04,
+    (ObjectDescriptorCallback)Effect2_func05,
+};
 
 
 /*

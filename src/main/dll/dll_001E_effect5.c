@@ -11,6 +11,7 @@
  * lbl_803109B8 object descriptor complete the TU.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/object_descriptor.h"
 #include "main/dll/mtxbuildarg_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"
@@ -50,9 +51,18 @@ STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 
-void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x00000000, (void*)0x00050000,
-                          Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,
-                          Effect5_func04,     Effect5_func05};
+ObjectDescriptor6 lbl_803109B8 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect5_initialise,
+    (ObjectDescriptorCallback)Effect5_release,
+    0,
+    (ObjectDescriptorCallback)Effect5_func03_nop,
+    (ObjectDescriptorCallback)Effect5_func04,
+    (ObjectDescriptorCallback)Effect5_func05,
+};
 
 
 /*
