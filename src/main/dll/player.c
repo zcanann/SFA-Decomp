@@ -34,8 +34,6 @@
 #include "main/track_bbox_api.h"
 #include "main/vecmath_distance_api.h"
 
-typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
-
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -10711,7 +10709,8 @@ void fn_802A81B8(GameObject* obj, int state, f32* out)
         mag = PSVECMag(out);
         if (mag > lbl_803E7EA4)
         {
-            ((PSVECScaleLegacyFn)PSVECScale)(lbl_803E7EE0 / mag, out, out);
+            f32 scale = lbl_803E7EE0 / mag;
+            PSVECScale(out, out, scale);
         }
         else
         {
