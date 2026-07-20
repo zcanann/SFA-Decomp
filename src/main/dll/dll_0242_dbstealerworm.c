@@ -1036,18 +1036,16 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
 {
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&(obj)->extra)->control;
-    int c2c = sub->msgMode;
     int c30 = sub->objGroup;
+    int c2c = sub->msgMode;
     int tmpB;
     int tmpA;
     int target;
     f32 z;
     f32 dist;
-    struct
-    {
-        f32 v[3];
-        f32 out[3];
-    } stk;
+    f32 out[3];
+    f32 vBuf[3];
+    f32* v = vBuf;
     int msgA[3];
     int msgB[3];
     int msgC[3];
@@ -1095,22 +1093,22 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
         if (*(void**)&sub->linkedObj != NULL && (s32)(((BaddieState*)baddie)->eventFlags & BADDIE_EVENT_LANDING) != 0)
         {
             target = *(int*)&((BaddieState*)baddie)->targetObj;
-            stk.v[0] = ((GameObject*)target)->anim.localPosX - (obj)->anim.localPosX;
-            stk.v[1] = ((GameObject*)target)->anim.localPosY - (obj)->anim.localPosY;
-            stk.v[2] = ((GameObject*)target)->anim.localPosZ - (obj)->anim.localPosZ;
+            v[0] = ((GameObject*)target)->anim.localPosX - (obj)->anim.localPosX;
+            v[1] = ((GameObject*)target)->anim.localPosY - (obj)->anim.localPosY;
+            v[2] = ((GameObject*)target)->anim.localPosZ - (obj)->anim.localPosZ;
             {
-                f32 sqx = stk.v[0] * stk.v[0];
-                f32 sqz = stk.v[2] * stk.v[2];
+                f32 sqx = v[0] * v[0];
+                f32 sqz = v[2] * v[2];
                 dist = sqrtf(sqx + sqz);
             }
-            stk.v[1] = stk.v[1] * 0.015625f;
+            v[1] *= 0.015625f;
             dist = dist / 140.0f;
-            stk.out[1] = -(dist * (-1.7f * dist) - stk.v[1]) / dist;
-            stk.out[1] *= 1.0666667f;
-            stk.out[0] = 0.0f;
-            stk.out[2] = 2.3333333f;
+            out[1] = -(dist * (-1.7f * dist) - v[1]) / dist;
+            out[1] *= 1.0666667f;
+            out[0] = 0.0f;
+            out[2] = 2.3333333f;
             ObjMsg_SendToObject((void*)sub->linkedObj, 0x11, obj, 0x11);
-            (**(void (**)(int, f32*))(*(int*)(*(int*)(sub->linkedObj + 0x68)) + 0x24))(sub->linkedObj, stk.out);
+            (**(void (**)(int, f32*))(*(int*)(*(int*)(sub->linkedObj + 0x68)) + 0x24))(sub->linkedObj, out);
             sub->linkedObj = 0;
             sub->msgSlotIndex = -1;
         }
