@@ -1815,9 +1815,11 @@ void doPendingMapLoads(void)
                 {
                     int nx = gx + gMapBlockOriginX;
                     int nz;
-                    gMapBlockOriginX = nx - 7;
+                    nx -= 7;
+                    gMapBlockOriginX = nx;
                     nz = gz + gMapBlockOriginZ;
-                    gMapBlockOriginZ = nz - 7;
+                    nz -= 7;
+                    gMapBlockOriginZ = nz;
                 }
                 playerMapOffsetX = gMapBlockWorldSize * gMapBlockOriginX;
                 playerMapOffsetZ = gMapBlockWorldSize * gMapBlockOriginZ;
