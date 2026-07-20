@@ -26,6 +26,7 @@
 #include "main/dll/FRONT/dll_3B.h"
 #include "main/dll/FRONT/picmenu.h"
 #include "main/audio_decode_thread.h"
+#include "main/attract_movie_api.h"
 #include "main/fileio.h"
 
 typedef struct AttractMovieControl
@@ -82,7 +83,6 @@ enum
 
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];
-extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
 extern OSMessage lbl_803DD67C;
 void InitAllMessageQueue(void);

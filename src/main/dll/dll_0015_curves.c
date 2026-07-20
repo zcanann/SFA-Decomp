@@ -25,7 +25,6 @@
 #include "dolphin/os.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/savedata_struct.h"
 #include "main/camera_interface.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/dll_0017_savegame_api.h"
@@ -68,7 +67,6 @@ typedef struct CurvesSaveGameObjectPosition
 #define SAVEGAME_OBJECT_POSITION_COUNT  0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
 
-extern SaveData saveData;
 extern f32 lbl_803E0668;
 extern const f32 lbl_803E068C;
 extern const f32 gCurvesSurfaceNormalZThreshold;
@@ -1690,7 +1688,7 @@ void saveFileStruct_setCheatActive(u8 optionIndex, u8 active)
 {
     SaveData* save;
 
-    save = &saveData;
+    save = (SaveData*)saveData;
     if ((save->registeredDebugOptions & (1 << optionIndex)) == 0)
     {
         return;
@@ -1709,7 +1707,7 @@ int saveFileStruct_isCheatActive(u8 idx)
 {
     SaveData* save;
 
-    save = &saveData;
+    save = (SaveData*)saveData;
     if ((save->registeredDebugOptions & (1 << idx)) != 0)
     {
         if ((save->enabledDebugOptions & (1 << idx)) != 0)
@@ -1722,7 +1720,7 @@ int saveFileStruct_isCheatActive(u8 idx)
 
 void saveFileStruct_unlockCheat(u8 idx)
 {
-    SaveData* p = &saveData;
+    SaveData* p = (SaveData*)saveData;
     u32 reg = p->registeredDebugOptions;
     u32 mask = 1 << idx;
     p->registeredDebugOptions = reg | mask;
@@ -1730,7 +1728,7 @@ void saveFileStruct_unlockCheat(u8 idx)
 
 int isCheatUnlocked(u8 idx)
 {
-    SaveData* p = &saveData;
+    SaveData* p = (SaveData*)saveData;
     u32 reg = p->registeredDebugOptions;
     u32 mask = 1 << idx;
     return reg & mask;
@@ -1738,27 +1736,27 @@ int isCheatUnlocked(u8 idx)
 
 void saveFileStruct_resetVolumes(void)
 {
-    saveData.musicVolume = 0x7f;
-    saveData.sfxVolume = 0x7f;
-    saveData.speechVolume = 0x7f;
+    ((SaveData*)saveData)->musicVolume = 0x7f;
+    ((SaveData*)saveData)->sfxVolume = 0x7f;
+    ((SaveData*)saveData)->speechVolume = 0x7f;
 }
 
-void* getSaveFileStruct(void)
+SaveData* getSaveFileStruct(void)
 {
-    return &saveData;
+    return (SaveData*)saveData;
 }
 
 void loadSaveSettings(void)
 {
-    setWidescreen(saveData.widescreenEnabled);
-    setSubtitlesEnabled(saveData.subtitlesEnabled);
-    setRumbleEnabled(saveData.rumbleEnabled);
-    audioSetSoundMode(saveData.soundMode, 0);
-    (*gGameUIInterface)->setUnusedHudSetting(saveData.gameUiSetting);
-    (*gCameraInterface)->func1D(saveData.cameraSetting);
-    audioSetVolumes(saveData.sfxVolume, 10, 0, 1, 0);
-    audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
-    audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
+    setWidescreen(((SaveData*)saveData)->widescreenEnabled);
+    setSubtitlesEnabled(((SaveData*)saveData)->subtitlesEnabled);
+    setRumbleEnabled(((SaveData*)saveData)->rumbleEnabled);
+    audioSetSoundMode(((SaveData*)saveData)->soundMode, 0);
+    (*gGameUIInterface)->setUnusedHudSetting(((SaveData*)saveData)->gameUiSetting);
+    (*gCameraInterface)->func1D(((SaveData*)saveData)->cameraSetting);
+    audioSetVolumes(((SaveData*)saveData)->sfxVolume, 10, 0, 1, 0);
+    audioSetVolumes(((SaveData*)saveData)->musicVolume, 10, 1, 0, 0);
+    audioSetVolumes(((SaveData*)saveData)->speechVolume, 10, 0, 0, 1);
 }
 
 void* getLastSavedGameTexts(void)

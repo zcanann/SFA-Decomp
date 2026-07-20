@@ -59,15 +59,12 @@ u8 gTitleMenuSelection;
 s32 gAttractMovieState;
 static char sNRarewareReportTag[] = "n_rareware\n";
 
-extern s32 gAttractMovieIdleFrameCount;
-
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable (cleared on the
    highlighted entry, set on the rest). */
 #define TITLE_MENU_TEXT_ENTRY_HIDDEN 0x4000
 
 
 extern TitleMenuTextEntry lbl_8031A214[4];
-extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
 
 extern u8* lbl_803DD498;

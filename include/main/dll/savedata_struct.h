@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+#define SAVE_DATA_SIZE 0xE4
+
 typedef struct SaveData
 {
     u8 pad00[2];

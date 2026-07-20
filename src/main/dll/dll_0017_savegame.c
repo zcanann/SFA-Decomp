@@ -204,7 +204,7 @@ const SaveGameDefaultPosition gSaveGameDefaultPosition = {
 void loadMapForCurrentSaveGame(void);
 
 u8 gSaveGameData[0xF70];
-u8 saveData[228];
+u8 saveData[SAVE_DATA_SIZE];
 u32 gMapObjGroupStatuses[0x78];
 u8 gExtendedMapActLookup[0x28];
 
@@ -335,14 +335,14 @@ int saveFn_800e8508(void)
     loadResult = maybeTryLoadSave(saveData);
     if ((loadResult == 0) || (saveData[0] == '\0'))
     {
-        memset(saveData, 0, 0xE4);
+        memset(saveData, 0, SAVE_DATA_SIZE);
         saveData[6] = 0;
         saveData[2] = 1;
         saveData[8] = 1;
         saveData[0] = 1;
-        saveData[10] = 0x7F;
-        saveData[11] = 0x7F;
-        saveData[12] = 0x7F;
+        saveData[10] = SAVEGAME_DEFAULT_VOLUME;
+        saveData[11] = SAVEGAME_DEFAULT_VOLUME;
+        saveData[12] = SAVEGAME_DEFAULT_VOLUME;
     }
     return loadResult;
 }
