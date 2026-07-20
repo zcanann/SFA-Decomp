@@ -26,17 +26,35 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from function_objdump import load_units, resolve_unit, objdump_symbol, strip_preamble
 
-INSTR_RE = re.compile(r"^[0-9a-f]+:\s+(?:[0-9a-f]{2} ){4}\s*(.*)$")
-LABEL_RE = re.compile(r"\b[0-9a-f]+ <[^>]+>")
+INSTR_RE = re.compile(r"^([0-9a-f]+):\s+(?:[0-9a-f]{2} ){4}\s*(.*)$")
+LABEL_RE = re.compile(r"\b([0-9a-f]+) <([^>+]+)(?:\+0x([0-9a-f]+))?>")
 
 
-def normalize(lines: list[str]) -> list[str]:
+def normalize(lines: list[str], symbol: str | None = None) -> list[str]:
+    """Instruction stream with addresses masked but intra-function control flow KEPT.
+
+    A branch whose target lies inside `symbol` is rendered as a signed
+    instruction DELTA (LBL{+N}) rather than a bare LBL, so a jump-threaded or
+    retargeted branch is visible. Deltas are position-independent, so a function
+    sitting at a different .text offset produces no noise. Targets outside the
+    symbol (calls, cross-function branches) stay a bare LBL -- their identity is
+    carried by the R_PPC reloc line, and their absolute address would otherwise
+    inject .text-order noise.
+    """
     out = []
     for line in lines:
         line = line.strip()
         m = INSTR_RE.match(line)
         if m:
-            out.append(LABEL_RE.sub("LBL", m.group(1)).strip())
+            addr = int(m.group(1), 16)
+
+            def repl(lm: re.Match) -> str:
+                if symbol is None or lm.group(2) != symbol:
+                    return "LBL"
+                delta = (int(lm.group(1), 16) - addr) // 4
+                return f"LBL{delta:+d}"
+
+            out.append(LABEL_RE.sub(repl, m.group(2)).strip())
         elif "R_PPC" in line:
             out.append("RELOC " + line.split()[-1])
     return out
@@ -72,6 +90,7 @@ CLASSIFY_OWNER = {
     "fcmpo-swap": "FP compare operand order / coloring",
     "frame": "stack frame size (locals, struct/array slots, alignment)",
     "pool-reloc": "literal-pool reloc (usually score-neutral)",
+    "branch-target": "control-flow shape (block order / jump threading)",
     "mr-copy": "copy survival (propagation / value-numbering / coalescer)",
     "lha-lhz": "load signedness (s16 vs u16 field/deref)",
     "li-const": "constant materialization",
@@ -94,6 +113,10 @@ def classify(tt: list[str], cc: list[str]) -> str:
         return "ext-insert"
     if set(tm) - set(cm) <= ext and len(tm) > len(cm) and set(tm) & ext:
         return "ext-delete"
+    strip_lbl = lambda s: re.sub(r"LBL[+-]\d+", "LBL", s)
+    if len(tt) == len(cc) and tt != cc and all(
+            strip_lbl(a) == strip_lbl(b) for a, b in zip(tt, cc)):
+        return "branch-target"
     joined_t, joined_c = " | ".join(tt), " | ".join(cc)
     if "RELOC @" in joined_c and "RELOC lbl" in joined_t and len(tt) == len(cc) == 1:
         return "pool-reloc"
@@ -153,8 +176,8 @@ def main() -> None:
     current_object = repo_root / Path(
         unit["object"].replace(f"build/{args.version}/obj/", f"build/{args.version}/src/"))
 
-    t = normalize(strip_preamble(objdump_symbol(objdump_path, target_object, args.symbol)))
-    c = normalize(strip_preamble(objdump_symbol(objdump_path, current_object, args.symbol)))
+    t = normalize(strip_preamble(objdump_symbol(objdump_path, target_object, args.symbol)), args.symbol)
+    c = normalize(strip_preamble(objdump_symbol(objdump_path, current_object, args.symbol)), args.symbol)
     if not t:
         raise SystemExit(f"Symbol {args.symbol} not found in target object")
     if not c:
