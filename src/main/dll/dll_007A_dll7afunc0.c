@@ -20,13 +20,13 @@
 
 extern u8 lbl_80314BD0[];
 
-int dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
+s16 dll_7A_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     ModgfxPointerSpawnPacket buf;
     u8* base = (u8*)(int)lbl_80314BD0;
     GfxCmd* entries;
     GfxCmd* e;
-    int ret;
+    s16 ret;
     ret = 0;
     entries = buf.entries;
     entries[0].layer = 0;

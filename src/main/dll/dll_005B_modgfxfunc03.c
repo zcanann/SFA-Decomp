@@ -33,7 +33,7 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
     return (u8*)objAnim->banks[objAnim->bankIndex];
 }
 
-int modgfx_func03(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
+s16 modgfx_func03(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
                   ModgfxSpawnCountRange* countRange)
 {
     ModgfxSpawnCountRange r;
@@ -51,7 +51,7 @@ int modgfx_func03(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams,
     GfxCmd* cmdList;
     int emitCount;
     void* texture;
-    int result;
+    s16 result;
     u8* activeModel;
     base[0] = lbl_80311E30;
     result = 0;

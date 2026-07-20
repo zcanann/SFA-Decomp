@@ -23,7 +23,7 @@
 
 extern u8 lbl_803175E8[];
 
-int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
+s16 dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_803175E8;

@@ -14,7 +14,7 @@ typedef union ModgfxSpawnCountRange
     u32 packed;
 } ModgfxSpawnCountRange;
 
-typedef int (*ModgfxFunc03SpawnFn)(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
+typedef s16 (*ModgfxFunc03SpawnFn)(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                                    int modelId, ModgfxSpawnCountRange* countRange);
 
 typedef struct ModgfxFunc03Interface
@@ -26,7 +26,7 @@ typedef struct ModgfxFunc03Interface
 STATIC_ASSERT(sizeof(ModgfxSpawnCountRange) == 4);
 STATIC_ASSERT(offsetof(ModgfxFunc03Interface, spawn) == 4);
 
-int modgfx_func03(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
+s16 modgfx_func03(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
                   ModgfxSpawnCountRange* countRange);
 
 #endif /* MAIN_DLL_DLL_005B_MODGFXFUNC03_H_ */

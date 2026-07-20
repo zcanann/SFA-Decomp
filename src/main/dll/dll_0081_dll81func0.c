@@ -26,7 +26,7 @@
 
 extern u8 lbl_80315548[];
 
-int dll_81_func03(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused)
+s16 dll_81_func03(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315548;

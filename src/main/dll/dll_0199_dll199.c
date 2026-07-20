@@ -20,6 +20,7 @@
 #include "main/object_descriptor.h"
 #include "main/shader_api.h"
 #include "main/dll/dll_0004_dummy04.h"
+#include "main/dll/dll_006A_dll6afunc0.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -390,9 +391,8 @@ void dll_199_update(GameObject* obj)
             mainSetBits(0x5b2, 0);
             mainSetBits(0x5b9, 1);
             {
-                int* res = Resource_Acquire(0x6a, 1);
-                state[6] =
-                    (**(short (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 0x402, 0xffffffff, 0);
+                Dll6AInterface** res = Resource_Acquire(0x6a, 1);
+                state[6] = (*res)->spawn(obj, 0, NULL, 0x402, -1, NULL);
                 Resource_Release(res);
             }
             mainSetBits(0x1cd, 0);
@@ -441,7 +441,7 @@ void dll_199_update(GameObject* obj)
 void dll_199_init(GameObject* obj, int def)
 {
     short* state;
-    int* res;
+    Dll6AInterface** res;
     short id;
 
     state = (obj)->extra;
@@ -471,7 +471,7 @@ void dll_199_init(GameObject* obj, int def)
     state[5] = 0;
     ((Dll199State*)state)->triggered = 0;
     res = Resource_Acquire(0x6a, 1);
-    id = (**(short (**)(int, int, int, int, int, int))(*res + 4))((int)obj, 0, 0, 0x402, 0xffffffff, 0);
+    id = (*res)->spawn(obj, 0, NULL, 0x402, -1, NULL);
     state[6] = id;
     Resource_Release(res);
 }
