@@ -4888,8 +4888,7 @@ int ObjSeq_update(u8* obj, f32 t)
 
         for (k = 0; k < 10; k++)
         {
-            aInt = k + 300;
-            conditionOpcode = seq[aInt];
+            conditionOpcode = state->conditionOpcodes[k];
             if (conditionOpcode == 0)
             {
                 continue;
