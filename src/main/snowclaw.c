@@ -326,9 +326,9 @@ void snowclaw_syncMountTransform(GameObject* obj, GameObject* mount, int p2, int
 
 int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
 {
+    int* sub;
     int* inner;
     int i;
-    int* sub;
     SnowClawDropObjectTable tbl;
     f32 dist;
 
