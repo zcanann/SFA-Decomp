@@ -274,25 +274,28 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalM
     float absMin;
     float absMax;
     s32 absVal;
+    s16 r16 = radius;
+    s16 vmin = verticalMin;
+    s16 vmax = verticalMax;
 
     hitState = (ObjHitsPriorityState*)obj->hitReactState;
     if (hitState != 0)
     {
         if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0)
         {
-            hitState->primaryCapsuleOffsetA = verticalMin;
-            hitState->primaryCapsuleOffsetB = verticalMax;
-            hitState->primaryRadius = radius;
+            hitState->primaryCapsuleOffsetA = vmin;
+            hitState->primaryCapsuleOffsetB = vmax;
+            hitState->primaryRadius = r16;
             hitState->primaryRadiusSquared = (float)(s32)hitState->primaryRadius * (float)(s32)hitState->primaryRadius;
             hitState->capsuleScale = OBJHITBOX_DEFAULT_CAPSULE_SCALE;
             hitState->primaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
-            absVal = verticalMin;
+            absVal = vmin;
             if (absVal < 0)
             {
                 absVal = -absVal;
             }
             absMin = (float)absVal;
-            absVal = verticalMax;
+            absVal = vmax;
             if (absVal < 0)
             {
                 absVal = -absVal;
@@ -314,17 +317,17 @@ void ObjHitbox_SetCapsuleBounds(ObjAnimComponent* obj, int radius, int verticalM
         }
         if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0)
         {
-            hitState->secondaryCapsuleOffsetA = verticalMin;
-            hitState->secondaryCapsuleOffsetB = verticalMax;
-            hitState->secondaryRadius = radius;
+            hitState->secondaryCapsuleOffsetA = vmin;
+            hitState->secondaryCapsuleOffsetB = vmax;
+            hitState->secondaryRadius = r16;
             hitState->secondaryRadiusY = obj->hitboxScale * obj->rootMotionScale;
-            absVal = verticalMin;
+            absVal = vmin;
             if (absVal < 0)
             {
                 absVal = -absVal;
             }
             absMin = (float)absVal;
-            absVal = verticalMax;
+            absVal = vmax;
             if (absVal < 0)
             {
                 absVal = -absVal;
