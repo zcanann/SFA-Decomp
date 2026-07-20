@@ -6,14 +6,16 @@
 
 typedef struct AppleOnTreeState
 {
-    u8 unk00[4];
+    u32 unk00;
     f32 phaseDuration;
     f32 elapsedTime;
     f32 flightTime;
-    f32 growThreshold;
-    u8 unk14[0x20 - 0x14];
+    f32 stageEnd0; /* 0x10: elapsed-fraction at which GROWING -> RIPE */
+    f32 stageEnd1; /* 0x14: RIPE -> FALLING */
+    f32 stageEnd2; /* 0x18: FALLING -> LANDED */
+    f32 stageEnd3; /* 0x1C: LANDED -> auto knock-loose */
     f32 fadeThreshold;
-    f32 unk24;
+    f32 fallScale;
     f32 velY;
     f32 posY;
     f32 dropHeight;
@@ -29,7 +31,8 @@ typedef struct AppleOnTreeState
     s16 rotZ;
     u8 pad4E[2];
     f32 totalFlightTime;
-    u8 pad54[6];
+    f32 fallBlendDivisor; /* 0x54 */
+    u8 pad58[0x5A - 0x58];
     u8 flags;
     u8 pad5B;
     s16 triggerGameBit; /* 0x5C: head of the ObjMsg 0x7000a grab-trigger descriptor
@@ -42,31 +45,6 @@ typedef struct AppleOnTreeState
                            interaction slot (matches collectible/ediblemushroom). */
     f32 unk60;
 } AppleOnTreeState;
-
-/* CrackAnimState is the second obj+0xB8 extra record owned by this TU. */
-typedef struct CrackAnimState {
-    u32 unk0;
-    f32 duration;
-    f32 elapsed;
-    u8 unkC[0x10 - 0xC];
-    f32 stageEnd0;
-    f32 stageEnd1;
-    f32 stageEnd2;
-    f32 stageEnd3;
-    f32 fadeThreshold;
-    f32 fallScale;
-    f32 velY;
-    u8 unk2C[0x38 - 0x2C];
-    u16 healthRestore;
-    u8 stage;
-    u8 unk3B[0x3C - 0x3B];
-    f32 extraAccel;
-    f32 gravity;
-    f32 bounceVel;
-    u8 unk48[0x54 - 0x48];
-    f32 fallBlendDivisor;
-    u8 unk58[0x5C - 0x58];
-} CrackAnimState;
 
 extern ObjectDescriptor gDllFCObjDescriptor;
 

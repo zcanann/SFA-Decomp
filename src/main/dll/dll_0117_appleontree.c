@@ -147,7 +147,7 @@ static inline void appleontree_markFallen(GameObject* obj)
     }
 }
 
-void fn_8017D854(GameObject* obj, int msg)
+void appleontree_knockLoose(GameObject* obj, int msg)
 {
     int state = *(int*)&obj->extra;
     int v;
@@ -212,11 +212,11 @@ void fn_8017D854(GameObject* obj, int msg)
         if (((AppleOnTreeState*)state)->velY < lbl_803E37D4)
         {
             ((AppleOnTreeState*)state)->dropHeight =
-                -(lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24 - ((AppleOnTreeState*)state)->dropHeight);
+                -(lbl_803E37D8 * ((AppleOnTreeState*)state)->fallScale - ((AppleOnTreeState*)state)->dropHeight);
         }
         else
         {
-            ((AppleOnTreeState*)state)->dropHeight = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState*)state)->unk24) +
+            ((AppleOnTreeState*)state)->dropHeight = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState*)state)->fallScale) +
                                                      ((AppleOnTreeState*)state)->dropHeight;
         }
 
@@ -310,7 +310,7 @@ void AppleOnTree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     }
 }
 
-int fn_8017DCD4(GameObject* obj, int state, f32 y)
+int appleontree_bounceGroundStep(GameObject* obj, int state, f32 y)
 {
     f32 zero = lbl_803E37D4;
     f32 m = ((AppleOnTreeState*)state)->gravity;
@@ -418,7 +418,7 @@ int fn_8017DCD4(GameObject* obj, int state, f32 y)
     return 1;
 }
 
-int fn_8017DF34(GameObject* obj, int state, f32 y)
+int appleontree_bounceWaterStep(GameObject* obj, int state, f32 y)
 {
     if (lbl_803E37D4 == ((AppleOnTreeState*)state)->extraAccel)
     {
@@ -615,7 +615,7 @@ void AppleOnTree_update(int objArg)
             }
             else
             {
-                if (frac > ((AppleOnTreeState*)state)->growThreshold)
+                if (frac > ((AppleOnTreeState*)state)->stageEnd0)
                 {
                     ((GameObject*)obj)->anim.rootMotionScale =
                         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -625,7 +625,7 @@ void AppleOnTree_update(int objArg)
                 {
                     fb = ((AppleOnTreeState*)((GameObject*)obj)->extra)->elapsedTime /
                          ((AppleOnTreeState*)((GameObject*)obj)->extra)->phaseDuration;
-                    fb = fb * (lbl_803E37C8 / ((AppleOnTreeState*)((GameObject*)obj)->extra)->growThreshold);
+                    fb = fb * (lbl_803E37C8 / ((AppleOnTreeState*)((GameObject*)obj)->extra)->stageEnd0);
                     ((GameObject*)obj)->anim.rootMotionScale =
                         ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * fb;
                 }
@@ -653,7 +653,7 @@ void AppleOnTree_update(int objArg)
             }
             else
             {
-                if (frac > ((GroundBaddieState*)state)->baddie.posX)
+                if (frac > ((AppleOnTreeState*)state)->stageEnd1)
                 {
                     i = 0;
                     do
@@ -679,12 +679,12 @@ void AppleOnTree_update(int objArg)
             }
             break;
         case APPLEONTREE_STATE_FALLING:
-            if (frac > ((GroundBaddieState*)state)->baddie.posY)
+            if (frac > ((AppleOnTreeState*)state)->stageEnd2)
             {
                 val = *(int*)&((GameObject*)obj)->extra;
                 modelIdxPtrW = (u32*)objFindTexture((GameObject*)obj, 0, 0);
                 *modelIdxPtrW = 0;
-                ((AppleOnTreeState*)val)->unk24 = lbl_803E37C8;
+                ((AppleOnTreeState*)val)->fallScale = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale =
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex((GameObject*)obj, 1);
@@ -694,17 +694,19 @@ void AppleOnTree_update(int objArg)
             {
                 f32 fallProgress;
                 val = *(int*)&((GameObject*)obj)->extra;
-                fallProgress = -(*(float*)(val + 4) * *(float*)(val + 0x14) - *(float*)(val + 8)) /
-                               (*(float*)(val + 4) * (*(float*)(val + 0x18) - *(float*)(val + 0x14)));
-                fa = *(float*)(val + 8);
+                fallProgress = -(((AppleOnTreeState*)val)->phaseDuration * ((AppleOnTreeState*)val)->stageEnd1 -
+                                 ((AppleOnTreeState*)val)->elapsedTime) /
+                               (((AppleOnTreeState*)val)->phaseDuration *
+                                (((AppleOnTreeState*)val)->stageEnd2 - ((AppleOnTreeState*)val)->stageEnd1));
+                fa = ((AppleOnTreeState*)val)->elapsedTime;
                 fc = fa * fa;
                 fc = fc * fc;
-                state = 0x100 - (int)((fc * fc) / *(float*)(val + 0x54));
+                state = 0x100 - (int)((fc * fc) / ((AppleOnTreeState*)val)->fallBlendDivisor);
                 modelIdxPtr = (int*)objFindTexture((GameObject*)obj, 0, 0);
                 *modelIdxPtr = state;
-                ((AppleOnTreeState*)val)->unk24 = lbl_803E37D0 * fallProgress + lbl_803E37CC;
+                ((AppleOnTreeState*)val)->fallScale = lbl_803E37D0 * fallProgress + lbl_803E37CC;
                 ((GameObject*)obj)->anim.rootMotionScale =
-                    ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * ((AppleOnTreeState*)val)->unk24;
+                    ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase * ((AppleOnTreeState*)val)->fallScale;
                 Obj_SetActiveModelIndex((GameObject*)obj, 1);
             }
             state = ObjHits_GetPriorityHit((GameObject*)obj, 0x0, 0x0, 0x0);
@@ -712,14 +714,14 @@ void AppleOnTree_update(int objArg)
                 ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                   (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
             {
-                fn_8017D854((GameObject*)obj, 1);
+                appleontree_knockLoose((GameObject*)obj, 1);
             }
             break;
         case APPLEONTREE_STATE_LANDED:
             ((AppleOnTreeState*)state)->elapsedTime = fb - timeDelta;
-            if (frac > ((GroundBaddieState*)state)->baddie.posZ)
+            if (frac > ((AppleOnTreeState*)state)->stageEnd3)
             {
-                fn_8017D854((GameObject*)obj, 0);
+                appleontree_knockLoose((GameObject*)obj, 0);
             }
             else
             {
@@ -728,7 +730,7 @@ void AppleOnTree_update(int objArg)
                     ((((AppleontreeObjectDef*)placement)->gameBit != -1 &&
                       (bitVal = mainGetBit((int)((AppleontreeObjectDef*)placement)->gameBit), bitVal != 0))))
                 {
-                    fn_8017D854((GameObject*)obj, 2);
+                    appleontree_knockLoose((GameObject*)obj, 2);
                 }
             }
             break;
@@ -747,15 +749,15 @@ void AppleOnTree_update(int objArg)
                 while (placement == 0)
                 {
                     f32 t = ((AppleOnTreeState*)state)->flightTime;
-                    fb = t * (((GroundBaddieState*)state)->baddie.velZ + ((GroundBaddieState*)state)->baddie.velY);
+                    fb = t * (((AppleOnTreeState*)state)->gravity + ((AppleOnTreeState*)state)->extraAccel);
                     fc = t * fb + (((AppleOnTreeState*)state)->bounceVel * t + ((AppleOnTreeState*)state)->posY);
                     if (((AppleOnTreeState*)state)->velY > fd)
                     {
-                        placement = fn_8017DF34((GameObject*)(obj), state, fc);
+                        placement = appleontree_bounceWaterStep((GameObject*)(obj), state, fc);
                     }
                     else
                     {
-                        placement = fn_8017DCD4((GameObject*)(obj), state, fc);
+                        placement = appleontree_bounceGroundStep((GameObject*)(obj), state, fc);
                     }
                     iteration = iteration + 1;
                     if (!((iteration == 100) || (iteration != 0x66)))
@@ -830,32 +832,32 @@ void AppleOnTree_init(int obj, int def)
 
     state = *(int*)&((GameObject*)obj)->extra;
 
-    ((CrackAnimState*)state)->unk0 = ((AppleontreeObjectDef*)def)->unk18;
-    ((CrackAnimState*)state)->duration = (f32)((AppleontreeObjectDef*)def)->duration;
-    ((CrackAnimState*)state)->elapsed = (f32)((AppleontreeObjectDef*)def)->elapsed;
+    ((AppleOnTreeState*)state)->unk00 = ((AppleontreeObjectDef*)def)->unk18;
+    ((AppleOnTreeState*)state)->phaseDuration = (f32)((AppleontreeObjectDef*)def)->duration;
+    ((AppleOnTreeState*)state)->elapsedTime = (f32)((AppleontreeObjectDef*)def)->elapsed;
     {
-        ((CrackAnimState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->stage0Frac / lbl_803E3828;
+        ((AppleOnTreeState*)state)->stageEnd0 = (f32)((AppleontreeObjectDef*)def)->stage0Frac / lbl_803E3828;
         progress = (f32)((AppleontreeObjectDef*)def)->stage1Frac / lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd1 = progress + ((CrackAnimState*)state)->stageEnd0;
+        ((AppleOnTreeState*)state)->stageEnd1 = progress + ((AppleOnTreeState*)state)->stageEnd0;
         progress = (f32)((AppleontreeObjectDef*)def)->stage2Frac / lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd2 = progress + ((CrackAnimState*)state)->stageEnd1;
+        ((AppleOnTreeState*)state)->stageEnd2 = progress + ((AppleOnTreeState*)state)->stageEnd1;
         progress = (f32)((AppleontreeObjectDef*)def)->stage3Frac / lbl_803E3828;
-        ((CrackAnimState*)state)->stageEnd3 = progress + ((CrackAnimState*)state)->stageEnd2;
-        ((CrackAnimState*)state)->fadeThreshold = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
-        ((CrackAnimState*)state)->velY = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
-        ((CrackAnimState*)state)->velY = ((CrackAnimState*)state)->velY * lbl_803E37DC;
-        ((CrackAnimState*)state)->fallScale = lbl_803E37C8;
-        ((CrackAnimState*)state)->healthRestore = 0;
+        ((AppleOnTreeState*)state)->stageEnd3 = progress + ((AppleOnTreeState*)state)->stageEnd2;
+        ((AppleOnTreeState*)state)->fadeThreshold = (f32)((AppleontreeObjectDef*)def)->unk24 / lbl_803E3828;
+        ((AppleOnTreeState*)state)->velY = (f32)((AppleontreeObjectDef*)def)->unk25 / lbl_803E3828;
+        ((AppleOnTreeState*)state)->velY = ((AppleOnTreeState*)state)->velY * lbl_803E37DC;
+        ((AppleOnTreeState*)state)->fallScale = lbl_803E37C8;
+        ((AppleOnTreeState*)state)->healthRestore = 0;
         zeroScale = lbl_803E37D4;
-        ((CrackAnimState*)state)->extraAccel = zeroScale;
-        ((CrackAnimState*)state)->gravity = lbl_803E382C;
-        ((CrackAnimState*)state)->bounceVel = zeroScale;
+        ((AppleOnTreeState*)state)->extraAccel = zeroScale;
+        ((AppleOnTreeState*)state)->gravity = lbl_803E382C;
+        ((AppleOnTreeState*)state)->bounceVel = zeroScale;
 
-        timeScale = ((CrackAnimState*)state)->duration * ((CrackAnimState*)state)->stageEnd2;
+        timeScale = ((AppleOnTreeState*)state)->phaseDuration * ((AppleOnTreeState*)state)->stageEnd2;
         timeScale *= timeScale;
         timeScale *= timeScale;
         zeroScale = timeScale * timeScale;
-        ((CrackAnimState*)state)->fallBlendDivisor = zeroScale * lbl_803E3830;
+        ((AppleOnTreeState*)state)->fallBlendDivisor = zeroScale * lbl_803E3830;
 
         ((GameObject*)obj)->anim.rotX = randomGetRange(-0x8000, 0x7fff);
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3834;
@@ -864,34 +866,34 @@ void AppleOnTree_init(int obj, int def)
         eventBit = ((AppleontreeObjectDef*)def)->gameBit;
         if ((eventBit != -1) && (mainGetBit(eventBit) != 0))
         {
-            ((CrackAnimState*)state)->elapsed = lbl_803E3838;
-            ((CrackAnimState*)state)->stage = 6;
+            ((AppleOnTreeState*)state)->elapsedTime = lbl_803E3838;
+            ((AppleOnTreeState*)state)->animState = 6;
         }
         else
         {
-            progress = ((CrackAnimState*)state)->elapsed / ((CrackAnimState*)state)->duration;
-            if (progress < ((CrackAnimState*)state)->stageEnd0)
+            progress = ((AppleOnTreeState*)state)->elapsedTime / ((AppleOnTreeState*)state)->phaseDuration;
+            if (progress < ((AppleOnTreeState*)state)->stageEnd0)
             {
-                ((CrackAnimState*)state)->stage = 0;
+                ((AppleOnTreeState*)state)->animState = 0;
             }
-            else if (progress < ((CrackAnimState*)state)->stageEnd1)
+            else if (progress < ((AppleOnTreeState*)state)->stageEnd1)
             {
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-                ((CrackAnimState*)state)->stage = 1;
+                ((AppleOnTreeState*)state)->animState = 1;
             }
-            else if (progress < ((CrackAnimState*)state)->stageEnd2)
+            else if (progress < ((AppleOnTreeState*)state)->stageEnd2)
             {
-                ((CrackAnimState*)state)->stage = 2;
+                ((AppleOnTreeState*)state)->animState = 2;
             }
             else
             {
                 int reread = *(int*)&((GameObject*)obj)->extra;
                 texture = objFindTexture((GameObject*)obj, 0, 0);
                 texture->textureId = 0;
-                ((CrackAnimState*)reread)->fallScale = lbl_803E37C8;
+                ((AppleOnTreeState*)reread)->fallScale = lbl_803E37C8;
                 ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
                 Obj_SetActiveModelIndex((GameObject*)obj, 1);
-                ((CrackAnimState*)state)->stage = 3;
+                ((AppleOnTreeState*)state)->animState = 3;
             }
         }
 
