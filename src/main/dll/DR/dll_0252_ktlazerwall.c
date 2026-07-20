@@ -182,8 +182,9 @@ void KT_Lazerwall_update(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamgenlp16);
     }
     {
+        f32 limit;
         f32 timer = ((KtlazerwallState*)flags)->reloadTimer;
-        f32 limit = lbl_803E6898.f;
+        limit = lbl_803E6898.f;
         if (timer > limit)
         {
             ((KtlazerwallState*)flags)->reloadTimer = timer - timeDelta;
