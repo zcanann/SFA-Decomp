@@ -29,34 +29,38 @@ typedef struct
 
 typedef struct
 {
-    ObjPlacement head;
+    ObjPlacement base;
     u8 drainRate; // 0x18
     u8 fillRate; // 0x19
     s16 activeBit; // 0x1a
 } DeathGasSetup;
 
-void DeathGas_free(int* obj)
+STATIC_ASSERT(offsetof(DeathGasState, radius) == 0x8);
+STATIC_ASSERT(sizeof(DeathGasState) == 0x10);
+STATIC_ASSERT(offsetof(DeathGasSetup, activeBit) == 0x1A);
+STATIC_ASSERT(sizeof(DeathGasSetup) == 0x1C);
+
+void DeathGas_free(GameObject* obj)
 {
-    u8* state = ((GameObject*)obj)->extra;
-    u8 flags = state[12];
-    if (((u32)flags >> 7) & 1u)
+    DeathGasState* state = obj->extra;
+    if (state->fogOn)
     {
-        if (!(((u32)flags >> 5) & 1u))
+        if (!state->noFog)
         {
             disableHeavyFog();
         }
     }
-    if (((u32)state[12] >> 6) & 1u)
+    if (state->draining)
     {
         (*gGameUIInterface)->airMeterSetShutdown();
     }
 }
 
-void DeathGas_update(int* obj)
+void DeathGas_update(GameObject* obj)
 {
 
-    DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject*)obj)->anim.placementData;
-    DeathGasState* state = ((GameObject*)obj)->extra;
+    DeathGasSetup* setup = (DeathGasSetup*)obj->anim.placementData;
+    DeathGasState* state = obj->extra;
     GameObject* player;
     u8 active;
     int bit;
@@ -93,8 +97,8 @@ void DeathGas_update(int* obj)
     {
         if (!state->noFog)
         {
-            enableHeavyFog(35.0f + ((GameObject*)obj)->anim.worldPosY,
-                           ((GameObject*)obj)->anim.worldPosY - 5.0f,
+            enableHeavyFog(35.0f + obj->anim.worldPosY,
+                           obj->anim.worldPosY - 5.0f,
                            1000.0f, 0.1f, 0.0005f, 0);
         }
         state->fogOn = 1;
@@ -102,8 +106,8 @@ void DeathGas_update(int* obj)
 
     player = Obj_GetPlayerObject();
     if (!playerIsDisguised(player)
-        && player->anim.worldPosY <= 30.0f + ((GameObject*)obj)->anim.worldPosY
-        && Vec_distance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <=
+        && player->anim.worldPosY <= 30.0f + obj->anim.worldPosY
+        && Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) <=
                state->radius)
     {
         if (!state->draining)
@@ -121,7 +125,7 @@ void DeathGas_update(int* obj)
             if (state->hitTimer < floor)
             {
                 state->hitTimer += 120.0f;
-                ObjHits_RecordObjectHit(player, (GameObject*)obj, 0x16, 1, 0);
+                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
             }
         }
     }
@@ -141,14 +145,14 @@ void DeathGas_update(int* obj)
     }
 }
 
-void DeathGas_init(int* obj)
+void DeathGas_init(GameObject* obj)
 {
-    register DeathGasState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);
+    register DeathGasState* state = obj->extra;
+    obj->objectFlags = (u16)(obj->objectFlags | DEATHGAS_OBJFLAG_HIDDEN);
     state->radius = 10000.0f;
-    if (((GameObject*)obj)->anim.seqId != DEATHGAS_NOFOG_OBJ) return;
+    if (obj->anim.seqId != DEATHGAS_NOFOG_OBJ) return;
     state->noFog = 1;
-    state->radius = *(f32*)((char*)obj + 64);
+    state->radius = obj->anim.cullDistance2;
 }
 
 ObjectDescriptor gDeathGasObjDescriptor = {

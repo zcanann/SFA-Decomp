@@ -42,16 +42,16 @@ int wmtorch_getObjectTypeId(void)
 
 void wmtorch_free(GameObject* obj, int mode)
 {
-    int state = *(int*)&(obj)->extra;
-    if (mode == 0 && ((WmTorchState*)state)->linkedObj != 0)
+    WmTorchState* state = obj->extra;
+    if (mode == 0 && state->linkedObj != 0)
     {
-        Obj_FreeObject(((WmTorchState*)state)->linkedObj);
+        Obj_FreeObject(state->linkedObj);
     }
     (*gModgfxInterface)->detachSource((void*)obj);
     (*gExpgfxInterface)->freeSource((int)obj);
 }
 
-void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
+void wmtorch_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     if (visible == 0)
         return;
@@ -63,8 +63,8 @@ void wmtorch_hitDetect(void)
 
 void wmtorch_update(GameObject* obj)
 {
-    int state = *(int*)&(obj)->extra;
-    if (((WmTorchState*)state)->torchType == 2)
+    WmTorchState* state = obj->extra;
+    if (state->torchType == 2)
     {
         (obj)->anim.rotX += 0x32;
     }
@@ -78,52 +78,52 @@ void wmtorch_update(GameObject* obj)
     }
 }
 
-void wmtorch_init(u8* obj, u8* params)
+void wmtorch_init(GameObject* obj, WmTorchPlacement* placement)
 {
     WmTorchState* state;
     void* res;
     f32 flameParams[5]; /* flame params; only [4] is set, the rest raw on purpose */
 
-    state = ((GameObject*)obj)->extra;
-    if (((WmTorchPlacement*)params)->motionRate != 0)
+    state = obj->extra;
+    if (placement->motionRate != 0)
     {
-        state->motionRate = (f32)(s32)((WmTorchPlacement*)params)->motionRate;
+        state->motionRate = (f32)(s32)placement->motionRate;
     }
     else
     {
         state->motionRate = lbl_803E5DEC;
     }
-    if (((WmTorchPlacement*)params)->colorIdx != 0)
+    if (placement->colorIdx != 0)
     {
-        state->colorIdx = ((WmTorchPlacement*)params)->colorIdx;
+        state->colorIdx = placement->colorIdx;
     }
     else
     {
         state->colorIdx = 0x8c;
     }
-    state->torchType = ((WmTorchPlacement*)params)->torchType;
+    state->torchType = placement->torchType;
     flameParams[4] = lbl_803E5DF0;
     if (state->torchType == 0)
     {
         res = Resource_Acquire(0x69, 1);
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        (*(Dll69Interface**)res)->spawn((GameObject*)obj, 1, flameParams, 0x10004, -1, NULL);
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E5DF4;
+        (*(Dll69Interface**)res)->spawn(obj, 1, flameParams, 0x10004, -1, NULL);
     }
     else if (state->torchType == 0x7f)
     {
         res = Resource_Acquire(0x69, 1);
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        (*(Dll69Interface**)res)->spawn((GameObject*)obj, 2, flameParams, 0x10004, -1, NULL);
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E5DF4;
+        (*(Dll69Interface**)res)->spawn(obj, 2, flameParams, 0x10004, -1, NULL);
     }
     else
     {
         res = Resource_Acquire(0x63, 1);
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF4;
-        (*(Dll63Interface**)res)->spawn((GameObject*)obj, 2, flameParams, 0x10004, -1, NULL);
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E5DF4;
+        (*(Dll63Interface**)res)->spawn(obj, 2, flameParams, 0x10004, -1, NULL);
     }
-    ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.rootMotionScale * lbl_803E5DF8;
+    obj->anim.rootMotionScale = obj->anim.rootMotionScale * lbl_803E5DF8;
     Resource_Release(res);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | WMTORCH_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = (u16)(obj->objectFlags | WMTORCH_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void wmtorch_release(void)

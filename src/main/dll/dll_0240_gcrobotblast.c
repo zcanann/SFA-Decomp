@@ -17,6 +17,9 @@
 #include "main/dll/dll_0240_gcrobotblast.h"
 
 STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
+STATIC_ASSERT(offsetof(GCRobotBlastState, mode) == 0x0);
+STATIC_ASSERT(offsetof(GCRobotBlastState, flags04) == 0x4);
+STATIC_ASSERT(offsetof(GCRobotBlastPlacement, mode) == 0x19);
 
 extern f32 lbl_803E6270;
 extern f32 lbl_803E6274;
@@ -24,16 +27,16 @@ extern f32 lbl_803E6274;
 
 int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state = *(int*)&(obj)->extra;
+    GCRobotBlastState* state = obj->extra;
     int i;
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        ((BlastFlags4*)&((GCRobotBlastState*)state)->flags04)->b80 = animUpdate->eventIds[i];
+        ((BlastFlags4*)&state->flags04)->b80 = animUpdate->eventIds[i];
     }
-    if (((BlastFlags4*)&((GCRobotBlastState*)state)->flags04)->b80 != 0)
+    if (((BlastFlags4*)&state->flags04)->b80 != 0)
     {
-        switch (((GCRobotBlastState*)state)->mode)
+        switch (state->mode)
         {
         case 0:
         case 1:
@@ -70,10 +73,10 @@ void GCRobotBlast_update(void)
 {
 }
 
-void GCRobotBlast_init(GameObject* obj, s8* def)
+void GCRobotBlast_init(GameObject* obj, GCRobotBlastPlacement* placement)
 {
     GCRobotBlastState* state = obj->extra;
-    state->mode = def[0x19];
+    state->mode = placement->mode;
     ((BlastFlags4*)&state->flags04)->b80 = 0;
     obj->animEventCallback = GCRobotBlast_SeqFn;
 }
