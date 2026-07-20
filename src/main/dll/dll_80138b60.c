@@ -278,7 +278,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 
         if (dll_19_func1B((GameObject*)(*objs)) != 0)
         {
-            obj_extra = (**(f32(**)(int))((char*)(*gBaddieControlInterface) + 0x60))(*objs);
+            obj_extra = ((BaddieControlInterface*)*gBaddieControlInterface)->getHealthFraction((GameObject*)*objs);
         }
         else
         {

@@ -6,14 +6,15 @@
 typedef struct GameObject GameObject;
 typedef struct ObjSeqState ObjSeqState;
 
-/* Function-pointer table exported by the baddie-control DLL (0x19); slot K
- * here is the DLL's exported func(K - 4) (updateMovementBlend = dll_19_func06,
+/* Function-pointer table exported by the baddie-control DLL (0x19); word slot N
+ * here is the DLL's exported func(N + 2) (updateMovementBlend = dll_19_func06,
  * getTargetGeometry = dll_19_func07, getClearDirectionMask = dll_19_func08,
  * pollCameraTarget = dll_19_func11, releaseState = dll_19_func12,
  * shouldDropTarget = dll_19_func13, findAggroTarget = dll_19_func14,
  * updateHitReaction = dll_19_func16, processMessages = dll_19_func17,
- * initGroundBaddie = dll_19_func18). Named slots are those with recovered call
- * sites; the pads are unrecovered slots. */
+ * initGroundBaddie = dll_19_func18, getHealthFraction = dll_19_func1A).
+ * Named slots are those with recovered call sites; the pads are unrecovered
+ * slots. */
 typedef struct BaddieControlInterface
 {
     u8 pad00[0x10];
@@ -42,6 +43,8 @@ typedef struct BaddieControlInterface
                            s16 substateIdle, s16 substateActive, s16 moveMode); /* 0x54 */
     void (*initGroundBaddie)(GameObject* obj, u8* config, u8* state, int moveArg0, int moveArg1,
                              int pathFlags, u8 initFlags, f32 pathRadius); /* 0x58 */
+    u8 pad5C[0x60 - 0x5C];
+    f32 (*getHealthFraction)(GameObject* obj); /* 0x60 */
 } BaddieControlInterface;
 
 extern int* gBaddieControlInterface;
