@@ -14,6 +14,5 @@ void sndBegin(void);
 void hwIRQEnterCritical(void);
 void hwIRQLeaveCritical(void);
 void *salMalloc(u32 size);
-void salFree(void *ptr);
 
 #endif /* MAIN_AUDIO_SAL_DSP_H_ */

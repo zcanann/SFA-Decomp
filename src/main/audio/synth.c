@@ -20,6 +20,7 @@
 #include "main/audio/adsr_lowprec.h"
 #include "main/audio/data_tables.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/snd_reverb.h"
 #include "main/audio/synth_delay.h"
 #include "main/audio/synth_virtual_sample.h"
 #include "main/audio/vid_init.h"

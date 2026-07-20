@@ -4,6 +4,7 @@
 #include "string.h"
 #include "dolphin/os/OSCache.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/snd_reverb.h"
 #include "main/audio/aram.h"
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/sal_studio.h"

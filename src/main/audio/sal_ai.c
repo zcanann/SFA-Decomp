@@ -2,6 +2,7 @@
 #include "main/audio/synth_config.h"
 
 #include "main/audio/sal_dsp.h"
+#include "main/audio/snd_reverb.h"
 #include "string.h"
 #include "dolphin/os/OSCache.h"
 
