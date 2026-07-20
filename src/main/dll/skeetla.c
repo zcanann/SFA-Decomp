@@ -886,7 +886,7 @@ int trickyFindReachableRouteIndex(u8* state, void** routes, u8* routeFlags, int 
     return -1;
 }
 
-void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue)
+void* trickySelectRouteEntry(u8* state, u8* routeDef, u8 routeFlagValue)
 {
     void* entry;
 
