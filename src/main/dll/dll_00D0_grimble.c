@@ -33,6 +33,7 @@
 #include "main/audio/sfx.h"
 #include "main/player_control_interface.h"
 #include "main/dll/baddie_control_interface.h"
+#include "main/dll/dll_00CD_iceball.h"
 
 typedef struct GrimblePlacement
 {
@@ -44,8 +45,6 @@ typedef struct GrimblePlacement
 #define GRIMBLE_OBJGROUP    3
 #define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
 
-extern int lbl_803200E0[];
-extern int lbl_80320158[];
 extern void* gGrimbleStateHandlersA[10];
 extern void* gGrimbleStateHandlersB[6];
 int grimble_animEventCallback(void);
@@ -417,7 +416,7 @@ void grimble_update(GameObject* obj)
                                   (u8*)(state + 0x405), 0, 0, 0);
             r = (*gBaddieControlInterface)
                     ->updateHitReaction(obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB,
-                                        lbl_803200E0, (u8*)lbl_80320158, 3, NULL);
+                                        lbl_803200E0, lbl_80320158, 3, NULL);
             if (r == 0xe)
             {
                 ((GroundBaddieState*)state)->subMode = 2;

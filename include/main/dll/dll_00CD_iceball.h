@@ -16,5 +16,9 @@ void IceBall_init(GameObject* obj);
 void IceBall_release(void);
 void IceBall_initialise(void);
 extern ObjectDescriptor gIceBallObjDescriptor;
+extern int lbl_80320008[30];
+extern u8 lbl_80320080[32];
+extern int lbl_803200E0[30];
+extern u8 lbl_80320158[32];
 
 #endif /* MAIN_DLL_DLL_00CD_ICEBALL_H_ */

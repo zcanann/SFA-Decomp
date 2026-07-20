@@ -68,9 +68,6 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 extern void* gDllCBMoveHandlers[];
 void* gDllCBStateHandlers[6];
-extern u8 lbl_80320008[];
-extern u8 lbl_80320080[];
-
 int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
@@ -318,7 +315,7 @@ void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state
         ->processMessages((GameObject*)obj, state, &sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0);
     stateResult = (*gBaddieControlInterface)
                       ->updateHitReaction((GameObject*)obj, state, &sub->routeNav, sub->gameBitB,
-                                          (int*)lbl_80320008, lbl_80320080, 1, NULL);
+                                          lbl_80320008, lbl_80320080, 1, NULL);
     if (stateResult >= 4)
     {
         sub->subMode = 2;
