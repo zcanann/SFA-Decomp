@@ -13,10 +13,10 @@
 
 #define RESTARTMARKER_OBJFLAG_HIDDEN 0x4000
 
-void restartmarker_init(int* obj, int* placement)
+void restartmarker_init(GameObject* obj, s8* placement)
 {
-    *(s16*)obj = (s16)(*(u8*)((char*)placement + 0x18) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | RESTARTMARKER_OBJFLAG_HIDDEN);
+    obj->anim.rotX = (s16)(*(u8*)(placement + 0x18) << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | RESTARTMARKER_OBJFLAG_HIDDEN);
 }
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {
