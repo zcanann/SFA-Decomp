@@ -10,6 +10,7 @@
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
+#include "main/dll/dll_01D6_dll1d6.h"
 #include "main/dll/explosion_state.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
@@ -29,16 +30,6 @@
 
 s16 gDll1D6SlotTabIndex[4] = {0x10A, 0x14F, 0x151, 0x153};
 u8 gDll1D6SlotInUse[8] = {0};
-
-typedef struct Dll1D6Placement
-{
-    u8 pad0[0x18 - 0x0];
-    s8 rotXParam; /* 0x18: <<8 -> anim.rotX seed */
-    u8 pad19[0x1A - 0x19];
-    s16 upTimer;
-    s16 downTimer;
-    u8 pad1E[0x20 - 0x1E];
-} Dll1D6Placement;
 
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
@@ -80,8 +71,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
 
 STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
@@ -91,7 +80,9 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
-#define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
+#define DLL1D6_ACTION_SLOT_COUNT    4
+#define DLL1D6_ACTION_DATA_SIZE     40
+#define DLL1D6_HIT_ENABLE_GAMEBIT   496
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
@@ -105,16 +96,16 @@ int dll_1D6_getObjectTypeId(void)
     return 0x0;
 }
 
-void dll_1D6_free(int* obj)
+void dll_1D6_free(GameObject* obj)
 {
-    Dll1D6State* state = ((GameObject*)obj)->extra;
-    if ((state->flags1D & 4) != 0)
+    Dll1D6State* state = obj->extra;
+    if ((state->flags & DLL1D6_STATE_FLAG_BOB_ACTIVE) != 0)
     {
-        state->flags1D = (u8)(state->flags1D & ~4);
+        state->flags = (u8)(state->flags & ~DLL1D6_STATE_FLAG_BOB_ACTIVE);
     }
-    mm_free(state->bufA);
-    mm_free(state->bufB);
-    (gDll1D6SlotInUse)[state->slot] = 0;
+    mm_free(state->actionDataA);
+    mm_free(state->actionDataB);
+    gDll1D6SlotInUse[state->actionSlot] = 0;
 }
 
 void dll_1D6_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -128,16 +119,16 @@ void dll_1D6_hitDetect(void)
 {
 }
 
-static inline ObjModel* DIM2snowball_GetActiveModel(GameObject* obj)
+static inline ObjModel* Dll1D6_GetActiveModel(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
-void dll_1D6_update(int* obj)
+void dll_1D6_update(GameObject* obj)
 {
-    Dll1D6State* extra;
-    int* def;
+    Dll1D6State* state;
+    Dll1D6Placement* placement;
     ObjModel* model;
     ObjTextureRuntimeSlot* tex;
     GameObject* player;
@@ -145,60 +136,60 @@ void dll_1D6_update(int* obj)
     s16 ang[6];
     f32 lx, ly, lz;
 
-    def = *(int**)&((GameObject*)obj)->anim.placementData;
-    extra = ((GameObject*)obj)->extra;
+    placement = (Dll1D6Placement*)obj->anim.placementData;
+    state = obj->extra;
 
-    if ((extra->flags1D & 1) != 0)
+    if ((state->flags & DLL1D6_STATE_FLAG_DOWN_PHASE) != 0)
     {
-        if ((extra->flags1D & 4) == 0)
+        if ((state->flags & DLL1D6_STATE_FLAG_BOB_ACTIVE) == 0)
         {
-            extra->flags1D |= 4;
-            extra->bobPhase = (f32)(int)randomGetRange(20, 40);
-            extra->bobRate = (f32)(int)randomGetRange(6, 10) / 20.0f;
+            state->flags |= DLL1D6_STATE_FLAG_BOB_ACTIVE;
+            state->bobPhase = (f32)(int)randomGetRange(20, 40);
+            state->bobRate = (f32)(int)randomGetRange(6, 10) / 20.0f;
         }
-        extra->downTimer -= framesThisStep;
-        extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
-        if (extra->dizzyTimer <= 0)
+        state->downTimer -= framesThisStep;
+        state->dizzyTimer = state->dizzyTimer - framesThisStep;
+        if (state->dizzyTimer <= 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_en_trpopn_c_9f);
         }
-        if (extra->downTimer <= 0)
+        if (state->downTimer <= 0)
         {
-            model = DIM2snowball_GetActiveModel((GameObject*)(obj));
+            model = Dll1D6_GetActiveModel(obj);
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.1f, 16);
-            extra->upTimer = ((Dll1D6Placement*)def)->upTimer;
-            if (extra->upTimer < 15)
+            state->upTimer = placement->upTimer;
+            if (state->upTimer < 15)
             {
-                extra->upTimer = 15;
+                state->upTimer = 15;
             }
-            extra->flags1D &= ~1;
+            state->flags &= ~DLL1D6_STATE_FLAG_DOWN_PHASE;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_1f6);
         }
     }
     else
     {
-        void* p28;
-        model = DIM2snowball_GetActiveModel((GameObject*)(obj));
-        p28 = *(void**)((char*)model + 0x28);
-        if (p28 != NULL && (extra->flags1D & 4) != 0)
+        ObjModelBlendChannel* blendChannel;
+        model = Dll1D6_GetActiveModel(obj);
+        blendChannel = model->blendChannels;
+        if (blendChannel != NULL && (state->flags & DLL1D6_STATE_FLAG_BOB_ACTIVE) != 0)
         {
-            if (*(f32*)p28 >= 1.0f)
+            if (blendChannel->weight >= 1.0f)
             {
-                extra->flags1D &= ~4;
+                state->flags &= ~DLL1D6_STATE_FLAG_BOB_ACTIVE;
             }
         }
-        extra->upTimer -= framesThisStep;
-        if (extra->upTimer <= 0)
+        state->upTimer -= framesThisStep;
+        if (state->upTimer <= 0)
         {
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, -0.1f, 16);
-            extra->downTimer = ((Dll1D6Placement*)def)->downTimer;
-            if (extra->downTimer < 15)
+            state->downTimer = placement->downTimer;
+            if (state->downTimer < 15)
             {
-                extra->downTimer = 15;
+                state->downTimer = 15;
             }
-            extra->flags1D |= 1;
+            state->flags |= DLL1D6_STATE_FLAG_DOWN_PHASE;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_1f7);
-            extra->dizzyTimer = 20;
+            state->dizzyTimer = 20;
         }
     }
     tex = objFindTexture((GameObject*)(obj), 0, 0);
@@ -222,18 +213,18 @@ void dll_1D6_update(int* obj)
         tex->offsetT = -v;
     }
     player = Obj_GetPlayerObject();
-    mtx[0] = -((GameObject*)obj)->anim.localPosX;
-    mtx[1] = -((GameObject*)obj)->anim.localPosY;
-    mtx[2] = -((GameObject*)obj)->anim.localPosZ;
-    ang[0] = -((GameObject*)obj)->anim.rotX;
+    mtx[0] = -obj->anim.localPosX;
+    mtx[1] = -obj->anim.localPosY;
+    mtx[2] = -obj->anim.localPosZ;
+    ang[0] = -obj->anim.rotX;
     ang[1] = 0;
     ang[2] = 0;
     mtxRotateByVec3s(&mtx[3], ang);
     Matrix_TransformPoint(&mtx[3], player->anim.localPosX, player->anim.localPosY, player->anim.localPosZ, &lx, &ly,
                           &lz);
-    if ((extra->flags1D & 2) != 0)
+    if ((state->flags & DLL1D6_STATE_FLAG_HIT_ENABLED) != 0)
     {
-        ly = ((GameObject*)obj)->anim.localPosY - player->anim.localPosY;
+        ly = obj->anim.localPosY - player->anim.localPosY;
         if (ly < 0.0f)
         {
             ly = -ly;
@@ -241,91 +232,92 @@ void dll_1D6_update(int* obj)
         if (ly < 50.0f)
         {
             lz = lz * lz;
-            if (lz <= extra->hitRangeSqA)
+            if (lz <= state->hitRangeSqA)
             {
                 int* row;
                 f32 lim;
-                model = DIM2snowball_GetActiveModel((GameObject*)(obj));
+                model = Dll1D6_GetActiveModel(obj);
                 {
                     char* mrow = (char*)model + 4;
                     row = *(int**)(mrow + ((((ObjModel*)model)->bufferFlags >> 1) & 1) * 4);
                 }
-                lim = ((GameObject*)obj)->anim.rootMotionScale * (f32)(int)*(s16*)((char*)row + extra->hitRow * 16);
+                lim = obj->anim.rootMotionScale * (f32)(int)*(s16*)((char*)row + state->hitRow * 16);
                 if (lx <= lim)
                 {
-                    ObjHits_RecordObjectHit(player, (GameObject*)obj, 11, 4, 0);
+                    ObjHits_RecordObjectHit(player, obj, 11, 4, 0);
                 }
             }
         }
     }
-    if ((extra->flags1D & 4) != 0)
+    if ((state->flags & DLL1D6_STATE_FLAG_BOB_ACTIVE) != 0)
     {
-        extra->bobPhase = extra->bobRate * timeDelta + extra->bobPhase;
-        if (extra->bobPhase > 40.0f)
+        state->bobPhase = state->bobRate * timeDelta + state->bobPhase;
+        if (state->bobPhase > 40.0f)
         {
-            extra->bobRate = -(f32)(int)randomGetRange(6, 10) / 20.0f;
-            extra->bobPhase = 40.0f;
+            state->bobRate = -(f32)(int)randomGetRange(6, 10) / 20.0f;
+            state->bobPhase = 40.0f;
         }
-        else if (extra->bobPhase < 20.0f)
+        else if (state->bobPhase < 20.0f)
         {
-            extra->bobRate = (f32)(int)randomGetRange(6, 10) / 20.0f;
-            extra->bobPhase = 20.0f;
+            state->bobRate = (f32)(int)randomGetRange(6, 10) / 20.0f;
+            state->bobPhase = 20.0f;
         }
     }
-    if (mainGetBit(496) != 0)
+    if (mainGetBit(DLL1D6_HIT_ENABLE_GAMEBIT) != 0)
     {
-        extra->flags1D |= 2;
+        state->flags |= DLL1D6_STATE_FLAG_HIT_ENABLED;
     }
     else
     {
-        extra->flags1D &= ~2;
+        state->flags &= ~DLL1D6_STATE_FLAG_HIT_ENABLED;
     }
 }
 
-void dll_1D6_init(int* obj, u8* paramsBytes)
+void dll_1D6_init(GameObject* obj, Dll1D6Placement* placement)
 {
-    Dll1D6Placement* params = (Dll1D6Placement*)paramsBytes;
-    Dll1D6State* extra;
+    Dll1D6State* state;
     ObjModel* model;
     int i;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(params->rotXParam << 8);
-    extra = ((GameObject*)obj)->extra;
-    model = DIM2snowball_GetActiveModel((GameObject*)(obj));
+    obj->anim.rotX = (s16)(placement->rotX << 8);
+    state = obj->extra;
+    model = Dll1D6_GetActiveModel(obj);
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.0f, 0);
     ObjModel_SetBlendChannelWeight(model, 0, 1.0f);
-    extra->upTimer = params->upTimer;
-    if (extra->upTimer < 15)
+    state->upTimer = placement->upTimer;
+    if (state->upTimer < 15)
     {
-        extra->upTimer = 15;
+        state->upTimer = 15;
     }
-    extra->downTimer = params->downTimer;
-    if (extra->downTimer < 15)
+    state->downTimer = placement->downTimer;
+    if (state->downTimer < 15)
     {
-        extra->downTimer = 15;
+        state->downTimer = 15;
     }
     {
         f32 k = 0.0f;
-        extra->hitRangeSqA = k * ((GameObject*)obj)->anim.rootMotionScale;
-        extra->hitRangeSqA = extra->hitRangeSqA * extra->hitRangeSqA;
-        extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
-        extra->hitRangeSqB = extra->hitRangeSqB * extra->hitRangeSqB;
+        state->hitRangeSqA = k * obj->anim.rootMotionScale;
+        state->hitRangeSqA = state->hitRangeSqA * state->hitRangeSqA;
+        state->hitRangeSqB = k * obj->anim.rootMotionScale;
+        state->hitRangeSqB = state->hitRangeSqB * state->hitRangeSqB;
     }
-    extra->flags1D = mainGetBit(496) ? 2 : 0;
-    for (i = 0; i < 4; i++)
+    state->flags = mainGetBit(DLL1D6_HIT_ENABLE_GAMEBIT) ? DLL1D6_STATE_FLAG_HIT_ENABLED : 0;
+    for (i = 0; i < DLL1D6_ACTION_SLOT_COUNT; i++)
     {
         if ((gDll1D6SlotInUse)[i] == 0)
         {
             (gDll1D6SlotInUse)[i] = 1;
-            extra->slot = i;
-            i = 4;
+            state->actionSlot = i;
+            i = DLL1D6_ACTION_SLOT_COUNT;
         }
     }
-    extra->bufA = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
-    extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN, ((gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
-    ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
+    state->actionDataA = mmAlloc(DLL1D6_ACTION_DATA_SIZE, 18, 0);
+    getTabEntry(state->actionDataA, MLDF_FILEID_LACTIONS_BIN,
+                gDll1D6SlotTabIndex[state->actionSlot] * DLL1D6_ACTION_DATA_SIZE, DLL1D6_ACTION_DATA_SIZE);
+    state->actionDataB = mmAlloc(DLL1D6_ACTION_DATA_SIZE, 18, 0);
+    getTabEntry(state->actionDataB, MLDF_FILEID_LACTIONS_BIN,
+                (gDll1D6SlotTabIndex[state->actionSlot] + 1) * DLL1D6_ACTION_DATA_SIZE, DLL1D6_ACTION_DATA_SIZE);
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_1D6_release(void)

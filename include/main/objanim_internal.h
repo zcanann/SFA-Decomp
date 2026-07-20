@@ -119,7 +119,7 @@ typedef struct ObjAnimState {
   u8 *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   /* 0x2c: cursor into the current frame's packed bitstream, written by
-     ObjModel_SampleJointTransform and read back as posA in fn_80007F78. */
+     ObjModel_SampleJointTransform and consumed by modelRenderInterpolateRootTransform. */
   u8 *frameStreamCursor;
   u8 pad30[4];
   ObjAnimFrameCommand *moveFrameData;

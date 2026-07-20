@@ -2207,7 +2207,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
     {
         /* the four frame-data pointers (move/prevMove/blend/prevBlend) are
            indexed as one array here; the selected one is swapped into the
-           moveFrameData slot for fn_80007F78, then restored */
+           moveFrameData slot for modelRenderInterpolateRootTransform, then restored */
         ObjAnimFrameCommand** p = &ch->moveFrameData;
         ch->moveFrameData = p[idx];
     }
@@ -2251,7 +2251,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
         }
         *(u8**)((u8*)ch + 0x2c) = anim + *(s16*)(anim + 2) + bv * n;
     }
-    fn_80007F78(ch, srot, outRot);
+    modelRenderInterpolateRootTransform(ch, srot, outRot);
     *(int*)&ch->moveFrameData = saved;
     {
         f32 k = lbl_803DE880;
@@ -3631,11 +3631,11 @@ void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
         {
             if (t < 0)
             {
-                srcBits = (u8*)fn_80006B1C(&srcState, &dstState, dst[7], vertBits, t);
+                srcBits = (u8*)modelRenderCopyPackedSamples(&srcState, &dstState, dst[7], vertBits, t);
             }
             else
             {
-                srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits, t);
+                srcBits = modelRenderDecodeAdpcm(srcBits, dst[7], &dstState, vertBits, t);
             }
         }
     }

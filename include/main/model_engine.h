@@ -61,9 +61,10 @@ extern int lbl_803DB280;
 extern int lbl_803DB284;
 extern int lbl_803DB288;
 
-u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
-                           u8 encodedBitWidth);
-int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth);
+u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
+                          u8 encodedBitWidth);
+int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap,
+                                 u8 bitWidth);
 
 int Queue_GetCount(RingBufferQueue* queue);
 BOOL Queue_IsEmpty(RingBufferQueue* queue);

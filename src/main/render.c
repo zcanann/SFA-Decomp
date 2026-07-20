@@ -18,7 +18,7 @@
 
 register int gRenderReserved asm("r14");
 
-const int lbl_802C18C0[89] = {
+const int gModelRenderAdpcmStepTable[89] = {
     0x4, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE,
     0x10, 0x11, 0x13, 0x15, 0x17, 0x19, 0x1C, 0x1F,
     0x22, 0x25, 0x29, 0x2D, 0x32, 0x37, 0x3C, 0x42,
@@ -31,7 +31,7 @@ const int lbl_802C18C0[89] = {
     0x1BDC, 0x1EA5, 0x21B6, 0x2515, 0x28CA, 0x2CDF, 0x315B, 0x364B,
     0x3BB9, 0x41B2, 0x4844, 0x4F7E, 0x5771, 0x602F, 0x69CE, 0x7462,
     0x7FFF};
-const int lbl_802C1A24[17] = {-4, -2, -1, -1, 2, 4, 6, 8, -4, -2, -1, -1, 2, 4, 6, 8, 0};
+const int gModelRenderAdpcmIndexDeltaTable[17] = {-4, -2, -1, -1, 2, 4, 6, 8, -4, -2, -1, -1, 2, 4, 6, 8, 0};
 
 f32 gRenderSinTable[513] = {
     0.0f, 0.003068000078201294f, 0.006136000156402588f, 0.009204000234603882f, 0.012272000312805176f, 0.015339000150561333f, 0.018407000228762627f, 0.021474000066518784f,
@@ -117,8 +117,8 @@ int getLActions(void* source, void* target, u16 index, int arg3, int arg4, int a
     return 0;
 }
 
-u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
-                           u8 encodedBitWidth)
+u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
+                          u8 encodedBitWidth)
 {
     int predictor;
     int bitWidth = encodedBitWidth;
@@ -155,7 +155,7 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
     for (i = sampleCount / 2; i > 0; i--)
     {
         code = *compressed & 0xf;
-        step = lbl_802C18C0[stepIndex];
+        step = gModelRenderAdpcmStepTable[stepIndex];
         difference = 0;
         codeValue = code;
         if (codeValue & 1)
@@ -175,7 +175,7 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
             difference = -difference;
         }
         predictor += difference;
-        stepIndex += lbl_802C1A24[code];
+        stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
         if (stepIndex < 0)
         {
             stepIndex = 0;
@@ -200,7 +200,7 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
         }
 
         code = (*compressed++ >> 4) & 0xf;
-        step = lbl_802C18C0[stepIndex];
+        step = gModelRenderAdpcmStepTable[stepIndex];
         difference = 0;
         codeValue = code;
         if (codeValue & 1)
@@ -220,7 +220,7 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
             difference = -difference;
         }
         predictor += difference;
-        stepIndex += lbl_802C1A24[code];
+        stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
         if (stepIndex < 0)
         {
             stepIndex = 0;
@@ -247,7 +247,7 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
     if (sampleCount & 1)
     {
         code = *compressed++ & 0xf;
-        step = lbl_802C18C0[stepIndex];
+        step = gModelRenderAdpcmStepTable[stepIndex];
         difference = 0;
         codeValue = code;
         if (codeValue & 1)
@@ -267,7 +267,7 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
             difference = -difference;
         }
         predictor += difference;
-        stepIndex += lbl_802C1A24[code];
+        stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
         if (stepIndex < 0)
         {
             stepIndex = 0;
@@ -297,7 +297,8 @@ u8* modelRenderFn_80006744(u8* compressed, int sampleCount, ModelRenderInstrsSta
     return compressed;
 }
 
-int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth)
+int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap,
+                                 u8 bitWidth)
 {
     int startBit = modelRenderInstrsState_getBit(dst);
     u32 mask;
@@ -359,10 +360,10 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
     bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
     bitpos += (nb);
 
-void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
+void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation)
 {
     f32 t = anim->framePhase;
-    u64 outPos = (u32)out;
+    u64 outPos = (u32)outRotation;
     u64 end;
     int curB = anim->frameStreamStride;
     u64 posA = (u32)anim->frameStreamCursor;
@@ -380,9 +381,9 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
 
     addrB = posA + curB;
     curB = addrB;
-    end = (u32)(dst + 3);
+    end = (u32)(outPosition + 3);
     t = t - floorf(t);
-    t = t * lbl_803DE544;
+    t = t * gModelRenderSubframeScale;
     frac = (int)t;
 
     render_copyPackedU64Head(&bufA, posA);
@@ -482,9 +483,9 @@ void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
                 tp += 2;
             } while (0);
         }
-        *dst = sample;
-        dst++;
-    } while ((u64)(u32)dst != end);
+        *outPosition = sample;
+        outPosition++;
+    } while ((u64)(u32)outPosition != end);
 }
 
 void render_copyPackedU64Tail(u64* dst, u32 packed)
