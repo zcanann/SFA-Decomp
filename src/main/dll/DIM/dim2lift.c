@@ -231,7 +231,7 @@ int DIMbossHitDetect_tonsilSlam(GameObject* obj, int runtime)
             ((BaddieState*)runtime)->moveDone = 0;
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 0, lbl_803DBF30);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 0, lbl_803DBF30);
     return 0;
 }
 
@@ -260,7 +260,7 @@ int DIMbossHitDetect_liftSlam(GameObject* obj, int runtime)
             *(f32*)(*(int*)&((GroundBaddieState*)state)->control + 0xa8) = lbl_803E4BEC;
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 1, lbl_803DBF30);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 1, lbl_803DBF30);
     return 0;
 }
 
@@ -319,8 +319,8 @@ int DIMbossHitDetect_chooseIdleTaunt(GameObject* obj, int runtime)
             }
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 0, lbl_80325AA0);
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 7, 1, lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 0, lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 7, 1, lbl_80325AA0);
     return 0;
 }
 
@@ -341,7 +341,7 @@ int DIMbossHitDetect_lungeAttack(GameObject* obj, int runtime, f32 hitAmount)
         ((BaddieState*)runtime)->animSpeedA = animSpeed;
         ((BaddieState*)runtime)->animSpeedB = animSpeed;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 1, lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 1, lbl_80325AA0);
     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, hitAmount, 0xf0);
     return 0;
 }
@@ -372,7 +372,7 @@ int DIMbossHitDetect_breathBurst(GameObject* obj, int runtime, f32 arg)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_BREATH_BURST;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 5, lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 5, lbl_80325AA0);
     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
@@ -407,7 +407,7 @@ int DIMbossHitDetect_blueWhiteCapture(GameObject* obj, int runtime, f32 arg)
     {
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 3, lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 3, lbl_80325AA0);
     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
@@ -443,7 +443,7 @@ int DIMbossHitDetect_blueWhiteEventCapture(GameObject* obj, int runtime, f32 arg
         gDIMbossSequenceFlags |= (u64)DIMBOSS_SEQUENCE_FLAG_CAPTURE_BLUE_WHITE_VELOCITY;
         *(int*)&((BaddieState*)runtime)->eventFlags &= ~BADDIE_EVENT_LANDING;
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 3, lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, 3, lbl_80325AA0);
     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }
@@ -484,8 +484,7 @@ int DIMbossHitDetect_randomSwipe(GameObject* obj, int runtime, f32 arg)
         *(int*)&((BaddieState*)runtime)->eventFlags = eventFlags & ~BADDIE_EVENT_LANDING;
         gDIMbossSequenceFlags |= (DIMBOSS_SEQUENCE_FLAG_0001 | DIMBOSS_SEQUENCE_FLAG_0004);
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, randomGetRange(0, 1),
-                                                                             lbl_80325AA0);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)runtime, 0, randomGetRange(0, 1), lbl_80325AA0);
     (*gPlayerInterface)->rotateTowardTarget(obj, (void*)runtime, arg, 0xf0);
     return 0;
 }

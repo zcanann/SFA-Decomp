@@ -1639,8 +1639,8 @@ int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
         }
         sub->configFlags |= ((DbstealerwormPlacement*)data)->configFlags;
     }
-    (**(void (**)(int, int, int, int, int*))((char*)(*gPlayerInterface) + 0x34))((int)obj, baddie, 0, 2, lbl_80329634);
-    (**(void (**)(int, int, int, int, int*))((char*)(*gPlayerInterface) + 0x34))((int)obj, baddie, 7, 0, lbl_80329640);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)baddie, 0, 2, lbl_80329634);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)baddie, 7, 0, lbl_80329640);
     return 0;
 }
 
@@ -1849,7 +1849,7 @@ int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie)
         }
         sub_40c->msgAdvance = 1;
     }
-    (**(int (**)(int, int, int, int, int*))((char*)*gPlayerInterface + 0x34))((int)obj, baddie, 7, 0, lbl_80329640);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)baddie, 7, 0, lbl_80329640);
     return 0;
 }
 
@@ -1893,7 +1893,7 @@ int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie)
         sub_40c->flags14 = (u8)(sub_40c->flags14 | DBWORM_FLAG14_FX_DUST);
     }
 
-    (**(void (**)(int, int, int, int, int*))((char*)(*gPlayerInterface) + 0x34))((int)obj, baddie, 7, 0, lbl_80329640);
+    (*gPlayerInterface)->playSoundOnEvent0F(obj, (void*)baddie, 7, 0, lbl_80329640);
     return 0;
 }
 
