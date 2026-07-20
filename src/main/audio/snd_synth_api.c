@@ -16,6 +16,7 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_handle.h"
+#include "main/audio/synth_queue.h"
 
 #define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
 
@@ -24,7 +25,6 @@
 #define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
-extern u8 gSynthVoiceNotes[];
 extern u8 synthITDDefault[8][2];
 extern u8 synthAuxBMIDISet[8];
 extern u8 synthAuxBMIDI[8];
@@ -47,7 +47,7 @@ void sndSeqVolume(u8 volume, u16 time, u32 seqId, u8 mode)
  */
 u16 seqGetMIDIPriority(u8 slot, u8 event)
 {
-    return *(u16*)(gSynthVoiceNotes + slot * 32 + event * 2);
+    return gSynthVoiceNotes[slot][event];
 }
 
 /*

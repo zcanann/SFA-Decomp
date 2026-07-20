@@ -9,9 +9,7 @@
 #include "main/audio/synth_queue.h"
 #include "main/dll/synthfade_struct.h"
 
-#define SYNTH_MAX_VOICES 8
 #define SYNTH_CALLBACK_COUNT 0x100
-#define SYNTH_VOICE_NOTE_COUNT 0x10
 #define SYNTH_SEQUENCE_TRACK_COUNT 0x40
 #define SYNTH_STUDIO_CHANNEL_SCALE_STUDIO_COUNT 9
 #define SYNTH_DELAY_BUCKET_COUNT 0x20
@@ -345,7 +343,6 @@ extern u32 gSynthDelayedActionWord0;
 extern u32 gSynthDelayedActionWord1;
 extern u32 gSynthFadeMask;
 
-extern u16 gSynthVoiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 extern SynthVoice gSynthVoices[SYNTH_MAX_VOICES];
 extern u8 synthTrackVolume[64];
 extern SynthVoice* gSynthFreeVoices;
