@@ -24,6 +24,7 @@
  * Trigger_render/update/release/initialise are stubs; Trigger_free stops
  * any sfx the trigger started.
  */
+#define DLL_0126_TRIGGER_LEGCODE_INT
 #include "main/frame_timing.h"
 #include "main/texture.h"
 #include "main/gameloop_api.h"
@@ -87,7 +88,7 @@ extern f32 lbl_803E40D8;
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
-void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int distSq)
+void objInterpretSeq(GameObject* obj, GameObject* seqObj, int legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
     u8* state = ((GameObject*)obj)->extra;
