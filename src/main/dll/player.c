@@ -272,7 +272,7 @@ void fn_802AE650(GameObject* obj, int state, int p3);
 void fn_802AE83C(int obj, int inner, int state);
 void fn_802AE9C8(GameObject* obj, int inner, int state);
 void fn_802AED2C(GameObject* obj, int state, int p3);
-void staffAnimate(int obj, int state);
+void staffAnimate(int obj, void* state, f32 dt);
 void playerProcessQueuedItemCommand(GameObject* obj, int state);
 void playerRunActiveSpells(GameObject* obj, int state);
 void fn_802B066C(GameObject* obj, int state);
@@ -13902,7 +13902,7 @@ void fn_802AED2C(GameObject* obj, int state, int p3)
     }
 }
 
-void staffAnimate(int obj, int state)
+void staffAnimate(int obj, void* state, f32 dt)
 {
     int prevChanged;
     int changed;
@@ -16776,7 +16776,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     {
         objSetAnimField48to0((GameObject*)gPlayerPathObject);
     }
-    ((void (*)(int, void*, f32))staffAnimate)(obj, inner, timeDelta);
+    staffAnimate(obj, inner, timeDelta);
     if (gPlayerPathObject != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
     {
         ((GameObject*)gPlayerPathObject)->objectFlags &= ~7;
