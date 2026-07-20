@@ -2883,9 +2883,10 @@ void mapDebugRender(int* state)
             row = dy / step;
             cx = wx / 80;
             cz = wz / 80;
-            cell = row * 0x40 + cz * 8;
+            cell = row * 0x40;
+            cell += cz * 8;
             cell += cx;
-            logPrintf(sTrackCellCoordFormat);
+            logPrintf(sTrackCellCoordFormat, cx, row, cz);
             v = lbl_803DCE70;
             n = v >> 3;
             if (v & 7)
