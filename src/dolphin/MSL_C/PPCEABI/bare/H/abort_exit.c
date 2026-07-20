@@ -1,7 +1,6 @@
 #include "stddef.h"
-
-void _ExitProcess(void);
-void __destroy_global_chain(void);
+#include "PowerPC_EABI_Support/Runtime/NMWException.h"
+#include "dolphin/os/__ppc_eabi_init.h"
 
 extern void (*_dtors[])(void);
 

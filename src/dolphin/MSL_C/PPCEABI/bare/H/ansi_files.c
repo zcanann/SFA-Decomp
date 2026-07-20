@@ -1,10 +1,9 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/file_io.h"
 
 static unsigned char stdin_buff[0x100];
 static unsigned char stdout_buff[0x100];
 static unsigned char stderr_buff[0x100];
-
-int __TRK_write_console(__file_handle file, unsigned char* buff, size_t* count, __idle_proc idle_fn);
 
 FILE __files[4] = {
     {0,
@@ -74,9 +73,6 @@ FILE __files[4] = {
      0,
      &__files[3]},
 };
-
-int fclose(FILE*);
-int fflush(FILE*);
 
 unsigned int __flush_all(void)
 {
