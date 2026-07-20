@@ -130,15 +130,15 @@ int DFSH_LaserBeam_getObjectTypeId(void)
 
 void DFSH_LaserBeam_free(int* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    DFSHLaserBeamRuntime* runtime = ((GameObject*)obj)->extra;
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(gLaserBeamEffectResource);
     gLaserBeamEffectResource = NULL;
-    if (*(void**)state != NULL)
+    if (runtime->beamTexture != NULL)
     {
-        textureFree((Texture*)(*(void**)state));
+        textureFree((Texture*)runtime->beamTexture);
     }
-    *(void**)state = NULL;
+    runtime->beamTexture = NULL;
 }
 
 void DFSH_LaserBeam_render(void)
@@ -383,10 +383,10 @@ void DFSH_LaserBeam_init(void* objArg, void* configArg)
     obj->yaw = (s16)((s32)config->yawByte << 8);
     timer = randomGetRange(-0x50, 0x50);
     runtime->lockTimer = (s16)(timer + 0x190);
-    *(u8*)((u8*)runtime + 0x49) = 0;
+    DFSH_LASER_BLAST_PHASE(runtime) = 0;
     gLaserBeamEffectResource = Resource_Acquire(DFSHLASERBEAM_EFFECT_RESOURCE_ID, 1);
     runtime->beamVolumeScale = (0.0f);
-    *(u8*)((u8*)runtime + 0x4A) = config->proximityMode;
+    DFSH_LASER_PROXIMITY_MODE(runtime) = config->proximityMode;
     runtime->cycleTimer = 0x118;
     if (runtime->beamTexture == NULL)
     {

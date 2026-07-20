@@ -1102,8 +1102,7 @@ void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         if (vis == -1)
         {
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E83A8);
-            ObjPath_GetPointWorldPosition(obj, 3, &((CloudRunnerState*)inner)->spawnPosX, (f32*)((char*)inner + 0xaec),
-                                          (f32*)((char*)inner + 0xaf0), 0);
+            ObjPath_GetPointWorldPosition(obj, 3, &inner->spawnPosX, &inner->spawnPosY, &inner->spawnPosZ, 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {

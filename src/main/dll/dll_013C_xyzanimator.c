@@ -96,13 +96,14 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
     int edge[1];
     int edgeIdx[1];
     VertexS16* vtx;
+    MapBlockData* mb = (MapBlockData*)block;
 
     edgeOffset[0] = 0;
     edge[0] = 0;
     blockIndex = 0;
     coordOffset[0] = 0;
     triangleOffset[0] = coordOffset[0];
-    for (; blockIndex < (int)(u32)((MapBlockData*)block)->polyGroupCount; blockIndex++)
+    for (; blockIndex < (int)(u32)mb->polyGroupCount; blockIndex++)
     {
         mapBlock = mapBlockFn_800606ec((void*)block, blockIndex);
         blockLayer = mapBlockFn_80060678(mapBlock);
@@ -119,17 +120,17 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
                 int o6;
                 int o12;
                 mapBlock = fn_800606DC((int*)block, triangle);
-                vtx = (VertexS16*)(((MapBlockData*)block)->vertices + (u32)*mapBlock * 6);
+                vtx = (VertexS16*)(mb->vertices + (u32)*mapBlock * 6);
                 *(s16*)(state->dataBuffer + edgeOffset[0]) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset[0] + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + edgeOffset[0] + 4) = vtx->z;
                 o6 = edgeOffset[0] + 6;
-                vtx = (VertexS16*)(((MapBlockData*)block)->vertices + mapBlock[1] * 6);
+                vtx = (VertexS16*)(mb->vertices + mapBlock[1] * 6);
                 *(s16*)(state->dataBuffer + o6) = vtx->x;
                 *(s16*)(state->dataBuffer + o6 + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + o6 + 4) = vtx->z;
                 o12 = o6 + 6;
-                vtx = (VertexS16*)(((MapBlockData*)block)->vertices + mapBlock[2] * 6);
+                vtx = (VertexS16*)(mb->vertices + mapBlock[2] * 6);
                 *(s16*)(state->dataBuffer + o12) = vtx->x;
                 *(s16*)(state->dataBuffer + o12 + 2) = vtx->y;
                 *(s16*)(state->dataBuffer + o12 + 4) = vtx->z;
@@ -140,7 +141,7 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
     }
     edgeIdx[0] = 0;
     edge[0] = edgeIdx[0];
-    for (; edgeIdx[0] < (int)(u32)((MapBlockData*)block)->edgeCount; edgeIdx[0]++)
+    for (; edgeIdx[0] < (int)(u32)mb->edgeCount; edgeIdx[0]++)
     {
         blockIndex = (int)fn_800606FC((int*)block, edgeIdx[0]);
         *(s16*)(state->edgeV0xBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v0x;
@@ -166,7 +167,7 @@ void XyzAnimator_free(GameObject* obj, int flag)
     f32 zero;
 
     state = (XyzAnimatorState*)(obj)->extra;
-    setup = *(XyzAnimatorPlacement**)&(obj)->anim.placementData;
+    setup = (XyzAnimatorPlacement*)obj->anim.placementData;
     zero = 0.0f;
     state->offsetX = zero;
     state->offsetY = zero;
@@ -181,9 +182,9 @@ void XyzAnimator_free(GameObject* obj, int flag)
             fn_80194C40(setup, state, block);
         }
     }
-    if (*(void**)&state->dataBuffer != NULL)
+    if ((void*)state->dataBuffer != NULL)
     {
-        mm_free(*(void**)&state->dataBuffer);
+        mm_free((void*)state->dataBuffer);
     }
     ObjGroup_RemoveObject((int)obj, XYZANIMATOR_OBJGROUP);
 }
@@ -277,8 +278,8 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 
 void XyzAnimator_update(GameObject* obj)
 {
-    u8* setup = *(u8**)&obj->anim.placementData;
-    u8* state = obj->extra;
+    XyzAnimatorPlacement* setup = (XyzAnimatorPlacement*)obj->anim.placementData;
+    XyzAnimatorState* state = (XyzAnimatorState*)obj->extra;
     int block;
     u8* row;
     int i;
@@ -289,447 +290,447 @@ void XyzAnimator_update(GameObject* obj)
     block = (int)mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
     if ((u32)block == 0)
     {
-        ((XyzAnimatorState*)state)->loopCount = 0;
+        state->loopCount = 0;
         return;
     }
     if ((((MapBlockData*)block)->flags4 & 8) == 0)
     {
         return;
     }
-    if (((XyzAnimatorState*)state)->vertexCount == 0)
+    if (state->vertexCount == 0)
     {
         for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
             row = mapBlockFn_800606ec((void*)block, i);
             t = mapBlockFn_80060678(row);
-            if (((XyzAnimatorPlacement*)setup)->blockLayer == t)
+            if (setup->blockLayer == t)
             {
-                ((XyzAnimatorState*)state)->rowCount++;
-                ((XyzAnimatorState*)state)->vertexCount += (*(u16*)(row + 0x14) - *(u16*)(row + 0));
+                state->rowCount++;
+                state->vertexCount += (*(u16*)(row + 0x14) - *(u16*)(row + 0));
             }
         }
-        if (((XyzAnimatorState*)state)->vertexCount == 0)
+        if (state->vertexCount == 0)
         {
             return;
         }
-        ((XyzAnimatorState*)state)->vertexCount *= 3;
-        if (((XyzAnimatorPlacement*)setup)->triggerGameBit == -1)
+        state->vertexCount *= 3;
+        if (setup->triggerGameBit == -1)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = 1;
+            state->gameBitValue = 1;
         }
         else
         {
-            ((XyzAnimatorState*)state)->gameBitValue = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
+            state->gameBitValue = mainGetBit(setup->triggerGameBit);
         }
-        ((XyzAnimatorState*)state)->edgeCount = ((MapBlockData*)block)->edgeCount;
-        ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
-        ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
-        ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
-        if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1 &&
-            mainGetBit(((XyzAnimatorPlacement*)setup)->doneGameBit) != 0)
+        state->edgeCount = ((MapBlockData*)block)->edgeCount;
+        state->offsetX = (f32)setup->startX;
+        state->offsetY = (f32)setup->startY;
+        state->offsetZ = (f32)setup->startZ;
+        if (setup->doneGameBit != -1 &&
+            mainGetBit(setup->doneGameBit) != 0)
         {
-            ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
-            ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
-            ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
-            ((XyzAnimatorState*)state)->gameBitValue = 1;
+            state->offsetX = (f32)setup->targetX;
+            state->offsetY = (f32)setup->targetY;
+            state->offsetZ = (f32)setup->targetZ;
+            state->gameBitValue = 1;
         }
-        t = ((XyzAnimatorState*)state)->vertexCount * 6 + ((XyzAnimatorState*)state)->rowCount * 0xc;
-        t = t + ((XyzAnimatorState*)state)->edgeCount * 0xc;
+        t = state->vertexCount * 6 + state->rowCount * 0xc;
+        t = t + state->edgeCount * 0xc;
         alloc = (int)mmAlloc(t, 5, 0);
-        ((XyzAnimatorState*)state)->dataBuffer = alloc;
-        stride = ((XyzAnimatorState*)state)->rowCount * 2;
-        alloc = alloc + ((XyzAnimatorState*)state)->vertexCount * 6;
-        ((XyzAnimatorState*)state)->unk18 = alloc;
+        state->dataBuffer = alloc;
+        stride = state->rowCount * 2;
+        alloc = alloc + state->vertexCount * 6;
+        state->unk18 = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk1C = alloc;
+        state->unk1C = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->posABuffer = alloc;
+        state->posABuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->posBBuffer = alloc;
+        state->posBBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk20 = alloc;
+        state->unk20 = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->unk24 = alloc;
+        state->unk24 = alloc;
         alloc = alloc + stride;
-        stride = ((XyzAnimatorState*)state)->edgeCount * 2;
-        ((XyzAnimatorState*)state)->edgeV0xBuffer = alloc;
+        stride = state->edgeCount * 2;
+        state->edgeV0xBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->edgeV1xBuffer = alloc;
+        state->edgeV1xBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->edgeV0yBuffer = alloc;
+        state->edgeV0yBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->edgeV1yBuffer = alloc;
+        state->edgeV1yBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->edgeV0zBuffer = alloc;
+        state->edgeV0zBuffer = alloc;
         alloc = alloc + stride;
-        ((XyzAnimatorState*)state)->edgeV1zBuffer = alloc;
-        XyzAnimator_captureGeometry((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
-        if (((XyzAnimatorPlacement*)setup)->mode != 4)
+        state->edgeV1zBuffer = alloc;
+        XyzAnimator_captureGeometry(setup, state, block);
+        if (setup->mode != 4)
         {
-            fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
+            fn_80194C40(setup, state, block);
             ((MapBlockData*)block)->flags4 = ((MapBlockData*)block)->flags4 ^ 1;
-            fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
+            fn_80194C40(setup, state, block);
             ((MapBlockData*)block)->flags4 = ((MapBlockData*)block)->flags4 ^ 1;
         }
     }
-    if (((XyzAnimatorPlacement*)setup)->mode == 2)
+    if (setup->mode == 2)
     {
-        t = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
-        if (((XyzAnimatorState*)state)->gameBitValue != t)
+        t = mainGetBit(setup->triggerGameBit);
+        if (state->gameBitValue != t)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = t;
+            state->gameBitValue = t;
             if (t == 0)
             {
-                if (((XyzAnimatorPlacement*)setup)->doneGameBit > -1)
+                if (setup->doneGameBit > -1)
                 {
-                    mainSetBits(((XyzAnimatorPlacement*)setup)->doneGameBit, 0);
+                    mainSetBits(setup->doneGameBit, 0);
                 }
             }
-            if (((XyzAnimatorState*)state)->loopCount > 2)
+            if (state->loopCount > 2)
             {
-                ((XyzAnimatorState*)state)->loopCount = 0;
+                state->loopCount = 0;
             }
         }
-        if (((XyzAnimatorState*)state)->loopCount > 2)
+        if (state->loopCount > 2)
         {
             return;
         }
-        if (((XyzAnimatorState*)state)->loopSfxId != 0)
+        if (state->loopSfxId != 0)
         {
-            Sfx_KeepAliveLoopedObjectSound((u32)obj, ((XyzAnimatorState*)state)->loopSfxId);
+            Sfx_KeepAliveLoopedObjectSound((u32)obj, state->loopSfxId);
         }
     }
     else
     {
-        if (((XyzAnimatorState*)state)->loopCount > 2)
+        if (state->loopCount > 2)
         {
             return;
         }
-        if (((XyzAnimatorState*)state)->gameBitValue == 0)
+        if (state->gameBitValue == 0)
         {
-            ((XyzAnimatorState*)state)->gameBitValue = mainGetBit(((XyzAnimatorPlacement*)setup)->triggerGameBit);
-            if (((XyzAnimatorState*)state)->gameBitValue == 0)
+            state->gameBitValue = mainGetBit(setup->triggerGameBit);
+            if (state->gameBitValue == 0)
             {
                 return;
             }
         }
     }
-    switch (((XyzAnimatorPlacement*)setup)->mode)
+    switch (setup->mode)
     {
     case 0:
     case 4:
         done = 0;
-        if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
+        if (setup->startX > setup->targetX)
         {
-            ((XyzAnimatorState*)state)->offsetX =
-                -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
-                  ((XyzAnimatorState*)state)->offsetX);
-            if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->targetX)
+            state->offsetX =
+                -(0.1f * ((f32)(int)setup->speedX * timeDelta) -
+                  state->offsetX);
+            if (state->offsetX <= (f32)setup->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
+                state->offsetX = (f32)setup->targetX;
                 done = 1;
             }
         }
         else
         {
-            ((XyzAnimatorState*)state)->offsetX =
-                0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
-                ((XyzAnimatorState*)state)->offsetX;
-            if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->targetX)
+            state->offsetX =
+                0.1f * ((f32)(int)setup->speedX * timeDelta) +
+                state->offsetX;
+            if (state->offsetX >= (f32)setup->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
+                state->offsetX = (f32)setup->targetX;
                 done = 1;
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
+        if (setup->startY > setup->targetY)
         {
-            ((XyzAnimatorState*)state)->offsetY =
-                -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
-                  ((XyzAnimatorState*)state)->offsetY);
-            if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->targetY)
+            state->offsetY =
+                -(0.1f * ((f32)(int)setup->speedY * timeDelta) -
+                  state->offsetY);
+            if (state->offsetY <= (f32)setup->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
+                state->offsetY = (f32)setup->targetY;
                 done += 1;
             }
         }
         else
         {
-            ((XyzAnimatorState*)state)->offsetY =
-                0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
-                ((XyzAnimatorState*)state)->offsetY;
-            if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->targetY)
+            state->offsetY =
+                0.1f * ((f32)(int)setup->speedY * timeDelta) +
+                state->offsetY;
+            if (state->offsetY >= (f32)setup->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
+                state->offsetY = (f32)setup->targetY;
                 done += 1;
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
+        if (setup->startZ > setup->targetZ)
         {
-            ((XyzAnimatorState*)state)->offsetZ =
-                -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
-                  ((XyzAnimatorState*)state)->offsetZ);
-            if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
+            state->offsetZ =
+                -(0.1f * ((f32)(int)setup->speedZ * timeDelta) -
+                  state->offsetZ);
+            if (state->offsetZ <= (f32)setup->targetZ)
             {
-                ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
+                state->offsetZ = (f32)setup->targetZ;
                 done += 1;
             }
         }
         else
         {
-            ((XyzAnimatorState*)state)->offsetZ =
-                0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
-                ((XyzAnimatorState*)state)->offsetZ;
-            if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
+            state->offsetZ =
+                0.1f * ((f32)(int)setup->speedZ * timeDelta) +
+                state->offsetZ;
+            if (state->offsetZ >= (f32)setup->targetZ)
             {
-                ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
+                state->offsetZ = (f32)setup->targetZ;
                 done += 1;
             }
         }
         if (done == 3)
         {
-            if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1)
+            if (setup->doneGameBit != -1)
             {
-                mainSetBits(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
+                mainSetBits(setup->doneGameBit, 1);
             }
-            ((XyzAnimatorState*)state)->loopCount += 1;
+            state->loopCount += 1;
         }
         break;
     case 1:
-        if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
+        if (setup->startX > setup->targetX)
         {
-            ((XyzAnimatorState*)state)->offsetX =
-                -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
-                  ((XyzAnimatorState*)state)->offsetX);
-            if (((XyzAnimatorState*)state)->offsetX < (f32)((XyzAnimatorPlacement*)setup)->targetX)
+            state->offsetX =
+                -(0.1f * ((f32)(int)setup->speedX * timeDelta) -
+                  state->offsetX);
+            if (state->offsetX < (f32)setup->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX =
-                    (f32)(((XyzAnimatorPlacement*)setup)->startX -
-                          (int)((f32)((XyzAnimatorPlacement*)setup)->targetX - ((XyzAnimatorState*)state)->offsetX));
+                state->offsetX =
+                    (f32)(setup->startX -
+                          (int)((f32)setup->targetX - state->offsetX));
             }
         }
         else
         {
-            ((XyzAnimatorState*)state)->offsetX =
-                0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
-                ((XyzAnimatorState*)state)->offsetX;
-            if (((XyzAnimatorState*)state)->offsetX > (f32)((XyzAnimatorPlacement*)setup)->startX)
+            state->offsetX =
+                0.1f * ((f32)(int)setup->speedX * timeDelta) +
+                state->offsetX;
+            if (state->offsetX > (f32)setup->startX)
             {
-                ((XyzAnimatorState*)state)->offsetX =
-                    (f32)(((XyzAnimatorPlacement*)setup)->targetX +
-                          (int)(((XyzAnimatorState*)state)->offsetX - (f32)((XyzAnimatorPlacement*)setup)->targetX));
+                state->offsetX =
+                    (f32)(setup->targetX +
+                          (int)(state->offsetX - (f32)setup->targetX));
             }
         }
-        if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
+        if (setup->startY > setup->targetY)
         {
-            ((XyzAnimatorState*)state)->offsetY =
-                -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
-                  ((XyzAnimatorState*)state)->offsetY);
-            if (((XyzAnimatorState*)state)->offsetY < (f32)((XyzAnimatorPlacement*)setup)->targetY)
+            state->offsetY =
+                -(0.1f * ((f32)(int)setup->speedY * timeDelta) -
+                  state->offsetY);
+            if (state->offsetY < (f32)setup->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY =
-                    -(0.1f * (f32)(int)((f32)((XyzAnimatorPlacement*)setup)->targetY -
-                                                ((XyzAnimatorState*)state)->offsetY) -
-                      (f32)((XyzAnimatorPlacement*)setup)->startY);
-            }
-        }
-        else
-        {
-            ((XyzAnimatorState*)state)->offsetY =
-                0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
-                ((XyzAnimatorState*)state)->offsetY;
-            if (((XyzAnimatorState*)state)->offsetY > (f32)((XyzAnimatorPlacement*)setup)->startY)
-            {
-                ((XyzAnimatorState*)state)->offsetY =
-                    (f32)(((XyzAnimatorPlacement*)setup)->targetY +
-                          (int)(((XyzAnimatorState*)state)->offsetY - (f32)((XyzAnimatorPlacement*)setup)->targetY));
-            }
-        }
-        if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
-        {
-            ((XyzAnimatorState*)state)->offsetZ =
-                -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
-                  ((XyzAnimatorState*)state)->offsetZ);
-            if (((XyzAnimatorState*)state)->offsetZ < (f32)((XyzAnimatorPlacement*)setup)->targetZ)
-            {
-                ((XyzAnimatorState*)state)->offsetZ =
-                    (f32)(((XyzAnimatorPlacement*)setup)->startZ -
-                          (int)((f32)((XyzAnimatorPlacement*)setup)->targetZ - ((XyzAnimatorState*)state)->offsetZ));
+                state->offsetY =
+                    -(0.1f * (f32)(int)((f32)setup->targetY -
+                                                state->offsetY) -
+                      (f32)setup->startY);
             }
         }
         else
         {
-            ((XyzAnimatorState*)state)->offsetZ =
-                0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
-                ((XyzAnimatorState*)state)->offsetZ;
-            if (((XyzAnimatorState*)state)->offsetZ > (f32)((XyzAnimatorPlacement*)setup)->startZ)
+            state->offsetY =
+                0.1f * ((f32)(int)setup->speedY * timeDelta) +
+                state->offsetY;
+            if (state->offsetY > (f32)setup->startY)
             {
-                ((XyzAnimatorState*)state)->offsetZ =
-                    (f32)(((XyzAnimatorPlacement*)setup)->targetZ +
-                          (int)(((XyzAnimatorState*)state)->offsetZ - (f32)((XyzAnimatorPlacement*)setup)->targetZ));
+                state->offsetY =
+                    (f32)(setup->targetY +
+                          (int)(state->offsetY - (f32)setup->targetY));
+            }
+        }
+        if (setup->startZ > setup->targetZ)
+        {
+            state->offsetZ =
+                -(0.1f * ((f32)(int)setup->speedZ * timeDelta) -
+                  state->offsetZ);
+            if (state->offsetZ < (f32)setup->targetZ)
+            {
+                state->offsetZ =
+                    (f32)(setup->startZ -
+                          (int)((f32)setup->targetZ - state->offsetZ));
+            }
+        }
+        else
+        {
+            state->offsetZ =
+                0.1f * ((f32)(int)setup->speedZ * timeDelta) +
+                state->offsetZ;
+            if (state->offsetZ > (f32)setup->startZ)
+            {
+                state->offsetZ =
+                    (f32)(setup->targetZ +
+                          (int)(state->offsetZ - (f32)setup->targetZ));
             }
         }
         break;
     case 2:
         done = 0;
-        if (((XyzAnimatorState*)state)->gameBitValue != 0)
+        if (state->gameBitValue != 0)
         {
-            if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
+            if (setup->startX > setup->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX =
-                    -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
-                      ((XyzAnimatorState*)state)->offsetX);
-                if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->targetX)
+                state->offsetX =
+                    -(0.1f * ((f32)(int)setup->speedX * timeDelta) -
+                      state->offsetX);
+                if (state->offsetX <= (f32)setup->targetX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
+                    state->offsetX = (f32)setup->targetX;
                     done = 1;
                 }
             }
             else
             {
-                ((XyzAnimatorState*)state)->offsetX =
-                    0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
-                    ((XyzAnimatorState*)state)->offsetX;
-                if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->targetX)
+                state->offsetX =
+                    0.1f * ((f32)(int)setup->speedX * timeDelta) +
+                    state->offsetX;
+                if (state->offsetX >= (f32)setup->targetX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->targetX;
+                    state->offsetX = (f32)setup->targetX;
                     done = 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
+            if (setup->startY > setup->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY =
-                    -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
-                      ((XyzAnimatorState*)state)->offsetY);
-                if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->targetY)
+                state->offsetY =
+                    -(0.1f * ((f32)(int)setup->speedY * timeDelta) -
+                      state->offsetY);
+                if (state->offsetY <= (f32)setup->targetY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
+                    state->offsetY = (f32)setup->targetY;
                     done += 1;
                 }
             }
             else
             {
-                ((XyzAnimatorState*)state)->offsetY =
-                    0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
-                    ((XyzAnimatorState*)state)->offsetY;
-                if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->targetY)
+                state->offsetY =
+                    0.1f * ((f32)(int)setup->speedY * timeDelta) +
+                    state->offsetY;
+                if (state->offsetY >= (f32)setup->targetY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->targetY;
+                    state->offsetY = (f32)setup->targetY;
                     done += 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
+            if (setup->startZ > setup->targetZ)
             {
-                ((XyzAnimatorState*)state)->offsetZ =
-                    -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
-                      ((XyzAnimatorState*)state)->offsetZ);
-                if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
+                state->offsetZ =
+                    -(0.1f * ((f32)(int)setup->speedZ * timeDelta) -
+                      state->offsetZ);
+                if (state->offsetZ <= (f32)setup->targetZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
+                    state->offsetZ = (f32)setup->targetZ;
                     done += 1;
                 }
             }
             else
             {
-                ((XyzAnimatorState*)state)->offsetZ =
-                    0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
-                    ((XyzAnimatorState*)state)->offsetZ;
-                if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->targetZ)
+                state->offsetZ =
+                    0.1f * ((f32)(int)setup->speedZ * timeDelta) +
+                    state->offsetZ;
+                if (state->offsetZ >= (f32)setup->targetZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->targetZ;
+                    state->offsetZ = (f32)setup->targetZ;
                     done += 1;
                 }
             }
             if (done == 3)
             {
-                if (((XyzAnimatorPlacement*)setup)->doneGameBit != -1)
+                if (setup->doneGameBit != -1)
                 {
-                    mainSetBits(((XyzAnimatorPlacement*)setup)->doneGameBit, 1);
+                    mainSetBits(setup->doneGameBit, 1);
                 }
-                ((XyzAnimatorState*)state)->loopCount += 1;
+                state->loopCount += 1;
             }
         }
         else
         {
-            if (((XyzAnimatorPlacement*)setup)->startX > ((XyzAnimatorPlacement*)setup)->targetX)
+            if (setup->startX > setup->targetX)
             {
-                ((XyzAnimatorState*)state)->offsetX =
-                    0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) +
-                    ((XyzAnimatorState*)state)->offsetX;
-                if (((XyzAnimatorState*)state)->offsetX >= (f32)((XyzAnimatorPlacement*)setup)->startX)
+                state->offsetX =
+                    0.1f * ((f32)(int)setup->speedX * timeDelta) +
+                    state->offsetX;
+                if (state->offsetX >= (f32)setup->startX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
+                    state->offsetX = (f32)setup->startX;
                     done = 1;
                 }
             }
             else
             {
-                ((XyzAnimatorState*)state)->offsetX =
-                    -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedX * timeDelta) -
-                      ((XyzAnimatorState*)state)->offsetX);
-                if (((XyzAnimatorState*)state)->offsetX <= (f32)((XyzAnimatorPlacement*)setup)->startX)
+                state->offsetX =
+                    -(0.1f * ((f32)(int)setup->speedX * timeDelta) -
+                      state->offsetX);
+                if (state->offsetX <= (f32)setup->startX)
                 {
-                    ((XyzAnimatorState*)state)->offsetX = (f32)((XyzAnimatorPlacement*)setup)->startX;
+                    state->offsetX = (f32)setup->startX;
                     done = 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->startY > ((XyzAnimatorPlacement*)setup)->targetY)
+            if (setup->startY > setup->targetY)
             {
-                ((XyzAnimatorState*)state)->offsetY =
-                    0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) +
-                    ((XyzAnimatorState*)state)->offsetY;
-                if (((XyzAnimatorState*)state)->offsetY >= (f32)((XyzAnimatorPlacement*)setup)->startY)
+                state->offsetY =
+                    0.1f * ((f32)(int)setup->speedY * timeDelta) +
+                    state->offsetY;
+                if (state->offsetY >= (f32)setup->startY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
+                    state->offsetY = (f32)setup->startY;
                     done += 1;
                 }
             }
             else
             {
-                ((XyzAnimatorState*)state)->offsetY =
-                    -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedY * timeDelta) -
-                      ((XyzAnimatorState*)state)->offsetY);
-                if (((XyzAnimatorState*)state)->offsetY <= (f32)((XyzAnimatorPlacement*)setup)->startY)
+                state->offsetY =
+                    -(0.1f * ((f32)(int)setup->speedY * timeDelta) -
+                      state->offsetY);
+                if (state->offsetY <= (f32)setup->startY)
                 {
-                    ((XyzAnimatorState*)state)->offsetY = (f32)((XyzAnimatorPlacement*)setup)->startY;
+                    state->offsetY = (f32)setup->startY;
                     done += 1;
                 }
             }
-            if (((XyzAnimatorPlacement*)setup)->startZ > ((XyzAnimatorPlacement*)setup)->targetZ)
+            if (setup->startZ > setup->targetZ)
             {
-                ((XyzAnimatorState*)state)->offsetZ =
-                    0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) +
-                    ((XyzAnimatorState*)state)->offsetZ;
-                if (((XyzAnimatorState*)state)->offsetZ >= (f32)((XyzAnimatorPlacement*)setup)->startZ)
+                state->offsetZ =
+                    0.1f * ((f32)(int)setup->speedZ * timeDelta) +
+                    state->offsetZ;
+                if (state->offsetZ >= (f32)setup->startZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
+                    state->offsetZ = (f32)setup->startZ;
                     done += 1;
                 }
             }
             else
             {
-                ((XyzAnimatorState*)state)->offsetZ =
-                    -(0.1f * ((f32)(int)((XyzAnimatorPlacement*)setup)->speedZ * timeDelta) -
-                      ((XyzAnimatorState*)state)->offsetZ);
-                if (((XyzAnimatorState*)state)->offsetZ <= (f32)((XyzAnimatorPlacement*)setup)->startZ)
+                state->offsetZ =
+                    -(0.1f * ((f32)(int)setup->speedZ * timeDelta) -
+                      state->offsetZ);
+                if (state->offsetZ <= (f32)setup->startZ)
                 {
-                    ((XyzAnimatorState*)state)->offsetZ = (f32)((XyzAnimatorPlacement*)setup)->startZ;
+                    state->offsetZ = (f32)setup->startZ;
                     done += 1;
                 }
             }
             if (done == 3)
             {
-                ((XyzAnimatorState*)state)->loopCount += 1;
+                state->loopCount += 1;
             }
         }
         break;
     }
-    fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
+    fn_80194C40(setup, state, block);
     return;
 }
 
 void XyzAnimator_init(GameObject* obj)
 {
-    int inner = *(int*)&(obj)->extra;
+    XyzAnimatorState* inner = (XyzAnimatorState*)obj->extra;
     int id;
     ObjGroup_AddObject((int)obj, XYZANIMATOR_OBJGROUP);
     id = *(int*)(*(int*)&(obj)->anim.placementData + 0x14);
@@ -737,12 +738,12 @@ void XyzAnimator_init(GameObject* obj)
     {
     case 0x46406:
     case 0x4BAB1:
-        ((XyzAnimatorState*)inner)->loopSfxId = 0x7d;
+        inner->loopSfxId = 0x7d;
         break;
     case 0x49275:
     case 0x49CB7:
     case 0x4C797:
-        ((XyzAnimatorState*)inner)->loopSfxId = 0x4b7;
+        inner->loopSfxId = 0x4b7;
         break;
     }
 }
