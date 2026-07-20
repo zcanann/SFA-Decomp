@@ -1679,7 +1679,7 @@ void Tricky_update(int obj)
                         if (trickyState->targetPosPtr != target)
                         {
                             trickyState->targetPosPtr = target;
-                            trickyState->stateFlags &= ~(u64)0x400;
+                            *(s32*)&trickyState->stateFlags &= ~(u64)0x400;
                             trickyState->linkedWalkGroup = 0;
                         }
                         trickyState->substate = 0;
@@ -1697,7 +1697,7 @@ void Tricky_update(int obj)
                             if (trickyState->targetPosPtr != (u8*)&step->anim.worldPosX)
                             {
                                 trickyState->targetPosPtr = (u8*)&step->anim.worldPosX;
-                                trickyState->stateFlags &= ~(u64)0x400;
+                                *(s32*)&trickyState->stateFlags &= ~(u64)0x400;
                                 trickyState->linkedWalkGroup = 0;
                             }
                             trickyState->stateIndex = 0xd;
@@ -1740,7 +1740,7 @@ void Tricky_update(int obj)
             if (trickyState->targetPosPtr != (u8*)&trickyState->wanderTargetX)
             {
                 trickyState->targetPosPtr = (u8*)&trickyState->wanderTargetX;
-                trickyState->stateFlags &= ~(u64)0x400;
+                *(s32*)&trickyState->stateFlags &= ~(u64)0x400;
                 trickyState->linkedWalkGroup = 0;
             }
         }
