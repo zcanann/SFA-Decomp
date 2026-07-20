@@ -2688,7 +2688,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
 
 extern f32 lbl_803DEBEC;
 extern f32 lbl_803DEBF0;
-extern char gViewFrustumPlanes[];
+extern FrustumPlane gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
 {
@@ -2699,7 +2699,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius)
     for (; i < FRUSTUM_PLANE_COUNT; i++)
     {
         float dot;
-        plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+        plane = &gViewFrustumPlanes[i];
         dot = plane->distance + (plane->normalZ * (center[2] - offZ) +
                                  (center[1] * plane->normalY + plane->normalX * (center[0] - offX)));
         if (radius + dot < *(f32*)&lbl_803DEBCC)
@@ -2802,7 +2802,7 @@ int objUpdateOpacity(GameObject* obj)
         offX = playerMapOffsetX;
         for (; i < FRUSTUM_PLANE_COUNT; i++)
         {
-            FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+            FrustumPlane* plane = &gViewFrustumPlanes[i];
             if (prod + (plane->distance + (plane->normalZ * (((GameObject*)obj)->anim.worldPosZ - offZ) +
                                            (((GameObject*)obj)->anim.worldPosY * plane->normalY +
                                             plane->normalX * (((GameObject*)obj)->anim.worldPosX - offX)))) <
@@ -2920,7 +2920,7 @@ int mapRectFn_8005a728(int bx, int bz, u8* obj)
         y0 = lbl_803DEBEC;
         y1 = lbl_803DEBF0;
     }
-    plane = (FrustumPlane*)gViewFrustumPlanes;
+    plane = gViewFrustumPlanes;
     for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
     {
         f32 p0 = plane[i].normalX;
