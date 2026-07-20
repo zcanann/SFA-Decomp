@@ -1,3 +1,4 @@
+#define INTERSECT_DRAWTEX_U8
 #include "main/dll/partfx_interface.h"
 #include "dolphin/card.h"
 #include "main/hud_visibility_api.h"

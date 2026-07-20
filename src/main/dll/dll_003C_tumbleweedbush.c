@@ -533,7 +533,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), drawItem->y, (u8)alpha, 0x100);
+                        drawTexture(drawItem->texture, (f32)(drawItem->x + 11), drawItem->y, alpha & 0xff, 0x100);
                     }
                     else
                     {
@@ -545,7 +545,7 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity;
                         }
-                        drawTexture(drawItem->texture, drawItem->x, drawItem->y, (u8)alpha, 0x100);
+                        drawTexture(drawItem->texture, drawItem->x, drawItem->y, alpha & 0xff, 0x100);
                     }
                 }
 
