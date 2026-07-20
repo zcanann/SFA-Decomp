@@ -17,6 +17,7 @@
  * stubs.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -2385,9 +2386,10 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         {
             if (cfg.attachedSource != 0)
             {
-                cfg.startPosX = cfg.startPosX + *(f32*)((char*)cfg.attachedSource + 0x18);
-                cfg.startPosY = cfg.startPosY + *(f32*)((char*)cfg.attachedSource + 0x1c);
-                cfg.startPosZ = cfg.startPosZ + *(f32*)((char*)cfg.attachedSource + 0x20);
+                GameObject* source = (GameObject*)cfg.attachedSource;
+                cfg.startPosX = cfg.startPosX + source->anim.worldPosX;
+                cfg.startPosY = cfg.startPosY + source->anim.worldPosY;
+                cfg.startPosZ = cfg.startPosZ + source->anim.worldPosZ;
             }
         }
     }

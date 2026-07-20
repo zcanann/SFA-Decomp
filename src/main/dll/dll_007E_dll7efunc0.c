@@ -29,13 +29,15 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     f32 originOffset = 0.0f;
     FbCmd* e;
     FbCmd* p;
+    GameObject* obj = (GameObject*)sourceObj;
+    PartFxSpawnParams* params = (PartFxSpawnParams*)posSource;
     if (scalePtr != NULL)
     {
         s = *scalePtr;
     }
     if ((u32)posSource != 0)
     {
-        s = ((PartFxSpawnParams*)posSource)->scale;
+        s = params->scale;
     }
     e = buf.entries;
     p = &e[2];
@@ -133,15 +135,15 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = originOffset + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] = originOffset + obj->anim.worldPosX;
+            buf.pos[1] = originOffset + obj->anim.worldPosY;
+            buf.pos[2] = originOffset + obj->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = originOffset + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = originOffset + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = originOffset + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = originOffset + params->posX;
+            buf.pos[1] = originOffset + params->posY;
+            buf.pos[2] = originOffset + params->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 9, (u8*)(int)lbl_80315258, 5, base + 0x5c, DLL7E_EFFECT_ID, 0);
