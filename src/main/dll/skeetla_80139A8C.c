@@ -235,137 +235,141 @@ int trickyMove(GameObject* obj, f32* targetPos)
             state->cooldownC = lbl_803E2440;
             state->particleTimer = lbl_803E23DC;
             trickyDebugPrint(debugStrings + 0x184);
-            return 1;
         }
-
-        if (state->stateIndex == 1)
+        else
         {
-            if ((skeetla_pathSpeedDelta((u8*)obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta((u8*)obj)
-                                                                  : -skeetla_pathSpeedDelta((u8*)obj)) > lbl_803E23DC)
+            if (state->stateIndex == 1)
             {
-                state->sfxIntervalTimer -= timeDelta;
-                if (state->sfxIntervalTimer <= lbl_803E23DC)
+                if ((skeetla_pathSpeedDelta((u8*)obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta((u8*)obj)
+                                                                      : -skeetla_pathSpeedDelta((u8*)obj)) > lbl_803E23DC)
                 {
-                    state->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
-                    if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
+                    state->sfxIntervalTimer -= timeDelta;
+                    if (state->sfxIntervalTimer <= lbl_803E23DC)
                     {
-                        if (moveSpeed > lbl_803E23E8)
+                        state->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
+                        if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                         {
-                            sfxId = randomGetRange(0x34d, 0x34e);
-                            skeetla_playFootstepSfx((u8*)obj, sfxId);
-                        }
-                        else
-                        {
-                            *(u32*)sfxIds = gSkeetlaFootstepSfxIds01;
-                            sfxIds[2] = gSkeetlaFootstepSfxId2;
-                            if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0)
+                            if (moveSpeed > lbl_803E23E8)
                             {
-                                randomGetRange(0, 2);
+                                sfxId = randomGetRange(0x34d, 0x34e);
+                                skeetla_playFootstepSfx((u8*)obj, sfxId);
                             }
                             else
                             {
-                                randomGetRange(0, 1);
+                                *(u32*)sfxIds = gSkeetlaFootstepSfxIds01;
+                                sfxIds[2] = gSkeetlaFootstepSfxId2;
+                                if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0)
+                                {
+                                    randomGetRange(0, 2);
+                                }
+                                else
+                                {
+                                    randomGetRange(0, 1);
+                                }
+                                sfxId = sfxIds[randomGetRange(0, 2)];
+                                skeetla_playFootstepSfx((u8*)obj, sfxId);
                             }
-                            sfxId = sfxIds[randomGetRange(0, 2)];
-                            skeetla_playFootstepSfx((u8*)obj, sfxId);
                         }
                     }
                 }
             }
-        }
 
-        if (moveSpeed > lbl_803E246C)
-        {
-            state->voiceCooldown = lbl_803E2440;
-            objAnimFn_8013a3f0((int)obj, 0x30, lbl_803E2468, 0x3000000);
-        }
-        else if (moveSpeed > lbl_803E23E8)
-        {
-            objAnimFn_8013a3f0((int)obj, 5, lbl_803E2468, 0x3000000);
-        }
-        else if (moveSpeed > lbl_803E2470)
-        {
-            objAnimFn_8013a3f0((int)obj, 4, lbl_803E2468, 0x3000000);
-        }
-        else if (moveSpeed > lbl_803E2474)
-        {
-            objAnimFn_8013a3f0((int)obj, 2, lbl_803E2468, 0x3000000);
-        }
-        else
-        {
-            objAnimFn_8013a3f0((int)obj, 1, lbl_803E2468, 0x3000000);
-        }
-        trickyDebugPrint(debugStrings + 0x1a0);
-        return 1;
-    }
-
-    previousYaw = obj->anim.rotX;
-    turnDelta = 0;
-    skeetla_updateFacingFromMoveVector((u8*)obj, &turnDelta);
-    td = turnDelta;
-
-    if ((state->stateFlags & 0x100000) != 0)
-    {
-        if (skeetla_isInWater((u8*)state) != 0)
-        {
-            trickyDebugPrint(debugStrings + 0x1bc);
-            objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
-            state->cooldownC = lbl_803E2440;
-            state->particleTimer = lbl_803E23DC;
-        }
-        else
-        {
-            u32 flags;
-            trickyDebugPrint(debugStrings + 0x1d0);
-            flags = state->stateFlags;
-            if ((flags & 0x400000) != 0)
+            if (moveSpeed > lbl_803E246C)
             {
-                if ((td >= 0 ? td : -td) > 0x3555)
-                {
-                    animId = 0x27;
-                }
-                else
+                state->voiceCooldown = lbl_803E2440;
+                objAnimFn_8013a3f0((int)obj, 0x30, lbl_803E2468, 0x3000000);
+            }
+            else if (moveSpeed > lbl_803E23E8)
+            {
+                objAnimFn_8013a3f0((int)obj, 5, lbl_803E2468, 0x3000000);
+            }
+            else if (moveSpeed > lbl_803E2470)
+            {
+                objAnimFn_8013a3f0((int)obj, 4, lbl_803E2468, 0x3000000);
+            }
+            else if (moveSpeed > lbl_803E2474)
+            {
+                objAnimFn_8013a3f0((int)obj, 2, lbl_803E2468, 0x3000000);
+            }
+            else
+            {
+                objAnimFn_8013a3f0((int)obj, 1, lbl_803E2468, 0x3000000);
+            }
+            trickyDebugPrint(debugStrings + 0x1a0);
+        }
+    }
+    else
+    {
+        previousYaw = obj->anim.rotX;
+        turnDelta = 0;
+        skeetla_updateFacingFromMoveVector((u8*)obj, &turnDelta);
+        td = turnDelta;
+
+        if ((state->stateFlags & 0x100000) != 0)
+        {
+            if (skeetla_isInWater((u8*)state) != 0)
+            {
+                trickyDebugPrint(debugStrings + 0x1bc);
+                objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
+                state->cooldownC = lbl_803E2440;
+                state->particleTimer = lbl_803E23DC;
+            }
+            else
+            {
+                u32 flags;
+                trickyDebugPrint(debugStrings + 0x1d0);
+                flags = state->stateFlags;
+                if ((flags & 0x400000) != 0)
                 {
                     td = td >= 0 ? td : -td;
-                    if (td > 0x2000)
+                    if (td > 0x3555)
                     {
-                        animId = 0xb;
+                        animId = 0x27;
                     }
                     else
                     {
-                        animId = 9;
+                        td = td >= 0 ? td : -td;
+                        if (td > 0x2000)
+                        {
+                            animId = 0xb;
+                        }
+                        else
+                        {
+                            animId = 9;
+                        }
                     }
                 }
-            }
-            else if ((flags & 0x800000) != 0)
-            {
-                if ((td >= 0 ? td : -td) > 0x3555)
-                {
-                    animId = 0x28;
-                }
-                else
+                else if ((flags & 0x800000) != 0)
                 {
                     td = td >= 0 ? td : -td;
-                    if (td > 0x2000)
+                    if (td > 0x3555)
                     {
-                        animId = 0xc;
+                        animId = 0x28;
                     }
                     else
                     {
-                        animId = 10;
+                        td = td >= 0 ? td : -td;
+                        if (td > 0x2000)
+                        {
+                            animId = 0xc;
+                        }
+                        else
+                        {
+                            animId = 10;
+                        }
                     }
                 }
+                obj->anim.rotX = previousYaw;
+                objAnimFn_8013a3f0((int)obj, animId, lbl_803E2478, 0x1000100);
             }
-            obj->anim.rotX = previousYaw;
-            objAnimFn_8013a3f0((int)obj, animId, lbl_803E2478, 0x1000100);
         }
-    }
 
-    state->speed = lbl_803E2420;
-    f = state->stateFlags;
-    if (((f & 0x100000) == 0) && ((f & 0x200000) == 0))
-    {
-        return 0;
+        state->speed = lbl_803E2420;
+        f = state->stateFlags;
+        if (((f & 0x100000) == 0) && ((f & 0x200000) == 0))
+        {
+            return 0;
+        }
     }
     return 1;
 }
