@@ -101,7 +101,7 @@ extern u8 gLightmapScreenImageEnabled;
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
 extern int lbl_8038228C[];
-extern s32 gMapLayerCellStates;
+extern s8* gMapLayerCellStates;
 extern s32 gMapCurRomListSlot;
 extern f32 lbl_803DCE58;
 extern f32 lbl_803DCE54;
@@ -112,8 +112,8 @@ typedef struct
     u32 key;
     u32 d;
 } LightSortEntry;
-extern void* gMapBlockIds;
-extern void* gMapBlockRefCounts;
+extern s16* gMapBlockIds;
+extern u8* gMapBlockRefCounts;
 extern void* lbl_803DCE78;
 extern void* lbl_803DCE7C;
 extern void* lbl_803DCE80;
@@ -689,7 +689,7 @@ void renderSceneGeometry(u8 renderType, s8* order)
     do
     {
         table = (s8*)*layerTablePtr;
-        gMapLayerCellStates = *layerFlagPtr;
+        gMapLayerCellStates = (s8*)*layerFlagPtr;
         mapFn_80057d24(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, box0, box1, box2, box3, layer, 1,
                        gMapCurRomListSlot);
         p = map;
