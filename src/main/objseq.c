@@ -5041,8 +5041,8 @@ int ObjSeq_update(u8* obj, f32 t)
                 {
                     fval = lbl_803DD074;
                     aInt = fval;
-                    fval = fval - lbl_803DF054;
-                    lbl_803DD074 = fval;
+                    lbl_803DD074 = fval - lbl_803DF054;
+                    fval = lbl_803DD074;
                     if (aInt != (int)fval)
                     {
                         step--;
