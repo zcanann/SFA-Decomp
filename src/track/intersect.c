@@ -5542,7 +5542,7 @@ void fn_8007CAF4(void* texture)
 
 void gxTextureSetupFn_8007cf7c(void)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 lbl_803DEEDC;
 
     Mtx mtx_cc;
     Mtx mtx_9c;
@@ -5560,7 +5560,7 @@ void gxTextureSetupFn_8007cf7c(void)
     getTextureFn_8006c5e4((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
 
-    PSMTXScale(mtx_cc, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    PSMTXScale(mtx_cc, 1.0f, 1.0f, 1.0f);
     mtx_cc[1][3] = fA;
     GXLoadTexMtxImm(mtx_cc, GX_TEXMTX3, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX3, GX_FALSE, GX_PTIDENTITY);
