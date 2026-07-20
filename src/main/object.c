@@ -54,7 +54,7 @@ int gObjFileCount;
 u8* gObjTablesBinData;
 int* gObjTablesBinIndex;
 int gObjTablesBinCount;
-u8* gObjFileBufferTable;
+u8** gObjFileBufferTable;
 u8* gObjFileRefCount;
 s16* gObjSeqToObjIdTable;
 int gObjSeqToObjIdMax;
@@ -200,7 +200,6 @@ extern s16* gObjSeqToObjIdTable;
 extern f32 lbl_803DE8CC;
 extern f32 lbl_803DE8D0;
 extern u8* gObjFileRefCount;
-extern u8* gObjFileBufferTable;
 extern u32 gObjUpdateFlags;
 extern f32 lbl_803DE8BC;
 extern f32 gObjPi;
@@ -1094,7 +1093,7 @@ void objFreeObjDef(u8* obj, int flag)
             refCounts[type]--;
             if (gObjFileRefCount[type] == 0)
             {
-                otherObj = ((u8**)gObjFileBufferTable)[type];
+                otherObj = gObjFileBufferTable[type];
                 if (*(void**)&((GameObject*)otherObj)->anim.parent != NULL)
                 {
                     mm_free(((GameObject*)otherObj)->anim.parent);
@@ -1143,7 +1142,6 @@ u8* loadObjectFile(int id)
     int size;
     int base;
     u8* buf;
-    int off;
     int n;
     s16 modLine;
 
@@ -1154,14 +1152,13 @@ u8* loadObjectFile(int id)
     if (gObjFileRefCount[id] != 0)
     {
         gObjFileRefCount[id]++;
-        return *(u8**)((int)gObjFileBufferTable + (id << 2));
+        return gObjFileBufferTable[id];
     }
     {
         int* offsets = (int*)gObjFileOffsetTable;
         base = offsets[id];
         size = (&offsets[id])[1] - base;
     }
-    off = id << 2;
     buf = mmAlloc(size, 0xe, 0);
     if (buf != 0)
     {
@@ -1203,7 +1200,7 @@ u8* loadObjectFile(int id)
             *(u8*)(buf + 0x5c) = modLine;
             intersectModLineBuild((IntersectModLineObject*)buf);
         }
-        *(u8**)((int)gObjFileBufferTable + off) = buf;
+        gObjFileBufferTable[id] = buf;
         gObjFileRefCount[id] = 1;
     }
     else
