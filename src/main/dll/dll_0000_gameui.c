@@ -5307,7 +5307,6 @@ int pauseMenuIsFox(void);
 void timeListFn_8012be84(void);
 void pauseMenuAnimateCarousel(void);
 void pauseMenuInit(void);
-void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag);
 void mapScreenDrawHud(int p1, int p2, int p3);
 void drawWorldMapHud(void);
 void setShowWorldMapHud(u8 param);
