@@ -144,7 +144,7 @@ void DIM_BossGut2_free(int objArg)
         Obj_FreeObject(childObj);
         ((GameObject*)obj)->childObjs[0] = NULL;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, (void*)state, 0);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, (void*)state, 0);
     return;
 }
 
@@ -267,7 +267,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     {
         flags |= 1;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie(obj, (u8*)def, (u8*)state, 0, 0, 0x102, flags, 20.0f);
     (obj)->animEventCallback = NULL;
     curve = state->curveData;

@@ -67,7 +67,7 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target)
     int* aux = ((GameObject*)obj)->extra;
     if (*(s8*)(target + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->spawnChild((GameObject*)obj, (int)((LandedArwingTriggerLaunchTargetState*)aux)->launchMoveId, -1, 0);
         (*gPlayerInterface)->spawnPartfx((void*)obj, (void*)target, 0x3c, 0xa, 0);
         mainSetBits((int)((LandedArwingTriggerLaunchTargetState*)aux)->triggerGameBit, 1);

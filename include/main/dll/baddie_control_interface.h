@@ -47,6 +47,6 @@ typedef struct BaddieControlInterface
     f32 (*getHealthFraction)(GameObject* obj); /* 0x60 */
 } BaddieControlInterface;
 
-extern int* gBaddieControlInterface;
+extern BaddieControlInterface** gBaddieControlInterface;
 
 #endif /* MAIN_DLL_BADDIE_CONTROL_INTERFACE_H_ */

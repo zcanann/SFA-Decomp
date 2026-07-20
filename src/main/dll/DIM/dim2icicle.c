@@ -550,7 +550,7 @@ void DIM2icicle_updateHitResponse(GameObject* obj, BaddieState* playerState)
                 player = Obj_GetPlayerObject();
                 if (fn_80295A04(player, 1) != 0)
                 {
-                    ((BaddieControlInterface*)*gBaddieControlInterface)
+                    (*gBaddieControlInterface)
                         ->startHitReaction((GameObject*)obj, playerState, (char*)state + 0x35c,
                                            *(s16*)((char*)state + 0x3f4), NULL, 2, 10, -1, -1);
                     playerState->targetObj = player;
@@ -629,9 +629,9 @@ void DIM2icicle_updateCombatState(DIMbossObject* obj, ObjAnimUpdateState* animUp
     tricky = (u8*)getTrickyObject();
     ObjHits_EnableObject((GameObject*)obj);
     updateRuntime->effectActive = 1;
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->updateGravity((GameObject*)obj, updateRuntime, lbl_803E4C70, 1);
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, updateRuntime, runtime->moveScratch, runtime->activeMoveId,
                           &runtime->hitReactMode, 0, 0, 0);
     if (updateRuntime->scale == 6)

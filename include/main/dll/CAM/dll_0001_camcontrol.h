@@ -6,11 +6,6 @@
 #include "main/objanim_internal.h"
 #include "main/mldf_fileid.h"
 
-typedef struct CamcontrolBaddieControlInterface {
-  u8 pad00[0x60];
-  f32 (*getTargetReticleDistance)(int obj);
-} CamcontrolBaddieControlInterface;
-
 typedef struct CamcontrolTargetMarkerSlot {
   f32 x;
   f32 y;

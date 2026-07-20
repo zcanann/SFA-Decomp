@@ -1457,7 +1457,7 @@ void ktrex_free(GameObject* obj)
     int i;
     gKTRexRuntime = obj->extra;
     ObjGroup_RemoveObject((int)obj, KTREX_OBJGROUP);
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, gKTRexRuntime, 0);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, gKTRexRuntime, 0);
     Stack_Free(gKTRexState->stack);
     if (gKTRexResource != NULL)
     {
@@ -1640,12 +1640,12 @@ void ktrex_update(int obj)
         bitB++;
     }
     gKTRexState->laneMode = zm[0];
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, runtime, (char*)gKTRexRuntime + 0x35c, gKTRexRuntime->unk3F4,
                           (u8*)gKTRexRuntime + 0x405, 2, 2, 0);
     ktrex_updateContactEffects((GameObject*)obj, runtime);
     ktrex_updateAttackEffects((GameObject*)(obj));
-    ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity((GameObject*)obj, runtime, 0.0f, 0);
+    (*gBaddieControlInterface)->updateGravity((GameObject*)obj, runtime, 0.0f, 0);
     ObjHits_SetHitVolumeMasks((ObjAnimComponent*)obj, 24, 2, 0x1fffff);
     (*gPlayerInterface)->update((void*)obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB,
                                 gKTRexStateHandlersA);
@@ -1670,7 +1670,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
     {
         spawnFlags |= 1;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie(obj, (u8*)arg, (u8*)gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, 20.0f);
     (obj)->animEventCallback = ktrex_animEventCallback;
     rt = (KTRexRuntime*)gKTRexRuntime;

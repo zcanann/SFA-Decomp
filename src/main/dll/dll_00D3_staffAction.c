@@ -758,7 +758,7 @@ void dll_D3_free(int obj)
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
         *(int*)&((GameObject*)obj)->childObjs[0] = 0;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, inner, 0);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, inner, 0);
 }
 
 void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -906,7 +906,7 @@ void dll_D3_update(int* obj)
         return;
     }
 
-    rc = ((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid((GameObject*)obj, state, 0);
+    rc = (*gBaddieControlInterface)->isObjectValid((GameObject*)obj, state, 0);
     if (rc == 0)
         return;
 
@@ -922,12 +922,12 @@ void dll_D3_update(int* obj)
 
     if (((TreasureChestState*)state)->targetState != 1)
     {
-        rc = (int)((BaddieControlInterface*)*gBaddieControlInterface)
+        rc = (int)(*gBaddieControlInterface)
                  ->findAggroTarget((GameObject*)obj, state,
                                    (f32)(u32)((TreasureChestState*)state)->aggroRange, 0x8000);
         if (rc != 0u)
         {
-            ((BaddieControlInterface*)*gBaddieControlInterface)
+            (*gBaddieControlInterface)
                 ->startHitReaction((GameObject*)obj, state, (char*)state + 0x35c,
                                    ((TreasureChestState*)state)->gameBitB, NULL, 0, 1, 0, -1);
             ((TreasureChestState*)state)->targetObj = rc;
@@ -956,14 +956,14 @@ void dll_D3_update(int* obj)
         ((TreasureChestState*)state)->targetDistance = sqrtf(dz * dz + (dx * dx + dy * dy));
     }
 
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, state, (char*)state + 0x35c,
                           ((TreasureChestState*)state)->gameBitB, NULL, 0, 0, 0);
 
     hits = (int)((TreasureChestState*)state)->hitPoints;
     if (hits > 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->updateHitReaction((GameObject*)obj, state, (void*)((int)state + 0x35c),
                                 ((TreasureChestState*)state)->gameBitB, lbl_803202E8, (u8*)lbl_80320360, 0,
                                 gStaffActionHitLightParams);
@@ -978,7 +978,7 @@ void dll_D3_update(int* obj)
         }
     }
 
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->updateGravity((GameObject*)obj, state, lbl_803E2FDC, -1);
 
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
@@ -1020,7 +1020,7 @@ void dll_D3_init(GameObject* obj, int def, int flag)
     {
         setupFlags |= 1;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie(obj, (u8*)def, (u8*)state, 5, 1, 0x108, setupFlags, 20.0f);
     (obj)->animEventCallback = NULL;
 

@@ -53,10 +53,10 @@ void dimBossTonsil_newState_hitFightMain(u8* obj, ObjAnimUpdateState* animUpdate
 
     updateState->effectActive = 1;
 
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->updateGravity((GameObject*)obj, updateState, timer, 1);
 
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, updateState, state->animPoints, state->animFrame,
                           &state->hitReactMode, 0, 0, 0);
 

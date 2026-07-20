@@ -73,7 +73,7 @@ int DIMbosstonsil_chooseHitReaction(void* obj, DIMbosstonsilState* state)
     if (state->active != 0)
     {
         lbl_803DDB9C = lbl_803DDBA0;
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->getTargetGeometry((GameObject*)obj, Obj_GetPlayerObject(), 4, &moveId, &unused1, &unused2);
         switch (moveId)
         {

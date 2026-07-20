@@ -146,7 +146,7 @@ int dll_CB_stateHandler3(int* obj, u8* obj2)
     GroundBaddieState* x = ((GameObject*)obj)->extra;
     if ((s8)obj2[0x27b] != 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild((GameObject*)obj, x->triggerId, -1, 0);
+        (*gBaddieControlInterface)->spawnChild((GameObject*)obj, x->triggerId, -1, 0);
     }
     return 0;
 }
@@ -232,7 +232,7 @@ int dll_CB_moveHandler1(int* obj, GroundBaddieState* def)
     def->baddie.physicsActive = 1;
     ((GameObject*)obj)->anim.rotZ = def->baddie.spawnRotZ;
     ((GameObject*)obj)->anim.rotY = def->baddie.spawnRotY;
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->updateMovementBlend((GameObject*)obj, def, state, 1.0f, 12.0f);
     def->baddie.moveSpeed = 0.075f * def->baddie.animSpeedA;
     return 0;
@@ -261,7 +261,7 @@ void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state)
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
     state->baddie.moveDone = 1;
-    if (((BaddieControlInterface*)*gBaddieControlInterface)
+    if ((*gBaddieControlInterface)
             ->shouldDropTarget((GameObject*)obj, state, (f32)(u32)((GroundBaddieState*)sub)->aggroRange, 1) != 0)
     {
         *(int*)&state->baddie.targetObj = ((GroundBaddieState*)sub)->savedObjC0;
@@ -279,7 +279,7 @@ void dll_CB_seekAndUpdate(int obj, void* seq, int sub, GroundBaddieState* state)
             *(int*)&state->baddie.targetObj = 0;
         }
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity((GameObject*)obj, state, 0.17f, 1);
+    (*gBaddieControlInterface)->updateGravity((GameObject*)obj, state, 0.17f, 1);
     ((GroundBaddieState*)sub)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
     (*gPlayerInterface)->update((void*)obj, state, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
@@ -311,12 +311,12 @@ void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state
     characterDoEyeAnims((GameObject*)obj, sub->eyeAnimState);
     if ((sub->configFlags & 1) == 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->pollCameraTarget((GameObject*)obj, state, &sub->flags400, 2, 3, sub->soundIdB, sub->soundIdA);
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, state, &sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0);
-    stateResult = ((BaddieControlInterface*)*gBaddieControlInterface)
+    stateResult = (*gBaddieControlInterface)
                       ->updateHitReaction((GameObject*)obj, state, &sub->routeNav, sub->gameBitB,
                                           (int*)lbl_80320008, lbl_80320080, 1, NULL);
     if (stateResult >= 4)
@@ -340,7 +340,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     }
     if (((GameObject*)obj)->seqIndex != -1)
     {
-        if (((BaddieControlInterface*)*gBaddieControlInterface)
+        if ((*gBaddieControlInterface)
                 ->isObjectValid((GameObject*)obj, (void*)sub, 1) == 0)
         {
             return 1;
@@ -366,11 +366,11 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
             }
             break;
         case 1:
-            if (((BaddieControlInterface*)*gBaddieControlInterface)
+            if ((*gBaddieControlInterface)
                     ->updateSequenceMovement((GameObject*)obj, (ObjSeqState*)e, (char*)sub, gDllCBMoveHandlers,
                                              gDllCBStateHandlers, 0) != 0)
             {
-                ((BaddieControlInterface*)*gBaddieControlInterface)
+                (*gBaddieControlInterface)
                     ->updateGravity((GameObject*)obj, (void*)sub, 0.17f, 1);
             }
             break;
@@ -437,7 +437,7 @@ void dll_CB_free(int* obj)
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 1);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 1);
 }
 
 void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -480,11 +480,11 @@ void dll_CB_update(int* obj)
     }
     if ((sub->flags400 & 2) != 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->startHitReaction((GameObject*)obj, sub, &sub->routeNav, sub->gameBitB, &sub->subMode, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
-    if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid((GameObject*)obj, sub, 1) == 0)
+    if ((*gBaddieControlInterface)->isObjectValid((GameObject*)obj, sub, 1) == 0)
         return;
     dll_CB_advanceAI(obj, sub, sub);
     path = (RomCurveWalker*)sub->path;
@@ -519,7 +519,7 @@ void dll_CB_init(int* obj, u8* params, int extra)
         flags |= 8;
     ((GameObject*)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
     ((GameObject*)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie((GameObject*)obj, params, (u8*)sub, 4, 6, 0x82, flags, 2e+01f);
     ((GameObject*)obj)->animEventCallback = dll_CB_seqFn;
     (*gPlayerInterface)->setState(obj, sub, 0);

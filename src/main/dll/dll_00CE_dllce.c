@@ -143,7 +143,7 @@ int chukChuk_checkChooseAttackState(int obj, GroundBaddieState* state)
     if (*(char*)&state->baddie.moveDone != '\0' || *(char*)&state->baddie.moveJustStartedB != '\0')
     {
         hit = *(u8**)&sub->control;
-        result = ((BaddieControlInterface*)*gBaddieControlInterface)
+        result = (*gBaddieControlInterface)
                      ->shouldDropTarget((GameObject*)obj, state, (f32)(u32)sub->aggroRange, 1);
         if (result != 0)
         {
@@ -331,7 +331,7 @@ int chukChuk_updateWindupState(GameObject* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.moveEventFlags |= 2;
-        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild(obj, sub->triggerId, -1, 0);
+        (*gBaddieControlInterface)->spawnChild(obj, sub->triggerId, -1, 0);
     }
     return 0;
 }
@@ -644,13 +644,13 @@ void chukChuk_acquireTarget(GameObject* obj, int state, int target)
             int sub = *(int*)&((GroundBaddieState*)state)->control;
     GameObject* r;
 
-    r = ((BaddieControlInterface*)*gBaddieControlInterface)
+    r = (*gBaddieControlInterface)
             ->findAggroTarget(obj, (void*)target, (f32)(u32)((GroundBaddieState*)state)->aggroRange, 0x8000);
 
     if (r != NULL && (((GroundBaddieState*)state)->configFlags & 0x4) == 0)
     {
         int v = -1;
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->startHitReaction(obj, (void*)target, (char*)state + 0x35c,
                                ((GroundBaddieState*)state)->gameBitB, NULL, 0, 0, 8, v);
         *(int*)&((GroundBaddieState*)target)->baddie.targetObj = (int)r;
@@ -712,16 +712,16 @@ void chukChuk_updateTargeting(int obj, int state, int target)
 
     if ((((GroundBaddieState*)state)->configFlags & 0x20) == 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->pollCameraTarget((GameObject*)obj, (void*)target, &((GroundBaddieState*)state)->flags400, 2, 3,
                                ((GroundBaddieState*)state)->soundIdA, ((GroundBaddieState*)state)->soundIdB);
     }
 
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->processMessages((GameObject*)obj, (void*)target, (void*)(state + 0x35c),
                           ((GroundBaddieState*)state)->gameBitB, NULL, 0, 0, 8);
 
-    result = ((BaddieControlInterface*)*gBaddieControlInterface)
+    result = (*gBaddieControlInterface)
                  ->updateHitReaction((GameObject*)obj, (void*)target, (char*)state + 0x35c,
                                      ((GroundBaddieState*)state)->gameBitB, (int*)lbl_8031FEA8, lbl_8031FF20, 1,
                                      lbl_803AC580);
@@ -780,7 +780,7 @@ void dll_CE_free(int* obj)
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 32);
+    (*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 32);
 }
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -820,7 +820,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
         {
-            ((BaddieControlInterface*)*gBaddieControlInterface)
+            (*gBaddieControlInterface)
                 ->initGroundBaddie(obj, (u8*)setup, (u8*)sub, 7, 6, 0x102, 0x26, 20.0f);
             sub->targetState = 0;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_263);
@@ -840,7 +840,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
     }
     else
     {
-        if (((BaddieControlInterface*)*gBaddieControlInterface)->isObjectValid(obj, sub, 0) == 0)
+        if ((*gBaddieControlInterface)->isObjectValid(obj, sub, 0) == 0)
         {
             sub->targetState = 0;
         }
@@ -876,7 +876,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
                     } while (spawnCount < 10);
                 }
                 hit[8] = 0;
-                ((BaddieControlInterface*)*gBaddieControlInterface)->updateGravity(obj, sub, 0.0f, -1);
+                (*gBaddieControlInterface)->updateGravity(obj, sub, 0.0f, -1);
                 (*gPlayerInterface)->rotateTowardTarget(obj, sub, timeDelta, 4);
                 sub->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(int*)&obj->pendingParentObj = 0;
@@ -905,7 +905,7 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
     {
         mode |= 8;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie(obj, def, (u8*)sub, 7, 6, 0x102, mode, 20.0f);
     (obj)->animEventCallback = NULL;
     v = *(f32**)&sub->control;

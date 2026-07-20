@@ -72,7 +72,7 @@ int kaldachom_stateHandlerB05(int obj, int baddieState)
     if ((s8)((GroundBaddieState*)baddieState)->baddie.moveDone != 0 ||
         (s8)((GroundBaddieState*)baddieState)->baddie.moveJustStartedB != 0)
     {
-        if (((BaddieControlInterface*)*gBaddieControlInterface)
+        if ((*gBaddieControlInterface)
                 ->shouldDropTarget((GameObject*)obj, (void*)baddieState,
                                    (f32)(u32)((CfDoorlightState*)state)->aggroRange, 1) != 0)
         {
@@ -229,7 +229,7 @@ int kaldachom_stateHandlerA07(GameObject* obj, int baddieState)
             GameObject* linkedObj;
             if (((CfDoorlightState*)state)->spawnsLinkedObj != 0)
             {
-                linkedObj = ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild(obj, 6, -1, 0);
+                linkedObj = (*gBaddieControlInterface)->spawnChild(obj, 6, -1, 0);
             }
             else
             {

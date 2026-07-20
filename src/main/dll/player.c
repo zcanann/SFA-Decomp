@@ -18175,7 +18175,7 @@ int Lightfoot_UpdateWanderSteering(GameObject* obj, int state, f32 fv)
         }
         else
         {
-            r = ((BaddieControlInterface*)*gBaddieControlInterface)
+            r = (*gBaddieControlInterface)
                     ->getClearDirectionMask(obj, (void*)state, lbl_803E8190);
             if ((r & 1) == 0)
             {
@@ -18579,7 +18579,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     int mode;
     int v;
 
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->getTargetGeometry((GameObject*)obj, Obj_GetPlayerObject(), 0x10, (u16*)((char*)p + 0x1e),
                             (u16*)((char*)p + 0x20), (u16*)((char*)p + 0x22));
     ((PlayerState*)state)->baddie.targetDistance = (f32)(u32) * (u16*)((int)p + 0x22);
@@ -18601,7 +18601,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
         v = *(int*)&((PlayerState*)sub)->baddie.posX;
         if (v >= 0x49942 || v < 0x4993f)
         {
-            ((BaddieControlInterface*)*gBaddieControlInterface)
+            (*gBaddieControlInterface)
                 ->updateGravity((GameObject*)obj, (void*)state, lbl_803E820C, 1);
         }
         ((PlayerState*)inner)->pendingParentObj = *(int*)&((GameObject*)obj)->pendingParentObj;

@@ -91,7 +91,7 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
     state = *(int*)&obj->extra;
     if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedB != 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->getTargetGeometry(obj, (GameObject*)((BaddieState*)runtime)->targetObj, 0x10,
                                 &dirSector, &unused, &distance);
         ((BaddieState*)runtime)->moveDone = 0;
@@ -112,7 +112,7 @@ int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
             {
                 ((BaddieState*)runtime)->moveDone = 0;
                 if (distance > 240 &&
-                    (((BaddieControlInterface*)*gBaddieControlInterface)
+                    ((*gBaddieControlInterface)
                          ->getClearDirectionMask(obj, (void*)runtime, lbl_803E4BBC) & 1))
                 {
                     (*gPlayerInterface)->setState(obj, (void*)runtime,
@@ -499,7 +499,7 @@ int DIMbossHitDetect_trackTargetMove(GameObject* obj, int runtime, f32 hitAmount
     if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0 ||
         (obj)->anim.currentMove == 1)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->getTargetGeometry(obj, (GameObject*)((BaddieState*)runtime)->targetObj, 0x10,
                                 &dirSector, &unused, &distance);
         ObjAnim_SetCurrentMove((int)obj, lbl_80325960[dirSector], lbl_803E4BD8, 0);

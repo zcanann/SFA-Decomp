@@ -112,7 +112,7 @@ void lightfoot_free(GameObject* obj, int flag)
             }
         }
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState(obj, (void*)inner, 0x20);
+    (*gBaddieControlInterface)->releaseState(obj, (void*)inner, 0x20);
 }
 
 void lightfoot_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -317,7 +317,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
     {
         flags |= 1;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie(obj, (u8*)def, (u8*)inner, 5, 3, 0x108, flags, lbl_803E8228);
     (obj)->animEventCallback = Lightfoot_SeqFn;
     ((GroundBaddieState*)inner)->baddie.controlMode = 0;

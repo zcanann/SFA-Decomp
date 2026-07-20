@@ -53,6 +53,7 @@
 #include "main/frame_timing.h"
 #include "main/resource.h"
 #include "main/dll/dll_0019_dll19func0.h"
+#include "main/dll/baddie_control_interface.h"
 
 u8* pCamera;
 u8 gCamcontrolHandlerCount;
@@ -89,13 +90,6 @@ s8 gCamcontrolTargetChanged;
 
 u8 gCamcontrolStateStorage[0x148];
 CamcontrolHandlerEntry* gCamcontrolHandlerEntries[20];
-extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
-
-
-static inline CamcontrolBaddieControlInterface* camcontrol_GetBaddieControlInterface(void)
-{
-    return *gBaddieControlInterface;
-}
 
 static inline u32 camcontrol_GetTargetKind(CamcontrolTargetObject* target)
 {
@@ -288,7 +282,7 @@ void camcontrol_updateTargetFeedback(void)
                 result = dll_19_func1B((GameObject*)target);
                 if (result != 0)
                 {
-                    targetDistance = camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
+                    targetDistance = (*gBaddieControlInterface)->getHealthFraction((GameObject*)target);
                 }
                 else
                 {

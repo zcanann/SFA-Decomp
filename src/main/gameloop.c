@@ -104,7 +104,7 @@ u8 gGameLoopHardReset;
 u8 lbl_803DCAC4;
 CarryableInterface** gCarryableInterface;
 MinimapInterface* gMinimapInterface;
-int* gBaddieControlInterface;
+BaddieControlInterface** gBaddieControlInterface;
 BoneParticleEffectInterface** gBoneParticleEffectInterface;
 void* lbl_803DCAB0;
 MapEventInterface** gMapEventInterface;

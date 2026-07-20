@@ -147,7 +147,7 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
     {
         if ((f32)p->baddie.stateTimer > 4.0f * timeDelta)
         {
-            ((BaddieControlInterface*)*gBaddieControlInterface)
+            (*gBaddieControlInterface)
                 ->getTargetGeometry((GameObject*)obj, (GameObject*)p->baddie.targetObj, 16, &a, &b, &c);
             if (a < 4 || a > 11)
             {
@@ -204,7 +204,7 @@ int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
     {
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
         state->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
-        ((BaddieControlInterface*)*gBaddieControlInterface)->spawnChild((GameObject*)obj, sub->triggerId, -1, 1);
+        (*gBaddieControlInterface)->spawnChild((GameObject*)obj, sub->triggerId, -1, 1);
     }
     return 0;
 }

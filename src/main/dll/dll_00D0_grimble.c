@@ -98,7 +98,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg)
                      (f32)(s16)(angle * ((((GrimbleControl*)sub)->reversed << 1) - 1));
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
-        ((BaddieControlInterface*)*gBaddieControlInterface)
+        (*gBaddieControlInterface)
             ->getTargetGeometry(obj, (GameObject*)((GroundBaddieState*)state)->baddie.targetObj, 0x10,
                                 &zone, &pad, &dist);
         ((GrimbleControl*)sub)->reversed = 1 - *(u8*)&((GrimbleControl*)sub)->reversed;
@@ -217,7 +217,7 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
     {
         ((GrimbleControl*)sub)->pathProgress = 6.7f;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->getTargetGeometry(obj, (GameObject*)((GroundBaddieState*)state)->baddie.targetObj, 0x10,
                             &zone, &pad, &dist);
     if (zone > 3 && zone < 0xc && dist > 0x190 && ((GrimbleControl*)sub)->pathProgress > 2.0f &&
@@ -349,7 +349,7 @@ void grimble_free(GameObject* obj)
 {
     int* state = obj->extra;
     ObjGroup_RemoveObject((u32)obj, GRIMBLE_OBJGROUP);
-    ((BaddieControlInterface*)*gBaddieControlInterface)->releaseState(obj, state, 0);
+    (*gBaddieControlInterface)->releaseState(obj, state, 0);
 }
 
 void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -395,7 +395,7 @@ void grimble_update(GameObject* obj)
     {
         if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->mapId) != 0)
         {
-            ((BaddieControlInterface*)*gBaddieControlInterface)
+            (*gBaddieControlInterface)
                 ->initGroundBaddie(obj, (u8*)def, (u8*)state, 0xa, 6, 0x10e, 0x36, 20.0f);
             ((GroundBaddieState*)state)->baddie.substate = 1;
             ((GroundBaddieState*)state)->baddie.moveJustStartedB = 1;
@@ -412,10 +412,10 @@ void grimble_update(GameObject* obj)
             (*(void (**)(int, f32, int, int, int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
                 ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress, (int)obj + 0xc, (int)obj + 0x10,
                 (int)obj + 0x14);
-            ((BaddieControlInterface*)*gBaddieControlInterface)
+            (*gBaddieControlInterface)
                 ->processMessages(obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB,
                                   (u8*)(state + 0x405), 0, 0, 0);
-            r = ((BaddieControlInterface*)*gBaddieControlInterface)
+            r = (*gBaddieControlInterface)
                     ->updateHitReaction(obj, state, state + 0x35c, ((GroundBaddieState*)state)->gameBitB,
                                         lbl_803200E0, (u8*)lbl_80320158, 3, NULL);
             if (r == 0xe)
@@ -427,7 +427,7 @@ void grimble_update(GameObject* obj)
                 *(s8*)&((GroundBaddieState*)state)->baddie.hitPoints == 0)
             {
                 ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags |= 1;
-                if (((BaddieControlInterface*)*gBaddieControlInterface)
+                if ((*gBaddieControlInterface)
                         ->shouldDropTarget(obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 1) != 0)
                 {
                     *(int*)&((GroundBaddieState*)state)->baddie.targetObj = 0;
@@ -436,7 +436,7 @@ void grimble_update(GameObject* obj)
             else
             {
                 ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~1;
-                target = ((BaddieControlInterface*)*gBaddieControlInterface)
+                target = (*gBaddieControlInterface)
                              ->findAggroTarget(obj, state, (f32)((GroundBaddieState*)state)->aggroRange, 0x8000);
                 if (target != NULL)
                 {
@@ -461,7 +461,7 @@ void grimble_init(int obj, int def, int flag)
     {
         flags |= 1;
     }
-    ((BaddieControlInterface*)*gBaddieControlInterface)
+    (*gBaddieControlInterface)
         ->initGroundBaddie((GameObject*)obj, (u8*)def, (u8*)state, 0, 0, 0, flags, 20.0f);
     ((GameObject*)obj)->animEventCallback = grimble_animEventCallback;
     (*gPlayerInterface)->setState((void*)obj, state, 0);
