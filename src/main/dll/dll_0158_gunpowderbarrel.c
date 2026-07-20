@@ -934,8 +934,8 @@ void gunpowderbarrel_update(GameObject *obj)
         state->fuseFrames + 1.0f;
         {
             f32 r = state->hitRadius;
-            ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r * 0.5f),
-                                       (s32)(r * 0.5f));
+            ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, r, (s32)(-r / 2.0f),
+                                       (s32)(r / 2.0f));
         }
         if (state->linkedTimerObject != NULL)
         {
