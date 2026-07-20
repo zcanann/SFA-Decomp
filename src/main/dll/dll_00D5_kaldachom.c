@@ -262,8 +262,8 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
     ((BaddieControlInterface*)*gBaddieControlInterface)
         ->processMessages(obj, (void*)state, (void*)(stateWithBaddieData + 0x35c),
                           ((GroundBaddieState*)stateWithBaddieData)->gameBitB, NULL, 0, 0, 4);
-    (*(void (**)(void*, GameObject*, int, u16*, u16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
-        obj, playerObj, 4, &hitType, &hitAux1, &hitAux2);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->getTargetGeometry(obj, playerObj, 4, &hitType, &hitAux1, &hitAux2);
     if ((hitType == 1) || (hitType == 2))
     {
         result = ((BaddieControlInterface*)*gBaddieControlInterface)

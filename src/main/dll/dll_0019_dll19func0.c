@@ -113,7 +113,7 @@ f32 dll_19_func0B(int* obj);
 u16 dll_19_func0A(GameObject* obj);
 void dll_19_func06(s16* yaw, char* st, f32 cap, f32 speed);
 f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st);
-void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist);
+void dll_19_func07(GameObject* obj, GameObject* target, int div, u16* outYaw, u16* outDelta, u16* outDist);
 int dll_19_func09_ret_0(void);
 u8 dll_19_func08(GameObject* obj, void* state, f32 dist);
 void dll_19_func04_nop(void);
@@ -1172,9 +1172,9 @@ f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, char* st)
     return -(-((obj)->anim.localPosX * c + (obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
 
-/* Computes the yaw step, signed yaw delta and distance from an object to its
+/* Computes the yaw step, wrapped yaw delta and distance from an object to its
  * target, updating the wide-turn flag. */
-void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDelta, u16* outDist)
+void dll_19_func07(GameObject* obj, GameObject* target, int div, u16* outYaw, u16* outDelta, u16* outDist)
 {
     char* st = (obj)->extra;
     f32 d[3];
@@ -1184,7 +1184,7 @@ void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDe
     int cur;
     int delta;
 
-    if ((void*)obj == NULL || (void*)target == NULL)
+    if ((void*)obj == NULL || target == NULL)
     {
         *outYaw = 0;
         *outDelta = 0;
@@ -1192,9 +1192,9 @@ void dll_19_func07(GameObject* obj, int target, int div, u16* outYaw, u16* outDe
     }
     else
     {
-        dp[0] = ((GameObject*)target)->anim.worldPosX - (obj)->anim.worldPosX;
-        dp[1] = ((GameObject*)target)->anim.worldPosY - (obj)->anim.worldPosY;
-        dp[2] = ((GameObject*)target)->anim.worldPosZ - (obj)->anim.worldPosZ;
+        dp[0] = target->anim.worldPosX - (obj)->anim.worldPosX;
+        dp[1] = target->anim.worldPosY - (obj)->anim.worldPosY;
+        dp[2] = target->anim.worldPosZ - (obj)->anim.worldPosZ;
         ang = getAngle(-dp[0], -dp[2]);
         ovr = *(s16**)&(obj)->anim.parent;
         if (ovr != NULL)

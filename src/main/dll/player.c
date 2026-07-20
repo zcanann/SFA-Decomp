@@ -18579,8 +18579,9 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     int mode;
     int v;
 
-    (*(void (*)(int, int, int, void*, void*, void*))(*(int*)(*gBaddieControlInterface + 0x14)))(
-        obj, (int)Obj_GetPlayerObject(), 0x10, (char*)p + 0x1e, (char*)p + 0x20, (char*)p + 0x22);
+    ((BaddieControlInterface*)*gBaddieControlInterface)
+        ->getTargetGeometry((GameObject*)obj, Obj_GetPlayerObject(), 0x10, (u16*)((char*)p + 0x1e),
+                            (u16*)((char*)p + 0x20), (u16*)((char*)p + 0x22));
     ((PlayerState*)state)->baddie.targetDistance = (f32)(u32) * (u16*)((int)p + 0x22);
     mode = ((GameObject*)obj)->userData2;
     if (mode == 2)

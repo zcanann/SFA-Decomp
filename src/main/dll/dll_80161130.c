@@ -147,8 +147,8 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
     {
         if ((f32)p->baddie.stateTimer > 4.0f * timeDelta)
         {
-            ((void (*)(int, int, int, u16*, u16*, u16*))((void**)*gBaddieControlInterface)[5])(
-                obj, *(int*)&p->baddie.targetObj, 16, &a, &b, &c);
+            ((BaddieControlInterface*)*gBaddieControlInterface)
+                ->getTargetGeometry((GameObject*)obj, (GameObject*)p->baddie.targetObj, 16, &a, &b, &c);
             if (a < 4 || a > 11)
             {
                 return 3;

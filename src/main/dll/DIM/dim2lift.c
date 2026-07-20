@@ -84,15 +84,16 @@ STATIC_ASSERT(sizeof(DIM2icicleBlueWhiteEffectPlacement) == 0x24);
 int DIMbossAnim_updatePlayerHitReaction(GameObject* obj, int runtime)
 {
     u16 dirSector;
-    s16 unused;
+    u16 unused;
     u16 distance;
     int state;
     s16 mode;
     state = *(int*)&obj->extra;
     if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedB != 0)
     {
-        (*(int (**)(void*, int, int, u16*, s16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
-            obj, *(int*)&((BaddieState*)runtime)->targetObj, 0x10, &dirSector, &unused, &distance);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->getTargetGeometry(obj, (GameObject*)((BaddieState*)runtime)->targetObj, 0x10,
+                                &dirSector, &unused, &distance);
         ((BaddieState*)runtime)->moveDone = 0;
         if (distance < 90)
         {
@@ -492,14 +493,15 @@ int DIMbossHitDetect_randomSwipe(GameObject* obj, int runtime, f32 arg)
 int DIMbossHitDetect_trackTargetMove(GameObject* obj, int runtime, f32 hitAmount)
 {
     u16 dirSector;
-    s16 unused;
-    s16 distance;
+    u16 unused;
+    u16 distance;
     ((BaddieState*)runtime)->animSpeedA = lbl_803E4BD8;
     if (*(s8*)&((BaddieState*)runtime)->moveDone != 0 || *(s8*)&((BaddieState*)runtime)->moveJustStartedA != 0 ||
         (obj)->anim.currentMove == 1)
     {
-        (*(int (**)(int, int, int, u16*, s16*, s16*))(*(int*)gBaddieControlInterface + 0x14))(
-            (int)obj, *(int*)&((BaddieState*)runtime)->targetObj, 0x10, &dirSector, &unused, &distance);
+        ((BaddieControlInterface*)*gBaddieControlInterface)
+            ->getTargetGeometry(obj, (GameObject*)((BaddieState*)runtime)->targetObj, 0x10,
+                                &dirSector, &unused, &distance);
         ObjAnim_SetCurrentMove((int)obj, lbl_80325960[dirSector], lbl_803E4BD8, 0);
         ((BaddieState*)runtime)->moveSpeed = gDim2LiftMoveSpeedByDir[dirSector];
         ((BaddieState*)runtime)->moveDone = 0;
