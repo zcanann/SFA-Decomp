@@ -3,11 +3,11 @@
 
 #include "dolphin/types.h"
 
-float fastCastS16ToFloat(s16* p);
-void fastCastFloatToS16(float x, s16* p);
-float fastCastU16ToFloat(u16* p);
-void fastCastFloatToU16(float x, u16* p);
+float fastCastS16ToFloat(const s16* input);
+void fastCastFloatToS16(float value, s16* output);
+float fastCastU16ToFloat(const u16* input);
+void fastCastFloatToU16(float value, u16* output);
 
-float fastFloorf(float x);
+float fastFloorf(float value);
 
 #endif

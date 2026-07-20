@@ -14,88 +14,101 @@ static float __four_over_pi_m1[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 __declspec(section ".ctors") static void* const __sinit_trigf_c_reference = __sinit_trigf_c;
 
-float tanf(float x)
+float tanf(float angle)
 {
-    float c = cos__Ff(x);
-    return sin__Ff(x) / c;
+    float cosine = cos__Ff(angle);
+    return sin__Ff(angle) / cosine;
 }
 
 
-float cos__Ff(float x)
+float cos__Ff(float angle)
 {
-    return cosf(x);
+    return cosf(angle);
 }
 
-float sin__Ff(float x)
+float sin__Ff(float angle)
 {
-    return sinf(x);
+    return sinf(angle);
 }
 
 
-float cosf(float x)
+float cosf(float angle)
 {
-    int n;
-    float y;
-    float ysq;
-    float z;
+    int quadrant;
+    float reducedAngle;
+    float reducedSquared;
+    float scaledAngle;
+    float result;
 
-    z = 0.63661975f * x;
-    n = (__HI(x) & 0x80000000) ? (int)(z - 0.5f) : (int)(z + 0.5f);
+    scaledAngle = 0.63661975f * angle;
+    quadrant = (__HI(angle) & 0x80000000) ? (int)(scaledAngle - 0.5f) : (int)(scaledAngle + 0.5f);
 
-    y = x - n * 2 + __four_over_pi_m1[0] * x + __four_over_pi_m1[1] * x + __four_over_pi_m1[2] * x + __four_over_pi_m1[3] * x;
-    n &= 3;
+    reducedAngle = angle - quadrant * 2 + __four_over_pi_m1[0] * angle + __four_over_pi_m1[1] * angle
+                 + __four_over_pi_m1[2] * angle + __four_over_pi_m1[3] * angle;
+    quadrant &= 3;
 
-    if (fabsf__Ff(y) < __epsilon) {
-        n <<= 1;
-        return __sincos_on_quadrant[n + 1] - y * __sincos_on_quadrant[n];
+    if (fabsf__Ff(reducedAngle) < __epsilon) {
+        quadrant <<= 1;
+        return __sincos_on_quadrant[quadrant + 1] - reducedAngle * __sincos_on_quadrant[quadrant];
     }
 
-    ysq = y * y;
-    if (n & 1) {
-        n <<= 1;
-        z = -((((__sincos_poly[1] * ysq + __sincos_poly[3]) * ysq + __sincos_poly[5]) * ysq + __sincos_poly[7]) * ysq
+    reducedSquared = reducedAngle * reducedAngle;
+    if (quadrant & 1) {
+        quadrant <<= 1;
+        result = -((((__sincos_poly[1] * reducedSquared + __sincos_poly[3]) * reducedSquared + __sincos_poly[5])
+                     * reducedSquared + __sincos_poly[7])
+                        * reducedSquared
+                    + __sincos_poly[9])
+               * reducedAngle;
+        return result * __sincos_on_quadrant[quadrant];
+    }
+
+    quadrant <<= 1;
+    result = (((__sincos_poly[0] * reducedSquared + __sincos_poly[2]) * reducedSquared + __sincos_poly[4])
+               * reducedSquared + __sincos_poly[6])
+                 * reducedSquared
+             + __sincos_poly[8];
+    return result * __sincos_on_quadrant[quadrant + 1];
+}
+
+float sinf(float angle)
+{
+    int quadrant;
+    float reducedAngle;
+    float reducedSquared;
+    float scaledAngle;
+    float result;
+
+    scaledAngle = 0.63661975f * angle;
+    quadrant = (__HI(angle) & 0x80000000) ? (int)(scaledAngle - 0.5f) : (int)(scaledAngle + 0.5f);
+
+    reducedAngle = angle - quadrant * 2 + __four_over_pi_m1[0] * angle + __four_over_pi_m1[1] * angle
+                 + __four_over_pi_m1[2] * angle + __four_over_pi_m1[3] * angle;
+    quadrant &= 3;
+
+    if (fabsf__Ff(reducedAngle) < __epsilon) {
+        quadrant <<= 1;
+        return __sincos_on_quadrant[quadrant]
+             + (__sincos_on_quadrant[quadrant + 1] * reducedAngle * __sincos_poly[9]);
+    }
+
+    reducedSquared = reducedAngle * reducedAngle;
+    if (quadrant & 1) {
+        quadrant <<= 1;
+        result = (((__sincos_poly[0] * reducedSquared + __sincos_poly[2]) * reducedSquared + __sincos_poly[4])
+                   * reducedSquared + __sincos_poly[6])
+                     * reducedSquared
+                 + __sincos_poly[8];
+        return result * __sincos_on_quadrant[quadrant];
+    }
+
+    quadrant <<= 1;
+    result = ((((__sincos_poly[1] * reducedSquared + __sincos_poly[3]) * reducedSquared + __sincos_poly[5])
+                * reducedSquared + __sincos_poly[7])
+                  * reducedSquared
               + __sincos_poly[9])
-            * y;
-        return z * __sincos_on_quadrant[n];
-    }
-
-    n <<= 1;
-    z = (((__sincos_poly[0] * ysq + __sincos_poly[2]) * ysq + __sincos_poly[4]) * ysq + __sincos_poly[6]) * ysq
-        + __sincos_poly[8];
-    return z * __sincos_on_quadrant[n + 1];
-}
-
-float sinf(float x)
-{
-    int n;
-    float y;
-    float ysq;
-    float z;
-
-    z = 0.63661975f * x;
-    n = (__HI(x) & 0x80000000) ? (int)(z - 0.5f) : (int)(z + 0.5f);
-
-    y = x - n * 2 + __four_over_pi_m1[0] * x + __four_over_pi_m1[1] * x + __four_over_pi_m1[2] * x + __four_over_pi_m1[3] * x;
-    n &= 3;
-
-    if (fabsf__Ff(y) < __epsilon) {
-        n <<= 1;
-        return __sincos_on_quadrant[n] + (__sincos_on_quadrant[n + 1] * y * __sincos_poly[9]);
-    }
-
-    ysq = y * y;
-    if (n & 1) {
-        n <<= 1;
-        z = (((__sincos_poly[0] * ysq + __sincos_poly[2]) * ysq + __sincos_poly[4]) * ysq + __sincos_poly[6]) * ysq
-            + __sincos_poly[8];
-        return z * __sincos_on_quadrant[n];
-    }
-
-    n <<= 1;
-    z = ((((__sincos_poly[1] * ysq + __sincos_poly[3]) * ysq + __sincos_poly[5]) * ysq + __sincos_poly[7]) * ysq
-         + __sincos_poly[9])
-        * y;
-    return z * __sincos_on_quadrant[n + 1];
+           * reducedAngle;
+    return result * __sincos_on_quadrant[quadrant + 1];
 }
 
 void __sinit_trigf_c(void)
