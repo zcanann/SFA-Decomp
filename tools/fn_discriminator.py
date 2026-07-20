@@ -251,6 +251,9 @@ def main() -> None:
     ap.add_argument("--extra", metavar="MNEM",
                     help="report fns where OURS emits this mnemonic and the "
                          "target does not (surplus-instruction screen)")
+    ap.add_argument("--absent", metavar="MNEM",
+                    help="report fns where the TARGET emits this mnemonic and "
+                         "ours does not (deficit-instruction screen)")
     args = ap.parse_args()
 
     build = REPO / "build" / args.version
@@ -303,6 +306,11 @@ def main() -> None:
                 n = surplus(tf[name], cf[name], args.extra)
                 if n:
                     rows.append((unit["name"], name, size, pct, "EXTRA:%d" % n, 0, 0))
+                continue
+            if args.absent:
+                n = surplus(cf[name], tf[name], args.absent)
+                if n:
+                    rows.append((unit["name"], name, size, pct, "ABSENT:%d" % n, 0, 0))
                 continue
             cls, md, od = classify(tf[name], cf[name])
             if args.control:
