@@ -4893,23 +4893,20 @@ int ObjSeq_update(u8* obj, f32 t)
             {
                 continue;
             }
+            pressed = 0;
             switch (conditionOpcode)
             {
             case 0x12:
                 if (getButtonsJustPressed(0) & PAD_BUTTON_A)
                 {
                     pressed = 1;
-                    break;
                 }
-                pressed = 0;
                 break;
             case 0x13:
                 if (getButtonsJustPressed(0) & PAD_BUTTON_B)
                 {
                     pressed = 1;
-                    break;
                 }
-                pressed = 0;
                 break;
             case 0x14:
             case 0x15:
@@ -4921,15 +4918,12 @@ int ObjSeq_update(u8* obj, f32 t)
                 if (cb != NULL)
                 {
                     pressed = cb(state->callbackContext, obj);
-                    break;
                 }
-                pressed = 0;
                 break;
             case 0x1a:
                 pressed = isTalkingToNpc() == 0;
                 break;
             default:
-                pressed = 0;
                 break;
             }
             if (pressed != 0)
