@@ -5,6 +5,7 @@
 
 typedef struct RomCurveDef RomCurveDef;
 typedef struct RomCurveWalker RomCurveWalker;
+struct GameObject;
 
 #define ROM_CURVE_PATH_LINK_COUNT 5
 
@@ -41,6 +42,8 @@ typedef void (*RomCurveVoidFn)(void);
 typedef RomCurveDef **(*RomCurveGetCurvesFn)(int *outCount);
 typedef int (*RomCurveFindFn)(int *types,int typeCount,int action,f32 x,f32 y,f32 z);
 typedef RomCurveDef *(*RomCurveGetByIdFn)(int curveId);
+typedef f32 (*RomCurveDistanceToObjectFn)(struct GameObject *obj,u32 curveId);
+typedef int (*RomCurveFindByActionFn)(int action);
 typedef u8 (*RomCurveInitWalkerFn)(void *walker,void *obj,f32 scale,int *curveParam,int arg);
 typedef u8 (*RomCurveGoNextPointFn)(void *walker);
 typedef int (*RomCurveSetClosedFn)(void *walker,int closed);
@@ -56,14 +59,14 @@ typedef struct RomCurveInterface {
   void *slot18;
   RomCurveGetByIdFn getById;
   void *slot20;
-  void *slot24;
+  RomCurveDistanceToObjectFn distanceToObject;
   void *slot28;
   void *slot2C;
   void *slot30;
   void *slot34;
   void *slot38;
   void *slot3C;
-  void *slot40;
+  RomCurveFindByActionFn findByAction;
   void *slot44;
   void *slot48;
   void *slot4C;

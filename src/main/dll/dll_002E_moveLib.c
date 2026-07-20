@@ -90,10 +90,10 @@ void dll_2E_func09(MoveLibState* s, const void* src1, const void* src2, int coun
 
 f32 dll_2E_func0B(GameObject* obj, int arg)
 {
-    int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
+    int r = (*gRomCurveInterface)->findByAction(arg);
     if (r > -1)
     {
-        return ((f32(*)(int, int))(*gRomCurveInterface)->slot24)((int)obj, r);
+        return (*gRomCurveInterface)->distanceToObject(obj, r);
     }
     return -1.0f;
 }
@@ -107,7 +107,7 @@ int dll_2E_func0C(int idx, MoveLibTarget* out)
     int curveId;
 
     range = 1000.0f;
-    curveId = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
+    curveId = (*gRomCurveInterface)->findByAction(idx);
     if (curveId > -1)
     {
         RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(curveId);
@@ -139,7 +139,7 @@ int dll_2E_func0A(int idx, MoveLibTarget* out)
     {
         return 0;
     }
-    curveId = ((int (*)(int))(*gRomCurveInterface)->slot40)(idx);
+    curveId = (*gRomCurveInterface)->findByAction(idx);
     if (curveId > -1)
     {
         RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(curveId);
