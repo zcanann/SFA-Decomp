@@ -1134,14 +1134,14 @@ int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s
                 {
                     if (animLeft != -1)
                     {
-                        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, animLeft, 0.0f, 0);
+                        ObjAnim_SetCurrentMove((int)obj, animLeft, 0.0f, 0);
                     }
                 }
                 else
                 {
                     if (animRight != -1)
                     {
-                        ((int (*)(void*, int, f32, int))ObjAnim_SetCurrentMove)(obj, animRight, 0.0f, 0);
+                        ObjAnim_SetCurrentMove((int)obj, animRight, 0.0f, 0);
                     }
                 }
             }
