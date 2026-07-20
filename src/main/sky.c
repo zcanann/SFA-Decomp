@@ -143,7 +143,7 @@ extern const f32 lbl_803DF0C4;
 extern const f32 lbl_803DF108;
 extern const f32 lbl_803DF10C;
 extern const f32 lbl_803DF110;
-extern f32 lbl_803DF114;
+extern const f32 lbl_803DF114;
 extern f32 lbl_803DF118;
 extern f32 lbl_803DF11C;
 extern f32 lbl_803DF120;
