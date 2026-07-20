@@ -10,9 +10,8 @@
  * from the yaw delta between the object and its anchor, clamps it, and
  * decides the return direction.
  *
- * `state` is a raw byte base; field offsets are spelled via the
- * DRSHACKLE_*_OFFSET macros. Several `lbl_803E5Bxx` are plain float
- * constants (see the inline value comments).
+ * Several `lbl_803E5Bxx` are plain float constants (see the inline value
+ * comments).
  */
 #include "main/dll/DR/DRshackle.h"
 #include "main/track_dolphin_api.h"
@@ -41,8 +40,6 @@ STATIC_ASSERT(offsetof(ShackleSwingState, swingReturn) == 0x458);
 STATIC_ASSERT(offsetof(ShackleSwingState, swingBlend) == 0x45C);
 STATIC_ASSERT(offsetof(ShackleSwingState, unk494) == 0x494);
 STATIC_ASSERT(offsetof(ShackleSwingState, lastPitch) == 0x49C);
-
-#define DRSHACKLE_MODEL_OFFSET 0x54
 
 #define DRSHACKLE_ANGLE_STEP         0xb6
 #define DRSHACKLE_SWING_BLEND_LIMIT  0x41
@@ -185,12 +182,12 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
             obj->anim.localPosY = s->anchorY;
             obj->anim.localPosZ = s->anchorZ;
             (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = obj->anim.localPosX;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = obj->anim.localPosY;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = obj->anim.localPosZ;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x1c) = obj->anim.worldPosX;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x20) = obj->anim.worldPosY;
-            *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x24) = obj->anim.worldPosZ;
+            *(f32*)((int)obj->anim.hitReactState + 0x10) = obj->anim.localPosX;
+            *(f32*)((int)obj->anim.hitReactState + 0x14) = obj->anim.localPosY;
+            *(f32*)((int)obj->anim.hitReactState + 0x18) = obj->anim.localPosZ;
+            *(f32*)((int)obj->anim.hitReactState + 0x1c) = obj->anim.worldPosX;
+            *(f32*)((int)obj->anim.hitReactState + 0x20) = obj->anim.worldPosY;
+            *(f32*)((int)obj->anim.hitReactState + 0x24) = obj->anim.worldPosZ;
 
             if (s->floorAdjustFlag == 0)
             {
@@ -221,12 +218,12 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
     obj->anim.localPosY = s->anchorY;
     obj->anim.localPosZ = s->anchorZ;
     (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x10) = obj->anim.localPosX;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x14) = obj->anim.localPosY;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x18) = obj->anim.localPosZ;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x1c) = obj->anim.worldPosX;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x20) = obj->anim.worldPosY;
-    *(f32*)(*(int*)((int)obj + DRSHACKLE_MODEL_OFFSET) + 0x24) = obj->anim.worldPosZ;
+    *(f32*)((int)obj->anim.hitReactState + 0x10) = obj->anim.localPosX;
+    *(f32*)((int)obj->anim.hitReactState + 0x14) = obj->anim.localPosY;
+    *(f32*)((int)obj->anim.hitReactState + 0x18) = obj->anim.localPosZ;
+    *(f32*)((int)obj->anim.hitReactState + 0x1c) = obj->anim.worldPosX;
+    *(f32*)((int)obj->anim.hitReactState + 0x20) = obj->anim.worldPosY;
+    *(f32*)((int)obj->anim.hitReactState + 0x24) = obj->anim.worldPosZ;
     flags->positionAnchored = 0;
     return 0;
 }
