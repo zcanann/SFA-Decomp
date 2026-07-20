@@ -62,7 +62,7 @@ u8 gNewShadowFrameIndex;
 int gNewShadowLightAngleY;
 int gNewShadowLightAngleX;
 u8 lbl_803DCF80;
-char* gNewShadowReflectionTexture;
+Texture* gNewShadowReflectionTexture;
 u8 gNewShadowCasterCount;
 
 u8 lbl_803DB668[8] = {0xFF, 7, 6, 5, 4, 3, 2, 1};
@@ -128,7 +128,7 @@ extern Texture* gNewShadowNoiseTexFrames[0x10];
 extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern u32 gNewShadowSmallDiskTexture;
-extern char* gNewShadowReflectionTexture;
+extern Texture* gNewShadowReflectionTexture;
 extern u32 lbl_803DCF94;
 extern u32 gNewShadowInverseRampTexture;
 extern u32 gNewShadowFalloffTexture;
@@ -1227,7 +1227,7 @@ void fn_8006C6A4(int id)
 void selectReflectionTexture(int id)
 {
     register int idCopy = id;
-    Texture* p = (Texture*)gNewShadowReflectionTexture;
+    Texture* p = gNewShadowReflectionTexture;
     if (p->preloaded != 0)
     {
         GXLoadTexObjPreLoaded(textureGetGXTexObj(p), textureGetGXTexRegion(p), idCopy);
@@ -1274,7 +1274,7 @@ void textureFn_8006c75c(int id)
 }
 void drawReflectionTexture(void)
 {
-    char* texture = gNewShadowReflectionTexture;
+    char* texture = (char*)gNewShadowReflectionTexture;
     drawTexture(texture, 0.0f, 0.0f, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
@@ -1295,17 +1295,17 @@ void updateReflectionTextures(void)
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     GXSetTexCopyDst(0x140, 0xf0, GX_TF_Z8, GX_TRUE);
     GXCopyTex((char*)gNewShadowReflectionTexture2 + 0x60, GX_FALSE);
-    if (((Texture*)gNewShadowReflectionTexture)->preloaded != 0)
+    if (gNewShadowReflectionTexture->preloaded != 0)
     {
-        GXPreLoadEntireTexture(textureGetGXTexObj((Texture*)gNewShadowReflectionTexture),
-                               textureGetGXTexRegion((Texture*)gNewShadowReflectionTexture));
+        GXPreLoadEntireTexture(textureGetGXTexObj(gNewShadowReflectionTexture),
+                               textureGetGXTexRegion(gNewShadowReflectionTexture));
     }
     if (((Texture*)gNewShadowReflectionTexture2)->preloaded != 0)
     {
         GXPreLoadEntireTexture(textureGetGXTexObj((Texture*)gNewShadowReflectionTexture2),
                                textureGetGXTexRegion((Texture*)gNewShadowReflectionTexture2));
     }
-    if (((Texture*)gNewShadowReflectionTexture)->preloaded == 0 ||
+    if (gNewShadowReflectionTexture->preloaded == 0 ||
         ((Texture*)gNewShadowReflectionTexture2)->preloaded == 0)
     {
         GXInvalidateTexAll();
