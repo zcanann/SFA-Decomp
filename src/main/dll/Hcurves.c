@@ -138,7 +138,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
 #define OBJFSA_CORNER(BASE, OFF, POSOFF) (f32)((f32) * (s8*)(OFF) * scale + *(f32*)((BASE) + (POSOFF)))
 #define OBJFSA_SET_PLANE(P, K, XA, ZA)                                                                                 \
     len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
-    if (len != 0.0f)                                                                                           \
+    if (len)                                                                                                   \
     {                                                                                                                  \
         dxn = dxn / len;                                                                                               \
         dzn = dzn / len;                                                                                               \
@@ -165,7 +165,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
     dxn = (DXE);                                                                                                       \
     dzn = (DZE);                                                                                                       \
     len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
-    if (len != 0.0f)                                                                                           \
+    if (len)                                                                                                   \
     {                                                                                                                  \
         dxn = dxn / len;                                                                                               \
         dzn = dzn / len;                                                                                               \
@@ -1545,7 +1545,7 @@ void walkgroupFindExitPointFn_800dc398(void)
                 dzn = x3 - objfsaCorner(curve->firstEdge[0], scale, &curve->x);
                 po = &wg->planeOffsets[3];
                 len = sqrtf(dxn * dxn + dzn * dzn);
-                if (len != 0.0f)
+                if (len)
                 {
                     dxn = dxn / len;
                     dzn = dzn / len;
