@@ -30,7 +30,8 @@ project matches more.
 ## Build & verify
 - Rebuild one unit + the report:
   `rm build/GSAE01/src/main/<path>.o && ninja build/GSAE01/src/main/<path>.o && ninja build/GSAE01/report.json`
-- `timeout 60 ninja; echo EXIT=$?` — must be `EXIT=0` before any commit.
+- `ninja; echo EXIT=$?` — must be `EXIT=0` before any commit. (No `timeout` on this box: it is
+  not installed, so a `timeout N ninja` gate returns 127 and never builds.)
 - Paired-single disasm: `build/binutils/powerpc-eabi-objdump -M gekko -drz` (stock objdump mis-decodes PS as VSX).
 - Tools are in `tools/` — start with `function_objdump.py <unit> <symbol>` (full target asm) and `ndiff.py`.
 
