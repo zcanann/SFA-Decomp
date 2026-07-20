@@ -3,12 +3,8 @@
  * Fortress). init seeds the three rotation bytes and optional uniform
  * scale from the placement; render just draws the model.
  */
-#include "main/game_object.h"
 #include "main/object_render.h"
-#include "main/object_descriptor.h"
-
-#define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
-#define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
+#include "main/dll/CF/dll_012E_cflightwall.h"
 
 int CFLightWall_getExtraSize(void)
 {
@@ -24,9 +20,9 @@ void CFLightWall_free(void)
 {
 }
 
-void CFLightWall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void CFLightWall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void CFLightWall_hitDetect(void)
@@ -37,22 +33,21 @@ void CFLightWall_update(void)
 {
 }
 
-void CFLightWall_init(s16* obj, u8* def)
+void CFLightWall_init(GameObject* obj, CFLightWallSetup* setup)
 {
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
-    if (def[0x1b] != 0)
+    obj->anim.rotZ = (s16)((s32)setup->rotZ << 8);
+    obj->anim.rotY = (s16)((s32)setup->rotY << 8);
+    obj->anim.rotX = (s16)((s32)setup->rotX << 8);
+    if (setup->scale != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / 255.0f;
-        if (!((GameObject*)obj)->anim.rootMotionScale)
+        obj->anim.rootMotionScale = (f32)(u32)setup->scale / 255.0f;
+        if (!obj->anim.rootMotionScale)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
+            obj->anim.rootMotionScale = 1.0f;
         }
-        ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     }
-    ((GameObject*)obj)->objectFlags |= CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED | CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void CFLightWall_release(void)

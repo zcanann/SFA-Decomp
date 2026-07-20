@@ -29,16 +29,16 @@ extern u8 lbl_8030CDA0[];
 extern u8 lbl_8030CDC0[];
 extern u8 lbl_8030CDE0[];
 
-u8 lbl_8035F740[0x120];
-u16 lbl_8035F860[0x8000];
-u8 lbl_8036F860[0x20];
-u8 lbl_8036F880[0x8000];
-u8 lbl_80377880[0x14];
-u16 lbl_80377894[0x10];
-u16 lbl_803778B4[0x10];
-u8 lbl_803778D4[0x80];
-u16 lbl_80377954[0x10];
-u16 lbl_80377974[0x16];
+u8 gInflateLiteralCodeLengths[0x120];
+u16 gInflateLiteralDecodeTable[0x8000];
+u8 gInflateDistanceCodeLengths[0x20];
+u8 gInflateDistanceDecodeTable[0x8000];
+u8 gInflateCodeLengthCodeLengths[0x14];
+u16 gInflateLiteralLengthCounts[0x10];
+u16 gInflateDistanceLengthCounts[0x10];
+u8 gInflateCodeLengthDecodeTable[0x80];
+u16 gInflateLiteralNextCode[0x10];
+u16 gInflateDistanceNextCode[0x16];
 
 u8 lbl_803DCD18[8];
 u8 lbl_803DCD20[8];
@@ -112,22 +112,22 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                 distanceDecodeTable = lbl_8030CDC0;
                 distanceMaxBits = 5;
             } else {
-                literalCodeLengths = lbl_8035F740;
-                literalDecodeTable = (u8 *)lbl_8035F860;
-                distanceCodeLengths = lbl_8036F860;
-                distanceDecodeTable = lbl_8036F880;
+                literalCodeLengths = gInflateLiteralCodeLengths;
+                literalDecodeTable = (u8 *)gInflateLiteralDecodeTable;
+                distanceCodeLengths = gInflateDistanceCodeLengths;
+                distanceDecodeTable = gInflateDistanceDecodeTable;
                 val = 0;
                 p8 = lbl_803DCD20;
                 for (i = 8; i != 0; i--) {
                     *p8 = val;
                     p8++;
                 }
-                p8 = lbl_80377880;
+                p8 = gInflateCodeLengthCodeLengths;
                 for (i = 0x13; i != 0; i--) {
                     *p8 = val;
                     p8++;
                 }
-                p16 = lbl_80377894;
+                p16 = gInflateLiteralLengthCounts;
                 for (i = 0x10; i != 0; i--) {
                     *p16 = val;
                     p16++;
@@ -137,7 +137,7 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     *p8 = val;
                     p8++;
                 }
-                p16 = lbl_803778B4;
+                p16 = gInflateDistanceLengthCounts;
                 for (i = 0x10; i != 0; i--) {
                     *p16 = val;
                     p16++;
@@ -155,7 +155,7 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                 ZADV(4);
                 for (i = 0; i != codeLengthCodeCount; i++) {
                     u32 v = ZGB8() & 7;
-                    lbl_80377880[gInflateCodeLengthOrder[i]] = v;
+                    gInflateCodeLengthCodeLengths[gInflateCodeLengthOrder[i]] = v;
                     lbl_803DCD20[v] += 1;
                     ZADV(3);
                 }
@@ -171,17 +171,17 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     }
                 }
                 for (i = 0; i < 0x13; i++) {
-                    u32 len = lbl_80377880[i];
+                    u32 len = gInflateCodeLengthCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (literalMaxBits - len); k++) {
                             u8 c = lbl_803DCD18[len] + 1;
                             lbl_803DCD18[len] = c;
-                            (lbl_803778D4 - 1)[c] = i;
+                            (gInflateCodeLengthDecodeTable - 1)[c] = i;
                         }
                     }
                 }
                 activeCodeLengths = literalCodeLengths;
-                activeLengthCounts = (u8 *)lbl_80377894;
+                activeLengthCounts = (u8 *)gInflateLiteralLengthCounts;
                 n = 0;
                 do {
                     u32 extra;
@@ -193,8 +193,8 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                     }
                     v = (ZROT8(src[0]) | extra) & ((1 << literalMaxBits) - 1);
                     m = literalMaxBits + 0x18;
-                    sym = lbl_803778D4[ZROTL(lbl_8030CDE0[v], m) & 0xff];
-                    ZADV(lbl_80377880[sym]);
+                    sym = gInflateCodeLengthDecodeTable[ZROTL(lbl_8030CDE0[v], m) & 0xff];
+                    ZADV(gInflateCodeLengthCodeLengths[sym]);
                     if (sym == 0x10) {
                         rep = (ZGB8() & 3) + 3;
                         ZADV(2);
@@ -215,52 +215,52 @@ int zlbDecompress(u8 *srcv, int size, u8 *dstv, void *outp) {
                         n += 1;
                         *(u16 *)(activeLengthCounts + val + val) += 1;
                         if (activeCodeLengths == literalCodeLengths && n == literalCodeCount) {
-                            activeLengthCounts = (u8 *)lbl_803778B4;
+                            activeLengthCounts = (u8 *)gInflateDistanceLengthCounts;
                             n = 0;
                             activeCodeLengths = distanceCodeLengths;
                         }
                     } while (--rep != 0);
                 } while (activeCodeLengths == literalCodeLengths || n < distanceCodeCount);
                 literalMaxBits = 0xf;
-                p8 = (u8 *)lbl_80377894 + literalMaxBits + literalMaxBits;
+                p8 = (u8 *)gInflateLiteralLengthCounts + literalMaxBits + literalMaxBits;
                 while (*(u16 *)p8 == 0) {
                     p8 -= 2;
                     literalMaxBits--;
                 }
                 code = 0;
                 for (j = 1; j <= literalMaxBits; j++) {
-                    if (lbl_80377894[j] != 0) {
-                        lbl_80377954[j] = code;
-                        code += lbl_80377894[j] << (literalMaxBits - j);
+                    if (gInflateLiteralLengthCounts[j] != 0) {
+                        gInflateLiteralNextCode[j] = code;
+                        code += gInflateLiteralLengthCounts[j] << (literalMaxBits - j);
                     }
                 }
                 for (i = 0; i < literalCodeCount; i++) {
                     u32 len = literalCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (literalMaxBits - len); k++) {
-                            u16 c = lbl_80377954[len] + 1;
-                            lbl_80377954[len] = c;
+                            u16 c = gInflateLiteralNextCode[len] + 1;
+                            gInflateLiteralNextCode[len] = c;
                             *(u16 *)(literalDecodeTable + (c - 1) + (c - 1)) = i;
                         }
                     }
                 }
                 distanceMaxBits = 0xf;
-                while (lbl_803778B4[distanceMaxBits] == 0) {
+                while (gInflateDistanceLengthCounts[distanceMaxBits] == 0) {
                     distanceMaxBits--;
                 }
                 code = 0;
                 for (j = 1; j <= distanceMaxBits; j++) {
-                    if (lbl_803778B4[j] != 0) {
-                        lbl_80377974[j] = code;
-                        code += lbl_803778B4[j] << (distanceMaxBits - j);
+                    if (gInflateDistanceLengthCounts[j] != 0) {
+                        gInflateDistanceNextCode[j] = code;
+                        code += gInflateDistanceLengthCounts[j] << (distanceMaxBits - j);
                     }
                 }
                 for (i = 0; i < distanceCodeCount; i++) {
                     u32 len = distanceCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (distanceMaxBits - len); k++) {
-                            u16 c = lbl_80377974[len] + 1;
-                            lbl_80377974[len] = c;
+                            u16 c = gInflateDistanceNextCode[len] + 1;
+                            gInflateDistanceNextCode[len] = c;
                             distanceDecodeTable[c - 1] = i;
                         }
                     }
