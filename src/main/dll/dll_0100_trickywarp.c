@@ -98,7 +98,7 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state)
     TrickyWarpCurveEntry* entry;
     TrickyWarpCurveNode* node;
     int nodeCount;
-    int playerObj;
+    GameObject* player;
     int playerPatchGroup;
 
     if (mainGetBit(GAMEBIT_TRICKY_AVAILABLE) == 0)
@@ -142,8 +142,8 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state)
     {
         return 0;
     }
-    playerObj = (int)Obj_GetPlayerObject();
-    playerPatchGroup = Objfsa_GetWalkGroupIndexAtPoint((f32*)(playerObj + 0xc), 0);
+    player = Obj_GetPlayerObject();
+    playerPatchGroup = Objfsa_GetWalkGroupIndexAtPoint(&player->anim.localPosX, 0);
     if (playerPatchGroup != 0)
     {
         if (playerPatchGroup == state->patchGroup)
@@ -184,16 +184,16 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state)
             }
         }
     }
-    return getPatchGroup((f32*)(playerObj + 0xc), state->patchGroup);
+    return getPatchGroup(&player->anim.localPosX, state->patchGroup);
 }
 
-void TrickyWarp_init(s16* obj, u8* placement)
+void TrickyWarp_init(GameObject* obj, u8* placement)
 {
     u32 flags;
-    flags = ((GameObject*)obj)->objectFlags;
+    flags = obj->objectFlags;
     flags |= 0x4000;
-    ((GameObject*)obj)->objectFlags = flags;
-    *obj = (s16)((u32)placement[0x1a] << 8);
+    obj->objectFlags = flags;
+    obj->anim.rotX = (s16)((u32)placement[0x1a] << 8);
 }
 
 ObjectDescriptor gTrickyWarpObjDescriptor = {

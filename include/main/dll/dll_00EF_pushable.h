@@ -42,7 +42,7 @@ int pushable_getObjectTypeId(void);
 
 int WarpPoint_getExtraSize(void);
 int WarpPoint_getObjectTypeId(void);
-int WarpPoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
+int WarpPoint_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int InvHit_getExtraSize(void);
 int InvHit_getObjectTypeId(void);

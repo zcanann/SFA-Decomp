@@ -87,9 +87,9 @@ extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 
 
-int WarpPoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int WarpPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    WarpPointObjectDef* p = *(WarpPointObjectDef**)&((GameObject*)obj)->anim.placementData;
+    WarpPointObjectDef* p = (WarpPointObjectDef*)obj->anim.placementData;
     if (p->mode != WARPPOINT_MODE_GATED_WARP)
     {
         if (animUpdate->triggerCommand == 1)
@@ -114,9 +114,9 @@ int WarpPoint_getObjectTypeId(void)
     return 0x1;
 }
 
-void WarpPoint_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
+void WarpPoint_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    WarpPointObjectDef* p = *(WarpPointObjectDef**)&((GameObject*)obj)->anim.placementData;
+    WarpPointObjectDef* p = (WarpPointObjectDef*)obj->anim.placementData;
     if (visible == 0)
         return;
     if (p->mode == WARPPOINT_MODE_HINT_TIMER)

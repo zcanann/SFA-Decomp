@@ -53,7 +53,7 @@ f32 lbl_803E3E98 = 0.0f;
 void warpPadFn_8019042c(GameObject* obj)
 {
     WarpPadState* state;
-    void* player;
+    GameObject* player;
     u8 flags;
     u8 i;
     struct
@@ -93,7 +93,7 @@ void warpPadFn_8019042c(GameObject* obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_B) != 0)
     {
-        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) <
             409600.0f)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
@@ -111,7 +111,7 @@ void warpPadFn_8019042c(GameObject* obj)
     }
     else if ((flags & WARPPAD_FLAG_WARP_C) != 0)
     {
-        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) <
             409600.0f)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
@@ -129,7 +129,7 @@ void warpPadFn_8019042c(GameObject* obj)
     }
     else
     {
-        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) <
             409600.0f)
         {
             if (((state->flags & (WARPPAD_FLAG_DISABLED | WARPPAD_FLAG_GAMEBIT_DISABLED)) != 0) &&
@@ -197,7 +197,7 @@ void warpPadPlayerStandingOn(GameObject* obj)
 {
     WarpPadPlacement* placement;
     WarpPadState* state;
-    void* player;
+    GameObject* player;
     s16 gameBit;
 
     placement = (WarpPadPlacement*)(obj)->anim.placement;
@@ -236,7 +236,7 @@ void warpPadPlayerStandingOn(GameObject* obj)
         (((obj)->objectFlags & WARPPAD_OBJFLAG_PARENT_SLACK) == 0))
     {
         if ((lbl_803DCEB8 > -1) &&
-            (Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) <
+            (Vec_xzDistance(&(obj)->anim.worldPosX, &Obj_GetPlayerObject()->anim.worldPosX) <
              40.0f))
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
