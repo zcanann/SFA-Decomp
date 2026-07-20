@@ -220,10 +220,14 @@ void* gCrawlerDescriptorTable[24] = {
     lbl_8031F6F8, lbl_8031F7AC, lbl_8031F788, lbl_8031F728, lbl_8031F7AC, lbl_8031F86C, lbl_8031F7D0, lbl_8031F8BC,
     lbl_8031F958, lbl_8031FA18, lbl_8031F9E8, lbl_8031F988, lbl_8031FA3C, lbl_8031FAA8, lbl_8031FA78, lbl_8031F65C,
 };
-u8 gCrawlerSpeedThresholds[] = {
-    0x3F, 0x99, 0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17, 0x3F, 0x99,
-    0x99, 0x9A, 0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17, 0x3F, 0x99, 0x99, 0x9A,
-    0x3F, 0x4C, 0xCC, 0xCD, 0x38, 0xD1, 0xB7, 0x17, 0x00, 0x00, 0x00, 0x00,
+typedef struct
+{
+    f32 speeds[3][3];
+    f32 unused;
+} CrawlerSpeedThresholdTable;
+CrawlerSpeedThresholdTable gCrawlerSpeedThresholds = {
+    {{1.2f, 0.8f, 1e-04f}, {1.2f, 0.8f, 1e-04f}, {1.2f, 0.8f, 1e-04f}},
+    0.0f,
 };
 u8 gCrawlerSeqTable[] = {
     0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00,
@@ -298,12 +302,12 @@ typedef struct
 typedef struct
 {
     u8* tbl0;          // 0x0  anim move ids
-    u8* tbl4;          // 0x4  chained move table (stride 0xc)
-    u8* tbl8;          // 0x8  random move table (stride 0xc)
-    u8* tblC;          // 0xc  octant move table (stride 0xc)
-    u8* tbl10;         // 0x10 single move entry
-    CrawlerSeq16* seq; // 0x14
-    u8* tbl18;         // 0x18 anim-id loop table (stride 0xc)
+    CrawlerSeq12* tbl4;  // 0x4  chained move table
+    CrawlerSeq12* tbl8;  // 0x8  random move table
+    CrawlerSeq12* tblC;  // 0xc  octant move table
+    CrawlerSeq12* tbl10; // 0x10 single move entry
+    CrawlerSeq16* seq;   // 0x14
+    CrawlerSeq12* tbl18; // 0x18 anim-id loop table
     u8 pad1C[4];
 } CrawlerDescriptor;
 
@@ -705,10 +709,10 @@ void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, in
 void crawler_updateC(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
-    u8* t8 = d[((BaddieState*)state)->userData2].tbl8;
+    CrawlerSeq12* t8 = d[((BaddieState*)state)->userData2].tbl8;
     u8* t0 = d[((BaddieState*)state)->userData2].tbl0;
     CrawlerSeq16* seq = d[((BaddieState*)state)->userData2].seq;
-    u8* tC = d[((BaddieState*)state)->userData2].tblC;
+    CrawlerSeq12* tC = d[((BaddieState*)state)->userData2].tblC;
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 scale = 1.0f;
     f32 cap;
@@ -874,25 +878,25 @@ void crawler_updateC(s16* obj, u8* state)
                         rel2 = rel2 + 0xffff;
                     }
                     oct2 = ((u32)rel2 & 0xffff) >> 13;
-                    i = oct2 * 0xc;
-                    mv = *(u8*)((char*)tC + i + 8);
+                    i = oct2;
+                    mv = tC[i].moveId;
                     if (mv == 0)
                     {
                         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x18;
                         {
                             f32 v = ((FCVars*)state)->pathSpeed;
-                            int j = ((BaddieState*)state)->userData2 * 0xc;
-                            if (v > *(f32*)((int)gCrawlerSpeedThresholds + j))
+                            int j = ((BaddieState*)state)->userData2;
+                            if (v > gCrawlerSpeedThresholds.speeds[j][0])
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
                                 ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 0x2c), 0.0f, 0);
                             }
-                            else if (v > *(f32*)((char*)gCrawlerSpeedThresholds + j + 4))
+                            else if (v > gCrawlerSpeedThresholds.speeds[j][1])
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
                                 ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 0x20), 0.0f, 0);
                             }
-                            else if (v > *(f32*)((char*)gCrawlerSpeedThresholds + j + 8))
+                            else if (v > gCrawlerSpeedThresholds.speeds[j][2])
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
                                 ObjAnim_SetCurrentMove((u32)obj, *(u8*)(t0 + 0x14), 0.0f, 0);
@@ -908,7 +912,7 @@ void crawler_updateC(s16* obj, u8* state)
                     }
                     else
                     {
-                        fn_8014D08C((GameObject*)obj, (int)state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
+                        fn_8014D08C((GameObject*)obj, (int)state, mv, tC[i].spd, 0, tC[i].mode);
                         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD | 8;
                     }
                 }
@@ -920,8 +924,8 @@ void crawler_updateC(s16* obj, u8* state)
         }
         else if ((flags & 0xc0000000) != 0)
         {
-            i = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-            fn_8014D08C((GameObject*)obj, (int)state, (t8 + i)[8], *(f32*)((int)t8 + i), 0, (t8 + i)[0xa]);
+            i = randomGetRange(1, t8[0].moveId) & 0xff;
+            fn_8014D08C((GameObject*)obj, (int)state, t8[i].moveId, t8[i].spd, 0, t8[i].mode);
         }
     }
     fn_80157CDC((int)obj, (int)state);
@@ -930,12 +934,12 @@ void crawler_updateC(s16* obj, u8* state)
 void crawler_updateB(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
-    u8* t10 = d[((BaddieState*)state)->userData2].tbl10;
-    u8* t8 = d[((BaddieState*)state)->userData2].tbl8;
-    u8* tC = d[((BaddieState*)state)->userData2].tblC;
+    CrawlerSeq12* t10 = d[((BaddieState*)state)->userData2].tbl10;
+    CrawlerSeq12* t8 = d[((BaddieState*)state)->userData2].tbl8;
+    CrawlerSeq12* tC = d[((BaddieState*)state)->userData2].tblC;
     CrawlerSeq16* seq = d[((BaddieState*)state)->userData2].seq;
-    u8* t4 = d[((BaddieState*)state)->userData2].tbl4;
-    u8* t18 = d[((BaddieState*)state)->userData2].tbl18;
+    CrawlerSeq12* t4 = d[((BaddieState*)state)->userData2].tbl4;
+    CrawlerSeq12* t18 = d[((BaddieState*)state)->userData2].tbl18;
     f32 cap;
     int count;
     int i;
@@ -1016,29 +1020,29 @@ void crawler_updateB(s16* obj, u8* state)
                     if (oct < 3 || oct > 4)
                     {
                         u8 mv;
-                        i = ((FCVars*)state)->moveTableIndex * 0xc;
-                        mv = *(u8*)((char*)tC + i + 8);
+                        i = ((FCVars*)state)->moveTableIndex;
+                        mv = tC[i].moveId;
                         if (mv == 0)
                         {
-                            int i2 = ((FCVars*)state)->moveChainIndex * 0xc;
-                            u8* p9 = (u8*)t4 + 9;
-                            fn_8014D08C((GameObject*)obj, (int)state, (t4 + i2)[8], *(f32*)((int)t4 + i2), 0, (t4 + i2)[0xa]);
-                            ((FCVars*)state)->moveChainIndex = p9[((FCVars*)state)->moveChainIndex * 0xc];
+                            int i2 = ((FCVars*)state)->moveChainIndex;
+
+                            fn_8014D08C((GameObject*)obj, (int)state, t4[i2].moveId, t4[i2].spd, 0, t4[i2].mode);
+                            ((FCVars*)state)->moveChainIndex = t4[((FCVars*)state)->moveChainIndex].next;
                         }
                         else
                         {
-                            fn_8014D08C((GameObject*)obj, (int)state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
+                            fn_8014D08C((GameObject*)obj, (int)state, mv, tC[i].spd, 0, tC[i].mode);
                         }
                     }
                     else
                     {
-                        i = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-                        fn_8014D08C((GameObject*)obj, (int)state, (t8 + i)[8], *(f32*)((int)t8 + i), 0, (t8 + i)[0xa]);
+                        i = randomGetRange(1, t8[0].moveId) & 0xff;
+                        fn_8014D08C((GameObject*)obj, (int)state, t8[i].moveId, t8[i].spd, 0, t8[i].mode);
                     }
                 }
                 else
                 {
-                    fn_8014D08C((GameObject*)obj, (int)state, *(u8*)(t10 + 8), *(f32*)t10, 0, *(u8*)(t10 + 0xa));
+                    fn_8014D08C((GameObject*)obj, (int)state, t10[0].moveId, t10[0].spd, 0, t10[0].mode);
                 }
                 ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD | 0x20;
                 ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x10;
@@ -1066,40 +1070,39 @@ void crawler_updateB(s16* obj, u8* state)
             else
             {
                 int i2;
-                u8* q;
+                CrawlerSeq12* q;
                 if ((((BaddieState*)state)->controlFlags &
-                     *(u32*)((q = t4 + (i2 = ((FCVars*)state)->moveChainIndex * 0xc)) + 4)) != 0)
+                     (q = &t4[i2 = ((FCVars*)state)->moveChainIndex])->mask) != 0)
                 {
                     u8 mv;
-                    i = ((FCVars*)state)->moveTableIndex * 0xc;
-                    mv = *(u8*)((char*)tC + i + 8);
+                    i = ((FCVars*)state)->moveTableIndex;
+                    mv = tC[i].moveId;
                     if (mv == 0)
                     {
-                        fn_8014D08C((GameObject*)obj, (int)state, q[8], *(f32*)((int)t4 + i2), 0, q[0xa]);
+                        fn_8014D08C((GameObject*)obj, (int)state, q->moveId, t4[i2].spd, 0, q->mode);
                     }
                     else
                     {
-                        fn_8014D08C((GameObject*)obj, (int)state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
+                        fn_8014D08C((GameObject*)obj, (int)state, mv, tC[i].spd, 0, tC[i].mode);
                     }
                 }
                 else
                 {
                     u8 mv;
-                    i = ((FCVars*)state)->moveTableIndex * 0xc;
-                    mv = *(u8*)((char*)tC + i + 8);
+                    i = ((FCVars*)state)->moveTableIndex;
+                    mv = tC[i].moveId;
                     if (mv == 0)
                     {
-                        int i4 = (randomGetRange(1, *(u8*)(t8 + 8)) & 0xff) * 0xc;
-                        fn_8014D08C((GameObject*)obj, (int)state, (t8 + i4)[8], *(f32*)((int)t8 + i4), 0, (t8 + i4)[0xa]);
+                        int i4 = randomGetRange(1, t8[0].moveId) & 0xff;
+                        fn_8014D08C((GameObject*)obj, (int)state, t8[i4].moveId, t8[i4].spd, 0, t8[i4].mode);
                     }
                     else
                     {
-                        fn_8014D08C((GameObject*)obj, (int)state, mv, *(f32*)((int)tC + i), 0, *(u8*)((char*)tC + i + 0xa));
+                        fn_8014D08C((GameObject*)obj, (int)state, mv, tC[i].spd, 0, tC[i].mode);
                     }
                 }
                 {
-                    u8* p9 = (u8*)t4 + 9;
-                    ((FCVars*)state)->moveChainIndex = p9[((FCVars*)state)->moveChainIndex * 0xc];
+                    ((FCVars*)state)->moveChainIndex = t4[((FCVars*)state)->moveChainIndex].next;
                 }
             }
         }
@@ -1109,9 +1112,9 @@ void crawler_updateB(s16* obj, u8* state)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
     {
         int j = 1;
-        u8* p = t18 + 0xc;
+        u8* p = (u8*)t18 + 0xc;
         int c;
-        for (c = *(u8*)(t18 + 8); c >= 1; c--)
+        for (c = *(u8*)((char*)t18 + 8); c >= 1; c--)
         {
             if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
             {
@@ -1148,16 +1151,16 @@ void crawler_update(int* obj, u8* state)
     typedef struct
     {
         u8 pad[0xc];
-        u8* tC;
+        CrawlerSeq12* tC;
         CrawlerSeq12* t10;
         CrawlerSeq16* t14;
-        u8* t18;
+        CrawlerSeq12* t18;
         u8 pad2[4];
     } CrawlerDescL;
     CrawlerDescL* d = (CrawlerDescL*)gCrawlerDescriptorTable;
     CrawlerSeq12* t9 = d[((BaddieState*)state)->userData2].t10;
-    u8* t8 = d[((BaddieState*)state)->userData2].t18;
-    u8* t7 = d[((BaddieState*)state)->userData2].tC;
+    CrawlerSeq12* t8 = d[((BaddieState*)state)->userData2].t18;
+    CrawlerSeq12* t7 = d[((BaddieState*)state)->userData2].tC;
     CrawlerSeq16* t6 = d[((BaddieState*)state)->userData2].t14;
     f32 cap;
     int i;
@@ -1215,8 +1218,8 @@ void crawler_update(int* obj, u8* state)
         }
         else
         {
-            i = ((FCVars*)state)->moveTableIndex * 0xc;
-            if (*(u8*)(t7 + i + 8) == 0)
+            i = ((FCVars*)state)->moveTableIndex;
+            if (t7[i].moveId == 0)
             {
                 if (((FCVars*)state)->projectileTimer >= 0x50)
                 {
@@ -1235,7 +1238,7 @@ void crawler_update(int* obj, u8* state)
             }
             else
             {
-                fn_8014D08C((GameObject*)obj, (int)state, *(u8*)(t7 + i + 8), *(f32*)((int)t7 + i), 0, *(u8*)(t7 + i + 0xa));
+                fn_8014D08C((GameObject*)obj, (int)state, t7[i].moveId, t7[i].spd, 0, t7[i].mode);
             }
         }
     }
@@ -1243,16 +1246,16 @@ void crawler_update(int* obj, u8* state)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 0;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 0;
     j = 1;
-    p = t8 + 0xc;
-    n = *(u8*)(t8 + 8);
+    p = (u8*)t8 + 0xc;
+    n = *(u8*)((char*)t8 + 8);
     for (; j <= n; j++)
     {
         if (((GameObject*)obj)->anim.currentMove == *(u8*)(p + 8))
         {
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority =
-                (s8) * (int*)(t8 + j * 0xc + 4);
+                (s8) * (int*)((char*)t8 + j * 0xc + 4);
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId =
-                (s8) * (u8*)(t8 + j * 0xc + 9);
+                (s8) * (u8*)((char*)t8 + j * 0xc + 9);
             if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority == 0x1f)
             {
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x40;
