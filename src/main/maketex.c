@@ -756,6 +756,16 @@ int arrayIndexOf(int* arr, int count, int target)
     return -1;
 }
 
+static inline int seqPairKey(SeqSortPair* pair)
+{
+    return pair->key;
+}
+
+static inline int seqPairVal(SeqSortPair* pair)
+{
+    return pair->val;
+}
+
 void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
 {
     int key;
@@ -773,8 +783,8 @@ void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
     {
         for (i = gap + 1; i < n; i++)
         {
-            key = arr[i].key;
-            val = arr[i].val;
+            key = seqPairKey(&arr[i]);
+            val = seqPairVal(&arr[i]);
             j = i;
             while (j > gap && arr[j - gap].key > key)
             {

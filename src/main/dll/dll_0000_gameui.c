@@ -9185,7 +9185,21 @@ void GameUI_release(void)
         }
     }
 
-    gameUiReleaseMenuResources(gameUi);
+    gameUiResetMenuState();
+    gameUiClearItemSlots(gameUi);
+
+    if (lbl_803DD7C8 != NULL)
+    {
+        textureFree((Texture*)lbl_803DD7C8);
+        lbl_803DD7C8 = NULL;
+    }
+    if (gTrickyHudCachedIconTexture != NULL)
+    {
+        textureFree((Texture*)gTrickyHudCachedIconTexture);
+    }
+    gTrickyHudCachedIconIndex = -1;
+    gTrickyHudCachedIconTexture = NULL;
+
     gameUiClearItemSlots(gameUi);
 
     textureFree((Texture*)((u8*)gGameUiBlinkTexture));
