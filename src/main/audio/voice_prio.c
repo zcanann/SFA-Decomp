@@ -4,6 +4,7 @@
 #include "main/audio/vidlisttables.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/voice_prio.h"
+#include "main/audio/vid_init.h"
 
 
 typedef struct VoicePrioPrev
@@ -17,7 +18,6 @@ typedef struct VoicePrioPrev
 #define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)&(vb)->prioritySortLinks[0])[p].next)
 #define VB_PRIO_SORT_PREV(vb, p) (((VoicePrioPrev*)((u8*)&(vb)->prioritySortLinks[0] + 2))[p].prev)
 
-extern u8 vidListNodes[];
 extern u16 voicePrioSortedRoot;
 
 /*

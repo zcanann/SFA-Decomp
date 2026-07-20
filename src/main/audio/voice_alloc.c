@@ -6,6 +6,7 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/voice_alloc.h"
 #include "main/audio/voice_id.h"
+#include "main/audio/vid_init.h"
 
 
 #define VOICE_CFLAGS(i) (*(u64*)&synthVoice[i].inputFlags)
@@ -23,8 +24,6 @@ extern u8 voiceMusicRunning;
 extern u8 voiceFxRunning;
 extern u8 voiceFreeListTail;
 extern u8 voiceFreeListRoot;
-extern u8 vidListNodes[];
-
 /*
  * Allocate a voice id, preferring a free slot but stealing the lowest-priority
  * compatible active voice when limits are exceeded. (musyx synthvoice.c

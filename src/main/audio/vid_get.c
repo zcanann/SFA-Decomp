@@ -1,7 +1,6 @@
 #include "main/audio/vid_get.h"
 #include "main/audio/mcmd.h"
-
-extern McmdVidListNode* vidRoot;
+#include "main/audio/vid_init.h"
 
 McmdVidListNode* get_vidlist(u32 id)
 {
