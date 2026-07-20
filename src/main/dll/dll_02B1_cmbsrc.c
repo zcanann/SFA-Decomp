@@ -144,9 +144,6 @@ u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     return idx;
 }
 
-static const f32 kCmbSrcFullScale[1] = { 2.0f };
-static const f32 kCmbSrcChargeFull[1] = { 15.0f };
-static const f32 kCmbSrcRadiusMinScale[1] = { 0.25f };
 
 void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 {
@@ -158,20 +155,23 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     f32 dist;
     f32 vec[3];
     f32 param[6];
+    f32 t;
+    f32 radiusScaled;
+    f32 fullRadius;
 
     viewSlot = Camera_GetCurrentViewSlot();
     if (sourceState->active == 0)
     {
-        sourceState->radius = kCmbSrcFullScale[0] * setup->radius;
+        sourceState->radius = 2.0f * setup->radius;
     }
     else
     {
         f32 t = sourceState->hitCharge;
         f32 radiusScaled;
         f32 fullRadius;
-        t /= kCmbSrcChargeFull[0];
-        radiusScaled = setup->radius * kCmbSrcRadiusMinScale[0];
-        fullRadius = kCmbSrcFullScale[0] * setup->radius;
+        t = t / 15.0f;
+        radiusScaled = setup->radius / 4.0f;
+        fullRadius = 2.0f * setup->radius;
         sourceState->radius += interpolate(t * (fullRadius - radiusScaled) + radiusScaled - sourceState->radius,
                                            0.1f, timeDelta);
     }
@@ -223,7 +223,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
         }
         else
         {
-            sourceState->effectTimer += kCmbSrcChargeFull[0];
+            sourceState->effectTimer += 15.0f;
         }
     }
     if ((cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED) || (sourceState->flags & CMBSRC_STATE_EXTERNAL_ACTIVE))
@@ -430,7 +430,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
             state->active = 0;
             if (state->light != NULL)
             {
-                modelLightStruct_setEnabled(state->light, 0, kCmbSrcFullScale[0]);
+                modelLightStruct_setEnabled(state->light, 0, 2.0f);
             }
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
@@ -478,7 +478,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
             state->active = 1;
             if (state->light != NULL)
             {
-                modelLightStruct_setEnabled(state->light, 1, kCmbSrcFullScale[0]);
+                modelLightStruct_setEnabled(state->light, 1, 2.0f);
             }
             if (!state->hitFlags.disabled)
             {
@@ -573,11 +573,11 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
             {
                 if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
                 {
-                    modelLightStruct_setEnabled(state->light, 1, kCmbSrcFullScale[0]);
+                    modelLightStruct_setEnabled(state->light, 1, 2.0f);
                 }
                 else
                 {
-                    modelLightStruct_setEnabled(state->light, 0, kCmbSrcFullScale[0]);
+                    modelLightStruct_setEnabled(state->light, 0, 2.0f);
                     state->active = 0;
                 }
             }
@@ -638,7 +638,7 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
     {
         state->hitFlags.disabled = 1;
         ObjHitbox_SetSphereRadius(
-            (ObjAnimComponent*)cmbsrc, (int)(kCmbSrcFullScale[0] * (mapData->radius *
+            (ObjAnimComponent*)cmbsrc, (int)(2.0f * (mapData->radius *
                                (cmbsrc->objAnim.rootMotionScale * gCmbsrcColorRadiusScaleTable[mapData->colorIndex]))));
         if (mapData->flags & CMBSRC_MAP_ENABLE_HIT_VOLUME)
         {
@@ -668,7 +668,7 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
         }
     }
     state->colorCycleTimer = randomGetRange(0, 0x64);
-    state->radius = kCmbSrcFullScale[0] * mapData->radius;
+    state->radius = 2.0f * mapData->radius;
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
 

@@ -85,7 +85,6 @@ typedef struct
 
 const IdPair lbl_803E1C18 = {0x02C402CD, 0x02CE02CF};
 const IdPair lbl_803E1C20 = {0x000B000B, 0x000B000B};
-const u32 lbl_803E1C28 = 2;
 
 
 int dll_19_func1B(GameObject* obj);
@@ -243,7 +242,7 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     int curveLocal;
     u8 byteLocal;
 
-    curveLocal = *(u32*)&lbl_803E1C28;
+    curveLocal = 2;
     byteLocal = 1;
     ((GroundBaddieState*)state)->control = (void*)(state + 1040);
     ((GroundBaddieState*)state)->targetState = 0;
@@ -555,10 +554,6 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
     return hit;
 }
 
-const f32 lbl_803E1C54 = 30.0f;
-const f32 lbl_803E1C58 = 750.0f;
-const f32 lbl_803E1C5C = 15.0f;
-const f32 lbl_803E1C60 = 25.0f;
 
 int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
 {
@@ -591,7 +586,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
             idx = 3;
         }
         setup = Obj_AllocObjectSetup(48, ids1[idx]);
-        scale = *(f32*)&lbl_803E1C54;
+        scale = 30.0f;
     }
     if ((((Dll19Placement*)state)->stateFlags & 0xf000) != 0)
     {
@@ -601,7 +596,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
             idx = 3;
         }
         setup = Obj_AllocObjectSetup(48, ids2[idx]);
-        scale = *(f32*)&lbl_803E1C54;
+        scale = 30.0f;
     }
     if ((int)(u8)((Dll19Placement*)state)->stateFlags != 0)
     {
@@ -609,19 +604,19 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
         {
         case 1:
             setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MAGIC_DUST);
-            scale = *(f32*)&lbl_803E1C54;
+            scale = 30.0f;
             break;
         case 2:
             setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_ENERGY_GEM1);
-            scale = *(f32*)&lbl_803E1C54;
+            scale = 30.0f;
             break;
         case 3:
             setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_ENERGY_EGG);
-            scale = *(f32*)&lbl_803E1C54;
+            scale = 30.0f;
             break;
         case 4:
             setup = Obj_AllocObjectSetup(48, DLL19_CHILD_OBJ_MAGIC_DUST);
-            scale = *(f32*)&lbl_803E1C54;
+            scale = 30.0f;
             break;
         case 5:
             savedX = source->anim.worldPosX;
@@ -636,7 +631,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                     source->anim.worldPosZ = pl->posZ;
                 }
             }
-            nearDist = *(f32*)&lbl_803E1C58;
+            nearDist = 750.0f;
             gDll19NearestObj = (GameObject*)ObjGroup_FindNearestObject(DLL19_TARGET_OBJGROUP, (GameObject*)obj, &nearDist);
             source->anim.worldPosX = savedX;
             source->anim.worldPosY = savedY;
@@ -647,7 +642,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
                 xx = source->anim.localPosX;
                 gDll19NearestObj->anim.worldPosX = xx;
                 gDll19NearestObj->anim.localPosX = xx;
-                yy = source->anim.localPosY + *(f32*)&lbl_803E1C5C;
+                yy = source->anim.localPosY + 15.0f;
                 gDll19NearestObj->anim.worldPosY = yy;
                 gDll19NearestObj->anim.localPosY = yy;
                 zz = source->anim.localPosZ;
@@ -660,7 +655,7 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
             *(u8*)((u8*)setup + 27) = 0;
             *(u8*)((u8*)setup + 34) = 0;
             *(u8*)((u8*)setup + 35) = 64;
-            scale = *(f32*)&lbl_803E1C60;
+            scale = 25.0f;
             break;
         default:
             return 0;
@@ -1007,9 +1002,9 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
         {
             step = 50.0f;
         }
-        else if (step < *(f32*)&lbl_803E1C5C)
+        else if (step < 15.0f)
         {
-            step = *(f32*)&lbl_803E1C5C;
+            step = 15.0f;
         }
         if (dist <= gDll19SeqMinDist)
         {

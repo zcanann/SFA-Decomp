@@ -465,19 +465,9 @@ void staffSetGlow(GameObject* obj, u8 attackType, u8 enable)
 
 extern u8 gStaffQuakeSpellState[0x28];
 
-const f32 lbl_803E32E0 = 5.5f;
-const f32 lbl_803E32E4 = -4.0f;
-const f32 lbl_803E32E8 = 0.97f;
-const f32 lbl_803E32EC = 1.01f;
-const f32 lbl_803E32F0 = 0.07f;
-const f32 lbl_803E32F4 = 255.0f;
-const f32 lbl_803E32F8 = 5.0f;
-const f32 lbl_803E32FC = 4.0f;
 const f32 gStaffHalfPi = 1.5707964f;
 const f32 gStaffPi = 3.1415927f;
 const f32 gStaffAngleUnitScale = 32768.0f;
-const f32 lbl_803E330C = 2.0f;
-const f32 lbl_803E3310 = 0.125f;
 
 void superQuakeFn_8016d9fc(f32* pos)
 {
@@ -491,11 +481,11 @@ void superQuakeFn_8016d9fc(f32* pos)
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX = pos[0];
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY = 10.0f + pos[1];
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ = pos[2];
-    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = *(f32*)&lbl_803E32F4;
+    ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = 255.0f;
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->scale = 1.0f;
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius = 0.4f;
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale = 1.0f;
-    CameraShake_Start(*(f32*)&lbl_803E32F8, 10.0f, *(f32*)&lbl_803E32FC);
+    CameraShake_Start(5.0f, 10.0f, 4.0f);
     player = (int*)Obj_GetPlayerObject();
     if (player != NULL && Obj_IsLoadingLocked() != 0)
     {
@@ -667,7 +657,7 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
         {
             f32 sw;
             slot = (u8*)((StaffState*)swipe)->activeSlot;
-            count = (int)(*(f32*)&lbl_803E330C * *(f32*)(model2 + 0x14));
+            count = (int)(2.0f * *(f32*)(model2 + 0x14));
             prog = ((StaffSwipeSlot*)slot)->lengthScale * *(f32*)(model2 + 0x14);
             if (slot[0x14] & 1)
             {
@@ -693,10 +683,10 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
             if (sw >= 0.0f)
             {
                 fla = fastFloorf(sw * *(f32*)&lbl_803E32A4) / *(f32*)&lbl_803E32A4;
-                fla *= *(f32*)&lbl_803E330C;
+                fla *= 2.0f;
                 tmax *= *(f32*)&lbl_803E32A4;
                 flb = fastFloorf(tmax) / *(f32*)&lbl_803E32A4;
-                flb *= *(f32*)&lbl_803E330C;
+                flb *= 2.0f;
                 ibase = fla;
                 frac = fla - ibase;
                 count2 = (int)((flb - fla) / 0.1f);
@@ -762,12 +752,12 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                             for (n = 4; n != 0; n--)
                             {
                                 f32 t1, t2;
-                                *pAx = (f32)tbl[*pidx * 6] / *(f32*)&lbl_803E32F4;
-                                *pAy = (f32)tbl[*pidx * 6 + 1] / *(f32*)&lbl_803E32F4;
-                                *pAz = (f32)tbl[*pidx * 6 + 2] / *(f32*)&lbl_803E32F4;
-                                *pBx = (f32)tbl[*pidx * 6 + 3] / *(f32*)&lbl_803E32F4;
-                                *pBy = (f32)tbl[*pidx * 6 + 4] / *(f32*)&lbl_803E32F4;
-                                *pBz = (f32)tbl[*pidx * 6 + 5] / *(f32*)&lbl_803E32F4;
+                                *pAx = (f32)tbl[*pidx * 6] / 255.0f;
+                                *pAy = (f32)tbl[*pidx * 6 + 1] / 255.0f;
+                                *pAz = (f32)tbl[*pidx * 6 + 2] / 255.0f;
+                                *pBx = (f32)tbl[*pidx * 6 + 3] / 255.0f;
+                                *pBy = (f32)tbl[*pidx * 6 + 4] / 255.0f;
+                                *pBz = (f32)tbl[*pidx * 6 + 5] / 255.0f;
                                 t1 = cosv * *pAx - sinv * *pAz;
                                 t2 = sinv * *pAx + cosv * *pAz;
                                 *pAx = t1;
@@ -796,10 +786,10 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         vidx = ibase + frac;
                         ((SwipeVertex*)vp)[0].life = vidx;
                         {
-                            f32 k = *(f32*)&lbl_803E32F4;
+                            f32 k = 255.0f;
                             f32 t = flb - ((SwipeVertex*)vp)[0].life;
                             f32 clamped;
-                            t = k * (t * *(f32*)&lbl_803E3310);
+                            t = k * (t * 0.125f);
                             if (t < 0.0f)
                             {
                                 clamped = 0.0f;
@@ -822,10 +812,10 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
                         ((SwipeVertex*)vp)[1].z += ((StaffState*)swipe)->anchorZ + acc * (((GameObject*)obj)->anim.worldPosZ - ((StaffState*)swipe)->anchorZ);
                         ((SwipeVertex*)vp)[1].life = vidx;
                         {
-                            f32 k = *(f32*)&lbl_803E32F4;
+                            f32 k = 255.0f;
                             f32 t = flb - ((SwipeVertex*)vp)[1].life;
                             f32 clamped;
-                            t = k * (t * *(f32*)&lbl_803E3310);
+                            t = k * (t * 0.125f);
                             if (t < 0.0f)
                             {
                                 clamped = 0.0f;
@@ -1210,10 +1200,10 @@ void staff_update(int* obj)
             {
                 if ((u8*)swp == ((StaffState*)state)->activeSlot)
                 {
-                    f32 k = *(f32*)&lbl_803E32F4;
-                    f32 t = *(f32*)&lbl_803E330C * ((StaffState*)state)->progress - vp[0].life;
+                    f32 k = 255.0f;
+                    f32 t = 2.0f * ((StaffState*)state)->progress - vp[0].life;
                     f32 clamped;
-                    t = k * (t * *(f32*)&lbl_803E3310);
+                    t = k * (t * 0.125f);
                     if (t < 0.0f)
                     {
                         clamped = 0.0f;
@@ -1278,19 +1268,19 @@ void staff_update(int* obj)
         StaffQuakeSpellState* q = (StaffQuakeSpellState*)gStaffQuakeSpellState;
         if (q->active != 0)
         {
-            f32 sc = q->scale + *(f32*)&lbl_803E32E0;
+            f32 sc = q->scale + 5.5f;
             f32 fade;
             q->scale = sc;
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)q->object, sc);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)q->object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
-            fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + *(f32*)&lbl_803E32E4;
+            fade = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade + -4.0f;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade = fade;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius =
-                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * *(f32*)&lbl_803E32E8;
+                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->radius * 0.97f;
             ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale =
-                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * *(f32*)&lbl_803E32EC;
+                ((StaffQuakeSpellState*)gStaffQuakeSpellState)->heightScale * 1.01f;
             ((GameObject*)q->object)->anim.alpha = fade;
-            ((GameObject*)q->object)->anim.rootMotionScale += *(f32*)&lbl_803E32F0;
+            ((GameObject*)q->object)->anim.rootMotionScale += 0.07f;
             if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < 1.0f)
             {
                 q->active = 0;
