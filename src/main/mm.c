@@ -154,7 +154,7 @@ void* getCache(void)
     return (void*)0xe0000000;
 }
 
-extern void* gMmStoreArray[0x20];
+extern MmStore* gMmStoreArray[0x20];
 
 void* mmAllocateFromFBMemoryStore(int handle, int size)
 {
@@ -165,7 +165,7 @@ void* mmAllocateFromFBMemoryStore(int handle, int size)
     i = 0;
     while (i < 0x20)
     {
-        if (gMmStoreArray[i] != NULL && handle == ((MmStore*)gMmStoreArray[i])->handle)
+        if (gMmStoreArray[i] != NULL && handle == gMmStoreArray[i]->handle)
         {
             found = gMmStoreArray[i];
             break;
@@ -351,7 +351,7 @@ int roundUpTo32(int x)
 
 DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
 
-void* gMmStoreArray[0x20];
+MmStore* gMmStoreArray[0x20];
 
 int mmGetRegionForPtr(u8* ptr)
 {
