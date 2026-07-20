@@ -26,7 +26,7 @@ SynthVoiceListNode voiceFreeListSlots[64];
  */
 u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 {
-    u32 mustSteal;
+    u32 cfgVoices;
     s32 i;
     s32 num;
     s32 voice;
@@ -44,17 +44,18 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
             type_alloc = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
                           SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->fxVoiceCount);
 
-            mustSteal = SYNTH_CONFIGURATION->fxVoiceCount <= maxVoices;
+            cfgVoices = SYNTH_CONFIGURATION->fxVoiceCount;
         }
         else
         {
             type_alloc = (voiceMusicRunning >= SYNTH_CONFIGURATION->musicVoiceCount &&
                           SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->musicVoiceCount);
 
-            mustSteal = SYNTH_CONFIGURATION->musicVoiceCount <= maxVoices;
+            cfgVoices = SYNTH_CONFIGURATION->musicVoiceCount;
         }
 
-        if (!mustSteal)
+        num = -1;
+        if (cfgVoices > maxVoices)
         {
             num = 0;
             voice = -1;
@@ -106,15 +107,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
                     prioNode = VB_PRIO_SORT_NEXT(vb, pn);
                 }
-
-                if (num < maxVoices)
-                {
-                    mustSteal = 1;
-                }
             }
         }
 
-        if (mustSteal)
+        if (num < maxVoices)
         {
             voice = -1;
             if (voiceFreeListRoot != 0xff && type_alloc == 0)
