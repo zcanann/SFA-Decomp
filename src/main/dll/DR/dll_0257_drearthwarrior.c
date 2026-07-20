@@ -1,6 +1,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/object_api.h"
 #include "main/object.h"
+#include "main/obj_placement.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -46,7 +47,7 @@
 
 typedef struct DREarthWarriorPlacement
 {
-    u8 pad0[0x18 - 0x0];
+    ObjPlacement head; /* 0x00 */
     s8 spawnYaw; /* (s8)<<8 -> anim.rotX */
     u8 unk19;    /* -> DREarthWarriorState.unk14E8 */
     s16 airMeterMax;

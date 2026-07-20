@@ -10,6 +10,7 @@
 #include "main/object.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/gamebits.h"
 #include "main/object_api.h"
 #include "main/audio/sfx.h"
@@ -21,8 +22,7 @@
 
 typedef struct DimicewallPlacement
 {
-    u8 pad0[0x14 - 0x0];
-    s32 mapId;
+    ObjPlacement head; /* 0x00..0x17 (mapId at 0x14) */
     u8 pad18[0x19 - 0x18];
     s8 shatterScale;
     u8 pad1A[0x1E - 0x1A];
@@ -78,7 +78,7 @@ void dimicewall_update(int* obj)
                 ;
                 (*gPartfxInterface)->spawnObject(obj, 2042, &desc, 2, -1, NULL);
             }
-            if ((u32)((DimicewallPlacement*)def)->mapId != DIMICEWALL_MAPID_NO_SFX)
+            if ((u32)((DimicewallPlacement*)def)->head.mapId != DIMICEWALL_MAPID_NO_SFX)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_bounce1);
             }

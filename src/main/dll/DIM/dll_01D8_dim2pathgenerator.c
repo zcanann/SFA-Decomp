@@ -18,6 +18,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
@@ -49,8 +50,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 
 typedef struct Dim2pathgeneratorObjectDef
 {
-    u8 pad0[0x14 - 0x0];
-    s32 mapId; /* 0x14: ObjPlacement-head map id (matches sibling Dim2pathgeneratorPlacement.mapId) */
+    ObjPlacement head; /* 0x00..0x17 (mapId at 0x14) */
     s16 spawnPeriod;
     s16 unk1A;
     s16 unk1C;

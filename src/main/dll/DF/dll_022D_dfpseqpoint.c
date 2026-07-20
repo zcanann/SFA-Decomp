@@ -11,6 +11,7 @@
 #include "main/map_load.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/DF/dll_022D_dfpseqpoint.h"
 #include "main/objseq.h"
@@ -30,11 +31,7 @@
 
 typedef struct DfpseqpointPlacement
 {
-    u8 pad0[0x8 - 0x0];
-    f32 posX;  /* 0x08 */
-    f32 posY;  /* 0x0C */
-    f32 posZ;  /* 0x10 */
-    s32 mapId; /* 0x14 */
+    ObjPlacement head;  /* 0x00..0x17 (posX 0x08, mapId 0x14) */
     s8 rotXByte;       /* 0x18 */
     u8 triggerMode;    /* 0x19 */
     s16 triggerRadius; /* 0x1A */
@@ -87,7 +84,7 @@ int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
             switch (animUpdate->eventIds[i])
             {
             case 0x14:
-                if (*(u32*)&((DfpseqpointPlacement*)data)->mapId == 0x49de8)
+                if (*(u32*)&((DfpseqpointPlacement*)data)->head.mapId == 0x49de8)
                 {
                     ((DfpFlags7*)&((DfpSeqPointState*)blob)->flags0F)->b80 = 1;
                 }
