@@ -3,33 +3,11 @@
 void synthSetHandleMixData(u32 handle, u32 mixValue0, u32 mixValue1)
 {
     SynthVoiceRuntime* runtime;
-    SynthVoice* walker;
     u32 slot;
-    u32 resolvedHandle;
 
     runtime = SYNTH_VOICE_RUNTIME();
-    resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
-    for (walker = gSynthQueuedVoices; walker != 0; walker = walker->next)
-    {
-        if (walker->handle == resolvedHandle)
-        {
-            slot = walker->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            goto resolved;
-        }
-    }
+    slot = synthResolveHandleSlot(handle);
 
-    for (walker = gSynthAllocatedVoices; walker != 0; walker = walker->next)
-    {
-        if (walker->handle == resolvedHandle)
-        {
-            slot = walker->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
-            goto resolved;
-        }
-    }
-
-    slot = SYNTH_HANDLE_INVALID;
-
-resolved:
     if (slot == SYNTH_HANDLE_INVALID)
     {
         return;

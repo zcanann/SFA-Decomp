@@ -30,34 +30,14 @@ void synthUpdateHandle(u8 volume, u16 time, u32 handle, u8 mode)
     u8* voiceBytes;
     u8* voiceCursor;
     SynthVoice* voice;
-    SynthVoice* walker;
     u32 voiceIndex;
     u32 studioIndex;
     u32 pubHandle;
 
     runtime = SYNTH_VOICE_RUNTIME();
     pubHandle = handle;
-    for (walker = gSynthQueuedVoices; walker != 0; walker = walker->next)
-    {
-        if (walker->handle == (handle & SYNTH_HANDLE_ID_MASK))
-        {
-            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | walker->slotIndex;
-            goto resolved;
-        }
-    }
+    studioIndex = synthResolveHandleSlot(handle);
 
-    for (walker = gSynthAllocatedVoices; walker != 0; walker = walker->next)
-    {
-        if (walker->handle == (handle & SYNTH_HANDLE_ID_MASK))
-        {
-            studioIndex = (handle & SYNTH_HANDLE_QUEUED_FLAG) | walker->slotIndex;
-            goto resolved;
-        }
-    }
-
-    studioIndex = SYNTH_HANDLE_INVALID;
-
-resolved:
     if (studioIndex != SYNTH_HANDLE_INVALID)
     {
         if ((studioIndex & SYNTH_HANDLE_QUEUED_FLAG) == 0)

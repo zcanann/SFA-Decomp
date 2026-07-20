@@ -363,33 +363,11 @@ static inline void synthKillVoiceCallbacks(SynthVoice* voice)
  */
 void synthQueueHandle(u32 handle)
 {
-    u32 key;
     u32 slot;
     SynthVoice* voice;
 
-    key = handle & 0x7fffffffu;
+    slot = synthResolveHandleSlot(handle);
 
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == key)
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == key)
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    slot = 0xffffffff;
-
-resolved:
     if (slot == 0xffffffff)
         return;
 
@@ -447,27 +425,8 @@ void synthFreeHandle(u32 handle)
 
     runtime = (SynthSeqRuntime*)(void*)gSynthCallbacks;
 
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == (handle & 0x7fffffffu))
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
+    slot = synthResolveHandleSlot(handle);
 
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == (handle & 0x7fffffffu))
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    slot = 0xffffffff;
-
-resolved:
     if (slot == 0xffffffff)
     {
         return;
@@ -552,35 +511,13 @@ resolved:
  */
 void synthSetHandleValue16(u32 handle, u16 speed)
 {
-    u32 key;
     u32 slot;
     SynthSeqRuntime* runtime;
     SynthVoice* voice;
 
     runtime = (SynthSeqRuntime*)(void*)gSynthCallbacks;
-    key = handle & 0x7fffffffu;
+    slot = synthResolveHandleSlot(handle);
 
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == key)
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == key)
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    slot = 0xffffffff;
-
-resolved:
     if ((slot & 0x80000000) == 0)
     {
         SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 0) = speed;
@@ -614,33 +551,11 @@ resolved:
  */
 void synthRestoreQueuedHandle(u32 handle)
 {
-    u32 key;
     u32 slot;
     SynthVoice* voice;
 
-    key = handle & 0x7fffffffu;
+    slot = synthResolveHandleSlot(handle);
 
-    for (voice = gSynthQueuedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == key)
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    for (voice = gSynthAllocatedVoices; voice != 0; voice = voice->next)
-    {
-        if (voice->handle == key)
-        {
-            slot = voice->slotIndex | (handle & 0x80000000);
-            goto resolved;
-        }
-    }
-
-    slot = 0xffffffff;
-
-resolved:
     if ((slot & 0x80000000) == 0)
     {
         voice = &gSynthVoices[slot];

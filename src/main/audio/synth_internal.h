@@ -373,6 +373,32 @@ void synthFlushCallbacks(void);
 void synthFreeCallback(SynthCallbackLink* callback);
 u32 synthAssignHandle(s32 voiceIndex);
 u32 synthResolveHandle(u32 handle);
+
+static inline u32 synthResolveHandleSlot(u32 handle)
+{
+    u32 resolvedHandle;
+    SynthVoice* walker;
+
+    resolvedHandle = handle & SYNTH_HANDLE_ID_MASK;
+
+    for (walker = gSynthQueuedVoices; walker != 0; walker = walker->next)
+    {
+        if (walker->handle == resolvedHandle)
+        {
+            return walker->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+        }
+    }
+
+    for (walker = gSynthAllocatedVoices; walker != 0; walker = walker->next)
+    {
+        if (walker->handle == resolvedHandle)
+        {
+            return walker->slotIndex | (handle & SYNTH_HANDLE_QUEUED_FLAG);
+        }
+    }
+
+    return SYNTH_HANDLE_INVALID;
+}
 void synthQueueVoice(SynthVoice* voice);
 void synthQueueHandle(u32 handle);
 void synthFreeHandle(u32 handle);
