@@ -72,7 +72,7 @@ const ModelLightCornerBlock gModelLightCornerBlock = {{
     -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
     -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f}};
 
-extern void* gModelLightList[0x32];
+extern ModelLightStruct* gModelLightList[0x32];
 
 static inline void modelLightRemoveAndFree(ModelLightStruct* light)
 {
@@ -496,7 +496,7 @@ void modelLightStruct_setProjectionFarZ(ModelLightStruct* p, f32 v)
     p->projectionFarZ = (v < p->projectionNearZ) ? p->projectionNearZ : ((v > lbl_803DE764) ? lbl_803DE764 : v);
 }
 
-void* gModelLightList[0x32];
+ModelLightStruct* gModelLightList[0x32];
 
 void modelLightStruct_setProjectionNearZ(ModelLightStruct* p, f32 v)
 {
@@ -1211,7 +1211,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
     candidateCount = 0;
     for (i = 0; i < gModelLightCount; i++)
     {
-        light = gModelLightList[i];
+        light = (u8*)gModelLightList[i];
         if (((ModelLightStruct*)light)->enabled != 0 && ((ModelLightStruct*)light)->lightKind == 2 &&
             ((ModelLightStruct*)light)->attenuationFar > lbl_803DE75C &&
             ((ModelLightStruct*)light)->affectsAabbLightSelection != 0)
@@ -1304,7 +1304,7 @@ void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** out
     candidateCount = 0;
     for (i = 0; i < gModelLightCount; i++)
     {
-        light = (ModelLightStruct*)gModelLightList[i];
+        light = gModelLightList[i];
         if (light->enabled != 0 && (light->lightKind & typeMask) != 0 &&
             (light->objectLightMask & objectLightMask) != 0)
         {
