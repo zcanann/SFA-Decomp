@@ -873,10 +873,10 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
         total = total + 4;
     }
-    total = total + (u32)((ModelFileHeader*)hdr)->renderOpCount * 0xc;
+    total += (u32)((ModelFileHeader*)hdr)->renderOpCount * 0xc;
     if ((flags & 0x8000) != 0)
     {
-        total = total + 0x1a;
+        total += 0x1a;
     }
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
