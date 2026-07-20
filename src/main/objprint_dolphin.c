@@ -424,7 +424,7 @@ void objFn_8003dc50(u8* obj, u8* model)
         if (t2 || t10)
         {
             gObjCurChanColor.a = 0;
-            GXSetChanAmbColor(chan, gObjCurChanColor);
+            GXSetChanAmbColor((u8)chan, gObjCurChanColor);
             GXSetChanCtrl(GX_COLOR0, GX_TRUE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(1);

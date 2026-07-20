@@ -23,6 +23,7 @@
  * it owns no game objects of its own.
  */
 #define OBJFSA_PATCH_EXIT_U16
+#define TRACK_BBOX_FLAGS_S8
 #include "dolphin/os/OSReport.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -2265,8 +2266,9 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, int 
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
-                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
+                        (((int (*)(f32*, f32*, f32, int, TrackBBoxHit*, GameObject*, s8, int, int, int))objBboxFn_800640cc)(
+                             (f32*)(obj + 0xc), curvePos, gFloatOne, 0, (TrackBBoxHit*)bboxHit, (GameObject*)obj,
+                             bboxMode, -1, 0, 0) == 0))
                     {
                         bestDistance = distance;
                         bestCurve = curve;
@@ -2280,8 +2282,9 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, int 
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
-                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
+                        (((int (*)(f32*, f32*, f32, int, TrackBBoxHit*, GameObject*, s8, int, int, int))objBboxFn_800640cc)(
+                             (f32*)(obj + 0xc), curvePos, gFloatOne, 0, (TrackBBoxHit*)bboxHit, (GameObject*)obj,
+                             bboxMode, -1, 0, 0) == 0))
                     {
                         bestActionDistance = distance;
                         bestActionCurve = curve;
