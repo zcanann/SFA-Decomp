@@ -2290,25 +2290,27 @@ void ObjHits_Update(int objectCount)
     u8 skeletonHits[1512];
     u8 skeletonScratchD[100];
     u8 skeletonScratchE[100];
-    int candidateIndex;
-    ObjHitsSweepEntry** entrySlot;
-    int listCount;
-    ObjHitsSweepEntry* sweepEntries;
+    int listObj;
+    ObjHitsPriorityState* listState;
     ObjHitsSweepEntry* nextEntry;
+    ObjHitsSweepEntry** entrySlot;
+    int slotIndex;
+    int obj;
+    ObjHitsPriorityState* objState;
+    int candidateIndex;
     int slotCount;
+    int candObj;
+    ObjHitsSweepEntry** entrySlotBase;
+    ObjHitsPriorityState* candState;
+    int currentIndex;
+    u32 attachedObj;
+    ObjHitsSweepEntry* sweepEntries;
+    int listCount;
     int startIndex;
     ObjHitsSweepEntry* entry;
     ObjHitsSweepEntry* candidateEntry;
-    int obj;
     int* objectList;
-    u32 attachedObj;
     u32 candAttachedObj;
-    ObjHitsPriorityState* objState;
-    ObjHitsPriorityState* candState;
-    int candObj;
-    int slotIndex;
-    ObjHitsSweepEntry** entrySlotBase;
-    int currentIndex;
     f32 axisDiff;
     f32 diff;
     int hitVolumeIndex;
@@ -2325,34 +2327,34 @@ void ObjHits_Update(int objectCount)
     for (; objectCount > 0; objectCount--)
     {
         {
-            obj = *objectList;
-            objState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            if (objState != NULL)
+            listObj = *objectList;
+            listState = (ObjHitsPriorityState*)((GameObject*)listObj)->anim.hitReactState;
+            if (listState != NULL)
             {
-                if (((objState->flags &
+                if (((listState->flags &
                       (OBJHITS_PRIORITY_STATE_ENABLED | OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE)) != 0) &&
-                    (objState->shapeFlags != 8) && (slotCount < OBJHITS_SWEEP_ENTRY_CAPACITY))
+                    (listState->shapeFlags != 8) && (slotCount < OBJHITS_SWEEP_ENTRY_CAPACITY))
                 {
                     *entrySlot = nextEntry;
-                    (*entrySlot)->obj = obj;
-                    (*entrySlot)->minX = ((GameObject*)obj)->anim.worldPosX - objState->sweepRadiusX;
+                    (*entrySlot)->obj = listObj;
+                    (*entrySlot)->minX = ((GameObject*)listObj)->anim.worldPosX - listState->sweepRadiusX;
                     nextEntry++;
                     entrySlot++;
                     gObjHitsSweepEntryPtrs[slotCount++]->maxX =
-                        ((GameObject*)obj)->anim.worldPosX + objState->sweepRadiusX;
+                        ((GameObject*)listObj)->anim.worldPosX + listState->sweepRadiusX;
                 }
-                objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
-                objState->contactFlags = 0;
-                objState->contactHitVolume = -1;
-                *(int*)objState = 0;
-                attachedObj = (u32)((GameObject*)obj)->childObjs[0];
+                listState->flags = listState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
+                listState->contactFlags = 0;
+                listState->contactHitVolume = -1;
+                *(int*)listState = 0;
+                attachedObj = (u32)((GameObject*)listObj)->childObjs[0];
                 if ((attachedObj != 0) && (((GameObject*)attachedObj)->anim.classId == 0x2d))
                 {
-                    objState = ObjAnim_GetPriorityHitState((ObjAnimComponent*)attachedObj);
-                    objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
-                    objState->contactFlags = 0;
-                    objState->contactHitVolume = -1;
-                    *(int*)objState = 0;
+                    listState = ObjAnim_GetPriorityHitState((ObjAnimComponent*)attachedObj);
+                    listState->flags = listState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
+                    listState->contactFlags = 0;
+                    listState->contactHitVolume = -1;
+                    *(int*)listState = 0;
                 }
             }
             objectList++;
@@ -2394,7 +2396,7 @@ void ObjHits_Update(int objectCount)
                 }
                 {
                     candObj = candidateEntry->obj;
-                    candState = ObjAnim_GetPriorityHitState((ObjAnimComponent*)candObj);
+                    candState = (ObjHitsPriorityState*)((GameObject*)candObj)->anim.hitReactState;
                     if ((slotIndex != candidateIndex) && ((u32)((GameObject*)obj)->anim.parent != candObj))
                     {
                         diff = ((GameObject*)obj)->anim.worldPosZ - ((GameObject*)candObj)->anim.worldPosZ;
