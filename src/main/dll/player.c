@@ -11107,8 +11107,7 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         probe.z = out[0x13];
         Obj_TransformLocalPointToWorld(probe.x, probe.y, probe.z, &probe.x, &probe.y, &probe.z,
                                        *(int*)&obj->anim.parent);
-        if (((int (*)(int, f32, f32, f32, f32*, int))hitDetectFn_800658a4)((int)obj, probe.x, probe.y, probe.z, out + 0x12,
-                                                                           0x205) == 0)
+        if (hitDetectFn_800658a4(obj, probe.x, probe.y, probe.z, out + 0x12, 0x205) == 0)
         {
             out[0x12] = out[1] - out[0x12];
         }
@@ -11275,9 +11274,8 @@ int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance)
         *(f32*)((char*)c + 0x48) * (*(f32*)((char*)c + 0x40) - *(f32*)((char*)c + 0x3c)) + *(f32*)((char*)c + 0x3c);
     *(u8*)((char*)d + 0x5e) = *(u8*)((char*)c + 0x50);
     *(u8*)((char*)d + 0x61) = 1;
-    if (((int (*)(int, f32, f32, f32, char*, int))hitDetectFn_800658a4)(
-            a, *(f32*)((char*)d + 0x44), *(f32*)((char*)d + 0x4), *(f32*)((char*)d + 0x4c), (char*)d + 0x48, 0x205) ==
-        0)
+    if (hitDetectFn_800658a4((GameObject*)a, *(f32*)((char*)d + 0x44), *(f32*)((char*)d + 0x4),
+                             *(f32*)((char*)d + 0x4c), (f32*)((char*)d + 0x48), 0x205) == 0)
     {
         *(f32*)((int)d + 0x48) = *(f32*)((char*)d + 0x4) - *(f32*)((int)d + 0x48);
     }
