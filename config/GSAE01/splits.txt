@@ -1250,6 +1250,7 @@ main/dll/dll_0037_optionsscreen.c:
 	.text       start:0x8011CD54 end:0x8011D51C
 	.data       start:0x8031A8F8 end:0x8031AD20
 	.sdata      start:0x803DBA28 end:0x803DBA30
+	.sdata2     start:0x803E1DE8 end:0x803E1DF0
 
 main/dll/dll_0038_weirdunusedmenu.c:
 	.text       start:0x8011D51C end:0x8011D854
@@ -1885,6 +1886,7 @@ main/dll/dll_010C_lanternfirefly.c:
 	.text       start:0x80186704 end:0x801871C8
 	.sdata      start:0x803DBDD8 end:0x803DBDE0
 	.sbss       start:0x803DDAD8 end:0x803DDAE0
+	.sdata2     start:0x803E3AB0 end:0x803E3AB8
 
 main/dll/dll_010B_fireflylantern.c:
 	.text       start:0x801871C8 end:0x80187640

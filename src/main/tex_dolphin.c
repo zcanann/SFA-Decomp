@@ -540,7 +540,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
     float maxY;
     float maxZ;
     u8 lightColor[4];
-    u8 chanColor[4];
+    GXColor chanColor;
     int i;
     u32 visible;
     u32 flags;
@@ -615,20 +615,20 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
                     if ((shader != NULL) &&
                         (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
                     {
-                        fn_80088730(chanColor);
-                        chanColor[3] = 0;
-                        chanColor[2] = 0;
-                        chanColor[1] = 0;
-                        chanColor[0] = 0;
+                        ObjSeq_copyDefaultColor(&chanColor);
+                        chanColor.a = 0;
+                        chanColor.b = 0;
+                        chanColor.g = 0;
+                        chanColor.r = 0;
                         if (count == 0)
                         {
                             if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
                             {
-                                fn_8004EF9C((int*)chanColor);
+                                fn_8004EF9C((int*)&chanColor);
                             }
                             else
                             {
-                                fn_8004EECC(chanColor);
+                                fn_8004EECC((u8*)&chanColor);
                             }
                         }
                         else
@@ -638,7 +638,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
                             modelLightStruct_getPosition(gTexBlockLightList[0], (f32*)&lightPos[0],
                                                          (f32*)&lightPos[1], (f32*)&lightPos[2]);
                             fn_8004F6D8(modelLightStruct_getRadius(gTexBlockLightList[0]),
-                                        (int*)lightColor, (f32*)&lightPos[0], chanColor);
+                                        (int*)lightColor, (f32*)&lightPos[0], (u8*)&chanColor);
                             for (i = 1; i < count; i = i + 1)
                             {
                                 modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0],

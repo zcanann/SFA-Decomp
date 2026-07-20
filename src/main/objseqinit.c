@@ -1,10 +1,10 @@
 #include "main/objseq.h"
+#include "main/objseq_api.h"
 #include "main/mm.h"
 #include "main/maketex_sequence_api.h"
 
-extern u8 lbl_80396918[];
+extern u8 gObjSeqRuntimeBuffer[];
 extern int gObjSeqStreamTableA[];
-extern u8 lbl_803DB748[4];
 extern f32 lbl_803DEFB0;
 extern f32 lbl_803DEFF0;
 extern u8 lbl_803DD124;
@@ -53,7 +53,7 @@ STATIC_ASSERT(offsetof(ObjSeqRuntimeStorage, actions) == 0x3c4c);
 
 void ObjSeq_onMapSetup(void)
 {
-    u8* base = lbl_80396918;
+    u8* base = gObjSeqRuntimeBuffer;
     u8* flagsB;
     u8* flagsA;
     s16* modes;
@@ -253,13 +253,13 @@ void ObjSeq_initialise(void)
     objSeqInitFn_80080078(gObjSeqStreamTableA, 5);
 }
 
-void fn_80088730(u8* out)
+void ObjSeq_copyDefaultColor(GXColor* out)
 {
-    u8* src;
+    GXColor* src;
 
-    out[0] = lbl_803DB748[0];
-    src = lbl_803DB748;
-    out[1] = src[1];
-    out[2] = src[2];
-    out[3] = src[3];
+    out->r = gObjSeqDefaultColor.r;
+    src = &gObjSeqDefaultColor;
+    out->g = src->g;
+    out->b = src->b;
+    out->a = src->a;
 }

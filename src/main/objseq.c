@@ -61,7 +61,7 @@ f32 gObjSeqShakeAmplitude = 0.2f;
 char sSeqAAnimDataTag[] = "SEQA";
 char sSeqBAnimDataTag[] = "SEQB";
 int lbl_803DB744[1] = {0};
-u8 lbl_803DB748[4] = {0x20, 0x20, 0x20, 0xFF};
+GXColor gObjSeqDefaultColor = {0x20, 0x20, 0x20, 0xFF};
 
 typedef struct ObjSeqBgCmd
 {
@@ -181,7 +181,7 @@ extern s8 gObjSeqBoolFlags[];
 extern s8 gObjSeqCondFlags[];
 extern s8 gObjSeqSlotResults[];
 extern ObjSeqBgCmd lbl_8039A5BC[];
-extern u8 lbl_80396918[];
+extern u8 gObjSeqRuntimeBuffer[];
 extern int lbl_8030EDA4[];
 extern int gObjSeqStreamTableA[];
 extern ObjSeqAnimLookup* lbl_803DD0D4;
@@ -215,7 +215,7 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq);
 void ObjSeq_onMapSetup(void);
 void ObjSeq_release(void);
 void ObjSeq_initialise(void);
-void fn_80088730(u8* out);
+void ObjSeq_copyDefaultColor(GXColor* out);
 void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode* curve, RomCurveNode* next, f32 t,
                                           int flag);
 void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t);
@@ -541,7 +541,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     f32 y;
     f32 z;
 
-    base = lbl_80396918;
+    base = gObjSeqRuntimeBuffer;
     st = (SeqRunTables*)base;
     srcSeq = (u8*)((GameObject*)obj)->anim.placementData;
     camArg = 0;
@@ -965,7 +965,7 @@ static inline u8* objSeqFindLinkedObject(u8* seqObj, u8* candidate)
     int j;
 
     j = 0;
-    slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
+    slotBase = gObjSeqRuntimeBuffer + (s8)seqObj[0x57] * 0x80;
     entry = slotBase;
     for (; j < 16; j++)
     {
@@ -1179,7 +1179,7 @@ void ObjSeq_runBgCmds(void)
     int objectCount;
     int unused;
 
-    base = lbl_80396918;
+    base = gObjSeqRuntimeBuffer;
     state = (ObjSeqRunBgState*)base;
     objects = ObjSeq_GetObjects(&unused, &objectCount);
     if (lbl_803DD060 != lbl_803DD062)
@@ -1395,7 +1395,7 @@ void ObjSeq_seqState_init(u8* seq)
 
 void ObjSeq_objLoadAnimdata(ObjSeqState* seq, ObjSeqAnimPlacement* placement)
 {
-    ObjSeqRunBgState* runBgState = (ObjSeqRunBgState*)lbl_80396918;
+    ObjSeqRunBgState* runBgState = (ObjSeqRunBgState*)gObjSeqRuntimeBuffer;
     s16 size;
     int animId;
     int fileOffset;
@@ -1831,7 +1831,7 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame)
 
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
 {
-    u8* base = lbl_80396918;
+    u8* base = gObjSeqRuntimeBuffer;
     ObjAnimComponent* sourceAnim = (ObjAnimComponent*)sourceObj;
     u32 cmdByte;
     int cmdArg = (cmd >> 8) & 0xff;
@@ -3117,7 +3117,7 @@ void objSeqDoBgCmds0D(u8* seq, u8* obj, int skipSpawns)
 
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void* out)
 {
-    u8* base = lbl_80396918;
+    u8* base = gObjSeqRuntimeBuffer;
     s8 noExec;
     s8 doUpdate;
     s8 flag8;
@@ -3512,7 +3512,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
     long long time;
     u8* historyBase;
 
-    historyBase = lbl_80396918;
+    historyBase = gObjSeqRuntimeBuffer;
     if ((s8)((ObjSeqState*)seq)->unk7B != 0)
     {
         gObjSeqCamModeArgB = 1;
@@ -3609,7 +3609,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
             activeObj = *(u8**)seq;
             j = 0;
             slotOff = (s8)((ObjSeqState*)seq)->slot * 0x80;
-            slotBase = lbl_80396918 + slotOff;
+            slotBase = gObjSeqRuntimeBuffer + slotOff;
             entry = slotBase;
             for (; j < 16; j++)
             {
@@ -3620,7 +3620,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 entry += 8;
             }
             *(u8**)(slotBase + j * 8) = activeObj;
-            *(u8**)((u8*)(int)lbl_80396918 + slotOff + j * 8 + 4) = obj;
+            *(u8**)((u8*)(int)gObjSeqRuntimeBuffer + slotOff + j * 8 + 4) = obj;
         }
     }
     else
@@ -4558,7 +4558,7 @@ static inline int ObjSeq_CheckConditionOpcode(ObjSeqState* state, u8* obj, u8 co
 
 int ObjSeq_update(u8* obj, f32 t)
 {
-    u8* base = lbl_80396918;
+    u8* base = gObjSeqRuntimeBuffer;
     u8* activeObj;
     u8* action;
     u8* cmd;
@@ -5131,7 +5131,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     gObjSeqBgCmds[count * 3 + 2] = shortYrot;
     gObjSeqBgCmds[gObjSeqBgCmdCount++ * 3 + 1] = shortXrot;
 }
-u8 lbl_80396918[0x2A80];
+u8 gObjSeqRuntimeBuffer[0x2A80];
 s16 gObjSeqBgCmds[0x5A];
 u8 lbl_8039944C[0xA0];
 f32 objSeqOverridePos[0x259];

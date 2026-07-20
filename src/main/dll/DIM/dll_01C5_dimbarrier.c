@@ -4,6 +4,7 @@
  * timer; on expiry fades the barrier out and latches its gamebit.
  */
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -12,9 +13,7 @@
 #include "main/object_render.h"
 #include "main/audio/sfx.h"
 
-#define DIMBARRIER_TRIGGER_OBJ_TYPE 470
-#define DIMBARRIER_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define DIMBARRIER_OBJFLAG_HIDDEN 0x4000
+#define DIMBARRIER_TRIGGER_SEQ_ID 470
 
 /* dimbarrier_update state machine */
 #define DIMBARRIER_STATE_ARMED 0    /* watching the trigger list, counting down */
@@ -23,7 +22,9 @@
 
 typedef struct DimbarrierPlacement
 {
-    u8 pad0[0x1E - 0x0];
+    ObjPlacement head;
+    s8 rotX;
+    u8 pad19[0x1E - 0x19];
     s16 barrierGameBit;
 } DimbarrierPlacement;
 
@@ -34,8 +35,19 @@ typedef struct DimbarrierState
     s8 countdown;
 } DimbarrierState;
 
+typedef struct DimbarrierTriggerState
+{
+    u8 pad0[4];
+    u8 active;
+} DimbarrierTriggerState;
 
-int dimbarrier_getExtraSize(void) { return 0x4; }
+STATIC_ASSERT(offsetof(DimbarrierPlacement, rotX) == 0x18);
+STATIC_ASSERT(offsetof(DimbarrierPlacement, barrierGameBit) == 0x1E);
+STATIC_ASSERT(sizeof(DimbarrierState) == 0x4);
+STATIC_ASSERT(offsetof(DimbarrierTriggerState, active) == 0x4);
+
+
+int dimbarrier_getExtraSize(void) { return sizeof(DimbarrierState); }
 int dimbarrier_getObjectTypeId(void) { return 0x0; }
 
 void dimbarrier_free(void)
@@ -52,24 +64,24 @@ void dimbarrier_hitDetect(void)
 {
 }
 
-void dimbarrier_update(int obj)
+void dimbarrier_update(GameObject* obj)
 {
-    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    DimbarrierState* extra = (DimbarrierState*)((GameObject*)obj)->extra;
-    switch (extra->state)
+    DimbarrierPlacement* placement = (DimbarrierPlacement*)obj->anim.placementData;
+    DimbarrierState* state = obj->extra;
+    switch (state->state)
     {
     case DIMBARRIER_STATE_ARMED:
         {
-            int entry;
-            int ex;
+            GameObject* entry;
+            DimbarrierTriggerState* triggerState;
             int found;
             int i;
             found = 0;
-            for (i = 0; i < (int)*(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
+            for (i = 0; i < obj->anim.proximityList->count; i++)
             {
-                entry = *(int*)(*(int*)(obj + 0x58) + i * 4 + 0x100);
-                ex = *(int*)&((GameObject*)entry)->extra;
-                if (((GameObject*)entry)->anim.seqId == DIMBARRIER_TRIGGER_OBJ_TYPE && *(u8*)(ex + 4) != 0)
+                entry = obj->anim.proximityList->objects[i];
+                triggerState = entry->extra;
+                if (entry->anim.seqId == DIMBARRIER_TRIGGER_SEQ_ID && triggerState->active != 0)
                 {
                     found = 1;
                     break;
@@ -77,15 +89,15 @@ void dimbarrier_update(int obj)
             }
             if (found)
             {
-                if (--extra->countdown <= 0)
+                if (--state->countdown <= 0)
                 {
-                    extra->state = DIMBARRIER_STATE_FADING;
-                    extra->timer = 30;
-                    Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_206);
+                    state->state = DIMBARRIER_STATE_FADING;
+                    state->timer = 30;
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c_206);
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_wp_dsmk2_c_207);
+                    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_dsmk2_c_207);
                 }
             }
             break;
@@ -93,19 +105,19 @@ void dimbarrier_update(int obj)
     case DIMBARRIER_STATE_FADING:
         {
             ObjHitsPriorityState* hitState;
-            int v = ((GameObject*)obj)->anim.alpha - framesThisStep * 16;
+            int v = obj->anim.alpha - framesThisStep * 16;
             if (v < 0)
             {
                 v = 0;
             }
-            hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            hitState->flags &= ~1;
-            ((GameObject*)obj)->anim.alpha = v;
-            extra->timer -= framesThisStep;
-            if (extra->timer <= 0)
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+            hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+            obj->anim.alpha = v;
+            state->timer -= framesThisStep;
+            if (state->timer <= 0)
             {
-                mainSetBits(((DimbarrierPlacement*)def)->barrierGameBit, 1);
-                extra->state = DIMBARRIER_STATE_RESOLVED;
+                mainSetBits(placement->barrierGameBit, 1);
+                state->state = DIMBARRIER_STATE_RESOLVED;
             }
             break;
         }
@@ -114,22 +126,22 @@ void dimbarrier_update(int obj)
     }
 }
 
-void dimbarrier_init(GameObject *obj, s8* p)
+void dimbarrier_init(GameObject* obj, DimbarrierPlacement* placement)
 {
-    char* inner;
-    (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    (obj)->objectFlags |= (DIMBARRIER_OBJFLAG_HIDDEN | DIMBARRIER_OBJFLAG_HITDETECT_DISABLED);
-    inner = (obj)->extra;
-    inner[3] = 1;
-    inner[2] = DIMBARRIER_STATE_ARMED;
-    if (mainGetBit(((DimbarrierPlacement*)p)->barrierGameBit) != 0)
+    DimbarrierState* state;
+    obj->anim.rotX = (s16)((s32)placement->rotX << 8);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    state = obj->extra;
+    state->countdown = 1;
+    state->state = DIMBARRIER_STATE_ARMED;
+    if (mainGetBit(placement->barrierGameBit) != 0)
     {
         ObjHitsPriorityState* hitState;
-        inner[3] = 0;
-        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        (obj)->anim.alpha = 0;
-        inner[2] = DIMBARRIER_STATE_RESOLVED;
+        state->countdown = 0;
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+        obj->anim.alpha = 0;
+        state->state = DIMBARRIER_STATE_RESOLVED;
     }
 }
 
