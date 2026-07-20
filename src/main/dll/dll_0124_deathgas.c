@@ -9,6 +9,7 @@
 #include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/dll/dll_0124_deathgas.h"
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
@@ -28,7 +29,7 @@ typedef struct
 
 typedef struct
 {
-    u8 pad[0x18];
+    ObjPlacement head;
     u8 drainRate; // 0x18
     u8 fillRate; // 0x19
     s16 activeBit; // 0x1a
