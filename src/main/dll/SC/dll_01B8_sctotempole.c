@@ -5,7 +5,6 @@
  * fanfare; the test is timed (beat MuscleFoot's record). */
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
-#include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/SC/sc_shared.h"
 #include "main/dll/SC/dll_01B8_sctotempole.h"
 #include "main/dll/SC/dll_01B9_sccloudrunnera.h"
@@ -19,33 +18,18 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-u16 lbl_803DC068[4] = {0x2B7, 0x2CB, 0x2CC, 0};
+u16 gSCTotemPoleRecordGameBits[4] = {0x2B7, 0x2CB, 0x2CC, 0};
 
-int lbl_803DDC08;
-STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
-STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
-
-typedef struct SCTotemPoleState
-{
-    u16 gameBit;       /* 0x00: this pole's lit-state GameBit */
-    u8 currentState;   /* 0x02: lit (1) / unlit (0) this frame */
-    u8 previousState;  /* 0x03: lit state last frame, for edge detection */
-    f32 animSpeed;     /* 0x04: light / extinguish anim playback speed */
-} SCTotemPoleState;
+int gSCTotemPoleHitCooldown;
 
 #define SC_TOTEMPOLE_GAMEBIT_FRONT 0x81
 #define SC_TOTEMPOLE_GAMEBIT_LEFT 0x82
 #define SC_TOTEMPOLE_GAMEBIT_RIGHT 0x83
 #define SC_TOTEMPOLE_GAMEBIT_REAR 0x84
-#define SC_TOTEMPOLE_SETUP_REAR 0x44916
-#define SC_TOTEMPOLE_SETUP_RIGHT 0x44909
-#define SC_TOTEMPOLE_SETUP_FRONT 0x4490C
-#define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
+#define SC_TOTEMPOLE_MAP_ID_REAR 0x44916
+#define SC_TOTEMPOLE_MAP_ID_RIGHT 0x44909
+#define SC_TOTEMPOLE_MAP_ID_FRONT 0x4490C
+#define SC_TOTEMPOLE_MAP_ID_LEFT 0x4490F
 
 #define SC_TOTEMPOLE_EVENT_ALL_LIT 6      /* peer event: all four poles lit */
 
@@ -88,29 +72,29 @@ u16 newTime;
     return changed;
 }
 
-int sc_totempole_getExtraSize(void) { return 0x8; }
+int sc_totempole_getExtraSize(void) { return sizeof(SCTotemPoleState); }
 int sc_totempole_getObjectTypeId(void) { return 0x0; }
 
 void sc_totempole_free(void)
 {
 }
 
-void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void sc_totempole_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    if (v != 0) objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void sc_totempole_hitDetect(void)
 {
 }
 
-void sc_totempole_update(int obj)
+void sc_totempole_update(GameObject* obj)
 {
-    SCTotemPoleState* state = ((GameObject*)obj)->extra;
-    f32 animEvents[8];
+    SCTotemPoleState* state = obj->extra;
+    ObjAnimEventList animEvents;
     int playedFanfare;
-    int* objects;
+    GameObject** objects;
     int objCount;
     int i;
 
@@ -120,7 +104,7 @@ void sc_totempole_update(int obj)
     {
         if (state->currentState != 0)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_cflap2_c);
             state->animSpeed = 0.01f;
             playedFanfare = 0;
             if (mainGetBit(SC_TOTEMPOLE_GAMEBIT_FRONT) != 0 &&
@@ -130,19 +114,17 @@ void sc_totempole_update(int obj)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
                 playedFanfare = 1;
-                objects = ObjList_GetObjects(&i, &objCount);
+                objects = (GameObject**)ObjList_GetObjects(&i, &objCount);
                 for (; i < objCount; i++)
                 {
-                    if ((void*)objects[i] != (void*)obj &&
-                        ((GameObject*)objects[i])->anim.seqId == SC_SEQ_TOTEMPOLE)
+                    if (objects[i] != obj && objects[i]->anim.seqId == SC_SEQ_TOTEMPOLE)
                     {
-                        (*(void (**)(int, int))(*(int*)&((GameObject*)objects[i])->anim.dll[0] +
-                                                SC_VT_HANDLE_EVENT))(
+                        (*(SCTotemPoleInterfaceVTable**)objects[i]->anim.dll)->handleEvent(
                             objects[i], SC_TOTEMPOLE_EVENT_ALL_LIT);
                         break;
                     }
                 }
-                sc_totempole_sortCompletionGameBits((u16*)&lbl_803DC068,
+                sc_totempole_sortCompletionGameBits(gSCTotemPoleRecordGameBits,
                                                      (s32)(fn_8001461C() / 10.0f));
             }
             if (!playedFanfare)
@@ -152,34 +134,34 @@ void sc_totempole_update(int obj)
         }
         else
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_cflap2_c);
             state->animSpeed = -0.01f;
         }
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
-                                                                (ObjAnimEventList*)&animEvents);
-    ObjHits_PollPriorityHitEffectWithCooldown((GameObject*)(obj), 8, 0xff, 0xff, 0x78, 0x129, (f32*)&lbl_803DDC08);
+    ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, &animEvents);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129,
+                                               (f32*)&gSCTotemPoleHitCooldown);
 }
 
-void sc_totempole_init(GameObject *obj, int def)
+void sc_totempole_init(GameObject* obj, SCTotemPolePlacement* placement)
 {
-    SCTotemPoleState* state = (obj)->extra;
-    switch (((ObjPlacement*)def)->mapId)
+    SCTotemPoleState* state = obj->extra;
+    switch (placement->head.mapId)
     {
-    case SC_TOTEMPOLE_SETUP_REAR:
+    case SC_TOTEMPOLE_MAP_ID_REAR:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_REAR;
         break;
-    case SC_TOTEMPOLE_SETUP_RIGHT:
+    case SC_TOTEMPOLE_MAP_ID_RIGHT:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_RIGHT;
         break;
-    case SC_TOTEMPOLE_SETUP_FRONT:
+    case SC_TOTEMPOLE_MAP_ID_FRONT:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_FRONT;
         break;
-    case SC_TOTEMPOLE_SETUP_LEFT:
+    case SC_TOTEMPOLE_MAP_ID_LEFT:
         state->gameBit = SC_TOTEMPOLE_GAMEBIT_LEFT;
         break;
     }
-    (obj)->anim.rotX = (s16)((u32)((SCMusicTreeSetup*)def)->yawByte << 8);
+    obj->anim.rotX = (s16)((u32)placement->yaw << 8);
 }
 
 void sc_totempole_release(void)

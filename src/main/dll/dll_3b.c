@@ -2,12 +2,11 @@
  * dll_3b (FRONT 0x3B) - attract-movie audio decode thread support.
  *
  * Backs the THP attract-movie player (AttractMoviePlayer lbl_803A5D60,
- * attract_movie.h). A worker thread (lbl_803A54A0) decodes audio frames
+ * attract_movie.h). A worker thread decodes audio frames
  * out of a THP stream and hands finished sample buffers to the player's
  * mixer through two message queues:
- *   lbl_803A4460 - decoded audio buffers ready for playback (producer here,
- *                  drained via PopDecodedAudioBuffer / n_options.c)
- *   lbl_803A4480 - free buffers returned for reuse (PushFreeAudioBuffer)
+ *   gAttractMovieDecodedAudioQueue - decoded buffers ready for playback
+ *   gAttractMovieFreeAudioQueueAndStack - free buffers returned for reuse
  *
  * AttractMovieAudio_Decode pulls the audio THP frame-component out of a read
  * buffer, runs THPAudioDecode into a free AttractMovieAudioBuffer, and posts
@@ -42,15 +41,15 @@ typedef struct AttractMovieDecodeThread
     u32 pad310[0x10 / 4];
 } AttractMovieDecodeThread;
 
-OSMessageQueue lbl_803A4460; /* ready-buffer queue */
-AttractMovieFreeQueueAndStack lbl_803A4480;
-AttractMovieDecodeThread lbl_803A54A0;
+OSMessageQueue gAttractMovieDecodedAudioQueue;
+AttractMovieFreeQueueAndStack gAttractMovieFreeAudioQueueAndStack;
+AttractMovieDecodeThread gAttractMovieAudioDecodeThread;
 
 void* PopDecodedAudioBuffer(int flags)
 {
     void* message;
 
-    if (OSReceiveMessage(&lbl_803A4460, &message, flags) == 1)
+    if (OSReceiveMessage(&gAttractMovieDecodedAudioQueue, &message, flags) == 1)
     {
         return message;
     }
@@ -59,7 +58,7 @@ void* PopDecodedAudioBuffer(int flags)
 
 void PushFreeAudioBuffer(void* message)
 {
-    OSSendMessage(&lbl_803A4480.queue, message, OS_MESSAGE_NOBLOCK);
+    OSSendMessage(&gAttractMovieFreeAudioQueueAndStack.queue, message, OS_MESSAGE_NOBLOCK);
 }
 
 void AttractMovieAudio_Decode(void* readBufferArg)
@@ -75,7 +74,7 @@ void AttractMovieAudio_Decode(void* readBufferArg)
     audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + THP_FRAME_HEADER_SIZE;
     {
         AttractMovieAudioBuffer* received;
-        OSReceiveMessage(&lbl_803A4480.queue, &received, OS_MESSAGE_BLOCK);
+        OSReceiveMessage(&gAttractMovieFreeAudioQueueAndStack.queue, &received, OS_MESSAGE_BLOCK);
         audioBuf[0] = received;
     }
     for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++)
@@ -86,7 +85,7 @@ void AttractMovieAudio_Decode(void* readBufferArg)
             audioBuf[0]->validSample = THPAudioDecode(audioBuf[0]->buffer, audioFrame, 0);
             audioBuf[0]->curPtr = audioBuf[0]->buffer;
             audioBuf[0]->frameNumber = readBuffer->frameNumber;
-            OSSendMessage(&lbl_803A4460, audioBuf[0], OS_MESSAGE_BLOCK);
+            OSSendMessage(&gAttractMovieDecodedAudioQueue, audioBuf[0], OS_MESSAGE_BLOCK);
             break;
         }
         audioFrame += *audioFrameSizes;
@@ -122,7 +121,7 @@ void* AudioDecoderForOnMemory(void* param)
             }
             else
             {
-                OSSuspendThread(&lbl_803A54A0.thread);
+                OSSuspendThread(&gAttractMovieAudioDecodeThread.thread);
             }
         }
         else
@@ -154,7 +153,7 @@ void AudioDecodeThreadCancel(void)
 {
     if (gAttractMovieAudioThreadActive != 0)
     {
-        OSCancelThread(&lbl_803A54A0.thread);
+        OSCancelThread(&gAttractMovieAudioDecodeThread.thread);
         gAttractMovieAudioThreadActive = 0;
     }
 }
@@ -163,6 +162,6 @@ void AudioDecodeThreadStart(void)
 {
     if (gAttractMovieAudioThreadActive != 0)
     {
-        OSResumeThread(&lbl_803A54A0.thread);
+        OSResumeThread(&gAttractMovieAudioDecodeThread.thread);
     }
 }

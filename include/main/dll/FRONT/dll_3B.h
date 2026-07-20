@@ -10,7 +10,7 @@ extern s32 gAttractMovieAudioThreadActive;
 void TitleMenu_initialise(void);
 void *PopDecodedAudioBuffer(int flags);
 void PushFreeAudioBuffer(void *message);
-void AttractMovieAudio_Decode(void *cursor);
+void AttractMovieAudio_Decode(void *readBuffer);
 void *AudioDecoderForOnMemory(void *param);
 void *AudioDecoder(void *param);
 void AudioDecodeThreadCancel(void);

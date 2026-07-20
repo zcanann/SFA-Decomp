@@ -1,7 +1,7 @@
 #include "main/audio_decode_thread.h"
 #include "main/dll/FRONT/dll_3B.h"
 
-typedef struct THPAudioDecodeContext
+typedef struct AttractMovieAudioDecodeContext
 {
     OSMessage freeAudioBuffers[3];
     OSMessage decodedAudioBuffers[3];
@@ -9,17 +9,17 @@ typedef struct THPAudioDecodeContext
     OSMessageQueue decodedQueue;
     u8 stack[0x1000];
     OSThread thread;
-} THPAudioDecodeContext;
+} AttractMovieAudioDecodeContext;
 
-STATIC_ASSERT(offsetof(THPAudioDecodeContext, stack) == 0x58);
-STATIC_ASSERT(offsetof(THPAudioDecodeContext, thread) == 0x1058);
+STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, stack) == 0x58);
+STATIC_ASSERT(offsetof(AttractMovieAudioDecodeContext, thread) == 0x1058);
 
-extern THPAudioDecodeContext lbl_803A4448;
+extern AttractMovieAudioDecodeContext gAttractMovieAudioDecodeContext;
 
 BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
 {
-    THPAudioDecodeContext* context[1];
-    context[0] = &lbl_803A4448;
+    AttractMovieAudioDecodeContext* context[1];
+    context[0] = &gAttractMovieAudioDecodeContext;
 
     if (param != NULL)
     {

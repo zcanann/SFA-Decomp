@@ -340,7 +340,6 @@ void SidekickBall_update(GameObject* self)
 
 u8 trickyBallMove(GameObject* obj)
 {
-
     int hasCollisionNormal;
     f32 collisionNormal[3];
     f32 dx;
@@ -397,7 +396,7 @@ u8 trickyBallMove(GameObject* obj)
         if (obj->anim.localPosY > state->floorY)
         {
             state->floorY = 0.0f;
-            hasFloorDepth = 0;
+            goto noFloorDepth;
         }
         else
         {
@@ -407,6 +406,7 @@ u8 trickyBallMove(GameObject* obj)
     }
     else
     {
+    noFloorDepth:
         hasFloorDepth = 0;
     }
 
