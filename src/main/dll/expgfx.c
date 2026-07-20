@@ -123,7 +123,6 @@ typedef union Dll0BDescriptorTable
 
 #define GXWGFifo (*(volatile ExpgfxWGPipe*)0xCC008000)
 
-extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
 extern f32 gExpgfxYVelocityPositiveLimit;
 extern f32 gExpgfxYVelocityFastStep;
@@ -161,11 +160,6 @@ static inline ExpgfxSlot* Expgfx_GetSlot(int poolIndex, int slotIndex)
 static inline ExpgfxBounds* Expgfx_GetBoundsTemplate(int templateIndex)
 {
     return &((ExpgfxBounds*)gExpgfxStaticData)[templateIndex];
-}
-
-static inline ExpgfxBounds* Expgfx_GetPoolBounds(int poolIndex)
-{
-    return &gExpgfxPoolBounds[poolIndex];
 }
 
 #define EXPGFX_POOL_ACTIVE_MASK_PTR(runtime, poolIndex) \
