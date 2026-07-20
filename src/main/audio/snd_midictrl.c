@@ -481,11 +481,13 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
 
     for (value = 0, i = 0; i < slotPtr->entryCount; ++i)
     {
-        ctrl = slotPtr->entries[i].controller;
         if ((slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) ||
-            ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
-            ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
-            ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING)
+            slotPtr->entries[i].controller == MCMD_CTRL_PITCH_BEND ||
+            slotPtr->entries[i].controller == MCMD_CTRL_MODULATION ||
+            slotPtr->entries[i].controller == MCMD_CTRL_PANNING ||
+            slotPtr->entries[i].controller == MCMD_CTRL_EX_A0 ||
+            slotPtr->entries[i].controller == MCMD_CTRL_EX_A1 ||
+            slotPtr->entries[i].controller == MCMD_CTRL_SUR_PANNING)
         {
             if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
             {
@@ -493,6 +495,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
             }
             else
             {
+                ctrl = slotPtr->entries[i].controller;
                 switch (ctrl)
                 {
                 case MCMD_CTRL_EX_A0:
@@ -592,6 +595,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
         }
         else
         {
+            ctrl = slotPtr->entries[i].controller;
             switch (ctrl)
             {
             case MCMD_CTRL_MIDI_LAYER:
