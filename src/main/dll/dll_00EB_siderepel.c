@@ -25,19 +25,19 @@ int siderepel_getExtraSize(void)
     return 0x1;
 }
 
-void siderepel_free(int obj)
+void siderepel_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, SIDEREPEL_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, SIDEREPEL_OBJGROUP);
 }
 
-void siderepel_init(int obj, int placement)
+void siderepel_init(GameObject* obj, SideRepelPlacement* placement)
 {
-    ((GameObject*)obj)->objectFlags =
-        ((GameObject*)obj)->objectFlags |
+    obj->objectFlags =
+        obj->objectFlags |
         (SIDEREPEL_OBJFLAG_UPDATE_DISABLED | SIDEREPEL_OBJFLAG_HIDDEN | SIDEREPEL_OBJFLAG_HITDETECT_DISABLED);
-    ObjGroup_AddObject(obj, SIDEREPEL_OBJGROUP);
-    if (((GameObject*)obj)->anim.hitReactState != NULL)
+    ObjGroup_AddObject((int)obj, SIDEREPEL_OBJGROUP);
+    if (obj->anim.hitReactState != NULL)
     {
-        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)(((SideRepelPlacement*)placement)->radius >> 3));
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)(placement->radius >> 3));
     }
 }

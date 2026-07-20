@@ -56,16 +56,17 @@ typedef struct ProximityMineCollider {
 } ProximityMineCollider;
 
 typedef struct ProximityMineObject {
-  s16 angle;
-  s16 angle2;
-  u8 unk04[4];
-  f32 height;
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  f32 prevX;
-  f32 prevY;
-  f32 prevZ;
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s16 animFlags;
+  f32 rootMotionScale;
+  f32 localPosX;
+  f32 localPosY;
+  f32 localPosZ;
+  f32 worldPosX;
+  f32 worldPosY;
+  f32 worldPosZ;
   f32 velocityX;
   f32 velocityY;
   f32 velocityZ;
@@ -84,6 +85,13 @@ typedef struct ProximityMineObject {
   u8 unkC8[0x2c];
   int pathIndex;
 } ProximityMineObject;
+
+STATIC_ASSERT(offsetof(ProximityMineObject, rotX) == 0x00);
+STATIC_ASSERT(offsetof(ProximityMineObject, animFlags) == 0x06);
+STATIC_ASSERT(offsetof(ProximityMineObject, rootMotionScale) == 0x08);
+STATIC_ASSERT(offsetof(ProximityMineObject, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(ProximityMineObject, worldPosX) == 0x18);
+STATIC_ASSERT(offsetof(ProximityMineObject, velocityX) == 0x24);
 
 typedef struct ProximityMineDef {
   u8 unk0[0x18];

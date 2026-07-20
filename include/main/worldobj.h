@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/modellight_api.h"
+#include "main/obj_placement.h"
 
 typedef struct WorldObjEffectParams {
     u8 pad00[6];
@@ -14,8 +15,8 @@ typedef struct WorldObjEffectParams {
 } WorldObjEffectParams;
 
 typedef struct WorldObjSetup {
-    s16 objectId;
-    u8 pad02[0x1B - 2];
+    ObjPlacement base;
+    u8 pad18[3];
     u8 variant;
 } WorldObjSetup;
 
@@ -54,7 +55,7 @@ STATIC_ASSERT(offsetof(WorldObjEffectParams, effectScale) == 0x08);
 STATIC_ASSERT(offsetof(WorldObjEffectParams, offsetX) == 0x0C);
 
 STATIC_ASSERT(sizeof(WorldObjSetup) == 0x1C);
-STATIC_ASSERT(offsetof(WorldObjSetup, objectId) == 0x00);
+STATIC_ASSERT(offsetof(WorldObjSetup, base) == 0x00);
 STATIC_ASSERT(offsetof(WorldObjSetup, variant) == 0x1B);
 
 STATIC_ASSERT(sizeof(WorldObjPathSegmentWork) == 0x34);

@@ -21,6 +21,14 @@ typedef struct EffectboxPlacement
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
 
+STATIC_ASSERT(offsetof(EffectboxPlacement, rotYaw) == 0x18);
+STATIC_ASSERT(offsetof(EffectboxPlacement, extentX) == 0x1A);
+STATIC_ASSERT(offsetof(EffectboxPlacement, actionArg) == 0x1D);
+STATIC_ASSERT(offsetof(EffectboxPlacement, gameBitValue) == 0x1F);
+STATIC_ASSERT(offsetof(EffectboxPlacement, gameBitIndex) == 0x20);
+STATIC_ASSERT(offsetof(EffectboxPlacement, targetMode) == 0x22);
+STATIC_ASSERT(sizeof(EffectboxPlacement) == 0x28);
+
 int EffectBox_getExtraSize(void);
 int EffectBox_getObjectTypeId(void);
 void EffectBox_free(GameObject* obj);

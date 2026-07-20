@@ -7,9 +7,12 @@ typedef struct THPAudioDecodeContext
     OSMessage decodedAudioBuffers[3];
     OSMessageQueue freeQueue;
     OSMessageQueue decodedQueue;
-    u8 pad58[0x1058 - 0x58];
+    u8 stack[0x1000];
     OSThread thread;
 } THPAudioDecodeContext;
+
+STATIC_ASSERT(offsetof(THPAudioDecodeContext, stack) == 0x58);
+STATIC_ASSERT(offsetof(THPAudioDecodeContext, thread) == 0x1058);
 
 extern THPAudioDecodeContext lbl_803A4448;
 
@@ -20,15 +23,16 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
 
     if (param != NULL)
     {
-        if (OSCreateThread(&context[0]->thread, AudioDecoderForOnMemory, param, &context[0]->thread, 0x1000, priority, 1) ==
-            0)
+        if (OSCreateThread(&context[0]->thread, AudioDecoderForOnMemory, param,
+                           context[0]->stack + sizeof(context[0]->stack), 0x1000, priority, 1) == 0)
         {
             return 0;
         }
     }
     else
     {
-        if (OSCreateThread(&context[0]->thread, AudioDecoder, NULL, &context[0]->thread, 0x1000, priority, 1) == 0)
+        if (OSCreateThread(&context[0]->thread, AudioDecoder, NULL,
+                           context[0]->stack + sizeof(context[0]->stack), 0x1000, priority, 1) == 0)
         {
             return 0;
         }

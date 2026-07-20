@@ -21,16 +21,13 @@ typedef struct WorldAsteroidsState {
 } WorldAsteroidsState;
 
 typedef struct WorldAsteroidsObject {
-  s16 rotX;
-  s16 rotY;
-  s16 rotZ;
-  u8 pad006[6];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  u8 pad018[0xb8 - 0x18];
+  ObjAnimComponent anim;
+  u8 padB0[0xb8 - sizeof(ObjAnimComponent)];
   WorldAsteroidsState *state;
 } WorldAsteroidsObject;
+
+STATIC_ASSERT(offsetof(WorldAsteroidsObject, anim) == 0x00);
+STATIC_ASSERT(offsetof(WorldAsteroidsObject, state) == 0xB8);
 
 extern ObjectDescriptor gWorldAsteroidsObjDescriptor;
 

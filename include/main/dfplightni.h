@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dfppowersl.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/lightningeffect.h"
@@ -56,9 +57,8 @@ typedef struct DfpLightniState {
 } DfpLightniState;
 
 typedef struct DfpLightniObject {
-  u8 pad00[0x0C];
-  f32 position[3];
-  u8 pad18[0xB8 - 0x18];
+  ObjAnimComponent anim;
+  u8 padB0[8];
   DfpLightniState *state;
 } DfpLightniObject;
 
@@ -78,7 +78,7 @@ STATIC_ASSERT(offsetof(DfpLightniState, angleIndex) == 0x14);
 STATIC_ASSERT(offsetof(DfpLightniState, delayFrames) == 0x16);
 STATIC_ASSERT(offsetof(DfpLightniState, eventId) == 0x18);
 
-STATIC_ASSERT(offsetof(DfpLightniObject, position) == 0x0C);
+STATIC_ASSERT(offsetof(DfpLightniObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(DfpLightniObject, state) == 0xB8);
 
 extern ObjectDescriptor gDfplightniObjDescriptor;

@@ -2,15 +2,15 @@
  * flammablevine (DLL 0xE7) - a burnable vine obstacle.
  *
  * Lives in object group 0x31. A flame hit (ObjHits priority-hit type
- * 0x1a) ignites it: the placement's "burned" game bit (def->burnedBit)
+ * 0x1a) ignites it: the placement's "burned" game bit (placement->burnedBit)
  * is set, a sfx plays, and a burn timer starts. While burning, update()
  * fades the model out, drives the burn anim progress, plays the looped
  * lift sound, and finally removes the object from the update list and
  * disables its hits.
  *
- * When def->gateBit is valid it must be set AND the Tricky companion
+ * When placement->gateBit is valid it must be set AND the Tricky companion
  * must be present AND game bit 0x245 (use-vine enabled) must be set;
- * when def->gateBit is -1 the vine is always usable. If the burned bit
+ * when placement->gateBit is -1 the vine is always usable. If the burned bit
  * is already set at init the vine spawns already-consumed (hidden,
  * hits off).
  */
@@ -51,28 +51,28 @@ void FlammableVine_free(GameObject* obj)
     ObjGroup_RemoveObject((int)obj, FLAMMABLEVINE_OBJGROUP);
 }
 
-void FlammableVine_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void FlammableVine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void FlammableVine_hitDetect(GameObject* obj)
 {
-    FlammablevineState* state;
-    u8* def;
+    FlammableVineState* state;
+    FlammableVinePlacement* placement;
     int hitObj;
 
     state = (obj)->extra;
-    def = *(u8**)&(obj)->anim.placementData;
+    placement = (FlammableVinePlacement*)obj->anim.placementData;
     if ((state->flags & 3) == 0)
     {
         if (ObjHits_GetPriorityHit(obj, 0, 0, (u32*)&hitObj) == 0x1a)
         {
-            if (((FlammablevineObjectDef*)def)->burnedBit != -1)
+            if (placement->burnedBit != -1)
             {
-                mainSetBits(((FlammablevineObjectDef*)def)->burnedBit, 1);
+                mainSetBits(placement->burnedBit, 1);
                 Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
             }
             state->burnTimer = 240.0f;
@@ -83,9 +83,9 @@ void FlammableVine_hitDetect(GameObject* obj)
 
 void FlammableVine_update(GameObject* obj)
 {
-    FlammablevineState* state;
-    u8* def;
-    void* tricky;
+    FlammableVineState* state;
+    FlammableVinePlacement* placement;
+    GameObject* tricky;
     u8 canUse;
     f32 burnTimer;
     f32 zero;
@@ -93,12 +93,12 @@ void FlammableVine_update(GameObject* obj)
     u32 fadeAlpha;
 
     state = (obj)->extra;
-    def = *(u8**)&(obj)->anim.placementData;
+    placement = (FlammableVinePlacement*)obj->anim.placementData;
     tricky = getTrickyObject();
 
     *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-    if (((FlammablevineObjectDef*)def)->gateBit == -1 ||
-        (mainGetBit(((FlammablevineObjectDef*)def)->gateBit) != 0 && tricky != NULL &&
+    if (placement->gateBit == -1 ||
+        (mainGetBit(placement->gateBit) != 0 && tricky != NULL &&
          mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0))
     {
         canUse = 1;
@@ -133,8 +133,8 @@ void FlammableVine_update(GameObject* obj)
             *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
             if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                TrickyIface* iface = *(TrickyIface**)((u8*)tricky + 0x68);
-                iface->vtbl->slot28(tricky, (int)obj, 1, 4);
+                TrickyIface* iface = (TrickyIface*)tricky->anim.dll;
+                iface->vtbl->slot28(tricky, obj, 1, 4);
             }
         }
     }
@@ -200,16 +200,16 @@ void FlammableVine_update(GameObject* obj)
     }
 }
 
-void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
+void FlammableVine_init(GameObject* obj, FlammableVinePlacement* placement)
 {
-    FlammablevineState* state;
+    FlammableVineState* state;
     f32 scale;
 
     state = (obj)->extra;
     ObjGroup_AddObject((int)obj, FLAMMABLEVINE_OBJGROUP);
-    (obj)->anim.rotX = (s16)(def->rotXByte << 8);
+    (obj)->anim.rotX = (s16)(placement->rotXByte << 8);
 
-    (obj)->anim.rootMotionScale = 5.0f * ((f32)def->scaleParam / 32767.0f);
+    (obj)->anim.rootMotionScale = 5.0f * ((f32)placement->scaleParam / 32767.0f);
     if ((obj)->anim.rootMotionScale <= 0.05f)
     {
         (obj)->anim.rootMotionScale = 0.05f;
@@ -220,7 +220,7 @@ void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
     state->burnIntensity = 0.001f;
     ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, 0.0f);
 
-    if (def->burnedBit != -1 && mainGetBit(def->burnedBit) != 0)
+    if (placement->burnedBit != -1 && mainGetBit(placement->burnedBit) != 0)
     {
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
@@ -228,7 +228,7 @@ void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
         state->flags = state->flags | 2;
     }
 
-    state->setupParam = def->setupParam;
+    state->setupParam = placement->setupParam;
     if (state->setupParam == 1)
     {
         ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)(int)obj);

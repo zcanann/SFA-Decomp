@@ -106,9 +106,9 @@ void DFP_Lightni_update(DfpLightniObject* obj)
             }
             if ((state->timer > state->triggerTime) && (state->timer < DFPLIGHTNI_TIMER_MAX))
             {
-                start[0] = obj->position[0];
-                start[1] = obj->position[1];
-                start[2] = obj->position[2];
+                start[0] = obj->anim.localPosX;
+                start[1] = obj->anim.localPosY;
+                start[2] = obj->anim.localPosZ;
                 if (eventActive != 0)
                 {
                     end[0] =
@@ -128,7 +128,7 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                         start[0];
                     end[1] =
                         gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX) +
-                        obj->position[1];
+                        obj->anim.localPosY;
                     end[2] =
                         gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
                         start[2];

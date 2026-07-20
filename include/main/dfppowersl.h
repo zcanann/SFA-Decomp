@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/objseq.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
@@ -39,8 +40,8 @@ typedef struct DfpPowerSlMapData {
 } DfpPowerSlMapData;
 
 struct DfpPowerSlObject {
-  s16 modeWord;
-  u8 pad02[0xB8 - 0x02];
+  ObjAnimComponent anim;
+  u8 padB0[8];
   DfpPowerSlState *state;
   DfpPowerSlHitCallback hitCallback;
 };
@@ -56,7 +57,7 @@ STATIC_ASSERT(offsetof(DfpPowerSlMapData, spawnObjectId) == 0x1C);
 STATIC_ASSERT(offsetof(DfpPowerSlMapData, eventId) == 0x20);
 STATIC_ASSERT(sizeof(DfpPowerSlMapData) == 0x24);
 
-STATIC_ASSERT(offsetof(DfpPowerSlObject, modeWord) == 0x00);
+STATIC_ASSERT(offsetof(DfpPowerSlObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(DfpPowerSlObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(DfpPowerSlObject, hitCallback) == 0xBC);
 

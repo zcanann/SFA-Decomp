@@ -106,7 +106,7 @@ void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, 
     }
 }
 
-/* World-map object defNos (WorldObjSetup.objectId), names read from retail
+/* World-map object defNos (WorldObjSetup.base.objectId), names read from retail
  * OBJECTS.bin at def+0x91; the WORLD* set all belongs to DLL 0x1D3. The
  * WORLDOBJ_SUN_OBJ case spawns 11 scattered WORLDOBJ_SUNRAY_OBJ children, each
  * with random rotation on all axes and random per-axis spin.
@@ -182,7 +182,7 @@ int worldobj_getExtraSize(void)
 
 int worldobj_getObjectTypeId(int* obj)
 {
-    if (((WorldObjSetup*)((GameObject*)obj)->anim.placementData)->objectId != WORLDOBJ_PEPPER_OBJ)
+    if (((WorldObjSetup*)((GameObject*)obj)->anim.placementData)->base.objectId != WORLDOBJ_PEPPER_OBJ)
     {
         return 0x0;
     }
@@ -203,7 +203,7 @@ void worldobj_free(GameObject* obj)
 void worldobj_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WorldObjState* state = obj->extra;
-    int modelId = ((WorldObjSetup*)obj->anim.placementData)->objectId;
+    int modelId = ((WorldObjSetup*)obj->anim.placementData)->base.objectId;
 
     if (modelId == WORLDOBJ_SKYSCAPE_OBJ)
     {
@@ -292,7 +292,7 @@ void worldobj_update(GameObject* obj)
     state = obj->extra;
     setup = (WorldObjSetup*)obj->anim.placementData;
 
-    switch (setup->objectId)
+    switch (setup->base.objectId)
     {
     case WORLDOBJ_COMET_OBJ:
         if (state->orbitAngle > 0x8000 || state->orbitAngle < 0)
@@ -595,7 +595,7 @@ void worldobj_init(GameObject* obj, int arg)
     f32 base;
     f32 dist;
 
-    switch (setup->objectId)
+    switch (setup->base.objectId)
     {
     case WORLDOBJ_PATH1_OBJ:
     case WORLDOBJ_PATH2_OBJ:
