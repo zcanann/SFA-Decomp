@@ -101,10 +101,6 @@ OSTime __OSGetSystemTime();
 void __OSSetTick(register OSTick newTicks);
 OSTime __OSTimeToSystemTime(OSTime time);
 
-// ppc_eabi_init
-__declspec(section ".init") asm void __init_hardware(void);
-__declspec(section ".init") asm void __flush_cache(void* address, unsigned int size);
-
 // start
 __declspec(weak) void InitMetroTRK_BBA();
 
