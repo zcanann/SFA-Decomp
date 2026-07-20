@@ -208,7 +208,7 @@ void shopitem_onSeqFree(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
     int def = *(int*)&obj->anim.placementData;
-    PushcartState97* b = (PushcartState97*)(state + 0x97);
+    PushcartState97* b = (PushcartState97*)&((ShopItemState*)state)->flags97;
     if (b->flag_40 == 0)
     {
         int* vptr = (int*)((ShopItemState*)state)->vendorObj;
@@ -325,7 +325,7 @@ void shopitem_update(GameObject* obj)
     void* player = Obj_GetPlayerObject();
     int state = *(int*)&(obj)->extra;
     f32 range = lbl_803E5A64;
-    PushcartState97* b = (PushcartState97*)(state + 0x97);
+    PushcartState97* b = (PushcartState97*)&((ShopItemState*)state)->flags97;
     int money;
     int price;
 

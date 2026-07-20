@@ -600,7 +600,7 @@ void explosion_update(GameObject* obj)
                 ang[0] = r0v;
                 ang[1] = r0v;
                 ang[2] = r0v;
-                ang[3] = *(int*)((char*)state + 0x14);
+                ang[3] = ((ExplosionDebris*)state)->lifetime;
                 k = 0;
                 while ((f32)(int)k < ((ExplosionState*)state)->scale)
                 {

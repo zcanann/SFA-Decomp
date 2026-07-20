@@ -27,7 +27,7 @@ void fn_801EC1AC(int obj, int state)
     f32 out[3];
     f32 vec_args[4];
 
-    flags = (PickupFlags*)(state + 0x428);
+    flags = (PickupFlags*)&((DRPickupState*)state)->flags;
     origBit4 = flags->b4;
 
     if ((((DRPickupState*)state)->flags458 & 0x100) != 0)
