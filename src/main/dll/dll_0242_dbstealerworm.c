@@ -2123,9 +2123,9 @@ void dbstealerworm_acquireTarget(GameObject* obj, int groundState, int baddie)
 {
 
     GroundBaddieState* st = (GroundBaddieState*)groundState;
+    DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     GameObject* near;
     int data;
-    DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     char* player;
     f32 dist;
     struct
