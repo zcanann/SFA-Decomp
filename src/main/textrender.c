@@ -2994,7 +2994,7 @@ void subtitleStart(int x)
     }
 }
 
-static int gameTextIsTaskTextAllowed(int taskId)
+static inline int gameTextIsTaskTextAllowed(int taskId)
 {
     s16* taskList;
     int count;
