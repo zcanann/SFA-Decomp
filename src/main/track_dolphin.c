@@ -5103,10 +5103,11 @@ u8 doEdges;
                 v0[2] = __OSs16tof32(&((TrackTriangle*)cur)->vz[0]);
                 maxYi = 0;
                 minYi = 0;
+                j = 1;
                 tw = &((MapTriIndex*)vq)->vert[1];
                 vo = (u8*)(cur + 2);
                 vf = verts;
-                for (j = 1; j < 3; j++)
+                for (; j < 3; j++)
                 {
                     int x, yy, z;
                     vp = (s16*)(vb + *tw * 6);
@@ -5160,10 +5161,8 @@ u8 doEdges;
                 mag = PSVECMag((f32*)(cur + 4));
                 if (!(mag > lbl_803DECB4))
                     continue;
-                {
-                    f32 inv = lbl_803DECC4 / mag;
-                    PSVECScale((f32*)(cur + 4), (f32*)(cur + 4), inv);
-                }
+                mag = lbl_803DECC4 / mag;
+                PSVECScale((f32*)(cur + 4), (f32*)(cur + 4), mag);
                 if (f8)
                 {
                     if (*(f32*)(cur + 8) >= lbl_803DECB0 || *(f32*)(cur + 8) <= lbl_803DECEC)
