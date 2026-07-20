@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/obj_placement.h"
 
 /* anim.seqId values identifying the two health-refill collectibles (Tier 3
  * loot). Same ids spawned by largecrate dropType 5/6 (LARGECRATE_DROP_GAS). */
@@ -81,7 +82,8 @@ STATIC_ASSERT(sizeof(CollectibleState) == 0x2B8);
  * collectible_init / collectible_applyPickup.
  */
 typedef struct CollectibleSetup {
-    u8 pad0[0x19 - 0x0];
+    ObjPlacement base;
+    u8 pad18;
     u8 unkC;            /* 0x19 -> CollectibleState.unkC */
     u8 unkD;            /* 0x1A -> CollectibleState.unkD */
     u8 rotXByte;        /* 0x1B initial anim.rotX (<<8) */
@@ -100,6 +102,7 @@ typedef struct CollectibleSetup {
     s16 counterGameBit; /* 0x2C bit incremented on collect (>0 = active) */
 } CollectibleSetup;
 
+STATIC_ASSERT(offsetof(CollectibleSetup, base) == 0x00);
 STATIC_ASSERT(offsetof(CollectibleSetup, unkC) == 0x19);
 STATIC_ASSERT(offsetof(CollectibleSetup, hideGameBit) == 0x1C);
 STATIC_ASSERT(offsetof(CollectibleSetup, collectGameBit) == 0x1E);
@@ -108,5 +111,6 @@ STATIC_ASSERT(offsetof(CollectibleSetup, visibilityGameBit) == 0x24);
 STATIC_ASSERT(offsetof(CollectibleSetup, modelIndex) == 0x26);
 STATIC_ASSERT(offsetof(CollectibleSetup, colorR) == 0x28);
 STATIC_ASSERT(offsetof(CollectibleSetup, counterGameBit) == 0x2C);
+STATIC_ASSERT(sizeof(CollectibleSetup) == 0x30);
 
 #endif /* MAIN_DLL_COLLECTIBLE_STATE_H_ */

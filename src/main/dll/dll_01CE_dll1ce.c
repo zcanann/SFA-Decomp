@@ -2,8 +2,8 @@
  * dll_1CE: hatch-door object. The lid coasts open under a clamped velocity
  * while idle; once a key object (seqId 0x18F or 0x1D6) is in range it counts
  * down, sets its placement gamebit, and - if the load isn't locked and the
- * placement's spawnGameBitValue matches gamebit 0x46D - spawns its contents object
- * (subtype 0x246) seeded from the door's transform.
+ * placement's contents-spawn value matches gamebit 0x46D - spawns its
+ * contents object (object id 0x246) seeded from the door's placement.
  *
  * The TU also hosts dimmagicbridge_* and explosion_* sibling exports (in
  * DIM/dll_01CC_dimmagicbridge.c / DIM/dll_01CA_dimexplosion.c); their forward
@@ -14,6 +14,8 @@
 #include "main/dll/dimmagicbridge_api.h"
 #include "main/dll/dll1ceplacement_struct.h"
 #include "main/dll/dimwooddoor2state_struct.h"
+#include "main/dll/collectible_state.h"
+#include "main/dll/dll_01CE_dll1ce.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
 #include "main/dll/explosionpartfxsource_struct.h"
@@ -29,25 +31,6 @@
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 
-/* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
- * position/color head plus class-specific fields (see the target stb/sth). */
-typedef struct Dll1CESpawnSetup
-{
-    u8 pad0[0x4 - 0x0];
-    u8 color[4]; /* 0x04 */
-    f32 posX;    /* 0x08 */
-    f32 posY;    /* 0x0c */
-    f32 posZ;    /* 0x10 */
-    u8 pad14[0x1a - 0x14];
-    u8 field1A;  /* 0x1a */
-    u8 rotByte;  /* 0x1b */
-    s16 field1C; /* 0x1c */
-    u8 pad1E[0x24 - 0x1e];
-    s16 field24; /* 0x24 */
-    u8 pad26[0x2c - 0x26];
-    s16 field2C; /* 0x2c */
-} Dll1CESpawnSetup;
-
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -59,8 +42,6 @@ STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
  * Per-object extra state for the dll_1CE hatch door
  * (dll_1CE_getExtraSize == 0xC).
  */
-
-STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
 
 /*
  * Per-object extra state for the dimmagicbridge flame bridge
@@ -86,17 +67,16 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
-#define DLL1CE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 /* Key objects that unlock the hatch (docblock: "a key object (seqId 0x18F or 0x1D6)"). */
 #define DLL1CE_SEQID_DIM_HUT_DOOR 0x334 /* retail "DIMHutDoor" (DLL 0x128) */
 #define DLL1CE_KEY_SEQID_A 0x18f /* retail "DIMSnowHorn..." (DLL 0x256) */
 #define DLL1CE_KEY_SEQID_B 0x1d6 /* retail "DIMCannonBa..." (DLL 0x1C6) */
 
-/* Subtype of the contents object spawned on unlock (docblock: "contents object (subtype 0x246)"). */
-#define DLL1CE_CONTENTS_SUBTYPE 0x246 /* retail "DIMBridgeCo..." (DLL 0xED) */
+/* Contents object spawned on unlock (retail "DIMBridgeCo...", DLL 0xED). */
+#define DLL1CE_CONTENTS_OBJECT_ID    0x246
+#define DLL1CE_CONTENTS_GATE_GAMEBIT 0x46d
 
-void* lbl_803DDB78;
+void* gDll1CEResource;
 
 int dll_1CE_getExtraSize(void)
 {
@@ -109,11 +89,11 @@ int dll_1CE_getObjectTypeId(void)
 
 void dll_1CE_free(void)
 {
-    if (lbl_803DDB78 != NULL)
+    if (gDll1CEResource != NULL)
     {
-        Resource_Release(lbl_803DDB78);
+        Resource_Release(gDll1CEResource);
     }
-    lbl_803DDB78 = NULL;
+    gDll1CEResource = NULL;
 }
 
 void dll_1CE_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -131,101 +111,103 @@ void dll_1CE_hitDetect(void)
  * velocity while idle, and once a key object is nearby, count down then
  * ring the gamebit and (if the load isn't locked) spawn the contents
  * object seeded from the door's transform. */
-void dll_1CE_update(int* obj)
+void dll_1CE_update(GameObject* obj)
 {
-    int* q = *(int**)&((GameObject*)obj)->anim.placementData;
-    Dll1CEState* sub = ((GameObject*)obj)->extra;
+    Dll1CEPlacement* placement = (Dll1CEPlacement*)obj->anim.placementData;
+    Dll1CEState* state = obj->extra;
     ObjHitsPriorityState* hitState;
-    if (((GameObject*)obj)->anim.alpha == 0)
+    if (obj->anim.alpha == 0)
         return;
-    if ((s8)sub->igniteCountdown <= 0)
+    if (state->unlockCountdown <= 0)
     {
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        if (sub->opened == 1)
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+        if (state->opened == 1)
         {
-            sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;
-            if (sub->openProgress > 82.0f)
+            state->openProgress = state->openVelocity * timeDelta + state->openProgress;
+            if (state->openProgress > 82.0f)
             {
-                sub->openProgress = 82.0f;
-                sub->openVelocity = -0.1f;
+                state->openProgress = 82.0f;
+                state->openVelocity = -0.1f;
             }
-            else if (sub->openProgress < -5.0f)
+            else if (state->openProgress < -5.0f)
             {
-                sub->openProgress = -5.0f;
-                sub->openVelocity = 0.1f;
+                state->openProgress = -5.0f;
+                state->openVelocity = 0.1f;
             }
         }
     }
-    if (((GameObject*)obj)->anim.seqId == DLL1CE_SEQID_DIM_HUT_DOOR)
+    if (obj->anim.seqId == DLL1CE_SEQID_DIM_HUT_DOOR)
         return;
     {
-        int off;
+        int offset;
         int i;
-        int* list;
+        ObjProximityList* proximityList;
         int count;
         int found = 0;
-        off = 0;
-        list = *(int**)((char*)obj + 0x58);
-        count = (s8) * (s8*)((char*)list + 0x10f);
+        offset = 0;
+        proximityList = obj->anim.proximityList;
+        count = proximityList->count;
         for (i = 0; i < count; i++)
         {
-            int* o = *(int**)((char*)list + off + 0x100);
-            if (((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_A ||
-                ((GameObject*)o)->anim.seqId == DLL1CE_KEY_SEQID_B)
+            GameObject* other =
+                *(GameObject**)((u8*)proximityList + offset + offsetof(ObjProximityList, objects));
+            if (other->anim.seqId == DLL1CE_KEY_SEQID_A ||
+                other->anim.seqId == DLL1CE_KEY_SEQID_B)
             {
                 found = 1;
                 break;
             }
-            off += 4;
+            offset += sizeof(proximityList->objects[0]);
         }
         if (!found)
             return;
     }
     {
-        if ((s8)(sub->igniteCountdown -= 1) > 0)
+        if ((state->unlockCountdown -= 1) > 0)
             return;
     }
-    mainSetBits(((Dll1CEPlacement*)q)->gameBitId, 1);
-    sub->opened = 1;
-    if ((u32)(s16)((Dll1CEPlacement*)q)->spawnGameBitValue != mainGetBit(0x46d))
+    mainSetBits(placement->openedGameBit, 1);
+    state->opened = 1;
+    if ((u32)(s16)placement->contentsSpawnBitValue != mainGetBit(DLL1CE_CONTENTS_GATE_GAMEBIT))
         return;
     if (Obj_IsLoadingLocked() == 0)
         return;
     {
-        int* no = (int*)Obj_AllocObjectSetup(0x30, DLL1CE_CONTENTS_SUBTYPE);
-        ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
-        ((Dll1CESpawnSetup*)no)->posY = 8.0f + ((Dll1CEPlacement*)q)->posYOffset;
-        ((Dll1CESpawnSetup*)no)->posZ = ((Dll1CEPlacement*)q)->posZ;
-        ((Dll1CESpawnSetup*)no)->color[0] = ((Dll1CEPlacement*)q)->color[0];
-        ((Dll1CESpawnSetup*)no)->color[1] = ((Dll1CEPlacement*)q)->color[1];
-        ((Dll1CESpawnSetup*)no)->color[2] = ((Dll1CEPlacement*)q)->color[2];
-        ((Dll1CESpawnSetup*)no)->color[3] = ((Dll1CEPlacement*)q)->color[3];
-        ((Dll1CESpawnSetup*)no)->field1C = 0x17f;
-        ((Dll1CESpawnSetup*)no)->field24 = -1;
-        ((Dll1CESpawnSetup*)no)->field2C = -1;
-        ((Dll1CESpawnSetup*)no)->field1A = 5;
-        ((Dll1CESpawnSetup*)no)->rotByte = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
-        Obj_SetupObject((ObjPlacement*)no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+        CollectibleSetup* contentsSetup =
+            (CollectibleSetup*)Obj_AllocObjectSetup(sizeof(CollectibleSetup), DLL1CE_CONTENTS_OBJECT_ID);
+        contentsSetup->base.posX = placement->base.posX;
+        contentsSetup->base.posY = 8.0f + placement->base.posY;
+        contentsSetup->base.posZ = placement->base.posZ;
+        contentsSetup->base.color[0] = placement->base.color[0];
+        contentsSetup->base.color[1] = placement->base.color[1];
+        contentsSetup->base.color[2] = placement->base.color[2];
+        contentsSetup->base.color[3] = placement->base.color[3];
+        contentsSetup->hideGameBit = 0x17f;
+        contentsSetup->visibilityGameBit = -1;
+        contentsSetup->counterGameBit = -1;
+        contentsSetup->unkD = 5;
+        contentsSetup->rotXByte = (u8)((s16)obj->anim.rotX >> 8);
+        Obj_SetupObject(&contentsSetup->base, 5, obj->anim.mapEventSlot, -1, 0);
     }
 }
 
-void dll_1CE_init(u8* obj, u8* params)
+void dll_1CE_init(GameObject* obj, Dll1CEPlacement* placement)
 {
-    Dll1CEState* sub;
+    Dll1CEState* state;
     ObjHitsPriorityState* hitState;
-    *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | DLL1CE_OBJFLAG_HITDETECT_DISABLED);
-    sub = ((GameObject*)obj)->extra;
-    sub->igniteCountdown = 1;
-    if (mainGetBit(((Dll1CEPlacement*)params)->gameBitId) != 0)
+    obj->anim.rotX = (s16)(((s16)placement->rotX) << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    state = obj->extra;
+    state->unlockCountdown = 1;
+    if (mainGetBit(placement->openedGameBit) != 0)
     {
-        sub->igniteCountdown = 0;
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-        ((GameObject*)obj)->anim.alpha = 0;
+        state->unlockCountdown = 0;
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+        obj->anim.alpha = 0;
     }
-    sub->openVelocity = -0.1f;
+    state->openVelocity = -0.1f;
 }
 
 void dll_1CE_release(void)

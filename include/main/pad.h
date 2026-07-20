@@ -5,7 +5,7 @@
 #include "main/pad_api.h"
 
 extern f32 gRumbleTimer;
-extern f32 lbl_803DE6E8;
+extern f32 gRumbleTimerZero;
 extern u8 joypadDisabled;
 extern u8 rumbleEnabled;
 extern u32 gPadResetMask;
@@ -22,11 +22,10 @@ extern u16 gPadTriggers;
 extern u16 gPadTriggersReleased;
 extern u16 gPadTriggersPressed;
 extern u8 gPadStatusToggle;
-extern u32 gPadStateBlock[];
+extern u32 gPadButtonsPrevious[];
 extern u32 gPadButtonsHeld[];
-extern u32 lbl_803398D0[];
+extern u32 gPadButtonsReleased[];
 extern u32 gPadButtonsJustPressed[];
-extern u8 gPadStatuses[];
 extern u8 lbl_803DCCA5;
 
 u32 getButtonsJustPressedIfNotBusy(int port);
