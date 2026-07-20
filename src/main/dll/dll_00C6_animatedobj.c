@@ -39,7 +39,7 @@ typedef struct AnimatedobjPlacement
     f32 posZ;
     s32 mapId; /* 0x14: ObjPlacement map id */
     s16 loadKey;
-    s16 unk1A;
+    s16 gameBit; /* 0x1A: copied into ObjSeqState.gameBit at init */
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
@@ -47,46 +47,6 @@ typedef struct AnimatedobjPlacement
     s16 unk2C;
     u8 pad2E[0x30 - 0x2E];
 } AnimatedobjPlacement;
-
-typedef struct AnimatedobjState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD[0x18 - 0xD];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 unk24;
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x6A - 0x54];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71[0x94 - 0x71];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0xE8 - 0xB2];
-    s32 unkE8;
-    u8 padEC[0x114 - 0xEC];
-    s16 unk114;
-    s16 unk116;
-    u8 pad118[0x140 - 0x118];
-} AnimatedobjState;
-
-
-
 
 
 
@@ -267,36 +227,36 @@ void animatedobj_update(int* obj)
 
 void animatedobj_init(int* obj, int* params)
 {
-    int* state;
+    ObjSeqState* seq;
     int f4;
     objSetSlot((GameObject*)obj, 0x64);
-    state = ((GameObject*)obj)->extra;
-    ((AnimatedobjState*)state)->unk6A = ((AnimatedobjPlacement*)params)->unk1A;
-    ((AnimatedobjState*)state)->unk6E = -1;
+    seq = ((GameObject*)obj)->extra;
+    seq->gameBit = ((AnimatedobjPlacement*)params)->gameBit;
+    seq->flags = -1;
     {
         f32 d = 1.0f;
-        ((AnimatedobjState*)state)->unk24 = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
+        seq->posOffsetDecay = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
     }
-    ((AnimatedobjState*)state)->unk28 = -1;
-    ((AnimatedobjState*)state)->unk98 = 0;
-    ((AnimatedobjState*)state)->unk94 = 0;
-    ((AnimatedobjState*)state)->unk116 = 0;
-    ((AnimatedobjState*)state)->unk114 = 0;
-    ((AnimatedobjState*)state)->unkE8 = 0;
+    seq->curveId = -1;
+    seq->animEntries = NULL;
+    seq->cmds = NULL;
+    seq->baseRotX = 0;
+    seq->baseRotY = 0;
+    seq->freeCallback = NULL;
     f4 = ((GameObject*)obj)->userData1;
     if (f4 == 0 && ((AnimatedobjPlacement*)params)->loadKey != 1)
     {
         (*gObjectTriggerInterface)
-            ->loadAnimData((u8*)state, (u8*)params);
+            ->loadAnimData((u8*)seq, (u8*)params);
         ((GameObject*)obj)->userData1 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }
     else if (f4 != 0 && ((AnimatedobjPlacement*)params)->loadKey != f4 - 1)
     {
-        (*gObjectTriggerInterface)->freeState((u8*)state);
+        (*gObjectTriggerInterface)->freeState((u8*)seq);
         if (((AnimatedobjPlacement*)params)->loadKey != -1)
         {
             (*gObjectTriggerInterface)
-                ->loadAnimData((u8*)state, (u8*)params);
+                ->loadAnimData((u8*)seq, (u8*)params);
         }
         ((GameObject*)obj)->userData1 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }

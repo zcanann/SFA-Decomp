@@ -32,7 +32,7 @@ typedef struct Dim2roofrubPlacement
     f32 posZ;
     s32 mapId;         /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
     s16 animDataIndex; /* 0x18 anim-data set selector (-1 = none); obj.userData1 = animDataIndex+1 */
-    s16 unk1A;
+    s16 gameBit; /* 0x1A: copied into ObjSeqState.gameBit at init */
     s16 unk1C;
     s16 unk1E;
     s16 unk20;
@@ -42,41 +42,6 @@ typedef struct Dim2roofrubPlacement
     s16 unk2C;
     u8 pad2E[0x30 - 0x2E];
 } Dim2roofrubPlacement;
-
-typedef struct Dim2roofrubState
-{
-    u8 pad0[0x4 - 0x0];
-    f32 unk4;
-    u8 unk8;
-    s8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD[0x18 - 0xD];
-    u8 unk18;
-    u8 pad19[0x24 - 0x19];
-    f32 dampingFactor; /* 0x24: d/(d + placement[0x24]) smoothing coefficient */
-    s32 unk28;
-    f32 unk2C;
-    u8 pad30[0x50 - 0x30];
-    f32 unk50;
-    u8 pad54[0x6A - 0x54];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 unk70;
-    u8 pad71[0x94 - 0x71];
-    s32 unk94;
-    s32 unk98;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    u8 padB2[0x114 - 0xB2];
-    s16 unk114;
-    s16 unk116;
-    u8 pad118[0x140 - 0x118];
-} Dim2roofrubState;
 
 typedef struct Dim2FxRow
 {
@@ -353,35 +318,35 @@ void dim2roofrub_update(int* obj)
 
 void dim2roofrub_init(int* obj, int* params)
 {
-    int* state;
+    ObjSeqState* seq;
     int f4;
     objSetSlot((GameObject*)obj, 0x64);
-    state = ((GameObject*)obj)->extra;
-    ((Dim2roofrubState*)state)->unk6A = ((Dim2roofrubPlacement*)params)->unk1A;
-    ((Dim2roofrubState*)state)->unk6E = -1;
+    seq = ((GameObject*)obj)->extra;
+    seq->gameBit = ((Dim2roofrubPlacement*)params)->gameBit;
+    seq->flags = -1;
     {
         f32 d = (1.0f);
-        ((Dim2roofrubState*)state)->dampingFactor =
+        seq->posOffsetDecay =
             d / (d + (f32)(u32)((Dim2roofrubPlacement*)params)->dampingParam);
     }
-    ((Dim2roofrubState*)state)->unk28 = -1;
-    ((Dim2roofrubState*)state)->unk98 = 0;
-    ((Dim2roofrubState*)state)->unk94 = 0;
-    ((Dim2roofrubState*)state)->unk116 = 0;
-    ((Dim2roofrubState*)state)->unk114 = 0;
+    seq->curveId = -1;
+    seq->animEntries = NULL;
+    seq->cmds = NULL;
+    seq->baseRotX = 0;
+    seq->baseRotY = 0;
     ((GameObject*)obj)->userData2 = 0;
     f4 = ((GameObject*)obj)->userData1;
     if (f4 == 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != 1)
     {
-        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
+        (*gObjectTriggerInterface)->loadAnimData((u8*)seq, (u8*)params);
         ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
     else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != f4 - 1)
     {
-        (*gObjectTriggerInterface)->freeState((u8*)state);
+        (*gObjectTriggerInterface)->freeState((u8*)seq);
         if (((Dim2roofrubPlacement*)params)->animDataIndex != -1)
         {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
+            (*gObjectTriggerInterface)->loadAnimData((u8*)seq, (u8*)params);
         }
         ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
