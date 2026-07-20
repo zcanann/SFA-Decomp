@@ -952,7 +952,7 @@ void renderShadows(int unused0, int unused1, int unused2)
                     if (casterPtr->flags == 2)
                     {
                         gxSetZMode_(1, GX_LEQUAL, 1);
-                        PSMTXScale(castSlot->texMtx, lbl_803DED28, lbl_803DED28, lbl_803DED28);
+                        PSMTXScale(castSlot->texMtx, 0.0f, 0.0f, 0.0f);
                         castSlot->texMtx[2] = lbl_803DED70;
                         castSlot->texMtx[3] = lbl_803DED74;
                         castSlot->texMtx[11] = lbl_803DED2C;
