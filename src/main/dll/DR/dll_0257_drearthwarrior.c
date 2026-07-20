@@ -1268,8 +1268,8 @@ void DR_EarthWarrior_runController(GameObject* obj, int t, int p3)
     }
     *(int*)((char*)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, sub, inner);
-    (*(void (*)(void*, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, (void*)inner, timeDelta, timeDelta, gDREarthWarriorStateHandlers,
+                                &gDREarthWarriorDefaultStateHandler);
     obj->anim.rotY =
         (s16)(obj->anim.rotY + (((EarthWarriorState*)inner)->baddie.spawnRotY >> 2));
     obj->anim.rotZ =

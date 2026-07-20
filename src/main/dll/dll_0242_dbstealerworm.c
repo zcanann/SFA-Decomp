@@ -2416,8 +2416,7 @@ void dbstealerworm_update(u8* objp)
                     }
                     ((GroundBaddieState*)blob)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
                     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
-                    ((void (*)(int, int, f32, f32, int, int))((void**)*(int*)gPlayerInterface)[2])(
-                        obj, blob, timeDelta, timeDelta, (int)(st + 0x34), (int)(st + 0x18));
+                    (*gPlayerInterface)->update((void*)obj, (void*)blob, timeDelta, timeDelta, st + 0x34, st + 0x18);
                     *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)blob)->savedObjC0;
                 }
             }

@@ -490,9 +490,8 @@ void kaldachom_update(GameObject* obj)
                 }
                 ((GroundBaddieState*)state)->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(u32*)&obj->pendingParentObj = 0;
-                (*(void (**)(double, void*, int, double, void*, void*))(*(int*)gPlayerInterface + 8))(
-                    (double)timeDelta, obj, state, (double)timeDelta, &gKaldaChomStateHandlersA,
-                    &gKaldaChomStateHandlersB);
+                (*gPlayerInterface)->update(obj, (void*)state, timeDelta, timeDelta, &gKaldaChomStateHandlersA,
+                                            &gKaldaChomStateHandlersB);
                 *(u32*)&obj->pendingParentObj = ((GroundBaddieState*)state)->savedObjC0;
             }
         }

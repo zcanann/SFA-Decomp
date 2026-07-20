@@ -406,8 +406,7 @@ void grimble_update(GameObject* obj)
         {
             void* target;
             int r;
-            (*(void (**)(void*, char*, f32, f32, void*, void*))(*(int*)gPlayerInterface + 0x8))(
-                obj, state, 1.0f, 1.0f, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
+            (*gPlayerInterface)->update(obj, state, 1.0f, 1.0f, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
             (*(void (**)(int, f32, int, int, int))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x24))(
                 ((GrimbleControl*)sub)->pathObj, ((GrimbleControl*)sub)->pathProgress, (int)obj + 0xc, (int)obj + 0x10,
                 (int)obj + 0x14);

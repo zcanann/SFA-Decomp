@@ -945,8 +945,7 @@ int dll_19_func10(GameObject* obj, u8* state, int moveArg0, int moveArg1, s16 co
             ((BaddieState*)state)->moveInputZ = 50.0f * dz;
             (obj)->anim.localPosX += dist * dx;
             (obj)->anim.localPosZ += dist * dz;
-            (*(void (**)(int, u8*, f32, f32, int, int))(*(int*)gPlayerInterface + 8))((int)obj, state, timeDelta,
-                                                                                      timeDelta, moveArg0, moveArg1);
+            (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, (void*)moveArg0, (void*)moveArg1);
         }
         if (*reachedOut == 0)
         {
@@ -1048,8 +1047,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
             else
             {
                 td = timeDelta;
-                (*(void (**)(int, char*, f32, f32, int, int))((char*)*gPlayerInterface + 0x8))((int)obj, st, td, td,
-                                                                                               moveArg0, moveArg1);
+                (*gPlayerInterface)->update(obj, st, td, td, (void*)moveArg0, (void*)moveArg1);
             }
         }
         else
@@ -1061,8 +1059,7 @@ int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int moveArg0, int
             (obj)->anim.localPosX = dist * nx + seq->posOffsetX;
             (obj)->anim.localPosZ = dist * nz + seq->posOffsetZ;
             td = timeDelta;
-            (*(void (**)(int, char*, f32, f32, int, int))((char*)*gPlayerInterface + 0x8))((int)obj, st, td, td,
-                                                                                           moveArg0, moveArg1);
+            (*gPlayerInterface)->update(obj, st, td, td, (void*)moveArg0, (void*)moveArg1);
         }
     }
     gDll19SeqMinDist = dist;

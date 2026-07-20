@@ -878,8 +878,8 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
                 (*gPlayerInterface)->rotateTowardTarget(obj, sub, timeDelta, 4);
                 sub->savedObjC0 = *(int*)&obj->pendingParentObj;
                 *(int*)&obj->pendingParentObj = 0;
-                (*(void (**)(void*, int, f32, f32, void*, void*))(*(int*)gPlayerInterface + 8))(
-                    obj, (int)sub, timeDelta, timeDelta, gChukChukMoveHandlers, gChukChukCheckHandlers);
+                (*gPlayerInterface)->update(obj, sub, timeDelta, timeDelta, gChukChukMoveHandlers,
+                                            gChukChukCheckHandlers);
                 *(int*)&obj->pendingParentObj = sub->savedObjC0;
             }
             obj->anim.localPosY = ((ObjPlacement*)setup)->posY - 2.0f;

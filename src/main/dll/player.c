@@ -16873,8 +16873,7 @@ void playerAnimate(GameObject* obj, int state, f32 fv)
         (*gPlayerInterface)->setState(obj, (void*)state, 0xa);
         *(int*)&((PlayerState*)state)->baddie.unk304 = 0;
     }
-    (*(void (*)(int, int, f32, f32, int*, int*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        (int)obj, state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, (void*)state, fv, fv, gPlayerStateHandlers, &gPlayerDefaultStateHandler);
     *(int*)state &= ~0x1000000;
 }
 
@@ -17222,7 +17221,7 @@ void playerDoHitDetection(int obj)
     ObjModelChain_AdvancePhase((ObjModelChain*)gPlayerModelChain);
     if (!(((PlayerState*)inner)->cutsceneTimer >= lbl_803E7EF0))
     {
-        (*(void (*)(int, int, void*))(*(int*)((char*)*gPlayerInterface + 0xc)))(obj, inner, gPlayerStateHandlers);
+        (*gPlayerInterface)->updateVelocityState((void*)obj, (void*)inner, gPlayerStateHandlers);
         if (*(s8*)&((PlayerState*)inner)->baddie.stateTag == 1)
         {
             if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0 &&
@@ -18604,8 +18603,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
         }
         ((PlayerState*)inner)->pendingParentObj = *(int*)&((GameObject*)obj)->pendingParentObj;
         *(int*)&((GameObject*)obj)->pendingParentObj = 0;
-        (*(void (*)(int, int, f32, f32, void*, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-            obj, state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
+        (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
         *(int*)&((GameObject*)obj)->pendingParentObj = ((PlayerState*)inner)->pendingParentObj;
         Lightfoot_ProcessHitResponseFlags(obj, inner);
     }

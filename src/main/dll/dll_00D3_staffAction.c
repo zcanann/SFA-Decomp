@@ -980,9 +980,8 @@ void dll_D3_update(int* obj)
     ((TreasureChestState*)state)->savedObjC0 = *(int*)&((GameObject*)obj)->pendingParentObj;
     *(int*)&((GameObject*)obj)->pendingParentObj = 0;
 
-    (*(void (**)(double, int*, int*, double, void**, void*))(*(int*)gPlayerInterface + 8))(
-        (double)timeDelta, obj, state, (double)timeDelta, gLandedArwingStateHandlers,
-        &gLandedArwingDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, state, timeDelta, timeDelta, gLandedArwingStateHandlers,
+                                &gLandedArwingDefaultStateHandler);
 
     *(int*)&((GameObject*)obj)->pendingParentObj = ((TreasureChestState*)state)->savedObjC0;
 

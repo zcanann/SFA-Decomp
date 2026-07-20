@@ -1107,8 +1107,8 @@ void HighTop_update(GameObject* obj)
     *(int*)&runtime->baddie.unk318 = 0;
     runtime->baddie.cameraYaw = 0;
     *(int*)state &= ~0x400000;
-    (*(void (**)(int, char*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
-        self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
+    (*gPlayerInterface)->update((void*)self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers,
+                                &gHighTopDefaultStateHandler);
     hightop_playMovementSfx((GameObject*)self, runtime, runtime);
     characterDoEyeAnims((GameObject*)self, state + 0x38c);
     objAnimFn_80038f38((GameObject*)(self), (char*)(state + 0x3bc));

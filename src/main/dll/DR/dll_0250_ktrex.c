@@ -1647,8 +1647,8 @@ void ktrex_update(int obj)
     ktrex_updateAttackEffects((GameObject*)(obj));
     (*(void (**)(int, void*, f32, int))((char*)*gBaddieControlInterface + 0x2c))(obj, runtime, 0.0f, 0);
     ObjHits_SetHitVolumeMasks((ObjAnimComponent*)obj, 24, 2, 0x1fffff);
-    (*(void (**)(int, void*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
-        obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
+    (*gPlayerInterface)->update((void*)obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB,
+                                gKTRexStateHandlersA);
     ((GameObject*)obj)->anim.localPosY = gKTRexState->posY;
 }
 

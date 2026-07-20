@@ -678,7 +678,7 @@ void fn_800D915C(int gameObj, int* obj, f32 fval, void* fnTable)
     }
 }
 
-void playerRunStateMachine(char* pos, char* state, float dt, int stateFns)
+void playerRunStateMachine(char* pos, char* state, float dt, void* stateFns)
 {
     int iterations;
     s16 currentState;
@@ -831,7 +831,7 @@ void player_setOverride(u32 x)
     playerOverride = x;
 }
 
-void player_updateVel(char* p, char* obj, int unused)
+void player_updateVel(char* p, char* obj, void* stateFns)
 {
     float fcos, fsin;
     f32 vx;
@@ -864,11 +864,11 @@ void player_updateVel(char* p, char* obj, int unused)
         gPlayerMoveVelHandled = 1;
         lbl_803DD44F = 0;
         lbl_803DD44E = 1;
-        playerRunStateMachine(p, obj, timeDelta, unused);
+        playerRunStateMachine(p, obj, timeDelta, stateFns);
     }
 }
 
-void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns)
+void player_update(char* pos, char* state, float dt, float pathDt, void* stateFns, void* auxStateFns)
 {
     MatrixTransform localTransform;
     f32 matrix[16];
@@ -902,7 +902,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
     pathObj = ((GameObject*)pos)->pendingParentObj;
     if ((*(int*)state & 0x8000) != 0 && pathObj == NULL)
     {
-        fn_800D915C((int)pos, (int*)state, dt, (void*)auxStateFns);
+        fn_800D915C((int)pos, (int*)state, dt, auxStateFns);
         ((BaddieState*)state)->stateTimer = (s16)((f32)((BaddieState*)state)->stateTimer + dt);
         if ((f32)((BaddieState*)state)->stateTimer > lbl_803E05C4)
         {

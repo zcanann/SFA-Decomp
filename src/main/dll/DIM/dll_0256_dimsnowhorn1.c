@@ -1213,8 +1213,8 @@ void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
         (obj)->anim.velocityY = (cur < -4.0f) ? -4.0f : ((cur > 0.0f) ? 0.0f : cur);
     }
 
-    (*(void (**)(int, int, f32, f32, int*, f32*))(*(int*)gPlayerInterface + 0x8))(
-        (int)obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
+    (*gPlayerInterface)->update(obj, (void*)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers,
+                                &gDIMSnowHorn1DefaultStateHandler);
     fn_802BB998((int)obj, state, state);
 }
 

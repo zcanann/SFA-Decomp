@@ -1196,8 +1196,8 @@ void fn_802C11BC(GameObject* obj, f32 f, int triggerFrame)
     {
         *(int*)&inner->baddie &= ~0x400000;
     }
-    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        (int)obj, (int)inner, f, timeDelta, (int)gDRCloudRunnerStateHandlers, &gDRCloudRunnerDefaultStateHandler);
+    (*gPlayerInterface)->update(obj, inner, f, timeDelta, gDRCloudRunnerStateHandlers,
+                                &gDRCloudRunnerDefaultStateHandler);
     if ((*(int*)&inner->baddie.eventFlags & 1) != 0)
     {
         fn_802BF4D8(obj);

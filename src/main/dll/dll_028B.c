@@ -75,8 +75,7 @@ void dll_28B_update(GameObject* obj)
     state->playerDistance = Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX);
     state->objectFlagsMirror |= OBJFLAG_BIT_2000000;
     dt = timeDelta;
-    (*(void (**)(int, int, f32, f32, void*, void*))((char*)*gPlayerInterface + 0x8))(
-        (int)obj, (int)state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
+    (*gPlayerInterface)->update(obj, state, dt, dt, gDll28BStateHandlers, gDll28BSubstateHandlers);
     if ((state->flagsAC0 & 1) != 0)
     {
         state->moveLib.modeBits &= ~1;

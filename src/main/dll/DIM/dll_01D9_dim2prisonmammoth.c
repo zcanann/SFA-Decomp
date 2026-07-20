@@ -227,8 +227,8 @@ void dim2prisonmammoth_update(int obj)
     ((Dim2prisonmammothState*)inner)->unk318 = 0;
     ((Dim2prisonmammothState*)inner)->unk330 = 0;
     ((Dim2prisonmammothState*)inner)->flags |= 0x400000;
-    (*(void (*)(int, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
-        obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
+    (*gPlayerInterface)->update((void*)obj, (void*)inner, timeDelta, timeDelta, gDim2PrisonMammothStateHandlers,
+                                &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos((GameObject*)obj);
 }
 
