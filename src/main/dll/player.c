@@ -10702,8 +10702,8 @@ void fn_802A81B8(GameObject* obj, int state, f32* out)
         mag = PSVECMag(out);
         if (mag > lbl_803E7EA4)
         {
-            f32 scale = lbl_803E7EE0 / mag;
-            PSVECScale(out, out, scale);
+            mag = lbl_803E7EE0 / mag;
+            PSVECScale(out, out, mag);
         }
         else
         {
