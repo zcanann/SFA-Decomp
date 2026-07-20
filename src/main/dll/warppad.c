@@ -150,7 +150,7 @@ void warpPadFn_8019042c(GameObject* obj)
     {
         if (state->pulseTimer < WARP_PAD_PULSE_STAGE1_TIME)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * 0.5f)
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / 2.0f)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
@@ -169,7 +169,7 @@ void warpPadFn_8019042c(GameObject* obj)
         }
         else if (state->pulseTimer < WARP_PAD_PULSE_STAGE3_TIME)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * 0.5f)
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / 2.0f)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
