@@ -1,5 +1,4 @@
 /* DLL 0x00F9 (projectileswitch) - Projectile switch object [0x8017A350-0x8017A8EC). */
-#include "main/dll/tFrameAnimator.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"

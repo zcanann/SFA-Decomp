@@ -2,7 +2,6 @@
  * Scarab (DLL 0x106) - GreenScarab/RedScarab/GoldScarab/RainScarab money
  * beetles. TU = 0x801843C0..0x80185868.
  */
-#include "main/dll/CF/CFguardian.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/mtx_legacy.h"

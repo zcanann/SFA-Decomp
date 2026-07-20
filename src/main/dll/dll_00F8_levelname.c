@@ -18,7 +18,6 @@
  * Render/hitDetect/free/release/initialise are empty; behaviour is driven
  * entirely by update() and the sequence callback.
  */
-#include "main/dll/tFrameAnimator.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"

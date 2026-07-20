@@ -1,7 +1,6 @@
 #ifndef MAIN_DLL_DLL_0106_SCARAB_H_
 #define MAIN_DLL_DLL_0106_SCARAB_H_
 
-#include "main/dll/CF/CFguardian.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
