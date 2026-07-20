@@ -5,8 +5,6 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
-void treebird_init(GameObject* obj, int setup);
-int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 f32* fn_801CDE70(GameObject* obj);
 void nw_geyser_free(int* obj);
 void nw_geyser_init(GameObject* obj);

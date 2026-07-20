@@ -18,8 +18,6 @@ void PaymentKiosk_init(int obj, PaymentKioskMapData* initData);
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void FEseqobject_init(GameObject* obj);
 void FEseqobject_update(int obj);
-int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void dll_144_init(GameObject* obj);
 void PaymentKiosk_release(void);
 void PaymentKiosk_initialise(void);
 void FUN_801df784(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
