@@ -357,24 +357,24 @@ void VFP_lavastar_hitDetect(void)
 {
 }
 
-void VFP_lavastar_update(int obj)
+void VFP_lavastar_update(GameObject* obj)
 {
     VfpLavaStarMapData* mapData;
     VfpLavaStarState* state;
 
-    mapData = (VfpLavaStarMapData*)*(int*)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.localPosY += timeDelta * state->verticalVelocity;
-    if (((GameObject*)obj)->anim.localPosY > lbl_803E61B0 + mapData->base.posY)
+    mapData = (VfpLavaStarMapData*)obj->anim.placementData;
+    state = obj->extra;
+    obj->anim.localPosY += timeDelta * state->verticalVelocity;
+    if (obj->anim.localPosY > lbl_803E61B0 + mapData->base.posY)
     {
         state->verticalVelocity = lbl_803E61B4 * (f32)(int)randomGetRange(5, 0x14);
-        ((GameObject*)obj)->anim.localPosY = mapData->base.posY;
+        obj->anim.localPosY = mapData->base.posY;
     }
     state->effectTimer += (s16)timeDelta;
     if (gVfpLavaPoolEffectResource != 0 && state->effectTimer >= 0x28)
     {
-        (*(void (*)(int, int, int, int, int, int)) * (int*)(*(int*)gVfpLavaPoolEffectResource + 4))(obj, 0, 0, 4, -1,
-                                                                                                    0);
+        (*(void (*)(int, int, int, int, int, int)) * (int*)(*(int*)gVfpLavaPoolEffectResource + 4))((int)obj, 0, 0, 4,
+                                                                                                    -1, 0);
         state->effectTimer = 0;
     }
     if (state->particleToggle == 0)
