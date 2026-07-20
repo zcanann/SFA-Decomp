@@ -4,8 +4,6 @@
 #include "global.h"
 #include "main/game_object.h"
 
-typedef void (*EcshSetupFn)(s16*, int, int, int, int, int);
-
 typedef struct EcshCreatorState
 {
     s16 countdown;

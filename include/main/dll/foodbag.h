@@ -3,6 +3,9 @@
 
 #include "ghidra_import.h"
 
+struct GameObject;
+struct PartFxSpawnParams;
+
 typedef s16 (*Dll81SpawnFn)(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused);
 
 typedef struct Dll81Interface
@@ -11,12 +14,24 @@ typedef struct Dll81Interface
     Dll81SpawnFn spawn;
 } Dll81Interface;
 
+typedef void (*Dll82SpawnFn)(struct GameObject* sourceObj, int variant, struct PartFxSpawnParams* spawnParams,
+                             u32 spawnFlags, int modelId, void* extraArg);
+
+typedef struct Dll82Interface
+{
+    void* reserved;
+    Dll82SpawnFn spawn;
+} Dll82Interface;
+
+STATIC_ASSERT(offsetof(Dll82Interface, spawn) == 0x04);
+
 void dll_81_func00_nop(void);
 void dll_81_func01_nop(void);
 int dll_81_func03(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused);
 void dll_82_func00_nop(void);
 void dll_82_func01_nop(void);
-void dll_82_func03(int param_1,int param_2,int param_3,u32 param_4);
+void dll_82_func03(struct GameObject* sourceObj, int variant, struct PartFxSpawnParams* spawnParams, u32 spawnFlags,
+                   int modelId, void* extraArg);
 void dll_83_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_84_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_85_func03(int param_1,int param_2,int param_3,u32 param_4);
