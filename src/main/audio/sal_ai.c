@@ -12,7 +12,6 @@
 #define SAL_AI_CACHED_BASE         0x80000000U
 #define SAL_AI_OUTPUT_SAMPLE_COUNT 0x7d00
 
-extern void* salAiCallback;
 extern u32 salAiDmaBuffer;
 extern volatile u32 salDspCallbackEnabled;
 extern volatile u32 salDspCallbackPending;
@@ -38,7 +37,7 @@ void salCallback(u32 p1, u32 p2, u32 p3, int p4, u32 p5, u32 p6)
         {
             salCallbackActive = 1;
             OSEnableInterrupts();
-            ((void (*)(void))salAiCallback)();
+            salAiCallback();
             OSDisableInterrupts();
             salCallbackActive = 0;
         }
@@ -76,7 +75,7 @@ void dspResumeCallback(void* task)
         {
             salCallbackActive = 1;
             OSEnableInterrupts();
-            ((void (*)(void))salAiCallback)();
+            salAiCallback();
             OSDisableInterrupts();
             salCallbackActive = 0;
         }
@@ -88,7 +87,7 @@ void dspResumeCallback(void* task)
  * zero it, register the AI DMA callback, and kick off the first DMA.
  * Returns 1 on success, 0 if allocation failed.
  */
-int salInitAi(void* userCallback, u32 unused, u32* outSampleCount)
+int salInitAi(SalAiCallback userCallback, u32 unused, u32* outSampleCount)
 {
     if ((salAiDmaBuffer = (u32)salMalloc(SAL_AI_DMA_BUFFER_SIZE)) != 0)
     {
