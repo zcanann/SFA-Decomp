@@ -1436,6 +1436,15 @@ void fn_8003B608(s16 a, s16 b, s16 c)
     lbl_803DCC08 = 1;
 }
 
+typedef struct
+{
+    f32 pos[3];
+    s16 rot[3];
+    s8 joints[6];
+} ChildEnt;
+
+#define OBJPRINT_CHILD_TABLE(staff) (*(char**)(*(char**)((staff) + 0x50) + 0x2c))
+
 void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, int c)
 {
     Vec va;
@@ -1461,15 +1470,12 @@ void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, in
             if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
             {
                 MtxPtr jm;
-                char* t;
                 int joint;
-                t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                joint = *(s8*)(t + off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a);
+                joint = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
                 jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
-                t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                vp->x = *(f32*)(t + off + 0x18);
-                va.y = *(f32*)(t + off + 0x1c);
-                va.z = *(f32*)(t + off + 0x20);
+                vp->x = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[0];
+                va.y = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[1];
+                va.z = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[2];
                 PSMTXMultVec(jm, vp, vp);
                 vp->x = vp->x + playerMapOffsetX;
                 va.z = va.z + playerMapOffsetZ;
@@ -1479,13 +1485,12 @@ void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, in
             }
             if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
             {
-                char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                char* row = t + off;
-                int idx2 = *(s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
+                ChildEnt* row = (ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off);
+                int idx2 = row->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
                 MtxPtr mtx2 = (MtxPtr)(*(char**)(model + ((((ObjModel*)model)->bufferFlags & 1) * 4) + 0xc) + idx2 * 0x40);
-                vb.x = *(f32*)row;
-                vb.y = *(f32*)(t + off + 4);
-                vb.z = *(f32*)(t + off + 8);
+                vb.x = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))->pos[0];
+                vb.y = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))->pos[1];
+                vb.z = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))->pos[2];
                 PSMTXMultVec(mtx2, &vb, &vb);
                 vb.x = vb.x + playerMapOffsetX;
                 vb.z = vb.z + playerMapOffsetZ;
