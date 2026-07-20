@@ -6,17 +6,10 @@
  * userData1 phase counter. The remaining handlers (free/hitDetect/init/release/
  * initialise) are stubs - the mast is purely cosmetic.
  */
-#include "main/dll/sbshipheadstate_struct.h"
-#include "main/dll/sbpropellerstate_struct.h"
-#include "main/dll/DB/DBstealerworm.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 #include "main/dll/SB/dll_01EB_sbshipmast.h"
 #include "main/object_descriptor.h"
-
-STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
-
-STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 /* parent galleon anim.seqId selecting the rigging-animation behavior */
 #define SB_GALLEON_SEQID 0x139
@@ -35,12 +28,12 @@ void SB_ShipMast_free(void)
 {
 }
 
-void SB_ShipMast_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SB_ShipMast_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

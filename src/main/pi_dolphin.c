@@ -90,7 +90,7 @@ u8 lbl_803DCCA9;
 u8 lbl_803DCCA8;
 u8 lbl_803DCCA7;
 u8 lbl_803DCCA6;
-u8 lbl_803DCCA5;
+u8 gPadReadReady;
 u8 lbl_803DCCA4;
 int lbl_803DCCA0;
 static u32 sPiUnused0;
@@ -4174,7 +4174,7 @@ void gpuErrorHandler(u32 retraceCount)
         lbl_803DCCA8 = 0;
         lbl_803DCCA9 = 0;
     }
-    lbl_803DCCA5 = 1;
+    gPadReadReady = 1;
     lbl_803DCCA6 = 1;
     switch (lbl_803DCCA4)
     {

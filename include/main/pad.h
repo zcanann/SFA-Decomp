@@ -26,7 +26,7 @@ extern u32 gPadButtonsPrevious[];
 extern u32 gPadButtonsHeld[];
 extern u32 gPadButtonsReleased[];
 extern u32 gPadButtonsJustPressed[];
-extern u8 lbl_803DCCA5;
+extern u8 gPadReadReady;
 
 u32 getButtonsJustPressedIfNotBusy(int port);
 u32 getButtonsJustPressed(int port);
@@ -40,7 +40,7 @@ u32 getButtonsHeld(int port);
 void setRumbleEnabled(u8 enabled);
 void padClearAnalogInputX(int port);
 void padClearAnalogInputY(int port);
-void padFn_80014b18(int value);
+void padSetStickRepeatDelay(int delay);
 void padGetAnalogInput(int port, s8* x, s8* y);
 s8 padGetCY(int port);
 s8 padGetCX(int port);
@@ -48,8 +48,8 @@ s8 padGetStickY(int port);
 s8 padGetStickX(int port);
 u8 padGetLTrigger(int port);
 u8 padGetRTrigger(int port);
-u16 getPadFn_80014d9c(int port);
-u16 getButtons_80014dd8(int port);
+u16 padGetTriggersPressed(int port);
+u16 padGetTriggers(int port);
 int initControllers(void);
 void doNothing_endOfFrame(void);
 

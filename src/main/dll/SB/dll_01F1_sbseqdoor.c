@@ -10,10 +10,6 @@
  * is set, runs trigger sequence 0 a single time (latched through obj->userData1)
  * to play the open animation. Each tick it also forces hitbox-reset bit 0x10.
  */
-#include "main/dll/shipbattlestate_struct.h"
-#include "main/dll/sbkytecagestate_struct.h"
-#include "main/dll/sbfireballstate_struct.h"
-#include "main/dll/sbcloudballstate_struct.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
@@ -22,18 +18,9 @@
 #include "main/dll/SB/dll_01F1_sbseqdoor.h"
 #include "main/object_descriptor.h"
 
-STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
-STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
-STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
-STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
-
 /* The sequence-door seqId and the GameBit that arms it. */
 #define SB_SEQDOOR_SEQ_ID      0x173
 #define SB_SEQDOOR_ARM_GAMEBIT 0xA4B
-
-/* anim.resetHitboxMode bit forced on each update tick. */
-#define SB_SEQDOOR_HITBOX_RESET_BIT 0x10
-
 
 int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -58,11 +45,11 @@ void SB_SeqDoor_free(void)
 {
 }
 
-void SB_SeqDoor_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SB_SeqDoor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -83,7 +70,7 @@ void SB_SeqDoor_update(GameObject* obj)
             }
         }
     }
-    obj->anim.resetHitboxFlags |= SB_SEQDOOR_HITBOX_RESET_BIT;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
 }
 
 void SB_SeqDoor_init(GameObject* obj, SBSeqDoorPlacement* placement)

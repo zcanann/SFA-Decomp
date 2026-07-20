@@ -62,43 +62,28 @@
 #define CCGASVENT_STATE_WAIT_CLEAR 6 /* wait for gas to clear, then shut fog off */
 #define CCGASVENT_STATE_DONE       7 /* puzzle complete / inactive */
 
-typedef struct CcgasventcontrolState
-{
-    u8 state;       /* 0x00: state-machine index (0..7) */
-    u8 soundActive; /* 0x01: looped vent-hiss sound latch (CCGasVentControlFn_801a9fd0) */
-    u8 pad02[2];
-    f32 airMeter; /* 0x04: air-meter value, depletes while submerged */
-    f32 fogRise;  /* 0x08: rising gas/fog height above the vent */
-    u8 ventCount; /* 0x0C: cached count of vents the player is clear of */
-    u8 pad0D[3];
-} CcgasventcontrolState;
-
-STATIC_ASSERT(offsetof(CcgasventcontrolState, airMeter) == 0x4);
-STATIC_ASSERT(offsetof(CcgasventcontrolState, fogRise) == 0x8);
-STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
-STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
-
 int CCGasVentControl_SeqFn(GameObject* obj)
 {
-    CCGasVentControlFn_801a9fd0((int)obj, *(int*)&(obj)->extra);
+    CCGasVentControlFn_801a9fd0(obj, obj->extra);
     return 0;
 }
 
-u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
+u8 CCGasVentControlFn_801a9fd0(GameObject* obj, CCGasVentControlState* state)
 {
     u8 i;
     u8 count = 0;
     if (mainGetBit(GAMEBIT_GAS_ACTIVE) != 0)
     {
         int cnt;
-        int* list = (int*)ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
+        GameObject** vents = (GameObject**)ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
         f32 thr;
         i = 0;
         thr = CCGASVENTCONTROL_CLEAR_DISTANCE;
         for (; i < 4; i++)
         {
-            int other = ObjGroup_FindNearestObject(CCGASVENTCONTROL_TARGET_OBJGROUP, (GameObject*)list[i], 0);
-            if (getXZDistance((f32*)(list[i] + 0x18), (f32*)(other + 0x18)) > thr)
+            GameObject* nearest = (GameObject*)ObjGroup_FindNearestObject(
+                CCGASVENTCONTROL_TARGET_OBJGROUP, vents[i], 0);
+            if (getXZDistance(&vents[i]->anim.worldPosX, &nearest->anim.worldPosX) > thr)
             {
                 count = count + 1u;
             }
@@ -106,20 +91,20 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     }
     if (count != 0)
     {
-        if (((CcgasventcontrolState*)extra)->soundActive == 0)
+        if (state->soundActive == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
-            ((CcgasventcontrolState*)extra)->soundActive = 1;
+            Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_en_diallp_c_223);
+            state->soundActive = 1;
         }
-        Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_diallp_c_223, (u8)(count * 0xf + 0x28),
+        Sfx_SetObjectSfxVolume((int)obj, SFXTRIG_en_diallp_c_223, (u8)(count * 0xf + 0x28),
                                CCGASVENTCONTROL_SFX_VOLUME_MAX);
     }
     else
     {
-        if (((CcgasventcontrolState*)extra)->soundActive != 0)
+        if (state->soundActive != 0)
         {
-            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
-            ((CcgasventcontrolState*)extra)->soundActive = 0;
+            Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_en_diallp_c_223);
+            state->soundActive = 0;
         }
     }
     return count;
@@ -127,13 +112,13 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 
 int ccgasventcontrol_getExtraSize(void)
 {
-    return sizeof(CcgasventcontrolState);
+    return sizeof(CCGasVentControlState);
 }
 
 void ccgasventcontrol_free(GameObject* obj)
 {
-    char* inner = obj->extra;
-    u8 t = ((CcgasventcontrolState*)inner)->state;
+    CCGasVentControlState* state = obj->extra;
+    u8 t = state->state;
     if (t == CCGASVENT_STATE_ACTIVE || t == CCGASVENT_STATE_WARP_BACK)
     {
         disableHeavyFog();
@@ -141,14 +126,14 @@ void ccgasventcontrol_free(GameObject* obj)
     (*gGameUIInterface)->airMeterSetShutdown();
 }
 
-void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void ccgasventcontrol_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, CCGASVENTCONTROL_RENDER_SCALE);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, CCGASVENTCONTROL_RENDER_SCALE);
 }
 
-void ccgasventcontrol_init(GameObject* obj, u8* def);
+void ccgasventcontrol_init(GameObject* obj, CCGasVentControlPlacement* placement);
 void ccgasventcontrol_update(GameObject* obj);
 
 ObjectDescriptor gCCgasventControlObjDescriptor = {
@@ -170,9 +155,9 @@ ObjectDescriptor gCCgasventControlObjDescriptor = {
 
 void ccgasventcontrol_update(GameObject* obj)
 {
-    int ex = *(int*)&(obj)->extra;
-    u8 b = CCGasVentControlFn_801a9fd0((int)obj, ex);
-    switch (((CcgasventcontrolState*)ex)->state)
+    CCGasVentControlState* state = obj->extra;
+    u8 clearVentCount = CCGasVentControlFn_801a9fd0(obj, state);
+    switch (state->state)
     {
     case CCGASVENT_STATE_WAIT_VENTS:
     {
@@ -180,7 +165,7 @@ void ccgasventcontrol_update(GameObject* obj)
         ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
         if (cnt == 4)
         {
-            ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_INTRO;
+            state->state = CCGASVENT_STATE_WAIT_INTRO;
         }
         break;
     }
@@ -188,60 +173,58 @@ void ccgasventcontrol_update(GameObject* obj)
         if (mainGetBit(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_INIT_METER;
+            state->state = CCGASVENT_STATE_INIT_METER;
         }
         break;
     case CCGASVENT_STATE_INIT_METER:
         (*gGameUIInterface)->initAirMeter(6000, CCGASVENTCONTROL_AIRMETER_BGTEXTURE);
-        ((CcgasventcontrolState*)ex)->airMeter = CCGASVENTCONTROL_AIR_METER_MAX;
-        ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_ACTIVE;
-        ((CcgasventcontrolState*)ex)->ventCount = b;
+        state->airMeter = CCGASVENTCONTROL_AIR_METER_MAX;
+        state->state = CCGASVENT_STATE_ACTIVE;
+        state->ventCount = clearVentCount;
         break;
     case CCGASVENT_STATE_ACTIVE:
-        if (b != 0)
+        if (clearVentCount != 0)
         {
-            int player = (int)Obj_GetPlayerObject();
-            ((CcgasventcontrolState*)ex)->fogRise =
-                ((CcgasventcontrolState*)ex)->fogRise + timeDelta / CCGASVENTCONTROL_CLEAR_DISTANCE;
-            if (((CcgasventcontrolState*)ex)->fogRise > CCGASVENTCONTROL_FOG_RISE_MAX)
+            GameObject* player = Obj_GetPlayerObject();
+            state->fogRise = state->fogRise + timeDelta / CCGASVENTCONTROL_CLEAR_DISTANCE;
+            if (state->fogRise > CCGASVENTCONTROL_FOG_RISE_MAX)
             {
-                ((CcgasventcontrolState*)ex)->fogRise = CCGASVENTCONTROL_FOG_RISE_MAX;
+                state->fogRise = CCGASVENTCONTROL_FOG_RISE_MAX;
             }
-            if (((GameObject*)player)->anim.localPosY <= (obj)->anim.localPosY + ((CcgasventcontrolState*)ex)->fogRise)
+            if (player->anim.localPosY <= obj->anim.localPosY + state->fogRise)
             {
-                ((CcgasventcontrolState*)ex)->airMeter = -(timeDelta * b - ((CcgasventcontrolState*)ex)->airMeter);
+                state->airMeter = -(timeDelta * clearVentCount - state->airMeter);
             }
             else
             {
-                ((CcgasventcontrolState*)ex)->airMeter =
-                    CCGASVENTCONTROL_AIR_RECOVERY * timeDelta + ((CcgasventcontrolState*)ex)->airMeter;
-                if (((CcgasventcontrolState*)ex)->airMeter > CCGASVENTCONTROL_AIR_METER_MAX)
+                state->airMeter = CCGASVENTCONTROL_AIR_RECOVERY * timeDelta + state->airMeter;
+                if (state->airMeter > CCGASVENTCONTROL_AIR_METER_MAX)
                 {
-                    ((CcgasventcontrolState*)ex)->airMeter = CCGASVENTCONTROL_AIR_METER_MAX;
+                    state->airMeter = CCGASVENTCONTROL_AIR_METER_MAX;
                 }
             }
-            enableHeavyFog((obj)->anim.localPosY + ((CcgasventcontrolState*)ex)->fogRise,
-                           (obj)->anim.localPosY - CCGASVENTCONTROL_FOG_BELOW_OFFSET,
+            enableHeavyFog(obj->anim.localPosY + state->fogRise,
+                           obj->anim.localPosY - CCGASVENTCONTROL_FOG_BELOW_OFFSET,
                            CCGASVENTCONTROL_FOG_DISTANCE, CCGASVENTCONTROL_FOG_DENSITY,
                            CCGASVENTCONTROL_FOG_STEP, 0);
-            if (((CcgasventcontrolState*)ex)->airMeter >= CCGASVENTCONTROL_AIR_METER_MIN)
+            if (state->airMeter >= CCGASVENTCONTROL_AIR_METER_MIN)
             {
-                (*gGameUIInterface)->runAirMeter((int)((CcgasventcontrolState*)ex)->airMeter);
+                (*gGameUIInterface)->runAirMeter((int)state->airMeter);
             }
             else
             {
                 (*gGameUIInterface)->airMeterSetShutdown();
-                (obj)->anim.localPosX = ((GameObject*)player)->anim.localPosX;
-                (obj)->anim.localPosY = ((GameObject*)player)->anim.localPosY;
-                (obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
+                obj->anim.localPosX = player->anim.localPosX;
+                obj->anim.localPosY = player->anim.localPosY;
+                obj->anim.localPosZ = player->anim.localPosZ;
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
                 (*gCameraInterface)->setMode(CCGASVENTCONTROL_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
-                ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WARP_BACK;
+                state->state = CCGASVENT_STATE_WARP_BACK;
             }
-            if (b != ((CcgasventcontrolState*)ex)->ventCount)
+            if (clearVentCount != state->ventCount)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
-                ((CcgasventcontrolState*)ex)->ventCount = b;
+                state->ventCount = clearVentCount;
             }
         }
         else
@@ -250,7 +233,7 @@ void ccgasventcontrol_update(GameObject* obj)
             (*gGameUIInterface)->airMeterSetShutdown();
             mainSetBits(GAMEBIT_GAS_PUZZLE_DONE, 1);
             mainSetBits(0x620, 0);
-            ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_SAVE_POINT;
+            state->state = CCGASVENT_STATE_SAVE_POINT;
         }
         break;
     case CCGASVENT_STATE_WARP_BACK:
@@ -258,28 +241,28 @@ void ccgasventcontrol_update(GameObject* obj)
         break;
     case CCGASVENT_STATE_SAVE_POINT:
     {
-        int player = (int)Obj_GetPlayerObject();
-        (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
-        ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_WAIT_CLEAR;
+        GameObject* player = Obj_GetPlayerObject();
+        (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+        state->state = CCGASVENT_STATE_WAIT_CLEAR;
         break;
     }
     case CCGASVENT_STATE_WAIT_CLEAR:
         if (mainGetBit(GAMEBIT_GAS_ACTIVE) == 0)
         {
             disableHeavyFog();
-            ((CcgasventcontrolState*)ex)->state = CCGASVENT_STATE_DONE;
+            state->state = CCGASVENT_STATE_DONE;
         }
         break;
     }
 }
 
-void ccgasventcontrol_init(GameObject* obj, u8* def)
+void ccgasventcontrol_init(GameObject* obj, CCGasVentControlPlacement* placement)
 {
-    char* inner = obj->extra;
+    CCGasVentControlState* state = obj->extra;
     obj->animEventCallback = CCGasVentControl_SeqFn;
-    obj->anim.rotX = (s16)((u32)def[0x1a] << 8);
+    obj->anim.rotX = (s16)((u32)placement->rotX << 8);
     if (mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
-        ((CcgasventcontrolState*)inner)->state = CCGASVENT_STATE_DONE;
+        state->state = CCGASVENT_STATE_DONE;
     }
 }

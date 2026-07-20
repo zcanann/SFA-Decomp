@@ -2228,7 +2228,7 @@ int playerState39(GameObject* obj, int state, f32 fv)
     hdr = *(s16*)obj;
     inner->yaw = hdr;
     inner->targetYaw = hdr;
-    if ((getButtons_80014dd8(0) & 0x20) == 0)
+    if ((padGetTriggers(0) & 0x20) == 0)
     {
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029C8C8;
         return 0x25;
@@ -4148,7 +4148,7 @@ int playerState28(GameObject* obj, int state, f32 fv)
     }
     if (((PlayerState*)state)->baddie.controlMode != 0x39)
     {
-        if ((getButtons_80014dd8(0) & 0x20) != 0)
+        if ((padGetTriggers(0) & 0x20) != 0)
         {
             ((ByteFlags*)((char*)inner + 0x3f6))->b20 = 1;
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029782C;
@@ -9280,7 +9280,7 @@ int playerStateMoving(int obj, int state, f32 fv)
             {
                 u32 fl2;
                 int stay;
-                if ((getButtons_80014dd8(0) & 0x20) != 0 &&
+                if ((padGetTriggers(0) & 0x20) != 0 &&
                     ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0 &&
                     ((fl2 = *(u8*)((char*)inner + 0x3f0)) >> 5 & 1) == 0 && (fl2 >> 3 & 1) == 0 &&
                     (fl2 >> 2 & 1) == 0 && ((PlayerState*)inner)->curAnimId != 0x44 &&
@@ -12879,7 +12879,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
             }
         }
         {
-            int btn = getButtons_80014dd8(0);
+            int btn = padGetTriggers(0);
             if ((btn & 0x20) != 0)
             {
                 if (((ByteFlags*)((char*)inner + 0x3f4))->b40 && !((ByteFlags*)((char*)inner + 0x3f0))->b20 &&

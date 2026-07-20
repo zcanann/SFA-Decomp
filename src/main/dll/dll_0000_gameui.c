@@ -7315,7 +7315,7 @@ void pauseMenuInit(void)
     lbl_803DD786 = 0;
     lbl_803DD784 = 0;
     lbl_803DD78C = 0;
-    padFn_80014b18(0xf);
+    padSetStickRepeatDelay(0xf);
     if (obj != NULL)
     {
     Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);

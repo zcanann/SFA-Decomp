@@ -67,9 +67,9 @@ void setJoypadDisabled(void)
     joypadDisabled = 1;
 }
 
-void padFn_80014b18(int value)
+void padSetStickRepeatDelay(int delay)
 {
-    gPadStickRepeatDelay = value;
+    gPadStickRepeatDelay = delay;
 }
 
 u32 buttonGetDisabled(int port)
@@ -192,7 +192,7 @@ u8 padGetRTrigger(int port)
     return statuses[gPadStatusToggle * 4 + port].triggerRight;
 }
 
-u16 getPadFn_80014d9c(int port)
+u16 padGetTriggersPressed(int port)
 {
     if (port > 0)
     {
@@ -205,7 +205,7 @@ u16 getPadFn_80014d9c(int port)
     return (&gPadTriggersPressed)[port];
 }
 
-u16 getButtons_80014dd8(int port)
+u16 padGetTriggers(int port)
 {
     if (port > 0)
     {
@@ -373,7 +373,7 @@ void padUpdate(void)
             gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
             currentStatus->err = PAD_ERR_NO_CONTROLLER;
         }
-        else if ((u8)(currentStatus->err + 3) <= 1 || lbl_803DCCA5 == 0)
+        else if ((u8)(currentStatus->err + 3) <= 1 || gPadReadReady == 0)
         {
             memcpy(currentStatus, prevPad, sizeof(PADStatus));
             useprev = 1;
@@ -510,7 +510,7 @@ void padUpdate(void)
     {
         gPadStatusToggle ^= 1;
     }
-    lbl_803DCCA5 = 0;
+    gPadReadReady = 0;
 }
 
 void setRumbleEnabled(u8 enabled)

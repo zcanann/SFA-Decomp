@@ -12,13 +12,12 @@
 #include "main/object_render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll/WM/dll_0201_wmcolrise.h"
 #include "main/object_descriptor.h"
-
-#define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
 extern f32 lbl_803E5DC8; /* 1.0: render scale */
 extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
@@ -28,7 +27,15 @@ extern f32 lbl_803E5DD8;       /* 0.5: settle speed when overshot */
 extern f32 lbl_803E5DDC;       /* 0.25: rise speed */
 extern f32 lbl_803E5DE0;       /* 0.125: sink speed */
 
-int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+#define WM_COLRISE_RENDER_SCALE          lbl_803E5DC8
+#define WM_COLRISE_RIDER_HEIGHT          lbl_803E5DCC
+#define WM_COLRISE_RAISED_OFFSET_LOW     lbl_803E5DD0
+#define WM_COLRISE_RAISED_OFFSET_HIGH    lbl_803E5DD4
+#define WM_COLRISE_SETTLE_SPEED          lbl_803E5DD8
+#define WM_COLRISE_RISE_SPEED            lbl_803E5DDC
+#define WM_COLRISE_SINK_SPEED            lbl_803E5DE0
+
+int WM_colrise_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
@@ -48,61 +55,61 @@ void WM_colrise_free(void)
 {
 }
 
-void WM_colrise_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void WM_colrise_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5DC8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, WM_COLRISE_RENDER_SCALE);
 }
 
 void WM_colrise_hitDetect(void)
 {
 }
 
-void WM_colrise_update(int* obj)
+void WM_colrise_update(GameObject* obj)
 {
-    u8* def;
-    WMColriseState* sub;
+    WMColrisePlacement* placement;
+    WMColriseState* state;
     s32 reached;
     f32 target;
     int i;
 
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    sub = ((GameObject*)obj)->extra;
-    sub->raiseTimer -= 1;
-    if ((s8)sub->raiseTimer < 0)
-        sub->raiseTimer = 0;
+    placement = (WMColrisePlacement*)obj->anim.placementData;
+    state = obj->extra;
+    state->raiseTimer -= 1;
+    if (state->raiseTimer < 0)
+        state->raiseTimer = 0;
     /* rearm the 60-frame rise window while any rider sits more than
        3.0 above the column */
-    if ((s8)OBJ_RIDER_REGISTRY(obj)->riderCount > 0)
+    if (obj->anim.proximityList->count > 0)
     {
-        for (i = 0; i < OBJ_RIDER_REGISTRY(obj)->riderCount; i++)
+        for (i = 0; i < obj->anim.proximityList->count; i++)
         {
-            GameObject* rider = (GameObject*)OBJ_RIDER_REGISTRY(obj)->riders[i];
-            if (rider->anim.localPosY - ((GameObject*)obj)->anim.localPosY > lbl_803E5DCC)
+            GameObject* rider = obj->anim.proximityList->objects[i];
+            if (rider->anim.localPosY - obj->anim.localPosY > WM_COLRISE_RIDER_HEIGHT)
             {
-                sub->raiseTimer = 0x3c;
+                state->raiseTimer = 0x3c;
             }
         }
     }
     reached = 0;
-    if ((sub->gameBit == -1 || (u32)mainGetBit(sub->gameBit) != 0) && (s8)sub->raiseTimer != 0)
+    if ((state->gameBit == -1 || (u32)mainGetBit(state->gameBit) != 0) && state->raiseTimer != 0)
     {
-        target = lbl_803E5DD0 + (lbl_803E5DD4 + ((WMColrisePlacement*)def)->base.posY);
-        if (((GameObject*)obj)->anim.localPosY > target)
+        target = WM_COLRISE_RAISED_OFFSET_LOW + (WM_COLRISE_RAISED_OFFSET_HIGH + placement->base.posY);
+        if (obj->anim.localPosY > target)
         {
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E5DD8 * timeDelta;
-            if (((GameObject*)obj)->anim.localPosY > target)
+            obj->anim.localPosY = obj->anim.localPosY - WM_COLRISE_SETTLE_SPEED * timeDelta;
+            if (obj->anim.localPosY > target)
             {
-                ((GameObject*)obj)->anim.localPosY = target;
+                obj->anim.localPosY = target;
             }
         }
         else
         {
-            ((GameObject*)obj)->anim.localPosY = lbl_803E5DDC * timeDelta + ((GameObject*)obj)->anim.localPosY;
-            if (((GameObject*)obj)->anim.localPosY > target)
+            obj->anim.localPosY = WM_COLRISE_RISE_SPEED * timeDelta + obj->anim.localPosY;
+            if (obj->anim.localPosY > target)
             {
-                ((GameObject*)obj)->anim.localPosY = target;
+                obj->anim.localPosY = target;
             }
             else
             {
@@ -112,10 +119,10 @@ void WM_colrise_update(int* obj)
     }
     else
     {
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E5DE0 * timeDelta;
-        if (((GameObject*)obj)->anim.localPosY < ((WMColrisePlacement*)def)->base.posY)
+        obj->anim.localPosY = obj->anim.localPosY - WM_COLRISE_SINK_SPEED * timeDelta;
+        if (obj->anim.localPosY < placement->base.posY)
         {
-            ((GameObject*)obj)->anim.localPosY = ((WMColrisePlacement*)def)->base.posY;
+            obj->anim.localPosY = placement->base.posY;
         }
         else
         {
@@ -132,12 +139,12 @@ void WM_colrise_update(int* obj)
     }
 }
 
-void WM_colrise_init(s16* obj, s8* def)
+void WM_colrise_init(GameObject* obj, WMColrisePlacement* placement)
 {
-    WMColriseState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->animEventCallback = WM_colrise_SeqFn;
-    obj[0] = (s16)((s32)((WMColrisePlacement*)def)->rotXByte << 8);
-    state->gameBit = ((WMColrisePlacement*)def)->gameBit;
+    WMColriseState* state = obj->extra;
+    obj->animEventCallback = WM_colrise_SeqFn;
+    obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
+    state->gameBit = placement->gameBit;
 }
 
 void WM_colrise_release(void)

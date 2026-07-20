@@ -974,7 +974,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             f32 f6 = ((GameObject*)obj)->anim.localPosZ - state->posHistZ[4];
             if (f5 * f5 + f6 * f6 > PUSHABLE_UNIT_SCALE && (state->flags & PUSHABLE_FLAG_PUSH_SFX_DUE) != 0)
             {
-                Sfx_PlayFromObject((u32)obj, SFXTRIG_birdymornin11);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_birdymornin11);
                 state->flags = state->flags & ~PUSHABLE_FLAG_PUSH_SFX_DUE;
             }
         }

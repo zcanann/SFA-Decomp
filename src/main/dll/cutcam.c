@@ -224,7 +224,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         else
         {
             cond = getCurSeqNo();
-            if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & PAD_TRIGGER_L) != 0)) &&
+            if (((cond == 0) && (buttons = padGetTriggersPressed(0), (buttons & PAD_TRIGGER_L) != 0)) &&
                 ((camera->anim.flags & 4) == 0))
             {
                 action43Payload.action = 5;

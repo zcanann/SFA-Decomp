@@ -831,7 +831,7 @@ void Link_initialise(void)
         ((LinkTextureSlot*)linkTextures)[i].texture = textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
     }
 
-    padFn_80014b18(10);
+    padSetStickRepeatDelay(10);
     linkItemOpacity = 0xff;
     fn_8001BE2C(3);
     linkIsRotated = 0;
