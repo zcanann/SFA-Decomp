@@ -325,14 +325,14 @@ int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
 void mapLoadUnloadObjects(int flag)
 {
     int grpBit;
-    u32 bits;
+    u32 objStart;
     GameObject* obj;
     int unload;
     s16 count;
     int bit;
     u8 mask;
     u8* bp;
-    u32 objStart;
+    u32 bits;
     int slot;
     int i;
     int objCount;
