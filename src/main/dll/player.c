@@ -623,7 +623,7 @@ int playerStopRidingObject(GameObject* obj)
         obj->anim.modelState->flags &= 0xFFFFEFFFLL;
         inner->focusObject = NULL;
         obj->anim.activeMove = -1;
-        (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))((int)obj, (int)inner, 1);
+        (*gPlayerInterface)->setState(obj, inner, 1);
         *(int*)&inner->baddie.unk304 = (int)fn_802A514C;
         Music_Trigger(MUSICTRIG_inside_warlock, 0);
         Music_Trigger(MUSICTRIG_drako_2, 0);
@@ -647,10 +647,10 @@ void fn_80295918(GameObject* obj, int sel, f32 fval)
         break;
     }
     case 6:
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 0x3f);
+        (*gPlayerInterface)->setState(obj, (void*)state, 0x3f);
         break;
     case 5:
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 1);
+        (*gPlayerInterface)->setState(obj, (void*)state, 1);
         *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A514C;
         break;
     case 10:
@@ -749,7 +749,7 @@ void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3)
     obj->anim.worldPosZ = f3;
     obj->anim.localPosZ = f3;
     fn_802AB5A4(obj, inner, 7);
-    (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, inner, 1);
+    (*gPlayerInterface)->setState(obj, (void*)inner, 1);
     *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
 }
 
@@ -1186,7 +1186,7 @@ int playerSetHeldObject(GameObject* obj, GameObject* heldObj)
     if (heldObj != NULL)
     {
         inner->heldObj = heldObj;
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 5);
+        (*gPlayerInterface)->setState(obj, inner, 5);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A4B4C;
     }
     else if (inner->heldObj != NULL)
@@ -1209,7 +1209,7 @@ int playerSetHeldObject(GameObject* obj, GameObject* heldObj)
             inner->heldObj = NULL;
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 1);
+        (*gPlayerInterface)->setState(obj, inner, 1);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
     }
     return inner->heldObj != NULL;
@@ -1604,7 +1604,7 @@ void fn_80296D20(GameObject* obj, GameObject* parentObj)
                 *(int*)((char*)inner->heldObj + 0xf8) = 0;
                 inner->heldObj = 0;
             }
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 2);
+            (*gPlayerInterface)->setState(obj, (void*)state, 2);
             *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A514C;
         }
     }
@@ -11394,7 +11394,7 @@ void fn_802A93F4(GameObject* obj, int p2, int p3)
     *(int*)((char*)inner + 0x4) |= 0x8000000;
     if (*(s8*)(*(int*)((char*)*(int*)&obj->extra + 0x35c)) <= 0)
     {
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 3);
+        (*gPlayerInterface)->setState(obj, inner, 3);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = 0;
     }
     vec = (s16*)objModelGetVecFn_800395d8(obj, 1);
@@ -12221,12 +12221,12 @@ void playerCastSpell(int a, int b, int c)
         break;
     case GAMEBIT_STAFF_ABILITY_STAFF_BOOSTER:
         gPlayerInteractTarget = ((PlayerState*)b)->cameraTargetObject;
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(a, b, 0x32);
+        (*gPlayerInterface)->setState((void*)a, (void*)b, 0x32);
         *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802994A4;
         break;
     case 0x107:
     case 0xc55:
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(a, b, 0x36);
+        (*gPlayerInterface)->setState((void*)a, (void*)b, 0x36);
         *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802985AC;
         break;
     case 0x40:
@@ -14142,7 +14142,7 @@ void playerProcessQueuedItemCommand(GameObject* obj, int state)
                 cameraSetInterpMode(2);
                 (*gCameraInterface)->setMode(0x52, 1, 0, 0, NULL, 0x2d, 0xff);
                 ((ByteFlags*)((char*)state + 0x3f6))->b40 = 1;
-                (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 0x2a);
+                (*gPlayerInterface)->setState(obj, (void*)state, 0x2a);
                 *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_8029A4A8;
                 playerCastSpell((int)obj, state, ((PlayerState*)state)->queuedItemCommand);
             }
