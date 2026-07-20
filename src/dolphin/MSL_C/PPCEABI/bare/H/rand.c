@@ -1,12 +1,12 @@
 #include "dolphin.h"
 
-static u32 lbl_803DE410;
+static u32 sRandState;
 
 u32 rand(void) {
-    lbl_803DE410 = lbl_803DE410 * 0x19660D + 0x3C6EF35F;
-    return lbl_803DE410;
+    sRandState = sRandState * 0x19660D + 0x3C6EF35F;
+    return sRandState;
 }
 
 void srand(u32 seed) {
-    lbl_803DE410 = seed;
+    sRandState = seed;
 }

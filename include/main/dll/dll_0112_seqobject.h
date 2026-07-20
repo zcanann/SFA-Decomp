@@ -21,12 +21,22 @@ typedef struct SeqObjectPlacement
     u8 pad25[3];
 } SeqObjectPlacement;
 
+STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, initialYaw) == 0x1C);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerId) == 0x1E);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, preemptSequenceId) == 0x20);
+STATIC_ASSERT(offsetof(SeqObjectPlacement, warpMapId) == 0x24);
+STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
+
 typedef struct SeqObjectState
 {
     u8 flags;
-    s8 triggerBitState;
+    s8 triggerBitState; /* previous sampled value of triggerGameBit */
     u8 pad02;
 } SeqObjectState;
+
+STATIC_ASSERT(offsetof(SeqObjectState, triggerBitState) == 0x1);
+STATIC_ASSERT(sizeof(SeqObjectState) == 0x3);
 
 extern ObjectDescriptor gSeqObjectObjDescriptor;
 
@@ -35,7 +45,7 @@ int SeqObject_SeqFn(GameObject* obj, int* unused, ObjAnimUpdateState* animUpdate
 int SeqObject_getExtraSize(void);
 int SeqObject_getObjectTypeId(void);
 void SeqObject_free(GameObject* obj);
-void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SeqObject_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void SeqObject_update(GameObject* obj);
 void SeqObject_init(GameObject* obj, SeqObjectPlacement* params);
 

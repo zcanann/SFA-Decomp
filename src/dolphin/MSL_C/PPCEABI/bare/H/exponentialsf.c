@@ -39,7 +39,15 @@ static inline u32 float_bits(float value)
     return *(u32*)&value;
 }
 
-static inline int classify_float(float value)
+typedef enum FloatClass {
+    FLOAT_CLASS_NAN = 1,
+    FLOAT_CLASS_INFINITY = 2,
+    FLOAT_CLASS_ZERO = 3,
+    FLOAT_CLASS_NORMAL = 4,
+    FLOAT_CLASS_SUBNORMAL = 5,
+} FloatClass;
+
+static inline FloatClass classify_float(float value)
 {
     u32 bits;
     s32 fraction;
@@ -50,17 +58,17 @@ static inline int classify_float(float value)
     case 0x7F800000:
         fraction = bits & 0x007FFFFF;
         if (fraction != 0) {
-            return 1;
+            return FLOAT_CLASS_NAN;
         }
-        return 2;
+        return FLOAT_CLASS_INFINITY;
     case 0:
         fraction = bits & 0x007FFFFF;
         if (fraction != 0) {
-            return 5;
+            return FLOAT_CLASS_SUBNORMAL;
         }
-        return 3;
+        return FLOAT_CLASS_ZERO;
     default:
-        return 4;
+        return FLOAT_CLASS_NORMAL;
     }
 }
 
@@ -69,75 +77,75 @@ typedef union {
     long i;
 } float_word;
 
-static inline float log2_kernel(float x, float* table)
+static inline float log2_kernel(float value, const float* table)
 {
     u32 bits;
     int exponent;
-    u32 index;
-    u32 fraction;
-    float_word high;
+    u32 tableIndex;
+    u32 fractionBits;
+    float_word roundedMantissa;
     float_word coef0;
     float_word coef1;
-    float_word pad;
-    float_word full;
+    float_word inputWord;
+    float_word normalizedMantissa;
 
-    bits = *(u32*)&x;
+    bits = *(u32*)&value;
     coef0.i = lbl_803DC658;
     coef1.i = lbl_803DC65C;
     exponent = (bits >> 23) - 0x80;
-    fraction = bits;
-    fraction &= 0x007FFFFF;
-    index = fraction >> 16;
+    fractionBits = bits;
+    fractionBits &= 0x007FFFFF;
+    tableIndex = fractionBits >> 16;
 
     if ((bits & 0xFFFF) != 0) {
         float delta;
 
-        pad.i = bits;
-        high.i = (bits & 0x007F0000) | 0x3F800000;
-        full.i = fraction | 0x3F800000;
+        inputWord.i = bits;
+        roundedMantissa.i = (bits & 0x007F0000) | 0x3F800000;
+        normalizedMantissa.i = fractionBits | 0x3F800000;
 
         if ((bits & 0x00008000) != 0) {
-            ++index;
-            high.i += 0x10000;
+            ++tableIndex;
+            roundedMantissa.i += 0x10000;
         }
 
-        delta = full.f - high.f;
-        delta *= __one_over_F[index];
+        delta = normalizedMantissa.f - roundedMantissa.f;
+        delta *= __one_over_F[tableIndex];
         return ((float)exponent + lbl_803E7E54)
-             + (table[index]
+             + (table[tableIndex]
                 + (delta
                    + (lbl_803DC650[0] * delta
                       + (lbl_803DC650[1] * delta + (delta * delta) * (delta * coef1.f + coef0.f)))));
     }
 
-    return ((float)exponent + lbl_803E7E54) + table[index];
+    return ((float)exponent + lbl_803E7E54) + table[tableIndex];
 }
 
-static inline float exp2_kernel(float x, float* table)
+static inline float exp2_kernel(float value, const float* table)
 {
-    float_word scale;
-    float_word pad;
+    float_word exponentScale;
+    float_word scaleCopy;
     float fraction;
-    float z;
-    float poly;
+    float scaleFactor;
+    float polynomial;
 
-    scale.i = x;
-    pad.i = scale.i;
-    fraction = x - (float)scale.i;
+    exponentScale.i = value;
+    scaleCopy.i = exponentScale.i;
+    fraction = value - (float)exponentScale.i;
 
-    if (scale.i > 128) {
+    if (exponentScale.i > 128) {
         return lbl_803DC64C;
     }
 
-    if (scale.i < -127) {
+    if (exponentScale.i < -127) {
         return 0.0f;
     }
 
-    scale.i += 127;
-    scale.i <<= 23;
-    z = scale.f;
+    exponentScale.i += 127;
+    exponentScale.i <<= 23;
+    scaleFactor = exponentScale.f;
 
-    poly = fraction
+    polynomial = fraction
          * (fraction
                 * (fraction
                        * (fraction
@@ -149,60 +157,60 @@ static inline float exp2_kernel(float x, float* table)
                        + table[131])
                 + table[130])
          + table[129];
-    poly = fraction * poly;
+    polynomial = fraction * polynomial;
 
-    return z * (poly + lbl_803E7E58);
+    return scaleFactor * (polynomial + lbl_803E7E58);
 }
 
 #define float_bits(value) (*(u32*)&(value))
 
 #pragma optimization_level 2
 #pragma opt_propagation off
-float powf(float x, float y)
+float powf(float base, float power)
 {
-    float* table;
-    int int_y;
-    float d;
+    const float* table;
+    int integerPower;
+    float fractionalPower;
 
-    table = (float*)lbl_80332C78;
+    table = (const float*)lbl_80332C78;
 
-    if (x > lbl_803E7E50) {
-        y *= log2_kernel(x, table);
-        return exp2_kernel(y, table);
+    if (base > lbl_803E7E50) {
+        power *= log2_kernel(base, table);
+        return exp2_kernel(power, table);
     }
 
-    if (x < lbl_803E7E50) {
-        int_y = y;
-        d = y - (float)int_y;
-        if (d != lbl_803E7E50) {
+    if (base < lbl_803E7E50) {
+        integerPower = power;
+        fractionalPower = power - (float)integerPower;
+        if (fractionalPower != lbl_803E7E50) {
             return lbl_803DC648;
         }
 
-        if (int_y % 2 != 0) {
-            y *= log2_kernel(-x, table);
-            return -exp2_kernel(y, table);
+        if (integerPower % 2 != 0) {
+            power *= log2_kernel(-base, table);
+            return -exp2_kernel(power, table);
         }
 
-        y *= log2_kernel(-x, table);
-        return exp2_kernel(y, table);
+        power *= log2_kernel(-base, table);
+        return exp2_kernel(power, table);
     }
 
-    if (classify_float(x) == 1) {
-        return x;
+    if (classify_float(base) == FLOAT_CLASS_NAN) {
+        return base;
     }
 
-    switch (classify_float(y)) {
-    case 3:
+    switch (classify_float(power)) {
+    case FLOAT_CLASS_ZERO:
         return 1.0f;
-    case 1:
-    case 2:
+    case FLOAT_CLASS_NAN:
+    case FLOAT_CLASS_INFINITY:
         return lbl_803DC648;
-    case 4:
-    case 5:
-        if ((float_bits(x) & 0x80000000) != 0) {
+    case FLOAT_CLASS_NORMAL:
+    case FLOAT_CLASS_SUBNORMAL:
+        if ((float_bits(base) & 0x80000000) != 0) {
             return lbl_803DC64C;
         }
-        return x;
+        return base;
     }
 
     return 0.0f;

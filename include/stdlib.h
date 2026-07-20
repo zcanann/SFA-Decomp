@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-int rand(void);
-void srand(int seed);
+u32 rand(void);
+void srand(u32 seed);
 
 #endif /* STDLIB_H_ */
