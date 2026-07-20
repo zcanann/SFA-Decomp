@@ -229,7 +229,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             }
             if (timerCountDown(&state->resetTimer) != 0)
             {
-                proximitymine_resetToIdle(obj);
+                ProximityMine_expire(obj);
                 return;
             }
         }

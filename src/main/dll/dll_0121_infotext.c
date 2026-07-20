@@ -8,53 +8,44 @@
 #include "main/object_descriptor.h"
 #include "main/dll/dll_0121_infotext.h"
 
-#define INFOTEXT_OBJFLAG_HIDDEN 0x4000
-#define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000
+int infotext_getExtraSize(void) { return sizeof(InfoTextState); }
 
-typedef struct InfoTextPlacement
+void infotext_update(GameObject* obj)
 {
-    u8 pad00[0x18];
-    u8 rotByte;     /* 0x18 */
-    u8 hintTextIdx; /* 0x19 */
-} InfoTextPlacement;
+    InfoTextState* state;
+    GameObject* objReg = obj;
 
-int infotext_getExtraSize(void) { return 0x4; }
-
-void infotext_update(int obj)
-{
-    f32* sub;
-    GameObject* objReg = (GameObject*)obj;
-    sub = objReg->extra;
-    if (ObjTrigger_IsSet(obj) != 0 && isAreaNameTextActive() == 0)
+    state = objReg->extra;
+    if (ObjTrigger_IsSet((int)obj) != 0 && isAreaNameTextActive() == 0)
     {
-        *sub = 600.0f;
+        state->displayTimer = 600.0f;
     }
-    if (*sub > 0.0f)
+    if (state->displayTimer > 0.0f)
     {
-        if ((*(u8*)&(objReg)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        if ((objReg->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) == 0)
         {
-            *sub = 0.0f;
+            state->displayTimer = 0.0f;
         }
         else
         {
-            *sub = *sub - timeDelta;
-            showHelpText((objReg)->anim.modelInstance->helpTextIds[(*(u8**)&(objReg)->anim.placementData)[0x19]]);
+            state->displayTimer = state->displayTimer - timeDelta;
+            showHelpText(objReg->anim.modelInstance->helpTextIds[
+                ((InfoTextSetup*)objReg->anim.placementData)->hintTextIndex]);
         }
     }
-    if ((objReg->anim.modelInstance->flags & 1) != 0)
+    if ((objReg->anim.modelInstance->flags & OBJDEF_FLAG_HAS_MODELS) != 0)
     {
         objRenderFn_80041018(objReg);
     }
 }
 
-void infotext_init(GameObject *obj, s8* def)
+void infotext_init(GameObject* obj, InfoTextSetup* setup)
 {
     u32 flags;
-    InfoTextPlacement* p = (InfoTextPlacement*)def;
-    flags = (u32)(obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
-    (obj)->objectFlags = flags;
-    (obj)->anim.rotX = (s16)((s32)(u8)p->rotByte << 8);
-    objSetHintTextIdx(obj, (u8)p->hintTextIdx);
+    flags = (u32)obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = flags;
+    obj->anim.rotX = (s16)((s32)(u8)setup->rotation << 8);
+    objSetHintTextIdx(obj, (u8)setup->hintTextIndex);
 }
 
 ObjectDescriptor gInfoTextObjDescriptor = {

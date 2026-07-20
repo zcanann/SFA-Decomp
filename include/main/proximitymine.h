@@ -102,7 +102,7 @@ typedef struct ProximityMineDef {
 
 extern ObjectDescriptor gProximityMineObjDescriptor;
 
-void proximitymine_resetToIdle(ProximityMineObject *obj);
+void ProximityMine_expire(ProximityMineObject *obj);
 int ProximityMine_getExtraSize(void);
 int ProximityMine_getObjectTypeId(void);
 void ProximityMine_free(ProximityMineObject *obj);

@@ -14,19 +14,19 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-void proximitymine_resetToIdle(ProximityMineObject* obj)
+void ProximityMine_expire(ProximityMineObject* obj)
 {
     ProximityMineState* state;
-    f32 zero;
+    f32 zeroVelocity;
 
     state = obj->state;
     Obj_GetPlayerObject();
     Sfx_StopFromObject((u32)obj, SFXTRIG_id_2e9);
     Sfx_StopFromObject((u32)obj, SFXTRIG_id_2e8);
     Sfx_PlayFromObject((u32)obj, SFXTRIG_crthit6);
-    zero = lbl_803E6768;
-    obj->velocityX = zero;
-    obj->velocityZ = zero;
+    zeroVelocity = lbl_803E6768;
+    obj->velocityX = zeroVelocity;
+    obj->velocityZ = zeroVelocity;
     storeZeroToFloatParam(&state->renderTimer);
     s16toFloat(&state->renderTimer, 10);
     state->mode = PROXIMITYMINE_MODE_EXPIRED;
@@ -35,8 +35,9 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     storeZeroToFloatParam(&state->resetTimer);
     fn_8009A8C8((GameObject*)obj, lbl_803E676C);
     {
-        f32 dist = state->triggerDistance - lbl_803E6774;
-        spawnExplosion((GameObject*)obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);
+        f32 triggerRadiusDelta = state->triggerDistance - lbl_803E6774;
+        spawnExplosion((GameObject*)obj, triggerRadiusDelta * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1,
+                       0);
     }
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, state->triggerDistance, -5, 10);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
