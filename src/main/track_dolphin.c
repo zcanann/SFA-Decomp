@@ -581,7 +581,7 @@ void renderGlows(void)
     textureSetupFn_800799c0();
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
-    GXSetFog(GX_FOG_NONE, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, fogCol);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogCol);
     gxBlendFn_800789ac();
     alpha = 0xff;
     gSunFlareScissorWidth = 0;
