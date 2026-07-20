@@ -733,6 +733,7 @@ void mapBlockRender_setupShaderTextures(MapShader* shader, int mode)
     TexOverride* ovr;
     u8 layerByte;
     u32 kColor;
+    f32 tx;
     Mtx texMatrix;
 
     kColor = lbl_803DEBB0;
@@ -767,8 +768,8 @@ void mapBlockRender_setupShaderTextures(MapShader* shader, int mode)
         }
         if (layer->mtxIndex != 0xff)
         {
-            PSMTXTrans(texMatrix,
-                       *(float*)(((u32)layer->mtxIndex << 4) + lbl_803DCE68) / 1048576.0f,
+            tx = *(float*)(lbl_803DCE68 + ((u32)layer->mtxIndex << 4)) / 1048576.0f;
+            PSMTXTrans(texMatrix, tx,
                        *(float*)((lbl_803DCE68 + 4) + ((u32)layer->mtxIndex << 4)) / 1048576.0f,
                        lbl_803DEBCC);
             texMtx = texMatrix;
@@ -810,8 +811,8 @@ void mapBlockRender_setupShaderTextures(MapShader* shader, int mode)
         }
         if (layer->mtxIndex != 0xff)
         {
-            PSMTXTrans(texMatrix,
-                       *(float*)(((u32)layer->mtxIndex << 4) + lbl_803DCE68) / 1048576.0f,
+            tx = *(float*)(lbl_803DCE68 + ((u32)layer->mtxIndex << 4)) / 1048576.0f;
+            PSMTXTrans(texMatrix, tx,
                        *(float*)((lbl_803DCE68 + 4) + ((u32)layer->mtxIndex << 4)) / 1048576.0f,
                        lbl_803DEBCC);
             texMtx = texMatrix;
@@ -858,10 +859,10 @@ void mapBlockRender_setupShaderTextures(MapShader* shader, int mode)
                     }
                     if (layer->mtxIndex != 0xff)
                     {
-                        float* mvec;
                         int mtxOff = (u32)layer->mtxIndex * 0x10;
-                        mvec = (float*)(lbl_803DCE68 + mtxOff);
-                        PSMTXTrans(texMatrix, mvec[0] / 1048576.0f, mvec[1] / 1048576.0f, lbl_803DEBCC);
+                        tx = *(float*)(lbl_803DCE68 + mtxOff) / 1048576.0f;
+                        PSMTXTrans(texMatrix, tx, *(float*)((lbl_803DCE68 + mtxOff) + 4) / 1048576.0f,
+                                   lbl_803DEBCC);
                         texMtx = texMatrix;
                     }
                     else

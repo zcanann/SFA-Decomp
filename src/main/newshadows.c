@@ -1524,11 +1524,15 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
 void initFn_8006d020(void)
 {
     u8 saved;
+    f32* px;
+    int placed;
+    f32* pz;
+    f32* prad;
+    f32* e;
+    f32* o;
+    int attempts;
     int count;
     int col;
-    f32* e;
-    int placed;
-    int attempts;
     int j;
     u8 collide;
     int row;
@@ -1540,7 +1544,6 @@ void initFn_8006d020(void)
     e = gNewShadowPlacements;
     while (placed < 0x32 && attempts < 10000u)
     {
-        f32 *px, *pz, *prad;
         e[0] = (f32)randomGetRange(8, 0x10);
         e[3] = lbl_803DEDD8 * (f32)randomGetRange(5, 10);
         e[4] = e[3] * (lbl_803DEDD8 * (f32)randomGetRange(0x14, 0x32));
@@ -1550,7 +1553,6 @@ void initFn_8006d020(void)
         prad = &e[4];
         do
         {
-            f32* o;
             *px = lbl_803DEDDC * (f32)randomGetRange(0, 999);
             *pz = lbl_803DEDDC * (f32)randomGetRange(0, 999);
             collide = 0;
@@ -1600,7 +1602,7 @@ void initFn_8006d020(void)
             {
                 f32 o1, o2;
                 int hi, lo;
-                int dst = (int)gNewShadowNoiseTexFrames[tex] + lowoff + rowoff;
+                int dst = (int)gNewShadowNoiseTexFrames[tex] + rowoff + lowoff;
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
                 fn_8006CD20(row * lbl_803DEDE0, col * lbl_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
