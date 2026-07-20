@@ -6,6 +6,7 @@
 #include "track/intersect_depth_read_api.h"
 #include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
+#include "main/pi_dolphin.h"
 #include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -5812,11 +5813,8 @@ void pauseMenuDoSave(void)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
-                      lbl_803E1E68);
-    }
+    GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)gRenderModeObj->fbWidth,
+                  gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
     for (i = 1; i < 6; i++)
     {
         if (lbl_803A9410[i] == NULL)
@@ -5901,11 +5899,8 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
-                      lbl_803E1E3C, lbl_803E1E68);
-    }
+    GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32)gRenderModeObj->fbWidth,
+                  gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
 }
 
 /* Conditional render setup gated on
@@ -5931,11 +5926,8 @@ void perspectiveFn_80129db4(void)
     Camera_SetFovY(lbl_803E2044);
     Camera_RebuildProjectionMatrix();
     Camera_UpdateViewMatrices();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
-                      lbl_803E1E68);
-    }
+    GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)gRenderModeObj->fbWidth,
+                  gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
     shadowRenderFn_8006b558((int*)((void**)lbl_803A9410)[lbl_803DBA64]);
     {
         void* slot = ((void**)lbl_803A9410)[lbl_803DBA64];

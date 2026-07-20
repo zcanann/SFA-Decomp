@@ -134,7 +134,6 @@ typedef struct ObjModelRenderOp
     u8 pad38[0x3C - 0x38];
     u32 flags;
 } ObjModelRenderOp;
-extern s32 gObjLevelLockSlots;
 extern volatile int lbl_803DCC80;
 extern f32 lbl_803DEA04;
 extern const f32 lbl_803DEA1C;
@@ -3760,14 +3759,14 @@ int unlockLevel(s32 val, int idx, int flag)
     s32 cur;
     if (flag == 1)
     {
-        (&gObjLevelLockSlots)[0] = -2;
-        (&gObjLevelLockSlots)[1] = -2;
+        gObjLevelLockSlots[0] = -2;
+        gObjLevelLockSlots[1] = -2;
         return -1;
     }
-    cur = (&gObjLevelLockSlots)[idx];
+    cur = gObjLevelLockSlots[idx];
     if (val == cur || cur == -2)
     {
-        (&gObjLevelLockSlots)[idx] = -2;
+        gObjLevelLockSlots[idx] = -2;
         return -1;
     }
     return cur;
@@ -3776,10 +3775,10 @@ int unlockLevel(s32 val, int idx, int flag)
 
 int lockLevel(s32 val, int idx)
 {
-    s32 cur = (&gObjLevelLockSlots)[idx];
+    s32 cur = gObjLevelLockSlots[idx];
     if (cur == -2)
     {
-        (&gObjLevelLockSlots)[idx] = val;
+        gObjLevelLockSlots[idx] = val;
         return -1;
     }
     return cur;
@@ -3944,7 +3943,7 @@ int mapUnload(int mapId, int flags)
         st = (int*)(*gMapEventInterface)->getCurCharPos();
         {
             int v = *(s8*)((char*)st + 0xe);
-            if (v != gObjLevelLockSlots && v != (&gObjLevelLockSlots)[1])
+            if (v != gObjLevelLockSlots[0] && v != gObjLevelLockSlots[1])
             {
                 if ((flags & 0x10000000) && mapId != v)
                 {
@@ -3965,7 +3964,7 @@ int mapUnload(int mapId, int flags)
         f20 = flags & 0x20000000;
         f10 = flags & 0x10000000;
         f80 = flags & 0x80000000;
-        lockp = &gObjLevelLockSlots;
+        lockp = gObjLevelLockSlots;
         for (; i < 0x38; i += 2)
         {
             if ((f20 && mapId == MAPID_RT(e[0])) || (f10 && mapId != MAPID_RT(e[0])) ||
@@ -3981,7 +3980,7 @@ int mapUnload(int mapId, int flags)
                     if (f80 || ((flags & e[1]) && mapId == ((s16*)((char*)tbl + 0x20000 + -0x68C8))[idx]) ||
                         (f10 && mapId != MAPOWNER_RT(idx)) || (f20 && mapId == MAPOWNER_RT(idx)))
                     {
-                        if (gObjLevelLockSlots != (v = MAPOWNER_RT(idx)) && lockp[1] != v)
+                        if (gObjLevelLockSlots[0] != (v = MAPOWNER_RT(idx)) && lockp[1] != v)
                         {
                             switch (idx)
                             {
