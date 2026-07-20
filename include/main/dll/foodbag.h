@@ -11,13 +11,6 @@ typedef struct Dll81Interface
     Dll81SpawnFn spawn;
 } Dll81Interface;
 
-void dll_7C_func03(int param_1,int param_2,int param_3,u32 param_4);
-int dll_7D_func03(int param_1,int param_2,int param_3,u32 param_4,u32 param_5,
-                 f32 *param_6);
-void dll_7E_func03(int param_1,int param_2,int param_3,u32 param_4,u32 param_5,f32 *param_6
-                 );
-void dll_7F_func03(int param_1,int param_2,int param_3,u32 param_4);
-void dll_80_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_81_func00_nop(void);
 void dll_81_func01_nop(void);
 int dll_81_func03(int sourceObj, int variant, void* posSource, u32 flags, int owner, int unused);
@@ -49,9 +42,4 @@ void dll_8B_func03(int param_1,int param_2,int param_3,u32 param_4,u32 param_5,
 void dll_8C_func00_nop(void);
 void dll_8C_func01_nop(void);
 void dll_8C_func03(int param_1,int param_2,int param_3,u32 param_4);
-int dll_8D_func03(int param_1,int param_2,int param_3,u32 param_4);
-void dll_8E_func03(int param_1,int param_2,int param_3,u32 param_4);
-void dll_8F_func03(int param_1,int param_2,int param_3,u32 param_4);
-void dll_90_func03(int param_1,int param_2,int param_3,u32 param_4);
-
 #endif /* MAIN_DLL_FOODBAG_H_ */
