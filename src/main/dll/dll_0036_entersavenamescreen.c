@@ -34,7 +34,7 @@ extern f32 lbl_803E1D9C;
 
 s32 gEnterSaveNameCharWidths[40];
 s32 gEnterSaveNameCharOffsets[40];
-extern u8 saveFileSelect_currentSlotIndex;
+extern s8 saveFileSelect_currentSlotIndex;
 extern f32 lbl_803DD6D0;
 extern f32 gEnterSaveNameTargetScrollVel;
 extern u8 gEnterSaveNameAutoScrolling;
@@ -231,7 +231,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
             {
                 gEnterSaveNameBuffer[gEnterSaveNameLength++] =
                     *(char*)gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
-                gEnterSaveNameBuffer[*(volatile u8*)&gEnterSaveNameLength] = 0;
+                gEnterSaveNameBuffer[gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
                 Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_TYPE);
                 if (gEnterSaveNameLength == ENTER_SAVE_NAME_MAX_LENGTH)
@@ -257,7 +257,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
                     gEnterSaveNameBuffer[3] = 0;
                 }
                 Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_CONFIRM);
-                gplayNewGame(gEnterSaveNameBuffer, saveFileSelect_currentSlotIndex);
+                gplayNewGame(gEnterSaveNameBuffer, *(u8*)&saveFileSelect_currentSlotIndex);
                 loadUiDll(ENTER_SAVE_NAME_MENU_DLL);
                 lbl_803DD6EC = 2;
             }

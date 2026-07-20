@@ -298,7 +298,7 @@ void CFCrate_update(GameObject* obj)
             u32 r;
             int tbl;
             r = randomGetRange(0, state->sfxCount - 1) << 1;
-            tbl = *(int volatile*)&state->sfxTable;
+            tbl = *(int*)&state->sfxTable;
             Sfx_PlayFromObject((int)obj, *(u16*)(tbl + r));
             state->sfxTimer = state->sfxPeriod;
             r = randomGetRange(0, state->sfxPeriod);

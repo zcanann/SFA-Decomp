@@ -272,7 +272,7 @@ void PressureSwitchFB_update(GameObject* obj)
                 off += 4;
             }
         }
-        slots2 = *(volatile int*)&obj->extra;
+        slots2 = *(int*)&obj->extra;
         found = pfb_scanTrackedSlots(slots2, 0, 0, 0);
         if (found & 0xff)
         {
