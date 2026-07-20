@@ -4,6 +4,14 @@
 #include "main/game_object.h"
 #include "global.h"
 #include "main/objanim_update.h"
+#include "main/obj_placement.h"
+
+typedef struct GCRobotBlastPlacement
+{
+    ObjPlacement base;
+    u8 unk18;
+    s8 mode;
+} GCRobotBlastPlacement;
 
 int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int GCRobotBlast_getExtraSize(void);
@@ -12,7 +20,7 @@ void GCRobotBlast_free(void);
 void GCRobotBlast_render(void);
 void GCRobotBlast_hitDetect(void);
 void GCRobotBlast_update(void);
-void GCRobotBlast_init(GameObject* obj, s8* def);
+void GCRobotBlast_init(GameObject* obj, GCRobotBlastPlacement* placement);
 void GCRobotBlast_release(void);
 void GCRobotBlast_initialise(void);
 

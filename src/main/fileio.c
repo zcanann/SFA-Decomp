@@ -204,7 +204,7 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
         mm_free(fileInfo);
         return NULL;
     }
-    size = *(int*)((u8*)fileInfo + 0x34);
+    size = fileInfo->length;
     alignedSize = (size + 0x1f) & ~0x1f;
     guard = testAndSet_onlyUseHeap3(0) & 0xff;
     buf = mmAlloc(alignedSize, 0x7d7d7d7d, 0);

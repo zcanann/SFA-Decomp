@@ -104,10 +104,22 @@ u8 lbl_803268B4[24] = {0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04, 0x00, 0x2
 int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
 int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
 
-void* gNW_mammothObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, (void*)0x00090000,
-                                      (void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, NW_mammoth_init,
-                                      NW_mammoth_update, (void*)0x00000000,      NW_mammoth_render, NW_mammoth_free,
-                                      (void*)0x00000000, NW_mammoth_getExtraSize};
+ObjectDescriptor gNW_mammothObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)NW_mammoth_init,
+    (ObjectDescriptorCallback)NW_mammoth_update,
+    0,
+    (ObjectDescriptorCallback)NW_mammoth_render,
+    (ObjectDescriptorCallback)NW_mammoth_free,
+    0,
+    NW_mammoth_getExtraSize,
+};
 
 typedef struct
 {

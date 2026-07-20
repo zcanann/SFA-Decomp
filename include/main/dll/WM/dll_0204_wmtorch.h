@@ -15,7 +15,9 @@ typedef struct WmTorchPlacement
 } WmTorchPlacement;
 
 STATIC_ASSERT(offsetof(WmTorchPlacement, torchType) == 0x19);
+STATIC_ASSERT(offsetof(WmTorchPlacement, motionRate) == 0x1A);
 STATIC_ASSERT(offsetof(WmTorchPlacement, colorIdx) == 0x1C);
+STATIC_ASSERT(sizeof(WmTorchPlacement) == 0x20);
 
 typedef struct WmTorchState
 {
@@ -27,15 +29,19 @@ typedef struct WmTorchState
     u8 pad0D[3];
 } WmTorchState;
 
+STATIC_ASSERT(offsetof(WmTorchState, linkedObj) == 0x0);
+STATIC_ASSERT(offsetof(WmTorchState, motionRate) == 0x4);
+STATIC_ASSERT(offsetof(WmTorchState, colorIdx) == 0xA);
+STATIC_ASSERT(offsetof(WmTorchState, torchType) == 0xC);
 STATIC_ASSERT(sizeof(WmTorchState) == 0x10);
 
 int wmtorch_getExtraSize(void);
 int wmtorch_getObjectTypeId(void);
 void wmtorch_free(GameObject* obj, int mode);
-void wmtorch_render(int* obj, int p1, int p2, int p3, int p4, s8 visible);
+void wmtorch_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 void wmtorch_hitDetect(void);
 void wmtorch_update(GameObject* obj);
-void wmtorch_init(u8* obj, u8* params);
+void wmtorch_init(GameObject* obj, WmTorchPlacement* placement);
 void wmtorch_release(void);
 void wmtorch_initialise(void);
 

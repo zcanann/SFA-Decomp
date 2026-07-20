@@ -7,6 +7,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 #include "main/dll/rom_curve_interface.h"
 
 #define NW_MAMMOTH_OBJECT_DEF_ID_WHITE 0x0280
@@ -198,5 +199,7 @@ void FUN_801cf1a0(u64 param_1,double param_2,double param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8,
                  short *param_9);
 void NW_mammoth_updateEyeTracking(GameObject* obj, int state, int flag);
+
+extern ObjectDescriptor gNW_mammothObjDescriptor;
 
 #endif /* MAIN_DLL_NW_DLL_01A1_NWMAMMOTH_H_ */

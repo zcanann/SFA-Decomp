@@ -1197,9 +1197,8 @@ void skyFn_8008a04c(void)
     f32* lightIntensityCurve;
     int greenCurveOffset;
     int blueCurveOffset;
-    u8* color;
-    int part4;
     int i;
+    int off;
     f32* vec;
     int rawR;
     int blue;
@@ -1250,19 +1249,17 @@ void skyFn_8008a04c(void)
             frac = (tc - 0.75f) / 0.25f;
             part = 3;
         }
-        i = 0;
-        part4 = part * 4;
-        blendAlphaCurve = &((f32*)((u8*)vec + 0x40))[part];
-        ambientIntensityCurve = &((f32*)((u8*)vec + 0x18))[part];
-        lightIntensityCurve = &((f32*)((u8*)vec + 0x2c))[part];
-        greenCurveOffset = (part + 7) * 4;
-        blueCurveOffset = (part + 0xe) * 4;
-        color = &gSkyCurrentTextureColor.r;
-        zero = lbl_803DF058;
-        dayStart = gSkyDayStartTime;
-        do
+        for (i = 0; i < 2; i++)
         {
-            if ((u32)((gSkyState[i * 0xa4 + 0xc1] >> 7) & 1) != 0)
+            blendAlphaCurve = &((f32*)((u8*)vec + 0x40))[part];
+            ambientIntensityCurve = &((f32*)((u8*)vec + 0x18))[part];
+            lightIntensityCurve = &((f32*)((u8*)vec + 0x2c))[part];
+            greenCurveOffset = (part + 7) * 4;
+            blueCurveOffset = (part + 0xe) * 4;
+            zero = lbl_803DF058;
+            dayStart = gSkyDayStartTime;
+            off = i * 0xa4;
+            if ((u32)((gSkyState[off + 0xc1] >> 7) & 1) != 0)
             {
                 blendAlpha = 0xc8;
                 ambientIntensity = 0;
@@ -1274,10 +1271,10 @@ void skyFn_8008a04c(void)
                 ambientIntensity = Curve_EvalLinear(ambientIntensityCurve, frac, 0);
                 lightIntensity = Curve_EvalLinear(lightIntensityCurve, frac, 0);
             }
-            rawR = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + part4 + 0x20, frac, 0);
-            rawG = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + greenCurveOffset + 0x20, frac, 0);
-            blue = Curve_EvalCatmullRom(gSkyState + i * 0xa4 + blueCurveOffset + 0x20, frac, 0);
-            slot = (SkyColorBlendView*)(gSkyState + i * 0xa4);
+            rawR = Curve_EvalCatmullRom(gSkyState + off + part * 4 + 0x20, frac, 0);
+            rawG = Curve_EvalCatmullRom(gSkyState + off + greenCurveOffset + 0x20, frac, 0);
+            blue = Curve_EvalCatmullRom(gSkyState + off + blueCurveOffset + 0x20, frac, 0);
+            slot = (SkyColorBlendView*)(gSkyState + off);
             blend = slot->factor;
             if (blend != zero)
             {
@@ -1320,8 +1317,8 @@ void skyFn_8008a04c(void)
             if (i == 0)
             {
                 gSkyCurrentTextureColor.r = red;
-                color[1] = green;
-                color[2] = blue;
+                gSkyCurrentTextureColor.g = green;
+                gSkyCurrentTextureColor.b = blue;
             }
             time2 = ((SkyState*)gSkyState)->timeOfDay;
             if (time2 >= dayStart && time2 <= lbl_803DF088)
@@ -1334,8 +1331,7 @@ void skyFn_8008a04c(void)
                 fn_80089A60(i, -vec[3], vec[4], -vec[5], red, green, blue, ambientIntensity, lightIntensity,
                             blendAlpha);
             }
-            i++;
-        } while (i < 2);
+        }
         fn_80089A60(2, 0.0f, 0.0f, 0.0f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
     }
 }

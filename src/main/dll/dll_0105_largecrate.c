@@ -150,43 +150,44 @@ static void largecrate_spawnPickup(GameObject* obj)
 
 f32 largecrate_getReticleDistance(GameObject* obj)
 {
-    u8* state = obj->extra;
-    return 1.0f -
-           (f32)(u32)((LargeCrateState*)state)->damageTaken / (f32)(u32)((LargeCrateState*)state)->damageThreshold;
+    LargeCrateState* state = obj->extra;
+    return 1.0f - (f32)(u32)state->damageTaken / (f32)(u32)state->damageThreshold;
 }
 
-void largecrate_updateConveyorSlide(GameObject* obj, int def)
+void largecrate_updateConveyorSlide(GameObject* obj, LargeCrateState* state)
 {
-    int state31;
-    int player;
+    ObjPlacement* placement;
+    GameObject* player;
+    GameObject* parent;
     f32 oldVel;
     int sum;
     u32 adj;
     u32 linkedId;
     f32 limit;
 
-    state31 = *(int*)&(obj)->anim.placementData;
-    player = (int)Obj_GetPlayerObject();
-    if ((*(u16*)(*(int*)&(obj)->anim.parent + 0xb0) & LARGECRATE_OBJFLAG_PARENT_SLACK) != 0)
+    placement = (ObjPlacement*)obj->anim.placementData;
+    player = Obj_GetPlayerObject();
+    parent = obj->anim.parent;
+    if ((parent->objectFlags & LARGECRATE_OBJFLAG_PARENT_SLACK) != 0)
     {
-        (obj)->anim.localPosX = ((LargeCrateState*)def)->homeX;
-        (obj)->anim.velocityX = 0.0f;
+        obj->anim.localPosX = state->homeX;
+        obj->anim.velocityX = 0.0f;
     }
     else
     {
-        oldVel = (obj)->anim.velocityX;
-        sum = ((GameObject*)(obj)->anim.parent)->anim.rotZ + ((LargeCrateState*)def)->slideOffset;
-        (obj)->anim.velocityX = -(f32)sum / ((LargeCrateState*)def)->slidePhase;
-        if ((oldVel <= 0.0f && (obj)->anim.velocityX >= 0.0f) || (oldVel >= 0.0f && (obj)->anim.velocityX <= 0.0f))
+        oldVel = obj->anim.velocityX;
+        sum = parent->anim.rotZ + state->slideOffset;
+        obj->anim.velocityX = -(f32)sum / state->slidePhase;
+        if ((oldVel <= 0.0f && obj->anim.velocityX >= 0.0f) || (oldVel >= 0.0f && obj->anim.velocityX <= 0.0f))
         {
-            linkedId = *(u32*)(state31 + 0x14);
+            linkedId = placement->mapId;
             adj = linkedId - LARGECRATE_LINKED_ID_BASE;
             if ((adj == LARGECRATE_ROB_WAVE_ID_65D7) ||
                 ((adj - LARGECRATE_ROB_WAVE_ID_65D5) <= (LARGECRATE_ROB_WAVE_ID_65D6 - LARGECRATE_ROB_WAVE_ID_65D5)) ||
                 (linkedId == LARGECRATE_ROB_WAVE_DIRECT_ID) || (adj == LARGECRATE_ROB_WAVE_ID_65D0) ||
                 (adj == LARGECRATE_ROB_WAVE_ID_65D2))
             {
-                if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) < 200.0f)
+                if (Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < 200.0f)
                 {
                     if ((u32)mainGetBit(GAMEBIT_SFX_MUTE) == 0)
                     {
@@ -195,17 +196,17 @@ void largecrate_updateConveyorSlide(GameObject* obj, int def)
                 }
             }
         }
-        (obj)->anim.localPosX = (obj)->anim.localPosX + (obj)->anim.velocityX;
-        if ((obj)->anim.localPosX > (limit = 5.0f + ((LargeCrateState*)def)->homeX))
+        obj->anim.localPosX = obj->anim.localPosX + obj->anim.velocityX;
+        if (obj->anim.localPosX > (limit = 5.0f + state->homeX))
         {
-            (obj)->anim.localPosX = limit;
+            obj->anim.localPosX = limit;
         }
         else
         {
-            limit = ((LargeCrateState*)def)->homeX - 60.0f;
-            if ((obj)->anim.localPosX < limit)
+            limit = state->homeX - 60.0f;
+            if (obj->anim.localPosX < limit)
             {
-                (obj)->anim.localPosX = limit;
+                obj->anim.localPosX = limit;
             }
         }
     }
@@ -402,9 +403,9 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
     return 0;
 }
 
-int LargeCrate_SeqFn(int* obj)
+int LargeCrate_SeqFn(GameObject* obj)
 {
-    if (((GameObject*)obj)->seqIndex != -1)
+    if (obj->seqIndex != -1)
     {
         (*gCameraInterface)->setTargetReticleOverride((int)obj);
     }
@@ -421,7 +422,7 @@ int largecrate_getObjectTypeId(void)
     return 0;
 }
 
-void largecrate_free(int obj)
+void largecrate_free(GameObject* obj)
 {
     (*gModgfxInterface)->detachSource((void*)obj);
     Resource_Release(lbl_803DDAC8);
@@ -608,7 +609,7 @@ void largecrate_update(GameObject* obj)
             }
             if ((obj)->anim.parent != NULL)
             {
-                largecrate_updateConveyorSlide(obj, state);
+                largecrate_updateConveyorSlide(obj, (LargeCrateState*)state);
             }
         }
     }

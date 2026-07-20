@@ -11,29 +11,6 @@
 #include "main/dll/dll_00D4_skeetlawall.h"
 #include "main/object_render.h"
 
-typedef struct SkeetlaWallState
-{
-    u8 negXExtent;
-    u8 posXExtent;
-    u8 posZExtent;
-    u8 negZExtent;
-    u8 posYExtent;
-    u8 negYExtent;
-    u8 shapeFlag;
-} SkeetlaWallState;
-
-typedef struct SkeetlaWallPlacement
-{
-    u8 pad00[0x18];
-    u8 negXExtent; /* 0x18 */
-    u8 posXExtent; /* 0x19 */
-    u8 posZExtent; /* 0x1a */
-    u8 negZExtent; /* 0x1b */
-    u8 posYExtent; /* 0x1c */
-    u8 negYExtent; /* 0x1d */
-    u8 shapeFlag;  /* 0x1e */
-} SkeetlaWallPlacement;
-
 void SkeetlaWall_setScale(GameObject* obj, f32* outVec, u8* outByte)
 {
     SkeetlaWallState* state = obj->extra;
@@ -59,14 +36,14 @@ void SkeetlaWall_free(void)
 {
 }
 
-void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SkeetlaWall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        switch (((GameObject*)obj)->userData1)
+        switch (obj->userData1)
         {
         case 0:
-            objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
             break;
         }
     }

@@ -41,6 +41,14 @@ typedef struct PollenExtra
     s16 fragmentSpawnTimer;
 } PollenExtra;
 
+STATIC_ASSERT(offsetof(PollenExtra, phaseX) == 0x0);
+STATIC_ASSERT(offsetof(PollenExtra, phaseY) == 0x4);
+STATIC_ASSERT(offsetof(PollenExtra, phaseSpeed) == 0x6);
+STATIC_ASSERT(offsetof(PollenExtra, settleVelocity) == 0x8);
+STATIC_ASSERT(offsetof(PollenExtra, driftVelocity) == 0xC);
+STATIC_ASSERT(offsetof(PollenExtra, fragmentSpawnTimer) == 0x12);
+STATIC_ASSERT(sizeof(PollenExtra) == 0x14);
+
 #define POLLEN_FRAGMENT_SETUP_SIZE           0x24
 #define POLLEN_FRAGMENT_SETUP_KIND           5
 #define POLLEN_FRAGMENT_BURST_COUNTER_START  5
@@ -65,16 +73,16 @@ int Pollen_getObjectTypeId(void)
     return 0x0;
 }
 
-void Pollen_free(int obj)
+void Pollen_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void Pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void Pollen_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void Pollen_hitDetect(GameObject* obj)
@@ -94,44 +102,44 @@ void Pollen_hitDetect(GameObject* obj)
     }
 }
 
-void Pollen_update(int obj)
+void Pollen_update(GameObject* obj)
 {
     PollenExtra* extra;
     int i;
 
-    extra = *(PollenExtra**)&((GameObject*)obj)->extra;
+    extra = obj->extra;
     if (extra->fragmentSpawnTimer != 0)
     {
         extra->fragmentSpawnTimer -= 1;
     }
     else
     {
-        f32 prev = ((GameObject*)obj)->anim.velocityY;
-        ((GameObject*)obj)->anim.velocityY = -(0.045f * timeDelta - prev);
-        if (prev >= 0.0f && ((GameObject*)obj)->anim.velocityY <= 0.0f)
+        f32 prev = obj->anim.velocityY;
+        obj->anim.velocityY = -(0.045f * timeDelta - prev);
+        if (prev >= 0.0f && obj->anim.velocityY <= 0.0f)
         {
-            Pollen_burst((GameObject*)(obj));
-            Sfx_PlayFromObject(obj, SFXTRIG_majring2);
-            ((GameObject*)obj)->anim.alpha = 0;
+            Pollen_burst(obj);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_majring2);
+            obj->anim.alpha = 0;
         }
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
-                ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+                obj->anim.velocityZ * timeDelta);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLEN_HIT_VOLUME_SLOT, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 7);
-        ObjHits_EnableObject((GameObject*)obj);
-        if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0 &&
-            (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject ==
+        ObjHits_EnableObject(obj);
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0 &&
+            (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject ==
                  (int)Obj_GetPlayerObject() ||
-             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
+             ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject == (int)getTrickyObject()))
         {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(1.0f);
-            Sfx_PlayFromObject(obj, SFXTRIG_id_b6);
-            ((GameObject*)obj)->anim.alpha = 0;
+            Sfx_PlayFromObject((int)obj, SFXTRIG_id_b6);
+            obj->anim.alpha = 0;
             extra->fragmentSpawnTimer = 0x3c;
-            ObjHits_DisableObject((GameObject*)obj);
+            ObjHits_DisableObject(obj);
         }
-        if (((GameObject*)obj)->anim.alpha == 0xff)
+        if (obj->anim.alpha == 0xff)
         {
             i = 2;
             do
@@ -140,9 +148,9 @@ void Pollen_update(int obj)
             } while (i-- != 0);
         }
     }
-    if (((GameObject*)obj)->anim.alpha == 0 && extra->fragmentSpawnTimer == 0)
+    if (obj->anim.alpha == 0 && extra->fragmentSpawnTimer == 0)
     {
-        Obj_FreeObject((GameObject*)obj);
+        Obj_FreeObject(obj);
     }
 }
 u8 Pollen_burst(GameObject* obj)
@@ -152,7 +160,7 @@ u8 Pollen_burst(GameObject* obj)
     u8* fragment;
     u8 loadingLocked;
 
-    extra = *(PollenExtra**)&(obj)->extra;
+    extra = obj->extra;
     loadingLocked = Obj_IsLoadingLocked();
     if (loadingLocked == 0)
     {
@@ -194,7 +202,7 @@ u8 Pollen_burst(GameObject* obj)
 
 void Pollen_init(GameObject* obj)
 {
-    PollenExtra* extra = *(PollenExtra**)&obj->extra;
+    PollenExtra* extra = obj->extra;
     extra->phaseX = randomGetRange(-0x8000, 0x7fff);
     extra->driftVelocity = 0.01f * (f32)(s32)randomGetRange(0xfa0, 0x1388);
     extra->phaseY = randomGetRange(-0x8000, 0x7fff);

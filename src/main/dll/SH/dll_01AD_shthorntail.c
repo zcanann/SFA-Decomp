@@ -590,18 +590,19 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     ObjGroup_AddObject((int)obj, THORNTAIL_OBJGROUP);
 }
 
-/* descriptor/ptr table auto 0x80327560-0x80327598 */
-u32 gWarpStoneObjDescriptor[14] = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00090000,
-                                   (u32)warpstone_initialise,
-                                   (u32)warpstone_release,
-                                   0x00000000,
-                                   (u32)warpstone_init,
-                                   (u32)warpstone_update,
-                                   (u32)warpstone_hitDetect,
-                                   (u32)warpstone_render,
-                                   (u32)warpstone_free,
-                                   (u32)warpstone_getObjectTypeId,
-                                   (u32)warpstone_getExtraSize};
+ObjectDescriptor gWarpStoneObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)warpstone_initialise,
+    (ObjectDescriptorCallback)warpstone_release,
+    0,
+    (ObjectDescriptorCallback)warpstone_init,
+    (ObjectDescriptorCallback)warpstone_update,
+    (ObjectDescriptorCallback)warpstone_hitDetect,
+    (ObjectDescriptorCallback)warpstone_render,
+    (ObjectDescriptorCallback)warpstone_free,
+    (ObjectDescriptorCallback)warpstone_getObjectTypeId,
+    warpstone_getExtraSize,
+};

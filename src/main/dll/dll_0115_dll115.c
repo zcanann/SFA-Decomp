@@ -39,39 +39,47 @@ enum
 #define DLL115_OBJFLAG_HIDDEN             0x4000
 #define DLL115_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+STATIC_ASSERT(offsetof(Dll115Placement, setGameBits) == 0x18);
+STATIC_ASSERT(offsetof(Dll115Placement, gateGameBits) == 0x28);
+STATIC_ASSERT(offsetof(Dll115Placement, rotByte) == 0x38);
+STATIC_ASSERT(offsetof(Dll115Placement, preemptArg) == 0x3C);
+STATIC_ASSERT(offsetof(Dll115Placement, triggerSeqIds) == 0x40);
+STATIC_ASSERT(sizeof(Dll115Placement) == 0x48);
+STATIC_ASSERT(sizeof(Dll115State) == 0x2);
+
 
 /* Sequence-event callback: while a trigger sequence is running on an
  * indexed step, end it once the NEXT step's gate bit (placement+0x28) has
  * gone set and differs from this step's gate bit. Always latches state[1]
  * bit 0 so update advances the step next frame. */
-int dll_115_seqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int dll_115_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int step;
-    u8* state = ((GameObject*)obj)->extra;
-    s16* gateBits = (s16*)((GameObject*)obj)->anim.placementData;
+    Dll115State* state = obj->extra;
+    Dll115Placement* placement = (Dll115Placement*)obj->anim.placementData;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     animUpdate->sequenceEventActive = 0;
-    if (((GameObject*)obj)->seqIndex == -1)
+    if (obj->seqIndex == -1)
     {
         return 0;
     }
-    step = state[0];
+    step = state->step;
     if (step >= DLL115_STEP_DONE || step < DLL115_STEP_IDLE)
     {
         int next = step + 1;
         if (next < DLL115_STEP_COUNT)
         {
-            s16 nextGate = (gateBits + next)[0x14];
-            if (nextGate != -1 && nextGate != (gateBits + step)[0x14])
+            s16 nextGate = placement->gateGameBits[next];
+            if (nextGate != -1 && nextGate != placement->gateGameBits[step])
             {
                 if (mainGetBit(nextGate) != 0)
                 {
-                    (*gObjectTriggerInterface)->endSequence(((GameObject*)obj)->seqIndex);
+                    (*gObjectTriggerInterface)->endSequence(obj->seqIndex);
                 }
             }
         }
     }
-    state[1] = (u8)(state[1] | 1);
+    state->flags = (u8)(state->flags | 1);
     return 0;
 }
 
@@ -84,16 +92,16 @@ int dll_115_getObjectTypeId(void)
     return 0x0;
 }
 
-void dll_115_free(int obj)
+void dll_115_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, DLL115_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DLL115_OBJGROUP);
 }
 
-void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_115_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_115_hitDetect_nop(void)
@@ -102,44 +110,43 @@ void dll_115_hitDetect_nop(void)
 
 void dll_115_update(GameObject* obj)
 {
-    u8* state;
-    u8* mapData;
+    Dll115State* state;
+    Dll115Placement* placement;
     s16* p;
     int step;
     int eventId;
 
-    state = (obj)->extra;
-    mapData = (u8*)(obj)->anim.placementData;
-    if ((state[1] & 1) != 0)
+    state = obj->extra;
+    placement = (Dll115Placement*)obj->anim.placementData;
+    if ((state->flags & 1) != 0)
     {
-        eventId = ((s16*)(mapData + 0x18))[state[0]];
+        eventId = placement->setGameBits[state->step];
         if (eventId != -1)
         {
             mainSetBits(eventId, 1);
         }
-        state[1] = (u8)(state[1] & ~1);
-        state[0]++;
+        state->flags = (u8)(state->flags & ~1);
+        state->step++;
     }
-    switch (state[0])
+    switch (state->step)
     {
     case DLL115_STEP_FINISH:
-        (*gObjectTriggerInterface)->preempt((int)obj, ((Dll115Placement*)mapData)->preemptArg);
+        (*gObjectTriggerInterface)->preempt((int)obj, placement->preemptArg);
         (*gObjectTriggerInterface)
-            ->runSequence(((Dll115Placement*)mapData)->finishSeqId, (void*)obj,
-                          ((Dll115Placement*)mapData)->finishSeqParam);
+            ->runSequence(placement->finishSeqId, (void*)obj, placement->finishSeqParam);
         break;
     case DLL115_STEP_IDLE:
     case DLL115_STEP_DONE:
         break;
     default:
-        eventId = ((s16*)(mapData + 0x28))[state[0]];
+        eventId = placement->gateGameBits[state->step];
         if (eventId == -1)
         {
-            state[0] = DLL115_STEP_IDLE;
+            state->step = DLL115_STEP_IDLE;
         }
         else if ((u32)mainGetBit(eventId) != 0)
         {
-            s8 id = (s8)((u8*)(mapData + 0x40))[state[0]];
+            s8 id = placement->triggerSeqIds[state->step];
             if (id != -1)
             {
                 (*gObjectTriggerInterface)->runSequence(id, (void*)obj, -1);
@@ -147,8 +154,8 @@ void dll_115_update(GameObject* obj)
         }
         break;
     }
-    step = state[0] - 1;
-    p = (s16*)mapData + step;
+    step = state->step - 1;
+    p = (s16*)placement + step;
     while (step >= 0)
     {
         eventId = p[12];
@@ -156,25 +163,25 @@ void dll_115_update(GameObject* obj)
             break;
         if ((u32)mainGetBit(eventId) != 0)
             break;
-        state[0]--;
+        state->step--;
         p--;
         step--;
     }
 }
 
-void dll_115_init(s16* obj, int mapData)
+void dll_115_init(GameObject* obj, Dll115Placement* placement)
 {
     s16* p;
-    u8* state;
+    Dll115State* state;
     int step;
 
-    state = ((GameObject*)obj)->extra;
-    *obj = (s16)(((Dll115Placement*)mapData)->rotByte << 8);
-    ((GameObject*)obj)->animEventCallback = dll_115_seqFn;
-    ((GameObject*)obj)->objectFlags |= (DLL115_OBJFLAG_HIDDEN | DLL115_OBJFLAG_HITDETECT_DISABLED);
+    state = obj->extra;
+    obj->anim.rotX = (s16)(placement->rotByte << 8);
+    obj->animEventCallback = dll_115_seqFn;
+    obj->objectFlags |= (DLL115_OBJFLAG_HIDDEN | DLL115_OBJFLAG_HITDETECT_DISABLED);
     ObjGroup_AddObject((int)obj, DLL115_OBJGROUP);
     step = 0;
-    p = (s16*)mapData;
+    p = (s16*)placement;
     do
     {
         if (p[12] == -1)
@@ -184,17 +191,17 @@ void dll_115_init(s16* obj, int mapData)
         p++;
         step++;
     } while (step < DLL115_STEP_COUNT);
-    if ((step < DLL115_STEP_COUNT) && (*(s16*)(mapData + 0x18 + step * 2) == -1))
+    if ((step < DLL115_STEP_COUNT) && (placement->setGameBits[step] == -1))
     {
-        state[0] = DLL115_STEP_IDLE;
+        state->step = DLL115_STEP_IDLE;
     }
     else
     {
-        state[0] = step;
+        state->step = step;
     }
-    if ((state[0] == DLL115_STEP_IDLE) && ((((Dll115Placement*)mapData)->flags & DLL115_PLACEMENT_FINISH_FLAG) != 0))
+    if ((state->step == DLL115_STEP_IDLE) && ((placement->flags & DLL115_PLACEMENT_FINISH_FLAG) != 0))
     {
-        state[0] = DLL115_STEP_FINISH;
+        state->step = DLL115_STEP_FINISH;
     }
 }
 

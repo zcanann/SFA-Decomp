@@ -3722,7 +3722,6 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         f32 y;
         f32 z;
     } pos;
-    u8* activeObj;
     f32* posp;
     int out[3];
     u8* cmd;
@@ -3743,8 +3742,6 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     u8* entry;
 
     ObjSeqState* state = (ObjSeqState*)seq;
-
-    (void)seqObj;
 
     if (state->cmds == NULL)
     {
@@ -3771,7 +3768,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     state->curFrame = -1;
 
     found = -1;
-    activeObj = obj;
+    seqObj = obj;
     i = 0;
     while (i < state->cmdCount && state->curFrame <= targetFrame)
     {
@@ -3781,8 +3778,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
         {
         case 3:
             flags = (s8)(flags | 4);
-            activeObj = ObjSeq_ToggleCommand3Target(obj, seq, (u8*)model);
-            ((GameObject*)activeObj)->anim.activeMove = -1;
+            seqObj = ObjSeq_ToggleCommand3Target(obj, seq, (u8*)model);
+            ((GameObject*)seqObj)->anim.activeMove = -1;
             break;
         case 0:
             state->curFrame = *(s16*)(cmd + 2);
@@ -3807,7 +3804,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     }
 
     state->curFrame = found;
-    action = (u8*)((ObjAnimComponent*)activeObj)->banks[((ObjAnimComponent*)activeObj)->bankIndex];
+    action = (u8*)((ObjAnimComponent*)seqObj)->banks[((ObjAnimComponent*)seqObj)->bankIndex];
     if (action != NULL)
     {
         val = ObjSeq_SampleTrackCurve(seq, 13, -1);
@@ -3837,7 +3834,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 action != NULL)
             {
                 f32 dx = posp[0] - prevX;
-                if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)activeObj,
+                if (ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)seqObj,
                                                  sqrtf(dx * dx + (posp[2] - prevZ) * (posp[2] - prevZ)),
                                                  &speed) == 0)
                 {
@@ -3855,7 +3852,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 
             if (action != NULL)
             {
-                ObjAnim_AdvanceCurrentMove((int)activeObj, speed, lbl_803DEFC8,
+                ObjAnim_AdvanceCurrentMove((int)seqObj, speed, lbl_803DEFC8,
                                                                             &state->animEvents);
                 if (mode != 0)
                 {
@@ -3874,27 +3871,27 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                         {
                             rate = lbl_803DEFC8;
                         }
-                        state->fade = state->fade - lbl_803DEFC8 / rate;
-                        if (state->fade < lbl_803DEFB0)
+                        rate = 1.0f / rate;
+                        state->fade -= rate;
+                        if (state->fade < 0.0f)
                         {
-                            state->fade = lbl_803DEFB0;
+                            state->fade = 0.0f;
                         }
                     }
                 }
             }
             else
             {
-                ((GameObject*)activeObj)->anim.currentMoveProgress += speed;
+                ((GameObject*)seqObj)->anim.currentMoveProgress += speed;
                 val = lbl_803DEFC8;
-                while (((GameObject*)activeObj)->anim.currentMoveProgress > val)
+                while (((GameObject*)seqObj)->anim.currentMoveProgress > val)
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress -= val;
+                    ((GameObject*)seqObj)->anim.currentMoveProgress -= val;
                 }
                 rate = lbl_803DEFC8;
-                val = lbl_803DEFB0;
-                while (val > ((GameObject*)activeObj)->anim.currentMoveProgress)
+                while (((GameObject*)seqObj)->anim.currentMoveProgress < 0.0f)
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress += rate;
+                    ((GameObject*)seqObj)->anim.currentMoveProgress += rate;
                 }
             }
         }
@@ -3940,7 +3937,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                             t = obj;
                         }
                         action = ObjSeq_GetActiveModel(t);
-                        activeObj = t;
+                        seqObj = t;
                     }
                 }
                 else
@@ -3952,7 +3949,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
 
         for (i = 0; i < lbl_803DD0C0; i++)
         {
-            if (seqDoSubCmd0B(obj, activeObj, seq, *(u8**)(entry + i * 8), *(s16*)(entry + i * 8 + 6),
+            if (seqDoSubCmd0B(obj, seqObj, seq, *(u8**)(entry + i * 8), *(s16*)(entry + i * 8 + 6),
                               *(s16*)(entry + i * 8 + 4), 1, 0) != 0)
             {
                 i = lbl_803DD0C0;
@@ -3964,7 +3961,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                     t = obj;
                 }
                 action = ObjSeq_GetActiveModel(t);
-                activeObj = t;
+                seqObj = t;
             }
         }
         lbl_803DD0C0 = 0;

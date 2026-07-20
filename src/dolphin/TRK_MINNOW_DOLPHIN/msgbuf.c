@@ -1,7 +1,6 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msgbuf.h"
 
 TRKBuffer gTRKMessageBuffers[3];
-const char lbl_802C30D8[] = "ERROR : No buffer available\n";
 
 static inline void TRKSetBufferUsed(TRKBuffer* msg, BOOL state) {
     msg->isInUse = state;
@@ -42,7 +41,7 @@ DSError TRKGetFreeBuffer(int* msgID, TRKBuffer** outMsg) {
     }
 
     if (error == DS_NoMessageBufferAvailable) {
-        usr_puts_serial(lbl_802C30D8);
+        usr_puts_serial("ERROR : No buffer available\n");
     }
 
     return error;

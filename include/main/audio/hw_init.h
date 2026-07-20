@@ -13,10 +13,10 @@ int hwInit(u32 *sampleRate, u16 numVoices, u16 numStudios, u32 flags);
 void hwExit(void);
 void hwSetTimeOffset(int value);
 u8 hwGetTimeOffset(void);
-u32 hwIsActive(u32 slot);
+u32 hwIsActive(u32 voiceIndex);
 void hwSetMesgCallback(SndMessageCallback callback);
-void hwSetPriority(int slot, u32 value);
-void hwInitSamplePlayback(u32 voice, u16 sampleId, SAMPLE_INFO *sampleInfo,
+void hwSetPriority(int voiceIndex, u32 priority);
+void hwInitSamplePlayback(u32 voiceIndex, u16 sampleId, SAMPLE_INFO *sampleInfo,
                           u32 resetAdsr, u32 priority, u32 callbackUserValue,
                           u32 resetSrc, u32 itdMode);
 

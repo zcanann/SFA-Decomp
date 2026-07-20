@@ -106,15 +106,15 @@ u8 hwGetTimeOffset(void)
     return salTimeOffset;
 }
 
-u32 hwIsActive(u32 slot)
+u32 hwIsActive(u32 voiceIndex)
 {
     u8* entry;
     int active;
 
-    slot *= 0xf4;
+    voiceIndex *= sizeof(DSPvoice);
     entry = (u8*)dspVoice;
-    entry += slot;
-    active = entry[0xec];
+    entry += voiceIndex;
+    active = ((DSPvoice*)entry)->state;
     return active != 0;
 }
 
@@ -123,54 +123,54 @@ void hwSetMesgCallback(SndMessageCallback callback)
     salMessageCallback = callback;
 }
 
-void hwSetPriority(int slot, u32 value)
+void hwSetPriority(int voiceIndex, u32 priority)
 {
     u8* entry;
 
-    slot *= 0xf4;
+    voiceIndex *= sizeof(DSPvoice);
     entry = (u8*)dspVoice;
-    entry += slot;
-    ((DSPvoice*)entry)->prio = value;
+    entry += voiceIndex;
+    ((DSPvoice*)entry)->prio = priority;
 }
 
-void hwInitSamplePlayback(u32 voice, u16 sampleId, SAMPLE_INFO* sampleInfo, u32 resetAdsr, u32 priority,
+void hwInitSamplePlayback(u32 voiceIndex, u16 sampleId, SAMPLE_INFO* sampleInfo, u32 resetAdsr, u32 priority,
                           u32 callbackUserValue, u32 resetSrc, u32 itdMode)
 {
-    u8 i;
-    u32 flags;
+    u8 timeOffset;
+    u32 changedFlags;
 
-    flags = 0;
-    for (i = 0; i <= salTimeOffset; i++)
+    changedFlags = 0;
+    for (timeOffset = 0; timeOffset <= salTimeOffset; timeOffset++)
     {
-        flags |= dspVoice[voice].changed[i] & 0x20;
-        dspVoice[voice].changed[i] = 0;
+        changedFlags |= dspVoice[voiceIndex].changed[timeOffset] & 0x20;
+        dspVoice[voiceIndex].changed[timeOffset] = 0;
     }
 
-    dspVoice[voice].changed[0] = flags;
-    dspVoice[voice].prio = priority;
-    dspVoice[voice].mesgCallBackUserValue = callbackUserValue;
-    dspVoice[voice].flags = 0;
-    dspVoice[voice].smp_id = sampleId;
-    dspVoice[voice].smp_info = *sampleInfo;
+    dspVoice[voiceIndex].changed[0] = changedFlags;
+    dspVoice[voiceIndex].prio = priority;
+    dspVoice[voiceIndex].mesgCallBackUserValue = callbackUserValue;
+    dspVoice[voiceIndex].flags = 0;
+    dspVoice[voiceIndex].smp_id = sampleId;
+    dspVoice[voiceIndex].smp_info = *sampleInfo;
 
     if (resetAdsr != 0)
     {
-        dspVoice[voice].adsr.mode = 0;
-        dspVoice[voice].adsr.aTime = 0;
-        dspVoice[voice].adsr.dTime = 0;
-        dspVoice[voice].adsr.sLevel = 0x7fff;
-        dspVoice[voice].adsr.rTime = 0;
+        dspVoice[voiceIndex].adsr.mode = 0;
+        dspVoice[voiceIndex].adsr.aTime = 0;
+        dspVoice[voiceIndex].adsr.dTime = 0;
+        dspVoice[voiceIndex].adsr.sLevel = 0x7fff;
+        dspVoice[voiceIndex].adsr.rTime = 0;
     }
 
-    dspVoice[voice].lastUpdate.pitch = 0xff;
-    dspVoice[voice].lastUpdate.vol = 0xff;
-    dspVoice[voice].lastUpdate.volA = 0xff;
-    dspVoice[voice].lastUpdate.volB = 0xff;
+    dspVoice[voiceIndex].lastUpdate.pitch = 0xff;
+    dspVoice[voiceIndex].lastUpdate.vol = 0xff;
+    dspVoice[voiceIndex].lastUpdate.volA = 0xff;
+    dspVoice[voiceIndex].lastUpdate.volB = 0xff;
 
     if (resetSrc != 0)
     {
-        hwSetSRCType(voice, 0);
-        hwSetPolyPhaseFilter(voice, 1);
+        hwSetSRCType(voiceIndex, 0);
+        hwSetPolyPhaseFilter(voiceIndex, 1);
     }
-    hwSetITDMode(voice, itdMode);
+    hwSetITDMode(voiceIndex, itdMode);
 }

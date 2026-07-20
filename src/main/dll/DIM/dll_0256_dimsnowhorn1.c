@@ -1436,7 +1436,7 @@ void DIMSnowHorn1_update(GameObject* obj)
 void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
 {
     u8* base = gDIMSnowHorn1ConfigTable;
-    int stk = 0x01010101;
+    u8 stk[4] = {1, 1, 1, 1};
     DIMSnowHorn1State* inner;
     u8* pathState;
     s8 idx;
@@ -1467,7 +1467,7 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
     case 4:
         (*gPathControlInterface)->init(pathState, 3, 0x200020, 1);
         (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0xe0, &gDIMSnowHorn1PathCollisionData, 8);
-        (*gPathControlInterface)->setup(pathState, 4, base + 0xa0, base + 0xd0, &stk);
+        (*gPathControlInterface)->setup(pathState, 4, base + 0xa0, base + 0xd0, stk);
         (*gPathControlInterface)->attachObject((void*)obj, pathState);
         break;
     case 2:
