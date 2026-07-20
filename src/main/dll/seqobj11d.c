@@ -40,6 +40,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/wispbaddieseq_ext.h"
+#include "main/dll/dll_00E1_wispbaddie.h"
 
 typedef struct GroundBaddieModelChainDescriptor
 {
@@ -48,8 +49,6 @@ typedef struct GroundBaddieModelChainDescriptor
 } GroundBaddieModelChainDescriptor;
 
 STATIC_ASSERT(sizeof(GroundBaddieModelChainDescriptor) == 8);
-
-extern u32 lbl_8031F280[];
 
 u8 gGroundBaddieAngleSectorOffsets[8] = {1, 4, 4, 3, 3, 5, 5, 1};
 GroundBaddieModelChainDescriptor lbl_803DBC90 = {lbl_8031F280, 4};

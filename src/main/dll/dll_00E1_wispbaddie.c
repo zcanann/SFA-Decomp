@@ -619,6 +619,6 @@ void* lbl_8031F16C[69] = {
     lbl_8031EF28,      lbl_8031EEA4,      lbl_8031EEC8,      lbl_8031F054,      lbl_8031F154,      lbl_8031ED78,
     (void*)0x0F3C0A32, (void*)0x07140514, (void*)0x030F030F, (void*)0x3F000000, (void*)0x3F000000, (void*)0x3F333333,
     (void*)0x3F19999A, (void*)0x3FC00000, (void*)0x3FC00000};
-u8 lbl_8031F280[16] = {0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 8, 0, 0, 0, 9};
+u32 lbl_8031F280[4] = {6, 7, 8, 9};
 
 const WispTriggerDistanceParams lbl_803E2720 = {4.0f, 0.0f};
