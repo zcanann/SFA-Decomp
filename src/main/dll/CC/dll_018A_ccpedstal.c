@@ -46,27 +46,27 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
     {
         int doMark;
         Obj_SetActiveModelIndex(obj, 0);
-        if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
+        do
         {
-            *(u8*)&(obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
-            if (ObjTrigger_IsSetById((int)obj, 0xa9) != 0)
+            if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
             {
-                (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-                gameBitDecrement(GAMEBIT_ITEM_FireGem_Count);
-                doMark = 1;
+                *(u8*)&(obj)->anim.resetHitboxMode =
+                    (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+                if (ObjTrigger_IsSetById((int)obj, 0xa9) != 0)
+                {
+                    (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+                    gameBitDecrement(GAMEBIT_ITEM_FireGem_Count);
+                    doMark = 1;
+                    break;
+                }
             }
             else
             {
-                doMark = 0;
+                *(u8*)&(obj)->anim.resetHitboxMode =
+                    (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
             }
-        }
-        else
-        {
-            *(u8*)&(obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
             doMark = 0;
-        }
+        } while (0);
 
         if (doMark != 0)
         {
