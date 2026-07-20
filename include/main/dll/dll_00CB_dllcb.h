@@ -22,7 +22,7 @@ int dll_CB_stateHandler3(int* obj, u8* obj2);
 void dll_CB_hitDetect(int* obj);
 void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 int dll_CB_moveHandler2(short* out, u8* obj);
-int dll_CB_moveHandler0(short* out, u8* obj);
+int dll_CB_moveHandler0(short* out, u8* obj, f32 timeDelta);
 int dll_CB_stateHandler4(int* obj, GroundBaddieState* state);
 int dll_CB_moveHandler1(int* obj, GroundBaddieState* def);
 void dll_CB_initialise(void);

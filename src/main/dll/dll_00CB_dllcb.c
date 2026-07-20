@@ -235,7 +235,7 @@ int dll_CB_moveHandler1(int* obj, GroundBaddieState* def)
     return 0;
 }
 
-int dll_CB_moveHandler0(short* out, u8* obj)
+int dll_CB_moveHandler0(short* out, u8* obj, f32 timeDelta)
 {
     f32 f = 0.0f;
     ((BaddieState*)obj)->animSpeedA = f;
@@ -244,7 +244,7 @@ int dll_CB_moveHandler0(short* out, u8* obj)
     ((BaddieState*)obj)->physicsActive = 1;
     out[2] = ((BaddieState*)obj)->spawnRotZ;
     out[1] = ((BaddieState*)obj)->spawnRotY;
-    (*gPlayerInterface)->rotateTowardTarget(out, obj, f, 5);
+    (*gPlayerInterface)->rotateTowardTarget(out, obj, timeDelta, 5);
     return 0;
 }
 
