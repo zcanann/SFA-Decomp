@@ -344,6 +344,18 @@ cflags_dll_noopt_noautoinline = [
     "-inline", "noauto",
 ]
 
+cflags_dll_noopt_noautoinline_level3 = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,level=3",
+    "-inline", "noauto",
+]
+
+cflags_dll_noopt_noautoinline_deferred = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule",
+    "-inline", "noauto,deferred",
+]
+
 cflags_dll_nosched = [
     *cflags_base,
     "-opt", "noschedule",
@@ -1034,7 +1046,7 @@ config.libs = [
             Object(NonMatching, "main/lightmap.c", cflags=[*cflags_dll_noopt_noprop, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/textblock.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/objHitReact.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline_level3),
             Object(NonMatching, "main/light.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/main.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/dll_023F_dbegg.c", cflags=cflags_dll_noopt_noloopinv),
@@ -1057,7 +1069,7 @@ config.libs = [
             Object(NonMatching, "main/shader_dolphin.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(MatchingFor("GSAE01"), "main/boot_logo.c"),
             Object(NonMatching, "main/rcp_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt_noautoinline_deferred),
             Object(NonMatching, "main/tex_dolphin.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/track_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/newshadows.c", cflags=cflags_dll_noopt_noautoinline),
