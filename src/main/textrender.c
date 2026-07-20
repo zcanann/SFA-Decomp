@@ -3236,7 +3236,7 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
         cur = gameTextGetCurBox();
         if (strPtr != NULL)
         {
-            gameTextFn_8001628c(*(u16*)strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
+            gameTextMeasureById(*(u16*)strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
         }
         else if ((u32)boxId != 0)
         {
@@ -3266,7 +3266,7 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
         cur = gameTextGetCurBox();
         if (strPtr != NULL)
         {
-            gameTextFn_8001628c(*(u16*)strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
+            gameTextMeasureById(*(u16*)strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         else if ((u32)boxId != 0)
         {

@@ -28,6 +28,6 @@ void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, 
     ((void (*)(GameObject*, f32, int, int, int, int, int, int, int))spawnExplosion)(                              \
         (GameObject*)(source), (scale), (kind), (flag4), (flag8), (flag10), (doShake), (flag20), (initialFlags))
 
-void hitDetectFn_80097070(void* obj, f32 scale, int effect, int variant, int count, GameObject* origin);
+void objfx_spawnHitEffectBurst(void* obj, f32 scale, int effect, int variant, int count, GameObject* origin);
 
 #endif /* MAIN_OBJFX_H_ */

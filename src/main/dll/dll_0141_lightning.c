@@ -174,12 +174,12 @@ void lightning_update(GameObject* obj)
             state->ageTimer = 0.0f;
             if ((state->modeBits.mode & 1) != 0)
             {
-                hitDetectFn_80097070(obj, state->hitRadius, 1, 7, 0x1e, NULL);
+                objfx_spawnHitEffectBurst(obj, state->hitRadius, 1, 7, 0x1e, NULL);
             }
             data = *(u8**)(*slot + 0xb8);
             if ((((LightningMode*)(data + 0x24))->mode & 1) != 0)
             {
-                hitDetectFn_80097070((void*)*slot, ((LightningState*)data)->hitRadius, 1, 7, 0x1e, NULL);
+                objfx_spawnHitEffectBurst((void*)*slot, ((LightningState*)data)->hitRadius, 1, 7, 0x1e, NULL);
             }
             if ((state->modeBits.mode & 2) != 0)
             {

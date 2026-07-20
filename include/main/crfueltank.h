@@ -23,22 +23,22 @@ typedef struct CrFuelTankCollider {
 
 typedef struct CrFuelTankHitObj {
   u8 unk0[0x24];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
+  f32 velocityX;
+  f32 velocityY;
+  f32 velocityZ;
   u8 unk30[0x16];
   s16 objType;
 } CrFuelTankHitObj;
 
 typedef struct CrFuelTankObject {
   u8 unk0[6];
-  s16 flags;
+  s16 animFlags;
   u8 unk8[0x1c];
-  f32 posX;
-  f32 posY;
-  f32 posZ;
+  f32 velocityX;
+  f32 velocityY;
+  f32 velocityZ;
   u8 unk30[6];
-  u8 fadeTimer;
+  u8 alpha;
   u8 unk37[0x15];
   CrFuelTankDef *def;
   u8 unk50[4];
@@ -48,6 +48,11 @@ typedef struct CrFuelTankObject {
   u8 unkBC[0x3c];
   int triggered;
 } CrFuelTankObject;
+
+STATIC_ASSERT(offsetof(CrFuelTankHitObj, velocityX) == 0x24);
+STATIC_ASSERT(offsetof(CrFuelTankObject, animFlags) == 0x06);
+STATIC_ASSERT(offsetof(CrFuelTankObject, velocityX) == 0x24);
+STATIC_ASSERT(offsetof(CrFuelTankObject, alpha) == 0x36);
 
 extern ObjectDescriptor gCrFuelTankObjDescriptor;
 

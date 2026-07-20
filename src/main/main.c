@@ -197,7 +197,7 @@ void VFP_flamepoint_init(int* obj, s8* def)
     ((GameObject*)obj)->objectFlags |= (MAIN_OBJFLAG_HIDDEN | MAIN_OBJFLAG_HITDETECT_DISABLED);
 }
 
-void fn_801FD6B4(GameObject* obj)
+void VFP_lavapool_updateWave(GameObject* obj)
 {
     VfpLavaPoolState* state;
     VfpLavaPoolMapData* mapData;
@@ -267,7 +267,7 @@ void fn_801FD6B4(GameObject* obj)
         tex->offsetT = (s16)scrollT;
     }
 }
-int return1_801FDA08(void)
+int VFP_lavapool_animEventCallback(void)
 {
     return 0x1;
 }
@@ -306,7 +306,7 @@ void VFP_lavapool_hitDetect_nop(void)
 
 void VFP_lavapool_update(GameObject* obj)
 {
-    fn_801FD6B4(obj);
+    VFP_lavapool_updateWave(obj);
 }
 
 void VFP_lavapool_init(GameObject* obj, VfpLavaPoolMapData* mapData)
@@ -314,7 +314,7 @@ void VFP_lavapool_init(GameObject* obj, VfpLavaPoolMapData* mapData)
     VfpLavaPoolState* state;
 
     state = obj->extra;
-    obj->animEventCallback = return1_801FDA08;
+    obj->animEventCallback = VFP_lavapool_animEventCallback;
     state->timerA = 7000;
     state->timerB = 2000;
     if (mapData->amplitudeDivisor == 0)

@@ -4,6 +4,6 @@
 typedef struct GameObject GameObject;
 
 int vfpflamepoint_countdownCallback(GameObject* obj, int amount);
-void fn_801FD6B4(GameObject* obj);
+void VFP_lavapool_updateWave(GameObject* obj);
 
 #endif /* MAIN_MAIN_INTERNAL_H_ */

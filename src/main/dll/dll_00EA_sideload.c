@@ -21,24 +21,24 @@
 /* object id sideload_update defers into existence once its arming game bit is set */
 #define SIDELOAD_CHILD_OBJ 0x24
 
-void sideload_update(int self)
+void sideload_update(GameObject* self)
 {
-    int state;
-    void* obj;
-    short* p;
+    SideloadPlacement* placement;
+    ObjPlacement* setup;
+    GameObject* child;
 
-    state = *(int*)&((GameObject*)self)->anim.placementData;
+    placement = (SideloadPlacement*)self->anim.placementData;
     if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) && (getTrickyObject() == 0) &&
-        (mainGetBit((int)((SideloadPlacement*)state)->armGameBit) != 0))
+        (mainGetBit((int)placement->armGameBit) != 0))
     {
-        obj = Obj_AllocObjectSetup(0x18, SIDELOAD_CHILD_OBJ);
-        *(u8*)((char*)obj + 4) = 2;
-        *(u8*)((char*)obj + 5) = 4;
-        *(u8*)((char*)obj + 7) = 0xff;
-        ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)self)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)self)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)self)->anim.localPosZ;
-        p = (short*)Obj_SetupObject((ObjPlacement*)obj, 5, -1, -1, NULL);
-        *p = (short)((u8)((SideloadPlacement*)state)->yawByte << 8);
+        setup = Obj_AllocObjectSetup(0x18, SIDELOAD_CHILD_OBJ);
+        setup->color[0] = 2;
+        setup->color[1] = 4;
+        setup->color[3] = 0xff;
+        setup->posX = self->anim.localPosX;
+        setup->posY = self->anim.localPosY;
+        setup->posZ = self->anim.localPosZ;
+        child = Obj_SetupObject(setup, 5, -1, -1, NULL);
+        child->anim.rotX = (s16)((u8)placement->yawByte << 8);
     }
 }

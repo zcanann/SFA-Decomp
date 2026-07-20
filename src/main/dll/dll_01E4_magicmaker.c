@@ -110,7 +110,7 @@ void magicmaker_update(GameObject* obj)
                         i = 3;
                         do
                         {
-                            hitDetectFn_80097070(spawnedObj, lbl_803E4D88, 2, 2, 0x64, NULL);
+                            objfx_spawnHitEffectBurst(spawnedObj, lbl_803E4D88, 2, 2, 0x64, NULL);
                             i--;
                         } while (i != 0);
                     }

@@ -108,7 +108,7 @@ void TreasureChest_hitDetect(GameObject* obj)
     state = obj->extra;
     if (((u32)state[0] >> 5 & 1) != 0)
     {
-        hitDetectFn_80097070(obj, 0.6f, 2, (u8)(setup->hitboxKind + 6), 4, NULL);
+        objfx_spawnHitEffectBurst(obj, 0.6f, 2, (u8)(setup->hitboxKind + 6), 4, NULL);
     }
 }
 

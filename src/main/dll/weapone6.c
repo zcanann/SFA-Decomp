@@ -544,7 +544,7 @@ void fn_8013FBE4(GameObject* obj, register int state)
             ((TrickyNibblePair*)&((TrickyState*)state)->scratch700)->hi++;
             **(u8**)state -= 2;
         }
-        targetPos = fn_801CDE70((GameObject*)((TrickyState*)state)->followObj);
+        targetPos = NW_mammoth_getSpawnPosition((GameObject*)((TrickyState*)state)->followObj);
         trackedObj = tumbleweedbush_findNearestActive(targetPos);
         if (trackedObj != 0 && **(u8**)state != 0)
         {
