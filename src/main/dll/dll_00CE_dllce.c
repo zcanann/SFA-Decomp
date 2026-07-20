@@ -362,7 +362,7 @@ int chukChuk_updateAlertState(int* obj, GroundBaddieState* state)
                 (*(void (**)(void*, int, int))(**(int**)&((GameObject*)o)->anim.dll + 0x24))(o, 129, 0);
             }
         }
-        playerChild = *(int**)((char*)Obj_GetPlayerObject() + 0xc8);
+        playerChild = (int*)((GameObject*)Obj_GetPlayerObject())->childObjs[0];
         player = Obj_GetPlayerObject();
         result = (**(int (**)(int*))(*(int*)(*(int*)&((GameObject*)playerChild)->anim.dll) + 0x44))(playerChild);
         if (result != 0)
@@ -402,7 +402,7 @@ int chukChuk_updateSpitState(GameObject* obj, int state)
     int count;
     int idx;
 
-    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
+    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjHits_EnableObject(obj);
     }
@@ -411,7 +411,7 @@ int chukChuk_updateSpitState(GameObject* obj, int state)
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->objectPairHitVolume = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
 
-    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
+    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         int* objs = ObjList_GetObjects(&idx, &count);
         while (idx < count)
@@ -427,7 +427,7 @@ int chukChuk_updateSpitState(GameObject* obj, int state)
 
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.01f;
 
-    if ((s32)(s8) * (u8*)(state + 0x27a) != 0)
+    if ((s32)(s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
         ObjAnim_SetCurrentMove((int)obj, 10, 0.0f, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;

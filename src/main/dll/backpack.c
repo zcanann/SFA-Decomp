@@ -38,8 +38,6 @@ typedef struct LandedArwingTriggerLaunchTargetState
 
 /* BaddieState+0x27A (moveJustStartedA): just-collided / move-just-started one-shot */
 #define LANDED_ARWING_JUST_COLLIDED 0x27A
-/* BaddieState+0x34D (stateTag): state index written each tick */
-#define LANDED_ARWING_STATE_INDEX 0x34D
 /* surfaceMode value for script/free flight */
 #define LANDED_ARWING_SCRIPT_MODE 6
 /* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
@@ -83,7 +81,7 @@ int LandedArwing_UpdateBounceFade(int obj, u32* stateWord)
     ObjHitsPriorityState* hitState;
 
     state = (LandedArwingState*)((GroundBaddieState*)*(int*)&((GameObject*)obj)->extra)->control;
-    *(u8*)((int)stateWord + LANDED_ARWING_STATE_INDEX) = 3;
+    ((BaddieState*)stateWord)->stateTag = 3;
     if (*(s8*)((int)stateWord + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
         ObjHits_DisableObject((GameObject*)obj);
@@ -159,7 +157,7 @@ int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord)
     state = (LandedArwingState*)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
     player = (int)Obj_GetPlayerObject();
     playerObj = (GameObject*)player;
-    *(u8*)(stateWord + LANDED_ARWING_STATE_INDEX) = 1;
+    ((BaddieState*)stateWord)->stateTag = 1;
     if (*(s8*)(stateWord + LANDED_ARWING_JUST_COLLIDED) != 0)
     {
         state->scriptTimer = 0x3c;

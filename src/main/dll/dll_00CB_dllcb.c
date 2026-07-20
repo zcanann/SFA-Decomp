@@ -71,14 +71,14 @@ void* gDllCBStateHandlers[6];
 int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
-    char* routePath;
+    RouteNav* routePath;
     f32 zero;
 
     sub = obj->extra;
     if (*(void**)&state->baddie.targetObj != NULL)
     {
         (*gPlayerInterface)->setState((void*)obj, state, 1);
-        routePath = (char*)&sub->routeNav;
+        routePath = &sub->routeNav;
         zero = 0.0f;
         state->baddie.moveInputX = zero;
         state->baddie.moveInputZ = zero;
@@ -89,16 +89,16 @@ int dll_CB_stateHandler5(GameObject* obj, GroundBaddieState* state)
         {
             return 5;
         }
-        if (*(u8*)(routePath + 0x25) == 0)
+        if (routePath->flag25 == 0)
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), 0.0f,
+                ->moveTowardPoint((void*)obj, state, routePath->tgtPos[0], routePath->tgtPos[2], 0.0f,
                                   0.0f, 6e+01f);
         }
         else
         {
             (*gPlayerInterface)
-                ->moveTowardPoint((void*)obj, state, *(f32*)(routePath + 0x18), *(f32*)(routePath + 0x20), 15.0f,
+                ->moveTowardPoint((void*)obj, state, routePath->tgtPos[0], routePath->tgtPos[2], 15.0f,
                                   3e+01f, 6e+01f);
         }
     }
@@ -295,7 +295,7 @@ void dll_CB_advanceAI(int* obj, GroundBaddieState* sub, GroundBaddieState* state
 
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
-        *(int*)(*(int*)&((GameObject*)obj)->childObjs[0] + 0x30) = *(int*)&((GameObject*)obj)->anim.parent;
+        ((GameObject*)((GameObject*)obj)->childObjs[0])->anim.parent = ((GameObject*)obj)->anim.parent;
     }
     targetObj = *(char**)&state->baddie.targetObj;
     if (targetObj != NULL)

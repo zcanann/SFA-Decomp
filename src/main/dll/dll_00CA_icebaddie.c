@@ -144,7 +144,7 @@ int iceBaddie_stateHandlerB07(int obj, int state)
             }
             else
             {
-                IceBaddieControl* control = (IceBaddieControl*)*(int*)&sub->control;
+                IceBaddieControl* control = (IceBaddieControl*)sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
                     (*gPlayerInterface)->setState(
@@ -193,7 +193,7 @@ int iceBaddie_stateHandlerB07(int obj, int state)
             }
             else
             {
-                int control = *(int*)&sub->control;
+                int control = (int)sub->control;
                 if ((sub->configFlags & 0x10) != 0)
                 {
                     (*gPlayerInterface)->setState(
@@ -512,7 +512,7 @@ int iceBaddie_updateContactHitState(GameObject* obj, int state)
     }
     ((GroundBaddieState*)state)->baddie.stateTag = 3;
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.008f;
-    control = *(int*)&sub->control;
+    control = (int)sub->control;
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
     noBlend = 0.0f;
     ((GroundBaddieState*)state)->baddie.animSpeedA = noBlend;
@@ -548,7 +548,7 @@ int iceBaddie_stateHandlerA0B(GameObject* obj, int state)
             sub->targetState = 3;
         }
     }
-    control = *(int*)&sub->control;
+    control = (int)sub->control;
     ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_BURST;
     if ((s32)(((GroundBaddieState*)state)->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
     {
@@ -562,7 +562,7 @@ int iceBaddie_stateHandlerA0B(GameObject* obj, int state)
 
 int iceBaddie_updateDropState(GameObject* obj, int state)
 {
-    int control = *(int*)(*(int*)&(obj)->extra + 0x40c);
+    int control = (int)((GroundBaddieState*)(obj)->extra)->control;
     int player;
 
     ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_BURST;
@@ -594,7 +594,7 @@ int iceBaddie_updateDropState(GameObject* obj, int state)
 int iceBaddie_updateCommDownState(GameObject* obj, int state)
 {
     GroundBaddieState* sub = (obj)->extra;
-    int control = *(int*)&sub->control;
+    int control = (int)sub->control;
 
     ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_BURST;
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.01f;
@@ -606,7 +606,7 @@ int iceBaddie_updateCommDownState(GameObject* obj, int state)
     ((GroundBaddieState*)state)->baddie.stateTag = 1;
     if ((*(s32*)&((GroundBaddieState*)state)->baddie.eventFlags & 1) != 0)
     {
-        control = *(int*)&sub->control;
+        control = (int)sub->control;
         ((GroundBaddieState*)state)->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         ((IceBaddieControl*)control)->effectFlags |= ICEBADDIE_FX_ARM_ICEBALL;
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_dsmk2_c_cf);
@@ -632,7 +632,7 @@ int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state)
 
 int iceBaddie_updateHeightBlendState(GameObject* obj, int state)
 {
-    int control = *(int*)(*(int*)&(obj)->extra + 0x40c);
+    int control = (int)((GroundBaddieState*)(obj)->extra)->control;
     f32 height;
 
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
@@ -788,7 +788,7 @@ int iceBaddie_updateSpinState(GameObject* obj, int state)
         ObjAnim_SetCurrentMove((int)obj, 9, 0.0f, 0);
         ((GroundBaddieState*)state)->baddie.moveDone = 0;
     }
-    control = *(int*)&sub->control;
+    control = (int)sub->control;
     ((IceBaddieControl*)control)->effectFlags |= (ICEBADDIE_FX_BURST | ICEBADDIE_FX_PUFF);
     if ((s8)((GroundBaddieState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -1187,7 +1187,7 @@ void iceBaddie_tryAcquireTarget(int obj, int sub, int state)
 
 void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
 {
-    int control = *(int*)&((GroundBaddieState*)sub)->control;
+    int control = (int)((GroundBaddieState*)sub)->control;
 
     ((IceBaddieControl*)control)->ambientSfxTimer += framesThisStep;
     if (((IceBaddieControl*)control)->ambientSfxTimer >= 300)
@@ -1216,7 +1216,7 @@ void iceBaddie_updateTargetMotion(GameObject* obj, int sub, int state)
 
 void iceBaddie_updateTargetCollision(int obj, int sub, int state)
 {
-    int control = *(int*)&((GroundBaddieState*)sub)->control;
+    int control = (int)((GroundBaddieState*)sub)->control;
     u8* target;
     int hitInfo[7];
     f32 targetDelta[3];

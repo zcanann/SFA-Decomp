@@ -66,7 +66,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
     int animOk;
 
     state = (obj)->extra;
-    config = *(DIMbosstonsilConfig**)&(obj)->anim.placementData;
+    config = (DIMbosstonsilConfig*)(obj)->anim.placementData;
 
     if (gDIMbosstonsilLight != NULL)
     {
@@ -199,7 +199,7 @@ void DIMbosstonsil_func0B(void)
 
 int DIMbosstonsil_setScale(GameObject* obj)
 {
-    return (*(DIMbosstonsilState**)&obj->extra)->scale;
+    return ((DIMbosstonsilState*)obj->extra)->scale;
 }
 
 int DIMbosstonsil_getExtraSize(void)
@@ -273,7 +273,7 @@ void DIMbosstonsil_update(GameObject* obj)
     u8 red, green, blue, alpha;
 
     state = (obj)->extra;
-    config = *(DIMbosstonsilConfig**)&(obj)->anim.placementData;
+    config = (DIMbosstonsilConfig*)(obj)->anim.placementData;
 
     if ((obj)->userData1 != 0)
         return;
