@@ -271,6 +271,7 @@ void exploded_update(int* obj)
             o->alpha = 0;
             o->flags06 = (s16)(o->flags06 | 0x4000);
             flag = 1;
+            goto updatePhase;
         }
         else
         {
@@ -279,14 +280,11 @@ void exploded_update(int* obj)
             {
                 o->alpha = remainingFrames;
             }
-            flag = 0;
         }
     }
-    else
-    {
-        flag = 0;
-    }
+    flag = 0;
 
+updatePhase:
     if (flag != 0)
     {
         state->explodePhase = EXPLODED_PHASE_EXPIRED;
