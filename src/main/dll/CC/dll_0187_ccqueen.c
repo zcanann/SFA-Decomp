@@ -33,23 +33,23 @@ int ccqueen_getExtraSize(void)
     return 0x654;
 }
 
-void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void ccqueen_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void* state = ((GameObject*)obj)->extra;
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
-    dll_2E_func06((GameObject*)obj, (MoveLibState*)state, 0);
+    void* state = obj->extra;
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
+    dll_2E_func06(obj, (MoveLibState*)state, 0);
 }
 
-void ccqueen_update(int* obj)
+void ccqueen_update(GameObject* obj)
 {
     u8* charState;
     GameObject* player;
 
-    charState = ((GameObject*)obj)->extra;
+    charState = obj->extra;
     if (mainGetBit(GAMEBIT_QUEEN_LATCHED) == 0 && mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         player = Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX) <
+        if (vec3f_distanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) <
             18225.0f)
         {
             mainSetBits(GAMEBIT_QUEEN_LATCHED, 1);
@@ -57,28 +57,28 @@ void ccqueen_update(int* obj)
     }
     if (mainGetBit(GAMEBIT_QUEEN_RETIRED) != 0)
     {
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCQUEEN_OBJFLAG_UPDATE_DISABLED);
-        ObjHits_DisableObject((GameObject*)obj);
+        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+        obj->objectFlags = (u16)(obj->objectFlags | CCQUEEN_OBJFLAG_UPDATE_DISABLED);
+        ObjHits_DisableObject(obj);
     }
     else
     {
         ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
-        dll_2E_func03((GameObject*)obj, (MoveLibState*)charState);
-        characterDoEyeAnims((GameObject*)obj, charState + 0x624);
+        dll_2E_func03(obj, (MoveLibState*)charState);
+        characterDoEyeAnims(obj, charState + 0x624);
     }
 }
 
-void ccqueen_init(int* obj, u8* placement)
+void ccqueen_init(GameObject* obj, u8* placement)
 {
     u8* charState;
     Vec3s buf2;
     Vec3s buf1;
-    charState = ((GameObject*)obj)->extra;
+    charState = obj->extra;
     buf2 = ccqueenEyeSetupA;
     buf1 = ccqueenEyeSetupB;
-    ((GameObject*)obj)->anim.rotX = (s16)(placement[0x1a] << 8);
-    dll_2E_func05((GameObject*)obj, (MoveLibState*)charState, 0x71c7, 0x3555, 3);
+    obj->anim.rotX = (s16)(placement[0x1a] << 8);
+    dll_2E_func05(obj, (MoveLibState*)charState, 0x71c7, 0x3555, 3);
     dll_2E_func08((MoveLibState*)charState, 0x258, 0xf0);
     dll_2E_func09((MoveLibState*)charState, &buf1, &buf2, 3);
     charState[0x611] = (u8)(charState[0x611] | 0xa);

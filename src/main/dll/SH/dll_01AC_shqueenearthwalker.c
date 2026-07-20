@@ -83,7 +83,7 @@ ObjectDescriptor gSH_queenearthwalkerObjDescriptor = {
 
 void openPortalFn_801d4364(GameObject* obj, void* state)
 {
-    void* player;
+    GameObject* player;
 
     player = Obj_GetPlayerObject();
     (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
@@ -98,8 +98,8 @@ void openPortalFn_801d4364(GameObject* obj, void* state)
     else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
     {
         (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-        if (playerHasSpell((GameObject*)(player), 3) != 0 &&
-            getXZDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) <
+        if (playerHasSpell(player, 3) != 0 &&
+            getXZDistance(&player->anim.worldPosX, &(obj)->anim.worldPosX) <
                 gQueenEarthWalkerPortalSpellDistance)
         {
             mainSetBits(0x23b, 1);
@@ -116,9 +116,9 @@ void openPortalFn_801d4364(GameObject* obj, void* state)
 
     player = Obj_GetPlayerObject();
     ((u8*)state)[8] = 1;
-    ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-    ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-    ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+    ((QueenEarthWalkerState*)state)->targetX = player->anim.localPosX;
+    ((QueenEarthWalkerState*)state)->targetY = player->anim.localPosY;
+    ((QueenEarthWalkerState*)state)->targetZ = player->anim.localPosZ;
     fn_8003B500(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
 }
 
@@ -127,7 +127,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
     s16 triggerId;
     s32 total;
     void* tricky;
-    void* player;
+    GameObject* player;
 
     switch (((QueenEarthWalkerState*)state)->stateIndex)
     {
@@ -196,9 +196,9 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
         ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableFed;
         player = Obj_GetPlayerObject();
         ((u8*)state)[0x8] = 1;
-        ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-        ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-        ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+        ((QueenEarthWalkerState*)state)->targetX = player->anim.localPosX;
+        ((QueenEarthWalkerState*)state)->targetY = player->anim.localPosY;
+        ((QueenEarthWalkerState*)state)->targetZ = player->anim.localPosZ;
         fn_8003B500(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
         break;
     default:
@@ -214,7 +214,7 @@ int sh_queenearthwalker_getExtraSize(void)
 void sh_queenearthwalker_update(GameObject* obj)
 {
     void* state;
-    void* player;
+    GameObject* player;
     void* target;
     u8 action;
     s8 mapSlot;
@@ -247,9 +247,9 @@ void sh_queenearthwalker_update(GameObject* obj)
             }
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
-            ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-            ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-            ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+            ((QueenEarthWalkerState*)state)->targetX = player->anim.localPosX;
+            ((QueenEarthWalkerState*)state)->targetY = player->anim.localPosY;
+            ((QueenEarthWalkerState*)state)->targetZ = player->anim.localPosZ;
             fn_8003B500(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
         case 5:
@@ -266,9 +266,9 @@ void sh_queenearthwalker_update(GameObject* obj)
             }
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
-            ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-            ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-            ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+            ((QueenEarthWalkerState*)state)->targetX = player->anim.localPosX;
+            ((QueenEarthWalkerState*)state)->targetY = player->anim.localPosY;
+            ((QueenEarthWalkerState*)state)->targetZ = player->anim.localPosZ;
             fn_8003B500(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
         case 7:
@@ -282,17 +282,17 @@ void sh_queenearthwalker_update(GameObject* obj)
             }
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
-            ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-            ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-            ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+            ((QueenEarthWalkerState*)state)->targetX = player->anim.localPosX;
+            ((QueenEarthWalkerState*)state)->targetY = player->anim.localPosY;
+            ((QueenEarthWalkerState*)state)->targetZ = player->anim.localPosZ;
             fn_8003B500(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
         case 8:
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
-            ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-            ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-            ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+            ((QueenEarthWalkerState*)state)->targetX = player->anim.localPosX;
+            ((QueenEarthWalkerState*)state)->targetY = player->anim.localPosY;
+            ((QueenEarthWalkerState*)state)->targetZ = player->anim.localPosZ;
             fn_8003B500(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
         case 0:

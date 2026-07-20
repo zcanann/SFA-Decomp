@@ -36,24 +36,24 @@ typedef struct ShopItemRow
     s16 textId;    /* 0xa */
 } ShopItemRow;
 
-void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4);
-void shop_func16(int* obj, int p2, int p3);
-void shop_func15(int* obj, int v);
+void shop_func17(GameObject* obj, int* out_b3, int* out_b2, int* out_b4);
+void shop_func16(GameObject* obj, int p2, int p3);
+void shop_func15(GameObject* obj, int v);
 void shop_buyItem(GameObject* obj, int price);
-s32 shop_getItemIndex(int* obj);
-void shop_setItemIndex(int* obj, int v);
+s32 shop_getItemIndex(GameObject* obj);
+void shop_setItemIndex(GameObject* obj, int v);
 s16 shop_getItemTextId(int obj, int idx);
 int shop_getItemPrice(int obj, int idx);
 u8 shop_getItemField4(int obj, int idx);
 u8 shop_getItemMinPrice(int obj, int idx);
 int shop_isItemBought(int obj, int idx);
 int shop_isItemAvailable(int obj, int idx);
-void shop_func0B(int* obj, int v, int p3);
-s32 shop_getStateField0(int* obj);
+void shop_func0B(GameObject* obj, int v, int p3);
+s32 shop_getStateField0(GameObject* obj);
 int shop_getExtraSize(void);
 int shop_getObjectTypeId(void);
-void shop_free(int* obj);
-void shop_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void shop_free(GameObject* obj);
+void shop_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void shop_hitDetect(void);
 void shop_update(GameObject* obj);
 void shop_init(GameObject* obj, int objDef);

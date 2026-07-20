@@ -199,9 +199,9 @@ extern f32 lbl_803E59C8;
 
 /* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
-void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
+void shop_func17(GameObject* obj, int* out_b3, int* out_b2, int* out_b4)
 {
-    s8* b = ((GameObject*)obj)->extra;
+    s8* b = obj->extra;
     *out_b2 = b[2];
     *out_b3 = b[3];
     *out_b4 = b[4];
@@ -209,18 +209,18 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 
 /* Increment-and-store: obj->_b8[2] += delta2,
  * obj->_b8[3] += delta3. */
-void shop_func16(int* obj, int delta3, int delta2)
+void shop_func16(GameObject* obj, int delta3, int delta2)
 {
-    s8* b = ((GameObject*)obj)->extra;
+    s8* b = obj->extra;
     b[2] = (s8)(b[2] + delta2);
     b[3] = (s8)(b[3] + delta3);
 }
 
 /* Shop state reset/seed: zero obj->_b8[2]
  * and obj->_b8[3], stash v in obj->_b8[4]. */
-void shop_func15(int* obj, int v)
+void shop_func15(GameObject* obj, int v)
 {
-    s8* b = ((GameObject*)obj)->extra;
+    s8* b = obj->extra;
     b[2] = 0;
     b[3] = 0;
     b[4] = v;
@@ -283,14 +283,14 @@ void shop_buyItem(GameObject* obj, int price)
     }
 }
 
-s32 shop_getItemIndex(int* obj)
+s32 shop_getItemIndex(GameObject* obj)
 {
-    return ((ShopBuyItemState*)((GameObject*)obj)->extra)->itemIndex;
+    return ((ShopBuyItemState*)obj->extra)->itemIndex;
 }
 
-void shop_setItemIndex(int* obj, int v)
+void shop_setItemIndex(GameObject* obj, int v)
 {
-    s8* state = ((GameObject*)obj)->extra;
+    s8* state = obj->extra;
     state[1] = v;
 }
 
@@ -366,9 +366,9 @@ int shop_isItemAvailable(int obj, int idx)
     return result;
 }
 
-void shop_func0B(int* obj, int v, int seqId)
+void shop_func0B(GameObject* obj, int v, int seqId)
 {
-    s8* state = ((GameObject*)obj)->extra;
+    s8* state = obj->extra;
     state[0] = v;
     if (v != 0)
     {
@@ -376,9 +376,9 @@ void shop_func0B(int* obj, int v, int seqId)
     }
 }
 
-s32 shop_getStateField0(int* obj)
+s32 shop_getStateField0(GameObject* obj)
 {
-    return ((ShopBuyItemState*)((GameObject*)obj)->extra)->unk0;
+    return ((ShopBuyItemState*)obj->extra)->unk0;
 }
 
 int shop_getExtraSize(void)
@@ -391,7 +391,7 @@ int shop_getObjectTypeId(void)
     return 0x0;
 }
 
-void shop_free(int* obj)
+void shop_free(GameObject* obj)
 {
     skyFn_80088c94(7, 0);
     ObjGroup_RemoveObject((int)obj, SPSHOP_OBJGROUP);
@@ -399,11 +399,11 @@ void shop_free(int* obj)
     mainSetBits(GAMEBIT_PlayerInShop, 0);
 }
 
-void shop_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void shop_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E59C8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E59C8);
 }
 
 void shop_hitDetect(void)
