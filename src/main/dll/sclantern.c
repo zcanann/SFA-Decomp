@@ -16,7 +16,6 @@
 #include "main/mapEvent.h"
 #include "main/obj_path.h"
 #include "main/frame_timing.h"
-#include "main/dll/SC/dll_01B0_shswapston.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 
 #define SCLANTERN_EVENT_LEFT_SPARK_A  1

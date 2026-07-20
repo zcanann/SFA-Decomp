@@ -19,8 +19,6 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
-#include "main/dll/SC/dll_01B0_shswapston.h"
-#include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SH/dll_01B0_shswapston.h"
 #include "main/newshadows_audio_api.h"
 #include "main/dll/path_control_interface.h"

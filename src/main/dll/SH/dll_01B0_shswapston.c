@@ -48,6 +48,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SC/SCchieflightfoot.h"
 #include "main/dll/SC/SClantern.h"
+#include "main/dll/SH/dll_01B0_shswapston.h"
 
 typedef s16 (*SwapstoneYawDeltaFn)(int obj, int target, f32* distance);
 
@@ -402,7 +403,6 @@ void warpstone_hitDetect(GameObject* obj)
 
 #include "main/dll/SC/SClantern.h"
 #include "main/audio/sfx.h"
-#include "main/dll/SC/dll_01B0_shswapston.h"
 #include "main/maketex_api.h"
 
 int lbl_803DC038 = 300;

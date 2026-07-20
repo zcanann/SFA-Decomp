@@ -12,7 +12,6 @@
  * setScale is the trigger-volume callback that cuts/harvests.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/DIM/dimlogfire.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object_render.h"
 #include "main/object.h"

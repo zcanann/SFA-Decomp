@@ -51,7 +51,6 @@ typedef struct DimLogFireState
 STATIC_ASSERT(sizeof(DimLogFireState) == 0x24);
 
 int dimlogfire_countdownCallback(GameObject* obj, int delta);
-int MoonSeedPlantingSpot_SeqFn(int obj);
 int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int DIMLogFire_getExtraSize(void);
 int DIMLogFire_getObjectTypeId(void);
