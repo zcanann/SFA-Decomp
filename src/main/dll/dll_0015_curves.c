@@ -423,8 +423,8 @@ void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* colli
             }
             if ((s32)(collision->flags & 0x8000) != 0)
             {
-                angle = (u16)getAngle((localX[0] + localX[idx1]) - (localX[idx3] + localX[idx2]),
-                                      (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
+                secondArg = (localX[0] + localX[idx1]) - (localX[idx3] + localX[idx2]);
+                angle = (u16)getAngle(secondArg, (localZ[0] + localZ[idx1]) - (localZ[idx3] + localZ[idx2]));
                 obj->anim.rotX += (s16)(u16)(angle + 0x8000) >> 2;
             }
             if ((s32)(collision->flags & 0x200) != 0)
