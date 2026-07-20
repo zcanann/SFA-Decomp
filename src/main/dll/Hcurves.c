@@ -2216,14 +2216,14 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
 fail:
     return 1;
 }
-int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
+int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, int bboxMode)
 {
     f32 bestDistance;
     f32 bestActionDistance;
+    int curveIndex;
     ObjfsaRomCurveDef* curve;
     ObjfsaRomCurveDef* bestCurve;
     ObjfsaRomCurveDef* bestActionCurve;
-    int curveIndex;
     f32 dx;
     f32 dy;
     f32 dz;
