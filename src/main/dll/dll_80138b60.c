@@ -195,7 +195,7 @@ void fn_80138D7C(int obj, int state)
                 }
                 else
                 {
-                    *(u8*)(*(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x34) + 8) = ratio;
+                    Obj_GetActiveModel((GameObject*)obj)->textureRefs->unk08 = ratio;
                     alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
                 }
                 Obj_SetModelColorOverrideRecursive((GameObject*)obj, 255, 255, 255, lbl_803E240C * alpha, 1);
