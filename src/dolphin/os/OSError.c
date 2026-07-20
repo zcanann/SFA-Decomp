@@ -1,9 +1,8 @@
 #include <stdarg.h>
 #include <dolphin.h>
 
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/__os.h"
-
-int vprintf(const char* format, va_list arg);
 
 OSErrorHandler __OSErrorTable[OS_ERROR_MAX];
 
