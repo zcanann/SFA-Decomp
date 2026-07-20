@@ -17,7 +17,7 @@ GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUN
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
-extern u8* gObjHitsPriorityHitStates;
+extern ObjHitsPriorityWorkSlot* gObjHitsPriorityHitStates;
 extern f64 lbl_803DE928;
 extern f32 gObjHitsSweepSortSentinel;
 extern f32 lbl_803DE91C;
@@ -893,7 +893,7 @@ void ObjHits_TickPriorityHitCooldowns(void)
     slotOffset = 0;
     do
     {
-        base = gObjHitsPriorityHitStates;
+        base = (u8*)gObjHitsPriorityHitStates;
         workSlot = (ObjHitsPriorityWorkSlot*)(base + slotOffset);
         if (workSlot->active != 0)
         {

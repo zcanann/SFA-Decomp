@@ -82,7 +82,7 @@ struct ObjLibRegionList
 
 ObjContactCallbackEntry gObjContactCallbacks[0xC0 / sizeof(ObjContactCallbackEntry)];
 extern void* gObjHitsWorkBuffer;
-extern u8* gObjHitsPriorityHitStates;
+extern ObjHitsPriorityWorkSlot* gObjHitsPriorityHitStates;
 extern u8 gObjGroupObjectCount;
 extern int gObjContactCallbackCount;
 extern f32 gObjHitsPriorityHitTickDelta;
@@ -201,7 +201,7 @@ void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, 
     }
     for (slotIndex = 0; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
     {
-        workSlot = &((ObjHitsPriorityWorkSlot*)gObjHitsPriorityHitStates)[slotIndex];
+        workSlot = &gObjHitsPriorityHitStates[slotIndex];
         if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj))
         {
             workSlot->active = 0;
@@ -930,7 +930,7 @@ void ObjHits_ResetWorkBuffers(void)
 
     for (slotIndex = 0; slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex++)
     {
-        ((ObjHitsPriorityWorkSlot*)gObjHitsPriorityHitStates)[slotIndex].active = 0;
+        gObjHitsPriorityHitStates[slotIndex].active = 0;
     }
     gObjHitReactResetObjectCount = 0;
 }
