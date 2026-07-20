@@ -128,9 +128,9 @@ int DFSH_LaserBeam_getObjectTypeId(void)
     return 0x0;
 }
 
-void DFSH_LaserBeam_free(int* obj)
+void DFSH_LaserBeam_free(GameObject* obj)
 {
-    DFSHLaserBeamRuntime* runtime = ((GameObject*)obj)->extra;
+    DFSHLaserBeamRuntime* runtime = obj->extra;
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(gLaserBeamEffectResource);
     gLaserBeamEffectResource = NULL;
