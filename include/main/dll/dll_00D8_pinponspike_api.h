@@ -8,10 +8,10 @@ extern ObjectDescriptor gPinPonSpikeObjDescriptor;
 
 int pinponspike_getExtraSize(void);
 int pinponspike_getObjectTypeId(void);
-void pinponspike_free(int obj);
+void pinponspike_free(GameObject* obj);
 void pinponspike_render(void);
 void pinponspike_hitDetect(void);
-void pinponspike_update(int obj);
+void pinponspike_update(GameObject* obj);
 void pinponspike_init(GameObject* obj);
 void pinponspike_release(void);
 void pinponspike_initialise(void);

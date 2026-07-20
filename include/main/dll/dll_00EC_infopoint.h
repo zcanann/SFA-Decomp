@@ -35,10 +35,10 @@ int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 int InfoPoint_getExtraSize(void);
 int InfoPoint_getObjectTypeId(void);
 void InfoPoint_free(void);
-void InfoPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void InfoPoint_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void InfoPoint_hitDetect(void);
 void InfoPoint_update(GameObject* obj);
-void InfoPoint_init(int* obj, u8* def);
+void InfoPoint_init(GameObject* obj, u8* def);
 void InfoPoint_release(void);
 void InfoPoint_initialise(void);
 

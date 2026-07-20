@@ -69,14 +69,14 @@ u32 lbl_803208E8[] = {
     0,
 };
 
-int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int depthoffieldpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    DofState* state = ((GameObject*)obj)->extra;
+    DofState* state = obj->extra;
     int ev;
     if (state->enabled)
     {
-        turnOnBlurFilter(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                         ((GameObject*)obj)->anim.worldPosZ, state->mode0, state->mode1);
+        turnOnBlurFilter(obj->anim.worldPosX, obj->anim.worldPosY,
+                         obj->anim.worldPosZ, state->mode0, state->mode1);
     }
     for (ev = 0; ev < animUpdate->eventCount; ev++)
     {
@@ -107,9 +107,9 @@ int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate
 
 int depthoffieldpoint_getExtraSize(void) { return 0x3; }
 
-void depthoffieldpoint_update(int* obj)
+void depthoffieldpoint_update(GameObject* obj)
 {
-    DofState* state = ((GameObject*)obj)->extra;
+    DofState* state = obj->extra;
     if (state->enabled)
     {
         state->enabled = 0;
@@ -117,11 +117,11 @@ void depthoffieldpoint_update(int* obj)
     }
 }
 
-void depthoffieldpoint_init(int* obj)
+void depthoffieldpoint_init(GameObject* obj)
 {
-    DofState* state = ((GameObject*)obj)->extra;
+    DofState* state = obj->extra;
     state->enabled = 0;
-    ((GameObject*)obj)->animEventCallback = depthoffieldpoint_SeqFn;
+    obj->animEventCallback = depthoffieldpoint_SeqFn;
     state->mode0 = 0;
-    ((GameObject*)obj)->objectFlags |= DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN;
+    obj->objectFlags |= DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN;
 }

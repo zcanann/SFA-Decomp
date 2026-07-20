@@ -59,7 +59,7 @@ int arwarwingbo_getExtraSize(void);
 int arwarwingbo_getObjectTypeId(void);
 void arwarwingbo_free(int obj);
 void arwarwingbo_hitDetect(void);
-void arwarwingbo_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void arwarwingbo_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void arwarwingbo_init(GameObject* obj, ArwingBombSetup* setup);
 void arwarwingbo_setActiveVisible(GameObject* obj, u8 active, u8 visible);
 void arwarwingbo_release(void);

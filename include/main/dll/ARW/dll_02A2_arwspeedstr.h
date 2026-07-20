@@ -40,7 +40,7 @@ int ARWSpeedStr_getExtraSize(void);
 int ARWSpeedStr_getObjectTypeId(void);
 void ARWSpeedStr_free(void);
 void ARWSpeedStr_hitDetect(void);
-void ARWSpeedStr_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
+void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 void ARWSpeedStr_init(GameObject* obj, int setup);
 void ARWSpeedStr_update(GameObject* obj);
 void ARWSpeedStr_release(void);

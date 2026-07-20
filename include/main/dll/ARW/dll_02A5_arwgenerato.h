@@ -34,7 +34,7 @@ STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnMode) == 0x25);
 int arwgenerato_getExtraSize(void);
 int arwgenerato_getObjectTypeId(void);
 void arwgenerato_free(void);
-void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
+void arwgenerato_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 void arwgenerato_hitDetect(void);
 void arwgenerato_update(GameObject* obj);
 void arwgenerato_init(GameObject* obj, ARWGeneratorSetup* setup);

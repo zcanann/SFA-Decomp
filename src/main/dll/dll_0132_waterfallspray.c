@@ -48,13 +48,13 @@ int WaterFallSpray_getExtraSize(void)
     return 0x8;
 }
 
-int WaterFallSpray_SeqFn(int* obj)
+int WaterFallSpray_SeqFn(GameObject* obj)
 {
     WaterFallSpray_update(obj);
     return 0;
 }
 
-void WaterFallSpray_free(u8* obj)
+void WaterFallSpray_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -73,11 +73,10 @@ typedef struct WaterFallSprayPartfxArgs
     f32 zOffset;
 } WaterFallSprayPartfxArgs;
 
-void WaterFallSpray_update(int* objParam)
+void WaterFallSpray_update(GameObject* obj)
 {
     WaterFallSprayState* state;
     WaterFallSprayPlacement* data[1];
-    u8* obj;
     GameObject* playerObj;
     WaterFallSprayPartfxArgs partfxArgs;
     f32 dx;
@@ -87,9 +86,8 @@ void WaterFallSpray_update(int* objParam)
     int cooldown;
     s16 i;
 
-    obj = (u8*)objParam;
-    state = ((GameObject*)obj)->extra;
-    data[0] = *(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData;
+    state = obj->extra;
+    data[0] = *(WaterFallSprayPlacement**)&obj->anim.placementData;
     playerObj = (GameObject*)Obj_GetPlayerObject();
     if (playerObj != NULL)
     {
@@ -109,15 +107,15 @@ void WaterFallSpray_update(int* objParam)
                 Sfx_KeepAliveLoopedObjectSound((int)obj, state->sfxIdB & 0xffff);
             }
 
-            cooldown = ((GameObject*)obj)->userData1;
+            cooldown = obj->userData1;
             if (cooldown <= 0)
             {
-                dx = ((GameObject*)obj)->anim.worldPosX - playerObj->anim.worldPosX;
-                dy = ((GameObject*)obj)->anim.worldPosY - playerObj->anim.worldPosY;
-                dz = ((GameObject*)obj)->anim.worldPosZ - playerObj->anim.worldPosZ;
+                dx = obj->anim.worldPosX - playerObj->anim.worldPosX;
+                dy = obj->anim.worldPosY - playerObj->anim.worldPosY;
+                dz = obj->anim.worldPosZ - playerObj->anim.worldPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (((distance <= (f32)(s32)((u32)data[0]->distance << 4)) || (data[0]->distance == 0)) &&
-                    ((((GameObject*)obj)->objectFlags & WATERFALLSPRAY_OBJFLAG_RENDERED) != 0))
+                    ((obj->objectFlags & WATERFALLSPRAY_OBJFLAG_RENDERED) != 0))
                 {
                     for (i = 0; i < data[0]->count; i++)
                     {
@@ -142,40 +140,39 @@ void WaterFallSpray_update(int* objParam)
                         }
                     }
                 }
-                *(u32*)&((GameObject*)obj)->userData1 = -data[0]->count;
+                *(u32*)&obj->userData1 = -data[0]->count;
             }
             else if (cooldown > 0)
             {
-                *(u32*)&((GameObject*)obj)->userData1 = cooldown - framesThisStep;
+                *(u32*)&obj->userData1 = cooldown - framesThisStep;
             }
         }
     }
 }
 
-void WaterFallSpray_init(u8* obj, u8* dataRaw)
+void WaterFallSpray_init(GameObject* obj, WaterFallSprayPlacement* data)
 {
-    WaterFallSprayPlacement* data = (WaterFallSprayPlacement*)dataRaw;
-    u8* sub = ((GameObject*)obj)->extra;
+    WaterFallSprayState* sub = obj->extra;
     s16 a, b, c;
     int mapId;
     a = (s16)((s32)data->rotZSeed << 8);
-    ((GameObject*)obj)->anim.rotZ = a;
+    obj->anim.rotZ = a;
     b = (s16)((s32)data->rotYSeed << 8);
-    ((GameObject*)obj)->anim.rotY = b;
+    obj->anim.rotY = b;
     c = (s16)((s32)data->rotXSeed << 8);
-    ((GameObject*)obj)->anim.rotX = c;
-    *(u32*)&((GameObject*)obj)->userData1 = 0;
-    ((GameObject*)obj)->animEventCallback = WaterFallSpray_SeqFn;
-    mapId = (*(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData)->mapId;
+    obj->anim.rotX = c;
+    *(u32*)&obj->userData1 = 0;
+    obj->animEventCallback = WaterFallSpray_SeqFn;
+    mapId = (*(WaterFallSprayPlacement**)&obj->anim.placementData)->mapId;
     switch (mapId)
     {
     case WATERFALLSPRAY_ALT_SFX_DEF_MIN:
     case WATERFALLSPRAY_ALT_SFX_DEF_END - 1:
-        ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_ALT_SFX_A;
-        ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_ALT_SFX_B;
+        sub->sfxIdA = WATERFALLSPRAY_ALT_SFX_A;
+        sub->sfxIdB = WATERFALLSPRAY_ALT_SFX_B;
         return;
     default:
-        ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_DEFAULT_SFX_A;
-        ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
+        sub->sfxIdA = WATERFALLSPRAY_DEFAULT_SFX_A;
+        sub->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
     }
 }

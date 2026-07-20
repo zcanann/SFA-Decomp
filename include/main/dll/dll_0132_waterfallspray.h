@@ -11,11 +11,14 @@
 #define WATERFALLSPRAY_ALT_SFX_A 0x489
 #define WATERFALLSPRAY_ALT_SFX_B 0x48A
 
-void WaterFallSpray_free(u8 *obj);
-void WaterFallSpray_init(u8 *obj, u8 *data);
+struct GameObject;
+struct WaterFallSprayPlacement;
+
+void WaterFallSpray_free(struct GameObject *obj);
+void WaterFallSpray_init(struct GameObject *obj, struct WaterFallSprayPlacement *data);
 void WaterFallSpray_render(void);
-void WaterFallSpray_update(int *obj);
+void WaterFallSpray_update(struct GameObject *obj);
 int WaterFallSpray_getExtraSize(void);
-int WaterFallSpray_SeqFn(int *obj);
+int WaterFallSpray_SeqFn(struct GameObject *obj);
 
 #endif /* MAIN_DLL_DLL_0132_WATERFALLSPRAY_H_ */

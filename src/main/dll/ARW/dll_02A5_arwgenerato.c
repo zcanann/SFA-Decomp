@@ -117,9 +117,9 @@ void arwgenerato_free(void)
 {
 }
 
-void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void arwgenerato_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwgenerato_hitDetect(void)

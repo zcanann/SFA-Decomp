@@ -55,19 +55,19 @@ void FogControl_hitDetect(void)
  * target and feed the heavy fog params. */
 void FogControl_update(GameObject* obj)
 {
-    u8* setup = (u8*)obj->anim.placement;
+    FogcontrolPlacement* setup = (FogcontrolPlacement*)obj->anim.placement;
     FogControlState* st = obj->extra;
     u8 cv;
     u8 run;
     f32 fogY;
 
-    if (((FogcontrolPlacement*)setup)->enableGameBit == -1)
+    if (setup->enableGameBit == -1)
     {
         cv = 1;
     }
     else
     {
-        cv = mainGetBit(((FogcontrolPlacement*)setup)->enableGameBit);
+        cv = mainGetBit(setup->enableGameBit);
     }
     if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0))
     {
@@ -81,7 +81,7 @@ void FogControl_update(GameObject* obj)
     {
         if (cv != 0)
         {
-            if ((*(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_FAST_IN) != 0)
+            if ((*(u8*)&setup->flags & FOG_FLAG_FAST_IN) != 0)
             {
                 st->blend = 0.005f * timeDelta + st->blend;
             }
@@ -93,7 +93,7 @@ void FogControl_update(GameObject* obj)
         }
         else
         {
-            if ((*(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_FAST_OUT) != 0)
+            if ((*(u8*)&setup->flags & FOG_FLAG_FAST_OUT) != 0)
             {
                 st->blend = -(0.005f * timeDelta - st->blend);
             }
@@ -117,15 +117,10 @@ void FogControl_update(GameObject* obj)
                 st->blend = 1.0f;
                 st->full = 1;
             }
-            fogY =
-                st->blend * ((f32)((FogcontrolPlacement*)setup)->fogTop - (f32)((FogcontrolPlacement*)setup)->fogBase) +
-                (f32)((FogcontrolPlacement*)setup)->fogBase;
+            fogY = st->blend * ((f32)setup->fogTop - (f32)setup->fogBase) + (f32)setup->fogBase;
             fogY = obj->anim.localPosY + fogY;
-            enableHeavyFog(
-                fogY,
-                ((f32)((FogcontrolPlacement*)setup)->fogBottom + fogY) - (f32)((FogcontrolPlacement*)setup)->fogTop,
-                (f32)((FogcontrolPlacement*)setup)->fogRed, (f32)((FogcontrolPlacement*)setup)->fogGreen / 65535.0f,
-                0.0001f, *(u8*)&((FogcontrolPlacement*)setup)->flags & FOG_FLAG_MODE);
+            enableHeavyFog(fogY, ((f32)setup->fogBottom + fogY) - (f32)setup->fogTop, (f32)setup->fogRed,
+                           (f32)setup->fogGreen / 65535.0f, 0.0001f, *(u8*)&setup->flags & FOG_FLAG_MODE);
         }
     }
 }

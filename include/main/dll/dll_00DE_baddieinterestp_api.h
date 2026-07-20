@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "main/object_descriptor.h"
+#include "main/game_object.h"
 
 extern ObjectDescriptor gBaddieInterestPObjDescriptor;
 
@@ -13,7 +14,7 @@ void BaddieInterestP_hitDetect(void);
 void BaddieInterestP_init(void);
 void BaddieInterestP_initialise(void);
 void BaddieInterestP_release(void);
-void BaddieInterestP_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void BaddieInterestP_update(int* obj);
+void BaddieInterestP_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void BaddieInterestP_update(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_00DE_BADDIEINTERESTP_API_H_ */

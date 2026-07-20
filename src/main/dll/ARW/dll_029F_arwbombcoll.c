@@ -81,9 +81,9 @@ void ARWBombColl_free(void)
 }
 
 
-void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWBombColl_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, sRenderScale);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, sRenderScale);
 }
 
 

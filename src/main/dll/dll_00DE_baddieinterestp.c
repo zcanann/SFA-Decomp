@@ -49,20 +49,20 @@ void BaddieInterestP_free(void)
 {
 }
 
-void BaddieInterestP_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void BaddieInterestP_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void BaddieInterestP_hitDetect(void)
 {
 }
 
-void BaddieInterestP_update(int* obj)
+void BaddieInterestP_update(GameObject* obj)
 {
-    int* params = *(int**)&((GameObject*)obj)->anim.placementData;
+    int* params = *(int**)&obj->anim.placementData;
 
     if (((int)((BaddieinterestpPlacement*)params)->enableGameBit == -1 ||
          mainGetBit((int)((BaddieinterestpPlacement*)params)->enableGameBit) != 0) &&
@@ -98,10 +98,10 @@ void BaddieInterestP_update(int* obj)
                 if (found != 0)
                 {
                     found = 0;
-                    if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
+                    if (vec3f_distanceSquared(&obj->anim.worldPosX,
                                               &((GameObject*)other)->anim.worldPosX) < 1600.0f)
                     {
-                        if (((GameObject*)obj)->userData1 == 0)
+                        if (obj->userData1 == 0)
                         {
                             if ((int)randomGetRange(1, 100) <= ((BaddieinterestpPlacement*)params)->prob)
                             {
@@ -184,7 +184,7 @@ void BaddieInterestP_update(int* obj)
                                     break;
                                 }
                             }
-                            ((GameObject*)obj)->userData1 = 1;
+                            obj->userData1 = 1;
                         }
                         found = 1;
                     }
@@ -193,7 +193,7 @@ void BaddieInterestP_update(int* obj)
             }
             if (found == 0)
             {
-                ((GameObject*)obj)->userData1 = 0;
+                obj->userData1 = 0;
             }
         }
     }

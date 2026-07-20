@@ -116,12 +116,12 @@ void pollenfragment_free(GameObject* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
+void pollenfragment_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    PollenFragmentExtra* state = ((GameObject*)obj)->extra;
+    PollenFragmentExtra* state = obj->extra;
     if (fn_80080150(&state->deathTimer) != 0)
         return;
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void pollenfragment_hitDetect(GameObject* obj)
@@ -160,7 +160,7 @@ void pollenfragment_hitDetect(GameObject* obj)
     }
 }
 
-void pollenfragment_update(int obj)
+void pollenfragment_update(GameObject* obj)
 {
     u8* extra;
     u8* nearObj;
@@ -173,7 +173,7 @@ void pollenfragment_update(int obj)
     Vec sc;
     Vec pos;
 
-    extra = *(u8**)&((GameObject*)obj)->extra;
+    extra = *(u8**)&obj->extra;
     if (getCurSeqNo() != 0)
     {
         Obj_FreeObject(obj);
@@ -191,17 +191,17 @@ void pollenfragment_update(int obj)
     {
         s16toFloat((f32*)(extra + 0x20), 0x78);
     }
-    if (*(void**)&((GameObject*)obj)->ownerObj != NULL)
+    if (*(void**)&obj->ownerObj != NULL)
     {
-        ((PollenFragmentExtra*)extra)->ownerObj = *(int*)&((GameObject*)obj)->ownerObj;
-        *(int*)&((GameObject*)obj)->ownerObj = 0;
+        ((PollenFragmentExtra*)extra)->ownerObj = *(int*)&obj->ownerObj;
+        *(int*)&obj->ownerObj = 0;
     }
     if ((((PollenFragmentExtra*)extra)->def)->timed)
     {
         ((PollenFragmentExtra*)extra)->timer -= timeDelta;
         if (((PollenFragmentExtra*)extra)->timer <= 0.0f)
         {
-            if (((GameObject*)obj)->anim.alpha == 0xff)
+            if (obj->anim.alpha == 0xff)
             {
                 i = 2;
                 do
@@ -212,13 +212,13 @@ void pollenfragment_update(int obj)
                 } while (i-- != 0);
             }
             ((PollenFragmentExtra*)extra)->timer = 0.0f;
-            if (((GameObject*)obj)->anim.alpha >= framesThisStep << 3)
+            if (obj->anim.alpha >= framesThisStep << 3)
             {
-                ((GameObject*)obj)->anim.alpha -= framesThisStep << 3;
+                obj->anim.alpha -= framesThisStep << 3;
             }
             else
             {
-                ((GameObject*)obj)->anim.alpha = 0;
+                obj->anim.alpha = 0;
                 Obj_FreeObject(obj);
                 return;
             }
@@ -229,7 +229,7 @@ void pollenfragment_update(int obj)
         (*gPartfxInterface)
             ->spawnObject((void*)obj, (int)(((PollenFragmentExtra*)extra)->def)->auraFx, NULL, 1, -1, NULL);
     }
-    nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, (GameObject*)obj, 0);
+    nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, obj, 0);
     if (nearObj != NULL &&
         (!(def = ((PollenFragmentExtra*)extra)->def)->timed || ((PollenFragmentExtra*)extra)->timer < 210.0f))
     {
@@ -246,7 +246,7 @@ void pollenfragment_update(int obj)
             pos.y = prod * quarter + ((GameObject*)nearObj)->anim.worldPosY;
             pos.z = ((GameObject*)nearObj)->anim.worldPosZ;
         }
-        PSVECSubtract(&pos, &((GameObject*)obj)->anim.worldPos, &dir);
+        PSVECSubtract(&pos, &obj->anim.worldPos, &dir);
         PSVECMag(&dir);
         PSVECNormalize(&dir, &dir);
         PSVECSubtract(&dir, &((PollenFragmentExtra*)extra)->velocity, &sc);
@@ -255,60 +255,60 @@ void pollenfragment_update(int obj)
         *(f32*)((int)extra + 0x14) = dir.z;
         PSVECScale(&sc, &sc, 30.0f);
         PSVECAdd(&dir, &sc, &dir);
-        ((GameObject*)obj)->anim.velocityX =
-            ((GameObject*)obj)->anim.velocityX +
+        obj->anim.velocityX =
+            obj->anim.velocityX +
             ((30.0f + ((PollenFragmentExtra*)extra)->timer) * (dir.x * ((PollenFragmentExtra*)extra)->speed)) /
                 210.0f;
-        ((GameObject*)obj)->anim.velocityZ =
-            ((GameObject*)obj)->anim.velocityZ +
+        obj->anim.velocityZ =
+            obj->anim.velocityZ +
             ((30.0f + ((PollenFragmentExtra*)extra)->timer) * (dir.z * ((PollenFragmentExtra*)extra)->speed)) /
                 210.0f;
         if (!(((PollenFragmentExtra*)extra)->def)->noVertical)
         {
-            ((GameObject*)obj)->anim.velocityY =
-                ((GameObject*)obj)->anim.velocityY + ((30.0f + ((PollenFragmentExtra*)extra)->timer) *
+            obj->anim.velocityY =
+                obj->anim.velocityY + ((30.0f + ((PollenFragmentExtra*)extra)->timer) *
                                                       (2.0f * (dir.y * ((PollenFragmentExtra*)extra)->speed))) /
                                                          210.0f;
         }
     }
-    ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (horizDamping = 0.97f);
-    ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * horizDamping;
-    ((GameObject*)obj)->anim.velocityY *= 0.95f;
+    obj->anim.velocityX = obj->anim.velocityX * (horizDamping = 0.97f);
+    obj->anim.velocityZ = obj->anim.velocityZ * horizDamping;
+    obj->anim.velocityY *= 0.95f;
     if ((((PollenFragmentExtra*)extra)->def)->noVertical)
     {
         t = 0.04f * timeDelta;
-        ((GameObject*)obj)->anim.velocityY =
-            ((GameObject*)obj)->anim.velocityY - (t * ((PollenFragmentExtra*)extra)->timer) / 300.0f;
+        obj->anim.velocityY =
+            obj->anim.velocityY - (t * ((PollenFragmentExtra*)extra)->timer) / 300.0f;
     }
     if ((((PollenFragmentExtra*)extra)->def)->smoothTurn)
     {
-        Obj_SmoothTurnAnglesTowardVelocity((GameObject*)obj, (const Vec3f*)(obj + 0x24), 10, 0.0f,
+        Obj_SmoothTurnAnglesTowardVelocity(obj, (const Vec3f*)((int)obj + 0x24), 10, 0.0f,
                                            1.0f);
-        ((GameObject*)obj)->anim.rotZ = ((GameObject*)obj)->anim.rotZ + framesThisStep * 0x500;
+        obj->anim.rotZ = obj->anim.rotZ + framesThisStep * 0x500;
     }
-    else if (((GameObject*)obj)->anim.seqId == POLLEN_FRAGMENT_OBJECT_ID)
+    else if (obj->anim.seqId == POLLEN_FRAGMENT_OBJECT_ID)
     {
         t = 5.0f * lbl_803DBD48;
-        ((GameObject*)obj)->anim.rotX = t * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotX;
-        ((GameObject*)obj)->anim.rotY =
-            lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)((GameObject*)obj)->anim.rotY;
+        obj->anim.rotX = t * (f32)(u32)framesThisStep + (f32)(int)obj->anim.rotX;
+        obj->anim.rotY =
+            lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)obj->anim.rotY;
     }
-    Sfx_KeepAliveLoopedObjectSound(obj, (u16)(((PollenFragmentExtra*)extra)->def)->loopSfx);
-    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-            ((GameObject*)obj)->anim.velocityZ * timeDelta);
+    Sfx_KeepAliveLoopedObjectSound((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->loopSfx);
+    objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
+            obj->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLENFRAGMENT_HIT_VOLUME_SLOT, 1, 0);
-    ObjHits_EnableObject((GameObject*)obj);
-    hit = (void*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
-    if (hit != NULL && ((GameObject*)hit)->anim.seqId != ((GameObject*)obj)->anim.seqId &&
+    ObjHits_EnableObject(obj);
+    hit = (void*)((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject;
+    if (hit != NULL && ((GameObject*)hit)->anim.seqId != obj->anim.seqId &&
         hit != *(void**)&((PollenFragmentExtra*)extra)->ownerObj)
     {
         ((PollenFragmentExtra*)extra)->timer = 0.0f;
-        ObjHits_DisableObject((GameObject*)obj);
+        ObjHits_DisableObject(obj);
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
-            spawnExplosion((GameObject*)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
+            spawnExplosion(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
             Sfx_PlayFromObjectLimited(
-                obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
+                (u32)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
         s16toFloat((f32*)(extra + 0x20), 0x78);
     }
