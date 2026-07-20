@@ -780,8 +780,8 @@ void renderShadows(int unused0, int unused1, int unused2)
     f32 dot24[3], proj[3];
     CameraViewSlot* slot;
     NewShadowData* shadowData = (NewShadowData*)gNewShadowEntries;
-    void* blkArr;
-    u32 blkCount;
+    void* layerTables;
+    u32 blocks;
     s8 casterIdx;
     f32 sCamZ, savedFovY, vAx, vAz, orthoHalf;
     int texIdx, slotIdx;
@@ -806,7 +806,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     v30[1] = lbl_803DED2C;
     v30[2] = lbl_803DED28;
     fn_80061094(v30, om100, lbl_803DED34);
-    mapGetBlocks(&blkArr, &blkCount);
+    mapGetBlocks(&layerTables, &blocks);
     texIdx = 0;
     slotIdx = 0;
     casterIdx = 0;

@@ -276,7 +276,7 @@ extern u32 gSunFlareScissorY;
 extern u32 gSunFlareScissorWidth;
 extern u32 gSunFlareScissorHeight;
 extern u8 gMapBlockLayerTables[];
-extern u32 gMapBlocks;
+extern void** gMapBlocks;
 extern u8 lbl_803DCE06;
 extern int gGlowLightList[];
 extern char gViewFrustumPlanes[];
@@ -284,7 +284,7 @@ extern u8 lbl_803DCE98;
 extern const f32 lbl_803DEC20;
 extern int lbl_803DCE80;
 extern int gMapBlockIndexCount;
-extern int gMapBlockIndexList;
+extern int* gMapBlockIndexList;
 extern f32 lbl_803DECC4;
 extern const f32 lbl_803DECBC;
 extern const f32 lbl_803DECC0;
@@ -986,7 +986,7 @@ void* MapBlock_loadFromFile(int blockId)
     int tableEntry;
     if (blockId <= gMapBlockIndexCount)
     {
-        table = (int*)gMapBlockIndexList;
+        table = gMapBlockIndexList;
         if (table != 0)
         {
             tableEntry = table[blockId];
@@ -1042,10 +1042,10 @@ int return0_80060B90(void* wpad0)
     return 0x0;
 }
 
-void mapGetBlocks(void** outPtr, u32* outVal)
+void mapGetBlocks(void** outLayerTables, u32* outBlocks)
 {
-    *outPtr = gMapBlockLayerTables;
-    *outVal = gMapBlocks;
+    *outLayerTables = gMapBlockLayerTables;
+    *outBlocks = (u32)gMapBlocks;
 }
 
 void fn_80060BB0(void)
@@ -1057,7 +1057,7 @@ void fn_80060BB0(void)
 
     for (i = 0; i < lbl_803DCE98; i++)
     {
-        blk = *(int**)((char*)gMapBlocks + i * 4);
+        blk = (int*)gMapBlocks[i];
         if (blk != NULL)
         {
             for (j = 0; j < (int)((MapBlockData*)blk)->edgeCount; j++)
