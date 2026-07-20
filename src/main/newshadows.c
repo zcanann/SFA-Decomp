@@ -1833,19 +1833,18 @@ void allocLotsOfTextures(void)
     {
         f32 x = i / 3.0f - lbl_803DED38;
         int lowoff = (i & 3) * 2;
-        int rowoff = (i >> 2) * 0x20;
         int t;
         t = lbl_803DCF94 + lowoff;
-        t += rowoff;
+        t += (i >> 2) * 0x20;
         *(u16*)(t + 0x60) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DED38 & 0xff));
         t = lbl_803DCF94 + lowoff;
-        t += rowoff;
+        t += (i >> 2) * 0x20;
         *(u16*)(t + 0x68) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DEE14 & 0xff));
         t = lbl_803DCF94 + lowoff;
-        t += rowoff;
+        t += (i >> 2) * 0x20;
         *(u16*)(t + 0x70) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DEE18 & 0xff));
         t = lbl_803DCF94 + lowoff;
-        t += rowoff;
+        t += (i >> 2) * 0x20;
         *(u16*)(t + 0x78) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DEE1C & 0xff));
     }
     DCFlushRange((void*)(lbl_803DCF94 + 0x60), ((Texture*)lbl_803DCF94)->dataSize);
