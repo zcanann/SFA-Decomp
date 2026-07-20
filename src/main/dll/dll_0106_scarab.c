@@ -75,7 +75,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
 extern u32 gScarabMoneyValues;
-extern f32 lbl_803E39F4;
 extern f32 gScarabZero;
 extern f32 gScarabNormScale;
 extern f32 gScarabScaleOne;
@@ -124,7 +123,7 @@ int scarab_sweptCollide(GameObject* obj)
         startPoints[0] = (obj)->anim.previousLocalPosX;
         startPoints[1] = (obj)->anim.previousLocalPosY;
         startPoints[2] = (obj)->anim.previousLocalPosZ;
-        results.radii[0] = lbl_803E39F4;
+        results.radii[0] = 8.0f;
         *(s8*)&results.axisTable[0] = -1;
         results.axisTable[4] = 0x3;
     }
@@ -556,7 +555,7 @@ void Scarab_update(GameObject* obj)
                 state->phase = 0;
                 state->riseAmount = gScarabZero;
                 {
-                    f32 k = lbl_803E39F4;
+                    f32 k = 8.0f;
                     obj->anim.localPosX = k * (obj->anim.velocityX * timeDelta) + obj->anim.localPosX;
                     obj->anim.localPosY = k * (obj->anim.velocityY * timeDelta) + obj->anim.localPosY;
                     obj->anim.localPosZ = k * (obj->anim.velocityZ * timeDelta) + obj->anim.localPosZ;
@@ -643,7 +642,7 @@ void Scarab_update(GameObject* obj)
                     angleF = ang;
                     angleF = lbl_803DBDCC * angleF + gScarabHeadingYawOffset;
                     obj->anim.rotX = angleF;
-                    obj->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best[0]]->normalX) + obj->anim.localPosX;
+                    obj->anim.localPosX = timeDelta * ((k = 8.0f) * list[best[0]]->normalX) + obj->anim.localPosX;
                     obj->anim.localPosZ = timeDelta * (k * list[best[0]]->normalZ) + obj->anim.localPosZ;
                     obj->anim.velocityX = list[best[0]]->normalX;
                     obj->anim.velocityZ = list[best[0]]->normalZ;
