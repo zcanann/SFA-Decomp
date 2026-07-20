@@ -88,8 +88,6 @@ extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 extern void* gNewClouds[8];
 
-typedef void (*LightningDrawBoltU8WidthFn)(f32* start, f32* end, u8 width, f32 segScale, f32 d,
-                                           int* seed, int depth, int flags);
 extern const f32 lbl_803DF1FC;
 extern const f32 lbl_803DF214;
 #define NC_CLOUD ((u8 *)gNewClouds[*(u16 *)(params + 0x26)])
@@ -126,8 +124,6 @@ extern const f32 lbl_803DF1C0;
 extern const f32 lbl_803DF1C4;
 extern const f32 lbl_803DF1C8;
 extern const f32 lbl_803DF1CC;
-
-void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int* seed, int depth, int flags);
 
 f32 lightningGetRemainingFraction(void)
 {
@@ -304,8 +300,8 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     f32 progress;
     f32 step;
     f32 bfrac;
+    u8 halfWidth;
     int oddFlag;
-    int halfWidth;
     int i;
     int j;
     int segs;
@@ -413,8 +409,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                 PSVECScale(scaled, branchEnd, bfrac * len);
                 PSVECAdd(start, branchEnd, branchEnd);
                 PSVECAdd(branchEnd, offset, branchEnd);
-                ((LightningDrawBoltU8WidthFn)lightningDrawBolt)(
-                    next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
+                lightningDrawBolt(next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
             }
         }
         else
@@ -1582,8 +1577,6 @@ int dll_07_func08(void)
 {
     return gNewCloudBlizzardActive;
 }
-
-void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
 
 void dll_07_func07(int arg)
 {
