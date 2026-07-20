@@ -287,7 +287,7 @@ void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d)
     (*partfxIface)->spawn(NULL, 1, (PartFxSpawnParams*)&emitter, 0x401, -1, &emitterArgs);
 }
 
-void hitDetectFn_80097070(void* obj, f32 scale, int idSel, int paramSel, int count, GameObject* origin)
+void objfx_spawnHitEffectBurst(void* obj, f32 scale, int idSel, int paramSel, int count, GameObject* origin)
 {
     ObjFxParticleParams params;
     ObjFxU16Table11 table = gObjFxHitEffectParamTbl2;

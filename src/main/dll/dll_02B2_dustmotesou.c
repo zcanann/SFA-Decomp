@@ -75,7 +75,7 @@ void dustmotesou_update(DustMoteSouObject* source)
         {
             return;
         }
-        hitDetectFn_80097070(source, mapData->scale, mapData->effectId, mapData->effectParamA,
+        objfx_spawnHitEffectBurst(source, mapData->scale, mapData->effectId, mapData->effectParamA,
                             mapData->effectParamB, NULL);
         return;
     }

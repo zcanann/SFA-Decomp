@@ -43,7 +43,7 @@ typedef struct NwGeyserTextureScrollParams
 
 const NwGeyserTextureScrollParams gNwGeyserTextureScrollParams = {512.0f, 0.0f};
 
-int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int NW_geyser_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     ObjTextureRuntimeSlot* tex0;
     u8* animUpdateBytes;
@@ -53,8 +53,8 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
-    tex0 = objFindTexture((GameObject*)(obj), 0, 0);
-    objFindTexture((GameObject*)(obj), 1, 0);
+    tex0 = objFindTexture(obj, 0, 0);
+    objFindTexture(obj, 1, 0);
     tex0->offsetT =
         (s16)(tex0->offsetT + (s32)(gNwGeyserTextureScrollParams.unitsPerSecond * timeDelta));
     if (tex0->offsetT > 0x4e80)
@@ -66,9 +66,9 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void nw_geyser_free(int* obj)
+void nw_geyser_free(GameObject* obj)
 {
-    (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x1f, 0);
+    (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 0x1f, 0);
 }
 
 void nw_geyser_update(GameObject* obj)
@@ -97,9 +97,9 @@ void nw_geyser_init(GameObject* obj)
     obj->animEventCallback = NW_geyser_SeqFn;
 }
 
-f32* fn_801CDE70(GameObject* obj)
+f32* NW_mammoth_getSpawnPosition(GameObject* obj)
 {
-    return (f32*)((u8*)obj->extra + 0xc);
+    return &((NwMammothState*)obj->extra)->spawnPosX;
 }
 
 int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
