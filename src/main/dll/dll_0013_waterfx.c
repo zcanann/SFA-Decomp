@@ -41,13 +41,13 @@ u8* gWaterfxRippleVtxDesc;
 u8* gWaterfxWakeVtx;
 u8* gWaterfxWakeVtxDesc;
 int gWaterfxRippleCount;
-void* gWaterfxRipplePool;
+u8* gWaterfxRipplePool;
 int gWaterfxSplashCount;
-void* gWaterfxSplashPool;
+u8* gWaterfxSplashPool;
 int gWaterfxWakeCount;
-void* gWaterfxWakePool;
+u8* gWaterfxWakePool;
 int gWaterfxDropCount;
-void* gWaterfxDropPool;
+u8* gWaterfxDropPool;
 Texture* gWaterfxRippleTexture;
 Texture* gWaterfxSplashTexture0;
 Texture* gWaterfxSplashTexture1;
@@ -308,7 +308,7 @@ int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist)
 void waterfx_spawnRipple(f32 x, f32 y, f32 z, s16 rotParam, f32 w, int intensity)
 {
     int i = 0;
-    WaterEntry7* p = gWaterfxRipplePool;
+    WaterEntry7* p = (WaterEntry7*)gWaterfxRipplePool;
     WaterVtx* q;
     WaterEntry7* e;
     int j;
@@ -381,7 +381,7 @@ void waterfx_setRippleScale(int flag, f32 val)
 void waterfx_spawnSimpleRipple(f32 x, f32 y, f32 z, s16 id, f32 w)
 {
     int i = 0;
-    WaterEntry* p = gWaterfxWakePool;
+    WaterEntry* p = (WaterEntry*)gWaterfxWakePool;
     WaterVtx* q;
     WaterEntry* entry;
     int j;
@@ -445,7 +445,7 @@ void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d)
         d = lbl_803DF31C;
     }
     i = 0;
-    base = gWaterfxSplashPool;
+    base = (WaterParticle*)gWaterfxSplashPool;
     p = base;
     while (i < WATERFX_MAX_SPLASHES && (p->dropCount != 0 || p->life < *(f32*)&lbl_803DF2EC))
     {
@@ -540,7 +540,7 @@ void waterfx_render(int obj, int renderParam)
         for (i = 0, poolOffset = 0, descriptorOffset = 0; i < WATERFX_POOL_SIZE;
              poolOffset += 0x1c, descriptorOffset += 0x20, i++)
         {
-            e = (WaterEntry7*)((char*)gWaterfxRipplePool + poolOffset);
+            e = (WaterEntry7*)(gWaterfxRipplePool + poolOffset);
             if (e->active != 0)
             {
                 setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)e->active);
@@ -554,7 +554,7 @@ void waterfx_render(int obj, int renderParam)
                 Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300,
                                            NULL);
                 fn_8007D670();
-                drawFn_8005cf8c(&((WaterVtx*)gWaterfxRippleVtx)[i * 4],
+                drawFn_8005cf8c(gWaterfxRippleVtx + i * 0x40,
                                   gWaterfxRippleVtxDesc + descriptorOffset, 2);
             }
         }
@@ -573,7 +573,7 @@ void waterfx_render(int obj, int renderParam)
         }
         for (poolOffset = 0, thr = lbl_803DF2EC; j < WATERFX_MAX_SPLASHES; poolOffset += 0x3c, j++)
         {
-            s = (WaterParticle*)((char*)gWaterfxSplashPool + poolOffset);
+            s = (WaterParticle*)(gWaterfxSplashPool + poolOffset);
             if (s->life < thr)
             {
                 waterfx_drawSplashBurst(s);
@@ -585,7 +585,7 @@ void waterfx_render(int obj, int renderParam)
         }
         for (i = 0, poolOffset = 0; i < WATERFX_POOL_SIZE; poolOffset += 0x1c, i++)
         {
-            d = (WaterDrop*)((char*)gWaterfxDropPool + poolOffset);
+            d = (WaterDrop*)(gWaterfxDropPool + poolOffset);
             if (d->parentIdx != -1)
             {
                 f32 vx, vy, vz;
@@ -605,7 +605,7 @@ void waterfx_render(int obj, int renderParam)
         for (i = 0, poolOffset = 0, vertexOffset = 0; i < WATERFX_POOL_SIZE;
              poolOffset += 0x1c, vertexOffset += 0x40, i++)
         {
-            g = (WaterEntry*)((char*)gWaterfxWakePool + poolOffset);
+            g = (WaterEntry*)(gWaterfxWakePool + poolOffset);
             if (g->active != 0 && g->f18 == 0)
             {
                 setTextColor((void*)obj, 0xff, 0xff, 0xff, (u8)g->active);
@@ -617,7 +617,7 @@ void waterfx_render(int obj, int renderParam)
                 dp.rotZ = 0;
                 dp.rotY = 0;
                 Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300,
-                                            NULL);
+                                           NULL);
                 fn_8007D670();
                 drawFn_8005cf8c(gWaterfxWakeVtx + vertexOffset,
                                   gWaterfxWakeVtxDesc + i * 0x20, 2);
