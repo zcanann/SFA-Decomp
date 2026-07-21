@@ -11,7 +11,7 @@ typedef struct SkyBlendStateFlags
 {
     u8 unused80 : 1;
     u8 active : 1;
-    u8 bit20 : 1;
+    u8 visibility : 1;
     u8 cloud : 2;
     u8 rest : 3;
 } SkyBlendStateFlags;
@@ -114,7 +114,7 @@ void dll_06_func0E(void);
 void dll_06_func0D(void);
 void sky2_initialise(void);
 void lightningGetStartPos(f32* out);
-int fn_8008B71C(int slot);
+int skyGetVisibility(int slot);
 void skyTimeToDayHourMinute(f32 time, s16* days, s16* hours, s16* minutes);
 void skyGetClockTime(f32* time);
 int dll_06_func0F(void);

@@ -15,7 +15,7 @@ typedef void (*SkyGetTransitionTimerFn)(int *outTimer);
 typedef int (*SkyGetSunPositionFn)(f32 *outTime);
 typedef void (*SkySetTimeOfDayFn)(f32 time);
 typedef void (*SkyTimeToDayHourMinuteFn)(f32 time, s16 *days, s16 *hours, s16 *minutes);
-typedef int (*SkyGetBlendStateBit20Fn)(int slot);
+typedef int (*SkyGetVisibilityFn)(int slot);
 typedef void (*SkyRenderTimeOfDayBackdropFn)(int unused0, int unused1);
 typedef void (*SkyGetCurrentTextureColorFn)(u8 *red, u8 *green, u8 *blue);
 typedef void (*SkyGetCurrentAmbientAndLightColorsFn)(u8 *ambientRed, u8 *ambientGreen,
@@ -38,7 +38,7 @@ typedef struct SkyInterface {
     SkySetTimeOfDayFn setTimeOfDay;
     int (*return0)(void);
     SkyTimeToDayHourMinuteFn timeToDayHourMinute;
-    SkyGetBlendStateBit20Fn getBlendStateBit20;
+    SkyGetVisibilityFn getVisibility;
     SkyRenderTimeOfDayBackdropFn renderTimeOfDayBackdrop;
     SkyGetCurrentTextureColorFn getCurrentTextureColor;
     SkyGetCurrentAmbientAndLightColorsFn getCurrentAmbientAndLightColors;
@@ -60,7 +60,7 @@ STATIC_ASSERT(offsetof(SkyInterface, getSunPosition) == 0x24);
 STATIC_ASSERT(offsetof(SkyInterface, setTimeOfDay) == 0x28);
 STATIC_ASSERT(offsetof(SkyInterface, return0) == 0x2C);
 STATIC_ASSERT(offsetof(SkyInterface, timeToDayHourMinute) == 0x30);
-STATIC_ASSERT(offsetof(SkyInterface, getBlendStateBit20) == 0x34);
+STATIC_ASSERT(offsetof(SkyInterface, getVisibility) == 0x34);
 STATIC_ASSERT(offsetof(SkyInterface, renderTimeOfDayBackdrop) == 0x38);
 STATIC_ASSERT(offsetof(SkyInterface, getCurrentTextureColor) == 0x3C);
 STATIC_ASSERT(offsetof(SkyInterface, getCurrentAmbientAndLightColors) == 0x40);

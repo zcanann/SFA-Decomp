@@ -12103,7 +12103,7 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
     {
         objDoTeleportAnim(obj);
     }
-    if ((*gSkyInterface)->getBlendStateBit20(2) != 0)
+    if ((*gSkyInterface)->getVisibility(2) != 0)
     {
         playerUpdatePathEffectCountdown(obj, inner);
     }

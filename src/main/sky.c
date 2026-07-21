@@ -439,7 +439,7 @@ SkyDllInterface lbl_8030F414 = {
     (ObjectDescriptorCallback)pDll_Sky_setTimeOfDay_nop,
     (ObjectDescriptorCallback)return0_8008B7E8,
     (ObjectDescriptorCallback)skyTimeToDayHourMinute,
-    (ObjectDescriptorCallback)fn_8008B71C,
+    (ObjectDescriptorCallback)skyGetVisibility,
     (ObjectDescriptorCallback)skyFn_8008aee8,
     (ObjectDescriptorCallback)skyGetCurrentTextureColor,
     (ObjectDescriptorCallback)skyGetCurrentAmbientAndLightColors,
@@ -551,7 +551,8 @@ void skyFn_80088e54(int mode, f32 brightness)
         }
         ((SkyBlendStateFlags*)(gSkyState + 0x209))->unused80 =
             ((SkyBlendStateFlags*)(gSkyState + idx + 0xc1))->unused80;
-        ((SkyBlendStateFlags*)(gSkyState + 0x209))->bit20 = ((SkyBlendStateFlags*)(gSkyState + idx + 0xc1))->bit20;
+        ((SkyBlendStateFlags*)(gSkyState + 0x209))->visibility =
+            ((SkyBlendStateFlags*)(gSkyState + idx + 0xc1))->visibility;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0)
         {
@@ -1814,14 +1815,14 @@ void skyFn_8008aee8(void)
     }
 }
 
-int fn_8008B71C(int slot)
+int skyGetVisibility(int slot)
 {
     u8* sky;
 
     sky = gSkyState;
     if (sky != NULL)
     {
-        return ((SkyBlendStateFlags*)(sky + slot * 0xa4 + 0xc1))->bit20;
+        return ((SkyBlendStateFlags*)(sky + slot * 0xa4 + 0xc1))->visibility;
     }
     return 0;
 }
@@ -2296,11 +2297,11 @@ void Sky_func03(int a, int b, u8* cfg)
         {
             if ((mask & (1 << i)) != 0)
             {
-                ((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->bit20 = vis;
+                ((SkyBlendStateFlags*)(gSkyState + i * 0xa4 + 0xc1))->visibility = vis;
             }
         }
-        ((SkyBlendStateFlags*)(gSkyState + 0x209))->bit20 =
-            ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->bit20;
+        ((SkyBlendStateFlags*)(gSkyState + 0x209))->visibility =
+            ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->visibility;
         if ((((Sky2Config*)cfg)->flags & 1) == 0)
         {
             ((SkyState*)gSkyState)->skyTextureIds[0] = ((Sky2Config*)cfg)->skyTexId0 + 0xc38;
@@ -2341,8 +2342,8 @@ void Sky_func03(int a, int b, u8* cfg)
         }
         ((SkyBlendStateFlags*)(gSkyState + 0x209))->unused80 =
             ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->unused80;
-        ((SkyBlendStateFlags*)(gSkyState + 0x209))->bit20 =
-            ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->bit20;
+        ((SkyBlendStateFlags*)(gSkyState + 0x209))->visibility =
+            ((SkyBlendStateFlags*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0xc1))->visibility;
         env2 = saveGameGetEnvState();
         if (getSaveGameLoadStatus() == 0)
         {
