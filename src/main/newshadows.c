@@ -72,7 +72,8 @@ typedef struct NewShadowEntry
 {
     u8 pad00[0x10];
     u8 isActive;
-    u8 pad11[0x3];
+    u8 state;
+    u8 pad12[0x2];
 } NewShadowEntry;
 
 typedef struct
@@ -1661,17 +1662,16 @@ void initFn_8006d020(void)
 void allocLotsOfTextures(void)
 {
     f32 rc2;
-    u8 saved;
     int i;
     int j;
     Texture* frameTexture;
     f32 rc;
-    char* shadowData = (char*)(int)gNewShadowEntries;
-    Texture** renderTargets = (Texture**)(shadowData + 0x3a10);
-    Texture** frameTextures = (Texture**)(shadowData + 0x294);
+    NewShadowData* shadowData = (NewShadowData*)gNewShadowEntries;
+    Texture** renderTargets = shadowData->castTextures;
+    Texture** frameTextures = shadowData->frameTextures;
     f32 cy;
 
-    saved = testAndSet_onlyUseHeap3(1);
+    u8 saved = testAndSet_onlyUseHeap3(1);
 
     renderTargets[0] = textureAlloc(0x100, 0x100, 0, 0, 0, 0, 0, 1, 1);
     renderTargets[1] = textureAlloc(0x100, 0x100, 1, 0, 0, 0, 0, 0, 0);
@@ -1886,7 +1886,7 @@ void allocLotsOfTextures(void)
 
     {
         u8* entryBytes;
-        for (i = 0, entryBytes = (u8*)(int)gNewShadowEntries; i < 0x20; i += 0x10)
+        for (i = 0, entryBytes = (u8*)shadowData; i < 0x20; i += 0x10)
         {
             entryBytes[0x010] = 0;
             entryBytes[0x011] = 1;
@@ -1922,7 +1922,7 @@ void allocLotsOfTextures(void)
             entryBytes[0x13d] = 1;
             entryBytes += 0x140;
         }
-        entryBytes = (u8*)(int)gNewShadowEntries + i * 0x14;
+        entryBytes = (u8*)shadowData + i * 0x14;
         for (; i < 0x21; i++)
         {
             int k;
