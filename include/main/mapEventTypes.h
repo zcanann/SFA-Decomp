@@ -36,6 +36,11 @@ typedef struct MapEventInterface {
 
 extern MapEventInterface **gMapEventInterface;
 
+static inline u8 mapEventGetMapAct(s32 mapId)
+{
+    return (*gMapEventInterface)->getMapAct(mapId);
+}
+
 STATIC_ASSERT(offsetof(MapEventInterface, savePoint) == 0x1C);
 STATIC_ASSERT(offsetof(MapEventInterface, gotoSavegame) == 0x20);
 STATIC_ASSERT(offsetof(MapEventInterface, restartPoint) == 0x24);

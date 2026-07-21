@@ -119,6 +119,22 @@ f32 gWmLevelControlLightIntensityBase = 32.0f;
 f32 gWmLevelControlLightIntensityRange = 128.0f;
 f32 gWmLevelControlOverrideLightIntensity = 100.0f;
 
+static inline void WmLevelControl_blendColor(u8* output, const u8* from, const u8* to)
+{
+    {
+        int red = from[0];
+        output[0] = (u8)(red + gWmLevelControlBlendFactor * (to[0] - red));
+    }
+    {
+        int green = from[1];
+        output[1] = (u8)(green + gWmLevelControlBlendFactor * (to[1] - green));
+    }
+    {
+        int blue = from[2];
+        output[2] = (u8)(blue + gWmLevelControlBlendFactor * (to[2] - blue));
+    }
+}
+
 void fn_801F3F18(GameObject* obj)
 {
     LightVec3 auxDir;
@@ -126,21 +142,21 @@ void fn_801F3F18(GameObject* obj)
     LightVec3 toDir;
     f32 newBlend;
     const LightVec3* dirTable;
-    u8* fromColor;
-    u8* toColor;
+    u8 skyColorActive;
 
     dirTable = gWmLevelControlSkyVecTable.vecs;
     auxDir = dirTable[1];
     fromDir = dirTable[2];
     toDir = dirTable[3];
 
-    if ((u8)(*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 7)
+    if (mapEventGetMapAct(obj->anim.mapEventSlot) == 7)
     {
         return;
     }
 
     setDrawLights(0);
-    if ((u8)getSkyColorFn_80088e08(0) != 0)
+    skyColorActive = getSkyColorFn_80088e08(0);
+    if (skyColorActive != 0)
     {
         skySetOverrideLightColorEnabled(0);
         skySetOverrideLightDirectionEnabled(0);
@@ -175,63 +191,18 @@ void fn_801F3F18(GameObject* obj)
     }
 
     /* blend each color channel source->target by the blend factor. */
-    fromColor = gWmLevelControlLightColorFrom;
-    toColor = gWmLevelControlLightColorTo;
-    {
-        int red = fromColor[0];
-        gWmLevelControlBlendedLightColor[0] =
-            red + gWmLevelControlBlendFactor * (f32)(toColor[0] - red);
-    }
-    {
-        int green = fromColor[1];
-        gWmLevelControlBlendedLightColor[1] =
-            green + gWmLevelControlBlendFactor * (f32)(toColor[1] - green);
-    }
-    {
-        int blue = fromColor[2];
-        gWmLevelControlBlendedLightColor[2] =
-            blue + gWmLevelControlBlendFactor * (f32)(toColor[2] - blue);
-    }
+    WmLevelControl_blendColor(gWmLevelControlBlendedLightColor, gWmLevelControlLightColorFrom,
+                              gWmLevelControlLightColorTo);
     skySetBaseColor(1, gWmLevelControlBlendedLightColor[0], gWmLevelControlBlendedLightColor[1],
                     gWmLevelControlBlendedLightColor[2], 0x40, 0x40);
 
-    fromColor = gWmLevelControlSkyColorFrom;
-    toColor = gWmLevelControlSkyColorTo;
-    {
-        int red = fromColor[0];
-        gWmLevelControlBlendedSkyColor[0] =
-            red + gWmLevelControlBlendFactor * (f32)(toColor[0] - red);
-    }
-    {
-        int green = fromColor[1];
-        gWmLevelControlBlendedSkyColor[1] =
-            green + gWmLevelControlBlendFactor * (f32)(toColor[1] - green);
-    }
-    {
-        int blue = fromColor[2];
-        gWmLevelControlBlendedSkyColor[2] =
-            blue + gWmLevelControlBlendFactor * (f32)(toColor[2] - blue);
-    }
+    WmLevelControl_blendColor(gWmLevelControlBlendedSkyColor, gWmLevelControlSkyColorFrom,
+                              gWmLevelControlSkyColorTo);
     skySetLightColor(1, gWmLevelControlBlendedSkyColor[0], gWmLevelControlBlendedSkyColor[1],
                      gWmLevelControlBlendedSkyColor[2]);
 
-    fromColor = gWmLevelControlFogColorFrom;
-    toColor = gWmLevelControlFogColorTo;
-    {
-        int red = fromColor[0];
-        gWmLevelControlBlendedFogColor[0] =
-            red + gWmLevelControlBlendFactor * (f32)(toColor[0] - red);
-    }
-    {
-        int green = fromColor[1];
-        gWmLevelControlBlendedFogColor[1] =
-            green + gWmLevelControlBlendFactor * (f32)(toColor[1] - green);
-    }
-    {
-        int blue = fromColor[2];
-        gWmLevelControlBlendedFogColor[2] =
-            blue + gWmLevelControlBlendFactor * (f32)(toColor[2] - blue);
-    }
+    WmLevelControl_blendColor(gWmLevelControlBlendedFogColor, gWmLevelControlFogColorFrom,
+                              gWmLevelControlFogColorTo);
     skySetAmbientColor(1, gWmLevelControlBlendedFogColor[0], gWmLevelControlBlendedFogColor[1],
                        gWmLevelControlBlendedFogColor[2]);
 
