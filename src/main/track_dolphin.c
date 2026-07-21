@@ -2875,7 +2875,15 @@ static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, GameObject*
     return NULL;
 }
 
-static inline MapDynamicSlot* trackAllocDynamicSlot(GameObject* self, GameObject* target, int querySlot)
+static inline int trackDynamicSlotEnabled(int querySlot)
+{
+    return (u8)querySlot != 0xff;
+}
+
+static inline MapDynamicSlot* trackAllocDynamicSlot(self, target, querySlot)
+GameObject* self;
+GameObject* target;
+u8 querySlot;
 {
     s16 k;
     MapDynamicSlot* entry;
@@ -2973,7 +2981,7 @@ int objBboxFn_800640cc(f32* startPos, f32* endPos, f32 radius, int flags, TrackB
         }
         if (hit == 0)
             continue;
-        if ((u8)slot != 0xff && (entry = trackFindDynamicSlot(self, target, slot)) != NULL)
+        if (trackDynamicSlotEnabled(slot) && (entry = trackFindDynamicSlot(self, target, slot)) != NULL)
         {
             localStart[0] = entry->cachedLocalEnd.x;
             localStart[1] = entry->cachedLocalEnd.y;
@@ -2990,7 +2998,7 @@ int objBboxFn_800640cc(f32* startPos, f32* endPos, f32 radius, int flags, TrackB
                                          self) != 0)
             Obj_TransformLocalPointToWorld(localEnd[0], localEnd[1], localEnd[2], &worldEnd[0], &worldEnd[1],
                                            &worldEnd[2], (int)target);
-        if ((u8)slot != 0xff)
+        if (trackDynamicSlotEnabled(slot))
         {
             entry = trackAllocDynamicSlot(self, target, slot);
             if (entry != NULL)
