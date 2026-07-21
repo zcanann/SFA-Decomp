@@ -29,13 +29,6 @@ typedef struct VoxPos {
     s16 z;
 } VoxPos;
 
-typedef struct VoxBlock {
-    u8 pad0[6];
-    s16 blockId;
-    s8 f8;
-    s8 f9;
-} VoxBlock;
-
 typedef struct VoxActiveMap {
     u8 pad00[4];
     int minY;

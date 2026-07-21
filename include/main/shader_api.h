@@ -15,6 +15,19 @@ extern MapRomListPage* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 
 typedef MapRomListPage MapRomList;
 
+typedef struct MapCellEntry
+{
+    s16 mapId;
+    s16 adjacentMapId1;
+    s16 adjacentMapId2;
+    s16 blockId;
+    s8 cellIndex;
+    s8 romListIndex;
+    s16 unkA;
+} MapCellEntry;
+
+STATIC_ASSERT(sizeof(MapCellEntry) == 0xC);
+
 /* MAPINFO.bin per-record map type (curMapType / getCurMapType()). */
 typedef enum MapType
 {
@@ -25,7 +38,7 @@ typedef enum MapType
     MAPTYPE_NO_HUD        = 4, /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
 } MapType;
 
-void* fn_80059334(int x, int z);
+MapCellEntry* mapGetCellEntry(int x, int z);
 MapRomList* mapBlockFn_800592e4(void);
 void mapBlockFn_80059c2c(u8* outFlags);
 s32 getCurMapType(void);

@@ -147,17 +147,6 @@ typedef struct MapLoadRec
     s16 layer;
 } MapLoadRec;
 
-typedef struct MapCellEnt
-{
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 state;
-    s8 cellIndex;
-    s8 romListIndex;
-    s16 unkA;
-} MapCellEnt;
-
 int mapProcessRomList(int slot);
 
 static inline int objVisibleForAct(int obj, int t)
@@ -946,7 +935,7 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 
 char lbl_803822C8[0x41A0];
 
-void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
+void mapBlockFn_80059354(int p1, int p2, MapCellEntry* entry, int layer);
 
 
 int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
@@ -965,7 +954,7 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
     slotIdx = cellX + (cellZ << 4);
     entry += slotIdx * 12;
 
-    mapBlockFn_80059354(worldX, worldZ, (MapCellEnt*)entry, layer);
+    mapBlockFn_80059354(worldX, worldZ, (MapCellEntry*)entry, layer);
 
     blockId = *(s16*)(entry + 6);
     if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1)
@@ -1749,7 +1738,7 @@ void doPendingMapLoads(void)
                     recsCursor = savedBlocks;
                     for (; layer < 5; layer++)
                     {
-                        MapCellEnt* ent = (MapCellEnt*)*bp2;
+                        MapCellEntry* ent = (MapCellEntry*)*bp2;
                         char* grid = (char*)*ap2;
                         gMapLayerCellStates = (s8*)*cp2;
                         cellIdx = 0;
@@ -1776,10 +1765,10 @@ void doPendingMapLoads(void)
                                 }
                                 g2[0] = -2;
                                 gMapLayerCellStates[cellIdx] = -1;
-                                ent[0].state = -3;
-                                ent[0].x = -1;
-                                ent[0].y = -1;
-                                ent[0].z = -1;
+                                ent[0].blockId = -3;
+                                ent[0].mapId = -1;
+                                ent[0].adjacentMapId1 = -1;
+                                ent[0].adjacentMapId2 = -1;
                                 cellIdx = cellIdx + 1;
                                 colIdx = colIdx + 1;
                                 c = g2[1];
@@ -1796,10 +1785,10 @@ void doPendingMapLoads(void)
                                 }
                                 g2[1] = -2;
                                 gMapLayerCellStates[cellIdx] = -1;
-                                ent[1].state = -3;
-                                ent[1].x = -1;
-                                ent[1].y = -1;
-                                ent[1].z = -1;
+                                ent[1].blockId = -3;
+                                ent[1].mapId = -1;
+                                ent[1].adjacentMapId1 = -1;
+                                ent[1].adjacentMapId2 = -1;
                                 ent += 2;
                                 cellIdx = cellIdx + 1;
                                 g2 += 2;
@@ -2205,16 +2194,16 @@ MapRomList* mapBlockFn_800592e4(void)
     }
 }
 
-void* fn_80059334(int a, int b)
+MapCellEntry* mapGetCellEntry(int x, int z)
 {
     int* base = (int*)lbl_803822A0[0];
-    return (char*)base + (a + (b << 4)) * 12;
+    return (MapCellEntry*)((char*)base + (x + (z << 4)) * 12);
 }
 
 extern s16 lbl_803DCE90;
 extern u16* lbl_803DCE84;
 
-void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
+void mapBlockFn_80059354(int x, int z, MapCellEntry* out, int layer)
 {
     int id;
     char* activeFlags;
@@ -2240,9 +2229,9 @@ void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
         adjacentMapId1 = (s8)adjacentMapIds[id << 1];
         adjacentMapId2 = adjacentMapIds[(id << 1) + 1];
         adjacentMapId2 = (s8)adjacentMapId2;
-        out->x = id;
-        out->y = adjacentMapId1;
-        out->z = adjacentMapId2;
+        out->mapId = id;
+        out->adjacentMapId1 = adjacentMapId1;
+        out->adjacentMapId2 = adjacentMapId2;
         if (adjacentMapId1 != -1)
         {
             slot = mapFindRomListSlot(slots, adjacentMapId1);
@@ -2267,23 +2256,23 @@ void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
             out->romListIndex = -1;
         if (out->romListIndex == -1)
         {
-            out->state = -1;
+            out->blockId = -1;
         }
         else
         {
             if (out->romListIndex >= lbl_803DCE90)
                 out->romListIndex = lbl_803DCE90 - 1;
-            out->state = out->cellIndex + lbl_803DCE84[out->romListIndex];
-            if (out->state >= lbl_803DCE84[lbl_803DCE90])
-                out->state = lbl_803DCE84[lbl_803DCE90] - 1;
+            out->blockId = out->cellIndex + lbl_803DCE84[out->romListIndex];
+            if (out->blockId >= lbl_803DCE84[lbl_803DCE90])
+                out->blockId = lbl_803DCE84[lbl_803DCE90] - 1;
         }
     }
     else
     {
-        out->x = -1;
-        out->y = -1;
-        out->z = -1;
-        out->state = -2;
+        out->mapId = -1;
+        out->adjacentMapId1 = -1;
+        out->adjacentMapId2 = -1;
+        out->blockId = -2;
         out->romListIndex = -1;
         out->cellIndex = 0;
     }

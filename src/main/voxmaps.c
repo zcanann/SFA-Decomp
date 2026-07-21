@@ -1221,7 +1221,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     int bestSlot;
     int blockId;
     int ay;
-    VoxBlock* block;
+    MapCellEntry* cell;
 
     ay = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
 
@@ -1236,8 +1236,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     blockId = -1;
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
     {
-        block = fn_80059334(gridX, gridY);
-        blockId = block->blockId;
+        cell = mapGetCellEntry(gridX, gridY);
+        blockId = cell->blockId;
     }
     if (blockId != -1)
     {
@@ -1270,8 +1270,8 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
                     bestVal = vm->timer[s];
                 }
             }
-            b8 = block->f8;
-            b9 = block->f9;
+            b8 = cell->cellIndex;
+            b9 = cell->romListIndex;
             if (vm->mapBuffer[bestSlot] != NULL)
             {
                 int saved = mmSetFreeDelay(0);
