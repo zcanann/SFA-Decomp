@@ -1534,7 +1534,7 @@ void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, 
     }
 }
 
-int fn_8003BB84(f32* m, f32* out);
+int objNormalizeRotationMatrix(f32* matrix, f32* out);
 
 void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -1635,22 +1635,22 @@ void objSetAlphaCompareThreshold(u8 x)
     gObjAlphaCompareThreshold = x;
 }
 
-int fn_8003BB84(f32* m, f32* out)
+int objNormalizeRotationMatrix(f32* matrix, f32* out)
 {
     Vec v3;
     Vec v1;
     Vec v2;
     f32 zero;
 
-    v1.x = m[0];
-    v1.y = m[1];
-    v1.z = m[2];
-    v2.x = m[4];
-    v2.y = m[5];
-    v2.z = m[6];
-    v3.x = m[8];
-    v3.y = m[9];
-    v3.z = m[10];
+    v1.x = matrix[0];
+    v1.y = matrix[1];
+    v1.z = matrix[2];
+    v2.x = matrix[4];
+    v2.y = matrix[5];
+    v2.z = matrix[6];
+    v3.x = matrix[8];
+    v3.y = matrix[9];
+    v3.z = matrix[10];
 
     if ((v1.x == lbl_803DEA04 && v1.y == lbl_803DEA04 && v1.z == lbl_803DEA04) ||
         (v2.x == *(f32*)&lbl_803DEA04 && v2.y == *(f32*)&lbl_803DEA04 && v2.z == *(f32*)&lbl_803DEA04) ||
@@ -1691,7 +1691,7 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
     f32 y;
     f32 z;
 
-    if (fn_8003BB84(m, buf) == 0)
+    if (objNormalizeRotationMatrix(m, buf) == 0)
     {
         return 0;
     }
