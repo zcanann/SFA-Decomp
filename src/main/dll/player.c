@@ -11721,12 +11721,12 @@ void fn_802AA014(GameObject* obj, int state, f32 aimInputZ, f32 zero)
 
 void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
 {
-    int slot = 1;
+    int slot;
     ObjPlacement* setup;
     f32 x1, y1, z1, x0, y0, z0;
     f32 dx, dy, dz, len;
 
-    Camera_GetCurrentViewSlot();
+    slot = (int)Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked() != 0)
     {
         Sfx_PlayFromObject(0, SFXTRIG_staff_rocket_hitdirt);
