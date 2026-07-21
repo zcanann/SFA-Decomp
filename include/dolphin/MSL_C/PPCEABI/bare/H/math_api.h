@@ -21,7 +21,7 @@ float Vec_lengthSquared(void* input);
 float trigReduceQuadrant(u16* quadrant, float angle);
 float fn_80291FF4(float x);
 float fn_80292194(float x);
-void fn_80293C64(float angle, float* sinOut, float* cosOut);
+void mathSinCosf(float angle, float* sinOut, float* cosOut);
 float fn_80293F7C(float x);
 float fn_802942EC(float x);
 float mathTanf(float angle);

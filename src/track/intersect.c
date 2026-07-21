@@ -4719,7 +4719,7 @@ void doHeatEffect(u8 alpha)
     getTextureFn_8006c5e4((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
 
-    fn_80293C64(lbl_803DEF70 * fA, &mulX, &mulY);
+    mathSinCosf(lbl_803DEF70 * fA, &mulX, &mulY);
     mulY *= gSynthDelayedActionWord0;
     mulX *= gSynthDelayedActionWord0;
 

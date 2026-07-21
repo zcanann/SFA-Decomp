@@ -259,7 +259,7 @@ float fcos16HighPrecision(int angle) {
     }
 }
 
-void fn_80293C64(float x, float* outSin, float* outCos) {
+void mathSinCosf(float x, float* outSin, float* outCos) {
     u16 quadrant;
     float reducedAngle = trigReduceQuadrant(&quadrant, x);
     float reducedSquared = reducedAngle * reducedAngle;

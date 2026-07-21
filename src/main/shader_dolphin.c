@@ -874,7 +874,7 @@ void fn_8004DA54(char* p1)
     }
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     newshadows_getReflectionScrollOffsets(&rx, &ry);
-    fn_80293C64(Prepared_803DEAD8 * rx, &sv, &cv);
+    mathSinCosf(Prepared_803DEAD8 * rx, &sv, &cv);
     s = mathCosf(Prepared_803DEAD8 * ry);
     k = lbl_803DEB08 * s + lbl_803DEB04;
     k = k * lbl_803DB5F0;
@@ -884,7 +884,7 @@ void fn_8004DA54(char* p1)
     m1.v[0][1] = sv;
     m1.v[1][0] = -sv;
     m1.v[1][1] = cv;
-    fn_80293C64(Prepared_803DEAD8 * -ry, &sv, &cv);
+    mathSinCosf(Prepared_803DEAD8 * -ry, &sv, &cv);
     s = mathCosf(Prepared_803DEAD8 * rx);
     f31v = lbl_803DEADC * s + lbl_803DEADC;
     k = lbl_803DEB08 * s + lbl_803DEB04;
