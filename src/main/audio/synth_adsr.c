@@ -14,7 +14,7 @@ u32 voiceConvertDbToLinear(u32 timeCents)
                              powf(2.0f, 1.2715658e-08f * (f32)(s32)timeCents));
 }
 
-int fn_8027A660(ADSR_VARS* adsr)
+int adsrAdvancePhase(ADSR_VARS* adsr)
 {
     int ret = 0;
 
@@ -60,7 +60,7 @@ int fn_8027A660(ADSR_VARS* adsr)
             if ((adsr->cnt = adsr->aTime) != 0)
             {
                 adsr->state = ADSR_STATE_DECAY;
-                if (adsr->aMode == 0)
+                if (adsr->aMode == ADSR_ATTACK_MODE_LINEAR)
                 {
                     adsr->currentVolume = 0;
                     adsr->currentDelta = 0x7fff0000 / adsr->cnt;
@@ -111,7 +111,7 @@ int fn_8027A660(ADSR_VARS* adsr)
 int adsrSetup(ADSR_VARS* adsr)
 {
     adsr->state = ADSR_STATE_ATTACK;
-    return fn_8027A660(adsr);
+    return adsrAdvancePhase(adsr);
 }
 
 int adsrStartRelease(ADSR_VARS* adsr, u32 divisor)
@@ -130,7 +130,7 @@ int adsrStartRelease(ADSR_VARS* adsr, u32 divisor)
         adsr->currentDelta = -(adsr->currentVolume / divisor);
         break;
     case ADSR_MODE_DLS:
-        if (adsr->aMode == 0 && adsr->state == ADSR_STATE_DECAY)
+        if (adsr->aMode == ADSR_ATTACK_MODE_LINEAR && adsr->state == ADSR_STATE_DECAY)
         {
             adsr->currentIndex = (u32)(193 - voiceAdsrDecayTable[*(int*)&adsr->currentVolume >> 21]) << 16;
         }
@@ -193,7 +193,7 @@ u32 adsrHandle(ADSR_VARS* adsr, u16* out1, u16* out2)
             }
             if (--*(int*)&adsr->cnt == 0)
             {
-                ret = fn_8027A660(adsr);
+                ret = adsrAdvancePhase(adsr);
             }
         }
         else
@@ -208,7 +208,7 @@ u32 adsrHandle(ADSR_VARS* adsr, u16* out1, u16* out2)
         if (adsr->state != ADSR_STATE_HOLD)
         {
             v8 = *(int*)&adsr->currentVolume;
-            if (adsr->aMode == 0 && adsr->state == ADSR_STATE_DECAY)
+            if (adsr->aMode == ADSR_ATTACK_MODE_LINEAR && adsr->state == ADSR_STATE_DECAY)
             {
                 *(int*)&adsr->currentVolume = v8 + *(int*)&adsr->currentDelta;
             }
@@ -237,7 +237,7 @@ u32 adsrHandle(ADSR_VARS* adsr, u16* out1, u16* out2)
             }
             if (--*(int*)&adsr->cnt == 0)
             {
-                ret = fn_8027A660(adsr);
+                ret = adsrAdvancePhase(adsr);
             }
         }
         else

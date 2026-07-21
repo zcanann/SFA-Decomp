@@ -143,7 +143,7 @@ void hwInitSamplePlayback(u32 voiceIndex, u16 sampleId, SAMPLE_INFO* sampleInfo,
 
     if (resetAdsr != 0)
     {
-        dspVoice[voiceIndex].adsr.mode = 0;
+        dspVoice[voiceIndex].adsr.mode = ADSR_MODE_LINEAR;
         dspVoice[voiceIndex].adsr.aTime = 0;
         dspVoice[voiceIndex].adsr.dTime = 0;
         dspVoice[voiceIndex].adsr.sLevel = 0x7fff;

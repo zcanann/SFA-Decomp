@@ -47,6 +47,9 @@ STATIC_ASSERT(offsetof(ADSR_VARS, aMode) == 0x26);
 #define ADSR_MODE_LINEAR 0 /* linear ramps */
 #define ADSR_MODE_DLS 1    /* DLS volume curve (lbl_8032F618 / 0xC1-step index) */
 
+/* ADSR_VARS.aMode - DLS attack interpolation */
+#define ADSR_ATTACK_MODE_LINEAR 0
+
 /* ADSR_VARS.state - envelope phase */
 #define ADSR_STATE_ATTACK 0  /* ramp 0 -> peak */
 #define ADSR_STATE_DECAY 1   /* ramp peak -> sustain level */

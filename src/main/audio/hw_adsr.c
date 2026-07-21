@@ -23,7 +23,7 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
     switch (mode)
     {
     case 0:
-        dspVoice[slot].adsr.mode = 0;
+        dspVoice[slot].adsr.mode = ADSR_MODE_LINEAR;
         dspVoice[slot].adsr.aTime = envelope->attack;
         dspVoice[slot].adsr.dTime = envelope->decay;
 
@@ -37,8 +37,8 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
         break;
     case 1:
     case 2:
-        dspVoice[slot].adsr.mode = 1;
-        dspVoice[slot].adsr.aMode = 0;
+        dspVoice[slot].adsr.mode = ADSR_MODE_DLS;
+        dspVoice[slot].adsr.aMode = ADSR_ATTACK_MODE_LINEAR;
 
         if (mode == 1)
         {
