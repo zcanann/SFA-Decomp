@@ -635,7 +635,7 @@ void fn_8004D230(void)
     f32 tmp;
     f32 t;
 
-    obj1 = (u8*)fn_8006C754();
+    obj1 = (u8*)getNewShadowFalloffTexture();
     C_MTXLightOrtho(mtx1, 25.0f, -25.0f, -25.0f, 25.0f, 0.5f, 0.5f, 0.5f, 0.5f);
     GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
@@ -708,7 +708,7 @@ void fn_8004D230(void)
     GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     lbl_803DCD30 = 1;
-    obj2 = (u8*)fn_8006C74C();
+    obj2 = (u8*)getNewShadowInverseRampTexture();
     id = lbl_803DCD8C;
     if (obj2 != NULL)
     {

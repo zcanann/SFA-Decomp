@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-u32 fn_8006C754(void);
-u32 fn_8006C74C(void);
+u32 getNewShadowFalloffTexture(void);
+u32 getNewShadowInverseRampTexture(void);
 void allocLotsOfTextures(void);
 
 #endif /* MAIN_NEWSHADOWS_TEXTURE_API_H_ */

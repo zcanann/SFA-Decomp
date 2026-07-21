@@ -1249,11 +1249,11 @@ u32 getTextureFn_8006c744(void)
 }
 
 u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
-u32 fn_8006C74C(void)
+u32 getNewShadowInverseRampTexture(void)
 {
     return gNewShadowInverseRampTexture;
 }
-u32 fn_8006C754(void)
+u32 getNewShadowFalloffTexture(void)
 {
     return gNewShadowFalloffTexture;
 }
