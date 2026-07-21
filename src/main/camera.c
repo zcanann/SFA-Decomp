@@ -933,7 +933,7 @@ void Camera_ApplyFullViewport(void)
     }
 }
 
-void fn_8000F83C(void)
+void Camera_ApplyEffectDepthViewport(void)
 {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
@@ -949,7 +949,7 @@ void fn_8000F83C(void)
     }
 }
 
-void fn_8000F8F8(void)
+void Camera_ApplyTransparentViewport(void)
 {
     GXRenderModeObj* renderMode = gRenderModeObj;
 
@@ -965,7 +965,7 @@ void fn_8000F8F8(void)
     }
 }
 
-void fn_8000F9B4(void)
+void Camera_ApplyDecalViewport(void)
 {
     GXRenderModeObj* renderMode = gRenderModeObj;
 

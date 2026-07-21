@@ -1546,7 +1546,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     int i;
     u8* s0;
 
-    fn_8000F8F8();
+    Camera_ApplyTransparentViewport();
     countShifted = (int)((MapBlockData*)obj)->nRenderInstrsTransp << 3;
     modelRenderInstrsState_init((ModelRenderInstrsState*)state, *(void**)&((GameObject *)obj)->anim.banks,
                                 countShifted, countShifted);
@@ -1588,7 +1588,7 @@ void objDrawFn_8005da48(GameObject* obj)
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
         renderResetFn_8003fc60();
         objRender(0, 0, 0, 0, obj, 1);
-        fn_8000F9B4();
+        Camera_ApplyDecalViewport();
         shadow = obj->anim.modelState;
         if (shadow != NULL && ((ObjModelState*)shadow)->shadowCastSlot != NULL)
         {
@@ -1642,12 +1642,12 @@ void sceneDrawTransparentPolys(void)
             }
             break;
         case 2:
-            fn_8000F9B4();
+            Camera_ApplyDecalViewport();
             objShadowFn_80062498((GameObject*)e[i][0], 0, 0, framesThisStep);
             Camera_ApplyFullViewport();
             break;
         case 3:
-            fn_8000F9B4();
+            Camera_ApplyDecalViewport();
             objDrawFn_80061654((GameObject*)e[i][0], Obj_GetActiveModel((GameObject*)e[i][0]));
             Camera_ApplyFullViewport();
             break;

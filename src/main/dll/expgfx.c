@@ -2029,7 +2029,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     {
                         if (zMode != 1)
                         {
-                            fn_8000F83C();
+                            Camera_ApplyEffectDepthViewport();
                             gxSetZMode_(1, 3, 0);
                             zMode = 1;
                         }

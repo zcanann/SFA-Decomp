@@ -539,7 +539,7 @@ void drawFn_8006f500(void)
     {
         return;
     }
-    fn_8000F9B4();
+    Camera_ApplyDecalViewport();
     GXSetCurrentMtx(GX_PNMTX0);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
