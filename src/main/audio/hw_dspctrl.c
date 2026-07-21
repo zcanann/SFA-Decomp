@@ -464,7 +464,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         pb->mix.vDeltaAuxBL = 0;
                         pb->mix.vDeltaAuxBR = 0;
                         pb->mix.vDeltaAuxBS = 0;
-                        if (stp->type == 0)
+                        if (stp->type == SND_STUDIO_TYPE_STD)
                         {
                             if ((pb->mix.vAuxBS | (pb->mix.vAuxBL | pb->mix.vAuxBR)) != 0)
                             {
@@ -578,7 +578,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         }
                         if ((dsp_vptr->changed[0] & 4) != 0)
                         {
-                            if (stp->type == 0)
+                            if (stp->type == SND_STUDIO_TYPE_STD)
                             {
                                 sal_setup_dspvol(&pb->mix.vDeltaAuxBL, &dsp_vptr->lastVolLb, dsp_vptr->volLb);
                                 sal_setup_dspvol(&pb->mix.vDeltaAuxBR, &dsp_vptr->lastVolRb, dsp_vptr->volRb);
@@ -616,7 +616,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                 }
                             }
                         }
-                        else if (stp->type == 0)
+                        else if (stp->type == SND_STUDIO_TYPE_STD)
                         {
                             if ((pb->mixerCtrl & 2) != 0)
                             {
@@ -684,7 +684,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         {
                             pb->mixerCtrl &= ~8;
                         }
-                        if (stp->type == 0)
+                        if (stp->type == SND_STUDIO_TYPE_STD)
                         {
                             if ((pb->mix.vS != 0) || (pb->mix.vDeltaS != 0) || (pb->mix.vAuxAS != 0) ||
                                 (pb->mix.vDeltaAuxAS != 0) || (pb->mix.vAuxBS != 0) || (pb->mix.vDeltaAuxBS != 0))
@@ -913,7 +913,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                 dspCmdPtr[4] = (u32)stp->auxA[getAuxFrame];
                 dspCmdPtr += 5;
             }
-            if (stp->type == 0)
+            if (stp->type == SND_STUDIO_TYPE_STD)
             {
                 if (stp->auxBHandler)
                 {
@@ -1098,7 +1098,7 @@ void salHandleAuxProcessing(void)
                 studio->auxAHandler(0, &info, studio->auxAUser);
                 DCFlushRangeNoSync((void*)buf, 0x780);
             }
-            if (studio->type == 0 && studio->auxBHandler != NULL)
+            if (studio->type == SND_STUDIO_TYPE_STD && studio->auxBHandler != NULL)
             {
                 buf = (int)studio->auxB[(salAuxFrame + 2) % DSP_STUDIO_AUX_BUFFER_COUNT];
                 info.data.bufferUpdate.left = (s32*)buf;

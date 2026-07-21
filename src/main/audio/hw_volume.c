@@ -34,7 +34,7 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
         u32 f0w = voice->flags;
         f0w &= DSP_VOICE_ITD_ENABLED_FLAG;
         salCalcVolumeMatrix(volumeTable, out, pan, surroundPan, f0w != 0,
-                            dspStudio[voice->studio].type == 1, volume, auxA, auxB);
+                            dspStudio[voice->studio].type == SND_STUDIO_TYPE_DPL2, volume, auxA, auxB);
     }
 
     il = lbl_803E78E4 * out[0];

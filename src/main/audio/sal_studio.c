@@ -95,7 +95,8 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                         DCFlushRangeNoSync(dspStudio[i].spb, sizeof(_SPB));
                     }
 
-                    salActivateStudio(0, 1, defaultStudioDPL2 != 0 ? 1 : 0);
+                    salActivateStudio(0, 1,
+                                      defaultStudioDPL2 != 0 ? SND_STUDIO_TYPE_DPL2 : SND_STUDIO_TYPE_STD);
                     if (!(dspCmdBuffer = salMalloc(0x100)))
                     {
                         return 0;
