@@ -171,7 +171,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     rampResetOffsetFlags[0] = 0;
     for (st = 0; st < salMaxStudioNum; st++)
     {
-        if (dspStudio[st].state == 1)
+        if (dspStudio[st].state == DSP_STUDIO_STATE_ACTIVE)
         {
             stp = &dspStudio[st];
             for (dsp_vptr = stp->voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
@@ -853,7 +853,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         }
                         for (st1 = st + 1; st1 < salMaxStudioNum; st1++)
                         {
-                            if (dspStudio[st1].state == 1)
+                            if (dspStudio[st1].state == DSP_STUDIO_STATE_ACTIVE)
                             {
                                 for (dsp_vptr = dspStudio[st1].voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
                                 {
@@ -961,7 +961,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     dspCmdPtr += 3;
     for (st = 0; st < salMaxStudioNum; st++)
     {
-        if ((dspStudio[st].state == 1) && (dspStudio[st].isMaster != 0))
+        if ((dspStudio[st].state == DSP_STUDIO_STATE_ACTIVE) && (dspStudio[st].isMaster != 0))
         {
             SAL_CHECK_CMD_SPACE(3);
             dspCmdPtr[0] = 9;
@@ -1045,7 +1045,7 @@ void salDeactivateVoice(DSPvoice* voice)
 
 u32 salAddStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)
 {
-    if (studio->numInputs < 7)
+    if (studio->numInputs < ARRAY_COUNT(studio->in))
     {
         studio->in[studio->numInputs].studio = input->srcStudio;
         studio->in[studio->numInputs].vol = (input->vol << 8) | (input->vol << 1);
@@ -1087,11 +1087,11 @@ void salHandleAuxProcessing(void)
     studio = dspStudio;
     for (i = 0; (u8)i < salMaxStudioNum; i++, studio++)
     {
-        if (studio->state == 1)
+        if (studio->state == DSP_STUDIO_STATE_ACTIVE)
         {
             if (studio->auxAHandler != NULL)
             {
-                buf = (int)studio->auxA[(salAuxFrame + 2) % 3];
+                buf = (int)studio->auxA[(salAuxFrame + 2) % DSP_STUDIO_AUX_BUFFER_COUNT];
                 info.data.bufferUpdate.left = (s32*)buf;
                 info.data.bufferUpdate.right = (s32*)(buf + 0x280);
                 info.data.bufferUpdate.surround = (s32*)(buf + 0x500);
@@ -1100,7 +1100,7 @@ void salHandleAuxProcessing(void)
             }
             if (studio->type == 0 && studio->auxBHandler != NULL)
             {
-                buf = (int)studio->auxB[(salAuxFrame + 2) % 3];
+                buf = (int)studio->auxB[(salAuxFrame + 2) % DSP_STUDIO_AUX_BUFFER_COUNT];
                 info.data.bufferUpdate.left = (s32*)buf;
                 info.data.bufferUpdate.right = (s32*)(buf + 0x280);
                 info.data.bufferUpdate.surround = (s32*)(buf + 0x500);

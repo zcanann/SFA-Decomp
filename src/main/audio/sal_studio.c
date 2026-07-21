@@ -70,7 +70,7 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
 
                     for (i = 0; i < salMaxStudioNum; ++i)
                     {
-                        dspStudio[i].state = 0;
+                        dspStudio[i].state = DSP_STUDIO_STATE_INACTIVE;
                         if (!(dspStudio[i].spb = salMalloc(sizeof(_SPB))))
                         {
                             return 0;
@@ -155,7 +155,7 @@ void salActivateStudio(u8 studio, u32 isMaster, SND_STUDIO_TYPE type)
     DCFlushRangeNoSync(base[studio].auxB[0], 0x780);
     base[studio].voiceRoot = NULL;
     base[studio].alienVoiceRoot = NULL;
-    base[studio].state = 1;
+    base[studio].state = DSP_STUDIO_STATE_ACTIVE;
     base[studio].isMaster = isMaster;
     base[studio].numInputs = 0;
     base[studio].type = type;
@@ -166,7 +166,7 @@ void salDeactivateStudio(u8 studio)
 {
     DSPstudioinfo* base = dspStudio;
 
-    base[studio].state = 0;
+    base[studio].state = DSP_STUDIO_STATE_INACTIVE;
 }
 
 u32 salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol, u16* resetFlags,

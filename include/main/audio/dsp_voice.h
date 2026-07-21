@@ -127,12 +127,16 @@ typedef struct DSPinput {
     SND_STUDIO_INPUT *desc; /* 0x08 */
 } DSPinput;
 
+#define DSP_STUDIO_STATE_INACTIVE 0
+#define DSP_STUDIO_STATE_ACTIVE   1
+#define DSP_STUDIO_AUX_BUFFER_COUNT 3
+
 typedef struct DSPstudioinfo {
     struct _SPB *spb;         /* 0x00 */
     DSPhostDPop hostDPopSum;  /* 0x04 */
     s32 *main[2];             /* 0x28 */
-    s32 *auxA[3];             /* 0x30 */
-    s32 *auxB[3];             /* 0x3c */
+    s32 *auxA[DSP_STUDIO_AUX_BUFFER_COUNT]; /* 0x30 */
+    s32 *auxB[DSP_STUDIO_AUX_BUFFER_COUNT]; /* 0x3c */
     DSPvoice *voiceRoot;      /* 0x48 */
     DSPvoice *alienVoiceRoot; /* 0x4c */
     u8 state;                 /* 0x50 */

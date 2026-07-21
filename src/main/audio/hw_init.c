@@ -35,7 +35,7 @@ void snd_handle_irq(void)
     hwIRQEnterCritical();
 
     salFrame ^= 1;
-    salAuxFrame = (salAuxFrame + 1) % 3;
+    salAuxFrame = (salAuxFrame + 1) % DSP_STUDIO_AUX_BUFFER_COUNT;
 
     for (voiceIndex = 0; voiceIndex < salNumVoices; voiceIndex++)
     {
