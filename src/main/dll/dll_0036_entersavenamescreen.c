@@ -102,6 +102,8 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
     s8 stickX;
     int buttons;
     u8 moved;
+    u8 slotIndex;
+    char* selectedText;
 
     stickX = padGetStickX(0);
     padClearAnalogInputX(0);
@@ -230,8 +232,8 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
         {
             if ((gEnterSaveNameSelectedIndex <= 0x25) && (gEnterSaveNameLength < ENTER_SAVE_NAME_MAX_LENGTH))
             {
-                gEnterSaveNameBuffer[gEnterSaveNameLength++] =
-                    *(char*)gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
+                selectedText = gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
+                gEnterSaveNameBuffer[gEnterSaveNameLength++] = selectedText[0];
                 gEnterSaveNameBuffer[gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
                 Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_TYPE);
@@ -258,7 +260,8 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
                     gEnterSaveNameBuffer[3] = 0;
                 }
                 Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_CONFIRM);
-                gplayNewGame(gEnterSaveNameBuffer, *(u8*)&saveFileSelect_currentSlotIndex);
+                slotIndex = saveFileSelect_currentSlotIndex;
+                gplayNewGame(gEnterSaveNameBuffer, slotIndex);
                 loadUiDll(ENTER_SAVE_NAME_MENU_DLL);
                 lbl_803DD6EC = 2;
             }
