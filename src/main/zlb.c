@@ -23,12 +23,6 @@ const InflateBaseExtra gInflateDistCodes[30] = {
     {513, 8},   {769, 8},   {1025, 9},  {1537, 9},  {2049, 10}, {3073, 10},
     {4097, 11}, {6145, 11}, {8193, 12}, {12289, 12}, {16385, 13}, {24577, 13}};
 
-extern u8 gInflateFixedLiteralCodeLengths[];
-extern u16 gInflateFixedLiteralDecodeTable[];
-extern u8 gInflateFixedDistanceCodeLengths[];
-extern u8 gInflateFixedDistanceDecodeTable[];
-extern u8 gInflateBitReverseTable[];
-
 u8 gInflateLiteralCodeLengths[0x120];
 u16 gInflateLiteralDecodeTable[0x8000];
 u8 gInflateDistanceCodeLengths[0x20];

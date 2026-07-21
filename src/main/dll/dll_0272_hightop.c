@@ -59,6 +59,13 @@ void* gHighTopDefaultStateHandler;
 const HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
 const HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
 
+typedef struct HighTopPathParams
+{
+    u8 values[4];
+} HighTopPathParams;
+
+static const HighTopPathParams sHighTopPathParams = {{1, 1, 1, 1}};
+
 #define PAD_BUTTON_A 0x100
 
 /* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id
@@ -1160,8 +1167,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement)
     int* node;
     HtInitData local1;
     HtInitData local2;
-    u32 pathParam;
-    pathParam = 0x01010101;
+    HighTopPathParams pathParam = sHighTopPathParams;
     local1 = gHighTopLookInitData1;
     local2 = gHighTopLookInitData2;
     (obj)->anim.rotX = (s16)(placement->rotByte << 8);
@@ -1182,7 +1188,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement)
     pathState[0x25b] = 1;
     (*gPathControlInterface)->init(pathState, 3, 1024, 0);
     (*gPathControlInterface)->setLocalPointCollision(pathState, 2, &base[0xe8], &lbl_803DC318, 8);
-    (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], &pathParam);
+    (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], pathParam.values);
     (*gPathControlInterface)->attachObject(obj, pathState);
     dll_2E_func05(obj, (MoveLibState*)runtime->lookController, -4551, 23665, 6);
     dll_2E_func08((MoveLibState*)runtime->lookController, 300, 120);
