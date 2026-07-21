@@ -132,10 +132,10 @@ void dll_F7_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     DllF7State* state = obj->extra;
     if (state->broken == 0 && visible != 0)
     {
-        f32 v = state->bounceOffset;
-        if (v)
+        f32 bounceOffset = state->bounceOffset;
+        if (bounceOffset)
         {
-            fn_8003B5E0(0xc8, 0, 0, v);
+            fn_8003B5E0(0xc8, 0, 0, bounceOffset);
         }
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }

@@ -524,22 +524,22 @@ void gunpowderbarrel_updatePhysics(int* obj)
         sub->throwVelY -= 0.12f * timeDelta;
     }
     {
-        f32 v = sub->throwVelX;
-        sub->throwVelX = (v < -5.0f)
+        f32 velX = sub->throwVelX;
+        sub->throwVelX = (velX < -5.0f)
                                                                    ? -5.0f
-                                                                   : ((v > 5.0f) ? 5.0f : v);
+                                                                   : ((velX > 5.0f) ? 5.0f : velX);
     }
     {
-        f32 v = sub->throwVelY;
-        sub->throwVelY = (v < -5.0f)
+        f32 velY = sub->throwVelY;
+        sub->throwVelY = (velY < -5.0f)
                                                                    ? -5.0f
-                                                                   : ((v > 5.0f) ? 5.0f : v);
+                                                                   : ((velY > 5.0f) ? 5.0f : velY);
     }
     {
-        f32 v = sub->throwVelZ;
-        sub->throwVelZ = (v < -5.0f)
+        f32 velZ = sub->throwVelZ;
+        sub->throwVelZ = (velZ < -5.0f)
                                                                    ? -5.0f
-                                                                   : ((v > 5.0f) ? 5.0f : v);
+                                                                   : ((velZ > 5.0f) ? 5.0f : velZ);
     }
     ((GameObject*)obj)->anim.velocityX = sub->throwVelX;
     ((GameObject*)obj)->anim.velocityY = sub->throwVelY;

@@ -235,10 +235,10 @@ void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
     out_vec[2] = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E0500;
     alt_found = 0;
     {
-        s32 v = n->forwardLink0;
-        if (v != 0)
+        s32 forwardLink = n->forwardLink0;
+        if (forwardLink != 0)
         {
-            CheckpointRouteEntry* m = Checkpoint_find(v, &local_idx);
+            CheckpointRouteEntry* m = Checkpoint_find(forwardLink, &local_idx);
             if (m->forwardLink0 > -1)
             {
                 alt_found = 1;
@@ -253,20 +253,20 @@ void Checkpoint_func0A(s32 key, f32* out_vec, u8* flag_byte)
         }
         else
         {
-            s32 v = n->backLink0;
-            if (v > -1)
+            s32 backLink = n->backLink0;
+            if (backLink > -1)
             {
-                *(s32*)(out_vec + 4) = v;
+                *(s32*)(out_vec + 4) = backLink;
                 *flag_byte = 1;
             }
         }
     }
     else
     {
-        s32 v = n->backLink0;
-        if (v != 0)
+        s32 backLink = n->backLink0;
+        if (backLink != 0)
         {
-            *(s32*)(out_vec + 4) = v;
+            *(s32*)(out_vec + 4) = backLink;
         }
         else if (alt_found != 0)
         {

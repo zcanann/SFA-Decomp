@@ -102,9 +102,9 @@ void cannonclaw_update(GameObject* obj)
 
 void cannonclaw_init(GameObject* obj, CannonClawPlacement* placement)
 {
-    s8 v = placement->rotXByte;
-    s16 t = v << 8;
-    obj->anim.rotX = t;
+    s8 rotXByte = placement->rotXByte;
+    s16 rotX = rotXByte << 8;
+    obj->anim.rotX = rotX;
 }
 
 void cannonclaw_release(void)

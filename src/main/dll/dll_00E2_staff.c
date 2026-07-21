@@ -992,19 +992,19 @@ void staff_hitDetectGeometry(int* obj)
     staffDrawSwipe(obj, swipe);
     if (hitState->contactFlags != 0 && getHudHiddenFrameCount() == 0)
     {
-        int t = hitState->contactHitVolume;
+        int contactHitVolume = hitState->contactHitVolume;
         int idx;
-        if (t < 0)
+        if (contactHitVolume < 0)
         {
             idx = 0;
         }
-        else if (t > 35)
+        else if (contactHitVolume > 35)
         {
             idx = 35;
         }
         else
         {
-            idx = t;
+            idx = contactHitVolume;
         }
         if (idx == 14)
         {

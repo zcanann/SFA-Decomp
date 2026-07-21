@@ -231,11 +231,11 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
     {
     case SHOPITEM_SEQ_BSPLINE:
     {
-        f32 t = s->splineT;
-        if (t > 1.0f)
+        f32 splineT = s->splineT;
+        if (splineT > 1.0f)
         {
             u32 segCounter;
-            s->splineT = t - 1.0f;
+            s->splineT = splineT - 1.0f;
             segCounter = s->segCounter;
             if (segCounter >= 4)
             {
@@ -390,11 +390,11 @@ void shopitem_update(GameObject* obj)
             {
             case SHOPITEM_SEQ_BSPLINE:
             {
-                f32 t = s->splineT;
-                if (t > 1.0f)
+                f32 splineT = s->splineT;
+                if (splineT > 1.0f)
                 {
                     u32 segCounter;
-                    s->splineT = t - 1.0f;
+                    s->splineT = splineT - 1.0f;
                     segCounter = s->segCounter;
                     if (segCounter >= 4)
                     {

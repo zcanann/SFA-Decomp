@@ -1089,11 +1089,11 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             return;
         case PUSHABLE_SEQID_VFP_BLOCK2:
         {
-            f32 v = state->timer_0x14;
+            f32 timer = state->timer_0x14;
             f32 zero = PUSHABLE_ZERO;
-            if (v > zero)
+            if (timer > zero)
             {
-                state->timer_0x14 = v - timeDelta;
+                state->timer_0x14 = timer - timeDelta;
                 if (state->timer_0x14 <= zero)
                 {
                     state->timer_0x14 = zero;

@@ -619,11 +619,11 @@ void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
     if (arwing->activeBombObj != NULL)
         return;
     {
-        f32 t = arwing->bombCooldown;
+        f32 bombCooldown = arwing->bombCooldown;
         f32 zero = 0.0f;
-        if (t > zero)
+        if (bombCooldown > zero)
         {
-            arwing->bombCooldown = t - timeDelta;
+            arwing->bombCooldown = bombCooldown - timeDelta;
             if (arwing->bombCooldown < zero)
             {
                 arwing->bombCooldown = zero;
@@ -705,11 +705,11 @@ void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
     int fire;
     arwarwing_updateThrusters(obj, state);
     {
-        f32 t = state->fireCooldown;
+        f32 fireCooldown = state->fireCooldown;
         f32 zero = 0.0f;
-        if (t > zero)
+        if (fireCooldown > zero)
         {
-            state->fireCooldown = t - timeDelta;
+            state->fireCooldown = fireCooldown - timeDelta;
             if (state->fireCooldown < zero)
                 state->fireCooldown = zero;
             else

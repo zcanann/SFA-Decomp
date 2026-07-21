@@ -376,12 +376,12 @@ void Fireball_update(GameObject* obj)
                     obj->anim.localPosZ, *(s16*)obj, 0.0f, 2);
             }
             {
-                u8 v = state->colorIndex;
-                if (v == 0)
+                u8 colorIndex = state->colorIndex;
+                if (colorIndex == 0)
                 {
                     projectileParticleFxFn_80099660(obj, 1.0f, 3);
                 }
-                else if (v == 1)
+                else if (colorIndex == 1)
                 {
                     projectileParticleFxFn_80099660(obj, 1.0f, 0);
                 }

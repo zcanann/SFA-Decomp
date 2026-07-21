@@ -139,8 +139,8 @@ void dll_1DB_update(GameObject* obj)
         state->velocity =
             state->velocity + (0.02f * timeDelta + 0.1f * (f32)(s32)(state->velocity < 0.0f));
         {
-            f32 v = state->velocity;
-            if (v > 1.5f)
+            f32 velocity = state->velocity;
+            if (velocity > 1.5f)
             {
                 state->velocity = 1.5f;
             }
@@ -161,8 +161,8 @@ void dll_1DB_update(GameObject* obj)
     case DIM2_CRUSHER_STATE_FALLING:
         state->velocity = -0.02f * timeDelta + state->velocity;
         {
-            f32 v = state->velocity;
-            if (v < -1.5f)
+            f32 velocity = state->velocity;
+            if (velocity < -1.5f)
             {
                 state->velocity = -1.5f;
             }
