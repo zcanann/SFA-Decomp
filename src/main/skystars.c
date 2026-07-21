@@ -76,7 +76,7 @@ SkyStarColorRange gNewCloudStarColorRanges[SKY_STAR_COLOR_RANGE_COUNT] = {
     {0xD0, 0xFF, 0x80, 0xA0, 0xD0, 0xFF},
 };
 u16 gNewCloudStarDisplayListSizes[SKY_STAR_DISPLAY_LIST_COUNT];
-void* gNewCloudStarDisplayLists[SKY_STAR_DISPLAY_LIST_COUNT];
+u8* gNewCloudStarDisplayLists[SKY_STAR_DISPLAY_LIST_COUNT];
 
 #define NEWCLOUD_TEXTURE_STAR_A 0xc21 /* gNewCloudStarTextureA */
 #define NEWCLOUD_TEXTURE_STAR_B 0xc22 /* gNewCloudStarTextureB */
@@ -199,7 +199,7 @@ void initSkyStars(void)
 
     GXSetMisc(1, 0);
     testAndSet_onlyUseHeap3(0);
-    constellation = mmAlloc(0x4b0, 0x7f7f7fff, 0);
+    constellation = mmAlloc(SKY_STAR_CONSTELLATION_POINT_COUNT * sizeof(Vec3f), 0x7f7f7fff, 0);
     testAndSet_onlyUseHeap3(1);
     for (constellationPointIndex = 0, constellationPoint = constellation;
          constellationPointIndex < SKY_STAR_CONSTELLATION_POINT_COUNT;
