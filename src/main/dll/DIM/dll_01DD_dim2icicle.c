@@ -50,7 +50,9 @@ typedef struct Dim2iciclePlacement
     u8 unk4;
     u8 pad5[0xC - 0x5];
     f32 resetPosY;
-    u8 pad10[0x1E - 0x10];
+    u8 pad10[0x18 - 0x10];
+    s8 initialRotX;
+    u8 pad19[0x1E - 0x19];
     s16 impactGameBit;
 } Dim2iciclePlacement;
 
@@ -75,19 +77,19 @@ void dim2icicle_hitDetect(void)
 void dim2icicle_update(GameObject *obj)
 {
     ObjHitsPriorityState* hitState;
-    int sub;
-    int state;
-    state = *(int*)&(obj)->anim.placementData;
-    sub = *(int*)&(obj)->extra;
-    switch (((Dim2IcicleState*)sub)->mode)
+    Dim2IcicleState* icicle;
+    Dim2iciclePlacement* placement;
+    placement = (Dim2iciclePlacement*)obj->anim.placementData;
+    icicle = (Dim2IcicleState*)obj->extra;
+    switch (icicle->mode)
     {
     case DIM2ICICLE_MODE_WAIT_HIT:
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0xe)
         {
             break;
         }
-        ((Dim2IcicleState*)sub)->wobbleRotY = randomGetRange(0x320, 0x4b0);
-        ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_WOBBLE;
+        icicle->wobbleRotY = randomGetRange(0x320, 0x4b0);
+        icicle->mode = DIM2ICICLE_MODE_WOBBLE;
         hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->flags &= ~1;
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_sbalhis6);
@@ -96,46 +98,46 @@ void dim2icicle_update(GameObject *obj)
     {
         f32 wobble;
 
-        (obj)->anim.rotY = ((Dim2IcicleState*)sub)->wobbleRotY;
-        wobble = (f32)((Dim2IcicleState*)sub)->wobbleRotY;
+        obj->anim.rotY = icicle->wobbleRotY;
+        wobble = (f32)icicle->wobbleRotY;
         wobble *= 0.333f;
-        ((Dim2IcicleState*)sub)->wobbleRotY = wobble;
+        icicle->wobbleRotY = wobble;
         if ((obj)->anim.rotY >= 10)
         {
             break;
         }
-        (obj)->anim.rotY = 0;
-        ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_DROP;
-        ((Dim2IcicleState*)sub)->timer = 0x3c;
+        obj->anim.rotY = 0;
+        icicle->mode = DIM2ICICLE_MODE_DROP;
+        icicle->timer = 0x3c;
         break;
     }
     case DIM2ICICLE_MODE_DROP:
-        if (((Dim2IcicleState*)sub)->dropTargetFound == 0)
+        if (icicle->dropTargetFound == 0)
         {
             int hitCount;
             int i;
             TrackGroundHit** list;
             hitCount = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY,
                                             (obj)->anim.localPosZ, &list, 0, 0);
-            ((Dim2IcicleState*)sub)->dropY = -100000.0f;
+            icicle->dropY = -100000.0f;
             for (i = 0; i < hitCount; i++)
             {
                 TrackGroundHit* hit = list[i];
                 if ((s8)hit->surfaceType == 0xe)
                 {
-                    ((Dim2IcicleState*)sub)->dropY = hit->height;
+                    icicle->dropY = hit->height;
                     i = hitCount;
                 }
             }
-            if (-100000.0f != ((Dim2IcicleState*)sub)->dropY)
+            if (-100000.0f != icicle->dropY)
             {
-                ((Dim2IcicleState*)sub)->dropTargetFound = 1;
+                icicle->dropTargetFound = 1;
             }
         }
-        if (((Dim2IcicleState*)sub)->timer > 0)
+        if (icicle->timer > 0)
         {
-            ((Dim2IcicleState*)sub)->timer -= framesThisStep;
-            if (((Dim2IcicleState*)sub)->timer <= 0)
+            icicle->timer -= framesThisStep;
+            if (icicle->timer <= 0)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_wp_swdwood16);
             }
@@ -147,27 +149,27 @@ void dim2icicle_update(GameObject *obj)
         }
         (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.
             localPosY;
-        if ((obj)->anim.localPosY < ((Dim2IcicleState*)sub)->dropY)
+        if ((obj)->anim.localPosY < icicle->dropY)
         {
-            mainSetBits(((Dim2iciclePlacement*)state)->impactGameBit, 1);
-            ((Dim2IcicleState*)sub)->mode = DIM2ICICLE_MODE_IMPACTED;
+            mainSetBits(placement->impactGameBit, 1);
+            icicle->mode = DIM2ICICLE_MODE_IMPACTED;
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void*)obj, (obj)->anim.localPosX,
-                ((Dim2IcicleState*)sub)->dropY, (obj)->anim.localPosZ,
+                icicle->dropY, (obj)->anim.localPosZ,
                 10.0f);
             (*gWaterfxInterface)->spawnRipple(
-                (obj)->anim.localPosX, ((Dim2IcicleState*)sub)->dropY,
+                (obj)->anim.localPosX, icicle->dropY,
                 (obj)->anim.localPosZ, 0, 0.0f, 2);
             Sfx_PlayFromObject((int)obj, SFXTRIG_mv_curtainopen16);
-            ((Dim2IcicleState*)sub)->timer = 0x96;
+            icicle->timer = 0x96;
         }
         break;
     case DIM2ICICLE_MODE_IMPACTED:
     default:
-        if (((Dim2IcicleState*)sub)->timer > 0)
+        if (icicle->timer > 0)
         {
-            ((Dim2IcicleState*)sub)->timer -= framesThisStep;
-            if (((Dim2IcicleState*)sub)->timer <= 0)
+            icicle->timer -= framesThisStep;
+            if (icicle->timer <= 0)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_155);
             }
@@ -177,7 +179,7 @@ void dim2icicle_update(GameObject *obj)
             if (v < 0)
             {
                 v = 0;
-                (obj)->anim.localPosY = ((Dim2iciclePlacement*)state)->resetPosY;
+                (obj)->anim.localPosY = placement->resetPosY;
                 (obj)->anim.velocityY = 0.0f;
             }
             (obj)->anim.alpha = v;
@@ -190,18 +192,19 @@ void dim2icicle_update(GameObject *obj)
 
 void dim2icicle_init(GameObject *obj, s8* p)
 {
-    char* inner = (obj)->extra;
-    if (mainGetBit(((Dim2iciclePlacement*)p)->impactGameBit) != 0)
+    Dim2IcicleState* icicle = (Dim2IcicleState*)obj->extra;
+    Dim2iciclePlacement* placement = (Dim2iciclePlacement*)p;
+    if (mainGetBit(placement->impactGameBit) != 0)
     {
-        inner[6] = DIM2ICICLE_MODE_IMPACTED;
+        icicle->mode = DIM2ICICLE_MODE_IMPACTED;
         (obj)->anim.alpha = 0;
     }
     else
     {
-        inner[6] = DIM2ICICLE_MODE_WAIT_HIT;
+        icicle->mode = DIM2ICICLE_MODE_WAIT_HIT;
         (obj)->anim.alpha = 0xff;
     }
-    (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
+    (obj)->anim.rotX = (s16)((s32)placement->initialRotX << 8);
     (obj)->anim.velocityY = 0.0f;
     (obj)->objectFlags |= DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED;
 }
