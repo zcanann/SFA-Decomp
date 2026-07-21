@@ -355,12 +355,16 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
     }
 }
 
-static inline u16 render_readPackedU16(u64 address)
+typedef u64 RenderPackedAddress;
+
+#define RENDER_PACKED_ADDRESS(pointer) ((u32)(pointer))
+
+static inline u16 render_readPackedU16(RenderPackedAddress address)
 {
     return *(u16*)(u32)address;
 }
 
-static inline void render_writePackedU16(u64 address, u16 value)
+static inline void render_writePackedU16(RenderPackedAddress address, u16 value)
 {
     *(u16*)(u32)address = value;
 }
@@ -385,11 +389,11 @@ static inline void render_writePackedU16(u64 address, u16 value)
 void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation)
 {
     f32 framePhase = anim->framePhase;
-    u64 outPos = (u32)outRotation;
+    u64 outPos = RENDER_PACKED_ADDRESS(outRotation);
     u64 end;
     int curB = anim->frameStreamStride;
-    u64 posA = (u32)anim->frameStreamCursor;
-    u64 tp = (u32)anim->moveFrameData + 4;
+    u64 posA = RENDER_PACKED_ADDRESS(anim->frameStreamCursor);
+    u64 tp = RENDER_PACKED_ADDRESS(anim->moveFrameData) + 4;
     u64 bufA;
     u64 bufB;
     s64 tmp;
@@ -403,7 +407,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
 
     addrB = posA + curB;
     curB = addrB;
-    end = (u32)(outPosition + 3);
+    end = RENDER_PACKED_ADDRESS(outPosition + 3);
     framePhase = framePhase - floorf(framePhase);
     framePhase = framePhase * gModelRenderSubframeScale;
     frac = (int)framePhase;
@@ -507,7 +511,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
         }
         *outPosition = sample;
         outPosition++;
-    } while ((u64)(u32)outPosition != end);
+    } while ((RenderPackedAddress)RENDER_PACKED_ADDRESS(outPosition) != end);
 }
 
 void render_copyPackedU64Tail(u64* dst, u32 packed)
