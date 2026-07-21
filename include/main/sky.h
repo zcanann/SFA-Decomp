@@ -127,7 +127,7 @@ void pDll_Sky_setTimeOfDay_nop(void);
 void dll_06_func0C_nop(void);
 int dll_06_func07_ret_0(void);
 void sky2_release(void);
-void loadLightFn_8008bbc4(void);
+void skyLoadLights(void);
 void dll_06_func06(int obj);
 void dll_06_func08(int obj);
 void fn_8008DAE8(int obj);

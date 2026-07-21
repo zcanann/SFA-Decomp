@@ -428,7 +428,7 @@ SkyDllInterface lbl_8030F414 = {
     0,
     0,
     (ObjectDescriptorCallback)Sky_func03,
-    (ObjectDescriptorCallback)loadLightFn_8008bbc4,
+    (ObjectDescriptorCallback)skyLoadLights,
     (ObjectDescriptorCallback)timeOfDayFn_8008b964,
     (ObjectDescriptorCallback)renderSky,
     (ObjectDescriptorCallback)getTimeOfDay,
@@ -2019,7 +2019,7 @@ void timeOfDayFn_8008b964(void)
     }
 }
 
-void loadLightFn_8008bbc4(void)
+void skyLoadLights(void)
 {
     u8 done = 0;
 
