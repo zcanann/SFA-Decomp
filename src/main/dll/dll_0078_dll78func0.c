@@ -89,9 +89,10 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[5].mode = 2;
     if (posSource != 0)
     {
-        e[5].x = 0.01f * (3.5f * (f32)((PartFxSpawnParams*)posSource)->unk4);
-        e[5].y = 0.01f * (2.0f * (f32)((PartFxSpawnParams*)posSource)->unk4);
-        e[5].z = 0.01f * (3.5f * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+        e[5].x = 0.01f * (3.5f * (f32)ps->unk4);
+        e[5].y = 0.01f * (2.0f * (f32)ps->unk4);
+        e[5].z = 0.01f * (3.5f * (f32)ps->unk4);
     }
     else
     {
@@ -146,9 +147,10 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.v44 = variant;
     if (posSource != 0)
     {
-        buf.pos[0] = ((PartFxSpawnParams*)posSource)->posX;
-        buf.pos[1] = ((PartFxSpawnParams*)posSource)->posY;
-        buf.pos[2] = ((PartFxSpawnParams*)posSource)->posZ;
+        PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+        buf.pos[0] = ps->posX;
+        buf.pos[1] = ps->posY;
+        buf.pos[2] = ps->posZ;
     }
     else
     {
@@ -180,15 +182,17 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (buf.ctx != NULL)
         {
-            buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ;
+            GameObject* ctx = (GameObject*)buf.ctx;
+            buf.pos[0] += ctx->anim.worldPosX;
+            buf.pos[1] += ctx->anim.worldPosY;
+            buf.pos[2] += ctx->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+            buf.pos[0] += ps->posX;
+            buf.pos[1] += ps->posY;
+            buf.pos[2] += ps->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &tex[0], 0xc, &tex[140], DLL78_EFFECT_ID, 0);

@@ -78,9 +78,10 @@ s16 dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->mode = 0x80;
         if ((u32)posSource != 0)
         {
-            p->x = ((PartFxSpawnParams*)posSource)->posX;
-            p->y = ((PartFxSpawnParams*)posSource)->posY;
-            p->z = ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+            p->x = ps->posX;
+            p->y = ps->posY;
+            p->z = ps->posZ;
             p++;
         }
         else
@@ -141,9 +142,10 @@ s16 dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->mode = 0x80;
         if ((u32)posSource != 0)
         {
-            p->x = ((PartFxSpawnParams*)posSource)->posX;
-            p->y = ((PartFxSpawnParams*)posSource)->posY;
-            p->z = ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+            p->x = ps->posX;
+            p->y = ps->posY;
+            p->z = ps->posZ;
             p++;
         }
         else
@@ -188,9 +190,10 @@ s16 dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->mode = 0x80;
         if ((u32)posSource != 0)
         {
-            p->x = ((PartFxSpawnParams*)posSource)->posX;
-            p->y = ((PartFxSpawnParams*)posSource)->posY;
-            p->z = ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+            p->x = ps->posX;
+            p->y = ps->posY;
+            p->z = ps->posZ;
             p++;
         }
         else
@@ -407,15 +410,17 @@ s16 dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)buf.ctx != 0)
         {
-            buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ;
+            GameObject* ctx = (GameObject*)buf.ctx;
+            buf.pos[0] += ctx->anim.worldPosX;
+            buf.pos[1] += ctx->anim.worldPosY;
+            buf.pos[2] += ctx->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+            buf.pos[0] += ps->posX;
+            buf.pos[1] += ps->posY;
+            buf.pos[2] += ps->posZ;
         }
     }
     if (variant == 0)

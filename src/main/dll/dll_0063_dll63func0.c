@@ -141,20 +141,21 @@ s16 dll_63_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags
     }
     else
     {
+        PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
         cmd[1].layer = 0;
         cmd[1].flags = 7;
         cmd[1].tex = &base[0x100];
         cmd[1].mode = 2;
-        cmd[1].x = DLL63_PRIMARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
-        cmd[1].y = DLL63_PRIMARY_Y_SCALE * ((PartFxSpawnParams*)posSource)->scale;
-        cmd[1].z = DLL63_PRIMARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[1].x = DLL63_PRIMARY_XZ_SCALE * ps->scale;
+        cmd[1].y = DLL63_PRIMARY_Y_SCALE * ps->scale;
+        cmd[1].z = DLL63_PRIMARY_XZ_SCALE * ps->scale;
         cmd[2].layer = 0;
         cmd[2].flags = 7;
         cmd[2].tex = &base[0xf0];
         cmd[2].mode = 2;
-        cmd[2].x = DLL63_SECONDARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
-        cmd[2].y = ((PartFxSpawnParams*)posSource)->scale;
-        cmd[2].z = DLL63_SECONDARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[2].x = DLL63_SECONDARY_XZ_SCALE * ps->scale;
+        cmd[2].y = ps->scale;
+        cmd[2].z = DLL63_SECONDARY_XZ_SCALE * ps->scale;
         cmd += 3;
     }
     cmd[0].layer = 1;
@@ -285,15 +286,17 @@ s16 dll_63_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags
     {
         if (buf.ctx != 0)
         {
-            buf.pos[0] += ((GameObject*)(buf.ctx))->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)(buf.ctx))->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)(buf.ctx))->anim.worldPosZ;
+            GameObject* ctx = (GameObject*)buf.ctx;
+            buf.pos[0] += ctx->anim.worldPosX;
+            buf.pos[1] += ctx->anim.worldPosY;
+            buf.pos[2] += ctx->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
+            PartFxSpawnParams* ps = (PartFxSpawnParams*)posSource;
+            buf.pos[0] += ps->posX;
+            buf.pos[1] += ps->posY;
+            buf.pos[2] += ps->posZ;
         }
     }
     return (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], DLL63_EFFECT_ID, 0);
