@@ -138,7 +138,7 @@ void SB_CloudBall_update(GameObject* obj)
         if (state->fadeTimer <= zero)
         {
             state->fadeTimer = zero;
-            Obj_FreeObject((GameObject*)obj);
+            Obj_FreeObject(obj);
         }
     }
     else

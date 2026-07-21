@@ -280,7 +280,7 @@ void wcpushblock_update(GameObject* obj)
             obj->anim.velocityX = zero;
             obj->anim.velocityZ = zero;
         }
-        if (fn_80296414((GameObject*)player, obj, &state->pushDir) != 0)
+        if (fn_80296414(player, obj, &state->pushDir) != 0)
         {
             if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
             {
@@ -370,7 +370,7 @@ void wcpushblock_update(GameObject* obj)
         }
     }
         dt = timeDelta;
-        objMove((GameObject*)obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
+        objMove(obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
         reachedTarget = 0;
         {
             if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)

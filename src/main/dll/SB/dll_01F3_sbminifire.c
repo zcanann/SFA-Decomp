@@ -132,7 +132,7 @@ void SB_MiniFire_update(GameObject* obj)
     obj->userData1 = obj->userData1 - framesThisStep;
     if (obj->userData1 < 0)
     {
-        Obj_FreeObject((GameObject*)obj);
+        Obj_FreeObject(obj);
     }
 }
 

@@ -116,14 +116,14 @@ void mmp_moonrock_handleImpact(GameObject* obj)
                        (state->flags & MOONROCK_FLAG_SUNK) != 0))
     {
         (obj)->anim.localPosY += 10.0f;
-        spawnExplosion((GameObject*)(int)obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
+        spawnExplosion(obj, 0.0f, 1, 1, 0, 0, 0, 1, 0);
         state->flags |= MOONROCK_FLAG_RESPAWNING;
         state->respawnTimer = 120.0f;
         (obj)->anim.alpha = 0;
         (obj)->anim.localPosX = state->homeX;
         (obj)->anim.localPosY = state->homeY;
         (obj)->anim.localPosZ = state->homeZ;
-        saveGame_saveObjectPos((GameObject*)obj);
+        saveGame_saveObjectPos(obj);
     }
 }
 void mmp_moonrock_updateThrow(GameObject* obj)
@@ -191,7 +191,7 @@ void mmp_moonrock_updateThrow(GameObject* obj)
         }
         obj->anim.velocityX = clamped;
     }
-    objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
+    objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta, obj->anim.velocityZ * timeDelta);
     state->flags &= ~MOONROCK_FLAG_PROBE;
     posY = obj->anim.localPosY;
     probeResult = mmp_moonrock_probeFloor(obj, obj->anim.localPosX, posY, obj->anim.localPosZ, 20.0f + posY, &floorYOut,
@@ -304,7 +304,7 @@ void mmp_moonrock_reconcilePlacement(GameObject* obj, u8 place, u8 mode)
                 obj->anim.localPosX = state->homeX;
                 obj->anim.localPosY = state->homeY;
                 obj->anim.localPosZ = state->homeZ;
-                saveGame_saveObjectPos((GameObject*)obj);
+                saveGame_saveObjectPos(obj);
             }
             else
             {
@@ -318,7 +318,7 @@ void mmp_moonrock_reconcilePlacement(GameObject* obj, u8 place, u8 mode)
                     obj->anim.localPosX = ((GameObject*)list[i])->anim.localPosX;
                     obj->anim.localPosY = ((GameObject*)list[i])->anim.localPosY;
                     obj->anim.localPosZ = ((GameObject*)list[i])->anim.localPosZ;
-                    saveGame_saveObjectPos((GameObject*)obj);
+                    saveGame_saveObjectPos(obj);
                 }
                 {
                     f32 y = obj->anim.localPosY;
