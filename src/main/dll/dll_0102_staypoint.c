@@ -12,101 +12,90 @@
  * active bit, sets the hit-volume priority from whether a menu item is
  * selected, clears the disable bit, re-runs the object render hook, and -
  * if the player is within range - issues the stay command to Tricky
- * through Tricky's vtable (slot at (tricky + 0x68) -> [0] -> 0x28).
+ * through Tricky's object interface.
  *
  * The descriptor follows the implementation below.
  */
 #include "main/game_object.h"
 #include "main/objprint_render_api.h"
 #include "main/object.h"
-#include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_80136a40.h"
-#include "main/obj_placement.h"
+#include "main/dll/dll_0102_staypoint.h"
 #include "main/vecmath_distance_api.h"
 
-typedef struct StayPointSetup
+typedef void (*StayPointCommandCallback)(GameObject* tricky, GameObject* stayPoint, int enabled, int mode);
+
+typedef struct StayPointTrickyInterface
 {
-    ObjPlacement base;
-    u8 pad18[0x1E - 0x18];
-    s16 activeGameBit;   /* 0x1E: set while Tricky is staying here; -1 = none */
-    s16 requiredGameBit; /* 0x20: gate; -1 = always active */
-} StayPointSetup;
+    void* callbacks[10];
+    StayPointCommandCallback commandStay;
+} StayPointTrickyInterface;
 
-STATIC_ASSERT(offsetof(StayPointSetup, base) == 0x0);
-STATIC_ASSERT(offsetof(StayPointSetup, activeGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(StayPointSetup, requiredGameBit) == 0x20);
-STATIC_ASSERT(sizeof(StayPointSetup) == 0x24);
-
-/* StayPoint_init: object flag set on spawn. */
-#define STAYPOINT_OBJECT_FLAG 0x4000
-
-#define STAYPOINT_HITBOX_IN_RANGE 0x4
+STATIC_ASSERT(offsetof(StayPointTrickyInterface, commandStay) == 0x28);
 
 /* hit-volume priority when a cMenu item is / isn't selected. */
 #define STAYPOINT_PRIORITY_MENU 0x10
 
 extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
 
-void StayPoint_update(int obj)
+void StayPoint_update(GameObject* obj)
 {
-    StayPointSetup* setup;
+    StayPointPlacement* placement;
     GameObject* tricky;
     int isCurrentStayPoint;
 
-    setup = *(StayPointSetup**)&((GameObject*)obj)->anim.placementData;
+    placement = (StayPointPlacement*)obj->anim.placementData;
     tricky = getTrickyObject();
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    *(u8*)&obj->anim.resetHitboxMode =
+        (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     if (tricky != NULL)
     {
-        isCurrentStayPoint = (obj - (int)fn_80138F84(tricky) == 0);
-        if (isCurrentStayPoint == 0 && setup->activeGameBit != -1)
+        isCurrentStayPoint = ((int)obj - (int)fn_80138F84(tricky) == 0);
+        if (isCurrentStayPoint == 0 && placement->activeGameBit != -1)
         {
-            mainSetBits(setup->activeGameBit, 0);
+            mainSetBits(placement->activeGameBit, 0);
         }
-        if (setup->requiredGameBit == -1 || mainGetBit(setup->requiredGameBit) != 0)
+        if (placement->requiredGameBit == -1 || mainGetBit(placement->requiredGameBit) != 0)
         {
             if (isCurrentStayPoint != 0 &&
-                vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((int)tricky + 0x18)) < lbl_803E38A8)
+                vec3f_distanceSquared(&obj->anim.worldPosX, &tricky->anim.worldPosX) < lbl_803E38A8)
             {
-                if (setup->activeGameBit != -1)
+                if (placement->activeGameBit != -1)
                 {
-                    mainSetBits(setup->activeGameBit, 1);
+                    mainSetBits(placement->activeGameBit, 1);
                 }
                 return;
             }
             if (cMenuGetSelectedItem() == -1)
             {
-                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = 0;
+                obj->anim.modelInstance->hitVolumes[0].priority = 0;
             }
             else
             {
-                ((GameObject*)obj)->anim.modelInstance->hitVolumes[0].priority = STAYPOINT_PRIORITY_MENU;
+                obj->anim.modelInstance->hitVolumes[0].priority = STAYPOINT_PRIORITY_MENU;
             }
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-            if (((((ObjAnimComponent*)obj)->modelInstance->flags & 1) != 0) &&
-                ((ObjAnimComponent*)obj)->hitVolumeTransforms != NULL)
+            *(u8*)&obj->anim.resetHitboxMode =
+                (u8)(*(u8*)&obj->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+            if (((obj->anim.modelInstance->flags & 1) != 0) && obj->anim.hitVolumeTransforms != NULL)
             {
-                objRenderFn_80041018((GameObject*)obj);
+                objRenderFn_80041018(obj);
             }
-            if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & STAYPOINT_HITBOX_IN_RANGE) != 0)
+            if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                ((void (*)(void*, int, int, int))(*(int*)(*(int*)(*(int*)((int)tricky + 0x68)) + 0x28)))(tricky, obj, 1,
-                                                                                                         3);
+                ((StayPointTrickyInterface*)*tricky->anim.dll)->commandStay(tricky, obj, 1, 3);
             }
         }
     }
 }
 
-void StayPoint_init(u16* obj)
+void StayPoint_init(GameObject* obj)
 {
     u32 flags;
-    flags = ((GameObject*)obj)->objectFlags;
-    flags |= STAYPOINT_OBJECT_FLAG;
-    ((GameObject*)obj)->objectFlags = flags;
+    flags = obj->objectFlags;
+    flags |= OBJECT_OBJFLAG_HIDDEN;
+    obj->objectFlags = flags;
 }
 
 ObjectDescriptor gStayPointObjDescriptor = {

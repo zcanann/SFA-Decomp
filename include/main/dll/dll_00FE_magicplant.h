@@ -116,8 +116,6 @@ void FUN_8017fbe0(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
 void FUN_8017fd40(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9, u32 param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
                   u32 param_15, u32 param_16);
-void StayPoint_update(int obj);
-void StayPoint_init(u16* obj);
 int duster_getExtraSize(void);
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect(GameObject* obj);
@@ -129,7 +127,6 @@ void FUN_80181b50(u64 param_1, double param_2, double param_3, u64 param_4, u64 
                   u64 param_8, u32 param_9, u32 param_10, int param_11);
 extern ObjectDescriptor gMagicPlantObjDescriptor;
 extern ObjectDescriptor gTrickyGuardObjDescriptor;
-extern ObjectDescriptor gStayPointObjDescriptor;
 extern ObjectDescriptor gDusterObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00FE_MAGICPLANT_H_ */
