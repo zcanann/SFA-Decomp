@@ -3767,10 +3767,10 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
     return lbl_803DCF60;
 }
 
-int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
+int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, int type)
 {
-    f32 d0[3];
-    f32 d1[3];
+    f32 displacement[3];
+    f32 horizontalNormal[3];
 
     if ((u8)type == 3)
     {
@@ -3779,26 +3779,22 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
         b[0] = c[0];
         b[1] = c[1];
         b[2] = c[2];
-        d0[0] = b[0] - a[0];
-        d0[1] = b[1] - a[1];
-        d0[2] = b[2] - a[2];
-        Vec3_Normalize(d0);
-        {
-            f32 fbd = b[1] * p[1];
-            f32 fad = a[1] * p[1];
-            fb = (fbd + b[0] * p[0] + b[2] * p[2] + p[3]) - y;
-            fa = (fad + a[0] * p[0] + a[2] * p[2] + p[3]) - y;
-        }
+        displacement[0] = b[0] - a[0];
+        displacement[1] = b[1] - a[1];
+        displacement[2] = b[2] - a[2];
+        Vec3_Normalize(displacement);
+        fb = (p[3] + (b[2] * p[2] + (b[0] * p[0] + b[1] * p[1]))) - y;
+        fa = (p[3] + (a[2] * p[2] + (a[0] * p[0] + a[1] * p[1]))) - y;
         if (fa != fb)
             scale = fa / (fa - fb);
         else
             scale = 0.0f;
-        d0[0] = b[0] - a[0];
-        d0[1] = b[1] - a[1];
-        d0[2] = b[2] - a[2];
-        b[0] = d0[0] * scale;
-        b[1] = d0[1] * scale;
-        b[2] = d0[2] * scale;
+        displacement[0] = b[0] - a[0];
+        displacement[1] = b[1] - a[1];
+        displacement[2] = b[2] - a[2];
+        b[0] = displacement[0] * scale;
+        b[1] = displacement[1] * scale;
+        b[2] = displacement[2] * scale;
         b[0] = b[0] + a[0];
         b[1] = b[1] + a[1];
         b[2] = b[2] + a[2];
@@ -3814,9 +3810,7 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
             case 8:
             case 0xa:
             {
-                f32 dotL = b[1] * p[1];
-                f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
-                y = y - dot;
+                y = y - (p[3] + (b[2] * p[2] + (b[0] * p[0] + b[1] * p[1])));
                 if (y > 0.0f)
                 {
                     f32 px = p[0] * p[0];
@@ -3824,27 +3818,25 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                     f32 d = mathCosfHighPrecision(fn_802925C4(p[1], sqrtf(px + pz)));
                     if (0.0f != d)
                         y = y / d;
-                    d1[0] = p[0];
-                    d1[1] = 0.0f;
-                    d1[2] = p[2];
-                    Vec3_Normalize(d1);
-                    b[0] = y * d1[0] + b[0];
-                    b[2] = y * d1[2] + b[2];
+                    horizontalNormal[0] = p[0];
+                    horizontalNormal[1] = 0.0f;
+                    horizontalNormal[2] = p[2];
+                    Vec3_Normalize(horizontalNormal);
+                    b[0] = y * horizontalNormal[0] + b[0];
+                    b[2] = y * horizontalNormal[2] + b[2];
                 }
                 break;
             }
             default:
             {
-                f32 dot, t, dotL;
-                b[0] = b[0] - f1p * p[0];
-                b[1] = b[1] - f1p * p[1];
-                b[2] = b[2] - f1p * p[2];
-                dotL = b[1] * p[1];
-                dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
-                t = y - dot;
-                b[0] = t * p[0] + b[0];
-                b[1] = t * p[1] + b[1];
-                b[2] = t * p[2] + b[2];
+                f32 t;
+                b[0] -= f1p * p[0];
+                b[1] -= f1p * p[1];
+                b[2] -= f1p * p[2];
+                t = y - (p[3] + (b[2] * p[2] + (b[0] * p[0] + b[1] * p[1])));
+                b[0] += t * p[0];
+                b[1] += t * p[1];
+                b[2] += t * p[2];
                 break;
             }
             }
@@ -3856,26 +3848,21 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
             case 5:
             case 8:
             {
-                f32 dot, t, dotL;
-                b[0] = b[0] - f1p * p[0];
-                b[1] = b[1] - f1p * p[1];
-                b[2] = b[2] - f1p * p[2];
-                dotL = b[1] * p[1];
-                dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
-                t = y - dot;
-                b[0] = t * p[0] + b[0];
-                b[1] = t * p[1] + b[1];
-                b[2] = t * p[2] + b[2];
-                return 1;
+                f32 t;
+                b[0] -= f1p * p[0];
+                b[1] -= f1p * p[1];
+                b[2] -= f1p * p[2];
+                t = y - (p[3] + (b[2] * p[2] + (b[0] * p[0] + b[1] * p[1])));
+                b[0] += t * p[0];
+                b[1] += t * p[1];
+                b[2] += t * p[2];
+                break;
             }
             case 9:
             case 0xa:
-                break;
-            }
+            default:
             {
-                f32 dotL = b[1] * p[1];
-                f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
-                y = y - dot;
+                y = y - (p[3] + (b[2] * p[2] + (b[0] * p[0] + b[1] * p[1])));
                 if (y > 0.0f)
                 {
                     f32 px = p[0] * p[0];
@@ -3884,6 +3871,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
                     d = y / d;
                     b[1] = b[1] + d;
                 }
+                break;
+            }
             }
         }
     }
