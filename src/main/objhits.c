@@ -1944,8 +1944,8 @@ void ObjHits_DetectObjectPair(int objA, int objB)
     if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0)
     {
         sumRadius = radiusB + radiusA;
-        sy = ((GameObject*)objA)->anim.worldPosY - stateA->worldPosY;
         sx = ((GameObject*)objA)->anim.worldPosX - stateA->worldPosX;
+        sy = ((GameObject*)objA)->anim.worldPosY - stateA->worldPosY;
         sz = ((GameObject*)objA)->anim.worldPosZ - stateA->worldPosZ;
         if (vertical != 0)
         {
