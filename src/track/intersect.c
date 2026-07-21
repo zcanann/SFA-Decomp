@@ -4538,7 +4538,7 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 
     getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 0);
-    fn_8006C4F8((u32*)&handle2);
+    getNewShadowSnowFlashTexture((u32*)&handle2);
     selectTexture((Texture*)handle2, 1);
 
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);

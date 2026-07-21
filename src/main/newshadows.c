@@ -44,7 +44,7 @@ u32 gNewShadowSmallDiskTexture;
 u32 gNewShadowBumpTexture;
 u32 lbl_803DCFCC;
 Texture* lbl_803DCFC8;
-u32 lbl_803DCFC4;
+u32 gNewShadowSnowFlashTexture;
 Texture* gNewShadowRadialTexture;
 Texture* gNewShadowDistortionTexture;
 Texture* gNewShadowHeavyFogTexture;
@@ -132,7 +132,7 @@ extern Texture* gNewShadowReflectionTexture;
 extern u32 lbl_803DCF94;
 extern u32 gNewShadowInverseRampTexture;
 extern u32 gNewShadowFalloffTexture;
-extern u32 lbl_803DCFC4;
+extern u32 gNewShadowSnowFlashTexture;
 extern Texture* lbl_803DCFC8;
 extern Texture* gNewShadowRingTexture;
 extern Texture* gNewShadowLightningTexture;
@@ -1129,9 +1129,9 @@ void getNewShadowNoiseTextureFrames(Texture*** tableOut, int* frameCountOut)
     *frameCountOut = 0x10;
 }
 
-void fn_8006C4F8(u32* p)
+void getNewShadowSnowFlashTexture(u32* p)
 {
-    *p = lbl_803DCFC4;
+    *p = gNewShadowSnowFlashTexture;
 }
 void fn_8006C504(Texture** p)
 {
@@ -1775,7 +1775,7 @@ void allocLotsOfTextures(void)
 
     lbl_803DCFCC = (u32)textureLoadAsset(0x5b0);
     lbl_803DCFC8 = textureLoadAsset(0x600);
-    lbl_803DCFC4 = (u32)textureLoadAsset(0xc18);
+    gNewShadowSnowFlashTexture = (u32)textureLoadAsset(0xc18);
 
     gNewShadowRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
     fillRampTexture();
