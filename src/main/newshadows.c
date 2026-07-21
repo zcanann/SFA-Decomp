@@ -271,7 +271,7 @@ typedef union ShadowBlurRow
     u32 words[38];
 } ShadowBlurRow;
 
-void fn_8006A028(u8* texData, int size, int window, u32 fill)
+void boxBlurTexture(u8* texData, int size, int window, u32 fill)
 {
     ShadowBlurOutput blurred;
     ShadowBlurRow row;
@@ -504,7 +504,8 @@ void shadowRenderFn_8006b558(int* obj)
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
         GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), GX_TRUE);
-        fn_8006A028((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80, 0x10, 0);
+        boxBlurTexture((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80,
+                       0x10, 0);
         *(f32*)obj[0x64 / 4] = lbl_803DED2C / sc;
     }
     else
