@@ -14,8 +14,10 @@ typedef struct GlyphEntry {
     u8 pad[0xa];
 } GlyphEntry;
 
+typedef struct MeasGlyph MeasGlyph;
+
 typedef struct GameTextFont {
-    void* glyphs;
+    MeasGlyph* glyphs;
     GlyphEntry* entries;
     int glyphCount;
     int count;
@@ -61,17 +63,19 @@ typedef struct FontSizeEntry {
     u8 padc[4];
 } FontSizeEntry;
 
-typedef struct MeasGlyph {
+struct MeasGlyph {
     u32 key;
-    u8 pad4[4];
-    s8 f8;
-    s8 f9;
-    u8 padA[2];
-    u8 fC;
-    u8 padD;
+    u16 u;
+    u16 v;
+    s8 offsetX;
+    s8 advanceX;
+    s8 offsetY;
+    s8 advanceY;
+    u8 width;
+    u8 height;
     u8 lang;
-    u8 padF;
-} MeasGlyph;
+    u8 page;
+};
 
 typedef struct SpecialGlyph {
     u32 key;

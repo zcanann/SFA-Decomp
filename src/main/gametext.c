@@ -805,23 +805,24 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int langIdx;
     FontSizeEntry* sizeEntry;
     int lineOff;
-    int* bp;
+    int* currentBoundary;
     int lineCount;
-    char** buffer;
+    char** lines;
     int breakPos;
     int haveSpace;
     int charPos;
     char* src;
+    u8* encodedText;
     int lineIdx;
     char* dst;
     int lineStarts[32];
     int params[8];
     f32 penX;
     int charLen;
-    int i;
-    int charLen2;
+    int index;
+    int previousCharLen;
     u32 ch;
-    char* mp;
+    char* clearPos;
     lineCount = 0;
     lineOff = 0;
     cursor = 0;
@@ -830,14 +831,14 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     penX = lbl_803DE704;
     if (gameTextCharset == 2)
     {
-        i = 6;
+        index = 6;
     }
     else
     {
-        i = sLanguageNameTable[curLanguage].sizeIdx;
+        index = sLanguageNameTable[curLanguage].sizeIdx;
     }
-    langIdx = i;
-    sizeEntry = &lbl_802C8680[i];
+    langIdx = index;
+    sizeEntry = &lbl_802C8680[index];
 
     *outCount = 0;
     if (outLineH != NULL)
@@ -848,6 +849,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     {
         return 0;
     }
+    encodedText = (u8*)str;
     if (lbl_803DC9AA != 0 || lbl_803DC9A8 != 0)
     {
         width = (f32)(u32)lbl_803DC9AA;
@@ -855,9 +857,9 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 
     lineStarts[0] = 0;
     boundary = lineStarts;
-    bp = boundary;
+    currentBoundary = boundary;
 
-    while ((ch = utf8GetNextChar((u8*)(str + cursor), &charLen)) != 0)
+    while ((ch = utf8GetNextChar(encodedText + cursor, &charLen)) != 0)
     {
         cursor += charLen;
         if (ch == 0x20)
@@ -867,74 +869,76 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         if (ch >= 0xe000 && ch <= 0xf8ff)
         {
-            int n;
-            int k;
-            SpecialGlyph* sp = lbl_802C86F0;
-            int sel;
-            for (k = 46; k-- != 0 || (n = 0, 0);)
+            int parameterCount;
+            int remainingSpecials;
+            SpecialGlyph* specialGlyph = lbl_802C86F0;
+            int updatesLineHeight;
+            for (remainingSpecials = 46;
+                 remainingSpecials-- != 0 || (parameterCount = 0, 0);)
             {
-                if (sp->key == ch)
+                if (specialGlyph->key == ch)
                 {
-                    n = sp->val;
+                    parameterCount = specialGlyph->val;
                     break;
                 }
-                sp++;
+                specialGlyph++;
             }
-            for (i = 0; i < n; i++)
+            for (index = 0; index < parameterCount; index++)
             {
-                int b0 = ((u8*)str)[cursor++];
-                int b1 = ((u8*)str)[cursor++];
-                params[i] = (b0 << 8) | b1;
+                int parameterHigh = encodedText[cursor++];
+                int parameterLow = encodedText[cursor++];
+                params[index] = (parameterHigh << 8) | parameterLow;
             }
-            sel = 1;
+            updatesLineHeight = 1;
             switch (ch)
             {
             case TEXT_CTRL_SCALE:
-                height = (f32)(int)params[0] * lbl_803DE708;
+                height = (f32)params[0] * lbl_803DE708;
                 break;
             case TEXT_CTRL_FONT:
                 langIdx = params[0];
                 sizeEntry = &lbl_802C8680[langIdx];
                 break;
             default:
-                sel = 0;
+                updatesLineHeight = 0;
             }
-            if (sel != 0 && langIdx != 5)
+            if (updatesLineHeight != 0 && langIdx != 5)
             {
-                f32 lh = (f32)(u32)sizeEntry->lineHeight * height;
-                if (outLineH != NULL && lh > *outLineH)
+                f32 lineHeight = (f32)(u32)sizeEntry->lineHeight * height;
+                if (outLineH != NULL && lineHeight > *outLineH)
                 {
-                    *outLineH = lh;
+                    *outLineH = lineHeight;
                 }
             }
         }
         else
         {
-            MeasGlyph* p = gameTextFonts->glyphs;
-            MeasGlyph* g;
-            int cnt;
-            for (cnt = gameTextFonts->glyphCount; cnt-- != 0 || (g = NULL, 0); p++)
+            MeasGlyph* glyphEntry = gameTextFonts->glyphs;
+            MeasGlyph* glyph;
+            int glyphsRemaining;
+            for (glyphsRemaining = gameTextFonts->glyphCount;
+                 glyphsRemaining-- != 0 || (glyph = NULL, 0); glyphEntry++)
             {
-                if (p->key == ch && p->lang == langIdx)
+                if (glyphEntry->key == ch && glyphEntry->lang == langIdx)
                 {
-                    g = p;
+                    glyph = glyphEntry;
                     break;
                 }
             }
-            if (g != NULL)
+            if (glyph != NULL)
             {
-                int advance = (g->fC + g->f8) + g->f9;
-                penX += height * (f32)(int)advance;
+                int glyphAdvance = (glyph->width + glyph->offsetX) + glyph->advanceX;
+                penX += height * (f32)glyphAdvance;
                 if (penX >= width)
                 {
                     if (haveSpace == 0)
                     {
                         breakPos = cursor - charLen;
                     }
-                    bp++;
+                    currentBoundary++;
                     lineCount++;
                     *(int*)((char*)lineStarts + (lineOff += 4)) = breakPos;
-                    if (lineCount > 1 && bp[0] == bp[-1])
+                    if (lineCount > 1 && currentBoundary[0] == currentBoundary[-1])
                     {
                         return 0;
                     }
@@ -960,24 +964,24 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     charLen = cursor + (lineCount + lineOff);
     if (outLineH != NULL)
     {
-        buffer = mmAllocateFromFBMemoryStore((int)lbl_803DB378, charLen);
+        lines = mmAllocateFromFBMemoryStore((int)lbl_803DB378, charLen);
     }
     else
     {
-        buffer = mmAlloc(charLen, 0, 0);
+        lines = mmAlloc(charLen, 0, 0);
     }
-    if (buffer == NULL)
+    if (lines == NULL)
     {
         return 0;
     }
-    mp = (char*)buffer;
-    i = charLen;
-    while (i-- != 0)
+    clearPos = (char*)lines;
+    index = charLen;
+    while (index-- != 0)
     {
-        *mp++ = 0;
+        *clearPos++ = 0;
     }
 
-    dst = buffer[0] = (char*)buffer + lineOff;
+    dst = lines[0] = (char*)lines + lineOff;
     lineIdx = 0;
     charPos = 0;
     src = str;
@@ -986,33 +990,33 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         *dst++ = *src;
         if (charPos == boundary[1])
         {
-            char* q = --dst;
+            char* lineEnd = --dst;
             do
             {
-                int k = 6;
+                int lookback = 6;
                 do
                 {
-                    ch = utf8GetNextChar((u8*)(dst - k), &charLen2);
-                    if (k != charLen2)
+                    ch = utf8GetNextChar((u8*)(dst - lookback), &previousCharLen);
+                    if (lookback != previousCharLen)
                     {
                         continue;
                     }
                     if (isSpace(ch))
                     {
-                        int j = charLen2;
-                        while (j-- != 0)
+                        int bytesToClear = previousCharLen;
+                        while (bytesToClear-- != 0)
                         {
                             *--dst = 0;
                         }
                         break;
                     }
-                    q[1] = q[0];
-                    q[0] = 0;
-                    dst = q + 1;
-                    buffer[lineIdx + 1] = dst++;
+                    lineEnd[1] = lineEnd[0];
+                    lineEnd[0] = 0;
+                    dst = lineEnd + 1;
+                    lines[lineIdx + 1] = dst++;
                     break;
-                } while (--k > 0);
-            } while (dst <= q);
+                } while (--lookback > 0);
+            } while (dst <= lineEnd);
             boundary++;
             lineIdx++;
         }
@@ -1020,7 +1024,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         src++;
     }
     *dst = 0;
-    return buffer;
+    return lines;
 }
 
 void* gameTextGetBox(int box)
