@@ -3,6 +3,10 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+#include "main/obj_placement.h"
+
+#define ARWSPEEDSTR_FLAG_POSITION_INITIALIZED 0x1
 
 typedef struct ARWSpeedStrState
 {
@@ -13,7 +17,7 @@ typedef struct ARWSpeedStrState
     f32 spreadY;
     f32 viewZ;
     u8 flags;
-    u8 pad19[3];
+    u8 reserved19[3];
 } ARWSpeedStrState;
 
 typedef struct ARWSpeedStrVelocity
@@ -40,13 +44,15 @@ int ARWSpeedStr_getExtraSize(void);
 int ARWSpeedStr_getObjectTypeId(void);
 void ARWSpeedStr_free(void);
 void ARWSpeedStr_hitDetect(void);
-void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
-void ARWSpeedStr_init(GameObject* obj, int setup);
+void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void ARWSpeedStr_init(GameObject* obj, ObjPlacement* placement);
 void ARWSpeedStr_update(GameObject* obj);
 void ARWSpeedStr_release(void);
 void ARWSpeedStr_initialise(void);
 
 void dll_2A3_setSpeed(GameObject* obj, int speed);
 void dll_2A3_setVelocity(GameObject* obj, ARWSpeedStrVelocity* velocity);
+
+extern ObjectDescriptor gARWSpeedStrObjDescriptor;
 
 #endif

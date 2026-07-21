@@ -26,7 +26,7 @@ static f32 ARWSpeedStr_randomSpread(f32 spread)
 
 int ARWSpeedStr_getExtraSize(void)
 {
-    return 0x1c;
+    return sizeof(ARWSpeedStrState);
 }
 
 int ARWSpeedStr_getObjectTypeId(void)
@@ -38,7 +38,7 @@ void ARWSpeedStr_free(void)
 {
 }
 
-void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
+void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
@@ -49,17 +49,17 @@ void ARWSpeedStr_hitDetect(void)
 
 void ARWSpeedStr_update(GameObject* obj)
 {
-    ARWSpeedStrState* state = (obj)->extra;
+    ARWSpeedStrState* state = obj->extra;
     if (state->flags == 0)
     {
-        f32 camOffset[3];
-        camOffset[0] = ARWSpeedStr_randomSpread(state->spreadX);
-        camOffset[1] = ARWSpeedStr_randomSpread(state->spreadY);
-        camOffset[2] = state->viewZ;
-        PSMTXMultVec((MtxP)Camera_GetInverseViewMatrix(), (const Vec*)&camOffset[0], (Vec*)((char*)obj + 12));
-        (obj)->anim.localPosX += playerMapOffsetX;
-        (obj)->anim.localPosZ += playerMapOffsetZ;
-        state->flags = (state->flags | 1) & 0xff;
+        Vec cameraOffset;
+        cameraOffset.x = ARWSpeedStr_randomSpread(state->spreadX);
+        cameraOffset.y = ARWSpeedStr_randomSpread(state->spreadY);
+        cameraOffset.z = state->viewZ;
+        PSMTXMultVec((MtxP)Camera_GetInverseViewMatrix(), &cameraOffset, (Vec*)&obj->anim.localPosX);
+        obj->anim.localPosX += playerMapOffsetX;
+        obj->anim.localPosZ += playerMapOffsetZ;
+        state->flags = (state->flags | ARWSPEEDSTR_FLAG_POSITION_INITIALIZED) & 0xff;
         state->alpha = 0.0f;
     }
     {
@@ -79,15 +79,15 @@ void ARWSpeedStr_update(GameObject* obj)
         {
             return;
         }
-        objMove((GameObject*)obj, zero, zero, state->speed * timeDelta);
+        objMove(obj, zero, zero, state->speed * timeDelta);
         state->alpha = 2.0f * timeDelta + state->alpha;
         if (state->alpha > 140.0f)
             state->alpha = 140.0f;
-        (obj)->anim.alpha = state->alpha;
+        obj->anim.alpha = state->alpha;
     }
 }
 
-void ARWSpeedStr_init(GameObject* obj, int setup)
+void ARWSpeedStr_init(GameObject* obj, ObjPlacement* placement)
 {
     obj->anim.alpha = 0;
 }
