@@ -28,7 +28,7 @@
 #include "main/obj_list.h"
 #include "main/dll/dll_0054_dll54.h"
 
-CameraMode54State* gCameraModeNpcSpeakState;
+CameraMode54State* gCameraMode54State;
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define DLL54_CAMMODE_DEFAULT 0x42
@@ -44,8 +44,8 @@ void dll_54_func06_nop(void)
 
 void dll_54_func05(void)
 {
-    mm_free((void*)gCameraModeNpcSpeakState);
-    gCameraModeNpcSpeakState = NULL;
+    mm_free((void*)gCameraMode54State);
+    gCameraMode54State = NULL;
 }
 
 void dll_54_update(u8* obj)
@@ -64,13 +64,13 @@ void dll_54_update(u8* obj)
     s16 cur;
     s16 angleDelta;
 
-    if (gCameraModeNpcSpeakState->exitRequested != 0)
+    if (gCameraMode54State->exitRequested != 0)
     {
         (*gCameraInterface)->setMode(DLL54_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     }
     else
     {
-        if (gCameraModeNpcSpeakState->lookAtObj == NULL)
+        if (gCameraMode54State->lookAtObj == NULL)
         {
             int* arr = (int*)ObjList_GetObjects(&i, &count);
             for (; i < count; i++)
@@ -78,55 +78,55 @@ void dll_54_update(u8* obj)
                 GameObject* o = (GameObject*)arr[i];
                 if (o->anim.seqId == DLL54_LOOKAT_SEQID)
                 {
-                    gCameraModeNpcSpeakState->lookAtObj = o;
+                    gCameraMode54State->lookAtObj = o;
                 }
                 else if (o->anim.seqId == DLL54_ORIGIN_SEQID)
                 {
-                    gCameraModeNpcSpeakState->originObj = o;
+                    gCameraMode54State->originObj = o;
                 }
             }
         }
-        if (gCameraModeNpcSpeakState->playerObj == NULL)
+        if (gCameraMode54State->playerObj == NULL)
         {
-            gCameraModeNpcSpeakState->playerObj = (GameObject*)Obj_GetPlayerObject();
+            gCameraMode54State->playerObj = (GameObject*)Obj_GetPlayerObject();
         }
         {
-            GameObject* a = gCameraModeNpcSpeakState->lookAtObj;
-            dx = a->anim.worldPosX - gCameraModeNpcSpeakState->originObj->anim.worldPosX;
-            dy = a->anim.worldPosY - gCameraModeNpcSpeakState->originObj->anim.worldPosY;
-            dz = a->anim.worldPosZ - gCameraModeNpcSpeakState->originObj->anim.worldPosZ;
+            GameObject* a = gCameraMode54State->lookAtObj;
+            dx = a->anim.worldPosX - gCameraMode54State->originObj->anim.worldPosX;
+            dy = a->anim.worldPosY - gCameraMode54State->originObj->anim.worldPosY;
+            dz = a->anim.worldPosZ - gCameraMode54State->originObj->anim.worldPosZ;
         }
         zz = dz * dz;
         xx = dx * dx;
         dist = sqrtf(zz + (dy * dy + xx));
         nx = dx / dist;
         nz = dz / dist;
-        fx = -(140.0f * nx - gCameraModeNpcSpeakState->originObj->anim.worldPosX) -
-             gCameraModeNpcSpeakState->playerObj->anim.worldPosX;
-        fz = -(140.0f * nz - gCameraModeNpcSpeakState->originObj->anim.worldPosZ) -
-             gCameraModeNpcSpeakState->playerObj->anim.worldPosZ;
+        fx = -(140.0f * nx - gCameraMode54State->originObj->anim.worldPosX) -
+             gCameraMode54State->playerObj->anim.worldPosX;
+        fz = -(140.0f * nz - gCameraMode54State->originObj->anim.worldPosZ) -
+             gCameraMode54State->playerObj->anim.worldPosZ;
         d2 = sqrtf(fx * fx + fz * fz);
         t = (200.0f - d2) / 200.0f;
         camera->fov = 45.0f + 70.0f * t;
         h = -30.0f + 350.0f * t;
-        camera->anim.worldPosX = -(nx * h - gCameraModeNpcSpeakState->originObj->anim.worldPosX);
-        camera->anim.worldPosY = (20.0f + gCameraModeNpcSpeakState->originObj->anim.worldPosY) + 60.0f * t;
-        camera->anim.worldPosZ = -(nz * h - gCameraModeNpcSpeakState->originObj->anim.worldPosZ);
+        camera->anim.worldPosX = -(nx * h - gCameraMode54State->originObj->anim.worldPosX);
+        camera->anim.worldPosY = (20.0f + gCameraMode54State->originObj->anim.worldPosY) + 60.0f * t;
+        camera->anim.worldPosZ = -(nz * h - gCameraMode54State->originObj->anim.worldPosZ);
         camera->anim.rotX = -getAngle(dx, dz);
         camera->anim.rotY = -getAngle(-(100.0f * (dist / 400.0f) - dy), sqrtf(xx + zz));
 
-        if (gCameraModeNpcSpeakState->transitionDone == 0)
+        if (gCameraMode54State->transitionDone == 0)
         {
-            t2 = gCameraModeNpcSpeakState->transitionTimer / 60.0f;
+            t2 = gCameraMode54State->transitionTimer / 60.0f;
             camera->anim.worldPosX =
-                t2 * (gCameraModeNpcSpeakState->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
+                t2 * (gCameraMode54State->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
             camera->anim.worldPosY =
-                t2 * (gCameraModeNpcSpeakState->startY - camera->anim.worldPosY) + camera->anim.worldPosY;
+                t2 * (gCameraMode54State->startY - camera->anim.worldPosY) + camera->anim.worldPosY;
             camera->anim.worldPosZ =
-                t2 * (gCameraModeNpcSpeakState->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
+                t2 * (gCameraMode54State->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
 
             cur = camera->anim.rotX;
-            angleDelta = (s16)(gCameraModeNpcSpeakState->startYaw - (u16)cur);
+            angleDelta = (s16)(gCameraMode54State->startYaw - (u16)cur);
             if (angleDelta > 0x8000)
             {
                 angleDelta = (s16)(angleDelta - 0xffff);
@@ -138,16 +138,16 @@ void dll_54_update(u8* obj)
             camera->anim.rotX = angleDelta * t2 + cur;
 
             cur = camera->anim.rotY;
-            angleDelta = (s16)(gCameraModeNpcSpeakState->startPitch - (u16)cur);
+            angleDelta = (s16)(gCameraMode54State->startPitch - (u16)cur);
             angleDelta = (angleDelta > 0x8000) ? (s16)(angleDelta - 0xffff) : angleDelta;
             angleDelta = (angleDelta < -0x8000) ? (s16)(angleDelta + 0xffff) : angleDelta;
             camera->anim.rotY = angleDelta * t2 + cur;
 
-            gCameraModeNpcSpeakState->transitionTimer -= timeDelta;
-            if (gCameraModeNpcSpeakState->transitionTimer < 0.0f)
+            gCameraMode54State->transitionTimer -= timeDelta;
+            if (gCameraMode54State->transitionTimer < 0.0f)
             {
-                gCameraModeNpcSpeakState->transitionDone = 1;
-                gCameraModeNpcSpeakState->transitionTimer = 0.0f;
+                gCameraMode54State->transitionDone = 1;
+                gCameraMode54State->transitionTimer = 0.0f;
             }
         }
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
@@ -161,13 +161,13 @@ void dll_54_init(int* cameraObj, int unused, int* sourceObj)
     CameraObject* camera = (CameraObject*)cameraObj;
     CameraObject* source = (CameraObject*)sourceObj;
 
-    if (gCameraModeNpcSpeakState == NULL)
+    if (gCameraMode54State == NULL)
     {
-        gCameraModeNpcSpeakState = (CameraMode54State*)mmAlloc(sizeof(CameraMode54State), 15, 0);
+        gCameraMode54State = (CameraMode54State*)mmAlloc(sizeof(CameraMode54State), 15, 0);
     }
-    memset(gCameraModeNpcSpeakState, 0, sizeof(CameraMode54State));
-    gCameraModeNpcSpeakState->transitionTimer = 60.0f;
-    gCameraModeNpcSpeakState->transitionDone = 0;
+    memset(gCameraMode54State, 0, sizeof(CameraMode54State));
+    gCameraMode54State->transitionTimer = 60.0f;
+    gCameraMode54State->transitionDone = 0;
     if (sourceObj != NULL)
     {
         camera->anim.localPosX = source->anim.worldPosX;
@@ -178,12 +178,12 @@ void dll_54_init(int* cameraObj, int unused, int* sourceObj)
         camera->anim.rotZ = source->anim.rotZ;
         camera->fov = source->fov;
     }
-    gCameraModeNpcSpeakState->startX = camera->anim.worldPosX;
-    gCameraModeNpcSpeakState->startY = camera->anim.worldPosY;
-    gCameraModeNpcSpeakState->startZ = camera->anim.worldPosZ;
-    gCameraModeNpcSpeakState->startYaw = camera->anim.rotX;
-    gCameraModeNpcSpeakState->startPitch = camera->anim.rotY;
-    gCameraModeNpcSpeakState->startRoll = camera->anim.rotZ;
+    gCameraMode54State->startX = camera->anim.worldPosX;
+    gCameraMode54State->startY = camera->anim.worldPosY;
+    gCameraMode54State->startZ = camera->anim.worldPosZ;
+    gCameraMode54State->startYaw = camera->anim.rotX;
+    gCameraMode54State->startPitch = camera->anim.rotY;
+    gCameraMode54State->startRoll = camera->anim.rotZ;
 }
 
 void dll_54_release_nop(void)
