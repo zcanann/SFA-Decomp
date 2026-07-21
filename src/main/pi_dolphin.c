@@ -988,8 +988,8 @@ void* mapLoadDataFile(int mapId, int fileId)
     u32 slotPtrAddr;  /* &tbl->ptrs[slot] + 0x6A28 (ha-sum biased base) */
     u32 slotSizeAddr; /* &tbl->sizes[slot] + 0x6D68 */
     int ok;
-    void* tmp;
-    int cls[1];
+    void* loadedBuffer;
+    int adjacentClass[1];
     char buf[56];
 
     if (lbl_803DCC92 != 0)
@@ -1017,17 +1017,17 @@ void* mapLoadDataFile(int mapId, int fileId)
             lbl_803DCC92 = 1;
             if (o25 == adj)
             {
-                cls[0] = 0;
+                adjacentClass[0] = 0;
             }
             else if (o47 == adj)
             {
-                cls[0] = 1;
+                adjacentClass[0] = 1;
             }
             else
             {
-                cls[0] = -1;
+                adjacentClass[0] = -1;
             }
-            if (cls[0] == -1)
+            if (adjacentClass[0] == -1)
             {
                 mapLoadDataFile(adj, fileId);
             }
@@ -1075,7 +1075,7 @@ void* mapLoadDataFile(int mapId, int fileId)
             slotPtrAddr = (slot << 2) + ((u32)&tbl->ptrs[0] + 0x6A28);
             if (MLDF_SP_PTR(x) != 0)
             {
-                mm_free((void*)MLDF_SP_PTR(x));
+                mm_free(MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(mapId));
@@ -1095,9 +1095,9 @@ void* mapLoadDataFile(int mapId, int fileId)
                 else
                 {
                     MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
-                    DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                    tmp = MLDF_SP_PTR(x);
-                    if (tmp == 0)
+                    DCInvalidateRange(MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+                    loadedBuffer = MLDF_SP_PTR(x);
+                    if (loadedBuffer == 0)
                     {
                         if (MLDF_ID_RT(fileId) == -1)
                         {
@@ -1113,7 +1113,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         if (sync != 0)
                         {
-                            DVDRead(fi, tmp, MLDF_SP_SIZE(x), 0);
+                            DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
                             DVDClose(fi);
                             AtomicSList_Push(lbl_803DCC8C, fi);
                             if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
@@ -1131,7 +1131,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             {
                                 lbl_803DCC80 = lbl_803DCC80 | 0x40000000;
                             }
-                            DVDReadAsyncPrio(fi, tmp, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
+                            DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
                             MLDF_FINFO4(x) = fi;
                         }
                         MLDF_OWNER_RT(slot) = mapId;
@@ -1210,7 +1210,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         {
                             lbl_803DCC80 = lbl_803DCC80 | 0x80000000;
                         }
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
+                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
                         MLDF_FINFO4(x) = fi;
                     }
                     MLDF_OWNER_RT(slot) = mapId;
@@ -1298,7 +1298,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                     lbl_803DCC80 = lbl_803DCC80 | 0x4000000;
                 }
                 MLDF_FINFO4(x) = fi;
-                DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
+                DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
             }
             MLDF_OWNER_RT(slot) = mapId;
             return MLDF_SP_PTR(x);
@@ -1375,7 +1375,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             lbl_803DCC80 = lbl_803DCC80 | 0x8000000;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
+                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
                     return MLDF_SP_PTR(x);
@@ -1443,8 +1443,8 @@ void* mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
                 MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
                 DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                tmp = MLDF_SP_PTR(x);
-                if (tmp == 0)
+                loadedBuffer = MLDF_SP_PTR(x);
+                if (loadedBuffer == 0)
                 {
                     if (MLDF_ID_RT(fileId) == -1)
                     {
@@ -1460,7 +1460,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (sync != 0)
                     {
-                        DVDRead(fi, tmp, MLDF_SP_SIZE(x), 0);
+                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
                         DVDClose(fi);
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
@@ -1479,7 +1479,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             lbl_803DCC80 = lbl_803DCC80 | 0x40000;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, tmp, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
+                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
                     return MLDF_SP_PTR(x);
@@ -1568,7 +1568,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         lbl_803DCC80 = lbl_803DCC80 | 0x80000;
                     }
                     MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+                    DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
                 }
                 MLDF_OWNER_RT(slot) = mapId;
                 return MLDF_SP_PTR(x);
@@ -1629,8 +1629,8 @@ void* mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
                 MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
                 DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                tmp = MLDF_SP_PTR(x);
-                if (tmp == 0)
+                loadedBuffer = MLDF_SP_PTR(x);
+                if (loadedBuffer == 0)
                 {
                     if (MLDF_ID_RT(fileId) == -1)
                     {
@@ -1646,7 +1646,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (sync != 0)
                     {
-                        DVDRead(fi, tmp, MLDF_SP_SIZE(x), 0);
+                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
                         DVDClose(fi);
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
@@ -1667,7 +1667,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             lbl_803DCC80 = lbl_803DCC80 | 2;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, tmp, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
+                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
                     return MLDF_SP_PTR(x);
@@ -1739,7 +1739,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         lbl_803DCC80 = lbl_803DCC80 | 8;
                     }
                     MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
+                    DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
                 }
                 MLDF_OWNER_RT(slot) = mapId;
                 return MLDF_SP_PTR(x);
@@ -1799,8 +1799,8 @@ void* mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
                 MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
                 DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                tmp = MLDF_SP_PTR(x);
-                if (tmp == 0)
+                loadedBuffer = MLDF_SP_PTR(x);
+                if (loadedBuffer == 0)
                 {
                     if (MLDF_ID_RT(fileId) == -1)
                     {
@@ -1816,7 +1816,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (sync != 0)
                     {
-                        DVDRead(fi, tmp, MLDF_SP_SIZE(x), 0);
+                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
                         DVDClose(fi);
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
@@ -1835,7 +1835,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             lbl_803DCC80 = lbl_803DCC80 | 0x20;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, tmp, MLDF_SP_SIZE(x), 0, animReadCb, 2);
+                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
                     return MLDF_SP_PTR(x);
@@ -1907,7 +1907,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         lbl_803DCC80 = lbl_803DCC80 | 0x80;
                     }
                     MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
+                    DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
                 }
                 MLDF_OWNER_RT(slot) = mapId;
                 return MLDF_SP_PTR(x);
@@ -1967,8 +1967,8 @@ void* mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
                 MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
                 DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                tmp = MLDF_SP_PTR(x);
-                if (tmp == 0)
+                loadedBuffer = MLDF_SP_PTR(x);
+                if (loadedBuffer == 0)
                 {
                     if (MLDF_ID_RT(fileId) == -1)
                     {
@@ -1984,7 +1984,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (sync != 0)
                     {
-                        DVDRead(fi, tmp, MLDF_SP_SIZE(x), 0);
+                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
                         DVDClose(fi);
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
@@ -2003,7 +2003,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             lbl_803DCC80 = lbl_803DCC80 | 0x200;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, tmp, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
+                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
                     return MLDF_SP_PTR(x);
@@ -2070,13 +2070,13 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         lbl_803DCC80 = lbl_803DCC80 | 0x400;
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab1readCb, 2);
+                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab1readCb, 2);
                     }
                     else
                     {
                         lbl_803DCC80 = lbl_803DCC80 | 0x800;
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
+                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
                     }
                 }
                 MLDF_OWNER_RT(slot) = mapId;
@@ -2137,8 +2137,8 @@ void* mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
                 MLDF_SP_PTR(x) = mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
                 DCInvalidateRange((void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
-                tmp = MLDF_SP_PTR(x);
-                if (tmp == 0)
+                loadedBuffer = MLDF_SP_PTR(x);
+                if (loadedBuffer == 0)
                 {
                     if (MLDF_ID_RT(fileId) == -1)
                     {
@@ -2154,7 +2154,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                 {
                     if (sync != 0)
                     {
-                        DVDRead(fi, tmp, MLDF_SP_SIZE(x), 0);
+                        DVDRead(fi, loadedBuffer, MLDF_SP_SIZE(x), 0);
                         DVDClose(fi);
                         AtomicSList_Push(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
@@ -2173,7 +2173,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             lbl_803DCC80 = lbl_803DCC80 | 0x2000;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, tmp, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
+                        DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
                     return MLDF_SP_PTR(x);
@@ -2240,12 +2240,12 @@ void* mapLoadDataFile(int mapId, int fileId)
                     if (slot == 0x21)
                     {
                         lbl_803DCC80 = lbl_803DCC80 | 0x4000;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab1readCb, 2);
+                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab1readCb, 2);
                     }
                     else
                     {
                         lbl_803DCC80 = lbl_803DCC80 | 0x8000;
-                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
+                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
                     }
                 }
                 MLDF_OWNER_RT(slot) = mapId;
