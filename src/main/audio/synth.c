@@ -78,7 +78,6 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 #define SYNTH_FADE_DELAY_ACTION_CLEAR_MIX    3
 #define SYNTH_FADE_ACTION_DISABLED           4
 #define SYNTH_INVALID_LINK_ID                0xffffffff
-#define SYNTH_VOICE_SLOT_SIZE                0x404
 
 extern u8 gSynthDelayBucketCursor;
 extern u32 synthMasterFaderPauseActiveFlags;
@@ -1232,7 +1231,7 @@ void synthQueueVoiceInputUpdate(McmdVoiceState* voice)
 
 /*
  * Walk a voice linked-list, marking each entry's slot 9 as 0xff and
- * invoking the callback for entries whose voice's 0x11c field is 0.
+ * invoking the callback for entries whose voice has no active callback.
  */
 void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback callback)
 {
@@ -1242,7 +1241,7 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
         SynthDelayedNode* next = node->next;
         node->bucketIndex = 0xff;
         {
-            if (*(u8*)(node->voiceIndex * SYNTH_VOICE_SLOT_SIZE + (u8*)synthVoice + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0)
+            if (synthVoice[node->voiceIndex].callbackActive == 0)
             {
                 callback(node->voiceIndex);
             }
