@@ -3,71 +3,82 @@
 
 #include "main/game_object.h"
 #include "global.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 extern char sDrCreatorTimeFormat[];
+extern ObjectDescriptor gDrCreatorObjDescriptor;
 
-/* Obj_AllocObjectSetup(36,...) buffer composed in DR_Creator_update and
+typedef enum DrcreatorBehaviorMode
+{
+    DRCREATOR_BEHAVIOR_SEQUENCE_0 = 3,
+    DRCREATOR_BEHAVIOR_TIMED_PROJECTILES = 4,
+    DRCREATOR_BEHAVIOR_SEQUENCE_4 = 9
+} DrcreatorBehaviorMode;
+
+/* DRHomingMis setup buffer composed in DR_Creator_update and
  * DR_Creator_SeqFn. Head is the common ObjPlacement;
  * tail (0x18..0x23) is file-local. */
 typedef struct DrcreatorSetup
 {
     ObjPlacement base; /* 0x00..0x17 */
     u8 pad18;          /* 0x18 */
-    u8 unk19;          /* 0x19 */
+    u8 projectileVariant; /* 0x19: DRHomingMis setup variant */
     u8 pad1A[0x24 - 0x1A];
 } DrcreatorSetup;
 
-STATIC_ASSERT(offsetof(DrcreatorSetup, unk19) == 0x19);
+STATIC_ASSERT(offsetof(DrcreatorSetup, projectileVariant) == 0x19);
 STATIC_ASSERT(sizeof(DrcreatorSetup) == 0x24);
 
 typedef struct DrcreatorPlacement
 {
-    u8 pad0[0x18 - 0x0];
-    s16 gameBitId;     /* 0x18: copied into runtime gameBitId */
-    s16 behaviorMode;  /* 0x1A switch selector: 3/9 run-sequence, 4 spawn-projectiles */
+    ObjPlacement base;
+    s16 spawnGameBit;  /* 0x18: enables sequences/projectile spawning */
+    s16 behaviorMode;  /* 0x1A: DrcreatorBehaviorMode */
     s16 spawnInterval; /* 0x1C: copied into runtime spawnInterval */
-    s8 rotXByte;       /* 0x1E: <<8 seeds anim.rotX */
+    s8 rotX;           /* 0x1E: 1/256-turn initial pitch */
     s8 timerVariance;  /* 0x1F: copied into runtime timerVariance */
     u8 speedScale;     /* 0x20: projectile speed scalar, stored at runtime[0] */
 } DrcreatorPlacement;
 
+STATIC_ASSERT(offsetof(DrcreatorPlacement, spawnGameBit) == 0x18);
 STATIC_ASSERT(offsetof(DrcreatorPlacement, behaviorMode) == 0x1A);
 STATIC_ASSERT(offsetof(DrcreatorPlacement, speedScale) == 0x20);
-STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x22);
+STATIC_ASSERT(sizeof(DrcreatorPlacement) == 0x24);
 
-typedef struct DrcreatorSpawnProjectileCallbackState
+typedef struct DrcreatorStateFlags
 {
-    u8 pad0[0x4 - 0x0];
-    s16 spawnGameBit;
-    u8 pad6[0xA - 0x6];
-    s16 velocitySpread;
-    u8 padC[0x10 - 0xC];
-} DrcreatorSpawnProjectileCallbackState;
+    u8 initialized : 1; /* set by DR_Creator_init; reader not yet recovered */
+    u8 unk1 : 1;
+    u8 unk2 : 1;
+    u8 unk3 : 1;
+    u8 unk4 : 1;
+    u8 unk5 : 1;
+    u8 unk6 : 1;
+    u8 unk7 : 1;
+} DrcreatorStateFlags;
 
 typedef struct DrcreatorState
 {
-    u8 pad0[0x2 - 0x0];
-    s16 unk2;          /* 0x2 */
-    s16 gameBitId;     /* 0x4 */
+    s32 speedScale;    /* 0x0: magnitude used for DRHomingMis velocity */
+    s16 spawnGameBit;  /* 0x4 */
     s16 spawnInterval; /* 0x6: base interval reloaded into spawnTimer */
     s16 spawnTimer;    /* 0x8 */
-    s16 timerVariance; /* 0xA */
-    u8 padC[0x24 - 0xC];
-    f32 velocityX; /* 0x24 */
-    f32 velocityY; /* 0x28 */
-    f32 velocityZ; /* 0x2C */
-    u8 pad30[0xC4 - 0x30];
-    GameObject* creatorObj; /* 0xC4 */
+    union {
+        s16 timerVariance;  /* timed-spawn random delay */
+        s16 velocitySpread; /* sequence-event X/Z launch spread */
+    };
+    u8 padC[0x18 - 0xC];
+    DrcreatorStateFlags flags;
+    u8 pad19[0x1C - 0x19];
 } DrcreatorState;
 
-STATIC_ASSERT(offsetof(DrcreatorState, gameBitId) == 0x4);
+STATIC_ASSERT(offsetof(DrcreatorState, speedScale) == 0x0);
+STATIC_ASSERT(offsetof(DrcreatorState, spawnGameBit) == 0x4);
 STATIC_ASSERT(offsetof(DrcreatorState, spawnTimer) == 0x8);
-STATIC_ASSERT(offsetof(DrcreatorState, velocityX) == 0x24);
-STATIC_ASSERT(offsetof(DrcreatorState, velocityY) == 0x28);
-STATIC_ASSERT(offsetof(DrcreatorState, velocityZ) == 0x2C);
-STATIC_ASSERT(offsetof(DrcreatorState, creatorObj) == 0xC4);
+STATIC_ASSERT(offsetof(DrcreatorState, flags) == 0x18);
+STATIC_ASSERT(sizeof(DrcreatorState) == 0x1C);
 
 int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int DR_Creator_getExtraSize(void);
