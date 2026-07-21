@@ -49,8 +49,8 @@ void gameTextInitFn_8001a234(void);
 void gameTextInitFn_8001bd14(void);
 void gameTextInitFn_8001c794(void);
 void gameTextLoadGraphicsFn_8001a918(void);
-void fn_8001BDD4(int mode);
-void fn_8001BE2C(int mode);
+void subtitleFreeBoxTextures(int mode);
+void subtitleLoadBoxTextures(int mode);
 void gameTextDrawBox(struct GameTextDef* def, int box, struct GameTextBox* slot);
 void textRenderStr(char* str, struct GameTextBox* slot, f32 x, f32 y, f32 lineH, int mode);
 

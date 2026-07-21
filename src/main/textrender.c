@@ -3138,7 +3138,7 @@ void gameTextInitFn_8001bd14(void)
     }
 }
 
-void fn_8001BDD4(int mode)
+void subtitleFreeBoxTextures(int mode)
 {
     switch (mode)
     {
@@ -3150,7 +3150,7 @@ void fn_8001BDD4(int mode)
     }
 }
 
-void fn_8001BE2C(int mode)
+void subtitleLoadBoxTextures(int mode)
 {
     switch (mode)
     {

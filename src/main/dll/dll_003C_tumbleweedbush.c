@@ -810,7 +810,7 @@ void Link_release(void)
     {
         textureFree((Texture*)(((LinkTextureSlot*)linkTextures)[i].texture));
     }
-    fn_8001BDD4(3);
+    subtitleFreeBoxTextures(3);
 }
 void Link_initialise(void)
 {
@@ -823,7 +823,7 @@ void Link_initialise(void)
 
     padSetStickRepeatDelay(10);
     linkItemOpacity = 0xff;
-    fn_8001BE2C(3);
+    subtitleLoadBoxTextures(3);
     linkIsRotated = 0;
     linkFlag_803dd8f8 = 1;
 }
