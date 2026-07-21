@@ -427,8 +427,8 @@ void mmFree(void* p)
         {
             if (base[i].key == p)
             {
-                s16 t = base[i].type;
-                if (t == 1 || t == 4)
+                s16 itemType = base[i].type;
+                if (itemType == 1 || itemType == 4)
                 {
                     heapFree(region, i);
                 }

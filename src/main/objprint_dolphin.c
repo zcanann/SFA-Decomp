@@ -2780,18 +2780,18 @@ void objRenderModel(GameObject* obj)
         return;
     }
     {
-        s16 t = obj->anim.seqId;
-        if (t == 0x6a8)
+        s16 seqId = obj->anim.seqId;
+        if (seqId == 0x6a8)
             return;
-        if (t == 0x6a9)
+        if (seqId == 0x6a9)
             return;
-        if (t == 0x6aa)
+        if (seqId == 0x6aa)
             return;
-        if (t == 0x6ab)
+        if (seqId == 0x6ab)
             return;
-        if (t == 0x6ac)
+        if (seqId == 0x6ac)
             return;
-        if (t == 0x752)
+        if (seqId == 0x752)
             return;
     }
     Camera_ProjectWorldPointWithOffset(

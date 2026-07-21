@@ -362,7 +362,7 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
 
 void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation)
 {
-    f32 t = anim->framePhase;
+    f32 framePhase = anim->framePhase;
     u64 outPos = (u32)outRotation;
     u64 end;
     int curB = anim->frameStreamStride;
@@ -382,9 +382,9 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     addrB = posA + curB;
     curB = addrB;
     end = (u32)(outPosition + 3);
-    t = t - floorf(t);
-    t = t * gModelRenderSubframeScale;
-    frac = (int)t;
+    framePhase = framePhase - floorf(framePhase);
+    framePhase = framePhase * gModelRenderSubframeScale;
+    frac = (int)framePhase;
 
     render_copyPackedU64Head(&bufA, posA);
     render_copyPackedU64Tail(&bufA, posA + 7);

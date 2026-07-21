@@ -1353,10 +1353,10 @@ void characterDoEyeAnims(GameObject* obj, void* stateData)
         {
         case 0:
         {
-            s8 t = state->blinkTimer;
-            if (t > 0)
+            s8 blinkTimer = state->blinkTimer;
+            if (blinkTimer > 0)
             {
-                state->blinkTimer = t - framesThisStep;
+                state->blinkTimer = blinkTimer - framesThisStep;
             }
             else if ((int)randomGetRange(0, 1000) > 0x3de)
             {

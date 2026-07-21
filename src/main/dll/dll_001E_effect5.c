@@ -228,8 +228,8 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.startPosX = (f32)(s32)randomGetRange(0, 0xfa);
         {
             f32 rnd = (f32)(s32)randomGetRange(-5, 5);
-            f32 v = 20.0f + cfg.startPosX / 20.0f;
-            cfg.startPosY = v + rnd;
+            f32 baseY = 20.0f + cfg.startPosX / 20.0f;
+            cfg.startPosY = baseY + rnd;
         }
         cfg.startPosZ = 0.7f * cfg.startPosX;
         cfg.scale = 0.00004f * (f32)(s32)randomGetRange(0x28, 0x50);
@@ -253,8 +253,8 @@ int Effect5_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.startPosX = -(f32)(s32)randomGetRange(0, 0xfa);
         {
             f32 rnd = (f32)(s32)randomGetRange(-5, 5);
-            f32 v = 20.0f + cfg.startPosX / 20.0f;
-            cfg.startPosY = v + rnd;
+            f32 baseY = 20.0f + cfg.startPosX / 20.0f;
+            cfg.startPosY = baseY + rnd;
         }
         cfg.startPosZ = -cfg.startPosX;
         cfg.scale = 0.00004f * (f32)(s32)randomGetRange(0x28, 0x50);

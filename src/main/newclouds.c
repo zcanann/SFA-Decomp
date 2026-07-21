@@ -439,8 +439,8 @@ void lightningRender(LightningEffect* p)
     Texture* tex;
     int savedSeed;
     FogColor color;
-    int a;
-    int b;
+    int timer;
+    int lifetime;
     int half;
 
     color = *(FogColor*)&gNewCloudLightningFogColor;
@@ -450,17 +450,17 @@ void lightningRender(LightningEffect* p)
     end[0] = p->end[0] - playerMapOffsetX;
     end[1] = p->end[1];
     end[2] = p->end[2] - playerMapOffsetZ;
-    a = p->timer;
-    b = p->lifetime;
-    half = (u32)b >> 1;
-    if (a <= half)
+    timer = p->timer;
+    lifetime = p->lifetime;
+    half = (u32)lifetime >> 1;
+    if (timer <= half)
     {
         _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);
     }
     else
     {
         _gxSetTevColor2(0x80, 0x80, 0xff,
-                        (int)((lbl_803DF1D4 * (b - a)) / half));
+                        (int)((lbl_803DF1D4 * (lifetime - timer)) / half));
     }
     GXSetCullMode(GX_CULL_NONE);
     Camera_RebuildProjectionMatrix();

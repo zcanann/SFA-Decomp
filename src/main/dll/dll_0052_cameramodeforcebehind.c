@@ -128,8 +128,8 @@ void CameraModeForceBehind_init(u8* obj, int unused, f32* params)
     f32 dx, dz;
 
     {
-        s16 a = target->anim.rotX;
-        angle = 3.1415927f * a / 32768.0f;
+        s16 rotX = target->anim.rotX;
+        angle = 3.1415927f * rotX / 32768.0f;
     }
     cosv = mathSinf(angle);
     sinv = mathCosf(angle);

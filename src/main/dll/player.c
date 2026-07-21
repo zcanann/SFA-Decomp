@@ -3960,9 +3960,9 @@ int playerStateAimStaff(int obj, int state, f32 fv)
         }
         inner->targetYaw = lbl_803E7FB4 * spin + (f32)(int)inner->targetYaw;
         {
-            s16 v = inner->targetYaw;
-            inner->yaw = v;
-            ((GameObject*)obj)->anim.rotX = v;
+            s16 targetYaw = inner->targetYaw;
+            inner->yaw = targetYaw;
+            ((GameObject*)obj)->anim.rotX = targetYaw;
         }
         break;
     }
@@ -4373,9 +4373,9 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
     }
     else if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        s16 v = inner->inputHeading;
-        inner->targetYaw = v;
-        inner->yaw = v;
+        s16 inputHeading = inner->inputHeading;
+        inner->targetYaw = inputHeading;
+        inner->yaw = inputHeading;
     }
     if (changed != 0)
     {
@@ -6211,8 +6211,8 @@ void fn_8029FFD0(GameObject* obj, int p2)
     s16 v = ((PlayerState*)p2)->baddie.controlMode;
     if (v != 0x15 && v != 0x14 && v != 0x12 && v != 0x13 && v != 0xe && v != 0xf && v != 0x10)
     {
-        u8 c = inner->curAnimId;
-        if (c != 0x48 && c != 0x47 && c != 0x42 && getCurSeqNo() == 0)
+        u8 curAnimId = inner->curAnimId;
+        if (curAnimId != 0x48 && curAnimId != 0x47 && curAnimId != 0x42 && getCurSeqNo() == 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
             inner->curAnimId = 0x42;

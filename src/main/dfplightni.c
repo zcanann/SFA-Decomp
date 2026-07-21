@@ -205,9 +205,9 @@ void DFP_Lightni_init(DfpLightniObject* obj, DfpLightniMapData* mapData)
         }
         randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN, DFPLIGHTNI_RANDOM_TIMER_MAX);
         {
-            f32 t = randomValue;
-            t = gDfpLightningTriggerTimeBase + t;
-            state->triggerTime = t;
+            f32 triggerTime = randomValue;
+            triggerTime = gDfpLightningTriggerTimeBase + triggerTime;
+            state->triggerTime = triggerTime;
         }
         state->radiusX = ((f32)(s32)mapData->radiusX / gDfpLightningRadiusNormDivisor) * gDfpLightningRadiusMax;
         state->radiusY = ((f32)(s32)mapData->radiusY / gDfpLightningRadiusNormDivisor) * gDfpLightningRadiusMax;
