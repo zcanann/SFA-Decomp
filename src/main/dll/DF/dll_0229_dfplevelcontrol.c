@@ -1,8 +1,8 @@
 /*
  * DragonRock Palace level controller (DLL 0x229; "DFP_LevelControl").
  * Drives the spell-puzzle level state: a per-mode countdown timer, RNG
- * seeding of the 6-entry puzzle solution table (lbl_80329848) when the
- * reset flag (lbl_803DC182) is raised, and gamebit-driven progression
+ * seeding of the puzzle solution table when its map-act reset flag is
+ * raised, and gamebit-driven progression
  * (1504/1505/1507/1508/1589/3671) plus level unlocks and music triggers.
  */
 #include "main/dll/dfp_types.h"
@@ -26,9 +26,9 @@
 #include "main/audio/sfx.h"
 #include "main/dll/DF/dll_0229_dfplevelcontrol.h"
 
-s16 lbl_803DC180 = 0x82;
-u8 lbl_803DC182 = 1;
-u8 lbl_803DC183 = 1;
+s16 gDFPLevelControlMapAct1Timer = 0x82;
+u8 gDFPLevelControlResetMapAct1 = 1;
+u8 gDFPLevelControlResetMapAct2 = 1;
 
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
@@ -39,26 +39,24 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 /* repels the player away from this object and applies status damage (arg = status type) */
 #define DFPLEVELCONTROL_MSG_PLAYER_HIT 0x60005
 
-extern s16 lbl_80329848[];
-
-void fn_80204098(GameObject* obj)
+void DFP_LevelControl_updateMapAct2(GameObject* obj)
 {
     DfpLevelControlState* state = (obj)->extra;
     GameObject* player;
     s16 i;
 
     player = Obj_GetPlayerObject();
-    if (lbl_803DC183 != 0)
+    if (gDFPLevelControlResetMapAct2 != 0)
     {
         mainSetBits(GAMEBIT_STAFF_ABILITY_FIRE_BLASTER, 1);
         mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
         for (i = 0; i < 9; i++)
         {
-            lbl_80329848[i] = (s16)randomGetRange(1, 4);
+            gDFPLevelControlPuzzleValues[i] = (s16)randomGetRange(1, 4);
         }
         mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
         state->timer = 0;
-        lbl_803DC183 = 0;
+        gDFPLevelControlResetMapAct2 = 0;
     }
     if (mainGetBit(0x5e3) == 0 && mainGetBit(0x5e0) != 0 && mainGetBit(0x5e1) != 0)
     {
@@ -77,7 +75,7 @@ void fn_80204098(GameObject* obj)
             Sfx_PlayFromObject(0, SFXTRIG_dn_boar1_c_1c4);
             for (i = 0; i < 9; i++)
             {
-                lbl_80329848[i] = (s16)randomGetRange(1, 4);
+                gDFPLevelControlPuzzleValues[i] = (s16)randomGetRange(1, 4);
             }
             mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 1);
             state->sfxLatch = 1;
@@ -105,26 +103,26 @@ void fn_80204098(GameObject* obj)
     }
 }
 
-void fn_80204320(GameObject* obj)
+void DFP_LevelControl_updateMapAct1(GameObject* obj)
 {
-    DfpLevelControlState* sub;
+    DfpLevelControlState* state;
     GameObject* player;
 
-    sub = (obj)->extra;
+    state = (obj)->extra;
     player = Obj_GetPlayerObject();
-    if (lbl_803DC182 != 0)
+    if (gDFPLevelControlResetMapAct1 != 0)
     {
         s16 i;
-        lbl_80329848[6] = 0;
-        lbl_80329848[7] = 0;
-        lbl_80329848[8] = 0;
+        gDFPLevelControlPuzzleValues[6] = 0;
+        gDFPLevelControlPuzzleValues[7] = 0;
+        gDFPLevelControlPuzzleValues[8] = 0;
         for (i = 0; i < 6; i++)
         {
-            lbl_80329848[i] = (s16)randomGetRange(1, 4);
+            gDFPLevelControlPuzzleValues[i] = (s16)randomGetRange(1, 4);
         }
         mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
-        sub->timer = 0;
-        lbl_803DC182 = 0;
+        state->timer = 0;
+        gDFPLevelControlResetMapAct1 = 0;
     }
     if (mainGetBit(1507) == 0)
     {
@@ -135,67 +133,66 @@ void fn_80204320(GameObject* obj)
     }
     if (mainGetBit(3671) == 0)
     {
-        if (mainGetBit(1589) != 0 && sub->sfxLatch == 0)
+        if (mainGetBit(1589) != 0 && state->sfxLatch == 0)
         {
             s16 i;
             Sfx_PlayFromObject(0, SFXTRIG_statue_wave);
             for (i = 0; i < 6; i++)
             {
-                lbl_80329848[i] = (s16)randomGetRange(1, 4);
+                gDFPLevelControlPuzzleValues[i] = (s16)randomGetRange(1, 4);
             }
             mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 1);
-            sub->sfxLatch = 1;
+            state->sfxLatch = 1;
         }
-        else if (mainGetBit(1589) == 0 && sub->sfxLatch == 1)
+        else if (mainGetBit(1589) == 0 && state->sfxLatch == 1)
         {
-            sub->sfxLatch = 0;
+            state->sfxLatch = 0;
             mainSetBits(GAMEBIT_DRBOT_SpellPuzzleActive, 0);
         }
         if (mainGetBit(1509) != 0)
         {
-            sub->timer = 300;
+            state->timer = 300;
             ObjMsg_SendToObject(player, DFPLEVELCONTROL_MSG_PLAYER_HIT, obj, 1);
         }
     }
 }
 
-int DFP_LevelControl_SeqFn(int p1)
+int DFP_LevelControl_sequenceCallback(GameObject* obj)
 {
-
-    DfpLevelControlState* p_b8 = ((GameObject*)p1)->extra;
+    DfpLevelControlState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
-    s16 timer = p_b8->timer;
+    s16 timer = state->timer;
     if (timer > 0)
     {
-        p_b8->timer -= (s16)timeDelta;
+        state->timer -= (s16)timeDelta;
         fn_802960E8(player, 0x51e);
     }
     return 0;
 }
 
-void DFP_LevelControl_setScale(int unused, u8* out)
+void DFP_LevelControl_copyPuzzleValues(int unused, u8* out)
 {
     int i;
     for (i = 0; (s16)i < 9; i += 3)
     {
-        out[(s16)i] = lbl_80329848[i];
-        out[(s16)(i + 1)] = lbl_80329848[i + 1];
-        out[(s16)(i + 2)] = lbl_80329848[i + 2];
+        out[(s16)i] = gDFPLevelControlPuzzleValues[i];
+        out[(s16)(i + 1)] = gDFPLevelControlPuzzleValues[i + 1];
+        out[(s16)(i + 2)] = gDFPLevelControlPuzzleValues[i + 2];
     }
 }
 
 int DFP_LevelControl_getExtraSize(void)
 {
-    return 0xc;
+    return sizeof(DfpLevelControlState);
 }
 int DFP_LevelControl_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void DFP_LevelControl_free(int obj)
+void DFP_LevelControl_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, DFPLEVELCONTROL_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, DFPLEVELCONTROL_OBJGROUP);
 }
 
 void DFP_LevelControl_render(void)
@@ -237,18 +234,18 @@ void DFP_LevelControl_update(GameObject* obj)
     switch (mode)
     {
     case 1:
-        if (lbl_803DC180 != 0)
+        if (gDFPLevelControlMapAct1Timer != 0)
         {
-            lbl_803DC180 -= (s16)timeDelta;
-            if (lbl_803DC180 <= 0)
+            gDFPLevelControlMapAct1Timer -= (s16)timeDelta;
+            if (gDFPLevelControlMapAct1Timer <= 0)
             {
-                lbl_803DC180 = 0;
+                gDFPLevelControlMapAct1Timer = 0;
             }
         }
-        fn_80204320(obj);
+        DFP_LevelControl_updateMapAct1(obj);
         break;
     case 2:
-        fn_80204098(obj);
+        DFP_LevelControl_updateMapAct2(obj);
         break;
     case 3:
         break;
@@ -259,7 +256,7 @@ void DFP_LevelControl_update(GameObject* obj)
     mainSetBits(0xdcf, 0);
 }
 
-void DFP_LevelControl_init(GameObject* obj, int param2)
+void DFP_LevelControl_init(GameObject* obj, DfpLevelControlPlacement* placement)
 {
 
     DfpLevelControlState* state = (obj)->extra;
@@ -268,9 +265,9 @@ void DFP_LevelControl_init(GameObject* obj, int param2)
     ((DfpFlags7*)&state->flags07)->b80 = mainGetBit(0xd5d);
     ((DfpFlags7*)&state->flags07)->b40 = mainGetBit(0xd59);
     ((DfpFlags7*)&state->flags07)->b20 = mainGetBit(0xd5a);
-    (obj)->animEventCallback = (void*)DFP_LevelControl_SeqFn;
+    (obj)->animEventCallback = (void*)DFP_LevelControl_sequenceCallback;
     state->mode = 1;
-    mode = *(s16*)(param2 + 0x1a);
+    mode = placement->mode;
     if (mode != 0 && mode <= 2)
     {
         state->mode = mode;
@@ -295,7 +292,7 @@ void DFP_LevelControl_release(void)
 
 void DFP_LevelControl_initialise(void)
 {
-    s16* p = lbl_80329848;
+    s16* p = gDFPLevelControlPuzzleValues;
     p[0] = 1;
     p[1] = 2;
     p[2] = 3;

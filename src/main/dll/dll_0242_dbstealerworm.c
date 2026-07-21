@@ -2596,7 +2596,7 @@ ObjectDescriptor gDBHoleControl1ObjDescriptor = {
     (ObjectDescriptorCallback)dbholecontrol1_getObjectTypeId,
     dbholecontrol1_getExtraSize,
 };
-s16 lbl_80329848[10] = {1, 2, 3, 0, 0, 0, 0, 0, 0, 0};
+s16 gDFPLevelControlPuzzleValues[10] = {1, 2, 3, 0, 0, 0, 0, 0, 0, 0};
 ObjectDescriptor11 gDFP_LevelControlObjDescriptor = {
     0,
     0,
@@ -2612,7 +2612,7 @@ ObjectDescriptor11 gDFP_LevelControlObjDescriptor = {
     (ObjectDescriptorCallback)DFP_LevelControl_free,
     (ObjectDescriptorCallback)DFP_LevelControl_getObjectTypeId,
     (ObjectDescriptorCallback)DFP_LevelControl_getExtraSize,
-    (ObjectDescriptorCallback)DFP_LevelControl_setScale,
+    (ObjectDescriptorCallback)DFP_LevelControl_copyPuzzleValues,
 };
 ObjectDescriptor gDFP_ObjCreatorObjDescriptor = {
     0,
