@@ -36,10 +36,10 @@
 #include "main/camera.h"
 #include "dolphin/os/OSCache.h"
 
-void* gWaterfxRippleVtx;
-void* gWaterfxRippleVtxDesc;
-void* gWaterfxWakeVtx;
-void* gWaterfxWakeVtxDesc;
+u8* gWaterfxRippleVtx;
+u8* gWaterfxRippleVtxDesc;
+u8* gWaterfxWakeVtx;
+u8* gWaterfxWakeVtxDesc;
 int gWaterfxRippleCount;
 void* gWaterfxRipplePool;
 int gWaterfxSplashCount;
@@ -555,7 +555,7 @@ void waterfx_render(int obj, int renderParam)
                                            NULL);
                 fn_8007D670();
                 drawFn_8005cf8c(&((WaterVtx*)gWaterfxRippleVtx)[i * 4],
-                                  (u8*)gWaterfxRippleVtxDesc + descriptorOffset, 2);
+                                  gWaterfxRippleVtxDesc + descriptorOffset, 2);
             }
         }
         j = 0;
@@ -617,10 +617,10 @@ void waterfx_render(int obj, int renderParam)
                 dp.rotZ = 0;
                 dp.rotY = 0;
                 Camera_LoadModelViewMatrix(obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300,
-                                           NULL);
+                                            NULL);
                 fn_8007D670();
-                drawFn_8005cf8c((char*)gWaterfxWakeVtx + vertexOffset,
-                                  (u8*)gWaterfxWakeVtxDesc + i * 0x20, 2);
+                drawFn_8005cf8c(gWaterfxWakeVtx + vertexOffset,
+                                  gWaterfxWakeVtxDesc + i * 0x20, 2);
             }
         }
         Rcp_ResetRenderState();
@@ -866,7 +866,7 @@ void waterfx_release(void)
 
 void waterfx_initialise(void)
 {
-    char* buf;
+    u8* buf;
 
     buf = mmAlloc(0x22b0, 0x13, 0);
     if (buf == NULL)
@@ -877,8 +877,8 @@ void waterfx_initialise(void)
     gWaterfxRippleVtxDesc = buf;
     gWaterfxWakeVtxDesc = buf + 0x3c0;
     {
-        char* p2 = buf + 0x780;
-        char* p3;
+        u8* p2 = buf + 0x780;
+        u8* p3;
         gWaterfxRippleVtx = p2;
         gWaterfxWakeVtx = p2 + 0x780;
         p3 = p2 + 0xf00;
