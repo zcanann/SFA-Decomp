@@ -45,6 +45,10 @@ extern u8 lbl_803DD6ED;
 extern char gEnterSaveNameBuffer[4];
 extern s32 gEnterSaveNameSelectedIndex;
 
+#define gEnterSaveNameScrollVelocity lbl_803DD6D0
+#define gEnterSaveNameScrollWrapOffset lbl_803DD6DC
+#define gEnterSaveNameRefreshState lbl_803DD6EC
+
 void EnterSaveNameScreen_render(void)
 {
     u8 buf[2];
@@ -97,7 +101,7 @@ void EnterSaveNameScreen_frameEnd(void)
 #define PAD_BUTTON_A                 0x100
 #define PAD_BUTTON_B                 0x200
 
-u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u32 arg6, u32 arg7, u32 arg8)
+u32 EnterSaveNameScreen_run(void)
 {
     s8 stickX;
     int buttons;
@@ -111,7 +115,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
     {
         gEnterSaveNameAutoScrolling = 0;
         gEnterSaveNameTargetScrollVel = 0.08f * stickX;
-        if (gEnterSaveNameTargetScrollVel * lbl_803DD6D0 < 0.0f)
+        if (gEnterSaveNameTargetScrollVel * gEnterSaveNameScrollVelocity < 0.0f)
         {
             gEnterSaveNameTargetScrollVel = 0.0f;
         }
@@ -135,9 +139,9 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
         }
     }
     moved = 0;
-    if (lbl_803DD6D0 < 0.0f)
+    if (gEnterSaveNameScrollVelocity < 0.0f)
     {
-        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + lbl_803DD6D0;
+        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameScrollVelocity;
         if (gEnterSaveNameScrollPos <= (f32)(-gEnterSaveNameCharWidths[ENTER_SAVE_NAME_DONE_INDEX] / 2))
         {
             gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameTotalWidth;
@@ -153,7 +157,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
         {
             if (0.0f == gEnterSaveNameTargetScrollVel)
             {
-                lbl_803DD6D0 = 0.0f;
+                gEnterSaveNameScrollVelocity = 0.0f;
             }
             gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex - 1;
             if (gEnterSaveNameSelectedIndex < 0)
@@ -163,14 +167,14 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
             if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX) && (gEnterSaveNameAutoScrolling != 0))
             {
                 gEnterSaveNameTargetScrollVel = 0.0f;
-                lbl_803DD6D0 = 0.0f;
+                gEnterSaveNameScrollVelocity = 0.0f;
                 gEnterSaveNameAutoScrolling = 0;
             }
         }
     }
-    else if (lbl_803DD6D0 > 0.0f)
+    else if (gEnterSaveNameScrollVelocity > 0.0f)
     {
-        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + lbl_803DD6D0;
+        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameScrollVelocity;
         if (gEnterSaveNameScrollPos >= (f32)(gEnterSaveNameTotalWidth + gEnterSaveNameCharWidths[0] / 2))
         {
             gEnterSaveNameScrollPos = gEnterSaveNameScrollPos - gEnterSaveNameTotalWidth;
@@ -186,7 +190,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
         {
             if (0.0f == gEnterSaveNameTargetScrollVel)
             {
-                lbl_803DD6D0 = 0.0f;
+                gEnterSaveNameScrollVelocity = 0.0f;
             }
             gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex + 1;
             if (gEnterSaveNameSelectedIndex >= ENTER_SAVE_NAME_CHAR_COUNT)
@@ -197,34 +201,34 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
             {
                 gEnterSaveNameAutoScrolling = 0;
                 gEnterSaveNameTargetScrollVel = 0.0f;
-                lbl_803DD6D0 = 0.0f;
+                gEnterSaveNameScrollVelocity = 0.0f;
             }
         }
     }
-    lbl_803DD6DC = (gEnterSaveNameScrollPos < (f32)(gEnterSaveNameTotalWidth >> 2)) ? gEnterSaveNameTotalWidth : 0;
-    if ((0.0f != lbl_803DD6D0) || (0.0f != gEnterSaveNameTargetScrollVel))
+    gEnterSaveNameScrollWrapOffset = (gEnterSaveNameScrollPos < (f32)(gEnterSaveNameTotalWidth >> 2)) ? gEnterSaveNameTotalWidth : 0;
+    if ((0.0f != gEnterSaveNameScrollVelocity) || (0.0f != gEnterSaveNameTargetScrollVel))
     {
-        if ((lbl_803DD6D0 < 0.0f) || (gEnterSaveNameTargetScrollVel < 0.0f))
+        if ((gEnterSaveNameScrollVelocity < 0.0f) || (gEnterSaveNameTargetScrollVel < 0.0f))
         {
-            if (lbl_803DD6D0 > -1.2f)
+            if (gEnterSaveNameScrollVelocity > -1.2f)
             {
-                lbl_803DD6D0 = -1.2f;
+                gEnterSaveNameScrollVelocity = -1.2f;
             }
             else
             {
-                lbl_803DD6D0 = 0.025f * (gEnterSaveNameTargetScrollVel - lbl_803DD6D0) + lbl_803DD6D0;
+                gEnterSaveNameScrollVelocity = 0.025f * (gEnterSaveNameTargetScrollVel - gEnterSaveNameScrollVelocity) + gEnterSaveNameScrollVelocity;
             }
         }
-        else if (lbl_803DD6D0 < 1.2f)
+        else if (gEnterSaveNameScrollVelocity < 1.2f)
         {
-            lbl_803DD6D0 = 1.2f;
+            gEnterSaveNameScrollVelocity = 1.2f;
         }
         else
         {
-            lbl_803DD6D0 = 0.025f * (gEnterSaveNameTargetScrollVel - lbl_803DD6D0) + lbl_803DD6D0;
+            gEnterSaveNameScrollVelocity = 0.025f * (gEnterSaveNameTargetScrollVel - gEnterSaveNameScrollVelocity) + gEnterSaveNameScrollVelocity;
         }
     }
-    if ((stickX == 0) && (0.0f == lbl_803DD6D0))
+    if ((stickX == 0) && (0.0f == gEnterSaveNameScrollVelocity))
     {
         buttons = getButtonsJustPressed(0);
         buttonDisable(0, buttons);
@@ -235,7 +239,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
                 selectedText = gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
                 gEnterSaveNameBuffer[gEnterSaveNameLength++] = selectedText[0];
                 gEnterSaveNameBuffer[gEnterSaveNameLength] = 0;
-                lbl_803DD6EC = 2;
+                gEnterSaveNameRefreshState = 2;
                 Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_TYPE);
                 if (gEnterSaveNameLength == ENTER_SAVE_NAME_MAX_LENGTH)
                 {
@@ -247,7 +251,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
                 Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_DELETE);
                 gEnterSaveNameLength -= 1;
                 gEnterSaveNameBuffer[gEnterSaveNameLength] = 0;
-                lbl_803DD6EC = 2;
+                gEnterSaveNameRefreshState = 2;
                 gEnterSaveNameAutoScrolling = 0;
             }
             else if (gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX)
@@ -263,7 +267,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
                 slotIndex = saveFileSelect_currentSlotIndex;
                 gplayNewGame(gEnterSaveNameBuffer, slotIndex);
                 loadUiDll(ENTER_SAVE_NAME_MENU_DLL);
-                lbl_803DD6EC = 2;
+                gEnterSaveNameRefreshState = 2;
             }
         }
         else if (buttons & PAD_BUTTON_B)
@@ -274,7 +278,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
             {
                 gEnterSaveNameLength -= 1;
                 gEnterSaveNameBuffer[gEnterSaveNameLength] = 0;
-                lbl_803DD6EC = 2;
+                gEnterSaveNameRefreshState = 2;
             }
             else
             {
