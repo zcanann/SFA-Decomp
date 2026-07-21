@@ -26,12 +26,6 @@ enum
     FLAG_SEQ_TIED = 0x803
 };
 
-#define FLAG_PARENT_SLACK_FLAG 0x1000
-
-/* placement-record byte seeding the flag's initial rotX */
-#define FLAG_MAPDATA_ROT_X_BYTE_OFF 0x18
-
-
 int Flag_getExtraSize(void)
 {
     return 0x0;
@@ -47,7 +41,7 @@ void Flag_free(void)
 
 static void flag_updateTiedSwing(GameObject* obj, GameObject* parent)
 {
-    if ((parent->objectFlags & FLAG_PARENT_SLACK_FLAG) != 0)
+    if ((parent->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
     {
         obj->anim.velocityX = 0.0f;
     }
@@ -69,19 +63,19 @@ void Flag_hitDetect(void)
 {
 }
 
-void Flag_update(int obj)
+void Flag_update(GameObject* obj)
 {
-    int linkedObj;
+    GameObject* parent;
 
-    if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_FLUTTER)
+    if (obj->anim.seqId == FLAG_SEQ_FLUTTER)
     {
         ObjAnim_AdvanceCurrentMove((int)obj, 0.007f, (f32)(u32)framesThisStep, NULL);
     }
-    else if (((GameObject*)obj)->anim.seqId == FLAG_SEQ_TIED)
+    else if (obj->anim.seqId == FLAG_SEQ_TIED)
     {
         Obj_GetPlayerObject();
-        linkedObj = *(int*)&((GameObject*)obj)->anim.parent;
-        flag_updateTiedSwing((GameObject*)obj, (GameObject*)linkedObj);
+        parent = obj->anim.parent;
+        flag_updateTiedSwing(obj, parent);
     }
     else
     {
@@ -89,11 +83,11 @@ void Flag_update(int obj)
     }
 }
 
-void Flag_init(int* obj, int* def)
+void Flag_init(GameObject* obj, FlagPlacement* placement)
 {
-    if (((GameObject*)obj)->anim.seqId != FLAG_SEQ_TIED)
+    if (obj->anim.seqId != FLAG_SEQ_TIED)
     {
-        ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + FLAG_MAPDATA_ROT_X_BYTE_OFF) << 8);
+        obj->anim.rotX = (s16)((s32)placement->rotX << 8);
         ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
     }
 }
