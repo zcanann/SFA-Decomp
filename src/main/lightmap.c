@@ -86,6 +86,13 @@ typedef struct MapTextureScroll
     u8 pad[3];
 } MapTextureScroll;
 
+typedef struct EnvironmentUpdateInterface
+{
+    void (*create)(void);
+    void (*destroy)(void);
+    void (*update)(void);
+} EnvironmentUpdateInterface;
+
 extern u32 renderFlags;
 /* Global renderFlags bits (decoded by the accessor fns below: shouldDrawShadows,
  * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad,
@@ -141,9 +148,9 @@ extern void* lbl_803DCE84;
 extern s16 lbl_803DCE90;
 extern s16 lbl_803DCEBA;
 extern s16 lbl_803DCEB8;
-extern void* lbl_803DCE6C;
-extern void* lbl_803DCE68;
-extern void* lbl_803DCAB0;
+extern u8* lbl_803DCE6C;
+extern u8* lbl_803DCE68;
+extern EnvironmentUpdateInterface** lbl_803DCAB0;
 extern s32 gHeatEffectFadeDirection;
 
 typedef union
@@ -1008,7 +1015,7 @@ void updateEnvironment(int mode)
         off = i = 0;
         for (; i < 80; i++)
         {
-            textureOverride = (MapTextureOverride*)((char*)lbl_803DCE6C + off);
+            textureOverride = (MapTextureOverride*)(lbl_803DCE6C + off);
             if (textureOverride->refCount != 0 && (tex = textureOverride->texture) != NULL &&
                 tex->animationFrameCount != 0x100 && tex->animationFrameStep != 0)
             {
@@ -1021,12 +1028,12 @@ void updateEnvironment(int mode)
         off = 0;
         for (; i < 58; i++)
         {
-            textureScroll = (MapTextureScroll*)((char*)lbl_803DCE68 + off);
+            textureScroll = (MapTextureScroll*)(lbl_803DCE68 + off);
             if (textureScroll->refCount != 0)
             {
-                deltaY = (f32)textureScroll->yStep * (deltaTime = timeDelta);
+                deltaY = textureScroll->yStep * (deltaTime = timeDelta);
                 x = textureScroll->offsetX;
-                deltaX = (f32)textureScroll->xStep * deltaTime;
+                deltaX = textureScroll->xStep * deltaTime;
                 textureScroll->offsetX = x + deltaX;
                 textureScroll->offsetY = textureScroll->offsetY + deltaY;
             }
@@ -1036,7 +1043,7 @@ void updateEnvironment(int mode)
         loadNextMap();
         if (lbl_803DCAB0 != NULL)
         {
-            (*(void (***)(void))lbl_803DCAB0)[2]();
+            (*lbl_803DCAB0)->update();
         }
         gMinimapInterface->vtable->frameStart();
 
