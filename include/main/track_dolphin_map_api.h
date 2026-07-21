@@ -5,7 +5,7 @@
 
 void* mapBlockFn_800606ec(void* block, int index);
 int mapBlockFn_80060678(void* entry);
-void fn_800605F0(s16* in, f32* out);
-void fn_8006058C(s16* out, f32* in);
+void trackUnpackVector(s16* in, f32* out);
+void trackPackVector(s16* out, f32* in);
 
 #endif /* MAIN_TRACK_DOLPHIN_MAP_API_H_ */

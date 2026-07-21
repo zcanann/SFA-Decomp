@@ -259,7 +259,7 @@ void renderClouds(int a, int b, int c, int d)
         objSetOverrideColor(ambientRed, ambientGreen, ambientBlue);
         objRender(a, b, c, d, lbl_8039AB28.mainCloudObj, 1);
 
-        fn_80060490(&clipX, &clipY, &clipW, &clipH);
+        getSunFlareScissorRect(&clipX, &clipY, &clipW, &clipH);
         if (clipW > 0 && clipH > 0)
         {
             GXGetScissor(&savedClipX, &savedClipY, &savedClipW, &savedClipH);

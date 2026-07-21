@@ -749,7 +749,7 @@ void renderGlows(void)
     }
 }
 
-void fn_80060490(int* outX, int* outY, int* outWidth, int* outHeight)
+void getSunFlareScissorRect(int* outX, int* outY, int* outWidth, int* outHeight)
 {
     *outX = gSunFlareScissorX;
     *outY = gSunFlareScissorY;
@@ -803,7 +803,7 @@ void queueGlowRender(ModelLightStruct* light)
     gGlowLightList[idx] = light;
 }
 
-void fn_8006058C(short* out, float* vec)
+void trackPackVector(short* out, float* vec)
 {
     int yScaled;
     int zScaled;
@@ -815,7 +815,7 @@ void fn_8006058C(short* out, float* vec)
     out[2] = zScaled;
 }
 
-void fn_800605F0(s16* in, f32* out)
+void trackUnpackVector(s16* in, f32* out)
 {
     out[0] = (f32)(s32)in[0] * lbl_803DEC20;
     out[1] = (f32)(s32)in[1] * lbl_803DEC20;

@@ -168,7 +168,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* 
                     f32 dx;
                     f32 dz;
                     f32 d;
-                    fn_800605F0(cell, vpos);
+                    trackUnpackVector(cell, vpos);
                     dx = vpos[0] - fracX;
                     dz = vpos[2] - fracZ;
                     d = (dx * dx + dz * dz) / radsq;
@@ -234,11 +234,11 @@ void groundanimator_free(int* obj, int flag)
                         for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
                             cell = (s16*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
-                            fn_800605F0(cell, local);
+                            trackUnpackVector(cell, local);
                             if (*(void**)&w->heightBuf != NULL)
                             {
                                 local[1] = (f32) * (s16*)((char*)w->heightBuf + innoff);
-                                fn_8006058C(cell, local);
+                                trackPackVector(cell, local);
                             }
                             innoff += 2;
                             midoff += 2;
@@ -433,10 +433,10 @@ void groundanimator_update(int* obj)
                         {
                             void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
                             f32 prod;
-                            fn_800605F0(cell, vbuf);
+                            trackUnpackVector(cell, vbuf);
                             prod = (g->lastDepth / (100.0f)) * *(f32*)((char*)g->falloffBuf + foffVtx);
                             vbuf[1] = (f32) * (s16*)((char*)g->heightBuf + hoffVtx) - prod;
-                            fn_8006058C(cell, vbuf);
+                            trackPackVector(cell, vbuf);
                         }
                         foffVtx += 4;
                         hoffVtx += 2;
