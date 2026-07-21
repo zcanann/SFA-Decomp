@@ -729,11 +729,11 @@ void gunpowderbarrel_hitDetect(int obj)
         return;
     }
 
-    if (fn_80080150(&state->respawnTimer) != 0)
+    if (timerIsActive(&state->respawnTimer) != 0)
     {
         return;
     }
-    switch (fn_80080150(&state->releaseTimer))
+    switch (timerIsActive(&state->releaseTimer))
     {
     case 0:
         break;
@@ -836,7 +836,7 @@ void gunpowderbarrel_update(GameObject *obj)
     }
     /* --- Respawn phase: while the respawn timer runs the barrel stays hidden;
      * the frame it expires we un-hide, reset state and pop back onto the pad. --- */
-    if (fn_80080150(&state->respawnTimer) != 0)
+    if (timerIsActive(&state->respawnTimer) != 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (timerCountDown(&state->respawnTimer) != 0)
@@ -856,7 +856,7 @@ void gunpowderbarrel_update(GameObject *obj)
     }
     /* --- Release-cooldown phase: just after a generator hand-back, hold the
      * barrel still (zero throw + object velocity) until the timer drains. --- */
-    if (fn_80080150(&state->releaseTimer) != 0)
+    if (timerIsActive(&state->releaseTimer) != 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         timerCountDown(&state->releaseTimer);

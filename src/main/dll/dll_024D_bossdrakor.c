@@ -177,7 +177,7 @@ void bossdrakor_updateHeadTracking(GameObject* obj, int state)
         neck[0] += (s16)neckStep;
         PSVECSubtract(&drakorState->homePosX, &obj->anim.localPosX, partfxParams.vec);
         partfxParams.val = lbl_803E651C;
-        if (fn_80080150(&drakorState->jawAnimAngle) != 0)
+        if (timerIsActive(&drakorState->jawAnimAngle) != 0)
         {
             upperJaw = objModelGetVecFn_800395d8(obj, 0xf);
             if (upperJaw != NULL)

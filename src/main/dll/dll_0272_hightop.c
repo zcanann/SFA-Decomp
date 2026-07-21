@@ -240,7 +240,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
             stateArg->baddie.moveSpeed = 0.004f;
         }
     }
-    if (fn_80080150(&state->transitionTimer) != 0)
+    if (timerIsActive(&state->transitionTimer) != 0)
     {
         if (timerCountDown(&state->transitionTimer) != 0)
         {

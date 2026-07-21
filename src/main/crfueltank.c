@@ -81,7 +81,7 @@ void crfueltank_update(CrFuelTankObject* obj)
 
     def = obj->def;
     state = obj->state;
-    if (fn_80080150(&state->timer) != 0)
+    if (timerIsActive(&state->timer) != 0)
     {
         if (timerCountDown(&state->timer) != 0)
         {

@@ -449,7 +449,7 @@ void babycloudrunner_update(GameObject* obj)
         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
         (*gGameUIInterface)->airMeterSetShutdown();
     }
-    else if (fn_80080150(&sub->triggeredLatch) != 0)
+    else if (timerIsActive(&sub->triggeredLatch) != 0)
     {
         sub->flags22C |= 1;
         sub->behaviourState = 0;
@@ -555,7 +555,7 @@ void babycloudrunner_update(GameObject* obj)
             if (sub->runnerState == 2)
             {
                 radius = (f32)def->outerRadius;
-                if (fn_80080150(&sub->countdownTimer) != 0)
+                if (timerIsActive(&sub->countdownTimer) != 0)
                 {
                     if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0 &&
                         timerCountDown(&sub->countdownTimer) != 0)

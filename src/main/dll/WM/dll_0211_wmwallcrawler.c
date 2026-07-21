@@ -337,7 +337,7 @@ void wmwallcrawler_update(GameObject* obj)
             }
             else
             {
-                if (fn_80080150((const f32*)&state->attackTimer) != 0)
+                if (timerIsActive((const f32*)&state->attackTimer) != 0)
                 {
                     timerCountDown((f32*)&state->attackTimer);
                 }

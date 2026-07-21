@@ -170,7 +170,7 @@ void drakord_thornbush_update(GameObject* obj)
     DrakordThornbushState* inner = (DrakordThornbushState*)(obj)->extra;
     int setup = *(int*)&(obj)->anim.placementData;
     int setup2;
-    if (fn_80080150(&inner->growth) != 0)
+    if (timerIsActive(&inner->growth) != 0)
     {
         if (inner->growth < (f32)(s32)((DrakordThornbushPlacement*)setup)->baseRadius)
         {

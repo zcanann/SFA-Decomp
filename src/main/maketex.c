@@ -861,7 +861,7 @@ int randFn_80080100(int n)
     return randomGetRange(0, n * 60 / 60) == 0;
 }
 
-int fn_80080150(const f32* p)
+int timerIsActive(const f32* p)
 {
     return 0.0f != *p;
 }

@@ -47,7 +47,7 @@ f32 lbl_803DC41C = 5.0f;
 void timer_addDuration(GameObject* obj, int duration)
 {
     TimerState* state = obj->extra;
-    if (fn_80080150(&state->countdownTimer) != 0)
+    if (timerIsActive(&state->countdownTimer) != 0)
     {
         state->countdownTimer = state->countdownTimer + duration;
         if (state->mode == TIMER_MODE_GLOBAL)
@@ -125,7 +125,7 @@ void timer_update(GameObject* obj)
     setup = (TimerSetup*)(obj)->anim.placementData;
     flags = &state->flags;
 
-    if (fn_80080150(&state->countdownTimer) != 0)
+    if (timerIsActive(&state->countdownTimer) != 0)
     {
         expiredThisFrame = 0;
         if (flags->manual == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
@@ -196,7 +196,7 @@ void timer_update(GameObject* obj)
             }
         }
     }
-    if (state->mode == TIMER_MODE_EFFECT && fn_80080150(&state->countdownTimer) != 0)
+    if (state->mode == TIMER_MODE_EFFECT && timerIsActive(&state->countdownTimer) != 0)
     {
         ModelLight* light = state->lightSlot;
         f32 progress = (f32)(setup->durationMinutes * 60) / state->countdownTimer;

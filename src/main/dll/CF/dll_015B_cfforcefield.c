@@ -136,7 +136,7 @@ void cfforcefield_update(GameObject* obj)
                 }
             }
 
-            if (fn_80080150(&state->collapseTimer) != 0)
+            if (timerIsActive(&state->collapseTimer) != 0)
             {
                 obj->anim.rotY =
                     (s16)((f32)(s32)gCfForceFieldCollapseSpinStep * timeDelta + (f32)(s32)obj->anim.rotY);

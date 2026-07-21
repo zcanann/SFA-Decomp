@@ -119,7 +119,7 @@ void pollenfragment_free(GameObject* obj)
 void pollenfragment_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
     PollenFragmentExtra* state = obj->extra;
-    if (fn_80080150(&state->deathTimer) != 0)
+    if (timerIsActive(&state->deathTimer) != 0)
         return;
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
@@ -131,7 +131,7 @@ void pollenfragment_hitDetect(GameObject* obj)
     int hitObject;
 
     extra = *(u8**)&(obj)->extra;
-    if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) == 0)
+    if (timerIsActive(&((PollenFragmentExtra*)extra)->deathTimer) == 0)
     {
         hitType = ObjHits_GetPriorityHit(obj, &hitObject, 0, 0);
         if (hitType == 0xe || hitType == 0xf)
@@ -179,7 +179,7 @@ void pollenfragment_update(GameObject* obj)
         Obj_FreeObject(obj);
         return;
     }
-    if (fn_80080150(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
+    if (timerIsActive(&((PollenFragmentExtra*)extra)->deathTimer) != 0)
     {
         if (timerCountDown((f32*)(extra + 0x20)) != 0)
         {

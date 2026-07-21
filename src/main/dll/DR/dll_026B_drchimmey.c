@@ -49,7 +49,7 @@ void DR_Chimmey_update(GameObject* obj)
     {
         return;
     }
-    if (fn_80080150(&state->timer) == 0)
+    if (timerIsActive(&state->timer) == 0)
     {
         if (state->offeringsRemaining <= 0)
         {

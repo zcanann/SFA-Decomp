@@ -306,7 +306,7 @@ void firepipe_updateState(FirePipeObject* obj)
             mainSetBits(mapData->gameBit, flags->lastGameBitState);
         }
 
-        if ((fn_80080150(&extra->cycleTimer) != 0) && (flags->emitting == 0))
+        if ((timerIsActive(&extra->cycleTimer) != 0) && (flags->emitting == 0))
         {
             if (extra->cycleTimer < lbl_803DC348)
             {

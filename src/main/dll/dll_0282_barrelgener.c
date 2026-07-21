@@ -108,7 +108,7 @@ void barrelgener_update(GameObject* obj)
             mainSetBits(GAMEBIT_BARRELGENER_TRIGGERED, 1);
         }
     }
-    if (fn_80080150(&state->releaseTimer) != 0)
+    if (timerIsActive(&state->releaseTimer) != 0)
     {
         if (state->releaseTimer <= lbl_803E6C28 && state->releaseAnimPlaying == 0)
         {

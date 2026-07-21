@@ -80,7 +80,7 @@ void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 
         state->targetObj = obj->pendingTarget;
         obj->pendingTarget = NULL;
     }
-    if (fn_80080150(&state->renderTimer) != 0 ||
+    if (timerIsActive(&state->renderTimer) != 0 ||
         (mapBlock = objPosToMapBlockIdx((double)obj->localPosX, (double)obj->localPosY, (double)obj->localPosZ)) == -1)
     {
         return;
@@ -102,7 +102,7 @@ void ProximityMine_hitDetect(ProximityMineObject* obj)
     ProximityMineCollider* collider;
     ProximityMineState* state;
 
-    if (fn_80080150(&obj->state->renderTimer) == 0)
+    if (timerIsActive(&obj->state->renderTimer) == 0)
     {
         hit = ObjHits_GetPriorityHit((GameObject*)obj, 0, 0, 0);
         collider = obj->collider;
@@ -139,7 +139,7 @@ void ProximityMine_update(ProximityMineObject* obj)
         state->targetObj = obj->pendingTarget;
         obj->pendingTarget = NULL;
     }
-    if (fn_80080150(&state->lifespanTimer) != 0)
+    if (timerIsActive(&state->lifespanTimer) != 0)
     {
         obj->rootMotionScale += state->verticalStep * timeDelta;
         if (state->targetObj != NULL)
@@ -201,7 +201,7 @@ void ProximityMine_update(ProximityMineObject* obj)
     }
     else
     {
-        if (fn_80080150(&state->resetTimer) != 0)
+        if (timerIsActive(&state->resetTimer) != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_ef);
             if (state->effectHandle == NULL)
@@ -318,7 +318,7 @@ void ProximityMine_update(ProximityMineObject* obj)
             }
             break;
         }
-        if (fn_80080150(&state->renderTimer) == 0)
+        if (timerIsActive(&state->renderTimer) == 0)
         {
             if (objPosToMapBlockIdx((double)obj->localPosX, (double)obj->localPosY, (double)obj->localPosZ) == -1)
             {
