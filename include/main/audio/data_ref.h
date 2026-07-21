@@ -1,7 +1,7 @@
 #ifndef MAIN_AUDIO_DATA_REF_H_
 #define MAIN_AUDIO_DATA_REF_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 typedef struct SAMPLE_HEADER {
     u32 info;
@@ -79,6 +79,17 @@ typedef struct SynthDataTables {
     LAYER_TAB getLayerKey;    /* 0xA620 dataGetLayerSearchKey */
     FX_TAB getFXKey;          /* 0xA62C dataGetFXSearchKey */
 } SynthDataTables;
+
+STATIC_ASSERT(offsetof(SynthDataTables, curve) == 0x600);
+STATIC_ASSERT(offsetof(SynthDataTables, keymap) == 0x4600);
+STATIC_ASSERT(offsetof(SynthDataTables, layer) == 0x4E00);
+STATIC_ASSERT(offsetof(SynthDataTables, macMain) == 0x5A00);
+STATIC_ASSERT(offsetof(SynthDataTables, macSub) == 0x6200);
+STATIC_ASSERT(offsetof(SynthDataTables, fxGroup) == 0xA200);
+STATIC_ASSERT(offsetof(SynthDataTables, getSampleKey) == 0xA600);
+STATIC_ASSERT(offsetof(SynthDataTables, getLayerKey) == 0xA620);
+STATIC_ASSERT(offsetof(SynthDataTables, getFXKey) == 0xA62C);
+STATIC_ASSERT(sizeof(SynthDataTables) == 0xA638);
 
 typedef DATA_TAB DataRefEntry;
 typedef LAYER_TAB DataLayerRef;
