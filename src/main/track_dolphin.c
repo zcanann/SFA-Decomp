@@ -326,7 +326,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
                 f32 y1, f32 z1, u8 flags);
 int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
                       int flagsArg);
-int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
+int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
+                                 GameObject* target, int lineMask, int segment, int yTolerance,
+                                 GameObject* sourceObj);
 
 f32 lbl_8038D7DC[0x19];
 f32 gPrevSunDir[3];
@@ -2293,12 +2295,12 @@ void trackInvalidateDynamicSlotsForObject(GameObject* target)
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
-/* doLotsOfMath -- sweep a 2D segment (with radius) against the intersection
- * line table, sliding/clipping the end point; fills *out with the last hit. */
-int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* obj, int pmask, int seg, int ytol,
-                 int self)
+/* trackSweepCircleAgainstLines -- sweep a 2D segment (with radius) against the intersection
+ * line table, sliding/clipping the end point; fills *hit with the last hit. */
+int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
+                                 GameObject* target, int lineMask, int segment, int yTolerance,
+                                 GameObject* sourceObj)
 {
-    f32* A = ptA;
     f32 fracs[5];
     f32 dists[5];
     f32 lb[4], la[4], ld[4];
@@ -2329,32 +2331,32 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     f32 len, ax2, ay2, az2, bx2, by2, bz2, dx, dz;
     f32 minX, maxX, minZ, maxZ;
 
-    if (obj != NULL)
+    if (target != NULL)
     {
-        if ((s8)seg != -1)
+        if ((s8)segment != -1)
         {
-            u8* tbl = *(u8**)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x38);
-            start = tbl[(s8)seg * 2];
-            end = tbl[(s8)seg * 2 + 1];
+            u8* tbl = *(u8**)(*(int*)&target->anim.modelInstance + 0x38);
+            start = tbl[(s8)segment * 2];
+            end = tbl[(s8)segment * 2 + 1];
         }
         else
         {
             start = 0;
-            end = *(u8*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x5c);
+            end = *(u8*)(*(int*)&target->anim.modelInstance + 0x5c);
         }
         lineIdx = 0;
-        vt = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x34);
-        vp = *(int*)(*(int*)&((GameObject*)obj)->anim.modelInstance + 0x3c);
-        if (((GameObject*)obj)->objectFlags & 0x100)
+        vt = *(int*)(*(int*)&target->anim.modelInstance + 0x34);
+        vp = *(int*)(*(int*)&target->anim.modelInstance + 0x3c);
+        if (target->objectFlags & 0x100)
         {
             end = 0;
         }
     }
     else
     {
-        if ((s8)seg != -1)
+        if ((s8)segment != -1)
         {
-            int idx = (s8)seg * 2;
+            int idx = (s8)segment * 2;
             start = gIntersectSegmentTypeTable[idx];
             end = gIntersectSegmentTypeTable[idx + 1];
         }
@@ -2374,12 +2376,12 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
 
     {
         f32 x1, x0;
-        x0 = A[0];
+        x0 = startPos[0];
         posX[0] = x0;
-        posZ[0] = A[2];
-        x1 = ((f32*)ptB)[0];
+        posZ[0] = startPos[2];
+        x1 = endPos[0];
         posX[1] = x1;
-        posZ[1] = ((f32*)ptB)[2];
+        posZ[1] = endPos[2];
         if (x0 < x1)
         {
             minX = x0;
@@ -2415,7 +2417,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
     hitp = hits;
     fracp = fracs;
     distp = dists;
-    mask = pmask;
+    mask = lineMask;
     si2 = start << 1;
     si16 = start << 4;
 
@@ -2478,7 +2480,7 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             ylo = ay2;
             if (by2 < ay2)
                 ylo = by2;
-            ylo = ylo - (f32)(s8)ytol;
+            ylo = ylo - (f32)(s8)yTolerance;
             if ((s8)rec[2] & 0x80)
             {
                 ha = (f32) * (s16*)rec;
@@ -2495,10 +2497,10 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 if (by2 + hb > ta)
                     yhi = by2 + hb;
             }
-            yhi = yhi + (f32)(s8)ytol;
-            if (A[1] < ylo)
+            yhi = yhi + (f32)(s8)yTolerance;
+            if (startPos[1] < ylo)
                 continue;
-            if (A[1] > yhi)
+            if (startPos[1] > yhi)
                 continue;
 
             dx = bx2 - ax2;
@@ -2724,9 +2726,9 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         }
     }
 
-    if (count != 0 && out != NULL)
+    if (count != 0 && hit != NULL)
     {
-        f32* outf = out;
+        f32* outf = (f32*)hit;
         int pick = count - 1;
         int hi;
         s16* rec2;
@@ -2737,8 +2739,8 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
         {
             pick = 0;
         }
-        dx = ((f32*)ptB)[0] - posX[0];
-        dz = ((f32*)ptB)[2] - posZ[0];
+        dx = endPos[0] - posX[0];
+        dz = endPos[2] - posZ[0];
         outf[0x11] = fracs[0] * sqrtf(dx * dx + dz * dz);
         outf[0x12] = dists[pick];
         hi = hits[pick];
@@ -2773,20 +2775,20 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             outf[4] = vb2[1];
             outf[0x10] = outf[4] + fb;
             outf[6] = vb2[2];
-            *(s8*)((u8*)out + 0x50) = (s8)(*((u8*)rec2 + 3) & 0x3f);
-            *((u8*)out + 0x52) = *((u8*)rec2 + 2);
-            *(s8*)((u8*)out + 0x51) = rec2[6];
-            *(int**)out = obj;
-            *(s16*)((u8*)out + 0x4c) = rec2[4];
-            *(s16*)((u8*)out + 0x4e) = rec2[5];
+            *(s8*)((u8*)hit + 0x50) = (s8)(*((u8*)rec2 + 3) & 0x3f);
+            *((u8*)hit + 0x52) = *((u8*)rec2 + 2);
+            *(s8*)((u8*)hit + 0x51) = rec2[6];
+            *(GameObject**)hit = target;
+            *(s16*)((u8*)hit + 0x4c) = rec2[4];
+            *(s16*)((u8*)hit + 0x4e) = rec2[5];
         }
     }
     if (count != 0)
     {
         lbl_803DCF4C++;
         count = 1;
-        ((f32*)ptB)[0] = posX[1];
-        ((f32*)ptB)[2] = posZ[1];
+        endPos[0] = posX[1];
+        endPos[2] = posZ[1];
     }
     return count;
 }
@@ -2955,7 +2957,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], (u32)o);
         }
         Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
-        if (doLotsOfMath(t20, t14, f, p5, out, o, p8, p9, arg8, (int)self) != 0)
+        if (trackSweepCircleAgainstLines(t20, t14, f, p5, out, (GameObject*)o, p8, p9, arg8, self) != 0)
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
         if ((u8)slot != 0xff)
         {
@@ -2968,7 +2970,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             }
         }
     }
-    doLotsOfMath(w0, w1, f, p5, out, NULL, p8, p9, arg8, (int)self);
+    trackSweepCircleAgainstLines(w0, w1, f, p5, out, NULL, p8, p9, arg8, self);
     if (lbl_803DCF4C != 0 && out != NULL)
     {
         f32 hx = *(f32*)((char*)out + 0x3c) - *(f32*)((char*)out + 0xc);
