@@ -1756,7 +1756,7 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     selectReflectionTexture(0);
     getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
-    fn_8006C540(&handle2);
+    getNewShadowRadialTexture(&handle2);
     selectTexture(handle2, 2);
 
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
@@ -2220,7 +2220,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     mtx[2][3] = lbl_803DEEE4;
     GXLoadTexMtxImm(mtx, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_TRUE, GX_PTTEXMTX7);
-    fn_8006C5CC((u32*)&handle2);
+    getNewShadowDiskTexture((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
     c.a = alpha;
     GXSetTevKColor(GX_KCOLOR0, c);
@@ -2330,7 +2330,7 @@ int modelCb_80073d04(u8* obj, int* objB)
     texMtx[2][3] = lbl_803DEEE4;
     GXLoadTexMtxImm(texMtx, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_TRUE, GX_PTTEXMTX7);
-    fn_8006C5CC((u32*)&handle);
+    getNewShadowDiskTexture((u32*)&handle);
     selectTexture((Texture*)handle, 0);
     colorK.a = obj[0x37];
     GXSetTevKColor(GX_KCOLOR0, colorK);
@@ -2766,7 +2766,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXLoadTexMtxImm((f32(*)[4])mtx_8c, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX3x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTTEXMTX7);
 
-    fn_8006C5CC((u32*)&handle2);
+    getNewShadowDiskTexture((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
 
     GXSetNumIndStages(2);
@@ -3767,7 +3767,7 @@ void fn_80077AD8(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx, f32 dep
     v.z = mtx[2][3];
     PSMTXMultVec(shadow->depthMtx, &v, &v);
     z = -v.z;
-    fn_8006C5B8((u32*)&handle);
+    getNewShadowRampTexture((u32*)&handle);
     selectTexture((Texture*)handle, 1);
     m58[0][0] = lbl_803DEEDC;
     m58[0][1] = lbl_803DEEDC;
@@ -3939,7 +3939,7 @@ void fn_80077EF8(ProjectedShadowTexture* shadow, u32* colorPtr, Mtx mtx, f32 sca
     PSMTXMultVec(shadow->depthMtx, (Vec*)vec3, (Vec*)vec3);
     f31_val = -vec3[2];
 
-    fn_8006C5B8((u32*)&handle);
+    getNewShadowRampTexture((u32*)&handle);
     selectTexture((Texture*)handle, 1);
 
     {
@@ -4410,7 +4410,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     *(u32*)&c0 = lbl_803DEEA0;
     *(u32*)&c1 = lbl_803DEEA4;
     *(u32*)&c2 = lbl_803DEEA8;
-    fn_8006C540(&handle);
+    getNewShadowRadialTexture(&handle);
     selectTexture(handle, 0);
     {
         f32 dec = *(f32*)&gSynthDelayedActionWord0;

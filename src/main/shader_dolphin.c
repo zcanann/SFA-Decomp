@@ -583,7 +583,7 @@ void fn_8004CE0C(void* viewMtx)
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    fn_8006C5B8((u32*)&obj80);
+    getNewShadowRampTexture((u32*)&obj80);
     if (obj80 != NULL)
     {
         void* obj = obj80 + 0x20;
@@ -1073,7 +1073,7 @@ void fn_8004E0FC(void)
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXLoadTexMtxImm(m1b8, lbl_803DCD80 + 3, 0);
     GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
-    fn_8006C510(&tex1c);
+    getNewShadowRingTexture(&tex1c);
     {
         int id = lbl_803DCD8C;
         if (tex1c != 0)
@@ -1449,7 +1449,7 @@ void fn_8004F380(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        fn_8006C540(&src);
+        getNewShadowRadialTexture(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
@@ -1532,7 +1532,7 @@ void fn_8004F6D8(f32 scale, int* colorIn, f32* pos, u8* chanColor)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        fn_8006C540(&src);
+        getNewShadowRadialTexture(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
@@ -1620,7 +1620,7 @@ void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        fn_8006C540(&src);
+        getNewShadowRadialTexture(&src);
         GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
         GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
@@ -1789,7 +1789,7 @@ void fn_8005011C(u8* objInst)
     GXSetTevSwapMode(lbl_803DCD90 + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
     GXSetTevAlphaOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    fn_8006C5B8((u32*)&src);
+    getNewShadowRampTexture((u32*)&src);
     id = lbl_803DCD8C;
     if (src != NULL)
     {

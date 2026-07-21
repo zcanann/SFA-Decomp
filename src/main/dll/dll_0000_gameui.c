@@ -1154,7 +1154,7 @@ int pauseMenuHoloRenderFn(int* this, int* p2, int p3)
     mtex[11] = 1.0f;
     GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, 1);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    fn_8006C5CC((u32*)&tex2);
+    getNewShadowDiskTexture((u32*)&tex2);
     selectTexture((Texture*)((void*)tex2), 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)&gTrickyHudIconKColor);

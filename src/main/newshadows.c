@@ -1137,9 +1137,9 @@ void fn_8006C504(Texture** p)
 {
     *p = lbl_803DCFC8;
 }
-void fn_8006C510(Texture** p)
+void getNewShadowRingTexture(Texture** out)
 {
-    *p = gNewShadowRingTexture;
+    *out = gNewShadowRingTexture;
 }
 void fn_8006C51C(Texture** p)
 {
@@ -1153,9 +1153,9 @@ void fn_8006C534(Texture** p)
 {
     *p = lbl_803DCFBC;
 }
-void fn_8006C540(Texture** p)
+void getNewShadowRadialTexture(Texture** out)
 {
-    *p = gNewShadowRadialTexture;
+    *out = gNewShadowRadialTexture;
 }
 
 void* textureAlloc512(void)
@@ -1165,18 +1165,18 @@ void* textureAlloc512(void)
     DCFlushRange((char*)tex + 0x60, tex->dataSize);
     return tex;
 }
-void fn_8006C5B8(u32* p)
+void getNewShadowRampTexture(u32* out)
 {
-    *p = gNewShadowRampTexture;
+    *out = gNewShadowRampTexture;
 }
 
 u32 textureFn_8006c5c4(void)
 {
     return gNewShadowSmallDiskTexture;
 }
-void fn_8006C5CC(u32* p)
+void getNewShadowDiskTexture(u32* out)
 {
-    *p = gNewShadowDiskTexture;
+    *out = gNewShadowDiskTexture;
 }
 void getReflectionTexture2(u32* p)
 {
