@@ -1388,9 +1388,15 @@ main/dll/dll_00C4_tricky.c:
 	.sdata2     start:0x803E23D8 end:0x803E2468
 
 main/dll/dll_00C9_enemy.c:
-	.text       start:0x8014A9F0 end:0x8014E1DC
+	.text       start:0x8014A9F0 end:0x8014C678
 	.data       start:0x8031DBF0 end:0x8031DC88
 	.sdata      start:0x803DBC58 end:0x803DBC70
+
+main/dll/dll_00C9_enemy_8014c678.c:
+	.text       start:0x8014C678 end:0x8014C920
+
+main/dll/dll_00C9_enemy_8014c920.c:
+	.text       start:0x8014C920 end:0x8014E1DC
 
 main/dll/dll_00DF_hagabon.c:
 	.text       start:0x8014E1DC end:0x8014EE8C

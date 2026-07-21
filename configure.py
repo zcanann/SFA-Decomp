@@ -1400,6 +1400,8 @@ config.libs = [
                 section_alignments={".data": 4},
             ),
             Object(NonMatching, "main/dll/dll_00C9_enemy.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/dll_00C9_enemy_8014c678.c", cflags=cflags_dll_noopt_nocse),
+            Object(NonMatching, "main/dll/dll_00C9_enemy_8014c920.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00DF_hagabon.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00E0_swarmbaddie.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00E1_wispbaddie.c", cflags=cflags_dll_noopt),
