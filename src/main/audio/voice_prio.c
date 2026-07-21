@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
@@ -8,16 +9,11 @@
 #include "main/audio/voice_manage.h"
 
 
-typedef struct VoicePrioPrev
-{
-    u16 prev;
-    u16 pad;
-} VoicePrioPrev;
-
 #define VB_PRIO_HEAD(vb, p)      (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
-#define VB_PRIO_LINK(vb, i)      ((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))
+#define VB_PRIO_LINK(vb, i)      ((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * sizeof(SynthVoiceListNode)))
 #define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)&(vb)->prioritySortLinks[0])[p].next)
-#define VB_PRIO_SORT_PREV(vb, p) (((VoicePrioPrev*)((u8*)&(vb)->prioritySortLinks[0] + 2))[p].prev)
+#define VB_PRIO_SORT_PREV(vb, p) \
+    (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + offsetof(SynthRootListNode, prev)))[p].next)
 
 /*
  * Insert the voice into the new priority group's list and keep the global
