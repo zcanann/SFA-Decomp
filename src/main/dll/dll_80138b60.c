@@ -240,7 +240,7 @@ f32 fn_80138F78(GameObject* obj)
     return ((TrickyImpressState*)obj->extra)->unk14;
 }
 
-GameObject* fn_80138F84(GameObject* obj)
+GameObject* trickyGetStayPoint(GameObject* obj)
 {
     return ((TrickyImpressState*)obj->extra)->stayPoint;
 }

@@ -6,7 +6,7 @@
  *
  * StayPoint_update arms the disable bit each frame, then - while the
  * placement's required game bit is satisfied (-1 = always) - tests whether
- * this is the stay point Tricky is currently assigned to (fn_80138F84).
+ * this is the stay point Tricky is currently assigned to (trickyGetStayPoint).
  * If it is and Tricky is within range (squared distance < lbl_803E38A8) it
  * sets the placement's active game bit and bails. Otherwise it clears the
  * active bit, sets the hit-volume priority from whether a menu item is
@@ -52,7 +52,7 @@ void StayPoint_update(GameObject* obj)
         (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     if (tricky != NULL)
     {
-        isCurrentStayPoint = ((int)obj - (int)fn_80138F84(tricky) == 0);
+        isCurrentStayPoint = ((int)obj - (int)trickyGetStayPoint(tricky) == 0);
         if (isCurrentStayPoint == 0 && placement->activeGameBit != -1)
         {
             mainSetBits(placement->activeGameBit, 0);
