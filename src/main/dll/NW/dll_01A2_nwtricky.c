@@ -57,7 +57,7 @@ void NW_tricky_update(int* obj)
 
     int count;
     NwTrickyIds ids;
-    char* state;
+    NwTrickyState* state;
     int* tricky;
     int* player;
     int** objects;
@@ -104,7 +104,7 @@ void NW_tricky_update(int* obj)
                 if (!(*(u8(**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
                     mainSetBits(GAMEBIT_Tricky_Usable, 0);
-                    ((NwTrickyState*)state)->timer = lbl_803E5260.f;
+                    state->timer = lbl_803E5260.f;
                 }
 
                 for (i2 = 0, ip = ids.ids, healthMin = lbl_803E5260.f; i2 < 3; ip++, i2++)
@@ -118,11 +118,11 @@ void NW_tricky_update(int* obj)
                     }
                 }
 
-                ((NwTrickyState*)state)->timer += timeDelta;
-                timer = ((NwTrickyState*)state)->timer;
+                state->timer += timeDelta;
+                timer = state->timer;
                 if (timer >= lbl_803E5264.f)
                 {
-                    ((NwTrickyState*)state)->timer = timer - lbl_803E5264.f;
+                    state->timer = timer - lbl_803E5264.f;
                     trickyTryPlaySound((GameObject*)tricky, 0x152, 0x1000);
                 }
             }
@@ -148,7 +148,7 @@ void NW_tricky_update(int* obj)
     case 1:
         if (!(((GameObject*)tricky)->objectFlags & NWTRICKY_OBJFLAG_PARENT_SLACK))
         {
-            ((NwTrickyState*)state)->timer += timeDelta;
+            state->timer += timeDelta;
         }
         if (mainGetBit(GAMEBIT_TrickyTalk) == 1)
         {
@@ -157,10 +157,10 @@ void NW_tricky_update(int* obj)
                 mainSetBits(GAMEBIT_TrickyTalk, 0xff);
             }
         }
-        timer = ((NwTrickyState*)state)->timer;
+        timer = state->timer;
         if (timer >= lbl_803E5268.f)
         {
-            ((NwTrickyState*)state)->timer = timer - lbl_803E5268.f;
+            state->timer = timer - lbl_803E5268.f;
             if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff)
             {
                 if ((*gMapEventInterface)->getTrickyEnergy()[0] < 4)

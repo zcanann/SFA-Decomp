@@ -105,21 +105,23 @@ f32* NW_mammoth_getSpawnPosition(GameObject* obj)
 int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     u8* state;
+    NwMammothState* s;
     void* audioEvents;
     void* audioPoints;
     void* audioScratch;
 
     state = (obj)->extra;
-    if ((((NwMammothState*)state)->runtimeFlags & 0x20) == 0)
+    s = (NwMammothState*)state;
+    if ((s->runtimeFlags & 0x20) == 0)
     {
         Sfx_StopObjectChannel((int)obj, 0x7f);
-        ((NwMammothState*)state)->pathSpeed = 0.0f;
-        ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags & ~0x10);
-        ((NwMammothState*)state)->runtimeFlags = (u8)(((NwMammothState*)state)->runtimeFlags | 0x20);
+        s->pathSpeed = 0.0f;
+        s->runtimeFlags = (u8)(s->runtimeFlags & ~0x10);
+        s->runtimeFlags = (u8)(s->runtimeFlags | 0x20);
     }
-    if ((((NwMammothState*)state)->runtimeFlags & 4) != 0)
+    if ((s->runtimeFlags & 4) != 0)
     {
-        ((NwMammothState*)state)->playerDistanceSq = 0.0f;
+        s->playerDistanceSq = 0.0f;
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
         animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
         NW_mammoth_updateEyeTracking(obj, (int)state, 1);

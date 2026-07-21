@@ -129,22 +129,23 @@ typedef struct
 
 void NW_mammoth_updateEyeTracking(GameObject* obj, int state, int flag)
 {
-    if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
-        ((NwMammothState*)state)->playerDistanceSq < 40000.0f)
+    NwMammothState* s = (NwMammothState*)state;
+    if (flag != 0 && s->playerObject != NULL &&
+        s->playerDistanceSq < 40000.0f)
     {
-        ((NwMammothState*)state)->eyeTarget.enabled = 1;
-        ((NwMammothState*)state)->eyeTarget.targetX =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosX;
-        ((NwMammothState*)state)->eyeTarget.targetY =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosY;
-        ((NwMammothState*)state)->eyeTarget.targetZ =
-            ((GameObject*)((NwMammothState*)state)->playerObject)->anim.localPosZ;
+        s->eyeTarget.enabled = 1;
+        s->eyeTarget.targetX =
+            ((GameObject*)s->playerObject)->anim.localPosX;
+        s->eyeTarget.targetY =
+            ((GameObject*)s->playerObject)->anim.localPosY;
+        s->eyeTarget.targetZ =
+            ((GameObject*)s->playerObject)->anim.localPosZ;
     }
     else
     {
-        ((NwMammothState*)state)->eyeTarget.enabled = 0;
+        s->eyeTarget.enabled = 0;
     }
-    if ((lbl_803268B4[((NwMammothState*)state)->stateIndex] & 0x2) != 0)
+    if ((lbl_803268B4[s->stateIndex] & 0x2) != 0)
     {
         fn_8003A168(obj, (void*)(state + 0x40c));
         fn_8003B228(obj, (void*)(state + 0x40c));

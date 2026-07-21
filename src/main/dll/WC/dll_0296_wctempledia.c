@@ -61,7 +61,7 @@ void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
 
 int wctempledia_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    WCTempleDiaState* state = ((GameObject*)obj)->extra;
+    WCTempleDiaState* state = obj->extra;
 
     {
         f32 scaled = gWcTempleDiaSpeedLerpRate;
@@ -69,7 +69,7 @@ int wctempledia_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState
         scaled = scaled * -cs;
         state->currentSpeed = scaled * timeDelta + cs;
     }
-    ((GameObject*)obj)->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)((GameObject*)obj)->anim.rotZ);
+    obj->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)obj->anim.rotZ);
     animUpdate->sequenceEventActive = 0;
     animUpdate->activeHitVolumePair &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
     animUpdate->hitVolumePair &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
@@ -117,7 +117,7 @@ void wctempledia_update(GameObject* obj)
 
     if (state->flags & WCTEMPLE_DIA_FLAG_SOLVED)
     {
-        wctempledia_syncPartVisibility((GameObject*)go, state->stageMask);
+        wctempledia_syncPartVisibility(go, state->stageMask);
         return;
     }
     state->currentSpeed += timeDelta * (gWcTempleDiaSpeedLerpRate * (state->targetSpeed - state->currentSpeed));
@@ -166,7 +166,7 @@ void wctempledia_update(GameObject* obj)
             }
         }
     }
-    wctempledia_syncPartVisibility((GameObject*)go, state->stageMask);
+    wctempledia_syncPartVisibility(go, state->stageMask);
     if (state->stageMask == WCTEMPLE_DIA_ALL_STAGES_MASK)
     {
         mainSetBits(setup->solvedBit, 1);
@@ -178,10 +178,10 @@ void wctempledia_update(GameObject* obj)
 void wctempledia_init(GameObject* obj, WCTempleDiaSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    WCTempleDiaState* state = ((GameObject*)obj)->extra;
+    WCTempleDiaState* state = obj->extra;
     int i;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setup->type << 8);
+    obj->anim.rotX = (s16)(setup->type << 8);
     *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
@@ -222,8 +222,8 @@ void wctempledia_init(GameObject* obj, WCTempleDiaSetup* setup)
         state->currentSpeed = state->targetTable[0];
     }
     state->targetSpeed = state->currentSpeed;
-    ((GameObject*)obj)->animEventCallback = wctempledia_interactCallback;
-    wctempledia_syncPartVisibility((GameObject*)(obj), state->stageMask);
+    obj->animEventCallback = wctempledia_interactCallback;
+    wctempledia_syncPartVisibility(obj, state->stageMask);
 }
 
 void wctempledia_release(void)
