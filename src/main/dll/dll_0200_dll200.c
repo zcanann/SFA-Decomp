@@ -108,16 +108,17 @@ void fn_801F2290(int obj)
     f32 spd;
     ItemIdSet3 itemSet;
     ObjAnimEventList animEvents;
+    GameObject* o = (GameObject*)obj;
 
-    state = ((GameObject*)obj)->extra;
+    state = o->extra;
     Obj_GetPlayerObject();
     itemSet = gArwingAttachmentItemSetWander;
-    ((GameObject*)obj)->anim.localPosY = state->homeY;
+    o->anim.localPosY = state->homeY;
     if (mainGetBit(GAMEBIT_WM_FoundKrystal) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
+        *(u8*)&o->anim.resetHitboxMode =
+            (u8)(*(u8*)&o->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        if ((*(u8*)&o->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
             (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&itemSet, 3) > -1)
         {
             mainSetBits(0x4d1, 1);
@@ -128,8 +129,8 @@ void fn_801F2290(int obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        *(u8*)&o->anim.resetHitboxMode =
+            (u8)(*(u8*)&o->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
         if (state->modeTimer <= 0)
         {
             switch (randomGetRange(1, 4))
@@ -168,17 +169,17 @@ void fn_801F2290(int obj)
             {
                 ang =
                     getAngle(gArwingAttachmentTargets[state->prevMode].x, gArwingAttachmentTargets[state->prevMode].y);
-                diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
+                diff = (s16)(ang - o->anim.rotX);
                 logPrintf(sArwingAttachmentDiffFormat, diff);
                 if (diff < -1000 || diff > 1000)
                 {
                     if (diff > 0)
                     {
-                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + framesThisStep * 100);
+                        o->anim.rotX = (s16)(o->anim.rotX + framesThisStep * 100);
                     }
                     else
                     {
-                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - framesThisStep * 100);
+                        o->anim.rotX = (s16)(o->anim.rotX - framesThisStep * 100);
                     }
                 }
                 else
@@ -193,7 +194,7 @@ void fn_801F2290(int obj)
                 if (ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                                  &animEvents) != 0)
                 {
-                    if ((f32)(int)((GameObject*)obj)->anim.currentMove ==
+                    if ((f32)(int)o->anim.currentMove ==
                         gArwingAttachmentTargets[state->prevMode].moveId)
                     {
                         ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[state->prevMode].altMoveId, 0.0f,
@@ -209,37 +210,37 @@ void fn_801F2290(int obj)
             }
             else
             {
-                dx = gArwingAttachmentTargets[mode].x - (((GameObject*)obj)->anim.localPosX - state->homeX);
-                dy = gArwingAttachmentTargets[mode].y - (((GameObject*)obj)->anim.localPosZ - state->homeZ);
+                dx = gArwingAttachmentTargets[mode].x - (o->anim.localPosX - state->homeX);
+                dy = gArwingAttachmentTargets[mode].y - (o->anim.localPosZ - state->homeZ);
                 dist = sqrtf(dx * dx + dy * dy);
                 ang = getAngle(dx, dy);
-                diff = (s16)(ang - ((GameObject*)obj)->anim.rotX);
+                diff = (s16)(ang - o->anim.rotX);
                 if (diff >= -1000 && diff <= 1000)
                 {
-                    if (((GameObject*)obj)->anim.currentMove != 59)
+                    if (o->anim.currentMove != 59)
                     {
                         ObjAnim_SetCurrentMove(obj, 59, 0.0f, 0);
                         state->animSpeed = 0.04f;
                     }
                     spd = 0.25f;
-                    ((GameObject*)obj)->anim.velocityX = spd * (dx / dist);
-                    ((GameObject*)obj)->anim.velocityZ = spd * (dy / dist);
+                    o->anim.velocityX = spd * (dx / dist);
+                    o->anim.velocityZ = spd * (dy / dist);
                     ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, spd, &state->animSpeed);
                 }
                 else
                 {
-                    if (((GameObject*)obj)->anim.currentMove != 12)
+                    if (o->anim.currentMove != 12)
                     {
                         ObjAnim_SetCurrentMove(obj, 12, 0.0f, 0);
                         state->animSpeed = 0.01f;
                     }
                     if (diff > 0)
                     {
-                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + framesThisStep * 300);
+                        o->anim.rotX = (s16)(o->anim.rotX + framesThisStep * 300);
                     }
                     else
                     {
-                        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - framesThisStep * 300);
+                        o->anim.rotX = (s16)(o->anim.rotX - framesThisStep * 300);
                     }
                 }
                 if (dist < 4.0f)
@@ -247,13 +248,13 @@ void fn_801F2290(int obj)
                     state->prevMode = state->mode;
                     state->mode = 12;
                     spd = 0.0f;
-                    ((GameObject*)obj)->anim.velocityX = spd;
-                    ((GameObject*)obj)->anim.velocityZ = spd;
+                    o->anim.velocityX = spd;
+                    o->anim.velocityZ = spd;
                 }
-                ((GameObject*)obj)->anim.localPosX =
-                    ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
-                ((GameObject*)obj)->anim.localPosZ =
-                    ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+                o->anim.localPosX =
+                    o->anim.velocityX * timeDelta + o->anim.localPosX;
+                o->anim.localPosZ =
+                    o->anim.velocityZ * timeDelta + o->anim.localPosZ;
                 ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,
                                                                              &animEvents);
             }
@@ -312,11 +313,12 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
     int state;
     int player;
     int i;
+    GameObject* o = (GameObject*)obj;
 
     player = (int)Obj_GetPlayerObject();
-    state = *(int*)&((GameObject*)obj)->extra;
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-        (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    state = *(int*)&o->extra;
+    *(u8*)&o->anim.resetHitboxMode =
+        (u8)(*(u8*)&o->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
 
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -464,8 +466,9 @@ void dll_200_update(int obj)
     u8 ev;
     u8 ret;
     Dll200State* state;
+    GameObject* o = (GameObject*)obj;
 
-    state = ((GameObject*)obj)->extra;
+    state = o->extra;
     ret = ObjHitReact_Update(obj, gArwingAttachmentHitReactTable, 11,
                              (u8)((state->mode & DLL200_MODE_HITREACTING) ? 1 : 0), &state->hitReactVec);
     if (ret != 0)
@@ -475,7 +478,7 @@ void dll_200_update(int obj)
     else
     {
         state->mode = (u8)(state->mode & ~DLL200_MODE_HITREACTING);
-        ev = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
+        ev = (*gMapEventInterface)->getMapAct((int)o->anim.mapEventSlot);
         switch (ev)
         {
         case 1:
@@ -485,9 +488,9 @@ void dll_200_update(int obj)
             fn_801F2290(obj);
             break;
         case 4:
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-                (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-            if (((GameObject*)obj)->anim.currentMove != 2)
+            *(u8*)&o->anim.resetHitboxMode =
+                (u8)(*(u8*)&o->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+            if (o->anim.currentMove != 2)
             {
                 ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
             }
@@ -509,10 +512,11 @@ void dll_200_init(int* obj, int* arg)
 {
     Dll200State* state;
     Dll200Placement* def = (Dll200Placement*)arg;
-    ((GameObject*)obj)->userData1 = 0;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def->rotXByte << 8);
-    ((GameObject*)obj)->animEventCallback = dll_200_SeqFn;
-    state = ((GameObject*)obj)->extra;
+    GameObject* o = (GameObject*)obj;
+    o->userData1 = 0;
+    o->anim.rotX = (s16)((s32)def->rotXByte << 8);
+    o->animEventCallback = dll_200_SeqFn;
+    state = o->extra;
     state->defNoLow = (u8)def->head.objectId;
     state->unk1C = 0;
     state->unk18 = 0;

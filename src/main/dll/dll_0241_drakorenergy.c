@@ -106,66 +106,68 @@ void drakorenergy_update(int obj)
     f32 interceptPt[3];
     f32 seekDir[3];
     s16 colorRGB[12];
+    GameObject* o = (GameObject*)obj;
+    DrakorEnergyState* s = (DrakorEnergyState*)state;
 
     player = Obj_GetPlayerObject();
-    placement = *(int*)&((GameObject*)obj)->anim.placementData;
-    switch (((DrakorEnergyState*)state)->mode)
+    placement = *(int*)&o->anim.placementData;
+    switch (s->mode)
     {
     case DRAKORENERGY_MODE_IDLE:
         if (mainGetBit(((DrakorenergyPlacement*)placement)->gameBitId) == 1)
         {
-            ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_BOBBING;
+            s->mode = DRAKORENERGY_MODE_BOBBING;
         }
         break;
     case DRAKORENERGY_MODE_FALLING:
-        if (((DrakorEnergyState*)state)->startY - ((GameObject*)obj)->anim.localPosY > (zeroF = lbl_803E627C))
+        if (s->startY - o->anim.localPosY > (zeroF = lbl_803E627C))
         {
-            ((GameObject*)obj)->anim.velocityY = gDrakorEnergyBounceRestitution * -((GameObject*)obj)->anim.velocityY;
-            dist = (((GameObject*)obj)->anim.velocityY >= zeroF) ? ((GameObject*)obj)->anim.velocityY
-                                                                 : -((GameObject*)obj)->anim.velocityY;
+            o->anim.velocityY = gDrakorEnergyBounceRestitution * -o->anim.velocityY;
+            dist = (o->anim.velocityY >= zeroF) ? o->anim.velocityY
+                                                                 : -o->anim.velocityY;
             if (dist < lbl_803E6284)
             {
-                ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_BOBBING;
+                s->mode = DRAKORENERGY_MODE_BOBBING;
                 zeroF = lbl_803E627C;
-                ((GameObject*)obj)->anim.velocityX = zeroF;
-                ((GameObject*)obj)->anim.velocityZ = zeroF;
+                o->anim.velocityX = zeroF;
+                o->anim.velocityZ = zeroF;
                 break;
             }
         }
-        ((GameObject*)obj)->anim.velocityY += gDrakorEnergyGravity;
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
-                ((GameObject*)obj)->anim.velocityZ);
+        o->anim.velocityY += gDrakorEnergyGravity;
+        objMove((GameObject*)obj, o->anim.velocityX, o->anim.velocityY,
+                o->anim.velocityZ);
         colorRGB[2] = 0xff;
-        colorRGB[1] = 0xff - ((DrakorEnergyState*)state)->phase % 0x500;
+        colorRGB[1] = 0xff - s->phase % 0x500;
         colorRGB[0] = 0xff;
         (*gPartfxInterface)->spawnObject((void*)obj, DRAKORENERGY_PARTFX, colorRGB, 0, -1, NULL);
         break;
     case DRAKORENERGY_MODE_BOBBING:
-        ((GameObject*)obj)->anim.velocityY =
+        o->anim.velocityY =
             gDrakorEnergyBobAmplitude *
-            mathSinf(gDrakorEnergyPi * (f32)((DrakorEnergyState*)state)->phase / gDrakorEnergyPhaseDivisor);
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
-                ((GameObject*)obj)->anim.velocityZ);
-        if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            mathSinf(gDrakorEnergyPi * (f32)s->phase / gDrakorEnergyPhaseDivisor);
+        objMove((GameObject*)obj, o->anim.velocityX, o->anim.velocityY,
+                o->anim.velocityZ);
+        if (Vec_distance(&o->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
             gDrakorEnergySeekRange)
         {
-            ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_CHASING;
+            s->mode = DRAKORENERGY_MODE_CHASING;
         }
         objfx_spawnFlaggedTrailBurst((void*)obj, lbl_803DC174, 1, 0xc22, 0x14, (void*)(obj + 0x24));
         break;
     case DRAKORENERGY_MODE_CHASING:
-        dist = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
+        dist = Vec_xzDistance(&o->anim.worldPosX, &player->anim.worldPosX);
         if (dist < lbl_803DC168)
         {
             playerAddHealth(player, gDrakorEnergyHealAmount);
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
-            ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_COLLECTED;
+            s->mode = DRAKORENERGY_MODE_COLLECTED;
         }
         else
         {
             spd = gDrakorEnergyChaseSpeed;
             Obj_PredictInterceptPoint((GameObject*)player, spd / lbl_803E6294,
-                                      (const Vec3f*)&((GameObject*)obj)->anim.localPosX, (Vec3f*)interceptPt);
+                                      (const Vec3f*)&o->anim.localPosX, (Vec3f*)interceptPt);
             PSVECSubtract(interceptPt, (f32*)(obj + 0xc), seekDir);
             PSVECNormalize(seekDir, seekDir);
             if (dist < spd)
@@ -173,8 +175,8 @@ void drakorenergy_update(int obj)
                 spd = dist;
             }
             PSVECScale(seekDir, (f32*)(obj + 0x24), spd);
-            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                    ((GameObject*)obj)->anim.velocityZ * timeDelta);
+            objMove((GameObject*)obj, o->anim.velocityX * timeDelta, o->anim.velocityY * timeDelta,
+                    o->anim.velocityZ * timeDelta);
             colorRGB[2] = 0xff;
             colorRGB[1] = 0;
             colorRGB[0] = 0xff;
@@ -182,11 +184,11 @@ void drakorenergy_update(int obj)
         }
         break;
     case DRAKORENERGY_MODE_RESET:
-        ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_IDLE;
+        s->mode = DRAKORENERGY_MODE_IDLE;
         break;
     }
     *(s16*)obj += lbl_803DC178;
-    ((DrakorEnergyState*)state)->phase += framesThisStep * 0x500;
+    s->phase += framesThisStep * 0x500;
 }
 
 void drakorenergy_init(int* obj, u8* init)
@@ -194,15 +196,16 @@ void drakorenergy_init(int* obj, u8* init)
     DrakorEnergyState* state;
     DrakorenergyPlacement* placement = (DrakorenergyPlacement*)init;
     f32 fz;
-    state = ((GameObject*)obj)->extra;
+    GameObject* o = (GameObject*)obj;
+    state = o->extra;
     state->mode = DRAKORENERGY_MODE_RESET;
-    ((GameObject*)obj)->anim.localPosX = placement->posX;
-    ((GameObject*)obj)->anim.localPosY = placement->posY;
-    ((GameObject*)obj)->anim.localPosZ = placement->posZ;
+    o->anim.localPosX = placement->posX;
+    o->anim.localPosY = placement->posY;
+    o->anim.localPosZ = placement->posZ;
     fz = lbl_803E627C;
-    ((GameObject*)obj)->anim.velocityZ = fz;
-    ((GameObject*)obj)->anim.velocityX = fz;
-    ((GameObject*)obj)->anim.velocityY = -4.0f;
+    o->anim.velocityZ = fz;
+    o->anim.velocityX = fz;
+    o->anim.velocityY = -4.0f;
     state->phase = randomGetRange(0, 0xffff);
     if (mainGetBit(placement->gameBitId) != 0)
     {

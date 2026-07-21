@@ -264,7 +264,8 @@ void drakormissile_hitDetect(void)
 
 void drakormissile_update(int obj)
 {
-    DrakorMissileState* state = ((GameObject*)obj)->extra;
+    GameObject* o = (GameObject*)obj;
+    DrakorMissileState* state = o->extra;
     int moving;
     f32 toTarget[3];
     f32 dir[3];
@@ -282,11 +283,11 @@ void drakormissile_update(int obj)
     {
     case DRAKORMISSILE_STATE_STRAIGHT:
         moving = 1;
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove((GameObject*)obj, o->anim.velocityX * timeDelta, o->anim.velocityY * timeDelta,
+                o->anim.velocityZ * timeDelta);
         break;
     case DRAKORMISSILE_STATE_EXPLODING:
-        ((GameObject*)obj)->anim.alpha = 0;
+        o->anim.alpha = 0;
         if (state->timer == 0)
         {
             ObjHits_DisableObject((GameObject*)obj);
@@ -308,23 +309,23 @@ void drakormissile_update(int obj)
             mag = PSVECMag((f32*)(player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
-        Obj_PredictInterceptPoint((GameObject*)player, mag, (const Vec3f*)&((GameObject*)obj)->anim.localPosX,
+        Obj_PredictInterceptPoint((GameObject*)player, mag, (const Vec3f*)&o->anim.localPosX,
                                   (Vec3f*)toTarget);
         PSVECSubtract(toTarget, (f32*)(obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
         PSVECScale((f32*)((char*)obj + 0x24), (f32*)((char*)obj + 0x24), lbl_803DC2B0);
         PSVECAdd((f32*)(obj + 0x24), dir, (f32*)(obj + 0x24));
-        mag = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-                    ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
+        mag = sqrtf(o->anim.velocityX * o->anim.velocityX +
+                    o->anim.velocityZ * o->anim.velocityZ);
         {
-            int tmpAng = getAngle(((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityZ);
-            ((GameObject*)obj)->anim.rotX = tmpAng;
-            tmpAng = getAngle(((GameObject*)obj)->anim.velocityY, mag);
-            ((GameObject*)obj)->anim.rotY = tmpAng;
+            int tmpAng = getAngle(o->anim.velocityX, o->anim.velocityZ);
+            o->anim.rotX = tmpAng;
+            tmpAng = getAngle(o->anim.velocityY, mag);
+            o->anim.rotY = tmpAng;
         }
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove((GameObject*)obj, o->anim.velocityX * timeDelta, o->anim.velocityY * timeDelta,
+                o->anim.velocityZ * timeDelta);
         moving = 1;
         break;
     case DRAKORMISSILE_STATE_FADEOUT:
@@ -343,7 +344,7 @@ void drakormissile_update(int obj)
     }
     if (moving)
     {
-        lastHit = (int*)((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject;
+        lastHit = (int*)((ObjHitsPriorityState*)o->anim.hitReactState)->lastHitObject;
         hitObj = 0;
         hit = ObjHits_GetPriorityHit((GameObject*)(obj), &hitObj, 0, 0);
         expired = 0;
@@ -359,11 +360,11 @@ void drakormissile_update(int obj)
             nearHit = 1;
         }
         result = expired | nearHit;
-        result |= ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags;
+        result |= ((ObjHitsPriorityState*)o->anim.hitReactState)->contactFlags;
         if (state->state == DRAKORMISSILE_STATE_HOMING)
         {
             player = (int)Obj_GetPlayerObject();
-            if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            if (Vec_distance(&o->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
                 gDrakorMissileProximityDetonateDist)
             {
                 result |= 1;
@@ -377,11 +378,11 @@ void drakormissile_update(int obj)
         {
             state->state = DRAKORMISSILE_STATE_EXPLODING;
             state->timer = 0;
-            if ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & 8) != 0)
+            if ((((ObjHitsPriorityState*)o->anim.hitReactState)->flags & 8) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_blaserrecoil16);
             }
-            if (((GameObject*)obj)->anim.mapEventSlot == 2)
+            if (o->anim.mapEventSlot == 2)
             {
                 spawnExplosion((GameObject*)obj, 50.0f, 3, 0, 0, 0, 0, 0, 3);
             }
@@ -395,8 +396,8 @@ void drakormissile_update(int obj)
                 state->light = NULL;
             }
         }
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->skeletonHitMask = 0x10;
-        ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->objectHitMask = 0x10;
+        ((ObjHitsPriorityState*)o->anim.hitReactState)->skeletonHitMask = 0x10;
+        ((ObjHitsPriorityState*)o->anim.hitReactState)->objectHitMask = 0x10;
     }
     if (state->light != NULL && modelLightStruct_getActiveState(state->light))
     {

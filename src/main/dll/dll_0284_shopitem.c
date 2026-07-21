@@ -216,6 +216,7 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
 {
     int sub = *(int*)&(obj)->extra;
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    ShopItemState* s = (ShopItemState*)sub;
 
     seq->freeCallback = (ObjAnimSequenceFreeCallback)shopitem_onSeqFree;
     seq->flags &= ~4;
@@ -230,15 +231,15 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
     {
     case SHOPITEM_SEQ_BSPLINE:
     {
-        f32 t = ((ShopItemState*)sub)->splineT;
+        f32 t = s->splineT;
         if (t > 1.0f)
         {
             u32 segCounter;
-            ((ShopItemState*)sub)->splineT = t - 1.0f;
-            segCounter = ((ShopItemState*)sub)->segCounter;
+            s->splineT = t - 1.0f;
+            segCounter = s->segCounter;
             if (segCounter >= 4)
             {
-                ((ShopItemState*)sub)->segCounter += 1;
+                s->segCounter += 1;
             }
             else
             {
@@ -249,13 +250,13 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
     }
         {
             (obj)->anim.localPosX =
-                Curve_EvalBSpline(((ShopItemState*)sub)->controlX, ((ShopItemState*)sub)->splineT, 0);
+                Curve_EvalBSpline(s->controlX, s->splineT, 0);
             (obj)->anim.localPosY =
-                Curve_EvalBSpline(((ShopItemState*)sub)->controlY, ((ShopItemState*)sub)->splineT, 0);
+                Curve_EvalBSpline(s->controlY, s->splineT, 0);
             (obj)->anim.localPosZ =
-                Curve_EvalBSpline(((ShopItemState*)sub)->controlZ, ((ShopItemState*)sub)->splineT, 0);
-            ((ShopItemState*)sub)->splineT =
-                ((ShopItemState*)sub)->splineSpeed * timeDelta + ((ShopItemState*)sub)->splineT;
+                Curve_EvalBSpline(s->controlZ, s->splineT, 0);
+            s->splineT =
+                s->splineSpeed * timeDelta + s->splineT;
             (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
                                         (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
             (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1, NULL);
@@ -311,7 +312,8 @@ void shopitem_update(GameObject* obj)
     void* player = Obj_GetPlayerObject();
     int state = *(int*)&(obj)->extra;
     f32 range = 10000.0f;
-    PushcartState97* b = (PushcartState97*)&((ShopItemState*)state)->flags97;
+    ShopItemState* s = (ShopItemState*)state;
+    PushcartState97* b = (PushcartState97*)&s->flags97;
     int money;
     int price;
 
@@ -323,33 +325,33 @@ void shopitem_update(GameObject* obj)
     }
     else if (b->flag_80)
     {
-        ((ShopItemState*)state)->msgParam = -1;
+        s->msgParam = -1;
         ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, state + 0x88);
         b->flag_80 = 0;
         b->flag_40 = 1;
     }
     else
     {
-        if (*(u32*)&((ShopItemState*)state)->vendorObj == 0)
+        if (*(u32*)&s->vendorObj == 0)
         {
             int item;
-            ((ShopItemState*)state)->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, obj, &range);
-            item = ((ShopItemState*)state)->vendorObj;
+            s->vendorObj = ObjGroup_FindNearestObject(SHOPITEM_TARGET_OBJGROUP, obj, &range);
+            item = s->vendorObj;
             if ((u32)item != 0)
             {
                 if ((*(int (**)(int, int))((char*)**(int***)(item + 0x68) + 0x28))(
                         item, ((ShopItemDef*)def)->itemSlot) == 0 ||
-                    (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x2C))(
-                        ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot) != 0)
+                    (*(int (**)(int, int))((char*)**(int***)(s->vendorObj + 0x68) + 0x2C))(
+                        s->vendorObj, ((ShopItemDef*)def)->itemSlot) != 0)
                 {
                     b->flag_40 = 1;
                     (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                     (obj)->objectFlags = (u16)((obj)->objectFlags | SHOPITEM_OBJFLAG_UPDATE_DISABLED);
                     *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                 }
-                ((ShopItemState*)state)->helpTextId =
-                    (s16)(*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x3C))(
-                        ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
+                s->helpTextId =
+                    (s16)(*(int (**)(int, int))((char*)**(int***)(s->vendorObj + 0x68) + 0x3C))(
+                        s->vendorObj, ((ShopItemDef*)def)->itemSlot);
             }
         }
         else
@@ -357,15 +359,15 @@ void shopitem_update(GameObject* obj)
             if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE)
             {
                 forceAButtonIcon(0x12);
-                showHelpText(((ShopItemState*)state)->helpTextId);
+                showHelpText(s->helpTextId);
             }
             if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
             {
                 money = playerGetMoney(player);
-                price = (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x38))(
-                    ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
-                (*(int (**)(int, int))((char*)**(int***)(((ShopItemState*)state)->vendorObj + 0x68) + 0x40))(
-                    ((ShopItemState*)state)->vendorObj, ((ShopItemDef*)def)->itemSlot);
+                price = (*(int (**)(int, int))((char*)**(int***)(s->vendorObj + 0x68) + 0x38))(
+                    s->vendorObj, ((ShopItemDef*)def)->itemSlot);
+                (*(int (**)(int, int))((char*)**(int***)(s->vendorObj + 0x68) + 0x40))(
+                    s->vendorObj, ((ShopItemDef*)def)->itemSlot);
                 switch ((obj)->anim.seqId)
                 {
                 case SHOPITEM_SEQ_BSPLINE:
@@ -388,15 +390,15 @@ void shopitem_update(GameObject* obj)
             {
             case SHOPITEM_SEQ_BSPLINE:
             {
-                f32 t = ((ShopItemState*)state)->splineT;
+                f32 t = s->splineT;
                 if (t > 1.0f)
                 {
                     u32 segCounter;
-                    ((ShopItemState*)state)->splineT = t - 1.0f;
-                    segCounter = ((ShopItemState*)state)->segCounter;
+                    s->splineT = t - 1.0f;
+                    segCounter = s->segCounter;
                     if (segCounter >= 4)
                     {
-                        ((ShopItemState*)state)->segCounter++;
+                        s->segCounter++;
                     }
                     else
                     {
@@ -405,13 +407,13 @@ void shopitem_update(GameObject* obj)
                     fn_801F4ECC(obj, (BoulderShakeRec*)state);
                 }
                 (obj)->anim.localPosX =
-                    Curve_EvalBSpline(((ShopItemState*)state)->controlX, ((ShopItemState*)state)->splineT, 0);
+                    Curve_EvalBSpline(s->controlX, s->splineT, 0);
                 (obj)->anim.localPosY =
-                    Curve_EvalBSpline(((ShopItemState*)state)->controlY, ((ShopItemState*)state)->splineT, 0);
+                    Curve_EvalBSpline(s->controlY, s->splineT, 0);
                 (obj)->anim.localPosZ =
-                    Curve_EvalBSpline(((ShopItemState*)state)->controlZ, ((ShopItemState*)state)->splineT, 0);
-                ((ShopItemState*)state)->splineT =
-                    ((ShopItemState*)state)->splineSpeed * timeDelta + ((ShopItemState*)state)->splineT;
+                    Curve_EvalBSpline(s->controlZ, s->splineT, 0);
+                s->splineT =
+                    s->splineSpeed * timeDelta + s->splineT;
                 (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
                                             (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x19F, NULL, 1, -1, NULL);
@@ -435,6 +437,7 @@ void shopitem_init(GameObject* obj, int data)
 {
     ObjAnimComponent* objAnim;
     int state = *(int*)&(obj)->extra;
+    ShopItemState* s = (ShopItemState*)state;
 
     objAnim = (ObjAnimComponent*)obj;
     (obj)->objectFlags |= SHOPITEM_OBJFLAG_HITDETECT_DISABLED;
