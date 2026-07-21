@@ -16,6 +16,6 @@ void Fireball_initialise(void);
 void Fireball_release(void);
 void Fireball_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void Fireball_update(GameObject* obj);
-u8 fn_8016F16C(int* obj);
+u8 fn_8016F16C(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_00E3_FIREBALL_API_H_ */

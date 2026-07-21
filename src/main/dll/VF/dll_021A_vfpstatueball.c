@@ -26,13 +26,11 @@
 #include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/VF/dll_021A_vfpstatueball.h"
 
-#define VFPSTATUEBALL_OBJFLAG_HIDDEN 0x4000
-
 #define VFPSTATUEBALL_HIT_SEQID 0x14b /* staff-strike object seq id */
 
 int VFP_statueball_getExtraSize(void)
 {
-    return 0xc;
+    return sizeof(VfpStatueBallState);
 }
 
 int VFP_statueball_getObjectTypeId(void)
@@ -40,9 +38,9 @@ int VFP_statueball_getObjectTypeId(void)
     return 0x0;
 }
 
-void VFP_statueball_free(int obj)
+void VFP_statueball_free(GameObject* obj)
 {
-    (*gExpgfxInterface)->freeSource(obj);
+    (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
 void VFP_statueball_render(void)
@@ -53,60 +51,60 @@ void VFP_statueball_hitDetect(void)
 {
 }
 
-void VFP_statueball_update(int* obj)
+void VFP_statueball_update(GameObject* obj)
 {
-    int* setup;
+    VfpStatueBallPlacement* placement;
     VfpStatueBallState* state;
-    int* hitObj;
+    GameObject* hitObj;
     int hitType;
     int variant;
 
-    setup = *(int**)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    placement = (VfpStatueBallPlacement*)obj->anim.placementData;
+    state = obj->extra;
     hitObj = 0;
 
     if (state->active != 0)
     {
-        state->particleIdx = 6;
-        state->particleChance = 0x14;
-        state->particleAlpha = 0xa;
+        state->burstEffectId = 6;
+        state->burstChance = 0x14;
+        state->burstScale = 0xa;
     }
     else
     {
-        state->particleIdx = 5;
-        state->particleChance = 0x28;
-        state->particleAlpha = 5;
+        state->burstEffectId = 5;
+        state->burstChance = 0x28;
+        state->burstScale = 5;
     }
 
     state->timer -= (s16)timeDelta;
 
-    variant = ((VfpStatueBallPlacement*)setup)->variant;
+    variant = placement->variant;
     if (variant == 0)
     {
-        objfx_spawnDirectionalBurst(obj, state->particleIdx, 1.0f, 5, 1, state->particleChance,
-                                    state->particleAlpha, 0, 0);
+        objfx_spawnDirectionalBurst(obj, state->burstEffectId, 1.0f, 5, 1, state->burstChance,
+                                    state->burstScale, 0, 0);
     }
     else if (variant == 1)
     {
-        objfx_spawnDirectionalBurst(obj, state->particleIdx, 1.0f, 2, 1, state->particleChance,
-                                    state->particleAlpha, 0, 0);
+        objfx_spawnDirectionalBurst(obj, state->burstEffectId, 1.0f, 2, 1, state->burstChance,
+                                    state->burstScale, 0, 0);
     }
     else
     {
-        objfx_spawnDirectionalBurst(obj, state->particleIdx, 1.0f, 1, 1, state->particleChance,
-                                    state->particleAlpha, 0, 0);
+        objfx_spawnDirectionalBurst(obj, state->burstEffectId, 1.0f, 1, 1, state->burstChance,
+                                    state->burstScale, 0, 0);
     }
 
-    Vec_distance((void*)((char*)Obj_GetPlayerObject() + 0x18), &((GameObject*)obj)->anim.worldPosX);
-    state->prevActive = state->active;
+    Vec_distance(&Obj_GetPlayerObject()->anim.worldPosX, &obj->anim.worldPosX);
+    state->previousActive = state->active;
 
-    if ((u32)mainGetBit(state->gameBit) == 0)
+    if ((u32)mainGetBit(state->activationGameBit) == 0)
     {
-        hitType = ObjHits_GetPriorityHit((GameObject*)obj, (int*)&hitObj, 0, 0);
+        hitType = ObjHits_GetPriorityHit(obj, (int*)&hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
-            (((GameObject*)hitObj)->anim.seqId == VFPSTATUEBALL_HIT_SEQID))
+            (hitObj->anim.seqId == VFPSTATUEBALL_HIT_SEQID))
         {
-            if ((u8)fn_8016F16C(hitObj) == ((VfpStatueBallPlacement*)setup)->variant)
+            if ((u8)fn_8016F16C(hitObj) == placement->variant)
             {
                 state->active = (u8)(1 - state->active);
             }
@@ -116,62 +114,60 @@ void VFP_statueball_update(int* obj)
             }
         }
 
-        ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + ((s32)timeDelta * 0x82));
+        obj->anim.rotX = (s16)(obj->anim.rotX + ((s32)timeDelta * 0x82));
     }
 
-    if ((state->active != 0) && (state->playActivateSfx != 0))
+    if ((state->active != 0) && (state->activateSfxPending != 0))
     {
-        state->playActivateSfx = 0;
+        state->activateSfxPending = 0;
         Sfx_PlayFromObject((int)obj, SFXTRIG_cvdrip1c);
         Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
 
-    if (state->active != state->prevActive)
+    if (state->active != state->previousActive)
     {
         if (state->active != 0)
         {
-            if (state->gameBit != -1)
+            if (state->activationGameBit != -1)
             {
-                if ((u32)mainGetBit(state->gameBit) == 0)
+                if ((u32)mainGetBit(state->activationGameBit) == 0)
                 {
-                    mainSetBits(state->gameBit, 1);
+                    mainSetBits(state->activationGameBit, 1);
                 }
             }
-            state->playActivateSfx = 1;
+            state->activateSfxPending = 1;
         }
         else
         {
             Sfx_StopObjectChannel((int)obj, 0x40);
             (*gExpgfxInterface)->freeSource((u32)obj);
-            if (state->gameBit != -1)
+            if (state->activationGameBit != -1)
             {
-                if ((u32)mainGetBit(state->gameBit) != 0)
+                if ((u32)mainGetBit(state->activationGameBit) != 0)
                 {
-                    mainSetBits(state->gameBit, 0);
+                    mainSetBits(state->activationGameBit, 0);
                 }
             }
         }
     }
 }
 
-void VFP_statueball_init(int* obj, u8* init)
+void VFP_statueball_init(GameObject* obj, VfpStatueBallPlacement* placement)
 {
-    VfpStatueBallPlacement* setup = (VfpStatueBallPlacement*)init;
-    VfpStatueBallState* state = ((GameObject*)obj)->extra;
-    state->gameBit = setup->gameBit;
+    VfpStatueBallState* state = obj->extra;
+    state->activationGameBit = placement->activationGameBit;
     state->timer = 0x19;
-    ((GameObject*)obj)->objectFlags |= VFPSTATUEBALL_OBJFLAG_HIDDEN;
-    if (setup->variant > 2)
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
+    if (placement->variant > 2)
     {
-        setup->variant = 2;
+        placement->variant = 2;
     }
-    if (setup->modelScale > 1)
+    if (placement->scale > 1)
     {
-        ((GameObject*)obj)->anim.rootMotionScale =
-            ((GameObject*)obj)->anim.rootMotionScale * (f32)(s32)setup->modelScale;
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * (f32)(s32)placement->scale;
     }
-    Obj_SetActiveModelIndex((GameObject*)obj, setup->variant);
-    state->active = mainGetBit(state->gameBit);
+    Obj_SetActiveModelIndex(obj, placement->variant);
+    state->active = mainGetBit(state->activationGameBit);
 }
 
 void VFP_statueball_release(void)

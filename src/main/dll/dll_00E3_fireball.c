@@ -50,9 +50,9 @@ u8 gFireballColorIndexTable[8] = {0, 2, 4, 0, 0, 0, 0, 0};
 
 void fn_8016F260(GameObject* obj, int* state, int* other);
 
-u8 fn_8016F16C(int* obj)
+u8 fn_8016F16C(GameObject* obj)
 {
-    return ((FireballState*)((GameObject*)obj)->extra)->colorIndex;
+    return ((FireballState*)obj->extra)->colorIndex;
 }
 
 int Fireball_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
