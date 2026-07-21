@@ -1,22 +1,13 @@
-/* DLL 0x00E6 (restartmarker) - Restart marker object [0x801713D8-0x801713FC).
- *
- * Retail TU = restartmarker_init plus the gReStartMarkerObjDescriptor .data
- * object at 0x80320B00. The drift-catalogue descriptors and dead staticCamera
- * bodies formerly carried here are all homed in sibling TUs' split ranges.
+/* DLL 0x00E6 (restartmarker) - restart-position marker object.
+ * Its placement rotation seeds the marker heading; the marker itself stays
+ * hidden because it exists only as a gameplay respawn anchor.
  */
-#include "main/game_object.h"
-#include "main/object_descriptor.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 
-/* object group this object joins while active */
-#define RESTARTMARKER_OBJGROUP 7
-
-#define RESTARTMARKER_OBJFLAG_HIDDEN 0x4000
-
-void restartmarker_init(GameObject* obj, s8* placement)
+void restartmarker_init(GameObject* obj, RestartMarkerPlacement* placement)
 {
-    obj->anim.rotX = (s16)(*(u8*)(placement + 0x18) << 8);
-    obj->objectFlags = (u16)(obj->objectFlags | RESTARTMARKER_OBJFLAG_HIDDEN);
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_HIDDEN);
 }
 
 ObjectDescriptor gReStartMarkerObjDescriptor = {
