@@ -232,7 +232,7 @@ u8 gDebugFontGlyphs[580] = {
     115, 0,   0,   0,   9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 9,   37,  48,  56,
     120, 0,   0,   0,   0,
 };
-void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d);
+void errDisplayHandler(OSError error, OSContext* context, u32 dsisr, u32 dar);
 typedef struct ErrStackFrame
 {
     struct ErrStackFrame* previous;
@@ -1098,12 +1098,12 @@ void* errDisplayThreadMain(void* unused)
 
 /* Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
-void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d)
+void errDisplayHandler(OSError error, OSContext* context, u32 dsisr, u32 dar)
 {
-    gErrExceptionType = a;
-    gErrContext = b;
-    lbl_803DDA38 = c;
-    lbl_803DDA34 = d;
+    gErrExceptionType = error;
+    gErrContext = context;
+    lbl_803DDA38 = dsisr;
+    lbl_803DDA34 = dar;
     OSResumeThread(&gErrDisplayThread);
 }
 
