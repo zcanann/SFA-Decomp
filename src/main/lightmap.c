@@ -66,6 +66,26 @@ typedef struct
     f32 hi;
 } F32Pair;
 
+typedef struct MapTextureOverride
+{
+    Texture* texture;
+    s32 frame;
+    u32 flags;
+    s16 refCount;
+    u8 type;
+    u8 pad;
+} MapTextureOverride;
+
+typedef struct MapTextureScroll
+{
+    f32 offsetX;
+    f32 offsetY;
+    s16 xStep;
+    s16 yStep;
+    u8 refCount;
+    u8 pad[3];
+} MapTextureScroll;
+
 extern u32 renderFlags;
 /* Global renderFlags bits (decoded by the accessor fns below: shouldDrawShadows,
  * shouldDrawClouds, getDrawDistanceFlag, isOvercast, setPendingMapLoad,
@@ -969,13 +989,15 @@ void updateEnvironment(int mode)
 {
     if (mode == 0)
     {
-        char* entry;
+        MapTextureOverride* textureOverride;
+        MapTextureScroll* textureScroll;
         Texture* tex;
         int i;
         int off;
+        f32 x;
         f32 deltaY;
         f32 deltaX;
-        f32 x;
+        f32 deltaTime;
 
         envFxFn_80088884();
         (*gCloudActionInterface)->scrollTexture();
@@ -983,15 +1005,14 @@ void updateEnvironment(int mode)
         (*gSkyInterface)->updateTimeOfDay();
         (*gNewCloudsInterface)->run();
 
-        i = 0;
-        off = 0;
+        off = i = 0;
         for (; i < 80; i++)
         {
-            entry = (char*)lbl_803DCE6C + off;
-            if (*(s16*)(entry + 12) != 0 && (tex = *(void**)entry) != NULL &&
+            textureOverride = (MapTextureOverride*)((char*)lbl_803DCE6C + off);
+            if (textureOverride->refCount != 0 && (tex = textureOverride->texture) != NULL &&
                 tex->animationFrameCount != 0x100 && tex->animationFrameStep != 0)
             {
-                textureUpdateAnimationFrame(tex, (u32*)(entry + 8), (s32*)(entry + 4));
+                textureUpdateAnimationFrame(tex, &textureOverride->flags, &textureOverride->frame);
             }
             off += 0x10;
         }
@@ -1000,14 +1021,14 @@ void updateEnvironment(int mode)
         off = 0;
         for (; i < 58; i++)
         {
-            entry = (char*)lbl_803DCE68 + off;
-            if (*(u8*)(entry + 12) != 0)
+            textureScroll = (MapTextureScroll*)((char*)lbl_803DCE68 + off);
+            if (textureScroll->refCount != 0)
             {
-                deltaY = (f32) * (s16*)(entry + 10) * timeDelta;
-                x = *(f32*)entry;
-                deltaX = (f32) * (s16*)(entry + 8) * timeDelta;
-                *(f32*)entry = x + deltaX;
-                *(f32*)(entry + 4) = *(f32*)(entry + 4) + deltaY;
+                deltaY = (f32)textureScroll->yStep * (deltaTime = timeDelta);
+                x = textureScroll->offsetX;
+                deltaX = (f32)textureScroll->xStep * deltaTime;
+                textureScroll->offsetX = x + deltaX;
+                textureScroll->offsetY = textureScroll->offsetY + deltaY;
             }
             off += 0x10;
         }
