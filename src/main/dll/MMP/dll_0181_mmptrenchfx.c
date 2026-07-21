@@ -21,8 +21,6 @@
 #include "main/dll/MMP/dll_0181_mmptrenchfx.h"
 #include "main/object_descriptor.h"
 
-STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
-
 /* Partfx effect ids (see docblock): the emit-timer burst vs the per-tick puff. */
 #define MMPTRENCHFX_PARTFX_EMIT 0x71F
 #define MMPTRENCHFX_PARTFX_TICK 0x720
@@ -31,19 +29,19 @@ PartFxSpawnParams lbl_803AC930;
 
 int mmp_trenchfx_getExtraSize(void)
 {
-    return 0x30;
+    return sizeof(MmpTrenchFxState);
 }
 int mmp_trenchfx_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void mmp_trenchfx_free(int obj)
+void mmp_trenchfx_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void mmp_trenchfx_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void mmp_trenchfx_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
         return;
@@ -55,33 +53,33 @@ void mmp_trenchfx_hitDetect(void)
 
 void mmp_trenchfx_update(GameObject* obj)
 {
-    MmpTrenchfxState* state = obj->extra;
+    MmpTrenchFxState* state = obj->extra;
     if (state->enableBit == -1 || mainGetBit(state->enableBit) != 0)
     {
         state->emitCooldown -= timeDelta;
         if (state->emitCooldown < 0.0f)
         {
-            state->fxScale = 1.0f;
-            state->fxX = (f32)(int)randomGetRange(-state->extentX, state->extentX);
-            state->fxY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
-            state->fxZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
-            vecRotateZXY((void*)state->emitAngles, &state->fxX);
-            state->fxX += obj->anim.localPosX;
-            state->fxY += obj->anim.localPosY;
-            state->fxZ += obj->anim.localPosZ;
+            state->effect.scale = 1.0f;
+            state->effect.posX = (f32)(int)randomGetRange(-state->extentX, state->extentX);
+            state->effect.posY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
+            state->effect.posZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
+            vecRotateZXY(state->emitAngles, &state->effect.posX);
+            state->effect.posX += obj->anim.localPosX;
+            state->effect.posY += obj->anim.localPosY;
+            state->effect.posZ += obj->anim.localPosZ;
             state->emitCooldown = (f32)(int)randomGetRange(0x64, 0xC8);
             state->emitTimer = (f32)(int)randomGetRange(0x32, 0x64);
         }
         state->emitTimer -= timeDelta;
         if (state->emitTimer > 0.0f)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->fxUnk10, 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, MMPTRENCHFX_PARTFX_EMIT, &state->effect, 0x200001, -1, NULL);
         }
         lbl_803AC930.scale = 1.0f;
         lbl_803AC930.posX = (f32)(int)randomGetRange(-state->extentX, state->extentX);
         lbl_803AC930.posY = (f32)(int)randomGetRange(-state->extentY, state->extentY);
         lbl_803AC930.posZ = (f32)(int)randomGetRange(-state->extentZ, state->extentZ);
-        vecRotateZXY((void*)state->emitAngles, &lbl_803AC930.posX);
+        vecRotateZXY(state->emitAngles, &lbl_803AC930.posX);
         lbl_803AC930.posX += obj->anim.localPosX;
         lbl_803AC930.posY += obj->anim.localPosY;
         lbl_803AC930.posZ += obj->anim.localPosZ;
@@ -89,22 +87,21 @@ void mmp_trenchfx_update(GameObject* obj)
     }
 }
 
-void mmp_trenchfx_init(GameObject* obj, int data)
+void mmp_trenchfx_init(GameObject* obj, MmpTrenchFxPlacement* placement)
 {
-    MmpTrenchfxState* state = obj->extra;
-    MmpTrenchfxPlacement* place = (MmpTrenchfxPlacement*)data;
+    MmpTrenchFxState* state = obj->extra;
     s16 angle;
-    state->enableBit = place->enableBit;
-    state->extentX = (u16)(place->extentX << 2);
-    state->extentZ = (u16)(place->extentZ << 2);
-    state->extentY = (u16)(place->extentY << 2);
-    angle = (s16)(((s32)place->emitAngleZ) << 8);
+    state->enableBit = placement->enableBit;
+    state->extentX = (u16)(placement->extentX << 2);
+    state->extentZ = (u16)(placement->extentZ << 2);
+    state->extentY = (u16)(placement->extentY << 2);
+    angle = (s16)(((s32)placement->emitAngleZ) << 8);
     state->emitAngles[2] = angle;
     obj->anim.rotZ = angle;
-    angle = (s16)(((s32)place->emitAngleY) << 8);
+    angle = (s16)(((s32)placement->emitAngleY) << 8);
     state->emitAngles[1] = angle;
     obj->anim.rotY = angle;
-    angle = (s16)(((s32)place->emitAngleX) << 8);
+    angle = (s16)(((s32)placement->emitAngleX) << 8);
     state->emitAngles[0] = angle;
     obj->anim.rotX = angle;
     obj->anim.rootMotionScale = 0.1f;

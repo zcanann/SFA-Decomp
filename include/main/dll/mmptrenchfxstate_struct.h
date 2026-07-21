@@ -2,6 +2,7 @@
 #define MAIN_DLL_MMPTRENCHFXSTATE_STRUCT_H_
 
 #include "types.h"
+#include "main/dll/partfx_interface.h"
 #include "main/obj_placement.h"
 
 /*
@@ -10,7 +11,7 @@
  * the trench emitter's class-specific setup fields, matching the
  * <Family>Placement convention used by the other object DLLs.
  */
-typedef struct MmpTrenchfxPlacement
+typedef struct MmpTrenchFxPlacement
 {
     ObjPlacement base;  /* 0x00: common placement head */
     u8 pad18[1];        /* 0x18 */
@@ -22,28 +23,30 @@ typedef struct MmpTrenchfxPlacement
     u8 extentY;         /* 0x1E: random offset half-extent Y (<<2) */
     u8 pad1F[5];        /* 0x1F */
     s16 enableBit;      /* 0x24: gamebit gate, -1 = always on */
-} MmpTrenchfxPlacement;
+} MmpTrenchFxPlacement;
 
-STATIC_ASSERT(offsetof(MmpTrenchfxPlacement, emitAngleZ) == 0x19);
-STATIC_ASSERT(offsetof(MmpTrenchfxPlacement, extentX) == 0x1C);
-STATIC_ASSERT(offsetof(MmpTrenchfxPlacement, enableBit) == 0x24);
+STATIC_ASSERT(offsetof(MmpTrenchFxPlacement, emitAngleZ) == 0x19);
+STATIC_ASSERT(offsetof(MmpTrenchFxPlacement, extentX) == 0x1c);
+STATIC_ASSERT(offsetof(MmpTrenchFxPlacement, enableBit) == 0x24);
+STATIC_ASSERT(sizeof(MmpTrenchFxPlacement) == 0x28);
 
-typedef struct MmpTrenchfxState
+typedef struct MmpTrenchFxState
 {
     s16 enableBit; /* data+0x24 gamebit gate, -1 = always on */
     u16 extentX; /* data[0x1C..0x1E] << 2 random offset half-extents */
     u16 extentZ;
     u16 extentY;
     s16 emitAngles[3]; /* roll/pitch/yaw presets, mirrored to obj+4/2/0 */
-    u8 pad0E[2];
-    u32 fxUnk10; /* embedded partfx args record (state+0x10 passed to spawn) */
-    u32 fxUnk14;
-    f32 fxScale;
-    f32 fxX;
-    f32 fxY;
-    f32 fxZ;
+    u8 reserved0E[2];
+    PartFxSpawnParams effect;
     f32 emitCooldown; /* rand(100,200) frames between bursts */
     f32 emitTimer; /* rand(50,100); spawns effect 0x71F while > 0 */
-} MmpTrenchfxState;
+} MmpTrenchFxState;
+
+STATIC_ASSERT(offsetof(MmpTrenchFxState, emitAngles) == 0x8);
+STATIC_ASSERT(offsetof(MmpTrenchFxState, effect) == 0x10);
+STATIC_ASSERT(offsetof(MmpTrenchFxState, emitCooldown) == 0x28);
+STATIC_ASSERT(offsetof(MmpTrenchFxState, emitTimer) == 0x2c);
+STATIC_ASSERT(sizeof(MmpTrenchFxState) == 0x30);
 
 #endif
