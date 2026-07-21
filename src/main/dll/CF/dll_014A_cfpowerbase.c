@@ -1,7 +1,7 @@
 /*
  * cfpowerbase (DLL 0x14A) - the three CloudRunner Fortress power bases
- * (type game bits 0x54/0x55/0x56, lit game bits 0x51/0x52/0x53). Each
- * base tracks its lit bit into the hitbox-mode prompt bits, relays
+ * (powered game bits 0x54/0x55/0x56, power-gem bits 0x51/0x52/0x53). Each
+ * base tracks whether Fox holds its gem into the interaction flags, relays
  * 0x11000x object messages to the requesting object once its trigger
  * sequence has progressed past 175, and grants game bit 0x4E0 when all
  * three bases are powered. update fires the queued state-change
@@ -34,23 +34,12 @@ enum
     CFPOWERBASE_MSG_PYLON_3 = 0x110003
 };
 
-/* game bits: one type bit per base (0x54..0x56, also used as the
-   placement type id); 0x4E0 is granted once all three are powered. */
-enum
-{
-    GAMEBIT_CFBASE_1 = 0x54,
-    GAMEBIT_CFBASE_2 = 0x55,
-    GAMEBIT_CFBASE_3 = 0x56,
-    GAMEBIT_CF_ALL_BASES = 0x4E0
-};
-
 /* trigger-sequence progress past which pylon messages are answered */
 #define CFPOWERBASE_SEQ_READY 175
 
 int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    CfPowerBaseState* sub = (obj)->extra;
-    u8* animUpdateBytes = (u8*)animUpdate;
+    CfPowerBaseState* state = obj->extra;
     int msgArg;
     int msgType;
     int msgFlag = 0;
@@ -61,25 +50,28 @@ int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         switch (msgType)
         {
         case CFPOWERBASE_MSG_PYLON_1:
-            if (sub->typeBit == GAMEBIT_CFBASE_1 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
+            if (state->poweredGameBit == GAMEBIT_CF_RedPowerBasePowered &&
+                animUpdate->curFrame > CFPOWERBASE_SEQ_READY)
             {
                 ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_1, obj, 0);
             }
             break;
         case CFPOWERBASE_MSG_PYLON_2:
-            if (sub->typeBit == GAMEBIT_CFBASE_2 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
+            if (state->poweredGameBit == GAMEBIT_CF_GreenPowerBasePowered &&
+                animUpdate->curFrame > CFPOWERBASE_SEQ_READY)
             {
                 ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_2, obj, 0);
             }
             break;
         case CFPOWERBASE_MSG_PYLON_3:
-            if (sub->typeBit == GAMEBIT_CFBASE_3 && *(s16*)(animUpdateBytes + 0x58) > CFPOWERBASE_SEQ_READY)
+            if (state->poweredGameBit == GAMEBIT_CF_BluePowerBasePowered &&
+                animUpdate->curFrame > CFPOWERBASE_SEQ_READY)
             {
                 ObjMsg_SendToObject((void*)msgArg, CFPOWERBASE_MSG_PYLON_3, obj, 0);
             }
             break;
         case CFPOWERBASE_MSG_POWERED:
-            mainSetBits(sub->typeBit, 1);
+            mainSetBits(state->poweredGameBit, 1);
             break;
         }
     }
@@ -89,10 +81,11 @@ int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            if (mainGetBit(GAMEBIT_CFBASE_1) != 0 && mainGetBit(GAMEBIT_CFBASE_2) != 0 &&
-                mainGetBit(GAMEBIT_CFBASE_3) != 0)
+            if (mainGetBit(GAMEBIT_CF_RedPowerBasePowered) != 0 &&
+                mainGetBit(GAMEBIT_CF_GreenPowerBasePowered) != 0 &&
+                mainGetBit(GAMEBIT_CF_BluePowerBasePowered) != 0)
             {
-                mainSetBits(GAMEBIT_CF_ALL_BASES, 1);
+                mainSetBits(GAMEBIT_CF_AllPowerBasesPowered, 1);
             }
             break;
         }
@@ -114,24 +107,24 @@ void CFPowerBase_free(void)
 {
 }
 
-void CFPowerBase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void CFPowerBase_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void CFPowerBase_hitDetect(void)
 {
 }
 
-/* CFPowerBase_update: track its gamebit's lit state, fire the queued
- * state-change trigger, and when the base is powered and its UI
- * condition clears, mark it done and notify. */
+/* CFPowerBase_update: expose the interaction while Fox holds this base's
+ * power gem, fire a queued restored-state trigger, and consume the gem when
+ * the activation UI is ready. */
 void CFPowerBase_update(GameObject* obj)
 {
-    CfPowerBaseState* sub = obj->extra;
-    if (mainGetBit(sub->litBit) != 0)
+    CfPowerBaseState* state = obj->extra;
+    if (mainGetBit(state->crystalGameBit) != 0)
     {
         obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
@@ -142,52 +135,50 @@ void CFPowerBase_update(GameObject* obj)
     if (obj->userData1 != 0)
     {
         (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
-        (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
+        (*gObjectTriggerInterface)->runSequence(state->baseIndex, obj, 3);
         obj->userData1 = 0;
     }
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
-        if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0)
+        if ((*gGameUIInterface)->isEventReady(state->crystalGameBit) != 0)
         {
             obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-            mainSetBits(sub->litBit, 0);
-            mainSetBits(0x973, 0);
-            (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
+            mainSetBits(state->crystalGameBit, 0);
+            mainSetBits(GAMEBIT_CFPowerBaseRelated0973, 0);
+            (*gObjectTriggerInterface)->runSequence(state->baseIndex, obj, -1);
         }
     }
 }
 
-/* CFPowerBase_init: seed header and the sub's type from spawn params,
- * map the type id (0x54..0x56) to a model and gamebit, then gate the
- * active/lit state bits on those gamebits. */
-void CFPowerBase_init(GameObject* obj, u8* params)
+/* CFPowerBase_init: recover the base identity from placement, select its
+ * gem/model/sequence tuple, then restore its interaction and powered state. */
+void CFPowerBase_init(GameObject* obj, CfPowerBaseMapData* placement)
 {
-    CfPowerBaseState* sub = obj->extra;
-    CfPowerBaseMapData* mapData = (CfPowerBaseMapData*)params;
+    CfPowerBaseState* state = obj->extra;
     s16 type;
-    obj->anim.rotX = (s16)(mapData->rotXByte << 8);
-    sub->typeBit = mapData->typeBit;
-    type = sub->typeBit;
+    obj->anim.rotX = (s16)(placement->rotX << 8);
+    state->poweredGameBit = placement->poweredGameBit;
+    type = state->poweredGameBit;
     switch (type)
     {
-    case GAMEBIT_CFBASE_1:
-        sub->litBit = 0x51;
-        sub->typeIndex = 0;
+    case GAMEBIT_CF_RedPowerBasePowered:
+        state->crystalGameBit = GAMEBIT_ITEM_CFRedCrystal_Got;
+        state->baseIndex = 0;
         break;
-    case GAMEBIT_CFBASE_2:
-        sub->litBit = 0x52;
-        sub->typeIndex = 1;
+    case GAMEBIT_CF_GreenPowerBasePowered:
+        state->crystalGameBit = GAMEBIT_ITEM_CFGreenCrystal_Got;
+        state->baseIndex = 1;
         Obj_SetActiveModelIndex(obj, 2);
         break;
-    case GAMEBIT_CFBASE_3:
-        sub->litBit = 0x53;
-        sub->typeIndex = 2;
+    case GAMEBIT_CF_BluePowerBasePowered:
+        state->crystalGameBit = GAMEBIT_ITEM_CFBlueCrystal_Got;
+        state->baseIndex = 2;
         Obj_SetActiveModelIndex(obj, 1);
         break;
     }
     obj->animEventCallback = CFPowerBase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
-    if (mainGetBit(sub->litBit) != 0)
+    if (mainGetBit(state->crystalGameBit) != 0)
     {
         obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
@@ -195,7 +186,7 @@ void CFPowerBase_init(GameObject* obj, u8* params)
     {
         obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
-    if (mainGetBit(sub->typeBit) != 0)
+    if (mainGetBit(state->poweredGameBit) != 0)
     {
         obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         obj->userData1 = 1;

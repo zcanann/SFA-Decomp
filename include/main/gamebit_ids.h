@@ -318,9 +318,9 @@ enum GameBitId {
     GAMEBIT_ITEM_CFRedCrystal_Got = 0x51,                /* table 2; power gems in CloudRunner Fortress */
     GAMEBIT_ITEM_CFGreenCrystal_Got = 0x52,              /* table 2 */
     GAMEBIT_ITEM_CFBlueCrystal_Got = 0x53,               /* table 2 */
-    GAMEBIT_CF_CrystalRelated0054 = 0x54,                /* table 2 */
-    GAMEBIT_CF_CrystalRelated0055 = 0x55,                /* table 2 */
-    GAMEBIT_CF_CrystalRelated0056 = 0x56,                /* table 2 */
+    GAMEBIT_CF_RedPowerBasePowered = 0x54,               /* table 2; set when the red power gem is installed */
+    GAMEBIT_CF_GreenPowerBasePowered = 0x55,             /* table 2; set when the green power gem is installed */
+    GAMEBIT_CF_BluePowerBasePowered = 0x56,              /* table 2; set when the blue power gem is installed */
     GAMEBIT_CF_PowerOn = 0x57,                           /* table 2; hint 328; ref clouddungeon/StaffLeverT enabled */
     GAMEBIT_ITEM_CFPowerKey_Used = 0x5F,                 /* table 2; ref fortress/HitAnimator target */
     GAMEBIT_ITEM_CFPowerKey_Got = 0x60,                  /* table 2; ref fortress/CFPowerLock key */
@@ -595,7 +595,7 @@ enum GameBitId {
     GAMEBIT_NW_ObjGroups = 0x4AE,                        /* table 3; size 32; also LinkB */
     GAMEBIT_TargetRelated04B7 = 0x4B7,                   /* table 1; related to object targeting */
     GAMEBIT_IM_PushBlock_Placed = 0x4D3,                 /* table 2 */
-    GAMEBIT_CFPowerRelated04E0 = 0x4E0,                  /* table 1 */
+    GAMEBIT_CF_AllPowerBasesPowered = 0x4E0,             /* table 1; set after all three power-base bits are set */
     GAMEBIT_TrickyTalk = 0x4E3,                          /* table 0; size 8; if < FF, can talk to Tricky, but he won't say anything */
     GAMEBIT_Tricky_Usable = 0x4E4,                       /* table 2; can use Tricky commands */
     GAMEBIT_IM_DoneRace = 0x4E5,                         /* table 2; Completed first race */
@@ -721,6 +721,7 @@ enum GameBitId {
     GAMEBIT_ITEM_SharpClawDisguise_Disabled = 0x969,     /* table 2 */
     GAMEBIT_ITEM_SuperQuake_Disabled = 0x96B,            /* table 2 */
     GAMEBIT_CF_DoStandUpAnim = 0x970,                    /* table 1; triggers a falling and getting back up scene on map reload */
+    GAMEBIT_CFPowerBaseRelated0973 = 0x973,              /* cleared when a power gem is installed in a CloudRunner Fortress power base */
     GAMEBIT_CFLever0974 = 0x974,                         /* table 2; ref fortress/StaffLeverO activated */
     GAMEBIT_CFLever0975 = 0x975,                         /* table 2; ref fortress/StaffLeverO activated */
     GAMEBIT_CFRelated0983 = 0x983,                       /* table 3 */
