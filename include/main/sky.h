@@ -5,6 +5,8 @@
 #include "dolphin/gx/GXFogColor.h"
 #include "main/sky_api.h"
 
+typedef struct Texture Texture;
+
 typedef struct SkyBlendStateFlags
 {
     u8 unused80 : 1;
@@ -97,7 +99,7 @@ int getSkyStructField24C(void);
 void skyGetCurrentTextureColor(u8* red, u8* green, u8* blue);
 void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* ambientBlue, u8* lightRed, u8* lightGreen,
                                         u8* lightBlue);
-void* skyGetSkyTexture(void);
+Texture* skyGetSkyTexture(void);
 void skyBuildSunModelMatrix(f32 mtx[3][4]);
 u8 skyFn_8008919c(int slot);
 void getTimeOfDay(f32* time);

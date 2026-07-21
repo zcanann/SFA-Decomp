@@ -68,9 +68,9 @@ f32 gSkyOverrideLightIntensity;
 u8 gSkyOverrideLightColorEnabled;
 SkyColor gSkyOverrideLightColor;
 int gSkyObjectsInitialized;
-void* gSkySkyTexture;
-void* gSkyMoonObject;
-u8* gSkySunObject;
+Texture* gSkySkyTexture;
+GameObject* gSkyMoonObject;
+GameObject* gSkySunObject;
 ModelLightStruct* gSkySunLight;
 u8 gSkyEnvFxFlags;
 void* lbl_803DD13C;
@@ -104,9 +104,9 @@ u8 lbl_803DB758 = 1;
 extern u8 gSkyConfigFieldIndices[];
 extern u8 gSkyEnvFxFlags;
 extern u8* gSkyState;
-extern u8* gSkySunObject;
-extern void* gSkyMoonObject;
-extern void* gSkySkyTexture;
+extern GameObject* gSkySunObject;
+extern GameObject* gSkyMoonObject;
+extern Texture* gSkySkyTexture;
 extern int gSkyObjectsInitialized;
 extern f32 gSkyOverrideLightIntensity;
 extern u8 gSkyOverrideLightDirectionEnabled;
@@ -355,11 +355,11 @@ void playerEnvFxFn_80088ad4(u8 idx)
 
 void loadSunAndMoon(void)
 {
-    void* moonObj;
+    GameObject* moonObj;
 
     if (gSkyObjectsInitialized == 0)
     {
-        gSkySunObject = (u8*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_SUN), 4, -1, -1, NULL);
+        gSkySunObject = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_SUN), 4, -1, -1, NULL);
         moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_MOON), 4, -1, -1, NULL);
         gSkyMoonObject = moonObj;
         gSkyObjectsInitialized = 1;
@@ -644,7 +644,7 @@ void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* am
     *lightBlue = 0xff;
 }
 
-void* skyGetSkyTexture(void)
+Texture* skyGetSkyTexture(void)
 {
     return gSkySkyTexture;
 }
@@ -654,7 +654,7 @@ void skyBuildSunModelMatrix(f32 mtx[3][4])
     f32 scale;
     f32 scaleMtx[3][4];
 
-    scale = 1.0f / *(f32*)(gSkySunObject + 8);
+    scale = 1.0f / gSkySunObject->anim.rootMotionScale;
     PSMTXScale((f32*)scaleMtx, scale, scale, scale);
     Obj_BuildWorldTransformMatrix((GameObject*)gSkySunObject, (f32*)mtx, 0);
     PSMTXConcat((f32*)mtx, (f32*)scaleMtx, (f32*)mtx);
@@ -674,7 +674,7 @@ u8 skyFn_8008919c(int slot)
     {
         return 0;
     }
-    return gSkySunObject[0x37];
+    return gSkySunObject->anim.renderAlpha;
 }
 
 void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
@@ -1517,7 +1517,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         *(s16*)gSkySunObject = 0x10000 - cam->yaw;
         ((GameObject*)gSkySunObject)->anim.rotY = cam->pitch;
         ((GameObject*)gSkySunObject)->anim.rotZ = 0;
-        gSkySunObject[0x37] = *(s16*)&gSkySunAlpha;
+        gSkySunObject->anim.renderAlpha = *(s16*)&gSkySunAlpha;
         time2 = ((SkyState*)gSkyState)->timeOfDay;
         if (time2 >= lbl_803DF088)
         {
@@ -1599,7 +1599,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vis = 0;
         ((GameObject*)gSkyMoonObject)->anim.rotZ = 0;
         ((u8*)gSkyMoonObject)[0x37] = *(s16*)&gSkyMoonAlpha;
-        if (gSkySunObject[0x37] != 0)
+        if (gSkySunObject->anim.renderAlpha != 0)
         {
             if (gSkyState != NULL)
             {
