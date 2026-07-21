@@ -1707,9 +1707,9 @@ void arwarwing_hitDetect(GameObject* obj)
         PSMTXMultVec((MtxP)mtx, (const Vec*)&state->aimOffsetX, &pos);
         pos.x += playerMapOffsetX;
         pos.z += playerMapOffsetZ;
-        fn_8008020C(pos.x, pos.y, (s16)(0x8000 - (obj)->anim.rotX + state->aimYaw),
-                    (s16)((obj)->anim.rotY + state->aimPitch), (s16)((obj)->anim.rotZ + state->aimRoll), pos.z,
-                    lbl_803E6FF8);
+        ObjSeq_SetCameraTransformOverride(pos.x, pos.y, (s16)(0x8000 - (obj)->anim.rotX + state->aimYaw),
+                                          (s16)((obj)->anim.rotY + state->aimPitch),
+                                          (s16)((obj)->anim.rotZ + state->aimRoll), pos.z, lbl_803E6FF8);
     }
 }
 

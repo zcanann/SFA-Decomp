@@ -910,7 +910,7 @@ int getCurSeqNo(void)
     return curSeqNo;
 }
 
-void fn_8008020C(f32 x, f32 y, s16 rx, s16 ry, s16 rz, f32 z, f32 w)
+void ObjSeq_SetCameraTransformOverride(f32 x, f32 y, s16 rx, s16 ry, s16 rz, f32 z, f32 w)
 {
     lbl_803DD0F8 = 1;
     lbl_803DD0F4 = x;
