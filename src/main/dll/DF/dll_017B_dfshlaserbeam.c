@@ -153,7 +153,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
 {
     DFSHLaserBeamConfig* config;
     DFSHLaserBeamRuntime* runtime;
-    void* playerObj;
+    GameObject* playerObj;
     DFSHLaserBeamObject* obj;
     f32 range;
     f32 rangeSq;
@@ -248,8 +248,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
         DFSH_LASER_DAMAGE_COOLDOWN(runtime) = 0;
     }
 
-    damageDistance = beamPlane + (yawSin * ((GameObject*)playerObj)->anim.localPosX +
-                                  yawCos * ((GameObject*)playerObj)->anim.localPosZ);
+    damageDistance = beamPlane + (yawSin * playerObj->anim.localPosX +
+                                  yawCos * playerObj->anim.localPosZ);
     if ((DFSH_LASER_PROXIMITY_MODE(runtime) == 1) ||
         ((damageDistance > (0.0f)) && (DFSH_LASER_PROXIMITY_MODE(runtime) != 0)))
     {
@@ -290,15 +290,15 @@ void DFSH_LaserBeam_update(u32 objAddr)
     if (((playerObj != NULL) && (DFSH_LASER_DAMAGE_COOLDOWN(runtime) == 0)) && (DFSH_LASER_ACTIVE(runtime) != 0))
     {
         heightThreshold = (5.0f) + (f32)(int)DFSH_LASER_HEIGHT_WINDOW(runtime);
-        heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
+        heightDelta = playerObj->anim.localPosY - obj->localPosY;
         if ((heightDelta < heightThreshold) && (heightDelta > -((25.0f) + heightThreshold)))
         {
-            xDelta = ((GameObject*)playerObj)->anim.localPosX - obj->localPosX;
-            zDelta = ((GameObject*)playerObj)->anim.localPosZ - obj->localPosZ;
+            xDelta = playerObj->anim.localPosX - obj->localPosX;
+            zDelta = playerObj->anim.localPosZ - obj->localPosZ;
             if ((xDelta * xDelta + zDelta * zDelta) < rangeSq)
             {
-                damageDistance = beamPlane + (yawSin * ((GameObject*)playerObj)->anim.localPosX +
-                                              yawCos * ((GameObject*)playerObj)->anim.localPosZ);
+                damageDistance = beamPlane + (yawSin * playerObj->anim.localPosX +
+                                              yawCos * playerObj->anim.localPosZ);
                 lateralAbs = damageDistance;
                 if (damageDistance < (0.0f))
                 {
@@ -318,11 +318,11 @@ void DFSH_LaserBeam_update(u32 objAddr)
                 if ((damageDistance < heightThreshold) && (damageDistance > -heightThreshold))
                 {
                     pushDistance =
-                        ((beamPlane + (yawSin * ((GameObject*)playerObj)->anim.previousLocalPosX +
-                                       yawCos * ((GameObject*)playerObj)->anim.previousLocalPosZ)) < (0.0f))
+                        ((beamPlane + (yawSin * playerObj->anim.previousLocalPosX +
+                                       yawCos * playerObj->anim.previousLocalPosZ)) < (0.0f))
                             ? (-20.0f)
                             : (20.0f);
-                    if (objGetAnimState80A((GameObject*)(playerObj)) != 0x1D7)
+                    if (objGetAnimState80A(playerObj) != 0x1D7)
                     {
                         int i;
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_espk2_c);
@@ -331,8 +331,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
                             (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), 0x28B, (void*)0, 4, -1,
                                                              (void*)0);
                         }
-                        DFSH_LASER_HIT_X(runtime) = yawSin * pushDistance + ((GameObject*)playerObj)->anim.localPosX;
-                        DFSH_LASER_HIT_Z(runtime) = yawCos * pushDistance + ((GameObject*)playerObj)->anim.localPosZ;
+                        DFSH_LASER_HIT_X(runtime) = yawSin * pushDistance + playerObj->anim.localPosX;
+                        DFSH_LASER_HIT_Z(runtime) = yawCos * pushDistance + playerObj->anim.localPosZ;
                         if ((DFSH_LASER_PROXIMITY_MODE(runtime) == 0) || (DFSH_LASER_PROXIMITY_MODE(runtime) == 1))
                         {
                             ObjMsg_SendToObject(playerObj, DFSH_MSG_PLAYER_HIT, DFSH_LASER_HIT_POS(runtime), 0);

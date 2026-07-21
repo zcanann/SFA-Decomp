@@ -83,31 +83,31 @@ void VFP_ObjCreator_update(int* obj)
             GameObject* spawned;
             state->spawnTimer = state->spawnInterval;
             setupBuf = (VfpObjCreatorSetup*)Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[2] = 0xff;
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[3] = 0xff;
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[0] = 2;
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[1] = 1;
-            ((VfpObjCreatorSetup*)setupBuf)->base.posX =
+            setupBuf->base.color[2] = 0xff;
+            setupBuf->base.color[3] = 0xff;
+            setupBuf->base.color[0] = 2;
+            setupBuf->base.color[1] = 1;
+            setupBuf->base.posX =
                 ((GameObject*)obj)->anim.localPosX + (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
-            ((VfpObjCreatorSetup*)setupBuf)->base.posY = ((GameObject*)obj)->anim.localPosY;
-            ((VfpObjCreatorSetup*)setupBuf)->base.posZ =
+            setupBuf->base.posY = ((GameObject*)obj)->anim.localPosY;
+            setupBuf->base.posZ =
                 ((GameObject*)obj)->anim.localPosZ + (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
-            ((VfpObjCreatorSetup*)setupBuf)->unk20 = 0x50;
-            ((VfpObjCreatorSetup*)setupBuf)->unk1E = (s16)(randomGetRange(0, 2) + 0x16a);
-            ((VfpObjCreatorSetup*)setupBuf)->unk22 = -1;
-            ((VfpObjCreatorSetup*)setupBuf)->unk18 = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
-            ((VfpObjCreatorSetup*)setupBuf)->unk1A = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
-            ((VfpObjCreatorSetup*)setupBuf)->unk1C = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
-            ((VfpObjCreatorSetup*)setupBuf)->unk24 = 0;
+            setupBuf->unk20 = 0x50;
+            setupBuf->unk1E = (s16)(randomGetRange(0, 2) + 0x16a);
+            setupBuf->unk22 = -1;
+            setupBuf->unk18 = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
+            setupBuf->unk1A = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
+            setupBuf->unk1C = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
+            setupBuf->unk24 = 0;
             spawned = Obj_SetupObject(&setupBuf->base, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                       ((GameObject*)obj)->anim.parent);
             if (spawned == NULL)
             {
                 break;
             }
-            ((GameObject*)spawned)->anim.velocityY = 0.01f * (f32)(int)randomGetRange(0, 10) + 0.1f;
-            ((GameObject*)spawned)->anim.velocityX = 0.2f * (f32)(int)randomGetRange(-10, 10);
-            ((GameObject*)spawned)->anim.velocityZ = 0.2f * (f32)(int)randomGetRange(-10, 10);
+            spawned->anim.velocityY = 0.01f * (f32)(int)randomGetRange(0, 10) + 0.1f;
+            spawned->anim.velocityX = 0.2f * (f32)(int)randomGetRange(-10, 10);
+            spawned->anim.velocityZ = 0.2f * (f32)(int)randomGetRange(-10, 10);
         }
         break;
     case VFP_OBJCREATOR_PROJECTILE_MODE:
@@ -123,29 +123,29 @@ void VFP_ObjCreator_update(int* obj)
             } launch;
             state->spawnTimer = state->spawnInterval;
             setupBuf = (VfpObjCreatorSetup*)Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
-            ((VfpObjCreatorSetup*)setupBuf)->base.posX = placement->base.posX;
-            ((VfpObjCreatorSetup*)setupBuf)->base.posY = placement->base.posY;
-            ((VfpObjCreatorSetup*)setupBuf)->base.posZ = placement->base.posZ;
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[0] = placement->base.color[0];
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[1] = placement->base.color[1];
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[2] = placement->base.color[2];
-            ((VfpObjCreatorSetup*)setupBuf)->base.color[3] = placement->base.color[3];
-            ((VfpObjCreatorSetup*)setupBuf)->unk1E = -1;
-            ((VfpObjCreatorSetup*)setupBuf)->unk20 = -1;
+            setupBuf->base.posX = placement->base.posX;
+            setupBuf->base.posY = placement->base.posY;
+            setupBuf->base.posZ = placement->base.posZ;
+            setupBuf->base.color[0] = placement->base.color[0];
+            setupBuf->base.color[1] = placement->base.color[1];
+            setupBuf->base.color[2] = placement->base.color[2];
+            setupBuf->base.color[3] = placement->base.color[3];
+            setupBuf->unk1E = -1;
+            setupBuf->unk20 = -1;
             spawned = Obj_SetupObject(&setupBuf->base, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                       ((GameObject*)obj)->anim.parent);
             if (spawned == NULL)
             {
                 break;
             }
-            ((GameObject*)spawned)->userData2 = 0x1f4;
+            spawned->userData2 = 0x1f4;
             {
                 f32 vz;
                 f32 vxy = 0.0f;
-                ((GameObject*)spawned)->anim.velocityY = vxy;
-                ((GameObject*)spawned)->anim.velocityX = vxy;
+                spawned->anim.velocityY = vxy;
+                spawned->anim.velocityX = vxy;
                 vz = 1.0f;
-                ((GameObject*)spawned)->anim.velocityZ = vz;
+                spawned->anim.velocityZ = vz;
                 launch.v[1] = vxy;
                 launch.v[2] = vxy;
                 launch.v[3] = vxy;

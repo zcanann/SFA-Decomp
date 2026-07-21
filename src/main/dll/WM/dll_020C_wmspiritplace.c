@@ -113,7 +113,7 @@ int WM_spiritplace_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
     u8 eventId;
     u8 fxPos[24];
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     if ((state->fxFlags & WMSPIRITPLACE_FX_ACTIVE) != 0)
     {
         (*gPartfxInterface)->spawnObject((void*)obj, WMSPIRITPLACE_PARTFX, NULL, 2, -1, NULL);
@@ -121,8 +121,8 @@ int WM_spiritplace_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
     }
 
     actor->sequenceEventActive = 0;
-    ((GameObject*)obj)->anim.resetHitboxFlags =
-        (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
+    obj->anim.resetHitboxFlags =
+        (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     actor->freeCallback = (ObjAnimSequenceFreeCallback)wmspiritplace_onSeqFree;
 
     for (i = 0; i < actor->eventCount; i++)
@@ -134,7 +134,7 @@ int WM_spiritplace_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
             unlockLevel(0, 0, 1);
             break;
         case WMSPIRITPLACE_SEQEV_WARP:
-            mapId = ((GameObject*)obj)->anim.placement->mapId;
+            mapId = obj->anim.placement->mapId;
             switch (mapId)
             {
             case WMSPIRITPLACE_MAP_2:
@@ -149,7 +149,7 @@ int WM_spiritplace_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
             }
             break;
         case WMSPIRITPLACE_SEQEV_SET_SEQUENCE_BIT:
-            mapId = ((GameObject*)obj)->anim.placement->mapId;
+            mapId = obj->anim.placement->mapId;
             switch (mapId)
             {
             case WMSPIRITPLACE_MAP_2:
@@ -182,7 +182,7 @@ int WM_spiritplace_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
             Rcp_SetSpiritVisionEnabled(0);
             break;
         case WMSPIRITPLACE_SEQEV_MAP_PROGRESS:
-            mapId = ((GameObject*)obj)->anim.placement->mapId;
+            mapId = obj->anim.placement->mapId;
             switch (mapId)
             {
             case WMSPIRITPLACE_MAP_1:

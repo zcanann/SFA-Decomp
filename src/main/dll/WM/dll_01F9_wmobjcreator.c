@@ -191,20 +191,20 @@ void WM_ObjCreator_update(GameObject* obj)
             if ((s8)(int)state)
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_GALLEON);
-                ((ObjPlacement*)setup)->posX = placement->base.posX;
-                ((ObjPlacement*)setup)->posY = placement->base.posY;
-                ((ObjPlacement*)setup)->posZ = placement->base.posZ;
-                ((ObjPlacement*)setup)->color[0] = placement->base.color[0];
-                ((ObjPlacement*)setup)->color[1] = placement->base.color[1];
-                ((ObjPlacement*)setup)->color[2] = placement->base.color[2];
-                ((ObjPlacement*)setup)->color[3] = placement->base.color[3];
+                setup->posX = placement->base.posX;
+                setup->posY = placement->base.posY;
+                setup->posZ = placement->base.posZ;
+                setup->color[0] = placement->base.color[0];
+                setup->color[1] = placement->base.color[1];
+                setup->color[2] = placement->base.color[2];
+                setup->color[3] = placement->base.color[3];
                 ((WmGalleonSpawnSetup*)setup)->unk1E = 0xffff;
                 ((WmGalleonSpawnSetup*)setup)->unk1A = 2;
                 ((WmGalleonSpawnSetup*)setup)->yawByte = placement->yaw;
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
-                    ((GameObject*)spawned)->userData1 = 8;
+                    spawned->userData1 = 8;
                 }
                 obj->userData2 = 1;
             }
@@ -216,12 +216,12 @@ void WM_ObjCreator_update(GameObject* obj)
             {
                 ObjPlacement* setup =
                     Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                ((ObjPlacement*)setup)->color[0] = 0x20;
-                ((ObjPlacement*)setup)->color[1] = 2;
-                ((ObjPlacement*)setup)->color[3] = 0xff;
-                ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+                setup->color[0] = 0x20;
+                setup->color[1] = 2;
+                setup->color[3] = 0xff;
+                setup->posX = obj->anim.localPosX;
+                setup->posY = obj->anim.localPosY;
+                setup->posZ = obj->anim.localPosZ;
                 ((LfxEmitterPlacement*)setup)->lifeTimer = 0x50;
                 ((LfxEmitterPlacement*)setup)->configIndex = 0x10f;
                 ((LfxEmitterPlacement*)setup)->enableBit = 0xffff;
@@ -231,7 +231,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
-                    ((GameObject*)spawned)->anim.velocityX = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
+                    spawned->anim.velocityX = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -242,9 +242,9 @@ void WM_ObjCreator_update(GameObject* obj)
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_WALLCRAWLER);
                 ((WmwallcrawlerMapData*)setup)->rotXByte = randomGetRange(-0x7f, 0x7e);
-                ((ObjPlacement*)setup)->posX = obj->anim.localPosX + (f32)(int)randomGetRange(-100, 100);
-                ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-100, 100);
+                setup->posX = obj->anim.localPosX + (f32)(int)randomGetRange(-100, 100);
+                setup->posY = obj->anim.localPosY;
+                setup->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-100, 100);
                 ((WmwallcrawlerMapData*)setup)->triggerRadius = 0x31;
                 ((WmwallcrawlerMapData*)setup)->heightOffset = 200;
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
@@ -262,9 +262,9 @@ void WM_ObjCreator_update(GameObject* obj)
                 setup = Obj_AllocObjectSetup(0x38, WMOBJCREATOR_SPAWN_HOODED_ZYCK);
                 mainSetBits(state->gameBit, 0);
                 ((HoodedZyckSpawnSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
-                ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+                setup->posX = obj->anim.localPosX;
+                setup->posY = obj->anim.localPosY;
+                setup->posZ = obj->anim.localPosZ;
                 ((HoodedZyckSpawnSetup*)setup)->triggerGameBit = state->gameBit;
                 ((HoodedZyckSpawnSetup*)setup)->unk22 = 1;
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
@@ -280,11 +280,11 @@ void WM_ObjCreator_update(GameObject* obj)
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                ((ObjPlacement*)setup)->color[0] = 4;
-                ((ObjPlacement*)setup)->color[1] = 2;
-                ((ObjPlacement*)setup)->posX = placement->base.posX;
-                ((ObjPlacement*)setup)->posY = placement->base.posY + (f32)(int)randomGetRange(-0x28, 0x28);
-                ((ObjPlacement*)setup)->posZ = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
+                setup->color[0] = 4;
+                setup->color[1] = 2;
+                setup->posX = placement->base.posX;
+                setup->posY = placement->base.posY + (f32)(int)randomGetRange(-0x28, 0x28);
+                setup->posZ = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
                 ((LfxEmitterPlacement*)setup)->lifeTimer = 100;
                 ((LfxEmitterPlacement*)setup)->configIndex = 0x10f;
                 ((LfxEmitterPlacement*)setup)->enableBit = 0xffff;
@@ -293,7 +293,7 @@ void WM_ObjCreator_update(GameObject* obj)
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
-                    ((GameObject*)spawned)->anim.velocityX = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
+                    spawned->anim.velocityX = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -308,12 +308,12 @@ void WM_ObjCreator_update(GameObject* obj)
                     ObjPlacement* setup;
                     n -= 1;
                     setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                    ((ObjPlacement*)setup)->color[0] = 0x20;
-                    ((ObjPlacement*)setup)->color[1] = 2;
-                    ((ObjPlacement*)setup)->color[3] = 0xff;
-                    ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
-                    ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
-                    ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+                    setup->color[0] = 0x20;
+                    setup->color[1] = 2;
+                    setup->color[3] = 0xff;
+                    setup->posX = obj->anim.localPosX;
+                    setup->posY = obj->anim.localPosY;
+                    setup->posZ = obj->anim.localPosZ;
                     ((LfxEmitterPlacement*)setup)->lifeTimer = 400;
                     ((LfxEmitterPlacement*)setup)->configIndex = 0xf;
                     ((LfxEmitterPlacement*)setup)->enableBit = 0x222;
@@ -324,16 +324,16 @@ void WM_ObjCreator_update(GameObject* obj)
                     spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                     if ((u32)spawned != 0)
                     {
-                        *(u8*)(*(int*)&((GameObject*)spawned)->extra + 0x120) |= 2;
-                        ((GameObject*)spawned)->anim.velocityX = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
-                        ((GameObject*)spawned)->anim.velocityZ = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
-                        ((GameObject*)spawned)->anim.velocityY = lbl_803E5CD8;
+                        *(u8*)(*(int*)&spawned->extra + 0x120) |= 2;
+                        spawned->anim.velocityX = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
+                        spawned->anim.velocityZ = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
+                        spawned->anim.velocityY = lbl_803E5CD8;
                         vec.pos[0] = lbl_803E5CC8;
                         vec.dir[0] = 0;
                         vec.dir[1] = 0;
                         vec.dir[2] = 0;
-                        vec.pos[1] = ((GameObject*)spawned)->anim.velocityX;
-                        vec.pos[3] = ((GameObject*)spawned)->anim.velocityZ;
+                        vec.pos[1] = spawned->anim.velocityX;
+                        vec.pos[3] = spawned->anim.velocityZ;
                         vec.pos[2] = lbl_803E5CD8;
                         (*gPartfxInterface)->spawnObject((void*)spawned, 0x1a7, &vec, 0x10000, -1, NULL);
                     }
@@ -346,11 +346,11 @@ void WM_ObjCreator_update(GameObject* obj)
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(LFXEMITTER_PLACEMENT_BYTES, WMOBJCREATOR_SPAWN_LFX_EMITTER);
-                ((ObjPlacement*)setup)->color[0] = 4;
-                ((ObjPlacement*)setup)->color[1] = 2;
-                ((ObjPlacement*)setup)->posX = placement->base.posX + (f32)(int)randomGetRange(-0x28, 0x28);
-                ((ObjPlacement*)setup)->posY = placement->base.posY + (f32)(int)randomGetRange(0, 0x14);
-                ((ObjPlacement*)setup)->posZ = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
+                setup->color[0] = 4;
+                setup->color[1] = 2;
+                setup->posX = placement->base.posX + (f32)(int)randomGetRange(-0x28, 0x28);
+                setup->posY = placement->base.posY + (f32)(int)randomGetRange(0, 0x14);
+                setup->posZ = placement->base.posZ + (f32)(int)randomGetRange(-0x28, 0x28);
                 ((LfxEmitterPlacement*)setup)->lifeTimer = 0x1c2;
                 ((LfxEmitterPlacement*)setup)->configIndex = randomGetRange(0, 2) + 0x1cc;
                 ((LfxEmitterPlacement*)setup)->enableBit = 0xffff;
@@ -365,12 +365,12 @@ void WM_ObjCreator_update(GameObject* obj)
             if (mainGetBit(state->gameBit) != 0 || state->gameBit == -1)
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_ROCK);
-                ((ObjPlacement*)setup)->posX = obj->anim.localPosX + (f32)(int)randomGetRange(-0x104, 0x104);
-                ((ObjPlacement*)setup)->posY = lbl_803E5CDC + obj->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-0x50, 0x50);
-                ((ObjPlacement*)setup)->color[0] = 0x20;
-                ((ObjPlacement*)setup)->color[1] = 2;
-                ((ObjPlacement*)setup)->color[3] = 0xff;
+                setup->posX = obj->anim.localPosX + (f32)(int)randomGetRange(-0x104, 0x104);
+                setup->posY = lbl_803E5CDC + obj->anim.localPosY;
+                setup->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-0x50, 0x50);
+                setup->color[0] = 0x20;
+                setup->color[1] = 2;
+                setup->color[3] = 0xff;
                 ((WmRockSpawnSetup*)setup)->unk1E = 0xffff;
                 ((WmRockSpawnSetup*)setup)->yawByte = obj->anim.rotX >> 8;
                 Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
