@@ -1,7 +1,7 @@
 /*
  * effect3 (DLL 0x1C) - a particle-effect spawner object.
  *
- * The live entry point is Effect3_func04: a spawn dispatcher keyed on
+ * The live entry point is Effect3_spawnEffect: a spawn dispatcher keyed on
  * effectId (0x1F4..0x20E). For each id it fills a PartFxSpawn request -
  * texture, lifetime, scale, start position, velocity, color, behavior and
  * render flags, mostly randomized via randomGetRange - then hands it to
@@ -30,7 +30,7 @@ ObjectDescriptor6 lbl_80310808 = {
     (ObjectDescriptorCallback)Effect3_release,
     0,
     (ObjectDescriptorCallback)Effect3_func03_nop,
-    (ObjectDescriptorCallback)Effect3_func04,
+    (ObjectDescriptorCallback)Effect3_spawnEffect,
     (ObjectDescriptorCallback)Effect3_func05_nop,
 };
 
@@ -46,8 +46,8 @@ static inline PartFxSpawnParams* Effect3_getDefaultSpawnParams(void)
     return &lbl_8039C350;
 }
 
-int Effect3_func04(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
-                   f32* extraArgs)
+int Effect3_spawnEffect(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
+                        f32* extraArgs)
 {
     u32 hasAttachedSource;
     PartFxSpawn cfg;
