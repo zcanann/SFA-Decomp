@@ -60,53 +60,6 @@ WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
 };
 int gWarpStoneUiSelectedIndices[0x6];
 
-int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuItem* items,
-                             const WarpstoneEntry* entries, int count, int* selectedIndices)
-{
-    int slot;
-    int tmp;
-    int yoff;
-    WarpstoneMenuItem* lastDst;
-    int entry;
-
-    lastDst = NULL;
-    entry = 0;
-    slot = 0;
-    for (; slot < count; slot++)
-    {
-        if (mainGetBit(entries[slot].bit) != 0)
-        {
-            entry++;
-        }
-    }
-    tmp = (count - entry) * 0x2a / 2 + 0x52;
-    slot = 0;
-    entry = slot;
-    yoff = tmp;
-    for (; entry < count; entry++)
-    {
-        if (mainGetBit(entries[entry].bit) != 0)
-        {
-            memcpy(items, templates, sizeof(WarpstoneMenuItem));
-            lastDst = items;
-            items->y = yoff;
-            items->previousItem = slot - 1;
-            items->nextItem = slot + 1;
-            selectedIndices[0] = entry;
-            selectedIndices++;
-            items++;
-            yoff += 0x2a;
-            slot++;
-        }
-        templates++;
-    }
-    if (lastDst != NULL)
-    {
-        lastDst->nextItem = -1;
-    }
-    return slot;
-}
-
 void WarpstoneUI_setState(int val)
 {
     warpstoneUIState[0] = val;
@@ -163,6 +116,53 @@ void WarpstoneUI_showUI(int arg)
         gTitleMenuLinkInterface->vtable->free();
         gWarpStoneUiMenuActive = 0;
     }
+}
+
+int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuItem* items,
+                             const WarpstoneEntry* entries, int count, int* selectedIndices)
+{
+    int slot;
+    int tmp;
+    int yoff;
+    WarpstoneMenuItem* lastDst;
+    int entry;
+
+    lastDst = NULL;
+    entry = 0;
+    slot = 0;
+    for (; slot < count; slot++)
+    {
+        if (mainGetBit(entries[slot].bit) != 0)
+        {
+            entry++;
+        }
+    }
+    tmp = (count - entry) * 0x2a / 2 + 0x52;
+    slot = 0;
+    entry = slot;
+    yoff = tmp;
+    for (; entry < count; entry++)
+    {
+        if (mainGetBit(entries[entry].bit) != 0)
+        {
+            memcpy(items, templates, sizeof(WarpstoneMenuItem));
+            lastDst = items;
+            items->y = yoff;
+            items->previousItem = slot - 1;
+            items->nextItem = slot + 1;
+            selectedIndices[0] = entry;
+            selectedIndices++;
+            items++;
+            yoff += 0x2a;
+            slot++;
+        }
+        templates++;
+    }
+    if (lastDst != NULL)
+    {
+        lastDst->nextItem = -1;
+    }
+    return slot;
 }
 
 void WarpstoneUI_frameEnd(void)
