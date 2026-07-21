@@ -12,18 +12,10 @@
  *
  * SlidingDoor_update fires once (latched via obj->userData1): it preempts the
  * placement's preemptEvent if the door is already moving and runs the
- * placement's startup sequence (data[0x1e], -1 = none).
+ * placement's startup sequence (-1 = none).
  */
-#include "main/dll/drexplodable_types.h"
 #include "main/object.h"
 #include "main/object_descriptor.h"
-#include "main/obj_placement.h"
-
-STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
-
-STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
-STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
-
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
@@ -37,12 +29,12 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 {
     register int playerNear;
     register int trickyNear;
-    register u8* state;
-    u8* params;
+    register SlidingdoorState* state;
+    SlidingdoorPlacement* placement;
     u32 mode;
     int result;
-    void* player;
-    void* tricky;
+    GameObject* player;
+    GameObject* tricky;
 
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
@@ -50,7 +42,7 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     if (player != NULL)
     {
         playerNear =
-            Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 130.0f;
+            Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX) < 130.0f;
     }
     else
     {
@@ -59,7 +51,7 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 
     if (tricky != NULL)
     {
-        trickyNear = Vec_xzDistance(&obj->anim.worldPosX, (f32*)((u8*)tricky + 0x18)) < 130.0f;
+        trickyNear = Vec_xzDistance(&obj->anim.worldPosX, &tricky->anim.worldPosX) < 130.0f;
     }
     else
     {
@@ -67,27 +59,25 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     }
 
     state = obj->extra;
-    params = *(u8**)&obj->anim.placementData;
-    mode = ((u32)state[0] >> 5) & 7;
+    placement = (SlidingdoorPlacement*)obj->anim.placementData;
+    mode = state->mode;
 
     if (mode == SLIDINGDOOR_MODE_CLOSED)
     {
-        if (mainGetBit(((SlidingdoorPlacement*)params)->openGameBit) != 0 &&
-            (((SlidingdoorPlacement*)params)->gateGameBit == -1 ||
-             mainGetBit(((SlidingdoorPlacement*)params)->gateGameBit) != 0))
+        if (mainGetBit(placement->openGameBit) != 0 &&
+            (placement->gateGameBit == -1 || mainGetBit(placement->gateGameBit) != 0))
         {
-            mainSetBits(((SlidingdoorPlacement*)params)->openedGameBit, 1);
+            mainSetBits(placement->openedGameBit, 1);
             if (playerNear != 0 || trickyNear != 0)
             {
-                ((SlidingdoorState*)state)->mode = SLIDINGDOOR_MODE_OPENING;
+                state->mode = SLIDINGDOOR_MODE_OPENING;
             }
         }
     }
     else if (mode == SLIDINGDOOR_MODE_OPEN)
     {
-        if ((mainGetBit(((SlidingdoorPlacement*)params)->openGameBit) != 0 ||
-             (((SlidingdoorPlacement*)params)->gateGameBit != -1 &&
-              mainGetBit(((SlidingdoorPlacement*)params)->gateGameBit) != 0)) &&
+        if ((mainGetBit(placement->openGameBit) != 0 ||
+             (placement->gateGameBit != -1 && mainGetBit(placement->gateGameBit) != 0)) &&
             playerNear == 0 && trickyNear == 0)
         {
             ((SlidingdoorState*)state)->mode = SLIDINGDOOR_MODE_CLOSING;
@@ -95,7 +85,7 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     }
 
     {
-        register SlidingdoorState* fl = (SlidingdoorState*)state;
+        register SlidingdoorState* fl = state;
         if (fl->mode == SLIDINGDOOR_MODE_OPENING)
         {
             if (animUpdate->triggerCommand == 2)
@@ -114,7 +104,7 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 
     result = 0;
     {
-        u32 modeAfter = ((u32)state[0] >> 5) & 7;
+        u32 modeAfter = state->mode;
         if (modeAfter != SLIDINGDOOR_MODE_OPENING)
         {
             if (modeAfter != SLIDINGDOOR_MODE_CLOSING)
@@ -126,7 +116,7 @@ int SlidingDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
 
 int SlidingDoor_getExtraSize(void)
 {
-    return 0x1;
+    return sizeof(SlidingdoorState);
 }
 int SlidingDoor_getObjectTypeId(void)
 {
@@ -149,44 +139,44 @@ void SlidingDoor_hitDetect(void)
 
 void SlidingDoor_update(GameObject* obj)
 {
-    u8* sub;
-    u8* data;
+    SlidingdoorState* state;
+    SlidingdoorPlacement* placement;
     if (obj->userData1 != 0)
         return;
-    sub = obj->extra;
-    data = *(u8**)&obj->anim.placementData;
-    if (((SlidingdoorPlacement*)data)->preemptEvent != 0)
+    state = obj->extra;
+    placement = (SlidingdoorPlacement*)obj->anim.placementData;
+    if (placement->preemptEvent != 0)
     {
-        u32 mode = (u32)((sub[0] >> 5) & 7);
+        u32 mode = state->mode;
         if (mode != SLIDINGDOOR_MODE_CLOSED)
         {
-            (*gObjectTriggerInterface)->preempt((int)obj, ((SlidingdoorPlacement*)data)->preemptEvent);
+            (*gObjectTriggerInterface)->preempt((int)obj, placement->preemptEvent);
         }
     }
     {
-        s8 id = ((SlidingdoorPlacement*)data)->startupSequenceId;
+        s8 id = placement->startupSequenceId;
         if (id != -1)
         {
             (*gObjectTriggerInterface)->runSequence(id, obj, -1);
         }
     }
-    *(u32*)&obj->userData1 = 1;
+    obj->userData1 = 1;
 }
 
-void SlidingDoor_init(GameObject* obj, u8* data)
+void SlidingDoor_init(GameObject* obj, SlidingdoorPlacement* placement)
 {
-    u8* sub;
+    SlidingdoorState* state;
     f32 scale;
     u32 doorState = 0;
-    *(u32*)&obj->userData1 = doorState;
-    obj->anim.rotX = (s16)(data[0x1f] << 8);
+    obj->userData1 = doorState;
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = SlidingDoor_SeqFn;
-    scale = (f32)(u32)data[0x21] / 64.0f;
+    scale = (f32)(u32)placement->scaleByte / 64.0f;
     obj->anim.rootMotionScale = scale;
     obj->anim.rootMotionScale =
         obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
-    sub = obj->extra;
-    ((SlidingdoorState*)sub)->mode = doorState;
+    state = obj->extra;
+    state->mode = doorState;
 }
 
 void SlidingDoor_release(void)
