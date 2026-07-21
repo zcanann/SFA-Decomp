@@ -158,6 +158,16 @@ typedef struct ObjSeqAnimLookup
     s16 baseAnimId;
 } ObjSeqAnimLookup;
 
+typedef struct ObjSeqStreamMapEntry
+{
+    int trackId;
+    u32* streamIds;
+} ObjSeqStreamMapEntry;
+
+#define OBJSEQ_STREAM_MAP_COUNT 5
+
+STATIC_ASSERT(sizeof(ObjSeqStreamMapEntry) == 8);
+
 STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, animDataIndex) == 0x18);
 STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, unk1A) == 0x1A);
 STATIC_ASSERT(offsetof(ObjSeqAnimPlacement, targetType) == 0x1C);
@@ -183,7 +193,7 @@ extern s8 gObjSeqSlotResults[];
 extern ObjSeqBgCmd lbl_8039A5BC[];
 extern u8 gObjSeqRuntimeBuffer[];
 extern int lbl_8030EDA4[];
-extern int gObjSeqStreamTableA[];
+extern ObjSeqStreamMapEntry gObjSeqStreamTableA[];
 extern ObjSeqAnimLookup* lbl_803DD0D4;
 extern u8 lbl_803DD0D8;
 extern int lbl_803DD090;
@@ -286,7 +296,7 @@ extern int gObjSeqMsgIds[];
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
 
-extern int gObjSeqStreamTableB[];
+extern ObjSeqStreamMapEntry gObjSeqStreamTableB[];
 extern f32 lbl_803DD0F4;
 extern f32 lbl_803DD0F0;
 extern f32 lbl_803DD0EC;
@@ -2136,7 +2146,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             trackId = (u32)(((s16*)(base + 0x3a98))[slot] - 1) & 0x3fff;
             gObjSeqCurrentTrackId = trackId;
-            streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableA, 5, trackId);
+            streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableA, OBJSEQ_STREAM_MAP_COUNT, trackId);
             if (streams != NULL)
             {
                 off = cmdArg * 4;
@@ -2144,7 +2154,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
                 {
                     lbl_803DB720 = slot;
                 }
-                streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, 5, trackId);
+                streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, OBJSEQ_STREAM_MAP_COUNT, trackId);
                 if (streams != NULL)
                 {
                     lbl_803DB718 = *(int*)((u8*)streams + off);
@@ -5165,10 +5175,14 @@ u32 lbl_8030EC70[3] = {-1, -1, 0x525};
 u32 lbl_8030EC7C[7] = {0x2E5, 0x2E6, 0x2E8, 0x2EA, 0x2EA, 0x2E8, 0x2E9};
 u32 lbl_8030EC98[4] = {0x2ED, 0x2EE, 0x2EF, 0x2F0};
 
-int gObjSeqStreamTableA[10] = {0x35F, (int)lbl_8030EC00, 0x45A, (int)lbl_8030EC10, 0x117, (int)lbl_8030EC1C,
-                               0xC3,  (int)lbl_8030EC28, 0x122, (int)lbl_8030EC44};
-int gObjSeqStreamTableB[10] = {0x35F, (int)lbl_8030EC54, 0x45A, (int)lbl_8030EC64, 0x117, (int)lbl_8030EC70,
-                               0xC3,  (int)lbl_8030EC7C, 0x122, (int)lbl_8030EC98};
+ObjSeqStreamMapEntry gObjSeqStreamTableA[OBJSEQ_STREAM_MAP_COUNT] = {
+    {0x35F, lbl_8030EC00}, {0x45A, lbl_8030EC10}, {0x117, lbl_8030EC1C},
+    {0xC3, lbl_8030EC28},  {0x122, lbl_8030EC44},
+};
+ObjSeqStreamMapEntry gObjSeqStreamTableB[OBJSEQ_STREAM_MAP_COUNT] = {
+    {0x35F, lbl_8030EC54}, {0x45A, lbl_8030EC64}, {0x117, lbl_8030EC70},
+    {0xC3, lbl_8030EC7C},  {0x122, lbl_8030EC98},
+};
 
 s16 lbl_8030ECF8[86] = {0};
 
