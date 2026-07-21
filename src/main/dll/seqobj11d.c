@@ -201,16 +201,16 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
     GameObject* player;
     u8* p20;
     u8* p28;
-    u8 t;
+    u8 tableIdx;
     f32 tv;
     f32 fz;
     GroundBaddieSequenceTable* table;
 
     table = (GroundBaddieSequenceTable*)lbl_8031F16C;
-    t = ((GroundBaddieState*)state)->baddie.userData2;
-    p20 = table[t].hitEntries;
-    p28 = table[t].sequenceEntries;
-    if (t == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
+    tableIdx = ((GroundBaddieState*)state)->baddie.userData2;
+    p20 = table[tableIdx].hitEntries;
+    p28 = table[tableIdx].sequenceEntries;
+    if (tableIdx == 5 && (((GroundBaddieState*)state)->baddie.controlFlags & 0x800000) != 0)
     {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }

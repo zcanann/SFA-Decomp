@@ -256,7 +256,7 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
 {
     GrimbleControl* ctrl;
     f64 d;
-    f32 r;
+    f32 horizRun;
     struct
     {
         f32 x, y, z;
@@ -307,9 +307,9 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
-    r = sqrtf(a.x * a.x + a.z * a.z);
-    d = r;
-    a.x = r;
+    horizRun = sqrtf(a.x * a.x + a.z * a.z);
+    d = horizRun;
+    a.x = horizRun;
     {
         int ang = (s16)getAngle(a.y, d);
         (obj)->anim.rotY = ang * ((ctrl->reversed << 1) - 1);
@@ -325,7 +325,7 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
 {
     GrimbleControl* ctrl;
     f64 d;
-    f32 r;
+    f32 horizRun;
     struct
     {
         f32 x, y, z;
@@ -350,9 +350,9 @@ int grimble_stateHandlerA05(short* obj, GroundBaddieState* p)
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
-    r = sqrtf(a.x * a.x + a.z * a.z);
-    d = r;
-    a.x = r;
+    horizRun = sqrtf(a.x * a.x + a.z * a.z);
+    d = horizRun;
+    a.x = horizRun;
     {
         int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((ctrl->reversed << 1) - 1);
@@ -364,7 +364,7 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
 {
     GrimbleControl* ctrl;
     f64 d;
-    f32 r;
+    f32 horizRun;
     struct
     {
         f32 x, y, z;
@@ -389,9 +389,9 @@ int grimble_stateHandlerA04(short* obj, GroundBaddieState* p)
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
-    r = sqrtf(a.x * a.x + a.z * a.z);
-    d = r;
-    a.x = r;
+    horizRun = sqrtf(a.x * a.x + a.z * a.z);
+    d = horizRun;
+    a.x = horizRun;
     {
         int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((ctrl->reversed << 1) - 1);
@@ -407,7 +407,7 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
 {
     GrimbleControl* ctrl;
     f64 d;
-    f32 r;
+    f32 horizRun;
     struct
     {
         f32 x, y, z;
@@ -432,9 +432,9 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
     a.x = a.x - b.x;
     a.y = a.y - b.y;
     a.z = a.z - b.z;
-    r = sqrtf(a.x * a.x + a.z * a.z);
-    d = r;
-    a.x = r;
+    horizRun = sqrtf(a.x * a.x + a.z * a.z);
+    d = horizRun;
+    a.x = horizRun;
     {
         int ang = (s16)getAngle(a.y, d);
         ((GameObject*)obj)->anim.rotY = ang * ((ctrl->reversed << 1) - 1);

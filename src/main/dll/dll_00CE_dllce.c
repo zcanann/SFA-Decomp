@@ -608,7 +608,7 @@ void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state);
 void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state)
 {
                 f32 dur;
-    f32 t;
+    f32 distRatio;
     int setup;
     u8* o;
 
@@ -625,12 +625,12 @@ void chukChuk_spawnIceBall(GameObject* obj, GroundBaddieState* state)
         o = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
         if (o != NULL)
         {
-            t = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
-            dur = 50.0f * t;
+            distRatio = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
+            dur = 50.0f * distRatio;
             ((GameObject*)o)->anim.velocityX =
                 (((GameObject*)state->baddie.targetObj)->anim.localPosX - (obj)->anim.localPosX) / dur;
             ((GameObject*)o)->anim.velocityY =
-                ((90.0f * t + ((GameObject*)state->baddie.targetObj)->anim.localPosY) - (obj)->anim.localPosY) /
+                ((90.0f * distRatio + ((GameObject*)state->baddie.targetObj)->anim.localPosY) - (obj)->anim.localPosY) /
                 dur;
             ((GameObject*)o)->anim.velocityZ =
                 (((GameObject*)state->baddie.targetObj)->anim.localPosZ - (obj)->anim.localPosZ) / dur;
@@ -786,17 +786,17 @@ void dll_CE_free(int* obj)
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
         GroundBaddieState* sub = ((GameObject*)p1)->extra;
-    f32 t;
+    f32 alpha;
     f32 zero = 0.0f;
 
     if (visible == 0 || ((GameObject*)p1)->userData1 != 0 || sub->targetState == 0)
     {
         return;
     }
-    t = sub->glowAlpha;
-    if (t != zero)
+    alpha = sub->glowAlpha;
+    if (alpha != zero)
     {
-        fn_8003B5E0(200, 0, 0, t);
+        fn_8003B5E0(200, 0, 0, alpha);
     }
     objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
 }

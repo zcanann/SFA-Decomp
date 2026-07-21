@@ -317,20 +317,20 @@ void sharpClawUpdateIdle(int* obj, u8* state)
     flags = ((BaddieState*)state)->controlFlags;
     if (flags & BADDIE_CONTROL_PATH_FOLLOW)
     {
-        f32 d;
+        f32 dist;
         f32 delta;
 
         {
             f32 dx = path->posX - ((GameObject*)obj)->anim.localPosX;
             f32 dz = path->posZ - ((GameObject*)obj)->anim.localPosZ;
-            d = sqrtf(dx * dx + dz * dz);
+            dist = sqrtf(dx * dx + dz * dz);
         }
-        if (d > 64.0f)
+        if (dist > 64.0f)
         {
-            d = 64.0f;
+            dist = 64.0f;
         }
         {
-            f32 diff = 64.0f - d;
+            f32 diff = 64.0f - dist;
             f32 spd = diff * gSidekickToyDistToSpeedScale;
             *(f32*)(state + 0x310) = spd * ((BaddieState*)state)->pathStep;
         }

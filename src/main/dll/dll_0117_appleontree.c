@@ -150,24 +150,24 @@ static inline void appleontree_markFallen(GameObject* obj)
 void appleontree_knockLoose(GameObject* obj, int msg)
 {
     int state = *(int*)&obj->extra;
-    int v;
+    int healthRestore;
 
     switch (msg)
     {
     case 0:
-        v = 2;
+        healthRestore = 2;
         break;
     case 1:
-        v = 2;
+        healthRestore = 2;
         break;
     case 2:
-        v = 2;
+        healthRestore = 2;
         break;
     default:
-        v = 0;
+        healthRestore = 0;
         break;
     }
-    ((AppleOnTreeState*)state)->healthRestore = v;
+    ((AppleOnTreeState*)state)->healthRestore = healthRestore;
     ((AppleOnTreeState*)state)->animState = APPLEONTREE_STATE_KNOCKED;
     ((AppleOnTreeState*)state)->elapsedTime = timeDelta;
     ((AppleOnTreeState*)state)->flightTime = timeDelta;

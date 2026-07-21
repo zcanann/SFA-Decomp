@@ -1138,19 +1138,19 @@ void enemy_setHealthZero(GameObject* obj)
 
 f32 enemy_getHealthFraction(register GameObject* obj)
 {
-    register u16 a;
+    register u16 maxHealth;
     register EnemyState* state;
-    u16 b;
+    u16 curHealth;
     state = obj->extra;
     if (state == NULL)
         return lbl_803E2574;
-    a = state->max;
-    if (a != 0)
+    maxHealth = state->max;
+    if (maxHealth != 0)
     {
-        b = *(u16*)&state->current;
-        if (b != 0)
+        curHealth = *(u16*)&state->current;
+        if (curHealth != 0)
         {
-            return (f32)(u32)b / (f32)(u32)a;
+            return (f32)(u32)curHealth / (f32)(u32)maxHealth;
         }
     }
     return lbl_803E2574;

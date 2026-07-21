@@ -315,14 +315,14 @@ void groundanimator_update(int* obj)
     }
     if ((g->flags & 1) != 0 && *(void**)&g->falloffBuf == NULL)
     {
-        int p;
+        int buf;
         block = mapGetBlock(bi);
         g->vertCount = (s16)(mapBlockCountTrianglesByType(block, r20->blockId) * 3);
         if (g->vertCount > 0)
         {
-            p = (int)mmAlloc(g->vertCount * 6, 5, 0);
-            g->falloffBuf = p;
-            g->heightBuf = p + g->vertCount * 4;
+            buf = (int)mmAlloc(g->vertCount * 6, 5, 0);
+            g->falloffBuf = buf;
+            g->heightBuf = buf + g->vertCount * 4;
             fn_801932C8(obj, g, r20);
         }
     }

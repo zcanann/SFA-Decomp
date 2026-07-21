@@ -502,13 +502,13 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
     {
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
-            f32 dx, dz, d;
+            f32 dx, dz, dist;
             player = ((BackpackState*)aux)->targetObj ? (GameObject*)((BackpackState*)aux)->targetObj
                                                       : (GameObject*)Obj_GetPlayerObject();
             dx = (obj)->anim.localPosX - player->anim.localPosX;
             dz = (obj)->anim.localPosZ - player->anim.localPosZ;
-            d = sqrtf(dx * dx + dz * dz);
-            ((BackpackState*)aux)->distToTarget = d;
+            dist = sqrtf(dx * dx + dz * dz);
+            ((BackpackState*)aux)->distToTarget = dist;
             if (((BackpackState*)aux)->distToTarget < *(u16*)&((BackpackState*)aux)->triggerRange)
             {
                 ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_ROLLING;
