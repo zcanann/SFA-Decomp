@@ -1,9 +1,8 @@
 /*
  * attractor (DLL 0x15F) - a placement-driven object that joins object
  * group 0x1e and, on demand, reports either itself or a heading toward
- * the player. Its placement record carries a setup byte (0x18, copied
- * <<8 into anim.rotX at init), a mode byte (0x19) and a scale halfword
- * (0x1a).
+ * the player. Its placement record carries its initial rotation, mode,
+ * and scale.
  *
  * attractor_getTarget is the queried accessor: mode 1 returns the object;
  * mode 2 additionally faces the object at the player (atan2 of the
@@ -26,41 +25,37 @@
 
 #define ATTRACTOR_OBJ_GROUP 0x1e
 
-/* placement mode byte (0x19) - selects what attractor_getTarget reports */
-#define ATTRACTOR_MODE_NONE        0 /* report nothing */
-#define ATTRACTOR_MODE_RETURN_SELF 1 /* return the object */
-#define ATTRACTOR_MODE_FACE_PLAYER 2 /* face player, then return the object */
-
-void attractor_getTarget(GameObject* obj, void** out)
+void attractor_getTarget(GameObject* obj, GameObject** outTarget)
 {
-    void* result = NULL;
-    s8 mode = ((AttractorMapData*)obj->anim.placementData)->mode;
+    GameObject* target = NULL;
+    AttractorPlacement* placement = (AttractorPlacement*)obj->anim.placementData;
+    s8 mode = placement->mode;
     switch (mode)
     {
     case ATTRACTOR_MODE_NONE:
         break;
     case ATTRACTOR_MODE_RETURN_SELF:
-        result = obj;
+        target = obj;
         break;
     case ATTRACTOR_MODE_FACE_PLAYER:
     {
-        GameObject* player = (GameObject*)Obj_GetPlayerObject();
+        GameObject* player = Obj_GetPlayerObject();
         int angle = atan2i((int)(player->anim.localPosX - obj->anim.localPosX),
                            (int)(player->anim.localPosZ - obj->anim.localPosZ));
         obj->anim.rotX = (s16)(angle + 0x8000);
-        result = obj;
+        target = obj;
         break;
     }
     }
-    *out = result;
+    *outTarget = target;
 }
 
-int attractor_setScale(int* obj)
+int attractor_setScale(GameObject* obj)
 {
-    AttractorMapData* p = (AttractorMapData*)((int**)obj)[0x4c / 4];
-    if (p->mode != ATTRACTOR_MODE_NONE)
+    AttractorPlacement* placement = (AttractorPlacement*)obj->anim.placementData;
+    if (placement->mode != ATTRACTOR_MODE_NONE)
     {
-        return p->scale;
+        return placement->scale;
     }
     return 0;
 }
@@ -74,9 +69,9 @@ int attractor_getObjectTypeId(void)
     return 0x0;
 }
 
-void attractor_free(int obj)
+void attractor_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, ATTRACTOR_OBJ_GROUP);
+    ObjGroup_RemoveObject((int)obj, ATTRACTOR_OBJ_GROUP);
 }
 
 void attractor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -94,12 +89,12 @@ void attractor_update(void)
 {
 }
 
-void attractor_init(GameObject* obj, AttractorMapData* data)
+void attractor_init(GameObject* obj, AttractorPlacement* placement)
 {
     ObjGroup_AddObject((u32)obj, ATTRACTOR_OBJ_GROUP);
     {
-        s8 setup = data->setupByte;
-        s16 rotX = setup << 8;
+        s8 rotation = placement->rotXByte;
+        s16 rotX = rotation << 8;
         obj->anim.rotX = rotX;
     }
 }
