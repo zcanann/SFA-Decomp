@@ -9,7 +9,7 @@ typedef struct SBPropellerState
     f32 spinBlend; /* 0x04 */
     int spinRate; /* 0x08: init 1200 */
     s8 health; /* 0x0c: init 4 */
-    u8 pad0D[3];
+    u8 reserved0D[3];
 } SBPropellerState;
 
 #endif

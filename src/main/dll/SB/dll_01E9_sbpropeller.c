@@ -62,19 +62,18 @@ int SB_Propeller_getExtraSize(void)
     return sizeof(SBPropellerState);
 }
 
-void SB_Propeller_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void SB_Propeller_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E5810);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5810);
 }
 
 void SB_Propeller_hitDetect(GameObject* obj)
 {
-    GameObject* object = obj;
-    if (object->anim.seqId != SB_PROPELLER_SEQ_ID)
+    if (obj->anim.seqId != SB_PROPELLER_SEQ_ID)
         return;
-    object->anim.rotZ = *(s16*)(lbl_803DDC40 + 4);
+    obj->anim.rotZ = ((GameObject*)lbl_803DDC40)->anim.rotZ;
 }
 
 void SB_Propeller_update(GameObject* obj)
@@ -89,15 +88,7 @@ void SB_Propeller_update(GameObject* obj)
     int j;
     int hit;
     SBPropellerState* state;
-    struct
-    {
-        u8 pad[6];
-        u16 mode;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } stk;
+    PartFxSpawnParams effect;
 
     objAnim = (ObjAnimComponent*)obj;
     object = obj;
@@ -117,25 +108,25 @@ void SB_Propeller_update(GameObject* obj)
             f32 spd;
             for (i = randomGetRange(10, 0x19), spd = lbl_803E5810; i != 0; i--)
             {
-                stk.x = objAnim->worldPosX;
-                stk.y = objAnim->worldPosY;
-                stk.z = objAnim->worldPosZ;
-                stk.scale = spd;
-                (*gPartfxInterface)->spawnObject((void*)obj, SB_PROPELLER_PARTFX_SMOKE, stk.pad, 0x200001, -1, NULL);
+                effect.posX = objAnim->worldPosX;
+                effect.posY = objAnim->worldPosY;
+                effect.posZ = objAnim->worldPosZ;
+                effect.scale = spd;
+                (*gPartfxInterface)->spawnObject((void*)obj, SB_PROPELLER_PARTFX_SMOKE, &effect, 0x200001, -1, NULL);
             }
             state->smokeTimer = (f32)(int)randomGetRange(0x5a, 0xf0);
         }
         if ((2 < camA) && (objAnim->bankIndex == 1))
         {
-            stk.scale = lbl_803E5818;
-            stk.mode = 0xc0a;
-            ObjPath_GetPointWorldPosition(obj, 0, &stk.x, &stk.y, &stk.z, 0);
-            stk.x = stk.x - objAnim->worldPosX;
-            stk.y = stk.y - objAnim->worldPosY;
-            stk.z = stk.z - objAnim->worldPosZ;
+            effect.scale = lbl_803E5818;
+            effect.arg3 = 0xc0a;
+            ObjPath_GetPointWorldPosition(obj, 0, &effect.posX, &effect.posY, &effect.posZ, 0);
+            effect.posX = effect.posX - objAnim->worldPosX;
+            effect.posY = effect.posY - objAnim->worldPosY;
+            effect.posZ = effect.posZ - objAnim->worldPosZ;
             for (j = 0; j < framesThisStep; j++)
             {
-                (*gPartfxInterface)->spawnObject((void*)obj, SB_PROPELLER_PARTFX_DEBRIS, stk.pad, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, SB_PROPELLER_PARTFX_DEBRIS, &effect, 2, -1, NULL);
             }
         }
     }
@@ -195,20 +186,20 @@ void SB_Propeller_update(GameObject* obj)
     }
 }
 
-void SB_Propeller_init(GameObject* obj, int placement)
+void SB_Propeller_init(GameObject* obj, SBPropellerPlacement* placement)
 {
     ObjAnimComponent* objAnim;
     u32 randVal;
     SBPropellerState* state;
 
-    objAnim = (ObjAnimComponent*)obj;
+    objAnim = &obj->anim;
     state = obj->extra;
     randVal = randomGetRange(0x5a, 0xf0);
     state->smokeTimer = (f32)(s32)(randVal);
     state->spinBlend = lbl_803E5810;
     state->spinRate = 1200;
     state->health = 4;
-    objAnim->bankIndex = (char)*(s16*)(placement + 0x1a);
+    objAnim->bankIndex = (char)placement->modelBankIndex;
     if (objAnim->seqId != SB_PROPELLER_SEQ_ID)
     {
         lbl_803DDC40 = (u32)obj;
