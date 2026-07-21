@@ -509,9 +509,9 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
                 tp += 2;
             } while (0);
         }
-        *outPosition = sample;
+        outPosition[0] = sample;
         outPosition++;
-    } while ((RenderPackedAddress)RENDER_PACKED_ADDRESS(outPosition) != end);
+    } while (RENDER_PACKED_ADDRESS(outPosition) != end);
 }
 
 void render_copyPackedU64Tail(u64* dst, u32 packed)
