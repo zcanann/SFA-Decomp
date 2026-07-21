@@ -1957,7 +1957,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
-    tex = (void*)getTextureFn_8006c744();
+    tex = (void*)getNewShadowReflectionGradientTexture();
     selectReflectionTexture(0);
     selectTexture((Texture*)tex, 1);
     fn_8006C6A4(2);

@@ -23,7 +23,7 @@ void getReflectionTexture2(u32* out);
 void getNewShadowCausticTexture(u32* out);
 void getNewShadowDiskTexture(u32* out);
 void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY);
-u32 getTextureFn_8006c744(void);
+u32 getNewShadowReflectionGradientTexture(void);
 void getNewShadowSnowFlashTexture(u32* out);
 void fn_8006C504(Texture** out);
 void getNewShadowRingTexture(Texture** out);

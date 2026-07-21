@@ -56,7 +56,7 @@ f32 lbl_803DCFA4;
 u16 lbl_803DCFA0;
 u32 gNewShadowRampTexture;
 u32 gNewShadowInverseRampTexture;
-u32 lbl_803DCF94;
+u32 gNewShadowReflectionGradientTexture;
 u32 gNewShadowFalloffTexture;
 u8 gNewShadowFrameIndex;
 int gNewShadowLightAngleY;
@@ -129,7 +129,7 @@ extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern u32 gNewShadowSmallDiskTexture;
 extern Texture* gNewShadowReflectionTexture;
-extern u32 lbl_803DCF94;
+extern u32 gNewShadowReflectionGradientTexture;
 extern u32 gNewShadowInverseRampTexture;
 extern u32 gNewShadowFalloffTexture;
 extern u32 gNewShadowSnowFlashTexture;
@@ -1243,9 +1243,9 @@ u32 getReflectionTexture1(void)
 }
 
 NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
-u32 getTextureFn_8006c744(void)
+u32 getNewShadowReflectionGradientTexture(void)
 {
-    return lbl_803DCF94;
+    return gNewShadowReflectionGradientTexture;
 }
 
 u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
@@ -1828,26 +1828,27 @@ void allocLotsOfTextures(void)
     fillRingTexture();
     DCFlushRange((u8*)gNewShadowRingTexture + 0x60, gNewShadowRingTexture->dataSize);
 
-    lbl_803DCF94 = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
+    gNewShadowReflectionGradientTexture = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 4; i++)
     {
         f32 x = i / 3.0f - lbl_803DED38;
         int lowoff = (i & 3) * 2;
         int t;
-        t = lbl_803DCF94 + lowoff;
+        t = gNewShadowReflectionGradientTexture + lowoff;
         t += (i >> 2) * 0x20;
         *(u16*)(t + 0x60) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DED38 & 0xff));
-        t = lbl_803DCF94 + lowoff;
+        t = gNewShadowReflectionGradientTexture + lowoff;
         t += (i >> 2) * 0x20;
         *(u16*)(t + 0x68) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DEE14 & 0xff));
-        t = lbl_803DCF94 + lowoff;
+        t = gNewShadowReflectionGradientTexture + lowoff;
         t += (i >> 2) * 0x20;
         *(u16*)(t + 0x70) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DEE18 & 0xff));
-        t = lbl_803DCF94 + lowoff;
+        t = gNewShadowReflectionGradientTexture + lowoff;
         t += (i >> 2) * 0x20;
         *(u16*)(t + 0x78) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DEE1C & 0xff));
     }
-    DCFlushRange((void*)(lbl_803DCF94 + 0x60), ((Texture*)lbl_803DCF94)->dataSize);
+    DCFlushRange((void*)(gNewShadowReflectionGradientTexture + 0x60),
+                 ((Texture*)gNewShadowReflectionGradientTexture)->dataSize);
 
     frameTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     memset(frameTexture + 1, 0, frameTexture->dataSize);
