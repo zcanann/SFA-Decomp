@@ -29,8 +29,8 @@ void timeOfDayFn_80055038(void);
 void setMotionBlur(u8 enabled, f32 amount);
 void warpToMap(int idx, s8 transType);
 void textureSetAnimationFrameStep(Texture* texture, u16 frameStep);
-void textureFn_800541ac(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed,
-                        int unused0, int unused1);
+void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed,
+                                     int unused0, int unused1);
 void fn_800542F4(void);
 void textureUpdateAnimationFrame(const Texture* texture, u32* flags, s32* frame);
 void fn_80051868(Texture* texture, f32 (*texMtx)[4], int mode);

@@ -248,11 +248,11 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         (*gPartfxInterface)->spawnObject((u8*)gobj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
         if ((int)randomGetRange(0, 1) != 0)
         {
-            textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
+            textureSelectAnimationFramePair(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
         }
         else
         {
-            textureFn_800541ac(ctx, gBoneParticleTextureB, 0, 0, 0, 0, 0);
+            textureSelectAnimationFramePair(ctx, gBoneParticleTextureB, 0, 0, 0, 0, 0);
         }
         gBoneParticleEffectTimer -= framesThisStep;
         if (gBoneParticleEffectTimer < 0)
@@ -262,7 +262,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     }
     else
     {
-        textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
+        textureSelectAnimationFramePair(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
     Camera_LoadModelViewMatrix((int)ctx, renderParam, (MatrixTransform*)&vtx, 1.0f, 0.0f, NULL);
     GXSetCullMode(GX_CULL_NONE);
