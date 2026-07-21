@@ -16,7 +16,7 @@
 GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {NULL};
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
-f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
+ObjHitsContactScratchEntry gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT];
 extern ObjHitsPriorityWorkSlot* gObjHitsPriorityHitStates;
 extern f64 lbl_803DE928;
 extern f32 gObjHitsSweepSortSentinel;
@@ -977,12 +977,12 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix)
 
 int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask, u32 volMask)
 {
-    float* contact;
+    ObjHitsContactScratchEntry* contact;
     int countB;
     ObjHitsPriorityState* stateA;
     ObjHitsPriorityState* stateB;
     ObjHitsPriorityState* stateSrc;
-    float* cw;
+    ObjHitsContactScratchEntry* cw;
     char modeB;
     float* sphB;
     float* curSphA;
@@ -994,7 +994,7 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
     ObjHitsModelHitVolume* volB;
     int countA;
     s64 volBits;
-    float* contactBase;
+    ObjHitsContactScratchEntry* contactBase;
     int count;
     char modeA;
     char miss;
@@ -1004,7 +1004,7 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
     ObjHitsModelBank* modelBank;
     ObjHitsModelFileHeader* modelFile;
     s64 maskA;
-    float* cr;
+    ObjHitsContactScratchEntry* cr;
     int result;
     s64 bitA;
     s64 bitB;
@@ -1350,9 +1350,9 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
                                     {
                                         sumSq = gObjHitsScalarZero;
                                     }
-                                    cw[5] = sumSq;
-                                    cw[0] = dxs * sumSq;
-                                    cw[1] = dzs * sumSq;
+                                    cw->depth = sumSq;
+                                    cw->responseX = dxs * sumSq;
+                                    cw->responseZ = dzs * sumSq;
                                 }
                             }
                             else
@@ -1365,14 +1365,14 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
                                     dzs = dzs / sumSq;
                                 }
                                 sb0 = sphB[0];
-                                cw[2] = dxs * sb0;
-                                cw[3] = dys * sb0;
-                                cw[4] = dzs * sb0;
+                                cw->contactOffsetX = dxs * sb0;
+                                cw->contactOffsetY = dys * sb0;
+                                cw->contactOffsetZ = dzs * sb0;
                             }
-                            *((u8*)cw + 24) = i;
-                            *((u8*)cw + 25) = j;
-                            cw += 7;
-                            contact += 7;
+                            cw->sphereIndexA = i;
+                            cw->sphereIndexB = j;
+                            cw++;
+                            contact++;
                             count += 1;
                         }
                     }
@@ -1388,8 +1388,8 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
         cr = contactBase;
         for (; k < count; k++)
         {
-            idxA = *((u8*)cr + 24);
-            hit = *((u8*)cr + 25);
+            idxA = cr->sphereIndexA;
+            hit = cr->sphereIndexB;
             linkA = volA[idxA].linkedSpheres;
             linkB = volB[hit].linkedSpheres;
             link = linkA;
@@ -1409,20 +1409,20 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
                 if (checkA != 0)
                 {
                     pb2 = &spheresB[hit * 4];
-                    cx = pb2[1] + cr[2];
+                    cx = pb2[1] + cr->contactOffsetX;
                     ObjHits_RecordPositionHit((GameObject*)objB, (GameObject*)objA,
                                               stateSrc->hitVolumePriority, (u8)stateSrc->hitVolumeId, hit, cx,
-                                              (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr[3],
-                                              pb2[3] + cr[4]);
+                                              (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr->contactOffsetY,
+                                              pb2[3] + cr->contactOffsetZ);
                     result = 1;
                 }
                 else if (checkB != 0)
                 {
-                    if (cr[5] > bestDepth)
+                    if (cr->depth > bestDepth)
                     {
-                        bestDepth = cr[5];
-                        bestX = cr[0];
-                        bestZ = cr[1];
+                        bestDepth = cr->depth;
+                        bestX = cr->responseX;
+                        bestZ = cr->responseZ;
                     }
                 }
             }
@@ -1434,7 +1434,7 @@ int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char ch
             {
                 maskB |= 1 << hit;
             }
-            cr += 7;
+            cr++;
         }
     }
     if (checkA != 0 && result != 0)

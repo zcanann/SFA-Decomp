@@ -8,7 +8,6 @@
 
 #define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT       5
 #define OBJHITS_CONTACT_SCRATCH_COUNT                0x40
-#define OBJHITS_CONTACT_SCRATCH_WORDS                7
 #define OBJHITS_SWEEP_ENTRY_CAPACITY                 400
 #define OBJHITS_PRIORITY_INVALID                     0x7f
 #define OBJHITS_SHAPE_SPHERE                         0x01
@@ -80,8 +79,23 @@
 #define OBJHITBOX_STATE_CONTACT_OBJECT_COUNT_OFFSET  0x10F
 #define OBJHITBOX_ROTATED_BOUNDS_RESET_FRAMES        10
 
+typedef struct ObjHitsContactScratchEntry
+{
+    f32 responseX;
+    f32 responseZ;
+    f32 contactOffsetX;
+    f32 contactOffsetY;
+    f32 contactOffsetZ;
+    f32 depth;
+    u8 sphereIndexA;
+    u8 sphereIndexB;
+    u8 reserved[2];
+} ObjHitsContactScratchEntry;
+
+STATIC_ASSERT(sizeof(ObjHitsContactScratchEntry) == 0x1C);
+
 extern GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT];
-extern f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
+extern ObjHitsContactScratchEntry gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT];
 extern void* gObjHitsPrimaryHitboxBufferScratch0;
 extern void* gObjHitsSecondaryHitboxBufferScratch0;
 extern const f32 gObjHitsScalarZero;
