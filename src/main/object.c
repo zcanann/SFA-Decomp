@@ -58,11 +58,11 @@ u8** gObjFileBufferTable;
 u8* gObjFileRefCount;
 s16* gObjSeqToObjIdTable;
 int gObjSeqToObjIdMax;
-void** gObjDeferredFreeList;
+GameObject** gObjDeferredFreeList;
 int gObjDeferredFreeCount;
-void* lbl_803DCB90;
+GameObject** lbl_803DCB90;
 int lbl_803DCB8C;
-void* gObjList;
+GameObject** gObjList;
 int gObjCount;
 ObjLinkedList gObjUpdateList;
 u32 gObjUpdateFlags;
@@ -166,6 +166,13 @@ typedef struct CharSpawn
 #define OBJECT_OBJGROUP_HITBOX 6 /* joined when modelInstance flags & 0x40 (SKIP_RESET_UPDATE) */
 #define OBJECT_OBJGROUP_GROUP8 8 /* joined when modelInstance->group8RegistrationCount > 0 */
 
+enum
+{
+    OBJ_LIST_CAPACITY = 600,
+    OBJ_DEFERRED_FREE_CAPACITY = 400,
+    OBJ_PENDING_DEF_FREE_CAPACITY = 24
+};
+
 /* loadCharacter model-load config word (flags29), passed to ObjModel_Load etc. */
 #define OBJLOAD_FLAG_HAS_SHADOW    0x0002 /* modelDef->shadowType != 0 */
 #define OBJLOAD_FLAG_ANIM_EVENTS   0x0040 /* allocate anim move-event table */
@@ -187,11 +194,11 @@ extern int gObjTablesBinCount;
 extern int* gObjTablesBinIndex;
 extern u8* gObjTablesBinData;
 extern int gObjCount;
-extern void* gObjList;
+extern GameObject** gObjList;
 extern const f32 lbl_803DE890;
 extern const f32 lbl_803DE8B8;
 extern int gObjDeferredFreeCount;
-extern void** gObjDeferredFreeList;
+extern GameObject** gObjDeferredFreeList;
 extern char sObjSetupObjectLoadingLockedWarning[];
 extern char sObjDebugStrings[];
 extern s16 gObjPartitionPivot;
@@ -207,7 +214,7 @@ extern f32 lbl_803DE8C4;
 extern f32 lbl_803DE8C8;
 extern int lbl_803DCB70;
 extern int lbl_803DCB8C;
-extern void* lbl_803DCB90;
+extern GameObject** lbl_803DCB90;
 extern void* lbl_803DCBC0;
 extern int* gObjFileOffsetTable;
 extern int gObjFileCount;
@@ -969,7 +976,7 @@ void objFreeObjDef(u8* obj, int flag)
             count = 0;
             for (i = 0; i < gObjCount; i++)
             {
-                otherObj = ((u8**)gObjList)[i];
+                otherObj = (u8*)gObjList[i];
                 if (*(int*)&((GameObject*)otherObj)->anim.parent == (int)obj)
                 {
                     *(int*)&((GameObject*)otherObj)->anim.parent = 0;
@@ -990,7 +997,7 @@ void objFreeObjDef(u8* obj, int flag)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            otherObj = ((u8**)gObjList)[i];
+            otherObj = (u8*)gObjList[i];
             if (*(int*)&((GameObject*)otherObj)->pendingParentObj == (int)obj)
             {
                 *(int*)&((GameObject*)otherObj)->pendingParentObj = 0;
@@ -999,9 +1006,9 @@ void objFreeObjDef(u8* obj, int flag)
     }
     for (j = 0; j < gObjCount; j++)
     {
-        if (((GameObject*)((u8**)gObjList)[j])->anim.classId == 0x10)
+        if (gObjList[j]->anim.classId == 0x10)
         {
-            bp = (int*)((GameObject*)((u8**)gObjList)[j])->extra;
+            bp = (int*)gObjList[j]->extra;
             if (*(u8**)bp == obj)
             {
                 *bp = 0;
@@ -1384,7 +1391,7 @@ void Obj_FreeObject(GameObject* obj)
     u8** p;
     int n;
     int i;
-    u8** base;
+    GameObject** base;
     int off;
     u8* q;
 
@@ -1398,7 +1405,7 @@ void Obj_FreeObject(GameObject* obj)
     {
         for (i = 0; i < gObjCount; i++)
         {
-            if (((GameObject**)gObjList)[i] == obj)
+            if (gObjList[i] == obj)
             {
                 break;
             }
@@ -1434,16 +1441,16 @@ void Obj_FreeObject(GameObject* obj)
         base = lbl_803DCB90;
         for (; i < lbl_803DCB8C; i++)
         {
-            if (base[i] == (u8*)obj)
+            if (base[i] == obj)
             {
                 break;
             }
         }
         if (i == lbl_803DCB8C)
         {
-            if (lbl_803DCB8C < 0x18)
+            if (lbl_803DCB8C < OBJ_PENDING_DEF_FREE_CAPACITY)
             {
-                ((GameObject**)lbl_803DCB90)[lbl_803DCB8C] = obj;
+                lbl_803DCB90[lbl_803DCB8C] = obj;
                 lbl_803DCB8C++;
                 return;
             }
@@ -1460,7 +1467,7 @@ void Obj_FreeObject(GameObject* obj)
         {
             for (i = 0; i < gObjDeferredFreeCount; i++)
             {
-                if (((GameObject**)gObjDeferredFreeList)[i] == obj)
+                if (gObjDeferredFreeList[i] == obj)
                 {
                     break;
                 }
@@ -1468,9 +1475,9 @@ void Obj_FreeObject(GameObject* obj)
         }
         if (i == gObjDeferredFreeCount)
         {
-            ((GameObject**)gObjDeferredFreeList)[gObjDeferredFreeCount] = obj;
+            gObjDeferredFreeList[gObjDeferredFreeCount] = obj;
             gObjDeferredFreeCount++;
-            if (gObjDeferredFreeCount == 400)
+            if (gObjDeferredFreeCount == OBJ_DEFERRED_FREE_CAPACITY)
             {
                 gObjDeferredFreeCount--;
             }
@@ -2141,7 +2148,7 @@ void Obj_ApplyPendingParentLinks(void)
     int i;
     for (i = 0; i < gObjCount; i++)
     {
-        u8* obj = ((u8**)gObjList)[i];
+        u8* obj = (u8*)gObjList[i];
         ((GameObject*)obj)->anim.resetHitboxFlags &= ~7;
         if (((GameObject*)obj)->pendingParentObj != NULL)
         {
@@ -2179,7 +2186,7 @@ int ObjList_PartitionForRender(int* out)
         stop = 0;
         while (i <= hi && stop == 0)
         {
-            if (((ObjAnimComponent*)((void**)gObjList)[i])->modelInstance->flags & 1)
+            if (((ObjAnimComponent*)gObjList[i])->modelInstance->flags & 1)
             {
                 i++;
             }
@@ -2191,7 +2198,7 @@ int ObjList_PartitionForRender(int* out)
         stop = 0;
         while (j >= 0 && stop == 0)
         {
-            if (!(((ObjAnimComponent*)((void**)gObjList)[j])->modelInstance->flags & 1))
+            if (!(((ObjAnimComponent*)gObjList[j])->modelInstance->flags & 1))
             {
                 j--;
             }
@@ -2202,9 +2209,9 @@ int ObjList_PartitionForRender(int* out)
         }
         if (i < j)
         {
-            swapObj = ((void**)gObjList)[i];
-            ((void**)gObjList)[i] = ((void**)gObjList)[j];
-            ((void**)gObjList)[j] = swapObj;
+            swapObj = gObjList[i];
+            gObjList[i] = gObjList[j];
+            gObjList[j] = swapObj;
             i++;
             j--;
         }
@@ -2278,7 +2285,7 @@ void Obj_UpdateModelBlendStates(void)
     i = 0;
     for (; i < gObjCount; i++)
     {
-        obj = ((u8**)gObjList)[i];
+        obj = (u8*)gObjList[i];
         objAnim = (ObjAnimComponent*)obj;
         if (obj != 0 && objAnim->modelInstance != NULL)
         {
@@ -2495,8 +2502,8 @@ void Obj_InitObjectSystem(void)
     int* q;
     int i;
 
-    gObjDeferredFreeList = mmAlloc(0x640, 0xe, 0);
-    lbl_803DCB90 = mmAlloc(0x60, 0xe, 0);
+    gObjDeferredFreeList = mmAlloc(OBJ_DEFERRED_FREE_CAPACITY * sizeof(*gObjDeferredFreeList), 0xe, 0);
+    lbl_803DCB90 = mmAlloc(OBJ_PENDING_DEF_FREE_CAPACITY * sizeof(*lbl_803DCB90), 0xe, 0);
     lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
     loadAssetFileById(&gObjSeqToObjIdTable, MLDF_FILEID_OBJINDEX_BIN);
     gObjSeqToObjIdMax = (getDataFileSize(MLDF_FILEID_OBJINDEX_BIN) >> 1) - 1;
@@ -2527,7 +2534,7 @@ void Obj_InitObjectSystem(void)
         q++;
         gObjTablesBinCount++;
     }
-    gObjList = mmAlloc(0x960, 0xe, 0);
+    gObjList = mmAlloc(OBJ_LIST_CAPACITY * sizeof(*gObjList), 0xe, 0);
     ObjHits_InitWorkBuffers();
     gObjDeferredFreeCount = 0;
     lbl_803DCB8C = 0;
@@ -2636,7 +2643,7 @@ void Obj_RegisterObject(GameObject* obj, int flags)
     if (flags & 1)
     {
         obj->objectFlags |= OBJECT_FLAG_IN_UPDATE_LIST;
-        ((GameObject**)gObjList)[gObjCount++] = obj;
+        gObjList[gObjCount++] = obj;
         if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
         {
             prev = 0;
