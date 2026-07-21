@@ -56,7 +56,7 @@
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/gametext_color_api.h"
 
-u8 lbl_803DC078[4] = {0x0A, 0x10, 0x1F, 0};
+u8 gSbGalleonSkyColorBStart[4] = {0x0A, 0x10, 0x1F, 0};
 u8 gSbGalleonSkyColorBEnd[4] = {9, 0x0F, 0x1E, 0};
 u8 gSbGalleonSkyColorAStart[4] = {0x3E, 0x52, 0x64, 0};
 u8 gSbGalleonSkyColorAEnd[4] = {0xC8, 0xE7, 0xFF, 0};
@@ -89,10 +89,10 @@ const SkyVec3 gSbGalleonSkyLightVecs[4] = {
 u8 gSbGalleonSkyColorA[4];
 u8 gSbGalleonSkyColorB[4];
 u8 gSbGalleonSkyColorC[4];
-u8 lbl_803DDC2D;
+u8 gSbGalleonSkyLightIntensity;
 s8 lbl_803DDC2C;
-f32 lbl_803DDC28;
-f32 lbl_803DDC24;
+f32 gSbGalleonSkyBlendFactor;
+f32 gSbGalleonSkyBlendHold;
 GameObject* gSbGalleon;
 int gSbGalleonSkyTexB;
 int gSbGalleonSkyTexA;
@@ -154,98 +154,102 @@ enum SbGalleonCameraState
 
 void fn_801E1588(GameObject* obj, SBGalleonState* state)
 {
-    ObjModel* model;
-    int i;
-    ModelRenderOp* rop;
-    SkyVec3 a;
-    SkyVec3 b;
-    SkyVec3 c;
-    SkyVec3 d;
-    a = gSbGalleonSkyLightVecs[0];
-    b = gSbGalleonSkyLightVecs[1];
-    c = gSbGalleonSkyLightVecs[2];
-    d = gSbGalleonSkyLightVecs[3];
+    ObjModel* activeModel;
+    int renderOpIndex;
+    ModelRenderOp* renderOp;
+    SkyVec3 primaryLightDirection;
+    SkyVec3 alternateLightDirection;
+    SkyVec3 overrideDirectionStart;
+    SkyVec3 overrideDirectionEnd;
+    primaryLightDirection = gSbGalleonSkyLightVecs[0];
+    alternateLightDirection = gSbGalleonSkyLightVecs[1];
+    overrideDirectionStart = gSbGalleonSkyLightVecs[2];
+    overrideDirectionEnd = gSbGalleonSkyLightVecs[3];
     setDrawLights(0);
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
     skyFn_80089710(SBGALLEON_SKY_LIGHT_SLOT, 1, 0);
     if (lightningGetRemainingFraction() > *(f32*)&lbl_803E56CC)
     {
-        lbl_803DDC24 = lbl_803E57A4;
-        lbl_803DDC28 = lbl_803E57A4;
+        gSbGalleonSkyBlendHold = lbl_803E57A4;
+        gSbGalleonSkyBlendFactor = lbl_803E57A4;
     }
     {
-        f32 t = -(lbl_803E57B4 * timeDelta - lbl_803DDC28);
-        lbl_803DDC28 = t;
-        if (t < lbl_803E56CC)
+        f32 blendFactor = -(lbl_803E57B4 * timeDelta - gSbGalleonSkyBlendFactor);
+        gSbGalleonSkyBlendFactor = blendFactor;
+        if (blendFactor < lbl_803E56CC)
         {
-            lbl_803DDC28 = lbl_803E56CC;
+            gSbGalleonSkyBlendFactor = lbl_803E56CC;
         }
     }
     {
         int red = gSbGalleonSkyColorAStart[0];
-        gSbGalleonSkyColorA[0] = red + lbl_803DDC28 * (gSbGalleonSkyColorAEnd[0] - red);
+        gSbGalleonSkyColorA[0] = red + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorAEnd[0] - red);
     }
     {
         int green = gSbGalleonSkyColorAStart[1];
-        gSbGalleonSkyColorA[1] = green + lbl_803DDC28 * (gSbGalleonSkyColorAEnd[1] - green);
+        gSbGalleonSkyColorA[1] = green + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorAEnd[1] - green);
     }
     {
         int blue = gSbGalleonSkyColorAStart[2];
-        gSbGalleonSkyColorA[2] = blue + lbl_803DDC28 * (gSbGalleonSkyColorAEnd[2] - blue);
+        gSbGalleonSkyColorA[2] = blue + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorAEnd[2] - blue);
     }
     skySetBaseColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0], gSbGalleonSkyColorA[1],
                    gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
-        int red = lbl_803DC078[0];
-        gSbGalleonSkyColorB[0] = red + lbl_803DDC28 * (gSbGalleonSkyColorBEnd[0] - red);
+        int red = gSbGalleonSkyColorBStart[0];
+        gSbGalleonSkyColorB[0] = red + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorBEnd[0] - red);
     }
     {
-        int green = lbl_803DC078[1];
-        gSbGalleonSkyColorB[1] = green + lbl_803DDC28 * (gSbGalleonSkyColorBEnd[1] - green);
+        int green = gSbGalleonSkyColorBStart[1];
+        gSbGalleonSkyColorB[1] = green + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorBEnd[1] - green);
     }
     {
-        int blue = lbl_803DC078[2];
-        gSbGalleonSkyColorB[2] = blue + lbl_803DDC28 * (gSbGalleonSkyColorBEnd[2] - blue);
+        int blue = gSbGalleonSkyColorBStart[2];
+        gSbGalleonSkyColorB[2] = blue + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorBEnd[2] - blue);
     }
     skySetLightColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0],
                 gSbGalleonSkyColorB[1], gSbGalleonSkyColorB[2]);
     {
         int red = gSbGalleonSkyColorCStart[0];
-        gSbGalleonSkyColorC[0] = red + lbl_803DDC28 * (gSbGalleonSkyColorCEnd[0] - red);
+        gSbGalleonSkyColorC[0] = red + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorCEnd[0] - red);
     }
     {
         int green = gSbGalleonSkyColorCStart[1];
-        gSbGalleonSkyColorC[1] = green + lbl_803DDC28 * (gSbGalleonSkyColorCEnd[1] - green);
+        gSbGalleonSkyColorC[1] = green + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorCEnd[1] - green);
     }
     {
         int blue = gSbGalleonSkyColorCStart[2];
-        gSbGalleonSkyColorC[2] = blue + lbl_803DDC28 * (gSbGalleonSkyColorCEnd[2] - blue);
+        gSbGalleonSkyColorC[2] = blue + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorCEnd[2] - blue);
     }
     skySetAmbientColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0],
                 gSbGalleonSkyColorC[1], gSbGalleonSkyColorC[2]);
-    lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
+    gSbGalleonSkyLightIntensity = gSbGalleonSkyBlendFactor * lbl_803E57E0 + lbl_803E57F0;
     skySetOverrideLightDirectionEnabled(1);
-    skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x, lbl_803DDC28 * (d.y - c.y) + c.y,
-                                 lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
+    skySetOverrideLightDirection(gSbGalleonSkyBlendFactor * (overrideDirectionEnd.x - overrideDirectionStart.x) + overrideDirectionStart.x,
+                                 gSbGalleonSkyBlendFactor * (overrideDirectionEnd.y - overrideDirectionStart.y) + overrideDirectionStart.y,
+                                 gSbGalleonSkyBlendFactor * (overrideDirectionEnd.z - overrideDirectionStart.z) + overrideDirectionStart.z,
+                                 lbl_803E5724);
     if (state->skyFlag == 0)
     {
-        skySetLightDirection(SBGALLEON_SKY_LIGHT_SLOT, a.x, a.y, a.z);
+        skySetLightDirection(SBGALLEON_SKY_LIGHT_SLOT, primaryLightDirection.x, primaryLightDirection.y,
+                             primaryLightDirection.z);
     }
     else
     {
-        skySetLightDirection(SBGALLEON_SKY_LIGHT_SLOT, b.x, b.y, b.z);
+        skySetLightDirection(SBGALLEON_SKY_LIGHT_SLOT, alternateLightDirection.x, alternateLightDirection.y,
+                             alternateLightDirection.z);
     }
-    model = Obj_GetActiveModel(obj);
-    i = 0;
+    activeModel = Obj_GetActiveModel(obj);
+    renderOpIndex = 0;
     {
-        f32 scale = lbl_803E57F4;
-        for (; i < model->file->renderOpCount; i++)
+        f32 alphaScale = lbl_803E57F4;
+        for (; renderOpIndex < activeModel->file->renderOpCount; renderOpIndex++)
         {
-            rop = ObjModel_GetRenderOp(model->file, i);
-            if (rop->layerCount == 1)
+            renderOp = ObjModel_GetRenderOp(activeModel->file, renderOpIndex);
+            if (renderOp->layerCount == 1)
             {
-                rop->alpha = scale * lbl_803DDC28;
+                renderOp->alpha = alphaScale * gSbGalleonSkyBlendFactor;
             }
         }
     }
