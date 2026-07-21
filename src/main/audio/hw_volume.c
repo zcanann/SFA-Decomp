@@ -6,7 +6,7 @@
 
 
 extern DSPstudioinfo dspStudio[8];
-extern u8 lbl_802C2820[];
+extern const u16 gItdPanDelayTable[128];
 extern f32 lbl_803E78E4;
 
 /*
@@ -75,9 +75,9 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
 
     if (voice->flags & 0x80000000)
     {
-        u8* p = lbl_802C2820 + (((pan >> 16) & 0xff) << 1);
-        voice->itdShiftL = *(u16*)p;
-        voice->itdShiftR = 0x20 - *(u16*)p;
+        const u16* delay = &gItdPanDelayTable[(pan >> 16) & 0xff];
+        voice->itdShiftL = *delay;
+        voice->itdShiftR = 0x20 - *delay;
         voice->changed[0] |= 0x200;
     }
 }
