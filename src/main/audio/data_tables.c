@@ -376,6 +376,22 @@ u32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
     return 1;
 }
 
+static inline void dataFindSampleReference(u16 sid, u32* dirIndex, SDIR_DATA** cursor,
+                                           SDIR_DATA** result)
+{
+    for (*dirIndex = 0; *dirIndex < dataSmpSDirNum; ++*dirIndex)
+    {
+        for (*cursor = dataSmpSDirs[*dirIndex].data; (*cursor)->id != 0xFFFF; ++*cursor)
+        {
+            if ((*cursor)->id == sid && (*cursor)->ref_cnt != 0xFFFF)
+            {
+                *result = *cursor;
+                return;
+            }
+        }
+    }
+}
+
 s32 dataAddSampleReference(u16 sid)
 {
     u32 i;
@@ -387,21 +403,7 @@ s32 dataAddSampleReference(u16 sid)
 
     data = NULL;
     sdir = NULL;
-    for (i = 0; i < dataSmpSDirNum; ++i)
-    {
-        for (data = dataSmpSDirs[i].data; data->id != 0xFFFF; ++data)
-        {
-            if (data->id == sid && data->ref_cnt != 0xFFFF)
-            {
-                sdir = data;
-                break;
-            }
-        }
-        if (sdir != NULL)
-        {
-            break;
-        }
-    }
+    dataFindSampleReference(sid, &i, &data, &sdir);
 
     if (sdir->ref_cnt == 0)
     {
