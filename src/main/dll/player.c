@@ -241,7 +241,7 @@ int playerState04(int obj, int state, f32 fv);
 int playerStateIceSpell(int obj, int state, f32 fv);
 void fn_802A514C(GameObject* obj, int state);
 int playerState00(int obj, int state);
-int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
+s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
 void fn_802A81B8(GameObject* obj, int state, f32* out);
 int fn_802A8680(int p1, int p2, void* src, f32* vec, int out, int flag);
 int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance);
@@ -10082,7 +10082,7 @@ int playerState00(int obj, int state)
     return 2;
 }
 
-int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
+s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
 {
     ObjModel* model;
     int uf;
