@@ -2963,7 +2963,7 @@ void objCallSeqFn(u8* obj, u8* sourceObj, u8* seq, int action)
         movementState = (s8)((ObjSeqState*)seq)->movementState;
         if (movementState >= 4)
         {
-            if (ObjSeq_func20((GameObject*)obj, (ObjAnimUpdateState*)seq, 6, 0x1e, 0x50, -1, -1) != 0)
+            if (ObjSeq_TurnToFacePlayer((GameObject*)obj, (ObjAnimUpdateState*)seq, 6, 0x1e, 0x50, -1, -1) != 0)
             {
                 actionSlot = ((ObjSeqState*)seq)->slot;
                 if (gObjSeqSlotResults[actionSlot] < 2)
@@ -5226,10 +5226,10 @@ void* lbl_8030EE34[40] = {(void*)0,
                           (void*)ObjSeq_getGlobal2,
                           (void*)ObjSeq_setGlobal2,
                           (void*)ObjSeq_setXrot,
-                          (void*)ObjSeq_func20,
+                          (void*)ObjSeq_TurnToFacePlayer,
                           (void*)ObjSeq_SetObjs,
                           (void*)ObjSeq_setOverridePos,
-                          (void*)ObjSeq_func23};
+                          (void*)ObjSeq_SetCoordinateSpace};
 
 char sEndObjSequenceMaxFreesError[41] = "endObjSequence: max number of obj frees\n\000";
 char sObjSequenceMissingObjectFormat[38] = " SEQUENCE: Could not Find Object %i \n\000";

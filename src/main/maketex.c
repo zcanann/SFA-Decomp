@@ -926,7 +926,7 @@ GameObject* getFocusedNpc(void)
     return focusedNpc;
 }
 
-void objModelResetVecFn_80080548(GameObject* obj);
+void ObjSeq_ClearModelLookVector(GameObject* obj);
 
 /* Starts the prepared audio stream for a sequence slot and records its
  * subtitle timing. */
@@ -985,9 +985,9 @@ void ObjSeq_AudioStreamCallback(void)
     }
 }
 
-int ObjSeq_func23(int unused, int x)
+int ObjSeq_SetCoordinateSpace(int unused, int space)
 {
-    switch (x)
+    switch (space)
     {
     case 0:
         lbl_803DD0B4.useWorldSpace = 1;
@@ -1046,7 +1046,7 @@ void cameraFocusNpc(int param1, GameObject* obj)
     (*gCameraInterface)->setMode(MAKETEX_CAMMODE_NPCSPEAK, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
 
-void objModelResetVecFn_80080548(GameObject* obj)
+void ObjSeq_ClearModelLookVector(GameObject* obj)
 {
     s16* v = (s16*)objModelGetVecFn_800395d8(obj, 0);
     if (v != NULL)
@@ -1059,8 +1059,8 @@ void objModelResetVecFn_80080548(GameObject* obj)
 /* Object-sequence turn-to-face-player step: starts (mode 4) or advances
  * (mode 5) a smooth turn of the object toward the player, blending the model
  * vector and animation as it goes. */
-int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s16 yawThreshold, s16 maxAngle,
-                  s16 animRight, s16 animLeft)
+int ObjSeq_TurnToFacePlayer(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s16 yawThreshold,
+                            s16 maxAngle, s16 animRight, s16 animLeft)
 {
     int player;
     s16* modelVec;
@@ -1086,7 +1086,7 @@ int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s
         {
             ((ObjSeqTurnState*)state)->flags = ((ObjSeqTurnState*)state)->flags & ~8;
         }
-        ((ObjSeqTurnState*)state)->resetVecCb = objModelResetVecFn_80080548;
+        ((ObjSeqTurnState*)state)->resetVecCb = ObjSeq_ClearModelLookVector;
         ((ObjSeqTurnState*)state)->vecX = 0.0f;
         ((ObjSeqTurnState*)state)->vecY = 0.0f;
         ((ObjSeqTurnState*)state)->vecZ = 0.0f;
@@ -1156,7 +1156,7 @@ int ObjSeq_func20(GameObject* obj, ObjAnimUpdateState* state, s16 turnDegrees, s
                 }
             }
         }
-        ((ObjSeqTurnState*)state)->resetVecCb = objModelResetVecFn_80080548;
+        ((ObjSeqTurnState*)state)->resetVecCb = ObjSeq_ClearModelLookVector;
         return 1;
     }
     else if (mode == 5)
