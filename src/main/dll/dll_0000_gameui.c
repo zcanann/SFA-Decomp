@@ -2373,7 +2373,7 @@ char lbl_803A87F0[0x40];
 void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
 {
     int total = lbl_803A9364[8];
-    int t13 = total - 0xd;
+    int middleCapacity = total - 0xd;
     int current = lbl_803A9364[2];
     int seg4;
     int seg1;
@@ -2381,27 +2381,27 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
     int seg2;
     int rem4;
     int rem1;
-    int w8;
-    int seg4Raw;
+    int previewFirstWidth;
+    int endFilledWidth;
     int previousCurrent;
-    void* tex;
+    Texture* tex;
     seg1 = (current > 7) ? 7 : current;
     if (seg1 != 0)
     {
         seg1++;
     }
     rem1 = 8 - seg1;
-    seg2 = (t13 < current - 7) ? t13 : current - 7;
+    seg2 = (middleCapacity < current - 7) ? middleCapacity : current - 7;
     seg2 = (seg2 > 0) ? seg2 : 0;
-    seg3 = t13 - seg2;
-    seg4Raw = (current - 7) - t13;
-    if (seg4Raw > 5)
+    seg3 = middleCapacity - seg2;
+    endFilledWidth = (current - 7) - middleCapacity;
+    if (endFilledWidth > 5)
     {
-        seg4Raw = 5;
+        endFilledWidth = 5;
     }
-    if (seg4Raw > 0)
+    if (endFilledWidth > 0)
     {
-        seg4 = seg4Raw;
+        seg4 = endFilledWidth;
     }
     else
     {
@@ -2419,19 +2419,18 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
     }
     else
     {
-        ((void (*)(void*, f32, f32, u8, int))drawTexture)(tex, gHudMagicBarX, gHudMagicBarY, alpha, 0x100);
+        drawTexture(tex, gHudMagicBarX, gHudMagicBarY, alpha, 0x100);
     }
     if (seg1 != 0)
     {
         tex = hudTextures[0x28];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg1, 0x12, 0);
+            drawFn_8011eb3c(tex, lbl_803DBAD0 + 0x1c, lbl_803DBAD4, elemAlpha, alpha, 0x100, seg1, 0x12, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-                tex, (f32)(gHudMagicBarX + 0x1c), gHudMagicBarY, alpha, 0x100, seg1, 0x12, 0);
+            drawScaledTexture(tex, gHudMagicBarX + 0x1c, gHudMagicBarY, alpha, 0x100, seg1, 0x12, 0);
         }
     }
     if (rem1 != 0)
@@ -2439,13 +2438,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x29];
         if (flags)
         {
-            drawFn_8011e8d8(tex, (f32)(seg1 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, rem1, 0x12, seg1, 0);
+            drawFn_8011e8d8(tex, seg1 + 0x1c + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, rem1, 0x12, seg1, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int, int))drawPartialTexture)(
-                tex, (f32)(seg1 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, rem1, 0x12, seg1,
-                               0);
+            drawPartialTexture(tex, seg1 + 0x1c + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, rem1, 0x12, seg1, 0);
         }
     }
     if (seg2 != 0)
@@ -2453,12 +2450,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2A];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
+            drawFn_8011eb3c(tex, lbl_803DBAD0 + 0x24, lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-                tex, (f32)(gHudMagicBarX + 0x24), gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
+            drawScaledTexture(tex, gHudMagicBarX + 0x24, gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
         }
     }
     if (seg3 != 0)
@@ -2466,12 +2462,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2B];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg3, 0x12, 0);
+            drawFn_8011eb3c(tex, seg2 + 0x24 + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, seg3, 0x12, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-                tex, (f32)(seg2 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg3, 0x12, 0);
+            drawScaledTexture(tex, seg2 + 0x24 + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, seg3, 0x12, 0);
         }
     }
     if (seg4 != 0)
@@ -2479,12 +2474,12 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2C];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg4, 0x12, 0);
+            drawFn_8011eb3c(tex, middleCapacity + 0x24 + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, seg4,
+                            0x12, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-                tex, (f32)(t13 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg4, 0x12, 0);
+            drawScaledTexture(tex, middleCapacity + 0x24 + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, seg4, 0x12, 0);
         }
     }
     if (rem4 != 0)
@@ -2492,14 +2487,13 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x2D];
         if (flags)
         {
-            drawFn_8011e8d8(tex, (f32)(t13 + (seg4 + 0x24) + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, rem4, 0x12,
-                            seg4, 0);
+            drawFn_8011e8d8(tex, middleCapacity + (seg4 + 0x24) + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, rem4,
+                            0x12, seg4, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int, int))drawPartialTexture)(
-                tex, (f32)(t13 + (seg4 + 0x24) + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, rem4, 0x12,
-                               seg4, 0);
+            drawPartialTexture(tex, middleCapacity + (seg4 + 0x24) + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, rem4,
+                               0x12, seg4, 0);
         }
     }
     previousCurrent = current - gHudMagicCostPreview;
@@ -2515,16 +2509,16 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
     {
         previousCurrent++;
     }
-    w8 = (previousCurrent > 8) ? 8 : previousCurrent;
-    seg1 = seg1 - w8;
+    previewFirstWidth = (previousCurrent > 8) ? 8 : previousCurrent;
+    seg1 = seg1 - previewFirstWidth;
     rem1 = previousCurrent - 8;
-    if (t13 < previousCurrent - 8)
+    if (middleCapacity < previousCurrent - 8)
     {
-        rem1 = t13;
+        rem1 = middleCapacity;
     }
     rem1 = (rem1 > 0) ? rem1 : 0;
     seg2 = seg2 - rem1;
-    previousCurrent = (previousCurrent - 8) - t13;
+    previousCurrent = (previousCurrent - 8) - middleCapacity;
     if (previousCurrent > 8)
     {
         previousCurrent = 8;
@@ -2536,12 +2530,13 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x31];
         if (flags)
         {
-            drawFn_8011e8d8(tex, (f32)(w8 + 0x1c + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, seg1, 0x12, w8, 0);
+            drawFn_8011e8d8(tex, previewFirstWidth + 0x1c + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, seg1, 0x12,
+                            previewFirstWidth, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int, int))drawPartialTexture)(
-                tex, (f32)(w8 + 0x1c + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg1, 0x12, w8, 0);
+            drawPartialTexture(tex, previewFirstWidth + 0x1c + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, seg1, 0x12,
+                               previewFirstWidth, 0);
         }
     }
     if (seg2 != 0)
@@ -2549,12 +2544,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x32];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
+            drawFn_8011eb3c(tex, rem1 + 0x24 + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-                tex, (f32)(rem1 + 0x24 + gHudMagicBarX), gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
+            drawScaledTexture(tex, rem1 + 0x24 + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, seg2, 0x12, 0);
         }
     }
     if (seg4 != 0)
@@ -2562,14 +2556,13 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
         tex = hudTextures[0x33];
         if (flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + (previousCurrent + 0x24) + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha,
-                            0x100, seg4, 0x12, 0);
+            drawFn_8011eb3c(tex, middleCapacity + (previousCurrent + 0x24) + lbl_803DBAD0, lbl_803DBAD4, elemAlpha,
+                            alpha, 0x100, seg4, 0x12, 0);
         }
         else
         {
-            ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-                tex, (f32)(t13 + (previousCurrent + 0x24) + gHudMagicBarX), gHudMagicBarY, alpha, 0x100,
-                              seg4, 0x12, 0);
+            drawScaledTexture(tex, middleCapacity + (previousCurrent + 0x24) + gHudMagicBarX, gHudMagicBarY, alpha,
+                              0x100, seg4, 0x12, 0);
         }
     }
 }
