@@ -218,7 +218,7 @@ void bossdrakor_updateHeadTracking(GameObject* obj, int state)
 int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut)
 {
     int state;
-    BossDrakorState* s;
+    BossDrakorState* drakorState;
     int idx;
     int v;
     s16 d;
@@ -226,12 +226,12 @@ int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut)
     f32 dir[3];
 
     state = *(int*)&obj->extra;
-    s = (BossDrakorState*)state;
+    drakorState = (BossDrakorState*)state;
     PSVECNormalize(&obj->anim.velocityX, dir);
-    if (s->moveState != 0)
+    if (drakorState->moveState != 0)
     {
         *speedOut = lbl_803E6534;
-        return s->moveState;
+        return drakorState->moveState;
     }
     idx = 0;
     if (dir[1] > lbl_803E6538)
@@ -677,11 +677,11 @@ void bossdrakor_update(GameObject* obj)
     f32 hy;
     f32 hx;
     int curveArg;
-    BossDrakorState* s;
+    BossDrakorState* drakorState;
     BossDrakorState* s2;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    s = (BossDrakorState*)state;
+    drakorState = (BossDrakorState*)state;
     curveArg = 0x29;
     if (((DrakorFlags*)((char*)state + 0x198))->b10)
     {
@@ -695,39 +695,39 @@ void bossdrakor_update(GameObject* obj)
         {
             (*gRomCurveInterface)->initCurve((void*)((char*)state + 0x28), (void*)obj, lbl_803E6560, &curveArg, 0);
         }
-        ((GameObject*)obj)->anim.localPosX = s->savedPosX;
-        ((GameObject*)obj)->anim.localPosZ = s->savedPosZ;
-        ((GameObject*)obj)->anim.localPosY = s->savedPosY;
+        ((GameObject*)obj)->anim.localPosX = drakorState->savedPosX;
+        ((GameObject*)obj)->anim.localPosZ = drakorState->savedPosZ;
+        ((GameObject*)obj)->anim.localPosY = drakorState->savedPosY;
         ((DrakorFlags*)((char*)state + 0x198))->b20 = 1;
-        s->repeatCount = 0;
+        drakorState->repeatCount = 0;
         state2 = *(int*)&((GameObject*)obj)->extra;
         s2 = (BossDrakorState*)state2;
         ((DrakorFlags*)((char*)state2 + 0x198))->b20 = 1;
         (*gGameUIInterface)->initAirMeter(s2->airMeterHandle, BOSSDRAKOR_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(s2->airMeterHandle);
         ((DrakorFlags*)((char*)state + 0x198))->b10 = 0;
-        s->lightObj = objCreateLight(NULL, 1);
-        if (s->lightObj != NULL)
+        drakorState->lightObj = objCreateLight(NULL, 1);
+        if (drakorState->lightObj != NULL)
         {
-            modelLightStruct_setLightKind(s->lightObj, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setDiffuseColor(s->lightObj, 0x40, 0, 0xff, 0xff);
-            modelLightStruct_setSpecularColor(s->lightObj, 0x40, 0, 0xff, 0xff);
-            modelLightStruct_setupGlow(s->lightObj, 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
-            modelLightStruct_setDistanceAttenuation(s->lightObj, lbl_803E6544, lbl_803E6540);
-            lightSetField4D((ModelLightStruct*)s->lightObj, 0);
-            modelLightStruct_setEnabled(s->lightObj, 1, lbl_803E6520);
-            modelLightStruct_setDiffuseTargetColor(s->lightObj, 0x40, 0, 0x80, 0x40);
-            modelLightStruct_setSpecularTargetColor((ModelLightStruct*)s->lightObj, 0x40, 0,
+            modelLightStruct_setLightKind(drakorState->lightObj, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setDiffuseColor(drakorState->lightObj, 0x40, 0, 0xff, 0xff);
+            modelLightStruct_setSpecularColor(drakorState->lightObj, 0x40, 0, 0xff, 0xff);
+            modelLightStruct_setupGlow(drakorState->lightObj, 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
+            modelLightStruct_setDistanceAttenuation(drakorState->lightObj, lbl_803E6544, lbl_803E6540);
+            lightSetField4D((ModelLightStruct*)drakorState->lightObj, 0);
+            modelLightStruct_setEnabled(drakorState->lightObj, 1, lbl_803E6520);
+            modelLightStruct_setDiffuseTargetColor(drakorState->lightObj, 0x40, 0, 0x80, 0x40);
+            modelLightStruct_setSpecularTargetColor((ModelLightStruct*)drakorState->lightObj, 0x40, 0,
                                                      0x80, 0x40);
-            modelLightStruct_startColorFade(s->lightObj, 2, 0x28);
-            modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)s->lightObj, 1);
-            modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)s->lightObj,
+            modelLightStruct_startColorFade(drakorState->lightObj, 2, 0x28);
+            modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)drakorState->lightObj, 1);
+            modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)drakorState->lightObj,
                                                       lbl_803E6550);
         }
     }
     moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(
-        (GameObject*)obj, (RomCurveWalker*)((char*)state + 0x28), s->curveIndex,
-        lbl_803E6568, lbl_803E6520, 1, &s->curveFollowState);
+        (GameObject*)obj, (RomCurveWalker*)((char*)state + 0x28), drakorState->curveIndex,
+        lbl_803E6568, lbl_803E6520, 1, &drakorState->curveFollowState);
     if (((DrakorFlags*)((char*)state + 0x198))->b40)
     {
         player = (int)Obj_GetPlayerObject();
@@ -775,62 +775,62 @@ void bossdrakor_update(GameObject* obj)
     }
     adv = ObjAnim_AdvanceCurrentMove(
         (int)obj,
-        (spd = PSVECMag(&((GameObject*)obj)->anim.velocityX) / s->moveSpeed, spd + lbl_803E6570),
+        (spd = PSVECMag(&((GameObject*)obj)->anim.velocityX) / drakorState->moveSpeed, spd + lbl_803E6570),
         timeDelta, (ObjAnimEventList*)buf);
     if (adv != 0)
     {
-        if (s->moveState == 0)
+        if (drakorState->moveState == 0)
         {
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
             ((DrakorFlags*)((char*)state + 0x198))->b04 = 0;
             ((DrakorFlags*)((char*)state + 0x198))->b08 = 0;
             if (!((DrakorFlags*)((char*)state + 0x198))->b40)
             {
-                s->moveSpeed = lbl_803E6534;
+                drakorState->moveSpeed = lbl_803E6534;
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x28);
                 moveId = 0x10;
             }
             else
             {
-                moveId = bossdrakor_chooseNextMove((GameObject*)(obj), &s->moveSpeed);
+                moveId = bossdrakor_chooseNextMove((GameObject*)(obj), &drakorState->moveSpeed);
             }
             ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E6510, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, s->moveState, lbl_803E6510, 0);
+            ObjAnim_SetCurrentMove((int)obj, drakorState->moveState, lbl_803E6510, 0);
         }
-        if (arrayIndexOf(gBossDrakorTurnMoveStates.turnMoveStates, 5, s->moveState) != -1)
+        if (arrayIndexOf(gBossDrakorTurnMoveStates.turnMoveStates, 5, drakorState->moveState) != -1)
         {
-            switch (s->moveState)
+            switch (drakorState->moveState)
             {
             case 0x12:
                 ((DrakorFlags*)((char*)state + 0x198))->b40 = 0;
-                s->moveState = 0;
+                drakorState->moveState = 0;
                 break;
             case 0x13:
-                s->moveState = 0x16;
-                s->moveSpeed = lbl_803E6534;
+                drakorState->moveState = 0x16;
+                drakorState->moveSpeed = lbl_803E6534;
                 break;
             case 0x16:
-                s->moveState = 0x16;
-                s->moveSpeed = lbl_803E6574;
+                drakorState->moveState = 0x16;
+                drakorState->moveSpeed = lbl_803E6574;
                 break;
             case 0x14:
                 if (((DrakorFlags*)((char*)state + 0x198))->b08)
                 {
-                    s->moveState = 0;
+                    drakorState->moveState = 0;
                 }
                 else
                 {
                     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, BOSSDRAKOR_HIT_VOLUME_SLOT, 1, 0);
-                    s->moveState = 0x15;
-                    s->moveSpeed = lbl_803E6574;
+                    drakorState->moveState = 0x15;
+                    drakorState->moveSpeed = lbl_803E6574;
                 }
                 break;
             case 0x15:
-                s->moveState = 0;
-                s->moveSpeed = lbl_803E6514;
+                drakorState->moveState = 0;
+                drakorState->moveSpeed = lbl_803E6514;
                 ((DrakorFlags*)((char*)state + 0x198))->b04 = 1;
                 break;
             }
@@ -849,40 +849,40 @@ void bossdrakor_update(GameObject* obj)
         }
         p++;
     }
-    if (timerCountDown(&s->attackTimer) != 0)
+    if (timerCountDown(&drakorState->attackTimer) != 0)
     {
-        bossdrakor_spawnAttackObjects((GameObject*)(obj), state, s->attackType);
-        if (s->attackTimerDuration != lbl_803E6510)
+        bossdrakor_spawnAttackObjects((GameObject*)(obj), state, drakorState->attackType);
+        if (drakorState->attackTimerDuration != lbl_803E6510)
         {
-            s16toFloat(&s->attackTimer,
-                       s->attackTimerDuration);
+            s16toFloat(&drakorState->attackTimer,
+                       drakorState->attackTimerDuration);
         }
     }
     if ((((GameObject*)obj)->objectFlags & BOSSDRAKOR_OBJFLAG_RENDERED) == 0)
     {
-        s->homePosX = ((GameObject*)obj)->anim.localPosX;
-        s->homePosY = ((GameObject*)obj)->anim.localPosY - lbl_803E655C;
-        s->homePosZ = ((GameObject*)obj)->anim.localPosZ;
+        drakorState->homePosX = ((GameObject*)obj)->anim.localPosX;
+        drakorState->homePosY = ((GameObject*)obj)->anim.localPosY - lbl_803E655C;
+        drakorState->homePosZ = ((GameObject*)obj)->anim.localPosZ;
     }
     objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
             ((GameObject*)obj)->anim.velocityZ);
     if (((DrakorFlags*)((char*)state + 0x198))->b20)
     {
-        (*gGameUIInterface)->runAirMeter(s->airMeterHandle);
+        (*gGameUIInterface)->runAirMeter(drakorState->airMeterHandle);
     }
     t = lbl_803E6510;
-    if (t != s->shakeAmount)
+    if (t != drakorState->shakeAmount)
     {
-        s->shakeVel = -(lbl_803E6578 * timeDelta - s->shakeVel);
-        s->shakeAmount =
-            s->shakeAmount + s->shakeVel;
-        t = (s->shakeAmount < t)
+        drakorState->shakeVel = -(lbl_803E6578 * timeDelta - drakorState->shakeVel);
+        drakorState->shakeAmount =
+            drakorState->shakeAmount + drakorState->shakeVel;
+        t = (drakorState->shakeAmount < t)
                 ? t
-                : ((s->shakeAmount > lbl_803E6550) ? lbl_803E6550
-                                                                           : s->shakeAmount);
-        s->shakeAmount = t;
-        shakeScaleZ = s->shakeScaleZ;
-        shake = s->shakeAmount;
+                : ((drakorState->shakeAmount > lbl_803E6550) ? lbl_803E6550
+                                                                           : drakorState->shakeAmount);
+        drakorState->shakeAmount = t;
+        shakeScaleZ = drakorState->shakeScaleZ;
+        shake = drakorState->shakeAmount;
         tblRes = seqFn_800394a0();
         shakeX = (s16)(gBossDrakorDegToAngle * shake);
         shakeY = (s16)(gBossDrakorDegToAngle * (shake * shakeScaleZ));

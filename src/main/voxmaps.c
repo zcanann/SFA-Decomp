@@ -64,7 +64,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
     int foundSlot;
     int shiftLo;
     CurveHeapNode* q;
-    RouteNode* n;
+    RouteNode* routeNode;
     u8 occ[3][4];
     int dxh;
     int dyh;
@@ -103,15 +103,15 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
         }
         else
         {
-            n = &state->nodes[state->nodeCount++];
-            n->x = box[0];
-            n->z = box[1];
-            n->y = box[2];
-            n->gCost = count;
-            n->parentNodeIndex = (u8)(u16)parentNodeIndex;
-            dxh = n->x - state->tgtX;
-            dyh = n->y - state->tgtY;
-            n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+            routeNode = &state->nodes[state->nodeCount++];
+            routeNode->x = box[0];
+            routeNode->z = box[1];
+            routeNode->y = box[2];
+            routeNode->gCost = count;
+            routeNode->parentNodeIndex = (u8)(u16)parentNodeIndex;
+            dxh = routeNode->x - state->tgtX;
+            dyh = routeNode->y - state->tgtY;
+            routeNode->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
         }
         q = state->queue;
         q[++state->queueCount].value = idx;
@@ -295,14 +295,14 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
 
     if (foundIdx >= 0 && savedFlag == 0)
     {
-        n = &state->nodes[foundIdx];
-        if (count >= n->gCost)
+        routeNode = &state->nodes[foundIdx];
+        if (count >= routeNode->gCost)
         {
             return;
         }
-        n->parentNodeIndex = parentNodeIndex;
-        n->gCost = count;
-        key = (u16)(n->hCost + n->gCost);
+        routeNode->parentNodeIndex = parentNodeIndex;
+        routeNode->gCost = count;
+        key = (u16)(routeNode->hCost + routeNode->gCost);
         {
             s16 qcnt = state->queueCount;
             q = state->queue;
@@ -336,30 +336,30 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
     if (nodeCount == VOXMAPS_ROUTE_NODE_CAPACITY)
     {
         debugPrintf(sVoxmapsRouteNodesListOverflow);
-        n = NULL;
+        routeNode = NULL;
     }
     else
     {
-        n = &state->nodes[state->nodeCount++];
-        n->x = box[0];
-        n->z = box[1];
-        n->y = box[2];
-        n->gCost = count;
-        n->parentNodeIndex = (u8)(u16)parentNodeIndex;
-        dxh = n->x - state->tgtX;
-        dyh = n->y - state->tgtY;
-        n->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
+        routeNode = &state->nodes[state->nodeCount++];
+        routeNode->x = box[0];
+        routeNode->z = box[1];
+        routeNode->y = box[2];
+        routeNode->gCost = count;
+        routeNode->parentNodeIndex = (u8)(u16)parentNodeIndex;
+        dxh = routeNode->x - state->tgtX;
+        dyh = routeNode->y - state->tgtY;
+        routeNode->hCost = (u16)(gVoxMapsHCostScale * sqrtf((f32)(dxh * dxh + dyh * dyh)));
     }
 
-    if (n == NULL)
+    if (routeNode == NULL)
     {
         debugPrintf(sVoxMapsDebugStrings);
         return;
     }
 
-    if (n->hCost > state->minHCost)
+    if (routeNode->hCost > state->minHCost)
     {
-        key = (u16)(n->hCost + n->gCost);
+        key = (u16)(routeNode->hCost + routeNode->gCost);
         q = state->queue;
         q[++state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;
@@ -367,11 +367,11 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
     }
     else
     {
-        if (n->hCost < state->minHCost)
+        if (routeNode->hCost < state->minHCost)
         {
-            state->minHCost = n->hCost;
+            state->minHCost = routeNode->hCost;
         }
-        key = (u16)(n->hCost + n->gCost);
+        key = (u16)(routeNode->hCost + routeNode->gCost);
         q = state->queue;
         q[++state->queueCount].value = nodeCount;
         q[state->queueCount].priority = 0xFFFF - key;

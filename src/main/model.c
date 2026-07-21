@@ -891,7 +891,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     int szs[7];
     int pos;
     int end;
-    int n;
+    int normalStride;
     u8* out;
     int k;
     u8* q;
@@ -934,17 +934,17 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     {
         if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE)
         {
-            n = 9;
+            normalStride = 9;
         }
         else
         {
-            n = 3;
+            normalStride = 3;
         }
         pos = roundUpTo32(pos);
         *(int*)&((ObjModel*)out2)->normalBuf = pos;
-        end = pos + ((ModelFileHeader*)p)->normalCount * n;
-        memcpy(((ObjModel*)out2)->normalBuf, ((ModelFileHeader*)p)->normals, ((ModelFileHeader*)p)->normalCount * n);
-        DCFlushRange(((ObjModel*)out2)->normalBuf, n * ((ModelFileHeader*)p)->normalCount);
+        end = pos + ((ModelFileHeader*)p)->normalCount * normalStride;
+        memcpy(((ObjModel*)out2)->normalBuf, ((ModelFileHeader*)p)->normals, ((ModelFileHeader*)p)->normalCount * normalStride);
+        DCFlushRange(((ObjModel*)out2)->normalBuf, normalStride * ((ModelFileHeader*)p)->normalCount);
         pos = roundUpTo32(end);
     }
     else
@@ -2268,7 +2268,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     int tmp;
     int size;
     u8* ptr;
-    u32 v;
+    u32 animOffset;
     int i;
     u32 ftype;
 
@@ -2281,10 +2281,10 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
         if (ModelList_getHeader(gModelAnimCacheList, (i = id), &ptr) == 0)
         {
             u8* np;
-            v = gModelAnimDataOffsetTable[id];
-            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, v, 0, &size, i, 1);
+            animOffset = gModelAnimDataOffsetTable[id];
+            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, animOffset, 0, &size, i, 1);
             ptr = np = mmAlloc(size, 10, 0);
-            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, np, v, size, &tmp, i, 0);
+            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, np, animOffset, size, &tmp, i, 0);
             *ptr = 1;
             modelInitModelList(gModelAnimCacheList, id, &ptr);
         }

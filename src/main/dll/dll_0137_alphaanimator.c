@@ -74,10 +74,10 @@ int AlphaAnimator_getObjectTypeId(void)
 
 void AlphaAnimator_free(int* obj)
 {
-    AlphaAnimatorState* o = (AlphaAnimatorState*)((GameObject*)obj)->extra;
-    void* p = o->buf;
-    if (p != NULL)
-        mm_free(p);
+    AlphaAnimatorState* state = (AlphaAnimatorState*)((GameObject*)obj)->extra;
+    void* buf = state->buf;
+    if (buf != NULL)
+        mm_free(buf);
 }
 
 void AlphaAnimator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -92,233 +92,233 @@ void AlphaAnimator_hitDetect(void)
 
 void AlphaAnimator_update(int* obj)
 {
-    AlphaanimatorPlacement* d;
-    AlphaAnimatorState* s;
+    AlphaanimatorPlacement* placement;
+    AlphaAnimatorState* state;
     int mode;
     MapBlockData* block;
     f32 absRate;
     int lvl;
-    d = (AlphaanimatorPlacement*)((GameObject*)obj)->anim.placementData;
-    s = (AlphaAnimatorState*)((GameObject*)obj)->extra;
-    mode = d->modeFlags & 3;
+    placement = (AlphaanimatorPlacement*)((GameObject*)obj)->anim.placementData;
+    state = (AlphaAnimatorState*)((GameObject*)obj)->extra;
+    mode = placement->modeFlags & 3;
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                             (double)((GameObject*)obj)->anim.localPosY,
                                             (double)((GameObject*)obj)->anim.localPosZ));
     if (block == NULL)
     {
-        s->doneCount = 0;
+        state->doneCount = 0;
         return;
     }
     if ((block->flags4 & 8) == 0)
     {
         return;
     }
-    if (s->vertCount == 0)
+    if (state->vertCount == 0)
     {
-        s->active = d->active;
-        if (s->vertCount == 0)
+        state->active = placement->active;
+        if (state->vertCount == 0)
         {
-            s->active = 0;
+            state->active = 0;
         }
-        if ((s8)s->active == 0)
+        if ((s8)state->active == 0)
         {
             return;
         }
-        s->fadeB = s->fadeA = 0.0f;
-        s->fadeMax = (f32)(u32)d->fadeMax;
-        if (d->gateBit == -1)
+        state->fadeB = state->fadeA = 0.0f;
+        state->fadeMax = (f32)(u32)placement->fadeMax;
+        if (placement->gateBit == -1)
         {
-            s->gateVal = 1;
+            state->gateVal = 1;
         }
         else
         {
-            s->gateVal = mainGetBit(d->gateBit);
+            state->gateVal = mainGetBit(placement->gateBit);
         }
-        s->alphaLevel = d->startAlpha;
-        if (d->completeBit != -1 && mainGetBit(d->completeBit) != 0)
+        state->alphaLevel = placement->startAlpha;
+        if (placement->completeBit != -1 && mainGetBit(placement->completeBit) != 0)
         {
-            s->alphaLevel = d->targetAlpha;
-            s->fadeA = 1.0f + s->fadeMax;
-            s->gateVal = 1;
+            state->alphaLevel = placement->targetAlpha;
+            state->fadeA = 1.0f + state->fadeMax;
+            state->gateVal = 1;
         }
         if (mode == ALPHAANIM_MODE_TIMED)
         {
-            s->buf = mmAlloc(s->vertCount << 2, 5, 0);
+            state->buf = mmAlloc(state->vertCount << 2, 5, 0);
         }
         /* double-toggle of bit 0 - a real no-op present in retail */
         block->flags4 = block->flags4 ^ 1;
         block->flags4 = block->flags4 ^ 1;
     }
-    if ((s8)s->active == 0)
+    if ((s8)state->active == 0)
     {
         return;
     }
     if (mode == ALPHAANIM_MODE_GATED)
     {
-        s->gateVal = mainGetBit(d->gateBit);
-        if ((s8)s->doneCount > 2 && (s8)s->gateVal != (s8)s->prevGate)
+        state->gateVal = mainGetBit(placement->gateBit);
+        if ((s8)state->doneCount > 2 && (s8)state->gateVal != (s8)state->prevGate)
         {
-            if ((d->modeFlags >> 2) != 0)
+            if ((placement->modeFlags >> 2) != 0)
             {
-                Sfx_PlayFromObject((u32)obj, d->sfxId);
+                Sfx_PlayFromObject((u32)obj, placement->sfxId);
             }
-            s->doneCount = 0;
-            s->prevGate = s->gateVal;
+            state->doneCount = 0;
+            state->prevGate = state->gateVal;
         }
-        if ((s8)s->doneCount > 2)
+        if ((s8)state->doneCount > 2)
         {
             return;
         }
     }
     else
     {
-        if ((s8)s->doneCount > 2)
+        if ((s8)state->doneCount > 2)
         {
             return;
         }
-        if ((s8)s->gateVal == 0)
+        if ((s8)state->gateVal == 0)
         {
-            s->gateVal = mainGetBit(d->gateBit);
-            if ((s8)s->gateVal == 0)
+            state->gateVal = mainGetBit(placement->gateBit);
+            if ((s8)state->gateVal == 0)
             {
                 return;
             }
-            if ((d->modeFlags >> 2) != 0)
+            if ((placement->modeFlags >> 2) != 0)
             {
-                Sfx_PlayFromObject((u32)obj, d->sfxId);
+                Sfx_PlayFromObject((u32)obj, placement->sfxId);
             }
         }
     }
     switch (mode)
     {
     case ALPHAANIM_MODE_ONESHOT:
-        if (d->startAlpha > d->targetAlpha)
+        if (placement->startAlpha > placement->targetAlpha)
         {
-            s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
-            if (s->alphaLevel <= d->targetAlpha)
+            state->alphaLevel = (s16)(state->alphaLevel - placement->rate * framesThisStep);
+            if (state->alphaLevel <= placement->targetAlpha)
             {
-                s->alphaLevel = d->targetAlpha;
-                if (d->completeBit != -1)
+                state->alphaLevel = placement->targetAlpha;
+                if (placement->completeBit != -1)
                 {
-                    mainSetBits(d->completeBit, 1);
+                    mainSetBits(placement->completeBit, 1);
                 }
-                s->doneCount += 1;
+                state->doneCount += 1;
             }
         }
         else
         {
-            s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
-            if (s->alphaLevel >= d->targetAlpha)
+            state->alphaLevel = (s16)(state->alphaLevel + placement->rate * framesThisStep);
+            if (state->alphaLevel >= placement->targetAlpha)
             {
-                s->alphaLevel = d->targetAlpha;
-                if (d->completeBit != -1)
+                state->alphaLevel = placement->targetAlpha;
+                if (placement->completeBit != -1)
                 {
-                    mainSetBits(d->completeBit, 1);
+                    mainSetBits(placement->completeBit, 1);
                 }
-                s->doneCount += 1;
+                state->doneCount += 1;
             }
         }
         break;
     case ALPHAANIM_MODE_PINGPONG:
-        if (d->startAlpha > d->targetAlpha)
+        if (placement->startAlpha > placement->targetAlpha)
         {
-            s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
-            if (s->alphaLevel < d->targetAlpha)
+            state->alphaLevel = (s16)(state->alphaLevel - placement->rate * framesThisStep);
+            if (state->alphaLevel < placement->targetAlpha)
             {
-                s->alphaLevel = (s16)(d->startAlpha - (int)(d->targetAlpha - s->alphaLevel));
+                state->alphaLevel = (s16)(placement->startAlpha - (int)(placement->targetAlpha - state->alphaLevel));
             }
         }
         else
         {
-            s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
-            lvl = s->alphaLevel;
-            if (lvl > d->startAlpha)
+            state->alphaLevel = (s16)(state->alphaLevel + placement->rate * framesThisStep);
+            lvl = state->alphaLevel;
+            if (lvl > placement->startAlpha)
             {
-                lvl -= d->targetAlpha;
-                s->alphaLevel = (s16)(d->targetAlpha + lvl);
+                lvl -= placement->targetAlpha;
+                state->alphaLevel = (s16)(placement->targetAlpha + lvl);
             }
         }
         break;
     case ALPHAANIM_MODE_GATED:
-        if ((s8)s->gateVal != 0)
+        if ((s8)state->gateVal != 0)
         {
-            if (d->startAlpha > d->targetAlpha)
+            if (placement->startAlpha > placement->targetAlpha)
             {
-                s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
-                if (s->alphaLevel > d->targetAlpha)
+                state->alphaLevel = (s16)(state->alphaLevel - placement->rate * framesThisStep);
+                if (state->alphaLevel > placement->targetAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = d->targetAlpha;
-                if (d->completeBit != -1)
+                state->alphaLevel = placement->targetAlpha;
+                if (placement->completeBit != -1)
                 {
-                    mainSetBits(d->completeBit, 1);
+                    mainSetBits(placement->completeBit, 1);
                 }
-                s->doneCount += 1;
+                state->doneCount += 1;
             }
             else
             {
-                s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
-                if (s->alphaLevel < d->targetAlpha)
+                state->alphaLevel = (s16)(state->alphaLevel + placement->rate * framesThisStep);
+                if (state->alphaLevel < placement->targetAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = d->targetAlpha;
-                if (d->completeBit != -1)
+                state->alphaLevel = placement->targetAlpha;
+                if (placement->completeBit != -1)
                 {
-                    mainSetBits(d->completeBit, 1);
+                    mainSetBits(placement->completeBit, 1);
                 }
-                s->doneCount += 1;
+                state->doneCount += 1;
             }
         }
         else
         {
-            if (d->startAlpha > d->targetAlpha)
+            if (placement->startAlpha > placement->targetAlpha)
             {
-                s->alphaLevel = (s16)(s->alphaLevel + d->rate * framesThisStep);
-                if (s->alphaLevel < d->startAlpha)
+                state->alphaLevel = (s16)(state->alphaLevel + placement->rate * framesThisStep);
+                if (state->alphaLevel < placement->startAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = d->startAlpha;
-                if (d->completeBit != -1)
+                state->alphaLevel = placement->startAlpha;
+                if (placement->completeBit != -1)
                 {
-                    mainSetBits(d->completeBit, 0);
+                    mainSetBits(placement->completeBit, 0);
                 }
-                s->doneCount += 1;
+                state->doneCount += 1;
             }
             else
             {
-                s->alphaLevel = (s16)(s->alphaLevel - d->rate * framesThisStep);
-                if (s->alphaLevel > d->startAlpha)
+                state->alphaLevel = (s16)(state->alphaLevel - placement->rate * framesThisStep);
+                if (state->alphaLevel > placement->startAlpha)
                 {
                     return;
                 }
-                s->alphaLevel = d->startAlpha;
-                if (d->completeBit != -1)
+                state->alphaLevel = placement->startAlpha;
+                if (placement->completeBit != -1)
                 {
-                    mainSetBits(d->completeBit, 0);
+                    mainSetBits(placement->completeBit, 0);
                 }
-                s->doneCount += 1;
+                state->doneCount += 1;
             }
         }
         break;
     case ALPHAANIM_MODE_TIMED:
     {
-        int rate = d->rate;
+        int rate = placement->rate;
         if (rate < 0)
         {
             rate = -rate;
         }
         absRate = (f32)rate / 10.0f;
-        s->fadeA = absRate * timeDelta + s->fadeA;
-        if (s->fadeA > s->fadeMax)
+        state->fadeA = absRate * timeDelta + state->fadeA;
+        if (state->fadeA > state->fadeMax)
         {
-            s->fadeA = s->fadeMax;
-            mainSetBits(d->completeBit, 1);
-            s->doneCount += 1;
+            state->fadeA = state->fadeMax;
+            mainSetBits(placement->completeBit, 1);
+            state->doneCount += 1;
         }
-        s->fadeB = s->fadeA - 50.0f;
+        state->fadeB = state->fadeA - 50.0f;
         break;
     }
     }

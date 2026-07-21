@@ -128,7 +128,7 @@ extern Dll81Interface** gLaserBeamObjModgfxResource;
 void LaserBeam_update(int obj2)
 {
     char* t;
-    LaserBeamState* b;
+    LaserBeamState* state;
     GameObject* player;
     u8 beamKind;
     int i;
@@ -149,41 +149,41 @@ void LaserBeam_update(int obj2)
     f32 tt;
 
     t = *(char**)&((GameObject*)obj2)->anim.placementData;
-    b = ((GameObject*)obj2)->extra;
-    b->fireTimer -= framesThisStep;
+    state = ((GameObject*)obj2)->extra;
+    state->fireTimer -= framesThisStep;
     if (mainGetBit(((LaserBeamPlacement*)t)->disableGameBit) == 0)
     {
-        if (b->fireTimer < 0)
+        if (state->fireTimer < 0)
         {
-            if (b->sweepDone == 0)
+            if (state->sweepDone == 0)
             {
-                beamKind = b->beamKind;
+                beamKind = state->beamKind;
                 if (beamKind == 3 || beamKind == 30)
                 {
-                    b->fireTimer = b->firePeriod;
+                    state->fireTimer = state->firePeriod;
                 }
                 else
                 {
-                    if (beamKind == 0 && b->emitterSlot != -1)
+                    if (beamKind == 0 && state->emitterSlot != -1)
                     {
-                        (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
+                        (*gModgfxInterface)->releaseHandle(&state->emitterSlot);
                     }
-                    b->fireTimer = b->firePeriod;
+                    state->fireTimer = state->firePeriod;
                 }
-                b->sweepPhase = 0.0f;
+                state->sweepPhase = 0.0f;
             }
             else
             {
-                b->fireTimer = 150;
+                state->fireTimer = 150;
             }
-            b->active = 0;
+            state->active = 0;
         }
-        else if (b->fireTimer < b->fireTimerLimit)
+        else if (state->fireTimer < state->fireTimerLimit)
         {
-            if (b->active == 0)
+            if (state->active == 0)
             {
-                b->active = 1;
-                beamKind = b->beamKind;
+                state->active = 1;
+                beamKind = state->beamKind;
                 if (beamKind == 1)
                 {
                     if (gLaserBeamObjModgfxResource != NULL)
@@ -196,19 +196,19 @@ void LaserBeam_update(int obj2)
                     (*gLaserBeamObjModgfxResource)->spawn(obj2, 0, NULL, 0x10004, -1, 0);
                 }
             }
-            if (b->fireTimer < 0x28)
+            if (state->fireTimer < 0x28)
             {
-                if (b->sweepPhase >= 0.0f && b->sweepDone == 0)
+                if (state->sweepPhase >= 0.0f && state->sweepDone == 0)
                 {
-                    b->sweepPhase = -(0.0026f * timeDelta - b->sweepPhase);
+                    state->sweepPhase = -(0.0026f * timeDelta - state->sweepPhase);
                 }
             }
-            else if (b->fireTimer < 0x8c)
+            else if (state->fireTimer < 0x8c)
             {
-                if (b->active == 1)
+                if (state->active == 1)
                 {
-                    b->active = 2;
-                    beamKind = b->beamKind;
+                    state->active = 2;
+                    beamKind = state->beamKind;
                     if (beamKind == 1)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
@@ -220,7 +220,7 @@ void LaserBeam_update(int obj2)
                     {
                         if (gLaserBeamObjModgfxResource != NULL)
                         {
-                            b->emitterSlot =
+                            state->emitterSlot =
                                 (*gLaserBeamObjModgfxResource)->spawn(obj2, 30, NULL, 0x10004, -1, 0);
                         }
                     }
@@ -233,30 +233,30 @@ void LaserBeam_update(int obj2)
                     }
                     else
                     {
-                        if (gLaserBeamObjModgfxResource != NULL && b->emitterSlot == -1)
+                        if (gLaserBeamObjModgfxResource != NULL && state->emitterSlot == -1)
                         {
-                            if (b->emitterSlot != -1)
+                            if (state->emitterSlot != -1)
                             {
-                                (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
+                                (*gModgfxInterface)->releaseHandle(&state->emitterSlot);
                             }
                             if (gLaserBeamObjModgfxResource != NULL)
                             {
-                                b->emitterSlot =
+                                state->emitterSlot =
                                     (*gLaserBeamObjModgfxResource)->spawn(obj2, 0, NULL, 0x10004, -1, 0);
                             }
                         }
                     }
                 }
             }
-            else if (b->sweepPhase <= 1.0f)
+            else if (state->sweepPhase <= 1.0f)
             {
-                b->sweepPhase = 0.052f * timeDelta + b->sweepPhase;
+                state->sweepPhase = 0.052f * timeDelta + state->sweepPhase;
             }
         }
     }
-    else if (b->beamKind == 0 && b->emitterSlot != -1)
+    else if (state->beamKind == 0 && state->emitterSlot != -1)
     {
-        (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
+        (*gModgfxInterface)->releaseHandle(&state->emitterSlot);
     }
     dz = (f32)(int)((LaserBeamPlacement*)t)->beamLength;
     dz2 = dz * dz;
@@ -264,55 +264,55 @@ void LaserBeam_update(int obj2)
     cosv = mathSinf((gLaserBeamObjPi * (f32)(int)((GameObject*)obj2)->anim.rotX) / gLaserBeamObjAngleToRadScale);
     dot = -(((GameObject*)obj2)->anim.localPosX * sinv + ((GameObject*)obj2)->anim.localPosZ * cosv);
     player = Obj_GetPlayerObject();
-    b->fireCooldown = (s8)(b->fireCooldown - framesThisStep);
-    if (b->fireCooldown <= 0)
+    state->fireCooldown = (s8)(state->fireCooldown - framesThisStep);
+    if (state->fireCooldown <= 0)
     {
-        b->fireCooldown = 0;
+        state->fireCooldown = 0;
     }
-    else if (b->beamKind == 0 && b->emitterSlot != -1)
+    else if (state->beamKind == 0 && state->emitterSlot != -1)
     {
-        (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
+        (*gModgfxInterface)->releaseHandle(&state->emitterSlot);
     }
     if ((dot + (sinv * ((GameObject*)player)->anim.localPosX + cosv * ((GameObject*)player)->anim.localPosZ) >
              0.0f &&
-         b->beamKind != 2) ||
-        b->beamKind == 30)
+         state->beamKind != 2) ||
+        state->beamKind == 30)
     {
-        b->sweepYaw -= framesThisStep;
-        if (b->sweepYaw < 0)
+        state->sweepYaw -= framesThisStep;
+        if (state->sweepYaw < 0)
         {
-            b->sweepYaw = 0;
-            b->sweepDone = 0;
+            state->sweepYaw = 0;
+            state->sweepDone = 0;
         }
     }
     else
     {
-        b->sweepYaw += framesThisStep;
-        if (b->sweepYaw > 60)
+        state->sweepYaw += framesThisStep;
+        if (state->sweepYaw > 60)
         {
-            b->sweepYaw = 60;
-            b->sweepDone = 1;
+            state->sweepYaw = 60;
+            state->sweepDone = 1;
         }
     }
-    if (b->sweepDone == 0)
+    if (state->sweepDone == 0)
     {
-        b->beamState = (u8)(b->active & 3);
+        state->beamState = (u8)(state->active & 3);
     }
     else
     {
-        b->beamState = 2;
+        state->beamState = 2;
     }
     if (mainGetBit(((LaserBeamPlacement*)t)->disableGameBit) != 0)
     {
-        b->beamState = 0;
+        state->beamState = 0;
     }
-    if (b->fireCooldown == 0)
+    if (state->fireCooldown == 0)
     {
-        b->unk28 = 0;
+        state->unk28 = 0;
     }
-    if (player != NULL && b->fireCooldown == 0 && b->beamState == 2)
+    if (player != NULL && state->fireCooldown == 0 && state->beamState == 2)
     {
-        range = 5.0f + (f32)(int)*(s8*)&b->rangeOffset;
+        range = 5.0f + (f32)(int)*(s8*)&state->rangeOffset;
         dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj2)->anim.localPosY;
         if (dy < range && dy > -(25.0f + range))
         {
@@ -333,15 +333,15 @@ void LaserBeam_update(int obj2)
                 }
                 tt = 63.0f - a;
                 tt = 2.0f * tt;
-                b->unk28 = (s16)(int)tt;
-                if (!(lat < 70.0f && lat > -70.0f) && b->sourceAttached == 1)
+                state->unk28 = (s16)(int)tt;
+                if (!(lat < 70.0f && lat > -70.0f) && state->sourceAttached == 1)
                 {
                     (*gModgfxInterface)->detachSource((void*)obj2);
-                    b->sourceAttached = 0;
+                    state->sourceAttached = 0;
                 }
                 if (lat < range && lat > -range)
                 {
-                    if (objGetAnimState80A((GameObject*)(player)) == 0x1d7 && b->beamKind != 1)
+                    if (objGetAnimState80A((GameObject*)(player)) == 0x1d7 && state->beamKind != 1)
                     {
                         mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 1);
                     }
@@ -374,43 +374,43 @@ void LaserBeam_update(int obj2)
                             (*gPartfxInterface)
                                 ->spawnObject(Obj_GetPlayerObject(), LASERBEAM_PARTFX_HIT, NULL, 4, -1, NULL);
                         }
-                        b->targetX = sinv * spread + ((GameObject*)player)->anim.localPosX;
-                        b->targetZ = cosv * spread + ((GameObject*)player)->anim.localPosZ;
-                        beamKind = b->beamKind;
+                        state->targetX = sinv * spread + ((GameObject*)player)->anim.localPosX;
+                        state->targetZ = cosv * spread + ((GameObject*)player)->anim.localPosZ;
+                        beamKind = state->beamKind;
                         if (beamKind == 0 || beamKind == 1)
                         {
-                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_HIT, (char*)b + 0x34, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_HIT, (char*)state + 0x34, 0);
                         }
                         else if ((u8)(beamKind - 2) <= 1 || beamKind == 30)
                         {
-                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)b + 0x34, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (char*)state + 0x34, 0);
                         }
-                        b->fireCooldown = 2;
+                        state->fireCooldown = 2;
                     }
                 }
             }
         }
     }
-    if (b->beamState == 0)
+    if (state->beamState == 0)
     {
-        if (b->beamKind == 30 && b->emitterSlot != -1)
+        if (state->beamKind == 30 && state->emitterSlot != -1)
         {
-            (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
+            (*gModgfxInterface)->releaseHandle(&state->emitterSlot);
         }
-        if (b->sourceAttached == 1)
+        if (state->sourceAttached == 1)
         {
             (*gModgfxInterface)->detachSource((void*)obj2);
-            b->sourceAttached = 0;
+            state->sourceAttached = 0;
         }
     }
     fz = 0.0f;
-    b->beamY = fz;
-    b->beamX = fz;
-    b->beamZ = fz;
-    b->beamY2 = b->beamY;
-    b->beamX2 = b->beamX;
-    b->beamZ2 = b->beamZ + dz;
-    b->rangeOffset = 8;
+    state->beamY = fz;
+    state->beamX = fz;
+    state->beamZ = fz;
+    state->beamY2 = state->beamY;
+    state->beamX2 = state->beamX;
+    state->beamZ2 = state->beamZ + dz;
+    state->rangeOffset = 8;
     ((GameObject*)obj2)->anim.currentMoveProgress =
         0.04f * timeDelta + ((GameObject*)obj2)->anim.currentMoveProgress;
     if (((GameObject*)obj2)->anim.currentMoveProgress > 1.0f)
@@ -422,42 +422,42 @@ void LaserBeam_update(int obj2)
 
 void LaserBeam_init(s16* obj, char* arg)
 {
-    LaserBeamState* b;
+    LaserBeamState* state;
 
-    b = ((GameObject*)obj)->extra;
+    state = ((GameObject*)obj)->extra;
     ObjMsg_AllocQueue(obj, 2);
     *obj = (s16)((s32)((LaserBeamPlacement*)arg)->spawnYaw << 8);
     if (((LaserBeamPlacement*)arg)->firePeriod == 0)
     {
-        b->firePeriod = (s16)(randomGetRange(-80, 80) + 400);
+        state->firePeriod = (s16)(randomGetRange(-80, 80) + 400);
     }
     else
     {
-        b->firePeriod = ((LaserBeamPlacement*)arg)->firePeriod;
+        state->firePeriod = ((LaserBeamPlacement*)arg)->firePeriod;
     }
-    b->fireTimer = b->firePeriod;
-    b->active = 0;
-    b->sweepPhase = 0.0f;
-    b->beamKind = ((LaserBeamPlacement*)arg)->beamKind;
-    b->fireTimerLimit = 0x118;
-    b->emitterSlot = -1;
-    if (b->beamKind == 30)
+    state->fireTimer = state->firePeriod;
+    state->active = 0;
+    state->sweepPhase = 0.0f;
+    state->beamKind = ((LaserBeamPlacement*)arg)->beamKind;
+    state->fireTimerLimit = 0x118;
+    state->emitterSlot = -1;
+    if (state->beamKind == 30)
     {
-        if (*(void**)&b->texture == NULL)
+        if (*(void**)&state->texture == NULL)
         {
-            b->texture = textureLoadAsset(LASERBEAM_TEXTURE_KIND30);
+            state->texture = textureLoadAsset(LASERBEAM_TEXTURE_KIND30);
         }
     }
-    else if (b->beamKind == 1)
+    else if (state->beamKind == 1)
     {
-        if (*(void**)&b->texture == NULL)
+        if (*(void**)&state->texture == NULL)
         {
-            b->texture = textureLoadAsset(LASERBEAM_TEXTURE_KIND1);
+            state->texture = textureLoadAsset(LASERBEAM_TEXTURE_KIND1);
         }
     }
-    else if (*(void**)&b->texture == NULL)
+    else if (*(void**)&state->texture == NULL)
     {
-        b->texture = textureLoadAsset(LASERBEAM_TEXTURE_DEFAULT);
+        state->texture = textureLoadAsset(LASERBEAM_TEXTURE_DEFAULT);
     }
 }
 

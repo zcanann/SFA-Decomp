@@ -76,7 +76,7 @@ void ColdWaterControl_update(GameObject* obj)
 
 void ColdWaterControl_init(GameObject* obj)
 {
-    ColdwaterControlState* p = (ColdwaterControlState*)obj->extra;
-    p->timer = -30.0f;
+    ColdwaterControlState* state = (ColdwaterControlState*)obj->extra;
+    state->timer = -30.0f;
     obj->objectFlags = (u16)(obj->objectFlags | (COLDWATER_OBJFLAG_HIDDEN | COLDWATER_OBJFLAG_HITDETECT_DISABLED));
 }

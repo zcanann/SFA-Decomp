@@ -140,10 +140,10 @@ int dll_CB_stateHandler4(int* obj, GroundBaddieState* state)
 
 int dll_CB_stateHandler3(int* obj, u8* obj2)
 {
-    GroundBaddieState* x = ((GameObject*)obj)->extra;
+    GroundBaddieState* state = ((GameObject*)obj)->extra;
     if ((s8)obj2[0x27b] != 0)
     {
-        (*gBaddieControlInterface)->spawnChild((GameObject*)obj, x->triggerId, -1, 0);
+        (*gBaddieControlInterface)->spawnChild((GameObject*)obj, state->triggerId, -1, 0);
     }
     return 0;
 }

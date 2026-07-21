@@ -2476,7 +2476,7 @@ void fn_8008C9F4(u8* cfg, u8 flags)
 
 void fn_8008D088(int slot)
 {
-    SkySlotAnim* p;
+    SkySlotAnim* anim;
     f32 dur;
     f32 zero;
     f32 len;
@@ -2486,18 +2486,18 @@ void fn_8008D088(int slot)
     u16 flags;
     int flag1;
 
-    p = *(SkySlotAnim**)(&gSky2State + slot);
-    if (p->t >= (dur = lbl_803DF114))
+    anim = *(SkySlotAnim**)(&gSky2State + slot);
+    if (anim->t >= (dur = lbl_803DF114))
     {
-        p->flags4 &= ~0x100;
+        anim->flags4 &= ~0x100;
         zero = lbl_803DF108;
         (*(SkySlotAnim**)(&gSky2State + slot))->step = zero;
         (*(SkySlotAnim**)(&gSky2State + slot))->t = zero;
         (*(SkySlotAnim**)(&gSky2State + slot))->prevT = dur;
-        p = *(SkySlotAnim**)(&gSky2State + slot);
-        if (p->b316 != 0 && (p->flags6 & 0x40) == 0)
+        anim = *(SkySlotAnim**)(&gSky2State + slot);
+        if (anim->b316 != 0 && (anim->flags6 & 0x40) == 0)
         {
-            p->b316 = 0;
+            anim->b316 = 0;
         }
         for (i = 0; i < 0x21; i++)
         {
@@ -2510,14 +2510,14 @@ void fn_8008D088(int slot)
     }
     else
     {
-        if (p->b315 != 0)
+        if (anim->b315 != 0)
         {
-            len = lbl_803DF11C * ((f32)p->frameCount / lbl_803DF120);
+            len = lbl_803DF11C * ((f32)anim->frameCount / lbl_803DF120);
             if (lbl_803DF108 == len)
             {
                 len = dur;
             }
-            p->step = 1.0f / len;
+            anim->step = 1.0f / len;
             for (i = 0; i < 0x21; i++)
             {
                 (*(SkySlotAnim**)(&gSky2State + slot))->vel[i] = ((*(SkySlotAnim**)(&gSky2State + slot))->target[i] -
@@ -2543,29 +2543,29 @@ void fn_8008D088(int slot)
                 timeDelta * (*(SkySlotAnim**)(&gSky2State + slot))->vel2[i];
         }
         (*(SkySlotAnim**)(&gSky2State + slot))->t += timeDelta * (*(SkySlotAnim**)(&gSky2State + slot))->step;
-        p = *(SkySlotAnim**)(&gSky2State + slot);
-        flags = p->flags4;
+        anim = *(SkySlotAnim**)(&gSky2State + slot);
+        flags = anim->flags4;
         flag1 = flags & 1;
-        if (flag1 != 0 && (bv = p->blend) > (zero = lbl_803DF108))
+        if (flag1 != 0 && (bv = anim->blend) > (zero = lbl_803DF108))
         {
-            p->blend = -(255.0f * p->t - bv);
+            anim->blend = -(255.0f * anim->t - bv);
             if ((*(SkySlotAnim**)(&gSky2State + slot))->blend < zero)
             {
                 (*(SkySlotAnim**)(&gSky2State + slot))->blend = zero;
                 lbl_803DB750 = 1;
             }
         }
-        else if ((flags & 4) != 0 && p->blend < (spd = 255.0f))
+        else if ((flags & 4) != 0 && anim->blend < (spd = 255.0f))
         {
-            p->blend = spd * p->t;
+            anim->blend = spd * anim->t;
             if ((*(SkySlotAnim**)(&gSky2State + slot))->blend > spd)
             {
                 (*(SkySlotAnim**)(&gSky2State + slot))->blend = spd;
             }
         }
-        else if (flag1 == 0 && p->blend < (spd = 255.0f))
+        else if (flag1 == 0 && anim->blend < (spd = 255.0f))
         {
-            p->blend = spd * p->t;
+            anim->blend = spd * anim->t;
             if ((*(SkySlotAnim**)(&gSky2State + slot))->blend > spd)
             {
                 (*(SkySlotAnim**)(&gSky2State + slot))->blend = spd;

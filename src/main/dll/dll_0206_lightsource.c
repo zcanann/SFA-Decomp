@@ -91,8 +91,8 @@ typedef struct LightSourceFlagByte
 void lightsource_update(GameObject* obj)
 {
 
-    LightSourceState* b;
-    ModelLightStruct* t;
+    LightSourceState* state;
+    ModelLightStruct* light;
     s16 sum;
     int sfxFlag;
     f32 vec[3];
@@ -103,51 +103,51 @@ void lightsource_update(GameObject* obj)
         u8 pad2[0xc];
     } fx;
 
-    b = (obj)->extra;
-    switch (b->mode)
+    state = (obj)->extra;
+    switch (state->mode)
     {
     case LIGHTSOURCE_MODE_STATIC:
         break;
     case LIGHTSOURCE_MODE_INTERACTIVE:
-        b->litPrev = b->lit;
+        state->litPrev = state->lit;
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0)
         {
-            b->lit = (u8)(1 - b->lit);
+            state->lit = (u8)(1 - state->lit);
         }
-        if (b->lit != b->litPrev)
+        if (state->lit != state->litPrev)
         {
-            if (b->lit != 0)
+            if (state->lit != 0)
             {
-                if (b->gameBit != -1 && mainGetBit(b->gameBit) == 0)
+                if (state->gameBit != -1 && mainGetBit(state->gameBit) == 0)
                 {
-                    mainSetBits(b->gameBit, 1);
+                    mainSetBits(state->gameBit, 1);
                 }
                 Sfx_PlayFromObject((int)obj, SFXTRIG_cvdrip1c);
             }
             else
             {
                 (*gExpgfxInterface)->freeSource((int)obj);
-                if (b->gameBit != -1 && mainGetBit(b->gameBit) != 0)
+                if (state->gameBit != -1 && mainGetBit(state->gameBit) != 0)
                 {
-                    mainSetBits(b->gameBit, 0);
+                    mainSetBits(state->gameBit, 0);
                 }
             }
         }
         break;
     }
-    if (b->lit != 0 && ((obj)->objectFlags & LIGHTSOURCE_OBJFLAG_RENDERED))
+    if (state->lit != 0 && ((obj)->objectFlags & LIGHTSOURCE_OBJFLAG_RENDERED))
     {
-        b->fxTimer = b->fxTimer - timeDelta;
-        if (b->fxTimer <= 0.0f)
+        state->fxTimer = state->fxTimer - timeDelta;
+        if (state->fxTimer <= 0.0f)
         {
-            sfxFlag = b->fxArg;
-            b->fxTimer += 15.0f;
+            sfxFlag = state->fxArg;
+            state->fxTimer += 15.0f;
         }
         else
         {
             sfxFlag = 0;
         }
-        if (b->fxType != 0 || b->fxArg != 0)
+        if (state->fxType != 0 || state->fxArg != 0)
         {
             vec[0] = 0.0f;
             if ((obj)->anim.seqId == LIGHTSOURCE_SEQID_ARWING_FX)
@@ -159,51 +159,51 @@ void lightsource_update(GameObject* obj)
                 vec[1] = 3.5f;
             }
             vec[2] = 0.0f;
-            fn_80098B18(obj, 10.0f * (obj)->anim.rootMotionScale, b->fxType, sfxFlag, 0, vec);
+            fn_80098B18(obj, 10.0f * (obj)->anim.rootMotionScale, state->fxType, sfxFlag, 0, vec);
         }
-        if (b->sparks != 0)
+        if (state->sparks != 0)
         {
-            b->sparkSpawnTimer = b->sparkSpawnTimer - timeDelta;
-            if (b->sparkSpawnTimer <= 0.0f)
+            state->sparkSpawnTimer = state->sparkSpawnTimer - timeDelta;
+            if (state->sparkSpawnTimer <= 0.0f)
             {
                 fx.scale = 1.0f;
                 (*gPartfxInterface)->spawnObject((void*)obj, LIGHTSOURCE_PARTFX_SPARK, &fx, 2, -1, NULL);
-                b->sparkSpawnTimer += 5.0f;
+                state->sparkSpawnTimer += 5.0f;
             }
         }
     }
-    t = b->light;
-    if (t != NULL && t->glowType != 0 && t->enabled != 0)
+    light = state->light;
+    if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
-        sum = (s16)(t->glowAlpha + t->glowAlphaStep);
+        sum = (s16)(light->glowAlpha + light->glowAlphaStep);
         if (sum < 0)
         {
             sum = 0;
-            t->glowAlphaStep = 0;
+            light->glowAlphaStep = 0;
         }
         else if (sum > 255)
         {
             sum = 255;
-            t->glowAlphaStep = 0;
+            light->glowAlphaStep = 0;
         }
-        b->light->glowAlpha = sum;
+        state->light->glowAlpha = sum;
     }
     if ((obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_A && (obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_B)
     {
-        if (b->lit != 0)
+        if (state->lit != 0)
         {
-            if (!((LightSourceFlagByte*)&b->loopFlags)->looped)
+            if (!((LightSourceFlagByte*)&state->loopFlags)->looped)
             {
                 Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_mushdizzylp12);
-                ((LightSourceFlagByte*)&b->loopFlags)->looped = 1;
+                ((LightSourceFlagByte*)&state->loopFlags)->looped = 1;
             }
         }
         else
         {
-            if (((LightSourceFlagByte*)&b->loopFlags)->looped)
+            if (((LightSourceFlagByte*)&state->loopFlags)->looped)
             {
                 Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_mushdizzylp12);
-                ((LightSourceFlagByte*)&b->loopFlags)->looped = 0;
+                ((LightSourceFlagByte*)&state->loopFlags)->looped = 0;
             }
         }
     }

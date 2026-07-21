@@ -1374,7 +1374,7 @@ void* gameTextGetStr(int textId)
 {
     u8* entry;
     char* strings;
-    void* t;
+    void* textEntry;
 
     strings = gGameTextFontData;
     if (gameTextFonts->mode != 2)
@@ -1405,8 +1405,8 @@ void* gameTextGetStr(int textId)
         }
         return gGameTextLastEntry;
     }
-    t = gameTextGet(textId);
-    return *(void**)*(u8**)((u8*)t + 8);
+    textEntry = gameTextGet(textId);
+    return *(void**)*(u8**)((u8*)textEntry + 8);
 }
 
 void* gameTextGet(int textId)
@@ -1536,12 +1536,12 @@ void gameTextSetCursor(u16 x, u16 y, int flags)
     if (flags & 2)
     {
         int i = gGameTextCommandCount;
-        GameTextSlot* s;
+        GameTextSlot* cmd;
         gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 0xa;
-        s->arg0 = (u16)x;
-        s->arg1 = (u16)y;
+        cmd = &gGameTextCommandSlots[i];
+        cmd->opcode = 0xa;
+        cmd->arg0 = (u16)x;
+        cmd->arg1 = (u16)y;
     }
 }
 
@@ -1555,13 +1555,13 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     else
     {
         int i = gGameTextCommandCount;
-        GameTextSlot* s;
+        GameTextSlot* cmd;
         gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 4;
-        s->arg0 = idx;
-        s->arg1 = x;
-        s->arg2 = y;
+        cmd = &gGameTextCommandSlots[i];
+        cmd->opcode = 4;
+        cmd->arg0 = idx;
+        cmd->arg1 = x;
+        cmd->arg2 = y;
     }
 }
 void gameTextLoadDir(int dirId)
@@ -2677,14 +2677,14 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
     else
     {
         int i = gGameTextCommandCount;
-        GameTextSlot* s;
+        GameTextSlot* cmd;
         gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 3;
-        s->arg0 = r;
-        s->arg1 = g;
-        s->arg2 = b;
-        s->arg3 = a;
+        cmd = &gGameTextCommandSlots[i];
+        cmd->opcode = 3;
+        cmd->arg0 = r;
+        cmd->arg1 = g;
+        cmd->arg2 = b;
+        cmd->arg3 = a;
     }
 }
 
@@ -2788,7 +2788,7 @@ void subtitleBuildLineTable(void)
     SubtitleLineTable* s[1];
     f32 delta;
     f32 curTime;
-    SubtitleTextEntry* t;
+    SubtitleTextEntry* entry;
     u8* win;
     int m;
     int i;
@@ -2812,7 +2812,7 @@ void subtitleBuildLineTable(void)
         savedCharset = gameTextGetCharset();
         gameTextSetCharset(1, 1);
     }
-    t = (SubtitleTextEntry*)gameTextGet(gGameTextPendingTextId);
+    entry = (SubtitleTextEntry*)gameTextGet(gGameTextPendingTextId);
     win = (u8*)gTextBoxes + 0x140;
     gSubtitleLineCount = 0;
     gSubtitleBlockCount = 0;
@@ -2821,9 +2821,9 @@ void subtitleBuildLineTable(void)
     {
         s[0]->times[i] = gSubtitleNoTimeSentinel;
     } while (++i < SUBTITLE_LINE_COUNT);
-    for (i = 0; i < t->count; i++)
+    for (i = 0; i < entry->count; i++)
     {
-        str = t->strs[i];
+        str = entry->strs[i];
         n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
         if (n != 0)
         {
@@ -2915,11 +2915,11 @@ void gameTextSetCharset(int charset, int flags)
     if (gameTextDrawFunc == NULL || (flags & 2))
     {
         int i = gGameTextCommandCount;
-        GameTextSlot* s;
+        GameTextSlot* cmd;
         gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 0xf;
-        s->arg0 = charset;
+        cmd = &gGameTextCommandSlots[i];
+        cmd->opcode = 0xf;
+        cmd->arg0 = charset;
     }
 }
 
@@ -3326,23 +3326,23 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
 void gameTextSetWindow(u8* textBox)
 {
     int i;
-    GameTextSlot* s;
+    GameTextSlot* cmd;
     int idx;
 
     if (textBox == NULL)
     {
         i = gGameTextCommandCount;
         gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
+        cmd = &gGameTextCommandSlots[i];
         gCurTextBox = NULL;
-        s->opcode = 8;
-        s->arg0 = 0xff;
+        cmd->opcode = 8;
+        cmd->arg0 = 0xff;
     }
     else
     {
         i = gGameTextCommandCount;
         gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
+        cmd = &gGameTextCommandSlots[i];
         idx = (textBox - (u8*)gTextBoxes) / 0x20;
         if (idx == 0xff)
         {
@@ -3352,12 +3352,12 @@ void gameTextSetWindow(u8* textBox)
         {
             gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
         }
-        s->opcode = 8;
-        s->arg0 = idx;
+        cmd->opcode = 8;
+        cmd->arg0 = idx;
     }
 }
 
-void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
+void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box)
 {
     int x;
     int y;
@@ -3367,12 +3367,12 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     int midX;
     int midY;
 
-    alpha = ((GameTextBox*)p)->alpha;
-    alpha |= ((GameTextBox*)p)->alpha;
-    x = ((GameTextBox*)p)->x;
-    y = ((GameTextBox*)p)->y;
-    halfW = ((x + ((GameTextBox*)p)->width) - ((GameTextBox*)p)->x) >> 1;
-    halfH = ((y + ((GameTextBox*)p)->height) - ((GameTextBox*)p)->y) >> 1;
+    alpha = ((GameTextBox*)box)->alpha;
+    alpha |= ((GameTextBox*)box)->alpha;
+    x = ((GameTextBox*)box)->x;
+    y = ((GameTextBox*)box)->y;
+    halfW = ((x + ((GameTextBox*)box)->width) - ((GameTextBox*)box)->x) >> 1;
+    halfH = ((y + ((GameTextBox*)box)->height) - ((GameTextBox*)box)->y) >> 1;
     midX = x + halfW;
     midY = y + halfH;
     setTextColor(0, gGameTextBoxColorR & 0xff, gGameTextBoxColorG & 0xff, gGameTextBoxColorB & 0xff,
