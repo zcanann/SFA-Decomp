@@ -1123,10 +1123,10 @@ void newshadows_getShadowTextureTable4x8(Texture*** tableOut, int* columnsOut, i
 
 extern Texture* gNewShadowNoiseTexFrames[0x10];
 
-void textureFn_8006c4e0(int* p1, int* p2)
+void getNewShadowNoiseTextureFrames(Texture*** tableOut, int* frameCountOut)
 {
-    *p1 = (int)gNewShadowNoiseTexFrames;
-    *p2 = 0x10;
+    *tableOut = gNewShadowNoiseTexFrames;
+    *frameCountOut = 0x10;
 }
 
 void fn_8006C4F8(u32* p)

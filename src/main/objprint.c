@@ -1882,8 +1882,8 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
     GXColor kc;
-    int texTbl;
-    int texCnt;
+    Texture** noiseTextures;
+    int noiseFrameCount;
     int t164;
     f32 sx;
     f32 sy;
@@ -1911,8 +1911,8 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
         return 1;
     }
     lbl_803DCC3E = 1;
-    textureFn_8006c4e0(&texTbl, &texCnt);
-    fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)texCnt;
+    getNewShadowNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
+    fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)noiseFrameCount;
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
     selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
@@ -1972,7 +1972,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     mtxB.m[1][2] = fz;
     GXSetIndTexMtx(GX_ITM_1, mtxB.m, (s8)lbl_803DB49C);
     GXSetTevIndirect(3, 1, 0, 7, 2, 0, 0, 1, 0, 1);
-    selectTexture((Texture*)(*(void**)(texTbl + lbl_803DCC44 * 4)), 3);
+    selectTexture(noiseTextures[lbl_803DCC44], 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, GX_PTTEXMTX0, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
@@ -2071,8 +2071,8 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     GXColorS10 s10;
     int stage;
     int coord;
-    int texTbl;
-    int texCnt;
+    Texture** noiseTextures;
+    int noiseFrameCount;
     int texRef4;
     f32 sx;
     f32 sy;
@@ -2092,14 +2092,14 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
         return 0;
     }
     lbl_803DCC3E = 1;
-    textureFn_8006c4e0(&texTbl, &texCnt);
+    getNewShadowNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
     if (lbl_803DCC35 != 0)
     {
         fz = lbl_803DEA04;
     }
     else
     {
-        fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)texCnt;
+        fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)noiseFrameCount;
         fz = fz * lbl_803DEA28;
     }
     selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
@@ -2265,7 +2265,7 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
         GXSetIndTexMtx(GX_ITM_1, mtxB.m, -0xf);
         GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
     }
-    selectTexture((Texture*)(*(void**)(texTbl + lbl_803DCC44 * 4)), 3);
+    selectTexture(noiseTextures[lbl_803DCC44], 3);
     PSMTXScale(mtx4, lbl_803DEA30, *(f32*)&lbl_803DEA30, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx4, GX_PTTEXMTX0, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD4, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
