@@ -27,8 +27,6 @@
 #include "main/dll/dll_01F4_lamp.h"
 #include "main/object_descriptor.h"
 
-#define LAMP_OBJFLAG_RENDERED 0x800
-
 /* partfx ids emitted framesThisStep-times while rendered (index-style; roles opaque).
    A spawned from Lamp_SeqFn anchored at the object body; B from Lamp_update at path point 0. */
 #define LAMP_PARTFX_A 0x7a8
@@ -38,26 +36,25 @@
 
 int Lamp_getExtraSize(void)
 {
-    return 0x1;
+    return sizeof(LampState);
 }
 
-void Lamp_free(int* obj)
+void Lamp_free(GameObject* obj)
 {
     Sfx_StopObjectChannel((int)obj, 0x40);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void Lamp_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void Lamp_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 int Lamp_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    u8 effectArgs[0x18];
-    PartFxSpawnParams* fx = (PartFxSpawnParams*)effectArgs;
+    PartFxSpawnParams effect;
     int i;
 
     if ((s32)randomGetRange(0, 1) != 0)
@@ -76,16 +73,16 @@ int Lamp_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         return 0;
     }
-    if ((obj->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
+    if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
     {
-        fx->scale = 0.35f;
-        fx->arg3 = 0xc0d;
-        fx->posX = fx->posX - obj->anim.worldPosX;
-        fx->posY = fx->posY - obj->anim.worldPosY;
-        fx->posZ = fx->posZ - obj->anim.worldPosZ;
+        effect.scale = 0.35f;
+        effect.arg3 = 0xc0d;
+        effect.posX = effect.posX - obj->anim.worldPosX;
+        effect.posY = effect.posY - obj->anim.worldPosY;
+        effect.posZ = effect.posZ - obj->anim.worldPosZ;
         for (i = 0; i < framesThisStep; i++)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, LAMP_PARTFX_A, effectArgs, 6, -1, NULL);
+            (*gPartfxInterface)->spawnObject((void*)obj, LAMP_PARTFX_A, &effect, 6, -1, NULL);
         }
     }
     return 0;
@@ -117,10 +114,10 @@ void Lamp_update(int obj)
             ((GameObject*)obj)->userData2 = 1;
             ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, (f32)(s32)randomGetRange(0, 90) / 100.0f);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.003f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.003f, timeDelta, NULL);
     }
 
-    if ((((GameObject*)obj)->objectFlags & LAMP_OBJFLAG_RENDERED) != 0)
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0)
     {
         ((PartFxSpawnParams*)effectArgs)->scale = 0.35f;
         ((PartFxSpawnParams*)effectArgs)->arg3 = 0xc0d;
@@ -148,22 +145,22 @@ void Lamp_update(int obj)
     }
 }
 
-void Lamp_init(int* obj, int* def)
+void Lamp_init(GameObject* obj, LampPlacement* placement)
 {
-    s8* state = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->anim.seqId == LAMP_SEQ_STATIC)
+    LampState* state = obj->extra;
+    if (obj->anim.seqId == LAMP_SEQ_STATIC)
     {
-        ((GameObject*)obj)->anim.rotX = (s16)((u32)((LampObjectDef*)def)->rotXStatic << 8);
+        obj->anim.rotX = (s16)((u32)placement->rotXStatic << 8);
     }
     else
     {
-        ((GameObject*)obj)->anim.rotX = (s16)((s32)((LampObjectDef*)def)->rotXSwing << 8);
+        obj->anim.rotX = (s16)((s32)placement->rotXSwing << 8);
     }
-    ((GameObject*)obj)->anim.rotY = 0;
-    ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->userData2 = 0;
-    *state = 1;
-    ((GameObject*)obj)->animEventCallback = Lamp_SeqFn;
+    obj->anim.rotY = 0;
+    obj->anim.rotZ = 0;
+    obj->userData2 = 0;
+    state->active = 1;
+    obj->animEventCallback = Lamp_SeqFn;
 }
 
 ObjectDescriptor gLampObjDescriptor = {
