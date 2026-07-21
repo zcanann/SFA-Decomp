@@ -3575,34 +3575,36 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset,
                                          f32* outNormal, int kinds)
 {
-    TrackGroundHit** arr;
-    int n;
-    int i;
-    int bestIdx;
-    f32 best;
-    f32 cur;
+    TrackGroundHit** hits;
+    int hitCount;
+    int hitIndex;
+    int nearestIndex;
+    f32 firstDistance;
+    f32 bestDistance;
 
-    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, kinds);
-    if (n != 0)
+    hitCount = hitDetectFn_80065e50(obj, x, y, z, &hits, 0, kinds);
+    if (hitCount != 0)
     {
-        cur = y - arr[0]->height;
-        cur = cur >= lbl_803DECB4 ? cur : -cur;
-        best = cur;
-        bestIdx = 0;
-        for (i = 1; i < n; i++)
+        firstDistance = hits[0]->height;
+        firstDistance = y - firstDistance;
+        firstDistance = firstDistance >= lbl_803DECB4 ? firstDistance : -firstDistance;
+        bestDistance = firstDistance;
+        nearestIndex = 0;
+        for (hitIndex = 1; hitIndex < hitCount; hitIndex++)
         {
-            cur = y - arr[i]->height;
-            cur = cur >= lbl_803DECB4 ? cur : -cur;
-            if (cur < best)
+            f32 distance = hits[hitIndex]->height;
+            distance = y - distance;
+            distance = distance >= lbl_803DECB4 ? distance : -distance;
+            if (distance < bestDistance)
             {
-                best = cur;
-                bestIdx = i;
+                bestDistance = distance;
+                nearestIndex = hitIndex;
             }
         }
-        *outGroundOffset = y - arr[bestIdx]->height;
-        outNormal[0] = arr[bestIdx]->normalX;
-        outNormal[1] = arr[bestIdx]->normalY;
-        outNormal[2] = arr[bestIdx]->normalZ;
+        *outGroundOffset = y - hits[nearestIndex]->height;
+        outNormal[0] = hits[nearestIndex]->normalX;
+        outNormal[1] = hits[nearestIndex]->normalY;
+        outNormal[2] = hits[nearestIndex]->normalZ;
         return 0;
     }
     *outGroundOffset = lbl_803DECB4;
