@@ -1506,20 +1506,16 @@ extern int* gRcpTexBankTable[3];
 
 void* textureLoad(int texId, u8 flagIn)
 {
-    int bankWordHeld;
-    int disabled;
-    u8 flag;
     int file;
     int bank;
     int id16;
     u32 size;
-    u8* buf;
-    u8* firstTex;
-    u8* prevTex;
+    Texture* buf;
+    Texture* firstTex;
+    Texture* prevTex;
     int slot;
-    LoadedTextureEntry* entry;
-    u8* walk;
-    int bankWord;
+    Texture* walk;
+    u32 bankWord;
     int bankWordSaved;
     int restore;
     int origTexId;
@@ -1533,8 +1529,10 @@ void* textureLoad(int texId, u8 flagIn)
     int* bankPtr;
     int sizeOut;
     int frameOut;
+    int disabled;
+    int bankWordHeld;
+    LoadedTextureEntry* entry;
 
-    flag = flagIn;
     restore = 1;
     disabled = 0;
     if (texId < 0)
@@ -1555,9 +1553,9 @@ void* textureLoad(int texId, u8 flagIn)
     {
         if (texId == entry->key)
         {
-            buf = gLoadedTextures[n].texture;
-            ((Texture*)buf)->refCount += 1;
-            if (flag != 0 && gLoadedTextures[n].flag != 0)
+            buf = (Texture*)gLoadedTextures[n].texture;
+            buf->refCount += 1;
+            if (flagIn != 0 && gLoadedTextures[n].flag != 0)
             {
                 return (void*)(n + 1);
             }
@@ -1699,23 +1697,20 @@ void* textureLoad(int texId, u8 flagIn)
         {
             frameSize = frameOut;
             texFlagFn_80023cbc(1);
-            buf = (u8*)mmAlloc(size, gRcpTexAllocTag, 0);
+            buf = mmAlloc(size, gRcpTexAllocTag, 0);
             texFlagFn_80023cbc(0);
             if (buf == NULL)
             {
                 gRcpTexAllocFailed = 1;
-                if (getLoadedFileFlags(0) != 0)
+                if (getLoadedFileFlags(0) != 0 && disabled == 1)
                 {
-                    if (disabled == 1)
-                    {
-                        OSRestoreInterrupts(restore);
-                    }
+                    OSRestoreInterrupts(restore);
                 }
                 else if (disabled == 1)
                 {
                     OSRestoreInterrupts(restore);
                 }
-                if (flag != 0)
+                if (flagIn != 0)
                 {
                     return (void*)1;
                 }
@@ -1727,18 +1722,15 @@ void* textureLoad(int texId, u8 flagIn)
             if (mipLevel == 0)
             {
                 gRcpTexAllocFailed = 1;
-                if (getLoadedFileFlags(0) != 0)
+                if (getLoadedFileFlags(0) != 0 && disabled == 1)
                 {
-                    if (disabled == 1)
-                    {
-                        OSRestoreInterrupts(restore);
-                    }
+                    OSRestoreInterrupts(restore);
                 }
                 else if (disabled == 1)
                 {
                     OSRestoreInterrupts(restore);
                 }
-                if (flag != 0)
+                if (flagIn != 0)
                 {
                     return (void*)1;
                 }
@@ -1746,7 +1738,7 @@ void* textureLoad(int texId, u8 flagIn)
             }
             else
             {
-                ((Texture*)firstTex)->animationFrameCount = mipChainWord;
+                firstTex->animationFrameCount = mipChainWord;
                 mipLevel = mips;
                 continue;
             }
@@ -1755,12 +1747,12 @@ void* textureLoad(int texId, u8 flagIn)
         {
             buf = loadAndDecompressDataFile(file, 0, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize,
                                             0, id16, 0);
-            buf[0x49] = 1;
-            if (flag != 0)
+            buf->cached = 1;
+            if (flagIn != 0)
             {
-                flag = 0;
+                flagIn = 0;
             }
-            ((Texture*)buf)->refCount = 1;
+            buf->refCount = 1;
         }
         else
         {
@@ -1771,24 +1763,24 @@ void* textureLoad(int texId, u8 flagIn)
         {
             DCStoreRange(buf, size);
         }
-        *(void**)buf = NULL;
+        buf->nextAnimationFrame = NULL;
         if (prevTex != NULL)
         {
-            *(u8**)prevTex = buf;
+            prevTex->nextAnimationFrame = buf;
         }
         prevTex = buf;
         if (mipLevel == 0)
         {
             firstTex = buf;
-            ((Texture*)buf)->animationFrameCount = mipChainWord;
+            buf->animationFrameCount = mipChainWord;
         }
         else
         {
-            ((Texture*)buf)->animationFrameCount = 1;
+            buf->animationFrameCount = 1;
         }
     }
     walk = firstTex;
-    *(u32*)(firstTex + 0x4c) = size;
+    firstTex->loadedSize = size;
     slot = 0;
     entry = gLoadedTextures;
     for (; slot < gLoadedTextureCount; entry++, slot++)
@@ -1803,23 +1795,20 @@ void* textureLoad(int texId, u8 flagIn)
         gLoadedTextureCount += 1;
     }
     gLoadedTextures[slot].key = origTexId;
-    gLoadedTextures[slot].texture = firstTex;
-    gLoadedTextures[slot].flag = flag;
+    gLoadedTextures[slot].texture = (u8*)firstTex;
+    gLoadedTextures[slot].flag = flagIn;
     gLoadedTextures[slot].size = getHeapItemSize(gLoadedTextures[slot].texture);
     if (gLoadedTextureCount > 0x2bc)
     {
-        if (getLoadedFileFlags(0) != 0)
+        if (getLoadedFileFlags(0) != 0 && disabled == 1)
         {
-            if (disabled == 1)
-            {
-                OSRestoreInterrupts(restore);
-            }
+            OSRestoreInterrupts(restore);
         }
         else if (disabled == 1)
         {
             OSRestoreInterrupts(restore);
         }
-        if (flag != 0)
+        if (flagIn != 0)
         {
             return (void*)1;
         }
@@ -1828,20 +1817,17 @@ void* textureLoad(int texId, u8 flagIn)
     while (walk != NULL)
     {
         textureInitGXTexObj(walk);
-        walk = *(u8**)walk;
+        walk = walk->nextAnimationFrame;
     }
-    if (getLoadedFileFlags(0) != 0)
+    if (getLoadedFileFlags(0) != 0 && disabled == 1)
     {
-        if (disabled == 1)
-        {
-            OSRestoreInterrupts(restore);
-        }
+        OSRestoreInterrupts(restore);
     }
     else if (disabled == 1)
     {
         OSRestoreInterrupts(restore);
     }
-    if (flag != 0)
+    if (flagIn != 0)
     {
         return (void*)(slot + 1);
     }

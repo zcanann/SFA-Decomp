@@ -47,7 +47,7 @@ typedef struct Texture {
     u8 cached;
     u8 unk4A;
     u8 evictTimer;
-    u8 unk4C[4];
+    u32 loadedSize;
     s32 imageOffset;
     u8 unk54[0xC];
 } Texture;
@@ -60,6 +60,7 @@ STATIC_ASSERT(offsetof(Texture, gxTexObj) == 0x20);
 STATIC_ASSERT(offsetof(Texture, tmemAddr) == 0x40);
 STATIC_ASSERT(offsetof(Texture, dataSize) == 0x44);
 STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
+STATIC_ASSERT(offsetof(Texture, loadedSize) == 0x4C);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
