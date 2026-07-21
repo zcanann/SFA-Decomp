@@ -289,7 +289,7 @@ int synthGetVoiceSlotChannelScale(McmdVoiceState* state)
 /*
  * Flag-check and conditional store.
  */
-void fn_8026F5B8(McmdVoiceState* state)
+void synthInitPortamento(McmdVoiceState* state)
 {
     McmdVoiceState* v = state;
     u64 flags;

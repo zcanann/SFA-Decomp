@@ -156,7 +156,7 @@ static inline void mcmdEnablePortamento(McmdVoiceState* state)
 {
     if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400)))
     {
-        fn_8026F5B8(state);
+        synthInitPortamento(state);
     }
     state->outputFlags |= 0x400;
 }
