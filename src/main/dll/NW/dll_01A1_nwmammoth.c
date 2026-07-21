@@ -854,12 +854,10 @@ void NW_mammoth_update(NwMammothObject* obj, int unused)
 
 void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload)
 {
-    u32 pathParam;
-    NwMammothState* state;
+    NwMammothState* state = obj->state;
+    u8 pathParam[4] = {1, 1, 1, 1};
     int curveParam;
 
-    state = obj->state;
-    pathParam = 0x01010101;
     obj->rotX = (s16)(mapData->modelIndex << 8);
     obj->seqCallback = nw_mammoth_SeqFn;
     if (isReload != 0)
@@ -928,7 +926,7 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
         (*gPathControlInterface)->init(path, 3, 2, 1);
         (*gPathControlInterface)
             ->setup(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA, gNwMammothPathSetupDataB,
-                    &pathParam);
+                    pathParam);
         (*gPathControlInterface)->attachObject(obj, path);
     }
     ObjGroup_AddObject((int)obj, NW_MAMMOTH_GROUP_ID);
