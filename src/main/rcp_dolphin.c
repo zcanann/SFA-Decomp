@@ -1848,7 +1848,7 @@ void* textureLoad(int texId, u8 flagIn)
     return firstTex;
 }
 
-Texture* textureCrazyPointerFollowFn_80054c30(Texture* texture, int n)
+Texture* textureGetAnimationFrame(Texture* texture, int n)
 {
     int limit = texture->animationFrameCount;
     int i;
