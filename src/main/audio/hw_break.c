@@ -12,7 +12,7 @@ void hwBreak(int voiceIndex)
 
     offset = voiceIndex * sizeof(DSPvoice);
     entry = (u8*)dspVoice + offset;
-    if ((((DSPvoice*)entry)->state == 1) && (salTimeOffset == 0))
+    if ((((DSPvoice*)entry)->state == DSP_VOICE_STATE_STARTUP) && (salTimeOffset == 0))
     {
         ((DSPvoice*)entry)->startupBreak = 1;
     }

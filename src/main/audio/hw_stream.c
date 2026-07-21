@@ -23,7 +23,7 @@ u32 hwChangeStudio(u32 slot)
     DSPvoice* curVoice;
 
     voice = &dspVoice[slot];
-    if (voice->state != 2)
+    if (voice->state != DSP_VOICE_STATE_ACTIVE)
     {
         return 0;
     }

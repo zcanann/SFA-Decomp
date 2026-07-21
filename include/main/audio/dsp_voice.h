@@ -40,6 +40,10 @@ typedef struct VSampleInfo {
 #define DSP_VOICE_CHANGE_ITD         0x200
 #define DSP_VOICE_ITD_ENABLED_FLAG   0x80000000
 
+#define DSP_VOICE_STATE_INACTIVE 0
+#define DSP_VOICE_STATE_STARTUP  1
+#define DSP_VOICE_STATE_ACTIVE   2
+
 typedef struct DSPvoice {
     struct _PB *pb;             /* 0x00 */
     void *patchData;            /* 0x04 */

@@ -184,7 +184,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     {
                         salSynthSendMessage((int)dsp_vptr, 3);
                     }
-                    if ((dsp_vptr->state != 1) || (dsp_vptr->startupBreak != 0))
+                    if ((dsp_vptr->state != DSP_VOICE_STATE_STARTUP) || (dsp_vptr->startupBreak != 0))
                     {
                         salDeactivateVoice(dsp_vptr);
                         dsp_vptr->startupBreak = 0;
@@ -226,7 +226,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
             for (voiceIdx = voiceNum; voiceIdx > 0; voiceIdx--)
             {
                 dsp_vptr = voices[voiceIdx - 1];
-                if (dsp_vptr->state != 0)
+                if (dsp_vptr->state != DSP_VOICE_STATE_INACTIVE)
                 {
                     u8 i;
                     pb = dsp_vptr->pb;
@@ -234,7 +234,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                     {
                         rampResetOffsetFlags[s] = 0;
                     }
-                    if (dsp_vptr->state == 1)
+                    if (dsp_vptr->state == DSP_VOICE_STATE_STARTUP)
                     {
                         dsp_vptr->virtualSampleID = -1;
                         dsp_vptr->pb->ve.currentDelta = 0x8000;
@@ -479,7 +479,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         {
                             pb->mixerCtrl |= 0x10;
                         }
-                        dsp_vptr->state = 2;
+                        dsp_vptr->state = DSP_VOICE_STATE_ACTIVE;
                         newVoice = 1;
                     }
                     else
@@ -844,7 +844,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         salSynthSendMessage((int)dsp_vptr, 1);
                         for (voiceIdx = voiceIdx - 1; voiceIdx > 0; voiceIdx--)
                         {
-                            if (voices[voiceIdx - 1]->state == 2)
+                            if (voices[voiceIdx - 1]->state == DSP_VOICE_STATE_ACTIVE)
                             {
                                 HandleDepopVoice(stp, voices[voiceIdx - 1]);
                             }
@@ -858,7 +858,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                 for (dsp_vptr = dspStudio[st1].voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
                                 {
                                     next_dsp_vptr = dsp_vptr->next;
-                                    if (dsp_vptr->state == 2)
+                                    if (dsp_vptr->state == DSP_VOICE_STATE_ACTIVE)
                                     {
                                         HandleDepopVoice(&dspStudio[st1], dsp_vptr);
                                     }
@@ -1005,7 +1005,7 @@ int salSynthSendMessage(int synth, int msg)
 
 void salActivateVoice(DSPvoice* voice, u8 studio)
 {
-    if (voice->state != 0)
+    if (voice->state != DSP_VOICE_STATE_INACTIVE)
     {
         salDeactivateVoice(voice);
         voice->changed[0] |= DSP_VOICE_CHANGE_BREAK;
@@ -1018,13 +1018,13 @@ void salActivateVoice(DSPvoice* voice, u8 studio)
     voice->prev = 0;
     dspStudio[studio].voiceRoot = voice;
     voice->startupBreak = 0;
-    voice->state = 1;
+    voice->state = DSP_VOICE_STATE_STARTUP;
     voice->studio = studio;
 }
 
 void salDeactivateVoice(DSPvoice* voice)
 {
-    if (voice->state == 0)
+    if (voice->state == DSP_VOICE_STATE_INACTIVE)
     {
         return;
     }
@@ -1040,7 +1040,7 @@ void salDeactivateVoice(DSPvoice* voice)
     {
         voice->next->prev = voice->prev;
     }
-    voice->state = 0;
+    voice->state = DSP_VOICE_STATE_INACTIVE;
 }
 
 u32 salAddStudioInput(DSPstudioinfo* studio, SND_STUDIO_INPUT* input)

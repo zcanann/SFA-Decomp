@@ -82,7 +82,7 @@ u32 hwGetVirtualSampleID(u32 voice)
     DSPvoice* entry;
 
     entry = &dspVoice[voice];
-    if (entry->state == 0)
+    if (entry->state == DSP_VOICE_STATE_INACTIVE)
     {
         return -1;
     }
@@ -91,5 +91,5 @@ u32 hwGetVirtualSampleID(u32 voice)
 
 u32 hwVoiceInStartup(u32 voice)
 {
-    return dspVoice[voice].state == 1;
+    return dspVoice[voice].state == DSP_VOICE_STATE_STARTUP;
 }

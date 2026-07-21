@@ -108,7 +108,7 @@ u8 hwGetTimeOffset(void)
 
 u32 hwIsActive(u32 voiceIndex)
 {
-    return dspVoice[voiceIndex].state != 0;
+    return dspVoice[voiceIndex].state != DSP_VOICE_STATE_INACTIVE;
 }
 
 void hwSetMesgCallback(SndMessageCallback callback)

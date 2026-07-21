@@ -42,7 +42,7 @@ u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                     itdPtr = (u32)dspITDBuffer;
                     for (i = 0; i < salNumVoices; ++i)
                     {
-                        dspVoice[i].state = 0;
+                        dspVoice[i].state = DSP_VOICE_STATE_INACTIVE;
                         dspVoice[i].postBreak = 0;
                         dspVoice[i].startupBreak = 0;
                         dspVoice[i].lastUpdate.pitch = 0xff;
