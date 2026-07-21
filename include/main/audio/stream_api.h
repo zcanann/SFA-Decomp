@@ -24,6 +24,5 @@ void AudioStream_SetDefaultVolume(int volume);
 void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
 void AudioStream_PlayAddrCallback(u32 result);
 int AudioStream_Play(int id, void (*preparedCallback)(void));
-void streamFn_8000a380(int mask, int mode, int time);
 
 #endif /* MAIN_AUDIO_STREAM_API_H_ */

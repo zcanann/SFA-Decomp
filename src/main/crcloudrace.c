@@ -1,6 +1,6 @@
 #include "main/crcloudrace.h"
 #include "main/pi_dolphin_api.h"
-#include "main/audio/stream_api.h"
+#include "main/audio/music_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/dll/player_api.h"
@@ -230,7 +230,7 @@ void crcloudrace_init(CrCloudRaceObject* obj)
     state->phase = CRCLOUDRACE_PHASE_START;
     storeZeroToFloatParam(&state->timer);
     mainSetBits(CRCLOUDRACE_GAMEBIT_START_LATCH_A, 1);
-    streamFn_8000a380(3, 2, 1000);
+    Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_FADE, 1000);
     return;
 }
 

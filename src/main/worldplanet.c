@@ -433,7 +433,7 @@ void worldplanet_update(GameObject* obj)
                 {
                     AudioStream_StopCurrent();
                     Sfx_PlayFromObject(0, SFXTRIG_wmap_greatfox_lp);
-                    streamFn_8000a380(2, 2, 1000);
+                    Music_StopChannelsByPriorityGroup(2, MUSIC_CHANNEL_STOP_FADE, 1000);
                     (*gCameraInterface)->setFocus((void*)obj, 0x50);
                     state->selectionLocked = 0;
                     gWorldPlanetReselectDelayTimer = 0x1e;
@@ -445,7 +445,7 @@ void worldplanet_update(GameObject* obj)
                 else if ((buttons & PAD_BUTTON_A) != 0)
                 {
                     (*gScreenTransitionInterface)->start(4, 1);
-                    streamFn_8000a380(3, 1, 0);
+                    Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_DEFAULT, 0);
                     AudioStream_StopCurrent();
                     Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
                     setShowWorldMapHud(0);

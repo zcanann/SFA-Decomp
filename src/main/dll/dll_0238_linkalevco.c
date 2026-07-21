@@ -11,13 +11,13 @@
  *                 three routes from game bits) and load the UI DLL.
  *   - UNLOAD_NEIGHBOR_MAP: unload the adjacent map for the active mode.
  * init unlocks the starting level, flags the object as a sequence object,
- * sets three progression game bits, kicks an env-fx act and streams a
- * collectable. A looping object sound is kept alive while sequences run.
+ * sets three progression game bits, kicks an env-fx act and fades the active
+ * music channels. A looping object sound is kept alive while sequences run.
  */
 #include "main/dll/dll_0238_linkalevco.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"
-#include "main/audio/stream_api.h"
+#include "main/audio/music_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/map_load.h"
@@ -53,7 +53,7 @@
 #define LINKA_LEVCONTROL_INIT_GAMEBIT_0      0x90D
 #define LINKA_LEVCONTROL_INIT_GAMEBIT_1      0x90E
 #define LINKA_LEVCONTROL_INIT_GAMEBIT_2      0x90F
-#define LINKA_LEVCONTROL_INIT_COLLECTABLE_ID 0x2EE
+#define LINKA_LEVCONTROL_MUSIC_FADE_TIME 0x2EE
 
 /* per-instance extra block reserved by the object system; unused by this TU */
 #define LINKA_LEVCONTROL_EXTRA_SIZE 4
@@ -198,7 +198,7 @@ void LinkALevControl_init(FireObject* obj)
     mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_0, 1);
     mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_1, 1);
     mainSetBits(LINKA_LEVCONTROL_INIT_GAMEBIT_2, 1);
-    streamFn_8000a380(3, 2, LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
+    Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_FADE, LINKA_LEVCONTROL_MUSIC_FADE_TIME);
 }
 
 void LinkALevControl_release(void)

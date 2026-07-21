@@ -32,7 +32,6 @@
 #include "track/intersect_hud_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render.h"
-#include "main/audio/stream_api.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "main/sky_api.h"
@@ -267,7 +266,7 @@ void creditsStart_(void)
     {
         if (gTitleScreenCreditIndex == lbl_803DBC0A - 1 && gTitleScreenCreditsEndTriggered == 0)
         {
-            streamFn_8000a380(3, 2, 0xfa0);
+            Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_FADE, 0xfa0);
             gTitleScreenCreditsEndTriggered = 1;
         }
         alpha =

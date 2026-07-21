@@ -687,11 +687,11 @@ void audioStopByMask(int mask)
     }
     if ((mask & 1) != 0)
     {
-        streamFn_8000a380(1, 1, 0);
+        Music_StopChannelsByPriorityGroup(1, MUSIC_CHANNEL_STOP_DEFAULT, 0);
     }
     if ((mask & 2) != 0)
     {
-        streamFn_8000a380(2, 1, 0);
+        Music_StopChannelsByPriorityGroup(2, MUSIC_CHANNEL_STOP_DEFAULT, 0);
     }
     if ((mask & 8) != 0)
     {
@@ -717,8 +717,8 @@ void audioStopAll(void)
 {
     gAudioResetting = 1;
     Sfx_StopAllObjectSounds();
-    streamFn_8000a380(1, 1, 0);
-    streamFn_8000a380(2, 1, 0);
+    Music_StopChannelsByPriorityGroup(1, MUSIC_CHANNEL_STOP_DEFAULT, 0);
+    Music_StopChannelsByPriorityGroup(2, MUSIC_CHANNEL_STOP_DEFAULT, 0);
     AudioStream_StopCurrent();
     gAudioManagedChannelMask &= ~0xfU;
     gAudioResetting = 1;
@@ -930,7 +930,7 @@ void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 void Music_PlayTrackByIndex(int index)
 {
     MusicTrigger* trigger = Music_FindTriggerById(MUSICTRIG_dark_ice_boss_1_ec);
-    streamFn_8000a380(3, 1, 0);
+    Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_DEFAULT, 0);
     trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
     Music_Trigger(MUSICTRIG_dark_ice_boss_1_ec, 1);
 }
@@ -939,17 +939,17 @@ int return0x64_8000A378(void)
 {
     return 0x64;
 }
-void streamFn_8000a380(int mask, int mode, int time)
+void Music_StopChannelsByPriorityGroup(int priorityGroupMask, MusicChannelStopMode mode, int fadeTime)
 {
     MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
     int i = 15;
     do
     {
-        if (ch->status != 0 && ((ch->priorityGroup + 1) & mask) != 0)
+        if (ch->status != 0 && ((ch->priorityGroup + 1) & priorityGroupMask) != 0)
         {
             switch (mode)
             {
-            case 1:
+            case MUSIC_CHANNEL_STOP_DEFAULT:
                 if (audioIsResetting() == 0)
                 {
                     if (ch->status != 2)
@@ -974,7 +974,7 @@ void streamFn_8000a380(int mask, int mode, int time)
                     Music_FreeChannel(ch);
                 }
                 break;
-            case 2:
+            case MUSIC_CHANNEL_STOP_FADE:
                 if (ch->status != 2)
                 {
                     if (ch->status == 4 || ch->status == 5)
@@ -983,7 +983,7 @@ void streamFn_8000a380(int mask, int mode, int time)
                     }
                     else
                     {
-                        sndSeqVolume(0, (u16)(time < 500 ? 500 : time), ch->seqHandle, 1);
+                        sndSeqVolume(0, (u16)(fadeTime < 500 ? 500 : fadeTime), ch->seqHandle, 1);
                         ch->status = 2;
                     }
                 }

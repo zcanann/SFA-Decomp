@@ -4,7 +4,6 @@
 #include "main/model_light.h"
 #include "main/model.h"
 #include "main/audio/music_api.h"
-#include "main/audio/stream_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -1736,7 +1735,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
         modelLightStruct_setupGlow(gKTRexState->light, 0, 0xff, 0, 0, 0x50, 30.0f);
         modelLightStruct_setGlowProjectionRadius(gKTRexState->light, 50.0f);
     }
-    streamFn_8000a380(3, 2, 0x1f4);
+    Music_StopChannelsByPriorityGroup(3, MUSIC_CHANNEL_STOP_FADE, 0x1f4);
 }
 
 void ktrex_release(void)
