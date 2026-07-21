@@ -302,6 +302,14 @@ typedef struct
     u32 a, b, c, d;
 } LightmapQEnt;
 
+typedef struct MapLayerBuffers
+{
+    u8 reserved[0x41cc];
+    u8* cellStates[5];
+    u8* blockDescriptors[5];
+    u8* blockIndices[5];
+} MapLayerBuffers;
+
 typedef struct
 {
     u8 pad[0x4114];
@@ -1066,6 +1074,7 @@ void updateEnvironment(int mode)
 void initMapBlocks(void)
 {
     u8* mb = (u8*)lbl_8037E0C0;
+    MapLayerBuffers* buffers = (MapLayerBuffers*)lbl_8037E0C0;
     u32 zero;
     u32* q;
     u16* p;
@@ -1077,9 +1086,9 @@ void initMapBlocks(void)
     gMapBlockIds = mmAlloc(0x80, 5, 0);
     gMapBlockRefCounts = mmAlloc(0x40, 5, 0);
     lbl_803DCE78 = mmAlloc(0xd48, 5, 0);
-    *(u32*)(mb + 0x41f4) = (u32)mmAlloc(0x500, 5, 0);
-    *(u32*)(mb + 0x41e0) = (u32)mmAlloc(0x3c00, 5, 0);
-    *(u32*)(mb + 0x41cc) = (u32)mmAlloc(0x500, 5, 0);
+    buffers->blockIndices[0] = mmAlloc(0x500, 5, 0);
+    buffers->blockDescriptors[0] = mmAlloc(0x3c00, 5, 0);
+    buffers->cellStates[0] = mmAlloc(0x500, 5, 0);
 
     for (i = 0; i < 16; i += 4)
     {
