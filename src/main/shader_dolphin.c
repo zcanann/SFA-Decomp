@@ -817,7 +817,7 @@ void fn_8004D6D8(void)
 
 void fn_8004D928(void)
 {
-    textureFn_8006c75c(lbl_803DCD8C);
+    loadNewShadowSmallReflectionTexture(lbl_803DCD8C);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevKColorSel(lbl_803DCD90, GX_TEV_KCSEL_1_4);

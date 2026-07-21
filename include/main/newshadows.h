@@ -35,6 +35,6 @@ void getNewShadowRampTexture(u32* out);
 void loadNewShadowBumpTexture(int texMapId);
 void fn_8006C6A4(int id);
 void getNewShadowNoiseTextureFrames(Texture*** tableOut, int* frameCountOut);
-void textureFn_8006c75c(int id);
+void loadNewShadowSmallReflectionTexture(int id);
 
 #endif /* MAIN_NEWSHADOWS_H_ */

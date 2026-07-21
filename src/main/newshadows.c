@@ -1259,7 +1259,7 @@ u32 getNewShadowFalloffTexture(void)
 }
 
 
-void textureFn_8006c75c(int id)
+void loadNewShadowSmallReflectionTexture(int id)
 {
     register int idCopy = id;
     Texture* p = (Texture*)gNewShadowReflectionSmallTexture;
