@@ -813,9 +813,9 @@ void baddieTurnTowardTarget(int* node, int* sub)
         *(s16*)&((TrickyState*)sub)->targetDist = (s16)dist;
 
         {
-            GameObject* t = ((TrickyState*)sub)->actionTargetObj;
+            GameObject* targetObj = ((TrickyState*)sub)->actionTargetObj;
             *(s16*)&((TrickyState*)sub)->targetHeightDelta =
-                (s16)(t->anim.worldPosY - ((GameObject*)node)->anim.worldPosY);
+                (s16)(targetObj->anim.worldPosY - ((GameObject*)node)->anim.worldPosY);
         }
     }
 }
@@ -951,13 +951,13 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
 {
     EnemyTargetSearchResult* cur[1];
     int state;
-    int n;
+    int resultCount;
     GameObject** arr;
     short ang;
     GameObject* tgt;
     u32 diff;
     int i;
-    f32 d2;
+    f32 distSquared;
     int count;
     TrickyVec3 d;
     void* dp = &d;
@@ -965,7 +965,7 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
     cur[0] = 0;
     state = *(int*)&obj->extra;
     count = 0;
-    n = 0;
+    resultCount = 0;
     if ((flags & 1) != 0)
     {
         tgt = (GameObject*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, obj, &radius);
@@ -973,7 +973,7 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
         if (tgt != 0)
         {
             out->dist = radius;
-            n = 1;
+            resultCount = 1;
             if ((flags & 2) != 0)
             {
                 if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
@@ -1025,11 +1025,11 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
             cur[0] = out;
             for (; i < count; i++)
             {
-                d2 = vec3f_distanceSquared(&obj->anim.worldPosX, &arr[i]->anim.worldPosX);
-                if ((d2 < radius) && (arr[i] != obj))
+                distSquared = vec3f_distanceSquared(&obj->anim.worldPosX, &arr[i]->anim.worldPosX);
+                if ((distSquared < radius) && (arr[i] != obj))
                 {
                     cur[0]->obj = arr[i];
-                    cur[0]->dist = sqrtf(d2);
+                    cur[0]->dist = sqrtf(distSquared);
                     if ((flags & 2) != 0)
                     {
                         if ((((TrickyState*)state)->controlFlags & 0x8000) != 0)
@@ -1071,8 +1071,8 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
                         }
                     }
                     cur[0]++;
-                    n++;
-                    if (n >= max)
+                    resultCount++;
+                    if (resultCount >= max)
                     {
                         i = count;
                     }
@@ -1080,13 +1080,13 @@ int fn_8014C11C(GameObject* obj, f32 radius, u8 flags, int max, EnemyTargetSearc
             }
         }
     }
-    return n;
+    return resultCount;
 }
 
 u8 fn_8014C4D8(GameObject* obj)
 {
     int* state;
-    f32 val;
+    f32 freezeRecoverTimer;
     if (obj != NULL)
     {
         state = obj->extra;
@@ -1097,10 +1097,10 @@ u8 fn_8014C4D8(GameObject* obj)
     }
     if (state != NULL)
     {
-        val = ((EnemyState*)state)->freezeRecoverTimer;
-        if (val != lbl_803E2574)
+        freezeRecoverTimer = ((EnemyState*)state)->freezeRecoverTimer;
+        if (freezeRecoverTimer != lbl_803E2574)
         {
-            return (u8)((s32)(val / lbl_803E2598) + 1);
+            return (u8)((s32)(freezeRecoverTimer / lbl_803E2598) + 1);
         }
         else
         {

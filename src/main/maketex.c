@@ -747,9 +747,9 @@ int arrayIndexOf(int* arr, int count, int target)
     int i;
     for (i = 0; i < count; i++)
     {
-        int v = *arr;
+        int elem = *arr;
         arr++;
-        if (v == target)
+        if (elem == target)
             return idx;
         idx++;
     }
@@ -879,11 +879,11 @@ void s16toFloat(f32* p, s16 val)
 
 int timerCountDown(f32* p)
 {
-    f32 v = *p;
+    f32 timer = *p;
     f32 zero = 0.0f;
-    if (v != zero)
+    if (timer != zero)
     {
-        *p = v - timeDelta;
+        *p = timer - timeDelta;
         if (*p <= zero)
         {
             *p = zero;
@@ -1068,7 +1068,7 @@ int ObjSeq_TurnToFacePlayer(GameObject* obj, ObjAnimUpdateState* state, s16 turn
     s16 turn;
     int mode;
     f32 out;
-    f32 d[3];
+    f32 delta[3];
     f32 dist;
     f32 rate;
     f32 yaw;
@@ -1101,7 +1101,7 @@ int ObjSeq_TurnToFacePlayer(GameObject* obj, ObjAnimUpdateState* state, s16 turn
         }
         ((ObjSeqTurnState*)state)->turnAmount = turn;
         {
-            f32* dp = d;
+            f32* dp = delta;
             ObjHitVolumeRuntimeTransform* ovr = obj->anim.hitVolumeTransforms;
             if (ovr == NULL)
             {

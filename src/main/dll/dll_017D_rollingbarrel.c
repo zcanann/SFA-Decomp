@@ -276,9 +276,9 @@ void RollingBarrel_update(GameObject* obj)
 void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params)
 {
     RollingBarrelState* state = obj->extra;
-    int tmp[2];
+    int curveInitParams[2];
 
-    *(RollingBarrelInitPair*)tmp = gRollingBarrelCurveInitPair;
+    *(RollingBarrelInitPair*)curveInitParams = gRollingBarrelCurveInitPair;
     params->respawnParam = -1;
     obj->anim.flags = (s16)(obj->anim.flags & ~OBJANIM_FLAG_HIDDEN);
     obj->anim.rotZ = 0x4000;
@@ -296,7 +296,7 @@ void RollingBarrel_init(GameObject* obj, RollingBarrelMapData* params)
     state->pitchRising = 1;
     state->timer = 0.0f;
 
-    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, 100.0f, tmp, -1);
+    (*gRomCurveInterface)->initCurve(&state->curve, (void*)obj, 100.0f, curveInitParams, -1);
 }
 
 void RollingBarrel_release(void)
