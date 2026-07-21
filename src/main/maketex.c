@@ -766,7 +766,7 @@ static inline int seqPairVal(SeqSortPair* pair)
     return pair->val;
 }
 
-void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
+void seqPairTableSort(SeqSortPair* arr, int n)
 {
     int key;
     int val;
@@ -800,9 +800,9 @@ void objSeqInitFn_8007feac(SeqSortPair* arr, int n)
     {
     }
 }
-void objSeqInitFn_8007feac(SeqSortPair* arr, int n);
+void seqPairTableSort(SeqSortPair* arr, int n);
 
-int seqStreamLookupFn_8007fff8(void* entries, int count, int key)
+int seqPairTableLookup(void* entries, int count, int key)
 {
     int (*arr)[2] = entries;
     int lo, mid;
@@ -838,7 +838,7 @@ int seqStreamLookupFn_8007fff8(void* entries, int count, int key)
 }
 
 /* Spin-delay then sort when the pair list is large enough. */
-void objSeqInitFn_80080078(void* entries, int n)
+void seqPairTablePrepare(void* entries, int n)
 {
     SeqSortPair* arr = entries;
     int i;
@@ -852,7 +852,7 @@ void objSeqInitFn_80080078(void* entries, int n)
     }
     if (n > 0x10)
     {
-        objSeqInitFn_8007feac(arr, n);
+        seqPairTableSort(arr, n);
     }
 }
 

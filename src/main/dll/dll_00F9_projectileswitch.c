@@ -210,7 +210,7 @@ void ProjectileSwitch_init(GameObject *obj, ProjectileSwitchPlacement* placement
         if (linkPlacement != 0)
         {
             switchState->gameBitId =
-                seqStreamLookupFn_8007fff8(gProjectileSwitchParentGameBitMap, 2, linkPlacement->mapId);
+                seqPairTableLookup(gProjectileSwitchParentGameBitMap, 2, linkPlacement->mapId);
         }
         else
         {

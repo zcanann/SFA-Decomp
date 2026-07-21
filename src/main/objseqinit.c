@@ -250,7 +250,7 @@ void ObjSeq_initialise(void)
     gObjSeqCamModeArgB = 1;
     gObjSeqCamModeArgD = 0x5a;
     gObjSeqCamMode = 0x42;
-    objSeqInitFn_80080078(gObjSeqStreamTableA, 5);
+    seqPairTablePrepare(gObjSeqStreamTableA, 5);
 }
 
 void ObjSeq_copyDefaultColor(GXColor* out)

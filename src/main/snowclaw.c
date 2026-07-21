@@ -728,7 +728,7 @@ void snowclaw_update(GameObject* obj)
     if (*(void**)inner == NULL)
     {
         objects = ObjGroup_GetObjects(SNOWCLAW_MOUNT_OBJGROUP, &objectCount);
-        targetType = seqStreamLookupFn_8007fff8(gSnowClawMoveTable, 6, obj->anim.seqId);
+        targetType = seqPairTableLookup(gSnowClawMoveTable, 6, obj->anim.seqId);
         for (i = 0; i < objectCount; i++)
         {
             if (((GameObject*)objects[i])->anim.seqId == targetType)
@@ -837,7 +837,7 @@ void snowclaw_init(int* obj, s8* init)
     inner->unk30 = 0.006f;
     storeZeroToFloatParam(&inner->attackTimer);
     s16toFloat(&inner->attackTimer, (s16) * (int*)(table + 0x3c));
-    objSeqInitFn_80080078((u8*)(int)gSnowClawMoveTable, 6);
+    seqPairTablePrepare((u8*)(int)gSnowClawMoveTable, 6);
     gSnowClawDropBombAngle = 0x96;
     ((SnowclawAaFlags*)&inner->flags)->b0 = 0;
 }

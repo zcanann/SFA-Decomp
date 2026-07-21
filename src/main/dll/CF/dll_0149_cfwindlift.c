@@ -489,8 +489,8 @@ void WindLift_init(GameObject* obj, u8* def)
     int i;
     WindLiftSub* sub = obj->extra;
     sub->seqId = ((WindliftObjectDef*)def)->seqId;
-    sub->duration = seqStreamLookupFn_8007fff8(gWindLiftSeqDurationTable, 4, sub->seqId);
-    sub->gamebit = seqStreamLookupFn_8007fff8(gWindLiftSeqGamebitTable, 3, sub->seqId);
+    sub->duration = seqPairTableLookup(gWindLiftSeqDurationTable, 4, sub->seqId);
+    sub->gamebit = seqPairTableLookup(gWindLiftSeqGamebitTable, 3, sub->seqId);
     if (sub->gamebit == 0)
     {
         sub->gamebit = -1;

@@ -821,7 +821,7 @@ int cfguardian_updateMain(GameObject* obj)
         }
         else if (sub->chatterState == GUARDIAN_CHATTER_READY)
         {
-            int* tbl = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
+            int* tbl = (int*)seqPairTableLookup(gCfGuardianSeqStreamTable, 0xf, sub->questState);
             int pick;
             if (playerGetCurMagic(player) > 3)
             {
@@ -845,7 +845,7 @@ int cfguardian_updateMain(GameObject* obj)
     }
     if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_902) != 0)
     {
-        int* tbl2 = (int*)seqStreamLookupFn_8007fff8(gCfGuardianSeqStreamTable, 0xf, sub->questState);
+        int* tbl2 = (int*)seqPairTableLookup(gCfGuardianSeqStreamTable, 0xf, sub->questState);
         if (tbl2[0] != -1)
         {
             sub->chatterState = GUARDIAN_CHATTER_PLAYING;
@@ -1013,7 +1013,7 @@ void cfguardian_init(GameObject* obj, u8* params)
     dll_2E_func05(obj, &sub->moveLib, -0x2000, 0x2800, 4);
     dll_2E_func08(&sub->moveLib, 0x12c, 0x64);
     dll_2E_func09(&sub->moveLib, &stk2, &stk1, 4);
-    objSeqInitFn_80080078(gCfGuardianSeqStreamTable, 0xf);
+    seqPairTablePrepare(gCfGuardianSeqStreamTable, 0xf);
     sub->flags611 = (u8)(sub->flags611 | 0x2);
 }
 

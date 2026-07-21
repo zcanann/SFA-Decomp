@@ -2146,7 +2146,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         {
             trackId = (u32)(((s16*)(base + 0x3a98))[slot] - 1) & 0x3fff;
             gObjSeqCurrentTrackId = trackId;
-            streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableA, OBJSEQ_STREAM_MAP_COUNT, trackId);
+            streams = (int*)seqPairTableLookup(gObjSeqStreamTableA, OBJSEQ_STREAM_MAP_COUNT, trackId);
             if (streams != NULL)
             {
                 off = cmdArg * 4;
@@ -2154,7 +2154,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
                 {
                     lbl_803DB720 = slot;
                 }
-                streams = (int*)seqStreamLookupFn_8007fff8(gObjSeqStreamTableB, OBJSEQ_STREAM_MAP_COUNT, trackId);
+                streams = (int*)seqPairTableLookup(gObjSeqStreamTableB, OBJSEQ_STREAM_MAP_COUNT, trackId);
                 if (streams != NULL)
                 {
                     lbl_803DB718 = *(int*)((u8*)streams + off);
