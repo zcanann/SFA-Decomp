@@ -233,7 +233,10 @@ typedef struct ObjDef {
   s16 *eventMoveTable;
   ObjHitReactMoveEntry *hitReactMoveTable;
   s16 *weaponDaTable;
-  u8 pad2C[0x40 - 0x2C];
+  u8 pad2C[0x34 - 0x2C];
+  void *intersectionLines;
+  u8 *intersectionSegmentRanges;
+  f32 *intersectionPoints;
   ObjDefHitVolume *hitVolumes;
   u32 flags;
   s16 shadowType;

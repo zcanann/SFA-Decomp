@@ -10,7 +10,7 @@ typedef struct FrontendSaveSlot {
     u8 lifeCount;
     u8 pad07;
     u32 playTimeSeconds;
-    u8 pad0C[0x20 - 0x0C];
+    char* taskTexts[5];
     u8 isOccupied;
     u8 cheatFlag;
     u8 pad22[0x24 - 0x22];

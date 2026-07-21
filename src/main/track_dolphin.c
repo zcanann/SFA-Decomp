@@ -1,3 +1,4 @@
+#define OBJHITS_STATE_INDEX_S8
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -20,6 +21,7 @@
 #include "main/model_render_instrs_api.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
+#undef OBJHITS_STATE_INDEX_S8
 #include "main/obj_group.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
@@ -38,7 +40,13 @@
 #include "main/track_dolphin_api.h"
 #include "main/track_dolphin_shadow_api.h"
 #include "main/newshadows_shadow_api.h"
+#define TRACK_BBOX_FLAGS_S8
+#define TRACK_BBOX_MASK_TYPE s8
+#define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
+#undef TRACK_BBOX_ARG10_TYPE
+#undef TRACK_BBOX_MASK_TYPE
+#undef TRACK_BBOX_FLAGS_S8
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"
@@ -189,7 +197,7 @@ typedef struct MapTriIndex
 struct MapDynamicSlot
 {
     GameObject* owner;
-    int* target;
+    GameObject* target;
     Vec3f cachedLocalEnd;
     u8 cooldown;
     u8 querySlot;
@@ -2804,36 +2812,35 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
     return gIntersectPointCount - 1;
 }
 
-static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, int* target, int querySlot)
+static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, GameObject* target, int querySlot)
 {
     s16 k;
     MapDynamicSlot* entry;
 
     k = 0;
-    entry = gMapDynamicSlots;
     do
     {
+        entry = &gMapDynamicSlots[k];
         if (entry->cooldown != 0 && entry->owner == self && entry->target == target &&
             entry->querySlot == (u8)querySlot)
         {
             entry->cooldown = 0;
             return entry;
         }
-        entry++;
         k++;
     } while (k < 0x40);
     return NULL;
 }
 
-static inline MapDynamicSlot* trackAllocDynamicSlot(GameObject* self, int* target, int querySlot)
+static inline MapDynamicSlot* trackAllocDynamicSlot(GameObject* self, GameObject* target, int querySlot)
 {
     s16 k;
     MapDynamicSlot* entry;
 
     k = 0;
-    entry = gMapDynamicSlots;
     do
     {
+        entry = &gMapDynamicSlots[k];
         if (entry->cooldown == 0)
         {
             entry->owner = self;
@@ -2842,117 +2849,116 @@ static inline MapDynamicSlot* trackAllocDynamicSlot(GameObject* self, int* targe
             entry->cooldown = 2;
             return entry;
         }
-        entry++;
         k++;
     } while (k < 0x40);
     debugPrintf(sTrackNoFreeLastLineError);
     return NULL;
 }
 
-int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameObject* self, int p8, int p9,
-                      int slot, u8 arg8)
+int objBboxFn_800640cc(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* out, GameObject* self,
+                      s8 lineMask, s8 segment, int slot, s8 yTolerance)
 {
-    f32 w0[3];
-    f32 w1[3];
-    f32 t20[3];
-    f32 t14[3];
-    int* objs;
+    f32 worldStart[3];
+    f32 worldEnd[3];
+    f32 localStart[3];
+    f32 localEnd[3];
+    u32* objects;
     int count;
     int i;
-    int mtx;
+    u32 mtx;
 
     lbl_803DCF4C = 0;
     if (out != NULL)
     {
-        *(s8*)((char*)out + 0x50) = -1;
-        *(s8*)((char*)out + 0x51) = -1;
+        out->surfaceType = -1;
+        out->kind = -1;
     }
-    mtx = (self != NULL) ? *(int*)((char*)self + 0x30) : 0;
-    if ((u32)mtx != 0)
+    mtx = (self != NULL) ? (u32)self->anim.parent : 0;
+    if (mtx != 0)
     {
-        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], mtx);
-        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], mtx);
+        Obj_TransformLocalPointToWorld(startPos[0], startPos[1], startPos[2], &worldStart[0], &worldStart[1],
+                                       &worldStart[2], mtx);
+        Obj_TransformLocalPointToWorld(endPos[0], endPos[1], endPos[2], &worldEnd[0], &worldEnd[1], &worldEnd[2], mtx);
     }
     else
     {
-        memcpy(w0, p0, 0xc);
-        memcpy(w1, p1, 0xc);
+        memcpy(worldStart, startPos, 0xc);
+        memcpy(worldEnd, endPos, 0xc);
     }
-    objs = (int*)ObjGroup_GetObjects(6, &count);
-    for (i = 0; i < count; i++, objs++)
+    objects = ObjGroup_GetObjects(6, &count);
+    for (i = 0; i < count; i++)
     {
-        int* o = (int*)*objs;
-        int* p54;
-        int hdr;
-        f32 rad;
+        GameObject* target = (GameObject*)objects[i];
+        ObjHitsPriorityState* priorityState;
+        ModelFileHeader* modelHeader;
+        f32 cullRadiusSq;
         f32 dx, dy, dz;
         s8 hit;
         MapDynamicSlot* entry;
 
-        if ((GameObject*)o == self)
+        if (target == self)
             continue;
-        if ((s8) * (u8*)((char*)o + 0x35) <= -1)
+        if (target->anim.transformMatrixIndex <= -1)
             continue;
-        if (*(u32*)(*(int*)&((GameObject*)o)->anim.modelInstance + 0x34) == 0)
+        if (target->anim.modelInstance->intersectionLines == NULL)
             continue;
-        p54 = *(int**)&((GameObject*)o)->anim.hitReactState;
-        if (p54 != NULL && (((ObjHitsPriorityState*)p54)->flags & 1) == 0)
+        priorityState = (ObjHitsPriorityState*)target->anim.hitReactState;
+        if (priorityState != NULL && (priorityState->flags & 1) == 0)
             continue;
-        dx = ((GameObject*)o)->anim.localPosX - w0[0];
-        dy = ((GameObject*)o)->anim.localPosY - w0[1];
-        dz = ((GameObject*)o)->anim.localPosZ - w0[2];
-        hdr = *(int*)(*(int*)(*(int*)&((GameObject*)o)->anim.banks + (s8)((ObjHitsPriorityState*)p54)->stateIndex * 4));
-        rad = (f32)((u16)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr) + 0x32);
-        rad = rad * rad;
+        dx = target->anim.localPosX - worldStart[0];
+        dy = target->anim.localPosY - worldStart[1];
+        dz = target->anim.localPosZ - worldStart[2];
+        modelHeader = (ModelFileHeader*)target->anim.banks[priorityState->stateIndex]->animDef;
+        cullRadiusSq = (f32)(modelFileHeaderGetCullDistance(modelHeader) + 0x32);
+        cullRadiusSq = cullRadiusSq * cullRadiusSq;
         hit = 0;
         {
             f32 ddy = dy * dy;
-            if (ddy + dx * dx + dz * dz < rad)
+            if (ddy + dx * dx + dz * dz < cullRadiusSq)
                 hit = 1;
         }
         if (hit == 0)
         {
-            dx = ((GameObject*)o)->anim.localPosX - w1[0];
-            dy = ((GameObject*)o)->anim.localPosY - w1[1];
-            dz = ((GameObject*)o)->anim.localPosZ - w1[2];
+            dx = target->anim.localPosX - worldEnd[0];
+            dy = target->anim.localPosY - worldEnd[1];
+            dz = target->anim.localPosZ - worldEnd[2];
             {
                 f32 ddy = dy * dy;
-                if (ddy + dx * dx + dz * dz < rad)
+                if (ddy + dx * dx + dz * dz < cullRadiusSq)
                     hit = 1;
             }
         }
         if (hit == 0)
             continue;
-        entry = NULL;
-        if ((u8)slot != 0xff)
+        if ((u8)slot != 0xff && (entry = trackFindDynamicSlot(self, target, slot)) != NULL)
         {
-            entry = trackFindDynamicSlot(self, o, slot);
-        }
-        if (entry != NULL)
-        {
-            t20[0] = entry->cachedLocalEnd.x;
-            t20[1] = entry->cachedLocalEnd.y;
-            t20[2] = entry->cachedLocalEnd.z;
+            localStart[0] = entry->cachedLocalEnd.x;
+            localStart[1] = entry->cachedLocalEnd.y;
+            localStart[2] = entry->cachedLocalEnd.z;
         }
         else
         {
-            Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], (u32)o);
+            Obj_TransformWorldPointToLocal(worldStart[0], worldStart[1], worldStart[2], &localStart[0], &localStart[1],
+                                           &localStart[2], (int)target);
         }
-        Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
-        if (trackSweepCircleAgainstLines(t20, t14, f, p5, out, (GameObject*)o, p8, p9, arg8, self) != 0)
-            Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
+        Obj_TransformWorldPointToLocal(worldEnd[0], worldEnd[1], worldEnd[2], &localEnd[0], &localEnd[1], &localEnd[2],
+                                       (int)target);
+        if (trackSweepCircleAgainstLines(localStart, localEnd, radius, flags, out, target, lineMask, segment, yTolerance,
+                                         self) != 0)
+            Obj_TransformLocalPointToWorld(localEnd[0], localEnd[1], localEnd[2], &worldEnd[0], &worldEnd[1],
+                                           &worldEnd[2], (int)target);
         if ((u8)slot != 0xff)
         {
-            entry = trackAllocDynamicSlot(self, o, slot);
+            entry = trackAllocDynamicSlot(self, target, slot);
             if (entry != NULL)
             {
-                entry->cachedLocalEnd.x = t14[0];
-                entry->cachedLocalEnd.y = t14[1];
-                entry->cachedLocalEnd.z = t14[2];
+                entry->cachedLocalEnd.x = localEnd[0];
+                entry->cachedLocalEnd.y = localEnd[1];
+                entry->cachedLocalEnd.z = localEnd[2];
             }
         }
     }
-    trackSweepCircleAgainstLines(w0, w1, f, p5, out, NULL, p8, p9, arg8, self);
+    trackSweepCircleAgainstLines(worldStart, worldEnd, radius, flags, out, NULL, lineMask, segment, yTolerance, self);
     if (lbl_803DCF4C != 0 && out != NULL)
     {
         f32 upperDeltaStart = out->upperY0 - out->lineStartY;
@@ -2976,7 +2982,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             Obj_TransformLocalPointToWorld(out->lineEndX, out->lineEndY, out->lineEndZ, &out->lineEndX,
                                            &out->lineEndY, &out->lineEndZ, (u32)out->object);
         }
-        if ((u32)mtx != 0)
+        if (mtx != 0)
         {
             Obj_TransformWorldPointToLocal(out->lineStartX, out->lineStartY, out->lineStartZ, &out->lineStartX,
                                            &out->lineStartY, &out->lineStartZ, mtx);
@@ -2999,10 +3005,11 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
     }
     if (lbl_803DCF4C != 0)
     {
-        if ((u32)mtx != 0)
-            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], mtx);
+        if (mtx != 0)
+            Obj_TransformWorldPointToLocal(worldEnd[0], worldEnd[1], worldEnd[2], &endPos[0], &endPos[1], &endPos[2],
+                                           mtx);
         else
-            memcpy(p1, w1, 0xc);
+            memcpy(endPos, worldEnd, 0xc);
     }
     return lbl_803DCF4C;
 }

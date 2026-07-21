@@ -80,7 +80,11 @@ typedef struct ObjHitsPriorityState {
   s8 contactFlags;
   u8 activeHitboxMode;
   u8 resetHitboxMode;
+#ifdef OBJHITS_STATE_INDEX_S8
+  s8 stateIndex;
+#else
   u8 stateIndex;
+#endif
   u8 padB1;
   u16 trackContactMask;
   u8 sourceMask;

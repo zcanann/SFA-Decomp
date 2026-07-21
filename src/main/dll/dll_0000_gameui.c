@@ -82,7 +82,9 @@
 #include "main/newshadows_shadow_api.h"
 #include "main/dll/hint_text_api.h"
 #include "main/shader_map_text_api.h"
+#define INTERSECT_HUD_ALPHA_U8
 #include "track/intersect_hud_api.h"
+#undef INTERSECT_HUD_ALPHA_U8
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_8B.h"
 
@@ -4338,16 +4340,20 @@ void headDisplayDraw(void)
 {
     u32 width;
     u32 height;
+    s16 panelAlpha;
     int panelType;
     int viewportY;
     int clampedAlpha;
     int waveAlpha;
     int noiseX;
     int noiseY;
+    int lineOffset;
+    int wavePhaseA;
+    int wavePhaseB;
+    int drawY;
     u32 clampedHeight;
     f32 wave;
     f32 cameraOrigin;
-    s16 panelAlpha;
     if (gHeadDisplayActive != 0)
     {
         if ((s8)lbl_803DD7A8 == 0)
@@ -4445,56 +4451,40 @@ void headDisplayDraw(void)
         Camera_ApplyFullViewport();
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
+        lineOffset = 0;
+        wavePhaseA = wavePhaseB = lineOffset;
+        for (; lineOffset < (int)height; lineOffset += 4)
         {
-            int lineOffset;
-            int wavePhaseA;
-            int wavePhaseB;
-            int drawY;
-
-            lineOffset = 0;
-            wavePhaseA = lineOffset;
-            wavePhaseB = lineOffset;
-            for (; lineOffset < (int)height; lineOffset += 4)
+            wave = lbl_803E204C * fsin16Approx((u16)(wavePhaseA + lbl_803DD77C * 0x1838));
+            wave = lbl_803E204C * fsin16Approx((u16)(wavePhaseB + lbl_803DD77C * 0xfa0)) + wave;
+            waveAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2050 + wave));
+            clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
+            noiseX = randomGetRange(0, 0x1e) << 1;
+            noiseY = randomGetRange(0, 0x1e) << 1;
+            drawY = width;
+            drawY += lineOffset;
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)drawY,
+                               (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
+            clampedAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2010 + wave));
+            if (clampedAlpha < 0)
             {
-                wave = lbl_803E204C * fsin16Approx((u16)(wavePhaseA + lbl_803DD77C * 0x1838));
-                wave = lbl_803E204C * fsin16Approx((u16)(wavePhaseB + lbl_803DD77C * 0xfa0)) + wave;
-                waveAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2050 + wave));
-                clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
-                noiseX = randomGetRange(0, 0x1e) << 1;
-                noiseY = randomGetRange(0, 0x1e) << 1;
-                drawY = width;
-                drawY += lineOffset;
-                drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)drawY,
-                                   (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
-                clampedAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2010 + wave));
-                if (clampedAlpha < 0)
-                {
-                    clampedAlpha = 0;
-                }
-                noiseX = randomGetRange(0, 0x1e) << 1;
-                noiseY = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(drawY + 2),
-                                   (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
-                wavePhaseA += 0x3520;
-                wavePhaseB += 0x1f40;
+                clampedAlpha = 0;
             }
+            noiseX = randomGetRange(0, 0x1e) << 1;
+            noiseY = randomGetRange(0, 0x1e) << 1;
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(drawY + 2),
+                               (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
+            wavePhaseA += 0x3520;
+            wavePhaseB += 0x1f40;
         }
-        ((void (*)(void*, f32, f32, u8, int))drawTexture)(hudTextures[10], lbl_803E2054, (s16)width - 5, panelAlpha,
-                                                          0x100);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[13], lbl_803E2040, (s16)width - 5, panelAlpha, 0x100, 0x78, 5, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[11], lbl_803E2054, (s16)width, panelAlpha, 0x100, 5, (s16)height, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, panelAlpha, 0x100, 0x78, 5, 2);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[11], lbl_803E2058, (s16)width, panelAlpha, 0x100, 5, (s16)height, 1);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 3);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[10], lbl_803E2058, (s16)width - 5, panelAlpha, 0x100, 5, 5, 1);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 2);
+        drawTexture(hudTextures[10], lbl_803E2054, (s16)width - 5, panelAlpha, 0x100);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width - 5, panelAlpha, 0x100, 0x78, 5, 0);
+        drawScaledTexture(hudTextures[11], lbl_803E2054, (s16)width, panelAlpha, 0x100, 5, (s16)height, 0);
+        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, panelAlpha, 0x100, 0x78, 5, 2);
+        drawScaledTexture(hudTextures[11], lbl_803E2058, (s16)width, panelAlpha, 0x100, 5, (s16)height, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 3);
+        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width - 5, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5, 5, 2);
     }
 }
 

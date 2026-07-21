@@ -419,13 +419,8 @@ void SaveSelectScreen_render(int param)
     SaveSelectPanel* panel;
     int progress;
     int alpha;
-    int i;
-    int slotCount;
-    int off;
-    char* p;
-    u8* strs;
-    void** arr;
-    u16* ptrs;
+    u8 transitionAlpha;
+    u8 fadeAlpha;
 
     panel = &gSaveSelectPanels[gSaveSelectPanelIndex];
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
@@ -439,70 +434,88 @@ void SaveSelectScreen_render(int param)
     else
     {
         titleScreenPositionElements(lbl_803E1D68, lbl_803E1D74);
-        alpha = ((u8)progress & 0x7f) << 1;
-        alpha &= 0xff;
+        transitionAlpha = ((u8)progress & 0x7f) * 2;
+        alpha = transitionAlpha;
     }
     gameTextBoxFn_80134d40(alpha, (u8)(gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CONFIRM_ERASE), 0);
     switch (gSaveSelectPanelIndex)
     {
     case SAVE_SELECT_PANEL_OPEN_FILE:
+    {
+        u8* infoTextIds;
+        int taskTextOffset;
+        int slotCount;
+        int infoIndex;
+        FrontendSaveSlot* slot;
+
         saveSelect_drawText(param, alpha);
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         slotCount = 0;
-        p = (char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24;
-        while (slotCount < 3 && *(void**)(p + 0xc) != NULL)
+        slot = &saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex];
+        while (slotCount < 3 && slot->taskTexts[slotCount] != NULL)
         {
-            p += 4;
             slotCount++;
         }
-        i = 0;
-        strs = gSaveSelectInfoTextIds + (u8)(3 - slotCount);
-        off = 0;
-        while (i < slotCount)
+        infoIndex = 0;
+        infoTextIds = gSaveSelectInfoTextIds + (u8)(3 - slotCount);
+        taskTextOffset = 0;
+        while (infoIndex < slotCount)
         {
             gameTextAppendStr(
-                *(char**)((char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24 + off + 0xc), *strs);
-            strs++;
-            off += 4;
-            i++;
+                *(char**)((char*)saveFileSelect_saveSlots + saveFileSelect_currentSlotIndex * 0x24 + taskTextOffset +
+                          0xc),
+                *infoTextIds);
+            infoTextIds++;
+            taskTextOffset += 4;
+            infoIndex++;
         }
         if (gSaveSelectMenuItem != NULL)
         {
             gTitleMenuItemInterface->vtable->render(gSaveSelectMenuItem, 0, alpha);
         }
         break;
+    }
     case SAVE_SELECT_PANEL_CONFIRM_ERASE:
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextShow(0x324);
         break;
     case SAVE_SELECT_PANEL_CHOOSE_SLOT:
+    {
         gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gTitleMenuLinkInterface->vtable->getSelected();
         if (lbl_803DB424 != 0)
         {
+            int slotIndex;
+            int slotOffset;
+
             saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
-            arr = gSaveSelectTextBuffers;
-            ptrs = gSaveSelectSlotTextIds;
-            for (i = 0; i < 3; i++)
+            slotIndex = 0;
+            slotOffset = 0;
+            do
             {
-                sprintf(arr[i], sFrontendPercentFormat, saveFileSelect_saveSlots[i].completionPercent);
+                sprintf(gSaveSelectTextBuffers[slotIndex], sFrontendPercentFormat,
+                        ((FrontendSaveSlot*)((u8*)saveFileSelect_saveSlots + slotOffset))->completionPercent);
                 gameTextSetColor(0xff, 0xff, 0xff, alpha);
-                gameTextAppendStr(arr[i], ptrs[i]);
-            }
+                gameTextAppendStr(gSaveSelectTextBuffers[slotIndex], gSaveSelectSlotTextIds[slotIndex]);
+                slotOffset += sizeof(FrontendSaveSlot);
+                slotIndex++;
+            } while (slotIndex < 3);
         }
         break;
+    }
     }
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
     if (panel->textIdA != 0xffff)
     {
-        if ((u8)alpha < 0x7f)
+        fadeAlpha = alpha;
+        if (fadeAlpha < 0x7f)
         {
-            gameTextSetColor(0xff, 0xff, 0xff, (u8)(0xff - (alpha << 1)));
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)(0xff - (fadeAlpha << 1)));
             gameTextShow(0x331);
         }
         else
         {
-            gameTextSetColor(0xff, 0xff, 0xff, (u8)((alpha - 0x7f) << 1));
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)((fadeAlpha - 0x7f) << 1));
             gameTextShow(panel->textIdA);
         }
     }
