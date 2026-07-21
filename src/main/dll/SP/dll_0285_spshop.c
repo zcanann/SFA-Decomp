@@ -230,17 +230,17 @@ void shop_buyItem(GameObject* obj, int price)
 {
 
     int player;
-    int state;
+    ShopBuyItemState* state;
     int mapEventState;
     u8* items;
     s16 boughtBit;
 
     player = (int)Obj_GetPlayerObject();
-    state = *(int*)&obj->extra;
+    state = obj->extra;
     mapEventState = (int)(*gMapEventInterface)->getCurCharacterState();
     playerAddMoney((GameObject*)player, -price);
 
-    switch (((ShopBuyItemState*)state)->itemIndex)
+    switch (state->itemIndex)
     {
     case SHOP_ITEM_DUMBLEDANG_POD:
         playerAddHealth((GameObject*)player, 2);
@@ -276,7 +276,7 @@ void shop_buyItem(GameObject* obj, int price)
     }
 
     items = lbl_80327FD0 + 8;
-    boughtBit = *(s16*)(items + ((ShopBuyItemState*)state)->itemIndex * 0xc);
+    boughtBit = *(s16*)(items + state->itemIndex * 0xc);
     if (boughtBit != -1)
     {
         mainSetBits(boughtBit, 1);

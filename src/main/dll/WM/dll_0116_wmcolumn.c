@@ -152,17 +152,18 @@ void WM_Column_update(int obj)
                 if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == WMCOLUMN_SCENE_MARKER_OBJ) &&
                     (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < 35.0f))
                 {
-                    int mapData = *(int*)&((GameObject*)objects[i])->anim.placementData;
-                    if (((GameObject*)obj)->anim.seqId == (s8)((WmColumnPlacement*)mapData)->modelIndex + 500)
+                    WmColumnPlacement* mapData =
+                        (WmColumnPlacement*)*(int*)&((GameObject*)objects[i])->anim.placementData;
+                    if (((GameObject*)obj)->anim.seqId == (s8)mapData->modelIndex + 500)
                     {
-                        if (((WmColumnPlacement*)mapData)->gameBit != -1)
+                        if (mapData->gameBit != -1)
                         {
-                            mainSetBits(((WmColumnPlacement*)mapData)->gameBit, 1);
+                            mainSetBits(mapData->gameBit, 1);
                         }
                     }
-                    else if (((WmColumnPlacement*)mapData)->gameBit != -1)
+                    else if (mapData->gameBit != -1)
                     {
-                        mainSetBits(((WmColumnPlacement*)mapData)->gameBit, 0);
+                        mainSetBits(mapData->gameBit, 0);
                     }
                     ((GameObject*)obj)->anim.localPosX = ((GameObject*)objects[i])->anim.localPosX;
                     ((GameObject*)obj)->anim.localPosY = ((GameObject*)objects[i])->anim.localPosY;

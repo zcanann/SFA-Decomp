@@ -96,7 +96,7 @@ u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
 
 void DFP_Floorbar_update(GameObject* obj)
 {
-    int placement = *(int*)&(obj)->anim.placementData;
+    DfpfloorbarPlacement* placement = (DfpfloorbarPlacement*)*(int*)&(obj)->anim.placementData;
     DfpFloorbarState* state = (obj)->extra;
     s16 score = -1;
     int mode;
@@ -117,14 +117,14 @@ void DFP_Floorbar_update(GameObject* obj)
             return;
         if (mainGetBit(0xe57) != 0)
         {
-            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - 3.2f;
+            (obj)->anim.localPosY = placement->posY - 3.2f;
             return;
         }
         break;
     case 2:
         if (mainGetBit(0xe58) != 0)
         {
-            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - 3.2f;
+            (obj)->anim.localPosY = placement->posY - 3.2f;
             return;
         }
         break;
@@ -165,13 +165,13 @@ void DFP_Floorbar_update(GameObject* obj)
     state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];
 
     active = state->active;
-    if (active != 0 && (obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - 3.2f)
+    if (active != 0 && (obj)->anim.localPosY > placement->posY - 3.2f)
     {
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_en_treedrum16_1c8);
         (obj)->anim.localPosY = (obj)->anim.localPosY - timeDelta / 12.0f;
-        if ((obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->posY - 3.2f)
+        if ((obj)->anim.localPosY <= placement->posY - 3.2f)
         {
-            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - 3.2f;
+            (obj)->anim.localPosY = placement->posY - 3.2f;
         }
         return;
     }
@@ -180,7 +180,7 @@ void DFP_Floorbar_update(GameObject* obj)
         return;
     if (active == 0)
     {
-        (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY;
+        (obj)->anim.localPosY = placement->posY;
     }
     if (state->active != 0)
         return;
@@ -231,23 +231,24 @@ void DFP_Floorbar_update(GameObject* obj)
 void DFP_Floorbar_init(GameObject* obj, int params)
 {
     DfpFloorbarState* state = obj->extra;
+    DfpfloorbarPlacement* placement = (DfpfloorbarPlacement*)params;
 
-    obj->anim.rotX = (s16)((s8)((DfpfloorbarPlacement*)params)->rotXByte << 8);
+    obj->anim.rotX = (s16)((s8)placement->rotXByte << 8);
     obj->animEventCallback = dfpfloorbar_SeqFn;
-    state->modeIndex = ((DfpfloorbarPlacement*)params)->modeIndex;
-    state->triggerGameBit = ((DfpfloorbarPlacement*)params)->triggerGameBit;
-    state->completionGameBit = ((DfpfloorbarPlacement*)params)->completionGameBit;
+    state->modeIndex = placement->modeIndex;
+    state->triggerGameBit = placement->triggerGameBit;
+    state->completionGameBit = placement->completionGameBit;
     state->linkedObject = NULL;
 
-    if (((DfpfloorbarPlacement*)params)->travelRange != 0)
+    if (placement->travelRange != 0)
     {
-        obj->anim.rootMotionScale = 1.0f / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
+        obj->anim.rootMotionScale = 1.0f / ((f32)(s32)placement->travelRange / 1000.0f);
     }
 
     if (mainGetBit((int)state->completionGameBit) != 0)
     {
         state->active = 1;
-        obj->anim.localPosY = ((DfpfloorbarPlacement*)params)->posY - 3.2f;
+        obj->anim.localPosY = placement->posY - 3.2f;
     }
 }
 

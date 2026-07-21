@@ -337,7 +337,7 @@ void SH_LevelControl_setMusic(short* obj)
     }
 }
 
-void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
+void SH_LevelControl_runBloopEvent(GameObject* obj, ShLevelcontrolState* state)
 {
     int player;
     u8 i;
@@ -347,7 +347,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
     if (((u8)(*gMapEventInterface)->getObjGroupStatus(obj->anim.mapEventSlot, 0) == 0) &&
         (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) == 0))
     {
-        ((ShLevelcontrolState*)state)->eventState = 0;
+        state->eventState = 0;
         (*gGameUIInterface)->airMeterShutdown();
         for (j = 0; j < 0x12; j++)
         {
@@ -356,25 +356,25 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
     }
 
     player = (int)Obj_GetPlayerObject();
-    switch (((ShLevelcontrolState*)state)->eventState)
+    switch (state->eventState)
     {
     case 0:
         if (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) != 0)
         {
-            ((ShLevelcontrolState*)state)->eventState = 7;
+            state->eventState = 7;
         }
         else
         {
-            ((ShLevelcontrolState*)state)->eventState = 1;
+            state->eventState = 1;
         }
         break;
     case 1:
         if (mainGetBit(0x124) != 0)
         {
             (*gMapEventInterface)->savePoint(player + 0xc, ((GameObject*)player)->anim.rotX, 1, 0);
-            ((ShLevelcontrolState*)state)->timer8 = 100000.0f;
+            state->timer8 = 100000.0f;
             (*gGameUIInterface)->initAirMeter(100000, SHLEVELCONTROL_AIRMETER_BGTEXTURE);
-            ((ShLevelcontrolState*)state)->eventState = 2;
+            state->eventState = 2;
         }
         break;
     case 2:
@@ -391,25 +391,25 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
         {
             (*gGameUIInterface)->airMeterShutdown();
             (*gScreenTransitionInterface)->start(0x14, 1);
-            ((ShLevelcontrolState*)state)->eventState = 3;
+            state->eventState = 3;
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
         }
         else
         {
-            ((ShLevelcontrolState*)state)->timer8 -= bloopsRemaining * timeDelta;
-            if (((ShLevelcontrolState*)state)->timer8 >= 0.0f)
+            state->timer8 -= bloopsRemaining * timeDelta;
+            if (state->timer8 >= 0.0f)
             {
-                (*gGameUIInterface)->runAirMeter((int)((ShLevelcontrolState*)state)->timer8);
+                (*gGameUIInterface)->runAirMeter((int)state->timer8);
             }
             else if ((u8)(*gMapEventInterface)->getObjGroupStatus(obj->anim.mapEventSlot, 0) != 0)
             {
                 (*gGameUIInterface)->airMeterShutdown();
                 (*gScreenTransitionInterface)->start(0x14, 1);
-                ((ShLevelcontrolState*)state)->eventState = 5;
+                state->eventState = 5;
             }
             else
             {
-                ((ShLevelcontrolState*)state)->timer8 = 0.0f;
+                state->timer8 = 0.0f;
                 (*gGameUIInterface)->runAirMeter(1);
             }
         }
@@ -420,18 +420,18 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
         {
             mainSetBits(GAMEBIT_ITEM_BigScarabBag_Got, 1);
             (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
-            ((ShLevelcontrolState*)state)->eventState = 4;
+            state->eventState = 4;
         }
         break;
     case 4:
-        ((ShLevelcontrolState*)state)->eventState = 7;
+        state->eventState = 7;
         break;
     case 5:
         if (((*gScreenTransitionInterface)->isFinished() != 0) &&
             ((((GameObject*)Obj_GetPlayerObject())->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-            ((ShLevelcontrolState*)state)->eventState = 6;
+            state->eventState = 6;
         }
         break;
     case 6:
@@ -449,20 +449,20 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
         break;
     }
 
-    if (((ShLevelcontrolState*)state)->eventState == 2)
+    if (state->eventState == 2)
     {
-        if (((ShLevelcontrolState*)state)->musicLatch != 0xf2)
+        if (state->musicLatch != 0xf2)
         {
-            ((ShLevelcontrolState*)state)->musicLatch = 0xf2;
+            state->musicLatch = 0xf2;
             mainSetBits(GAMEBIT_SH_Entered00C0, 1);
-            ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
+            state->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
         }
     }
-    else if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
+    else if (state->musicLatch != 0xcc)
     {
-        ((ShLevelcontrolState*)state)->musicLatch = 0xcc;
+        state->musicLatch = 0xcc;
         mainSetBits(GAMEBIT_SH_Entered00C0, 1);
-        ((ShLevelcontrolState*)state)->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
+        state->flags &= ~SHOPKEEPER_OBJFLAG_REFRESH_MAP;
     }
 
     if ((mainGetBit(GAMEBIT_SH_Give200ScarabBag) == 0) && (mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0))
@@ -814,7 +814,7 @@ void SH_LevelControl_update(GameObject* obj)
         }
         break;
     case 6:
-        SH_LevelControl_runBloopEvent(obj, (int)state);
+        SH_LevelControl_runBloopEvent(obj, (ShLevelcontrolState*)state);
         break;
     case 7:
         val = mainGetBit(GAMEBIT_SH_ThornTailRelated01A0);
