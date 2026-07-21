@@ -74,7 +74,18 @@ extern const f32 lbl_803E56CC;
 extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
-const f32 gSbGalleonSkyLightVecs[12] = {-1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f};
+
+typedef struct SkyVec3
+{
+    f32 x, y, z;
+} SkyVec3;
+
+const SkyVec3 gSbGalleonSkyLightVecs[4] = {
+    {-1.0f, -2.0f, -1.0f},
+    {1.0f, -2.0f, 1.0f},
+    {1.0f, -2.0f, 1.0f},
+    {1.0f, -0.25f, 1.0f}
+};
 u8 gSbGalleonSkyColorA[4];
 u8 gSbGalleonSkyColorB[4];
 u8 gSbGalleonSkyColorC[4];
@@ -141,11 +152,6 @@ enum SbGalleonCameraState
 #define SBGALLEON_MAP_PALACE       0xb /* map-event/dir id this boss locks */
 #define SBGALLEON_SKY_LIGHT_SLOT   7   /* sky override light slot fn_801E1588 drives */
 
-typedef struct
-{
-    f32 x, y, z;
-} SkyVec3;
-
 void fn_801E1588(GameObject* obj, SBGalleonState* state)
 {
     ObjModel* model;
@@ -155,10 +161,10 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
     SkyVec3 b;
     SkyVec3 c;
     SkyVec3 d;
-    a = ((SkyVec3*)gSbGalleonSkyLightVecs)[0];
-    b = ((SkyVec3*)gSbGalleonSkyLightVecs)[1];
-    c = ((SkyVec3*)gSbGalleonSkyLightVecs)[2];
-    d = ((SkyVec3*)gSbGalleonSkyLightVecs)[3];
+    a = gSbGalleonSkyLightVecs[0];
+    b = gSbGalleonSkyLightVecs[1];
+    c = gSbGalleonSkyLightVecs[2];
+    d = gSbGalleonSkyLightVecs[3];
     setDrawLights(0);
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x29, 0x4b, 0xa9);
@@ -177,44 +183,44 @@ void fn_801E1588(GameObject* obj, SBGalleonState* state)
         }
     }
     {
-        int v0 = gSbGalleonSkyColorAStart[0];
-        gSbGalleonSkyColorA[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[0] - v0);
+        int red = gSbGalleonSkyColorAStart[0];
+        gSbGalleonSkyColorA[0] = red + lbl_803DDC28 * (gSbGalleonSkyColorAEnd[0] - red);
     }
     {
-        int v1 = gSbGalleonSkyColorAStart[1];
-        gSbGalleonSkyColorA[1] = v1 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[1] - v1);
+        int green = gSbGalleonSkyColorAStart[1];
+        gSbGalleonSkyColorA[1] = green + lbl_803DDC28 * (gSbGalleonSkyColorAEnd[1] - green);
     }
     {
-        int v2 = gSbGalleonSkyColorAStart[2];
-        gSbGalleonSkyColorA[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorAEnd[2] - v2);
+        int blue = gSbGalleonSkyColorAStart[2];
+        gSbGalleonSkyColorA[2] = blue + lbl_803DDC28 * (gSbGalleonSkyColorAEnd[2] - blue);
     }
     skySetBaseColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0], gSbGalleonSkyColorA[1],
                    gSbGalleonSkyColorA[2], 0x40, 0x40);
     {
-        int v0 = lbl_803DC078[0];
-        gSbGalleonSkyColorB[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[0] - v0);
+        int red = lbl_803DC078[0];
+        gSbGalleonSkyColorB[0] = red + lbl_803DDC28 * (gSbGalleonSkyColorBEnd[0] - red);
     }
     {
-        int v1 = lbl_803DC078[1];
-        gSbGalleonSkyColorB[1] = v1 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[1] - v1);
+        int green = lbl_803DC078[1];
+        gSbGalleonSkyColorB[1] = green + lbl_803DDC28 * (gSbGalleonSkyColorBEnd[1] - green);
     }
     {
-        int v2 = lbl_803DC078[2];
-        gSbGalleonSkyColorB[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorBEnd[2] - v2);
+        int blue = lbl_803DC078[2];
+        gSbGalleonSkyColorB[2] = blue + lbl_803DDC28 * (gSbGalleonSkyColorBEnd[2] - blue);
     }
     skySetLightColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0],
                 gSbGalleonSkyColorB[1], gSbGalleonSkyColorB[2]);
     {
-        int v0 = gSbGalleonSkyColorCStart[0];
-        gSbGalleonSkyColorC[0] = v0 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[0] - v0);
+        int red = gSbGalleonSkyColorCStart[0];
+        gSbGalleonSkyColorC[0] = red + lbl_803DDC28 * (gSbGalleonSkyColorCEnd[0] - red);
     }
     {
-        int v1 = gSbGalleonSkyColorCStart[1];
-        gSbGalleonSkyColorC[1] = v1 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[1] - v1);
+        int green = gSbGalleonSkyColorCStart[1];
+        gSbGalleonSkyColorC[1] = green + lbl_803DDC28 * (gSbGalleonSkyColorCEnd[1] - green);
     }
     {
-        int v2 = gSbGalleonSkyColorCStart[2];
-        gSbGalleonSkyColorC[2] = v2 + lbl_803DDC28 * (f32)(gSbGalleonSkyColorCEnd[2] - v2);
+        int blue = gSbGalleonSkyColorCStart[2];
+        gSbGalleonSkyColorC[2] = blue + lbl_803DDC28 * (gSbGalleonSkyColorCEnd[2] - blue);
     }
     skySetAmbientColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0],
                 gSbGalleonSkyColorC[1], gSbGalleonSkyColorC[2]);
