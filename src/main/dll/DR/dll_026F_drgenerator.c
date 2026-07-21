@@ -70,15 +70,15 @@ void drgenerator_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 
 void drgenerator_hitDetect(GameObject* obj)
 {
-    char* state = (obj)->extra;
-    int placement = *(int*)&(obj)->anim.placementData;
+    DrgeneratorState* state = (obj)->extra;
+    DrgeneratorPlacement* placement = (DrgeneratorPlacement*)obj->anim.placementData;
     f32 hitPosZ;
     f32 hitPosY;
     f32 hitPosX;
     u32 hitVolume;
     int hitObject;
     void* found;
-    if (((BitFlags8*)&((DrgeneratorState*)state)->flags)->b0 || ((BitFlags8*)&((DrgeneratorState*)state)->flags)->b3)
+    if (state->flags.b0 || state->flags.b3)
     {
         return;
     }
@@ -86,10 +86,10 @@ void drgenerator_hitDetect(GameObject* obj)
     {
         return;
     }
-    state[0x19a] = ((DrgeneratorState*)state)->hitsRemaining - hitVolume;
+    ((char*)state)[0x19a] = state->hitsRemaining - hitVolume;
     Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E6B5C);
     fn_8009A8C8(obj, lbl_803E6B60);
-    if (state[0x19a] > 0)
+    if (((char*)state)[0x19a] > 0)
     {
         return;
     }
@@ -101,12 +101,12 @@ void drgenerator_hitDetect(GameObject* obj)
             tex->textureId = 0x100;
         }
     }
-    ((BitFlags8*)&((DrgeneratorState*)state)->flags)->b0 = 1;
-    mainSetBits(((DrgeneratorPlacement*)placement)->completionGameBit, 1);
+    state->flags.b0 = 1;
+    mainSetBits(placement->completionGameBit, 1);
     if ((obj)->anim.seqId == DRGENERATOR_OBJ &&
         (found = (void*)ObjGroup_FindNearestObject(TIMER_OBJGROUP, obj, NULL)) != NULL)
     {
-        timer_addDuration((GameObject*)found, ((DrgeneratorState*)state)->timerDuration);
+        timer_addDuration((GameObject*)found, state->timerDuration);
     }
     else
     {

@@ -90,7 +90,7 @@ void KT_Lazerwall_free(GameObject* obj)
 void KT_Lazerwall_render(GameObject* obj)
 {
     char* extra = obj->extra;
-    int placement = *(int*)&obj->anim.placementData;
+    KtlazerwallPlacement* placement = (KtlazerwallPlacement*)obj->anim.placementData;
     int bolt;
     if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
     {
@@ -115,7 +115,7 @@ void KT_Lazerwall_render(GameObject* obj)
             mm_free((void*)bolt);
             ((KtlazerwallState*)extra)->bolt = 0;
             *(u8*)extra &= ~8;
-            mainSetBits(((KtlazerwallPlacement*)placement)->activeBit, 0);
+            mainSetBits(placement->activeBit, 0);
         }
     }
 }
@@ -126,22 +126,22 @@ void KT_Lazerwall_hitDetect(void)
 
 void KT_Lazerwall_update(GameObject* obj)
 {
-    int placement = *(int*)&(obj)->anim.placementData;
+    KtlazerwallPlacement* placement = (KtlazerwallPlacement*)obj->anim.placementData;
     u8* flags = (obj)->extra;
     int intensity;
     int mode;
     int i;
     flags[1] = flags[0];
     flags[0] &= ~3;
-    intensity = (s16)mainGetBit(((KtlazerwallPlacement*)placement)->intensityBit);
-    if (intensity >= ((KtlazerwallPlacement*)placement)->fireThreshold)
+    intensity = (s16)mainGetBit(placement->intensityBit);
+    if (intensity >= placement->fireThreshold)
     {
         flags[0] |= 4;
     }
     else
     {
         flags[0] &= ~4;
-        if (mainGetBit(((KtlazerwallPlacement*)placement)->activeBit) == 0)
+        if (mainGetBit(placement->activeBit) == 0)
         {
             return;
         }
@@ -149,7 +149,7 @@ void KT_Lazerwall_update(GameObject* obj)
     (obj)->anim.rotZ += 910;
     if (intensity >= 15 && (flags[0] & 9) == 0)
     {
-        mainSetBits(((KtlazerwallPlacement*)placement)->activeBit, 1);
+        mainSetBits(placement->activeBit, 1);
         flags[0] |= 9;
         ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8.f, 120);
         (*gPartfxInterface)->spawnObject((void*)obj, 1150, NULL, 2, -1, NULL);

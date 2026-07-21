@@ -259,14 +259,14 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int fl
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
     setup = (ArwSquadronProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);
-    ((ArwSquadronProjectileSetup*)setup)->posX = px;
-    ((ArwSquadronProjectileSetup*)setup)->posY = py;
-    ((ArwSquadronProjectileSetup*)setup)->posZ = pz;
-    ((ArwSquadronProjectileSetup*)setup)->rotX = ((obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
-    ((ArwSquadronProjectileSetup*)setup)->rotY = -(obj)->anim.rotY >> 8;
-    ((ArwSquadronProjectileSetup*)setup)->rotZ = 0;
-    ((ArwSquadronProjectileSetup*)setup)->field04 = 1;
-    ((ArwSquadronProjectileSetup*)setup)->field05 = 1;
+    setup->posX = px;
+    setup->posY = py;
+    setup->posZ = pz;
+    setup->rotX = ((obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
+    setup->rotY = -(obj)->anim.rotY >> 8;
+    setup->rotZ = 0;
+    setup->field04 = 1;
+    setup->field05 = 1;
     proj = loadObjectAtObject(obj, (ObjPlacement*)setup);
     if (proj == NULL)
         return;
