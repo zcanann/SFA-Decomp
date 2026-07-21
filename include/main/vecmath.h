@@ -23,7 +23,7 @@ f32 Vec3_Length(const f32 *vector);
 void Vec3_Cross(f32 *lhs, f32 *rhs, f32 *out);
 void Vec3_ReflectAgainstNormal(f32 *normal, f32 *velocity, f32 *out);
 f32 Vec3_Normalize(f32 *vector);
-void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
+void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2);
 f32 getXZDistance(f32* a, f32* b);
 void mtx44ScaleRow1(f32* matrix, f32 scale);
 void mtx44Transpose(f32* src, f32* dst);

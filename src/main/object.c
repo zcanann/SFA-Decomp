@@ -292,7 +292,7 @@ void fn_8002A5DC(GameObject* obj)
         vecB[0] = rot[4];
         vecB[1] = rot[5];
         vecB[2] = rot[6];
-        fn_800213D0(vecA, vecB, &obj->anim.rotZ, &obj->anim.rotY, (s16*)obj);
+        basisVectorsToEulerAngles(vecA, vecB, &obj->anim.rotZ, &obj->anim.rotY, (s16*)obj);
     }
 }
 void Obj_SetModelRenderOpAlpha(void* obj, u8 alpha)

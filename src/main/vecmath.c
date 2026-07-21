@@ -34,7 +34,7 @@ f32 interpolate(f32 a, f32 t, f32 exp)
     }
     return lbl_803DE7C0;
 }
-void fn_800213D0(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
+void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
 {
     f32 cross[3];
     f32 sinp;
