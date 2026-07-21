@@ -18,8 +18,9 @@
  *    hitDetect_calcSweptSphereBounds) - vs the per-class extra-state
  *    POINTER on GameObject. Cameras carry no extra-state block.
  * Shared-head evidence: camera.c walks anim.parent (0x30), reads
- * rootMotionScale/localPos, and tests the 0xB0 u16 flags - identical
- * to GameObject through 0xB3.
+ * rootMotionScale/localPos, and tests the 0xB0 u16 flags. Normal-camera
+ * initialization also snapshots local position across 0xA8..0xB3, so that
+ * tail is exposed as an alternate camera-specific Vec3f view.
  *
  * The camera's focus/track targets are REGULAR GameObjects: the
  * pointer at +0xA4 (inside the ObjAnimComponent pad - also seen on
@@ -32,9 +33,17 @@
  * do not take sizeof(CameraObject) or index arrays of it.
  */
 typedef struct CameraObject {
-    ObjAnimComponent anim;
-    u16 objectFlags; /* 0xB0 GameObject flag word (camera.c tests bit 8 via GameObject cast) */
-    u8 padB2[2];
+    union {
+        struct {
+            ObjAnimComponent anim;
+            u16 objectFlags; /* 0xB0 GameObject flag word (camera.c tests bit 8 via GameObject cast) */
+            u8 padB2[2];
+        };
+        struct {
+            u8 padSavedLocalPos[0xA8];
+            Vec3f savedLocalPos; /* local-position snapshot used by normal-camera mode transitions */
+        };
+    };
     f32 fov;
     f32 probePosX; /* swept-collision anchor, seeded from anim.worldPos */
     f32 probePosY;
@@ -65,6 +74,7 @@ typedef struct CameraObject {
 } CameraObject;
 
 STATIC_ASSERT(offsetof(CameraObject, fov) == 0xB4);
+STATIC_ASSERT(offsetof(CameraObject, savedLocalPos) == 0xA8);
 STATIC_ASSERT(offsetof(CameraObject, probePosX) == 0xB8);
 STATIC_ASSERT(offsetof(CameraObject, blendProgress) == 0xF4);
 STATIC_ASSERT(offsetof(CameraObject, targetObj) == 0x11C);

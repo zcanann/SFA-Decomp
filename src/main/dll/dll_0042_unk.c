@@ -904,15 +904,15 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         fVal = cam->anim.worldPosX;
         cam->anim.localPosX = fVal;
         cam->probePosX = fVal;
-        cam->anim.hitboxScale = fVal;
+        cam->savedLocalPos.x = fVal;
         fVal = cam->anim.worldPosY;
         cam->anim.localPosY = fVal;
         cam->probePosY = fVal;
-        *(f32*)((u8*)cam + 0xAC) = fVal;
+        cam->savedLocalPos.y = fVal;
         fVal = cam->anim.worldPosZ;
         cam->anim.localPosZ = fVal;
         cam->probePosZ = fVal;
-        *(f32*)((u8*)cam + 0xB0) = fVal;
+        cam->savedLocalPos.z = fVal;
         cam->anim.rotX = 0;
         cam->anim.rotZ = 0;
         if (data != NULL)
@@ -933,9 +933,9 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         cam->probePosX = cam->anim.worldPosX;
         cam->probePosY = cam->anim.worldPosY;
         cam->probePosZ = cam->anim.worldPosZ;
-        cam->anim.hitboxScale = cam->anim.localPosX;
-        *(f32*)((u8*)cam + 0xAC) = cam->anim.localPosY;
-        *(f32*)((u8*)cam + 0xB0) = cam->anim.localPosZ;
+        cam->savedLocalPos.x = cam->anim.localPosX;
+        cam->savedLocalPos.y = cam->anim.localPosY;
+        cam->savedLocalPos.z = cam->anim.localPosZ;
         cam->fov = gCamcontrolModeSettings->fov;
         gCamcontrolModeSettings->transitionTimer = 0;
         break;
@@ -1025,9 +1025,9 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         cam->anim.rotX = gCamcontrolModeSettings->savedRotX;
         cam->anim.rotY = gCamcontrolModeSettings->savedRotY;
         cam->anim.rotZ = gCamcontrolModeSettings->savedRotZ;
-        cam->anim.hitboxScale = cam->anim.localPosX;
-        *(f32*)((u8*)cam + 0xAC) = cam->anim.localPosY;
-        *(f32*)((u8*)cam + 0xB0) = cam->anim.localPosZ;
+        cam->savedLocalPos.x = cam->anim.localPosX;
+        cam->savedLocalPos.y = cam->anim.localPosY;
+        cam->savedLocalPos.z = cam->anim.localPosZ;
         cam->probePosX = cam->anim.worldPosX;
         cam->probePosY = cam->anim.worldPosY;
         cam->probePosZ = cam->anim.worldPosZ;
