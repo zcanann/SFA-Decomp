@@ -30,33 +30,13 @@
 #include "main/dll/dll_00DC_mikabombshadow_api.h"
 #define MIKABOMB_HIT_VOLUME_SLOT 5
 
-/* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
+/* Shadow-bomb object spawned at init, cached into MikaBombState.shadowObj. */
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
 
-extern f32 lbl_803E31C0;
-extern u32 lbl_803E31A0;
 extern f32 gMikaBombHitSphereRadiusScale;
 extern f32 gMikaBombCameraShakeMagnitude;
 extern f32 gMikaBombCameraShakeDuration;
 extern f32 gMikaBombCameraShakeFalloff;
-extern f32 lbl_803E31C4;
-extern f32 lbl_803E31C8;
-extern f32 lbl_803E31D4;
-
-typedef struct MikabombState
-{
-    GameObject* shadowObj; /* 0x00: spawned shadow-bomb object */
-    f32 groundY;    /* 0x04: ground-plane Y sampled at init */
-    ModgfxFunc03Interface** resource; /* 0x08: Resource_Acquire(0x5b) handle */
-    u8 exploded;    /* 0x0C: set once the bomb has detonated */
-    u8 padD[3];
-} MikabombState;
-
-STATIC_ASSERT(offsetof(MikabombState, shadowObj) == 0x0);
-STATIC_ASSERT(offsetof(MikabombState, groundY) == 0x4);
-STATIC_ASSERT(offsetof(MikabombState, resource) == 0x8);
-STATIC_ASSERT(offsetof(MikabombState, exploded) == 0xC);
-STATIC_ASSERT(sizeof(MikabombState) == 0x10);
 
 int MikaBomb_getExtraSize(void)
 {
@@ -69,7 +49,7 @@ int MikaBomb_getObjectTypeId(void)
 
 void MikaBomb_free(GameObject* obj, int mode)
 {
-    MikabombState* state = obj->extra;
+    MikaBombState* state = obj->extra;
     if (state->shadowObj != NULL && mode == 0)
     {
         Obj_FreeObject(state->shadowObj);
@@ -82,7 +62,7 @@ void MikaBomb_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E31C0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gMikaBombRenderScale);
 }
 
 void MikaBomb_hitDetect(void)
@@ -91,14 +71,14 @@ void MikaBomb_hitDetect(void)
 
 void MikaBomb_update(GameObject* obj)
 {
-    MikabombState* state = obj->extra;
+    MikaBombState* state = obj->extra;
     u32 timer = obj->anim.alpha;
 
     if (timer < 0xff)
     {
         f32 t = timer;
         f32 dec;
-        if (t - (dec = lbl_803E31C4 * timeDelta) > lbl_803E31C8)
+        if (t - (dec = gMikaBombFadeRate * timeDelta) > gMikaBombZero)
         {
             obj->anim.alpha = timer - dec;
         }
@@ -133,9 +113,9 @@ void MikaBomb_update(GameObject* obj)
         {
             if (obj->anim.alpha == 0xff)
             {
-                MikabombState* st = obj->extra;
+                MikaBombState* st = obj->extra;
                 u32 rnd;
-                localB.packed = lbl_803E31A0;
+                localB.packed = gMikaBombExplosionSpawnCountRange;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
                 (*st->resource)->spawn(obj, rnd, NULL, 2, -1, &localB);
@@ -155,9 +135,9 @@ void MikaBomb_update(GameObject* obj)
             if (obj->anim.localPosY <= state->groundY &&
                 obj->anim.alpha == 0xff)
             {
-                MikabombState* st = obj->extra;
+                MikaBombState* st = obj->extra;
                 u32 rnd;
-                localA.packed = lbl_803E31A0;
+                localA.packed = gMikaBombExplosionSpawnCountRange;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dsmk2_c);
                 rnd = randomGetRange(0, 2);
                 (*st->resource)->spawn(obj, rnd, NULL, 2, -1, &localA);
@@ -177,16 +157,16 @@ void MikaBomb_update(GameObject* obj)
 
 void MikaBomb_init(GameObject* obj)
 {
-    MikabombState* state = obj->extra;
+    MikaBombState* state = obj->extra;
     f32 out;
     ObjPlacement* alloc;
     f32 fz;
 
     ObjHits_DisableObject(obj);
     obj->anim.alpha = 0xff;
-    fz = lbl_803E31C8;
+    fz = gMikaBombZero;
     obj->anim.velocityX = fz;
-    obj->anim.velocityY = lbl_803E31D4;
+    obj->anim.velocityY = gMikaBombInitialVelocityY;
     obj->anim.velocityZ = fz;
     obj->anim.rotY = -0x4000;
     obj->anim.rotX = 0;

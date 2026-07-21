@@ -13,12 +13,12 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 
-const f32 lbl_803E31C0 = 1.0f;
-const f32 lbl_803E31C4 = 4.0f;
-const f32 lbl_803E31C8 = 0.0f;
+const f32 gMikaBombRenderScale = 1.0f;
+const f32 gMikaBombFadeRate = 4.0f;
+const f32 gMikaBombZero = 0.0f;
 const f32 gMikaBombGravityAccel = 0.01f;
 const f32 gMikaBombMinFallVelocity = -2.5f;
-const f32 lbl_803E31D4 = -1.0f;
+const f32 gMikaBombInitialVelocityY = -1.0f;
 
 typedef struct MikaBombShadowState
 {
