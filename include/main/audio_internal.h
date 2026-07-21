@@ -4,6 +4,7 @@
 #include "global.h"
 #include "dolphin/ar.h"
 #include "dolphin/dvd.h"
+#include "main/audio/snd_reverb.h"
 #include "main/audio/synth_queue.h"
 
 #define SFX_OBJECT_CHANNEL_COUNT 56
@@ -16,6 +17,8 @@
 #define STREAM_FADEBITS_STOPSFX_SHIFT 2
 #define STREAM_VOLBITS_CHANMASK_BIT 7
 #define STREAM_VOLBITS_VOLUME_MASK 0x7F
+
+STATIC_ASSERT(sizeof(ReverbState) == 0x154);
 
 struct MusicTrackSlot;
 struct MusicChannel;
@@ -196,8 +199,8 @@ extern s32 gAudioStreamPreparedId;
 extern f32 gAudioStreamEndPos;
 extern f32 gAudioStreamPos;
 extern f32 gAudioStreamFramesPerSecond;
-extern u8 gAudioStreamDvdBlockCurrent[];
-extern u8 gAudioStreamDvdBlockPrepared[];
+extern DVDCommandBlock gAudioStreamDvdBlockCurrent;
+extern AudioDvdStreamContext gAudioStreamDvdBlockPrepared;
 extern char sDvdCancelStreamWarning[];
 extern f32 gSfxPanCenter;
 extern f32 gSfxPanScale;
@@ -274,7 +277,7 @@ extern void* gAudioStarfoxSSampleDirectoryHandle;
 extern void* gAudioStarfoxSSampleBufferHandle;
 extern int gAudioMemAllocHook;
 extern int gAudioMemFreeHook;
-extern u8 gAudioReverbSettings[];
+extern ReverbState gAudioReverbSettings;
 extern u32 gAudioAramBlock[0x2C / sizeof(u32)];
 extern f32 lbl_803DE5D4;
 extern f32 lbl_803DE568;

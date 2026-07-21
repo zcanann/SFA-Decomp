@@ -138,12 +138,12 @@ int gAudioArqRequestIndex;
 #define AUDIO_LOAD_MIDI_WAD       0x800 /* MIDI WAD */
 
 AudioArqRequestEntry gAudioArqRequests[0x300 / sizeof(AudioArqRequestEntry)];
-u8 gAudioReverbSettings[0x154];
+ReverbState gAudioReverbSettings;
 u32 gAudioAramBlock[0x2C / sizeof(u32)];
 MusicChannel gMusicChannels[0x240 / sizeof(MusicChannel)];
 SfxObjectChannel gSfxObjectChannels[0xC40 / sizeof(SfxObjectChannel)];
-u8 gAudioStreamDvdBlockCurrent[0x30];
-u8 gAudioStreamDvdBlockPrepared[0xA0];
+DVDCommandBlock gAudioStreamDvdBlockCurrent;
+AudioDvdStreamContext gAudioStreamDvdBlockPrepared;
 
 // AISetStreamPlayState() states
 #define AI_STREAM_STOP  0
@@ -770,15 +770,15 @@ int audioInit(void)
             gAudioSoundMode = 0;
             sndOutputMode(1);
         }
-        gAudioReverbSettings[0x13c] = 0;
-        *(f32*)&gAudioReverbSettings[0x148] = lbl_803DE550;
-        *(f32*)&gAudioReverbSettings[0x150] = lbl_803DE554;
-        *(f32*)&gAudioReverbSettings[0x14c] = lbl_803DE558;
-        *(f32*)&gAudioReverbSettings[0x140] = lbl_803DE558;
-        *(f32*)&gAudioReverbSettings[0x144] = lbl_803DE55C;
-        sndAuxCallbackUpdateSettingsReverbSTD((ReverbState*)gAudioReverbSettings);
+        gAudioReverbSettings.tempDisableFX = 0;
+        gAudioReverbSettings.time = lbl_803DE550;
+        gAudioReverbSettings.preDelay = lbl_803DE554;
+        gAudioReverbSettings.damping = lbl_803DE558;
+        gAudioReverbSettings.coloration = lbl_803DE558;
+        gAudioReverbSettings.mix = lbl_803DE55C;
+        sndAuxCallbackUpdateSettingsReverbSTD(&gAudioReverbSettings);
         reverbWork = 0;
-        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
+        sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, &gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
                                      (void*)reverbWork);
         {
             if (!sndIsInstalled())
@@ -2460,7 +2460,7 @@ void AudioStream_StopAll(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
+        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockPrepared.preparedCommand,
                                  fn_8000D0B4) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
@@ -2478,7 +2478,7 @@ void AudioStream_StopAll(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
@@ -2556,7 +2556,7 @@ void AudioStream_StopCurrent(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync(&gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
@@ -2586,7 +2586,7 @@ void AudioStream_CancelPrepared(void)
 {
     AISetStreamVolLeft(0);
     AISetStreamVolRight(0);
-    if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
+    if (DVDCancelStreamAsync(&gAudioStreamDvdBlockPrepared.preparedCommand,
                              fn_8000D0B4) == 0)
     {
         OSReport(sDvdCancelStreamWarning);
@@ -2648,7 +2648,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     int i;
     u8 stopped;
 
-    dvd[0] = gAudioStreamDvdBlockCurrent;
+    dvd[0] = (u8*)&gAudioStreamDvdBlockCurrent;
     fadeTbl = gAudioStreamFadeTable;
     s = gStreamsData;
     count = gStreamsCount;
