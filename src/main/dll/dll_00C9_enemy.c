@@ -86,7 +86,7 @@ typedef struct BaddieAfterUpdateBonesCbState
     u8 unk2F3;
     u8 unk2F4;
     u8 pad2F5[0x36C - 0x2F5];
-    s32 tailBoneChain; /* 0x36C: bone chain passed to playerTailFn_80026b3c for tail sim */
+    s32 tailBoneChain; /* 0x36C: bone chain passed to ObjModelChain_Update for tail sim */
 } BaddieAfterUpdateBonesCbState;
 
 typedef struct
@@ -1463,11 +1463,10 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
     switch (obj->anim.seqId)
     {
     case ENEMY_HAGABONMK2_OBJ:
-        playerTailFn_80026b3c(bones, v, (ObjModelChain*)state->tailBoneChain,
-                              crawler_rotateVectorYaw);
+        ObjModelChain_Update(bones, v, (ObjModelChain*)state->tailBoneChain, crawler_rotateVectorYaw);
         break;
     default:
-        playerTailFn_80026b3c(bones, v, (ObjModelChain*)state->tailBoneChain, NULL);
+        ObjModelChain_Update(bones, v, (ObjModelChain*)state->tailBoneChain, NULL);
         break;
     }
 }

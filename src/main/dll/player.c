@@ -360,7 +360,7 @@ void playerDoTailAnims(int obj, void* statep)
     if ((void*)gPlayerModelChain != NULL)
     {
         ObjModelChain_SetOrigin((ObjModelChain*)gPlayerModelChain, gPlayerModelChainOriginX, gPlayerModelChainOriginY, gPlayerModelChainOriginZ);
-        playerTailFn_80026b3c(state, v, (ObjModelChain*)gPlayerModelChain, playerUpdateTail);
+        ObjModelChain_Update(state, v, (ObjModelChain*)gPlayerModelChain, playerUpdateTail);
     }
 }
 static inline ObjModel* Player_GetActiveModel(int obj)

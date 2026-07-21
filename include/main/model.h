@@ -378,7 +378,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);
-void playerTailFn_80026b3c(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback);
+void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback);
 void __set_debug_bba(u8* p);
 
 #endif

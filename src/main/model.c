@@ -1384,8 +1384,7 @@ void modelChainInitNodesFromJoints(int* obj, int b, int* desc)
         PSMTXMultVec((f32*)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + lastJointIdx * 0x40), (f32*)(lastEntry + 0x18), (f32*)lastEntry);
     }
 }
-void playerTailFn_80026b3c(int* model, int animState, ObjModelChain* chain,
-                           ObjModelChainUpdateCallback callback)
+void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback)
 {
     int off;
     int i;

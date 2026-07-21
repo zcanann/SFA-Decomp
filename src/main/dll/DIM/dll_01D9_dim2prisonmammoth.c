@@ -263,7 +263,7 @@ void dim2prisonmammoth_initialise(void)
 
 void fn_802BC788(GameObject* obj, int b)
 {
-    playerTailFn_80026b3c((int*)b, *(int*)b, (ObjModelChain*)*(int*)(*(int*)&obj->extra + 0x14f8), NULL);
+    ObjModelChain_Update((int*)b, *(int*)b, (ObjModelChain*)*(int*)(*(int*)&obj->extra + 0x14f8), NULL);
 }
 
 ObjHitReactEntry gPrisonMammothHitReactEntry[] = {
