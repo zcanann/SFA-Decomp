@@ -2906,6 +2906,7 @@ void pauseMenuDrawStatus(void)
     u8* trickyEnergy;
     f32* opacity;
     u8* base;
+    TrickyHud* hud;
     int magicDelta;
     f32 nextOpacity;
     int displayedValue;
@@ -2921,17 +2922,18 @@ void pauseMenuDrawStatus(void)
     int statuses[HUD_STATUS_COUNT];
 
     base = (u8*)lbl_803A87F0;
+    hud = (TrickyHud*)base;
     player = Obj_GetPlayerObject();
     getTrickyObject();
     trickyEnergy = (*gMapEventInterface)->getTrickyEnergy();
     statuses[HUD_STATUS_HEALTH] = playerGetCurHealth(player);
     statuses[HUD_STATUS_MAX_HEALTH] = playerGetMaxHealth(player);
     statuses[HUD_STATUS_TRICKY_FOOD] = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
-    if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - playerGetCurMagic(player) < 0)
+    if (hud->statusPrevious[HUD_STATUS_MAGIC] - playerGetCurMagic(player) < 0)
     {
         magicDelta = -1;
     }
-    else if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - playerGetCurMagic(player) > 0)
+    else if (hud->statusPrevious[HUD_STATUS_MAGIC] - playerGetCurMagic(player) > 0)
     {
         magicDelta = 1;
     }
@@ -2939,12 +2941,12 @@ void pauseMenuDrawStatus(void)
     {
         magicDelta = 0;
     }
-    statuses[HUD_STATUS_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - magicDelta;
-    if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - playerGetMaxMagic(player) < 0)
+    statuses[HUD_STATUS_MAGIC] = hud->statusPrevious[HUD_STATUS_MAGIC] - magicDelta;
+    if (hud->statusPrevious[HUD_STATUS_MAX_MAGIC] - playerGetMaxMagic(player) < 0)
     {
         magicDelta = -1;
     }
-    else if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - playerGetMaxMagic(player) > 0)
+    else if (hud->statusPrevious[HUD_STATUS_MAX_MAGIC] - playerGetMaxMagic(player) > 0)
     {
         magicDelta = 1;
     }
@@ -2953,17 +2955,17 @@ void pauseMenuDrawStatus(void)
         magicDelta = 0;
     }
     maxMagicDelta = -magicDelta;
-    statuses[HUD_STATUS_MAX_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] + maxMagicDelta;
+    statuses[HUD_STATUS_MAX_MAGIC] = hud->statusPrevious[HUD_STATUS_MAX_MAGIC] + maxMagicDelta;
     if ((maxMagicDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) && (objIsCurModelNotZero(player) != 0) &&
         (mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
     }
-    ((int*)(base + 0xB74))[HUD_STATUS_MAGIC] = statuses[HUD_STATUS_MAGIC];
-    ((int*)(base + 0xB74))[HUD_STATUS_MAX_MAGIC] = statuses[HUD_STATUS_MAX_MAGIC];
+    hud->statusValue[HUD_STATUS_MAGIC] = statuses[HUD_STATUS_MAGIC];
+    hud->statusValue[HUD_STATUS_MAX_MAGIC] = statuses[HUD_STATUS_MAX_MAGIC];
     statuses[HUD_STATUS_BOMB_SPORES] = mainGetBit(GAMEBIT_ITEM_BombSpore_Count);
     statuses[HUD_STATUS_FIREFLIES] = mainGetBit(GAMEBIT_ITEM_Firefly_Count);
-    if (statuses[HUD_STATUS_FIREFLIES] != ((int*)(base + 0xB30))[HUD_STATUS_FIREFLIES])
+    if (statuses[HUD_STATUS_FIREFLIES] != hud->statusPrevious[HUD_STATUS_FIREFLIES])
     {
         u8 flag = 0;
         if (statuses[HUD_STATUS_FIREFLIES] == 0)
