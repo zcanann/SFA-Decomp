@@ -67,7 +67,7 @@ void setupToRenderMapBlock(int* block, void* posMtx);
 void renderMapBlock(int* block, u8 type);
 void fn_80062894(void);
 void fn_80062808(void);
-void fn_80063368(GameObject* target);
+void trackInvalidateDynamicSlotsForObject(GameObject* target);
 void objDrawFn_80061654(GameObject* obj, ObjModel* model);
 int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
                         GameObject** outSurfaceObj);

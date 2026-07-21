@@ -2274,7 +2274,7 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
     return 0;
 }
 
-void fn_80063368(GameObject* target)
+void trackInvalidateDynamicSlotsForObject(GameObject* target)
 {
     s16 i;
     for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++)

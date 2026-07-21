@@ -908,7 +908,7 @@ void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision)
             *(f32*)((u8*)collision + iv[0] * 12 + 280) = lbl_803E068C + *(f32*)((u8*)collision + iv[0] * 12 + 232);
             *(f32*)((u8*)collision + iv[0] * 12 + 284) = *(f32*)((u8*)collision + iv[0] * 12 + 236);
         }
-        fn_80063368((GameObject*)obj);
+        trackInvalidateDynamicSlotsForObject((GameObject*)obj);
     }
 }
 
@@ -970,7 +970,7 @@ void dll_15_func0A(GameObject* obj, CurvesCollisionState* collision)
             *(f32*)(worldBase + 284) = *(f32*)(worldBase + 236);
             worldBase += 0xc;
         }
-        fn_80063368(obj);
+        trackInvalidateDynamicSlotsForObject(obj);
     }
 }
 
@@ -1300,7 +1300,7 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, f32 step)
                 *(f32*)(wb[0] + 284) = *(f32*)(wb[0] + 236);
                 wb[0] += 0xc;
             }
-            fn_80063368(curveObj);
+            trackInvalidateDynamicSlotsForObject(curveObj);
         }
         if ((s32)(state->flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)
         {
@@ -1389,7 +1389,7 @@ void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, f32 step)
                 *(f32*)(wb[0] + 284) = *(f32*)(wb[0] + 236);
                 wb[0] += 0xc;
             }
-            fn_80063368(curveObj);
+            trackInvalidateDynamicSlotsForObject(curveObj);
         }
     }
     if (curveObj->anim.parentAnim != NULL)
