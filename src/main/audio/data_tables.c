@@ -338,10 +338,11 @@ u32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
                     for (k = 0; k < dataSmpSDirs[i].numSmp; ++k)
                     {
                         if (sdir[j].id == dataSmpSDirs[i].data[k].id)
-                            goto found_id;
+                            break;
                     }
+                    if (k != dataSmpSDirs[i].numSmp)
+                        break;
                 }
-            found_id:
                 if (i != dataSmpSDirNum)
                 {
                     sdir[j].ref_cnt = 0xFFFF;

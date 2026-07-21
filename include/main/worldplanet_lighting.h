@@ -39,9 +39,9 @@ extern WorldPlanetColorRGBA8 gWorldPlanetSkyColorTo;
 extern WorldPlanetColorRGBA8 gWorldPlanetAmbientFrom;
 extern WorldPlanetPaddedColorRGBA8 gWorldPlanetAmbientTo;
 
-extern volatile WorldPlanetColorRGB8 gWorldPlanetCurAmbient;
-extern volatile WorldPlanetColorRGB8 gWorldPlanetCurLight;
-extern volatile WorldPlanetColorRGB8 gWorldPlanetCurSky;
+extern WorldPlanetColorRGB8 gWorldPlanetCurAmbient;
+extern WorldPlanetColorRGB8 gWorldPlanetCurLight;
+extern WorldPlanetColorRGB8 gWorldPlanetCurSky;
 
 void worldplanet_updateMapLighting(GameObject* obj);
 
