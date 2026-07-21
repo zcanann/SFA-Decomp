@@ -14,7 +14,7 @@ s16* objModelGetVecFn_800395d8(GameObject* obj, int target);
 void fn_8003A168(GameObject* obj, void* state);
 void fn_8003B608(s16 red, s16 green, s16 blue);
 void fn_8003B5E0(int red, int green, int blue, int alpha);
-void fn_8003B950(f32* matrix);
+void objSetModelMatrixOverride(f32* matrix);
 int objGetAlphaCompareThreshold(void);
 void objSetAlphaCompareThreshold(u8 alpha);
 void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model);

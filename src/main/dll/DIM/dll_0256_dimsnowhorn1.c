@@ -913,7 +913,7 @@ void DIMSnowHorn1_func22(GameObject* obj, f32 scale)
     transform.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos((f32*)gDIMSnowHorn1ModelMtx, &transform);
     mtx44_mult(gDIMSnowHorn1ModelMtx, (f32*)pathMtx, gDIMSnowHorn1ModelMtx);
-    fn_8003B950(gDIMSnowHorn1ModelMtx);
+    objSetModelMatrixOverride(gDIMSnowHorn1ModelMtx);
 }
 
 void DIMSnowHorn1_func21(void)

@@ -875,7 +875,7 @@ void HighTop_renderGroundMarker(GameObject* obj, f32 scale)
     pos.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(gHighTopGroundMarkerMtx, &pos);
     mtx44_mult(gHighTopGroundMarkerMtx, mtx, gHighTopGroundMarkerMtx);
-    fn_8003B950(gHighTopGroundMarkerMtx);
+    objSetModelMatrixOverride(gHighTopGroundMarkerMtx);
 }
 
 void hightop_func15(void)

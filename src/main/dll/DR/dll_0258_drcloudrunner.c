@@ -963,7 +963,7 @@ int DR_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
 
 void DR_CloudRunner_setGroundMarkerMatrix(GameObject* obj)
 {
-    fn_8003B950((f32*)ObjPath_GetPointModelMtx(obj, 2));
+    objSetModelMatrixOverride((f32*)ObjPath_GetPointModelMtx(obj, 2));
 }
 
 void DR_CloudRunner_func21(void)

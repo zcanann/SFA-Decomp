@@ -791,9 +791,9 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 mtx[12] = (obj)->anim.localPosX - playerMapOffsetX;
                 mtx[13] = (obj)->anim.localPosY;
                 mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
-                fn_8003B950((f32*)mtx);
+                objSetModelMatrixOverride((f32*)mtx);
                 objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2FF4);
-                fn_8003B950(0);
+                objSetModelMatrixOverride(NULL);
             }
             else
             {

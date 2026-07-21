@@ -40,7 +40,7 @@
 s16 lbl_803DCC18;
 s16 lbl_803DCC16;
 s16 lbl_803DCC14;
-u32 lbl_803DCC10;
+f32* gObjModelMatrixOverride;
 u8 lbl_803DCC0D;
 u8 lbl_803DCC0C;
 u8 lbl_803DCC0B;
@@ -1551,9 +1551,9 @@ void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5
 }
 
 
-void fn_8003B950(f32* matrix)
+void objSetModelMatrixOverride(f32* matrix)
 {
-    lbl_803DCC10 = (u32)matrix;
+    gObjModelMatrixOverride = matrix;
 }
 
 

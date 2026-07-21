@@ -237,7 +237,7 @@ void drakorhoverpad_renderGroundMarker(GameObject* obj, f32 scale)
     pos.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(gDrakorHoverpadMtx, &pos);
     mtx44_mult(gDrakorHoverpadMtx, mtx, gDrakorHoverpadMtx);
-    fn_8003B950(gDrakorHoverpadMtx);
+    objSetModelMatrixOverride(gDrakorHoverpadMtx);
 }
 
 void drakorhoverpad_func15(void)
