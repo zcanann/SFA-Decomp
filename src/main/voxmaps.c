@@ -379,7 +379,7 @@ void voxmapsFn_80010ff4(struct RouteState* state, VoxBoxArg* srcBox, int parentN
     }
 }
 
-void fn_800118EC(RouteState* state, VoxBoxArg* box, int parentNodeIndex)
+void voxmaps_expandRouteNeighbors(RouteState* state, VoxBoxArg* box, int parentNodeIndex)
 {
     s16 neighbor[3];
     u16 nextCost = box->cost + 1;
@@ -400,7 +400,7 @@ void fn_800118EC(RouteState* state, VoxBoxArg* box, int parentNodeIndex)
     voxmapsFn_80010ff4(state, box, parentNodeIndex, nextCost, neighbor);
 }
 
-int fn_800119FC(s16* dest, s16* start, s16* out)
+int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut)
 {
     int shiftLo;
     VoxPos cur = *(VoxPos*)dest;
@@ -573,9 +573,9 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
 
             if (blocked)
             {
-                if (out != NULL)
+                if (lastReachableOut != NULL)
                 {
-                    *(VoxPos*)out = found;
+                    *(VoxPos*)lastReachableOut = found;
                 }
                 return 0;
             }
@@ -611,14 +611,14 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
         }
     }
 
-    if (out != NULL)
+    if (lastReachableOut != NULL)
     {
-        *(VoxPos*)out = *(VoxPos*)start;
+        *(VoxPos*)lastReachableOut = *(VoxPos*)start;
     }
     return 1;
 }
 
-int fn_80011EB0(RouteState* state, int maxPathPoints)
+int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints)
 {
     f32 waypoint[3];
     RouteNode startNode;
@@ -664,7 +664,7 @@ int fn_80011EB0(RouteState* state, int maxPathPoints)
     {
         if (segmentStart->x != candidate->x || segmentStart->y != candidate->y)
         {
-            if (fn_800119FC((s16*)candidate, (s16*)segmentStart, NULL) == 0)
+            if (voxmaps_traceTraversableRoute((s16*)candidate, (s16*)segmentStart, NULL) == 0)
             {
                 waypoint[0] = (f32)(lastVisibleNode->x * 10 + 5);
                 waypoint[1] = (f32)(lastVisibleNode->z * 10 + 5);
@@ -743,7 +743,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
         state->startY &= ~1;
         state->tgtX &= ~1;
         state->tgtY &= ~1;
-        if (fn_800119FC(&state->startX, &state->tgtX, out) != 0)
+        if (voxmaps_traceTraversableRoute(&state->startX, &state->tgtX, out) != 0)
         {
             pathDirect[0] = 1;
         }
@@ -810,7 +810,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
             else
             {
                 navState = 0;
-                if (fn_80011EB0(state, 1) != 0)
+                if (voxmaps_buildRouteWaypoints(state, 1) != 0)
                 {
                     nav->tgtPos[0] = state->pathPoints[0];
                     nav->tgtPos[1] = state->pathPoints[1];
@@ -828,7 +828,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
             break;
         case 1:
             navState = 0;
-            if (fn_80011EB0(state, 1) != 0)
+            if (voxmaps_buildRouteWaypoints(state, 1) != 0)
             {
                 nav->tgtPos[0] = state->pathPoints[0];
                 nav->tgtPos[1] = state->pathPoints[1];
@@ -891,7 +891,7 @@ int voxmaps_processRouteQueue(RouteState* state, int count)
             else
             {
                 node->flag = 1;
-                fn_800118EC(state, (VoxBoxArg*)node, nodeIdx);
+                voxmaps_expandRouteNeighbors(state, (VoxBoxArg*)node, nodeIdx);
             }
         }
         else

@@ -145,13 +145,13 @@ void voxmaps_resetLoadedMaps(void);
 void voxmaps_initialise(void);
 int* voxmaps_updateActiveMap(VoxPos* obj);
 int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, u8 skipFirst);
-void fn_800118EC(RouteState* state, VoxBoxArg* box, int parentNodeIndex);
+void voxmaps_expandRouteNeighbors(RouteState* state, VoxBoxArg* box, int parentNodeIndex);
 void voxmapsFn_80010ff4(RouteState* state, VoxBoxArg* srcBox, int parentNodeIndex, u16 count, s16* box);
 int voxmaps_processRouteQueue(RouteState* state, int count);
 int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state);
-int fn_80011EB0(RouteState* state, int count);
+int voxmaps_buildRouteWaypoints(RouteState* state, int maxPathPoints);
 void loadVoxMaps(int handle, int* outCount, int* outSize);
 void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8);
-int fn_800119FC(s16* dest, s16* start, s16* out);
+int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut);
 
 #endif /* MAIN_VOXMAPS_H_ */
