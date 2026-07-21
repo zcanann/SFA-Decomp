@@ -9,30 +9,32 @@ typedef struct CCGasVentControlPlacement
 {
     ObjPlacement head;
     u8 pad18[2];
-    u8 rotX;
+    u8 rotByte;
 } CCGasVentControlPlacement;
 
 typedef struct CCGasVentControlState
 {
-    u8 state;
+    u8 phase;
     u8 soundActive;
     u8 pad02[2];
     f32 airMeter;
     f32 fogRise;
-    u8 ventCount;
+    u8 previousClearVentCount;
     u8 pad0D[3];
 } CCGasVentControlState;
 
-STATIC_ASSERT(offsetof(CCGasVentControlPlacement, rotX) == 0x1A);
+STATIC_ASSERT(offsetof(CCGasVentControlPlacement, rotByte) == 0x1A);
+STATIC_ASSERT(offsetof(CCGasVentControlState, phase) == 0x0);
+STATIC_ASSERT(offsetof(CCGasVentControlState, soundActive) == 0x1);
 STATIC_ASSERT(offsetof(CCGasVentControlState, airMeter) == 0x4);
 STATIC_ASSERT(offsetof(CCGasVentControlState, fogRise) == 0x8);
-STATIC_ASSERT(offsetof(CCGasVentControlState, ventCount) == 0xC);
+STATIC_ASSERT(offsetof(CCGasVentControlState, previousClearVentCount) == 0xC);
 STATIC_ASSERT(sizeof(CCGasVentControlState) == 0x10);
 
 extern ObjectDescriptor gCCgasventControlObjDescriptor;
 
 int CCGasVentControl_SeqFn(GameObject* obj);
-u8 CCGasVentControlFn_801a9fd0(GameObject* obj, CCGasVentControlState* state);
+u8 CCGasVentControl_countClearVents(GameObject* obj, CCGasVentControlState* state);
 
 int ccgasventcontrol_getExtraSize(void);
 void ccgasventcontrol_free(GameObject* obj);

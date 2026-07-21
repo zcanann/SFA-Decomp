@@ -5,7 +5,7 @@
  *
  * Once all four vents exist and the room trigger (gameBit 0x3EC) fires it
  * runs the intro sequence, then enters the active state: it counts how many
- * vents the player is clear of (CCGasVentControlFn_801a9fd0), drives the air
+ * vents the player is clear of (CCGasVentControl_countClearVents), drives the air
  * meter and the rising heavy-fog gas, and - if the player sinks into the gas
  * - warps them back. Running the air out sets the "gas puzzle done" gameBit
  * (0xA3) and shuts everything down.
@@ -39,6 +39,7 @@
 #define GAMEBIT_GAS_ACTIVE               0x1c0 /* gas filling the room */
 #define GAMEBIT_GAS_PUZZLE_DONE          0xa3
 #define GAMEBIT_GAS_INTRO_TRIGGER        0x3ec /* fires the intro sequence once the vents exist */
+#define GAMEBIT_GAS_PUZZLE_STATE         0x620
 
 #define CCGASVENTCONTROL_CLEAR_DISTANCE   100.0f
 #define CCGASVENTCONTROL_SFX_VOLUME_MAX   127.0f
@@ -64,11 +65,11 @@
 
 int CCGasVentControl_SeqFn(GameObject* obj)
 {
-    CCGasVentControlFn_801a9fd0(obj, obj->extra);
+    CCGasVentControl_countClearVents(obj, obj->extra);
     return 0;
 }
 
-u8 CCGasVentControlFn_801a9fd0(GameObject* obj, CCGasVentControlState* state)
+u8 CCGasVentControl_countClearVents(GameObject* obj, CCGasVentControlState* state)
 {
     u8 i;
     u8 count = 0;
@@ -118,8 +119,8 @@ int ccgasventcontrol_getExtraSize(void)
 void ccgasventcontrol_free(GameObject* obj)
 {
     CCGasVentControlState* state = obj->extra;
-    u8 t = state->state;
-    if (t == CCGASVENT_STATE_ACTIVE || t == CCGASVENT_STATE_WARP_BACK)
+    u8 phase = state->phase;
+    if (phase == CCGASVENT_STATE_ACTIVE || phase == CCGASVENT_STATE_WARP_BACK)
     {
         disableHeavyFog();
     }
@@ -132,9 +133,6 @@ void ccgasventcontrol_render(GameObject* obj, int p2, int p3, int p4, int p5, s8
     if (v != 0)
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, CCGASVENTCONTROL_RENDER_SCALE);
 }
-
-void ccgasventcontrol_init(GameObject* obj, CCGasVentControlPlacement* placement);
-void ccgasventcontrol_update(GameObject* obj);
 
 ObjectDescriptor gCCgasventControlObjDescriptor = {
     0,
@@ -156,8 +154,8 @@ ObjectDescriptor gCCgasventControlObjDescriptor = {
 void ccgasventcontrol_update(GameObject* obj)
 {
     CCGasVentControlState* state = obj->extra;
-    u8 clearVentCount = CCGasVentControlFn_801a9fd0(obj, state);
-    switch (state->state)
+    u8 clearVentCount = CCGasVentControl_countClearVents(obj, state);
+    switch (state->phase)
     {
     case CCGASVENT_STATE_WAIT_VENTS:
     {
@@ -165,22 +163,22 @@ void ccgasventcontrol_update(GameObject* obj)
         ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
         if (cnt == 4)
         {
-            state->state = CCGASVENT_STATE_WAIT_INTRO;
+            state->phase = CCGASVENT_STATE_WAIT_INTRO;
         }
         break;
     }
     case CCGASVENT_STATE_WAIT_INTRO:
         if (mainGetBit(GAMEBIT_GAS_INTRO_TRIGGER) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            state->state = CCGASVENT_STATE_INIT_METER;
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
+            state->phase = CCGASVENT_STATE_INIT_METER;
         }
         break;
     case CCGASVENT_STATE_INIT_METER:
         (*gGameUIInterface)->initAirMeter(6000, CCGASVENTCONTROL_AIRMETER_BGTEXTURE);
         state->airMeter = CCGASVENTCONTROL_AIR_METER_MAX;
-        state->state = CCGASVENT_STATE_ACTIVE;
-        state->ventCount = clearVentCount;
+        state->phase = CCGASVENT_STATE_ACTIVE;
+        state->previousClearVentCount = clearVentCount;
         break;
     case CCGASVENT_STATE_ACTIVE:
         if (clearVentCount != 0)
@@ -217,14 +215,14 @@ void ccgasventcontrol_update(GameObject* obj)
                 obj->anim.localPosX = player->anim.localPosX;
                 obj->anim.localPosY = player->anim.localPosY;
                 obj->anim.localPosZ = player->anim.localPosZ;
-                (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                 (*gCameraInterface)->setMode(CCGASVENTCONTROL_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
-                state->state = CCGASVENT_STATE_WARP_BACK;
+                state->phase = CCGASVENT_STATE_WARP_BACK;
             }
-            if (clearVentCount != state->ventCount)
+            if (clearVentCount != state->previousClearVentCount)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
-                state->ventCount = clearVentCount;
+                state->previousClearVentCount = clearVentCount;
             }
         }
         else
@@ -232,8 +230,8 @@ void ccgasventcontrol_update(GameObject* obj)
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             (*gGameUIInterface)->airMeterSetShutdown();
             mainSetBits(GAMEBIT_GAS_PUZZLE_DONE, 1);
-            mainSetBits(0x620, 0);
-            state->state = CCGASVENT_STATE_SAVE_POINT;
+            mainSetBits(GAMEBIT_GAS_PUZZLE_STATE, 0);
+            state->phase = CCGASVENT_STATE_SAVE_POINT;
         }
         break;
     case CCGASVENT_STATE_WARP_BACK:
@@ -243,14 +241,14 @@ void ccgasventcontrol_update(GameObject* obj)
     {
         GameObject* player = Obj_GetPlayerObject();
         (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
-        state->state = CCGASVENT_STATE_WAIT_CLEAR;
+        state->phase = CCGASVENT_STATE_WAIT_CLEAR;
         break;
     }
     case CCGASVENT_STATE_WAIT_CLEAR:
         if (mainGetBit(GAMEBIT_GAS_ACTIVE) == 0)
         {
             disableHeavyFog();
-            state->state = CCGASVENT_STATE_DONE;
+            state->phase = CCGASVENT_STATE_DONE;
         }
         break;
     }
@@ -260,9 +258,9 @@ void ccgasventcontrol_init(GameObject* obj, CCGasVentControlPlacement* placement
 {
     CCGasVentControlState* state = obj->extra;
     obj->animEventCallback = CCGasVentControl_SeqFn;
-    obj->anim.rotX = (s16)((u32)placement->rotX << 8);
+    obj->anim.rotX = (s16)((u32)placement->rotByte << 8);
     if (mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
-        state->state = CCGASVENT_STATE_DONE;
+        state->phase = CCGASVENT_STATE_DONE;
     }
 }
