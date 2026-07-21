@@ -242,7 +242,7 @@ int iceBaddie_stateHandlerB07(int obj, int state)
 int iceBaddie_stateHandlerB06(int obj, int state)
 {
     GroundBaddieState* sub = ((GameObject*)obj)->extra;
-    int route;
+    RouteNav* route;
     f32 neutralBlend;
 
     if ((s8)((GroundBaddieState*)state)->baddie.moveDone != 0 &&
@@ -278,23 +278,23 @@ int iceBaddie_stateHandlerB06(int obj, int state)
     {
         return 8;
     }
-    route = (int)&sub->routeNav;
+    route = &sub->routeNav;
     neutralBlend = 0.0f;
     ((GroundBaddieState*)state)->baddie.moveInputX = neutralBlend;
     ((GroundBaddieState*)state)->baddie.moveInputZ = neutralBlend;
-    memcpy((void*)route, &((GameObject*)obj)->anim.localPosX, 0xc);
+    memcpy(route, &((GameObject*)obj)->anim.localPosX, 0xc);
     memcpy((void*)sub->routeNav.curPos,
            (void*)&((GameObject*)((GroundBaddieState*)state)->baddie.targetObj)->anim.localPosX, 0xc);
     voxmaps_updateRoutePath(&sub->routeNav, &sub->routeState);
-    if (*(u8*)(route + 0x25) == 0)
+    if (route->flag25 == 0)
     {
-        (*gPlayerInterface)->moveTowardPoint((void*)obj, (void*)state, *(f32*)(route + 0x18),
-                                             *(f32*)(route + 0x20), 0.0f, 0.0f, 60.0f);
+        (*gPlayerInterface)->moveTowardPoint((void*)obj, (void*)state, route->tgtPos[0],
+                                             route->tgtPos[2], 0.0f, 0.0f, 60.0f);
     }
     else
     {
-        (*gPlayerInterface)->moveTowardPoint((void*)obj, (void*)state, *(f32*)(route + 0x18),
-                                             *(f32*)(route + 0x20), 15.0f, 30.0f, 60.0f);
+        (*gPlayerInterface)->moveTowardPoint((void*)obj, (void*)state, route->tgtPos[0],
+                                             route->tgtPos[2], 15.0f, 30.0f, 60.0f);
     }
     if (((GroundBaddieState*)state)->baddie.stateTimer > 0x78 &&
         (*gBaddieControlInterface)
