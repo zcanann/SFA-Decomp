@@ -1516,130 +1516,137 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
 }
 void initFn_8006d020(void)
 {
-    u8 saved;
-    f32* px;
-    int placed;
-    f32* pz;
-    f32* prad;
-    f32* e;
-    f32* o;
-    int attempts;
-    int count;
-    int col;
-    int j;
-    u8 collide;
+    u8 savedHeap;
+    f32* placementX;
+    int placedCount;
+    f32* placementZ;
+    f32* placementRadius;
+    f32* placement;
+    f32* otherPlacement;
+    int placementAttempts;
+    int column;
+    u8 overlaps;
+    int otherIndex;
     int row;
-    int tex;
+    int frame;
 
-    saved = testAndSet_onlyUseHeap3(1);
-    attempts = 0;
-    placed = 0;
-    e = gNewShadowPlacements;
-    while (placed < 0x32 && attempts < 10000u)
+    savedHeap = testAndSet_onlyUseHeap3(1);
+    placementAttempts = 0;
+    placedCount = 0;
+    placement = gNewShadowPlacements;
+    while (placedCount < 0x32 && placementAttempts < 10000u)
     {
-        e[0] = (f32)randomGetRange(8, 0x10);
-        e[3] = lbl_803DEDD8 * (f32)randomGetRange(5, 10);
-        e[4] = e[3] * (lbl_803DEDD8 * (f32)randomGetRange(0x14, 0x32));
-        attempts = 0;
-        px = &e[1];
-        pz = &e[2];
-        prad = &e[4];
+        placement[0] = randomGetRange(8, 0x10);
+        placement[3] = lbl_803DEDD8 * randomGetRange(5, 10);
+        placement[4] = placement[3] * (lbl_803DEDD8 * randomGetRange(0x14, 0x32));
+        placementAttempts = 0;
+        placementX = &placement[1];
+        placementZ = &placement[2];
+        placementRadius = &placement[4];
         do
         {
-            *px = lbl_803DEDDC * (f32)randomGetRange(0, 999);
-            *pz = lbl_803DEDDC * (f32)randomGetRange(0, 999);
-            collide = 0;
-            j = 0;
-            o = gNewShadowPlacements;
-            while (j < placed && !collide)
+            *placementX = lbl_803DEDDC * randomGetRange(0, 999);
+            *placementZ = lbl_803DEDDC * randomGetRange(0, 999);
+            overlaps = 0;
+            otherIndex = 0;
+            otherPlacement = gNewShadowPlacements;
+            while (otherIndex < placedCount && !overlaps)
             {
-                f32 mx, mz, tmp, d;
-                mx = __fabsf(*px - o[1]);
-                tmp = __fabsf((lbl_803DED2C + *px) - o[1]);
-                if (tmp < mx)
-                    mx = tmp;
-                tmp = __fabsf((*px - lbl_803DED2C) - o[1]);
-                if (tmp < mx)
-                    mx = tmp;
-                mz = __fabsf(*pz - o[2]);
-                tmp = __fabsf((lbl_803DED2C + *pz) - o[2]);
-                if (tmp < mz)
-                    mz = tmp;
-                tmp = __fabsf((*pz - lbl_803DED2C) - o[2]);
-                if (tmp < mz)
-                    mz = tmp;
-                d = sqrtf(mx * mx + mz * mz);
-                if (d < *prad + o[3])
-                    collide = 1;
-                o += 5;
-                j++;
+                f32 xDistance, zDistance, wrappedDistance;
+                xDistance = __fabsf(*placementX - otherPlacement[1]);
+                wrappedDistance = __fabsf((lbl_803DED2C + *placementX) - otherPlacement[1]);
+                if (wrappedDistance < xDistance)
+                    xDistance = wrappedDistance;
+                wrappedDistance = __fabsf((*placementX - lbl_803DED2C) - otherPlacement[1]);
+                if (wrappedDistance < xDistance)
+                    xDistance = wrappedDistance;
+                zDistance = __fabsf(*placementZ - otherPlacement[2]);
+                wrappedDistance = __fabsf((lbl_803DED2C + *placementZ) - otherPlacement[2]);
+                if (wrappedDistance < zDistance)
+                    zDistance = wrappedDistance;
+                wrappedDistance = __fabsf((*placementZ - lbl_803DED2C) - otherPlacement[2]);
+                if (wrappedDistance < zDistance)
+                    zDistance = wrappedDistance;
+                wrappedDistance = zDistance * zDistance;
+                zDistance = xDistance * xDistance + wrappedDistance;
+                zDistance = sqrtf(zDistance);
+                if (zDistance < *placementRadius + otherPlacement[3])
+                    overlaps = 1;
+                otherPlacement += 5;
+                otherIndex++;
             }
-            attempts++;
-        } while (collide && attempts < 10000u);
-        e += 5;
-        placed++;
+            placementAttempts++;
+        } while (overlaps && placementAttempts < 10000u);
+        placement += 5;
+        placedCount++;
     }
 
-    count = placed;
-    tex = 0;
-    for (; tex < 0x10; tex++)
     {
-        gNewShadowNoiseTexFrames[tex] = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
-        for (row = 0; row < 0x40; row++)
+        u32 noisePlacementCount = placedCount;
+
+        frame = 0;
+        for (; frame < 0x10; frame++)
         {
-            int rowoff, lowoff;
-            col = 0;
-            rowoff = (row >> 2) * 0x20;
-            lowoff = (row & 3) * 2;
-            for (; col < 0x40; col++)
+            gNewShadowNoiseTexFrames[frame] = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
+            for (row = 0; row < 0x40; row++)
             {
-                f32 o1, o2;
-                int hi, lo;
-                int dst = (int)gNewShadowNoiseTexFrames[tex] + rowoff + lowoff;
-                dst += (col & 3) * 8;
-                dst += (col >> 2) * 0x200;
-                fn_8006CD20(row * lbl_803DEDE0, col * lbl_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
-                hi = (int)(255.0f * o2);
-                lo = (int)(255.0f * o1);
-                *(u16*)(dst + 0x60) = ((hi & 0xffff) << 8) | lo;
+                int tileRowOffset, rowPixelOffset;
+                column = 0;
+                tileRowOffset = (row >> 2) * 0x20;
+                rowPixelOffset = (row & 3) * 2;
+                for (; column < 0x40; column++)
+                {
+                    f32 shift, intensity;
+                    int highByte, lowByte;
+                    int texelAddress = (int)gNewShadowNoiseTexFrames[frame] + tileRowOffset + rowPixelOffset;
+                    texelAddress += (column & 3) * 8;
+                    texelAddress += (column >> 2) * 0x200;
+                    fn_8006CD20(row * lbl_803DEDE0, column * lbl_803DEDE0, frame,
+                                gNewShadowPlacements, noisePlacementCount, &shift, &intensity);
+                    highByte = 255.0f * intensity;
+                    lowByte = 255.0f * shift;
+                    ((NewShadowVectorTexel*)(texelAddress + 0x60))->packedXY =
+                        ((highByte & 0xffff) << 8) | lowByte;
+                }
             }
+            DCFlushRange(gNewShadowNoiseTexFrames[frame] + 1, gNewShadowNoiseTexFrames[frame]->dataSize);
         }
-        DCFlushRange(gNewShadowNoiseTexFrames[tex] + 1, gNewShadowNoiseTexFrames[tex]->dataSize);
     }
 
     gNewShadowCausticTexture = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
     for (row = 0; row < 0x40; row++)
     {
-        int rowoff, lowoff;
-        f32 rv;
-        col = 0;
-        rowoff = (row >> 2) * 0x20;
-        lowoff = (row & 3) * 2;
-        rv = lbl_803DEDE4 * row;
-        for (; col < 0x40; col++)
+        int tileRowOffset, rowPixelOffset;
+        f32 rowPhase;
+        column = 0;
+        tileRowOffset = (row >> 2) * 0x20;
+        rowPixelOffset = (row & 3) * 2;
+        rowPhase = lbl_803DEDE4 * row;
+        for (; column < 0x40; column++)
         {
-            f32 cv, n1, n2, prod, fa;
-            int hi, lo;
-            u8* dst = (u8*)gNewShadowCausticTexture + lowoff;
-            dst += rowoff;
-            dst += (col & 3) * 8;
-            dst += (col >> 2) * 0x200;
-            cv = lbl_803DEDE8 * col;
-            n1 = mathCosfHighPrecision(lbl_803DED38 * mathSinfHighPrecision(cv) + rv);
-            n2 = mathCosfHighPrecision(cv);
-            prod = n1 * n2;
-            prod = 127.0f * prod + 127.0f;
-            fa = 127.0f * n1 + 127.0f;
-            lo = fa;
-            hi = prod;
-            *(u16*)(dst + 0x60) = lo | ((hi & 0xffff) << 8);
+            f32 columnPhase, wave, carrier, productValue, waveValue;
+            int highByte, lowByte;
+            u8* texel = (u8*)gNewShadowCausticTexture + rowPixelOffset;
+            texel += tileRowOffset;
+            texel += (column & 3) * 8;
+            texel += (column >> 2) * 0x200;
+            columnPhase = lbl_803DEDE8 * column;
+            wave = mathCosfHighPrecision(lbl_803DED38 * mathSinfHighPrecision(columnPhase) + rowPhase);
+            carrier = mathCosfHighPrecision(columnPhase);
+            productValue = wave * carrier;
+            productValue = 127.0f * productValue + 127.0f;
+            waveValue = 127.0f * wave + 127.0f;
+            lowByte = waveValue;
+            highByte = productValue;
+            ((NewShadowVectorTexel*)(texel + 0x60))->packedXY =
+                lowByte | ((highByte & 0xffff) << 8);
         }
     }
     DCFlushRange(gNewShadowCausticTexture + 1, gNewShadowCausticTexture->dataSize);
 
     gNewShadowReflectionScrollX = lbl_803DED28;
     gNewShadowReflectionScrollY = lbl_803DED28;
-    testAndSet_onlyUseHeap3(saved);
+    testAndSet_onlyUseHeap3(savedHeap);
 }
 
 void allocLotsOfTextures(void)
