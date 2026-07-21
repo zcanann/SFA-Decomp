@@ -50,12 +50,12 @@
 #include "string.h"
 
 f32 gObjSeqCameraFov = 60.0f;
-int lbl_803DB714 = -1;
-int lbl_803DB718 = -1;
-int lbl_803DB71C = -1;
-int lbl_803DB720 = -1;
-int lbl_803DB724 = -1;
-int lbl_803DB728 = -1;
+int gObjSeqTaskTextId = -1;
+int gObjSeqSubtitleId = -1;
+int gObjSeqDeferredTaskTextId = -1;
+int gObjSeqPreparingStreamSlot = -1;
+int gObjSeqTimedStreamSlot = -1;
+int gObjSeqStreamResumeOffset = -1;
 int objSeqObjs = -1;
 f32 gObjSeqShakeAmplitude = 0.2f;
 char sSeqAAnimDataTag[] = "SEQA";
@@ -309,7 +309,7 @@ extern u8 lbl_803DB411;
 extern u8 lbl_803DD0D9;
 extern u8 lbl_803DD078;
 extern s16 gObjSeqSlotValues[];
-extern f32 lbl_803DD074;
+extern f32 gObjSeqStreamRemainingTime;
 extern f32 lbl_803DF054;
 extern f32 lbl_803DF050;
 extern u8 lbl_803DD111;
@@ -410,7 +410,7 @@ int lbl_803DD084;
 s8 seqGlobal3;
 u8* lbl_803DD07C;
 u8 lbl_803DD078;
-f32 lbl_803DD074;
+f32 gObjSeqStreamRemainingTime;
 s16 gObjSeqStreamStopped;
 s16 seqGlobal2;
 s16 seqGlobal1;
@@ -603,14 +603,14 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
 
     val = seqIdx + 1;
     *(s16*)(slotPtr = slot * 2 + 0x3a98 + base) = val;
-    lbl_803DB714 = -1;
-    lbl_803DB718 = -1;
+    gObjSeqTaskTextId = -1;
+    gObjSeqSubtitleId = -1;
 
     mon = base + 0x3d4c;
     found = objSeqIsObjMonitored(mon, obj);
     if (found == 0)
     {
-        lbl_803DB714 = seqIdx;
+        gObjSeqTaskTextId = seqIdx;
     }
 
     hdr = mmAlloc(0x20, 0x11, 0);
@@ -898,19 +898,19 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
         gObjSeqCurrentTrackId = trackId;
         if (AudioStream_Play(trackId, ObjSeq_AudioStreamCallback) == 0)
         {
-            if (lbl_803DB714 != -1)
+            if (gObjSeqTaskTextId != -1)
             {
-                gameTextLoadTaskText(lbl_803DB714);
-                lbl_803DB714 = -1;
+                gameTextLoadTaskText(gObjSeqTaskTextId);
+                gObjSeqTaskTextId = -1;
             }
         }
         else
         {
-            lbl_803DB720 = slot;
-            lbl_803DB71C = lbl_803DB714;
-            lbl_803DB724 = -1;
-            lbl_803DD074 = lbl_803DEFB0;
-            lbl_803DB728 = -1;
+            gObjSeqPreparingStreamSlot = slot;
+            gObjSeqDeferredTaskTextId = gObjSeqTaskTextId;
+            gObjSeqTimedStreamSlot = -1;
+            gObjSeqStreamRemainingTime = lbl_803DEFB0;
+            gObjSeqStreamResumeOffset = -1;
         }
     }
 
@@ -1686,10 +1686,10 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
         ((ObjSeqState*)seq)->freeCallback = NULL;
     }
 
-    if ((s8)((ObjSeqState*)seq)->slot == lbl_803DB720)
+    if ((s8)((ObjSeqState*)seq)->slot == gObjSeqPreparingStreamSlot)
     {
         AudioStream_CancelPrepared();
-        lbl_803DB720 = -1;
+        gObjSeqPreparingStreamSlot = -1;
     }
 
     if (((ObjSeqState*)seq)->runState != 0)
@@ -2134,9 +2134,9 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         (*gMapEventInterface)->gotoRestartPoint();
         break;
     case 39:
-        if (lbl_803DB720 == (s8)((ObjSeqState*)seq)->slot)
+        if (gObjSeqPreparingStreamSlot == (s8)((ObjSeqState*)seq)->slot)
         {
-            lbl_803DB728 = (int)((f32*)(base + 0x3894))[(s8)((ObjSeqState*)seq)->slot];
+            gObjSeqStreamResumeOffset = (int)((f32*)(base + 0x3894))[(s8)((ObjSeqState*)seq)->slot];
             gObjSeqStreamStopped = ObjSeq_StartPreparedStream(((ObjSeqState*)seq)->slot) == 0;
         }
         break;
@@ -2152,12 +2152,12 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
                 off = cmdArg * 4;
                 if (AudioStream_Play(*(int*)((u8*)streams + off), ObjSeq_AudioStreamCallback) != 0)
                 {
-                    lbl_803DB720 = slot;
+                    gObjSeqPreparingStreamSlot = slot;
                 }
                 streams = (int*)seqPairTableLookup(gObjSeqStreamTableB, OBJSEQ_STREAM_MAP_COUNT, trackId);
                 if (streams != NULL)
                 {
-                    lbl_803DB718 = *(int*)((u8*)streams + off);
+                    gObjSeqSubtitleId = *(int*)((u8*)streams + off);
                 }
             }
         }
@@ -5016,7 +5016,7 @@ int ObjSeq_update(u8* obj, f32 t)
 
         if (gObjSeqStreamStopped != 0)
         {
-            gObjSeqStreamStopped = ObjSeq_StartPreparedStream(lbl_803DB720) == 0;
+            gObjSeqStreamStopped = ObjSeq_StartPreparedStream(gObjSeqPreparingStreamSlot) == 0;
         }
         state->prevFrame = state->curFrame;
 
@@ -5044,18 +5044,18 @@ int ObjSeq_update(u8* obj, f32 t)
             }
             if (-1.0f == ((f32*)(base + 0x3740))[slot = state->slot])
             {
-                if (lbl_803DB724 == slot)
+                if (gObjSeqTimedStreamSlot == slot)
                 {
-                    fval = lbl_803DD074;
+                    fval = gObjSeqStreamRemainingTime;
                     aInt = fval;
-                    lbl_803DD074 = fval - lbl_803DF054;
-                    fval = lbl_803DD074;
+                    gObjSeqStreamRemainingTime = fval - lbl_803DF054;
+                    fval = gObjSeqStreamRemainingTime;
                     if (aInt != (int)fval)
                     {
                         step--;
                         if (fval <= lbl_803DEFB0)
                         {
-                            lbl_803DB724 = -1;
+                            gObjSeqTimedStreamSlot = -1;
                         }
                     }
                 }

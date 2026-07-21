@@ -116,8 +116,8 @@ static inline u64 saveGame_checksum(u64* p, int count)
 #define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
 extern u8 seqGlobal3;
-extern u32 lbl_803DB714;
-extern u32 lbl_803DB71C;
+extern u32 gObjSeqTaskTextId;
+extern u32 gObjSeqDeferredTaskTextId;
 extern u8 lbl_803DD0F8;
 extern f32 lbl_803DD0F4;
 extern f32 lbl_803DD0F0;
@@ -130,22 +130,22 @@ extern s16 gObjSeqSlotValues[];
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
 extern u8 lbl_803DD0D9;
-extern u32 lbl_803DB718;
+extern u32 gObjSeqSubtitleId;
 extern SeqB4Flags lbl_803DD0B4;
 extern u8 lbl_803DD124;
 extern int gObjSeqPreemptList[][2];
 extern void* lbl_803DD0B8;
-extern int lbl_803DB720;
+extern int gObjSeqPreparingStreamSlot;
 extern int lbl_803DD064;
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
 extern u8* gSaveCardImageBuffer;
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
-extern int lbl_803DB728;
+extern int gObjSeqStreamResumeOffset;
 extern f32 lbl_803DEFB0;
-extern f32 lbl_803DD074;
-extern int lbl_803DB724;
+extern f32 gObjSeqStreamRemainingTime;
+extern int gObjSeqTimedStreamSlot;
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
@@ -896,8 +896,8 @@ int timerCountDown(f32* p)
 void seqClearTaskTexts(void)
 {
     u32 v = -0x1;
-    lbl_803DB714 = v;
-    lbl_803DB71C = v;
+    gObjSeqTaskTextId = v;
+    gObjSeqDeferredTaskTextId = v;
 }
 
 void clearCurSeqNo(void)
@@ -939,19 +939,19 @@ int ObjSeq_StartPreparedStream(int slot)
     {
         return 0;
     }
-    streamTime = gObjSeqSlotStreamTimeTable[slot] - (f32)lbl_803DB728;
-    lbl_803DD074 = streamTime;
-    if (lbl_803DEFB0 != lbl_803DD074)
+    streamTime = gObjSeqSlotStreamTimeTable[slot] - (f32)gObjSeqStreamResumeOffset;
+    gObjSeqStreamRemainingTime = streamTime;
+    if (lbl_803DEFB0 != gObjSeqStreamRemainingTime)
     {
-        lbl_803DB724 = slot;
+        gObjSeqTimedStreamSlot = slot;
     }
-    lbl_803DB728 = -1;
+    gObjSeqStreamResumeOffset = -1;
     if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 || seqId == 0x57a)
     {
-        lbl_803DD074 = 0.0f;
-        lbl_803DB724 = -1;
+        gObjSeqStreamRemainingTime = 0.0f;
+        gObjSeqTimedStreamSlot = -1;
     }
-    lbl_803DB720 = -1;
+    gObjSeqPreparingStreamSlot = -1;
     AudioStream_StartPrepared();
     return 1;
 }
@@ -971,17 +971,17 @@ void ObjSeq_AudioStreamCallback(void)
 {
     AudioStream_IsPreparing();
     doNothing_8000CF54(0);
-    if ((s32)lbl_803DB71C != -1)
+    if ((s32)gObjSeqDeferredTaskTextId != -1)
     {
-        gameTextLoadTaskText(lbl_803DB71C);
-        lbl_803DB71C = -1;
-        lbl_803DB714 = -1;
+        gameTextLoadTaskText(gObjSeqDeferredTaskTextId);
+        gObjSeqDeferredTaskTextId = -1;
+        gObjSeqTaskTextId = -1;
     }
-    else if ((s32)lbl_803DB718 != -1)
+    else if ((s32)gObjSeqSubtitleId != -1)
     {
         subtitleFn_8001b700();
-        subtitleStart(lbl_803DB718);
-        lbl_803DB718 = -1;
+        subtitleStart(gObjSeqSubtitleId);
+        gObjSeqSubtitleId = -1;
     }
 }
 
@@ -1313,10 +1313,10 @@ void endObjSequence(int seq)
         curSeqNo = 0;
         Pause_ResetMenuFrameCounter();
     }
-    if (seq == lbl_803DB720)
+    if (seq == gObjSeqPreparingStreamSlot)
     {
         AudioStream_CancelPrepared();
-        lbl_803DB720 = -1;
+        gObjSeqPreparingStreamSlot = -1;
     }
     for (j = 0; j < nFree; j++)
     {
