@@ -2824,7 +2824,7 @@ void objRenderModel(GameObject* obj)
         }
     }
     gObjShadowColor[3] = obj->anim.modelState->shadowAlpha;
-    objShadowFn_8006c5f0(obj, &d1, &d2, &d3, &d4);
+    getObjectShadowDrawParams(obj, &d1, &d2, &d3, &d4);
     col = *(u32*)gObjShadowColor;
     hudDrawColored(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
 }

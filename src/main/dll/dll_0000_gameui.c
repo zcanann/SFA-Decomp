@@ -5899,7 +5899,7 @@ void pauseMenuDoSave(void)
         {
             if (lbl_803DD78C > 0x1f4)
             {
-                objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
+                getObjectShadowDrawParams(lbl_803A9410[i], &texture, &scale, &x, &y);
                 colorA = colorB;
                 hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
             }

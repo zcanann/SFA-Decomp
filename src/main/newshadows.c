@@ -1189,11 +1189,11 @@ void getNewShadowCausticTexture(u32* p)
 
 Texture* gNewShadowTextureTable[8][4];
 
-void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, int* outY)
+void getObjectShadowDrawParams(GameObject* obj, u32* outTexture, f32* outScale, int* outX, int* outY)
 {
     int idx = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
-    *outTable = gNewShadowFrameTextures[idx];
-    *outF = obj->anim.modelState->shadowScale;
+    *outTexture = gNewShadowFrameTextures[idx];
+    *outScale = obj->anim.modelState->shadowScale;
     *outX = (int)obj->anim.modelState->shadowOffsetX;
     *outY = (int)obj->anim.modelState->shadowOffsetY;
 }
