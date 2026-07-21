@@ -359,9 +359,9 @@ int debugPrintDrawRecord(int color, u8* p)
     u8* start = p;
     u8 c;
     GXColor textColorSource;
-    GXColor positionColor;
-    GXColor newlineColor;
     GXColor wrapColor;
+    GXColor newlineColor;
+    GXColor positionColor;
 
     while ((c = *p++) != 0)
     {
