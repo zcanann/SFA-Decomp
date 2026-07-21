@@ -125,7 +125,7 @@ void sc_totempole_update(GameObject* obj)
                     }
                 }
                 sc_totempole_sortCompletionGameBits(gSCTotemPoleRecordGameBits,
-                                                     (s32)(fn_8001461C() / 10.0f));
+                                                     (s32)(gameTimerGetElapsedMilliseconds() / 10.0f));
             }
             if (!playedFanfare)
             {

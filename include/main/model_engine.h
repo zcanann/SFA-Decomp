@@ -93,7 +93,7 @@ void loadUiDll(int index);
 void fn_8001404C(s32 value);
 void hudNumberFn_80014060(void* context);
 void set_hudNumber_803db278(s32 value);
-f32 fn_8001461C(void);
+f32 gameTimerGetElapsedMilliseconds(void);
 f32 gameTimerGetValue(void);
 void curUiDllDraw(int a, int b, int c, int d);
 void uiDll_runFrameEndAndLoadNext(void);

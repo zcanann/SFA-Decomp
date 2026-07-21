@@ -700,7 +700,7 @@ void gameTimerRun(void* context)
     }
 }
 
-f32 fn_8001461C(void)
+f32 gameTimerGetElapsedMilliseconds(void)
 {
     if (((s8)gModelEngineTimerFlags & 1) != 0)
     {

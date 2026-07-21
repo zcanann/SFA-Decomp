@@ -230,7 +230,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                         break;
                     }
                 }
-                fn_801DE320(lbl_803DC070, fn_8001461C() / 10.0f);
+                fn_801DE320(lbl_803DC070, gameTimerGetElapsedMilliseconds() / 10.0f);
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0)
                 {
