@@ -11135,13 +11135,13 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 
 int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance)
 {
-    EmitPlane* pl;
     char* cp;
     f32* b6b8;
     f32* pbx;
     f32* pby;
     f32* pbz;
     int tbl1, tbl2;
+    EmitPlane* pl;
     void* hit;
     int i;
     int j;
