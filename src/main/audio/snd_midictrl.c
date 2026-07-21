@@ -478,43 +478,48 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u8 midiSlot
     u8 ctrl;
     s32 tmp;
     s32 vtmp;
+    int other;
 
     for (value = 0, i = 0; i < slotPtr->entryCount; ++i)
     {
-        if ((slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) ||
-            slotPtr->entries[i].controller == MCMD_CTRL_PITCH_BEND ||
-            slotPtr->entries[i].controller == MCMD_CTRL_MODULATION ||
-            slotPtr->entries[i].controller == MCMD_CTRL_PANNING ||
-            slotPtr->entries[i].controller == MCMD_CTRL_EX_A0 ||
-            slotPtr->entries[i].controller == MCMD_CTRL_EX_A1 ||
-            slotPtr->entries[i].controller == MCMD_CTRL_SUR_PANNING)
+        other = 0;
+        if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG)
         {
-            if (!(slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG))
+            tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
+        }
+        else if (slotPtr->entries[i].controller == MCMD_CTRL_PITCH_BEND ||
+                 slotPtr->entries[i].controller == MCMD_CTRL_MODULATION ||
+                 slotPtr->entries[i].controller == MCMD_CTRL_PANNING ||
+                 slotPtr->entries[i].controller == MCMD_CTRL_EX_A0 ||
+                 slotPtr->entries[i].controller == MCMD_CTRL_EX_A1 ||
+                 slotPtr->entries[i].controller == MCMD_CTRL_SUR_PANNING)
+        {
+            ctrl = slotPtr->entries[i].controller;
+            switch (ctrl)
             {
-                ctrl = slotPtr->entries[i].controller;
-                switch (ctrl)
+            case MCMD_CTRL_EX_A0:
+            case MCMD_CTRL_EX_A1:
+                if (statePtr != NULL)
                 {
-                case MCMD_CTRL_EX_A0:
-                case MCMD_CTRL_EX_A1:
-                    if (statePtr != NULL)
-                    {
-                        tmp = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
-                        statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
-                    }
-                    else
-                    {
-                        tmp = 0;
-                    }
-                    break;
-                default:
-                    tmp = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
-                    break;
+                    tmp = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
+                    statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
                 }
+                else
+                {
+                    tmp = 0;
+                }
+                break;
+            default:
+                tmp = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
+                break;
             }
-            else
-            {
-                tmp = (statePtr != NULL ? varGet(statePtr, 0, slotPtr->entries[i].controller) : 0);
-            }
+        }
+        else
+        {
+            other = 1;
+        }
+        if (!other)
+        {
             tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
             if (tmp < -0x2000)
             {
