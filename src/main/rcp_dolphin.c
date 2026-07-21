@@ -1505,7 +1505,7 @@ extern int* gRcpTexBankTable[3];
 
 void* textureLoad(int texId, u8 flagIn)
 {
-    int restore;
+    int bankWordHeld;
     int disabled;
     u8 flag;
     int file;
@@ -1520,7 +1520,7 @@ void* textureLoad(int texId, u8 flagIn)
     u8* walk;
     int bankWord;
     int bankWordSaved;
-    int bankWordHeld;
+    int restore;
     int origTexId;
     int mipChainWord;
     u16 remapped;
