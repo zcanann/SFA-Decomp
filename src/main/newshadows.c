@@ -234,6 +234,7 @@ extern const f32 lbl_803DEDBC;
 extern const f32 gNewShadowFovY;
 extern const f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
 extern const f32 lbl_803DED44;
+extern const f32 lbl_803DED50;
 extern const f32 lbl_803DED4C;
 extern const f32 lbl_803DED68;
 extern const f32 lbl_803DED6C;
@@ -772,7 +773,8 @@ void renderShadows(int unused0, int unused1, int unused2)
     f32 *mc54p;
     f32 dirY, dirZ, vAy, dirX, sCamX, sCamY;
     int savedRotY;
-    s16 savedRotX, savedRotZ;
+    s16 savedRotX;
+    Texture** texture;
     f32 om100[24];
     f32 mTrans[12], mScale[12], mOrtho[16];
     f32 mc54[3], mc48[3];
@@ -782,9 +784,16 @@ void renderShadows(int unused0, int unused1, int unused2)
     NewShadowData* shadowData = (NewShadowData*)gNewShadowEntries;
     void* layerTables;
     u32 blocks;
-    s8 casterIdx;
     f32 sCamZ, savedFovY, vAx, vAz, orthoHalf;
-    int texIdx, slotIdx;
+    int slotIdx, texIdx;
+    s8 casterIdx;
+    int w;
+    GameObject* obj;
+    s16 savedRotZ;
+    ObjModelState* modelState;
+    NewShadowCastSlot* castSlot;
+    f32* viewMtx;
+    int screenW;
 
     if (gNewShadowCasterCount == 0)
         return;
@@ -814,12 +823,11 @@ void renderShadows(int unused0, int unused1, int unused2)
     mc54p = &mc54[0];
     for (; casterIdx < gNewShadowCasterCount && casterIdx < NEW_SHADOW_MAX_CASTERS; casterPtr++, casterIdx++)
     {
-        GameObject* obj = casterPtr->obj;
-        ObjModelState* modelState = obj->anim.modelState;
         u8 alpha;
         u8 kind;
-        int screenW = 0, w = 0;
-        NewShadowCastSlot* castSlot;
+        obj = casterPtr->obj;
+        modelState = obj->anim.modelState;
+        screenW = 0;
         Camera_SetCurrentViewIndex(0);
         alpha = objShadowUpdateAlpha(obj, framesThisStep);
         Camera_SetCurrentViewIndex(1);
@@ -893,8 +901,8 @@ void renderShadows(int unused0, int unused1, int unused2)
             dirZ = -vAz;
             gNewShadowLightAngleX = (u16)getAngle(dirX, vAz);
             {
-                f32 sqA = vAx * vAx;
                 f32 sqB = vAz * vAz;
+                f32 sqA = vAx * vAx;
                 gNewShadowLightAngleY = (u16)getAngle(sqrtf(sqA + sqB), vAy) - 0x3fc8;
             }
             slot->pitch = gNewShadowLightAngleY;
@@ -939,13 +947,13 @@ void renderShadows(int unused0, int unused1, int unused2)
             Camera_UpdateViewMatrices();
             C_MTXLightOrtho(castSlot->modelMtx, vAz, vAx, vAx, vAz, orthoHalf, orthoHalf, orthoHalf, orthoHalf);
             {
-                f32* vm = Camera_GetViewMatrix();
-                PSMTXCopy(vm, castSlot->texMtx);
-                PSMTXConcat(castSlot->modelMtx, vm, castSlot->modelMtx);
+                viewMtx = Camera_GetViewMatrix();
+                PSMTXCopy(viewMtx, castSlot->texMtx);
+                PSMTXConcat(castSlot->modelMtx, viewMtx, castSlot->modelMtx);
                 obj->anim.modelState->shadowCastSlot = castSlot;
                 {
                     Texture** texturePool = shadowData->castTextures;
-                    Texture** texture = texturePool + (u8)texIdx;
+                    texture = texturePool + (u8)texIdx;
                     castSlot->texture = *texture;
                     castSlot->dirIndex = lbl_803DB668[(u8)texIdx];
                     objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
@@ -956,7 +964,7 @@ void renderShadows(int unused0, int unused1, int unused2)
                         castSlot->texMtx[2] = lbl_803DED70;
                         castSlot->texMtx[3] = lbl_803DED74;
                         castSlot->texMtx[11] = lbl_803DED2C;
-                        PSMTXConcat(castSlot->texMtx, vm, castSlot->texMtx);
+                        PSMTXConcat(castSlot->texMtx, viewMtx, castSlot->texMtx);
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, GX_TF_Z8, GX_FALSE);
                         {
