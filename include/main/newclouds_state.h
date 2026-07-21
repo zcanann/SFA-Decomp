@@ -5,8 +5,8 @@
 
 /*
  * NewCloud - per-cloud working record (gNewClouds[i] / the NC_CLOUD and
- * D7_CLOUD macros in newclouds.c). Only the 0x1378+ region referenced at
- * constant offsets in newclouds.c is mapped; the head is untyped.
+ * D7_CLOUD macros in newclouds.c). The owner and separately allocated flake
+ * buffer head the record; the simulation body before 0x1378 remains untyped.
  */
 /*
  * SnowQuad - per-quad geometry record in the NewCloud body at offset
@@ -24,9 +24,8 @@ typedef struct SnowQuad {
 STATIC_ASSERT(sizeof(SnowQuad) == 0x2C);
 
 /*
- * SnowFlake - per-flake state for the heap buffer pointed to by
- * *(void**)(NewCloud + 4) (the NC_PARTS macro). flakeCount entries,
- * 0x18 bytes each.
+ * SnowFlake - per-flake state for NewCloud::flakes. The buffer contains
+ * NewCloud::flakeCount entries.
  */
 typedef struct SnowFlake {
     f32 x;
@@ -44,7 +43,9 @@ typedef struct SnowFlake {
 STATIC_ASSERT(sizeof(SnowFlake) == 0x18);
 
 typedef struct NewCloud {
-    u8 unk0000[0x1378];
+    void* owner;
+    SnowFlake* flakes;
+    u8 unk0008[0x1370];
     f32 flakeMinX;
     u8 unk137C[0x4];
     f32 flakeMinZ;
@@ -98,6 +99,8 @@ typedef struct NewCloud {
     u8 posInitialized;
 } NewCloud;
 
+STATIC_ASSERT(offsetof(NewCloud, owner) == 0x0);
+STATIC_ASSERT(offsetof(NewCloud, flakes) == 0x4);
 STATIC_ASSERT(offsetof(NewCloud, flakeMinX) == 0x1378);
 STATIC_ASSERT(offsetof(NewCloud, cloudType) == 0x13F4);
 STATIC_ASSERT(offsetof(NewCloud, lightningTimer) == 0x1448);
