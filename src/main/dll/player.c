@@ -6380,16 +6380,17 @@ int playerStateClimbUpFromWall(GameObject* obj, int state)
     return 0;
 }
 
-int playerStateClimbWall(GameObject* obj, int state)
+int playerStateClimbWall(GameObject* obj, int stateArg)
 {
-    int b7;
-    ObjModel* jt;
-    register int inner;
-    int b6;
-    int mask;
-    int b8;
-    int b9;
+    PlayerState* inner = obj->extra;
+    int movingUp;
+    int movingDown;
+    int movingRight;
+    int movingLeft;
     int dir;
+    PlayerState* state = (PlayerState*)stateArg;
+    ObjModel* model;
+    int mask;
     s16 i;
     f32 oldSpd;
     f32 dx;
@@ -6401,56 +6402,55 @@ int playerStateClimbWall(GameObject* obj, int state)
     f32 dst[3];
     s16 tmp[3];
 
-    inner = *(int*)&obj->extra;
-    if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
+    if ((s8)state->baddie.moveJustStartedA != 0)
     {
         gPlayerCurrentMoveId = 0x10;
         ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
     {
-        int base = *(int*)&obj->extra;
-        *(int*)((char*)base + 0x360) &= ~0x2LL;
-        *(u32*)((char*)base + 0x360) |= 0x2000LL;
+        PlayerState* player = obj->extra;
+        player->flags360 &= ~2LL;
+        player->flags360 |= 0x2000;
     }
-    *(u32*)((char*)state + 4) |= 0x100000;
+    state->baddie.flags4 |= 0x100000;
     {
         f32 z = lbl_803E7EA4;
-        ((PlayerState*)state)->baddie.animSpeedA = z;
-        ((PlayerState*)state)->baddie.animSpeedB = z;
-        *(u32*)state |= 0x200000;
+        state->baddie.animSpeedA = z;
+        state->baddie.animSpeedB = z;
+        state->baddie.flags0 |= 0x200000;
         obj->anim.velocityX = z;
         obj->anim.velocityZ = z;
-        *(u32*)((char*)state + 4) |= 0x8000000;
+        state->baddie.flags4 |= 0x8000000;
         obj->anim.velocityY = z;
     }
-    jt = Player_GetActiveModel((int)obj);
-    ph = ((PlayerState*)state)->baddie.moveSpeed;
+    model = Player_GetActiveModel((int)obj);
+    ph = state->baddie.moveSpeed;
     gPlayerPrevMoveId = gPlayerCurrentMoveId;
     switch ((s16)gPlayerCurrentMoveId)
     {
     case 0x10:
         if (obj->anim.currentMove == 0x66)
         {
-            ((PlayerState*)inner)->moveAltToggle = 0;
+            inner->moveAltToggle = 0;
             gPlayerCurrentMoveId = 0x16;
         }
         else
         {
-            ((PlayerState*)inner)->moveAltToggle = 1;
+            inner->moveAltToggle = 1;
             gPlayerCurrentMoveId = 0x15;
         }
-        obj->anim.localPosY = ((PlayerState*)inner)->savedPosY;
+        obj->anim.localPosY = inner->savedPosY;
         ph = 0.006f;
     case 0x15:
     case 0x16:
     {
         f32 z = 0.0f;
-        ((PlayerState*)inner)->moveOffsetX = z;
-        ((PlayerState*)inner)->moveOffsetY = z;
-        ((PlayerState*)inner)->moveOffsetZ = z;
+        inner->moveOffsetX = z;
+        inner->moveOffsetY = z;
+        inner->moveOffsetZ = z;
     }
-        playerPlayClimbingSound(obj, state);
-        if (((PlayerState*)state)->baddie.inputMagnitude <= 0.1f)
+        playerPlayClimbingSound(obj, stateArg);
+        if (state->baddie.inputMagnitude <= 0.1f)
         {
             break;
         }
@@ -6459,11 +6459,11 @@ int playerStateClimbWall(GameObject* obj, int state)
     default:
         if (1.0f == obj->anim.currentMoveProgress)
         {
-            pnt[0] = -(30.0f * ((PlayerState*)inner)->groundNormalX - ((PlayerState*)inner)->savedPosX);
-            pnt[1] = ((PlayerState*)inner)->savedPosY;
-            pnt[2] = -(30.0f * ((PlayerState*)inner)->groundNormalZ - ((PlayerState*)inner)->savedPosZ);
+            pnt[0] = -(30.0f * inner->groundNormalX - inner->savedPosX);
+            pnt[1] = inner->savedPosY;
+            pnt[2] = -(30.0f * inner->groundNormalZ - inner->savedPosZ);
             {
-                int r = objBboxFn_800640cc((f32*)((char*)inner + 0x768), pnt, 0.0f, 3,
+                int r = objBboxFn_800640cc(&inner->savedPosX, pnt, 0.0f, 3,
                                            (TrackBBoxHit*)&hit, obj, 1, 3, 0xff, 0);
                 if (r != 0)
                 {
@@ -6471,25 +6471,23 @@ int playerStateClimbWall(GameObject* obj, int state)
                     obj->anim.localPosZ = pnt[2];
                     {
                         f32 ga = hit.ga;
-                        ((PlayerState*)inner)->spanTopY = hit.gt * (hit.gb - ga) + ga;
+                        inner->spanTopY = hit.gt * (hit.gb - ga) + ga;
                     }
                     {
                         f32 fz0 = hit.fz0;
-                        ((PlayerState*)inner)->spanBottomY = hit.gt * (hit.fz1 - fz0) + fz0;
+                        inner->spanBottomY = hit.gt * (hit.fz1 - fz0) + fz0;
                     }
-                    ((PlayerState*)inner)->groundNormalX = hit.nx;
-                    ((PlayerState*)inner)->groundNormalY = hit.ny;
-                    ((PlayerState*)inner)->groundNormalZ = hit.nz;
-                    ((PlayerState*)inner)->groundNormalW = hit.nw;
-                    ((PlayerState*)inner)->slopeTangentX = -hit.nz;
-                    ((PlayerState*)inner)->slopeTangentY = 0.0f;
-                    ((PlayerState*)inner)->slopeTangentZ = hit.nx;
-                    ((PlayerState*)inner)->slopePlaneD = -(pnt[2] * ((PlayerState*)inner)->slopeTangentZ +
-                                                           (pnt[0] * ((PlayerState*)inner)->slopeTangentX +
-                                                            pnt[1] * ((PlayerState*)inner)->slopeTangentY));
-                    ((PlayerState*)inner)->targetYaw =
-                        (s16)getAngle(((PlayerState*)inner)->groundNormalX, ((PlayerState*)inner)->groundNormalZ);
-                    ((PlayerState*)inner)->yaw = ((PlayerState*)inner)->targetYaw;
+                    inner->groundNormalX = hit.nx;
+                    inner->groundNormalY = hit.ny;
+                    inner->groundNormalZ = hit.nz;
+                    inner->groundNormalW = hit.nw;
+                    inner->slopeTangentX = -hit.nz;
+                    inner->slopeTangentY = 0.0f;
+                    inner->slopeTangentZ = hit.nx;
+                    inner->slopePlaneD = -(pnt[2] * inner->slopeTangentZ +
+                                           (pnt[0] * inner->slopeTangentX + pnt[1] * inner->slopeTangentY));
+                    inner->targetYaw = (s16)getAngle(inner->groundNormalX, inner->groundNormalZ);
+                    inner->yaw = inner->targetYaw;
                     {
                         int hf = hit.flags;
                         if ((hf & 4) != 0)
@@ -6517,12 +6515,12 @@ int playerStateClimbWall(GameObject* obj, int state)
             }
             if (gPlayerCurrentMoveId != 0x15 && gPlayerCurrentMoveId != 0x16)
             {
-                obj->anim.localPosY = ((PlayerState*)inner)->savedPosY;
+                obj->anim.localPosY = inner->savedPosY;
             }
-            if (((PlayerState*)state)->baddie.inputMagnitude > 0.1f)
+            if (state->baddie.inputMagnitude > 0.1f)
             {
                 gPlayerCurrentMoveId =
-                    ((getAngle(((PlayerState*)state)->baddie.moveInputX, -((PlayerState*)state)->baddie.moveInputZ) &
+                    ((getAngle(state->baddie.moveInputX, -state->baddie.moveInputZ) &
                       0xffff) +
                          0x1000 >>
                      13) &
@@ -6530,50 +6528,50 @@ int playerStateClimbWall(GameObject* obj, int state)
                 gPlayerPrevMoveId = -1;
                 if ((s16)gPlayerCurrentMoveId == 4 || (s16)gPlayerCurrentMoveId == 0)
                 {
-                    ((PlayerState*)inner)->moveAltToggle ^= 1;
+                    inner->moveAltToggle ^= 1;
                 }
-                b6 = 0;
-                b7 = 0;
-                b8 = 0;
-                b9 = 0;
+                movingUp = 0;
+                movingDown = 0;
+                movingRight = 0;
+                movingLeft = 0;
                 switch (gPlayerCurrentMoveId)
                 {
                 case 4:
-                    b6 = 1;
+                    movingUp = 1;
                     break;
                 case 0:
-                    b7 = 1;
+                    movingDown = 1;
                     break;
                 case 6:
-                    b8 = 1;
+                    movingRight = 1;
                     break;
                 case 2:
-                    b9 = 1;
+                    movingLeft = 1;
                     break;
                 case 3:
-                    b6 = 1;
-                    b9 = 1;
+                    movingUp = 1;
+                    movingLeft = 1;
                     break;
                 case 5:
-                    b6 = 1;
-                    b8 = 1;
+                    movingUp = 1;
+                    movingRight = 1;
                     break;
                 case 1:
-                    b7 = 1;
-                    b9 = 1;
+                    movingDown = 1;
+                    movingLeft = 1;
                     break;
                 case 7:
-                    b7 = 1;
-                    b8 = 1;
+                    movingDown = 1;
+                    movingRight = 1;
                     break;
                 }
-                if (((PlayerState*)inner)->moveAltToggle != 0)
+                if (inner->moveAltToggle != 0)
                 {
                     gPlayerCurrentMoveId += 8;
                 }
-                if (b6 != 0)
+                if (movingUp != 0)
                 {
-                    f32 fv = ((PlayerState*)inner)->spanTopY - ((PlayerState*)inner)->savedPosY;
+                    f32 fv = inner->spanTopY - inner->savedPosY;
                     f32 lo = lbl_803DAF88[12];
                     f32 hi;
                     if (lo < 0.0f)
@@ -6589,15 +6587,15 @@ int playerStateClimbWall(GameObject* obj, int state)
                     {
                         f32 frac = (fv - lo) / (hi - lo);
                         f32 m = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
-                        ((PlayerState*)inner)->animEventState = (s16)(16384.0f * m);
-                        ((PlayerState*)inner)->moveOffsetY = m;
-                        *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
+                        inner->animEventState = (s16)(16384.0f * m);
+                        inner->moveOffsetY = m;
+                        state->baddie.stateHandler = (int)fn_8029FFD0;
                         return 0x15;
                     }
                 }
-                else if (b7 != 0)
+                else if (movingDown != 0)
                 {
-                    f32 fv = ((PlayerState*)inner)->savedPosY - ((PlayerState*)inner)->spanBottomY;
+                    f32 fv = inner->savedPosY - inner->spanBottomY;
                     f32 lo = lbl_803DAF88[14];
                     f32 hi;
                     if (lo < 0.0f)
@@ -6613,42 +6611,42 @@ int playerStateClimbWall(GameObject* obj, int state)
                     {
                         f32 frac = (fv - lo) / (hi - lo);
                         f32 m = (frac < 0.0f) ? 0.0f : ((frac > 1.0f) ? 1.0f : frac);
-                        ((PlayerState*)inner)->animEventState = (s16)(16384.0f * m);
-                        ((PlayerState*)inner)->moveOffsetY = m;
-                        *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029FFD0;
+                        inner->animEventState = (s16)(16384.0f * m);
+                        inner->moveOffsetY = m;
+                        state->baddie.stateHandler = (int)fn_8029FFD0;
                         return 0x16;
                     }
                 }
                 Object_ObjAnimSetMove((int)obj, lbl_80332F48[gPlayerCurrentMoveId], 0.0f, 1);
-                ObjModel_SampleJointTransform(jt, 1, 0, 1.0f, obj->anim.rootMotionScale, out1, tmp);
+                ObjModel_SampleJointTransform(model, 1, 0, 1.0f, obj->anim.rootMotionScale, out1, tmp);
                 obj->anim.activeMove = -1;
-                ((PlayerState*)inner)->moveOffsetX = ((PlayerState*)inner)->slopeTangentX * -out1[0];
-                ((PlayerState*)inner)->moveOffsetY = out1[1];
-                ((PlayerState*)inner)->moveOffsetZ = ((PlayerState*)inner)->slopeTangentZ * -out1[0];
-                if (b6 == 0 && b7 == 0)
+                inner->moveOffsetX = inner->slopeTangentX * -out1[0];
+                inner->moveOffsetY = out1[1];
+                inner->moveOffsetZ = inner->slopeTangentZ * -out1[0];
+                if (movingUp == 0 && movingDown == 0)
                 {
-                    ((PlayerState*)inner)->moveOffsetY = 0.0f;
+                    inner->moveOffsetY = 0.0f;
                 }
-                if (b8 == 0 && b9 == 0)
+                if (movingRight == 0 && movingLeft == 0)
                 {
                     f32 z = 0.0f;
-                    ((PlayerState*)inner)->moveOffsetX = z;
-                    ((PlayerState*)inner)->moveOffsetZ = z;
+                    inner->moveOffsetX = z;
+                    inner->moveOffsetZ = z;
                 }
                 mask = 0;
                 if (out1[0] < 0.0f)
                 {
-                    dx = 7.0f * ((PlayerState*)inner)->slopeTangentX;
-                    dy = 7.0f * ((PlayerState*)inner)->slopeTangentZ;
+                    dx = 7.0f * inner->slopeTangentX;
+                    dy = 7.0f * inner->slopeTangentZ;
                 }
                 else
                 {
-                    dx = 7.0f * -((PlayerState*)inner)->slopeTangentX;
-                    dy = 7.0f * -((PlayerState*)inner)->slopeTangentZ;
+                    dx = 7.0f * -inner->slopeTangentX;
+                    dy = 7.0f * -inner->slopeTangentZ;
                 }
-                if (b6 != 0 || b7 != 0)
+                if (movingUp != 0 || movingDown != 0)
                 {
-                    pnt[1] = ((PlayerState*)inner)->savedPosY + out1[1];
+                    pnt[1] = inner->savedPosY + out1[1];
                     if (out1[1] < 0.0f)
                     {
                         pnt[1] = pnt[1] - 11.0f;
@@ -6661,17 +6659,17 @@ int playerStateClimbWall(GameObject* obj, int state)
                     {
                         if (i != 0)
                         {
-                            pnt[0] = ((PlayerState*)inner)->savedPosX + dx;
-                            pnt[2] = ((PlayerState*)inner)->savedPosZ + dy;
+                            pnt[0] = inner->savedPosX + dx;
+                            pnt[2] = inner->savedPosZ + dy;
                         }
                         else
                         {
-                            pnt[0] = ((PlayerState*)inner)->savedPosX - dx;
-                            pnt[2] = ((PlayerState*)inner)->savedPosZ - dy;
+                            pnt[0] = inner->savedPosX - dx;
+                            pnt[2] = inner->savedPosZ - dy;
                         }
-                        dst[0] = -(ph * ((PlayerState*)inner)->groundNormalX - pnt[0]);
+                        dst[0] = -(ph * inner->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
-                        dst[2] = -(ph * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
+                        dst[2] = -(ph * inner->groundNormalZ - pnt[2]);
                         if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, NULL, obj, 1, 3, 0xff, 0) != 0)
                         {
                             mask = mask | 1 << i;
@@ -6682,23 +6680,23 @@ int playerStateClimbWall(GameObject* obj, int state)
                 {
                     mask |= 3;
                 }
-                if (b8 != 0 || b9 != 0)
+                if (movingRight != 0 || movingLeft != 0)
                 {
-                    pnt[0] = dx + (((PlayerState*)inner)->savedPosX + ((PlayerState*)inner)->moveOffsetX);
-                    pnt[2] = dy + (((PlayerState*)inner)->savedPosZ + ((PlayerState*)inner)->moveOffsetZ);
+                    pnt[0] = dx + (inner->savedPosX + inner->moveOffsetX);
+                    pnt[2] = dy + (inner->savedPosZ + inner->moveOffsetZ);
                     for (i = 0, dy = 30.0f; i < 2; i++)
                     {
                         if (i != 0)
                         {
-                            pnt[1] = 11.0f + ((PlayerState*)inner)->savedPosY;
+                            pnt[1] = 11.0f + inner->savedPosY;
                         }
                         else
                         {
-                            pnt[1] = ((PlayerState*)inner)->savedPosY - 11.0f;
+                            pnt[1] = inner->savedPosY - 11.0f;
                         }
-                        dst[0] = -(dy * ((PlayerState*)inner)->groundNormalX - pnt[0]);
+                        dst[0] = -(dy * inner->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
-                        dst[2] = -(dy * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
+                        dst[2] = -(dy * inner->groundNormalZ - pnt[2]);
                         if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, NULL, obj, 1, 3, 0xff, 0) != 0)
                         {
                             mask = mask | 1 << (i + 2);
@@ -6714,20 +6712,20 @@ int playerStateClimbWall(GameObject* obj, int state)
                 {
                     {
                         f32 z = 0.0f;
-                        ((PlayerState*)inner)->moveOffsetX = z;
-                        ((PlayerState*)inner)->moveOffsetY = z;
-                        ((PlayerState*)inner)->moveOffsetZ = z;
+                        inner->moveOffsetX = z;
+                        inner->moveOffsetY = z;
+                        inner->moveOffsetZ = z;
                     }
                     {
                         int st2 = (s16)gPlayerCurrentMoveId;
                         if (st2 == 4 || st2 == 0 || ((st2 == 0xc) | (st2 == 8)) != 0)
                         {
-                            ((PlayerState*)inner)->moveAltToggle ^= 1;
+                            inner->moveAltToggle ^= 1;
                         }
                     }
                     {
                         s16 ns;
-                        if (((PlayerState*)inner)->moveAltToggle != 0)
+                        if (inner->moveAltToggle != 0)
                         {
                             ns = 0x15;
                         }
@@ -6748,10 +6746,10 @@ int playerStateClimbWall(GameObject* obj, int state)
             }
             else
             {
-                obj->anim.localPosY = ((PlayerState*)inner)->savedPosY;
+                obj->anim.localPosY = inner->savedPosY;
                 {
                     s16 ns;
-                    if (((PlayerState*)inner)->moveAltToggle != 0)
+                    if (inner->moveAltToggle != 0)
                     {
                         ns = 0x15;
                     }
@@ -6766,7 +6764,7 @@ int playerStateClimbWall(GameObject* obj, int state)
         }
         if (gPlayerCurrentMoveId != 0x15 && gPlayerCurrentMoveId != 0x16)
         {
-            f32 v = ((PlayerState*)state)->baddie.inputMagnitude;
+            f32 v = state->baddie.inputMagnitude;
             if (ph < 0.0f)
             {
                 ph = -(0.003999997f * v + 0.034f);
@@ -6776,10 +6774,10 @@ int playerStateClimbWall(GameObject* obj, int state)
                 ph = 0.003999997f * v + 0.034f;
             }
         }
-        playerPlayClimbingSound(obj, state);
+        playerPlayClimbingSound(obj, stateArg);
         break;
     }
-    ((PlayerState*)state)->baddie.moveSpeed = ph;
+    state->baddie.moveSpeed = ph;
     {
         s16 cur;
         if (gPlayerPrevMoveId != (cur = gPlayerCurrentMoveId))
@@ -6790,11 +6788,11 @@ int playerStateClimbWall(GameObject* obj, int state)
     {
         f32 sp = obj->anim.currentMoveProgress;
         (*gCameraInterface)
-            ->overridePos(((PlayerState*)inner)->moveOffsetX * sp + obj->anim.localPosX,
-                          ((PlayerState*)inner)->moveOffsetY * sp + obj->anim.localPosY,
-                          ((PlayerState*)inner)->moveOffsetZ * sp + obj->anim.localPosZ);
+            ->overridePos(inner->moveOffsetX * sp + obj->anim.localPosX,
+                          inner->moveOffsetY * sp + obj->anim.localPosY,
+                          inner->moveOffsetZ * sp + obj->anim.localPosZ);
     }
-    fn_802AB5A4(obj, inner, 5);
+    fn_802AB5A4(obj, (int)inner, 5);
     return 0;
 }
 

@@ -29,7 +29,9 @@
  * interface implementations) own most of the unobserved head.
  */
 typedef struct BaddieState {
-    u8 unk00[0x14];
+    u32 flags0; /* actor-state flags; player climbing sets bit 0x200000 */
+    u32 flags4; /* secondary actor-state flags; player climbing sets bits 0x100000/0x8000000 */
+    u8 unk08[0x14 - 0x8];
     f32 posX; /* copied into spawned contact objects as position */
     f32 posY;
     f32 posZ;
@@ -115,7 +117,10 @@ typedef struct BaddieState {
     f32 pathStep; /* path-advance step (lfs/stfs 764; fed to Curve_AdvanceAlongPath) */
     f32 animDeltaScale;
     f32 unk304;
-    f32 unk308;
+    union {
+        f32 unk308;
+        int stateHandler; /* player state callback address */
+    };
     u8 unk30C[8];
 /* eventFlags bit: anim-event footstep - the anim/event stream latches it, and
  * the per-family update readers test-then-clear it to fire the footstep/climb
