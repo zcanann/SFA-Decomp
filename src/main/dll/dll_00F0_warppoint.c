@@ -26,44 +26,12 @@
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
-#include "main/dll/pushable.h"
-#include "main/dll/dll_00EF_pushable.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/shader_api.h"
 #include "main/vecmath_distance_api.h"
-
-typedef struct WarpPointObjectDef
-{
-    ObjPlacement head; /* 0x00: common placement head (color / pos / mapId) */
-    u8 rotByte;        /* 0x18: initial yaw, shifted into anim.rotX */
-    s8 hintId;         /* 0x19: map-hint id matched against lbl_803DCEB8 */
-    s8 warpMapIdx;     /* 0x1a: destination map index for warpToMap */
-    s8 seqId;          /* 0x1b: sequence id cached into WarpPointState.seqId */
-    s8 enableFlag;     /* 0x1c: nonzero arms the trigger */
-    s8 mode;           /* 0x1d: behavior selector (0..4) */
-    s8 radiusByte;     /* 0x1e: trigger radius seed */
-    u8 savePointArmed; /* 0x1f: one-shot save-point arming flag */
-    s16 gameBit;       /* 0x20 */
-    u8 pad22[0x28 - 0x22];
-} WarpPointObjectDef;
-
-STATIC_ASSERT(offsetof(WarpPointObjectDef, mode) == 0x1d);
-STATIC_ASSERT(offsetof(WarpPointObjectDef, gameBit) == 0x20);
-
-/* extra block; only the head 0x10 bytes are owned (WarpPoint_getExtraSize). */
-typedef struct WarpPointState
-{
-    s16 countdown;
-    s16 gameBit;
-    s16 seqId;
-    s16 unk06;
-    f32 triggerRadius;    /* 0x08 */
-    u8 triggered;         /* 0x0C: sequence already fired this approach */
-    u8 savePointRecorded; /* 0x0D: one-shot save-point latch */
-    u8 padE[0x10 - 0xE];
-} WarpPointState;
+#include "main/dll/dll_00F0_warppoint.h"
 
 /* placement mapIds that arm the one-shot save-point recording at init */
 #define WARPPOINT_MAP_SAVE_A 0x4B675
@@ -73,13 +41,6 @@ typedef struct WarpPointState
    and calls the map-event savePoint) before running its sequence. */
 #define WARPPOINT_SEQID_SAVEPOINT 0x27e
 
-/* def->mode behavior selector (see file header) */
-#define WARPPOINT_MODE_PROXIMITY   0 /* proximity warp / trigger-sequence near player */
-#define WARPPOINT_MODE_HINT_TIMER  1 /* trigger while hint flag set, on a timer */
-#define WARPPOINT_MODE_GATED_WARP  2 /* game-bit-gated warp, world-space distance */
-#define WARPPOINT_MODE_ONESHOT_SEQ 3 /* one-shot trigger-sequence gated on game bit */
-#define WARPPOINT_MODE_GATED_WARP2 4 /* game-bit-gated warp variant, world-space distance */
-
 /* game bit shared with mode-0 markers to coordinate a single save point */
 #define GAMEBIT_WARPPOINT_SAVED 0xD53
 
@@ -87,9 +48,9 @@ extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 
 
-int WarpPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+int WarpPoint_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    WarpPointObjectDef* p = (WarpPointObjectDef*)obj->anim.placementData;
+    WarpPointPlacement* p = (WarpPointPlacement*)obj->anim.placementData;
     if (p->mode != WARPPOINT_MODE_GATED_WARP)
     {
         if (animUpdate->triggerCommand == 1)
@@ -107,7 +68,7 @@ int WarpPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int WarpPoint_getExtraSize(void)
 {
-    return 0x10;
+    return sizeof(WarpPointState);
 }
 int WarpPoint_getObjectTypeId(void)
 {
@@ -116,7 +77,7 @@ int WarpPoint_getObjectTypeId(void)
 
 void WarpPoint_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    WarpPointObjectDef* p = (WarpPointObjectDef*)obj->anim.placementData;
+    WarpPointPlacement* p = (WarpPointPlacement*)obj->anim.placementData;
     if (visible == 0)
         return;
     if (p->mode == WARPPOINT_MODE_HINT_TIMER)
@@ -125,12 +86,12 @@ void WarpPoint_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visibl
 
 void WarpPoint_update(GameObject* obj)
 {
-    WarpPointObjectDef* def;
+    WarpPointPlacement* def;
     WarpPointState* state;
     GameObject* player;
     f32 dist;
 
-    def = (WarpPointObjectDef*)obj->anim.placementData;
+    def = (WarpPointPlacement*)obj->anim.placementData;
     state = obj->extra;
     player = Obj_GetPlayerObject();
     if (player == NULL)
@@ -264,10 +225,10 @@ void WarpPoint_update(GameObject* obj)
     }
 }
 
-void WarpPoint_init(GameObject* obj, WarpPointObjectDef* def)
+void WarpPoint_init(GameObject* obj, WarpPointPlacement* def)
 {
     WarpPointState* state = obj->extra;
-    obj->animEventCallback = WarpPoint_SeqFn;
+    obj->animEventCallback = WarpPoint_animEventCallback;
     obj->anim.rotX = (s16)((u32)def->rotByte << 8);
     state->countdown = 0x1e;
     state->triggerRadius = (f32)((s32)def->radiusByte << 2);
@@ -285,7 +246,7 @@ void WarpPoint_init(GameObject* obj, WarpPointObjectDef* def)
     {
         state->countdown = 0;
     }
-    if (def->head.mapId == WARPPOINT_MAP_SAVE_A || def->head.mapId == WARPPOINT_MAP_SAVE_B)
+    if (def->base.mapId == WARPPOINT_MAP_SAVE_A || def->base.mapId == WARPPOINT_MAP_SAVE_B)
     {
         def->savePointArmed = 1;
     }

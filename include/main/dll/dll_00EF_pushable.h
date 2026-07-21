@@ -7,7 +7,6 @@
 #include "main/dll/dll_00F2_iceblast.h"
 
 extern ObjectDescriptor14 gPushableObjDescriptor;
-extern ObjectDescriptor gWarpPointObjDescriptor;
 extern ObjectDescriptor gInvHitObjDescriptor;
 extern ObjectDescriptor gIceblastObjDescriptor;
 extern ObjectDescriptor gFlameblastObjDescriptor;
@@ -39,10 +38,6 @@ FUN_801778e0(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
 
 int pushable_getExtraSize(void);
 int pushable_getObjectTypeId(void);
-
-int WarpPoint_getExtraSize(void);
-int WarpPoint_getObjectTypeId(void);
-int WarpPoint_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int InvHit_getExtraSize(void);
 int InvHit_getObjectTypeId(void);
