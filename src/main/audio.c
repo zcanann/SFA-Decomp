@@ -540,14 +540,16 @@ void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
     {
         StreamEntry* s;
         int i;
+        int count;
         DVDClose(fileInfo);
         saved = mmSetFreeDelay(0);
         mm_free(fileInfo);
         mmSetFreeDelay(saved);
-        gAudioPendingLoadFlags &= ~(u64)AUDIO_LOAD_STREAMS;
+        gAudioPendingLoadFlags &= ~AUDIO_LOAD_STREAMS;
         gAudioCompletedLoadFlags |= AUDIO_LOAD_STREAMS;
         s = gStreamsData;
-        for (i = gStreamsCount; i != 0; i--)
+        count = gStreamsCount;
+        for (i = 0; i != count; i++)
         {
             s->flag = 0;
             s++;
