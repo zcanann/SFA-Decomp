@@ -290,8 +290,8 @@ void gcRobotPatrol_init(GameObject* obj, int state)
 }
 
 const f32 gGcRobotPatrolZero = 0.0f;
-const f32 lbl_803E2868 = 0.0f;
-const f32 lbl_803E286C = 60.0f;
+const f32 gMikaladonZero = 0.0f;
+const f32 gMikaladonDefaultPeriod = 60.0f;
 
 void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg, int wpad0, int wpad1, void* wpad2, int wpad3)
 {

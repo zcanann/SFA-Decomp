@@ -237,7 +237,7 @@ void enemyObjAnimUpdate(short* obj, int state)
                 gcRobotPatrol_update((int*)obj, (u8*)state);
                 break;
             case ENEMY_MIKALADON_OBJ:
-                mikaladon_update((int*)obj, (u8*)state);
+                mikaladon_update((GameObject*)obj, (MikaladonState*)state);
                 break;
             case ENEMY_VAMBAT_OBJ:
             case ENEMY_FIREBAT_OBJ:
@@ -314,7 +314,7 @@ void enemyObjAnimUpdate(short* obj, int state)
                 gcRobotPatrol_update((int*)obj, (u8*)state);
                 break;
             case ENEMY_MIKALADON_OBJ:
-                mikaladon_update((int*)obj, (u8*)state);
+                mikaladon_update((GameObject*)obj, (MikaladonState*)state);
                 break;
             case ENEMY_VAMBAT_OBJ:
             case ENEMY_FIREBAT_OBJ:
@@ -425,7 +425,7 @@ void enemyObjAnimUpdate(short* obj, int state)
             gcRobotPatrol_update((int*)obj, (u8*)state);
             break;
         case ENEMY_MIKALADON_OBJ:
-            mikaladon_update((int*)obj, (u8*)state);
+            mikaladon_update((GameObject*)obj, (MikaladonState*)state);
             break;
         case ENEMY_VAMBAT_OBJ:
         case ENEMY_FIREBAT_OBJ:
@@ -1976,7 +1976,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             gcRobotPatrol_init(obj, (int)state);
             break;
         case ENEMY_MIKALADON_OBJ:
-            mikaladon_init(obj, (int)state);
+            mikaladon_init(obj, (MikaladonState*)state);
             break;
         case ENEMY_VAMBAT_OBJ:
         case ENEMY_FIREBAT_OBJ:
