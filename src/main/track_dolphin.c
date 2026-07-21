@@ -1598,7 +1598,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
             f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;
         handle = *(u32*)&((MapBlockData*)blockData)->allocHandle;
         if (handle != 0xFFFFFFFF ||
-            (h2 = textureFn_8006c5c4(), hdr = ((MapBlockData*)blockData)->shadowTexHeader,
+            (h2 = getNewShadowSmallDiskTexture(), hdr = ((MapBlockData*)blockData)->shadowTexHeader,
              (u32)hdr->texture == h2))
         {
             u32 c = *(u32*)col;
@@ -1920,7 +1920,7 @@ void* shadowInit(int* obj, int size, int wpad0)
     }
     else
     {
-        modelState->shadowTexture = (void*)textureFn_8006c5c4();
+        modelState->shadowTexture = (void*)getNewShadowSmallDiskTexture();
     }
     if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
     {

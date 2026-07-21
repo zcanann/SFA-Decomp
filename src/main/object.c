@@ -1028,7 +1028,7 @@ void objFreeObjDef(u8* obj, int flag)
         }
         if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL)
         {
-            curTex = (void*)textureFn_8006c5c4();
+            curTex = (void*)getNewShadowSmallDiskTexture();
             tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex)
             {

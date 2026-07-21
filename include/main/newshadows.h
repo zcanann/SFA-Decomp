@@ -32,7 +32,7 @@ void fn_8006C528(Texture** out);
 void fn_8006C534(Texture** out);
 void getNewShadowRadialTexture(Texture** out);
 void getNewShadowRampTexture(u32* out);
-void fn_8006C678(int id);
+void loadNewShadowBumpTexture(int texMapId);
 void fn_8006C6A4(int id);
 void textureFn_8006c4e0(int* tableOut, int* countOut);
 void textureFn_8006c75c(int id);

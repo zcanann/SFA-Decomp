@@ -1170,7 +1170,7 @@ void getNewShadowRampTexture(u32* out)
     *out = gNewShadowRampTexture;
 }
 
-u32 textureFn_8006c5c4(void)
+u32 getNewShadowSmallDiskTexture(void)
 {
     return gNewShadowSmallDiskTexture;
 }
@@ -1205,9 +1205,9 @@ f32 fn_8006C670(void)
     return lbl_803DCFA4;
 }
 
-void fn_8006C678(int id)
+void loadNewShadowBumpTexture(int texMapId)
 {
-    GXLoadTexObj(textureGetGXTexObj((Texture*)gNewShadowBumpTexture), id);
+    GXLoadTexObj(textureGetGXTexObj((Texture*)gNewShadowBumpTexture), texMapId);
 }
 
 void fn_8006C6A4(int id)

@@ -5471,7 +5471,7 @@ void fn_8007CAF4(void* texture)
     Mtx scaleMtx;
 
     selectReflectionTexture(0);
-    fn_8006C678(1);
+    loadNewShadowBumpTexture(1);
     newshadows_getReflectionScrollOffsets(&sOff, &tOff);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
