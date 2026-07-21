@@ -1415,7 +1415,8 @@ void createNewShadowDistortionTexture(void)
             row += (x & 3) * 8;
             addr = row + (x >> 2) * 0x800;
             fx = x - lbl_803DEDAC;
-            dist = sqrtf(fx * fx + fy * fy);
+            dist = fx * fx;
+            dist = sqrtf(fy * fy + dist);
             ny = fy / dist;
             fx /= dist;
             if (dist <= lbl_803DEDB8)
