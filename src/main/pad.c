@@ -1,3 +1,4 @@
+#include "global.h"
 #include "main/fileio.h"
 #include "main/frame_timing.h"
 #include "main/gameloop_api.h"
@@ -25,6 +26,13 @@ typedef struct PadStateBlock
     u32 pressedButtons[4];        /* 0x30 */
     PADStatus statusBuffers[2][4]; /* 0x40, two 0x30-byte PADRead buffers */
 } PadStateBlock;
+
+STATIC_ASSERT(offsetof(PadStateBlock, currentButtons) == 0x10);
+STATIC_ASSERT(offsetof(PadStateBlock, releasedButtons) == 0x20);
+STATIC_ASSERT(offsetof(PadStateBlock, pressedButtons) == 0x30);
+STATIC_ASSERT(offsetof(PadStateBlock, statusBuffers[0]) == 0x40);
+STATIC_ASSERT(offsetof(PadStateBlock, statusBuffers[1]) == 0x70);
+STATIC_ASSERT(sizeof(PadStateBlock) == 0xA0);
 
 u32 gPadButtonsPrevious[4];
 u32 gPadButtonsHeld[4];

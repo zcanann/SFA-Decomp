@@ -12,49 +12,45 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 
-#define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
-
 int brokenpipe_getExtraSize(void)
 {
-    return 4;
+    return sizeof(BrokenPipeState);
 }
 
 void brokenpipe_update(GameObject* obj)
 {
-    BrokenPipeState* state = (obj)->extra;
+    BrokenPipeState* state = obj->extra;
 
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f, &state->hitEffectCooldown);
 }
 
 void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
 {
-    GameObject* object = obj;
-    BrokenPipeSetup* setupData = setup;
-    f32 minScale = 0.0f;
+    f32 zeroScale = 0.0f;
 
-    object->anim.rotZ = (s16)(setupData->rotZ << 8);
-    object->anim.rotY = (s16)(setupData->rotY << 8);
-    object->anim.rotX = (s16)(setupData->rotX << 8);
-    if (setupData->scale != 0)
+    obj->anim.rotZ = (s16)(setup->rotZ << 8);
+    obj->anim.rotY = (s16)(setup->rotY << 8);
+    obj->anim.rotX = (s16)(setup->rotX << 8);
+    if (setup->scale != 0)
     {
-        object->anim.rootMotionScale = (f32)(u32)setupData->scale / 255.0f;
-        if (object->anim.rootMotionScale == minScale)
+        obj->anim.rootMotionScale = (f32)(u32)setup->scale / 255.0f;
+        if (obj->anim.rootMotionScale == zeroScale)
         {
-            object->anim.rootMotionScale = 1.0f;
+            obj->anim.rootMotionScale = 1.0f;
         }
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
-                                  (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *
-                                        object->anim.rootMotionScale));
-        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
+                                  (int)((f32)((ObjHitsPriorityState*)obj->anim.hitReactState)->primaryRadius *
+                                        obj->anim.rootMotionScale));
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
     }
-    object->objectFlags |= BROKENPIPE_OBJFLAG_HIDDEN;
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
 }
 
 ObjectDescriptor gBrokenPipeObjDescriptor = {
     0,
     0,
     0,
-    0x00090000,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     NULL,
     NULL,
     NULL,
