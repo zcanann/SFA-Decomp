@@ -712,7 +712,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 }
                 if ((s->modeBits & 0x10) != 0)
                 {
-                    fn_80038F1C(0, 1);
+                    objSetLookAtFlip(0, 1);
                     yawDelta = yawDelta + -0x8000;
                 }
                 ival = (short)yawDelta;
@@ -794,7 +794,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     yawDelta = Obj_GetYawDeltaToObject((GameObject*)objAnim, (GameObject*)obj, NULL);
     if ((control->flags & 0x10) != 0)
     {
-        fn_80038F1C(0, 1);
+        objSetLookAtFlip(0, 1);
         yawDelta += -0x8000;
     }
 

@@ -2294,19 +2294,11 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u16 flags)
     *(s16*)(playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG) + 2) = -rotation;
 }
 
-typedef struct ObjLibFlagByte
+void objSetLookAtFlip(int mode, u8 enabled)
 {
-    u8 highBit : 1;
-    u8 rest : 7;
-} ObjLibFlagByte;
-
-extern ObjLibFlagByte lbl_803DCC00;
-
-void fn_80038F1C(int a, u8 b)
-{
-    if ((int)(u8)a != 0)
+    if ((int)(u8)mode != 0)
         return;
-    lbl_803DCC00.highBit = b;
+    gObjLookAtControlFlags.flip = enabled;
 }
 
 char sObjMsgOverflowInObjectWarning[] = "objmsg (%x): overflow in object %d defno=%d FROM: defno %d\n";

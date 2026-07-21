@@ -8,6 +8,7 @@
 #include "main/objprintgxcolor.h"
 #include "main/model.h"
 #include "main/object_api.h"
+#include "main/objlib_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/curve_eval.h"
@@ -76,12 +77,6 @@ extern int lbl_803DCC48;
 extern f32 lbl_803DEA04;
 extern f32 lbl_803DE9E4;
 extern f32 gObjPrintDegToAngle;
-typedef struct ObjPrintFlipFlag
-{
-    u8 flip : 1;
-    u8 rest : 7;
-} ObjPrintFlipFlag;
-extern ObjPrintFlipFlag lbl_803DCC00;
 extern int lbl_803DCC44;
 extern u8 lbl_803DCC3E;
 extern u32 lbl_803DB468;
@@ -923,11 +918,11 @@ s16 objMathFn_8003a380(GameObject* obj, GameObject* target, f32* pos, u8* p4, s1
     }
 
     ret = src[0];
-    if (lbl_803DCC00.flip)
+    if (gObjLookAtControlFlags.flip)
     {
         src[0] -= 0x8000;
         src[1] = -src[1];
-        lbl_803DCC00.flip = 0;
+        gObjLookAtControlFlags.flip = 0;
     }
 
     i = 0;
