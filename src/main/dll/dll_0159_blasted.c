@@ -60,7 +60,7 @@ int fn_801A27B8(GameObject* obj, int id)
 
 int blasted_getExtraSize(void)
 {
-    return 0x14;
+    return sizeof(BlastedTargetState);
 }
 
 int blasted_getObjectTypeId(void)
@@ -74,8 +74,8 @@ void blasted_free(void)
 
 void blasted_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state = obj->extra;
-    if (visible != 0 && state[3] == 0)
+    BlastedTargetState* state = obj->extra;
+    if (visible != 0 && state->triggerFired == 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4348);
     }
@@ -87,14 +87,14 @@ void blasted_hitDetect(void)
 
 /* Blasted-target update: once the target's GameBit is latched, fires the
  * map trigger; otherwise scans the model's hit nodes for newly-destroyed
- * (state 5) pieces, records each unique piece, advances the damage model
+ * priority-5 pieces, records each unique piece, advances the damage model
  * index, and on the final piece latches the GameBit, fires the trigger,
  * and swaps to the destroyed model. */
 void blasted_update(GameObject* obj)
 {
     int i;
-    BlastedTargetSetup* setup = (BlastedTargetSetup*)(obj)->anim.placementData;
-    BlastedTargetState* state = (obj)->extra;
+    BlastedTargetSetup* setup = (BlastedTargetSetup*)obj->anim.placementData;
+    BlastedTargetState* state = obj->extra;
     s16 total = setup->pieceCount;
 
     if (state->triggerFired != 0)
@@ -107,16 +107,17 @@ void blasted_update(GameObject* obj)
         return;
     }
     {
-        for (i = 0; i < ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->priorityHitCount; i++)
+        for (i = 0; i < ((ObjHitsPriorityState*)obj->anim.hitReactState)->priorityHitCount; i++)
         {
             int cnt;
             u32 hitObject;
-            int hitType;
+            int hitPriority;
             int found;
-            hitType = *(s8*)((int)(obj)->anim.hitReactState + i + 117);
-            hitObject = ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitObjects[i];
+            hitPriority = *(s8*)((u8*)obj->anim.hitReactState + i +
+                                 offsetof(ObjHitsPriorityState, priorities));
+            hitObject = ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitObjects[i];
             found = 0;
-            if (hitType != 5)
+            if (hitPriority != 5)
             {
                 continue;
             }
@@ -125,7 +126,7 @@ void blasted_update(GameObject* obj)
                 mainSetBits(setup->completedGameBit, 1);
                 return;
             }
-            if (hitType == 5)
+            if (hitPriority == 5)
             {
                 int k = 0;
                 cnt = state->damageStep;
@@ -170,34 +171,33 @@ void blasted_update(GameObject* obj)
     }
 }
 
-void blasted_init(GameObject* obj, int placement)
+void blasted_init(GameObject* obj, BlastedTargetSetup* setup)
 {
-    BlastedTargetSetup* setup = (BlastedTargetSetup*)placement;
-    int* state = (obj)->extra;
-    int* targ;
+    BlastedTargetState* state = obj->extra;
+    ObjHitsPriorityState* hitState;
     s16 gbid;
     u8 progress;
 
-    state[0xc / 4] = 0;
-    objSetSlot((GameObject*)obj, 0x51);
-    targ = *(int**)&(obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
-    ((BlastedState*)state)->pieceCount = (u8)setup->pieceCount;
+    state->triggerFired = 0;
+    objSetSlot(obj, 0x51);
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    hitState->flags = (s16)(hitState->flags | 1);
+    state->pieceCount = (u8)setup->pieceCount;
     gbid = setup->progressGameBit;
     if (gbid != -1)
     {
         progress = mainGetBit(gbid);
-        ((BlastedState*)state)->gameBitLatchState = progress;
+        state->damageStep = progress;
         if (progress != 0)
         {
-            Obj_SetActiveModelIndex(obj, (int)((BlastedState*)state)->gameBitLatchState);
+            Obj_SetActiveModelIndex(obj, state->damageStep);
         }
     }
     mainSetBits(BLASTED_GAMEBIT_DAMAGE_BASE, 1);
-    (obj)->anim.rotX = (s16)((s32) * (s8*)(placement + 0x18) << 8);
+    obj->anim.rotX = (s16)((s32)setup->rotX << 8);
     if ((u32)mainGetBit(setup->completedGameBit) != 0)
     {
-        state[0xc / 4] = fn_801A27B8(obj, (int)setup->triggerId);
+        state->triggerFired = fn_801A27B8(obj, setup->triggerId);
     }
 }
 

@@ -1,32 +1,12 @@
+#include "global.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_unregister.h"
 #include "main/audio/vid_init.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/vidlisttables.h"
 
-
-typedef struct VoicePrioVoiceRec
-{
-    u8 prev;
-    u8 next;
-    u16 user;
-} VoicePrioVoiceRec;
-
-typedef struct VoicePrioRootRec
-{
-    u16 next;
-    u16 prev;
-} VoicePrioRootRec;
-
-typedef struct VoicePrioBlockRec
-{
-    u8 vidNodes[0x8C0];
-    VoicePrioVoiceRec prioVoices[64];   /* 0x8C0 */
-    u8 prioVoicesRoot[256];             /* 0x9C0 */
-    VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
-} VoicePrioBlockRec;
-
-#define voicePriorityLinks ((u8*)vidListNodes + 0x8c0)
+#define voicePriorityLinks ((u8*)vidListNodes + offsetof(VidListTables, priorityLinks))
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
@@ -221,37 +201,38 @@ int vidGetInternalId(u32 id)
 void voiceRemovePriority(McmdVoiceState* state)
 {
     McmdVoiceState* s = state;
-    VoicePrioBlockRec* vb;
-    VoicePrioVoiceRec* vps;
-    VoicePrioRootRec* pr;
+    VidListTables* vb;
+    SynthVoiceListNode* vps;
+    SynthRootListNode* pr;
 
-    vb = (VoicePrioBlockRec*)vidListNodes;
-    vps = (VoicePrioVoiceRec*)&((u8*)voicePriorityLinks)[(s->voiceHandle & 0xff) << 2];
+    vb = (VidListTables*)vidListNodes;
+    vps = (SynthVoiceListNode*)&((u8*)voicePriorityLinks)[(s->voiceHandle & 0xff) << 2];
     if (vps->user != 1)
     {
         return;
     }
     if (vps->prev != 0xff)
     {
-        vb->prioVoices[vps->prev].next = vps->next;
+        vb->priorityLinks[vps->prev].next = vps->next;
     }
     else
     {
-        vb->prioVoicesRoot[s->priorityGroup] = vps->next;
+        vb->priorityGroupHeads[s->priorityGroup] = vps->next;
     }
     if (vps->next != 0xff)
     {
-        vb->prioVoices[vps->next].prev = vps->prev;
+        vb->priorityLinks[vps->next].prev = vps->prev;
     }
     else if (vps->prev == 0xff)
     {
         u32 prevv;
-        pr = (VoicePrioRootRec*)((u8*)vb + ((u32)s->priorityGroup << 2));
-        prevv = *(u16*)((u8*)pr + 2754);
-        pr = (VoicePrioRootRec*)((u8*)pr + 2752);
+        pr = (SynthRootListNode*)((u8*)vb + ((u32)s->priorityGroup << 2));
+        prevv = *(u16*)((u8*)pr + offsetof(VidListTables, prioritySortLinks) +
+                       offsetof(SynthRootListNode, prev));
+        pr = (SynthRootListNode*)((u8*)pr + offsetof(VidListTables, prioritySortLinks));
         if (prevv != 0xffff)
         {
-            vb->prioRootList[prevv].next = pr->next;
+            vb->prioritySortLinks[prevv].next = pr->next;
         }
         else
         {
@@ -259,7 +240,7 @@ void voiceRemovePriority(McmdVoiceState* state)
         }
         if (pr->next != 0xffff)
         {
-            vb->prioRootList[pr->next].prev = pr->prev;
+            vb->prioritySortLinks[pr->next].prev = pr->prev;
         }
     }
     vps->user = 0;
