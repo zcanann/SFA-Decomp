@@ -1261,7 +1261,7 @@ int mathFn_800dbff0(float* point)
 
     while (down != up)
     {
-        if (Objfsa_IsWalkGroupActive(down))
+        if (gObjfsaWalkGroupActive[down])
         {
             wg = &gObjfsaWalkGroups[down];
             g = wg;
@@ -1287,7 +1287,7 @@ int mathFn_800dbff0(float* point)
                 }
             }
         }
-        if (Objfsa_IsWalkGroupActive(up))
+        if (gObjfsaWalkGroupActive[up])
         {
             g = &gObjfsaWalkGroups[up];
             y = point[1];
@@ -1324,7 +1324,7 @@ int mathFn_800dbff0(float* point)
         }
     }
 
-    if (Objfsa_IsWalkGroupActive(down))
+    if (gObjfsaWalkGroupActive[down])
     {
         wgLast = &gObjfsaWalkGroups[down];
         g = wgLast;
