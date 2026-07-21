@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-u32 mapLoadDataFile(int mapId, int fileId);
+void* mapLoadDataFile(int mapId, int fileId);
 s32 getDataFileSize(int id);
 void loadDataFiles();
 
