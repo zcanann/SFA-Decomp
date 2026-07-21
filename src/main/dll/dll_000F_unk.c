@@ -646,6 +646,8 @@ void fn_800D915C(GameObject* gameObj, BaddieState* state, f32 dt, PlayerSubstate
             result = -result;
             if (result != startState)
             {
+                s16 previousState = startState;
+                startState = previousState;
                 state->prevSubstate = startState;
                 state->moveJustStartedB = 1;
                 state->stateTimer = 0;
