@@ -53,6 +53,7 @@ STATIC_ASSERT(offsetof(WispBaddiePlacement, base) == 0x0);
 STATIC_ASSERT(offsetof(WispBaddiePlacement, triggerDistanceScale) == 0x19);
 STATIC_ASSERT(offsetof(WispBaddiePlacement, maxHitRadiusParam) == 0x1A);
 
+void WispBaddie_updateMovement(GameObject* obj, WispBaddieState* state);
 int wispbaddie_getExtraSize(void);
 int wispbaddie_getObjectTypeId(void);
 void wispbaddie_free(GameObject* obj);
@@ -66,7 +67,7 @@ void wispbaddie_release(void);
 void wispbaddie_initialise(void);
 
 extern ObjectDescriptor gWispBaddieObjDescriptor;
-extern u32 lbl_8031F280[4];
+extern u32 gGroundBaddieModelChainIds[4];
 
 void wispbaddie_init(GameObject* obj, WispBaddiePlacement* placement, int initialised);
 
