@@ -32,7 +32,7 @@ int* lbl_803DCB5C;
 int lbl_803DCB58;
 ModelList* gModelList;
 ModelList* gModelAnimCacheList;
-void* gModelAnimFlagsTable;
+u32* gModelAnimDataOffsetTable;
 f32 lbl_803DCB48;
 
 u16 gModelCopyChunkWordLimit = 0x2A0;
@@ -69,7 +69,7 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
             *(u16 *)(hdr + 4) == 3) {                                                 \
             if (v == 0) {                                                             \
                 if (ModelList_getHeader(gModelAnimCacheList, idx, &hp) == 0) {               \
-                    sz4 = *(int *)((u8 *)gModelAnimFlagsTable + idx * 4);                     \
+                    sz4 = gModelAnimDataOffsetTable[idx];                                   \
                     loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, sz4, 0, &sz, idx, 1);    \
                     hp = mmAlloc(sz, 10, 0);                                           \
                     loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, hp, sz4, sz,     \
@@ -736,7 +736,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                 {
                     if (ModelList_getHeader(gModelAnimCacheList, animId, &atlasHdr) == 0)
                     {
-                        dataOff = *(int*)((u8*)gModelAnimFlagsTable + animId * 4);
+                        dataOff = gModelAnimDataOffsetTable[animId];
                         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, dataOff, 0, &sz2, animId, 1);
                         atlasHdr = mmAlloc(sz2, 10, 0);
                         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, atlasHdr, dataOff, sz2, &unusedSize, animId,
@@ -1579,8 +1579,8 @@ int loadModelAndAnimTabs(void)
         gModelTabEntryCount++;
     }
     gModelTabEntryCount--;
-    gModelAnimFlagsTable = getCurrentDataFile(MLDF_FILEID_ANIM_TAB_A);
-    if (gModelAnimFlagsTable == NULL)
+    gModelAnimDataOffsetTable = getCurrentDataFile(MLDF_FILEID_ANIM_TAB_A);
+    if (gModelAnimDataOffsetTable == NULL)
     {
         return 0;
     }
@@ -2285,7 +2285,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
         if (ModelList_getHeader(gModelAnimCacheList, (i = id), &ptr) == 0)
         {
             u8* np;
-            v = ((u32*)gModelAnimFlagsTable)[id];
+            v = gModelAnimDataOffsetTable[id];
             loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, v, 0, &size, i, 1);
             ptr = np = mmAlloc(size, 10, 0);
             loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, np, v, size, &tmp, i, 0);
@@ -2322,7 +2322,7 @@ void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
     }
     else
     {
-        flags = *(u32*)((int)gModelAnimFlagsTable + id * 4);
+        flags = gModelAnimDataOffsetTable[id];
         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, flags, 0, &size, id, 1);
         buf = out + 0x80;
         loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, buf, flags, size, &out2, id, 0);
