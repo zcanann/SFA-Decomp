@@ -2901,60 +2901,59 @@ char sTemplateProgressCounterFormat[] = "%02d/%02d";
 
 void pauseMenuDrawStatus(void)
 {
-    int off;
-    u8 i;
-    u8 j;
-    u8* trickyStatus;
+    int statusOffset;
+    u8* trickyEnergy;
+    f32* opacity;
     u8* base;
-    int delta;
-    f32 newOp;
-    int cur;
-    f32* op;
-    int* dp;
-    int player;
-    int bit;
-    u32 ji;
-    int sv;
-    f32 thresh;
-    f32 prev;
-    s8 negDelta;
+    int magicDelta;
+    f32 nextOpacity;
+    int displayedValue;
+    int* displayedValuePtr;
+    GameObject* player;
+    u8 statusSlot;
+    int showCountBit;
+    u32 statusIndex;
+    int statusValue;
+    f32 flashThreshold;
+    f32 previousOpacity;
+    s8 maxMagicDelta;
     int statuses[HUD_STATUS_COUNT];
 
     base = (u8*)lbl_803A87F0;
-    player = (int)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     getTrickyObject();
-    trickyStatus = (*gMapEventInterface)->getTrickyEnergy();
-    statuses[HUD_STATUS_HEALTH] = Player_GetCurrentHealth(player);
-    statuses[HUD_STATUS_MAX_HEALTH] = Player_GetMaxHealth(player);
+    trickyEnergy = (*gMapEventInterface)->getTrickyEnergy();
+    statuses[HUD_STATUS_HEALTH] = playerGetCurHealth(player);
+    statuses[HUD_STATUS_MAX_HEALTH] = playerGetMaxHealth(player);
     statuses[HUD_STATUS_TRICKY_FOOD] = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
-    if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - Player_GetCurrentMagic(player) < 0)
+    if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - playerGetCurMagic(player) < 0)
     {
-        delta = -1;
+        magicDelta = -1;
     }
-    else if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - Player_GetCurrentMagic(player) > 0)
+    else if (((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - playerGetCurMagic(player) > 0)
     {
-        delta = 1;
-    }
-    else
-    {
-        delta = 0;
-    }
-    statuses[HUD_STATUS_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - delta;
-    if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - Player_GetMaxMagic(player) < 0)
-    {
-        delta = -1;
-    }
-    else if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - Player_GetMaxMagic(player) > 0)
-    {
-        delta = 1;
+        magicDelta = 1;
     }
     else
     {
-        delta = 0;
+        magicDelta = 0;
     }
-    negDelta = -delta;
-    statuses[HUD_STATUS_MAX_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] + negDelta;
-    if ((negDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) && (objIsCurModelNotZero((void*)player) != 0) &&
+    statuses[HUD_STATUS_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAGIC] - magicDelta;
+    if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - playerGetMaxMagic(player) < 0)
+    {
+        magicDelta = -1;
+    }
+    else if (((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] - playerGetMaxMagic(player) > 0)
+    {
+        magicDelta = 1;
+    }
+    else
+    {
+        magicDelta = 0;
+    }
+    maxMagicDelta = -magicDelta;
+    statuses[HUD_STATUS_MAX_MAGIC] = ((int*)(base + 0xB30))[HUD_STATUS_MAX_MAGIC] + maxMagicDelta;
+    if ((maxMagicDelta != 0) && (lbl_803DD83C != lbl_803E1E3C) && (objIsCurModelNotZero(player) != 0) &&
         (mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0))
     {
         Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep_3f0);
@@ -2974,12 +2973,12 @@ void pauseMenuDrawStatus(void)
     }
     statuses[HUD_STATUS_MOON_SEEDS] = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
     statuses[HUD_STATUS_FUEL_CELLS] = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
-    statuses[HUD_STATUS_SCARABS] = playerGetMoney((GameObject*)player);
-    statuses[HUD_STATUS_TRICKY_ENERGY] = *trickyStatus;
+    statuses[HUD_STATUS_SCARABS] = playerGetMoney(player);
+    statuses[HUD_STATUS_TRICKY_ENERGY] = *trickyEnergy;
     if ((((lbl_803DD792 & 1) != 0) ||
          ((lbl_803E1E3C == (*gScreenTransitionInterface)->getProgress()) &&
           ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER) &&
-          ((((GameObject*)player)->objectFlags & 0x1000) == 0) && (getHudHiddenFrameCount() == 0) && (lbl_803DD75B == 0))) &&
+           ((player->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK) == 0) && (getHudHiddenFrameCount() == 0) && (lbl_803DD75B == 0))) &&
         (pauseMenuState == 0))
     {
         lbl_803DD83C = lbl_803E1FA0 * timeDelta + lbl_803DD83C;
@@ -3000,50 +2999,53 @@ void pauseMenuDrawStatus(void)
     {
         cMenuEnabled = 1;
     }
-    for (i = 0; i < HUD_STATUS_COUNT; i++)
     {
-        switch (i)
+        u8 animationSlot;
+        for (animationSlot = 0; animationSlot < HUD_STATUS_COUNT; animationSlot++)
         {
-        case HUD_STATUS_TRICKY_FOOD:
-        case HUD_STATUS_SCARABS:
-        case HUD_STATUS_BOMB_SPORES:
-        case HUD_STATUS_FIREFLIES:
-        case HUD_STATUS_MOON_SEEDS:
-        case HUD_STATUS_FUEL_CELLS:
-            if ((((f32*)(base + 0xAFC))[i] >= lbl_803E1E3C && ((((GameObject*)player)->objectFlags & 0x1000) == 0) &&
-                 (pauseMenuState == 0) && ((u32)airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
-                 ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER)) ||
-                ((i == HUD_STATUS_SCARABS) && ((lbl_803DD792 & 2) != 0)))
+            switch (animationSlot)
             {
-                thresh = lbl_803E1FA0 * timeDelta + ((f32*)(base + 0xAC8))[i];
-                ((f32*)(base + 0xAC8))[i] = thresh;
-                if (thresh > hudElementOpacity)
+            case HUD_STATUS_TRICKY_FOOD:
+            case HUD_STATUS_SCARABS:
+            case HUD_STATUS_BOMB_SPORES:
+            case HUD_STATUS_FIREFLIES:
+            case HUD_STATUS_MOON_SEEDS:
+            case HUD_STATUS_FUEL_CELLS:
+                if ((((f32*)(base + 0xAFC))[animationSlot] >= lbl_803E1E3C && ((player->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK) == 0) &&
+                      (pauseMenuState == 0) && ((u32)airMeter == 0) && (getHudHiddenFrameCount() == 0) &&
+                      ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER)) ||
+                    ((animationSlot == HUD_STATUS_SCARABS) && ((lbl_803DD792 & 2) != 0)))
                 {
-                    ((f32*)(base + 0xAC8))[i] = hudElementOpacity;
+                    flashThreshold = lbl_803E1FA0 * timeDelta + ((f32*)(base + 0xAC8))[animationSlot];
+                    ((f32*)(base + 0xAC8))[animationSlot] = flashThreshold;
+                    if (flashThreshold > hudElementOpacity)
+                    {
+                        ((f32*)(base + 0xAC8))[animationSlot] = hudElementOpacity;
+                    }
                 }
-            }
-            else
-            {
-                thresh = -(lbl_803E1FA0 * timeDelta - ((f32*)(base + 0xAC8))[i]);
-                ((f32*)(base + 0xAC8))[i] = thresh;
-                if (thresh < lbl_803E1E3C)
+                else
                 {
-                    ((f32*)(base + 0xAC8))[i] = *(f32*)&lbl_803E1E3C;
+                    flashThreshold = -(lbl_803E1FA0 * timeDelta - ((f32*)(base + 0xAC8))[animationSlot]);
+                    ((f32*)(base + 0xAC8))[animationSlot] = flashThreshold;
+                    if (flashThreshold < lbl_803E1E3C)
+                    {
+                        ((f32*)(base + 0xAC8))[animationSlot] = *(f32*)&lbl_803E1E3C;
+                    }
                 }
+                break;
             }
-            break;
         }
     }
-    i = 0;
+    statusSlot = 0;
     statuses[HUD_STATUS_UNKNOWN_6] = 0;
     if ((lbl_803DD840 & 1) != 0)
     {
         lbl_803DD840 = lbl_803DD840 & ~1;
-        for (j = 0; j < HUD_STATUS_COUNT; j++)
+        for (statusSlot = 0; statusSlot < HUD_STATUS_COUNT; statusSlot++)
         {
-            ((int*)(base + 0xB74))[j] = statuses[j];
-            ((int*)(base + 0xB30))[j] = statuses[j];
-            ((f32*)(base + 0xAFC))[j] = gHudElemOpacityFloor;
+            ((int*)(base + 0xB74))[statusSlot] = statuses[statusSlot];
+            ((int*)(base + 0xB30))[statusSlot] = statuses[statusSlot];
+            ((f32*)(base + 0xAFC))[statusSlot] = gHudElemOpacityFloor;
         }
         if ((mainGetBit(GAMEBIT_ITEM_BombSpore_ShowCount) != 0) ||
             (statuses[HUD_STATUS_BOMB_SPORES] != 0))
@@ -3075,84 +3077,84 @@ void pauseMenuDrawStatus(void)
     }
     else
     {
-        thresh = lbl_803E1FA8;
-        for (; i < HUD_STATUS_COUNT; i++)
+        flashThreshold = lbl_803E1FA8;
+        for (; statusSlot < HUD_STATUS_COUNT; statusSlot++)
         {
-            ji = i;
-            off = ji * sizeof(int);
-            op = ((f32*)(base + 0xAFC)) + ji;
-            prev = *op;
-            newOp = prev - timeDelta;
-            *op = newOp;
-            if ((prev > thresh) && (newOp <= thresh))
+            statusIndex = statusSlot;
+            statusOffset = statusIndex * sizeof(int);
+            opacity = ((f32*)(base + 0xAFC)) + statusIndex;
+            previousOpacity = *opacity;
+            nextOpacity = previousOpacity - timeDelta;
+            *opacity = nextOpacity;
+            if ((previousOpacity > flashThreshold) && (nextOpacity <= flashThreshold))
             {
-                switch (ji)
+                switch (statusIndex)
                 {
                 case HUD_STATUS_SCARABS:
                     Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
-                    dp = ((int*)(base + 0xB74)) + ji;
-                    cur = *dp;
-                    sv = *(int*)((u8*)statuses + off);
-                    if (cur > sv)
+                    displayedValuePtr = ((int*)(base + 0xB74)) + statusIndex;
+                    displayedValue = *displayedValuePtr;
+                    statusValue = *(int*)((u8*)statuses + statusOffset);
+                    if (displayedValue > statusValue)
                     {
-                        *dp = cur - 1;
+                        *displayedValuePtr = displayedValue - 1;
                     }
                     else
                     {
-                        *dp = cur + 1;
+                        *displayedValuePtr = displayedValue + 1;
                     }
-                    if (*dp != sv)
+                    if (*displayedValuePtr != statusValue)
                     {
-                        *op = gHudMoneyFlashOpacity;
+                        *opacity = gHudMoneyFlashOpacity;
                     }
                     break;
                 default:
-                    ((int*)(base + 0xB74))[ji] = *(int*)((u8*)statuses + off);
+                    ((int*)(base + 0xB74))[statusIndex] = *(int*)((u8*)statuses + statusOffset);
                     break;
                 }
             }
-            if (*(int*)((u8*)statuses + off) != 0)
+            if (*(int*)((u8*)statuses + statusOffset) != 0)
             {
-                if (((u8*)(base + 0xB64))[ji] == 0)
+                if (((u8*)(base + 0xB64))[statusIndex] == 0)
                 {
-                    bit = 0;
-                    switch (i)
+                    showCountBit = 0;
+                    switch (statusSlot)
                     {
                     case HUD_STATUS_SCARABS:
-                        bit = 0xB9C;
+                        showCountBit = GAMEBIT_ITEM_Scarab_ShowCount;
                         break;
                     case HUD_STATUS_BOMB_SPORES:
-                        bit = 0xB98;
+                        showCountBit = GAMEBIT_ITEM_BombSpore_ShowCount;
                         break;
                     case HUD_STATUS_TRICKY_FOOD:
-                        bit = 0xB99;
+                        showCountBit = GAMEBIT_ITEM_TrickyFood_ShowCount;
                         break;
                     case HUD_STATUS_FIREFLIES:
-                        bit = 0xB9A;
+                        showCountBit = GAMEBIT_ITEM_Firefly_ShowCount;
                         break;
                     case HUD_STATUS_MOON_SEEDS:
-                        bit = 0xB9B;
+                        showCountBit = GAMEBIT_ITEM_MoonSeed_ShowCount;
                         break;
                     case HUD_STATUS_FUEL_CELLS:
-                        bit = 0xD97;
+                        showCountBit = GAMEBIT_ITEM_FuelCell_ShowCount;
                         break;
                     }
-                    if (bit != 0)
+                    if (showCountBit != 0)
                     {
-                        mainSetBits(bit, 1);
-                        ((u8*)(base + 0xB64))[ji] = 1;
+                        mainSetBits(showCountBit, 1);
+                        ((u8*)(base + 0xB64))[statusIndex] = 1;
                     }
                 }
             }
-            if (*(int*)((u8*)statuses + off) != ((int*)(base + 0xB30))[ji])
+            if (*(int*)((u8*)statuses + statusOffset) != ((int*)(base + 0xB30))[statusIndex])
             {
-                ((int*)(base + 0xB30))[ji] = *(int*)((u8*)statuses + off);
-                if (*op <= lbl_803E1FA8)
+                ((int*)(base + 0xB30))[statusIndex] = *(int*)((u8*)statuses + statusOffset);
+                if (*opacity <= lbl_803E1FA8)
                 {
-                    *op = gHudCounterFlashOpacity - timeDelta;
+                    *opacity = gHudCounterFlashOpacity - timeDelta;
                 }
             }
-            switch (i)
+            switch (statusSlot)
             {
             case HUD_STATUS_TRICKY_FOOD:
             case HUD_STATUS_SCARABS:
@@ -3160,15 +3162,15 @@ void pauseMenuDrawStatus(void)
             case HUD_STATUS_FIREFLIES:
             case HUD_STATUS_MOON_SEEDS:
             case HUD_STATUS_FUEL_CELLS:
-                if ((prev > lbl_803E1E3C) && (*op <= lbl_803E1E3C))
+                if ((previousOpacity > lbl_803E1E3C) && (*opacity <= lbl_803E1E3C))
                 {
-                    *op = lbl_803E1FC0;
+                    *opacity = lbl_803E1FC0;
                 }
                 break;
             default:
-                if (*op < gHudElemOpacityFloor)
+                if (*opacity < gHudElemOpacityFloor)
                 {
-                    *op = gHudElemOpacityFloor;
+                    *opacity = gHudElemOpacityFloor;
                 }
                 break;
             }
