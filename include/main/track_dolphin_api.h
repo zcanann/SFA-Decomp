@@ -75,7 +75,7 @@ void renderGlows(void);
 void MapBlock_init(GameObject* obj);
 void MapBlock_initHits(GameObject* obj, int index);
 int mapBlockCountTrianglesByType(struct MapBlockData* block, int type);
-void fn_80061094(f32* vec, f32* out, f32 scale);
+void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale);
 int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds);
 extern int lbl_803DCF34;
 extern f32* lbl_803DCF38;

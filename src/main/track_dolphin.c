@@ -539,7 +539,7 @@ int objShadowFn_80062378(GameObject* obj, u8 param);
 
 int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag);
 
-void fn_80061094(f32* vec, f32* out, f32 scale);
+void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale);
 
 u8 gShadowDrawScratch[0x5DC0];
 
@@ -1194,7 +1194,7 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
     return grp;
 }
 
-void fn_80061094(f32* vec, f32* out, f32 scale)
+void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale)
 {
     AngleXf xf;
     f32 ax;
@@ -1207,22 +1207,22 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
     xf.tz = 0.0f;
     xf.scale = 1.0f;
     xf.rotZ = 0;
-    ax = __fabsf(vec[0]);
-    az = __fabsf(vec[2]);
+    ax = __fabsf(direction[0]);
+    az = __fabsf(direction[2]);
     if (ax > az)
     {
-        rotY = (u16)getAngle(ax, vec[1]);
+        rotY = (u16)getAngle(ax, direction[1]);
     }
     else
     {
-        rotY = (u16)getAngle(az, vec[1]);
+        rotY = (u16)getAngle(az, direction[1]);
     }
     xf.rotY = rotY;
     if (xf.rotY > 0x2000)
     {
         xf.rotY = 0x2000;
     }
-    xf.rotX = (s16)getAngle(vec[0], vec[2]);
+    xf.rotX = (s16)getAngle(direction[0], direction[2]);
     for (i = 0; i < 8; i++)
     {
         out[i * 3 + 0] = lbl_8038D7DC[i * 3 + 0];
@@ -1232,7 +1232,7 @@ void fn_80061094(f32* vec, f32* out, f32 scale)
         }
         else
         {
-            out[i * 3 + 1] = scale * lbl_8038D7DC[i * 3 + 1];
+            out[i * 3 + 1] = lowerScale * lbl_8038D7DC[i * 3 + 1];
         }
         out[i * 3 + 2] = lbl_8038D7DC[i * 3 + 2];
         vecRotateZXY(&xf.rotX, &out[i * 3]);
@@ -1270,7 +1270,7 @@ void vecGetRanges(f32* pts, f32* base, f32 scale, int* out)
     }
 }
 
-void fn_8006135C(s16* out, GameObject* obj)
+void buildGroundShadowQuad(s16* out, GameObject* obj)
 {
     f32 dist;
     f32 b[3];
@@ -1336,7 +1336,7 @@ void objDrawFn_80061654(GameObject* obj, ObjModel* model)
     shadowVerts = (s16*)model->unk54;
     if (*(u8*)((u8*)shadowVerts + 0x18) == 0)
     {
-        fn_8006135C(shadowVerts, obj);
+        buildGroundShadowQuad(shadowVerts, obj);
     }
     if (*(u8*)((u8*)shadowVerts + 0x18) != 0xff)
     {
@@ -1766,7 +1766,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
         vec[0] = modelState->shadowOffsetX;
         vec[1] = modelState->shadowOffsetY;
         vec[2] = modelState->shadowOffsetZ;
-        fn_80061094(vec, (f32*)buf48, modelState->shadowModelScale);
+        buildShadowVolumeBox(vec, (f32*)buf48, modelState->shadowModelScale);
 
         {
             void* p54 = obj->anim.hitReactState;

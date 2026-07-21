@@ -805,7 +805,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     v30[0] = lbl_803DED28;
     v30[1] = lbl_803DED2C;
     v30[2] = lbl_803DED28;
-    fn_80061094(v30, om100, lbl_803DED34);
+    buildShadowVolumeBox(v30, om100, lbl_803DED34);
     mapGetBlocks(&layerTables, &blocks);
     texIdx = 0;
     slotIdx = 0;
