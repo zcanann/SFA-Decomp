@@ -135,8 +135,8 @@ int smallbasket_spawnContents(GameObject* obj, GameObject* player, void* dataIn)
     int ang;
     int diff;
     f32 ratio;
-    f32 num;
-    f32 den;
+    f32 health;
+    f32 maxHealth;
     f32 sc;
     f32 mag;
     struct
@@ -170,10 +170,10 @@ int smallbasket_spawnContents(GameObject* obj, GameObject* player, void* dataIn)
     }
     if (data[0x1e] == 7)
     {
-        num = (f32)(int)Player_GetCurrentHealth((int)player);
-        ratio = num;
-        den = (f32)(int)Player_GetMaxHealth((int)player);
-        ratio = ratio / den;
+        health = (f32)(int)Player_GetCurrentHealth((int)player);
+        ratio = health;
+        maxHealth = (f32)(int)Player_GetMaxHealth((int)player);
+        ratio = ratio / maxHealth;
         ratio = ratio * lbl_803E3930;
         if (ratio <= lbl_803E3940)
         {
@@ -184,7 +184,7 @@ int smallbasket_spawnContents(GameObject* obj, GameObject* player, void* dataIn)
             if ((int)randomGetRange(0, (s16)(int)(ratio - lbl_803E3940)) < 7)
             {
                 mode = 6;
-                max = (s16)(den * lbl_803E393C);
+                max = (s16)(maxHealth * lbl_803E393C);
                 if (max < 1)
                 {
                     max = 1;

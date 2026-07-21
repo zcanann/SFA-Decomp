@@ -1211,7 +1211,7 @@ u8 dll_19_func08(GameObject* obj, void* state, f32 dist)
     int cur;
     s16* ovr;
     u8 ok;
-    f32 a;
+    f32 angle;
 
     mask = 0;
     world[0] = obj->anim.localPosX;
@@ -1229,10 +1229,10 @@ u8 dll_19_func08(GameObject* obj, void* state, f32 dist)
     }
     for (i = 0; i < 4; i++)
     {
-        a = 3.1415927f * (f32)((s16)cur + (i << 14)) / 32768.0f;
-        world[0] = obj->anim.localPosX - dist * mathSinf(a);
+        angle = 3.1415927f * (f32)((s16)cur + (i << 14)) / 32768.0f;
+        world[0] = obj->anim.localPosX - dist * mathSinf(angle);
         world[1] = 10.0f + obj->anim.localPosY;
-        world[2] = obj->anim.localPosZ - dist * mathCosf(a);
+        world[2] = obj->anim.localPosZ - dist * mathCosf(angle);
         voxmaps_worldToGrid(world, (s16*)grid1);
         if (obj->anim.parent != NULL)
         {

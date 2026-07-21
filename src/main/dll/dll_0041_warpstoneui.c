@@ -122,7 +122,7 @@ int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuIt
                              const WarpstoneEntry* entries, int count, int* selectedIndices)
 {
     int slot;
-    int tmp;
+    int yStart;
     int yoff;
     WarpstoneMenuItem* lastDst;
     int entry;
@@ -137,10 +137,10 @@ int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuIt
             entry++;
         }
     }
-    tmp = (count - entry) * 0x2a / 2 + 0x52;
+    yStart = (count - entry) * 0x2a / 2 + 0x52;
     slot = 0;
     entry = slot;
-    yoff = tmp;
+    yoff = yStart;
     for (; entry < count; entry++)
     {
         if (mainGetBit(entries[entry].bit) != 0)

@@ -96,7 +96,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, int legCode, int distS
     u8 i = 0;
     u8 b;
     u8 sflags;
-    u8 c;
+    u8 groupStatus;
     int t;
     int t2;
     int* tbl;
@@ -425,8 +425,10 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, int legCode, int distS
                     break;
                 case 0x22:
                     id = (p[2] << 8) | p[3];
-                    c = (u8)(*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
-                    (*gMapEventInterface)->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, c ^ 1);
+                    groupStatus =
+                        (u8)(*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id);
+                    (*gMapEventInterface)
+                        ->setObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, id, groupStatus ^ 1);
                     break;
                 case 0x15:
                     t = (int)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);

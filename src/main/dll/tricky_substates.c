@@ -141,13 +141,13 @@ static inline void trickyAdvanceNode(u8* state)
     int idx;
     int off;
     int k;
-    int v;
+    int linkId;
     idx = 0;
     off = 0;
     for (k = 4; k != 0; k--)
     {
-        v = *(int*)((u8*)((TrickyState*)state)->scratch704.ptr + off + 0x1c);
-        if (v > -1 && v != ((TrickyCurveNode*)((TrickyState*)state)->scratch700.ptr)->id)
+        linkId = *(int*)((u8*)((TrickyState*)state)->scratch704.ptr + off + 0x1c);
+        if (linkId > -1 && linkId != ((TrickyCurveNode*)((TrickyState*)state)->scratch700.ptr)->id)
         {
             ((TrickyState*)state)->scratch700.ptr = ((TrickyState*)state)->scratch704.ptr;
             ((TrickyState*)state)->scratch704.ptr =
@@ -369,7 +369,7 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
     u8* pc;
     int ret;
     f32 spd;
-    f32 d;
+    f32 dist;
     f32 z;
 
     sfxTable = gTrickySubstateSfxIdPairA;
@@ -458,12 +458,12 @@ void tricky_stateFindSecretDig(u8* obj, u8* state)
                 pc = ((TrickyState*)state)->followObj;
                 ((TrickyState*)state)->dirX = ((TrickyCurveNode*)ptr)->x - ((GameObject*)pc)->anim.worldPosX;
                 ((TrickyState*)state)->dirZ = ((TrickyCurveNode*)ptr)->z - ((GameObject*)pc)->anim.worldPosZ;
-                d = sqrtf(((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX +
+                dist = sqrtf(((TrickyState*)state)->dirX * ((TrickyState*)state)->dirX +
                           ((TrickyState*)state)->dirZ * ((TrickyState*)state)->dirZ);
-                if (lbl_803E23DC != d)
+                if (lbl_803E23DC != dist)
                 {
-                    ((TrickyState*)state)->dirX = ((TrickyState*)state)->dirX / d;
-                    ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / d;
+                    ((TrickyState*)state)->dirX = ((TrickyState*)state)->dirX / dist;
+                    ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / dist;
                 }
             }
         }

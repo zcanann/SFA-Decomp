@@ -96,15 +96,15 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 alphaSpan;
     u32 fadeSpan;
     f32 conv;
-    s32 w;
-    s32 h;
+    s32 viewWidth;
+    s32 viewHeight;
 
     GXGetScissor(&sx, &sy, &sw, &sh);
     Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
-    w = vr - vx;
-    width = w & 0xffff;
-    h = vb - vy;
-    height = h & 0xffff;
+    viewWidth = vr - vx;
+    width = viewWidth & 0xffff;
+    viewHeight = vb - vy;
+    height = viewHeight & 0xffff;
     if (screenTransitionAlpha > gScreenTransitionAlphaMidpoint)
     {
         maxAlpha = 0xff;
@@ -128,7 +128,7 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         fadeSpan = (half - band) & 0xffff;
         outer = (half + band) & 0xffff;
         band = ((half - 1) - band) & 0xffff;
-        GXSetScissor(vx, vy, w, h);
+        GXSetScissor(vx, vy, viewWidth, viewHeight);
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;

@@ -435,7 +435,7 @@ void hoodedZyck_init(int* obj, int* st)
 {
     f32 ratio;
     f32 base_v;
-    u32 v;
+    u32 flags;
     u32 amt;
     amt = *((u8*)((int*)*(int*)&((GameObject*)obj)->anim.placementData) + 0x2f);
     ratio = amt;
@@ -446,8 +446,8 @@ void hoodedZyck_init(int* obj, int* st)
     ratio = ratio / 10.0f;
     ((BaddieState*)st)->speedScale = 30.0f;
     *(u32*)&((BaddieState*)st)->unk2E4 = 0x8b;
-    v = *(u32*)&((BaddieState*)st)->unk2E4;
-    *(u32*)&((BaddieState*)st)->unk2E4 = v | 0x20;
+    flags = *(u32*)&((BaddieState*)st)->unk2E4;
+    *(u32*)&((BaddieState*)st)->unk2E4 = flags | 0x20;
     ((BaddieState*)st)->unk308 = 0.02f * ratio;
     base_v = 1.0f;
     ((BaddieState*)st)->animDeltaScale = base_v;
