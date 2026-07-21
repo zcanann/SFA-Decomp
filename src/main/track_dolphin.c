@@ -1431,98 +1431,127 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
 {
     f32* verts = buf48;
     f32* planes = bufA8;
-    f32 e2y, e1x, e1y, e1z, e2x, e2z;
     f32 nrm[3];
 
-    e1x = verts[6] - verts[9];
-    e1y = verts[7] - verts[10];
-    e1z = verts[8] - verts[0xb];
-    e2x = verts[0x15] - verts[9];
-    e2y = verts[0x16] - verts[10];
-    e2z = verts[0x17] - verts[0xb];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
+    {
+    Vec3f edge1;
+    Vec3f edge2;
+
+    edge1.x = verts[6] - verts[9];
+    edge1.y = verts[7] - verts[10];
+    edge1.z = verts[8] - verts[0xb];
+    edge2.x = verts[0x15] - verts[9];
+    edge2.y = verts[0x16] - verts[10];
+    edge2.z = verts[0x17] - verts[0xb];
+    nrm[0] = edge2.y * edge1.z - edge2.z * edge1.y;
+    nrm[1] = -(edge2.x * edge1.z - edge2.z * edge1.x);
+    nrm[2] = edge2.x * edge1.y - edge2.y * edge1.x;
     PSVECNormalize(nrm, nrm);
     planes[0] = -nrm[0];
     planes[1] = -nrm[1];
     planes[2] = -nrm[2];
     planes[3] = -(planes[0] * verts[9] + planes[1] * verts[10] + planes[2] * verts[0xb]);
+    }
 
-    e1x = verts[0x12] - verts[0xf];
-    e1y = verts[0x13] - verts[0x10];
-    e1z = verts[0x14] - verts[0x11];
-    e2x = verts[3] - verts[0xf];
-    e2y = verts[4] - verts[0x10];
-    e2z = verts[5] - verts[0x11];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
+    {
+    Vec3f edge1;
+    Vec3f edge2;
+
+    edge1.x = verts[0x12] - verts[0xf];
+    edge1.y = verts[0x13] - verts[0x10];
+    edge1.z = verts[0x14] - verts[0x11];
+    edge2.x = verts[3] - verts[0xf];
+    edge2.y = verts[4] - verts[0x10];
+    edge2.z = verts[5] - verts[0x11];
+    nrm[0] = edge2.y * edge1.z - edge2.z * edge1.y;
+    nrm[1] = -(edge2.x * edge1.z - edge2.z * edge1.x);
+    nrm[2] = edge2.x * edge1.y - edge2.y * edge1.x;
     PSVECNormalize(nrm, nrm);
     planes[5] = -nrm[0];
     planes[6] = -nrm[1];
     planes[7] = -nrm[2];
     planes[8] = -(planes[5] * verts[0xf] + planes[6] * verts[0x10] + planes[7] * verts[0x11]);
+    }
 
-    e1x = verts[0xf] - verts[0xc];
-    e1y = verts[0x10] - verts[0xd];
-    e1z = verts[0x11] - verts[0xe];
-    e2x = verts[0] - verts[0xc];
-    e2y = verts[1] - verts[0xd];
-    e2z = verts[2] - verts[0xe];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
+    {
+    Vec3f edge1;
+    Vec3f edge2;
+
+    edge1.x = verts[0xf] - verts[0xc];
+    edge1.y = verts[0x10] - verts[0xd];
+    edge1.z = verts[0x11] - verts[0xe];
+    edge2.x = verts[0] - verts[0xc];
+    edge2.y = verts[1] - verts[0xd];
+    edge2.z = verts[2] - verts[0xe];
+    nrm[0] = edge2.y * edge1.z - edge2.z * edge1.y;
+    nrm[1] = -(edge2.x * edge1.z - edge2.z * edge1.x);
+    nrm[2] = edge2.x * edge1.y - edge2.y * edge1.x;
     PSVECNormalize(nrm, nrm);
     planes[10] = -nrm[0];
     planes[0xb] = -nrm[1];
     planes[0xc] = -nrm[2];
     planes[0xd] = -(planes[10] * verts[0xc] + planes[0xb] * verts[0xd] + planes[0xc] * verts[0xe]);
+    }
 
-    e1x = verts[9] - verts[0];
-    e1y = verts[10] - verts[1];
-    e1z = verts[0xb] - verts[2];
-    e2x = verts[0xc] - verts[0];
-    e2y = verts[0xd] - verts[1];
-    e2z = verts[0xe] - verts[2];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
+    {
+    Vec3f edge1;
+    Vec3f edge2;
+
+    edge1.x = verts[9] - verts[0];
+    edge1.y = verts[10] - verts[1];
+    edge1.z = verts[0xb] - verts[2];
+    edge2.x = verts[0xc] - verts[0];
+    edge2.y = verts[0xd] - verts[1];
+    edge2.z = verts[0xe] - verts[2];
+    nrm[0] = edge2.y * edge1.z - edge2.z * edge1.y;
+    nrm[1] = -(edge2.x * edge1.z - edge2.z * edge1.x);
+    nrm[2] = edge2.x * edge1.y - edge2.y * edge1.x;
     PSVECNormalize(nrm, nrm);
     planes[0xf] = -nrm[0];
     planes[0x10] = -nrm[1];
     planes[0x11] = -nrm[2];
     planes[0x12] = -(planes[0xf] * verts[0] + planes[0x10] * verts[1] + planes[0x11] * verts[2]);
+    }
 
-    e1x = verts[0x12] - verts[0x15];
-    e1y = verts[0x13] - verts[0x16];
-    e1z = verts[0x14] - verts[0x17];
-    e2x = verts[0xc] - verts[0x15];
-    e2y = verts[0xd] - verts[0x16];
-    e2z = verts[0xe] - verts[0x17];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
+    {
+    Vec3f edge1;
+    Vec3f edge2;
+
+    edge1.x = verts[0x12] - verts[0x15];
+    edge1.y = verts[0x13] - verts[0x16];
+    edge1.z = verts[0x14] - verts[0x17];
+    edge2.x = verts[0xc] - verts[0x15];
+    edge2.y = verts[0xd] - verts[0x16];
+    edge2.z = verts[0xe] - verts[0x17];
+    nrm[0] = edge2.y * edge1.z - edge2.z * edge1.y;
+    nrm[1] = -(edge2.x * edge1.z - edge2.z * edge1.x);
+    nrm[2] = edge2.x * edge1.y - edge2.y * edge1.x;
     PSVECNormalize(nrm, nrm);
     planes[0x14] = -nrm[0];
     planes[0x15] = -nrm[1];
     planes[0x16] = -nrm[2];
     planes[0x17] = -(planes[0x14] * verts[0x15] + planes[0x15] * verts[0x16] + planes[0x16] * verts[0x17]);
+    }
 
-    e1x = verts[3] - verts[0];
-    e1y = verts[4] - verts[1];
-    e1z = verts[5] - verts[2];
-    e2x = verts[9] - verts[0];
-    e2y = verts[10] - verts[1];
-    e2z = verts[0xb] - verts[2];
-    nrm[0] = e2y * e1z - e2z * e1y;
-    nrm[1] = -(e2x * e1z - e2z * e1x);
-    nrm[2] = e2x * e1y - e2y * e1x;
+    {
+    Vec3f edge1;
+    Vec3f edge2;
+
+    edge1.x = verts[3] - verts[0];
+    edge1.y = verts[4] - verts[1];
+    edge1.z = verts[5] - verts[2];
+    edge2.x = verts[9] - verts[0];
+    edge2.y = verts[10] - verts[1];
+    edge2.z = verts[0xb] - verts[2];
+    nrm[0] = edge2.y * edge1.z - edge2.z * edge1.y;
+    nrm[1] = -(edge2.x * edge1.z - edge2.z * edge1.x);
+    nrm[2] = edge2.x * edge1.y - edge2.y * edge1.x;
     PSVECNormalize(nrm, nrm);
     planes[0x19] = -nrm[0];
     planes[0x1a] = -nrm[1];
     planes[0x1b] = -nrm[2];
     planes[0x1c] = -(planes[0x19] * verts[0] + planes[0x1a] * verts[1] + planes[0x1b] * verts[2]);
+    }
 }
 
 int fn_80061DD8(GameObject* obj, void* u1, void* u2, int count, Vec3f* vertices, Vec3f* outVertices,
