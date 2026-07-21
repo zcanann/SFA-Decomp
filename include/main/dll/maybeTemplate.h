@@ -10,6 +10,6 @@
 #include "dolphin/gx/GXCull.h"
 
 void cMenuUpdateAnims(void);
-void hudDrawMagicBar(u8 alpha, int elementAlpha, u8 flags);
+void hudDrawMagicBar(int alpha, int elementAlpha, u8 flags);
 
 #endif
