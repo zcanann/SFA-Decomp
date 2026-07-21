@@ -339,8 +339,9 @@ void boxBlurTexture(u8* texData, int size, int window, u32 fill)
                 u8* gp;
                 u8* bp;
                 u32 yy;
+                u32 padding;
 
-                for (i = 0; i < nfill; i++)
+                for (padding = 0; padding < nfill; padding++)
                 {
                     dst[0] = fill;
                     dst++;
@@ -357,7 +358,7 @@ void boxBlurTexture(u8* texData, int size, int window, u32 fill)
                     gp += (size >> 3) * 32;
                 }
                 dst = (u32*)(row.bytes + (size + (window >> 1)));
-                for (i = 0; i < nfill; i++)
+                for (padding = 0; padding < nfill; padding++)
                 {
                     dst[0] = fill;
                     dst++;
@@ -378,11 +379,11 @@ void boxBlurTexture(u8* texData, int size, int window, u32 fill)
     }
     else
     {
+        u32 y = 0;
         int nfill = window >> 2;
         u16 fillhw = fill;
-        u32 y;
 
-        for (y = 0; y < size; y++)
+        for (; y < size; y++)
         {
             u16* tile = (u16*)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
             u16* dst = row.halfwords;
