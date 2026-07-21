@@ -22,7 +22,9 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
     if (param != NULL)
     {
         if (OSCreateThread(&context[0]->decodeThread.thread, AudioDecoderForOnMemory, param,
-                           context[0]->freeQueueAndStack.threadStack + 0x1000 / sizeof(u32), 0x1000, priority, 1) == 0)
+                           context[0]->freeQueueAndStack.threadStack +
+                               ARRAY_COUNT(context[0]->freeQueueAndStack.threadStack),
+                           sizeof(context[0]->freeQueueAndStack.threadStack), priority, 1) == 0)
         {
             return 0;
         }
@@ -30,13 +32,17 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void* param)
     else
     {
         if (OSCreateThread(&context[0]->decodeThread.thread, AudioDecoder, NULL,
-                           context[0]->freeQueueAndStack.threadStack + 0x1000 / sizeof(u32), 0x1000, priority, 1) == 0)
+                           context[0]->freeQueueAndStack.threadStack +
+                               ARRAY_COUNT(context[0]->freeQueueAndStack.threadStack),
+                           sizeof(context[0]->freeQueueAndStack.threadStack), priority, 1) == 0)
         {
             return 0;
         }
     }
-    OSInitMessageQueue(&context[0]->freeQueueAndStack.queue, context[0]->messages.free, 3);
-    OSInitMessageQueue(&context[0]->decodedQueue, context[0]->messages.decoded, 3);
+    OSInitMessageQueue(&context[0]->freeQueueAndStack.queue, context[0]->messages.free,
+                       ARRAY_COUNT(context[0]->messages.free));
+    OSInitMessageQueue(&context[0]->decodedQueue, context[0]->messages.decoded,
+                       ARRAY_COUNT(context[0]->messages.decoded));
     gAttractMovieAudioThreadActive = 1;
     return 1;
 }
