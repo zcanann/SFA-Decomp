@@ -990,7 +990,7 @@ void objFreeObjDef(u8* obj, int flag)
             {
                 Obj_FreeObject((GameObject*)defs[n]);
             }
-            fn_80059A50(*(u8*)(obj + 0x34));
+            mapUnloadRomListPage(*(u8*)(obj + 0x34));
         }
     }
     if (flag == 0 && ((GameObject*)obj)->anim.classId == 0x10)

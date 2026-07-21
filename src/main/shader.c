@@ -2434,7 +2434,7 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 
 #undef INIT_MAP_SLOT
 
-void fn_80059A50(int pageIndex)
+void mapUnloadRomListPage(int pageIndex)
 {
     int idx = pageIndex;
     MapRomListPage* p = gLoadedRomListPages[idx];
