@@ -2,6 +2,10 @@
 #define MAIN_DLL_DLL_000F_UNK_H_
 
 #include "types.h"
+#include "main/game_object.h"
+#include "main/dll/baddie_state.h"
+
+typedef int (*PlayerSubstateFn)(GameObject* obj, BaddieState* state, f32 dt);
 
 typedef struct PlayerMoveBuf
 {
@@ -36,7 +40,7 @@ void player_render2(s16* obj, int* state, f32 f1, f32 f2);
 void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2);
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3);
 void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags);
-void fn_800D915C(int p1, int* obj, f32 fval, void* fnTable);
+void fn_800D915C(GameObject* obj, BaddieState* state, f32 dt, PlayerSubstateFn* stateFns);
 void playerRunStateMachine(char* pos, char* state, float dt, void* stateFns);
 void player_setState(void* ctx, void* p, int new_state);
 void player_setOverride(u32 x);

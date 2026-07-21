@@ -145,7 +145,7 @@ typedef struct BaddieState {
     s16 cameraYaw;
     u8 unk332[4];
     s16 turnRate; /* s16 angle units/sec: *yaw += k * (turnRate * timeDelta / speed) */
-    u8 unk338[2];
+    s16 controlTimer; /* primary control-state timer; reset on mode entry and accumulated each update */
     /* 0x33A/0x33B: two bytes of PER-FAMILY scratch - the consumers agree on
      * nothing. 0x33A is a 16B-SeqEntry index (seqObj11D), a 12B-move-table
      * index (duster_wb/snowworm/hagabon/seqObj11E), a chain-node index

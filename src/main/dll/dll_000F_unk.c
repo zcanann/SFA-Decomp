@@ -614,66 +614,67 @@ void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags)
     gPlayerMoveAdvanced = 1;
 }
 
-void fn_800D915C(int gameObj, int* obj, f32 fval, void* fnTable)
+void fn_800D915C(GameObject* gameObj, BaddieState* state, f32 dt, PlayerSubstateFn* stateFns)
 {
-    int i;
-    s16 startState;
+    int iterations;
+    int startState;
     int done;
     int result;
-    int flag30;
-    flag30 = 0;
-    i = 0;
-    if (((BaddieState*)obj)->substate != ((BaddieState*)obj)->prevSubstate)
+    int stateChanged;
+
+    stateChanged = 0;
+    iterations = 0;
+    if (state->substate != state->prevSubstate)
     {
-        ((BaddieState*)obj)->moveJustStartedB = 1;
-        ((BaddieState*)obj)->stateTimer = 0;
+        state->moveJustStartedB = 1;
+        state->stateTimer = 0;
     }
     do
     {
         done = 0;
-        startState = ((BaddieState*)obj)->substate;
-        result = ((int (*)(int, int*, f32))((int**)fnTable)[startState])(gameObj, obj, fval);
+        startState = state->substate;
+        result = stateFns[startState](gameObj, state, dt);
         if (result > 0)
         {
-            ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
-            ((BaddieState*)obj)->substate = result - 1;
-            ((BaddieState*)obj)->moveJustStartedB = 1;
-            ((BaddieState*)obj)->stateTimer = 0;
+            state->prevSubstate = state->substate;
+            state->substate = result - 1;
+            state->moveJustStartedB = 1;
+            state->stateTimer = 0;
         }
         else if (result < 0)
         {
             result = -result;
             if (result != startState)
             {
-                ((BaddieState*)obj)->prevSubstate = (s16)(int)startState;
-                ((BaddieState*)obj)->moveJustStartedB = 1;
-                ((BaddieState*)obj)->stateTimer = 0;
+                state->prevSubstate = startState;
+                state->moveJustStartedB = 1;
+                state->stateTimer = 0;
             }
             else
             {
-                ((BaddieState*)obj)->moveJustStartedB = 0;
+                state->moveJustStartedB = 0;
             }
-            ((BaddieState*)obj)->substate = result;
+            state->substate = result;
             done = 1;
-            flag30 = 1;
+            stateChanged = 1;
         }
         else
         {
             done = 1;
         }
-        i++;
-        if (i > 0xff)
+        iterations++;
+        if (iterations > 0xff)
         {
             done = 1;
         }
     } while (done == 0);
-    ((BaddieState*)obj)->prevSubstate = ((BaddieState*)obj)->substate;
-    if (flag30 == 0)
+    state->prevSubstate = state->substate;
+    if (stateChanged == 0)
     {
-        ((BaddieState*)obj)->moveJustStartedB = 0;
-        if ((f32) * (s16*)((char*)obj + 0x338) > lbl_803E05BC)
+        state->moveJustStartedB = 0;
+        if (state->controlTimer > lbl_803E05BC)
         {
-            ((BaddieState*)obj)->moveJustStartedB = 0;
+            state->moveJustStartedB = 0;
         }
     }
 }
@@ -902,7 +903,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, void* stateFn
     pathObj = ((GameObject*)pos)->pendingParentObj;
     if ((*(int*)state & 0x8000) != 0 && pathObj == NULL)
     {
-        fn_800D915C((int)pos, (int*)state, dt, auxStateFns);
+        fn_800D915C((GameObject*)pos, (BaddieState*)state, dt, (PlayerSubstateFn*)auxStateFns);
         ((BaddieState*)state)->stateTimer = (s16)((f32)((BaddieState*)state)->stateTimer + dt);
         if ((f32)((BaddieState*)state)->stateTimer > lbl_803E05C4)
         {
