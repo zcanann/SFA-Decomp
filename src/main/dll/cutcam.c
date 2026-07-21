@@ -147,7 +147,7 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     f32 cosv;
     f32 sinv;
     u32 ang;
-    int d;
+    int angleDelta;
 
     cosv = mathSinf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
     sinv = mathCosf((lbl_803E168C * targetAnim->rotX) / lbl_803E1690);
@@ -175,19 +175,19 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     (*gCameraInterface)->getRelativePosition(camera, &a, &b, &c, &d2, gCamcontrolModeSettings->targetHeight, 0);
     b = camera->anim.worldPosY - (targetAnim->worldPosY + gCamcontrolModeSettings->targetHeight);
     ang = getAngle(b, d2);
-    d = ang & 0xffff;
-    d -= (u16)camera->anim.rotY;
-    if (0x8000 < d)
+    angleDelta = ang & 0xffff;
+    angleDelta -= (u16)camera->anim.rotY;
+    if (0x8000 < angleDelta)
     {
-        d = d - 0xffff;
+        angleDelta = angleDelta - 0xffff;
     }
-    if (d < -0x8000)
+    if (angleDelta < -0x8000)
     {
-        d = d + 0xffff;
+        angleDelta = angleDelta + 0xffff;
     }
     if (outRotY != NULL)
     {
-        *outRotY = camera->anim.rotY + d;
+        *outRotY = camera->anim.rotY + angleDelta;
     }
     return box[CAMCONTROL_TRACE_BLOCKED_OFFSET];
 }

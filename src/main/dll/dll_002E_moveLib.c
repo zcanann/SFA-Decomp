@@ -533,23 +533,23 @@ void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
  * tables. */
 void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
 {
-    f32 z;
+    f32 zero;
 
     s->yawLimitA = a;
     s->yawLimitB = b;
     s->pointCount = count;
     s->turnState = 0;
-    z = 0.0f;
-    s->animPhase = z;
+    zero = 0.0f;
+    s->animPhase = zero;
     s->setupFlag = 0;
     s->lastTarget = NULL;
     s->lockTarget = NULL;
     s->lookAtMaxDistance = 1000.0f;
     s->phase = MOVELIB_PHASE_IDLE;
     s->needsReinit = 1;
-    s->startOffsetX = z;
-    s->startOffsetY = z;
-    s->startOffsetZ = z;
+    s->startOffsetX = zero;
+    s->startOffsetY = zero;
+    s->startOffsetZ = zero;
     s->reattackDelayBase = -1;
     fn_8003AC14(obj, seqFn_800394a0(), count);
     objFn_8003acfc(obj, seqFn_800394a0(), count, s->animChannels);
