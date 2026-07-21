@@ -7,7 +7,7 @@
  * it disables the A-button and runs trigger sequence 0.
  *
  * InfoPoint_SeqFn handles the trigger sequence: events 1/2 toggle the s16
- * event state at extra+0x16; events 3/4 are no-ops.
+ * sequence state; events 3/4 are no-ops.
  */
 #include "main/game_object.h"
 #include "main/pad_api.h"
@@ -24,9 +24,6 @@
 
 #define PAD_BUTTON_A 0x100
 
-extern int lbl_803219A0[];
-extern int lbl_80321990[];
-
 int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     InfoPointState* state = obj->extra;
@@ -36,10 +33,10 @@ int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (animUpdate->eventIds[i])
         {
         case 1:
-            state->eventState = 0xff;
+            state->sequenceState = 0xff;
             break;
         case 2:
-            state->eventState = 0;
+            state->sequenceState = 0;
             break;
         case 3:
             break;
@@ -52,7 +49,7 @@ int InfoPoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int InfoPoint_getExtraSize(void)
 {
-    return 0x20;
+    return sizeof(InfoPointState);
 }
 int InfoPoint_getObjectTypeId(void)
 {
@@ -88,19 +85,19 @@ void InfoPoint_init(GameObject* obj, InfoPointPlacement* placement)
     InfoPointState* state = obj->extra;
     GameTextDef* text;
     obj->animEventCallback = InfoPoint_SeqFn;
-    if (*(void**)lbl_803219A0 == NULL)
+    if (lbl_803219A0.fontTexture == NULL)
     {
-        *(int*)lbl_803219A0 = (int)textureLoadAsset(INFOPOINT_TEXTURE_FONT);
+        lbl_803219A0.fontTexture = textureLoadAsset(INFOPOINT_TEXTURE_FONT);
     }
-    state->renderData = lbl_80321990;
+    state->renderBounds = &lbl_80321990;
     text = gameTextGet(placement->textId);
     state->firstString = text->strings[0];
-    state->timer = 100;
+    state->displayTimer = 100;
     state->text = text;
     obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
     state->unk18 = 2;
     state->unk10 = placement->unk1B;
-    state->eventState = 0;
+    state->sequenceState = 0;
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 

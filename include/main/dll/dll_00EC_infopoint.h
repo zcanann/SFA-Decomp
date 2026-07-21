@@ -3,20 +3,35 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
 
 struct GameTextDef;
 
+typedef struct InfoPointRenderBounds
+{
+    s32 x;
+    s32 y;
+    s32 width;
+    s32 height;
+} InfoPointRenderBounds;
+
+typedef struct InfoPointSharedResources
+{
+    void* fontTexture;
+    u32 unused[5];
+} InfoPointSharedResources;
+
 typedef struct InfoPointState
 {
     struct GameTextDef* text;
     char* firstString;
-    int* renderData;
-    s32 timer;       /* 0x0C: scroll/fade timer (starts at 100) */
+    InfoPointRenderBounds* renderBounds;
+    s32 displayTimer; /* 0x0C: scroll/fade timer (starts at 100) */
     u8 unk10;        /* 0x10: copied from placement->unk1B */
     u8 pad11[0x16 - 0x11];
-    s16 eventState;  /* 0x16: toggled 0xff/0 by InfoPoint_SeqFn events 1/2 */
+    s16 sequenceState; /* 0x16: toggled 0xff/0 by InfoPoint_SeqFn events 1/2 */
     int unk18;       /* 0x18: starts at 2 */
     u8 pad1C[0x20 - 0x1C];
 } InfoPointState;
@@ -35,8 +50,10 @@ typedef struct InfoPointPlacement
 
 STATIC_ASSERT(sizeof(InfoPointState) == 0x20);
 STATIC_ASSERT(offsetof(InfoPointState, text) == 0x0);
-STATIC_ASSERT(offsetof(InfoPointState, timer) == 0xC);
-STATIC_ASSERT(offsetof(InfoPointState, eventState) == 0x16);
+STATIC_ASSERT(offsetof(InfoPointState, firstString) == 0x4);
+STATIC_ASSERT(offsetof(InfoPointState, renderBounds) == 0x8);
+STATIC_ASSERT(offsetof(InfoPointState, displayTimer) == 0xc);
+STATIC_ASSERT(offsetof(InfoPointState, sequenceState) == 0x16);
 STATIC_ASSERT(offsetof(InfoPointState, unk18) == 0x18);
 STATIC_ASSERT(sizeof(InfoPointPlacement) == 0x20);
 STATIC_ASSERT(offsetof(InfoPointPlacement, base) == 0x0);
@@ -54,5 +71,9 @@ void InfoPoint_update(GameObject* obj);
 void InfoPoint_init(GameObject* obj, InfoPointPlacement* placement);
 void InfoPoint_release(void);
 void InfoPoint_initialise(void);
+
+extern InfoPointRenderBounds lbl_80321990;
+extern InfoPointSharedResources lbl_803219A0;
+extern ObjectDescriptor gInfoPointObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00EC_INFOPOINT_H_ */

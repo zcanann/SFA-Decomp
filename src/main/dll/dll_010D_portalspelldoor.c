@@ -274,8 +274,8 @@ ObjectDescriptor gColdWaterControlObjDescriptor = {
     0,
     ColdWaterControl_getExtraSize,
 };
-u32 lbl_80321990[4] = {0x00000050, 0x00000230, 0x0000003c, 0x00000190};
-u32 lbl_803219A0[6] = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+InfoPointRenderBounds lbl_80321990 = {0x50, 0x230, 0x3c, 0x190};
+InfoPointSharedResources lbl_803219A0 = {NULL, {0, 0, 0, 0, 0}};
 ObjectDescriptor gInfoPointObjDescriptor = {
     0,
     0,
