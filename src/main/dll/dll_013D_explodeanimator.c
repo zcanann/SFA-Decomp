@@ -18,19 +18,20 @@
 #include "main/object_descriptor.h"
 
 #define EXPLODEANIMATOR_OBJGROUP 0x1a
+#define EXPLODEANIMATOR_FLAG_FIRED 0x1
 
 int ExplodeAnimator_getExtraSize(void)
 {
-    return 0x4;
+    return sizeof(ExplodeAnimatorState);
 }
 int ExplodeAnimator_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void ExplodeAnimator_free(int obj)
+void ExplodeAnimator_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, EXPLODEANIMATOR_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, EXPLODEANIMATOR_OBJGROUP);
 }
 
 void ExplodeAnimator_render(void)
@@ -41,50 +42,48 @@ void ExplodeAnimator_hitDetect(void)
 {
 }
 
-void ExplodeAnimator_update(int* obj)
+void ExplodeAnimator_update(GameObject* obj)
 {
     int i;
-    u8* sub;
-    u8* def;
-    ExplodeanimatorPlacement* d;
-    PartFxSpawnParams buf;
-    f32 vel[2];
+    ExplodeAnimatorState* state;
+    ExplodeAnimatorPlacement* placement;
+    PartFxSpawnParams effect;
+    f32 velocity[2];
 
-    sub = ((GameObject*)obj)->extra;
-    if ((sub[2] & 1) != 0)
+    state = obj->extra;
+    if ((state->flags & EXPLODEANIMATOR_FLAG_FIRED) != 0)
         return;
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    d = (ExplodeanimatorPlacement*)def;
-    if (mainGetBit(d->triggerGameBit) == 0)
+    placement = (ExplodeAnimatorPlacement*)obj->anim.placementData;
+    if (mainGetBit(placement->triggerGameBit) == 0)
         return;
-    mainSetBits(d->resultGameBit, 1);
-    sub[2] = (u8)(sub[2] | 1);
+    mainSetBits(placement->resultGameBit, 1);
+    state->flags = (u8)(state->flags | EXPLODEANIMATOR_FLAG_FIRED);
     {
-        for (i = 0; i < def[0x2c]; i++)
+        for (i = 0; i < placement->particleCount; i++)
         {
-            vel[0] = 0.01f * (f32)(s32)randomGetRange(d->velXMin, d->velXMax);
-            vel[1] = 0.01f * (f32)(s32)randomGetRange(d->velYMin, d->velYMax);
-            buf.posX = (f32)(s32)randomGetRange(d->posXMin, d->posXMax);
-            buf.posY = (f32)(s32)randomGetRange(d->posYMin, d->posYMax);
-            buf.posZ = (f32)(s32)randomGetRange(d->posZMin, d->posZMax);
-            (*gPartfxInterface)->spawnObject(obj, d->effectId, &buf, 2, -1, vel);
+            velocity[0] = 0.01f * (f32)(s32)randomGetRange(placement->velXMin, placement->velXMax);
+            velocity[1] = 0.01f * (f32)(s32)randomGetRange(placement->velYMin, placement->velYMax);
+            effect.posX = (f32)(s32)randomGetRange(placement->posXMin, placement->posXMax);
+            effect.posY = (f32)(s32)randomGetRange(placement->posYMin, placement->posYMax);
+            effect.posZ = (f32)(s32)randomGetRange(placement->posZMin, placement->posZMax);
+            (*gPartfxInterface)->spawnObject(obj, placement->effectId, &effect, 2, -1, velocity);
         }
     }
 }
 
-void ExplodeAnimator_init(int* obj, int* def)
+void ExplodeAnimator_init(GameObject* obj, ExplodeAnimatorPlacement* placement)
 {
-    int* state = ((GameObject*)obj)->extra;
-    int flag;
-    if ((u32)mainGetBit(((ExplodeanimatorPlacement*)def)->resultGameBit) != 0u)
+    ExplodeAnimatorState* state = obj->extra;
+    int fired;
+    if ((u32)mainGetBit(placement->resultGameBit) != 0u)
     {
-        flag = 1;
+        fired = 1;
     }
     else
     {
-        flag = 0;
+        fired = 0;
     }
-    ((ExplodeanimatorState*)state)->flags = flag;
+    state->flags = fired;
     ObjGroup_AddObject((int)obj, EXPLODEANIMATOR_OBJGROUP);
 }
 
