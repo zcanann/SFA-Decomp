@@ -277,7 +277,7 @@ extern const f32 lbl_803DEC58;
 extern const f32 lbl_803DEC68;
 extern f32 lbl_803DEC90[2];
 extern f32 lbl_803DEC94;
-extern int lbl_803DCFB8;
+extern int gNewShadowHeavyFogTexture;
 extern u8 lbl_803DCF80;
 extern f32 lbl_803DEBCC;
 extern u32 gSunFlareScissorX;
@@ -5638,6 +5638,6 @@ void fn_80069EB8(int param)
             cache[idx] = (s * j) >> 12;
         }
     }
-    memcpyToCache((void*)(lbl_803DCFB8 + 0x60), cache, 0);
+    memcpyToCache((void*)(gNewShadowHeavyFogTexture + 0x60), cache, 0);
     lbl_803DCF80 = param;
 }

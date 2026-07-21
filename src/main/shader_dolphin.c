@@ -1212,7 +1212,7 @@ void renderHeavyFog(void* fogColor)
     GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
     GXSetTevKColor(lbl_803DCD74, *(GXColor*)fogColor);
-    fn_8006C528(&tex20);
+    getNewShadowHeavyFogTexture(&tex20);
     {
         int id = lbl_803DCD8C;
         if (tex20 != 0)

@@ -471,7 +471,7 @@ void lightningRender(LightningEffect* p)
     gxTextureFn_800794e0();
     textRenderSetupFn_80079804();
     gxBlendFn_800788dc();
-    fn_8006C51C(&tex);
+    getNewShadowLightningTexture(&tex);
     selectTexture(tex, 0);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
