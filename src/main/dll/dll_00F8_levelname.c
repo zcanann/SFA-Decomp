@@ -20,7 +20,6 @@
  */
 #include "main/object_api.h"
 #include "main/game_object.h"
-#include "main/dll/tframeanimator_state.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/textrender_api.h"
@@ -29,16 +28,12 @@
 #include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-#define LEVELNAME_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 #define LEVELNAME_PHASE_WAIT      0
 #define LEVELNAME_PHASE_SLIDE_IN  1
 #define LEVELNAME_PHASE_HOLD      2
 #define LEVELNAME_PHASE_SLIDE_OUT 3
 #define LEVELNAME_PHASE_IDLE      4
 
-#define LEVELNAME_PHASE         0x14 /* state machine phase byte (struct .phase) */
-#define LEVELNAME_TRIGGER_DIST  0xc  /* trigger radius byte in the extra record */
 #define LEVELNAME_BANNER_Y_MAX  0xdc
 #define LEVELNAME_BANNER_Y_STEP 4
 #define LEVELNAME_SEQEV_SHOW    1 /* anim event id that triggers the banner */
@@ -47,17 +42,17 @@
 
 int LevelName_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int* state = obj->extra;
+    LevelNameState* state = obj->extra;
     int i;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
         if (animUpdate->eventIds[i] == LEVELNAME_SEQEV_SHOW)
         {
-            if (((TFrameAnimatorState*)state)->enableGameBit != -1)
+            if (state->enableGameBit != -1)
             {
-                mainSetBits(((TFrameAnimatorState*)state)->enableGameBit, 1);
+                mainSetBits(state->enableGameBit, 1);
             }
-            ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_SLIDE_IN;
+            state->phase = LEVELNAME_PHASE_SLIDE_IN;
             return LEVELNAME_SEQFN_HANDLED;
         }
     }
@@ -66,7 +61,7 @@ int LevelName_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int LevelName_getExtraSize(void)
 {
-    return 0x18;
+    return sizeof(LevelNameState);
 }
 int LevelName_getObjectTypeId(void)
 {
@@ -87,7 +82,7 @@ void LevelName_hitDetect(void)
 
 void LevelName_update(GameObject* obj)
 {
-    LevelnameState* state;
+    LevelNameState* state;
     GameObject* player;
 
     state = obj->extra;
@@ -97,42 +92,40 @@ void LevelName_update(GameObject* obj)
         player = Obj_GetPlayerObject();
         if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < (f32)(u32)state->triggerRadius)
         {
-            if (((LevelnameState*)state)->gameBit != -1)
+            if (state->enableGameBit != -1)
             {
-                mainSetBits(((LevelnameState*)state)->gameBit, 1);
+                mainSetBits(state->enableGameBit, 1);
             }
             state->phase = LEVELNAME_PHASE_SLIDE_IN;
         }
         break;
     case LEVELNAME_PHASE_SLIDE_IN:
-        ((LevelnameState*)state)->bannerY =
-            (s16)(((LevelnameState*)state)->bannerY + framesThisStep * LEVELNAME_BANNER_Y_STEP);
-        if (((LevelnameState*)state)->bannerY > LEVELNAME_BANNER_Y_MAX)
+        state->bannerY = (s16)(state->bannerY + framesThisStep * LEVELNAME_BANNER_Y_STEP);
+        if (state->bannerY > LEVELNAME_BANNER_Y_MAX)
         {
-            ((LevelnameState*)state)->bannerY = LEVELNAME_BANNER_Y_MAX;
+            state->bannerY = LEVELNAME_BANNER_Y_MAX;
             state->phase = LEVELNAME_PHASE_HOLD;
         }
         break;
     case LEVELNAME_PHASE_HOLD:
     {
-        ((LevelnameState*)state)->holdTimer += framesThisStep;
-        if ((u32)((LevelnameState*)state)->holdTimer > (u32)((LevelnameState*)state)->holdDuration)
+        state->elapsedFrames += framesThisStep;
+        if ((u32)state->elapsedFrames > (u32)state->holdDuration)
         {
             state->phase = LEVELNAME_PHASE_SLIDE_OUT;
         }
-        ((LevelnameState*)state)->bannerY =
+        state->bannerY =
             (s16)((s32)(30.0f *
-                        mathSinf((3.1415927410125732f * (f32)((s32)((LevelnameState*)state)->holdTimer * 0x500)) /
+                        mathSinf((3.1415927410125732f * (f32)((s32)state->elapsedFrames * 0x500)) /
                                  32768.0f)) +
                   LEVELNAME_BANNER_Y_MAX);
         break;
     }
     case LEVELNAME_PHASE_SLIDE_OUT:
-        ((LevelnameState*)state)->bannerY =
-            (s16)(((LevelnameState*)state)->bannerY - framesThisStep * LEVELNAME_BANNER_Y_STEP);
-        if (((LevelnameState*)state)->bannerY < 0)
+        state->bannerY = (s16)(state->bannerY - framesThisStep * LEVELNAME_BANNER_Y_STEP);
+        if (state->bannerY < 0)
         {
-            ((LevelnameState*)state)->bannerY = 0;
+            state->bannerY = 0;
             state->phase = LEVELNAME_PHASE_IDLE;
         }
         break;
@@ -141,30 +134,30 @@ void LevelName_update(GameObject* obj)
     }
 }
 
-void LevelName_init(GameObject* obj, int objDef)
+void LevelName_init(GameObject* obj, LevelNamePlacement* placement)
 {
-    int* state;
+    LevelNameState* state;
     int* text;
 
     state = obj->extra;
     obj->animEventCallback = LevelName_SeqFn;
-    text = (int*)gameTextGet(*(int*)(objDef + 0x1c));
-    ((TFrameAnimatorState*)state)->unk4 = **(int**)(text + 2);
-    ((TFrameAnimatorState*)state)->duration = 0x64;
-    ((TFrameAnimatorState*)state)->textRecord = (int)text;
-    ((TFrameAnimatorState*)state)->triggerRadius = *(u8*)(objDef + 0x20);
-    ((TFrameAnimatorState*)state)->enableGameBit = *(s16*)(objDef + 0x18);
-    ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_WAIT;
-    ((TFrameAnimatorState*)state)->bannerY = 0;
-    ((TFrameAnimatorState*)state)->elapsedFrames = 0;
-    if (((TFrameAnimatorState*)state)->enableGameBit != -1)
+    text = (int*)gameTextGet(placement->textId);
+    state->textData = **(int**)(text + 2);
+    state->holdDuration = 0x64;
+    state->textRecord = (int)text;
+    state->triggerRadius = placement->triggerRadius;
+    state->enableGameBit = placement->enableGameBit;
+    state->phase = LEVELNAME_PHASE_WAIT;
+    state->bannerY = 0;
+    state->elapsedFrames = 0;
+    if (state->enableGameBit != -1)
     {
-        if (mainGetBit(((TFrameAnimatorState*)state)->enableGameBit) != 0)
+        if (mainGetBit(state->enableGameBit) != 0)
         {
-            ((TFrameAnimatorState*)state)->phase = LEVELNAME_PHASE_IDLE;
+            state->phase = LEVELNAME_PHASE_IDLE;
         }
     }
-    obj->objectFlags |= LEVELNAME_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void LevelName_release(void)
