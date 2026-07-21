@@ -149,7 +149,7 @@ extern u32 gDebugPrintOriginX;
 extern u32 gDebugPrintOriginY;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
-extern s16 gErrExceptionType;
+extern u16 gErrExceptionType;
 extern OSContext* gErrContext;
 extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
@@ -233,50 +233,58 @@ u8 gDebugFontGlyphs[580] = {
     120, 0,   0,   0,   0,
 };
 void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d);
-static inline void errDisplayFillBackdrop(int xcb, int x)
+typedef struct ErrStackFrame
 {
+    struct ErrStackFrame* previous;
+    u32 returnAddress;
+} ErrStackFrame;
+
+static inline void errDisplayFillBackdrop(void)
+{
+    int x;
+    int xcb;
     int row;
     int n;
     u16* fbrow;
-    u16 fill;
 
+    x = 0;
+    xcb = x;
     do
     {
         row = 0;
         for (n = 0; n < 60; n++)
         {
-            fill = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0x500);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0xA00);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0xF00);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0x1400);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0x1900);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0x1E00);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             fbrow = debugDrawFrameBuffer;
             fbrow = (u16*)((char*)fbrow + row);
             fbrow = (u16*)((char*)fbrow + 0x2300);
-            *(u16*)(xcb + (int)fbrow) = fill;
+            *(u16*)(xcb + (int)fbrow) = 0x1080;
             row += 0x2800;
         }
         xcb += 2;
@@ -874,13 +882,13 @@ void* errDisplayThreadMain(void* unused)
     int x;
     int h, h2;
     int b;
+    ErrStackFrame* frame;
+    int stackLines;
     int n;
-    u32* p;
     u8 lvl;
     u32 r, rr;
     u32* rp;
     int rows;
-    u16 fill;
 
     sp = NULL;
     depth = 0;
@@ -900,12 +908,11 @@ void* errDisplayThreadMain(void* unused)
         {
             if (enableDebugText != 0)
             {
-                x = 0;
-                errDisplayFillBackdrop(x, x);
+                errDisplayFillBackdrop();
             }
             debugPrintfxy(0x10, 0x15, strs + 0x140, self[0]);
             debugPrintfxy(0x10, 0x2a, strs + 0x154);
-            switch (*(u16*)&gErrExceptionType)
+            switch (gErrExceptionType)
             {
             case 0:
                 debugPrintfxy(0xa0, 0x2a, strs + 0x160);
@@ -963,37 +970,40 @@ void* errDisplayThreadMain(void* unused)
             }
             debugPrintfxy(0x10, 0x60, strs + 0x1e4);
             y = 0x6c;
-            p = (u32*)*(u32*)gErrContext->gpr[1];
-            n = 0;
-            while (p != (u32*)0xffffffff && n++ != 8)
+            frame = ((ErrStackFrame*)gErrContext->gpr[1])->previous;
+            stackLines = 0;
+            while (frame != (ErrStackFrame*)-1 && stackLines++ != 8)
             {
-                debugPrintfxy(0x10, y, lbl_803DBC30, p[1]);
+                debugPrintfxy(0x10, y, lbl_803DBC30, frame->returnAddress);
                 y += 0xc;
-                p = (u32*)*p;
+                frame = frame->previous;
             }
-            y += (8 - n) * 0xc;
+            y += (8 - stackLines) * 0xc;
             if (enableDebugText != 0)
             {
-                rows = y + 0x4c;
-                h = rows * 0x280;
-                h2 = (y + 0x4b) * 0x280;
-                fill = 0xc080;
-                if (rows > 0)
+                int lineRows;
+                int lineOffset;
+                int previousLineOffset;
+
+                lineRows = y + 0x4c;
+                lineOffset = lineRows * 0x280;
+                previousLineOffset = (y + 0x4b) * 0x280;
+                if (lineRows > 0)
                 {
                     for (n = 0x280; n != 0; n--)
                     {
-                        debugDrawFrameBuffer[h] = fill;
-                        debugDrawFrameBuffer[h2] = fill;
-                        h++;
-                        h2++;
+                        debugDrawFrameBuffer[lineOffset] = 0xc080;
+                        debugDrawFrameBuffer[previousLineOffset] = 0xc080;
+                        lineOffset++;
+                        previousLineOffset++;
                     }
                 }
                 else
                 {
                     for (n = 0x280; n != 0; n--)
                     {
-                        debugDrawFrameBuffer[h] = fill;
-                        h++;
+                        debugDrawFrameBuffer[lineOffset] = 0xc080;
+                        lineOffset++;
                     }
                 }
             }
@@ -1071,8 +1081,7 @@ void* errDisplayThreadMain(void* unused)
     {
         if (enableDebugText != 0)
         {
-            x = 0;
-            errDisplayFillBackdrop(x, x);
+            errDisplayFillBackdrop();
         }
         if (enableDebugText != 0)
         {
