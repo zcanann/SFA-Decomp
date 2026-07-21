@@ -36,7 +36,7 @@ extern f32 lbl_803DB3D0;
 int utf8GetNextChar(u8* str, int* outLen);
 char* gameStrcpy(char* dst, char* src);
 void* gameTextGetCurBox(void);
-void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
+void gameTextMeasureStringBounds(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 void gameTextRenderStrs(char* str, int boxIdx);
 void textDisplayFn_800168dc(int textId, struct TextDisplayState* state);
 void gameTextFn_8001658c(int textId, int x, int y);

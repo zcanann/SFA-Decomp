@@ -3243,8 +3243,8 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
         }
         else if ((u32)boxId != 0)
         {
-            gameTextBoxFn_800164b0((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0,
-                                   &c6y1);
+            gameTextMeasureStringBounds((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1,
+                                        &c6y0, &c6y1);
         }
         gameTextSetWindow(cur);
         hw = (c6x1 - c6x0) >> 1;
@@ -3273,8 +3273,8 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
         }
         else if ((u32)boxId != 0)
         {
-            gameTextBoxFn_800164b0((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0,
-                                   &c3y1);
+            gameTextMeasureStringBounds((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1,
+                                        &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
         drawTexture(gSubtitleBoxTextures[0], (f32)(c3x0 - 0x16), (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);

@@ -429,7 +429,7 @@ void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMax
     box->f1a = savedY;
 }
 
-void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+void gameTextMeasureStringBounds(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
     TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
     s16 savedX = box->f18;
