@@ -24,22 +24,22 @@ typedef struct Dimbossgut2State
 
 struct Dimbossgut2Curve
 {
-    f32 f0;
-    f32 leanAngle;
-    f32 turnWobble;
-    f32 lavaSurfaceY;
+    f32 verticalVelocity;
+    f32 swayVelocity;
+    f32 turnHeightBias;
+    f32 surfaceY;
     f32 pathSpeed;
-    s16 randomPhase;
+    s16 bobPhase;
     u16 breathFxTimer;
     ModelLightStruct* light;
 };
 
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, f0) == 0x0);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, leanAngle) == 0x4);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, turnWobble) == 0x8);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, lavaSurfaceY) == 0xC);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, verticalVelocity) == 0x0);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, swayVelocity) == 0x4);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, turnHeightBias) == 0x8);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, surfaceY) == 0xC);
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, pathSpeed) == 0x10);
-STATIC_ASSERT(offsetof(Dimbossgut2Curve, randomPhase) == 0x14);
+STATIC_ASSERT(offsetof(Dimbossgut2Curve, bobPhase) == 0x14);
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, breathFxTimer) == 0x16);
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, light) == 0x18);
 

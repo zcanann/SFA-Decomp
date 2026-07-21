@@ -1,64 +1,48 @@
 /*
- * mmsh_waterspike (DLL 0x18E) - shared spike/stalk bob-and-sway motion helper.
+ * Shared bob-and-sway motion helper for the DIM BossGut2 tendrils.
  *
- * fn_801BEEA0 advances one frame of a water-spike's vertical bob and lateral
- * sway. It is exported and reused by dimbossgut2 (DLL 0x1E3) to drive the
- * gut-tendril stalks. The per-instance motion state lives in a small block
- * pointed to from the owner state at +0x40C (laid out by the caller as its
- * curve struct):
- *   +0x00 f32 ySpeed   - current vertical velocity, low-pass smoothed
- *   +0x04 f32 zSpin    - accumulated rotZ sway velocity
- *   +0x08 f32 targetY  - desired height offset
- *   +0x0C f32 baseY    - rest height the spike bobs around
- *   +0x14 s16 phase    - bob phase angle, advanced +0x400/frame
+ * dimbossgut2_updateBobAndSway advances one frame of a gut tendril's vertical
+ * bob and lateral sway. The motion values are part of Dimbossgut2Curve, which
+ * the owner state references directly.
  */
 #include "main/dll/mmsh_waterspike.h"
+#include "main/dll/DIM/dll_01E3_dimbossgut2.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
-
-typedef struct WaterSpikeMotion
+void dimbossgut2_updateBobAndSway(GameObject* obj, Dimbossgut2State* state)
 {
-    /* 0x00 */ f32 ySpeed;  /* current vertical velocity, low-pass smoothed */
-    /* 0x04 */ f32 zSpin;   /* accumulated rotZ sway velocity */
-    /* 0x08 */ f32 targetY; /* desired height offset */
-    /* 0x0C */ f32 baseY;   /* rest height the spike bobs around */
-    /* 0x10 */ u8 pad10[4];
-    /* 0x14 */ s16 phase; /* bob phase angle, advanced +0x400/frame */
-} WaterSpikeMotion;
-
-void fn_801BEEA0(s16* obj, u8* state)
-{
-    WaterSpikeMotion* motion;
+    Dimbossgut2Curve* motion;
     f32 heightDelta;
-    s16 turnDelta;
+    s16 rollDelta;
 
-    motion = (WaterSpikeMotion*)*(int*)(state + 0x40C);
-    heightDelta = motion->baseY - ((GameObject*)obj)->anim.localPosY;
+    motion = state->curveData;
+    heightDelta = motion->surfaceY - obj->anim.localPosY;
 
-    motion->phase += 0x400;
-    heightDelta = heightDelta + (f32)(int)cos16(motion->phase) / 65535.0f;
+    motion->bobPhase += 0x400;
+    heightDelta = heightDelta + (f32)(int)cos16(motion->bobPhase) / 65535.0f;
 
-    motion->ySpeed = timeDelta * (heightDelta / 50.0f - motion->targetY) + motion->ySpeed;
+    motion->verticalVelocity =
+        timeDelta * (heightDelta / 50.0f - motion->turnHeightBias) + motion->verticalVelocity;
 
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + motion->ySpeed;
+    obj->anim.localPosY = obj->anim.localPosY + motion->verticalVelocity;
 
-    ((GameObject*)obj)->anim.rotY = (s16)(2048.0f * motion->ySpeed);
+    obj->anim.rotY = (s16)(2048.0f * motion->verticalVelocity);
 
-    turnDelta = (s16) - (u16)((GameObject*)obj)->anim.rotZ;
-    if (turnDelta > 0x8000)
+    rollDelta = (s16) - (u16)obj->anim.rotZ;
+    if (rollDelta > 0x8000)
     {
-        turnDelta = (s16)((turnDelta - 0x10000) + 1);
+        rollDelta = (s16)((rollDelta - 0x10000) + 1);
     }
-    if (turnDelta < (s16)-0x8000)
+    if (rollDelta < (s16)-0x8000)
     {
-        turnDelta = (s16)((turnDelta + 0x10000) - 1);
+        rollDelta = (s16)((rollDelta + 0x10000) - 1);
     }
 
-    motion->zSpin = motion->zSpin + (f32)((int)(turnDelta / 16) * framesThisStep);
-    ((GameObject*)obj)->anim.rotZ = (s16)((f32)(int)((GameObject*)obj)->anim.rotZ + motion->zSpin);
+    motion->swayVelocity = motion->swayVelocity + (f32)((int)(rollDelta / 16) * framesThisStep);
+    obj->anim.rotZ = (s16)((f32)(int)obj->anim.rotZ + motion->swayVelocity);
 
-    motion->ySpeed = motion->ySpeed / 1.07f;
-    motion->zSpin = motion->zSpin / 1.04f;
+    motion->verticalVelocity = motion->verticalVelocity / 1.07f;
+    motion->swayVelocity = motion->swayVelocity / 1.04f;
 }

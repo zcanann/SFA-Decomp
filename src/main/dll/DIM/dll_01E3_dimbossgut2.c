@@ -64,7 +64,7 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
             delta = (s16)(delta + 0xffff);
         }
         (obj)->anim.rotX = angle;
-        curve->leanAngle = curve->leanAngle + (f32)(delta >> 4);
+        curve->swayVelocity = curve->swayVelocity + (f32)(delta >> 4);
         if (curve->pathSpeed < 0.15f)
         {
             curve->pathSpeed += 0.002f;
@@ -79,11 +79,11 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
         if (angleScale > 1.0f)
         {
             curve->pathSpeed = curve->pathSpeed / angleScale;
-            curve->turnWobble += 0.01f;
+            curve->turnHeightBias += 0.01f;
         }
-        if (curve->turnWobble > 0.0f)
+        if (curve->turnHeightBias > 0.0f)
         {
-            curve->turnWobble = curve->turnWobble / 1.04f;
+            curve->turnHeightBias = curve->turnHeightBias / 1.04f;
         }
         (obj)->anim.localPosX = pathWalker->posX;
         (obj)->anim.localPosZ = pathWalker->posZ;
@@ -204,14 +204,14 @@ void DIM_BossGut2_update(GameObject* obj)
             result = ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC);
         } while (result != 0);
         posData = state->curveData;
-        if ((posData->f0 < -0.025f) && (posData->pathSpeed < 0.25f))
+        if ((posData->verticalVelocity < -0.025f) && (posData->pathSpeed < 0.25f))
         {
-            heightDiff = posData->lavaSurfaceY - (obj)->anim.localPosY;
+            heightDiff = posData->surfaceY - (obj)->anim.localPosY;
             if (heightDiff < 0.0f)
             {
                 heightDiff = -heightDiff;
             }
-            if ((heightDiff < 14.0f) && (stk.f4c = posData->lavaSurfaceY, randomThreshold = randomGetRange(0x1e, 0x3c),
+            if ((heightDiff < 14.0f) && (stk.f4c = posData->surfaceY, randomThreshold = randomGetRange(0x1e, 0x3c),
                                                 (int)(u32)posData->breathFxTimer > (int)randomThreshold))
             {
                 xyScale = 20.0f * posData->pathSpeed;
@@ -225,7 +225,7 @@ void DIM_BossGut2_update(GameObject* obj)
             }
         }
         posData->breathFxTimer += framesThisStep;
-        fn_801BEEA0((s16*)obj, (u8*)state);
+        dimbossgut2_updateBobAndSway(obj, state);
         dimbossgut2_updateTracking(obj, state);
         ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumePriority = 9;
@@ -272,32 +272,32 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     (obj)->animEventCallback = NULL;
     curve = state->curveData;
     z = 0.0f;
-    curve->f0 = z;
-    curve->leanAngle = z;
-    curve->randomPhase = randomGetRange(-0x7fff, 0x7fff);
+    curve->verticalVelocity = z;
+    curve->swayVelocity = z;
+    curve->bobPhase = randomGetRange(-0x7fff, 0x7fff);
     z = 0.0f;
-    curve->turnWobble = z;
+    curve->turnHeightBias = z;
     curve->breathFxTimer = 0;
     curve->pathSpeed = z;
     count = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
                                  0, 0);
-    curve->lavaSurfaceY = 0.0f;
+    curve->surfaceY = 0.0f;
     if (count != 0)
     {
-        curve->lavaSurfaceY = -9999.0f;
+        curve->surfaceY = -9999.0f;
         for (i = 0; i < count; i++)
         {
             f32 d = list[i]->height - (obj)->anim.localPosY;
             if ((s8)list[i]->surfaceType == 0xe)
             {
-                if (d > curve->lavaSurfaceY)
+                if (d > curve->surfaceY)
                 {
-                    curve->lavaSurfaceY = d;
+                    curve->surfaceY = d;
                 }
             }
         }
     }
-    curve->lavaSurfaceY += (obj)->anim.localPosY;
+    curve->surfaceY += (obj)->anim.localPosY;
     ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / 100.0f, 0);
     ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
     curve->light = objCreateLight(obj, 1);

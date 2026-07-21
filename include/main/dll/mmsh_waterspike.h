@@ -1,9 +1,10 @@
-#ifndef MAIN_DLL_DLL_18E_H_
-#define MAIN_DLL_DLL_18E_H_
+#ifndef MAIN_DLL_DIMBOSSGUT2_MOTION_H_
+#define MAIN_DLL_DIMBOSSGUT2_MOTION_H_
 
-#include "ghidra_import.h"
+typedef struct GameObject GameObject;
+typedef struct Dimbossgut2State Dimbossgut2State;
 
-void fn_801BEEA0(s16 *out, u8 *state);
+void dimbossgut2_updateBobAndSway(GameObject* obj, Dimbossgut2State* state);
 
 
-#endif /* MAIN_DLL_DLL_18E_H_ */
+#endif /* MAIN_DLL_DIMBOSSGUT2_MOTION_H_ */
