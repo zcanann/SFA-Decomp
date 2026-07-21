@@ -209,7 +209,7 @@ typedef struct IntersectLine
 {
     u8 end0;     /* 0x0 per-endpoint byte from the source segment */
     u8 end1;     /* 0x1 */
-    u8 flags;    /* 0x2 bit 0x10 is toggled on import */
+    s8 flags;    /* 0x2 bit 0x10 is toggled on import */
     s8 kind;     /* 0x3 low 6 bits group key; 0x14 = consumed */
     s16 pt[2];   /* 0x4 indices into the shared point pool */
     s16 adj[2];  /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
@@ -327,7 +327,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
 int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
                       int flagsArg);
 int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
-                                 GameObject* target, int lineMask, int segment, int yTolerance,
+                                 GameObject* target, s8 lineMask, s8 segment, s8 yTolerance,
                                  GameObject* sourceObj);
 
 f32 lbl_8038D7DC[0x19];
@@ -2300,7 +2300,7 @@ void trackInvalidateDynamicSlotsForObject(GameObject* target)
 /* trackSweepCircleAgainstLines -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *hit with the last hit. */
 int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
-                                 GameObject* target, int lineMask, int segment, int yTolerance,
+                                 GameObject* target, s8 lineMask, s8 segment, s8 yTolerance,
                                  GameObject* sourceObj)
 {
     f32 fracs[5];
@@ -2310,16 +2310,8 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
     f32 posX[2];
     f32 posZ[2];
     s16 m[2];
-    int si16;
-    int si2;
-    s16* hitp;
     int start;
-    f32* fracp;
     u8 flag4;
-    s16* ep;
-    u8* rp;
-    f32* distp;
-    s8 mask;
     int i;
     int found;
     int count;
@@ -2335,11 +2327,11 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
 
     if (target != NULL)
     {
-        if ((s8)segment != -1)
+        if (segment != -1)
         {
             u8* tbl = *(u8**)(*(int*)&target->anim.modelInstance + 0x38);
-            start = tbl[(s8)segment * 2];
-            end = tbl[(s8)segment * 2 + 1];
+            start = tbl[segment * 2];
+            end = tbl[segment * 2 + 1];
         }
         else
         {
@@ -2356,9 +2348,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
     }
     else
     {
-        if ((s8)segment != -1)
+        if (segment != -1)
         {
-            int idx = (s8)segment * 2;
+            int idx = segment * 2;
             start = gIntersectSegmentTypeTable[idx];
             end = gIntersectSegmentTypeTable[idx + 1];
         }
@@ -2416,39 +2408,36 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
 
     count = 0;
     found = 1;
-    hitp = hits;
-    fracp = fracs;
-    distp = dists;
-    mask = lineMask;
-    si2 = start << 1;
-    si16 = start << 4;
 
     while (found)
     {
         found = 0;
-        for (i = start, ep = (s16*)(lineIdx + si2), rp = (u8*)(vt + si16); i < end; ep++, rp += 0x10, i++)
+        for (i = start; i < end; i++)
         {
             u8* rec;
             int i0, i1;
+            s8 lineFlags, kind;
             f32 *va, *vb;
             f32 ha, ylo, hb, yhi;
 
             dist = lbl_803DECD0;
             if (lineIdx != 0)
             {
-                rec = (u8*)(vt + ep[0] * 0x10);
+                rec = (u8*)(vt + ((s16*)lineIdx)[i] * 0x10);
             }
             else
             {
-                rec = rp;
+                rec = (u8*)(vt + i * 0x10);
             }
-            if ((mask & ~(s8)rec[2]) == 0)
+            lineFlags = ((IntersectLine*)rec)->flags;
+            if ((lineMask & ~lineFlags) == 0)
                 continue;
-            if ((s8)rec[3] & 0x40)
+            kind = ((IntersectLine*)rec)->kind;
+            if (kind & 0x40)
                 continue;
             i0 = *(s16*)(rec + 4);
             i1 = *(s16*)(rec + 6);
-            if ((s8)rec[3] & 0x80)
+            if (kind & 0x80)
             {
                 if (flag4 != 0)
                     continue;
@@ -2482,10 +2471,10 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             ylo = ay2;
             if (by2 < ay2)
                 ylo = by2;
-            ylo = ylo - (f32)(s8)yTolerance;
-            if ((s8)rec[2] & 0x80)
+            ylo = ylo - (f32)yTolerance;
+            if (lineFlags & 0x80)
             {
-                ha = (f32) * (s16*)rec;
+                ha = (f32)*(s16*)rec;
                 hb = ha;
             }
             else
@@ -2499,7 +2488,7 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                 if (by2 + hb > ta)
                     yhi = by2 + hb;
             }
-            yhi = yhi + (f32)(s8)yTolerance;
+            yhi = yhi + (f32)yTolerance;
             if (startPos[1] < ylo)
                 continue;
             if (startPos[1] > yhi)
@@ -2652,17 +2641,14 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                                 int j;
                                 if (flag1 != 0)
                                 {
-                                    f32 stepLb, stepLa;
-                                    f32 t3 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
-                                    posX[1] = -(t3 * lb[3] - posX[1]);
-                                    posZ[1] = -(t3 * la[3] - posZ[1]);
+                                    t1 = ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]);
+                                    posX[1] -= t1 * lb[3];
+                                    posZ[1] -= t1 * la[3];
                                     j = 0;
-                                    stepLb = lbl_803DB660 * lb[3];
-                                    stepLa = lbl_803DB660 * la[3];
                                     while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
-                                        posX[1] += stepLb;
-                                        posZ[1] += stepLa;
+                                        posX[1] += lbl_803DB660 * lb[3];
+                                        posZ[1] += lbl_803DB660 * la[3];
                                         j++;
                                         if (j > 0xa)
                                         {
@@ -2674,17 +2660,13 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                                 }
                                 else
                                 {
-                                    f32 stepLb, stepLa;
                                     posX[1] = cx;
                                     posZ[1] = cz;
                                     j = 0;
-                                    stepLb = lbl_803DB660 * lb[3];
-                                    stepLa = lbl_803DB660 * la[3];
-                                    t1 = ld[3];
-                                    while (t1 + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
+                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
                                     {
-                                        posX[1] += stepLb;
-                                        posZ[1] += stepLa;
+                                        posX[1] += lbl_803DB660 * lb[3];
+                                        posZ[1] += lbl_803DB660 * la[3];
                                         j++;
                                         if (j > 0xa)
                                         {
@@ -2709,12 +2691,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
         }
         if (found)
         {
-            *hitp = i;
-            *fracp = lbl_803DCF58;
-            *distp = dist;
-            hitp++;
-            fracp++;
-            distp++;
+            hits[count] = i;
+            fracs[count] = lbl_803DCF58;
+            dists[count] = dist;
             count++;
             if (count > 4)
             {
@@ -2740,8 +2719,10 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
         {
             pick = 0;
         }
-        dx = endPos[0] - posX[0];
-        dz = endPos[2] - posZ[0];
+        dx = endPos[0];
+        dx -= posX[0];
+        dz = endPos[2];
+        dz -= posZ[0];
         hit->distance = fracs[0] * sqrtf(dx * dx + dz * dz);
         hit->interpolation = dists[pick];
         hi = hits[pick];
