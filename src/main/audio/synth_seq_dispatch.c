@@ -291,10 +291,9 @@ SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 voice
 }
 
 /*
- * Iterate 64 voice slots: for each active one, append it to the studio's
- * voice list. Uses an indirection table when present.
+ * Queue each MIDI channel's initial event into its mapped sequence section.
  */
-void fn_8026E864(void)
+void synthQueueAllChannelEvents(void)
 {
     u32 i;
     SynthSequenceEvent* event;
@@ -323,7 +322,8 @@ void fn_8026E864(void)
     }
 }
 
-void fn_8026E90C(u8 voice)
+/* Queue the next event for every MIDI channel mapped to one sequence section. */
+void synthQueueChannelEventsForSection(u8 sectionIndex)
 {
     u32 group;
     u32 i;
@@ -342,7 +342,7 @@ void fn_8026E90C(u8 voice)
     }
     else
     {
-        group = voice & 0xff;
+        group = sectionIndex & 0xff;
         for (i = 0; i < 0x40; i++)
         {
             if (group == gSynthCurrentVoice->keyGroupMap[i])
@@ -436,7 +436,7 @@ u32 synthProcessChannelEventQueue(u8 voice, u32 param)
                 }
             }
             vp->loopCount += 1;
-            fn_8026E90C(voice);
+            synthQueueChannelEventsForSection(voice);
             continue;
         }
         res = synthHandleSequenceEvent(event, voice, &flag);

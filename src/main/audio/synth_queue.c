@@ -272,7 +272,7 @@ u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u3
 
     prevCurSeq = gSynthCurrentVoice;
     gSynthCurrentVoice = seq;
-    fn_8026E864();
+    synthQueueAllChannelEvents();
     gSynthCurrentVoice = prevCurSeq;
     return synthAssignHandle(seqId);
 }
