@@ -12,9 +12,12 @@
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
 
+#define CFPERCH_FLOCK_GROUP     62
+#define CFPERCH_REMOVAL_MESSAGE 0x40001
+
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */
-int CFPerch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+int CFPerch_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0)
     {
@@ -33,9 +36,9 @@ int cfperch_getObjectTypeId(void)
     return 0x0;
 }
 
-void cfperch_free(int* obj)
+void cfperch_free(GameObject* obj)
 {
-    ObjMsg_SendToObjects(62, 0, obj, 0x40001, 0);
+    ObjMsg_SendToObjects(CFPERCH_FLOCK_GROUP, 0, obj, CFPERCH_REMOVAL_MESSAGE, 0);
 }
 
 void cfperch_render(void)
@@ -46,22 +49,22 @@ void cfperch_hitDetect(void)
 {
 }
 
-void cfperch_update(int* obj)
+void cfperch_update(GameObject* obj)
 {
-    if (((GameObject*)obj)->userData1 != 0)
+    if (obj->userData1 != 0)
     {
         if (mainGetBit(GAMEBIT_CF_UncleFlewOff) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
-    ((GameObject*)obj)->userData1 = 0;
+    obj->userData1 = 0;
 }
 
-void cfperch_init(int* obj)
+void cfperch_init(GameObject* obj)
 {
-    ((GameObject*)obj)->userData1 = 1;
-    ((GameObject*)obj)->animEventCallback = CFPerch_SeqFn;
+    obj->userData1 = 1;
+    obj->animEventCallback = CFPerch_SeqFn;
 }
 
 void cfperch_release(void)
