@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 
 typedef struct SoftBodySetup
 {
@@ -21,9 +22,10 @@ STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
 STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
 STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 
-extern GameObject* lbl_803DDD98;
-extern f32 lbl_803DDD9C;
-extern f32 lbl_803DDDA0;
+extern GameObject* gSoftBodyPhaseDriver;
+extern f32 gSoftBodyFastPhase;
+extern f32 gSoftBodySlowPhase;
+extern ObjectDescriptor gSoftBodyObjDescriptor;
 
 int SoftBody_getExtraSize(void);
 int SoftBody_getObjectTypeId(void);

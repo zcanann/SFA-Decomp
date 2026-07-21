@@ -1,8 +1,8 @@
 /*
  * softbody (DLL 0x2AD) - a decorative wobbling/swaying object whose
  * animation move is driven by a pair of shared, free-running phase
- * accumulators (lbl_803DDDA0 / lbl_803DDD9C). The first non-disabled
- * instance to update becomes the global "phase driver" (lbl_803DDD98)
+ * accumulators. The first non-disabled instance to update becomes the
+ * global phase driver
  * and advances both phases by timeDelta each frame, wrapping each at
  * 1.0f; every softbody then samples one of the two phases to
  * pick its current animation move. Which phase is used depends on the
@@ -15,9 +15,9 @@
  */
 #include "main/dll/dll_02AD_softbody.h"
 
-f32 lbl_803DDDA0;
-f32 lbl_803DDD9C;
-GameObject* lbl_803DDD98;
+f32 gSoftBodySlowPhase;
+f32 gSoftBodyFastPhase;
+GameObject* gSoftBodyPhaseDriver;
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -26,6 +26,11 @@ GameObject* lbl_803DDD98;
 #include "main/object_descriptor.h"
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
+#define SOFTBODY_SLOW_PHASE_RATE   0.001f
+#define SOFTBODY_FAST_PHASE_RATE   0.005f
+#define SOFTBODY_PHASE_WRAP        1.0f
+#define SOFTBODY_ROTATION_SHIFT    8
+#define SOFTBODY_SCALE_DIVISOR     255.0f
 
 /* seqId range whose moves are driven by the first shared phase */
 #define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
@@ -43,9 +48,9 @@ int SoftBody_getObjectTypeId(void)
 
 void SoftBody_free(GameObject* obj)
 {
-    if (obj == lbl_803DDD98)
+    if (obj == gSoftBodyPhaseDriver)
     {
-        lbl_803DDD98 = NULL;
+        gSoftBodyPhaseDriver = NULL;
     }
 }
 
@@ -66,22 +71,22 @@ void SoftBody_update(GameObject* obj)
     GameObject* object = obj;
     SoftBodySetup* setup = (SoftBodySetup*)object->anim.placementData;
 
-    if (lbl_803DDD98 == NULL && setup->phaseDriverDisabled == 0)
+    if (gSoftBodyPhaseDriver == NULL && setup->phaseDriverDisabled == 0)
     {
-        lbl_803DDD98 = obj;
+        gSoftBodyPhaseDriver = obj;
     }
 
-    if (obj == lbl_803DDD98)
+    if (obj == gSoftBodyPhaseDriver)
     {
-        lbl_803DDDA0 = 0.001f * timeDelta + lbl_803DDDA0;
-        while (lbl_803DDDA0 > 1.0f)
+        gSoftBodySlowPhase = SOFTBODY_SLOW_PHASE_RATE * timeDelta + gSoftBodySlowPhase;
+        while (gSoftBodySlowPhase > SOFTBODY_PHASE_WRAP)
         {
-            lbl_803DDDA0 -= 1.0f;
+            gSoftBodySlowPhase -= SOFTBODY_PHASE_WRAP;
         }
-        lbl_803DDD9C = 0.005f * timeDelta + lbl_803DDD9C;
-        while (lbl_803DDD9C > 1.0f)
+        gSoftBodyFastPhase = SOFTBODY_FAST_PHASE_RATE * timeDelta + gSoftBodyFastPhase;
+        while (gSoftBodyFastPhase > SOFTBODY_PHASE_WRAP)
         {
-            lbl_803DDD9C -= 1.0f;
+            gSoftBodyFastPhase -= SOFTBODY_PHASE_WRAP;
         }
     }
 
@@ -90,10 +95,10 @@ void SoftBody_update(GameObject* obj)
     case SOFTBODY_MOVE_PHASE_A_FIRST:
     case SOFTBODY_MOVE_PHASE_A_FIRST + 1:
     case SOFTBODY_MOVE_PHASE_A_FIRST + 2:
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803DDDA0, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, gSoftBodySlowPhase, 0);
         break;
     default:
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803DDD9C, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, gSoftBodyFastPhase, 0);
         break;
     }
 }
@@ -103,12 +108,12 @@ void SoftBody_init(GameObject* obj, SoftBodySetup* setup)
     GameObject* object = obj;
     SoftBodySetup* setupData = setup;
 
-    object->anim.rotZ = (s16)(setupData->rotZ << 8);
-    object->anim.rotY = (s16)(setupData->rotY << 8);
-    object->anim.rotX = (s16)(setupData->rotX << 8);
+    object->anim.rotZ = (s16)(setupData->rotZ << SOFTBODY_ROTATION_SHIFT);
+    object->anim.rotY = (s16)(setupData->rotY << SOFTBODY_ROTATION_SHIFT);
+    object->anim.rotX = (s16)(setupData->rotX << SOFTBODY_ROTATION_SHIFT);
     if (setupData->scale != 0)
     {
-        object->anim.rootMotionScale = (f32)(u32)setupData->scale / 255.0f;
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / SOFTBODY_SCALE_DIVISOR;
         if (!object->anim.rootMotionScale)
         {
             object->anim.rootMotionScale = 1.0f;
@@ -131,9 +136,9 @@ void SoftBody_release(void)
 
 void SoftBody_initialise(void)
 {
-    lbl_803DDD98 = NULL;
-    lbl_803DDDA0 = 0.0f;
-    lbl_803DDD9C = 0.0f;
+    gSoftBodyPhaseDriver = NULL;
+    gSoftBodySlowPhase = 0.0f;
+    gSoftBodyFastPhase = 0.0f;
 }
 
 ObjectDescriptor gSoftBodyObjDescriptor = {
