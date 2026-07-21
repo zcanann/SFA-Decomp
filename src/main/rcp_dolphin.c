@@ -1243,13 +1243,13 @@ void textureFn_80053d58(void* vobj)
 }
 
 
-void fn_80053EBC(u32 bits)
+void Rcp_ClearRenderFlags(u32 bits)
 {
     gRcpRenderFlags &= ~(u64)bits;
 }
 
 
-void fn_80053ED0(u32 bits)
+void Rcp_SetRenderFlags(u32 bits)
 {
     gRcpRenderFlags = gRcpRenderFlags | bits;
 }

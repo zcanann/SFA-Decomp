@@ -54,9 +54,9 @@ void VFP_MiniFire_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
     {
         return;
     }
-    fn_80053ED0(8);
+    Rcp_SetRenderFlags(8);
     objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
-    fn_80053EBC(8);
+    Rcp_ClearRenderFlags(8);
 }
 
 void VFP_MiniFire_hitDetect(void)
