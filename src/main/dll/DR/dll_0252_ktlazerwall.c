@@ -34,31 +34,30 @@ const union KtlazerwallConstF32 lbl_803E68A4 = {0.3f};
 
 void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
 {
-    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
-    f32 pos[3];
-    f32 dir[3];
-    if (runtime->boltObj != 0)
+    KtlazerwallState* state = obj->extra;
+    Vec3f pos;
+    Vec3f dir;
+    if (state->bolt != NULL)
     {
-        mm_free(runtime->boltObj);
-        runtime->boltObj = 0;
+        mm_free(state->bolt);
+        state->bolt = NULL;
     }
-    pos[0] = (obj)->anim.localPosX;
-    pos[1] = (obj)->anim.localPosY;
-    pos[2] = (obj)->anim.localPosZ;
-    dir[0] = lbl_803E6898.f;
+    pos.x = obj->anim.localPosX;
+    pos.y = obj->anim.localPosY;
+    pos.z = obj->anim.localPosZ;
+    dir.x = lbl_803E6898.f;
     {
         f32 fr = angle;
-        fr = fr * runtime->angleScale;
-        dir[1] = -(fr * lbl_803E689C.f);
+        fr = fr * state->driftSpeed;
+        dir.y = -(fr * lbl_803E689C.f);
     }
-    dir[2] = scale;
-    vecRotateZXY(&obj->anim.rotX, dir);
-    dir[0] += (obj)->anim.localPosX;
-    dir[1] += (obj)->anim.localPosY;
-    dir[2] += (obj)->anim.localPosZ;
-    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreate((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0.f, lbl_803E68A4.f,
-                                                  angle, 96, 0);
+    dir.z = scale;
+    vecRotateZXY(&obj->anim.rotX, &dir.x);
+    dir.x += obj->anim.localPosX;
+    dir.y += obj->anim.localPosY;
+    dir.z += obj->anim.localPosZ;
+    state->driftTimer = (f32)(int)randomGetRange(10, angle);
+    state->bolt = lightningCreate(&pos, &dir, lbl_803E68A0.f, lbl_803E68A4.f, angle, 96, 0);
 }
 
 const union KtlazerwallConstF32 lbl_803E68B0 = {120.0f};
@@ -68,7 +67,7 @@ const union KtlazerwallConstF32 lbl_803E68BC = {0.01f};
 
 int KT_Lazerwall_getExtraSize(void)
 {
-    return 0x14;
+    return sizeof(KtlazerwallState);
 }
 
 int KT_Lazerwall_getObjectTypeId(void)
@@ -78,43 +77,43 @@ int KT_Lazerwall_getObjectTypeId(void)
 
 void KT_Lazerwall_free(GameObject* obj)
 {
-    char* extra = obj->extra;
-    void* bolt = *(void**)&((KtlazerwallState*)extra)->bolt;
-    if (bolt != 0)
+    KtlazerwallState* state = obj->extra;
+    LightningEffect* bolt = state->bolt;
+    if (bolt != NULL)
     {
         mm_free(bolt);
-        *(void**)&((KtlazerwallState*)extra)->bolt = 0;
+        state->bolt = NULL;
     }
 }
 
 void KT_Lazerwall_render(GameObject* obj)
 {
-    char* extra = obj->extra;
+    KtlazerwallState* state = obj->extra;
     KtlazerwallPlacement* placement = (KtlazerwallPlacement*)obj->anim.placementData;
-    int bolt;
-    if (*(void**)&((KtlazerwallState*)extra)->bolt != 0)
+    LightningEffect* bolt;
+    if (state->bolt != NULL)
     {
-        ((KtlazerwallState*)extra)->driftTimer -= timeDelta;
-        if (((KtlazerwallState*)extra)->driftTimer <= lbl_803E6898.f)
+        state->driftTimer -= timeDelta;
+        if (state->driftTimer <= lbl_803E6898.f)
         {
-            f32 kick = lbl_803E68B0.f * ((KtlazerwallState*)extra)->driftSpeed;
-            bolt = ((KtlazerwallState*)extra)->bolt;
-            *(f32*)(bolt + 0x10) -= kick * lbl_803E68B4.f;
-            ((KtlazerwallState*)extra)->driftTimer = (f32)(int)randomGetRange(0xa, 0x78);
+            f32 kick = lbl_803E68B0.f * state->driftSpeed;
+            bolt = state->bolt;
+            bolt->end[1] -= kick * lbl_803E68B4.f;
+            state->driftTimer = (f32)(int)randomGetRange(0xa, 0x78);
         }
         else
         {
-            bolt = ((KtlazerwallState*)extra)->bolt;
-            *(f32*)(bolt + 0x10) += ((KtlazerwallState*)extra)->driftSpeed * timeDelta;
+            bolt = state->bolt;
+            bolt->end[1] += state->driftSpeed * timeDelta;
         }
-        lightningRender(*(LightningEffect**)&((KtlazerwallState*)extra)->bolt);
-        *(u16*)(((KtlazerwallState*)extra)->bolt + 0x20) += framesThisStep;
-        bolt = ((KtlazerwallState*)extra)->bolt;
-        if (*(u16*)(bolt + 0x20) >= *(u16*)(bolt + 0x22))
+        lightningRender(state->bolt);
+        state->bolt->timer += framesThisStep;
+        bolt = state->bolt;
+        if (bolt->timer >= bolt->lifetime)
         {
-            mm_free((void*)bolt);
-            ((KtlazerwallState*)extra)->bolt = 0;
-            *(u8*)extra &= ~8;
+            mm_free(bolt);
+            state->bolt = NULL;
+            state->flags &= ~KT_LAZERWALL_FLAG_BOLT_ACTIVE;
             mainSetBits(placement->activeBit, 0);
         }
     }
@@ -127,30 +126,31 @@ void KT_Lazerwall_hitDetect(void)
 void KT_Lazerwall_update(GameObject* obj)
 {
     KtlazerwallPlacement* placement = (KtlazerwallPlacement*)obj->anim.placementData;
-    u8* flags = (obj)->extra;
+    KtlazerwallState* state = obj->extra;
     int intensity;
     int mode;
     int i;
-    flags[1] = flags[0];
-    flags[0] &= ~3;
+    state->previousFlags = state->flags;
+    state->flags &= ~(KT_LAZERWALL_FLAG_TRIGGERED | 0x2);
     intensity = (s16)mainGetBit(placement->intensityBit);
     if (intensity >= placement->fireThreshold)
     {
-        flags[0] |= 4;
+        state->flags |= KT_LAZERWALL_FLAG_FIRING;
     }
     else
     {
-        flags[0] &= ~4;
+        state->flags &= ~KT_LAZERWALL_FLAG_FIRING;
         if (mainGetBit(placement->activeBit) == 0)
         {
             return;
         }
     }
-    (obj)->anim.rotZ += 910;
-    if (intensity >= 15 && (flags[0] & 9) == 0)
+    obj->anim.rotZ += 910;
+    if (intensity >= 15 &&
+        (state->flags & (KT_LAZERWALL_FLAG_TRIGGERED | KT_LAZERWALL_FLAG_BOLT_ACTIVE)) == 0)
     {
         mainSetBits(placement->activeBit, 1);
-        flags[0] |= 9;
+        state->flags |= KT_LAZERWALL_FLAG_TRIGGERED | KT_LAZERWALL_FLAG_BOLT_ACTIVE;
         ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8.f, 120);
         (*gPartfxInterface)->spawnObject((void*)obj, 1150, NULL, 2, -1, NULL);
         for (i = 10; i != 0; i--)
@@ -158,55 +158,56 @@ void KT_Lazerwall_update(GameObject* obj)
             mode = 2;
             (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         }
-        ((KtlazerwallState*)flags)->reloadTimer = (f32)(int)randomGetRange(1, 60);
+        state->reloadTimer = (f32)(int)randomGetRange(1, 60);
     }
-    if (flags[0] & 4)
+    if (state->flags & KT_LAZERWALL_FLAG_FIRING)
     {
         mode = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         mode = 1;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
-        if ((flags[1] & 4) == 0)
+        if ((state->previousFlags & KT_LAZERWALL_FLAG_FIRING) == 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamhit16);
         }
     }
-    if (flags[0] & 8)
+    if (state->flags & KT_LAZERWALL_FLAG_BOLT_ACTIVE)
     {
         mode = 0;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
         mode = 2;
         (*gPartfxInterface)->spawnObject((void*)obj, 1164, NULL, 2, -1, &mode);
     }
-    if ((flags[0] & 8) == 0 && (flags[1] & 8) != 0)
+    if ((state->flags & KT_LAZERWALL_FLAG_BOLT_ACTIVE) == 0 &&
+        (state->previousFlags & KT_LAZERWALL_FLAG_BOLT_ACTIVE) != 0)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_wp_beamgenlp16);
     }
     {
         f32 limit;
-        f32 timer = ((KtlazerwallState*)flags)->reloadTimer;
+        f32 timer = state->reloadTimer;
         limit = lbl_803E6898.f;
         if (timer > limit)
         {
-            ((KtlazerwallState*)flags)->reloadTimer = timer - timeDelta;
-            if (((KtlazerwallState*)flags)->reloadTimer <= limit)
+            state->reloadTimer = timer - timeDelta;
+            if (state->reloadTimer <= limit)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_wp_blaserflyby16);
-                ((KtlazerwallState*)flags)->reloadTimer = lbl_803E6898.f;
+                state->reloadTimer = lbl_803E6898.f;
             }
         }
     }
 }
 
-void KT_Lazerwall_init(GameObject* obj, char* placement)
+void KT_Lazerwall_init(GameObject* obj, KtlazerwallPlacement* placement)
 {
-    char* extra = obj->extra;
-    obj->anim.rotX = (s16)((s8)placement[0x18] << 8);
-    ((KtlazerwallState*)extra)->reloadTimer = lbl_803E6898.f;
-    ((KtlazerwallState*)extra)->driftSpeed = lbl_803E68BC.f * (f32)(int)randomGetRange(0x50, 0x78);
+    KtlazerwallState* state = obj->extra;
+    obj->anim.rotX = (s16)((s8)placement->rotX << 8);
+    state->reloadTimer = lbl_803E6898.f;
+    state->driftSpeed = lbl_803E68BC.f * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0)
     {
-        ((KtlazerwallState*)extra)->driftSpeed = -((KtlazerwallState*)extra)->driftSpeed;
+        state->driftSpeed = -state->driftSpeed;
     }
 }
 
