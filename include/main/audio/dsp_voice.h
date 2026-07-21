@@ -27,6 +27,13 @@ typedef struct VSampleInfo {
     u8 inLoopBuffer;      /* 0x08 */
 } VSampleInfo;
 
+#define SAMPLE_TYPE_ADPCM         0
+#define SAMPLE_TYPE_ADPCM_PLUS    1
+#define SAMPLE_TYPE_PCM16         2
+#define SAMPLE_TYPE_PCM8          3
+#define SAMPLE_TYPE_STREAM_ADPCM  4
+#define SAMPLE_TYPE_VIRTUAL_ADPCM 5
+
 #define DSP_VOICE_UPDATE_COUNT       5
 #define DSP_VOICE_CHANGE_VOLUME      0x1
 #define DSP_VOICE_CHANGE_AUX_A       0x2

@@ -30,10 +30,10 @@ u32 hwChangeStudio(u32 slot)
     mode = voice->smp_info.compType;
     switch (mode)
     {
-    case 0:
-    case 1:
-    case 4:
-    case 5:
+    case SAMPLE_TYPE_ADPCM:
+    case SAMPLE_TYPE_ADPCM_PLUS:
+    case SAMPLE_TYPE_STREAM_ADPCM:
+    case SAMPLE_TYPE_VIRTUAL_ADPCM:
         curVoice = (DSPvoice*)((u8*)dspVoice + slot * sizeof(DSPvoice));
         pos = curVoice->currentAddr;
         samplePos = ((pos - 2 * (u32)curVoice->smp_info.addr) >> 4) * 0xe;
@@ -44,9 +44,9 @@ u32 hwChangeStudio(u32 slot)
         }
         samplePos = lowBits + samplePos;
         return samplePos - 2;
-    case 3:
+    case SAMPLE_TYPE_PCM8:
         return (int)voice->currentAddr - (u32)voice->smp_info.addr;
-    case 2:
+    case SAMPLE_TYPE_PCM16:
         return (int)voice->currentAddr - ((u32)voice->smp_info.addr >> 1);
     default:
         return slot;

@@ -50,11 +50,11 @@ void streamHandle(void)
             switch (si->format)
             {
             case SYNTH_JOB_FORMAT_PCM:
-                newsmp.compType = 2;
+                newsmp.compType = SAMPLE_TYPE_PCM16;
                 break;
             case SYNTH_JOB_FORMAT_ADPCM:
                 newsmp.extraData = &si->adpcm;
-                newsmp.compType = 4;
+                newsmp.compType = SAMPLE_TYPE_STREAM_ADPCM;
                 break;
             }
             hwInitSamplePlayback(si->voice, 0xFFFF, &newsmp, 1, -1,

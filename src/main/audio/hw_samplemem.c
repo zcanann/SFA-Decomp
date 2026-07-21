@@ -18,14 +18,14 @@ void hwSaveSample(SAMPLE_HEADER** sample, void** ptr)
     size = header & 0xffffff;
     switch (type)
     {
-    case 0:
-    case 1:
-    case 4:
-    case 5:
+    case SAMPLE_TYPE_ADPCM:
+    case SAMPLE_TYPE_ADPCM_PLUS:
+    case SAMPLE_TYPE_STREAM_ADPCM:
+    case SAMPLE_TYPE_VIRTUAL_ADPCM:
         adjusted = size + 0xd;
         size = (adjusted / 7 * 4) & ~7;
         break;
-    case 2:
+    case SAMPLE_TYPE_PCM16:
         size <<= 1;
         break;
     }
@@ -44,14 +44,14 @@ void hwRemoveSample(SAMPLE_HEADER* sample, void* ptr)
     size = header & 0xffffff;
     switch (type)
     {
-    case 0:
-    case 1:
-    case 4:
-    case 5:
+    case SAMPLE_TYPE_ADPCM:
+    case SAMPLE_TYPE_ADPCM_PLUS:
+    case SAMPLE_TYPE_STREAM_ADPCM:
+    case SAMPLE_TYPE_VIRTUAL_ADPCM:
         adjusted = size + 0xd;
         size = (adjusted / 7 * 4) & ~7;
         break;
-    case 2:
+    case SAMPLE_TYPE_PCM16:
         size <<= 1;
         break;
     }
