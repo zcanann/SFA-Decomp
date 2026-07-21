@@ -19,7 +19,11 @@ typedef struct WaveAnimatorState
     f32 scaleA; /* 0x2c */
     f32 scaleB; /* 0x30 */
     u8 flags; /* 0x34: 1 = scale pending, 2 = func0B latch */
-    u8 pad35[7];
+    u8 pad35;
+    u8 modelMtxArg0; /* 0x36: callback argument latched by waveanimator_modelMtxFn */
+    u8 modelMtxArg1; /* 0x37 */
+    u8 modelMtxArg2; /* 0x38 */
+    u8 pad39[3];
 } WaveAnimatorState;
 
 #endif

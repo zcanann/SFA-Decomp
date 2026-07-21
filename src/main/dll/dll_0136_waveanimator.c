@@ -3,11 +3,11 @@
  * surface for a map object. On init it folds the object's placement def
  * (origin/span/amplitude/period/grid) into a shared WaveAnimatorState and,
  * for the first instance only, builds three globally shared tables via
- * waveanimator_buildSharedTables: a per-cell height field (lbl_803DDAF4), a per-cell RGB
- * color field shaded by height (lbl_803DDAEC), and a per-grid phase table
- * (lbl_803DDAF0). hitDetect advances every phase by framesThisStep/2 each
+ * waveanimator_buildSharedTables: a per-cell height field, a per-cell RGB
+ * color field shaded by height, and a per-grid phase table. hitDetect advances
+ * every phase by framesThisStep/2 each
  * step (wrapping at the wave period); the tables are freed when the last
- * instance is destroyed (lbl_803DDAE8 is the live-instance refcount).
+ * instance is destroyed.
  */
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -19,45 +19,38 @@
 #include "main/mm.h"
 #include "main/object_descriptor.h"
 
-/*
- * Field overlay used by waveanimator_modelMtxFn: 0x34 is WaveAnimatorState.flags,
- * 0x36-0x38 are the three dispatch args stored into pad35[1..3].
- */
-typedef struct WaveanimatorModelMtxCtx
+typedef struct WaveAnimatorColor
 {
-    u8 pad0[0x34 - 0x0];
-    u8 flags;
-    u8 pad35[0x36 - 0x35];
-    u8 arg0;
-    u8 arg1;
-    u8 arg2;
-    u8 pad39[0x3c - 0x39];
-} WaveanimatorModelMtxCtx;
-
-STATIC_ASSERT(sizeof(WaveanimatorModelMtxCtx) == 0x3C);
+    u8 red;
+    u8 green;
+    u8 blue;
+} WaveAnimatorColor;
 
 STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
+STATIC_ASSERT(offsetof(WaveAnimatorState, modelMtxArg0) == 0x36);
+STATIC_ASSERT(offsetof(WaveAnimatorState, modelMtxArg2) == 0x38);
+STATIC_ASSERT(sizeof(WaveAnimatorColor) == 3);
 
 #define WAVEANIMATOR_OBJGROUP 27
 
-u8 lbl_803DDAF8;    /* phases-advanced-this-frame latch */
-void* lbl_803DDAF4; /* per-cell height field */
-void* lbl_803DDAF0; /* per-grid phase table */
-void* lbl_803DDAEC; /* per-cell RGB color field */
-u8 lbl_803DDAE8;    /* live-instance refcount */
+u8 gWaveAnimatorPhaseUpdateLatch;
+f32* gWaveAnimatorHeightTable;
+s16* gWaveAnimatorPhaseTable;
+WaveAnimatorColor* gWaveAnimatorColorTable;
+u8 gWaveAnimatorInstanceCount;
 
 
 void waveanimator_buildSharedTables(int* cfgArg);
 
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c)
 {
-    WaveanimatorModelMtxCtx* state = (WaveanimatorModelMtxCtx*)obj->extra;
+    WaveAnimatorState* state = (WaveAnimatorState*)obj->extra;
     u32 v;
     v = (u32)state->flags | 4;
     state->flags = v;
-    state->arg0 = a;
-    state->arg1 = b;
-    state->arg2 = c;
+    state->modelMtxArg0 = a;
+    state->modelMtxArg1 = b;
+    state->modelMtxArg2 = c;
 }
 
 void waveanimator_func0B(int* obj)
@@ -88,8 +81,8 @@ void waveanimator_buildSharedTables(int* cfgArg)
     f32 initHeight;
     WaveAnimatorState* cfg = (WaveAnimatorState*)cfgArg;
 
-    lbl_803DDAF4 = mmAlloc(4 * cfg->period * cfg->period, 0xFFFFFF, 0);
-    lbl_803DDAEC = mmAlloc(3 * cfg->period * cfg->period, 0xFFFFFF, 0);
+    gWaveAnimatorHeightTable = mmAlloc(sizeof(f32) * cfg->period * cfg->period, 0xFFFFFF, 0);
+    gWaveAnimatorColorTable = mmAlloc(sizeof(WaveAnimatorColor) * cfg->period * cfg->period, 0xFFFFFF, 0);
 
     x = cfg->originX;
     stepX = (s32)((65536.0f * cfg->spanX) / cfg->period);
@@ -114,14 +107,14 @@ void waveanimator_buildSharedTables(int* cfgArg)
             f32 s2;
             waveY = cfg->ampY * s1;
             s2 = mathSinf(xv / 32768.0f);
-            *(f32*)((u8*)lbl_803DDAF4 + row) = cfg->ampX * s2 + waveY;
-            if (*(f32*)((u8*)lbl_803DDAF4 + row) < cfg->minHeight)
+            *(f32*)((u8*)gWaveAnimatorHeightTable + row) = cfg->ampX * s2 + waveY;
+            if (*(f32*)((u8*)gWaveAnimatorHeightTable + row) < cfg->minHeight)
             {
-                cfg->minHeight = *(f32*)((u8*)lbl_803DDAF4 + row);
+                cfg->minHeight = *(f32*)((u8*)gWaveAnimatorHeightTable + row);
             }
-            if (*(f32*)((u8*)lbl_803DDAF4 + row) > cfg->maxHeight)
+            if (*(f32*)((u8*)gWaveAnimatorHeightTable + row) > cfg->maxHeight)
             {
-                cfg->maxHeight = *(f32*)((u8*)lbl_803DDAF4 + row);
+                cfg->maxHeight = *(f32*)((u8*)gWaveAnimatorHeightTable + row);
             }
             y += stepY;
             row += 4;
@@ -144,32 +137,32 @@ void waveanimator_buildSharedTables(int* cfgArg)
             int byte[1];
             for (j = 0, src[0] = x, byte[0] = i; j < cfg->period; src[0] += 4, byte[0] += 3, x += 4, i += 3, j++)
             {
-                f32 v = *(f32*)((u8*)lbl_803DDAF4 + src[0]);
+                f32 v = *(f32*)((u8*)gWaveAnimatorHeightTable + src[0]);
                 if (v < colorSplitZero)
                 {
                     t = (v - cfg->minHeight) / negMin;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = 65.0f * t + 190.0f;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = 165.0f * t + 90.0f;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = 235.0f * t + 20.0f;
+                    *(u8*)((u8*)gWaveAnimatorColorTable + byte[0]) = 65.0f * t + 190.0f;
+                    *(u8*)((u8*)gWaveAnimatorColorTable + byte[0] + 1) = 165.0f * t + 90.0f;
+                    *(u8*)((u8*)gWaveAnimatorColorTable + byte[0] + 2) = 235.0f * t + 20.0f;
                 }
                 else
                 {
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0]) = 255;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 1) = 255;
-                    *(u8*)((u8*)lbl_803DDAEC + byte[0] + 2) = 255;
+                    *(u8*)((u8*)gWaveAnimatorColorTable + byte[0]) = 255;
+                    *(u8*)((u8*)gWaveAnimatorColorTable + byte[0] + 1) = 255;
+                    *(u8*)((u8*)gWaveAnimatorColorTable + byte[0] + 2) = 255;
                 }
             }
         }
     }
 
-    lbl_803DDAF0 = mmAlloc(4 * cfg->gridN * cfg->gridN, 0xFFFFFF, 0);
+    gWaveAnimatorPhaseTable = mmAlloc(2 * sizeof(s16) * cfg->gridN * cfg->gridN, 0xFFFFFF, 0);
     phaseIdx = 0;
     for (i = 0; i < cfg->gridN; i++)
     {
         for (j = 0; j < cfg->gridN; j++)
         {
-            ((s16*)lbl_803DDAF0)[phaseIdx] = (s16)(i * 10);
-            ((s16*)lbl_803DDAF0)[phaseIdx + 1] = (s16)(j * 10);
+            gWaveAnimatorPhaseTable[phaseIdx] = (s16)(i * 10);
+            gWaveAnimatorPhaseTable[phaseIdx + 1] = (s16)(j * 10);
             phaseIdx += 2;
         }
     }
@@ -187,14 +180,14 @@ int waveanimator_getObjectTypeId(void)
 
 void waveanimator_free(int* obj)
 {
-    if (--lbl_803DDAE8 == 0)
+    if (--gWaveAnimatorInstanceCount == 0)
     {
-        if (lbl_803DDAF4 != NULL)
-            mm_free(lbl_803DDAF4);
-        if (lbl_803DDAF0 != NULL)
-            mm_free(lbl_803DDAF0);
-        if (lbl_803DDAEC != NULL)
-            mm_free(lbl_803DDAEC);
+        if (gWaveAnimatorHeightTable != NULL)
+            mm_free(gWaveAnimatorHeightTable);
+        if (gWaveAnimatorPhaseTable != NULL)
+            mm_free(gWaveAnimatorPhaseTable);
+        if (gWaveAnimatorColorTable != NULL)
+            mm_free(gWaveAnimatorColorTable);
     }
     ObjGroup_RemoveObject((int)obj, WAVEANIMATOR_OBJGROUP);
 }
@@ -212,7 +205,7 @@ void waveanimator_hitDetect(int* obj)
     int j;
     int phaseIdx;
     WaveAnimatorState* state;
-    if (lbl_803DDAF8 != 0)
+    if (gWaveAnimatorPhaseUpdateLatch != 0)
     {
         return;
     }
@@ -222,20 +215,20 @@ void waveanimator_hitDetect(int* obj)
     {
         for (j = 0; j < state->gridN; j++)
         {
-            ((s16*)lbl_803DDAF0)[phaseIdx] += framesThisStep >> 1;
-            while (((s16*)lbl_803DDAF0)[phaseIdx] >= state->period)
+            gWaveAnimatorPhaseTable[phaseIdx] += framesThisStep >> 1;
+            while (gWaveAnimatorPhaseTable[phaseIdx] >= state->period)
             {
-                ((s16*)lbl_803DDAF0)[phaseIdx] -= state->period;
+                gWaveAnimatorPhaseTable[phaseIdx] -= state->period;
             }
-            ((s16*)lbl_803DDAF0)[phaseIdx + 1] += framesThisStep >> 1;
-            while (((s16*)lbl_803DDAF0)[phaseIdx + 1] >= state->period)
+            gWaveAnimatorPhaseTable[phaseIdx + 1] += framesThisStep >> 1;
+            while (gWaveAnimatorPhaseTable[phaseIdx + 1] >= state->period)
             {
-                ((s16*)lbl_803DDAF0)[phaseIdx + 1] -= state->period;
+                gWaveAnimatorPhaseTable[phaseIdx + 1] -= state->period;
             }
             phaseIdx += 2;
         }
     }
-    lbl_803DDAF8 = 1;
+    gWaveAnimatorPhaseUpdateLatch = 1;
 }
 
 void waveanimator_update(void)
@@ -258,12 +251,12 @@ void waveanimator_init(int* obj, int* desc)
     scale = (1.0f);
     state->scaleA = scale;
     state->scaleB = scale;
-    if (lbl_803DDAE8 == 0)
+    if (gWaveAnimatorInstanceCount == 0)
     {
         waveanimator_buildSharedTables((int*)state);
     }
     ObjGroup_AddObject((int)obj, WAVEANIMATOR_OBJGROUP);
-    lbl_803DDAE8++;
+    gWaveAnimatorInstanceCount++;
 }
 
 void waveanimator_release(void)
