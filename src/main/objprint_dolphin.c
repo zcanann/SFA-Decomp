@@ -1055,7 +1055,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)*am, idx);
     refs = (u32*)ObjModel_GetRenderOpTextureRefs((ObjModel*)am, idx);
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     envtex = 0;
     if ((refs[0] != 0 || refs[1] != 0) && ((ObjModelRenderOp*)op)->envTextureId != 0)
     {
@@ -1245,7 +1245,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     {
         fn_80118240();
     }
-    textureFn_800528bc();
+    Rcp_ApplyTextureStageCounts();
     {
         ObjModelRenderCb pcb = (ObjModelRenderCb)ObjModel_GetPostRenderCallback((ObjModel*)am);
         if (pcb != NULL)
@@ -1528,7 +1528,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         if (cb == NULL || cb(obj, am, 0) == 0)
         {
             _gxSetFogParams();
-            resetLotsOfRenderVars();
+            Rcp_ResetTextureStageState();
             gxFn_80051fb8(textureIdxToPtr(*(int*)(*(int*)&((ModelFileHeader*)m)->renderOps + 0x24)), NULL,
                           0, (GXColor*)color, 0, 0);
             if (isHeavyFogEnabled() != 0)
@@ -1537,7 +1537,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
                 getColor803dd01c(c);
                 renderHeavyFog(c);
             }
-            textureFn_800528bc();
+            Rcp_ApplyTextureStageCounts();
             GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
             GXSetNumChans(0);

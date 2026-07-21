@@ -3957,10 +3957,10 @@ int cMenuRingModelRenderFn(int obj, int block, int idx)
     GXColor cfg;
     *(u32*)&cfg = lbl_803E1E14;
     renderOp = (int)ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx);
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     cfg.a = ((GameObject*)obj)->anim.renderAlpha;
     gxFn_80051fb8(textureIdxToPtr(((ModelRenderOp*)renderOp)->textureId), NULL, 0, &cfg, 0, 1);
-    textureFn_800528bc();
+    Rcp_ApplyTextureStageCounts();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, GX_ALWAYS, 0);
     gxSetPeControl_ZCompLoc_(0);
@@ -3975,7 +3975,7 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
     GXColor cfg;
     *(u32*)&cfg = lbl_803E1E10;
     slotIdx = ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx)->layerCount - 1;
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     if (slotIdx >= 0 && slotIdx <= 6 && (tex = gCMenuRingIconTextures[slotIdx]) != 0)
     {
         if (gCMenuRingIconActiveFlags[slotIdx] != 0)
@@ -3993,7 +3993,7 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
         cfg.a = 0;
         gxColorFn_80052764(&cfg);
     }
-    textureFn_800528bc();
+    Rcp_ApplyTextureStageCounts();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, GX_ALWAYS, 0);
     gxSetPeControl_ZCompLoc_(0);

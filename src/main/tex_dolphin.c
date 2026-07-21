@@ -377,7 +377,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
                                                    (f32)(b->maxY >> 3) + fldY, az1 + fz, gTexDimmedLightList, 2,
                                                    &lightCount);
     }
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     fn_8004CE0C((void*)i);
     i = 0;
     lightPtr = gTexDimmedLightList;
@@ -397,7 +397,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
             fn_8004FA30(modelLightStruct_getRadius(*lightPtr), (int*)&colorR, &posX);
         }
     }
-    textureFn_800528bc();
+    Rcp_ApplyTextureStageCounts();
     GXSetNumChans(1);
     GXSetCullMode(GX_CULL_BACK);
     gxSetZMode_(1, GX_LEQUAL, 0);
@@ -703,7 +703,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, MapBlockData* block, Ma
                         }
                         fn_8004D230();
                     }
-                    textureFn_800528bc();
+                    Rcp_ApplyTextureStageCounts();
                 }
             }
             GXCallDisplayList(((MapBlockBoundsRec*)rec[0])->dlist, ((MapBlockBoundsRec*)rec[0])->dlistSize);
@@ -946,7 +946,7 @@ MapShader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, int* bi
             return shader;
         }
     }
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     if ((SHADER_FLAGS(shader) & 0x80) != 0)
     {
         fn_8004DA54((char*)shader);

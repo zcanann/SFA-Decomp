@@ -12,8 +12,8 @@ void* textureAlloc(u16 width, u16 height, int format, u8 mip, u8 maxLod, u8 wrap
                    u8 minFilter, u8 magFilter);
 void* textureLoad(int texId, u8 flag);
 void* textureIdxToPtr(int index);
-void resetLotsOfRenderVars(void);
-void textureFn_800528bc(void);
+void Rcp_ResetTextureStageState(void);
+void Rcp_ApplyTextureStageCounts(void);
 void gxColorFn_800523d0(void);
 void texRestructRefs(int mode);
 void Rcp_DisableBlurFilter(void);

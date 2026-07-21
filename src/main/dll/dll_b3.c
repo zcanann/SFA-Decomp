@@ -53,7 +53,7 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
     {
         tier = 0;
     }
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     if (renderOp->distanceTier <= tier)
     {
         color.r = 0;
@@ -71,7 +71,7 @@ int lockIconTexCb(GameObject* obj, int* modelPtr, int renderOpIdx)
         color.a = obj->anim.alpha;
         fn_80051D5C(textureIdxToPtr(renderOp->textureId), NULL, 0, &color);
     }
-    textureFn_800528bc();
+    Rcp_ApplyTextureStageCounts();
     if (obj->anim.alpha < 0xff || renderOp->distanceTier <= tier)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);

@@ -48,7 +48,7 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
     GXColor color; /* r/g/b intentionally left unset: callee reads only alpha for this op */
 
     renderOp = (CamcontrolIconRenderOp*)ObjModel_GetRenderOp((ModelFileHeader*)*objPtr, renderOpIdx);
-    resetLotsOfRenderVars();
+    Rcp_ResetTextureStageState();
     if (renderOp->variantId == ICON_VARIANT_PRESS_A)
     {
         if ((CAMCONTROL_CAMERA->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT) == 0)
@@ -69,7 +69,7 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
         color.a = 0;
     }
     fn_80051D5C(textureIdxToPtr(renderOp->textureId), NULL, 0, &color);
-    textureFn_800528bc();
+    Rcp_ApplyTextureStageCounts();
     if (color.a < 0xff)
     {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
