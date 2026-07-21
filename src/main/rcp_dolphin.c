@@ -133,7 +133,7 @@ typedef struct F32Pair
     f32 lo;
     f32 hi;
 } F32Pair;
-void textureInitGXTexObj(void* obj);
+void textureInitGXTexObj(Texture* texture);
 extern GXTexObj lbl_803779A0;
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
@@ -1065,7 +1065,7 @@ void texRestructRefs(int mode)
                 done = 0;
                 memcpy(na, tex, size);
                 DCStoreRange(na, size);
-                textureInitGXTexObj(na);
+                textureInitGXTexObj((Texture*)na);
                 d = mmSetFreeDelay(0);
                 mm_free(gLoadedTextures[i].texture);
                 mmSetFreeDelay(d);
@@ -1114,7 +1114,7 @@ void texRestructRefs(int mode)
                         done = 0;
                         memcpy(na, tex, size);
                         DCStoreRange(na, size);
-                        textureInitGXTexObj(na);
+                        textureInitGXTexObj((Texture*)na);
                         d = mmSetFreeDelay(0);
                         mm_free(gLoadedTextures[i].texture);
                         mmSetFreeDelay(d);
@@ -1146,7 +1146,7 @@ void texRestructRefs(int mode)
                                 done = 0;
                                 memcpy(na, tex, size);
                                 DCStoreRange(na, size);
-                                textureInitGXTexObj(na);
+                                textureInitGXTexObj((Texture*)na);
                                 d = mmSetFreeDelay(0);
                                 mm_free(gLoadedTextures[i].texture);
                                 mmSetFreeDelay(d);
@@ -1208,37 +1208,35 @@ void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj)
     }
 }
 
-void textureInitGXTexObj(void* vobj)
+void textureInitGXTexObj(Texture* texture)
 {
     u8 mipmap = 0;
-    u8* obj = (u8*)vobj;
     GXTexObj* texObj;
-    *(int*)(obj + 64) = mipmap;
-    ((Texture*)obj)->preloaded = mipmap;
-    texObj = textureGetGXTexObj((Texture*)obj);
-    if ((int)((Texture*)obj)->maxLod - (int)((Texture*)obj)->minLod > 0)
+    texture->tmemAddr = NULL;
+    texture->preloaded = mipmap;
+    texObj = textureGetGXTexObj(texture);
+    if (texture->maxLod - texture->minLod > 0)
         mipmap = 1;
-    GXInitTexObj(texObj, obj + 96, ((Texture*)obj)->width, ((Texture*)obj)->height, ((Texture*)obj)->format,
-                 ((Texture*)obj)->wrapS, ((Texture*)obj)->wrapT, mipmap);
+    GXInitTexObj(texObj, textureGetImageData(texture), texture->width, texture->height, texture->format,
+                 texture->wrapS, texture->wrapT, mipmap);
     if (mipmap != 0)
     {
-        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, (f32)(u32)obj[28],
-                        (f32)(s32)obj[29], /* minLod/maxLod */
-                        -2.0f, 0, 0, 0);
+        GXInitTexObjLOD(texObj, texture->minFilter, texture->magFilter, (f32)(u32)texture->minLod,
+                        (f32)(s32)texture->maxLod, -2.0f, 0, 0, 0);
     }
     else
     {
-        GXInitTexObjLOD(texObj, ((Texture*)obj)->minFilter, ((Texture*)obj)->magFilter, 0.0f, 0.0f,
+        GXInitTexObjLOD(texObj, texture->minFilter, texture->magFilter, 0.0f, 0.0f,
                         0.0f, 0, 0, 0);
     }
-    GXInitTexObjUserData(texObj, obj);
+    GXInitTexObjUserData(texObj, texture);
     {
         u16 w;
         u16 h;
-        int fmt = GXGetTexObjFmt(texObj);
+        GXTexFmt fmt = GXGetTexObjFmt(texObj);
         w = GXGetTexObjWidth(texObj);
         h = GXGetTexObjHeight(texObj);
-        ((Texture*)obj)->dataSize = GXGetTexBufferSize(w, h, fmt, 0, 0);
+        texture->dataSize = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
 
@@ -1865,7 +1863,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
     ((Texture*)obj)->minFilter = minFilter;
     ((Texture*)obj)->magFilter = magFilter;
     ((Texture*)obj)->imageOffset = 0;
-    textureInitGXTexObj(obj);
+    textureInitGXTexObj((Texture*)obj);
     return obj;
 }
 

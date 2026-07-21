@@ -69,6 +69,11 @@ static inline struct _GXTexObj* textureGetGXTexObj(Texture* texture)
     return (struct _GXTexObj*)texture->gxTexObj;
 }
 
+static inline void* textureGetImageData(Texture* texture)
+{
+    return (u8*)texture + sizeof(Texture);
+}
+
 static inline struct _GXTexRegion* textureGetGXTexRegion(Texture* texture)
 {
     return (struct _GXTexRegion*)texture->tmemAddr;
