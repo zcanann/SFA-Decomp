@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/dll/duster_api.h"
 
 void rachnopUpdateApproach(int* obj, int state);
 void rachnopUpdateAttack(int* obj, int state);
@@ -57,18 +58,19 @@ typedef struct DusterState
     f32 decoyTimer; /* 0x328 */
     u8 pad32C[0x338 - 0x32C];
     u16 turnDelta; /* 0x338 hooded-zyck per-frame rotY step */
-    /*
-     * 0x344..0x364: the wall/plane block rachnopFindWallPlane writes from a bbox probe
-     * hit and the crawl helpers read back. planeNormal (0x344) is passed by
-     * address to the PSVEC helpers, so it stays raw; the rest are scalar-only.
-     */
-    u8 pad33A[0x350 - 0x33A];
-    f32 planeNormalW;   /* 0x350 4th probe component (hit[10]) */
-    f32 planeAxisRatio; /* 0x354 anchor->plane projection ratio */
-    f32 planeAnchorY;   /* 0x358 max(hit[3],hit[4]) */
-    f32 planeBoundMin;  /* 0x35C min(hit[15],hit[16]) */
-    f32 planeAnchorX;   /* 0x360 hit[1] */
-    f32 planeAnchorZ;   /* 0x364 hit[5] */
+    u8 pad33A[0x344 - 0x33A];
+    WallPlaneState wallPlane; /* 0x344 */
 } DusterState;
+
+STATIC_ASSERT(offsetof(DusterState, wallPlane) == 0x344);
+STATIC_ASSERT(sizeof(DusterState) == 0x368);
+
+enum
+{
+    DUSTER_WALL_PLANE_OFFSET = offsetof(DusterState, wallPlane),
+    DUSTER_WALL_NORMAL_X_OFFSET = offsetof(DusterState, wallPlane.normal[0]),
+    DUSTER_WALL_NORMAL_Y_OFFSET = offsetof(DusterState, wallPlane.normal[1]),
+    DUSTER_WALL_NORMAL_Z_OFFSET = offsetof(DusterState, wallPlane.normal[2])
+};
 
 #endif /* MAIN_DLL_DUSTER_H_ */

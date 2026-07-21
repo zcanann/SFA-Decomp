@@ -9,7 +9,7 @@
  *     player, drives the move/look helpers and plays attack-breath SFX.
  *   - pinPon_init  state init: seeds BaddieState path/speed fields and a
  *     random path phase/step.
- *   - fn_80154D0C  computes the signed angle + planar distance from the
+ *   - fireflyLanternGetTargetAngleAndDistance computes the signed angle + planar distance from the
  *     object to its tracked target relative to the path plane.
  *   - fireflyLanternSteerTowardTarget  steers/moves the object toward its target along the
  *     path plane, clamped by a per-frame turn rate and max step.
@@ -38,33 +38,14 @@
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
 extern f32 gFireflyLanternPathStepScale;
-extern f32 lbl_803E2A00;
-extern f32 lbl_803E2A04;
-extern f32 lbl_803E2A08;
 
-/*
- * FireflyState - file-local overlay naming the PER-FAMILY scratch that
- * baddie_state.h leaves raw for this path-walking baddie:
- *  - trackTimer(0x324): reset to 0 while facing the tracked player.
- *  - breathTimer(0x328): fightbreath-SFX cooldown, counts down by timeDelta.
- *  - anchorY(0x32C): object localPosY captured at init.
- *  - unk330(0x330): init-seeded f32 constant.
- */
 typedef struct FireflyState
 {
-    u8 pad00[0x324];
-    f32 trackTimer;  /* 0x324 */
-    f32 breathTimer; /* 0x328 */
-    f32 anchorY;     /* 0x32C */
-    f32 unk330;      /* 0x330 */
-    u8 pad334[0x358 - 0x334];
-    /* 0x344..0x364 is the wall/plane block rachnopFindWallPlane (duster.c) writes.
-     * planeNormal (0x344..0x34C) is passed by address to the PSVEC helpers,
-     * so it stays raw here; only the scalar-only anchor point is named. */
-    f32 planeAnchorY; /* 0x358 */
+    u8 pad00[0x358];
+    f32 planeAnchorY;
     u8 pad35C[0x360 - 0x35C];
-    f32 planeAnchorX; /* 0x360 */
-    f32 planeAnchorZ; /* 0x364 */
+    f32 planeAnchorX;
+    f32 planeAnchorZ;
 } FireflyState;
 
 void pinPon_updateEngaged(GameObject* obj, int* state)
@@ -95,7 +76,7 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
-        ((FireflyState*)state)->trackTimer = 0.0f;
+        ((FireflyLanternState*)state)->trackTimer = 0.0f;
     }
     (obj)->anim.rotY = -(1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->userData1) -
                          (f32)(obj)->anim.rotY);
@@ -115,18 +96,18 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     if (state[0xb7] & 0x40000000U)
     {
         fval = 0.0f;
-        if (fval == ((FireflyState*)state)->breathTimer)
+        if (fval == ((FireflyLanternState*)state)->breathTimer)
         {
             if (flag == 0)
             {
                 if ((obj)->anim.currentMoveProgress > 0.5f)
                 {
-                    ((FireflyState*)state)->breathTimer = 300.0f;
+                    ((FireflyLanternState*)state)->breathTimer = 300.0f;
                     ((BaddieState*)state)->userData2 += 1;
                 }
                 else
                 {
-                    ((FireflyState*)state)->breathTimer = 120.0f;
+                    ((FireflyLanternState*)state)->breathTimer = 120.0f;
                 }
             }
             else if ((obj)->anim.currentMoveProgress > 0.5)
@@ -142,10 +123,10 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
         }
         else
         {
-            ((FireflyState*)state)->breathTimer = ((FireflyState*)state)->breathTimer - timeDelta;
-            if (((FireflyState*)state)->breathTimer <= fval)
+            ((FireflyLanternState*)state)->breathTimer = ((FireflyLanternState*)state)->breathTimer - timeDelta;
+            if (((FireflyLanternState*)state)->breathTimer <= fval)
             {
-                ((FireflyState*)state)->breathTimer = fval;
+                ((FireflyLanternState*)state)->breathTimer = fval;
                 if ((obj)->anim.currentMoveProgress > 0.5)
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
@@ -183,20 +164,20 @@ void pinPon_init(GameObject* obj, void* state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fval;
     fval = 0.0f;
-    ((FireflyState*)state)->trackTimer = fval;
-    ((FireflyState*)state)->breathTimer = fval;
-    ((FireflyState*)state)->anchorY = obj->anim.localPosY;
+    ((FireflyLanternState*)state)->trackTimer = fval;
+    ((FireflyLanternState*)state)->breathTimer = fval;
+    ((FireflyLanternState*)state)->anchorY = obj->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
     ((BaddieState*)state)->userData1 = randVal;
     ((BaddieState*)state)->userData2 = 0;
-    ((FireflyState*)state)->unk330 = 30.0f;
+    ((FireflyLanternState*)state)->unk330 = 30.0f;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;
     fval = gFireflyLanternPathStepScale * fval;
     ((BaddieState*)state)->pathStep = fval;
 }
 
-void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
+void fireflyLanternGetTargetAngleAndDistance(int obj, int state, u16* outAngle, float* outDistance)
 {
     f32 targetPos[3];
     f32 tmpA[3];
@@ -223,12 +204,12 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     vecA[0] = *(f32*)(state + 0x344) * d + ((GameObject*)obj)->anim.localPosX;
     vecA[1] = *(f32*)(state + 0x348) * d + (objY = ((GameObject*)obj)->anim.localPosY);
     vecA[2] = *(f32*)(state + 0x34c) * d + ((GameObject*)obj)->anim.localPosZ;
-    axisA[0] = lbl_803E2A00;
-    axisA[1] = lbl_803E2A04;
-    axisA[2] = lbl_803E2A00;
+    axisA[0] = gWallPlaneZero;
+    axisA[1] = gWallPlaneOne;
+    axisA[2] = gWallPlaneZero;
     PSVECCrossProduct(axisA, (f32*)(state + 0x344), crossA);
     PSVECNormalize(crossA, crossA);
-    if (lbl_803E2A00 != crossA[0])
+    if (gWallPlaneZero != crossA[0])
     {
         dxDiff = (((GameObject*)obj)->anim.localPosX - ((FireflyState*)state)->planeAnchorX) / crossA[0];
     }
@@ -238,7 +219,7 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
-    targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
+    targetPos[1] = gFireflyLanternTargetHeightOffset + ((GameObject*)targetObj)->anim.localPosY;
     targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
     vecB[0] = ((FireflyState*)state)->planeAnchorX;
     vecB[1] = ((FireflyState*)state)->planeAnchorY;
@@ -248,12 +229,12 @@ void fn_80154D0C(int obj, int state, u16* outAngle, float* outDistance)
     vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
     vecB[1] = *(f32*)(state + 0x348) * d + (dy = targetPos[1]);
     vecB[2] = *(f32*)(state + 0x34c) * d + targetPos[2];
-    axisB[0] = lbl_803E2A00;
-    axisB[1] = lbl_803E2A04;
-    axisB[2] = lbl_803E2A00;
+    axisB[0] = gWallPlaneZero;
+    axisB[1] = gWallPlaneOne;
+    axisB[2] = gWallPlaneZero;
     PSVECCrossProduct(axisB, (f32*)(state + 0x344), crossB);
     PSVECNormalize(crossB, crossB);
-    if (lbl_803E2A00 != crossB[0])
+    if (gWallPlaneZero != crossB[0])
     {
         d = (targetPos[0] - ((FireflyState*)state)->planeAnchorX) / crossB[0];
     }

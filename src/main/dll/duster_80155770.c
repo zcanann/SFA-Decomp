@@ -30,8 +30,6 @@
 
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
-extern f32 lbl_803E2A00;
-extern f32 lbl_803E2A04;
 
 void rachnopUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind, int wpad0, int wpad1, void* wpad2, int wpad3)
 {
@@ -66,7 +64,7 @@ void rachnopUpdateIdle(int* obj, int state)
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_253);
-            Baddie_SetMove((int)obj, state, 2, lbl_803E2A04, 0, 0);
+            Baddie_SetMove((int)obj, state, 2, gWallPlaneOne, 0, 0);
         }
     }
     return;
@@ -115,13 +113,13 @@ void rachnopUpdateAttack(int* obj, int state)
         move = ((GameObject*)obj)->anim.currentMove;
         if (move == 3)
         {
-            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)lbl_803E2A00);
+            fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)gWallPlaneZero);
         }
         else if ((move == 0) || (move == 1))
         {
             fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)0.5f);
         }
-        fn_80154D0C((int)obj, state, outIds, outVec);
+        fireflyLanternGetTargetAngleAndDistance((int)obj, state, outIds, outVec);
         if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
             ((outIds[0] < 0x5dc && (((GameObject*)obj)->anim.currentMove != 1))))
         {
@@ -158,11 +156,11 @@ void rachnopInit(u32 unused, int state)
     fb = 1.5f;
     *(float*)&((BaddieState*)state)->eventFlags = 1.5f;
     ((BaddieState*)state)->unk321 = 4;
-    fa = lbl_803E2A04;
-    ((BaddieState*)state)->unk318 = lbl_803E2A04;
+    fa = gWallPlaneOne;
+    ((BaddieState*)state)->unk318 = gWallPlaneOne;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fb;
-    ((DusterState*)state)->phaseTimer = lbl_803E2A00;
+    ((DusterState*)state)->phaseTimer = gWallPlaneZero;
     ((BaddieState*)state)->userData1 = 0;
     ((BaddieState*)state)->userData2 = 0;
     ((BaddieState*)state)->pathStep = fa;

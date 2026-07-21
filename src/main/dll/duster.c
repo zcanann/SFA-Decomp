@@ -56,10 +56,8 @@ int lbl_803DBCD8[2] = {2, 3};
 
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
-extern f32 lbl_803E2A00;
-extern f32 lbl_803E2A04;
 
-void wallPlaneClampMoveTarget(float* outPos, float* anchor, float lateral, float height)
+void wallPlaneClampMoveTarget(float* outPos, WallPlaneState* plane, float lateral, float height)
 {
     float hi;
     float lo;
@@ -68,28 +66,28 @@ void wallPlaneClampMoveTarget(float* outPos, float* anchor, float lateral, float
     float upConst;
     float scale;
 
-    hi = anchor[6] - 15.0f;
+    hi = plane->boundMin - 15.0f;
     if (height > hi)
     {
         height = hi;
     }
     else
     {
-        lo = (50.0f) + anchor[5];
+        lo = (50.0f) + plane->anchorY;
         if (height < lo)
         {
             height = lo;
         }
     }
-    if (anchor[4] > lbl_803E2A00)
+    if (plane->axisLimit > gWallPlaneZero)
     {
-        hi = anchor[4] - 15.0f;
+        hi = plane->axisLimit - 15.0f;
         lo = 15.0f;
     }
     else
     {
         hi = -15.0f;
-        lo = 15.0f + anchor[4];
+        lo = 15.0f + plane->axisLimit;
     }
     if (lateral > hi)
     {
@@ -103,18 +101,18 @@ void wallPlaneClampMoveTarget(float* outPos, float* anchor, float lateral, float
         }
     }
     outPos[1] = height;
-    upConst = lbl_803E2A00;
+    upConst = gWallPlaneZero;
     up[0] = upConst;
-    up[1] = lbl_803E2A04;
+    up[1] = gWallPlaneOne;
     up[2] = upConst;
-    PSVECCrossProduct(up, anchor, sideAxis);
+    PSVECCrossProduct(up, plane->normal, sideAxis);
     PSVECNormalize(sideAxis, sideAxis);
-    *outPos = lateral * sideAxis[0] + anchor[7];
-    outPos[2] = lateral * sideAxis[2] + anchor[8];
+    *outPos = lateral * sideAxis[0] + plane->anchorX;
+    outPos[2] = lateral * sideAxis[2] + plane->anchorZ;
     scale = (2.0f);
-    *outPos = scale * *anchor + *outPos;
-    outPos[1] = scale * anchor[1] + outPos[1];
-    outPos[2] = scale * anchor[2] + outPos[2];
+    *outPos = scale * plane->normal[0] + *outPos;
+    outPos[1] = scale * plane->normal[1] + outPos[1];
+    outPos[2] = scale * plane->normal[2] + outPos[2];
 }
 
 void rachnopFindWallPlane(int* obj, int state)
@@ -144,48 +142,50 @@ void rachnopFindWallPlane(int* obj, int state)
         minv[0] = ((GameObject*)obj)->anim.localPosX - probeOffsets[i * 2 + 0];
         minv[1] = ((GameObject*)obj)->anim.localPosY;
         minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[i * 2 + 1];
-        didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, (TrackBBoxHit*)hit,
+        didHit = objBboxFn_800640cc(maxv, minv, gWallPlaneZero, 3, (TrackBBoxHit*)hit,
                                     (GameObject*)obj, 5, 3, 0xff, 0);
     }
     if (didHit != 0)
     {
         ((GameObject*)obj)->anim.localPosX = (hit[17] - (15.0f)) * ((minv[0] - maxv[0]) / (50.0f)) + maxv[0];
         ((GameObject*)obj)->anim.localPosZ = (hit[17] - (15.0f)) * ((minv[2] - maxv[2]) / (50.0f)) + maxv[2];
-        *(float*)(state + 0x344) = hit[7];
-        *(float*)(state + 0x348) = hit[8];
-        *(float*)(state + 0x34c) = hit[9];
-        ((DusterState*)state)->planeNormalW = hit[10];
-        ((DusterState*)state)->planeAnchorY = (hit[3] > hit[4]) ? hit[3] : hit[4];
-        ((DusterState*)state)->planeBoundMin = (hit[15] < hit[16]) ? hit[15] : hit[16];
-        av[0] = lbl_803E2A00;
-        av[1] = lbl_803E2A04;
-        av[2] = lbl_803E2A00;
-        PSVECCrossProduct(av, (float*)(state + 0x344), sideAxis0);
+        *(float*)(state + DUSTER_WALL_NORMAL_X_OFFSET) = hit[7];
+        *(float*)(state + DUSTER_WALL_NORMAL_Y_OFFSET) = hit[8];
+        *(float*)(state + DUSTER_WALL_NORMAL_Z_OFFSET) = hit[9];
+        ((DusterState*)state)->wallPlane.normalW = hit[10];
+        ((DusterState*)state)->wallPlane.anchorY = (hit[3] > hit[4]) ? hit[3] : hit[4];
+        ((DusterState*)state)->wallPlane.boundMin = (hit[15] < hit[16]) ? hit[15] : hit[16];
+        av[0] = gWallPlaneZero;
+        av[1] = gWallPlaneOne;
+        av[2] = gWallPlaneZero;
+        PSVECCrossProduct(av, (float*)(state + DUSTER_WALL_PLANE_OFFSET), sideAxis0);
         PSVECNormalize(sideAxis0, sideAxis0);
-        ((DusterState*)state)->planeAnchorX = hit[1];
-        ((DusterState*)state)->planeAnchorZ = hit[5];
+        ((DusterState*)state)->wallPlane.anchorX = hit[1];
+        ((DusterState*)state)->wallPlane.anchorZ = hit[5];
         cv[0] = hit[2];
         cv[2] = hit[6];
-        bv[0] = ((DusterState*)state)->planeAnchorX;
-        bv[1] = ((DusterState*)state)->planeAnchorY;
-        bv[2] = ((DusterState*)state)->planeAnchorZ;
+        bv[0] = ((DusterState*)state)->wallPlane.anchorX;
+        bv[1] = ((DusterState*)state)->wallPlane.anchorY;
+        bv[2] = ((DusterState*)state)->wallPlane.anchorZ;
         PSVECSubtract(bv, cv, toAnchor);
-        dot = PSVECDotProduct(toAnchor, (float*)(state + 0x344));
-        bv[0] = *(float*)(state + 0x344) * dot + cv[0];
-        bv[1] = *(float*)(state + 0x348) * dot + cv[1];
-        bv[2] = *(float*)(state + 0x34c) * dot + cv[2];
-        dv[0] = lbl_803E2A00;
-        dv[1] = lbl_803E2A04;
-        dv[2] = lbl_803E2A00;
-        PSVECCrossProduct(dv, (float*)(state + 0x344), sideAxis);
+        dot = PSVECDotProduct(toAnchor, (float*)(state + DUSTER_WALL_PLANE_OFFSET));
+        bv[0] = *(float*)(state + DUSTER_WALL_NORMAL_X_OFFSET) * dot + cv[0];
+        bv[1] = *(float*)(state + DUSTER_WALL_NORMAL_Y_OFFSET) * dot + cv[1];
+        bv[2] = *(float*)(state + DUSTER_WALL_NORMAL_Z_OFFSET) * dot + cv[2];
+        dv[0] = gWallPlaneZero;
+        dv[1] = gWallPlaneOne;
+        dv[2] = gWallPlaneZero;
+        PSVECCrossProduct(dv, (float*)(state + DUSTER_WALL_PLANE_OFFSET), sideAxis);
         PSVECNormalize(sideAxis, sideAxis);
-        if (lbl_803E2A00 != sideAxis[0])
+        if (gWallPlaneZero != sideAxis[0])
         {
-            ((DusterState*)state)->planeAxisRatio = (cv[0] - ((DusterState*)state)->planeAnchorX) / sideAxis[0];
+            ((DusterState*)state)->wallPlane.axisLimit =
+                (cv[0] - ((DusterState*)state)->wallPlane.anchorX) / sideAxis[0];
         }
         else
         {
-            ((DusterState*)state)->planeAxisRatio = (cv[2] - ((DusterState*)state)->planeAnchorZ) / sideAxis[2];
+            ((DusterState*)state)->wallPlane.axisLimit =
+                (cv[2] - ((DusterState*)state)->wallPlane.anchorZ) / sideAxis[2];
         }
         ((BaddieState*)state)->userData1 = 1;
     }

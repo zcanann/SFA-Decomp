@@ -14,19 +14,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/duster_api.h"
-
-extern f32 lbl_803E2A00;
-extern f32 lbl_803E2A04;
-extern f32 lbl_803E2A08;
-
-typedef struct FireflyState
-{
-    u8 pad00[0x358];
-    f32 planeAnchorY; /* 0x358 */
-    u8 pad35C[0x360 - 0x35C];
-    f32 planeAnchorX; /* 0x360 */
-    f32 planeAnchorZ; /* 0x364 */
-} FireflyState;
+#include "main/dll/fireflyLantern.h"
 
 u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 maxDistance)
 {
@@ -54,53 +42,53 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
     int angleStep;
     u32 angle;
     GameObject* o = (GameObject*)obj;
-    FireflyState* fs = (FireflyState*)state;
+    FireflyLanternState* fs = (FireflyLanternState*)state;
 
-    vecA[0] = fs->planeAnchorX;
-    vecA[1] = fs->planeAnchorY;
-    vecA[2] = fs->planeAnchorZ;
+    vecA[0] = fs->wallPlane.anchorX;
+    vecA[1] = fs->wallPlane.anchorY;
+    vecA[2] = fs->wallPlane.anchorZ;
     PSVECSubtract(vecA, (f32*)(obj + 6), tmpA);
-    d = PSVECDotProduct(tmpA, (f32*)(state + 0x344));
-    vecA[0] = *(f32*)(state + 0x344) * d + o->anim.localPosX;
-    vecA[1] = *(f32*)(state + 0x348) * d + (objY = o->anim.localPosY);
-    vecA[2] = *(f32*)(state + 0x34c) * d + o->anim.localPosZ;
-    axisA[0] = lbl_803E2A00;
-    axisA[1] = lbl_803E2A04;
-    axisA[2] = lbl_803E2A00;
-    PSVECCrossProduct(axisA, (f32*)(state + 0x344), crossA);
+    d = PSVECDotProduct(tmpA, fs->wallPlane.normal);
+    vecA[0] = fs->wallPlane.normal[0] * d + o->anim.localPosX;
+    vecA[1] = fs->wallPlane.normal[1] * d + (objY = o->anim.localPosY);
+    vecA[2] = fs->wallPlane.normal[2] * d + o->anim.localPosZ;
+    axisA[0] = gWallPlaneZero;
+    axisA[1] = gWallPlaneOne;
+    axisA[2] = gWallPlaneZero;
+    PSVECCrossProduct(axisA, fs->wallPlane.normal, crossA);
     PSVECNormalize(crossA, crossA);
-    if (lbl_803E2A00 != crossA[0])
+    if (gWallPlaneZero != crossA[0])
     {
-        dxA = (o->anim.localPosX - fs->planeAnchorX) / crossA[0];
+        dxA = (o->anim.localPosX - fs->wallPlane.anchorX) / crossA[0];
     }
     else
     {
-        dxA = (o->anim.localPosZ - fs->planeAnchorZ) / crossA[2];
+        dxA = (o->anim.localPosZ - fs->wallPlane.anchorZ) / crossA[2];
     }
     targetObj = *(int*)&((BaddieState*)state)->trackedObj;
     targetPos[0] = ((GameObject*)targetObj)->anim.localPosX;
-    targetPos[1] = lbl_803E2A08 + ((GameObject*)targetObj)->anim.localPosY;
+    targetPos[1] = gFireflyLanternTargetHeightOffset + ((GameObject*)targetObj)->anim.localPosY;
     targetPos[2] = ((GameObject*)targetObj)->anim.localPosZ;
-    vecB[0] = fs->planeAnchorX;
-    vecB[1] = fs->planeAnchorY;
-    vecB[2] = fs->planeAnchorZ;
+    vecB[0] = fs->wallPlane.anchorX;
+    vecB[1] = fs->wallPlane.anchorY;
+    vecB[2] = fs->wallPlane.anchorZ;
     PSVECSubtract(vecB, targetPos, tmpB);
-    d = PSVECDotProduct(tmpB, (f32*)(state + 0x344));
-    vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
-    vecB[1] = *(f32*)(state + 0x348) * d + (targetY = targetPos[1]);
-    vecB[2] = *(f32*)(state + 0x34c) * d + targetPos[2];
-    axisB[0] = lbl_803E2A00;
-    axisB[1] = lbl_803E2A04;
-    axisB[2] = lbl_803E2A00;
-    PSVECCrossProduct(axisB, (f32*)(state + 0x344), crossB);
+    d = PSVECDotProduct(tmpB, fs->wallPlane.normal);
+    vecB[0] = fs->wallPlane.normal[0] * d + targetPos[0];
+    vecB[1] = fs->wallPlane.normal[1] * d + (targetY = targetPos[1]);
+    vecB[2] = fs->wallPlane.normal[2] * d + targetPos[2];
+    axisB[0] = gWallPlaneZero;
+    axisB[1] = gWallPlaneOne;
+    axisB[2] = gWallPlaneZero;
+    PSVECCrossProduct(axisB, fs->wallPlane.normal, crossB);
     PSVECNormalize(crossB, crossB);
-    if (lbl_803E2A00 != crossB[0])
+    if (gWallPlaneZero != crossB[0])
     {
-        d = (targetPos[0] - fs->planeAnchorX) / crossB[0];
+        d = (targetPos[0] - fs->wallPlane.anchorX) / crossB[0];
     }
     else
     {
-        d = (targetPos[2] - fs->planeAnchorZ) / crossB[2];
+        d = (targetPos[2] - fs->wallPlane.anchorZ) / crossB[2];
     }
     dxDiff = dxA - d;
     dy = objY - targetY;
@@ -116,28 +104,28 @@ u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 max
         delta = delta + 0xffff;
     }
     turnStep = timeDelta / (f32)(turnTime & 0xffff);
-    if (turnStep > lbl_803E2A04)
+    if (turnStep > gWallPlaneOne)
     {
-        turnStep = lbl_803E2A04;
+        turnStep = gWallPlaneOne;
     }
     angleStep = (int)((f32)delta * turnStep);
     *obj = (s16)(rot + angleStep);
     o->anim.rotZ = 0x4000;
     o->anim.rotY = *obj;
-    *obj = getAngle(*(f32*)(state + 0x34c), -*(f32*)(state + 0x344));
+    *obj = getAngle(fs->wallPlane.normal[2], -fs->wallPlane.normal[0]);
     turnStep = sqrtf(dxDiff * dxDiff + dy * dy);
     if (turnStep > maxDistance)
     {
-        f32 ratio = lbl_803E2A04 / turnStep;
+        f32 ratio = gWallPlaneOne / turnStep;
         dxDiff = maxDistance * (dxDiff * ratio);
         dy = maxDistance * (dy * ratio);
     }
     dxA -= dxDiff;
     turnStep = objY - dy;
-    wallPlaneClampMoveTarget(moveTarget, (f32*)(state + 0x344), dxA, turnStep);
+    wallPlaneClampMoveTarget(moveTarget, &fs->wallPlane, dxA, turnStep);
     PSVECSubtract(moveTarget, (f32*)(obj + 6), moveDelta);
     objMove((GameObject*)obj, moveDelta[0], moveDelta[1], moveDelta[2]);
-    turnStep = lbl_803E2A00;
+    turnStep = gWallPlaneZero;
     o->anim.velocityX = turnStep;
     o->anim.velocityY = turnStep;
     o->anim.velocityZ = turnStep;
