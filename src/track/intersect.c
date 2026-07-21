@@ -142,11 +142,7 @@ extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
 extern f32 lbl_803DEF08, lbl_803DEF20;
 extern double lbl_803DEF10, lbl_803DEF18;
 extern u8 lbl_8030E8B0[];
-extern f32 gWaterFxState[4];
-extern u8 gWaterRipples[0x1000];
-extern u8 gWaterSplashQuads[0x3800];
 extern f32 lbl_803DEE40;
-extern void* gWaterFxTextures[4];
 extern f32 lbl_803DEE38, lbl_803DEE3C, lbl_803DEE44, lbl_803DEE48, lbl_803DEE58;
 extern f32 lbl_803DEE5C, lbl_803DEE64;
 extern f32 lbl_803DEE60;
@@ -231,14 +227,14 @@ typedef struct
 extern f32 lbl_803DEE20;
 extern f32 lbl_803DEE24;
 extern f32 lbl_803DEE28;
-typedef struct
+typedef struct RippleEntry
 {
     f32 x, y, z;
     u16 id;
     u8 alpha;
     u8 flip;
 } RippleEntry;
-typedef struct
+typedef struct SplashQuad
 {
     f32 v[12];
     u16 angle;
@@ -247,6 +243,15 @@ typedef struct
     u8 flip;
     u8 pad[3];
 } SplashQuad;
+
+STATIC_ASSERT(sizeof(RippleEntry) == 0x10);
+STATIC_ASSERT(sizeof(SplashQuad) == 0x38);
+
+extern f32 gWaterFxState[4];
+extern Texture* gWaterFxTextures[4];
+extern RippleEntry gWaterRipples[0x100];
+extern SplashQuad gWaterSplashQuads[0x100];
+
 typedef struct
 {
     f32 scales[4];
@@ -494,8 +499,8 @@ void timeFn_8006f400(f32 step)
     SplashQuad* quads;
     RippleEntry* ripples;
 
-    quads = (SplashQuad*)gWaterSplashQuads;
-    ripples = (RippleEntry*)gWaterRipples;
+    quads = gWaterSplashQuads;
+    ripples = gWaterRipples;
 
     for (i = 0; i < 256; i++)
     {
@@ -523,7 +528,7 @@ void drawFn_8006f500(void)
     Mtx posMtx;
     Mtx rot;
     Mtx trans;
-    u8* quad;
+    SplashQuad* quad;
     f32* view;
     int i;
     f32 tTop;
@@ -556,7 +561,7 @@ void drawFn_8006f500(void)
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    selectTexture((Texture*)gWaterFxTextures[gWaterFxBank], 0);
+    selectTexture(gWaterFxTextures[gWaterFxBank], 0);
     view = Camera_GetViewMatrix();
     PSMTXTrans(camTrans, -playerMapOffsetX, lbl_803DEE20, -playerMapOffsetZ);
     PSMTXConcat((MtxP)view, camTrans, posMtx);
@@ -567,11 +572,11 @@ void drawFn_8006f500(void)
     i = 0;
     for (; i < 0x100; i++)
     {
-        quad = &gWaterSplashQuads[i * 0x38];
-        alpha = quad[0x33];
+        quad = &gWaterSplashQuads[i];
+        alpha = quad->alpha;
         if (alpha != 0)
         {
-            if (quad[0x32] == 1)
+            if (quad->type == 1)
             {
                 color.a = alpha >> 2;
             }
@@ -580,18 +585,18 @@ void drawFn_8006f500(void)
                 color.a = alpha >> 1;
             }
             GXSetTevKColor(GX_KCOLOR0, color);
-            if (quad[0x34] != 0)
+            if (quad->flip != 0)
             {
                 tTop = lbl_803DEE38;
                 tBot = lbl_803DEE20;
                 PSMTXRotRad(rot, 0x7a,
-                            lbl_803DEE3C * (lbl_803DEE40 * (f32)(int)(0x8000 - *(u16*)(quad + 0x30))) / lbl_803DEE44);
+                            lbl_803DEE3C * (lbl_803DEE40 * (f32)(int)(0x8000 - quad->angle)) / lbl_803DEE44);
             }
             else
             {
                 tTop = lbl_803DEE20;
                 tBot = lbl_803DEE38;
-                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (lbl_803DEE40 * (f32)(u32) * (u16*)(quad + 0x30)) / lbl_803DEE44);
+                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (lbl_803DEE40 * (f32)(u32)quad->angle) / lbl_803DEE44);
             }
             PSMTXTrans(trans, lbl_803DEE48, *(f32*)&lbl_803DEE48, lbl_803DEE20);
             PSMTXConcat(rot, trans, rot);
@@ -601,9 +606,9 @@ void drawFn_8006f500(void)
             GXBegin(GX_QUADS, GX_VTXFMT2, 4);
             {
                 f32 px, py, pz;
-                pz = *(f32*)(quad + 0x8);
-                py = *(f32*)(quad + 0x4);
-                px = *(f32*)(quad + 0x0);
+                pz = quad->v[2];
+                py = quad->v[1];
+                px = quad->v[0];
                 GXWGFifo.f32 = px;
                 GXWGFifo.f32 = py;
                 GXWGFifo.f32 = pz;
@@ -612,9 +617,9 @@ void drawFn_8006f500(void)
             GXWGFifo.f32 = tTop;
             {
                 f32 px, py, pz;
-                pz = *(f32*)(quad + 0x14);
-                py = *(f32*)(quad + 0x10);
-                px = *(f32*)(quad + 0xc);
+                pz = quad->v[5];
+                py = quad->v[4];
+                px = quad->v[3];
                 GXWGFifo.f32 = px;
                 GXWGFifo.f32 = py;
                 GXWGFifo.f32 = pz;
@@ -623,9 +628,9 @@ void drawFn_8006f500(void)
             GXWGFifo.f32 = tTop;
             {
                 f32 px, py, pz;
-                pz = *(f32*)(quad + 0x20);
-                py = *(f32*)(quad + 0x1c);
-                px = *(f32*)(quad + 0x18);
+                pz = quad->v[8];
+                py = quad->v[7];
+                px = quad->v[6];
                 GXWGFifo.f32 = px;
                 GXWGFifo.f32 = py;
                 GXWGFifo.f32 = pz;
@@ -634,9 +639,9 @@ void drawFn_8006f500(void)
             GXWGFifo.f32 = tBot;
             {
                 f32 px, py, pz;
-                pz = *(f32*)(quad + 0x2c);
-                py = *(f32*)(quad + 0x28);
-                px = *(f32*)(quad + 0x24);
+                pz = quad->v[11];
+                py = quad->v[10];
+                px = quad->v[9];
                 GXWGFifo.f32 = px;
                 GXWGFifo.f32 = py;
                 GXWGFifo.f32 = pz;
@@ -753,8 +758,8 @@ void waterFxSetDisabled(int disabled)
     {
         return;
     }
-    quads = (SplashQuad*)gWaterSplashQuads;
-    ripples = (RippleEntry*)gWaterRipples;
+    quads = gWaterSplashQuads;
+    ripples = gWaterRipples;
     for (i = 0; i < 32; i++)
     {
         quads[i * 8].alpha = 0;
@@ -6409,9 +6414,9 @@ int saveCb_8007e748(int saveId, int size, void* dst)
 
 /* .bss block 0x80391DC0-0x803967C0 */
 f32 gWaterFxState[4];
-void* gWaterFxTextures[4];
-u8 gWaterRipples[0x1000];
-u8 gWaterSplashQuads[0x3800];
+Texture* gWaterFxTextures[4];
+RippleEntry gWaterRipples[0x100];
+SplashQuad gWaterSplashQuads[0x100];
 DepthReadRequest gDepthReadResults[0x14];
 DepthReadRequest gDepthReadPendingQueue[0x14];
 
