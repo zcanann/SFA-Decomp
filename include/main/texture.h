@@ -10,7 +10,7 @@
  *  - width/height/refCount @0xA/0xC/0xE: GXInitTexObj dims; refCount
  *    decremented on release, <=1 makes a cached texture evictable
  *  - wrapS/wrapT @0x17/0x18, minFilter/magFilter @0x19/0x1A,
- *    minLod/maxLod @0x1C/0x1D: fn_80053C40's GXInitTexObj /
+ *    minLod/maxLod @0x1C/0x1D: textureInitSecondaryGXTexObj's GXInitTexObj /
  *    GXInitTexObjLOD argument loads (mipmap = maxLod > minLod)
  *  - tmemAddr @0x40 + preloaded @0x48: GXLoadTexObjPreLoaded path,
  *    TMEM region released through tmemAddr when preloaded is set

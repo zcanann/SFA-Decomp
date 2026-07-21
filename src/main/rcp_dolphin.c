@@ -471,7 +471,7 @@ void gxFn_80051fb8(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam, u8 swaps
         }
         if (*(void**)&tex->imageOffset != NULL)
         {
-            fn_80053C40(tex, &lbl_803779A0);
+            textureInitSecondaryGXTexObj(tex, &lbl_803779A0);
             GXLoadTexObj(&lbl_803779A0, GX_TEXMAP1);
         }
     }
@@ -1184,7 +1184,7 @@ extern u8 gRcpWarpTransitionType;
 extern u8 lbl_803DCEBD;
 
 
-void fn_80053C40(Texture* tex, GXTexObj* obj)
+void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj)
 {
     u8 mipmap;
     if ((int)tex->maxLod - (int)tex->minLod > 0)

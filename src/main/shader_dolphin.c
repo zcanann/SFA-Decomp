@@ -317,7 +317,7 @@ void textureFn_8004c264(Texture* texture, int mapId)
     }
     if (*(void**)((u8*)texture + 80) != NULL)
     {
-        fn_80053C40(texture, &lbl_803779A0);
+        textureInitSecondaryGXTexObj(texture, &lbl_803779A0);
         GXLoadTexObj(&lbl_803779A0, GX_TEXMAP1);
     }
 }
