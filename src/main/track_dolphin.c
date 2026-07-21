@@ -2196,75 +2196,79 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
     }
 }
 
-int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
+int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 radius,
+                                 s8 resolveCollision)
 {
-    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2, lc;
+    f32 quadraticC, startDeltaX, timeA, startDistanceSq, startX, moveX, moveZ, quadraticB, negB;
+    f32 separation, sqrtDiscriminant, denominator, separationX, timeB, hitTime, hitX, hitZ;
+    f32 separationZ, planeOffset, normalX, penetration, discriminant, startDeltaZ, normalZ;
+    f32 motionLengthSq, fourMotionLengthSq;
 
-    if (0.0f == r)
+    if (0.0f == radius)
         return 0;
 
-    px = p4[0];
-    dx = px - cx;
-    sum = dx * dx;
-    dy = p5[0] - cy;
+    startX = x[0];
+    startDeltaX = startX - centerX;
+    startDistanceSq = startDeltaX * startDeltaX;
+    startDeltaZ = z[0] - centerZ;
     {
-        f32 dyy = dy * dy;
-        sum = sum + dyy;
+        f32 deltaZSq = startDeltaZ * startDeltaZ;
+        startDistanceSq = startDistanceSq + deltaZSq;
     }
-    cc = sum - r * r;
-    if (cc < 0.0f)
+    quadraticC = startDistanceSq - radius * radius;
+    if (quadraticC < 0.0f)
     {
-        if (flag != 0)
+        if (resolveCollision != 0)
         {
-            p4[1] = px + lbl_803DCF54;
-            p5[1] = p5[0] + lbl_803DCF50;
+            x[1] = startX + lbl_803DCF54;
+            z[1] = z[0] + lbl_803DCF50;
         }
         return 0;
     }
 
-    dx2 = p4[1] - px;
-    dy2 = p5[1] - p5[0];
-    len2 = dx2 * dx2 + dy2 * dy2;
-    if (len2 > 0.0f)
+    moveX = x[1] - startX;
+    moveZ = z[1] - z[0];
+    motionLengthSq = moveX * moveX + moveZ * moveZ;
+    if (motionLengthSq > 0.0f)
     {
-        B = 2.0f * (dx2 * dx + dy2 * dy);
-        lc = lbl_803DECBC * len2;
-        disc = B * B - lc * cc;
-        if (disc >= 0.0f)
+        quadraticB = 2.0f * (moveX * startDeltaX + moveZ * startDeltaZ);
+        fourMotionLengthSq = lbl_803DECBC * motionLengthSq;
+        discriminant = quadraticB * quadraticB - fourMotionLengthSq * quadraticC;
+        if (discriminant >= 0.0f)
         {
-            root = sqrtf(disc);
-            nB = -B;
-            t1 = nB + root;
-            denom = 2.0f * len2;
-            t1 = t1 / denom;
-            t2 = (nB - root) / denom;
-            if (t1 < 0.0f)
-                t1 = lbl_803DECC0;
-            if (t2 < 0.0f)
-                t2 = lbl_803DECC0;
-            if (t2 < t1)
-                t1 = t2;
-            t = t1;
-            if (t >= 0.0f && t <= 1.0f)
+            sqrtDiscriminant = sqrtf(discriminant);
+            negB = -quadraticB;
+            timeA = negB + sqrtDiscriminant;
+            denominator = 2.0f * motionLengthSq;
+            timeA = timeA / denominator;
+            timeB = (negB - sqrtDiscriminant) / denominator;
+            if (timeA < 0.0f)
+                timeA = lbl_803DECC0;
+            if (timeB < 0.0f)
+                timeB = lbl_803DECC0;
+            if (timeB < timeA)
+                timeA = timeB;
+            hitTime = timeA;
+            if (hitTime >= 0.0f && hitTime <= 1.0f)
             {
-                lbl_803DCF58 = t;
-                if (flag != 0)
+                lbl_803DCF58 = hitTime;
+                if (resolveCollision != 0)
                 {
-                    hitX = t * dx2 + p4[0];
-                    hitY = t * dy2 + p5[0];
-                    nx = (hitX - cx) / r;
-                    ny = (hitY - cy) / r;
-                    dot = -(hitX * nx + hitY * ny);
-                    proj = dot + (nx * p4[1] + ny * p5[1]);
-                    p4[1] = p4[1] - proj * nx;
-                    p5[1] = p5[1] - proj * ny;
-                    step8 = lbl_803DECC8;
-                    step_x = step8 * nx;
-                    step_y = step8 * ny;
-                    while (dot + (p4[1] * nx + p5[1] * ny) < step8)
+                    hitX = hitTime * moveX + x[0];
+                    hitZ = hitTime * moveZ + z[0];
+                    normalX = (hitX - centerX) / radius;
+                    normalZ = (hitZ - centerZ) / radius;
+                    planeOffset = -(hitX * normalX + hitZ * normalZ);
+                    penetration = planeOffset + (normalX * x[1] + normalZ * z[1]);
+                    x[1] = x[1] - penetration * normalX;
+                    z[1] = z[1] - penetration * normalZ;
+                    separation = lbl_803DECC8;
+                    separationX = separation * normalX;
+                    separationZ = separation * normalZ;
+                    while (planeOffset + (x[1] * normalX + z[1] * normalZ) < separation)
                     {
-                        p4[1] += step_x;
-                        p5[1] += step_y;
+                        x[1] += separationX;
+                        z[1] += separationZ;
                     }
                 }
                 return 1;
@@ -2578,12 +2582,12 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 {
                     if (m[0] & 1)
                     {
-                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
+                        found = trackSweepCircleAgainstPoint(posX, posZ, ax2, az2, radius, lineType);
                         dist = lbl_803DECB4;
                     }
                     else if (m[0] & 2)
                     {
-                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
+                        found = trackSweepCircleAgainstPoint(posX, posZ, bx2, bz2, radius, lineType);
                         dist = lbl_803DECC4;
                     }
                     else if (lineType != 0)
@@ -2596,12 +2600,12 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                 {
                     if (ma & 1)
                     {
-                        found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
+                        found = trackSweepCircleAgainstPoint(posX, posZ, ax2, az2, radius, lineType);
                         dist = lbl_803DECB4;
                     }
                     else if (ma & 2)
                     {
-                        found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
+                        found = trackSweepCircleAgainstPoint(posX, posZ, bx2, bz2, radius, lineType);
                         dist = lbl_803DECC4;
                     }
                     else if (m[0] & 4)
@@ -2626,13 +2630,13 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
                         ok = 1;
                         if (ld[0] + (cx * lb[0] + cz * la[0]) < lbl_803DECB4)
                         {
-                            found = fn_800630D8(posX, posZ, ax2, az2, radius, lineType);
+                            found = trackSweepCircleAgainstPoint(posX, posZ, ax2, az2, radius, lineType);
                             ok = 0;
                             dist = lbl_803DECB4;
                         }
                         if (ld[1] + (cx * lb[1] + cz * la[1]) < lbl_803DECB4)
                         {
-                            found = fn_800630D8(posX, posZ, bx2, bz2, radius, lineType);
+                            found = trackSweepCircleAgainstPoint(posX, posZ, bx2, bz2, radius, lineType);
                             ok = 0;
                             dist = lbl_803DECC4;
                         }
