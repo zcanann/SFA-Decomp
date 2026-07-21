@@ -12,36 +12,39 @@
 #include "main/obj_placement.h"
 #include "main/object_render.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
-#include "main/object_descriptor.h"
 
+#define DRCHIMMEY_INITIAL_OFFERING_COUNT 3
+#define DRCHIMMEY_REPEAT_OFFERING_COUNT  1
+#define DRCHIMMEY_EVENT_DURATION         90.0f
+#define DRCHIMMEY_RESET_GAMEBIT          0xEA4
 
-int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
+int drchimmey_countdownCallback(GameObject* obj, int amount)
 {
-    DRChimmeyState* state = obj->state;
+    DRChimmeyState* state = obj->extra;
     state->offeringsRemaining -= amount;
     return state->offeringsRemaining <= 0;
 }
 
 int DR_Chimmey_getExtraSize(void)
 {
-    return 0x18;
+    return sizeof(DRChimmeyState);
 }
 
-void DR_Chimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void DR_Chimmey_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
         f32 scale = 1.0f;
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, scale);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, scale);
     }
 }
 
-void DR_Chimmey_update(DRChimmeyObject* obj)
+void DR_Chimmey_update(GameObject* obj)
 {
-    DRChimmeySetup* setup = obj->setup;
-    DRChimmeyState* state = obj->state;
+    DRChimmeySetup* setup = (DRChimmeySetup*)obj->anim.placementData;
+    DRChimmeyState* state = obj->extra;
 
-    obj->renderFlags |= 8;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     if (setup->enableGameBit != -1 && mainGetBit(setup->enableGameBit) == 0)
     {
         return;
@@ -56,16 +59,16 @@ void DR_Chimmey_update(DRChimmeyObject* obj)
         }
         else
         {
-            int* tricky = (int*)getTrickyObject();
-            if (tricky != 0)
+            GameObject* tricky = getTrickyObject();
+            if (tricky != NULL)
             {
-                if ((obj->renderFlags & 4) != 0)
+                if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
                 {
-                    (*(void (**)(int*, int, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x28))(
-                        tricky, (int)obj, 1, 4);
+                    ((DRChimmeyTrickyInterface*)*tricky->anim.dll)
+                        ->sideCommandEnable(tricky, obj, 1, 4);
                 }
-                obj->renderFlags &= ~8;
-                objRenderFn_80041018((GameObject*)obj);
+                obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+                objRenderFn_80041018(obj);
             }
         }
     }
@@ -74,21 +77,21 @@ void DR_Chimmey_update(DRChimmeyObject* obj)
         state->linkedObject = NULL;
         state->timer = 0.0f;
         state->eventActive = 0;
-        state->offeringsRemaining = 1;
+        state->offeringsRemaining = DRCHIMMEY_REPEAT_OFFERING_COUNT;
         mainSetBits(state->completionGameBit, 0);
-        mainSetBits(0xea4, 0);
+        mainSetBits(DRCHIMMEY_RESET_GAMEBIT, 0);
     }
 }
 
-void DR_Chimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
+void DR_Chimmey_init(GameObject* obj, DRChimmeySetup* setup)
 {
     DRChimmeyState* state;
 
-    obj->yaw = (s16)(setup->yawByte << 8);
-    state = obj->state;
-    state->timerDuration = 90.0f;
+    obj->anim.rotX = (s16)(setup->initialRotX << 8);
+    state = obj->extra;
+    state->timerDuration = DRCHIMMEY_EVENT_DURATION;
     state->completionGameBit = setup->completionGameBit;
-    state->offeringsRemaining = 3;
+    state->offeringsRemaining = DRCHIMMEY_INITIAL_OFFERING_COUNT;
     storeZeroToFloatParam(&state->timer);
 }
 
