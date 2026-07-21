@@ -17,40 +17,9 @@
 #include "main/object_descriptor.h"
 #include "main/object_render.h"
 
-typedef struct KaldaChompMeState
-{
-    f32 progress;
-    f32 step;
-    f32 targetProgress;
-    u8 moveId;
-    u8 pad0D[3];
-} KaldaChompMeState;
-
-typedef struct KaldaChompMePlacement
-{
-    ObjPlacement head;
-    u8 rotZByte; /* 0x18 */
-    u8 rotYByte; /* 0x19 */
-    u8 rotXByte; /* 0x1a */
-} KaldaChompMePlacement;
-
-STATIC_ASSERT(offsetof(KaldaChompMeState, progress) == 0x0);
-STATIC_ASSERT(offsetof(KaldaChompMeState, step) == 0x4);
-STATIC_ASSERT(offsetof(KaldaChompMeState, targetProgress) == 0x8);
-STATIC_ASSERT(offsetof(KaldaChompMeState, moveId) == 0xC);
-STATIC_ASSERT(sizeof(KaldaChompMeState) == 0x10);
-STATIC_ASSERT(offsetof(KaldaChompMePlacement, rotZByte) == 0x18);
-STATIC_ASSERT(offsetof(KaldaChompMePlacement, rotYByte) == 0x19);
-STATIC_ASSERT(offsetof(KaldaChompMePlacement, rotXByte) == 0x1A);
-STATIC_ASSERT(sizeof(KaldaChompMePlacement) == 0x1C);
-
 #define KALDACHOMME_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E30D0;
-extern f32 lbl_803E30D4;
-extern f32 lbl_803E30D8;
-
-void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
+void kaldachompme_setLinkedMouthMode(u8* obj, KaldaChompMeLinkedMode mode)
 {
     KaldaChompMeState* state;
     GameObject* linkedObj;
@@ -108,16 +77,16 @@ void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
     {
         switch (mode)
         {
-        case 1:
-            state->targetProgress = lbl_803E30D0;
-            state->progress = lbl_803E30D4;
-            state->step = lbl_803E30D8;
+        case KALDACHOMPME_LINKED_MOVE_0:
+            state->targetProgress = gKaldaChompOne;
+            state->progress = gKaldaChompZero;
+            state->step = gKaldaChompLinkedMouthStep;
             state->moveId = 0;
             break;
-        case 2:
-            state->targetProgress = lbl_803E30D0;
-            state->progress = lbl_803E30D4;
-            state->step = lbl_803E30D8;
+        case KALDACHOMPME_LINKED_MOVE_1:
+            state->targetProgress = gKaldaChompOne;
+            state->progress = gKaldaChompZero;
+            state->step = gKaldaChompLinkedMouthStep;
             state->moveId = 1;
             break;
         }
@@ -142,7 +111,7 @@ void KaldaChompMe_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 ren
 {
     if (renderFlag != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E30D0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gKaldaChompOne);
     }
 }
 
@@ -163,7 +132,7 @@ void KaldaChompMe_update(GameObject* obj)
     if (current != target)
     {
         step = extra->step;
-        if (step > lbl_803E30D4)
+        if (step > gKaldaChompZero)
         {
             if (current < target)
             {
@@ -195,7 +164,7 @@ void KaldaChompMe_init(GameObject* obj, KaldaChompMePlacement* placement)
     (obj)->anim.rotY = (s16)(placement->rotYByte << 8);
     (obj)->anim.rotX = (s16)(placement->rotXByte << 8);
     (obj)->objectFlags = (u16)((obj)->objectFlags | KALDACHOMME_OBJFLAG_HITDETECT_DISABLED);
-    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E30D4, 0);
+    ObjAnim_SetCurrentMove((int)obj, 0, gKaldaChompZero, 0);
 }
 
 void KaldaChompMe_release(void)
