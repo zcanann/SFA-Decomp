@@ -57,14 +57,14 @@ typedef struct
     u8 itemFlags[0x40]; /* 0x448 */
     u8 enabled[0x40]; /* 0x488 */
     u8 closeMode[0x40]; /* 0x4c8 */
-    u8 unk508[0x40]; /* 0x508 */
+    u8 auxiliaryBytes[0x40]; /* 0x508 */
     s16 textIds[0x40]; /* 0x548 */
-    s16 unk5C8[0x40]; /* 0x5c8 */
+    s16 auxiliaryValues[0x40]; /* 0x5c8 */
     int usedBits[0x40]; /* 0x648 */
     int activeBits[0x40]; /* 0x748 */
     int ownedBits[0x40]; /* 0x848 */
     s16 textureIds[0x40]; /* 0x948 */
-    void* itemTextures[0x40]; /* 0x9c8 */
+    struct Texture* itemTextures[0x40]; /* 0x9c8 */
     u8 padAC8[0xf0]; /* 0xac8 */
     int visibleItemStates[7]; /* 0xbb8 */
     void* visibleItemTextures[7]; /* 0xbd4 */

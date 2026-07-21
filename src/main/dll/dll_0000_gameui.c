@@ -508,7 +508,7 @@ extern short cMenuFadeCounter;
 extern short gCMenuOpenAnim;
 extern short gCMenuOpenAnimMax;
 extern int gTrickyHudItemMask;
-extern u8 gCMenuStaffAbilities[];
+extern CMenuItemDef gCMenuStaffAbilities[];
 extern int lbl_803A9364[];
 extern int lbl_803DBAD0;
 extern int lbl_803DBAD4;
@@ -2741,16 +2741,16 @@ CMenuItemDef gCMenuCollectableItems[] = {
     {3555, 3899, -1, 3230, -1, -1, 1353, 0xFF, 0x01},  {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
-/* 8 CMenuItemDef entries (last is the -1 terminator) then a 6-word tail. */
-u8 gCMenuStaffAbilities[] = {
-    0x00, 0x2D, 0xFF, 0xFF, 0x09, 0x86, 0x0C, 0x7A, 0xFF, 0xFF, 0x00, 0x0D, 0x03, 0xFD, 0xFF, 0x00,
-    0x05, 0xCE, 0xFF, 0xFF, 0x09, 0x61, 0x0C, 0x7B, 0xFF, 0xFF, 0x00, 0x3C, 0x03, 0xFE, 0xFF, 0x00,
-    0x00, 0x40, 0xFF, 0xFF, 0x09, 0x69, 0x0C, 0x7C, 0xFF, 0xFF, 0x00, 0x0E, 0x03, 0xFF, 0xFF, 0x00,
-    0x01, 0x07, 0x0C, 0x55, 0x09, 0x6B, 0x0C, 0x08, 0xFF, 0xFF, 0x00, 0x0D, 0x04, 0x00, 0xFF, 0x00,
-    0x0C, 0x55, 0xFF, 0xFF, 0x09, 0x6B, 0x0C, 0x1A, 0xFF, 0xFF, 0x00, 0x0D, 0x05, 0x6B, 0xFF, 0x00,
-    0x05, 0xBD, 0xFF, 0xFF, 0x09, 0x60, 0x0C, 0x7D, 0xFF, 0xFF, 0x00, 0x3B, 0x04, 0x01, 0xFF, 0x00,
-    0x09, 0x57, 0xFF, 0xFF, 0x09, 0x64, 0x0C, 0x07, 0xFF, 0xFF, 0x00, 0x3E, 0x04, 0x02, 0xFF, 0x00,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/* Staff ability entries, terminated by an ownedGameBit of -1. */
+CMenuItemDef gCMenuStaffAbilities[] = {
+    {45, -1, 2438, 3194, -1, 13, 1021, 0xFF, 0x00},
+    {1486, -1, 2401, 3195, -1, 60, 1022, 0xFF, 0x00},
+    {64, -1, 2409, 3196, -1, 14, 1023, 0xFF, 0x00},
+    {263, 3157, 2411, 3080, -1, 13, 1024, 0xFF, 0x00},
+    {3157, -1, 2411, 3098, -1, 13, 1387, 0xFF, 0x00},
+    {1469, -1, 2400, 3197, -1, 59, 1025, 0xFF, 0x00},
+    {2391, -1, 2404, 3079, -1, 62, 1026, 0xFF, 0x00},
+    {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
 u8 lbl_8031B560[] = {
@@ -2766,7 +2766,7 @@ CMenuItemDef gCMenuTrickyAbilities[] = {
 
 CMenuSection gCMenuSections[] = {
     {gCMenuCollectableItems, 0, 0, 0x80001, 0x80000},
-    {(CMenuItemDef*)gCMenuStaffAbilities, 0, 0, 0x80002, 0x40000},
+    {gCMenuStaffAbilities, 0, 0, 0x80002, 0x40000},
     {gCMenuTrickyAbilities, 0, 0, 0x80009, 0x20000},
     {NULL, 0, 0, 0x0, 0x0},
 };
@@ -3710,7 +3710,7 @@ int cMenuCountAvailableEntries(CMenuItemDef* items, s8 useTricky)
         {
             if (mainGetBit(item->ownedGameBit) != 0)
             {
-                if (items == (CMenuItemDef*)gCMenuStaffAbilities)
+                if (items == gCMenuStaffAbilities)
                 {
                     if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0)
                     {
@@ -3791,10 +3791,10 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
     s16* textId;
     u8* itemFlag;
     int active;
-    void** itemTexture;
+    Texture** itemTexture;
     s16* currentTextureId;
-    void** itemTextures;
-    int i;
+    Texture** itemTextures;
+    int slotIndex;
     s16 previousTextureIds[CMENU_ITEM_SLOT_COUNT];
 
     hud = (CMenuHud*)lbl_803A87F0;
@@ -3806,7 +3806,7 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
     textId = textIds;
     itemFlags = hud->itemFlags;
     itemFlag = itemFlags;
-    for (i = 0; i < CMENU_ITEM_SLOT_COUNT; i++)
+    for (slotIndex = 0; slotIndex < CMENU_ITEM_SLOT_COUNT; slotIndex++)
     {
         *previousTextureId = *textureId;
         *textureId = -1;
@@ -3829,7 +3829,7 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
             active = mainGetBit(item->ownedGameBit);
             if (active != 0)
             {
-                if (items == (CMenuItemDef*)gCMenuStaffAbilities)
+                if (items == gCMenuStaffAbilities)
                 {
                     if (item->usedGameBit < 0 || mainGetBit(item->usedGameBit) == 0)
                     {
@@ -3839,9 +3839,9 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
                         hud->usedBits[count] = item->usedGameBit;
                         hud->itemFlags[count] = active;
                         hud->textIds[count] = item->nameTextId;
-                        hud->unk5C8[count] = item->unkA;
-                        hud->unk508[count] = item->unkE;
-                        hud->closeMode[count] = item->unkF;
+                        hud->auxiliaryValues[count] = item->auxiliaryValue;
+                        hud->auxiliaryBytes[count] = item->auxiliaryByte;
+                        hud->closeMode[count] = item->closeMode;
                         if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0)
                         {
                             hud->enabled[count] = 1;
@@ -3865,9 +3865,9 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
                     hud->usedBits[count] = item->usedGameBit;
                     hud->itemFlags[count] = active;
                     hud->textIds[count] = item->nameTextId;
-                    hud->unk5C8[count] = item->unkA;
-                    hud->unk508[count] = item->unkE;
-                    hud->closeMode[count] = item->unkF;
+                    hud->auxiliaryValues[count] = item->auxiliaryValue;
+                    hud->auxiliaryBytes[count] = item->auxiliaryByte;
+                    hud->closeMode[count] = item->closeMode;
                     if (item->activeGameBit < 0 || mainGetBit(item->activeGameBit) == 0)
                     {
                         hud->enabled[count] = 1;
@@ -3899,8 +3899,8 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
         {
             item = items;
             textureId = textureIds;
-            auxiliaryValue = hud->unk5C8;
-            auxiliaryByte = hud->unk508;
+            auxiliaryValue = hud->auxiliaryValues;
+            auxiliaryByte = hud->auxiliaryBytes;
             closeMode = hud->closeMode;
             enabled = hud->enabled;
             actionMask = gTrickyHudActionMask;
@@ -3913,9 +3913,9 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
                     *itemFlags = 1;
                     *ownedBits = item->activeGameBit;
                     *textIds = item->nameTextId;
-                    *auxiliaryValue = item->unkA;
-                    *auxiliaryByte = item->unkE;
-                    *closeMode = item->unkF;
+                    *auxiliaryValue = item->auxiliaryValue;
+                    *auxiliaryByte = item->auxiliaryByte;
+                    *closeMode = item->closeMode;
                     if ((itemMask & item->ownedGameBit) != 0)
                     {
                         *enabled = 1;
@@ -3950,7 +3950,7 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
             }
         }
     }
-    i = 0;
+    slotIndex = 0;
     currentTextureId = textureIds;
     itemTextures = hud->itemTextures;
     itemTexture = itemTextures;
@@ -3958,17 +3958,17 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
     {
         if (*previousTextureIdsBase > -1 && *previousTextureIdsBase != *currentTextureId && *itemTexture != NULL)
         {
-            textureFree((Texture*)*itemTexture);
+            textureFree(*itemTexture);
             *itemTexture = NULL;
         }
         currentTextureId++;
         previousTextureIdsBase++;
         itemTexture++;
-        i++;
-    } while (i < CMENU_ITEM_SLOT_COUNT);
+        slotIndex++;
+    } while (slotIndex < CMENU_ITEM_SLOT_COUNT);
     if (getLoadedFileFlags(0) == 0)
     {
-        i = 0;
+        slotIndex = 0;
         do
         {
             if (*textureIds > -1 && *itemTextures == NULL)
@@ -3977,8 +3977,8 @@ int cMenuSetItems(CMenuItemDef* items, char useTricky)
             }
             textureIds++;
             itemTextures++;
-            i++;
-        } while (i < CMENU_ITEM_SLOT_COUNT);
+            slotIndex++;
+        } while (slotIndex < CMENU_ITEM_SLOT_COUNT);
     }
     return count;
 }

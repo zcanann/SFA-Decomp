@@ -29,10 +29,10 @@ typedef struct CMenuItemDef
     s16 activeGameBit; /* +0x4  "currently in use" gate (-1 = none) */
     s16 iconTextureId; /* +0x6  HUD icon texture id (drives the on-screen art) */
     s16 unk8;          /* +0x8  -1 in every shipped entry */
-    s16 unkA;          /* +0xA  per-entry value, purpose TBD */
+    s16 auxiliaryValue; /* +0xA  per-entry value, purpose TBD */
     s16 nameTextId;    /* +0xC  gametext id for the "<verb> <noun>" label */
-    u8  unkE;          /* +0xE  0xff in every shipped entry */
-    u8  unkF;          /* +0xF  0x01 in every shipped entry */
+    u8 auxiliaryByte;  /* +0xE  0xff in every shipped entry */
+    u8 closeMode;      /* +0xF  0x01 in every shipped entry */
 } CMenuItemDef; /* sizeof 0x10 */
 
 typedef struct CMenuSection
