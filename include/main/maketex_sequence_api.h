@@ -13,6 +13,6 @@ void seqPairTablePrepare(void* entries, int count);
 int animatedObjGetSeqId(ObjAnimUpdateState* state);
 int ObjSeq_SetSlotValue(ObjAnimUpdateState* state, int value);
 void ObjSeq_SetCameraTransformOverride(f32 x, f32 y, s16 rx, s16 ry, s16 rz, f32 z, f32 w);
-void streamCb_80080384(void);
+void ObjSeq_AudioStreamCallback(void);
 
 #endif /* MAIN_MAKETEX_SEQUENCE_API_H_ */

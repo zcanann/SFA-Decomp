@@ -896,7 +896,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
         gObjSeqStreamStopped = 0;
         trackId = (u32)(*(s16*)slotPtr - 1) & 0x3fff;
         gObjSeqCurrentTrackId = trackId;
-        if (AudioStream_Play(trackId, streamCb_80080384) == 0)
+        if (AudioStream_Play(trackId, ObjSeq_AudioStreamCallback) == 0)
         {
             if (lbl_803DB714 != -1)
             {
@@ -2137,7 +2137,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
         if (lbl_803DB720 == (s8)((ObjSeqState*)seq)->slot)
         {
             lbl_803DB728 = (int)((f32*)(base + 0x3894))[(s8)((ObjSeqState*)seq)->slot];
-            gObjSeqStreamStopped = seqStreamFn_8008023c(((ObjSeqState*)seq)->slot) == 0;
+            gObjSeqStreamStopped = ObjSeq_StartPreparedStream(((ObjSeqState*)seq)->slot) == 0;
         }
         break;
     case 40:
@@ -2150,7 +2150,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
             if (streams != NULL)
             {
                 off = cmdArg * 4;
-                if (AudioStream_Play(*(int*)((u8*)streams + off), streamCb_80080384) != 0)
+                if (AudioStream_Play(*(int*)((u8*)streams + off), ObjSeq_AudioStreamCallback) != 0)
                 {
                     lbl_803DB720 = slot;
                 }
@@ -5016,7 +5016,7 @@ int ObjSeq_update(u8* obj, f32 t)
 
         if (gObjSeqStreamStopped != 0)
         {
-            gObjSeqStreamStopped = seqStreamFn_8008023c(lbl_803DB720) == 0;
+            gObjSeqStreamStopped = ObjSeq_StartPreparedStream(lbl_803DB720) == 0;
         }
         state->prevFrame = state->curFrame;
 

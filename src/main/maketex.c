@@ -930,20 +930,20 @@ void objModelResetVecFn_80080548(GameObject* obj);
 
 /* Starts the prepared audio stream for a sequence slot and records its
  * subtitle timing. */
-int seqStreamFn_8008023c(int x)
+int ObjSeq_StartPreparedStream(int slot)
 {
-    int seqId = gObjSeqSlotSeqIdTable[x] - 1;
+    int seqId = gObjSeqSlotSeqIdTable[slot] - 1;
     f32 streamTime;
 
     if (gObjSeqStreamSuppressed != 0 || AudioStream_IsPreparing() != 0)
     {
         return 0;
     }
-    streamTime = gObjSeqSlotStreamTimeTable[x] - (f32)lbl_803DB728;
+    streamTime = gObjSeqSlotStreamTimeTable[slot] - (f32)lbl_803DB728;
     lbl_803DD074 = streamTime;
     if (lbl_803DEFB0 != lbl_803DD074)
     {
-        lbl_803DB724 = x;
+        lbl_803DB724 = slot;
     }
     lbl_803DB728 = -1;
     if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 || seqId == 0x57a)
@@ -967,7 +967,7 @@ int ObjSeq_SetSlotValue(ObjAnimUpdateState* state, int value)
     return 1;
 }
 
-void streamCb_80080384(void)
+void ObjSeq_AudioStreamCallback(void)
 {
     AudioStream_IsPreparing();
     doNothing_8000CF54(0);
