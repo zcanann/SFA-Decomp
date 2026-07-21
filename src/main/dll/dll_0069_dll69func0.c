@@ -167,17 +167,21 @@ s16 dll_69_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags
     buf.hw[5] = *(s16*)&base[0x82];
     buf.hw[6] = *(s16*)&base[0x84];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    buf.flags = 0x4000000;
-    buf.flags |= flags | 0x80;
-    if (variant == 2)
     {
-        u32 mask = DLL69_CMDLIST_FLAG_TOGGLE;
-        buf.flags ^= mask;
-    }
-    else
-    {
-        u32 mask = DLL69_CMDLIST_FLAG_TOGGLE;
-        buf.flags |= mask;
+        u32 packetFlags = 0x4000000;
+        buf.flags = packetFlags;
+        packetFlags |= flags | 0x80;
+        buf.flags = packetFlags;
+        if (variant == 2)
+        {
+            u32 mask = DLL69_CMDLIST_FLAG_TOGGLE;
+            buf.flags = packetFlags ^ mask;
+        }
+        else
+        {
+            u32 mask = DLL69_CMDLIST_FLAG_TOGGLE;
+            buf.flags = packetFlags | mask;
+        }
     }
     if ((buf.flags & 1) != 0)
     {
