@@ -525,7 +525,6 @@ void mmp_moonrock_update(GameObject* obj)
             i = 0;
             list = (u32*)def;
             k = 40.0f;
-            found = 1;
             for (; i < count; i++)
             {
                 GameObject* other = (GameObject*)*list;
@@ -534,11 +533,13 @@ void mmp_moonrock_update(GameObject* obj)
                 {
                     (*gCarryableInterface)->setDropDisabled((void*)stateCopy, 1);
                     found = 0;
-                    break;
+                    goto checked_nearby_rocks;
                 }
                 list++;
             }
+            found = 1;
         }
+    checked_nearby_rocks:
         if (found != 0)
         {
             state->flags |= MOONROCK_FLAG_PICKUP_PENDING;
