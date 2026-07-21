@@ -135,7 +135,7 @@ char sArchivePathFormat[] = "%s/%s";
 char sZlbBlockTag[] = "ZLB";
 char sDirBlockTag[] = "DIR";
 int lbl_803DB5C8 = 1;
-u8 lbl_803DB5CC = 5;
+u8 gVideoBlackScreenFrameCount = 5;
 u16 lbl_803DB5CE = 1;
 u8 lbl_803DB5D0[4] = {0, 0, 0, 0xFF};
 u8 lbl_803DB5D4[8] = {7, 7, 0xC, 0xC, 0xC, 7, 7, 0};
@@ -4535,13 +4535,13 @@ int GXFlush_(u8 visible, int unused)
     lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
     next = renderFrameBuffer == externalFrameBuffer0 ? externalFrameBuffer1 : externalFrameBuffer0;
     renderFrameBuffer = next;
-    if (visible != 0 && lbl_803DB5CC != 0)
+    if (visible != 0 && gVideoBlackScreenFrameCount != 0)
     {
-        lbl_803DB5CC--;
-        if (lbl_803DB5CC == 0)
+        gVideoBlackScreenFrameCount--;
+        if (gVideoBlackScreenFrameCount == 0)
         {
             VISetBlack(0);
-            lbl_803DB5CC = 0;
+            gVideoBlackScreenFrameCount = 0;
         }
     }
     return 0;
@@ -4549,12 +4549,12 @@ int GXFlush_(u8 visible, int unused)
 
 
 
-void viFn_8004a56c(int val)
+void videoBlackScreenForFrames(int frameCount)
 {
-    int v = val;
+    int frames = frameCount;
     VISetBlack(1);
     VIFlush();
-    lbl_803DB5CC = v;
+    gVideoBlackScreenFrameCount = frames;
 }
 void logGpuHang(void)
 {

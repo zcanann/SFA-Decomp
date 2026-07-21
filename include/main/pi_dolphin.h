@@ -56,7 +56,7 @@ void* fileLoad(int id, int heap);
 void videoInit(void* rmode, int arg);
 int fileLoadToBuffer(int id, void* buffer);
 u8 initLoadFiles(void);
-void viFn_8004a56c(int val);
+void videoBlackScreenForFrames(int frameCount);
 void checkLoadBlock(int a, int* compressedSize, int* decompressedSize);
 
 extern void** lbl_803DCC8C;

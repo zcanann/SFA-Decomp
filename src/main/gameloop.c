@@ -1402,7 +1402,7 @@ void init(void)
     }
     mmSetFreeDelay(delay);
     testAndSet_onlyUseHeap3(1);
-    viFn_8004a56c(5);
+    videoBlackScreenForFrames(5);
     errDisplayInstallHandlers();
     loadTextureFiles();
     initMapBlocks();
