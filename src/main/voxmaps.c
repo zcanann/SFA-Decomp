@@ -1390,15 +1390,12 @@ void voxmaps_resetLoadedMaps(void)
 void voxmaps_initialise(void)
 {
     VoxMaps* mgr = &gVoxMaps;
-    int* p;
     int i;
 
-    loadAssetFileById((void**)&gVoxMapsMapList, MLDF_FILEID_VOXOBJ_TAB);
+    loadAssetFileById(&gVoxMapsMapList, MLDF_FILEID_VOXOBJ_TAB);
     i = 0;
-    p = gVoxMapsMapList;
-    while (*p != -1)
+    while (gVoxMapsMapList[i] != -1)
     {
-        p++;
         i++;
     }
     gVoxMapsMaxMapIndex = i - 1;
