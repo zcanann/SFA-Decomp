@@ -7,10 +7,11 @@
 #define LAVA1BE_SEQID_DEBRIS 0x1fa
 #define LAVA1BE_PARTFX       0x1f5
 
-#define LAVA1BE_FLAG_HOMING_OFF 0x08
+#define LAVA1BE_FLAG_UPDATED    0x08
 #define LAVA1BE_FLAG_INACTIVE   0x10
 #define LAVA1BE_FLAG_FALLING    0x20
 #include "main/dll/partfx_interface.h"
+#include "main/dll/DIM/dll_01BE_dimlava.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/object_api.h"
 #include "main/dll/lavaball1bestate_struct.h"
@@ -31,38 +32,17 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
-#define DIMLAVA_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-typedef struct Lavaball1bePlacement
+typedef struct DimLavaDebrisLaunch
 {
-    u8 pad0[0x14 - 0x0];
-    s32 linkedId;   /* 0x14: linked-object id, consumed and cleared (-1) at init */
-    s8 spawnRotX;   /* 0x18: spawn yaw byte, placed in anim.rotX high byte */
-    u8 pad19;       /* 0x19 */
-    s16 velScaleY;  /* 0x1A: vertical launch-velocity scale */
-    s16 velScaleXZ; /* 0x1C: horizontal launch-velocity scale */
-    u8 pad1E[0x20 - 0x1E];
-} Lavaball1bePlacement;
+    Vec3f velocity;
+    Vec3s rotation;
+    u8 pad12[0x24 - 0x12];
+} DimLavaDebrisLaunch;
 
-STATIC_ASSERT(offsetof(Lavaball1bePlacement, linkedId) == 0x14);
-STATIC_ASSERT(offsetof(Lavaball1bePlacement, spawnRotX) == 0x18);
-STATIC_ASSERT(offsetof(Lavaball1bePlacement, velScaleY) == 0x1a);
-STATIC_ASSERT(offsetof(Lavaball1bePlacement, velScaleXZ) == 0x1c);
-STATIC_ASSERT(sizeof(Lavaball1bePlacement) == 0x20);
+const Vec3f gDimLavaDebrisBaseVec = {1.2f, 0.0f, 0.0f};
 
-typedef struct
-{
-    f32 x, y, z;
-} LavaVec;
-
-STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-const LavaVec gDimLavaDebrisBaseVec = {1.2f, 0.0f, 0.0f};
-
-static inline int* DIMcannon_GetActiveModel(void* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
+STATIC_ASSERT(offsetof(DimLavaDebrisLaunch, rotation) == 0x0C);
+STATIC_ASSERT(sizeof(DimLavaDebrisLaunch) == 0x24);
 
 static void lavaball1be_applyDebrisGravity(GameObject* obj)
 {
@@ -74,60 +54,59 @@ static void lavaball1be_scaleDebrisRootMotion(GameObject* obj)
     obj->anim.rootMotionScale *= 0.25f;
 }
 
-void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
+void lavaball1be_relaunch(GameObject* obj, int verticalSpeed, int horizontalSpeed)
 {
     Lavaball1beState* state;
-    u8* setup;
+    DimLavaPlacement* placement;
     f32 vxz;
     f32 x;
 
-    state = ((GameObject*)obj)->extra;
-    setup = *(u8**)&((GameObject*)obj)->anim.placementData;
-    vxz = 0.1f * horizSpeed;
+    state = obj->extra;
+    placement = (DimLavaPlacement*)obj->anim.placement;
+    vxz = 0.1f * horizontalSpeed;
     x = state->targetObj->anim.localPosX;
-    ((GameObject*)obj)->anim.worldPosX = x;
-    ((GameObject*)obj)->anim.localPosX = x;
+    obj->anim.worldPosX = x;
+    obj->anim.localPosX = x;
     x = state->targetObj->anim.localPosY;
-    ((GameObject*)obj)->anim.worldPosY = x;
-    ((GameObject*)obj)->anim.localPosY = x;
+    obj->anim.worldPosY = x;
+    obj->anim.localPosY = x;
     x = state->targetObj->anim.localPosZ;
-    ((GameObject*)obj)->anim.worldPosZ = x;
-    ((GameObject*)obj)->anim.localPosZ = x;
-    x = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)obj)->anim.previousWorldPosX = x;
-    ((GameObject*)obj)->anim.previousLocalPosX = x;
-    x = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.previousWorldPosY = x;
-    ((GameObject*)obj)->anim.previousLocalPosY = x;
-    x = ((GameObject*)obj)->anim.localPosZ;
-    ((GameObject*)obj)->anim.previousWorldPosZ = x;
-    ((GameObject*)obj)->anim.previousLocalPosZ = x;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement*)setup)->spawnRotX << 8);
-    ((GameObject*)obj)->anim.velocityX =
-        vxz * -mathSinf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
-    ((GameObject*)obj)->anim.velocityY = 0.1f * vertSpeed;
-    ((GameObject*)obj)->anim.velocityZ =
-        vxz * -mathCosf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
-    ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ObjHits_EnableObject((GameObject*)obj);
-    state->flags &= ~LAVA1BE_FLAG_INACTIVE;
+    obj->anim.worldPosZ = x;
+    obj->anim.localPosZ = x;
+    x = obj->anim.localPosX;
+    obj->anim.previousWorldPosX = x;
+    obj->anim.previousLocalPosX = x;
+    x = obj->anim.localPosY;
+    obj->anim.previousWorldPosY = x;
+    obj->anim.previousLocalPosY = x;
+    x = obj->anim.localPosZ;
+    obj->anim.previousWorldPosZ = x;
+    obj->anim.previousLocalPosZ = x;
+    obj->anim.rotX = (s16)((s32)placement->launchYaw << 8);
+    obj->anim.velocityX = vxz * -mathSinf(3.14159274f * (f32)obj->anim.rotX / 32768.0f);
+    obj->anim.velocityY = 0.1f * verticalSpeed;
+    obj->anim.velocityZ = vxz * -mathCosf(3.14159274f * (f32)obj->anim.rotX / 32768.0f);
+    obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+    ObjHits_EnableObject(obj);
+    state->statusFlags &= ~LAVA1BE_FLAG_INACTIVE;
 }
 
-u32 lavaball1be_isInactive(int* obj)
+u32 lavaball1be_isInactive(GameObject* obj)
 {
-    return *((u8*)(int*)((GameObject*)obj)->extra + 0x10) & LAVA1BE_FLAG_INACTIVE;
+    Lavaball1beState* state = obj->extra;
+    return state->statusFlags & LAVA1BE_FLAG_INACTIVE;
 }
 
-int lavaball1be_getExtraSize(int* obj)
+int lavaball1be_getExtraSize(GameObject* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
+    if (obj->anim.seqId == LAVA1BE_SEQID_DEBRIS)
         return 0x0;
-    return 0x14;
+    return sizeof(Lavaball1beState);
 }
 
-int lavaball1be_getObjectTypeId(int* obj)
+int lavaball1be_getObjectTypeId(GameObject* obj)
 {
-    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
+    if (obj->anim.seqId == LAVA1BE_SEQID_DEBRIS)
         return 0x0;
     return 0x2;
 }
@@ -142,9 +121,9 @@ void lavaball1be_free(GameObject* obj)
     }
 }
 
-void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
+void lavaball1be_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
-    Lavaball1beState* state = ((GameObject*)obj)->extra;
+    Lavaball1beState* state = obj->extra;
     if (state->light != NULL)
     {
         if (modelLightStruct_getActiveState(state->light) != 0)
@@ -152,104 +131,100 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
             queueGlowRender(state->light);
         }
     }
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void lavaball1be_hitDetect(void)
 {
 }
 
-void lavaball1be_update(s16* obj)
+void lavaball1be_update(GameObject* obj)
 {
     Lavaball1beState* state;
-    ObjHitsPriorityState* sub;
+    ObjHitsPriorityState* hitState;
 
-    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
+    if (obj->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
-        ((GameObject*)obj)->anim.localPosX =
-            ((GameObject*)obj)->anim.velocityX * timeDelta + ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY =
-            ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosZ =
-            ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
+        obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
+        obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+        obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
         (*gPartfxInterface)->spawnObject(obj, LAVA1BE_PARTFX, NULL, 1, -1, NULL);
-        ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
-        ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
-        lavaball1be_applyDebrisGravity((GameObject*)obj);
-        ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - framesThisStep;
-        if (((GameObject*)obj)->userData1 < 0)
+        obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x374;
+        obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x12c;
+        lavaball1be_applyDebrisGravity(obj);
+        obj->userData1 = obj->userData1 - framesThisStep;
+        if (obj->userData1 < 0)
         {
-            Obj_FreeObject((GameObject*)obj);
+            Obj_FreeObject(obj);
         }
     }
     else
     {
-        state = ((GameObject*)obj)->extra;
-        if (state->flags & LAVA1BE_FLAG_INACTIVE)
+        state = obj->extra;
+        if (state->statusFlags & LAVA1BE_FLAG_INACTIVE)
         {
-            ObjHits_DisableObject((GameObject*)obj);
+            ObjHits_DisableObject(obj);
         }
         else
         {
             f32 dt = timeDelta;
             u8 steps = framesThisStep;
-            if (state->explodeCooldown != 0)
+            if (state->explosionCooldown != 0)
             {
-                state->explodeCooldown--;
+                state->explosionCooldown--;
             }
-            ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + (steps << 6);
-            ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY - (steps << 9);
-            ((GameObject*)obj)->anim.velocityY = -0.09f * dt + ((GameObject*)obj)->anim.velocityY;
-            objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * dt, ((GameObject*)obj)->anim.velocityY * dt,
-                    ((GameObject*)obj)->anim.velocityZ * dt);
-            if (((GameObject*)obj)->anim.velocityY < 2.0f)
+            obj->anim.rotX = obj->anim.rotX + (steps << 6);
+            obj->anim.rotY = obj->anim.rotY - (steps << 9);
+            obj->anim.velocityY = -0.09f * dt + obj->anim.velocityY;
+            objMove(obj, obj->anim.velocityX * dt, obj->anim.velocityY * dt, obj->anim.velocityZ * dt);
+            if (obj->anim.velocityY < 2.0f)
             {
-                if (!(state->flags & LAVA1BE_FLAG_FALLING))
+                if (!(state->statusFlags & LAVA1BE_FLAG_FALLING))
                 {
-        Sfx_PlayFromObject((u32)obj, SFXTRIG_en_cvdrip1c_3dd);
-                    state->flags |= LAVA1BE_FLAG_FALLING;
+                    Sfx_PlayFromObject((u32)obj, SFXTRIG_en_cvdrip1c_3dd);
+                    state->statusFlags |= LAVA1BE_FLAG_FALLING;
                 }
             }
             else
             {
-                state->flags &= ~LAVA1BE_FLAG_FALLING;
+                state->statusFlags &= ~LAVA1BE_FLAG_FALLING;
             }
-            sub = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-            if (sub != NULL)
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+            if (hitState != NULL)
             {
-                sub->hitVolumePriority = 0xb;
-                sub->hitVolumeId = 1;
-                sub->objectHitMask = 0x10;
-                sub->skeletonHitMask = 0x10;
-                if (*(void**)&sub->lastHitObject != NULL)
+                hitState->hitVolumePriority = 0xb;
+                hitState->hitVolumeId = 1;
+                hitState->objectHitMask = 0x10;
+                hitState->skeletonHitMask = 0x10;
+                if (*(void**)&hitState->lastHitObject != NULL)
                 {
-                    if (state->explodeCooldown != 0)
+                    if (state->explosionCooldown != 0)
                     {
-                        spawnExplosion((GameObject*)obj, 60.0f, 0, 1, 0, 0, 0, 0, 0);
+                        spawnExplosion(obj, 60.0f, 0, 1, 0, 0, 0, 0, 0);
                     }
                     else
                     {
-                        state->explodeCooldown = 0xa;
-                        spawnExplosion((GameObject*)obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
+                        state->explosionCooldown = 0xa;
+                        spawnExplosion(obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
                     }
-                    state->flags |= LAVA1BE_FLAG_INACTIVE;
-                    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    state->statusFlags |= LAVA1BE_FLAG_INACTIVE;
+                    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
-                if (((ObjAnimComponent*)sub)->bankIndex & 1)
+                if (hitState->contactFlags & OBJHITS_CONTACT_FLAG_KIND0)
                 {
-                    spawnExplosion((GameObject*)obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
-                    state->flags |= LAVA1BE_FLAG_INACTIVE;
-                    ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    spawnExplosion(obj, 60.0f, 1, 1, 0, 0, 0, 0, 0);
+                    state->statusFlags |= LAVA1BE_FLAG_INACTIVE;
+                    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     return;
                 }
             }
-            if (((GameObject*)obj)->anim.localPosY < state->floorY)
+            if (obj->anim.localPosY < state->floorY)
             {
-                state->flags |= LAVA1BE_FLAG_INACTIVE;
+                state->statusFlags |= LAVA1BE_FLAG_INACTIVE;
             }
-            if (!(state->flags & LAVA1BE_FLAG_HOMING_OFF))
+            if (!(state->statusFlags & LAVA1BE_FLAG_UPDATED))
             {
-                state->flags |= LAVA1BE_FLAG_HOMING_OFF;
+                state->statusFlags |= LAVA1BE_FLAG_UPDATED;
             }
             if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
             {
@@ -259,62 +234,53 @@ void lavaball1be_update(s16* obj)
     }
 }
 
-void lavaball1be_init(s16* obj, u8* p)
+void lavaball1be_init(GameObject* obj, DimLavaPlacement* placement)
 {
     Lavaball1beState* state;
-    if (((GameObject*)obj)->anim.seqId == LAVA1BE_SEQID_DEBRIS)
+    if (obj->anim.seqId == LAVA1BE_SEQID_DEBRIS)
     {
-        struct
-        {
-            LavaVec vec;
-            s16 rot[3];
-            u8 pad[18];
-        } s;
-        s.vec = gDimLavaDebrisBaseVec;
-        s.rot[2] = 0;
-        s.rot[1] = randomGetRange(-0x2ee0, 0x2ee0);
-        s.rot[0] = randomGetRange(0, 0xfffe);
-        vecRotateZXY((s16*)((u8*)&s + 12), (f32*)&s.vec);
-        ((GameObject*)obj)->userData1 = 0x4b;
-        ((GameObject*)obj)->anim.velocityX = s.vec.x;
-        ((GameObject*)obj)->anim.velocityY = s.vec.y;
-        ((GameObject*)obj)->anim.velocityZ = s.vec.z;
-        lavaball1be_scaleDebrisRootMotion((GameObject*)obj);
+        DimLavaDebrisLaunch launch;
+        launch.velocity = gDimLavaDebrisBaseVec;
+        launch.rotation.z = 0;
+        launch.rotation.y = randomGetRange(-0x2ee0, 0x2ee0);
+        launch.rotation.x = randomGetRange(0, 0xfffe);
+        vecRotateZXY((s16*)((u8*)&launch + offsetof(DimLavaDebrisLaunch, rotation)), (f32*)&launch.velocity);
+        obj->userData1 = 0x4b;
+        obj->anim.velocityX = launch.velocity.x;
+        obj->anim.velocityY = launch.velocity.y;
+        obj->anim.velocityZ = launch.velocity.z;
+        lavaball1be_scaleDebrisRootMotion(obj);
     }
     else
     {
         f32 vy;
         f32 vxz;
-        int* sub;
+        ObjHitsPriorityState* hitState;
         ModelLightStruct* light;
-        Lavaball1bePlacement* placement = (Lavaball1bePlacement*)p;
 
-        ((GameObject*)obj)->anim.rotX = (s16)((s32)placement->spawnRotX << 8);
-        state = ((GameObject*)obj)->extra;
-        vy = 0.1f * (f32)placement->velScaleY;
-        vxz = 0.1f * (f32)placement->velScaleXZ;
-        state->floorY = ((GameObject*)obj)->anim.localPosY;
-        state->linkedId = placement->linkedId;
-        placement->linkedId = -1;
-        ((GameObject*)obj)->anim.velocityX =
-            vxz * -mathSinf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
-        ((GameObject*)obj)->anim.velocityY = vy;
-        ((GameObject*)obj)->anim.velocityZ =
-            vxz * -mathCosf(3.14159274f * (f32)((GameObject*)obj)->anim.rotX / 32768.0f);
-        sub = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        if (sub != NULL)
+        obj->anim.rotX = (s16)((s32)placement->launchYaw << 8);
+        state = obj->extra;
+        vy = 0.1f * (f32)placement->verticalSpeed;
+        vxz = 0.1f * (f32)placement->horizontalSpeed;
+        state->floorY = obj->anim.localPosY;
+        state->linkedObjectId = placement->linkedObjectId;
+        placement->linkedObjectId = -1;
+        obj->anim.velocityX = vxz * -mathSinf(3.14159274f * (f32)obj->anim.rotX / 32768.0f);
+        obj->anim.velocityY = vy;
+        obj->anim.velocityZ = vxz * -mathCosf(3.14159274f * (f32)obj->anim.rotX / 32768.0f);
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+        if (hitState != NULL)
         {
-            *((u8*)sub + 0x6a) = 0;
+            hitState->lateralResponseWeight = 0;
         }
-        sub = (int*)((GameObject*)obj)->anim.modelState;
-        if (sub != NULL)
+        if (obj->anim.modelState != NULL)
         {
-            ((GameObject*)obj)->anim.modelState->flags |= 0x810;
+            obj->anim.modelState->flags |= 0x810;
         }
-        state->targetObj = ObjList_FindObjectById(state->linkedId);
-        state->flags |= LAVA1BE_FLAG_INACTIVE;
-        ObjHits_DisableObject((GameObject*)obj);
-        ((GameObject*)obj)->objectFlags |= DIMLAVA_OBJFLAG_HITDETECT_DISABLED;
+        state->targetObj = ObjList_FindObjectById(state->linkedObjectId);
+        state->statusFlags |= LAVA1BE_FLAG_INACTIVE;
+        ObjHits_DisableObject(obj);
+        obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
         state->light = objCreateLight(obj, 1);
         light = state->light;
         if (light != NULL)
