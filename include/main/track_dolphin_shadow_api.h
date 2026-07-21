@@ -8,7 +8,7 @@
 typedef struct GameObject GameObject;
 
 void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst);
-u8 fn_800626C8(GameObject* obj, int delta);
+u8 objShadowUpdateAlpha(GameObject* obj, int delta);
 void fn_80069EB8(int intensity);
 void mapGetBlocks(void** outLayerTables, u32* outBlocks);
 void MapBlock_initShaders(MapBlockData* block);

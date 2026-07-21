@@ -104,7 +104,7 @@ typedef struct
     f32 modelMtx[12];
     f32 texMtx[12];
     Texture* texture;
-    u8 lod;
+    u8 alpha;
     u8 dirIndex;
     u8 pad66[2];
 } NewShadowCastSlot;
@@ -817,14 +817,14 @@ void renderShadows(int unused0, int unused1, int unused2)
     {
         GameObject* obj = casterPtr->obj;
         ObjModelState* modelState = obj->anim.modelState;
-        u8 lod;
+        u8 alpha;
         u8 kind;
         int screenW = 0, w = 0;
         NewShadowCastSlot* castSlot;
         Camera_SetCurrentViewIndex(0);
-        lod = fn_800626C8(obj, framesThisStep);
+        alpha = objShadowUpdateAlpha(obj, framesThisStep);
         Camera_SetCurrentViewIndex(1);
-        if (lod <= 4)
+        if (alpha <= 4)
             continue;
         if ((modelState->flags & 0x20) != 0)
         {
@@ -834,7 +834,7 @@ void renderShadows(int unused0, int unused1, int unused2)
             memcpy(&obj->anim.worldPos, &modelState->overrideWorldPosX, sizeof(Vec3f));
         }
         castSlot = &shadowData->castSlots[(u8)slotIdx];
-        castSlot->lod = lod;
+        castSlot->alpha = alpha;
         if ((u8)texIdx < NEW_SHADOW_MAX_CAST_TEXTURES && (kind = casterPtr->flags) != 0)
         {
             if ((u8)texIdx < 3)

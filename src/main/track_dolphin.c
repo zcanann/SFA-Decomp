@@ -1803,7 +1803,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
     return 0;
 }
 
-u8 fn_800626C8(GameObject* obj, int delta)
+u8 objShadowUpdateAlpha(GameObject* obj, int delta)
 {
     ObjModelState* modelState;
     s16* alphaStep;
