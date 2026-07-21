@@ -1,6 +1,4 @@
-/*
- * FireFlyLantern (DLL 0x10B). TU = 0x801871C8..0x80187640.
- */
+/* FireFlyLantern (DLL 0x10B) - container and release point for lantern fireflies. */
 #include "main/dll/dll_010B_fireflylantern.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -10,6 +8,7 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/obj_group.h"
 #include "main/object_render.h"
+#include "main/dll/dll_010C_lanternfirefly.h"
 
 /* object group this object belongs to */
 #define FIREFLYLANTERN_OBJGROUP 0xf
@@ -21,13 +20,26 @@ extern f32 lbl_803E3AF0;
 extern const f32 lbl_803E3AEC;
 extern f32 lbl_803E3AE8;
 
+typedef void (*LanternFireFlyReleaseCallback)(GameObject* firefly);
+typedef void (*LanternFireFlySetAnchorCallback)(GameObject* firefly, f32 x, f32 y, f32 z);
+
+typedef struct LanternFireFlyRuntimeInterface
+{
+    void* callbacks[9];
+    LanternFireFlyReleaseCallback release;
+    LanternFireFlySetAnchorCallback setAnchor;
+} LanternFireFlyRuntimeInterface;
+
+STATIC_ASSERT(offsetof(LanternFireFlyRuntimeInterface, release) == 0x24);
+STATIC_ASSERT(offsetof(LanternFireFlyRuntimeInterface, setAnchor) == 0x28);
+
 GameObject* FireFlyLantern_spawnFireFly(GameObject* obj)
 {
-    FireFlyLanternSpawnSetup* setup;
+    LanternFireFlyPlacement* setup;
     if (Obj_IsLoadingLocked() == 0)
         return NULL;
-    setup = (FireFlyLanternSpawnSetup*)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup),
-                                                            FIREFLYLANTERN_CHILD_OBJ_FIREFLY);
+    setup = (LanternFireFlyPlacement*)Obj_AllocObjectSetup(sizeof(LanternFireFlyPlacement),
+                                                           FIREFLYLANTERN_CHILD_OBJ_FIREFLY);
     setup->base.objectId = FIREFLYLANTERN_CHILD_OBJ_FIREFLY;
     setup->base.size = 9;
     setup->base.color[0] = 2;
@@ -37,10 +49,10 @@ GameObject* FireFlyLantern_spawnFireFly(GameObject* obj)
     setup->base.posX = obj->anim.localPosX;
     setup->base.posY = lbl_803E3AE8 + obj->anim.localPosY;
     setup->base.posZ = obj->anim.localPosZ;
-    setup->spawnMode = 4;
-    setup->field1A = 0x514;
-    setup->field1C = 40;
-    setup->field18 = 30;
+    setup->stateId = 4;
+    setup->timer = 0x514;
+    setup->driftRangeZ = 40;
+    setup->wanderRange = 30;
     return loadObjectAtObject(obj, &setup->base);
 }
 
@@ -62,23 +74,23 @@ int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
                 child = state->fireflies[state->fireflyCount - 1];
                 if (child != 0)
                 {
-                    (*(void (**)(void*))((char*)*child->anim.dll + 0x24))(child);
+                    ((LanternFireFlyRuntimeInterface*)*child->anim.dll)->release(child);
                 }
                 --state->fireflyCount;
                 --state->remainingCount;
-                mainSetBits(state->gameBit, state->remainingCount);
+                mainSetBits(state->countGameBit, state->remainingCount);
             }
             break;
         }
         i++;
     }
 
-    ((FireFlyLanternStateFlags*)&state->flags)->finished = 1;
+    state->flags.sequenceFinished = 1;
     i = 0;
     while (i < state->fireflyCount)
     {
         child = state->fireflies[i];
-        (*(void (**)(void*, f32, f32, f32))((char*)*child->anim.dll + 0x28))(
+        ((LanternFireFlyRuntimeInterface*)*child->anim.dll)->setAnchor(
             child, obj->anim.localPosX, lbl_803E3AEC + obj->anim.localPosY, obj->anim.localPosZ);
         i++;
     }
@@ -88,7 +100,7 @@ int FireFlyLantern_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
 
 int FireFlyLantern_getExtraSize(void)
 {
-    return 0x24;
+    return sizeof(FireFlyLanternState);
 }
 int FireFlyLantern_getObjectTypeId(void)
 {
@@ -97,10 +109,10 @@ int FireFlyLantern_getObjectTypeId(void)
 
 void FireFlyLantern_free(GameObject* obj)
 {
-    void* tricky = getTrickyObject();
+    GameObject* tricky = getTrickyObject();
     if (tricky != NULL)
     {
-        trickyImpress((GameObject*)tricky);
+        trickyImpress(tricky);
     }
     ObjGroup_RemoveObject((int)obj, FIREFLYLANTERN_OBJGROUP);
 }
@@ -114,29 +126,29 @@ void FireFlyLantern_update(GameObject* obj)
 {
     GameObject** slot;
     FireFlyLanternState* state;
-    FireFlyLanternSpawnSetup* placement;
+    FireFlyLanternPlacement* placement;
     GameObject* child;
     int i;
     int shouldFree;
 
     state = (obj)->extra;
-    placement = (FireFlyLanternSpawnSetup*)obj->anim.placementData;
+    placement = (FireFlyLanternPlacement*)obj->anim.placementData;
     shouldFree = 0;
 
-    if ((s8)placement->spawnMode == 1)
+    if ((s8)placement->mode == 1)
     {
         if (state->fireflyCount != 0)
         {
             child = state->fireflies[0];
             if (child != 0)
             {
-                (*(void (**)(void*))((char*)*child->anim.dll + 0x24))(child);
+                ((LanternFireFlyRuntimeInterface*)*child->anim.dll)->release(child);
             }
-            gameBitDecrement(state->gameBit);
+            gameBitDecrement(state->countGameBit);
         }
         shouldFree = 1;
     }
-    else if (((FireFlyLanternStateFlags*)&state->flags)->finished != 0)
+    else if (state->flags.sequenceFinished != 0)
     {
         i = 0;
         slot = state->fireflies;
@@ -155,7 +167,7 @@ void FireFlyLantern_update(GameObject* obj)
     }
 }
 
-void FireFlyLantern_init(GameObject* obj, FireFlyLanternSpawnSetup* placement)
+void FireFlyLantern_init(GameObject* obj, FireFlyLanternPlacement* placement)
 {
     GameObject* player;
     GameObject** childSlot;
@@ -168,17 +180,17 @@ void FireFlyLantern_init(GameObject* obj, FireFlyLanternSpawnSetup* placement)
     player = Obj_GetPlayerObject();
     if (player->anim.seqId != 0)
     {
-        state->gameBit = 0x13d;
+        state->countGameBit = 0x13d;
     }
     else
     {
-        state->gameBit = 0x5d6;
+        state->countGameBit = 0x5d6;
     }
 
     state->fireflyCount = 0;
-    state->remainingCount = mainGetBit(state->gameBit);
+    state->remainingCount = mainGetBit(state->countGameBit);
 
-    if ((s8)placement->spawnMode == 1)
+    if ((s8)placement->mode == 1)
     {
         if (state->remainingCount != 0)
         {
