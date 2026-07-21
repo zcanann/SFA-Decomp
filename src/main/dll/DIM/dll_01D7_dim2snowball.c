@@ -157,16 +157,15 @@ void dim2snowball_update(int* obj)
             ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
             if ((((Dim2SnowballState*)extra)->flagsAC & 0x10) == 0)
             {
-                int** list;
-                int* hit;
+                GameObject** list;
+                GameObject* hit = NULL;
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = 0.05f);
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
                 ((Dim2SnowballState*)extra)->flagsAC |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
-                hit = NULL;
                 for (; start < count; start++)
                 {
-                    if (((GameObject*)list[start])->anim.seqId == OBJ_TYPE_SHARPCLAW)
+                    if (list[start]->anim.seqId == OBJ_TYPE_SHARPCLAW)
                     {
                         hit = list[start];
                         break;
@@ -175,7 +174,7 @@ void dim2snowball_update(int* obj)
 
                 if (hit != NULL)
                 {
-                    (*(void (**)(int*))(**(int**)&((GameObject*)hit)->anim.dll + 0x20))(hit);
+                    (*(void (**)(GameObject*))(**(int**)&hit->anim.dll + 0x20))(hit);
                 }
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_nlite1_c);
             }
