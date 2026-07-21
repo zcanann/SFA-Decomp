@@ -8,6 +8,9 @@
 
 typedef struct GameObject GameObject;
 
+typedef f32 CameraMatrix[16];
+STATIC_ASSERT(sizeof(CameraMatrix) == 0x40);
+
 typedef struct CameraViewSlot {
     s16 yaw;
     s16 pitch;
@@ -56,7 +59,7 @@ STATIC_ASSERT(offsetof(CameraViewSlot, unk5A) == 0x5A);
 STATIC_ASSERT(sizeof(CameraViewSlot) == 0x60);
 
 extern CameraViewSlot gCameraShakeSlots[];
-extern f32 gCameraDefaultModelMatrix[16];
+extern CameraMatrix gCameraDefaultModelMatrix;
 extern f32 gCameraWorldMatrix[64];
 extern f32 lbl_803DE5F0;
 extern f32 gCameraShakeMagnitudeDecay;
@@ -69,17 +72,17 @@ extern f32 lbl_803DE610;
 extern f32 gCameraDepth24BitMax;
 extern f32 lbl_803DE624;
 extern s8 gObjTransformMatrixSlot;
-extern f32 gObjInverseYawTransformMatrices[][16];
-extern f32 gObjYawTransformMatrices[][16];
-extern f32 gCameraViewRotationMatrix[16];
-extern f32 gCameraInverseViewRotationMatrix[16];
-extern f32 gCameraViewMatrix[16];
-extern f32 gCameraInverseViewMatrix[16];
+extern CameraMatrix gObjInverseYawTransformMatrices[];
+extern CameraMatrix gObjYawTransformMatrices[];
+extern CameraMatrix gCameraViewRotationMatrix;
+extern CameraMatrix gCameraInverseViewRotationMatrix;
+extern CameraMatrix gCameraViewMatrix;
+extern CameraMatrix gCameraInverseViewMatrix;
 extern u8 gCameraCurrentViewIndex;
 extern u8 cameraViewYOffsetEnabled;
 extern s16 cameraViewportYOffset;
 extern s16 gCameraViewportYOffset;
-extern f32 gCameraProjectionMatrix[16];
+extern CameraMatrix gCameraProjectionMatrix;
 extern f32 lbl_803967C0[3][4];
 extern f32 lbl_803967F0[3][4];
 extern f32 lbl_80396820[3][4];

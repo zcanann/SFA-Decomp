@@ -36,16 +36,16 @@ s16 gCameraViewportYOffset;
 s16 gCameraFarPlaneTransitionFrames;
 s16 gCameraFarPlaneTransitionFramesLeft;
 
-f32 gObjInverseYawTransformMatrices[0x1E][16];
-f32 gObjYawTransformMatrices[0x22][16];
+CameraMatrix gObjInverseYawTransformMatrices[0x1E];
+CameraMatrix gObjYawTransformMatrices[0x22];
 f32 gCameraWorldMatrix[64];
-f32 gCameraDefaultModelMatrix[16];
+CameraMatrix gCameraDefaultModelMatrix;
 CameraViewSlot gCameraShakeSlots[0x480 / sizeof(CameraViewSlot)];
-f32 gCameraViewRotationMatrix[16];
-f32 gCameraInverseViewRotationMatrix[16];
-f32 gCameraViewMatrix[16];
-f32 gCameraInverseViewMatrix[16];
-f32 gCameraProjectionMatrix[16];
+CameraMatrix gCameraViewRotationMatrix;
+CameraMatrix gCameraInverseViewRotationMatrix;
+CameraMatrix gCameraViewMatrix;
+CameraMatrix gCameraInverseViewMatrix;
+CameraMatrix gCameraProjectionMatrix;
 
 void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex)
 {
@@ -207,9 +207,9 @@ void Obj_GetWorldPosition(u32 obj, f32* outX, f32* outY, f32* outZ)
 
 typedef struct ObjTransformMatrixPool
 {
-    f32 inverse[0x1E * 16];
-    f32 yaw[0x1F * 16];
-    f32 scratch[16];
+    CameraMatrix inverse[0x1E];
+    CameraMatrix yaw[0x1F];
+    CameraMatrix scratch;
 } ObjTransformMatrixPool;
 
 void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex)
@@ -227,9 +227,9 @@ void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex)
 
     base = (ObjTransformMatrixPool*)gObjInverseYawTransformMatrices;
     matrixIndex = yawIndex << 4;
-    yawMatrices = base->yaw;
+    yawMatrices = (f32*)base->yaw;
     yawMatrix = yawMatrices + matrixIndex;
-    inverseYawMatrix = base->inverse + matrixIndex;
+    inverseYawMatrix = (f32*)base->inverse + matrixIndex;
     hasParent = 0;
     ancestorCount = 0;
     while (obj != 0)
