@@ -56,29 +56,29 @@ void CameraModeBike_update(CameraObject* camera)
     float pivotX;
     float pivotY;
     float pivotZ;
-    MatrixTransform xformIn;
-    float mtxBuf[17];
+    MatrixTransform targetTransform;
+    f32 matrix[16];
 
     (*gCameraInterface)->getDefaultHandlerEntry();
     target = camera->anim.targetObj;
     if (target != NULL)
     {
         camera->fov = (85.0f);
-        xformIn.x = target->anim.worldPosX;
-        xformIn.y = target->anim.worldPosY;
-        xformIn.z = target->anim.worldPosZ;
-        xformIn.scale = (1.0f);
-        xformIn.rotX = target->anim.rotX;
-        xformIn.rotY = gCamTalkBikeState->pitchTarget;
-        xformIn.rotZ = 0;
-        setMatrixFromObjectPos(mtxBuf, &xformIn);
-        Matrix_TransformPoint(mtxBuf, (0.0f), (2e+01f), (0.0f), &pivotX, &pivotY, &pivotZ);
+        targetTransform.x = target->anim.worldPosX;
+        targetTransform.y = target->anim.worldPosY;
+        targetTransform.z = target->anim.worldPosZ;
+        targetTransform.scale = (1.0f);
+        targetTransform.rotX = target->anim.rotX;
+        targetTransform.rotY = gCamTalkBikeState->pitchTarget;
+        targetTransform.rotZ = 0;
+        setMatrixFromObjectPos(matrix, &targetTransform);
+        Matrix_TransformPoint(matrix, (0.0f), (2e+01f), (0.0f), &pivotX, &pivotY, &pivotZ);
         angleDelta = 0x8000 - target->anim.rotX;
         camera->anim.rotX = angleDelta;
         st = gCamTalkBikeState;
         st->smoothedYawOffset += (0.1f) * ((f32)((12.0f) * st->turnInput) - st->smoothedYawOffset);
         camera->anim.rotX = camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset;
-        targetAngle = (int)((3072.0f) - gCamTalkBikeState->pitchTarget);
+        targetAngle = (3072.0f) - gCamTalkBikeState->pitchTarget;
         angleDelta = targetAngle - (u16)camera->anim.rotY;
         if (0x8000 < angleDelta)
         {
@@ -108,7 +108,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosX = pivotX + cosYaw;
         camera->anim.worldPosY = pivotY + kFollowA;
         camera->anim.worldPosZ = pivotZ + kFollowB;
-        targetAngle = (int)(lbl_803E17A8 * gCamTalkBikeState->rollInput);
+        targetAngle = lbl_803E17A8 * gCamTalkBikeState->rollInput;
         angleDelta = targetAngle - (u16)camera->anim.rotZ;
         if (0x8000 < angleDelta)
         {
