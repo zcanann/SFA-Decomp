@@ -74,7 +74,7 @@ extern f32 gScreenTransitionEdgeScale;
 void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 {
     u32 band;
-    u32 wipeSpan;
+    u32 height;
     u32 walked;
     u32 outer;
     u8 strip;
@@ -89,7 +89,7 @@ void screenTransition_drawWhiteWipe(int p1, int p2, int p3, u8 r, u8 g, u8 b)
     u32 sh;
     GXColor col;
     u32 width;
-    u32 height;
+    u32 wipeSpan;
     u32 wipe;
     u32 half;
     u32 dist;
