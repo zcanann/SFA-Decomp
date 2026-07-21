@@ -10874,7 +10874,6 @@ int fn_802A8680(int p1, int p2, void* src, f32* vec, int out, int flag)
 
 int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
 {
-    f32* pl;
     f32* dp;
     char* cp;
     f32* px2;
@@ -10887,6 +10886,7 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     int tris;
     int verts;
     void* parent;
+    f32* pl;
 
     f32 x2;
     f32 x1;
