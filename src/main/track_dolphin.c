@@ -1945,12 +1945,12 @@ void* shadowInit(int* obj, int size, int wpad0)
     return (char*)rounded + 0x44;
 }
 
-void playerShadowFn_80062a30(GameObject* obj)
+void playerShadowClearPositionOverride(GameObject* obj)
 {
-    ObjModelState* p = obj->anim.modelState;
-    if (p == NULL)
+    ObjModelState* modelState = obj->anim.modelState;
+    if (modelState == NULL)
         return;
-    p->flags &= ~0x2020;
+    modelState->flags &= ~0x2020;
 }
 
 void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z)
