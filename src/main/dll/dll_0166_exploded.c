@@ -259,32 +259,34 @@ void exploded_update(int* obj)
     case EXPLODED_PHASE_EXPIRED:
         break;
     }
-    if (state->durationFrames != -1)
+    do
     {
-        s32 elapsedFrames = state->elapsedFrames + framesThisStep;
-        s32 durationFrames;
-        state->elapsedFrames = elapsedFrames;
-        durationFrames = state->durationFrames;
-        if (elapsedFrames >= durationFrames)
+        if (state->durationFrames != -1)
         {
-            state->durationFrames = -1;
-            o->alpha = 0;
-            o->flags06 = (s16)(o->flags06 | 0x4000);
-            flag = 1;
-            goto updatePhase;
-        }
-        else
-        {
-            s32 remainingFrames = durationFrames - state->elapsedFrames;
-            if (remainingFrames < 0xff)
+            s32 elapsedFrames = state->elapsedFrames + framesThisStep;
+            s32 durationFrames;
+            state->elapsedFrames = elapsedFrames;
+            durationFrames = state->durationFrames;
+            if (elapsedFrames >= durationFrames)
             {
-                o->alpha = remainingFrames;
+                state->durationFrames = -1;
+                o->alpha = 0;
+                o->flags06 = (s16)(o->flags06 | 0x4000);
+                flag = 1;
+                break;
+            }
+            else
+            {
+                s32 remainingFrames = durationFrames - state->elapsedFrames;
+                if (remainingFrames < 0xff)
+                {
+                    o->alpha = remainingFrames;
+                }
             }
         }
-    }
-    flag = 0;
+        flag = 0;
+    } while (0);
 
-updatePhase:
     if (flag != 0)
     {
         state->explodePhase = EXPLODED_PHASE_EXPIRED;
