@@ -293,7 +293,7 @@ void Sfx_UpdateObjectSounds(void);
 void Sfx_StopAllObjectSounds(void);
 void AudioStream_UpdateFadeTimer(void);
 void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
-void fn_8000D0B4(s32 result, DVDCommandBlock* block);
+void AudioStream_CancelPreparedCallback(s32 result, DVDCommandBlock* block);
 void AudioAramReadCompleteCallback(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, MusicTrigger* trigger);

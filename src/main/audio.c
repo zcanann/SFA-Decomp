@@ -2464,7 +2464,7 @@ void AudioStream_StopAll(void)
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
         if (DVDCancelStreamAsync(&gAudioStreamDvdBlockPrepared.preparedCommand,
-                                 fn_8000D0B4) == 0)
+                                 AudioStream_CancelPreparedCallback) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
         }
@@ -2578,7 +2578,7 @@ void AudioStream_StopCurrent(void)
     }
 }
 
-void fn_8000D0B4(s32 result, DVDCommandBlock* block)
+void AudioStream_CancelPreparedCallback(s32 result, DVDCommandBlock* block)
 {
     (void)result;
     (void)block;
@@ -2590,7 +2590,7 @@ void AudioStream_CancelPrepared(void)
     AISetStreamVolLeft(0);
     AISetStreamVolRight(0);
     if (DVDCancelStreamAsync(&gAudioStreamDvdBlockPrepared.preparedCommand,
-                             fn_8000D0B4) == 0)
+                             AudioStream_CancelPreparedCallback) == 0)
     {
         OSReport(sDvdCancelStreamWarning);
     }
