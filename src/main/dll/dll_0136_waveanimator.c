@@ -45,9 +45,9 @@ void waveanimator_buildSharedTables(int* cfgArg);
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c)
 {
     WaveAnimatorState* state = (WaveAnimatorState*)obj->extra;
-    u32 v;
-    v = (u32)state->flags | 4;
-    state->flags = v;
+    u32 newFlags;
+    newFlags = (u32)state->flags | 4;
+    state->flags = newFlags;
     state->modelMtxArg0 = a;
     state->modelMtxArg1 = b;
     state->modelMtxArg2 = c;

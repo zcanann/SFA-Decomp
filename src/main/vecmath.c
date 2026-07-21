@@ -73,12 +73,12 @@ void basisVectorsToEulerAngles(f32* a, f32* b, s16* out0, s16* out1, s16* out2)
         roll = __kernel_cos(c1, c0) - (yaw = lbl_803DE7C0);
     }
     {
-        f32 d;
-        f32 s;
-        scale = (s = gVecMathAngleScale);
-        *out0 = scale * yaw / (d = gVecMathTwoPi);
-        *out1 = s * sinp / d;
-        *out2 = s * roll / d;
+        f32 twoPi;
+        f32 angleScale;
+        scale = (angleScale = gVecMathAngleScale);
+        *out0 = scale * yaw / (twoPi = gVecMathTwoPi);
+        *out1 = angleScale * sinp / twoPi;
+        *out2 = angleScale * roll / twoPi;
     }
 }
 

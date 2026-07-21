@@ -1458,7 +1458,7 @@ void objParticleFn_80099d84(GameObject* obj, f32 scale, int type, f32 extraScale
 void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* light)
 {
     u8 spawnArgs[16];
-    u8 n;
+    u8 remaining;
 
     if (type != 0)
     {
@@ -1466,97 +1466,97 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
         {
         case 1:
             spawnArgs[0] = 1;
-            for (n = 10; n != 0; n--)
+            for (remaining = 10; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 4; n != 0; n--)
+            for (remaining = 4; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 2:
             spawnArgs[0] = 2;
-            for (n = 13; n != 0; n--)
+            for (remaining = 13; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 6; n != 0; n--)
+            for (remaining = 6; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 3:
             spawnArgs[0] = 3;
-            for (n = 30; n != 0; n--)
+            for (remaining = 30; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x325, origin, 0x200001, -1, spawnArgs);
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 8; n != 0; n--)
+            for (remaining = 8; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 4:
-            for (n = 7; n != 0; n--)
+            for (remaining = 7; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x328, origin, 0x200001, -1, NULL);
             }
             break;
         case 5:
             spawnArgs[0] = 4;
-            for (n = 10; n != 0; n--)
+            for (remaining = 10; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 4; n != 0; n--)
+            for (remaining = 4; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 6:
             spawnArgs[0] = 5;
-            for (n = 10; n != 0; n--)
+            for (remaining = 10; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 4; n != 0; n--)
+            for (remaining = 4; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 7:
             spawnArgs[0] = 6;
-            for (n = 10; n != 0; n--)
+            for (remaining = 10; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 4; n != 0; n--)
+            for (remaining = 4; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 8:
             spawnArgs[0] = 7;
-            for (n = 10; n != 0; n--)
+            for (remaining = 10; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 4; n != 0; n--)
+            for (remaining = 4; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }
             break;
         case 9:
             spawnArgs[0] = 8;
-            for (n = 10; n != 0; n--)
+            for (remaining = 10; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x323, origin, 0x200001, -1, spawnArgs);
             }
-            for (n = 4; n != 0; n--)
+            for (remaining = 4; remaining != 0; remaining--)
             {
                 (*gPartfxInterface)->spawnObject(obj, 0x326, origin, 0x200001, -1, spawnArgs);
             }

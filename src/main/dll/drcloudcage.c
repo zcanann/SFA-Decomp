@@ -411,10 +411,10 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
                                 u8 channelFlags)
 {
     f32 clamped;
-    f32 d;
+    f32 windVol;
     f32 fv;
     int vol;
-    f32 v;
+    f32 channelVol;
     DRCloudCagePulseParams pulse;
 
     clamped =
@@ -462,13 +462,13 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
         {
             if (((DRCloudCageState*)state)->distanceGate < lbl_803E5B18)
             {
-                d = 0.0f;
-                if (d != clamped)
+                windVol = 0.0f;
+                if (windVol != clamped)
                 {
-                    d = clamped * (f32)obj->anim.rotZ / lbl_803E5B24;
+                    windVol = clamped * (f32)obj->anim.rotZ / lbl_803E5B24;
                 }
-                gDrCloudCageWindVolume = d;
-                fv = (f32)(f64)d;
+                gDrCloudCageWindVolume = windVol;
+                fv = (f32)(f64)windVol;
                 if (fv < 0.0f)
                 {
                     gDrCloudCageWindVolume = -fv;
@@ -514,8 +514,8 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
         {
             ((DRCloudCageState*)state)->channel2Vol = lbl_803E5B30;
         }
-        v = ((DRCloudCageState*)state)->channel2Vol;
-        ((void (*)(GameObject*, u32, u8, f32))Sfx_SetObjectChannelVolume)(obj, 2, v, v * lbl_803E5B38 + lbl_803E5B34);
+        channelVol = ((DRCloudCageState*)state)->channel2Vol;
+        ((void (*)(GameObject*, u32, u8, f32))Sfx_SetObjectChannelVolume)(obj, 2, channelVol, channelVol * lbl_803E5B38 + lbl_803E5B34);
         if (intensity > 5)
         {
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B3C + intensity;
@@ -536,8 +536,8 @@ void drcloudcage_updateEngineFx(GameObject* obj, void* state, f32 distanceScale,
         {
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B44;
         }
-        v = ((DRCloudCageState*)state)->channel4Vol;
-        ((void (*)(GameObject*, u32, u8, f32))Sfx_SetObjectChannelVolume)(obj, 4, v, v / lbl_803E5B48);
+        channelVol = ((DRCloudCageState*)state)->channel4Vol;
+        ((void (*)(GameObject*, u32, u8, f32))Sfx_SetObjectChannelVolume)(obj, 4, channelVol, channelVol / lbl_803E5B48);
         pulse.unkC = lbl_803E5B4C;
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;

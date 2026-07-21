@@ -129,7 +129,7 @@ void worldplanet_update(GameObject* obj)
     WorldPlanetState* state;
     u8 done;
     u8 i;
-    u8 b;
+    u8 planetIdx;
     int objId;
     WorldObjEffectParams pfx;
     struct
@@ -462,7 +462,7 @@ void worldplanet_update(GameObject* obj)
         }
         {
             u32 ang;
-            f32 r;
+            f32 orbitRadius;
             {
                 u8 spin = 0;
                 ang = -(obj)->anim.rotZ & 0xffff;
@@ -472,12 +472,12 @@ void worldplanet_update(GameObject* obj)
                     planetObj->anim.rotZ = -ang;
                 }
             }
-            for (b = 0, r = gWorldPlanetOrbitRadius; b < WORLDPLANET_PLANET_COUNT; b++)
+            for (planetIdx = 0, orbitRadius = gWorldPlanetOrbitRadius; planetIdx < WORLDPLANET_PLANET_COUNT; planetIdx++)
             {
-                GameObject* planetObj = ObjList_FindObjectById(tbl->orbitObjectIds[b]);
-                if (tbl->orbitObjectIds[b] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID)
+                GameObject* planetObj = ObjList_FindObjectById(tbl->orbitObjectIds[planetIdx]);
+                if (tbl->orbitObjectIds[planetIdx] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID)
                 {
-                    planetObj->anim.rotX = ang + tbl->orbitAngleOffsets[b] + 0x4000;
+                    planetObj->anim.rotX = ang + tbl->orbitAngleOffsets[planetIdx] + 0x4000;
                 }
                 else
                 {
@@ -488,13 +488,13 @@ void worldplanet_update(GameObject* obj)
                     Sfx_KeepAliveLoopedObjectSound((u32)planetObj, SFXTRIG_crf_babyambi2);
                 }
                 planetObj->anim.localPosX =
-                    r * fsin16Approx((ang + tbl->orbitAngleOffsets[b]) & 0xffff) * fcos16Approx(3000) +
+                    orbitRadius * fsin16Approx((ang + tbl->orbitAngleOffsets[planetIdx]) & 0xffff) * fcos16Approx(3000) +
                     (obj)->anim.localPosX;
                 planetObj->anim.localPosY =
-                    r * fsin16Approx((ang + tbl->orbitAngleOffsets[b]) & 0xffff) * fsin16Approx(3000) +
+                    orbitRadius * fsin16Approx((ang + tbl->orbitAngleOffsets[planetIdx]) & 0xffff) * fsin16Approx(3000) +
                     (obj)->anim.localPosY;
                 planetObj->anim.localPosZ =
-                    r * fcos16Approx((ang + tbl->orbitAngleOffsets[b]) & 0xffff) + (obj)->anim.localPosZ;
+                    orbitRadius * fcos16Approx((ang + tbl->orbitAngleOffsets[planetIdx]) & 0xffff) + (obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;

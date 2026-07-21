@@ -85,7 +85,7 @@ void iceBall_handleCharacterImpact(GameObject* obj)
 {
 
     s16 projectileType;
-    int n;
+    int particleIdx;
 
     Camera_EnableViewYOffset();
     CameraShake_SetAllMagnitudes(1.0f);
@@ -101,7 +101,7 @@ void iceBall_handleCharacterImpact(GameObject* obj)
                                                                                              ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
-        for (n = 0; n < ICEBALL_PARTICLE_COUNT; n++)
+        for (particleIdx = 0; particleIdx < ICEBALL_PARTICLE_COUNT; particleIdx++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 832, NULL, 1, -1, NULL);
         }
@@ -116,7 +116,7 @@ void iceBall_handleCharacterImpact(GameObject* obj)
                                                                                              ICEBALL_MSG_NOTIFY_OWNER);
             }
         }
-        for (n = 0; n < ICEBALL_PARTICLE_COUNT; n++)
+        for (particleIdx = 0; particleIdx < ICEBALL_PARTICLE_COUNT; particleIdx++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 835, NULL, 1, -1, NULL);
         }
@@ -131,7 +131,7 @@ void iceBall_handleCharacterImpact(GameObject* obj)
                     (obj)->ownerObj, ICEBALL_MSG_NOTIFY_OWNER, 0);
             }
         }
-        for (n = 0; n < ICEBALL_PARTICLE_COUNT; n++)
+        for (particleIdx = 0; particleIdx < ICEBALL_PARTICLE_COUNT; particleIdx++)
         {
             (*gPartfxInterface)->spawnObject((void*)obj, 835, NULL, 1, -1, NULL);
         }

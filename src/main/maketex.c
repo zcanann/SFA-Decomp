@@ -731,12 +731,12 @@ void cardSetStatusNoCard2(void)
 int arrayRemoveUnordered(int* array, int* count, int value)
 {
     int i;
-    int n;
-    n = *count;
-    i = maketex_indexOf(array, n, value);
+    int len;
+    len = *count;
+    i = maketex_indexOf(array, len, value);
     if (i == -1)
         return -1;
-    array[i] = array[n - 1];
+    array[i] = array[len - 1];
     (*count)--;
     return i;
 }

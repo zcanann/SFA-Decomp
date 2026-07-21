@@ -271,11 +271,11 @@ int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker* route, f32 speed)
     f32 maxSq, dist, step;
     int iter;
     int result;
-    f32 tmp;
+    f32 maxDist;
 
     result = 0;
-    tmp = lbl_803E244C * (speed * timeDelta);
-    maxSq = tmp * tmp;
+    maxDist = lbl_803E244C * (speed * timeDelta);
+    maxSq = maxDist * maxDist;
     dist = getXZDistance(&route->posX, (f32*)(obj + 0x18));
     if (route->reverse != 0)
     {

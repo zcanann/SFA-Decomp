@@ -507,23 +507,23 @@ s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist)
         sinStepM = mathCosf(-0.34898064f);
         for (i = 0; i < 8; i++)
         {
-            f32 t;
+            f32 cosNext;
 
             anglePlus += 0xe38;
-            t = cosP * sinStepP + sinP * cosStepP;
+            cosNext = cosP * sinStepP + sinP * cosStepP;
             sinP = sinP * sinStepP - cosP * cosStepP;
-            cosP = t;
-            vec[0] = ((GameObject*)obj)->anim.localPosX - dist * t;
+            cosP = cosNext;
+            vec[0] = ((GameObject*)obj)->anim.localPosX - dist * cosNext;
             vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sinP;
             if (objBboxFn_800640cc((f32*)(obj + 0xc), vec, 0.1f, 1, NULL, (GameObject*)obj, 8, -1, 0xff, 0) == 0)
             {
                 return anglePlus;
             }
             angleMinus -= 0xe38;
-            t = cosM * sinStepM + sinM * cosStepM;
+            cosNext = cosM * sinStepM + sinM * cosStepM;
             sinM = sinM * sinStepM - cosM * cosStepM;
-            cosM = t;
-            vec[0] = ((GameObject*)obj)->anim.localPosX - dist * t;
+            cosM = cosNext;
+            vec[0] = ((GameObject*)obj)->anim.localPosX - dist * cosNext;
             vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sinM;
             if (objBboxFn_800640cc((f32*)(obj + 0xc), vec, 0.1f, 1, NULL, (GameObject*)obj, 8, -1, 0xff, 0) == 0)
             {
