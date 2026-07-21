@@ -299,22 +299,18 @@ void padUpdate(void)
     u16* triggers;
     u16* triggersReleased;
     u16* triggersPressed;
-    PADStatus* prevPad;
+    const PADStatus* prevPad;
     PADStatus* readPad;
     s32 i;
     PADStatus* statuses;
     int sx;
     int sy;
-    u8 toggle;
-    u8 other;
     u8 useprev;
 
     padStateBlock[0] = gPadButtonsPrevious;
-    toggle = gPadStatusToggle;
-    prevPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + toggle * 0x30);
-    other = toggle ^ 1;
-    gPadStatusToggle = other;
-    readPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + other * 0x30);
+    prevPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + gPadStatusToggle * 0x30);
+    gPadStatusToggle ^= 1;
+    readPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + gPadStatusToggle * 0x30);
     if (PADRead(readPad) == PAD_ERR_TRANSFER)
     {
         return;
@@ -376,7 +372,7 @@ void padUpdate(void)
             *triggersPressed = 0;
             memset(statuses, 0, sizeof(PADStatus));
             memset((u8*)(padStateBlock[0] + 0x10) + (i + 4) * 0xc, 0, sizeof(PADStatus));
-            gPadResetMask |= (u32)PAD_CHAN0_BIT >> i;
+            gPadResetMask |= PAD_CHAN0_BIT >> i;
             currentStatus->err = PAD_ERR_NO_CONTROLLER;
         }
         else if ((u8)(currentStatus->err + 3) <= 1 || gPadReadReady == 0)
