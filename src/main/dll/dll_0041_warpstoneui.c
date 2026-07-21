@@ -68,28 +68,24 @@ int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuIt
     int yoff;
     WarpstoneMenuItem* lastDst;
     int entry;
-    const WarpstoneEntry* entryp;
 
     lastDst = NULL;
     entry = 0;
     slot = 0;
-    entryp = entries;
     for (; slot < count; slot++)
     {
-        if (mainGetBit(entryp->bit) != 0)
+        if (mainGetBit(entries[slot].bit) != 0)
         {
             entry++;
         }
-        entryp++;
     }
     tmp = (count - entry) * 0x2a / 2 + 0x52;
     slot = 0;
     entry = slot;
-    entryp = entries;
     yoff = tmp;
     for (; entry < count; entry++)
     {
-        if (mainGetBit(entryp->bit) != 0)
+        if (mainGetBit(entries[entry].bit) != 0)
         {
             memcpy(items, templates, sizeof(WarpstoneMenuItem));
             lastDst = items;
@@ -102,7 +98,6 @@ int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuIt
             yoff += 0x2a;
             slot++;
         }
-        entryp++;
         templates++;
     }
     if (lastDst != NULL)
