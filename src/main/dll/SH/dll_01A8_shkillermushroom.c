@@ -375,7 +375,7 @@ void enemymushroom_update(int* obj)
             {
                 (*gExpgfxInterface)->freeSource((u32)obj);
                 state->stateId = 0;
-                objFn_8002b67c((GameObject*)obj);
+                Obj_ResetActiveHitVolumeBounds((GameObject*)obj);
             }
             else
             {
@@ -400,7 +400,7 @@ void enemymushroom_update(int* obj)
         {
             enemymushroom_resetToSpawn((EnemyMushroomObject*)obj, state, 1);
             state->stateId = 1;
-            objFn_8002b67c((GameObject*)obj);
+            Obj_ResetActiveHitVolumeBounds((GameObject*)obj);
         }
         break;
     default:

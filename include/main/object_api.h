@@ -26,7 +26,7 @@ void Obj_Shatter(GameObject* obj);
 void Obj_StartModelFadeIn(GameObject* obj, int frames);
 void Obj_SetActiveModelIndex(GameObject* obj, int idx);
 void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags);
-void objFn_8002b67c(GameObject* obj);
+void Obj_ResetActiveHitVolumeBounds(GameObject* obj);
 void objSetHintTextIdx(GameObject* obj, u16 idx);
 void objSetSlot(GameObject* obj, s8 slot);
 void doNothing_afterRenderObject(void);

@@ -666,7 +666,7 @@ void objSetHintTextIdx(GameObject* obj, u16 idx)
     (obj)->hintTextIdx = idx;
 }
 
-void objFn_8002b67c(GameObject* obj)
+void Obj_ResetActiveHitVolumeBounds(GameObject* obj)
 {
     ObjHitVolumeRuntimeBounds* dst;
     ObjDefHitVolume* src;
