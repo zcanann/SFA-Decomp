@@ -276,7 +276,7 @@ u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u3
             else
             {
                 loadUiDll(ENTER_SAVE_NAME_MENU_DLL);
-                set_uiDllIdx_803dc8f0(ENTER_SAVE_NAME_MENU_DLL);
+                setCurUiDll(ENTER_SAVE_NAME_MENU_DLL);
             }
         }
     }

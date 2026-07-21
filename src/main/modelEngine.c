@@ -843,12 +843,12 @@ int uiDll_runFrameStartAndLoadNext(void)
     return result;
 }
 
-void set_uiDllIdx_803dc8f0(int idx)
+void setCurUiDll(int idx)
 {
     curUiDll = idx;
 }
 
-int getUiDllFn_80014930(void)
+int getPrevUiDll(void)
 {
     return gModelEnginePrevUiDll;
 }

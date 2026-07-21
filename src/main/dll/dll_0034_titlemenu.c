@@ -410,7 +410,7 @@ void TitleMenu_initialise(void)
     gameTextLoadDir(0x15);
     gTitleMenuNextDllId = 0;
     gTitleMenuLoadDelay = 0;
-    mode = getUiDllFn_80014930();
+    mode = getPrevUiDll();
     if (mode == 3)
     {
         gTitleMenuLinkInterface->vtable->setup(sNAttractModeStringBlock, 1, 0, NULL, 0, 0, 0x14, 200, 0xff, 0xff, 0xff,
@@ -425,9 +425,9 @@ void TitleMenu_initialise(void)
     gTitleMenuLinkInterface->vtable->setSelected(gTitleMenuSelection);
     titleScreenFn_801368a4(0);
 
-    mode = getUiDllFn_80014930();
-    if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) || (mode = getUiDllFn_80014930(), mode == 6)) ||
-        (mode = getUiDllFn_80014930(), mode == 5))
+    mode = getPrevUiDll();
+    if ((((mode == 0xd) || (mode = getPrevUiDll(), mode == 7)) || (mode = getPrevUiDll(), mode == 6)) ||
+        (mode = getPrevUiDll(), mode == 5))
     {
         (*gScreenTransitionInterface)->step(0x23, 5);
     }

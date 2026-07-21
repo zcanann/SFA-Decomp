@@ -725,9 +725,9 @@ void SaveSelectScreen_initialise(void)
         lbl_803A8680[i] = textureLoadAsset(gSaveSelectTextureIds[i]);
     }
 
-    if (getUiDllFn_80014930() != 6)
+    if (getPrevUiDll() != 6)
     {
-        if (getUiDllFn_80014930() != 5)
+        if (getPrevUiDll() != 5)
         {
             (*gScreenTransitionInterface)->step(0x14, 5);
         }

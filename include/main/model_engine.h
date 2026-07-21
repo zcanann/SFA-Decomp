@@ -88,7 +88,7 @@ void model_adjustModelList(ModelList* list, int index);
 void modelInitModelList(ModelList* list, s16 index, void* header);
 ModelList* allocModelStruct(int capacity, int dataSize);
 
-int getUiDllFn_80014930(void);
+int getPrevUiDll(void);
 void loadUiDll(int index);
 void fn_8001404C(s32 value);
 void hudNumberFn_80014060(void* context);
@@ -98,7 +98,7 @@ f32 gameTimerGetValue(void);
 void curUiDllDraw(int a, int b, int c, int d);
 void uiDll_runFrameEndAndLoadNext(void);
 int uiDll_runFrameStartAndLoadNext(void);
-void set_uiDllIdx_803dc8f0(int idx);
+void setCurUiDll(int idx);
 UiDllVTable** getDLL16(void);
 void initGameTimer(void);
 void gameTimerRun(void* context);
