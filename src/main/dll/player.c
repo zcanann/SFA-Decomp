@@ -12000,9 +12000,9 @@ void fn_802AABE4(int obj)
     f32 jointPosition[3];
 
     object = (GameObject*)obj;
-    model = (ObjModel*)object->anim.banks[object->anim.bankIndex];
+    model = object->anim.modelBanks[object->anim.bankIndex];
     player = object->extra;
-    moveTable = (s16*)player->moveAnimTable;
+    moveTable = player->moveAnimIds;
 
     ObjAnim_SetCurrentMove(obj, moveTable[0], lbl_803E7EA4, 0);
     ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, object->anim.rootMotionScale, jointPosition, jointRotation);

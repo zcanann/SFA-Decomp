@@ -414,7 +414,10 @@ typedef struct ObjAnimComponent {
   ObjTextureRuntimeSlot *textureSlots;
   ObjHitVolumeRuntimeTransform *hitVolumeTransforms;
   ObjHitVolumeRuntimeBounds *hitVolumeBounds;
-  ObjAnimBank **banks;
+  union {
+    ObjAnimBank **banks;
+    struct ObjModel **modelBanks;
+  };
   f32 previousLocalPosX;
   f32 previousLocalPosY;
   f32 previousLocalPosZ;
