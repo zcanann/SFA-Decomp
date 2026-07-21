@@ -98,20 +98,21 @@ int fn_80198B68(u8* obj, f32* point)
     f32 localY;
     f32 localZ;
     f32 forward;
+    GameObject* o = (GameObject*)obj;
 
-    data = *(u8**)&((GameObject*)obj)->anim.placementData;
+    data = *(u8**)&o->anim.placementData;
     pointX = point[0];
     pointY = point[1];
     pointZ = point[2];
 
-    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotX));
-    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotX));
-    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotY));
-    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(((GameObject*)obj)->anim.rotY));
+    yawCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(o->anim.rotX));
+    yawSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(o->anim.rotX));
+    pitchCos = mathSinf(MOONROCK_ANGLE_TO_RADIANS(o->anim.rotY));
+    pitchSin = mathCosf(MOONROCK_ANGLE_TO_RADIANS(o->anim.rotY));
 
-    relX = pointX - ((GameObject*)obj)->anim.worldPosX;
-    relY = pointY - ((GameObject*)obj)->anim.worldPosY;
-    relZ = pointZ - ((GameObject*)obj)->anim.worldPosZ;
+    relX = pointX - o->anim.worldPosX;
+    relY = pointY - o->anim.worldPosY;
+    relZ = pointZ - o->anim.worldPosZ;
     localX = relX * yawSin - relZ * yawCos;
     forward = relX * yawCos + relZ * yawSin;
     localY = relY * pitchSin - forward * pitchCos;

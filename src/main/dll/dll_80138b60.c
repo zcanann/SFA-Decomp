@@ -213,19 +213,19 @@ void fn_80138D7C(int obj, int state)
  * and store lbl_803E2408 into obj->_b8->_808. */
 void trickyImpress(GameObject* obj)
 {
-    u8* b = ((GameObject*)obj)->extra;
-    ((TrickyImpressState*)b)->flags54 |= 0x80000000;
-    ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
+    TrickyImpressState* b = ((GameObject*)obj)->extra;
+    b->flags54 |= 0x80000000;
+    b->unk808 = lbl_803E2408;
 }
 /* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(GAMEBIT_Tricky_Usable); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
 int trickyFn_80138f14(GameObject* obj)
 {
-    u8* b = obj->extra;
+    TrickyImpressState* b = obj->extra;
     if ((u32)mainGetBit(GAMEBIT_Tricky_Usable) != 0u)
     {
-        ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
-        if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
+        b->flags54 |= 0x10000LL;
+        if ((b->flags54 & 0x10) != 0u)
         {
             return 1;
         }
