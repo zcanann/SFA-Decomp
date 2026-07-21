@@ -3542,7 +3542,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
     }
 }
 
-void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, int* frameTable, int queryMode)
 {
     int idx = -1;
     if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0)
@@ -3576,7 +3576,7 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* fr
             {
                 if (queryMode == 1 && frameTable != 0)
                 {
-                    int e = (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4);
+                    int e = (texId & 0xffffff) * 2 + frameTable[count];
                     int v;
                     e = base + e + 4;
                     v = *(int*)(e + 4);
@@ -3614,7 +3614,7 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* fr
                 DCStoreRange(buf, 0x400);
                 if (queryMode == 1 && frameTable != 0)
                 {
-                    int e = *(int*)(frameTable + count * 4);
+                    int e = frameTable[count];
                     int v;
                     e = (int)buf + e + 4;
                     v = *(int*)(e + 4);
@@ -3646,7 +3646,7 @@ void tex1GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* fr
 
 extern f32 lbl_803DEAC8;
 
-void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, int* frameTable, int queryMode)
 {
     int idx = -1;
     if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0)
@@ -3677,7 +3677,7 @@ void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* fr
         if (queryMode == 1 && frameTable != 0)
         {
             int base = lbl_8035F3E8[idx];
-            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
+            int e = base + (texId & 0xffffff) * 2 + frameTable[count] + 4;
             int v = *(int*)(e + 8);
             *outA = *(int*)(e + 4);
             *outB = v;
@@ -3697,14 +3697,14 @@ void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* fr
 }
 
 
-void texPreGetMipmap(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+void texPreGetMipmap(int texId, int unused, int* outA, int* outB, int count, int* frameTable, int queryMode)
 {
     u32 base = lbl_8035F3E8[0x4f];
     if (base != 0)
     {
         if (queryMode == 1 && frameTable != 0)
         {
-            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
+            int e = base + (texId & 0xffffff) * 2 + frameTable[count] + 4;
             int v = *(int*)(e + 8);
             *outA = *(int*)(e + 4);
             *outB = v;

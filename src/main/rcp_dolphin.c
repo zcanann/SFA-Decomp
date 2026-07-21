@@ -55,7 +55,7 @@
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
 int gLoadedTextureCount;
-void* gRcpTexHeaderBuffer;
+int* gRcpTexHeaderBuffer;
 u32 lbl_803DCDB4;
 u32 lbl_803DCDB0;
 u8 gRcpTexAllocFailed;
@@ -161,7 +161,7 @@ extern RcpDistortSlot gRcpDistortSlots[6];
 extern u8 gRcpDistortSlotIndex;
 extern void* gRcpDistortTexture;
 extern u16* gRcpTexIdRemap;
-extern void* gRcpTexHeaderBuffer;
+extern int* gRcpTexHeaderBuffer;
 extern u8 gRcpDistortGroup;
 extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
@@ -1643,15 +1643,15 @@ void* textureLoad(int texId, u8 flagIn)
         {
             tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
         }
-        *(int*)gRcpTexHeaderBuffer = 0;
-        *((int*)gRcpTexHeaderBuffer + 1) = sizeOut;
+        gRcpTexHeaderBuffer[0] = 0;
+        gRcpTexHeaderBuffer[1] = sizeOut;
         if (frameOut == -1)
         {
-            *((int*)gRcpTexHeaderBuffer + 2) = sizeOut;
+            gRcpTexHeaderBuffer[2] = sizeOut;
         }
         else
         {
-            *((int*)gRcpTexHeaderBuffer + 2) = frameOut;
+            gRcpTexHeaderBuffer[2] = frameOut;
         }
     }
     else if (bank == 0)
@@ -1752,7 +1752,7 @@ void* textureLoad(int texId, u8 flagIn)
         }
         if (frameOut == -1)
         {
-            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize,
+            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize,
                                             0, id16, 0);
             buf[0x49] = 1;
             if (flag != 0)
@@ -1763,7 +1763,7 @@ void* textureLoad(int texId, u8 flagIn)
         }
         else
         {
-            loadAndDecompressDataFile(file, buf, dataByteOffset + ((int*)gRcpTexHeaderBuffer)[mipLevel], frameSize, 0,
+            loadAndDecompressDataFile(file, buf, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize, 0,
                                       id16, 0);
         }
         if (frameOut != -1)
