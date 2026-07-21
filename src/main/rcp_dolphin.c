@@ -1971,7 +1971,7 @@ void Rcp_SetColorFilterEnabled(u32 x)
     bEnableColorFilter = x;
 }
 
-void fn_80054F74(GameObject* object, f32* position)
+void ObjHits_ConvertHitPositionToWorld(GameObject* object, f32* position)
 {
     if (object->anim.parent != NULL)
         return;

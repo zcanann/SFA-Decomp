@@ -1546,7 +1546,7 @@ int ObjHits_PollPriorityHitWithCooldown(GameObject* obj, float* cooldown, int* o
                                                                outHitPos + 2);
             if (collisionType != 0)
             {
-                fn_80054F74(obj, outHitPos);
+                ObjHits_ConvertHitPositionToWorld(obj, outHitPos);
             }
         }
         else
