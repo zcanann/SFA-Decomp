@@ -5468,7 +5468,7 @@ void mapInitFn_80069990(void)
     lbl_803DCF4F = 0;
 }
 
-void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
+void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
 {
     u32 fmt;
     u32 w;
@@ -5608,7 +5608,7 @@ void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
     }
 }
 
-void fn_80069EB8(int param)
+void updateHeavyFogTexture(int intensity)
 {
     u8* cache;
     int hi, mid;
@@ -5622,7 +5622,7 @@ void fn_80069EB8(int param)
         j = 0;
         hi = ((u32)blk >> 2) << 8;
         mid = (blk & 3) << 3;
-        scaled = (blk + param) * 0xff;
+        scaled = (blk + intensity) * 0xff;
         for (; j < 0x40; j++)
         {
             int idx;
@@ -5639,5 +5639,5 @@ void fn_80069EB8(int param)
         }
     }
     memcpyToCache((void*)(gNewShadowHeavyFogTexture + 0x60), cache, 0);
-    lbl_803DCF80 = param;
+    lbl_803DCF80 = intensity;
 }

@@ -1345,7 +1345,7 @@ void maybeHudFn_8006c91c(void)
         else
             v = (int)(lbl_803DED1C * (hi - z) / (hi - lo));
         if ((u8)v != lbl_803DCF80)
-            fn_80069EB8((u8)v);
+            updateHeavyFogTexture((u8)v);
     }
 }
 
@@ -1819,7 +1819,7 @@ void allocLotsOfTextures(void)
 
     gNewShadowHeavyFogTexture = textureAlloc(0x40, 0x40, 1, 0, 0, 0, 0, 1, 1);
     DCInvalidateRange((u8*)gNewShadowHeavyFogTexture + 0x60, gNewShadowHeavyFogTexture->dataSize);
-    fn_80069EB8(0);
+    updateHeavyFogTexture(0);
 
     gNewShadowLightningTexture = textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
     fillTextureCFB4();

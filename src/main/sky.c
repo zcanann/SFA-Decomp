@@ -1742,15 +1742,15 @@ void skyFn_8008aee8(void)
             }
             ((SkyTimeBlend*)gSkyState)->prevPhase = (s8)((SkyTimeBlend*)gSkyState)->phase;
         }
-        fn_80069B1C(((SkyTimeBlend*)gSkyState)->texB, ((SkyTimeBlend*)gSkyState)->texA, tc,
-                    (void*)(*(int**)&gSkyState)[((SkyTimeBlend*)gSkyState)->texSel + 2]);
+        blendTextures(((SkyTimeBlend*)gSkyState)->texB, ((SkyTimeBlend*)gSkyState)->texA, tc,
+                      (void*)(*(int**)&gSkyState)[((SkyTimeBlend*)gSkyState)->texSel + 2]);
         ((SkyBlendStateFlags*)(gSkyState + 0x255))->unused80 = 1;
         sky = *(int**)&gSkyState;
         blend = ((SkyTimeBlend*)sky)->blend;
         if (blend)
         {
             texHandle = sky[((SkyTimeBlend*)sky)->texSel + 2];
-            fn_80069B1C((void*)sky[4], (void*)texHandle, blend, (void*)texHandle);
+            blendTextures((void*)sky[4], (void*)texHandle, blend, (void*)texHandle);
         }
         sky = *(int**)&gSkyState;
         idxA = (s16)(sky[((SkyTimeBlend*)sky)->phase + 0x87] - 0xc38) * 6;
