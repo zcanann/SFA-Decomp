@@ -5599,18 +5599,18 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
 void updateHeavyFogTexture(int intensity)
 {
     u8* cache;
-    int hi, mid;
+    u32 hi, mid;
     u32 scaled;
     u32 j;
-    int blk;
+    int row;
 
     cache = getCache();
-    for (blk = 0; (u32)blk < 0x40; blk++)
+    for (row = 0; (u32)row < 0x40; row++)
     {
         j = 0;
-        hi = ((u32)blk >> 2) << 8;
-        mid = (blk & 3) << 3;
-        scaled = (blk + intensity) * 0xff;
+        hi = ((u32)row >> 2) << 8;
+        mid = (row & 3) << 3;
+        scaled = (row + intensity) * 0xff;
         for (; j < 0x40; j++)
         {
             int idx;
