@@ -2267,7 +2267,7 @@ void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
     int tmp;
     int size;
     u8* ptr;
-    u32 animOffset;
+    int animOffset;
     int i;
     u32 ftype;
 
