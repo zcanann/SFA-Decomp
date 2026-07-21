@@ -3,8 +3,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/synth_config.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/fake_tgmath.h"
+#undef NAN
+#include "dolphin/math.h"
 
 
 void sndQuit(void)
