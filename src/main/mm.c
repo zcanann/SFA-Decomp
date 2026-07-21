@@ -486,7 +486,7 @@ void heapFree(int region, int idx)
 
 void mmFreeTick(int arg)
 {
-    MmGlobalLayout* g[1];
+    MmGlobalLayout* g;
     int i;
     DeferredFree* d;
     int k;
@@ -494,20 +494,20 @@ void mmFreeTick(int arg)
     HeapItem* item;
     s16 next;
 
-    g[0] = (MmGlobalLayout*)gMmStoreArray;
+    g = (MmGlobalLayout*)gMmStoreArray;
     gMmTickCount++;
     gMmOpCount++;
 
     i = 0;
-    d = g[0]->deferred;
+    d = g->deferred;
     for (; i < gMmDeferredFreeCount;)
     {
         d->delay--;
         if (d->delay == 0)
         {
             mmFree(d->ptr);
-            d->ptr = g[0]->deferred[gMmDeferredFreeCount - 1].ptr;
-            d->delay = g[0]->deferred[gMmDeferredFreeCount - 1].delay;
+            d->ptr = g->deferred[gMmDeferredFreeCount - 1].ptr;
+            d->delay = g->deferred[gMmDeferredFreeCount - 1].delay;
             gMmDeferredFreeCount--;
         }
         else
@@ -519,7 +519,7 @@ void mmFreeTick(int arg)
 
     for (k = 0; k < 0x20; k++)
     {
-        MmStore** sp = (MmStore**)g[0]->stores;
+        MmStore** sp = (MmStore**)g->stores;
         if (sp[k] != NULL)
         {
             sp[k]->bufCur = sp[k]->buf;
@@ -534,7 +534,7 @@ void mmFreeTick(int arg)
 
     if (gMmRegionCount > 1)
     {
-        base = (HeapItem*)g[0]->regions[1].start;
+        base = (HeapItem*)g->regions[1].start;
         item = base;
         do
         {
@@ -549,7 +549,7 @@ void mmFreeTick(int arg)
             }
         } while (next != -1);
 
-        base = (HeapItem*)g[0]->regions[2].start;
+        base = (HeapItem*)g->regions[2].start;
         item = base;
         do
         {
@@ -564,7 +564,7 @@ void mmFreeTick(int arg)
             }
         } while (next != -1);
 
-        base = (HeapItem*)g[0]->regions[3].start;
+        base = (HeapItem*)g->regions[3].start;
         item = base;
         do
         {
@@ -582,11 +582,11 @@ void mmFreeTick(int arg)
 
     if (gMmStatsPrintCounter++ % 500 == 0)
     {
-        OSReport(sMemStatsFormat, 0, g[0]->regions[0].size, gMmRegion1Used, g[0]->regions[1].size, gMmRegion2Used,
-                 g[0]->regions[2].size, gMmRegion3Used, g[0]->regions[3].size, g[0]->regions[0].slotCount,
-                 g[0]->regions[0].numSlots, g[0]->regions[1].slotCount, g[0]->regions[1].numSlots,
-                 g[0]->regions[2].slotCount, g[0]->regions[2].numSlots, g[0]->regions[3].slotCount,
-                 g[0]->regions[3].numSlots);
+        OSReport(sMemStatsFormat, 0, g->regions[0].size, gMmRegion1Used, g->regions[1].size, gMmRegion2Used,
+                 g->regions[2].size, gMmRegion3Used, g->regions[3].size, g->regions[0].slotCount,
+                 g->regions[0].numSlots, g->regions[1].slotCount, g->regions[1].numSlots,
+                 g->regions[2].slotCount, g->regions[2].numSlots, g->regions[3].slotCount,
+                 g->regions[3].numSlots);
     }
 }
 void mm_free(void* p)
