@@ -801,7 +801,7 @@ void sceneDraw(void)
     drawReflectionTexture();
     lbl_803DCE30 = 0;
     getVisibleObjects(buf);
-    gxTextureFn_80052efc();
+    Rcp_UpdateDistortionTextures();
     perspectiveFn_80129db4();
     GXPixModeSync();
     Camera_UpdateProjection(NULL, 0);

@@ -47,7 +47,7 @@ void* getLoadedTexture(int key);
 u8 Rcp_GetViewFinderHudEnabled(void);
 void Rcp_SetViewFinderHudEnabled(u8 x);
 void ShaderDef_free(int* def);
-void gxTextureFn_80052efc(void);
+void Rcp_UpdateDistortionTextures(void);
 void loadNextMap(void);
 
 #endif /* MAIN_RCP_DOLPHIN_H_ */

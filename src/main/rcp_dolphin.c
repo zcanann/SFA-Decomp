@@ -595,7 +595,7 @@ void gxColorFn_80052764(GXColor* param)
 }
 extern u8 gRcpWarpDistortDisplayList[0x6640];
 
-void gxFn_80052dc0(void);
+void Rcp_SetupDistortionRenderState(void);
 
 static inline void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
 {
@@ -614,7 +614,7 @@ static inline void gxLoadObjectLights(GameObject* model, ModelLightStruct** ligh
 void textureFn_800524ec(GXColor* param);
 void Rcp_ApplyTextureStageCounts(void);
 void Rcp_ResetTextureStageState(void);
-int textureFn_80052bb4(int model, f32* params);
+int Rcp_SetupDistortionLights(int model, f32* params);
 void Rcp_ApplyTextureStageCounts(void)
 {
     GXSetNumTexGens(lbl_803DCD69);
@@ -651,7 +651,7 @@ void Rcp_ResetTextureStageState(void)
     lbl_803DCD30 = 0;
 }
 
-void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
+void Rcp_DrawWarpDistortionMesh(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
 {
     f32 x0;
     f32 y;
@@ -726,7 +726,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
     }
     GXCallDisplayList(gRcpWarpDistortDisplayList, gRcpWarpDistortListSize);
 }
-int textureFn_80052bb4(int model, f32* params)
+int Rcp_SetupDistortionLights(int model, f32* params)
 {
     ModelLightStruct* la;
     ModelLightStruct* lb;
@@ -762,7 +762,7 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightStruct_setAngularAttenuation(lb, 1.0f, 0.0f, 0.0f);
     return 0;
 }
-void gxFn_80052dc0(void)
+void Rcp_SetupDistortionRenderState(void)
 {
     f32 omtx[4][4];
     f32 pmtx[3][4];
@@ -788,7 +788,7 @@ void gxFn_80052dc0(void)
     GXSetCurrentMtx(GX_PNMTX0);
 }
 
-void gxTextureFn_80052efc(void)
+void Rcp_UpdateDistortionTextures(void)
 {
     union
     {
@@ -809,7 +809,7 @@ void gxTextureFn_80052efc(void)
     int model[1];
     u8* tex;
 
-    gxFn_80052dc0();
+    Rcp_SetupDistortionRenderState();
     PSMTXScale(mtx, 0.5f, -0.5f, 0.5f);
     mtx[0][3] = 0.5f;
     mtx[1][3] = 0.5f;
@@ -832,11 +832,11 @@ void gxTextureFn_80052efc(void)
             matColor.a = 0xff;
             GXSetChanMatColor(GX_COLOR0A0, matColor);
             GXSetChanMatColor(GX_COLOR1A1, matColor);
-            textureFn_80052bb4(((RcpDistortSlot*)slots[0])[i].model, ((RcpDistortSlot*)slots[0])[i].params);
+            Rcp_SetupDistortionLights(((RcpDistortSlot*)slots[0])[i].model, ((RcpDistortSlot*)slots[0])[i].params);
             Rcp_ResetTextureStageState();
             textureFn_8004ff20(gRcpDistortTexture, (f32*)mtx, &texColor, 0);
             Rcp_ApplyTextureStageCounts();
-            lightFn_80052974((f32)(i * 0x20), 0.0f);
+            Rcp_DrawWarpDistortionMesh((f32)(i * 0x20), 0.0f);
             GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, 0);
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
             if (((Texture*)tex)->preloaded != 0)
@@ -874,7 +874,7 @@ void gxTextureFn_80052efc(void)
             gxLoadObjectLights((GameObject*)model[0], lights);
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
-            lightFn_80052974((f32)(i * 0x20), 0.0f);
+            Rcp_DrawWarpDistortionMesh((f32)(i * 0x20), 0.0f);
             GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60,
                       (i == clearSlot) ? GX_TRUE : GX_FALSE);
             tex = ((RcpDistortSlot*)slots[0])[i].texture;
