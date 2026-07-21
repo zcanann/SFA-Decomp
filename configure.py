@@ -1915,7 +1915,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BE_androssbrain.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02BF_androssligh.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/audio/synth_queue.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
-            Object(NonMatching, "main/audio/synth_seq_events.c", mw_version="GC/1.2.5n"),
+            Object(MatchingFor("GSAE01"), "main/audio/synth_seq_events.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/synth_seq_dispatch.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-fp_contract", "off"]),
             Object(NonMatching, "main/audio/synth_channel_scale.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-fp_contract", "off"]),
             Object(NonMatching, "main/audio/synth.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-fp_contract", "off"]),
