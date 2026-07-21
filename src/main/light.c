@@ -235,7 +235,7 @@ void VFP_Block1_initialise(void)
 {
 }
 
-void fn_801FBAC8(GameObject* obj)
+void VFP_Platform_updateLavaBlock(GameObject* obj)
 {
     ObjPlacement* placement = (ObjPlacement*)obj->anim.placementData;
     VfpPlatformState* state = obj->extra;
@@ -400,7 +400,7 @@ void VFP_Platform_update(GameObject* obj)
         {
             if ((obj)->anim.seqId == VFP_PLATFORM_LAVABLOCK_OBJ)
             {
-                fn_801FBAC8(obj);
+                VFP_Platform_updateLavaBlock(obj);
             }
             else
             {
