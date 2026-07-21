@@ -19,6 +19,7 @@
 #define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
 #define VOXMAPS_PATH_POINT_CAPACITY 10
+#define VOXMAPS_SCRATCH_BUFFER_SIZE 640
 
 typedef struct VoxRouteWork {
     RouteNode nodes[VOXMAPS_ROUTE_NODE_CAPACITY];
@@ -32,8 +33,8 @@ STATIC_ASSERT(offsetof(VoxRouteWork, pathPoints) == 0xe10);
 STATIC_ASSERT(sizeof(VoxRouteWork) == 0xe88);
 
 int* gVoxMapsMapList;
-void* gVoxMapsScratchBuffer;
-void* gVoxMapsScratchBufferPtr;
+u8* gVoxMapsScratchBuffer;
+u8* gVoxMapsScratchBufferPtr;
 u8 gVoxMapsSlotInUse[8];
 u32 gVoxMapsTransformObj;
 int gVoxMapsMaxMapIndex;
@@ -1406,7 +1407,7 @@ void voxmaps_initialise(void)
         i++;
     }
     gVoxMapsMaxMapIndex = i - 1;
-    gVoxMapsScratchBuffer = mmAlloc(640, 16, 0);
+    gVoxMapsScratchBuffer = mmAlloc(VOXMAPS_SCRATCH_BUFFER_SIZE, 16, 0);
 
     for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
     {
