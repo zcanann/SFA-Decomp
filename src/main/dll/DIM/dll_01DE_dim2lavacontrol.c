@@ -38,7 +38,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 
-u8 lbl_803DBF28[8] = {0xFF, 0xCD, 0xB9, 0xAA, 0, 0, 0, 0};
+u8 gDim2LavaHeatAlphaTargets[8] = {0xFF, 0xCD, 0xB9, 0xAA, 0, 0, 0, 0};
 
 /* Env-effect ids co-activated on the userData1 restore tick (immediately when
    userData1==2, else deferred); opaque distinct roles per index. */
@@ -64,7 +64,7 @@ typedef struct Dim2lavacontrolState
     s8 countdown;
     u8 countdownSave;
     s8 flags;
-    u8 sfxLevel;
+    u8 heatEffectAlpha;
     u8 phase;
     u8 pad5[0xC - 0x5];
     int musicTrack;
@@ -101,7 +101,7 @@ int dim2lavacontrol_getExtraSize(void) { return 0x10; }
 
 void dim2lavacontrol_free(void)
 {
-    fn_8004C1E4(0xC0, 1.0f);
+    setHeatEffectParams(0xC0, 1.0f);
     Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
     Rcp_DisableHeatEffect();
 }
@@ -114,7 +114,7 @@ void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 
 
 void dim2lavacontrol_update(int obj)
 {
-    int diff;
+    int alphaDelta;
     GameObject* heldObj;
     if (((GameObject*)obj)->userData1 != 0)
     {
@@ -147,18 +147,19 @@ void dim2lavacontrol_update(int obj)
     case DIM2LAVACONTROL_PHASE_TRIGGERED:
         break;
     }
-    diff = ((Dim2lavacontrolState*)obj)->sfxLevel - lbl_803DBF28[((Dim2lavacontrolState*)obj)->countdown];
-    if (diff != 0)
+    alphaDelta = ((Dim2lavacontrolState*)obj)->heatEffectAlpha -
+                 gDim2LavaHeatAlphaTargets[((Dim2lavacontrolState*)obj)->countdown];
+    if (alphaDelta != 0)
     {
-        if (diff > 0)
+        if (alphaDelta > 0)
         {
-            ((Dim2lavacontrolState*)obj)->sfxLevel -= 1;
+            ((Dim2lavacontrolState*)obj)->heatEffectAlpha -= 1;
         }
         else
         {
-            ((Dim2lavacontrolState*)obj)->sfxLevel += 1;
+            ((Dim2lavacontrolState*)obj)->heatEffectAlpha += 1;
         }
-        fn_8004C1E4(((Dim2lavacontrolState*)obj)->sfxLevel, 1.0f);
+        setHeatEffectParams(((Dim2lavacontrolState*)obj)->heatEffectAlpha, 1.0f);
     }
     if (Player_GetHeldObject(Obj_GetPlayerObject(), &heldObj) != 0)
     {
@@ -222,14 +223,14 @@ void dim2lavacontrol_init(GameObject *obj, int param2)
     if ((((Dim2lavacontrolState*)state)->flags & 1) != 0)
     {
         *(u8*)&((Dim2lavacontrolState*)state)->countdown = 0;
-        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[0];
-        fn_8004C1E4(lbl_803DBF28[0], 1.0f);
+        ((Dim2lavacontrolState*)state)->heatEffectAlpha = gDim2LavaHeatAlphaTargets[0];
+        setHeatEffectParams(gDim2LavaHeatAlphaTargets[0], 1.0f);
     }
     else
     {
         *(u8*)&((Dim2lavacontrolState*)state)->countdown = 3;
-        ((Dim2lavacontrolState*)state)->sfxLevel = lbl_803DBF28[3];
-        fn_8004C1E4(lbl_803DBF28[3], 1.0f);
+        ((Dim2lavacontrolState*)state)->heatEffectAlpha = gDim2LavaHeatAlphaTargets[3];
+        setHeatEffectParams(gDim2LavaHeatAlphaTargets[3], 1.0f);
     }
     Music_Trigger(MUSICTRIG_WLC_Corridors, 1);
     envFxActFn_800887f8(0);

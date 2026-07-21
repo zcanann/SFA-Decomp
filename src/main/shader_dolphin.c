@@ -70,8 +70,8 @@ u8* lbl_803DCD2C;
 u8 lbl_803DCD28;
 
 u8 lbl_803DB5E8 = 0xFF;
-u32 lbl_803DB5EC = 0xFFFFFFC0;
-f32 lbl_803DB5F0 = 1.0f;
+GXColor gHeatEffectColor = {0xFF, 0xFF, 0xFF, 0xC0};
+f32 gHeatEffectScale = 1.0f;
 int lbl_803DB5F4 = -4;
 u8 lbl_803DB5F8[8] = {0x28, 0x20, 0, 0xFF, 0, 0, 0, 0};
 
@@ -258,13 +258,13 @@ extern f32 lbl_803DEB10;
 extern f32 lbl_803DEB14;
 extern f32 lbl_803DEB18;
 
-void fn_8004C1E4(u8 b, f32 scale)
+void setHeatEffectParams(u8 alpha, f32 scale)
 {
-    ((u8*)&lbl_803DB5EC)[3] = b;
-    lbl_803DB5F0 = scale;
+    gHeatEffectColor.a = alpha;
+    gHeatEffectScale = scale;
     if (scale > lbl_803DEAC8)
     {
-        lbl_803DB5F0 = lbl_803DEAC8;
+        gHeatEffectScale = lbl_803DEAC8;
     }
 }
 
@@ -877,7 +877,7 @@ void fn_8004DA54(char* p1)
     mathSinCosf(Prepared_803DEAD8 * rx, &sv, &cv);
     s = mathCosf(Prepared_803DEAD8 * ry);
     k = lbl_803DEB08 * s + lbl_803DEB04;
-    k = k * lbl_803DB5F0;
+    k = k * gHeatEffectScale;
     cv = cv * k;
     sv = sv * k;
     m1.v[0][0] = cv;
@@ -888,7 +888,7 @@ void fn_8004DA54(char* p1)
     s = mathCosf(Prepared_803DEAD8 * rx);
     f31v = lbl_803DEADC * s + lbl_803DEADC;
     k = lbl_803DEB08 * s + lbl_803DEB04;
-    k = k * lbl_803DB5F0;
+    k = k * gHeatEffectScale;
     cv = cv * k;
     sv = sv * k;
     m2.v[0][0] = cv;
@@ -955,10 +955,10 @@ void fn_8004DA54(char* p1)
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
     GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
-    ((u8*)&lbl_803DB5EC)[0] = lbl_803DEB18 * f31v;
-    ((u8*)&lbl_803DB5EC)[1] = 0;
-    ((u8*)&lbl_803DB5EC)[2] = 0;
-    GXSetTevKColor(lbl_803DCD74, *(GXColor*)&lbl_803DB5EC);
+    gHeatEffectColor.r = lbl_803DEB18 * f31v;
+    gHeatEffectColor.g = 0;
+    gHeatEffectColor.b = 0;
+    GXSetTevKColor(lbl_803DCD74, gHeatEffectColor);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, lbl_803DCD6C);
     GXSetTevKColorSel(GX_TEVSTAGE1, lbl_803DCD70);
     GXSetTevDirect(GX_TEVSTAGE0);
