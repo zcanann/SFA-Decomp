@@ -155,8 +155,9 @@ typedef struct AudioMemHookPair
     s32 free;
 } AudioMemHookPair;
 
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
-                          MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2, MusicTrigger* callbackArg3)
+void AudioAramReadAllocAsync(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
+                             MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2,
+                             MusicTrigger* callbackArg3)
 {
     int idx;
     void* buf;
@@ -180,7 +181,8 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, AudioArqReques
     entry->callbackArg3 = callbackArg3;
     DCFlushRange(buf, size);
     gAudioArqRequestDone = 0;
-    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size, fn_80008EDC);
+    ARQPostRequest(&entry->request, 0x64, 1, 1, (u32)source, (u32)buf, size,
+                   AudioAramReadCompleteCallback);
 }
 static inline void Music_FreeChannel(MusicChannel* ch)
 {
@@ -285,7 +287,7 @@ static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
 
 
 
-void fn_80008EDC(u32 request)
+void AudioAramReadCompleteCallback(u32 request)
 {
     int i;
     AudioArqRequestEntry* p = (AudioArqRequestEntry*)request;
@@ -301,7 +303,7 @@ void fn_80008EDC(u32 request)
     }
 }
 
-void fn_80008F38(void* addr, u32 dest, u32 size)
+void AudioAramWriteSync(void* addr, u32 dest, u32 size)
 {
     int idx;
     AudioArqRequestEntry* entry;
@@ -318,14 +320,15 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
     }
     DCFlushRange(addr, size);
     gAudioArqRequestDone = 0;
-    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size, fn_80009008);
+    ARQPostRequest(&entry->request, 0x64, 0, 1, (u32)addr, dest, size,
+                   AudioAramWriteCompleteCallback);
     while (gAudioArqRequestDone == 0)
     {
     }
 }
 
 
-void fn_80009008(u32 request)
+void AudioAramWriteCompleteCallback(u32 request)
 {
     (void)request;
     gAudioArqRequestDone = 1;
@@ -1361,7 +1364,7 @@ u8 musicInitMidiWad(void)
                 arenaOffset += size2;
             }
         }
-        fn_80008F38(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
+        AudioAramWriteSync(gMidiWadPayloadStart, gMidiWadArenaSize, gMidiWadPayloadSize);
         saved = mmSetFreeDelay(0);
         mm_free(gMidiWadFileData);
         mmSetFreeDelay(saved);
@@ -1420,8 +1423,8 @@ void Music_LoadChannelForTrigger(MusicTrigger* trigger)
     channel->order = counter;
     channel->trigger = trigger;
     channel->fadeTimer = lbl_803DE560;
-    audioAllocFn_80008df4((void*)slot->offset, slot->size, &channel->bankData, Music_ChannelLoadedCallback, slot,
-                          channel, trigger);
+    AudioAramReadAllocAsync((void*)slot->offset, slot->size, &channel->bankData,
+                            Music_ChannelLoadedCallback, slot, channel, trigger);
 }
 
 void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, MusicTrigger* trigger)

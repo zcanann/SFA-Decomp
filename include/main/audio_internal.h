@@ -294,7 +294,7 @@ void Sfx_StopAllObjectSounds(void);
 void AudioStream_UpdateFadeTimer(void);
 void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
 void fn_8000D0B4(s32 result, DVDCommandBlock* block);
-void fn_80008EDC(u32 request);
+void AudioAramReadCompleteCallback(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 void Music_ChannelLoadedCallback(MusicTrackSlot* slot, MusicChannel* channel, MusicTrigger* trigger);
 u32 audioFlagFn_8000a188(u32 mask);
@@ -304,7 +304,7 @@ s32 Music_GetActivePriority(void);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* vector);
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
-void fn_80009008(u32 request);
+void AudioAramWriteCompleteCallback(u32 request);
 void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 u8 musicInitMidiWad(void);
 void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
@@ -323,9 +323,10 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
 SfxTrigger* Sfx_FindTrigger(u16 id);
 SfxObjectChannel* Sfx_AllocObjectChannel(u16 fxId, u8 volume, double pitch, u8 pan,
                                          int globalCtrlDisabled);
-void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
-                          MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2, MusicTrigger* callbackArg3);
+void AudioAramReadAllocAsync(void* source, u32 size, void** outBuf, AudioArqRequestCallback callback,
+                             MusicTrackSlot* callbackArg1, MusicChannel* callbackArg2,
+                             MusicTrigger* callbackArg3);
 void audioLoadTriggerData(void);
-void fn_80008F38(void* addr, u32 dest, u32 size);
+void AudioAramWriteSync(void* addr, u32 dest, u32 size);
 
 #endif /* MAIN_AUDIO_INTERNAL_H_ */
