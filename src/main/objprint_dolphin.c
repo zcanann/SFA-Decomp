@@ -177,7 +177,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     ModelLightStruct* renderHandle;
     int obj = (int)objArg;
     volatile u32 savedEnvColor;
-    int shadowTable;
+    Texture** shadowTable;
     int shadowStride;
     int shadowParam;
     float mtx[12];
@@ -201,7 +201,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
-    selectTexture(*(Texture**)(shadowTable + ((lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride) * 4), 0);
+    selectTexture(shadowTable[(lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride], 0);
     PSMTXScale(mtx, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
     GXLoadTexMtxImm((const f32 (*)[4])mtx, 0x40, 0);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);

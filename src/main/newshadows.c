@@ -1112,13 +1112,13 @@ void shadowCreate(int* obj)
         gNewShadowCasterCount++;
     }
 }
-extern u8 lbl_8038E1E8[0x80];
+extern Texture* gNewShadowTextureTable[8][4];
 
-void newshadows_getShadowTextureTable4x8(int* p1, int* p2, int* p3)
+void newshadows_getShadowTextureTable4x8(Texture*** tableOut, int* columnsOut, int* rowsOut)
 {
-    *p1 = (int)lbl_8038E1E8;
-    *p2 = 4;
-    *p3 = 8;
+    *tableOut = &gNewShadowTextureTable[0][0];
+    *columnsOut = 4;
+    *rowsOut = 8;
 }
 
 extern Texture* gNewShadowNoiseTexFrames[0x10];
@@ -1187,7 +1187,7 @@ void getTextureFn_8006c5e4(u32* p)
     *p = (u32)gNewShadowCausticTexture;
 }
 
-u8 lbl_8038E1E8[0x80];
+Texture* gNewShadowTextureTable[8][4];
 
 void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, int* outY)
 {
