@@ -82,7 +82,6 @@
 #include "main/newshadows_shadow_api.h"
 #include "main/dll/hint_text_api.h"
 #include "main/shader_map_text_api.h"
-#define INTERSECT_HUD_ALPHA_U8
 #include "track/intersect_hud_api.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_8B.h"
