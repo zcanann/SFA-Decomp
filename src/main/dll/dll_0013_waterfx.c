@@ -623,7 +623,7 @@ void waterfx_render(int obj, int renderParam)
                                   (u8*)gWaterfxWakeVtxDesc + i * 0x20, 2);
             }
         }
-        fn_800542F4();
+        Rcp_ResetRenderState();
     }
 }
 

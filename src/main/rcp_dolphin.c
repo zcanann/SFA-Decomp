@@ -1433,7 +1433,7 @@ void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* f
     selectTexture(result, 1);
 }
 
-void fn_800542F4(void)
+void Rcp_ResetRenderState(void)
 {
     gRcpRenderFlags = 0;
     lbl_803DCDB4 = 0;

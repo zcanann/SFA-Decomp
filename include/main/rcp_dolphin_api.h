@@ -31,7 +31,7 @@ void warpToMap(int idx, s8 transType);
 void textureSetAnimationFrameStep(Texture* texture, u16 frameStep);
 void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed,
                                      int unused0, int unused1);
-void fn_800542F4(void);
+void Rcp_ResetRenderState(void);
 void textureUpdateAnimationFrame(const Texture* texture, u32* flags, s32* frame);
 void fn_80051868(Texture* texture, f32 (*texMtx)[4], int mode);
 void fn_80051B00(Texture* texture, f32 (*texMtx)[4], int mode, struct _GXColor* color);
