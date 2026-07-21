@@ -612,7 +612,7 @@ void andross_update(int obj)
     {
         pathIndex = 1;
     }
-    ObjPath_GetPointWorldPosition((GameObject*)obj, pathIndex, &state->cachedPosX, &state->cachedPosY,
+    ObjPath_GetPointWorldPosition(boss, pathIndex, &state->cachedPosX, &state->cachedPosY,
                                   &state->cachedPosZ, 0);
     if (pathIndex == 1)
     {
@@ -939,7 +939,7 @@ void andross_update(int obj)
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0)
         {
-            andross_spawnAimedRing((GameObject*)obj, state, 0);
+            andross_spawnAimedRing(boss, state, 0);
             state->actionTimer = gAndrossRingSpawnInterval;
         }
         state->durationTimer -= timeDelta;
@@ -1378,10 +1378,10 @@ void andross_update(int obj)
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
         {
-            andross_spawnSuckAsteroid((GameObject*)obj, state);
+            andross_spawnSuckAsteroid(boss, state);
             state->durationTimer += gAndrossMissileSpawnInterval;
         }
-        andross_steerAsteroids((GameObject*)obj, state);
+        andross_steerAsteroids(boss, state);
         if (mainGetBit(0x10) != 0)
         {
             mainSetBits(0x10, 0);
@@ -1480,10 +1480,10 @@ void andross_update(int obj)
         state->durationTimer -= timeDelta;
         if (state->durationTimer < gAndrossZero)
         {
-            andross_spawnSuckAsteroid((GameObject*)obj, state);
+            andross_spawnSuckAsteroid(boss, state);
             state->durationTimer += gAndrossCentralMissileSpawnInterval;
         }
-        andross_steerAsteroids((GameObject*)obj, state);
+        andross_steerAsteroids(boss, state);
         if (state->hitReactionFlag != 0)
         {
             if (state->fightPhase == 5)
@@ -1660,7 +1660,7 @@ void andross_update(int obj)
             f32 fade = state->fadeAlpha;
             f32 alpha;
 
-            model = *(ModelFileHeader**)Obj_GetActiveModel((GameObject*)obj);
+            model = Obj_GetActiveModel(boss)->file;
             index = 0;
             alpha = ANDROSS_ALPHA_255 * fade;
             for (; index < model->renderOpCount; index++)
@@ -1784,7 +1784,7 @@ void andross_update(int obj)
                 childSetup->base.color[0] = 1;
                 childSetup->base.color[1] = 1;
                 childSetup->flags = -1;
-                state->spawnedObj = loadObjectAtObject((GameObject*)obj, &childSetup->base);
+                state->spawnedObj = loadObjectAtObject(boss, &childSetup->base);
                 if (state->spawnedObj != NULL)
                 {
                     state->spawnedObj->anim.alpha = 0xff;
@@ -1795,7 +1795,7 @@ void andross_update(int obj)
         }
         if (state->actionTimer < 0)
         {
-            andross_spawnAsteroid((GameObject*)obj, state);
+            andross_spawnAsteroid(boss, state);
             state->actionTimer = gAndrossAsteroidSpawnInterval;
         }
         if (state->durationTimer < gAndrossZero)
@@ -1887,7 +1887,7 @@ void andross_update(int obj)
         if (actionChanged)
         {
             androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_VULNERABLE, 0);
-            ObjHits_DisableObject((GameObject*)obj);
+            ObjHits_DisableObject(boss);
             state->actionTimer = 0x3c;
             state->durationTimer = 3.0f;
             state->targetPosX = state->homePosX;
@@ -1936,7 +1936,7 @@ void andross_update(int obj)
                     state->actionToggle = 0;
                     state->actionState = 0x12;
                     androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_SHIELDED, 0);
-                    ObjHits_EnableObject((GameObject*)obj);
+                    ObjHits_EnableObject(boss);
                 }
                 else
                 {
@@ -1969,7 +1969,7 @@ void andross_update(int obj)
             f32 fade = state->fadeAlpha;
             f32 alpha;
 
-            model = *(ModelFileHeader**)Obj_GetActiveModel((GameObject*)obj);
+            model = Obj_GetActiveModel(boss)->file;
             index = 0;
             alpha = ANDROSS_ALPHA_255 * fade;
             for (; index < model->renderOpCount; index++)
@@ -1983,7 +1983,7 @@ void andross_update(int obj)
         if (actionChanged)
         {
             androssbrain_setState(state->lightAnchorObj, ANDROSSBRAIN_VULNERABLE, 0);
-            ObjHits_DisableObject((GameObject*)obj);
+            ObjHits_DisableObject(boss);
             state->actionTimer = gAndrossBrainAttackDuration;
             state->targetPosX = state->arwingObj->anim.localPosX;
             state->targetPosY = state->arwingObj->anim.localPosY + gAndrossSpawnOffsetY;
@@ -2281,7 +2281,7 @@ void andross_update(int obj)
     boss->anim.rotY += state->rotYSpeed;
 
     ObjAnim_AdvanceCurrentMove(obj, state->animSpeed, timeDelta, 0);
-    andross_processPartHits((GameObject*)obj, state);
+    andross_processPartHits(boss, state);
     andross_updateBombCollector(boss, state);
     if (state->spawnedObj != NULL)
     {
