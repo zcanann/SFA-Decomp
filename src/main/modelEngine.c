@@ -281,7 +281,8 @@ extern ResourceDescriptor lbl_803197F8, lbl_80319840, lbl_80319888, lbl_803198D8
     lbl_803199B0, lbl_803199F8;
 extern ResourceDescriptor lbl_80319A40, lbl_80319A88, lbl_80319B58, lbl_80319B98, lbl_80319BC8, lbl_80319BF8,
     lbl_80319C28, lbl_80319C58;
-extern ResourceDescriptor lbl_80319C88, lbl_80319CE8, lbl_80319D18, lbl_80319D48, lbl_80319D78, lbl_80319DA8,
+extern ResourceDescriptor lbl_80319C88, lbl_80319CE8, lbl_80319D18, lbl_80319D48, lbl_80319D78,
+    gCameraModeNpcSpeakDescriptor,
     lbl_80319E08, lbl_80319E38;
 extern ResourceDescriptor lbl_80319E68, lbl_80319E98, lbl_80319EC8, lbl_80319EF8, lbl_80319F58, lbl_80319F88,
     lbl_8031A01C, lbl_8031A148;
@@ -991,7 +992,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &lbl_80319D18,
     &lbl_80319D48,
     &lbl_80319D78,
-    &lbl_80319DA8,
+    &gCameraModeNpcSpeakDescriptor,
     &lbl_80319E08,
     &lbl_80319E38,
     &lbl_80319E68,
