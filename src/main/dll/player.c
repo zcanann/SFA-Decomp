@@ -11982,35 +11982,41 @@ STATIC_ASSERT(offsetof(PlayerSeqPlacement, movementEnabled) == 0x20);
 
 void fn_802AABE4(int obj)
 {
-    s16* movp;
-    f32* outp;
+    s16* moveId;
+    f32* outputHeight;
     ObjModel* model;
-    short i;
-    s16 out2[3];
-    f32 out1[5];
+    GameObject* object;
+    PlayerState* player;
+    s16* moveTable;
+    s16 moveIndex;
+    s16 jointRotation[3];
+    f32 jointPosition[3];
 
-    model = (ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
+    object = (GameObject*)obj;
+    model = (ObjModel*)object->anim.banks[object->anim.bankIndex];
+    player = object->extra;
+    moveTable = (s16*)player->moveAnimTable;
 
-    ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->moveAnimTable, lbl_803E7EA4, 0);
-    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
-    lbl_803DAF88[0] = out1[1];
+    ObjAnim_SetCurrentMove(obj, moveTable[0], lbl_803E7EA4, 0);
+    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, object->anim.rootMotionScale, jointPosition, jointRotation);
+    lbl_803DAF88[0] = jointPosition[1];
 
     ObjAnim_SetCurrentMove(obj, lbl_80332F2C[0], lbl_803E7EA4, 0);
-    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
-    lbl_803DAF88[1] = out1[1];
+    ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, object->anim.rootMotionScale, jointPosition, jointRotation);
+    lbl_803DAF88[1] = jointPosition[1];
 
-    i = 12;
-    movp = (s16*)((char*)lbl_80332F48 + 0x22);
-    outp = &lbl_803DAF88[i];
-    for (; i <= 15; i++)
+    moveIndex = 12;
+    moveId = &lbl_80332F48[17];
+    outputHeight = &lbl_803DAF88[moveIndex];
+    for (; moveIndex <= 15; moveIndex++)
     {
-        ObjAnim_SetCurrentMove(obj, *movp, lbl_803E7EA4, 0);
-        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
-        *outp = out1[1];
-        movp++;
-        outp++;
+        ObjAnim_SetCurrentMove(obj, moveId[0], lbl_803E7EA4, 0);
+        ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, object->anim.rootMotionScale, jointPosition, jointRotation);
+        outputHeight[0] = jointPosition[1];
+        moveId++;
+        outputHeight++;
     }
-    ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
+    ObjAnim_WriteStateWord(&object->anim, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
 
 void playerDrawTeleportAnim(GameObject* obj)
