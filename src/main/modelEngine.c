@@ -222,8 +222,8 @@ extern ResourceDescriptor gTrickyObjDescriptor, gTrickyWarpObjDescriptor, gTrigg
     gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor,
     gVFP_Block1ObjDescriptor;
 extern ResourceDescriptor gVFP_DoorSwitchObjDescriptor, gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
-    gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor, gVFP_SpellPlaceObjDescriptor, gVFP_coreplatObjDescriptor,
-    gVFP_flamepointObjDescriptor;
+    gVFP_MiniFireObjDescriptor, gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor,
+    gVFP_SpellPlaceObjDescriptor, gVFP_coreplatObjDescriptor, gVFP_flamepointObjDescriptor;
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
     gVisAnimatorObjDescriptor, gVortexObjDescriptor,
     gWCBouncyCraObjDescriptor;
@@ -292,7 +292,7 @@ extern ResourceDescriptor lbl_8031CC10, lbl_8031CDB8, lbl_80321428, lbl_80321788
     lbl_803230F8;
 extern ResourceDescriptorCallbacks8 lbl_80320700;
 extern ResourceDescriptor lbl_80323740, lbl_80325928, lbl_80325F20, lbl_80327BA8, lbl_80328AD8, lbl_80328E28,
-    lbl_80328F00, lbl_80329340;
+    lbl_80329340;
 extern ResourceDescriptor lbl_803298D0, Dummy245, Dummy246, Dummy244, Dummy247, Dummy248, Dummy24A, Dummy24B;
 extern ResourceDescriptor lbl_8032A110, lbl_8032AD00, lbl_8032AD68, lbl_8032B6B0, lbl_803DBE00, lbl_803DBE10,
     lbl_803DBE18, lbl_803DBE50;
@@ -1449,7 +1449,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gWM_newcrystalObjDescriptor,
     &gVFP_LevelControlObjDescriptor,
     &gVFP_ObjCreatorObjDescriptor,
-    &lbl_80328F00,
+    &gVFP_MiniFireObjDescriptor,
     &dll_219,
     &gVFP_statueballObjDescriptor,
     &dll_21B,

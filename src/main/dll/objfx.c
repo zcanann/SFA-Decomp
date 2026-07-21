@@ -7,7 +7,7 @@
  * bone-attached effect interface (gBoneParticleEffectInterface), keyed by
  * a small caller-supplied selector that indexes the effect-id tables at
  * gObjFxCrystalSparkleTbl / gObjFxHitEffectParamTbl / etc. Coverage: crystal sparkle
- * (WM_newcrystalFn_800969b0), generic hit/impact bursts, directional /
+ * (objfx_spawnCrystalOrbitEffects), generic hit/impact bursts, directional /
  * arced / box scatter bursts, the A-button glow, projectile trails, item
  * pickup sparkles, and dynamic lights (objParticleFn / objLightFn driving
  * modelLightStruct_*). fn_8009A8C8 / spawnExplosion / DIMexplosionFn add a
@@ -166,8 +166,8 @@ STATIC_ASSERT(offsetof(ExplosionSetup, unk19) == 0x19);
 STATIC_ASSERT(offsetof(ExplosionSetup, flags) == 0x1C);
 STATIC_ASSERT(sizeof(ExplosionSetup) == 0x24);
 
-void WM_newcrystalFn_800969b0(GameObject* obj, s16* work, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff,
-                             u8 flags)
+void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* work, f32 period, f32 xMul, f32 yMul, f32 xOff,
+                                    f32 yOff, u8 flags)
 {
     ObjFxParticleParams params;
     int crystalIdx;

@@ -522,8 +522,7 @@ TrackBlockDescriptor gTrackBlockDescriptors[20];
 
 void* fn_80069944(u32* outVal);
 
-/* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte. */
-u32 fn_80060668(int* obj);
+u32 trackGetPackedSurfaceType(int* obj);
 
 void fn_80069968(int* outCount, int* outTable);
 
@@ -829,7 +828,7 @@ char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
-u32 fn_80060668(int* obj)
+u32 trackGetPackedSurfaceType(int* obj)
 {
     u32 v = obj[4];
     v &= 0x00FF0000;
@@ -841,7 +840,7 @@ int mapBlockFn_80060678(void* obj)
     return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
 }
 
-int fn_80060688(GameObject* obj, int type)
+int mapBlockCountTrianglesByType(MapBlockData* block, int type)
 {
     int entry;
     int offset;
@@ -850,10 +849,10 @@ int fn_80060688(GameObject* obj, int type)
     int count;
     total = 0;
     offset = 0;
-    count = ((MapBlockData*)obj)->polyGroupCount;
+    count = block->polyGroupCount;
     for (i = 0; i < count; i++)
     {
-        entry = *(int*)&obj->anim.modelInstance + offset;
+        entry = (int)block->polygonGroups + offset;
         if (type == (int)((*(u32*)(entry + 0x10) & 0xff000000) >> 24))
         {
             total += *(u16*)(entry + 0x14) - *(u16*)entry;
@@ -4841,7 +4840,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
                     continue;
             }
 
-            *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)fn_80060668((int*)blk);
+            *(s8*)&((TrackTriangle*)cur)->surfaceType = (u8)trackGetPackedSurfaceType((int*)blk);
             ((TrackTriangle*)cur)->minMaxY = (u8)((maxYi << 4) | minYi);
             ((TrackTriangle*)cur)->flags = 10;
             ((TrackTriangle*)cur)->flags |= 8;
@@ -5091,7 +5090,7 @@ u8 doEdges;
                 continue;
             if (tf & 4)
                 type |= 8;
-            typeb = fn_80060668((int*)tri);
+            typeb = trackGetPackedSurfaceType((int*)tri);
             t0 = ((MapTriGroup*)tri)->firstTri;
             vq = (u8*)(bb + t0 * 8);
             vEnd = ((MapTriGroup*)tri)[1].firstTri;

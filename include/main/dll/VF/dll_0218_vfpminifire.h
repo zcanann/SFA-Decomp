@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "global.h"
 
 typedef struct VfpMinifireState
@@ -34,5 +35,7 @@ void VFP_MiniFire_update(GameObject* obj);
 void VFP_MiniFire_init(int* obj, u8* init);
 void VFP_MiniFire_release(void);
 void VFP_MiniFire_initialise(void);
+
+extern ObjectDescriptor gVFP_MiniFireObjDescriptor;
 
 #endif /* MAIN_DLL_VF_DLL_0218_VFPMINIFIRE_H_ */

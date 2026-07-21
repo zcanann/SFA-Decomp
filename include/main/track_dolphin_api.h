@@ -31,6 +31,7 @@ typedef struct TrackQueryBounds
 STATIC_ASSERT(sizeof(TrackQueryBounds) == 0x18);
 
 struct MapShader;
+struct MapBlockData;
 typedef struct ObjModel ObjModel;
 
 int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameCount);
@@ -73,7 +74,7 @@ int findSurfaceInYRange(GameObject* obj, f32 x, f32 lo, f32 z, f32 hi, f32* outS
 void renderGlows(void);
 void MapBlock_init(GameObject* obj);
 void MapBlock_initHits(GameObject* obj, int index);
-int fn_80060688(GameObject* obj, int type);
+int mapBlockCountTrianglesByType(struct MapBlockData* block, int type);
 void fn_80061094(f32* vec, f32* out, f32 scale);
 int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds);
 extern int lbl_803DCF34;

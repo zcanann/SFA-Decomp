@@ -3,13 +3,15 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
 typedef struct WmNewCrystalState
 {
-    s16 fxState[0x1A];    /* 0x00: primary glow-effect block (WM_newcrystalFn_800969b0) */
-    s16 altFxState[0x1A]; /* 0x34: secondary glow-effect block */
-    u8 active;           /* 0x68: green crystal still bursting */
+    s16 fxState[0x1A];    /* 0x00: primary crystal-orbit effect block */
+    s16 secondaryFxState[0x1A]; /* 0x34: secondary crystal-orbit effect block */
+    u8 greenBurstsActive;       /* 0x68: green crystal still bursting */
     u8 pad69[3];
 } WmNewCrystalState;
 
@@ -24,8 +26,8 @@ typedef struct WmNewCrystalParticleParams
     f32 z; /* 0x14 */
 } WmNewCrystalParticleParams;
 
-STATIC_ASSERT(offsetof(WmNewCrystalState, altFxState) == 0x34);
-STATIC_ASSERT(offsetof(WmNewCrystalState, active) == 0x68);
+STATIC_ASSERT(offsetof(WmNewCrystalState, secondaryFxState) == 0x34);
+STATIC_ASSERT(offsetof(WmNewCrystalState, greenBurstsActive) == 0x68);
 STATIC_ASSERT(sizeof(WmNewCrystalState) == 0x6C);
 STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, pathPoint) == 0x06);
 STATIC_ASSERT(offsetof(WmNewCrystalParticleParams, x) == 0x0C);
@@ -35,11 +37,13 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor);
 int WM_newcrystal_getExtraSize(void);
 int WM_newcrystal_getObjectTypeId(void);
 void WM_newcrystal_free(void);
-void WM_newcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
+void WM_newcrystal_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void WM_newcrystal_hitDetect(void);
 void WM_newcrystal_update(void);
-void WM_newcrystal_init(GameObject* obj, void* setup);
+void WM_newcrystal_init(GameObject* obj, ObjPlacement* unused);
 void WM_newcrystal_release(void);
 void WM_newcrystal_initialise(void);
+
+extern ObjectDescriptor gWM_newcrystalObjDescriptor;
 
 #endif /* MAIN_DLL_WM_DLL_0215_WMNEWCRYSTAL_H_ */

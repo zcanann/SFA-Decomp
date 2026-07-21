@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0219_H_
 
 #include "global.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 typedef struct Dll219State
@@ -38,5 +39,7 @@ void dll_219_update(Dll219Object* obj);
 void dll_219_init(int* obj, Dll219Setup* placement);
 void dll_219_release_nop(void);
 void dll_219_initialise_nop(void);
+
+extern ObjectDescriptor dll_219;
 
 #endif /* MAIN_DLL_DLL_0219_H_ */

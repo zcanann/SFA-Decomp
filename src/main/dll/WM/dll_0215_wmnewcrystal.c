@@ -1,6 +1,6 @@
 /*
  * DLL 0x0215 - wmnewcrystal (gResourceDescriptors[0x215]): the blue/green power
- * crystals at Krazoa Palace (map 'warlock'). TU: 0x801F943C-0x801F9804.
+ * crystals at Krazoa Palace (map 'warlock').
  * The warlock romlist places all three variants (defs 890/891/892 'WM_newcrystal',
  * types 0x783 blue / 0x784 green / 0x785): Krystal's crystal-prison set seen in
  * the finale. While the active game bit is set, the blue crystal runs its two glow
@@ -30,6 +30,12 @@
 #define WMNEWCRYSTAL_OBJECT_GREEN       0x784
 #define WMNEWCRYSTAL_PARTICLE_ID        0x7ed
 
+enum
+{
+    WMNEWCRYSTAL_EVENT_DETONATE = 1,
+    WMNEWCRYSTAL_EVENT_STOP_GREEN_BURSTS = 2
+};
+
 ObjectDescriptor gWM_newcrystalObjDescriptor = {
     0,
     0,
@@ -47,7 +53,7 @@ ObjectDescriptor gWM_newcrystalObjDescriptor = {
     WM_newcrystal_getExtraSize,
 };
 
-int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
+int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WmNewCrystalState* state;
     WmNewCrystalParticleParams params;
@@ -55,27 +61,27 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
     int i;
 
     state = obj->extra;
-    for (i = 0; i < actor->eventCount; i++)
+    for (i = 0; i < animUpdate->eventCount; i++)
     {
-        switch (actor->eventIds[i])
+        switch (animUpdate->eventIds[i])
         {
-        case 1:
-            PSVECSubtract((f32*)((char*)Camera_GetCurrentViewSlot() + 0xc), &obj->anim.localPosX, cameraDelta);
+        case WMNEWCRYSTAL_EVENT_DETONATE:
+            PSVECSubtract(&Camera_GetCurrentViewSlot()->position.x, &obj->anim.localPosX, cameraDelta);
             PSVECNormalize(cameraDelta, cameraDelta);
             PSVECScale(cameraDelta, cameraDelta, 100.0f);
             PSVECAdd(&obj->anim.localPosX, cameraDelta, &obj->anim.localPosX);
             obj->anim.worldPosX = obj->anim.localPosX;
             obj->anim.worldPosY = obj->anim.localPosY;
             obj->anim.worldPosZ = obj->anim.localPosZ;
-            spawnExplosion((GameObject*)(int*)obj, 100.0f, 1, 1, 0, 0, 0, 0, 0);
+            spawnExplosion(obj, 100.0f, 1, 1, 0, 0, 0, 0, 0);
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
             if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_BLUE)
             {
                 mainSetBits(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 0);
             }
             break;
-        case 2:
-            state->active = 0;
+        case WMNEWCRYSTAL_EVENT_STOP_GREEN_BURSTS:
+            state->greenBurstsActive = 0;
             break;
         }
     }
@@ -94,10 +100,10 @@ int WM_newcrystal_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* actor)
                stack block for this effect */
             (*gPartfxInterface)->spawnObject(obj, WMNEWCRYSTAL_PARTICLE_ID, &params, 2, -1, NULL);
         }
-        WM_newcrystalFn_800969b0((GameObject*)obj, state->fxState, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
-        WM_newcrystalFn_800969b0((GameObject*)obj, state->altFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
+        objfx_spawnCrystalOrbitEffects(obj, state->fxState, 640.0f, 36.0f, -60.0f, 5.0f, 100.0f, 1);
+        objfx_spawnCrystalOrbitEffects(obj, state->secondaryFxState, 640.0f, 36.0f, 60.0f, 5.0f, 0.0f, 1);
     }
-    else if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->active != 0)
+    else if (obj->anim.seqId == WMNEWCRYSTAL_OBJECT_GREEN && state->greenBurstsActive != 0)
     {
         ObjPath_GetPointLocalPosition((GameObject*)obj, 0, &params.x, &params.y, &params.z);
         params.x *= obj->anim.rootMotionScale;
@@ -130,9 +136,9 @@ void WM_newcrystal_free(void)
 {
 }
 
-void WM_newcrystal_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
+void WM_newcrystal_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
 }
 
 void WM_newcrystal_hitDetect(void)
@@ -143,14 +149,14 @@ void WM_newcrystal_update(void)
 {
 }
 
-void WM_newcrystal_init(GameObject* obj, void* setup)
+void WM_newcrystal_init(GameObject* obj, ObjPlacement* unused)
 {
     WmNewCrystalState* state = obj->extra;
     obj->animEventCallback = WM_newcrystal_SeqFn;
     if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) > 1)
     {
         mainSetBits(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
-        state->active = 1;
+        state->greenBurstsActive = 1;
     }
 }
 
@@ -171,7 +177,7 @@ void WM_newcrystal_initialise(void)
 #include "main/dll/VF/dll_0217_vfpobjcreator.h"
 #include "main/dll/VF/dll_021A_vfpstatueball.h"
 
-/* descriptor/ptr table auto 0x80328e90-0x80329050 */
+/* VFP object descriptors sharing this data pool. */
 ObjectDescriptor gVFP_LevelControlObjDescriptor = {
     0,
     0,
@@ -204,34 +210,38 @@ ObjectDescriptor gVFP_ObjCreatorObjDescriptor = {
     (ObjectDescriptorCallback)VFP_ObjCreator_getObjectTypeId,
     VFP_ObjCreator_getExtraSize,
 };
-u32 lbl_80328F00[14] = {0x00000000,
-                        0x00000000,
-                        0x00000000,
-                        0x00090000,
-                        (u32)VFP_MiniFire_initialise,
-                        (u32)VFP_MiniFire_release,
-                        0x00000000,
-                        (u32)VFP_MiniFire_init,
-                        (u32)VFP_MiniFire_update,
-                        (u32)VFP_MiniFire_hitDetect,
-                        (u32)VFP_MiniFire_render,
-                        (u32)VFP_MiniFire_free,
-                        (u32)VFP_MiniFire_getObjectTypeId,
-                        (u32)VFP_MiniFire_getExtraSize};
-u32 dll_219[14] = {0x00000000,
-                   0x00000000,
-                   0x00000000,
-                   0x00090000,
-                   (u32)dll_219_initialise_nop,
-                   (u32)dll_219_release_nop,
-                   0x00000000,
-                   (u32)dll_219_init,
-                   (u32)dll_219_update,
-                   (u32)dll_219_hitDetect_nop,
-                   (u32)dll_219_render_nop,
-                   (u32)dll_219_free,
-                   (u32)dll_219_getObjectTypeId,
-                   (u32)dll_219_getExtraSize_ret_4};
+ObjectDescriptor gVFP_MiniFireObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)VFP_MiniFire_initialise,
+    (ObjectDescriptorCallback)VFP_MiniFire_release,
+    0,
+    (ObjectDescriptorCallback)VFP_MiniFire_init,
+    (ObjectDescriptorCallback)VFP_MiniFire_update,
+    (ObjectDescriptorCallback)VFP_MiniFire_hitDetect,
+    (ObjectDescriptorCallback)VFP_MiniFire_render,
+    (ObjectDescriptorCallback)VFP_MiniFire_free,
+    (ObjectDescriptorCallback)VFP_MiniFire_getObjectTypeId,
+    VFP_MiniFire_getExtraSize,
+};
+ObjectDescriptor dll_219 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_219_initialise_nop,
+    (ObjectDescriptorCallback)dll_219_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_219_init,
+    (ObjectDescriptorCallback)dll_219_update,
+    (ObjectDescriptorCallback)dll_219_hitDetect_nop,
+    (ObjectDescriptorCallback)dll_219_render_nop,
+    (ObjectDescriptorCallback)dll_219_free,
+    (ObjectDescriptorCallback)dll_219_getObjectTypeId,
+    dll_219_getExtraSize_ret_4,
+};
 ObjectDescriptor gVFP_statueballObjDescriptor = {
     0,
     0,
@@ -248,20 +258,22 @@ ObjectDescriptor gVFP_statueballObjDescriptor = {
     (ObjectDescriptorCallback)VFP_statueball_getObjectTypeId,
     VFP_statueball_getExtraSize,
 };
-u32 dll_21B[14] = {0x00000000,
-                   0x00000000,
-                   0x00000000,
-                   0x00090000,
-                   (u32)dll_21B_initialise_nop,
-                   (u32)dll_21B_release_nop,
-                   0x00000000,
-                   (u32)dll_21B_init,
-                   (u32)dll_21B_update,
-                   (u32)dll_21B_hitDetect_nop,
-                   (u32)dll_21B_render_nop,
-                   (u32)dll_21B_free,
-                   (u32)dll_21B_getObjectTypeId,
-                   (u32)dll_21B_getExtraSize_ret_4};
+ObjectDescriptor dll_21B = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_21B_initialise_nop,
+    (ObjectDescriptorCallback)dll_21B_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_21B_init,
+    (ObjectDescriptorCallback)dll_21B_update,
+    (ObjectDescriptorCallback)dll_21B_hitDetect_nop,
+    (ObjectDescriptorCallback)dll_21B_render_nop,
+    (ObjectDescriptorCallback)dll_21B_free,
+    (ObjectDescriptorCallback)dll_21B_getObjectTypeId,
+    dll_21B_getExtraSize_ret_4,
+};
 ObjectDescriptor gVFP_LaddersObjDescriptor = {
     0,
     0,

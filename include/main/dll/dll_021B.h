@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "global.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 typedef struct Dll21BState
@@ -41,5 +42,7 @@ void dll_21B_update(GameObject* obj);
 void dll_21B_init(int* obj, Dll21BPlacement* init);
 void dll_21B_release_nop(void);
 void dll_21B_initialise_nop(void);
+
+extern ObjectDescriptor dll_21B;
 
 #endif /* MAIN_DLL_DLL_021B_H_ */

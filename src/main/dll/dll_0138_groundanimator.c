@@ -317,7 +317,7 @@ void groundanimator_update(int* obj)
     {
         int p;
         block = mapGetBlock(bi);
-        g->vertCount = (s16)(fn_80060688((GameObject*)block, r20->blockId) * 3);
+        g->vertCount = (s16)(mapBlockCountTrianglesByType(block, r20->blockId) * 3);
         if (g->vertCount > 0)
         {
             p = (int)mmAlloc(g->vertCount * 6, 5, 0);

@@ -6,8 +6,8 @@
 #include "main/objfx_hit_emitter_api.h"
 
 void objLightFn_8009a1dc(void *obj, f32 scale, void *origin, u8 type, void *light);
-void WM_newcrystalFn_800969b0(GameObject* obj, s16* state, f32 period, f32 xMul, f32 yMul, f32 xOff,
-                             f32 yOff, u8 flags);
+void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* state, f32 period, f32 xMul, f32 yMul, f32 xOff,
+                                    f32 yOff, u8 flags);
 void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, f32 mult, u8 flagByte);
 void objfx_spawnMaskedHitEffect(void* obj, f32 scale, u8 type, u8 mode, u8 mask, void* origin);
 void objfx_spawnLightPulse(GameObject* obj, f32 radius, int type, int colorIndex, int mode, f32 intensity,
