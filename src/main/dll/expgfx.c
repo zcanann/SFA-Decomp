@@ -76,19 +76,6 @@ typedef struct ExpgfxRotateParams
     f32 z;
 } ExpgfxRotateParams;
 
-typedef struct ExpgfxCameraViewSlot
-{
-    s16 yaw;
-    s16 pitch;
-    s16 roll;
-    u8 pad06[0x0C - 0x06];
-    f32 x;
-    f32 y;
-    f32 z;
-} ExpgfxCameraViewSlot;
-
-STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
-
 typedef union Dll0BDescriptorTable
 {
     u32 words[30];
@@ -1732,7 +1719,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     ExpgfxSourceObject* sourceObject;
     u32 renderFlags;
     u32 stateBitsValue;
-    ExpgfxCameraViewSlot* cameraSlot;
+    CameraViewSlot* cameraSlot;
     f32 halfLifeFrames;
     f32 scaleSize;
     f32 centerX, centerY, centerZ;
@@ -1743,9 +1730,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     u32 behaviorFlags;
     f32 sinC, cosC;
     f32 worldX, worldY, worldZ;
-    f32 cC, sC, cB, sB, cA, ay_cosB, sA, pz_sinB;
     f32 px, nx, py, pz, ny;
-    f32 aimDelta[3];
+    Vec aimDelta;
     ExpgfxQuadVertex* quad;
     ExpgfxQuadVertex* vertexStream;
     int vertexIndex;
@@ -1783,7 +1769,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     {
         return;
     }
-    cameraSlot = (ExpgfxCameraViewSlot*)Camera_GetCurrentViewSlot();
+    cameraSlot = Camera_GetCurrentViewSlot();
     _textSetColor(0, 0xff, 0xff, 0xff, 0xff);
     alphaMode = -1;
     blendMode = -1;
@@ -1888,8 +1874,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     }
                 }
 
-                pitchAngle = 0;
-                yawAngle = pitchAngle;
+                yawAngle = pitchAngle = 0;
                 centerX = slot->renderX;
                 centerY = slot->renderY;
                 centerZ = slot->renderZ;
@@ -1918,24 +1903,24 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                         {
                             if ((slot->renderFlags & EXPGFX_RENDER_AIM_AT_SOURCE_OBJECT) != 0 && sourceObject != NULL)
                             {
-                                aimDelta[0] = cameraSlot->x - sourceObject->worldPosX;
-                                aimDelta[1] = cameraSlot->y - sourceObject->worldPosY;
-                                aimDelta[2] = cameraSlot->z - sourceObject->worldPosZ;
-                                PSVECNormalize((Vec*)aimDelta, (Vec*)aimDelta);
+                                aimDelta.x = cameraSlot->x - sourceObject->worldPosX;
+                                aimDelta.y = cameraSlot->y - sourceObject->worldPosY;
+                                aimDelta.z = cameraSlot->z - sourceObject->worldPosZ;
+                                PSVECNormalize(&aimDelta, &aimDelta);
                                 {
-                                    f32 absX = __fabsf(aimDelta[0]);
-                                    f32 absZ = __fabsf(aimDelta[2]);
+                                    f32 absX = __fabsf(aimDelta.x);
+                                    f32 absZ = __fabsf(aimDelta.z);
                                     if (absX > absZ)
                                     {
-                                        getAngle(absX, aimDelta[1]);
-                                        pitchAngle = (s16)(getAngle(absX, aimDelta[1]) - 0x3800);
+                                        getAngle(absX, aimDelta.y);
+                                        pitchAngle = (s16)(getAngle(absX, aimDelta.y) - 0x3800);
                                     }
                                     else
                                     {
-                                        getAngle(absZ, aimDelta[1]);
-                                        pitchAngle = (s16)(getAngle(absZ, aimDelta[1]) - 0x3800);
+                                        getAngle(absZ, aimDelta.y);
+                                        pitchAngle = (s16)(getAngle(absZ, aimDelta.y) - 0x3800);
                                     }
-                                    yawAngle = (s16)getAngle(aimDelta[0], aimDelta[2]);
+                                    yawAngle = (s16)getAngle(aimDelta.x, aimDelta.z);
                                 }
                             }
                             else
@@ -2067,31 +2052,17 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     pz = scaleFactor * __OSs16tof32(&vertexStream->z);
                     if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0)
                     {
-                        cC = cosC;
-                        sC = sinC;
-                        nx = px * cC - py * sC;
-                        ny = px * sC + py * cC;
-                        cA = cosA;
-                        sB = sinB;
-                        pz_sinB = pz * sB;
-                        sA = sinA;
-                        cB = cosB;
-                        ay_cosB = ny * cB;
-                        worldX = centerX + (nx * sA + cA * ay_cosB + cA * pz_sinB);
-                        worldY = centerY + (ny * sB + (-pz) * cB);
-                        worldZ = centerZ + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
+                        nx = px * cosC - py * sinC;
+                        ny = px * sinC + py * cosC;
+                        worldX = centerX + (nx * sinA + cosA * (ny * cosB) + cosA * (pz * sinB));
+                        worldY = centerY + (ny * sinB + (-pz) * cosB);
+                        worldZ = centerZ + ((-nx) * cosA + sinA * (ny * cosB) + sinA * (pz * sinB));
                     }
                     else
                     {
-                        cA = cosA;
-                        sB = sinB;
-                        pz_sinB = pz * sB;
-                        sA = sinA;
-                        cB = cosB;
-                        ay_cosB = py * cB;
-                        worldX = centerX + (px * sA + cA * ay_cosB + cA * pz_sinB);
-                        worldY = centerY + (py * sB + (-pz) * cB);
-                        worldZ = centerZ + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
+                        worldX = centerX + (px * sinA + cosA * (py * cosB) + cosA * (pz * sinB));
+                        worldY = centerY + (py * sinB + (-pz) * cosB);
+                        worldZ = centerZ + ((-px) * cosA + sinA * (py * cosB) + sinA * (pz * sinB));
                     }
                     viewDepth = viewMatrix[2][0] * worldX + viewMatrix[2][1] * worldY + viewMatrix[2][2] * worldZ +
                                 viewMatrix[2][3];
