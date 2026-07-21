@@ -137,7 +137,7 @@ char sDirBlockTag[] = "DIR";
 int lbl_803DB5C8 = 1;
 u8 gVideoBlackScreenFrameCount = 5;
 u16 lbl_803DB5CE = 1;
-u8 lbl_803DB5D0[4] = {0, 0, 0, 0xFF};
+GXColor lbl_803DB5D0 = {0, 0, 0, 0xFF};
 u8 lbl_803DB5D4[8] = {7, 7, 0xC, 0xC, 0xC, 7, 7, 0};
 char sProgramCounterFormat[] = "PC: %x";
 int lbl_803DB5E4 = 0;
@@ -4420,32 +4420,34 @@ void videoInit(void* wpad0, int wpad1)
     GXFifoObj fifo;
     f32 mtx[3][4];
     GXColor cc;
-    u32 lo;
-    u32 hi;
-    u32 next;
+    u8* arenaLo;
+    u8* arenaHi;
+    u8* nextArenaLo;
+    u32 fifoSize;
     int fbSize;
-    lo = (u32)OSGetArenaLo();
-    hi = (u32)OSGetArenaHi();
-    memcpy((void*)(hi - 0x40000), gLoadingScreenTextures, 0x40000);
-    DCStoreRange((void*)(hi - 0x40000), 0x40000);
-    fbSize = 0x40000;
-    lbl_803DCCE4 = (void*)fbSize;
+    arenaLo = OSGetArenaLo();
+    arenaHi = OSGetArenaHi();
+    memcpy(arenaHi - 0x40000, gLoadingScreenTextures, 0x40000);
+    DCStoreRange(arenaHi - 0x40000, 0x40000);
+    fifoSize = 0x40000;
+    lbl_803DCCE4 = (void*)fifoSize;
     lbl_803DCCD8 = gLoadingScreenTextures;
-    DCInvalidateRange((char*)gLoadingScreenTextures, fbSize);
+    DCInvalidateRange(lbl_803DCCD8, fifoSize);
     lbl_803DCCD4 = GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     lbl_803DCCB8 = GXSetDispCopyYScale((f32)gRenderModeObj->xfbHeight / gRenderModeObj->efbHeight);
     fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2;
-    externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
+    externalFrameBuffer0 = (void*)(((u32)arenaLo + 0x1f) & ~0x1f);
     fbSize += 0x1f;
     externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
-    next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
-    OSSetArenaLo((void*)next);
-    OSSetArenaLo((void*)(lo = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
-    lo = (lo + 0x1f) & ~0x1f;
-    hi = hi & ~0x1f;
-    OSSetCurrentHeap(OSCreateHeap((void*)lo, (void*)hi));
+    nextArenaLo = (u8*)(((u32)externalFrameBuffer1 + fbSize) & ~0x1f);
+    OSSetArenaLo(nextArenaLo);
+    arenaLo = OSInitAlloc(nextArenaLo, arenaHi, 1);
+    OSSetArenaLo(arenaLo);
+    arenaLo = (u8*)(((u32)arenaLo + 0x1f) & ~0x1f);
+    arenaHi = (u8*)((u32)arenaHi & ~0x1f);
+    OSSetCurrentHeap(OSCreateHeap(arenaLo, arenaHi));
     VIConfigure(gRenderModeObj);
     GXInitFifoBase(&fifo, externalFrameBuffer0, 0x10000);
     GXSetCPUFifo(&fifo);
@@ -4531,7 +4533,7 @@ void videoInit(void* wpad0, int wpad1)
     GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
     lbl_803DCCF4 = 0;
     GXSetCullMode(GX_CULL_NONE);
-    cc = *(GXColor*)&lbl_803DB5D0;
+    cc = lbl_803DB5D0;
     GXSetCopyClear(cc, 0xffffff);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     GXSetNumChans(1);
@@ -4555,9 +4557,9 @@ void videoInit(void* wpad0, int wpad1)
 
 void setColor_803db5d0(u8 r, u8 g, u8 b)
 {
-    lbl_803DB5D0[0] = r;
-    lbl_803DB5D0[1] = g;
-    lbl_803DB5D0[2] = b;
+    lbl_803DB5D0.r = r;
+    lbl_803DB5D0.g = g;
+    lbl_803DB5D0.b = b;
 }
 
 extern int lbl_803DCD88;
