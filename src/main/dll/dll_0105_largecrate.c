@@ -720,7 +720,19 @@ ObjectDescriptor gScarabObjDescriptor = {
     0,
     Scarab_getExtraSize,
 };
-void* lbl_80321788[14] = {(void*)0x00000000,       (void*)0x00000000,          (void*)0x00000000, (void*)0x00090000,
-                          dll_107_initialise_nop,  dll_107_release_nop,        (void*)0x00000000, dll_107_init,
-                          dll_107_update,          dll_107_hitDetect_nop,      dll_107_render,    dll_107_free,
-                          dll_107_getObjectTypeId, dll_107_getExtraSize_ret_44};
+ObjectDescriptor gWindLift107ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)windLift107_initialise,
+    (ObjectDescriptorCallback)windLift107_release,
+    0,
+    (ObjectDescriptorCallback)windLift107_init,
+    (ObjectDescriptorCallback)windLift107_update,
+    (ObjectDescriptorCallback)windLift107_hitDetect,
+    (ObjectDescriptorCallback)windLift107_render,
+    (ObjectDescriptorCallback)windLift107_free,
+    (ObjectDescriptorCallback)windLift107_getObjectTypeId,
+    windLift107_getExtraSize,
+};

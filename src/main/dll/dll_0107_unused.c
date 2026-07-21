@@ -48,10 +48,10 @@ static const f32 gWindLift107LaunchGravity = -0.12f;
 static const f32 gWindLift107RadiusScale = 10.0f;
 static const f32 gWindLift107DefaultRadius = 50.0f;
 
-void* lbl_803DDAD4;
-void* lbl_803DDAD0;
+void* gWindLift107Resource170;
+void* gWindLift107Resource91;
 
-void fn_80185868(GameObject* obj, f32 arg)
+void windLift107_finishSpitBurst(GameObject* obj, f32 playerDistance)
 {
 
     struct
@@ -65,8 +65,8 @@ void fn_80185868(GameObject* obj, f32 arg)
 
     sub = (obj)->extra;
     stk.val = sub->radius;
-    (*(VtableFn*)(*(int*)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
-    (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
+    (*(VtableFn*)(*(int*)gWindLift107Resource91 + 4))(obj, 0xf, 0, 2, -1, 0);
+    (*(VtableFn*)(*(int*)gWindLift107Resource170 + 4))(obj, 0, stk.pad, 2, -1, 0);
     Sfx_PlayFromObject((int)obj, SFXTRIG_wp_crthit6);
     fz = 0.0f;
     (obj)->anim.velocityX = fz;
@@ -80,7 +80,7 @@ void fn_80185868(GameObject* obj, f32 arg)
     ObjHits_EnableObject(obj);
     ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     sub->spitTimer = 0;
-    if (arg < sub->radius)
+    if (playerDistance < sub->radius)
     {
         ObjMsg_SendToObject(Obj_GetPlayerObject(), UNUSED107_MSG_PLAYER_BURST, obj, 0);
     }
@@ -89,25 +89,25 @@ void fn_80185868(GameObject* obj, f32 arg)
     ObjHits_EnableObject(obj);
 }
 
-int dll_107_getExtraSize_ret_44(void)
+int windLift107_getExtraSize(void)
 {
-    return 0x2c;
+    return sizeof(WindLift107State);
 }
-int dll_107_getObjectTypeId(void)
+int windLift107_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void dll_107_free(int* obj)
+void windLift107_free(GameObject* obj)
 {
     (*gModgfxInterface)->detachSource(obj);
-    Resource_Release(lbl_803DDAD0);
-    lbl_803DDAD0 = NULL;
-    Resource_Release(lbl_803DDAD4);
-    lbl_803DDAD4 = NULL;
+    Resource_Release(gWindLift107Resource91);
+    gWindLift107Resource91 = NULL;
+    Resource_Release(gWindLift107Resource170);
+    gWindLift107Resource170 = NULL;
 }
 
-void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
+void windLift107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     WindLift107State* state;
     s16 spitTimer;
@@ -166,11 +166,11 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
-void dll_107_hitDetect_nop(void)
+void windLift107_hitDetect(void)
 {
 }
 
-void dll_107_update(GameObject* obj)
+void windLift107_update(GameObject* obj)
 {
 
     typedef struct
@@ -235,7 +235,7 @@ void dll_107_update(GameObject* obj)
         }
         if (state->spitTimer <= 0)
         {
-            fn_80185868(obj, dist);
+            windLift107_finishSpitBurst(obj, dist);
             return;
         }
     }
@@ -366,7 +366,7 @@ void dll_107_update(GameObject* obj)
         {
             windLiftState = obj->extra;
             stkA.val = windLiftState->radius;
-            (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
+            (*(VtableFn*)(*(int*)gWindLift107Resource170 + 4))(obj, 0, stkA.pad, 2, -1, 0);
             windLiftState->spitTimer = 1;
             return;
         }
@@ -391,7 +391,7 @@ void dll_107_update(GameObject* obj)
             state->launchPhase = 0;
             windLiftState = obj->extra;
             stkB.val = windLiftState->radius;
-            (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
+            (*(VtableFn*)(*(int*)gWindLift107Resource170 + 4))(obj, 0, stkB.pad, 2, -1, 0);
             windLiftState->spitTimer = 1;
             return;
         }
@@ -400,7 +400,7 @@ void dll_107_update(GameObject* obj)
             state->launchPhase = 0;
             windLiftState = obj->extra;
             stkC.val = windLiftState->radius;
-            (*(VtableFn*)(*(int*)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
+            (*(VtableFn*)(*(int*)gWindLift107Resource170 + 4))(obj, 0, stkC.pad, 2, -1, 0);
             windLiftState->spitTimer = 1;
             (obj)->anim.velocityY = 0.0f;
             return;
@@ -430,82 +430,80 @@ void dll_107_update(GameObject* obj)
     }
 }
 
-typedef struct WindLift107Placement
+struct WindLift107Placement
 {
-    ObjPlacement head; /* 0x00 */
+    ObjPlacement base; /* 0x00 */
     s8 rotXParam;    /* 0x18: <<8 -> anim.rotX seed */
     s8 radiusParam;  /* 0x19: * gWindLift107RadiusScale -> radius */
     u8 pad1a[0x1c - 0x1a];
     s16 reloadParam; /* 0x1c: hold/reload scale (* 0x34BC0) */
     s16 unk1e;       /* 0x1e */
     s16 maxDist;     /* 0x20 */
-} WindLift107Placement;
+};
 
-void dll_107_init(int obj, int pArg)
+STATIC_ASSERT(offsetof(WindLift107Placement, rotXParam) == 0x18);
+STATIC_ASSERT(offsetof(WindLift107Placement, maxDist) == 0x20);
+STATIC_ASSERT(sizeof(WindLift107Placement) == 0x24);
+
+void windLift107_init(GameObject* obj, WindLift107Placement* placement)
 {
-    WindLift107Placement* p = (WindLift107Placement*)pArg;
-    WindLift107State* sub;
-    int p54;
-    int p64;
+    WindLift107State* state;
 
-    sub = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = 0;
-    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    *(int*)&((ObjHitsPriorityState*)p54)->skeletonHitMask = 16;
-    p54 = *(int*)&((GameObject*)obj)->anim.hitReactState;
-    *(int*)&((ObjHitsPriorityState*)p54)->objectHitMask = 16;
-    ObjHits_DisableObject((GameObject*)obj);
-    ObjGroup_AddObject(obj, UNUSED_OBJGROUP);
-    sub->ventState = 0;
-    sub->launchPhase = 0;
+    state = obj->extra;
+    obj->anim.rotX = 0;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask = 16;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask = 16;
+    ObjHits_DisableObject(obj);
+    ObjGroup_AddObject((int)obj, UNUSED_OBJGROUP);
+    state->ventState = 0;
+    state->launchPhase = 0;
     {
-        s16 v = p->reloadParam;
+        s16 v = placement->reloadParam;
         if (v == 0)
         {
-            sub->holdReload = 0;
+            state->holdReload = 0;
         }
         else
         {
-            sub->holdReload = v * 0x34BC0;
+            state->holdReload = v * 0x34BC0;
         }
     }
-    sub->holdTimer = 0;
-    sub->unk25 = 0;
-    lbl_803DDAD0 = Resource_Acquire(91, 1);
-    lbl_803DDAD4 = Resource_Acquire(170, 1);
-    sub->timer = 100;
-    sub->unk18 = 400;
-    ((GameObject*)obj)->anim.rotX = (s16)(p->rotXParam << 8);
-    sub->unk14 = p->unk1e;
-    sub->maxDist = p->maxDist;
-    if (sub->maxDist == 0)
+    state->holdTimer = 0;
+    state->unk25 = 0;
+    gWindLift107Resource91 = Resource_Acquire(91, 1);
+    gWindLift107Resource170 = Resource_Acquire(170, 1);
+    state->timer = 100;
+    state->unk18 = 400;
+    obj->anim.rotX = (s16)(placement->rotXParam << 8);
+    state->unk14 = placement->unk1e;
+    state->maxDist = placement->maxDist;
+    if (state->maxDist == 0)
     {
-        sub->maxDist = 30;
+        state->maxDist = 30;
     }
-    sub->liftTimer = 800;
-    sub->spitTimer = 0;
-    sub->glowPulse = 0xff;
-    sub->unk27 = 0;
-    if (p->radiusParam != '\0')
+    state->liftTimer = 800;
+    state->spitTimer = 0;
+    state->glowPulse = 0xff;
+    state->unk27 = 0;
+    if (placement->radiusParam != '\0')
     {
-        sub->radius = gWindLift107RadiusScale * (f32)(s32)p->radiusParam;
+        state->radius = gWindLift107RadiusScale * (f32)(s32)placement->radiusParam;
     }
     else
     {
-        sub->radius = gWindLift107DefaultRadius;
+        state->radius = gWindLift107DefaultRadius;
     }
-    ((GameObject*)obj)->userData1 = 0;
-    if (((GameObject*)obj)->anim.modelState != NULL)
+    obj->userData1 = 0;
+    if (obj->anim.modelState != NULL)
     {
-        p64 = *(int*)&((GameObject*)obj)->anim.modelState;
-        *(u32*)(p64 + 0x30) |= 0x8000LL;
+        obj->anim.modelState->flags |= 0x8000LL;
     }
 }
 
-void dll_107_release_nop(void)
+void windLift107_release(void)
 {
 }
 
-void dll_107_initialise_nop(void)
+void windLift107_initialise(void)
 {
 }
