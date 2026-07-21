@@ -169,7 +169,7 @@ typedef struct ObjHitsPriorityWorkSlot
 {
     int active;
     u8 pad04[OBJHITS_PRIORITY_WORK_SLOT_OBJ_OFFSET - 0x04];
-    int obj;
+    GameObject* object;
     u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
 } ObjHitsPriorityWorkSlot;
 

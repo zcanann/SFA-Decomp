@@ -1,4 +1,5 @@
 #define OBJHITS_SETTERS_S16
+#define OBJHITS_STATE_INDEX_S8
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/objpathtransform_struct.h"
@@ -194,14 +195,12 @@ typedef struct ObjPathPoint
 
 void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, int stateIndex)
 {
-    ObjAnimComponent* obj;
     ObjHitsPriorityState* hitState;
     int slotIndex;
     ObjHitsPriorityWorkSlot* workSlot;
     int modelCount;
 
-    obj = &object->anim;
-    modelCount = obj->modelInstance->modelCount;
+    modelCount = object->anim.modelInstance->modelCount;
     if (stateIndex >= modelCount)
     {
         stateIndex = modelCount + -1;
@@ -211,19 +210,19 @@ void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, 
         stateIndex = 0;
     }
     hitState = (ObjHitsPriorityState*)hitStatePtr;
-    if (*(s8*)&hitState->stateIndex == stateIndex)
+    if (hitState->stateIndex == stateIndex)
     {
         return;
     }
     for (slotIndex = 0; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1)
     {
         workSlot = &gObjHitsPriorityHitStates[slotIndex];
-        if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj))
+        if ((workSlot->active != 0) && (workSlot->object == object))
         {
             workSlot->active = 0;
         }
     }
-    *(s8*)&hitState->stateIndex = stateIndex;
+    hitState->stateIndex = stateIndex;
     return;
 }
 
