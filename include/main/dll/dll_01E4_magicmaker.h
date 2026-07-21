@@ -3,15 +3,12 @@
 
 #include "main/game_object.h"
 #include "global.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 typedef struct MagicmakerPlacement
 {
-    u8 pad0[0x4 - 0x0];
-    u8 colorR; /* 0x4 -> spawn head.color[0] */
-    u8 colorG; /* 0x5 -> spawn head.color[1] */
-    u8 colorB; /* 0x6 -> spawn head.color[2] */
-    u8 colorA; /* 0x7 -> spawn head.color[3] */
+    ObjPlacement base;
 } MagicmakerPlacement;
 
 /*
@@ -21,7 +18,7 @@ typedef struct MagicmakerPlacement
  */
 typedef struct MagicmakerSetup
 {
-    ObjPlacement head;
+    ObjPlacement base;
     u8 pad18[0x1A - 0x18];
     u8 unk1A;
     u8 pad1B[0x1C - 0x1B];
@@ -33,12 +30,18 @@ typedef struct MagicmakerSetup
     s16 unk2E;
 } MagicmakerSetup;
 
+STATIC_ASSERT(sizeof(MagicmakerPlacement) == 0x18);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk1A) == 0x1A);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(MagicmakerSetup, gameBit) == 0x24);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk2C) == 0x2C);
 STATIC_ASSERT(offsetof(MagicmakerSetup, unk2E) == 0x2E);
 STATIC_ASSERT(sizeof(MagicmakerSetup) == 0x30);
+
+extern u16 gMagicMakerSpawnObjectIds[6];
+extern ObjectDescriptor10WithPadding gMAGICMakerObjDescriptor;
+extern f32 gMagicMakerRenderScale;
+extern f32 gMagicMakerSpawnHeightOffset;
 
 int magicmaker_getExtraSize(void);
 int magicmaker_getObjectTypeId(void);
