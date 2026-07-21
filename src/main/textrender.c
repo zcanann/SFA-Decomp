@@ -335,12 +335,12 @@ extern u8 gSubtitleColorR;
 extern u8 gSubtitleColorG;
 extern u8 gSubtitleColorB;
 extern u8 gSubtitleColorA;
-extern void* gSubtitleBoxTextures[];
+extern Texture* gSubtitleBoxTextures[];
 extern int gSubtitleBlockCount;
 extern int lbl_803DC9D0;
 extern int lbl_803DC9D4;
 extern int gGameTextLastLanguage;
-extern void* lbl_8033BE40[];
+extern Texture* gGameTextBoxFrameTextures[];
 extern Texture* gGameTextBoxCornerTexture;
 extern Texture* gGameTextBoxBgTexture;
 extern GXColor gGameTextBoxFillColor;
@@ -3143,9 +3143,9 @@ void fn_8001BDD4(int mode)
     switch (mode)
     {
     case 3:
-        textureFree((Texture*)(gSubtitleBoxTextures[0]));
-        textureFree((Texture*)(gSubtitleBoxTextures[1]));
-        textureFree((Texture*)(gSubtitleBoxTextures[2]));
+        textureFree(gSubtitleBoxTextures[0]);
+        textureFree(gSubtitleBoxTextures[1]);
+        textureFree(gSubtitleBoxTextures[2]);
         break;
     }
 }
@@ -3298,19 +3298,21 @@ void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
             rem = 0;
         }
         GXSetScissor(0, 0, 0x280, 0x1e0);
-        drawTexture(lbl_8033BE40[0], (f32)(x2 - 0x34), (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
-        drawTexture(lbl_8033BE40[4], (f32)xw, (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture(gGameTextBoxFrameTextures[0], (f32)(x2 - 0x34), (f32)(y2 - 0x23),
+                    ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture(gGameTextBoxFrameTextures[4], (f32)xw, (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
         if (half != 0)
         {
-            drawScaledTexture(lbl_8033BE40[1], (f32)x2, (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100, half, 0x3a,
-                              0);
-            drawPartialTexture(lbl_8033BE40[3], (f32)(xw - half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
+            drawScaledTexture(gGameTextBoxFrameTextures[1], (f32)x2, (f32)(y2 - 0x13),
+                              ((GameTextBox*)box)->alpha, 0x100, half, 0x3a, 0);
+            drawPartialTexture(gGameTextBoxFrameTextures[3], (f32)(xw - half), (f32)(y2 - 0x13),
+                               ((GameTextBox*)box)->alpha, 0x100,
                                half, 0x3a, 0xc - half, 0);
         }
         if (rem != 0)
         {
-            drawScaledTexture(lbl_8033BE40[2], (f32)(x2 + half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
-                              rem, 0x3a, 0);
+            drawScaledTexture(gGameTextBoxFrameTextures[2], (f32)(x2 + half), (f32)(y2 - 0x13),
+                              ((GameTextBox*)box)->alpha, 0x100, rem, 0x3a, 0);
         }
         break;
     case 4:
@@ -3570,5 +3572,5 @@ void* jumptable_802CA420[8] = {
     (void*)((u8*)gameTextDrawBox + 0x368), (void*)((u8*)gameTextDrawBox + 0x6F8), (void*)((u8*)gameTextDrawBox + 0x068),
     (void*)((u8*)gameTextDrawBox + 0x114), (void*)((u8*)gameTextDrawBox + 0x06C),
 };
-void* lbl_8033BE40[5];
-void* gSubtitleBoxTextures[3];
+Texture* gGameTextBoxFrameTextures[5];
+Texture* gSubtitleBoxTextures[3];
