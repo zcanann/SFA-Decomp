@@ -32,7 +32,7 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
 
     {
         u32 f0w = voice->flags;
-        f0w &= 0x80000000;
+        f0w &= DSP_VOICE_ITD_ENABLED_FLAG;
         salCalcVolumeMatrix(volumeTable, out, pan, surroundPan, f0w != 0,
                             dspStudio[voice->studio].type == 1, volume, auxA, auxB);
     }
@@ -45,7 +45,7 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
         voice->volL = il;
         voice->volR = ir;
         voice->volS = is;
-        voice->changed[0] |= 0x1;
+        voice->changed[0] |= DSP_VOICE_CHANGE_VOLUME;
         voice->lastUpdate.vol = 0;
     }
 
@@ -57,7 +57,7 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
         voice->volLa = il;
         voice->volRa = ir;
         voice->volSa = is;
-        voice->changed[0] |= 0x2;
+        voice->changed[0] |= DSP_VOICE_CHANGE_AUX_A;
         voice->lastUpdate.volA = 0;
     }
 
@@ -69,16 +69,16 @@ void hwSetVolume(u32 voiceIndex, u8 volumeTable, f32 volume, u32 pan, u32 surrou
         voice->volLb = il;
         voice->volRb = ir;
         voice->volSb = is;
-        voice->changed[0] |= 0x4;
+        voice->changed[0] |= DSP_VOICE_CHANGE_AUX_B;
         voice->lastUpdate.volB = 0;
     }
 
-    if (voice->flags & 0x80000000)
+    if (voice->flags & DSP_VOICE_ITD_ENABLED_FLAG)
     {
         const u16* delay = &gItdPanDelayTable[(pan >> 16) & 0xff];
         voice->itdShiftL = *delay;
         voice->itdShiftR = 0x20 - *delay;
-        voice->changed[0] |= 0x200;
+        voice->changed[0] |= DSP_VOICE_CHANGE_ITD;
     }
 }
 

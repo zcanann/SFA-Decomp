@@ -64,5 +64,5 @@ void hwSetADSR(int slot, u32* adsr, u8 mode)
         break;
     }
 
-    dspVoice[slot].changed[0] |= 0x10;
+    dspVoice[slot].changed[0] |= DSP_VOICE_CHANGE_ADSR;
 }

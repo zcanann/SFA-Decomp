@@ -507,7 +507,8 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                             salDeactivateVoice(dsp_vptr);
                             continue;
                         }
-                        if (((dsp_vptr->changed[0] & 0x10) != 0) && ((u32)adsrSetup(&dsp_vptr->adsr) != 0))
+                        if (((dsp_vptr->changed[0] & DSP_VOICE_CHANGE_ADSR) != 0) &&
+                            ((u32)adsrSetup(&dsp_vptr->adsr) != 0))
                         {
                             salSynthSendMessage((int)dsp_vptr, 0);
                             salDeactivateVoice(dsp_vptr);
@@ -695,16 +696,16 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                 pb->mixerCtrl &= ~4;
                             }
                         }
-                        if ((dsp_vptr->changed[0] & 0x200) != 0)
+                        if ((dsp_vptr->changed[0] & DSP_VOICE_CHANGE_ITD) != 0)
                         {
                             pb->itd.targetShiftL = dsp_vptr->itdShiftL;
                             pb->itd.targetShiftR = dsp_vptr->itdShiftR;
                         }
-                        if ((dsp_vptr->changed[0] & 0x100) != 0)
+                        if ((dsp_vptr->changed[0] & DSP_VOICE_CHANGE_SRC_TYPE) != 0)
                         {
                             pb->srcSelect = dsp_vptr->srcTypeSelect;
                         }
-                        if ((dsp_vptr->changed[0] & 0x80) != 0)
+                        if ((dsp_vptr->changed[0] & DSP_VOICE_CHANGE_POLYPHASE) != 0)
                         {
                             pb->coefSelect = dsp_vptr->srcCoefSelect;
                         }

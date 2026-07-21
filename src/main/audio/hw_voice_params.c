@@ -2,10 +2,6 @@
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/hw_voice_params.h"
 
-#define DSP_VOICE_PITCH_CHANGE_FLAG     0x8
-#define DSP_VOICE_SRC_TYPE_CHANGE_FLAG  0x100
-#define DSP_VOICE_POLYPHASE_CHANGE_FLAG 0x80
-#define DSP_VOICE_ITD_ENABLED_FLAG      0x80000000
 #define DSP_VOICE_ITD_DISABLED_MASK     0x7fffffff
 #define DSP_VOICE_ITD_CENTER            0x10
 
@@ -35,7 +31,7 @@ void hwSetPitch(u32 slot, u16 pitch)
     entry->pitch[channel] = pitch << 4;
     channel = salTimeOffset;
     val = entry->changed[channel];
-    entry->changed[channel] = val | DSP_VOICE_PITCH_CHANGE_FLAG;
+    entry->changed[channel] = val | DSP_VOICE_CHANGE_PITCH;
     entry->lastUpdate.pitch = salTimeOffset;
 }
 
@@ -44,7 +40,7 @@ void hwSetSRCType(u32 slot, u8 value)
     static u16 dspSRCType[3] = {0, 1, 2};
     DSPvoice* entry = &dspVoice[slot];
     entry->srcTypeSelect = dspSRCType[(u8)value];
-    entry->changed[0] |= DSP_VOICE_SRC_TYPE_CHANGE_FLAG;
+    entry->changed[0] |= DSP_VOICE_CHANGE_SRC_TYPE;
 }
 
 void hwSetPolyPhaseFilter(u32 slot, u8 value)
@@ -52,7 +48,7 @@ void hwSetPolyPhaseFilter(u32 slot, u8 value)
     static u16 dspCoefSel[3] = {0, 1, 2};
     DSPvoice* entry = &dspVoice[slot];
     entry->srcCoefSelect = dspCoefSel[(u8)value];
-    entry->changed[0] |= DSP_VOICE_POLYPHASE_CHANGE_FLAG;
+    entry->changed[0] |= DSP_VOICE_CHANGE_POLYPHASE;
 }
 
 void hwSetITDMode(u32 slot, u8 value)
