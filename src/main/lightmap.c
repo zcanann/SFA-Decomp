@@ -794,7 +794,7 @@ void sceneDraw(void)
     }
     mapDebugRender((int*)(q + 0x4164));
     fn_80062894();
-    fn_80062808();
+    shadowVolumeBeginFrame();
     gVisibleObjectSortKeyCount = 1;
     lbl_803DCEAC = 0;
     lbl_803DCE06 = 0;

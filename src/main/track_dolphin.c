@@ -530,7 +530,7 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
-/* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
+/* Begin a new shadow-volume frame: clear the per-frame
  * counts, flip the three double-buffer selectors, and rotate the current
  * write pointers to the buffer picked by this frame's flip index. */
 void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
@@ -1850,7 +1850,7 @@ u8 objShadowUpdateAlpha(GameObject* obj, int delta)
     return v & 0xff;
 }
 
-void fn_80062808(void)
+void shadowVolumeBeginFrame(void)
 {
     void* bufPtr;
     s16 zero;
