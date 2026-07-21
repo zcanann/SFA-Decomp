@@ -109,7 +109,7 @@ typedef struct ObjfsaWalkCurveDef
     s8 type;
     s8 minYExtent;
     u8 pad1B;
-    u32 linkIds[4];
+    s32 linkIds[4];
     u8 pad2C[4];
     s8 secondEdge[4];
     s8 linkEdges[4][4];
@@ -179,6 +179,11 @@ inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base);
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
     return &gObjfsaPatches[patchIndex];
+}
+
+static inline ObjfsaStorage* Objfsa_GetStorage(ObjfsaPatch* patches)
+{
+    return (ObjfsaStorage*)patches;
 }
 
 static inline ObjfsaWalkGroup* Objfsa_GetWalkGroup(int groupIndex)
@@ -1399,8 +1404,8 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 pairs[364];
     f32 z1;
     f32 x1;
-    f32* po;
     ObjfsaPatch* np;
+    s8* edgeCoords;
     u8 groupB;
     ObjfsaPatch* p;
     int flagIndex;
@@ -1416,17 +1421,16 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkCurveDef* linked;
     int iter;
     int pi;
-    u32 gi;
+    u8 gi;
     u8 groupA;
     u8 normalIdx;
     u8 edge;
     int pairId;
     u16 pairGid;
-    int zid;
     u32 checksum;
     int searchCount;
-    ObjfsaWalkGroup* wgB;
     ObjfsaPatchPlane* pl;
+    f32* po;
     ObjfsaPatch* pC;
     ObjfsaWalkCurveDef** curveList;
     ObjfsaPatch* sp;
@@ -1449,12 +1453,10 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 fy0;
     f32 fy1;
     s16 fyv;
-    f32 zero;
     ObjfsaWalkGroup* wg;
     ObjfsaWalkGroup* wgT;
     ObjfsaWalkGroup* wgBT;
     s32* linkId;
-    s8* edgeCoords;
     s16 sz;
     s16 sx;
     ObjfsaPatch* ep;
@@ -1490,7 +1492,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
 
         curveList = (ObjfsaWalkCurveDef**)(*gRomCurveInterface)->getCurves(&curveCount);
-        memset((char*)patchBase[0] + OBJFSA_ACTIVE_WALKGROUPS_OFFSET, 0, OBJFSA_WALKGROUP_COUNT);
+        memset(Objfsa_GetStorage(patchBase[0])->activeWalkGroups, 0, OBJFSA_WALKGROUP_COUNT);
         sp = patchBase[0];
         for (pi = 0; pi < 256; pi++)
         {
@@ -1506,7 +1508,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             {
                 gi = curve->walkGroup;
                 wg = &((ObjfsaWalkGroup*)(patchBase[0] + 256))[gi];
-                ((ObjfsaStorage*)patchBase[0])->activeWalkGroups[gi] = 1;
+                Objfsa_GetStorage(patchBase[0])->activeWalkGroups[gi] = 1;
 
                 x0 = objfsaCorner(curve->firstEdge[0], scale, &curve->x);
                 z0 = objfsaCorner(curve->firstEdge[1], scale, &curve->z);
@@ -1617,8 +1619,9 @@ void walkgroupFindExitPointFn_800dc398(void)
                             OBJFSA_SET_NEWPATCH_PLANE(2, z3 - z2, x2 - x3, x2, z2);
 
                             edgeCoords = (s8*)(slotPtr + 0x34);
-                            OBJFSA_SET_NEWPATCH_PLANE(3, objfsaCorner(edgeCoords[1], scale, &curve->z) - z3,
-                                                      x3 - objfsaCorner(edgeCoords[0], scale, &curve->x), x3, z3);
+                            z0 = objfsaCorner(edgeCoords[1], scale, &curve->z);
+                            x0 = objfsaCorner(edgeCoords[0], scale, &curve->x);
+                            OBJFSA_SET_NEWPATCH_PLANE(3, z0 - z3, x3 - x0, x3, z3);
 
                             fy0 = 2.0f * curve->maxYExtent + curve->y;
                             fy1 = 2.0f * linked->maxYExtent + linked->y;
