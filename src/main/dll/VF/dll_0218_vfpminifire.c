@@ -131,10 +131,10 @@ void VFP_MiniFire_update(GameObject* obj)
     linkedGfx = *(int*)&(obj)->anim.hitReactState;
     if ((void*)linkedGfx != NULL)
     {
-        *(u8*)&((ObjHitsPriorityState*)linkedGfx)->hitVolumePriority = 0xb;
-        *(u8*)&((ObjHitsPriorityState*)linkedGfx)->hitVolumeId = 1;
-        *(int*)&((ObjHitsPriorityState*)linkedGfx)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)linkedGfx)->skeletonHitMask = 0x10;
+        ((ObjHitsPriorityState*)linkedGfx)->hitVolumePriority = 0xb;
+        ((ObjHitsPriorityState*)linkedGfx)->hitVolumeId = 1;
+        ((ObjHitsPriorityState*)linkedGfx)->objectHitMask = 0x10;
+        ((ObjHitsPriorityState*)linkedGfx)->skeletonHitMask = 0x10;
     }
     if (((void*)linkedGfx != NULL && *(void**)&((ObjHitsPriorityState*)linkedGfx)->lastHitObject != NULL) ||
         ((obj)->anim.localPosY < state->baseY && state->burstStarted == 0))

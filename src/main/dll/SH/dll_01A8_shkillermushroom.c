@@ -176,7 +176,7 @@ ObjectDescriptor gEnemyMushroomObjDescriptor = {
  * hit reaction, pop and respawn. */
 void enemymushroom_update(int* obj)
 {
-    char* state;
+    EnemyMushroomState* state;
     GameObject* player;
     int* src;
     MushHitInfo hv;
@@ -190,7 +190,7 @@ void enemymushroom_update(int* obj)
     src = *(int**)&((GameObject*)obj)->anim.placementData;
     ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
     ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-    ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_ACTIVE;
+    state->stateFlags |= MUSHROOM_STATEFLAG_ACTIVE;
 
     if (objIsFrozen((u8*)obj))
     {
@@ -212,38 +212,38 @@ void enemymushroom_update(int* obj)
         return;
     }
 
-    switch (((EnemyMushroomState*)state)->stateId)
+    switch (state->stateId)
     {
     case 6:
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_diallp_c);
-        ((EnemyMushroomState*)state)->stateFlags =
-            (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
-        ((EnemyMushroomState*)state)->hitRadius =
-            3.5f * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
-        if (((EnemyMushroomState*)state)->hitRadius > 80.0f)
+        state->stateFlags =
+            (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
+        state->hitRadius =
+            3.5f * timeDelta + state->hitRadius;
+        if (state->hitRadius > 80.0f)
         {
-            ((EnemyMushroomState*)state)->hitRadius = 80.0f;
+            state->hitRadius = 80.0f;
         }
-        if (!(((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_HIT_PLAYER))
+        if (!(state->stateFlags & MUSHROOM_STATEFLAG_HIT_PLAYER))
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <=
-                    ((EnemyMushroomState*)state)->hitRadius &&
+                    state->hitRadius &&
                 !EmissionController_IsLingering((GameObject*)(player)) &&
                 !playerGetFlags3F0Bit5((GameObject*)(player)) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit(player, (GameObject*)obj, 0x16, 1, 0);
-                ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_HIT_PLAYER;
+                state->stateFlags |= MUSHROOM_STATEFLAG_HIT_PLAYER;
             }
         }
-        if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
+        if (state->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
-            ((EnemyMushroomState*)state)->timer = 0.0f;
-            ((EnemyMushroomState*)state)->stateId = 2;
+            state->timer = 0.0f;
+            state->stateId = 2;
         }
-        hv.x = ((EnemyMushroomState*)state)->hitEffectX;
-        hv.y = ((EnemyMushroomState*)state)->hitEffectY;
-        hv.z = ((EnemyMushroomState*)state)->hitEffectZ;
+        hv.x = state->hitEffectX;
+        hv.y = state->hitEffectY;
+        hv.z = state->hitEffectZ;
         {
             u8 k = 1;
             int base = 0x200000;
@@ -255,9 +255,9 @@ void enemymushroom_update(int* obj)
         }
         break;
     case 2:
-        ((EnemyMushroomState*)state)->stateFlags =
-            (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
-        if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
+        state->stateFlags =
+            (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
+        if (state->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
             int newAlpha = ((GameObject*)obj)->anim.alpha - framesThisStep * 4;
             if (newAlpha < 0)
@@ -265,11 +265,11 @@ void enemymushroom_update(int* obj)
                 newAlpha = 0;
             }
             ((GameObject*)obj)->anim.alpha = newAlpha;
-            ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
-            if (((EnemyMushroomState*)state)->timer > (f32)((EnemyMushroomState*)state)->respawnFrameLimit)
+            state->timer = state->timer + timeDelta;
+            if (state->timer > (f32)state->respawnFrameLimit)
             {
-                enemymushroom_resetToSpawn((EnemyMushroomObject*)obj, (EnemyMushroomState*)state, 1);
-                ((EnemyMushroomState*)state)->stateId = 1;
+                enemymushroom_resetToSpawn((EnemyMushroomObject*)obj, state, 1);
+                state->stateId = 1;
             }
         }
         break;
@@ -277,42 +277,42 @@ void enemymushroom_update(int* obj)
         ((GameObject*)obj)->anim.resetHitboxFlags =
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_id_9c);
-        if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
+        if (state->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
-            ((EnemyMushroomState*)state)->stateId = 4;
+            state->stateId = 4;
         }
         break;
     case 4:
         ((GameObject*)obj)->anim.resetHitboxFlags =
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-        ((EnemyMushroomState*)state)->hitRadius =
-            2.5f * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
+        state->hitRadius =
+            2.5f * timeDelta + state->hitRadius;
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_diallp_c);
-        if (!(((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_HIT_PLAYER))
+        if (!(state->stateFlags & MUSHROOM_STATEFLAG_HIT_PLAYER))
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <=
-                    ((EnemyMushroomState*)state)->hitRadius &&
+                    state->hitRadius &&
                 !EmissionController_IsLingering((GameObject*)(player)) &&
                 !playerGetFlags3F0Bit5((GameObject*)(player)) &&
                 !(((GameObject*)player)->objectFlags & SHKILLERMUSHROOM_OBJFLAG_PARENT_SLACK))
             {
                 ObjHits_RecordObjectHit(player, (GameObject*)obj, 0x16, 1, 0);
-                ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_HIT_PLAYER;
+                state->stateFlags |= MUSHROOM_STATEFLAG_HIT_PLAYER;
             }
         }
-        if (((EnemyMushroomState*)state)->hitRadius > 80.0f)
+        if (state->hitRadius > 80.0f)
         {
-            ((EnemyMushroomState*)state)->hitRadius = 80.0f;
+            state->hitRadius = 80.0f;
         }
-        ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
-        if (((EnemyMushroomState*)state)->timer > 120.0f)
+        state->timer = state->timer + timeDelta;
+        if (state->timer > 120.0f)
         {
-            ((EnemyMushroomState*)state)->timer = 0.0f;
-            ((EnemyMushroomState*)state)->stateId = 5;
+            state->timer = 0.0f;
+            state->stateId = 5;
         }
-        hv.x = ((EnemyMushroomState*)state)->hitEffectX;
-        hv.y = ((EnemyMushroomState*)state)->hitEffectY;
-        hv.z = ((EnemyMushroomState*)state)->hitEffectZ;
+        hv.x = state->hitEffectX;
+        hv.y = state->hitEffectY;
+        hv.z = state->hitEffectZ;
         {
             u8 k = 1;
             int base = 0x200000;
@@ -326,67 +326,67 @@ void enemymushroom_update(int* obj)
     case 5:
         ((GameObject*)obj)->anim.resetHitboxFlags =
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-        ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
-        if (((EnemyMushroomState*)state)->timer > (f32)((EnemymushroomPlacement*)src)->regrowDelay)
+        state->timer = state->timer + timeDelta;
+        if (state->timer > (f32)((EnemymushroomPlacement*)src)->regrowDelay)
         {
-            if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
+            if (state->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
             {
-                ((EnemyMushroomState*)state)->stateId = 0;
-                ((EnemyMushroomState*)state)->hitRadius = 0.0f;
-                ((EnemyMushroomState*)state)->stateFlags =
-                    (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
+                state->stateId = 0;
+                state->hitRadius = 0.0f;
+                state->stateFlags =
+                    (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
             }
         }
         break;
     case 1:
-        ((EnemyMushroomState*)state)->stateFlags =
-            (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
-        if (((GameObject*)obj)->anim.rootMotionScale > ((EnemyMushroomState*)state)->heightTarget)
+        state->stateFlags =
+            (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
+        if (((GameObject*)obj)->anim.rootMotionScale > state->heightTarget)
         {
-            ((EnemyMushroomState*)state)->riseStep =
-                ((EnemyMushroomState*)state)->riseStep / 1.1f;
+            state->riseStep =
+                state->riseStep / 1.1f;
         }
-        if (((EnemyMushroomState*)state)->riseStep < 0.00001f)
+        if (state->riseStep < 0.00001f)
         {
-            ((EnemyMushroomState*)state)->riseStep = 0.0f;
+            state->riseStep = 0.0f;
         }
-        ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
+        state->timer = state->timer + timeDelta;
         ((GameObject*)obj)->anim.rootMotionScale =
-            ((EnemyMushroomState*)state)->riseStep * timeDelta + ((GameObject*)obj)->anim.rootMotionScale;
-        if (((EnemyMushroomState*)state)->timer > ((EnemyMushroomState*)state)->riseDuration)
+            state->riseStep * timeDelta + ((GameObject*)obj)->anim.rootMotionScale;
+        if (state->timer > state->riseDuration)
         {
-            ((EnemyMushroomState*)state)->stateId = 0;
+            state->stateId = 0;
         }
         break;
     case 9:
-        if (((EnemyMushroomState*)state)->timer <= 0.0f)
+        if (state->timer <= 0.0f)
         {
-            ((EnemyMushroomState*)state)->timer = (f32)(int)randomGetRange(0xf0, 0x12c);
+            state->timer = (f32)(int)randomGetRange(0xf0, 0x12c);
         }
-        if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
+        if (state->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
-            ((EnemyMushroomState*)state)->timer = 0.0f;
+            state->timer = 0.0f;
         }
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_cagelp_c);
         {
-            f32 nv = ((EnemyMushroomState*)state)->timer - timeDelta;
-            ((EnemyMushroomState*)state)->timer = nv;
+            f32 nv = state->timer - timeDelta;
+            state->timer = nv;
             if (nv <= 0.0f)
             {
                 (*gExpgfxInterface)->freeSource((u32)obj);
-                ((EnemyMushroomState*)state)->stateId = 0;
+                state->stateId = 0;
                 objFn_8002b67c((GameObject*)obj);
             }
             else
             {
-                f32 nw = ((EnemyMushroomState*)state)->effectTimer - timeDelta;
-                ((EnemyMushroomState*)state)->effectTimer = nw;
+                f32 nw = state->effectTimer - timeDelta;
+                state->effectTimer = nw;
                 if (nw <= 0.0f)
                 {
                     hv.x = 14.0f;
                     hv.y = 25.0f;
                     (*gPartfxInterface)->spawnObject(obj, SHKILLERMUSHROOM_PARTFX_STUN, &hv, 2, -1, NULL);
-                    ((EnemyMushroomState*)state)->effectTimer = 20.0f;
+                    state->effectTimer = 20.0f;
                 }
                 ((GameObject*)obj)->anim.resetHitboxFlags =
                     (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
@@ -395,11 +395,11 @@ void enemymushroom_update(int* obj)
         break;
     case 0xa:
         ObjHits_DisableObject((GameObject*)obj);
-        ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->timer + timeDelta;
-        if (((EnemyMushroomState*)state)->timer > (f32)((EnemyMushroomState*)state)->respawnFrameLimit)
+        state->timer = state->timer + timeDelta;
+        if (state->timer > (f32)state->respawnFrameLimit)
         {
-            enemymushroom_resetToSpawn((EnemyMushroomObject*)obj, (EnemyMushroomState*)state, 1);
-            ((EnemyMushroomState*)state)->stateId = 1;
+            enemymushroom_resetToSpawn((EnemyMushroomObject*)obj, state, 1);
+            state->stateId = 1;
             objFn_8002b67c((GameObject*)obj);
         }
         break;
@@ -415,10 +415,10 @@ void enemymushroom_update(int* obj)
             {
                 if (fn_8029610C((GameObject*)player) >= 0.54f)
                 {
-                    ((EnemyMushroomState*)state)->stateFlags =
-                        (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
-                    ((EnemyMushroomState*)state)->stateId = 3;
-                    ((EnemyMushroomState*)state)->timer = 0.0f;
+                    state->stateFlags =
+                        (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
+                    state->stateId = 3;
+                    state->timer = 0.0f;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_haga_talk3);
                 }
             }
@@ -432,7 +432,7 @@ void enemymushroom_update(int* obj)
     hv.z += playerMapOffsetZ;
     if (hitType != 0)
     {
-        if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ACTIVE)
+        if (state->stateFlags & MUSHROOM_STATEFLAG_ACTIVE)
         {
             if (hitType == 0x10)
             {
@@ -440,18 +440,18 @@ void enemymushroom_update(int* obj)
             }
             else
             {
-                if (((EnemyMushroomState*)state)->stateId != 9)
+                if (state->stateId != 9)
                 {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mv_ladderslide16);
                 }
-                ((EnemyMushroomState*)state)->stateFlags =
-                    (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
+                state->stateFlags =
+                    (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);
                 if (((EnemymushroomPlacement*)src)->popGameBit != -1)
                 {
                     mainSetBits(((EnemymushroomPlacement*)src)->popGameBit, 1);
                 }
-                ((EnemyMushroomState*)state)->stateId = 9;
-                ((EnemyMushroomState*)state)->timer = 0.0f;
+                state->stateId = 9;
+                state->timer = 0.0f;
                 ((GameObject*)obj)->anim.currentMoveProgress =
                     (f32)(int)randomGetRange(0, 0x28) / 100.0f;
             }
@@ -459,20 +459,20 @@ void enemymushroom_update(int* obj)
         }
     }
 
-    if (((GameObject*)obj)->anim.currentMove != gKillerMushroomStateAnimMoves[((EnemyMushroomState*)state)->stateId])
+    if (((GameObject*)obj)->anim.currentMove != gKillerMushroomStateAnimMoves[state->stateId])
     {
-        ObjAnim_SetCurrentMove((int)obj, gKillerMushroomStateAnimMoves[((EnemyMushroomState*)state)->stateId],
+        ObjAnim_SetCurrentMove((int)obj, gKillerMushroomStateAnimMoves[state->stateId],
                                0.0f, 0);
     }
     if (ObjAnim_AdvanceCurrentMove(
-            (int)obj, gKillerMushroomStateAnimRates[((EnemyMushroomState*)state)->stateId], timeDelta, NULL) != 0)
+            (int)obj, gKillerMushroomStateAnimRates[state->stateId], timeDelta, NULL) != 0)
     {
-        ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_ANIM_DONE;
+        state->stateFlags |= MUSHROOM_STATEFLAG_ANIM_DONE;
     }
     else
     {
-        ((EnemyMushroomState*)state)->stateFlags =
-            (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ANIM_DONE);
+        state->stateFlags =
+            (u8)(state->stateFlags & ~MUSHROOM_STATEFLAG_ANIM_DONE);
     }
 }
 

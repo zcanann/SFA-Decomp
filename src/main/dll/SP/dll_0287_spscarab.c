@@ -90,7 +90,7 @@ void SPScarab_hitDetect(void)
 
 void SPScarab_update(int obj)
 {
-    int state;
+    SpscarabState* state;
     int placement;
     s16 angle;
     f32 distance;
@@ -98,17 +98,17 @@ void SPScarab_update(int obj)
     f32 outV[3];
     f32 hit_buf[24]; /* objBboxFn_800640cc collision output */
 
-    state = *(int*)&((GameObject*)obj)->extra;
+    state = (SpscarabState*)*(int*)&((GameObject*)obj)->extra;
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
 
-    if (((GameObject*)obj)->anim.localPosY > ((SpscarabState*)state)->groundY)
+    if (((GameObject*)obj)->anim.localPosY > state->groundY)
     {
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY - 0.1f * timeDelta;
     }
 
-    objMove((GameObject*)obj, timeDelta * (((GameObject*)obj)->anim.velocityX * ((SpscarabState*)state)->speedScale),
+    objMove((GameObject*)obj, timeDelta * (((GameObject*)obj)->anim.velocityX * state->speedScale),
             ((GameObject*)obj)->anim.velocityY * timeDelta,
-            timeDelta * (((GameObject*)obj)->anim.velocityZ * ((SpscarabState*)state)->speedScale));
+            timeDelta * (((GameObject*)obj)->anim.velocityZ * state->speedScale));
 
     distance = sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                      ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ);
@@ -116,9 +116,9 @@ void SPScarab_update(int obj)
     ObjAnim_SampleRootCurvePhase((ObjAnimComponent*)obj, distance, &phase);
     ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, 0);
 
-    if (((GameObject*)obj)->anim.localPosY < ((SpscarabState*)state)->groundY)
+    if (((GameObject*)obj)->anim.localPosY < state->groundY)
     {
-        ((GameObject*)obj)->anim.localPosY = ((SpscarabState*)state)->groundY;
+        ((GameObject*)obj)->anim.localPosY = state->groundY;
         ((GameObject*)obj)->anim.velocityY = 0.0f;
     }
 
@@ -136,14 +136,14 @@ void SPScarab_update(int obj)
                       &((GameObject*)obj)->anim.worldPosX) <
         100.0f)
     {
-        Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);
-        itemPickupDoParticleFx((void*)obj, 1.0f, ((SpscarabState*)state)->mode, 0x28);
+        Sfx_PlayFromObject(obj, (u16)state->sfxId);
+        itemPickupDoParticleFx((void*)obj, 1.0f, state->mode, 0x28);
         ((GameObject*)obj)->objectFlags = ((GameObject*)obj)->objectFlags | SPSCARAB_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
 
         {
             int notifyArgB = (((SpscarabPlacement*)placement)->kind == 0) ? 1 : 0;
-            int vendorObj = ((SpscarabState*)state)->vendorObj;
+            int vendorObj = state->vendorObj;
             int notifyArgA = (((SpscarabPlacement*)placement)->kind == 0) ? 0 : 1;
             (*(void (**)(int, int, int))(*(int*)(*(int*)(vendorObj + 0x68)) + 0x50))(vendorObj, notifyArgA, notifyArgB);
         }
@@ -151,9 +151,9 @@ void SPScarab_update(int obj)
 
     if ((((GameObject*)obj)->objectFlags & SPSCARAB_OBJFLAG_RENDERED) != 0)
     {
-        if (((SpscarabState*)state)->burstCount != 0)
+        if (state->burstCount != 0)
         {
-            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, ((SpscarabState*)state)->burstCount, 1, 0x14,
+            objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, state->burstCount, 1, 0x14,
                                         2.5f, NULL, 0);
         }
     }
@@ -162,12 +162,12 @@ void SPScarab_update(int obj)
 void SPScarab_init(GameObject* obj, int def)
 {
     ObjAnimComponent* objAnim;
-    int state;
+    SpscarabState* state;
     int model;
     SpscarabPalette paletteBytes;
 
     objAnim = (ObjAnimComponent*)obj;
-    state = *(int*)&(obj)->extra;
+    state = (SpscarabState*)*(int*)&(obj)->extra;
     {
         const u16* palettePair = &gSpScarabPaletteBytesA;
         const u8* paletteByte = &gSpScarabPaletteByteB;
@@ -183,9 +183,9 @@ void SPScarab_init(GameObject* obj, int def)
 
     objAnim->bankIndex = (s8)(1 - *(u8*)(def + 0x19));
 
-    ((SpscarabState*)state)->groundY = (f32)(s32) * (s16*)(def + 0x1a);
-    ((SpscarabState*)state)->speedScale = 0.4f + randomGetRange(0, 0x64) / 100.0f;
-    ((SpscarabState*)state)->vendorObj = *(int*)(def + 0x14);
+    state->groundY = (f32)(s32) * (s16*)(def + 0x1a);
+    state->speedScale = 0.4f + randomGetRange(0, 0x64) / 100.0f;
+    state->vendorObj = *(int*)(def + 0x14);
     *(int*)(def + 0x14) = -1;
 
     Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_scarab_runloop);
@@ -195,14 +195,14 @@ void SPScarab_init(GameObject* obj, int def)
     {
     case 0:
         *(u8*)(*(int*)(model + 0x34) + 8) = *((u8*)&paletteBytes + randomGetRange(0, 2));
-        ((SpscarabState*)state)->sfxId = 0x41;
-        ((SpscarabState*)state)->mode = 4;
-        ((SpscarabState*)state)->burstCount = 2;
+        state->sfxId = 0x41;
+        state->mode = 4;
+        state->burstCount = 2;
         break;
     case 1:
-        ((SpscarabState*)state)->sfxId = 0x42;
-        ((SpscarabState*)state)->mode = 1;
-        ((SpscarabState*)state)->burstCount = 0;
+        state->sfxId = 0x42;
+        state->mode = 1;
+        state->burstCount = 0;
         break;
     }
 }
