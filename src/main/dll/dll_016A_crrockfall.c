@@ -48,6 +48,33 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 void* gRockfallResource;
 extern u8 gRockfallCfgTable[];
 
+static int crrockfall_isPlayerInRange(GameObject* obj)
+{
+    CrrockfallPlacement* placement;
+    f32 xzDistance;
+    f32 heightDifference;
+    GameObject* player = Obj_GetPlayerObject();
+
+    if (player == NULL)
+    {
+        return 0;
+    }
+
+    placement = (CrrockfallPlacement*)obj->anim.placementData;
+    xzDistance = Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX);
+    heightDifference = obj->anim.localPosY - player->anim.localPosY;
+    if (heightDifference < 0.0f)
+    {
+        heightDifference = 0.0f;
+    }
+    if (xzDistance < 4.0f * (f32)(u32)placement->triggerRange &&
+        heightDifference < 300.0f)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 f32 fn_801ACCFC(GameObject* obj)
 {
     CrRockfallState* state = (obj)->extra;
