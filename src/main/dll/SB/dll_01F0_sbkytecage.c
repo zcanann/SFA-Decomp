@@ -34,9 +34,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 /* objType of the loose Kyte child the cage attaches */
 #define SB_KYTE_OBJECT_TYPE 0x121
 
-/* obj->objectFlags bits set at init */
-#define SB_KYTECAGE_INIT_FLAGS 0x6000
-
 /* gMapEvent action ids requested at init when GAMEBIT_KYTE_CAGED is unset */
 enum
 {
@@ -47,8 +44,8 @@ enum
 /* trigger-sequence indices run by SB_KyteCage_update */
 enum
 {
-    SB_KYTECAGE_TRIGGER_RELEASE_A = 1, /* doorChoice == 0 */
-    SB_KYTECAGE_TRIGGER_RELEASE_B = 2, /* doorChoice != 0 */
+    SB_KYTECAGE_TRIGGER_RELEASE_A = 1, /* first activation */
+    SB_KYTECAGE_TRIGGER_RELEASE_B = 2, /* later activations */
     SB_KYTECAGE_TRIGGER_OPEN = 3
 };
 
@@ -62,14 +59,6 @@ enum
 /* game bits */
 #define GAMEBIT_KYTE_CAGED  117
 #define GAMEBIT_KYTE_OPENED 0x92a
-
-/* anim.resetHitboxMode trigger bits */
-enum
-{
-    SB_KYTECAGE_HIT_CLEAR = 0x8, /* cleared each tick */
-    SB_KYTECAGE_HIT_OPEN = 0x4,  /* player opened the cage */
-    SB_KYTECAGE_HIT_RELEASE = 0x1
-};
 
 /* SB_KyteCage_SeqFn anim-event opcodes (written into state->seqLatch) */
 enum
@@ -144,26 +133,27 @@ void SB_KyteCage_hitDetect(void)
 
 void SB_KyteCage_update(GameObject* obj)
 {
-    SBKyteCageState* state = (obj)->extra;
-    (obj)->anim.resetHitboxFlags = (u8)((obj)->anim.resetHitboxFlags & ~SB_KYTECAGE_HIT_CLEAR);
+    SBKyteCageState* state = obj->extra;
+
+    obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     if (state->kyte == NULL)
     {
-        int* head;
+        GameObject** objects;
         int count;
         int i;
-        head = ObjList_GetObjects(&i, &count);
+        objects = (GameObject**)ObjList_GetObjects(&i, &count);
         for (i = 0; i < count; i++)
         {
-            int child = head[i];
-            if (((GameObject*)child)->anim.seqId == SB_KYTE_OBJECT_TYPE)
+            GameObject* child = objects[i];
+            if (child->anim.seqId == SB_KYTE_OBJECT_TYPE)
             {
-                state->kyte = (GameObject*)child;
+                state->kyte = child;
                 ObjLink_AttachChild(obj, state->kyte, 1);
                 i = count;
             }
         }
     }
-    if (((obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_OPEN) != 0)
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
     {
         if (mainGetBit(GAMEBIT_KYTE_OPENED) == 0)
         {
@@ -174,30 +164,30 @@ void SB_KyteCage_update(GameObject* obj)
             return;
         }
     }
-    if (((obj)->anim.resetHitboxFlags & SB_KYTECAGE_HIT_RELEASE) != 0)
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         buttonDisable(0, PAD_BUTTON_A);
         (*gObjectTriggerInterface)->setRunSequenceWorldSpace((int)obj, 0);
-        if (state->doorChoice != 0)
+        if (state->releaseStage != 0)
         {
             (*gObjectTriggerInterface)->runSequence(SB_KYTECAGE_TRIGGER_RELEASE_B, (void*)obj, -1);
         }
         else
         {
             (*gObjectTriggerInterface)->runSequence(SB_KYTECAGE_TRIGGER_RELEASE_A, (void*)obj, -1);
-            state->doorChoice = 1;
+            state->releaseStage = 1;
         }
     }
-    if ((obj)->anim.parent != NULL)
+    if (obj->anim.parent != NULL)
     {
-        int kind = ((GameObject*)(obj)->anim.parent)->userData1;
+        int kind = ((GameObject*)obj->anim.parent)->userData1;
         s16* mvec = objModelGetVecFn_800395d8(obj, 0);
-        if (mvec != 0 && kind < 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
+        if (mvec != 0 && kind < 9 && obj->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
         {
-            mvec[2] = ((GameObject*)(obj)->anim.parent)->anim.rotZ;
+            mvec[2] = ((GameObject*)obj->anim.parent)->anim.rotZ;
             ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
         }
-        else if (mvec != 0 && kind >= 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
+        else if (mvec != 0 && kind >= 9 && obj->anim.currentMove != SB_KYTECAGE_MOVE_FAR)
         {
             mvec[2] = 0;
             ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
@@ -209,12 +199,13 @@ void SB_KyteCage_update(GameObject* obj)
     }
 }
 
-void SB_KyteCage_init(GameObject* obj, int* params)
+void SB_KyteCage_init(GameObject* obj, SBKyteCagePlacement* placement)
 {
     SBKyteCageState* state = obj->extra;
     obj->animEventCallback = SB_KyteCage_SeqFn;
-    obj->anim.rotX = (s16)((s8) * (s8*)&((ObjHitsPriorityState*)params)->localPosZ << 8);
-    obj->objectFlags = (u16)(obj->objectFlags | SB_KYTECAGE_INIT_FLAGS);
+    obj->anim.rotX = (s16)(placement->rotX << 8);
+    obj->objectFlags =
+        (u16)(obj->objectFlags | (OBJECT_OBJFLAG_HITDETECT_DISABLED | OBJECT_OBJFLAG_HIDDEN));
     state->seqLatch = 0;
     if ((u32)mainGetBit(GAMEBIT_KYTE_CAGED) == 0u)
     {
