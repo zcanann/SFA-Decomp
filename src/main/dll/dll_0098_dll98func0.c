@@ -23,16 +23,29 @@
 #define DLL98_EFFECT_ID_VARIANT1 0x3f0
 #define DLL98_EFFECT_ID_DEFAULT  0x3f3
 
+typedef struct Dll98EffectTable
+{
+    u8 baseArgs[0xb4];
+    u8 variantArgs[0x168 - 0xb4];
+    u8 effectArgs[0x1dc - 0x168];
+    u8 textureData[0x214 - 0x1dc];
+    s16 frameValues[7];
+    u8 pad222[2];
+} Dll98EffectTable;
+
+STATIC_ASSERT(sizeof(Dll98EffectTable) == 0x224);
+
 extern u8 lbl_803178B0[];
 
 void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, int extraArgs)
 {
     ModgfxSpawnPacket buf;
     u8* table = (u8*)(int)lbl_803178B0;
+    Dll98EffectTable* effectTable = (Dll98EffectTable*)table;
     GfxCmd* entry;
     int anim;
-    *(s16*)(table + 0x216) = randomGetRange(0, 0x1e) + 0x1e;
-    *(s16*)(table + 0x218) = *(s16*)(table + 0x216);
+    effectTable->frameValues[1] = randomGetRange(0, 0x1e) + 0x1e;
+    effectTable->frameValues[2] = effectTable->frameValues[1];
     entry = buf.entries;
     entry[0].layer = 0;
     entry[0].flags = 0x12;
@@ -148,13 +161,13 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     buf.v5b = 0x10;
     buf.flags = 0x4080400; /* bit 0 enables position offset below */
     buf.count = (GfxCmd*)((u8*)entry + 0xd8) - entry;
-    buf.hw[0] = *(s16*)(table + 0x214);
-    buf.hw[1] = *(s16*)(table + 0x216);
-    buf.hw[2] = *(s16*)(table + 0x218);
-    buf.hw[3] = *(s16*)(table + 0x21a);
-    buf.hw[4] = *(s16*)(table + 0x21c);
-    buf.hw[5] = *(s16*)(table + 0x21e);
-    buf.hw[6] = *(s16*)(table + 0x220);
+    buf.hw[0] = effectTable->frameValues[0];
+    buf.hw[1] = effectTable->frameValues[1];
+    buf.hw[2] = effectTable->frameValues[2];
+    buf.hw[3] = effectTable->frameValues[3];
+    buf.hw[4] = effectTable->frameValues[4];
+    buf.hw[5] = effectTable->frameValues[5];
+    buf.hw[6] = effectTable->frameValues[6];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)
@@ -185,7 +198,9 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
         anim = DLL98_EFFECT_ID_DEFAULT;
     }
     (*gModgfxInterface)
-        ->spawnEffect(&buf, 0, 0x12, (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0, 0x10, table + 0x168,
+        ->spawnEffect(&buf, 0, 0x12,
+                      (u32)extraArgs != 0 ? table + 0xb4 : (u8*)(int)lbl_803178B0,
+                      0x10, table + 0x168,
                       anim, 0);
 }
 
