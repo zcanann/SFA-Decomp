@@ -1592,6 +1592,6 @@ void pushable_init(s16* obj, char* def)
     if (arrayIndexOf(gPushableSavedMapIds, gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId) != -1)
     {
         state->flags = state->flags | PUSHABLE_FLAG_RESTORED;
-        fn_8007FE04(gPushableSavedMapIds, &gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId);
+        arrayRemoveUnordered(gPushableSavedMapIds, &gPushableSavedMapIdCount, ((ObjPlacement*)def)->mapId);
     }
 }

@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-int fn_8007FE04(int* arr, int* count_ptr, int target);
+int arrayRemoveUnordered(int* array, int* count, int value);
 
 #endif /* MAIN_MAKETEX_H_ */

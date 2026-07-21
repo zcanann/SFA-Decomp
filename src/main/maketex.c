@@ -728,16 +728,16 @@ void cardSetStatusNoCard2(void)
     lbl_803DB700 = 0x3;
 }
 
-int fn_8007FE04(int* arr, int* count_ptr, int target)
+int arrayRemoveUnordered(int* array, int* count, int value)
 {
     int i;
     int n;
-    n = *count_ptr;
-    i = maketex_indexOf(arr, n, target);
+    n = *count;
+    i = maketex_indexOf(array, n, value);
     if (i == -1)
         return -1;
-    arr[i] = arr[n - 1];
-    (*count_ptr)--;
+    array[i] = array[n - 1];
+    (*count)--;
     return i;
 }
 
