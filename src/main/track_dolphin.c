@@ -598,7 +598,7 @@ void renderGlows(void)
     if (sunAlpha != 0 && (renderFlags & 0x40))
     {
         viewMtx = Camera_GetViewMatrix();
-        fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
+        skyGetSunLightDirection(0, &dir[0], &dir[1], &dir[2]);
         cam[0] = *(f32*)((char*)viewMtx + 0x20);
         cam[1] = *(f32*)((char*)viewMtx + 0x24);
         cam[2] = *(f32*)((char*)viewMtx + 0x28);

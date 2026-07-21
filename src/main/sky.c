@@ -948,7 +948,7 @@ void skyFn_80089710(int flags, u8 enabled, int startComplete)
     }
 }
 
-void fn_800897D4(int slot, f32* x, f32* y, f32* z)
+void skyGetSunLightDirection(int slot, f32* x, f32* y, f32* z)
 {
     u8* sky;
     int offset;

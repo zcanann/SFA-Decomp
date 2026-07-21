@@ -107,7 +107,7 @@ void renderSky(int a, int b, int c, int d, int visible);
 void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
 int getSunPos(f32* outTime);
 void skyGetTimer(int* outTimer);
-void fn_800897D4(int slot, f32* x, f32* y, f32* z);
+void skyGetSunLightDirection(int slot, f32* x, f32* y, f32* z);
 void dll_06_func0B(int* x, int* y);
 void dll_06_func0A(int* a, int* b, int* c, f32* scale);
 void dll_06_func0E(void);
