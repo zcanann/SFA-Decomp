@@ -42,16 +42,16 @@ void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
             for (slot = 0, bit = mask & (1 << (part - 1)); slot < block->layerCount; slot++)
             {
                 MapShader* entry = mapBlockGetShader(block, slot);
-                if (*((u8*)entry + 0x29) == part)
+                if (entry->layers[0].overrideType == part)
                 {
                     bit = mask & (1 << (part - 1));
                     if (bit != 0)
                     {
-                        mapTextureOverrideSetValue(part, *(int*)((u8*)entry + 0x24), WCTEMPLE_DIA_VISIBLE_OVERRIDE);
+                        mapTextureOverrideSetValue(part, entry->layers[0].texture, WCTEMPLE_DIA_VISIBLE_OVERRIDE);
                     }
                     else
                     {
-                        mapTextureOverrideSetValue(part, *(int*)((u8*)entry + 0x24), 0);
+                        mapTextureOverrideSetValue(part, entry->layers[0].texture, 0);
                     }
                 }
             }

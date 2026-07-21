@@ -374,7 +374,7 @@ void sh_queenearthwalker_update(GameObject* obj)
     if ((stateFlags & QEW_FLAG_ACTIVE) == 0)
     {
         ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_TARGETING;
-        if (ObjTrigger_IsSet((int)obj) != 0 && *(u8*)(*(int*)((u8*)obj + 0x78) + 0x4) != 4)
+        if (ObjTrigger_IsSet((int)obj) != 0 && obj->anim.hitVolumeBounds->flags != 4)
         {
             eventIndex = randomGetRange(1, *((QueenEarthWalkerState*)state)->eventTable);
             ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;

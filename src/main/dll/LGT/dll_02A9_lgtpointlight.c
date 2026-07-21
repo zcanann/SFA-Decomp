@@ -66,7 +66,7 @@ void PointLight_render(GameObject* obj)
 {
     PointLightState* state = obj->extra;
     ModelLight* light = state->light;
-    if (light != NULL && *(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)
+    if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
         queueGlowRender(light);
     }
