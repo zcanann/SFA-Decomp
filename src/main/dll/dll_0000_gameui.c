@@ -5332,7 +5332,7 @@ int pauseMenuIsFox(void);
 void timeListFn_8012be84(void);
 void pauseMenuAnimateCarousel(void);
 void pauseMenuInit(void);
-void mapScreenDrawHud(int p1, int p2, int p3);
+void mapScreenDrawHud(int unused1, int unused2, int unused3);
 void drawWorldMapHud(void);
 void setShowWorldMapHud(u8 param);
 u8 pauseMenuGetTokenConfirmFlag(void);
@@ -7348,7 +7348,7 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 /* Map screen HUD: rising panel with quest
  * hint voice line and dust shimmer while opening, then the full two-panel
  * map layout with location labels. */
-void mapScreenDrawHud(int p1, int p2, int p3)
+void mapScreenDrawHud(int unused1, int unused2, int unused3)
 {
     u8* hintCandidates;
     if (pauseMenuState != 0)
@@ -7411,22 +7411,22 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int taskCount, taskPartial;
             int hint;
             {
-                int i;
+                int candidateIndex;
                 int hintIndex;
                 u8* candidate;
-                i = 0;
+                candidateIndex = 0;
                 hintCandidates = (u8*)&gGameUiTaskHintCandidates;
                 candidate = hintCandidates;
                 for (;;)
                 {
                     if (mainGetBit(gTaskHintTable[*candidate].bit_id))
                     {
-                        hintIndex = (s8)gGameUiTaskHintCandidates[i];
+                        hintIndex = (s8)gGameUiTaskHintCandidates[candidateIndex];
                         break;
                     }
                     candidate++;
-                    i++;
-                    if (i >= GAMEUI_TASK_HINT_COUNT)
+                    candidateIndex++;
+                    if (candidateIndex >= GAMEUI_TASK_HINT_COUNT)
                     {
                         hintIndex = -1;
                         break;
@@ -7546,26 +7546,26 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int row;
             int phaseA;
             int phaseB;
-            f32 s;
-            f32 k;
+            f32 shimmer;
+            f32 shimmerScale;
             HudTextures* textures;
             row = 0;
             phaseA = 0;
             phaseB = 0;
             textures = (HudTextures*)hudTextures;
-            k = lbl_803E204C;
+            shimmerScale = lbl_803E204C;
             for (; row < 0x96; row += 4)
             {
                 int alpha0, alpha1, jitter1, jitter0, rawAlpha;
-                s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + phaseA));
-                s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + phaseB)) + s;
-                rawAlpha = (int)((f32)panelAlpha * (lbl_803E2050 + s));
+                shimmer = shimmerScale * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + phaseA));
+                shimmer = shimmerScale * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + phaseB)) + shimmer;
+                rawAlpha = (int)((f32)panelAlpha * (lbl_803E2050 + shimmer));
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
                 jitter0 = randomGetRange(0, 0x1e) << 1;
                 drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x32),
                                    (u8)(alpha0 > 0xff ? 0xff : alpha0), 0x100, 0x82, 2, jitter0, jitter1);
-                rawAlpha = (int)((f32)panelAlpha * (lbl_803E2010 + s));
+                rawAlpha = (int)((f32)panelAlpha * (lbl_803E2010 + shimmer));
                 alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
                 jitter0 = randomGetRange(0, 0x1e) << 1;
@@ -7579,7 +7579,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     }
     else
     {
-        char* gt;
+        GameTextDef* mapText;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
@@ -7591,15 +7591,15 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
         drawTexture(((HudTextures*)hudTextures)->texFC, lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
-        gt = gameTextGet(0x2ac);
-        if (*(u16*)(gt + 2) > 1)
+        mapText = (GameTextDef*)gameTextGet(0x2ac);
+        if (mapText->count > 1)
         {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 4), 0x93, 0x69, 0x17f);
+            gameTextShowStr(mapText->strings[1], 0x93, 0x69, 0x17f);
         }
         drawTexture(((HudTextures*)hudTextures)->tex10C, lbl_803E1E9C, lbl_803E21B4, 0xff, 0x100);
-        if (*(u16*)(gt + 2) > 2)
+        if (mapText->count > 2)
         {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 8), 0x93, 0x51, 0x194);
+            gameTextShowStr(mapText->strings[2], 0x93, 0x51, 0x194);
         }
         drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21B8, lbl_803E21A4, 0xff, 0x100);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E21BC, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
@@ -7611,14 +7611,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21C0, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21B8, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
         drawTexture(((HudTextures*)hudTextures)->tex100, lbl_803E21C4, lbl_803E21C8, 0xff, 0x100);
-        if (*(u16*)(gt + 2) > 4)
+        if (mapText->count > 4)
         {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x10), 0x93, 0x20c, 0x17f);
+            gameTextShowStr(mapText->strings[4], 0x93, 0x20c, 0x17f);
         }
         drawTexture(((HudTextures*)hudTextures)->tex104, lbl_803E21CC, lbl_803E1FB8, 0xff, 0x100);
-        if (*(u16*)(gt + 2) > 5)
+        if (mapText->count > 5)
         {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x14), 0x93, 0x1f6, 0x195);
+            gameTextShowStr(mapText->strings[5], 0x93, 0x1f6, 0x195);
         }
     }
 }
