@@ -15,6 +15,10 @@
 #include "main/dll/SB/dll_01E8_sbgalleon.h"
 
 CameraModeBikeState* gCamTalkBikeState;
+extern const f32 gCamTalkDefaultFov;
+extern const f32 gCamTalkPi;
+extern const f32 gCamTalkAngleUnitScale;
+extern const f32 gCamTalkDefaultFollowDist;
 extern const f32 lbl_803E17B4;
 extern const f32 lbl_803E17A8;
 
@@ -50,6 +54,8 @@ void CameraModeBike_update(CameraObject* camera)
     float heightT;
     float followTermB;
     float followTermA;
+    float yawSmoothing;
+    float yawTarget;
     short angleDelta;
     u16 cameraAngle;
     GameObject* target;
@@ -68,7 +74,7 @@ void CameraModeBike_update(CameraObject* camera)
     target = camera->anim.targetObj;
     if (target != NULL)
     {
-        camera->fov = (85.0f);
+        camera->fov = gCamTalkDefaultFov;
         targetTransform.x = target->anim.worldPosX;
         targetTransform.y = target->anim.worldPosY;
         targetTransform.z = target->anim.worldPosZ;
@@ -81,7 +87,9 @@ void CameraModeBike_update(CameraObject* camera)
         angleDelta = 0x8000 - target->anim.rotX;
         camera->anim.rotX = angleDelta;
         st = gCamTalkBikeState;
-        st->smoothedYawOffset += (0.1f) * ((f32)((12.0f) * st->turnInput) - st->smoothedYawOffset);
+        yawSmoothing = (0.1f);
+        yawTarget = (12.0f) * st->turnInput;
+        st->smoothedYawOffset += yawSmoothing * (yawTarget - st->smoothedYawOffset);
         camera->anim.rotX = camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset;
         targetAngle = (3072.0f) - gCamTalkBikeState->pitchTarget;
         cameraAngle = camera->anim.rotY;
@@ -95,17 +103,17 @@ void CameraModeBike_update(CameraObject* camera)
             angleDelta = angleDelta + 0xFFFF;
         }
         camera->anim.rotY += (angleDelta >> 3);
-        sinYaw = mathSinf((3.1415927f) * (camera->anim.rotX - 0x4000) / (32768.0f));
-        cosYaw = mathCosf((3.1415927f) * (camera->anim.rotX - 0x4000) / (32768.0f));
-        cosPitch = mathCosf((3.1415927f) * camera->anim.rotY / (32768.0f));
-        sinPitch = mathSinf((3.1415927f) * camera->anim.rotY / (32768.0f));
+        sinYaw = mathSinf(gCamTalkPi * (camera->anim.rotX - 0x4000) / gCamTalkAngleUnitScale);
+        cosYaw = mathCosf(gCamTalkPi * (camera->anim.rotX - 0x4000) / gCamTalkAngleUnitScale);
+        cosPitch = mathCosf(gCamTalkPi * camera->anim.rotY / gCamTalkAngleUnitScale);
+        sinPitch = mathSinf(gCamTalkPi * camera->anim.rotY / gCamTalkAngleUnitScale);
         st = gCamTalkBikeState;
         heightT = -st->heightInput / (6.0f);
         followTermA = CAM_TALK_FOLLOW_SMOOTHING;
         followTermB = (25.0f);
         heightT =
             (heightT < (0.0f)) ? (0.0f) : ((heightT > (1.0f)) ? (1.0f) : heightT);
-        st->followDistance += followTermA * ((followTermB * heightT + (5e+01f)) - st->followDistance);
+        st->followDistance += followTermA * ((followTermB * heightT + gCamTalkDefaultFollowDist) - st->followDistance);
         followDist = gCamTalkBikeState->followDistance;
         followTermA = followDist * sinPitch;
         followTermB = followDist * cosPitch;
