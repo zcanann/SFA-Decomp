@@ -4,25 +4,18 @@
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_config.h"
 #include "main/audio/vid_get.h"
+#include "main/audio/vidlisttables.h"
 #include "main/audio/snd_core.h"
-
-
-typedef struct VoiceListNode
-{
-    u8 prev;
-    u8 next;
-    u16 time;
-} VoiceListNode;
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
 static u8 vidListNodes[0x800];
 static u8 midiKeySlots[0x80];
 static u8 directSlots[0x40];
-static VoiceListNode priorityLinks[0x40];
+static SynthVoiceListNode priorityLinks[0x40];
 static u8 priorityGroupHeads[0x100];
 static u16 prioritySortLinks[0x200];
-static VoiceListNode freeList[0x40];
+static SynthVoiceListNode freeList[0x40];
 
 static inline void voiceInitFreeList(void)
 {
@@ -32,7 +25,7 @@ static inline void voiceInitFreeList(void)
     {
         freeList[i].prev = i - 1;
         freeList[i].next = i + 1;
-        freeList[i].time = 1;
+        freeList[i].user = 1;
     }
     freeList[0].prev = 0xff;
     freeList[synthInfo.voiceCount - 1].next = 0xff;
@@ -46,7 +39,7 @@ static inline void voiceInitPrioSort(void)
 
     for (i = 0; i < synthInfo.voiceCount; i++)
     {
-        priorityLinks[i].time = 0;
+        priorityLinks[i].user = 0;
     }
     for (i = 0; i < 0x100; i++)
     {
