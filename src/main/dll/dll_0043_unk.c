@@ -42,6 +42,8 @@ typedef struct CameraModeStaffAnimSettings
     u8 snapToTarget;
 } CameraModeStaffAnimSettings;
 
+typedef void (*CameraBoundsFn)(CameraObject* camera, GameObject* target, f32 min, f32 max);
+
 /* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
 #define CAMMODE_DEFAULT    0x42 /* dll_0042 - default/release camera */
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
@@ -105,8 +107,7 @@ void camclimb_update(CameraObject* cam)
         Obj_TransformLocalPointToWorld(cam->anim.localPosX, cam->anim.localPosY, cam->anim.localPosZ,
                                        &cam->anim.worldPosX, &cam->anim.worldPosY, &cam->anim.worldPosZ,
                                        *(int*)&cam->anim.parent);
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x1c))(cam, target, (double)-100000.0f,
-                                                             (double)100000.0f);
+        (*(CameraBoundsFn*)(**(int**)(defaultHandler + 4) + 0x1c))(cam, target, -100000.0f, 100000.0f);
         (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(cam, 1, 3, &gCamcontrolPathState->curveMin,
                                                              &gCamcontrolPathState->curveMax);
         if ((cam->anim.currentMove != 0) || (cam->cameraCollisionActive != 0))
