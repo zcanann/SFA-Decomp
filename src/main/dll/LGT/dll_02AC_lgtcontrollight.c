@@ -48,14 +48,11 @@ void ControlLight_hitDetect(void)
 void ControlLight_update(GameObject* obj)
 {
     ControlLightState* state;
-    u32 bit;
     u8 newBit;
-    GameObject* self = obj;
-    state = self->extra;
+    state = obj->extra;
     newBit = mainGetBit(state->gameBit);
-    bit = newBit;
 
-    if (bit != state->lastBit)
+    if ((u32)newBit != state->lastBit)
     {
         switch (state->invertMode)
         {
@@ -70,9 +67,9 @@ void ControlLight_update(GameObject* obj)
             for (i = 0, lightIter = objs; i < count; i++)
             {
                 lightObj = *lightIter;
-            if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
+                if (Vec_distance(&obj->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
                 {
-                    pointlight_setEffectState((GameObject*)lightObj, newBit);
+                    pointlight_setEffectState(lightObj, newBit);
                 }
                 lightIter++;
             }
@@ -88,13 +85,13 @@ void ControlLight_update(GameObject* obj)
             GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
             GameObject** lightIter;
             i = 0, lightIter = objs;
-            invBit = bit == 0;
+            invBit = newBit == 0;
             for (; i < count; i++)
             {
                 lightObj = *lightIter;
-                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
+                if (Vec_distance(&obj->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
                 {
-                    pointlight_setEffectState((GameObject*)lightObj, (u8)invBit);
+                    pointlight_setEffectState(lightObj, (u8)invBit);
                 }
                 lightIter++;
             }
@@ -106,14 +103,13 @@ void ControlLight_update(GameObject* obj)
     state->lastBit = newBit;
 }
 
-void ControlLight_init(GameObject* obj, int setup)
+void ControlLight_init(GameObject* obj, ControlLightSetup* setup)
 {
-    ControlLightSetup* setupData = (ControlLightSetup*)setup;
     ControlLightState* state = obj->extra;
 
-    state->gameBit = setupData->gameBit;
-    state->radius = setupData->radius;
-    state->invertMode = setupData->invertMode % 2;
+    state->gameBit = setup->gameBit;
+    state->radius = setup->radius;
+    state->invertMode = setup->invertMode % 2;
     state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
 }
 

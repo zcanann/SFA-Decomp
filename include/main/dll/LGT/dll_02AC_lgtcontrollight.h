@@ -3,26 +3,27 @@
 
 #include "main/game_object.h"
 #include "main/dll/LGT/lgt_types.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 typedef struct ControlLightSetup
 {
     ObjPlacement base;
-    u8 pad18;
+    u8 reserved18;
     s8 invertMode;
     s16 radius;
-    u8 pad1C[0x1E - 0x1C];
+    u8 reserved1C[2];
     s16 gameBit;
 } ControlLightSetup;
 
 typedef struct ControlLightState
 {
     s16 gameBit;
-    u8 pad02[2];
+    u8 reserved02[2];
     f32 radius;
     u8 invertMode;
     u8 lastBit;
-    u8 pad0A[2];
+    u8 reserved0A[2];
 } ControlLightState;
 
 STATIC_ASSERT(sizeof(ControlLightState) == 0x0C);
@@ -40,9 +41,11 @@ int ControlLight_getObjectTypeId(void);
 void ControlLight_free(void);
 void ControlLight_hitDetect(void);
 void ControlLight_render(void);
-void ControlLight_init(GameObject* obj, int setup);
+void ControlLight_init(GameObject* obj, ControlLightSetup* setup);
 void ControlLight_update(GameObject* obj);
 void ControlLight_release(void);
 void ControlLight_initialise(void);
+
+extern ObjectDescriptor gControlLightObjDescriptor;
 
 #endif /* MAIN_DLL_LGT_DLL_02AC_LGTCONTROLLIGHT_H_ */
