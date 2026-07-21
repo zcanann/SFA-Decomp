@@ -2107,8 +2107,8 @@ void fn_8008BDA8(void)
         }
         gSkyState = NULL;
     }
-    gSkyState = mmAlloc(600, 0x17, 0);
-    memset(gSkyState, 0, 600);
+    gSkyState = mmAlloc(sizeof(SkyState), 0x17, 0);
+    memset(gSkyState, 0, sizeof(SkyState));
     ((SkyState*)gSkyState)->unk250 = -1;
     ((SkyState*)gSkyState)->timer = randomGetRange(0, 0x1c);
     ((SkyState*)gSkyState)->unk252 = 0xc;

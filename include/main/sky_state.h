@@ -124,6 +124,7 @@ typedef struct SkyState {
 STATIC_ASSERT(offsetof(SkyState, lights) == 0x20);
 STATIC_ASSERT(offsetof(SkyState, timeOfDay) == 0x20C);
 STATIC_ASSERT(offsetof(SkyState, unk250) == 0x250);
+STATIC_ASSERT(sizeof(SkyState) == 0x258);
 
 /* Per-map sky blend config record passed to sky2_update / Sky_func03. */
 typedef struct Sky2Config {
