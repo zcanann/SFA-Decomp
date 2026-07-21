@@ -2746,7 +2746,7 @@ void dll_06_func06(int obj)
     if (s != NULL)
     {
         gSky2DrawMode = 2;
-        fn_8005D0BC(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28), (u8) * (int*)(s + 0x2c), 55);
+        setFogColorCallback(obj, (u8) * (int*)(s + 0x24), (u8) * (int*)(s + 0x28), (u8) * (int*)(s + 0x2c), 55);
         s = gSky2State;
         if (*(f32*)(s + 0x14) == *(f32*)(s + 0x18))
         {

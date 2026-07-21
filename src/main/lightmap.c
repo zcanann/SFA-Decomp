@@ -1258,9 +1258,9 @@ void drawFn_8005cf8c(const void* vertexBase, u8* triList, int triCount)
 }
 
 
-void fn_8005D0BC(int unused, u8 a, u8 b, u8 c, int wpad0)
+void setFogColorCallback(int unused, u8 red, u8 green, u8 blue, int wpad0)
 {
-    setFogColorRgb(a, b, c);
+    setFogColorRgb(red, green, blue);
 }
 
 
