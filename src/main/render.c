@@ -154,37 +154,37 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
 
     for (i = sampleCount / 2; i > 0; i--)
     {
-        code = *compressed & 0xf;
-        step = gModelRenderAdpcmStepTable[stepIndex];
-        difference = 0;
-        codeValue = code;
-        if (codeValue & 1)
         {
-            difference = step >> 2;
-        }
-        if (codeValue & 2)
-        {
-            difference += step >> 1;
-        }
-        if (codeValue & 4)
-        {
-            difference += step;
-        }
-        if (codeValue & 8)
-        {
-            difference = -difference;
-        }
-        predictor += difference;
-        stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
-        if (stepIndex < 0)
-        {
-            stepIndex = 0;
-        }
-        else if (stepIndex > 0x58)
-        {
-            stepIndex = 0x58;
-        }
-        {
+            code = *compressed & 0xf;
+            step = gModelRenderAdpcmStepTable[stepIndex];
+            difference = 0;
+            codeValue = code;
+            if (codeValue & 1)
+            {
+                difference = step >> 2;
+            }
+            if (codeValue & 2)
+            {
+                difference += step >> 1;
+            }
+            if (codeValue & 4)
+            {
+                difference += step;
+            }
+            if (codeValue & 8)
+            {
+                difference = -difference;
+            }
+            predictor += difference;
+            stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
+            if (stepIndex < 0)
+            {
+                stepIndex = 0;
+            }
+            else if (stepIndex > 0x58)
+            {
+                stepIndex = 0x58;
+            }
             packedSample = (u16)predictor;
             outputBit = output->bit;
             outputByte = outputBit >> 3;
@@ -199,53 +199,65 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
             output->bit += bitStride;
         }
 
-        code = (*compressed++ >> 4) & 0xf;
-        step = gModelRenderAdpcmStepTable[stepIndex];
-        difference = 0;
-        codeValue = code;
-        if (codeValue & 1)
         {
-            difference = step >> 2;
-        }
-        if (codeValue & 2)
-        {
-            difference += step >> 1;
-        }
-        if (codeValue & 4)
-        {
-            difference += step;
-        }
-        if (codeValue & 8)
-        {
-            difference = -difference;
-        }
-        predictor += difference;
-        stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
-        if (stepIndex < 0)
-        {
-            stepIndex = 0;
-        }
-        else if (stepIndex > 0x58)
-        {
-            stepIndex = 0x58;
-        }
-        {
-            packedSample = (u16)predictor;
-            outputBit = output->bit;
-            outputByte = outputBit >> 3;
-            packedSample <<= ((8 - (outputBit & 7)) + packedShift);
-            outputBytes = output->instrs;
-            outputBytes[outputByte] |= (packedSample >> 16) & 0xff;
-            outputBytes = output->instrs;
-            outputBytes[outputByte + 1] |= (packedSample >> 8) & 0xff;
-            outputBytes = output->instrs;
-            outputBytes[outputByte + 2] |= packedSample & 0xff;
-            output->bit += bitWidth;
-            output->bit += bitStride;
+            int difference;
+            int step;
+            int codeValue;
+
+            code = (*compressed++ >> 4) & 0xf;
+            step = gModelRenderAdpcmStepTable[stepIndex];
+            difference = 0;
+            codeValue = code;
+            if (codeValue & 1)
+            {
+                difference = step >> 2;
+            }
+            if (codeValue & 2)
+            {
+                difference += step >> 1;
+            }
+            if (codeValue & 4)
+            {
+                difference += step;
+            }
+            if (codeValue & 8)
+            {
+                difference = -difference;
+            }
+            predictor += difference;
+            stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
+            if (stepIndex < 0)
+            {
+                stepIndex = 0;
+            }
+            else if (stepIndex > 0x58)
+            {
+                stepIndex = 0x58;
+            }
+            {
+                u32 packedSample;
+
+                packedSample = (u16)predictor;
+                outputBit = output->bit;
+                outputByte = outputBit >> 3;
+                packedSample <<= ((8 - (outputBit & 7)) + packedShift);
+                outputBytes = output->instrs;
+                outputBytes[outputByte] |= (packedSample >> 16) & 0xff;
+                outputBytes = output->instrs;
+                outputBytes[outputByte + 1] |= (packedSample >> 8) & 0xff;
+                outputBytes = output->instrs;
+                outputBytes[outputByte + 2] |= packedSample & 0xff;
+                output->bit += bitWidth;
+                output->bit += bitStride;
+            }
         }
     }
     if (sampleCount & 1)
     {
+        int difference;
+        int step;
+        int codeValue;
+
         code = *compressed++ & 0xf;
         step = gModelRenderAdpcmStepTable[stepIndex];
         difference = 0;
