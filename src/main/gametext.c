@@ -616,14 +616,19 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     int special;
     u32 ch;
     int charLen;
+    int glyphsRemaining;
+    int glyphParamCount;
+    SpecialGlyph* glyph;
+    u8* defAddress;
 
     if (gameTextFonts->mode == 1)
     {
         return;
     }
     def = (GameTextDef*)gameTextGet(textId);
+    defAddress = (u8*)def;
     special = 0;
-    if ((u8*)def >= lbl_803399C0 && (u8*)def < lbl_803399C0 + 0x60)
+    if (defAddress >= lbl_803399C0 && defAddress < lbl_803399C0 + 0x60)
     {
         special = 1;
     }
@@ -646,20 +651,18 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
             byteOffset += charLen;
             if (ch >= 0xe000 && ch <= 0xf8ff)
             {
-                int n;
-                int val;
-                SpecialGlyph* g;
-                g = lbl_802C86F0;
-                for (n = 46; n-- != 0 || (val = 0, 0);)
+                glyph = lbl_802C86F0;
+                for (glyphsRemaining = 46;
+                     glyphsRemaining-- != 0 || (glyphParamCount = 0, 0);)
                 {
-                    if (g->key == ch)
+                    if (glyph->key == ch)
                     {
-                        val = g->val;
+                        glyphParamCount = glyph->val;
                         break;
                     }
-                    g++;
+                    glyph++;
                 }
-                byteOffset += val * 2;
+                byteOffset += glyphParamCount * 2;
             }
             else
             {
@@ -704,7 +707,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
                 {
                     state->charIndex--;
                 }
-                if (state->charIndex < def->count && *(u8*)def->strings[state->charIndex] == 0)
+                if (state->charIndex < def->count && (u8)def->strings[state->charIndex][0] == 0)
                 {
                     continue;
                 }
