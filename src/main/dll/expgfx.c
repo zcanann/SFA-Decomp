@@ -76,6 +76,12 @@ typedef struct ExpgfxRotateParams
     f32 z;
 } ExpgfxRotateParams;
 
+typedef struct ExpgfxBillboardAngles
+{
+    s16 pitch;
+    s16 yaw;
+} ExpgfxBillboardAngles;
+
 typedef union Dll0BDescriptorTable
 {
     u32 words[30];
@@ -1713,8 +1719,7 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
-    s16 pitchAngle;
-    s16 yawAngle;
+    ExpgfxBillboardAngles angles;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
@@ -1879,7 +1884,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     }
                 }
 
-                yawAngle = pitchAngle = 0;
+                angles.pitch = 0;
+                angles.yaw = angles.pitch;
                 centerX = slot->renderX;
                 centerY = slot->renderY;
                 centerZ = slot->renderZ;
@@ -1899,10 +1905,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                     u32 behavior = slot->behaviorFlags;
                     if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0)
                     {
-                        pitchAngle = 0;
+                        angles.pitch = 0;
                         if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_A) != 0)
                         {
-                            yawAngle = pitchAngle;
+                            angles.yaw = angles.pitch;
                         }
                         else if ((behavior & EXPGFX_BEHAVIOR_BILLBOARD_USE_PITCH) != 0)
                         {
@@ -1918,31 +1924,31 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                                     if (absX > absZ)
                                     {
                                         getAngle(absX, aimDelta.y);
-                                        pitchAngle = (s16)(getAngle(absX, aimDelta.y) - 0x3800);
+                                        angles.pitch = (s16)(getAngle(absX, aimDelta.y) - 0x3800);
                                     }
                                     else
                                     {
                                         getAngle(absZ, aimDelta.y);
-                                        pitchAngle = (s16)(getAngle(absZ, aimDelta.y) - 0x3800);
+                                        angles.pitch = (s16)(getAngle(absZ, aimDelta.y) - 0x3800);
                                     }
-                                    yawAngle = (s16)getAngle(aimDelta.x, aimDelta.z);
+                                    angles.yaw = (s16)getAngle(aimDelta.x, aimDelta.z);
                                 }
                             }
                             else
                             {
-                                yawAngle = (s16)(0x10000 - cameraSlot->yaw);
-                                pitchAngle = cameraSlot->pitch;
+                                angles.yaw = (s16)(0x10000 - cameraSlot->yaw);
+                                angles.pitch = cameraSlot->pitch;
                             }
                         }
                         else
                         {
-                            yawAngle = (s16)(0x10000 - cameraSlot->yaw);
+                            angles.yaw = (s16)(0x10000 - cameraSlot->yaw);
                         }
                     }
                 }
 
-                angleToVec2((u16)yawAngle, &cosA, &sinA);
-                angleToVec2((u16)pitchAngle, &cosB, &sinB);
+                angleToVec2((u16)angles.yaw, &cosA, &sinA);
+                angleToVec2((u16)angles.pitch, &cosB, &sinB);
                 if ((slot->renderFlags & EXPGFX_RENDER_PHASE_ROTATE_A) != 0)
                 {
                     angleToVec2((u16)(gExpgfxPhaseAngleA + (((u32)slot << 8) & 0xFF00)), &sinC, &cosC);
