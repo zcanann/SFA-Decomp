@@ -936,7 +936,7 @@ void sceneDraw(void)
     {
         doColorFilter(colorFilterColor);
     }
-    setShadowFlag_803db658(0);
+    shadowVolumesSetDirty(0);
 }
 
 extern s8 curMapType;

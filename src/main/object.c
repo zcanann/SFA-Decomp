@@ -1024,7 +1024,7 @@ void objFreeObjDef(u8* obj, int flag)
     {
         if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
         {
-            setShadowFlag_803db658(1);
+            shadowVolumesSetDirty(1);
         }
         if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL)
         {

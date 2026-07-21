@@ -1718,7 +1718,7 @@ void doPendingMapLoads(void)
             }
             if (gx != 7 || gz != 7 || doLoad != 0 || (renderFlags & 0x4000))
             {
-                setShadowFlag_803db658(1);
+                shadowVolumesSetDirty(1);
                 doNothing_8001F678(1, 0);
                 cnt = 0;
                 layer = 0;

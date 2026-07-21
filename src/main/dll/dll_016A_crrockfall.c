@@ -150,7 +150,7 @@ void crrockfall_update(int* obj)
         if (state->floorFound != 0 && modelState != NULL)
         {
             modelState->overrideWorldPosY = state->floorY;
-            fn_800628CC(obj);
+            objShadowInvalidate((GameObject*)obj);
         }
         return;
     }

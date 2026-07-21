@@ -110,7 +110,7 @@ f32 gShadowOffsetX;
 
 f32 gShadowOffsetY = 1.0f;
 f32 lbl_803DB654 = 1.0f;
-s8 gShadowFlag = 10;
+s8 gShadowVolumesDirty = 10;
 s16 gSunMagnitude = 100;
 int gSunDirChanged = 1;
 f32 lbl_803DB660 = 0.01f;
@@ -1854,7 +1854,7 @@ void shadowVolumeBeginFrame(void)
 {
     void* bufPtr;
     s16 zero;
-    if ((s8)gShadowFlag == 0)
+    if ((s8)gShadowVolumesDirty == 0)
     {
         return;
     }
@@ -1885,14 +1885,14 @@ void fn_80062894(void)
     lbl_803DCEE8 = 0;
 }
 
-void fn_800628CC(void* wpad0)
+void objShadowInvalidate(GameObject* obj)
 {
-    gShadowFlag = 0x1;
+    gShadowVolumesDirty = 0x1;
 }
 
-void setShadowFlag_803db658(s32 v)
+void shadowVolumesSetDirty(s32 dirty)
 {
-    gShadowFlag = v;
+    gShadowVolumesDirty = dirty;
 }
 
 void* shadowInit(int* obj, int size, int wpad0)
@@ -1941,7 +1941,7 @@ void* shadowInit(int* obj, int size, int wpad0)
     modelState->pad38[1] = 0x4b;
     modelState->shadowTintA = 0x96;
     modelState->shadowTintB = 0x64;
-    gShadowFlag = 1;
+    gShadowVolumesDirty = 1;
     return (char*)rounded + 0x44;
 }
 
@@ -2009,7 +2009,7 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
         gPrevSunDir[1] = vec[1];
         gPrevSunDir[2] = vec[2];
         gSunDirChanged = 0;
-        gShadowFlag = 1;
+        gShadowVolumesDirty = 1;
     }
 }
 
@@ -2018,7 +2018,7 @@ void initTextures(void)
     f32* a = lbl_8038D77C;
     f32* b = lbl_8038D7DC;
 
-    gShadowFlag = 10;
+    gShadowVolumesDirty = 10;
     gShadowVolumeBuffer = (int)mmAlloc(0xa8c0, 0x18, 0);
     a[0] = -1.0f;
     b[0] = -1.0f;
