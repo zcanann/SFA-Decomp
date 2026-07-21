@@ -120,8 +120,11 @@ main/object.c:
 	.sbss       start:0x803DCB70 end:0x803DCBC8
 
 main/objanim.c:
-	.text       start:0x8002EB54 end:0x80030688
+	.text       start:0x8002EB54 end:0x8002F5D4
 	.data       start:0x802CAD50 end:0x802CADA0
+
+main/objanim_8002f5d4.c:
+	.text       start:0x8002F5D4 end:0x80030688
 
 main/objhits.c:
 	.text       start:0x80030688 end:0x800353A4
