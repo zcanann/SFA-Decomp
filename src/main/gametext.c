@@ -773,7 +773,7 @@ static inline MeasGlyph* gameTextFindGlyph(u32 ch, int langIdx)
     MeasGlyph* g;
     int cnt;
 
-    g = (MeasGlyph*)gameTextFonts->glyphs;
+    g = gameTextFonts->glyphs;
     cnt = gameTextFonts->glyphCount;
     while (cnt-- != 0)
     {
@@ -910,7 +910,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
         }
         else
         {
-            MeasGlyph* p = (MeasGlyph*)gameTextFonts->glyphs;
+            MeasGlyph* p = gameTextFonts->glyphs;
             MeasGlyph* g;
             int cnt;
             for (cnt = gameTextFonts->glyphCount; cnt-- != 0 || (g = NULL, 0); p++)

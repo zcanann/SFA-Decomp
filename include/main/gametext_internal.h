@@ -15,7 +15,7 @@ typedef struct GlyphEntry {
 } GlyphEntry;
 
 typedef struct GameTextFont {
-    int glyphs;
+    void* glyphs;
     GlyphEntry* entries;
     int glyphCount;
     int count;
