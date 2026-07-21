@@ -113,6 +113,9 @@ void CameraModeForceBehind_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
+
+const f32 gCamForceBehindZero = 0.0f;
+
 void CameraModeForceBehind_init(u8* obj, int unused, f32* params)
 {
     CameraObject* camera = (CameraObject*)obj;

@@ -2,6 +2,7 @@
 #define MAIN_SHADER_API_H_
 
 #include "global.h"
+#include "main/map_romlist_page.h"
 
 struct GameObject;
 struct MapBlockData;
@@ -10,17 +11,9 @@ struct MapBlockData;
 
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern void* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
+extern MapRomListPage* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 
-typedef struct MapRomList
-{
-    u8 pad00[0x24];
-    f32 worldX;
-    f32 worldZ;
-} MapRomList;
-
-STATIC_ASSERT(offsetof(MapRomList, worldX) == 0x24);
-STATIC_ASSERT(offsetof(MapRomList, worldZ) == 0x28);
+typedef MapRomListPage MapRomList;
 
 /* MAPINFO.bin per-record map type (curMapType / getCurMapType()). */
 typedef enum MapType

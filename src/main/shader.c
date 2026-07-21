@@ -1092,7 +1092,7 @@ void unloadMap(void)
         if (gLoadedRomListPages[z[0]] != 0)
         {
             mm_free(gLoadedRomListPages[z[0]]);
-            gLoadedRomListPages[z[0]] = (void*)z[1];
+            gLoadedRomListPages[z[0]] = (MapRomListPage*)z[1];
         }
     }
     (*gCheckpointInterface)->reset();
@@ -2303,7 +2303,7 @@ void mapLoadForObject(int mapId, GameObject* obj)
     {
         if (gLoadedRomListPages[slot] == NULL)
         {
-            gLoadedRomListPages[slot] = (void*)romList;
+            gLoadedRomListPages[slot] = (MapRomListPage*)romList;
             break;
         }
         slot++;
@@ -2437,10 +2437,10 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 void fn_80059A50(int pageIndex)
 {
     int idx = pageIndex;
-    void* p = gLoadedRomListPages[idx];
+    MapRomListPage* p = gLoadedRomListPages[idx];
     if (p != 0)
     {
-        defStartFn_8005972c(p, (u32*)(lbl_803822C8 + idx * 0x8C), idx, 1);
+        defStartFn_8005972c((char*)p, (u32*)(lbl_803822C8 + idx * 0x8C), idx, 1);
         mm_free(gLoadedRomListPages[idx]);
         gLoadedRomListPages[idx] = 0;
     }
@@ -3072,5 +3072,5 @@ u8 lbl_8038228C[0x14];
 int lbl_803822A0[5];
 int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 
-void* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
+MapRomListPage* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 u8 lbl_80386648[0x290];
