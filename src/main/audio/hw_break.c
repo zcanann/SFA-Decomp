@@ -8,7 +8,7 @@ void hwBreak(int voiceIndex)
 {
     u8* entry;
     u32 offset;
-    u32 channel;
+    u32 timeOffset;
 
     offset = voiceIndex * sizeof(DSPvoice);
     entry = (u8*)dspVoice + offset;
@@ -17,9 +17,9 @@ void hwBreak(int voiceIndex)
         ((DSPvoice*)entry)->startupBreak = 1;
     }
     entry = (u8*)dspVoice;
-    channel = salTimeOffset;
-    channel <<= 2;
+    timeOffset = salTimeOffset;
+    timeOffset <<= 2;
     entry += offset;
-    entry += channel;
-    *(u32*)(entry + offsetof(DSPvoice, changed)) |= 0x20;
+    entry += timeOffset;
+    *(u32*)(entry + offsetof(DSPvoice, changed)) |= DSP_VOICE_CHANGE_BREAK;
 }
