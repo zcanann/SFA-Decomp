@@ -343,6 +343,16 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
     }
 }
 
+static inline u16 render_readPackedU16(u64 address)
+{
+    return *(u16*)(u32)address;
+}
+
+static inline void render_writePackedU16(u64 address, u16 value)
+{
+    *(u16*)(u32)address = value;
+}
+
 /* Refill the two parallel 64-bit bitstream windows from the next
    byte-aligned position once the consumed bit count overruns 64. */
 #define RENDER_BITS_REFILL(nb)                                                                                         \
@@ -395,7 +405,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     do
     {
         u64 sample = 0;
-        u64 h = *(u16*)(u32)tp;
+        u64 h = render_readPackedU16(tp);
         u64 nib = h & 0xf;
         u32 hw = h;
         u64 masked = h & maskConst;
@@ -426,7 +436,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
             bufB <<= (nib & 0xFFFFFFFF);
         }
         tp += 2;
-        *(u16*)(u32)outPos = sample;
+        render_writePackedU16(outPos, sample);
         outPos += 2;
 
         sample = 0;
@@ -436,7 +446,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
 
             do
             {
-                h = *(u16*)(u32)tp;
+                h = render_readPackedU16(tp);
                 if ((h & 0x10) != 0)
                 {
                     u64 nib2 = h & 0xf;
@@ -456,7 +466,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
                         sample = 0;
                         break;
                     }
-                    h = *(u16*)(u32)tp;
+                    h = render_readPackedU16(tp);
                 }
                 nib3 = h & 0xf;
                 if (nib3 != 0)
