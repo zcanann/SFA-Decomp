@@ -17,7 +17,7 @@
  * gated, 0x3fd->0x3fb, 0x4b9->0x4ba, 0x4be->0x4c1), finds a free piece
  * slot, caps the live sibling count at 7, and allocates/positions a new
  * sibling. tumbleweedbush_updateDetachedPiece (called by tumbleweed) advances a detached piece's
- * gravity/spin. findNearestActive/setScale are shared piece helpers used
+ * gravity/spin. findNearestActive/removePieceReference are shared piece helpers used
  * by sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
@@ -42,35 +42,6 @@
 #include "main/track_dolphin_api.h"
 #include "string.h"
 
-typedef struct TumbleweedBushState
-{
-    f32 scale;
-    u8 pad04[4];
-    u16 triggerRadius;
-    u8 pad0A[2];
-    void* pieceObjects[4];
-    f32 pieceOffsets[3][3];
-    u8 pad40[0x4c - 0x40];
-    u8 variant;
-    u8 pad4D[1];
-    u16 spawnedCount;
-    u8 pieceCount;
-    u8 pad51[3];
-} TumbleweedBushState;
-
-typedef struct TumbleweedBushPlacement
-{
-    ObjPlacement head;
-    u8 rotZByte;   /* 0x18 */
-    u8 rotYByte;   /* 0x19 */
-    u8 rotXByte;   /* 0x1a */
-    u8 radiusByte; /* 0x1b: triggerRadius = *2 */
-    f32 scale;     /* 0x1c: anim.rootMotionScale */
-    u8 pad20[0x23 - 0x20];
-    u8 variant;    /* 0x23 */
-} TumbleweedBushPlacement;
-
-
 #define TUMBLEWEED_BUSH_PIECE_SCALE 64.0f
 #define TUMBLEWEED_BUSH_RENDER_SCALE 1.0f
 #define TUMBLEWEED_BUSH_INIT_SCALE 0.0f
@@ -85,7 +56,7 @@ u8 gTumbleweedBushHitCooldownState;
 s8 tumbleweedbush_spawnSibling(int* obj)
 {
     u8* state;
-    u8* p4c;
+    u8* placementData;
     int siblingType;
     int idx;
     int outCount;
@@ -97,7 +68,7 @@ s8 tumbleweedbush_spawnSibling(int* obj)
     int* newObj;
 
     state = ((GameObject*)obj)->extra;
-    p4c = *(u8**)&((GameObject*)obj)->anim.placementData;
+    placementData = *(u8**)&((GameObject*)obj)->anim.placementData;
     switch (((GameObject*)obj)->anim.seqId)
     {
     case TUMBLEWEEDBUSH_SEQ_A:
@@ -121,7 +92,7 @@ s8 tumbleweedbush_spawnSibling(int* obj)
     scan = state;
     while (idx < (int)((TumbleweedBushState*)state)->pieceCount && freeSlot == -1)
     {
-        if (*(void**)(scan + 0xc) == NULL)
+        if (((TumbleweedBushState*)scan)->pieceObjects[0] == NULL)
             freeSlot = idx;
         scan += 4;
         idx++;
@@ -148,13 +119,13 @@ s8 tumbleweedbush_spawnSibling(int* obj)
         ((GameObject*)obj)->anim.localPosX + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][0];
     ((ObjPlacement*)newObj)->posY =
         ((GameObject*)obj)->anim.localPosY + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][1];
-    *(f32*)&((ObjDef*)newObj)->jointData =
+    ((ObjPlacement*)newObj)->posZ =
         ((GameObject*)obj)->anim.localPosZ + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][2];
-    ((ObjPlacement*)newObj)->color[0] = p4c[4];
-    ((ObjPlacement*)newObj)->color[1] = p4c[5];
-    ((ObjPlacement*)newObj)->color[2] = p4c[6];
-    ((ObjPlacement*)newObj)->color[3] = p4c[7];
-    *(f32*)((char*)newObj + 0x1c) = TUMBLEWEED_BUSH_PIECE_SCALE;
+    ((ObjPlacement*)newObj)->color[0] = ((TumbleweedBushPlacement*)placementData)->base.color[0];
+    ((ObjPlacement*)newObj)->color[1] = ((TumbleweedBushPlacement*)placementData)->base.color[1];
+    ((ObjPlacement*)newObj)->color[2] = ((TumbleweedBushPlacement*)placementData)->base.color[2];
+    ((ObjPlacement*)newObj)->color[3] = ((TumbleweedBushPlacement*)placementData)->base.color[3];
+    ((TumbleweedBushPlacement*)newObj)->scale = TUMBLEWEED_BUSH_PIECE_SCALE;
 
     if ((((TumbleweedBushState*)state)->variant & 1) != 0)
     {
@@ -163,7 +134,7 @@ s8 tumbleweedbush_spawnSibling(int* obj)
         case 0x292c:
             if (((TumbleweedBushState*)state)->spawnedCount == 6)
             {
-                *((u8*)newObj + 0x1b) = 1;
+                ((TumbleweedBushPlacement*)newObj)->radiusByte = 1;
                 list = ObjList_GetObjects(&idx, &outCount);
                 while (idx < outCount)
                 {
@@ -171,8 +142,8 @@ s8 tumbleweedbush_spawnSibling(int* obj)
                     if (((GameObject*)child)->anim.seqId == 0x27f)
                     {
                         ((ObjPlacement*)newObj)->posX = ((GameObject*)child)->anim.localPosX;
-                        ((ObjPlacement*)newObj)->posY = *(f32*)((char*)list[idx] + 0x10);
-                        *(f32*)&((ObjDef*)newObj)->jointData = *(f32*)((char*)list[idx] + 0x14);
+                        ((ObjPlacement*)newObj)->posY = ((GameObject*)list[idx])->anim.localPosY;
+                        ((ObjPlacement*)newObj)->posZ = ((GameObject*)list[idx])->anim.localPosZ;
                         idx = outCount;
                     }
                     idx++;
@@ -185,7 +156,7 @@ s8 tumbleweedbush_spawnSibling(int* obj)
     {
         int* setup = (int*)Obj_SetupObject((ObjPlacement*)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
                                            ((GameObject*)obj)->anim.parent);
-        u8* slotBase = state + 0xc;
+        u8* slotBase = (u8*)((TumbleweedBushState*)state)->pieceObjects;
         *(int**)(slotBase + freeSlot * 4) = setup;
         {
             int* spawned = *(int**)(slotBase + freeSlot * 4);
@@ -197,15 +168,15 @@ s8 tumbleweedbush_spawnSibling(int* obj)
     return freeSlot;
 }
 
-void TumbleWeedBush_setScale(u8* obj, void* match)
+void tumbleweedbush_removePieceReference(GameObject* obj, GameObject* piece)
 {
     TumbleweedBushState* state;
     int i;
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     i = 0;
     while (i < state->pieceCount)
     {
-        if (state->pieceObjects[i] == match)
+        if (state->pieceObjects[i] == piece)
         {
             state->pieceObjects[i] = NULL;
         }
@@ -215,7 +186,7 @@ void TumbleWeedBush_setScale(u8* obj, void* match)
 
 int TumbleWeedBush_getExtraSize(void)
 {
-    return 0x54;
+    return sizeof(TumbleweedBushState);
 }
 
 int TumbleWeedBush_getObjectTypeId(void)
@@ -459,7 +430,7 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
         (ObjectDescriptorCallback)TumbleWeedBush_free,
         (ObjectDescriptorCallback)TumbleWeedBush_getObjectTypeId,
         TumbleWeedBush_getExtraSize,
-        (ObjectDescriptorCallback)TumbleWeedBush_setScale,
+        (ObjectDescriptorCallback)tumbleweedbush_removePieceReference,
     },
     0,
 };
