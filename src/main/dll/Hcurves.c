@@ -84,6 +84,16 @@ typedef struct ObjfsaWalkGroup
     u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
 } ObjfsaWalkGroup;
 
+typedef struct ObjfsaStorage
+{
+    ObjfsaPatch patches[256];
+    ObjfsaWalkGroup walkGroups[OBJFSA_WALKGROUP_COUNT];
+    u8 activeWalkGroups[0xB8];
+} ObjfsaStorage;
+
+STATIC_ASSERT(offsetof(ObjfsaStorage, walkGroups) == 0x3000);
+STATIC_ASSERT(offsetof(ObjfsaStorage, activeWalkGroups) == OBJFSA_ACTIVE_WALKGROUPS_OFFSET);
+
 /* Type 0x26 curve records carry the walk-group outline after the common
  * RomCurveDef prefix.  Each linked edge has a pair of X/Z corner offsets. */
 typedef struct ObjfsaWalkCurveDef
@@ -1413,14 +1423,13 @@ void walkgroupFindExitPointFn_800dc398(void)
     int pairId;
     u16 pairGid;
     int zid;
-    int checksum;
+    u32 checksum;
     int searchCount;
     ObjfsaWalkGroup* wgB;
     ObjfsaPatchPlane* pl;
     ObjfsaPatch* pC;
     ObjfsaWalkCurveDef** curveList;
     ObjfsaPatch* sp;
-    char* lp;
     f32 fdx;
     f32 fdz;
     f32 div;
@@ -1461,7 +1470,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
     }
 
-    if ((u32)checksum != gObjfsaBlockFlagsChecksum)
+    if (checksum != gObjfsaBlockFlagsChecksum)
     {
         gObjfsaBlockFlagsChecksum = checksum;
     }
@@ -1495,9 +1504,9 @@ void walkgroupFindExitPointFn_800dc398(void)
             curve = *listWalk;
             if (curve->type == 0x26)
             {
-                wg = (ObjfsaWalkGroup*)((char*)patchBase[0] + (curve->walkGroup * 40 + 0x3000));
-                lp = (char*)patchBase[0] + curve->walkGroup;
-                lp[OBJFSA_ACTIVE_WALKGROUPS_OFFSET] = 1;
+                gi = curve->walkGroup;
+                wg = &((ObjfsaWalkGroup*)(patchBase[0] + 256))[gi];
+                ((ObjfsaStorage*)patchBase[0])->activeWalkGroups[gi] = 1;
 
                 x0 = objfsaCorner(curve->firstEdge[0], scale, &curve->x);
                 z0 = objfsaCorner(curve->firstEdge[1], scale, &curve->z);
@@ -1650,8 +1659,8 @@ void walkgroupFindExitPointFn_800dc398(void)
         p = &patchBase[0][1];
         for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
-            wgT = (ObjfsaWalkGroup*)((char*)patchBase[0] + (pp[0] * 40 + 0x3000));
-            wgBT = (ObjfsaWalkGroup*)((char*)patchBase[0] + (pp[1] * 40 + 0x3000));
+            wgT = &((ObjfsaWalkGroup*)(patchBase[0] + 256))[pp[0]];
+            wgBT = &((ObjfsaWalkGroup*)(patchBase[0] + 256))[pp[1]];
             fdx = p->exit1X - p->exit0X;
             fdz = p->exit1Z - p->exit0Z;
 
