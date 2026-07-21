@@ -5,6 +5,10 @@
 #include "global.h"
 #include "main/voxmaps.h"
 
+struct GameObject;
+struct BaddieState;
+typedef void (*BaddieStateExitFn)(struct GameObject* obj, struct BaddieState* state);
+
 /*
  * BaddieState - the engine-wide actor-control record that lives at the
  * head of the obj+0xB8 extra block for objects driven through
@@ -116,10 +120,14 @@ typedef struct BaddieState {
     u8 pad2EC[0x2FC - 0x2EC];
     f32 pathStep; /* path-advance step (lfs/stfs 764; fed to Curve_AdvanceAlongPath) */
     f32 animDeltaScale;
-    f32 unk304;
+    union {
+        f32 unk304;
+        BaddieStateExitFn stateExitFn;
+    };
     union {
         f32 unk308;
         int stateHandler; /* player state callback address */
+        BaddieStateExitFn nextStateExitFn;
     };
     u8 unk30C[8];
 /* eventFlags bit: anim-event footstep - the anim/event stream latches it, and
@@ -164,7 +172,8 @@ typedef struct BaddieState {
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
     u8 unk347[2];
     u8 hasTarget; /* cleared with death/reset */
-    u8 unk34A[3];
+    u8 unk34A[2];
+    s8 movementFlags; /* root-motion / velocity handling flags for the shared player controller */
     u8 stateTag; /* per-tick state/mode index (written each tick; compared ==1/==3 across the baddie cluster + player) */
     u8 unk34E[6];
     u8 hitPoints; /* decremented on hit, (s8) < 1 = dead (anim.c/kt_rex pattern) */
