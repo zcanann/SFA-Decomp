@@ -703,7 +703,7 @@ void skySetOverrideLightDirectionEnabled(u8 enabled)
     gSkyOverrideLightDirectionEnabled = enabled;
 }
 
-void fn_8008923C(GameObject* obj, f32* x, f32* y, f32* z)
+void skyGetObjectLightDirection(GameObject* obj, f32* x, f32* y, f32* z)
 {
     u8* lights[4];
     f32 dir[3];

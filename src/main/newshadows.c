@@ -860,7 +860,7 @@ void renderShadows(int unused0, int unused1, int unused2)
                 w = obj->anim.modelState->shadowTexture->width;
                 screenW = w;
             }
-            fn_8008923C(obj, vA, &vA[1], &vA[2]);
+            skyGetObjectLightDirection(obj, vA, &vA[1], &vA[2]);
             dot24[0] = -modelState->shadowOffsetX;
             dot24[1] = -modelState->shadowOffsetY;
             dot24[2] = -modelState->shadowOffsetZ;
