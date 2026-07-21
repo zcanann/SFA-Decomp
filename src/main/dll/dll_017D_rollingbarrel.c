@@ -26,12 +26,11 @@ typedef struct
 s16 gRollingBarrelExplodingCount;
 const RollingBarrelInitPair gRollingBarrelCurveInitPair = { 21, 0 };
 
-void fn_801A5D88(GameObject* obj, int explosionVariant)
+void RollingBarrel_explode(GameObject* obj, int unusedExplosionVariant)
 {
     RollingBarrelState* state = (obj)->extra;
     u32 debrisType;
-    u32 r2;
-    int player;
+    GameObject* player;
     f32 dist;
     f32 falloff;
     gRollingBarrelExplodingCount += 1;
@@ -51,10 +50,10 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
     (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                               (s32)(3.0f * (f32)(u32)(obj)->anim.modelInstance->primaryHitboxRadius));
-    player = (int)Obj_GetPlayerObject();
-    if ((((GameObject*)player)->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
+    player = Obj_GetPlayerObject();
+    if ((player->objectFlags & ROLLINGBARREL_OBJFLAG_PARENT_SLACK) == 0)
     {
-        dist = Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+        dist = Vec_distance(&(obj)->anim.worldPosX, &player->anim.worldPosX);
         if (dist <= 500.0f)
         {
             falloff = 1.0f - dist / 500.0f;
@@ -66,26 +65,26 @@ void fn_801A5D88(GameObject* obj, int explosionVariant)
 
 int RollingBarrel_getExtraSize(void)
 {
-    return ROLLINGBARREL_EXTRA_SIZE;
+    return sizeof(RollingBarrelState);
 }
 int RollingBarrel_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void RollingBarrel_free(int obj)
+void RollingBarrel_free(GameObject* obj)
 {
-    RollingBarrelState* state = ((GameObject*)obj)->extra;
+    RollingBarrelState* state = obj->extra;
     int count;
-    int* arr = (int*)ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
+    u32* groupObjects = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
-    u32 groupObj;
+    u32 groupObject;
     for (i = 0; i < count; i++)
     {
-        groupObj = arr[i];
-        if (groupObj == obj)
+        groupObject = groupObjects[i];
+        if (groupObject == (u32)obj)
         {
-            ObjGroup_RemoveObject(obj, ROLLINGBARREL_GROUP_ID);
+            ObjGroup_RemoveObject((int)obj, ROLLINGBARREL_GROUP_ID);
             break;
         }
     }
@@ -113,9 +112,9 @@ void RollingBarrel_hitDetect(void)
 void RollingBarrel_update(GameObject* obj)
 {
     RollingBarrelState* state;
-    RollingBarrelMapData* descriptor;
-    f32 floor_y;
-    f32 dist_sq;
+    RollingBarrelMapData* mapData;
+    f32 floorY;
+    f32 distanceSquared;
     int blocked;
     int hitObject;
     int hitSphereIndex;
@@ -126,19 +125,19 @@ void RollingBarrel_update(GameObject* obj)
 
     state = (obj)->extra;
     hitObject = 0;
-    descriptor = *(RollingBarrelMapData**)&(obj)->anim.placementData;
+    mapData = (RollingBarrelMapData*)obj->anim.placementData;
     blocked = 0;
-    dist_sq = 0.0f;
+    distanceSquared = 0.0f;
     stateId = state->state;
 
     switch (stateId)
     {
     case ROLLINGBARREL_STATE_ROLLING:
     {
-        if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
+        if (mapData->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
         {
             f32 vmax = 3.0f;
-            while (blocked == 0 && dist_sq < vmax * timeDelta)
+            while (blocked == 0 && distanceSquared < vmax * timeDelta)
             {
                 blocked = Curve_AdvanceAlongPath(&state->curve.curve, state->curveSpeed);
                 if (blocked == 0 && state->curve.atSegmentEnd != 0)
@@ -148,7 +147,7 @@ void RollingBarrel_update(GameObject* obj)
                 {
                     f32 dx = state->curve.posX - (obj)->anim.previousLocalPosX;
                     f32 dz = state->curve.posZ - (obj)->anim.previousLocalPosZ;
-                    dist_sq = dx * dx + dz * dz;
+                    distanceSquared = dx * dx + dz * dz;
                 }
             }
         }
@@ -164,21 +163,21 @@ void RollingBarrel_update(GameObject* obj)
         state->hitVolumeSlot = 10;
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (obj)->anim.modelInstance->primaryHitboxRadius);
 
-        if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
+        if (mapData->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE)
         {
-            floor_y = 5.0f + state->curve.posY;
+            floorY = 5.0f + state->curve.posY;
         }
         else
         {
-            floor_y = state->curve.posY;
+            floorY = state->curve.posY;
         }
 
         state->verticalSpeed = -0.1f * timeDelta + state->verticalSpeed;
         (obj)->anim.localPosY = state->verticalSpeed * timeDelta + (obj)->anim.localPosY;
 
-        if ((obj)->anim.localPosY < floor_y)
+        if ((obj)->anim.localPosY < floorY)
         {
-            if (descriptor->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE &&
+            if (mapData->objectDefId == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE &&
                 (obj)->anim.localPosY < -2680.0f)
             {
                 blocked = 1;
@@ -188,11 +187,11 @@ void RollingBarrel_update(GameObject* obj)
                 Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_mfin2_c, 6);
             }
             state->verticalSpeed *= -0.6f;
-            (obj)->anim.localPosY = 2.0f * floor_y - (obj)->anim.localPosY;
+            (obj)->anim.localPosY = 2.0f * floorY - (obj)->anim.localPosY;
         }
         (obj)->anim.localPosX = state->curve.posX;
         (obj)->anim.localPosZ = state->curve.posZ;
-        *(s16*)obj = (s16)getAngle(state->curve.tangentX, state->curve.tangentZ);
+        obj->anim.rotX = (s16)getAngle(state->curve.tangentX, state->curve.tangentZ);
 
         if (state->pitchRising != 0)
         {
@@ -229,7 +228,7 @@ void RollingBarrel_update(GameObject* obj)
                 state->hitVolumeSlot = 5;
             }
             explosionVariant = randomGetRange(0, 2);
-            fn_801A5D88(obj, explosionVariant);
+            RollingBarrel_explode(obj, explosionVariant);
         }
     }
     break;
