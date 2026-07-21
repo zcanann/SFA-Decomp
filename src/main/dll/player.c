@@ -1,3 +1,5 @@
+#define BADDIE_MOVE_STATUS_SIGNED
+
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/obj_placement.h"
@@ -89,7 +91,9 @@
 #include "string.h"
 #include "main/dll/dll_002F_carryable.h"
 #include "main/dll/dll_0104_smallbasket.h"
+#define FEAR_TEST_METER_POSITION_INT
 #include "main/dll/dll_0000_gameui.h"
+#undef FEAR_TEST_METER_POSITION_INT
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
@@ -106,6 +110,8 @@
 #include "main/gamebit_ids.h"
 #include "main/player_control_interface.h"
 #include "main/sky.h"
+
+#undef BADDIE_MOVE_STATUS_SIGNED
 
 int lbl_80332EC0[5] = {0x1D, 0x1E, 0x1F, 0x20, 0x21};
 void* gPlayerSpawnedObjects[7] = {NULL};
@@ -18289,7 +18295,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
     {
         int meterPosition =
             (s16)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32)challenge->phase / lbl_803E81B8));
-        int successRange = (int)(lbl_803E81B0 * controls->scales[challenge->difficulty]);
+        u16 successRange = (int)(lbl_803E81B0 * controls->scales[challenge->difficulty]);
         if (obj->userData2 == 0)
         {
             if ((s16)challenge->phase * (s16)challenge->previousPhase < 0)
@@ -18319,9 +18325,9 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
     {
         fearTestMeterSetFadeIn(0);
     }
-    if (*(s8*)&playerState->moveDone != 0 || *(s8*)&playerState->moveJustStartedA != 0)
+    if (playerState->moveDone != 0 || playerState->moveJustStartedA != 0)
     {
-        if (*(s8*)&playerState->moveJustStartedA != 0)
+        if (playerState->moveJustStartedA != 0)
         {
             int index;
             u16* gameBit;
@@ -18343,7 +18349,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
             setAButtonIcon(6);
         }
         placement = (LightfootChallengePlacement*)obj->anim.placementData;
-        if (*(s8*)&playerState->moveJustStartedA != 0)
+        if (playerState->moveJustStartedA != 0)
         {
             challenge->animationIndex = 0;
             obj->anim.localPosX = placement->base.posX;
