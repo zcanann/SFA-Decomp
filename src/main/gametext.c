@@ -804,9 +804,9 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
     int lineOff;
     int* bp;
     int lineCount;
+    char** buffer;
     int breakPos;
     int haveSpace;
-    char** buffer;
     int charPos;
     char* src;
     int lineIdx;
