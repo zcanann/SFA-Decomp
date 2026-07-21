@@ -4,7 +4,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
-typedef struct PressureswitchfbPlacement
+typedef struct PressureSwitchFBPlacement
 {
     ObjPlacement base;
     u8 initialYaw;
@@ -18,7 +18,7 @@ typedef struct PressureswitchfbPlacement
     s16 unk22;
     s16 unk24;
     u8 pad26[2];
-} PressureswitchfbPlacement;
+} PressureSwitchFBPlacement;
 
 typedef struct PressureSwitchFbFlags
 {
@@ -66,19 +66,19 @@ typedef struct PressureSwitchFbState
     u8 pad85[3];
 } PressureSwitchFbState;
 
-STATIC_ASSERT(offsetof(PressureswitchfbPlacement, initialYaw) == 0x18);
-STATIC_ASSERT(offsetof(PressureswitchfbPlacement, pressedGameBit) == 0x1A);
-STATIC_ASSERT(offsetof(PressureswitchfbPlacement, enableGameBit) == 0x20);
-STATIC_ASSERT(sizeof(PressureswitchfbPlacement) == 0x28);
+STATIC_ASSERT(offsetof(PressureSwitchFBPlacement, initialYaw) == 0x18);
+STATIC_ASSERT(offsetof(PressureSwitchFBPlacement, pressedGameBit) == 0x1A);
+STATIC_ASSERT(offsetof(PressureSwitchFBPlacement, enableGameBit) == 0x20);
+STATIC_ASSERT(sizeof(PressureSwitchFBPlacement) == 0x28);
 STATIC_ASSERT(offsetof(PressureSwitchFbState, trackedObjects) == 0x04);
 STATIC_ASSERT(offsetof(PressureSwitchFbState, trackedPositions) == 0x2C);
 STATIC_ASSERT(offsetof(PressureSwitchFbState, targetPosY) == 0x7C);
 STATIC_ASSERT(offsetof(PressureSwitchFbState, flags) == 0x84);
 STATIC_ASSERT(sizeof(PressureSwitchFbState) == 0x88);
-int PressureSwitchFB_SeqFn(GameObject* obj, int unused, int stateParam);
+int PressureSwitchFB_animEventCallback(GameObject* obj, int unused, int animEventState);
 int PressureSwitchFB_getExtraSize(void);
 void PressureSwitchFB_free(GameObject* obj);
 void PressureSwitchFB_update(GameObject* obj);
-void PressureSwitchFB_init(GameObject* obj, PressureswitchfbPlacement* params);
+void PressureSwitchFB_init(GameObject* obj, PressureSwitchFBPlacement* params);
 
 #endif /* MAIN_DLL_DLL_00FB_PRESSURESWITCHFB_H_ */

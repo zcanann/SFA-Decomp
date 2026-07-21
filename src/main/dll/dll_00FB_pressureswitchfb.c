@@ -8,7 +8,7 @@
  * weight leaves it springs back up and clears the game bit.
  *
  * Up to PRESSURESWITCHFB_TRACKED_OBJECT_COUNT contacts are cached in the runtime
- * extra block; the animEventCallback (PressureSwitchFB_SeqFn) captures
+ * extra block; PressureSwitchFB_animEventCallback captures
  * or resets those slots on demand. canRelease / playerOnly / startPressed /
  * usePressedTexture behaviour comes from the seqId and placement flags. The pad
  * registers/unregisters in object group PRESSURESWITCHFB_REMOVE_GROUP_ID and can
@@ -46,10 +46,7 @@
 #define PRESSURESWITCHFB_TRACKED_SEQID_A 0x754
 #define PRESSURESWITCHFB_TRACKED_SEQID_B 0x6d
 
-#define PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET   0x04
-#define PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET 0x2c
-#define PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET        0x7c
-#define PRESSURESWITCHFB_EXTRA_SIZE                       0x88
+#define PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET 0x04
 
 #define PRESSURESWITCHFB_STATE_MODE_OFFSET 0x80
 #define PRESSURESWITCHFB_REMOVE_GROUP_ID   0x53
@@ -70,63 +67,65 @@ extern f32 lbl_803E3764;
 extern f32 lbl_803E3768;
 extern f32 lbl_803E3778;
 
-int PressureSwitchFB_SeqFn(GameObject* obj, int unused, int stateParam)
+int PressureSwitchFB_animEventCallback(GameObject* obj, int unused, int animEventState)
 {
-    s16 objType;
-    PressureswitchfbPlacement* config;
-    u32 handle;
-    u32 offset;
-    int runtime;
-    int trackedObjectSlot;
+    s16 sequenceId;
+    PressureSwitchFBPlacement* placement;
+    u32 trackedObject;
+    u32 objectSlotOffset;
+    int stateData;
+    int positionSlotBase;
     u8 i;
 
-    runtime = *(int*)&obj->extra;
-    config = (PressureswitchfbPlacement*)obj->anim.placementData;
-    if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) == PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS)
+    stateData = *(int*)&obj->extra;
+    placement = (PressureSwitchFBPlacement*)obj->anim.placementData;
+    if (*(u8*)(animEventState + PRESSURESWITCHFB_STATE_MODE_OFFSET) == PRESSURESWITCHFB_STATE_CAPTURE_POSITIONS)
     {
         for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i++)
         {
-            offset = (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
-            handle = *(u32*)(runtime + offset);
-            if (handle != 0)
+            objectSlotOffset = (u32)i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET;
+            trackedObject = *(u32*)(stateData + objectSlotOffset);
+            if (trackedObject != 0)
             {
-                *(f32*)((trackedObjectSlot = runtime + (u32)i * 8) +
-                        PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET) = ((GameObject*)handle)->anim.localPosX;
-                *(f32*)(trackedObjectSlot + (PRESSURESWITCHFB_RUNTIME_TRACKED_POSITIONS_OFFSET + 4)) =
-                    ((GameObject*)*(int*)(runtime + offset))->anim.localPosZ;
+                ((PressureSwitchFbState*)(positionSlotBase = stateData + (u32)i * 8))->trackedPositions[0].x =
+                    ((GameObject*)trackedObject)->anim.localPosX;
+                ((PressureSwitchFbState*)positionSlotBase)->trackedPositions[0].z =
+                    ((GameObject*)*(int*)(stateData + objectSlotOffset))->anim.localPosZ;
             }
         }
-        *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) = PRESSURESWITCHFB_STATE_IDLE;
+        *(u8*)(animEventState + PRESSURESWITCHFB_STATE_MODE_OFFSET) = PRESSURESWITCHFB_STATE_IDLE;
     }
-    else if (*(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) == PRESSURESWITCHFB_STATE_RESET)
+    else if (*(u8*)(animEventState + PRESSURESWITCHFB_STATE_MODE_OFFSET) == PRESSURESWITCHFB_STATE_RESET)
     {
         for (i = 0; i < PRESSURESWITCHFB_TRACKED_OBJECT_COUNT; i += PRESSURESWITCHFB_TRACKED_OBJECT_BATCH)
         {
-            *(int*)(trackedObjectSlot = runtime + i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET) = 0;
-            *(int*)(trackedObjectSlot + 0x4) = 0;
-            *(int*)(trackedObjectSlot + 0x8) = 0;
-            *(int*)(trackedObjectSlot + 0xc) = 0;
-            *(int*)(trackedObjectSlot + 0x10) = 0;
+            *(int*)(positionSlotBase = stateData + i * 4 + PRESSURESWITCHFB_RUNTIME_TRACKED_OBJECTS_OFFSET) = 0;
+            *(int*)(positionSlotBase + 0x4) = 0;
+            *(int*)(positionSlotBase + 0x8) = 0;
+            *(int*)(positionSlotBase + 0xc) = 0;
+            *(int*)(positionSlotBase + 0x10) = 0;
         }
-        obj->anim.localPosZ = config->base.posX;
-        obj->anim.localPosY = *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET);
-        obj->anim.localPosZ = config->base.posZ;
-        mainSetBits(config->pressedGameBit, 0);
-        *(u8*)(stateParam + PRESSURESWITCHFB_STATE_MODE_OFFSET) = PRESSURESWITCHFB_STATE_IDLE;
+        /* Retail performs both horizontal reset stores through localPosZ. */
+        obj->anim.localPosZ = placement->base.posX;
+        obj->anim.localPosY = ((PressureSwitchFbState*)stateData)->targetPosY;
+        obj->anim.localPosZ = placement->base.posZ;
+        mainSetBits(placement->pressedGameBit, 0);
+        *(u8*)(animEventState + PRESSURESWITCHFB_STATE_MODE_OFFSET) = PRESSURESWITCHFB_STATE_IDLE;
     }
-    objType = obj->anim.seqId;
-    if ((((objType != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) && (objType != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
-         (objType != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
-        (objType != PRESSURESWITCHFB_OBJ_CC_PRESSURE))
+    sequenceId = obj->anim.seqId;
+    if ((((sequenceId != PRESSURESWITCHFB_OBJ_LINK_SNOWPR) &&
+          (sequenceId != PRESSURESWITCHFB_OBJ_SH_PRESSURE)) &&
+         (sequenceId != PRESSURESWITCHFB_OBJ_LINK_UNDERW)) &&
+        (sequenceId != PRESSURESWITCHFB_OBJ_CC_PRESSURE))
     {
-        *(f32*)(runtime + PRESSURESWITCHFB_RUNTIME_BASE_COORD_OFFSET) = obj->anim.localPosY;
+        ((PressureSwitchFbState*)stateData)->targetPosY = obj->anim.localPosY;
     }
     return 0;
 }
 
 int PressureSwitchFB_getExtraSize(void)
 {
-    return PRESSURESWITCHFB_EXTRA_SIZE;
+    return sizeof(PressureSwitchFbState);
 }
 
 void PressureSwitchFB_free(GameObject* obj)
@@ -175,7 +174,7 @@ void PressureSwitchFB_update(GameObject* obj)
 {
     int found;
     u32 other;
-    PressureswitchfbPlacement* def;
+    PressureSwitchFBPlacement* def;
     PressureSwitchFbState* state;
     int i;
     int tmp;
@@ -194,7 +193,7 @@ void PressureSwitchFB_update(GameObject* obj)
     f32 nearDist;
     FxArgs fx;
 
-    def = (PressureswitchfbPlacement*)obj->anim.placementData;
+    def = (PressureSwitchFBPlacement*)obj->anim.placementData;
     state = obj->extra;
     if (state->flags.update.active != 0)
     {
@@ -411,7 +410,7 @@ void PressureSwitchFB_update(GameObject* obj)
     }
 }
 
-void PressureSwitchFB_init(GameObject* obj, PressureswitchfbPlacement* params)
+void PressureSwitchFB_init(GameObject* obj, PressureSwitchFBPlacement* params)
 {
     ObjAnimComponent* objAnim;
     PressureSwitchFbState* state;
@@ -480,7 +479,7 @@ void PressureSwitchFB_init(GameObject* obj, PressureswitchfbPlacement* params)
     state->trackedObjects[7] = NULL;
     state->trackedObjects[8] = NULL;
     state->trackedObjects[9] = NULL;
-    obj->animEventCallback = PressureSwitchFB_SeqFn;
+    obj->animEventCallback = PressureSwitchFB_animEventCallback;
 }
 
 ObjectDescriptor gPressureSwitchFBObjDescriptor = {
