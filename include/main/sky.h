@@ -140,7 +140,7 @@ void skyFn_8008a500(void);
 void sky2_update(int a, int b, u8* cfg);
 void fn_8008C9F4(u8* cfg, u8 flags);
 void fn_8008D088(int slot);
-void fn_8008BDA8(void);
+void skyResetState(void);
 void skyFn_8008a04c(void);
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, int ambientIntensity,
                  int lightIntensity, u8 blendAlpha);

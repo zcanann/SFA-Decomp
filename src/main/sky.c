@@ -2068,7 +2068,7 @@ void loadLightFn_8008bbc4(void)
             modelLightStruct_setSpecularColor(gSkyMoonLight, 0xff, 0xff, 0xff, 0xff);
         }
     }
-    fn_8008BDA8();
+    skyResetState();
     skyFn_80088c94(7, 0);
     skyFn_80088e54(0, lbl_803DF058);
     skyFn_8008a500();
@@ -2082,7 +2082,7 @@ void loadLightFn_8008bbc4(void)
     gSkySkyTexture = textureLoadAsset(SKY_TEXTURE_SKY);
 }
 
-void fn_8008BDA8(void)
+void skyResetState(void)
 {
     u8* tex0;
     int iofs;
