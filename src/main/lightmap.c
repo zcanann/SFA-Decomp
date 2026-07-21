@@ -1260,7 +1260,7 @@ void drawFn_8005cf8c(const void* vertexBase, u8* triList, int triCount)
 
 void fn_8005D0BC(int unused, u8 a, u8 b, u8 c, int wpad0)
 {
-    fn_800704FC(a, b, c);
+    setFogColorRgb(a, b, c);
 }
 
 

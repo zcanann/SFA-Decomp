@@ -24,7 +24,7 @@ void normalize(f32* x, f32* y, f32* z);
 void mtx44Identity(f32* matrix);
 void resetSomeGxFlags(void);
 void fogFn_80070404(f32 a, f32 b);
-void fn_800704FC(u8 param_1, u8 param_2, u8 param_3);
+void setFogColorRgb(u8 red, u8 green, u8 blue);
 void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);

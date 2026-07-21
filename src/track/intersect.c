@@ -1050,7 +1050,7 @@ void getColor803dd01c(u8* rgbOut)
     rgbOut[2] = gFogColor.b;
 }
 
-void fn_800704FC(u8 red, u8 green, u8 blue)
+void setFogColorRgb(u8 red, u8 green, u8 blue)
 {
     gFogColor.r = red;
     gFogColor.g = green;
