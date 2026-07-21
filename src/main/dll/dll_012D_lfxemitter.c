@@ -12,11 +12,11 @@
 #include "main/object_descriptor.h"
 
 #include "main/object.h"
-LfxEmitterConfig lbl_803AC7B0;
+LfxEmitterConfig gLfxEmitterConfigCache;
 
 
 /* reports whether the emitter's config record has been loaded yet */
-int lfxemitter_func0B(LfxEmitterObject* obj)
+int lfxemitter_isConfigLoaded(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
     return state->config != NULL;
@@ -27,8 +27,11 @@ int lfxemitter_setScale(void)
     return -1;
 }
 
-void fn_8018FF48(u16* src, u16* dst)
+void lfxemitter_copyConfig(const LfxEmitterConfig* srcConfig, LfxEmitterConfig* dstConfig)
 {
+    const u16* src = (const u16*)srcConfig;
+    u16* dst = (u16*)dstConfig;
+
     *dst = *src;
     dst[1] = src[1];
     ((s16*)dst)[2] = ((s16*)src)[2];
@@ -73,7 +76,7 @@ int lfxemitter_getObjectTypeId(void)
 void lfxemitter_free(LfxEmitterObject* obj)
 {
     LfxEmitterState* state = obj->state;
-    int* ptr = state->config;
+    LfxEmitterConfig* ptr = state->config;
     if (ptr != NULL)
     {
         mm_free(ptr);
@@ -136,12 +139,12 @@ void lfxemitter_update(LfxEmitterObject* obj)
         }
         if (state->configLoaded == 0)
         {
-            if ((state != NULL) && (state->configIndex == (lbl_803AC7B0.recordCount - 1)))
+            if ((state != NULL) && (state->configIndex == (gLfxEmitterConfigCache.recordCount - 1)))
             {
                 state->config = mmAlloc(LFXEMITTER_CONFIG_BYTES, 0x12, 0);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((u16*)&lbl_803AC7B0, state->config);
+                    lfxemitter_copyConfig(&gLfxEmitterConfigCache, state->config);
                 }
             }
             else
@@ -151,7 +154,7 @@ void lfxemitter_update(LfxEmitterObject* obj)
                             LFXEMITTER_CONFIG_BYTES);
                 if (state->config != NULL)
                 {
-                    fn_8018FF48((u16*)state->config, (u16*)&lbl_803AC7B0);
+                    lfxemitter_copyConfig(state->config, &gLfxEmitterConfigCache);
                 }
             }
             state->configLoaded = 1;
@@ -175,9 +178,9 @@ void lfxemitter_init(LfxEmitterObject* obj, LfxEmitterPlacement* setup)
     state->spinRoll = setup->spinRoll;
     state->spinPitch = setup->spinPitch;
     state->spinYaw = setup->spinYaw;
-    obj->objAnim.localPosX = setup->initialX;
-    obj->objAnim.localPosY = setup->initialY;
-    obj->objAnim.localPosZ = setup->initialZ;
+    obj->objAnim.localPosX = setup->base.posX;
+    obj->objAnim.localPosY = setup->base.posY;
+    obj->objAnim.localPosZ = setup->base.posZ;
 
     if (state->lifeTimer != 0)
     {
@@ -203,7 +206,7 @@ void lfxemitter_release(void)
 
 void lfxemitter_initialise(void)
 {
-    lbl_803AC7B0.recordCount = 10000;
+    gLfxEmitterConfigCache.recordCount = 10000;
 }
 
 ObjectDescriptor12 gLFXEmitterObjDescriptor = {
@@ -222,5 +225,5 @@ ObjectDescriptor12 gLFXEmitterObjDescriptor = {
     (ObjectDescriptorCallback)lfxemitter_getObjectTypeId,
     lfxemitter_getExtraSize,
     (ObjectDescriptorCallback)lfxemitter_setScale,
-    (ObjectDescriptorCallback)lfxemitter_func0B,
+    (ObjectDescriptorCallback)lfxemitter_isConfigLoaded,
 };

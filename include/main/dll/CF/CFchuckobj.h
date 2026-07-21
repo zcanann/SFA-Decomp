@@ -119,8 +119,8 @@ STATIC_ASSERT(offsetof(AreaFxEmitObject, seqCallback) == 0xBC);
 STATIC_ASSERT(offsetof(AreaFxEmitObject, emitCooldown) == 0xF4);
 
 /*
- * 0x28-byte lfxemitter spawn config record (the lbl_803AC7B0 / mmAlloc copy
- * format produced by fn_8018FF48 and consumed by FUN_8018f650). spawnType
+ * 0x28-byte lfxemitter spawn config record (the shared config cache / mmAlloc
+ * copy format produced by lfxemitter_copyConfig). spawnType
  * selects between the gPartfxInterface spawn paths and the FUN_80006b14
  * effect-bank paths; the rangeX/Y/Z fields seed randomGetRange jitter and
  * posBlock* feed FUN_80017748.
@@ -157,11 +157,7 @@ STATIC_ASSERT(offsetof(LfxEmitterConfig, posBlock2) == 0x1E);
 
 typedef struct LfxEmitterPlacement
 {
-    u8 pad00[0x08];
-    f32 initialX;
-    f32 initialY;
-    f32 initialZ;
-    u8 pad14[0x18 - 0x14];
+    ObjPlacement base;
     s16 spinRoll;
     s16 spinPitch;
     s16 spinYaw;
@@ -181,7 +177,7 @@ typedef struct LfxEmitterPlacement
 typedef struct LfxEmitterState
 {
     RomCurveWalker curve;
-    void* config;    /* mmAlloc(0x28) copy of the lbl_803AC7B0-format record */
+    LfxEmitterConfig* config; /* allocated copy of the shared config format */
     f32 curveSpeed;  /* placement curveSpeed / lbl_803E3E84 */
     s16 lifeTimer;   /* frames until Obj_FreeObject when armed */
     s16 configIndex; /* tab entry index */
@@ -205,7 +201,7 @@ struct LfxEmitterObject
 };
 
 STATIC_ASSERT(sizeof(LfxEmitterPlacement) == LFXEMITTER_PLACEMENT_BYTES);
-STATIC_ASSERT(offsetof(LfxEmitterPlacement, initialX) == 0x08);
+STATIC_ASSERT(offsetof(LfxEmitterPlacement, base.posX) == 0x08);
 STATIC_ASSERT(offsetof(LfxEmitterPlacement, spinRoll) == 0x18);
 STATIC_ASSERT(offsetof(LfxEmitterPlacement, spinPitch) == 0x1A);
 STATIC_ASSERT(offsetof(LfxEmitterPlacement, spinYaw) == 0x1C);
@@ -226,9 +222,7 @@ STATIC_ASSERT(offsetof(LfxEmitterObject, state) == 0xB8);
 
 void areafxemit_emitBurst(AreaFxEmitObject* obj, int count);
 void areafxemit_emitEffect(AreaFxEmitObject* obj);
-void fn_8018FF48(u16* src, u16* dst);
-void FUN_80190004(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                  u64 param_8, short* param_9);
+void lfxemitter_copyConfig(const LfxEmitterConfig* srcConfig, LfxEmitterConfig* dstConfig);
 
 int AreaFxEmit_getExtraSize(void);
 int AreaFxEmit_getObjectTypeId(void);
@@ -240,7 +234,7 @@ void AreaFxEmit_init(AreaFxEmitObject* obj, AreaFxEmitPlacement* setup);
 void AreaFxEmit_release(void);
 void AreaFxEmit_initialise(void);
 
-int lfxemitter_func0B(LfxEmitterObject* obj);
+int lfxemitter_isConfigLoaded(LfxEmitterObject* obj);
 int lfxemitter_setScale(void);
 int lfxemitter_getExtraSize(void);
 int lfxemitter_getObjectTypeId(void);
