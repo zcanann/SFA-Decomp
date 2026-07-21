@@ -299,8 +299,8 @@ void padUpdate(void)
     u16* triggers;
     u16* triggersReleased;
     u16* triggersPressed;
-    PADStatus* readPad;
     PADStatus* prevPad;
+    PADStatus* readPad;
     s32 i;
     PADStatus* statuses;
     u32* buttonMask;
@@ -341,10 +341,10 @@ void padUpdate(void)
 
     i = 0;
     currentStatus = readPad;
-    prevStickY = (s8*)&gPadPrevStickY;
-    prevStickX = (s8*)&gPadPrevStickX;
-    repeatY = (s8*)&gPadRepeatY;
-    repeatX = (s8*)&gPadRepeatX;
+    prevStickY = &gPadPrevStickY;
+    prevStickX = &gPadPrevStickX;
+    repeatY = &gPadRepeatY;
+    repeatX = &gPadRepeatX;
     analogY = &gPadAnalogY;
     analogX = &gPadAnalogX;
     previousButtons = padStateBlock[0];
@@ -529,10 +529,10 @@ void setRumbleEnabled(u8 enabled)
 int initControllers(void)
 {
     PadStateBlock* base[1];
-    u8* prevStickY;
-    u8* prevStickX;
-    u8* repeatY;
-    u8* repeatX;
+    s8* prevStickY;
+    s8* prevStickX;
+    s8* repeatY;
+    s8* repeatX;
     s8* analogY;
     s8* analogX;
     u32* previousButtons;
