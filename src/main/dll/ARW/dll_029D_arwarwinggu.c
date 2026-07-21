@@ -79,7 +79,7 @@ void arwarwinggu_applyTextureFrame(GameObject* obj)
     texture = objFindTexture(obj, 0, 0);
     anim = ObjModel_GetTexture(model->file, 0);
     textureSetAnimationFrameStep(anim, (u16)state->texture.textureFrame);
-    textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
+    textureUpdateAnimationFrame(anim, &state->texture.textureAnimFlags, &texture->textureId);
 }
 
 int ARWArwingGu_getExtraSize(GameObject* obj)
@@ -128,7 +128,7 @@ void ARWArwingGu_update(GameObject* obj)
         ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         Texture* anim = ObjModel_GetTexture(model->file, 0);
         textureSetAnimationFrameStep(anim, (u16)state->texture.textureFrame);
-        textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
+        textureUpdateAnimationFrame(anim, &state->texture.textureAnimFlags, &texture->textureId);
         break;
     }
     case ARWGU_DEF_GUN_L:

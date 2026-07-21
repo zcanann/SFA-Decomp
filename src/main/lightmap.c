@@ -991,7 +991,7 @@ void updateEnvironment(int mode)
             if (*(s16*)(entry + 12) != 0 && (tex = *(void**)entry) != NULL &&
                 tex->animationFrameCount != 0x100 && tex->animationFrameStep != 0)
             {
-                textureAnimFn_80053f2c(tex, (u32*)(entry + 8), (s32*)(entry + 4));
+                textureUpdateAnimationFrame(tex, (u32*)(entry + 8), (s32*)(entry + 4));
             }
             off += 0x10;
         }

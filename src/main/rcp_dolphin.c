@@ -1272,7 +1272,7 @@ void* getLoadedTexture(int key)
     return NULL;
 }
 
-void textureAnimFn_80053f2c(const Texture* texture, u32* node, s32* cnt)
+void textureUpdateAnimationFrame(const Texture* texture, u32* node, s32* cnt)
 {
     u32 a, b, c;
     u32 flags;

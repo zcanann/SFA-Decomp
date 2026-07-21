@@ -8606,7 +8606,7 @@ void GameUI_hudDraw(int a, int b, int c)
             {
                 void* tex;
                 f32 scale, x, y;
-                textureAnimFn_80053f2c(gGameUiBlinkTexture, &lbl_803DD82C, &lbl_803DD828);
+                textureUpdateAnimationFrame(gGameUiBlinkTexture, &lbl_803DD82C, &lbl_803DD828);
                 tex = gGameUiBlinkTexture;
                 scale = lbl_803E1E70;
                 x = sx - scale * (f32)(u32) ((Texture*)tex)->width;
