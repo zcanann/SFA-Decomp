@@ -177,7 +177,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
             for (dsp_vptr = stp->voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr)
             {
                 next_dsp_vptr = dsp_vptr->next;
-                if ((dsp_vptr->postBreak != 0) || ((dsp_vptr->changed[0] & 0x20) != 0))
+                if ((dsp_vptr->postBreak != 0) || ((dsp_vptr->changed[0] & DSP_VOICE_CHANGE_BREAK) != 0))
                 {
                     HandleDepopVoice(stp, dsp_vptr);
                     if (dsp_vptr->virtualSampleID != -1)
@@ -712,7 +712,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                         newVoice = 0;
                         dsp_vptr->currentAddr = (pb->addr.currentAddressHi << 0x10) | pb->addr.currentAddressLo;
                     }
-                    if ((dsp_vptr->changed[mix_start] & 0x40) != 0)
+                    if ((dsp_vptr->changed[mix_start] & DSP_VOICE_CHANGE_KEYOFF) != 0)
                     {
                         adsrRelease(&dsp_vptr->adsr);
                     }
@@ -765,14 +765,14 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
                                     }
                                 }
                             }
-                            if ((dsp_vptr->changed[s] & 0x20) != 0)
+                            if ((dsp_vptr->changed[s] & DSP_VOICE_CHANGE_BREAK) != 0)
                             {
                                 adsrStartRelease(&dsp_vptr->adsr, 10);
                                 dsp_vptr->postBreak = 1;
                             }
                             else if (dsp_vptr->postBreak == 0)
                             {
-                                if ((dsp_vptr->changed[s] & 0x40) != 0)
+                                if ((dsp_vptr->changed[s] & DSP_VOICE_CHANGE_KEYOFF) != 0)
                                 {
                                     adsrRelease(&dsp_vptr->adsr);
                                 }
@@ -1007,7 +1007,7 @@ void salActivateVoice(DSPvoice* voice, u8 studio)
     if (voice->state != 0)
     {
         salDeactivateVoice(voice);
-        voice->changed[0] |= 0x20;
+        voice->changed[0] |= DSP_VOICE_CHANGE_BREAK;
     }
     voice->postBreak = 0;
     if ((voice->next = dspStudio[studio].voiceRoot) != NULL)

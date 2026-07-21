@@ -6,5 +6,5 @@ extern u8 salTimeOffset;
 
 void hwKeyOff(int slot)
 {
-    dspVoice[slot].changed[salTimeOffset] |= 0x40;
+    dspVoice[slot].changed[salTimeOffset] |= DSP_VOICE_CHANGE_KEYOFF;
 }

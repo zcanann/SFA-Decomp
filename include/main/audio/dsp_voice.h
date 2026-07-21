@@ -29,6 +29,7 @@ typedef struct VSampleInfo {
 
 #define DSP_VOICE_UPDATE_COUNT       5
 #define DSP_VOICE_CHANGE_BREAK       0x20
+#define DSP_VOICE_CHANGE_KEYOFF      0x40
 
 typedef struct DSPvoice {
     struct _PB *pb;             /* 0x00 */
