@@ -15,7 +15,12 @@
 #include "main/dll/CC/dll_018A_ccpedstal.h"
 #include "main/object_descriptor.h"
 
-#define CCPEDSTAL_OBJFLAG_HIDDEN 0x4000
+#define CCPEDSTAL_GAMEBIT_ALT_GATE         0xDC5
+#define CCPEDSTAL_GAMEBIT_ALT_PEDESTAL     0xAA
+#define CCPEDSTAL_GAMEBIT_FIRST_ACTIVATION 0xDF0
+#define CCPEDSTAL_GAMEBIT_GATE_A           0xF1
+#define CCPEDSTAL_GAMEBIT_GATE_B           0xFE
+#define CCPEDSTAL_TRIGGER_FIRE_GEM         0xA9
 
 /* placement def-ids that pick the pedestal's think routine */
 enum
@@ -34,12 +39,11 @@ int ccpedstal_getExtraSize(void)
  * Otherwise shows model 0 and, while gameBit 0xA9 is set and the object's
  * 0xA9 trigger fires, runs sequence 0, decrements 0xA9 and marks the one-shot;
  * with 0xA9 clear it instead raises the obj's 0x10 hitbox bit. */
-void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
+void ccpedstal_updateGameBitGate(GameObject* obj, CcpedstalState* state)
 {
-    CcpedstalState* state = (CcpedstalState*)state2;
     if (mainGetBit(state->gameBit) != 0)
     {
-        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         Obj_SetActiveModelIndex(obj, 1);
     }
     else
@@ -50,11 +54,11 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
         {
             if (mainGetBit(GAMEBIT_ITEM_FireGem_Count) != 0)
             {
-                *(u8*)&(obj)->anim.resetHitboxMode =
-                    (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
-                if (ObjTrigger_IsSetById((int)obj, 0xa9) != 0)
+                obj->anim.resetHitboxFlags =
+                    (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED);
+                if (ObjTrigger_IsSetById((int)obj, CCPEDSTAL_TRIGGER_FIRE_GEM) != 0)
                 {
-                    (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+                    (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                     gameBitDecrement(GAMEBIT_ITEM_FireGem_Count);
                     doMark = 1;
                     break;
@@ -62,8 +66,8 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
             }
             else
             {
-                *(u8*)&(obj)->anim.resetHitboxMode =
-                    (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_PROMPT_SUPPRESSED);
+                obj->anim.resetHitboxFlags =
+                    (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
             }
             doMark = 0;
         } while (0);
@@ -79,20 +83,19 @@ void ccpedstal_updateGameBitGate(GameObject* obj, u8* state2)
  * then on the pedestal's own gameBit: set -> model 0; clear -> model 1 and,
  * when the pending trigger asserts, runs sequence 1, increments 0xA9 and
  * marks the one-shot. */
-void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
+void ccpedstal_updateAltVariant(GameObject* obj, CcpedstalState* state)
 {
-    CcpedstalState* state = (CcpedstalState*)state2;
-    if (mainGetBit(0xdc5) != 0)
+    if (mainGetBit(CCPEDSTAL_GAMEBIT_ALT_GATE) != 0)
     {
-        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
     }
     else
     {
-        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
     }
     if (mainGetBit(state->gameBit) != 0)
     {
-        *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+        obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         Obj_SetActiveModelIndex(obj, 0);
     }
     else
@@ -101,7 +104,7 @@ void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
         Obj_SetActiveModelIndex(obj, 1);
         if (ObjTrigger_IsSet((int)obj) != 0)
         {
-            (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             gameBitIncrement(GAMEBIT_ITEM_FireGem_Count);
             doMark = 1;
         }
@@ -116,9 +119,9 @@ void ccpedstal_updateAltVariant(GameObject* obj, u8* state2)
     }
 }
 
-void ccpedstal_update(int obj)
+void ccpedstal_update(GameObject* obj)
 {
-    CcpedstalState* state = ((GameObject*)obj)->extra;
+    CcpedstalState* state = obj->extra;
     if (state->markFlags != 0)
     {
         if (state->markFlags & 1)
@@ -130,33 +133,34 @@ void ccpedstal_update(int obj)
             mainSetBits(state->gameBit, 0);
         }
         state->markFlags = 0;
-        if (mainGetBit(0xdf0) == 0 && mainGetBit(0xaa) != 0)
+        if (mainGetBit(CCPEDSTAL_GAMEBIT_FIRST_ACTIVATION) == 0 &&
+            mainGetBit(CCPEDSTAL_GAMEBIT_ALT_PEDESTAL) != 0)
         {
-            mainSetBits(0xdf0, 1);
+            mainSetBits(CCPEDSTAL_GAMEBIT_FIRST_ACTIVATION, 1);
         }
     }
-    (*(void (*)(int, int))state->think)(obj, (int)state);
+    state->think(obj, state);
 }
 
-void ccpedstal_init(int* obj, u8* params)
+void ccpedstal_init(GameObject* obj, CcpedstalPlacement* placement)
 {
-    CcpedstalState* state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)((u32)params[0x1a] << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCPEDSTAL_OBJFLAG_HIDDEN);
-    switch (*(int*)(params + 0x14))
+    CcpedstalState* state = obj->extra;
+    obj->anim.rotX = (s16)((u32)placement->yaw << 8);
+    obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_HIDDEN);
+    switch (placement->variantId)
     {
     case PEDSTAL_DEF_ALT:
         state->think = ccpedstal_updateAltVariant;
-        state->gameBit = 0xaa;
-        Obj_SetActiveHitVolumeBounds((GameObject*)obj, 0, 0, 0, 0, 3);
+        state->gameBit = CCPEDSTAL_GAMEBIT_ALT_PEDESTAL;
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 3);
         break;
     case PEDSTAL_DEF_GATE_A:
         state->think = ccpedstal_updateGameBitGate;
-        state->gameBit = 0xf1;
+        state->gameBit = CCPEDSTAL_GAMEBIT_GATE_A;
         break;
     case PEDSTAL_DEF_GATE_B:
         state->think = ccpedstal_updateGameBitGate;
-        state->gameBit = 0xfe;
+        state->gameBit = CCPEDSTAL_GAMEBIT_GATE_B;
         break;
     }
 }
