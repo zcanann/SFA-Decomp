@@ -246,7 +246,7 @@ void linkb_levcontrol_update(int* obj)
 
 void linkb_levcontrol_init(int* obj)
 {
-    /* the (u8*)(int) launder is load-bearing: it makes the fn_80088870 arg
+    /* the (u8*)(int) launder is load-bearing: it makes the skySetEnvFxRampTables arg
      * reuse envBase's register instead of re-materializing the address */
     u8* envBase = (u8*)(int)lbl_803238D8;
     LinkbLevState* state = ((GameObject*)obj)->extra;
@@ -277,7 +277,7 @@ void linkb_levcontrol_init(int* obj)
     {
         state->stage = LINKBLEVCONTROL_STAGE_1;
     }
-    fn_80088870(envBase + 0x38, (u8*)(int)lbl_803238D8, envBase + 0x70, envBase + 0xa8);
+    skySetEnvFxRampTables(envBase + 0x38, (u8*)(int)lbl_803238D8, envBase + 0x70, envBase + 0xa8);
     if (getSaveGameLoadStatus() != 0)
     {
         if ((u8)(*gMapEventInterface)->getObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0) == 0)

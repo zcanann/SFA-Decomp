@@ -136,7 +136,7 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
     switch (((GameObject*)obj)->anim.mapEventSlot)
     {
     case AREA_CELL_47:
-        fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
+        skySetEnvFxRampTables(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
         if (((GameObject*)obj)->userData1 == LEVCON_SAVE_STATUS_LOADED)
         {
             envFxActFn_800887f8(0x3f);

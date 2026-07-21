@@ -231,7 +231,7 @@ void envFxActFn_800887f8(u8 value)
     }
 }
 
-void fn_80088870(void* groupB, void* groupA, void* groupC, void* groupD)
+void skySetEnvFxRampTables(void* groupB, void* groupA, void* groupC, void* groupD)
 {
     lbl_803DD13C = groupB;
     lbl_803DD130 = groupA;

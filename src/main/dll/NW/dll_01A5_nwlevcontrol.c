@@ -357,7 +357,7 @@ void nw_levcontrol_init(int* obj)
 
     state->countdown = 300.0f;
 
-    fn_80088870(base + 0x8c, base + 0x54, base + 0xc4, base + 0xfc);
+    skySetEnvFxRampTables(base + 0x8c, base + 0x54, base + 0xc4, base + 0xfc);
 
     if (getSaveGameLoadStatus() != 0)
     {

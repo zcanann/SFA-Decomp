@@ -91,7 +91,7 @@ typedef struct SkyTimeBlend
 int getEnvFxBit2BA(void);
 void setGameBit2BA(int value);
 void envFxFn_800887cc(void);
-void fn_80088870(void* groupB, void* groupA, void* groupC, void* groupD);
+void skySetEnvFxRampTables(void* groupB, void* groupA, void* groupC, void* groupD);
 void envFxFn_80088884(void);
 void loadSunAndMoon(void);
 int getSkyColorFn_80088e30(int slot);

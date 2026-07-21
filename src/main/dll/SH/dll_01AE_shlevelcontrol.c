@@ -102,10 +102,10 @@ void SH_LevelControl_setMusic(short* state);
 typedef struct ShLevelControlTables
 {
     s16 bloopGameBits[18]; /* bloop-minigame collected game bits */
-    s16 skyRampA[28];      /* env-fx ramp, passed 2nd to fn_80088870 (base+0x24) */
-    s16 skyRampB[28];      /* env-fx ramp, passed 1st to fn_80088870 (base+0x5c) */
-    s16 skyRampC[28];      /* env-fx ramp, passed 3rd to fn_80088870 (base+0x94) */
-    s16 skyRampD[28];      /* env-fx ramp, passed 4th to fn_80088870 (base+0xcc) */
+    s16 skyRampA[28];      /* env-fx ramp, passed 2nd to skySetEnvFxRampTables (base+0x24) */
+    s16 skyRampB[28];      /* env-fx ramp, passed 1st to skySetEnvFxRampTables (base+0x5c) */
+    s16 skyRampC[28];      /* env-fx ramp, passed 3rd to skySetEnvFxRampTables (base+0x94) */
+    s16 skyRampD[28];      /* env-fx ramp, passed 4th to skySetEnvFxRampTables (base+0xcc) */
 } ShLevelControlTables;
 
 ShLevelControlTables lbl_80327618 = {
@@ -926,14 +926,14 @@ void SH_LevelControl_update(GameObject* obj)
             (obj)->userData2 = 0;
             if ((obj)->userData1 == 2)
             {
-                fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
+                skySetEnvFxRampTables(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);
                 getEnvfxActImmediately(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
                 skyFn_80088e54(0, 0.0f);
             }
             else
             {
-                fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
+                skySetEnvFxRampTables(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x1f);
                 getEnvfxAct(0, 0, SHLEVELCONTROL_ENVFX_D, 0);
             }

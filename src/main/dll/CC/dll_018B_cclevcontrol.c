@@ -179,7 +179,7 @@ void cclevcontrol_init(int* obj)
     envfxTable = &lbl_80323548;
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = cclevcontrol_SeqFn;
-    fn_80088870((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
+    skySetEnvFxRampTables((char*)envfxTable + 0x38, envfxTable, (char*)envfxTable + 0x70, (char*)envfxTable + 0xa8);
     if (getSaveGameLoadStatus() != 0)
     {
         envFxActFn_800887f8(0x3f);
