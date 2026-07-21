@@ -14,7 +14,7 @@ typedef struct AramStreamBufferEntry
 
 STATIC_ASSERT(sizeof(AramStreamBufferEntry) == 0x10);
 
-extern u8 lbl_803D3F60[];
+extern AramTransferQueues lbl_803D3F60;
 
 extern u32 aramTop;
 extern u32 aramWrite;
@@ -76,20 +76,21 @@ void aramRemoveData(void* unused, u32 size)
  */
 void aramInitStreamBuffers(void)
 {
-    u8* base = lbl_803D3F60;
+    u8* base = (u8*)&lbl_803D3F60;
     AramStreamBufferEntry* buffers;
     u32 i;
 
     aramQueueWrite = 0;
     aramQueueValid = 0;
-    buffers = (AramStreamBufferEntry*)(base + 0x508);
+    buffers = (AramStreamBufferEntry*)(base + sizeof(AramTransferQueues));
     aramStreamFreeList = buffers;
 
     for (i = 1; i < ARAM_STREAM_BUFFER_COUNT; i++)
     {
-        ((AramStreamBufferEntry*)(base + 0x508))[i - 1].next = &((AramStreamBufferEntry*)(base + 0x508))[i];
+        ((AramStreamBufferEntry*)(base + sizeof(AramTransferQueues)))[i - 1].next =
+            &((AramStreamBufferEntry*)(base + sizeof(AramTransferQueues)))[i];
     }
-    ((AramStreamBufferEntry*)(base + 0x508))[i - 1].next = NULL;
+    ((AramStreamBufferEntry*)(base + sizeof(AramTransferQueues)))[i - 1].next = NULL;
     aramStream = aramTop;
 }
 
