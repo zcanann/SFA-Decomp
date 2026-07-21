@@ -39,6 +39,13 @@ typedef struct MacDataTables
     u32 auxBDirty[4];      /* 0x270 */
 } MacDataTables;
 
+STATIC_ASSERT(offsetof(MacDataTables, midi2TimeTab) == 0x1C);
+STATIC_ASSERT(offsetof(MacDataTables, auxAMask) == 0x220);
+STATIC_ASSERT(offsetof(MacDataTables, auxADirty) == 0x240);
+STATIC_ASSERT(offsetof(MacDataTables, auxBMask) == 0x250);
+STATIC_ASSERT(offsetof(MacDataTables, auxBDirty) == 0x270);
+STATIC_ASSERT(sizeof(MacDataTables) == 0x280);
+
 extern u8 lbl_8032EDD0[];
 extern u8 inpAuxB[];
 extern u8 inpAuxA[];
