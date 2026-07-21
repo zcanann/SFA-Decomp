@@ -248,7 +248,7 @@ void doNothing_beforeRenderObject(int a)
 }
 
 
-void fn_8002A5DC(GameObject* obj)
+void Obj_UpdateRollingRotation(GameObject* obj)
 {
     f32 m2[12];
     f32 rot[12];

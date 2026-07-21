@@ -16,7 +16,7 @@ void Obj_SetModelSlotIndex(GameObject* obj, int slotIndex);
 int objApplyVelocity(GameObject* obj);
 void Obj_RegisterEffectBox(GameObject* obj);
 void Obj_UnregisterEffectBox(GameObject* obj);
-void fn_8002A5DC(GameObject* obj);
+void Obj_UpdateRollingRotation(GameObject* obj);
 ObjPlacement* Obj_AllocObjectSetup(int size, int type);
 GameObject* loadObjectAtObject(GameObject* source, ObjPlacement* setup);
 GameObject* Obj_SetupObject(ObjPlacement* setup, int flags, int mapLayer, int objIndex, void* parent);

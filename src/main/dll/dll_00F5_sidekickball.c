@@ -484,7 +484,7 @@ u8 trickyBallMove(GameObject* obj)
         obj->anim.velocityY -= 0.05f * timeDelta;
     }
 
-    fn_8002A5DC(obj);
+    Obj_UpdateRollingRotation(obj);
     state->previousPosX = obj->anim.localPosX;
     state->previousPosY = obj->anim.localPosY;
     state->previousPosZ = obj->anim.localPosZ;
