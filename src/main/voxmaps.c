@@ -1213,66 +1213,75 @@ u8* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int y
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
     VoxMaps* vm = &gVoxMaps;
-    int gridX, gridY, bestVal, i, found, bestSlot, blockId, ay;
+    int zWorldOffset;
+    int gridX;
+    int gridZ;
+    int cellIndex;
+    int romListIndex;
+    int previousFreeDelay;
+    int bestTimer;
+    int slot;
+    int foundSlot;
+    int blockId;
+    int bestSlot;
     MapCellEntry* cell;
+    VoxMapSlotOrigin* origin;
 
-    ay = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
+    zWorldOffset = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
 
     gridX = fastFloorf((f32)(obj->x * 10 + 5 - gMapBlockOriginWorldX) / gVoxMapsBlockWorldSize);
-    gridY = fastFloorf((f32)ay / gVoxMapsBlockWorldSize);
+    gridZ = fastFloorf((f32)zWorldOffset / gVoxMapsBlockWorldSize);
 
     vm->blockOriginWorld[0] = gMapBlockOriginWorldX + gridX * 640;
-    vm->blockOriginWorld[1] = gMapBlockOriginWorldZ + gridY * 640;
-    vm->blockOriginGrid[0] = vm->blockOriginWorld[0] / 10;
-    vm->blockOriginGrid[1] = vm->blockOriginWorld[1] / 10;
+    vm->blockOriginWorld[1] = gMapBlockOriginWorldZ + gridZ * 640;
+    for (slot = 0; slot < 2; slot++)
+    {
+        vm->blockOriginGrid[slot] = vm->blockOriginWorld[slot] / 10;
+    }
 
     blockId = -1;
-    if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
+    if (mapGetBlockAtPos(gridX, gridZ, 0) != NULL)
     {
-        cell = mapGetCellEntry(gridX, gridY);
+        cell = mapGetCellEntry(gridX, gridZ);
         blockId = cell->blockId;
     }
     if (blockId != -1)
     {
-        found = -1;
-        for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
+        for (slot = 0, foundSlot = -1; slot < VOXMAP_SLOT_COUNT; slot++)
         {
-            if (blockId == vm->blockId[i])
+            if (blockId == vm->blockId[slot])
             {
-                found = i;
-                i = VOXMAP_SLOT_COUNT;
+                foundSlot = slot;
+                slot = VOXMAP_SLOT_COUNT;
             }
         }
-        if (found != -1)
+        if (foundSlot != -1)
         {
-            vm->timer[found] = 0;
+            vm->timer[foundSlot] = 0;
             vm->f58 = 0;
         }
         else
         {
-            int b8;
-            int b9;
-            VoxMapSlotOrigin* origin;
             bestSlot = -1;
-            bestVal = -1;
-            for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
+            bestTimer = -1;
+            for (slot = 0; slot < VOXMAP_SLOT_COUNT; slot++)
             {
-                u32 s = i;
-                if (gVoxMapsSlotInUse[s] == 0 && vm->timer[s] > bestVal)
+                u32 s = slot;
+                if (gVoxMapsSlotInUse[s] == 0 && vm->timer[s] > bestTimer)
                 {
                     bestSlot = s;
-                    bestVal = vm->timer[s];
+                    bestTimer = vm->timer[s];
                 }
             }
-            b8 = cell->cellIndex;
-            b9 = cell->romListIndex;
+            cellIndex = cell->cellIndex;
+            romListIndex = cell->romListIndex;
             if (vm->mapBuffer[bestSlot] != NULL)
             {
-                int saved = mmSetFreeDelay(0);
+                previousFreeDelay = mmSetFreeDelay(0);
                 mm_free(vm->mapBuffer[bestSlot]);
-                mmSetFreeDelay(saved);
+                mmSetFreeDelay(previousFreeDelay);
             }
-            vm->mapBuffer[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
+            vm->mapBuffer[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, romListIndex, cellIndex);
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
             origin = &vm->slotOrigin[bestSlot];
