@@ -106,6 +106,7 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
     ModelFileHeader* model;
     GasVentTableEntry* e;
     f32 zero;
+    DrExplodableState* st = (DrExplodableState*)state;
     struct
     {
         f32 v[3];
@@ -113,16 +114,16 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
     } s;
 
     e = (GasVentTableEntry*)gExplodableBreakRecipeTable;
-    objType = e[((DrExplodableState*)state)->recipeIndex].objType;
-    ((DrExplodableState*)state)->breakSfx = e[((DrExplodableState*)state)->recipeIndex].sfx;
-    entMode = e[((DrExplodableState*)state)->recipeIndex].mode;
+    objType = e[st->recipeIndex].objType;
+    st->breakSfx = e[st->recipeIndex].sfx;
+    entMode = e[st->recipeIndex].mode;
     if (objType != -1)
     {
         i13 = 0;
         c = (DrExplodableChunk*)state;
         i14 = 0;
         i8 = state;
-        for (; i13 < ((DrExplodableState*)state)->count6D4; i13++)
+        for (; i13 < st->count6D4; i13++)
         {
             *(u8*)(state + i13 + offsetof(DrExplodableState, spawnedFlags)) = 1;
             c->spinScale = entMode;
@@ -158,7 +159,7 @@ void explodable_buildFragments(GameObject* obj, int def, int skipCentroid, int s
             i14 += 4;
             i8 += 4;
         }
-        ((DrExplodableState*)state)->phase6E4 = ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0)
+        st->phase6E4 = ((u32)mainGetBit(((ExplodablePlacement*)def)->doneGameBit) != 0)
                                                     ? EXPLODABLE_PHASE_BREAKING
                                                     : EXPLODABLE_PHASE_WAIT;
     }
@@ -174,22 +175,23 @@ void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def)
     int max2;
     DrExplodableChunk* c = (DrExplodableChunk*)chunkSlot;
     int max;
+    ExplodablePlacement* d = (ExplodablePlacement*)def;
     f32 zero = 0.0f;
 
     vecRotateZXY((s16*)(def + 0x1a), &c->offX);
-    c->posX = c->offX * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posX;
-    c->posY = c->offY * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posY;
-    c->posZ = c->offZ * obj->anim.rootMotionScale + ((ExplodablePlacement*)def)->base.posZ;
-    c->rotX = ((ExplodablePlacement*)def)->rotX;
-    c->rotY = ((ExplodablePlacement*)def)->rotY;
-    c->rotZ = ((ExplodablePlacement*)def)->rotZ;
-    dx = c->offX - (f32)((ExplodablePlacement*)def)->originX;
-    dy = c->offY - (f32)((ExplodablePlacement*)def)->originY;
-    dz = c->offZ - (f32)((ExplodablePlacement*)def)->originZ;
+    c->posX = c->offX * obj->anim.rootMotionScale + d->base.posX;
+    c->posY = c->offY * obj->anim.rootMotionScale + d->base.posY;
+    c->posZ = c->offZ * obj->anim.rootMotionScale + d->base.posZ;
+    c->rotX = d->rotX;
+    c->rotY = d->rotY;
+    c->rotZ = d->rotZ;
+    dx = c->offX - (f32)d->originX;
+    dy = c->offY - (f32)d->originY;
+    dz = c->offZ - (f32)d->originZ;
     mag = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (mag != zero)
     {
-        scale = (f32)((ExplodablePlacement*)def)->launchForce / (5.0f * mag);
+        scale = (f32)d->launchForce / (5.0f * mag);
         if (dx != zero || dy != zero || dz != zero)
         {
             normalize(&dx, &dy, &dz);
@@ -201,7 +203,7 @@ void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def)
         c->spinX = (f32)(int)randomGetRange(0, max) / 50.0f;
         c->spinY = (f32)(int)randomGetRange(0, max) / 50.0f;
         c->spinZ = (f32)(int)randomGetRange(0, max) / 50.0f;
-        scale = (f32)((ExplodablePlacement*)def)->launchScale2 / 1000.0f;
+        scale = (f32)d->launchScale2 / 1000.0f;
         if (obj->anim.velocityX > 0.0f)
         {
             c->launchFlags |= 1;
@@ -230,16 +232,16 @@ void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def)
         c->vel2Y = dy * scale - 0.07f;
         c->vel2Z = dz * scale;
         {
-            int height = ((ExplodablePlacement*)def)->fragmentHeight;
+            int height = d->fragmentHeight;
             if (height != 0)
             {
                 c->height = height;
             }
         }
-        *(u32*)&c->launchDelayBase = ((ExplodablePlacement*)def)->launchDelayBase;
-        if (((ExplodablePlacement*)def)->launchDelayBase != 0)
+        *(u32*)&c->launchDelayBase = d->launchDelayBase;
+        if (d->launchDelayBase != 0)
         {
-            c->launchDelay = (int)(((ExplodablePlacement*)def)->launchDelayBase * (randomGetRange(0, 100) + 100)) / 200;
+            c->launchDelay = (int)(d->launchDelayBase * (randomGetRange(0, 100) + 100)) / 200;
         }
         else
         {
@@ -288,21 +290,25 @@ void explodable_update(GameObject* obj)
     int state;
     int status;
     int fragObj;
+    DrExplodableState* s;
+    ExplodablePlacement* d;
 
     state = *(int*)&(obj)->extra;
     def = *(int*)&(obj)->anim.placementData;
-    if (((DrExplodableState*)state)->phase6E4 != EXPLODABLE_PHASE_BROKEN)
+    s = (DrExplodableState*)state;
+    d = (ExplodablePlacement*)def;
+    if (s->phase6E4 != EXPLODABLE_PHASE_BROKEN)
     {
-        if (((DrExplodableState*)state)->phase6E4 == EXPLODABLE_PHASE_WAIT)
+        if (s->phase6E4 == EXPLODABLE_PHASE_WAIT)
         {
-            if ((u32)mainGetBit(((ExplodablePlacement*)def)->activateGameBit) != 0)
+            if ((u32)mainGetBit(d->activateGameBit) != 0)
             {
                 explodable_buildFragments(obj, def, 0, state);
-                if (((DrExplodableState*)state)->breakSfx != 0)
+                if (s->breakSfx != 0)
                 {
-                    Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->breakSfx & 0xffff);
+                    Sfx_PlayFromObject(obj, s->breakSfx & 0xffff);
                 }
-                ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BREAKING;
+                s->phase6E4 = EXPLODABLE_PHASE_BREAKING;
                 (obj)->anim.alpha = 0;
             }
             else
@@ -323,15 +329,15 @@ void explodable_update(GameObject* obj)
                     switch (status)
                     {
                     case 2:
-                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
+                        mainSetBits(d->doneGameBit, 1);
                         Obj_FreeObject(((DrExplodableState*)slotPtr)->children[0]);
                         ((DrExplodableState*)slotPtr)->children[0] = NULL;
                         break;
                     case 0:
-                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
-                        if ((((DrExplodableState*)state)->flags6CC & (1 << i)) == 0)
+                        mainSetBits(d->doneGameBit, 1);
+                        if ((s->flags6CC & (1 << i)) == 0)
                         {
-                            ((DrExplodableState*)state)->flags6CC |= 1 << i;
+                            s->flags6CC |= 1 << i;
                         }
                         break;
                     }
@@ -349,54 +355,57 @@ void explodable_init(GameObject* obj, int setup)
     int base;
     GasVentTableEntry* e;
     u32 count;
+    DrExplodableState* st;
+    ExplodablePlacement* su = (ExplodablePlacement*)setup;
 
     ObjGroup_AddObject(obj, EXPLODABLE_OBJ_GROUP);
     state = *(int*)&(obj)->extra;
-    count = ((ExplodablePlacement*)setup)->fragmentCount;
+    st = (DrExplodableState*)state;
+    count = su->fragmentCount;
     if (count == 0)
     {
         count = 1;
     }
-    ((DrExplodableState*)state)->count6D4 = count;
-    *(int*)&((DrExplodableState*)state)->flags6CC = 0;
-    ((DrExplodableState*)state)->children[0] = 0;
-    ((DrExplodableState*)state)->children[1] = 0;
-    ((DrExplodableState*)state)->children[2] = 0;
-    ((DrExplodableState*)state)->children[3] = 0;
-    ((DrExplodableState*)state)->children[4] = 0;
-    ((DrExplodableState*)state)->children[5] = 0;
-    ((DrExplodableState*)state)->children[6] = 0;
-    ((DrExplodableState*)state)->children[7] = 0;
-    ((DrExplodableState*)state)->children[8] = 0;
-    ((DrExplodableState*)state)->children[9] = 0;
-    ((DrExplodableState*)state)->children[10] = 0;
-    ((DrExplodableState*)state)->children[11] = 0;
-    ((DrExplodableState*)state)->children[12] = 0;
-    ((DrExplodableState*)state)->children[13] = 0;
-    ((DrExplodableState*)state)->children[14] = 0;
-    (obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
-    (obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
-    (obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
-    if ((u32)mainGetBit(((ExplodablePlacement*)setup)->doneGameBit) != 0)
+    st->count6D4 = count;
+    *(int*)&st->flags6CC = 0;
+    st->children[0] = 0;
+    st->children[1] = 0;
+    st->children[2] = 0;
+    st->children[3] = 0;
+    st->children[4] = 0;
+    st->children[5] = 0;
+    st->children[6] = 0;
+    st->children[7] = 0;
+    st->children[8] = 0;
+    st->children[9] = 0;
+    st->children[10] = 0;
+    st->children[11] = 0;
+    st->children[12] = 0;
+    st->children[13] = 0;
+    st->children[14] = 0;
+    (obj)->anim.rotX = su->rotX;
+    (obj)->anim.rotY = su->rotY;
+    (obj)->anim.rotZ = su->rotZ;
+    if ((u32)mainGetBit(su->doneGameBit) != 0)
     {
-        ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BROKEN;
+        st->phase6E4 = EXPLODABLE_PHASE_BROKEN;
     }
     for (base = 0; base < 16; base++)
     {
         if ((obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
         {
-            ((DrExplodableState*)state)->recipeIndex = base;
+            st->recipeIndex = base;
             break;
         }
     }
-    if (((ExplodablePlacement*)setup)->scaleParam == 0)
+    if (su->scaleParam == 0)
     {
-        ((ExplodablePlacement*)setup)->scaleParam = 0x14;
+        su->scaleParam = 0x14;
     }
     (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
-                                  (f32)(int)((ExplodablePlacement*)setup)->scaleParam / 20.0f;
+                                  (f32)(int)su->scaleParam / 20.0f;
     e = gExplodableBreakRecipeTable;
-    if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
+    if ((e[st->recipeIndex].flags & 1) != 0)
     {
         (obj)->objectFlags |= EXPLODABLE_OBJFLAG_HIDDEN;
     }

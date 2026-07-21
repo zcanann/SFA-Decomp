@@ -46,6 +46,7 @@ void ExplodeAnimator_update(int* obj)
     int i;
     u8* sub;
     u8* def;
+    ExplodeanimatorPlacement* d;
     PartFxSpawnParams buf;
     f32 vel[2];
 
@@ -53,24 +54,20 @@ void ExplodeAnimator_update(int* obj)
     if ((sub[2] & 1) != 0)
         return;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (mainGetBit(((ExplodeanimatorPlacement*)def)->triggerGameBit) == 0)
+    d = (ExplodeanimatorPlacement*)def;
+    if (mainGetBit(d->triggerGameBit) == 0)
         return;
-    mainSetBits(((ExplodeanimatorPlacement*)def)->resultGameBit, 1);
+    mainSetBits(d->resultGameBit, 1);
     sub[2] = (u8)(sub[2] | 1);
     {
         for (i = 0; i < def[0x2c]; i++)
         {
-            vel[0] = 0.01f * (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->velXMin,
-                                                      ((ExplodeanimatorPlacement*)def)->velXMax);
-            vel[1] = 0.01f * (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->velYMin,
-                                                      ((ExplodeanimatorPlacement*)def)->velYMax);
-            buf.posX = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posXMin,
-                                                ((ExplodeanimatorPlacement*)def)->posXMax);
-            buf.posY = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posYMin,
-                                                ((ExplodeanimatorPlacement*)def)->posYMax);
-            buf.posZ = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement*)def)->posZMin,
-                                                ((ExplodeanimatorPlacement*)def)->posZMax);
-            (*gPartfxInterface)->spawnObject(obj, ((ExplodeanimatorPlacement*)def)->effectId, &buf, 2, -1, vel);
+            vel[0] = 0.01f * (f32)(s32)randomGetRange(d->velXMin, d->velXMax);
+            vel[1] = 0.01f * (f32)(s32)randomGetRange(d->velYMin, d->velYMax);
+            buf.posX = (f32)(s32)randomGetRange(d->posXMin, d->posXMax);
+            buf.posY = (f32)(s32)randomGetRange(d->posYMin, d->posYMax);
+            buf.posZ = (f32)(s32)randomGetRange(d->posZMin, d->posZMax);
+            (*gPartfxInterface)->spawnObject(obj, d->effectId, &buf, 2, -1, vel);
         }
     }
 }

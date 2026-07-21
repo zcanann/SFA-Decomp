@@ -127,12 +127,13 @@ void animsharpclaw_update(GameObject* obj)
             for (i = 0, kindExt = (int)(s8)kind; i < count; i++)
             {
                 int other = *objList;
-                if (((GameObject*)other)->seqIndex == kind)
+                GameObject* o = (GameObject*)other;
+                if (o->seqIndex == kind)
                 {
                     found = other;
                 }
-                if (((GameObject*)other)->seqIndex == -2 && ((GameObject*)other)->anim.classId == 0x10 &&
-                    kindExt == *(s8*)((char*)*(int**)&((GameObject*)other)->extra + 0x57))
+                if (o->seqIndex == -2 && o->anim.classId == 0x10 &&
+                    kindExt == *(s8*)((char*)*(int**)&o->extra + 0x57))
                 {
                     matchCount++;
                 }
@@ -152,31 +153,34 @@ void animsharpclaw_init(GameObject* obj, u8* init)
 {
     int* inner;
     int prevLinkCount;
+    AnimsharpclawState* st;
+    AnimsharpclawPlacement* pl = (AnimsharpclawPlacement*)init;
 
     obj->animEventCallback = NULL;
     objSetSlot(obj, 0x64);
     inner = obj->extra;
-    ((AnimsharpclawState*)inner)->unk6A = ((AnimsharpclawPlacement*)init)->unk1A;
-    ((AnimsharpclawState*)inner)->unk6E = -1;
-    ((AnimsharpclawState*)inner)->dampingFactor = 1.0f / (1.0f + (f32)(u32)init[0x24]);
-    ((AnimsharpclawState*)inner)->unk28 = -1;
-    ((AnimsharpclawState*)inner)->unk98 = 0;
-    ((AnimsharpclawState*)inner)->unk94 = 0;
+    st = (AnimsharpclawState*)inner;
+    st->unk6A = pl->unk1A;
+    st->unk6E = -1;
+    st->dampingFactor = 1.0f / (1.0f + (f32)(u32)init[0x24]);
+    st->unk28 = -1;
+    st->unk98 = 0;
+    st->unk94 = 0;
     obj->userData2 = -1;
     prevLinkCount = obj->userData1;
-    if (prevLinkCount == 0 && ((AnimsharpclawPlacement*)init)->linkIndex != 1)
+    if (prevLinkCount == 0 && pl->linkIndex != 1)
     {
         (*gObjectTriggerInterface)->loadAnimData((u8*)inner, init);
-        obj->userData1 = ((AnimsharpclawPlacement*)init)->linkIndex + 1;
+        obj->userData1 = pl->linkIndex + 1;
     }
-    else if (prevLinkCount != 0 && ((AnimsharpclawPlacement*)init)->linkIndex != prevLinkCount - 1)
+    else if (prevLinkCount != 0 && pl->linkIndex != prevLinkCount - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)inner);
-        if (((AnimsharpclawPlacement*)init)->linkIndex != -1)
+        if (pl->linkIndex != -1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)inner, init);
         }
-        obj->userData1 = ((AnimsharpclawPlacement*)init)->linkIndex + 1;
+        obj->userData1 = pl->linkIndex + 1;
     }
     if (obj->anim.modelState != NULL)
     {
