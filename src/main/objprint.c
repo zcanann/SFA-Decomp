@@ -1200,7 +1200,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             f32 dist = sqrtf(dx * dx + dy * dy);
             int minB;
             int negA;
-            char* p;
+            ObjJointTrackChannel* channel;
             s16* ap;
             f32 prodB;
             int prodBi;
@@ -1221,7 +1221,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
 
             a = (s16)(gObjPrintDegToAngle * a);
-            p = (char*)p3;
+            channel = p3;
             ap = ang;
             prodB = gObjPrintDegToAngle * b;
             prodBi = (s32)prodB;
@@ -1231,7 +1231,7 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
             {
                 int v;
                 int w;
-                *ap -= ((ObjSoundState*)p)->pitch;
+                *ap -= channel->angle;
                 v = *ap;
                 if (v < minB)
                 {
@@ -1246,16 +1246,16 @@ void fn_8003ADC4(GameObject* obj, void* tgt, void* p3, int a, u8 inv, int b)
                     w = (s16)v;
                 }
                 *ap = (s16)w;
-                ((ObjSoundState*)p)->pitch += *ap;
-                if (((ObjSoundState*)p)->pitch > a)
+                channel->angle += *ap;
+                if (channel->angle > a)
                 {
-                    ((ObjSoundState*)p)->pitch = a;
+                    channel->angle = a;
                 }
-                if (((ObjSoundState*)p)->pitch < negA)
+                if (channel->angle < negA)
                 {
-                    ((ObjSoundState*)p)->pitch = negA;
+                    channel->angle = negA;
                 }
-                p += 0x30;
+                channel++;
                 ap++;
             } while (ap != ang + 2);
             found[0][1] = *(s16*)((u8*)p3 + 0x14);
