@@ -313,9 +313,11 @@ void renderClouds(int a, int b, int c, int d)
         c1 = 1.0f;
         GXPos3f32(-gCloudActionGlareQuadSize[0], -gCloudActionGlareQuadSize[0], c0);
         GXTex2f32(c0, c0);
-        GXPos3f32(gCloudActionGlareQuadSize[0], -gCloudActionGlareQuadSize[0], c0);
+        v = -gCloudActionGlareQuadSize[0];
+        GXPos3f32(gCloudActionGlareQuadSize[0], v, c0);
         GXTex2f32(c1, c0);
-        GXPos3f32(gCloudActionGlareQuadSize[0], gCloudActionGlareQuadSize[0], c0);
+        v = gCloudActionGlareQuadSize[0];
+        GXPos3f32(gCloudActionGlareQuadSize[0], v, c0);
         GXTex2f32(c1, c1);
         GXPos3f32(-gCloudActionGlareQuadSize[0], gCloudActionGlareQuadSize[0], c0);
         GXTex2f32(c0, c1);
