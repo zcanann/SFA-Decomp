@@ -60,7 +60,7 @@ void CameraModeBike_update(CameraObject* camera)
     float mtxBuf[17];
 
     (*gCameraInterface)->getDefaultHandlerEntry();
-    target = (GameObject*)camera->anim.targetObj;
+    target = camera->anim.targetObj;
     if (target != NULL)
     {
         camera->fov = (85.0f);
@@ -77,7 +77,7 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.rotX = angleDelta;
         st = gCamTalkBikeState;
         st->smoothedYawOffset += (0.1f) * ((f32)((12.0f) * st->turnInput) - st->smoothedYawOffset);
-        camera->anim.rotX = (f32)(s32)camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset;
+        camera->anim.rotX = camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset;
         targetAngle = (int)((3072.0f) - gCamTalkBikeState->pitchTarget);
         angleDelta = targetAngle - (u16)camera->anim.rotY;
         if (0x8000 < angleDelta)
@@ -89,10 +89,10 @@ void CameraModeBike_update(CameraObject* camera)
             angleDelta = angleDelta + 0xFFFF;
         }
         camera->anim.rotY += (angleDelta >> 3);
-        sinYaw = mathSinf((3.1415927f) * (f32)(s32)((int)camera->anim.rotX - 0x4000) / (32768.0f));
-        cosYaw = mathCosf((3.1415927f) * (f32)(s32)((int)camera->anim.rotX - 0x4000) / (32768.0f));
-        cosPitch = mathCosf((3.1415927f) * (f32)(s32)camera->anim.rotY / (32768.0f));
-        sinPitch = mathSinf((3.1415927f) * (f32)(s32)camera->anim.rotY / (32768.0f));
+        sinYaw = mathSinf((3.1415927f) * (camera->anim.rotX - 0x4000) / (32768.0f));
+        cosYaw = mathCosf((3.1415927f) * (camera->anim.rotX - 0x4000) / (32768.0f));
+        cosPitch = mathCosf((3.1415927f) * camera->anim.rotY / (32768.0f));
+        sinPitch = mathSinf((3.1415927f) * camera->anim.rotY / (32768.0f));
         st = gCamTalkBikeState;
         heightT = -st->heightInput / (6.0f);
         kFollowA = lbl_803E17A8;
