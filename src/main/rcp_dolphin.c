@@ -963,9 +963,9 @@ typedef struct RcpDistortConfig
     f32 radius;
     f32 strength;
 } RcpDistortConfig;
-extern RcpDistortConfig lbl_8030D028[6];
+extern RcpDistortConfig gRcpDistortConfigs[6];
 
-void initFn_800534f8(void)
+void Rcp_InitDistortionEffects(void)
 {
     int i;
     RcpDistortSlot* slots;
@@ -985,7 +985,7 @@ void initFn_800534f8(void)
         slots[i].group = 0;
     }
     gRcpDistortSlotIndex = i = 0;
-    cfg = &lbl_8030D028[0].radius;
+    cfg = &gRcpDistortConfigs[0].radius;
     slots = gRcpDistortSlots;
     radiusScale = gRcpDistortScaleA;
     strengthScale = 255.0f;
@@ -2141,7 +2141,7 @@ TevSwapEntry gRcpTevSwapTable[24] = {
     {1, 0, 1}, {0, 1, 1}, {2, 2, 0}, {2, 0, 2}, {0, 2, 2}, {2, 2, 1}, {2, 1, 2}, {1, 2, 2},
 };
 
-RcpDistortConfig lbl_8030D028[6] ALIGN_DECL(8) = {
+RcpDistortConfig gRcpDistortConfigs[6] ALIGN_DECL(8) = {
     {0.5f, 1.0f}, {0.5f, 0.5f}, {0.4f, 1.0f}, {0.3f, 0.8f}, {0.2f, 1.0f}, {0.4f, 0.5f},
 };
 u8 Rcp_GetViewFinderHudEnabled(void)

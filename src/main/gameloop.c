@@ -1451,7 +1451,7 @@ void init(void)
     gMinimapInterface = Resource_Acquire(0x31, 2);
     gCarryableInterface = Resource_Acquire(0x2f, 0xc);
     gTitleMenuItemInterface = Resource_Acquire(0x3d, 0xa);
-    initFn_800534f8();
+    Rcp_InitDistortionEffects();
     initSkyStars();
     testAndSet_onlyUseHeap3(0);
     loadAssetFileById(&gGameBitTable, MLDF_FILEID_BITTABLE_BIN);
