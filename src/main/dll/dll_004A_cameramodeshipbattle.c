@@ -79,9 +79,11 @@ void CameraModeShipBattle_update(short* cam)
         gCamShipBattleState->startVerticalOffset = gCamShipBattleState->verticalOffset;
         gCamShipBattleState->blendTimer = lbl_803E1954;
     }
-    if (gCamShipBattleState->blendTimer < (fa = lbl_803E195C))
+    fb = gCamShipBattleState->blendTimer;
+    fa = lbl_803E195C;
+    if (fb < fa)
     {
-        gCamShipBattleState->blendTimer = gCamShipBattleBlendRate * timeDelta + gCamShipBattleState->blendTimer;
+        gCamShipBattleState->blendTimer = gCamShipBattleBlendRate * timeDelta + fb;
         if (gCamShipBattleState->blendTimer > fa)
         {
             gCamShipBattleState->blendTimer = fa;
