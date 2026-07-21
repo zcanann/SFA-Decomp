@@ -16,13 +16,9 @@
 /* object group: side-repel object */
 #define SIDEREPEL_OBJGROUP 0x40
 
-#define SIDEREPEL_OBJFLAG_UPDATE_DISABLED    0x8000
-#define SIDEREPEL_OBJFLAG_HIDDEN             0x4000
-#define SIDEREPEL_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 int siderepel_getExtraSize(void)
 {
-    return 0x1;
+    return sizeof(SideRepelState);
 }
 
 void siderepel_free(GameObject* obj)
@@ -34,7 +30,7 @@ void siderepel_init(GameObject* obj, SideRepelPlacement* placement)
 {
     obj->objectFlags =
         obj->objectFlags |
-        (SIDEREPEL_OBJFLAG_UPDATE_DISABLED | SIDEREPEL_OBJFLAG_HIDDEN | SIDEREPEL_OBJFLAG_HITDETECT_DISABLED);
+        (OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
     ObjGroup_AddObject((int)obj, SIDEREPEL_OBJGROUP);
     if (obj->anim.hitReactState != NULL)
     {

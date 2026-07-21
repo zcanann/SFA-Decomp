@@ -12,16 +12,16 @@
  */
 typedef struct SideRepelPlacement
 {
-    ObjPlacement head; /* 0x00: common placement head */
+    ObjPlacement base; /* 0x00: common placement head */
     u16 radius;        /* 0x18: hit-sphere radius source */
 } SideRepelPlacement;
 
 typedef struct SideRepelState
 {
-    u8 unk0;
+    u8 reserved;
 } SideRepelState;
 
-STATIC_ASSERT(offsetof(SideRepelPlacement, head) == 0x0);
+STATIC_ASSERT(offsetof(SideRepelPlacement, base) == 0x0);
 STATIC_ASSERT(offsetof(SideRepelPlacement, radius) == 0x18);
 STATIC_ASSERT(sizeof(SideRepelPlacement) == 0x1C);
 STATIC_ASSERT(sizeof(SideRepelState) == 0x1);
