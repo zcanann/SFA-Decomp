@@ -2870,7 +2870,7 @@ void dvdReadCb_80041d30(s32 result, DVDFileInfo* fileInfo)
 #define DVD_STATE_CANCELED      10
 #define DVD_STATE_RETRY         11
 
-int fn_80041D98(DVDCommandBlock* block)
+s32 ObjLoad_GetDvdCommandBlockStatus(DVDCommandBlock* block)
 {
     s32 status;
     if (block == NULL)

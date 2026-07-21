@@ -725,13 +725,19 @@ s16 sMapFileNameAdjacencyTable[] = {
 
 
 void* jumptable_802CBE94[13] = {
-    (void*)((u8*)fn_80041D98 + 0x44), (void*)((u8*)fn_80041D98 + 0x48),
-    (void*)((u8*)fn_80041D98 + 0x4C), (void*)((u8*)fn_80041D98 + 0x50),
-    (void*)((u8*)fn_80041D98 + 0x54), (void*)((u8*)fn_80041D98 + 0x58),
-    (void*)((u8*)fn_80041D98 + 0x5C), (void*)((u8*)fn_80041D98 + 0x60),
-    (void*)((u8*)fn_80041D98 + 0x64), (void*)((u8*)fn_80041D98 + 0x68),
-    (void*)((u8*)fn_80041D98 + 0x6C), (void*)((u8*)fn_80041D98 + 0x70),
-    (void*)((u8*)fn_80041D98 + 0x74),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x44),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x48),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x4C),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x50),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x54),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x58),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x5C),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x60),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x64),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x68),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x6C),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x70),
+    (void*)((u8*)ObjLoad_GetDvdCommandBlockStatus + 0x74),
 };
 
 void* jumptable_802CBEC8[73] = {

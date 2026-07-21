@@ -22,6 +22,6 @@ void modelsReadCb(s32 result, DVDFileInfo* fileInfo);
 void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo);
 void dvdReadCb_80041d30(s32 result, DVDFileInfo* fileInfo);
 void romListReadCb(s32 result, DVDFileInfo* fileInfo);
-int fn_80041D98(DVDCommandBlock* block);
+s32 ObjLoad_GetDvdCommandBlockStatus(DVDCommandBlock* block);
 
 #endif /* MAIN_OBJPRINT_LOAD_API_H_ */
