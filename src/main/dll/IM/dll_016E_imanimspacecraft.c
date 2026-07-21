@@ -20,34 +20,30 @@
 #include "main/dll/IM/dll_016E_imanimspacecraft.h"
 #include "main/object_descriptor.h"
 
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-/* state->flags */
 #define ANIMSPACECRAFT_PARTFX        0x133
 #define ANIMSPACECRAFT_FLAG_BLINK_ON 0x2
 #define ANIMSPACECRAFT_FLAG_TOGGLE_8 0x8
 #define ANIMSPACECRAFT_FLAG_TOGGLE_4 0x4
 
-/* state->maskBits: bits 4..6 toggled together as one group */
+/* state->submodelMask: bits 4..6 toggled together as one group */
 #define ANIMSPACECRAFT_MASK_GROUP 0x70
 
-char lbl_803AC948[0x18];
+PartFxSpawnParams gIMAnimSpacecraftPartFxParams;
 
 void imanimspacecraft_modelMtxFn(void)
 {
 }
 
-/* vtable slot 0x0B: reports whether the spacecraft's ANIMSPACECRAFT_FLAG_TOGGLE_4
-   flag bit is set. */
-u32 imanimspacecraft_func0B(int* obj)
+u32 imanimspacecraft_getEventFlag(GameObject* obj)
 {
-    return ((ImAnimSpacecraftState*)((GameObject*)obj)->extra)->flags & ANIMSPACECRAFT_FLAG_TOGGLE_4;
+    ImAnimSpacecraftState* state = obj->extra;
+    return state->eventFlags & ANIMSPACECRAFT_FLAG_TOGGLE_4;
 }
 
-int imanimspacecraft_setScale(int* obj, int bitIdx)
+int imanimspacecraft_setScale(GameObject* obj, int bitIdx)
 {
-    ImAnimSpacecraftState* state = (ImAnimSpacecraftState*)((GameObject*)obj)->extra;
-    switch (state->maskBits & (1 << bitIdx))
+    ImAnimSpacecraftState* state = obj->extra;
+    switch (state->submodelMask & (1 << bitIdx))
     {
     default:
         return TRUE;
@@ -55,16 +51,6 @@ int imanimspacecraft_setScale(int* obj, int bitIdx)
         return FALSE;
     }
 }
-
-int imanimspacecraft_getExtraSize(void);
-int imanimspacecraft_getObjectTypeId(void);
-void imanimspacecraft_free(GameObject* obj);
-void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-void imanimspacecraft_hitDetect(void);
-void imanimspacecraft_update(GameObject* obj);
-void imanimspacecraft_init(GameObject* obj);
-void imanimspacecraft_release(void);
-void imanimspacecraft_initialise(void);
 
 ObjectDescriptor13 gIMAnimSpaceCraftObjDescriptor = {
     0,
@@ -82,43 +68,43 @@ ObjectDescriptor13 gIMAnimSpaceCraftObjDescriptor = {
     (ObjectDescriptorCallback)imanimspacecraft_getObjectTypeId,
     imanimspacecraft_getExtraSize,
     (ObjectDescriptorCallback)imanimspacecraft_setScale,
-    (ObjectDescriptorCallback)imanimspacecraft_func0B,
+    (ObjectDescriptorCallback)imanimspacecraft_getEventFlag,
     (ObjectDescriptorCallback)imanimspacecraft_modelMtxFn,
 };
 
-int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int imanimspacecraft_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     ImAnimSpacecraftState* state;
     int i;
     ObjTextureRuntimeSlot* tex;
 
-    state = ((GameObject*)obj)->extra;
-    tex = objFindTexture((GameObject*)(obj), 1, 0);
-    tex->textureId = ((state->flags >> 1 & 1) ^ 1) << 8;
-    if (!(state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON))
+    state = obj->extra;
+    tex = objFindTexture(obj, 1, 0);
+    tex->textureId = ((state->eventFlags >> 1 & 1) ^ 1) << 8;
+    if (!(state->eventFlags & ANIMSPACECRAFT_FLAG_BLINK_ON))
     {
         if ((state->blinkTimer -= framesThisStep) < 0)
         {
-            state->flags |= ANIMSPACECRAFT_FLAG_BLINK_ON;
+            state->eventFlags |= ANIMSPACECRAFT_FLAG_BLINK_ON;
             state->blinkTimer = 0x78;
         }
     }
     else
     {
-        state->flags &= ~ANIMSPACECRAFT_FLAG_BLINK_ON;
+        state->eventFlags &= ~ANIMSPACECRAFT_FLAG_BLINK_ON;
     }
-    if (state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON)
+    if (state->eventFlags & ANIMSPACECRAFT_FLAG_BLINK_ON)
     {
-        ((PartFxSpawnParams*)lbl_803AC948)->posX = 143.0f;
-        ((PartFxSpawnParams*)lbl_803AC948)->posY = 16.0f;
-        ((PartFxSpawnParams*)lbl_803AC948)->posZ = -79.0f;
-        (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
-        ((PartFxSpawnParams*)lbl_803AC948)->posX = -143.0f;
-        ((PartFxSpawnParams*)lbl_803AC948)->posY = 16.0f;
-        ((PartFxSpawnParams*)lbl_803AC948)->posZ = -79.0f;
-        (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
+        gIMAnimSpacecraftPartFxParams.posX = 143.0f;
+        gIMAnimSpacecraftPartFxParams.posY = 16.0f;
+        gIMAnimSpacecraftPartFxParams.posZ = -79.0f;
+        (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, &gIMAnimSpacecraftPartFxParams, 4, -1, NULL);
+        gIMAnimSpacecraftPartFxParams.posX = -143.0f;
+        gIMAnimSpacecraftPartFxParams.posY = 16.0f;
+        gIMAnimSpacecraftPartFxParams.posZ = -79.0f;
+        (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, &gIMAnimSpacecraftPartFxParams, 4, -1, NULL);
     }
-    tex = objFindTexture((GameObject*)(obj), 0, 0);
+    tex = objFindTexture(obj, 0, 0);
     tex->textureId = 0x100;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -126,25 +112,25 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         switch (ev)
         {
         case 1:
-            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
+            state->submodelMask = (u8)(state->submodelMask ^ (1 << (ev - 1)));
             break;
         case 2:
-            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
+            state->submodelMask = (u8)(state->submodelMask ^ (1 << (ev - 1)));
             break;
         case 3:
-            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
+            state->submodelMask = (u8)(state->submodelMask ^ (1 << (ev - 1)));
             break;
         case 4:
-            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
+            state->submodelMask = (u8)(state->submodelMask ^ (1 << (ev - 1)));
             break;
         case 5:
-            state->maskBits = (u8)(state->maskBits ^ ANIMSPACECRAFT_MASK_GROUP);
+            state->submodelMask = (u8)(state->submodelMask ^ ANIMSPACECRAFT_MASK_GROUP);
             break;
         case 6:
-            state->flags = (u8)(state->flags ^ ANIMSPACECRAFT_FLAG_TOGGLE_8);
+            state->eventFlags = (u8)(state->eventFlags ^ ANIMSPACECRAFT_FLAG_TOGGLE_8);
             break;
         case 7:
-            state->flags = (u8)(state->flags ^ ANIMSPACECRAFT_FLAG_TOGGLE_4);
+            state->eventFlags = (u8)(state->eventFlags ^ ANIMSPACECRAFT_FLAG_TOGGLE_4);
             break;
         }
     }
@@ -153,7 +139,7 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 int imanimspacecraft_getExtraSize(void)
 {
-    return 0x4;
+    return sizeof(ImAnimSpacecraftState);
 }
 int imanimspacecraft_getObjectTypeId(void)
 {
@@ -165,11 +151,11 @@ void imanimspacecraft_free(GameObject* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+void imanimspacecraft_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void imanimspacecraft_hitDetect(void)
@@ -188,9 +174,9 @@ void imanimspacecraft_init(GameObject* obj)
     f32 pos;
     obj->animEventCallback = imanimspacecraft_SeqFn;
     pos = 0.0f;
-    ((PartFxSpawnParams*)lbl_803AC948)->posX = pos;
-    ((PartFxSpawnParams*)lbl_803AC948)->posY = pos;
-    ((PartFxSpawnParams*)lbl_803AC948)->posZ = pos;
+    gIMAnimSpacecraftPartFxParams.posX = pos;
+    gIMAnimSpacecraftPartFxParams.posY = pos;
+    gIMAnimSpacecraftPartFxParams.posZ = pos;
     mainSetBits(GAMEBIT_IM_Unk0BEB, 1);
     mainSetBits(GAMEBIT_IM_Unk0BEC, 1);
     mainSetBits(GAMEBIT_IM_Unk0BED, 1);
