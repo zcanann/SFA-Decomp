@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/voice_manage.h"
@@ -170,9 +171,9 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
         }
 
         slotBase = (SynthVoiceListNode*)((u8*)voiceLists + selectedVoice * 4);
-        if (slotBase[944].user == 1)
+        if (slotBase[offsetof(VidListTables, freeList) / sizeof(*slotBase)].user == 1)
         {
-            freeSlot = (SynthVoiceListNode*)((u8*)slotBase + 3776);
+            freeSlot = (SynthVoiceListNode*)((u8*)slotBase + offsetof(VidListTables, freeList));
             i = freeSlot->prev;
 
             if (i != SYNTH_INVALID_VOICE_U8)
