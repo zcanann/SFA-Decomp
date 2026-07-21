@@ -57,9 +57,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/obj_path.h"
-#define OBJ_YAW_DELTA_RETURNS_S16
 #include "main/obj_query.h"
-#undef OBJ_YAW_DELTA_RETURNS_S16
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/dll/dll_0242_dbstealerworm.h"
