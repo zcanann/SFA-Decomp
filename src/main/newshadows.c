@@ -1073,17 +1073,17 @@ void renderShadows(int unused0, int unused1, int unused2)
 
 extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 
-void shadowCreate(int* obj)
+void queueObjectShadow(GameObject* obj)
 {
     CameraViewSlot* cam;
     f32 dx, dy, dz, dist2;
     if (gNewShadowCasterCount < NEW_SHADOW_MAX_QUEUED_CASTERS)
     {
-        gNewShadowCasterTable[gNewShadowCasterCount].obj = (GameObject*)obj;
+        gNewShadowCasterTable[gNewShadowCasterCount].obj = obj;
         cam = gNewShadowCurrentViewSlot;
-        dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
-        dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
-        dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
+        dx = obj->anim.worldPosX - cam->x;
+        dy = obj->anim.worldPosY - cam->y;
+        dz = obj->anim.worldPosZ - cam->z;
         dist2 = dx * dx + dy * dy + dz * dz;
         if (dist2 > lbl_803DED28)
         {
@@ -1095,11 +1095,11 @@ void shadowCreate(int* obj)
             root = (f32)(dist2 * guess);
             dist2 = root;
         }
-        gNewShadowCasterTable[gNewShadowCasterCount].scale = ((GameObject*)obj)->anim.modelState->shadowScale / dist2;
-        if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
+        gNewShadowCasterTable[gNewShadowCasterCount].scale = obj->anim.modelState->shadowScale / dist2;
+        if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
         {
             gNewShadowCasterTable[gNewShadowCasterCount].flags = 1;
-            if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
+            if (obj->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
             {
                 gNewShadowCasterTable[gNewShadowCasterCount].flags = 2;
                 gNewShadowCasterTable[gNewShadowCasterCount].scale = lbl_803DED90;

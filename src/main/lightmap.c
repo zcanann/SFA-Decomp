@@ -511,7 +511,7 @@ void getVisibleObjects(s8* opacity)
                     t = ((ObjAnimComponent*)o)->modelInstance->shadowType;
                     if (t == 2 || t == 1)
                     {
-                        shadowCreate((int*)o);
+                        queueObjectShadow((GameObject*)o);
                     }
                     else if (t == 4)
                     {
