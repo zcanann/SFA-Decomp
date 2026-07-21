@@ -23,73 +23,48 @@
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 #include "main/audio/sfx.h"
-#define UNK0109_HIT_VOLUME_SLOT 5
+#include "main/dll/dll_0109_unk.h"
 
-#define UNK_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-/* per-object extra block; 0xA is the object phase enum
-   (0=carrying/active, 1=just broke, 2=respawning) */
-typedef struct Dll109State
-{
-    u8 pad0[0xa];
-    u8 phase;
-    u8 padB;
-    f32 timer;
-} Dll109State;
-
-typedef enum Dll109Phase
-{
-    DLL109_PHASE_INTACT = 0,     /* carryable/active; waits for a priority hit */
-    DLL109_PHASE_BREAKING = 1,   /* just broke: spawn debris, disable, snap to placement */
-    DLL109_PHASE_RESPAWNING = 2, /* respawn timer + off-screen wait, then reset */
-} Dll109Phase;
+#define BREAKABLE_CARRYABLE_HIT_VOLUME_SLOT 5
+#define BREAKABLE_CARRYABLE_OBJECT_FLAG_HITDETECT_DISABLED 0x2000
 
 /* Replacement object dropped at break; retail OBJECTS.bin name
    "DIMExplosio..." (DLL 0x1CA). */
-#define DLL109_CHILD_OBJ_DIM_EXPLOSION 0x253
+#define BREAKABLE_CARRYABLE_CHILD_DIM_EXPLOSION 0x253
 
-typedef struct Dll109MapData
+int breakableCarryable_getExtraSize(void)
 {
-    ObjPlacement base;
-    u8 pad18[0x1a - 0x18];
-    u8 rotX; /* 0x1a: rotX in 1/256 turns */
-} Dll109MapData;
-
-STATIC_ASSERT(offsetof(Dll109MapData, rotX) == 0x1a);
-
-int dll_109_getExtraSize_ret_16(void)
-{
-    return 0x10;
+    return sizeof(BreakableCarryableState);
 }
-int dll_109_getObjectTypeId(void)
+int breakableCarryable_getObjectTypeId(void)
 {
     return 0x0;
 }
 
-void dll_109_free(int obj)
+void breakableCarryable_free(GameObject* obj)
 {
-    (*gCarryableInterface)->free((GameObject*)obj);
+    (*gCarryableInterface)->free(obj);
 }
 
-void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+void breakableCarryable_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    Dll109State* state = ((GameObject*)obj)->extra;
-    if (state->phase == DLL109_PHASE_INTACT)
+    BreakableCarryableState* state = obj->extra;
+    if (state->phase == BREAKABLE_CARRYABLE_PHASE_INTACT)
     {
-        if ((*gCarryableInterface)->updateRenderState((GameObject*)obj, visible) != 0)
+        if ((*gCarryableInterface)->updateRenderState(obj, visible) != 0)
         {
-            objRenderModelAndHitVolumes((GameObject*)obj, p1, p2, p3, p4, 1.0f);
+            objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
         }
     }
 }
 
-void dll_109_hitDetect_nop(void)
+void breakableCarryable_hitDetect(void)
 {
 }
 
-void carryable_break_respawn_update(GameObject* obj)
+void breakableCarryable_update(GameObject* obj)
 {
-    Dll109State* state;
+    BreakableCarryableState* state;
     ObjPlacement* placement;
     ObjPlacement* setup;
     u32 hitVolume;
@@ -98,17 +73,17 @@ void carryable_break_respawn_update(GameObject* obj)
     placement = (ObjPlacement*)(obj)->anim.placementData;
     switch (state->phase)
     {
-    case DLL109_PHASE_INTACT:
+    case BREAKABLE_CARRYABLE_PHASE_INTACT:
         (*gCarryableInterface)->updateHeld(obj, state);
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0)
         {
             (*gCarryableInterface)->stopCarrying(obj, state);
             Sfx_PlayFromObject((int)obj, SFXTRIG_crtsmsh6);
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0x28);
-            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, UNK0109_HIT_VOLUME_SLOT, 4, 0);
+            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, BREAKABLE_CARRYABLE_HIT_VOLUME_SLOT, 4, 0);
             if (Obj_IsLoadingLocked() != 0)
             {
-                setup = Obj_AllocObjectSetup(0x24, DLL109_CHILD_OBJ_DIM_EXPLOSION);
+                setup = Obj_AllocObjectSetup(0x24, BREAKABLE_CARRYABLE_CHILD_DIM_EXPLOSION);
                 setup->posX = (obj)->anim.localPosX;
                 setup->posY = (obj)->anim.localPosY;
                 setup->posZ = (obj)->anim.localPosZ;
@@ -116,47 +91,47 @@ void carryable_break_respawn_update(GameObject* obj)
             }
             (*gPartfxInterface)->spawnObject((void*)obj, 0x355, NULL, 0, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x352, NULL, 0, -1, NULL);
-            state->phase = DLL109_PHASE_BREAKING;
+            state->phase = BREAKABLE_CARRYABLE_PHASE_BREAKING;
         }
         break;
-    case DLL109_PHASE_BREAKING:
+    case BREAKABLE_CARRYABLE_PHASE_BREAKING:
         ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         ObjHits_DisableObject(obj);
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        state->phase = DLL109_PHASE_RESPAWNING;
-        state->timer = 0.0f;
+        state->phase = BREAKABLE_CARRYABLE_PHASE_RESPAWNING;
+        state->respawnTimer = 0.0f;
         (obj)->anim.localPosX = placement->posX;
         (obj)->anim.localPosY = placement->posY;
         (obj)->anim.localPosZ = placement->posZ;
         break;
-    case DLL109_PHASE_RESPAWNING:
-        state->timer += timeDelta;
-        if (state->timer > 300.0f)
+    case BREAKABLE_CARRYABLE_PHASE_RESPAWNING:
+        state->respawnTimer += timeDelta;
+        if (state->respawnTimer > 300.0f)
         {
             if (ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX,
                                             (obj)->anim.hitboxScale * (obj)->anim.rootMotionScale) == 0)
             {
                 ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-                state->phase = DLL109_PHASE_INTACT;
+                state->phase = BREAKABLE_CARRYABLE_PHASE_INTACT;
             }
         }
         break;
     }
 }
 
-void dll_109_init(GameObject* obj, Dll109MapData* p)
+void breakableCarryable_init(GameObject* obj, BreakableCarryablePlacement* placement)
 {
-    obj->anim.rotX = (s16)((s32)p->rotX << 8);
-    obj->objectFlags |= UNK_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.rotX = (s16)((s32)placement->rotX << 8);
+    obj->objectFlags |= BREAKABLE_CARRYABLE_OBJECT_FLAG_HITDETECT_DISABLED;
     (*gCarryableInterface)->init(obj, obj->extra, 0x21);
     (*gCarryableInterface)->setSuppressPositionSave(obj->extra, 1);
 }
 
-void dll_109_release_nop(void)
+void breakableCarryable_release(void)
 {
 }
 
-void dll_109_initialise_nop(void)
+void breakableCarryable_initialise(void)
 {
 }
