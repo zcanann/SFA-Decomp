@@ -20,7 +20,7 @@ void createNewShadowDistortionTexture(void);
 
 u32 getReflectionTexture1(void);
 void getReflectionTexture2(u32* out);
-void getTextureFn_8006c5e4(u32* out);
+void getNewShadowCausticTexture(u32* out);
 void getNewShadowDiskTexture(u32* out);
 void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY);
 u32 getTextureFn_8006c744(void);

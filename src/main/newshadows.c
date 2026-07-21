@@ -1182,7 +1182,7 @@ void getReflectionTexture2(u32* p)
 {
     *p = gNewShadowReflectionTexture2;
 }
-void getTextureFn_8006c5e4(u32* p)
+void getNewShadowCausticTexture(u32* p)
 {
     *p = (u32)gNewShadowCausticTexture;
 }

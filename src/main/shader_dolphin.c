@@ -554,7 +554,7 @@ void fn_8004CE0C(void* viewMtx)
     mtx40[1][3] = 0.0f;
     GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getTextureFn_8006c5e4((u32*)&obj7c);
+    getNewShadowCausticTexture((u32*)&obj7c);
     if (obj7c != NULL)
     {
         void* obj = obj7c + 0x20;
@@ -778,7 +778,7 @@ void fn_8004D6D8(void)
     GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
     GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
-    getTextureFn_8006c5e4((u32*)&tex);
+    getNewShadowCausticTexture((u32*)&tex);
     id = lbl_803DCD8C + 1;
     if (tex != NULL)
     {
@@ -922,7 +922,7 @@ void fn_8004DA54(char* p1)
     }
     GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
-    getTextureFn_8006c5e4((u32*)&tex30);
+    getNewShadowCausticTexture((u32*)&tex30);
     if (tex30 != 0)
     {
         void* obj = textureGetGXTexObj(tex30);
@@ -1152,7 +1152,7 @@ void fn_8004E0FC(void)
     GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getTextureFn_8006c5e4((u32*)&tex18);
+    getNewShadowCausticTexture((u32*)&tex18);
     {
         int id2 = lbl_803DCD8C + 1;
         if (tex18 != 0)
@@ -1287,7 +1287,7 @@ void renderHeavyFog(void* fogColor)
         GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        getTextureFn_8006c5e4((u32*)&tex1c);
+        getNewShadowCausticTexture((u32*)&tex1c);
         {
             int id2 = lbl_803DCD8C + 1;
             if (tex1c != 0)

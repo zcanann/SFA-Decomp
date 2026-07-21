@@ -1298,7 +1298,7 @@ void screenImageDraw(u8 alpha)
     f32 fB;
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    getTextureFn_8006c5e4((u32*)&handle);
+    getNewShadowCausticTexture((u32*)&handle);
     updateReflectionTextures();
     selectReflectionTexture(0);
     selectTexture((Texture*)handle, 1);
@@ -2190,7 +2190,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
     newshadows_getReflectionScrollOffsets(&a, &b);
     a = a * lbl_803DEF28;
-    getTextureFn_8006c5e4((u32*)&handle1);
+    getNewShadowCausticTexture((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
     PSMTXScale((f32(*)[4])tex_mtx, 4.0f, 4.0f, 4.0f);
     tex_mtx[0][3] = a;
@@ -2706,7 +2706,7 @@ u32 objCallback_80074d04(int handle, void* model)
     newshadows_getReflectionScrollOffsets(&f1, &f2);
     f1 *= hudScale;
     f2 *= hudScale;
-    getTextureFn_8006c5e4((u32*)&handle1);
+    getNewShadowCausticTexture((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
 
     PSMTXScale(mtx_ec, hudScale, hudScale, hudScale);
@@ -4716,7 +4716,7 @@ void doHeatEffect(u8 alpha)
     newshadows_getReflectionScrollOffsets(&fA, &fB);
     fA *= lbl_803DEF6C;
     fB *= lbl_803DEF6C;
-    getTextureFn_8006c5e4((u32*)&handle2);
+    getNewShadowCausticTexture((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
 
     mathSinCosf(lbl_803DEF70 * fA, &mulX, &mulY);
@@ -5568,7 +5568,7 @@ void gxTextureSetupFn_8007cf7c(void)
     newshadows_getReflectionScrollOffsets(&fA, &fB);
     selectReflectionTexture(0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getTextureFn_8006c5e4((u32*)&handle1);
+    getNewShadowCausticTexture((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
 
     PSMTXScale(mtx_cc, 1.0f, 1.0f, 1.0f);
