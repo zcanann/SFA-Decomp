@@ -241,7 +241,8 @@ int playerState04(int obj, int state, f32 fv);
 int playerStateIceSpell(int obj, int state, f32 fv);
 void fn_802A514C(GameObject* obj, int state);
 int playerState00(int obj, int state);
-s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
+int fn_802A71E0(int obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
+                f32 samplePhase, f32 moveStepScale, int axis, int flags);
 void fn_802A81B8(GameObject* obj, int state, f32* out);
 int fn_802A8680(int p1, int p2, void* src, f32* vec, int out, int flag);
 int fn_802A8EE4(int a, int b, void* c, int d, f32* e, f32 distance);
@@ -10082,107 +10083,113 @@ int playerState00(int obj, int state)
     return 2;
 }
 
-s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
+int fn_802A71E0(int obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
+                f32 samplePhase, f32 moveStepScale, int axis, int flags)
 {
     ObjModel* model;
-    int uf;
-    u8 mf;
-    int sel;
-    int off;
-    f32* q;
-    int blend;
-    f32 v1, v2, t;
-    f32 buf1[3];
-    s16 buf2[3];
+    int controlFlags;
+    u8 moveFlags;
+    int useSecondary;
+    int axisOffset;
+    f32* sampledPosition;
+    int blendWeight;
+    f32 baseDistance, blendDistance, blendFactor;
+    f32 jointPosition[3];
+    s16 jointRotation[3];
     model = Player_GetActiveModel(obj);
-    mf = 0;
-    uf = (u8)flags;
-    if (uf & 0x2)
+    moveFlags = 0;
+    controlFlags = (u8)flags;
+    if (controlFlags & 0x2)
     {
-        mf |= 0x2;
+        moveFlags |= 0x2;
     }
-    if (uf & 0x40)
+    if (controlFlags & 0x40)
     {
-        mf |= 0x4;
+        moveFlags |= 0x4;
     }
-    if (uf & 0x10)
+    if (controlFlags & 0x10)
     {
-        mf |= 0x8;
+        moveFlags |= 0x8;
     }
-    if (uf & 0x20)
+    if (controlFlags & 0x20)
     {
-        mf |= 0x1;
+        moveFlags |= 0x1;
     }
-    sel = uf & 0x4;
-    if (sel != 0)
+    useSecondary = controlFlags & 0x4;
+    if (useSecondary != 0)
     {
-        ((int (*)(int, int, u8, f32))ObjAnim_SetCurrentMove)(obj, a, mf, lbl_803E7EA4);
-        ObjAnim_AdvanceCurrentMove((int)obj, f, lbl_803E7EA4, NULL);
-        ObjModel_SampleJointTransform(model, 0, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-    }
-    else
-    {
-        ((int (*)(int, int, u8, f32))Object_ObjAnimSetMove)(obj, a, mf, lbl_803E7EA4);
-        Object_ObjAnimAdvanceMove(obj, f, lbl_803E7EA4, NULL);
-        ObjModel_SampleJointTransform(model, 1, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
-    }
-    off = (u8)n << 2;
-    q = buf1;
-    v1 = *(f32*)((char*)q + off);
-    if (v1 < lbl_803E7EA4)
-    {
-        v1 = -v1;
-    }
-    if (sel != 0)
-    {
-        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, b, 0);
-        ObjModel_SampleJointTransform(model, 0, 2, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
+        ((int (*)(int, int, u8, f32))ObjAnim_SetCurrentMove)(obj, baseMoveId, moveFlags, lbl_803E7EA4);
+        ObjAnim_AdvanceCurrentMove((int)obj, moveStepScale, lbl_803E7EA4, NULL);
+        ObjModel_SampleJointTransform(model, 0, 0, samplePhase, ((GameObject*)obj)->anim.rootMotionScale,
+                                      jointPosition, jointRotation);
     }
     else
     {
-        Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent*)obj, b, 0);
-        ObjModel_SampleJointTransform(model, 1, 2, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
+        ((int (*)(int, int, u8, f32))Object_ObjAnimSetMove)(obj, baseMoveId, moveFlags, lbl_803E7EA4);
+        Object_ObjAnimAdvanceMove(obj, moveStepScale, lbl_803E7EA4, NULL);
+        ObjModel_SampleJointTransform(model, 1, 0, samplePhase, ((GameObject*)obj)->anim.rootMotionScale,
+                                      jointPosition, jointRotation);
     }
-    v2 = *(f32*)((char*)q + off);
-    if (v2 < 0.0f)
+    axisOffset = (u8)axis << 2;
+    sampledPosition = jointPosition;
+    baseDistance = *(f32*)((char*)sampledPosition + axisOffset);
+    if (baseDistance < lbl_803E7EA4)
     {
-        v2 = -v2;
+        baseDistance = -baseDistance;
     }
-    t = *(f32*)((char*)p7 + 0xc) +
-        (*(f32*)((char*)p6 + 0x0) * *(f32*)((char*)p7 + 0x0) + *(f32*)((char*)p6 + 0x8) * *(f32*)((char*)p7 + 0x8));
-    if (t < 0.0f)
+    if (useSecondary != 0)
     {
-        t = -t;
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, blendMoveId, 0);
+        ObjModel_SampleJointTransform(model, 0, 2, samplePhase, ((GameObject*)obj)->anim.rootMotionScale,
+                                      jointPosition, jointRotation);
     }
-    t = (t - v1) / (v2 - v1);
-    if (uf & 0x1)
+    else
     {
-        if (t < 0.0f)
+        Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent*)obj, blendMoveId, 0);
+        ObjModel_SampleJointTransform(model, 1, 2, samplePhase, ((GameObject*)obj)->anim.rootMotionScale,
+                                      jointPosition, jointRotation);
+    }
+    blendDistance = *(f32*)((char*)sampledPosition + axisOffset);
+    if (blendDistance < 0.0f)
+    {
+        blendDistance = -blendDistance;
+    }
+    blendFactor = *(f32*)((char*)blendPlane + 0xc) +
+        (*(f32*)((char*)blendAnchor + 0x0) * *(f32*)((char*)blendPlane + 0x0) +
+         *(f32*)((char*)blendAnchor + 0x8) * *(f32*)((char*)blendPlane + 0x8));
+    if (blendFactor < 0.0f)
+    {
+        blendFactor = -blendFactor;
+    }
+    blendFactor = (blendFactor - baseDistance) / (blendDistance - baseDistance);
+    if (controlFlags & 0x1)
+    {
+        if (blendFactor < 0.0f)
         {
-            t = 0.0f;
+            blendFactor = 0.0f;
         }
     }
     else
     {
-        if (t < 0.0f)
+        if (blendFactor < 0.0f)
         {
-            t = -t;
+            blendFactor = -blendFactor;
         }
     }
-    if (t > lbl_803E7EE0)
+    if (blendFactor > lbl_803E7EE0)
     {
-        t = lbl_803E7EE0;
+        blendFactor = lbl_803E7EE0;
     }
-    blend = (int)(lbl_803E7FAC * t);
-    if (sel != 0)
+    blendWeight = (int)(lbl_803E7FAC * blendFactor);
+    if (useSecondary != 0)
     {
-        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, b, (s16)blend);
+        Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, blendMoveId, (s16)blendWeight);
     }
     else
     {
-        Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent*)obj, b, (s16)blend);
+        Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent*)obj, blendMoveId, (s16)blendWeight);
     }
-    return blend;
+    return blendWeight;
 }
 
 int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask)
