@@ -135,7 +135,7 @@ void crrockfall_update(int* obj)
             f32 height;
             f32 dist;
             int alphaScale;
-            int* player;
+            GameObject* player;
             frac = (((GameObject*)obj)->anim.localPosY - state->floorY) / (state->startY - state->floorY);
             if (frac > 1.0f)
             {
@@ -146,10 +146,10 @@ void crrockfall_update(int* obj)
                 frac = 0.0f;
             }
             height = (1.0f) - frac;
-            player = (int*)Obj_GetPlayerObject();
+            player = Obj_GetPlayerObject();
             if (player != NULL)
             {
-                dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+                dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
                 if (dist > 350.0f)
                 {
                     dist = 350.0f;
