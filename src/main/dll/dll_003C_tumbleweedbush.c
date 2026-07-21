@@ -103,9 +103,10 @@ STATIC_ASSERT(offsetof(LinkMenuItem, flags) == 0x16);
 STATIC_ASSERT(offsetof(LinkMenuItem, upLink) == 0x1A);
 #define LINK_FLAG_DRAW_SLOTS        0x0004
 
+extern LinkMenuItem gTumbleweedBushItems[40];
+
 u16 linkGetSelectedItemId(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     return gTumbleweedBushItems[linkSelected].boxId;
 }
 void linkInitTextures(LinkMenuItem* item)
@@ -145,7 +146,6 @@ void linkInitTextures(LinkMenuItem* item)
 }
 void linkDrawFn_801302c0(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     LinkMenuItem* sel;
     int resetTimer;
     void* iconTex;
@@ -239,7 +239,6 @@ void setLinkIsRotated(void)
 
 void linkDrawFn_80130484(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     LinkMenuItem* item;
     void* iconTex;
     int i;
@@ -293,7 +292,6 @@ void linkDrawFn_80130484(void)
 }
 void Link_func0F(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     int i;
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
@@ -303,7 +301,6 @@ void Link_func0F(void)
 }
 void Link_copy(u8* srcArg)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     LinkMenuItem* dst;
     LinkMenuItem* src;
     int i;
@@ -340,7 +337,6 @@ u8 Link_func0C(void)
 }
 void Link_func0B(u8* srcArg)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     LinkMenuItem* src;
     int i;
 
@@ -354,13 +350,11 @@ void Link_func0B(u8* srcArg)
 }
 void Link_func0A(int idx, int v)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     gTumbleweedBushItems[idx].state = v;
 }
 
 s32 Link_func09(int idx)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     return gTumbleweedBushItems[idx].state;
 }
 void Link_setOpacity(u8 v)
@@ -401,7 +395,6 @@ s32 Link_getSelected(void)
 
 void Link_render(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     LinkMenuItem* item;
     int i;
     int slotIndex;
@@ -563,7 +556,6 @@ void Link_render(void)
 
 u32 Link_update(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     int result;
     LinkMenuItem* item;
     u32 buttons;
@@ -706,7 +698,6 @@ u32 Link_update(void)
 
 void Link_free(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     int i;
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
@@ -721,7 +712,6 @@ void Link_free(void)
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
                 int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     int i;
     LinkMenuItem* item;
     const char* defaultText;

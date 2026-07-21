@@ -69,6 +69,13 @@
 #include "string.h"
 #include "main/dll/baddie_control_interface.h"
 
+extern int lbl_803296FC[];
+extern f32 lbl_8032970C[];
+extern int lbl_8032971C[];
+extern f32 lbl_8032972C[];
+extern int lbl_8032973C[];
+extern f32 lbl_8032974C[];
+
 typedef struct DbstealerwormPlacement
 {
     u8 pad0[0x4 - 0x0];
@@ -242,7 +249,6 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 
 int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 {
-    extern int lbl_803296FC[];
     GroundBaddieState* state = (obj)->extra;
     DbStealerwormControl* sub;
     int data = *(int*)&(obj)->anim.placementData;
@@ -459,8 +465,6 @@ int dbstealerworm_stateHandlerB00(int obj, int baddie)
 
 int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
 {
-    extern int lbl_8032973C[];
-    extern f32 lbl_8032974C[];
     GroundBaddieState* blob = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
     int n = 0x1f40 / blob->aggression;
@@ -797,8 +801,6 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 {
 
-    extern int lbl_8032971C[];
-    extern f32 lbl_8032972C[];
     DbStealerwormControl* sub;
     GroundBaddieState* blob = (obj)->extra;
     int c30;
@@ -1207,8 +1209,6 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie)
 }
 int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 {
-    extern int lbl_803296FC[];
-    extern f32 lbl_8032970C[];
     int q;
     int* ptr;
     int* p2;
@@ -1394,8 +1394,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 }
 int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 {
-    extern int lbl_803296FC[];
-    extern f32 lbl_8032970C[];
     GroundBaddieState* blob = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
     s16 h;

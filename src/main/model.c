@@ -46,6 +46,9 @@ u16 gModelCopyChunkWordLimit = 0x2A0;
 extern f32 gModelPhaseWrapPeriod;
 extern f32 lbl_803DE828;
 extern f32 lbl_803DE840;
+extern f32 lbl_803DE844;
+extern f32 lbl_803DE848;
+extern f32 lbl_803DE84C;
 extern f32 lbl_803DE818;
 extern f32 lbl_803DE874;
 extern f32 lbl_803DE878;
@@ -1418,10 +1421,6 @@ void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjMo
 
 void modelChainApplyDampingAndJitter(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
 {
-    extern f32 lbl_803DCB48;
-    extern f32 lbl_803DE844;
-    extern f32 lbl_803DE848;
-    extern f32 lbl_803DE84C;
     f32 vec[3];
     int modelIndex;
     ModelFileHeader* hdr;
@@ -2064,8 +2063,6 @@ void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b,
 
 void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
-    extern f32 gMapSavedPlayerOffsetX;
-    extern f32 gMapSavedPlayerOffsetZ;
     int off[2];
     u8* prevSphere;
     int i;
