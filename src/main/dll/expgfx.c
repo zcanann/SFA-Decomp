@@ -300,6 +300,13 @@ void expgfxRemoveAll(void)
 
 void expgfxRemoveAll(void);
 
+static inline void expgfxSetSlotResult(s16* poolIndexOut, s16* slotIndexOut,
+                                       s16 poolIndex, s16 slotIndex)
+{
+    *slotIndexOut = slotIndex;
+    *poolIndexOut = poolIndex;
+}
+
 int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int preferredPoolIndex, u32 sourceId)
 {
     u32 currentMask;
@@ -358,8 +365,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
             activeBit = 1 << slotIndex;
             if ((activeBit & currentMask) == 0)
             {
-                *slotIndexOut = slotIndex;
-                *poolIndexOut = foundPoolIndex;
+                expgfxSetSlotResult(poolIndexOut, slotIndexOut, foundPoolIndex, slotIndex);
                 *activeMaskPtr |= activeBit;
                 runtime->poolActiveCounts[chosenPool]++;
                 return 1;
@@ -402,8 +408,7 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
             activeBit = 1 << slotIndex;
             if ((activeBit & currentMask) == 0)
             {
-                *slotIndexOut = slotIndex;
-                *poolIndexOut = foundPoolIndex;
+                expgfxSetSlotResult(poolIndexOut, slotIndexOut, foundPoolIndex, slotIndex);
                 *activeMaskPtr |= activeBit;
                 gExpgfxStaticPoolSlotTypeIds[searchIndex] = slotType;
                 runtime->poolActiveCounts[chosenPool]++;
