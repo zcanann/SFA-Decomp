@@ -66,7 +66,7 @@ GameObject** gObjList;
 int gObjCount;
 ObjLinkedList gObjUpdateList;
 u32 gObjUpdateFlags;
-s8 gObjPtrTableCount;
+s8 gEffectBoxObjectCount;
 int lbl_803DCB70;
 
 int gObjDefCaptureMode = 2;
@@ -189,7 +189,7 @@ extern f32 lbl_803DE8D4;
 extern f32 lbl_803DE8D8;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
-void* gObjPtrTable[20];
+GameObject* gEffectBoxObjects[20];
 extern int gObjTablesBinCount;
 extern int* gObjTablesBinIndex;
 extern u8* gObjTablesBinData;
@@ -727,26 +727,26 @@ void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int y
     }
 }
 
-void fn_8002B758(void* v)
+void Obj_UnregisterEffectBox(GameObject* obj)
 {
     int i;
 
-    for (i = 0; i < gObjPtrTableCount && gObjPtrTable[i] != v; i++)
+    for (i = 0; i < gEffectBoxObjectCount && gEffectBoxObjects[i] != obj; i++)
     {
     }
-    if (i == gObjPtrTableCount)
+    if (i == gEffectBoxObjectCount)
     {
         return;
     }
-    for (; i < gObjPtrTableCount - 1; i++)
+    for (; i < gEffectBoxObjectCount - 1; i++)
     {
-        gObjPtrTable[i] = gObjPtrTable[i + 1];
+        gEffectBoxObjects[i] = gEffectBoxObjects[i + 1];
     }
-    gObjPtrTableCount--;
+    gEffectBoxObjectCount--;
 }
-void fn_8002B860(void* v)
+void Obj_RegisterEffectBox(GameObject* obj)
 {
-    gObjPtrTable[gObjPtrTableCount++] = v;
+    gEffectBoxObjects[gEffectBoxObjectCount++] = obj;
 }
 
 void Obj_SetActiveModelIndex(GameObject* obj, int idx)

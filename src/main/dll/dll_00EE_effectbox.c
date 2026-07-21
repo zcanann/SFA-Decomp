@@ -50,7 +50,7 @@ int EffectBox_getObjectTypeId(void)
 
 void EffectBox_free(GameObject* obj)
 {
-    fn_8002B758(obj);
+    Obj_UnregisterEffectBox(obj);
 }
 
 void EffectBox_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -173,7 +173,7 @@ void EffectBox_init(GameObject* obj, EffectboxPlacement* placement)
     u32 flags;
     if (obj->userData1 == 0)
     {
-        fn_8002B860(obj);
+        Obj_RegisterEffectBox(obj);
     }
     obj->userData1 = 1;
     gateGameBit = placement->gameBitIndex;
