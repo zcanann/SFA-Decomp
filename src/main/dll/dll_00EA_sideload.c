@@ -7,7 +7,7 @@
  * placement's arming game bit (placement+0x18) is set, it allocates an object
  * setup (type 0x24), copies the spawner's position into it, hands it to
  * Obj_SetupObject, and seeds the new object's first field from placement
- * field yawByte (<< 8).
+ * rotX byte.
  *
  * Foreign ObjectDescriptor tables are not present in this translation unit;
  * each descriptor is defined by its own DLL.
@@ -19,7 +19,7 @@
 #include "main/dll/dll_00EA_sideload.h"
 
 /* object id sideload_update defers into existence once its arming game bit is set */
-#define SIDELOAD_CHILD_OBJ 0x24
+#define SIDELOAD_TRICKY_OBJECT_ID 0x24
 
 void sideload_update(GameObject* self)
 {
@@ -28,10 +28,10 @@ void sideload_update(GameObject* self)
     GameObject* child;
 
     placement = (SideloadPlacement*)self->anim.placementData;
-    if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != 0) && (getTrickyObject() == 0) &&
-        (mainGetBit((int)placement->armGameBit) != 0))
+    if ((Obj_IsLoadingLocked() != 0) && (Obj_GetPlayerObject() != NULL) && (getTrickyObject() == NULL) &&
+        (mainGetBit(placement->armGameBit) != 0))
     {
-        setup = Obj_AllocObjectSetup(0x18, SIDELOAD_CHILD_OBJ);
+        setup = Obj_AllocObjectSetup(sizeof(ObjPlacement), SIDELOAD_TRICKY_OBJECT_ID);
         setup->color[0] = 2;
         setup->color[1] = 4;
         setup->color[3] = 0xff;
@@ -39,6 +39,6 @@ void sideload_update(GameObject* self)
         setup->posY = self->anim.localPosY;
         setup->posZ = self->anim.localPosZ;
         child = Obj_SetupObject(setup, 5, -1, -1, NULL);
-        child->anim.rotX = (s16)((u8)placement->yawByte << 8);
+        child->anim.rotX = (s16)((u8)placement->rotX << 8);
     }
 }
