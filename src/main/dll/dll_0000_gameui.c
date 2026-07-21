@@ -82,6 +82,7 @@
 #include "main/newshadows_shadow_api.h"
 #include "main/dll/hint_text_api.h"
 #include "main/shader_map_text_api.h"
+#define INTERSECT_HUD_ALPHA_U8
 #include "track/intersect_hud_api.h"
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_8B.h"
@@ -4338,8 +4339,7 @@ void headDisplayDraw(void)
 {
     u32 width;
     u32 height;
-    s16 panelAlpha;
-    int panelType;
+    u8 panelType;
     int viewportY;
     int clampedAlpha;
     int waveAlpha;
@@ -4350,6 +4350,7 @@ void headDisplayDraw(void)
     int wavePhaseB;
     int drawY;
     u32 clampedHeight;
+    int panelAlpha;
     f32 wave;
     f32 cameraOrigin;
     if (gHeadDisplayActive != 0)
@@ -4389,8 +4390,7 @@ void headDisplayDraw(void)
         {
             clampedAlpha = 0xff;
         }
-        panelAlpha = clampedAlpha;
-        gHeadDisplayFadeAlpha = panelAlpha;
+        panelAlpha = gHeadDisplayFadeAlpha = clampedAlpha;
         clampedHeight = gHeadDisplayPanelHeight;
         if (clampedHeight > 0x6e)
         {
@@ -4462,7 +4462,7 @@ void headDisplayDraw(void)
             drawY = width;
             drawY += lineOffset;
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)drawY,
-                               (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, noiseY, noiseX);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2010 + wave));
             if (clampedAlpha < 0)
             {
@@ -4471,7 +4471,7 @@ void headDisplayDraw(void)
             noiseX = randomGetRange(0, 0x1e) << 1;
             noiseY = randomGetRange(0, 0x1e) << 1;
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(drawY + 2),
-                               (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, noiseY, noiseX);
             wavePhaseA += 0x3520;
             wavePhaseB += 0x1f40;
         }
