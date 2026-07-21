@@ -11,7 +11,17 @@
 #include "main/audio/snd_core.h"
 
 
-#define VOICE_CFLAGS(i) (*(u64*)&synthVoice[i].inputFlags)
+typedef union SynthVoiceFlags
+{
+    u64 combined;
+    struct
+    {
+        u32 input;
+        u32 output;
+    } channel;
+} SynthVoiceFlags;
+
+#define VOICE_CFLAGS(i) (((SynthVoiceFlags*)&synthVoice[i].inputFlags)->combined)
 
 #define VB_PRIO_HEAD(vb, p)      (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
 #define VB_PRIO_LINK_NEXT(vb, i) (((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))->next)
@@ -39,6 +49,8 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
 
     if (!synthIdleWaitActive)
     {
+        do
+        {
         if (streamKind)
         {
             restrictToStreamKind = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
@@ -161,13 +173,13 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
 
             if (synthVoice[selectedVoice].priorityGroup > priority)
             {
-                return SYNTH_INVALID_VOICE;
+                break;
             }
         }
 
         if (selectedVoice == -1)
         {
-            return SYNTH_INVALID_VOICE;
+            break;
         }
 
         slotBase = (SynthVoiceListNode*)((u8*)voiceLists + selectedVoice * 4);
@@ -215,6 +227,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
             ++voiceMusicRunning;
         }
         return selectedVoice;
+        } while (0);
     }
 
     return SYNTH_INVALID_VOICE;
