@@ -862,13 +862,34 @@ f32* Camera_GetInverseViewMatrix(void)
 {
     return gCameraInverseViewMatrix;
 }
+
+typedef struct CameraMatrixStorage
+{
+    CameraMatrix inverseYawTransforms[0x1E];
+    CameraMatrix yawTransforms[0x22];
+    f32 worldMatrix[64];
+    CameraMatrix defaultModelMatrix;
+    CameraViewSlot viewSlots[12];
+    CameraMatrix viewRotationMatrix;
+    CameraMatrix inverseViewRotationMatrix;
+    CameraMatrix viewMatrix;
+    CameraMatrix inverseViewMatrix;
+    CameraMatrix projectionMatrix;
+} CameraMatrixStorage;
+
 void Camera_UpdateViewMatrices(void)
 {
+    void* storageBase;
+    CameraMatrixStorage* storage;
+    CameraViewSlot* viewSlots;
     CameraViewSlot* slot;
     MatrixTransform transform;
     f32 rotationMatrix[16];
 
-    slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
+    storageBase = gObjInverseYawTransformMatrices;
+    storage = storageBase;
+    viewSlots = storage->viewSlots;
+    slot = &viewSlots[gCameraCurrentViewIndex];
     transform.x = -(slot->x - playerMapOffsetX);
     transform.y = -slot->y;
     transform.z = -(slot->z - playerMapOffsetZ);
@@ -888,7 +909,7 @@ void Camera_UpdateViewMatrices(void)
     }
 
     mtxRotateByVec3s(rotationMatrix, &transform);
-    mtx44Transpose(rotationMatrix, gCameraViewMatrix);
+    mtx44Transpose(rotationMatrix, storage->viewMatrix);
 
     transform.x = slot->x - playerMapOffsetX;
     transform.y = slot->y;
@@ -908,13 +929,13 @@ void Camera_UpdateViewMatrices(void)
         transform.z -= lbl_803DE60C;
     }
 
-    setMatrixFromObjectPos(gCameraWorldMatrix, &transform);
-    mtx44Transpose(gCameraWorldMatrix, gCameraInverseViewMatrix);
-    PSMTXCopy(gCameraViewMatrix, gCameraViewRotationMatrix);
-    gCameraViewRotationMatrix[11] = gCameraViewRotationMatrix[7] = gCameraViewRotationMatrix[3] = lbl_803DE60C;
-    PSMTXCopy(gCameraInverseViewMatrix, gCameraInverseViewRotationMatrix);
-    gCameraInverseViewRotationMatrix[11] = gCameraInverseViewRotationMatrix[7] =
-        gCameraInverseViewRotationMatrix[3] = lbl_803DE60C;
+    setMatrixFromObjectPos(storage->worldMatrix, &transform);
+    mtx44Transpose(storage->worldMatrix, storage->inverseViewMatrix);
+    PSMTXCopy(storage->viewMatrix, storage->viewRotationMatrix);
+    storage->viewRotationMatrix[11] = storage->viewRotationMatrix[7] = storage->viewRotationMatrix[3] = lbl_803DE60C;
+    PSMTXCopy(storage->inverseViewMatrix, storage->inverseViewRotationMatrix);
+    storage->inverseViewRotationMatrix[11] = storage->inverseViewRotationMatrix[7] =
+        storage->inverseViewRotationMatrix[3] = lbl_803DE60C;
 }
 
 void Camera_ApplyFullViewport(void)
