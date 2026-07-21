@@ -1923,7 +1923,7 @@ config.libs = [
             Object(NonMatching, "main/audio/synth_jobs.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/audio/data_tables.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "main/audio/mcmd_wait.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
-            Object(NonMatching, "main/audio/mcmd_loop.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
+            Object(MatchingFor("GSAE01"), "main/audio/mcmd_loop.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "main/audio/mcmd_setup.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/audio/mcmd_exec.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "main/audio/vid_get.c"),
