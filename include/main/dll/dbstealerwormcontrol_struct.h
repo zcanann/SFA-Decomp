@@ -4,6 +4,8 @@
 #include "types.h"
 #include "main/model_engine.h"
 
+struct GameObject;
+
 /* DbStealerwormControl.flags14: per-frame effect-request bits, consumed and
  * cleared each tick by the fx dispatcher (fn_80203000). */
 #define DBWORM_FLAG14_ATTACK  0x1 /* strike the current target this frame */
@@ -20,7 +22,10 @@ typedef struct DbStealerwormControl
     u8 flags14; /* bits 1/2 */
     u8 flags15; /* bits 1/4 */
     u8 unk16[2];
-    int linkedObj; /* ObjMsg target object */
+    union {
+        int linkedObj;
+        struct GameObject* linkedObject; /* ObjMsg target object */
+    };
     s16 msgSlotIndex; /* queued message-config slot index (-1 = none); pushed as the type-7 frame payload */
     u8 unk1E[2];
     int routeCursor; /* cursor into the cfg route list (12-byte entries) */

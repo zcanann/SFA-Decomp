@@ -1044,95 +1044,99 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     }
     return 0;
 }
-int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
+int dbstealerworm_stateHandlerA0A(GameObject* obj, BaddieState* state)
 {
-    DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&(obj)->extra)->control;
-    int c30 = sub->objGroup;
-    int c2c = sub->msgMode;
-    int tmpB;
-    int tmpA;
-    int target;
-    f32 z;
-    f32 dist;
-    f32 out[3];
-    f32 vBuf[3];
-    f32* v = vBuf;
-    int msgA[3];
-    int msgB[3];
-    int msgC[3];
+    GroundBaddieState* groundState = obj->extra;
+    DbStealerwormControl* control = groundState->control;
+    RingBufferQueue* messageQueue;
+    int objGroup = control->objGroup;
+    int msgMode = control->msgMode;
+    int currentMsgMode;
+    int messageArg;
+    GameObject* targetObject;
+    s16 rotationX;
+    f32 zero;
+    f32 horizontalDistance;
+    f32 launchVelocity[3];
+    f32 targetOffsetBuffer[3];
+    f32* targetOffset = targetOffsetBuffer;
+    int currentMessage[3];
+    int resumeMessage[3];
+    int unlinkMessage[3];
 
-    z = 0.0f;
-    ((BaddieState*)baddie)->animSpeedA = 0.0f;
-    ((BaddieState*)baddie)->animSpeedB = z;
-    sub->flags14 |= DBWORM_FLAG14_FX_DUST;
-    if (*(void**)&sub->linkedObj == NULL && sub->msgSlotIndex != -1)
+    zero = 0.0f;
+    state->animSpeedA = 0.0f;
+    state->animSpeedB = zero;
+    control->flags14 |= DBWORM_FLAG14_FX_DUST;
+    if (control->linkedObject == NULL && control->msgSlotIndex != -1)
     {
-        tmpA = sub->objGroup;
-        tmpB = sub->msgMode;
-        obj = (GameObject*)sub->msgStack;
-        msgA[0] = sub->msgCode;
-        msgA[1] = tmpB;
-        msgA[2] = tmpA;
-        if (Stack_IsFull((RingBufferQueue*)obj) == 0)
+        messageArg = control->objGroup;
+        currentMsgMode = control->msgMode;
+        messageQueue = control->msgStack;
+        currentMessage[0] = control->msgCode;
+        currentMessage[1] = currentMsgMode;
+        currentMessage[2] = messageArg;
+        if (Stack_IsFull(messageQueue) == 0)
         {
-            Stack_Push((RingBufferQueue*)obj, msgA);
+            Stack_Push(messageQueue, currentMessage);
         }
-        obj = (GameObject*)sub->msgStack;
-        msgB[0] = 8;
-        msgB[1] = c2c;
-        msgB[2] = c30;
-        if (Stack_IsFull((RingBufferQueue*)obj) == 0)
+        messageQueue = control->msgStack;
+        resumeMessage[0] = 8;
+        resumeMessage[1] = msgMode;
+        resumeMessage[2] = objGroup;
+        if (Stack_IsFull(messageQueue) == 0)
         {
-            Stack_Push((RingBufferQueue*)obj, msgB);
+            Stack_Push(messageQueue, resumeMessage);
         }
-        sub->msgAdvance = 1;
-        tmpA = sub->msgSlotIndex;
-        obj = (GameObject*)sub->msgStack;
-        msgC[0] = 9;
-        msgC[1] = 0;
-        msgC[2] = tmpA;
-        if (Stack_IsFull((RingBufferQueue*)obj) == 0)
+        control->msgAdvance = 1;
+        messageArg = control->msgSlotIndex;
+        messageQueue = control->msgStack;
+        unlinkMessage[0] = 9;
+        unlinkMessage[1] = 0;
+        unlinkMessage[2] = messageArg;
+        if (Stack_IsFull(messageQueue) == 0)
         {
-            Stack_Push((RingBufferQueue*)obj, msgC);
+            Stack_Push(messageQueue, unlinkMessage);
         }
-        sub->msgAdvance = 1;
+        control->msgAdvance = 1;
         return 0;
     }
     else
     {
-        sub->flags15 |= 4;
-        if (*(void**)&sub->linkedObj != NULL && (s32)(((BaddieState*)baddie)->eventFlags & BADDIE_EVENT_LANDING) != 0)
+        control->flags15 |= 4;
+        if (control->linkedObject != NULL && (s32)(state->eventFlags & BADDIE_EVENT_LANDING) != 0)
         {
-            target = *(int*)&((BaddieState*)baddie)->targetObj;
-            v[0] = ((GameObject*)target)->anim.localPosX - (obj)->anim.localPosX;
-            v[1] = ((GameObject*)target)->anim.localPosY - (obj)->anim.localPosY;
-            v[2] = ((GameObject*)target)->anim.localPosZ - (obj)->anim.localPosZ;
+            targetObject = state->targetObj;
+            targetOffset[0] = targetObject->anim.localPosX - obj->anim.localPosX;
+            targetOffset[1] = targetObject->anim.localPosY - obj->anim.localPosY;
+            targetOffset[2] = targetObject->anim.localPosZ - obj->anim.localPosZ;
             {
-                f32 sqx = v[0] * v[0];
-                f32 sqz = v[2] * v[2];
-                dist = sqrtf(sqx + sqz);
+                f32 squaredX = targetOffset[0] * targetOffset[0];
+                f32 squaredZ = targetOffset[2] * targetOffset[2];
+                horizontalDistance = sqrtf(squaredX + squaredZ);
             }
-            v[1] *= 0.015625f;
-            dist = dist / 140.0f;
-            out[1] = -(dist * (-1.7f * dist) - v[1]) / dist;
-            out[1] *= 1.0666667f;
-            out[0] = 0.0f;
-            out[2] = 2.3333333f;
-            ObjMsg_SendToObject((void*)sub->linkedObj, 0x11, obj, 0x11);
-            (**(void (**)(int, f32*))(*(int*)(*(int*)(sub->linkedObj + 0x68)) + 0x24))(sub->linkedObj, out);
-            sub->linkedObj = 0;
-            sub->msgSlotIndex = -1;
+            targetOffset[1] *= 0.015625f;
+            horizontalDistance = horizontalDistance / 140.0f;
+            launchVelocity[1] = -(horizontalDistance * (-1.7f * horizontalDistance) - targetOffset[1]) / horizontalDistance;
+            launchVelocity[1] *= 1.0666667f;
+            launchVelocity[0] = 0.0f;
+            launchVelocity[2] = 2.3333333f;
+            ObjMsg_SendToObject(control->linkedObject, 0x11, obj, 0x11);
+            (*(void (**)(GameObject*, f32*))((char*)*control->linkedObject->anim.dll + 0x24))(control->linkedObject, launchVelocity);
+            control->linkedObject = NULL;
+            control->msgSlotIndex = -1;
         }
-        obj->anim.rotX += Obj_GetYawDeltaToObject(obj, ((BaddieState*)baddie)->targetObj, NULL);
-        ((BaddieState*)baddie)->stateTag = 0x11;
-        if (*(s8*)&((BaddieState*)baddie)->moveJustStartedA != 0)
+        rotationX = obj->anim.rotX + Obj_GetYawDeltaToObject(obj, state->targetObj, NULL);
+        obj->anim.rotX = rotationX;
+        state->stateTag = 0x11;
+        if ((s8)state->moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x12, 0.0f, 0);
-            ((BaddieState*)baddie)->moveDone = 0;
+            state->moveDone = 0;
         }
-        if (*(s8*)&((BaddieState*)baddie)->moveDone != 0)
+        if ((s8)state->moveDone != 0)
         {
-            sub->msgAdvance = 1;
+            control->msgAdvance = 1;
         }
         return 0;
     }

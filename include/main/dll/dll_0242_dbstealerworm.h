@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0242_DBSTEALERWORM_H_
 
 #include "main/game_object.h"
+#include "main/dll/baddie_state.h"
 
 extern int gDBStealerWormStateHandlersA[];
 extern int gDBStealerWormStateHandlersB[];
@@ -16,7 +17,7 @@ int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie);
+int dbstealerworm_stateHandlerA0A(GameObject* obj, BaddieState* state);
 int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie);
