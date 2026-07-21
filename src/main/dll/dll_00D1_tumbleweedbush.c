@@ -247,7 +247,6 @@ void TumbleWeedBush_update(int* obj)
     int hit0;
     f32 dx, dy, d;
     int nullVal;
-    int j;
     int** slot;
     int i;
 
@@ -284,9 +283,9 @@ void TumbleWeedBush_update(int* obj)
         {
         }
     }
-    for (nullVal = j = 0; (u8)j < state->pieceCount; j++)
+    for (nullVal = i = 0; (u8)i < state->pieceCount; i++)
     {
-        slot = (int**)&state->pieceObjects[(u8)j];
+        slot = (int**)&state->pieceObjects[(u8)i];
         if (*slot != NULL)
         {
             if (((int (*)(int*)) * (int*)(*(int*)(*(int*)&((GameObject*)*slot)->anim.dll) + 0x20))(*slot) > 1)
