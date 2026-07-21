@@ -2,65 +2,24 @@
  * sin/cos of a placement-defined rotation angle. For map id 0x49B23 (the dual-direction belt),
  * manages forward/reverse direction via game bits 3163/3164 with a timed swap (swapTimer). Adds
  * itself to object group 22; music track 0xDF is kept alive while the belt is moving. */
-#include "main/dll/dimmagicbridge_state.h"
 #include "main/audio/music_api.h"
-#include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
-#include "main/dll/dll1cestate_struct.h"
-#include "main/dll/explosionpartfxsource_struct.h"
-#include "main/dll/dim2pathgeneratorstate_struct.h"
-#include "main/dll/dim2snowballstate_struct.h"
-#include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"
-#include "main/dll/dll1d6state_struct.h"
-#include "main/dll/explosion_state.h"
-#include "main/objseq.h"
-#include "main/obj_placement.h"
-#include "main/object_descriptor.h"
-
-STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
-
-STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
-
-STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
-
-STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, worldPosX) == 0x18);
-STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
-
-STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
-STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
+#include "main/dll/DIM/dll_01D5_dim2conveyor.h"
 
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
 
-#include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/game_object.h"
 #include "main/object_render.h"
 #include "main/obj_group.h"
 #include "main/gamebits.h"
-#include "main/texture.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/ppcwgpipe_struct.h"
-#include "dolphin/gx/GXLegacyDecls.h"
 #include "main/audio/sfx.h"
 
-#define DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
-
-STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
-
-STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);
-
-STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
-
-STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 #define GAMEBIT_CONVEYOR_FORWARD   3163
 #define GAMEBIT_CONVEYOR_REVERSE   3164
@@ -72,22 +31,16 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 
-static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
+void dim2conveyor_getScrollVector(GameObject* obj, int unused, f32* outX, f32* outY)
 {
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
-void dim2conveyor_getScrollVector(int* obj, int unused, f32* outX, f32* outY)
-{
-    Dim2ConveyorState* state = ((GameObject*)obj)->extra;
+    Dim2ConveyorState* state = obj->extra;
     int id;
-    if (state->musicHold == 0)
+    if (state->musicHoldTimer == 0)
     {
         Music_Trigger(MUSIC_TRACK_CONVEYOR, 1);
     }
-    state->musicHold = 20;
-    id = ((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId;
+    state->musicHoldTimer = 20;
+    id = ((Dim2ConveyorPlacement*)obj->anim.placementData)->base.mapId;
     switch (id)
     {
     case MAP_ID_SINGLE_BELT:
@@ -121,11 +74,11 @@ void dim2conveyor_getScrollVector(int* obj, int unused, f32* outX, f32* outY)
     }
 }
 
-int dim2conveyor_getExtraSize(void) { return 0x14; }
+int dim2conveyor_getExtraSize(void) { return sizeof(Dim2ConveyorState); }
 
 int dim2conveyor_getObjectTypeId(void) { return 0x0; }
 
-void dim2conveyor_free(int obj) { ObjGroup_RemoveObject(obj, OBJ_GROUP_CONVEYORS); }
+void dim2conveyor_free(GameObject* obj) { ObjGroup_RemoveObject((int)obj, OBJ_GROUP_CONVEYORS); }
 
 void dim2conveyor_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -137,26 +90,25 @@ void dim2conveyor_hitDetect(void)
 {
 }
 
-void dim2conveyor_update(int* obj)
+void dim2conveyor_update(GameObject* obj)
 {
-
-    Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
+    Dim2ConveyorState* state = obj->extra;
     Sfx_PlayFromObject((int)obj, SFXTRIG_mv_liftloop);
-    if (extra->musicHold != 0)
+    if (state->musicHoldTimer != 0)
     {
-        extra->musicHold = extra->musicHold - 1;
-        if (extra->musicHold == 0)
+        state->musicHoldTimer = state->musicHoldTimer - 1;
+        if (state->musicHoldTimer == 0)
         {
             Music_Trigger(MUSIC_TRACK_CONVEYOR, 0);
         }
     }
-    switch (((ObjPlacement*)((GameObject*)obj)->anim.placementData)->mapId)
+    switch (((Dim2ConveyorPlacement*)obj->anim.placementData)->base.mapId)
     {
     case MAP_ID_DUAL_BELT:
         if (mainGetBit(GAMEBIT_CONVEYOR_SWAP) != 0)
         {
-            extra->swapTimer = extra->swapTimer + timeDelta;
-            if (extra->swapTimer > 100.0f)
+            state->swapTimer = state->swapTimer + timeDelta;
+            if (state->swapTimer > 100.0f)
             {
                 if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
                 {
@@ -168,7 +120,7 @@ void dim2conveyor_update(int* obj)
                     mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 0);
                     mainSetBits(GAMEBIT_CONVEYOR_FORWARD, 1);
                 }
-                extra->swapTimer = 0.0f;
+                state->swapTimer = 0.0f;
             }
         }
         if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
@@ -185,19 +137,19 @@ void dim2conveyor_update(int* obj)
     }
 }
 
-void dim2conveyor_init(int* obj, u8* params)
+void dim2conveyor_init(GameObject* obj, Dim2ConveyorPlacement* placement)
 {
-    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / 5.0f;
-    Dim2ConveyorState* extra;
-    *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
-    extra = ((GameObject*)obj)->extra;
-    extra->scrollX = scale * mathSinf(3.1415927f * (f32) * (s16*)obj / 32768.0f);
-    extra->scrollY = scale * mathCosf(3.1415927f * (f32) * (s16*)obj / 32768.0f);
-    extra->swapTimer = 0.0f;
-    extra->musicHold = 0;
+    f32 scale = (f32)placement->scrollSpeed / 5.0f;
+    Dim2ConveyorState* state;
+    obj->anim.rotX = (s16)(placement->rotX << 8);
+    state = obj->extra;
+    state->scrollX = scale * mathSinf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
+    state->scrollY = scale * mathCosf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
+    state->swapTimer = 0.0f;
+    state->musicHoldTimer = 0;
     ObjGroup_AddObject((u32)obj, OBJ_GROUP_CONVEYORS);
-    ((GameObject*)obj)->objectFlags |= DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED;
-    if (((ObjPlacement*)params)->mapId == MAP_ID_DUAL_BELT)
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    if (placement->base.mapId == MAP_ID_DUAL_BELT)
     {
         mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 1);
     }
