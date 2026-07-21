@@ -45,8 +45,16 @@ extern char sObjAddObjectTypeReachedMaxTypes[];
 #define OBJLIB_PRIMARY_ROM_PAGE_COUNT 0x50
 #define OBJHITREGION_ROM_ENTRY_TYPE   0x130
 
+typedef struct ObjGroupOffsetTable
+{
+    u8 offsets[OBJGROUP_OFFSET_CLEAR_COUNT];
+    u8 reserved[3];
+} ObjGroupOffsetTable;
+
+STATIC_ASSERT(sizeof(ObjGroupOffsetTable) == 0x58);
+
 u32 gObjGroupObjects[OBJGROUP_MAX_OBJECTS];
-u8 gObjGroupOffsets[0x58];
+ObjGroupOffsetTable gObjGroupOffsets;
 
 typedef struct ObjContactCallbackEntry
 {
@@ -974,8 +982,8 @@ int ObjGroup_ContainsObject(u32 obj, int group)
     {
         return 0;
     }
-    index = gObjGroupOffsets[group];
-    limit = gObjGroupOffsets[group + 1];
+    index = gObjGroupOffsets.offsets[group];
+    limit = gObjGroupOffsets.offsets[group + 1];
     for (entry = gObjGroupObjects + index; ((int)index < (int)limit && (obj != *entry));
          entry = entry + 1, index = index + 1)
     {
@@ -1001,8 +1009,8 @@ int ObjGroup_FindNearestObjectToPoint(int group, float* point, float* maxDistanc
     {
         return 0;
     }
-    index = gObjGroupOffsets[group];
-    limit = gObjGroupOffsets[group + 1];
+    index = gObjGroupOffsets.offsets[group];
+    limit = gObjGroupOffsets.offsets[group + 1];
     entry = gObjGroupObjects + index;
     while (index < limit)
     {
@@ -1047,8 +1055,8 @@ GameObject* ObjGroup_FindNearestObjectForObject(int group, GameObject* obj, floa
     {
         bestDistanceSq = lbl_803DE968;
     }
-    index = gObjGroupOffsets[group];
-    limit = gObjGroupOffsets[group + 1];
+    index = gObjGroupOffsets.offsets[group];
+    limit = gObjGroupOffsets.offsets[group + 1];
     entry = gObjGroupObjects + index;
     while (index < limit)
     {
@@ -1095,8 +1103,8 @@ int ObjGroup_FindNearestObject(int group, GameObject* obj, float* maxDistance)
         bestDistanceSq = lbl_803DE968;
     }
     o = obj;
-    index = gObjGroupOffsets[group];
-    limit = gObjGroupOffsets[group + 1];
+    index = gObjGroupOffsets.offsets[group];
+    limit = gObjGroupOffsets.offsets[group + 1];
     entry = gObjGroupObjects + index;
     while (index < limit)
     {
@@ -1126,8 +1134,8 @@ u32* ObjGroup_GetObjects(int group, int* countOut)
         *countOut = 0;
         return 0x0;
     }
-    *countOut = gObjGroupOffsets[group + 1] - gObjGroupOffsets[group];
-    return (u32*)(gObjGroupObjects + gObjGroupOffsets[group]);
+    *countOut = gObjGroupOffsets.offsets[group + 1] - gObjGroupOffsets.offsets[group];
+    return (u32*)(gObjGroupObjects + gObjGroupOffsets.offsets[group]);
 }
 
 void ObjGroup_RemoveObject(int obj, int group)
@@ -1142,7 +1150,7 @@ void ObjGroup_RemoveObject(int obj, int group)
     {
         return;
     }
-    offset = gObjGroupOffsets;
+    offset = gObjGroupOffsets.offsets;
     index = offset[group];
     offset += group;
     limit = offset[1];
@@ -1165,7 +1173,7 @@ void ObjGroup_RemoveObject(int obj, int group)
         index++;
     }
     group++;
-    offset = gObjGroupOffsets + group;
+    offset = gObjGroupOffsets.offsets + group;
     while (group <= OBJGROUP_COUNT)
     {
         (*offset)--;
@@ -1185,7 +1193,8 @@ int ObjGroup_GetObjectGroup(u32 obj)
         if (entryObj == obj)
         {
             group = 0;
-            while (((int)(u32)gObjGroupOffsets[group] <= objectIndex) && (group < OBJGROUP_OFFSET_CLEAR_COUNT))
+            while (((int)(u32)gObjGroupOffsets.offsets[group] <= objectIndex) &&
+                   (group < OBJGROUP_OFFSET_CLEAR_COUNT))
             {
                 group++;
             }
@@ -1213,7 +1222,7 @@ void ObjGroup_AddObject(int obj, int group)
         OSReport(sObjAddObjectTypeReachedMaxTypes);
         return;
     }
-    offset = gObjGroupOffsets;
+    offset = gObjGroupOffsets.offsets;
     insertIndex = offset[group];
     offset += group;
     limit = offset[1];
@@ -1238,7 +1247,7 @@ void ObjGroup_AddObject(int obj, int group)
     }
     gObjGroupObjects[insertIndex] = obj;
     group++;
-    offset = gObjGroupOffsets + group;
+    offset = gObjGroupOffsets.offsets + group;
     while (group <= OBJGROUP_COUNT)
     {
         (*offset)++;
@@ -1249,7 +1258,7 @@ void ObjGroup_AddObject(int obj, int group)
 
 void ObjGroup_ClearAll(void)
 {
-    memset(gObjGroupOffsets, 0, OBJGROUP_OFFSET_CLEAR_COUNT);
+    memset(gObjGroupOffsets.offsets, 0, sizeof(gObjGroupOffsets.offsets));
     gObjGroupObjectCount = 0;
     return;
 }
