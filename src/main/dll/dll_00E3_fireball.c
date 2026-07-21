@@ -58,8 +58,8 @@ u8 fn_8016F16C(int* obj)
 int Fireball_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int i;
-    int* state = obj->extra;
-    if (((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED)
+    FireballState* state = obj->extra;
+    if (state->stateFlags & FIREBALL_FLAG_DISABLED)
     {
         return 0;
     }
@@ -68,17 +68,17 @@ int Fireball_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         u8 cmd = animUpdate->eventIds[i];
         if (cmd == 1)
         {
-            if (((FireballState*)state)->light != NULL)
+            if (state->light != NULL)
             {
-                modelLightStruct_setEnabled(((FireballState*)state)->light, 1, 0.0f);
+                modelLightStruct_setEnabled(state->light, 1, 0.0f);
             }
             obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
         else if (cmd == 2)
         {
-            if (((FireballState*)state)->light != NULL)
+            if (state->light != NULL)
             {
-                modelLightStruct_setEnabled(((FireballState*)state)->light, 0, 0.0f);
+                modelLightStruct_setEnabled(state->light, 0, 0.0f);
             }
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -258,11 +258,11 @@ void Fireball_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
 
 void Fireball_hitDetect(GameObject* obj)
 {
-    int* state = obj->extra;
+    FireballState* state = obj->extra;
     int* target;
     if (obj->anim.seqId == FIREBALL_SEQID_HIDDEN)
         return;
-    switch (((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED)
+    switch (state->stateFlags & FIREBALL_FLAG_DISABLED)
     {
     case 0:
         break;
@@ -277,12 +277,12 @@ void Fireball_hitDetect(GameObject* obj)
         int idx = cmbsrc_getColorIndex((CmbSrcObject*)target);
         if ((s8)idx != -1)
         {
-            ((FireballState*)state)->colorIndex = idx;
-            if (((FireballState*)state)->light != NULL)
+            state->colorIndex = idx;
+            if (state->light != NULL)
             {
-                int paletteBase = ((FireballState*)state)->colorIndex * 3;
+                int paletteBase = state->colorIndex * 3;
                 u8* pal = (u8*)lbl_80320978;
-                modelLightStruct_setDiffuseColor(((FireballState*)state)->light, pal[paletteBase], pal[paletteBase + 1],
+                modelLightStruct_setDiffuseColor(state->light, pal[paletteBase], pal[paletteBase + 1],
                                                  pal[paletteBase + 2], 0);
             }
         }
@@ -291,8 +291,8 @@ void Fireball_hitDetect(GameObject* obj)
     else
     {
         u8 colorIndex;
-        ((FireballState*)state)->fadeoutTimer = 60.0f;
-        colorIndex = ((FireballState*)state)->colorIndex;
+        state->fadeoutTimer = 60.0f;
+        colorIndex = state->colorIndex;
         if (colorIndex == 0)
         {
             projectileParticleFxFn_80099660(obj, 1.0f, 3);
@@ -306,10 +306,10 @@ void Fireball_hitDetect(GameObject* obj)
             projectileParticleFxFn_80099660(obj, 1.0f, 6);
         }
         obj->anim.alpha = 0;
-        if (((FireballState*)state)->light != NULL)
+        if (state->light != NULL)
         {
-            ModelLightStruct_free(((FireballState*)state)->light);
-            ((FireballState*)state)->light = NULL;
+            ModelLightStruct_free(state->light);
+            state->light = NULL;
         }
     }
     ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
@@ -317,46 +317,46 @@ void Fireball_hitDetect(GameObject* obj)
 
 void Fireball_update(GameObject* obj)
 {
-    int* state = obj->extra;
+    FireballState* state = obj->extra;
 #define hitState ((ObjHitsPriorityState*)obj->anim.hitReactState)
     int* other = *(int**)&obj->userData2;
     int* params = *(int**)&obj->anim.placementData;
     f32 zero = 0.0f;
 
-    if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_DISABLED) != 0)
+    if ((state->stateFlags & FIREBALL_FLAG_DISABLED) != 0)
     {
         return;
     }
-    ((FireballState*)state)->startupDelay -= timeDelta;
-    if (((FireballState*)state)->startupDelay < 0.0f)
+    state->startupDelay -= timeDelta;
+    if (state->startupDelay < 0.0f)
     {
-        ((FireballState*)state)->startupDelay = 0.0f;
+        state->startupDelay = 0.0f;
     }
     if (obj->anim.seqId == FIREBALL_SEQID_HIDDEN)
     {
-        if (((FireballState*)state)->light != NULL)
+        if (state->light != NULL)
         {
-            modelLightStruct_setEnabled(((FireballState*)state)->light, 0, 0.0f);
+            modelLightStruct_setEnabled(state->light, 0, 0.0f);
         }
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         return;
     }
-    if (0.0f == ((FireballState*)state)->elapsedTime)
+    if (0.0f == state->elapsedTime)
     {
-        ((FireballState*)state)->flightDuration = 7.0f / Vec3_Length(&obj->anim.velocityX);
+        state->flightDuration = 7.0f / Vec3_Length(&obj->anim.velocityX);
     }
-    ((FireballState*)state)->elapsedTime += timeDelta;
-    if (((FireballState*)state)->elapsedTime > ((FireballState*)state)->flightDuration)
+    state->elapsedTime += timeDelta;
+    if (state->elapsedTime > state->flightDuration)
     {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREBALL_HIT_VOLUME_SLOT,
                                 ((FireballPlacement*)params)->hitVolumeMode != 0 ? 3 : 1, 0);
     }
-    if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_POS_LATCHED) == 0)
+    if ((state->stateFlags & FIREBALL_FLAG_POS_LATCHED) == 0)
     {
-        ((FireballState*)state)->posX = obj->anim.localPosX;
-        ((FireballState*)state)->posY = obj->anim.localPosY;
-        ((FireballState*)state)->posZ = obj->anim.localPosZ;
-        ((FireballState*)state)->stateFlags |= FIREBALL_FLAG_POS_LATCHED;
+        state->posX = obj->anim.localPosX;
+        state->posY = obj->anim.localPosY;
+        state->posZ = obj->anim.localPosZ;
+        state->stateFlags |= FIREBALL_FLAG_POS_LATCHED;
     }
     {
         if (hitState->contactFlags != 0)
@@ -376,7 +376,7 @@ void Fireball_update(GameObject* obj)
                     obj->anim.localPosZ, *(s16*)obj, 0.0f, 2);
             }
             {
-                u8 v = ((FireballState*)state)->colorIndex;
+                u8 v = state->colorIndex;
                 if (v == 0)
                 {
                     projectileParticleFxFn_80099660(obj, 1.0f, 3);
@@ -390,25 +390,25 @@ void Fireball_update(GameObject* obj)
                     projectileParticleFxFn_80099660(obj, 1.0f, 6);
                 }
             }
-            ((FireballState*)state)->fadeoutTimer = 60.0f;
+            state->fadeoutTimer = 60.0f;
             obj->anim.alpha = 0;
-            if (((FireballState*)state)->light != NULL)
+            if (state->light != NULL)
             {
-                ModelLightStruct_free(((FireballState*)state)->light);
-                ((FireballState*)state)->light = NULL;
+                ModelLightStruct_free(state->light);
+                state->light = NULL;
             }
             ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
             ObjHits_DisableObject(obj);
         }
     }
-    if (((FireballState*)state)->fadeoutTimer != zero)
+    if (state->fadeoutTimer != zero)
     {
         obj->anim.velocityX = 0.0f;
         obj->anim.velocityY = 0.0f;
         obj->anim.velocityZ = 0.0f;
         ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
-        ((FireballState*)state)->fadeoutTimer -= timeDelta;
-        if (((FireballState*)state)->fadeoutTimer <= 0.0f)
+        state->fadeoutTimer -= timeDelta;
+        if (state->fadeoutTimer <= 0.0f)
         {
             Obj_FreeObject(obj);
         }
@@ -426,38 +426,38 @@ void Fireball_update(GameObject* obj)
             }
             else
             {
-                fn_8016F260(obj, state, other);
+                fn_8016F260(obj, (int*)state, other);
             }
         }
-        ((FireballState*)state)->posX += obj->anim.velocityX * timeDelta;
-        ((FireballState*)state)->posY += obj->anim.velocityY * timeDelta;
-        ((FireballState*)state)->posZ += obj->anim.velocityZ * timeDelta;
-        ((FireballState*)state)->spiralPhase += framesThisStep * 1500;
-        if ((((FireballState*)state)->stateFlags & FIREBALL_FLAG_GRAVITY) != 0)
+        state->posX += obj->anim.velocityX * timeDelta;
+        state->posY += obj->anim.velocityY * timeDelta;
+        state->posZ += obj->anim.velocityZ * timeDelta;
+        state->spiralPhase += framesThisStep * 1500;
+        if ((state->stateFlags & FIREBALL_FLAG_GRAVITY) != 0)
         {
             f32 ground;
-            ((FireballState*)state)->posY -= 2.0f * timeDelta;
-            if (hitDetectFn_800658a4(obj, ((FireballState*)state)->posX, ((FireballState*)state)->posY,
-                                     ((FireballState*)state)->posZ, &ground, 0) == 0)
+            state->posY -= 2.0f * timeDelta;
+            if (hitDetectFn_800658a4(obj, state->posX, state->posY,
+                                     state->posZ, &ground, 0) == 0)
             {
                 ground -= 10.0f;
                 if (ground < 0.0f && ground > -15.0f)
                 {
-                    ((FireballState*)state)->posY -= ground;
+                    state->posY -= ground;
                 }
             }
         }
-        obj->anim.localPosX = ((FireballState*)state)->posX;
-        obj->anim.localPosY = ((FireballState*)state)->posY;
-        obj->anim.localPosZ = ((FireballState*)state)->posZ;
+        obj->anim.localPosX = state->posX;
+        obj->anim.localPosY = state->posY;
+        obj->anim.localPosZ = state->posZ;
         if (other != NULL)
         {
             obj->anim.localPosX +=
                 8.0f *
-                mathSinf(3.1415927f * (f32)((FireballState*)state)->spiralPhase / 32768.0f);
+                mathSinf(3.1415927f * (f32)state->spiralPhase / 32768.0f);
             obj->anim.localPosZ +=
                 8.0f *
-                mathCosf(3.1415927f * (f32)((FireballState*)state)->spiralPhase / 32768.0f);
+                mathCosf(3.1415927f * (f32)state->spiralPhase / 32768.0f);
         }
         if ((obj->userData1 -= framesThisStep) < 0)
         {
@@ -469,20 +469,20 @@ void Fireball_update(GameObject* obj)
 
 void Fireball_init(GameObject* obj)
 {
-    int* state = obj->extra;
+    FireballState* state = obj->extra;
     int* params = *(int**)&obj->anim.placementData;
 
     if (((FireballPlacement*)params)->startDisabled != 0)
     {
-        ((FireballState*)state)->stateFlags |= FIREBALL_FLAG_DISABLED;
+        state->stateFlags |= FIREBALL_FLAG_DISABLED;
     }
     else
     {
         FireballState* fs;
         int i;
-        ((FireballState*)state)->unk40 = randomGetRange(600, 900);
-        ((FireballState*)state)->unk42 = randomGetRange(-600, 600);
-        ((FireballState*)state)->colorIndex = 0;
+        state->unk40 = randomGetRange(600, 900);
+        state->unk42 = randomGetRange(-600, 600);
+        state->colorIndex = 0;
         {
             ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             if (hitState != NULL)
@@ -490,33 +490,33 @@ void Fireball_init(GameObject* obj)
                 hitState->trackContactMask = 257;
             }
         }
-        if (((FireballState*)state)->light == NULL)
+        if (state->light == NULL)
         {
-            ((FireballState*)state)->light = objCreateLight(obj, 1);
-            if (((FireballState*)state)->light != NULL)
+            state->light = objCreateLight(obj, 1);
+            if (state->light != NULL)
             {
                 int c;
                 u8* base1;
                 u8* base2;
-                modelLightStruct_setLightKind(((FireballState*)state)->light, MODEL_LIGHT_KIND_POINT);
-                lightSetField4D(((FireballState*)state)->light, 0);
-                modelLightStruct_setPosition(((FireballState*)state)->light, 0.0f, 0.0f,
+                modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
+                lightSetField4D(state->light, 0);
+                modelLightStruct_setPosition(state->light, 0.0f, 0.0f,
                                              0.0f);
-                lightSetFieldBC_8001db14(((FireballState*)state)->light, 1);
-                c = ((FireballState*)state)->colorIndex * 3;
+                lightSetFieldBC_8001db14(state->light, 1);
+                c = state->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(
-                    ((FireballState*)state)->light, ((u8*)lbl_80320978)[c],
-                    (base1 = (u8*)lbl_80320978 + 1)[((FireballState*)state)->colorIndex * 3],
-                    (base2 = (u8*)lbl_80320978 + 2)[((FireballState*)state)->colorIndex * 3], 0);
-                modelLightStruct_setDistanceAttenuation(((FireballState*)state)->light, 60.0f, 80.0f);
-                c = ((FireballState*)state)->colorIndex * 3;
-                modelLightStruct_setupGlow(((FireballState*)state)->light, 0, ((u8*)lbl_80320978)[c], base1[c],
+                    state->light, ((u8*)lbl_80320978)[c],
+                    (base1 = (u8*)lbl_80320978 + 1)[state->colorIndex * 3],
+                    (base2 = (u8*)lbl_80320978 + 2)[state->colorIndex * 3], 0);
+                modelLightStruct_setDistanceAttenuation(state->light, 60.0f, 80.0f);
+                c = state->colorIndex * 3;
+                modelLightStruct_setupGlow(state->light, 0, ((u8*)lbl_80320978)[c], base1[c],
                                            base2[c], 32, 50.0f);
-                modelLightStruct_setGlowProjectionRadius(((FireballState*)state)->light, 50.0f);
+                modelLightStruct_setGlowProjectionRadius(state->light, 50.0f);
             }
         }
         obj->anim.alpha = 200;
-        for (i = 0, fs = (FireballState*)state; i < FIREBALL_ROT_COUNT; i++)
+        for (i = 0, fs = state; i < FIREBALL_ROT_COUNT; i++)
         {
             fs->rotZBase[0] = randomGetRange(-32767, 32767);
             fs->rotZDelta[0] = randomGetRange(-1024, 1024);
@@ -529,7 +529,7 @@ void Fireball_init(GameObject* obj)
         if (obj->anim.seqId != FIREBALL_SEQID_HIDDEN &&
             ((FireballPlacement*)params)->startupDelayEnabled != 0)
         {
-            ((FireballState*)state)->startupDelay = 4.0f;
+            state->startupDelay = 4.0f;
         }
     }
 }

@@ -1132,22 +1132,22 @@ void fn_8014C540(GameObject* obj, int* outIdx, f32* outA, f32* outB)
 }
 void enemy_setHealthZero(GameObject* obj)
 {
-    int* state = obj->extra;
-    ((EnemyState*)state)->current = 0;
+    EnemyState* state = obj->extra;
+    state->current = 0;
 }
 
 f32 enemy_getHealthFraction(register GameObject* obj)
 {
     register u16 a;
-    register int* state;
+    register EnemyState* state;
     u16 b;
     state = obj->extra;
     if (state == NULL)
         return lbl_803E2574;
-    a = ((EnemyState*)state)->max;
+    a = state->max;
     if (a != 0)
     {
-        b = *(u16*)&((EnemyState*)state)->current;
+        b = *(u16*)&state->current;
         if (b != 0)
         {
             return (f32)(u32)b / (f32)(u32)a;
@@ -1158,8 +1158,8 @@ f32 enemy_getHealthFraction(register GameObject* obj)
 
 void enemy_trackPlayer(GameObject* obj)
 {
-    int* state = obj->extra;
-    ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
+    EnemyState* state = obj->extra;
+    state->trackedObj = Obj_GetPlayerObject();
 }
 
 void enemy_setTrackedObj(GameObject* obj, GameObject* target)
@@ -1458,16 +1458,16 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 rateScale, int moveC
 
 void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
 {
-    int* state = obj->extra;
+    BaddieAfterUpdateBonesCbState* state = obj->extra;
     int v = *bones;
     switch (obj->anim.seqId)
     {
     case ENEMY_HAGABONMK2_OBJ:
-        playerTailFn_80026b3c(bones, v, (ObjModelChain*)((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain,
+        playerTailFn_80026b3c(bones, v, (ObjModelChain*)state->tailBoneChain,
                               crawler_rotateVectorYaw);
         break;
     default:
-        playerTailFn_80026b3c(bones, v, (ObjModelChain*)((BaddieAfterUpdateBonesCbState*)state)->tailBoneChain, NULL);
+        playerTailFn_80026b3c(bones, v, (ObjModelChain*)state->tailBoneChain, NULL);
         break;
     }
 }
@@ -1559,7 +1559,7 @@ void enemy_free(GameObject* obj, int flag)
 
 void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state = ((GameObject*)obj)->extra;
+    EnemyState* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
         switch (((GameObject*)obj)->userData1)
@@ -1567,44 +1567,44 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         case 0:
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E256C);
             {
-                u32 flags = *(u32*)&((EnemyState*)state)->flags2E8;
+                u32 flags = *(u32*)&state->flags2E8;
                 if ((flags & 3) != 0)
                 {
                     if ((flags & 1) != 0)
                     {
-                        *(u32*)&((EnemyState*)state)->flags2E8 = flags & ~1LL;
-                        *(u32*)&((EnemyState*)state)->flags2E8 = *(u32*)&((EnemyState*)state)->flags2E8 | 2;
+                        *(u32*)&state->flags2E8 = flags & ~1LL;
+                        *(u32*)&state->flags2E8 = *(u32*)&state->flags2E8 | 2;
                     }
-                    if (((EnemyState*)state)->modelLight == NULL)
+                    if (state->modelLight == NULL)
                     {
-                        ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
+                        state->modelLight = objCreateLight(0, 1);
                     }
-                    objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
-                                           ((EnemyState*)state)->modelLight);
+                    objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 3, state->particleScale,
+                                           state->modelLight);
                 }
             }
-            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 4) != 0)
+            if ((*(u32*)&state->flags2E8 & 4) != 0)
             {
-                if (((EnemyState*)state)->modelLight == NULL)
+                if (state->modelLight == NULL)
                 {
-                    ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
+                    state->modelLight = objCreateLight(0, 1);
                 }
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
-                                       ((EnemyState*)state)->modelLight);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 4, state->particleScale,
+                                       state->modelLight);
             }
-            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
+            if ((*(u32*)&state->flags2E8 & 0x40) != 0)
             {
                 Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 5, state->particleScale, 0);
             }
-            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
+            if ((*(u32*)&state->flags2E8 & 0x80) != 0)
             {
                 Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E25F8, 6, state->particleScale, 0);
             }
-            if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)
+            if ((*(u32*)&state->flags2E8 & 0x100) != 0)
             {
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E25FC, 7, state->particleScale, 0);
             }
             break;
         }

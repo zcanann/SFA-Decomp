@@ -92,14 +92,14 @@ static u8 sCollectiblePathData[12] = {0};
 
 void collectible_setPosition(int* obj, f32 f1, f32 f2, f32 f3)
 {
-    char* inner = (char*)((GameObject*)obj)->extra;
+    CollectibleState* inner = (CollectibleState*)((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.localPosX = f1;
-    ((CollectibleState*)inner)->basePosX = f1;
+    inner->basePosX = f1;
     ((GameObject*)obj)->anim.localPosY = f2;
-    ((CollectibleState*)inner)->basePosY = f2;
+    inner->basePosY = f2;
     ((GameObject*)obj)->anim.localPosZ = f3;
-    ((CollectibleState*)inner)->basePosZ = f3;
-    if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
+    inner->basePosZ = f3;
+    if (mainGetBit(inner->hideGameBit) == 0)
     {
         saveGame_saveObjectPos((GameObject*)obj);
     }
@@ -123,28 +123,28 @@ void collectible_setVisibilityBitClear(int* obj, u32 v)
 
 int collectible_getHitRegionId(int* obj)
 {
-    int* inner = (int*)*(int*)&((GameObject*)obj)->extra;
-    if (((CollectibleState*)inner)->hitRegionId == -2)
+    CollectibleState* inner = (CollectibleState*)*(int*)&((GameObject*)obj)->extra;
+    if (inner->hitRegionId == -2)
     {
         f32 f1 = ((GameObject*)obj)->anim.worldPosX;
         f32 f2 = ((GameObject*)obj)->anim.worldPosY;
         f32 f3 = ((GameObject*)obj)->anim.worldPosZ;
-        *(u32*)&((CollectibleState*)inner)->hitRegionId = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
+        *(u32*)&inner->hitRegionId = (u16)ObjHitRegion_FindContainingId(f1, f2, f3);
     }
-    return ((CollectibleState*)inner)->hitRegionId;
+    return inner->hitRegionId;
 }
 
 void collectible_setDisabled(int* obj, int flag)
 {
-    char* inner = (char*)((GameObject*)obj)->extra;
-    ((CollectibleState*)inner)->disabled = flag;
+    CollectibleState* inner = (CollectibleState*)((GameObject*)obj)->extra;
+    inner->disabled = flag;
     if (flag != 0)
     {
         ObjHits_DisableObject((GameObject*)obj);
     }
     else
     {
-        if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
+        if (mainGetBit(inner->hideGameBit) == 0)
         {
             ObjHits_EnableObject((GameObject*)obj);
         }

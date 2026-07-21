@@ -815,35 +815,35 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 
 void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
 {
-    int* state = obj->extra;
+    StaffDoGrowShrinkAnimState* state = obj->extra;
     if (grow != 0)
     {
-        if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate < 0.0f)
+        if (state->growShrinkAnimRate < 0.0f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stpos4_b);
         }
         if (flag2 == 0)
         {
-            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = 0.15f;
+            state->growShrinkAnimRate = 0.15f;
         }
         else
         {
-            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = 1.0f;
+            state->growShrinkAnimRate = 1.0f;
         }
     }
     else
     {
-        if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate > 0.0f)
+        if (state->growShrinkAnimRate > 0.0f)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_stapo1_b);
         }
         if (flag2 == 0)
         {
-            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = -0.15f;
+            state->growShrinkAnimRate = -0.15f;
         }
         else
         {
-            ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = -1.0f;
+            state->growShrinkAnimRate = -1.0f;
         }
     }
 }
@@ -1039,15 +1039,15 @@ void staff_hitDetectGeometry(int* obj)
 
 void staff_modelMtxFn(int* obj, int p4, int p5)
 {
-    int* inner = (int*)*(int*)&((GameObject*)obj)->extra;
+    StaffState* inner = (StaffState*)*(int*)&((GameObject*)obj)->extra;
     staff_setupSwipe((int)obj, (u8*)inner, p5, p4);
     if (getHudHiddenFrameCount() != 0)
     {
-        ((StaffState*)inner)->hudSuppressed = 1;
+        inner->hudSuppressed = 1;
     }
     else
     {
-        ((StaffState*)inner)->hudSuppressed = 0;
+        inner->hudSuppressed = 0;
     }
 }
 
@@ -1248,13 +1248,13 @@ void staff_update(int* obj)
 
 void staff_init(int* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    StaffDoGrowShrinkAnimState* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
     StaffSwipeSlot* p;
     int i;
-    ((StaffDoGrowShrinkAnimState*)state)->unkAA = 1;
-    ((StaffDoGrowShrinkAnimState*)state)->unkB0 = 2;
-    ((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate = -1.0f;
+    state->unkAA = 1;
+    state->unkB0 = 2;
+    state->growShrinkAnimRate = -1.0f;
     hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
     {
