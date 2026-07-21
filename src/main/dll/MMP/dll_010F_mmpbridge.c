@@ -21,10 +21,6 @@ char lbl_803DBD90[] = "S %d\n";
 #define BRIDGE_TEX_OFFSET_START 0x800
 #define BRIDGE_TEX_OFFSET_MAX   0x131f
 
-#define MMPBRIDGE_OBJFLAG_HIDDEN             0x4000
-#define MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED 0x2000
-
-
 int mmp_bridge_getExtraSize(void)
 {
     return 0x0;
@@ -46,44 +42,44 @@ void mmp_bridge_hitDetect(void)
 {
 }
 
-void mmp_bridge_update(int* obj)
+void mmp_bridge_update(GameObject* obj)
 {
-    MmpBridgePlacement* placement = (MmpBridgePlacement*)*(int**)&((GameObject*)obj)->anim.placementData;
+    MmpBridgePlacement* placement = (MmpBridgePlacement*)obj->anim.placementData;
     ObjTextureRuntimeSlot* tex;
-    int frame;
+    int nextOffset;
 
     if (mainGetBit(placement->enableBit) != 0)
     {
-        tex = objFindTexture((GameObject*)(obj), 0, 0);
+        tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
         {
-            frame = tex->offsetS + ((int)timeDelta << 3);
-            tex->offsetS = frame;
-            frame = tex->offsetS + ((int)timeDelta << 3);
-            if (frame >= BRIDGE_TEX_OFFSET_MAX)
+            nextOffset = tex->offsetS + ((int)timeDelta << 3);
+            tex->offsetS = nextOffset;
+            nextOffset = tex->offsetS + ((int)timeDelta << 3);
+            if (nextOffset >= BRIDGE_TEX_OFFSET_MAX)
             {
                 tex->offsetS = BRIDGE_TEX_OFFSET_MAX;
             }
             logPrintf(lbl_803DBD90, tex->offsetS);
         }
-        ObjHits_EnableObject((GameObject*)obj);
+        ObjHits_EnableObject(obj);
     }
 }
 
-void mmp_bridge_init(int* obj)
+void mmp_bridge_init(GameObject* obj)
 {
-    MmpBridgePlacement* placement = (MmpBridgePlacement*)*(int**)&((GameObject*)obj)->anim.placementData;
-    ObjTextureRuntimeSlot* tex = objFindTexture((GameObject*)(obj), 0, 0);
+    MmpBridgePlacement* placement = (MmpBridgePlacement*)obj->anim.placementData;
+    ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
     if (tex != NULL)
     {
         tex->offsetS = BRIDGE_TEX_OFFSET_START;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)(placement->rotXByte << 8);
-    ((GameObject*)obj)->objectFlags |= (MMPBRIDGE_OBJFLAG_HIDDEN | MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED);
-    ObjHits_DisableObject((GameObject*)obj);
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    ObjHits_DisableObject(obj);
     if (mainGetBit(placement->enableBit) != 0)
     {
-        ObjHits_EnableObject((GameObject*)obj);
+        ObjHits_EnableObject(obj);
     }
 }
 
