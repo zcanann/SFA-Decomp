@@ -166,12 +166,20 @@ typedef struct ObjMsgQueue
     ObjMsgEntry entries[1];
 } ObjMsgQueue;
 
-typedef struct ObjMsgQueueSlotBase
+STATIC_ASSERT(sizeof(ObjMsgEntry) == 0xC);
+STATIC_ASSERT(offsetof(ObjMsgQueue, entries) == 0x8);
+
+typedef struct ObjMsgQueueCursor
 {
     u32 count;
     u32 capacity;
     ObjMsgEntry entry;
-} ObjMsgQueueSlotBase;
+    ObjMsgEntry nextEntry;
+} ObjMsgQueueCursor;
+
+STATIC_ASSERT(offsetof(ObjMsgQueueCursor, entry) == 0x8);
+STATIC_ASSERT(offsetof(ObjMsgQueueCursor, nextEntry) == 0x14);
+STATIC_ASSERT(sizeof(ObjMsgQueueCursor) == 0x20);
 
 typedef struct ObjPathPoint
 {
@@ -1294,7 +1302,7 @@ int ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam)
 int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam)
 {
     ObjMsgQueue* queue;
-    ObjMsgQueueSlotBase* slot;
+    ObjMsgQueueCursor* slot;
     u32 i;
 
     if (obj == 0x0)
@@ -1319,10 +1327,10 @@ int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam)
         }
         for (i = 0; i < queue->count; i = i + 1)
         {
-            slot = (ObjMsgQueueSlotBase*)((u8*)queue + ((i + i + i) << 2));
-            slot->entry.message = *(u32*)((u8*)slot + 0x14);
-            slot->entry.sender = *(u32*)((u8*)slot + 0x18);
-            slot->entry.param = *(u32*)((u8*)slot + 0x1c);
+            slot = (ObjMsgQueueCursor*)((u8*)queue + ((i + i + i) << 2));
+            slot->entry.message = slot->nextEntry.message;
+            slot->entry.sender = slot->nextEntry.sender;
+            slot->entry.param = slot->nextEntry.param;
         }
         return 1;
     }
@@ -1335,7 +1343,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
     u32 count;
     int maskedFlags;
     ObjMsgQueue* queue;
-    ObjMsgQueueSlotBase* slot;
+    ObjMsgQueueCursor* slot;
     int objectIndex;
     int objectCount;
     void* obj;
@@ -1360,7 +1368,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
             count = queue->count;
             if (count < queue->capacity)
             {
-                slot = (ObjMsgQueueSlotBase*)((u8*)queue + ((count + count + count) << 2));
+                slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
                 slot->entry.message = message;
                 slot->entry.sender = (u32)sender;
                 slot->entry.param = param;
@@ -1382,7 +1390,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
     u32 count;
     int maskedFlags;
     ObjMsgQueue* queue;
-    ObjMsgQueueSlotBase* slot;
+    ObjMsgQueueCursor* slot;
     int objectIndex;
     int objectCount;
     void* obj;
@@ -1402,7 +1410,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                 count = queue->count;
                 if (count < queue->capacity)
                 {
-                    slot = (ObjMsgQueueSlotBase*)((u8*)queue + ((count + count + count) << 2));
+                    slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
                     slot->entry.message = message;
                     slot->entry.sender = (u32)sender;
                     slot->entry.param = param;
@@ -1429,7 +1437,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                 count = queue->count;
                 if (count < queue->capacity)
                 {
-                    slot = (ObjMsgQueueSlotBase*)((u8*)queue + ((count + count + count) << 2));
+                    slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
                     slot->entry.message = message;
                     slot->entry.sender = (u32)sender;
                     slot->entry.param = param;
@@ -1451,7 +1459,7 @@ u32 ObjMsg_SendToObject(GameObject* obj, u32 message, void* sender, u32 param)
     u32 count;
     void* senderObj;
     ObjMsgQueue* queue;
-    ObjMsgQueueSlotBase* slot;
+    ObjMsgQueueCursor* slot;
 
     senderObj = sender;
     if (obj == NULL)
@@ -1464,7 +1472,7 @@ u32 ObjMsg_SendToObject(GameObject* obj, u32 message, void* sender, u32 param)
         count = queue->count;
         if (count < queue->capacity)
         {
-            slot = (ObjMsgQueueSlotBase*)((u8*)queue + ((count + count + count) << 2));
+            slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
             slot->entry.message = message;
             slot->entry.sender = (u32)senderObj;
             slot->entry.param = param;

@@ -15,8 +15,6 @@
 #include "main/object_descriptor.h"
 
 
-#define EXPLODEPLAN_OBJECT_TYPE_ID 0x0
-
 int explodeplan_getExtraSize(void)
 {
     return sizeof(ExplodePlanState);
@@ -24,14 +22,14 @@ int explodeplan_getExtraSize(void)
 
 int explodeplan_getObjectTypeId(void)
 {
-    return EXPLODEPLAN_OBJECT_TYPE_ID;
+    return 0;
 }
 
 void explodeplan_free(void)
 {
 }
 
-void explodeplan_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
+void explodeplan_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     f32 scale = 1.0f;
 
@@ -47,29 +45,28 @@ void explodeplan_hitDetect(void)
 
 void explodeplan_update(GameObject* obj)
 {
-    ExplodePlanPlacement* placement = *(ExplodePlanPlacement**)&(obj)->anim.placementData;
+    ExplodePlanPlacement* placement = (ExplodePlanPlacement*)obj->anim.placementData;
     if (mainGetBit(placement->removeGameBit) != 0)
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     }
     else
     {
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
     }
 }
 
-void explodeplan_init(GameObject* obj, char* arg)
+void explodeplan_init(GameObject* obj, ExplodePlanPlacement* placement)
 {
-    ExplodePlanPlacement* def = (ExplodePlanPlacement*)arg;
     ObjHits_EnableObject(obj);
-    if (mainGetBit(def->removeGameBit) != 0)
+    if (mainGetBit(placement->removeGameBit) != 0)
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     }
-    (obj)->anim.rotX = (s16)(def->rotXByte << 8);
+    obj->anim.rotX = (s16)(placement->rotX << 8);
 }
 
 void explodeplan_release(void)
