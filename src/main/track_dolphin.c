@@ -1056,7 +1056,7 @@ void mapGetBlocks(void** outLayerTables, u32* outBlocks)
     *outBlocks = (u32)gMapBlocks;
 }
 
-void fn_80060BB0(void)
+void mapClearBlockEdgeFlags(void)
 {
     char* arr;
     int i;

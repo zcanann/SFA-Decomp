@@ -56,7 +56,7 @@ void mapInitFn_80069990(void);
 void trackIntersect(void);
 void mapBlockRender_setVtxDcrs(int flag, int* obj, struct MapShader* shader, int* blockState);
 void initTextures(void);
-void fn_80060BB0(void);
+void mapClearBlockEdgeFlags(void);
 void* mapBlockGetPolygon(int* obj, int idx);
 void* mapBlockGetEdge(int* obj, int idx);
 void gxErrorFn_80060b40(void);
