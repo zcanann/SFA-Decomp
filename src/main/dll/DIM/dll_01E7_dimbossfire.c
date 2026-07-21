@@ -28,42 +28,11 @@
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
 
-extern f32 lbl_803E4DA0;
-extern f32 lbl_803E4DA4;
-extern f32 lbl_803E4DA8;
-extern f32 lbl_803E4DAC;
-extern f32 lbl_803E4DB0;
-extern f32 lbl_803E4DB4;
-extern f32 lbl_803E4DB8;
-extern f32 lbl_803E4DBC;
-extern f32 lbl_803E4DC0;
-
-typedef struct DimbossfireState
-{
-    u8 flags;
-    u8 flameIndex;
-    u8 pad02[0x4 - 0x2];
-    f32 activeTimer;
-    f32 initialActiveTimer;
-    f32 cooldownTimer;
-    ModelLightStruct* light;
-    u8 pad14[0x18 - 0x14];
-} DimbossfireState;
-
-typedef struct DimbossfirePlacement
-{
-    ObjPlacement base;
-    u8 pad18[0x1A - 0x18];
-    s16 flameColor;
-    u8 pad1C[0x20 - 0x1C];
-    s16 triggerGameBit;
-    u8 pad22[0x24 - 0x22];
-} DimbossfirePlacement;
-
 #define DIMBOSSFIRE_FLAG_START_BURST 1
-#define DIMBOSSFIRE_FLAME_COUNT 10
 #define DIMBOSSFIRE_COOLDOWN_MIN 0xf0  /* minimum random cooldown in frames */
 #define DIMBOSSFIRE_COOLDOWN_MAX 0x1e0 /* maximum random cooldown in frames */
+#define DIMBOSSFIRE_BURST_COUNT 50
+#define DIMBOSSFIRE_HIT_RADIUS  15
 
 f32 gDimbossfireActiveDurations[DIMBOSSFIRE_FLAME_COUNT] = {
     160.0f, 30.0f, 110.0f, 160.0f, 80.0f, 40.0f, 120.0f, 60.0f, 120.0f, 120.0f,
@@ -78,30 +47,22 @@ f32 gDimbossfireActiveDurations[DIMBOSSFIRE_FLAME_COUNT] = {
 #define DIMBOSSFIRE_PARTFX_SUSTAINED_ORANGE 0x4cb
 #define DIMBOSSFIRE_PARTFX_SUSTAINED_GREEN 0x4cd
 
-STATIC_ASSERT(offsetof(DimbossfireState, activeTimer) == 0x4);
-STATIC_ASSERT(offsetof(DimbossfireState, initialActiveTimer) == 0x8);
-STATIC_ASSERT(offsetof(DimbossfireState, cooldownTimer) == 0xC);
-STATIC_ASSERT(offsetof(DimbossfireState, light) == 0x10);
-STATIC_ASSERT(offsetof(DimbossfirePlacement, flameColor) == 0x1A);
-STATIC_ASSERT(offsetof(DimbossfirePlacement, triggerGameBit) == 0x20);
-
 int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 void dimbossfire_free(GameObject *obj)
 {
-    int o = (int)obj;
-    int state;
+    DimbossfireState* state;
     ModelLightStruct* light;
 
-    state = *(int*)&((GameObject*)o)->extra;
-    light = ((DimbossfireState*)state)->light;
+    state = obj->extra;
+    light = state->light;
     if (light != 0)
     {
         ModelLightStruct_free(light);
-        ((DimbossfireState*)state)->light = NULL;
+        state->light = NULL;
     }
-    (*gExpgfxInterface)->freeSource2((u32)o);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
@@ -115,12 +76,13 @@ void dimbossfire_update(GameObject *obj)
     u32 bitVal;
     ModelLightStruct* light;
     int ref;
+    GameObject* player;
     DimbossfireState* state;
     DimbossfirePlacement* placement;
     float playerDist;
 
     state = (obj)->extra;
-    placement = *(DimbossfirePlacement**)&(obj)->anim.placementData;
+    placement = (DimbossfirePlacement*)obj->anim.placementData;
     if ((int)placement->triggerGameBit != -1)
     {
         bitVal = mainGetBit((int)placement->triggerGameBit);
@@ -128,39 +90,39 @@ void dimbossfire_update(GameObject *obj)
         {
             mainSetBits((int)placement->triggerGameBit, 0);
             state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
-            state->activeTimer = gDimbossfireActiveDurations[state->flameIndex];
+            state->activeTimer = gDimbossfireActiveDurations[state->durationIndex];
             state->initialActiveTimer = state->activeTimer;
-            state->flameIndex += 1;
-            if (state->flameIndex >= DIMBOSSFIRE_FLAME_COUNT)
+            state->durationIndex += 1;
+            if (state->durationIndex >= DIMBOSSFIRE_FLAME_COUNT)
             {
-                state->flameIndex = 0;
+                state->durationIndex = 0;
             }
         }
     }
     else
     {
         state->cooldownTimer = state->cooldownTimer - timeDelta;
-        if (state->cooldownTimer <= lbl_803E4DA0)
+        if (state->cooldownTimer <= gDimbossfireZero)
         {
             state->cooldownTimer = (f32)(int)
             randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
             state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
-            state->activeTimer = gDimbossfireActiveDurations[state->flameIndex];
+            state->activeTimer = gDimbossfireActiveDurations[state->durationIndex];
             state->initialActiveTimer = state->activeTimer;
-            state->flameIndex += 1;
-            if (state->flameIndex >= DIMBOSSFIRE_FLAME_COUNT)
+            state->durationIndex += 1;
+            if (state->durationIndex >= DIMBOSSFIRE_FLAME_COUNT)
             {
-                state->flameIndex = 0;
+                state->durationIndex = 0;
             }
         }
     }
-    if (state->activeTimer > lbl_803E4DA0)
+    if (state->activeTimer > gDimbossfireZero)
     {
         if ((state->flags & DIMBOSSFIRE_FLAG_START_BURST) != 0)
         {
             state->flags &= ~DIMBOSSFIRE_FLAG_START_BURST;
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMBOSSFIRE_HIT_VOLUME_SLOT, 1, 0);
-            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0xf);
+            ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, DIMBOSSFIRE_HIT_RADIUS);
             ObjHits_EnableObject(obj);
             if (((obj)->objectFlags & DIMBOSSFIRE_OBJFLAG_RENDERED) != 0)
             {
@@ -177,17 +139,18 @@ void dimbossfire_update(GameObject *obj)
                     }
                     ref = ref + 1;
                 }
-                while (ref < 0x32);
+                while (ref < DIMBOSSFIRE_BURST_COUNT);
             }
-            ref = (int)Obj_GetPlayerObject();
-            if (((void*)ref != NULL) && ((((GameObject*)ref)->objectFlags & DIMBOSSFIRE_OBJFLAG_PARENT_SLACK) == 0))
+            player = Obj_GetPlayerObject();
+            if ((player != NULL) && ((player->objectFlags & DIMBOSSFIRE_OBJFLAG_PARENT_SLACK) == 0))
             {
-                playerDist = Vec_distance((float*)&(obj)->anim.worldPosX, (float*)(ref + 0x18));
-                if (playerDist <= lbl_803E4DA4)
+                playerDist = Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX);
+                if (playerDist <= gDimbossfireShakeRadius)
                 {
-                    playerDist = lbl_803E4DA8 - playerDist / lbl_803E4DA4;
-                    CameraShake_Start(lbl_803E4DAC * playerDist, lbl_803E4DAC, lbl_803E4DB0);
-                    doRumble(lbl_803E4DB4 * playerDist);
+                    playerDist = gDimbossfireFullIntensity - playerDist / gDimbossfireShakeRadius;
+                    CameraShake_Start(gDimbossfireShakeMagnitudeDuration * playerDist,
+                                      gDimbossfireShakeMagnitudeDuration, gDimbossfireShakeFalloff);
+                    doRumble(gDimbossfireRumbleMagnitude * playerDist);
                 }
             }
             if (state->light == NULL)
@@ -206,17 +169,18 @@ void dimbossfire_update(GameObject *obj)
                     {
                         modelLightStruct_setDiffuseColor(state->light, 0x7f, 0xff, 0, 0);
                     }
-                    modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4DB8, lbl_803E4DBC);
-                    modelLightStruct_setEnabled(state->light, 1, lbl_803E4DA0);
-                    modelLightStruct_setEnabled(state->light, 0, state->activeTimer / lbl_803E4DC0);
+                    modelLightStruct_setDistanceAttenuation(state->light, gDimbossfireLightNearDistance,
+                                                            gDimbossfireLightFarDistance);
+                    modelLightStruct_setEnabled(state->light, 1, gDimbossfireZero);
+                    modelLightStruct_setEnabled(state->light, 0, state->activeTimer / gDimbossfireLightFadeFrames);
                 }
             }
             Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_188);
         }
         state->activeTimer = state->activeTimer - timeDelta;
-        if (state->activeTimer <= lbl_803E4DA0)
+        if (state->activeTimer <= gDimbossfireZero)
         {
-            state->activeTimer = *(f32*)&lbl_803E4DA0;
+            state->activeTimer = *(f32*)&gDimbossfireZero;
             if (state->light != NULL)
             {
                 ModelLightStruct_free(state->light);
@@ -256,7 +220,7 @@ void dimbossfire_init(GameObject *obj, u32 arg2, int placement)
     {
         state->cooldownTimer = (f32)(int)randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
         randVal = randomGetRange(0, 9);
-        state->flameIndex = randVal;
+        state->durationIndex = randVal;
     }
     return;
 }
