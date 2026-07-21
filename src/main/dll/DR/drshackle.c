@@ -55,9 +55,9 @@ extern f32 lbl_803E5B6C; /* 56.0f */
 extern f32 lbl_803E5B70; /* -1.0f */
 extern f32 lbl_803E5B74; /* -0.05f */
 extern f32 lbl_803E5B78; /* 2.0f */
-int drshackle_updateSwingBlend(GameObject* obj, int state)
+int drshackle_updateSwingBlend(GameObject* obj, ShackleSwingState* state)
 {
-    ShackleSwingState* s = (ShackleSwingState*)state;
+    ShackleSwingState* s = state;
     GameObject* o = (GameObject*)obj;
     int hitResult;
     int yawDelta;
@@ -124,7 +124,7 @@ int drshackle_updateSwingBlend(GameObject* obj, int state)
     }
 
     {
-        f32 ang = fn_801EA678(o, state);
+        f32 ang = fn_801EA678(o, (int)state);
         ang = -ang;
         if (s->lastPitch < ang || yawDelta > DRSHACKLE_ANGLE_RETURN_LIMIT || yawDelta < -DRSHACKLE_ANGLE_RETURN_LIMIT)
         {
@@ -182,12 +182,12 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
             obj->anim.localPosY = s->anchorY;
             obj->anim.localPosZ = s->anchorZ;
             (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
-            *(f32*)((int)obj->anim.hitReactState + 0x10) = obj->anim.localPosX;
-            *(f32*)((int)obj->anim.hitReactState + 0x14) = obj->anim.localPosY;
-            *(f32*)((int)obj->anim.hitReactState + 0x18) = obj->anim.localPosZ;
-            *(f32*)((int)obj->anim.hitReactState + 0x1c) = obj->anim.worldPosX;
-            *(f32*)((int)obj->anim.hitReactState + 0x20) = obj->anim.worldPosY;
-            *(f32*)((int)obj->anim.hitReactState + 0x24) = obj->anim.worldPosZ;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosX = obj->anim.worldPosX;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosY = obj->anim.worldPosY;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosZ = obj->anim.worldPosZ;
 
             if (s->floorAdjustFlag == 0)
             {
@@ -199,7 +199,7 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
             flags->positionAnchored = 1;
             return 0;
         }
-        return drshackle_updateSwingBlend(obj, (int)state) != 0;
+        return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
     hitResult = (*gCheckpointInterface)
@@ -218,12 +218,12 @@ int drshackle_updateAttachedPosition(GameObject* obj, ShackleSwingState* state)
     obj->anim.localPosY = s->anchorY;
     obj->anim.localPosZ = s->anchorZ;
     (*gPathControlInterface)->attachObject((void*)obj, (void*)s->attachment);
-    *(f32*)((int)obj->anim.hitReactState + 0x10) = obj->anim.localPosX;
-    *(f32*)((int)obj->anim.hitReactState + 0x14) = obj->anim.localPosY;
-    *(f32*)((int)obj->anim.hitReactState + 0x18) = obj->anim.localPosZ;
-    *(f32*)((int)obj->anim.hitReactState + 0x1c) = obj->anim.worldPosX;
-    *(f32*)((int)obj->anim.hitReactState + 0x20) = obj->anim.worldPosY;
-    *(f32*)((int)obj->anim.hitReactState + 0x24) = obj->anim.worldPosZ;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosX = obj->anim.worldPosX;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosY = obj->anim.worldPosY;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->worldPosZ = obj->anim.worldPosZ;
     flags->positionAnchored = 0;
     return 0;
 }
