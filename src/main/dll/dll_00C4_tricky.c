@@ -612,19 +612,21 @@ int Tricky_isPlayingBall(int* obj)
 
 int Tricky_requestMoveToObject(int* obj, int targetObj)
 {
-    TrickyState* state = ((GameObject*)obj)->extra;
-    s32 objBlocked = ((GameObject*)obj)->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK;
+    GameObject* tricky = (GameObject*)obj;
+    TrickyState* state = tricky->extra;
+    u8* target = (u8*)targetObj;
+    s32 objBlocked = tricky->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK;
 
     if (objBlocked != 0)
     {
         return 0;
     }
-    if (((u32)state->stateFlags & 0x10) == 0)
+    if ((state->stateFlags & 0x10) == 0)
     {
-        state->followObj = (u8*)targetObj;
-        if ((void*)state->targetPosPtr != (void*)(targetObj + 0x18))
+        state->followObj = target;
+        if (state->targetPosPtr != target + 0x18)
         {
-            state->targetPosPtr = (u8*)(targetObj + 0x18);
+            state->targetPosPtr = target + 0x18;
             *(s32*)&state->stateFlags &= ~(u64)0x400;
             state->linkedWalkGroup = 0;
         }
@@ -634,8 +636,8 @@ int Tricky_requestMoveToObject(int* obj, int targetObj)
     else
     {
         state->pendingFollowRequest = 1;
-        state->pendingFollowObj = (u8*)targetObj;
-        *(u32*)&state->stateFlags = *(u32*)&state->stateFlags | 0x10000LL;
+        state->pendingFollowObj = target;
+        state->stateFlags |= 0x10000LL;
     }
     return 1;
 }
