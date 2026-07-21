@@ -466,16 +466,15 @@ void boxBlurTexture(u8* texData, int size, int window, u32 fill)
 
 extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
-void shadowRenderFn_8006b558(int* obj)
+void renderObjectShadowTexture(GameObject* obj)
 {
     f32 mtx[12];
     f32 vA, vB, vC, vD, vE, vF;
     f32 sc, objScale, saved, nx, ny, m;
-    Obj_BuildWorldTransformMatrix((GameObject*)obj, mtx, 0);
-    Camera_ProjectWorldSphere(((GameObject*)obj)->anim.localPosX - playerMapOffsetX, ((GameObject*)obj)->anim.localPosY,
-                              ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ,
-                              lbl_803DED0C *
-                                  (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale),
+    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    Camera_ProjectWorldSphere(obj->anim.localPosX - playerMapOffsetX, obj->anim.localPosY,
+                              obj->anim.localPosZ - playerMapOffsetZ,
+                              lbl_803DED0C * (obj->anim.hitboxScale * obj->anim.rootMotionScale),
                               &vA, &vB, &vC, &vD, &vE, &vF);
     vD = lbl_803DED14 * vD + lbl_803DED10;
     vE = lbl_803DED18 * vE + lbl_803DED10;
@@ -484,7 +483,7 @@ void shadowRenderFn_8006b558(int* obj)
     else
         m = vE;
     sc = lbl_803DED1C / m;
-    objScale = ((GameObject*)obj)->anim.rootMotionScale * sc;
+    objScale = obj->anim.rootMotionScale * sc;
     nx = -vA;
     ny = vB;
     GXSetViewport(*(f32*)&lbl_803DED14 * nx, *(f32*)&lbl_803DED18 * ny, lbl_803DED20, lbl_803DED24,
@@ -492,13 +491,13 @@ void shadowRenderFn_8006b558(int* obj)
     if (vC < *(f32*)&lbl_803DED28)
     {
         int* model;
-        saved = ((GameObject*)obj)->anim.rootMotionScale;
-        ((GameObject*)obj)->anim.rootMotionScale = objScale;
+        saved = obj->anim.rootMotionScale;
+        obj->anim.rootMotionScale = objScale;
         set_shadowFlag_803dcc29(1);
-        objRender(0, 0, 0, 0, (GameObject*)obj, 1);
+        objRender(0, 0, 0, 0, obj, 1);
         set_shadowFlag_803dcc29(0);
-        ((GameObject*)obj)->anim.rootMotionScale = saved;
-        model = (int*)Obj_GetActiveModel((GameObject*)obj);
+        obj->anim.rootMotionScale = saved;
+        model = (int*)Obj_GetActiveModel(obj);
         ((ObjModel*)model)->bufferFlags &= ~0x8;
         gxSetZMode_(1, GX_LEQUAL, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
@@ -506,19 +505,19 @@ void shadowRenderFn_8006b558(int* obj)
         GXCopyTex((void*)(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60), GX_TRUE);
         boxBlurTexture((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80,
                        0x10, 0);
-        *(f32*)obj[0x64 / 4] = lbl_803DED2C / sc;
+        obj->anim.modelState->shadowScale = lbl_803DED2C / sc;
     }
     else
     {
-        *(f32*)obj[0x64 / 4] = lbl_803DED28;
+        obj->anim.modelState->shadowScale = lbl_803DED28;
     }
     Camera_ApplyFullViewport();
-    ((f32*)obj[0x64 / 4])[5] = lbl_803DED14 * (-nx);
-    ((f32*)obj[0x64 / 4])[6] = lbl_803DED18 * (-ny);
-    ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] + lbl_803DED14;
-    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] + lbl_803DED18;
-    ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
-    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
+    obj->anim.modelState->shadowOffsetX = lbl_803DED14 * (-nx);
+    obj->anim.modelState->shadowOffsetY = lbl_803DED18 * (-ny);
+    obj->anim.modelState->shadowOffsetX += lbl_803DED14;
+    obj->anim.modelState->shadowOffsetY += lbl_803DED18;
+    obj->anim.modelState->shadowOffsetX -= lbl_803DED1C * obj->anim.modelState->shadowScale;
+    obj->anim.modelState->shadowOffsetY -= lbl_803DED1C * obj->anim.modelState->shadowScale;
 }
 
 void sortShadowEntriesDescending(ShadowSortEntry* arr, int count)

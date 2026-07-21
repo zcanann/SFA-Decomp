@@ -5976,7 +5976,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
  * 0x8000, saves current FOV before swapping in 43.0f, then
  * issues GXSetViewport with width/height from the global render obj
  * at gRenderModeObj. Then walks to slot lbl_803A9410[lbl_803DBA64],
- * dispatches shadowRenderFn_8006b558(slot) to do the actual draw, re-reads the
+ * dispatches renderObjectShadowTexture(slot) to do the actual draw, re-reads the
  * slot pointer and clears the +0x4c sentinel
  * if it overflowed the 0x90000000 watermark. Tail restores FOV
  * and runs the standard close-block trio. */
@@ -5995,7 +5995,7 @@ void perspectiveFn_80129db4(void)
     Camera_UpdateViewMatrices();
     GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)gRenderModeObj->fbWidth,
                   gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
-    shadowRenderFn_8006b558((int*)((void**)lbl_803A9410)[lbl_803DBA64]);
+    renderObjectShadowTexture((GameObject*)((void**)lbl_803A9410)[lbl_803DBA64]);
     {
         void* slot = ((void**)lbl_803A9410)[lbl_803DBA64];
         if (((u32*)slot)[0x13] > 0x90000000U)

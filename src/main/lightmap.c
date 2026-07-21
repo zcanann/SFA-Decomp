@@ -515,7 +515,7 @@ void getVisibleObjects(s8* opacity)
                     }
                     else if (t == 4)
                     {
-                        shadowRenderFn_8006b558((int*)o);
+                        renderObjectShadowTexture((GameObject*)o);
                     }
                 }
                 if (gVisibleObjectSortKeyCount < 1000)
