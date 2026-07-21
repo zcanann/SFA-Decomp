@@ -29,18 +29,6 @@
  */
 #define THP_FRAME_HEADER_SIZE 8
 
-typedef struct AttractMovieFreeQueueAndStack
-{
-    OSMessageQueue queue;      /* free-buffer queue */
-    u32 threadStack[0x1000 / 4];
-} AttractMovieFreeQueueAndStack;
-
-typedef struct AttractMovieDecodeThread
-{
-    OSThread thread; /* audio decode worker thread */
-    u32 pad310[0x10 / 4];
-} AttractMovieDecodeThread;
-
 OSMessageQueue gAttractMovieDecodedAudioQueue;
 AttractMovieFreeQueueAndStack gAttractMovieFreeAudioQueueAndStack;
 AttractMovieDecodeThread gAttractMovieAudioDecodeThread;

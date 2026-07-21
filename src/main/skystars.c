@@ -26,6 +26,7 @@
 u8 gNewCloudStarsInitialized;
 Texture* gNewCloudStarTextureB;
 Texture* gNewCloudStarTextureA;
+extern const f32 gNewCloudStarAxisThreshold;
 
 typedef struct SkyStarAlphaRange
 {
@@ -258,7 +259,7 @@ void initSkyStars(void)
                 starPosition.y = constellation[constellationIndex].y;
                 starPosition.z = constellation[constellationIndex].z;
                 ax = __fabs(starPosition.x);
-                if (ax > 3750.0f)
+                if (ax > gNewCloudStarAxisThreshold)
                 {
                     PSMTXRotRad(rotationA, 0x79,
                                 (0.015f *
@@ -286,7 +287,7 @@ void initSkyStars(void)
                 else
                 {
                     f64 ay = __fabs(starPosition.y);
-                    if (ay > 3750.0f)
+                    if (ay > gNewCloudStarAxisThreshold)
                     {
                         PSMTXRotRad(rotationA, 0x78,
                                     (0.015f *
