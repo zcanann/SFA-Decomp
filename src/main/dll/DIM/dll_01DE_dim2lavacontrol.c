@@ -103,7 +103,7 @@ void dim2lavacontrol_free(void)
 {
     fn_8004C1E4(0xC0, 1.0f);
     Music_Trigger(MUSICTRIG_PU3_Adventure_c4, 0);
-    timeOfDayFn_80055000();
+    Rcp_DisableHeatEffect();
 }
 
 void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)

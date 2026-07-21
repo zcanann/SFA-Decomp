@@ -991,7 +991,7 @@ void SH_LevelControl_init(GameObject* obj)
             mainSetBits(lbl_80327618.bloopGameBits[i], 0);
         }
     }
-    timeOfDayFn_80055000();
+    Rcp_DisableHeatEffect();
 }
 
 /* descriptor/ptr table auto 0x803277a8-0x80327818 */

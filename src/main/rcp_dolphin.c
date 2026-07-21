@@ -953,7 +953,7 @@ void shaderInit(u8* def, ModelRenderOpTextureRefs* textures, GameObject* obj, in
     textures->texture1 = slot->texture;
 }
 
-extern s32 lbl_803DCE00;
+extern s32 gHeatEffectFadeDirection;
 
 extern f32 gRcpDistortScaleA;
 extern f32 gRcpDistortPowExp;
@@ -2008,17 +2008,17 @@ void turnOnDistortionFilter(f32* vec, f32 angle2, u32* color, f32 angle1)
 
 extern char lbl_803822C8[];
 
-void timeOfDayFn_80055000(void)
+void Rcp_DisableHeatEffect(void)
 {
     u8* p = saveGameGetEnvState();
-    lbl_803DCE00 = -1;
+    gHeatEffectFadeDirection = -1;
     p[0x40] = (u8)(p[0x40] & ~0x20);
 }
 
-void timeOfDayFn_80055038(void)
+void Rcp_EnableHeatEffect(void)
 {
     u8* p = saveGameGetEnvState();
-    lbl_803DCE00 = 1;
+    gHeatEffectFadeDirection = 1;
     p[0x40] = (u8)(p[0x40] | 0x20);
 }
 void Rcp_DisableBlurFilter(void)

@@ -249,7 +249,7 @@ int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             case 0x49267:
                 getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G3_A, 0);
                 getEnvfxActImmediately(obj, obj, TRANSPORTER_ENVFX_G3_B, 0);
-                timeOfDayFn_80055000();
+                Rcp_DisableHeatEffect();
                 mainSetBits(0xef6, 1);
                 break;
             case 0x4cb6a:

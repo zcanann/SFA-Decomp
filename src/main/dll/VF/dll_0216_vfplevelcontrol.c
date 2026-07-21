@@ -119,7 +119,7 @@ int VFP_LevelControl_getObjectTypeId(void)
 
 void VFP_LevelControl_free(GameObject* obj)
 {
-    timeOfDayFn_80055000();
+    Rcp_DisableHeatEffect();
     ObjGroup_RemoveObject((int)obj, VFPLEVELCONTROL_OBJGROUP);
     Music_Trigger(VFP_MUSIC_A, 0);
 }
@@ -224,7 +224,7 @@ void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup)
     state->unk02[4] = 0;
     state->unk02[5] = 0;
     obj->objectFlags |= (VFPLEVELCONTROL_OBJFLAG_HIDDEN | VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED);
-    timeOfDayFn_80055038();
+    Rcp_EnableHeatEffect();
     mainSetBits(GAMEBIT_VFP_LATCH, 1);
     unlockLevel(0, 0, 1);
     if ((u32)mainGetBit(GAMEBIT_VFP_SEQ_DONE) != 0)

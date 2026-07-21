@@ -444,7 +444,7 @@ void DIMboss_free(DIMbossObject* obj)
     {
         ModelLightStruct_free(effect);
     }
-    timeOfDayFn_80055000();
+    Rcp_DisableHeatEffect();
 }
 
 void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,

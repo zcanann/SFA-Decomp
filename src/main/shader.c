@@ -1240,7 +1240,7 @@ extern int gMapCurRomListSlot;
 extern u8 gMapLoadDeferred;
 extern u8 bEnableBlurFilter;
 extern u8 bEnableMotionBlur;
-extern int lbl_803DCE00;
+extern int gHeatEffectFadeDirection;
 extern u8 lbl_803DCEBD;
 extern f32 gShaderDefaultTimeOfDay;
 void beginLoadingMap(void)
@@ -1310,7 +1310,7 @@ void beginLoadingMap(void)
     bEnableBlurFilter = 0;
     bEnableMotionBlur = 0;
     lbl_803DB62C = lbl_803DEBCC;
-    lbl_803DCE00 = -1;
+    gHeatEffectFadeDirection = -1;
     setSaveGameLoadingFlag();
     pz = p[2];
     py = p[1];
@@ -1404,9 +1404,9 @@ void beginLoadingMap(void)
             }
         }
         if (*(u8*)(env + 0x40) & 0x20)
-            lbl_803DCE00 = 1;
+            gHeatEffectFadeDirection = 1;
         else
-            lbl_803DCE00 = -1;
+            gHeatEffectFadeDirection = -1;
         *(int*)(buf + 0x30) = 0;
         *(f32*)(buf + 0xc) = lbl_803DEBCC;
         *(f32*)(buf + 0x10) = lbl_803DEBCC;

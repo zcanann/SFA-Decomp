@@ -124,7 +124,7 @@ extern s16 lbl_803DCEB8;
 extern void* lbl_803DCE6C;
 extern void* lbl_803DCE68;
 extern void* lbl_803DCAB0;
-extern s32 lbl_803DCE00;
+extern s32 gHeatEffectFadeDirection;
 
 typedef union
 {
@@ -1019,18 +1019,18 @@ void updateEnvironment(int mode)
         }
         gMinimapInterface->vtable->frameStart();
 
-        if (lbl_803DCE00 != 0)
+        if (gHeatEffectFadeDirection != 0)
         {
-            heatEffectIntensity += lbl_803DCE00;
+            heatEffectIntensity += gHeatEffectFadeDirection;
             if (heatEffectIntensity < 0)
             {
                 heatEffectIntensity = 0;
-                lbl_803DCE00 = 0;
+                gHeatEffectFadeDirection = 0;
             }
             else if (heatEffectIntensity > 255)
             {
                 heatEffectIntensity = 255;
-                lbl_803DCE00 = 0;
+                gHeatEffectFadeDirection = 0;
             }
         }
     }

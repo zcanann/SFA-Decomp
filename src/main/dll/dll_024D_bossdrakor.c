@@ -138,7 +138,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
             (*gMapEventInterface)->setObjGroupStatus(2, 0x10, 1);
             mainSetBits(GAMEBIT_DRArwingRelated0E7B, 0);
             warpToMap(0x79, 0);
-            timeOfDayFn_80055000();
+            Rcp_DisableHeatEffect();
             break;
         }
     }
@@ -689,7 +689,7 @@ void bossdrakor_update(GameObject* obj)
         getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_B, 0);
         getEnvfxActImmediately(obj, obj, BOSSDRAKOR_ENVFX_C, 0);
         skyFn_80088e54(1, lbl_803E6510);
-        timeOfDayFn_80055038();
+        Rcp_EnableHeatEffect();
         if ((*gRomCurveInterface)->initCurve((void*)((char*)state + 0x28), (void*)obj, lbl_803E6560, &curveArg, 0xd) !=
             0)
         {

@@ -280,11 +280,11 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, int legCode, int distS
                     case 8:
                         if (p[3] != 0)
                         {
-                            timeOfDayFn_80055038();
+                            Rcp_EnableHeatEffect();
                         }
                         else
                         {
-                            timeOfDayFn_80055000();
+                            Rcp_DisableHeatEffect();
                         }
                         break;
                     case 9:

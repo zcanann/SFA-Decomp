@@ -76,7 +76,7 @@ void dim_levelcontrol_free(GameObject *obj)
 {
     Music_Trigger(MUSICTRIG_drako_1, 0);
     Music_Trigger(MUSICTRIG_citytombs_ed, 0);
-    timeOfDayFn_80055000();
+    Rcp_DisableHeatEffect();
 }
 
 void dim_levelcontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
