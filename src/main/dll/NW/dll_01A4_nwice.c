@@ -1,4 +1,4 @@
-/* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
+/* DLL 0x01A4 - paired ice objects in Northern Wastes. */
 #include "main/obj_group.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -10,75 +10,76 @@
 
 int NW_ice_getExtraSize(void)
 {
-    return 0x4;
+    return sizeof(NwIceState);
 }
 
-void NW_ice_free(int obj)
+void NW_ice_free(GameObject* obj)
 {
-    ObjGroup_RemoveObject(obj, NWICE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, NWICE_OBJGROUP);
 }
 
 void NW_ice_render(void)
 {
 }
 
-void NW_ice_update(int* obj)
+void NW_ice_update(GameObject* obj)
 {
-    int** scan;
+    GameObject** scan;
     int i;
-    NwIcePlacement* setup;
+    NwIcePlacement* placement;
     NwIceState* state;
-    int** objects;
-    int* candidate;
+    GameObject** objects;
+    GameObject* candidate;
     int count;
     f32 nearestDist;
 
     nearestDist = 3.4028235e38f;
-    state = ((GameObject*)obj)->extra;
-    if (state->linkedObj != NULL)
+    state = obj->extra;
+    if (state->pairedIce != NULL)
     {
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)state->linkedObj)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)state->linkedObj)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)state->linkedObj)->anim.localPosZ;
-        ((GameObject*)obj)->anim.rotX = ((GameObject*)state->linkedObj)->anim.rotX;
-        ObjGroup_FindNearestObjectForObject(NWICE_OBJGROUP, (GameObject*)obj, &nearestDist);
+        obj->anim.localPosX = state->pairedIce->anim.localPosX;
+        obj->anim.localPosY = state->pairedIce->anim.localPosY;
+        obj->anim.localPosZ = state->pairedIce->anim.localPosZ;
+        obj->anim.rotX = state->pairedIce->anim.rotX;
+        ObjGroup_FindNearestObjectForObject(NWICE_OBJGROUP, obj, &nearestDist);
 
-        if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
+        if (state->pairedIce->anim.alpha < 0xc0)
         {
-            ObjHits_DisableObject((GameObject*)obj);
-            fn_80296D20(Obj_GetPlayerObject(), (GameObject*)obj);
+            ObjHits_DisableObject(obj);
+            fn_80296D20(Obj_GetPlayerObject(), obj);
         }
         else
         {
-            ObjHits_EnableObject((GameObject*)obj);
+            ObjHits_EnableObject(obj);
         }
 
-        if ((((GameObject*)state->linkedObj)->anim.alpha < 0xc0) || (nearestDist < 120.0f))
+        if ((state->pairedIce->anim.alpha < 0xc0) || (nearestDist < 120.0f))
         {
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | 0x100);
+            obj->objectFlags = (u16)(obj->objectFlags | 0x100);
         }
         else
         {
-            ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags & ~0x100);
+            obj->objectFlags = (u16)(obj->objectFlags & ~0x100);
         }
     }
     else
     {
-        objects = (int**)ObjGroup_GetObjects(NWICE_LINK_OBJGROUP, &count);
-        setup = *(NwIcePlacement**)&((GameObject*)obj)->anim.placementData;
+        objects = (GameObject**)ObjGroup_GetObjects(NWICE_LINK_OBJGROUP, &count);
+        placement = (NwIcePlacement*)obj->anim.placementData;
         for (i = 0, scan = objects; i < count; scan++, i++)
         {
             candidate = *scan;
-            if ((obj != candidate) && (setup->linkId == *(u8*)((char*)*(int**)((char*)candidate + 0x4c) + 0x1b)))
+            if (obj != candidate &&
+                placement->pairId == ((NwIcePlacement*)candidate->anim.placementData)->pairId)
             {
-                state->linkedObj = objects[i];
+                state->pairedIce = objects[i];
                 break;
             }
         }
     }
 }
 
-void NW_ice_init(int obj)
+void NW_ice_init(GameObject* obj)
 {
-    ObjGroup_AddObject(obj, NWICE_OBJGROUP);
+    ObjGroup_AddObject((int)obj, NWICE_OBJGROUP);
 }
