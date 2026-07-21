@@ -126,7 +126,7 @@ extern s16 lbl_803DD0E8;
 extern s16 lbl_803DD0E6;
 extern s16 lbl_803DD0E4;
 extern f32 lbl_803DD0E0;
-extern s16 lbl_8030ECF8[];
+extern s16 gObjSeqSlotValues[];
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
 extern u8 lbl_803DD0D9;
@@ -961,9 +961,9 @@ int animatedObjGetSeqId(ObjAnimUpdateState* state)
     return gObjSeqSlotSeqIdTable[state->sequenceSlot] - 1;
 }
 
-int fn_80080360(int p, int val)
+int ObjSeq_SetSlotValue(ObjAnimUpdateState* state, int value)
 {
-    lbl_8030ECF8[(s8) * (u8*)(p + 0x57)] = (s16)val;
+    gObjSeqSlotValues[(s8)state->sequenceSlot] = (s16)value;
     return 1;
 }
 

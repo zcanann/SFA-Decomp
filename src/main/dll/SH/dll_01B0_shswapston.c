@@ -186,9 +186,9 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
     u8 command;
     ObjAnimUpdateState* animUpdate = (ObjAnimUpdateState*)animObj;
 
-    if (animatedObjGetSeqId((ObjAnimUpdateState*)animObj) == 0x35f)
+    if (animatedObjGetSeqId(animUpdate) == 0x35f)
     {
-        fn_80080360(animObj, 0x2648);
+        ObjSeq_SetSlotValue(animUpdate, 0x2648);
         if (getCurUiDll() != 0x10)
         {
             loadUiDll(0x10);

@@ -308,7 +308,7 @@ extern f32 lbl_803DF04C;
 extern u8 lbl_803DB411;
 extern u8 lbl_803DD0D9;
 extern u8 lbl_803DD078;
-extern s16 lbl_8030ECF8[];
+extern s16 gObjSeqSlotValues[];
 extern f32 lbl_803DD074;
 extern f32 lbl_803DF054;
 extern f32 lbl_803DF050;
@@ -650,7 +650,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     i = 0;
     st->cmdFlags[((GameObject*)obj)->seqIndex] = 0;
     base[((GameObject*)obj)->seqIndex + 0x3334] = 0;
-    lbl_8030ECF8[((GameObject*)obj)->seqIndex] = 0;
+    gObjSeqSlotValues[((GameObject*)obj)->seqIndex] = 0;
     st->handles[((GameObject*)obj)->seqIndex] = ((GameObject*)obj)->anim.seqId;
 
     walk = buf;
@@ -5184,7 +5184,7 @@ ObjSeqStreamMapEntry gObjSeqStreamTableB[OBJSEQ_STREAM_MAP_COUNT] = {
     {0xC3, lbl_8030EC7C},  {0x122, lbl_8030EC98},
 };
 
-s16 lbl_8030ECF8[86] = {0};
+s16 gObjSeqSlotValues[86] = {0};
 
 int lbl_8030EDA4[7] = {0x100, 0x200, 0x40000, 0x80000, 0x20000, 0x10000, -1};
 
