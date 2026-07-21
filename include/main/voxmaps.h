@@ -7,18 +7,16 @@ struct CurveHeapNode;
 typedef struct Texture Texture;
 
 typedef struct VoxMapSlotOrigin {
-    u16 gridX;
-    u16 gridZ;
+    s16 gridX;
+    s16 gridZ;
 } VoxMapSlotOrigin;
 
 typedef struct VoxMaps {
     VoxMapSlotOrigin slotOrigin[6];
     int timer[6];
     int blockId[6];
-    int blockOriginWorldX;
-    int blockOriginWorldZ;
-    int blockOriginGridX;
-    int blockOriginGridZ;
+    int blockOriginWorld[2];
+    int blockOriginGrid[2];
     int f58;
     void* mapBuffer[6];
 } VoxMaps;

@@ -1213,14 +1213,7 @@ u8* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int y
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
     VoxMaps* vm = &gVoxMaps;
-    int gridX;
-    int gridY;
-    int bestVal;
-    int i;
-    int found;
-    int bestSlot;
-    int blockId;
-    int ay;
+    int gridX, gridY, bestVal, i, found, bestSlot, blockId, ay;
     MapCellEntry* cell;
 
     ay = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
@@ -1228,10 +1221,10 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     gridX = fastFloorf((f32)(obj->x * 10 + 5 - gMapBlockOriginWorldX) / gVoxMapsBlockWorldSize);
     gridY = fastFloorf((f32)ay / gVoxMapsBlockWorldSize);
 
-    vm->blockOriginWorldX = gMapBlockOriginWorldX + gridX * 640;
-    vm->blockOriginWorldZ = gMapBlockOriginWorldZ + gridY * 640;
-    vm->blockOriginGridX = vm->blockOriginWorldX / 10;
-    vm->blockOriginGridZ = vm->blockOriginWorldZ / 10;
+    vm->blockOriginWorld[0] = gMapBlockOriginWorldX + gridX * 640;
+    vm->blockOriginWorld[1] = gMapBlockOriginWorldZ + gridY * 640;
+    vm->blockOriginGrid[0] = vm->blockOriginWorld[0] / 10;
+    vm->blockOriginGrid[1] = vm->blockOriginWorld[1] / 10;
 
     blockId = -1;
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL)
@@ -1259,6 +1252,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
         {
             int b8;
             int b9;
+            VoxMapSlotOrigin* origin;
             bestSlot = -1;
             bestVal = -1;
             for (i = 0; i < VOXMAP_SLOT_COUNT; i++)
@@ -1281,8 +1275,9 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
             vm->mapBuffer[bestSlot] = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
-            *(s16*)&vm->slotOrigin[bestSlot].gridX = vm->blockOriginGridX;
-            *(s16*)&vm->slotOrigin[bestSlot].gridZ = vm->blockOriginGridZ;
+            origin = &vm->slotOrigin[bestSlot];
+            origin->gridX = vm->blockOriginGrid[0];
+            origin->gridZ = vm->blockOriginGrid[1];
             vm->f58 = 0;
         }
     }
@@ -1290,7 +1285,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     {
         vm->f58 = 0;
     }
-    return &vm->blockOriginWorldX;
+    return vm->blockOriginWorld;
 }
 
 void* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
