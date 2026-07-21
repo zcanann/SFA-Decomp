@@ -8,6 +8,7 @@
  * field re-arms if the collapse bit is cleared again.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/CF/dll_015B_cfforcefield.h"
 #include "main/game_object.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/maketex_timer_api.h"
@@ -21,54 +22,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-f32 lbl_803DBE90 = 5.0f;
-int lbl_803DBE94 = 5;
-int lbl_803DBE98 = 0x200;
-
-typedef struct CfForceFieldFlags
-{
-    u8 disabled : 1; /* 0x80: field collapsed; skip update work */
-    u8 rest : 7;
-} CfForceFieldFlags;
-
-typedef struct CfForceFieldState
-{
-    CfForceFieldFlags flags; /* 0x00 */
-    u8 pad01[3];
-    f32 timer; /* 0x04: collapse countdown, seconds */
-} CfForceFieldState;
-
-typedef struct CfForceFieldMapData
-{
-    ObjPlacement base;
-    s8 rotXByte; /* 0x18: rotX in 1/256 turns */
-    s8 style;    /* 0x19: emitter style index (mod 3) */
-    s16 unk1A;
-    u8 pad1C[2];
-    s16 activeEvent;   /* 0x1E: game bit keeping the field running */
-    s16 collapseEvent; /* 0x20: game bit triggering the collapse */
-    u8 pad22[0x28 - 0x22];
-} CfForceFieldMapData;
-
-typedef struct CfForceFieldEmitter
-{
-    int effectId;
-    int unk04;
-    int angleStep;
-    int unk0C;
-    int unk10;
-    f32 waveScale;
-} CfForceFieldEmitter;
-
-STATIC_ASSERT(offsetof(CfForceFieldState, timer) == 0x04);
-STATIC_ASSERT(sizeof(CfForceFieldState) == 0x08);
-STATIC_ASSERT(offsetof(CfForceFieldMapData, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(CfForceFieldMapData, activeEvent) == 0x1E);
-STATIC_ASSERT(offsetof(CfForceFieldMapData, collapseEvent) == 0x20);
-STATIC_ASSERT(sizeof(CfForceFieldMapData) == 0x28);
-STATIC_ASSERT(offsetof(CfForceFieldEmitter, angleStep) == 0x08);
-STATIC_ASSERT(offsetof(CfForceFieldEmitter, waveScale) == 0x14);
-STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
+f32 gCfForceFieldRingRadiusScale = 5.0f;
+int gCfForceFieldRingJitter = 5;
+int gCfForceFieldCollapseSpinStep = 0x200;
 
 /* the second collapse jingle is skipped for the placement on this map */
 #define CFFORCEFIELD_MAP_SILENT_COLLAPSE 0x47F5E
@@ -77,7 +33,7 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 #define CFFORCEFIELD_COLLAPSE_FRAMES 60
 
 
-CfForceFieldEmitter lbl_80322ED8[3] = {
+CfForceFieldEmitter gCfForceFieldEmitters[3] = {
     {0x7a4, 0x7a5, 0x4000, 100, -0x1000, 1850.0f},
     {0x7a2, 0x7a3, 0x4000, 50, 0x1000, 732.0f},
     {0x7a2, 0x7a3, 0x4000, 50, 0x1000, 732.0f},
@@ -105,7 +61,7 @@ void cfforcefield_hitDetect(void)
 {
 }
 
-void cfforcefield_update(u8* obj)
+void cfforcefield_update(GameObject* obj)
 {
     f32* wavePtr;
     int* stepPtr;
@@ -122,12 +78,12 @@ void cfforcefield_update(u8* obj)
     PartFxSpawnParams world;
     f32 local[3];
 
-    data = (CfForceFieldMapData*)((GameObject*)obj)->anim.placement;
-    state = ((GameObject*)obj)->extra;
+    data = (CfForceFieldMapData*)obj->anim.placement;
+    state = obj->extra;
     zero = 0.0f;
-    ((GameObject*)obj)->anim.velocityZ = zero;
-    ((GameObject*)obj)->anim.velocityY = zero;
-    ((GameObject*)obj)->anim.velocityX = zero;
+    obj->anim.velocityZ = zero;
+    obj->anim.velocityY = zero;
+    obj->anim.velocityX = zero;
 
     if (mainGetBit(data->activeEvent) != 0)
     {
@@ -136,7 +92,7 @@ void cfforcefield_update(u8* obj)
             /* the ring runs at full strength until the collapse timer is
                started, then shrinks with the time left */
             style = data->style % 3;
-            timeLeft = state->timer;
+            timeLeft = state->collapseTimer;
             notCollapsing = (timeLeft != zero);
             notCollapsing = !notCollapsing;
             if (notCollapsing)
@@ -149,50 +105,52 @@ void cfforcefield_update(u8* obj)
             }
 
             {
-                Obj_BuildWorldTransformMatrix((GameObject*)obj, (f32*)mtx, 0);
-                ((GameObject*)obj)->anim.rotZ = (s16)(512.0f * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
+                Obj_BuildWorldTransformMatrix(obj, (f32*)mtx, 0);
+                obj->anim.rotZ = (s16)(512.0f * timeDelta + (f32)(s32)obj->anim.rotZ);
 
                 angle = -0x7fff;
-                emitter = &lbl_80322ED8[style];
+                emitter = &gCfForceFieldEmitters[style];
                 wavePtr = &emitter->waveScale;
                 stepPtr = &emitter->angleStep;
                 for (; angle < 0x7fff; angle += *stepPtr)
                 {
-                    local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
-                               10.0f * (strength * lbl_803DBE90) *
+                    local[0] = (f32)(int)randomGetRange(-gCfForceFieldRingJitter, gCfForceFieldRingJitter) +
+                               10.0f * (strength * gCfForceFieldRingRadiusScale) *
                                    mathCosf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
-                    local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
-                               10.0f * (strength * lbl_803DBE90) *
+                    local[1] = (f32)(int)randomGetRange(-gCfForceFieldRingJitter, gCfForceFieldRingJitter) +
+                               10.0f * (strength * gCfForceFieldRingRadiusScale) *
                                    mathSinf(3.1415927f * (f32)(angle + (s32)(100.0f * *wavePtr)) / 32768.0f);
                     local[2] = 0.0f;
                     PSMTXMultVecSR((f32*)mtx, local, local);
                     /* burst target = ring point in world space; the burst
-                       inherits the field's velocity (obj + 0x24) */
-                    world.posX = local[0] + ((GameObject*)obj)->anim.localPosX;
-                    world.posY = local[1] + ((GameObject*)obj)->anim.localPosY;
-                    world.posZ = local[2] + ((GameObject*)obj)->anim.localPosZ;
-                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1, obj + 0x24);
-                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1, obj + 0x24);
-                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1, obj + 0x24);
+                       inherits the field's velocity */
+                    world.posX = local[0] + obj->anim.localPosX;
+                    world.posY = local[1] + obj->anim.localPosY;
+                    world.posZ = local[2] + obj->anim.localPosZ;
+                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1,
+                                                     &obj->anim.velocity);
+                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1,
+                                                     &obj->anim.velocity);
+                    (*gPartfxInterface)->spawnObject(obj, emitter->effectId, &world, 0x200001, -1,
+                                                     &obj->anim.velocity);
                 }
             }
 
-            if (fn_80080150(&state->timer) != 0)
+            if (fn_80080150(&state->collapseTimer) != 0)
             {
-                ((GameObject*)obj)->anim.rotY =
-                    (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotY);
-                if (timerCountDown(&state->timer) != 0)
+                obj->anim.rotY =
+                    (s16)((f32)(s32)gCfForceFieldCollapseSpinStep * timeDelta + (f32)(s32)obj->anim.rotY);
+                if (timerCountDown(&state->collapseTimer) != 0)
                 {
                     state->flags.disabled = 1;
-                    ((GameObject*)obj)->anim.rotY = 0;
+                    obj->anim.rotY = 0;
                 }
             }
             else if (mainGetBit(data->collapseEvent) != 0)
             {
-                s16toFloat(&state->timer, CFFORCEFIELD_COLLAPSE_FRAMES);
+                s16toFloat(&state->collapseTimer, CFFORCEFIELD_COLLAPSE_FRAMES);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_littletink22); /* field power-down */
-                if (((CfForceFieldMapData*)((GameObject*)obj)->anim.placement)->base.mapId !=
-                    CFFORCEFIELD_MAP_SILENT_COLLAPSE)
+                if (((CfForceFieldMapData*)obj->anim.placement)->base.mapId != CFFORCEFIELD_MAP_SILENT_COLLAPSE)
                 {
                     Sfx_PlayFromObject((int)obj, SFXTRIG_sc_menuups16k_409); /* collapse jingle */
                 }
@@ -214,7 +172,7 @@ void cfforcefield_init(GameObject* obj, CfForceFieldMapData* data)
         obj->anim.rotX = rotX;
     }
     state->flags.disabled = mainGetBit(data->collapseEvent);
-    storeZeroToFloatParam(&state->timer);
+    storeZeroToFloatParam(&state->collapseTimer);
 }
 
 void cfforcefield_release(void)
