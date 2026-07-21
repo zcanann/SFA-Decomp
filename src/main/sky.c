@@ -660,7 +660,7 @@ void skyBuildSunModelMatrix(f32 mtx[3][4])
     PSMTXConcat((f32*)mtx, (f32*)scaleMtx, (f32*)mtx);
 }
 
-u8 skyFn_8008919c(int slot)
+u8 skyGetSunRenderAlpha(int slot)
 {
     u8* sky;
 

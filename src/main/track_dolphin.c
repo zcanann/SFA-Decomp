@@ -576,7 +576,7 @@ void renderGlows(void)
     f32 cam[3];
     void* viewMtx;
     u8 alpha;
-    u8 sky;
+    u8 sunAlpha;
     f32 sunDot;
     f32 cx, cy, cz;
 
@@ -594,8 +594,8 @@ void renderGlows(void)
     alpha = 0xff;
     gSunFlareScissorWidth = 0;
     gSunFlareScissorHeight = 0;
-    sky = skyFn_8008919c(2);
-    if (sky != 0 && (renderFlags & 0x40))
+    sunAlpha = skyGetSunRenderAlpha(2);
+    if (sunAlpha != 0 && (renderFlags & 0x40))
     {
         viewMtx = Camera_GetViewMatrix();
         fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
@@ -649,7 +649,7 @@ void renderGlows(void)
                 GXSetCurrentMtx(GX_PNMTX0);
                 selectTexture((Texture*)((int)skyGetSkyTexture()), 0);
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
-                sunDot = (f32)(u32)sky * sunDot;
+                sunDot = (f32)(u32)sunAlpha * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(lbl_803DEBFC * sunDot));
                 alpha = lbl_803DEBD8 - lbl_803DEC38 * sunDot;
                 fade = lbl_803DEC3C * sunDot;
