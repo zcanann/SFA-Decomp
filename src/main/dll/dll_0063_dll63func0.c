@@ -17,7 +17,29 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL63_EFFECT_ID 0x40
 
-extern u8 lbl_80312BD8[];
+extern s16 lbl_80312BD8[144];
+
+typedef struct Dll63VectorRecord
+{
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 unk6;
+    s16 unk8;
+} Dll63VectorRecord;
+
+typedef struct Dll63EffectTable
+{
+    Dll63VectorRecord records[14];
+    u8 effectArgs[0xd4 - 0x8c];
+    u8 textureD4[0xf0 - 0xd4];
+    u8 textureF0[0x100 - 0xf0];
+    u8 texture100[0x110 - 0x100];
+    s16 frameValues[7];
+    u8 pad11E[2];
+} Dll63EffectTable;
+
+STATIC_ASSERT(sizeof(Dll63EffectTable) == 0x120);
 
 #define DLL63_LARGE_INNER_SIZE 100.0f
 #define DLL63_OUTER_SIZE 200.0f
@@ -35,7 +57,8 @@ extern u8 lbl_80312BD8[];
 s16 dll_63_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags, int unused, void* unusedParams)
 {
     ModgfxPointerSpawnPacket buf;
-    u8* base = lbl_80312BD8;
+    u8* base = (u8*)lbl_80312BD8;
+    Dll63EffectTable* table = (Dll63EffectTable*)base;
     s16* rec;
     int i;
     u32 flag;
@@ -43,7 +66,7 @@ s16 dll_63_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags
     GfxCmd* entries;
     if (variant == 1)
     {
-        *(s16*)&base[0x112] = 0;
+        table->frameValues[1] = 0;
     }
     flag = *(u8*)(*(u8**)&sourceObj->anim.placementData + 0x1a);
     if (variant == 2)
@@ -272,13 +295,13 @@ s16 dll_63_func03(GameObject* sourceObj, int variant, void* posSource, u32 flags
     buf.v5a = 0;
     buf.v5b = 0x1e;
     buf.count = (cmd + 13) - entries;
-    buf.hw[0] = *(s16*)&base[0x110];
-    buf.hw[1] = *(s16*)&base[0x112];
-    buf.hw[2] = *(s16*)&base[0x114];
-    buf.hw[3] = *(s16*)&base[0x116];
-    buf.hw[4] = *(s16*)&base[0x118];
-    buf.hw[5] = *(s16*)&base[0x11a];
-    buf.hw[6] = *(s16*)&base[0x11c];
+    buf.hw[0] = table->frameValues[0];
+    buf.hw[1] = table->frameValues[1];
+    buf.hw[2] = table->frameValues[2];
+    buf.hw[3] = table->frameValues[3];
+    buf.hw[4] = table->frameValues[4];
+    buf.hw[5] = table->frameValues[5];
+    buf.hw[6] = table->frameValues[6];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0x40000c0;
     buf.flags |= flags;
