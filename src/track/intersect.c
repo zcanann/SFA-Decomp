@@ -675,8 +675,9 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
     {
         gWaterFxBank = 3;
     }
-    if (fn_80065768((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ, &groundY, (f32*)&norm, 0) == 0)
+    if (trackGetNearestGroundOffsetAndNormal((GameObject*)obj, ((GameObject*)obj)->anim.localPosX,
+                                             ((GameObject*)obj)->anim.localPosY,
+                                             ((GameObject*)obj)->anim.localPosZ, &groundY, (f32*)&norm, 0) == 0)
     {
         if (type == 1)
         {

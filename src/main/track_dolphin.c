@@ -539,7 +539,8 @@ void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
 
 int objShadowFn_80062378(GameObject* obj, u8 param);
 
-int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag);
+int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset,
+                                         f32* outNormal, int kinds);
 
 void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale);
 
@@ -1284,7 +1285,8 @@ void buildGroundShadowQuad(s16* out, GameObject* obj)
     f32 s;
     f32 nd;
 
-    if (fn_80065768((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &dist, a, 0) == 0)
+    if (trackGetNearestGroundOffsetAndNormal(obj, obj->anim.localPosX, obj->anim.localPosY,
+                                             obj->anim.localPosZ, &dist, a, 0) == 0)
     {
         PSVECNormalize(a, a);
         b[0] = lbl_803DEC68;
@@ -3528,7 +3530,8 @@ int fn_80065684(GameObject* obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
     return 0;
 }
 
-int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
+int trackGetNearestGroundOffsetAndNormal(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundOffset,
+                                         f32* outNormal, int kinds)
 {
     TrackGroundHit** arr;
     int n;
@@ -3537,7 +3540,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
     f32 best;
     f32 cur;
 
-    n = hitDetectFn_80065e50((GameObject*)obj, x, y, z, &arr, 0, flag);
+    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, kinds);
     if (n != 0)
     {
         cur = y - arr[0]->height;
@@ -3554,13 +3557,13 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
                 bestIdx = i;
             }
         }
-        *outGroundY = y - arr[bestIdx]->height;
+        *outGroundOffset = y - arr[bestIdx]->height;
         outNormal[0] = arr[bestIdx]->normalX;
         outNormal[1] = arr[bestIdx]->normalY;
         outNormal[2] = arr[bestIdx]->normalZ;
         return 0;
     }
-    *outGroundY = lbl_803DECB4;
+    *outGroundOffset = lbl_803DECB4;
     return 1;
 }
 
