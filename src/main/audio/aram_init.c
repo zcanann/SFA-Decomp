@@ -6,7 +6,7 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/ar.h"
 
-extern u8 lbl_803D3F60[];
+extern AramTransferQueues lbl_803D3F60;
 extern u32 aramTop;
 extern u32 aramWrite;
 
@@ -18,14 +18,14 @@ extern u32 aramWrite;
  */
 void aramInit(u32 extraSize)
 {
-    u8* status;
-    volatile u8* flag;
+    AramTransferQueues* queues;
+    volatile u8* pendingCount;
     u16* clear;
     u8* buf;
     u32 arBase;
     int i;
 
-    status = lbl_803D3F60;
+    queues = &lbl_803D3F60;
     arBase = ARGetBaseAddress();
     buf = salMalloc(0x500);
     clear = (u16*)buf;
@@ -34,12 +34,12 @@ void aramInit(u32 extraSize)
         clear[i] = 0;
     }
     DCFlushRange(buf, 0x500);
-    *(flag = status + 0x281) = 0;
-    status[0x280] = 0;
-    status[0x505] = 0;
-    status[0x504] = 0;
+    *(pendingCount = &queues->normalPriority.count) = 0;
+    queues->normalPriority.head = 0;
+    queues->highPriority.count = 0;
+    queues->highPriority.head = 0;
     aramUploadData(buf, arBase, 0x500, 0, 0, 0);
-    while (*flag != 0)
+    while (*pendingCount != 0)
     {
     }
     salFree(buf);

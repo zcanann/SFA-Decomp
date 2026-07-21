@@ -12,7 +12,10 @@ typedef struct AramStreamBufferEntry
 
 #define ARAM_STREAM_BUFFER_COUNT 64
 
+STATIC_ASSERT(sizeof(AramStreamBufferEntry) == 0x10);
+
 extern u8 lbl_803D3F60[];
+
 extern u32 aramTop;
 extern u32 aramWrite;
 extern u32 aramStream;

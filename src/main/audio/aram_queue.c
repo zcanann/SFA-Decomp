@@ -19,7 +19,7 @@ void aramQueueCallback(u32 requestAddress)
 
     request = (ARQRequest*)requestAddress;
     queue = (request->priority == ARQ_PRIORITY_HIGH) ? &lbl_803D41E4 : &lbl_803D3F60;
-    for (i = 0; i < 0x10; i++)
+    for (i = 0; i < ARAM_TRANSFER_QUEUE_CAPACITY; i++)
     {
         if (request == &queue->slots[i].request && queue->slots[i].completionCallback != NULL)
         {
@@ -45,7 +45,7 @@ void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32
     while (1)
     {
         irq = OSDisableInterrupts();
-        if (queue->count < 0x10)
+        if (queue->count < ARAM_TRANSFER_QUEUE_CAPACITY)
         {
             queue->slots[queue->head].request.owner = 0x2a;
             queue->slots[queue->head].request.type = ARQ_TYPE_MRAM_TO_ARAM;
@@ -61,7 +61,7 @@ void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32
                            queue->slots[queue->head].request.source, queue->slots[queue->head].request.dest,
                            queue->slots[queue->head].request.length, queue->slots[queue->head].request.callback);
             queue->count += 1;
-            queue->head = (queue->head + 1) % 0x10;
+            queue->head = (queue->head + 1) % ARAM_TRANSFER_QUEUE_CAPACITY;
             OSRestoreInterrupts(irq);
             return;
         }
