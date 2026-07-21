@@ -3,20 +3,37 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+#include "main/obj_placement.h"
+
+typedef struct EcshCreatorPlacement
+{
+    ObjPlacement base;
+    s16 triggerGameBit;
+    u8 pad1A[0x1E - 0x1A];
+    s8 initialRotX;
+    s8 childGameBitOffset;
+    u8 groupSlotOffset;
+} EcshCreatorPlacement;
 
 typedef struct EcshCreatorState
 {
-    s16 countdown;
-    s16 active;
-    s16 gameBit;
+    s16 spawnTimer;
+    s16 spawnTimerStep;
+    s16 triggerGameBit;
     s16 pad06;
-    s16 groupSlot;
+    s16 childGroupSlot;
 } EcshCreatorState;
 
-STATIC_ASSERT(offsetof(EcshCreatorState, countdown) == 0);
-STATIC_ASSERT(offsetof(EcshCreatorState, active) == 2);
-STATIC_ASSERT(offsetof(EcshCreatorState, gameBit) == 4);
-STATIC_ASSERT(offsetof(EcshCreatorState, groupSlot) == 8);
+STATIC_ASSERT(offsetof(EcshCreatorPlacement, triggerGameBit) == 0x18);
+STATIC_ASSERT(offsetof(EcshCreatorPlacement, initialRotX) == 0x1E);
+STATIC_ASSERT(offsetof(EcshCreatorPlacement, childGameBitOffset) == 0x1F);
+STATIC_ASSERT(offsetof(EcshCreatorPlacement, groupSlotOffset) == 0x20);
+STATIC_ASSERT(sizeof(EcshCreatorPlacement) == 0x24);
+STATIC_ASSERT(offsetof(EcshCreatorState, spawnTimer) == 0);
+STATIC_ASSERT(offsetof(EcshCreatorState, spawnTimerStep) == 2);
+STATIC_ASSERT(offsetof(EcshCreatorState, triggerGameBit) == 4);
+STATIC_ASSERT(offsetof(EcshCreatorState, childGroupSlot) == 8);
 STATIC_ASSERT(sizeof(EcshCreatorState) == 0xa);
 
 /* 0x38-byte spawn descriptor handed to Obj_SetupObject for the spawned
@@ -25,13 +42,7 @@ STATIC_ASSERT(sizeof(EcshCreatorState) == 0xa);
  * mapId); the tail is ground-baddie placement fields. */
 typedef struct EcshSharpClawSpawnSetup
 {
-    s16 objType;  /* 0x00 */
-    s16 pad02;    /* 0x02 */
-    u8 color[4];  /* 0x04 */
-    f32 posX;     /* 0x08 */
-    f32 posY;     /* 0x0c */
-    f32 posZ;     /* 0x10 */
-    s32 mapId;    /* 0x14 */
+    ObjPlacement base;
     s16 gameBit;  /* 0x18 */
     s16 unk1A;    /* 0x1a */
     u8 pad1C[2];  /* 0x1c */
@@ -43,7 +54,7 @@ typedef struct EcshSharpClawSpawnSetup
     u8 unk27;     /* 0x27 */
     u8 unk28;     /* 0x28 */
     u8 unk29;     /* 0x29 */
-    s8 rotByte;   /* 0x2a: object yaw byte (anim.rotX >> 8) */
+    s8 rotX;      /* 0x2a: anim.rotX >> 8 */
     u8 unk2B;     /* 0x2b */
     s16 unk2C;    /* 0x2c */
     s8 unk2E;     /* 0x2e */
@@ -55,21 +66,22 @@ typedef struct EcshSharpClawSpawnSetup
     u8 pad36[2];  /* 0x36 */
 } EcshSharpClawSpawnSetup;
 
-STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, posX) == 0x8);
-STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, mapId) == 0x14);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, base.posX) == 0x8);
 STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, gameBit) == 0x18);
-STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, rotByte) == 0x2a);
+STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, rotX) == 0x2a);
 STATIC_ASSERT(offsetof(EcshSharpClawSpawnSetup, unk34) == 0x34);
 STATIC_ASSERT(sizeof(EcshSharpClawSpawnSetup) == 0x38);
 
 int ecsh_creator_getExtraSize(void);
 int ecsh_creator_getObjectTypeId(void);
 void ecsh_creator_free(void);
-void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void ecsh_creator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void ecsh_creator_hitDetect(void);
 void ecsh_creator_update(GameObject* obj);
-void ecsh_creator_init(GameObject* obj, s8* def);
+void ecsh_creator_init(GameObject* obj, EcshCreatorPlacement* placement);
 void ecsh_creator_release(void);
 void ecsh_creator_initialise(void);
+
+extern ObjectDescriptor gECSH_CreatorObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_0191_ECSHCREATOR_H_ */

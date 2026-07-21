@@ -25,24 +25,16 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0191_ecshcreator.h"
-#include "main/object_descriptor.h"
 #include "main/dll/foodbag.h"
+#include "main/dll/baddie_state.h"
 
 #define ECSH_SHRINE_RESOURCE 0x82 /* setup resource (Resource_Acquire id) */
 #define ECSH_SHARPCLAW_OBJ 0x11 /* defNo of the spawned child: "sharpclawGr" (DLL 0xC9) */
 #define ECSH_COUNTDOWN_START 100
+#define ECSH_CHILD_GROUP_SLOT_BASE 2
+#define ECSH_SHARPCLAW_DISABLE_CAMERA_TARGET 0x20
 
 extern f32 lbl_803E4FF8;
-
-typedef struct EcshCreatorPlacement
-{
-    ObjPlacement head;
-    s16 gameBit;         /* 0x18 */
-    u8 pad1a[0x1e - 0x1a];
-    s8 rotByte;          /* 0x1e: object yaw seed (<<8 -> anim.rotX) */
-    s8 gameBitOffset;    /* 0x1f: added to spawned child gameBit */
-    u8 groupSlotOffset;  /* 0x20: added to base group slot */
-} EcshCreatorPlacement;
 
 ObjectDescriptor gECSH_CreatorObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -55,7 +47,7 @@ ObjectDescriptor gECSH_CreatorObjDescriptor = {
 
 int ecsh_creator_getExtraSize(void)
 {
-    return 0xa;
+    return sizeof(EcshCreatorState);
 }
 int ecsh_creator_getObjectTypeId(void)
 {
@@ -66,11 +58,11 @@ void ecsh_creator_free(void)
 {
 }
 
-void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void ecsh_creator_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4FF8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4FF8);
 }
 
 void ecsh_creator_hitDetect(void)
@@ -79,80 +71,78 @@ void ecsh_creator_hitDetect(void)
 
 void ecsh_creator_update(GameObject* obj)
 {
-    u8* def;
+    EcshCreatorPlacement* placement;
     EcshCreatorState* state;
-    Dll82Interface** res;
-    EcshSharpClawSpawnSetup* p;
-    int ret;
+    Dll82Interface** effectResource;
+    EcshSharpClawSpawnSetup* spawnSetup;
+    GameObject* sharpClaw;
 
-    def = (u8*)obj->anim.placementData;
-    state = (EcshCreatorState*)obj->extra;
-    if (obj->userData2 == 0 && (u32)mainGetBit(state->gameBit) != 0)
+    placement = (EcshCreatorPlacement*)obj->anim.placementData;
+    state = obj->extra;
+    if (obj->userData2 == 0 && (u32)mainGetBit(state->triggerGameBit) != 0)
     {
-        res = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
-        (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
-        (*res)->spawn(obj, 1, NULL, 1, -1, NULL);
+        effectResource = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
+        (*effectResource)->spawn(obj, 0, NULL, 1, -1, NULL);
+        (*effectResource)->spawn(obj, 1, NULL, 1, -1, NULL);
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_hitpos_6);
-        Resource_Release(res);
-        state->active = 1;
+        Resource_Release(effectResource);
+        state->spawnTimerStep = 1;
         obj->userData2 = 1;
     }
-    if (state->active != 0)
+    if (state->spawnTimerStep != 0)
     {
-        state->countdown = state->countdown - state->active * framesThisStep;
+        state->spawnTimer = state->spawnTimer - state->spawnTimerStep * framesThisStep;
     }
-    if (Obj_IsLoadingLocked() != 0 && state->countdown <= 0)
+    if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0)
     {
-        p = mmAlloc(0x38, 0xe, 0);
-        p->posX = ((ObjPlacement*)def)->posX;
-        p->posY = ((ObjPlacement*)def)->posY;
-        p->posZ = ((ObjPlacement*)def)->posZ;
-        p->objType = ECSH_SHARPCLAW_OBJ;
-        p->mapId = -1;
-        p->color[0] = ((ObjPlacement*)def)->color[0];
-        p->color[1] = ((ObjPlacement*)def)->color[1];
-        p->color[2] = ((ObjPlacement*)def)->color[2];
-        p->color[3] = ((ObjPlacement*)def)->color[3];
-        p->unk27 = 3;
-        p->unk28 = 0;
-        p->gameBit = state->gameBit + ((EcshCreatorPlacement*)def)->gameBitOffset;
-        p->unk30 = -1;
-        p->rotByte = (s8)(obj->anim.rotX >> 8);
-        p->unk2B = 2;
-        p->unk20 = 0;
-        p->unk1E = 0;
-        p->unk22 = -1;
-        p->unk29 = 0xff;
-        p->unk2E = -1;
-        p->unk24 = 0;
-        p->unk2C = 0;
-        p->unk34 = 0xFFFF;
-        p->unk1A = 0;
-        p->groupSlot = state->groupSlot;
-        ret = (int)Obj_SetupObject((ObjPlacement*)p, 5, obj->anim.mapEventSlot, -1,
-                                   (void*)*(int*)&obj->anim.parent);
-        if ((u32)ret != 0)
+        spawnSetup = mmAlloc(sizeof(EcshSharpClawSpawnSetup), 0xe, 0);
+        spawnSetup->base.posX = placement->base.posX;
+        spawnSetup->base.posY = placement->base.posY;
+        spawnSetup->base.posZ = placement->base.posZ;
+        spawnSetup->base.objectId = ECSH_SHARPCLAW_OBJ;
+        spawnSetup->base.mapId = -1;
+        spawnSetup->base.color[0] = placement->base.color[0];
+        spawnSetup->base.color[1] = placement->base.color[1];
+        spawnSetup->base.color[2] = placement->base.color[2];
+        spawnSetup->base.color[3] = placement->base.color[3];
+        spawnSetup->unk27 = 3;
+        spawnSetup->unk28 = 0;
+        spawnSetup->gameBit = state->triggerGameBit + placement->childGameBitOffset;
+        spawnSetup->unk30 = -1;
+        spawnSetup->rotX = (s8)(obj->anim.rotX >> 8);
+        spawnSetup->unk2B = 2;
+        spawnSetup->unk20 = 0;
+        spawnSetup->unk1E = 0;
+        spawnSetup->unk22 = -1;
+        spawnSetup->unk29 = 0xff;
+        spawnSetup->unk2E = -1;
+        spawnSetup->unk24 = 0;
+        spawnSetup->unk2C = 0;
+        spawnSetup->unk34 = 0xFFFF;
+        spawnSetup->unk1A = 0;
+        spawnSetup->groupSlot = state->childGroupSlot;
+        sharpClaw = Obj_SetupObject(&spawnSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+        if (sharpClaw != NULL)
         {
-            *(u8*)(*(int*)&((GameObject*)ret)->extra + 0x404) = 0x20;
+            ((GroundBaddieState*)sharpClaw->extra)->configFlags = ECSH_SHARPCLAW_DISABLE_CAMERA_TARGET;
         }
-        state->countdown = ECSH_COUNTDOWN_START;
-        state->active = 0;
+        state->spawnTimer = ECSH_COUNTDOWN_START;
+        state->spawnTimerStep = 0;
     }
 }
 
-void ecsh_creator_init(GameObject* obj, s8* defArg)
+void ecsh_creator_init(GameObject* obj, EcshCreatorPlacement* placement)
 {
-    EcshCreatorState* state = (EcshCreatorState*)obj->extra;
-    EcshCreatorPlacement* def = (EcshCreatorPlacement*)defArg;
-    obj->anim.rotX = (s16)((s32)def->rotByte << 8);
+    EcshCreatorState* state = obj->extra;
+    obj->anim.rotX = (s16)((s32)placement->initialRotX << 8);
     obj->userData2 = 0;
-    state->countdown = ECSH_COUNTDOWN_START;
-    state->active = 0;
-    *(u8*)((char*)obj + 0x37) = 0xff; /* anim.pad37[0], adjacent to anim.alpha */
+    state->spawnTimer = ECSH_COUNTDOWN_START;
+    state->spawnTimerStep = 0;
+    obj->anim.renderAlpha = 0xff;
     obj->anim.alpha = 0xff;
-    state->gameBit = def->gameBit;
-    state->groupSlot = 2;
-    state->groupSlot += def->groupSlotOffset;
+    state->triggerGameBit = placement->triggerGameBit;
+    state->childGroupSlot = ECSH_CHILD_GROUP_SLOT_BASE;
+    state->childGroupSlot += placement->groupSlotOffset;
 }
 
 void ecsh_creator_release(void)
