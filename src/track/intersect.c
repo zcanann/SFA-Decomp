@@ -1800,7 +1800,7 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     GXSetTevKColor(GX_KCOLOR2, c2);
     GXSetTevColor(GX_TEVREG0, c3);
 
-    fn_8006C534(&handle3);
+    getNewShadowDistortionTexture(&handle3);
     selectTexture(handle3, 3);
 
     {

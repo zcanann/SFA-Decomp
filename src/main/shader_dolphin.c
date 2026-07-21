@@ -764,7 +764,7 @@ void fn_8004D6D8(void)
     int id;
     f32 v;
     indmtx = lbl_802C1E10;
-    v = lbl_803DEADC * fn_8006C670();
+    v = lbl_803DEADC * getNewShadowDistortionWaveOffset();
     indmtx.m[0][0] = v;
     indmtx.m[1][2] = v;
     if (lbl_803DCD88 > 0)

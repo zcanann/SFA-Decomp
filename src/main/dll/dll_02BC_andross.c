@@ -453,7 +453,7 @@ int andross_getObjectTypeId(void)
 }
 void andross_free(int obj)
 {
-    fn_8006CB24();
+    freeNewShadowDistortionTexture();
     Rcp_DisableDistortionFilter();
 }
 void andross_render(GameObject* obj, int p2, int p3, int p4, int p5)
@@ -2406,7 +2406,7 @@ void andross_init(int obj, ObjPlacement* setup)
     ((AndrossState*)state)->handsInitialized = 1;
     ObjHits_SetTargetMask((GameObject*)obj, 4);
     ((GameObject*)obj)->animEventCallback = andross_SeqFn;
-    fn_8006CB50();
+    createNewShadowDistortionTexture();
     i = (int)Obj_GetActiveModel((GameObject*)obj);
     model = *(int*)i;
     for (i = 0, val = i; i < *(u8*)(model + 0xf8); i++)

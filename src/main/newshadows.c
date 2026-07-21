@@ -46,7 +46,7 @@ u32 lbl_803DCFCC;
 Texture* lbl_803DCFC8;
 u32 lbl_803DCFC4;
 Texture* gNewShadowRadialTexture;
-Texture* lbl_803DCFBC;
+Texture* gNewShadowDistortionTexture;
 Texture* lbl_803DCFB8;
 Texture* lbl_803DCFB4;
 Texture* gNewShadowRingTexture;
@@ -137,7 +137,7 @@ extern Texture* lbl_803DCFC8;
 extern Texture* gNewShadowRingTexture;
 extern Texture* lbl_803DCFB4;
 extern Texture* lbl_803DCFB8;
-extern Texture* lbl_803DCFBC;
+extern Texture* gNewShadowDistortionTexture;
 extern Texture* gNewShadowRadialTexture;
 extern u32 gNewShadowRampTexture;
 extern u32 gNewShadowDiskTexture;
@@ -1149,9 +1149,9 @@ void fn_8006C528(Texture** p)
 {
     *p = lbl_803DCFB8;
 }
-void fn_8006C534(Texture** p)
+void getNewShadowDistortionTexture(Texture** out)
 {
-    *p = lbl_803DCFBC;
+    *out = gNewShadowDistortionTexture;
 }
 void getNewShadowRadialTexture(Texture** out)
 {
@@ -1200,7 +1200,7 @@ void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, 
 
 Texture* gNewShadowNoiseTexFrames[0x10];
 
-f32 fn_8006C670(void)
+f32 getNewShadowDistortionWaveOffset(void)
 {
     return lbl_803DCFA4;
 }
@@ -1380,12 +1380,12 @@ void findSomething(void* needle)
 }
 
 
-void fn_8006CB24(void)
+void freeNewShadowDistortionTexture(void)
 {
-    mm_free(lbl_803DCFBC);
-    lbl_803DCFBC = 0;
+    mm_free(gNewShadowDistortionTexture);
+    gNewShadowDistortionTexture = 0;
 }
-void fn_8006CB50(void)
+void createNewShadowDistortionTexture(void)
 {
     int yhi;
     int ylo;
@@ -1398,7 +1398,7 @@ void fn_8006CB50(void)
     f32 t;
     f32 py;
     f32 px;
-    lbl_803DCFBC = textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
+    gNewShadowDistortionTexture = textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
         x = 0;
@@ -1410,7 +1410,7 @@ void fn_8006CB50(void)
             u8* rowBase;
             u8* row;
             u8* addr;
-            rowBase = (u8*)lbl_803DCFBC + ylo;
+            rowBase = (u8*)gNewShadowDistortionTexture + ylo;
             row = rowBase + yhi;
             row += (x & 3) * 8;
             addr = row + (x >> 2) * 0x800;
@@ -1437,7 +1437,7 @@ void fn_8006CB50(void)
             }
         }
     }
-    DCFlushRange(lbl_803DCFBC + 1, lbl_803DCFBC->dataSize);
+    DCFlushRange(gNewShadowDistortionTexture + 1, gNewShadowDistortionTexture->dataSize);
 }
 /* Sample the animated noise field built from gNewShadowPlacements: sums the
    contribution of every active placement at texel (px,pz) for animation frame

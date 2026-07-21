@@ -12,11 +12,11 @@ void findSomething(void* needle);
 
 /* extern-cleanup: defining-file public prototypes */
 void initFn_8006d020(void);
-f32 fn_8006C670(void);
+f32 getNewShadowDistortionWaveOffset(void);
 void drawReflectionTexture(void);
 void maybeHudFn_8006c91c(void);
-void fn_8006CB24(void);
-void fn_8006CB50(void);
+void freeNewShadowDistortionTexture(void);
+void createNewShadowDistortionTexture(void);
 
 u32 getReflectionTexture1(void);
 void getReflectionTexture2(u32* out);
@@ -29,7 +29,7 @@ void fn_8006C504(Texture** out);
 void getNewShadowRingTexture(Texture** out);
 void fn_8006C51C(Texture** out);
 void fn_8006C528(Texture** out);
-void fn_8006C534(Texture** out);
+void getNewShadowDistortionTexture(Texture** out);
 void getNewShadowRadialTexture(Texture** out);
 void getNewShadowRampTexture(u32* out);
 void loadNewShadowBumpTexture(int texMapId);
