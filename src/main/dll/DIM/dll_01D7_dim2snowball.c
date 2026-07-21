@@ -158,7 +158,7 @@ void dim2snowball_update(int* obj)
             if ((((Dim2SnowballState*)extra)->flagsAC & 0x10) == 0)
             {
                 GameObject** list;
-                GameObject* hit = NULL;
+                GameObject* hit;
                 ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * (k = 0.05f);
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
                 ((Dim2SnowballState*)extra)->flagsAC |= 0x18;
@@ -168,10 +168,12 @@ void dim2snowball_update(int* obj)
                     if (list[start]->anim.seqId == OBJ_TYPE_SHARPCLAW)
                     {
                         hit = list[start];
-                        break;
+                        goto found_sharpclaw;
                     }
                 }
+                hit = NULL;
 
+            found_sharpclaw:
                 if (hit != NULL)
                 {
                     (*(void (**)(GameObject*))(**(int**)&hit->anim.dll + 0x20))(hit);
