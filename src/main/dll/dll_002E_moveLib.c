@@ -45,7 +45,7 @@
 /* Persistent movement-state block that sits at the start of the per-object
  * extra for the baddie/object DLLs that use moveLib. The anim-channel table
  * region (0x1c..0x5bb) and the two packed turn/event tables (0x5bc/0x5da) are
- * handed to the seq helpers (objFn_8003acfc / fn_8003A9C0 / objMathFn_8003a380)
+ * handed to the seq helpers (objFn_8003acfc / objJointTracksSetAngles / objMathFn_8003a380)
  * as raw blocks, so they stay byte arrays here. */
 
 /* MoveLibState.phase (state+0x600): shared scripted-move / turn-arbitration
@@ -414,7 +414,7 @@ void fn_80114B1C(GameObject* obj)
     state->phase = MOVELIB_PHASE_IDLE;
     objFn_8003acfc(obj, types, state->pointCount, state->animChannels);
     state->setupFlag = 0x50;
-    fn_8003A9C0(state->animChannels, state->pointCount, 0, 0);
+    objJointTracksSetAngles(state->animChannels, state->pointCount, 0, 0);
 }
 
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16 b)
@@ -553,7 +553,7 @@ void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
     s->reattackDelayBase = -1;
     fn_8003AC14(obj, seqFn_800394a0(), count);
     objFn_8003acfc(obj, seqFn_800394a0(), count, s->animChannels);
-    fn_8003A9C0(s->animChannels, s->pointCount, 0, 0);
+    objJointTracksSetAngles(s->animChannels, s->pointCount, 0, 0);
     dll_2E_func09(s, gMoveLibDefaultMoveData, gMoveLibDefaultMoveData, s->pointCount);
 }
 
@@ -599,7 +599,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
             {
                 objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                 s->setupFlag = 0x50;
-                fn_8003A9C0(s->animChannels, (u32)s->pointCount, 0, 0);
+                objJointTracksSetAngles(s->animChannels, (u32)s->pointCount, 0, 0);
             }
             else
             {
@@ -662,7 +662,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                     {
                         objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                         s->setupFlag = 0x50;
-                        fn_8003A9C0(s->animChannels, (u32)s->pointCount, 0, 0);
+                        objJointTracksSetAngles(s->animChannels, (u32)s->pointCount, 0, 0);
                         s->phase = MOVELIB_PHASE_IDLE;
                         return;
                     }
@@ -724,7 +724,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                     {
                         objFn_8003acfc(obj, (int*)seqHandle, (u32)s->pointCount, s->animChannels);
                         s->setupFlag = 10;
-                        fn_8003A9C0(s->animChannels, (u32)s->pointCount, 0, 0);
+                        objJointTracksSetAngles(s->animChannels, (u32)s->pointCount, 0, 0);
                         s->phase = MOVELIB_PHASE_IDLE;
                     }
                 }

@@ -1069,13 +1069,15 @@ int fn_8003A8B4(GameObject* objArg, int* keyList, int countArg, u8* p4Arg)
     return (count * 2 - total) == 0;
 }
 
-void fn_8003A9C0(u8* p, int count, s16 a, s16 b)
+void objJointTracksSetAngles(u8* channelData, int count, s16 yaw, s16 pitch)
 {
+    ObjJointTrackPair* tracks = (ObjJointTrackPair*)channelData;
+
     while (count > 0)
     {
-        ((ObjJointTrackPair*)p)->yaw.angle = a;
-        ((ObjJointTrackPair*)p)->pitch.angle = b;
-        p += 0x60;
+        tracks->yaw.angle = yaw;
+        tracks->pitch.angle = pitch;
+        tracks++;
         count--;
     }
 }

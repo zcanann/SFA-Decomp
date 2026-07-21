@@ -23,7 +23,7 @@ void objModelClearVecFn_8003aa40(GameObject* obj);
 int fn_8003A8B4(GameObject* obj, int* keys, int count, u8* channels);
 s16 objMathFn_8003a380(GameObject* obj, GameObject* target, f32* targetPos, u8* channels, s16* speeds,
                        f32 yOffset, int unused, int basePitch);
-void fn_8003A9C0(u8* channels, int count, s16 a, s16 b);
+void objJointTracksSetAngles(u8* channelData, int count, s16 yaw, s16 pitch);
 void fn_8003AC14(GameObject* obj, int* keys, int count);
 void objFn_8003acfc(GameObject* obj, int* keys, int count, u8* channels);
 
