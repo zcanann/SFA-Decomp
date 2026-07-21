@@ -90,10 +90,10 @@ int bombplant_SeqFn(int* obj)
     return 0;
 }
 
-static inline void bombplant_tryBeginGrow(void* obj, void* state)
+static inline void bombplant_tryBeginGrow(GameObject* obj, void* state)
 {
     void* plr = Obj_GetPlayerObject();
-    f32 dist = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
+    f32 dist = vec3f_distanceSquared(&obj->anim.worldPosX, (f32*)((u8*)plr + 0x18));
 
     if (dist > 6400.0f)
     {
@@ -177,9 +177,9 @@ void bombplant_hitDetect(void)
 {
 }
 
-void bombplant_explode(int* obj, u8* unused, int* p3)
+void bombplant_explode(GameObject* obj, u8* unused, int* p3)
 {
-    BombplantPlacement* p4 = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
+    BombplantPlacement* p4 = (BombplantPlacement*)obj->anim.placementData;
     void* trickyObj = getTrickyObject();
     s16 gbId;
     int i;
@@ -189,10 +189,10 @@ void bombplant_explode(int* obj, u8* unused, int* p3)
     }
         Sfx_PlayFromObject((u32)obj, SFXTRIG_bombplant_woompf);
     {
-        int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        int* p = *(int**)&obj->anim.hitReactState;
         ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
     }
-    spawnExplosion((GameObject*)(int)obj, 100.0f, 0, 1, 1, 1, 0, 1, 0);
+    spawnExplosion(obj, 100.0f, 0, 1, 1, 1, 0, 1, 0);
     ((BombPlantState*)p3)->stateIndex = 1;
     ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     gbId = p4->gameBit;
@@ -204,12 +204,12 @@ void bombplant_explode(int* obj, u8* unused, int* p3)
     {
         for (i = 0; i < 3; i++)
         {
-            bombplant_throwSpore(obj, p3);
+            bombplant_throwSpore((int*)obj, p3);
         }
     }
 }
 
-void bombplant_update(void* obj)
+void bombplant_update(GameObject* obj)
 {
     void* state;
     u8* entry;
@@ -228,18 +228,18 @@ void bombplant_update(void* obj)
 #define hitZ hit[2]
 
     Obj_GetPlayerObject();
-    if (objIsFrozen(obj) != 0)
+    if (objIsFrozen((u8*)obj) != 0)
     {
         return;
     }
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     entry = &gBombPlantStateTable[((BombPlantState*)state)->stateIndex * 0xc];
 
     switch (((BombPlantState*)state)->stateIndex)
     {
     case 1:
-        param = ((GameObject*)obj)->anim.placementData;
+        param = obj->anim.placementData;
         if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
             ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
@@ -270,21 +270,21 @@ void bombplant_update(void* obj)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_bombplant_grows);
             ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
-            p4c = ((GameObject*)obj)->anim.placementData;
-            ((GameObject*)obj)->anim.alpha = 0xff;
-            ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
-            ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
-            ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-            ((GameObject*)obj)->anim.rootMotionScale = 1e-05f;
+            p4c = obj->anim.placementData;
+            obj->anim.alpha = 0xff;
+            obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            obj->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+            obj->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+            obj->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
+            obj->anim.rootMotionScale = 1e-05f;
             ((BombPlantState*)state)->growDuration = 135.0f;
             ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
             ((BombPlantState*)state)->growRate =
                 ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
             ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
-            ObjHits_RefreshObjectState((GameObject*)obj);
+            ObjHits_RefreshObjectState(obj);
         }
-        if (((GameObject*)obj)->anim.rootMotionScale > ((BombPlantState*)state)->growStartScale)
+        if (obj->anim.rootMotionScale > ((BombPlantState*)state)->growStartScale)
         {
             ((BombPlantState*)state)->growRate = ((BombPlantState*)state)->growRate / 1.1f;
         }
@@ -292,8 +292,8 @@ void bombplant_update(void* obj)
         {
             ((BombPlantState*)state)->growRate = 0.0f;
         }
-        ((GameObject*)obj)->anim.rootMotionScale =
-            ((BombPlantState*)state)->growRate * timeDelta + ((GameObject*)obj)->anim.rootMotionScale;
+        obj->anim.rootMotionScale =
+            ((BombPlantState*)state)->growRate * timeDelta + obj->anim.rootMotionScale;
         {
             f32 t = ((BombPlantState*)state)->growTimer - timeDelta;
             ((BombPlantState*)state)->growTimer = t;
@@ -312,14 +312,14 @@ void bombplant_update(void* obj)
     case 0:
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_eggsnatch_sniff2);
     default:
-        param = ((GameObject*)obj)->anim.placementData;
+        param = obj->anim.placementData;
         if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
         {
             ((BombPlantState*)state)->flags &= ~BOMBPLANT_FLAG_STATE_ENTERED;
             ((BombPlantState*)state)->growTimer =
                 (f32)(int)(((BombplantPlacement*)param)->timerBase + randomGetRange(-0x32, 0x32));
         }
-        if ((((GameObject*)obj)->objectFlags & BOMBPLANT_OBJFLAG_RENDERED) != 0)
+        if ((obj->objectFlags & BOMBPLANT_OBJFLAG_RENDERED) != 0)
         {
             (*gPartfxInterface)->spawnObject(obj, BOMBPLANT_PARTFX, NULL, 2, -1, NULL);
         }
@@ -328,13 +328,13 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x1) != 0)
     {
-        hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &outA, &outB, (u32*)&outC, &hitX,
+        hitType = ObjHits_GetPriorityHitWithPosition(obj, &outA, &outB, (u32*)&outC, &hitX,
                                                      &hitY, &hitZ);
         if (hitType != 0 && outC != 0)
         {
             if (hitType == 0x10)
             {
-                Obj_StartModelFadeIn((GameObject*)obj, 0x12c);
+                Obj_StartModelFadeIn(obj, 0x12c);
             }
             else if ((u32)(hitType - 0xe) <= 1 || hitType == 0x11)
             {
@@ -345,7 +345,7 @@ void bombplant_update(void* obj)
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
                 ((BombPlantState*)state)->stateIndex = 4;
                 ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
-                p50 = ((GameObject*)obj)->anim.modelInstance;
+                p50 = obj->anim.modelInstance;
                 ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj,
                                            (s16)(((ObjDef*)p50)->primaryHitboxRadius + 0x50),
                                            (s16)(((ObjDef*)p50)->primaryCapsuleOffsetA - 0x50),
@@ -375,8 +375,8 @@ void bombplant_update(void* obj)
 
     if ((entry[8] & 0x2) != 0)
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-        if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(BOMBPLANT_GAMEBIT_INTRO_SEEN) == 0)
+        *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+        if ((*(u8*)&obj->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) != 0 && mainGetBit(BOMBPLANT_GAMEBIT_INTRO_SEEN) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
             mainSetBits(BOMBPLANT_GAMEBIT_INTRO_SEEN, 1);
@@ -384,19 +384,19 @@ void bombplant_update(void* obj)
     }
     else
     {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     }
 
     if ((entry[8] & 0x4) != 0)
     {
-        ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     else
     {
-        ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     }
 
-    if (((GameObject*)obj)->anim.currentMove != *(s16*)entry)
+    if (obj->anim.currentMove != *(s16*)entry)
     {
         ObjAnim_SetCurrentMove((int)obj, *(s16*)entry, 0.0f, 0);
     }
