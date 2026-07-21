@@ -550,18 +550,14 @@ void modelAnimEvalChannels(u8* dst, u8* model, u8* channel, f32 blend, int flags
             *(u32*)(stk + 0x20) = *(u32*)&((ObjAnimState*)channel)->moveCache[1];
             *(u32*)(stk + 0x24) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[0];
             *(u32*)(stk + 0x28) = *(u32*)&((ObjAnimState*)channel)->blendMoveCache[1];
+            for (j = 0, animChan = channel, blendChan = channel; j < slotCount;
+                 animChan += 2, blendChan += 4, j++)
             {
-                u8* srcSlotVals;
-                u8* dstSlotVals;
-                for (j = 0, srcSlotVals = channel, dstSlotVals = stk; j < slotCount;
-                     srcSlotVals += 4, dstSlotVals += 4, j++)
-                {
-                    *(u16*)(stk + j * 2 + 0x44) = *(u16*)(channel + j * 2 + 0x44);
-                    stk[j + 0x60] = channel[j + 0x60];
-                    *(f32*)(dstSlotVals + 0x14) = *(f32*)(srcSlotVals + 0x14);
-                    *(f32*)(dstSlotVals + 4) = *(f32*)(srcSlotVals + 4);
-                    *(u32*)(dstSlotVals + 0x34) = *(u32*)(srcSlotVals + 0x34);
-                }
+                *(u16*)(stk + j * 2 + 0x44) = *(u16*)(animChan + 0x44);
+                stk[j + 0x60] = channel[j + 0x60];
+                *(f32*)(stk + j * 4 + 0x14) = *(f32*)(blendChan + 0x14);
+                *(f32*)(stk + j * 4 + 4) = *(f32*)(blendChan + 4);
+                *(u32*)(stk + j * 4 + 0x34) = *(u32*)(blendChan + 0x34);
             }
             *(u16*)(stk + 0x58) = ((ObjAnimState*)channel)->eventCountdown;
             modelAnimUpdateChannels(hdr, stk, slotCount);
