@@ -148,23 +148,23 @@ ObjectDescriptor gShieldObjDescriptor = {
     Shield_getExtraSize,
 };
 
-void staffFn_80170380(GameObject* obj, int cmd)
+void staffFn_80170380(GameObject* obj, u8 cmd)
 {
-    f32* tbl[1];
+    f32* segmentTable[1];
     ShieldState* state;
     void* segmentData;
     GameObject* player;
     GameObject* glow;
-    tbl[0] = lbl_80320A28;
-    segmentData = obj->extra;
-    state = segmentData;
+    segmentTable[0] = lbl_80320A28;
+    state = obj->extra;
+    segmentData = state;
     player = Obj_GetPlayerObject();
     glow = NULL;
     if (player != NULL)
     {
         glow = Player_GetStaffObject(player);
     }
-    switch ((u8)cmd)
+    switch (cmd)
     {
     case 7:
         if (glow != NULL)
@@ -246,14 +246,14 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 f32 k;
                 s16* phaseCursor;
                 f32* valueCursor;
-                f32* t1;
+                f32* segmentScaleCursor;
                 int i;
                 amp = 1.0f;
                 state->fadeRate = amp;
                 i = 0;
                 phaseCursor = segmentData;
                 valueCursor = segmentData;
-                t1 = tbl[0] + 4;
+                segmentScaleCursor = segmentTable[0] + 4;
                 k = 0.5f;
                 for (; i < 4; i++)
                 {
@@ -263,13 +263,13 @@ void staffFn_80170380(GameObject* obj, int cmd)
                     wave = fcos16((u16)phaseCursor[0x1A]);
                     sum = amp + wave;
                     wave = sum * k;
-                    valueCursor[9] = *tbl[0] * wave;
-                    valueCursor[5] = *t1;
+                    valueCursor[9] = *segmentTable[0] * wave;
+                    valueCursor[5] = *segmentScaleCursor;
                     phaseCursor[0x1E] = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + 136.0f;
                     phaseCursor += 1;
-                    tbl[0] += 1;
+                    segmentTable[0] += 1;
                     valueCursor += 1;
-                    t1 += 1;
+                    segmentScaleCursor += 1;
                 }
             }
         Sfx_PlayFromObject((u32)obj, SFXTRIG_lrope_powerup);
@@ -326,8 +326,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
             int i;
             s16* phaseCursor;
             f32* valueCursor;
-            f32* t0;
-            f32* t1;
+            f32* segmentScaleCursor;
             f32 k;
             f32 amp;
             amp = 1.0f;
@@ -335,7 +334,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
             i = 0;
             phaseCursor = segmentData;
             valueCursor = segmentData;
-            t1 = tbl[0] + 4;
+            segmentScaleCursor = segmentTable[0] + 4;
             k = 0.5f;
             for (; i < 4; i++)
             {
@@ -345,12 +344,12 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 wave = fcos16((u16)phaseCursor[0x1A]);
                 sum = amp + wave;
                 wave = sum * k;
-                valueCursor[9] = *tbl[0] * wave;
-                valueCursor[5] = *t1;
+                valueCursor[9] = *segmentTable[0] * wave;
+                valueCursor[5] = *segmentScaleCursor;
                 phaseCursor += 1;
-                tbl[0] += 1;
+                segmentTable[0] += 1;
                 valueCursor += 1;
-                t1 += 1;
+                segmentScaleCursor += 1;
             }
         }
         Sfx_PlayFromObject((u32)obj, SFXTRIG_lockon3_on);
@@ -374,15 +373,15 @@ void staffFn_80170380(GameObject* obj, int cmd)
         {
             int i;
             s16* phaseCursor;
-            f32* t0;
+            f32* segmentAlphaCursor;
             f32* valueCursor;
-            f32* t1;
+            f32* segmentScaleCursor;
             f32 k;
             i = 0;
             phaseCursor = segmentData;
-            t0 = tbl[0] + 8;
+            segmentAlphaCursor = segmentTable[0] + 8;
             valueCursor = segmentData;
-            t1 = tbl[0] + 12;
+            segmentScaleCursor = segmentTable[0] + 12;
             k = 0.5f;
             for (; i < 4; i++)
             {
@@ -392,13 +391,13 @@ void staffFn_80170380(GameObject* obj, int cmd)
                 wave = fcos16((u16)phaseCursor[0x1A]);
                 sum = amp + wave;
                 wave = sum * k;
-                valueCursor[9] = *t0 * wave;
-                valueCursor[5] = *t1;
+                valueCursor[9] = *segmentAlphaCursor * wave;
+                valueCursor[5] = *segmentScaleCursor;
                 phaseCursor[0x1E] = (f32)(int)(i * randomGetRange(0x78, 0x7f)) + 136.0f;
                 phaseCursor += 1;
-                t0 += 1;
+                segmentAlphaCursor += 1;
                 valueCursor += 1;
-                t1 += 1;
+                segmentScaleCursor += 1;
             }
         }
         Sfx_PlayFromObject((u32)obj, SFXTRIG_lockon3_on);
@@ -409,16 +408,16 @@ void staffFn_80170380(GameObject* obj, int cmd)
     {
         int i;
         s16* phaseCursor;
-        f32* t0;
+        f32* segmentAlphaCursor;
         f32* valueCursor;
-        f32* t1;
+        f32* segmentScaleCursor;
         f32 amp;
         f32 k;
         i = 0;
         phaseCursor = segmentData;
-        t0 = tbl[0] + 8;
+        segmentAlphaCursor = segmentTable[0] + 8;
         valueCursor = segmentData;
-        t1 = tbl[0] + 12;
+        segmentScaleCursor = segmentTable[0] + 12;
         amp = 1.0f;
         k = 0.5f;
         for (; i < 4; i++)
@@ -429,12 +428,12 @@ void staffFn_80170380(GameObject* obj, int cmd)
             wave = fcos16((u16)phaseCursor[0x1A]);
             sum = amp + wave;
             wave = sum * k;
-            valueCursor[9] = *t0 * wave;
-            valueCursor[5] = *t1;
+            valueCursor[9] = *segmentAlphaCursor * wave;
+            valueCursor[5] = *segmentScaleCursor;
             phaseCursor += 1;
-            t0 += 1;
+            segmentAlphaCursor += 1;
             valueCursor += 1;
-            t1 += 1;
+            segmentScaleCursor += 1;
         }
         break;
     }
