@@ -3272,17 +3272,20 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
     int iconIndex;
     int rowOffset;
     int i;
-    void* player;
+    GameObject* player;
     int k;
     int slotCount;
     int sel;
-    char* textPtr;
-    u8* phraseIndex;
+    int aPrevCharset2;
+    char* aTextPtr;
     s16 alpha;
     s16 rowFade;
     s16 a16;
     int prevCharset;
-    int prevCharset2;
+    u8* aPhraseIndex;
+    int bPrevCharset2;
+    char* bTextPtr;
+    u8* bPhraseIndex;
     GameTextDef* textObj;
     char slots[68];
     u32 glyph;
@@ -3336,9 +3339,9 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
         fade = cMenuFadeCounter;
         for (i = 0; i < GCMENU_ITEM_ICON_COUNT; i++)
         {
-            ((int*)(base + 0xBD4))[i] = 0;
+            ((CMenuHud*)base)->visibleItemTextures[i] = NULL;
             gCMenuItemIcons[i] = 0;
-            ((int*)(base + 0xBB8))[i] = 0;
+            ((CMenuHud*)base)->visibleItemStates[i] = 0;
         }
         for (i = 0; i < slotCount; i++)
         {
@@ -3421,7 +3424,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
     }
     if (hudYButtonItemIconTexture != NULL && gHudYButtonItemTextureCache != yButtonItemTextureId)
     {
-        textureFree((Texture*)(hudYButtonItemIconTexture));
+        textureFree(hudYButtonItemIconTexture);
         gHudYButtonItemTextureCache = -1;
         hudYButtonItemIconTexture = 0;
     }
@@ -3475,23 +3478,23 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
                 }
                 textObj = gameTextGet(0x2AD);
             }
-            if (icon != 0 && textObj != NULL && textObj->count > *(phraseIndex = gHudButtonIcons + icon * 2 + 1))
+            if (icon != 0 && textObj != NULL && textObj->count > *(aPhraseIndex = gHudButtonIcons + icon * 2 + 1))
             {
-                textPtr = textObj->strings[*phraseIndex];
-                prevCharset2 = gameTextGetCharset();
+                aTextPtr = textObj->strings[*aPhraseIndex];
+                aPrevCharset2 = gameTextGetCharset();
                 gameTextSetCharset(3, 3);
-                gameTextMeasureFn_800163c4((char*)textPtr, 8, 0, 0, &am0, &am1, &am2, &am3);
-                gameTextShowStr((char*)textPtr, 8, 0, 0);
-                gameTextSetCharset(prevCharset2, 3);
-                gameTextMeasureFn_800163c4(textObj->strings[*phraseIndex], 8, 0, 0, &ax0, &ax1, &ay0, &ay1);
+                gameTextMeasureFn_800163c4(aTextPtr, 8, 0, 0, &am0, &am1, &am2, &am3);
+                gameTextShowStr(aTextPtr, 8, 0, 0);
+                gameTextSetCharset(aPrevCharset2, 3);
+                gameTextMeasureFn_800163c4(textObj->strings[*aPhraseIndex], 8, 0, 0, &ax0, &ax1, &ay0, &ay1);
                 wid = (ax1 - ax0) + -0x19;
                 if (wid < 1)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], (f32)(0x219 - wid), gHudAButtonY, lbl_803DD83C,
+                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], 0x219 - wid, gHudAButtonY, lbl_803DD83C,
                                   0x100, wid, 0x16, 0);
-                drawTexture(((CMenuHud*)base)->textures1C0[7], (f32)(0x20D - wid), gHudAButtonY, lbl_803DD83C, 0x100);
+                drawTexture(((CMenuHud*)base)->textures1C0[7], 0x20D - wid, gHudAButtonY, lbl_803DD83C, 0x100);
             }
             else
             {
@@ -3536,23 +3539,23 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
             textObj = gameTextGet(0x2AD);
-            if (icon != 0 && textObj != NULL && textObj->count > *(phraseIndex = gHudButtonIcons + icon * 2 + 1))
+            if (icon != 0 && textObj != NULL && textObj->count > *(bPhraseIndex = gHudButtonIcons + icon * 2 + 1))
             {
-                textPtr = textObj->strings[*phraseIndex];
-                prevCharset2 = gameTextGetCharset();
+                bTextPtr = textObj->strings[*bPhraseIndex];
+                bPrevCharset2 = gameTextGetCharset();
                 gameTextSetCharset(3, 3);
-                gameTextMeasureFn_800163c4((char*)textPtr, 9, 0, 0, &bm0, &bm1, &bm2, &bm3);
-                gameTextShowStr((char*)textPtr, 9, 0, 0);
-                gameTextSetCharset(prevCharset2, 3);
-                gameTextMeasureFn_800163c4(textObj->strings[*phraseIndex], 9, 0, 0, &bx0, &bx1, &by0, &by1);
+                gameTextMeasureFn_800163c4(bTextPtr, 9, 0, 0, &bm0, &bm1, &bm2, &bm3);
+                gameTextShowStr(bTextPtr, 9, 0, 0);
+                gameTextSetCharset(bPrevCharset2, 3);
+                gameTextMeasureFn_800163c4(textObj->strings[*bPhraseIndex], 9, 0, 0, &bx0, &bx1, &by0, &by1);
                 wid = (bx1 - bx0) + -7;
                 if (wid < 1)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], (f32)(0x219 - wid), gHudBButtonY, lbl_803DD83C,
+                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], 0x219 - wid, gHudBButtonY, lbl_803DD83C,
                                   0x100, wid, 0x16, 0);
-                drawTexture(((CMenuHud*)base)->textures1C0[7], (f32)(0x20D - wid), gHudBButtonY, lbl_803DD83C, 0x100);
+                drawTexture(((CMenuHud*)base)->textures1C0[7], 0x20D - wid, gHudBButtonY, lbl_803DD83C, 0x100);
             }
             else
             {
