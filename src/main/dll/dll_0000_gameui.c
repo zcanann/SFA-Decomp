@@ -82,7 +82,9 @@
 #include "main/newshadows_shadow_api.h"
 #include "main/dll/hint_text_api.h"
 #include "main/shader_map_text_api.h"
+#define INTERSECT_HUD_ALPHA_U8
 #include "track/intersect_hud_api.h"
+#undef INTERSECT_HUD_ALPHA_U8
 #include "main/dll/dll_0011_screens.h"
 #include "main/dll/dll_8B.h"
 
@@ -4476,7 +4478,8 @@ void headDisplayDraw(void)
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
         lineOffset = 0;
-        wavePhaseA = wavePhaseB = lineOffset;
+        wavePhaseA = lineOffset;
+        wavePhaseB = wavePhaseA;
         for (; lineOffset < (int)height; lineOffset += 4)
         {
             wave = lbl_803E204C * fsin16Approx((u16)(wavePhaseA + lbl_803DD77C * 0x1838));
