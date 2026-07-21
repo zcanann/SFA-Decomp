@@ -10396,8 +10396,8 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             {
             case 3:
             case 5:
-                if (((GameObject*)obj)->anim.localPosY < lbl_803E7F10 + buf.minY &&
-                    ((GameObject*)obj)->anim.localPosY < lbl_803E7F10 + buf.maxY)
+                if (((GameObject*)obj)->anim.localPosY < lbl_803E7F10 + buf.lineStartY &&
+                    ((GameObject*)obj)->anim.localPosY < lbl_803E7F10 + buf.lineEndY)
                 {
                     hit = 0;
                 }
@@ -10407,8 +10407,8 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             case 6:
                 if (((u32)((PlayerState*)state)->flags3F1 & 1) != 0)
                 {
-                    if (dp > lbl_803E8090 || (((GameObject*)obj)->anim.localPosY > buf.upperY1 - lbl_803E7ED8 &&
-                                              ((GameObject*)obj)->anim.localPosY > buf.upperY2 - lbl_803E7ED8))
+                    if (dp > lbl_803E8090 || (((GameObject*)obj)->anim.localPosY > buf.upperY0 - lbl_803E7ED8 &&
+                                              ((GameObject*)obj)->anim.localPosY > buf.upperY1 - lbl_803E7ED8))
                     {
                         hit = 0;
                     }
@@ -10499,7 +10499,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             ((PlayerState*)state)->surfaceNormalX = buf.normalX;
             ((PlayerState*)state)->surfaceNormalY = buf.normalY;
             ((PlayerState*)state)->surfaceNormalZ = buf.normalZ;
-            ((PlayerState*)state)->surfaceNormalW = buf.upperY0;
+            ((PlayerState*)state)->surfaceNormalW = buf.sourceNormalW;
             *(u8*)&((PlayerState*)state)->stickEdgeLatch = 0;
             if (buf.object != NULL)
             {
@@ -10529,7 +10529,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             ((PlayerState*)state)->surfaceNormalX = buf.normalX;
             ((PlayerState*)state)->surfaceNormalY = buf.normalY;
             ((PlayerState*)state)->surfaceNormalZ = buf.normalZ;
-            ((PlayerState*)state)->surfaceNormalW = buf.upperY0;
+            ((PlayerState*)state)->surfaceNormalW = buf.sourceNormalW;
             *(u8*)&((PlayerState*)state)->stickEdgeLatch = 0;
             if (buf.object != NULL)
             {
@@ -10642,12 +10642,12 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
                 {
                     for (k = 0; k < 0x4b; k++)
                     {
-                        lo = buf.minX;
-                        pfx.x = lo + (buf.maxX - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
-                        lo = buf.minY;
-                        pfx.y = lo + (buf.upperY1 - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
-                        lo = buf.minZ;
-                        pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
+                        lo = buf.lineStartX;
+                        pfx.x = lo + (buf.lineEndX - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
+                        lo = buf.lineStartY;
+                        pfx.y = lo + (buf.upperY0 - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
+                        lo = buf.lineStartZ;
+                        pfx.z = lo + (buf.lineEndZ - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
                         pfx.scale = lbl_803E7EE0;
                         pfx.mode = 0x3c;
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001, -1, NULL);

@@ -2728,7 +2728,6 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
 
     if (count != 0 && hit != NULL)
     {
-        f32* outf = (f32*)hit;
         int pick = count - 1;
         int hi;
         s16* rec2;
@@ -2741,8 +2740,8 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
         }
         dx = endPos[0] - posX[0];
         dz = endPos[2] - posZ[0];
-        outf[0x11] = fracs[0] * sqrtf(dx * dx + dz * dz);
-        outf[0x12] = dists[pick];
+        hit->distance = fracs[0] * sqrtf(dx * dx + dz * dz);
+        hit->interpolation = dists[pick];
         hi = hits[pick];
         if (lineIdx != 0)
         {
@@ -2765,22 +2764,22 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                 fa = (f32)(s8) * (u8*)rec2;
                 fb = (f32)(s8) * ((u8*)rec2 + 1);
             }
-            outf[1] = ((f32*)vp)[j0 * 3];
+            hit->lineStartX = ((f32*)vp)[j0 * 3];
             va2 = (f32*)(vp + j0 * 0xc);
-            outf[3] = va2[1];
-            outf[0xf] = outf[3] + fa;
-            outf[5] = va2[2];
-            outf[2] = ((f32*)vp)[j1 * 3];
+            hit->lineStartY = va2[1];
+            hit->upperY0 = hit->lineStartY + fa;
+            hit->lineStartZ = va2[2];
+            hit->lineEndX = ((f32*)vp)[j1 * 3];
             vb2 = (f32*)(vp + j1 * 0xc);
-            outf[4] = vb2[1];
-            outf[0x10] = outf[4] + fb;
-            outf[6] = vb2[2];
-            *(s8*)((u8*)hit + 0x50) = (s8)(*((u8*)rec2 + 3) & 0x3f);
-            *((u8*)hit + 0x52) = *((u8*)rec2 + 2);
-            *(s8*)((u8*)hit + 0x51) = rec2[6];
-            *(GameObject**)hit = target;
-            *(s16*)((u8*)hit + 0x4c) = rec2[4];
-            *(s16*)((u8*)hit + 0x4e) = rec2[5];
+            hit->lineEndY = vb2[1];
+            hit->upperY1 = hit->lineEndY + fb;
+            hit->lineEndZ = vb2[2];
+            hit->surfaceType = (s8)(*((u8*)rec2 + 3) & 0x3f);
+            hit->flags = *((u8*)rec2 + 2);
+            hit->kind = rec2[6];
+            hit->object = target;
+            hit->adjacentLine0 = rec2[4];
+            hit->adjacentLine1 = rec2[5];
         }
     }
     if (count != 0)
@@ -2973,53 +2972,47 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
     trackSweepCircleAgainstLines(w0, w1, f, p5, out, NULL, p8, p9, arg8, self);
     if (lbl_803DCF4C != 0 && out != NULL)
     {
-        f32 hx = *(f32*)((char*)out + 0x3c) - *(f32*)((char*)out + 0xc);
-        f32 hy = *(f32*)((char*)out + 0x40) - *(f32*)((char*)out + 0x10);
+        f32 upperDeltaStart = out->upperY0 - out->lineStartY;
+        f32 upperDeltaEnd = out->upperY1 - out->lineEndY;
         f32 len;
-        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
-        *(f32*)((char*)out + 0x30) = lbl_803DECB4;
-        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
+        out->sourceNormalX = out->lineEndZ - out->lineStartZ;
+        out->sourceNormalY = lbl_803DECB4;
+        out->sourceNormalZ = out->lineStartX - out->lineEndX;
         {
-            f32 sqA = *(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x2c);
-            f32 sqB = *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x34);
+            f32 sqA = out->sourceNormalX * out->sourceNormalX;
+            f32 sqB = out->sourceNormalZ * out->sourceNormalZ;
             len = lbl_803DECC4 / sqrtf(sqA + sqB);
         }
-        *(f32*)((char*)out + 0x2c) = *(f32*)((char*)out + 0x2c) * len;
-        *(f32*)((char*)out + 0x34) = *(f32*)((char*)out + 0x34) * len;
-        *(f32*)((char*)out + 0x38) = -(*(f32*)((char*)out + 0x2c) * *(f32*)((char*)out + 0x4) +
-                                       *(f32*)((char*)out + 0x34) * *(f32*)((char*)out + 0x14));
-        if (*(u32*)out != 0)
+        out->sourceNormalX = out->sourceNormalX * len;
+        out->sourceNormalZ = out->sourceNormalZ * len;
+        out->sourceNormalW = -(out->sourceNormalX * out->lineStartX + out->sourceNormalZ * out->lineStartZ);
+        if (out->object != NULL)
         {
-            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
-                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
-                                           (f32*)((int)out + 0x14), (u32) * (int*)out);
-            Obj_TransformLocalPointToWorld(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
-                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
-                                           (f32*)((int)out + 0x18), (u32) * (int*)out);
+            Obj_TransformLocalPointToWorld(out->lineStartX, out->lineStartY, out->lineStartZ, &out->lineStartX,
+                                           &out->lineStartY, &out->lineStartZ, (u32)out->object);
+            Obj_TransformLocalPointToWorld(out->lineEndX, out->lineEndY, out->lineEndZ, &out->lineEndX,
+                                           &out->lineEndY, &out->lineEndZ, (u32)out->object);
         }
         if ((u32)mtx != 0)
         {
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 4), *(f32*)((char*)out + 0xc),
-                                           *(f32*)((char*)out + 0x14), (f32*)((int)out + 4), (f32*)((int)out + 0xc),
-                                           (f32*)((int)out + 0x14), mtx);
-            Obj_TransformWorldPointToLocal(*(f32*)((char*)out + 8), *(f32*)((char*)out + 0x10),
-                                           *(f32*)((char*)out + 0x18), (f32*)((int)out + 8), (f32*)((int)out + 0x10),
-                                           (f32*)((int)out + 0x18), mtx);
+            Obj_TransformWorldPointToLocal(out->lineStartX, out->lineStartY, out->lineStartZ, &out->lineStartX,
+                                           &out->lineStartY, &out->lineStartZ, mtx);
+            Obj_TransformWorldPointToLocal(out->lineEndX, out->lineEndY, out->lineEndZ, &out->lineEndX,
+                                           &out->lineEndY, &out->lineEndZ, mtx);
         }
-        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x18) - *(f32*)((char*)out + 0x14);
-        *(f32*)((char*)out + 0x20) = lbl_803DECB4;
-        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x4) - *(f32*)((char*)out + 0x8);
+        out->normalX = out->lineEndZ - out->lineStartZ;
+        out->normalY = lbl_803DECB4;
+        out->normalZ = out->lineStartX - out->lineEndX;
         {
-            f32 sqA = *(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x1c);
-            f32 sqB = *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x24);
+            f32 sqA = out->normalX * out->normalX;
+            f32 sqB = out->normalZ * out->normalZ;
             len = lbl_803DECC4 / sqrtf(sqA + sqB);
         }
-        *(f32*)((char*)out + 0x1c) = *(f32*)((char*)out + 0x1c) * len;
-        *(f32*)((char*)out + 0x24) = *(f32*)((char*)out + 0x24) * len;
-        *(f32*)((char*)out + 0x3c) = *(f32*)((char*)out + 0xc) + hx;
-        *(f32*)((char*)out + 0x40) = *(f32*)((char*)out + 0x10) + hy;
-        *(f32*)((char*)out + 0x28) = -(*(f32*)((char*)out + 0x1c) * *(f32*)((char*)out + 0x4) +
-                                       *(f32*)((char*)out + 0x24) * *(f32*)((char*)out + 0x14));
+        out->normalX = out->normalX * len;
+        out->normalZ = out->normalZ * len;
+        out->upperY0 = out->lineStartY + upperDeltaStart;
+        out->upperY1 = out->lineEndY + upperDeltaEnd;
+        out->normalW = -(out->normalX * out->lineStartX + out->normalZ * out->lineStartZ);
     }
     if (lbl_803DCF4C != 0)
     {
