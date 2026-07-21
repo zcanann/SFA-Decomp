@@ -33,7 +33,7 @@ int fn_801A27B8(GameObject* obj, int id)
         for (i = 0; i < block->polyGroupCount; i++)
         {
             u8* e = mapBlockGetPolygonGroup(block, i);
-            if (id == mapBlockFn_80060678(e))
+            if (id == mapBlockGetPolygonGroupType(e))
             {
                 *(int*)(e + 0x10) |= 3;
             }

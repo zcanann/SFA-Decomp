@@ -28,7 +28,7 @@
  * mapBlockGetPolygonGroup) - layout matches MapTriGroup in track_dolphin.c.
  * Only the flags word is touched here: bit 1 = poly group hidden,
  * bit 0 = shader disabled; the top byte is the effect id matched by
- * mapBlockFn_80060678. */
+ * mapBlockGetPolygonGroupType. */
 typedef struct HitAnimatorPolyGroup
 {
     u8 pad0[0x10 - 0x0];
@@ -64,7 +64,7 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
         for (i = 0; i < block->polyGroupCount; i++)
         {
             poly = mapBlockGetPolygonGroup(block, i);
-            if (desc->blockEffectId == mapBlockFn_80060678(poly))
+            if (desc->blockEffectId == mapBlockGetPolygonGroupType(poly))
             {
                 if (state->activeBit != 0)
                 {

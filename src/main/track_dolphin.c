@@ -520,11 +520,11 @@ u8 gTrackGridOrigin[0x104];
 
 TrackBlockDescriptor gTrackBlockDescriptors[20];
 
-void* fn_80069944(u32* outVal);
+void* trackGetBlockDescriptors(u32* outVal);
 
 u32 trackGetPackedSurfaceType(int* obj);
 
-void fn_80069968(int* outCount, int* outTable);
+void trackGetTriangleBuffer(int* outCount, int* outTable);
 
 int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
 
@@ -835,7 +835,7 @@ u32 trackGetPackedSurfaceType(int* obj)
     return v >> 16;
 }
 
-int mapBlockFn_80060678(void* obj)
+int mapBlockGetPolygonGroupType(void* obj)
 {
     return (*(u32*)&((GameObject*)obj)->anim.localPosY & 0xff000000) >> 24;
 }
@@ -1081,7 +1081,7 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
 {
     int j;
     f32 lm[12];
-    u8* descBytes = fn_80069944((u32*)&j);
+    u8* descBytes = trackGetBlockDescriptors((u32*)&j);
     u8* end = descBytes + j * 0x18;
     int total;
     int grp;
@@ -1787,7 +1787,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
 
         hitDetectFn_800691c0(obj, &ranges, 0x81, 0);
         trackGetGridOrigin((int**)&vtx);
-        fn_80069968(&idxOut, &alphaOut);
+        trackGetTriangleBuffer(&idxOut, &alphaOut);
 
         alpha = alphaOut;
         idxOut = fn_80060C14((int*)obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
@@ -5422,7 +5422,7 @@ void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoin
     }
 }
 
-void* fn_80069944(u32* outVal)
+void* trackGetBlockDescriptors(u32* outVal)
 {
     *outVal = gActiveTrackBlockCount;
     return gTrackBlockDescriptors;
@@ -5433,7 +5433,7 @@ void trackGetGridOrigin(int** outOrigin)
     *outOrigin = (int*)gTrackGridOrigin;
 }
 
-void fn_80069968(int* outCount, int* outTable)
+void trackGetTriangleBuffer(int* outCount, int* outTable)
 {
     TrackBlockDescriptor* descriptors = gTrackBlockDescriptors;
     *outCount = descriptors[gActiveTrackBlockCount].firstTriangle;

@@ -4,7 +4,7 @@
 #include "types.h"
 
 void* mapBlockGetPolygonGroup(void* block, int index);
-int mapBlockFn_80060678(void* entry);
+int mapBlockGetPolygonGroupType(void* entry);
 void trackUnpackVector(s16* in, f32* out);
 void trackPackVector(s16* out, f32* in);
 

@@ -34,7 +34,7 @@ void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfa
     for (j = 0; j < (int)((MapBlockData*)map)->polyGroupCount; j++)
     {
         block = mapBlockGetPolygonGroup(map, j);
-        got = mapBlockFn_80060678(block);
+        got = mapBlockGetPolygonGroupType(block);
         if (surfaceType == got)
         {
             if (disable != 0)

@@ -153,7 +153,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* 
     for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
     {
         entry = mapBlockGetPolygonGroup(block, blkIdx);
-        if (placement->blockId == mapBlockFn_80060678(entry))
+        if (placement->blockId == mapBlockGetPolygonGroupType(entry))
         {
             mid = *(u16*)entry;
             fallMid = off[0];
@@ -226,7 +226,7 @@ void groundanimator_free(int* obj, int flag)
             for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
             {
                 entry = mapBlockGetPolygonGroup(block, blkIdx);
-                if (r21->blockId == mapBlockFn_80060678(entry))
+                if (r21->blockId == mapBlockGetPolygonGroupType(entry))
                 {
                     for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {

@@ -286,7 +286,7 @@ void playerShadow_renderObject(GameObject* obj)
 
     hitDetect_calcSweptSphereBounds(&hitData, &verts[0][0], &verts[4][0], radii, 4);
     hitDetectFn_800691c0(obj, &hitData, 0x84, 0);
-    fn_80069968(&hitCount, &hitTable);
+    trackGetTriangleBuffer(&hitCount, &hitTable);
     hitTableValue = hitTable;
     trackGetGridOrigin(&tileInfo);
     playerShadow_scatterFootfallEffects((PlayerShadowTriHit*)hitTableValue, hitCount, (obj)->anim.localPosX - tileInfo[0],

@@ -5,7 +5,7 @@
 #include "main/game_object.h"
 
 /* One terrain-triangle hit record produced by the hit-detect pipeline
- * (hitDetectFn_800691c0 / fn_80069968). Stride 0x4c; the three struck-triangle
+ * (hitDetectFn_800691c0 / trackGetTriangleBuffer). Stride 0x4c; the three struck-triangle
  * corners are stored as separate s16 component arrays (tile-local coords), and
  * the GameObject surface type lives at 0x48. */
 typedef struct PlayerShadowTriHit

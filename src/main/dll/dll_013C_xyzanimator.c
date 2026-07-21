@@ -106,7 +106,7 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
     for (; blockIndex < (int)(u32)mb->polyGroupCount; blockIndex++)
     {
         mapBlock = mapBlockGetPolygonGroup((void*)block, blockIndex);
-        blockLayer = mapBlockFn_80060678(mapBlock);
+        blockLayer = mapBlockGetPolygonGroupType(mapBlock);
         if ((int)setup->blockLayer == blockLayer)
         {
             *(s16*)(state->posABuffer + coordOffset[0]) = ((MapBlockHdr*)mapBlock)->posA;
@@ -219,7 +219,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     for (; blockIndex < (int)(u32)mb->polyGroupCount; blockIndex++)
     {
         mapBlock = mapBlockGetPolygonGroup((void*)block, blockIndex);
-        blockLayer = mapBlockFn_80060678(mapBlock);
+        blockLayer = mapBlockGetPolygonGroupType(mapBlock);
         if ((int)def->blockLayer == blockLayer)
         {
             ((MapBlockHdr*)mapBlock)->posA = (s16)(state->offsetY + (f32) * (s16*)(state->posABuffer + coordOffset[0]));
@@ -302,7 +302,7 @@ void XyzAnimator_update(GameObject* obj)
         for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
             row = mapBlockGetPolygonGroup((void*)block, i);
-            t = mapBlockFn_80060678(row);
+            t = mapBlockGetPolygonGroupType(row);
             if (setup->blockLayer == t)
             {
                 state->rowCount++;

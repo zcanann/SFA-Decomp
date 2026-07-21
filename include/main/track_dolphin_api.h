@@ -51,7 +51,7 @@ void playerShadowFn_80062a30(GameObject* obj);
 void setShadowFlag_803db658(s32 value);
 void getSunFlareScissorRect(int* outX, int* outY, int* outWidth, int* outHeight);
 void trackGetGridOrigin(int** outOrigin);
-void fn_80069968(int* outCount, int* outTable);
+void trackGetTriangleBuffer(int* outCount, int* outTable);
 void mapInitFn_80069990(void);
 void trackIntersect(void);
 void mapBlockRender_setVtxDcrs(int flag, int* obj, struct MapShader* shader, int* blockState);
