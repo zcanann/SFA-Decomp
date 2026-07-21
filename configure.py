@@ -1024,7 +1024,7 @@ config.libs = [
                 NonMatching, "main/dll/dll_0013_waterfx.c", cflags=cflags_dll_noopt_noautoinline,
                 section_alignments={".data": 4},
             ),
-            Object(NonMatching, "main/dll/viewfinder.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/viewfinder.c"),
             Object(NonMatching, "main/dll/objfx.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/expgfxresource.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/audio_decode_thread.c", cflags=cflags_dll_noopt),
