@@ -1969,16 +1969,16 @@ void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z)
 
 void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int magnitude)
 {
-    f32 vec[3];
-    f32 dot;
-    f32 mag;
-    f32 lenv;
-    f32 lenp;
+    f32 normalizedDirection[3];
+    f32 directionSimilarity;
+    f32 combinedMagnitudeSquared;
+    f32 directionMagnitudeSquared;
+    f32 previousMagnitudeSquared;
 
-    vec[0] = directionX;
-    vec[1] = directionY;
-    vec[2] = directionZ;
-    PSVECNormalize(vec, vec);
+    normalizedDirection[0] = directionX;
+    normalizedDirection[1] = directionY;
+    normalizedDirection[2] = directionZ;
+    PSVECNormalize(normalizedDirection, normalizedDirection);
     gSunMagnitude = magnitude;
     gShadowOffsetX = directionX * magnitude;
     gShadowOffsetY = directionY * magnitude;
@@ -1988,24 +1988,27 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
         gShadowOffsetY = lbl_803DEC94;
     }
     gShadowOffsetZ = directionZ * magnitude;
-    dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
-    lenv = vec[0] * vec[0] + vec[1] * vec[1];
-    lenv += vec[2] * vec[2];
-    lenp = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] + gPrevSunDir[2] * gPrevSunDir[2];
-    mag = lenv * lenp;
-    if (mag != lbl_803DEC58)
+    directionSimilarity = normalizedDirection[0] * gPrevSunDir[0] + normalizedDirection[1] * gPrevSunDir[1] +
+                          normalizedDirection[2] * gPrevSunDir[2];
+    directionMagnitudeSquared = normalizedDirection[0] * normalizedDirection[0] +
+                                normalizedDirection[1] * normalizedDirection[1];
+    directionMagnitudeSquared += normalizedDirection[2] * normalizedDirection[2];
+    previousMagnitudeSquared = gPrevSunDir[0] * gPrevSunDir[0] + gPrevSunDir[1] * gPrevSunDir[1] +
+                               gPrevSunDir[2] * gPrevSunDir[2];
+    combinedMagnitudeSquared = directionMagnitudeSquared * previousMagnitudeSquared;
+    if (combinedMagnitudeSquared != lbl_803DEC58)
     {
-        lenp = sqrtf(mag);
+        previousMagnitudeSquared = sqrtf(combinedMagnitudeSquared);
     }
+    if (previousMagnitudeSquared != lbl_803DEC58)
     {
-        f32 r = lbl_803DEC58;
-        if (lenp != r)
-        {
-            r = dot / lenp;
-        }
-        gSunDotCos = r;
+        gSunDotCos = directionSimilarity / previousMagnitudeSquared;
     }
-    if ((f32)gSunDotCos < *(f32*)&lbl_803DEC58)
+    else
+    {
+        gSunDotCos = lbl_803DEC58;
+    }
+    if (gSunDotCos < *(f32*)&lbl_803DEC58)
     {
         gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
     }
@@ -2015,9 +2018,9 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
     }
     if (gSunDirChanged != 0)
     {
-        gPrevSunDir[0] = vec[0];
-        gPrevSunDir[1] = vec[1];
-        gPrevSunDir[2] = vec[2];
+        gPrevSunDir[0] = normalizedDirection[0];
+        gPrevSunDir[1] = normalizedDirection[1];
+        gPrevSunDir[2] = normalizedDirection[2];
         gSunDirChanged = 0;
         gShadowVolumesDirty = 1;
     }
