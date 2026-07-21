@@ -1023,7 +1023,15 @@ void cutsceneFadeInOut(int enter)
 }
 
 u8 lbl_8033C3B8[0x3E8];
-u8 gGameLoopRenderModeCopy[0x40];
+typedef struct GameLoopRenderModeStorage
+{
+    GXRenderModeObj mode;
+    u8 reserved[4];
+} GameLoopRenderModeStorage;
+
+STATIC_ASSERT(sizeof(GameLoopRenderModeStorage) == 0x40);
+
+GameLoopRenderModeStorage gGameLoopRenderModeCopy;
 extern char sMainFinishedInitMessage[];
 
 
@@ -1463,8 +1471,8 @@ void init(void)
         askProgressiveScanMode();
     }
     OSSetSaveRegion(NULL, NULL);
-    memcpy(gGameLoopRenderModeCopy, gRenderModeObj, 0x3c);
-    gRenderModeObj = (GXRenderModeObj*)gGameLoopRenderModeCopy;
+    memcpy(&gGameLoopRenderModeCopy.mode, gRenderModeObj, sizeof(GXRenderModeObj));
+    gRenderModeObj = &gGameLoopRenderModeCopy.mode;
     initViewport();
     tvInit();
     OSReport(sMainFinishedInitMessage);
