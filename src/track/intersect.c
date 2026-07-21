@@ -276,7 +276,7 @@ extern f32 lbl_803DEE98;
 extern f32 lbl_803DEE9C;
 extern u8 gSaveCardRetry;
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type);
-void fn_80070234(f32* mat);
+void mtx44Identity(f32* mat);
 void gxSetPeControl_ZCompLoc_(u8 zCompLoc);
 void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
@@ -910,7 +910,7 @@ void matrixFn_8006ff0c(float* mat, short* out, f32 fov, f32 aspect, f32 near, f3
     f32 tan;
     int i;
 
-    fn_80070234((f32*)mat);
+    mtx44Identity((f32*)mat);
 
     angle = (f32)(s32)(lbl_803DEE6C * fov) * gGxPi / lbl_803DEE70;
     tan = mathCosf(angle) / mathSinf(angle);
@@ -960,7 +960,7 @@ void normalize(f32* x, f32* y, f32* z)
 }
 
 /* 4x4 identity fill. */
-void fn_80070234(f32* mat)
+void mtx44Identity(f32* mat)
 {
     int i = 0, j;
     f32 zero, one;
