@@ -486,7 +486,7 @@ void babycloudrunner_update(GameObject* obj)
         }
         else
         {
-            if (randFn_80080100(500) != 0)
+            if (randomChanceOneIn(500) != 0)
             {
                 u16 sfxId = ((s16*)sub->mutterSfxTable)[randomGetRange(0, 3)];
                 objAudioFn_80039270((int)obj, &sub->soundState, sfxId);
@@ -633,7 +633,7 @@ void babycloudrunner_update(GameObject* obj)
                     if (ObjAnim_AdvanceCurrentMove((int)obj, sub->animSpeed, timeDelta,
                                                                                   0) != 0)
                     {
-                        if (randFn_80080100(2) != 0)
+                        if (randomChanceOneIn(2) != 0)
                         {
                             ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4218, 0);
                         }

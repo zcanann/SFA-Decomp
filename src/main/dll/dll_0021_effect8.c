@@ -405,7 +405,7 @@ int Effect8_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
             cfg.overrideColor2 = 0x3caf;
         }
         cfg.renderFlags = 0x20;
-        cfg.behaviorFlags = (u32)randFn_80080100;
+        cfg.behaviorFlags = (u32)randomChanceOneIn;
         cfg.textureId = 0x62;
         cfg.initialAlpha = 0xa0;
         break;

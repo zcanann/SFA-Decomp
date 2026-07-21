@@ -387,7 +387,7 @@ void warpstone_hitDetect(GameObject* obj)
         pos[0] += playerMapOffsetX;
         pos[2] += playerMapOffsetZ;
         objLightFn_8009a1dc((void*)obj, 0.01f, lightPos, 1, 0);
-        if (randFn_80080100(3) != 0)
+        if (randomChanceOneIn(3) != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
         }
@@ -458,11 +458,11 @@ void warpstone_update(int obj)
     advanceResult = SClantern_advanceAnimEvents(obj, 0.0055555557f);
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
-        if (randFn_80080100(100) != 0)
+        if (randomChanceOneIn(100) != 0)
         {
             objAudioFn_800393f8((GameObject*)obj, (ObjSoundState*)(state + 0x14), 0xab, -0x100, -1, 0);
         }
-        if (randFn_80080100(500) != 0)
+        if (randomChanceOneIn(500) != 0)
         {
             objAudioFn_800393f8((GameObject*)obj, (ObjSoundState*)(state + 0x14), 0x417, -0x500, -1, 0);
         }
@@ -470,7 +470,7 @@ void warpstone_update(int obj)
 
     if (mainGetBit(GAMEBIT_ITEM_RockCandy_Used) != 0)
     {
-        if (randFn_80080100(lbl_803DC038) != 0)
+        if (randomChanceOneIn(lbl_803DC038) != 0)
         {
             ((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer = (((WarpstoneFlags*)(state + 0xd5))->lookAtPlayer == 0);
         }
@@ -540,12 +540,12 @@ void warpstone_update(int obj)
                 ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                 Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
             }
-            else if (randFn_80080100(lbl_803DC048) != 0)
+            else if (randomChanceOneIn(lbl_803DC048) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
                 ObjAnim_SetCurrentMove(obj, 0x1b, 0.0f, 0);
             }
-            else if (randFn_80080100(lbl_803DC04C) != 0)
+            else if (randomChanceOneIn(lbl_803DC04C) != 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
                 ObjAnim_SetCurrentMove(obj, 0x1a, 0.0f, 0);

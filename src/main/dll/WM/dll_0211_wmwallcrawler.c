@@ -359,7 +359,7 @@ void wmwallcrawler_update(GameObject* obj)
                         else if (lbl_803E5FD0.f < state->fleeChaseThreshold)
                         {
                             state->lifeTimer -= framesThisStep;
-                            if (randFn_80080100(0x32) != 0)
+                            if (randomChanceOneIn(0x32) != 0)
                             {
                                 Sfx_PlayFromObject(ob, SFXTRIG_id_74);
                             }
@@ -702,7 +702,7 @@ void wmwallcrawler_update(GameObject* obj)
                             ((GameObject*)ob)->anim.localPosY =
                                 ((GameObject*)ob)->anim.velocityY * timeDelta + ((GameObject*)ob)->anim.localPosY;
                         }
-                        if (randFn_80080100(0x32) != 0)
+                        if (randomChanceOneIn(0x32) != 0)
                         {
                             Sfx_PlayFromObject(ob, SFXTRIG_id_76);
                         }

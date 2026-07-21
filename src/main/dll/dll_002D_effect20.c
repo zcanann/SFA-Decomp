@@ -1750,7 +1750,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
             cfg.lifetimeFrames = randomGetRange(0x1e, 0x28);
             cfg.initialAlpha = randomGetRange(0x40, 0x7f);
             cfg.textureId = 0x605;
-            cfg.behaviorFlags = (u32)randFn_80080100;
+            cfg.behaviorFlags = (u32)randomChanceOneIn;
             cfg.renderFlags = 0x28a0;
             cfg.colorWord0 = 0;
             cfg.colorWord1 = 0x7fff;
@@ -1789,7 +1789,7 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         if (spawnParams != NULL)
         {
             cfg.scale = 0.0002f * (f32)(s32)randomGetRange(0x1e, 0x46);
-            cfg.behaviorFlags = (u32)randFn_80080100;
+            cfg.behaviorFlags = (u32)randomChanceOneIn;
             cfg.renderFlags = 0x8a0;
             cfg.colorWord0 = randomGetRange(40000, 0xffff);
             cfg.colorWord1 = randomGetRange(0x4b0, 32000);

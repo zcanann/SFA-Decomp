@@ -359,7 +359,7 @@ int Effect2_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = 1e-05f * (f32)(s32)randomGetRange(0x64, 0x78);
         cfg.lifetimeFrames = 0x3b6;
         cfg.initialAlpha = 0xff;
-        cfg.behaviorFlags = (u32)randFn_80080100;
+        cfg.behaviorFlags = (u32)randomChanceOneIn;
         cfg.textureId = 0x5c;
         break;
     case 0x2a5:

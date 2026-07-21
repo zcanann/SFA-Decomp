@@ -869,7 +869,7 @@ int cfguardian_updateMain(GameObject* obj)
         sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
     }
     cfguardianPlayEventSfx((u32)obj, (ObjAnimEventList*)((u8*)&stk + 12), lbl_803DBE20);
-    if (randFn_80080100(0x3c) != 0)
+        if (randomChanceOneIn(0x3c) != 0)
     {
         objAudioFn_800393f8(obj, &sub->soundState, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }

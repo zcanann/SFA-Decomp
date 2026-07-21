@@ -856,7 +856,7 @@ void objSeqInitFn_80080078(void* entries, int n)
     }
 }
 
-int randFn_80080100(int n)
+int randomChanceOneIn(int n)
 {
     return randomGetRange(0, n * 60 / 60) == 0;
 }

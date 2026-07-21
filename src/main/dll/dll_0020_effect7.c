@@ -335,7 +335,7 @@ int Effect7_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.scale = 0.0016f * (f32)(s32)randomGetRange(0x32, 0xc8);
         cfg.lifetimeFrames = 0x96;
         cfg.textureId = 0xc10;
-        cfg.behaviorFlags = (u32)randFn_80080100;
+        cfg.behaviorFlags = (u32)randomChanceOneIn;
         cfg.renderFlags = 0x4020020;
         cfg.initialAlpha = randomGetRange(0x7f, 0xff);
         cfg.colorWord0 = cfg.overrideColor0 = 0xa70f;

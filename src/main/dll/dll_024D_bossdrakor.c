@@ -901,7 +901,7 @@ void bossdrakor_update(GameObject* obj)
             i++;
         } while (i < 5);
     }
-    if (randFn_80080100(200) != 0 && ((DrakorFlags*)((char*)state + 0x198))->b40)
+    if (randomChanceOneIn(200) != 0 && ((DrakorFlags*)((char*)state + 0x198))->b40)
     {
     objAudioFn_80039270((u32)obj, (void*)(state + 0x130), 0x2ff);
     }

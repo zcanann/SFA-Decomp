@@ -261,7 +261,7 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
         }
         inner->attackDelay = delay;
 
-        if (randFn_80080100(2) == 0)
+        if (randomChanceOneIn(2) == 0)
         {
             ObjAnim_SetCurrentMove((int)obj, inner->moveIdBase, 0.0f, 0);
         }
@@ -772,7 +772,7 @@ void snowclaw_update(GameObject* obj)
         snowclaw_updateMountAttack(obj, (GameObject*)sub);
     }
 
-    if (randFn_80080100(0x12c) != 0)
+    if (randomChanceOneIn(0x12c) != 0)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_id_2e5);
     }

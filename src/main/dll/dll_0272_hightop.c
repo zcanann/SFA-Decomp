@@ -111,7 +111,7 @@ int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg)
     }
     if (Vec_distance((f32*)((char*)Obj_GetPlayerObject() + 0x18), &obj->anim.worldPosX) > 700.0f)
     {
-        if (randFn_80080100(500) != 0)
+        if (randomChanceOneIn(500) != 0)
         {
             roll = randomGetRange(0, 100);
             i = 0;
@@ -175,14 +175,14 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
     if (mainGetBit(placement->gameBitId) == 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        if (randFn_80080100(0x64) != 0)
+        if (randomChanceOneIn(0x64) != 0)
         {
             objSoundFn_800392f0(obj, &state->modelSoundState,
                                 (ObjSoundDef*)(&lbl_803DC308 + randomGetRange(0, 0) * 6), 1);
         }
         if ((s8)stateArg->baddie.moveDone != 0)
         {
-            if (randFn_80080100(2) != 0)
+            if (randomChanceOneIn(2) != 0)
             {
                 ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
                 ObjAnim_SetCurrentMove((int)obj, 9, 0.0f, 0);
@@ -215,7 +215,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
         total = total + mainGetBit(GAMEBIT_ITEM_CCGoldBar_Count);
         mainSetBits(GAMEBIT_ITEM_CCGoldBar_Used, total);
         mainSetBits(GAMEBIT_ITEM_CCGoldBar_Count, 0);
-        if (randFn_80080100(5 - total) != 0)
+        if (randomChanceOneIn(5 - total) != 0)
         {
             state->substate = 2;
         }
@@ -252,7 +252,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
     {
         if (Vec_distance((f32*)((char*)Obj_GetPlayerObject() + 0x18), &(obj)->anim.worldPosX) > 700.0f)
         {
-            if (randFn_80080100(0x1f4) != 0)
+        if (randomChanceOneIn(0x1f4) != 0)
             {
                 roll = randomGetRange(0, 0x64);
                 idx = 0;
@@ -470,7 +470,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         }
         else
         {
-            if (randFn_80080100((4 - count) * 0xa) != 0)
+            if (randomChanceOneIn((4 - count) * 0xa) != 0)
             {
                 stateArg->baddie.moveSpeed = 0.0005f * count + 0.007f;
                 move = 9;
