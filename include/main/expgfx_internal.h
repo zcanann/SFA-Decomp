@@ -522,7 +522,7 @@ STATIC_ASSERT(offsetof(ExpgfxSlot, renderX) == 0x90);
 extern u8 gExpgfxStaticData[];
 extern u8 gExpgfxRuntimeData[];
 extern ExpgfxTableEntry gExpgfxTableEntries[];
-extern void* gExpgfxTrackedPoolSourceIds[];
+extern ExpgfxSourceObject* gExpgfxTrackedPoolSourceIds[];
 extern u64 gExpgfxTrackedSourceFrameMasks[];
 extern s16 gExpgfxStaticPoolSlotTypeIds[];
 extern u8 gExpgfxStaticPoolFrameFlags[];
