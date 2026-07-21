@@ -390,7 +390,7 @@ void dfropenode_render(int obj, int p2, int p3)
 {
     ObjAnimComponent* objAnim;
     DFropenodeExtra* extra;
-    int objDef;
+    DfropenodePlacement* objDef;
     int eventId;
     int fadeAlpha;
     u32 oldAlpha;
@@ -402,8 +402,8 @@ void dfropenode_render(int obj, int p2, int p3)
 
     objAnim = &((GameObject*)obj)->anim;
     extra = ((GameObject*)obj)->extra;
-    objDef = (int)objAnim->placementData;
-    eventId = ((DfropenodePlacement*)objDef)->fadeGameBit;
+    objDef = (DfropenodePlacement*)objAnim->placementData;
+    eventId = objDef->fadeGameBit;
     if ((eventId != 0) && (mainGetBit(eventId) != 0))
     {
         oldAlpha = objAnim->alpha;
@@ -435,7 +435,7 @@ void dfropenode_render(int obj, int p2, int p3)
         }
     }
 
-    if (((((DfropenodePlacement*)objDef)->flags18 & 1) != 0) && (extra->linkedObj != NULL) && (extra->rope != NULL))
+    if (((objDef->flags18 & 1) != 0) && (extra->linkedObj != NULL) && (extra->rope != NULL))
     {
         originalScale = ((GameObject*)obj)->anim.rootMotionScale;
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E4DF8;
@@ -444,7 +444,7 @@ void dfropenode_render(int obj, int p2, int p3)
         textureSetupFn_800799c0();
         textRenderSetupFn_800795e8();
         textRenderSetupFn_80079804();
-        if (((DfropenodePlacement*)objDef)->textureIndex == 1)
+        if (objDef->textureIndex == 1)
         {
             renderState.red = 0xff;
             renderState.green = 0xff;
@@ -470,7 +470,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 gxBlendFn_80078b4c();
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
-            selectTexture((Texture*)(gRopeNodeTextures[((DfropenodePlacement*)objDef)->textureIndex]), 0);
+            selectTexture((Texture*)(gRopeNodeTextures[objDef->textureIndex]), 0);
             setTextColor(&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
         }
         node = extra->rope->nodes;
@@ -480,7 +480,7 @@ void dfropenode_render(int obj, int p2, int p3)
             fn_801C0BF8((u8*)gRopeNodeSegmentDataA, extra->angle, (node - 1)->pos, node->pos, segmentVerts);
             drawFn_8005cf8c(segmentVerts, (u8*)gRopeNodeDisplayList, 6);
         }
-        if (((DfropenodePlacement*)objDef)->textureIndex == 1)
+        if (objDef->textureIndex == 1)
         {
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_waterblock_wave);
             gxBlendFn_80078b4c();

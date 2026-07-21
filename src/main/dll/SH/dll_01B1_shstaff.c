@@ -454,7 +454,7 @@ void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren
 void sh_staff_update(GameObject* obj)
 {
     ShStaffState* state = (obj)->extra;
-    int setup = *(int*)&(obj)->anim.placementData;
+    ShStaffPlacement* setup = (ShStaffPlacement*)(obj)->anim.placementData;
     GameObject* player = Obj_GetPlayerObject();
     f32 dist = getXZDistance(&(obj)->anim.worldPosX, (f32*)((int)player + 0x18));
     u8 mode = state->phase;
@@ -472,8 +472,8 @@ void sh_staff_update(GameObject* obj)
             int loadResult;
             staffToggle((GameObject*)player, 0);
             ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, lbl_803E54D0);
-            (obj)->anim.rotY = (s16)(((ShStaffPlacement*)setup)->rotYByte << 8);
-            (obj)->anim.rotZ = (s16)(((ShStaffPlacement*)setup)->rotZByte << 8);
+            (obj)->anim.rotY = (s16)(setup->rotYByte << 8);
+            (obj)->anim.rotZ = (s16)(setup->rotZByte << 8);
             (obj)->animEventCallback = sh_staff_SeqFn;
             state->phase = SHSTAFF_PHASE_ARMED;
             if (Obj_IsLoadingLocked() == 0)

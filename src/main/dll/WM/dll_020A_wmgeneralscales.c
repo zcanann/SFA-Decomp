@@ -105,14 +105,14 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 5: /* draw the sword: spawn + attach a scalessword child */
             if (((GameObject*)obj)->childObjs[0] == NULL && Obj_IsLoadingLocked() != 0)
             {
-                int setup = (int)Obj_AllocObjectSetup(0x24, WMGENERALSCALES_SWORD_OBJECT_TYPE);
-                ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
-                ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                ((ObjPlacement*)setup)->color[0] = 0x20;
-                ((ObjPlacement*)setup)->color[1] = 4;
-                ((ObjPlacement*)setup)->color[3] = 0xff;
-                ObjLink_AttachChild((GameObject*)obj, Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0), 0);
+                ObjPlacement* setup = Obj_AllocObjectSetup(0x24, WMGENERALSCALES_SWORD_OBJECT_TYPE);
+                setup->posX = ((GameObject*)obj)->anim.localPosX;
+                setup->posY = ((GameObject*)obj)->anim.localPosY;
+                setup->posZ = ((GameObject*)obj)->anim.localPosZ;
+                setup->color[0] = 0x20;
+                setup->color[1] = 4;
+                setup->color[3] = 0xff;
+                ObjLink_AttachChild((GameObject*)obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
                 *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= 1.1f;
             }
             break;

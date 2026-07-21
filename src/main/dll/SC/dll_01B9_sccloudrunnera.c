@@ -75,12 +75,12 @@ void sc_cloudrunnera_update(int obj)
 {
     int i;
     ObjSeqState* seq = ((GameObject*)obj)->extra;
-    void* sub;
+    ScCloudrunneraPlacement* sub;
     int idx, count;
 
-    sub = ((GameObject*)obj)->anim.placementData;
+    sub = (ScCloudrunneraPlacement*)((GameObject*)obj)->anim.placementData;
     if (sub == NULL) return;
-    if (((ScCloudrunneraPlacement*)sub)->animDataIndex == -1) return;
+    if (sub->animDataIndex == -1) return;
     idx = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)lbl_803DB411);
     if (idx != 0 && ((GameObject*)obj)->seqIndex == -2)
     {
@@ -197,32 +197,33 @@ void sc_cloudrunnera_init(GameObject *obj, int def)
     ObjSeqState* seq;
     f32 base;
     s32 objF4;
+    ScCloudrunneraPlacement* place = (ScCloudrunneraPlacement*)def;
 
     objSetSlot(obj, 0x64);
     seq = (obj)->extra;
-    seq->gameBit = ((ScCloudrunneraPlacement*)def)->gameBit;
+    seq->gameBit = place->gameBit;
     seq->flags = -1;
     base = 1.0f;
-    seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)def)->posOffsetDecayFactor);
+    seq->posOffsetDecay = base / (base + (f32)(u32)place->posOffsetDecayFactor);
     seq->curveId = -1;
     (obj)->userData2 = 0;
 
     objF4 = (obj)->userData1;
-    if (objF4 == 0 && ((ScCloudrunneraPlacement*)def)->animDataIndex != 1)
+    if (objF4 == 0 && place->animDataIndex != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)seq, (u8*)def);
-        (obj)->userData1 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
+        (obj)->userData1 = place->animDataIndex + 1;
     }
-    else if (objF4 != 0 && ((ScCloudrunneraPlacement*)def)->animDataIndex != objF4 - 1)
+    else if (objF4 != 0 && place->animDataIndex != objF4 - 1)
     {
         (*gObjectTriggerInterface)->freeState((u8*)seq);
-        if (((ScCloudrunneraPlacement*)def)->animDataIndex != -1)
+        if (place->animDataIndex != -1)
         {
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8*)seq, (u8*)def);
         }
-        (obj)->userData1 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
+        (obj)->userData1 = place->animDataIndex + 1;
     }
     if ((obj)->anim.modelState != NULL)
     {
