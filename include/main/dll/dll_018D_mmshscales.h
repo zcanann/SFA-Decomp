@@ -3,33 +3,23 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
+#include "main/objseq.h"
 
 typedef struct MmshScalesState
 {
-    u8 pad0[0xC - 0x0];
-    f32 unkC;
-    u8 pad10[0x14 - 0x10];
-    s32 unk14;
-    u8 pad18[0x24 - 0x18];
-    f32 dampingFactor; /* 0x24: base/(base + def[36]) smoothing coefficient */
-    s32 unk28;
-    u8 pad2C[0x57 - 0x2C];
-    s8 groupTag;
-    u8 pad58[0x6A - 0x58];
-    s16 unk6A;
-    u8 pad6C[0x6E - 0x6C];
-    s16 unk6E;
-    u8 pad70[0x140 - 0x70];
+    ObjSeqState sequence;
+    u8 pad138[0x140 - 0x138];
 } MmshScalesState;
 
 typedef struct MmshScalesPlacement
 {
     ObjPlacement base;
     s16 animationBank;
-    s16 sequenceTag;
+    s16 sequenceGameBit;
     u8 pad1C[0x24 - 0x1C];
-    u8 damping;
+    u8 positionDamping;
 } MmshScalesPlacement;
 
 /* 0x24-byte spawn descriptor handed to Obj_SetupObject for the child
@@ -40,13 +30,14 @@ typedef struct MmshScalesSpawnSetup
     u8 pad18[0x24 - 0x18];
 } MmshScalesSpawnSetup;
 
-STATIC_ASSERT(offsetof(MmshScalesState, groupTag) == 0x57);
-STATIC_ASSERT(offsetof(MmshScalesState, unk6A) == 0x6A);
+STATIC_ASSERT(offsetof(MmshScalesState, sequence) == 0x0);
 STATIC_ASSERT(sizeof(MmshScalesState) == 0x140);
 STATIC_ASSERT(offsetof(MmshScalesPlacement, animationBank) == 0x18);
-STATIC_ASSERT(offsetof(MmshScalesPlacement, sequenceTag) == 0x1A);
-STATIC_ASSERT(offsetof(MmshScalesPlacement, damping) == 0x24);
+STATIC_ASSERT(offsetof(MmshScalesPlacement, sequenceGameBit) == 0x1A);
+STATIC_ASSERT(offsetof(MmshScalesPlacement, positionDamping) == 0x24);
 STATIC_ASSERT(sizeof(MmshScalesSpawnSetup) == 0x24);
+
+extern ObjectDescriptor gMMSH_ScalesObjDescriptor;
 
 int MMSH_Scales_getExtraSize(void);
 int MMSH_Scales_getObjectTypeId(void);

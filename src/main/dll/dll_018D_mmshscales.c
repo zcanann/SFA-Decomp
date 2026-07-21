@@ -27,17 +27,20 @@
 /* Child object spawned at init and cached in childObjs[0] (scaled x2);
    retail OBJECTS.bin name "scalessword" (DLL 0x12A). */
 #define MMSHSCALES_CHILD_OBJ_SWORD 0x1b8
+#define MMSHSCALES_OBJECT_TYPE_ID  0xb
+#define MMSHSCALES_CLASS_ID        0x10
+#define MMSHSCALES_CHILD_SCALE     2.0f
 
 extern u8 lbl_803DB411;
 
 
 int MMSH_Scales_getExtraSize(void)
 {
-    return 0x140;
+    return sizeof(MmshScalesState);
 }
 int MMSH_Scales_getObjectTypeId(void)
 {
-    return 0xb;
+    return MMSHSCALES_OBJECT_TYPE_ID;
 }
 
 void MMSH_Scales_free(GameObject* obj, int keepChild)
@@ -65,11 +68,11 @@ void MMSH_Scales_hitDetect(void)
 
 void MMSH_Scales_update(GameObject* obj)
 {
-    int seqTag;
+    int sequenceSlot;
     GameObject** list;
     GameObject* other;
-    GameObject* match;
-    int groupTag;
+    GameObject* sequenceOwner;
+    int groupSlot;
     int siblingCount;
     int i;
     int count;
@@ -80,28 +83,28 @@ void MMSH_Scales_update(GameObject* obj)
         i = (*gObjectTriggerInterface)->update((u8*)obj, (f32)(u32)lbl_803DB411);
         if ((i != 0) && (obj->seqIndex == -2))
         {
-            seqTag = ((MmshScalesState*)obj->extra)->groupTag;
-            match = NULL;
+            sequenceSlot = ((MmshScalesState*)obj->extra)->sequence.slot;
+            sequenceOwner = NULL;
             list = (GameObject**)ObjList_GetObjects(&i, &count);
             siblingCount = 0;
-            for (i = 0, groupTag = (int)(s8)seqTag; i < count; i++)
+            for (i = 0, groupSlot = (int)(s8)sequenceSlot; i < count; i++)
             {
                 other = *list;
-                if (other->seqIndex == seqTag)
+                if (other->seqIndex == sequenceSlot)
                 {
-                    match = other;
+                    sequenceOwner = other;
                 }
-                if (((other->seqIndex == -2) && (other->anim.classId == 0x10)) &&
-                    (groupTag == ((MmshScalesState*)other->extra)->groupTag))
+                if (((other->seqIndex == -2) && (other->anim.classId == MMSHSCALES_CLASS_ID)) &&
+                    (groupSlot == ((MmshScalesState*)other->extra)->sequence.slot))
                 {
                     siblingCount++;
                 }
                 list = list + 1;
             }
-            if (((siblingCount <= 1) && ((u32)match != 0)) && (match->seqIndex != -1))
+            if (((siblingCount <= 1) && ((u32)sequenceOwner != 0)) && (sequenceOwner->seqIndex != -1))
             {
-                match->seqIndex = -1;
-                (*gObjectTriggerInterface)->endSequence(groupTag);
+                sequenceOwner->seqIndex = -1;
+                (*gObjectTriggerInterface)->endSequence(groupSlot);
             }
             obj->seqIndex = -1;
             Obj_FreeObject(obj);
@@ -114,10 +117,10 @@ void MMSH_Scales_init(GameObject* obj, MmshScalesPlacement* placement)
     MmshScalesState* state = obj->extra;
     MmshScalesSpawnSetup* setup;
     int loadedBank;
-    state->unk6A = placement->sequenceTag;
-    state->unk6E = -1;
-    state->dampingFactor = 1.0f / (1.0f + (f32)(u32)placement->damping);
-    state->unk28 = -1;
+    state->sequence.gameBit = placement->sequenceGameBit;
+    state->sequence.flags = -1;
+    state->sequence.posOffsetDecay = 1.0f / (1.0f + (f32)(u32)placement->positionDamping);
+    state->sequence.curveId = -1;
     loadedBank = obj->userData1;
     if (loadedBank == 0 && placement->animationBank != 1)
     {
@@ -135,15 +138,15 @@ void MMSH_Scales_init(GameObject* obj, MmshScalesPlacement* placement)
     }
     if (Obj_IsLoadingLocked() == 0)
         return;
-    setup = (MmshScalesSpawnSetup*)Obj_AllocObjectSetup(0x24, MMSHSCALES_CHILD_OBJ_SWORD);
+    setup = (MmshScalesSpawnSetup*)Obj_AllocObjectSetup(sizeof(MmshScalesSpawnSetup), MMSHSCALES_CHILD_OBJ_SWORD);
     setup->base.posX = obj->anim.localPosX;
     setup->base.posY = obj->anim.localPosY;
     setup->base.posZ = obj->anim.localPosZ;
     setup->base.color[0] = 32;
     setup->base.color[1] = 4;
     setup->base.color[3] = 0xff;
-    obj->childObjs[0] = Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
-    ((GameObject*)obj->childObjs[0])->anim.rootMotionScale *= 2.0f;
+    obj->childObjs[0] = Obj_SetupObject(&setup->base, 5, -1, -1, NULL);
+    ((GameObject*)obj->childObjs[0])->anim.rootMotionScale *= MMSHSCALES_CHILD_SCALE;
 }
 
 void MMSH_Scales_release(void)
