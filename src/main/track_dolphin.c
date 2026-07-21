@@ -5474,7 +5474,7 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
     if (dst == NULL)
         return;
     fmt = src1->format;
-    if (fmt != 4 && fmt != 6)
+    if (fmt != GX_TF_RGB565 && fmt != GX_TF_RGBA8)
         return;
     if (src2->format != fmt)
         return;
@@ -5493,10 +5493,10 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
     {
         wA = (int)(lbl_803DED08 * blend) & 0xff;
         wB = (0xff - wA) & 0xff;
-        if (fmt == 4)
+        if (fmt == GX_TF_RGB565)
         {
             int i, j;
-            for (i = 0; i < (int)src1->height; i++)
+            for (i = 0; i < src1->height; i++)
             {
                 u8 *pa, *pb;
                 u32 wd;
@@ -5516,24 +5516,24 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     rowDataOffset = (int)wd * w * 2;
                     pa += rowDataOffset;
                     pixelA = READ_TEXTURE_U16(pa + 0x60);
-                    redA = (int)(pixelA & 0xf800) >> 8;
-                    redA = (u8)(redA | ((int)(pixelA & 0xe000) >> 13));
+                    redA = (pixelA & 0xf800) >> 8;
+                    redA = (u8)(redA | ((pixelA & 0xe000) >> 13));
                     pb = (u8*)src2 + pixelColumnOffset;
                     pb += tileColumnOffset;
                     pb += h;
                     pb += rowDataOffset;
                     pixelB = READ_TEXTURE_U16(pb + 0x60);
-                    redB = (int)(pixelB & 0xf800) >> 8;
-                    redB = (u8)(redB | ((int)(pixelB & 0xe000) >> 13));
-                    blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((int)(pixelA & 0x1c) >> 2))) >> 8) +
-                               ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((int)(pixelB & 0x1c) >> 2))) >> 8)) &
+                    redB = (pixelB & 0xf800) >> 8;
+                    redB = (u8)(redB | ((pixelB & 0xe000) >> 13));
+                    blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((pixelA & 0x1c) >> 2))) >> 8) +
+                               ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((pixelB & 0x1c) >> 2))) >> 8)) &
                            0xf8) >>
                           3;
                     red = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
-                    green = ((u8)(((int)(wA * (u8)(((int)(pixelA & 0x7e0) >> 3) | ((int)(pixelA & 0x600) >> 9))) >> 8) +
-                               ((int)(wB * (u8)(((int)(pixelB & 0x7e0) >> 3) | ((int)(pixelB & 0x600) >> 9))) >> 8)) &
-                           0xfc)
-                          << 3;
+                    green = ((u8)(((int)(wA * (u8)(((pixelA & 0x7e0) >> 3) | ((pixelA & 0x600) >> 9))) >> 8) +
+                               ((int)(wB * (u8)(((pixelB & 0x7e0) >> 3) | ((pixelB & 0x600) >> 9))) >> 8)) &
+                            0xfc)
+                           << 3;
                     outputPixel = blue | (red | green);
                     WRITE_TEXTURE_U16((u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset + 0x60,
                                       outputPixel);
@@ -5543,7 +5543,7 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
         else
         {
             int i, j;
-            for (i = 0; i < (int)src1->height; i++)
+            for (i = 0; i < src1->height; i++)
             {
                 int tileRowGroupOffset, tileRowOffset;
                 u32 wd;
@@ -5572,17 +5572,17 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     bLo = READ_TEXTURE_U16(bd + 0x60);
                     bLo = (u8)bLo;
                     pixelA = READ_TEXTURE_U16(ad + 0x80);
-                    aHi = (int)(pixelA & 0xff00) >> 8;
+                    aHi = (pixelA & 0xff00) >> 8;
                     aHi = (u8)aHi;
                     pixelB = READ_TEXTURE_U16(bd + 0x80);
-                    bHi = (int)(pixelB & 0xff00) >> 8;
+                    bHi = (pixelB & 0xff00) >> 8;
                     bHi = (u8)bHi;
                     ct = (u8*)dst + pixelColumnOffset + 0x60;
                     cd = ct + tileColumnOffset;
                     cd += tileRowOffset;
                     WRITE_TEXTURE_U16(cd + rowDataOffset,
                                       (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8)));
-                    WRITE_TEXTURE_U16(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20,
+                    WRITE_TEXTURE_U16(cd + src1->width * tileRowGroupOffset * 2 + 0x20,
                                       ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
                                           (u8)(((int)(wA * (u8)pixelA) >> 8) +
                                                ((int)(wB * (u8)pixelB) >> 8)));
