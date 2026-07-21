@@ -133,7 +133,7 @@ typedef struct F32Pair
     f32 lo;
     f32 hi;
 } F32Pair;
-void textureFn_80053d58(void* obj);
+void textureInitGXTexObj(void* obj);
 extern GXTexObj lbl_803779A0;
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
@@ -1065,7 +1065,7 @@ void texRestructRefs(int mode)
                 done = 0;
                 memcpy(na, tex, size);
                 DCStoreRange(na, size);
-                textureFn_80053d58(na);
+                textureInitGXTexObj(na);
                 d = mmSetFreeDelay(0);
                 mm_free(gLoadedTextures[i].texture);
                 mmSetFreeDelay(d);
@@ -1114,7 +1114,7 @@ void texRestructRefs(int mode)
                         done = 0;
                         memcpy(na, tex, size);
                         DCStoreRange(na, size);
-                        textureFn_80053d58(na);
+                        textureInitGXTexObj(na);
                         d = mmSetFreeDelay(0);
                         mm_free(gLoadedTextures[i].texture);
                         mmSetFreeDelay(d);
@@ -1146,7 +1146,7 @@ void texRestructRefs(int mode)
                                 done = 0;
                                 memcpy(na, tex, size);
                                 DCStoreRange(na, size);
-                                textureFn_80053d58(na);
+                                textureInitGXTexObj(na);
                                 d = mmSetFreeDelay(0);
                                 mm_free(gLoadedTextures[i].texture);
                                 mmSetFreeDelay(d);
@@ -1208,7 +1208,7 @@ void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj)
     }
 }
 
-void textureFn_80053d58(void* vobj)
+void textureInitGXTexObj(void* vobj)
 {
     u8 mipmap = 0;
     u8* obj = (u8*)vobj;
@@ -1827,7 +1827,7 @@ void* textureLoad(int texId, u8 flagIn)
     }
     while (walk != NULL)
     {
-        textureFn_80053d58(walk);
+        textureInitGXTexObj(walk);
         walk = *(u8**)walk;
     }
     if (getLoadedFileFlags(0) != 0)
@@ -1879,7 +1879,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
     ((Texture*)obj)->minFilter = minFilter;
     ((Texture*)obj)->magFilter = magFilter;
     ((Texture*)obj)->imageOffset = 0;
-    textureFn_80053d58(obj);
+    textureInitGXTexObj(obj);
     return obj;
 }
 
