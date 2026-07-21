@@ -140,7 +140,7 @@ typedef struct TrackShadowTriangle
 {
     Vec3f normal;
     f32 planeDistance;
-    u8 flags;
+    s8 flags;
     u8 pad11[3];
 } TrackShadowTriangle;
 
@@ -238,7 +238,7 @@ typedef struct IntersectLine
 {
     u8 end0;     /* 0x0 per-endpoint byte from the source segment */
     u8 end1;     /* 0x1 */
-    s8 flags;    /* 0x2 bit 0x10 is toggled on import */
+    u8 flags;    /* 0x2 bit 0x10 is toggled on import */
     s8 kind;     /* 0x3 low 6 bits group key; 0x14 = consumed */
     s16 pt[2];   /* 0x4 indices into the shared point pool */
     s16 adj[2];  /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
@@ -3088,7 +3088,7 @@ void intersectModLineBuild(IntersectModLineObject* obj)
             line = (IntersectLine*)((u8*)lbl_803DCF34 + gIntersectLineCount * 0x10);
             line->end0 = sourceLine->endpointData[0];
             line->end1 = sourceLine->endpointData[1];
-            *(u8*)&line->kind = sourceLine->kind;
+            line->kind = sourceLine->kind;
             if ((line->kind & 0x3f) == 0x11)
             {
                 line->kind &= ~0x3f;
@@ -3175,27 +3175,30 @@ void intersectModLineBuild(IntersectModLineObject* obj)
         }
         {
             int m;
+            s16 bestLine;
+            bestLine = best;
             for (m = 0; m < li; m++)
             {
-                if (obj->lines[m].adj[0] == (s16)best)
+                if (obj->lines[m].adj[0] == bestLine)
                     obj->lines[m].adj[0] = li;
-                if (obj->lines[m].adj[1] == best)
+                if (obj->lines[m].adj[1] == bestLine)
                     obj->lines[m].adj[1] = li;
             }
         }
         {
+            s16 bestLine;
             int lineOff;
             int n;
-            n = 0;
-            lineOff = n;
+            lineOff = n = 0;
+            bestLine = best;
             for (; n < gIntersectLineCount; lineOff += 0x10, n++)
             {
                 line = (IntersectLine*)(lbl_803DCF34 + lineOff);
                 if (line->kind != 0x14)
                 {
-                    if ((s16)best == line->adj[0])
+                    if (bestLine == line->adj[0])
                         line->adj[0] = li;
-                    if ((s16)best == ((IntersectLine*)(lbl_803DCF34 + lineOff))->adj[1])
+                    if (bestLine == ((IntersectLine*)(lbl_803DCF34 + lineOff))->adj[1])
                         ((IntersectLine*)(lbl_803DCF34 + lineOff))->adj[1] = li;
                 }
             }
