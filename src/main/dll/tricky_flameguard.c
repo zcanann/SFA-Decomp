@@ -194,8 +194,8 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         else
         {
             trickyGuardFindBaddieTarget(trickyState);
+            break;
         }
-        break;
     case 3:
         trickyDebugPrint(strBase + 0x674);
         if (trickyFn_8013b368((GameObject*)obj, lbl_803E2488, (TrickyState*)trickyState) == 0)
