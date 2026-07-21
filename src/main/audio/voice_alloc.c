@@ -26,13 +26,11 @@ SynthVoiceListNode voiceFreeListSlots[64];
  */
 u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
 {
-    u32 configuredVoiceLimit;
     s32 i;
     s32 allocationCount;
     s32 selectedVoice;
     u16 priorityGroup;
     u32 restrictToStreamKind;
-    u32 scannedGroup;
     SynthVoiceListNode* freeSlot;
     SynthVoiceListNode* slotBase;
     VidListTables* voiceLists = (VidListTables*)vidListNodes;
@@ -44,19 +42,24 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
             restrictToStreamKind = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
                                     SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->fxVoiceCount);
 
-            configuredVoiceLimit = SYNTH_CONFIGURATION->fxVoiceCount;
+            if (SYNTH_CONFIGURATION->fxVoiceCount <= maxInstances)
+            {
+                goto skipInstanceLimit;
+            }
+
+            goto countInstances;
         }
         else
         {
             restrictToStreamKind = (voiceMusicRunning >= SYNTH_CONFIGURATION->musicVoiceCount &&
                                     SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->musicVoiceCount);
 
-            configuredVoiceLimit = SYNTH_CONFIGURATION->musicVoiceCount;
-        }
+            if (SYNTH_CONFIGURATION->musicVoiceCount <= maxInstances)
+            {
+                goto skipInstanceLimit;
+            }
 
-        allocationCount = -1;
-        if (configuredVoiceLimit > maxInstances)
-        {
+        countInstances:
             allocationCount = 0;
             selectedVoice = -1;
 
@@ -89,85 +92,85 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
 
                 priorityGroup = VB_PRIO_SORT_NEXT(voiceLists, group);
             }
-
-            if (allocationCount < maxInstances)
-            {
-                while (priorityGroup != VOICE_PRIORITY_NONE && allocationCount < maxInstances)
-                {
-                    u32 group = priorityGroup;
-                    i = VB_PRIO_HEAD(voiceLists, group);
-                    while (i != SYNTH_INVALID_VOICE_U8)
-                    {
-                        if (allocId == synthVoice[i].baseSample)
-                        {
-                            allocationCount++;
-                        }
-
-                        i = VB_PRIO_LINK_NEXT(voiceLists, i);
-                    }
-
-                    priorityGroup = VB_PRIO_SORT_NEXT(voiceLists, group);
-                }
-            }
         }
 
         if (allocationCount < maxInstances)
         {
-            selectedVoice = -1;
-            if (voiceFreeListRoot != SYNTH_INVALID_VOICE_U8 && restrictToStreamKind == 0)
+            while (priorityGroup != VOICE_PRIORITY_NONE && allocationCount < maxInstances)
             {
-                selectedVoice = voiceFreeListRoot;
+                u32 group = priorityGroup;
+                i = VB_PRIO_HEAD(voiceLists, group);
+                while (i != SYNTH_INVALID_VOICE_U8)
+                {
+                    if (allocId == synthVoice[i].baseSample)
+                    {
+                        allocationCount++;
+                    }
+
+                    i = VB_PRIO_LINK_NEXT(voiceLists, i);
+                }
+
+                priorityGroup = VB_PRIO_SORT_NEXT(voiceLists, group);
             }
-            else
+
+            if (allocationCount < maxInstances)
             {
+            skipInstanceLimit:
+                selectedVoice = -1;
+                if (voiceFreeListRoot != SYNTH_INVALID_VOICE_U8 && restrictToStreamKind == 0)
+                {
+                    selectedVoice = voiceFreeListRoot;
+                    goto validatePriority;
+                }
+
                 if (priority < voicePrioSortedRoot)
                 {
                     return SYNTH_INVALID_VOICE;
                 }
 
                 priorityGroup = voicePrioSortedRoot;
-
                 while (priorityGroup != VOICE_PRIORITY_NONE && priority >= priorityGroup && selectedVoice == -1)
                 {
-                    scannedGroup = priorityGroup;
-                    for (i = VB_PRIO_HEAD(voiceLists, scannedGroup); i != SYNTH_INVALID_VOICE_U8;
+                    u32 group = priorityGroup;
+                    for (i = VB_PRIO_HEAD(voiceLists, group); i != SYNTH_INVALID_VOICE_U8;
                          i = VB_PRIO_LINK_NEXT(voiceLists, i))
                     {
-                        if ((synthVoice[i].block == 0) &&
-                            (!restrictToStreamKind || streamKind == synthVoice[i].streamKind))
+                        if (synthVoice[i].block != 0)
+                            continue;
+
+                        if (!restrictToStreamKind || streamKind == synthVoice[i].streamKind)
                         {
-                            if ((VOICE_CFLAGS(i) & 2) == 0)
+                            if (VOICE_CFLAGS(i) & 2)
+                                continue;
+                            if (selectedVoice != -1)
                             {
-                                if (selectedVoice != -1)
-                                {
-                                    if (synthVoice[selectedVoice].priorityValue > synthVoice[i].priorityValue)
-                                        selectedVoice = i;
-                                }
-                                else
-                                {
+                                if (synthVoice[selectedVoice].priorityValue > synthVoice[i].priorityValue)
                                     selectedVoice = i;
-                                }
                             }
+                            else
+                                selectedVoice = i;
                         }
                     }
-                    priorityGroup = VB_PRIO_SORT_NEXT(voiceLists, scannedGroup);
+                    priorityGroup = VB_PRIO_SORT_NEXT(voiceLists, group);
                 }
 
                 if (selectedVoice == -1)
                 {
                     return SYNTH_INVALID_VOICE;
                 }
-            }
 
-            if (synthVoice[selectedVoice].priorityGroup > priority)
-            {
-                return SYNTH_INVALID_VOICE;
+            validatePriority:
+                if (synthVoice[selectedVoice].priorityGroup > priority)
+                {
+                    goto allocationFailed;
+                }
             }
         }
 
+    updateVoiceCounts:
         if (selectedVoice == -1)
         {
-            return SYNTH_INVALID_VOICE;
+            goto allocationFailed;
         }
 
         slotBase = (SynthVoiceListNode*)((u8*)voiceLists + selectedVoice * 4);
@@ -217,6 +220,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
         return selectedVoice;
     }
 
+allocationFailed:
     return SYNTH_INVALID_VOICE;
 }
 
