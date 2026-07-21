@@ -7388,33 +7388,22 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3)
         revealedHeight *= 0x10;
         if (revealedHeight > *(u16*)(gTextBoxes + 0x186))
         {
-            revealedHeight = (s16) * (u16*)(gTextBoxes + 0x186);
+            revealedHeight = *(u16*)(gTextBoxes + 0x186);
         }
         panelX = *(s16*)(gTextBoxes + 0x194);
         panelY = *(s16*)(gTextBoxes + 0x196);
         height = revealedHeight;
-        width = (s16) * (u16*)(gTextBoxes + 0x182);
-        ((void (*)(void*, f32, f32, u8, int))drawTexture)(((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5),
-                                                          (f32)(panelY - 5), panelAlpha, 0x100);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY - 5), panelAlpha, 0x100, width, 5, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex2C, (f32)(panelX - 5), panelY, panelAlpha, 0x100, 5, height, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex34, panelX, (f32)(panelY + height), panelAlpha, 0x100, width, 5, 2);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex2C, (f32)(panelX + width), panelY, panelAlpha, 0x100, 5, height, 1);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY + height), panelAlpha, 0x100, 5,
-            5, 3);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex28, (f32)(panelX + width), (f32)(panelY - 5), panelAlpha, 0x100, 5, 5,
-            1);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex28, (f32)(panelX - 5), (f32)(panelY + height), panelAlpha, 0x100, 5, 5,
-            2);
+        width = *(u16*)(gTextBoxes + 0x182);
+        drawTexture(((HudTextures*)hudTextures)->tex28, panelX - 5, panelY - 5, panelAlpha, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelY - 5, panelAlpha, 0x100, width, 5, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX - 5, panelY, panelAlpha, 0x100, 5, height, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex30, panelX, panelY, panelAlpha, 0x100, width, height, 0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, panelX, panelY + height, panelAlpha, 0x100, width, 5, 2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, panelX + width, panelY, panelAlpha, 0x100, 5, height, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelY + height, panelAlpha, 0x100, 5, 5,
+                          3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX + width, panelY - 5, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, panelX - 5, panelY + height, panelAlpha, 0x100, 5, 5, 2);
         *(u16*)(gTextBoxes + 0x18a) = revealedHeight;
         {
             s8 firstAvailableHint;
@@ -7487,7 +7476,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3)
                 progressHint = (s8)hintIndex;
             }
             {
-                int nextTaskHint = (u16)getNextTaskHintText();
+                int nextTaskHint = getNextTaskHintText();
                 hasLateGameHint = 0;
                 if (nextTaskHint > 0xad)
                 {
@@ -7538,22 +7527,18 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3)
             }
         }
         lbl_803DD77C++;
-        ((void (*)(void*, f32, f32, u8, int))drawTexture)(((HudTextures*)hudTextures)->tex28, lbl_803E2198,
-                                                          lbl_803E219C, panelAlpha, 0x100);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, panelAlpha, 0x100, 0x82, 5, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, panelAlpha, 0x100, 5, 0x96, 0);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, panelAlpha, 0x100, 0x82, 5, 2);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, panelAlpha, 0x100, 5, 0x96, 1);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, panelAlpha, 0x100, 5, 5, 3);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, panelAlpha, 0x100, 5, 5, 1);
-        ((void (*)(void*, f32, f32, u8, int, int, int, int))drawScaledTexture)(
-            ((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, panelAlpha, 0x100, 5, 5, 2);
+        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, panelAlpha, 0x100);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, panelAlpha, 0x100, 0x82, 5,
+                          0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, panelAlpha, 0x100, 5, 0x96,
+                          0);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, panelAlpha, 0x100, 0x82, 5,
+                          2);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, panelAlpha, 0x100, 5, 0x96,
+                          1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, panelAlpha, 0x100, 5, 5, 3);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, panelAlpha, 0x100, 5, 5, 1);
+        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, panelAlpha, 0x100, 5, 5, 2);
         {
             int row;
             int phaseA;
@@ -7571,18 +7556,18 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3)
                 int alpha0, alpha1, jitter1, jitter0, rawAlpha;
                 shimmer = shimmerScale * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + phaseA));
                 shimmer = shimmerScale * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + phaseB)) + shimmer;
-                rawAlpha = (int)((f32)panelAlpha * (lbl_803E2050 + shimmer));
+                rawAlpha = (int)(panelAlpha * (lbl_803E2050 + shimmer));
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
                 jitter0 = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x32),
-                                   (u8)(alpha0 > 0xff ? 0xff : alpha0), 0x100, 0x82, 2, jitter0, jitter1);
-                rawAlpha = (int)((f32)panelAlpha * (lbl_803E2010 + shimmer));
+                drawPartialTexture(textures->tex150, lbl_803E1F48, row + 0x32, alpha0 > 0xff ? 0xff : alpha0, 0x100,
+                                   0x82, 2, jitter0, jitter1);
+                rawAlpha = (int)(panelAlpha * (lbl_803E2010 + shimmer));
                 alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
                 jitter0 = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x34),
-                                   (u8)(alpha1 > 0xff ? 0xff : alpha1), 0x100, 0x82, 2, jitter0, jitter1);
+                drawPartialTexture(textures->tex150, lbl_803E1F48, row + 0x34, alpha1 > 0xff ? 0xff : alpha1, 0x100,
+                                   0x82, 2, jitter0, jitter1);
                 phaseA += 0x3520;
                 phaseB += 0x1f40;
             }
@@ -7603,7 +7588,7 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3)
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
         drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
         drawTexture(((HudTextures*)hudTextures)->texFC, lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
-        mapText = (GameTextDef*)gameTextGet(0x2ac);
+        mapText = gameTextGet(0x2ac);
         if (mapText->count > 1)
         {
             gameTextShowStr(mapText->strings[1], 0x93, 0x69, 0x17f);
