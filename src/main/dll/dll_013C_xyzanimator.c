@@ -105,7 +105,7 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
     triangleOffset[0] = coordOffset[0];
     for (; blockIndex < (int)(u32)mb->polyGroupCount; blockIndex++)
     {
-        mapBlock = mapBlockFn_800606ec((void*)block, blockIndex);
+        mapBlock = mapBlockGetPolygonGroup((void*)block, blockIndex);
         blockLayer = mapBlockFn_80060678(mapBlock);
         if ((int)setup->blockLayer == blockLayer)
         {
@@ -119,7 +119,7 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
             {
                 int o6;
                 int o12;
-                mapBlock = fn_800606DC((int*)block, triangle);
+                mapBlock = mapBlockGetPolygon((int*)block, triangle);
                 vtx = (VertexS16*)(mb->vertices + (u32)*mapBlock * 6);
                 *(s16*)(state->dataBuffer + edgeOffset[0]) = vtx->x;
                 *(s16*)(state->dataBuffer + edgeOffset[0] + 2) = vtx->y;
@@ -143,7 +143,7 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* setup, XyzAnimatorState* 
     edge[0] = edgeIdx[0];
     for (; edgeIdx[0] < (int)(u32)mb->edgeCount; edgeIdx[0]++)
     {
-        blockIndex = (int)fn_800606FC((int*)block, edgeIdx[0]);
+        blockIndex = (int)mapBlockGetEdge((int*)block, edgeIdx[0]);
         *(s16*)(state->edgeV0xBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v0x;
         *(s16*)(state->edgeV1xBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v1x;
         *(s16*)(state->edgeV0yBuffer + edge[0]) = ((EdgeVerts*)blockIndex)->v0y;
@@ -218,7 +218,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     vertexOffset[0] = coordOffset[0];
     for (; blockIndex < (int)(u32)mb->polyGroupCount; blockIndex++)
     {
-        mapBlock = mapBlockFn_800606ec((void*)block, blockIndex);
+        mapBlock = mapBlockGetPolygonGroup((void*)block, blockIndex);
         blockLayer = mapBlockFn_80060678(mapBlock);
         if ((int)def->blockLayer == blockLayer)
         {
@@ -231,7 +231,7 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
             scale = 8.0f;
             for (; triangle < blockEnd; triangle++)
             {
-                mapBlock = fn_800606DC((int*)block, triangle);
+                mapBlock = mapBlockGetPolygon((int*)block, triangle);
                 edgeOffset = vertexIndex;
                 for (edgeIndex = 3; edgeIndex != 0; edgeIndex--)
                 {
@@ -252,8 +252,8 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
     edgeOffset = edgeIndex;
     for (; edgeIndex < (int)(u32)mb->edgeCount; edgeIndex++)
     {
-        vertexOffset[0] = (int)fn_800606FC((int*)block, edgeIndex);
-        shader = fn_8006070C((MapBlockData*)block, *(u8*)(vertexOffset[0] + 0x13));
+        vertexOffset[0] = (int)mapBlockGetEdge((int*)block, edgeIndex);
+        shader = mapBlockGetShader((MapBlockData*)block, *(u8*)(vertexOffset[0] + 0x13));
         shader = Shader_getLayer(shader, 0);
         if ((int)*(u8*)((int)shader + 5) == def->blockLayer)
         {
@@ -301,7 +301,7 @@ void XyzAnimator_update(GameObject* obj)
     {
         for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
-            row = mapBlockFn_800606ec((void*)block, i);
+            row = mapBlockGetPolygonGroup((void*)block, i);
             t = mapBlockFn_80060678(row);
             if (setup->blockLayer == t)
             {

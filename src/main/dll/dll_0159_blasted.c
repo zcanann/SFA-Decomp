@@ -32,7 +32,7 @@ int fn_801A27B8(GameObject* obj, int id)
         int i;
         for (i = 0; i < block->polyGroupCount; i++)
         {
-            u8* e = mapBlockFn_800606ec(block, i);
+            u8* e = mapBlockGetPolygonGroup(block, i);
             if (id == mapBlockFn_80060678(e))
             {
                 *(int*)(e + 0x10) |= 3;
@@ -40,7 +40,7 @@ int fn_801A27B8(GameObject* obj, int id)
         }
         for (j = 0; j < block->layerCount; j++)
         {
-            u8* g = (u8*)fn_8006070C(block, j);
+            u8* g = (u8*)mapBlockGetShader(block, j);
             u8* p;
             int k;
             k = 0;

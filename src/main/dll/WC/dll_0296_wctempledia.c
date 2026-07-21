@@ -41,7 +41,7 @@ void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
         {
             for (slot = 0, bit = mask & (1 << (part - 1)); slot < block->layerCount; slot++)
             {
-                MapShader* entry = fn_8006070C(block, slot);
+                MapShader* entry = mapBlockGetShader(block, slot);
                 if (*((u8*)entry + 0x29) == part)
                 {
                     bit = mask & (1 << (part - 1));

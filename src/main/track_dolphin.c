@@ -514,7 +514,7 @@ void renderMapBlock(int* o, u8 type)
     }
 }
 
-void* fn_800606DC(int* obj, int idx);
+void* mapBlockGetPolygon(int* obj, int idx);
 
 u8 gTrackGridOrigin[0x104];
 
@@ -862,22 +862,22 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type)
     return total;
 }
 
-void* fn_800606DC(int* obj, int idx)
+void* mapBlockGetPolygon(int* obj, int idx)
 {
     return (char*)((int**)obj)[0x4c / 4] + idx * 8;
 }
 
-void* mapBlockFn_800606ec(void* obj, int idx)
+void* mapBlockGetPolygonGroup(void* obj, int idx)
 {
     return (char*)((int**)obj)[0x50 / 4] + idx * 0x14;
 }
 
-void* fn_800606FC(int* obj, int idx)
+void* mapBlockGetEdge(int* obj, int idx)
 {
     return (char*)((int**)obj)[0x68 / 4] + idx * 0x1c;
 }
 
-MapShader* fn_8006070C(MapBlockData* obj, int idx)
+MapShader* mapBlockGetShader(MapBlockData* obj, int idx)
 {
     return obj->shaders + idx;
 }
@@ -4964,7 +4964,7 @@ u8 doEdges;
 
     {
         MapBlockData* c0 = cells[0];
-        void* p = fn_800606DC((int*)c0, 0);
+        void* p = mapBlockGetPolygon((int*)c0, 0);
         dmaflip = 0;
         offA = 0;
         cacheAllocAndCopy((u32)p, c0->nPolygons << 3, &offA, &offB, 0x2000);
@@ -5002,7 +5002,7 @@ u8 doEdges;
             int c13, c14;
             dmaflip ^= 0x2000;
             nextBase = dmaflip + 0x2000;
-            p = fn_800606DC((int*)next, 0);
+            p = mapBlockGetPolygon((int*)next, 0);
             offA = dmaflip;
             c13 = cacheAllocAndCopy((u32)p, next->nPolygons << 3, &offA, &offB, nextBase);
             c14 = cacheAllocAndCopy((u32)next->vertices, next->vertexCount * 6, &offB, &offC, nextBase);

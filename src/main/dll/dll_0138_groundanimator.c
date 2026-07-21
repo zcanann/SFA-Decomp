@@ -152,7 +152,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* 
     radsq = state->radius * state->radius;
     for (blkIdx = 0, off[1] = off[0]; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
     {
-        entry = mapBlockFn_800606ec(block, blkIdx);
+        entry = mapBlockGetPolygonGroup(block, blkIdx);
         if (placement->blockId == mapBlockFn_80060678(entry))
         {
             mid = *(u16*)entry;
@@ -161,7 +161,7 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* 
             clampMax = (1.0f);
             for (; mid < *(u16*)((char*)entry + 0x14); mid++)
             {
-                nv = fn_800606DC((int*)block, mid);
+                nv = mapBlockGetPolygon((int*)block, mid);
                 for (inner = 0, vtx = nv, fallInn = fallMid, htInn = htMid; inner < 3; inner++)
                 {
                     void* cell = (char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6;
@@ -225,12 +225,12 @@ void groundanimator_free(int* obj, int flag)
         {
             for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
             {
-                entry = mapBlockFn_800606ec(block, blkIdx);
+                entry = mapBlockGetPolygonGroup(block, blkIdx);
                 if (r21->blockId == mapBlockFn_80060678(entry))
                 {
                     for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
                     {
-                        nv = fn_800606DC((int*)block, mid);
+                        nv = mapBlockGetPolygon((int*)block, mid);
                         for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
                         {
                             cell = (s16*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
@@ -420,13 +420,13 @@ void groundanimator_update(int* obj)
             blkIdx = 0;
             for (; blkIdx < g->entryCount; blkIdx++)
             {
-                entry = mapBlockFn_800606ec(block, g->blockEntries[blkIdx]);
+                entry = mapBlockGetPolygonGroup(block, g->blockEntries[blkIdx]);
                 mid = *(u16*)entry;
                 foffEntry = off2[0];
                 hoffEntry = off2[1];
                 for (; mid < *(u16*)((char*)entry + 0x14); mid++)
                 {
-                    nv = fn_800606DC((int*)block, mid);
+                    nv = mapBlockGetPolygon((int*)block, mid);
                     for (inner = 0, foffVtx = foffEntry, vtx = nv, hoffVtx = hoffEntry; inner < 3; inner++)
                     {
                         if (*(f32*)((char*)g->falloffBuf + foffVtx) > (0.0f))

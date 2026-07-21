@@ -85,16 +85,16 @@ typedef struct MapBlockData {
     u16 vertexCount; /* 0x90: entries in the vertices array (DCStoreRange size = count*6) */
     u8 pad92[0x98 - 0x92];
     u16 nPolygons; /* 0x98: entries in gcPolygons (cacheAllocAndCopy size = count<<3) */
-    u16 polyGroupCount; /* 0x9A: render/poly groups (mapBlockFn_800606ec index bound) */
+    u16 polyGroupCount; /* 0x9A: render/poly groups (mapBlockGetPolygonGroup index bound) */
     u16 hitCount; /* 0x9C: entries in the HITS.bin segment table */
     u8 pad9E[0xA1 - 0x9E];
-    u8 edgeCount; /* 0xA1: edges (fn_800606FC -> EdgeVerts index bound) */
-    u8 layerCount; /* 0xA2: shader layers (fn_8006070C index bound) */
+    u8 edgeCount; /* 0xA1: edges (mapBlockGetEdge index bound) */
+    u8 layerCount; /* 0xA2: shader layers (mapBlockGetShader index bound) */
     u8 padA3;
 } MapBlockData;
 
 STATIC_ASSERT(offsetof(MapBlockData, hitCount) == 0x9C);
 
-MapShader* fn_8006070C(MapBlockData* block, int index);
+MapShader* mapBlockGetShader(MapBlockData* block, int index);
 
 #endif

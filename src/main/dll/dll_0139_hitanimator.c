@@ -25,7 +25,7 @@
 #include "main/object_descriptor.h"
 
 /* Map-block poly-group record (blk+0x50 table, 0x14 stride, returned by
- * mapBlockFn_800606ec) - layout matches MapTriGroup in track_dolphin.c.
+ * mapBlockGetPolygonGroup) - layout matches MapTriGroup in track_dolphin.c.
  * Only the flags word is touched here: bit 1 = poly group hidden,
  * bit 0 = shader disabled; the top byte is the effect id matched by
  * mapBlockFn_80060678. */
@@ -36,7 +36,7 @@ typedef struct HitAnimatorPolyGroup
 } HitAnimatorPolyGroup;
 
 /* Map-block shader/render-op record (blk+0x64 table, 0x44 stride, returned
- * by fn_8006070C) - layout matches ObjModelRenderOp in objprint_dolphin.c;
+ * by mapBlockGetShader) - layout matches ObjModelRenderOp in objprint_dolphin.c;
  * flags @0x3C, bit 1 toggled here to hide the layer. */
 typedef struct HitAnimatorShader
 {
@@ -63,7 +63,7 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
     {
         for (i = 0; i < block->polyGroupCount; i++)
         {
-            poly = mapBlockFn_800606ec(block, i);
+            poly = mapBlockGetPolygonGroup(block, i);
             if (desc->blockEffectId == mapBlockFn_80060678(poly))
             {
                 if (state->activeBit != 0)
@@ -89,7 +89,7 @@ void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnim
     {
         for (i = 0; i < block->layerCount; i++)
         {
-            HitAnimatorShader* shader = (HitAnimatorShader*)fn_8006070C(block, i);
+            HitAnimatorShader* shader = (HitAnimatorShader*)mapBlockGetShader(block, i);
             u8* layer = Shader_getLayer(shader, 0);
             if (desc->blockEffectId == layer[5])
             {

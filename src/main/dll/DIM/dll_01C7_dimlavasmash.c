@@ -33,7 +33,7 @@ void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfa
     int got;
     for (j = 0; j < (int)((MapBlockData*)map)->polyGroupCount; j++)
     {
-        block = mapBlockFn_800606ec(map, j);
+        block = mapBlockGetPolygonGroup(map, j);
         got = mapBlockFn_80060678(block);
         if (surfaceType == got)
         {
@@ -51,7 +51,7 @@ void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfa
     }
     for (i = 0, clearMask = ~2; i < (int)((MapBlockData*)map)->layerCount; i++)
     {
-        block = (int*)fn_8006070C(map, i);
+        block = (int*)mapBlockGetShader(map, i);
         if (surfaceType == (int)*((u8*)Shader_getLayer(block, 0) + 5))
         {
             if (disable != 0)

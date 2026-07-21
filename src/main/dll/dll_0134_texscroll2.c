@@ -68,7 +68,7 @@ void texscroll2_applyMapTextureScroll(TexScroll2Object* obj, TexScroll2State* st
        tex+0xA/+0xC = u16 width/height. */
     for (layerIdx = 0; layerIdx < (s32)((MapBlockData*)block)->layerCount; layerIdx++)
     {
-        layer = fn_8006070C(block, layerIdx);
+        layer = mapBlockGetShader(block, layerIdx);
         for (matIdx = 0, material = layer; matIdx < (s32) * (u8*)((char*)layer + 0x41); matIdx++)
         {
             if (*(void**)((char*)material + 0x24) == tex)
