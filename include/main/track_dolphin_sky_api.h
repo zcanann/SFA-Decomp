@@ -3,6 +3,6 @@
 
 #include "main/track_dolphin_map_api.h"
 
-void skyFn_80062a54(f32 a, f32 b, f32 c, int param);
+void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int magnitude);
 
 #endif /* MAIN_TRACK_DOLPHIN_SKY_API_H_ */

@@ -1957,7 +1957,7 @@ void doNothing_80062A50(GameObject* obj, f32 x, f32 y, f32 z)
 {
 }
 
-void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
+void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int magnitude)
 {
     f32 vec[3];
     f32 dot;
@@ -1965,19 +1965,19 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
     f32 lenv;
     f32 lenp;
 
-    vec[0] = a;
-    vec[1] = b;
-    vec[2] = c;
+    vec[0] = directionX;
+    vec[1] = directionY;
+    vec[2] = directionZ;
     PSVECNormalize(vec, vec);
-    gSunMagnitude = param;
-    gShadowOffsetX = a * param;
-    gShadowOffsetY = b * param;
+    gSunMagnitude = magnitude;
+    gShadowOffsetX = directionX * magnitude;
+    gShadowOffsetY = directionY * magnitude;
     lbl_803DB654 = lbl_803DEC68;
     if (gShadowOffsetY < lbl_803DEC94)
     {
         gShadowOffsetY = lbl_803DEC94;
     }
-    gShadowOffsetZ = c * param;
+    gShadowOffsetZ = directionZ * magnitude;
     dot = vec[0] * gPrevSunDir[0] + vec[1] * gPrevSunDir[1] + vec[2] * gPrevSunDir[2];
     lenv = vec[0] * vec[0] + vec[1] * vec[1];
     lenv += vec[2] * vec[2];

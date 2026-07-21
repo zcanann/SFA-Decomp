@@ -1376,12 +1376,12 @@ void skyFn_8008a500(void)
         {
             if (gSkyOverrideLightDirectionEnabled != 0)
             {
-                skyFn_80062a54(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
+                shadowSetLightDirection(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
                                gSkyOverrideLightDirection[2], gSkyOverrideLightIntensity);
             }
             else
             {
-                skyFn_80062a54(*gSkySunDirection, gSkySunDirection[1], gSkySunDirection[2], 100);
+                shadowSetLightDirection(*gSkySunDirection, gSkySunDirection[1], gSkySunDirection[2], 100);
             }
             (*gCloudActionInterface)->func08Nop(*gSkySunDirection, gSkySunDirection[1], gSkySunDirection[2], 1);
         }
@@ -1389,12 +1389,12 @@ void skyFn_8008a500(void)
         {
             if (gSkyOverrideLightDirectionEnabled != 0)
             {
-                skyFn_80062a54(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
+                shadowSetLightDirection(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
                                gSkyOverrideLightDirection[2], gSkyOverrideLightIntensity);
             }
             else
             {
-                skyFn_80062a54(-(*gSkyMoonDirection), gSkyMoonDirection[1], -gSkyMoonDirection[2], 100);
+                shadowSetLightDirection(-(*gSkyMoonDirection), gSkyMoonDirection[1], -gSkyMoonDirection[2], 100);
             }
             (*gCloudActionInterface)->func08Nop(-(*gSkyMoonDirection), gSkyMoonDirection[1], -gSkyMoonDirection[2], 0);
         }
