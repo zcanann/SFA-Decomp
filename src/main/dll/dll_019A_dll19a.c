@@ -1,4 +1,4 @@
-#include "main/dll/dll199state_struct.h"
+#include "main/dll/dimmagicbridge.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
@@ -12,25 +12,12 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/foodbag.h"
 
-typedef struct Dll19APlacement
-{
-    u8 pad0[0x4 - 0x0];
-    u8 color[4]; /* 0x04: RGBA tint -> spawn setup color[4] */
-    u8 pad8[0x1F - 0x8];
-    s8 gateBitIndex; /* added to GAMEBIT_DLL19A_GATE_BASE; also passed to the child as link index */
-} Dll19APlacement;
-
 /* 0x38-byte spawn descriptor handed to Obj_SetupObject for the child
  * object (type 0x2d0). ObjPlacement-style head (color/position) plus
  * class-specific tail. */
 typedef struct Dll19ASpawnSetup
 {
-    u8 pad00[4];  /* 0x00 */
-    u8 color[4];  /* 0x04 */
-    f32 posX;     /* 0x08 */
-    f32 posY;     /* 0x0c */
-    f32 posZ;     /* 0x10 */
-    u8 pad14[4];  /* 0x14 */
+    ObjPlacement base;
     s16 unk18;    /* 0x18 */
     u8 pad1A[8];  /* 0x1a */
     s16 unk22;    /* 0x22 */
@@ -38,7 +25,7 @@ typedef struct Dll19ASpawnSetup
     u8 unk27;     /* 0x27 */
     u8 pad28;     /* 0x28 */
     u8 unk29;     /* 0x29 */
-    s8 rotByte;   /* 0x2a: object yaw byte (anim.rotX >> 8) */
+    s8 rotX;      /* 0x2a: anim.rotX >> 8 */
     u8 unk2B;     /* 0x2b */
     u8 pad2C[2];  /* 0x2c */
     s8 unk2E;     /* 0x2e */
@@ -48,9 +35,9 @@ typedef struct Dll19ASpawnSetup
     u8 pad33[5];  /* 0x33 */
 } Dll19ASpawnSetup;
 
-STATIC_ASSERT(offsetof(Dll19ASpawnSetup, posX) == 0x8);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, base.posX) == 0x8);
 STATIC_ASSERT(offsetof(Dll19ASpawnSetup, unk18) == 0x18);
-STATIC_ASSERT(offsetof(Dll19ASpawnSetup, rotByte) == 0x2a);
+STATIC_ASSERT(offsetof(Dll19ASpawnSetup, rotX) == 0x2a);
 STATIC_ASSERT(offsetof(Dll19ASpawnSetup, linkIndex) == 0x32);
 STATIC_ASSERT(sizeof(Dll19ASpawnSetup) == 0x38);
 
@@ -64,7 +51,7 @@ extern f32 lbl_803E5180;
 
 int dll_19A_getExtraSize(void)
 {
-    return 0x4;
+    return sizeof(Dll19AState);
 }
 int dll_19A_getObjectTypeId(void)
 {
@@ -86,55 +73,55 @@ void dll_19A_hitDetect(void)
 {
 }
 
-void dll_19A_update(int obj)
+void dll_19A_update(GameObject* obj)
 {
-    Dll19APlacement* setup;
-    short* state;
+    Dll19APlacement* placement;
+    Dll19AState* state;
     Dll82Interface** res;
     Dll19ASpawnSetup* newObj;
     GameObject* r;
 
-    setup = (Dll19APlacement*)((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    placement = (Dll19APlacement*)obj->anim.placementData;
+    state = obj->extra;
     if (mainGetBit(GAMEBIT_DLL19A_RESET) != 0)
     {
-        ((GameObject*)obj)->userData2 = 0;
-        *state = 100;
-        state[1] = 0;
-        *(u8*)(obj + 0x37) = 0xff; /* pad37[0], distinct from anim.alpha at 0x36 */
-        ((GameObject*)obj)->anim.alpha = 0xff;
+        obj->userData2 = 0;
+        state->countdown = 100;
+        state->countdownRate = 0;
+        obj->anim.pad37[0] = 0xff;
+        obj->anim.alpha = 0xff;
     }
     else
     {
-        if ((((GameObject*)obj)->userData2 == 0) &&
-            (mainGetBit(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
+        if ((obj->userData2 == 0) &&
+            (mainGetBit(placement->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
-            (*res)->spawn((GameObject*)obj, 0, NULL, 1, -1, NULL);
-            (*res)->spawn((GameObject*)obj, 1, NULL, 1, -1, NULL);
-            Sfx_PlayFromObject(obj, SFXTRIG_hitpos_6);
+            (*res)->spawn(obj, 0, NULL, 1, -1, NULL);
+            (*res)->spawn(obj, 1, NULL, 1, -1, NULL);
+            Sfx_PlayFromObject((int)obj, SFXTRIG_hitpos_6);
             Resource_Release(res);
-            state[1] = 1;
-            ((GameObject*)obj)->userData2 = 1;
+            state->countdownRate = 1;
+            obj->userData2 = 1;
         }
-        if (state[1] != 0)
+        if (state->countdownRate != 0)
         {
-            *state -= state[1] * framesThisStep;
+            state->countdown -= state->countdownRate * framesThisStep;
         }
-        if ((*state <= 0) && (Obj_IsLoadingLocked() != 0))
+        if ((state->countdown <= 0) && (Obj_IsLoadingLocked() != 0))
         {
-            newObj = (Dll19ASpawnSetup*)Obj_AllocObjectSetup(0x38, DLL19A_CHILD_OBJ);
-            newObj->posX = ((ObjPlacement*)setup)->posX;
-            newObj->posY = ((ObjPlacement*)setup)->posY;
-            newObj->posZ = ((ObjPlacement*)setup)->posZ;
-            newObj->color[0] = setup->color[0];
-            newObj->color[1] = setup->color[1];
-            newObj->color[2] = setup->color[2];
-            newObj->color[3] = ((Dll19APlacement*)setup)->color[3];
+            newObj = (Dll19ASpawnSetup*)Obj_AllocObjectSetup(sizeof(Dll19ASpawnSetup), DLL19A_CHILD_OBJ);
+            newObj->base.posX = placement->base.posX;
+            newObj->base.posY = placement->base.posY;
+            newObj->base.posZ = placement->base.posZ;
+            newObj->base.color[0] = placement->base.color[0];
+            newObj->base.color[1] = placement->base.color[1];
+            newObj->base.color[2] = placement->base.color[2];
+            newObj->base.color[3] = placement->base.color[3];
             newObj->unk27 = 1;
             newObj->unk18 = 0x1e7;
             newObj->unk30 = 0xffff;
-            newObj->rotByte = ((GameObject*)obj)->anim.rotX >> 8;
+            newObj->rotX = obj->anim.rotX >> 8;
             newObj->unk2B = 2;
             if (mainGetBit(GAMEBIT_DLL19A_GATE_BASE + 1) != 0)
             {
@@ -147,30 +134,29 @@ void dll_19A_update(int obj)
             newObj->unk29 = 0xff;
             newObj->unk2E = -1;
             {
-                int linkIdx = setup->gateBitIndex;
+                int linkIdx = placement->gateBitIndex;
                 newObj->linkIndex = linkIdx;
             }
-            r = Obj_SetupObject((ObjPlacement*)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, 0xffffffff,
-                                ((GameObject*)obj)->anim.parent);
-            if ((r != 0) && (((GameObject*)r)->extra != 0))
+            r = Obj_SetupObject(&newObj->base, 5, obj->anim.mapEventSlot, 0xffffffff, obj->anim.parent);
+            if ((r != NULL) && (r->extra != NULL))
             {
-                *(u8*)(*(int*)&((GameObject*)r)->extra + 0x404) = 0x20;
+                *(u8*)((u8*)r->extra + 0x404) = 0x20;
             }
-            *state = 100;
-            state[1] = 0;
+            state->countdown = 100;
+            state->countdownRate = 0;
         }
     }
 }
 
-void dll_19A_init(GameObject* obj, s8* def)
+void dll_19A_init(GameObject* obj, Dll19APlacement* placement)
 {
-    int* state = (obj)->extra;
-    (obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    (obj)->userData2 = 0;
-    *(s16*)state = 100;
-    ((Dll199State*)state)->unk2 = 0;
-    *(u8*)((char*)obj + 0x37) = 0xFF; /* pad37[0], distinct from anim.alpha at 0x36 */
-    (obj)->anim.alpha = 0xFF;
+    Dll19AState* state = obj->extra;
+    obj->anim.rotX = (s16)((s32)placement->rotX << 8);
+    obj->userData2 = 0;
+    state->countdown = 100;
+    state->countdownRate = 0;
+    obj->anim.pad37[0] = 0xFF;
+    obj->anim.alpha = 0xFF;
 }
 
 void dll_19A_release(void)
