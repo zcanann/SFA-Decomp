@@ -53,7 +53,7 @@ void worldplanet_updateMapLighting(GameObject* obj)
                        gWorldPlanetCurAmbient.blue);
 
     gWorldPlanetCurIntensity =
-        (u8)(s32)(gWorldPlanetLightingLerpT * gWorldPlanetLightingIntensityRange + gWorldPlanetLightingMinIntensity);
+        gWorldPlanetLightingLerpT * gWorldPlanetLightingIntensityRange + gWorldPlanetLightingMinIntensity;
     skySetLightDirection(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetLightingSkyDirX, gWorldPlanetLightingZero,
                          gWorldPlanetLightingSkyDirZ);
 }
