@@ -1,29 +1,17 @@
 /*
  * visanimator (DLL 0x013A) - per-map-block visibility animator object.
  *
- * On init it reads its placement def (a WaveanimatorObjectDef overlay): a
- * game bit (WaveanimatorObjectDef::originX), a gate bit index
- * (WaveanimatorObjectDef::spanX) and a base visibility bit
- * (WaveanimatorObjectDef::spanY). The gate bit's current state XORs the
- * visibility bit so the object's drawn state tracks the game bit, and
- * gateNow/gatePrev are primed. Each update re-reads the game bit (from
- * anim.placementData[0xC]) while the object sits on a loaded map block; on a
- * gate transition it toggles visBit and raises the refresh-pending flag
- * (VisAnimatorState.flags bit 1), which it then clears the same frame.
+ * Its placement selects a game-bit value, one bit within that value, and the
+ * initial map-block visibility state. The selected bit's current state XORs
+ * visibilityBit, and each later transition toggles it again while the map
+ * block containing the object remains loaded.
  */
 #include "main/game_object.h"
 #include "main/lightmap_api.h"
-#include "main/dll/waveanimatorobjectdef_struct.h"
-#include "main/dll/visanimatorstate_struct.h"
 #include "main/gamebits.h"
 #include "main/voxmaps.h"
 #include "main/dll/dll_013A_visanimator.h"
 #include "main/object_descriptor.h"
-
-STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
-
-#define VISANIMATOR_OBJFLAG_HIDDEN             0x4000
-#define VISANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 int VisAnimator_getExtraSize(void)
 {
@@ -46,57 +34,57 @@ void VisAnimator_hitDetect(void)
 {
 }
 
-void VisAnimator_update(int* obj)
+void VisAnimator_update(GameObject* obj)
 {
-    s16* placement = ((GameObject*)obj)->anim.placementData;
-    VisAnimatorState* vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
+    VisAnimatorPlacement* placement = (VisAnimatorPlacement*)obj->anim.placementData;
+    VisAnimatorState* state = obj->extra;
     int idx =
-        objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX, (double)((GameObject*)obj)->anim.localPosY,
-                            (double)((GameObject*)obj)->anim.localPosZ);
+        objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY,
+                            (double)obj->anim.localPosZ);
     int gate;
     if (mapGetBlock(idx) == NULL)
     {
-        vstate->flags |= 1;
+        state->flags |= VISANIMATOR_FLAG_REFRESH_PENDING;
         return;
     }
-    gate = mainGetBit(placement[0x18 / 2]);
-    vstate->gateNow = (u8)(vstate->gateMask & gate);
-    if (vstate->gatePrev != vstate->gateNow)
+    gate = mainGetBit(placement->gateGameBit);
+    state->currentGateState = (u8)(state->gateMask & gate);
+    if (state->previousGateState != state->currentGateState)
     {
-        vstate->visBit = (s8)(vstate->visBit ^ 1);
-        vstate->flags |= 1;
+        state->visibilityBit = (s8)(state->visibilityBit ^ 1);
+        state->flags |= VISANIMATOR_FLAG_REFRESH_PENDING;
     }
-    vstate->gatePrev = vstate->gateNow;
-    if (vstate->flags & 1)
+    state->previousGateState = state->currentGateState;
+    if (state->flags & VISANIMATOR_FLAG_REFRESH_PENDING)
     {
-        vstate->flags &= ~1;
+        state->flags &= ~VISANIMATOR_FLAG_REFRESH_PENDING;
     }
 }
 
-void VisAnimator_init(int* obj, int* desc)
+void VisAnimator_init(GameObject* obj, VisAnimatorPlacement* placement)
 {
-    VisAnimatorState* vstate;
+    VisAnimatorState* state;
     u32 gate;
     u8 gateBit;
     int baseVisBit;
-    ((GameObject*)obj)->objectFlags |= (VISANIMATOR_OBJFLAG_HIDDEN | VISANIMATOR_OBJFLAG_HITDETECT_DISABLED);
-    vstate = (VisAnimatorState*)((GameObject*)obj)->extra;
-    baseVisBit = *(s8*)((char*)desc + 0x1B);
-    vstate->visBit = baseVisBit;
-    vstate->gateMask = (u8)(1 << *(u8*)&((WaveanimatorObjectDef*)desc)->spanX);
-    gate = mainGetBit(((WaveanimatorObjectDef*)desc)->originX);
-    if ((vstate->gateMask & gate) != 0)
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    state = obj->extra;
+    baseVisBit = placement->initialVisibilityBit;
+    state->visibilityBit = baseVisBit;
+    state->gateMask = (u8)(1 << placement->gateBitIndex);
+    gate = mainGetBit(placement->gateGameBit);
+    if ((state->gateMask & gate) != 0)
     {
-        vstate->visBit = vstate->visBit ^ 1;
+        state->visibilityBit = state->visibilityBit ^ 1;
     }
-    mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                    (double)((GameObject*)obj)->anim.localPosY,
-                                    (double)((GameObject*)obj)->anim.localPosZ));
-    gate = mainGetBit(((WaveanimatorObjectDef*)desc)->originX);
-    gateBit = (u8)(vstate->gateMask & gate);
-    vstate->gateNow = gateBit;
-    vstate->gatePrev = gateBit;
-    vstate->flags |= 1;
+    mapGetBlock(objPosToMapBlockIdx((double)obj->anim.localPosX,
+                                    (double)obj->anim.localPosY,
+                                    (double)obj->anim.localPosZ));
+    gate = mainGetBit(placement->gateGameBit);
+    gateBit = (u8)(state->gateMask & gate);
+    state->currentGateState = gateBit;
+    state->previousGateState = gateBit;
+    state->flags |= VISANIMATOR_FLAG_REFRESH_PENDING;
 }
 
 void VisAnimator_release(void)
