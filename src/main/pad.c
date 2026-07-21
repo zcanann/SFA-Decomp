@@ -303,7 +303,6 @@ void padUpdate(void)
     PADStatus* readPad;
     s32 i;
     PADStatus* statuses;
-    u32* buttonMask;
     int sx;
     int sy;
     u8 toggle;
@@ -356,7 +355,6 @@ void padUpdate(void)
     triggersReleased = &gPadTriggersReleased;
     triggersPressed = &gPadTriggersPressed;
     statuses = (PADStatus*)((u8*)padStateBlock[0] + 0x40);
-    buttonMask = gPadButtonMask;
 
     for (; i < 4; i++)
     {
@@ -484,7 +482,7 @@ void padUpdate(void)
                 *prevStickX = 0;
                 *repeatX = 0;
             }
-            *buttonMask = -1;
+            gPadButtonMask[i] = -1;
         }
 
         currentStatus++;
@@ -504,7 +502,6 @@ void padUpdate(void)
         triggersPressed++;
         statuses++;
         prevPad++;
-        buttonMask++;
     }
 
     if (gPadResetMask != 0)
