@@ -2013,9 +2013,9 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
 {
     f32 normalizedDirection[3];
     f32 directionSimilarity;
-    f32 combinedMagnitudeSquared;
     f32 directionMagnitudeSquared;
     f32 previousMagnitudeSquared;
+    f32 combinedMagnitudeSquared;
 
     normalizedDirection[0] = directionX;
     normalizedDirection[1] = directionY;
@@ -2052,7 +2052,7 @@ void shadowSetLightDirection(f32 directionX, f32 directionY, f32 directionZ, int
     }
     if (gSunDotCos < *(f32*)&lbl_803DEC58)
     {
-        gSunDotCos = (f32)gSunDotCos * lbl_803DEC98;
+        gSunDotCos = gSunDotCos * lbl_803DEC98;
     }
     if (gSunDotCos <= lbl_803DEC9C)
     {
