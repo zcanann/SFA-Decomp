@@ -51,15 +51,15 @@ STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int blob = *(int*)&obj->extra;
-    int data = *(int*)&obj->anim.placementData;
+    DfpSeqPointState* blob = obj->extra;
+    DfpseqpointPlacement* data = (DfpseqpointPlacement*)obj->anim.placementData;
     int i;
 
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
     {
-        switch (((DfpSeqPointState*)blob)->triggerId)
+        switch (blob->triggerId)
         {
         case 1:
             switch (animUpdate->eventIds[i])
@@ -84,9 +84,9 @@ int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
             switch (animUpdate->eventIds[i])
             {
             case 0x14:
-                if (*(u32*)&((DfpseqpointPlacement*)data)->head.mapId == 0x49de8)
+                if (*(u32*)&data->head.mapId == 0x49de8)
                 {
-                    ((DfpFlags7*)&((DfpSeqPointState*)blob)->flags0F)->b80 = 1;
+                    ((DfpFlags7*)&blob->flags0F)->b80 = 1;
                 }
                 else
                 {

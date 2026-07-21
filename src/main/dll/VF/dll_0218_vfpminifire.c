@@ -69,7 +69,7 @@ void VFP_MiniFire_update(GameObject* obj)
        sampled offsets are intentionally signed. */
     VfpMinifireState* state = (obj)->extra;
     VfpMinifirePartfxArgs args;
-    int linkedGfx;
+    ObjHitsPriorityState* linkedGfx;
     int i;
 
     if (0.0f == state->baseY)
@@ -128,15 +128,15 @@ void VFP_MiniFire_update(GameObject* obj)
         (*gPartfxInterface)->spawnObject((void*)obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1, -1, NULL);
     }
 
-    linkedGfx = *(int*)&(obj)->anim.hitReactState;
+    linkedGfx = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     if ((void*)linkedGfx != NULL)
     {
-        ((ObjHitsPriorityState*)linkedGfx)->hitVolumePriority = 0xb;
-        ((ObjHitsPriorityState*)linkedGfx)->hitVolumeId = 1;
-        ((ObjHitsPriorityState*)linkedGfx)->objectHitMask = 0x10;
-        ((ObjHitsPriorityState*)linkedGfx)->skeletonHitMask = 0x10;
+        linkedGfx->hitVolumePriority = 0xb;
+        linkedGfx->hitVolumeId = 1;
+        linkedGfx->objectHitMask = 0x10;
+        linkedGfx->skeletonHitMask = 0x10;
     }
-    if (((void*)linkedGfx != NULL && *(void**)&((ObjHitsPriorityState*)linkedGfx)->lastHitObject != NULL) ||
+    if (((void*)linkedGfx != NULL && *(void**)&linkedGfx->lastHitObject != NULL) ||
         ((obj)->anim.localPosY < state->baseY && state->burstStarted == 0))
     {
         state->burstStarted = 1;

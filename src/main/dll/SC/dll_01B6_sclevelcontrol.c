@@ -62,7 +62,7 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 
 int sc_levelcontrol_processAnimEventsCallback(GameObject *obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int state = *(int*)&(obj)->extra;
+    ScLevelControlState* state = (obj)->extra;
     int i;
 
     animUpdate->sequenceEventActive = 0;
@@ -78,15 +78,15 @@ int sc_levelcontrol_processAnimEventsCallback(GameObject *obj, int unused, ObjAn
             sc_levelcontrol_applyAnimEventState(obj, 5);
             break;
         case 3:
-            ((ScLevelControlState*)state)->flags1F |= 2;
+            state->flags1F |= 2;
             break;
         }
     }
-    ((ScLevelControlState*)state)->flags1F |= 1;
+    state->flags1F |= 1;
     mainSetBits(0x60f, 0);
-    state = *(int*)&(obj)->extra;
+    state = (obj)->extra;
     Obj_GetPlayerObject();
-    if (((ScLevelControlState*)state)->mode == 5)
+    if (state->mode == 5)
     {
         mainSetBits(0x60f, 1);
         if (isGameTimerDisabled())
@@ -95,8 +95,8 @@ int sc_levelcontrol_processAnimEventsCallback(GameObject *obj, int unused, ObjAn
             {
                 mainSetBits(0x85, 1);
             }
-            ((ScLevelControlState*)state)->timer10 = 120.0f;
-            ((ScLevelControlState*)state)->mode = 0;
+            state->timer10 = 120.0f;
+            state->mode = 0;
             Sfx_PlayFromObject(0, SFXTRIG_id_10a);
             Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
         }
@@ -108,14 +108,14 @@ u8 sc_levelcontrol_getAnimEventState(int* obj) { return ((ScLevelControlState*)(
 
 void sc_levelcontrol_applyAnimEventState(GameObject *obj, u8 scale)
 {
-    int state = *(int*)&(obj)->extra;
+    ScLevelControlState* state = (obj)->extra;
     u8 mode;
 
-    ((ScLevelControlState*)state)->mode = scale;
-    mode = ((ScLevelControlState*)state)->mode;
+    state->mode = scale;
+    mode = state->mode;
     if (mode == 2)
     {
-        ((ScLevelControlState*)state)->mode = 0;
+        state->mode = 0;
     }
     else if (mode == 5)
     {
@@ -129,20 +129,20 @@ void sc_levelcontrol_applyAnimEventState(GameObject *obj, u8 scale)
     else if (mode == 3)
     {
         gameTimerInit(0x1d, 0x3c);
-        ((ScLevelControlState*)state)->mode = 0;
+        state->mode = 0;
         Music_Trigger(MUSICTRIG_trex_chase, 1);
         timerSetToCountUp();
     }
     else if (mode == 6)
     {
         Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
-        ((ScLevelControlState*)state)->mode = 0;
-        ((ScLevelControlState*)state)->fadeTimer = 120.0f;
+        state->mode = 0;
+        state->fadeTimer = 120.0f;
         gameTimerStop();
     }
     else if (mode == 4)
     {
-        ((ScLevelControlState*)state)->mode = 0;
+        state->mode = 0;
         Music_Trigger(MUSICTRIG_trex_chase, 0);
         gameTimerStop();
     }
@@ -178,7 +178,7 @@ void sc_levelcontrol_hitDetect(void)
    step, and keeps the area music in sync with the day/night sun position. */
 void sc_levelcontrol_update(GameObject *obj)
 {
-    int state = *(int*)&(obj)->extra;
+    ScLevelControlState* state = (obj)->extra;
     GameObject* player = Obj_GetPlayerObject();
 
     if ((obj)->userData1 != 0)
@@ -215,12 +215,12 @@ void sc_levelcontrol_update(GameObject *obj)
         }
         (obj)->userData1 = 0;
     }
-    if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(GAMEBIT_LV_ChallengeGate2Complete) != 0)
+    if (((SnowFlags22*)&state->flags22)->bit7 == 0 && (u32)mainGetBit(GAMEBIT_LV_ChallengeGate2Complete) != 0)
     {
         (*gMapEventInterface)->setObjGroupStatus(SCLEVELCONTROL_MAP_SWAPCIRCLE, 0xa, 1);
-        ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 1;
+        ((SnowFlags22*)&state->flags22)->bit7 = 1;
     }
-    if (((ScLevelControlState*)state)->areaCell != 0xe)
+    if (state->areaCell != 0xe)
     {
         if (coordsToMapCell(player->anim.localPosX, player->anim.localPosZ) == 0xe)
         {
@@ -250,18 +250,18 @@ void sc_levelcontrol_update(GameObject *obj)
             return;
         }
     }
-    if (((ScLevelControlState*)state)->fadeTimer &&
+    if (state->fadeTimer &&
         (player->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
-        if (120.0f == ((ScLevelControlState*)state)->fadeTimer)
+        if (120.0f == state->fadeTimer)
         {
             (*gScreenTransitionInterface)->start(0x73, 1);
         }
-        ((ScLevelControlState*)state)->fadeTimer -= timeDelta;
-        if (((ScLevelControlState*)state)->fadeTimer <= 0.0f)
+        state->fadeTimer -= timeDelta;
+        if (state->fadeTimer <= 0.0f)
         {
-            ((ScLevelControlState*)state)->fadeTimer = 0.0f;
-            ((ScLevelControlState*)state)->timer10 = 0.0f;
+            state->fadeTimer = 0.0f;
+            state->timer10 = 0.0f;
             mainSetBits(0x2b8, 0);
             mainSetBits(0x4bd, 1);
             mainSetBits(GAMEBIT_TOTEMPOLE_FRONT, 0);
@@ -272,18 +272,18 @@ void sc_levelcontrol_update(GameObject *obj)
             mainSetBits(0x7cf, 1);
         }
     }
-    else if (((ScLevelControlState*)state)->timer10 &&
+    else if (state->timer10 &&
              (player->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
-        if (120.0f == ((ScLevelControlState*)state)->timer10)
+        if (120.0f == state->timer10)
         {
             (*gScreenTransitionInterface)->start(0x73, 1);
         }
-        ((ScLevelControlState*)state)->timer10 -= timeDelta;
-        if (((ScLevelControlState*)state)->timer10 <= 0.0f)
+        state->timer10 -= timeDelta;
+        if (state->timer10 <= 0.0f)
         {
             mainSetBits(0x640, 1);
-            ((ScLevelControlState*)state)->timer10 = 0.0f;
+            state->timer10 = 0.0f;
             mainSetBits(0x2b8, 0);
             mainSetBits(0x4bd, 1);
             mainSetBits(GAMEBIT_TOTEMPOLE_FRONT, 0);
@@ -292,27 +292,27 @@ void sc_levelcontrol_update(GameObject *obj)
             mainSetBits(GAMEBIT_TOTEMPOLE_REAR, 0);
         }
     }
-    ((ScLevelControlState*)state)->areaCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
+    state->areaCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
     if ((u32)mainGetBit(0xcdc) != 0)
     {
-        if (((ScLevelControlState*)state)->fog0C > 0.0f)
+        if (state->fog0C > 0.0f)
         {
             gameTextShow(0x429);
-            ((ScLevelControlState*)state)->fog0C -= timeDelta;
-            if (((ScLevelControlState*)state)->fog0C < 0.0f)
+            state->fog0C -= timeDelta;
+            if (state->fog0C < 0.0f)
             {
-                ((ScLevelControlState*)state)->fog0C = 0.0f;
+                state->fog0C = 0.0f;
             }
         }
         if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 1) != 0)
         {
-            ((ScLevelControlState*)state)->fog04 = -1000.0f;
-            ((ScLevelControlState*)state)->fog08 = 0.35f;
+            state->fog04 = -1000.0f;
+            state->fog08 = 0.35f;
         }
         else if (((u8 (*)(int, int))(*gMapEventInterface)->getObjGroupStatus)(SCLEVELCONTROL_MAP_SWAPCIRCLE, 5) != 0)
         {
-            ((ScLevelControlState*)state)->fog04 = -1200.0f;
-            ((ScLevelControlState*)state)->fog08 = -0.35f;
+            state->fog04 = -1200.0f;
+            state->fog08 = -0.35f;
             if ((obj)->userData2 != 0)
             {
                 skyFn_80088e54(1, 1.0f);
@@ -321,79 +321,79 @@ void sc_levelcontrol_update(GameObject *obj)
         }
         else
         {
-            ((ScLevelControlState*)state)->fog04 = -1000.0f;
-            ((ScLevelControlState*)state)->fog08 = 0.35f;
+            state->fog04 = -1000.0f;
+            state->fog08 = 0.35f;
         }
     }
     else
     {
-        ((ScLevelControlState*)state)->fog04 = -1080.0f;
-        ((ScLevelControlState*)state)->fog08 = -0.35f;
+        state->fog04 = -1080.0f;
+        state->fog08 = -0.35f;
     }
-    if (((ScLevelControlState*)state)->fog04 != *(f32*)state)
+    if (state->fog04 != state->fogNear)
     {
-        *(f32*)state = ((ScLevelControlState*)state)->fog08 * timeDelta + *(f32*)state;
-        if (((ScLevelControlState*)state)->fog08 < 0.0f)
+        state->fogNear = state->fog08 * timeDelta + state->fogNear;
+        if (state->fog08 < 0.0f)
         {
-            if (*(f32*)state < ((ScLevelControlState*)state)->fog04)
+            if (state->fogNear < state->fog04)
             {
-                *(f32*)state = ((ScLevelControlState*)state)->fog04;
+                state->fogNear = state->fog04;
             }
         }
         else
         {
-            if (*(f32*)state > ((ScLevelControlState*)state)->fog04)
+            if (state->fogNear > state->fog04)
             {
-                *(f32*)state = ((ScLevelControlState*)state)->fog04;
+                state->fogNear = state->fog04;
             }
         }
-        enableHeavyFog(50.0f + *(f32*)state, *(f32*)state, 1000.0f, 0.1f,
+        enableHeavyFog(50.0f + state->fogNear, state->fogNear, 1000.0f, 0.1f,
                        0.0005f, 0);
     }
     if ((u32)mainGetBit(0x7d) != 0)
     {
         mainSetBits(0x7d, 0);
-        if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7d)
+        if (gScLevelControlMusicStepSequence[state->musicStep] == 0x7d)
         {
-            ((ScLevelControlState*)state)->musicStep += 1;
+            state->musicStep += 1;
         }
         else
         {
-            ((ScLevelControlState*)state)->musicStep = 0;
+            state->musicStep = 0;
         }
     }
     else if ((u32)mainGetBit(0x7e) != 0)
     {
         mainSetBits(0x7e, 0);
-        if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7e)
+        if (gScLevelControlMusicStepSequence[state->musicStep] == 0x7e)
         {
-            ((ScLevelControlState*)state)->musicStep += 1;
+            state->musicStep += 1;
         }
         else
         {
-            ((ScLevelControlState*)state)->musicStep = 0;
+            state->musicStep = 0;
         }
     }
     else if ((u32)mainGetBit(0x7f) != 0)
     {
         mainSetBits(0x7f, 0);
-        if (gScLevelControlMusicStepSequence[((ScLevelControlState*)state)->musicStep] == 0x7f)
+        if (gScLevelControlMusicStepSequence[state->musicStep] == 0x7f)
         {
-            ((ScLevelControlState*)state)->musicStep += 1;
+            state->musicStep += 1;
         }
         else
         {
-            ((ScLevelControlState*)state)->musicStep = 0;
+            state->musicStep = 0;
         }
     }
-    if (((ScLevelControlState*)state)->musicStep >= 3)
+    if (state->musicStep >= 3)
     {
         mainSetBits(0x80, 1);
-        ((ScLevelControlState*)state)->musicStep = 0;
+        state->musicStep = 0;
     }
-    if ((((ScLevelControlState*)state)->flags1F & 1) != 0)
+    if ((state->flags1F & 1) != 0)
     {
-        ((ScLevelControlState*)state)->flags1F &= ~1;
+        state->flags1F &= ~1;
         mainSetBits(0x60f, 1);
         if ((u32)mainGetBit(0x7a) == 0)
         {
@@ -410,7 +410,7 @@ void sc_levelcontrol_update(GameObject *obj)
             }
         }
     }
-    if (((ScLevelControlState*)state)->mode == 0)
+    if (state->mode == 0)
     {
         if ((u32)mainGetBit(0x60e) != 0)
         {
@@ -418,7 +418,7 @@ void sc_levelcontrol_update(GameObject *obj)
             timeListFn_8012df14();
         }
     }
-    else if (((ScLevelControlState*)state)->mode == 5)
+    else if (state->mode == 5)
     {
         if ((u32)mainGetBit(0x60e) != 0)
         {
@@ -428,9 +428,9 @@ void sc_levelcontrol_update(GameObject *obj)
             {
                 mainSetBits(0x85, 1);
             }
-            ((ScLevelControlState*)state)->timer10 = 120.0f;
+            state->timer10 = 120.0f;
             (*gScreenTransitionInterface)->start(0x73, 1);
-            ((ScLevelControlState*)state)->mode = 0;
+            state->mode = 0;
             Sfx_PlayFromObject(0, SFXTRIG_id_10a);
         }
     }
@@ -453,9 +453,9 @@ void sc_levelcontrol_update(GameObject *obj)
         mainSetBits(0xbe3, 1);
     }
     {
-        int state2 = *(int*)&(obj)->extra;
+        ScLevelControlState* state2 = (obj)->extra;
         Obj_GetPlayerObject();
-        if (((ScLevelControlState*)state2)->mode == 5)
+        if (state2->mode == 5)
         {
             mainSetBits(0x60f, 1);
             if (isGameTimerDisabled())
@@ -464,8 +464,8 @@ void sc_levelcontrol_update(GameObject *obj)
                 {
                     mainSetBits(0x85, 1);
                 }
-                ((ScLevelControlState*)state2)->timer10 = 120.0f;
-                ((ScLevelControlState*)state2)->mode = 0;
+                state2->timer10 = 120.0f;
+                state2->mode = 0;
                 Sfx_PlayFromObject(0, SFXTRIG_id_10a);
                 Music_Trigger(MUSICTRIG_CRF_Suspense, 0);
             }
@@ -483,48 +483,47 @@ void sc_levelcontrol_update(GameObject *obj)
     }
     if ((*gSkyInterface)->getSunPosition(0) != 0)
     {
-        if (((ScLevelControlState*)state)->musicTrack != 0x2d)
+        if (state->musicTrack != 0x2d)
         {
-            ((ScLevelControlState*)state)->musicTrack = 0x2d;
+            state->musicTrack = 0x2d;
             Music_Trigger(MUSICTRIG_PU1_Mysterious, 1);
         }
-        if (((ScLevelControlState*)state)->ambientMusicTrack != -1)
+        if (state->ambientMusicTrack != -1)
         {
-            ((ScLevelControlState*)state)->ambientMusicTrack = -1;
+            state->ambientMusicTrack = -1;
             Music_Trigger(MUSICTRIG_fox_arwing, 0);
         }
     }
     else
     {
-        if (((ScLevelControlState*)state)->musicTrack != 0x33)
+        if (state->musicTrack != 0x33)
         {
-            ((ScLevelControlState*)state)->musicTrack = 0x33;
+            state->musicTrack = 0x33;
             Music_Trigger(MUSICTRIG_KP_Text, 1);
         }
-        if (((ScLevelControlState*)state)->ambientMusicTrack != 0x22)
+        if (state->ambientMusicTrack != 0x22)
         {
-            ((ScLevelControlState*)state)->ambientMusicTrack = 0x22;
+            state->ambientMusicTrack = 0x22;
             Music_Trigger(MUSICTRIG_fox_arwing, 1);
         }
     }
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 0x18), 1, -1, -1, 0xe1e, 0x36);
-    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 0x18), 2, -1, -1, 0xcbb, 0xc4);
-    if ((((ScLevelControlState*)state)->flags1F & 2) != 0)
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->gameBitLatches, 1, -1, -1, 0xe1e, 0x36);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->gameBitLatches, 2, -1, -1, 0xcbb, 0xc4);
+    if ((state->flags1F & 2) != 0)
     {
         mainSetBits(0x60e, 1);
-        ((ScLevelControlState*)state)->flags1F &= ~2;
+        state->flags1F &= ~2;
     }
 }
 
 void sc_levelcontrol_init(GameObject *obj)
 {
     ScLevelControlState* st = (obj)->extra;
-    int state = (int)st;
     f32 fogNear;
 
-    ((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 = 0;
-    ((ScLevelControlState*)state)->areaCell = 0xff;
-    ((ScLevelControlState*)state)->mode = 0;
+    ((SnowFlags22*)&st->flags22)->bit7 = 0;
+    st->areaCell = 0xff;
+    st->mode = 0;
     (obj)->animEventCallback = sc_levelcontrol_processAnimEventsCallback;
     mainSetBits(0x60f, 1);
     mainSetBits(0x2b8, 0);

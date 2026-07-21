@@ -148,7 +148,7 @@ void DFSH_Shrine_initialise(void);
 
 void dfshshrine_updateHoverMotion(int obj)
 {
-    int def;
+    ObjPlacement* def;
     DFlanternShrineState* state;
     u8* player;
     f32 trigA;
@@ -158,13 +158,13 @@ void dfshshrine_updateHoverMotion(int obj)
     int turnStep;
     u8 animEvents[32];
 
-    def = *(int*)&((GameObject*)obj)->anim.placementData;
+    def = (ObjPlacement*)((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;
     player = (u8*)Obj_GetPlayerObject();
     if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
     {
         ((GameObject*)obj)->anim.rotX = 0;
-        ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
+        ((GameObject*)obj)->anim.localPosY = def->posY;
         return;
     }
 
@@ -173,7 +173,7 @@ void dfshshrine_updateHoverMotion(int obj)
     state->orbitC += (s32)(192.0f * timeDelta);
 
     ((GameObject*)obj)->anim.localPosY =
-        20.0f + (((ObjPlacement*)def)->posY + mathSinf((3.1415927f * state->orbitA) / 32768.0f));
+        20.0f + (def->posY + mathSinf((3.1415927f * state->orbitA) / 32768.0f));
 
     trigA = mathSinf((3.1415927f * state->orbitB) / 32768.0f);
     trigB = mathSinf((3.1415927f * state->orbitA) / 32768.0f);
