@@ -625,7 +625,7 @@ void textDisplayFn_800168dc(int textId, TextDisplayState* state)
     {
         return;
     }
-    def = (GameTextDef*)gameTextGet(textId);
+    def = gameTextGet(textId);
     defAddress = (u8*)def;
     special = 0;
     if (defAddress >= lbl_803399C0 && defAddress < lbl_803399C0 + 0x60)
