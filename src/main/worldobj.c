@@ -309,7 +309,7 @@ void worldobj_update(GameObject* obj)
             obj->anim.alpha = tmp;
             if (obj->anim.alpha == 0)
             {
-                Obj_FreeObject((GameObject*)obj);
+                Obj_FreeObject(obj);
             }
         }
         else

@@ -150,13 +150,13 @@ void worldplanet_update(GameObject* obj)
         if (Obj_IsLoadingLocked() != 0)
         {
             WorldObjSetup* setup = (WorldObjSetup*)Obj_AllocObjectSetup(0x20, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
-            ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)def)->color[0];
-            ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)def)->color[2];
-            ((ObjPlacement*)setup)->color[1] = ((ObjPlacement*)def)->color[1];
-            ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)def)->color[3];
-            ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
-            ((ObjPlacement*)setup)->posY = (obj)->anim.localPosY;
-            ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
+            setup->base.color[0] = ((ObjPlacement*)def)->color[0];
+            setup->base.color[2] = ((ObjPlacement*)def)->color[2];
+            setup->base.color[1] = ((ObjPlacement*)def)->color[1];
+            setup->base.color[3] = ((ObjPlacement*)def)->color[3];
+            setup->base.posX = (obj)->anim.localPosX;
+            setup->base.posY = (obj)->anim.localPosY;
+            setup->base.posZ = (obj)->anim.localPosZ;
             Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, NULL);
         }
     }

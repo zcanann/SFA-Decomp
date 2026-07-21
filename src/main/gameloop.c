@@ -1141,7 +1141,7 @@ void gameUpdate(void)
     Obj_UpdateAllObjects(timeStop);
     if (hudHiddenFrameCount == 0)
     {
-        void* player;
+        GameObject* player;
         int idx;
         PlayerTrailRecord* rec;
         int trailTime;
@@ -1155,9 +1155,9 @@ void gameUpdate(void)
         gGameLoopPlayerTrailTime = trailTime;
         if (player != 0)
         {
-            rec->posX = ((GameObject*)player)->anim.localPosX;
-            rec->posY = ((GameObject*)player)->anim.localPosY;
-            rec->posZ = ((GameObject*)player)->anim.localPosZ;
+            rec->posX = player->anim.localPosX;
+            rec->posY = player->anim.localPosY;
+            rec->posZ = player->anim.localPosZ;
             rec->time = trailTime;
             gGameLoopPlayerTrailIndex = idx + 1;
             if (gGameLoopPlayerTrailIndex >= 0x3c)
