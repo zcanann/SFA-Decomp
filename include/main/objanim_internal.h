@@ -375,6 +375,7 @@ typedef struct ObjAnimComponent {
   union {
     void *parent;
     struct ObjAnimComponent *parentAnim;
+    u32 parentAddress; /* raw address view for APIs that accept a 32-bit parent handle */
   };
   u8 pad34;
   s8 transformMatrixIndex;
