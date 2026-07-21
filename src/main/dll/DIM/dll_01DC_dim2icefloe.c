@@ -77,18 +77,18 @@ typedef struct
 
 void dim2icefloe_update(GameObject *obj)
 {
-    int sub = *(int*)&(obj)->extra;
-    if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL &&
-        (((GameObject*)((Dim2IceFloeState*)sub)->followedObj)->objectFlags & DIM2ICEFLOE_OBJFLAG_FREED) != 0)
+    Dim2IceFloeState* sub = (Dim2IceFloeState*)(obj)->extra;
+    if (*(void**)&sub->followedObj != NULL &&
+        (((GameObject*)sub->followedObj)->objectFlags & DIM2ICEFLOE_OBJFLAG_FREED) != 0)
     {
-        ((Dim2IceFloeState*)sub)->flags &= ~1;
-        ((Dim2IceFloeState*)sub)->followedObj = 0;
+        sub->flags &= ~1;
+        sub->followedObj = 0;
     }
     else
     {
         int alpha;
         int reached;
-        switch ((int)((Dim2IceFloeState*)sub)->paused)
+        switch ((int)sub->paused)
         {
         case 0:
         alpha = (obj)->anim.alpha + framesThisStep * 4;
@@ -97,42 +97,42 @@ void dim2icefloe_update(GameObject *obj)
             alpha = 0xff;
         }
         (obj)->anim.alpha = alpha;
-        if ((((Dim2IceFloeState*)sub)->flags & 1) == 0)
+        if ((sub->flags & 1) == 0)
         {
-            ((Dim2IceFloeState*)sub)->followedObj =
-                (int)ObjList_FindObjectById(((Dim2IceFloeState*)sub)->targetId);
-            ((Dim2IceFloeState*)sub)->curve.count = (*(VtableFn*)(**(int**)(((Dim2IceFloeState*)sub)->followedObj + 0x68) + 0x20))(
-                ((Dim2IceFloeState*)sub)->followedObj, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
-            ((Dim2IceFloeState*)sub)->curve.dir = 0;
-            ((Dim2IceFloeState*)sub)->curve.eval = Curve_EvalHermite;
-            ((Dim2IceFloeState*)sub)->curve.coeffFn = Curve_BuildHermiteCoeffs;
-            curvesMove(&((Dim2IceFloeState*)sub)->curve);
-            ((Dim2IceFloeState*)sub)->flags |= 1;
+            sub->followedObj =
+                (int)ObjList_FindObjectById(sub->targetId);
+            sub->curve.count = (*(VtableFn*)(**(int**)(sub->followedObj + 0x68) + 0x20))(
+                sub->followedObj, (int)sub + 0x84, (int)sub + 0x88, (int)sub + 0x8c, 0);
+            sub->curve.dir = 0;
+            sub->curve.eval = Curve_EvalHermite;
+            sub->curve.coeffFn = Curve_BuildHermiteCoeffs;
+            curvesMove(&sub->curve);
+            sub->flags |= 1;
         }
-        Curve_AdvanceAlongPath(&((Dim2IceFloeState*)sub)->curve, ((Dim2IceFloeState*)sub)->curveStep);
-        reached = ((Dim2IceFloeState*)sub)->curve.idx >= ((Dim2IceFloeState*)sub)->curve.count - 4;
-        (obj)->anim.localPosX = ((Dim2IceFloeState*)sub)->curve.sample[0];
-        if (!((IceFloeFlags*)(sub + 0xb9))->finished)
+        Curve_AdvanceAlongPath(&sub->curve, sub->curveStep);
+        reached = sub->curve.idx >= sub->curve.count - 4;
+        (obj)->anim.localPosX = sub->curve.sample[0];
+        if (!((IceFloeFlags*)((char*)sub + 0xb9))->finished)
         {
-            (obj)->anim.localPosY = 5.0f + ((Dim2IceFloeState*)sub)->curve.sample[1];
+            (obj)->anim.localPosY = 5.0f + sub->curve.sample[1];
         }
-        (obj)->anim.localPosZ = ((Dim2IceFloeState*)sub)->curve.sample[2];
+        (obj)->anim.localPosZ = sub->curve.sample[2];
         if (reached)
         {
-            ((IceFloeFlags*)(sub + 0xb9))->finished = 1;
+            ((IceFloeFlags*)((char*)sub + 0xb9))->finished = 1;
         }
-        ((Dim2IceFloeState*)sub)->bobPhase = timeDelta * ((Dim2IceFloeState*)sub)->bobRate + (f32) * (u16*)&((
+        sub->bobPhase = timeDelta * sub->bobRate + (f32) * (u16*)&((
             Dim2IceFloeState*)sub)->bobPhase;
-        if (((IceFloeFlags*)(sub + 0xb9))->finished)
+        if (((IceFloeFlags*)((char*)sub + 0xb9))->finished)
         {
             (obj)->anim.localPosY = -(0.3f * timeDelta - (obj)->anim.localPosY);
-            if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1])
+            if ((obj)->anim.localPosY < sub->curve.sample[1])
             {
                 ObjHits_DisableObject(obj);
                 (obj)->objectFlags |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }
-            if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - 50.0f)
+            if ((obj)->anim.localPosY < sub->curve.sample[1] - 50.0f)
             {
                 Obj_FreeObject((GameObject*)obj);
             }
@@ -148,10 +148,10 @@ void dim2icefloe_init(GameObject *obj, int p)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     Dim2IceFloePlacement* placement = (Dim2IceFloePlacement*)p;
-    int sub = *(int*)&(obj)->extra;
-    ((Dim2IceFloeState*)sub)->targetId = placement->base.mapId;
-    ((Dim2IceFloeState*)sub)->curveStep = (f32)placement->curveStep / 100.0f;
-    ((Dim2IceFloeState*)sub)->yawJitter = (f32)(s32)
+    Dim2IceFloeState* sub = (Dim2IceFloeState*)(obj)->extra;
+    sub->targetId = placement->base.mapId;
+    sub->curveStep = (f32)placement->curveStep / 100.0f;
+    sub->yawJitter = (f32)(s32)
     randomGetRange(-0x1e, 0x1e);
     placement->base.mapId = -1;
     objAnim->bankIndex = randomGetRange(0, objAnim->modelInstance->modelCount - 1);
@@ -161,20 +161,20 @@ void dim2icefloe_init(GameObject *obj, int p)
     switch ((obj)->anim.seqId)
     {
     case 0x109:
-        ((Dim2IceFloeState*)sub)->bobRate = 180.0f + (f32)(s32)
+        sub->bobRate = 180.0f + (f32)(s32)
         randomGetRange(0, 0x28);
-        ((Dim2IceFloeState*)sub)->bobBase = 2.0f;
+        sub->bobBase = 2.0f;
         break;
     case 0x10d:
-        ((Dim2IceFloeState*)sub)->bobRate = 200.0f + (f32)(s32)
+        sub->bobRate = 200.0f + (f32)(s32)
         randomGetRange(0, 0x32);
-        ((Dim2IceFloeState*)sub)->bobBase = 2.0f;
+        sub->bobBase = 2.0f;
         break;
     case 0x111:
     default:
-        ((Dim2IceFloeState*)sub)->bobRate = 196.0f + (f32)(s32)
+        sub->bobRate = 196.0f + (f32)(s32)
         randomGetRange(0, 0x28);
-        ((Dim2IceFloeState*)sub)->bobBase = 2.0f;
+        sub->bobBase = 2.0f;
         break;
     }
     (obj)->objectFlags |= DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED;
