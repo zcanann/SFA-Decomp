@@ -103,6 +103,23 @@ typedef struct MinimapMapEntry
     u8 count;
 } MinimapMapEntry;
 
+typedef union MinimapColor
+{
+    u32 value;
+    GXColor channels;
+} MinimapColor;
+
+typedef struct MinimapTextBox
+{
+    u16 width;
+    u16 cursorX;
+    u8 pad04[4];
+    u16 clipWidth;
+    u16 cursorY;
+    u8 pad0C[10];
+    s16 y;
+} MinimapTextBox;
+
 extern MinimapRow lbl_8031C328[];
 extern MinimapRow lbl_8031C33C[];
 extern MinimapRow lbl_8031C350[];
@@ -157,13 +174,13 @@ u8 gMinimapTexV;
 u8 gMinimapTexU;
 u8 gMinimapZoomSfxActive;
 s8 gMinimapViewMode;
-void* gMinimapCompassTexture;
-void* minimapTexture;
+Texture* gMinimapCompassTexture;
+Texture* minimapTexture;
 u32 gMinimapBoxY;
-int gMinimapRadarTarget;
+GameObject* gMinimapRadarTarget;
 s16 gMinimapContentAlpha;
 s16 gMinimapFadeAlpha;
-void* gMinimapLoadedMapId;
+int gMinimapLoadedMapId;
 u8 gMinimapBlipPulse;
 u8 gMinimapRadarInited;
 u8 gMinimapAreaNameDelay;
@@ -216,50 +233,42 @@ int Minimap_update(void)
     u8 k;
     u8 i;
     MinimapRow* row;
-    MinimapRow* r2;
     MinimapRow* rows;
     int v;
     u8 j;
     int n;
     int boxTargetWidth;
-    u16* box;
+    MinimapTextBox* box;
     int savedCharset;
     int boxW;
     int boxH;
-    int xc;
-    int xr;
+    s16 xc;
     int xl;
-    s16 m;
+    int xr;
     int sv;
     u32 texW, texH;
     f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, tileCoord, cx, cy, frac, fx;
-    u8* player;
+    GameObject* player;
     f32 c2, s1, c1, c3, s3, fv;
-    u32 col;
-    u32 col2;
-    u32 cwTri1;
-    u32 cwTri2;
-    u32 cwL;
-    u32 cwR;
-    u32 cwM;
-    u32 cwB;
+    MinimapColor color;
+    MinimapColor compassColor;
 
     mapTextureId = 0;
     i = 0;
     k = 0;
     found = 0;
     oy = ox = gMinimapZero;
-    col = gMinimapBaseColor;
-    player = (u8*)Obj_GetPlayerObject();
+    color.value = gMinimapBaseColor;
+    player = Obj_GetPlayerObject();
     if (player != NULL)
     {
-        if (((GameObject*)player)->anim.parent != NULL)
+        if (player->anim.parent != NULL)
         {
-            cell = ((GameObject*)((GameObject*)player)->anim.parent)->anim.mapEventSlot;
+            cell = ((GameObject*)player->anim.parent)->anim.mapEventSlot;
         }
         else
         {
-            cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
+            cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
         }
         while (!found && i < 0x19)
         {
@@ -277,17 +286,17 @@ int Minimap_update(void)
             rows = gMinimapCellTable[i].rows;
             if (rows->swap != 0)
             {
-                fx = ((GameObject*)player)->anim.worldPosZ;
-                fz = ((GameObject*)player)->anim.worldPosX;
+                fx = player->anim.worldPosZ;
+                fz = player->anim.worldPosX;
                 gMinimapAxisSwap = 1;
             }
             else
             {
-                fx = ((GameObject*)player)->anim.worldPosX;
-                fz = ((GameObject*)player)->anim.worldPosZ;
+                fx = player->anim.worldPosX;
+                fz = player->anim.worldPosZ;
                 gMinimapAxisSwap = 0;
             }
-            playerWorldY = (int)((GameObject*)player)->anim.worldPosY;
+            playerWorldY = (int)player->anim.worldPosY;
             for (; k < gMinimapCellTable[i].count; k++)
             {
                 row = &rows[k];
@@ -300,7 +309,7 @@ int Minimap_update(void)
                     {
                         mapTextureId = v;
                     }
-                    if ((int)gMinimapLoadedMapId == v)
+                    if (gMinimapLoadedMapId == v)
                     {
                         gMinimapRegionMaxX = -0x8000;
                         gMinimapRegionMaxZ = -0x8000;
@@ -333,7 +342,7 @@ int Minimap_update(void)
         }
         if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER || (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
-            (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
+            (player->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
             objIsCurModelNotZero(player) == 0 || pauseMenuState != 0 || lbl_803DD75B != 0)
         {
             mapTextureId = 0;
@@ -376,7 +385,7 @@ int Minimap_update(void)
                 n = 0xff;
             gMinimapFadeAlpha = n;
         }
-        if ((int)gMinimapLoadedMapId == mapTextureId)
+        if (gMinimapLoadedMapId == mapTextureId)
         {
             gMinimapContentAlpha += 0x20;
             gMinimapContentAlpha = (s16)((gMinimapContentAlpha < 0) ? 0
@@ -392,14 +401,14 @@ int Minimap_update(void)
                 gMinimapContentAlpha = 0;
                 if (minimapTexture != NULL)
                 {
-                    textureFree((Texture*)(minimapTexture));
+                    textureFree(minimapTexture);
                     minimapTexture = NULL;
-                    gMinimapLoadedMapId = NULL;
+                    gMinimapLoadedMapId = 0;
                 }
                 if (mapTextureId != 0)
                 {
                     minimapTexture = textureLoadAsset(mapTextureId);
-                    gMinimapLoadedMapId = (void*)mapTextureId;
+                    gMinimapLoadedMapId = mapTextureId;
                 }
             }
         }
@@ -424,9 +433,9 @@ int Minimap_update(void)
                 gMinimapBoxWidth -= framesThisStep * 8;
                 gMinimapBoxWidth = (gMinimapBoxWidth > boxTargetWidth) ? gMinimapBoxWidth : boxTargetWidth;
             }
-            box[4] = (u16)(gMinimapBoxWidth - 8);
+            box->clipWidth = (u16)(gMinimapBoxWidth - 8);
             gMinimapBoxY = 0x1b8 - gMinimapBoxHeight;
-            ((s16*)box)[0xb] = gMinimapBoxY;
+            box->y = gMinimapBoxY;
             drawHudBox(0x32, gMinimapBoxY, gMinimapBoxWidth, gMinimapBoxHeight, gMinimapFadeAlpha & 0xff, 1);
             GXSetScissor(0x32, gMinimapBoxY, gMinimapBoxWidth, gMinimapBoxHeight);
             switch (gMinimapViewMode)
@@ -434,8 +443,8 @@ int Minimap_update(void)
             case MINIMAP_VIEW_MODE_MAP:
                 if (minimapTexture != NULL)
                 {
-                    texW = ((Texture*)minimapTexture)->width;
-                    texH = ((Texture*)minimapTexture)->height;
+                    texW = minimapTexture->width;
+                    texH = minimapTexture->height;
                     gMinimapWorldToTexScale = texW / (f32)(gMinimapRegionMaxX - gMinimapRegionMinX);
                     boxW = gMinimapBoxWidth;
                     a = (f32)boxW / (f32)texW;
@@ -446,13 +455,13 @@ int Minimap_update(void)
                     gMinimapMinZoom = a;
                     if (gMinimapAxisSwap != 0)
                     {
-                        xrel = -((GameObject*)player)->anim.worldPosZ + gMinimapRegionMaxX;
-                        yrel = ((GameObject*)player)->anim.worldPosX - gMinimapRegionMinZ;
+                        xrel = -player->anim.worldPosZ + gMinimapRegionMaxX;
+                        yrel = player->anim.worldPosX - gMinimapRegionMinZ;
                     }
                     else
                     {
-                        xrel = -((GameObject*)player)->anim.worldPosX + gMinimapRegionMaxX;
-                        yrel = -((GameObject*)player)->anim.worldPosZ + gMinimapRegionMaxZ;
+                        xrel = -player->anim.worldPosX + gMinimapRegionMaxX;
+                        yrel = -player->anim.worldPosZ + gMinimapRegionMaxZ;
                     }
                     e = boxW - texW * gMinimapZoom;
                     e = e / 2.0f;
@@ -486,66 +495,66 @@ int Minimap_update(void)
                     tileCoord = oy / gMinimapZoom;
                     mapTileV = tileCoord;
                     fv = gMinimapZoom * (tileCoord - mapTileV);
-                    ((u8*)&col)[3] = gMinimapContentAlpha;
-                    ((u8*)&col)[0] = 0x20;
-                    ((u8*)&col)[1] = 0x4d;
-                    ((u8*)&col)[2] = 0x84;
-                    hudDrawRect(0x32, gMinimapBoxY, boxW + 0x32, gMinimapBoxY + boxH, *(GXColor*)&col);
+                    color.channels.a = gMinimapContentAlpha;
+                    color.channels.r = 0x20;
+                    color.channels.g = 0x4d;
+                    color.channels.b = 0x84;
+                    hudDrawRect(0x32, gMinimapBoxY, boxW + 0x32, gMinimapBoxY + boxH, color.channels);
                     drawPartialTexture(minimapTexture, (gMinimapF50 - panx) - frac,
                                        ((f32)(int)gMinimapBoxY - pany) - fv, gMinimapContentAlpha & 0xff,
-                                       (int)(gMinimapF256 * *(f32*)&gMinimapZoom), texW - mapTileU, texH - mapTileV, mapTileU, mapTileV);
+                                        (int)(gMinimapF256 * gMinimapZoom), texW - mapTileU, texH - mapTileV, mapTileU, mapTileV);
                     cx = 0.5f + ((gMinimapZoom * (xrel * gMinimapWorldToTexScale) + gMinimapF50) - ox - panx);
                     cy =
                         0.5f + ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)gMinimapBoxY) - oy - pany);
-                    ((u8*)&col)[3] = gMinimapContentAlpha;
-                    ((u8*)&col)[0] = 0;
-                    ((u8*)&col)[1] = 0;
-                    ((u8*)&col)[2] = 0;
-                    gMinimapArrowScale0 = gMinimapFNeg10;
-                    fv = gMinimapFNeg6_67;
-                    gMinimapArrowScale1 = fv;
-                    gMinimapArrowScale2 = fv;
-                    c1 = gMinimapArrowScale0 *
-                         mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
-                    s1 = gMinimapArrowScale0 *
-                         mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
-                    c2 = gMinimapArrowScale1 *
-                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
-                    s2 = gMinimapArrowScale1 *
-                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
-                    c3 = gMinimapArrowScale2 *
-                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
-                    s3 = gMinimapArrowScale2 *
-                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
-                    cwTri1 = col;
-                    hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
-                    ((u8*)&col)[3] = gMinimapContentAlpha;
-                    ((u8*)&col)[0] = 0xff;
-                    ((u8*)&col)[1] = 0xff;
-                    ((u8*)&col)[2] = 0;
-                    c1 = gMinimapFNeg6 * mathSinf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
-                    s1 = gMinimapFNeg6 * mathCosf(gMinimapPi * (f32)((GameObject*)player)->anim.rotX / gMinimapF32768);
-                    c2 = gMinimapFNeg4 *
-                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
-                    s2 = gMinimapFNeg4 *
-                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX + 0x6000) / gMinimapF32768);
-                    c3 = gMinimapFNeg4 *
-                         mathSinf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
-                    s3 = gMinimapFNeg4 *
-                         mathCosf(gMinimapPi * (f32)(((GameObject*)player)->anim.rotX - 0x6000) / gMinimapF32768);
-                    cwTri2 = col;
-                    hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
+                    {
+                        color.channels.a = gMinimapContentAlpha;
+                        color.channels.r = 0;
+                        color.channels.g = 0;
+                        color.channels.b = 0;
+                        gMinimapArrowScale0 = gMinimapFNeg10;
+                        fv = gMinimapFNeg6_67;
+                        gMinimapArrowScale1 = fv;
+                        gMinimapArrowScale2 = fv;
+                        c1 = gMinimapArrowScale0 *
+                             mathSinf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
+                        s1 = gMinimapArrowScale0 *
+                             mathCosf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
+                        c2 = gMinimapArrowScale1 *
+                             mathSinf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
+                        s2 = gMinimapArrowScale1 *
+                             mathCosf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
+                        c3 = gMinimapArrowScale2 *
+                             mathSinf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
+                        s3 = gMinimapArrowScale2 *
+                             mathCosf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
+                        hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, color.channels);
+                        color.channels.a = gMinimapContentAlpha;
+                        color.channels.r = 0xff;
+                        color.channels.g = 0xff;
+                        color.channels.b = 0;
+                        c1 = gMinimapFNeg6 * mathSinf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
+                        s1 = gMinimapFNeg6 * mathCosf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
+                        c2 = gMinimapFNeg4 *
+                             mathSinf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
+                        s2 = gMinimapFNeg4 *
+                             mathCosf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
+                        c3 = gMinimapFNeg4 *
+                             mathSinf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
+                        s3 = gMinimapFNeg4 *
+                             mathCosf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
+                        hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, color.channels);
+                    }
                 }
                 else
                 {
-                    gameTextSetCursor(box[1], box[5], 1);
+                    gameTextSetCursor(box->cursorX, box->cursorY, 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
-                    box[4] = (u16)((n > 2) ? n : 2);
-                    box[4] = (box[4] < box[0]) ? box[4] : box[0];
+                    box->clipWidth = (u16)((n > 2) ? n : 2);
+                    box->clipWidth = (box->clipWidth < box->width) ? box->clipWidth : box->width;
                     n = gMinimapBoxHeight;
-                    box[5] = (u16)((n > 2) ? n : 2);
-                    gameTextSetCursor(box[0], box[5], 2);
+                    box->cursorY = (u16)((n > 2) ? n : 2);
+                    gameTextSetCursor(box->width, box->cursorY, 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
@@ -556,17 +565,17 @@ int Minimap_update(void)
                 break;
             case MINIMAP_VIEW_MODE_RADAR:
                 Minimap_drawCompassBlip();
-                if ((u32)gMinimapRadarTarget == 0)
+                if (gMinimapRadarTarget == NULL)
                 {
                     Minimap_drawCompassNeedle();
-                    gameTextSetCursor(box[1], box[5], 1);
+                    gameTextSetCursor(box->cursorX, box->cursorY, 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
-                    box[4] = (u16)((n > 2) ? n : 2);
-                    box[4] = (box[4] < box[0]) ? box[4] : box[0];
+                    box->clipWidth = (u16)((n > 2) ? n : 2);
+                    box->clipWidth = (box->clipWidth < box->width) ? box->clipWidth : box->width;
                     n = gMinimapBoxHeight;
-                    box[5] = (u16)((n > 2) ? n : 2);
-                    gameTextSetCursor(box[0], box[5], 2);
+                    box->cursorY = (u16)((n > 2) ? n : 2);
+                    gameTextSetCursor(box->width, box->cursorY, 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
@@ -580,11 +589,11 @@ int Minimap_update(void)
                 {
                     if (gMinimapAreaNameDelay == 0)
                     {
-                        gameTextSetCursor(box[1], box[5], 1);
+                        gameTextSetCursor(box->cursorX, box->cursorY, 1);
                         gameTextResetCursor(1);
-                        box[4] = gMinimapBoxWidth;
-                        box[5] = gMinimapBoxHeight;
-                        gameTextSetCursor(box[1], box[5], 2);
+                        box->clipWidth = gMinimapBoxWidth;
+                        box->cursorY = gMinimapBoxHeight;
+                        gameTextSetCursor(box->cursorX, box->cursorY, 2);
                         gameTextSetColor(0, 0xff, 0, lbl_803DD7A2 & 0xff);
                         gameTextShow(lbl_803DBA6E + 10000);
                         gameTextResetCursor(2);
@@ -593,14 +602,14 @@ int Minimap_update(void)
                 else if (gMinimapEnabled != 0)
                 {
                     Minimap_drawCompassNeedle();
-                    gameTextSetCursor(box[1], box[5], 1);
+                    gameTextSetCursor(box->cursorX, box->cursorY, 1);
                     gameTextResetCursor(1);
                     n = gMinimapBoxWidth;
-                    box[4] = (u16)((n > 2) ? n : 2);
-                    box[4] = (box[4] < box[0]) ? box[4] : box[0];
+                    box->clipWidth = (u16)((n > 2) ? n : 2);
+                    box->clipWidth = (box->clipWidth < box->width) ? box->clipWidth : box->width;
                     n = gMinimapBoxHeight;
-                    box[5] = (u16)((n > 2) ? n : 2);
-                    gameTextSetCursor(box[0], box[5], 2);
+                    box->cursorY = (u16)((n > 2) ? n : 2);
+                    gameTextSetCursor(box->width, box->cursorY, 2);
                     gameTextSetColor(0, 0xff, 0, gMinimapFadeAlpha & 0xff);
                     savedCharset = gameTextGetCharset();
                     gameTextSetCharset(3, 3);
@@ -614,33 +623,33 @@ int Minimap_update(void)
             drawTexture(gMinimapCompassTexture, gMinimapF32, (f32)(int)(gMinimapBoxY - 0x14), gMinimapFadeAlpha & 0xff, 0x100);
             if (gMinimapFadeAlpha != 0)
             {
-                ((u8*)&col2)[3] = gMinimapContentAlpha;
-                ((u8*)&col2)[0] = 0xff;
-                ((u8*)&col2)[1] = 0xff;
-                ((u8*)&col2)[2] = 0;
+                compassColor.channels.a = gMinimapContentAlpha;
+                compassColor.channels.r = 0xff;
+                compassColor.channels.g = 0xff;
+                compassColor.channels.b = 0;
                 xc = (s16)(gMinimapBoxY - 4);
-                if (gMinimapViewMode == MINIMAP_VIEW_MODE_MAP && minimapTexture != NULL)
                 {
-                    if (gMinimapZoom < gMinimapMaxZoom)
+                    if (gMinimapViewMode == MINIMAP_VIEW_MODE_MAP && minimapTexture != NULL)
                     {
-                        t = (f32)(sv = xc - 0x14);
-                        cwL = col2;
-                        hudDrawTriangle(gMinimapF44, t, gMinimapF52, (f32)sv, gMinimapF48, (f32)(xc - 0x1a), &cwL);
+                        if (gMinimapZoom < gMinimapMaxZoom)
+                        {
+                            t = (f32)(sv = xc - 0x14);
+                            hudDrawTriangle(gMinimapF44, t, gMinimapF52, (f32)sv, gMinimapF48,
+                                            (f32)(xc - 0x1a), compassColor.channels);
+                        }
+                        if (gMinimapZoom > gMinimapMinZoom)
+                        {
+                            t = (f32)(sv = xc + 0x14);
+                            hudDrawTriangle(gMinimapF44, t, gMinimapF52, (f32)sv, gMinimapF48,
+                                            (f32)(xc + 0x1a), compassColor.channels);
+                        }
                     }
-                    if (gMinimapZoom > gMinimapMinZoom)
-                    {
-                        t = (f32)(sv = xc + 0x14);
-                        cwR = col2;
-                        hudDrawTriangle(gMinimapF44, t, gMinimapF52, (f32)sv, gMinimapF48, (f32)(xc + 0x1a), &cwR);
-                    }
+                    t = (f32)(xl = xc - 4);
+                    e = (f32)(xr = xc + 4);
+                    a = (f32)(sv = xc);
+                    hudDrawTriangle(gMinimapF28, t, gMinimapF28, e, gMinimapF22, a, compassColor.channels);
+                    hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr, gMinimapF74, xc, compassColor.channels);
                 }
-                t = (f32)(xl = xc - 4);
-                e = (f32)(xr = xc + 4);
-                a = (f32)(sv = xc);
-                cwM = col2;
-                hudDrawTriangle(gMinimapF28, t, gMinimapF28, e, gMinimapF22, a, &cwM);
-                cwB = col2;
-                hudDrawTriangle(gMinimapF68, xl, gMinimapF68, xr, gMinimapF74, xc, &cwB);
             }
         }
     }
@@ -671,8 +680,7 @@ PPCWGPipe GXWGFifo : (0xCC008000);
 
 void Minimap_drawCompassNeedle(void)
 {
-    u32 col;
-    u32 c2;
+    MinimapColor color;
     f32 c0;
     f32 s0;
     f32 c1;
@@ -681,8 +689,8 @@ void Minimap_drawCompassNeedle(void)
     f32 s2;
     int y;
 
-    col = gMinimapCompassColor;
-    ((u8*)&col)[3] = gMinimapFadeAlpha;
+    color.value = gMinimapCompassColor;
+    color.channels.a = gMinimapFadeAlpha;
     gMinimapCompassPhase = -(gMinimapBlipNearDist * timeDelta - gMinimapCompassPhase);
     if (gMinimapCompassPhase > *(f32*)&gMinimapF32768)
     {
@@ -695,8 +703,8 @@ void Minimap_drawCompassNeedle(void)
     cc2 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
     s2 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
     y = gMinimapBoxY + 0x32;
-    c2 = col;
-    hudDrawTriangle(gMinimapF110 - c0, y - s0, gMinimapF110 - c1, y - s1, gMinimapF110 - cc2, y - s2, &c2);
+    hudDrawTriangle(gMinimapF110 - c0, y - s0, gMinimapF110 - c1, y - s1, gMinimapF110 - cc2, y - s2,
+                    color.channels);
 }
 
 void Minimap_drawCompassBlip(void)
@@ -784,7 +792,7 @@ void fn_80133934(void)
     {
         textureFree((Texture*)(minimapTexture));
         minimapTexture = NULL;
-        gMinimapLoadedMapId = NULL;
+        gMinimapLoadedMapId = 0;
     }
 }
 
@@ -940,7 +948,7 @@ void Minimap_frameStart(void)
                     Sfx_StopFromObject(0, SFXTRIG_pda_compassbeep_3f0);
                     gMinimapZoomSfxActive = 0;
                 }
-                gMinimapRadarTarget = ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, (GameObject*)player, &dist);
+                gMinimapRadarTarget = (GameObject*)ObjGroup_FindNearestObject(FUELCELL_OBJGROUP, (GameObject*)player, &dist);
                 if ((void*)gMinimapRadarTarget != NULL)
                 {
                     if (dist < gMinimapBlipNearDist)

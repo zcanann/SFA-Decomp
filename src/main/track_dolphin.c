@@ -5451,6 +5451,9 @@ void mapInitFn_80069990(void)
     lbl_803DCF4F = 0;
 }
 
+#define READ_TEXTURE_U16(address) (*(u16*)(address))
+#define WRITE_TEXTURE_U16(address, value) (*(u16*)(address) = (value))
+
 void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
 {
     u32 fmt;
@@ -5515,14 +5518,14 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     pa += h;
                     rowDataOffset = (int)wd * w * 2;
                     pa += rowDataOffset;
-                    pixelA = *(u16*)(pa + 0x60);
+                    pixelA = READ_TEXTURE_U16(pa + 0x60);
                     redA = (int)(pixelA & 0xf800) >> 8;
                     redA = (u8)(redA | ((int)(pixelA & 0xe000) >> 13));
                     pb = (u8*)src2 + pixelColumnOffset;
                     pb += tileColumnOffset;
                     pb += h;
                     pb += rowDataOffset;
-                    pixelB = *(u16*)(pb + 0x60);
+                    pixelB = READ_TEXTURE_U16(pb + 0x60);
                     redB = (int)(pixelB & 0xf800) >> 8;
                     redB = (u8)(redB | ((int)(pixelB & 0xe000) >> 13));
                     blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((int)(pixelA & 0x1c) >> 2))) >> 8) +
@@ -5535,8 +5538,8 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                            0xfc)
                           << 3;
                     outputPixel = blue | (red | green);
-                    *(u16*)((u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset + 0x60) =
-                        outputPixel;
+                    WRITE_TEXTURE_U16((u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset + 0x60,
+                                      outputPixel);
                 }
             }
         }
@@ -5567,29 +5570,34 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     bt += tileColumnOffset;
                     bt += tileRowOffset;
                     bd = bt + rowDataOffset;
-                    aLo = *(u16*)(ad + 0x60);
+                    aLo = READ_TEXTURE_U16(ad + 0x60);
                     aLo = (u8)aLo;
-                    bLo = *(u16*)(bd + 0x60);
+                    bLo = READ_TEXTURE_U16(bd + 0x60);
                     bLo = (u8)bLo;
-                    pixelA = *(u16*)(ad + 0x80);
+                    pixelA = READ_TEXTURE_U16(ad + 0x80);
                     aHi = (int)(pixelA & 0xff00) >> 8;
                     aHi = (u8)aHi;
-                    pixelB = *(u16*)(bd + 0x80);
+                    pixelB = READ_TEXTURE_U16(bd + 0x80);
                     bHi = (int)(pixelB & 0xff00) >> 8;
                     bHi = (u8)bHi;
                     ct = (u8*)dst + pixelColumnOffset + 0x60;
                     cd = ct + tileColumnOffset;
                     cd += tileRowOffset;
-                    *(u16*)(cd + rowDataOffset) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
-                    *(u16*)(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20) =
-                        ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
-                        (u8)(((int)(wA * (u8)pixelA) >> 8) + ((int)(wB * (u8)pixelB) >> 8));
+                    WRITE_TEXTURE_U16(cd + rowDataOffset,
+                                      (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8)));
+                    WRITE_TEXTURE_U16(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20,
+                                      ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
+                                          (u8)(((int)(wA * (u8)pixelA) >> 8) +
+                                               ((int)(wB * (u8)pixelB) >> 8)));
                 }
             }
         }
         DCStoreRange((u8*)dst + sizeof(Texture), dst->dataSize);
     }
 }
+
+#undef READ_TEXTURE_U16
+#undef WRITE_TEXTURE_U16
 
 void updateHeavyFogTexture(int intensity)
 {
