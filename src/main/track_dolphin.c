@@ -54,6 +54,8 @@
 #include "main/tex_dolphin.h"
 #include "string.h"
 
+typedef struct MapDynamicSlot MapDynamicSlot;
+
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
 u8 gActiveTrackBlockCount;
@@ -69,7 +71,7 @@ u8 lbl_803DCF4F;
 u8 mapBlockFlag;
 u8 lbl_803DCF4D;
 u8 lbl_803DCF4C;
-int gMapDynamicSlots;
+MapDynamicSlot* gMapDynamicSlots;
 u8 lbl_803DCF44;
 u32 lbl_803DCF40;
 int gIntersectLineIndexTable;
@@ -184,13 +186,20 @@ typedef struct MapTriIndex
     u16 cellMask; /* 0x06 low byte = x cells, high byte = z cells */
 } MapTriIndex;
 
-typedef struct MapDynamicSlot
+struct MapDynamicSlot
 {
-    u32 object;
-    u8 pad04[0x10];
+    GameObject* owner;
+    int* target;
+    Vec3f cachedLocalEnd;
     u8 cooldown;
-    u8 pad15[3];
-} MapDynamicSlot;
+    u8 querySlot;
+    u8 pad16[2];
+};
+
+STATIC_ASSERT(sizeof(MapDynamicSlot) == 0x18);
+STATIC_ASSERT(offsetof(MapDynamicSlot, cachedLocalEnd) == 0x08);
+STATIC_ASSERT(offsetof(MapDynamicSlot, cooldown) == 0x14);
+STATIC_ASSERT(offsetof(MapDynamicSlot, querySlot) == 0x15);
 
 /* IntersectLine -- 0x10-byte water/track intersection line record built into
  * the scratch pool at lbl_803DCF34 (cap 0x5dc) and later compacted into the
@@ -2271,8 +2280,8 @@ void fn_80063368(GameObject* target)
     s16 i;
     for (i = 0; i < MAP_DYNAMIC_SLOT_COUNT; i++)
     {
-        MapDynamicSlot* p = (MapDynamicSlot*)(gMapDynamicSlots + i * 24);
-        if ((GameObject*)p->object == target)
+        MapDynamicSlot* p = &gMapDynamicSlots[i];
+        if (p->owner == target)
         {
             p->cooldown = 0;
         }
@@ -2808,45 +2817,45 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
     return gIntersectPointCount - 1;
 }
 
-static inline int* trackFindDynamicSlot(GameObject* self, int* o, int slot)
+static inline MapDynamicSlot* trackFindDynamicSlot(GameObject* self, int* target, int querySlot)
 {
     s16 k;
-    char* fl;
+    MapDynamicSlot* entry;
 
     k = 0;
-    fl = (char*)gMapDynamicSlots;
+    entry = gMapDynamicSlots;
     do
     {
-        if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
-            *(u8*)(fl + 0x15) == (u8)slot)
+        if (entry->cooldown != 0 && entry->owner == self && entry->target == target &&
+            entry->querySlot == (u8)querySlot)
         {
-            *(u8*)(fl + 0x14) = 0;
-            return (int*)fl;
+            entry->cooldown = 0;
+            return entry;
         }
-        fl += 0x18;
+        entry++;
         k++;
     } while (k < 0x40);
     return NULL;
 }
 
-static inline int* trackAllocDynamicSlot(GameObject* self, int* o, int slot)
+static inline MapDynamicSlot* trackAllocDynamicSlot(GameObject* self, int* target, int querySlot)
 {
     s16 k;
-    int* e;
+    MapDynamicSlot* entry;
 
     k = 0;
-    e = (int*)gMapDynamicSlots;
+    entry = gMapDynamicSlots;
     do
     {
-        if (*(u8*)((char*)e + 0x14) == 0)
+        if (entry->cooldown == 0)
         {
-            *(int*)e = (int)self;
-            *(int*)((char*)e + 4) = (int)o;
-            *(u8*)((char*)e + 0x15) = slot;
-            *(u8*)((char*)e + 0x14) = 2;
-            return e;
+            entry->owner = self;
+            entry->target = target;
+            entry->querySlot = querySlot;
+            entry->cooldown = 2;
+            return entry;
         }
-        e = (int*)((char*)e + 0x18);
+        entry++;
         k++;
     } while (k < 0x40);
     debugPrintf(sTrackNoFreeLastLineError);
@@ -2891,7 +2900,7 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         f32 rad;
         f32 dx, dy, dz;
         s8 hit;
-        int* e;
+        MapDynamicSlot* entry;
 
         if ((GameObject*)o == self)
             continue;
@@ -2927,16 +2936,16 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
         }
         if (hit == 0)
             continue;
-        e = NULL;
+        entry = NULL;
         if ((u8)slot != 0xff)
         {
-            e = trackFindDynamicSlot(self, o, slot);
+            entry = trackFindDynamicSlot(self, o, slot);
         }
-        if (e != NULL)
+        if (entry != NULL)
         {
-            t20[0] = ((ModelLightStruct*)e)->localY;
-            t20[1] = ((ModelLightStruct*)e)->localZ;
-            t20[2] = ((ModelLightStruct*)e)->worldX;
+            t20[0] = entry->cachedLocalEnd.x;
+            t20[1] = entry->cachedLocalEnd.y;
+            t20[2] = entry->cachedLocalEnd.z;
         }
         else
         {
@@ -2947,12 +2956,12 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
         if ((u8)slot != 0xff)
         {
-            e = trackAllocDynamicSlot(self, o, slot);
-            if (e != NULL)
+            entry = trackAllocDynamicSlot(self, o, slot);
+            if (entry != NULL)
             {
-                ((ModelLightStruct*)e)->localY = t14[0];
-                ((ModelLightStruct*)e)->localZ = t14[1];
-                ((ModelLightStruct*)e)->worldX = t14[2];
+                entry->cachedLocalEnd.x = t14[0];
+                entry->cachedLocalEnd.y = t14[1];
+                entry->cachedLocalEnd.z = t14[2];
             }
         }
     }
@@ -3461,10 +3470,10 @@ void objFn_80065604(void)
     idx = 0;
     do
     {
-        u8* p = (u8*)(gMapDynamicSlots + idx);
-        cur = p[20];
+        MapDynamicSlot* entry = (MapDynamicSlot*)((u8*)gMapDynamicSlots + idx);
+        cur = entry->cooldown;
         if (cur != 0)
-            p[20]--;
+            entry->cooldown--;
         idx += sizeof(MapDynamicSlot);
         i++;
     } while (i < MAP_DYNAMIC_SLOT_COUNT);
@@ -5442,7 +5451,7 @@ void mapInitFn_80069990(void)
         lbl_803DCF34 = (int)mmAlloc(0x5dc0, 0xffff00ff, 0);
         lbl_803DCF38 = mmAlloc(0x4fb0, 0xffff00ff, 0);
         gIntersectLineIndexTable = (int)mmAlloc(0xbb8, 0xffff00ff, 0);
-        gMapDynamicSlots = (int)mmAlloc(0x600, 0xffff00ff, 0);
+        gMapDynamicSlots = mmAlloc(MAP_DYNAMIC_SLOT_COUNT * sizeof(MapDynamicSlot), 0xffff00ff, 0);
     }
     off = 0;
     for (i = 0; i < 4; i++)
@@ -5450,7 +5459,7 @@ void mapInitFn_80069990(void)
         int j;
         for (j = 0; j < 16; j++)
         {
-            ((MapDynamicSlot*)(gMapDynamicSlots + off + j * sizeof(MapDynamicSlot)))->cooldown = 0;
+            ((MapDynamicSlot*)((u8*)gMapDynamicSlots + off))[j].cooldown = 0;
         }
         off += sizeof(MapDynamicSlot) * 16;
     }
