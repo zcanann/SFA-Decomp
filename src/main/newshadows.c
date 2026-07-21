@@ -1337,7 +1337,7 @@ void maybeHudFn_8006c91c(void)
     {
         f32 z = Camera_GetInverseViewMatrix()[7];
         int v;
-        fn_8004C234(&hi, &lo);
+        getHeavyFogRange(&hi, &lo);
         if (z >= hi)
             v = 0;
         else if (z <= lo)

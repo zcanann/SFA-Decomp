@@ -286,10 +286,10 @@ void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
 }
 
 
-void fn_8004C234(f32* p1, f32* p2)
+void getHeavyFogRange(f32* high, f32* low)
 {
-    *p1 = lbl_803DCD44;
-    *p2 = lbl_803DCD40;
+    *high = lbl_803DCD44;
+    *low = lbl_803DCD40;
 }
 
 u8 isHeavyFogEnabled(void)

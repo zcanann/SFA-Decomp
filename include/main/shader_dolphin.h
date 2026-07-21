@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void fn_8004C234(f32* high, f32* low);
+void getHeavyFogRange(f32* high, f32* low);
 
 #endif /* MAIN_SHADER_DOLPHIN_H_ */
