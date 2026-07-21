@@ -179,17 +179,7 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
     }
 }
 
-typedef struct
-{
-    s32 frame;
-    s32 frameCount;
-    f32 timer;
-    f32 timerStep;
-    int* keyframes;
-    u16 sfxId;
-} ObjKfAnimState;
-
-void objModelAndSoundFn_80039118(int obj, int state)
+void objKfAnimUpdate(GameObject* obj, ObjKfAnimState* state)
 {
     int frame;
     ObjModel* model;
@@ -198,16 +188,16 @@ void objModelAndSoundFn_80039118(int obj, int state)
 
     f32 t;
 
-    if (((ObjKfAnimState*)state)->frame < 0)
+    if (state->frame < 0)
         return;
-    t = ((ObjKfAnimState*)state)->timer - timeDelta;
-    ((ObjKfAnimState*)state)->timer = t;
+    t = state->timer - timeDelta;
+    state->timer = t;
     if (t < lbl_803DE9A4)
     {
-        frame = ((ObjKfAnimState*)state)->frame;
-        if (frame >= ((ObjKfAnimState*)state)->frameCount)
+        frame = state->frame;
+        if (frame >= state->frameCount)
         {
-            ((ObjKfAnimState*)state)->frame = -1;
+            state->frame = -1;
             model = (ObjModel*)OBJPRINT_ACTIVE_BANK(obj);
             if (model->file->morphTargetCount != 0)
             {
@@ -220,11 +210,11 @@ void objModelAndSoundFn_80039118(int obj, int state)
         {
             if (frame == 1)
             {
-                Sfx_PlayFromObjectChannel((u32)obj, 0x10, ((ObjKfAnimState*)state)->sfxId);
+                Sfx_PlayFromObjectChannel((u32)obj, 0x10, state->sfxId);
             }
-            kf = ((ObjKfAnimState*)state)->keyframes;
-            frame = ((ObjKfAnimState*)state)->frame;
-            ((ObjKfAnimState*)state)->frame = frame + 1;
+            kf = state->keyframes;
+            frame = state->frame;
+            state->frame = frame + 1;
             kfval = kf[frame];
             model = (ObjModel*)OBJPRINT_ACTIVE_BANK(obj);
             if (model->file->morphTargetCount != 0)
@@ -233,14 +223,14 @@ void objModelAndSoundFn_80039118(int obj, int state)
                                                 model->blendChannels[2].morphTargetB, kfval - 1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
-            ((ObjKfAnimState*)state)->timer = ((ObjKfAnimState*)state)->timer + ((ObjKfAnimState*)state)->timerStep;
+            state->timer = state->timer + state->timerStep;
         }
     }
 }
 
-void fn_80039264(s32* p)
+void objKfAnimStop(ObjKfAnimState* state)
 {
-    *p = -1;
+    state->frame = -1;
 }
 
 void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)

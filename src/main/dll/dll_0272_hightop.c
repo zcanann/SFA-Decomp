@@ -424,7 +424,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
             move = 2;
             stateArg->baddie.moveSpeed = 0.004f;
         }
-        fn_80039264((s32*)((char*)state + 0xb48));
+        objKfAnimStop(&state->keyframeAnimState);
     }
     count = mainGetBit(GAMEBIT_DR_HighTopSwitch1) + mainGetBit(GAMEBIT_DR_HighTopSwitch2) +
             mainGetBit(GAMEBIT_DR_HighTopSwitch3) + mainGetBit(GAMEBIT_DR_HighTopSwitch4);
@@ -446,7 +446,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, HIGHTOP_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(state2->airMeterRemaining);
-        fn_80039264((s32*)((char*)state + 0xb48));
+        objKfAnimStop(&state->keyframeAnimState);
         return 7;
     }
     if (count == 4)
@@ -454,7 +454,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         mainSetBits(0x62a, 1);
         return 0;
     }
-    objModelAndSoundFn_80039118(obj, (int)((char*)state + 0xb48));
+    objKfAnimUpdate((GameObject*)obj, &state->keyframeAnimState);
     state->stateTimer -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {

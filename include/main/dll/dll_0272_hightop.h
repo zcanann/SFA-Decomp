@@ -44,7 +44,8 @@ typedef struct HighTopRuntime
     u8 flags;
     u8 pad9FE[0xb18 - 0x9fe];
     f32 pathPointWorldPositions[12];
-    u8 padB48[0xb6c - 0xb48];
+    ObjKfAnimState keyframeAnimState;
+    u8 padB60[0xb6c - 0xb60];
     f32 pathPoint2X;
     f32 pathPoint2Y;
     f32 pathPoint2Z;
@@ -105,6 +106,7 @@ STATIC_ASSERT(sizeof(HighTopPlacement) == 0x20);
 STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
 STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
 STATIC_ASSERT(offsetof(HighTopRuntime, modelSoundState) == 0x3BC);
+STATIC_ASSERT(offsetof(HighTopRuntime, keyframeAnimState) == 0xB48);
 STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, substate) == 0xC4B);
 STATIC_ASSERT(offsetof(HighTopObject, anim) == 0x00);
