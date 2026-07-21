@@ -47,6 +47,7 @@ void CameraModeBike_update(CameraObject* camera)
     float kFollowB;
     float kFollowA;
     short angleDelta;
+    u16 cameraAngle;
     GameObject* target;
     CameraModeBikeState* st;
     float sinYaw;
@@ -79,7 +80,8 @@ void CameraModeBike_update(CameraObject* camera)
         st->smoothedYawOffset += (0.1f) * ((f32)((12.0f) * st->turnInput) - st->smoothedYawOffset);
         camera->anim.rotX = camera->anim.rotX + gCamTalkBikeState->smoothedYawOffset;
         targetAngle = (3072.0f) - gCamTalkBikeState->pitchTarget;
-        angleDelta = targetAngle - (u16)camera->anim.rotY;
+        cameraAngle = camera->anim.rotY;
+        angleDelta = targetAngle - cameraAngle;
         if (0x8000 < angleDelta)
         {
             angleDelta = angleDelta - 0xFFFF;
@@ -109,7 +111,8 @@ void CameraModeBike_update(CameraObject* camera)
         camera->anim.worldPosY = pivotY + kFollowA;
         camera->anim.worldPosZ = pivotZ + kFollowB;
         targetAngle = lbl_803E17A8 * gCamTalkBikeState->rollInput;
-        angleDelta = targetAngle - (u16)camera->anim.rotZ;
+        cameraAngle = camera->anim.rotZ;
+        angleDelta = targetAngle - cameraAngle;
         if (0x8000 < angleDelta)
         {
             angleDelta = angleDelta - 0xFFFF;
