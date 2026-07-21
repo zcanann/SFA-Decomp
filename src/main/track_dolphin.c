@@ -136,6 +136,14 @@ typedef struct TrackP6Entry
     f32 relZ2;
 } TrackP6Entry;
 
+typedef struct TrackShadowTriangle
+{
+    Vec3f normal;
+    f32 planeDistance;
+    u8 flags;
+    u8 pad11[3];
+} TrackShadowTriangle;
+
 typedef struct TrackBlockDescriptor
 {
     void* object;
@@ -1504,20 +1512,21 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x1c] = -(planes[0x19] * verts[0] + planes[0x1a] * verts[1] + planes[0x1b] * verts[2]);
 }
 
-int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
+int fn_80061DD8(GameObject* obj, void* u1, void* u2, int count, Vec3f* vertices, Vec3f* outVertices,
+                TrackShadowTriangle* triangles, int limit)
 {
-    int n = 0;
+    int vertexIndex = 0;
     int outCount = 0;
     int i = 0;
-    ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
-    s16 zero = 0;
+    int j;
+    ObjModelState* modelState = obj->anim.modelState;
 
-    gShadowVisibleCount = zero;
-    for (; n < count; n++, i += 3, input += 5)
+    gShadowVisibleCount = 0;
+    for (; i < count; i++, vertexIndex += 3, triangles++)
     {
         int vis = 1;
-        f32 dot = modelState->shadowOffsetX * input[0] + modelState->shadowOffsetY * input[1] +
-                  modelState->shadowOffsetZ * input[2];
+        f32 dot = modelState->shadowOffsetX * triangles->normal.x + modelState->shadowOffsetY * triangles->normal.y +
+                  modelState->shadowOffsetZ * triangles->normal.z;
         if (dot < lbl_803DEC58)
         {
             vis = -1;
@@ -1525,27 +1534,16 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
         if (vis == 1)
         {
             gShadowVisibleCount++;
-            outPtr[0] = *(f32*)((char*)outBase + i * 0xc + 0);
-            outPtr[1] = *(f32*)((char*)outBase + i * 0xc + 4);
-            outPtr[2] = *(f32*)((char*)outBase + i * 0xc + 8);
-            if (++outCount >= limit)
+            for (j = 0; j < 3; j++)
             {
-                return 0;
-            }
-            outPtr[3] = *(f32*)((char*)outBase + (i + 1) * 0xc + 0);
-            outPtr[4] = *(f32*)((char*)outBase + (i + 1) * 0xc + 4);
-            outPtr[5] = *(f32*)((char*)outBase + (i + 1) * 0xc + 8);
-            if (++outCount >= limit)
-            {
-                return 0;
-            }
-            outPtr[6] = *(f32*)((char*)outBase + (i + 2) * 0xc + 0);
-            outPtr[7] = *(f32*)((char*)outBase + (i + 2) * 0xc + 4);
-            outPtr[8] = *(f32*)((char*)outBase + (i + 2) * 0xc + 8);
-            outPtr += 9;
-            if (++outCount >= limit)
-            {
-                return 0;
+                outVertices->x = vertices[vertexIndex + j].x;
+                outVertices->y = vertices[vertexIndex + j].y;
+                outVertices->z = vertices[vertexIndex + j].z;
+                outVertices++;
+                if (++outCount >= limit)
+                {
+                    return 0;
+                }
             }
         }
     }
@@ -1808,8 +1806,8 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
         lbl_803DCEF0 = idxOut;
         lbl_803DCEE4 = (int)vtx;
         trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
-        fn_80061DD8((int*)obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache,
-                    (f32*)gShadowDrawScratch, 0x555);
+        fn_80061DD8(obj, buf48, bufA8, idxOut, (Vec3f*)gShadowVolumeBuffer, (Vec3f*)cache,
+                    (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
     }
     objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
