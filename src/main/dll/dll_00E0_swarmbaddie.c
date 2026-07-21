@@ -31,7 +31,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
 
-int lbl_803DBC78[2] = {2, 3};
+int gSwarmBaddieCurveInitData[2] = {2, 3};
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -53,17 +53,18 @@ STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 #define SWARM_BADDIE_S16_ANGLE_SCALE 32768.0f
 int gSwarmBaddieLastCurvePoint;
 
-void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
+void SwarmBaddie_updateMovement(GameObject* obj, SwarmBaddieState* state)
 {
     RomCurveWalker* curve;
-    int done;
+    int pathEnded;
     f32 step;
 
     curve = state->curve;
-    done = Curve_AdvanceAlongPath(&curve->curve, state->curveStep);
-    if (((done != 0) || (curve->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
+    pathEnded = Curve_AdvanceAlongPath(&curve->curve, state->curveStep);
+    if (((pathEnded != 0) || (curve->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, 400.0f, lbl_803DBC78, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, 400.0f, gSwarmBaddieCurveInitData, -1) !=
+         0))
     {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
@@ -113,7 +114,7 @@ void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
         (obj)->anim.velocityZ = -0.8f;
     }
 
-    objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
+    objMove(obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
             (obj)->anim.velocityZ * timeDelta);
 
     state->yawWavePhase += (s16)(32.0f * timeDelta);
@@ -165,21 +166,21 @@ void SwarmBaddie_update(GameObject* obj)
     struct
     {
         f32 x, y, z;
-    } d;
-    f32* dp = &d.x;
+    } delta;
+    f32* deltaValues = &delta.x;
     f32 volume;
-    RomCurveWalker* oldTarget;
-    int hitD;
-    int hitE;
-    int hitC;
-    int hitF;
-    int hitB;
-    int hitA;
+    RomCurveWalker* curve;
+    int hitObject;
+    int hitPosXBits;
+    int hitPosYBits;
+    int hitPosZBits;
+    int hitSphereIndex;
+    int hitVolume;
 
     state = obj->extra;
-    oldTarget = state->curve;
-    if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, (u32*)&hitA, (f32*)&hitE, (f32*)&hitC,
-                                           (f32*)&hitF) != 0)
+    curve = state->curve;
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, (u32*)&hitVolume, (f32*)&hitPosXBits,
+                                           (f32*)&hitPosYBits, (f32*)&hitPosZBits) != 0)
     {
         state->hitVolumeEnvelope = (2.0f);
     }
@@ -198,17 +199,17 @@ void SwarmBaddie_update(GameObject* obj)
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
     {
-        d.x = state->player->anim.worldPosX - (obj)->anim.worldPosX;
-        d.y = state->player->anim.worldPosY - (obj)->anim.worldPosY;
-        d.z = state->player->anim.worldPosZ - (obj)->anim.worldPosZ;
-        state->playerDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        delta.x = state->player->anim.worldPosX - (obj)->anim.worldPosX;
+        delta.y = state->player->anim.worldPosY - (obj)->anim.worldPosY;
+        delta.z = state->player->anim.worldPosZ - (obj)->anim.worldPosZ;
+        state->playerDistance = sqrtf(delta.z * delta.z + (delta.x * delta.x + delta.y * delta.y));
     }
-    if (oldTarget != NULL)
+    if (curve != NULL)
     {
-        d.x = oldTarget->posX - (obj)->anim.worldPosX;
-        d.y = oldTarget->posY - (obj)->anim.worldPosY;
-        d.z = oldTarget->posZ - (obj)->anim.worldPosZ;
-        state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        delta.x = curve->posX - (obj)->anim.worldPosX;
+        delta.y = curve->posY - (obj)->anim.worldPosY;
+        delta.z = curve->posZ - (obj)->anim.worldPosZ;
+        state->pathDistance = sqrtf(delta.z * delta.z + (delta.x * delta.x + delta.y * delta.y));
     }
     if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > 250.0f))
     {
@@ -224,7 +225,7 @@ void SwarmBaddie_update(GameObject* obj)
     {
         state->flags = state->flags | SWARMBADDIE_FLAG_CHASE_PLAYER;
     }
-    fn_8014EE8C(obj, state);
+    SwarmBaddie_updateMovement(obj, state);
 }
 
 void SwarmBaddie_init(GameObject* obj, SwarmBaddiePlacement* placement, int initialised)
@@ -240,8 +241,8 @@ void SwarmBaddie_init(GameObject* obj, SwarmBaddiePlacement* placement, int init
         {
             memset(state->curve, 0, sizeof(RomCurveWalker));
         }
-        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, lbl_803DBC78, -1) ==
-            0)
+        if ((*gRomCurveInterface)
+                ->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, gSwarmBaddieCurveInitData, -1) == 0)
         {
             state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
         }

@@ -22,7 +22,7 @@ STATIC_ASSERT(offsetof(SwarmBaddiePlacement, curveStepParam) == 0x1A);
 
 extern ObjectDescriptor gSwarmBaddieObjDescriptor;
 
-void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state);
+void SwarmBaddie_updateMovement(GameObject* obj, SwarmBaddieState* state);
 int SwarmBaddie_getExtraSize(void);
 int SwarmBaddie_getObjectTypeId(void);
 void SwarmBaddie_free(GameObject* obj);
