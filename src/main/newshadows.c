@@ -94,6 +94,12 @@ typedef struct
     u16 packedXY;
 } NewShadowVectorTexel;
 
+typedef struct
+{
+    f32 x;
+    f32 y;
+} NewShadowVector2;
+
 #define NEW_SHADOW_MAX_QUEUED_CASTERS 300
 #define NEW_SHADOW_MAX_CASTERS 100
 #define NEW_SHADOW_MAX_CAST_TEXTURES 8
@@ -1393,40 +1399,37 @@ void freeNewShadowDistortionTexture(void)
     mm_free(gNewShadowDistortionTexture);
     gNewShadowDistortionTexture = 0;
 }
+
 void createNewShadowDistortionTexture(void)
 {
     int yhi;
     int ylo;
     int y, x;
-    f32 fy;
-    f32 fx;
+    NewShadowVector2 direction;
     f32 dist;
-    f32 ny;
     f32 s;
     f32 t;
-    f32 py;
-    f32 px;
     gNewShadowDistortionTexture = textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
         x = 0;
         yhi = (y >> 2) * 0x20;
         ylo = (y & 3) * 2;
-        fy = y - lbl_803DEDAC;
+        direction.y = y - lbl_803DEDAC;
         for (; x < 0x100; x++)
         {
             u8* rowBase;
-            u8* row;
-            u8* addr;
-            rowBase = (u8*)gNewShadowDistortionTexture + ylo;
-            row = rowBase + yhi;
-            row += (x & 3) * 8;
-            addr = row + (x >> 2) * 0x800;
-            fx = x - lbl_803DEDAC;
-            dist = fx * fx;
-            dist = sqrtf(fy * fy + dist);
-            ny = fy / dist;
-            fx /= dist;
+            u8* tileRow;
+            u8* texel;
+            rowBase = (u8*)gNewShadowDistortionTexture;
+            rowBase += ylo;
+            tileRow = rowBase + yhi;
+            tileRow += (x & 3) * 8;
+            texel = tileRow + (x >> 2) * 0x800;
+            direction.x = x - lbl_803DEDAC;
+            dist = sqrtf(direction.y * direction.y + direction.x * direction.x);
+            direction.y /= dist;
+            direction.x /= dist;
             if (dist <= lbl_803DEDB8)
             {
                 t = lbl_803DED34 * (lbl_803DEDB0 - lbl_803DED48 * dist);
@@ -1436,14 +1439,12 @@ void createNewShadowDistortionTexture(void)
             {
                 s = lbl_803DED28;
             }
-            {
-                ny = ny * s;
-                fx = fx * s;
-                py = lbl_803DEDC0 * ny + lbl_803DEDBC;
-                px = lbl_803DEDC0 * fx + lbl_803DEDBC;
-                ((NewShadowVectorTexel*)(addr + 0x60))->packedXY =
-                    (u16)((int)px | (((int)py & 0xffff) << 8));
-            }
+            direction.y *= s;
+            direction.x *= s;
+            direction.y = lbl_803DEDC0 * direction.y + lbl_803DEDBC;
+            direction.x = lbl_803DEDC0 * direction.x + lbl_803DEDBC;
+            ((NewShadowVectorTexel*)(texel + 0x60))->packedXY =
+                (u16)((int)direction.x | (((int)direction.y & 0xffff) << 8));
         }
     }
     DCFlushRange(gNewShadowDistortionTexture + 1, gNewShadowDistortionTexture->dataSize);
