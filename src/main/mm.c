@@ -35,7 +35,11 @@ char sMmStoreAllocationTag[] = "mmStore";
 
 typedef f32 Mtx[3][4];
 
-typedef struct
+#define MM_STORE_COUNT 0x20
+#define MM_DEFERRED_FREE_CAPACITY 2000
+#define MM_REGION_CAPACITY 8
+
+typedef struct MmRegion
 {
     int numSlots;
     int slotCount;
@@ -44,7 +48,9 @@ typedef struct
     int usedBytes;
 } MmRegion;
 
-typedef struct
+STATIC_ASSERT(sizeof(MmRegion) == 0x14);
+
+typedef struct HeapItem
 {
     void* key;
     int size;
@@ -57,14 +63,18 @@ typedef struct
     int allocId;
 } HeapItem;
 
-typedef struct
+STATIC_ASSERT(sizeof(HeapItem) == 0x1C);
+
+typedef struct DeferredFree
 {
     void* ptr;
     u8 delay;
     u8 pad[3];
 } DeferredFree;
 
-typedef struct
+STATIC_ASSERT(sizeof(DeferredFree) == 0x8);
+
+typedef struct MmStore
 {
     void* buf;
     void* bufCur;
@@ -72,7 +82,9 @@ typedef struct
     int handle;
 } MmStore;
 
-typedef struct
+STATIC_ASSERT(sizeof(MmStore) == 0x10);
+
+typedef struct StackPool
 {
     void* freeList;
     void* end;
@@ -83,12 +95,19 @@ typedef struct
     u8 pad12[0xe];
 } StackPool;
 
-typedef struct
+STATIC_ASSERT(sizeof(StackPool) == 0x20);
+
+typedef struct MmGlobalLayout
 {
-    void* stores[0x20];
-    DeferredFree deferred[2000];
-    MmRegion regions[8];
-} MmGlobal;
+    void* stores[MM_STORE_COUNT];
+    DeferredFree deferred[MM_DEFERRED_FREE_CAPACITY];
+    MmRegion regions[MM_REGION_CAPACITY];
+} MmGlobalLayout;
+
+STATIC_ASSERT(offsetof(MmGlobalLayout, deferred) == 0x80);
+STATIC_ASSERT(offsetof(MmGlobalLayout, regions) == 0x3F00);
+STATIC_ASSERT(sizeof(MmGlobalLayout) == 0x3FA0);
+
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 extern char sMemStatsFormat[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
@@ -154,7 +173,7 @@ void* getCache(void)
     return (void*)0xe0000000;
 }
 
-extern MmStore* gMmStoreArray[0x20];
+extern MmStore* gMmStoreArray[MM_STORE_COUNT];
 
 void* mmAllocateFromFBMemoryStore(int handle, int size)
 {
@@ -337,7 +356,7 @@ int roundUpTo16(int x)
     return x;
 }
 
-MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
+MmRegion gMmRegionTable[MM_REGION_CAPACITY];
 
 int roundUpTo32(int x)
 {
@@ -349,9 +368,9 @@ int roundUpTo32(int x)
     return x;
 }
 
-DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
+DeferredFree gMmDeferredFreeStack[MM_DEFERRED_FREE_CAPACITY];
 
-MmStore* gMmStoreArray[0x20];
+MmStore* gMmStoreArray[MM_STORE_COUNT];
 
 int mmGetRegionForPtr(u8* ptr)
 {
@@ -467,7 +486,7 @@ void heapFree(int region, int idx)
 
 void mmFreeTick(int arg)
 {
-    MmGlobal* g[1];
+    MmGlobalLayout* g[1];
     int i;
     DeferredFree* d;
     int k;
@@ -475,7 +494,7 @@ void mmFreeTick(int arg)
     HeapItem* item;
     s16 next;
 
-    g[0] = (MmGlobal*)gMmStoreArray;
+    g[0] = (MmGlobalLayout*)gMmStoreArray;
     gMmTickCount++;
     gMmOpCount++;
 

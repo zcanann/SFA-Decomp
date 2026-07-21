@@ -2,8 +2,15 @@
 #define MAIN_DLL_DLL_00EE_EFFECTBOX_H_
 
 #include "main/game_object.h"
-#include "global.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
+
+typedef enum EffectBoxTargetMode
+{
+    EFFECTBOX_TARGET_PLAYER = 0,
+    EFFECTBOX_TARGET_TRICKY = 1,
+    EFFECTBOX_TARGET_GROUP = 2
+} EffectBoxTargetMode;
 
 typedef struct EffectboxPlacement
 {
@@ -17,7 +24,7 @@ typedef struct EffectboxPlacement
     u8 pad1E;
     u8 gameBitValue;  /* 0x1F: gate value compared against the game bit */
     s16 gameBitIndex; /* 0x20: game bit index */
-    u8 targetMode;    /* 0x22: EFFECTBOX_TARGET_* candidate set */
+    u8 targetMode;    /* 0x22: EffectBoxTargetMode candidate set */
     u8 pad23[0x28 - 0x23];
 } EffectboxPlacement;
 
@@ -35,8 +42,10 @@ void EffectBox_free(GameObject* obj);
 void EffectBox_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void EffectBox_hitDetect(void);
 void EffectBox_update(GameObject* obj);
-void EffectBox_init(GameObject* obj, EffectboxPlacement* def);
+void EffectBox_init(GameObject* obj, EffectboxPlacement* placement);
 void EffectBox_release(void);
 void EffectBox_initialise(void);
+
+extern ObjectDescriptor gEffectBoxObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00EE_EFFECTBOX_H_ */

@@ -7,7 +7,7 @@
  * The placement's targetMode selects the candidate set: 0 = the player,
  * 1 = Tricky, 2 = every object in object group 5. The action depends on
  * the same mode (the player gets fn_80295918 with actionArg; group members get
- * a vtable call at slot 0x28). A non-negative placement game bit gates the
+ * their action callback). A non-negative placement game bit gates the
  * box: it only runs while the bit's value differs from gameBitValue.
  */
 #include "main/game_object.h"
@@ -22,19 +22,22 @@
 #include "main/object_render.h"
 #include "main/dll/dll_00EE_effectbox.h"
 
-/* EffectboxPlacement.targetMode values */
-#define EFFECTBOX_TARGET_PLAYER   0 /* Obj_GetPlayerObject */
-#define EFFECTBOX_TARGET_TRICKY   1 /* getTrickyObject */
-#define EFFECTBOX_TARGET_GROUP    2 /* every object in EFFECTBOX_TARGET_OBJGROUP */
 #define EFFECTBOX_TARGET_OBJGROUP 5
-
-#define EFFECTBOX_OBJFLAG_HIDDEN             0x4000
-#define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 #define EFFECTBOX_RENDER_SCALE 1.0f
 #define EFFECTBOX_PI           3.1415927f
 #define EFFECTBOX_ANGLE_SCALE  32768.0f
 #define EFFECTBOX_ZERO         0.0f
+
+typedef void (*EffectBoxActionCallback)(GameObject* obj, int actionArg);
+
+typedef struct EffectBoxTargetInterface
+{
+    void* callbacks[10];
+    EffectBoxActionCallback applyAction;
+} EffectBoxTargetInterface;
+
+STATIC_ASSERT(offsetof(EffectBoxTargetInterface, applyAction) == 0x28);
 
 int EffectBox_getExtraSize(void)
 {
@@ -62,12 +65,12 @@ void EffectBox_hitDetect(void)
 
 void EffectBox_update(GameObject* obj)
 {
-    int* list;
+    GameObject** list;
     EffectboxPlacement* placement;
-    int single;
+    GameObject* single;
     int count;
     int i;
-    int other;
+    GameObject* other;
     f32 cosY;
     f32 sinY;
     f32 cosX;
@@ -81,11 +84,11 @@ void EffectBox_update(GameObject* obj)
     f32 dy;
     f32 dz;
     f32 proj;
-    int gb;
+    int gateGameBit;
 
     placement = (EffectboxPlacement*)obj->anim.placementData;
-    gb = obj->userData2;
-    if ((gb <= -1) || (placement->gameBitValue != mainGetBit(gb)))
+    gateGameBit = obj->userData2;
+    if ((gateGameBit <= -1) || (placement->gameBitValue != mainGetBit(gateGameBit)))
     {
         cosY = mathCosf((EFFECTBOX_PI * (f32) - (placement->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
         sinY = mathSinf((EFFECTBOX_PI * (f32) - (placement->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
@@ -97,8 +100,8 @@ void EffectBox_update(GameObject* obj)
         switch (placement->targetMode)
         {
         case EFFECTBOX_TARGET_PLAYER:
-            single = (int)Obj_GetPlayerObject();
-            if (single == 0u)
+            single = Obj_GetPlayerObject();
+            if (single == NULL)
             {
                 return;
             }
@@ -106,8 +109,8 @@ void EffectBox_update(GameObject* obj)
             count = 1;
             break;
         case EFFECTBOX_TARGET_TRICKY:
-            single = (int)getTrickyObject();
-            if (single == 0u)
+            single = getTrickyObject();
+            if (single == NULL)
             {
                 return;
             }
@@ -115,7 +118,7 @@ void EffectBox_update(GameObject* obj)
             count = 1;
             break;
         case EFFECTBOX_TARGET_GROUP:
-            list = (int*)ObjGroup_GetObjects(EFFECTBOX_TARGET_OBJGROUP, &count);
+            list = (GameObject**)ObjGroup_GetObjects(EFFECTBOX_TARGET_OBJGROUP, &count);
             if (list == NULL)
             {
                 return;
@@ -128,9 +131,9 @@ void EffectBox_update(GameObject* obj)
         for (; i < count; i++)
         {
             other = *list;
-            dx = ((GameObject*)other)->anim.localPosX;
-            dy = ((GameObject*)other)->anim.localPosY;
-            dz = ((GameObject*)other)->anim.localPosZ;
+            dx = other->anim.localPosX;
+            dy = other->anim.localPosY;
+            dz = other->anim.localPosZ;
             dx = dx - obj->anim.localPosX;
             dy = dy - obj->anim.localPosY;
             dz = dz - obj->anim.localPosZ;
@@ -149,10 +152,10 @@ void EffectBox_update(GameObject* obj)
                         case EFFECTBOX_TARGET_TRICKY:
                             break;
                         case EFFECTBOX_TARGET_PLAYER:
-                            fn_80295918((GameObject*)other, 1, (f32)placement->actionArg);
+                            fn_80295918(other, 1, (f32)placement->actionArg);
                             break;
                         case EFFECTBOX_TARGET_GROUP:
-                            (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(
+                            ((EffectBoxTargetInterface*)*other->anim.dll)->applyAction(
                                 other, placement->actionArg);
                             break;
                         }
@@ -164,26 +167,26 @@ void EffectBox_update(GameObject* obj)
     }
 }
 
-void EffectBox_init(GameObject* obj, EffectboxPlacement* def)
+void EffectBox_init(GameObject* obj, EffectboxPlacement* placement)
 {
-    s16 gameBit;
+    s16 gateGameBit;
     u32 flags;
-    if ((obj)->userData1 == 0)
+    if (obj->userData1 == 0)
     {
         fn_8002B860(obj);
     }
-    (obj)->userData1 = 1;
-    gameBit = def->gameBitIndex;
-    if (gameBit > -1)
+    obj->userData1 = 1;
+    gateGameBit = placement->gameBitIndex;
+    if (gateGameBit > -1)
     {
-        (obj)->userData2 = gameBit;
+        obj->userData2 = gateGameBit;
     }
     else
     {
-        (obj)->userData2 = -1;
+        obj->userData2 = -1;
     }
-    flags = (u32)(obj)->objectFlags | (EFFECTBOX_OBJFLAG_HIDDEN | EFFECTBOX_OBJFLAG_HITDETECT_DISABLED);
-    (obj)->objectFlags = flags;
+    flags = (u32)obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags = flags;
 }
 
 void EffectBox_release(void)
