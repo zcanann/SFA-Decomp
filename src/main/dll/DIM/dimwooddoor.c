@@ -65,8 +65,13 @@ extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
 extern f32 lbl_803DBEF0;
 extern f32 lbl_803DBF14;
-extern f32 gDimWoodDoorPi;
-extern f32 gDimWoodDoorAngleHalfCircle;
+
+const f32 lbl_803E48A0 = 50.0f;
+const f32 lbl_803E48A4 = 0.01f;
+const f32 lbl_803E48A8 = 0.5f;
+const f32 lbl_803E48AC = 2.0f;
+const f32 gDimWoodDoorPi = 3.1415927f;
+const f32 gDimWoodDoorAngleHalfCircle = 32768.0f;
 
 void DIMwooddoor_spawnShard(GameObject* obj, u8 variant)
 {
@@ -121,7 +126,7 @@ void DIMwooddoor_spawnShard(GameObject* obj, u8 variant)
     }
 
     launchSpeed = state->launchSpeed;
-    launchScale = 2.0f * launchSpeed;
+    launchScale = lbl_803E48AC * launchSpeed;
     shard->anim.rotX = obj->anim.rotX + modelVec[1];
     angle = (gDimWoodDoorPi * (f32)(s32) * (s16*)shard) / gDimWoodDoorAngleHalfCircle;
     shard->anim.velocityX = launchScale * -mathSinf(angle);
@@ -231,7 +236,7 @@ void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 t
                      ? distSq
                      : (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
 
-        accel = (0.01f * -lbl_803DBEF0) * distSq;
+        accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
         accelDenom = 8.0f * heightDelta - 4.0f * dist;
         accel = accel / ((accelDenom < -1.0f) ? accelDenom : -1.0f);
         accel = (0.0f > accel) ? 0.0f : accel;
