@@ -578,7 +578,7 @@ extern const f32 lbl_803E2010;
 extern f32 gHudYButtonIconX;
 extern const f32 lbl_803E2018;
 void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
-void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, int b, int c, int d);
+void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
 void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 extern s16 gCMenuForcedSelIndex;
 extern s8 gCMenuPreselectOwnedBit;
@@ -1350,7 +1350,7 @@ void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
     GXWGFifo.f32 = vb;
 }
 
-void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, int paletteIndex, int scalePercent, int flags)
+void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteIndex, int scalePercent, int flags)
 {
     u8 drawFlags = flags & 4;
     int dx, dy;
