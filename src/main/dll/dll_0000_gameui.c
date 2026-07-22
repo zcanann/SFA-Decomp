@@ -577,7 +577,7 @@ extern f32 gHudBButtonIconX;
 extern const f32 lbl_803E2010;
 extern f32 gHudYButtonIconX;
 extern const f32 lbl_803E2018;
-void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
+void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, u8 b, int w, int h, int off, int m);
 void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
 void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 extern s16 gCMenuForcedSelIndex;
@@ -891,7 +891,7 @@ void GameUI_release(void);
 
 void GameUI_airMeterShutdown(void);
 void gameUiResetMenuState(void);
-void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags);
+void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags);
 int cMenuRingModelRenderFn(int obj, int block, int idx);
 int cMenuRingIconRenderFn(int obj, int block, int idx);
 void pauseMenuDrawStatus_801274A0(GameObject* arg1);
@@ -1261,7 +1261,7 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
 }
-void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9)
+void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
     f32 u1, u0, v0, v1;
     pauseMenuMapFn_8011de20(this, p5, p4, 0);
@@ -2400,7 +2400,7 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
 }
 
 char lbl_803A87F0[0x40];
-void hudDrawMagicBar(int alpha, int elemAlpha, u8 flags)
+void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
 {
     int total = lbl_803A9364[8];
     int middleCapacity = total - 0xd;
