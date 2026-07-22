@@ -579,7 +579,7 @@ extern f32 gHudYButtonIconX;
 extern const f32 lbl_803E2018;
 void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
 void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, int b, int c, int d);
-void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
+void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 extern s16 gCMenuForcedSelIndex;
 extern s8 gCMenuPreselectOwnedBit;
 extern int gTrickyHudActionMask;
@@ -1295,7 +1295,7 @@ void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
 }
 
 
-void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9)
+void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9)
 {
     f32 ua, ub, va, vb, tu, tv;
     u32 dx, dy;
