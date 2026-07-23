@@ -1952,6 +1952,8 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio/aram_data.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "main/audio/sal_ai.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(NonMatching, "main/audio/sal_dsp.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
+            Object(NonMatching, "main/audio/sal_dsp_irqinit.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on", "-opt", "noschedule"]),
+            Object(NonMatching, "main/audio/sal_dsp_irq.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "main/audio/snd_reverb.c", mw_version="GC/1.2.5n", extra_cflags=["-Cpp_exceptions", "on"]),
             Object(MatchingFor("GSAE01"), "dolphin/axfx/reverb_std_create.c", mw_version="GC/1.2.5n"),
             Object(

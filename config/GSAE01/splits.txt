@@ -4543,12 +4543,22 @@ main/audio/sal_ai.c:
 	.text       start:0x80284670 end:0x802848D8
 
 main/audio/sal_dsp.c:
-	extab       start:0x80005C40 end:0x80005C90
-	extabindex  start:0x800065F0 end:0x80006668
-	.text       start:0x802848D8 end:0x80284B94
+	extab       start:0x80005C40 end:0x80005C60
+	extabindex  start:0x800065F0 end:0x80006620
+	.text       start:0x802848D8 end:0x80284A8C
 	.data       start:0x80330840 end:0x80332220
 	.bss        start:0x803D4880 end:0x803D68E0
 	.sdata      start:0x803DC628 end:0x803DC630
+
+main/audio/sal_dsp_irqinit.c:
+	extab       start:0x80005C60 end:0x80005C68
+	extabindex  start:0x80006620 end:0x8000662C
+	.text       start:0x80284A8C end:0x80284AB8
+
+main/audio/sal_dsp_irq.c:
+	extab       start:0x80005C68 end:0x80005C90
+	extabindex  start:0x8000662C end:0x80006668
+	.text       start:0x80284AB8 end:0x80284B94
 
 main/audio/snd_reverb.c:
 	extab       start:0x80005C90 end:0x80005CA8

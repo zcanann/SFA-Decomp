@@ -11,8 +11,6 @@ typedef struct
     u8 dram[0x2000];
 } SalDspTask;
 
-extern u16 hwIrqLevel;
-extern u32 oldState;
 extern u32 salLastTick;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
@@ -318,51 +316,4 @@ u32 salGetStartDelay(void)
 {
     OSTick now = OSGetTick();
     return OS_TICKS_TO_USEC(now - salLastTick);
-}
-
-void hwInitIrq(void)
-{
-    oldState = OSDisableInterrupts();
-    hwIrqLevel = 1;
-}
-
-void hwEnableIrq(void)
-{
-}
-
-void sndEnd(void)
-{
-    u16 count;
-
-    count = hwIrqLevel - 1;
-    hwIrqLevel = count;
-    if (count == 0)
-    {
-        OSRestoreInterrupts(oldState);
-    }
-}
-
-void sndBegin(void)
-{
-    u16 count = hwIrqLevel;
-    hwIrqLevel = count + 1;
-    if (count == 0)
-    {
-        oldState = OSDisableInterrupts();
-    }
-}
-
-void hwIRQEnterCritical(void)
-{
-    OSDisableInterrupts();
-}
-
-void hwIRQLeaveCritical(void)
-{
-    OSEnableInterrupts();
-}
-
-void* salMalloc(u32 size)
-{
-    return salHooks.mallocHook(size);
 }

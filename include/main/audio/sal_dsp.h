@@ -5,6 +5,8 @@
 
 extern u16 dspCmdFirstSize;
 extern u16* dspCmdList;
+extern u16 hwIrqLevel;
+extern u32 oldState;
 
 int salInitDsp(u32 flags);
 int salStartDsp(void);
