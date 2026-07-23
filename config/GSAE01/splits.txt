@@ -4870,11 +4870,17 @@ dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
 	.sdata2     start:0x803E7E50 end:0x803E7E68
 
 main/dll/player.c:
-	.text       start:0x80295334 end:0x802B8A58
+	.text       start:0x80295334 end:0x802B4ED8
 	.rodata     start:0x802C2B30 end:0x802C2CA8
 	.data       start:0x80332EC0 end:0x80334EE8
 	.bss        start:0x803DAEF0 end:0x803DB0D0
 	.sdata      start:0x803DC660 end:0x803DC66C
+
+main/dll/player_render.c:
+	.text       start:0x802B4ED8 end:0x802B6104
+
+main/dll/player_update.c:
+	.text       start:0x802B6104 end:0x802B8A58
 
 main/dll/dll_01B5_lightfoot.c:
 	.text       start:0x802B8A58 end:0x802B9780
