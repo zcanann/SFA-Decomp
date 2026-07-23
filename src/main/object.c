@@ -399,35 +399,48 @@ int objGetFlagsE5_2(u8* obj)
 
 void Obj_SetModelColorFadeRecursive(GameObject* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf)
 {
+    u8* childScan;
     int i;
+    int f;
 
     obj->colorFadeFrames = frames;
-    obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_INCREASING;
-    obj->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_ACTIVE;
+    f = obj->colorFadeFlags;
+    f &= ~OBJ_COLOR_FADE_FLAG_INCREASING;
+    obj->colorFadeFlags = (u8)f;
+    f = obj->colorFadeFlags;
+    f |= OBJ_COLOR_FADE_FLAG_ACTIVE;
+    obj->colorFadeFlags = (u8)f;
     obj->colorFadeRed = red;
     obj->colorFadeGreen = green;
     obj->colorFadeBlue = blue;
     if (frames == 10000)
     {
-        obj->colorFadeFlags |= OBJ_COLOR_FADE_FLAG_INFINITE;
+        f = obj->colorFadeFlags;
+        f |= OBJ_COLOR_FADE_FLAG_INFINITE;
+        obj->colorFadeFlags = (u8)f;
     }
     else
     {
-        obj->colorFadeFlags &= ~OBJ_COLOR_FADE_FLAG_INFINITE;
+        f = obj->colorFadeFlags;
+        f &= ~OBJ_COLOR_FADE_FLAG_INFINITE;
+        obj->colorFadeFlags = (u8)f;
     }
     if (startAtHalf != 0)
     {
-        obj->colorFadeAlpha = 0x7f;
+        f = 0x7f;
+        obj->colorFadeAlpha = (u8)f;
     }
     else
     {
-        obj->colorFadeAlpha = 0;
+        f = 0;
+        obj->colorFadeAlpha = (u8)f;
     }
 
     i = 0;
+    childScan = (u8*)obj;
     while (i < obj->childCount)
     {
-        Obj_SetModelColorFadeRecursive((GameObject*)obj->childObjs[i], frames, red, green, blue, startAtHalf);
+        Obj_SetModelColorFadeRecursive((GameObject*)((GameObject*)childScan)->childObjs[i], frames, red, green, blue, startAtHalf);
         i++;
     }
 }
@@ -599,32 +612,49 @@ void Obj_BuildInverseWorldTransformMatrix(GameObject* obj, f32* out)
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags)
 {
     f32 savedZ;
+    f32 pos;
+    f32 newPos;
+    f32 scale;
     f32 parentMtx[16];
     GameObject* parent;
+    int objFlags;
 
-    if (obj->anim.parent == NULL)
+    parent = obj->anim.parent;
+    if (parent == NULL)
     {
-        obj->anim.localPosX -= playerMapOffsetX;
-        obj->anim.localPosZ -= playerMapOffsetZ;
+        pos = obj->anim.localPosX;
+        newPos = pos - playerMapOffsetX;
+        obj->anim.localPosX = newPos;
+        pos = obj->anim.localPosZ;
+        newPos = pos - playerMapOffsetZ;
+        obj->anim.localPosZ = newPos;
     }
     if ((u8)flags != 0)
     {
         savedZ = obj->anim.rootMotionScale;
-        if ((obj->objectFlags & 0x8) == 0)
+        objFlags = obj->objectFlags;
+        objFlags &= 0x8;
+        if (objFlags == 0)
         {
-            obj->anim.rootMotionScale = lbl_803DE890;
+            scale = lbl_803DE890;
+            obj->anim.rootMotionScale = scale;
         }
     }
     setMatrixFromObjectTransposed(obj, mtx);
     if ((u8)flags != 0)
     {
-        obj->anim.rootMotionScale = savedZ;
+        scale = savedZ;
+        obj->anim.rootMotionScale = scale;
     }
     parent = obj->anim.parent;
     if (parent == NULL)
     {
-        obj->anim.localPosX += playerMapOffsetX;
-        obj->anim.localPosZ += playerMapOffsetZ;
+        pos = obj->anim.localPosX;
+        newPos = pos + playerMapOffsetX;
+        obj->anim.localPosX = newPos;
+        pos = obj->anim.localPosZ;
+        newPos = pos + playerMapOffsetZ;
+        obj->anim.localPosZ = newPos;
     }
     else
     {
