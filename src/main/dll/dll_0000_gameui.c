@@ -4367,6 +4367,7 @@ void headDisplayDraw(void)
 {
     u32 width;
     u32 height;
+    s16 panelAlpha;
     u8 panelType;
     int viewportY;
     int clampedAlpha;
@@ -4378,7 +4379,6 @@ void headDisplayDraw(void)
     int wavePhaseB;
     int drawY;
     u32 clampedHeight;
-    int panelAlpha;
     f32 wave;
     f32 cameraOrigin;
     if (gHeadDisplayActive != 0)
@@ -4418,7 +4418,8 @@ void headDisplayDraw(void)
         {
             clampedAlpha = 0xff;
         }
-        panelAlpha = gHeadDisplayFadeAlpha = clampedAlpha;
+        panelAlpha = clampedAlpha;
+        gHeadDisplayFadeAlpha = panelAlpha;
         clampedHeight = gHeadDisplayPanelHeight;
         if (clampedHeight > 0x6e)
         {
@@ -4478,8 +4479,7 @@ void headDisplayDraw(void)
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
         lineOffset = 0;
-        wavePhaseA = lineOffset;
-        wavePhaseB = wavePhaseA;
+        wavePhaseA = wavePhaseB = lineOffset;
         for (; lineOffset < (int)height; lineOffset += 4)
         {
             wave = lbl_803E204C * fsin16Approx((u16)(wavePhaseA + lbl_803DD77C * 0x1838));
