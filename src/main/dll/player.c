@@ -241,7 +241,7 @@ int playerState04(int obj, int state, f32 fv);
 int playerStateIceSpell(int obj, int state, f32 fv);
 void fn_802A514C(GameObject* obj, int state);
 int playerState00(int obj, int state);
-int fn_802A71E0(int obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
+s16 fn_802A71E0(int obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
                 f32 samplePhase, f32 moveStepScale, int axis, int flags);
 void fn_802A81B8(GameObject* obj, int state, f32* out);
 int fn_802A8680(int p1, int p2, void* src, f32* vec, int out, int flag);
@@ -10083,7 +10083,7 @@ int playerState00(int obj, int state)
     return 2;
 }
 
-int fn_802A71E0(int obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
+s16 fn_802A71E0(int obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
                 f32 samplePhase, f32 moveStepScale, int axis, int flags)
 {
     ObjModel* model;
