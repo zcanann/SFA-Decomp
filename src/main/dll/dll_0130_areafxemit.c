@@ -266,7 +266,7 @@ void AreaFxEmit_free(AreaFxEmitObject* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void AreaFxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void AreaFxEmit_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
         return;

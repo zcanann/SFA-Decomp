@@ -129,9 +129,9 @@ void MoonSeedPlantingSpot_free(int obj)
     ObjGroup_RemoveObject(obj, MSPLANTING_OBJ_GROUP);
 }
 
-void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void MoonSeedPlantingSpot_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8* inner = ((GameObject*)p1)->extra;
+    u8* inner = ((GameObject*)obj)->extra;
     s32 v = visible;
     if (v != 0)
     {
@@ -158,7 +158,7 @@ void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visi
         {
             fn_8003B608(0xff, 0xff, 0xff);
         }
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

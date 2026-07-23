@@ -104,14 +104,14 @@ void DFSH_Door2Speci_free(void)
 {
 }
 
-void DFSH_Door2Speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DFSH_Door2Speci_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visibleFlag;
 
     visibleFlag = visible;
     if (visibleFlag != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4E38);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E4E38);
     }
 }
 

@@ -513,11 +513,11 @@ void DoorF4_free(int obj)
     ObjGroup_RemoveObject(obj, DOORF4_OBJ_GROUP);
 }
 
-void DoorF4_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DoorF4_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3680);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E3680);
 }
 
 void DoorF4_hitDetect(void)

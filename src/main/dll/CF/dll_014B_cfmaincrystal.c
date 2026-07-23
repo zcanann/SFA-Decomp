@@ -332,11 +332,11 @@ void CFMainCrystal_free(int* obj)
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
 
-void CFMainCrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void CFMainCrystal_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E4210);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E4210);
 }
 
 void CFMainCrystal_hitDetect(void)

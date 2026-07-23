@@ -66,12 +66,12 @@ void DFP_Floorbar_free(int* obj)
     return;
 }
 
-void DFP_Floorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void DFP_Floorbar_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 t = visible;
     if (t != 0)
     {
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

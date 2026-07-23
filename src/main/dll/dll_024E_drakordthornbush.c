@@ -70,21 +70,21 @@ void drakord_thornbush_free(int obj)
     }
 }
 
-void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void drakord_thornbush_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    DrakordThornbushState* inner = (DrakordThornbushState*)((GameObject*)p1)->extra;
+    DrakordThornbushState* inner = (DrakordThornbushState*)((GameObject*)obj)->extra;
     f32 lightScale;
-    if (((GameObject*)p1)->anim.seqId == THORNBUSH_SEQ_LIGHTNING)
+    if (((GameObject*)obj)->anim.seqId == THORNBUSH_SEQ_LIGHTNING)
     {
         lightScale = inner->lightScale;
         if (lightScale < 10.0f)
         {
             lightScale = 150.0f;
         }
-        Obj_UpdateLightningCluster((GameObject*)p1, inner->lightningEntries, 3, lightScale,
+        Obj_UpdateLightningCluster((GameObject*)obj, inner->lightningEntries, 3, lightScale,
                                    &inner->light);
     }
-    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void drakord_thornbush_hitDetect(int obj)

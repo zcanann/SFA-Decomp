@@ -550,21 +550,21 @@ void bossdrakor_free(GameObject* obj)
     Music_Trigger(MUSICTRIG_citytombs, 0);
 }
 
-void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
+void bossdrakor_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    int inner = *(int*)&((GameObject*)p1)->extra;
+    int inner = *(int*)&((GameObject*)obj)->extra;
     f32 pos2;
     f32 pos1;
     f32 pos0;
     ModelLightStruct* light;
     int val;
     BossDrakorState* s = (BossDrakorState*)inner;
-    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E651C);
-    ObjPath_GetPointWorldPosition((GameObject*)p1, 0, &s->homePosX, &s->homePosY,
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E651C);
+    ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &s->homePosX, &s->homePosY,
                                   &s->homePosZ, 0);
     if (s->lightObj != NULL)
     {
-        ObjPath_GetPointWorldPosition((GameObject*)p1, 5, &pos0, &pos1, &pos2, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 5, &pos0, &pos1, &pos2, 0);
         modelLightStruct_setPosition(s->lightObj, pos0, pos1, pos2);
         light = s->lightObj;
         if (light->glowType != 0 && light->enabled != 0)

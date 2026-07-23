@@ -783,13 +783,13 @@ void dll_CE_free(int* obj)
     (*gBaddieControlInterface)->releaseState((GameObject*)obj, state, 32);
 }
 
-void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void dll_CE_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-        GroundBaddieState* sub = ((GameObject*)p1)->extra;
+        GroundBaddieState* sub = ((GameObject*)obj)->extra;
     f32 alpha;
     f32 zero = 0.0f;
 
-    if (visible == 0 || ((GameObject*)p1)->userData1 != 0 || sub->targetState == 0)
+    if (visible == 0 || ((GameObject*)obj)->userData1 != 0 || sub->targetState == 0)
     {
         return;
     }
@@ -798,7 +798,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     {
         fn_8003B5E0(200, 0, 0, alpha);
     }
-    objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_CE_hitDetect_nop(void)
