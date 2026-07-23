@@ -74,10 +74,13 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 	.text       start:0x800173E4 end:0x80017434
 
 main/textrender.c:
-	.text       start:0x80017434 end:0x8001CB3C
+	.text       start:0x80017434 end:0x8001C794
 	.data       start:0x802C8D40 end:0x802CA440
 	.bss        start:0x80339980 end:0x8033BE60
 	.sdata      start:0x803DB378 end:0x803DB408
+
+main/textrender_boxtex.c:
+	.text       start:0x8001C794 end:0x8001CB3C
 
 main/modellight.c:
 	.text       start:0x8001CB3C end:0x8001F54C
@@ -296,11 +299,14 @@ main/dll/expgfxresource.c:
 	.text       start:0x8009AD44 end:0x8009B0E0
 
 main/dll/expgfx.c:
-	.text       start:0x8009B0E0 end:0x8009FFF0
+	.text       start:0x8009B0E0 end:0x8009DDEC
 	.data       start:0x8030FBF0 end:0x8030FD20
 	.bss        start:0x8039AB58 end:0x8039BE98
 	.sdata      start:0x803DB790 end:0x803DB798
 	.sbss       start:0x803DD250 end:0x803DD280
+
+main/dll/expgfx_render.c:
+	.text       start:0x8009DDEC end:0x8009FFF0
 
 main/dll/dll_000B_dll0b.c:
 	.text       start:0x8009FFF0 end:0x800A3A40

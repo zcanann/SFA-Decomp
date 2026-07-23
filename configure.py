@@ -371,6 +371,11 @@ cflags_dll_noopt_nolifetimes_noloopinv_nostrength = [
     "-opt", "nopeephole,noschedule,nolifetimes,noloopinvariants,nostrength",
 ]
 
+cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nocse,nolifetimes,noloopinvariants,nopropagation,nostrength",
+]
+
 # ...plus common-subexpression elimination off (opt_common_subs off).
 cflags_dll_noopt_nocse = [
     *cflags_base,
@@ -406,6 +411,12 @@ cflags_dll_noopt_noprop_noinline = [
 cflags_dll_noopt_noprop_nostrength = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,nopropagation,nostrength",
+]
+
+cflags_dll_noopt_noprop_nostrength_noautoinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nopropagation,nostrength",
+    "-inline", "noauto",
 ]
 
 # ...plus loop-invariant code motion off (opt_loop_invariants off).
@@ -1010,6 +1021,7 @@ config.libs = [
             Object(Matching, "main/fileio.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt_nolifetimes_noinline),
             Object(NonMatching, "main/textrender.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength),
             Object(NonMatching, "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/vecmath.c", cflags=cflags_dll_noopt_nostrength),
@@ -1110,7 +1122,8 @@ config.libs = [
                 section_alignments={".data": 4},
             ),
             Object(NonMatching, "main/maketex.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/dll/expgfx.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/dll/expgfx.c", cflags=cflags_dll_noopt_noprop_nostrength_noautoinline),
+            Object(NonMatching, "main/dll/expgfx_render.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/dll/dll_000B_dll0b.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/dll/dll_000C_projgfx.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_000D_playershadow.c", cflags=cflags_dll_noopt),
