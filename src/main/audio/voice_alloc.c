@@ -41,6 +41,7 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
     s32 selectedVoice;
     u16 priorityGroup;
     u32 restrictToStreamKind;
+    u32 doScan;
     u32 scannedGroup;
     SynthVoiceListNode* freeSlot;
     SynthVoiceListNode* slotBase;
@@ -55,22 +56,18 @@ u32 voiceAllocate(u8 priority, u8 maxInstances, u16 allocId, u8 streamKind)
             restrictToStreamKind = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
                                     SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->fxVoiceCount);
 
-            /* A negative count bypasses the per-allocation-id scan. */
-            allocationCount = -1;
-            if (SYNTH_CONFIGURATION->fxVoiceCount > maxInstances)
-                allocationCount = 0;
+            doScan = SYNTH_CONFIGURATION->fxVoiceCount > maxInstances;
         }
         else
         {
             restrictToStreamKind = (voiceMusicRunning >= SYNTH_CONFIGURATION->musicVoiceCount &&
                                     SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->musicVoiceCount);
 
-            allocationCount = -1;
-            if (SYNTH_CONFIGURATION->musicVoiceCount > maxInstances)
-                allocationCount = 0;
+            doScan = SYNTH_CONFIGURATION->musicVoiceCount > maxInstances;
         }
 
-        if (allocationCount >= 0)
+        allocationCount = -1;
+        if (doScan)
         {
             allocationCount = 0;
             selectedVoice = -1;
