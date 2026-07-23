@@ -140,7 +140,6 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void animatedobj_update(int* obj)
 {
-    int* match = NULL;
     ObjSeqState* seq = ((GameObject*)obj)->extra;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
 
@@ -152,6 +151,7 @@ void animatedobj_update(int* obj)
         if (res != 0 && ((GameObject*)obj)->seqIndex == -2)
         {
             int slot8 = *(s8*)((char*)seq + 0x57);
+            int* match = NULL;
             int* list;
             int slot;
             int cnt;
