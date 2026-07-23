@@ -4,7 +4,7 @@
  * The fireball spawns a model light (objCreateLight) tinted per colorIndex
  * from lbl_80320978 (owned by the staff TU), flies for flightDuration
  * computed from its launch velocity, optionally homes onto a target
- * hit-volume (fn_8016F260) on a spiral (spiralPhase), runs ground collision
+ * hit-volume (Fireball_homeToTarget) on a spiral (spiralPhase), runs ground collision
  * when stateFlags bit 4 is set, and on contact plays an impact SFX /
  * particle burst, frees its light and fades out. seqId 2110 hides the
  * object; seqId 0x6e8 contact recolors it from the combat source palette.
@@ -48,7 +48,7 @@ u8 gFireballColorIndexTable[8] = {0, 2, 4, 0, 0, 0, 0, 0};
 /* anim.seqId of the hit object that triggers combat-source recolor. */
 #define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6e8
 
-void fn_8016F260(GameObject* obj, int* state, int* other);
+void Fireball_homeToTarget(GameObject* obj, int* state, int* other);
 
 u8 fn_8016F16C(GameObject* obj)
 {
@@ -86,7 +86,7 @@ int Fireball_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void fn_8016F260(GameObject* obj, int* state, int* other)
+void Fireball_homeToTarget(GameObject* obj, int* state, int* other)
 {
     ObjHitVolumeRuntimeTransform* hitVolume =
         &((GameObject*)other)->anim.hitVolumeTransforms[((GameObject*)other)->hitVolumeIndex];
@@ -426,7 +426,7 @@ void Fireball_update(GameObject* obj)
             }
             else
             {
-                fn_8016F260(obj, (int*)state, other);
+                Fireball_homeToTarget(obj, (int*)state, other);
             }
         }
         state->posX += obj->anim.velocityX * timeDelta;

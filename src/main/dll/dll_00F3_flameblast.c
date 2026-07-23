@@ -3,7 +3,7 @@
  * the pushable/transporter object family.
  *
  * Spawned by Tricky (getTrickyObject), the blast flies along the rotated
- * fire direction: fn_8017805C seeds the velocity from Tricky's heading and
+ * fire direction: flameblast_seedVelocity seeds the velocity from Tricky's heading and
  * the path/queued-particle origin, and flameblast_update integrates the
  * launch position over a per-frame timer while arming the damage hit
  * volume once the timer passes a threshold. The object frees itself when
@@ -48,14 +48,14 @@ STATIC_ASSERT(offsetof(FlameblastPlacement, initialTimer) == 0x1A);
 
 #define FLAMEBLAST_HIT_VOLUME_SLOT 0x1a
 
-int fn_8017805C(GameObject* obj, FlameblastState* state);
+int flameblast_seedVelocity(GameObject* obj, FlameblastState* state);
 
 void objSetAnimSpeedTo1(GameObject* obj)
 {
     ((FlameblastState*)obj->extra)->freeRequested = 1;
 }
 
-int fn_8017805C(GameObject* obj, FlameblastState* state)
+int flameblast_seedVelocity(GameObject* obj, FlameblastState* state)
 {
     GameObject* tricky = getTrickyObject();
     f32* origin;
@@ -122,7 +122,7 @@ void flameblast_update(GameObject* obj)
     if (state->timer > 24.0f)
     {
         state->timer = state->timer - 24.0f;
-        if (fn_8017805C(obj, state) == 0)
+        if (flameblast_seedVelocity(obj, state) == 0)
         {
             return;
         }
@@ -145,7 +145,7 @@ void flameblast_update(GameObject* obj)
 void flameblast_init(GameObject* obj, FlameblastPlacement* placement)
 {
     FlameblastState* state = obj->extra;
-    fn_8017805C(obj, state);
+    flameblast_seedVelocity(obj, state);
     state->timer = 3.4285715f * (f32)placement->initialTimer;
     state->hitVolumeDelay = 2;
 }

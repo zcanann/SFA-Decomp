@@ -53,7 +53,7 @@
 
 void EdibleMushroom_update(u8* self);
 void EdibleMushroom_hitDetect(u8* obj);
-s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist);
+s16 EdibleMushroom_findClearApproachAngle(u8* obj, GameObject* player, u8* state, f32 dist);
 
 s16 gEdibleMushroomMoveIdTable[12] = {0, 1, 6, 2, 3, 4, 0, 5, 6, 7, -1, 0};
 
@@ -150,7 +150,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                 else
                 {
                     ((EdibleMushroomState*)state)->moveAngle =
-                        fn_801D129C(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
+                        EdibleMushroom_findClearApproachAngle(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
                 }
                 ((EdibleMushroomState*)state)->animState = 1;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_mushrele16);
@@ -253,7 +253,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                     else
                     {
                         ((EdibleMushroomState*)state)->moveAngle =
-                            fn_801D129C(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
+                            EdibleMushroom_findClearApproachAngle(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
                     }
                     ((EdibleMushroomState*)state)->animState = 1;
                     ((GameObject*)obj)->anim.rotX = (s16)(((EdibleMushroomState*)state)->moveAngle - 0x4000);
@@ -288,7 +288,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                     else
                     {
                         ((EdibleMushroomState*)state)->moveAngle =
-                            fn_801D129C(obj, player, state, ((EdibleMushroomState*)state)->retreatRange);
+                            EdibleMushroom_findClearApproachAngle(obj, player, state, ((EdibleMushroomState*)state)->retreatRange);
                     }
                     ((EdibleMushroomState*)state)->animState = 5;
                     ((GameObject*)obj)->anim.rotX = ((EdibleMushroomState*)state)->moveAngle;
@@ -336,7 +336,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
             else
             {
                 ((EdibleMushroomState*)state)->moveAngle =
-                    fn_801D129C(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
+                    EdibleMushroom_findClearApproachAngle(obj, player, state, ((EdibleMushroomState*)state)->lungeRange);
             }
             ((EdibleMushroomState*)state)->animState = 1;
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mushrele16);
@@ -466,7 +466,7 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
     objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, 0.0f, ((GameObject*)obj)->anim.velocityZ * timeDelta);
 }
 
-s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist)
+s16 EdibleMushroom_findClearApproachAngle(u8* obj, GameObject* player, u8* state, f32 dist)
 {
     s16 angle;
     s16 anglePlus;
