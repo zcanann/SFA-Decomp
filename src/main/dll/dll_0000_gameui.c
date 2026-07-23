@@ -3251,6 +3251,15 @@ void hudUpdateMinimapReveal(void)
 
 void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
 {
+    u8* base;
+    int icon;
+    int iconIndex;
+    int rowOffset;
+    int i;
+    GameObject* player;
+    int k;
+    int slotCount;
+    int sel;
     s16 fade;
     u32 label;
     int ax0;
@@ -3269,15 +3278,6 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
     int bm2;
     int bm1;
     int bm0;
-    u8* base;
-    int icon;
-    int iconIndex;
-    int rowOffset;
-    int i;
-    GameObject* player;
-    int k;
-    int slotCount;
-    int sel;
     int aPrevCharset2;
     char* aTextPtr;
     s16 alpha;
@@ -3366,7 +3366,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
         GXSetScissor(0, 0, 0x280, 0x1E0);
         hudDrawCMenu(cMenuArg0, cMenuArg1, cMenuArg2);
         rowOffset = 0;
-        for (iconIndex = 0; iconIndex < GCMENU_ITEM_ICON_COUNT; iconIndex++, rowOffset += 0x32)
+        for (iconIndex = 0; iconIndex < GCMENU_ITEM_ICON_COUNT; rowOffset += 0x32, iconIndex++)
         {
             if (gCMenuItemIcons[iconIndex] > 1)
             {
