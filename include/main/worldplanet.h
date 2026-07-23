@@ -141,9 +141,31 @@ STATIC_ASSERT(offsetof(WorldPlanetState, selectedPlanet) == 0x10);
 STATIC_ASSERT(offsetof(WorldPlanetState, unlockedPlanetMask) == 0x11);
 STATIC_ASSERT(offsetof(WorldPlanetState, orbitSoundFrameCount) == 0x14);
 
+typedef struct WorldPlanetObjectTables
+{
+    int orbitObjectIds[WORLDPLANET_PLANET_COUNT];
+    int orbitAngleOffsets[WORLDPLANET_PLANET_COUNT];
+    int flightPathObjectIds[WORLDPLANET_PLANET_COUNT];
+} WorldPlanetObjectTables;
+
+STATIC_ASSERT(sizeof(WorldPlanetObjectTables) == 0x3c);
+
+extern u8 gWorldPlanetHintFlagTable[8];
+extern u8 gWorldPlanetDefaultSelectOrder[8];
+extern u8 gWorldPlanetSelectionToIndex[8];
+extern u8 gWorldPlanetTitleStringIds[8];
+extern u8 gWorldPlanetWarpMapIndices[6];
+extern u8 gWorldPlanetLoadMapIndices[6];
+extern u8 gWorldPlanetBriefingSpeakerModel[8];
+extern int gWorldPlanetSavedSelection;
+extern int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT];
+extern WorldPlanetObjectTables gWorldPlanetObjectIdTable;
+
 extern ObjectDescriptor gWorldPlanetObjDescriptor;
 
 int worldplanet_getExtraSize(void);
+int worldplanet_getObjectTypeId(void);
+void worldplanet_readMapInput(GameObject* obj, s8* outX, s8* outY);
 void worldplanet_free(void);
 void worldplanet_render(GameObject* obj, u32 param_2, u32 param_3, u32 param_4, u32 param_5, char visible);
 void worldplanet_hitDetect(void);

@@ -366,6 +366,11 @@ cflags_dll_noopt_nostrength = [
     "-opt", "nopeephole,noschedule,nostrength",
 ]
 
+cflags_dll_noopt_nolifetimes_noloopinv_nostrength = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nolifetimes,noloopinvariants,nostrength",
+]
+
 # ...plus common-subexpression elimination off (opt_common_subs off).
 cflags_dll_noopt_nocse = [
     *cflags_base,
@@ -1824,6 +1829,8 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/worldasteroids.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/worldplanet_lighting.c", cflags=cflags_dll_nosched),
             Object(NonMatching, "main/worldplanet.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/worldplanet_update.c", cflags=cflags_dll_noopt_nolifetimes_noloopinv_nostrength),
+            Object(NonMatching, "main/worldplanet_init.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/worldobj.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/snowclaw.c", cflags=cflags_dll_noopt_noloopinv_noinline),
             Object(MatchingFor("GSAE01"), "main/crcloudrace.c", cflags=cflags_dll_noopt_noinline),
