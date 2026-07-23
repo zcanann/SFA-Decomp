@@ -227,9 +227,9 @@ void tumbleweed_free(int* obj)
     ObjGroup_RemoveObject((int)obj, TUMBLEWEED_OBJGROUP_SECONDARY);
 }
 
-void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void tumbleweed_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if ((s32)visible >= 1) objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, 1.0f);
+    if ((s32)visible >= 1) objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, 1.0f);
 }
 void tumbleweed_updateStateMachine(GameObject* obj)
 {

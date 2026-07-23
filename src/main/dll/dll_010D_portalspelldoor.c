@@ -58,11 +58,11 @@ void PortalSpellDoor_free(void)
 {
 }
 
-void PortalSpellDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void PortalSpellDoor_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, p2, p3, p4, p5, lbl_803E3A88);
+        objRenderModelAndHitVolumes((GameObject*)obj, p2, p3, p4, p5, lbl_803E3A88);
 }
 
 void PortalSpellDoor_hitDetect(void)
@@ -129,13 +129,13 @@ void PortalSpellDoor_update(GameObject* obj)
 
 void PortalSpellDoor_init(GameObject* obj, u8* data)
 {
-    PortalSpellDoorState* sub = obj->extra;
+    PortalSpellDoorState* state = obj->extra;
     obj->anim.rotX = (s16)((s32)(s8)data[0x18] << 8);
     obj->anim.rotY = (s16)((s32) * (s16*)(data + 0x1c) << 8);
     obj->anim.rootMotionScale = lbl_803E3A8C;
     {
         f32 _ab = obj->anim.hitboxScale * obj->anim.rootMotionScale;
-        sub->openAmount = _ab * lbl_803E3A90;
+        state->openAmount = _ab * lbl_803E3A90;
     }
     if (mainGetBit(*(s16*)(data + 0x1e)) != 0)
     {
@@ -145,7 +145,7 @@ void PortalSpellDoor_init(GameObject* obj, u8* data)
                   (PORTALSPELLDOOR_OBJFLAG_UPDATE_DISABLED | PORTALSPELLDOOR_OBJFLAG_HIDDEN |
                    PORTALSPELLDOOR_OBJFLAG_HITDETECT_DISABLED));
     }
-    sub->openTimer = -1;
+    state->openTimer = -1;
 }
 
 void PortalSpellDoor_release(void)
