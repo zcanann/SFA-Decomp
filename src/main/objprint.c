@@ -1430,15 +1430,22 @@ typedef struct
 
 #define OBJPRINT_CHILD_TABLE(staff) (*(char**)(*(char**)((staff) + 0x50) + 0x2c))
 
-void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, int c)
+void staffMtxFn_8003b620(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c)
 {
-    Vec va;
+    f32 va[3];
     Vec vb;
     int k;
     char* q;
     Vec* vp;
     int i;
     char* base;
+    u8* model;
+    int obj;
+    char* staff;
+
+    staff = (char*)staffArg;
+    obj = (int)objArg;
+    model = (u8*)modelArg;
 
     if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
     {
@@ -1448,7 +1455,7 @@ void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, in
         k = 1;
         off = 0x18;
         q = base;
-        vp = &va;
+        vp = (Vec*)va;
 
         while (i < *(s16*)(base + 0xb0))
         {
@@ -1457,23 +1464,24 @@ void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, in
                 MtxPtr jm;
                 int joint;
                 joint = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
+                jm = (MtxPtr)ObjModel_GetJointMatrix(model, joint);
                 vp->x = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[0];
-                va.y = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[1];
-                va.z = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[2];
+                va[1] = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[1];
+                va[2] = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))[1].pos[2];
                 PSMTXMultVec(jm, vp, vp);
                 vp->x = vp->x + playerMapOffsetX;
-                va.z = va.z + playerMapOffsetZ;
+                va[2] = va[2] + playerMapOffsetZ;
                 *(f32*)(q + 0x6c) = vp->x;
-                *(f32*)(q + 0x74) = va.y;
-                *(f32*)(q + 0x7c) = va.z;
+                *(f32*)(q + 0x74) = va[1];
+                *(f32*)(q + 0x7c) = va[2];
             }
             if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
             {
                 ChildEnt* row = (ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off);
                 int idx2 = row->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr mtx2 = (MtxPtr)(*(char**)(model + ((((ObjModel*)model)->bufferFlags & 1) * 4) + 0xc) + idx2 * 0x40);
-                vb.x = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))->pos[0];
+                MtxPtr mtx2;
+                vb.x = row->pos[0];
+                mtx2 = (MtxPtr)(*(char**)(model + ((((ObjModel*)model)->bufferFlags & 1) * 4) + 0xc) + idx2 * 0x40);
                 vb.y = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))->pos[1];
                 vb.z = ((ChildEnt*)(OBJPRINT_CHILD_TABLE(staff) + off))->pos[2];
                 PSMTXMultVec(mtx2, &vb, &vb);
@@ -1492,18 +1500,18 @@ void staffMtxFn_8003b620(int staff, GameObject* obj, int model, int a, int b, in
         if (*(s16*)(base + 0xb0) != 0)
         {
             char* r = base + *(s16*)(base + 0xb2) * 4;
-            va.x = *(f32*)(r + 0x6c);
-            va.y = *(f32*)(r + 0x74);
-            va.z = *(f32*)(r + 0x7c);
-            (*(void (**)(int, int, Vec*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, (int)obj, &vb);
-            va.x = va.x - vb.x;
-            va.y = va.y - vb.y;
-            va.z = va.z - vb.z;
-            ((GameObject*)staff)->anim.rotX = getAngle(va.x, va.z);
+            va[0] = *(f32*)(r + 0x6c);
+            va[1] = *(f32*)(r + 0x74);
+            va[2] = *(f32*)(r + 0x7c);
+            (*(void (**)(int, int, Vec*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))((int)staff, obj, &vb);
+            va[0] = va[0] - vb.x;
+            va[1] = va[1] - vb.y;
+            va[2] = va[2] - vb.z;
+            ((GameObject*)staff)->anim.rotX = getAngle(va[0], va[2]);
             {
-                f32 dx = va.x * va.x;
-                f32 dz = va.z * va.z;
-                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va.y, sqrtf(dx + dz)) + 0x4000);
+                f32 dx = va[0] * va[0];
+                f32 dz = va[2] * va[2];
+                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
             }
             ((GameObject*)staff)->anim.rotZ = 0;
         }
