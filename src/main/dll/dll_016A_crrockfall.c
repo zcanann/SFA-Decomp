@@ -75,7 +75,7 @@ static int crrockfall_isPlayerInRange(GameObject* obj)
     return 0;
 }
 
-f32 fn_801ACCFC(GameObject* obj)
+f32 crrockfall_findFloorY(GameObject* obj)
 {
     CrRockfallState* state = (obj)->extra;
     TrackGroundHit** list;
@@ -146,7 +146,7 @@ void crrockfall_update(int* obj)
 
     if (state->floorFound == 0)
     {
-        state->floorY = fn_801ACCFC((GameObject*)obj);
+        state->floorY = crrockfall_findFloorY((GameObject*)obj);
         if (state->floorFound != 0 && modelState != NULL)
         {
             modelState->overrideWorldPosY = state->floorY;

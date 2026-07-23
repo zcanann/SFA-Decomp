@@ -11,7 +11,7 @@
  *     debugPrintfxy / debugPrintSetColor write tagged records into
  *     debugLogBuffer) replayed by debugPrintDraw, which lays the log out
  *     twice (measure then draw) and rasterizes glyphs through
- *     fn_80136A40 (per-glyph texture select + textRenderChar) and
+ *     debugPrintDrawGlyph (per-glyph texture select + textRenderChar) and
  *     debugPrintDrawRecord (record interpreter: color/tab/newline/position tags).
  *   - Tricky companion helpers: queued-path particle emission
  *     (Tricky_emitQueuedPathParticles), command-target selection,
@@ -293,7 +293,7 @@ static inline void errDisplayFillBackdrop(void)
 }
 void* errDisplayThreadMain(void* unused);
 
-int fn_80136A40(int unused, int c)
+int debugPrintDrawGlyph(int unused, int c)
 {
     u8* tbl;
     u8 first;
@@ -531,7 +531,7 @@ int debugPrintDrawRecord(int color, u8* p)
             }
             break;
         default:
-            w = fn_80136A40(color, c);
+            w = debugPrintDrawGlyph(color, c);
             break;
         }
         if (gDebugFixedWidthMode != 0 && c >= 0x20 && c <= 0x7f)

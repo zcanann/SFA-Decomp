@@ -2,7 +2,7 @@
  * dll_0256_dimsnowhorn1 (DLL 0x256) - the rideable SnowHorn mammoth found in
  * DIM (Dinosaur InfernoMountain).  Fox can mount the mammoth and use it to
  * clear puzzle obstacles.  The object runs a 12-state BaddieState machine
- * (stateHandler00-0B); the riding sub-loop (fn_802BB4B4) handles stick/button
+ * (stateHandler00-0B); the riding sub-loop (DIMSnowHorn1_ridingUpdate) handles stick/button
  * input and the air-meter while mounted, and DIMSnowHorn1_update coordinates
  * the full per-frame tick.
  */
@@ -1136,7 +1136,7 @@ void DIMSnowHorn1_hitDetect(void)
 {
 }
 
-void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
+void DIMSnowHorn1_ridingUpdate(GameObject* obj, int frameStep, int slot)
 {
     DIMSnowHorn1State* state;
     int* viewSlot;
@@ -1290,7 +1290,7 @@ void DIMSnowHorn1_update(GameObject* obj)
     if (((DIMSnowHorn1State*)data)->mountMode == 2)
     {
         ((DIMSnowHorn1State*)data)->baddie.physicsActive = 1;
-        fn_802BB4B4(obj, framesThisStep, -1);
+        DIMSnowHorn1_ridingUpdate(obj, framesThisStep, -1);
     }
     else
     {
@@ -1304,7 +1304,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         (obj)->anim.velocityY = fz;
         (obj)->anim.velocityZ = fz;
         (*gPathControlInterface)->attachObject((void*)obj, (u8*)&((DIMSnowHorn1State*)data)->baddie + 4);
-        fn_802BB4B4(obj, framesThisStep, -1);
+        DIMSnowHorn1_ridingUpdate(obj, framesThisStep, -1);
     }
     if (((DIMSnowHorn1State*)data)->mountMode == 0)
     {

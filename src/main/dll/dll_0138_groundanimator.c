@@ -115,7 +115,7 @@ f32 groundanimator_setScale(int* obj, int* target)
     return g->radius * (g->sinkDepth / ((100.0f) * (f32)(u32)r31->maxSinkDepth));
 }
 
-void fn_801932C8(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* placement)
+void groundanimator_gatherVertices(int* obj, GroundAnimatorState* state, GroundanimatorPlacement* placement)
 {
     void* entry;
     void* vtx;
@@ -323,7 +323,7 @@ void groundanimator_update(int* obj)
             buf = (int)mmAlloc(g->vertCount * 6, 5, 0);
             g->falloffBuf = buf;
             g->heightBuf = buf + g->vertCount * 4;
-            fn_801932C8(obj, g, r20);
+            groundanimator_gatherVertices(obj, g, r20);
         }
     }
     if (g->vertCount == 0)

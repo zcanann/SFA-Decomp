@@ -1554,7 +1554,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     }
 }
 
-int fn_80061DD8(GameObject* obj, void* u1, void* u2, int count, Vec3f* vertices, Vec3f* outVertices,
+int cullVisibleShadowTriangles(GameObject* obj, void* u1, void* u2, int count, Vec3f* vertices, Vec3f* outVertices,
                 TrackShadowTriangle* triangles, int limit)
 {
     int vertexIndex = 0;
@@ -1848,7 +1848,7 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
         lbl_803DCEF0 = idxOut;
         lbl_803DCEE4 = (int)vtx;
         trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
-        fn_80061DD8(obj, buf48, bufA8, idxOut, (Vec3f*)gShadowVolumeBuffer, (Vec3f*)cache,
+        cullVisibleShadowTriangles(obj, buf48, bufA8, idxOut, (Vec3f*)gShadowVolumeBuffer, (Vec3f*)cache,
                     (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
     }
     objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);

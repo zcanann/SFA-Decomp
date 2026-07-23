@@ -130,7 +130,7 @@ typedef struct DRcradleSnowBikeFlags
 } DRcradleSnowBikeFlags;
 
 extern f32 lbl_803E5AEC;
-void fn_801EC7A0(int obj, int state)
+void SnowBike_buildOrientationMatrices(int obj, int state)
 {
     MatrixTransform v;
     SnowBikeState* s = (SnowBikeState*)state;
@@ -731,7 +731,7 @@ void SnowBike_hitDetect(GameObject* obj)
     state->linkedObj = 0;
 }
 
-void fn_801EC7A0(int obj, int state);
+void SnowBike_buildOrientationMatrices(int obj, int state);
 
 void SnowBike_update(GameObject* obj)
 {
@@ -798,7 +798,7 @@ void SnowBike_update(GameObject* obj)
             if (drshackle_updateAttachedPosition(obj, (ShackleSwingState*)state) != 0)
             {
                 fn_801EBD60(obj, (int)state);
-                fn_801EC7A0((int)obj, (int)state);
+                SnowBike_buildOrientationMatrices((int)obj, (int)state);
                 if (s->collisionFxTimer)
                 {
                     PSVECScale((f32*)(state + 0x464), (f32*)(state + 0x47c),
@@ -879,7 +879,7 @@ void SnowBike_update(GameObject* obj)
             }
             s->stickX = clamped;
             fn_801EBD60(obj, (int)state);
-            fn_801EC7A0((int)obj, (int)state);
+            SnowBike_buildOrientationMatrices((int)obj, (int)state);
             if (s->collisionFxTimer)
             {
                 PSVECScale((f32*)(state + 0x464), (f32*)(state + 0x47c), s->collisionFxDamping);
