@@ -47,12 +47,15 @@ void ControlLight_hitDetect(void)
 
 void ControlLight_update(GameObject* obj)
 {
-    ControlLightState* state;
     u8 newBit;
-    state = obj->extra;
+    u32 bit;
+    ControlLightState* state;
+    GameObject* self = obj;
+    state = self->extra;
     newBit = mainGetBit(state->gameBit);
+    bit = newBit;
 
-    if ((u32)newBit != state->lastBit)
+    if (bit != state->lastBit)
     {
         switch (state->invertMode)
         {
@@ -67,9 +70,9 @@ void ControlLight_update(GameObject* obj)
             for (i = 0, lightIter = objs; i < count; i++)
             {
                 lightObj = *lightIter;
-                if (Vec_distance(&obj->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
+                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
                 {
-                    pointlight_setEffectState(lightObj, newBit);
+                    pointlight_setEffectState((GameObject*)lightObj, newBit);
                 }
                 lightIter++;
             }
@@ -85,13 +88,13 @@ void ControlLight_update(GameObject* obj)
             GameObject** objs = (GameObject**)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
             GameObject** lightIter;
             i = 0, lightIter = objs;
-            invBit = newBit == 0;
+            invBit = bit == 0;
             for (; i < count; i++)
             {
                 lightObj = *lightIter;
-                if (Vec_distance(&obj->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
+                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
                 {
-                    pointlight_setEffectState(lightObj, (u8)invBit);
+                    pointlight_setEffectState((GameObject*)lightObj, (u8)invBit);
                 }
                 lightIter++;
             }

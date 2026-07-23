@@ -1923,7 +1923,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/LGT/dll_02A9_lgtpointlight.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/LGT/dll_02AA_lgtdirectionallight.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/LGT/dll_02AB_lgtprojectedlight.c", cflags=cflags_dll_noopt_nocse),
-            Object(NonMatching, "main/dll/LGT/dll_02AC_lgtcontrollight.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/LGT/dll_02AC_lgtcontrollight.c", cflags=cflags_dll_noopt_level1),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02AD_softbody.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02AE_waterflowwe.c", cflags=cflags_dll_noopt, extra_cflags=["-opt", "nodeadstore"]),
             Object(MatchingFor("GSAE01"), "main/dll/dll_02AF_tree.c", cflags=cflags_dll_noopt_nocse_noinline),
