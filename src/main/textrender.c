@@ -103,22 +103,6 @@ typedef struct
     u8 pad26[2];       /* 0x26 */
 } TextFont;
 
-typedef struct GameTextBox
-{
-    u8 unk00[8];
-    u16 width;
-    u16 height;
-    u8 unk0C[6];
-    u8 alignment;
-    u8 style;
-    s16 x;
-    s16 y;
-    s16 cursorX;
-    s16 cursorY;
-    u16 flags;
-    u8 alpha;
-    u8 unk1F;
-} GameTextBox;
 STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
 STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
 
@@ -223,22 +207,6 @@ typedef struct
     u16 r, g, b, a;
 } SubtitleCmd;
 
-#define SUBTITLE_LINE_COUNT 256
-
-typedef struct SubtitleLineTable
-{
-    void* blocks[SUBTITLE_LINE_COUNT];
-    char* lines[SUBTITLE_LINE_COUNT];
-    f32 times[SUBTITLE_LINE_COUNT];
-} SubtitleLineTable;
-
-typedef struct SubtitleTextEntry
-{
-    u8 pad0[2];
-    u16 count;
-    u8 pad4[4];
-    char** strs;
-} SubtitleTextEntry;
 
 /*
  * In-string formatting control codes (Unicode PUA, 0xe000..0xf8ff) and the
@@ -261,9 +229,6 @@ typedef struct SubtitleTextEntry
 #define TEXT_ALIGN_CENTER  2
 #define TEXT_ALIGN_JUSTIFY 3
 
-#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT  0x43b
-#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID   0x43e
-#define TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT 0x43d
 
 /* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
 #define GAMETEXT_FONT_JAPANESE 0
@@ -2777,117 +2742,6 @@ GlyphResource802CA100 lbl_802CA100 = {
     0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
     },
 };
-void subtitleBuildLineTable(void)
-{
-    char* str;
-    SubtitleLineTable* s[1];
-    f32 delta;
-    f32 curTime;
-    SubtitleTextEntry* entry;
-    u8* win;
-    int m;
-    int i;
-    int savedCharset;
-    int k;
-    int total;
-    int oldDelay;
-    char** strLines;
-    int found;
-    int q;
-    int n;
-    int count;
-    int args[3];
-    f32 ftotal;
-
-    s[0] = (SubtitleLineTable*)gSubtitleLineTable;
-    total = 0;
-    curTime = 0.0f;
-    if (gGameTextSequenceMode != 0)
-    {
-        savedCharset = gameTextGetCharset();
-        gameTextSetCharset(1, 1);
-    }
-    entry = (SubtitleTextEntry*)gameTextGet(gGameTextPendingTextId);
-    win = (u8*)gTextBoxes + 0x140;
-    gSubtitleLineCount = 0;
-    gSubtitleBlockCount = 0;
-    i = 0;
-    do
-    {
-        s[0]->times[i] = gSubtitleNoTimeSentinel;
-    } while (++i < SUBTITLE_LINE_COUNT);
-    for (i = 0; i < entry->count; i++)
-    {
-        str = entry->strs[i];
-        n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
-        if (n != 0)
-        {
-            q = args[2] / 60;
-            s[0]->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
-        }
-        strLines = textMeasureFn_80016c9c(str, (f32)(u32) * (u16*)(win + 2), *(f32*)(win + 0xc), &count, NULL);
-        if (strLines != NULL)
-        {
-            k = 0;
-            do
-            {
-                s[0]->lines[gSubtitleLineCount++] = strLines[k];
-            } while (++k < count);
-            if (s[0]->blocks[gSubtitleBlockCount] != NULL)
-            {
-                oldDelay = mmSetFreeDelay(0);
-                mm_free(s[0]->blocks[gSubtitleBlockCount]);
-                mmSetFreeDelay(oldDelay);
-            }
-            s[0]->blocks[gSubtitleBlockCount++] = strLines;
-        }
-    }
-    for (k = 0; k < gSubtitleLineCount; k++)
-    {
-        if (gSubtitleNoTimeSentinel != s[0]->times[k])
-        {
-            curTime = s[0]->times[k];
-            total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
-        }
-        else
-        {
-            found = 0;
-            m = k;
-            for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
-            {
-                ftotal = total;
-                if (m < 255)
-                {
-                    if (gSubtitleNoTimeSentinel != s[0]->times[m + 1])
-                    {
-                        delta = s[0]->times[m + 1] - curTime;
-                        found = 1;
-                    }
-                    n = GameText_CountPrintableChars((u8*)s[0]->lines[m]);
-                    s[0]->times[m] = n;
-                    total += n;
-                    if (found != 0)
-                    {
-                        q = m;
-                        do
-                        {
-                            s[0]->times[q] = s[0]->times[q + 1] - delta * (s[0]->times[q] / total);
-                        } while (--q >= k);
-                        break;
-                    }
-                    m++;
-                }
-            }
-        }
-    }
-    gSubtitleLineIndex = 0;
-    gSubtitleElapsedFrames = 0;
-    gSubtitleActive = 2;
-    if (gGameTextSequenceMode != 0)
-    {
-        gameTextSetCharset(savedCharset, 1);
-    }
-}
 
 int gameTextGetCharset(void)
 {
@@ -2981,102 +2835,10 @@ int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
     return 0;
 }
 
-void subtitleStart(int x)
-{
-    if (gSubtitlesEnabled != 0)
-    {
-        gGameTextPendingTextId = x;
-        gGameTextPendingDir = getCurGameText();
-        gGameTextSequenceMode = 0;
-        gGameTextSavedDir = -1;
-        gSubtitleActive = 1;
-        gSubtitleColorR = 0xff;
-        gSubtitleColorG = 0xff;
-        gSubtitleColorB = 0xff;
-        gSubtitleColorA = 0xff;
-    }
-}
-
-static inline int gameTextIsTaskTextAllowed(int taskId)
-{
-    s16* taskList;
-    int count;
-
-    taskList = gGameTextTaskTextAllowList;
-    for (count = 0; count < 0xb; count++)
-    {
-        if (taskId == taskList[count])
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void gameTextLoadTaskText(int taskId)
-{
-    int textId;
-    int dirId;
-
-    if (gameTextGetTaskText(taskId, &textId, &dirId) != 0)
-    {
-        if (gSubtitlesEnabled == 0)
-        {
-            if (gameTextIsTaskTextAllowed(taskId) == 0)
-            {
-                return;
-            }
-        }
-
-        gGameTextPendingTextId = textId;
-        gGameTextPendingDir = (void*)dirId;
-        if (dirId == 0x29)
-        {
-            loadGameTextSequence(dirId, textId);
-            gGameTextSequenceMode = 1;
-        }
-        else
-        {
-            gGameTextSavedDir = (int)getCurGameText();
-            gameTextLoadDir((int)gGameTextPendingDir);
-            gGameTextSequenceMode = 0;
-        }
-        gSubtitleActive = 1;
-        gSubtitleColorR = 0xff;
-        gSubtitleColorG = 0xff;
-        gSubtitleColorB = 0xff;
-        gSubtitleColorA = 0xff;
-    }
-}
-
-int subtitleIsActive(void)
-{
-    int ret;
-
-    ret = 0;
-    if (gSubtitlesEnabled != 0)
-    {
-        if (gSubtitleActive != 0)
-        {
-            ret = 1;
-        }
-    }
-    return ret;
-}
 
 char* gSubtitleLineStrs[0x100];
 f32 gSubtitleLineTimes[0x100];
 
-int setSubtitlesEnabled(int enabled)
-{
-    int old = gSubtitlesEnabled;
-    gSubtitlesEnabled = enabled;
-    if (enabled == 0)
-    {
-        subtitleFn_8001b700();
-    }
-    return old;
-}
 
 void subtitleFn_8001b700(void)
 {
@@ -3108,215 +2870,7 @@ void subtitleFn_8001b700(void)
         }
     }
 }
-void gameTextInitFn_8001bd14(void)
-{
-    int i;
-    int zero;
-    int (*scratch)[8];
 
-    zero = 0;
-    gSubtitleActive = zero;
-    gSubtitlesEnabled = 1;
-    gGameTextSavedDir = -1;
-
-    scratch = (int (*)[8])gSubtitleLineTable;
-    for (i = 0; i < 32; i++)
-    {
-        scratch[i][0] = zero;
-        scratch[i][1] = zero;
-        scratch[i][2] = zero;
-        scratch[i][3] = zero;
-        scratch[i][4] = zero;
-        scratch[i][5] = zero;
-        scratch[i][6] = zero;
-        scratch[i][7] = zero;
-    }
-}
-
-void subtitleFreeBoxTextures(int mode)
-{
-    switch (mode)
-    {
-    case 3:
-        textureFree(gSubtitleBoxTextures[0]);
-        textureFree(gSubtitleBoxTextures[1]);
-        textureFree(gSubtitleBoxTextures[2]);
-        break;
-    }
-}
-
-void subtitleLoadBoxTextures(int mode)
-{
-    switch (mode)
-    {
-    case 3:
-        gSubtitleBoxTextures[0] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT);
-        gSubtitleBoxTextures[1] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID);
-        gSubtitleBoxTextures[2] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT);
-        break;
-    }
-}
-
-void gameTextDrawBox(struct GameTextDef* strPtr, int boxId, GameTextBox* box)
-{
-    int c6y1;
-    int c6y0;
-    int c6x1;
-    int c6x0;
-    int c3y1;
-    int c3y0;
-    int c3x1;
-    s16 savedY;
-    s16 savedX;
-    u16 boxFlags;
-    u8* cur;
-    int cy;
-    int cx;
-    int hh;
-    int hw;
-    s16 x7;
-    s16 y7;
-    u16 w7;
-    u16 h7;
-    int c3x0;
-    int y2;
-    int w2;
-    int xw;
-    s16 x2;
-    int half;
-    int rem;
-
-    savedX = ((GameTextBox*)box)->cursorX;
-    savedY = ((GameTextBox*)box)->cursorY;
-    boxFlags = ((GameTextBox*)box)->flags;
-    if (boxFlags & 1)
-    {
-        return;
-    }
-    ((GameTextBox*)box)->flags = boxFlags | 1;
-    switch (((GameTextBox*)box)->style)
-    {
-    case 5:
-        return;
-    case 7:
-        if ((int)getCurGameText() == 3)
-        {
-            u16 bh = ((GameTextBox*)box)->height;
-            u16 bw = ((GameTextBox*)box)->width;
-            s16 by = ((GameTextBox*)box)->y;
-            s16 bx = ((GameTextBox*)box)->x;
-            hudDrawRect(bx, by, bx + bw, by + bh, gGameTextBoxFillColor);
-        }
-        else
-        {
-            h7 = ((GameTextBox*)box)->height;
-            w7 = ((GameTextBox*)box)->width;
-            y7 = ((GameTextBox*)box)->y;
-            x7 = ((GameTextBox*)box)->x;
-            GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawHudBox(x7, y7, (s16)w7, (s16)h7, 0xff, 1);
-        }
-        break;
-    case 1:
-    {
-        u16 bh = ((GameTextBox*)box)->height;
-        u16 bw = ((GameTextBox*)box)->width;
-        s16 by = ((GameTextBox*)box)->y;
-        s16 bx = ((GameTextBox*)box)->x;
-        hudDrawRect(bx, by, bx + bw, by + bh, gGameTextBoxFillColor);
-    }
-    break;
-    case 6:
-        if (strPtr == NULL)
-        {
-            return;
-        }
-        cur = gameTextGetCurBox();
-        if (strPtr != NULL)
-        {
-            gameTextMeasureById(*(u16*)strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
-        }
-        else if ((u32)boxId != 0)
-        {
-            gameTextMeasureStringBounds((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1,
-                                        &c6y0, &c6y1);
-        }
-        gameTextSetWindow(cur);
-        hw = (c6x1 - c6x0) >> 1;
-        hh = (c6y1 - c6y0) >> 1;
-        cx = c6x0 + hw;
-        cy = c6y0 + hh;
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset),
-                          (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100, hw + gGameTextBoxCornerInset,
-                          hh + gGameTextBoxCornerInset, 0);
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100,
-                          hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 1);
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset), cy, 0xff, 0x100,
-                          hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 2);
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, cy, 0xff, 0x100, hw + gGameTextBoxCornerInset,
-                          hh + gGameTextBoxCornerInset, 3);
-        break;
-    case 0:
-        drawScaledTexture(gGameTextBoxBgTexture, (f32)((GameTextBox*)box)->x, (f32)((GameTextBox*)box)->y, 0xff, 0x100,
-                          ((GameTextBox*)box)->width, ((GameTextBox*)box)->height, 0);
-        break;
-    case 3:
-        cur = gameTextGetCurBox();
-        if (strPtr != NULL)
-        {
-            gameTextMeasureById(*(u16*)strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
-        }
-        else if ((u32)boxId != 0)
-        {
-            gameTextMeasureStringBounds((char*)boxId, (int)((u8*)box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1,
-                                        &c3y0, &c3y1);
-        }
-        gameTextSetWindow(cur);
-        drawTexture(gSubtitleBoxTextures[0], (f32)(c3x0 - 0x16), (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
-        drawScaledTexture(gSubtitleBoxTextures[1], (f32)c3x0, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100,
-                          c3x1 - c3x0, 0x24, 0);
-        drawTexture(gSubtitleBoxTextures[2], (f32)c3x1, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
-        break;
-    case 2:
-        x2 = ((GameTextBox*)box)->x;
-        w2 = ((GameTextBox*)box)->width;
-        xw = x2 + w2;
-        y2 = ((GameTextBox*)box)->y;
-        half = w2 >> 1;
-        if (half > 0xc)
-        {
-            half = 0xc;
-        }
-        rem = w2 - half * 2;
-        if (rem < 0)
-        {
-            rem = 0;
-        }
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        drawTexture(gGameTextBoxFrameTextures[0], (f32)(x2 - 0x34), (f32)(y2 - 0x23),
-                    ((GameTextBox*)box)->alpha, 0x100);
-        drawTexture(gGameTextBoxFrameTextures[4], (f32)xw, (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
-        if (half != 0)
-        {
-            drawScaledTexture(gGameTextBoxFrameTextures[1], (f32)x2, (f32)(y2 - 0x13),
-                              ((GameTextBox*)box)->alpha, 0x100, half, 0x3a, 0);
-            drawPartialTexture(gGameTextBoxFrameTextures[3], (f32)(xw - half), (f32)(y2 - 0x13),
-                               ((GameTextBox*)box)->alpha, 0x100,
-                               half, 0x3a, 0xc - half, 0);
-        }
-        if (rem != 0)
-        {
-            drawScaledTexture(gGameTextBoxFrameTextures[2], (f32)(x2 + half), (f32)(y2 - 0x13),
-                              ((GameTextBox*)box)->alpha, 0x100, rem, 0x3a, 0);
-        }
-        break;
-    case 4:
-        boxDrawFn_8001c5ac((u16*)strPtr, boxId, (u8*)box);
-        break;
-    }
-    ((GameTextBox*)box)->cursorX = savedX;
-    ((GameTextBox*)box)->cursorY = savedY;
-}
 
 void gameTextSetWindow(u8* textBox)
 {
@@ -3352,38 +2906,6 @@ void gameTextSetWindow(u8* textBox)
     }
 }
 
-void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box)
-{
-    int x;
-    int y;
-    int alpha;
-    int halfW;
-    int halfH;
-    int midX;
-    int midY;
-
-    alpha = ((GameTextBox*)box)->alpha;
-    alpha |= ((GameTextBox*)box)->alpha;
-    x = ((GameTextBox*)box)->x;
-    y = ((GameTextBox*)box)->y;
-    halfW = ((x + ((GameTextBox*)box)->width) - ((GameTextBox*)box)->x) >> 1;
-    halfH = ((y + ((GameTextBox*)box)->height) - ((GameTextBox*)box)->y) >> 1;
-    midX = x + halfW;
-    midY = y + halfH;
-    setTextColor(0, gGameTextBoxColorR & 0xff, gGameTextBoxColorG & 0xff, gGameTextBoxColorB & 0xff,
-                 gGameTextBoxColorA & 0xff);
-    textureSetupFn_800799c0();
-    textRenderSetupFn_800795e8();
-    textRenderSetupFn_80079804();
-    drawScaledTexture(gGameTextBoxEdgeTexture, (f32)(x - gGameTextBoxInset), (f32)(y - gGameTextBoxInset), alpha,
-                      0x100, halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 0);
-    drawScaledTexture(gGameTextBoxEdgeTexture, midX, (f32)(y - gGameTextBoxInset), alpha, 0x100,
-                      halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 1);
-    drawScaledTexture(gGameTextBoxEdgeTexture, (f32)(x - gGameTextBoxInset), midY, alpha, 0x100,
-                      halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 2);
-    drawScaledTexture(gGameTextBoxEdgeTexture, midX, midY, alpha, 0x100, halfW + gGameTextBoxInset,
-                      halfH + gGameTextBoxInset, 3);
-}
 
 void* getCurGameText(void)
 {

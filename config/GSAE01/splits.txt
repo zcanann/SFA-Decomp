@@ -74,10 +74,16 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 	.text       start:0x800173E4 end:0x80017434
 
 main/textrender.c:
-	.text       start:0x80017434 end:0x8001C794
+	.text       start:0x80017434 end:0x8001B7B8
 	.data       start:0x802C8D40 end:0x802CA440
 	.bss        start:0x80339980 end:0x8033BE60
 	.sdata      start:0x803DB378 end:0x803DB408
+
+main/textrender_subtitle.c:
+	.text       start:0x8001B7B8 end:0x8001BB78
+
+main/textrender_drawbox.c:
+	.text       start:0x8001BB78 end:0x8001C794
 
 main/textrender_boxtex.c:
 	.text       start:0x8001C794 end:0x8001CB3C

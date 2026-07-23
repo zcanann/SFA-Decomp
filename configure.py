@@ -350,6 +350,11 @@ cflags_dll_noopt_noautoinline_level3 = [
     "-inline", "noauto",
 ]
 
+cflags_dll_noopt_level1 = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,level=1",
+]
+
 cflags_dll_noopt_noautoinline_deferred = [
     *cflags_base,
     "-opt", "nopeephole,noschedule",
@@ -1021,6 +1026,8 @@ config.libs = [
             Object(Matching, "main/fileio.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt_nolifetimes_noinline),
             Object(NonMatching, "main/textrender.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/textrender_subtitle.c", cflags=cflags_dll_noopt_level1),
+            Object(NonMatching, "main/textrender_drawbox.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength),
             Object(NonMatching, "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
