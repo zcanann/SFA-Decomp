@@ -3830,7 +3830,7 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
     return lbl_803DCF60;
 }
 
-int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, int type)
+int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
 {
     f32 displacement[3];
     f32 horizontalNormal[3];
@@ -3906,7 +3906,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, int type)
         }
         else
         {
-            switch ((u8)type)
+            int switchType = type;
+            switch (switchType)
             {
             case 5:
             case 8:
