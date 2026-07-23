@@ -2480,7 +2480,7 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
             {
                 rec = (u8*)(vt + i * 0x10);
             }
-            lineFlags = ((IntersectLine*)rec)->flags;
+            lineFlags = *(s8*)&((IntersectLine*)rec)->flags;
             if ((lineMask & ~lineFlags) == 0)
                 continue;
             kind = ((IntersectLine*)rec)->kind;
