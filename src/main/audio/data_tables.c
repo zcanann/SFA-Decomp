@@ -309,21 +309,16 @@ s32 dataRemoveCurve(u16 sid)
     return 0;
 }
 
-static inline s32 dataFindSampleDir(SDIR_DATA* sample)
+static inline void dataFindSampleDir(SDIR_DATA* sample, s32* dirIndex, u16* k)
 {
-    s32 i;
-    u16 k;
-
-    for (i = 0; i < dataSmpSDirNum; ++i)
+    for (*dirIndex = 0; *dirIndex < dataSmpSDirNum; ++*dirIndex)
     {
-        for (k = 0; k < dataSmpSDirs[i].numSmp; ++k)
+        for (*k = 0; *k < dataSmpSDirs[*dirIndex].numSmp; ++*k)
         {
-            if (sample->id == dataSmpSDirs[i].data[k].id)
-                return i;
+            if (sample->id == dataSmpSDirs[*dirIndex].data[*k].id)
+                return;
         }
     }
-
-    return i;
 }
 
 u32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
@@ -332,6 +327,7 @@ u32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
     SDIR_DATA* s;
     u16 n;
     u16 j;
+    u16 k;
 
     for (i = 0; i < dataSmpSDirNum && dataSmpSDirs[i].data != sdir; ++i)
         ;
@@ -349,7 +345,7 @@ u32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
             sndBegin();
             for (j = 0; j < n; ++j)
             {
-                i = dataFindSampleDir(&sdir[j]);
+                dataFindSampleDir(&sdir[j], &i, &k);
                 if (i != dataSmpSDirNum)
                 {
                     sdir[j].ref_cnt = 0xFFFF;
