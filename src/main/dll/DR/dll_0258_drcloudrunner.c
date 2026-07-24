@@ -449,8 +449,9 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     speed = ((GameObject*)obj)->anim.currentMoveProgress;
     {
         s16* p;
-        s16 curMove = ((GameObject*)obj)->anim.currentMove;
-        for (idx = 0, p = (s16*)(base + 0x60); curMove != *p && idx < 6; idx++)
+        s16 curMove;
+        for (idx = 0, p = (s16*)(base + 0x60), curMove = ((GameObject*)obj)->anim.currentMove; curMove != *p && idx < 6;
+             idx++)
         {
             p += 1;
         }
@@ -545,8 +546,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     mag = sqrtf(((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ +
                 (((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                  ((GameObject*)obj)->anim.velocityY * ((GameObject*)obj)->anim.velocityY));
-    lim = (f32*)(base + ((int)idx >> 1) * 4 + 0xa8);
-    if (mag > *lim)
+    if (mag > *(lim = (f32*)(base + 0xa8) + ((int)idx >> 1)))
     {
         Vec3_Normalize((f32*)(obj + 0x24));
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * ((mag + *lim) * (d8 = lbl_803E83D8));
@@ -560,8 +560,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     }
     else
     {
-        lim = (f32*)(base + ((int)idx >> 1) * 4 + 0xb4);
-        if (mag < *lim)
+        if (mag < *(lim = (f32*)(base + 0xb4) + ((int)idx >> 1)))
         {
             Vec3_Normalize((f32*)(obj + 0x24));
             ((GameObject*)obj)->anim.velocityX =
@@ -652,10 +651,10 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         t = (dist < lbl_803E83A4) ? lbl_803E83A4 : ((dist > lbl_803E83DC) ? lbl_803E83DC : dist);
         Vec3_Normalize(&vecE.x);
         {
-            f32 scale = ((t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0))) / f;
-            vecE.x = vecE.x * scale;
-            vecE.y = vecE.y * scale;
-            vecE.z = vecE.z * scale;
+            f32 scale = (t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0));
+            vecE.x = vecE.x * (scale / f);
+            vecE.y = vecE.y * (scale / f);
+            vecE.z = vecE.z * (scale / f);
         }
         if (vecE.y < *(f32*)&lbl_803E83A4)
         {
@@ -706,9 +705,13 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     {
         if (moveId == -1)
         {
-            int masked = idx & 0xfe;
-            ObjAnim_SetCurrentMove(obj, *(s16*)((u8*)&base[0x60] + (masked + ((ByteFlags*)&inner->flagsBC0)->b80) * 2),
-                                   speed, 0);
+            int masked;
+            int lift;
+            ObjAnim_SetCurrentMove(
+                obj,
+                *(s16*)((u8*)&base[0x60] +
+                        ((masked = idx & 0xfe) + (lift = ((ByteFlags*)&inner->flagsBC0)->b80)) * 2),
+                speed, 0);
             ((CloudRunnerState*)baddie)->baddie.moveSpeed = ((f32*)(base + 0xc0))[masked >> 1];
         }
         else
