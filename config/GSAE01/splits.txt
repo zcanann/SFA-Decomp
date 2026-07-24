@@ -3116,9 +3116,15 @@ main/dll/dll_801e991c.c:
 	.sbss       start:0x803DDC60 end:0x803DDC64
 
 main/dll/drcloudcage.c:
-	.text       start:0x801E9C00 end:0x801EA854
+	.text       start:0x801E9C00 end:0x801EA240
 	.rodata     start:0x802C2428 end:0x802C2470
+
+main/dll/drcloudcage_engine.c:
+	.text       start:0x801EA240 end:0x801EA678
 	.sbss       start:0x803DDC64 end:0x803DDC68
+
+main/dll/drcloudcage_pitch.c:
+	.text       start:0x801EA678 end:0x801EA854
 
 main/dll/DR/drshackle.c:
 	.text       start:0x801EA854 end:0x801EAE4C

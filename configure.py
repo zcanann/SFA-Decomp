@@ -1836,10 +1836,12 @@ config.libs = [
             Object(NonMatching, "main/dll/SP/dll_0288_spdrape.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SP/dll_0289_spitembeam.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801e991c.c", cflags=cflags_dll_noopt_nocse),
+            Object(NonMatching, "main/dll/drcloudcage.c", cflags=cflags_dll_noopt),
             Object(
-                NonMatching, "main/dll/drcloudcage.c", cflags=cflags_dll_noopt,
+                NonMatching, "main/dll/drcloudcage_engine.c", cflags=cflags_dll_noopt_nolifetimes,
                 section_alignments={".sbss": 4},
             ),
+            Object(NonMatching, "main/dll/drcloudcage_pitch.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/DR/drshackle.c", cflags=cflags_dll_noopt),
             Object(
                 NonMatching, "main/dll/drhightop.c", cflags=cflags_dll_noopt,
