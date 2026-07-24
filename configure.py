@@ -1442,6 +1442,7 @@ config.libs = [
                 section_alignments={".data": 4},
             ),
             Object(NonMatching, "main/dll/skeetla_80139A8C.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/dll/skeetla_avoidance.c", cflags=cflags_dll_noopt_nocse_noautoinline),
             Object(NonMatching, "main/dll/trickyfollow.c", cflags=cflags_dll_noopt_nocse_noloopinv),
             Object(MatchingFor("GSAE01"), "main/dll/mmp_cratercritter.c", cflags=cflags_dll_nosched),
             Object(MatchingFor("GSAE01"), "main/dll/mmp_critterspit.c", cflags=cflags_dll_noopt),

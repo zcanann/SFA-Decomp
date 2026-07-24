@@ -1393,8 +1393,11 @@ main/dll/skeetla.c:
 	.data       start:0x8031D3EC end:0x8031D46C
 
 main/dll/skeetla_80139A8C.c:
-	.text       start:0x80139A8C end:0x8013B368
+	.text       start:0x80139A8C end:0x8013B1E0
 	.sdata      start:0x803DBC40 end:0x803DBC58
+
+main/dll/skeetla_avoidance.c:
+	.text       start:0x8013B1E0 end:0x8013B368
 
 main/dll/trickyfollow.c:
 	.text       start:0x8013B368 end:0x8013D8F0
