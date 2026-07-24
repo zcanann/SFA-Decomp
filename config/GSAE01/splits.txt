@@ -136,11 +136,17 @@ main/model.c:
 	.sbss       start:0x803DCB48 end:0x803DCB70
 
 main/object.c:
-	.text       start:0x8002A5D4 end:0x8002EB54
+	.text       start:0x8002A5D4 end:0x8002BDF4
 	.data       start:0x802CABF8 end:0x802CAD50
 	.bss        start:0x803408A8 end:0x803408F8
 	.sdata      start:0x803DB448 end:0x803DB450
 	.sbss       start:0x803DCB70 end:0x803DCBC8
+
+main/object_objdef.c:
+	.text       start:0x8002BDF4 end:0x8002C36C
+
+main/object_system.c:
+	.text       start:0x8002C36C end:0x8002EB54
 
 main/objanim.c:
 	.text       start:0x8002EB54 end:0x8002F5D4

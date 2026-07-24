@@ -1055,6 +1055,8 @@ config.libs = [
             Object(NonMatching, "main/mm.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/model.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/object.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/object_objdef.c", cflags=cflags_dll_noopt_nocse),
+            Object(NonMatching, "main/object_system.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objseq.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(
                 NonMatching, "main/objseqinit.c",
