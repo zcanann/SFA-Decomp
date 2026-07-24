@@ -60,8 +60,12 @@ def compare(unit_q: str, symbol: str, version: str = "GSAE01"):
 def rebuild(obj_rel: str) -> bool:
     obj = REPO / obj_rel
     obj.unlink(missing_ok=True)
+    # Go through the build mutex: a bare `ninja` here races parallel matching
+    # agents and corrupts .ninja_log / loses .d writes, which shows up as
+    # spurious BUILD-FAIL entries mid-sweep.
     proc = subprocess.run(
-        ["ninja", obj_rel], cwd=REPO, capture_output=True, text=True
+        ["bash", "tools/locked_ninja.sh", obj_rel],
+        cwd=REPO, capture_output=True, text=True
     )
     return proc.returncode == 0 and obj.is_file()
 

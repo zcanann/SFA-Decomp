@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -36,20 +37,28 @@ def run(cmd: str) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, shell=True, cwd=REPO, capture_output=True, text=True)
 
 
-def measure(unit_suffix: str, version: str):
+def measure(unit_suffix: str, version: str, retries: int = 4):
+    """Regenerate the report and read one unit's fuzzy.
+
+    Parallel matching agents delete build/<ver>/report.json seconds after it is
+    written, so snapshot it before parsing and retry rather than reporting a
+    spurious NO-MEASURE.
+    """
     report = REPO / "build" / version / "report.json"
-    if report.exists():
-        report.unlink()
-    run(f"bash tools/locked_ninja.sh build/{version}/report.json")
-    if not report.exists():
+    for attempt in range(retries):
+        if report.exists():
+            report.unlink()
+        run(f"bash tools/locked_ninja.sh build/{version}/report.json")
+        try:
+            raw = report.read_bytes()          # snapshot before a peer can unlink it
+            data = json.loads(raw)
+        except Exception:
+            time.sleep(0.5 * (attempt + 1))
+            continue
+        for unit in data["units"]:
+            if unit["name"].endswith(unit_suffix):
+                return unit["measures"].get("fuzzy_match_percent")
         return None
-    try:
-        data = json.loads(report.read_text())
-    except Exception:
-        return None
-    for unit in data["units"]:
-        if unit["name"].endswith(unit_suffix):
-            return unit["measures"].get("fuzzy_match_percent")
     return None
 
 
