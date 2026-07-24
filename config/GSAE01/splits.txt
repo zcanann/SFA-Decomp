@@ -152,10 +152,16 @@ main/objlib.c:
 	.bss        start:0x803428F8 end:0x80342E10
 
 main/objprint.c:
-	.text       start:0x80038F38 end:0x8003D6F8
-	.rodata     start:0x802C1B10 end:0x802C1B70
+	.text       start:0x80038F38 end:0x8003ADC4
 	.data       start:0x802CAE88 end:0x802CAED0
 	.sdata      start:0x803DB460 end:0x803DB468
+
+main/objprint_headtrack.c:
+	.text       start:0x8003ADC4 end:0x8003B0D0
+
+main/objprint_render.c:
+	.text       start:0x8003B0D0 end:0x8003D6F8
+	.rodata     start:0x802C1B10 end:0x802C1B70
 	.sbss       start:0x803DCC08 end:0x803DCC20
 
 main/objprint_dolphin.c:

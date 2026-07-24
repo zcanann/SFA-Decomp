@@ -510,6 +510,11 @@ cflags_dll_noopt_nocse_noloopinv = [
     "-opt", "nopeephole,noschedule,nocse,noloopinvariants",
 ]
 
+cflags_dll_noopt_nocse_noloopinv_noautoinline = [
+    *cflags_dll_noopt_nocse_noloopinv,
+    "-inline", "noauto",
+]
+
 cflags_dll_noopt_noprop_noinline = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,nopropagation",
@@ -1113,6 +1118,8 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/DF/dll_0230_dfpwallbar.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/objlib.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/objprint_headtrack.c", cflags=cflags_dll_noopt_nocse_noloopinv_noautoinline),
+            Object(NonMatching, "main/objprint_render.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv_nolifetimes_zerodata),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/zlb.c", **zlb_object_kwargs),
