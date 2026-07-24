@@ -204,9 +204,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                     } while (--rep != 0);
                 } while (activeCodeLengths == literalCodeLengths || n < distanceCodeCount);
                 literalMaxBits = 0xf;
-                p8 = (u8 *)gInflateLiteralLengthCounts + literalMaxBits + literalMaxBits;
-                while (*(u16 *)p8 == 0) {
-                    p8 -= 2;
+                while (gInflateLiteralLengthCounts[literalMaxBits] == 0) {
                     literalMaxBits--;
                 }
                 code = 0;
