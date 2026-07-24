@@ -611,6 +611,7 @@ int playerStopRidingObject(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
     int sub;
+    int mflags;
 
     if ((void*)obj == NULL)
     {
@@ -625,7 +626,8 @@ int playerStopRidingObject(GameObject* obj)
         (*(void (**)(int, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         obj->anim.flags &= ~8;
-        obj->anim.modelState->flags &= ~0x1000;
+        mflags = obj->anim.modelState->flags;
+        obj->anim.modelState->flags = mflags & 0xFFFFFEFFF;
         inner->focusObject = NULL;
         obj->anim.activeMove = -1;
         (*gPlayerInterface)->setState(obj, inner, 1);
@@ -4339,14 +4341,14 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
     {
         lbl_803DE459 = 0;
         changed = 1;
-        *(u32*)&inner->flags360 &= ~0x40LL;
+        *(u32*)&inner->flags360 &= 0xFFFFFFFBF;
         Player_GetObjHitsState(obj)->suppressOutgoingHits = 0;
         {
             f32 z = 0.0f;
             inner->hitTimer = z;
             inner->hitCount = 0;
             inner->lastHitObject = 0;
-            *(u8*)&inner->activeHitWindow = 0xff;
+            inner->activeHitWindow = -1;
             ((PlayerState*)state)->baddie.animSpeedC = z;
             ((PlayerState*)state)->baddie.animSpeedB = z;
             ((PlayerState*)state)->baddie.animSpeedA = z;
@@ -4486,16 +4488,14 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
         }
     }
     {
-        int off;
         int i;
-        off = 0;
         Player_GetObjHitsState(obj)->objectHitMask = 0;
         for (i = 0; i != 3; i++)
         {
             if (obj->anim.currentMoveProgress >=
-                    *(f32*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + off) + 0x30) &&
+                    *(f32*)((inner->moveSlots + ((u32)inner->moveSlotIndex * 0xb0 + i * 4)) + 0x30) &&
                 obj->anim.currentMoveProgress <=
-                    *(f32*)((inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0 + off) + 0x3c))
+                    *(f32*)((inner->moveSlots + ((u32)inner->moveSlotIndex * 0xb0 + i * 4)) + 0x3c))
             {
                 if ((s8)Player_GetObjHitsState(obj)->suppressOutgoingHits == 0)
                 {
@@ -4536,7 +4536,6 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
                 }
                 break;
             }
-            off += 4;
         }
     }
     (*gPlayerInterface)->updateAnimRootMotion(obj, (void*)state, fv, 3);
