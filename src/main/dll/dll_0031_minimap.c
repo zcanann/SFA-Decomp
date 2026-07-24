@@ -247,9 +247,9 @@ int Minimap_update(void)
     int xr;
     int sv;
     u32 texW, texH;
-    f32 s2, fz, panx, yrel, xrel, pany, ox, oy, t, e, a, b, tileCoord, cx, cy, frac, fx;
+    f32 cx, cy, fz, xrel, yrel, panx, pany, ox, oy, t, e, a, b, tileCoord, frac, fx;
     GameObject* player;
-    f32 c2, s1, c1, c3, s3, fv;
+    f32 fv;
     MinimapColor color;
     MinimapColor compassColor;
 
@@ -445,12 +445,12 @@ int Minimap_update(void)
                 {
                     texW = minimapTexture->width;
                     texH = minimapTexture->height;
-                    gMinimapWorldToTexScale = texW / (f32)(gMinimapRegionMaxX - gMinimapRegionMinX);
+                    a = texW / (f32)(gMinimapRegionMaxX - gMinimapRegionMinX);
+                    gMinimapWorldToTexScale = a;
                     boxW = gMinimapBoxWidth;
                     a = (f32)boxW / (f32)texW;
                     boxH = gMinimapBoxHeight;
-                    b = (f32)boxH / (f32)texH;
-                    a = (a > b) ? b : a;
+                    a = (a < (b = (f32)boxH / (f32)texH)) ? a : b;
                     a = (a < gMinimapMaxZoom) ? a : gMinimapMaxZoom;
                     gMinimapMinZoom = a;
                     if (gMinimapAxisSwap != 0)
@@ -506,41 +506,43 @@ int Minimap_update(void)
                     cx = 0.5f + ((gMinimapZoom * (xrel * gMinimapWorldToTexScale) + gMinimapF50) - ox - panx);
                     cy =
                         0.5f + ((gMinimapZoom * (yrel * gMinimapWorldToTexScale) + (f32)(int)gMinimapBoxY) - oy - pany);
+                    color.channels.a = gMinimapContentAlpha;
+                    color.channels.r = 0;
+                    color.channels.g = 0;
+                    color.channels.b = 0;
+                    gMinimapArrowScale0 = gMinimapFNeg10;
+                    fv = gMinimapFNeg6_67;
+                    gMinimapArrowScale1 = fv;
+                    gMinimapArrowScale2 = fv;
                     {
-                        color.channels.a = gMinimapContentAlpha;
-                        color.channels.r = 0;
-                        color.channels.g = 0;
-                        color.channels.b = 0;
-                        gMinimapArrowScale0 = gMinimapFNeg10;
-                        fv = gMinimapFNeg6_67;
-                        gMinimapArrowScale1 = fv;
-                        gMinimapArrowScale2 = fv;
-                        c1 = gMinimapArrowScale0 *
+                        f32 c1 = gMinimapArrowScale0 *
                              mathSinf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
-                        s1 = gMinimapArrowScale0 *
+                        f32 s1 = gMinimapArrowScale0 *
                              mathCosf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
-                        c2 = gMinimapArrowScale1 *
+                        f32 c2 = gMinimapArrowScale1 *
                              mathSinf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
-                        s2 = gMinimapArrowScale1 *
+                        f32 s2 = gMinimapArrowScale1 *
                              mathCosf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
-                        c3 = gMinimapArrowScale2 *
+                        f32 c3 = gMinimapArrowScale2 *
                              mathSinf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
-                        s3 = gMinimapArrowScale2 *
+                        f32 s3 = gMinimapArrowScale2 *
                              mathCosf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
                         hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, color.channels);
-                        color.channels.a = gMinimapContentAlpha;
-                        color.channels.r = 0xff;
-                        color.channels.g = 0xff;
-                        color.channels.b = 0;
-                        c1 = gMinimapFNeg6 * mathSinf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
-                        s1 = gMinimapFNeg6 * mathCosf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
-                        c2 = gMinimapFNeg4 *
+                    }
+                    color.channels.a = gMinimapContentAlpha;
+                    color.channels.r = 0xff;
+                    color.channels.g = 0xff;
+                    color.channels.b = 0;
+                    {
+                        f32 c1 = gMinimapFNeg6 * mathSinf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
+                        f32 s1 = gMinimapFNeg6 * mathCosf(gMinimapPi * (f32)player->anim.rotX / gMinimapF32768);
+                        f32 c2 = gMinimapFNeg4 *
                              mathSinf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
-                        s2 = gMinimapFNeg4 *
+                        f32 s2 = gMinimapFNeg4 *
                              mathCosf(gMinimapPi * (f32)(player->anim.rotX + 0x6000) / gMinimapF32768);
-                        c3 = gMinimapFNeg4 *
+                        f32 c3 = gMinimapFNeg4 *
                              mathSinf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
-                        s3 = gMinimapFNeg4 *
+                        f32 s3 = gMinimapFNeg4 *
                              mathCosf(gMinimapPi * (f32)(player->anim.rotX - 0x6000) / gMinimapF32768);
                         hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, color.channels);
                     }
