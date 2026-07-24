@@ -65,7 +65,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
     u8 moved;
     int wg;
     int targetWg;
-    u8 slot;
+    u8* prevNode;
     u16 pp;
     int trickyPatch;
     s16 link;
@@ -73,7 +73,7 @@ int trickyFn_8013b368(GameObject* obj, f32 vel, TrickyState* state)
     int dir;
     int i;
     ObjfsaRomCurveDef* node;
-    u8* prevNode;
+    u8 slot;
     f32* patchTarget;
     int absDiff;
     u16 ulink;
