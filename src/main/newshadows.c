@@ -1256,7 +1256,7 @@ void initFn_8006d020(void)
 {
     u8 savedHeap;
     int column;
-    int placedCount;
+    int row;
     f32* placementZ;
     f32* placementRadius;
     f32* placement;
@@ -1265,7 +1265,7 @@ void initFn_8006d020(void)
     f32* placementX;
     u8 overlaps;
     int otherIndex;
-    int row;
+    int placedCount;
     int frame;
 
     savedHeap = testAndSet_onlyUseHeap3(1);

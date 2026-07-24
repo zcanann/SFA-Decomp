@@ -44,11 +44,11 @@ static inline void BuildTransTab(u8* tab, SynthPage* page)
 u32 seqStartPlay(SynthPage* norm, SynthPage* drum, SynthMidiSetup* midiSetup, u32* song,
                  SynthPlayParams* para, u8 studio, u16 sgid)
 {
-    u32 seqId;
+    u8* midiData;
     SynthVoice* prevCurSeq;
     u32 bpm;
     SynthVoice* seq;
-    u8* midiData;
+    u32 seqId;
     long i;
     u32* trackOffsets;
     SynthArrangement* arrangement;
