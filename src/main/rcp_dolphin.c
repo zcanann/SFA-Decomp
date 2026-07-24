@@ -1502,6 +1502,25 @@ extern int gRcpTexBankCount[3];
 
 extern int* gRcpTexBankTable[3];
 
+static inline void loadTextureBank(int bank, int fileId)
+{
+    int* p;
+    int n = 0;
+
+    p = getCurrentDataFile(fileId);
+    gRcpTexBankTable[bank] = p;
+    if (gRcpTexBankTable == NULL)
+    {
+        return;
+    }
+    while (p[0] != -1)
+    {
+        p++;
+        n++;
+    }
+    gRcpTexBankCount[bank] = n - 1;
+}
+
 void* textureLoad(int texId, u8 flagIn)
 {
     int file;
@@ -1599,30 +1618,8 @@ void* textureLoad(int texId, u8 flagIn)
     {
         id16 = 0;
     }
-    n = 0;
-    bankPtr = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
-    gRcpTexBankTable[0] = bankPtr;
-    if (gRcpTexBankTable != NULL)
-    {
-        while (*bankPtr != -1)
-        {
-            bankPtr++;
-            n++;
-        }
-        gRcpTexBankCount[0] = n - 1;
-    }
-    n = 0;
-    bankPtr = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
-    gRcpTexBankTable[1] = bankPtr;
-    if (gRcpTexBankTable != NULL)
-    {
-        while (*bankPtr != -1)
-        {
-            bankPtr++;
-            n++;
-        }
-        gRcpTexBankCount[1] = n - 1;
-    }
+    loadTextureBank(0, MLDF_FILEID_TEX0_TAB_A);
+    loadTextureBank(1, MLDF_FILEID_TEX1_TAB_A);
     bankWord = gRcpTexBankTable[bank][id16];
     mips = (bankWord >> TEX_TAB_MIP_COUNT_SHIFT) & TEX_TAB_MIP_COUNT_MASK;
     bankWordSaved = bankWord;
@@ -1874,25 +1871,6 @@ void* textureLoadAsset(int asset)
         return NULL;
     loadTextureFile(&out, asset);
     return out;
-}
-
-static inline void loadTextureBank(int bank, int fileId)
-{
-    int* p;
-    int n = 0;
-
-    p = getCurrentDataFile(fileId);
-    gRcpTexBankTable[bank] = p;
-    if (gRcpTexBankTable == NULL)
-    {
-        return;
-    }
-    while (p[0] != -1)
-    {
-        p++;
-        n++;
-    }
-    gRcpTexBankCount[bank] = n - 1;
 }
 
 void loadTextureFiles(void)
