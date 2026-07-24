@@ -394,6 +394,12 @@ cflags_dll_noopt_nocse_noautoinline = [
     "-inline", "noauto",
 ]
 
+cflags_dll_noopt_nodead_noautoinline = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nodead",
+    "-inline", "noauto",
+]
+
 cflags_dll_noopt_nocse_noinline = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,nocse",
@@ -1119,7 +1125,8 @@ config.libs = [
             Object(NonMatching, "main/objlib.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/objprint_headtrack.c", cflags=cflags_dll_noopt_nocse_noloopinv_noautoinline),
-            Object(NonMatching, "main/objprint_render.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/objprint_render.c", cflags=cflags_dll_noopt_nodead_noautoinline),
+            Object(NonMatching, "main/objprint_model.c", cflags=cflags_dll_noopt_nocse_noautoinline),
             Object(NonMatching, "main/objprint_dolphin.c", cflags=cflags_dll_noopt_noloopinv_nolifetimes_zerodata),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/zlb.c", **zlb_object_kwargs),
