@@ -2172,7 +2172,7 @@ void hudDrawTimedElement(int unused, void* element)
     memset(lbl_803A9428, 0, 0xc);
     lbl_803A9428[0] = e[0];
     lbl_803A9428[3] = 0;
-    drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf), (int)*(f32*)((char*)e + 0x8), 0x100);
+    drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf), (u8)*(f32*)((char*)e + 0x8), 0x100);
 }
 
 
@@ -2239,7 +2239,7 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     TrickyHud* base = (TrickyHud*)lbl_803A87F0;
     int i;
     void* tricky;
-    int alpha;
+    u8 alpha;
     int itemTex = 0;
     int hcArg = 0;
     int krazoa = 0;
@@ -2269,7 +2269,7 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
             lbl_803DD844 = 0.0f;
     }
     alpha = lbl_803DD83C;
-    if ((u8)alpha != 0)
+    if (alpha != 0)
     {
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
         if (!(base->statusOpacity[HUD_STATUS_HEALTH] > lbl_803E1F9C &&
@@ -2295,9 +2295,9 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
             }
         }
     }
-    if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0)
+    if (alpha != 0 && objIsCurModelNotZero(player) != 0 && mainGetBit(GAMEBIT_ITEM_Magic_Got) != 0)
     {
-        ((void (*)(int, int, u8))hudDrawMagicBar)(alpha, 0x100, 0);
+        hudDrawMagicBar(alpha, 0x100, 0);
     }
     magicId = 0;
     if (playerHasKrazoaSpirit(1, 0) != 0)
@@ -2314,7 +2314,7 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     {
         drawTexture(base->icon348, (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), lbl_803E1FAC, alpha, 0x100);
     }
-    if ((u8)alpha != 0 && tricky != NULL)
+    if (alpha != 0 && tricky != NULL)
     {
         itemTex = 0x16;
         if (!(base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] > lbl_803E1F9C &&
