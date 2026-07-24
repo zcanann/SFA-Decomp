@@ -386,6 +386,20 @@ static inline void render_writePackedU16(RenderPackedAddress address, u16 value)
     bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
     bitpos += (nb);
 
+#define RENDER_BITS_REFILL_NEXT(nb)                                                                                    \
+    bitpos -= (nb);                                                                                                    \
+    bufA = bitpos >> 3;                                                                                                \
+    posA += bufA;                                                                                                      \
+    curB = bufA + curB;                                                                                                \
+    bitpos &= 7;                                                                                                       \
+    render_copyPackedU64Head(&bufA, posA);                                                                             \
+    render_copyPackedU64Tail(&bufA, posA + 7);                                                                         \
+    render_copyPackedU64Head(&bufB, curB);                                                                             \
+    render_copyPackedU64Tail(&bufB, curB + 7);                                                                         \
+    bufA <<= (bitpos & 0xFFFFFFFF);                                                                                    \
+    bufB <<= (bitpos & 0xFFFFFFFF);                                                                                    \
+    bitpos += (nb);
+
 void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation)
 {
     f32 framePhase = anim->framePhase;
@@ -455,60 +469,62 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
         render_writePackedU16(outPos, sample);
         outPos += 2;
 
-        sample = 0;
-        if ((hw & 0x10) != 0)
+        do
         {
             u64 nib3;
 
-            do
+            if ((hw & 0x10) == 0)
             {
-                h = render_readPackedU16(tp);
-                if ((h & 0x10) != 0)
+                sample = 0;
+                break;
+            }
+            h = render_readPackedU16(tp);
+            if ((h & 0x10) != 0)
+            {
+                u64 nib2 = h & 0xf;
+                if (nib2 != 0)
                 {
-                    u64 nib2 = h & 0xf;
-                    if (nib2 != 0)
-                    {
-                        bitpos += nib2;
-                        if ((s64)bitpos > 64)
-                        {
-                            RENDER_BITS_REFILL(nib2)
-                        }
-                        bufA <<= (nib2 & 0xFFFFFFFF);
-                        bufB <<= (nib2 & 0xFFFFFFFF);
-                    }
-                    tp += 2;
-                    if (((u32)h & 0x20) == 0)
-                    {
-                        sample = 0;
-                        break;
-                    }
-                    h = render_readPackedU16(tp);
-                }
-                nib3 = h & 0xf;
-                if (nib3 != 0)
-                {
-                    u64 masked2 = h & 0xFFF0;
-                    bitpos += nib3;
+                    bitpos += nib2;
                     if ((s64)bitpos > 64)
                     {
-                        RENDER_BITS_REFILL(nib3)
+                        RENDER_BITS_REFILL_NEXT(nib2)
                     }
-                    tmp = 64 - nib3;
-                    vA = bufA >> (tmp & 0xFFFFFFFF);
-                    tmp = bufB >> (tmp & 0xFFFFFFFF);
-                    tmp = tmp - vA;
-                    tmp = tmp * frac;
-                    for (i = 14; i != 0; i--)
-                    {
-                        *q /= 2;
-                    }
-                    sample = masked2 + (vA + tmp);
-                    bufA <<= (nib3 & 0xFFFFFFFF);
-                    bufB <<= (nib3 & 0xFFFFFFFF);
+                    bufA <<= (nib2 & 0xFFFFFFFF);
+                    bufB <<= (nib2 & 0xFFFFFFFF);
                 }
                 tp += 2;
-            } while (0);
-        }
+                if (((u32)h & 0x20) == 0)
+                {
+                    sample = 0;
+                    break;
+                }
+                h = render_readPackedU16(tp);
+            }
+            sample = 0;
+            nib3 = h & 0xf;
+            if (nib3 != 0)
+            {
+                u64 masked2 = h & 0xFFF0;
+                bitpos += nib3;
+                if ((s64)bitpos > 64)
+                {
+                    RENDER_BITS_REFILL_NEXT(nib3)
+                }
+                tmp = 64 - nib3;
+                vA = bufA >> (tmp & 0xFFFFFFFF);
+                tmp = bufB >> (tmp & 0xFFFFFFFF);
+                tmp = tmp - vA;
+                tmp = tmp * frac;
+                for (i = 14; i != 0; i--)
+                {
+                    *q /= 2;
+                }
+                sample = masked2 + (vA + tmp);
+                bufA <<= (nib3 & 0xFFFFFFFF);
+                bufB <<= (nib3 & 0xFFFFFFFF);
+            }
+            tp += 2;
+        } while (0);
         outPosition[0] = sample;
         outPosition++;
     } while (RENDER_PACKED_ADDRESS(outPosition) != end);
