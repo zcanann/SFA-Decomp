@@ -317,7 +317,6 @@ void mapLoadUnloadObjects(int flag)
     u32 objStart;
     GameObject* obj;
     int unload;
-    s16 count;
     int bit;
     u8 mask;
     u8* bp;
@@ -332,6 +331,7 @@ void mapLoadUnloadObjects(int flag)
     int* tp;
     u32 cur;
     u32 end;
+    s16 count;
     int vis;
     int idx;
 
