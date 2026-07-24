@@ -1457,8 +1457,6 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkGroup* wgT;
     ObjfsaWalkGroup* wgBT;
     s32* linkId;
-    s16 sz;
-    s16 sx;
     ObjfsaPatch* ep;
     patchBase[0] = gObjfsaPatches;
     mapBlockFn_80059c2c(blockFlags);
@@ -1669,8 +1667,8 @@ void walkgroupFindExitPointFn_800dc398(void)
 
             iter = 0;
             pB = pC = p;
-            while (objfsaExitOutside(wgT, sx = pC->exit0X, sz = pC->exit0Z) &&
-                   objfsaExitOutside(wgBT, sx, sz))
+            while (objfsaExitOutside(wgT, pC->exit0X, pC->exit0Z) &&
+                   objfsaExitOutside(wgBT, pC->exit0X, pC->exit0Z))
             {
                 p->exit0X = (s16)(p->exit0X + fdx / div);
                 p->exit0Z = (s16)(p->exit0Z + fdz / div);
@@ -1682,8 +1680,8 @@ void walkgroupFindExitPointFn_800dc398(void)
             }
 
             iter = 0;
-            while (objfsaExitOutside(wgT, sx = pC->exit1X, sz = pC->exit1Z) &&
-                   objfsaExitOutside(wgBT, sx, sz))
+            while (objfsaExitOutside(wgT, pC->exit1X, pC->exit1Z) &&
+                   objfsaExitOutside(wgBT, pC->exit1X, pC->exit1Z))
             {
                 pC->exit1X = (s16)(pB->exit1X - fdx / div);
                 pC->exit1Z = (s16)(pC->exit1Z - fdz / div);
