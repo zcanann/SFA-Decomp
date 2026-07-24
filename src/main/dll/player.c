@@ -16317,10 +16317,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 f32 best;
                 u8 found;
-                obj2 = (int)ObjGroup_GetObjects(10, &objCount);
+                void* objs = ObjGroup_GetObjects(10, &objCount);
                 found = 0;
                 best = 10000.0f;
-                for (endFlag = 0; endFlag < objCount; endFlag++)
+                for (endFlag = 0, obj2 = (int)objs; endFlag < objCount; endFlag++)
                 {
                     va = *(int*)obj2;
                     if ((u32)va != 0 && arrayIndexOf((int*)(tbl + 0x13c), 9, ((GameObject*)va)->anim.seqId) != -1)
