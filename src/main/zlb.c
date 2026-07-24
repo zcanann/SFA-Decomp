@@ -111,36 +111,24 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                 distanceCodeLengths = gInflateDistanceCodeLengths;
                 distanceDecodeTable = gInflateDistanceDecodeTable;
                 val = 0;
+                i = 8;
                 p8 = gInflateCodeLengthCounts;
-                for (i = 8; i != 0; i--) {
-                    *p8 = val;
-                    p8++;
-                }
+                do { *p8 = val; p8++; i--; } while (i != 0);
+                i = 0x13;
                 p8 = gInflateCodeLengthCodeLengths;
-                for (i = 0x13; i != 0; i--) {
-                    *p8 = val;
-                    p8++;
-                }
+                do { *p8 = val; p8++; i--; } while (i != 0);
+                i = 0x10;
                 p16 = gInflateLiteralLengthCounts;
-                for (i = 0x10; i != 0; i--) {
-                    *p16 = val;
-                    p16++;
-                }
+                do { *p16 = val; p16++; i--; } while (i != 0);
+                i = 0x120;
                 p8 = literalCodeLengths;
-                for (i = 0x120; i != 0; i--) {
-                    *p8 = val;
-                    p8++;
-                }
+                do { *p8 = val; p8++; i--; } while (i != 0);
+                i = 0x10;
                 p16 = gInflateDistanceLengthCounts;
-                for (i = 0x10; i != 0; i--) {
-                    *p16 = val;
-                    p16++;
-                }
+                do { *p16 = val; p16++; i--; } while (i != 0);
+                i = 0x20;
                 p8 = distanceCodeLengths;
-                for (i = 0x20; i != 0; i--) {
-                    *p8 = val;
-                    p8++;
-                }
+                do { *p8 = val; p8++; i--; } while (i != 0);
                 literalCodeCount = (ZGB8() & 0x1f) + 0x101;
                 ZADV(5);
                 distanceCodeCount = (ZGB8() & 0x1f) + 1;
