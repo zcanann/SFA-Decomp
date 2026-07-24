@@ -1652,7 +1652,6 @@ void doPendingMapLoads(void)
     int doLoad;
     MapCellEntry** eBase;
     int col;
-    char* cellGrid;
     int slot;
     MapLoadRec* rowCursor;
     int layer;
@@ -1663,6 +1662,7 @@ void doPendingMapLoads(void)
     int cnt;
     f32 dz;
     int gx, gz;
+    char* cellGrid;
     int row;
     int unusedColumn;
     int gridPass;
