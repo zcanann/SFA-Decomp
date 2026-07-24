@@ -1648,9 +1648,9 @@ void doPendingMapLoads(void)
     s8** cBase;
     char* base;
     MapLoadRec* savedBlocks;
-    u8 waited;
     int doLoad;
     MapCellEntry** eBase;
+    u8 waited;
     int col;
     int slot;
     MapLoadRec* rowCursor;
