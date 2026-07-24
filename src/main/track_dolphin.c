@@ -611,6 +611,8 @@ void renderGlows(void)
     u8 sunAlpha;
     f32 sunDot;
     f32 cx, cy, cz;
+    int i;
+    ModelLightStruct* e;
 
     fogCol = *(GXColor*)&sSynthFadeUnit;
     GXSetCullMode(GX_CULL_NONE);
@@ -637,7 +639,6 @@ void renderGlows(void)
         sunDot = PSVECDotProduct(dir, cam);
         if (sunDot > lbl_803DEBCC)
         {
-            int i;
             int occ;
             f32 fade;
             skyBuildSunModelMatrix((f32(*)[4])sunMtx);
@@ -713,11 +714,10 @@ void renderGlows(void)
     colorScale = alpha;
     if (lbl_803DCE06 != 0)
     {
-        int i;
         for (i = 0; i < lbl_803DCE06; i++)
         {
-            ModelLightStruct* e = gGlowLightList[i];
             int d;
+            e = gGlowLightList[i];
             Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
@@ -732,7 +732,7 @@ void renderGlows(void)
         gxBlendFn_800789ac();
         for (i = 0; i < lbl_803DCE06; i++)
         {
-            ModelLightStruct* e = gGlowLightList[i];
+            e = gGlowLightList[i];
             if (e->glowAlpha != 0)
             {
                 f32 f = e->activeIntensity;
@@ -4657,13 +4657,22 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
     f32 ytmp;
-    int count;
+    s16 *xw, *yw, *zw;
+    f32 ex, ey, ez;
+    int t;
+    int tEnd;
+    int minYi, maxYi;
+    int j2;
+    int k22;
+    u8* blk;
+    s16 *xs, *ys, *zs;
+    int hdr;
+    int deg;
+    int flag20;
     int flag8;
     int i;
-    int flag20;
+    int count;
     int flag4;
-    int hdr;
-    int maxYi, minYi;
 
     hdr = *(int*)model;
 
@@ -4707,10 +4716,11 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
 
     for (; i < count; i++)
     {
-        u8* blk = modelFileGetCollisionBlock((u8*)hdr, i);
-        s16* bs = (s16*)blk;
-        u32 bf = *(u32*)(blk + 0x10);
-        int tEnd, t;
+        s16* bs;
+        u32 bf;
+        blk = modelFileGetCollisionBlock((u8*)hdr, i);
+        bs = (s16*)blk;
+        bf = *(u32*)(blk + 0x10);
 
         if (bf & 0x100000)
             continue;
@@ -4735,10 +4745,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
         {
             u16* twn = modelFileGetCollisionTriangle((u8*)hdr, t);
             u16* tw;
-            f32 tMinY, tMaxX, tMinX, tMaxY, tMinZ, tMaxZ;
-            int j;
+            f32 tMinX, tMaxX, tMinY, tMaxY, tMinZ, tMaxZ;
             u8* vout;
-            s16 *xs, *ys, *zs;
+            int j;
             int nxi, nyi, nzi;
             f32 fnx, fny, fnz;
             f32 len, inv;
@@ -4806,11 +4815,11 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
             ys = ((TrackTriangle*)cur)->vy;
             zs = ((TrackTriangle*)cur)->vz;
 
-            nxi = ys[0] * (zs[1] - zs[2]) + (ys[1] * (zs[2] - zs[0]) + ys[2] * (zs[0] - zs[1]));
+            nxi = ys[2] * (zs[0] - zs[1]) + (ys[0] * (zs[1] - zs[2]) + ys[1] * (zs[2] - zs[0]));
             fnx = nxi;
-            nyi = zs[0] * (xs[1] - xs[2]) + (zs[1] * (xs[2] - xs[0]) + zs[2] * (xs[0] - xs[1]));
+            nyi = zs[2] * (xs[0] - xs[1]) + (zs[0] * (xs[1] - xs[2]) + zs[1] * (xs[2] - xs[0]));
             fny = nyi;
-            nzi = xs[0] * (ys[1] - ys[2]) + (xs[1] * (ys[2] - ys[0]) + xs[2] * (ys[0] - ys[1]));
+            nzi = xs[2] * (ys[0] - ys[1]) + (xs[0] * (ys[1] - ys[2]) + xs[1] * (ys[2] - ys[0]));
             fnz = nzi;
             len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
             if (!(len > lbl_803DECB4))
@@ -4834,21 +4843,22 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x
             }
 
             ((TrackTriangle*)cur)->planeD =
-                -(*(f32*)(cur + 0xc) * zs[0] + (*(f32*)(cur + 4) * xs[0] + *(f32*)(cur + 8) * ys[0]));
+                -(*(f32*)(cur + 0xc) * *(s16*)(cur + 0x1c) +
+                  (*(f32*)(cur + 4) * *(s16*)(cur + 0x10) + *(f32*)(cur + 8) * *(s16*)(cur + 0x16)));
 
             {
-                int k22 = 0;
-                int deg = 0;
-                int j2 = 0;
-                s16* xw = xs;
-                s16* yw = ys;
-                s16* zw = zs;
-                f32 eps = lbl_803DECB4;
+                f32 eps;
+                k22 = 0;
+                deg = 0;
+                j2 = 0;
+                xw = xs;
+                yw = ys;
+                zw = zs;
+                eps = lbl_803DECB4;
                 for (; j2 < 3; j2++)
                 {
                     int k = j2 + 1;
                     f32 px, py, pz;
-                    f32 ex, ey, ez;
                     if (k > 2)
                         k = 0;
                     px = *(f32*)(cur + 4) + xw[0];
