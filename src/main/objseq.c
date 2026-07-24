@@ -505,15 +505,46 @@ static inline int objSeqIsObjMonitored(u8* walk, u8* obj)
     return 0;
 }
 
+static inline int objSeqRemoveMonitoredObj(u8* base, u8** monp, u8* obj)
+{
+    int v;
+    int j;
+    int k;
+    int n;
+    int flags;
+    u8* p;
+
+    n = (s8)lbl_803DD124;
+    for (j = 0; j < n; j++)
+    {
+        if (*(u8**)*monp == obj)
+        {
+            flags = *(int*)(base + j * 8 + 0x3d50);
+            lbl_803DD124 -= 1;
+            p = base + j * 8 + 0x3d4c;
+            v = *(int*)(p + 8);
+            for (k = j; k < (s8)lbl_803DD124; k++)
+            {
+                *(int*)p = v;
+                *(int*)(p + 4) = v;
+                p += 8;
+            }
+            return flags;
+        }
+        *monp += 8;
+    }
+    return 0;
+}
+
 int ObjSeq_start(int seqIdx, u8* obj, int flags)
 {
     u8* base;
     SeqRunTables* st;
     u8* walk2;
-    int i;
+    u8* walk;
     int packed;
     u8* mon;
-    u8* walk;
+    int i;
     int idx;
     int count;
     int first;
@@ -531,18 +562,15 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     GameObject* player;
     int doCam;
     u8* newObj;
-    u8* slotPtr;
+    s16* slotPtr;
     u8* buf;
     u8* blk;
     u8* p;
     s16* mapTbl;
     int j;
-    int k;
-    int v;
     int seqFlags;
     int found;
     int cur;
-    int n;
     s16 val;
     u32 objIdU;
     u32 mapFlags;
@@ -602,7 +630,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     }
 
     val = seqIdx + 1;
-    *(s16*)(slotPtr = slot * 2 + 0x3a98 + base) = val;
+    *(slotPtr = (s16*)(base + 0x3a98) + slot) = val;
     gObjSeqTaskTextId = -1;
     gObjSeqSubtitleId = -1;
 
@@ -864,29 +892,9 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     }
 
     st->headings[((GameObject*)obj)->seqIndex] = heading;
-    j = 0;
     base[((GameObject*)obj)->seqIndex + 0x3590] = 0;
     base[((GameObject*)obj)->seqIndex + 0x338c] = 0;
-    n = (s8)lbl_803DD124;
-    seqFlags = 0;
-    for (; j < n; j++)
-    {
-        if (*(u8**)mon == obj)
-        {
-            seqFlags = *(int*)(base + j * 8 + 0x3d50);
-            lbl_803DD124 -= 1;
-            p = base + j * 8 + 0x3d4c;
-            v = *(int*)(p + 8);
-            for (k = j; k < (s8)lbl_803DD124; k++)
-            {
-                *(int*)p = v;
-                *(int*)(p + 4) = v;
-                p += 8;
-            }
-            break;
-        }
-        mon += 8;
-    }
+    seqFlags = objSeqRemoveMonitoredObj(base, &mon, obj);
     if (seqFlags != 0)
     {
         st->cmdFlags[((GameObject*)obj)->seqIndex] |= 0x10;
@@ -894,7 +902,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     else
     {
         gObjSeqStreamStopped = 0;
-        trackId = (u32)(*(s16*)slotPtr - 1) & 0x3fff;
+        trackId = (u32)(*slotPtr - 1) & 0x3fff;
         gObjSeqCurrentTrackId = trackId;
         if (AudioStream_Play(trackId, ObjSeq_AudioStreamCallback) == 0)
         {
