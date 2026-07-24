@@ -518,9 +518,13 @@ def main():
         print(seg)
         return
 
-    # baseline measure (current tree state as-is; ensure built)
-    if not cur_o.is_file():
-        rebuild(unit["object"], args.version)
+    # baseline measure. ALWAYS rebuild cur_o from the on-disk (original) source
+    # first: in a multi-agent tree the .o can be stale (a peer rebuilt it, or a
+    # prior run left a variant applied), and measuring a stale baseline lets a
+    # variant that is actually a REGRESSION beat the (wrongly-low) baseline and
+    # get written to disk. Rebuilding here pins base_fz to the true current
+    # source. (Cheap: one locked build.)
+    rebuild(unit["object"], args.version)
     t_norm = objdump_norm(objdump, tgt_o, args.symbol)
     report_unit = report_unit_name(unit)
 
