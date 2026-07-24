@@ -1137,11 +1137,11 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                 config->velocityY = config->velocityY + attachedSource->velocityY;
                 config->velocityZ = config->velocityZ + attachedSource->velocityZ;
             }
-        }
 
-        if (attachedSource != NULL)
-        {
-            attachedTableKey = attachedSource->attachedTableKey;
+            if (attachedSource != NULL)
+            {
+                attachedTableKey = attachedSource->attachedTableKey;
+            }
             attachedSource = NULL;
         }
 
