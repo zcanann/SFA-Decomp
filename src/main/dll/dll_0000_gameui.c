@@ -3252,7 +3252,6 @@ void hudUpdateMinimapReveal(void)
 void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
 {
     u8* base;
-    int icon;
     int iconIndex;
     int rowOffset;
     int i;
@@ -3295,6 +3294,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
     u8 bi;
     f32 scaleT;
     f64 dv;
+    int icon;
 
     base = (u8*)lbl_803A87F0;
     player = Obj_GetPlayerObject();
