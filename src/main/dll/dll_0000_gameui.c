@@ -3613,7 +3613,7 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
             }
             drawTexture(hudYButtonItemIconTexture, gHudYButtonAnimXScale * gYButtonIconAnim + gHudYButtonIconX,
                         gHudYButtonAnimYScale * gYButtonIconAnim + lbl_803E1F9C,
-                        (int)(gHudYButtonIconScale * lbl_803DD83C),
+                        gHudYButtonIconScale * lbl_803DD83C,
                         (int)(gHudYButtonAnimRenderScale * gYButtonIconAnim + lbl_803E2018));
         }
         else
