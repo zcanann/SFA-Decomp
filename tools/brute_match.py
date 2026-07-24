@@ -37,6 +37,7 @@ import itertools
 import random
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -154,10 +155,13 @@ def fuzzy_measure(report_unit: str, symbol: str, version: str,
     report (fast: objects are prebuilt) and decodes the proto. `report generate`
     is all-or-nothing, so a concurrent agent mid-rebuild can make it fail -- we
     retry with backoff. Returns -1.0 if it never succeeds."""
-    out = Path(f"/tmp/bm_fuzzy_{version}.binpb")
+    out = Path(tempfile.gettempdir()) / f"bm_fuzzy_{version}.binpb"
+    cli = REPO / "build" / "tools" / "objdiff-cli.exe"
+    if not cli.is_file():
+        cli = REPO / "build" / "tools" / "objdiff-cli"
     for attempt in range(retries):
         r = subprocess.run(
-            ["build/tools/objdiff-cli", "report", "generate",
+            [str(cli), "report", "generate",
              "-o", str(out), "-f", "proto"],
             cwd=REPO, capture_output=True, text=True)
         if r.returncode == 0 and out.is_file():
@@ -170,9 +174,9 @@ def fuzzy_measure(report_unit: str, symbol: str, version: str,
 
 # ------------------------------------------------------------- source parse
 def find_objdump() -> Path:
-    p = REPO / "build" / "binutils" / "powerpc-eabi-objdump"
+    p = REPO / "build" / "binutils" / "powerpc-eabi-objdump.exe"
     if not p.is_file():
-        p = REPO / "build" / "binutils" / "powerpc-eabi-objdump.exe"
+        p = REPO / "build" / "binutils" / "powerpc-eabi-objdump"
     return p
 
 
