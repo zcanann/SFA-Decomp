@@ -1528,14 +1528,14 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
 void initFn_8006d020(void)
 {
     u8 savedHeap;
-    f32* placementX;
+    int column;
     int placedCount;
     f32* placementZ;
     f32* placementRadius;
     f32* placement;
     f32* otherPlacement;
     int placementAttempts;
-    int column;
+    f32* placementX;
     u8 overlaps;
     int otherIndex;
     int row;
@@ -1720,6 +1720,7 @@ void allocLotsOfTextures(void)
                 cc2 = (f32)(j + 1) - lbl_803DEDF8;
                 cc2 = cc2 * lbl_803DEDFC;
                 cc2 = cc2 * cc2;
+                rc = fi * lbl_803DEDFC;
                 d3 = sqrtf(rc * rc + cc2);
                 n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                 n2 = __fabs(mathCosfHighPrecision(lbl_803DEE00 * d2));
@@ -1762,6 +1763,7 @@ void allocLotsOfTextures(void)
                     cc2 = (f32)(i + 1) - lbl_803DEDF8;
                     cc2 = cc2 * lbl_803DEDFC;
                     cc2 = cc2 * cc2;
+                    rc = fj * lbl_803DEDFC;
                     d3 = sqrtf(rc * rc + cc2);
                     n1 = -mathCosfHighPrecision(lbl_803DEE00 * d1);
                     n2 = -mathCosfHighPrecision(lbl_803DEE00 * d2);
