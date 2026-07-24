@@ -1446,24 +1446,25 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state, f32 step)
 {
     f32 maxX;
     f32 minX;
-    f32 radius;
-    f32 bound;
+    f32 maxY;
     f32 minY;
     f32 maxZ;
     f32 minZ;
-    f32 maxY;
+    f32 bound;
     f32* pin;
-    int idx3;
+    f32* ptsWalk;
+    int mtxIdx;
     int byteOff;
     int n;
     CurvesCollisionState* radSrc;
+    CurvesCollisionState* traceSrc;
     f32 radiusScale;
     f32 rr;
     f32* radDst;
     f32* radWrite;
     f32* ptsRead;
     int i;
-    f32* ptsWalk;
+    int idx3;
     f32 m[16];
     f32 pts[12];
     MatrixTransform s;
@@ -1480,8 +1481,8 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state, f32 step)
             if ((*(void**)(*(int*)&obj->anim.parent + 0x58) != NULL) &&
                 (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj->anim.parent) != 0))
             {
-                idx3 = (*(u8*)(*(int*)(*(int*)&obj->anim.parent + 0x58) + 0x10c) + 2) * 0x10;
-                Matrix_TransformPoint((f32*)(*(int*)(*(int*)&obj->anim.parent + 0x58)) + idx3, obj->anim.localPosX,
+                mtxIdx = (*(u8*)(*(int*)(*(int*)&obj->anim.parent + 0x58) + 0x10c) + 2) * 0x10;
+                Matrix_TransformPoint((f32*)(*(int*)(*(int*)&obj->anim.parent + 0x58)) + mtxIdx, obj->anim.localPosX,
                                       obj->anim.localPosY, obj->anim.localPosZ, &obj->anim.worldPosX,
                                       &obj->anim.worldPosY, &obj->anim.worldPosZ);
             }
@@ -1542,69 +1543,71 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state, f32 step)
         minY = minX;
         maxZ = maxX;
         minZ = minX;
+        traceSrc = state;
         for (n = 0; n < ((int)(u32)state->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT); n++)
         {
-            bound = *ptsRead + (radius = *radWrite);
+            bound = *ptsRead + *radWrite;
             if (bound > maxX)
             {
                 maxX = bound;
             }
-            bound = *ptsRead - radius;
+            bound = *ptsRead - *radWrite;
             if (bound < minX)
             {
                 minX = bound;
             }
-            bound = ptsRead[1] + radius;
+            bound = ptsRead[1] + *radWrite;
             if (bound > maxY)
             {
                 maxY = bound;
             }
-            bound = ptsRead[1] - radius;
+            bound = ptsRead[1] - *radWrite;
             if (bound < minY)
             {
                 minY = bound;
             }
-            bound = ptsRead[2] + radius;
+            bound = ptsRead[2] + *radWrite;
             if (bound > maxZ)
             {
                 maxZ = bound;
             }
-            bound = ptsRead[2] - radius;
+            bound = ptsRead[2] - *radWrite;
             if (bound < minZ)
             {
                 minZ = bound;
             }
-            bound = state->traceStart[n][0] + radius;
+            bound = traceSrc->traceStart[0][0] + *radWrite;
             if (bound > maxX)
             {
                 maxX = bound;
             }
-            bound = state->traceStart[n][0] - radius;
+            bound = traceSrc->traceStart[0][0] - *radWrite;
             if (bound < minX)
             {
                 minX = bound;
             }
-            bound = state->traceStart[n][1] + radius;
+            bound = traceSrc->traceStart[0][1] + *radWrite;
             if (bound > maxY)
             {
                 maxY = bound;
             }
-            bound = state->traceStart[n][1] - radius;
+            bound = traceSrc->traceStart[0][1] - *radWrite;
             if (bound < minY)
             {
                 minY = bound;
             }
-            bound = state->traceStart[n][2] + radius;
+            bound = traceSrc->traceStart[0][2] + *radWrite;
             if (bound > maxZ)
             {
                 maxZ = bound;
             }
-            radius = state->traceStart[n][2] - radius;
-            if (radius < minZ)
+            bound = traceSrc->traceStart[0][2] - *radWrite;
+            if (bound < minZ)
             {
-                minZ = radius;
+                minZ = bound;
             }
             ptsRead = ptsRead + 3;
+            traceSrc = (CurvesCollisionState*)((u8*)traceSrc + 12);
             radWrite = radWrite + 1;
         }
         state->hitBounds.minX = minX;
