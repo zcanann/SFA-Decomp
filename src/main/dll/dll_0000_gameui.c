@@ -2405,8 +2405,8 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
     int total = lbl_803A9364[8];
     int middleCapacity = total - 0xd;
     int current = lbl_803A9364[2];
-    int seg4;
     int seg1;
+    int seg4;
     int seg3;
     int seg2;
     int rem4;
