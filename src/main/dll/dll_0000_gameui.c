@@ -4366,18 +4366,18 @@ typedef struct HeadDisplayEntry
 void headDisplayDraw(void)
 {
     u32 width;
-    u32 height;
+    int wavePhaseA;
     s16 panelAlpha;
+    u32 height;
     u8 panelType;
     int viewportY;
     int clampedAlpha;
     int waveAlpha;
     int noiseX;
     int noiseY;
-    int lineOffset;
-    int wavePhaseA;
     int wavePhaseB;
     int drawY;
+    int lineOffset;
     u32 clampedHeight;
     f32 wave;
     f32 cameraOrigin;
