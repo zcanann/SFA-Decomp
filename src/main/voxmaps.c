@@ -1213,7 +1213,6 @@ u8* voxmaps_getRouteNode(u8* header, int* nodeBase, u8* bitmap, int tileX, int y
 int* voxmaps_updateActiveMap(VoxPos* obj)
 {
     VoxMaps* vm = &gVoxMaps;
-    int zWorldOffset;
     int gridX;
     int gridZ;
     int cellIndex;
@@ -1224,6 +1223,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj)
     int foundSlot;
     int blockId;
     int bestSlot;
+    int zWorldOffset;
     MapCellEntry* cell;
     VoxMapSlotOrigin* origin;
 

@@ -39,8 +39,8 @@ u8 gInflateCodeLengthCounts[8];
 
 #define ZROT1(b) ((((u32)(b) << sh) | ((u32)(b) >> (32 - sh))) & 1)
 #define ZROT8(b) ((((u32)(b) << sh) | ((u32)(b) >> (32 - sh))) & 0xff)
-#define ZGB8() (ZROT8(src[0]) | (u32)src[1] << (8 - pos))
-#define ZGB16() (ZROT8(src[0]) | (u32)src[1] << (8 - pos) | (u32)src[2] << (0x10 - pos))
+#define ZGB8() ((u32)src[1] << (8 - pos) | ZROT8(src[0]))
+#define ZGB16() ((u32)src[1] << (8 - pos) | ZROT8(src[0]) | (u32)src[2] << (0x10 - pos))
 #define ZADV(n) (pos += (n), src += pos >> 3, pos &= 7, sh = 32 - pos)
 #define ZROTL(b, m) (((u32)(b) << (m)) | ((u32)(b) >> (32 - (m))))
 
@@ -168,7 +168,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                     u32 len = gInflateCodeLengthCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (literalMaxBits - len); k++) {
-                            u8 c = gInflateCodeLengthNextCode[len] + 1;
+                            int c = gInflateCodeLengthNextCode[len] + 1;
                             gInflateCodeLengthNextCode[len] = c;
                             (gInflateCodeLengthDecodeTable - 1)[c] = i;
                         }
@@ -232,7 +232,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                     u32 len = literalCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (literalMaxBits - len); k++) {
-                            u16 c = gInflateLiteralNextCode[len] + 1;
+                            int c = gInflateLiteralNextCode[len] + 1;
                             gInflateLiteralNextCode[len] = c;
                             *(u16 *)(literalDecodeTable + (c - 1) + (c - 1)) = i;
                         }
@@ -253,7 +253,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                     u32 len = distanceCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (distanceMaxBits - len); k++) {
-                            u16 c = gInflateDistanceNextCode[len] + 1;
+                            int c = gInflateDistanceNextCode[len] + 1;
                             gInflateDistanceNextCode[len] = c;
                             distanceDecodeTable[c - 1] = i;
                         }
