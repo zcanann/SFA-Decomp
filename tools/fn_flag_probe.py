@@ -49,6 +49,7 @@ flag-fixable function in track_dolphin where a clean re-run found 3.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shlex
 import subprocess
@@ -78,8 +79,14 @@ PROFILES: dict[str, tuple[str | None, str | None]] = {
 def ninja_cflags(obj_path: str) -> tuple[list[str], str]:
     """Recover the exact cflags ninja uses for one object, plus its mw_version."""
     text = (REPO / "build.ninja").read_text()
-    marker = f"build {obj_path}: "
-    idx = text.index(marker)
+    # ninja writes native separators; on Windows that is backslashes while the
+    # objdiff config we derive obj_path from uses forward slashes.
+    for cand in (obj_path, obj_path.replace("/", "\\")):
+        idx = text.find(f"build {cand}: ")
+        if idx != -1:
+            break
+    else:
+        raise SystemExit(f"no build statement for {obj_path} in build.ninja")
     # the build statement runs until the next line that starts a new 'build '/'rule '
     end = len(text)
     for m in re.finditer(r"^(?:build|rule) ", text[idx + 1 :], re.M):
@@ -107,8 +114,10 @@ def substitute(flags: list[str], opt: str | None, inline: str | None) -> list[st
 
 def compile_probe(src: str, flags: list[str], mwv: str, outdir: Path) -> Path | None:
     outdir.mkdir(parents=True, exist_ok=True)
-    cmd = [
-        str(REPO / "build/tools/wibo"),
+    # wibo is the Linux loader for the Windows-native compiler; on Windows the
+    # ninja rules invoke sjiswrap.exe/mwcceppc.exe directly (see build.ninja).
+    cmd = [] if os.name == "nt" else [str(REPO / "build/tools/wibo")]
+    cmd += [
         str(REPO / "build/tools/sjiswrap.exe"),
         str(REPO / f"build/compilers/{mwv}/mwcceppc.exe"),
         *flags, "-c", src, "-o", str(outdir),
