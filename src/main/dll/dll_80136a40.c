@@ -988,23 +988,15 @@ void* errDisplayThreadMain(void* unused)
                 lineRows = y + 0x4c;
                 lineOffset = lineRows * 0x280;
                 previousLineOffset = (y + 0x4b) * 0x280;
-                if (lineRows > 0)
+                for (n = 0x280; n != 0; n--)
                 {
-                    for (n = 0x280; n != 0; n--)
+                    debugDrawFrameBuffer[lineOffset] = 0xc080;
+                    if (lineRows > 0)
                     {
-                        debugDrawFrameBuffer[lineOffset] = 0xc080;
                         debugDrawFrameBuffer[previousLineOffset] = 0xc080;
-                        lineOffset++;
-                        previousLineOffset++;
                     }
-                }
-                else
-                {
-                    for (n = 0x280; n != 0; n--)
-                    {
-                        debugDrawFrameBuffer[lineOffset] = 0xc080;
-                        lineOffset++;
-                    }
+                    lineOffset++;
+                    previousLineOffset++;
                 }
             }
             if (enableDebugText != 0)
