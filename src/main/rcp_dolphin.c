@@ -1876,6 +1876,25 @@ void* textureLoadAsset(int asset)
     return out;
 }
 
+static inline void loadTextureBank(int bank, int fileId)
+{
+    int* p;
+    int n = 0;
+
+    p = getCurrentDataFile(fileId);
+    gRcpTexBankTable[bank] = p;
+    if (gRcpTexBankTable == NULL)
+    {
+        return;
+    }
+    while (p[0] != -1)
+    {
+        p++;
+        n++;
+    }
+    gRcpTexBankCount[bank] = n - 1;
+}
+
 void loadTextureFiles(void)
 {
     int* p;
@@ -1884,32 +1903,9 @@ void loadTextureFiles(void)
     int n;
 
     gLoadedTextures = mmAlloc(0x2bc0, 6, 0);
-    gLoadedTextureCount = n = 0;
-    p = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
-    gRcpTexBankTable[0] = p;
-    if (gRcpTexBankTable == NULL)
-    {
-        return;
-    }
-    while (p[0] != -1)
-    {
-        p++;
-        n++;
-    }
-    gRcpTexBankCount[0] = n - 1;
-    n = 0;
-    p = getCurrentDataFile(MLDF_FILEID_TEX1_TAB_A);
-    gRcpTexBankTable[1] = p;
-    if (gRcpTexBankTable == NULL)
-    {
-        return;
-    }
-    while (p[0] != -1)
-    {
-        p++;
-        n++;
-    }
-    gRcpTexBankCount[1] = n - 1;
+    gLoadedTextureCount = 0;
+    loadTextureBank(0, MLDF_FILEID_TEX0_TAB_A);
+    loadTextureBank(1, MLDF_FILEID_TEX1_TAB_A);
     n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEXPRE_TAB);
     gRcpTexBankTable[2] = p;
@@ -2248,6 +2244,28 @@ void warpToMap(int idx, s8 transType)
     Pause_SetDisabled(1);
 }
 #undef mtx
+static inline int objIsVisibleInAct(u8* def, int act)
+{
+    if (act == -1)
+    {
+        return 0;
+    }
+    if (act != 0)
+    {
+        if (act < 9)
+        {
+            if ((def[3] >> (act - 1)) & 1)
+                return 0;
+        }
+        else
+        {
+            if ((def[5] >> (0x10 - act)) & 1)
+                return 0;
+        }
+    }
+    return 1;
+}
+
 void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObject* parent)
 {
     int* seg = (int*)(lbl_803822C8 + mapId * 0x8c);
@@ -2312,22 +2330,7 @@ void mapInstantiateObjects(MapRomListPage* page, int mapId, int index, GameObjec
         if (i == 0)
         {
             v = (*gMapEventInterface)->getMapAct(mapId);
-            if (v == -1)
-            {
-                flag = 0;
-            }
-            else if (v != 0 && v < 9 && ((*(u8*)(obj + 3) >> (v - 1)) & 1))
-            {
-                flag = 0;
-            }
-            else if ((*(u8*)(obj + 5) >> (0x10 - v)) & 1)
-            {
-                flag = 0;
-            }
-            else
-            {
-                flag = 1;
-            }
+            flag = objIsVisibleInAct((u8*)obj, v);
             if (flag != 0)
             {
                 if (objIndex >= 0)
@@ -2384,22 +2387,7 @@ int objShouldUnload(GameObject* obj)
         return 0;
     }
     m = (*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
-    if (m == -1)
-    {
-        keep = 0;
-    }
-    else if (m != 0 && m < 9 && ((def[3] >> (m - 1)) & 1))
-    {
-        keep = 0;
-    }
-    else if ((def[5] >> (0x10 - m)) & 1)
-    {
-        keep = 0;
-    }
-    else
-    {
-        keep = 1;
-    }
+    keep = objIsVisibleInAct(def, m);
     if (keep == 0)
     {
         return 1;
