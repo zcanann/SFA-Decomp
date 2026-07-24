@@ -131,11 +131,11 @@ void groundanimator_gatherVertices(int* obj, GroundAnimatorState* state, Grounda
     int iz;
     int blkIdx;
     int mid;
-    f32 fracX;
+    f32 vpos[3];
     f32 clampMax;
     f32 fracZ;
     f32 radsq;
-    f32 vpos[3];
+    f32 fracX;
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
                                             (double)((GameObject*)obj)->anim.localPosY,
                                             (double)((GameObject*)obj)->anim.localPosZ));
