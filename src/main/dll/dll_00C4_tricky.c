@@ -1737,12 +1737,12 @@ void Tricky_update(int obj)
             *(int*)&trickyState->followObj = obj;
             trickyState->stateIndex = 0xf;
             trickyState->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
-            trickyState->stateFlags &= ~(u64)0x40000;
+            trickyState->stateFlags &= (u64)~0x40000u;
             trickyState->commandPhase = 3;
             if (trickyState->targetPosPtr != (u8*)&trickyState->wanderTargetX)
             {
                 trickyState->targetPosPtr = (u8*)&trickyState->wanderTargetX;
-                *(s32*)&trickyState->stateFlags &= ~(u64)0x400;
+                trickyState->stateFlags &= (u64)~0x400u;
                 trickyState->linkedWalkGroup = 0;
             }
         }
