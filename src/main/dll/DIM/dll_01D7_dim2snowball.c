@@ -88,6 +88,15 @@ static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
+static inline GameObject* dim2snowball_findSharpclawHit(GameObject** list, int* start, int* count)
+{
+    GameObject** p = &list[*start];
+    for (; *start < *count; p++, (*start)++)
+        if ((*p)->anim.seqId == OBJ_TYPE_SHARPCLAW)
+            return list[*start];
+    return NULL;
+}
+
 int dim2snowball_getExtraSize(void) { return 0xb0; }
 int dim2snowball_getObjectTypeId(void) { return 0x0; }
 
@@ -163,17 +172,7 @@ void dim2snowball_update(int* obj)
                 ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * k;
                 ((Dim2SnowballState*)extra)->flagsAC |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
-                for (; start < count; start++)
-                {
-                    if (list[start]->anim.seqId == OBJ_TYPE_SHARPCLAW)
-                    {
-                        hit = list[start];
-                        goto found_sharpclaw;
-                    }
-                }
-                hit = NULL;
-
-            found_sharpclaw:
+                hit = dim2snowball_findSharpclawHit(list, &start, &count);
                 if (hit != NULL)
                 {
                     (*(void (**)(GameObject*))(**(int**)&hit->anim.dll + 0x20))(hit);
