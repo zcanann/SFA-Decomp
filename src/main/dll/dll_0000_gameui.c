@@ -2407,9 +2407,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags)
     int current = lbl_803A9364[2];
     int seg1;
     int seg4;
-    int seg3;
-    int seg2;
     int rem4;
+    int seg2;
+    int seg3;
     int rem1;
     int previewFirstWidth;
     int endFilledWidth;
@@ -4365,9 +4365,9 @@ typedef struct HeadDisplayEntry
 
 void headDisplayDraw(void)
 {
-    u32 width;
-    int wavePhaseA;
     s16 panelAlpha;
+    int wavePhaseA;
+    u32 width;
     u32 height;
     u8 panelType;
     int viewportY;
