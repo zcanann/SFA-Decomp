@@ -1644,7 +1644,7 @@ typedef struct MapBlockCleanup
 void doPendingMapLoads(void)
 {
     MapLoadRec* cellCursor;
-    char** aBase;
+    int gx, gz;
     s8** cBase;
     char* base;
     MapLoadRec* savedBlocks;
@@ -1661,7 +1661,7 @@ void doPendingMapLoads(void)
     MapLoadRec* recsCursor;
     int cnt;
     f32 dz;
-    int gx, gz;
+    char** aBase;
     char* cellGrid;
     int row;
     int unusedColumn;
@@ -1944,35 +1944,34 @@ void doPendingMapLoads(void)
                                 mapMarkRectRows(g3, rectD);
                                 {
                                     int loadedCount = 0;
-                                    int cellNo;
-                                    int rowNo;
-                                    char* cellState;
+                                    int zc[2];
                                     int blockX;
-                                    cellNo = 0;
-                                    rowNo = cellNo;
+                                    char* cellState;
+                                    zc[0] = 0;
+                                    zc[1] = zc[0];
                                     cellState = g3;
                                     do
                                     {
                                         for (blockX = 0; blockX < 16; blockX++)
                                         {
                                             int bx = gMapBlockOriginX + blockX;
-                                            int bz = gMapBlockOriginZ + rowNo;
+                                            int bz = gMapBlockOriginZ + zc[1];
                                             if (*cellState == -3)
                                             {
-                                                if (mapLoadBlock(blockX, rowNo, bx, bz, layer) == 0)
+                                                if (mapLoadBlock(blockX, zc[1], bx, bz, layer) == 0)
                                                 {
                                                     *cellState = -2;
                                                 }
                                                 else
                                                 {
-                                                    gMapLayerCellStates[cellNo] = (s8)loadedCount++;
+                                                    gMapLayerCellStates[zc[0]] = (s8)loadedCount++;
                                                 }
                                             }
-                                            cellNo++;
+                                            zc[0]++;
                                             cellState++;
                                         }
-                                        rowNo++;
-                                    } while (rowNo < 16);
+                                        zc[1]++;
+                                    } while (zc[1] < 16);
                                 }
                                 aBase++;
                                 cBase++;
@@ -1992,8 +1991,7 @@ void doPendingMapLoads(void)
                             if (romListSlot->romlist != NULL)
                             {
                                 s16 sl = romListSlot->slot;
-                                char* dp = base + sl * 0x8C;
-                                defStartFn_8005972c(romListSlot->romlist, (u32*)(dp + 0x4208), sl, 1);
+                                defStartFn_8005972c(romListSlot->romlist, (u32*)(base + sl * 0x8C + 0x4208), sl, 1);
                                 mm_free(romListSlot->romlist);
                                 ((int*)(base + 0x83A8))[sl] = 0;
                             }
@@ -2025,7 +2023,8 @@ void doPendingMapLoads(void)
                                 MapShaderLayerCleanup* shaderLayer;
                                 int layerIndex;
                                 gMapBlockIds[blockId] = -1;
-                                z[1] = gMapBlocks[blockId] = z[0] = 0;
+                                gMapBlocks[blockId] = z[0] = 0;
+                                z[1] = z[0];
                                 for (; z[0] < block->shaderCount; z[1] += sizeof(MapShaderCleanup), z[0]++)
                                 {
                                     shader = (MapShaderCleanup*)((char*)block->shaders + z[1]);
@@ -2045,7 +2044,8 @@ void doPendingMapLoads(void)
                                         shaderLayer = (MapShaderLayerCleanup*)((char*)shaderLayer + 8);
                                     }
                                 }
-                                z[1] = z[0] = 0;
+                                z[0] = 0;
+                                z[1] = z[0];
                                 for (; z[0] < block->textureCount; z[1] += 4, z[0]++)
                                     textureFree(*(Texture**)((char*)block->textures + z[1]));
                                 if (block->auxData != NULL)
