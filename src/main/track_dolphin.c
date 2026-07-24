@@ -790,21 +790,23 @@ void getSunFlareScissorRect(int* outX, int* outY, int* outWidth, int* outHeight)
 
 static inline int isGlowInFrustum(ModelLightStruct* light)
 {
-    u8 i;
     FrustumPlane* plane;
+    u8 i;
     f32 offsetZ;
     f32 offsetX;
+    f32 bias;
 
     i = 0;
     offsetZ = playerMapOffsetZ;
     offsetX = playerMapOffsetX;
+    bias = lbl_803DEBCC;
     for (; i < 5; i++)
     {
         f32 dot;
         plane = &gViewFrustumPlanes[i];
         dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
-                  plane->normalZ * (light->worldZ - offsetZ) + plane->distance + lbl_803DEBCC;
-        if (dot < lbl_803DEBCC)
+                  plane->normalZ * (light->worldZ - offsetZ) + plane->distance + bias;
+        if (dot < bias)
         {
             return 0;
         }
@@ -3943,8 +3945,8 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 y, u8 type)
     return 1;
 }
 
-int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 maxStep, f32 epsArg, f32* out29,
-                         f32* outNrm, f32* outDist)
+int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32* out29, f32* outNrm, f32 maxStep,
+                         f32* outDist, f32 epsArg)
 {
     f32 nrm[3];
     f32 e[3];
@@ -4090,7 +4092,7 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     u8 vertexBit;
     u8 nextBit;
     u8 bounces;
-    int hit;
+    s16 hit;
     TrackTriangle* tri;
     u32 objmtx;
     TrackBlockDescriptor* desc;
@@ -4235,7 +4237,7 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         if (b == 0)
                         {
                             hit = 1;
-                            break;
+                            goto hitCheck;
                         }
                         tri->edgeOutBits = b;
                     }
@@ -4269,10 +4271,8 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         tri->edgeOutBits = b;
                     }
                 }
-                if (hit == 0)
+                if (mag != 0.0f)
                 {
-                    if (mag == 0.0f)
-                        continue;
                     for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                          (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                     {
@@ -4295,17 +4295,14 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             vb[2] = tri->vz[k];
                             PSVECSubtract(vbp, va, evecp);
                             rdatap[2] = Vec3_Normalize(evecp);
-                            if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, 0.0f, hitpt, plane,
-                                                     &frac))
+                            if (hitDetectFn_800664fc(va, ws, dir, mag, hitpt, plane, maxStep,
+                                                     &frac, 0.0f))
                             {
                                 hit = 1;
-                                break;
+                                goto hitCheck;
                             }
                         }
-                        if (hit != 0)
-                            break;
                     }
-                    if (hit == 0)
                     for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                          (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                     {
@@ -4369,7 +4366,7 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             if (ok)
                             {
                                 hit = 1;
-                                break;
+                                goto hitCheck;
                             }
                             vb[0] = tri->vx[nextBit];
                             vb[1] = tri->vy[nextBit];
@@ -4421,13 +4418,12 @@ int hitDetect_800667ec(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                             if (ok)
                             {
                                 hit = 1;
-                                break;
+                                goto hitCheck;
                             }
                         }
-                        if (hit != 0)
-                            break;
                     }
                 }
+            hitCheck:
                 if (hit != 0)
                 {
                     u8 triFlags;
@@ -4968,13 +4964,9 @@ u8 doEdges;
     dw = descp;
     do
     {
-        p1 = cw;
-        q1 = dw;
-        for (gx = gx0; gx <= gx1 && count < 16; gx++)
+        for (gx = gx0, p1 = cw, q1 = dw; gx <= gx1 && count < 16; gx++)
         {
-            p2 = p1;
-            q2 = q1;
-            for (gz = gz0; gz <= gz1 && count < 16; gz++)
+            for (gz = gz0, p2 = p1, q2 = q1; gz <= gz1 && count < 16; gz++)
             {
                 MapBlockData* blk = mapGetBlockAtPos(gx, gz, layer);
                 if (blk != NULL)
@@ -5515,9 +5507,9 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
     u32 w;
     u32 h;
     u32 wA;
-    int pixelA;
-    int pixelB;
     u32 wB;
+    int pixelB;
+    int pixelA;
     int redB;
     int redA;
     int blue;
@@ -5556,7 +5548,7 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
             int i, j;
             for (i = 0; i < src1->height; i++)
             {
-                u8 *pa, *pb;
+                u8 *pa, *pb, *pc;
                 u32 wd;
                 int rowDataOffset;
                 int tileColumnOffset;
@@ -5593,8 +5585,8 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                             0xfc)
                            << 3;
                     outputPixel = blue | (red | green);
-                    WRITE_TEXTURE_U16((u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset + 0x60,
-                                      outputPixel);
+                    pc = (u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset;
+                    WRITE_TEXTURE_U16(pc + 0x60, outputPixel);
                 }
             }
         }
@@ -5613,18 +5605,18 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     int pixelColumnOffset = (j & 3) * 2;
                     int tileColumnOffset;
                     int rowDataOffset;
-                    u8 *at, *ad, *bd, *bt, *ct, *cd;
+                    u8 *ad, *bd, *ct, *cd;
                     int aLo, bLo, aHi, bHi;
-                    bt = (u8*)src1 + pixelColumnOffset;
+                    ad = (u8*)src1 + pixelColumnOffset;
                     tileColumnOffset = (j >> 2) * 0x40;
-                    at = bt + tileColumnOffset;
-                    bt = at + tileRowOffset;
+                    ad += tileColumnOffset;
+                    ad += tileRowOffset;
                     rowDataOffset = (int)wd * tileRowGroupOffset * 2;
-                    ad = bt + rowDataOffset;
-                    bt = (u8*)src2 + pixelColumnOffset;
-                    bt += tileColumnOffset;
-                    bt += tileRowOffset;
-                    bd = bt + rowDataOffset;
+                    ad += rowDataOffset;
+                    bd = (u8*)src2 + pixelColumnOffset;
+                    bd += tileColumnOffset;
+                    bd += tileRowOffset;
+                    bd += rowDataOffset;
                     aLo = READ_TEXTURE_U16(ad + 0x60);
                     aLo = (u8)aLo;
                     bLo = READ_TEXTURE_U16(bd + 0x60);
