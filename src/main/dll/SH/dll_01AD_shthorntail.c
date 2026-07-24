@@ -342,7 +342,6 @@ void SHthorntail_update(int obj)
     u32 uval;
     int ref;
     s32 activeConfigToken;
-    f32 facingAngleRadians;
     f32 negSinFacing;
     f32 negCosFacing;
     f32 leashDistance;
@@ -441,10 +440,8 @@ void SHthorntail_update(int obj)
             {
                 runtime->storedFacingAngle = ((SHthorntailObject*)obj)->facingAngle;
             }
-            facingAngleRadians = (3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f;
-            negSinFacing = -mathSinf(facingAngleRadians);
-            facingAngleRadians = (3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f;
-            negCosFacing = -mathCosf(facingAngleRadians);
+            negSinFacing = -mathSinf((3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f);
+            negCosFacing = -mathCosf((3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f);
             ((SHthorntailObject*)obj)->modelPos.x = negSinFacing * -animEvents.rootDeltaZ + ((SHthorntailObject*)obj)->modelPos.x;
             ((SHthorntailObject*)obj)->modelPos.z = negCosFacing * -animEvents.rootDeltaZ + ((SHthorntailObject*)obj)->modelPos.z;
             ((SHthorntailObject*)obj)->modelPos.x = negCosFacing * -animEvents.rootDeltaX + ((SHthorntailObject*)obj)->modelPos.x;
@@ -499,7 +496,7 @@ void SHthorntail_update(int obj)
         {
             leashDistance = getXZDistance(&((SHthorntailObject*)obj)->pos.x, (float*)&config->homePos);
             if ((leashDistance > (f32)(s32)((u32)config->leashRadiusByte * (u32)config->leashRadiusByte)) &&
-                (ref = ViewFrustum_IsSphereVisible(&((SHthorntailObject*)obj)->modelPos.x, ((SHthorntailObject*)obj)->cullRadius * ((SHthorntailObject*)obj)->modelScale), ref == 0))
+                (ref = ViewFrustum_IsSphereVisible((f32*)(obj + 0xC), ((SHthorntailObject*)obj)->cullRadius * ((SHthorntailObject*)obj)->modelScale), ref == 0))
             {
                 ref = getAngle(((SHthorntailObject*)obj)->modelPos.x - config->homePos.x, ((SHthorntailObject*)obj)->modelPos.z - config->homePos.z);
                 ((SHthorntailObject*)obj)->facingAngle = ref;
