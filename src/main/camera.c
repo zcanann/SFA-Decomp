@@ -291,19 +291,36 @@ s32 Obj_BuildTransformMatrixSlot(GameObject* obj)
     return gObjTransformMatrixSlot - 1;
 }
 
+static inline f32 Camera_Expf(f32 x, u32 iterations)
+{
+    f32 y;
+    f32 xp;
+    f32 n;
+    f32 yp;
+
+    y = 1.0f;
+    n = 1.0f;
+    xp = x;
+    yp = 1.0f;
+
+    for (; iterations != 0; iterations--)
+    {
+        y += xp / yp;
+        n += 1.0f;
+        xp *= x;
+        yp *= n;
+    }
+
+    return y;
+}
+
 void Camera_UpdateShakeAndFarPlane(void)
 {
     CameraViewSlot* slot;
     f32 expTerm;
-    f32 one;
-    f32 factorial;
-    f32 n;
-    f32 term;
-    f32 falloffTime;
     f32 shakeTimer;
     f32 sinePhase;
     f32 phaseScale;
-    s32 i;
 
     gCameraViewportYOffset = cameraViewportYOffset;
     if (gCameraFarPlaneTransitionFramesLeft != 0)
@@ -332,56 +349,7 @@ void Camera_UpdateShakeAndFarPlane(void)
     }
     else if (slot->shakeActive == 1)
     {
-        falloffTime = -slot->shakeFalloff * (shakeTimer = slot->shakeTimer);
-        expTerm = *(f32*)&lbl_803DE5F0;
-        n = expTerm;
-        term = falloffTime;
-        factorial = expTerm;
-        one = expTerm;
-
-        for (i = 0; i < 2; i++)
-        {
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-        }
+        expTerm = Camera_Expf(-slot->shakeFalloff * (shakeTimer = slot->shakeTimer), 20);
 
         phaseScale = lbl_803DE5FC * slot->shakeDuration;
         sinePhase = (gCameraPi * (phaseScale * shakeTimer)) / lbl_803DE600;
