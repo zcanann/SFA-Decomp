@@ -1384,6 +1384,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_0047_cameramodeteststrength.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/dll/attentioncam.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_60.c"),
+            Object(NonMatching, "main/dll/dll_0049_cameramodecombat_intro.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0049_cameramodecombat.c", cflags=cflags_dll_noopt_nocse),
             Object(NonMatching, "main/dll/dll_004A_cameramodeshipbattle.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(MatchingFor("GSAE01"), "main/dll/dll_004C_camDebug.c", cflags=cflags_dll_noopt),

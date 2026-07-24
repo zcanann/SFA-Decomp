@@ -1134,8 +1134,11 @@ main/dll/dll_0047_cameramodeteststrength.c:
 main/dll/dll_60.c:
 	.text       start:0x8010BF08 end:0x8010BF08
 
+main/dll/dll_0049_cameramodecombat_intro.c:
+	.text       start:0x8010BF08 end:0x8010C064
+
 main/dll/dll_0049_cameramodecombat.c:
-	.text       start:0x8010BF08 end:0x8010CEC0
+	.text       start:0x8010C064 end:0x8010CEC0
 	.data       start:0x80319CE8 end:0x80319D18
 	.sbss       start:0x803DD568 end:0x803DD570
 

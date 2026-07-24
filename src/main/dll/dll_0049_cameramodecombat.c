@@ -1,4 +1,4 @@
-/* DLL 0x0049 (cameramodecombat) - Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
+/* DLL 0x0049 (cameramodecombat) - Camera mode combat handlers [0x8010C064-0x8010CEC0). */
 #include "main/camera_interface.h"
 #include "main/resource.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -63,62 +63,6 @@ typedef struct {
     u8 b6 : 1;
     u8 b7 : 1;
 } CameraModeCombatFlags;
-
-void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f32* targetY)
-{
-    GameObject* focus;
-    GameObject* target;
-    ObjHitVolumeRuntimeTransform* hitVolumes;
-    u8 curIdx;
-    float lim;
-    float t;
-
-    target = (GameObject*)camera->targetObj;
-    focus = (GameObject*)camera->anim.targetObj;
-    hitVolumes = target->anim.hitVolumeTransforms;
-    curIdx = target->hitVolumeIndex;
-    if ((u32)curIdx != gCamCombatState->pathBlendTargetIndex)
-    {
-        gCamCombatState->pathBlendStartIndex = gCamCombatState->pathBlendTargetIndex;
-        gCamCombatState->pathBlendWeight = lbl_803E18C0;
-    }
-    t = gCamCombatState->pathBlendWeight;
-    lim = lbl_803E18C4;
-    if (t > lim)
-    {
-        gCamCombatState->pathBlendWeight = t - lbl_803E18C8 * timeDelta;
-        t = gCamCombatState->pathBlendWeight;
-        if (gCamCombatState->pathBlendWeight < lim)
-        {
-            gCamCombatState->pathBlendWeight = lim;
-            gCamCombatState->pathBlendStartIndex = target->hitVolumeIndex;
-        }
-        {
-            u8 ci = gCamCombatState->pathBlendStartIndex;
-            float w;
-            float dx = hitVolumes[ci].centerX - hitVolumes[target->hitVolumeIndex].centerX;
-            float dy = hitVolumes[ci].centerY - hitVolumes[target->hitVolumeIndex].centerY;
-            float dz = hitVolumes[ci].centerZ - hitVolumes[target->hitVolumeIndex].centerZ;
-            w = gCamCombatState->pathBlendWeight;
-            dx *= w;
-            dy *= w;
-            dz *= w;
-            dx += hitVolumes[target->hitVolumeIndex].centerX;
-            dy += hitVolumes[target->hitVolumeIndex].centerY;
-            dz += hitVolumes[target->hitVolumeIndex].centerZ;
-            *outX = dx - focus->anim.worldPosX;
-            *outY = dy - *targetY;
-            *outZ = dz - focus->anim.worldPosZ;
-        }
-    }
-    else
-    {
-        *outX = hitVolumes[target->hitVolumeIndex].centerX - focus->anim.worldPosX;
-        *outY = hitVolumes[target->hitVolumeIndex].centerY - *targetY;
-        *outZ = hitVolumes[target->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
-    }
-    gCamCombatState->pathBlendTargetIndex = target->hitVolumeIndex;
-}
 
 void CameraModeCombat_copyToCurrent(void)
 {
