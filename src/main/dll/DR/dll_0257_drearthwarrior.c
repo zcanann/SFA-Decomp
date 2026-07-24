@@ -267,10 +267,7 @@ extern f32 lbl_803E8318;
 extern f32 lbl_803E831C;
 extern f32 lbl_803E8320;
 extern f32 lbl_803E8324;
-extern f32 lbl_803E8328;
-extern f32 lbl_803E832C;
 extern f32 lbl_803E8330;
-extern f32 lbl_803E8334;
 extern f32 lbl_803E833C;
 extern f32 lbl_803E8340;
 extern f32 lbl_803E8344;
@@ -416,10 +413,10 @@ void DR_EarthWarrior_updateLookAtBones(GameObject* obj, int sub, int state)
         f32 scale;
         f32 ph;
 
-        ph = (f32)(s32)((BaddieState*)state)->spawnRotY / lbl_803E8328;
-        scale = lbl_803E832C;
-        step = lbl_803E8330;
-        delta = (int)(scale * (step * -((ph < lbl_803E8334) ? lbl_803E8334 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph))));
+        ph = (f32)(s32)((BaddieState*)state)->spawnRotY / 8192.0f;
+        scale = 182.0f;
+        step = 10.0f;
+        delta = (int)(scale * (step * -((ph < -1.0f) ? -1.0f : ((ph > 1.0f) ? 1.0f : ph))));
         delta -= (u16)s->aimAccumX;
     }
     if (delta > 0x8000)
@@ -441,14 +438,7 @@ void DR_EarthWarrior_updateLookAtBones(GameObject* obj, int sub, int state)
         vec0[0] = -s->aimAccumX;
         vec0[1] = s->aimAccumY / 2;
         sv = vec0[1];
-        if (sv < -4000)
-        {
-            sv = -4000;
-        }
-        else if (sv > 4000)
-        {
-            sv = 4000;
-        }
+        sv = (sv < -4000) ? -4000 : ((sv > 4000) ? 4000 : sv);
         vec0[1] = sv;
         vec0[2] = 0;
     }
@@ -458,14 +448,7 @@ void DR_EarthWarrior_updateLookAtBones(GameObject* obj, int sub, int state)
         int t;
         vec9[1] = s->aimHalfY;
         sv = vec9[1];
-        if (sv < -3000)
-        {
-            sv = -3000;
-        }
-        else if (sv > 3000)
-        {
-            sv = 3000;
-        }
+        sv = (sv < -3000) ? -3000 : ((sv > 3000) ? 3000 : sv);
         vec9[1] = sv;
         t = s->aimHalfY;
         if (t < 0)
