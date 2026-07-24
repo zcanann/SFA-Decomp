@@ -100,16 +100,14 @@ extern Mtx44 hudMatrix;
 
 void initViewport(void)
 {
-    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32*)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
 void videoInit(void* wpad0, int wpad1)
 {
     GXFifoObj fifo;
     f32 mtx[3][4];
-    GXColor cc;
     u8* arenaLo;
     u8* arenaHi;
-    u8* nextArenaLo;
     u32 fifoSize;
     int fbSize;
     arenaLo = OSGetArenaLo();
@@ -128,9 +126,9 @@ void videoInit(void* wpad0, int wpad1)
     externalFrameBuffer0 = (void*)(((u32)arenaLo + 0x1f) & ~0x1f);
     fbSize += 0x1f;
     externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
-    nextArenaLo = (u8*)(((u32)externalFrameBuffer1 + fbSize) & ~0x1f);
-    OSSetArenaLo(nextArenaLo);
-    arenaLo = OSInitAlloc(nextArenaLo, arenaHi, 1);
+    arenaLo = (u8*)(((u32)externalFrameBuffer1 + fbSize) & ~0x1f);
+    OSSetArenaLo(arenaLo);
+    arenaLo = OSInitAlloc(arenaLo, arenaHi, 1);
     OSSetArenaLo(arenaLo);
     arenaLo = (u8*)(((u32)arenaLo + 0x1f) & ~0x1f);
     arenaHi = (u8*)((u32)arenaHi & ~0x1f);
@@ -220,8 +218,7 @@ void videoInit(void* wpad0, int wpad1)
     GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
     lbl_803DCCF4 = 0;
     GXSetCullMode(GX_CULL_NONE);
-    cc = lbl_803DB5D0;
-    GXSetCopyClear(cc, 0xffffff);
+    GXSetCopyClear(lbl_803DB5D0, 0xffffff);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     GXSetNumChans(1);
     GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
