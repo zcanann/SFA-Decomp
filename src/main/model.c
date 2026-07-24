@@ -1678,10 +1678,11 @@ static inline void* modelGetBoneMtx(ObjModel* model, int idx)
     int lim;
     u32 cnt;
     int joint = idx;
+    ModelFileHeader* file = model->file;
     u8* base;
 
-    cnt = model->file->jointCount;
-    lim = cnt != 0 ? cnt + model->file->extraJointCount : 1;
+    cnt = file->jointCount;
+    lim = cnt != 0 ? cnt + file->extraJointCount : 1;
     if (joint >= lim)
     {
         joint = 0;
@@ -1694,24 +1695,31 @@ void modelInitBoneMtxs(ObjModel* model, f32* outReordered)
 {
     ModelFileHeader* file;
     u32 i;
+    f32* mtx;
+    int boneByteOff;
+    f32* reorderCursor;
+    ModelBone* bone;
     f32 transMtx[12];
 
     file = model->file;
-    for (i = 0; i < file->jointCount; i++)
+    i = 0;
+    boneByteOff = 0;
+    reorderCursor = outReordered;
+    for (; i < file->jointCount; i++)
     {
-        f32* mtx = modelGetBoneMtx(model, i);
-        PSMTXTrans(transMtx,
-            -((ModelBone*)file->jointData)[i].tail[0],
-            -((ModelBone*)file->jointData)[i].tail[1],
-            -((ModelBone*)file->jointData)[i].tail[2]);
+        mtx = modelGetBoneMtx(model, i);
+        bone = (ModelBone*)(file->jointData + boneByteOff);
+        PSMTXTrans(transMtx, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
         PSMTXConcat(mtx, transMtx, transMtx);
-        PSMTXReorder(transMtx, outReordered + i * 12);
+        PSMTXReorder(transMtx, reorderCursor);
+        boneByteOff += 0x1c;
+        reorderCursor += 12;
     }
 }
 void modelInitBoneMtxs2(ObjModel* model, f32* worldMtx, f32* outReordered)
 {
-    f32* reorderCursor;
     int boneByteOff;
+    f32* reorderCursor;
     ModelFileHeader* file;
     u32 i;
     u8* jointMtx;
@@ -1726,10 +1734,10 @@ void modelInitBoneMtxs2(ObjModel* model, f32* worldMtx, f32* outReordered)
         int idx;
 
         idx = 0;
-        cnt = model->file->jointCount;
+        cnt = file->jointCount;
         if (cnt != 0)
         {
-            lim = cnt + model->file->extraJointCount;
+            lim = cnt + file->extraJointCount;
         }
         else
         {
