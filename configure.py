@@ -460,6 +460,11 @@ cflags_dll_noopt_nolifetimes_noautoinline = [
     "-inline", "noauto",
 ]
 
+cflags_dll_noopt_nolifetimes = [
+    *cflags_base,
+    "-opt", "nopeephole,noschedule,nolifetimes",
+]
+
 cflags_dll_noopt_noloopinv_nolifetimes = [
     *cflags_base,
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes",
@@ -1043,6 +1048,8 @@ config.libs = [
             Object(NonMatching, "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/vecmath.c", cflags=cflags_dll_noopt_nostrength),
+            Object(NonMatching, "main/vecmath_rotate.c", cflags=cflags_dll_noopt_nolifetimes),
+            Object(NonMatching, "main/vecmath_matrix.c", cflags=cflags_dll_noopt_nostrength),
             Object(NonMatching, "main/mm.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/model.c", cflags=cflags_dll_noopt_noloopinv),
             Object(NonMatching, "main/object.c", cflags=cflags_dll_noopt),

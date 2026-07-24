@@ -104,7 +104,13 @@ main/gameloop.c:
 	.sdata2     start:0x803DE7A8 end:0x803DE7BC
 
 main/vecmath.c:
-	.text       start:0x80021370 end:0x80022948
+	.text       start:0x80021370 end:0x80021AC8
+
+main/vecmath_rotate.c:
+	.text       start:0x80021AC8 end:0x80021EC0
+
+main/vecmath_matrix.c:
+	.text       start:0x80021EC0 end:0x80022948
 
 main/mm.c:
 	.text       start:0x80022948 end:0x8002430C
