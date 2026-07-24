@@ -431,7 +431,7 @@ def rebuild(unit_object: str, version: str) -> bool:
         pass
     # ninja resolves targets relative to the build root -- pass the repo-relative
     # path, never an absolute path (ninja won't recognise the latter as a target).
-    r = subprocess.run(["bash", "tools/locked_ninja.sh", rel],
+    r = subprocess.run(["bash", "--noprofile", "--norc", "tools/locked_ninja.sh", rel],
                        cwd=REPO, capture_output=True, text=True)
     return r.returncode == 0 and src_o.is_file()
 

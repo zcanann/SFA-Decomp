@@ -48,7 +48,7 @@ def measure(unit_suffix: str, version: str, retries: int = 4):
     for attempt in range(retries):
         if report.exists():
             report.unlink()
-        run(f"bash tools/locked_ninja.sh build/{version}/report.json")
+        run(f"bash --noprofile --norc tools/locked_ninja.sh build/{version}/report.json")
         try:
             raw = report.read_bytes()          # snapshot before a peer can unlink it
             data = json.loads(raw)
@@ -93,7 +93,7 @@ def main() -> None:
             objp = REPO / obj
             if objp.exists():
                 objp.unlink()
-            if run(f"bash tools/locked_ninja.sh {obj}").returncode != 0 or not objp.exists():
+            if run(f"bash --noprofile --norc tools/locked_ninja.sh {obj}").returncode != 0 or not objp.exists():
                 print(f"{prof:<62} BUILD-FAIL")
                 continue
             fz = measure(args.unit_suffix, args.version)
@@ -106,7 +106,7 @@ def main() -> None:
         objp = REPO / obj
         if objp.exists():
             objp.unlink()
-        run(f"bash tools/locked_ninja.sh {obj}")
+        run(f"bash --noprofile --norc tools/locked_ninja.sh {obj}")
         measure(args.unit_suffix, args.version)
         print("\n-- configure.py restored --")
 

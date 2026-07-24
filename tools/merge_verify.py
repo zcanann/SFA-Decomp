@@ -100,7 +100,7 @@ def main():
     # `timeout` is not installed on this box and returns 127 without building, so
     # never wrap this. Go through the build mutex so a parallel matching agent
     # cannot corrupt .ninja_log / race the .d writes underneath us.
-    r = sh("bash", "tools/locked_ninja.sh")
+    r = sh("bash", "--noprofile", "--norc", "tools/locked_ninja.sh")
     print(f"[3] ninja EXIT={r.returncode}")
     if r.returncode:
         print("      " + "\n      ".join(r.stderr.strip().splitlines()[-12:]))

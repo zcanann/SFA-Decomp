@@ -1,5 +1,19 @@
 """Permute a block of local declarations and measure each ordering by BYTES.
 
+!! READ THIS BEFORE TRUSTING AN "INERT" RESULT !!
+This tool ranks by POSITIONAL INSTRUCTION-DIFF COUNT, which is NOT a proxy for
+fuzzy_match_percent -- the two can move in OPPOSITE directions.  Measured case:
+in shader.c mapLoadUnloadObjects an address-form rewrite took positional diffs
+419 -> 418 while the score fell 96.87 -> 94.73; and a diff-gated declaration
+sweep of that same function reported EVERY ordering inert (all 419) while the
+identical sweep gated on report.json found a +0.073 win.  A uniform diff count
+across permutations therefore does NOT establish that declaration order is
+inert.
+
+Use this only to find byte-IDENTICAL orderings (ndiff==0, which is exact).
+For "which ordering scores best", use tools/brute_match.py --strategy moves,
+which gates on true objdiff fuzzy_match_percent from report.json.
+
 The declaration-order lever permutes saved-register assignment among locals
 with disjoint live ranges.  This sweeps orderings of a contiguous decl block
 and scores every one against the retail object.
@@ -64,7 +78,7 @@ def rebuild(obj_rel: str) -> bool:
     # agents and corrupts .ninja_log / loses .d writes, which shows up as
     # spurious BUILD-FAIL entries mid-sweep.
     proc = subprocess.run(
-        ["bash", "tools/locked_ninja.sh", obj_rel],
+        ["bash", "--noprofile", "--norc", "tools/locked_ninja.sh", obj_rel],
         cwd=REPO, capture_output=True, text=True
     )
     return proc.returncode == 0 and obj.is_file()
