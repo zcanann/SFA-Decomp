@@ -245,8 +245,7 @@ static inline void saveGame_addTransientMapBit(int mapId, int shift, SaveGameMap
     {
         if (state->transient[i].mapId == -1)
         {
-            transient = &state->transient[i];
-            transient->mapId = mapId;
+            (transient = &state->transient[i])->mapId = mapId;
             transient->shift = shift;
             transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
             return;
