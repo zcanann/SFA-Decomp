@@ -58,7 +58,7 @@ def measure(unit: dict, version: str):
     base = (REPO / unit["object"].replace(f"build/{version}/obj/",
                                           f"build/{version}/src/")).resolve()
     if not base.is_file():
-        sys.exit(f"not built yet: {base}")
+        raise RuntimeError(f"not built yet: {base}")
     report_name = "main/" + unit["name"].replace("\\", "/").rsplit(".", 1)[0]
     with tempfile.TemporaryDirectory() as td:
         proj = Path(td)
@@ -79,12 +79,12 @@ def measure(unit: dict, version: str):
                             "-p", str(proj), "-o", str(out), "-f", "json"],
                            capture_output=True, text=True)
         if r.returncode != 0 or not out.is_file():
-            sys.exit("objdiff-cli failed: " + (r.stderr.strip() or "no output"))
+            raise RuntimeError("objdiff-cli failed: " + (r.stderr.strip() or "no output"))
         data = json.loads(out.read_text())
     for u in data["units"]:
         if u["name"].endswith(report_name.split("/")[-1]):
             return u
-    sys.exit("unit missing from generated report")
+    raise RuntimeError("unit missing from generated report")
 
 
 def main() -> int:
@@ -97,7 +97,10 @@ def main() -> int:
     ap.add_argument("--quiet", action="store_true", help="print just the unit fuzzy")
     args = ap.parse_args()
 
-    u = measure(find_unit(args.version, args.unit), args.version)
+    try:
+        u = measure(find_unit(args.version, args.unit), args.version)
+    except RuntimeError as exc:
+        sys.exit(str(exc))
     fz = u["measures"].get("fuzzy_match_percent")
     if fz is None:
         sys.exit("no fuzzy_match_percent for this unit (object mismatch?)")

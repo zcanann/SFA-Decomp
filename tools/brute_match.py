@@ -149,8 +149,31 @@ def decode_fuzzy(binpb: bytes, report_unit: str, symbol: str):
     return None
 
 
-def fuzzy_measure(report_unit: str, symbol: str, version: str,
-                  retries: int = 8) -> float:
+def fuzzy_measure(unit: dict, symbol: str, version: str,
+                  retries: int = 3) -> float:
+    """True objdiff fuzzy_match_percent for one function.
+
+    Uses a throwaway ONE-UNIT objdiff project (tools/unitfuzzy.measure) rather
+    than regenerating the shared build/<ver>/report.json: ~0.3s instead of
+    ~2.6s, and immune to peer agents deleting that shared file mid-sweep (which
+    previously showed up as silent holes in a sweep). Returns -1.0 on failure.
+    """
+    import unitfuzzy
+    for attempt in range(retries):
+        try:
+            u = unitfuzzy.measure(unit, version)
+        except Exception:
+            time.sleep(0.3 * (attempt + 1))
+            continue
+        for f in (u.get("functions") or []):
+            if f["name"] == symbol:
+                return float(f["fuzzy_match_percent"])
+        return -1.0
+    return -1.0
+
+
+def _fuzzy_measure_via_shared_report(report_unit: str, symbol: str, version: str,
+                                     retries: int = 8) -> float:
     """True objdiff fuzzy_match_percent for one function. Regenerates the whole
     report (fast: objects are prebuilt) and decodes the proto. `report generate`
     is all-or-nothing, so a concurrent agent mid-rebuild can make it fail -- we
@@ -506,7 +529,7 @@ def main():
         return match_score(t_norm, c)
 
     def fuzzy():
-        return fuzzy_measure(report_unit, args.symbol, args.version)
+        return fuzzy_measure(unit, args.symbol, args.version)
 
     base_proxy, base_reg = proxy()
     base_fz = fuzzy()
