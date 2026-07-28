@@ -82,13 +82,6 @@ const f32 gSmallBasketThrowVelocityY[1] = {2.2f};
 #define SMALLBASKET_CHILD_OBJECT_ENERGY_EGG COLLECTIBLE_ITEM_ENERGY_EGG
 #define SMALLBASKET_CHILD_OBJECT_APPLE      COLLECTIBLE_ITEM_APPLE
 
-typedef struct SmallBasketCollectibleInterface {
-    void* pad00[11];
-    void (*startBounceMotion)(GameObject* collectible, f32 velocityX, f32 velocityY, f32 velocityZ);
-} SmallBasketCollectibleInterface;
-
-STATIC_ASSERT(offsetof(SmallBasketCollectibleInterface, startBounceMotion) == 0x2C);
-
 typedef void (*SmallBasketBreakEffectFn)(GameObject* obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 
 /* Known fields shared by the 0x24- and 0x30-byte child placement records. */
@@ -438,7 +431,7 @@ int SmallBasket_spawnContents(GameObject* obj, GameObject* player, SmallBasketSt
             ((GameObject*)child)->anim.velocityZ *
             -(gSmallBasketVelocityStep[0] * (f32)randomGetRange(0, 0x19) - gSmallBasketOne[0]);
         ((GameObject*)child)->anim.velocityY = gSmallBasketThrowVelocityY[0];
-        (*(SmallBasketCollectibleInterface**)((GameObject*)child)->anim.dll)
+        (*(CollectibleInterface**)((GameObject*)child)->anim.dll)
             ->startBounceMotion((GameObject*)child, ((GameObject*)child)->anim.velocityX,
                                 ((GameObject*)child)->anim.velocityY, ((GameObject*)child)->anim.velocityZ);
         rotation.posX = gSmallBasketZero[0];

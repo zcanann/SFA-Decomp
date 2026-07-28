@@ -169,6 +169,17 @@ STATIC_ASSERT(offsetof(CollectibleModelSetup, pickupCategory) == 0x2);
 STATIC_ASSERT(offsetof(CollectibleModelSetup, pad04) == 0x4);
 STATIC_ASSERT(offsetof(CollectibleModelSetup, pickupRadius) == 0x8);
 
+/*
+ * gCollectibleObjDescriptor from slot02 onwards: the export table the crate and
+ * basket objects reach through child->anim.dll to launch a dropped collectible.
+ */
+typedef struct CollectibleInterface {
+    void* pad00[11];
+    void (*startBounceMotion)(GameObject* collectible, f32 velocityX, f32 velocityY, f32 velocityZ);
+} CollectibleInterface;
+
+STATIC_ASSERT(offsetof(CollectibleInterface, startBounceMotion) == 0x2C);
+
 void collectible_setPosition(GameObject* obj, f32 x, f32 y, f32 z);
 void collectible_startBounceMotion(GameObject* obj, f32 velocityX, f32 velocityY, f32 velocityZ);
 u8 collectible_getVisibilityBitClear(GameObject* obj);

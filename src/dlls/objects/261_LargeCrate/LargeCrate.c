@@ -72,13 +72,6 @@
 #define LARGECRATE_SPIN_SPEED_MIN            600
 #define LARGECRATE_SPIN_SPEED_MAX            800
 
-typedef struct LargeCrateCollectibleInterface {
-    void* pad00[11];
-    void (*startBounceMotion)(GameObject* collectible, f32 velocityX, f32 velocityY, f32 velocityZ);
-} LargeCrateCollectibleInterface;
-
-STATIC_ASSERT(offsetof(LargeCrateCollectibleInterface, startBounceMotion) == 0x2C);
-
 typedef void (*LargeCrateBreakEffectFn)(GameObject* obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 
 typedef struct LargeCrateVariantRemap {
@@ -372,7 +365,7 @@ int LargeCrate_spawnDropContents(GameObject* obj, GameObject* player, LargeCrate
         ((CollectibleSetup*)childPlacement)->visibilityGameBit = -1;
         child = (char*)Obj_SetupObject((ObjPlacement*)childPlacement, 5, obj->anim.mapEventSlot, -1,
                                        (void*)*(int*)&obj->anim.parent);
-        (*(LargeCrateCollectibleInterface**)((GameObject*)child)->anim.dll)
+        (*(CollectibleInterface**)((GameObject*)child)->anim.dll)
             ->startBounceMotion((GameObject*)child, 0.0f, 1.0f, 0.0f);
         break;
     case LARGECRATE_DROPTYPE_NONE_A:
