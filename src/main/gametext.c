@@ -3,18 +3,6 @@
 #include "main/gametext_shared_internal.h"
 #include "main/textrender_api.h"
 
-/* In-string formatting control codes (Unicode PUA). */
-#define TEXT_CTRL_SCALE 0xf8f4
-#define TEXT_CTRL_FONT  0xf8f7
-
-/* Language ids; order fixed by sLanguageNameTable[] below. */
-#define LANGUAGE_ENGLISH  0
-#define LANGUAGE_FRENCH   1
-#define LANGUAGE_GERMAN   2
-#define LANGUAGE_ITALIAN  3
-#define LANGUAGE_JAPANESE 4
-#define LANGUAGE_SPANISH  5
-
 char sMapDirectoryNameArwing[] = "Arwing";
 char sMapDirectoryNameBoot[] = "Boot";
 char sMapDirectoryNameCRFort[] = "CRFort";

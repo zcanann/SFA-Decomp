@@ -18,14 +18,6 @@
 #define TEXT_CTRL_SCALE 0xf8f4
 #define TEXT_CTRL_FONT  0xf8f7
 
-/* Language ids; order fixed by sLanguageNameTable[] below. */
-#define LANGUAGE_ENGLISH  0
-#define LANGUAGE_FRENCH   1
-#define LANGUAGE_GERMAN   2
-#define LANGUAGE_ITALIAN  3
-#define LANGUAGE_JAPANESE 4
-#define LANGUAGE_SPANISH  5
-
 int isSpace(u32 c);
 
 void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMinX, int* outMaxX, int* outMinY,
