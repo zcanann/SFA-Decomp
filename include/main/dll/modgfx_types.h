@@ -2,6 +2,7 @@
 #define MAIN_DLL_MODGFX_TYPES_H_
 
 #include "game/objects/object.h"
+#include "main/vec_types.h"
 
 typedef struct
 {
@@ -106,15 +107,6 @@ typedef struct ModgfxVertexData
     u8 alpha;
 } ModgfxVertexData;
 
-typedef struct ModgfxScaleVector
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} ModgfxScaleVector;
-
-STATIC_ASSERT(sizeof(ModgfxScaleVector) == 0xC);
-
 typedef struct ModgfxState
 {
     u8 pad00[4];
@@ -127,7 +119,7 @@ typedef struct ModgfxState
      * Each vertex-scale channel occupies two consecutive vectors: its
      * current XYZ scale followed by the per-frame XYZ step.
      */
-    ModgfxScaleVector scaleVectors[4];
+    Vec3f scaleVectors[4];
     f32 posCurX; /* 0x60: accumulated vertex-position offset */
     f32 posCurY;
     f32 posCurZ;
@@ -245,7 +237,7 @@ typedef struct PartfxEffectState
     f32 posStepX;
     f32 posStepY;
     f32 posStepZ;
-    ModgfxScaleVector scaleVectors[4];
+    Vec3f scaleVectors[4];
     f32 drawPosX;
     f32 drawPosY;
     f32 drawPosZ;

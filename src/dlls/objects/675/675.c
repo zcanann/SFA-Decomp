@@ -25,7 +25,7 @@ void dll_2A3_setSpeed(GameObject* obj, int speed)
     state->speed = speed;
 }
 
-void dll_2A3_setVelocity(GameObject* obj, ARWSpeedStrVelocity* velocity)
+void dll_2A3_setVelocity(GameObject* obj, Vec3f* velocity)
 {
     obj->anim.velocityX = velocity->x;
     obj->anim.velocityY = velocity->y;

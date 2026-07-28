@@ -5,6 +5,7 @@
 #include "game/objects/object.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_setup.h"
+#include "main/vec_types.h"
 
 #define ARWSPEEDSTR_FLAG_POSITION_INITIALIZED 0x1
 
@@ -20,13 +21,6 @@ typedef struct ARWSpeedStrState
     u8 reserved19[3];
 } ARWSpeedStrState;
 
-typedef struct ARWSpeedStrVelocity
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} ARWSpeedStrVelocity;
-
 STATIC_ASSERT(sizeof(ARWSpeedStrState) == 0x1c);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, speed) == 0x00);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer) == 0x04);
@@ -35,9 +29,6 @@ STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX) == 0x0c);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY) == 0x10);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, x) == 0x00);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, y) == 0x04);
-STATIC_ASSERT(offsetof(ARWSpeedStrVelocity, z) == 0x08);
 
 
 int ARWSpeedStr_getExtraSize(void);
@@ -51,7 +42,7 @@ void ARWSpeedStr_release(void);
 void ARWSpeedStr_initialise(void);
 
 void dll_2A3_setSpeed(GameObject* obj, int speed);
-void dll_2A3_setVelocity(GameObject* obj, ARWSpeedStrVelocity* velocity);
+void dll_2A3_setVelocity(GameObject* obj, Vec3f* velocity);
 
 extern ObjectDescriptor gARWSpeedStrObjDescriptor;
 

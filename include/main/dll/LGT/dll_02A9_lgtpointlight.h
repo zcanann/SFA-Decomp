@@ -3,6 +3,7 @@
 
 #include "game/objects/object.h"
 #include "main/dll/LGT/lgt_types.h"
+#include "main/vec_types.h"
 #include "game/objects/object_setup.h"
 
 extern const f32 lbl_802C25F8[4];

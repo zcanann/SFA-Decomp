@@ -35,8 +35,8 @@ f32 gWmSunGlareIntensity;
 #define WMSUN_ENVFX_B 0x34
 
 #define WM_SUN_PI 3.1415927f
-const WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
-const WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
+const Vec3f gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
+const Vec3f gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
 
 int wmsun_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* actor)
 {
@@ -51,8 +51,8 @@ int wmsun_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* act
    gWmSunGlareDamping), looking away decays it. */
 void wmsun_updateGlare(GameObject* obj)
 {
-    WmSunVec3 dir;
-    WmSunVec3 sun;
+    Vec3f dir;
+    Vec3f sun;
     WmSunGlare g;
     CameraViewSlot* cam;
     f32 dx, dy, dz, len;

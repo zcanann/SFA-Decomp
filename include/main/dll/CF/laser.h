@@ -27,8 +27,6 @@ typedef struct LaserObjectMapData {
   s16 activationGameBit;
 } LaserObjectMapData;
 
-typedef GameUIInterface LaserTriggerInterface;
-
 typedef struct LaserReleaseInterface {
   u8 pad00[0x48];
   void (*releaseObject)(int parent, void *object, int flags);

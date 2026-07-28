@@ -27,7 +27,7 @@ void dll_2A4_setLifetime(GameObject* obj, int lifetime)
     state->lifetime = lifetime;
 }
 
-void dll_2A4_setVelocity(GameObject* obj, Dll2A3Velocity* velocity)
+void dll_2A4_setVelocity(GameObject* obj, Vec3f* velocity)
 {
     obj->anim.velocityX = velocity->x;
     obj->anim.velocityY = velocity->y;

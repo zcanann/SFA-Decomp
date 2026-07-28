@@ -3,6 +3,7 @@
 
 #include "game/objects/object.h"
 #include "main/dll/LGT/lgt_types.h"
+#include "main/vec_types.h"
 #include "game/objects/object_setup.h"
 
 typedef struct DirectionalLightSetup

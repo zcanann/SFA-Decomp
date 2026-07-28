@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "game/objects/object.h"
+#include "main/vec_types.h"
 
 typedef struct Dll2A3State
 {
@@ -12,13 +13,6 @@ typedef struct Dll2A3State
     s16 spinRateZ;
     u8 pad0A[2];
 } Dll2A3State;
-
-typedef struct Dll2A3Velocity
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} Dll2A3Velocity;
 
 STATIC_ASSERT(sizeof(Dll2A3State) == 0x0c);
 STATIC_ASSERT(offsetof(Dll2A3State, spinRateX) == 0x04);
@@ -39,6 +33,6 @@ void dll_2A3_release_nop(void);
 void dll_2A3_initialise_nop(void);
 
 void dll_2A4_setLifetime(GameObject* obj, int lifetime);
-void dll_2A4_setVelocity(GameObject* obj, Dll2A3Velocity* velocity);
+void dll_2A4_setVelocity(GameObject* obj, Vec3f* velocity);
 
 #endif

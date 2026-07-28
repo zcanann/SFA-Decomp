@@ -118,11 +118,11 @@ void PointLight_update(GameObject* obj)
 void PointLight_init(GameObject* obj, PointLightSetup* setup)
 {
     u8 colorR, colorG, colorB;
-    PointLightVec vec;
+    Vec3f vec;
     PointLightSetup* setupData = setup;
     PointLightState* state = (obj)->extra;
 
-    vec = *(PointLightVec*)lbl_802C25F8;
+    vec = *(Vec3f*)lbl_802C25F8;
 
     (obj)->anim.rotX = (s16)(setupData->rotXByte << 8);
     (obj)->anim.rotY = (s16)(setupData->rotYByte << 8);

@@ -30,7 +30,7 @@
 void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     ArwSquadronSetup* newObj;
-    Dll2A3Velocity dir;
+    Vec3f dir;
 
     if (Obj_IsLoadingLocked())
     {
@@ -61,7 +61,7 @@ void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, A
 void arwgenerato_spawnSquadronShipB(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* setup)
 {
     ArwSquadronSetup* newObj;
-    ARWSpeedStrVelocity dir;
+    Vec3f dir;
 
     if (Obj_IsLoadingLocked())
     {

@@ -5,6 +5,7 @@
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 #include "main/objanim_update.h"
+#include "main/vec_types.h"
 
 #define WM_SUN_GLARE_COUNT 20
 
@@ -38,13 +39,6 @@ typedef struct WmSunState
     u8 pad0E[2];
 } WmSunState;
 
-typedef struct WmSunVec3
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} WmSunVec3;
-
 typedef struct WmSunGlare
 {
     s16 ang[3]; /* only member consumed after the work record is filled */
@@ -67,15 +61,14 @@ STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
 STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
-STATIC_ASSERT(sizeof(WmSunVec3) == 0xC);
 
 extern s16 gWmSunQuakeTimer; /* finale countdowns */
 extern s16 lbl_803DDCAA;
 extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 gWmSunEnvfxTimer;
-extern const WmSunVec3 gWmSunGlareDir;
-extern const WmSunVec3 gWmSunGlareSun;
+extern const Vec3f gWmSunGlareDir;
+extern const Vec3f gWmSunGlareSun;
 extern f32 gWmSunGlareIntensity;
 extern f32 gWmSunGlareDamping;
 
