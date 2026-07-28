@@ -21,6 +21,7 @@
 #include "dolphin/gx/GXGeometry.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/partfx_interface.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "main/frame_timing.h"
 #include "main/model.h"
 #include "main/model_light.h"
@@ -61,15 +62,6 @@ typedef struct DimExplosionTextureTable {
     int assetIds[4];
 } DimExplosionTextureTable;
 
-typedef union DimExplosionWGPipe {
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} DimExplosionWGPipe;
-
 STATIC_ASSERT(sizeof(DimExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(DimExplosionPartfxSource, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(DimExplosionPartfxSource, localPosX) == 0x0C);
@@ -92,7 +84,7 @@ u8 gExplosionUpdateTick;
 extern f32 gExplosionSpreadDirs[];
 const DimExplosionTextureTable gExplosionTexTable = {{0x5e1, 0x5f7, 0x5f8, 0x5f9}};
 
-volatile DimExplosionWGPipe GXWGFifo : (0xCC008000);
+volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 static const int sExplosionQuadColorA[1] = {-1};
 static const f32 sExplosionBaseScale[1] = {1.0f};

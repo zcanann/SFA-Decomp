@@ -35,7 +35,7 @@
 #include "main/dll/objfx_api.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/path_control_interface.h"
-#include "main/dll/shwgpipe_struct.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/tricky_api.h"
 #include "main/frame_timing.h"
 #include "main/game_ui_interface.h"
@@ -131,7 +131,7 @@ char sSnowBikeVelDebugFmt[] = "vel %f\n";
 f32 gDrCloudCageWindVolume;
 Texture* sSnowBikeTrailTexture;
 
-#define GXWGFifo (*(volatile ShWGPipe*)0xCC008000)
+#define GXWGFifo (*(volatile PPCWGPipe*)0xCC008000)
 
 static inline void shPos3f32(const f32 x, const f32 y, const f32 z)
 {

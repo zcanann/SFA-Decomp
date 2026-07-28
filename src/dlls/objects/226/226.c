@@ -17,7 +17,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/dll/genpropswgpipe_struct.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "game/objects/object_setup.h"
 #include "game/objects/object.h"
 #include "sys/objects/lifecycle.h"
@@ -219,7 +219,7 @@ void staff_free(GameObject* obj);
 void staff_release(void);
 void staff_init(GameObject* obj);
 void staff_initialise(void);
-#define GXWGFifo (*(volatile GenPropsWGPipe*)0xCC008000)
+#define GXWGFifo (*(volatile PPCWGPipe*)0xCC008000)
 
 void staff_hitDetectGeometry(GameObject* obj);
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)

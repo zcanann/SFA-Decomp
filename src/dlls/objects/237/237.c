@@ -9,7 +9,7 @@
 #include "dlls/objects/237.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/genpropswgpipe_struct.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/player_api.h"
@@ -138,7 +138,7 @@ static f32 collectible_getRotX(GameObject* obj) {
     return (f32)obj->anim.rotX;
 }
 
-GenPropsWGPipe GXWGFifo : (0xCC008000);
+PPCWGPipe GXWGFifo : (0xCC008000);
 
 void collectible_applyPickup(GameObject* obj) {
     CollectibleState* state = obj->extra;

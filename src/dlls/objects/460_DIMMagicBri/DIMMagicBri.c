@@ -15,6 +15,7 @@
 
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "dolphin/os/OSCache.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "main/frame_timing.h"
 #include "main/gamebits_api.h"
 #include "main/model.h"
@@ -26,15 +27,6 @@
 #define DIM_MAGIC_BRIDGE_GAMEBIT_IGNITED 0x1e9
 #define DIM_MAGIC_BRIDGE_GAMEBIT_TRIGGER 0x1ef
 #define DIM_MAGIC_BRIDGE_GAMEBIT_LATCH   0x1e8
-
-typedef union DimMagicBridgeWGPipe {
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} DimMagicBridgeWGPipe;
 
 void dimmagicbridge_updateVertexWave(GameObject* obj, u8* stateBytes) {
     int vertexIndex;
@@ -131,7 +123,7 @@ int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
     return 0;
 }
 
-DimMagicBridgeWGPipe GXWGFifo : (0xCC008000);
+PPCWGPipe GXWGFifo : (0xCC008000);
 
 int dimmagicbridge_getExtraSize(void) {
     return sizeof(DimMagicBridgeState);
