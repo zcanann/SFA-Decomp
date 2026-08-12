@@ -13,17 +13,17 @@
 
 typedef struct GameObject GameObject;
 
-#define ROMCURVE_MAX_CURVES                     0x514
-#define ROMCURVE_POINT_SIZE                     0x18
-#define ROMCURVE_LINK_ID_STRIDE                 sizeof(u32)
-#define ROMCURVE_LINK_ID_NONE                   0xffffffff
-#define ROMCURVE_LINK_SEARCH_RESULT_COUNT       ROMCURVE_LINK_COUNT
-#define ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY     0x28
-#define ROMCURVE_TYPE_ACTION                    0x15
-#define ROMCURVE_TYPE_SPECIAL_ANGLE_8           0x08
-#define ROMCURVE_TYPE_SPECIAL_ANGLE_1A          0x1a
-#define ROMCURVE_TYPE_SCALE_OVERRIDE_15         0x15
-#define ROMCURVE_TYPE_SCALE_OVERRIDE_16         0x16
+#define ROMCURVE_MAX_CURVES                 0x514
+#define ROMCURVE_POINT_SIZE                 0x18
+#define ROMCURVE_LINK_ID_STRIDE             sizeof(u32)
+#define ROMCURVE_LINK_ID_NONE               0xffffffff
+#define ROMCURVE_LINK_SEARCH_RESULT_COUNT   ROMCURVE_LINK_COUNT
+#define ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY 0x28
+#define ROMCURVE_TYPE_ACTION                0x15
+#define ROMCURVE_TYPE_SPECIAL_ANGLE_8       0x08
+#define ROMCURVE_TYPE_SPECIAL_ANGLE_1A      0x1a
+#define ROMCURVE_TYPE_SCALE_OVERRIDE_15     0x15
+#define ROMCURVE_TYPE_SCALE_OVERRIDE_16     0x16
 /* RomCurve objdef Type field (offset 0x19): selects which curve network an
  * object's "find nearby curve" query targets. Only literal type checks
  * confirmed in live code are named; see docs/wiki/Curves.md for the full list. */
@@ -60,22 +60,13 @@ extern char sCurvesMaxRomCurvesExceeded[];
 
 #include "main/dll/rom_curve_segment_projection.h"
 
-typedef struct CurvesCollisionState
-{
+typedef struct CurvesCollisionState {
     u32 flags;
     f32* segmentLocalPoints;
-    f32 points[4][3];           /* 0x008 world-space segment points; double as trace ends */
-    f32 traceStart[4][3];       /* 0x038 per-point raised trace starts */
-    f32 segmentHitPlanes[4][4]; /* 0x068 trace hit-plane records (x,y,z,d) */
-    f32 segmentRadii[4];
-    s8 segmentHitTypes[4];
-    s8 segmentSourceTypes[4];
-    u8 pad0C0[4];
-    GameObject* traceHitObj; /* 0x0C4 */
-    u8 pad0C8[0x0D4 - 0x0C8];
-    s16 traceHitCount; /* 0x0D4 copied into surfaceCounter after segment traces */
-    u8 pad0D6[2];
-    GameObject* contactObj; /* 0x0D8 latest trace hit forwarded to ObjHits_AddContactObject */
+    f32 points[4][3];            /* 0x008 world-space segment points; double as trace ends */
+    f32 traceStart[4][3];        /* 0x038 per-point raised trace starts */
+    TrackHitResults segmentHits; /* 0x068 trackGetIntersect result for the segment sweep */
+    GameObject* contactObj;      /* 0x0D8 latest trace hit forwarded to ObjHits_AddContactObject */
     f32* localPointPositions;
     f32* localPointRadii;
     f32 localPointWorld[4][3];  /* 0x0E4 localPointPositions transformed to world */
@@ -89,19 +80,19 @@ typedef struct CurvesCollisionState
     f32 surfaceNormalX;  /* 0x1A0 */
     f32 surfaceNormalY;
     f32 surfaceNormalZ;
-    f32 resultFloorGap;   /* 0x1AC latest-point copies of the arrays below */
-    f32 resultCeilingY;   /* 0x1B0 */
-    f32 resultWaterDepth; /* 0x1B4 */
-    f32 resultFloorY;     /* 0x1B8 */
-    f32 resultWaterY;     /* 0x1BC */
-    f32 floorGap[4];      /* 0x1C0 posY - floorY per point */
-    f32 ceilingY[4];      /* 0x1D0 */
-    f32 waterDepth[4];    /* 0x1E0 waterY - posY */
-    f32 floorY[4];        /* 0x1F0 */
-    f32 waterY[4];        /* 0x200 type-0xE surface height */
-    f32 waterNormalX[4];  /* 0x210 */
-    f32 waterNormalY[4];  /* 0x220 init 1.0 */
-    f32 waterNormalZ[4];  /* 0x230 */
+    f32 resultFloorGap;         /* 0x1AC latest-point copies of the arrays below */
+    f32 resultCeilingY;         /* 0x1B0 */
+    f32 resultWaterDepth;       /* 0x1B4 */
+    f32 resultFloorY;           /* 0x1B8 */
+    f32 resultWaterY;           /* 0x1BC */
+    f32 floorGap[4];            /* 0x1C0 posY - floorY per point */
+    f32 ceilingY[4];            /* 0x1D0 */
+    f32 waterDepth[4];          /* 0x1E0 waterY - posY */
+    f32 floorY[4];              /* 0x1F0 */
+    f32 waterY[4];              /* 0x200 type-0xE surface height */
+    f32 waterNormalX[4];        /* 0x210 */
+    f32 waterNormalY[4];        /* 0x220 init 1.0 */
+    f32 waterNormalZ[4];        /* 0x230 */
     TrackQueryBounds hitBounds; /* 0x240 swept-sphere bounds */
     u8 heightPadding;
     u8 pad259[2];
@@ -118,7 +109,6 @@ typedef struct CurvesCollisionState
     u8 pad265[CURVES_COLLISION_STATE_SIZE - 0x265];
 } CurvesCollisionState;
 
-
 STATIC_ASSERT(sizeof(RomCurveSegmentProjection) == 0x24);
 STATIC_ASSERT(offsetof(RomCurveSegmentProjection, endX) == 0x0C);
 STATIC_ASSERT(offsetof(RomCurveSegmentProjection, nearestX) == 0x18);
@@ -126,21 +116,21 @@ STATIC_ASSERT(offsetof(RomCurveSegmentProjection, nearestX) == 0x18);
 STATIC_ASSERT(sizeof(CurvesCollisionState) == CURVES_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(CurvesCollisionState, flags) == 0x00);
 STATIC_ASSERT(offsetof(CurvesCollisionState, segmentLocalPoints) == 0x04);
-STATIC_ASSERT(offsetof(CurvesCollisionState, segmentRadii) == 0xA8);
-STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHitTypes) == 0xB8);
-STATIC_ASSERT(offsetof(CurvesCollisionState, segmentSourceTypes) == 0xBC);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHits.radii) == 0xA8);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHits.surfaceTypes) == 0xB8);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHits.queryTypes) == 0xBC);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointPositions) == 0xDC);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointRadii) == 0xE0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, points) == 0x008);
 STATIC_ASSERT(offsetof(CurvesCollisionState, traceStart) == 0x038);
-STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHitPlanes) == 0x068);
-STATIC_ASSERT(offsetof(CurvesCollisionState, traceHitObj) == 0x0C4);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHits) == 0x068);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHits.objects) == 0x0C4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, contactObj) == 0x0D8);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localHitPlanes) == 0x144);
 STATIC_ASSERT(offsetof(CurvesCollisionState, tiltPitch) == 0x198);
 STATIC_ASSERT(offsetof(CurvesCollisionState, surfaceNormalX) == 0x1A0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, resultFloorGap) == 0x1AC);
-STATIC_ASSERT(offsetof(CurvesCollisionState, traceHitCount) == 0x0D4);
+STATIC_ASSERT(offsetof(CurvesCollisionState, segmentHits.hitCount) == 0x0D4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointWorld) == 0x0E4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointTarget) == 0x114);
 STATIC_ASSERT(offsetof(CurvesCollisionState, floorGap) == 0x1C0);
@@ -207,7 +197,8 @@ void saveFileStruct_setCheatActive(u8 optionIndex, u8 active);
 void* getLastSavedGameTexts(void);
 
 void curves_gatherTrackTriangles(GameObject* obj, CurvesCollisionState* state);
-void curves_setLocalPointCollision(CurvesCollisionState* state, int pointCount, f32* localPointPositions, f32* localPointRadii, int primaryHitType);
+void curves_setLocalPointCollision(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
+                                   f32* localPointRadii, int primaryHitType);
 void dll_15_initialise_nop(void);
 void dll_15_release_nop(void);
 

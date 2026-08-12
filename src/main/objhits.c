@@ -1885,14 +1885,7 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
     ObjHitsPriorityState* stateB;
     int pointCount;
     TrackQueryBounds bounds;
-    struct {
-        u8 out[64];
-        f32 radii[4];
-        s8 ids[4];
-        u8 sevens[4];
-        u8 pad58[4];
-        int kinds[5];
-    } hb;
+    TrackHitResults hb;
     float endPoints[18];
     float startPoints[18];
     f32 fConv;
@@ -1928,8 +1921,8 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                                 startPoints[pointCount * 3 + 1] = prevEntry[2];
                                 startPoints[pointCount * 3 + 2] = playerMapOffsetZ + prevEntry[3];
                                 hb.radii[pointCount] = *curEntry;
-                                hb.ids[pointCount] = -1;
-                                hb.sevens[pointCount] = 7;
+                                hb.surfaceTypes[pointCount] = -1;
+                                hb.queryTypes[pointCount] = 7;
                                 pointCount = pointCount + 1;
                             }
                         }
@@ -1943,8 +1936,8 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                             startPoints[pointCount * 3 + 2] =
                                 playerMapOffsetZ + ((float*)prevSpheres)[i * 4 + 3];
                             hb.radii[pointCount] = curSpheres[i * 4];
-                            hb.ids[pointCount] = -1;
-                            hb.sevens[pointCount] = 7;
+                            hb.surfaceTypes[pointCount] = -1;
+                            hb.queryTypes[pointCount] = 7;
                             pointCount = pointCount + 1;
                         }
                     }
@@ -1962,14 +1955,14 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                 fConv = gObjHitsScalarTenth[0];
             }
             hb.radii[0] = fConv;
-            hb.ids[0] = -1;
-            hb.sevens[0] = 7;
+            hb.surfaceTypes[0] = -1;
+            hb.queryTypes[0] = 7;
             pointCount = 1;
         }
         if (pointCount != 0) {
             hitDetect_calcSweptSphereBounds(&bounds, startPoints, endPoints, hb.radii, pointCount);
             trackIntersectBroadphase(objB, &bounds, stateB->trackContactMask, 1);
-            contact = trackGetIntersect(objB, startPoints, endPoints, pointCount, hb.out, 0);
+            contact = trackGetIntersect(objB, startPoints, endPoints, pointCount, &hb, 0);
             if (contact != 0) {
                 if ((contact & 1) != 0) {
                     pointCount = 0;
@@ -1980,11 +1973,11 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                 } else {
                     pointCount = 3;
                 }
-                stateB->contactHitVolume = hb.ids[pointCount];
+                stateB->contactHitVolume = hb.surfaceTypes[pointCount];
                 stateB->contactPosX = endPoints[pointCount * 3];
                 stateB->contactPosY = endPoints[pointCount * 3 + 1];
                 stateB->contactPosZ = endPoints[pointCount * 3 + 2];
-                if (hb.kinds[pointCount] != 0u) {
+                if (hb.objects[pointCount] != NULL) {
                     stateB->contactFlags = stateB->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
                 } else {
                     stateB->contactFlags = stateB->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
