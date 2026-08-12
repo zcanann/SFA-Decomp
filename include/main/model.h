@@ -6,6 +6,7 @@
 #include "dolphin/mtx.h"
 
 typedef struct GameObject GameObject;
+typedef struct ObjAnimState ObjAnimState;
 
 typedef struct ShaderLayer
 {
@@ -101,8 +102,10 @@ typedef struct ModelFileHeader {
     u8 refCount;
     u8 unk01;
     u16 flags; /* 0x8 = single-pass anim-eval path, 0x10 = dynamic vertex buffers, 0x40 = vertex anim area */
-    u16 modelId; /* 0x04: MODELS.TAB index; ids 1/3 (player models) bypass the
-                    loaded-file-flag 0x100000 anim-cache suppression */
+    union {
+        u16 modelId; /* MODELS.TAB index */
+        u16 modNo;   /* animation-bank model number */
+    };
     u8 unk06[6];
     s32 dataSize; /* anim data appended at header + dataSize */
     u8 unk10[8];
@@ -121,13 +124,25 @@ typedef struct ModelFileHeader {
     f32 vertexAnimPivot[3];
     f32 vertexAnimScaleDivisor;
     u8 *extraJointDefs; /* 0x54: extraJointCount 3-byte records {jointA, jointB, weight*4}; modelCalcVtxGroupMtxs blends the two joint matrices into the extra joint at jointCount+i; offset->ptr relocated on load */
-    u8 *hitVolumes; /* 0x58: 0x18-byte ModelHitSphereDef records, hitVolumeCount entries */
+    union {
+        u8 *hitVolumes;      /* 0x18-byte ModelHitSphereDef records */
+        void *hitReactTable; /* animation-bank hit-reaction rows */
+    };
     u8 *collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
     u8 *collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), collisionBlockCount entries */
-    u8 *animationModelPtrs;
+    union {
+        u8 *animationModelPtrs;
+        u8 **moveData;
+    };
     u8 *animationDataSection;
-    u8 *animationHeaderBuffer; /* per-joint s16 table */
-    s16 animGroupBaseIndices[8]; /* 0x70: wiki Idx0..Idx7; group-base indices from modelLoadAnimations scanning for -1 markers */
+    union {
+        u8 *animationHeaderBuffer; /* per-joint s16 table */
+        s16 *cachedAnimIds;
+    };
+    union {
+        s16 animGroupBaseIndices[8]; /* group bases from modelLoadAnimations */
+        s16 moveGroupBaseIndices[8];
+    };
     s32 animationDataFileOffset;
     s16 headerSize; /* roundUpTo8(loaded header size) + 0xb0; read back into size table */
     u8 unk86[4];
@@ -154,7 +169,10 @@ typedef struct ModelFileHeader {
     u16 vertexCount;
     u16 normalCount;
     u8 unkE8[4];
-    u16 animationCount; /* nonzero = per-joint matrix buffers */
+    union {
+        u16 animationCount; /* nonzero = per-joint matrix buffers */
+        u16 moveCount;
+    };
     u8 unkEE[2];
     u16 collisionBlockCount; /* 0xF0: number of 0x14-byte collisionBlocks entries */
     u8 textureCount;
@@ -189,8 +207,14 @@ typedef struct ModelFileHeader {
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
 
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
+STATIC_ASSERT(offsetof(ModelFileHeader, modNo) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, jointData) == 0x3C);
 STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
+STATIC_ASSERT(offsetof(ModelFileHeader, hitReactTable) == 0x58);
+STATIC_ASSERT(offsetof(ModelFileHeader, moveData) == 0x64);
+STATIC_ASSERT(offsetof(ModelFileHeader, cachedAnimIds) == 0x6C);
+STATIC_ASSERT(offsetof(ModelFileHeader, moveGroupBaseIndices) == 0x70);
+STATIC_ASSERT(offsetof(ModelFileHeader, moveCount) == 0xEC);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlockCount) == 0xF0);
@@ -332,7 +356,10 @@ STATIC_ASSERT(offsetof(ModelJointWork, jointCullDistances) == 0x10);
 STATIC_ASSERT(offsetof(ModelJointWork, touchedJoints) == 0x18);
 
 typedef struct ObjModel {
-    ModelFileHeader *file;
+    union {
+        ModelFileHeader *file;
+        ModelFileHeader *animDef;
+    };
     u8 unk04[8];
     u8 *jointMatrices[2];
     ModelJointWork *skeletonJointData;
@@ -341,8 +368,14 @@ typedef struct ObjModel {
     u8 *vtxBuf[2];
     u8 *normalBuf;
     struct ObjModelBlendChannel *blendChannels; /* 3 channels */
-    void *animStateA;  /* ObjAnimState */
-    void *animStateB;  /* ObjAnimState, only with load flag 0x80 */
+    union {
+        void *animStateA;
+        ObjAnimState *currentState;
+    };
+    union {
+        void *animStateB; /* only with load flag 0x80 */
+        ObjAnimState *activeState;
+    };
     ModelRenderOpTextureRefs *textureRefs;
     void *renderCallback;
     void *postRenderCallback;
@@ -371,6 +404,10 @@ Shader* ObjModel_GetRenderOp(ModelFileHeader* modelFile, int renderOpIndex);
 ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex);
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
+STATIC_ASSERT(sizeof(ObjModel) == 0x64);
+STATIC_ASSERT(offsetof(ObjModel, animDef) == 0x00);
+STATIC_ASSERT(offsetof(ObjModel, currentState) == 0x2C);
+STATIC_ASSERT(offsetof(ObjModel, activeState) == 0x30);
 STATIC_ASSERT(offsetof(ObjModel, skeletonJointData) == 0x14);
 STATIC_ASSERT(offsetof(ObjModel, hitVolumeSphereBuffers) == 0x48);
 STATIC_ASSERT(offsetof(ObjModel, activeHitVolumeSpheres) == 0x50);

@@ -1012,7 +1012,7 @@ static void objSetupLightChannels(u8* model, GameObject* obj)
                 GXSetChanAmbColor(ch, c);
             }
             {
-                u32 nl = ((u8*)obj->anim.modelInstance)[0x8c];
+                u32 nl = obj->anim.modelInstance->maxLights;
                 if (nl != 0)
                 {
                     modelLightStruct_selectObjectLights(obj, larr, nl, &count, mode);

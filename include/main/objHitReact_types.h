@@ -5,7 +5,7 @@
 #include "main/pi_dolphin.h"
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
-typedef struct ObjAnimBank ObjAnimBank;
+typedef struct ObjModel ObjAnimBank;
 typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjHitbox ObjHitbox;
 
