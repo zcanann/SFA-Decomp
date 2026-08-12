@@ -4052,20 +4052,8 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             ((PlayerStatus*)((PlayerState*)obj->extra)->playerStatus)->magic == 0 || getCurSeqNo() != 0)
         {
-            int z[2];
-            void** p[1];
-            z[1] = z[0] = gPlayerIceSpellSustaining = 0;
-            p[0] = gPlayerSpawnedObjects;
-            do
-            {
-                if (*p[0] != NULL)
-                {
-                    Obj_FreeObject((GameObject*)*p[0]);
-                    *p[0] = NULL;
-                }
-                p[0]++;
-                z[1]++;
-            } while (z[1] < 7);
+            gPlayerIceSpellSustaining = 0;
+            playerFreeSpawnedObjects(gPlayerSpawnedObjects, 0, 0);
             if (gPlayerResource != NULL)
             {
                 Resource_Release(gPlayerResource);
