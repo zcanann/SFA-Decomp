@@ -2384,7 +2384,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
                                        (u8**)((ObjModel*)am)->blendAnimData,
                                        ((ModelFileHeader*)m)->flags24 & 8);
         }
-        if (((ModelFileHeader*)m)->hitSphereCount != 0)
+        if (((ModelFileHeader*)m)->hitVolumeCount != 0)
         {
             objUpdateHitSpheres((u8*)am, m, (u8*)obj, NULL, (u8*)obj2);
         }
@@ -2712,7 +2712,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
                                            ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
-        if (((ModelFileHeader*)m)->hitSphereCount != 0)
+        if (((ModelFileHeader*)m)->hitVolumeCount != 0)
         {
             objUpdateHitSpheres((u8*)am, m, (u8*)obj, NULL, (u8*)obj2);
         }

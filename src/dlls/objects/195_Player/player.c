@@ -15134,7 +15134,7 @@ void playerProcessHitResponse(int obj, int inner, int state)
             if (gPlayerStepSfxTimer == 0)
             {
                 char* pt = (char*)Player_GetActiveModel(obj);
-                pt = (char*)((ObjModel*)pt)->hitSphereBufActive;
+                pt = (char*)((ObjModel*)pt)->activeHitVolumeSpheres;
                 desc.x = playerMapOffsetX + ((ObjModelHitSphere*)(pt + surfIdx * 0x10))->pos[0];
                 desc.y = ((ObjModelHitSphere*)(pt + surfIdx * 0x10))->pos[1];
                 desc.z = playerMapOffsetZ + ((ObjModelHitSphere*)(pt + surfIdx * 0x10))->pos[2];

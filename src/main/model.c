@@ -724,7 +724,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
     }
     {
-        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitSphereCount << 4;
+        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitVolumeCount << 4;
         sizes[1] = hitSphereBytes << 1;
     }
     sizes[3] = 0;
@@ -931,35 +931,36 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     if (szs[1] > 0)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->hitSphereBuf0 = pos;
-        o2 = ((ModelFileHeader*)p)->hitSphereCount;
+        *(int*)&((ObjModel*)out2)->hitVolumeSphereBuffers[0] = pos;
+        o2 = ((ModelFileHeader*)p)->hitVolumeCount;
         pos += o2 * 0x10;
-        *(int*)&((ObjModel*)out2)->hitSphereBuf1 = pos;
-        pos += ((ModelFileHeader*)p)->hitSphereCount * 0x10;
-        *(int*)&((ObjModel*)out2)->hitSphereBufActive = *(int*)&((ObjModel*)out2)->hitSphereBuf0;
+        *(int*)&((ObjModel*)out2)->hitVolumeSphereBuffers[1] = pos;
+        pos += ((ModelFileHeader*)p)->hitVolumeCount * 0x10;
+        *(int*)&((ObjModel*)out2)->activeHitVolumeSpheres =
+            *(int*)&((ObjModel*)out2)->hitVolumeSphereBuffers[0];
     }
     if (((ModelFileHeader*)p)->jointData != NULL && ((ModelFileHeader*)p)->jointCount != 0 && ((
         ModelFileHeader*)p)->unk18 != NULL && ((ModelFileHeader*)p)->unk1C != NULL)
     {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->jointWorkspace = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData = pos;
         pos += 0x1c;
-        *(int*)&((ObjModel*)out2)->jointWorkspace->unk00 = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData->unk00 = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 0xc;
-        *(int*)&((ObjModel*)out2)->jointWorkspace->radii = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData->jointRadii = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)&((ObjModel*)out2)->jointWorkspace->radiiSq = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData->radiiSq = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)&((ObjModel*)out2)->jointWorkspace->boneLengths = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData->jointLengths = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)&((ObjModel*)out2)->jointWorkspace->maxReach = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData->jointCullDistances = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
-        *(int*)&((ObjModel*)out2)->jointWorkspace->unk18 = pos;
+        *(int*)&((ObjModel*)out2)->skeletonJointData->touchedJoints = pos;
         pos += ((ModelFileHeader*)p)->jointCount;
     }
     else
     {
-        *(int*)&((ObjModel*)out2)->jointWorkspace = 0;
+        *(int*)&((ObjModel*)out2)->skeletonJointData = 0;
     }
     if (((ModelFileHeader*)p)->vertexAnimEntries != NULL)
     {

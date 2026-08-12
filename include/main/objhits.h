@@ -4,6 +4,7 @@
 #include "global.h"
 #include "game/objects/object.h"
 #include "types.h"
+#include "main/model.h"
 #include "main/objhits_types.h"
 
 #define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT       5
@@ -40,10 +41,6 @@
 #define OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD      0x10
 #define OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD      0x11
 #define OBJHITS_SKELETON_HIT_SENTINEL                -1
-#define OBJHITS_MODEL_HIT_VOLUME_SIZE                0x18
-#define OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET        0x14
-#define OBJHITS_MODEL_HIT_VOLUME_SPHERE_INDEX_OFFSET 0x16
-#define OBJHITS_MODEL_HIT_VOLUME_MASK_BIT_OFFSET     0x17
 #define OBJHITBOX_WORLD_X_OFFSET                     0x18
 #define OBJHITBOX_WORLD_Y_OFFSET                     0x1C
 #define OBJHITBOX_WORLD_Z_OFFSET                     0x20
@@ -165,58 +162,6 @@ typedef struct ObjHitsPriorityWorkSlot
     u8 pad0C[OBJHITS_PRIORITY_WORK_SLOT_SIZE - 0x0C];
 } ObjHitsPriorityWorkSlot;
 
-typedef struct ObjHitsModelJointInfo
-{
-    s8 parentJoint;
-    u8 pad01[0x1C - 0x01];
-} ObjHitsModelJointInfo;
-
-typedef struct ObjHitsModelHitVolume
-{
-    f32 radius;
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad10[OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET - 0x10];
-    u16 linkedSpheres;
-    s8 sphereIndex;
-    s8 maskBit;
-} ObjHitsModelHitVolume;
-
-typedef struct ObjHitsModelFileHeader
-{
-    u8 pad00[0x3C];
-    ObjHitsModelJointInfo* joints;
-    u8 pad40[0x58 - 0x40];
-    ObjHitsModelHitVolume* hitVolumes;
-    u8 pad5C[0xF3 - 0x5C];
-    u8 jointCount;
-    u8 padF4[0xF7 - 0xF4];
-    u8 hitVolumeCount;
-} ObjHitsModelFileHeader;
-
-typedef struct ObjHitsSkeletonJointData
-{
-    u8 pad00[0x04];
-    f32* jointRadii;
-    u8 pad08[0x0C - 0x08];
-    f32* jointLengths;
-    f32* jointCullDistances;
-    u8 pad14[0x18 - 0x14];
-    u8* touchedJoints;
-} ObjHitsSkeletonJointData;
-
-typedef struct ObjHitsModelBank
-{
-    ObjHitsModelFileHeader* modelFile;
-    u8 pad04[0x14 - 0x04];
-    ObjHitsSkeletonJointData* skeletonJointData;
-    u16 hitBufferFlags;
-    u8 pad1A[0x48 - 0x1A];
-    f32* hitVolumeSphereBuffers[2];
-    f32* activeHitVolumeSpheres;
-} ObjHitsModelBank;
-
 /*
  * The skeleton collectors fill a 0x48-byte hit record and terminate the list
  * by writing -1 to pointIndexA. Response code then walks the same records to
@@ -238,24 +183,6 @@ typedef struct ObjHitsSkeletonHit
     s32 pointIndexB;
 } ObjHitsSkeletonHit;
 
-STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C);
-STATIC_ASSERT(sizeof(ObjHitsModelHitVolume) == OBJHITS_MODEL_HIT_VOLUME_SIZE);
-STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, linkedSpheres) == OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, sphereIndex) == OBJHITS_MODEL_HIT_VOLUME_SPHERE_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, maskBit) == OBJHITS_MODEL_HIT_VOLUME_MASK_BIT_OFFSET);
-STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, joints) == 0x3C);
-STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, hitVolumes) == 0x58);
-STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, jointCount) == 0xF3);
-STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, hitVolumeCount) == 0xF7);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointRadii) == 0x04);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointLengths) == 0x0C);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointCullDistances) == 0x10);
-STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, touchedJoints) == 0x18);
-STATIC_ASSERT(offsetof(ObjHitsModelBank, skeletonJointData) == 0x14);
-STATIC_ASSERT(offsetof(ObjHitsModelBank, hitBufferFlags) == 0x18);
-STATIC_ASSERT(offsetof(ObjHitsModelBank, hitVolumeSphereBuffers) == 0x48);
-STATIC_ASSERT(offsetof(ObjHitsModelBank, activeHitVolumeSpheres) == 0x50);
-
 STATIC_ASSERT(sizeof(ObjHitsSkeletonHit) == OBJHITS_SKELETON_HIT_SIZE);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointARef) == 0x00);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointBRef) == 0x04);
@@ -270,16 +197,16 @@ STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, inverseDistance) == OBJHITS_SKELETON_
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexA) == OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexB) == OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET);
 
-int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData, int* model,
+int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointData, int* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32 yMax, f32 yMin,
                                   f32* outAccum);
-int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ObjHitsSkeletonJointData* jointData, int* model,
+int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointData, int* model,
                                   ObjHitsSkeletonHit* hits, ObjHitsSkeletonHit** outBest, f32* outAccum);
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ObjHitsSkeletonJointData* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
+                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
                                    f32 t, f32 axial, f32* out);
 int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ObjHitsSkeletonJointData* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
+                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
                                    f32 t, f32 axial, f32* out);
 float* ObjHits_ProjectPointToTaperedCapsuleXZ(float* point, float pointRadius, float axial, float* base, float* tip,
                                               float baseRadius, float tipRadius, float length, float* out);

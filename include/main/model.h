@@ -121,7 +121,7 @@ typedef struct ModelFileHeader {
     f32 vertexAnimPivot[3];
     f32 vertexAnimScaleDivisor;
     u8 *extraJointDefs; /* 0x54: extraJointCount 3-byte records {jointA, jointB, weight*4}; modelCalcVtxGroupMtxs blends the two joint matrices into the extra joint at jointCount+i; offset->ptr relocated on load */
-    u8 *hitVolumes; /* 0x58: 0x18-byte ModelHitSphereDef records, hitSphereCount entries */
+    u8 *hitVolumes; /* 0x58: 0x18-byte ModelHitSphereDef records, hitVolumeCount entries */
     u8 *collisionTriangles; /* 0x5c: 8-byte triangle vertex-index records (hit-detect mesh) */
     u8 *collisionBlocks;    /* 0x60: 0x14-byte spatial blocks (AABB + triangle range), collisionBlockCount entries */
     u8 *animationModelPtrs;
@@ -162,7 +162,7 @@ typedef struct ModelFileHeader {
     u8 extraJointCount;
     u8 displayListCount; /* 0xF5: count of the primary (non-shadow) 0x1c-stride display-list group; base index for the shadow group */
     u8 shadowDisplayListCount; /* count of the 2nd display-list group (shadow), indexed at base displayListCount */
-    u8 hitSphereCount; /* 0xF7: count of 0x10-byte hit-sphere records (double-buffered: pos += hitSphereCount*0x10 twice) */
+    u8 hitVolumeCount; /* 0xF7: count of 0x10-byte runtime hit-sphere records */
     u8 renderOpCount;
     u8 morphTargetCount;
     u8 texMtxCount; /* 0xFA: texture-matrix descriptor count (GX_VA_TEXnMTXIDX loop bound) */
@@ -185,15 +185,18 @@ typedef struct ModelFileHeader {
 #define MODEL_SHADERFLAGS_USE_OBJ_COLOR 0x2
 
 /* ObjModel.bufferFlags bits */
-#define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects hitSphereBuf0/1 for objUpdateHitSpheres */
+#define OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT 0x4 /* selects a hitVolumeSphereBuffers entry */
 #define OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED 0x40
 
 STATIC_ASSERT(offsetof(ModelFileHeader, modelId) == 0x04);
 STATIC_ASSERT(offsetof(ModelFileHeader, jointData) == 0x3C);
+STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
 STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlockCount) == 0xF0);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
+STATIC_ASSERT(offsetof(ModelFileHeader, jointCount) == 0xF3);
+STATIC_ASSERT(offsetof(ModelFileHeader, hitVolumeCount) == 0xF7);
 STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 STATIC_ASSERT(offsetof(ModelFileHeader, texMtxCount) == 0xFA);
 
@@ -212,12 +215,17 @@ typedef struct ModelHitSphereDef {
     u8 pad02[2];
     f32 radius;    /* scaled by anim.rootMotionScale at update */
     f32 center[3]; /* joint-space center */
-    u8 pad14[4];
+    u16 linkedSpheres; /* packed relative indices for track-contact sweeps */
+    s8 sphereIndex;    /* owning sphere for mask tests */
+    s8 maskBit;        /* bit selected from the object's hit-volume mask */
 } ModelHitSphereDef; /* 0x18 */
 
 STATIC_ASSERT(sizeof(ModelHitSphereDef) == 0x18);
+STATIC_ASSERT(offsetof(ModelHitSphereDef, linkedSpheres) == 0x14);
+STATIC_ASSERT(offsetof(ModelHitSphereDef, sphereIndex) == 0x16);
+STATIC_ASSERT(offsetof(ModelHitSphereDef, maskBit) == 0x17);
 
-/* Runtime double-buffered hit-sphere record (ObjModel.hitSphereBuf0/1). */
+/* Runtime double-buffered hit-sphere record (ObjModel.hitVolumeSphereBuffers). */
 typedef struct ObjModelHitSphere {
     f32 radius;
     f32 pos[3];
@@ -309,21 +317,25 @@ STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);
  */
 typedef struct ModelJointWork {
     u8 *unk00;
-    f32 *radii;
+    f32 *jointRadii;
     f32 *radiiSq;
-    f32 *boneLengths;
-    f32 *maxReach;
+    f32 *jointLengths;
+    f32 *jointCullDistances;
     u8 *unk14;
-    u8 *unk18;
+    u8 *touchedJoints;
 } ModelJointWork;
 
 STATIC_ASSERT(sizeof(ModelJointWork) == 0x1C);
+STATIC_ASSERT(offsetof(ModelJointWork, jointRadii) == 0x04);
+STATIC_ASSERT(offsetof(ModelJointWork, jointLengths) == 0x0C);
+STATIC_ASSERT(offsetof(ModelJointWork, jointCullDistances) == 0x10);
+STATIC_ASSERT(offsetof(ModelJointWork, touchedJoints) == 0x18);
 
 typedef struct ObjModel {
     ModelFileHeader *file;
     u8 unk04[8];
     u8 *jointMatrices[2];
-    ModelJointWork *jointWorkspace;
+    ModelJointWork *skeletonJointData;
     u16 bufferFlags; /* 1 = mtx buffer select, 2 = vtx buffer select, 0x40 = textures loaded */
     u8 unk1A[2];
     u8 *vtxBuf[2];
@@ -336,9 +348,8 @@ typedef struct ObjModel {
     void *postRenderCallback;
     s32 *vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimCount), filled from vertexAnimEntries[i]+0x60 */
     s32 *blendAnimData;  /* 0x44: per-entry s32 array (file->blendAnimCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
-    u8 *hitSphereBuf0; /* 0x48: hit-sphere workspace buffer 0 (file->hitSphereCount * 0x10) */
-    u8 *hitSphereBuf1; /* 0x4C: hit-sphere workspace buffer 1 (double-buffered) */
-    u8 *hitSphereBufActive; /* 0x50: current hit-sphere buffer, initialized to hitSphereBuf0 */
+    u8 *hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
+    u8 *activeHitVolumeSpheres; /* 0x50: current hit-sphere buffer */
     u8 *groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */
     void *renderAttachment;
     u8 *curMtxBuf;
@@ -360,6 +371,9 @@ Shader* ObjModel_GetRenderOp(ModelFileHeader* modelFile, int renderOpIndex);
 ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex);
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
+STATIC_ASSERT(offsetof(ObjModel, skeletonJointData) == 0x14);
+STATIC_ASSERT(offsetof(ObjModel, hitVolumeSphereBuffers) == 0x48);
+STATIC_ASSERT(offsetof(ObjModel, activeHitVolumeSpheres) == 0x50);
 STATIC_ASSERT(offsetof(ObjModel, textureRefs) == 0x34);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
 STATIC_ASSERT(offsetof(ObjModel, vtxBufDirty) == 0x60);
