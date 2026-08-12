@@ -23,8 +23,9 @@ typedef struct ObjMsgQueue ObjMsgQueue;
  *  - 0xE4/0xE5/0xE6/0xEB: object.c bookkeeping bytes
  *  - 0xF4/0xF8 s32: userData1/userData2, generic per-instance scratch
  *  - 0xFC/0x100/0x104 f32: object.c
- * The record extends past 0x10C; total size unverified - do not take
- * sizeof(GameObject) or index arrays of it.
+ * object.c's allocation and copy contract fixes the complete engine-owned
+ * prefix at 0x10C bytes; class-specific storage follows it in the same
+ * allocation.
  *
  * Width discipline (per CLAUDE.md recipe #77): the pointer fields here
  * are routinely null-tested through *(int *) in matched code (cmpwi).
@@ -99,6 +100,7 @@ struct GameObject {
 };
 
 STATIC_ASSERT(offsetof(GameObject, anim) == 0x00);
+STATIC_ASSERT(sizeof(GameObject) == 0x10C);
 STATIC_ASSERT(offsetof(GameObject, anim.worldPosX) == 0x18);
 STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 
@@ -152,5 +154,6 @@ STATIC_ASSERT(offsetof(GameObject, colorFadeBlue) == 0xEE);
 STATIC_ASSERT(offsetof(GameObject, lightColorSlot) == 0xF2);
 STATIC_ASSERT(offsetof(GameObject, userData1) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
+STATIC_ASSERT(offsetof(GameObject, afterBonesCallback) == 0x108);
 
 #endif /* GAME_OBJECTS_OBJECT_H_ */
