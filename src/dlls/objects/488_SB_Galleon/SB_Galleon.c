@@ -823,6 +823,11 @@ f32 gSbGalleonSkyBlendHold;
 GameObject* gSbGalleon;
 int gSbGalleonSkyTexB;
 int gSbGalleonSkyTexA;
+
+static inline void SB_Galleon_blendSkyColorChannel(u8* color, int start, int end, f32 blendFactor) {
+    *color = start + blendFactor * (end - start);
+}
+
 /* Sequence-event opcodes consumed by SB_Galleon_SeqFn. */
 enum SbGalleonSeqEvent {
     SBGALLEON_SEQEV_TOGGLE_DAMAGE_PHASE_1 = 2, /* toggle damagePhase to 1 */
@@ -890,47 +895,29 @@ void SB_Galleon_updateSkyLighting(GameObject* obj, SBGalleonState* state) {
             gSbGalleonSkyBlendFactor = 0.0f;
         }
     }
-    {
-        int red = gSbGalleonSkyColorAStart[0];
-        gSbGalleonSkyColorA[0] = red + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorAEnd[0] - red);
-    }
-    {
-        int green = gSbGalleonSkyColorAStart[1];
-        gSbGalleonSkyColorA[1] = green + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorAEnd[1] - green);
-    }
-    {
-        int blue = gSbGalleonSkyColorAStart[2];
-        gSbGalleonSkyColorA[2] = blue + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorAEnd[2] - blue);
-    }
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorA[0], gSbGalleonSkyColorAStart[0], gSbGalleonSkyColorAEnd[0],
+                                    gSbGalleonSkyBlendFactor);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorA[1], gSbGalleonSkyColorAStart[1], gSbGalleonSkyColorAEnd[1],
+                                    gSbGalleonSkyBlendFactor);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorA[2], gSbGalleonSkyColorAStart[2], gSbGalleonSkyColorAEnd[2],
+                                    gSbGalleonSkyBlendFactor);
     skySetBaseColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorA[0], gSbGalleonSkyColorA[1], gSbGalleonSkyColorA[2],
                     0x40, 0x40);
-    {
-        int red = gSbGalleonSkyColorBStart[0];
-        gSbGalleonSkyColorB[0] = red + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorBEnd[0] - red);
-    }
-    {
-        int green = gSbGalleonSkyColorBStart[1];
-        gSbGalleonSkyColorB[1] = green + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorBEnd[1] - green);
-    }
-    {
-        int blue = gSbGalleonSkyColorBStart[2];
-        gSbGalleonSkyColorB[2] = blue + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorBEnd[2] - blue);
-    }
-    skySetAmbientColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0], gSbGalleonSkyColorB[1], gSbGalleonSkyColorB[2]);
-    {
-        int red = gSbGalleonSkyColorCStart[0];
-        gSbGalleonSkyColorC[0] = red + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorCEnd[0] - red);
-    }
-    {
-        int green = gSbGalleonSkyColorCStart[1];
-        gSbGalleonSkyColorC[1] = green + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorCEnd[1] - green);
-    }
-    {
-        int blue = gSbGalleonSkyColorCStart[2];
-        gSbGalleonSkyColorC[2] = blue + gSbGalleonSkyBlendFactor * (gSbGalleonSkyColorCEnd[2] - blue);
-    }
-    skySetMoonColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0], gSbGalleonSkyColorC[1],
-                       gSbGalleonSkyColorC[2]);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorB[0], gSbGalleonSkyColorBStart[0], gSbGalleonSkyColorBEnd[0],
+                                    gSbGalleonSkyBlendFactor);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorB[1], gSbGalleonSkyColorBStart[1], gSbGalleonSkyColorBEnd[1],
+                                    gSbGalleonSkyBlendFactor);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorB[2], gSbGalleonSkyColorBStart[2], gSbGalleonSkyColorBEnd[2],
+                                    gSbGalleonSkyBlendFactor);
+    skySetAmbientColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorB[0], gSbGalleonSkyColorB[1],
+                       gSbGalleonSkyColorB[2]);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorC[0], gSbGalleonSkyColorCStart[0], gSbGalleonSkyColorCEnd[0],
+                                    gSbGalleonSkyBlendFactor);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorC[1], gSbGalleonSkyColorCStart[1], gSbGalleonSkyColorCEnd[1],
+                                    gSbGalleonSkyBlendFactor);
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorC[2], gSbGalleonSkyColorCStart[2], gSbGalleonSkyColorCEnd[2],
+                                    gSbGalleonSkyBlendFactor);
+    skySetMoonColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0], gSbGalleonSkyColorC[1], gSbGalleonSkyColorC[2]);
     gSbGalleonSkyLightIntensity = gSbGalleonSkyBlendFactor * 128.0f + 32.0f;
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(
