@@ -639,17 +639,17 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
     gameTextBase = (GameTextRuntime*)gGameTextBase;
     languageTableOffset = curLanguage << 3;
     languageTable = (u8*)sLanguageNameTable;
-    oldHeap = testAndSet_onlyUseHeap3(0);
+    oldHeap = mmSetDelay(0);
     if (getGameState() != 0 && getGameState() != 1)
     {
-        testAndSet_onlyUseHeap3(oldHeap);
+        mmSetDelay(oldHeap);
         return;
     }
 
     lbl_803DC9D0 = lbl_803DC9D4;
     if (curLanguage < 0 || curLanguage >= 6)
     {
-        testAndSet_onlyUseHeap3(oldHeap);
+        mmSetDelay(oldHeap);
         return;
     }
 
@@ -700,7 +700,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
     slot->loadHandle = loadFileByPathAsync(gameTextBase->path,
                                            &slot->loadedSize, 1, gameTextLoadCompleteCallback);
     setFileInfo(NULL);
-    testAndSet_onlyUseHeap3(oldHeap);
+    mmSetDelay(oldHeap);
 }
 
 void gameTextLoadForCurMap(int sourceId)
@@ -718,10 +718,10 @@ void gameTextLoadForCurMap(int sourceId)
 
     gameTextBase = gGameTextBase;
     runtime = (GameTextRuntime*)gameTextBase;
-    oldHeap = testAndSet_onlyUseHeap3(0);
+    oldHeap = mmSetDelay(0);
     if (getGameState() != 0 && getGameState() != 1)
     {
-        testAndSet_onlyUseHeap3(oldHeap);
+        mmSetDelay(oldHeap);
         return;
     }
 
@@ -729,7 +729,7 @@ void gameTextLoadForCurMap(int sourceId)
     gGameTextLastLanguage = languageId = curLanguage;
     if (dirId < 0 || dirId >= GAMETEXT_MAP_DIR_COUNT || languageId < 0 || languageId >= GAMETEXT_LANGUAGE_COUNT)
     {
-        testAndSet_onlyUseHeap3(oldHeap);
+        mmSetDelay(oldHeap);
         return;
     }
 
@@ -794,7 +794,7 @@ void gameTextLoadForCurMap(int sourceId)
         *langPtr = GAMETEXT_INVALID_LANGUAGE;
     }
 
-    testAndSet_onlyUseHeap3(oldHeap);
+    mmSetDelay(oldHeap);
 }
 
 void gameTextBuildSystemFontAtlas(void)
@@ -819,7 +819,7 @@ void gameTextBuildSystemFontAtlas(void)
     fontData = (u8*)gGameTextFontData;
     base30 = gGameTextFontMetrics;
     charset = &gGameTextCharsets[GAMETEXT_SLOT_ERROR];
-    savedHeap = testAndSet_onlyUseHeap3(0);
+    savedHeap = mmSetDelay(0);
     buf = mmAlloc(0x120, 0x1a, 0);
     switch (OSGetFontEncode())
     {
@@ -967,7 +967,7 @@ void gameTextBuildSystemFontAtlas(void)
     mm_free(bufA);
     mm_free(bufB);
     mm_free(buf);
-    testAndSet_onlyUseHeap3(savedHeap);
+    mmSetDelay(savedHeap);
     charset->status = 2;
 }
 

@@ -1428,13 +1428,13 @@ void saveFileStruct_setCheatActive(u8 optionIndex, u8 active) {
     SaveData* save;
 
     save = (SaveData*)saveData;
-    if ((save->registeredDebugOptions & (1 << optionIndex)) == 0) {
+    if ((save->unlockedCheats & (1 << optionIndex)) == 0) {
         return;
     }
     if (active != 0) {
-        save->enabledDebugOptions |= 1 << optionIndex;
+        save->enabledCheats |= 1 << optionIndex;
     } else {
-        save->enabledDebugOptions = save->enabledDebugOptions & ~(1 << optionIndex);
+        save->enabledCheats = save->enabledCheats & ~(1 << optionIndex);
     }
 }
 
@@ -1442,8 +1442,8 @@ int saveFileStruct_isCheatActive(u8 idx) {
     SaveData* save;
 
     save = (SaveData*)saveData;
-    if ((save->registeredDebugOptions & (1 << idx)) != 0) {
-        if ((save->enabledDebugOptions & (1 << idx)) != 0) {
+    if ((save->unlockedCheats & (1 << idx)) != 0) {
+        if ((save->enabledCheats & (1 << idx)) != 0) {
             return 1;
         }
     }
@@ -1452,14 +1452,14 @@ int saveFileStruct_isCheatActive(u8 idx) {
 
 void saveFileStruct_unlockCheat(u8 idx) {
     SaveData* p = (SaveData*)saveData;
-    u32 reg = p->registeredDebugOptions;
+    u32 reg = p->unlockedCheats;
     u32 mask = 1 << idx;
-    p->registeredDebugOptions = reg | mask;
+    p->unlockedCheats = reg | mask;
 }
 
 int isCheatUnlocked(u8 idx) {
     SaveData* p = (SaveData*)saveData;
-    u32 reg = p->registeredDebugOptions;
+    u32 reg = p->unlockedCheats;
     u32 mask = 1 << idx;
     return reg & mask;
 }

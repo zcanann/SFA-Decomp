@@ -1091,7 +1091,7 @@ void SaveGame_gplayGotoRestartPoint(void)
     loadMapForCurrentSaveGame();
 }
 
-void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
+void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int mapLayer, int bDazed)
 {
     int healed = 0;
     if (pRestartPoint == 0)
@@ -1100,7 +1100,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
         if (pRestartPoint == 0)
             return;
     }
-    if (flag != 0)
+    if (bDazed != 0)
     {
         mainSetBits(GAMEBIT_CF_DoStandUpAnim, 1);
         if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1)
@@ -1116,9 +1116,9 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     SAVEGAME_CHARACTER_POSITION((u8*)pRestartPoint)->angle = (s8)(angle >> 8);
     ((SaveGameCharacterPosition*)((u8*)pRestartPoint +
                                   SAVEGAME_CHARACTER_POSITION_OFFSET))[gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET]]
-        .mapLayer = b691;
+        .mapLayer = mapLayer;
     mainSetBits(GAMEBIT_CF_DoStandUpAnim, 0);
-    if (flag != 0 && healed != 0)
+    if (bDazed != 0 && healed != 0)
     {
         playerAddHealth(Obj_GetPlayerObject(), 1);
     }

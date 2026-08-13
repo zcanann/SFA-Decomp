@@ -197,9 +197,9 @@ void initSkyStars(void)
     Mtx rotationB;
 
     GXSetMisc(GX_MT_XF_FLUSH, 0);
-    testAndSet_onlyUseHeap3(0);
+    mmSetDelay(0);
     constellation = mmAlloc(SKY_STAR_CONSTELLATION_POINT_COUNT * sizeof(Vec3f), 0x7f7f7fff, 0);
-    testAndSet_onlyUseHeap3(1);
+    mmSetDelay(1);
     for (constellationPointIndex = 0, constellationPoint = constellation;
          constellationPointIndex < SKY_STAR_CONSTELLATION_POINT_COUNT;
          constellationPointIndex++)

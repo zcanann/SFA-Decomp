@@ -31,13 +31,13 @@ typedef struct SaveData
     u8 sfxVolume;
     u8 speechVolume;
     u8 pad0D[3];
-    u32 registeredDebugOptions;
-    u32 enabledDebugOptions;
+    u32 unlockedCheats;
+    u32 enabledCheats;
     u8 pad18[4];
     SaveScoreEntry scores[SAVE_SCORE_TABLE_COUNT][SAVE_SCORE_ENTRY_COUNT];
 } SaveData;
 
-/* Bit index into registeredDebugOptions/enabledDebugOptions, aka cheatId. */
+/* Bit index into unlockedCheats/enabledCheats, aka cheatId. */
 enum CheatId
 {
     CHEAT_SHOW_CREDITS = 0,

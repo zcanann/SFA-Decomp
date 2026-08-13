@@ -195,36 +195,36 @@ in the `GameBitId` enum — it's currently a private `#define` local to
 ### The global cheat-unlock byte (save offset 0x10)
 
 Confirmed **field-offset-exact**: `include/main/dll/savedata_struct.h`'s `SaveData` struct has
-`u32 registeredDebugOptions` immediately at offset `0x10` (2+1+1+1+1+1+1+1+1+1+1+1+3 bytes of
+`u32 unlockedCheats` immediately at offset `0x10` (2+1+1+1+1+1+1+1+1+1+1+1+3 bytes of
 prior fields), matching the wiki's "offset 0x10 in the global save settings" claim exactly — this
 repo just types it as a `u32` bitmask rather than "one byte" (both readings are compatible; only
 the low 6 bits documented by the wiki are ever set).
 
-- `registeredDebugOptions`: which cheats have ever been unlocked (wiki's "Unlocked" concept).
-- `enabledDebugOptions`: which unlocked cheats are currently turned **on** in the Options menu
+- `unlockedCheats`: which cheats have ever been unlocked (wiki's "Unlocked" concept).
+- `enabledCheats`: which unlocked cheats are currently turned **on** in the Options menu
   (a second bitmask, same struct, immediately following at `0x14`) — this is the wiki's implicit
   distinction between "unlocked" and "active/enabled" made concrete.
 
 Accessors, canonical home `src/main/dll/dll_0015_curves.c`:
 - `saveFileStruct_unlockCheat(u8 idx)` / `isCheatUnlocked(u8 idx)` (lines ~1836-1850) — set/test a
-  bit in `registeredDebugOptions`.
+  bit in `unlockedCheats`.
 - `saveFileStruct_setCheatActive(u8 idx, u8 active)` / `saveFileStruct_isCheatActive(u8 idx)`
   (lines ~1743-1760, ~1852-1865) — `setCheatActive` refuses to set the enabled bit unless the
-  matching `registeredDebugOptions` bit is already set; `isCheatActive` requires *both* bits.
+  matching `unlockedCheats` bit is already set; `isCheatActive` requires *both* bits.
 
 Per `config/GSAE01/splits.txt`, these four functions (`.text:0x800E7E40`-`0x800E7EFC`) belong to
 the `dll_0015_curves.c` unit (`0x800E5434`-`0x800E8100`). The identically-named functions also
 present in `src/main/dll/dll_0017_savegame.c:677-692` are a **separate, distinct compiled copy**
 at different addresses (`dll_0017_savegame.c` occupies `0x800E8100`-`0x800EA174`, i.e. immediately
 after `dll_0015`) — a "drift duplicate": same source shape, backed by loose globals
-(`gGameplayRegisteredDebugOptions`, etc., declared `extern` in `include/main/dll/gameplay.h`)
+(`gGameplayunlockedCheats`, etc., declared `extern` in `include/main/dll/gameplay.h`)
 instead of the `SaveData` struct. The header comments on `dll_0060_dll60func0.c`,
 `dll_0061_dll61func0.c`, `dll_0073_dll73func0.c` and `dll_0074_dll74func0.c` independently
 document further drift-duplicated copies of this same helper family across the DLL 0x005E-0x007B
 "gameplay" range, all citing `dll_0015_curves` as the retail/canonical home.
 
 The wiki's "mask with 0x3F, implying 6 cheats" detail was **not found** — no decompiled function
-in this pass ANDs `registeredDebugOptions`/`enabledDebugOptions` with `0x3F`. It may live in a
+in this pass ANDs `unlockedCheats`/`enabledCheats` with `0x3F`. It may live in a
 not-yet-matched function, or in one of the drift-duplicate copies not read in this pass.
 
 ### Which cheat index is which
@@ -235,7 +235,7 @@ The 4 real cheats' `cheatId` (0-3) is confirmed by call sites, independent of th
   calls `saveFileStruct_isCheatActive((u8)cheatId)` directly for `cheatId == 0`.
 - **1 = Sepia GFX Mode**: same loop special-cases `cheatId == 1` to read
   `Rcp_GetColorFilterEnabled()` instead of the save-file bit — Sepia mode's "on/off" is tracked by
-  the color-filter renderer flag directly, not through `enabledDebugOptions`.
+  the color-filter renderer flag directly, not through `enabledCheats`.
 - **2 = Music Test**: `optionsMenu_openAudioPanel` (`src/main/dll/prof.c`) calls
   `isCheatUnlocked(2)` to reveal an extra audio-panel entry (a sound-test row).
 - **3 = Dino Language**: named `#define LANGUAGE_MENU_CHEAT_ID 3` in `src/main/dll/dll_4d.c`;
@@ -274,7 +274,7 @@ with the cheat's text substitution never applying to Japanese text.
 ## Ready-to-adopt code
 
 ```c
-/* Cheat option indices (registeredDebugOptions/enabledDebugOptions bit index, aka cheatId).
+/* Cheat option indices (unlockedCheats/enabledCheats bit index, aka cheatId).
  * Confirmed by call sites: prof.c's optionsMenu_openGeneralPanel loop (0=Credits via
  * saveFileStruct_isCheatActive, 1=Sepia via Rcp_GetColorFilterEnabled), prof.c's
  * optionsMenu_openAudioPanel (2=Music Test via isCheatUnlocked), dll_4d.c's

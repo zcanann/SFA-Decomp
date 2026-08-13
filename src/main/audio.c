@@ -685,7 +685,7 @@ int audioInit(void)
         gAudioInitStarted = 1;
         gAudioPendingLoadFlags = 0;
         gAudioCompletedLoadFlags = 0;
-        testAndSet_onlyUseHeap3(1);
+        mmSetDelay(1);
         if (gAudioHardwareInitialized)
         {
             return 1;
@@ -730,7 +730,7 @@ int audioInit(void)
         Sfx_InitObjectChannels();
         AudioStream_Init();
         audioLoadTriggerData();
-        testAndSet_onlyUseHeap3(1);
+        mmSetDelay(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
         gAudioStarfoxMPoolDataHandle =
             loadFileByPathAsync(base + 0x228, NULL, 0, poolDataMLoadedCallback);
@@ -740,7 +740,7 @@ int audioInit(void)
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
         gAudioStarfoxMSampleDirectoryHandle =
             loadFileByPathAsync(base + 0x250, NULL, 0, sampleDirectoryMLoadedCallback);
-        testAndSet_onlyUseHeap3(0);
+        mmSetDelay(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
         gAudioStarfoxMSampleBufferHandle =
             loadFileByPathAsync(base + 0x264, NULL, 0, sampleBufferMLoadedCallback);
@@ -749,7 +749,7 @@ int audioInit(void)
         {
             return 0xff;
         }
-        testAndSet_onlyUseHeap3(0);
+        mmSetDelay(0);
     }
     if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
         (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
@@ -761,7 +761,7 @@ int audioInit(void)
         mm_free(gAudioStarfoxMSampleBufferHandle);
         mmSetFreeDelay(delay);
         gAudioMusicGroupReady = 1;
-        testAndSet_onlyUseHeap3(1);
+        mmSetDelay(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
         gAudioStarfoxSPoolDataHandle =
             loadFileByPathAsync(base + 0x278, NULL, 0, poolDataSLoadedCallback);
@@ -771,7 +771,7 @@ int audioInit(void)
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
         gAudioStarfoxSSampleDirectoryHandle =
             loadFileByPathAsync(base + 0x2a0, NULL, 0, sampleDirectorySLoadedCallback);
-        testAndSet_onlyUseHeap3(0);
+        mmSetDelay(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
         gAudioStarfoxSSampleBufferHandle =
             loadFileByPathAsync(base + 0x2b4, NULL, 0, sampleBufferSLoadedCallback);
@@ -1250,10 +1250,10 @@ u8 musicInitMidiWad(void)
         gMusicChannelCounterA = 1;
         gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
-        saved = testAndSet_onlyUseHeap3(0) & 0xff;
+        saved = mmSetDelay(0) & 0xff;
         gMidiWadFileData =
             loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
-        testAndSet_onlyUseHeap3(saved);
+        mmSetDelay(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
     {

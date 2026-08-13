@@ -42,7 +42,7 @@ void SaveGame_release(void);
 void SaveGame_func08_nop(void);
 void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapLayer);
 void SaveGame_gplayGotoSavegame(void);
-void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag);
+void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int mapLayer, int bDazed);
 void SaveGame_gplayGotoRestartPoint(void);
 void SaveGame_gplayClearRestartPoint(void);
 s32 SaveGame_gplayGetRestartGameNotCleared(void);

@@ -187,10 +187,10 @@ The other **17 carry at least one free pair**, adjudicated below.
 /*11*/ f32 d2;
 /*12*/ f32 v;
 /*13*/ int bumpRowOff;
-/*14*/ u8 saved = testAndSet_onlyUseHeap3(1);   // CALL: testAndSet_onlyUseHeap3
+/*14*/ u8 saved = mmSetDelay(1);   // CALL: mmSetDelay
 ```
 
-`testAndSet_onlyUseHeap3` writes `gMmUseHeap3` and `gMmOpCount` (src/main/mm.c). The partners cast/read `gNewShadowEntries`. Disjoint. Hoisting it across an ALLOCATION would matter; there is none in this block.
+`mmSetDelay` writes `gMmUseHeap3` and `gMmOpCount` (src/main/mm.c). The partners cast/read `gNewShadowEntries`. Disjoint. Hoisting it across an ALLOCATION would matter; there is none in this block.
 
 **12. `main/objprint_dolphin.c` :: `modelDoRenderInstrs` block 1 — UNRESOLVABLE**
 
