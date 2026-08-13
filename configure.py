@@ -683,6 +683,17 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Helper function for Metrowerks Standard Library objects
+def MSLLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/1.2.5n",
+        "cflags": cflags_base,
+        "progress_category": "third_party",
+        "objects": objects,
+    }
+
+
 # Helper function for REL script objects
 def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -1010,7 +1021,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/main_gdev.c", progress_category="sdk"),
         ],
     },
-    DolphinLib(
+    MSLLib(
         "MSL_C",
         [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c", mw_version="GC/1.3"),
@@ -1033,7 +1044,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_modf.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/base/PPCArch_weak.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/base/PPCArch_weak.c", progress_category="sdk"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c", mw_version="GC/1.2.5"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c"),
@@ -1053,10 +1064,10 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_sqrt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c", extra_cflags=["-inline", "off", *msl_math_extra]),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-use_lmw_stmw", "on", *msl_math_extra], section_alignments={".sdata2": 4}),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra]),
-            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_8029454c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra]),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c", extra_cflags=["-inline", "off", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-use_lmw_stmw", "on", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(NonMatching, "dolphin/MSL_C/PPCEABI/bare/H/math_8029454c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
         ],
     ),
     {

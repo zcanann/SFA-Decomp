@@ -7,6 +7,7 @@
 #include "types.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
+#include "main/model.h"
 
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
@@ -84,23 +85,6 @@ typedef s16 ObjAnimPackedEvent;
  * These names are still partially provisional, but the layouts are stable
  * enough to carry meaning across the nearby animation and hit-reaction code.
  */
-typedef struct ObjAnimDef {
-  u8 pad00[2];
-  u16 flags;
-  u16 modNo;
-  u8 pad06[0x20 - 6];
-  s16 *eventMoveTable;
-  ObjHitReactMoveEntry *hitReactMoveTable;
-  u8 pad28[0x58 - 0x28];
-  ObjAnimHitReactRow *hitReactTable;
-  u8 pad5C[0x64 - 0x5C];
-  u8 **moveData;
-  u8 pad68[4];
-  s16 *cachedAnimIds;
-  s16 moveGroupBaseIndices[OBJANIM_MOVE_GROUP_BASE_COUNT];
-  u16 moveCount;
-} ObjAnimDef;
-
 typedef struct ObjAnimState {
   u8 pad00[4];
   union {
@@ -335,7 +319,7 @@ typedef struct ObjDef {
   u16 avoidRadiusX; /* 0x84: lateral extent of the side-step avoidance ellipse (scaled by 0.1); 0 disables avoidance for the object */
   u16 avoidRadiusZ; /* 0x86: axial extent of the same ellipse */
   f32 shadowModelScaleBase;
-  u8 pad8C;
+  u8 maxLights;
   u8 modelLightMaskIndex;
   u8 defaultModelVariant;
   u8 fallbackHitSphereRadius;
@@ -353,13 +337,7 @@ typedef struct ObjAnimMoveData {
   u8 frameCommands[1];
 } ObjAnimMoveData;
 
-typedef struct ObjAnimBank {
-  ObjAnimDef *animDef;
-  u8 pad04[0x2C - 4];
-  ObjAnimState *currentState;
-  ObjAnimState *activeState;
-  u8 pad34[0x64 - 0x34];
-} ObjAnimBank;
+typedef ObjModel ObjAnimBank;
 
 typedef struct ObjectShadowMesh {
   Vec3s *vertices;
@@ -544,11 +522,8 @@ STATIC_ASSERT(sizeof(ObjAnimHitReactRow) == 0x18);
 STATIC_ASSERT(offsetof(ObjAnimHitReactRow, entryIndex) == 0x16);
 STATIC_ASSERT(offsetof(ObjAnimFrameCommand, frameLength) == 0x01);
 
-STATIC_ASSERT(sizeof(ObjAnimDef) == 0xF0);
 STATIC_ASSERT(offsetof(ObjAnimDef, flags) == 0x02);
 STATIC_ASSERT(offsetof(ObjAnimDef, modNo) == 0x04);
-STATIC_ASSERT(offsetof(ObjAnimDef, eventMoveTable) == 0x20);
-STATIC_ASSERT(offsetof(ObjAnimDef, hitReactMoveTable) == 0x24);
 STATIC_ASSERT(offsetof(ObjAnimDef, hitReactTable) == 0x58);
 STATIC_ASSERT(offsetof(ObjAnimDef, moveData) == 0x64);
 STATIC_ASSERT(offsetof(ObjAnimDef, cachedAnimIds) == 0x6C);
@@ -697,6 +672,7 @@ STATIC_ASSERT(offsetof(ObjDef, mapLoadObjectId) == 0x78);
 STATIC_ASSERT(offsetof(ObjDef, npcDialogueTextId) == 0x7A);
 STATIC_ASSERT(offsetof(ObjDef, helpTextIds) == 0x7C);
 STATIC_ASSERT(offsetof(ObjDef, shadowModelScaleBase) == 0x88);
+STATIC_ASSERT(offsetof(ObjDef, maxLights) == 0x8C);
 STATIC_ASSERT(offsetof(ObjDef, modelLightMaskIndex) == 0x8D);
 STATIC_ASSERT(offsetof(ObjDef, fallbackHitSphereRadius) == 0x8F);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
@@ -821,7 +797,7 @@ static inline ObjAnimState *ObjAnim_GetCurrentState(ObjAnimComponent *objAnim) {
 }
 
 static inline s32 ObjAnim_GetHitReactEntryIndex(ObjAnimDef *animDef, s32 sphereIndex) {
-  return animDef->hitReactTable[sphereIndex].entryIndex;
+  return ((ObjAnimHitReactRow *)animDef->hitReactTable)[sphereIndex].entryIndex;
 }
 
 static inline ObjAnimMoveData *ObjAnim_GetMoveData(ObjAnimDef *animDef, ObjAnimState *state,

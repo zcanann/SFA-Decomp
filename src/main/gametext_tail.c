@@ -370,13 +370,13 @@ void gameTextTickReveal(int textId, TextDisplayState* state)
     gameTextRenderStrs(def->strings[state->charIndex], 0x7c);
 }
 
-void gameTextQueueReveal(int a, int b)
+void gameTextQueueReveal(int a, TextDisplayState* b)
 {
     int i = gGameTextCommandCount++;
     GameTextSlot* e = &gGameTextCommandSlots[i];
     e->opcode = GAMETEXT_COMMAND_TICK_REVEAL;
     e->arg0 = a;
-    e->arg1 = b;
+    e->arg1 = (int)b;
 }
 
 static inline TextGlyph* gameTextFindGlyph(u32 ch, int langIdx)
@@ -397,16 +397,16 @@ static inline TextGlyph* gameTextFindGlyph(u32 ch, int langIdx)
     return NULL;
 }
 
-void gameTextFreePhrase(int* p)
+void gameTextFreePhrase(NpcDialoguePhraseState* p)
 {
-    p[0] = 0;
-    p[1] = 0;
-    p[2] = 0;
-    p[3] = 0;
-    if (((void**)p)[5] != NULL)
+    p->display.active = 0;
+    p->display.charIndex = 0;
+    p->display.f8 = 0;
+    p->display.fC = 0;
+    if (p->phraseBuffer != NULL)
     {
-        mm_free(((void**)p)[5]);
-        ((void**)p)[5] = NULL;
+        mm_free(p->phraseBuffer);
+        p->phraseBuffer = NULL;
     }
 }
 static inline char* gameTextBreakLine(char* dst, char** buffer, int lineIdx)

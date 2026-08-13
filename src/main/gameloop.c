@@ -188,7 +188,7 @@ void doNothing_startOfFrame(void)
 }
 extern AssetReq gGameLoopAssetReq;
 
-void animationLoad(void** out, int animId, int moveIndex, u8* cache, struct ObjAnimDef* animDef)
+void animationLoad(void** out, int animId, int moveIndex, u8* cache, ObjAnimDef* animDef)
 {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 7;

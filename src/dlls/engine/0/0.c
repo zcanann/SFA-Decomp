@@ -1617,7 +1617,7 @@ void hudDrawAirMeter(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
-extern int gNpcDialoguePhraseState[6];
+extern NpcDialoguePhraseState gNpcDialoguePhraseState;
 extern int gHudTimedElementTexSlot[6];
 extern GameObject* gHeadDisplayModelObjs[6];
 extern GameObject* gCMenuRingObjs[3];
@@ -4383,7 +4383,7 @@ void headDisplayOpen(int idx)
                     gNpcDialogueLetterbox = 0;
                     gNpcDialoguePageFrames = boxId;
                     gNpcDialoguePageTimer = (f32)(s16)boxId;
-                    gameTextFreePhrase(gNpcDialoguePhraseState);
+                    gameTextFreePhrase(&gNpcDialoguePhraseState);
                     gNpcDialogueDidFade = 0;
                 }
             }
@@ -8211,8 +8211,8 @@ void gameUiUpdateNpcDialogue(void)
         {
             dd = 1;
         }
-        gNpcDialoguePhraseState[3] = dd;
-        if (gNpcDialoguePhraseState[2] == 1)
+        gNpcDialoguePhraseState.display.fC = dd;
+        if (gNpcDialoguePhraseState.display.f8 == 1)
         {
             buttonDisable(0, PAD_BUTTON_A);
             gCMenuButtons &= ~0x100u;
@@ -8236,12 +8236,12 @@ void gameUiUpdateNpcDialogue(void)
         if (cur <= 0.0f)
         {
             gNpcDialoguePageTimer = (f32)(s32)gNpcDialoguePageFrames;
-            gNpcDialoguePhraseState[1]++;
+            gNpcDialoguePhraseState.display.charIndex++;
             {
                 u16* end = gameTextGet(curGameText);
-                if (gNpcDialoguePhraseState[1] >= end[1])
+                if (gNpcDialoguePhraseState.display.charIndex >= end[1])
                 {
-                    gNpcDialoguePhraseState[1] = end[1] - 1;
+                    gNpcDialoguePhraseState.display.charIndex = end[1] - 1;
                     gNpcDialogueActive = 0;
                 }
             }
@@ -8273,7 +8273,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 unusedA, s32 unusedB, s32 do_inp
     curGameText = id;
     gNpcDialoguePageFrames = -1;
     gNpcDialogueLetterbox = 1;
-    gameTextFreePhrase(gNpcDialoguePhraseState);
+    gameTextFreePhrase(&gNpcDialoguePhraseState);
     if (do_input_disable != 0)
     {
         cutsceneFadeInOut(1);
@@ -8395,11 +8395,11 @@ void GameUI_hudDraw(int a, int b, int c)
             box->alpha = gNpcDialogueTextAlpha;
             if (gNpcDialoguePageFrames != -1)
             {
-                gameTextAppendStr(gameTextGetPhrase(curGameText, gNpcDialoguePhraseState[1]), 0x7c);
+                gameTextAppendStr(gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex), 0x7c);
             }
             else
             {
-                gameTextQueueReveal(curGameText, (int)gNpcDialoguePhraseState);
+                gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
             }
         }
         pauseMenuDrawText(a, b, c);
@@ -8441,11 +8441,11 @@ void GameUI_hudDraw(int a, int b, int c)
                 box->alpha = gNpcDialogueTextAlpha;
                 if (gNpcDialoguePageFrames != -1)
                 {
-                    gameTextAppendStr(gameTextGetPhrase(curGameText, gNpcDialoguePhraseState[1]), 0x7c);
+                    gameTextAppendStr(gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex), 0x7c);
                 }
                 else
                 {
-                    gameTextQueueReveal(curGameText, (int)gNpcDialoguePhraseState);
+                    gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
                 }
             }
             drawTrickyHudOverlay(a, b, c);
@@ -9210,7 +9210,7 @@ int gLastTaskHintId;
 u8* gDummy39Texture;
 u8 gDummy39Countdown;
 
-int gNpcDialoguePhraseState[6];
+NpcDialoguePhraseState gNpcDialoguePhraseState;
 int gHudTimedElementTexSlot[6];
 GameObject* gGameUiHudAnimObjects[6];
 GameObject* gHeadDisplayModelObjs[6];

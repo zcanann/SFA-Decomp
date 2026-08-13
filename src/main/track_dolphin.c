@@ -114,19 +114,6 @@ struct TrackTriangle
     u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
 };
 
-typedef struct TrackHitResults
-{
-    f32 planes[4][4];
-    f32 radii[4];
-    u8 surfaceTypes[4];
-    u8 queryTypes[4];
-    u8 triangleFlags[4];
-    void* objects[4];
-    s16 hitCount;
-    u8 hitMask;
-    u8 pad6F;
-} TrackHitResults;
-
 struct MapDynamicSlot
 {
     GameObject* owner;
