@@ -4288,7 +4288,7 @@ void headDisplayDraw(void)
                       (f32)(u32)gRenderModeObj->xfbHeight, 0.0f, 1.0f);
         if (gHeadDisplayModelObjs[panelType] != NULL)
         {
-            ObjAnim_AdvanceCurrentMove((int)gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType], timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove(gHeadDisplayModelObjs[panelType], gPauseMenuPanelAnims.speeds[panelType], timeDelta, NULL);
             if (gHeadDisplayModelObjs[panelType]->anim.placementDataAddress > 0x90000000u)
             {
                 gHeadDisplayModelObjs[panelType]->anim.placementDataAddress = 0;
@@ -4439,7 +4439,7 @@ void pauseMenuCreateHeads(void)
                 {
                     ((GameObject*)gHeadDisplayModelObjs[i])->anim.placementData = NULL;
                 }
-                ObjAnim_SetCurrentMove((int)gHeadDisplayModelObjs[i], 1, 0.0f, 0);
+                ObjAnim_SetCurrentMove(gHeadDisplayModelObjs[i], 1, 0.0f, 0);
             }
         }
     }
@@ -5688,7 +5688,7 @@ void hudDrawCommunicatorAlert(int unused1, int unused2, int unused3)
  * the camera state and pops the save-confirm text when flagged. */
 void pauseMenuDoSave(void)
 {
-    u32 texture;
+    Texture* texture;
     f32 scale;
     int x;
     int y;
@@ -6113,7 +6113,7 @@ void pauseMenuUpdate(void)
             pauseMenuSetupTitle(0x2b1, gPauseMenuPageIndex, 1, 3);
             if ((s8)gPauseMenuCloseAnimIndex != 0 && AudioStream_GetCurrentId() == 0 && AudioStream_IsPreparing() == 0)
             {
-                ObjAnim_SetCurrentMove((int)hud->anims[(s8)gPauseMenuCloseAnimIndex], 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove(hud->anims[(s8)gPauseMenuCloseAnimIndex], 0, 0.0f, 0);
                 gPauseMenuCloseAnimIndex = 0;
             }
             if ((s8)analogX != 0 || gPauseMenuPodiumRamp == 0 || gPauseMenuPageIndex < menuMin || gPauseMenuPageIndex > menuMax)
@@ -6772,7 +6772,7 @@ void pauseMenuUpdateFadeAndBack(void)
         }
         for (i = 1; i < 4; i++)
         {
-            ObjAnim_SetCurrentMove((int)gGameUiHudAnimObjects[i], i == (s8)gPauseMenuCloseAnimIndex, 0.0f, 0);
+            ObjAnim_SetCurrentMove(gGameUiHudAnimObjects[i], i == (s8)gPauseMenuCloseAnimIndex, 0.0f, 0);
         }
     }
 
@@ -7080,7 +7080,7 @@ void pauseMenuAnimateCarousel(void)
         f32 spin = 0.13f * gPauseMenuPodiumRamp;
         gGameUiCommunicatorObjects[1]->anim.rootMotionScale = spin * gPauseMenuRingScale;
     }
-    ObjAnim_AdvanceCurrentMove((int)gGameUiCommunicatorObjects[1], 0.01f, timeDelta,
+    ObjAnim_AdvanceCurrentMove(gGameUiCommunicatorObjects[1], 0.01f, timeDelta,
                                &animEvents);
     watermark = 0x90000000;
     for (; k <= last; k++)
@@ -7103,7 +7103,7 @@ void pauseMenuAnimateCarousel(void)
         sel = gPauseMenuRingExpand * sel;
         gGameUiHudAnimObjects[k]->anim.rootMotionScale = sel * gPauseMenuRingScale;
         gGameUiHudAnimObjects[k]->anim.renderAlpha = 0xff;
-        ObjAnim_AdvanceCurrentMove((int)gGameUiHudAnimObjects[k], gPauseMenuPanelAnims.speeds[k], timeDelta,
+        ObjAnim_AdvanceCurrentMove(gGameUiHudAnimObjects[k], gPauseMenuPanelAnims.speeds[k], timeDelta,
                                                                      &animEvents);
         a = 2.0f * mathSinf(gGameUiPi * (f32)(gPauseMenuSwivelAngle + k * step) / gGameUiAngleDivisor);
         a = gPauseMenuRingExpand * a;

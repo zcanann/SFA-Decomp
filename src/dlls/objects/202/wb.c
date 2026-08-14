@@ -109,7 +109,7 @@ void wbUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int eventKind
     return;
 }
 
-static void wbTickDecoyTimer(u32 obj, EnemyState* state)
+static void wbTickDecoyTimer(GameObject* obj, EnemyState* state)
 {
     u32 randVal;
 
@@ -130,7 +130,7 @@ static void wbTickDecoyTimer(u32 obj, EnemyState* state)
     }
 }
 
-void wbUpdateEngaged(u32 obj, int state)
+void wbUpdateEngaged(GameObject* obj, int state)
 {
     GameObject* tracked;
     f32 moveSpeed;
@@ -208,7 +208,7 @@ void wbUpdateEngaged(u32 obj, int state)
     baddieTurnTowardLookDir((GameObject*)obj, (void*)state, 0x2d, 0.0f, 0.0f, 0);
 }
 
-void wbUpdateIdle(u32 obj, int state)
+void wbUpdateIdle(GameObject* obj, int state)
 {
     RomCurveWalker* route;
     ObjPlacement* placement;

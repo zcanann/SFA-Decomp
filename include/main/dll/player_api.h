@@ -72,8 +72,8 @@ void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 void playerInitFuncPtrsEntry(void);
 void playerRenderFuzz(GameObject* obj, int p2, int fuzzPass);
 void playerFree(GameObject* obj, int flag);
-void playerUpdateWhileTimeStopped(int obj);
-void objLoadPlayerFromSave(int obj);
+void playerUpdateWhileTimeStopped(GameObject* obj);
+void objLoadPlayerFromSave(GameObject* obj);
 void playerReparentPreservingWorldTransform(GameObject* obj, GameObject* newParent);
 
 int Lightfoot_UpdateProximityInteractionState(GameObject* obj, BaddieState* state);

@@ -27,7 +27,7 @@ int ccGasVent_getExtraSize(void) {
 }
 
 void ccGasVent_free(GameObject* obj) {
-    objFreeObjectType((int)obj, CC_GAS_VENT_OBJECT_GROUP);
+    objFreeObjectType(obj, CC_GAS_VENT_OBJECT_GROUP);
 }
 
 void ccGasVent_render(void) {
@@ -59,7 +59,7 @@ void ccGasVent_update(GameObject* obj) {
 }
 
 void ccGasVent_init(GameObject* obj) {
-    objAddObjectType((int)obj, CC_GAS_VENT_OBJECT_GROUP);
+    objAddObjectType(obj, CC_GAS_VENT_OBJECT_GROUP);
 }
 
 ObjectDescriptor gCCGasVentObjDescriptor = {

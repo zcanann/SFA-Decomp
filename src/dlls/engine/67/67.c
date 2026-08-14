@@ -206,7 +206,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
     if (gCameraModeStaffAnimState->pathNotNeeded != 0) {
         (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
     } else {
-        if (gCameraModeStaffAnimState->localFrame != (GameObject*)camera->anim.parentAddress) {
+        if (gCameraModeStaffAnimState->localFrame != (GameObject*)camera->anim.parent) {
             for (pointIndex = 0; pointIndex < gCameraModeStaffAnimState->pathCurve.count; pointIndex++) {
                 Obj_TransformLocalPointToWorld(
                     gCameraModeStaffAnimState->pointsX[pointIndex], gCameraModeStaffAnimState->pointsY[pointIndex],
@@ -219,9 +219,9 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
                     gCameraModeStaffAnimState->pointsX[pointIndex], gCameraModeStaffAnimState->pointsY[pointIndex],
                     gCameraModeStaffAnimState->pointsZ[pointIndex], &gCameraModeStaffAnimState->pointsX[pointIndex],
                     &gCameraModeStaffAnimState->pointsY[pointIndex], &gCameraModeStaffAnimState->pointsZ[pointIndex],
-                    (GameObject*)camera->anim.parentAddress);
+                    (GameObject*)camera->anim.parent);
             }
-            gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parentAddress;
+            gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parent;
         }
         target = (GameObject*)camera->anim.targetObj;
         *(pYaddr = &localPosY) = camera->anim.localPosY;
@@ -268,7 +268,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
         CameraModeStaffAnim_updateTargetAction(camera, target);
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
-                                       (GameObject*)camera->anim.parentAddress);
+                                       (GameObject*)camera->anim.parent);
     }
     return;
 }
@@ -315,7 +315,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
         &gCameraModeStaffAnimState->actionParamZ, 0, &gCameraModeStaffAnimState->actionParamY);
 
     gCameraModeStaffAnimState->pathNotNeeded = 0;
-    gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parentAddress;
+    gCameraModeStaffAnimState->localFrame = (GameObject*)camera->anim.parent;
 
     sinFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
     cosFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
@@ -363,7 +363,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
         }
 
         Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0], &localPos[1], &localPos[2],
-                                       (GameObject*)camera->anim.parentAddress);
+                                       (GameObject*)camera->anim.parent);
 
         for (pointCount = 0; pointCount < 3; pointCount++) {
             gCameraModeStaffAnimState->pointsX[pointCount] = camera->anim.localPosX;

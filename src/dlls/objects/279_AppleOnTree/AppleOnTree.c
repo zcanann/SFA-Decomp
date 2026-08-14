@@ -515,9 +515,9 @@ void AppleOnTree_update(GameObject* obj) {
                 } while (particleIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 ((AppleOnTreeState*)state)->animState = APPLE_ON_TREE_STATE_FALLING;
             } else if ((*gSkyInterface)->getSunPosition(&sunTime) != 0) {
-                ObjAnim_AdvanceCurrentMove((int)obj, -0.006f, timeDelta, 0);
+                ObjAnim_AdvanceCurrentMove(obj, -0.006f, timeDelta, 0);
             } else {
-                ObjAnim_AdvanceCurrentMove((int)obj, 0.006f, timeDelta, 0);
+                ObjAnim_AdvanceCurrentMove(obj, 0.006f, timeDelta, 0);
             }
             break;
         case APPLE_ON_TREE_STATE_FALLING:

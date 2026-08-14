@@ -345,7 +345,7 @@ int ShopKeeper_updateIdle(GameObject* obj, BaddieState* baddie)
     baddie->moveSpeed = 0.007f;
     if (obj->anim.currentMove != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
     }
     ObjHits_EnableObject(obj);
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
@@ -422,11 +422,11 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
         {
             if (obj->anim.currentMove == SHOPKEEPER_ANIM_TRACKING && baddie->moveSpeed > 0.0f)
             {
-                ObjAnim_SetCurrentMove((int)obj, SHOPKEEPER_ANIM_ALERT, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, SHOPKEEPER_ANIM_ALERT, 0.0f, 0);
             }
             else if (obj->anim.currentMove != 0)
             {
-                ObjAnim_SetCurrentMove((int)obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
             }
             baddie->moveSpeed = 0.007f;
             state->flags9D4 = state->flags9D4 & ~SHOPKEEPER_FLAG_IDLE_ANIM;
@@ -438,7 +438,7 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
     {
         if (obj->anim.currentMove != SHOPKEEPER_ANIM_ALERT && obj->anim.currentMove != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
             baddie->moveSpeed = 0.007f;
         }
     }
@@ -448,13 +448,13 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
         Sfx_PlayFromObject(obj, SHOPKEEPER_SFX_IDLE_ANIM);
         if (obj->anim.currentMove == SHOPKEEPER_ANIM_ALERT)
         {
-            ObjAnim_SetCurrentMove((int)obj, SHOPKEEPER_ANIM_TRACKING, 0.99f, 0);
+            ObjAnim_SetCurrentMove(obj, SHOPKEEPER_ANIM_TRACKING, 0.99f, 0);
             baddie->moveSpeed = -0.0125f;
         }
         else
         {
             rng = randomGetRange(0, 1);
-            ObjAnim_SetCurrentMove((int)obj, gShopKeeperIdleAnimMoves[rng], 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, gShopKeeperIdleAnimMoves[rng], 0.0f, 0);
             baddie->moveSpeed = gShopKeeperIdleAnimStepScales[rng];
         }
         state->flags9D4 = state->flags9D4 | SHOPKEEPER_FLAG_IDLE_ANIM;
@@ -755,7 +755,7 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     state->flags9D4 |= SHOPKEEPER_FLAG_FACING;
     if (advance != 0)
     {
-        ObjAnim_AdvanceCurrentMove((int)obj, speed, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, speed, timeDelta, NULL);
     }
     if ((obj)->seqIndex == -1)
     {

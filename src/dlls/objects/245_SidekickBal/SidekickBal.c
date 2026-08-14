@@ -25,6 +25,9 @@
 #include "main/vecmath.h"
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
+#include "main/dll/tricky_api.h"
+#include "main/dll/player_api.h"
+#include "main/audio/sfx_play_api.h"
 
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
@@ -390,7 +393,7 @@ u8 trickyBallMove(GameObject* obj) {
         reflectedZ = -obj->anim.velocityZ;
         speed = sqrtf(reflectedX * reflectedX + reflectedY * reflectedY + reflectedZ * reflectedZ);
         if (speed > SIDEKICKBALL_BOUNCE_SOUND_SPEED) {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_baptr1_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_baptr1_c);
         }
         if (0.0f != speed) {
             invSpeed = 1.0f / speed;

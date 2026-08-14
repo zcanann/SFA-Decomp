@@ -9,6 +9,7 @@
 #include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/vecmath.h"
+#include "main/objtype.h"
 #include "sys/objects/lifecycle.h"
 
 #define WALL_ANIMATOR_DONE_TIMER               3000
@@ -87,8 +88,8 @@ int WallAnimator_getExtraSize(void) {
 }
 
 void WallAnimator_free(GameObject* obj) {
-    objFreeObjectType((int)obj, WALL_ANIMATOR_GROUP_CLIMBABLE);
-    objFreeObjectType((int)obj, WALL_ANIMATOR_GROUP_SECONDARY);
+    objFreeObjectType(obj, WALL_ANIMATOR_GROUP_CLIMBABLE);
+    objFreeObjectType(obj, WALL_ANIMATOR_GROUP_SECONDARY);
 }
 
 void WallAnimator_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -100,7 +101,7 @@ void WallAnimator_render(GameObject* obj, int renderArg2, int renderArg3, int re
 }
 
 void WallAnimator_update(GameObject* obj) {
-    int nearbyObject;
+    GameObject* nearbyObject;
     WallAnimatorState* state;
     WallAnimatorPlacement* placement;
     GameObject* tricky;
@@ -125,7 +126,7 @@ void WallAnimator_update(GameObject* obj) {
     if (tricky != NULL) {
         nearestDistance[0] = 35.0f;
         nearbyObject = objGetNearestTypeTo(WALL_ANIMATOR_NEARBY_GROUP, obj, nearestDistance);
-        if ((void*)nearbyObject == NULL) {
+        if (nearbyObject == NULL) {
             obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {

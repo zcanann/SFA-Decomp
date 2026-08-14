@@ -91,10 +91,10 @@ void SoftBody_update(GameObject* obj)
     case SOFTBODY_MOVE_PHASE_A_FIRST:
     case SOFTBODY_MOVE_PHASE_A_FIRST + 1:
     case SOFTBODY_MOVE_PHASE_A_FIRST + 2:
-        ObjAnim_SetCurrentMove((int)obj, 0, gSoftBodySlowPhase, 0);
+        ObjAnim_SetCurrentMove(obj, 0, gSoftBodySlowPhase, 0);
         break;
     default:
-        ObjAnim_SetCurrentMove((int)obj, 0, gSoftBodyFastPhase, 0);
+        ObjAnim_SetCurrentMove(obj, 0, gSoftBodyFastPhase, 0);
         break;
     }
 }
@@ -117,7 +117,7 @@ void SoftBody_init(GameObject* obj, SoftBodySetup* setup)
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
-    ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     if (object->anim.hitReactState != NULL)
     {
         ObjHitbox_SetSphereRadius(&obj->anim,

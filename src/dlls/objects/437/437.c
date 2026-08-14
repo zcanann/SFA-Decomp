@@ -320,7 +320,7 @@ int Lightfoot_UpdateWanderSteering(GameObject* obj, BaddieState* state, f32 fv)
                 }
             }
         }
-        ObjAnim_SetCurrentMove((int)obj, 0x14, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0x14, 0.0f, 0);
     }
     if (sub->completionCountdown == 0)
     {
@@ -345,7 +345,7 @@ int Lightfoot_UpdateRandomTurn(GameObject* obj, BaddieState* state, f32 fv)
         {
             obj->anim.rotX -= 0x8AA9;
         }
-        ObjAnim_SetCurrentMove((int)obj, 0x23, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0x23, 0.0f, 0);
     }
     state->moveSpeed = 0.017f;
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, fv, 1);
@@ -388,7 +388,7 @@ int Lightfoot_UpdateTargetAnimationCycle(GameObject* obj, BaddieState* state, f3
         {
             control->moveIndex = 0;
         }
-        ObjAnim_SetCurrentMove((int)obj, gPlayerMoveTableC[control->moveIndex], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, gPlayerMoveTableC[control->moveIndex], 0.0f, 0);
     }
     state->moveSpeed =
         gPlayerMoveSpeedTable.speeds[control->moveIndex];
@@ -490,7 +490,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, BaddieState* state, f
             mainSetBits(placement->activeGameBit, 0);
             return 3;
         }
-        ObjAnim_SetCurrentMove((int)obj, controls->anims[challenge->animationIndex], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, controls->anims[challenge->animationIndex], 0.0f, 0);
     }
     state->moveSpeed = controls->blends[challenge->animationIndex];
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, fv, 1);
@@ -523,12 +523,12 @@ int Lightfoot_UpdateAnimationCycle(GameObject* obj, BaddieState* state, f32 fv)
         if (state->moveJustStartedA != 0)
         {
             obj->anim.currentMoveProgress = (f32)randomGetRange(0, 0x63) / 100.0f;
-            ObjAnim_SetCurrentMove((int)obj, moves[control->moveIndex], obj->anim.currentMoveProgress,
+            ObjAnim_SetCurrentMove(obj, moves[control->moveIndex], obj->anim.currentMoveProgress,
                                    0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, moves[control->moveIndex], 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, moves[control->moveIndex], 0.0f, 0);
         }
     }
     state->moveSpeed = blends[control->moveIndex];
@@ -788,7 +788,7 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             snd[0] = 0.0f;
             snd[1] = gLightfootPulseSpawnOffsetY[0];
             snd[2] = 0.0f;
-            Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_foot_metal_scuff_455);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
             objfx_spawnPulseBurst(obj, gLightfootPulseBurstScale[0] * obj->anim.rootMotionScale, 3, mode, 0, snd);
         }
     }
@@ -821,7 +821,7 @@ void Lightfoot_free(GameObject* obj, int preserveChildren) {
     int count;
     int i;
 
-    objFreeObjectType((u32)obj, DLL1B5_OBJECT_GROUP);
+    objFreeObjectType(obj, DLL1B5_OBJECT_GROUP);
     count = obj->childCount;
     for (i = 0; i < count; i++) {
         child = obj->childObjs[0];
@@ -982,7 +982,7 @@ void Lightfoot_update(GameObject* obj) {
             pulseOffset[0] = 0.0f;
             pulseOffset[1] = gLightfootPulseSpawnOffsetY[0];
             pulseOffset[2] = 0.0f;
-            Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_foot_metal_scuff_455);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
             objfx_spawnPulseBurst(obj, gLightfootPulseBurstScale[0] * obj->anim.rootMotionScale, 3, workValue, 0, pulseOffset);
         }
         control->wanderTimer -= timeDelta;

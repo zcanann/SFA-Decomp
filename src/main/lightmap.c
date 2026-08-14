@@ -585,7 +585,7 @@ void renderSceneGeometry(u8 renderType, s8* order)
     int box3[4];
     u8* cellMaskPtr;
     s8** layerTablePtr;
-    int* layerFlagPtr;
+    s8** layerFlagPtr;
     int idx;
     int k;
     int row, col;
@@ -604,7 +604,7 @@ void renderSceneGeometry(u8 renderType, s8* order)
     do
     {
         table = *layerTablePtr;
-        gMapLayerCellStates = (s8*)*layerFlagPtr;
+        gMapLayerCellStates = *layerFlagPtr;
         mapGetBlockGridRects(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, box0, box1, box2, box3, layer, 1,
                        gMapCurRomListSlot);
         cellMaskPtr = cellMask;

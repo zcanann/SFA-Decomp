@@ -24,6 +24,7 @@
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/dll_3B.h"
 #include "main/dll/FRONT/n_options.h"
+#include "main/attract_movie_api.h"
 #include "main/fileio.h"
 #include "main/audio_decode_thread.h"
 #include "main/dll/FRONT/picmenu.h"

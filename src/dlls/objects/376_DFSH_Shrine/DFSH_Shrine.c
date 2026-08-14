@@ -94,7 +94,7 @@ void dfshShrine_updateHoverMotion(int objArg) {
     trigB = trigB + trigA;
     obj->anim.rotY = 600.0f * trigB;
 
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, (ObjAnimEventList*)animEvents);
+    ObjAnim_AdvanceCurrentMove(obj, 0.005f, timeDelta, (ObjAnimEventList*)animEvents);
     if (player != NULL) {
         angleDelta =
             ((u16)getAngle(obj->anim.worldPosX - player->anim.worldPosX, obj->anim.worldPosZ - player->anim.worldPosZ) -

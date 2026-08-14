@@ -122,9 +122,9 @@ void explosion_spawnFlame(GameObject* obj, u8 generation, f32 speed, f32 x, f32 
         s8 sfxKind = placement->sfxKind;
         if (sfxKind != 0) {
             if (sfxKind == 2) {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_sexpl2_c_4bf);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4bf);
             } else if (sfxKind == 3) {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_sexpl2_c_4c2);
+                Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4c2);
             } else {
                 s8 mapEventSlot = (obj)->anim.mapEventSlot;
                 switch (mapEventSlot) {
@@ -134,10 +134,10 @@ void explosion_spawnFlame(GameObject* obj, u8 generation, f32 speed, f32 x, f32 
                 case 0x3c:
                 case 0x3d:
                 case 0x3e:
-                    Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
+                    Sfx_PlayFromObjectLimited(obj, SFXTRIG_wp_sexpl2_c_4b8, 2);
                     break;
                 default:
-                    Sfx_PlayFromObject((int)obj, SFXTRIG_sexpl2_c);
+                    Sfx_PlayFromObject(obj, SFXTRIG_sexpl2_c);
                     break;
                 }
             }

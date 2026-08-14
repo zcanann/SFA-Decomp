@@ -156,7 +156,7 @@ void duster_update(GameObject* obj) {
     }
 
     if (state->settleTimer == 0 && state->hitReactTimer == 0) {
-        if (ObjAnim_AdvanceCurrentMove((int)obj, state->moveStepScale, timeDelta, NULL) != 0 ||
+        if (ObjAnim_AdvanceCurrentMove(obj, state->moveStepScale, timeDelta, NULL) != 0 ||
             state->priorityHit != 0) {
             ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_en_lflsh3_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);

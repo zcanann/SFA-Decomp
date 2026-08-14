@@ -3,8 +3,10 @@
 
 #include "global.h"
 
-void wbUpdateEngaged(u32 obj, int state);
-void wbUpdateIdle(u32 obj, int state);
+struct GameObject;
+
+void wbUpdateEngaged(struct GameObject* obj, int state);
+void wbUpdateIdle(struct GameObject* obj, int state);
 void mutatedEbaUpdateEngaged(u32 obj, int state);
 void mutatedEbaUpdateIdle(u32 obj, int state);
 void mutatedEbaInit(u32 unused, int state);

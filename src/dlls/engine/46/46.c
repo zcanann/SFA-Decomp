@@ -10,6 +10,7 @@
 #include "main/dll/FRONT/POST.h"
 #include "main/obj_path.h"
 #include "main/obj_query.h"
+#include "main/obj_list.h"
 #include "main/objtype.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
@@ -340,7 +341,7 @@ int dll_2E_moveToTarget(GameObject* obj, const MoveLibTarget* target, f32 speed,
     {
         if (obj->anim.currentMove != move)
         {
-            ObjAnim_SetCurrentMove((int)obj, move, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, move, 0.0f, 0);
         }
         delta = obj->anim.rotX - (u16)(s16)getAngle(dx, dz);
         if (delta > 0x8000)
@@ -423,7 +424,7 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
                 break;
             }
             s->lastTarget = player;
-            ObjAnim_AdvanceCurrentMove((int)obj, s->animPhase, framesThisStep, NULL);
+            ObjAnim_AdvanceCurrentMove(obj, s->animPhase, framesThisStep, NULL);
             if (s->phase == MOVELIB_PHASE_FINISH)
             {
                 s16* v;
@@ -781,12 +782,12 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
     {
         if (((s16)yawDelta > 0) && (obj->anim.currentMove != moves[1]))
         {
-            ObjAnim_SetCurrentMove((int)obj, moves[1], 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, moves[1], 0.0f, 0);
             ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x1e);
         }
         if (((s16)yawDelta < 0) && (obj->anim.currentMove != moves[0]))
         {
-            ObjAnim_SetCurrentMove((int)obj, moves[0], 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, moves[0], 0.0f, 0);
             ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x1e);
         }
 

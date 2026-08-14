@@ -437,7 +437,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             state->phaseCounter = 5;
             state->headingLatch = 200;
             {
-                int sfxObj = sbGetPropeller();
+                int sfxObj = (int)sbGetPropeller();
                 Sfx_StopFromObject((GameObject*)sfxObj, SFXTRIG_swtst1_c);
                 Sfx_PlayFromObject((GameObject*)sfxObj, SFXTRIG_mv_curtainloop16);
             }
@@ -821,8 +821,8 @@ s8 gSB_GalleonTransitionPending;
 f32 gSbGalleonSkyBlendFactor;
 f32 gSbGalleonSkyBlendHold;
 GameObject* gSbGalleon;
-int gSbGalleonSkyTexB;
-int gSbGalleonSkyTexA;
+Texture* gSbGalleonSkyTexB;
+Texture* gSbGalleonSkyTexA;
 
 static inline void SB_Galleon_blendSkyColorChannel(u8* color, int start, int end, f32 blendFactor) {
     *color = start + blendFactor * (end - start);
@@ -1011,7 +1011,7 @@ int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
             state->skyFlag = 0;
             break;
         case SBGALLEON_SEQEV_SPLASH_SFX:
-            Sfx_PlayFromObject((GameObject*)sbGetPropeller(), SBGALLEON_SFX_SPRAY);
+            Sfx_PlayFromObject(sbGetPropeller(), SBGALLEON_SFX_SPRAY);
             break;
         case SBGALLEON_SEQEV_MUSIC:
             state->musicIdB = SBGALLEON_MUSIC_INTRO;
@@ -1131,15 +1131,15 @@ int SB_Galleon_getObjectTypeId(void) {
 
 void SB_Galleon_free(GameObject* obj, int leavingMap) {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
-    if ((void*)gSbGalleonSkyTexA != NULL) {
+    if (gSbGalleonSkyTexA != NULL) {
         textureFree((Texture*)((void*)gSbGalleonSkyTexA));
-        gSbGalleonSkyTexA = 0;
+        gSbGalleonSkyTexA = NULL;
     }
-    if ((void*)gSbGalleonSkyTexB != NULL) {
+    if (gSbGalleonSkyTexB != NULL) {
         textureFree((Texture*)((void*)gSbGalleonSkyTexB));
-        gSbGalleonSkyTexB = 0;
+        gSbGalleonSkyTexB = NULL;
     }
-    objFreeObjectType((u32)obj, SBGALLEON_OBJGROUP);
+    objFreeObjectType(obj, SBGALLEON_OBJGROUP);
     if (state->musicLatch != 0 && leavingMap == 0) {
         state->musicLatch = 0;
     }
@@ -1241,7 +1241,7 @@ void SB_Galleon_init(GameObject* obj) {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     ObjHitsPriorityState* hitState;
     gSbGalleon = obj;
-    objAddObjectType((u32)obj, SBGALLEON_OBJGROUP);
+    objAddObjectType(obj, SBGALLEON_OBJGROUP);
     objSetSlot(obj, 0x5a);
     obj->animEventCallback = SB_Galleon_SeqFn;
     state->posX = obj->anim.localPosX;
@@ -1262,8 +1262,8 @@ void SB_Galleon_init(GameObject* obj) {
     obj->anim.rotX = 0x4000;
     obj->anim.rotY = 0;
     obj->anim.rotZ = 0;
-    gSbGalleonSkyTexA = (int)textureLoadAsset(SBGALLEON_TEXTURE_SKY_A);
-    gSbGalleonSkyTexB = (int)textureLoadAsset(SBGALLEON_TEXTURE_SKY_B);
+    gSbGalleonSkyTexA = textureLoadAsset(SBGALLEON_TEXTURE_SKY_A);
+    gSbGalleonSkyTexB = textureLoadAsset(SBGALLEON_TEXTURE_SKY_B);
     state->unk84 = 100;
     (*gMapEventInterface)->setMapAct(obj->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);

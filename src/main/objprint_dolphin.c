@@ -254,12 +254,12 @@ void modelCalcVtxGroupMtxs(ModelFileHeader* def, ObjModel* model)
 
 void modelInitMtxs(ModelFileHeader* def, ObjModel* model)
 {
-    int cache;
-    int mtx;
+    u8* cache;
+    u8* mtx;
     int count;
     u8 rem;
 
-    cache = (int)getCache();
+    cache = (u8*)getCache();
     if (def->extraJointCount != 0)
     {
         modelCalcVtxGroupMtxs(def, model);
@@ -267,7 +267,7 @@ void modelInitMtxs(ModelFileHeader* def, ObjModel* model)
     count = (s32)(u32)def->jointCount + (s32)(u32)def->extraJointCount;
     if (count >= 2 && count <= 0x64)
     {
-        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
+        mtx = (u8*)ObjModel_GetJointMatrix((u8*)model, 0);
         DCFlushRange((void*)mtx, count << 6);
         rem = (u8)(count << 1);
         cache += 0x2700;
@@ -314,7 +314,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
     GXColor kc = sObjFuzzWhiteColor;
     Texture** noiseTextures;
     int noiseFrameCount;
-    int t164;
+    Texture* t164;
     f32 sx;
     f32 sy;
     GXColor kc2;
@@ -501,7 +501,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx)
     int coord;
     Texture** noiseTextures;
     int noiseFrameCount;
-    int texRef4;
+    Texture* texRef4;
     f32 sx;
     f32 sy;
     int projFlagOut1;
@@ -790,7 +790,7 @@ int lbl_803DB49C = -1;
 void objFuzzSetupGxState(void* objArg)
 {
     ModelLightStruct* renderHandle;
-    int obj = (int)objArg;
+    void* obj = objArg;
     GXColor savedEnvColor = sObjFuzzSavedEnvColor;
     Texture** shadowTable;
     int shadowStride;
@@ -2336,7 +2336,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
         {
-            if ((u32)((ModelFileHeader*)m)->vertexAnimEntries != 0)
+            if (((ModelFileHeader*)m)->vertexAnimEntries != NULL)
             {
                 PSMTXIdentity((MtxPtr)im);
                 ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, obj, im);
@@ -2406,7 +2406,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
     modelRenderInstrsState_init((ModelRenderInstrsState*)&bs, ((ModelFileHeader*)m)->instrs,
                                 ((ModelFileHeader*)m)->instrsBitLenWords << 3,
                                 ((ModelFileHeader*)m)->instrsBitLenWords << 3);
-    if ((u32)((ModelFileHeader*)m)->vertexAnimEntries != 0)
+    if (((ModelFileHeader*)m)->vertexAnimEntries != NULL)
     {
         PSMTXConcat((MtxPtr)vm, (MtxPtr)wm, (MtxPtr)cm);
         GXLoadPosMtxImm((const f32 (*)[4])cm, gObjGxPosMtxIdTable[9]);
@@ -2654,7 +2654,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
         {
-            if ((u32)((ModelFileHeader*)m)->vertexAnimEntries != 0)
+            if (((ModelFileHeader*)m)->vertexAnimEntries != NULL)
             {
                 PSMTXIdentity((MtxPtr)im);
                 ObjModel_UpdateAnimMatrices((ObjModel*)am, (ModelFileHeader*)m, obj, im);
@@ -2774,7 +2774,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
         f32 inv = 1.0f / obj->anim.rootMotionScale;
         PSMTXScale((MtxPtr)sm, inv, inv, inv);
     }
-    if ((u32)((ModelFileHeader*)m)->vertexAnimEntries != 0)
+    if (((ModelFileHeader*)m)->vertexAnimEntries != NULL)
     {
         if (fuzzPass || fuzzShadowPass || (passMaskCopy & 8))
         {
@@ -3364,7 +3364,7 @@ static void objRenderChild(GameObject* child, GameObject* parent, u8 isShadow)
 
 void objRenderModel(GameObject* obj)
 {
-    u32 d1;
+    Texture* d1;
     f32 d2;
     int d3;
     int d4;

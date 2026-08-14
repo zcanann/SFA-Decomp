@@ -12,6 +12,7 @@
 #include "main/mm.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/textrender_api.h"
+#include "main/textrender_internal.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 /* In-string formatting control codes (Unicode PUA). */

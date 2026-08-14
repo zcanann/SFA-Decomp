@@ -430,7 +430,7 @@ void triggerEvalEndpointSpheres(GameObject* obj, GameObject* seqObj) {
 void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range) {
     char* desc = (char*)&gTriggerObjDescriptor;
     u8* state = obj->extra;
-    u8* p = (u8*)(obj->anim.placementDataAddress + 0x18);
+    u8* p = (u8*)obj->anim.placementData + 0x18;
     u8 i = 0;
     u8 b;
     u8 sflags;
@@ -770,9 +770,9 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
             }
             if (ang > 0x4000) {
                 (*gMapEventInterface)
-                    ->savePoint((int)obj + 0xc, (int)(s16)(obj->anim.rotX + 0x8000), p[3], getCurMapLayer());
+                    ->savePoint(&obj->anim.localPosX, (int)(s16)(obj->anim.rotX + 0x8000), p[3], getCurMapLayer());
             } else {
-                (*gMapEventInterface)->savePoint((int)obj + 0xc, (int)obj->anim.rotX, p[3], getCurMapLayer());
+                (*gMapEventInterface)->savePoint(&obj->anim.localPosX, (int)obj->anim.rotX, p[3], getCurMapLayer());
             }
             break;
         case 0x20:

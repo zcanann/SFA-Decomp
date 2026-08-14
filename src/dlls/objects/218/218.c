@@ -283,7 +283,7 @@ void pollenfragment_update(GameObject* obj)
         obj->anim.rotY =
             gPollenFragmentSpinRateY * (f32)(u32)framesThisStep + (f32)(int)obj->anim.rotY;
     }
-    Sfx_KeepAliveLoopedObjectSound((int)obj, (u16)(extra->def)->loopSfxId);
+    Sfx_KeepAliveLoopedObjectSound(obj, (u16)(extra->def)->loopSfxId);
     objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
             obj->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot(&obj->anim, POLLENFRAGMENT_HIT_VOLUME_SLOT, 1, 0);

@@ -209,7 +209,7 @@ void dfptargetblock_hitDetect(GameObject* obj)
 
     if (obj->anim.velocityX != 0.0f)
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, DFPTARGETBLOCK_LOOP_SFX);
+        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
         velX = obj->anim.velocityX;
         if (velX < 0.0f)
         {
@@ -226,7 +226,7 @@ void dfptargetblock_hitDetect(GameObject* obj)
 
     if (obj->anim.velocityZ != 0.0f)
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, DFPTARGETBLOCK_LOOP_SFX);
+        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
         velZ = obj->anim.velocityZ;
         if (velZ < 0.0f)
         {

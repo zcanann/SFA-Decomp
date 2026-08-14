@@ -103,7 +103,7 @@ void sc_musictree_spawnAmbientEffect(GameObject* obj, ScMusicTreeState* state, i
         effectPlacement->despawnGameBit = SC_MUSIC_TREE_AMBIENT_EFFECT_NO_DESPAWN_BIT;
         effectPlacement->unk18 = 0;
         state->ambientEffectHandles[pathIndex] =
-            (int)objSetupObject(&effectPlacement->base, 5, -1, -1, (void*)obj->anim.parentAddress);
+            (int)objSetupObject(&effectPlacement->base, 5, -1, -1, obj->anim.parent);
     }
 }
 
@@ -194,7 +194,7 @@ void sc_musictree_update(GameObject* obj) {
     int* ambientEffectCursor;
     int* pathPointCursor;
 
-    ObjAnim_AdvanceCurrentMove((int)obj, state->animationStep, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove(obj, state->animationStep, timeDelta, &animEvents);
     if (state->flags == 0) {
         return;
     }
@@ -327,8 +327,8 @@ void sc_musictree_init(GameObject* obj, ScMusicTreePlacement* placement) {
     obj->userData2 = 0;
     obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED);
     ratio = (f32)(s32)randomGetRange(1, 99) / 100.0f;
-    ObjAnim_SetCurrentMove((int)obj, 0, ratio, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
+    ObjAnim_AdvanceCurrentMove(obj, 1.0f, 1.0f, &animEvents);
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(15.0f * state->effectScale), -5, 0xFF);
     if ((state->flags & SC_MUSIC_TREE_FLAG_SATELLITES) != 0) {
         state->flags = state->flags | SC_MUSIC_TREE_FLAG_HIT_ACTIVE;

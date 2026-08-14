@@ -163,7 +163,7 @@ void tree_update(GameObject* obj)
     ObjAnimEventList animOut;
     PartFxSpawnParams burstParams; /* pos slots: hit world-position outparams, then the scaled effect colour */
 
-    ObjAnim_AdvanceCurrentMove((int)obj, state->swayTimer, timeDelta, &animOut);
+    ObjAnim_AdvanceCurrentMove(obj, state->swayTimer, timeDelta, &animOut);
     if (state->flags != 0)
     {
         if (state->playerBurstCooldown > 0.0f)
@@ -312,8 +312,8 @@ void tree_init(GameObject* obj, TreeSetup* setup)
     {
         state->scale = 1.0f;
     }
-    ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f, &animOut);
+    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
+    ObjAnim_AdvanceCurrentMove(obj, 1.0f, 1.0f, &animOut);
     if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
     {
         state->flags |= TREE_FLAG_HIT_ENABLED;

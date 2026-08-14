@@ -353,7 +353,7 @@ void wcpushblock_update(GameObject* obj)
             {
                 sfxVolume = gWcPushBlockSlideSfxMaxVolume;
             }
-            Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_en_treedrum16_c8);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_c8);
             Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_treedrum16_c8, sfxVolume, lbl_803E6D78);
             WCPUSHBLOCK_FLAGS(state).sfxActive = 1;
         }

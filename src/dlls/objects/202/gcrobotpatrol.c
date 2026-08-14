@@ -128,7 +128,7 @@ GameObject* gcRobotLight_init(GameObject* obj, int childId)
     ObjPlacement* sub;
     u8* setup;
 
-    sub = (ObjPlacement*)(obj->anim.placementDataAddress);
+    sub = (ObjPlacement*)(obj->anim.placementData);
     Obj_GetPlayerObject();
     if (Obj_IsLoadingLocked() == 0)
         return NULL;
@@ -381,7 +381,7 @@ void gcRobotPatrol_init(GameObject* obj, int state)
     ((EnemyState*)state)->moveSpeedScale2 = fz;
     ((EnemyState*)state)->gcRobot.cooldownTimer = 0.0f;
     obj->anim.hitboxScale = 100.0f;
-    Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
+    Sfx_AddLoopedObjectSound(obj, SFXTRIG_tr_bcrek1_c);
 }
 
 const f32 gGcRobotPatrolZero = 0.0f;

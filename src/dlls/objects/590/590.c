@@ -93,7 +93,7 @@ void drakord_thornbush_hitDetect(GameObject* obj)
     GameObject* hitObj;
     int destroyed;
     int hit;
-    int setup;
+    DrakordThornbushPlacement* setup;
     if (inner->health != 0)
     {
         destroyed = timerCountDown(&inner->regrowTimer);
@@ -124,7 +124,7 @@ void drakord_thornbush_hitDetect(GameObject* obj)
         }
         if (destroyed != 0)
         {
-            setup = obj->anim.placementDataAddress;
+            setup = (DrakordThornbushPlacement*)obj->anim.placementData;
             inner->health = 0;
             switch (obj->anim.romDefNo)
             {
@@ -187,7 +187,7 @@ void drakord_thornbush_update(GameObject* obj)
     }
     else
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_drak_pain2);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_drak_pain2);
         if (inner->flags79.b80)
         {
             inner->flags79.b80 = 0;

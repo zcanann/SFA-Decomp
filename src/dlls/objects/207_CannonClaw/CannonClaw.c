@@ -64,9 +64,9 @@ void cannonclaw_update(GameObject* obj) {
         return;
     }
     if (obj->anim.currentMove != CANNON_CLAW_ARM_MOVE_ID) {
-        ObjAnim_SetCurrentMove((int)obj, CANNON_CLAW_ARM_MOVE_ID, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, CANNON_CLAW_ARM_MOVE_ID, 0.0f, 0);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, CANNON_CLAW_ANIM_SPEED, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, CANNON_CLAW_ANIM_SPEED, timeDelta, NULL);
     if (trickyObj == NULL) {
         return;
     }

@@ -17,7 +17,7 @@ void ccRiverFlow_free(GameObject* obj) {
     CCRiverFlowState* state = obj->extra;
 
     if (state->active != 0) {
-        objFreeObjectType((int)obj, CC_RIVER_FLOW_OBJECT_GROUP);
+        objFreeObjectType(obj, CC_RIVER_FLOW_OBJECT_GROUP);
     }
 }
 
@@ -36,18 +36,18 @@ void ccRiverFlow_update(GameObject* obj) {
         if (isGameBitSet != 0) {
             if (state->active != 0) {
                 state->active = 0;
-                objFreeObjectType((int)obj, CC_RIVER_FLOW_OBJECT_GROUP);
+                objFreeObjectType(obj, CC_RIVER_FLOW_OBJECT_GROUP);
             }
         } else if (state->active == 0) {
             state->active = 1;
-            objAddObjectType((int)obj, CC_RIVER_FLOW_OBJECT_GROUP);
+            objAddObjectType(obj, CC_RIVER_FLOW_OBJECT_GROUP);
         }
     }
 }
 
 void ccRiverFlow_init(GameObject* obj, CCRiverFlowPlacement* placement) {
     if (placement->gameBit == -1) {
-        objAddObjectType((int)obj, CC_RIVER_FLOW_OBJECT_GROUP);
+        objAddObjectType(obj, CC_RIVER_FLOW_OBJECT_GROUP);
         ((CCRiverFlowState*)obj->extra)->active = 1;
     }
 

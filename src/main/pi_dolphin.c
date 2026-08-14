@@ -5278,7 +5278,7 @@ void videoBreakPointCallback(void);
 void gpuErrorHandler(u32 retraceCount)
 {
     char* strs = (char*)gLoadingScreenTextures;
-    int tok[3];
+    void* tok[3];
     u32 botClks;
     u32 botPerf0;
     u32 botClks2;
@@ -5308,7 +5308,7 @@ void gpuErrorHandler(u32 retraceCount)
         else
         {
             Queue_Peek(&gVideoFlipQueue, tok);
-            GXEnableBreakPt((void*)tok[0]);
+            GXEnableBreakPt(tok[0]);
             gGxBreakPtEnabled = 1;
         }
         gFlipTokenHeldForDisplayedFb = 0;
@@ -5371,7 +5371,7 @@ void logGpuHang(void);
 void videoSwapFrameBuffers(u32 retraceCount)
 {
     u16 sync;
-    int tok[3];
+    void* tok[3];
     GXFifoObj fifo;
 
     gRetraceCountSinceFlip = gRetraceCountSinceFlip + 1;
@@ -5417,7 +5417,7 @@ void videoSwapFrameBuffers(u32 retraceCount)
         else
         {
             Queue_Peek(&gVideoFlipQueue, tok);
-            GXEnableBreakPt((void*)tok[0]);
+            GXEnableBreakPt(tok[0]);
         }
         gxSetGPMetricsEnabled(1);
     }
@@ -5426,7 +5426,7 @@ void videoSwapFrameBuffers(u32 retraceCount)
 void videoBreakPointCallback(void)
 {
     char peek[12];
-    int tok[3];
+    void* tok[3];
     int i;
 
     if (gAttractMovieState == 2 || gAttractMovieState == 3)
@@ -5461,7 +5461,7 @@ void videoBreakPointCallback(void)
         else
         {
             Queue_Peek(&gVideoFlipQueue, tok);
-            GXEnableBreakPt((void*)tok[0]);
+            GXEnableBreakPt(tok[0]);
             gGxBreakPtEnabled = 1;
         }
     }

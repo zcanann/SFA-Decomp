@@ -74,7 +74,7 @@ void DR_CageWith_free(GameObject* obj, int arg)
         state->spawnedObject->userData1 = 0;
         Obj_FreeObject(state->spawnedObject);
     }
-    objFreeObjectType((int)obj, DRCAGEWITH_OBJGROUP);
+    objFreeObjectType(obj, DRCAGEWITH_OBJGROUP);
 }
 
 void DR_CageWith_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible)
@@ -263,7 +263,7 @@ void DR_CageWith_init(GameObject* obj, DrcagewithPlacement* placement)
         state->unk18 = fz;
         state->unk1C = fz;
         state->unk20 = fz;
-        objAddObjectType((int)obj, DRCAGEWITH_OBJGROUP);
+        objAddObjectType(obj, DRCAGEWITH_OBJGROUP);
     }
 }
 

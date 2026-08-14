@@ -32,6 +32,10 @@
 #include "main/gamebit_ids.h"
 #include "dlls/object_descriptor.h"
 #include "main/vecmath.h"
+#include "main/dll/player_api.h"
+#include "main/objhits.h"
+#include "main/obj_message.h"
+#include "main/audio/sfx_play_api.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT       0x468
 #define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7
@@ -135,7 +139,7 @@ void TrickyCurve_updateCooldownHit(GameObject* obj)
         {
             ObjHits_RecordObjectHit(player, NULL, TRICKY_CURVE_HIT_PRIORITY, 2, 0);
         }
-        Sfx_PlayFromObject((u32)player, TRICKY_CURVE_SFX_COOLDOWN);
+        Sfx_PlayFromObject(player, TRICKY_CURVE_SFX_COOLDOWN);
         state->cooldown = TRICKY_CURVE_COOLDOWN_TICKS;
     }
 
@@ -238,7 +242,7 @@ void TrickyCurve_updateBurstHit(GameObject* obj)
             {
                 gTrickyCurveBurstCounter = 0;
                 mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
-                Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
+                Sfx_PlayFromObject(obj, TRICKY_CURVE_SFX_BURST);
             }
             (*gPartfxInterface)->spawnObject(player, TRICKY_CURVE_PARTFX_COOLDOWN, NULL, 2, -1, NULL);
         }
@@ -247,7 +251,7 @@ void TrickyCurve_updateBurstHit(GameObject* obj)
             mainSetBits(TRICKY_CURVE_GAMEBIT_HIT, 1);
             ObjMsg_SendToObject(player, TRICKY_CURVE_MESSAGE_BURST, obj, 2);
             (*gPartfxInterface)->spawnObject(obj, TRICKY_CURVE_PARTFX_BURST, &partfxArgs, 2, -1, NULL);
-            Sfx_PlayFromObject((u32)obj, TRICKY_CURVE_SFX_BURST);
+            Sfx_PlayFromObject(obj, TRICKY_CURVE_SFX_BURST);
         }
     }
 
@@ -490,7 +494,7 @@ void TrickyCurve_updateBurstTrigger(GameObject* obj)
             } while (burstParticles-- != 0);
         }
         mainSetBits(state->triggerGameBit, 1);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_wp_fball2_c_1c9);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_fball2_c_1c9);
     }
 
     state->xSide = xSide;

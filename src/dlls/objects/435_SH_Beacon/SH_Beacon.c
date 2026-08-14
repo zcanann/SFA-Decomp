@@ -106,7 +106,7 @@ void sh_beacon_update(GameObject* obj) {
         break;
     case SH_BEACON_MODE_LIT:
         if (state->flags.loopSoundActive == 0) {
-            Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_forcecryslp11);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             state->flags.loopSoundActive = 1;
         }
         if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {

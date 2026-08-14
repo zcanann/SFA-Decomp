@@ -88,7 +88,7 @@ int timer_getExtraSize(void)
 void timer_free(GameObject* obj)
 {
     TimerState* state = (obj)->extra;
-    objFreeObjectType((int)obj, TIMER_OBJECT_GROUP);
+    objFreeObjectType(obj, TIMER_OBJECT_GROUP);
     if (state->lightSlot != NULL)
     {
         modelLightStruct_freeSlot(&state->lightSlot);
@@ -243,7 +243,7 @@ void timer_init(GameObject* obj, TimerSetup* setup)
     state->flags.expired = 0;
     state->flags.manual = 0;
     state->lightSlot = NULL;
-    objAddObjectType((int)obj, TIMER_OBJECT_GROUP);
+    objAddObjectType(obj, TIMER_OBJECT_GROUP);
     state->flags.flag20 = 0;
 }
 

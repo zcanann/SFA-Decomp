@@ -529,13 +529,13 @@ void ccLightfoot_update(GameObject* obj) {
         moveId = phaseAnim[offsetof(CCLightfootAnimTable, moveIds)];
         if (moveId != obj->anim.currentMove) {
             if ((phaseAnim[0] & CC_LIGHTFOOT_ANIM_FLAG_START_AT_END) != 0) {
-                ObjAnim_SetCurrentMove((int)obj, moveId, CC_LIGHTFOOT_ANIMATION_PROGRESS_END, 0);
+                ObjAnim_SetCurrentMove(obj, moveId, CC_LIGHTFOOT_ANIMATION_PROGRESS_END, 0);
             } else {
-                ObjAnim_SetCurrentMove((int)obj, moveId, CC_LIGHTFOOT_ANIMATION_PROGRESS_START, 0);
+                ObjAnim_SetCurrentMove(obj, moveId, CC_LIGHTFOOT_ANIMATION_PROGRESS_START, 0);
             }
         }
     }
-    if (ObjAnim_AdvanceCurrentMove((int)obj, animTable->moveSpeeds[state->phase], timeDelta, NULL) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(obj, animTable->moveSpeeds[state->phase], timeDelta, NULL) != 0) {
         state->flags |= CC_LIGHTFOOT_FLAG_MOVE_COMPLETE;
     } else {
         state->flags &= ~CC_LIGHTFOOT_FLAG_MOVE_COMPLETE;

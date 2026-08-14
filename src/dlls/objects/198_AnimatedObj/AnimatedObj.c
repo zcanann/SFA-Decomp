@@ -37,7 +37,7 @@ int animatedobj_getExtraSize(void) {
 void animatedobj_free(GameObject* obj, int clearSequence) {
     (*gObjectTriggerInterface)->freeState(obj->extra);
     gTitleMenuControlInterfaceCopy->vtable->func05(obj, 0xffff, 0, 0, 0);
-    Sfx_RemoveLoopedObjectSoundForObject((u32)obj);
+    Sfx_RemoveLoopedObjectSoundForObject(obj);
     Sfx_StopObjectChannel(obj, 0x7f);
     if (obj->anim.romDefNo == ANIMATEDOBJ_SEQID_ANIM_KRYSTAL && obj->childCount != 0) {
         Obj_FreeObject(obj->childObjs[0]);
@@ -153,8 +153,8 @@ void animatedobj_update(GameObject* obj) {
                         child = objSetupObject(Obj_AllocObjectSetup(sizeof(ObjPlacement), ANIMATEDOBJ_CHILD_OBJ_STAFF),
                                                 4, -1, -1, NULL);
                         ObjLink_AttachChild(obj, child, 0);
-                        ObjAnim_SetCurrentMove((int)child, 0, 0.0f, 0);
-                        ObjAnim_AdvanceCurrentMove((int)child, 1.0f, timeDelta, NULL);
+                        ObjAnim_SetCurrentMove(child, 0, 0.0f, 0);
+                        ObjAnim_AdvanceCurrentMove(child, 1.0f, timeDelta, NULL);
                     }
                     break;
                 case ANIMATEDOBJ_SEQEV_DETACH_STAFF:

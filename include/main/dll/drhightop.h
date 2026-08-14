@@ -4,7 +4,7 @@
 #include "main/dll/dll_0255_snowbike.h"
 
 void SnowBike_UpdateRouteFollowing(GameObject* obj, SnowBikeState* state);
-void SnowBike_UpdateAirMeter(u32 obj, int stateRaw);
+void SnowBike_UpdateAirMeter(GameObject* obj, u8* stateRaw);
 void SnowBike_UpdateCollisionResponse(GameObject* obj, int stateRaw);
 void SnowBike_UpdateSteering(short* obj, int stateRaw);
 void SnowBike_UpdateExhaustFx(GameObject* obj, int stateRaw);

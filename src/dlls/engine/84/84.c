@@ -118,7 +118,7 @@ void CameraMode54_update(CameraObject* camera) {
         }
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
-                                       (GameObject*)camera->anim.parentAddress);
+                                       (GameObject*)camera->anim.parent);
     }
 }
 

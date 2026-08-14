@@ -75,7 +75,7 @@ int earthwalker_SeqFn(GameObject* ewObj, int unused, ObjSeqState* animUpdate, in
     }
     if ((s8)shouldAdvanceMove != 0)
     {
-        ObjAnim_AdvanceCurrentMove((int)ewObj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(ewObj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
     }
     for (i = 0; i < animUpdate->eventCount; i++)
     {
@@ -162,14 +162,14 @@ void earthwalker_update(GameObject* obj)
     {
         if (ewObj->anim.currentMove != 0x203)
         {
-            ObjAnim_SetCurrentMove((int)obj, 0x203, gEarthWalkerMoveStartProgress, 0);
+            ObjAnim_SetCurrentMove(obj, 0x203, gEarthWalkerMoveStartProgress, 0);
         }
     }
     else
     {
         if (ewObj->anim.currentMove != 2)
         {
-            ObjAnim_SetCurrentMove((int)obj, 2, gEarthWalkerMoveStartProgress, 0);
+            ObjAnim_SetCurrentMove(obj, 2, gEarthWalkerMoveStartProgress, 0);
         }
     }
 
@@ -446,7 +446,7 @@ void earthwalker_update(GameObject* obj)
         break;
     }
 
-    ObjAnim_AdvanceCurrentMove((int)obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
 }
 void earthwalker_init(GameObject* obj, EarthWalkerPlacement* setup)
 {

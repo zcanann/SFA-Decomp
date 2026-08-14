@@ -134,11 +134,11 @@ void lightsource_update(GameObject* obj) {
     if (obj->anim.romDefNo != LIGHTSOURCE_SEQID_ARWING_A && obj->anim.romDefNo != LIGHTSOURCE_SEQID_ARWING_B) {
         if (state->lit != 0) {
             if (!state->loopFlags.loopedSound) {
-                Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_mushdizzylp12);
+                Sfx_AddLoopedObjectSound(obj, SFXTRIG_mushdizzylp12);
                 state->loopFlags.loopedSound = 1;
             }
         } else if (state->loopFlags.loopedSound) {
-            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_mushdizzylp12);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_mushdizzylp12);
             state->loopFlags.loopedSound = 0;
         }
     }

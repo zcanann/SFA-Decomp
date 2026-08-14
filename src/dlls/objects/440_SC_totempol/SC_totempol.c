@@ -154,7 +154,7 @@ void sc_totempole_update(GameObject* obj) {
             state->animationSpeed = -SC_TOTEM_POLE_ANIMATION_SPEED;
         }
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, state->animationSpeed, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove(obj, state->animationSpeed, timeDelta, &animEvents);
     ObjHits_PollPriorityHitEffectWithCooldown(obj, SC_TOTEM_POLE_HIT_EFFECT_MODE, SC_TOTEM_POLE_HIT_EFFECT_RED,
                                               SC_TOTEM_POLE_HIT_EFFECT_GREEN, SC_TOTEM_POLE_HIT_EFFECT_BLUE,
                                               SFXTRIG_swdtest222, &gScTotemPoleHitEffectCooldown);

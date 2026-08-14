@@ -90,7 +90,7 @@ int wcpressures_getObjectTypeId(GameObject* obj) {
 }
 
 void wcpressures_free(GameObject* obj) {
-    objFreeObjectType((int)obj, WCPRESSURES_OBJECT_GROUP);
+    objFreeObjectType(obj, WCPRESSURES_OBJECT_GROUP);
 }
 
 void wcpressures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
@@ -227,7 +227,7 @@ void wcpressures_init(GameObject* obj, WCPressuresSetup* setup) {
         state->mode = WCPRESSURES_MODE_PRESSED;
     }
 
-    objAddObjectType((int)obj, WCPRESSURES_OBJECT_GROUP);
+    objAddObjectType(obj, WCPRESSURES_OBJECT_GROUP);
     for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
         state->objects[i] = 0;
     }

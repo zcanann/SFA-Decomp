@@ -263,7 +263,7 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
                                             magnitude);
     }
 
-    if (ObjAnim_AdvanceCurrentMove((int)obj, moveStep, (f32)framesThisStep,
+    if (ObjAnim_AdvanceCurrentMove(obj, moveStep, (f32)framesThisStep,
                                                                     NULL) != 0 &&
         (obj)->anim.currentMove != inner->moveIdBase)
     {
@@ -281,7 +281,7 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
 
         if (randomChanceOneIn(2) == 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, inner->moveIdBase, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, inner->moveIdBase, 0.0f, 0);
         }
         else
         {
@@ -304,7 +304,7 @@ void snowclaw_updateMountAttack(GameObject* obj, GameObject* mount)
             {
                 moveId = inner->moveIdBase + 8;
             }
-            ObjAnim_SetCurrentMove((int)obj, moveId, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
             inner->attackDelay += 0x64;
         }
     }
@@ -412,7 +412,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
                 s->prevPosY = s->posY;
                 s->prevPosZ = s->posZ;
                 SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 2);
-                ObjAnim_SetCurrentMove((int)obj, s->moveIdBase, 0.0f, 1);
+                ObjAnim_SetCurrentMove(obj, s->moveIdBase, 0.0f, 1);
                 {
                     ObjModelState* gx = obj->anim.modelState;
                     if (gx != 0)
@@ -648,7 +648,7 @@ void snowclaw_hitDetect(GameObject* obj)
             }
             else
             {
-                ObjAnim_SetCurrentMove((int)obj, s->moveIdBase + 9, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, s->moveIdBase + 9, 0.0f, 0);
                 s->unk30 = 0.004f;
             }
         }
@@ -770,12 +770,12 @@ void snowclaw_update(GameObject* obj)
         turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
         if (turnSign == 0 || obj->anim.romDefNo == SNOWCLAW_SEQID_CR_SNOWCLAW)
         {
-            ObjAnim_SetCurrentMove((int)obj, s->moveIdBase + 6, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, s->moveIdBase + 6, 0.0f, 0);
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 2);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, s->moveIdBase + 5, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, s->moveIdBase + 5, 0.0f, 0);
             snowclaw_spawnDropBomb((GameObject*)(*(int*)inner), obj, (u8)choice, 0);
         }
         s16toFloat((f32*)(inner + offsetof(SnowclawState, attackTimer)),

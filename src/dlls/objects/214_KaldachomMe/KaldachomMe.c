@@ -142,7 +142,7 @@ void KaldachomMe_update(GameObject* obj) {
             }
         }
     }
-    ObjAnim_SetCurrentMove((int)obj, state->moveId, state->progress, 0);
+    ObjAnim_SetCurrentMove(obj, state->moveId, state->progress, 0);
 }
 
 void KaldachomMe_init(GameObject* obj, KaldachomMePlacement* placement) {
@@ -150,7 +150,7 @@ void KaldachomMe_init(GameObject* obj, KaldachomMePlacement* placement) {
     obj->anim.rotY = (s16)(placement->rotYByte << 8);
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
-    ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
 }
 
 void KaldachomMe_release(void) {

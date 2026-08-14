@@ -378,14 +378,14 @@ static inline void andross_setModelAlpha(ModelFileHeader* model, f32 fade) {
 static inline void andross_setMove(GameObject* obj, int move) {
     AndrossState* state = obj->extra;
 
-    ObjAnim_SetCurrentMove((int)obj, move, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, move, 0.0f, 0);
     state->animSpeed = gAndrossMoveAnimSpeeds[move];
 }
 
 static inline void andross_setMoveSpeed(GameObject* obj, int move, f32 speed) {
     AndrossState* state = obj->extra;
 
-    ObjAnim_SetCurrentMove((int)obj, move, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, move, 0.0f, 0);
     state->animSpeed = speed;
 }
 
@@ -900,7 +900,7 @@ void andross_update(GameObject* boss) {
             state->actionTimer = -1;
         }
         andross_updateSway(state, 300.0f, 50.0f, 200.0f, 20.0f);
-        Sfx_KeepAliveLoopedObjectSound((int)boss, SFXTRIG_and_roar1);
+        Sfx_KeepAliveLoopedObjectSound(boss, SFXTRIG_and_roar1);
         state->actionTimer -= framesThisStep;
         if (state->actionTimer < 0) {
             andross_spawnAimedRing(boss, state, 0);
@@ -1081,7 +1081,7 @@ void andross_update(GameObject* boss) {
         andross_updateSway(state, 300.0f, 150.0f, 20.0f, 10.0f);
         andross_trackArwingVelocity(state, gAndrossMissileClampRange, gAndrossMissileVelocityScale,
                                     gAndrossMissileForwardVelocity);
-        Sfx_KeepAliveLoopedObjectSound((int)boss, SFXTRIG_and_missileloop);
+        Sfx_KeepAliveLoopedObjectSound(boss, SFXTRIG_and_missileloop);
         if ((state->actionTimer != 0) && (state->actionTimer -= framesThisStep, state->actionTimer <= 0)) {
             state->actionTimer = 0;
             mainSetBits(GAMEBIT_AndrossRelated000F, 1);
@@ -1131,7 +1131,7 @@ void andross_update(GameObject* boss) {
             state->actionTimer = gAndrossCentralAttackDuration;
             state->durationTimer = 0.0f;
         }
-        Sfx_KeepAliveLoopedObjectSound((int)boss, SFXTRIG_and_missileloop);
+        Sfx_KeepAliveLoopedObjectSound(boss, SFXTRIG_and_missileloop);
         if (state->fightPhase == 5) {
             andross_updateHitCue(state);
         }
@@ -1272,7 +1272,7 @@ void andross_update(GameObject* boss) {
             }
             state->actionTimer = -1;
         }
-        Sfx_KeepAliveLoopedObjectSound((int)boss, SFXTRIG_and_spitout);
+        Sfx_KeepAliveLoopedObjectSound(boss, SFXTRIG_and_spitout);
         if ((state->fightPhase == 5) && (state->actionToggle == 0)) {
             andross_updateHitCue(state);
         }
@@ -1624,7 +1624,7 @@ void andross_update(GameObject* boss) {
     boss->anim.rotX += state->rotXSpeed;
     boss->anim.rotY += state->rotYSpeed;
 
-    ObjAnim_AdvanceCurrentMove((int)boss, state->animSpeed, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(boss, state->animSpeed, timeDelta, 0);
     andross_processPartHits(boss, state);
     andross_updateBombCollector(boss, state);
     if (state->silverRing != NULL) {

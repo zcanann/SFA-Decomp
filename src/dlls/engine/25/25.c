@@ -213,7 +213,7 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, u8*
     b1 = flags & 1;
     if (b1 == 0 && (flags & 0x20) == 0)
     {
-        objAddObjectType((int)obj, DLL19_OBJGROUP);
+        objAddObjectType(obj, DLL19_OBJGROUP);
         ObjMsg_AllocQueue(obj, 4);
     }
     (*gPlayerInterface)->init(obj, state, moveArg0, moveArg1);
@@ -426,7 +426,7 @@ int dll_19_updateHitReaction(GameObject* obj, void* baddieState, void* hitbox, s
         {
             if (((Dll19State*)state)->oscValue > 2.0f)
             {
-                GroundBaddiePlacement* other = (GroundBaddiePlacement*)obj->anim.placementDataAddress;
+                GroundBaddiePlacement* other = (GroundBaddiePlacement*)obj->anim.placementData;
                 ((Dll19State*)state)->oscValue = 0.0f;
                 ((Dll19State*)state)->flags = ((Dll19State*)state)->flags & ~DLL19_FLAG_OSC_ACTIVE;
                 ((BaddieState*)baddieState)->hitPoints = 0;
@@ -672,7 +672,7 @@ void dll_19_startHitReaction(GameObject* obj, void* state, void* hitbox, s16 gam
     }
     if (animMove != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, animMove, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, animMove, 0.0f, 0);
     }
     (*gPathControlInterface)->attachObject((void*)obj, (u8*)state + 4);
     if (field25f != -1)
@@ -1105,7 +1105,7 @@ f32 dll_19_func05(GameObject* obj, f32 px, f32 pz, f32 range, GameObject* mover)
             mover->anim.worldPosZ = mover->anim.worldPosZ - c * d1;
             Obj_TransformWorldPointToLocal(mover->anim.worldPosX, mover->anim.worldPosY, mover->anim.worldPosZ,
                                            &mover->anim.localPosX, &mover->anim.localPosY, &mover->anim.localPosZ,
-                                           (GameObject*)mover->anim.parentAddress);
+                                           (GameObject*)mover->anim.parent);
         }
         else if (d2 > 1.0f)
         {

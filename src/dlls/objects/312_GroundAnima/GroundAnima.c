@@ -187,7 +187,7 @@ void GroundAnimator_free(GameObject* obj, int onlySelf) {
     if (state->vertexWeights != NULL) {
         mm_free(state->vertexWeights);
     }
-    objFreeObjectType((int)obj, GROUND_ANIMATOR_OBJECT_GROUP);
+    objFreeObjectType(obj, GROUND_ANIMATOR_OBJECT_GROUP);
 }
 
 void GroundAnimator_render(GameObject* obj, int gdl, int mtxs, int vtxs, int pols, s8 visibility) {
@@ -381,7 +381,7 @@ void GroundAnimator_init(GameObject* obj, GroundAnimatorPlacement* placement) {
         state->sinkDepth = GROUND_ANIMATOR_SINK_DEPTH_SCALE * placement->maxSinkDepth;
         state->flags |= GROUND_ANIMATOR_STATE_COMPLETE;
     }
-    objAddObjectType((int)obj, GROUND_ANIMATOR_OBJECT_GROUP);
+    objAddObjectType(obj, GROUND_ANIMATOR_OBJECT_GROUP);
     if (placement->sfxIndex > 1) {
         placement->sfxIndex = 0;
     }

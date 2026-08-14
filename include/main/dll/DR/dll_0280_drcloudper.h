@@ -26,7 +26,7 @@ int DR_CloudPer_activate(GameObject* obj);
 int DR_CloudPer_selectActiveCloud(GameObject* obj);
 int DR_CloudPer_getExtraSize(void);
 int DR_CloudPer_getObjectTypeId(void);
-void DR_CloudPer_free(int obj);
+void DR_CloudPer_free(GameObject* obj);
 void DR_CloudPer_render(void);
 void DR_CloudPer_hitDetect(void);
 void DR_CloudPer_update(void);

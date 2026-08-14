@@ -21,7 +21,7 @@ int NW_ice_getExtraSize(void) {
 }
 
 void NW_ice_free(GameObject* obj) {
-    objFreeObjectType((int)obj, NW_ICE_OBJECT_GROUP_ID);
+    objFreeObjectType(obj, NW_ICE_OBJECT_GROUP_ID);
 }
 
 void NW_ice_render(void) {
@@ -74,7 +74,7 @@ void NW_ice_update(GameObject* obj) {
 }
 
 void NW_ice_init(GameObject* obj) {
-    objAddObjectType((int)obj, NW_ICE_OBJECT_GROUP_ID);
+    objAddObjectType(obj, NW_ICE_OBJECT_GROUP_ID);
 }
 
 ObjectDescriptor gNW_iceObjDescriptor = {

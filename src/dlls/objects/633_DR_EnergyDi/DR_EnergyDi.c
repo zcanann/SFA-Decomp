@@ -77,7 +77,7 @@ void DR_EnergyDisc_update(GameObject* obj)
 
     if (mainGetBit(setup->moveGameBit) != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, 1.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 1.0f, 0);
     }
 }
 

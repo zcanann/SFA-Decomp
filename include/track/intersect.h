@@ -29,7 +29,7 @@ void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);
 void doDistortionFilter(f32* position, f32 radius, u8* modulation, f32 angle);
-int moonFxRenderCallback(u8* obj, int* objB, int slot);
+int moonFxRenderCallback(u8* obj, void** objB, int slot);
 void drawOrthoTexturedQuad(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2);
 void drawRect(f32 sx, f32 sy, int x, int y);

@@ -89,25 +89,25 @@ int DIMbosstonsil_chooseHitReaction(GameObject* obj, GroundBaddieState* state) {
         switch (moveId) {
         case 0:
             if (state->baddie.moveJustStartedA != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
                 state->baddie.moveDone = 0;
             }
             break;
         case 1:
             if (state->baddie.moveJustStartedA != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 3, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 3, 0.0f, 0);
                 state->baddie.moveDone = 0;
             }
             break;
         case 2:
             if (state->baddie.moveJustStartedA != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
                 state->baddie.moveDone = 0;
             }
             break;
         default:
             if (state->baddie.moveJustStartedA != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 4, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 4, 0.0f, 0);
                 state->baddie.moveDone = 0;
             }
             break;
@@ -119,7 +119,7 @@ int DIMbosstonsil_chooseHitReaction(GameObject* obj, GroundBaddieState* state) {
 
 int DIMbosstonsil_startIdleHitReaction(GameObject* obj, GroundBaddieState* state) {
     if (state->baddie.moveJustStartedA != 0) {
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         state->baddie.moveDone = 0;
     }
     state->baddie.moveSpeed = 0.01f;
@@ -415,7 +415,7 @@ void DIMbosstonsil_free(GameObject* obj) {
     GroundBaddieState* state;
 
     state = obj->extra;
-    objFreeObjectType((int)obj, DIMBOSSTONSIL_OBJGROUP);
+    objFreeObjectType(obj, DIMBOSSTONSIL_OBJGROUP);
     (*gBaddieControlInterface)->releaseState(obj, state, 1);
     if (gDIMbosstonsilLight != NULL) {
         ModelLightStruct_free(gDIMbosstonsilLight);

@@ -292,7 +292,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, ShLevelControlState* state) 
         break;
     case 1:
         if (mainGetBit(0x124) != 0) {
-            (*gMapEventInterface)->savePoint((int)player + 0xc, player->anim.rotX, 1, 0);
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->airMeterTimer = 100000.0f;
             (*gGameUIInterface)->initAirMeter(100000, SHLEVELCONTROL_AIRMETER_BGTEXTURE);
             state->bloopEventState = 2;
@@ -370,7 +370,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, ShLevelControlState* state) 
 
     if ((mainGetBit(GAMEBIT_SH_Give200ScarabBag) == 0) && (mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0)) {
         mainSetBits(GAMEBIT_SH_Give200ScarabBag, 1);
-        (*gMapEventInterface)->savePoint(0, 0, 1, 0);
+        (*gMapEventInterface)->savePoint(NULL, 0, 1, 0);
     }
 }
 
@@ -448,7 +448,7 @@ void SH_LevelControl_doThornTailEvents(void* obj, ShLevelControlState* state) {
 
     if (mainGetBit(GAMEBIT_SH_GiveMoonPassKey) == 0 && mainGetBit(GAMEBIT_ITEM_MMPKey_Got) != 0) {
         mainSetBits(GAMEBIT_SH_GiveMoonPassKey, 1);
-        (*gMapEventInterface)->savePoint(0, 0, 1, 0);
+        (*gMapEventInterface)->savePoint(NULL, 0, 1, 0);
     }
 }
 

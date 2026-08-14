@@ -39,7 +39,7 @@ int WM_Column_getObjectTypeId(void) {
 }
 
 void WM_Column_free(GameObject* obj) {
-    objFreeObjectType((int)obj, WM_COLUMN_GROUP);
+    objFreeObjectType(obj, WM_COLUMN_GROUP);
     (*gCarryableInterface)->free(obj);
 }
 
@@ -138,7 +138,7 @@ void WM_Column_init(GameObject* obj, WMColumnPlacement* placement) {
         obj->anim.bankIndex = WM_COLUMN_DEFAULT_MODEL_BANK;
     }
     (*gCarryableInterface)->init(obj, state, WM_COLUMN_CARRYABLE_INIT_ARG);
-    objAddObjectType((int)obj, WM_COLUMN_GROUP);
+    objAddObjectType(obj, WM_COLUMN_GROUP);
 }
 
 void WM_Column_release(void) {

@@ -226,10 +226,10 @@ void CFCrate_update(GameObject* obj) {
     case CFCRATE_OBJ_65C:
         break;
     case CFCRATE_OBJ_65D:
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.002f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.002f, timeDelta, NULL);
         break;
     case CFCRATE_OBJ_MMP_ORGANIC:
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.002f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.002f, timeDelta, NULL);
         break;
     case CFCRATE_OBJ_VFP_NEWBALL:
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0) {
@@ -387,7 +387,7 @@ void CFCrate_init(GameObject* obj, CFCratePlacement* placement) {
     case CFCRATE_OBJ_MMP_ORGANIC:
         obj->anim.rotX = (s16)(placement->initialRotX << CFCRATE_ROTATION_BYTE_SHIFT);
         obj->anim.rotY = placement->param1A;
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         break;
     case CFCRATE_OBJ_66C:
         obj->anim.rotX = (s16)(placement->initialRotX << CFCRATE_ROTATION_BYTE_SHIFT);

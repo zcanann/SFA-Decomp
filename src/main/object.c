@@ -135,7 +135,7 @@ enum
 GameObject* gEffectBoxObjects[20];
 
 void Obj_RegisterObject(GameObject* obj, int b);
-int loadModLines(int n, s16* out);
+void* loadModLines(int n, s16* out);
 
 u8 gObjCameraSetupBlock[32] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -588,8 +588,8 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
 {
     GameObject* obj;
     int type;
-    int objF30;
-    objF30 = (int)src->anim.parent;
+    void* objF30;
+    objF30 = src->anim.parent;
     type = src->anim.mapEventSlot;
     if (getLoadedFileFlags(0) & 0x100000)
     {
@@ -598,7 +598,7 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
     }
     else
     {
-        obj = loadCharacter((s16*)setup, 5, type, -1, (void*)objF30, 0);
+        obj = loadCharacter((s16*)setup, 5, type, -1, objF30, 0);
         if (obj != NULL)
         {
             Obj_RegisterObject(obj, 5);
@@ -920,7 +920,7 @@ static void objFreeObjdef(u8* obj, int flag)
     (*gExpgfxInterface)->freeOwner3((u32)(GameObject*)obj);
     if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
     {
-        objFreeObjectType((u32)obj, OBJECT_OBJGROUP_HITBOX);
+        objFreeObjectType((GameObject*)obj, OBJECT_OBJGROUP_HITBOX);
         if (flag == 0)
         {
             count = 0;
@@ -968,7 +968,7 @@ static void objFreeObjdef(u8* obj, int flag)
     }
     if (((ObjAnimComponent*)obj)->modelInstance->group8RegistrationCount > 0)
     {
-        objFreeObjectType((u32)obj, OBJECT_OBJGROUP_GROUP8);
+        objFreeObjectType((GameObject*)obj, OBJECT_OBJGROUP_GROUP8);
     }
     if (((ObjAnimComponent*)obj)->modelState != NULL)
     {
@@ -1030,10 +1030,10 @@ static void objFreeObjdef(u8* obj, int flag)
     {
         Obj_ClearModelColorFadeRecursive((GameObject*)obj);
     }
-    group = objGetObjectType((u32)obj);
+    group = objGetObjectType((GameObject*)obj);
     if (group != 0)
     {
-        objFreeObjectType((u32)obj, group - 1);
+        objFreeObjectType((GameObject*)obj, group - 1);
     }
     {
         s16 type;
@@ -1081,9 +1081,9 @@ static void objFreeObjdef(u8* obj, int flag)
 
 void Obj_RegisterObject(GameObject* obj, int b);
 
-int loadModLines(int idx, s16* outCount)
+void* loadModLines(int idx, s16* outCount)
 {
-    int result;
+    void* result;
     int* hdr;
     int size;
     int start;
@@ -1099,8 +1099,8 @@ int loadModLines(int idx, s16* outCount)
     size = hdr[1] - hdr[0];
     if (size > 0)
     {
-        result = (int)mmAlloc(size, 5, 0);
-        fileLoadToBufferOffset(MLDF_FILEID_MODLINES_BIN, (void*)result, start, size);
+        result = mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(MLDF_FILEID_MODLINES_BIN, result, start, size);
     }
     mm_free(hdr);
     *outCount = (u32)size / 20;
@@ -1123,7 +1123,7 @@ static inline void Obj_FreeDeferredObjects(void)
 
 u8* loadObjectFile(int id)
 {
-    extern int loadModLines(int idx, s16* outCount);
+    extern void* loadModLines(int idx, s16* outCount);
     int size;
     int base;
     ObjDef* buf;
@@ -1288,7 +1288,7 @@ void Obj_UpdateObject(GameObject* obj)
         {
         case OBJECT_SEQID_SABRE:
         case OBJECT_SEQID_KRYSTAL:
-            playerUpdateWhileTimeStopped((int)obj);
+            playerUpdateWhileTimeStopped(obj);
             break;
         case OBJECT_SEQID_STAFF:
             staffUpdateWhileTimeStopped(obj);
@@ -1407,7 +1407,7 @@ void Obj_RunInitCallback(GameObject* obj, int cb, int unused)
     {
     case 0x1f:
     case 0:
-        objLoadPlayerFromSave((int)obj);
+        objLoadPlayerFromSave(obj);
         break;
     default:
     {
@@ -1456,7 +1456,7 @@ void Obj_FreeObject(GameObject* obj)
     {
         return;
     }
-    Sfx_RemoveLoopedObjectSoundForObject((u32)obj);
+    Sfx_RemoveLoopedObjectSoundForObject(obj);
     Sfx_StopObjectChannel(obj, 0x7f);
     if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
@@ -1738,7 +1738,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
 void Obj_RegisterObject(GameObject* obj, int flags)
 {
-    extern void Obj_RunInitCallback(GameObject* obj, int cb, int unused);
+    extern void Obj_RunInitCallback(GameObject* obj, void* cb, int unused);
     ObjAnimComponent* object;
     int id;
     int prev;
@@ -1763,7 +1763,7 @@ void Obj_RegisterObject(GameObject* obj, int flags)
     object->previousLocalPosX = object->localPosX;
     object->previousLocalPosY = object->localPosY;
     object->previousLocalPosZ = object->localPosZ;
-    Obj_RunInitCallback(obj, (int)object->placementData, 0);
+    Obj_RunInitCallback(obj, object->placementData, 0);
     if (object->hitReactState != NULL)
     {
         ((ObjHitsPriorityState*)object->hitReactState)->localPosX = object->localPosX;
@@ -1780,7 +1780,7 @@ void Obj_RegisterObject(GameObject* obj, int flags)
     }
     if (object->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
     {
-        objAddObjectType((u32)obj, OBJECT_OBJGROUP_HITBOX);
+        objAddObjectType(obj, OBJECT_OBJGROUP_HITBOX);
         if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
         {
             object->activeHitboxMode = 0x5a;
@@ -1812,7 +1812,7 @@ void Obj_RegisterObject(GameObject* obj, int flags)
     }
     if (object->modelInstance->group8RegistrationCount > 0)
     {
-        objAddObjectType((u32)obj, OBJECT_OBJGROUP_GROUP8);
+        objAddObjectType(obj, OBJECT_OBJGROUP_GROUP8);
     }
     if (object->modelInstance->flags & 1)
     {
@@ -2521,7 +2521,7 @@ void Obj_UpdateAllObjects(u8 flags)
     }
     if (obj2 != 0 && (u32)(child = (int)((GameObject*)obj2)->childObjs[0]) != 0)
     {
-        *(int*)&((GameObject*)child)->anim.parent = *(int*)&((GameObject*)obj2)->anim.parent;
+        ((GameObject*)child)->anim.parent = ((GameObject*)obj2)->anim.parent;
         Obj_UpdateObject(((GameObject*)obj2)->childObjs[0]);
     }
     if (timeStop == 0)
@@ -2536,7 +2536,7 @@ void Obj_UpdateAllObjects(u8 flags)
                 {
                 case 0:
                 case 0x1f:
-                    playerDoHitDetection(obj3);
+                    playerDoHitDetection((GameObject*)obj3);
                     break;
                 default:
                     if (((GameObject*)obj3)->anim.dll == 0)
@@ -2559,8 +2559,8 @@ void Obj_UpdateAllObjects(u8 flags)
         obj2 = (count2 != 0) ? *(u8**)obj2 : 0;
         if (obj2 != 0 && ((GameObject*)obj2)->childObjs[0] != 0)
         {
-            *(int*)&((GameObject*)((GameObject*)obj2)->childObjs[0])->anim.parent =
-                *(int*)&((GameObject*)obj2)->anim.parent;
+            ((GameObject*)((GameObject*)obj2)->childObjs[0])->anim.parent =
+                ((GameObject*)obj2)->anim.parent;
             child = *(int*)&((GameObject*)obj2)->childObjs[0];
             if ((((GameObject*)child)->objectFlags & OBJECT_OBJFLAG_HITDETECT_DISABLED) == 0)
             {
@@ -2570,7 +2570,7 @@ void Obj_UpdateAllObjects(u8 flags)
                     {
                     case 0:
                     case 0x1f:
-                        playerDoHitDetection(child);
+                        playerDoHitDetection((GameObject*)child);
                         break;
                     default:
                         if (((GameObject*)child)->anim.dll == 0)

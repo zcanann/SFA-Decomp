@@ -168,7 +168,7 @@ void DIM_BossGut2_free(GameObject* obj) {
     if (light != NULL) {
         ModelLightStruct_free(light);
     }
-    objFreeObjectType((int)obj, DIMBOSSGUT2_OBJGROUP);
+    objFreeObjectType(obj, DIMBOSSGUT2_OBJGROUP);
     childObj = obj->childObjs[0];
     if (childObj != NULL) {
         Obj_FreeObject(childObj);
@@ -234,7 +234,7 @@ void DIM_BossGut2_update(GameObject* obj) {
         control->breathFxTimer += framesThisStep;
         ((void (*)(GameObject*, DimBossGut2State*))dimbossgut2_updateBobAndSway)(obj, state);
         dimbossgut2_updateTracking(obj, state);
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.015f, timeDelta, NULL);
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = DIMBOSSGUT2_HIT_VOLUME_PRIORITY;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = DIMBOSSGUT2_HIT_VOLUME_ID;
         ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -293,8 +293,8 @@ void DIM_BossGut2_init(GameObject* obj, u8* placementAddress, int isAltVariant) 
         }
     }
     control->surfaceY += obj->anim.localPosY;
-    ObjAnim_SetCurrentMove((int)obj, DIMBOSSGUT2_IDLE_MOVE_ID, (f32)randomGetRange(0, 0x63) / 100.0f, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
+    ObjAnim_SetCurrentMove(obj, DIMBOSSGUT2_IDLE_MOVE_ID, (f32)randomGetRange(0, 0x63) / 100.0f, 0);
+    ObjAnim_AdvanceCurrentMove(obj, 0.015f, timeDelta, NULL);
     control->light = objCreateLight(obj, 1);
     if (control->light != NULL) {
         modelLightStruct_setLightKind(control->light, MODEL_LIGHT_KIND_POINT);

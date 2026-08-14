@@ -122,9 +122,9 @@ void cfPrisonCage_init(GameObject* obj, CfPrisonCagePlacement* placement) {
     obj->animEventCallback = cfPrisonCage_sequenceCallback;
     if (obj->anim.romDefNo == CFPRISONCAGE_SEQUENCE_ID_SWITCH) {
         if (mainGetBit(placement->openedGameBit) != 0) {
-            ObjAnim_SetCurrentMove((int)obj, CFPRISONCAGE_SWITCH_OPEN_MOVE, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, CFPRISONCAGE_SWITCH_OPEN_MOVE, 0.0f, 0);
         } else {
-            ObjAnim_SetCurrentMove((int)obj, CFPRISONCAGE_SWITCH_CLOSED_MOVE, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, CFPRISONCAGE_SWITCH_CLOSED_MOVE, 0.0f, 0);
         }
     } else {
         if (mainGetBit(placement->openedGameBit) != 0) {

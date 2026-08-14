@@ -9,7 +9,7 @@ typedef struct PlayerControlInterface {
     void (*update)(void *obj, void *state, f32 timeDelta, f32 pathDelta, void *stateHandlers,
                    void *substateHandlers);
     void (*updateVelocityState)(void *obj, void *state, void *stateHandlers);
-    void (*setOverride)(u32 obj);
+    void (*setOverride)(void* obj);
     void (*setState)(void *obj, void *state, int newState);
     void (*followCurve)(void *obj, void *state, f32 x, f32 z, f32 timeDelta, int flag);
     void (*moveTowardPoint)(void *obj, void *state, f32 x, f32 z, f32 minDistance, f32 maxDistance,

@@ -440,7 +440,7 @@ void cmbsrc_update(GameObject* cmbsrc)
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
                 Sfx_KeepAliveLoopedObjectSound(
-                    (u32)cmbsrc,
+                    cmbsrc,
                     gCmbsrcColorSoundIdTable[((CmbSrcMapData*)cmbsrc->anim.placementData)->colorIndex]);
             }
             if (state->light != NULL && state->light->glowType != 0 && state->light->enabled != 0)

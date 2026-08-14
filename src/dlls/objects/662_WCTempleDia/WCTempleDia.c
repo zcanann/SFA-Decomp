@@ -122,7 +122,7 @@ void wctempledia_update(GameObject* obj)
     }
     state->currentSpeed += timeDelta * (0.01f * (state->targetSpeed - state->currentSpeed));
     go->anim.rotZ = (s16)(timeDelta * state->currentSpeed + (f32)go->anim.rotZ);
-    Sfx_KeepAliveLoopedObjectSound(k, SFXTRIG_en_treedrum16);
+    Sfx_KeepAliveLoopedObjectSound((GameObject*)k, SFXTRIG_en_treedrum16);
     {
         f32 ratio = state->currentSpeed / state->targetTable[2];
         ((void (*)(int, int, int, f32))Sfx_SetObjectSfxVolume)(

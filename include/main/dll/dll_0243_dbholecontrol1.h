@@ -31,7 +31,7 @@ typedef struct Dbholecontrol1Placement
 
 int dbholecontrol1_getExtraSize(void);
 int dbholecontrol1_getObjectTypeId(void);
-void dbholecontrol1_free(int obj);
+void dbholecontrol1_free(GameObject* obj);
 void dbholecontrol1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dbholecontrol1_hitDetect(void);
 void dbholecontrol1_update(GameObject* obj);

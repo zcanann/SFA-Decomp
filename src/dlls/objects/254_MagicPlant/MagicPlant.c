@@ -121,7 +121,7 @@ void magicPlantDropGem(GameObject* obj, MagicPlantPlacement* unusedPlacement, Ma
     if (obj->anim.currentMoveProgress >= MAGICPLANT_ONE) {
         state->mode = MAGICPLANT_MODE_FADE_OUT;
         state->animStepScale = MAGICPLANT_FADE_OUT_ANIM_STEP;
-        ObjAnim_SetCurrentMove((int)obj, MAGICPLANT_MOVE_BURST, MAGICPLANT_ZERO, 0);
+        ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_BURST, MAGICPLANT_ZERO, 0);
     }
 }
 
@@ -153,7 +153,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
             Sfx_PlayFromObject(obj, SFXTRIG_ladderslide16);
             state->mode = MAGICPLANT_MODE_HIT_REACT;
             state->animStepScale = gMagicPlantHitReactAnimStep;
-            ObjAnim_SetCurrentMove((int)obj, MAGICPLANT_MOVE_HIT, MAGICPLANT_ZERO, 0);
+            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_HIT, MAGICPLANT_ZERO, 0);
 
             particleCount = MAGICPLANT_HIT_BURST_COUNT;
             do {
@@ -176,7 +176,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
         if (obj->anim.currentMove == MAGICPLANT_MOVE_SWAY_FAST) {
             if (obj->anim.currentMoveProgress >= MAGICPLANT_ONE) {
                 state->animStepScale = gMagicPlantIdleAnimStep;
-                ObjAnim_SetCurrentMove((int)obj, MAGICPLANT_MOVE_IDLE, MAGICPLANT_ZERO, 0);
+                ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE, MAGICPLANT_ZERO, 0);
             } else {
                 state->animStepScale = MAGICPLANT_RANDOM_PROGRESS_SCALE;
             }
@@ -184,7 +184,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
             state->idleTimer = randomGetRange(MAGICPLANT_IDLE_TIMER_MIN, MAGICPLANT_IDLE_TIMER_MAX);
         } else if (obj->anim.currentMove != MAGICPLANT_MOVE_IDLE) {
             state->animStepScale = gMagicPlantIdleAnimStep;
-            ObjAnim_SetCurrentMove((int)obj, MAGICPLANT_MOVE_IDLE,
+            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE,
                                    MAGICPLANT_RANDOM_PROGRESS_SCALE * (f32)randomGetRange(0, 99), 0);
         }
     }
@@ -251,8 +251,8 @@ void MagicPlant_free(GameObject* obj, int keepChildren) {
     MagicPlantState* state;
 
     state = obj->extra;
-    objFreeObjectType((int)obj, MAGICPLANT_OBJGROUP_A);
-    objFreeObjectType((int)obj, MAGICPLANT_OBJGROUP_B);
+    objFreeObjectType(obj, MAGICPLANT_OBJGROUP_A);
+    objFreeObjectType(obj, MAGICPLANT_OBJGROUP_B);
     if (obj->childCount != 0) {
         ObjLink_DetachChild(obj, state->childObject);
         if (keepChildren == 0) {
@@ -335,7 +335,7 @@ void MagicPlant_update(GameObject* obj) {
             state->animProgress = MAGICPLANT_ONE - progress;
         }
         if (obj->anim.currentMove != MAGICPLANT_MOVE_CLOSED) {
-            ObjAnim_SetCurrentMove((int)obj, MAGICPLANT_MOVE_CLOSED, state->animProgress, 0);
+            ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, state->animProgress, 0);
         }
         ObjAnim_SetMoveProgress(&obj->anim, state->animProgress);
         break;
@@ -358,7 +358,7 @@ void MagicPlant_update(GameObject* obj) {
                 resetProgress = MAGICPLANT_ZERO;
                 state->animProgress = resetProgress;
                 state->animStepScale = resetProgress;
-                ObjAnim_SetCurrentMove((int)obj, MAGICPLANT_MOVE_CLOSED, resetProgress, 0);
+                ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_CLOSED, resetProgress, 0);
                 ObjAnim_SetMoveProgress(&obj->anim, MAGICPLANT_ZERO);
             }
             obj->anim.alpha = alpha;
@@ -379,7 +379,7 @@ void MagicPlant_update(GameObject* obj) {
         break;
     }
 
-    ObjAnim_AdvanceCurrentMove((int)obj, state->animStepScale, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, state->animStepScale, timeDelta, NULL);
 }
 
 void MagicPlant_init(GameObject* obj, MagicPlantPlacement* placement) {
@@ -391,8 +391,8 @@ void MagicPlant_init(GameObject* obj, MagicPlantPlacement* placement) {
 
     anim = &obj->anim;
     state = obj->extra;
-    objAddObjectType((int)obj, MAGICPLANT_OBJGROUP_A);
-    objAddObjectType((int)obj, MAGICPLANT_OBJGROUP_B);
+    objAddObjectType(obj, MAGICPLANT_OBJGROUP_A);
+    objAddObjectType(obj, MAGICPLANT_OBJGROUP_B);
     noSaveTime = (*gMapEventInterface)->shouldNotSaveTime(placement->eventId);
     if (noSaveTime == 0) {
         progress = (*gMapEventInterface)->getTime(placement->eventId);

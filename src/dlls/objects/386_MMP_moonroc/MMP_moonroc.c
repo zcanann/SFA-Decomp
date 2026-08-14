@@ -333,7 +333,7 @@ int mmpMoonRock_getObjectTypeId(void) {
 }
 
 void mmpMoonRock_free(GameObject* obj) {
-    objFreeObjectType((int)obj, MMP_MOON_ROCK_OBJECT_GROUP);
+    objFreeObjectType(obj, MMP_MOON_ROCK_OBJECT_GROUP);
     (*gCarryableInterface)->free(obj);
 }
 
@@ -517,7 +517,7 @@ void mmpMoonRock_init(GameObject* obj, const MMPMoonRockPlacement* placement) {
     }
     (*gCarryableInterface)->init(obj, obj->extra, 0x32);
     (*gCarryableInterface)->setSuppressPositionSave(state, 1);
-    objAddObjectType((int)obj, MMP_MOON_ROCK_OBJECT_GROUP);
+    objAddObjectType(obj, MMP_MOON_ROCK_OBJECT_GROUP);
     state->homeX = obj->anim.localPosX;
     state->homeY = obj->anim.localPosY;
     state->homeZ = obj->anim.localPosZ;

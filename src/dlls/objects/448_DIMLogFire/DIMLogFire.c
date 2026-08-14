@@ -94,7 +94,7 @@ void DIMLogFire_free(GameObject* obj, int freeMode) {
     if ((void*)state->subObject != NULL && freeMode == 0) {
         Obj_FreeObject((GameObject*)state->subObject);
     }
-    objFreeObjectType((int)obj, DIM_LOG_FIRE_OBJECT_GROUP);
+    objFreeObjectType(obj, DIM_LOG_FIRE_OBJECT_GROUP);
     if (state->light != NULL) {
         ModelLightStruct_free(state->light);
     }
@@ -221,7 +221,7 @@ void DIMLogFire_init(GameObject* obj, const DimLogFirePlacement* placement) {
     DimLogFireState* state;
 
     obj->animEventCallback = DIMLogFire_SeqFn;
-    objAddObjectType((int)obj, DIM_LOG_FIRE_OBJECT_GROUP);
+    objAddObjectType(obj, DIM_LOG_FIRE_OBJECT_GROUP);
     state = obj->extra;
     state->unknown20 = 0;
     state->initialMode = placement->initialMode;

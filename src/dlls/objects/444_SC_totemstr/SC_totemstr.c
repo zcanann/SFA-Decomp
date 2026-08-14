@@ -72,7 +72,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
     GameObject* self;
     ScTotemStrengthState* state;
     GameObject* playerObject;
-    int player;
+    GameObject* player;
     GameObject** objects;
     GameObject* totemPole;
     int i;
@@ -95,7 +95,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
     self = obj;
     state = self->extra;
     playerObject = Obj_GetPlayerObject();
-    player = (int)playerObject;
+    player = playerObject;
     state->flags = (u8)(state->flags | SC_TOTEM_STRENGTH_FLAG_ACTIVE);
     setAButtonIcon(SC_TOTEM_STRENGTH_A_BUTTON_ICON);
     gTotemStrengthDeactivateTimer = 0;
@@ -144,7 +144,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
                 state->linkedObject->anim.currentMoveProgress = 0.5f;
                 ObjAnim_SetCurrentMove(player, SC_TOTEM_STRENGTH_PLAYER_PULL_MOVE,
                                        playerObject->anim.currentMoveProgress, 0);
-                ObjAnim_SetCurrentMove((int)state->linkedObject, SC_TOTEM_STRENGTH_IDLE_PULL_MOVE,
+                ObjAnim_SetCurrentMove(state->linkedObject, SC_TOTEM_STRENGTH_IDLE_PULL_MOVE,
                                        state->linkedObject->anim.currentMoveProgress, 0);
                 state->prevTrackOffset = state->currentTrackOffset;
             }
@@ -168,12 +168,12 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
         }
         totemPole = state->linkedObject;
         if (totemPole->anim.currentMove != SC_TOTEM_STRENGTH_IDLE_PULL_MOVE) {
-            ObjAnim_SetCurrentMove((int)totemPole, SC_TOTEM_STRENGTH_IDLE_PULL_MOVE,
+            ObjAnim_SetCurrentMove(totemPole, SC_TOTEM_STRENGTH_IDLE_PULL_MOVE,
                                    totemPole->anim.currentMoveProgress, 0);
         }
         animUpdate->flags = -1;
         animUpdate->movementState = 0;
-        Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_blockscrape_lp);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_blockscrape_lp);
         for (i = 0; i < framesThisStep; i++) {
             if (state->linkedObject == NULL) {
                 return 0;
@@ -250,7 +250,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
                 playerObject->anim.currentMoveProgress < 0.0f) {
                 playerObject->anim.currentMoveProgress = 1.0f + playerObject->anim.currentMoveProgress;
             }
-            if (ObjAnim_AdvanceCurrentMove((int)state->linkedObject,
+            if (ObjAnim_AdvanceCurrentMove(state->linkedObject,
                                            ((f32)state->currentTrackOffset - state->prevTrackOffset) / 9500.0f,
                                            timeDelta, 0) != 0) {
                 progress = state->linkedObject->anim.currentMoveProgress;

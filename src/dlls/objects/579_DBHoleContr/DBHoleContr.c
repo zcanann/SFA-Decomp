@@ -25,9 +25,9 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 {
     GroundBaddiePlacement* childPlacement;
     void* res;
-    int* objs;
+    GameObject** objs;
     int count;
-    Dbholecontrol1Placement* data = (Dbholecontrol1Placement*)obj->anim.placementDataAddress;
+    Dbholecontrol1Placement* data = (Dbholecontrol1Placement*)obj->anim.placementData;
     int i;
 
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -56,7 +56,7 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 
     if (mainGetBit(data->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
-        objs = (int*)objGetAllOfType(DBEGG_OBJGROUP, &count);
+        objs = objGetAllOfType(DBEGG_OBJGROUP, &count);
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
         while (count-- != 0)
         {
@@ -76,7 +76,7 @@ int dbholecontrol1_getObjectTypeId(void)
     return 0x0;
 }
 
-void dbholecontrol1_free(int obj)
+void dbholecontrol1_free(GameObject* obj)
 {
     objFreeObjectType(obj, DBHOLE_CONTROL1_OBJECT_GROUP);
 }
@@ -111,7 +111,7 @@ void dbholecontrol1_update(GameObject* obj)
 void dbholecontrol1_init(GameObject* obj, u8* params)
 {
     DbHoleControl1State* state = obj->extra;
-    objAddObjectType((int)obj, DBHOLE_CONTROL1_OBJECT_GROUP);
+    objAddObjectType(obj, DBHOLE_CONTROL1_OBJECT_GROUP);
     obj->anim.rotX = (s16)(((Dbholecontrol1Placement*)params)->rotXByte << 8);
     obj->animEventCallback = dbholecontrol1_SeqFn;
     state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;

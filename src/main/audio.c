@@ -675,7 +675,7 @@ int audioInit(void)
 {
     char* base = sSampleBufferSLoadedCallbackLoadError;
     SalHooks hooks;
-    int reverbWork;
+    void* reverbWork;
     int delay;
     int group;
 
@@ -715,9 +715,9 @@ int audioInit(void)
         gAudioReverbSettings.coloration = 0.5f;
         gAudioReverbSettings.mix = 0.9f;
         sndAuxCallbackUpdateSettingsReverbSTD(&gAudioReverbSettings);
-        reverbWork = 0;
+        reverbWork = NULL;
         sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, &gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
-                                     (void*)reverbWork);
+                                     reverbWork);
         {
             if (!sndIsInstalled())
             {

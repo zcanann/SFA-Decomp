@@ -127,7 +127,7 @@ void HighTop_setMountState(GameObject* obj, int val);
 f32 hightop_func13(int obj, f32* out);
 void HighTop_getPlayerAnim(int obj, f32* a, int* b);
 void HighTop_getRiderPosition(GameObject* obj, f32* a, f32* b, f32* c);
-void HighTop_free(int obj);
+void HighTop_free(GameObject* obj);
 int hightop_stateHandler00(GameObject* obj);
 int hightop_stateHandler06(GameObject* obj, HighTopRuntime* runtime);
 void HighTop_getCameraPosition(int obj, f32* ox, f32* oy, f32* oz);

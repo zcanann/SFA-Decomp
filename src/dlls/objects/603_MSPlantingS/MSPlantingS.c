@@ -125,7 +125,7 @@ int MoonSeedPlantingSpot_getObjectTypeId(void)
     return 0x1;
 }
 
-void MoonSeedPlantingSpot_free(int obj)
+void MoonSeedPlantingSpot_free(GameObject* obj)
 {
     objFreeObjectType(obj, MSPLANTING_OBJ_GROUP);
 }
@@ -328,7 +328,7 @@ void MoonSeedPlantingSpot_init(GameObject* obj, MoonSeedPlantingSpotPlacement* i
     obj->animEventCallback = MoonSeedPlantingSpot_SeqFn;
     obj->anim.rotX = (s16)(init->rotByte << 8);
     inner->phase = MSPLANTING_PHASE_INIT;
-    objAddObjectType((int)obj, MSPLANTING_OBJ_GROUP);
+    objAddObjectType(obj, MSPLANTING_OBJ_GROUP);
     ident = init->ident;
     switch (ident)
     {

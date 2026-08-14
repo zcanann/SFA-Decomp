@@ -208,7 +208,7 @@ void dim2snowball_update(GameObject* obj) {
             hitState->skeletonHitMask = 16;
         }
     }
-    Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_firlp6);
+    Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_firlp6);
 }
 
 void dim2snowball_init(GameObject* obj, Dim2SnowBallPlacement* placement) {

@@ -73,12 +73,12 @@ static void imSnowClaw_advanceLinkedMove(GameObject* obj, GameObject* mount) {
     int moveNegative;
 
     if (obj->anim.currentMove != IM_SNOW_CLAW_MOVE_ID) {
-        ObjAnim_SetCurrentMove((int)obj, IM_SNOW_CLAW_MOVE_ID, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, IM_SNOW_CLAW_MOVE_ID, 0.0f, 0);
     }
     (*(IMSnowClawMountInterface**)mount->anim.dll)->getNormalizedSpeed(mount, &moveStep);
     moveStep = 0.01f;
     (*(IMSnowClawMountInterface**)mount->anim.dll)->func12(mount, &moveAmount, &moveNegative);
-    ObjAnim_AdvanceCurrentMove((int)obj, moveStep, (f32)(u32)framesThisStep, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, moveStep, (f32)(u32)framesThisStep, NULL);
 }
 
 int imSnowClaw_sequenceCallback(GameObject* obj, int unusedArg2, ObjSeqState* animUpdate) {
@@ -123,7 +123,7 @@ int imSnowClaw_sequenceCallback(GameObject* obj, int unusedArg2, ObjSeqState* an
         state->mountSnapY = state->pathPointY;
         state->mountSnapZ = state->pathPointZ;
         (*(IMSnowClawMountInterface**)mount->anim.dll)->setRiderMode(mount, 2);
-        ObjAnim_SetCurrentMove((int)obj, IM_SNOW_CLAW_MOVE_ID, 0.0f, 1);
+        ObjAnim_SetCurrentMove(obj, IM_SNOW_CLAW_MOVE_ID, 0.0f, 1);
         if (obj->anim.modelState != NULL) {
             obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }

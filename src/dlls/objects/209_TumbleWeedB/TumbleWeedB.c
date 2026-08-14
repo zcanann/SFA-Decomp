@@ -593,8 +593,8 @@ void tumbleweed_free(GameObject* obj) {
         }
         objectIndex++;
     }
-    objFreeObjectType((u32)obj, TUMBLEWEED_OBJECT_GROUP);
-    objFreeObjectType((u32)obj, TUMBLEWEED_SECONDARY_OBJECT_GROUP);
+    objFreeObjectType(obj, TUMBLEWEED_OBJECT_GROUP);
+    objFreeObjectType(obj, TUMBLEWEED_SECONDARY_OBJECT_GROUP);
 }
 
 void tumbleweed_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
@@ -919,7 +919,7 @@ void tumbleweed_updateEffects(GameObject* obj) {
         } else {
             objfx_spawnPulseBurst(obj, obj->anim.rootMotionScale, 1, TUMBLEWEED_HIT_PULSE_ALT_STYLE, 0, NULL);
         }
-        Sfx_KeepAliveLoopedObjectSound((u32)obj, TUMBLEWEED_SFX_HIT_LOOP);
+        Sfx_KeepAliveLoopedObjectSound(obj, TUMBLEWEED_SFX_HIT_LOOP);
     }
 }
 
@@ -949,8 +949,8 @@ void tumbleweed_init(GameObject* obj, TumbleweedPlacement* placement) {
     (*gPathControlInterface)->attachObject(obj, state);
     state->phase = TUMBLEWEED_PHASE_GROWING;
     state->phaseTimer = 1200.0f + (f32)(s32)randomGetRange(-0x12c, 0x12c);
-    objAddObjectType((int)obj, TUMBLEWEED_OBJECT_GROUP);
-    objAddObjectType((int)obj, TUMBLEWEED_SECONDARY_OBJECT_GROUP);
+    objAddObjectType(obj, TUMBLEWEED_OBJECT_GROUP);
+    objAddObjectType(obj, TUMBLEWEED_SECONDARY_OBJECT_GROUP);
     ObjHits_DisableObject(obj);
     ObjMsg_AllocQueue(obj, 1);
     if (obj->anim.romDefNo == TUMBLEWEED_TYPE_3) {

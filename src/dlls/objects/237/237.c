@@ -477,7 +477,7 @@ int collectible_getObjectTypeId(void) {
 
 void collectible_free(GameObject* obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    objFreeObjectType((int)obj, COLLECTIBLE_OBJECT_GROUP);
+    objFreeObjectType(obj, COLLECTIBLE_OBJECT_GROUP);
 }
 
 void collectible_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
@@ -606,7 +606,7 @@ void collectible_init(GameObject* obj, CollectibleSetup* setup) {
 
     objAnim = &obj->anim;
     pathControlByte = sCollectiblePathByte[0];
-    objAddObjectType((int)obj, COLLECTIBLE_OBJECT_GROUP);
+    objAddObjectType(obj, COLLECTIBLE_OBJECT_GROUP);
     ObjMsg_AllocQueue(obj, COLLECTIBLE_MESSAGE_QUEUE_LENGTH);
     obj->anim.rotX = (s16)(setup->rotXByte << 8);
     obj->anim.rotY = (s16)(setup->rotYByte << 8);

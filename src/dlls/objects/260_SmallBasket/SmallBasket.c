@@ -578,7 +578,7 @@ int SmallBasket_getExtraSize(void) {
 void SmallBasket_free(GameObject* obj) {
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(gSmallBasketResource);
-    objFreeObjectType((int)obj, SMALLBASKET_OBJECT_GROUP);
+    objFreeObjectType(obj, SMALLBASKET_OBJECT_GROUP);
 }
 
 void SmallBasket_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -871,7 +871,7 @@ void SmallBasket_init(GameObject* obj, SmallBasketPlacement* placement) {
 
     state = obj->extra;
     ObjHits_DisableObject(obj);
-    objAddObjectType((int)obj, SMALLBASKET_OBJECT_GROUP);
+    objAddObjectType(obj, SMALLBASKET_OBJECT_GROUP);
 
     respawnMinutes = placement->respawnMinutes;
     if (respawnMinutes == 0) {

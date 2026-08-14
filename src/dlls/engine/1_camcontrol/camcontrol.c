@@ -977,7 +977,7 @@ void camcontrol_updateTargetFeedback(void) {
                     gCamcontrolCamera->targetReticleFocus = NULL;
                 }
             } else {
-                ObjAnim_AdvanceCurrentMove((int)reticle, -0.04f, timeDelta, NULL);
+                ObjAnim_AdvanceCurrentMove(reticle, -0.04f, timeDelta, NULL);
             }
         } else if (((u32)gCamcontrolCamera->targetReticleFocus != (u32)target) &&
                    (reticle->currentMoveProgress >= 1.0f)) {
@@ -997,7 +997,7 @@ void camcontrol_updateTargetFeedback(void) {
                 }
             }
         } else {
-            ObjAnim_AdvanceCurrentMove((int)reticle, 0.04f, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove(reticle, 0.04f, timeDelta, NULL);
         }
         result = Obj_IsObjectAlive(gCamcontrolCamera->targetReticleFocus);
         if (result == 0) {
@@ -1094,12 +1094,12 @@ void Camera_setTarget(GameObject* target) {
     gCamcontrolCamera->currentTarget = target;
 }
 
-int Camera_getTarget(void) {
-    return (int)gCamcontrolCamera->currentTarget;
+GameObject* Camera_getTarget(void) {
+    return gCamcontrolCamera->currentTarget;
 }
 
-int Camera_getOverrideTarget(void) {
-    return (int)gCamcontrolCamera->overrideTarget;
+GameObject* Camera_getOverrideTarget(void) {
+    return gCamcontrolCamera->overrideTarget;
 }
 
 void camcontrol_getRelativePosition(void* targetObj, f32* outX, f32* outY, f32* outZ, f32* outDistanceXZ,

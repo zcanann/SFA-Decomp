@@ -109,14 +109,14 @@ void dll_200_updateMapAct6(GameObject* obj) {
     }
     if (mainGetBit(763) == 0) {
         if (obj->anim.currentMove != 7) {
-            ObjAnim_SetCurrentMove((int)obj, 7, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, 7, 0.0f, 0);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.005f, (f32)(u32)framesThisStep, NULL);
     } else {
         if (obj->anim.currentMove != 2) {
-            ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.005f, (f32)(u32)framesThisStep, NULL);
     }
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0) {
         mainSetBits(763, 1);
@@ -200,15 +200,15 @@ void dll_200_updateMapAct2(GameObject* obj) {
                         obj->anim.rotX = (s16)(obj->anim.rotX - framesThisStep * 100);
                     }
                 } else {
-                    ObjAnim_SetCurrentMove((int)obj, gDll200WanderTargets[state->previousBehaviorMode].moveId, 0.0f, 0);
+                    ObjAnim_SetCurrentMove(obj, gDll200WanderTargets[state->previousBehaviorMode].moveId, 0.0f, 0);
                     state->animationStep = gDll200WanderTargets[state->previousBehaviorMode].animationStep;
                     state->behaviorMode = DLL200_BEHAVIOR_MODE_PLAY_MOVE;
                 }
             } else if (behaviorMode == DLL200_BEHAVIOR_MODE_PLAY_MOVE) {
-                if (ObjAnim_AdvanceCurrentMove((int)obj, state->animationStep, timeDelta, &animEvents) != 0) {
+                if (ObjAnim_AdvanceCurrentMove(obj, state->animationStep, timeDelta, &animEvents) != 0) {
                     if ((f32)(int)obj->anim.currentMove == gDll200WanderTargets[state->previousBehaviorMode].moveId) {
                         ObjAnim_SetCurrentMove(
-                            (int)obj, gDll200WanderTargets[state->previousBehaviorMode].alternateMoveId, 0.0f, 0);
+                            obj, gDll200WanderTargets[state->previousBehaviorMode].alternateMoveId, 0.0f, 0);
                         state->animationStep = gDll200WanderTargets[state->previousBehaviorMode].animationStep;
                     }
                 }
@@ -224,7 +224,7 @@ void dll_200_updateMapAct2(GameObject* obj) {
                 angleDifference = (s16)(targetAngle - obj->anim.rotX);
                 if (angleDifference >= -1000 && angleDifference <= 1000) {
                     if (obj->anim.currentMove != 59) {
-                        ObjAnim_SetCurrentMove((int)obj, 59, 0.0f, 0);
+                        ObjAnim_SetCurrentMove(obj, 59, 0.0f, 0);
                         state->animationStep = 0.04f;
                     }
                     speed = 0.25f;
@@ -233,7 +233,7 @@ void dll_200_updateMapAct2(GameObject* obj) {
                     ObjAnim_SampleRootCurvePhase(&obj->anim, speed, &state->animationStep);
                 } else {
                     if (obj->anim.currentMove != 12) {
-                        ObjAnim_SetCurrentMove((int)obj, 12, 0.0f, 0);
+                        ObjAnim_SetCurrentMove(obj, 12, 0.0f, 0);
                         state->animationStep = 0.01f;
                     }
                     if (angleDifference > 0) {
@@ -251,7 +251,7 @@ void dll_200_updateMapAct2(GameObject* obj) {
                 }
                 obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
                 obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
-                ObjAnim_AdvanceCurrentMove((int)obj, state->animationStep, timeDelta, &animEvents);
+                ObjAnim_AdvanceCurrentMove(obj, state->animationStep, timeDelta, &animEvents);
             }
         }
     }
@@ -262,9 +262,9 @@ void dll_200_updateMapAct1(GameObject* obj) {
 
     state = obj->extra;
     if (obj->anim.currentMove != 2) {
-        ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, 0.005f, (f32)(u32)framesThisStep, NULL);
     /* Retail writes and then immediately reloads this latch. */
     state->interactionLatch = 1;
     if (state->interactionLatch == 0) {
@@ -410,9 +410,9 @@ void dll_200_update(GameObject* objectHandle) {
         case DLL200_MAP_ACT_RENDER_GATED:
             obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
             if (obj->anim.currentMove != 2) {
-                ObjAnim_SetCurrentMove((int)objectHandle, 2, 0.0f, 0);
+                ObjAnim_SetCurrentMove(objectHandle, 2, 0.0f, 0);
             }
-            ObjAnim_AdvanceCurrentMove((int)objectHandle, 0.005f, (f32)(u32)framesThisStep, NULL);
+            ObjAnim_AdvanceCurrentMove(objectHandle, 0.005f, (f32)(u32)framesThisStep, NULL);
             break;
         case DLL200_MAP_ACT_IDLE:
             dll_200_updateMapAct6(obj);

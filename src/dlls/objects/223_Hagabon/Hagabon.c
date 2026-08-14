@@ -157,7 +157,7 @@ void Hagabon_updateMovement(GameObject* obj, HagabonState* state) {
 
     (void)objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                   obj->anim.velocityZ * timeDelta);
-    (void)ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta, &animEvents.events);
+    (void)ObjAnim_AdvanceCurrentMove(obj, state->animSpeed, timeDelta, &animEvents.events);
 
     player = state->player;
     angle = (u16)getAngle(obj->anim.worldPosX - player->anim.worldPosX, obj->anim.worldPosZ - player->anim.worldPosZ);
@@ -182,7 +182,7 @@ int Hagabon_getObjectTypeId(void) {
 
 void Hagabon_free(GameObject* objAddress) {
     void** curveSlot = objAddress->extra;
-    objFreeObjectType((int)objAddress, HAGABON_OBJECT_GROUP);
+    objFreeObjectType(objAddress, HAGABON_OBJECT_GROUP);
     Sfx_StopFromObject(objAddress, SFXTRIG_en_twiggysnap11);
     if (*curveSlot != NULL) {
         mm_free(*curveSlot);

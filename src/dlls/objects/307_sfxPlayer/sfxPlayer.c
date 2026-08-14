@@ -37,12 +37,12 @@ void SfxPlayer_free(GameObject* obj) {
     if (placement->mode == SFXPLAYER_MODE_LOOPED) {
         u16 primarySfxId = placement->primarySfxId;
         if (primarySfxId != 0) {
-            Sfx_RemoveLoopedObjectSound((u32)obj, primarySfxId);
+            Sfx_RemoveLoopedObjectSound(obj, primarySfxId);
         }
         {
             u16 secondarySfxId = placement->secondarySfxId;
             if (secondarySfxId != 0) {
-                Sfx_RemoveLoopedObjectSound((u32)obj, secondarySfxId);
+                Sfx_RemoveLoopedObjectSound(obj, secondarySfxId);
             }
         }
     } else {
@@ -71,7 +71,7 @@ static inline void SfxPlayer_startSound(GameObject* obj, SfxPlayerPlacement* pla
         }
         if (soundObj == NULL || (placement->flags & SFXPLAYER_FLAG_FORCE_POINT) != 0) {
             if (placement->mode == SFXPLAYER_MODE_LOOPED) {
-                Sfx_AddLoopedObjectSound((u32)soundObj, soundId);
+                Sfx_AddLoopedObjectSound(soundObj, soundId);
             } else {
                 Sfx_PlayFromObject(soundObj, soundId);
             }
@@ -87,11 +87,11 @@ static inline void SfxPlayer_startSound(GameObject* obj, SfxPlayerPlacement* pla
         if (placement->mode == SFXPLAYER_MODE_LOOPED) {                                                                \
             soundId = placement->primarySfxId;                                                                         \
             if (soundId != 0) {                                                                                        \
-                Sfx_RemoveLoopedObjectSound((u32)obj, soundId);                                                        \
+                Sfx_RemoveLoopedObjectSound(obj, soundId);                                                        \
             }                                                                                                          \
             soundId = placement->secondarySfxId;                                                                       \
             if (soundId != 0) {                                                                                        \
-                Sfx_RemoveLoopedObjectSound((u32)obj, soundId);                                                        \
+                Sfx_RemoveLoopedObjectSound(obj, soundId);                                                        \
             }                                                                                                          \
         } else {                                                                                                       \
             soundId = placement->primarySfxId;                                                                         \

@@ -258,7 +258,7 @@ void EdibleMushroom_updateBehavior(GameObject* obj, EdibleMushroomState* state, 
         break;
     case 9:
         ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 1);
-        Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_cagelp_c);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_cagelp_c);
         if (state->burrowAttackTimer <= 0.0f) {
             state->burrowAttackTimer = (f32)randomGetRange(0xF0, 0x12C);
         }
@@ -319,10 +319,10 @@ void EdibleMushroom_updateBehavior(GameObject* obj, EdibleMushroomState* state, 
     curMove = obj->anim.currentMove;
     moveId = gEdibleMushroomStateMoveIds[state->animState];
     if (curMove != moveId && moveId != -1) {
-        ObjAnim_SetCurrentMove((int)obj, moveId, 0.25f, 0);
+        ObjAnim_SetCurrentMove(obj, moveId, 0.25f, 0);
     }
 
-    if (ObjAnim_AdvanceCurrentMove((int)obj, gEdibleMushroomAnimStepScaleTable[state->animState], timeDelta,
+    if (ObjAnim_AdvanceCurrentMove(obj, gEdibleMushroomAnimStepScaleTable[state->animState], timeDelta,
                                    &animEvents) != 0) {
         state->flags |= EDIBLE_MUSHROOM_FLAG_ANIM_DONE;
     } else {
@@ -417,8 +417,8 @@ int EdibleMushroom_getExtraSize(void) {
 }
 
 void EdibleMushroom_free(GameObject* obj) {
-    objFreeObjectType((int)obj, EDIBLE_MUSHROOM_GROUP_ID);
-    objFreeObjectType((int)obj, EDIBLE_MUSHROOM_SECONDARY_GROUP_ID);
+    objFreeObjectType(obj, EDIBLE_MUSHROOM_GROUP_ID);
+    objFreeObjectType(obj, EDIBLE_MUSHROOM_SECONDARY_GROUP_ID);
 }
 
 void EdibleMushroom_hitDetect(GameObject* obj) {
@@ -558,8 +558,8 @@ void EdibleMushroom_init(GameObject* obj, EdibleMushroomPlacement* placement) {
     state->lungeRootSpeedScale = 0.5f;
     state->mapParamScale = 0.2f * ((f32)placement->scaleParam / 255.0f);
 
-    ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
+    ObjAnim_AdvanceCurrentMove(obj, 1.0f, 1.0f, &animEvents);
     state->lungeRange = animEvents.rootDeltaX;
     if (state->lungeRange < 0.0f) {
         state->lungeRange = -state->lungeRange;
@@ -567,8 +567,8 @@ void EdibleMushroom_init(GameObject* obj, EdibleMushroomPlacement* placement) {
     state->lungeRange = state->lungeRange * state->lungeRootSpeedScale;
     state->lungeRange += 20.0f;
 
-    ObjAnim_SetCurrentMove((int)obj, 4, 0.0f, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, 1.0f, 1.0f, &animEvents);
+    ObjAnim_SetCurrentMove(obj, 4, 0.0f, 0);
+    ObjAnim_AdvanceCurrentMove(obj, 1.0f, 1.0f, &animEvents);
     state->retreatRange = animEvents.rootDeltaZ;
     if (state->retreatRange < 0.0f) {
         state->retreatRange = -state->retreatRange;
@@ -602,8 +602,8 @@ void EdibleMushroom_init(GameObject* obj, EdibleMushroomPlacement* placement) {
         state->previousTargetDistance = z;
     }
 
-    objAddObjectType((int)obj, EDIBLE_MUSHROOM_SECONDARY_GROUP_ID);
-    objAddObjectType((int)obj, EDIBLE_MUSHROOM_GROUP_ID);
+    objAddObjectType(obj, EDIBLE_MUSHROOM_SECONDARY_GROUP_ID);
+    objAddObjectType(obj, EDIBLE_MUSHROOM_GROUP_ID);
 
     if (obj->anim.romDefNo == EDIBLE_MUSHROOM_WHITE_ALIAS_ID) {
         state->collectedGameBitId = GAMEBIT_ITEM_WhiteShroom_Count;

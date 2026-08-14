@@ -265,7 +265,7 @@ void nwLevelControl_update(GameObject* obj) {
                     state->flags = state->flags | NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING;
                     gameTimerInit(NW_LEVEL_CONTROL_TIMER_ID, (u32)state->timerMinutes);
                     timerSetToCountUp();
-                    (*gMapEventInterface)->savePoint((int)&(player)->anim.localPosX, (int)(player)->anim.rotX, 0, 0);
+                    (*gMapEventInterface)->savePoint(&(player)->anim.localPosX, (int)(player)->anim.rotX, 0, 0);
                 } else if ((stateFlags & NW_LEVEL_CONTROL_FLAG_TIMER_COMPLETE) != 0) {
                     state->flags = stateFlags & ~NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING;
                     state->flags = state->flags & ~NW_LEVEL_CONTROL_FLAG_TIMER_COMPLETE;

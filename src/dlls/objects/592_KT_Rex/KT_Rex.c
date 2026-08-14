@@ -750,7 +750,7 @@ int ktrex_stateHandlerB08(GameObject* obj, GroundBaddieState* runtime)
 {
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 13, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 13, 0.0f, 0);
         runtime->baddie.moveSpeed =
             0.0017f + 0.0012f * (f32)(int)(gKTRexState->phaseCounter >> 1);
         Sfx_PlayFromObject(obj, SFXTRIG_dn_rexroarlng11);
@@ -767,7 +767,7 @@ int ktrex_stateHandlerB07(GameObject* obj, GroundBaddieState* runtime)
 {
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 12, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 12, 0.0f, 0);
         runtime->baddie.moveSpeed = 0.01f;
     }
     if ((gKTRexRuntime->baddie.eventFlags & 1) != 0)
@@ -788,7 +788,7 @@ int ktrex_stateHandlerB06(GameObject* obj, GroundBaddieState* runtime)
     f32 z;
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 11, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 11, 0.0f, 0);
         Sfx_PlayFromObject(obj, SFXTRIG_rexelctro11);
         runtime->baddie.moveSpeed = 0.006f;
         z = 0.0f;
@@ -813,7 +813,7 @@ int ktrex_stateHandlerB05(GameObject* obj, GroundBaddieState* runtime)
     f32 z;
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, gKTRexMoveIdByLaneB05[gKTRexState->laneIndex], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, gKTRexMoveIdByLaneB05[gKTRexState->laneIndex], 0.0f, 0);
         runtime->baddie.moveSpeed = 0.005f;
         z = 0.0f;
         runtime->baddie.animSpeedA = z;
@@ -833,7 +833,7 @@ int ktrex_stateHandlerB04(GameObject* obj, GroundBaddieState* runtime)
     u16 mask;
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, gKTRexMoveIdByVariantB04[gKTRexState->moveVariant], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, gKTRexMoveIdByVariantB04[gKTRexState->moveVariant], 0.0f, 0);
         runtime->baddie.moveSpeed = gKTRexCurvePhaseByVariantB04[gKTRexState->moveVariant];
         z = 0.0f;
         runtime->baddie.animSpeedA = z;
@@ -865,7 +865,7 @@ int ktrex_stateHandlerB03(GameObject* obj, GroundBaddieState* runtime)
     dir = gKTRexState->timerFA & 1;
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 15, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 15, 0.0f, 0);
         runtime->baddie.moveSpeed = 0.005f;
         z = 0.0f;
         runtime->baddie.animSpeedA = z;
@@ -897,7 +897,7 @@ int ktrex_stateHandlerB02(GameObject* obj, GroundBaddieState* runtime)
     if (runtime->baddie.moveJustStartedA != 0)
     {
         lane = gKTRexState->laneIndex * 2;
-        ObjAnim_SetCurrentMove((int)obj, gKTRexTurnMoveIdByLaneAndDir[lane + dir], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, gKTRexTurnMoveIdByLaneAndDir[lane + dir], 0.0f, 0);
         runtime->baddie.moveSpeed = gKTRexTurnCurvePhaseByLane[gKTRexState->laneIndex];
         gKTRexState->homeYaw = (obj)->anim.rotX;
     }
@@ -956,7 +956,7 @@ int ktrex_stateHandlerB01(GameObject* obj, GroundBaddieState* runtime)
     f32 dz;
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, gKTRexWalkMoveIdByLane[gKTRexState->laneIndex], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, gKTRexWalkMoveIdByLane[gKTRexState->laneIndex], 0.0f, 0);
         z = 0.0f;
         runtime->baddie.animSpeedA = z;
         runtime->baddie.animSpeedB = z;
@@ -1000,7 +1000,7 @@ int ktrex_stateHandlerB00(GameObject* obj, GroundBaddieState* runtime)
 {
     if (runtime->baddie.moveJustStartedA != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     }
     runtime->baddie.moveSpeed = 0.01f;
     return 0;
@@ -1463,7 +1463,7 @@ void ktrex_free(GameObject* obj)
 {
     int i;
     gKTRexRuntime = obj->extra;
-    objFreeObjectType((int)obj, KTREX_OBJGROUP);
+    objFreeObjectType(obj, KTREX_OBJGROUP);
     (*gBaddieControlInterface)->releaseState(obj, gKTRexRuntime, 0);
     Stack_Free(gKTRexState->stack);
     if (gKTRexResource != NULL)

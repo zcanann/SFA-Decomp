@@ -6,6 +6,7 @@
 #include "game/objects/object.h"
 #include "main/byte_flags.h"
 #include "main/dll/baddie_state.h"
+#include "main/objprint_character_api.h"
 
 typedef struct PlayerStatus {
     s8 health;
@@ -73,7 +74,7 @@ typedef struct PlayerState {
             Vec3f cameraSlideVector;
         };
     };
-    int playerStatus; /* PlayerStatus*; kept integer while raw decomp arithmetic remains */
+    PlayerStatus* playerStatus;
     u32 flags360; /* player state flag word; bits 2/0x2000/0x800000/0x2000000... */
     u8 pad364[0x3C4 - 0x364];
     f32 footPoints[2][3];
@@ -161,7 +162,7 @@ typedef struct PlayerState {
     u8 pad4B6[0x4B8 - 0x4B6];
     void *cameraTargetObject; /* (*gCameraInterface)->getTarget() result; mirrored into gPlayerInteractTarget */
     u8 pad4BC[0x4C0 - 0x4BC];
-    int lastHitObject;
+    GameObject* lastHitObject;
     GameObject* groundObject; /* object the player stands on/rides; transform parent for relative pos, set from collision hit */
     f32 smoothVelX; /* smoothed planar velocity X; eased toward maxSpeed*sin(heading) */
     f32 smoothVelZ; /* smoothed planar velocity Z; magnitude = sqrt(x^2+z^2) -> animSpeedC */
@@ -276,12 +277,12 @@ typedef struct PlayerState {
     f32 contactPointY;
     f32 contactPointZ;
     u8 pad670[0x67C - 0x670];
-    int contactObject; /* collision hit object the player is anchored to; local-space contact point stored at 0x664/0x668/0x66C, 0 when in free space */
+    GameObject* contactObject; /* collision hit object the player is anchored to; local-space contact point stored at 0x664/0x668/0x66C, 0 when in free space */
     u8 pad680[0x681 - 0x680];
     s8 stickEdgeLatch; /* 0x681: latched flag set to 1 when the stick/collision edge-probe vtable returns result 5 (the case with no latchedStickDir code), reset to 0 when a valid collision surface is captured (with hitObj) and on state resets; read to allow the stick-driven move to proceed even when the 0x100 button is not held */
     u8 surfaceDir; /* dominant surface-normal axis+sign (0=+X,1=-X,2=+Z,3=-Z); picks the wall slide/climb anim variant */
     u8 pad683[0x684 - 0x683];
-    u32 interactObject; /* object the player is interacting with; ObjMsg_SendToObject recipient, cleared after */
+    GameObject* interactObject; /* object the player is interacting with; ObjMsg_SendToObject recipient, cleared after */
     s16 unk688;
     u8 pad68A[0x6A4 - 0x68A];
     f32 unk6A4;

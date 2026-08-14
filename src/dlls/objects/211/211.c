@@ -94,7 +94,7 @@ int LandedArwing_UpdateBounceFade(GameObject* obj, BaddieState* baddie)
         obj->anim.velocityX = -obj->anim.velocityX;
         obj->anim.velocityY += 5.0f;
         obj->anim.velocityZ = -obj->anim.velocityZ;
-        ObjAnim_SetCurrentMove((int)obj, 3, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 3, 0.0f, 0);
         state->animSpeed = 0.012f;
     }
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
@@ -274,7 +274,7 @@ u32 LandedArwing_UpdateFlightChase(GameObject* obj, BaddieState* state)
         obj->anim.velocityZ =
             -sub->speed * fcos16Precise(obj->anim.rotX & 0xffff);
         state->flags0 |= LANDED_ARWING_FLAG_LAUNCHING;
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         sub->animSpeed = 0.1f;
     }
 
@@ -424,7 +424,7 @@ u32 landedarwing_updateMovementState(GameObject* obj, BaddieState* baddie)
         obj->anim.velocityY = 0.0f;
         obj->anim.velocityZ = -(state->speed) * fcos16Precise(obj->anim.rotX & 0xffff);
         baddie->flags0 |= LANDED_ARWING_FLAG_LAUNCHING;
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         state->animSpeed = 0.0f;
     }
     ObjHits_SetHitVolumeSlot(&obj->anim, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
@@ -1089,7 +1089,7 @@ int dll_D3_getObjectTypeId(void)
 void dll_D3_free(GameObject* obj)
 {
     int* inner = obj->extra;
-    objFreeObjectType((int)obj, STAFFACTION_OBJGROUP);
+    objFreeObjectType(obj, STAFFACTION_OBJGROUP);
     if (obj->childObjs[0] != NULL)
     {
         Obj_FreeObject(obj->childObjs[0]);
@@ -1200,7 +1200,7 @@ void dll_D3_update(GameObject* obj)
 #define dy           vec[2]
 #define dz           vec[3]
 
-    trans = (DllD3Placement*)(obj->anim.placementDataAddress);
+    trans = (DllD3Placement*)(obj->anim.placementData);
     state = obj->extra;
     extra = (LandedArwingState*)state->control;
     player = Obj_GetPlayerObject();
@@ -1246,7 +1246,7 @@ void dll_D3_update(GameObject* obj)
         }
     }
 
-    ObjAnim_AdvanceCurrentMove((int)obj, extra->animSpeed, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, extra->animSpeed, timeDelta, NULL);
 
     if (state->targetState != 1)
     {
@@ -1366,7 +1366,7 @@ void dll_D3_init(GameObject* obj, DllD3Placement* def, int flag)
     extra->scriptTargetY = (obj)->anim.localPosY;
     extra->scriptTargetZ = (obj)->anim.localPosZ;
 
-    ObjAnim_SetCurrentMove((int)obj, 0, fz, 0);
+    ObjAnim_SetCurrentMove(obj, 0, fz, 0);
     if (def->startControlMode == 0)
     {
         ftag = 0;

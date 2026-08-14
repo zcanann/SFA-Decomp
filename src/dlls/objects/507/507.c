@@ -67,7 +67,7 @@ void dll507_update(GameObject* obj) {
         buttonDisable(0, PAD_BUTTON_A);
         mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.01f, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, 0.01f, timeDelta, NULL);
 }
 
 void dll507_init(GameObject* obj, const Dll1FBPlacementView* placement) {
@@ -78,7 +78,7 @@ void dll507_init(GameObject* obj, const Dll1FBPlacementView* placement) {
     obj->anim.rotY = placement->rotationY;
     state->baseMove = placement->baseMove;
     state->triggerMode = placement->triggerMode;
-    ObjAnim_SetCurrentMove((int)obj, state->baseMove + DLL1FB_MOVE_GROUP_OFFSET, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, state->baseMove + DLL1FB_MOVE_GROUP_OFFSET, 0.0f, 0);
 }
 
 void dll507_release(void) {

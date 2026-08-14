@@ -57,7 +57,7 @@ void mclightning_free(GameObject* obj)
 {
     McLightningState* state = (obj)->extra;
 
-    objFreeObjectType((int)obj, MCLIGHTNING_OBJGROUP);
+    objFreeObjectType(obj, MCLIGHTNING_OBJGROUP);
     if (state->boltHandle != NULL)
     {
         mm_free(state->boltHandle);
@@ -151,7 +151,7 @@ void mclightning_init(GameObject* obj, McLightningSetup* setup)
 
     (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     (obj)->animEventCallback = mclightning_SeqFn;
-    objAddObjectType((int)obj, MCLIGHTNING_OBJGROUP);
+    objAddObjectType(obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup->spawnFlags;
     effectScale = 1.0f;
     state->hitEffectScale = effectScale;

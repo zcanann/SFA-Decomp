@@ -76,7 +76,7 @@ int BombPlant_animEventCallback(GameObject* obj) {
         BombPlantPlacement* placement;
         u8 flags;
 
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_eggsnatch_sniff2);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
         placement = (BombPlantPlacement*)obj->anim.placementData;
         flags = state->flags;
         if (flags & BOMB_PLANT_STATE_FLAG_JUST_ENTERED) {
@@ -288,7 +288,7 @@ void BombPlant_update(GameObject* obj) {
         break;
 
     case BOMB_PLANT_STATE_ACTIVE:
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_eggsnatch_sniff2);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
         /* fall through */
     default:
         placement = (BombPlantPlacement*)obj->anim.placementData;
@@ -355,10 +355,10 @@ void BombPlant_update(GameObject* obj) {
     }
 
     if (obj->anim.currentMove != config->moveId) {
-        ObjAnim_SetCurrentMove((int)obj, config->moveId, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, config->moveId, 0.0f, 0);
     }
 
-    if (ObjAnim_AdvanceCurrentMove((int)obj, config->moveStepScale, timeDelta, NULL) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(obj, config->moveStepScale, timeDelta, NULL) != 0) {
         state->flags |= BOMB_PLANT_STATE_FLAG_MOVE_ACTIVE;
     } else {
         state->flags &= ~BOMB_PLANT_STATE_FLAG_MOVE_ACTIVE;

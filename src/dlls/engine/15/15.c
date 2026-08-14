@@ -294,12 +294,12 @@ void player_updateSecondaryBlend(GameObject* obj, int* ctx, int moveA, int moveB
         f32 speedA = ((BaddieState*)ctx)->animSpeedA;
         if (speedA > PLAYER_MOVE_ZERO && obj->anim.currentMove != (int)gPlayerMoveFastMoveId)
         {
-            ObjAnim_SetCurrentMove((int)obj, gPlayerMoveFastMoveId, obj->anim.currentMoveProgress, 0);
+            ObjAnim_SetCurrentMove(obj, gPlayerMoveFastMoveId, obj->anim.currentMoveProgress, 0);
             ((BaddieState*)ctx)->moveDone = 0;
         }
         else if (speedA < PLAYER_MOVE_ZERO && obj->anim.currentMove != (int)gPlayerMoveSlowMoveId)
         {
-            ObjAnim_SetCurrentMove((int)obj, gPlayerMoveSlowMoveId, obj->anim.currentMoveProgress, 0);
+            ObjAnim_SetCurrentMove(obj, gPlayerMoveSlowMoveId, obj->anim.currentMoveProgress, 0);
             ((BaddieState*)ctx)->moveDone = 0;
         }
         q1 = ((BaddieState*)ctx)->animSpeedA * ((BaddieState*)ctx)->animSpeedA;
@@ -539,7 +539,7 @@ void player_advanceMove(short* moveState, u32* obj, f32 dt, int flags)
 
     buf.flag = 0;
     ((BaddieState*)obj)->moveDone =
-        ObjAnim_AdvanceCurrentMove((int)moveState, ((BaddieState*)obj)->moveSpeed, dt, (ObjAnimEventList*)&buf);
+        ObjAnim_AdvanceCurrentMove(moveState, ((BaddieState*)obj)->moveSpeed, dt, (ObjAnimEventList*)&buf);
 
     ((BaddieState*)obj)->eventFlags = 0;
     i = 0;
@@ -771,7 +771,7 @@ void playerRunStateMachine(GameObject* obj, BaddieState* state, f32 dt, PlayerSt
         int i;
 
         animEvents.triggerCount = 0;
-        state->moveDone = ObjAnim_AdvanceCurrentMove((int)obj, state->moveSpeed, dt, &animEvents);
+        state->moveDone = ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, dt, &animEvents);
         state->eventFlags = 0;
         for (i = 0; i < animEvents.triggerCount; i++)
         {

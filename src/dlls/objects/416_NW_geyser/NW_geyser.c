@@ -64,13 +64,13 @@ void nwGeyser_update(GameObject* obj) {
     if (mainGetBit(NW_GEYSER_DISABLE_GAMEBIT) != 0) {
         obj->anim.flags = OBJANIM_FLAG_HIDDEN;
         obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_UPDATE_DISABLED);
-        Sfx_RemoveLoopedObjectSound((u32)obj, NW_GEYSER_LOOP_SFX_A);
-        Sfx_RemoveLoopedObjectSound((u32)obj, NW_GEYSER_LOOP_SFX_B);
+        Sfx_RemoveLoopedObjectSound(obj, NW_GEYSER_LOOP_SFX_A);
+        Sfx_RemoveLoopedObjectSound(obj, NW_GEYSER_LOOP_SFX_B);
         ObjHits_DisableObject(obj);
         mainSetBits(NW_GEYSER_COMPLETION_GAMEBIT, 1);
     } else {
-        Sfx_AddLoopedObjectSound((u32)obj, NW_GEYSER_LOOP_SFX_A);
-        Sfx_AddLoopedObjectSound((u32)obj, NW_GEYSER_LOOP_SFX_B);
+        Sfx_AddLoopedObjectSound(obj, NW_GEYSER_LOOP_SFX_A);
+        Sfx_AddLoopedObjectSound(obj, NW_GEYSER_LOOP_SFX_B);
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
         ObjHits_EnableObject(obj);
     }

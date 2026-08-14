@@ -620,7 +620,7 @@ void DFropenode_free(GameObject* obj) {
     int objCount;
     GameObject** objs;
 
-    objFreeObjectType((u32)obj, DFROPENODE_OBJECT_GROUP);
+    objFreeObjectType(obj, DFROPENODE_OBJECT_GROUP);
     if (state->rope != NULL && state->rope != NULL) { //what?
         mm_free(state->rope);
     }
@@ -716,7 +716,7 @@ void DFropenode_render(GameObject* obj, int gdl, int mtxs) {
             return;
         }
 
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_waterblock_wave);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_waterblock_wave);
         gxSetAlphaBlendZTest();
         alpha = (u8)(objAnim->alpha + randomGetRange(0, objAnim->alpha));
         setTextColor(&gdl, renderState.blue, renderState.green, renderState.red, alpha);
@@ -843,7 +843,7 @@ void DFropenode_init(GameObject* obj, DFropenodePlacement* placement) {
         obj->anim.flags &= ~0x80;
     }
 
-    objAddObjectType((int)obj, DFROPENODE_OBJECT_GROUP);
+    objAddObjectType(obj, DFROPENODE_OBJECT_GROUP);
     obj->animEventCallback = DFropenode_syncRopeToEndpoints;
     state->rope = NULL;
     state->linkedNode = NULL;

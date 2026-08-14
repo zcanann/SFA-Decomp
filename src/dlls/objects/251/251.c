@@ -123,7 +123,7 @@ int PressureSwitchFB_getExtraSize(void) {
 }
 
 void PressureSwitchFB_free(GameObject* obj) {
-    objFreeObjectType((int)obj, PRESSURESWITCHFB_OBJECT_GROUP);
+    objFreeObjectType(obj, PRESSURESWITCHFB_OBJECT_GROUP);
 }
 
 static inline int PressureSwitchFB_scanTrackedSlots(PressureSwitchFBState* state) {
@@ -379,7 +379,7 @@ void PressureSwitchFB_init(GameObject* obj, PressureSwitchFBPlacement* placement
             }
         }
     }
-    objAddObjectType((int)obj, PRESSURESWITCHFB_OBJECT_GROUP);
+    objAddObjectType(obj, PRESSURESWITCHFB_OBJECT_GROUP);
     state->trackedObjects[0] = NULL;
     state->trackedObjects[1] = NULL;
     state->trackedObjects[2] = NULL;

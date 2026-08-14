@@ -15,6 +15,8 @@
 #include "string.h"
 #include "main/lightmap.h"
 #include "track/intersect_render_setup_api.h"
+#include "dolphin/gx/GXCull.h"
+#include "dolphin/gx/GXGet.h"
 
 struct JapaneseDiscStatusResource;
 struct EnglishDiscStatusResource;

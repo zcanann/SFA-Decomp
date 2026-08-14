@@ -265,9 +265,9 @@ void windLift107_update(GameObject* obj) {
     }
     if (state->throwState == WINDLIFT107_THROW_NONE) {
         if (state->carryState == WINDLIFT107_CARRY_IDLE) {
-            int cameraTarget = (*gCameraInterface)->getOverrideTarget();
+            GameObject* cameraTarget = (*gCameraInterface)->getOverrideTarget();
             carryActive = 0;
-            if ((void*)cameraTarget != (void*)obj && (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0 &&
+            if (cameraTarget != obj && (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0 &&
                 obj->userData2 == 0) {
                 buttonDisable(0, PAD_BUTTON_A);
                 Obj_GetYawDeltaToObject(obj, player, &yawDistance);
@@ -414,7 +414,7 @@ void windLift107_init(GameObject* obj, WindLift107Placement* placement) {
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->skeletonHitMask = WINDLIFT107_HIT_MASK;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->objectHitMask = WINDLIFT107_HIT_MASK;
     ObjHits_DisableObject(obj);
-    objAddObjectType((int)obj, WINDLIFT107_OBJECT_GROUP_ID);
+    objAddObjectType(obj, WINDLIFT107_OBJECT_GROUP_ID);
     state->disableTimer = 0;
     state->throwState = WINDLIFT107_THROW_NONE;
     {

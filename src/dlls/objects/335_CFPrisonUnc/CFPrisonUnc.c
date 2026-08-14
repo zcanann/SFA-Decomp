@@ -126,7 +126,7 @@ void cfPrisonUncle_update(GameObject* obj) {
         characterAimHeadAtTarget(obj, player, &((CfPrisonUncleState*)obj->extra)->eyeAnimState,
                                  CFPRISONUNCLE_HEAD_AIM_LIMIT, 0, 3);
         if (randomGetRange(0, CFPRISONUNCLE_MUTTER_RANDOM_RANGE) == 0) {
-            objSoundStart((int)obj, &state->soundState, SFXbaddie_kooshy_call);
+            objSoundStart(obj, &state->soundState, SFXbaddie_kooshy_call);
         }
         if (ObjTrigger_IsSet(obj) != 0) {
             s16* modelVector;
@@ -137,7 +137,7 @@ void cfPrisonUncle_update(GameObject* obj) {
             (*gObjectTriggerInterface)->runSequence(CFPRISONUNCLE_SEQUENCE_DIALOGUE, obj, -1);
         } else {
             objSoundUpdateMouth(obj, &state->soundState);
-            ObjAnim_AdvanceCurrentMove((int)obj, CFPRISONUNCLE_ANIM_STEP, (f32)(u32)framesThisStep, 0);
+            ObjAnim_AdvanceCurrentMove(obj, CFPRISONUNCLE_ANIM_STEP, (f32)(u32)framesThisStep, 0);
         }
     } else {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;

@@ -617,7 +617,7 @@ void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int 
     }
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
-                                   (GameObject*)camera->anim.parentAddress);
+                                   (GameObject*)camera->anim.parent);
 }
 
 void CameraModeNormal_getSettings(float* minDistanceOut, float* maxDistanceOut, float* lowerHeightOffsetOut,
@@ -1228,7 +1228,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
-                                       (GameObject*)cam->anim.parentAddress);
+                                       (GameObject*)cam->anim.parent);
         (*gCameraInterface)
             ->getRelativePosition(cam, &vOutA, &vOutB, &vOutC, &vOutD, gCameraModeNormalState->targetHeight, 0);
         vOutB = cam->anim.localPosY - (target->anim.localPosY + gCameraModeNormalState->targetHeight);
@@ -1304,7 +1304,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
             camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                            &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
-                                           (GameObject*)cam->anim.parentAddress);
+                                           (GameObject*)cam->anim.parent);
             gCameraModeNormalState->transitionTimer = 0;
         }
         break;
@@ -1315,7 +1315,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, CameraModeNormalInitSett
         cam->anim.worldPosZ = gCameraModeNormalState->savedWorldZ;
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
-                                       (GameObject*)cam->anim.parentAddress);
+                                       (GameObject*)cam->anim.parent);
         cam->anim.rotX = gCameraModeNormalState->savedRotX;
         cam->anim.rotY = gCameraModeNormalState->savedRotY;
         cam->anim.rotZ = gCameraModeNormalState->savedRotZ;

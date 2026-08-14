@@ -187,7 +187,7 @@ void Fireball_free(GameObject* obj) {
         ModelLightStruct_free(light);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    objFreeObjectType((int)obj, FIREBALL_OBJECT_GROUP);
+    objFreeObjectType(obj, FIREBALL_OBJECT_GROUP);
 }
 
 void Fireball_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
@@ -288,7 +288,7 @@ void Fireball_hitDetect(GameObject* obj) {
             state->light = NULL;
         }
     }
-    objFreeObjectType((int)obj, FIREBALL_OBJECT_GROUP);
+    objFreeObjectType(obj, FIREBALL_OBJECT_GROUP);
 }
 
 void Fireball_update(GameObject* obj) {
@@ -352,7 +352,7 @@ void Fireball_update(GameObject* obj) {
                 ModelLightStruct_free(state->light);
                 state->light = NULL;
             }
-            objFreeObjectType((int)obj, FIREBALL_OBJECT_GROUP);
+            objFreeObjectType(obj, FIREBALL_OBJECT_GROUP);
             ObjHits_DisableObject(obj);
         }
     }
@@ -450,7 +450,7 @@ void Fireball_init(GameObject* obj) {
             state->rotYDelta[i] = (u16)randomGetRange(-1024, 1024);
         }
         obj->animEventCallback = Fireball_SeqFn;
-        objAddObjectType((int)obj, FIREBALL_OBJECT_GROUP);
+        objAddObjectType(obj, FIREBALL_OBJECT_GROUP);
         if (obj->anim.romDefNo != FIREBALL_SEQID_HIDDEN && placement->startupDelayEnabled != 0) {
             state->startupDelay = 4.0f;
         }

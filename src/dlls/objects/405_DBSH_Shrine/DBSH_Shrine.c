@@ -120,7 +120,7 @@ void dbshShrine_updateHoverMotion(GameObject* obj) {
     trigB += trigA;
     obj->anim.rotY = (s16)(DBSH_SHRINE_ORBIT_ROTATION_SCALE * trigB);
 
-    ObjAnim_AdvanceCurrentMove((int)obj, DBSH_SHRINE_ANIMATION_STEP, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove(obj, DBSH_SHRINE_ANIMATION_STEP, timeDelta, &animEvents);
 
     if (player == NULL) {
         return;
@@ -208,7 +208,7 @@ void dbshShrine_free(GameObject* obj) {
         state->light = NULL;
     }
     gameTimerStop();
-    objFreeObjectType((int)obj, DBSH_SHRINE_OBJ_GROUP);
+    objFreeObjectType(obj, DBSH_SHRINE_OBJ_GROUP);
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);

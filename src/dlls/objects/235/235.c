@@ -17,12 +17,12 @@ int siderepel_getExtraSize(void) {
 }
 
 void siderepel_free(GameObject* obj) {
-    objFreeObjectType((int)obj, SIDEREPEL_OBJECT_GROUP);
+    objFreeObjectType(obj, SIDEREPEL_OBJECT_GROUP);
 }
 
 void siderepel_init(GameObject* obj, SideRepelPlacement* placement) {
     obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
-    objAddObjectType((int)obj, SIDEREPEL_OBJECT_GROUP);
+    objAddObjectType(obj, SIDEREPEL_OBJECT_GROUP);
     if (obj->anim.hitReactState != NULL) {
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)(placement->radius >> SIDEREPEL_RADIUS_SHIFT));
     }

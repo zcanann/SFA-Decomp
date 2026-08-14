@@ -98,7 +98,7 @@ void iceBaddie_enterWhirlpoolGroup(GameObject* obj, EnemyState* state)
 
     if (state->userData2 == 0)
     {
-        objAddObjectType((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
+        objAddObjectType(obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->userData2 = 1;
     }
     ObjHits_SetHitVolumeSlot(&obj->anim, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
@@ -111,7 +111,7 @@ void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, EnemyState* state)
 {
     if (state->userData2 != 0)
     {
-        objFreeObjectType((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
+        objFreeObjectType(obj, ICEBADDIE_OBJGROUP_SECONDARY);
         state->userData2 = 0;
     }
     *(u16*)obj = (float)(int)(obj)->anim.rotX - 256.0f * timeDelta;

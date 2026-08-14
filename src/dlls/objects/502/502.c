@@ -47,20 +47,20 @@ void dll502_update(GameObject* obj) {
     GameObject* parent;
 
     if (obj->anim.romDefNo == DLL1F6_SEQUENCE_FLUTTER) {
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.007f, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.007f, (f32)(u32)framesThisStep, NULL);
     } else if (obj->anim.romDefNo == DLL1F6_SEQUENCE_TIED) {
         Obj_GetPlayerObject();
         parent = obj->anim.parent;
         dll502_updateTiedSwing(obj, parent);
     } else {
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.02f, (f32)(u32)framesThisStep, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.02f, (f32)(u32)framesThisStep, NULL);
     }
 }
 
 void dll502_init(GameObject* obj, const Dll1F6PlacementView* placement) {
     if (obj->anim.romDefNo != DLL1F6_SEQUENCE_TIED) {
         obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     }
 }
 
