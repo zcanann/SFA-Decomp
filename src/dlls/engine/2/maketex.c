@@ -245,12 +245,17 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
                         {
                             int writeResult;
                             *(u64*)(gSaveCardIoBuffer + 0xa40) = t;
-                            writeResult = saveGame_doWrite(2);
-                            if (writeResult == 0)
+#ifdef VERSION_GSAE01_rev1
+                            if (cb == NULL)
+#endif
                             {
-                                writeResult = saveGame_doWrite(1);
+                                writeResult = saveGame_doWrite(2);
+                                if (writeResult == 0)
+                                {
+                                    writeResult = saveGame_doWrite(1);
+                                }
+                                result = writeResult;
                             }
-                            result = writeResult;
                         }
                     }
                 }
