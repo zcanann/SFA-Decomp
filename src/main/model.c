@@ -505,10 +505,10 @@ void modelAnimResetState(void* m, void* data)
         channel->prevBlendCacheSlot = channel->moveCacheSlot;
     }
 }
-int modelLoadAnimations(void* model, int id, void* animBase)
+int modelLoadAnimations(void* model, int modelId, u8* buf)
 {
     int tabBase;
-    u8* buf = animBase;
+    int id = modelId;
     int* tbl;
     u8* hdr = model;
     int sz;
