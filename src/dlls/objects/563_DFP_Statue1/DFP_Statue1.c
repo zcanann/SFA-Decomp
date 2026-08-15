@@ -95,7 +95,7 @@ void dfpstatue1_updateState(GameObject* obj)
     if (state->loopSfxStopTimer != 0)
     {
         state->loopSfxStopTimer = (float)state->loopSfxStopTimer - timeDelta;
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_treadlpc);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_treadlpc);
         if (state->loopSfxStopTimer <= 0)
         {
             state->loopSfxStopTimer = 0;

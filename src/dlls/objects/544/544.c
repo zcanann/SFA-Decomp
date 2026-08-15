@@ -52,7 +52,7 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
     }
     if (state->activated != 0)
     {
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.025f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.025f, timeDelta, NULL);
         if (state->exploded == 0)
         {
             if (obj->anim.currentMoveProgress >= 1.0f)

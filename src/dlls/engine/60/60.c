@@ -15,6 +15,7 @@
 #include "main/textrender_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0035_saveselectscreen.h"
+#include "main/dll/FRONT/title_menu.h"
 #include "main/gametext_color_api.h"
 #include "main/gametext_internal.h"
 #include "main/vecmath.h"

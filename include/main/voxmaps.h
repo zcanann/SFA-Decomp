@@ -4,6 +4,7 @@
 #include "types.h"
 
 struct CurveHeapNode;
+struct GameObject;
 typedef struct Texture Texture;
 
 typedef struct VoxMapSlotOrigin {
@@ -100,7 +101,7 @@ typedef struct RouteNav {
 } RouteNav;
 
 extern int gVoxMapsSlotTimers[];
-extern u32 gVoxMapsTransformObj;
+extern struct GameObject* gVoxMapsTransformObj;
 extern VoxMaps gVoxMaps;
 extern u8 gVoxMapsSlotInUse[8];
 extern int* gVoxMapsMapList;

@@ -194,7 +194,7 @@ void mmshShrine_updateHoverMotion(GameObject* obj) {
     trigB = trigB + trigA;
     obj->anim.rotY = (s16)(MMSH_SHRINE_ORBIT_ROTATION_SCALE * trigB);
 
-    ObjAnim_AdvanceCurrentMove((int)obj, MMSH_SHRINE_ANIMATION_STEP, timeDelta, &animEvents);
+    ObjAnim_AdvanceCurrentMove(obj, MMSH_SHRINE_ANIMATION_STEP, timeDelta, &animEvents);
     if (player == NULL) {
         return;
     }

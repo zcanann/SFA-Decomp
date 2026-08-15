@@ -190,7 +190,7 @@ void LanternFireFly_free(GameObject* obj, int flag) {
     if (flag == 0 && state->light != NULL && state->modeFlags.motionMode != LANTERN_FIREFLY_PLAYER_FOLLOW_MOTION_MODE) {
         sLanternFireFlyLightActive = 0;
     }
-    objFreeObjectType((int)obj, LANTERN_FIREFLY_OBJECT_GROUP);
+    objFreeObjectType(obj, LANTERN_FIREFLY_OBJECT_GROUP);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
@@ -281,7 +281,7 @@ void LanternFireFly_update(GameObject* obj) {
     velocityPtr[2] = velocityPtr[2] * stepScale;
 
     if (LANTERN_FIREFLY_IS_FOLLOWING_PLAYER(state)) {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_pk_lightcritter_lp);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_pk_lightcritter_lp);
         if ((f32)state->timer > sLanternFireFlyEffectSpawnTimerThreshold) {
             if (state->stateId == LANTERN_FIREFLY_LIGHT_STATE_A || state->stateId == LANTERN_FIREFLY_LIGHT_STATE_B) {
                 (*gPartfxInterface)->spawnObject((void*)obj, LANTERN_FIREFLY_EFFECT_GLOW_A, NULL, 1, -1, NULL);
@@ -327,7 +327,7 @@ void LanternFireFly_init(GameObject* obj, LanternFireFlyPlacement* placement) {
     int zeroFlag;
 
     state = obj->extra;
-    objAddObjectType((int)obj, LANTERN_FIREFLY_OBJECT_GROUP);
+    objAddObjectType(obj, LANTERN_FIREFLY_OBJECT_GROUP);
 
     zero = 0.0f;
     state->controlX[0] = zero;

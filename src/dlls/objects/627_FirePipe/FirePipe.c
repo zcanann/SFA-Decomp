@@ -379,7 +379,7 @@ void firepipe_updateState(GameObject* obj)
         {
             Sfx_PlayFromObjectLimited(obj, SFXTRIG_en_cvdrip1c_32c, 3);
         }
-        Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, SFXTRIG_en_trpopn_c_32d, 2);
+        Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXTRIG_en_trpopn_c_32d, 2);
     }
     flags->wasEmitting = flags->emitting;
 
@@ -412,7 +412,7 @@ void firepipe_free(GameObject* obj)
     FirePipeExtra* extra;
 
     extra = obj->extra;
-    objFreeObjectType((int)obj, FIREPIPE_OBJGROUP);
+    objFreeObjectType(obj, FIREPIPE_OBJGROUP);
     i = 0;
     iter = extra->effectObjs;
     while (i < (int)(u32)extra->effectCount)
@@ -579,7 +579,7 @@ void firepipe_init(GameObject* obj, FirePipeMapData* mapData)
         extra->flags.glowEnabled = flagValue;
         storeZeroToFloatParam(&extra->emitTimer);
         s16toFloat(&extra->emitTimer, 0x14);
-        objAddObjectType((int)obj, FIREPIPE_OBJGROUP);
+        objAddObjectType(obj, FIREPIPE_OBJGROUP);
         extra->flags.childEmitEnabled = 0;
         extra->glowLight = NULL;
     }

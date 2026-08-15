@@ -1950,7 +1950,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 {
     ExpgfxRuntimeDataLayout* runtime;
     int activeBit[1];
-    u32* resources[1];
+    void** resources[1];
     ExpgfxSlot* slot;
     u32 inactiveBitMask;
 
@@ -2059,7 +2059,7 @@ static inline void expgfxRemoveAllBody(void)
                     (*refCountPtr)--;
                     if (*refCountPtr == 0)
                     {
-                        expTabEntry->resource = 0;
+                        expTabEntry->resource = NULL;
                         expTabEntry->sourceId = 0;
                     }
                 }
@@ -2257,7 +2257,7 @@ void expgfx_initSlotQuad(void* slotPtr)
     ExpgfxTableEntry* entry;
     ExpgfxQuadVertex* quad;
     Vec3s* quadTemplate;
-    u32 resource;
+    void* resource;
     u32 behaviorFlags;
     s16 texT1;
     s16 texT0;
@@ -2545,7 +2545,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                 entry = (ExpgfxTableEntry*)((u8*)runtime->expTab +
                                             (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16);
                 srcObj = (ObjAnimComponent*)entry->sourceId;
-                poolOrResource = entry->resource;
+                poolOrResource = (u32)entry->resource;
                 slot->stateBits.bits.frameParity = 0;
                 slot->stateBits.bits.quadReady = 1;
                 if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_HOLD_LIFETIME_TIMER) == 0)
@@ -3411,7 +3411,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
     for (tableIndex = 0; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; tableIndex++)
     {
         entry = &gExpgfxTableEntries[tableIndex];
-        if ((entry->refCount != 0) && (entry->resource == resourceHandle) && (entry->sourceId == sourceId) &&
+        if ((entry->refCount != 0) && ((u32)entry->resource == resourceHandle) && (entry->sourceId == sourceId) &&
             (entry->attachedTableKey == attachedTableKey))
         {
             if (gExpgfxTableEntries[tableIndex].refCount >= EXPGFX_REFCOUNT_OVERFLOW)
@@ -3429,7 +3429,7 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
         if (gExpgfxTableEntries[freeIndex].refCount == 0)
         {
             gExpgfxTableEntries[freeIndex].refCount = 1;
-            gExpgfxTableEntries[freeIndex].resource = resourceHandle;
+            gExpgfxTableEntries[freeIndex].resource = (void*)resourceHandle;
             gExpgfxTableEntries[freeIndex].sourceId = sourceId;
             gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
             gExpgfxTableEntries[freeIndex].resourceId = resourceId;
@@ -3564,7 +3564,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 scaleSize;
     f32 centerX, centerY, centerZ;
     f32 scaleFactor;
-    u32 texture;
+    Texture* texture;
     MtxPtr viewMatrix;
     f32 sinA, cosA;
     u32 behaviorFlags;
@@ -3582,7 +3582,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     s8 blendMode;
     s8 zMode;
     s8 zCompLoc;
-    u32 currentTexture;
+    Texture* currentTexture;
     u8 lastOverrideColorFlag;
     ExpgfxSlot* cachedSlots;
     cachedSlots = getCache();
@@ -3794,7 +3794,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
                 if (currentTexture != texture)
                 {
-                    selectTexture((Texture*)texture, 0);
+                    selectTexture(texture, 0);
                     currentTexture = texture;
                 }
 
@@ -4159,7 +4159,7 @@ void expgfx_resetAllPools(void)
                     (*refCountPtr)--;
                     if (*refCountPtr == 0)
                     {
-                        tableEntry->resource = 0;
+                        tableEntry->resource = NULL;
                         tableEntry->sourceId = 0;
                     }
                 }
@@ -4311,7 +4311,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
         }
-        resourceHandle = (ExpgfxResourceHandle*)runtime->resourceTable[resourceTableIndex].resource;
+        resourceHandle = runtime->resourceTable[resourceTableIndex].resource;
         if (resourceHandle != NULL)
         {
             if (resourceHandle->refCount >= EXPGFX_REFCOUNT_OVERFLOW)

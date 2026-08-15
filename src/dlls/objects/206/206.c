@@ -278,7 +278,7 @@ int dll_CE_updateWindupState(GameObject* obj, GroundBaddieState* state) {
     state->baddie.animSpeedA = speed;
     state->baddie.animSpeedB = speed;
     if (state->baddie.moveJustStartedA != '\0') {
-        ObjAnim_SetCurrentMove((int)obj, 1, speed, 0);
+        ObjAnim_SetCurrentMove(obj, 1, speed, 0);
         state->baddie.moveDone = 0;
     }
     if ((state->baddie.moveEventFlags & 1) == 0) {
@@ -308,7 +308,7 @@ int dll_CE_updateAlertState(GameObject* obj, GroundBaddieState* state) {
     int childState;
 
     if (state->baddie.moveJustStartedA != '\0') {
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         state->baddie.moveDone = 0;
     }
     if (state->baddie.moveJustStartedA != '\0') {
@@ -375,7 +375,7 @@ int dll_CE_updateSpitState(GameObject* obj, GroundBaddieState* state) {
     state->baddie.moveSpeed = 0.01f;
 
     if ((s32)state->baddie.moveJustStartedA != 0) {
-        ObjAnim_SetCurrentMove((int)obj, 10, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 10, 0.0f, 0);
         state->baddie.moveDone = 0;
     }
     state->baddie.stateTag = 1;
@@ -400,7 +400,7 @@ int dll_CE_updateState3(GameObject* obj, GroundBaddieState* state) {
     ObjHits_RegisterActiveHitVolumeObject(obj);
     state->baddie.moveSpeed = 0.01f;
     if (state->baddie.moveJustStartedA != 0) {
-        ObjAnim_SetCurrentMove((int)obj, 5, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 5, 0.0f, 0);
         state->baddie.moveDone = 0;
     }
     state->baddie.stateTag = 1;
@@ -433,11 +433,11 @@ int dll_CE_updateAttackState(GameObject* obj, GroundBaddieState* state) {
         }
         if (randomGetRange(0, 1) != 0) {
             if (state->baddie.moveJustStartedA != '\0') {
-                ObjAnim_SetCurrentMove((int)obj, 6, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 6, 0.0f, 0);
                 state->baddie.moveDone = 0;
             }
         } else if (state->baddie.moveJustStartedA != '\0') {
-            ObjAnim_SetCurrentMove((int)obj, 7, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, 7, 0.0f, 0);
             state->baddie.moveDone = 0;
         }
         state->baddie.stateTag = 1;
@@ -453,7 +453,7 @@ int dll_CE_updateSubmergeState(GameObject* obj, GroundBaddieState* state) {
 
     objectState = obj->extra;
     if (state->baddie.moveJustStartedA != '\0') {
-        ObjAnim_SetCurrentMove((int)obj, 14, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 14, 0.0f, 0);
         state->baddie.moveDone = 0;
     }
     if (obj->anim.currentMoveProgress > 0.25f) {
@@ -467,7 +467,7 @@ int dll_CE_updateSubmergeState(GameObject* obj, GroundBaddieState* state) {
     }
     if (state->baddie.moveDone != '\0') {
         mainSetBits(objectState->gameBitB, 0);
-        ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
         state->baddie.targetObj = 0;
         state->baddie.physicsActive = 0;
         state->baddie.hasTarget = 0;
@@ -487,7 +487,7 @@ int dll_CE_updateEmergeState(GameObject* obj, GroundBaddieState* state) {
     objectState = obj->extra;
     control = objectState->control;
     if (state->baddie.moveJustStartedA != '\0') {
-        ObjAnim_SetCurrentMove((int)obj, 11, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 11, 0.0f, 0);
         state->baddie.moveDone = 0;
     }
     if (state->baddie.moveJustStartedA != '\0') {
@@ -669,7 +669,7 @@ int dll_CE_getObjectTypeId(void) {
 void dll_CE_free(GameObject* obj) {
     GroundBaddieState* state = obj->extra;
 
-    objFreeObjectType((int)obj, DLL_CE_OBJGROUP);
+    objFreeObjectType(obj, DLL_CE_OBJGROUP);
     {
         GameObject* child = obj->childObjs[0];
 
@@ -718,7 +718,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB) {
             (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)placement, (u8*)state, 7, 6, 0x102, 0x26, 20.0f);
             state->targetState = 0;
             Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_263);
-            ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
+            ObjAnim_SetCurrentMove(obj, 8, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
             state->baddie.moveDone = 0;
             obj->anim.alpha = 0xff;
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
@@ -784,7 +784,7 @@ void dll_CE_init(GameObject* obj, DllCEPlacement* placement, int flags) {
     obj->animEventCallback = NULL;
     control = state->control;
     control->soundTimer = (f32)randomGetRange(10, 300);
-    ObjAnim_SetCurrentMove((int)obj, 8, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     (*gPlayerInterface)->setState(obj, state, 0);
     state->baddie.substate = 0;

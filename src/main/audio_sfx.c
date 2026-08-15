@@ -74,7 +74,7 @@ int Sfx_IsPlayingFromObjectChannel(GameObject* obj, int channel)
 {
     SfxObjectChannel* objectChannel;
 
-    if (((u8)channel == 0) || ((u32)obj == 0))
+    if (((u8)channel == 0) || (obj == NULL))
     {
         objectChannel = NULL;
     }

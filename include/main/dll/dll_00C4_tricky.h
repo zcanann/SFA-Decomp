@@ -63,7 +63,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj);
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
 void Tricky_init(GameObject* obj);
 int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate);
-void Tricky_update(int obj);
+void Tricky_update(GameObject* obj);
 void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
 int Tricky_getExtraSize(void);

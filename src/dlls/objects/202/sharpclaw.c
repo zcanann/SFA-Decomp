@@ -946,12 +946,12 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
                 if (((EnemyState*)state)->pathSpeed > 1.2f)
                 {
                     ((EnemyState*)state)->rootMotionFlags = 1;
-                    ObjAnim_SetCurrentMove((int)obj, tbl0[0x20], 0.0f, 0);
+                    ObjAnim_SetCurrentMove(obj, tbl0[0x20], 0.0f, 0);
                 }
                 else
                 {
                     ((EnemyState*)state)->rootMotionFlags = 1;
-                    ObjAnim_SetCurrentMove((int)obj, tbl0[0x14], 0.0f, 0);
+                    ObjAnim_SetCurrentMove(obj, tbl0[0x14], 0.0f, 0);
                 }
             }
             else
@@ -961,7 +961,7 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
                 ((EnemyState*)state)->curveParamB = 0;
                 ((EnemyState*)state)->rootMotionFlags = 1;
                 *(f32*)(state + 0x308) = 0.01f;
-                ObjAnim_SetCurrentMove((int)obj, tbl0[8], 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, tbl0[8], 0.0f, 0);
                 ((EnemyState*)state)->pathSpeed = 0.0f;
             }
         }
@@ -1078,7 +1078,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
             if (idleAnim == 0)
             {
                 ((EnemyState*)state)->rootMotionFlags = 3;
-                ObjAnim_SetCurrentMove((int)obj, *(u8*)((u8*)animCtrl + 0x2c), 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, *(u8*)((u8*)animCtrl + 0x2c), 0.0f, 0);
             }
             else
             {

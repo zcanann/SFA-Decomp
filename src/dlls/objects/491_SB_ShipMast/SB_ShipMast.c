@@ -52,7 +52,7 @@ void SB_ShipMast_update(GameObject* obj) {
     if (((GameObject*)obj->anim.parent)->anim.romDefNo == WM_GALLEON_OBJECT_ID) {
         if (phase >= 0xa && phase < 0xd) {
             if (obj->anim.currentMove != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
             }
             if (phase >= 0xc) {
                 speed = -0.003f;
@@ -61,17 +61,17 @@ void SB_ShipMast_update(GameObject* obj) {
             }
         } else {
             if (obj->anim.currentMove != 1) {
-                ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
             }
             speed = 0.03f;
         }
     } else {
         if (obj->anim.currentMove != 1) {
-            ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
         }
         speed = 0.03f;
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, speed, (f32)(u32)framesThisStep, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, speed, (f32)(u32)framesThisStep, NULL);
 }
 
 void SB_ShipMast_init(void) {

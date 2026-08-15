@@ -165,7 +165,7 @@ void SB_CloudRunner_SpawnFromPath(GameObject* path, u8* unusedState)
     block->anim.rotX = 0;
 }
 
-void SB_CloudRunner_UpdateCloudAction(int obj, SBCloudRunnerRideState* state)
+void SB_CloudRunner_UpdateCloudAction(GameObject* obj, SBCloudRunnerRideState* state)
 {
     f32 angle;
     f32 rotorCos;
@@ -284,10 +284,10 @@ void SB_CloudRunner_UpdateRideTilt(GameObject* obj, SBCloudRunnerRideState* stat
 
     if (obj->anim.currentMove != SB_CLOUDRUNNER_RIDE_MOVE_ID)
     {
-        ObjAnim_SetCurrentMove((int)obj, SB_CLOUDRUNNER_RIDE_MOVE_ID, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, SB_CLOUDRUNNER_RIDE_MOVE_ID, 0.0f, 0);
     }
 
-    if (ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL) != 0)
+    if (ObjAnim_AdvanceCurrentMove(obj, 0.015f, timeDelta, NULL) != 0)
     {
         state->rideState = 0;
     }
@@ -299,7 +299,7 @@ struct SBCloudRunnerState
 {
     u8 pad0[0x10 - 0x0];
     GameObject* targetObj;  /* 0x10: laser-locked target (object type 0x8E) */
-    s32 resource;   /* 0x14: acquired resource handle */
+    void* resource;   /* 0x14: acquired resource handle */
     void* texture0; /* 0x18 */
     void* texture1; /* 0x1C */
     u8 pad20[0x2C - 0x20];
@@ -458,7 +458,7 @@ void SB_CloudRunner_UpdateSteer(GameObject* obj, SBCloudRunnerState* state)
     {
         if (obj->anim.currentMove != CLOUDRUNNER_MOVE_FLAP)
         {
-            ObjAnim_SetCurrentMove((int)obj, CLOUDRUNNER_MOVE_FLAP, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, CLOUDRUNNER_MOVE_FLAP, 0.0f, 0);
         }
     }
     else
@@ -466,10 +466,10 @@ void SB_CloudRunner_UpdateSteer(GameObject* obj, SBCloudRunnerState* state)
         spd = 0.015f;
         if (obj->anim.currentMove != CLOUDRUNNER_MOVE_GLIDE)
         {
-            ObjAnim_SetCurrentMove((int)obj, CLOUDRUNNER_MOVE_GLIDE, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, CLOUDRUNNER_MOVE_GLIDE, 0.0f, 0);
         }
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, spd, timeDelta, (ObjAnimEventList*)&events);
+    ObjAnim_AdvanceCurrentMove(obj, spd, timeDelta, (ObjAnimEventList*)&events);
 
     obj->anim.localPosX = state->spawnPosX;
     obj->anim.localPosY = state->spawnPosY;
@@ -710,9 +710,9 @@ void SB_CloudRunner_free(GameObject* obj)
         textureFree((Texture*)(state->texture1));
         state->texture1 = NULL;
     }
-    Resource_Release((void*)state->resource);
-    state->resource = 0;
-    objFreeObjectType((int)obj, SBCLOUDRUNNER_OBJGROUP);
+    Resource_Release(state->resource);
+    state->resource = NULL;
+    objFreeObjectType(obj, SBCLOUDRUNNER_OBJGROUP);
 }
 
 
@@ -775,7 +775,7 @@ void SB_CloudRunner_update(GameObject* obj)
     if (state->targetObj == NULL)
     {
         int count;
-        int* objs = (int*)objGetAllOfType(3, &count);
+        GameObject** objs = objGetAllOfType(3, &count);
         int i;
         for (i = 0; i < count; i++)
         {
@@ -821,7 +821,7 @@ void SB_CloudRunner_update(GameObject* obj)
     {
         state->rideFrames = 0;
     }
-    SB_CloudRunner_UpdateCloudAction((int)obj, (SBCloudRunnerRideState*)state);
+    SB_CloudRunner_UpdateCloudAction(obj, (SBCloudRunnerRideState*)state);
 }
 
 
@@ -836,9 +836,9 @@ void SB_CloudRunner_init(GameObject* obj)
     obj->anim.rotX = 0x4000;
     state->texture0 = textureLoadAsset(342);
     state->texture1 = textureLoadAsset(3085);
-    state->resource = (int)Resource_Acquire(121, 1);
+    state->resource = Resource_Acquire(121, 1);
     ObjHits_SetTargetMask(obj, 1);
-    objAddObjectType((int)obj, SBCLOUDRUNNER_OBJGROUP);
+    objAddObjectType(obj, SBCLOUDRUNNER_OBJGROUP);
 }
 
 

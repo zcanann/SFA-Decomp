@@ -611,7 +611,7 @@ void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* col
     }
 }
 
-void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision) {
+void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* collision) {
     u32 flags;
     ObjHitboxTransformState* matrixSource;
     int iv[2];
@@ -708,7 +708,7 @@ void curves_preparePointCollisionFrame(int obj, CurvesCollisionState* collision)
     }
 }
 
-void curves_updateLocalPointTransforms(int obj, CurvesCollisionState* collision) {
+void curves_updateLocalPointTransforms(GameObject* obj, CurvesCollisionState* collision) {
     u32 flags;
     u8* wb[1];
     int iv[2];
@@ -769,7 +769,7 @@ void curves_reset(GameObject* obj, CurvesCollisionState* collision) {
     MatrixTransform transform;
     f32 matrix[16];
 
-    curves_preparePointCollisionFrame((int)obj, collision);
+    curves_preparePointCollisionFrame(obj, collision);
     flags = collision->flags;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
@@ -1048,7 +1048,7 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             }
         }
     } else if (collision->subtype == CURVES_COLLISION_SUBTYPE_POINT) {
-        curves_preparePointCollisionFrame((int)curveObj, collision);
+        curves_preparePointCollisionFrame(curveObj, collision);
         flags = state->flags;
         if (((flags & CURVES_COLLISION_STATE_ACTIVE) != 0) && ((flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
             s2a.rotX = curveObj->anim.rotX;
@@ -1126,7 +1126,7 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
             }
         }
     } else {
-        curves_preparePointCollisionFrame((int)curveObj, collision);
+        curves_preparePointCollisionFrame(curveObj, collision);
         flags = state->flags;
         if (((flags & CURVES_COLLISION_STATE_ACTIVE) != 0) && ((flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
             sE.rotX = curveObj->anim.rotX;

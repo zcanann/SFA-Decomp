@@ -945,23 +945,23 @@ void crawler_updateC(GameObject* obj, u8* state)
                             if (v > gCrawlerSpeedThresholds.speeds[j][0])
                             {
                                 ((EnemyState*)state)->rootMotionFlags = 1;
-                                ObjAnim_SetCurrentMove((u32)obj, t0[3].moveId, 0.0f, 0);
+                                ObjAnim_SetCurrentMove(obj, t0[3].moveId, 0.0f, 0);
                             }
                             else if (v > gCrawlerSpeedThresholds.speeds[j][1])
                             {
                                 ((EnemyState*)state)->rootMotionFlags = 1;
-                                ObjAnim_SetCurrentMove((u32)obj, t0[2].moveId, 0.0f, 0);
+                                ObjAnim_SetCurrentMove(obj, t0[2].moveId, 0.0f, 0);
                             }
                             else if (v > gCrawlerSpeedThresholds.speeds[j][2])
                             {
                                 ((EnemyState*)state)->rootMotionFlags = 1;
-                                ObjAnim_SetCurrentMove((u32)obj, t0[1].moveId, 0.0f, 0);
+                                ObjAnim_SetCurrentMove(obj, t0[1].moveId, 0.0f, 0);
                             }
                             else
                             {
                                 ((EnemyState*)state)->rootMotionFlags = 1;
                                 *(f32*)(state + 0x308) = 0.01f;
-                                ObjAnim_SetCurrentMove((u32)obj, t0[0].moveId, 0.0f, 0);
+                                ObjAnim_SetCurrentMove(obj, t0[0].moveId, 0.0f, 0);
                                 ((EnemyState*)state)->pathSpeed = 0.0f;
                             }
                         }

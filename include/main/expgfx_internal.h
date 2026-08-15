@@ -182,7 +182,7 @@ typedef struct ExpgfxTableEntry {
   /* The add/remove paths key entries by source identity plus an optional attached-source key. */
   u32 sourceId;
   u32 attachedTableKey;
-  u32 resource;
+  void* resource;
   u16 refCount;
   s16 resourceId;
 } ExpgfxTableEntry;

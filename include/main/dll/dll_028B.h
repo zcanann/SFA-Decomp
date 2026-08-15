@@ -44,7 +44,7 @@ extern f32 gWcEarthWalkerIdleTimerThreshold;
 
 int dll_28B_getExtraSize(void);
 int dll_28B_getObjectTypeId(void);
-void dll_28B_free(int obj);
+void dll_28B_free(GameObject* obj);
 void dll_28B_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_28B_hitDetect_nop(void);
 void dll_28B_update(GameObject* obj);

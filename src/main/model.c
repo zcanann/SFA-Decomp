@@ -95,9 +95,9 @@ typedef struct ObjHitBufs
 void setGQR7Packed(int a, int b, int c, int d);
 u8* modelBoneTransforms_next(u8* stream, int* dx, int* dy, int* dz);
 static inline void* modelGetBoneMtx(ObjModel* model, int idx);
-void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, int d1, int d2, int count);
-void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, int count);
-void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, int count);
+void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
+void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
+void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count);
 void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
 {
     u8* a = *pd;
@@ -578,7 +578,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0)
     {
-        *(int*)&((ModelFileHeader*)hdr)->animationHeaderBuffer = 0;
+        ((ModelFileHeader*)hdr)->animationHeaderBuffer = NULL;
         ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
         buf += ((ModelFileHeader*)hdr)->animationCount * 4;
         padBytes += ((ModelFileHeader*)hdr)->animationCount * 4;
@@ -639,7 +639,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                             }
                         }
                     }
-                    *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
+                    ((ModelFileHeader*)hdr)->animationModelPtrs = NULL;
                     return 1;
                 }
             }
@@ -653,7 +653,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     }
     else
     {
-        *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
+        ((ModelFileHeader*)hdr)->animationModelPtrs = NULL;
     }
     return 0;
 }
@@ -828,7 +828,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     pos += szs[6] >> 1;
     *(int*)&((ObjModel*)out)->jointMatrices[1] = pos;
     pos += szs[6] >> 1;
-    *(int*)&((ObjModel*)out)->curMtxBuf = *(int*)&((ObjModel*)out)->jointMatrices[0];
+    ((ObjModel*)out)->curMtxBuf = ((ObjModel*)out)->jointMatrices[0];
     if (((ModelFileHeader*)p)->morphTargetCount != 0 || ((ModelFileHeader*)p)->vertexAnimEntries != NULL || (((
         ModelFileHeader*)p)->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS))
     {
@@ -868,7 +868,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     }
     else
     {
-        *(int*)&((ObjModel*)out2)->normalBuf = *(int*)&((ModelFileHeader*)p)->normals;
+        ((ObjModel*)out2)->normalBuf = ((ModelFileHeader*)p)->normals;
     }
     pos = roundUpTo4(pos);
     *(int*)&((ObjModel*)out2)->animStateA = pos;
@@ -990,7 +990,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
         *(int*)&((ObjModel*)out2)->groundShadowVerts = pos;
         *(u8*)(((ObjModel*)out2)->groundShadowVerts + 0x18) = 0;
     }
-    *(int*)&((ObjModel*)out2)->renderAttachment = 0;
+    ((ObjModel*)out2)->renderAttachment = NULL;
     ((ObjModel*)out2)->file = (ModelFileHeader*)p;
     ((ObjModel*)out2)->vtxBufDirty = 0;
     return out2;
@@ -2039,7 +2039,7 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
 void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s, f32* outPos, s16* outRot)
 {
     ObjAnimState* ch;
-    int saved;
+    ObjAnimFrameCommand* saved;
     s16 srot[3];
     int bv;
     u8* anim;
@@ -2062,7 +2062,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
     {
         ch = model->animStateA;
     }
-    saved = *(int*)&ch->moveFrameData;
+    saved = ch->moveFrameData;
     {
         /* the four frame-data pointers (move/prevMove/blend/prevBlend) are
            indexed as one array here; the selected one is swapped into the
@@ -2111,7 +2111,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
         ch->frameStreamCursors[0] = anim + *(s16*)(anim + 2) + bv * n;
     }
     modelRenderInterpolateRootTransform(ch, srot, outRot);
-    *(int*)&ch->moveFrameData = saved;
+    ch->moveFrameData = saved;
     {
         f32 k = 0.001953125f;
         outPos[0] = k * srot[0];
@@ -2719,7 +2719,7 @@ void ObjModel_Release(u8* model)
         z[0] = 0;
         for (z[1] = z[0]; z[0] < ((u8*)((ObjModel*)model)->file)[0xf8]; z[1] += 0xc, z[0]++)
         {
-            ShaderDef_free((int*)&((ObjModel*)model)->textureRefs[z[0]]);
+            ShaderDef_free((void**)&((ObjModel*)model)->textureRefs[z[0]]);
         }
     }
     header = (u8*)((ObjModel*)model)->file;
@@ -2917,8 +2917,8 @@ void ObjModel_BlendNormalStream(u8* mtxs, u8* job, u8* animData, u8** outs, int 
                 chunkDst = outs[i];
                 ObjModel_TransformQuadVerticesLinear(mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30,
                                                      gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                     chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                     chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                     (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                     (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
                                                      *(u16*)(chunk + 0x70));
                 memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
             }
@@ -2927,8 +2927,8 @@ void ObjModel_BlendNormalStream(u8* mtxs, u8* job, u8* animData, u8** outs, int 
                 chunkDst = outs[i];
                 ObjModel_TransformVerticesLinear(mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30,
                                                  gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                 chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                 chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                 (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                 (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
                                                  *(u16*)(chunk + 0x70));
                 memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
             }
@@ -2940,8 +2940,8 @@ void ObjModel_BlendNormalStream(u8* mtxs, u8* job, u8* animData, u8** outs, int 
             chunkDst = outs[i];
             ObjModel_TransformQuadVerticesLinear(mtxs + lastChunk[0x6c] * 0x30, mtxs + lastChunk[0x6d] * 0x30,
                                                  gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                 lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                 lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                 (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                 (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
                                                  *(u16*)(lastChunk + 0x70));
             memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
         }
@@ -2950,8 +2950,8 @@ void ObjModel_BlendNormalStream(u8* mtxs, u8* job, u8* animData, u8** outs, int 
             chunkDst = outs[i];
             ObjModel_TransformVerticesLinear(mtxs + lastChunk[0x6c] * 0x30, mtxs + lastChunk[0x6d] * 0x30,
                                              gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                             lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                             lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                             (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                             (u8*)(lastChunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
                                              *(u16*)(lastChunk + 0x70));
             memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
         }
@@ -2996,8 +2996,8 @@ void ObjModel_BlendVertexStream(u8* mtxs, u8* job, u8* animData, int* dstOffsets
             chunkDst = dstBase + dstOffsets[i];
             ObjModel_TransformVerticesWithTranslation(mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30,
                                                       gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                      chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                      chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                      (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                      (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
                                                       *(u16*)(chunk + 0x70));
             memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
         }
@@ -3006,15 +3006,15 @@ void ObjModel_BlendVertexStream(u8* mtxs, u8* job, u8* animData, int* dstOffsets
         chunkDst = dstBase + dstOffsets[i];
         ObjModel_TransformVerticesWithTranslation(mtxs + chunk[0x6c] * 0x30, mtxs + chunk[0x6d] * 0x30,
                                                   gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                  chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                  chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                  (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
+                                                  (u8*)(chunk[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)]),
                                                   *(u16*)(chunk + 0x70));
         memcpyToCache(chunkDst, gModelCacheBuffersA[(u8)((i & 1) * 2)], chunkWords[i & 1]);
         cacheQueueWait(0);
     }
 }
 
-void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, int d1, int d2, int count)
+void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count)
 {
     f32* ma = (f32*)m1;
     f32* mb = (f32*)m2;
@@ -3048,7 +3048,7 @@ void ObjModel_TransformVerticesWithTranslation(u8* m1, u8* m2, u8* src, int d1, 
     }
 }
 
-void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, int count)
+void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count)
 {
     f32* ma = (f32*)m1;
     f32* mb = (f32*)m2;
@@ -3078,7 +3078,7 @@ void ObjModel_TransformVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, i
         out += 3;
     }
 }
-void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, int d1, int d2, int count)
+void ObjModel_TransformQuadVerticesLinear(u8* m1, u8* m2, u8* src, u8* d1, u8* d2, int count)
 {
     f32* ma = (f32*)m1;
     f32* mb = (f32*)m2;

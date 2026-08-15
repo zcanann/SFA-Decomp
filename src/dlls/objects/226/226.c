@@ -882,9 +882,9 @@ void staff_hitDetectGeometry(GameObject* obj) {
     }
 }
 
-void staff_updateSwipe(GameObject* obj, int p4, int p5) {
+void staff_updateSwipe(GameObject* obj, GameObject* p4, int p5) {
     StaffState* inner = (StaffState*)(int)obj->extra;
-    staff_setupSwipe((int)obj, inner, p5, p4);
+    staff_setupSwipe((int)obj, inner, p5, (int)p4);
     if (getHudHiddenFrameCount() != 0) {
         inner->hudSuppressed = 1;
     } else {
@@ -961,7 +961,7 @@ void staff_update(GameObject* obj) {
     int n;
     ObjModel* model = Obj_GetActiveModel(obj);
     model->bufferFlags &= ~0x8;
-    ObjAnim_AdvanceCurrentMove((int)obj, state->moveSpeed, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, timeDelta, NULL);
 
     swp = (StaffSwipeSlot*)state;
     for (n = 3; n != 0; n--) {
@@ -971,7 +971,7 @@ void staff_update(GameObject* obj) {
             j = swp->startIndex;
             vp = (SwipeVertex*)(swp->vertexData + j * 20);
             for (; j < swp->endIndex; j += 2) {
-                if ((u8*)swp == state->activeSlot) {
+                if (swp == state->activeSlot) {
                     f32 t = 255.0f * ((2.0f * state->progress - vp[0].life) / 8.0f);
                     f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
                     vp[0].alpha = 255.0f - clamped;

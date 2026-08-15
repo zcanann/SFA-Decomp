@@ -665,7 +665,7 @@ void CameraModePath_update(CameraObject* cam) {
         }
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
-                                       (GameObject*)cam->anim.parentAddress);
+                                       (GameObject*)cam->anim.parent);
     }
 }
 
@@ -762,7 +762,7 @@ void CameraModePath_init(CameraObject* cam, int mode, CameraModePathSettings* se
         cam->anim.worldPosZ = pz;
         Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,
                                        &cam->anim.localPosX, &cam->anim.localPosY, &cam->anim.localPosZ,
-                                       (GameObject*)cam->anim.parentAddress);
+                                       (GameObject*)cam->anim.parent);
         cam->anim.rotX = rotationX;
         cam->anim.rotY = rotationY;
         cam->anim.rotZ = rotationZ;

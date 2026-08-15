@@ -19,7 +19,7 @@ typedef void (*CameraInitialiseFn)(f32 numerator, f32 *dst, f32 denominator, f32
 typedef void (*CameraGetRelativePositionFn)(void *targetObj, f32 *outX, f32 *outY, f32 *outZ,
                                             f32 *outDistanceXZ, f32 heightOffset,
                                             int useLocalPosition);
-typedef int (*CameraGetTargetFn)(void);
+typedef GameObject *(*CameraGetTargetFn)(void);
 typedef void (*CameraSetTargetFn)(GameObject *target);
 typedef void (*CameraUpdateTargetFeedbackFn)(void);
 typedef void (*CameraSetLetterboxFn)(int mode, int enabled);

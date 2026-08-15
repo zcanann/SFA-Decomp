@@ -17,7 +17,7 @@ void Rcp_InitDistortionEffects(void);
 void* getLoadedTexture(int key);
 u8 Rcp_GetViewFinderHudEnabled(void);
 void Rcp_SetViewFinderHudEnabled(u8 x);
-void ShaderDef_free(int* def);
+void ShaderDef_free(void** def);
 void Rcp_UpdateDistortionTextures(void);
 void loadNextMap(void);
 

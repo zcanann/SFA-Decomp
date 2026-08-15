@@ -96,7 +96,7 @@ u8 ccGasVentControl_countUnblockedVents(GameObject* obj, CCGasVentControlState* 
     }
     if (unblockedVentCount != 0) {
         if (state->loopedSoundActive == 0) {
-            Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_en_diallp_c_223);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
             state->loopedSoundActive = 1;
         }
         Sfx_SetObjectSfxVolume(obj, SFXTRIG_en_diallp_c_223,
@@ -105,7 +105,7 @@ u8 ccGasVentControl_countUnblockedVents(GameObject* obj, CCGasVentControlState* 
                                CC_GAS_VENT_CONTROL_SFX_VOLUME_MAX);
     } else {
         if (state->loopedSoundActive != 0) {
-            Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_en_diallp_c_223);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_223);
             state->loopedSoundActive = 0;
         }
     }
@@ -231,7 +231,7 @@ void ccGasVentControl_update(GameObject* obj) {
     case CC_GAS_VENT_CONTROL_PHASE_SAVE_POINT: {
         GameObject* player = Obj_GetPlayerObject();
 
-        (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+        (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
         state->phase = CC_GAS_VENT_CONTROL_PHASE_WAIT_FOR_CLEAR;
         break;
     }

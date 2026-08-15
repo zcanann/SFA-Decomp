@@ -774,7 +774,7 @@ void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state)
         }
         else if ((s8)((ArwingState*)(obj)->extra)->health <= 3)
         {
-            Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_bomb_pickup);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_wmap_select);
         state->flags339.scoreFlag = 1;
@@ -852,7 +852,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
     }
     else if ((s8)((ArwingState*)obj->extra)->health <= 3)
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_bomb_pickup);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
     }
 }
 
@@ -869,7 +869,7 @@ void arwarwing_updateRollAndEngine(GameObject* obj, ArwingState* state)
     {
         sum = 1.0 + log2fBitEstimate(state->velZ / state->maxSpeedZ);
         vol = (f32)(sum / 2.0);
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_ar_boost16);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_ar_boost16);
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 
@@ -1617,7 +1617,7 @@ void arwarwing_free(GameObject* obj)
 {
     ArwingState* state = obj->extra;
 
-    objFreeObjectType((int)obj, PLAYER_VEHICLE_OBJGROUP);
+    objFreeObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
     gArwing = NULL;
     if (state->light != NULL)
     {
@@ -1830,7 +1830,7 @@ void arwarwing_init(GameObject* obj)
     (*gPathControlInterface)->init(pathBlock, 4, 0x1040006, 1);
     (*gPathControlInterface)->setup(pathBlock, 3, gArwingPathSetupData, sArwingPathSpeeds, &cfg);
     (*gPathControlInterface)->attachObject((void*)obj, pathBlock);
-    objAddObjectType((int)obj, PLAYER_VEHICLE_OBJGROUP);
+    objAddObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
     gArwing = obj;
     ObjHits_SetTargetMask(obj, 1);
     state->fullLoadout = 1;

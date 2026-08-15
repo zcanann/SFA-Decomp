@@ -336,7 +336,7 @@ void Scarab_update(GameObject* obj) {
             return;
         }
     }
-    Sfx_KeepAliveLoopedObjectSoundLimited((u32)obj, SFXTRIG_scarab_runloop, 3);
+    Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXTRIG_scarab_runloop, 3);
     lifetime = state->lifetime;
     if (lifetime == 0) {
         state->destructDelayTimer -= framesThisStep;
@@ -544,7 +544,7 @@ void Scarab_update(GameObject* obj) {
                     speed =
                         sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
                     ObjAnim_SampleRootCurvePhase(&obj->anim, speed, &animationPhase);
-                    ObjAnim_AdvanceCurrentMove((int)obj, animationPhase, timeDelta, NULL);
+                    ObjAnim_AdvanceCurrentMove(obj, animationPhase, timeDelta, NULL);
                 }
                 collisionDetected = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 1.0f, 0,
                                                           &collisionScratch.bboxHit, obj, 8, -1, 0, 0);

@@ -58,7 +58,7 @@ int DR_CloudPer_getObjectTypeId(void)
     return 0;
 }
 
-void DR_CloudPer_free(int obj)
+void DR_CloudPer_free(GameObject* obj)
 {
     objFreeObjectType(obj, DRCLOUDPER_GROUP_TRIGGER);
     objFreeObjectType(obj, DRCLOUDPER_GROUP_SURFACE);
@@ -81,8 +81,8 @@ void DR_CloudPer_init(GameObject* cloud, DrCloudPerSetup* setup)
     DrCloudPerSetup* setupData;
     DrCloudPerState* state;
 
-    objAddObjectType((int)cloud, DRCLOUDPER_GROUP_TRIGGER);
-    objAddObjectType((int)cloud, DRCLOUDPER_GROUP_SURFACE);
+    objAddObjectType(cloud, DRCLOUDPER_GROUP_TRIGGER);
+    objAddObjectType(cloud, DRCLOUDPER_GROUP_SURFACE);
     setupData = setup;
     {
         int yawTmp = setupData->yawByte << 8;

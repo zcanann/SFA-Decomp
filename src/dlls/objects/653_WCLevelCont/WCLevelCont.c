@@ -55,7 +55,7 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
             mainSetBits(0x274, 1);
             mainSetBits(0xef1, 0);
             player = (GameObject*)Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->completionFlags |= WCLEVELCTL_FLAG_TREX;
             state->mode = WCLEVELCTL_MODE_IDLE;
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
@@ -179,7 +179,7 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
             mainSetBits(0xeec, 0);
             mainSetBits(0xbd0, 0);
             player = (GameObject*)Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
             Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
             state->completionFlags |= WCLEVELCTL_FLAG_FINAL;
         }
@@ -289,7 +289,7 @@ void wclevelcont_updateAct1State(GameObject* obj, WcLevelControlState* state)
             mainSetBits(0xda9, 0);
             mainSetBits(0xc37, 1);
             player = (GameObject*)Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
             state->mode = WCLEVELCTL_MODE_DONE;
         }
         break;
@@ -332,7 +332,7 @@ int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             GameObject* player;
             mainSetBits(0x7f7, 1);
             player = (GameObject*)Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
     }
     else if (state->previousMode == WCLEVELCTL_MODE_PUZZLE_B)
@@ -344,7 +344,7 @@ int wclevelcont_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             GameObject* player;
             mainSetBits(0x802, 1);
             player = (GameObject*)Obj_GetPlayerObject();
-            (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 1, 0);
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 1, 0);
         }
     }
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -746,7 +746,7 @@ void wclevelcont_free(GameObject* obj)
     WcLevelControlState* state = obj->extra;
     u8 mode;
 
-    objFreeObjectType((int)obj, WCLEVELCONT_OBJGROUP);
+    objFreeObjectType(obj, WCLEVELCONT_OBJGROUP);
     mode = state->mode;
     if (mode == 1)
     {
@@ -897,7 +897,7 @@ void wclevelcont_init(GameObject* obj)
     {
         state->mode = WCLEVELCTL_MODE_SEQUENCE;
     }
-    objAddObjectType((int)obj, WCLEVELCONT_OBJGROUP);
+    objAddObjectType(obj, WCLEVELCONT_OBJGROUP);
     mainSetBits(0x226, 1);
     mainSetBits(0x2a6, 1);
     mainSetBits(0x206, 1);

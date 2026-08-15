@@ -152,7 +152,7 @@ int drshackle_getObjectTypeId(void)
     return 0x0;
 }
 
-void drshackle_free(int obj)
+void drshackle_free(GameObject* obj)
 {
     objFreeObjectType(obj, DRSHACKLE_OBJGROUP);
 }
@@ -227,7 +227,7 @@ void drshackle_update(GameObject* obj)
 void drshackle_init(GameObject* obj, char* arg)
 {
     DrshackleState* state = (obj)->extra;
-    objAddObjectType((int)obj, DRSHACKLE_OBJGROUP);
+    objAddObjectType(obj, DRSHACKLE_OBJGROUP);
     state->flags1A.b0 = (mainGetBit(((DrshacklePlacement*)arg)->activeGameBit) == 0);
     state->pathPointA = ((DrshacklePlacement*)arg)->startPathPoint % 2;
     (obj)->animEventCallback = drshackle_SeqFn;

@@ -36,7 +36,7 @@ void DIM_BossGut_render(GameObject* obj, int renderArg2, int renderArg3, int ren
 
     visible = shouldRender;
     if (visible != 0) {
-        ObjAnim_AdvanceCurrentMove((int)obj, DIM_BOSS_GUT_ANIMATION_STEP, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, DIM_BOSS_GUT_ANIMATION_STEP, timeDelta, NULL);
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
     }
 }
@@ -48,11 +48,11 @@ void DIM_BossGut_update(void) {
 }
 
 void DIM_BossGut_init(GameObject* obj) {
-    int objArg;
+    GameObject* objArg;
 
     objSetSlot(obj, DIM_BOSS_GUT_OBJECT_SLOT);
     obj->animEventCallback = DIM_BossGut_SeqFn;
-    objArg = (int)obj;
+    objArg = obj;
     ObjAnim_SetCurrentMove(objArg, 0, 0.0f, 0);
     ObjAnim_AdvanceCurrentMove(objArg, DIM_BOSS_GUT_ANIMATION_STEP, timeDelta, NULL);
 }

@@ -422,7 +422,7 @@ void DoorF4_free(GameObject* obj) {
             Sfx_StopFromObject(obj, state->openSfxId);
         }
     }
-    objFreeObjectType((int)obj, DOORF4_OBJECT_GROUP);
+    objFreeObjectType(obj, DOORF4_OBJECT_GROUP);
 }
 
 void DoorF4_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
@@ -499,7 +499,7 @@ void DoorF4_init(GameObject* obj, DoorF4Placement* placement) {
         state->requiredGameBit = -1;
     }
 
-    objAddObjectType((int)obj, DOORF4_OBJECT_GROUP);
+    objAddObjectType(obj, DOORF4_OBJECT_GROUP);
 
     state->planeNormalX = mathSinf(DOORF4_PI * (f32)(int)obj->anim.rotX / DOORF4_BINARY_ANGLE_SCALE);
     state->planeNormalZ = mathCosf(DOORF4_PI * (f32)(int)obj->anim.rotX / DOORF4_BINARY_ANGLE_SCALE);

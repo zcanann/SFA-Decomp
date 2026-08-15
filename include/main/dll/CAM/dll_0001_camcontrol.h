@@ -3,6 +3,7 @@
 
 #include "game/objects/object.h"
 #include "global.h"
+#include "main/camera_object.h"
 #include "main/dll/DR/dr_types.h"
 #include "main/camera_interface.h"
 #include "main/objanim_internal.h"
@@ -184,8 +185,8 @@ void camcontrol_updateTargetFeedback(void);
 int Camera_isZooming(void);
 void Camera_setTargetReticleOverride(GameObject* target);
 void Camera_setTarget(GameObject* target);
-int Camera_getTarget(void);
-int Camera_getOverrideTarget(void);
+GameObject* Camera_getTarget(void);
+GameObject* Camera_getOverrideTarget(void);
 void camcontrol_getRelativePosition(void* targetObj, f32* outX, f32* outY, f32* outZ, f32* outDistanceXZ,
                                     f32 heightOffset, int useLocalPosition);
 void camcontrol_initialise(f32 numerator, f32* dst, f32 denominator, f32 minValue, f32 y, f32 z);

@@ -45,7 +45,7 @@ int dll_28B_getObjectTypeId(void)
     return 0x0;
 }
 
-void dll_28B_free(int obj)
+void dll_28B_free(GameObject* obj)
 {
     objFreeObjectType(obj, DLL28B_OBJ_GROUP);
 }
@@ -119,7 +119,7 @@ void dll_28B_init(GameObject* obj)
     state->moveLib.modeBits |= 0x22;
     (*gRomCurveInterface)->initCurve(&state->route, obj, gDll28BCurveInitParam, &curveParam, -1);
     (*gPlayerInterface)->init(obj, state, 4, 4);
-    objAddObjectType((int)obj, DLL28B_OBJ_GROUP);
+    objAddObjectType(obj, DLL28B_OBJ_GROUP);
 }
 
 void dll_28B_release_nop(void)

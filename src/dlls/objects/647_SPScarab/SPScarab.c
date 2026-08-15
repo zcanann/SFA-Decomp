@@ -69,7 +69,7 @@ int SPScarab_getObjectTypeId(void)
     return 0x0;
 }
 
-void SPScarab_free(int obj)
+void SPScarab_free(GameObject* obj)
 {
     Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_scarab_runloop);
 }
@@ -108,7 +108,7 @@ void SPScarab_update(GameObject* obj)
                      obj->anim.velocityZ * obj->anim.velocityZ);
 
     ObjAnim_SampleRootCurvePhase(&obj->anim, distance, &phase);
-    ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(obj, phase, timeDelta, 0);
 
     if (obj->anim.localPosY < state->groundY)
     {
@@ -182,7 +182,7 @@ void SPScarab_init(GameObject* obj, SpscarabPlacement* def)
     state->vendorObj = def->vendorObj;
     def->vendorObj = -1;
 
-    Sfx_AddLoopedObjectSound((int)obj, SFXTRIG_scarab_runloop);
+    Sfx_AddLoopedObjectSound(obj, SFXTRIG_scarab_runloop);
     model = Obj_GetActiveModel(obj);
 
     switch (def->kind)

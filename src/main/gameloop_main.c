@@ -61,6 +61,7 @@
 #include "main/voxmaps.h"
 #include "main/dll/FRONT/dll_0032_titlescreeninit.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
+#include "main/dll/tricky.h"
 #include "track/intersect_api.h"
 #include "dolphin/ai.h"
 #include "main/lightmap.h"
@@ -79,6 +80,7 @@
 #include "main/pi_flush_api.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/hud_visibility_api.h"
+#include "main/sky.h"
 
 #define GAMEBIT_FLAG_WIDTH_MASK 0x1f /* bit-run length: (mask)+1 bits stored for this entry */
 #define GAMEBIT_FLAG_SYNC       0x20 /* request a save-sync when this bit is written */

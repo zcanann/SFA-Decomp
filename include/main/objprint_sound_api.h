@@ -42,7 +42,7 @@ STATIC_ASSERT(sizeof(ObjKfAnimState) == 0x18);
 STATIC_ASSERT(offsetof(ObjKfAnimState, keyframes) == 0x10);
 STATIC_ASSERT(offsetof(ObjKfAnimState, sfxId) == 0x14);
 
-void objSoundStart(u32 obj, void* state, u16 sfxId);
+void objSoundStart(GameObject* obj, void* state, u16 sfxId);
 void objSoundStartTimed(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int duration, u8 force);
 void objSoundStartFromDef(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force);
 void objKfAnimStop(ObjKfAnimState* state);

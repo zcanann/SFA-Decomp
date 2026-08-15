@@ -26,7 +26,7 @@
 void TrickyWarp_free(GameObject* obj) {
     TrickyWarpState* state = obj->extra;
     if (state->active != 0) {
-        objFreeObjectType((int)obj, TRICKYWARP_OBJ_GROUP);
+        objFreeObjectType(obj, TRICKYWARP_OBJ_GROUP);
     }
 }
 
@@ -43,12 +43,12 @@ void TrickyWarp_update(GameObject* obj) {
     if (isReachable != 0) {
         if (state->active == 0) {
             state->active = 1;
-            objAddObjectType((int)obj, TRICKYWARP_OBJ_GROUP);
+            objAddObjectType(obj, TRICKYWARP_OBJ_GROUP);
         }
     } else {
         if (state->active != 0) {
             state->active = 0;
-            objFreeObjectType((int)obj, TRICKYWARP_OBJ_GROUP);
+            objFreeObjectType(obj, TRICKYWARP_OBJ_GROUP);
         }
     }
 }

@@ -67,7 +67,7 @@ void mmpGeyserVent_update(GameObject* obj) {
         (*gPartfxInterface)
             ->spawnObject((void*)obj, MMP_GEYSER_VENT_PARTICLE_GEYSER, NULL, MMP_GEYSER_VENT_PARTICLE_SPAWN_MODE,
                           MMP_GEYSER_VENT_PARTICLE_MODEL_NONE, NULL);
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_en_diallp_c_450);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_diallp_c_450);
     }
 }
 

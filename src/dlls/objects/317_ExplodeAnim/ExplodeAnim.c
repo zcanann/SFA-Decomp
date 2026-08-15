@@ -18,7 +18,7 @@ int ExplodeAnimator_getObjectTypeId(void) {
 }
 
 void ExplodeAnimator_free(GameObject* obj) {
-    objFreeObjectType((int)obj, EXPLODE_ANIMATOR_OBJECT_GROUP);
+    objFreeObjectType(obj, EXPLODE_ANIMATOR_OBJECT_GROUP);
 }
 
 void ExplodeAnimator_render(void) {
@@ -65,7 +65,7 @@ void ExplodeAnimator_init(GameObject* obj, ExplodeAnimatorPlacement* placement) 
         fired = 0;
     }
     state->flags = fired;
-    objAddObjectType((int)obj, EXPLODE_ANIMATOR_OBJECT_GROUP);
+    objAddObjectType(obj, EXPLODE_ANIMATOR_OBJECT_GROUP);
 }
 
 void ExplodeAnimator_release(void) {

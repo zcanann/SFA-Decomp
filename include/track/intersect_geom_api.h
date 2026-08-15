@@ -10,6 +10,6 @@ void gxTevTextureTimesRasStage(void);
 /* ObjDef-selected GX callbacks: normal-space disk masking and projected indirect texturing. */
 int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot);
 int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int slot);
-u32 objCausticReflectionRenderCb(int handle, void* model);
+u32 objCausticReflectionRenderCb(void* handle, void* model);
 
 #endif /* TRACK_INTERSECT_GEOM_API_H_ */

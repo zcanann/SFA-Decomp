@@ -13,6 +13,7 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "game/objects/object.h"
+#include "game/objects/object_interface.h"
 #include "sys/objects/lifecycle.h"
 #include "sys/objects.h"
 #include "main/dll/modgfx.h"

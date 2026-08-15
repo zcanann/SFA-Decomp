@@ -81,9 +81,9 @@ void DeathSeq_update(GameObject* obj) {
         if (obj->anim.currentMove != DEATH_SEQ_MOVE_DEATH) {
             AudioStream_StopCurrent();
             AudioStream_Play(DEATH_SEQ_AUDIO_STREAM_ID, AudioStream_StartPrepared);
-            ObjAnim_SetCurrentMove((int)obj, DEATH_SEQ_MOVE_DEATH, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, DEATH_SEQ_MOVE_DEATH, 0.0f, 0);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, DEATH_SEQ_ANIMATION_STEP, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, DEATH_SEQ_ANIMATION_STEP, timeDelta, NULL);
         if (obj->anim.currentMoveProgress > DEATH_SEQ_TEXTURE_SWAP_PROGRESS) {
             texture = objFindTexture(obj, DEATH_SEQ_TEXTURE_SLOT_A, 0);
             texture->textureId = DEATH_SEQ_TEXTURE_ID_HIDDEN;
@@ -110,7 +110,7 @@ void DeathSeq_update(GameObject* obj) {
     } else {
         state->cameraDistanceTarget = DEATH_SEQ_ALIVE_CAMERA_DISTANCE;
         if ((*gScreenTransitionInterface)->isFinished() != 0) {
-            ObjAnim_AdvanceCurrentMove((int)obj, DEATH_SEQ_ANIMATION_STEP, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove(obj, DEATH_SEQ_ANIMATION_STEP, timeDelta, NULL);
             useDeathCamera = TRUE;
         }
         if (obj->anim.currentMoveProgress > DEATH_SEQ_TEXTURE_SWAP_PROGRESS) {
@@ -180,7 +180,7 @@ void DeathSeq_init(GameObject* obj) {
 
     setScreenTransitionPause(TRUE);
     (*gScreenTransitionInterface)->start(DEATH_SEQ_FADE_OUT_FRAMES, SCREEN_TRANSITION_BLACK);
-    ObjAnim_SetCurrentMove((int)obj, DEATH_SEQ_MOVE_IDLE, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, DEATH_SEQ_MOVE_IDLE, 0.0f, 0);
     state->menuDelay = DEATH_SEQ_MENU_DELAY;
     state->savedCameraX = camera->x;
     state->savedCameraY = camera->y;

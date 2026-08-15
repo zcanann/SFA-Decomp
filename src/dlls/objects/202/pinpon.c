@@ -227,8 +227,8 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     dvec[0] = ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosX - (obj)->anim.localPosX;
     dvec[1] = 0.0f;
     dvec[2] = ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosZ - (obj)->anim.localPosZ;
-    if (((u32)((EnemyState*)state)->lastHitObject != 0) &&
-        ((u32)((EnemyState*)state)->lastHitObject == (u32)Obj_GetPlayerObject()))
+    if ((((EnemyState*)state)->lastHitObject != NULL) &&
+        (((EnemyState*)state)->lastHitObject == Obj_GetPlayerObject()))
     {
         ((EnemyState*)state)->flags2E4 |= 0x10000LL;
         ((EnemyState*)state)->fireflyLantern.trackTimer = 0.0f;

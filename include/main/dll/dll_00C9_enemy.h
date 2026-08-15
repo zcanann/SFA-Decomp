@@ -191,7 +191,7 @@ typedef struct EnemyState {
             u8 idleRowStarted;
         } sharpClaw;
     } familyData;
-    int lastHitObject;
+    GameObject* lastHitObject;
     /* 0x344: filled exactly by the wall-plane record; the rachnop/duster and
        firefly-lantern planar-movement helpers are its only users. */
     WallPlaneState wallPlane;

@@ -62,7 +62,7 @@ int barrelgener_getObjectTypeId(void)
 
 void barrelgener_free(GameObject* obj)
 {
-    objFreeObjectType((int)obj, BARREL_GENERATOR_OBJECT_GROUP);
+    objFreeObjectType(obj, BARREL_GENERATOR_OBJECT_GROUP);
 }
 
 void barrelgener_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -95,7 +95,7 @@ void barrelgener_update(GameObject* obj)
         if (state->releaseTimer <= 5.0f && state->releaseAnimPlaying == 0)
         {
             state->releaseAnimPlaying = 1;
-            ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_barrelgen_slide);
             state->releaseBeepPlayed = 0;
         }
@@ -118,7 +118,7 @@ void barrelgener_update(GameObject* obj)
                 releasedBarrel->anim.velocityZ = releaseVelocity;
                 releasedBarrel->anim.velocityY = releaseVelocity;
                 releasedBarrel->anim.velocityX = releaseVelocity;
-                objAddObjectType((int)state->queuedObject, GUNPOWDER_BARREL_OBJECT_GROUP);
+                objAddObjectType(state->queuedObject, GUNPOWDER_BARREL_OBJECT_GROUP);
                 state->queuedObject = NULL;
             }
         }
@@ -134,7 +134,7 @@ void barrelgener_update(GameObject* obj)
             }
         }
         state->releaseAnimPlaying =
-            !ObjAnim_AdvanceCurrentMove((int)obj, 0.01f, timeDelta, 0);
+            !ObjAnim_AdvanceCurrentMove(obj, 0.01f, timeDelta, 0);
     }
 }
 
@@ -142,7 +142,7 @@ void barrelgener_init(GameObject* obj)
 {
     BarrelGeneratorState* state = (obj)->extra;
 
-    objAddObjectType((int)obj, BARREL_GENERATOR_OBJECT_GROUP);
+    objAddObjectType(obj, BARREL_GENERATOR_OBJECT_GROUP);
     state->releaseAnimPlaying = 0;
     state->queuedObject = NULL;
     storeZeroToFloatParam(&state->releaseTimer);

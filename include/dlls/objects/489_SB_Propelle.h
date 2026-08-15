@@ -33,7 +33,7 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(offsetof(SBPropellerPlacementView, base) == 0x00);
 STATIC_ASSERT(offsetof(SBPropellerPlacementView, modelBankIndex) == 0x1A);
 
-u32 sbGetPropeller(void);
+GameObject* sbGetPropeller(void);
 int SB_Propeller_getExtraSize(void);
 void SB_Propeller_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible);
 void SB_Propeller_hitDetect(GameObject* obj);

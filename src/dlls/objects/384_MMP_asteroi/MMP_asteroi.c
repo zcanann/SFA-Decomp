@@ -136,7 +136,7 @@ void mmpAsteroidRe_update(GameObject* obj) {
             state->intensity = mainGetBit(0x88C);
         }
         state->phase = MMP_ASTEROID_RE_PHASE_RISEN;
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_lwfl1_c);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_lwfl1_c);
         {
             int volume = state->intensity * 0x20 + 0x20;
 

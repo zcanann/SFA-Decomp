@@ -91,7 +91,7 @@ void CampFire_update(GameObject* obj) {
         effectType = 2;
         effectCount = 0;
         if (state->loopSoundPlaying == 0) {
-            Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_forcecryslp11);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             state->loopSoundPlaying = 1;
         }
     } else {
@@ -109,7 +109,7 @@ void CampFire_update(GameObject* obj) {
         effectType = 0;
         effectMode = 0;
         if (state->loopSoundPlaying != 0) {
-            Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_forcecryslp11);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
             state->loopSoundPlaying = 0;
         }
     }

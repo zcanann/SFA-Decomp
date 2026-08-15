@@ -54,7 +54,7 @@ int drgenerator_getObjectTypeId(void)
 
 void drgenerator_free(GameObject* obj)
 {
-    objFreeObjectType((int)obj, DRGENERATOR_OBJGROUP);
+    objFreeObjectType(obj, DRGENERATOR_OBJGROUP);
 }
 
 void drgenerator_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
@@ -177,7 +177,7 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
     }
-    objAddObjectType((int)obj, DRGENERATOR_OBJGROUP);
+    objAddObjectType(obj, DRGENERATOR_OBJGROUP);
     *(int*)state = 0;
     state->flags.b3 = 1;
     (obj)->anim.rotX = (s16)(placement->initialYaw << 8);

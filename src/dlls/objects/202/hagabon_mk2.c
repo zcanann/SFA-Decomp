@@ -379,8 +379,8 @@ void hagabonMK2_updateB(GameObject* obj, u8* state)
 
     {
         s16 t;
-        if ((GameObject*)((EnemyState*)state)->lastHitObject != NULL &&
-            ((t = ((GameObject*)((EnemyState*)state)->lastHitObject)->anim.romDefNo) == 0x1f || t == 0))
+        if (((EnemyState*)state)->lastHitObject != NULL &&
+            ((t = (((EnemyState*)state)->lastHitObject)->anim.romDefNo) == 0x1f || t == 0))
         {
             Sfx_PlayFromObject(obj, SFXTRIG_fball2_c);
         }
@@ -395,7 +395,7 @@ void hagabonMK2_update(GameObject* obj, u8* state)
     int i;
     f32 pw;
 
-    if ((GameObject*)((EnemyState*)state)->lastHitObject != NULL && (GameObject*)((EnemyState*)state)->lastHitObject == ((EnemyState*)state)->trackedObj)
+    if (((EnemyState*)state)->lastHitObject != NULL && ((EnemyState*)state)->lastHitObject == ((EnemyState*)state)->trackedObj)
     {
         ((EnemyState*)state)->flags2E4 |= 0x10000LL;
         ((EnemyState*)state)->crawler.warpTimer = 180.0f;
@@ -476,8 +476,8 @@ void hagabonMK2_update(GameObject* obj, u8* state)
     {
         Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
     }
-    if ((GameObject*)((EnemyState*)state)->lastHitObject != NULL && (((GameObject*)((EnemyState*)state)->lastHitObject)->anim.romDefNo == 0x1f ||
-                                                ((GameObject*)((EnemyState*)state)->lastHitObject)->anim.romDefNo == 0))
+    if (((EnemyState*)state)->lastHitObject != NULL && ((((EnemyState*)state)->lastHitObject)->anim.romDefNo == 0x1f ||
+                                                (((EnemyState*)state)->lastHitObject)->anim.romDefNo == 0))
     {
         Sfx_PlayFromObject(obj, SFXTRIG_fball2_c);
     }

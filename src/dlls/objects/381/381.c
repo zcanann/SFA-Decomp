@@ -83,7 +83,7 @@ void rollingBarrel_free(GameObject* obj) {
     for (i = 0; i < count; i++) {
         groupObject = groupObjects[i];
         if (groupObject == (u32)obj) {
-            objFreeObjectType((int)obj, ROLLING_BARREL_OBJECT_GROUP_ID);
+            objFreeObjectType(obj, ROLLING_BARREL_OBJECT_GROUP_ID);
             break;
         }
     }
@@ -215,7 +215,7 @@ void rollingBarrel_update(GameObject* obj) {
             state->hitVolumeSlot = 0;
             state->mode = ROLLING_BARREL_MODE_CLEANUP;
             state->timer -= 30.0f;
-            objAddObjectType((int)obj, ROLLING_BARREL_OBJECT_GROUP_ID);
+            objAddObjectType(obj, ROLLING_BARREL_OBJECT_GROUP_ID);
             gRollingBarrelExplodingCount -= 1;
         }
         break;

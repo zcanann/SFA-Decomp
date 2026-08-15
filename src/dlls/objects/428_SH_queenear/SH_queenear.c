@@ -386,9 +386,9 @@ void sh_queenearthwalker_update(GameObject* obj) {
     currentMove = obj->anim.currentMove;
     targetMove = gQueenEarthWalkerMoveTable[state->stateIndex];
     if (currentMove != targetMove) {
-        ObjAnim_SetCurrentMove((int)obj, targetMove, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, targetMove, 0.0f, 0);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, gQueenEarthWalkerMoveSpeedTable[state->stateIndex], timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, gQueenEarthWalkerMoveSpeedTable[state->stateIndex], timeDelta, NULL);
 
     stateFlags = state->flags;
     if ((stateFlags & QUEEN_EARTH_WALKER_FLAG_ACTIVE) == 0) {

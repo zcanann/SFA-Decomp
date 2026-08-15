@@ -25,6 +25,7 @@
 #include "track/intersect_card_api.h"
 #include "main/pad.h"
 #include "main/dll/savegame_load_api.h"
+#include "main/dll/FRONT/frontend_control.h"
 
 u32 pRestartPoint;
 u8* gSaveGameWorkBuffer;

@@ -5,6 +5,7 @@
  * variants, the Wall City hit-ID puzzle, a floating ice block, a metal block,
  * and the Volcano Force Point curtain block.
  */
+#include "main/vecmath.h"
 #include "dlls/objects/239.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -219,7 +220,7 @@ int pushable_updateCurtain(GameObject* obj, PushableState* state) {
     ObjPlacement* placement;
     GameObject* player;
 
-    placement = (ObjPlacement*)obj->anim.placementDataAddress;
+    placement = (ObjPlacement*)obj->anim.placementData;
     player = Obj_GetPlayerObject();
     if (((state->flags & PUSHABLE_FLAG_PUSH_LOCKED) != 0) || (playerGetStateValue(player, 10) != 0)) {
         Sfx_StopObjectChannel(obj, 8);
@@ -959,7 +960,7 @@ void pushable_free(GameObject* obj) {
         gPushableSavedIdentCount = savedIdentIndex + 1;
         gPushableSavedIdents[savedIdentIndex] = ident;
     }
-    objFreeObjectType((int)obj, PUSHABLE_OBJECT_GROUP);
+    objFreeObjectType(obj, PUSHABLE_OBJECT_GROUP);
 }
 
 void pushable_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
@@ -1248,7 +1249,7 @@ void pushable_init(GameObject* obj, PushableObjectDef* setup) {
     }
     obj->anim.rotX = setup->rotXByte << 8;
     obj->anim.localPosY = PUSHABLE_COLLISION_RADIUS + setup->base.posY;
-    objAddObjectType((int)obj, PUSHABLE_OBJECT_GROUP);
+    objAddObjectType(obj, PUSHABLE_OBJECT_GROUP);
     objSetSlot(obj, PUSHABLE_OBJECT_SLOT);
     obj->animEventCallback = pushable_SeqFn;
     state = obj->extra;
@@ -1264,7 +1265,7 @@ void pushable_init(GameObject* obj, PushableObjectDef* setup) {
         f32 z0 = PUSHABLE_ZERO;
         state->renderTimer = z0;
         state->gameBit = setup->gameBit;
-        ObjAnim_SetCurrentMove((int)obj, 0, z0, 0);
+        ObjAnim_SetCurrentMove(obj, 0, z0, 0);
     }
     ObjMsg_AllocQueue(obj, PUSHABLE_MSG_QUEUE_SIZE);
     ObjHits_EnableObject(obj);

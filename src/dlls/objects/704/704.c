@@ -616,7 +616,7 @@ void TitleScreen_hitDetect(void)
 void TitleScreen_update(GameObject* obj)
 {
     TitlescreenState* state = (TitlescreenState*)obj->extra;
-    int objHandle = (int)obj;
+    GameObject* objHandle = obj;
     u8* p;
     u8 phase;
     int evt;
@@ -939,7 +939,7 @@ void TitleScreen_init(GameObject* obj, u8* def)
     {
         state->poseIndex = (s8)(romDefNo - FRONT_SEQID_FOX);
         state->moveProgress = gTitleScreenAnimMoves[obj->anim.romDefNo - FRONT_SEQID_FOX].moves[0];
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     }
     else
     {
@@ -949,11 +949,11 @@ void TitleScreen_init(GameObject* obj, u8* def)
         romDefNo = obj->anim.romDefNo;
         if (romDefNo == FRONT_SEQID_PILOTS_ATTRACT)
         {
-            ObjAnim_SetCurrentMove((int)obj, 1, blendFloat, 0);
+            ObjAnim_SetCurrentMove(obj, 1, blendFloat, 0);
         }
         else if (romDefNo == FRONT_SEQID_PILOTS)
         {
-            ObjAnim_SetCurrentMove((int)obj, 0, 1.0f, 0);
+            ObjAnim_SetCurrentMove(obj, 0, 1.0f, 0);
             ObjModel_SetRenderCallback((u8*)obj->anim.banks[0], AttractMovie_DrawTextureCallback);
         }
     }

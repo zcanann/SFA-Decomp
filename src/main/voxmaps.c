@@ -39,7 +39,7 @@ int* gVoxMapsMapList;
 u8* gVoxMapsScratchBuffer;
 u8* gVoxMapsScratchBufferPtr;
 u8 gVoxMapsSlotInUse[8];
-u32 gVoxMapsTransformObj;
+GameObject* gVoxMapsTransformObj;
 int gVoxMapsMaxMapIndex;
 Texture* gVoxMapsLargeTextures[2];
 Texture* gVoxMapsSmallTextures[2];

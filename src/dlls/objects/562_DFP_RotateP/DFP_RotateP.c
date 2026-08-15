@@ -76,7 +76,7 @@ void DFP_RotateP_updateEffectHandleRing(GameObject* obj)
 
     if (state->flags.bit10 != 0 && state->flags.bit20 == 0 && state->variantSfxTimer > 0x32)
     {
-        Sfx_KeepAliveLoopedObjectSound((u32)obj, DFP_ROTATEP_RING_START_SFX);
+        Sfx_KeepAliveLoopedObjectSound(obj, DFP_ROTATEP_RING_START_SFX);
         if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == DFP_ROTATEP_MODE_SEQUENCE)
         {
             obj->anim.rotX += (int)((1.0f + state->ringCount) * (30.0f * timeDelta));

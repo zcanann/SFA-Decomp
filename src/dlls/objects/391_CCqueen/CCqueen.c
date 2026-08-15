@@ -68,7 +68,7 @@ void ccQueen_update(GameObject* obj) {
         obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_UPDATE_DISABLED);
         ObjHits_DisableObject(obj);
     } else {
-        ObjAnim_AdvanceCurrentMove((int)obj, CC_QUEEN_MOVE_STEP_SCALE, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, CC_QUEEN_MOVE_STEP_SCALE, timeDelta, NULL);
         dll_2E_updateLookAt(obj, &state->moveLib);
         characterDoEyeAnims(obj, &state->eyeAnimState);
     }

@@ -109,7 +109,7 @@ void dll500_update(GameObject* obj) {
                                                                                      DLL1F4_MOVE_PROGRESS_RANDOM_MAX) /
                                                                 DLL1F4_MOVE_PROGRESS_DIVISOR);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, DLL1F4_MOVE_SPEED, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, DLL1F4_MOVE_SPEED, timeDelta, NULL);
     }
 
     if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {

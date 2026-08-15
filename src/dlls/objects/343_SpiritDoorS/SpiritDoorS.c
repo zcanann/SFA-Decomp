@@ -21,7 +21,7 @@ int spiritDoorSpirit_getObjectTypeId(void) {
 }
 
 void spiritDoorSpirit_free(GameObject* obj) {
-    objFreeObjectType((int)obj, SPIRIT_DOOR_SPIRIT_OBJECT_GROUP);
+    objFreeObjectType(obj, SPIRIT_DOOR_SPIRIT_OBJECT_GROUP);
 }
 
 void spiritDoorSpirit_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5,
@@ -45,7 +45,7 @@ void spiritDoorSpirit_update(GameObject* obj) {
     if (state->active == 0) {
         state->active = active = (u8)(mainGetBit(placement->gateGameBit) == 0);
         if (active != 0) {
-            objAddObjectType((int)obj, SPIRIT_DOOR_SPIRIT_OBJECT_GROUP);
+            objAddObjectType(obj, SPIRIT_DOOR_SPIRIT_OBJECT_GROUP);
         }
         if (obj->anim.alpha != 0) {
             obj->anim.alpha--;
@@ -54,7 +54,7 @@ void spiritDoorSpirit_update(GameObject* obj) {
         objfx_spawnPulseBurst(obj, gSpiritDoorSpiritPulseScale, SPIRIT_DOOR_SPIRIT_PULSE_TYPE, 0, 0, NULL);
         state->active = active = (u8)(mainGetBit(placement->gateGameBit) == 0);
         if (active == 0) {
-            objFreeObjectType((int)obj, SPIRIT_DOOR_SPIRIT_OBJECT_GROUP);
+            objFreeObjectType(obj, SPIRIT_DOOR_SPIRIT_OBJECT_GROUP);
         }
         if (obj->anim.alpha < SPIRIT_DOOR_SPIRIT_MAX_ALPHA) {
             obj->anim.alpha++;

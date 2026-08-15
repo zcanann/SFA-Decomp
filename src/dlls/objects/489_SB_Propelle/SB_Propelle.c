@@ -37,9 +37,9 @@
 #define SB_PROPELLER_PARTFX_SMOKE  0x9f  /* smokeTimer-gated smoke burst at the hub */
 #define SB_PROPELLER_PARTFX_DEBRIS 0x7aa /* bankIndex==1 debris trail from path point 0 */
 
-u32 gSbPropellerObject;
+GameObject* gSbPropellerObject;
 
-u32 sbGetPropeller(void) {
+GameObject* sbGetPropeller(void) {
     return gSbPropellerObject;
 }
 
@@ -74,10 +74,10 @@ void SB_Propeller_update(GameObject* obj) {
     PartFxSpawnParams spawnParams;
 
     state = obj->extra;
-    galleonStage = SB_GALLEON_VTBL(obj->anim.parentAddress)->getStage(obj->anim.parentAddress);
-    galleonPhase = SB_GALLEON_VTBL(obj->anim.parentAddress)->getPhase(obj->anim.parentAddress);
+    galleonStage = SB_GALLEON_VTBL(obj->anim.parent)->getStage(obj->anim.parent);
+    galleonPhase = SB_GALLEON_VTBL(obj->anim.parent)->getPhase(obj->anim.parent);
     if (state->health != 0 && galleonPhase < 6 && obj->anim.romDefNo != SB_PROPELLER_SEQ_ID) {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SB_PROPELLER_SFX_LOOP);
+        Sfx_KeepAliveLoopedObjectSound(obj, SB_PROPELLER_SFX_LOOP);
     }
     cameraState = SB_Galleon_getCameraState((GameObject*)obj->anim.parent);
     if (cameraState < 2 && state->health <= 0) {
@@ -131,7 +131,7 @@ void SB_Propeller_update(GameObject* obj) {
             state->health -= 1;
             if (state->health <= 0) {
                 state->health = 0;
-                SB_GALLEON_VTBL(obj->anim.parentAddress)->onPartDestroyed(obj->anim.parentAddress);
+                SB_GALLEON_VTBL(obj->anim.parent)->onPartDestroyed(obj->anim.parent);
                 ObjHits_DisableObject(obj);
                 obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
                 spawnExplosion(obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
@@ -162,7 +162,7 @@ void SB_Propeller_init(GameObject* obj, SBPropellerPlacementView* placement) {
     state->health = 4;
     obj->anim.bankIndex = (s8)placement->modelBankIndex;
     if (obj->anim.romDefNo != SB_PROPELLER_SEQ_ID) {
-        gSbPropellerObject = (u32)obj;
+        gSbPropellerObject = obj;
     }
 }
 

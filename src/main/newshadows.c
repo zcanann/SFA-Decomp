@@ -301,7 +301,7 @@ f32 gStandardAspectRatio = 1.3333334f;
 /* Linear search by pointer identity through the shadow entry table.
  * Clears the active flag when the entry matches the needle. */
 
-extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
+extern Texture* gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 extern Texture* gNewShadowNoiseTexFrames[0x10];
 extern f32 gNewShadowPlacements[0x112];
 u8 gSurfaceSfxTable[0xD8] = {
@@ -583,7 +583,7 @@ void renderObjectShadowTexture(GameObject* obj)
         gxSetZMode_(1, GX_LEQUAL, 1);
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, GX_CTF_B8, GX_FALSE);
-        GXCopyTex((Texture*)gNewShadowFrameTextures[gNewShadowFrameIndex] + 1, GX_TRUE);
+        GXCopyTex(gNewShadowFrameTextures[gNewShadowFrameIndex] + 1, GX_TRUE);
         boxBlurTexture((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT], 0x80,
                        0x10, 0);
         obj->anim.modelState->shadowScale = 1.0f / sc;
@@ -1055,7 +1055,7 @@ void getNewShadowCausticTexture(u32* p)
 }
 
 
-void getObjectShadowDrawParams(GameObject* obj, u32* outTexture, f32* outScale, int* outX, int* outY)
+void getObjectShadowDrawParams(GameObject* obj, Texture** outTexture, f32* outScale, int* outX, int* outY)
 {
     int idx = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
     *outTexture = gNewShadowFrameTextures[idx];
@@ -1467,6 +1467,7 @@ void newShadowsInitProceduralTextures(void)
             }
             DCFlushRange(gNewShadowNoiseTexFrames[frame] + 1, gNewShadowNoiseTexFrames[frame]->dataSize);
         }
+
     }
 
     gNewShadowCausticTexture = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
@@ -1508,12 +1509,12 @@ void newShadowsInitProceduralTextures(void)
 
 
 f32 gNewShadowPlacements[0x112];
-u32 gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
+Texture* gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
 NewShadowCastSlot gNewShadowCastSlots[NEW_SHADOW_MAX_CASTERS];
 NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 Texture* gNewShadowNoiseTexFrames[0x10];
 Texture* gNewShadowTextureTable[8][4];
-u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
+Texture* gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
 
 static inline void fillDiskTexture(void)

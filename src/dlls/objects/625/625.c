@@ -743,7 +743,7 @@ int drakorhoverpad_getObjectTypeId(void)
     return 0x0;
 }
 
-void drakorhoverpad_free(int obj)
+void drakorhoverpad_free(GameObject* obj)
 {
     objFreeObjectType(obj, DRAKORHOVERPAD_OBJGROUP);
     objFreeObjectType(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
@@ -1003,8 +1003,8 @@ void drakorhoverpad_initMain(GameObject* obj, void* desc)
         g->f08 = 1;
         break;
     }
-    objAddObjectType((int)obj, DRAKORHOVERPAD_OBJGROUP);
-    objAddObjectType((int)obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
+    objAddObjectType(obj, DRAKORHOVERPAD_OBJGROUP);
+    objAddObjectType(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
 }
 
 void drakorhoverpad_release(void)

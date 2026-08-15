@@ -36,7 +36,7 @@ int MoonSeedPlantingSpot_func0B(void);
 int MoonSeedPlantingSpot_cutOrHarvest(GameObject* obj, int arg);
 int MoonSeedPlantingSpot_getExtraSize(void);
 int MoonSeedPlantingSpot_getObjectTypeId(void);
-void MoonSeedPlantingSpot_free(int obj);
+void MoonSeedPlantingSpot_free(GameObject* obj);
 void MoonSeedPlantingSpot_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedPlantingSpot_hitDetect(void);
 void MoonSeedPlantingSpot_update(GameObject* obj);

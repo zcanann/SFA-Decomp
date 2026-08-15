@@ -70,7 +70,7 @@ int DoorLock_getExtraSize(void) {
 }
 
 void DoorLock_free(GameObject* obj) {
-    objFreeObjectType((int)obj, DOOR_LOCK_OBJECT_GROUP);
+    objFreeObjectType(obj, DOOR_LOCK_OBJECT_GROUP);
 }
 
 void DoorLock_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -183,7 +183,7 @@ void DoorLock_init(GameObject* obj, DoorLockPlacement* placement) {
     }
     state = obj->extra;
     state->unlocked = mainGetBit(placement->unlockedGameBit);
-    objAddObjectType((int)obj, DOOR_LOCK_OBJECT_GROUP);
+    objAddObjectType(obj, DOOR_LOCK_OBJECT_GROUP);
     if ((placement->flags & DOOR_LOCK_FLAG_HIDE_WHEN_UNLOCKED) != 0) {
         if (state->unlocked != DOOR_LOCK_LOCKED) {
             objAnim->alpha = DOOR_LOCK_HIDDEN_ALPHA;

@@ -71,6 +71,7 @@
 #include "string.h"
 #include "main/rcp_dolphin.h"
 #include "main/gameloop_internal.h"
+#include "main/lightmap_internal.h"
 
 extern char sTrackLoadBlockOverrunError[];
 extern char sShaderUnusedWordTable[];
@@ -2702,13 +2703,13 @@ void mapFillCellEntry(int gridX, int gridZ, MapCellEntry* out, int layer)
     }
 }
 
-int mapGetRomListAndOffsets(int p1, int b);
+MapRomListPage* mapGetRomListAndOffsets(int p1, int b);
 
 void mapLoadForObject(int mapId, GameObject* obj)
 {
     int saved = gShaderCurMapEventId;
     int slot;
-    int romList = mapGetRomListAndOffsets(mapId, 1);
+    MapRomListPage* romList = mapGetRomListAndOffsets(mapId, 1);
     int i;
     slot = 0x50;
 
@@ -2716,14 +2717,14 @@ void mapLoadForObject(int mapId, GameObject* obj)
     {
         if (gLoadedRomListPages[slot] == NULL)
         {
-            gLoadedRomListPages[slot] = (MapRomListPage*)romList;
+            gLoadedRomListPages[slot] = romList;
             break;
         }
         slot++;
     }
     obj->anim.hostedMapSlot = slot;
     (*gMapEventInterface)->setMapActLut(mapId, slot);
-    mapBuildRomListIndex((MapRomListPage*)romList, &gMapRomListIndexes[slot], slot, 0);
+    mapBuildRomListIndex(romList, &gMapRomListIndexes[slot], slot, 0);
     (*gMapEventInterface)->updateObjGroups(slot);
     gShaderCurMapEventId = saved;
 }
@@ -3029,7 +3030,7 @@ int mapProcessRomList(int slot)
     }
     if (i == count)
         gShaderRomListSlotCount++;
-    rl = mapGetRomListAndOffsets(slot, 0);
+    rl = (int)mapGetRomListAndOffsets(slot, 0);
     slots = (ShaderRomListSlot*)(base + 0x418C);
     entry = &slots[i];
     entry->romlist = (void*)rl;
@@ -3062,7 +3063,7 @@ int mapProcessRomList(int slot)
     return i;
 }
 
-int mapGetRomListAndOffsets(int p1, int flag)
+MapRomListPage* mapGetRomListAndOffsets(int p1, int flag)
 {
     int words = p1 * 7;
     int offset0 = *(int*)(gMapsTab + (words << 2));
@@ -3100,7 +3101,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
         mapBuildRomListIndex(gCurRomListPage, &gMapRomListIndexes[p1], p1, 0);
         (*gMapEventInterface)->updateObjGroups(p1);
     }
-    return (int)gCurRomListPage;
+    return gCurRomListPage;
 }
 
 
@@ -3473,8 +3474,8 @@ WarpVec gCameraPosByTransformSpace[0x29];
 MapRomListPage* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 MapRomListIndex gMapRomListIndexes[120];
 s8* gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
-int gMapBlockCellEntryTables[5];
-int gMapBlockCellStateTables[5];
+MapCellEntry* gMapBlockCellEntryTables[5];
+s8* gMapBlockCellStateTables[5];
 ShaderRomListSlot gShaderRomListSlots[8];
 int gShaderMapRomBuffers[0x5];
 f32 distortionFilterVector[0x1c];

@@ -61,7 +61,7 @@ int IMMultiSeq_getObjectTypeId(void) {
 }
 
 void IMMultiSeq_free(GameObject* obj) {
-    objFreeObjectType((int)obj, IM_MULTI_SEQ_GROUP);
+    objFreeObjectType(obj, IM_MULTI_SEQ_GROUP);
 }
 
 void IMMultiSeq_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -135,7 +135,7 @@ void IMMultiSeq_init(GameObject* obj, IMMultiSeqPlacement* placement) {
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = IM_MULTI_SEQ_DEFAULT_MODEL_BANK;
     }
-    objAddObjectType((int)obj, IM_MULTI_SEQ_GROUP);
+    objAddObjectType(obj, IM_MULTI_SEQ_GROUP);
     step = 0;
     while (step < IM_MULTI_SEQ_STEP_COUNT) {
         if ((u32)((placement->polarityMask >> (step + IM_MULTI_SEQ_COMPLETION_POLARITY_SHIFT)) & 1) ==

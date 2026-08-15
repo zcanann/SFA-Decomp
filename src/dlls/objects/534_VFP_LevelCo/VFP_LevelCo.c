@@ -115,7 +115,7 @@ int VFP_LevelControl_getObjectTypeId(void)
 void VFP_LevelControl_free(GameObject* obj)
 {
     Rcp_DisableHeatEffect();
-    objFreeObjectType((int)obj, VFPLEVELCONTROL_OBJGROUP);
+    objFreeObjectType(obj, VFPLEVELCONTROL_OBJGROUP);
     Music_Trigger(VFP_MUSIC_A, 0);
 }
 
@@ -202,7 +202,7 @@ void VFP_LevelControl_update(GameObject* obj)
 void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup)
 {
     VfpLevelControlState* state = obj->extra;
-    objAddObjectType((int)obj, VFPLEVELCONTROL_OBJGROUP);
+    objAddObjectType(obj, VFPLEVELCONTROL_OBJGROUP);
     state->unk02[0] = 0;
     state->unk02[1] = 0;
     state->unk02[2] = 0;

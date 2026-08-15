@@ -141,7 +141,7 @@ void arwingandrossstuff_free(GameObject* obj)
 {
     ArwProjectileState* state = (obj)->extra;
 
-    objFreeObjectType((int)obj, ARWINGANDROSSSTUFF_OBJGROUP);
+    objFreeObjectType(obj, ARWINGANDROSSSTUFF_OBJGROUP);
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
@@ -345,7 +345,7 @@ void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
     {
         hitState->trackContactMask = 1;
     }
-    objAddObjectType((int)obj, ARWINGANDROSSSTUFF_OBJGROUP);
+    objAddObjectType(obj, ARWINGANDROSSSTUFF_OBJGROUP);
 }
 
 void arwingandrossstuff_release(void)

@@ -5,7 +5,7 @@
 
 typedef struct MapEventInterface {
     u8 pad00[0x1C];
-    void (*savePoint)(int position, s16 angle, int flags, int map);
+    void (*savePoint)(void *position, s16 angle, int flags, int map);
     void (*gotoSavegame)(void);
     void (*restartPoint)(void *position, s16 angle, int map, int flag);
     void (*gotoRestartPoint)(void);

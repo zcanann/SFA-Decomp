@@ -44,7 +44,7 @@ int dbegg_setLaunchVelocity(GameObject* obj, f32* velocity);
 int dbegg_isActive(GameObject* obj);
 int dbegg_getExtraSize(void);
 int dbegg_getObjectTypeId(void);
-void dbegg_free(int obj);
+void dbegg_free(GameObject* obj);
 void dbegg_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
 void dbegg_hitDetect(GameObject* obj);
 void dbegg_update(GameObject* obj);

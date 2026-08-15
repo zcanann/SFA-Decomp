@@ -498,7 +498,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
                                                   STAFF_ACTIVATED_HIT_EFFECT_GREEN, STAFF_ACTIVATED_HIT_EFFECT_BLUE,
                                                   STAFF_ACTIVATED_HIT_EFFECT_SFX, &state->hitEffectCooldown);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, state->animationStepScale, timeDelta, &events);
+    ObjAnim_AdvanceCurrentMove(obj, state->animationStepScale, timeDelta, &events);
 }
 
 void landed_arwing_updateDamageTexture(GameObject* obj, LandedArwingHitReactionState* state) {

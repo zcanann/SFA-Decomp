@@ -112,7 +112,7 @@ int SeqObject_getObjectTypeId(void) {
 }
 
 void SeqObject_free(GameObject* obj) {
-    objFreeObjectType((int)obj, SEQ_OBJECT_GROUP);
+    objFreeObjectType(obj, SEQ_OBJECT_GROUP);
 }
 
 void SeqObject_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -193,7 +193,7 @@ void SeqObject_init(GameObject* obj, SeqObjectPlacement* placement) {
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = SEQ_OBJECT_DEFAULT_MODEL_BANK;
     }
-    objAddObjectType((int)obj, SEQ_OBJECT_GROUP);
+    objAddObjectType(obj, SEQ_OBJECT_GROUP);
     state->flags = 0;
     if (placement->openGameBit != SEQ_OBJECT_GAME_BIT_NONE &&
         mainGetBit(placement->openGameBit) != SEQ_OBJECT_GAME_BIT_CLEAR) {

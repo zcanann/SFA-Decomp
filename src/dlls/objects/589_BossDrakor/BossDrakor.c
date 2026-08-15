@@ -550,7 +550,7 @@ void bossdrakor_free(GameObject* obj)
 {
     BossDrakorState* inner = (BossDrakorState*)(obj)->extra;
     BossDrakorState* s = inner;
-    objFreeObjectType((int)obj, BOSSDRAKOR_OBJGROUP);
+    objFreeObjectType(obj, BOSSDRAKOR_OBJGROUP);
     if ((obj)->childObjs[0] != NULL)
     {
         ObjLink_DetachChild(obj, obj->childObjs[0]);
@@ -785,7 +785,7 @@ void bossdrakor_update(GameObject* obj)
     }
     t = PSVECMag(&obj->anim.velocity) / drakorState->moveSpeed;
     t += 0.001f;
-    adv = ObjAnim_AdvanceCurrentMove((int)obj, t, timeDelta, (ObjAnimEventList*)buf);
+    adv = ObjAnim_AdvanceCurrentMove(obj, t, timeDelta, (ObjAnimEventList*)buf);
     if (adv != 0)
     {
         if (drakorState->moveState == 0)
@@ -803,11 +803,11 @@ void bossdrakor_update(GameObject* obj)
             {
                 moveId = bossdrakor_chooseNextMove(obj, &drakorState->moveSpeed);
             }
-            ObjAnim_SetCurrentMove((int)obj, moveId, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, drakorState->moveState, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, drakorState->moveState, 0.0f, 0);
         }
         if (arrayIndexOf(gBossDrakorTurnMoveStates.turnMoveStates, 5, drakorState->moveState) != -1)
         {
@@ -912,7 +912,7 @@ void bossdrakor_update(GameObject* obj)
     }
     if (randomChanceOneIn(200) != 0 && state->flags198.b40)
     {
-    objSoundStart((u32)obj, &drakorState->soundState, 0x2ff);
+    objSoundStart(obj, &drakorState->soundState, 0x2ff);
     }
     objSoundUpdateMouth(obj, &drakorState->soundState);
     if (state->flags198.b04)
@@ -980,7 +980,7 @@ void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init)
     s->textTimer = fz;
     inner->flags198.b10 = 1;
     storeZeroToFloatParam(&s->attackTimer);
-    objAddObjectType((int)obj, BOSSDRAKOR_OBJGROUP);
+    objAddObjectType(obj, BOSSDRAKOR_OBJGROUP);
     storeZeroToFloatParam(&s->jawAnimTimer);
     (obj)->animEventCallback = bossdrakor_seqFn;
     Music_Trigger(MUSICTRIG_LVF_Tracking, 1);

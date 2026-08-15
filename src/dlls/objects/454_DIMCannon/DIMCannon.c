@@ -112,7 +112,7 @@ void DIMCannon_spawnBall(GameObject* obj, u8 variant) {
     f32 launchSpeed;
     f32 launchScale;
     f32 angle;
-    int objHandle = (int)obj;
+    GameObject* objHandle = obj;
 
     placement = *(DimCannonPlacement**)&obj->anim.placementData;
     if (Obj_IsLoadingLocked() == 0 || (state = obj->extra)->shouldSpawnProjectile == 0 || state->launchDelay > 0) {
@@ -164,7 +164,7 @@ void DIMCannon_spawnBall(GameObject* obj, u8 variant) {
     }
 
     ObjAnim_SetCurrentMove(objHandle, 0, 0.0f, 0);
-    Sfx_PlayFromObject((GameObject*)objHandle, SFXTRIG_tr_jrumbalp);
+    Sfx_PlayFromObject(objHandle, SFXTRIG_tr_jrumbalp);
 }
 
 void DIMCannon_updateAim(GameObject* obj, f32 targetX, f32 unusedTargetY, f32 targetZ, f32 unusedDistance) {
@@ -329,7 +329,7 @@ int DIMCannon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                     }
                 }
                 modelRotation[1] = (s16)(modelRotation[1] + aimDelta);
-                Sfx_KeepAliveLoopedObjectSound((u32)obj, SFXTRIG_gal_sailflap2);
+                Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_gal_sailflap2);
             } else if (state->previousAimDelta != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_cnplarlp);
             }
@@ -397,7 +397,7 @@ int DIMCannon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 }
                 Sfx_StopObjectChannel(obj, 2);
             }
-            ObjAnim_AdvanceCurrentMove((int)obj, gDimCannonAnimAdvanceSpeedCur, timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove(obj, gDimCannonAnimAdvanceSpeedCur, timeDelta, NULL);
         }
     } else {
         s16* modelRotation;
@@ -431,7 +431,7 @@ void DIMCannon_free(GameObject* obj) {
         Resource_Release(gDimCannonResource);
         gDimCannonResource = NULL;
     }
-    objFreeObjectType((int)obj, DIM_CANNON_OBJECT_GROUP);
+    objFreeObjectType(obj, DIM_CANNON_OBJECT_GROUP);
 }
 
 void DIMCannon_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5,
@@ -580,7 +580,7 @@ void DIMCannon_update(GameObject* obj) {
     }
 
     gDimCannonAnimAdvanceSpeedCur = 0.025f;
-    ObjAnim_AdvanceCurrentMove((int)obj, 0.025f, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove(obj, 0.025f, timeDelta, NULL);
 }
 
 void DIMCannon_init(GameObject* obj, DimCannonPlacement* placement) {

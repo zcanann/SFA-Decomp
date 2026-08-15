@@ -130,7 +130,7 @@ void TreasureChest_update(GameObject* obj) {
     nearestDist = TREASURE_CHEST_COLLECTIBLE_SEARCH_DIST;
     if (state->restoreOpenState != 0 && state->opened != 0) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-        ObjAnim_SetCurrentMove((int)obj, TREASURE_CHEST_OPEN_MOVE_ID, TREASURE_CHEST_OPEN_MOVE_PROGRESS,
+        ObjAnim_SetCurrentMove(obj, TREASURE_CHEST_OPEN_MOVE_ID, TREASURE_CHEST_OPEN_MOVE_PROGRESS,
                                TREASURE_CHEST_OPEN_MOVE_FLAGS);
     }
     if (state->opened == 0) {

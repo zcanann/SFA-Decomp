@@ -281,7 +281,7 @@ void worldobj_update(GameObject* obj) {
         }
         break;
     case WORLDOBJ_ARROW_OBJ:
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.017f, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove(obj, 0.017f, timeDelta, NULL);
         obj->anim.rotX = 256.0f * timeDelta + (f32)obj->anim.rotX;
         break;
     case WORLDOBJ_CLOUDL_OBJ:
@@ -348,7 +348,7 @@ void worldobj_update(GameObject* obj) {
         obj->anim.rotX += 1;
         break;
     case WORLDOBJ_COMM_OBJ:
-        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, (ObjAnimEventList*)&vec[3]);
+        ObjAnim_AdvanceCurrentMove(obj, 0.005f, timeDelta, (ObjAnimEventList*)&vec[3]);
         break;
     case WORLDOBJ_PEPPER_OBJ:
         if (state->controlByte != obj->anim.bankIndex) {
@@ -356,13 +356,13 @@ void worldobj_update(GameObject* obj) {
         }
         if (state->spinZStep != (gAudioStreamCurrentId != 0)) {
             if (gAudioStreamCurrentId != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
             } else {
-                ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
             }
         }
         state->spinZStep = gAudioStreamCurrentId != 0;
-        ObjAnim_AdvanceCurrentMove((int)obj, gWorldObjAdvanceMoveTable[state->controlByte], timeDelta,
+        ObjAnim_AdvanceCurrentMove(obj, gWorldObjAdvanceMoveTable[state->controlByte], timeDelta,
                                    (ObjAnimEventList*)&vec[3]);
         if (state->effectState == 0 && state->light != NULL) {
             ModelLightStruct_free(state->light);
@@ -548,7 +548,7 @@ void worldobj_init(GameObject* obj, const WorldObjSetup* setup) {
         Obj_SetActiveModelIndex(obj, idx);
         obj->anim.alpha = gWorldObjVariantAlphaTable[idx];
         for (i = 0; i < 0xb; i++) {
-            placement = (ObjPlacement*)obj->anim.placementDataAddress;
+            placement = (ObjPlacement*)obj->anim.placementData;
             if (Obj_IsLoadingLocked() != 0) {
                 ObjPlacement* childPlacement = Obj_AllocObjectSetup(0x20, WORLDOBJ_SUNRAY_OBJ);
                 childPlacement->color[0] = placement->color[0];

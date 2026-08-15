@@ -107,7 +107,7 @@ void WarpPoint_update(GameObject* obj) {
     }
     if (placement->savePointArmed != 0 && state->savePointRecorded == 0 && gArrivedWarpIndex > WARPPOINT_NO_ARRIVAL_WARP &&
         gArrivedWarpIndex == placement->arrivalWarpId) {
-        (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
+        (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
         state->savePointRecorded = 1;
     }
     switch (placement->mode) {
@@ -118,11 +118,11 @@ void WarpPoint_update(GameObject* obj) {
             f32 deltaZ = player->anim.localPosZ - obj->anim.localPosZ;
             distance = sqrtf(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             if (state->sequenceTriggered == 0 && placement->enabled != 0 && distance < state->triggerRadius &&
-                player->anim.parentAddress == obj->anim.parentAddress) {
+                player->anim.parent == obj->anim.parent) {
                 if (obj->anim.romDefNo == WARPPOINT_SEQ_ID_SAVEPOINT) {
                     mainSetBits(GAMEBIT_WarpPointRelatedD53, 1);
                     (*gMapEventInterface)
-                        ->savePoint((int)&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
+                        ->savePoint(&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
                 }
                 (*gObjectTriggerInterface)->runSequence(state->sequenceId, obj, -1);
                 mainSetBits(GAMEBIT_WarpPointRelatedD53, 0);
@@ -143,7 +143,7 @@ void WarpPoint_update(GameObject* obj) {
         f32 deltaZ = player->anim.localPosZ - obj->anim.localPosZ;
         distance = sqrtf(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
         if (gArrivedWarpIndex > WARPPOINT_NO_ARRIVAL_WARP && placement->enabled != 0 && distance < WARPPOINT_HINT_TRIGGER_RADIUS &&
-            player->anim.parentAddress == obj->anim.parentAddress) {
+            player->anim.parent == obj->anim.parent) {
             (*gObjectTriggerInterface)->runSequence(WARPPOINT_SEQUENCE_HINT_ACTIVE, obj, -1);
             gWarpArrivalTimer = WARPPOINT_HINT_TIMER_FRAMES;
         }
@@ -161,7 +161,7 @@ void WarpPoint_update(GameObject* obj) {
             distance = sqrtf(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
         }
         if (mainGetBit(state->gameBit) != 0 && state->sequenceTriggered == 0 && placement->enabled != 0 &&
-            distance <= state->triggerRadius && player->anim.parentAddress == obj->anim.parentAddress) {
+            distance <= state->triggerRadius && player->anim.parent == obj->anim.parent) {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, obj, -1);
             state->sequenceTriggered = 1;
         } else {
@@ -178,7 +178,7 @@ void WarpPoint_update(GameObject* obj) {
         f32 deltaZ = player->anim.localPosZ - obj->anim.localPosZ;
         distance = sqrtf(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
         if (mainGetBit(state->gameBit) != 0 && state->sequenceTriggered == 0 && placement->enabled != 0 &&
-            distance < state->triggerRadius && player->anim.parentAddress == obj->anim.parentAddress) {
+            distance < state->triggerRadius && player->anim.parent == obj->anim.parent) {
             mainSetBits(state->gameBit, 0);
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, obj, -1);
             state->sequenceTriggered = 1;
@@ -193,7 +193,7 @@ void WarpPoint_update(GameObject* obj) {
             distance = sqrtf(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
         }
         if (gArrivedWarpIndex > WARPPOINT_NO_ARRIVAL_WARP && state->sequenceTriggered == 0 && placement->enabled != 0 &&
-            distance < state->triggerRadius && player->anim.parentAddress == obj->anim.parentAddress) {
+            distance < state->triggerRadius && player->anim.parent == obj->anim.parent) {
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, obj, -1);
             gWarpArrivalTimer = WARPPOINT_HINT_TIMER_FRAMES;
             state->sequenceTriggered = 1;

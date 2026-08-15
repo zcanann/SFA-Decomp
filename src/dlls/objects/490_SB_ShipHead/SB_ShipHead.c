@@ -11,6 +11,7 @@
 #include "dlls/objects/490_SB_ShipHead.h"
 
 #include "dlls/objects/488_SB_Galleon.h"
+#include "dlls/objects/493_SB_FireBall.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
@@ -58,7 +59,7 @@ int SB_ShipHead_getObjectTypeId(void) {
 }
 
 void SB_ShipHead_free(GameObject* obj) {
-    objFreeObjectType((u32)obj, SB_SHIP_HEAD_OBJECT_GROUP);
+    objFreeObjectType(obj, SB_SHIP_HEAD_OBJECT_GROUP);
 }
 
 void SB_ShipHead_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -73,9 +74,9 @@ void SB_ShipHead_render(GameObject* obj, int renderArg2, int renderArg3, int ren
     if (visible != 0) {
         state = object->extra;
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
-        parentObj = (GameObject*)object->anim.parentAddress;
+        parentObj = object->anim.parent;
         if ((((void*)parentObj != NULL && (parentObj->anim.romDefNo == SB_GALLEON_FIRING_SEQUENCE_ID)) &&
-             (damagePhase = SB_GALLEON_VTBL(parentObj)->getDamagePhase((int)parentObj), damagePhase != 0)) &&
+             (damagePhase = SB_GALLEON_VTBL(parentObj)->getDamagePhase(parentObj), damagePhase != 0)) &&
             (damagePhase != 2)) {
             state->swayA = state->swayA - timeDelta;
             if (state->swayA <= 0.0f) {
@@ -162,14 +163,14 @@ void SB_ShipHead_update(GameObject* obj) {
             break;
         }
     }
-    if ((SB_GALLEON_VTBL(galleon)->getPhase((int)galleon) >= 2) && (object->userData2 <= 0) &&
+    if ((SB_GALLEON_VTBL(galleon)->getPhase(galleon) >= 2) && (object->userData2 <= 0) &&
         (((u32)(galleonPhase - 3) <= 1 || (galleonPhase == 5))) &&
         (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) && (hit->anim.romDefNo != SB_FIREBALL_OBJECT_ID)) {
         Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_gcfir1_c_37);
         state->health -= 1;
         if (state->health <= 0) {
-            SB_GALLEON_VTBL(galleon)->onPartDestroyed((int)galleon);
+            SB_GALLEON_VTBL(galleon)->onPartDestroyed(galleon);
             object->userData2 = 300;
             ObjHits_DisableObject(obj);
         }
@@ -184,7 +185,7 @@ void SB_ShipHead_update(GameObject* obj) {
         }
     }
     if ((galleonPhase == 5) && (gSbShipHeadPrevGalleonPhase != 5)) {
-        ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 1, 0.0f, 0);
         gSbShipHeadHasFiredFireball = 0;
     }
     if ((((object->anim.currentMove == 1) && (object->anim.currentMoveProgress >= 0.5f)) &&
@@ -230,9 +231,9 @@ void SB_ShipHead_update(GameObject* obj) {
         placementBytes->color[3] = 0xff;
         objSetupObject(placementBytes, 5, -1, -1, 0);
     }
-    result = ObjAnim_AdvanceCurrentMove((int)obj, gSbShipHeadAnimAdvanceRate, timeDelta, NULL);
+    result = ObjAnim_AdvanceCurrentMove(obj, gSbShipHeadAnimAdvanceRate, timeDelta, NULL);
     if ((object->anim.currentMove == 1) && (result != 0)) {
-        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     }
     gSbShipHeadPrevGalleonPhase = galleonPhase;
 }
@@ -240,7 +241,7 @@ void SB_ShipHead_update(GameObject* obj) {
 void SB_ShipHead_init(GameObject* obj) {
     SBShipHeadState* state = obj->extra;
 
-    objAddObjectType((u32)obj, SB_SHIP_HEAD_OBJECT_GROUP);
+    objAddObjectType(obj, SB_SHIP_HEAD_OBJECT_GROUP);
     ObjMsg_AllocQueue(obj, 10);
     state->health = 4;
     state->swayB += 1.0f;

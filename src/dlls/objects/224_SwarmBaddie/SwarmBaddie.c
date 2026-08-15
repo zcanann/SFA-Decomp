@@ -126,7 +126,7 @@ int SwarmBaddie_getObjectTypeId(void) {
 
 void SwarmBaddie_free(GameObject* obj) {
     SwarmBaddieState* state = obj->extra;
-    objFreeObjectType((int)obj, SWARMBADDIE_OBJECT_GROUP);
+    objFreeObjectType(obj, SWARMBADDIE_OBJECT_GROUP);
     if (state->curve != NULL) {
         mm_free(state->curve);
         state->curve = NULL;

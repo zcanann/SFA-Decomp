@@ -334,10 +334,10 @@ void Rcp_UpdateDistortionTextures(void)
     Camera_ApplyFullViewport();
     gRcpDistortGroup = 0;
 }
-void ShaderDef_free(int* def)
+void ShaderDef_free(void** def)
 {
     Texture* s;
-    void* p1 = (void*)def[0];
+    void* p1 = def[0];
     int i;
     void* p2;
     int j;
@@ -354,7 +354,7 @@ void ShaderDef_free(int* def)
             }
         }
     }
-    p2 = (void*)def[1];
+    p2 = def[1];
     if (p2 == NULL)
         return;
     for (j = 0; j < 6; j++)

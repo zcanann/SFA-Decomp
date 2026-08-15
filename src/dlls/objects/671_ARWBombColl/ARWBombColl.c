@@ -138,7 +138,7 @@ void ARWBombColl_update(GameObject* obj)
             ObjHits_SetHitVolumeSlot(&obj->anim, ARWBOMBCOLL_HIT_VOLUME_SLOT, 0, 0);
             if (flags->shotOpen != 0)
             {
-                if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
+                if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
                     (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
                 {
                     arwarwing_addScore(arw, 0x19);
@@ -158,7 +158,7 @@ void ARWBombColl_update(GameObject* obj)
                     Obj_SetActiveModelIndex(obj, 1);
                     spawnExplosion(obj, sExplosionScale, 1, 0, 0, 0, 0, 0, 2);
                 }
-                if ((u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
+                if (((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject != 0 &&
                     (u32)((ObjHitsPriorityState*)objAnim->hitReactState)->lastHitObject == (u32)getArwing())
                 {
                     obj->anim.flags |= OBJANIM_FLAG_HIDDEN;

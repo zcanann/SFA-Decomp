@@ -58,7 +58,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
     gCamForceBehindTraceDistance = sqrtf(traceDeltaX * traceDeltaX + traceDeltaZ * traceDeltaZ);
     gCamForceBehindPlacementRadius = gCamForceBehindTraceDistance;
 
-    Player_GetAimAngles((int)target, &yaw, &pitch);
+    Player_GetAimAngles(target, &yaw, &pitch);
     yaw = (s16)((0x8000 - target->anim.rotX) + (yaw >> 1));
     pitch = (s16)(pitch >> 1);
     targetX = target->anim.worldPosX;
@@ -100,7 +100,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
     camcontrol_traceFromTarget(&camera->anim.worldPosX, target, &camera->anim.worldPosX, &camera->anim.rotY);
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
-                                   (GameObject*)camera->anim.parentAddress);
+                                   (GameObject*)camera->anim.parent);
 }
 
 const f32 gCamForceBehindEaseRate[1] = {0.25f};

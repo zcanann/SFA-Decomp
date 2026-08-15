@@ -895,7 +895,7 @@ void SHthorntail_free(GameObject* obj) {
     if (activeConfigToken == placement->configToken) {
         gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
     }
-    objFreeObjectType((int)obj, SHTHORNTAIL_OBJECT_GROUP);
+    objFreeObjectType(obj, SHTHORNTAIL_OBJECT_GROUP);
 }
 
 void SHthorntail_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -995,11 +995,11 @@ void SHthorntail_update(GameObject* obj) {
         }
         if ((int)(obj)->anim.currentMove !=
             SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState]) {
-            ObjAnim_SetCurrentMove((int)obj, SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState],
+            ObjAnim_SetCurrentMove(obj, SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState],
                                    SHTHORNTAIL_TIMER_DONE_THRESHOLD, 0);
             runtime->storedFacingAngle = obj->anim.rotX;
         }
-        val = ObjAnim_AdvanceCurrentMove((int)obj, SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState],
+        val = ObjAnim_AdvanceCurrentMove(obj, SHTHORNTAIL_STATE_MOVE_STEP_SCALES(stateTables)[runtime->behaviorState],
                                          timeDelta, &animEvents);
         if (val != 0) {
             runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
@@ -1141,5 +1141,5 @@ void SHthorntail_init(GameObject* obj, const SHthorntailPlacement* placement) {
     obj->animEventCallback = SHthorntail_updateLevelControlState;
     dll_2E_initState(obj, (MoveLibState*)runtime, 0xffffdc72, 0x2aaa, 3);
     dll_2E_setReattackDelay((MoveLibState*)runtime, 400, 0x78);
-    objAddObjectType((int)obj, SHTHORNTAIL_OBJECT_GROUP);
+    objAddObjectType(obj, SHTHORNTAIL_OBJECT_GROUP);
 }

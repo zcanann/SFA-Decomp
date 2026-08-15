@@ -180,7 +180,7 @@ int WM_LevelControl_getObjectTypeId(void) {
 }
 
 void WM_LevelControl_free(GameObject* obj) {
-    objFreeObjectType((u32)obj, WM_LEVEL_CONTROL_OBJ_GROUP);
+    objFreeObjectType(obj, WM_LEVEL_CONTROL_OBJ_GROUP);
     Music_Trigger(MUSICTRIG_drako_3, 0);
     mainSetBits(GAMEBIT_WMRelated0A7F, 0);
     mainSetBits(GAMEBIT_KrazTest1Related0372, 1);
@@ -238,7 +238,7 @@ void WM_LevelControl_init(GameObject* obj) {
     WMLevelControlState* state;
     u8 mode;
 
-    objAddObjectType((u32)obj, WM_LEVEL_CONTROL_OBJ_GROUP);
+    objAddObjectType(obj, WM_LEVEL_CONTROL_OBJ_GROUP);
     unlockLevel(mapGetDirIdx(0xB), 0, 0);
     state = obj->extra;
     state->unknown0B = 0;

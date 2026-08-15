@@ -74,8 +74,8 @@ void WaterFallSpray_update(GameObject* obj) {
         }
         if (enabled != 0) {
             if ((placement->flags & WATERFALLSPRAY_FLAG_SFX_DISABLED) == 0) {
-                Sfx_KeepAliveLoopedObjectSound((int)obj, state->sfxIdA & 0xFFFF);
-                Sfx_KeepAliveLoopedObjectSound((int)obj, state->sfxIdB & 0xFFFF);
+                Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdA & 0xFFFF);
+                Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdB & 0xFFFF);
             }
 
             cooldown = obj->userData1;

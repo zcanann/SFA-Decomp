@@ -24,7 +24,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
         gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
         *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (int)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
         switch (gameTextFonts->status)
         {
         case 0:
@@ -54,7 +54,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
         gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
         *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (int)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
         sprintf(gCurTextBuffer, strings + 0xefc, textId,
                 sMapDirectoryNameTable[curGameTextDir]);
         return gGameTextLastEntry;
@@ -70,7 +70,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
         gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
         gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
         *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (int)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
         sprintf(gCurTextBuffer, strings + 0xf10, textId, phraseIndex);
         return gGameTextLastEntry;
     }
@@ -94,7 +94,7 @@ void* gameTextGetStr(int textId)
         gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
         gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
         *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (int)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
         switch (gameTextFonts->status)
         {
         case 0:
@@ -145,7 +145,7 @@ void* gameTextGet(int textId)
         gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
         *(u16*)gGameTextLastEntry = 0xffff;
         p = gameTextBase + gGameTextBufferIndex * 4;
-        gGameTextFallbackBuf = (int)(p + 0x20);
+        gGameTextFallbackBuf = (f32*)(p + 0x20);
 
         switch (gameTextFonts->status)
         {
@@ -210,10 +210,10 @@ void* gameTextGet(int textId)
     gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
     *(u16*)gGameTextLastEntry = 0xffff;
     p = gameTextBase + gGameTextBufferIndex * 4;
-    gGameTextFallbackBuf = (int)(p + 0x20);
+    gGameTextFallbackBuf = (f32*)(p + 0x20);
     sprintf(gCurTextBuffer, sGameTextBlankFormat, textId, sMapDirectoryNameTable[curGameTextDir]);
     *(u16*)gGameTextLastEntry = textId;
-    *(f32*)gGameTextFallbackBuf = lbl_803DE704;
+    *gGameTextFallbackBuf = lbl_803DE704;
     return gGameTextLastEntry;
 }
 

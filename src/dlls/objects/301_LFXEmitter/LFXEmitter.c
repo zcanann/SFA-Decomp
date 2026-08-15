@@ -136,7 +136,7 @@ void LFXEmitter_free(GameObject* obj) {
     if (lightAction != NULL) {
         mm_free(lightAction);
     }
-    objFreeObjectType((int)obj, LFXEMITTER_OBJECT_GROUP);
+    objFreeObjectType(obj, LFXEMITTER_OBJECT_GROUP);
 }
 
 void LFXEmitter_render(void) {
@@ -232,7 +232,7 @@ void LFXEmitter_init(GameObject* obj, LFXEmitterPlacement* placement) {
         (*gRomCurveInterface)
             ->initCurve(&state->curve, obj, LFXEMITTER_CURVE_SEARCH_RANGE, &curveFlags, LFXEMITTER_GAME_BIT_NONE);
     }
-    objAddObjectType((int)obj, LFXEMITTER_OBJECT_GROUP);
+    objAddObjectType(obj, LFXEMITTER_OBJECT_GROUP);
 }
 
 void LFXEmitter_release(void) {

@@ -29,7 +29,7 @@ int lightning_getExtraSize(void) {
 void lightning_free(GameObject* obj, int flags) {
     LightningState* state = obj->extra;
 
-    objFreeObjectType((int)obj, LIGHTNING_OBJECT_GROUP);
+    objFreeObjectType(obj, LIGHTNING_OBJECT_GROUP);
     if (state->effect != NULL) {
         mm_free(state->effect);
     }
@@ -144,7 +144,7 @@ void lightning_init(GameObject* obj, LightningPlacement* placement) {
     f32 defaultScale;
 
     state = obj->extra;
-    objAddObjectType((int)obj, LIGHTNING_OBJECT_GROUP);
+    objAddObjectType(obj, LIGHTNING_OBJECT_GROUP);
     state->modeBits.mode = placement->mode;
     defaultScale = 1.0f;
     state->hitRadius = defaultScale;

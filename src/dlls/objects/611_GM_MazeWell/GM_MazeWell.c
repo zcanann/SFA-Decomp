@@ -109,7 +109,7 @@ void GM_MazeWell_update(GameObject* obj)
         if (player != 0)
         {
             (*gMapEventInterface)
-                ->savePoint((int)&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
+                ->savePoint(&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
             state->savepointSet = 1;
         }
     }

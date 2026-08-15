@@ -3,6 +3,8 @@
 
 #include "types.h"
 
-void hudDrawColored(int texture, int x, int y, u32* color, int scale, int flags);
+struct Texture;
+
+void hudDrawColored(struct Texture* texture, int x, int y, u32* color, int scale, int flags);
 
 #endif /* TRACK_INTERSECT_HUD_COLOR_API_H_ */

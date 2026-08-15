@@ -44,7 +44,7 @@ void CameraModeCloudRunner_update(CameraObject* camera) {
     MatrixTransform focusTransform;
     f32 focusMatrix[16];
 
-    Player_GetAimAngles((int)target, &targetYaw, &targetPitch);
+    Player_GetAimAngles(target, &targetYaw, &targetPitch);
     focus = playerGetFocusObject(target);
     if (focus != NULL) {
         if (focus->anim.romDefNo == DR_CLOUDRUNNER_OBJECT_ID) {
@@ -103,7 +103,7 @@ void CameraModeCloudRunner_update(CameraObject* camera) {
     camera->anim.worldPosZ = focusZ + horizontalRadius;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
-                                   (GameObject*)camera->anim.parentAddress);
+                                   (GameObject*)camera->anim.parent);
 }
 
 void CameraModeCloudRunner_init(CameraObject* camera, int fallbackRadius, CameraModeCloudRunnerInitParams* params) {

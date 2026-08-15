@@ -107,7 +107,7 @@ int DR_EarthWarrior_updateLeap(GameObject* obj, EarthWarriorSub* warrior, Baddie
         warrior->flags3F0.b80 = 0;
         warrior->soundId = warrior->soundIdReload;
         baddie->moveSpeed = 0.0165f;
-        ObjAnim_SetCurrentMove((int)obj, warrior->moveTable[0x1D], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, warrior->moveTable[0x1D], 0.0f, 0);
         ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x10);
         warrior->leapStartYaw = warrior->currentYaw;
         warrior->animSpeedRate = (0.2f + (warrior->configRow[2].maxSpeed + baddie->animSpeedC)) / 60.0f;
@@ -246,11 +246,11 @@ int DR_EarthWarrior_stateHandler03(GameObject* obj, BaddieState* baddie)
     {
         if (state->sub.flags994.b80)
         {
-            ObjAnim_SetCurrentMove((int)obj, 7, fz, 0);
+            ObjAnim_SetCurrentMove(obj, 7, fz, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, 8, fz, 0);
+            ObjAnim_SetCurrentMove(obj, 8, fz, 0);
         }
         baddie->moveSpeed = 0.02f;
     }
@@ -293,7 +293,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, EarthWarriorState* controlle
         buttonDisable(0, PAD_BUTTON_A);
         state->sub.flags994.b01 = 1;
         ObjAnim_GetPriorityHitState(&obj->anim)->suppressOutgoingHits = 0;
-        ObjAnim_SetCurrentMove((int)obj, 0x14, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0x14, 0.0f, 0);
         controllerState->baddie.moveDone = 0;
         Sfx_PlayFromObject(obj, SFXTRIG_earthhuff);
     }
@@ -380,7 +380,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, EarthWarriorState* controlle
         warrior->flags3F0.b80 = 1;
         warrior->unk360 |= 0x1000000LL;
         warrior->animSpeedRate = controllerState->baddie.animSpeedA;
-        ObjAnim_SetCurrentMove((int)obj, warrior->moveTable[0x1E], 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, warrior->moveTable[0x1E], 0.0f, 0);
         controllerState->baddie.moveSpeed = 0.035f;
     }
     if (!warrior->flags3F0.b80 && !warrior->flags3F0.b40)
@@ -510,7 +510,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, EarthWarriorState* controlle
             {
                 blend = 0.85f;
             }
-            ObjAnim_SetCurrentMove((int)obj, warrior->moveTable[warrior->attackPhase], blend, 0);
+            ObjAnim_SetCurrentMove(obj, warrior->moveTable[warrior->attackPhase], blend, 0);
         }
     }
     if (!warrior->flags3F0.b80 && !warrior->flags3F0.b40 && !state->sub.flags994.b01)
@@ -551,7 +551,7 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, BaddieState* baddie)
         buttonDisable(0, PAD_BUTTON_A);
         state->sub.flags994.b01 = 1;
         ObjAnim_GetPriorityHitState(&obj->anim)->suppressOutgoingHits = 0;
-        ObjAnim_SetCurrentMove((int)obj, 0x14, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, 0x14, 0.0f, 0);
         baddie->moveDone = 0;
         return 3;
     }
@@ -588,13 +588,13 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, BaddieState* baddie)
     {
         if (baddie->moveDone != 0 && ObjAnim_GetCurrentEventCountdown(&obj->anim) == 0 && !state->sub.flags994.b01)
         {
-            ObjAnim_SetCurrentMove((int)obj, moveId, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
             baddie->moveSpeed = 0.005f;
         }
     }
     else if (!state->sub.flags994.b01)
     {
-        ObjAnim_SetCurrentMove((int)obj, moveId, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
         baddie->moveSpeed = 0.005f;
     }
     {
@@ -672,7 +672,7 @@ void DR_EarthWarrior_handleRiderScale(GameObject* obj, f32 scale)
 {
     MatrixTransform v;
     f32 lp0, lp1, lp2;
-    int mtx = ObjPath_GetPointModelMtx(obj, 2);
+    ObjModelJointMatrix* mtx = ObjPath_GetPointModelMtx(obj, 2);
     ObjPath_GetPointLocalPosition(obj, 2, &lp0, &lp1, &lp2);
     v.x = lp0;
     v.y = lp1;
@@ -802,7 +802,7 @@ void DR_EarthWarrior_free(GameObject* obj)
     {
         ObjModelChain_Free(state->sub.modelChain);
     }
-    objFreeObjectType((int)obj, DREARTHWARRIOR_OBJGROUP);
+    objFreeObjectType(obj, DREARTHWARRIOR_OBJGROUP);
     if (state->sub.flags994.b02)
     {
         (*gGameUIInterface)->airMeterShutdown();
@@ -1106,7 +1106,7 @@ void DR_EarthWarrior_init(GameObject* obj, DREarthWarriorPlacement* def)
     u8* pathState;
     obj->anim.rotX = (s16)(def->spawnYaw << 8);
     obj->animEventCallback = DR_EarthWarrior_SeqFn;
-    objAddObjectType((int)obj, DREARTHWARRIOR_OBJGROUP);
+    objAddObjectType(obj, DREARTHWARRIOR_OBJGROUP);
     state->sub.setupVariant = def->setupVariant;
     state->sub.turnThreshold = 5;
     state->sub.talkSequenceId = -1;

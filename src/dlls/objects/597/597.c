@@ -1023,7 +1023,7 @@ void SnowBike_UpdateRouteFollowing(GameObject* obj, SnowBikeState* st)
     }
 }
 
-void SnowBike_UpdateAirMeter(u32 obj, int stateRaw)
+void SnowBike_UpdateAirMeter(GameObject* obj, u8* stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     f32 rate;
@@ -1825,12 +1825,12 @@ typedef struct
 
 s32 SnowBike_getRouteRank(GameObject* obj)
 {
-    return (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)((int)obj->extra + 0x28));
+    return (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)((u8*)obj->extra + 0x28));
 }
 
 s32 SnowBike_isAtRankGate(GameObject* obj)
 {
-    int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)((int)obj->extra + 0x28));
+    int result = (*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)((u8*)obj->extra + 0x28));
     if (result == 3)
     {
         if (gSnowBikeLeaderRouteRank == -1)
@@ -2008,7 +2008,7 @@ void SnowBike_free(GameObject* obj)
     SnowBikeState* state;
 
     state = obj->extra;
-    objFreeObjectType((int)obj, SNOWBIKE_OBJGROUP);
+    objFreeObjectType(obj, SNOWBIKE_OBJGROUP);
     i = 0;
     p = (char*)state;
     for (; i < 9; i++)
@@ -2408,7 +2408,7 @@ void SnowBike_update(GameObject* obj)
                                   &obj->anim.velocityZ);
             objApplyVelocity(obj);
         }
-        SnowBike_UpdateAirMeter((int)obj, (int)state);
+        SnowBike_UpdateAirMeter(obj, state);
         SnowBike_UpdateEngineFx(obj, state, s->localVelZ,
                                    (int)(850.0f * -s->engineFxLevel), state + 0x461, 7);
         SnowBike_UpdateCollisionResponse(obj, (int)state);
@@ -2470,7 +2470,7 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag)
     s->posSnapshotY = obj->anim.localPosY;
     s->posSnapshotZ = obj->anim.localPosZ;
     obj->animEventCallback = SnowBike_SeqFn;
-    objAddObjectType((int)obj, SNOWBIKE_OBJGROUP);
+    objAddObjectType(obj, SNOWBIKE_OBJGROUP);
     if (flag == 0)
     {
         i = 0;

@@ -1,6 +1,7 @@
 #ifndef MAIN_CAMERA_OBJECT_H_
 #define MAIN_CAMERA_OBJECT_H_
 
+#include "game/objects/object_fwd.h"
 #include "global.h"
 #include "main/dll/DR/dr_types.h"
 #include "main/objanim_internal.h"

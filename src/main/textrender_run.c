@@ -63,7 +63,7 @@ u8 lbl_803DC980;
 int gGameTextBufferIndex;
 char* gCurTextBuffer;
 u8* gGameTextLastEntry;
-int gGameTextFallbackBuf;
+f32* gGameTextFallbackBuf;
 GameTextDrawFunc gameTextDrawFunc;
 u8 gGameTextFontIsSjis;
 
@@ -1115,7 +1115,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot)
         u16* s;
         old = loadSlot->loadHandle;
         s = old;
-        delta = (int)newBuf - (int)old;
+        delta = (u8*)newBuf - (u8*)old;
         while (n--)
         {
             *d++ = *s++;

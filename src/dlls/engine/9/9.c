@@ -80,7 +80,7 @@ void* cloudGetLayerTexture(f32* out1, f32* out2)
 
     if (gCloudActionRuntime.mainCloudObj != NULL)
     {
-        layer = (int*)Shader_getLayer(ObjModel_GetRenderOp(Obj_GetActiveModel(gCloudActionRuntime.mainCloudObj)->file, 0), 0);
+        layer = Shader_getLayer(ObjModel_GetRenderOp(Obj_GetActiveModel(gCloudActionRuntime.mainCloudObj)->file, 0), 0);
         tex = objFindTexture((GameObject*)(gCloudActionRuntime.mainCloudObj), 0, 0);
         if (tex != NULL)
         {

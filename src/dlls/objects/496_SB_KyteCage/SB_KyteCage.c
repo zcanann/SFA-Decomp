@@ -76,7 +76,7 @@ int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     animUpdate->flags = -4;
     if (obj->seqIndex != -1) {
         animUpdate->flags &= ~4;
-        if (ObjAnim_AdvanceCurrentMove((int)obj, SB_KYTECAGE_ANIMATION_RATE, timeDelta, NULL) != 0) {
+        if (ObjAnim_AdvanceCurrentMove(obj, SB_KYTECAGE_ANIMATION_RATE, timeDelta, NULL) != 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_mv_gdtur2_c);
         }
     }
@@ -148,14 +148,14 @@ void SB_KyteCage_update(GameObject* obj) {
         s16* mvec = objFindJointPoseVector(obj, 0);
         if (mvec != NULL && kind < SB_KYTECAGE_FAR_PARENT_KIND && obj->anim.currentMove != SB_KYTECAGE_MOVE_NEAR) {
             mvec[2] = ((GameObject*)obj->anim.parent)->anim.rotZ;
-            ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_NEAR, 0.0f, 0);
         } else if (mvec != NULL && kind >= SB_KYTECAGE_FAR_PARENT_KIND &&
                    obj->anim.currentMove != SB_KYTECAGE_MOVE_FAR) {
             mvec[2] = 0;
-            ObjAnim_SetCurrentMove((int)obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
+            ObjAnim_SetCurrentMove(obj, SB_KYTECAGE_MOVE_FAR, 0.0f, 0);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove((int)obj, SB_KYTECAGE_ANIMATION_RATE, timeDelta, NULL) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(obj, SB_KYTECAGE_ANIMATION_RATE, timeDelta, NULL) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_mv_gdtur2_c);
     }
 }

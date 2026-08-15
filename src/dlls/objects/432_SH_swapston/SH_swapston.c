@@ -40,6 +40,15 @@
 #include "main/vecmath.h"
 #include "sys/objects.h"
 #include "main/mapEventTypes.h"
+#include "sys/objects/lifecycle.h"
+#include "main/dll/player_api.h"
+#include "main/dll/player_spirit_api.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_position_api.h"
+#include "main/audio/stream_api.h"
+#include "main/audio/audio_control_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 
 union WarpStoneAnimEvents {
     ObjAnimEventList list;
@@ -173,7 +182,7 @@ u32 warpstone_advanceAnimEvents(GameObject* lantern, f32 moveStepScale) {
     pointIndex = 0;
     gWarpStoneObjAnimEvents.list.triggerCount = 0;
     gWarpStoneObjAnimEvents.list.rootCurveValid = 0;
-    advanceResult = ObjAnim_AdvanceCurrentMove((int)lantern, moveStepScale, timeDelta, &gWarpStoneObjAnimEvents.list);
+    advanceResult = ObjAnim_AdvanceCurrentMove(lantern, moveStepScale, timeDelta, &gWarpStoneObjAnimEvents.list);
     if (gWarpStoneObjAnimEvents.list.rootCurveValid != 0) {
         lantern->anim.rotX += gWarpStoneObjAnimEvents.list.rootPitch;
     }
@@ -327,7 +336,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animObj) {
     child = state->child;
     if ((void*)child != NULL) {
         ObjAnim_AdvanceCurrentMove(
-            (int)child, obj->anim.currentMoveProgress - child->anim.currentMoveProgress, timeDelta, NULL);
+            child, obj->anim.currentMoveProgress - child->anim.currentMoveProgress, timeDelta, NULL);
     }
 
     animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_testEvent;
@@ -492,9 +501,9 @@ void warpstone_hitDetect(GameObject* obj) {
         lightParams.posZ += playerMapOffsetZ;
         objDoHitParticleFx((void*)obj, 0.01f, &lightParams, 1, 0);
         if (randomChanceOneIn(3) != 0) {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
         } else {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
+            Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_short_2bc);
         }
         objSoundStartTimed(obj, (ObjSoundState*)((u8*)state + offsetof(WarpStoneState, soundState)), 171, -1280, -1, 0);
     }
@@ -590,17 +599,17 @@ void warpstone_update(GameObject* obj) {
                     moveId = 0x18;
                 }
                 if (obj->anim.currentMove != moveId) {
-                    ObjAnim_SetCurrentMove((int)obj, moveId, 0.0f, 0);
+                    ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
                 }
             } else if (obj->anim.currentMove != 0) {
-                ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                 Sfx_StopFromObject(obj, SFXTRIG_swapstone_move_long);
             } else if (randomChanceOneIn(gWarpStoneMumbleChance) != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_mumble);
-                ObjAnim_SetCurrentMove((int)obj, 0x1b, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0x1b, 0.0f, 0);
             } else if (randomChanceOneIn(gWarpStoneYawnChance) != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_swapstone_move_long);
-                ObjAnim_SetCurrentMove((int)obj, 0x1a, 0.0f, 0);
+                ObjAnim_SetCurrentMove(obj, 0x1a, 0.0f, 0);
             }
         }
     }

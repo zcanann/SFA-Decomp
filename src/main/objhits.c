@@ -876,7 +876,7 @@ void ObjHits_TickPriorityHitCooldowns(void) {
 
 void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix) {
     ObjHitboxTransformState* transformState;
-    int matrixBase;
+    float* matrixBase;
     int matrixFloatOffset;
     MatrixTransform xform;
 
@@ -886,7 +886,7 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix) {
             transformState->activeMatrixIndex = (transformState->activeMatrixIndex + 1) & 1;
         }
         matrixFloatOffset = transformState->activeMatrixIndex * OBJHITBOX_STATE_MATRIX_FLOAT_COUNT;
-        matrixBase = (int)((float*)transformState->matrices + matrixFloatOffset);
+        matrixBase = (float*)transformState->matrices + matrixFloatOffset;
         xform.rotX = -hitbox->rotationX;
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
             xform.rotY = 0;
@@ -902,7 +902,7 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix) {
         xform.x = -hitbox->radiusX;
         xform.y = -hitbox->radiusY;
         xform.z = -hitbox->radiusZ;
-        mtxRotateByVec3s((float*)matrixBase, &xform);
+        mtxRotateByVec3s(matrixBase, &xform);
         xform.rotX = hitbox->rotationX;
         if ((hitbox->def->flags & OBJHITBOX_DEF_CLAMP_Y) != 0) {
             xform.rotY = 0;
@@ -1386,7 +1386,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
                 memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                        hitboxBuf->file->hitVolumeCount << 4);
             }
-            if ((u32)attA != 0) {
+            if (attA != NULL) {
                 hitboxBuf = ObjHits_GetActiveModel(attA);
                 bufIndex = (hitboxBuf->bufferFlags >> 2) & 1;
                 if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
@@ -1407,7 +1407,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
         if (mask != 0) {
             result = ObjHits_CheckHitVolumes(objA, objB, objA, 1, 0, mask, stateA->skeletonHitMask >> 4);
         }
-        if ((((u32)attA != 0) && (result == 0)) && (mask = stateA->objectHitMask & 0xf, mask != 0)) {
+        if (((attA != NULL) && (result == 0)) && (mask = stateA->objectHitMask & 0xf, mask != 0)) {
             result = ObjHits_CheckHitVolumes(attA, objB, objA, 1, 0, mask, stateA->skeletonHitMask & 0xf);
         }
         if ((result == 0) && (objA->anim.classId == 1)) {
@@ -1430,7 +1430,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
                 memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
                        hitboxBuf->file->hitVolumeCount << 4);
             }
-            if ((u32)attB != 0) {
+            if (attB != NULL) {
                 hitboxBuf = ObjHits_GetActiveModel(attB);
                 bufIndex = (hitboxBuf->bufferFlags >> 2) & 1;
                 if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
@@ -1451,7 +1451,7 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
         if (mask != 0) {
             result = ObjHits_CheckHitVolumes(objB, objA, objB, 1, 0, mask, stateB->skeletonHitMask >> 4);
         }
-        if ((((u32)attB != 0) && (result == 0)) && (mask = stateB->objectHitMask & 0xf, mask != 0)) {
+        if (((attB != NULL) && (result == 0)) && (mask = stateB->objectHitMask & 0xf, mask != 0)) {
             result = ObjHits_CheckHitVolumes(attB, objA, objB, 1, 0, mask, stateB->skeletonHitMask & 0xf);
         }
         if ((result == 0) && (objB->anim.classId == 1)) {
@@ -2219,7 +2219,7 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
     effectColorArgs = gObjHitReactEffectColorArgs;
     if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
         OSReport(sObjHitReactHitstateFrameString, objAnim->currentMoveProgress);
-        moveEnded = ObjAnim_AdvanceCurrentMove((int)obj, (double)*reactionStepScale, (double)timeDelta, NULL);
+        moveEnded = ObjAnim_AdvanceCurrentMove(obj, (double)*reactionStepScale, (double)timeDelta, NULL);
         if (moveEnded != 0) {
             OSReport(sObjHitReactResetString);
             reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
@@ -2267,7 +2267,7 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
         }
         if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
             (reactionEntry->reactionMoveId > OBJHITREACT_NO_REACTION_ANIM)) {
-            ObjAnim_SetCurrentMove((int)obj, reactionEntry->reactionMoveId, gObjHitsScalarZero[0], 0);
+            ObjAnim_SetCurrentMove(obj, reactionEntry->reactionMoveId, gObjHitsScalarZero[0], 0);
             *reactionStepScale = reactionEntry->reactionStepScale;
             reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
         }

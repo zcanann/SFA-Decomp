@@ -223,11 +223,11 @@ void waterflowwe_update(GameObject* obj)
     }
     if (WATERFLOWWE_ZERO == vx && WATERFLOWWE_ZERO == vz)
     {
-        ObjAnim_SetCurrentMove((int)obj, 1, gWaterFlowIdlePhase, 0);
+        ObjAnim_SetCurrentMove(obj, 1, gWaterFlowIdlePhase, 0);
     }
     else
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, gWaterFlowIdlePhase, 0);
+        ObjAnim_SetCurrentMove(obj, 0, gWaterFlowIdlePhase, 0);
     }
 }
 
@@ -249,7 +249,7 @@ void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup)
         object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags = (u16)(object->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED);
-    ObjAnim_SetCurrentMove((int)obj, 0, WATERFLOWWE_ZERO, 0);
+    ObjAnim_SetCurrentMove(obj, 0, WATERFLOWWE_ZERO, 0);
 }
 
 void waterflowwe_release(void)

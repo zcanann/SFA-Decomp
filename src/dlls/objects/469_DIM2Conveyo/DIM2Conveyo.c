@@ -70,7 +70,7 @@ int dim2conveyor_getObjectTypeId(void) {
 }
 
 void dim2conveyor_free(GameObject* obj) {
-    objFreeObjectType((int)obj, DIM2CONVEYOR_OBJECT_GROUP);
+    objFreeObjectType(obj, DIM2CONVEYOR_OBJECT_GROUP);
 }
 
 void dim2conveyor_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -131,7 +131,7 @@ void dim2conveyor_init(GameObject* obj, const Dim2ConveyorPlacement* placement) 
     state->scrollZ = scale * mathCosf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
     state->directionSwapTimer = 0.0f;
     state->musicHoldTimer = 0;
-    objAddObjectType((u32)obj, DIM2CONVEYOR_OBJECT_GROUP);
+    objAddObjectType(obj, DIM2CONVEYOR_OBJECT_GROUP);
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     if (placement->base.ident == DIM2CONVEYOR_DUAL_DIRECTION_MAP_ID) {
         mainSetBits(DIM2CONVEYOR_GAMEBIT_POSITIVE_DIRECTION, 1);

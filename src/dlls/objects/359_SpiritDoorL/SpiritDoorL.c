@@ -138,7 +138,7 @@ void SpiritDoorLock_update(GameObject* obj) {
 
         cameraMode = (*gCameraInterface)->getMode();
         if (cameraMode != CAMERA_MODE_CANNON_RESOURCE_ID) {
-            Sfx_KeepAliveLoopedObjectSound((int)obj, SPIRIT_DOOR_LOCK_LOOP_SFX);
+            Sfx_KeepAliveLoopedObjectSound(obj, SPIRIT_DOOR_LOCK_LOOP_SFX);
         }
         orbitObjects = (GameObject**)objGetAllOfType(SPIRIT_DOOR_SPIRIT_OBJECT_GROUP, &orbitCount);
         angleStep = SPIRIT_DOOR_LOCK_FULL_TURN / state->orbitCount;

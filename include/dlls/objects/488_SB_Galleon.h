@@ -137,7 +137,7 @@ STATIC_ASSERT(offsetof(SBGalleonState, textTimer) == 0xAC);
 STATIC_ASSERT(offsetof(SBGalleonState, gameBitLatch) == 0xB0);
 STATIC_ASSERT(sizeof(SBGalleonState) == 0xB4);
 
-typedef int (*SBGalleonVtblFn)(int galleon);
+typedef int (*SBGalleonVtblFn)(GameObject* galleon);
 
 /* Class-specific callbacks following the standard eight object callbacks. */
 typedef struct SBGalleonVtbl {
