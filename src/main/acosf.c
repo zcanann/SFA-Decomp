@@ -109,6 +109,12 @@ float atanf(float value) {
                            + 0.9999999999994954));
     }
 
+    /* Unsequenced modification and access of `reduced`: undefined behaviour in C.
+       MWCC evaluates the assignment first, so retail computes squared = reduced * reduced.
+       Required for the byte match -- splitting it into two statements assigns absoluteValue
+       and reduced to swapped FPRs (f30/f29) and breaks atanf. Compilers that evaluate the
+       left operand first read `reduced` uninitialised and return NaN for every |value| > 1;
+       non-MWCC consumers must patch this locally. */
     squared = reduced * (reduced = 1.0 / absoluteValue);
     result = (float)(1.5707963267948966
                      - reduced * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (-0.00009545564651489258 * squared + 0.0008865618705749518) + -0.0038832764327526095)
