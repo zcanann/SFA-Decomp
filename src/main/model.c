@@ -2663,6 +2663,7 @@ void* ObjModel_LoadModelData(int id)
 {
     int fileOffset, dataLen, animCount, headerSize, amapFlag;
     int amapSize;
+    int allocSize;
     void* model;
     if (getTableFileEntry(MLDF_FILEID_MODELS_TAB_A, id, &fileOffset) == 0)
     {
@@ -2672,7 +2673,9 @@ void* ObjModel_LoadModelData(int id)
     headerSize = roundUpTo8(headerSize);
     headerSize += 0xb0;
     amapSize = modelGetAmapSize(id, amapFlag, animCount);
-    model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
+    allocSize = dataLen + amapSize + 0x1f4;
+    model = (void*)roundUpTo16((int)mmAlloc(allocSize, 9, 0));
+    DCInvalidateRange(model, allocSize);
     loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, model, fileOffset, dataLen, 0, id, 0);
     ((ModelFileHeader*)model)->headerSize = headerSize;
     ((ModelFileHeader*)model)->modelId = id;
