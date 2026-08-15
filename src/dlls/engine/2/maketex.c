@@ -42,6 +42,7 @@ static inline int maketex_indexOf(int* p, int n, int target)
     }
     return -1;
 }
+
 /* Offsets of this TU's memory card string literals from sMemoryCardFileNameString:
  * the two banner comment titles and the banner/icon asset file names. Rev 1 emits
  * the file names first because the comment writer became a separate function. */
@@ -329,38 +330,38 @@ void loadMemCardImages(void)
 #else
     if (gGameTextFontIsSjis != 0)
     {
-    gSaveCardImageBuffer[0x00] = 0x83;
-    gSaveCardImageBuffer[0x01] = 0x58;
-    gSaveCardImageBuffer[0x02] = 0x83;
-    gSaveCardImageBuffer[0x03] = 0x5e;
-    gSaveCardImageBuffer[0x04] = 0x81;
-    gSaveCardImageBuffer[0x05] = 0x5b;
-    gSaveCardImageBuffer[0x06] = 0x83;
-    gSaveCardImageBuffer[0x07] = 0x74;
-    gSaveCardImageBuffer[0x08] = 0x83;
-    gSaveCardImageBuffer[0x09] = 0x48;
-    gSaveCardImageBuffer[0x0a] = 0x83;
-    gSaveCardImageBuffer[0x0b] = 0x62;
-    gSaveCardImageBuffer[0x0c] = 0x83;
-    gSaveCardImageBuffer[0x0d] = 0x4e;
-    gSaveCardImageBuffer[0x0e] = 0x83;
-    gSaveCardImageBuffer[0x0f] = 0x58;
-    gSaveCardImageBuffer[0x10] = 0x83;
-    gSaveCardImageBuffer[0x11] = 0x41;
-    gSaveCardImageBuffer[0x12] = 0x83;
-    gSaveCardImageBuffer[0x13] = 0x68;
-    gSaveCardImageBuffer[0x14] = 0x83;
-    gSaveCardImageBuffer[0x15] = 0x78;
-    gSaveCardImageBuffer[0x16] = 0x83;
-    gSaveCardImageBuffer[0x17] = 0x93;
-    gSaveCardImageBuffer[0x18] = 0x83;
-    gSaveCardImageBuffer[0x19] = 0x60;
-    gSaveCardImageBuffer[0x1a] = 0x83;
-    gSaveCardImageBuffer[0x1b] = 0x83;
-    gSaveCardImageBuffer[0x1c] = 0x81;
-    gSaveCardImageBuffer[0x1d] = 0x5b;
-    gSaveCardImageBuffer[0x1e] = 0x00;
-    gSaveCardImageBuffer[0x1f] = 0x00;
+        gSaveCardImageBuffer[0x00] = 0x83;
+        gSaveCardImageBuffer[0x01] = 0x58;
+        gSaveCardImageBuffer[0x02] = 0x83;
+        gSaveCardImageBuffer[0x03] = 0x5e;
+        gSaveCardImageBuffer[0x04] = 0x81;
+        gSaveCardImageBuffer[0x05] = 0x5b;
+        gSaveCardImageBuffer[0x06] = 0x83;
+        gSaveCardImageBuffer[0x07] = 0x74;
+        gSaveCardImageBuffer[0x08] = 0x83;
+        gSaveCardImageBuffer[0x09] = 0x48;
+        gSaveCardImageBuffer[0x0a] = 0x83;
+        gSaveCardImageBuffer[0x0b] = 0x62;
+        gSaveCardImageBuffer[0x0c] = 0x83;
+        gSaveCardImageBuffer[0x0d] = 0x4e;
+        gSaveCardImageBuffer[0x0e] = 0x83;
+        gSaveCardImageBuffer[0x0f] = 0x58;
+        gSaveCardImageBuffer[0x10] = 0x83;
+        gSaveCardImageBuffer[0x11] = 0x41;
+        gSaveCardImageBuffer[0x12] = 0x83;
+        gSaveCardImageBuffer[0x13] = 0x68;
+        gSaveCardImageBuffer[0x14] = 0x83;
+        gSaveCardImageBuffer[0x15] = 0x78;
+        gSaveCardImageBuffer[0x16] = 0x83;
+        gSaveCardImageBuffer[0x17] = 0x93;
+        gSaveCardImageBuffer[0x18] = 0x83;
+        gSaveCardImageBuffer[0x19] = 0x60;
+        gSaveCardImageBuffer[0x1a] = 0x83;
+        gSaveCardImageBuffer[0x1b] = 0x83;
+        gSaveCardImageBuffer[0x1c] = 0x81;
+        gSaveCardImageBuffer[0x1d] = 0x5b;
+        gSaveCardImageBuffer[0x1e] = 0x00;
+        gSaveCardImageBuffer[0x1f] = 0x00;
         sprintf((char*)(gSaveCardImageBuffer + 0x20), names + MEMCARD_STR_TITLES);
     }
     else
@@ -433,38 +434,38 @@ void loadMemCardComments(void)
 
     if (getCurLanguage() == LANGUAGE_JAPANESE)
     {
-    gSaveCardImageBuffer[0x00] = 0x83;
-    gSaveCardImageBuffer[0x01] = 0x58;
-    gSaveCardImageBuffer[0x02] = 0x83;
-    gSaveCardImageBuffer[0x03] = 0x5e;
-    gSaveCardImageBuffer[0x04] = 0x81;
-    gSaveCardImageBuffer[0x05] = 0x5b;
-    gSaveCardImageBuffer[0x06] = 0x83;
-    gSaveCardImageBuffer[0x07] = 0x74;
-    gSaveCardImageBuffer[0x08] = 0x83;
-    gSaveCardImageBuffer[0x09] = 0x48;
-    gSaveCardImageBuffer[0x0a] = 0x83;
-    gSaveCardImageBuffer[0x0b] = 0x62;
-    gSaveCardImageBuffer[0x0c] = 0x83;
-    gSaveCardImageBuffer[0x0d] = 0x4e;
-    gSaveCardImageBuffer[0x0e] = 0x83;
-    gSaveCardImageBuffer[0x0f] = 0x58;
-    gSaveCardImageBuffer[0x10] = 0x83;
-    gSaveCardImageBuffer[0x11] = 0x41;
-    gSaveCardImageBuffer[0x12] = 0x83;
-    gSaveCardImageBuffer[0x13] = 0x68;
-    gSaveCardImageBuffer[0x14] = 0x83;
-    gSaveCardImageBuffer[0x15] = 0x78;
-    gSaveCardImageBuffer[0x16] = 0x83;
-    gSaveCardImageBuffer[0x17] = 0x93;
-    gSaveCardImageBuffer[0x18] = 0x83;
-    gSaveCardImageBuffer[0x19] = 0x60;
-    gSaveCardImageBuffer[0x1a] = 0x83;
-    gSaveCardImageBuffer[0x1b] = 0x83;
-    gSaveCardImageBuffer[0x1c] = 0x81;
-    gSaveCardImageBuffer[0x1d] = 0x5b;
-    gSaveCardImageBuffer[0x1e] = 0x00;
-    gSaveCardImageBuffer[0x1f] = 0x00;
+        gSaveCardImageBuffer[0x00] = 0x83;
+        gSaveCardImageBuffer[0x01] = 0x58;
+        gSaveCardImageBuffer[0x02] = 0x83;
+        gSaveCardImageBuffer[0x03] = 0x5e;
+        gSaveCardImageBuffer[0x04] = 0x81;
+        gSaveCardImageBuffer[0x05] = 0x5b;
+        gSaveCardImageBuffer[0x06] = 0x83;
+        gSaveCardImageBuffer[0x07] = 0x74;
+        gSaveCardImageBuffer[0x08] = 0x83;
+        gSaveCardImageBuffer[0x09] = 0x48;
+        gSaveCardImageBuffer[0x0a] = 0x83;
+        gSaveCardImageBuffer[0x0b] = 0x62;
+        gSaveCardImageBuffer[0x0c] = 0x83;
+        gSaveCardImageBuffer[0x0d] = 0x4e;
+        gSaveCardImageBuffer[0x0e] = 0x83;
+        gSaveCardImageBuffer[0x0f] = 0x58;
+        gSaveCardImageBuffer[0x10] = 0x83;
+        gSaveCardImageBuffer[0x11] = 0x41;
+        gSaveCardImageBuffer[0x12] = 0x83;
+        gSaveCardImageBuffer[0x13] = 0x68;
+        gSaveCardImageBuffer[0x14] = 0x83;
+        gSaveCardImageBuffer[0x15] = 0x78;
+        gSaveCardImageBuffer[0x16] = 0x83;
+        gSaveCardImageBuffer[0x17] = 0x93;
+        gSaveCardImageBuffer[0x18] = 0x83;
+        gSaveCardImageBuffer[0x19] = 0x60;
+        gSaveCardImageBuffer[0x1a] = 0x83;
+        gSaveCardImageBuffer[0x1b] = 0x83;
+        gSaveCardImageBuffer[0x1c] = 0x81;
+        gSaveCardImageBuffer[0x1d] = 0x5b;
+        gSaveCardImageBuffer[0x1e] = 0x00;
+        gSaveCardImageBuffer[0x1f] = 0x00;
         sprintf((char*)(gSaveCardImageBuffer + 0x20), names + MEMCARD_STR_TITLES);
     }
     else
