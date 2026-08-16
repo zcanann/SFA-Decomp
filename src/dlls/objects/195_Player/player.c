@@ -16580,7 +16580,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             }
             ObjPath_GetPointWorldPosition((GameObject*)obj, 5, &px, &py, &pz, 0);
             dx = ((GameObject*)obj)->anim.worldPosX - npos[0];
-            dy = (((GameObject*)obj)->anim.worldPosY + ((PlayerState*)inner)->pathBearingEyeY) - npos[1];
+            dy = (((PlayerState*)inner)->pathBearingEyeY + ((GameObject*)obj)->anim.worldPosY) - npos[1];
             dz = ((GameObject*)obj)->anim.worldPosZ - npos[2];
             {
                 s16 ang = (s16)getAngle(dx, dz);
@@ -17195,8 +17195,12 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 break;
             case 0x28:
             {
-                int h;
                 int mapVal;
+                int v;
+                int hi;
+                PlayerState* in0;
+                PlayerState* in1;
+                PlayerState* in2;
                 switch (coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ))
                 {
                 case 0x13:
@@ -17212,34 +17216,35 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     mapVal = 0x1c;
                     break;
                 }
-                h = (int)((GameObject*)obj)->extra;
-                if ((s8) * (s8*)(*(int*)(h + 0x35c) + 1) <= mapVal - 4)
+                in0 = (PlayerState*)((GameObject*)obj)->extra;
+                if ((in0->playerStatus)->maxHealth <= mapVal - 4)
                 {
-                    int vv = mapVal;
-                    if (mapVal < 0)
+                    v = mapVal;
+                    in1 = (PlayerState*)((GameObject*)obj)->extra;
+                    if (v < 0)
                     {
-                        vv = 0;
+                        v = 0;
                     }
-                    else if (mapVal > 0x50)
+                    else if (v > 0x50)
                     {
-                        vv = 0x50;
+                        v = 0x50;
                     }
-                    *(s8*)(*(int*)((char*)h + 0x35c) + 1) = vv;
-                    vv = mapVal;
-                    h = (int)((GameObject*)obj)->extra;
-                    if (mapVal < 0)
+                    (in1->playerStatus)->maxHealth = (s8)v;
+                    v = mapVal;
+                    in2 = (PlayerState*)((GameObject*)obj)->extra;
+                    if (v < 0)
                     {
-                        vv = 0;
+                        v = 0;
                     }
                     else
                     {
-                        s8 cur2 = *(s8*)(*(int*)(h + 0x35c) + 1);
-                        if (mapVal > cur2)
+                        hi = (in2->playerStatus)->maxHealth;
+                        if (v > hi)
                         {
-                            vv = cur2;
+                            v = hi;
                         }
                     }
-                    *(s8*)(*(int*)(h + 0x35c)) = vv;
+                    (in2->playerStatus)->health = (s8)v;
                 }
                 break;
             }
