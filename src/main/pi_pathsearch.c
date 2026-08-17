@@ -139,7 +139,7 @@ static inline int pathSearchFindPointNode(PathSearch* search, RomCurveDef* point
             *visitedOut = scanNode->visited;
             return index;
         }
-        offset += 0x10;
+        offset += sizeof(PathSearchNode);
         index++;
     }
     return -1;
@@ -408,7 +408,7 @@ void freeAndNull(void** p) {
 }
 
 void pathSearchInit(PathSearch* search) {
-    search->nodes = (PathSearchNode*)mmAlloc(0x1960, 0x10, 0);
+    search->nodes = (PathSearchNode*)mmAlloc(0xfe * sizeof(PathSearchNode) + 0xfe * sizeof(PathHeapEntry) + 100 * sizeof(RomCurveDef*), 0x10, 0);
     search->heap = (PathHeapEntry*)&search->nodes[0xfe];
     search->path = (RomCurveDef**)&search->heap[0xfe];
 }

@@ -123,7 +123,7 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
     }
     commands = packet.entries;
     for (; effectCount != 0; effectCount--) {
-        texture = textureIdxToPtr(*modelFile->textureIds);
+        texture = textureIdxToPtr(modelFile->textureIds[0]);
         commands[0].layer = 0;
         commands[0].flags = 1;
         commands[0].tex = gDll5BZeroIndices;

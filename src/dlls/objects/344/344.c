@@ -674,8 +674,7 @@ void gunpowderBarrel_update(GameObject* obj) {
     }
     if (obj->childObjs[0] == NULL) {
         f32 timerRange = 50.0f;
-        if ((u32)(state->linkedTimerObject =
-                      objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, &timerRange)) != 0 &&
+        if ((state->linkedTimerObject = objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, &timerRange)) != NULL &&
             timer_isEffectMode(state->linkedTimerObject) != 0 && state->linkedTimerObject->ownerObj == NULL) {
             ObjLink_AttachChild(obj, state->linkedTimerObject, 0);
         }

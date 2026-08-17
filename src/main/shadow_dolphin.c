@@ -342,7 +342,7 @@ void objDrawGroundShadow(GameObject* obj, ObjModel* model)
             GXSetCullMode(GX_CULL_NONE);
             GXSetCurrentMtx(GX_PNMTX9);
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-            selectTexture((Texture*)((int)(&obj->anim)->modelState->shadowTexture), 0);
+            selectTexture((Texture*)(&obj->anim)->modelState->shadowTexture, 0);
             GXBegin(GX_QUADS, GX_VTXFMT6, 4);
             GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
             GXTexCoord2s16(0, 0);
@@ -889,7 +889,7 @@ int shadowInit(GameObject* obj, u32 arena, int flags)
     modelState->shadowTintA = 0x96;
     modelState->shadowTintB = 0x64;
     gShadowVolumesDirty = 1;
-    return rounded + 0x44;
+    return rounded + sizeof(ObjModelState);
 }
 
 void playerShadowClearPositionOverride(GameObject* obj)

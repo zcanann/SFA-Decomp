@@ -1049,7 +1049,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
         else
         {
             Obj_TransformWorldPointToLocal(worldStart[0], worldStart[1], worldStart[2], &localStart[0], &localStart[1],
-                                           &localStart[2], (GameObject*)(int)target);
+                                           &localStart[2], target);
         }
         Obj_TransformWorldPointToLocal(worldEnd[0], worldEnd[1], worldEnd[2], &localEnd[0], &localEnd[1], &localEnd[2],
                                        (GameObject*)(int)target);
@@ -1088,9 +1088,9 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
         if (out->object != NULL)
         {
             Obj_TransformLocalPointToWorld(out->lineStartX, out->lineStartY, out->lineStartZ, &out->lineStartX,
-                                           &out->lineStartY, &out->lineStartZ, (GameObject*)(u32)out->object);
+                                           &out->lineStartY, &out->lineStartZ, out->object);
             Obj_TransformLocalPointToWorld(out->lineEndX, out->lineEndY, out->lineEndZ, &out->lineEndX,
-                                           &out->lineEndY, &out->lineEndZ, (GameObject*)(u32)out->object);
+                                           &out->lineEndY, &out->lineEndZ, out->object);
         }
         if (parentAddress != 0)
         {
@@ -1521,7 +1521,7 @@ void trackSetLinesEnabledByParam(int matchVal, GameObject* obj, int flag)
     int i;
     struct IntersectModLineObject* mod;
     IntersectLine* e;
-    if ((u32)obj != 0)
+    if (obj != NULL)
     {
         mod = (struct IntersectModLineObject*)(obj)->anim.modelInstance;
         e = mod->lines;
@@ -3393,7 +3393,7 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
         {
             cur = trackBuildBlockTriangles((int)gTrackTriangleBuffer, x0, y0, z0, x1, y1, z1, queryMask, b);
         }
-        if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
+        if (cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
         {
             ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
             i = 0;
@@ -3456,7 +3456,7 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
                 desc->object = resetObj;
                 cur = trackBuildModelTriangles(cur, desc, model, 1.0f, x0, y0, z0, x1, y1, z1, queryMask);
                 desc++;
-                if ((u32)cur >= gTrackTriangleBufferEnd)
+                if (cur >= gTrackTriangleBufferEnd)
                     break;
                 if (desc >= descEnd)
                     break;

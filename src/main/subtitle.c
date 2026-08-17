@@ -164,7 +164,7 @@ static void subtitleBuildLineTable(void) {
             for (k = 0; k < count; k++) {
                 s[0]->lines[gSubtitleLineCount++] = strLines[k];
             }
-            blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
+            blk = &s[0]->blocks[gSubtitleBlockCount];
             if (*blk != NULL) {
                 oldDelay = mmSetFreeDelay(0);
                 blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);

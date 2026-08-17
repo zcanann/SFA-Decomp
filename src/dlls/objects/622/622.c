@@ -144,7 +144,7 @@ int drshackle_renderAtPathPoint(GameObject* obj, int a, int b, int c, int d, int
 
 int drshackle_getExtraSize(void)
 {
-    return 0x20;
+    return sizeof(DrshackleState);
 }
 
 int drshackle_getObjectTypeId(void)

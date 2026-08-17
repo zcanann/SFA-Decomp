@@ -72,7 +72,7 @@ void BaddieInterestP_update(GameObject* obj) {
         ((int)placement->doneGameBit == BADDIE_INTEREST_GAME_BIT_NONE ||
          mainGetBit((int)placement->doneGameBit) == 0)) {
         int objectCount;
-        u32* objects = (u32*)objGetAllOfType(BADDIE_INTEREST_OBJECT_GROUP, &objectCount);
+        GameObject** objects = objGetAllOfType(BADDIE_INTEREST_OBJECT_GROUP, &objectCount);
         if (objectCount > 0) {
             u32 targetLinkId = (u32)(u16)placement->targetLinkIdHi << 16;
             GameObject* candidate;

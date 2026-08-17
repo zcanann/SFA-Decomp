@@ -86,8 +86,7 @@ int saveGame_doWrite(int slot)
         a[0] = a[0] + p[i[0]];
     }
     chk = x[0] ^ (a[0] + 13);
-    ((u32*)p)[0x7ff] = (u32)chk;
-    ((u32*)p)[0x7fe] = (u32)(chk >> 32);
+    p[0x3ff] = chk;
     DCFlushRange((void*)gSaveCardIoBuffer, 0x2000);
     result = CARDWrite(&gSaveCardFileInfo.fileInfo, (void*)gSaveCardIoBuffer, 0x2000, offset = (u8)slot << 13);
     if (result == -5)

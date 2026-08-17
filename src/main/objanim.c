@@ -444,7 +444,7 @@ static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 
 static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex)
 {
-    return axis[sampleIndex + 1];
+    return ObjAnim_ReadPackedS16(&axis[sampleIndex + 1]);
 }
 
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut)

@@ -706,7 +706,7 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
             {
                 state[0x33a] = rowsC[state[0x33c] * 12 + 0xa];
             }
-            ret = rowsC[state[0x33c] * 12 + 9];
+            ret = rowsC[((EnemyState*)state)->familyData.sharpClaw.activeEventIndex * 12 + 9];
             ((EnemyState*)state)->sharpClaw.moveHoldTimer = ((EnemyState*)state)->sharpClaw.moveHoldDuration;
             z = 0.0f;
             ((EnemyState*)state)->sharpClaw.eventDelayTimer = z;
@@ -724,8 +724,8 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
         }
         else
         {
-            amount = state[0x2f1] & 0x1f;
-            if ((u32)(state[0x2f1] & 0x1f) > 0x18)
+            amount = ((EnemyState*)state)->flags2F1 & 0x1f;
+            if ((u32)(((EnemyState*)state)->flags2F1 & 0x1f) > 0x18)
             {
                 amount = 0;
             }
@@ -784,13 +784,13 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
                 return 0;
             }
         }
-        if (state[0x2f1] & 0x10)
+        if (((EnemyState*)state)->flags2F1 & 0x10)
         {
             damage = 0x14;
         }
         else
         {
-            state[0x2f5] = 0;
+            ((EnemyState*)state)->spawnBits = 0;
         }
         if (damage > ((EnemyState*)state)->current)
         {
@@ -1124,11 +1124,7 @@ void groundBaddiePickIdleMove(GameObject* obj, u8* state)
     SeqEntry* entry;
     u32 idx;
     u8 wrapIdx;
-    char* base;
-
-    base = (char*)gBaddieFamilyTables;
-    base += ((EnemyState*)state)->userData2 * 40;
-    entry = *(SeqEntry**)(base + 12);
+    entry = (SeqEntry*)gBaddieFamilyTables[((EnemyState*)state)->userData2].tblC;
     if ((f32)((EnemyState*)state)->targetDist > 0.6f * ((EnemyState*)state)->sightRange)
     {
         if ((f32)((EnemyState*)state)->targetDist > 0.8f * ((EnemyState*)state)->sightRange)
@@ -1168,11 +1164,7 @@ void groundBaddiePickNextMove(GameObject* obj, u8* state)
     SeqEntry* entry;
     u32 idx;
     s16 d;
-    char* base;
-
-    base = (char*)gBaddieFamilyTables;
-    base += ((EnemyState*)state)->userData2 * 40;
-    entry = *(SeqEntry**)(base + 12);
+    entry = (SeqEntry*)gBaddieFamilyTables[((EnemyState*)state)->userData2].tblC;
     if (enemy_findNearbyEnemies(obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
     {
         if (gGroundBaddieTargetSearchResult[0].dist <= 40 && ((EnemyState*)state)->turnOctant != 3 &&

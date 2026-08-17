@@ -639,7 +639,7 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
                 Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                                ((GameObject*)obj)->anim.localPosZ, &((GameObject*)obj)->anim.worldPosX,
                                                &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ,
-                                               (GameObject*)((GameObject*)obj)->anim.parentAddress);
+                                               (GameObject*)((GameObject*)obj)->anim.parent);
             }
         } else {
             ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
@@ -1251,7 +1251,7 @@ void curves_updateQueryBounds(GameObject* obj, CurvesCollisionState* state, f32 
             } else {
                 Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
                                                &obj->anim.worldPosX, &obj->anim.worldPosY, &obj->anim.worldPosZ,
-                                               (GameObject*)obj->anim.parentAddress);
+                                               (GameObject*)obj->anim.parent);
             }
         } else {
             obj->anim.worldPosX = obj->anim.localPosX;

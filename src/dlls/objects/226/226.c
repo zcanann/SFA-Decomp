@@ -316,21 +316,21 @@ void staffUpdateAttackEffects(GameObject* obj, GameObject* player) {
             if (chargeLevel > 0.0f) {
                 fxA.count = 21 - (int)(15.0f * (chargeLevel / 60.0f));
                 fxA.id = 0xc95;
-                playerGetFxOffsets((GameObject*)((int)obj->ownerObj), &effectOffsets);
+                playerGetFxOffsets((GameObject*)obj->ownerObj, &effectOffsets);
                 fxB.posX = effectOffsets[3];
                 fxB.posY = effectOffsets[4];
                 fxB.posZ = effectOffsets[5];
-                (*gPartfxInterface)->spawnObject((void*)(int)obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void*)(int)obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void*)(int)obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void*)(int)obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject(obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject(obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject(obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject(obj->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
                 fxA.count = 9;
                 fxA.id = 0xc95;
                 fxA.scale = 0.8f * (chargeLevel / 60.0f) + 0.1f;
                 fxB.posX = effectOffsets[3];
                 fxB.posY = effectOffsets[4];
                 fxB.posZ = effectOffsets[5];
-                (*gPartfxInterface)->spawnObject((void*)(int)obj->ownerObj, 0x7ba, &fxB, 0x200001, -1, &fxA);
+                (*gPartfxInterface)->spawnObject(obj->ownerObj, 0x7ba, &fxB, 0x200001, -1, &fxA);
             }
             break;
         case 134: {
@@ -909,7 +909,7 @@ void staffUpdateWhileTimeStopped(GameObject* obj) {
 }
 
 int staff_getExtraSize(void) {
-    return 0xc0;
+    return sizeof(StaffState);
 }
 
 static inline void staff_initialiseBody(s16* p, int i) {
@@ -1010,7 +1010,7 @@ void staff_update(GameObject* obj) {
     }
 
     staffUpdateAttackEffects(obj, (GameObject*)obj->ownerObj);
-    objGetAnimState80A((GameObject*)((int)obj->ownerObj));
+    objGetAnimState80A((GameObject*)obj->ownerObj);
     state->swipeTextureIndex = 0;
     staffUpdateQuakeSpell();
 }
@@ -1043,7 +1043,7 @@ void staff_release(void) {
     int i;
     if (gStaffSwipeTextures[0] != NULL) {
         for (i = 0, p = gStaffSwipeTextures; i < 2; i++) {
-            textureFree((Texture*)((u8*)((int)*p)));
+            textureFree(*p);
             *p = NULL;
             p++;
         }

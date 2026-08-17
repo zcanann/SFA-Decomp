@@ -352,7 +352,7 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
         {
             tricky = (int*)getTrickyObject();
             Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11_4b6);
-            spawnExplosion((GameObject*)(int)obj, 50.0f, 0, 1, 1, 1, 0, 1, 0);
+            spawnExplosion((GameObject*)obj, 50.0f, 0, 1, 1, 1, 0, 1, 0);
             state->flags.b0 = 1;
             mainSetBits(setup->destroyedGameBit, 1);
             if (tricky != 0)

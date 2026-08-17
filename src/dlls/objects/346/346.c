@@ -293,8 +293,7 @@ void explodable_init(GameObject* obj, ExplodablePlacement* placementAddress) {
     ExplodablePlacement* placement = placementAddress;
 
     objAddObjectType(obj, EXPLODABLE_OBJECT_GROUP);
-    stateAddress = (int)obj->extra;
-    state = (ExplodableState*)stateAddress;
+    state = (ExplodableState*)obj->extra;
     fragmentCount = placement->fragmentCount;
     if (fragmentCount == 0) {
         fragmentCount = 1;

@@ -837,7 +837,7 @@ void mapLoadUnloadObjects(int flag)
     for (; i < 5; i++)
     {
         slot = 0;
-        idPtr = (s16*)(*tp + 0x594);
+        idPtr = (s16*)((char*)*tp + 0x594);
         for (; slot < 3; slot++)
         {
             s16 id = *idPtr;
@@ -866,7 +866,7 @@ void mapLoadUnloadObjects(int flag)
         tp++;
     }
     {
-        int* objs = (int*)ObjList_GetObjects(&i, &objCount);
+        GameObject** objs = ObjList_GetObjects(&i, &objCount);
         while (i < objCount)
         {
             obj = (GameObject*)objs[i];
@@ -1019,7 +1019,7 @@ void mapLoadUnloadObjects(int flag)
             }
         }
         {
-            int* objs2 = (int*)objGetAllOfType(6, &objCount);
+            GameObject** objs2 = objGetAllOfType(6, &objCount);
             for (i = 0; i < objCount; i++)
             {
                 GameObject* obj2 = (GameObject*)objs2[i];

@@ -174,7 +174,7 @@ int NW_mammoth_processAnimEvents(GameObject* obj, int unusedArg, ObjSeqState* an
     }
     audioEvents = &state->animEvents;
     audioPoints = state->pathPoints;
-    audioScratch = state->pathState;
+    audioScratch = &state->pathState;
     objAudioDispatchAnimEvents(obj, (ObjAnimEventList*)audioEvents, 8, audioPoints, audioScratch, 1.0f, 1.0f);
     if (animUpdate->eventCount != 0) {
         obj->objectFlags = (u16)(obj->objectFlags & ~OBJECT_OBJFLAG_SHADOW_DISABLED);
@@ -330,7 +330,7 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
                 }
                 {
                     int* o2 = (int*)ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
-                    if ((int*)playerGetTargetObject((GameObject*)(int)state->playerObject) == o2) {
+                    if ((int*)playerGetTargetObject((GameObject*)state->playerObject) == o2) {
                         enemy_setTrackedObj((GameObject*)o2, state->playerObject);
                     } else {
                         tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
@@ -732,7 +732,7 @@ void NW_mammoth_update(GameObject* obj, int unusedArg) {
     } else {
         state->runtimeFlags = state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_ANIM_ENDED;
     }
-    objAudioDispatchAnimEvents(obj, &state->animEvents, 8, state->pathPoints, state->pathState, 1.0f,
+    objAudioDispatchAnimEvents(obj, &state->animEvents, 8, state->pathPoints, &state->pathState, 1.0f,
                                1.0f);
     NW_mammoth_updateEyeTracking(obj, state,
                                  tables[0]->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
@@ -743,9 +743,9 @@ void NW_mammoth_update(GameObject* obj, int unusedArg) {
         (*gObjectTriggerInterface)->runSequence(state->triggerList[triggerIndex], obj, -1);
     }
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-        (*gPathControlInterface)->update(obj, state->pathState, timeDelta);
-        (*gPathControlInterface)->apply(obj, state->pathState);
-        (*gPathControlInterface)->advance(obj, state->pathState, timeDelta);
+        (*gPathControlInterface)->update(obj, &state->pathState, timeDelta);
+        (*gPathControlInterface)->apply(obj, &state->pathState);
+        (*gPathControlInterface)->advance(obj, &state->pathState, timeDelta);
     }
 }
 

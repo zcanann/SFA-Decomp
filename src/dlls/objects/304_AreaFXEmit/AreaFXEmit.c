@@ -117,7 +117,7 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
     s16 i;
     s16 rotation[3];
     u8 type;
-    void* resource;
+    ObjectInterfaceHandle resource;
     PartFxSpawnParams args;
 
     state = obj->extra;

@@ -55,7 +55,7 @@ ObjectDescriptor gSPDrapeObjDescriptor = {
 
 int spdrape_getExtraSize(void)
 {
-    return 0x18;
+    return sizeof(SpdrapeState);
 }
 
 int spdrape_getObjectTypeId(void)

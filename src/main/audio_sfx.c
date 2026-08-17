@@ -41,7 +41,7 @@ static f32 Sfx_GetListenerRelativeDistance(Vec* soundPos, Vec* outDelta);
 
 static inline SfxObjectChannel* Sfx_FindFreeObjectChannel(void)
 {
-    SfxObjectChannel* ch = (SfxObjectChannel*)(int)gSfxObjectChannels;
+    SfxObjectChannel* ch = gSfxObjectChannels;
     s32 i;
     for (i = SFX_OBJECT_CHANNEL_COUNT - 1; i >= 0; i--)
     {

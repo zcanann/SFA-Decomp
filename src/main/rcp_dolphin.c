@@ -277,7 +277,7 @@ void Rcp_UpdateDistortionTextures(void)
             addSphereMapLitStages(gRcpDistortTexture, (f32*)mtx, &texColor, 0);
             Rcp_ApplyTextureStageCounts();
             Rcp_DrawWarpDistortionMesh((f32)(i * 0x20), 0.0f);
-            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60, 0);
+            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + sizeof(Texture), 0);
             tex = (Texture*)((RcpDistortSlot*)slots[0])[i].texture;
             if (tex->preloaded != 0)
             {
@@ -315,7 +315,7 @@ void Rcp_UpdateDistortionTextures(void)
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
             Rcp_DrawWarpDistortionMesh((f32)(i * 0x20), 0.0f);
-            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + 0x60,
+            GXCopyTex(((RcpDistortSlot*)slots[0])[i].texture + sizeof(Texture),
                       (i == clearSlot) ? GX_TRUE : GX_FALSE);
             tex = (Texture*)((RcpDistortSlot*)slots[0])[i].texture;
             if (tex->preloaded != 0)

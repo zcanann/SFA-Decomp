@@ -400,9 +400,9 @@ int RomCurve_advanceToNextSegment(RomCurveWalker* state, void* targetCurve)
         state->nodeA0 = state->nodeA4;
         state->nodeA4 = targetCurve;
 
-        memcpy(stateBytes + 0xb8, stateBytes + 0xa8, 0x10);
-        memcpy(stateBytes + 0xd8, stateBytes + 0xc8, 0x10);
-        memcpy(stateBytes + 0xf8, stateBytes + 0xe8, 0x10);
+        memcpy(state->hermX2, state->hermX, sizeof(state->hermX2));
+        memcpy(state->hermY2, state->hermY, sizeof(state->hermY2));
+        memcpy(state->hermZ2, state->hermZ, sizeof(state->hermZ2));
 
         state->hermX[0] = ((RomCurveDef*)state->nodeA4)->x;
         state->hermX[1] = ((RomCurveDef*)state->nodeA0)->x;
@@ -434,9 +434,9 @@ int RomCurve_advanceToNextSegment(RomCurveWalker* state, void* targetCurve)
         state->nodeA0 = state->nodeA4;
         state->nodeA4 = targetCurve;
 
-        memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
-        memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
-        memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+        memcpy(state->hermX, state->hermX2, sizeof(state->hermX));
+        memcpy(state->hermY, state->hermY2, sizeof(state->hermY));
+        memcpy(state->hermZ, state->hermZ2, sizeof(state->hermZ));
 
         state->hermX2[0] = ((RomCurveDef*)state->nodeA0)->x;
         state->hermX2[1] = ((RomCurveDef*)state->nodeA4)->x;

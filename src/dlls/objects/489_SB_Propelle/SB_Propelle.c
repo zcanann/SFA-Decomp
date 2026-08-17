@@ -59,7 +59,7 @@ void SB_Propeller_hitDetect(GameObject* obj) {
     if (obj->anim.romDefNo != SB_PROPELLER_SEQ_ID) {
         return;
     }
-    obj->anim.rotZ = ((GameObject*)gSbPropellerObject)->anim.rotZ;
+    obj->anim.rotZ = gSbPropellerObject->anim.rotZ;
 }
 
 void SB_Propeller_update(GameObject* obj) {

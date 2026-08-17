@@ -218,10 +218,10 @@ void playerUpdateBlinkAnimation(void* obj, void* blinkState, u16 flags) {
     wave = 0.25f * mathCosfHighPrecision(phase);
     wave = wave * bs->amount / 255.0f;
     rotation = (32768.0f * (leftScale * wave)) / 3.142f;
-    ((ObjJointPose18*)playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG))->v[1] = rotation;
+    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_LEFT_JOINT_TAG)->v[1] = rotation;
 
     rotation = (32768.0f * (rightScale * wave)) / 3.142f;
-    ((ObjJointPose18*)playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG))->v[1] = -rotation;
+    playerEyeAnim_FindJoint(objAnim, OBJLIB_BLINK_RIGHT_JOINT_TAG)->v[1] = -rotation;
 }
 
 void objSetLookAtFlip(int mode, u8 enabled) {
@@ -843,8 +843,8 @@ s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8*
             int iv[2];
             int n;
             int j;
-            iv[0] = (int)found[0];
-            iv[1] = (int)found[0];
+            iv[0] = 0;
+            iv[1] = 0;
             n = ((ObjDef*)m[0])->jointCount;
             for (j = 0; j < n; j++) {
                 u8* entries = (u8*)((ObjDef*)m[0])->jointData;
@@ -1053,8 +1053,8 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
         int iv[2];
         int n;
         int j;
-        iv[0] = (int)found[0];
-        iv[1] = (int)found[0];
+        iv[0] = 0;
+        iv[1] = 0;
         n = ((ObjDef*)m[0])->jointCount;
         for (j = 0; j < n; j++) {
             u8* entries = (u8*)((ObjDef*)m[0])->jointData;

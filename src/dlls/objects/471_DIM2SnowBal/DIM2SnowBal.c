@@ -121,7 +121,7 @@ void dim2snowball_update(GameObject* obj) {
                 objects = ObjList_GetObjects(&objectIndex, &objectCount);
                 sharpClaw = dim2snowball_findSharpClaw(objects, &objectIndex, &objectCount);
                 if (sharpClaw != NULL) {
-                    (*(void (**)(GameObject*))(*(int*)sharpClaw->anim.dll + 0x20))(sharpClaw);
+                    ((void (*)(GameObject*))sharpClaw->anim.dll[0][8])(sharpClaw);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_en_nlite1_c);
             }

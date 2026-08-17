@@ -247,7 +247,7 @@ void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj)
     {
         mipmap = 0;
     }
-    GXInitTexObj(obj, (u8*)tex + tex->imageOffset + 0x60, tex->width, tex->height,
+    GXInitTexObj(obj, (u8*)tex + tex->imageOffset + sizeof(Texture), tex->width, tex->height,
                  GX_TF_I4, tex->wrapS, tex->wrapT, mipmap);
     if (mipmap != 0)
     {
@@ -538,7 +538,7 @@ void textureFree(Texture* tex)
                     iter = next;
                 }
                 if (((Texture*)tex)->preloaded != 0)
-                    findSomething((void*)(int)((Texture*)tex)->tmemAddr);
+                    findSomething((void*)((Texture*)tex)->tmemAddr);
                 if (((Texture*)tex)->cached == 0)
                     mm_free(tex);
                 gLoadedTextures[i].key = -1;

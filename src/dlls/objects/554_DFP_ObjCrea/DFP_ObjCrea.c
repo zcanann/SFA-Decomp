@@ -56,7 +56,7 @@ STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
 int DFP_ObjCreator_getExtraSize(void)
 {
-    return 0x1c;
+    return sizeof(DfpObjCreatorState);
 }
 int DFP_ObjCreator_getObjectTypeId(void)
 {

@@ -52,7 +52,7 @@ void barrelgener_queueObjectRelease(GameObject* obj, GameObject* queuedObj, int 
 
 int barrelgener_getExtraSize(void)
 {
-    return 0x10;
+    return sizeof(BarrelGeneratorState);
 }
 
 int barrelgener_getObjectTypeId(void)

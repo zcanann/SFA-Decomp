@@ -43,7 +43,7 @@ int dfpfloorbar_SeqFn(void)
 
 int DFP_Floorbar_getExtraSize(void)
 {
-    return 0xc;
+    return sizeof(DfpFloorbarState);
 }
 
 int DFP_Floorbar_getObjectTypeId(void)
@@ -55,7 +55,7 @@ void DFP_Floorbar_free(GameObject* obj)
 {
     DfpFloorbarState* state;
 
-    state = (DfpFloorbarState*)(int)obj->extra;
+    state = (DfpFloorbarState*)obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     state->linkedObject = NULL;
     return;
@@ -75,7 +75,7 @@ void DFP_Floorbar_hitDetect(GameObject* obj)
     GameObject* linkedObject;
     int** state;
     s32 hitFlag;
-    state = (int**)(int)obj->extra;
+    state = (int**)obj->extra;
     linkedObject = (GameObject*)state[2];
     if (linkedObject == NULL)
         return;

@@ -956,7 +956,7 @@ void* mmAlloc(int size, int type, int flag)
 void* mmInitRegion(u8* buf, int size, int numSlots)
 {
     int regIdx = gMmRegionCount++;
-    int slotsBytes = numSlots * 0x1c;
+    int slotsBytes = numSlots * sizeof(HeapItem);
     int after = size - slotsBytes;
     int i;
     HeapItem* slot;

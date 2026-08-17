@@ -329,7 +329,7 @@ void windLift_update(GameObject* obj) {
         for (objectIndex = 1; objectIndex < objectCount; objectIndex++) {
             matchedSlot = -1;
             for (slotIndex = 1; slotIndex < WINDLIFT_SLOT_COUNT; slotIndex++) {
-                if ((u32)state->slots[slotIndex].riderObject == *objects) {
+                if (state->slots[slotIndex].riderObject == *objects) {
                     matchedSlot = slotIndex;
                 }
             }

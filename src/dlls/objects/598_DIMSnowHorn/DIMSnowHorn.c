@@ -1111,7 +1111,7 @@ void DIMSnowHorn1_spawnFootstepEffects(void* obj, DIMSnowHorn1State* pointState,
 
 int DIMSnowHorn1_getExtraSize(void)
 {
-    return 0xd0c;
+    return sizeof(DIMSnowHorn1State);
 }
 
 int DIMSnowHorn1_getObjectTypeId(void)
@@ -1245,7 +1245,7 @@ const f32 gDIMSnowHorn1OverrideOffsetZ[1] = {-20.0f};
 void DIMSnowHorn1_update(GameObject* obj)
 {
     f32 nearDist;
-    u8* base = (u8*)(int)gDIMSnowHorn1ConfigTable;
+    u8* base = (u8*)gDIMSnowHorn1ConfigTable;
     GameObject* player = Obj_GetPlayerObject();
     DIMSnowHorn1State* data;
     s8 modeIndex = -1;
@@ -1315,7 +1315,7 @@ void DIMSnowHorn1_update(GameObject* obj)
     {
     case 0:
     case 5:
-        statePtr = (DIMSnowHorn1State*)((int)obj->extra);
+        statePtr = obj->extra;
         playerObj = Obj_GetPlayerObject();
         if (playerObj != NULL &&
             Vec_distance(&playerObj->anim.worldPosX, &(obj)->anim.worldPosX) < 300.0f &&

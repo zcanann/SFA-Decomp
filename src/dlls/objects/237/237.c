@@ -112,7 +112,7 @@ void collectible_setVisibilityBitClear(GameObject* obj, u32 clear) {
 }
 
 int collectible_getHitRegionId(GameObject* obj) {
-    CollectibleState* state = (CollectibleState*)(int)obj->extra;
+    CollectibleState* state = (CollectibleState*)obj->extra;
 
     if (state->hitRegionId == COLLECTIBLE_HIT_REGION_UNRESOLVED) {
         f32 worldX = obj->anim.worldPosX;

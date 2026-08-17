@@ -193,7 +193,7 @@ void spittingEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int 
     {
         if ((((EnemyState*)state)->userData1 == 2) && (((GameObject*)obj)->anim.currentMove != 5))
         {
-            Baddie_SetMove(obj, (int)state, 5, 3.0f, 0, 0);
+            Baddie_SetMove(obj, state, 5, 3.0f, 0, 0);
         }
     }
     else if ((((GameObject*)obj)->anim.currentMove == 5) || (((GameObject*)obj)->anim.currentMove == 4))
@@ -215,7 +215,7 @@ void spittingEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int 
     else
     {
         ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 0x10;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_mv_ladderslide16_250);
+        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_mv_ladderslide16_250);
     }
     return;
 }

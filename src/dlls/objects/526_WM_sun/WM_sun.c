@@ -200,7 +200,7 @@ void wmsun_updateGlare(GameObject* obj)
 
 int wmsun_getExtraSize(void)
 {
-    return 0x10;
+    return sizeof(WmSunState);
 }
 
 int wmsun_getObjectTypeId(void)

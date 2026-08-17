@@ -421,7 +421,7 @@ void firepipe_free(GameObject* obj)
         iter++;
         i++;
     }
-    if ((u32)extra->glowLight != 0)
+    if (extra->glowLight != NULL)
     {
         modelLightStruct_freeSlot(&extra->glowLight);
     }

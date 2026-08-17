@@ -92,8 +92,7 @@ void dll500_update(GameObject* obj) {
     f32 playerDistance;
     int frameIndex;
 
-    playerDistance = Vec_distance((void*)((int)Obj_GetPlayerObject() + offsetof(GameObject, anim.worldPosX)),
-                                  &obj->anim.worldPosX);
+    playerDistance = Vec_distance(&Obj_GetPlayerObject()->anim.worldPosX, &obj->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel(obj, DLL1F4_OBJECT_SFX_CHANNEL) == 0) {
         if (playerDistance < DLL1F4_OBJECT_SFX_RANGE) {
             Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);

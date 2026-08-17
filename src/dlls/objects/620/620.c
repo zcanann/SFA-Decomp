@@ -52,7 +52,7 @@ int DR_CageWith_toggleRopeStateCallback(GameObject* obj, int unused, ObjSeqState
 
 int DR_CageWith_getExtraSize(void)
 {
-    return 0x34;
+    return sizeof(DrcagewithState);
 }
 
 int DR_CageWith_getObjectTypeId(void)

@@ -155,7 +155,7 @@ void CameraModeStaffAnim_updateTargetAction(CameraObject* camera, GameObject* ta
         (camera->targetFlags & 2) != 0) {
         lockSlot = &camera->currentTarget;
         cam = *gCameraInterface;
-        cam->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, 4, lockSlot, 0x3c, 0xff);
+        cam->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, sizeof(GameObject*), lockSlot, 0x3c, 0xff);
         return;
     }
     zPressed = buttons & PAD_TRIGGER_Z;

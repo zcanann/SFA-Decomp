@@ -187,7 +187,7 @@ f32 gTrickyHudIconFarPlane = 1000.0f;
 f32 gTrickyHudTexScaleX = 0.003125f;
 f32 gTrickyHudTexScaleY = 0.003125f;
 f32 gTrickyHudTexScaleZ = 0.00240625f;
-int gTrickyHudIconKColor = 80;
+GXColor gTrickyHudIconKColor = {0, 0, 0, 80};
 f32 gTrickyHudTexMtxScale = 0.4f;
 char sViewFinderDirN[] = "N\n";
 char sViewFinderDirE[] = "E\n";
@@ -661,7 +661,7 @@ static inline void drawViewFinderHorizontal(f32 directionX, f32 y, f32 startX, f
     f32 endRight;
     f32 thickness;
 
-    extern GXColor gViewFinderLineColor;
+    extern const GXColor gViewFinderLineColor;
 
     color = gViewFinderLineColor;
     color.a = 255.0f * fade;
@@ -700,7 +700,7 @@ static inline void drawViewFinderVertical(f32 directionY, f32 x, f32 startY, f32
     f32 endTop;
     f32 thickness;
 
-    extern GXColor gViewFinderLineColor;
+    extern const GXColor gViewFinderLineColor;
 
     color = gViewFinderLineColor;
     color.a = 255.0f * fade;
@@ -2097,7 +2097,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
     }
     if ((u8)krazoa != 0)
     {
-        drawTexture(base->icon348, (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), 31.0f, alpha, 0x100);
+        drawTexture(base->icons[0x62], (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), 31.0f, alpha, 0x100);
     }
     if (alpha != 0 && tricky != NULL)
     {
@@ -2106,16 +2106,16 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
               base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] < 150.0f &&
               ((int)base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] & 8)))
         {
-            drawTexture(base->icon314, 30.0f, 92.0f, alpha, 0x100);
+            drawTexture(base->icons[0x55], 30.0f, 92.0f, alpha, 0x100);
         }
         for (i = 0; (u8)i < 0x14u; i += 4)
         {
             int b98 = base->statusValue[HUD_STATUS_TRICKY_ENERGY];
             if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0)
             {
-                drawScaledTexture(base->icon31c, (f32)(int)(((u8)i * 0xf) / 4 + 0x40), 102.0f, alpha, 0x100, 6,
+                drawScaledTexture(base->icons[0x57], (f32)(int)(((u8)i * 0xf) / 4 + 0x40), 102.0f, alpha, 0x100, 6,
                                   0x12, 0);
-                drawPartialTexture(base->icon318, (f32)(int)(((u8)i * 0xf) / 4 + 0x46), 102.0f, alpha, 0x100, 7,
+                drawPartialTexture(base->icons[0x56], (f32)(int)(((u8)i * 0xf) / 4 + 0x46), 102.0f, alpha, 0x100, 7,
                                    0x12, 6, 0);
             }
             else
@@ -2133,7 +2133,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
         {
         case 0x47:
         case 0x48:
-            drawTexture(base->icon354, 30.0f, (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
+            drawTexture(base->icons[0x65], 30.0f, (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
             break;
         }
     }
@@ -4066,28 +4066,28 @@ void cMenuUpdateRingRotation(void)
             *(u8*)&gCMenuCurSection = gCMenuPendingSection;
         }
         rot = cur;
-        *(s16*)gCMenuRingObjs[0] = rot;
-        *(s16*)gCMenuRingFrontObjs[0] = rot;
+        gCMenuRingObjs[0]->anim.rotX = rot;
+        gCMenuRingFrontObjs[0]->anim.rotX = rot;
         rot += 0x5555;
-        *(s16*)gCMenuRingObjs[1] = rot;
-        *(s16*)gCMenuRingFrontObjs[1] = rot;
+        gCMenuRingObjs[1]->anim.rotX = rot;
+        gCMenuRingFrontObjs[1]->anim.rotX = rot;
         rot += 0x5555;
-        *(s16*)gCMenuRingObjs[2] = rot;
-        *(s16*)gCMenuRingFrontObjs[2] = rot;
+        gCMenuRingObjs[2]->anim.rotX = rot;
+        gCMenuRingFrontObjs[2]->anim.rotX = rot;
         best = cMenuMinRingAbs();
         r = (s16)(int)(255.0 - 0.023346 * best);
         gCMenuHighlightFade = (r > 0) ? r : 0;
     }
     cur = gCMenuRingAngle;
     rot = cur;
-    *(s16*)gCMenuRingObjs[0] = rot;
-    *(s16*)gCMenuRingFrontObjs[0] = rot;
+    gCMenuRingObjs[0]->anim.rotX = rot;
+    gCMenuRingFrontObjs[0]->anim.rotX = rot;
     rot += 0x5555;
-    *(s16*)gCMenuRingObjs[1] = rot;
-    *(s16*)gCMenuRingFrontObjs[1] = rot;
+    gCMenuRingObjs[1]->anim.rotX = rot;
+    gCMenuRingFrontObjs[1]->anim.rotX = rot;
     rot += 0x5555;
-    *(s16*)gCMenuRingObjs[2] = rot;
-    *(s16*)gCMenuRingFrontObjs[2] = rot;
+    gCMenuRingObjs[2]->anim.rotX = rot;
+    gCMenuRingFrontObjs[2]->anim.rotX = rot;
     best = cMenuMinRingAbs();
     r = (s16)(int)(255.0 - 0.023346 * best);
     gCMenuHighlightFade = (r > 0) ? r : 0;
@@ -6720,7 +6720,7 @@ int pauseMenuIsFox(void)
     inner = s->anim.parent;
     if (inner != NULL)
     {
-        lookup = *((u8*)inner + 0xac);
+        lookup = ((GameObject*)inner)->anim.mapEventSlot;
     }
     else
     {
@@ -7535,7 +7535,7 @@ void drawWorldMapHud(void)
             int i;
             u8* p;
             i = 0;
-            base = (u8*)(int)gGameUiTaskHintCandidates;
+            base = (u8*)gGameUiTaskHintCandidates;
             p = base;
             for (;;)
             {
@@ -8844,7 +8844,7 @@ void cMenuSelectFirstEnabledItem(int idx, s8 flag)
     s16 pos;
     u8 i;
 
-    entry = (CMenuSection*)((u8*)gCMenuSections + idx * 16);
+    entry = &gCMenuSections[idx];
     count = cMenuSetItems(entry->items, flag);
     posPtr = &entry->cursor;
     pos = *posPtr;

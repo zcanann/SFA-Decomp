@@ -50,7 +50,7 @@ int mclightning_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 
 int mclightning_getExtraSize(void)
 {
-    return 0x1c;
+    return sizeof(McLightningState);
 }
 
 void mclightning_free(GameObject* obj)
@@ -71,7 +71,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
     if (mode == MCLIGHTNING_PHASE_ARMED)
     {
         int count;
-        u32* objs = (u32*)objGetAllOfType(MCLIGHTNING_OBJGROUP, &count);
+        GameObject** objs = objGetAllOfType(MCLIGHTNING_OBJGROUP, &count);
         int i;
         for (i = 0; i < count; i++)
         {

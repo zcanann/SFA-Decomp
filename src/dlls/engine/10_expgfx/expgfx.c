@@ -100,7 +100,7 @@ typedef struct ExpgfxBillboardAngles
 
 static inline ExpgfxTableEntry* Expgfx_GetTableEntry(int tableIndex)
 {
-    return &gExpgfxTableEntries[tableIndex];
+    return &EXPGFX_RUNTIME_DATA->expTab[tableIndex];
 }
 
 static inline u32 Expgfx_GetSlotTableIndex(const ExpgfxSlot* slot)

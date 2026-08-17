@@ -43,7 +43,7 @@ static int lbl_803DC1B4[1] = {0};
 
 int drakord_thornbush_getExtraSize(void)
 {
-    return 0x7c;
+    return sizeof(DrakordThornbushState);
 }
 
 int drakord_thornbush_getObjectTypeId(void)
@@ -215,7 +215,7 @@ void drakord_thornbush_update(GameObject* obj)
         }
         if (inner->health == 0)
         {
-            setup2 = (DrakordThornbushPlacement*)((obj)->anim.placementDataAddress);
+            setup2 = (DrakordThornbushPlacement*)(obj)->anim.placementData;
             ObjHits_EnableObject(obj);
             inner->health = setup2->spawnHealth;
             ObjHitbox_SetSphereRadius(&obj->anim, (s16)inner->radius);

@@ -49,7 +49,7 @@ enum DrbarrelgrMode
 
 int DR_BarrelGr_getExtraSize(void)
 {
-    return 0x12c;
+    return sizeof(DrbarrelgrState);
 }
 
 int DR_BarrelGr_getObjectTypeId(void)

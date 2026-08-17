@@ -252,7 +252,7 @@ u8 isHeavyFogEnabled(void)
 
 void* Shader_getLayer(void* base, int idx)
 {
-    return (u8*)base + idx * 8 + 0x24;
+    return &((Shader*)base)->layers[idx];
 }
 void selectTextureWithSecondary(Texture* texture, int mapId)
 {
@@ -327,7 +327,7 @@ void addWarpedNoiseTevStages(void* p1, void* mtx)
                 *(u16*)(dst + 0x60) = ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
             }
         }
-        DCFlushRange(sWarpNoiseTexture + 0x60, ((Texture*)sWarpNoiseTexture)->dataSize);
+        DCFlushRange(sWarpNoiseTexture + sizeof(Texture), ((Texture*)sWarpNoiseTexture)->dataSize);
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     wave = mathSinf(3.142f * sx);
@@ -2157,7 +2157,7 @@ void addSphereMapTexStage(void* p1, u8 intensity)
     texmap = gRcpNextTexMap;
     if (p1 != 0)
     {
-        char* tex = (char*)p1 + 0x20;
+        GXTexObj* tex = textureGetGXTexObj((Texture*)p1);
         if (((Texture*)p1)->preloaded != 0)
         {
         GXLoadTexObjPreLoaded((GXTexObj*)tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);

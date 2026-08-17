@@ -1360,12 +1360,12 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
     u8 result;
     stateB = (ObjHitsPriorityState*)objB->anim.hitReactState;
     stateA = (ObjHitsPriorityState*)objA->anim.hitReactState;
-    if ((u32)attA != 0) {
+    if (attA != NULL) {
         attStateA = ObjAnim_GetPriorityHitState(&attA->anim);
     } else {
         attStateA = NULL;
     }
-    if ((u32)attB != 0) {
+    if (attB != NULL) {
         attStateB = ObjAnim_GetPriorityHitState(&attB->anim);
     } else {
         attStateB = NULL;
@@ -1990,7 +1990,7 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
 void ObjHits_Update(int objectCount) {
     u8 skeletonScratchB[1036];
     u8 skeletonScratchC[1040];
-    u8 skeletonHits[1512];
+    ObjHitsSkeletonHit skeletonHits[OBJHITS_SKELETON_HIT_CAPACITY + 2];
     u8 skeletonScratchD[100];
     u8 skeletonScratchE[100];
     GameObject* listObj;
@@ -2246,12 +2246,12 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
             if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
                 (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
                  !sfxActive)) {
-                Sfx_PlayFromObject((GameObject*)(u32)obj, reactionEntry->primaryHitSfxId);
+                Sfx_PlayFromObject(obj, reactionEntry->primaryHitSfxId);
             }
             if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
                 (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
                  !sfxActive)) {
-                Sfx_PlayFromObject((GameObject*)(u32)obj, reactionEntry->secondaryHitSfxId);
+                Sfx_PlayFromObject(obj, reactionEntry->secondaryHitSfxId);
             }
             if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
                 effectResource = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
@@ -2678,7 +2678,7 @@ int ObjHits_AllocObjectState(GameObject* obj, u32 arena) {
     if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0) {
         hitState->resetHitboxMode = OBJHITS_RESET_HITBOX_MODE;
     }
-    return stateArena + 0xb8;
+    return stateArena + sizeof(ObjHitsPriorityState);
 }
 
 void ObjHits_RefreshObjectState(GameObject* object) {

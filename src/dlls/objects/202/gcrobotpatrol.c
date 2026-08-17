@@ -155,8 +155,8 @@ void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, GameObject* attacker, i
     if (msg == 16 || msg == 17) {
         return;
     }
-    Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_wp_pole1_c_23);
-    Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_en_lrope_powerdown);
+    Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_wp_pole1_c_23);
+    Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_en_lrope_powerdown);
     ((EnemyState*)state)->flags2E8 |= 0x8;
     ((EnemyState*)state)->gcRobot.cooldownTimer = (f32)(u32)(u16)sub[0]->respawnDelay;
     baddieSetMove((GameObject*)obj, (int)state, 1, 2.5f, 0, 0);

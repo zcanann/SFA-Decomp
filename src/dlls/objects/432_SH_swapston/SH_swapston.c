@@ -150,7 +150,9 @@ void warpstone_updateDustEffects(GameObject* obj) {
             state->dustEffectTimer = 0.0f;
             state->dustEffectFlags = state->dustEffectFlags & ~WARPSTONE_DUST_FLAG_ACTIVE;
         }
-        state->dustEffectTimer = state->dustEffectTimer + timeDelta;
+
+        state->dustEffectTimer += timeDelta;
+        return;
     }
 }
 
@@ -216,8 +218,7 @@ u32 warpstone_advanceAnimEvents(GameObject* lantern, f32 moveStepScale) {
     }
     if (pointIndex != 0) {
         ObjPath_GetPointWorldPosition(lantern, pointIndex - 1, &posX, &posY, &posZ, 0);
-        if (!((lantern->anim.currentMove == WARPSTONE_SPARK_SUPPRESS_MOVE) &&
-              (lantern->anim.currentMoveProgress < 0.8f))) {
+        if (!(lantern->anim.currentMove == WARPSTONE_SPARK_SUPPRESS_MOVE && lantern->anim.currentMoveProgress < 0.8f)) {
             Sfx_PlayAtPositionFromObject(lantern, posX, posY, posZ, WARPSTONE_SPARK_SFX_ID);
         }
     }
@@ -342,10 +343,10 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animObj) {
     animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_testEvent;
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)warpstone_loadBaseUi;
 
-    if ((s8)animUpdate->movementState != 0) {
-        state->sequenceFlags = state->sequenceFlags & ~3;
+    if (animUpdate->movementState != 0) {
+        state->sequenceFlags &= ~3;
         if ((s32)warpstoneProbePlayerAnimState() != 0) {
-            state->sequenceFlags = state->sequenceFlags | 1;
+            state->sequenceFlags |= 1;
         }
         {
             int hit;

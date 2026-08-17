@@ -543,7 +543,7 @@ void bossdrakor_handleActionEvent(GameObject* obj, BossDrakorState* state, int a
 
 int bossdrakor_getExtraSize(void)
 {
-    return 0x1a4;
+    return sizeof(BossDrakorState);
 }
 
 void bossdrakor_free(GameObject* obj)
@@ -711,7 +711,7 @@ void bossdrakor_update(GameObject* obj)
         obj->anim.localPosY = drakorState->curveWalker.posY;
         state->flags198.b20 = 1;
         drakorState->repeatCount = 0;
-        meterState = (BossDrakorState*)(int)obj->extra;
+        meterState = (BossDrakorState*)obj->extra;
         meterState->flags198.b20 = 1;
         (*gGameUIInterface)->initAirMeter(meterState->airMeterHandle, BOSSDRAKOR_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(meterState->airMeterHandle);

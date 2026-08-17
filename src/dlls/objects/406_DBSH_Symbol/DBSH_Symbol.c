@@ -171,7 +171,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
             state->playerSfxTimer =
                 (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
         }
-        Sfx_PlayFromObject((GameObject*)(u32)player, SFXTRIG_literun116_var);
+        Sfx_PlayFromObject(player, SFXTRIG_literun116_var);
     }
     state->objectSfxTimer = state->objectSfxTimer - timeDelta;
     if (state->objectSfxTimer < 0.0f) {

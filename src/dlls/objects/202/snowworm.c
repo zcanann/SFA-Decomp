@@ -220,11 +220,11 @@ void snowworm_updateWhileFrozen(int obj, u8* st, GameObject* attacker, int cmd, 
     }
     if (((EnemyState*)st)->current == 0)
     {
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_eggsnatch_carry2);
+        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_eggsnatch_carry2);
     }
     if (cmd == 0x1a)
         return;
-    Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_stftest);
+    Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_stftest);
 }
 
 void crawler_playReactionEffects(GameObject* obj, int* st)

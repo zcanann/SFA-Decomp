@@ -136,7 +136,7 @@ int MagicDust_getExtraSize(void) {
 }
 
 void MagicDust_free(GameObject* obj) {
-    if ((u32)obj->ownerObj != 0) {
+    if (obj->ownerObj != NULL) {
         ObjLink_DetachChild((GameObject*)obj->ownerObj, obj);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -213,7 +213,7 @@ void MagicDust_update(GameObject* obj) {
                 state->ambientTimer = value;
             }
         }
-        if ((u32)obj->ownerObj != 0) {
+        if (obj->ownerObj != NULL) {
             if (obj->anim.modelState != NULL) {
                 obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
