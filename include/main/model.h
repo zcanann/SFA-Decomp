@@ -485,7 +485,7 @@ void setGQR6_2(int a, int b, int c, int d);
 void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c);
 void modelAnimResetState(void* m, void* data);
-int modelLoadAnimations(void* model, int id, void* animBase);
+int modelLoadAnimations(void* model, int modelId, u8* buf);
 void ObjModel_AdvanceBlendChannels(u8* model, f32 dt);
 void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object);
 void ObjModel_Release(u8* model);
