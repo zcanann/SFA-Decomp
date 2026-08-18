@@ -140,8 +140,8 @@ void DIMbosstonsil_checkHit(GameObject* obj, GroundBaddieState* state) {
     if (hit != 0) {
         spawnPos = &spawnArgs.posX;
         {
-            f32(*modelPos)[4] =
-                (f32(*)[4])(*(int*)(*(int*)((int)(obj)->anim.banks + ((s8)((u8*)obj)[0xad] << 2)) + 0x50));
+            ObjModel* model = obj->anim.modelBanks[obj->anim.bankIndex];
+            f32(*modelPos)[4] = (f32(*)[4])model->activeHitVolumeSpheres;
             spawnPos[0] = playerMapOffsetX + modelPos[modelPart][1];
             spawnPos[1] = modelPos[modelPart][2];
             spawnPos[2] = playerMapOffsetZ + modelPos[modelPart][3];
@@ -533,22 +533,22 @@ void DIMbosstonsil_update(GameObject* obj) {
 
 void DIMbosstonsil_init(GameObject* obj, u8* placementAddress, int isAltVariant) {
     u8 variant;
-    int state;
+    GroundBaddieState* state;
 
-    state = (int)obj->extra;
+    state = obj->extra;
     variant = 6;
     if (isAltVariant != 0) {
         variant = variant | 1;
     }
     (*gBaddieControlInterface)->initGroundBaddie(obj, placementAddress, (u8*)state, 2, 2, 0x102, variant, 20.0f);
     obj->animEventCallback = DIMbosstonsil_SeqFn;
-    (*gPlayerInterface)->setState(obj, (void*)state, 0);
-    ((BaddieState*)state)->substate = 0;
+    (*gPlayerInterface)->setState(obj, state, 0);
+    state->baddie.substate = 0;
     gDIMbosstonsilRoutePhase = mainGetBit(DIMBOSSTONSIL_HIT_GAMEBIT);
     if (gDIMbosstonsilRoutePhase < 3) {
-        ((GroundBaddieState*)state)->baddie.hitPoints = 3 - gDIMbosstonsilRoutePhase;
+        state->baddie.hitPoints = 3 - gDIMbosstonsilRoutePhase;
     } else {
-        ((GroundBaddieState*)state)->baddie.hitPoints = 7 - gDIMbosstonsilRoutePhase;
+        state->baddie.hitPoints = 7 - gDIMbosstonsilRoutePhase;
     }
     gDIMbosstonsilFightTimer = 0.0f;
     gDIMbosstonsilRumbleElapsed = 0.0f;
