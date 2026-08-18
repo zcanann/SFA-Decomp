@@ -66,7 +66,7 @@ void dim2prisonmammoth_update(GameObject* obj);
 void dim2prisonmammoth_init(GameObject* obj, const Dim2PrisonMammothPlacement* placement);
 void dim2prisonmammoth_release(void);
 void dim2prisonmammoth_initialise(void);
-void dim2prisonmammoth_updateModelChain(GameObject* obj, int* model);
+void dim2prisonmammoth_updateModelChain(GameObject* obj, ObjModel* model);
 
 extern ObjectDescriptor10WithPadding gDIM2PrisonMammothObjDescriptor;
 

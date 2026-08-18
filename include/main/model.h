@@ -453,8 +453,8 @@ typedef struct ObjModelChain {
     u8 enabled;
 } ObjModelChain;
 
-typedef void (*ObjModelChainUpdateCallback)(int animState, int* model, f32* vector, int callbackArg, int nodeIndex,
-                                            f32 phase);
+typedef void (*ObjModelChainUpdateCallback)(ModelFileHeader* file, ObjModel* model, f32* vector, int callbackArg,
+                                            int nodeIndex, f32 phase);
 
 STATIC_ASSERT(sizeof(ObjModelChainNode) == 0x54);
 STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
@@ -506,7 +506,8 @@ void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);
-void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback);
+void ObjModelChain_Update(ObjModel* model, ModelFileHeader* file, ObjModelChain* chain,
+                          ObjModelChainUpdateCallback callback);
 void ObjModelChain_ResetFirstUpdate(ObjModelChain* chain);
 
 #endif

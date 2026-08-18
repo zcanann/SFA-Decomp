@@ -1243,7 +1243,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 pinPon_updateEngaged((GameObject*)(obj), (int*)state);
                 break;
             case ENEMY_RACHNOP_OBJ:
-                rachnopUpdateAttack((GameObject*)obj, (int)state);
+                rachnopUpdateAttack((GameObject*)obj, state);
                 break;
             case ENEMY_SPITTINGEBA_OBJ:
                 spittingEbaUpdateEngaged((GameObject*)(obj), (int)state);
@@ -1320,7 +1320,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 pinPon_updateEngaged((GameObject*)(obj), (int*)state);
                 break;
             case ENEMY_RACHNOP_OBJ:
-                rachnopUpdateApproach((GameObject*)obj, (int)state);
+                rachnopUpdateApproach((GameObject*)obj, state);
                 break;
             case ENEMY_SPITTINGEBA_OBJ:
                 spittingEbaUpdateEngaged((GameObject*)(obj), (int)state);
@@ -1431,7 +1431,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
             pinPon_updateIdle((GameObject*)(obj), state);
             break;
         case ENEMY_RACHNOP_OBJ:
-            rachnopUpdateIdle((GameObject*)obj, (int)state);
+            rachnopUpdateIdle((GameObject*)obj, state);
             break;
         case ENEMY_SPITTINGEBA_OBJ:
             spittingEbaUpdateIdle((GameObject*)(obj), (int)state);
@@ -2454,10 +2454,10 @@ void baddieSetMove(GameObject* obj, void* state, u8 moveId, f32 rateScale, u8 mo
     }
 }
 
-void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
+void baddieAfterUpdateBonesCb(GameObject* obj, ObjModel* bones)
 {
     BaddieAfterUpdateBonesCbState* state = obj->extra;
-    int v = *bones;
+    ModelFileHeader* v = bones->file;
     switch (obj->anim.romDefNo)
     {
     case ENEMY_HAGABONMK2_OBJ:
@@ -2968,7 +2968,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             pinPon_init(obj, state);
             break;
         case ENEMY_RACHNOP_OBJ:
-            rachnopInit((int)obj, (int)state);
+            rachnopInit((GameObject*)obj, state);
             break;
         case ENEMY_SPITTINGEBA_OBJ:
             spittingEbaInit((int)obj, (int)state);

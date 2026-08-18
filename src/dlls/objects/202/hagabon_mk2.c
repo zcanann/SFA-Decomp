@@ -184,7 +184,7 @@ ObjModelChainDesc* gCrawlerModelChainIds[] = {
     &gHagabonMK2ModelChain0, &gHagabonMK2ModelChain1, &gHagabonMK2ModelChain2, &gHagabonMK2ModelChain3, &gHagabonMK2ModelChain4,
 };
 
-void crawler_rotateVectorYaw(int unused1, int* unused2, f32* vec, int unused3, int nodeIndex, f32 phase)
+void crawler_rotateVectorYaw(ModelFileHeader* unused1, ObjModel* unused2, f32* vec, int unused3, int nodeIndex, f32 phase)
 {
     f32 mtx[12];
     f32 a;

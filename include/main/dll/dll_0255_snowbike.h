@@ -217,7 +217,7 @@ s32 SnowBike_isAtRankGate(GameObject* obj);
 int SnowBike_SeqFn(GameObject* obj, int unused, ObjSeqState* seq);
 void SnowBike_onSeqFree(GameObject* obj);
 void SnowBike_buildOrientationMatrices(GameObject* obj, int state);
-void SnowBike_InitTuning(GameObject* obj, int state);
+void SnowBike_InitTuning(GameObject* obj, SnowBikeState* state);
 f32 SnowBike_func13(GameObject* obj, f32* out);
 void SnowBike_getPlayerAnim(GameObject* obj, f32* outFloat, s32* outBool);
 void SnowBike_setMountState(GameObject* obj, int type);

@@ -1214,9 +1214,9 @@ static void SnowBike_SnapSmallToZero(f32* value)
     }
 }
 
-void SnowBike_UpdateCollisionResponse(GameObject* obj, int stateRaw)
+void SnowBike_UpdateCollisionResponse(GameObject* obj, SnowBikeState* stateRaw)
 {
-    SnowBikeState* st = (SnowBikeState*)stateRaw;
+    SnowBikeState* st = stateRaw;
     int hitKind;
     ObjHitsPriorityState* hitReact;
     int burstCount;
@@ -1392,10 +1392,10 @@ void SnowBike_UpdateSteering(short* obj, int stateRaw)
     obj[2] = rotClamped;
 }
 
-void SnowBike_UpdateExhaustFx(GameObject* obj, int stateRaw)
+void SnowBike_UpdateExhaustFx(GameObject* obj, SnowBikeState* stateRaw)
 {
 
-    SnowBikeState* st = (SnowBikeState*)stateRaw;
+    SnowBikeState* st = stateRaw;
     s16 motionFrame;
     f32 fa;
     f32 fb;
@@ -1768,10 +1768,10 @@ void SnowBike_ResetDynamics(int obj, register int state)
     s->collisionFxDamping = 1.0f;
 }
 
-void SnowBike_InitTuning(GameObject* obj, int state)
+void SnowBike_InitTuning(GameObject* obj, SnowBikeState* state)
 {
     f32 fa, fz;
-    SnowBikeState* s = (SnowBikeState*)state;
+    SnowBikeState* s = state;
     s->liftAccel = -0.12f;
     s->unk530 = 0.85f;
     s->unk534 = 700.0f;
@@ -2277,7 +2277,7 @@ void SnowBike_update(GameObject* obj)
         {
             if (SnowBike_UpdateAttachedPosition(obj, (SnowBikeState*)state) != 0)
             {
-                SnowBike_UpdateExhaustFx(obj, (int)state);
+                SnowBike_UpdateExhaustFx(obj, (SnowBikeState*)state);
                 ((void (*)(GameObject*, int))SnowBike_buildOrientationMatrices)(obj, (int)state);
                 if (s->collisionFxTimer)
                 {
@@ -2356,7 +2356,7 @@ void SnowBike_update(GameObject* obj)
                 clamped = value;
             }
             s->stickX = clamped;
-            SnowBike_UpdateExhaustFx(obj, (int)state);
+            SnowBike_UpdateExhaustFx(obj, (SnowBikeState*)state);
             ((void (*)(GameObject*, int))SnowBike_buildOrientationMatrices)(obj, (int)state);
             if (s->collisionFxTimer)
             {
@@ -2410,7 +2410,7 @@ void SnowBike_update(GameObject* obj)
         SnowBike_UpdateAirMeter(obj, state);
         SnowBike_UpdateEngineFx(obj, state, s->localVelZ,
                                    (int)(850.0f * -s->engineFxLevel), state + 0x461, 7);
-        SnowBike_UpdateCollisionResponse(obj, (int)state);
+        SnowBike_UpdateCollisionResponse(obj, (SnowBikeState*)state);
         obj->anim.rotX = s->yaw;
     }
     break;
@@ -2448,7 +2448,7 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag)
     s->yawCurrent = rot;
     s->yaw = rot;
     obj->anim.rotX = rot;
-    ((void (*)(GameObject*, int))SnowBike_InitTuning)(obj, (int)state);
+    ((void (*)(GameObject*, SnowBikeState*))SnowBike_InitTuning)(obj, (SnowBikeState*)state);
     if (flag == 0)
     {
         if (s->routeFlags.uiPrompt)

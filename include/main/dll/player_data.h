@@ -12,9 +12,9 @@ typedef struct PlayerModelChainEntry
     int count;
 } PlayerModelChainEntry;
 
-extern void* gPlayerPathObject;
+extern GameObject* gPlayerPathObject;
 extern u8 gPlayerModelChainStyle;
-extern void* gPlayerSpawnedObjects[];
+extern GameObject* gPlayerSpawnedObjects[];
 extern StaffCollisionInterface** gPlayerResource;
 extern int gPlayerPendingHealth;
 extern GameObject* gPlayerStaffObject;

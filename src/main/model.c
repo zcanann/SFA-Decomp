@@ -1108,7 +1108,7 @@ static void modelChainUpdateNodes(ObjModel* model, ModelFileHeader* file, ObjMod
         work.z = entry->nodes[i - 1].localOffset.z;
         if (callback != NULL)
         {
-            callback((int)file, (int*)model, (f32*)&work, callbackArg, i, chain->phase);
+            callback(file, model, (f32*)&work, callbackArg, i, chain->phase);
         }
         PSVECAdd(&work, &entry->nodes[i].localOffset, &work);
         PSMTXMultVec(tmp, &work, &work);
@@ -1319,7 +1319,7 @@ static void modelChainInitNodesFromJoints(int* obj, ModelFileHeader* b, int* des
     }
 }
 
-void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback)
+void ObjModelChain_Update(ObjModel* model, ModelFileHeader* file, ObjModelChain* chain, ObjModelChainUpdateCallback callback)
 {
     int off;
     int i;
@@ -1332,18 +1332,18 @@ void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjMo
         {
             if (chain->firstUpdateDone == 0)
             {
-                modelChainInitNodesFromJoints(model, (ModelFileHeader*)animState, (int*)((u8*)chain->entries + off));
+                modelChainInitNodesFromJoints((int*)model, file, (int*)((u8*)chain->entries + off));
             }
             if (getHudHiddenFrameCount() == 0)
             {
-                modelChainApplyDampingAndJitter((ObjModel*)model, (ModelFileHeader*)animState, chain,
+                modelChainApplyDampingAndJitter(model, file, chain,
                                                 (ObjModelChainEntry*)((u8*)chain->entries + off));
-                modelChainUpdateNodes((ObjModel*)model, (ModelFileHeader*)animState, chain,
+                modelChainUpdateNodes(model, file, chain,
                                       (ObjModelChainEntry*)((u8*)chain->entries + off), callback, i);
             }
             else
             {
-                modelChainUpdateNodesPassive((ObjModel*)model, (ModelFileHeader*)animState, chain,
+                modelChainUpdateNodesPassive(model, file, chain,
                                              (ObjModelChainEntry*)((u8*)chain->entries + off));
             }
             off += 0xc;
@@ -2423,7 +2423,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     ch = ((ObjModel*)model)->animStateA;
     if (ch->moveControlFlags & 4)
     {
-        ObjModel_SampleJointTransform((ObjModel*)model, 0, 0, obj->anim.currentMoveProgress,
+        ObjModel_SampleJointTransform(model, 0, 0, obj->anim.currentMoveProgress,
                                       obj->anim.rootMotionScale, pos, rot);
         gModelRootRotX = rot[0];
         gModelRootRotY = rot[1];

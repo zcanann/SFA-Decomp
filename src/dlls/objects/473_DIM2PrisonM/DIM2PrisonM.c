@@ -264,10 +264,10 @@ void dim2prisonmammoth_initialise(void) {
     gDim2PrisonMammothDefaultStateHandler[0] = dim2prisonmammoth_defaultStateHandler;
 }
 
-void dim2prisonmammoth_updateModelChain(GameObject* obj, int* model) {
+void dim2prisonmammoth_updateModelChain(GameObject* obj, ObjModel* model) {
     EarthWarriorModelChainStateView* state = obj->extra;
 
-    ObjModelChain_Update(model, *model, state->tailModelChain, NULL);
+    ObjModelChain_Update(model, model->file, state->tailModelChain, NULL);
 }
 
 ObjHitReactEntry gPrisonMammothHitReactEntry[] = {
