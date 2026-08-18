@@ -581,8 +581,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     {
         ((ModelFileHeader*)hdr)->animationHeaderBuffer = NULL;
         ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
-        buf += ((ModelFileHeader*)hdr)->animationCount * 4;
-        padBytes += ((ModelFileHeader*)hdr)->animationCount * 4;
+        buf += ((ModelFileHeader*)hdr)->animationCount * (int)sizeof(u8*);
+        padBytes += ((ModelFileHeader*)hdr)->animationCount * (int)sizeof(u8*);
         while (padBytes & 7)
         {
             buf++;
@@ -2423,7 +2423,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     ch = ((ObjModel*)model)->animStateA;
     if (ch->moveControlFlags & 4)
     {
-        ObjModel_SampleJointTransform(model, 0, 0, obj->anim.currentMoveProgress,
+        ObjModel_SampleJointTransform((ObjModel*)model, 0, 0, obj->anim.currentMoveProgress,
                                       obj->anim.rootMotionScale, pos, rot);
         gModelRootRotX = rot[0];
         gModelRootRotY = rot[1];

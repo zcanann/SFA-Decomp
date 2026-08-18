@@ -208,7 +208,7 @@ void gameTextShowAt(int a, int b, int c)
     {
         i = gGameTextCommandCount++;
         e = &gGameTextCommandSlots[i];
-        e->opcode = GAMETEXT_COMMAND_RENDER_BY_ID;
+        e->opcode = 2;
         e->arg0 = a;
         e->arg1 = b;
         e->arg2 = c;
@@ -227,7 +227,7 @@ void gameTextShow(int a)
     {
         i = gGameTextCommandCount++;
         e = &gGameTextCommandSlots[i];
-        e->opcode = GAMETEXT_COMMAND_RENDER_BY_ID;
+        e->opcode = 2;
         e->arg0 = a;
         e->arg1 = 0;
         e->arg2 = 0;

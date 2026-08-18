@@ -18,8 +18,6 @@
 #include "musyx/synth_handle.h"
 #include "musyx/synth_queue.h"
 
-#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
-
 /* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
 #define SND_OUTPUTMODE_MONO     0 /* mono downmix */
 #define SND_OUTPUTMODE_STEREO   1 /* plain stereo */

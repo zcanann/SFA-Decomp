@@ -429,7 +429,7 @@ void gameTextSetWindowById(int boxId)
         box = &gTextBoxes[boxId];
     }
     gCurTextBox = box;
-    cmd->opcode = GAMETEXT_COMMAND_SET_WINDOW;
+    cmd->opcode = 8;
     cmd->arg0 = boxId;
 }
 
@@ -445,7 +445,7 @@ void gameTextSetWindow(u8* textBox)
         gGameTextCommandCount = i + 1;
         cmd = &gGameTextCommandSlots[i];
         gCurTextBox = NULL;
-        cmd->opcode = GAMETEXT_COMMAND_SET_WINDOW;
+        cmd->opcode = 8;
         cmd->arg0 = 0xff;
     }
     else
@@ -462,7 +462,7 @@ void gameTextSetWindow(u8* textBox)
         {
             gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
         }
-        cmd->opcode = GAMETEXT_COMMAND_SET_WINDOW;
+        cmd->opcode = 8;
         cmd->arg0 = idx;
     }
 }

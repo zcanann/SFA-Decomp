@@ -5427,7 +5427,7 @@ void videoSwapFrameBuffers(u32 retraceCount)
 
 void videoBreakPointCallback(void)
 {
-    char peek[12];
+    void* peek[3];
     void* tok[3];
     int i;
 
@@ -5445,7 +5445,7 @@ void videoBreakPointCallback(void)
     }
     gDepthReadResultCount = gDepthReadPendingCount;
     gDepthReadPendingCount = 0;
-    if (*(void**)(peek + 8) == displayFrameBuffer)
+    if (peek[2] == displayFrameBuffer)
     {
         gFlipTokenHeldForDisplayedFb = 1;
         gFrameBufferFlipped = 0;

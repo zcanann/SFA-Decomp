@@ -112,7 +112,9 @@ typedef struct MapBlockData {
     s16 maxY; /* 0x8C: upper vertical bound */
     s16 collisionYOffset; /* 0x8E: added to collision-group and vertex Y coordinates */
     u16 vertexCount; /* 0x90: entries in the vertices array (DCStoreRange size = count*6) */
-    u8 pad92[0x98 - 0x92];
+    u16 unk92;
+    u16 colorCount;
+    u16 texCoordCount;
     u16 nPolygons; /* 0x98: entries in gcPolygons (cacheAllocAndCopy size = count<<3) */
     u16 polyGroupCount; /* 0x9A: render/poly groups (mapBlockGetPolygonGroup index bound) */
     u16 hitCount; /* 0x9C: entries in the HITS.bin segment table */

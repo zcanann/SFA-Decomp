@@ -2,9 +2,12 @@
 #define MAIN_DLL_PLAYER_DATA_H_
 
 #include "main/dll/dll_005A_staffcollision.h"
+#include "main/dll/dll_000F_unk.h"
 #include "main/dll/partfx_interface.h"
 #include "game/objects/object.h"
 #include "main/lightmap_api.h"
+#include "main/shader_api.h"
+#include "main/model.h"
 
 typedef struct PlayerModelChainEntry
 {

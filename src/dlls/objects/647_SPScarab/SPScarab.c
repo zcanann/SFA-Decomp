@@ -90,7 +90,7 @@ void SPScarab_update(GameObject* obj)
     f32 distance;
     f32 phase;
     f32 outV[3];
-    f32 hit_buf[24]; /* trackGetLineIntersect collision output */
+    TrackBBoxHit hit_buf;
 
     state = (SpscarabState*)obj->extra;
     placement = (SpscarabPlacement*)obj->anim.placementData;
@@ -117,9 +117,9 @@ void SPScarab_update(GameObject* obj)
     }
 
     if (trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 3.0f, 0,
-                           (TrackBBoxHit*)&hit_buf[0], obj, 8, -1, 0xff, 0xa) != 0)
+                           &hit_buf, obj, 8, -1, 0xff, 0xa) != 0)
     {
-        Vec3_ReflectAgainstNormal((f32*)&hit_buf[7], &obj->anim.velocityX, outV);
+        Vec3_ReflectAgainstNormal(&hit_buf.normalX, &obj->anim.velocityX, outV);
         obj->anim.velocityX = outV[0];
         obj->anim.velocityZ = outV[2];
         angle = (s16)getAngle(-obj->anim.velocityX, -obj->anim.velocityZ);

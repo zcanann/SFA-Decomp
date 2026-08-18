@@ -321,11 +321,11 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, u8*
     {
         if (((GroundBaddieState*)state)->path == NULL && (flags & 0x20) == 0)
         {
-            ((GroundBaddieState*)state)->path = mmAlloc(264, 26, 0);
+            ((GroundBaddieState*)state)->path = mmAlloc(sizeof(RomCurveWalker), 26, 0);
         }
         if (((GroundBaddieState*)state)->path != NULL)
         {
-            memset(((GroundBaddieState*)state)->path, 0, 264);
+            memset(((GroundBaddieState*)state)->path, 0, sizeof(RomCurveWalker));
         }
         if ((*gRomCurveInterface)
                 ->initCurve(((GroundBaddieState*)state)->path, (void*)obj,

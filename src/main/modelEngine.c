@@ -975,10 +975,8 @@ void gameTimerRun(void* context)
     }
 }
 
-f32 gameTimerGetElapsedMilliseconds(void)
-{
-    if (((s8)gModelEngineTimerFlags & 1) != 0)
-    {
+f32 gameTimerGetElapsedMilliseconds(void) {
+    if ((gModelEngineTimerFlags & 1) != 0) {
         return 1000.0f * ((gModelEngineTimerDuration - gModelEngineTimerValue) / 60.0f);
     }
     return 1000.0f * (gModelEngineTimerValue / 60.0f);

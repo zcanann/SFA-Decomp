@@ -23,9 +23,8 @@ typedef struct ObjMsgQueue ObjMsgQueue;
  *  - 0xE4/0xE5/0xE6/0xEB: object.c bookkeeping bytes
  *  - 0xF4/0xF8 s32: userData1/userData2, generic per-instance scratch
  *  - 0xFC/0x100/0x104 f32: object.c
- * object.c's allocation and copy contract fixes the complete engine-owned
- * prefix at 0x10C bytes; class-specific storage follows it in the same
- * allocation.
+ * The record extends past 0x10C; total size unverified - do not take
+ * sizeof(GameObject) or index arrays of it.
  *
  * Width discipline (per CLAUDE.md recipe #77): the pointer fields here
  * are routinely null-tested through *(int *) in matched code (cmpwi).

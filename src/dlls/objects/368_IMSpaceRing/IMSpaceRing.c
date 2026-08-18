@@ -49,7 +49,7 @@ void imSpaceRing_update(GameObject* obj) {
 }
 
 void imSpaceRing_init(GameObject* obj, const IMSpaceRingPlacement* placement) {
-    obj->anim.rotX = (s16)((s32)placement->initialRotX << 8);
+    obj->anim.rotX = placement->initialRotX << 8;
     IM_SPACE_RING_SPIN_AXIS(obj) = randomGetRange(0, 1);
 }
 

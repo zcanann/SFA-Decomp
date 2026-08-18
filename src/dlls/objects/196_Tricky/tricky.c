@@ -4978,11 +4978,10 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     pc = state->followObj;
     switch (state->substate) {
     case 0:
-        state->scratch70C.ptr =
-            Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1, 2);
+        state->scratch70C.ptr = Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1, 2);
         if (state->scratch70C.ptr != NULL &&
-            getXZDistanceSquared(&state->followObj->anim.worldPosX,
-                                 &((RomCurveDef*)state->scratch70C.ptr)->x) > 10000.0f) {
+            getXZDistanceSquared(&state->followObj->anim.worldPosX, &((RomCurveDef*)state->scratch70C.ptr)->x) >
+                10000.0f) {
             state->scratch70C.ptr = NULL;
         }
         state->substate = 1;
@@ -5007,7 +5006,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 state->substate = 3;
                 state->scratch700.f = 0.0f;
                 state->scratch710.f = (f32)(int)randomGetRange(0x28, 0x50);
-                Sfx_AddLoopedObjectSound((GameObject*)obj, SFXTRIG_trwhin1);
+                Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
                 trickyRequestMove(obj, 0xe, 0.033f, 0x4000000);
             }
         } else if (ret == 2) {
@@ -5028,12 +5027,11 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         }
         break;
     case 2:
-        if (trickyUpdateMovementState(obj, 340282346638528859811704183484516925440.0f,
-                                      state) == 0) {
+        if (trickyUpdateMovementState(obj, 340282346638528859811704183484516925440.0f, state) == 0) {
             state->stateFlags |= 0x10;
             state->substate = 3;
             state->scratch700.f = 0.0f;
-            Sfx_AddLoopedObjectSound((GameObject*)obj, SFXTRIG_trwhin1);
+            Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
             trickyRequestMove(obj, 0xe, 0.033f, 0x4000000);
         }
         break;
@@ -5049,8 +5047,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 pc = state->followObj;
                 state->dirX = ((RomCurveDef*)ptr)->x - pc->anim.worldPosX;
                 state->dirZ = ((RomCurveDef*)ptr)->z - pc->anim.worldPosZ;
-                dist = sqrtf(state->dirX * state->dirX +
-                             state->dirZ * state->dirZ);
+                dist = sqrtf(state->dirX * state->dirX + state->dirZ * state->dirZ);
                 if (0.0f != dist) {
                     state->dirX = state->dirX / dist;
                     state->dirZ = state->dirZ / dist;
@@ -5069,7 +5066,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         obj->anim.localPosX = state->scratch704.f - state->dirX * spd;
         obj->anim.localPosZ = state->scratch708.f - state->dirZ * spd;
         if (GROUND_ANIMATOR_INTERFACE(pc)->isFullySunk((GameObject*)pc) != 0) {
-            Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trwhin1);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             **(u8**)state -= 4;
             state->stateIndex = 1;
             state->substate = 0;
@@ -6287,7 +6284,7 @@ int lbl_803DDA4C;
 u32 gTrickyHelperObject;
 
 u8* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
-    int* objs;
+    GameObject** objs;
     int count[1];
     u8* result;
     f32 d;
@@ -6295,13 +6292,13 @@ u8* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
     int i;
 
     result = 0;
-    objs = (int*)objGetAllOfType(TRICKYWARP_OBJ_GROUP, count);
+    objs = objGetAllOfType(TRICKYWARP_OBJ_GROUP, count);
     d = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
     if ((d >= 360000.0f) || (state->cooldownA > 0.0f)) {
         if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, 19.0f) == 0) {
             bestD = 340282346638528859811704183484516925440.0f;
             for (i = 0; i < count[0]; i++) {
-                f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &((GameObject*)*objs)->anim.worldPosX);
+                f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
                 if (cd < d && cd < bestD) {
                     bestD = cd;
                     result = (u8*)*objs;
@@ -6432,7 +6429,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                  childSlot += sizeof(GameObject*), childIndex++) {
                 objSetAnimSpeedTo1(*(GameObject**)(childSlot + offsetof(TrickyState, flameChildren)));
             }
-            Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
             childSlot = obj->extra;
             if (((TrickyState*)childSlot)->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= 0x30 || obj->anim.currentMove < 0x29) &&
@@ -6440,7 +6437,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 objSoundStartTimed(obj, &((TrickyState*)childSlot)->soundState, 0x29d, 0, -1, 0);
             }
         }
-        Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trwhin1);
+        Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         ((TrickyState*)state)->stateFlags |= 0x200;
         if ((sequence->flags & 3) == 0) {
             ((TrickyState*)state)->stateFlags |= 0x4000;
@@ -6461,7 +6458,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                      childSlot += sizeof(GameObject*), secondChildIndex++) {
                     objSetAnimSpeedTo1(*(GameObject**)(childSlot + offsetof(TrickyState, flameChildren)));
                 }
-                Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
+                Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 childSlot = obj->extra;
                 if (((TrickyState*)childSlot)->soundSuppressed == 0 &&
                     (obj->anim.currentMove >= 0x30 || obj->anim.currentMove < 0x29) &&
@@ -6480,7 +6477,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                         objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
-                Sfx_AddLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
+                Sfx_AddLoopedObjectSound(obj, SFXTRIG_trpopn_c);
             }
             break;
         case TRICKY_SEQUENCE_EVENT_SPAWN_BADGE:
@@ -7103,8 +7100,7 @@ void Tricky_hitDetect(GameObject* obj) {
             slot_ = -1;                                                                                                \
         }                                                                                                              \
         ((TrickyState*)(state))->packedSlots.zzzSlot = slot_;                                                          \
-        ((TrickyState*)(state))->child =                                                                               \
-            objSetupObject((ObjPlacement*)setup_, 4, -1, -1, ((GameObject*)(obj))->anim.parent);                       \
+        ((TrickyState*)(state))->child = objSetupObject(setup_, 4, -1, -1, ((GameObject*)(obj))->anim.parent);         \
         ObjLink_AttachChild((GameObject*)(obj), ((TrickyState*)(state))->child,                                        \
                             ((TrickyState*)(state))->packedSlots.zzzSlot);                                             \
         z = 0.0f;                                                                                                      \

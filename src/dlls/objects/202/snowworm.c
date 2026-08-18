@@ -403,13 +403,13 @@ void snowworm_init(GameObject* obj, int* st)
     ((EnemyState*)st)->animPlaySpeed = 0.01f;
     ((EnemyState*)st)->gravity = 0.006f;
     ((EnemyState*)st)->drag = 0.95f;
-    *((u8*)st + 0x320) = 0;
+    ((EnemyState*)st)->moveId0 = 0;
     {
         f32 d = 1.0f;
         ((EnemyState*)st)->moveSpeedScale0 = d;
-        *((u8*)st + 0x321) = 0xa;
+        ((EnemyState*)st)->moveId1 = 0xa;
         ((EnemyState*)st)->moveSpeedScale1 = d;
-        *((u8*)st + 0x322) = 7;
+        ((EnemyState*)st)->moveId2 = 7;
         ((EnemyState*)st)->moveSpeedScale2 = d;
     }
     ((EnemyState*)st)->userData1 = 1;

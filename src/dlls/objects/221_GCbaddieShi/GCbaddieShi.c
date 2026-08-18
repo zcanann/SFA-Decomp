@@ -40,25 +40,23 @@ int GCbaddieShield_getObjectTypeId(void) {
 }
 
 void GCbaddieShield_free(GameObject* obj) {
-    (void)obj;
 }
 
 void GCbaddieShield_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
-    s32 visible32 = visible;
+    if (visible == 0) {
+        return;
+    }
 
-    if (visible32 != 0) {
-        switch (obj->userData1) {
-        case 0:
-            objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
-            break;
-        default:
-            break;
-        }
+    switch (obj->userData1) {
+    case 0:
+        objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
+        break;
+    default:
+        break;
     }
 }
 
 void GCbaddieShield_hitDetect(GameObject* obj) {
-    (void)obj;
 }
 
 void GCbaddieShield_update(GameObject* obj) {

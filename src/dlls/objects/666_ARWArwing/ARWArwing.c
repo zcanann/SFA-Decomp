@@ -602,7 +602,7 @@ void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
 void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int level, int linkEffect)
 {
     f32 pz, py, px;
-    int proj;
+    GameObject* proj;
     if (Obj_IsLoadingLocked() == 0)
         return;
     if (side == 0)
@@ -626,27 +626,27 @@ void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int
         setup->rotZByte = 0;
         setup->base.color[0] = 1;
         setup->base.color[1] = 1;
-        proj = (int)loadObjectAtObject(obj, &setup->base);
+        proj = loadObjectAtObject(obj, &setup->base);
     }
-    if ((void*)proj == NULL)
+    if (proj == NULL)
         return;
     if (level == 0)
     {
-        Sfx_PlayFromObject((GameObject*)proj, SFXTRIG_ar_brakes16);
+        Sfx_PlayFromObject(proj, SFXTRIG_ar_brakes16);
     }
     else if (level == 1)
     {
-        Sfx_PlayFromObject((GameObject*)proj, SFXTRIG_ar_englp16);
+        Sfx_PlayFromObject(proj, SFXTRIG_ar_englp16);
     }
     else
     {
-        Sfx_PlayFromObject((GameObject*)proj, SFXTRIG_ar_deflect16);
-        Obj_SetActiveModelIndex((GameObject*)proj, 1);
+        Sfx_PlayFromObject(proj, SFXTRIG_ar_deflect16);
+        Obj_SetActiveModelIndex(proj, 1);
     }
     if ((u8)linkEffect != 0)
-        arwprojectile_createLinkedEffect((GameObject*)(proj), 1);
-    arwprojectile_setLifetime((GameObject*)(proj), state->projLifetime);
-    arwprojectile_placeForward((GameObject*)(proj), state->projSpeed);
+        arwprojectile_createLinkedEffect(proj, 1);
+    arwprojectile_setLifetime(proj, state->projLifetime);
+    arwprojectile_placeForward(proj, state->projSpeed);
 }
 
 void arwarwing_updateWeaponFire(GameObject* obj, ArwingState* state)
@@ -1181,7 +1181,7 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
 {
     int allAttached;
-    int charState;
+    PlayerStatus* charState;
     f32 radius;
     f32 c6F7C;
     f32 c6F78;
@@ -1191,7 +1191,7 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
     f32 c6EF0;
 
     radius = gArwingEscortSearchRadius;
-    charState = (int)(*gMapEventInterface)->getCurCharacterState();
+    charState = (*gMapEventInterface)->getCurCharacterState();
 
     if (state->escortObj == NULL)
     {
@@ -1337,7 +1337,7 @@ void arwarwing_initAttachments(GameObject* obj, ArwingState* state)
         state->wingVec[3] = objFindJointPoseVector(obj, 3);
         state->wingFlexScale = 0.5f;
         state->enginePitch = 0xaf;
-        state->maxHealth = ((PlayerStatus*)charState)->maxHealth;
+        state->maxHealth = charState->maxHealth;
         state->health = state->maxHealth;
         state->bobSpeedThreshold = 0.1f;
         state->bobRotZRate = (c6EF0 = 250.0f);

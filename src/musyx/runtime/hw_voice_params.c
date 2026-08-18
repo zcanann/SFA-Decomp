@@ -35,19 +35,17 @@ void hwSetPitch(u32 slot, u16 pitch)
     entry->lastUpdate.pitch = salTimeOffset;
 }
 
-void hwSetSRCType(u32 slot, u8 value)
-{
+void hwSetSRCType(u32 slot, u8 value) {
     static u16 dspSRCType[3] = {0, 1, 2};
     DSPvoice* entry = &dspVoice[slot];
-    entry->srcTypeSelect = dspSRCType[(u8)value];
+    entry->srcTypeSelect = dspSRCType[value];
     entry->changed[0] |= DSP_VOICE_CHANGE_SRC_TYPE;
 }
 
-void hwSetPolyPhaseFilter(u32 slot, u8 value)
-{
+void hwSetPolyPhaseFilter(u32 slot, u8 value) {
     static u16 dspCoefSel[3] = {0, 1, 2};
     DSPvoice* entry = &dspVoice[slot];
-    entry->srcCoefSelect = dspCoefSel[(u8)value];
+    entry->srcCoefSelect = dspCoefSel[value];
     entry->changed[0] |= DSP_VOICE_CHANGE_POLYPHASE;
 }
 

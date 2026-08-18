@@ -2331,18 +2331,14 @@ int ObjList_PartitionForRender(int* out)
     return i;
 }
 
-void Obj_ResetObjectSystem(void)
-{
-    int off;
+void Obj_ResetObjectSystem(void) {
     int i;
 
     Obj_FreeDeferredObjects();
     gObjDeferredFreeCount = 0;
     gObjDefCaptureMode = 0;
     i = gObjCount - 1;
-    off = i << 2;
-    for (; i >= 0; i--)
-    {
+    for (; i >= 0; i--) {
         Obj_FreeObject(gObjList[i]);
     }
     Obj_FreeDeferredObjects();

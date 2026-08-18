@@ -48,10 +48,10 @@ void CCTestInfot_update(GameObject* obj) {
 }
 
 void CCTestInfot_init(GameObject* obj, CCTestInfotPlacement* placement) {
-    obj->objectFlags = (u16)((u32)obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
-    obj->anim.rotX = (s16)((s32)placement->rotationX << 8);
-    obj->anim.rotY = (s16)((s32)placement->rotationY << 8);
-    obj->anim.rotZ = (s16)((s32)placement->rotationZ << 8);
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.rotX = placement->rotationX << 8;
+    obj->anim.rotY = placement->rotationY << 8;
+    obj->anim.rotZ = placement->rotationZ << 8;
 }
 
 ObjectDescriptor gCCTestInfotObjDescriptor = {

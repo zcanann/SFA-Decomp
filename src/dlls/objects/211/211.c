@@ -1200,7 +1200,7 @@ void dll_D3_update(GameObject* obj)
     int rc;
     int hits;
     f32 vec[4];
-    int hitResult[21];
+    TrackBBoxHit hitResult;
 #define searchRadius vec[0]
 #define dx           vec[1]
 #define dy           vec[2]
@@ -1327,9 +1327,9 @@ void dll_D3_update(GameObject* obj)
     if (extra->flags92.scriptTargetActive == 0u && extra->surfaceMode == 6)
     {
         hitCount = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX,
-                                      6.0f, 0, (TrackBBoxHit*)hitResult, obj, -0x7c, -1, 0xff,
+                                      6.0f, 0, &hitResult, obj, -0x7c, -1, 0xff,
                                       0);
-        if (hitCount != 0 && ((TrackBBoxHit*)hitResult)->surfaceType == 13)
+        if (hitCount != 0 && hitResult.surfaceType == 13)
         {
             extra->flags92.scriptTargetActive = 1;
             extra->scriptTimer = (u16)(randomGetRange(10, 0xf) * 0x3c);

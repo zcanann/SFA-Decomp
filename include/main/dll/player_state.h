@@ -8,6 +8,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/objprint_character_api.h"
 
+struct PlayerMoveSlot;
+
 typedef struct PlayerStatus {
     s8 health;
     s8 maxHealth;

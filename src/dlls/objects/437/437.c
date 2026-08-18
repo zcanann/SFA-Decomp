@@ -1152,6 +1152,3 @@ ObjectDescriptor gLightfootObjDescriptor = {
     (ObjectDescriptorCallback)Lightfoot_getObjectTypeId,
     Lightfoot_getExtraSize,
 };
-
-LightfootStateHandler gLightfootStateHandlers[DLL1B5_STATE_HANDLER_COUNT];
-LightfootSubstateHandler gLightfootSubstateHandlers[DLL1B5_SUBSTATE_HANDLER_COUNT];

@@ -114,7 +114,7 @@ void DIM2PathGenerator_update(GameObject* obj) {
             childPlacementData->base.posZ = state->originZ;
             childPlacementData->base.ident = placement->base.ident;
             DIM2_SNOW_BALL_INTERFACE(objects[objectIndex])
-                ->init(objects[objectIndex], (Dim2SnowBallPlacement*)childPlacementData, 1);
+                ->init((GameObject*)objects[objectIndex], (Dim2SnowBallPlacement*)childPlacementData, 1);
             objFreeObjectType(objects[objectIndex], DIM2_PATH_GENERATOR_SNOWBALL_GROUP);
             objGetAllOfType(DIM2_PATH_GENERATOR_SNOWBALL_GROUP, &count);
             for (poolIndex = 0; poolIndex < count; poolIndex++) {

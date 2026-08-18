@@ -49,7 +49,7 @@ void CameraModeClimb_update(CameraObject* camera) {
     f32 distance;
     f32 traceFrom[3];
     f32 traceOut[3];
-    u8 traceWork[sizeof(CamcontrolTraceWork)];
+    CamcontrolTraceWork traceWork;
 
     target = (GameObject*)camera->anim.targetObj;
     if (gCameraModeClimbState->transitionTimer != 0) {

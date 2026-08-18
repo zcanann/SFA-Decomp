@@ -51,10 +51,11 @@ void attractor_free(GameObject* obj) {
 }
 
 void attractor_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 v = visible;
-    if (v != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
+    if (visible == 0) {
+        return;
     }
+
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
 void attractor_hitDetect(void) {
@@ -65,11 +66,7 @@ void attractor_update(void) {
 
 void attractor_init(GameObject* obj, AttractorPlacement* placement) {
     objAddObjectType(obj, ATTRACTOR_OBJECT_GROUP);
-    {
-        s8 rotation = placement->rotXByte;
-        s16 rotX = rotation << 8;
-        obj->anim.rotX = rotX;
-    }
+    obj->anim.rotX = placement->rotXByte << 8;
 }
 
 void attractor_release(void) {

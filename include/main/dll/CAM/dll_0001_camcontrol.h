@@ -6,7 +6,6 @@
 #include "main/camera_object.h"
 #include "main/dll/DR/dr_types.h"
 #include "main/camera_interface.h"
-#include "main/objanim_internal.h"
 #include "main/resource.h"
 
 typedef struct CamcontrolTriggeredAction CamcontrolTriggeredAction;

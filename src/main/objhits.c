@@ -1916,7 +1916,7 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                                 endPoints[pointCount * 3] = playerMapOffsetX + curEntry[1];
                                 endPoints[pointCount * 3 + 1] = curEntry[2];
                                 endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curEntry[3];
-                                prevEntry = (float*)(prevSpheres + sphereOff);
+                                prevEntry = (float*)((u8*)prevSpheres + sphereOff);
                                 startPoints[pointCount * 3] = playerMapOffsetX + prevEntry[1];
                                 startPoints[pointCount * 3 + 1] = prevEntry[2];
                                 startPoints[pointCount * 3 + 2] = playerMapOffsetZ + prevEntry[3];

@@ -68,8 +68,8 @@
 #include "main/objseq_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/lightmap_render_queue_api.h"
+#include "main/lightmap_internal.h"
 #include "main/objprint_dolphin_internal.h"
-#include "main/dll/ppcwgpipe_struct.h"
 
 u8 gCloudLayerOverlayColor[4] = {0x20, 0x20, 0x20, 0};
 GXColor gTexShaderAmbColor = {0xFF, 0xFF, 0xFF, 0xFF};
@@ -188,7 +188,7 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
     Texture** noiseTextures;
     MapBlockBoundsRec* bounds[1];
     u8 passCount;
-    int byteBase;
+    u8* byteBase;
     u32 bits;
     int bitPos;
     u32 flags;
@@ -197,11 +197,11 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
     bitPos = state->bit;
     {
         int off = bitPos >> 3;
-        byteBase = (int)state->instrs;
-        bits = *(u8*)(byteBase + off);
+        byteBase = state->instrs;
+        bits = byteBase[off];
         byteBase += off;
-        bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
-        bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
+        bits = bits | (u32)(byteBase[1] << 8);
+        bits = bits | (u32)(byteBase[2] << 16);
     }
     state->bit = bitPos + 8;
     /* extract this cursor's 8-bit field (LSB-first: shift out the bits already
@@ -247,7 +247,7 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
 {
     Shader* shader;
     u32 shaderIdx;
-    int byteBase;
+    u8* byteBase;
     GXColor fogColor;
     u32 bits;
     u32 bitPos;
@@ -257,11 +257,11 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     bitPos = state->bit;
     {
         int off = (int)bitPos >> 3;
-        byteBase = (int)state->instrs;
-        bits = *(u8*)(byteBase + off);
+        byteBase = state->instrs;
+        bits = byteBase[off];
         byteBase += off;
-        bits |= (u32) * (u8*)(byteBase + 1) << 8;
-        bits |= (u32) * (u8*)(byteBase + 2) << 16;
+        bits |= (u32)byteBase[1] << 8;
+        bits |= (u32)byteBase[2] << 16;
         state->bit = bitPos + 6;
         shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
         shader = &blockData->shaders[shaderIdx];

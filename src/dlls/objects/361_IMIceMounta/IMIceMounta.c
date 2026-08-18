@@ -23,8 +23,6 @@
 #include "main/sky_interface.h"
 #include "sys/objects.h"
 
-#define IM_ICE_MOUNTAIN_PLAYER_VTABLE_GET_MODE 0x48
-
 #define IM_ICE_MOUNTAIN_PLAYER_MODE_WORLDMAP 1
 #define IM_ICE_MOUNTAIN_HUD_STATE_WORLDMAP   5
 #define IM_ICE_MOUNTAIN_HUD_STATE_HIDDEN     6
@@ -42,8 +40,6 @@
 #define IM_ICE_MOUNTAIN_ENVFX_C 0x119
 #define IM_ICE_MOUNTAIN_ENVFX_D 0x104
 
-typedef int (*IMIceMountainGetPlayerModeFn)(GameObject* player);
-
 void IMIceMountain_enterWorldMap(GameObject* obj) {
     IMIceMountainState* state = obj->extra;
     s32 playerMode;
@@ -53,8 +49,7 @@ void IMIceMountain_enterWorldMap(GameObject* obj) {
     mainSetBits(GAMEBIT_IM_BikeRelated03A2, 0);
     player = playerGetFocusObject(Obj_GetPlayerObject());
     if (player != NULL) {
-        playerMode =
-            (*(IMIceMountainGetPlayerModeFn*)((u8*)*player->anim.dll + IM_ICE_MOUNTAIN_PLAYER_VTABLE_GET_MODE))(player);
+        playerMode = VEHICLE_INTERFACE(player)->getRacePosition(player);
     } else {
         playerMode = 0;
     }
@@ -83,8 +78,7 @@ void IMIceMountain_exitWorldMap(GameObject* obj, IMIceMountainState* state) {
         mainSetBits(GAMEBIT_IM_BikeRelated03B9, 0);
         player = playerGetFocusObject(Obj_GetPlayerObject());
         if (player != NULL) {
-            playerMode = (*(IMIceMountainGetPlayerModeFn*)((u8*)*player->anim.dll +
-                                                           IM_ICE_MOUNTAIN_PLAYER_VTABLE_GET_MODE))(player);
+            playerMode = VEHICLE_INTERFACE(player)->getRacePosition(player);
         } else {
             playerMode = 0;
         }

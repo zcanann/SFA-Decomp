@@ -4117,9 +4117,9 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
     drawViewFinderHud();
     if ((*gCameraInterface)->getMode() != CAMERA_MODE_VIEWFINDER_RESOURCE_ID &&
         (player->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
-        (void*)tricky != 0 && getHudHiddenFrameCount() == 0)
+        tricky != NULL && getHudHiddenFrameCount() == 0)
     {
-        HUD_TRICKY_INTERFACE(tricky)->getCurrentCommandType((GameObject*)tricky, &iconIndex);
+        HUD_TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)

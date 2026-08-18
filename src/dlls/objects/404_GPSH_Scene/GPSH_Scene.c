@@ -30,7 +30,7 @@ void gpshScene_update(void) {
 }
 
 void gpshScene_init(GameObject* obj, const GPSHScenePlacement* placement) {
-    obj->anim.rotX = (s16)((s32)placement->initialYaw << 8);
+    obj->anim.rotX = placement->initialYaw << 8;
     obj->anim.worldPosX = obj->anim.localPosX;
     obj->anim.worldPosY = obj->anim.localPosY;
     obj->anim.worldPosZ = obj->anim.localPosZ;

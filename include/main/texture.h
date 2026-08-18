@@ -44,7 +44,7 @@ typedef struct Texture {
     u8 minLod;
     u8 maxLod;
     u8 unk1E[2];
-    u32 gxTexObj[8];
+    u32 gxTexObj[sizeof(GXTexObj) / sizeof(u32)];
     u32 *tmemAddr;
     u32 dataSize;
     u8 preloaded;

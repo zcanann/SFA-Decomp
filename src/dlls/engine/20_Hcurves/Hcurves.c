@@ -162,7 +162,7 @@ void RomCurve_swapEndpointNodes(RomCurveWalker* p)
     }
 }
 
-static inline int Objfsa_FindRomCurveById(int curveId)
+static inline RomCurveDef* Objfsa_FindRomCurveById(int curveId)
 {
     int hi;
     int lo;
@@ -171,7 +171,7 @@ static inline int Objfsa_FindRomCurveById(int curveId)
 
     if (curveId < 0)
     {
-        return 0;
+        return NULL;
     }
 
     hi = nRomCurves - 1;
@@ -190,11 +190,11 @@ static inline int Objfsa_FindRomCurveById(int curveId)
         }
         else
         {
-            return (int)romCurves[mid];
+            return romCurves[mid];
         }
     }
 
-    return 0;
+    return NULL;
 }
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve)

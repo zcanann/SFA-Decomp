@@ -27,7 +27,7 @@ void area_update(void) {
 }
 
 void area_init(GameObject* obj) {
-    obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void area_release(void) {

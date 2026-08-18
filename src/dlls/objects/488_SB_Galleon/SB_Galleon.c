@@ -49,7 +49,6 @@
 #define DBPROTECTION_GAMEBIT_CYCLE_B_DONE     0xa3f
 #define DBPROTECTION_GAMEBIT_TRANSITION_ARMED 0x9f
 #define DBPROTECTION_GAMEBIT_TRANSITION_USED  0xa0
-#define DBPROTECTION_GAMEBIT_TRANSITION_READY 0x91c
 #define DBPROTECTION_GAMEBIT_MUTE_SFX         0xa71
 #define DBPROTECTION_ENVFX_A                  0x467e7
 #define DBPROTECTION_ENVFX_B                  0x467e8
@@ -438,9 +437,9 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             state->phaseCounter = 5;
             state->headingLatch = 200;
             {
-                int sfxObj = (int)sbGetPropeller();
-                Sfx_StopFromObject((GameObject*)sfxObj, SFXTRIG_swtst1_c);
-                Sfx_PlayFromObject((GameObject*)sfxObj, SFXTRIG_mv_curtainloop16);
+                GameObject* sfxObj = sbGetPropeller();
+                Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
+                Sfx_PlayFromObject(sfxObj, SFXTRIG_mv_curtainloop16);
             }
             mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         } else if (state->phaseCounter >= 4) {
@@ -1133,11 +1132,11 @@ int SB_Galleon_getObjectTypeId(void) {
 void SB_Galleon_free(GameObject* obj, int leavingMap) {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     if (gSbGalleonSkyTexA != NULL) {
-        textureFree((Texture*)((void*)gSbGalleonSkyTexA));
+        textureFree(gSbGalleonSkyTexA);
         gSbGalleonSkyTexA = NULL;
     }
     if (gSbGalleonSkyTexB != NULL) {
-        textureFree((Texture*)((void*)gSbGalleonSkyTexB));
+        textureFree(gSbGalleonSkyTexB);
         gSbGalleonSkyTexB = NULL;
     }
     objFreeObjectType(obj, SBGALLEON_OBJGROUP);

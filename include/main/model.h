@@ -173,7 +173,8 @@ typedef struct ModelFileHeader {
     u16 shaderFlags;
     u16 vertexCount;
     u16 normalCount;
-    u8 unkE8[4];
+    u16 colorCount;
+    u16 texCoordCount;
     union {
         u16 animationCount; /* nonzero = per-joint matrix buffers */
         u16 moveCount;

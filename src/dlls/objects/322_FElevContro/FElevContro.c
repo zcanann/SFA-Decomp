@@ -35,7 +35,7 @@ void FElevControl_update(void) {
 }
 
 void FElevControl_init(GameObject* obj) {
-    ObjMsg_AllocQueue(obj, FELEV_CONTROL_MESSAGE_QUEUE_CAPACITY);
+    ObjMsg_AllocQueue(obj, 2);
 }
 
 void FElevControl_release(void) {

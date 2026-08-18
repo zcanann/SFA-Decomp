@@ -19,7 +19,7 @@ void CameraMode55_free(void) {
 }
 
 void CameraMode55_update(CameraObject* camera) {
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target = camera->anim.targetObj;
 
     gCameraMode55State->timer -= 0.2f * timeDelta;
     if (gCameraMode55State->timer < 20.0f) {

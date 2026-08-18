@@ -75,8 +75,9 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
         int i;
         for (i = 0; i < count; i++)
         {
-            int* candidate = (int*)objs[i];
-            if (*(u8*)(*(int*)((int)candidate + 0x4c) + 0x1b) == state->targetLinkId)
+            GameObject* candidate = objs[i];
+            McLightningSetup* candidateSetup = (McLightningSetup*)candidate->anim.placementData;
+            if (candidateSetup->linkId == state->targetLinkId)
                 break;
         }
         if (i == count)

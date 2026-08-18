@@ -881,7 +881,7 @@ void Checkpoint_initialise(void)
 {
     gCheckpointRouteCount = 0;
     gCheckpointRankItemsPending = gCheckpointPartFxListBuffer;
-    gCheckpointRankItems = (void*)((u8*)gCheckpointPartFxListBuffer + 0x28);
+    gCheckpointRankItems = gCheckpointPartFxListBuffer + 10;
 }
 typedef struct CheckpointDllInterface {
     u32 reserved0;

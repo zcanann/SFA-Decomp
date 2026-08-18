@@ -869,7 +869,7 @@ void mapLoadUnloadObjects(int flag)
         GameObject** objs = ObjList_GetObjects(&i, &objCount);
         while (i < objCount)
         {
-            obj = (GameObject*)objs[i];
+            obj = objs[i];
             fp = obj->anim.placement;
             i++;
             unload = 0;

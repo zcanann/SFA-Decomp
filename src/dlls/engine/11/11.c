@@ -12,6 +12,7 @@
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "game/objects/object.h"
 #include "game/objects/object_interface.h"

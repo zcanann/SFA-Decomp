@@ -82,11 +82,9 @@ void dim_tricky_update(GameObject* obj)
     }
 }
 
-void dim_tricky_init(GameObject* obj)
-{
-    u8 v = DIMTRICKY_STATE_WAIT_TRIGGER;
+void dim_tricky_init(GameObject* obj) {
     DimTrickyState* state = obj->extra;
-    state->phase = v;
+    state->phase = DIMTRICKY_STATE_WAIT_TRIGGER;
 }
 
 ObjectDescriptor gDIM_trickyObjDescriptor = {

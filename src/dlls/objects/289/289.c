@@ -40,8 +40,8 @@ void infotext_update(GameObject* obj) {
 }
 
 void infotext_init(GameObject* obj, InfoTextPlacement* placement) {
-    obj->objectFlags = (u16)((u32)obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
-    obj->anim.rotX = (s16)((s32)placement->rotationX << 8);
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.rotX = placement->rotationX << 8;
     objSetHintTextIdx(obj, placement->hintTextIndex);
 }
 

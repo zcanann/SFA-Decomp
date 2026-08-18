@@ -39,12 +39,9 @@ void TrickyGuard_update(GameObject* obj) {
 }
 
 void TrickyGuard_init(GameObject* obj, TrickyGuardPlacement* placement) {
-    u32 flags;
 
-    obj->anim.rotX = (s16)((u32)placement->rotXByte << 8);
-    flags = obj->objectFlags;
-    flags |= OBJECT_OBJFLAG_HIDDEN;
-    obj->objectFlags = flags;
+    obj->anim.rotX = placement->rotXByte << 8;
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
 }
 
 ObjectDescriptor gTrickyGuardObjDescriptor = {

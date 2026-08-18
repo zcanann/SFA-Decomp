@@ -878,7 +878,7 @@ u32 SHthorntail_updateLevelControlState(GameObject* obj, int unused, ObjSeqState
     }
     runtime->activeMoveValid = 0;
     objAudioDispatchAnimEvents(obj, &animUpdate->animEvents, 8, runtime->renderPathPoints,
-                               runtime->moveScratch, 1.0f, 1.0f);
+                               &runtime->pathState, 1.0f, 1.0f);
     return 0;
 }
 
@@ -1074,9 +1074,9 @@ void SHthorntail_update(GameObject* obj) {
             gSHthorntailActiveConfigToken =
                 ((SHthorntailPlacement*)(obj)->anim.placementData)->configToken;
             obj->anim.velocityY = -(0.17f * timeDelta - obj->anim.velocityY);
-            (*gPathControlInterface)->update((void*)obj, runtime->moveScratch, timeDelta);
-            (*gPathControlInterface)->apply((void*)obj, runtime->moveScratch);
-            (*gPathControlInterface)->advance((void*)obj, runtime->moveScratch, timeDelta);
+            (*gPathControlInterface)->update((void*)obj, &runtime->pathState, timeDelta);
+            (*gPathControlInterface)->apply((void*)obj, &runtime->pathState);
+            (*gPathControlInterface)->advance((void*)obj, &runtime->pathState, timeDelta);
             obj->anim.rotY = runtime->moveControlPitch;
             obj->anim.rotZ = runtime->moveControlRoll;
         } else {
@@ -1086,13 +1086,13 @@ void SHthorntail_update(GameObject* obj) {
             }
             if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06')) {
                 obj->anim.velocityY = -(0.17f * timeDelta - obj->anim.velocityY);
-                (*gPathControlInterface)->update((void*)obj, runtime->moveScratch, timeDelta);
-                (*gPathControlInterface)->apply((void*)obj, runtime->moveScratch);
-                (*gPathControlInterface)->advance((void*)obj, runtime->moveScratch, timeDelta);
+                (*gPathControlInterface)->update((void*)obj, &runtime->pathState, timeDelta);
+                (*gPathControlInterface)->apply((void*)obj, &runtime->pathState);
+                (*gPathControlInterface)->advance((void*)obj, &runtime->pathState, timeDelta);
                 obj->anim.rotY = runtime->moveControlPitch;
                 obj->anim.rotZ = runtime->moveControlRoll;
             } else {
-                (*gPathControlInterface)->attachObject((void*)obj, runtime->moveScratch);
+                (*gPathControlInterface)->attachObject((void*)obj, &runtime->pathState);
             }
         }
     }

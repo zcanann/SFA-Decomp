@@ -15,7 +15,7 @@ typedef struct StaffInterface
     void* pad00[8];
     void (*func0A)(void);
     void (*func0B)(void);
-    void (*updateSwipe)(GameObject* staff, GameObject* p4, int p5);
+    void (*updateSwipe)(GameObject* staff, GameObject* player, void* context);
     void (*hitDetectGeometry)(GameObject* staff);
     void (*func0E)(void);
     void (*func0F)(void);

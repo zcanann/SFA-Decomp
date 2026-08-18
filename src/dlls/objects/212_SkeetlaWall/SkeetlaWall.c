@@ -31,26 +31,25 @@ void SkeetlaWall_free(GameObject* obj) {
 }
 
 void SkeetlaWall_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
-    if (visible != 0) {
-        switch (obj->userData1) {
-        case 0:
-            objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
-            break;
-        }
+    if (visible == 0) {
+        return;
+    }
+
+    switch (obj->userData1) {
+    case 0:
+        objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
+        break;
     }
 }
 
 void SkeetlaWall_hitDetect(GameObject* obj) {
-    (void)obj;
 }
 
 void SkeetlaWall_update(GameObject* obj) {
-    (void)obj;
 }
 
 void SkeetlaWall_init(GameObject* obj, SkeetlaWallPlacement* placement) {
     SkeetlaWallState* state = obj->extra;
-
     state->negXExtent = placement->negXExtent;
     state->posXExtent = placement->posXExtent;
     state->posZExtent = placement->posZExtent;

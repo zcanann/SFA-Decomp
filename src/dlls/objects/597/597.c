@@ -491,6 +491,7 @@ typedef struct SnowBikePulseParams
 void SnowBike_UpdateEngineFx(GameObject* obj, void* state, f32 localVelZ, int intensity, u8* unused,
                                 u8 channelFlags)
 {
+    SnowBikeState* bikeState;
     f32 clamped;
     f32 windVol;
     f32 fv;
@@ -499,6 +500,7 @@ void SnowBike_UpdateEngineFx(GameObject* obj, void* state, f32 localVelZ, int in
     f32 channelVol4;
     SnowBikePulseParams pulse;
 
+    bikeState = (SnowBikeState*)state;
     clamped =
         (localVelZ < 0.0f) ? 0.0f : ((localVelZ > 70.0f) ? 70.0f : localVelZ);
     if (channelFlags & 1)
@@ -518,7 +520,7 @@ void SnowBike_UpdateEngineFx(GameObject* obj, void* state, f32 localVelZ, int in
             {
                 gSnowBikeWindVolume = 200.0f;
             }
-            if (((SnowBikeStateView*)state)->distanceGate < 18.0f)
+            if (bikeState->impactShakeTimer < 18.0f)
             {
                 vol = (int)(30.0f * clamped);
                 if (vol < 0)
@@ -542,7 +544,7 @@ void SnowBike_UpdateEngineFx(GameObject* obj, void* state, f32 localVelZ, int in
     {
         if (Sfx_IsPlayingFromObjectChannel(obj, 1))
         {
-            if (((SnowBikeStateView*)state)->distanceGate < 18.0f)
+            if (bikeState->impactShakeTimer < 18.0f)
             {
                 windVol = 0.0f;
                 if (windVol != clamped)
@@ -1118,7 +1120,7 @@ void SnowBike_onSeqFree(GameObject* obj)
         state->engineFxLevel = -0.05f;
     }
     ObjHits_EnableObject(obj);
-    (*gPathControlInterface)->attachObject(obj, (char*)state + 0x178);
+    (*gPathControlInterface)->attachObject(obj, &state->pathState);
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
     ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
@@ -1875,7 +1877,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
         state->localVelX = zero;
         state->localVelY = zero;
         state->localVelZ = zero;
-        (*gPathControlInterface)->attachObject((void*)obj, (void*)((u8*)state + 0x178));
+        (*gPathControlInterface)->attachObject((void*)obj, &state->pathState);
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosX = obj->anim.localPosX;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosY = obj->anim.localPosY;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->localPosZ = obj->anim.localPosZ;
@@ -2024,21 +2026,19 @@ void SnowBike_free(GameObject* obj)
 
 void SnowBike_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    void* path;
+    SnowBikeState* state;
 
-    path = (obj)->extra;
-    SnowBike_DrawTrails(obj, (char*)path);
+    state = obj->extra;
+    SnowBike_DrawTrails(obj, (char*)state);
     if (visible == -1)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)1.0f);
-        ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)path + 0x3e8),
-                                      (f32*)((char*)path + 0x3ec), (f32*)((char*)path + 0x3f0), 0);
+        ObjPath_GetPointWorldPosition(obj, 0, &state->modelMtxPosX, &state->modelMtxPosY, &state->modelMtxPosZ, 0);
     }
     else
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)1.0f);
-        ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)path + 0x3e8),
-                                      (f32*)((char*)path + 0x3ec), (f32*)((char*)path + 0x3f0), 0);
+        ObjPath_GetPointWorldPosition(obj, 0, &state->modelMtxPosX, &state->modelMtxPosY, &state->modelMtxPosZ, 0);
     }
 }
 
@@ -2139,7 +2139,7 @@ void SnowBike_hitDetect(GameObject* obj)
             velScaleDefault *
             (oneOverTimeDelta * (obj->anim.localPosZ - obj->anim.previousLocalPosZ));
     }
-    Matrix_TransformPoint((f32*)((u8*)state + 0x12c), obj->anim.velocityX, 0.0f,
+    Matrix_TransformPoint(state->matrix12C, obj->anim.velocityX, 0.0f,
                           obj->anim.velocityZ, &state->localVelX, &dummy, &state->localVelZ);
     }
 {

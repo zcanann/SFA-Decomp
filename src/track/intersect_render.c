@@ -243,9 +243,9 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                                               &gWhirlpoolReflectionTintColor.g,
                                               &gWhirlpoolReflectionTintColor.b,
                                               &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
-        gWhirlpoolReflectionTintColor.r = (u8)((int)gWhirlpoolReflectionTintColor.r >> 3);
-        gWhirlpoolReflectionTintColor.g = (u8)((int)gWhirlpoolReflectionTintColor.g >> 3);
-        gWhirlpoolReflectionTintColor.b = (u8)((int)gWhirlpoolReflectionTintColor.b >> 3);
+        gWhirlpoolReflectionTintColor.r >>= 3;
+        gWhirlpoolReflectionTintColor.g >>= 3;
+        gWhirlpoolReflectionTintColor.b >>= 3;
         gWhirlpoolReflectionTintColor.a = gReflectionTintAlpha;
     }
     GXSetTevColor(GX_TEVREG2, gWhirlpoolReflectionTintColor);
@@ -1802,8 +1802,7 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     Mtx mtx_5c;
     f32 indMtx_44[6];
     f32 indMtx_2c[6];
-    Texture* handle1;
-    Texture* handle2;
+    Texture *handle1, *handle2;
     f32 scrollX, scrollY;
     f32 f31_val;
     GXColor temp;

@@ -495,8 +495,8 @@ void dll_2E_initState(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
     zero = 0.0f;
     s->animPhase = zero;
     s->setupFlag = 0;
-    s->lastTarget = NULL;
-    s->lockTarget = NULL;
+    s->lastTarget = 0;
+    s->lockTarget = 0;
     s->lookAtMaxDistance = 1000.0f;
     s->phase = MOVELIB_PHASE_IDLE;
     s->needsReinit = 1;
