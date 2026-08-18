@@ -21,7 +21,7 @@ typedef struct Dll219Setup
 
 int dll_219_getExtraSize_ret_4(void);
 int dll_219_getObjectTypeId(void);
-void dll_219_free(int obj);
+void dll_219_free(GameObject* obj);
 void dll_219_render_nop(void);
 void dll_219_hitDetect_nop(void);
 void dll_219_update(GameObject* obj);

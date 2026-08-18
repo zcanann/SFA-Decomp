@@ -8,6 +8,8 @@
 
 #define OBJHITBOX_CONTACT_OBJECT_COUNT 3
 
+struct ObjHitReactEntry;
+
 /*
  * ObjHitboxTransformState - the per-hitbox runtime record at
  * ObjAnimComponent+0x58 (also reached as ObjHitbox.transformState).

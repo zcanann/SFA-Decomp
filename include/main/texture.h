@@ -31,7 +31,10 @@ typedef struct Texture {
     u16 refCount;
     u16 animationFrameCount;
     u8 unk12[2];
-    u16 animationFrameStep;
+    union {
+        u16 animationFrameStep;
+        u16 expgfxLinkGroup;
+    };
     u8 format;
     u8 wrapS;
     u8 wrapT;

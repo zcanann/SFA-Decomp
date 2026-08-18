@@ -89,8 +89,7 @@
 
 int gWbCurveInitData[2] = {2, 3};
 
-void wbUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1, Vec* wpad2,
-                         int wpad3)
+void wbUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1, Vec* wpad2, int wpad3)
 {
     if (eventKind != 0x11)
     {

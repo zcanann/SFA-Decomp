@@ -4,6 +4,7 @@
 #include "types.h"
 #include "global.h"
 #include "game/objects/object_fwd.h"
+#include "main/dll/curves_collision_state.h"
 
 typedef struct Arw339Flags
 {
@@ -57,7 +58,7 @@ typedef struct ArwingState {
     f32 rollCooldown;    /* 0x0b4 */
     f32 rollCooldownInit;/* 0x0b8 */
     f32 rollRegenDelay;  /* 0x0bc */
-    u8 pathBlock[0x268]; /* 0x0c0: gPathControlInterface block */
+    CurvesCollisionState pathControl; /* 0x0c0: gPathControlInterface block */
     f32 damageFlashTimer;/* 0x328 */
     f32 knockVelX;       /* 0x32c */
     f32 knockVelZ;       /* 0x330 */

@@ -5,6 +5,7 @@
 #include "game/objects/object.h"
 #include "main/objprint_character_api.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/curves_collision_state.h"
 
 typedef struct SHthorntailPlacement {
     union {

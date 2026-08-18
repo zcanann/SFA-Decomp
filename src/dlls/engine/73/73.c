@@ -90,8 +90,8 @@ void CameraModeCombat_free(CameraObject* camera) {
     camera->smoothingFlags.b0 = 0;
 }
 
-static void CameraModeCombat_traceMove(f32* prevPos, CameraObject* camera, u8* traceWork) {
-    camcontrol_traceMove(prevPos, &camera->anim.worldPosX, &camera->anim.worldPosX, traceWork, 3, 1, 1, 4.0f);
+static void CameraModeCombat_traceMove(f32* prevPos, CameraObject* camera, CamcontrolTraceWork* traceWork) {
+    camcontrol_traceMove(prevPos, &camera->anim.worldPosX, &camera->anim.worldPosX, (u8*)traceWork, 3, 1, 1, 4.0f);
 }
 
 void CameraModeCombat_update(CameraObject* camera) {
@@ -104,7 +104,7 @@ void CameraModeCombat_update(CameraObject* camera) {
     f32 dx;
     f32 dz;
     Vec desiredPosition;
-    u8 traceWork[116];
+    CamcontrolTraceWork traceWork;
     Camera* currentView = Camera_GetCurrent();
     GameObject* target;
     ObjHitVolumeRuntimeTransform* hitVolumes;
@@ -305,7 +305,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                             }
                             PSVECScale(&movement, &movement, (mag < 0.0f) ? 0.0f : ((mag > 20.0f) ? 20.0f : mag));
                             PSVECAdd(&camera->anim.worldPos, &movement, &camera->anim.worldPos);
-                            CameraModeCombat_traceMove(&prevX, camera, traceWork);
+                            CameraModeCombat_traceMove(&prevX, camera, &traceWork);
                             t = 0.1f * dz + focus->anim.worldPosZ;
                             fb = currentView->x - (0.1f * dx + focus->anim.worldPosX);
                             dy = currentView->y - py;

@@ -2192,7 +2192,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                             MLDF_FINFO4(x) = fi;
                         }
                         MLDF_OWNER_RT(slot) = mapId;
-                        return MLDF_SP_PTR(x);
+                        return (void*)MLDF_SP_PTR(x);
                     }
                 }
             }
@@ -2273,11 +2273,11 @@ void* mapLoadDataFile(int mapId, int fileId)
                         {
                             gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x80000000;
                         }
-                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
+                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
                         MLDF_FINFO4(x) = fi;
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -2367,10 +2367,10 @@ void* mapLoadDataFile(int mapId, int fileId)
                     gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x4000000;
                 }
                 MLDF_FINFO4(x) = fi;
-                DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
+                DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
             }
             MLDF_OWNER_RT(slot) = mapId;
-            return MLDF_SP_PTR(x);
+            return (void*)MLDF_SP_PTR(x);
         }
         break;
     case 0x1a:
@@ -2450,10 +2450,10 @@ void* mapLoadDataFile(int mapId, int fileId)
                             gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x8000000;
                         }
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
+                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -2563,7 +2563,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -2655,10 +2655,10 @@ void* mapLoadDataFile(int mapId, int fileId)
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x80000;
                     }
                     MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
                 }
                 MLDF_OWNER_RT(slot) = mapId;
-                return MLDF_SP_PTR(x);
+                return (void*)MLDF_SP_PTR(x);
             }
         }
         break;
@@ -2763,7 +2763,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -2838,10 +2838,10 @@ void* mapLoadDataFile(int mapId, int fileId)
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 8;
                     }
                     MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
+                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
                 }
                 MLDF_OWNER_RT(slot) = mapId;
-                return MLDF_SP_PTR(x);
+                return (void*)MLDF_SP_PTR(x);
             }
         }
         break;
@@ -2943,7 +2943,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, animReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -3018,10 +3018,10 @@ void* mapLoadDataFile(int mapId, int fileId)
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x80;
                     }
                     MLDF_FINFO4(x) = fi;
-                    DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
+                    DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
                 }
                 MLDF_OWNER_RT(slot) = mapId;
-                return MLDF_SP_PTR(x);
+                return (void*)MLDF_SP_PTR(x);
             }
         }
         break;
@@ -3123,7 +3123,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -3193,17 +3193,17 @@ void* mapLoadDataFile(int mapId, int fileId)
                     {
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x400;
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab1readCb, 2);
+                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab1readCb, 2);
                     }
                     else
                     {
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x800;
                         MLDF_FINFO4(x) = fi;
-                        DVDReadAsyncPrio(fi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
+                        DVDReadAsyncPrio(fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
                     }
                 }
                 MLDF_OWNER_RT(slot) = mapId;
-                return MLDF_SP_PTR(x);
+                return (void*)MLDF_SP_PTR(x);
             }
         }
         break;
@@ -3301,7 +3301,7 @@ void* mapLoadDataFile(int mapId, int fileId)
                         DVDReadAsyncPrio(fi, loadedBuffer, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
                     }
                     MLDF_OWNER_RT(slot) = mapId;
-                    return MLDF_SP_PTR(x);
+                    return (void*)MLDF_SP_PTR(x);
                 }
             }
         }
@@ -3365,16 +3365,16 @@ void* mapLoadDataFile(int mapId, int fileId)
                     if (slot == 0x21)
                     {
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x4000;
-                        DVDReadAsyncPrio(tabFi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab1readCb, 2);
+                        DVDReadAsyncPrio(tabFi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab1readCb, 2);
                     }
                     else
                     {
                         gAssetLoadInFlightFlags = gAssetLoadInFlightFlags | 0x8000;
-                        DVDReadAsyncPrio(tabFi, MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
+                        DVDReadAsyncPrio(tabFi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
                     }
                 }
                 MLDF_OWNER_RT(slot) = mapId;
-                return MLDF_SP_PTR(x);
+                return (void*)MLDF_SP_PTR(x);
             }
         }
         break;

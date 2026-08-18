@@ -1,3 +1,4 @@
+#include "dlls/object_descriptor.h"
 #include "dlls/objects/198_AnimatedObj.h"
 #include "dlls/objects/199_DIM2RoofRub.h"
 #include "dlls/objects/200_DepthOfFieldPoint.h"
@@ -298,7 +299,6 @@
 #include "dlls/objects/521_WM_LevelCon.h"
 #include "dlls/objects/522_WM_GeneralS.h"
 #include "dlls/objects/599_DR_EarthWar.h"
-#include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
@@ -467,11 +467,8 @@
 #include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
 #include "main/gametext_box_api.h"
-#include "main/gametext_internal.h"
 #include "main/gametext_show_str_api.h"
-#include "main/textrender_api.h"
 #include "main/gametext_color_api.h"
-#include "main/gameloop_api.h"
 #include "main/minimap_api.h"
 #include "main/model_engine.h"
 #include "main/mm.h"
@@ -734,15 +731,10 @@ BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex)
     return FALSE;
 }
 
-BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
-{
-    s16* entry;
-
-    entry = list->entries;
-    while (entry < list->end)
-    {
-        if (*entry == index)
-        {
+BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader) {
+    s16* entry = list->entries;
+    while (entry < list->end) {
+        if (*entry == index) {
             memcpy(outHeader, entry + 1, list->dataSize);
             return TRUE;
         }
@@ -751,54 +743,40 @@ BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
     return FALSE;
 }
 
-void model_adjustModelList(ModelList* list, int index)
-{
-    s16* entry;
-
-    entry = list->entries;
-    while (entry < list->end)
-    {
-        if (*entry == index)
-        {
+void model_adjustModelList(ModelList* list, int index) {
+    s16* entry = list->entries;
+    while (entry < list->end) {
+        if (*entry == index) {
             *entry = -1;
             break;
         }
         entry += list->strideShorts;
     }
 
-    while (list->end > list->entries && list->end[-1] == -1)
-    {
+    while (list->end > list->entries && list->end[-1] == -1) {
         list->end -= list->strideShorts;
     }
 }
 
-void modelInitModelList(ModelList* list, s16 index, void* header)
-{
+void modelInitModelList(ModelList* list, s16 index, void* header) {
     s16* entry;
 
-    for (entry = list->entries; entry < list->end; entry += list->strideShorts)
-    {
-        if (*entry == -1)
-        {
+    for (entry = list->entries; entry < list->end; entry += list->strideShorts) {
+        if (*entry == -1) {
             break;
         }
     }
 
     *entry = index;
     memcpy(entry + 1, header, list->dataSize);
-    if (entry == list->end)
-    {
+    if (entry == list->end) {
         list->end += list->strideShorts;
     }
 }
 
-ModelList* allocModelStruct(int capacity, int dataSize)
-{
-    int entryBytes;
-    ModelList* list;
-
-    entryBytes = dataSize + 2;
-    list = mmAlloc(capacity * entryBytes + sizeof(ModelList), 0x1a, 0);
+ModelList* allocModelStruct(int capacity, int dataSize) {
+    int entryBytes = dataSize + 2;
+    ModelList* list = mmAlloc(capacity * entryBytes + sizeof(ModelList), 0x1a, 0);
     list->entries = (s16*)((u8*)list + sizeof(ModelList));
     list->dataSize = dataSize;
     list->strideShorts = (u32)entryBytes >> 1;
@@ -808,17 +786,11 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     return list;
 }
 
-BOOL Resource_Release(void* handleSlot)
-{
-    s32 i;
-    ResourceDescriptor* descriptor;
-
-    i = 0;
-    descriptor = (ResourceDescriptor*)handleSlot;
-    while (i < RESOURCE_DESCRIPTOR_COUNT)
-    {
-        if ((void*)&gResourceLoadedHandles[i] == handleSlot)
-        {
+BOOL Resource_Release(void* handleSlot) {
+    s32 i = 0;
+    ResourceDescriptor* descriptor = handleSlot;
+    while (i < RESOURCE_DESCRIPTOR_COUNT) {
+        if ((void*)&gResourceLoadedHandles[i] == handleSlot) {
             descriptor = gResourceDescriptors[i];
             break;
         }

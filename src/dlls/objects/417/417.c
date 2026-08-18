@@ -803,7 +803,7 @@ void NW_mammoth_init(GameObject* obj, NwMammothPlacement* placement, int isReloa
         break;
     }
     if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-        u8* path = state->pathState;
+        CurvesCollisionState* path = &state->pathState;
         (*gPathControlInterface)->init(path, 3, 2, 1);
         (*gPathControlInterface)
             ->setup(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT, gNwMammothPathSetupDataA, gNwMammothPathSetupDataB,

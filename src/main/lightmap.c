@@ -50,7 +50,6 @@
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/mtx.h"
 #include "main/lightmap.h"
-#include "main/dll/ppcwgpipe_struct.h"
 #include "main/lightmap_internal.h"
 
 u8 colorFilterColor[4] = {0xFF, 0x70, 0x40, 0};
@@ -356,7 +355,6 @@ void getVisibleObjects(s8* opacity)
     u8* sub;
     GameObject* att;
     int j;
-    u8* interactState;
     ObjModel* model;
     u32 tf;
     u32 mode;
@@ -483,10 +481,10 @@ void getVisibleObjects(s8* opacity)
             }
             else
             {
-                interactState = (void*)o->anim.hitReactState;
-                if (interactState != NULL && (interactState[0x62] & 0x30) != 0)
+                ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)o->anim.hitReactState;
+                if (hitState != NULL && (hitState->shapeFlags & 0x30) != 0)
                 {
-                    interactState[0xaf] = 2;
+                    hitState->resetHitboxMode = 2;
                 }
             }
         }

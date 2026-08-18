@@ -39,6 +39,7 @@ typedef struct McLightningSetup {
     ObjPlacement base;
     u8 pad18[2];
     u8 spawnFlags;
+    u8 linkId;
 } McLightningSetup;
 
 STATIC_ASSERT(sizeof(McLightningState) == 0x1C);
@@ -53,5 +54,6 @@ STATIC_ASSERT(offsetof(McLightningState, boltParamD) == 0x19);
 STATIC_ASSERT(offsetof(McLightningState, targetLinkId) == 0x1A);
 STATIC_ASSERT(offsetof(McLightningState, flags) == 0x1B);
 STATIC_ASSERT(offsetof(McLightningSetup, spawnFlags) == 0x1A);
+STATIC_ASSERT(offsetof(McLightningSetup, linkId) == 0x1B);
 
 #endif /* MAIN_DLL_MCLIGHTNING_STATE_H_ */

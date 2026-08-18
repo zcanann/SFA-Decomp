@@ -176,7 +176,7 @@ static inline MusicChannel* Music_FindFreeChannel(void)
 {
     MusicChannel* channel = gMusicChannels;
     int i;
-    for (i = 15; i >= 0; i--)
+    for (i = MUSIC_CHANNEL_COUNT - 1; i >= 0; i--)
     {
         if (channel->status == 0)
         {
@@ -205,8 +205,8 @@ static inline MusicTrackSlot* Music_FindTrackSlot(int track)
 static inline MusicChannel* Music_FindActiveChannelForTrack(int track)
 {
     int i;
-    MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
-    for (i = 15; i >= 0; i--)
+    MusicChannel* ch = gMusicChannels;
+    for (i = MUSIC_CHANNEL_COUNT - 1; i >= 0; i--)
     {
         if (ch->trackId == track)
         {
@@ -871,8 +871,8 @@ int Music_GetTrackCount(void)
 }
 void Music_StopChannelsByPriorityGroup(int priorityGroupMask, MusicChannelStopMode mode, int fadeTime)
 {
-    MusicChannel* ch = (MusicChannel*)(int)gMusicChannels;
-    int i = 15;
+    MusicChannel* ch = gMusicChannels;
+    int i = MUSIC_CHANNEL_COUNT - 1;
     do
     {
         if (ch->status != 0 && ((ch->priorityGroup + 1) & priorityGroupMask) != 0)
@@ -1001,7 +1001,7 @@ void Music_Update(void)
     gMusicActivePriority = 0x7fff;
 
     ch = gMusicChannels;
-    i = 0xf;
+    i = MUSIC_CHANNEL_COUNT - 1;
     do {
         int status = ch->status;
         if (status != 0 && status != 4)
@@ -1052,7 +1052,7 @@ void Music_Update(void)
     } while (i-- != 0);
 
     ch = gMusicChannels;
-    for (i = 0; i < 16; i++)
+    for (i = 0; i < MUSIC_CHANNEL_COUNT; i++)
     {
         switch (ch->status)
         {
@@ -1120,7 +1120,7 @@ void Music_Update(void)
     }
 
     ch = gMusicChannels;
-    i = 0xf;
+    i = MUSIC_CHANNEL_COUNT - 1;
     do
     {
         switch (ch->status)
@@ -1236,7 +1236,7 @@ u8 musicInitMidiWad(void)
     {
         gMidiWadLoadStarted = 1;
         ch = gMusicChannels;
-        for (i = 16; i != 0; i--)
+        for (i = MUSIC_CHANNEL_COUNT; i != 0; i--)
         {
             ch->trackId = -1;
             ch->seqHandle = -1;
@@ -1615,5 +1615,5 @@ MusicTrackSlot sMusicTrackTable[] = {
 char sMidiWadLoadedCallbackLoadError[] = "MIDIWADLoadedCallback load error\n";
 char sMidiWadPath[] = "audio/midi.wad";
 
-MusicChannel gMusicChannels[0x240 / sizeof(MusicChannel)];
+MusicChannel gMusicChannels[MUSIC_CHANNEL_COUNT];
 u32 gAudioAramBlock[0x2C / sizeof(u32)];

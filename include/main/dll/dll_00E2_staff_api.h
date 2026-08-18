@@ -24,7 +24,7 @@ typedef struct StaffInterface
     void (*addHitReactValue)(GameObject* staff, s32 delta);
     int (*getHitReactValue)(GameObject* staff);
     void (*getHitGeometryPoints)(GameObject* staff, f32* outA, f32* outB);
-    void (*startSwipe)(GameObject* staff, s16 index, f32 arg2, f32 arg3);
+    void (*startSwipe)(GameObject* staff, f32 start, f32 lengthScale);
     s32 (*getSwipeTextureIndex)(GameObject* staff);
 } StaffInterface;
 

@@ -145,22 +145,22 @@ void AreaFXEmit_emitEffect(GameObject* obj) {
         resource = Resource_Acquire((state->effectId + AREAFXEMIT_RESOURCE_OFFSET), AREAFXEMIT_RESOURCE_GROUP);
         if (state->emitCount > 0) {
             for (i = 0; i < state->emitCount; i++) {
-                (*(void (**)(GameObject*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
+                ((void (*)(GameObject*, int, int, int, int, int))resource[0][1])(obj, 0, 0, 1, -1, 0);
             }
         } else {
-            (*(void (**)(GameObject*, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1, 0);
+            ((void (*)(GameObject*, int, int, int, int, int))resource[0][1])(obj, 0, 0, 1, -1, 0);
         }
         Resource_Release(resource);
     } else if (type == AREAFXEMIT_SPAWN_OBJECT_RESOURCE_ALT) {
         resource = Resource_Acquire((state->effectId + AREAFXEMIT_ALT_RESOURCE_OFFSET), AREAFXEMIT_RESOURCE_GROUP);
         if (state->emitCount > 0) {
             for (i = 0; i < state->emitCount; i++) {
-                (*(void (**)(GameObject*, int, int, int, int, int, int))(*(int*)resource + 4))(
+                ((void (*)(GameObject*, int, int, int, int, int, int))resource[0][1])(
                     obj, 0, 0, 1, -1, state->effectId & 0xFF, 0);
             }
         } else {
-            (*(void (**)(GameObject*, int, int, int, int, int, int))(*(int*)resource + 4))(obj, 0, 0, 1, -1,
-                                                                                           state->effectId & 0xFF, 0);
+            ((void (*)(GameObject*, int, int, int, int, int, int))resource[0][1])(obj, 0, 0, 1, -1,
+                                                                                  state->effectId & 0xFF, 0);
         }
         Resource_Release(resource);
     } else if (type == AREAFXEMIT_SPAWN_LOCAL_OBJECT) {

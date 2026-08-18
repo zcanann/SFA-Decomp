@@ -41,6 +41,7 @@
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/obj_message.h"
 #include "main/objhits.h"
+#include "main/dll/curve_walker.h"
 
 GameObject* gDll19NearestObj;
 f32 gDll19SegmentRadius;

@@ -1,6 +1,7 @@
 #include "dlls/objects/273.h"
 
 #include "dolphin/pad.h"
+#include "game/objects/object.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/object_render.h"

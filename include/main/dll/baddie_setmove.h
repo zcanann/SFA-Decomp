@@ -13,8 +13,8 @@
  *
  * Call order is (obj, state, moveId, speed, moveControlFlags, stateByte).
  */
-void baddieSetMove(GameObject* obj, int state, u8 moveId, f32 speed, u8 moveControlFlags, u8 stateByte);
+void baddieSetMove(GameObject* obj, void* state, u8 moveId, f32 speed, u8 moveControlFlags, u8 stateByte);
 #define Baddie_SetMove(obj, state, moveId, speed, moveControlFlags, stateByte)                                        \
-    baddieSetMove((GameObject*)(obj), (int)(state), (moveId), (speed), (moveControlFlags), (stateByte))
+    baddieSetMove((GameObject*)(obj), (void*)(state), (moveId), (speed), (moveControlFlags), (stateByte))
 
 #endif

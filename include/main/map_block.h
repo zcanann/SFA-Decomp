@@ -21,7 +21,7 @@ typedef struct MapBlockBoundsRec
     s16 maxY;
     s16 maxZ;
     u8 flags;
-    u8 pad13;
+    u8 shaderIndex;
     u16 renderBitOffset;
     u8 pad16[2];
     u8 selector;

@@ -321,7 +321,7 @@ int pathSearchBuildPath(PathSearch* search) {
     i = 0;
     while (entry != NULL) {
         *(RomCurveDef**)((char*)search->path + i) = entry->point;
-        i += 4;
+        i += sizeof(RomCurveDef*);
         count++;
         if (count >= 100) {
             entry = NULL;

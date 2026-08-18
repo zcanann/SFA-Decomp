@@ -79,6 +79,11 @@ STATIC_ASSERT(offsetof(Shader, alphaOverride) == 0x43);
 #define SHADER_FLAG_DECAL_LAYER        0x100000
 #define SHADER_FLAG_FORCE_BLEND        0x40000000
 
+/* A model render callback normally returns zero for the standard material
+ * setup or one after supplying its own GX state. This third result suppresses
+ * the display list associated with the current render op. */
+#define OBJMODEL_RENDER_CALLBACK_SKIP_DRAW 2
+
 typedef struct ModelRenderOpTextureRefs
 {
     void* texture0;

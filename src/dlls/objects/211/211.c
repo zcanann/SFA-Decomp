@@ -459,13 +459,16 @@ void landedarwing_updateAirborneMotion(GameObject* obj, LandedArwingState* state
     f32 start[3];
     f32 end[3];
     TrackQueryBounds bounds;
-    struct
+    union
     {
-        f32 hit[16];
-        f32 hitRadius;
-        u8 pad[0x10];
-        u8 hitType;
-        u8 pad2[0x1f];
+        TrackHitResults rec;
+        struct
+        {
+            f32 hit[16];
+            f32 hitRadius;
+            u8 pad[0x10];
+            u8 hitType;
+        };
     } hitScratch;
     f32 damping;
     int hitFound;
@@ -822,13 +825,16 @@ void landedarwing_moveAlongSurface(GameObject* obj, LandedArwingState* state)
     f32 start[3];
     f32 end[3];
     TrackQueryBounds bounds;
-    struct
+    union
     {
-        f32 hit[16];
-        f32 hitRadius;
-        u8 pad[0x10];
-        u8 hitType;
-        u8 pad2[0x10];
+        TrackHitResults rec;
+        struct
+        {
+            f32 hit[16];
+            f32 hitRadius;
+            u8 pad[0x10];
+            u8 hitType;
+        };
     } hitScratch;
     f32 speed;
 

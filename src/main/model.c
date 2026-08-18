@@ -12,6 +12,7 @@
 #include "main/mm.h"
 #include "game/objects/object.h"
 #include "main/object_transform.h"
+#include "main/objHitReact_types.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/PPCArch.h"
@@ -350,7 +351,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
         {
             outFlags |= 0x20;
         }
-        modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount,
+        modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
                                     (u8*)gModelJointScratchBuffer, flags, outFlags | 0x40);
     }
     else
@@ -400,7 +401,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
                 }
                 work.eventCountdown = slotEvent;
                 modelAnimUpdateChannels(file, &work, 2);
-                modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount,
+                modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
                                             (u8*)gModelJointScratchBuffer, flags, blendMask);
                 if (blendMask != 0)
                 {
@@ -440,7 +441,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
             {
                 outFlags |= 0x20;
             }
-            modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount,
+            modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
                                         (u8*)gModelJointScratchBuffer, flags, outFlags);
         }
     }
@@ -674,7 +675,7 @@ int modelGetAmapSize(int modelId, int amapFlag, int animCount)
     }
     else
     {
-        totalSize += animCount * 4;
+        totalSize += animCount * (int)sizeof(u8*);
         while (totalSize & 7)
         {
             totalSize++;
@@ -1529,18 +1530,18 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
 
 void model_multMtxs(u8* model, f32* out)
 {
-    u8* hdr = (u8*)((ObjModel*)model)->file;
+    ModelFileHeader* hdr = ((ObjModel*)model)->file;
     u32 i;
-    for (i = 0; i < hdr[0xf3]; i++)
+    for (i = 0; i < hdr->jointCount; i++)
     {
         int j = i;
-        u8* h = (u8*)((ObjModel*)model)->file;
-        u32 cnt = h[0xf3];
+        ModelFileHeader* h = ((ObjModel*)model)->file;
+        u32 cnt = h->jointCount;
         int lim;
         MtxPtr base;
         if (cnt != 0)
         {
-            lim = cnt + h[0xf4];
+            lim = cnt + h->extraJointCount;
         }
         else
         {

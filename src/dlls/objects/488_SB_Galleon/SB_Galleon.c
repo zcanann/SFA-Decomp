@@ -16,6 +16,7 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -755,7 +756,7 @@ void SB_Galleon_updateShield(GameObject* obj) {
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
         mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
-        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0) {
+        mainGetBit(GAMEBIT_ITEM_WMGoldKey_Got) != 0) {
         gSB_GalleonTransitionPending = 1;
         mainSetBits(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);
         (*gScreenTransitionInterface)->start(0xa, SCREEN_TRANSITION_BLACK);

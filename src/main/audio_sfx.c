@@ -496,7 +496,7 @@ void Sfx_PlayFromObjectEx(GameObject* obj, Vec* pos, u32 channel, u16 sfxId)
     int tracksObj;
 
     tracksObj = 0;
-    if (!Sfx_ResolveObjectSfxId((int*)&obj, &sfxId)) {
+    if (!Sfx_ResolveObjectSfxId(&obj, &sfxId)) {
         return;
     }
     if (!Sfx_ReadTriggerParams((SfxTriggerFull*)Sfx_FindTrigger(sfxId), &outSfxId, &vol, &pitch, &nearDist, &farDist,
@@ -589,7 +589,7 @@ void Sfx_PlayFromObjectEx(GameObject* obj, Vec* pos, u32 channel, u16 sfxId)
     }
 }
 
-int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
+int Sfx_ResolveObjectSfxId(struct GameObject** object, u16* sfxId)
 {
     switch (*sfxId)
     {
@@ -598,11 +598,11 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
     case 0x109:
         *sfxId = 0x409;
     case 0x409:
-        *outChannel = 0;
+        *object = NULL;
         break;
     case 0x7e:
     case 0x487:
-        *outChannel = 0;
+        *object = NULL;
         break;
     case 0x420:
         Music_Trigger(MUSICTRIG_TTH_Fight, 0);

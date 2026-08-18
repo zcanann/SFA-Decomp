@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_DLL_0211_WMWALLCRAWLER_H_
 
 #include "game/objects/object.h"
+#include "main/dll/curves_collision_state.h"
 #include "main/track_dolphin_api.h"
 #include "main/dll/path_control_interface.h"
 #include "game/objects/object_setup.h"
@@ -15,7 +16,7 @@ typedef struct WcHitBits
 
 typedef struct WmwallcrawlerState
 {
-    u8 pathState[0x268];    /* 0x000: PathControlInterface state block */
+    CurvesCollisionState pathState; /* 0x000: PathControlInterface state block */
     f32 triggerRadius;      /* 0x268: aggro radius, from placement; rescaled after each dive */
     f32 fleeChaseThreshold; /* 0x26C: distance threshold; >thr+eps -> CHASE, <thr -> FLEE drains lifeTimer */
     f32 homeX;              /* 0x270: home position, from placement */

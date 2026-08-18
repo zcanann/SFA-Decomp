@@ -936,7 +936,7 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     }
     if ((SHADER_FLAGS(shader) & 1) != 0 || (SHADER_FLAGS(shader) & 0x40000) != 0 ||
         (SHADER_FLAGS(shader) & 0x800) != 0 || (SHADER_FLAGS(shader) & 0x1000) != 0) {
-        GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
+        GXSetChanAmbColor(GX_COLOR0, gTexShaderAmbColor);
         if ((SHADER_FLAGS(shader) & 0x40000) != 0) {
             GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         } else {
@@ -1446,7 +1446,7 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type)
     count = block->polyGroupCount;
     for (i = 0; i < count; i++)
     {
-        entry = (MapTriGroup*)((int)block->polygonGroups + offset);
+        entry = (MapTriGroup*)((u8*)block->polygonGroups + offset);
         if (type == (int)((entry->flags & 0xff000000) >> 24))
         {
             total += entry[1].firstTri - entry->firstTri;

@@ -909,7 +909,7 @@ void SHthorntail_render(GameObject* obj, int renderArg2, int renderArg3, int ren
     do {
         ObjPath_GetPointWorldPosition(obj, pointIndex, &runtime->renderPathPoints[0].x, &runtime->renderPathPoints[0].y,
                                       &runtime->renderPathPoints[0].z, 0);
-        runtime = (SHthorntailState*)((int)runtime + sizeof(Vec));
+        runtime = (SHthorntailState*)((u8*)runtime + sizeof(Vec));
         pointIndex = pointIndex + 1;
     } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }

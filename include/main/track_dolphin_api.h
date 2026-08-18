@@ -3,51 +3,10 @@
 
 #include "types.h"
 #include "game/objects/object.h"
+#include "main/track_hit_results.h"
 #include "main/model_render_instrs_api.h"
 #include "main/track_dolphin_map_api.h"
 
-typedef struct TrackGroundHit
-{
-    f32 height;
-    f32 normalX;
-    f32 normalY;
-    f32 normalZ;
-    GameObject* object;
-    u8 surfaceType;
-    u8 pad15[3];
-} TrackGroundHit;
-
-STATIC_ASSERT(sizeof(TrackGroundHit) == 0x18);
-
-typedef struct TrackQueryBounds
-{
-    s32 minX;
-    s32 minY;
-    s32 minZ;
-    s32 maxX;
-    s32 maxY;
-    s32 maxZ;
-} TrackQueryBounds;
-
-STATIC_ASSERT(sizeof(TrackQueryBounds) == 0x18);
-
-typedef struct TrackHitResults
-{
-    f32 planes[4][4];
-    f32 radii[4];
-    u8 surfaceTypes[4];
-    u8 queryTypes[4];
-    u8 triangleFlags[4];
-    GameObject* objects[4];
-    s16 hitCount;
-    u8 hitMask;
-    u8 pad6F;
-} TrackHitResults;
-
-STATIC_ASSERT(sizeof(TrackHitResults) == 0x70);
-STATIC_ASSERT(offsetof(TrackHitResults, radii) == 0x40);
-STATIC_ASSERT(offsetof(TrackHitResults, surfaceTypes) == 0x50);
-STATIC_ASSERT(offsetof(TrackHitResults, queryTypes) == 0x54);
 STATIC_ASSERT(offsetof(TrackHitResults, triangleFlags) == 0x58);
 STATIC_ASSERT(offsetof(TrackHitResults, objects) == 0x5C);
 STATIC_ASSERT(offsetof(TrackHitResults, hitCount) == 0x6C);

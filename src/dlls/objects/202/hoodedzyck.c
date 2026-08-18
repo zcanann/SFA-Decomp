@@ -121,7 +121,7 @@ static int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
     return d;
 }
 
-void hoodedZyckUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
+void hoodedZyckUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
                                  Vec* wpad2, int wpad3)
 {
     if (eventKind == 0x10)
@@ -137,7 +137,7 @@ void hoodedZyckUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int e
     return;
 }
 
-void hoodedZyck_updateIdle(GameObject* obj, int state)
+void hoodedZyck_updateIdle(GameObject* obj, void* state)
 {
     bool resetting;
     int groundHit;
@@ -245,7 +245,7 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
         ObjHits_DisableObject(obj);
         if (obj->anim.currentMove != 5)
         {
-            baddieSetMove(obj, (int)state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
+            baddieSetMove(obj, state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
         }
         else if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
@@ -329,7 +329,7 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
                     {
                         if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
                         {
-                            baddieSetMove(obj, (int)state, 7, 1.0f / (2.0f * scale), 0, 1);
+                            baddieSetMove(obj, state, 7, 1.0f / (2.0f * scale), 0, 1);
                         }
                         obj->anim.rotY = ((EnemyState*)state)->spawnRotY;
                         obj->anim.rotZ = ((EnemyState*)state)->spawnRotZ;
@@ -350,11 +350,11 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
             if (noHit != 0 && mag < 3000)
             {
                 ((EnemyState*)state)->phaseAngle = 0;
-                baddieSetMove(obj, (int)state, 0, 1.0f / scale, 0, 1);
+                baddieSetMove(obj, state, 0, 1.0f / scale, 0, 1);
             }
             else
             {
-                baddieSetMove(obj, (int)state, 1, 0.75f / scale, 0, 0);
+                baddieSetMove(obj, state, 1, 0.75f / scale, 0, 0);
                 {
                     f32 z = 0.0f;
                     obj->anim.velocityX = z;
@@ -394,7 +394,7 @@ void hoodedZyck_update(GameObject* obj, u8* state)
         ObjHits_DisableObject(obj);
         if (obj->anim.currentMove != 5)
         {
-            baddieSetMove(obj, (int)state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
+            baddieSetMove(obj, state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
         }
         else if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
@@ -427,7 +427,7 @@ void hoodedZyck_update(GameObject* obj, u8* state)
         grabbed = ((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN;
         if (grabbed != 0 && obj->anim.currentMove == 6)
         {
-            baddieSetMove(obj, (int)state, 4, gHoodedZyckFollowUpMoveSpeed, 0, 1);
+            baddieSetMove(obj, state, 4, gHoodedZyckFollowUpMoveSpeed, 0, 1);
         }
         else
         {
@@ -439,17 +439,17 @@ void hoodedZyck_update(GameObject* obj, u8* state)
                 {
                     if (((EnemyState*)state)->sightRange < 40.0f)
                     {
-                        baddieSetMove(obj, (int)state, 2, 0.75f, 0, 0);
+                        baddieSetMove(obj, state, 2, 0.75f, 0, 0);
                     }
                     else
                     {
-                        baddieSetMove(obj, (int)state, 6, gHoodedZyckLungeMoveSpeed, 0, 0);
+                        baddieSetMove(obj, state, 6, gHoodedZyckLungeMoveSpeed, 0, 0);
                     }
                     ((EnemyState*)state)->phaseAngle = 0;
                 }
                 else
                 {
-                    baddieSetMove(obj, (int)state, 1, 0.75f, 0, 0);
+                    baddieSetMove(obj, state, 1, 0.75f, 0, 0);
                     if ((s16)turnRaw < 0)
                     {
                         ((EnemyState*)state)->phaseAngle = 0xfed4;

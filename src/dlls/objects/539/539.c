@@ -36,7 +36,7 @@ int dll_21B_getObjectTypeId(void)
     return 0x0;
 }
 
-void dll_21B_free(int obj)
+void dll_21B_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }

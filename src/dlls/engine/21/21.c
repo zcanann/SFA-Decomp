@@ -550,7 +550,7 @@ void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* col
         collision->localPointHitMask |=
             trackGetLineIntersect(&collision->localPointTarget[0][zoff], &collision->localPointWorld[0][zoff],
                                   collision->localPointRadii[pointIndex], mode,
-                                  (TrackBBoxHit*)collision->localHitPlanes, obj, (u8)collision->primaryHitType, -1, 0,
+                                  &collision->localHit, obj, (u8)collision->primaryHitType, -1, 0,
                                   (s8)collision->activeTimer)
             << pointIndex;
         flags = collision->flags;
@@ -562,7 +562,7 @@ void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* col
             }
             trackGetLineIntersect(&collision->localPointTarget[0][zoff], &collision->localPointWorld[0][zoff],
                                   collision->localPointRadii[pointIndex], mode,
-                                  (TrackBBoxHit*)collision->localHitPlanes, obj, (u8)collision->secondaryHitType, -1, 0,
+                                  &collision->localHit, obj, (u8)collision->secondaryHitType, -1, 0,
                                   (s8)collision->activeTimer);
         }
         pointIndex++;

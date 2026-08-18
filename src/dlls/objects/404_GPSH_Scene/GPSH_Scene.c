@@ -2,10 +2,7 @@
  * GPSH_Scene (DLL 0x194) - Test of Knowledge scene geometry.
  */
 #include "dlls/objects/404_GPSH_Scene.h"
-
 #include "main/object_render.h"
-
-#define GPSH_SCENE_RENDER_SCALE 1.0f
 
 int gpshScene_getExtraSize(void) {
     return 0;
@@ -19,12 +16,11 @@ void gpshScene_free(void) {
 }
 
 void gpshScene_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 isVisible;
-
-    isVisible = visible;
-    if (isVisible != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, GPSH_SCENE_RENDER_SCALE);
+    if (visible == 0) {
+        return;
     }
+
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
 void gpshScene_hitDetect(void) {

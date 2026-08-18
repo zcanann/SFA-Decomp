@@ -327,7 +327,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
 
     mtxA = sObjFuzzShellIndMtxA;
     mtxB = sObjFuzzShellIndMtxB;
-    rop = ObjModel_GetRenderOp((ModelFileHeader*)*model, ropIdx);
+    rop = ObjModel_GetRenderOp(((ObjModel*)model)->file, ropIdx);
     if ((rop->flags & 0x200) == 0)
     {
         if ((gObjFuzzLayerIndex & 3) != 0)
@@ -3086,7 +3086,7 @@ void objRenderFuzzShells(GameObject* obj)
     ObjModel_SetRenderCallback((u8*)model, objFuzzShellRenderCb);
     for (gObjFuzzLayerIndex = 0; gObjFuzzLayerIndex < 16; gObjFuzzLayerIndex += gObjFuzzStep)
     {
-        modelDoRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)*model, 8);
+        modelDoRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)((ObjModel*)model)->file, 8);
         curObjMtx = savedMtx;
     }
     curObjMtx = 0;
@@ -3108,7 +3108,7 @@ void objRenderFuzzShadowShells(GameObject* obj)
     gObjFuzzPhaseLatched = gObjFuzzPhase;
     for (gObjFuzzLayerIndex = 0; gObjFuzzLayerIndex < 16; gObjFuzzLayerIndex += gObjFuzzStep)
     {
-        modelDoRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)*model, 2);
+        modelDoRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)((ObjModel*)model)->file, 2);
         curObjMtx = savedMtx;
     }
     curObjMtx = 0;
@@ -3198,7 +3198,7 @@ void objRenderFuzz(GameObject* obj)
         ObjModel_SetRenderCallback((u8*)model, objFuzzRenderCb);
         for (gObjFuzzLayerIndex = 0; gObjFuzzLayerIndex < n; gObjFuzzLayerIndex++)
         {
-            modelDoRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)*model, 4);
+            modelDoRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)((ObjModel*)model)->file, 4);
             curObjMtx = savedMtx;
         }
         curObjMtx = 0;
@@ -3382,7 +3382,7 @@ void objRenderModel(GameObject* obj)
         return;
     }
     {
-        ModelFileHeader* m0 = (ModelFileHeader*)*model;
+        ModelFileHeader* m0 = ((ObjModel*)model)->file;
         if (m0->flags & 0x8000)
         {
             modelDoAltRenderInstrs(obj, obj->ownerObj ? obj->ownerObj : obj, (u8*)m0, 0);

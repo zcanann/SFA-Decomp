@@ -67,7 +67,7 @@ int wcapertures_interactCallback(GameObject* obj, int unused, ObjSeqState* animU
 
 int wcapertures_getExtraSize(void)
 {
-    return WCAPERTURES_EXTRA_SIZE;
+    return sizeof(WCAperturesState);
 }
 
 int wcapertures_getObjectTypeId(GameObject* obj)

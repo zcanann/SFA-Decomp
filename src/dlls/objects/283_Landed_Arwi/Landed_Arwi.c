@@ -134,7 +134,7 @@ void landed_arwing_renderPathEffects(GameObject* obj) {
 }
 
 int landed_arwing_getExtraSize(void) {
-    return LANDED_ARWING_OBJECT_STATE_SIZE;
+    return sizeof(LandedArwingObjectState);
 }
 
 void landed_arwing_free(GameObject* obj) {

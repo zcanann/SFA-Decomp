@@ -95,11 +95,11 @@
 /* The magic-plant's one particle-fx effect (spawned per hit-count in the
    attack handler). */
 
-void kooshy_spawnProjectile(GameObject* obj, int state);
+void kooshy_spawnProjectile(GameObject* obj, void* state);
 
 u8 gMagicPlantSeqEntryTable[8] = {1, 1, 3, 2, 0, 0, 0, 0};
 
-void kooshy_spawnProjectile(GameObject* obj, int state)
+void kooshy_spawnProjectile(GameObject* obj, void* state)
 {
     ObjPlacement* fx;
     GameObject* newObj;
@@ -163,7 +163,7 @@ void kooshy_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     }
 }
 
-void kooshy_updateIdle(GameObject* obj, int state)
+void kooshy_updateIdle(GameObject* obj, void* state)
 {
     u32 hit;
     u8 losDetected;
@@ -282,7 +282,7 @@ void kooshy_updateIdle(GameObject* obj, int state)
     magicplantSpawnMovePuffs(obj, state);
 }
 
-void kooshy_updateEngaged(GameObject* obj, int state)
+void kooshy_updateEngaged(GameObject* obj, void* state)
 {
     ((EnemyState*)state)->userData2 = ((EnemyState*)state)->userData2 & 0xbf;
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && (obj)->anim.currentMove != 1)
@@ -293,7 +293,7 @@ void kooshy_updateEngaged(GameObject* obj, int state)
     magicplantSpawnMovePuffs(obj, state);
 }
 
-void kooshy_init(int unused, int state)
+void kooshy_init(GameObject* unused, void* state)
 {
     f32 eventFlagsVal;
     f32 pathStepInit;

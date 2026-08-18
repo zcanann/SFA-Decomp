@@ -4,6 +4,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/curves_collision_state.h"
 
 struct ObjSeqState;
 
@@ -54,13 +55,7 @@ typedef struct CollectibleState {
     f32 lifetimeTimer;            /* 0x44 */
     s16 pickupMsgValue;           /* 0x48 */
     u8 pad4A[6];                  /* 0x4A */
-    u8 pathState[0xB8 - 0x50];    /* 0x50 */
-    f32 bounceNormalX;            /* 0xB8 */
-    f32 bounceNormalY;            /* 0xBC */
-    f32 bounceNormalZ;            /* 0xC0 */
-    u8 pathStateC4[0x2B1 - 0xC4]; /* 0xC4 */
-    s8 bounceHitFlag;             /* 0x2B1 */
-    u8 pad2B2[6];                 /* 0x2B2 */
+    CurvesCollisionState pathState; /* 0x50 */
 } CollectibleState;
 
 STATIC_ASSERT(offsetof(CollectibleState, playerDistance) == 0x0);
@@ -99,12 +94,6 @@ STATIC_ASSERT(offsetof(CollectibleState, lifetimeTimer) == 0x44);
 STATIC_ASSERT(offsetof(CollectibleState, pickupMsgValue) == 0x48);
 STATIC_ASSERT(offsetof(CollectibleState, pad4A) == 0x4A);
 STATIC_ASSERT(offsetof(CollectibleState, pathState) == 0x50);
-STATIC_ASSERT(offsetof(CollectibleState, bounceNormalX) == 0xB8);
-STATIC_ASSERT(offsetof(CollectibleState, bounceNormalY) == 0xBC);
-STATIC_ASSERT(offsetof(CollectibleState, bounceNormalZ) == 0xC0);
-STATIC_ASSERT(offsetof(CollectibleState, pathStateC4) == 0xC4);
-STATIC_ASSERT(offsetof(CollectibleState, bounceHitFlag) == 0x2B1);
-STATIC_ASSERT(offsetof(CollectibleState, pad2B2) == 0x2B2);
 STATIC_ASSERT(sizeof(CollectibleState) == 0x2B8);
 
 /*

@@ -98,7 +98,8 @@ void CameraModeClimb_update(CameraObject* camera) {
     camera->anim.worldPosX = gCameraModeClimbState->smoothedDistance * trigValue + traceFrom[0];
     trigValue = mathCosf((gCamClimbPi * (f32)(s32)target->anim.rotX) / gCamClimbHalfCircleBinaryAngle);
     camera->anim.worldPosZ = gCameraModeClimbState->smoothedDistance * trigValue + traceFrom[2];
-    camcontrol_traceMove(traceFrom, &camera->anim.worldPosX, traceOut, traceWork, 3, 1, 1, gCamClimbTraceRadius);
+    camcontrol_traceMove(traceFrom, &camera->anim.worldPosX, traceOut, (u8*)&traceWork, 3, 1, 1,
+                         gCamClimbTraceRadius);
     camera->anim.worldPosX = traceOut[0];
     camera->anim.worldPosY = traceOut[1];
     camera->anim.worldPosZ = traceOut[2];

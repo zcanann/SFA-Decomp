@@ -17,6 +17,9 @@
 #include "main/gamebits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/savegame_load_api.h"
+// Local prologue quick-load toggle: uncomment these with the block in init().
+#include "main/dll/savegame.h"
+#include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/modgfx_interface.h"
@@ -788,6 +791,7 @@ static void gameLoop(void) {
 
 void init(void)
 {
+
     int audioDone;
     u8 filesDone;
     u8 once;

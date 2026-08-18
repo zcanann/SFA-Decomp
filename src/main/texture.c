@@ -890,11 +890,11 @@ Texture* textureGetAnimationFrame(Texture* texture, int n)
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter)
 {
     u8* obj;
-    u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + 96;
+    u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + (u32)sizeof(Texture);
     obj = (u8*)mmAlloc(size, 6, 0);
     if (obj == NULL)
         return NULL;
-    memset(obj, 0, 100);
+    memset(obj, 0, sizeof(Texture) + 4);
     ((Texture*)obj)->format = fmt;
     ((Texture*)obj)->width = w;
     ((Texture*)obj)->height = h;

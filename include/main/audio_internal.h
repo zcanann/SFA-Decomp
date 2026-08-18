@@ -9,6 +9,8 @@
 #include "dolphin/mtx/vec.h"
 #include "game/objects/object.h"
 
+#define AUDIO_ARQ_REQUEST_COUNT 16
+#define MUSIC_CHANNEL_COUNT 16
 #define SFX_OBJECT_CHANNEL_COUNT 56
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2

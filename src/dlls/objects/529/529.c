@@ -712,7 +712,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData)
     state->counterGameBit = mapData->counterGameBit;
     if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
     {
-        state->pathState[0x25b] = 1;
+        state->pathState.subtype = 1;
         (*gPathControlInterface)->init((void*)state, 0, 0, 1);
         (*gPathControlInterface)
             ->setLocalPointCollision((void*)state, 1, gWallCrawlerPointCollision, sWallCrawlerCollisionBone, 4);

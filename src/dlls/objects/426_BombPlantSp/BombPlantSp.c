@@ -278,7 +278,7 @@ void BombPlantSpore_update(GameObject* obj) {
                 state->fuseTimer = 120.0f;
             }
         }
-        if ((state->path.contactFlags & BOMB_PLANT_SPORE_PATH_CONTACT_MASK) != 0) {
+        if (((s8)state->path.surfaceFlags & BOMB_PLANT_SPORE_PATH_CONTACT_MASK) != 0) {
             state->flags.hitSurface = 1;
             if (state->fuseTimer > 120.0f) {
                 state->fuseTimer = 120.0f;

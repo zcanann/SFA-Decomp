@@ -12,7 +12,7 @@
 #define COLD_WATER_DAMAGE_PERIOD 240.0f
 
 int ColdWaterControl_getExtraSize(void) {
-    return COLD_WATER_CONTROL_STATE_SIZE;
+    return sizeof(ColdWaterControlState);
 }
 
 void ColdWaterControl_update(GameObject* obj) {

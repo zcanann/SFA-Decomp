@@ -1231,13 +1231,13 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 break;
             case ENEMY_VAMBAT_OBJ:
             case ENEMY_FIREBAT_OBJ:
-                vambat_updateEngaged((GameObject*)(obj), (int)state);
+                vambat_updateEngaged((GameObject*)(obj), state);
                 break;
             case ENEMY_KOOSHY_OBJ:
-                kooshy_updateEngaged((GameObject*)(obj), (int)state);
+                kooshy_updateEngaged((GameObject*)(obj), state);
                 break;
             case ENEMY_WEEVIL_OBJ:
-                weevil_updateEngaged((GameObject*)(obj), (int)state);
+                weevil_updateEngaged((GameObject*)(obj), state);
                 break;
             case ENEMY_PINPON_OBJ:
                 pinPon_updateEngaged((GameObject*)(obj), (int*)state);
@@ -1252,7 +1252,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 wbUpdateEngaged((GameObject*)obj, (int)state);
                 break;
             case ENEMY_MUTATEDEBA_OBJ:
-                mutatedEbaUpdateEngaged((u32)obj, (int)state);
+                mutatedEbaUpdateEngaged((GameObject*)obj, state);
                 break;
             case ENEMY_WHIRLPOOL_OBJ:
                 iceBaddie_enterWhirlpoolGroup((GameObject*)obj, state);
@@ -1265,7 +1265,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 hoodedZyck_update((GameObject*)obj, (u8*)state);
                 break;
             case ENEMY_BATTLEDROID_OBJ:
-                battleDroidUpdateAttack((int)obj, (int)state);
+                battleDroidUpdateAttack((GameObject*)obj, state);
                 break;
             case ENEMY_FIRECRAWLER_OBJ:
             case ENEMY_REDEYE_OBJ:
@@ -1278,7 +1278,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 break;
             case 0x7c7:
             default:
-                battleDroidUpdateAttack((int)obj, (int)state);
+                battleDroidUpdateAttack((GameObject*)obj, state);
                 break;
             }
         }
@@ -1308,13 +1308,13 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 break;
             case ENEMY_VAMBAT_OBJ:
             case ENEMY_FIREBAT_OBJ:
-                vambat_updateEngaged((GameObject*)(obj), (int)state);
+                vambat_updateEngaged((GameObject*)(obj), state);
                 break;
             case ENEMY_KOOSHY_OBJ:
-                kooshy_updateEngaged((GameObject*)(obj), (int)state);
+                kooshy_updateEngaged((GameObject*)(obj), state);
                 break;
             case ENEMY_WEEVIL_OBJ:
-                weevil_updateEngaged((GameObject*)(obj), (int)state);
+                weevil_updateEngaged((GameObject*)(obj), state);
                 break;
             case ENEMY_PINPON_OBJ:
                 pinPon_updateEngaged((GameObject*)(obj), (int*)state);
@@ -1329,7 +1329,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 wbUpdateEngaged((GameObject*)obj, (int)state);
                 break;
             case ENEMY_MUTATEDEBA_OBJ:
-                mutatedEbaUpdateEngaged((u32)obj, (int)state);
+                mutatedEbaUpdateEngaged((GameObject*)obj, state);
                 break;
             case ENEMY_WHIRLPOOL_OBJ:
                 iceBaddie_enterWhirlpoolGroup((GameObject*)obj, state);
@@ -1342,7 +1342,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 hoodedZyck_updateB((GameObject*)obj, (u8*)state);
                 break;
             case ENEMY_BATTLEDROID_OBJ:
-                battleDroidUpdate((int)obj, (int)state);
+                battleDroidUpdate((GameObject*)obj, state);
                 break;
             case ENEMY_FIRECRAWLER_OBJ:
             case ENEMY_REDEYE_OBJ:
@@ -1355,7 +1355,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 break;
             case 0x7c7:
             default:
-                battleDroidUpdate((int)obj, (int)state);
+                battleDroidUpdate((GameObject*)obj, state);
                 break;
             }
         }
@@ -1419,16 +1419,16 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
             break;
         case ENEMY_VAMBAT_OBJ:
         case ENEMY_FIREBAT_OBJ:
-            vambat_updateIdle((GameObject*)(obj), (int)state);
+            vambat_updateIdle((GameObject*)(obj), state);
             break;
         case ENEMY_KOOSHY_OBJ:
-            kooshy_updateIdle((GameObject*)(obj), (int)state);
+            kooshy_updateIdle((GameObject*)(obj), state);
             break;
         case ENEMY_WEEVIL_OBJ:
-            weevil_updateIdle((GameObject*)(obj), (int)state);
+            weevil_updateIdle((GameObject*)(obj), state);
             break;
         case ENEMY_PINPON_OBJ:
-            pinPon_updateIdle((GameObject*)(obj), (int)state);
+            pinPon_updateIdle((GameObject*)(obj), state);
             break;
         case ENEMY_RACHNOP_OBJ:
             rachnopUpdateIdle((GameObject*)obj, (int)state);
@@ -1440,7 +1440,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
             wbUpdateIdle((GameObject*)obj, (int)state);
             break;
         case ENEMY_MUTATEDEBA_OBJ:
-            mutatedEbaUpdateIdle((u32)obj, (int)state);
+            mutatedEbaUpdateIdle((GameObject*)obj, state);
             break;
         case ENEMY_WHIRLPOOL_OBJ:
             iceBaddie_leaveWhirlpoolGroup((GameObject*)obj, state);
@@ -1450,10 +1450,10 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
             snowworm_applyReactionState((GameObject*)obj, (int*)state);
             break;
         case ENEMY_HOODEDZYCK_OBJ:
-            hoodedZyck_updateIdle((GameObject*)(obj), (int)state);
+            hoodedZyck_updateIdle((GameObject*)(obj), state);
             break;
         case ENEMY_BATTLEDROID_OBJ:
-            battleDroidUpdate((int)obj, (int)state);
+            battleDroidUpdate((GameObject*)obj, state);
             break;
         case ENEMY_FIRECRAWLER_OBJ:
         case ENEMY_REDEYE_OBJ:
@@ -1466,7 +1466,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
             break;
         case 0x7c7:
         default:
-            battleDroidUpdate((int)obj, (int)state);
+            battleDroidUpdate((GameObject*)obj, state);
             break;
         }
     }
@@ -2419,7 +2419,7 @@ void baddieTurnTowardLookDir(GameObject* node, void* sub, int divisor, f32 fa, f
     }
 }
 
-void baddieTurnTowardPoint(GameObject* node, int state, f32 targetX, f32 targetZ, int divisor, int angleBias)
+void baddieTurnTowardPoint(GameObject* node, void* state, f32 targetX, f32 targetZ, int divisor, int angleBias)
 {
     s32 delta;
     f32 dt;
@@ -2440,7 +2440,7 @@ void baddieTurnTowardPoint(GameObject* node, int state, f32 targetX, f32 targetZ
     node->anim.rotX = newVal;
 }
 
-void baddieSetMove(GameObject* obj, int state, u8 moveId, f32 rateScale, u8 moveControlFlags, u8 stateByte)
+void baddieSetMove(GameObject* obj, void* state, u8 moveId, f32 rateScale, u8 moveControlFlags, u8 stateByte)
 {
     ObjHitsPriorityState* hitState;
 
@@ -2504,7 +2504,7 @@ void enemy_free(GameObject* obj, int flag)
     switch (obj->anim.romDefNo)
     {
     case ENEMY_HAGABONMK2_OBJ:
-        hagabonMK2_stopLoopSfx((int)obj, (u8*)state);
+        hagabonMK2_stopLoopSfx(obj, (u8*)state);
         break;
     case ENEMY_WHIRLPOOL_OBJ:
         if (objIsObjectType(obj, ENEMY_OBJGROUP_SECONDARY) != 0)
@@ -2798,7 +2798,7 @@ void enemy_update(GameObject* obj)
     if ((state->controlFlags & 0x8000) != 0)
     {
         setHudForceShowMask(0);
-        (*gPathControlInterface)->attachObject(obj, (u8*)state + 4);
+        (*gPathControlInterface)->attachObject(obj, &((EnemyState*)state)->flags);
         state->controlFlags &= ~0x8003;
         if ((state->flags2E4 & 0x20000) != 0)
         {
@@ -2942,27 +2942,27 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         case ENEMY_SHARPCLAW_SH_OBJ:
         case ENEMY_SHARPCLAW_SO_OBJ:
         case ENEMY_BOSSGENERAL_OBJ:
-            sharpClawInit((int)obj, state);
+            sharpClawInit(obj, state);
             break;
         case ENEMY_GUARDCLAW_OBJ:
         case 641:
             guardClaw_init(obj, state);
             break;
         case ENEMY_GCROBOTPATROL_OBJ:
-            gcRobotPatrol_init(obj, (int)state);
+            gcRobotPatrol_init(obj, state);
             break;
         case ENEMY_MIKALADON_OBJ:
             mikaladon_init(obj, (EnemyState*)state);
             break;
         case ENEMY_VAMBAT_OBJ:
         case ENEMY_FIREBAT_OBJ:
-            vambat_init(obj, (int)state);
+            vambat_init(obj, state);
             break;
         case ENEMY_KOOSHY_OBJ:
-            kooshy_init((int)obj, (int)state);
+            kooshy_init(obj, state);
             break;
         case ENEMY_WEEVIL_OBJ:
-            weevil_init((int)obj, state);
+            weevil_init(obj, state);
             break;
         case ENEMY_PINPON_OBJ:
             pinPon_init(obj, state);
@@ -2990,7 +2990,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             hoodedZyck_init(obj, (struct EnemyState*)state);
             break;
         case ENEMY_BATTLEDROID_OBJ:
-            battleDroidInit((int)obj, (char*)state);
+            battleDroidInit(obj, (char*)state);
             break;
         case ENEMY_FIRECRAWLER_OBJ:
         case ENEMY_REDEYE_OBJ:
@@ -3002,7 +3002,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             hagabonMK2_init(obj, (struct EnemyState*)state);
             break;
         default:
-            battleDroidInit((int)obj, (char*)state);
+            battleDroidInit(obj, (char*)state);
             break;
         }
         ((EnemyState*)state)->max = ((EnemyState*)state)->current;

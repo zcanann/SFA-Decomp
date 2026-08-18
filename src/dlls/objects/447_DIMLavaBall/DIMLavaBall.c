@@ -98,9 +98,9 @@ void lavaball1bf_update(GameObject* obj) {
         }
     }
     if (state->projectile == NULL && Obj_IsLoadingLocked() != 0) {
-        int setupHandle =
-            (int)Obj_AllocObjectSetup(sizeof(DimLavaProjectilePlacement), DIM_LAVA_PROJECTILE_SEQUENCE_ID);
-        DimLavaProjectilePlacement* projectilePlacement = (DimLavaProjectilePlacement*)setupHandle;
+        DimLavaProjectilePlacement* projectilePlacement =
+            (DimLavaProjectilePlacement*)Obj_AllocObjectSetup(sizeof(DimLavaProjectilePlacement),
+                                                               DIM_LAVA_PROJECTILE_SEQUENCE_ID);
 
         projectilePlacement->base.size = DIM_LAVA_BALL_PROJECTILE_SETUP_WORDS;
         projectilePlacement->base.color[0] = DIM_LAVA_BALL_PROJECTILE_COLOR_RED;
@@ -114,7 +114,7 @@ void lavaball1bf_update(GameObject* obj) {
         projectilePlacement->verticalSpeed = placement->verticalSpeed;
         projectilePlacement->horizontalSpeed = placement->horizontalSpeed;
         projectilePlacement->targetObjectId = placement->projectileTargetObjectId;
-        state->projectile = objSetupObject((ObjPlacement*)setupHandle, DIM_LAVA_BALL_PROJECTILE_SETUP_FLAGS,
+        state->projectile = objSetupObject(&projectilePlacement->base, DIM_LAVA_BALL_PROJECTILE_SETUP_FLAGS,
                                             obj->anim.mapEventSlot, -1, NULL);
     }
     projectile = state->projectile;

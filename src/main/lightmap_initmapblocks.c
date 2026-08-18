@@ -26,7 +26,6 @@
 #include "main/asset_load.h"
 
 #include "main/lightmap_internal.h"
-#include "main/dll/ppcwgpipe_struct.h"
 
 
 #include "main/render_flags.h"

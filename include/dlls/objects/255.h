@@ -4,6 +4,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/curves_collision_state.h"
 #include "dlls/objects/237.h"
 
 #define MAGICGEM_STATE_SIZE     0x288
@@ -26,13 +27,7 @@
 
 /* MagicDust_getExtraSize allocates the complete 0x288-byte state block. */
 typedef struct MagicGemState {
-    u8 pad000[0x6C];         /* 0x000 */
-    f32 contactNormalY;      /* 0x06C: collision surface-normal Y */
-    u8 pad070[0x25B - 0x70]; /* 0x070 */
-    u8 unk25B;               /* 0x25B */
-    u8 pad25C[5];            /* 0x25C */
-    s8 contacted;            /* 0x261: path control reported contact this tick */
-    u8 pad262[6];            /* 0x262 */
+    CurvesCollisionState path; /* 0x000 */
     f32 collectRadius;       /* 0x268: added to the base pickup radius */
     f32 burstTimer;          /* 0x26C: time until the next burst phase */
     u16 burstEffectId;       /* 0x270 */
@@ -48,13 +43,6 @@ typedef struct MagicGemState {
     u8 pad282[6];            /* 0x282 */
 } MagicGemState;
 
-STATIC_ASSERT(offsetof(MagicGemState, pad000) == 0x0);
-STATIC_ASSERT(offsetof(MagicGemState, contactNormalY) == 0x6C);
-STATIC_ASSERT(offsetof(MagicGemState, pad070) == 0x70);
-STATIC_ASSERT(offsetof(MagicGemState, unk25B) == 0x25B);
-STATIC_ASSERT(offsetof(MagicGemState, pad25C) == 0x25C);
-STATIC_ASSERT(offsetof(MagicGemState, contacted) == 0x261);
-STATIC_ASSERT(offsetof(MagicGemState, pad262) == 0x262);
 STATIC_ASSERT(offsetof(MagicGemState, collectRadius) == 0x268);
 STATIC_ASSERT(offsetof(MagicGemState, burstTimer) == 0x26C);
 STATIC_ASSERT(offsetof(MagicGemState, burstEffectId) == 0x270);

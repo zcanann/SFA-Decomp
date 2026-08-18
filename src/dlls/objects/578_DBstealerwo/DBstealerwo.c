@@ -2555,6 +2555,10 @@ typedef struct DbStealerwormObjDescriptorLayout
     char debugStrings[0x5C];
 } DbStealerwormObjDescriptorLayout;
 
+
+
+int gDBStealerWormStateHandlersA[17];
+
 DbStealerwormObjDescriptorLayout gDBstealerwormObjDescriptor = {
     0,
     0,

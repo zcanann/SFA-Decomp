@@ -9,13 +9,12 @@
 
 void SkeetlaWall_getBounds(GameObject* obj, f32* outBounds, u8* outShapeFlag) {
     SkeetlaWallState* state = obj->extra;
-
-    outBounds[0] = obj->anim.worldPosX - (f32)(u32)state->negXExtent;
-    outBounds[1] = obj->anim.worldPosX + (f32)(u32)state->posXExtent;
-    outBounds[2] = obj->anim.worldPosZ + (f32)(u32)state->posZExtent;
-    outBounds[3] = obj->anim.worldPosZ - (f32)(u32)state->negZExtent;
-    outBounds[4] = obj->anim.worldPosY + (f32)(u32)state->posYExtent;
-    outBounds[5] = obj->anim.worldPosY - (f32)(u32)state->negYExtent;
+    outBounds[0] = obj->anim.worldPosX - state->negXExtent;
+    outBounds[1] = obj->anim.worldPosX + state->posXExtent;
+    outBounds[2] = obj->anim.worldPosZ + state->posZExtent;
+    outBounds[3] = obj->anim.worldPosZ - state->negZExtent;
+    outBounds[4] = obj->anim.worldPosY + state->posYExtent;
+    outBounds[5] = obj->anim.worldPosY - state->negYExtent;
     *outShapeFlag = state->shapeFlag;
 }
 

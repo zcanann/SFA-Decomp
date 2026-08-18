@@ -1,6 +1,8 @@
 /* Ice Mountain event and world-map controller. */
 #include "dlls/objects/361_IMIceMounta.h"
 
+#include "dlls/objects/common/vehicle.h"
+
 #include "main/audio/music_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/cloudaction_interface.h"

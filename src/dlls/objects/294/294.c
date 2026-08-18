@@ -1117,6 +1117,7 @@ void Trigger_update(void) {
 void Trigger_init(GameObject* obj, u8* params) {
     u8* state;
     f32 range;
+    TriggerPlacement* placement = (TriggerPlacement*)params;
 
     objSetSlot(obj, 0x28);
     state = obj->extra;

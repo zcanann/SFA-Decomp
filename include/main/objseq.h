@@ -26,6 +26,8 @@ struct GameObject;
 typedef int (*ObjSeqTurnToPlayerFn)(struct GameObject* obj, struct ObjSeqState* state, s16 turnDegrees,
                                     s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft);
 
+struct ObjAnimComponent;
+
 typedef struct ObjectTriggerInterface {
     void *unusedSlot02;
     void (*onMapSetup)(void);

@@ -190,12 +190,12 @@ typedef struct PlayerState {
     f32 savedLocalPosX; /* localPosX saved at the vertical-move start (backed up before localPos is overwritten with moveStartPosX) */
     f32 savedLocalPosZ; /* localPosZ saved at the vertical-move start (backed up before localPos is overwritten with moveStartPosZ) */
     f32 moveDirX;       /* move direction vector X; (moveDirX,moveDirY,moveDirZ) is negated when flag set and fed to getAngle()->targetYaw and playerSetMoveBlendFromPlane */
-    u8 pad510[0x514 - 0x510];
+    f32 moveNormalY;
     f32 moveDirY;       /* move direction vector Y */
     f32 moveDirZ;       /* move direction vector Z */
     f32 blendPlane[4];
     f32 moveStartPosX;  /* localPosX assigned at the vertical-move start */
-    u8 pad530[0x534 - 0x530];
+    f32 moveStartSurfaceY;
     f32 moveStartPosZ;  /* localPosZ assigned at the vertical-move start */
     f32 blendAnchor[3]; /* planar anchor vector (X at +0, Z at +8) fed to playerSetMoveBlendFromPlane; dotted with the blend plane to form the interpolation factor; written in another TU */
     s16 eventCountdown; /* move-blend/event countdown from playerSetMoveBlendFromPlane; written each frame then pushed as the ObjAnim EVENT_COUNTDOWN state word (ObjAnim_WriteStateWord) */
@@ -203,7 +203,8 @@ typedef struct PlayerState {
     ByteFlags flags547;
     u8 pad548[0x549 - 0x548];
     s8 climbMoveVariant; /* 0x549: climb-move variant flag (set in another TU); when nonzero selects the alternate climb move table (lbl_803DC69C vs 698), the faster baddie.moveSpeed (lbl_803E7EF8 vs 8008) and the 0x40 blend flag */
-    u8 pad54A[0x54C - 0x54A];
+    s8 wallSurfaceType;
+    u8 pad54B;
     f32 spanTopY;    /* upper Y bound of the collision span (interpolated from SweepHit.g* at hit.gt); localPosY is clamped/checked against [spanBottomY, spanTopY] */
     f32 spanBottomY; /* lower Y bound of the collision span (interpolated from SweepHit.fz0/fz1) */
     u8 pad554[0x560 - 0x554];
@@ -219,9 +220,9 @@ typedef struct PlayerState {
     f32 slopeTangentZ; /* ground-tangent Z component (= groundNormalX) */
     f32 slopePlaneD; /* signed plane-distance term for the slope-tangent plane: -(point . slopeTangent), computed when the ground tangent is captured */
     f32 climbStartPosX; /* localPosX assigned at the climb move start (getAngle drives targetYaw from 0x56c/groundNormalZ) */
-    u8 pad590[0x594 - 0x590];
+    f32 climbStartPosY;
     f32 climbStartPosZ; /* localPosZ assigned at the climb move start */
-    u8 pad598[0x5A4 - 0x598];
+    f32 unk598[3]; /* 0x598: blend-anchor vector passed to playerSetMoveBlendFromPlane alongside groundNormalX */
     s16 animEventState; /* anim event-state word written each frame via ObjAnim_WriteStateWord(...EVENT_STATE); from playerSetMoveBlendFromPlane or a scaled move-blend factor */
     s16 moveAltToggle; /* alternating selector for a paired repeating move: !=0 picks move 0x15, ==0 picks 0x16; XOR-toggled each cycle (e.g. left/right climb step) */
     f32 leapSpeed;   /* leap/launch speed magnitude filled by playerBuildLedgeClimbProbe (base = &leapSpeed): threshold-compared vs lbl_803E8040/8048 to pick the jump move (0xe/0x16/0x12) then normalized (leapSpeed-lo)/(hi-lo) into the move blend */
@@ -232,13 +233,13 @@ typedef struct PlayerState {
     f32 moveStartZ;
     int launchYaw; /* heading captured (*(s16*)obj) when a jump/launch move starts; base angle for the airborne arc yaw (case 7) */
     f32 launchDirX; /* planar launch/arc direction vector X; getAngle(launchDirX,launchDirZ) sets targetYaw, worldPos = k*launchDir + launchAnchor (jump case 7 airborne arc) */
-    u8 pad5C8[0x5CC - 0x5C8];
+    f32 launchDirY;
     f32 launchDirZ;
-    u8 pad5D0[0x5D4 - 0x5D0];
+    f32 launchPlaneD;
     f32 launchAnchorX; /* launch base world position (X,Y,Z); world->local transformed like moveEnd; worldPos = k*launchDir + launchAnchor */
     f32 launchAnchorY;
     f32 launchAnchorZ;
-    u8 pad5E0[0x5EC - 0x5E0];
+    f32 launchReference[3];
     f32 moveEndX; /* local-space target position for the move lerp (paired with moveStart) */
     f32 moveEndY;
     f32 moveEndZ;
@@ -412,7 +413,7 @@ typedef struct PlayerState {
     u8 staffActionRequest; /* pending staff grow/shrink action: 0=none,1=shrink,2=begin-grow,4=grow */
     u8 pad8B5[0x8B8 - 0x8B5];
     u8 queuedBitCount; /* count (0..4) of queued bit-index bytes stored in the following array at 0x8b9; a "case 1" push appends a byte and increments this, clamped to 4; on state init the loop ORs (1 << each stored byte) into the bitmask at 0x310 then this is reset to 0 */
-    u8 pad8B9[0x8BF - 0x8B9]; /* queued bit-index byte array filled by the queuedBitCount push API */
+    u8 queuedBits[0x8BF - 0x8B9]; /* queued bit-index byte array filled by the queuedBitCount push API */
     u8 unk8BF;
     u8 moveChainIndex; /* 0x8c0: branch index into the current move slot's next-move table (slot+0x15+moveChainIndex selects the follow-up moveSlotIndex); set 0 or from state+0x34b */
     u8 attackVariantMode; /* 0x8c1: attack/swing variant (0/1/2) chosen from moveSlotIndex (0x11->0, 0xf/0x1b/else->1/2); read as `mode`, selects camera-flag bits 0x100/0x200/0x400 */

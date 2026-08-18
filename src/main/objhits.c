@@ -2154,7 +2154,8 @@ void ObjHits_Update(int objectCount) {
     }
     for (slotIndex = 1, entrySlot = entrySlotBase; slotIndex < slotCount; entrySlot++, slotIndex++) {
         obj = (*entrySlot)->obj;
-        if (((obj->anim.hitReactState)->flags & OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
+        if ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &
+             OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
             ObjHits_CheckTrackContact(obj, obj);
             attachedObj = obj->childObjs[0];
             if (attachedObj != 0) {
@@ -2826,7 +2827,7 @@ int ObjHits_RecordPositionHit(GameObject* obj, GameObject* hitObj, s8 priority, 
     int hitSlot;
     u8 hitVolumeId;
 
-    if ((int)priority == '\0') {
+    if (priority == 0) {
         return 0;
     }
     sourceObj = (ObjAnimComponent*)obj;

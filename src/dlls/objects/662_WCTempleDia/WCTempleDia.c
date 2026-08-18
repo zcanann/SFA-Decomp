@@ -78,7 +78,7 @@ int wctempledia_interactCallback(GameObject* obj, int unused, ObjSeqState* animU
 
 int wctempledia_getExtraSize(void)
 {
-    return WCTEMPLE_DIA_EXTRA_SIZE;
+    return sizeof(WCTempleDiaState);
 }
 
 int wctempledia_getObjectTypeId(void)

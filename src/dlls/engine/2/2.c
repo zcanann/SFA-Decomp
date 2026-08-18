@@ -585,6 +585,13 @@ typedef struct ObjSeqBgCmd
     };
 } ObjSeqBgCmd;
 
+typedef struct ObjSeqPendingCmd0B
+{
+    u8* cmd;
+    s16 reps;
+    s16 frame;
+} ObjSeqPendingCmd0B;
+
 typedef struct RomCurveNode
 {
     u8 pad00[0x08];

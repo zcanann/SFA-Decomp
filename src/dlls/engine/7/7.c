@@ -1776,7 +1776,7 @@ void newclouds_run(void)
             activeCount++;
         }
         i++;
-        slotOffset += 4;
+        slotOffset += sizeof(void*);
     }
     if (activeCount != 0)
     {

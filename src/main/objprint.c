@@ -20,6 +20,7 @@
 #include "main/objfx.h"
 #include "main/objHitReact_types.h"
 #include "main/dll/dll_005A_staffcollision.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/resource.h"
 #include "dolphin/mtx.h"
 #include "main/dll/objpathtransform_struct.h"

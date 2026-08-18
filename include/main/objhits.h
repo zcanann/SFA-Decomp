@@ -45,20 +45,20 @@
 #define OBJHITBOX_WORLD_Y_OFFSET                     0x1C
 #define OBJHITBOX_WORLD_Z_OFFSET                     0x20
 #define OBJHITBOX_TRANSFORM_STATE_OFFSET             0x58
-#define OBJHITBOX_DEF_OFFSET                         0x54
+#define OBJHITBOX_DEF_OFFSET                         offsetof(ObjAnimComponent, hitReactState)
 #define OBJHITBOX_RADIUS_X_OFFSET                    0x18
 #define OBJHITBOX_RADIUS_Y_OFFSET                    0x1C
 #define OBJHITBOX_RADIUS_Z_OFFSET                    0x20
-#define OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET          0x58
-#define OBJHITBOX_DEF_RADIUS_OFFSET                  0x5A
-#define OBJHITBOX_DEF_VERTICAL_MIN_OFFSET            0x5C
-#define OBJHITBOX_DEF_VERTICAL_MAX_OFFSET            0x5E
-#define OBJHITBOX_DEF_FLAGS_OFFSET                   0x60
-#define OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET             0x62
-#define OBJHITBOX_DEF_HIT_TYPE_OFFSET                0x6C
-#define OBJHITBOX_DEF_HIT_PRIORITY_OFFSET            0x6D
-#define OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET       0xAE
-#define OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET     0xAF
+#define OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET          offsetof(ObjHitsPriorityState, capsuleScale)
+#define OBJHITBOX_DEF_RADIUS_OFFSET                  offsetof(ObjHitsPriorityState, primaryRadius)
+#define OBJHITBOX_DEF_VERTICAL_MIN_OFFSET            offsetof(ObjHitsPriorityState, primaryCapsuleOffsetA)
+#define OBJHITBOX_DEF_VERTICAL_MAX_OFFSET            offsetof(ObjHitsPriorityState, primaryCapsuleOffsetB)
+#define OBJHITBOX_DEF_FLAGS_OFFSET                   offsetof(ObjHitsPriorityState, flags)
+#define OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET             offsetof(ObjHitsPriorityState, shapeFlags)
+#define OBJHITBOX_DEF_HIT_TYPE_OFFSET                offsetof(ObjHitsPriorityState, objectPairPriority)
+#define OBJHITBOX_DEF_HIT_PRIORITY_OFFSET            offsetof(ObjHitsPriorityState, objectPairHitVolume)
+#define OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET       offsetof(ObjHitsPriorityState, activeHitboxMode)
+#define OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET     offsetof(ObjHitsPriorityState, resetHitboxMode)
 #define OBJHITBOX_DEF_SOLID                          0x0001
 #define OBJHITBOX_DEF_NO_SEPARATION_RESPONSE         0x0002
 #define OBJHITBOX_DEF_CLAMP_Y                        0x0800
@@ -124,10 +124,10 @@ typedef struct ObjHitboxDef
     s16 verticalMax;
     s16 flags;
     u8 shapeFlags;
-    u8 pad63[OBJHITBOX_DEF_HIT_TYPE_OFFSET - 0x63];
+    u8 pad63[OBJHITBOX_DEF_HIT_TYPE_OFFSET - (OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET + 1)];
     s8 hitType;
     u8 hitPriority;
-    u8 pad6E[OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET - 0x6E];
+    u8 pad6E[OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET - (OBJHITBOX_DEF_HIT_PRIORITY_OFFSET + 1)];
     u8 skipObjectPairs;
     u8 skipSkeletonPairs;
 } ObjHitboxDef;

@@ -21,12 +21,12 @@ void mathSinCosf(float angle, float* outSin, float* outCos) {
 
     switch (quadrant & 6) {
         case 0:
-            sinApprox = (angle >= 0.0f) ? sinApprox : -sinApprox;
+            sinApprox = angle >= 0.0f ? sinApprox : -sinApprox;
             *outSin = sinApprox;
             *outCos = cosApprox;
             break;
         case 2:
-            cosApprox = (angle >= 0.0f) ? cosApprox : -cosApprox;
+            cosApprox = angle >= 0.0f ? cosApprox : -cosApprox;
             *outSin = cosApprox;
             *outCos = -sinApprox;
             break;

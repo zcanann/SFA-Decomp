@@ -3,43 +3,33 @@
 #include "dolphin/os.h"
 #include "dolphin/os/OSInterrupt.h"
 
-void hwEnableIrq(void)
-{
+void hwEnableIrq(void) {
 }
 
-void sndEnd(void)
-{
-    u16 count;
-
-    count = hwIrqLevel - 1;
+void sndEnd(void) {
+    u16 count = hwIrqLevel - 1;
     hwIrqLevel = count;
-    if (count == 0)
-    {
+    if (count == 0) {
         OSRestoreInterrupts(oldState);
     }
 }
 
-void sndBegin(void)
-{
+void sndBegin(void) {
     u16 count = hwIrqLevel;
     hwIrqLevel = count + 1;
-    if (count == 0)
-    {
+    if (count == 0) {
         oldState = OSDisableInterrupts();
     }
 }
 
-void hwIRQEnterCritical(void)
-{
+void hwIRQEnterCritical(void) {
     OSDisableInterrupts();
 }
 
-void hwIRQLeaveCritical(void)
-{
+void hwIRQLeaveCritical(void) {
     OSEnableInterrupts();
 }
 
-void* salMalloc(u32 size)
-{
+void* salMalloc(u32 size) {
     return salHooks.mallocHook(size);
 }

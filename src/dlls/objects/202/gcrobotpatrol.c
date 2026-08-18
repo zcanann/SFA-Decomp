@@ -99,7 +99,7 @@ typedef struct
 
 void gcRobotPatrol_update(GameObject* obj, u8* state);
 
-void gcRobotPatrol_init(GameObject* obj, int state);
+void gcRobotPatrol_init(GameObject* obj, void* state);
 
 static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
 {
@@ -146,7 +146,7 @@ GameObject* gcRobotLight_init(GameObject* obj, int childId)
     return objSetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
 }
 
-void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, GameObject* attacker, int msg, int wpad0, int wpad1, Vec* wpad2,
+void gcRobotPatrol_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int msg, int wpad0, int wpad1, Vec* wpad2,
                                      int wpad3) {
     GroundBaddiePlacement* sub[1];
     f32 fz;
@@ -159,7 +159,7 @@ void gcRobotPatrol_updateWhileFrozen(int obj, u8* state, GameObject* attacker, i
     Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_en_lrope_powerdown);
     ((EnemyState*)state)->flags2E8 |= 0x8;
     ((EnemyState*)state)->gcRobot.cooldownTimer = (f32)(u32)(u16)sub[0]->respawnDelay;
-    baddieSetMove((GameObject*)obj, (int)state, 1, 2.5f, 0, 0);
+    baddieSetMove((GameObject*)obj, state, 1, 2.5f, 0, 0);
     ((EnemyState*)state)->flags2E4 &= ~0x20LL;
     fz = 0.0f;
     ((GameObject*)obj)->anim.velocityZ = 0.0f;
@@ -192,7 +192,7 @@ void gcRobotPatrol_update(GameObject* obj, u8* state)
             ((EnemyState*)state)->gcRobot.cooldownTimer = 0.0f;
             ((EnemyState*)state)->flags2E4 |= 0x20;
             Sfx_StopObjectChannel(obj, 4);
-            baddieSetMove(obj, (int)state, 0, 1.0f, 0, 0);
+            baddieSetMove(obj, state, 0, 1.0f, 0, 0);
         }
         else if (!(((EnemyState*)state)->flags2E4 & 0x20))
         {
@@ -219,7 +219,7 @@ void gcRobotPatrol_update(GameObject* obj, u8* state)
         step = (s8)def->rotX;
         if (step == 0)
         {
-            baddieTurnTowardPoint(obj, (int)state, path->posX, path->posZ, 0xf, 0);
+            baddieTurnTowardPoint(obj, state, path->posX, path->posZ, 0xf, 0);
         }
         else if (((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW)
         {
@@ -233,7 +233,7 @@ void gcRobotPatrol_update(GameObject* obj, u8* state)
                 step = -spd;
             }
             obj->anim.rotX = obj->anim.rotX - step;
-            baddieTurnTowardPoint(obj, (int)state, path->posX, path->posZ, 0xf, 0);
+            baddieTurnTowardPoint(obj, state, path->posX, path->posZ, 0xf, 0);
             if ((int)(10.0f * path->tangentY) >= 0)
             {
                 step = spd;
@@ -361,7 +361,7 @@ void gcRobotPatrol_update(GameObject* obj, u8* state)
     }
 }
 
-void gcRobotPatrol_init(GameObject* obj, int state)
+void gcRobotPatrol_init(GameObject* obj, void* state)
 {
     f32 fz;
 

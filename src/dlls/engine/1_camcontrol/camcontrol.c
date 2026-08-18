@@ -314,11 +314,11 @@ void camcontrol_updateTargetReticle(GameObject* fallbackTarget, int unused2, u32
     }
 }
 
-int camcontrol_aButtonIconTextureCallback(GameObject* obj, void** objPtr, u32 renderOpIdx) {
+int camcontrol_aButtonIconTextureCallback(GameObject* obj, ObjModel* model, u32 renderOpIdx) {
     Shader* renderOp;
     GXColor color; /* r/g/b intentionally left unset: callee reads only alpha for this op */
 
-    renderOp = ObjModel_GetRenderOp((ModelFileHeader*)*objPtr, renderOpIdx);
+    renderOp = ObjModel_GetRenderOp(model->file, renderOpIdx);
     Rcp_ResetTextureStageState();
     if (renderOp->layers[0].materialId == CAMCONTROL_RETICLE_ICON_VARIANT_PRESS_A) {
         if ((gCamcontrolCamera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_PROMPT_SUPPRESSED) == 0) {
@@ -347,14 +347,14 @@ int camcontrol_aButtonIconTextureCallback(GameObject* obj, void** objPtr, u32 re
     return 1;
 }
 
-int camcontrol_lockIconTextureCallback(GameObject* obj, int* modelPtr, int renderOpIdx) {
+int camcontrol_lockIconTextureCallback(GameObject* obj, ObjModel* model, int renderOpIdx) {
     Shader* renderOp;
     u8 tier;
     GXColor color;
     f32 dist;
     int alphaVal;
 
-    renderOp = ObjModel_GetRenderOp((ModelFileHeader*)*modelPtr, renderOpIdx);
+    renderOp = ObjModel_GetRenderOp(model->file, renderOpIdx);
     dist = gCamcontrolCamera->targetDistance;
     if (dist <= 0.0f) {
         tier = 4;

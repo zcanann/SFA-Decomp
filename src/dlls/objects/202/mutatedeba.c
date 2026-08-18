@@ -83,7 +83,7 @@
 
 /* Baddie-family animation data shared with the sequence-driver TUs. */
 
-void mutatedEbaPlayMoveSfx(u32 obj, EnemyState* state);
+void mutatedEbaPlayMoveSfx(GameObject* obj, EnemyState* state);
 
 u8 gDusterEbaMoveTable[] = {
     0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x03, 0x03, 0x03, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00,
@@ -96,7 +96,7 @@ u8 gDusterEbaMoveTable[] = {
     0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x05, 0x06, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-void mutatedEbaPlayMoveSfx(u32 obj, EnemyState* state)
+void mutatedEbaPlayMoveSfx(GameObject* obj, EnemyState* state)
 {
     switch (((GameObject*)obj)->anim.currentMove)
     {
@@ -146,7 +146,7 @@ void mutatedEbaPlayMoveSfx(u32 obj, EnemyState* state)
     return;
 }
 
-void mutatedEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
+void mutatedEbaUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
                                  Vec* wpad2, int wpad3)
 {
     int move;
@@ -166,7 +166,7 @@ void mutatedEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int e
             }
             else
             {
-                baddieSetMove((GameObject*)obj, (int)state, 4, 1.0f, 0, 0);
+                baddieSetMove((GameObject*)obj, state, 4, 1.0f, 0, 0);
                 ((EnemyState*)state)->userData1 = 0;
                 Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_kooshy_call);
                 ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 8;
@@ -176,7 +176,7 @@ void mutatedEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int e
     return;
 }
 
-void mutatedEbaUpdateEngaged(u32 obj, int state)
+void mutatedEbaUpdateEngaged(GameObject* obj, void* state)
 {
     int tblOff;
 
@@ -212,7 +212,7 @@ void mutatedEbaUpdateEngaged(u32 obj, int state)
     return;
 }
 
-void mutatedEbaUpdateIdle(u32 obj, int state)
+void mutatedEbaUpdateIdle(GameObject* obj, void* state)
 {
     int tblOff;
     u32 phase;

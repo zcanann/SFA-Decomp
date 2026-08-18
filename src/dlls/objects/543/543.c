@@ -5,7 +5,7 @@
 #include "main/dll/expgfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_play_api.h"
 

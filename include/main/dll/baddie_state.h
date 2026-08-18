@@ -6,6 +6,7 @@
 #include "global.h"
 #include "main/objprint_character_api.h"
 #include "main/voxmaps.h"
+#include "main/dll/curves_collision_state.h"
 
 struct GameObject;
 struct BaddieState;

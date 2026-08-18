@@ -302,7 +302,7 @@ void firefly_activeTick(GameObject* obj)
 
 int firefly_getExtraSize(void)
 {
-    return FIREFLY_EXTRA_SIZE;
+    return sizeof(FireFlyState);
 }
 
 int firefly_getObjectTypeId(void)

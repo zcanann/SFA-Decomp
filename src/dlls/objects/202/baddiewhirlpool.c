@@ -87,7 +87,7 @@
 #define ICEBADDIE_HIT_VOLUME_SLOT    10
 
 
-void whirlpool_updateWhileFrozen(int wpad0, u8* wpad1, GameObject* attacker, int wpad3, int wpad4, int wpad5,
+void whirlpool_updateWhileFrozen(GameObject* wpad0, u8* wpad1, GameObject* attacker, int wpad3, int wpad4, int wpad5,
                                  Vec* wpad6, int wpad7)
 {
 }

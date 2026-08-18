@@ -292,18 +292,18 @@ u8 gWaterFxBank;
 
 u8 gReflectionTintAlpha = 0x60;
 u8 gHudTintAlpha = 0xFF;
-u32 gWaterCausticKColor = 0xFFFFFF60;
+GXColor gWaterCausticKColor = {0xFF, 0xFF, 0xFF, 0x60};
 GXColor gReflectionBumpTintColor = {0xFF, 0xFF, 0xFF, 0x60};
 GXColor gReflectionBumpKColor = {0xA0, 0xA0, 0xA0, 0x80};
 GXColor gReflectionTintColor = {0xFF, 0xFF, 0xFF, 0x60};
 GXColor gReflectionKColor = {0xA0, 0xA0, 0xA0, 0x80};
-u32 gWaterReflectionKColorR = 0xC0000000;
-u32 gWaterReflectionKColorG = 0x00C00000;
-u32 gWaterReflectionKColorB = 0x0000C000;
-u32 gBlurFilterKColor = 0x666666FF;
+GXColor gWaterReflectionKColorR = {0xC0, 0, 0, 0};
+GXColor gWaterReflectionKColorG = {0, 0xC0, 0, 0};
+GXColor gWaterReflectionKColorB = {0, 0, 0xC0, 0};
+GXColor gBlurFilterKColor = {0x66, 0x66, 0x66, 0xFF};
 GXColor gMotionBlurKColor = {0, 0, 0, 0x7F};
 GXColor gHeatEffectKColor = {0xFF, 0xFF, 0xFF, 0xFC};
-u32 gObjectShadowTevColor = 0xFFFFFFFF;
+GXColor gObjectShadowTevColor = {0xFF, 0xFF, 0xFF, 0xFF};
 f32 gCausticReflectionDiskScale = 0.55f;
 f32 gTrackProjectedTexScale = 2.0f;
 f32 gTrackNormalTexScale = 0.25f;
@@ -322,8 +322,8 @@ GXColor gScreenImageKColor0 = {0, 0, 0x80, 0};
 GXColor gScreenImageKColor1 = {0x80, 0x80, 0, 0};
 GXColor gScreenImageKColor2 = {0, 0x80, 0, 0};
 GXColor gScreenImageKColor3 = {0x80, 0, 0x80, 0};
-u32 gWhirlpoolReflectionTintColor = 0xFFFFFF60;
-u32 gWhirlpoolReflectionKColor = 0xA0A0A080;
+GXColor gWhirlpoolReflectionTintColor = {0xFF, 0xFF, 0xFF, 0x60};
+GXColor gWhirlpoolReflectionKColor = {0xA0, 0xA0, 0xA0, 0x80};
 static u32 sIntersectUnused1[1] = {0};
 
 

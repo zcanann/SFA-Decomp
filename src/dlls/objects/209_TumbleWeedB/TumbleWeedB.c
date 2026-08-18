@@ -168,8 +168,8 @@ s8 tumbleweedbush_spawnSibling(GameObject* obj) {
         {
             GameObject* spawnedPiece = state->pieceObjects[freePieceIndex];
 
-            ((void (*)(GameObject*, f64, f64))(*spawnedPiece->anim.dll)[TUMBLEWEED_BUSH_SET_ORIGIN_SLOT])(
-                spawnedPiece, (f64)obj->anim.localPosX, (f64)obj->anim.localPosZ);
+            ((void (*)(GameObject*, f32, f32))(*spawnedPiece->anim.dll)[TUMBLEWEED_BUSH_SET_ORIGIN_SLOT])(
+                spawnedPiece, obj->anim.localPosX, obj->anim.localPosZ);
         }
     }
     state->spawnedCount++;

@@ -144,7 +144,7 @@ void weevil_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     {
         ((EnemyState*)state)->weevil.recoverTimer = 120.0f;
         ((EnemyState*)state)->weevil.approachTimer = 180.0f;
-        baddieSetMove(obj, (int)state, 4, 2.0f, 0, 3);
+        baddieSetMove(obj, state, 4, 2.0f, 0, 3);
         ((EnemyState*)state)->flags2E4 = ((EnemyState*)state)->flags2E4 | 0x10000LL;
         ((EnemyState*)state)->userData2 = 0x3c;
     }
@@ -155,7 +155,7 @@ void weevil_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
 }
 }
 
-void weevil_updateIdle(GameObject* obj, int state)
+void weevil_updateIdle(GameObject* obj, void* state)
 {
     RomCurveWalker* curve;
     u32 rnd;
@@ -231,7 +231,7 @@ void weevil_updateIdle(GameObject* obj, int state)
     }
 }
 
-void weevil_updateEngaged(GameObject* obj, int state)
+void weevil_updateEngaged(GameObject* obj, void* state)
 {
     u8 done;
 
@@ -290,7 +290,7 @@ void weevil_updateEngaged(GameObject* obj, int state)
     }
 }
 
-void weevil_init(int unused, u8* state)
+void weevil_init(GameObject* unused, u8* state)
 {
     f32 fz;
     f32 fc;

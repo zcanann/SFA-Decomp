@@ -40,5 +40,7 @@ void *PopDecodedAudioBuffer(int flags);
 void PushFreeAudioBuffer(void *message);
 void AudioDecodeThreadCancel(void);
 void AudioDecodeThreadStart(void);
+void AttractMovieAudio_InitQueuesPC(void);
+void AttractMovieAudio_DecodeFramePC(u8 *audioFrame, s32 frameNumber);
 
 #endif /* MAIN_DLL_FRONT_DLL_3B_H_ */

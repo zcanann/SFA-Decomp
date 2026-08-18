@@ -36,7 +36,6 @@
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/mtx.h"
 #include "dolphin/os/OSFastCast.h"
-#include "main/dll/ppcwgpipe_struct.h"
 #include "main/lightmap_internal.h"
 #include "main/render_flags.h"
 #include "main/dll/player_api.h"

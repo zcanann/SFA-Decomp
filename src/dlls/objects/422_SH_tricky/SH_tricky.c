@@ -19,11 +19,8 @@ int shTricky_getExtraSize(void) {
 }
 
 void shTricky_update(GameObject* obj) {
-    ShTrickyState* state;
-    GameObject* tricky;
-
-    state = obj->extra;
-    tricky = getTrickyObject();
+    ShTrickyState* state = obj->extra;
+    GameObject* tricky = getTrickyObject();
     if (tricky == NULL) {
         return;
     }

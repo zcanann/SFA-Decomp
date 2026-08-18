@@ -27,6 +27,7 @@
 #include "main/objtype.h"
 #include "main/obj_list.h"
 #include "main/objhits.h"
+#include "main/dll/player_state.h"
 #include "main/objseq.h"
 #include "main/loaded_file_flags.h"
 #include "main/resource.h"

@@ -470,6 +470,10 @@ u8 gDllCBHitReactionDamage[32] = {
     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,   0,
 };
 
+
+
+DllCBMoveHandler gDllCBMoveHandlers[4];
+
 ObjectDescriptor12 gDllCBObjDescriptor = {
     0,
     0,
@@ -488,5 +492,3 @@ ObjectDescriptor12 gDllCBObjDescriptor = {
     (ObjectDescriptorCallback)dll_CB_getControlMode,
     (ObjectDescriptorCallback)dll_CB_handleMessage,
 };
-
-DllCBMoveHandler gDllCBMoveHandlers[4];

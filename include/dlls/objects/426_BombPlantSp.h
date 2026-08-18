@@ -2,6 +2,7 @@
 #define DLLS_OBJECTS_426_BOMB_PLANT_SP_H_
 
 #include "dlls/object_descriptor.h"
+#include "main/dll/curves_collision_state.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 #include "main/modellight_api.h"
@@ -30,17 +31,11 @@ typedef struct BombPlantSporePlacement {
     u8 unknown1E[6];
 } BombPlantSporePlacement;
 
-typedef struct BombPlantSporePathState {
-    u8 unknown000[0x260];
-    s8 contactFlags;
-    u8 unknown261[7];
-} BombPlantSporePathState;
-
 typedef struct BombPlantSporeState {
     s16 pickupMsgBitId;
     s16 pickupMsgValue;
     f32 pickupMsgDelay;
-    BombPlantSporePathState path;
+    CurvesCollisionState path;
     ModelLightStruct* light;
     f32 fuseTimer;
     f32 driftAmplitude;
@@ -71,11 +66,6 @@ STATIC_ASSERT(offsetof(BombPlantSporePlacement, behavior.baseAngle) == 0x1C);
 STATIC_ASSERT(offsetof(BombPlantSporePlacement, spawn.spawnYaw) == 0x1A);
 STATIC_ASSERT(offsetof(BombPlantSporePlacement, spawn.rotXSeed) == 0x1C);
 STATIC_ASSERT(offsetof(BombPlantSporePlacement, unknown1E) == 0x1E);
-
-STATIC_ASSERT(sizeof(BombPlantSporePathState) == 0x268);
-STATIC_ASSERT(offsetof(BombPlantSporePathState, unknown000) == 0x000);
-STATIC_ASSERT(offsetof(BombPlantSporePathState, contactFlags) == 0x260);
-STATIC_ASSERT(offsetof(BombPlantSporePathState, unknown261) == 0x261);
 
 STATIC_ASSERT(sizeof(BombPlantSporeState) == 0x2B4);
 STATIC_ASSERT(offsetof(BombPlantSporeState, pickupMsgBitId) == 0x000);

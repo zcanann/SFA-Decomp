@@ -5,15 +5,11 @@
  * object with the same placement pair ID, then follows its transform.
  */
 #include "dlls/objects/419.h"
-
 #include "game/objects/object.h"
 #include "main/objseq.h"
 #include "main/objtype.h"
 
-int dll419_processAnimEvents(GameObject* unusedObj, int unusedArg, ObjSeqState* unusedAnimUpdate) {
-    (void)unusedObj;
-    (void)unusedArg;
-    (void)unusedAnimUpdate;
+int dll419_processAnimEvents(GameObject*, int, ObjSeqState*) {
     return 0;
 }
 

@@ -12,8 +12,8 @@
 void attractor_getTarget(GameObject* obj, GameObject** outTarget) {
     GameObject* target = NULL;
     AttractorPlacement* placement = (AttractorPlacement*)obj->anim.placementData;
-    s8 mode = placement->mode;
-    switch (mode) {
+
+    switch (placement->mode) {
     case ATTRACTOR_MODE_NONE:
         break;
     case ATTRACTOR_MODE_RETURN_SELF:
@@ -21,9 +21,8 @@ void attractor_getTarget(GameObject* obj, GameObject** outTarget) {
         break;
     case ATTRACTOR_MODE_FACE_PLAYER: {
         GameObject* player = Obj_GetPlayerObject();
-        int angle = atan2i((int)(player->anim.localPosX - obj->anim.localPosX),
-                           (int)(player->anim.localPosZ - obj->anim.localPosZ));
-        obj->anim.rotX = (s16)(angle + 0x8000);
+        int angle = atan2i(player->anim.localPosX - obj->anim.localPosX, player->anim.localPosZ - obj->anim.localPosZ);
+        obj->anim.rotX = angle + 0x8000;
         target = obj;
         break;
     }

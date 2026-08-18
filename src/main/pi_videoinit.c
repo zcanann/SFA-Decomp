@@ -114,7 +114,7 @@ void videoInit(void* unusedRenderMode, int unusedArg)
     GXInitFifoLimits(gGxFifoObj, gGxFifoSize - 0x4000, (gGxFifoSize * 3) >> 2);
     GXSetCPUFifo(gGxFifoObj);
     GXSetGPFifo(gGxFifoObj);
-    Queue_Init(&gVideoFlipQueue, gVideoFlipQueueBuffer, 10, 0xc);
+    Queue_Init(&gVideoFlipQueue, gVideoFlipQueueBuffer, 10, 3 * sizeof(void*));
     OSInitThreadQueue((OSThreadQueue*)&gVideoFlipWaitQueue);
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);

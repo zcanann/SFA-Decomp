@@ -165,7 +165,7 @@ void sndOutputMode(int mode)
         u32 i;
         for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
-            *(u64*)((u8*)synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
+            *(u64*)&synthVoice[i].cFlagsHi |= 0x0000200000000000ULL;
         }
         streamOutputModeChanged();
     }

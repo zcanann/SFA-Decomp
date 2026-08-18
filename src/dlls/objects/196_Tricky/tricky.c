@@ -3077,7 +3077,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
     char* str = lbl_8031D2E8;
     u8 ok;
     int hasTarget;
-    int* bestWarp = NULL;
+    GameObject* bestWarp = NULL;
     f32 bestDetourSavings = 0.0f;
     int warpCount;
     u8* approachCfg;
@@ -5762,14 +5762,14 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
     TrickyState* tex;
     short move;
     u8 result;
-    int followBase;
+    f32* followBase;
     int inWater;
     float threshold;
 
-    state->followObj = (void*)state->playerObj;
-    followBase = *(u32*)&state->followObj + 0x18;
-    if (*(u32*)&state->targetPosPtr != followBase) {
-        state->targetPosPtr = (void*)followBase;
+    state->followObj = state->playerObj;
+    followBase = &state->followObj->anim.worldPosX;
+    if (state->targetPosPtr != followBase) {
+        state->targetPosPtr = followBase;
         {
             u32 mask;
             u32 flags = state->stateFlags;
@@ -7075,10 +7075,10 @@ void Tricky_hitDetect(GameObject* obj) {
 
 #define TRICKY_SPAWN_FOOD_BUBBLE(obj, state)                                                                           \
     if (((TrickyState*)(state))->child == NULL) {                                                                      \
-        int setup_;                                                                                                    \
+        ObjPlacement* setup_;                                                                                          \
         s8 used_[4];                                                                                                   \
         int slot_;                                                                                                     \
-        setup_ = (int)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);                                               \
+        setup_ = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);                                                    \
         used_[0] = -1;                                                                                                 \
         used_[1] = -1;                                                                                                 \
         used_[2] = -1;                                                                                                 \
