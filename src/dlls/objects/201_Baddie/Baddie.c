@@ -347,7 +347,7 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state)
         state->controlFlags = 0;
         obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         obj->anim.alpha = 0;
-        *(u32*)&obj->userData1 = 1;
+        obj->userData1 = 1;
         if ((u32)((ObjPlacement*)setup)->ident == 0xFFFFFFFF)
         {
             Obj_FreeObject(obj);
@@ -519,14 +519,14 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                                                sector);
                     break;
                 case 0x613:
-                    gcRobotPatrol_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    gcRobotPatrol_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x642:
-                    mikaladon_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    mikaladon_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x3fe:
                 case 0x7c6:
-                    vambat_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    vambat_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x58b:
                     kooshy_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
@@ -535,33 +535,33 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                     weevil_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x251:
-                    pinPon_updateWhileFrozen((int)obj, (EnemyState*)state, attacker, hit, hitArg, hitCount, &hitPos,
+                    pinPon_updateWhileFrozen(obj, (EnemyState*)state, attacker, hit, hitArg, hitCount, &hitPos,
                                              sector);
                     break;
                 case 0x25d:
                     rachnopUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x4d7:
-                    wbUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    wbUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x457:
-                    spittingEbaUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    spittingEbaUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x458:
-                    mutatedEbaUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    mutatedEbaUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x851:
-                    whirlpool_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    whirlpool_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x842:
                 case 0x84b:
-                    snowworm_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    snowworm_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x4ac:
-                    hoodedZyckUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    hoodedZyckUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x427:
-                    battleDroidUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    battleDroidUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x6a2:
                 case 0x6a3:
@@ -570,10 +570,10 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                     crawler_onHit(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 case 0x7c8:
-                    hagabonMK2_updateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    hagabonMK2_updateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 default:
-                    battleDroidUpdateWhileFrozen((int)obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
+                    battleDroidUpdateWhileFrozen(obj, state, attacker, hit, hitArg, hitCount, &hitPos, sector);
                     break;
                 }
             }
@@ -830,9 +830,9 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
     ((CollectibleSetup*)setup)->counterGameBit = -1;
     ((CollectibleSetup*)setup)->hideGameBit = -1;
     ((CollectibleSetup*)setup)->visibilityGameBit = -1;
-    ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
-    ((ObjPlacement*)setup)->posY = 30.0f + obj->anim.localPosY;
-    ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+    setup->posX = obj->anim.localPosX;
+    setup->posY = 30.0f + obj->anim.localPosY;
+    setup->posZ = obj->anim.localPosZ;
     if ((useAltMode & 0xff) != 0)
     {
         ((CollectibleSetup*)setup)->spawnMode = 2;
@@ -841,16 +841,15 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
     {
         ((CollectibleSetup*)setup)->spawnMode = 1;
     }
-    ((ObjPlacement*)setup)->color[0] = parentSetup->color[0];
-    ((ObjPlacement*)setup)->color[2] = parentSetup->color[2];
-    ((ObjPlacement*)setup)->color[1] = parentSetup->color[1];
-    ((ObjPlacement*)setup)->color[3] = parentSetup->color[3];
+    setup->color[0] = parentSetup->color[0];
+    setup->color[2] = parentSetup->color[2];
+    setup->color[1] = parentSetup->color[1];
+    setup->color[3] = parentSetup->color[3];
     nearest = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
     gTrickyNearestObject = (GameObject*)nearest;
     if ((nearest->anim.romDefNo == TRICKY_OBJ_APPLE) || (nearest->anim.romDefNo == TRICKY_CHILD_OBJ_ENERGY_EGG))
     {
-        (*(void (**)(int, f32, f32, f32))(*(int*)((int)nearest->anim.dll) + 0x2c))(
-            (int)nearest, 0.0f, 1.0f, 0.0f);
+        ((void (*)(GameObject*, f32, f32, f32))nearest->anim.dll[0][11])(nearest, 0.0f, 1.0f, 0.0f);
     }
     return (int)gTrickyNearestObject;
 }
@@ -1856,8 +1855,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjSeqState* animUpdate)
             obj = getTrickyObject();
             if (obj != NULL)
             {
-                (*(void (*)(GameObject*, int, GameObject*))(*(int*)(*(int*)((int)obj->anim.dll) + 0x34)))(
-                    obj, 1, node);
+                ((void (*)(GameObject*, int, GameObject*))obj->anim.dll[0][13])(obj, 1, node);
                 ((EnemyState*)sub)->controlFlags |= 0x200000LL;
                 ((EnemyState*)sub)->trackedObj = obj;
             }
@@ -2473,7 +2471,7 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
 
 int enemy_getExtraSize(void)
 {
-    return 0x370;
+    return sizeof(EnemyState);
 }
 int enemy_getObjectTypeId(void)
 {
@@ -2875,7 +2873,8 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
                 {
                     if (((EnemyPlacement*)setup)->respawnDelay != 0)
                     {
-                        if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->ident) == 0)
+                        int snst = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->ident);
+                        if (snst == 0)
                         {
                             obj->userData1 = 1;
                         }
@@ -3016,11 +3015,11 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         ((EnemyState*)state)->actionId = 2;
         if (*(void**)state == NULL)
         {
-            *(int*)state = (int)mmAlloc(264, 26, 0);
+            *(void**)state = mmAlloc(sizeof(RomCurveWalker), 26, 0);
         }
         if (*(void**)state != NULL)
         {
-            memset(*(void**)state, 0, 264);
+            memset(*(void**)state, 0, sizeof(RomCurveWalker));
         }
         if ((*gRomCurveInterface)
                 ->initCurve(*(void**)state, (void*)obj, ((EnemyState*)state)->sightRange, (int*)&lbl_803DBC58, -1) == 0)

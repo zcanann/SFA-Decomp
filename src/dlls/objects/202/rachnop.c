@@ -141,7 +141,7 @@ void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, int state, u16* ou
     axisA[0] = 0.0f;
     axisA[1] = 1.0f;
     axisA[2] = 0.0f;
-    PSVECCrossProduct((Vec*)axisA, (Vec*)(state + 0x344), (Vec*)crossA);
+    PSVECCrossProduct((Vec*)axisA, (Vec*)((EnemyState*)state)->wallPlane.normal, (Vec*)crossA);
     PSVECNormalize((Vec*)crossA, (Vec*)crossA);
     if (crossA[0] != 0.0f)
     {
@@ -488,7 +488,7 @@ void rachnopUpdateIdle(GameObject* obj, int state)
         if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_id_253);
-            Baddie_SetMove((int)obj, state, 2, 1.0f, 0, 0);
+            Baddie_SetMove(obj, state, 2, 1.0f, 0, 0);
         }
     }
     return;
@@ -508,7 +508,7 @@ void rachnopUpdateApproach(GameObject* obj, int state)
         fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, (double)(0.5f));
         if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            Baddie_SetMove((int)obj, state, 0, (0.5f), 0, 0);
+            Baddie_SetMove(obj, state, 0, (0.5f), 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_id_252);
         }
     }
@@ -550,11 +550,11 @@ void rachnopUpdateAttack(GameObject* obj, int state)
             if (outIds[0] < 0x5dc)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_251);
-                Baddie_SetMove((int)obj, state, 1, 0.5f, 0, 0);
+                Baddie_SetMove(obj, state, 1, 0.5f, 0, 0);
             }
             else
             {
-                Baddie_SetMove((int)obj, state, 3, 0.5f, 0, 0);
+                Baddie_SetMove(obj, state, 3, 0.5f, 0, 0);
             }
         }
     }

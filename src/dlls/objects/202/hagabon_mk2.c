@@ -213,7 +213,7 @@ void hagabonMK2_updateWhileFrozen(int obj, u8* st, GameObject* attacker, int cmd
     {
         ((EnemyState*)st)->flags2E8 |= 0x8;
         Sfx_StopFromObject((GameObject*)objI, SFXTRIG_baddie_rach_death);
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_eba_leavesopen);
+        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_eba_leavesopen);
         ((EnemyState*)st)->current = 0;
     }
 }
@@ -345,7 +345,7 @@ void hagabonMK2_updateB(GameObject* obj, u8* state)
             f32 t = 6370.0f * spd;
             ratio *= t * timeDelta;
         }
-        obj->anim.rotY = (f32)(int)obj->anim.rotY - ratio;
+        obj->anim.rotY = (f32)obj->anim.rotY - ratio;
         baddieTurnTowardLookDir(obj, state, (int)((EnemyState*)state)->crawler.emergeTimer, 10.0f * spd,
                     0.0f, 1);
     }

@@ -687,7 +687,7 @@ int SB_CloudRunner_canMount(void)
 
 int SB_CloudRunner_getExtraSize(void)
 {
-    return 0x84;
+    return sizeof(SBCloudRunnerState);
 }
 
 int SB_CloudRunner_getObjectTypeId(void)
@@ -779,7 +779,7 @@ void SB_CloudRunner_update(GameObject* obj)
         int i;
         for (i = 0; i < count; i++)
         {
-            GameObject* o = (GameObject*)(objs[i]);
+            GameObject* o = objs[i];
             if (o->anim.romDefNo == CLOUDRUNNER_TARGET_TYPE)
             {
                 state->targetObj = o;

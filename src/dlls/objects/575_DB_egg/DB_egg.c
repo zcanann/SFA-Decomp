@@ -443,7 +443,7 @@ void dbegg_computeFlocking(GameObject* obj, f32* vel)
 
 int dbegg_getExtraSize(void)
 {
-    return 0x124;
+    return sizeof(DbEggState);
 }
 int dbegg_getObjectTypeId(void)
 {

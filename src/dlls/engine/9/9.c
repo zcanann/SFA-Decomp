@@ -205,7 +205,7 @@ void renderClouds(int a, int b, int c, int d)
     {
         model = Obj_GetActiveModel((GameObject*)gCloudActionRuntime.upperCloudObj);
         model->bufferFlags &= ~8;
-        ((u8*)gCloudActionRuntime.upperCloudObj)[0x37] = 0xff;
+        gCloudActionRuntime.upperCloudObj->anim.renderAlpha = 0xff;
         if ((u32)gCloudOverridePositionValid != 0)
         {
             gCloudActionRuntime.upperCloudObj->anim.localPosX = gCloudOverridePositionX;
@@ -231,7 +231,7 @@ void renderClouds(int a, int b, int c, int d)
         }
         model = Obj_GetActiveModel((GameObject*)gCloudActionRuntime.mainCloudObj);
         model->bufferFlags &= ~8;
-        ((u8*)gCloudActionRuntime.mainCloudObj)[0x37] = 0xff;
+        gCloudActionRuntime.mainCloudObj->anim.renderAlpha = 0xff;
         v = view->x;
         gCloudActionRuntime.mainCloudObj->anim.worldPosX = v;
         gCloudActionRuntime.mainCloudObj->anim.localPosX = v;
@@ -315,7 +315,7 @@ void renderClouds(int a, int b, int c, int d)
     {
         model = Obj_GetActiveModel((GameObject*)gCloudActionRuntime.lowerCloudObj);
         model->bufferFlags &= ~8;
-        ((u8*)gCloudActionRuntime.lowerCloudObj)[0x37] = 0xff;
+        gCloudActionRuntime.lowerCloudObj->anim.renderAlpha = 0xff;
         if ((u32)gCloudOverridePositionValid != 0)
         {
             gCloudActionRuntime.lowerCloudObj->anim.localPosX = gCloudOverridePositionX;

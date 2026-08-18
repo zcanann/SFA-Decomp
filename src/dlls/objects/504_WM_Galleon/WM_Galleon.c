@@ -90,7 +90,7 @@ int WM_Galleon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
             getLActions(obj, obj, 0x80, 0, 0, 0);
             break;
         case WM_GALLEON_COMMAND_SCREEN_FADE:
-            (*(void (**)(int, int, int))(*(int*)gDll12Interface + 0x14))(0, 0x1e, 0x50);
+            ((void (*)(int, int, int))(*(void***)gDll12Interface)[5])(0, 0x1e, 0x50);
             break;
         case WM_GALLEON_COMMAND_SHOW_MODEL:
             gWMGalleonShowScreen = 1;

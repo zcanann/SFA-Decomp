@@ -195,7 +195,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
     switch (state->phase) {
     case 0:
         camShake = 120.0f;
-        Sfx_StopObjectChannel((int)obj, 1);
+        Sfx_StopObjectChannel(obj, 1);
         (*gCameraInterface)->releaseAction(&camShake, 0);
         obj->userData1 = 1;
         tx = state->homeX - 1600.0f;

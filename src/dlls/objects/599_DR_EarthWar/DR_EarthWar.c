@@ -787,7 +787,7 @@ int DR_EarthWarrior_canMount(void)
 
 int DR_EarthWarrior_getExtraSize(void)
 {
-    return 0x14fc;
+    return sizeof(EarthWarriorState);
 }
 
 int DR_EarthWarrior_getObjectTypeId(void)

@@ -1057,7 +1057,7 @@ typedef void (*ExpFn3)(void*, void*, int);
 typedef void (*ExpFn4)(void*, void*, int, int);
 typedef void (*ExpResFn6)(void*, int, void*, int, int, void*);
 
-#define PENDING_SPAWNS ((char*)*(int**)((char*)eff + 0x9c))
+#define PENDING_SPAWNS ((char*)((PartfxEffectState*)eff)->emitterCommands)
 
 void dll_0B_updateActiveEffects(void)
 {
@@ -1128,11 +1128,11 @@ void dll_0B_updateActiveEffects(void)
             }
             scaleGroupIndex = 0;
             alphaGroupIndex = 0;
-            ((ExpFn3)modgfx_restoreBaseVertices)(eff, PENDING_SPAWNS + emIdx * 0x18, active);
+            ((ExpFn3)modgfx_restoreBaseVertices)(eff, PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn), active);
             feFlag = 0;
             emIdx = 0;
             emOff = 0;
-            for (; emIdx < ((PartfxEffectState*)eff)->emitterCount; emOff += 0x18, emIdx++)
+            for (; emIdx < ((PartfxEffectState*)eff)->emitterCount; emOff += sizeof(ModgfxPendingSpawn), emIdx++)
             {
                 s16 frameIndex;
                 char* pendingSpawns;
@@ -1147,9 +1147,9 @@ void dll_0B_updateActiveEffects(void)
                 flags = emitter->modelOrResource;
                 if ((flags & 0x1000) && emitter->posX > MODGFX_ZERO && frameIndex > 0)
                 {
-                    ((PartfxEffectState*)eff)->currentStage = ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->param14;
-                    ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->posX =
-                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->posX - MODGFX_ONE;
+                    ((PartfxEffectState*)eff)->currentStage = ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->param14;
+                    ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->posX =
+                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->posX - MODGFX_ONE;
                     ((PartfxEffectState*)eff)->stageFrameCountdown = -1;
                     break;
                 }
@@ -1158,8 +1158,8 @@ void dll_0B_updateActiveEffects(void)
                     if (((PartfxEffectState*)eff)->releaseRequested != 0)
                     {
                         ((PartfxEffectState*)eff)->releaseRequested = 0;
-                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->modelOrResource = 0;
-                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->modelOrResource = 0x20;
+                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->modelOrResource = 0;
+                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->modelOrResource = 0x20;
                         ((PartfxEffectState*)eff)->stageFrameCountdown = -1;
                         reprocess = 1;
                         feFlag = 0;
@@ -1169,7 +1169,7 @@ void dll_0B_updateActiveEffects(void)
                     {
                         feFlag = 1;
                         ((PartfxEffectState*)eff)->currentStage =
-                            ((ModgfxPendingSpawn*)(pendingSpawns + emIdx * 0x18))->param14;
+                            ((ModgfxPendingSpawn*)(pendingSpawns + emIdx * sizeof(ModgfxPendingSpawn)))->param14;
                         ((PartfxEffectState*)eff)->stageFrameCountdown = -1;
                         reprocess = 1;
                         break;
@@ -1251,7 +1251,7 @@ void dll_0B_updateActiveEffects(void)
                                 {
                                     (*gPartfxInterface)
                                         ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                      (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->posZ, &tmpl,
+                                                      (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->posZ, &tmpl,
                                                       0x200001, -1, 0);
                                 }
                                 ((PartfxEffectState*)eff)->requestedStage =
@@ -1452,7 +1452,7 @@ void dll_0B_updateActiveEffects(void)
                                 }
                                 else
                                 {
-                                    (*(ExpResFn6*)(*(int*)res + 4))((int*)((PartfxEffectState*)eff)->sourceObject, 0,
+                                    ((ExpResFn6)(*(ObjectInterface**)res)->init)((int*)((PartfxEffectState*)eff)->sourceObject, 0,
                                                                     NULL, 1, -1, NULL);
                                 }
                             }
@@ -1468,7 +1468,7 @@ void dll_0B_updateActiveEffects(void)
                             }
                             else
                             {
-                                (*(ExpResFn6*)(*(int*)res + 4))((int*)((PartfxEffectState*)eff)->sourceObject, 0, NULL,
+                                ((ExpResFn6)(*(ObjectInterface**)res)->init)((int*)((PartfxEffectState*)eff)->sourceObject, 0, NULL,
                                                                 1, -1, NULL);
                             }
                         }
@@ -1528,8 +1528,9 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     }
 
     arr = (PartfxEffectState**)gPartfxActiveEffects;
-    arr[slot] =
-        (PartfxEffectState*)mmAlloc(base0 + 0x240 + spawnCount * 0x18 + total * 2, 0x15, 0);
+    arr[slot] = (PartfxEffectState*)mmAlloc(
+        sizeof(PartfxEffectState) + base0 + 0x100 + spawnCount * sizeof(ModgfxPendingSpawn) + total * 2,
+        0x15, 0);
     if (arr[slot] == NULL)
     {
         partfx_freeEffectsBySequence(0, 0);
@@ -1667,7 +1668,7 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     {
         arr[slot]->auxSequenceBuffer =
             (u8*)arr[slot]->emitterCommands +
-            context->pendingSpawnCount * 0x18;
+            context->pendingSpawnCount * sizeof(ModgfxPendingSpawn);
     }
 
     {

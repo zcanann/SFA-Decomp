@@ -638,7 +638,7 @@ void dll_CE_updateTargeting(GameObject* obj, GroundBaddieState* objectStateAddre
 
 void dll_CE_handleMessage(GameObject* obj, int message) {
     GroundBaddieState* objectState = obj->extra;
-    GroundBaddieState* stateAlias = (GroundBaddieState*)(int)objectState;
+    GroundBaddieState* stateAlias = (GroundBaddieState*)objectState;
 
     switch ((u8)message) {
     case DLL_CE_MESSAGE_HIDE:

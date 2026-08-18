@@ -507,7 +507,7 @@ void Link_render(void)
                 }
                 else if (textId != 0xffff)
                 {
-                    gameTextShowStr((char*)saveFileSelect_saveSlots + textId * 0x24, drawItem->boxId, 0, 0);
+                    gameTextShowStr(saveFileSelect_saveSlots[textId].name, drawItem->boxId, 0, 0);
                 }
 
                 if (drawItem->texture != NULL)

@@ -72,7 +72,7 @@
 #include "main/dll/ppcwgpipe_struct.h"
 
 u8 gCloudLayerOverlayColor[4] = {0x20, 0x20, 0x20, 0};
-int gTexShaderAmbColor = -1;
+GXColor gTexShaderAmbColor = {0xFF, 0xFF, 0xFF, 0xFF};
 GXColor gTexLightmapAmbColor = {0xff, 0xff, 0xff, 0xff};
 s8 gTexIndMtxScaleExp = -2;
 
@@ -725,9 +725,9 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
         }
         if (layer->scrollMtx != 0xff)
         {
-            tx = *(float*)((int)gMapTextureScrolls + ((u32)layer->scrollMtx << 4)) / 1048576.0f;
+            tx = gMapTextureScrolls[layer->scrollMtx].offsetX / 1048576.0f;
             PSMTXTrans(texMatrix, tx,
-                       *(float*)((int)gMapTextureScrolls + 4 + ((u32)layer->scrollMtx << 4)) /
+                       gMapTextureScrolls[layer->scrollMtx].offsetY /
                            1048576.0f,
                        0.0f);
             texMtx = texMatrix;
@@ -772,9 +772,9 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
         }
         if (layer->scrollMtx != 0xff)
         {
-            tx = *(float*)((int)gMapTextureScrolls + ((u32)layer->scrollMtx << 4)) / 1048576.0f;
+            tx = gMapTextureScrolls[layer->scrollMtx].offsetX / 1048576.0f;
             PSMTXTrans(texMatrix, tx,
-                       *(float*)((int)gMapTextureScrolls + 4 + ((u32)layer->scrollMtx << 4)) /
+                       gMapTextureScrolls[layer->scrollMtx].offsetY /
                            1048576.0f,
                        0.0f);
             texMtx = texMatrix;
@@ -1039,37 +1039,37 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader,
     {
         GXClearVtxDesc();
     }
-    pos = stateWords[4];
+    pos = state->bit;
     off = pos >> 3;
     val = *(u8*)(stateWords[0] + off);
     p = (u8*)stateWords[0] + off;
     val |= p[1] << 8;
     val |= p[2] << 16;
-    stateWords[4] = pos + 1;
+    state->bit = pos + 1;
     bit = (val >> (pos & 7)) & 1;
     if (doSetup != 0)
     {
         GXSetVtxDesc(GX_VA_POS, bit ? GX_INDEX16 : GX_INDEX8);
     }
-    pos2 = stateWords[4];
+    pos2 = state->bit;
     off2 = pos2 >> 3;
     val2 = *(u8*)(stateWords[0] + off2);
     q = (u8*)stateWords[0] + off2;
     val2 |= q[1] << 8;
     val2 |= q[2] << 16;
-    stateWords[4] = pos2 + 1;
+    state->bit = pos2 + 1;
     bit2 = (val2 >> (pos2 & 7)) & 1;
     if (doSetup != 0)
     {
         GXSetVtxDesc(GX_VA_CLR0, bit2 ? GX_INDEX16 : GX_INDEX8);
     }
-    pos3 = stateWords[4];
+    pos3 = state->bit;
     off3 = pos3 >> 3;
     val3 = *(u8*)(stateWords[0] + off3);
     r = (u8*)stateWords[0] + off3;
     val3 |= r[1] << 8;
     val3 |= r[2] << 16;
-    stateWords[4] = pos3 + 1;
+    state->bit = pos3 + 1;
     bit3 = (val3 >> (pos3 & 7)) & 1;
     if (doSetup != 0)
     {
@@ -1280,7 +1280,7 @@ void renderGlows(void)
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm((const f32 (*)[4])sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(GX_PNMTX0);
-                selectTexture((Texture*)((int)skyGetSkyTexture()), 0);
+                selectTexture(skyGetSkyTexture(), 0);
                 skyGetSunColor(0, &amb[0], &amb[1], &amb[2]);
                 sunDot = (f32)(u32)sunAlpha * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(0.5f * sunDot));
@@ -1323,7 +1323,7 @@ void renderGlows(void)
             e = gGlowLightList[i];
             if (e->glowAlpha != 0)
             {
-                selectTexture((Texture*)((int)e->glowTexture), 0);
+                selectTexture((Texture*)e->glowTexture, 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
                                 (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
                                 (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),

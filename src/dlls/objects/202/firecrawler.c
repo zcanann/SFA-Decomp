@@ -895,11 +895,11 @@ void crawler_updateC(GameObject* obj, u8* state)
                 *(f32*)(state + 0x308) = t * (1.0f - a / 65535.0f);
                 if (*(f32*)(state + 0x308) < 0.005f)
                 {
-                    *(f32*)(state + 0x308) = 0.005f;
+                    ((EnemyState*)state)->animPlaySpeed = 0.005f;
                 }
                 else if (*(f32*)(state + 0x308) > 0.05f)
                 {
-                    *(f32*)(state + 0x308) = 0.05f;
+                    ((EnemyState*)state)->animPlaySpeed = 0.05f;
                 }
             }
             if ((((EnemyState*)state)->controlFlags &
@@ -960,7 +960,7 @@ void crawler_updateC(GameObject* obj, u8* state)
                             else
                             {
                                 ((EnemyState*)state)->rootMotionFlags = 1;
-                                *(f32*)(state + 0x308) = 0.01f;
+                                ((EnemyState*)state)->animPlaySpeed = 0.01f;
                                 ObjAnim_SetCurrentMove(obj, t0[0].moveId, 0.0f, 0);
                                 ((EnemyState*)state)->pathSpeed = 0.0f;
                             }

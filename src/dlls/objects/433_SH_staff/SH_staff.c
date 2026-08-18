@@ -335,23 +335,22 @@ int sh_staff_sequenceCallback(GameObject* obj, int unused, ObjSeqState* animUpda
             setHudForceShowMask(1);
             break;
         case SHSTAFF_EVENT_SPAWN_EVEN_HAZE:
-            state->hazeFlags = state->hazeFlags | SHSTAFF_HAZE_FLAG_SPAWN_EVEN;
+            state->hazeFlags |= SHSTAFF_HAZE_FLAG_SPAWN_EVEN;
             break;
         case SHSTAFF_EVENT_SPAWN_ODD_HAZE:
-            state->hazeFlags = state->hazeFlags | SHSTAFF_HAZE_FLAG_SPAWN_ODD;
+            state->hazeFlags |= SHSTAFF_HAZE_FLAG_SPAWN_ODD;
             break;
         case SHSTAFF_EVENT_FADE_HAZE_OUT:
-            state->hazeFlags = state->hazeFlags | SHSTAFF_HAZE_FLAG_FADE_OUT;
+            state->hazeFlags |= SHSTAFF_HAZE_FLAG_FADE_OUT;
             state->hazeFadeTimer = 60.0f;
             break;
         case SHSTAFF_EVENT_CONVERGE_HAZE:
-            state->hazeFlags = state->hazeFlags | SHSTAFF_HAZE_FLAG_CONVERGE;
+            state->hazeFlags |= SHSTAFF_HAZE_FLAG_CONVERGE;
             state->hazeFadeTimer = 0.0f;
             break;
         case SHSTAFF_EVENT_FINISH_HAZE_EFFECT:
-            state->hazeFlags = state->hazeFlags | SHSTAFF_HAZE_FLAG_FADE_OUT;
-            state->hazeFlags =
-                (u8)(state->hazeFlags | SHSTAFF_HAZE_FLAG_EVEN_COMPLETE | SHSTAFF_HAZE_FLAG_ODD_COMPLETE);
+            state->hazeFlags |= SHSTAFF_HAZE_FLAG_FADE_OUT;
+            state->hazeFlags |= SHSTAFF_HAZE_FLAG_EVEN_COMPLETE | SHSTAFF_HAZE_FLAG_ODD_COMPLETE;
             state->hazeFadeTimer = SHSTAFF_FADE_OUT_TIMER_INIT;
             break;
         case 0:
@@ -364,7 +363,7 @@ int sh_staff_sequenceCallback(GameObject* obj, int unused, ObjSeqState* animUpda
         ((void (*)(s16, int, int))((int*)*gGameUIInterface)[0x34 / 4])(obj->anim.modelInstance->helpTextIds[1], 0xa0,
                                                                        0x8c);
     }
-    state->hazeClimbT = 0.01f * timeDelta + state->hazeClimbT;
+    state->hazeClimbT += 0.01f * timeDelta;
     if (state->hazeClimbT > 1.0f) {
         state->hazeClimbT = 0.0f;
     }

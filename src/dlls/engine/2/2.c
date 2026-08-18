@@ -2842,7 +2842,7 @@ int seqDoSubCmd0B(GameObject* obj, GameObject* sourceObj, u8* seq, u8* cmdsArg, 
                 }
                 if (found == 0 && freeSlot != -1)
                 {
-                    seq[freeSlot + 0x12c] = operand;
+                    ((ObjSeqState*)seq)->conditionOpcodes[freeSlot] = operand;
                     ((ObjSeqState*)seq)->conditionFrames[freeSlot] = objSeqFindLabel(seq, top16);
                 }
                 result = 0;
@@ -3881,7 +3881,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
         {
             break;
         }
-        if (*(u8*)(*(u8**)action + 0xf9) == 0)
+        if (((ObjModel*)action)->file->morphTargetCount == 0)
         {
             break;
         }

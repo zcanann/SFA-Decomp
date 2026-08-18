@@ -168,7 +168,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
         }
         if (obj == Obj_GetPlayerObject())
         {
-            if (*(s16*)((u32)obj->extra + 0x81a) == 1)
+            if (((PlayerState*)obj->extra)->characterId == 1)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_foot_ice_scuff);
             }

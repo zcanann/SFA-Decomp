@@ -148,14 +148,14 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     pa += tileColumnOffset;
                     rowDataOffset = w * (int)wd * 2;
                     pa += rowDataOffset;
-                    pixelA = READ_TEXTURE_U16(pa + 0x60);
+                    pixelA = READ_TEXTURE_U16(pa + sizeof(Texture));
                     redA = (pixelA & 0xf800) >> 8;
                     redA = (u8)(redA | ((pixelA & 0xe000) >> 13));
                     pb = (u8*)src2 + pixelColumnOffset;
                     pb += h;
                     pb += tileColumnOffset;
                     pb += rowDataOffset;
-                    pixelB = READ_TEXTURE_U16(pb + 0x60);
+                    pixelB = READ_TEXTURE_U16(pb + sizeof(Texture));
                     redB = (pixelB & 0xf800) >> 8;
                     redB = (u8)(redB | ((pixelB & 0xe000) >> 13));
                     blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((pixelA & 0x1c) >> 2))) >> 8) +
@@ -169,7 +169,7 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                            << 3;
                     outputPixel = blue | (red | green);
                     pc = (u8*)dst + pixelColumnOffset + tileColumnOffset + h + rowDataOffset;
-                    WRITE_TEXTURE_U16(pc + 0x60, outputPixel);
+                    WRITE_TEXTURE_U16(pc + sizeof(Texture), outputPixel);
                 }
             }
         }
@@ -200,20 +200,20 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
                     bd += tileColumnOffset;
                     bd += h;
                     bd += rowDataOffset;
-                    aLo = READ_TEXTURE_U16(ad + 0x60);
+                    aLo = READ_TEXTURE_U16(ad + sizeof(Texture));
                     aLo = (u8)aLo;
-                    bLo = READ_TEXTURE_U16(bd + 0x60);
+                    bLo = READ_TEXTURE_U16(bd + sizeof(Texture));
                     bLo = (u8)bLo;
-                    pixelA = READ_TEXTURE_U16(ad + 0x80);
+                    pixelA = READ_TEXTURE_U16(ad + sizeof(Texture) + 0x20);
                     aHi = (pixelA & 0xff00) >> 8;
                     aHi = (u8)aHi;
-                    pixelB = READ_TEXTURE_U16(bd + 0x80);
+                    pixelB = READ_TEXTURE_U16(bd + sizeof(Texture) + 0x20);
                     bHi = (pixelB & 0xff00) >> 8;
                     bHi = (u8)bHi;
                     ct = (u8*)dst + pixelColumnOffset;
                     ct += tileColumnOffset;
                     ct += h;
-                    cd = ct + 0x60;
+                    cd = ct + sizeof(Texture);
                     WRITE_TEXTURE_U16(cd + rowDataOffset,
                                       (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8)));
                     WRITE_TEXTURE_U16(cd + src1->width * w * 2 + 0x20,
@@ -260,7 +260,7 @@ void updateHeavyFogTexture(int intensity)
             cache[idx] = (s * j) >> 12;
         }
     }
-    memcpyToCache((u8*)gNewShadowHeavyFogTexture + 0x60, cache, 0);
+    memcpyToCache((u8*)gNewShadowHeavyFogTexture + sizeof(Texture), cache, 0);
     gNewShadowHeavyFogIntensity = intensity;
 }
 
@@ -386,7 +386,7 @@ static void boxBlurTexture(u8* texData, int size, int window, u32 fill) {
     u8* data;
     u32 i;
 
-    data = texData + 0x60;
+    data = texData + sizeof(Texture);
     if (window % 8 == 0) {
         u32 y = 0;
 
@@ -1029,7 +1029,7 @@ void* textureAlloc512(void)
 {
     Texture* tex = (Texture*)textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
     tex->refCount = 1;
-    DCFlushRange((char*)tex + 0x60, tex->dataSize);
+    DCFlushRange((char*)tex + sizeof(Texture), tex->dataSize);
     return tex;
 }
 void getNewShadowRampTexture(u32* out)
@@ -1144,7 +1144,7 @@ void drawReflectionTexture(void)
     drawTexture(texture, 0.0f, 0.0f, 0xff, 0x40);
     GXSetTexCopySrc(0, 0, 0x50, 0x3c);
     GXSetTexCopyDst(0x50, 0x3c, GX_TF_RGB565, GX_FALSE);
-    GXCopyTex((char*)gNewShadowReflectionSmallTexture + 0x60, GX_TRUE);
+    GXCopyTex((char*)gNewShadowReflectionSmallTexture + sizeof(Texture), GX_TRUE);
     if (((Texture*)gNewShadowReflectionSmallTexture)->preloaded != 0)
     {
         GXTexObj* obj = textureGetGXTexObj((Texture*)gNewShadowReflectionSmallTexture);
@@ -1156,10 +1156,10 @@ void updateReflectionTextures(void)
 {
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     GXSetTexCopyDst(0x140, 0xf0, GX_TF_RGB565, GX_TRUE);
-    GXCopyTex((char*)gNewShadowReflectionTexture + 0x60, GX_FALSE);
+    GXCopyTex((char*)gNewShadowReflectionTexture + sizeof(Texture), GX_FALSE);
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     GXSetTexCopyDst(0x140, 0xf0, GX_TF_Z8, GX_TRUE);
-    GXCopyTex((char*)gNewShadowReflectionTexture2 + 0x60, GX_FALSE);
+    GXCopyTex((char*)gNewShadowReflectionTexture2 + sizeof(Texture), GX_FALSE);
     if (gNewShadowReflectionTexture->preloaded != 0)
     {
         GXTexObj* obj = textureGetGXTexObj(gNewShadowReflectionTexture);
@@ -1540,7 +1540,7 @@ static inline void fillDiskTexture(void)
             base = (u8*)gNewShadowDiskTexture;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x80;
-            off2 = off + 0x60;
+            off2 = off + sizeof(Texture);
             dx = cy * lbl_803DEDD0;
             dz = (f32)j - 16.0f;
             dz = dz * lbl_803DEDD0;
@@ -1575,7 +1575,7 @@ static inline void fillSmallDiskTexture(void)
             base = (u8*)gNewShadowSmallDiskTexture;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x40;
-            off2 = off + 0x60;
+            off2 = off + sizeof(Texture);
             dx = cy * lbl_803DED40;
             dz = (f32)j - 8.0f;
             dz = dz * lbl_803DED40;
@@ -1603,16 +1603,16 @@ static inline void fillRampTexture(void)
         u8* t;
         t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x60] = i;
+        t[sizeof(Texture)] = i;
         t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x68] = i;
+        t[sizeof(Texture) + 8] = i;
         t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x70] = i;
+        t[sizeof(Texture) + 0x10] = i;
         t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x78] = i;
+        t[sizeof(Texture) + 0x18] = i;
     }
 }
 
@@ -1640,7 +1640,7 @@ static inline void fillFalloffTexture(void)
             base = (u8*)gNewShadowFalloffTexture;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
-            off2 = off + 0x60;
+            off2 = off + sizeof(Texture);
             dy = cy * lbl_803DEDE0;
             cx = ((f32)j - 64.0f) * lbl_803DEDE0;
             d2 = sqrtf(dy * dy + cx * cx);
@@ -1684,7 +1684,7 @@ static inline void fillLightningTexture(void)
             base = (u8*)gNewShadowLightningTexture;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x80;
-            off2 = off + 0x60;
+            off2 = off + sizeof(Texture);
             v = sqrtf(__fabsf(c0 * lbl_803DEDD0));
             v = sqrtf(v);
             base[off2] = 255.0f * (1.0f - v);
@@ -1717,7 +1717,7 @@ static inline void fillRingTexture(void)
             base = (u8*)gNewShadowRingTexture;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
-            off2 = off + 0x60;
+            off2 = off + sizeof(Texture);
             cx = ((f32)j - 64.0f) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f)
@@ -1750,16 +1750,16 @@ static inline void fillInverseRampTexture(void)
         u8* t;
         t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x60] = (u8)(255 - i);
+        t[sizeof(Texture)] = (u8)(255 - i);
         t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x68] = (u8)(255 - i);
+        t[sizeof(Texture) + 8] = (u8)(255 - i);
         t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x70] = (u8)(255 - i);
+        t[sizeof(Texture) + 0x10] = (u8)(255 - i);
         t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        t[0x78] = (u8)(255 - i);
+        t[sizeof(Texture) + 0x18] = (u8)(255 - i);
     }
 }
 
@@ -1895,7 +1895,7 @@ void allocLotsOfTextures(void)
                     bi = (int)b & 0xf;
                     ci = ((u16)(int)c & 0xf) << 4;
                     ai = ((u16)(int)a & 7) << 12;
-                    *(u16*)(dst + 0x60) = (u16)(ci | ai | bi);
+                    *(u16*)(dst + sizeof(Texture)) = (u16)(ci | ai | bi);
                 }
             }
         }
@@ -1935,7 +1935,7 @@ void allocLotsOfTextures(void)
             f32 cyScaled = cy * lbl_803DEDE0;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
-            off2 = off + 0x60;
+            off2 = off + sizeof(Texture);
             cx = __fabsf(((f32)j - 64.0f) * lbl_803DEDE0);
             cx = cx * cx;
             d2 = sqrtf(__fabsf(cyScaled) * __fabsf(cyScaled) + cx);
@@ -1945,19 +1945,19 @@ void allocLotsOfTextures(void)
             base[off2] = 255.0f * v;
         }
     }
-    DCFlushRange((u8*)gNewShadowRadialTexture + 0x60, gNewShadowRadialTexture->dataSize);
+    DCFlushRange((u8*)gNewShadowRadialTexture + sizeof(Texture), gNewShadowRadialTexture->dataSize);
 
     gNewShadowHeavyFogTexture = textureAlloc(0x40, 0x40, 1, 0, 0, 0, 0, 1, 1);
-    DCInvalidateRange((u8*)gNewShadowHeavyFogTexture + 0x60, gNewShadowHeavyFogTexture->dataSize);
+    DCInvalidateRange((u8*)gNewShadowHeavyFogTexture + sizeof(Texture), gNewShadowHeavyFogTexture->dataSize);
     updateHeavyFogTexture(0);
 
     gNewShadowLightningTexture = textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
     fillLightningTexture();
-    DCFlushRange((u8*)gNewShadowLightningTexture + 0x60, gNewShadowLightningTexture->dataSize);
+    DCFlushRange((u8*)gNewShadowLightningTexture + sizeof(Texture), gNewShadowLightningTexture->dataSize);
 
     gNewShadowRingTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 1, 1, 1, 1);
     fillRingTexture();
-    DCFlushRange((u8*)gNewShadowRingTexture + 0x60, gNewShadowRingTexture->dataSize);
+    DCFlushRange((u8*)gNewShadowRingTexture + sizeof(Texture), gNewShadowRingTexture->dataSize);
 
     gNewShadowReflectionGradientTexture = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 4; i++)
@@ -1970,17 +1970,17 @@ void allocLotsOfTextures(void)
         t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
         t += (i >> 2) * 0x20;
         hi = ((int)(255.0f * x + 128.0f) & 0xff) << 8;
-        *(u16*)(t + 0x60) = (u16)(hi | ((int)lbl_803DED38 & 0xff));
+        *(u16*)(t + sizeof(Texture)) = (u16)(hi | ((int)lbl_803DED38 & 0xff));
         t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
         t += (i >> 2) * 0x20;
-        *(u16*)(t + 0x68) = (u16)(hi | ((int)lbl_803DEE14 & 0xff));
+        *(u16*)(t + sizeof(Texture) + 8) = (u16)(hi | ((int)lbl_803DEE14 & 0xff));
         t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
         t += (i >> 2) * 0x20;
-        *(u16*)(t + 0x70) = (u16)(hi | ((int)lbl_803DEE18 & 0xff));
+        *(u16*)(t + sizeof(Texture) + 0x10) = (u16)(hi | ((int)lbl_803DEE18 & 0xff));
         v = (u16)(hi | ((int)lbl_803DEE1C & 0xff));
         t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
         t += (i >> 2) * 0x20;
-        *(u16*)(t + 0x78) = v;
+        *(u16*)(t + sizeof(Texture) + 0x18) = v;
     }
     DCFlushRange((Texture*)gNewShadowReflectionGradientTexture + 1,
                  ((Texture*)gNewShadowReflectionGradientTexture)->dataSize);

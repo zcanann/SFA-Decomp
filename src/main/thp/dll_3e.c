@@ -15,8 +15,7 @@
  * prepareAttractMode() seeks to a movie within the attract package
  * (offset table indexed by movieIndex), spins up the decode/read threads,
  * primes the message queues (InitAllMessageQueue) and installs the
- * retrace callback. Operates on the AttractMovieControl block at
- * gAttractMovieAudioDmaBuffer and the AttractMoviePlayer at gAttractMoviePlayer.
+ * retrace callback.
  */
 #include "global.h"
 #include "dolphin/ai.h"
@@ -175,11 +174,11 @@ static void PlayControl(u32 retraceCount) {
 
     if ((decodedTexture != NULL) && (decodedTexture != (AttractMovieTextureSet*)-1)) {
         gAttractMoviePlayer.curAudioTrack = decodedTexture->frameNumber;
-        if ((void*)gAttractMoviePlayer.curAudioNumber != NULL) {
-            OSSendMessage(&gAttractMovieSpentTextureSetQueue, (OSMessage)gAttractMoviePlayer.curAudioNumber,
+        if (gAttractMoviePlayer.curTextureSet != NULL) {
+            OSSendMessage(&gAttractMovieSpentTextureSetQueue, (OSMessage)gAttractMoviePlayer.curTextureSet,
                           OS_MESSAGE_NOBLOCK);
         }
-        gAttractMoviePlayer.curAudioNumber = (s32)decodedTexture;
+        gAttractMoviePlayer.curTextureSet = decodedTexture;
     }
 
     if ((gAttractMoviePlayer.playFlags & THP_PLAY_LOOP) == 0) {

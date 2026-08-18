@@ -35,7 +35,8 @@ static inline void inpSetRPNHi(u8 set, u8 channel, u8 value)
     u32 i;
     u8 range;
 
-    rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
+    rpn = gInpMidiCtrlByKey[set][channel][MIDI_CC_RPN_LSB] |
+          (gInpMidiCtrlByKey[set][channel][MIDI_CC_RPN_MSB] << 8);
     switch (rpn)
     {
     case MIDI_RPN_PITCH_BEND_SENSITIVITY:
@@ -66,7 +67,8 @@ static inline void inpSetRPNDec(u8 set, u8 channel)
     u32 i;
     u8 range;
 
-    rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
+    rpn = gInpMidiCtrlByKey[set][channel][MIDI_CC_RPN_LSB] |
+          (gInpMidiCtrlByKey[set][channel][MIDI_CC_RPN_MSB] << 8);
     switch (rpn)
     {
     case MIDI_RPN_PITCH_BEND_SENSITIVITY:
@@ -97,7 +99,8 @@ static inline void inpSetRPNInc(u8 set, u8 channel)
     u32 i;
     u8 range;
 
-    rpn = (st->midiCtrl[set][channel][MIDI_CC_RPN_LSB]) | (st->midiCtrl[set][channel][MIDI_CC_RPN_MSB] << 8);
+    rpn = gInpMidiCtrlByKey[set][channel][MIDI_CC_RPN_LSB] |
+          (gInpMidiCtrlByKey[set][channel][MIDI_CC_RPN_MSB] << 8);
     switch (rpn)
     {
     case MIDI_RPN_PITCH_BEND_SENSITIVITY:
@@ -157,7 +160,7 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
             break;
         }
 
-        st->midiCtrl[set][channel][ctrl] = value & 0x7f;
+        gInpMidiCtrlByKey[set][channel][ctrl] = value & 0x7f;
         for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiSet && channel == synthVoice[i].midi)
@@ -166,7 +169,7 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
                 synthKeyStateUpdate(&synthVoice[i]);
             }
         }
-        st->globalDirty[set][channel] = 0xFF;
+        lbl_803D3CA0[set][channel] = 0xFF;
     }
     else
     {

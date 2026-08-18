@@ -942,8 +942,7 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         }
         else
         {
-            tbl = (u8*)sLanguageNameTable;
-            glyphLang = tbl[curLanguage * 8 + 4];
+            glyphLang = sLanguageNameTable[curLanguage].fontId;
         }
     }
     tbl = (u8*)gGameTextFontMetrics + glyphLang * 16;

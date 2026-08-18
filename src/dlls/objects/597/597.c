@@ -140,7 +140,7 @@ static inline void shTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-void SnowBike_DrawTrails(int p1, char* table)
+void SnowBike_DrawTrails(GameObject* p1, char* table)
 {
     u8 r;
     u8 g;
@@ -646,8 +646,8 @@ f32 SnowBike_GetRouteIntensity(GameObject* obj, int state)
     {
         if (gSnowBikeLeaderRouteRank == -1)
         {
-            rank = (int)Obj_GetPlayerObject();
-            d = Vec_distance(&obj->anim.worldPosX, &((GameObject*)rank)->anim.worldPosX);
+            GameObject* playerObj = Obj_GetPlayerObject();
+            d = Vec_distance(&obj->anim.worldPosX, &playerObj->anim.worldPosX);
             d *= 0.5f;
         }
         else
@@ -1219,9 +1219,9 @@ void SnowBike_UpdateCollisionResponse(GameObject* obj, int stateRaw)
 {
     SnowBikeState* st = (SnowBikeState*)stateRaw;
     int hitKind;
-    int hitReact;
+    ObjHitsPriorityState* hitReact;
     int burstCount;
-    u32 hit;
+    GameObject* hit;
     f32 dot;
     int hitOutB;
     u32 hitOutC;
@@ -1230,7 +1230,7 @@ void SnowBike_UpdateCollisionResponse(GameObject* obj, int stateRaw)
     f32 zero;
 
     zero = 0.0f;
-    hitReact = *(int*)&obj->anim.hitReactState;
+    hitReact = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (ObjHits_IsObjectEnabled(&obj->anim) != 0)
     {
         if (st->routeFlags.b02 == 0)
@@ -1248,7 +1248,7 @@ void SnowBike_UpdateCollisionResponse(GameObject* obj, int stateRaw)
         case 0xd:
             if (st->routeFlags.b02 == 0)
             {
-                st->linkedObj = (int)hitObj;
+                st->linkedObject = hitObj;
                 st->collisionFxDamping = 1.0f;
             }
             break;
@@ -1273,8 +1273,8 @@ void SnowBike_UpdateCollisionResponse(GameObject* obj, int stateRaw)
             }
             break;
         }
-        hit = *(u32*)(hitReact + 0x50);
-        if (((hit != 0) && (hitObj = (GameObject*)hit, *(u32*)& st->linkedObj = hit, st->collisionFxTimer == zero)) &&
+        hit = (GameObject*)hitReact->lastHitObject;
+        if (((hit != NULL) && (hitObj = hit, st->linkedObject = hit, st->collisionFxTimer == zero)) &&
             (hitKind = arrayIndexOf(gDrHighTopHitObjectKinds, 0xc, (int)hitObj->anim.romDefNo), hitKind != -1))
         {
             objfx_shakeCameraByDistance(obj, 300.0f);
@@ -1557,7 +1557,7 @@ void SnowBike_UpdateLiftSway(int obj, int state)
 
     if ((origBit4 == 0) && (flags->b4 != 0))
     {
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_bblast16);
+        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_bblast16);
     }
 
     target = 0.0f;
@@ -1764,7 +1764,7 @@ void SnowBike_ResetDynamics(int obj, register int state)
     s->localVelZLimit = fc;
     flags->pathActive = 0;
     flags->impulseLatch = 0;
-    s->linkedObj = 0;
+    s->linkedObject = NULL;
     s->collisionFxTimer = fz;
     s->collisionFxDamping = 1.0f;
 }
@@ -1856,7 +1856,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
     SnowBikeRomListItem* found;
     f32 zero;
 
-    table = (int*)((int)gSnowBikeMountRomListTable + (int)(state->bikeType) * 12);
+    table = (int*)((u8*)gSnowBikeMountRomListTable + (int)(state->bikeType) * 12);
     found = (SnowBikeRomListItem*)mapRomListFindItem(table[state->bikeVariant], 0, 0, 0, 0);
     if (found != NULL)
     {
@@ -1992,7 +1992,7 @@ u32 SnowBike_canMount(GameObject* obj)
 
 int SnowBike_getExtraSize(void)
 {
-    return 0x59c;
+    return sizeof(SnowBikeState);
 }
 
 int SnowBike_getObjectTypeId(void)
@@ -2028,7 +2028,7 @@ void SnowBike_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
     void* path;
 
     path = (obj)->extra;
-    SnowBike_DrawTrails((int)obj, (char*)path);
+    SnowBike_DrawTrails(obj, (char*)path);
     if (visible == -1)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)1.0f);
@@ -2080,7 +2080,7 @@ void SnowBike_hitDetect(GameObject* obj)
     if (state->unk3D6 != 0 ||
         ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags & 8) != 0 &&
          arrayIndexOf((int*)gSnowBikeHitObjectIdTable, 10, other->anim.romDefNo) == -1) ||
-        (*(void**)&state->linkedObj != NULL && state->collisionFxDamping <= 1.0f))
+        (state->linkedObject != NULL && state->collisionFxDamping <= 1.0f))
     {
     mag = PSVECMag(&obj->anim.velocity);
     if (mag > 1.0f)
@@ -2114,12 +2114,12 @@ void SnowBike_hitDetect(GameObject* obj)
         shakeScale = 0.5f;
         CameraShake_SetOffset(mag * shakeScale);
     }
-    if (*(void**)&state->linkedObj != NULL)
+    if (state->linkedObject != NULL)
     {
         velScale = 0.75f;
         OSReport(sSnowBikeVelDebugFmt, mag);
-        if (((GameObject*)state->linkedObj)->anim.romDefNo == SNOWBIKE_CR_CLAWBIKE_V0_OBJ || ((GameObject*)state->linkedObj)->anim.romDefNo == SNOWBIKE_CR_CLAWBIKE_V1_OBJ ||
-            ((GameObject*)state->linkedObj)->anim.romDefNo == SNOWBIKE_CR_CLAWBIKE_V2_OBJ)
+        if (state->linkedObject->anim.romDefNo == SNOWBIKE_CR_CLAWBIKE_V0_OBJ || state->linkedObject->anim.romDefNo == SNOWBIKE_CR_CLAWBIKE_V1_OBJ ||
+            state->linkedObject->anim.romDefNo == SNOWBIKE_CR_CLAWBIKE_V2_OBJ)
         {
             velScale = 0.95f;
         }
@@ -2211,7 +2211,7 @@ void SnowBike_hitDetect(GameObject* obj)
     state->refPosX = obj->anim.localPosX;
     state->refPosY = obj->anim.localPosY;
     state->refPosZ = obj->anim.localPosZ;
-    state->linkedObj = 0;
+    state->linkedObject = NULL;
 }
 
 

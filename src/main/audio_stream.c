@@ -493,7 +493,7 @@ void Sfx_UpdateLoopedObjectSounds(void)
         obj = (GameObject*)*op;
         if (((obj != 0) && ((obj->objectFlags & SFX_LOOPED_OBJECT_STOP_FLAG) != 0)) || removeSound)
         {
-            Sfx_StopFromObject((GameObject*)obj, *ip);
+            Sfx_StopFromObject(obj, *ip);
             gSfxLoopedObjectSoundCount--;
             sz = (u16)((gSfxLoopedObjectSoundCount - (index = i)) << 2);
             memmove((u32*)table->objects + index, (u32*)table->objects + (index2 = index + 1), sz);

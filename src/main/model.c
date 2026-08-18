@@ -484,7 +484,7 @@ void modelAnimResetState(void* m, void* data)
         }
         else
         {
-            mdl = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + channel->moveCacheSlot * 4);
+            mdl = ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[channel->moveCacheSlot];
         }
         channel->moveFrameData = (ObjAnimFrameCommand*)(mdl + 6);
         channel->frameType = (s8)(*(u8*)(mdl + 1) & 0xf0);
@@ -572,7 +572,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     {
         if (*(s16*)(((ModelFileHeader*)hdr)->animationHeaderBuffer + hdrOff[0]) == -1)
         {
-            *(s16*)(hdr + groupSlot++ * 2 + 0x70) = (s16)(i + 1);
+            ((ModelFileHeader*)hdr)->animGroupBaseIndices[groupSlot++] = (s16)(i + 1);
         }
         hdrOff[0] += 2;
     }
@@ -619,15 +619,15 @@ int modelLoadAnimations(void* model, int id, void* animBase)
                     }
                     atlasPtr = atlasHdr;
                 }
-                *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = atlasPtr;
-                if (*(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) == 0)
+                ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[animIdx] = atlasPtr;
+                if (((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[animIdx] == 0)
                 {
                     int relIdx;
 
                     relIdx = 0;
                     for (; relIdx < animIdx; relIdx++)
                     {
-                        atlasEntry = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + relIdx * 4);
+                        atlasEntry = ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[relIdx];
                         if (atlasEntry != 0)
                         {
                             newRefCount = (*atlasEntry -= 1);
@@ -645,7 +645,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
             }
             else
             {
-                *(int*)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = 0;
+                ((u8**)((ModelFileHeader*)hdr)->animationModelPtrs)[animIdx] = NULL;
             }
             animIdx++;
         }
@@ -737,7 +737,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         }
         sizes[3] = sizes[5] << 2;
     }
-    sizes[4] = 0x68;
+    sizes[4] = (int)sizeof(ObjAnimState);
     if ((flags & 0x80) != 0)
     {
         sizes[4] = sizes[4] << 1;
@@ -746,12 +746,12 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || forceBlendChannels != 0)
     {
         sizes[4] = sizes[4] + 0x30;
-        total = sizes[3] + sizes[4] + 100;
+        total = sizes[3] + sizes[4] + (int)sizeof(ObjModel);
         total = (sizes[6] + sizes[1] + 8) + total;
     }
     else
     {
-        total = sizes[4] + 100;
+        total = sizes[4] + (int)sizeof(ObjModel);
         total = (sizes[3] + sizes[6] + sizes[1] + 8) + total;
     }
     total = total + sizes[0];
@@ -759,7 +759,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         unk18 != 0)
     {
         total = ((u32)((ModelFileHeader*)hdr)->jointCount << 1) + (((u32)((ModelFileHeader*)hdr)->jointCount * 7) << 2)
-            + 0x1c + total;
+            + (int)sizeof(ModelJointWork) + total;
     }
     if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
     {
@@ -771,7 +771,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
         total = total + 4;
     }
-    total += (u32)((ModelFileHeader*)hdr)->renderOpCount * 0xc;
+    total += (u32)((ModelFileHeader*)hdr)->renderOpCount * (int)sizeof(ModelRenderOpTextureRefs);
     if ((flags & 0x8000) != 0)
     {
         total += 0x1a;
@@ -826,7 +826,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     pos = roundUpTo32((int)out + 0x64);
     *(int*)&((ObjModel*)out)->jointMatrices[0] = pos;
     pos += szs[6] >> 1;
-    *(int*)&((ObjModel*)out)->jointMatrices[1] = pos;
+    ((ObjModel*)out)->jointMatrices[1] = (u8*)pos;
     pos += szs[6] >> 1;
     ((ObjModel*)out)->curMtxBuf = ((ObjModel*)out)->jointMatrices[0];
     if (((ModelFileHeader*)p)->morphTargetCount != 0 || ((ModelFileHeader*)p)->vertexAnimEntries != NULL || (((
@@ -882,24 +882,24 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     {
         pos = roundUpTo8(pos);
         q = ((ObjModel*)out2)->animStateA;
-        *(int*)(q + 0x1c) = pos;
+        ((ObjAnimState*)q)->moveCache[0] = (u8*)pos;
         pos += szs[5];
-        *(int*)(q + 0x20) = pos;
+        ((ObjAnimState*)q)->moveCache[1] = (u8*)pos;
         pos += szs[5];
-        *(int*)(q + 0x24) = pos;
+        ((ObjAnimState*)q)->blendMoveCache[0] = (u8*)pos;
         pos += szs[5];
-        *(int*)(q + 0x28) = pos;
+        ((ObjAnimState*)q)->blendMoveCache[1] = (u8*)pos;
         pos += szs[5];
         q = ((ObjModel*)out2)->animStateB;
         if (q != 0)
         {
-            *(int*)(q + 0x1c) = pos;
+            ((ObjAnimState*)q)->moveCache[0] = (u8*)pos;
             pos += szs[5];
-            *(int*)(q + 0x20) = pos;
+            ((ObjAnimState*)q)->moveCache[1] = (u8*)pos;
             pos += szs[5];
-            *(int*)(q + 0x24) = pos;
+            ((ObjAnimState*)q)->blendMoveCache[0] = (u8*)pos;
             pos += szs[5];
-            *(int*)(q + 0x28) = pos;
+            ((ObjAnimState*)q)->blendMoveCache[1] = (u8*)pos;
             pos += szs[5];
         }
     }
@@ -981,8 +981,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     o2 = 0;
     for (; k < (int)((ModelFileHeader*)p)->renderOpCount; k++)
     {
-        ((ModelRenderOpTextureRefs*)((u8*)((ObjModel*)out2)->textureRefs + o2))->swapSelector = 0;
-        o2 += 0xc;
+        ((ObjModel*)out2)->textureRefs[k].swapSelector = 0;
     }
     if (b & 0x8000)
     {
@@ -1398,11 +1397,11 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
     ObjModelChain* state;
     int i;
 
-    state = mmAlloc(0x1c, 0x1a, 0);
+    state = mmAlloc(sizeof(ObjModelChain), 0x1a, 0);
     state->count = count;
     state->firstUpdateDone = 0;
     state->updatedThisFrame = 0;
-    state->entries = mmAlloc(count * 0xc, 0x1a, 0);
+    state->entries = mmAlloc(count * sizeof(ObjModelChainEntry), 0x1a, 0);
     i = 0;
     p = models;
     off = 0;
@@ -1551,7 +1550,7 @@ void model_multMtxs(u8* model, f32* out)
         {
             j = 0;
         }
-        base = *(MtxPtr*)(model + 0xc + (((ObjModel*)model)->bufferFlags & 1) * 4);
+        base = (MtxPtr)((ObjModel*)model)->jointMatrices[((ObjModel*)model)->bufferFlags & 1];
         PSMTXConcat((MtxPtr)out, base + j * 4, base + j * 4);
     }
 }
@@ -1970,7 +1969,7 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         }
     }
 
-    if ((u8*)((GameObject*)prevObj)->anim.hitReactState != NULL)
+    if (((GameObject*)prevObj)->anim.hitReactState != NULL)
     {
         *(u8*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0xaf) -= 1;
         if (*(s8*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0xaf) < 0)
@@ -1994,11 +1993,11 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
     {
         if (boneMtx == NULL)
         {
-            idx = *(s16*)(*(u8**)(hdrOwner + 0x58) + off[0]);
-            cnt = *(u8*)(*(u8**)hitState + 0xf3);
+            idx = *(s16*)(((ModelFileHeader*)hdrOwner)->hitVolumes + off[0]);
+            cnt = ((ObjModel*)hitState)->file->jointCount;
             if (cnt != 0)
             {
-                lim = cnt + *(u8*)(*(u8**)hitState + 0xf4);
+                lim = cnt + ((ObjModel*)hitState)->file->extraJointCount;
             }
             else
             {
@@ -2008,7 +2007,7 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
             {
                 idx = 0;
             }
-            mtx = (u8*)((int*)hitState)[(((ObjModel*)hitState)->bufferFlags & 1) + 3] + idx * 0x40;
+            mtx = ((ObjModel*)hitState)->jointMatrices[((ObjModel*)hitState)->bufferFlags & 1] + idx * 0x40;
         }
         if (i == 0 && obj != prevObj)
         {
@@ -2344,7 +2343,7 @@ void ObjModel_LoadRenderOpTextures(u8* model, GameObject* object)
         return;
     }
     ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
-    for (i = 0; i < ((u8*)((ObjModel*)model)->file)[0xf8]; i++)
+    for (i = 0; i < ((ObjModel*)model)->file->renderOpCount; i++)
     {
         shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], &((ObjModel*)model)->textureRefs[i], object,
                    ((ModelFileHeader*)hdr)->shaderFlags);
@@ -2477,7 +2476,7 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
             }
             else
             {
-                e->textureIndex = 0;
+                e->texture = NULL;
             }
         }
         if (*(int*)(op + 0x34) != -1)
@@ -2486,7 +2485,7 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
         else
         {
-            *(int*)(op + 0x34) = 0;
+            ((Shader*)op)->auxTexture = NULL;
         }
         if (((Shader*)op)->indTextureId != -1)
         {
@@ -2494,22 +2493,22 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
         else
         {
-            ((Shader*)op)->indTextureId = 0;
+            ((Shader*)op)->indTexture = NULL;
         }
         if (*(int*)(op + 0x1c) != -1)
         {
             if (*(int*)(op + 0x1c) == -2)
             {
-                *(int*)(op + 0x1c) = 0;
+                ((Shader*)op)->unk1C = 0;
             }
             else
             {
-                *(int*)(op + 0x1c) = 1;
+                ((Shader*)op)->unk1C = 1;
             }
         }
         else
         {
-            *(int*)(op + 0x1c) = 0;
+            ((Shader*)op)->unk1C = 0;
         }
         if (((Shader*)op)->textureId != -1)
         {
@@ -2521,11 +2520,11 @@ void ObjModel_ResolveRenderOpTextures(u8* m)
         }
         if (!(((ModelFileHeader*)m)->shaderFlags & 0xc))
         {
-            *(int*)(op + 0x8) = 0;
+            ((Shader*)op)->reg1Texture = NULL;
         }
         if (!(((ModelFileHeader*)m)->shaderFlags & 0xe00))
         {
-            *(int*)(op + 0x14) = 0;
+            ((Shader*)op)->reg2Texture = NULL;
         }
     }
 }
@@ -2717,7 +2716,7 @@ void ObjModel_Release(u8* model)
     {
         ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
         z[0] = 0;
-        for (z[1] = z[0]; z[0] < ((u8*)((ObjModel*)model)->file)[0xf8]; z[1] += 0xc, z[0]++)
+        for (z[1] = z[0]; z[0] < ((ObjModel*)model)->file->renderOpCount; z[1] += 0xc, z[0]++)
         {
             ShaderDef_free((void**)&((ObjModel*)model)->textureRefs[z[0]]);
         }
@@ -2821,8 +2820,8 @@ void ObjModel_InitResourceCaches(void)
 {
     void* m;
     int* p;
-    gModelList = allocModelStruct(0x8c, 4);
-    gModelAnimCacheList = allocModelStruct(0xc4, 4);
+    gModelList = allocModelStruct(0x8c, (int)sizeof(u8*));
+    gModelAnimCacheList = allocModelStruct(0xc4, (int)sizeof(u8*));
     m = mmAlloc(0x830, 0xa, 0);
     gModelResourceBuffer = m;
     gModelAnimOffsetTable = (int*)((u8*)m + 0x800);

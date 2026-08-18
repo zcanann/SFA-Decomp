@@ -15,7 +15,7 @@
 
 int ktlazerlight_getExtraSize(void)
 {
-    return 0x14;
+    return sizeof(KtlazerlightState);
 }
 
 int ktlazerlight_getObjectTypeId(void)

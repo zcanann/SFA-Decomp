@@ -976,7 +976,7 @@ void ShopKeeper_spawnScarabs(GameObject* obj, ShopkeeperState* state, int count)
 
 int ShopKeeper_getExtraSize(void)
 {
-    return 0x9d8;
+    return sizeof(ShopkeeperState);
 }
 
 int ShopKeeper_getObjectTypeId(void)

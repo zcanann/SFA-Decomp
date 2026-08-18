@@ -289,7 +289,7 @@ void explosion_render(GameObject* obj, int renderArg2, int renderArg3, int rende
                 explosion_computeColor((f32)((DimExplosionFlame*)cursor)->age,
                                        (f32)((DimExplosionFlame*)cursor)->lifetime,
                                        state->modelKind, (u8*)&colA);
-                tex = (void**)((int*)gExplosionTextures)[state->modelKind];
+                tex = (void**)gExplosionTextures[state->modelKind];
                 for (k = 0; k < ((DimExplosionFlame*)cursor)->textureVariant; k++) {
                     tex = (void**)*tex;
                 }

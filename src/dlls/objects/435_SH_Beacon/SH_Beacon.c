@@ -45,7 +45,7 @@ int sh_beacon_sequenceCallback(GameObject* obj) {
 }
 
 int sh_beacon_resetFadeTimerCallback(GameObject* obj) {
-    ((ShBeaconState*)(int)obj->extra)->fadeTimer = 6.0f;
+    ((ShBeaconState*)obj->extra)->fadeTimer = 6.0f;
     return 1;
 }
 

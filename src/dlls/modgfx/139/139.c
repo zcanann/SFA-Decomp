@@ -56,7 +56,7 @@ u8 gDll8BEffectResourceData[sizeof(Dll8BEffectResourceView)] = {
 void dll_8B_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, u32 unused,
                         f32* scalePtr) {
     ModgfxSpawnPacket packet;
-    u8* resourceData = (u8*)(int)gDll8BEffectResourceData;
+    u8* resourceData = (u8*)gDll8BEffectResourceData;
     void* modelData = resourceData;
     f32 zero;
     f32 scaledZ;

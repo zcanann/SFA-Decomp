@@ -161,14 +161,14 @@ void mutatedEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int e
         {
             if ((((move = ((GameObject*)obj)->anim.currentMove) == 0) || (move == 1)) || (move == 3) || (move == 4))
             {
-                Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_mv_ladderslide16_250);
+                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_mv_ladderslide16_250);
                 ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 0x10;
             }
             else
             {
                 baddieSetMove((GameObject*)obj, (int)state, 4, 1.0f, 0, 0);
                 ((EnemyState*)state)->userData1 = 0;
-                Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_kooshy_call);
+                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_kooshy_call);
                 ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 8;
             }
         }

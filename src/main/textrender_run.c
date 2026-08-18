@@ -955,7 +955,7 @@ void gameTextBuildSystemFontAtlas(void)
                     dst += gGameTextFontTexRowPitch * row;
                     for (k = 0; k < 8; k++)
                     {
-                        *(u32*)(dst + 0x60 + k * 4) = *src++;
+                        *(u32*)(dst + sizeof(Texture) + k * 4) = *src++;
                     }
                 }
             }
@@ -963,7 +963,7 @@ void gameTextBuildSystemFontAtlas(void)
         x += wbytes << 3;
         glyph++;
     }
-    DCFlushRange((u8*)charset->textures[0] + 0x60, 0x20000);
+    DCFlushRange((u8*)charset->textures[0] + sizeof(Texture), 0x20000);
     mm_free(bufA);
     mm_free(bufB);
     mm_free(buf);

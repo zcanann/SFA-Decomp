@@ -912,7 +912,7 @@ static void objFreeObjdef(u8* obj, int flag)
                 fp(obj, flag);
             }
             Resource_Release(((GameObject*)obj)->anim.dll);
-            *(int*)&((GameObject*)obj)->anim.dll = 0;
+            ((GameObject*)obj)->anim.dll = NULL;
         }
         break;
     }
@@ -929,7 +929,7 @@ static void objFreeObjdef(u8* obj, int flag)
                 otherObj = gObjList[i];
                 if (*(int*)&otherObj->anim.parent == (int)obj)
                 {
-                    *(int*)&otherObj->anim.parent = 0;
+                    otherObj->anim.parent = NULL;
                     if (*(void**)&otherObj->anim.placementData != NULL)
                     {
                         defs[count++] = (int)otherObj;
@@ -950,7 +950,7 @@ static void objFreeObjdef(u8* obj, int flag)
             otherObj = gObjList[i];
             if (*(int*)&otherObj->pendingParentObj == (int)obj)
             {
-                *(int*)&otherObj->pendingParentObj = 0;
+                otherObj->pendingParentObj = NULL;
             }
         }
     }
@@ -1005,7 +1005,7 @@ static void objFreeObjdef(u8* obj, int flag)
     if (*(void**)&((GameObject*)obj)->msgQueue != NULL)
     {
         mm_free(((GameObject*)obj)->msgQueue);
-        *(int*)&((GameObject*)obj)->msgQueue = 0;
+        ((GameObject*)obj)->msgQueue = NULL;
     }
     modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
     for (j = 0; j < modelCount; j++)
@@ -1411,7 +1411,7 @@ void Obj_RunInitCallback(GameObject* obj, int cb, int unused)
         break;
     default:
     {
-        int* p = (int*)obj->anim.dll;
+        ObjectInterfaceHandle p = obj->anim.dll;
         if (p != NULL)
         {
             int fn = ((int*)*p)[1];
@@ -1691,11 +1691,11 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     size += extra;
     if ((flags & 0x40) || (modelDef->flags & 0x400000))
     {
-        size = roundUpTo8(roundUpTo4(size) + 8) + 0x50;
+        size = roundUpTo8(roundUpTo4(size) + sizeof(ObjAnimEventTable)) + 0x50;
     }
     if (flags & OBJLOAD_FLAG_WEAPON_DA)
     {
-        size = roundUpTo8(roundUpTo4(size) + 8) + 0x800;
+        size = roundUpTo8(roundUpTo4(size) + sizeof(ObjWeaponDaTable)) + 0x800;
     }
     if ((flags & 2) && modelDef->shadowType != OBJ_SHADOW_TYPE_NONE)
     {
@@ -1703,10 +1703,10 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
     }
     if (modelDef->hitboxStateCount != 0)
     {
-        size = roundUpTo4(size) + 0xb8;
+        size = roundUpTo4(size) + sizeof(ObjHitsPriorityState);
         if ((s8)modelDef->primaryHitboxShapeFlags & 8)
         {
-            size += 0x110;
+            size += sizeof(ObjHitboxTransformState);
         }
     }
     if (modelDef->jointCount != 0)
@@ -2342,20 +2342,19 @@ void Obj_ResetObjectSystem(void)
     off = i << 2;
     for (; i >= 0; i--)
     {
-        Obj_FreeObject(*(GameObject**)((int)gObjList + off));
-        off -= 4;
+        Obj_FreeObject(gObjList[i]);
     }
     Obj_FreeDeferredObjects();
     gObjDefCaptureMode = 2;
     gObjDeferredFreeCount = 0;
     gObjPendingDefFreeCount = 0;
     gObjCount = 0;
-    objListInit(&gObjUpdateList, 0x38);
+    objListInit(&gObjUpdateList, offsetof(GameObject, anim.next));
     gObjDeferredFreeCount = 0;
     gObjPendingDefFreeCount = 0;
     lbl_803DCB70 = 0;
     gObjCount = 0;
-    objListInit(&gObjUpdateList, 0x38);
+    objListInit(&gObjUpdateList, offsetof(GameObject, anim.next));
     gObjPartitionPivot = 0;
     objTypeInit();
     ObjHits_ResetWorkBuffers();
@@ -2442,7 +2441,7 @@ void Obj_UpdateModelBlendStates(void)
                                 {
                                     bp = 0;
                                 }
-                                if (c0 == 0 || (bp != 0 && *(s8*)(bp + 0x56) == 0))
+                                if (c0 == 0 || (bp != 0 && ((ObjSeqState*)bp)->movementState == 0))
                                 {
                                     ObjModel_AdvanceBlendChannels((u8*)m, timeDelta);
                                 }
@@ -2630,8 +2629,8 @@ void Obj_InitObjectSystem(void)
         gObjFileCount++;
     }
     gObjFileCount--;
-    gObjFileBufferTable = mmAlloc(gObjFileCount * 4, 0xe, 0);
-    gObjFileRefCount = mmAlloc(gObjFileCount, 0xe, 0);
+    gObjFileBufferTable = mmAlloc(gObjFileCount * sizeof(*gObjFileBufferTable), 0xe, 0);
+    gObjFileRefCount = mmAlloc(gObjFileCount * sizeof(*gObjFileRefCount), 0xe, 0);
     for (i = 0; i < gObjFileCount; i++)
     {
         gObjFileRefCount[i] = 0;
@@ -2650,7 +2649,7 @@ void Obj_InitObjectSystem(void)
     gObjPendingDefFreeCount = 0;
     lbl_803DCB70 = 0;
     gObjCount = 0;
-    objListInit(&gObjUpdateList, 0x38);
+    objListInit(&gObjUpdateList, offsetof(GameObject, anim.next));
     gObjPartitionPivot = 0;
     objTypeInit();
     ObjHits_ResetWorkBuffers();

@@ -169,7 +169,7 @@ static inline void initLoadingScreenTexturesBody(void)
         textureWidth = GXGetTexObjWidth(texObj);
         textureHeight = GXGetTexObjHeight(texObj);
         textureHeader->dataSize = GXGetTexBufferSize(textureWidth, textureHeight, textureFormat, 0, 0);
-        textureSize = (*textureSlot)->dataSize + 0x60;
+        textureSize = (*textureSlot)->dataSize + sizeof(Texture);
         arenaHi += textureSize;
     }
     gTitleScreenInitLoadingFrameCounter = 0;

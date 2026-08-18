@@ -606,7 +606,7 @@ int DFropenode_syncRopeToEndpoints(GameObject* obj) {
 }
 
 int DFropenode_getExtraSize(void) {
-    return 0x34;
+    return sizeof(DFropenodeState);
 }
 
 int DFropenode_getObjectTypeId(void) {

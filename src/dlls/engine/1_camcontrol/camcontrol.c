@@ -246,7 +246,7 @@ void camcontrol_updateTargetReticle(GameObject* fallbackTarget, int unused2, u32
 
     reticle = gCamcontrolTargetReticle;
     target = fallbackTarget;
-    if ((u32)gCamcontrolCamera->targetReticleOverride != 0) {
+    if (gCamcontrolCamera->targetReticleOverride != NULL) {
         target = gCamcontrolCamera->targetReticleOverride;
         savedReticleState = gCamcontrolTargetState;
         gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE;
@@ -308,7 +308,7 @@ void camcontrol_updateTargetReticle(GameObject* fallbackTarget, int unused2, u32
     activeModel = reticle->anim.modelBanks[reticle->anim.bankIndex];
     activeModel->bufferFlags = (u16)(activeModel->bufferFlags & ~8);
 
-    if ((u32)gCamcontrolCamera->targetReticleOverride != 0) {
+    if (gCamcontrolCamera->targetReticleOverride != NULL) {
         gCamcontrolTargetState = savedReticleState;
         reticle->anim.alpha = savedReticleAlpha;
     }
@@ -979,7 +979,7 @@ void camcontrol_updateTargetFeedback(void) {
             } else {
                 ObjAnim_AdvanceCurrentMove(reticle, -0.04f, timeDelta, NULL);
             }
-        } else if (((u32)gCamcontrolCamera->targetReticleFocus != (u32)target) &&
+        } else if ((gCamcontrolCamera->targetReticleFocus != target) &&
                    (reticle->currentMoveProgress >= 1.0f)) {
             gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
             if (target != NULL) {
@@ -1004,7 +1004,7 @@ void camcontrol_updateTargetFeedback(void) {
             gCamcontrolCamera->targetReticleFocus = NULL;
         }
         if ((gCamcontrolTargetState == CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE) &&
-            ((u32)gCamcontrolCamera->targetReticleFocus != 0)) {
+            (gCamcontrolCamera->targetReticleFocus != NULL)) {
             target = gCamcontrolCamera->targetReticleFocus;
             if ((target->anim.resetHitboxFlags & INTERACT_FLAG_PROMPT_SUPPRESSED) != 0) {
                 gCamcontrolCamera->targetFlags =

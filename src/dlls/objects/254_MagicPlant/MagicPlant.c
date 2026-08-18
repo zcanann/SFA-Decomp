@@ -132,12 +132,10 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
     PartFxSpawnParams lightParams;
     int hitKind;
     int particleCount;
-    int playerAddress;
     GameObject* player;
     f32 distance;
 
-    playerAddress = (int)Obj_GetPlayerObject();
-    player = (GameObject*)playerAddress;
+    player = Obj_GetPlayerObject();
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
 
     hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &hitSphereIndex, (u32*)&hitVolume, &lightParams.posX,

@@ -1454,7 +1454,7 @@ void macMakeActive(McmdVoiceState* sv)
         }
         if ((sv->nextMacActive = macActiveRoot) != 0)
         {
-            ((McmdVoiceState*)macActiveRoot)->prevMacActive = sv;
+            macActiveRoot->prevMacActive = sv;
         }
         sv->prevMacActive = 0;
         macActiveRoot = sv;
@@ -1621,7 +1621,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol, 
                     TimeQueueRemove(sv, 0);
                     if ((sv->nextMacActive = macActiveRoot) != 0)
                     {
-                        ((McmdVoiceState*)macActiveRoot)->prevMacActive = sv;
+                        macActiveRoot->prevMacActive = sv;
                     }
                     sv->prevMacActive = 0;
                     macActiveRoot = sv;

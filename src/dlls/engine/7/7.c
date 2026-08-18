@@ -2000,25 +2000,25 @@ void newclouds_updateEnvfxAct(GameObject* objA, GameObject* objB, u8* params)
     cloud = (NewCloud*)NC_CLOUD;
     if (cloud == NULL)
     {
-        fl = ((CloudSpawnParams*)params)->flags58;
+        fl = cfg->flags58;
         if (!(fl & NEWCLOUD_CMD_DESPAWN) && !(fl & NEWCLOUD_CMD_RELOCATE) && !(fl & NEWCLOUD_CMD_KILL))
         {
-            if ((fl & NEWCLOUD_CMD_SPAWN) && (fl & NEWCLOUD_CMD_ANCHOROBJ) && ((CloudSpawnParams*)params)->stationaryInit != 0)
+            if ((fl & NEWCLOUD_CMD_SPAWN) && (fl & NEWCLOUD_CMD_ANCHOROBJ) && cfg->stationaryInit != 0)
             {
-                newClouds((CloudSpawnParams*)params, objB, posA[0], posA[1], posA[2]);
+                newClouds(cfg, objB, posA[0], posA[1], posA[2]);
             }
             else if ((fl & NEWCLOUD_CMD_SPAWN) && (fl & NEWCLOUD_CMD_ANCHOROBJ))
             {
-                newClouds((CloudSpawnParams*)params, objB, posB[0], posB[1], posB[2]);
+                newClouds(cfg, objB, posB[0], posB[1], posB[2]);
             }
             else if (fl & NEWCLOUD_CMD_SPAWN)
             {
-                newClouds((CloudSpawnParams*)params, objB, posA[0], posA[1], posA[2]);
+                newClouds(cfg, objB, posA[0], posA[1], posA[2]);
             }
         }
         if (cfg->flags58 & NEWCLOUD_CMD_SPAWN)
         {
-            if (((CloudSpawnParams*)params)->cloudType == 0 || ((CloudSpawnParams*)params)->cloudType == 4)
+            if (cfg->cloudType == 0 || cfg->cloudType == 4)
             {
                 switch (cfg->cloudIndex)
                 {
@@ -2109,7 +2109,7 @@ void newclouds_updateEnvfxAct(GameObject* objA, GameObject* objB, u8* params)
     {
         return;
     }
-    if ((fl = ((CloudSpawnParams*)params)->flags58) & NEWCLOUD_CMD_SPAWN)
+    if ((fl = cfg->flags58) & NEWCLOUD_CMD_SPAWN)
     {
         return;
     }

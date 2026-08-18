@@ -97,7 +97,7 @@ void initMapBlocks(void)
     int i;
 
     renderFlags = 0;
-    gMapBlocks = mmAlloc(0x100, 5, 0);
+    gMapBlocks = mmAlloc(64 * sizeof(MapBlockData*), 5, 0);
     gMapBlockIds = mmAlloc(0x80, 5, 0);
     gMapBlockRefCounts = mmAlloc(0x40, 5, 0);
     gMapInfoBuffer = mmAlloc(0xd48, 5, 0);
@@ -175,9 +175,9 @@ void initMapBlocks(void)
     gPendingWarpIndex = -1;
     gArrivedWarpIndex = -2;
 
-    tmp = mmAlloc(0x500, 5, 0);
+    tmp = mmAlloc(80 * sizeof(MapTextureOverride), 5, 0);
     gMapTextureOverrides = tmp;
-    memset(tmp, 0, 0x500);
+    memset(tmp, 0, 80 * sizeof(MapTextureOverride));
 
     tmp = mmAlloc(0x3a0, 5, 0);
     gMapTextureScrolls = tmp;

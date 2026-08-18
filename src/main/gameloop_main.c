@@ -613,7 +613,7 @@ static void doQueuedLoads(void)
         beginLoadingMap();
         if (gDll12Interface != 0)
         {
-            (*(void (**)(int))(*(int*)gDll12Interface + 0xc))(1);
+            (*(void (**)(int))(*(void***)gDll12Interface + 3))(1);
         }
         mmSetFreeDelay(old);
         gGameLoopMapLoaded = 1;

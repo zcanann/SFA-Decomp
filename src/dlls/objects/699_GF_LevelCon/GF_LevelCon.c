@@ -227,7 +227,7 @@ int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjSeqState* animUpdate)
 
 int gf_levelcon_getExtraSize(void)
 {
-    return 0x10;
+    return sizeof(GfLevelconHandleScriptEventsState);
 }
 
 int gf_levelcon_getObjectTypeId(void)

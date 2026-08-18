@@ -129,7 +129,7 @@ void arwprojectile_setLifetime(GameObject* obj, int lifetime)
 
 int arwingandrossstuff_getExtraSize(void)
 {
-    return 0x20;
+    return sizeof(ArwProjectileState);
 }
 
 int arwingandrossstuff_getObjectTypeId(void)
@@ -171,7 +171,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0)
         {
-            spawnExplosion((GameObject*)(int)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
+            spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
             objAnim->flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             state->despawnTimer = 40.0f;

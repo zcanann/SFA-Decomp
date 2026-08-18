@@ -93,7 +93,7 @@ void spellstone_update(GameObject* obj)
     eventActive = mainGetBit(def->completeEvent);
     if (eventActive != 0)
     {
-        mainSetBits(*(gSpellStoneEventGameBits + def->eventIndex), 1);
+        mainSetBits(gSpellStoneEventGameBits[def->eventIndex], 1);
         obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
         Obj_RemoveFromUpdateList(obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);

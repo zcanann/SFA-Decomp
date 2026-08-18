@@ -162,7 +162,9 @@ void CameraModeNormal_updateTargetAction(CameraObject* camera, GameObject* targe
              ((cond = playerCanEnterStaffCombatCamera(target)) != 0)) ||
             ((camera->targetFlags & 2) != 0)) {
             Camera_setBlendCurveMode(1);
-            (*gCameraInterface)->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, 4, &camera->currentTarget, 0x3c, 0xff);
+            (*gCameraInterface)
+                ->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, sizeof(camera->currentTarget),
+                          &camera->currentTarget, 0x3c, 0xff);
         } else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
                    (cond = playerIsInNormalControl(target), cond != 0)) {
             viewfinderSettings.radius = gCameraModeNormalState->minDistance;
@@ -254,7 +256,7 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
         if (found1 == -1) {
             dx = spinD;
             dz = spinB;
-            tgt = (GameObject*)((int)cam->anim.targetObj);
+            tgt = (GameObject*)cam->anim.targetObj;
             rad = (3.1415927f * (f32)(s16)ang) / 32768.0f;
             cosv = mathSinf(rad);
             sinv = mathCosf(rad);
@@ -274,7 +276,7 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
         if (found2 == -1) {
             dx = spinD;
             dz = spinB;
-            tgt = (GameObject*)((int)cam->anim.targetObj);
+            tgt = (GameObject*)cam->anim.targetObj;
             rad = (3.1415927f * (f32)(s16)(-s * 0xb6)) / 32768.0f;
             cosv = mathSinf(rad);
             sinv = mathCosf(rad);

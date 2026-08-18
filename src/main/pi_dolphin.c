@@ -1742,7 +1742,9 @@ int mergeTableFiles(void* table, int id, int idx, int count_)
     int count = 0;
     int* p1;
     int* p2;
-    int* src1 = MAPTBLP(id);
+    int* src1;
+
+    src1 = MAPTBLP(id);
     if (src1 == NULL || MAPTBLP(idx) == NULL)
     {
         if (src1 == NULL)
@@ -3383,8 +3385,8 @@ void* mapLoadDataFile(int mapId, int fileId)
     return result;
 }
 
-/* The decompression path below manipulates loaded-buffer addresses as packed
-   32-bit values, while mapLoadDataFile itself treats them as pointers. */
+/* The decompression path below manipulates loaded-buffer addresses as
+   integers, while mapLoadDataFile itself treats them as pointers. */
 #undef MLDF_PTR
 #define MLDF_PTR(s) ((u32)tbl->ptrs[s])
 

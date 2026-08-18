@@ -374,7 +374,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     getNewShadowCausticTexture((u32*)&t164);
-    selectTexture((Texture*)((void*)t164), 4);
+    selectTexture(t164, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, 0.5f * sx, 0.5f * sy, 0.0f);
     mtxR[0][0] = 1.0f;
@@ -653,7 +653,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx)
         coord = 1;
     }
     getNewShadowCausticTexture((u32*)&texRef4);
-    selectTexture((Texture*)((void*)texRef4), 4);
+    selectTexture(texRef4, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, 0.5f * sx, 0.5f * sy, 0.0f);
     mtxR[0][0] = 1.0f;
@@ -850,7 +850,7 @@ void objRenderAttachment(GameObject* obj, int* p2)
     f32 sm[12];
     MatrixTransform blk;
     int* mdl = p2;
-    u8* data = (u8*)mdl[22];
+    u8* data = (u8*)((ObjModel*)mdl)->renderAttachment;
     s16 b;
     s16 c;
     u16* idx;
@@ -945,7 +945,7 @@ static void objSetupLightChannels(u8* model, GameObject* obj)
     u8 ch;
     u16 f;
     u8 b;
-    ModelLightStruct* larr[6];
+    ModelLightStruct* larr[8];
     s32 count;
     GXColor c;
 
@@ -1309,7 +1309,7 @@ extern u8 gObjGxPosMtxIdTable[12];
 static void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
 {
     u32 flags = 0;
-    if (hdr[0xf3] > 1)
+    if (((ModelFileHeader*)hdr)->jointCount > 1)
     {
         flags |= 1;
     }
@@ -1371,7 +1371,7 @@ static void modelRenderFn_setVtxDescr(u8* modelHeader, u8* shader, u32* textureR
         previousMatrixAttr = 8;
         if (textureRefs[0] != 0 || textureRefs[1] != 0)
         {
-            if (((Shader*)shader)->auxTextureIndex != 0)
+            if (((Shader*)shader)->auxTexture != NULL)
             {
                 GXSetVtxDesc(GX_VA_TEX0MTXIDX, GX_DIRECT);
                 nextMatrixAttr = GX_VA_TEX1MTXIDX;
@@ -1545,8 +1545,8 @@ static u8 addShaderLayerStages(GameObject* obj, u8* shader, u32* p3, int mask, i
         cnt = 0;
         for (i = 0; i < ((Shader*)shader)->layerCount; i++)
         {
-            u8* l = Shader_getLayer(shader, i);
-            if (l[4] & 0x80)
+            ShaderLayer* l = Shader_getLayer(shader, i);
+            if (l->typeBits & 0x80)
             {
                 cnt++;
             }
@@ -2419,7 +2419,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         {
             o = nxt;
         }
-        sh = ((u8*)o->anim.modelState->shadowCastSlot)[0x65];
+        sh = o->anim.modelState->shadowCastSlot->mode;
         if (sh == 0xff)
         {
             GXSetTevColor(GX_TEVREG2, *(GXColor*)&lbl_803DB468);
@@ -2819,7 +2819,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
             {
                 o = nxt;
             }
-            sh = ((u8*)o->anim.modelState->shadowCastSlot)[0x65];
+            sh = o->anim.modelState->shadowCastSlot->mode;
             if (sh == 0xff)
             {
                 GXSetTevColor(GX_TEVREG2, *(GXColor*)&lbl_803DB468);

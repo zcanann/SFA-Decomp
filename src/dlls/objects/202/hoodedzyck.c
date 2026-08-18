@@ -131,7 +131,7 @@ void hoodedZyckUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int e
     else
     {
         ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 8;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_dn_boar1_c_244);
+        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_dn_boar1_c_244);
         ((EnemyState*)state)->current = 0;
     }
     return;

@@ -209,7 +209,7 @@ static void Obj_BuildTransformMatricesForYaw(GameObject* obj, s32 yawIndex) {
     matrixOffset = yawIndex * 16;
     yawMatrices = (f32*)storage->yawTransforms;
     yawMatrix = yawMatrices + matrixOffset;
-    inverseYawMatrix = (f32*)storage->inverseYawTransforms + matrixOffset;
+    inverseYawMatrix = (f32*)gObjInverseYawTransformMatrices + matrixOffset;
     isAncestor = 0;
     ancestorCount = 0;
     while (obj != NULL) {

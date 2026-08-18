@@ -61,7 +61,7 @@ void androssbrain_setState(GameObject* obj, AndrossBrainMode newState, u8 force)
 
 int AndrossBrain_getExtraSize(void)
 {
-    return 0x28;
+    return sizeof(AndrossBrainState);
 }
 
 int AndrossBrain_getObjectTypeId(void)

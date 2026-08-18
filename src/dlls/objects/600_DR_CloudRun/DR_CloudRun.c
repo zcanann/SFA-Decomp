@@ -1061,7 +1061,7 @@ int DR_CloudRunner_canMount(void)
 
 int DR_CloudRunner_getExtraSize(void)
 {
-    return 0xbc8;
+    return sizeof(CloudRunnerState);
 }
 
 int DR_CloudRunner_getObjectTypeId(void)
@@ -1301,7 +1301,7 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def)
     inner->baddie.gravity = 0.17f;
     DR_CloudRunner_setupPath(obj, (CloudRunnerState*)inner, inner->flagsBC0.b20);
     dll_2E_initState(obj, &inner->moveLib, -0x11c7, 0x1555, 1);
-    dll_2E_setReattackDelay((MoveLibState*)((u8*)inner + 0x4c4), 0x12c, 0x78);
+    dll_2E_setReattackDelay(&inner->moveLib, 0x12c, 0x78);
     objAddObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
     inner->flagsBC0.b01 = 0;
 }

@@ -100,7 +100,7 @@ void wbUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int eventKind
         }
         else
         {
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_mika_wingflap_260);
+            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_mika_wingflap_260);
             ((EnemyState*)state)->current = 0;
             ((EnemyState*)state)->flags2E4 = ((EnemyState*)state)->flags2E4 | 0x20;
             ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 8;

@@ -1026,7 +1026,7 @@ void SHthorntail_update(GameObject* obj) {
         for (i = 0, eventId = (s8*)&animEvents; i < animEvents.triggerCount; i = i + 1) {
             if (eventId[0x13] == '\0') {
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0) {
-                    Sfx_PlayFromObject((GameObject*)(u32)obj,
+                    Sfx_PlayFromObject(obj,
                                        SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
             } else if ((eventId[0x13] == '\a') &&

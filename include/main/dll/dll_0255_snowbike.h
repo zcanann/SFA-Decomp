@@ -129,7 +129,7 @@ typedef struct SnowBikeState {
     f32 impactShakeTimer;   /* 0x424: accumulates timeDelta while grounded; drives doRumble + CameraShake_SetOffset */
     SnowBikeRouteFlags routeFlags; /* 0x428 */
     u8 pad429[0x3];
-    int linkedObj;             /* 0x42c: linked object */
+    GameObject* linkedObject;  /* 0x42c: linked object */
     f32 engineFxLevel;      /* 0x430: scaled down on each collision impact; negated and scaled to form the SnowBike_UpdateEngineFx intensity argument */
     u8 bikeType;              /* 0x434: bike kind */
     u8 bikeVariant;              /* 0x435: variant */

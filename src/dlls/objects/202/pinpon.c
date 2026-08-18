@@ -126,7 +126,7 @@ void pinPon_updateWhileFrozen(int obj, EnemyState* state, GameObject* attacker, 
     if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
     {
         state->flags2E8 |= 8;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_en_rfall5_c);
         Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_wp_iceywindlp16_233);
         state->current = 0;
         state->flags2E4 |= 32;

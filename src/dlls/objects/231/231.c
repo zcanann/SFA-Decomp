@@ -223,7 +223,7 @@ void FlammableVine_init(GameObject* obj, FlammableVinePlacement* placement) {
 
     state->setupParam = placement->setupParam;
     if (state->setupParam == FLAMMABLEVINE_SETUP_POS_DIRTY) {
-        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)(int)obj);
+        ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
 }
 

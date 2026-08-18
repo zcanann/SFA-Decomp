@@ -597,9 +597,9 @@ int RomCurve_goNextPointIndexed(RomCurveWalker* state, int pickIdx)
 
     state->node9C = state->nodeA0;
     state->nodeA0 = state->nodeA4;
-    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
-    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
-    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+    memcpy(state->hermX, state->hermX2, sizeof(state->hermX));
+    memcpy(state->hermY, state->hermY2, sizeof(state->hermY));
+    memcpy(state->hermZ, state->hermZ2, sizeof(state->hermZ));
 
     if (state->reverse != 0)
     {
@@ -755,9 +755,9 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
 
     state->node9C = state->nodeA0;
     state->nodeA0 = state->nodeA4;
-    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
-    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
-    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+    memcpy(state->hermX, state->hermX2, sizeof(state->hermX));
+    memcpy(state->hermY, state->hermY2, sizeof(state->hermY));
+    memcpy(state->hermZ, state->hermZ2, sizeof(state->hermZ));
 
     if (state->reverse != 0)
     {

@@ -238,7 +238,7 @@ void weevil_updateEngaged(GameObject* obj, int state)
     ((EnemyState*)state)->weevil.recoverTimer = 0.0f;
     done = 0;
     ObjHits_SetHitVolumeSlot(&obj->anim, FALL_LADDERS_HIT_VOLUME_SLOT, 1, -1);
-    if (*(void**)(state + 0x340) != 0)
+    if (((EnemyState*)state)->lastHitObject != NULL)
     {
         done = 1;
         ((EnemyState*)state)->weevil.approachTimer = 360.0f;

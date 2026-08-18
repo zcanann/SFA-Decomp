@@ -215,7 +215,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     selectReflectionTexture(1);
     tex2 = textureIdxToPtr(renderOp->auxTextureIndex);
     wrapBit = (tex2->maxLod - tex2->minLod > 0) ? GX_TRUE : GX_FALSE;
-    GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + 0x60, tex2->width, tex2->height,
+    GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height,
                  tex2->format, GX_REPEAT, GX_REPEAT, wrapBit);
     selectTexture((Texture*)tex2, 2);
     GXLoadTexMtxImm(gCameraLightPerspectiveScaledMatrix, GX_PTTEXMTX6, GX_MTX3x4);
@@ -298,7 +298,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     else
     {
         u8 zCompLoc = 1;
-        if (((u8*)obj_a)[0x37] < 0xFF || (renderOp->flags & 0x40000000) != 0 ||
+        if (((GameObject*)obj_a)->anim.renderAlpha < 0xFF || (renderOp->flags & 0x40000000) != 0 ||
             renderOp->alpha < 0xFF)
         {
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
@@ -1543,7 +1543,7 @@ int moonFxRenderCallback(u8* obj, void** objB, int slot)
     GXSetNumTevStages(3);
     GXSetNumIndStages(0);
     selectTexture(tex, 0);
-    colorK.a = (op->alpha * obj[0x37]) >> 8;
+    colorK.a = (op->alpha * ((GameObject*)obj)->anim.renderAlpha) >> 8;
     GXSetTevKColor(GX_KCOLOR0, colorK);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevDirect(GX_TEVSTAGE0);
@@ -1918,7 +1918,7 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
-    temp.a = ((u8*)handle)[0x37];
+    temp.a = ((GameObject*)handle)->anim.renderAlpha;
     GXSetTevKColor(GX_KCOLOR0, temp);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevDirect(GX_TEVSTAGE2);

@@ -26,7 +26,7 @@ extern u32 gDll95EffectResourceData[sizeof(Dll95EffectResourceView) / sizeof(u32
 
 void dll_95_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams) {
     ModgfxSpawnPacket packet;
-    u8* resourceData = (u8*)(int)gDll95EffectResourceData;
+    u8* resourceData = (u8*)gDll95EffectResourceData;
     GfxCmd* commands = packet.entries;
     GameObject* anchorObj = sourceObj;
     PartFxSpawnParams* anchorParams = spawnParams;

@@ -161,7 +161,7 @@ int dfshShrine_processAnimEvents(GameObject* obj, int unusedArg2, ObjSeqState* a
 }
 
 int dfshShrine_getExtraSize(void) {
-    return 0x20;
+    return sizeof(DFSHShrineState);
 }
 
 int dfshShrine_getObjectTypeId(void) {

@@ -110,7 +110,7 @@ void vambat_updateWhileFrozen(int obj, u8* state, GameObject* attacker, int msgF
         if (msgFlag == 16)
         {
             bs->flags2E8 = bs->flags2E8 | 0x28;
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_mika_wingflap);
+            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_mika_wingflap);
             bs->current = 0;
         }
     }
@@ -123,7 +123,7 @@ void vambat_updateWhileFrozen(int obj, u8* state, GameObject* attacker, int msgF
         else
         {
             bs->flags2E8 = bs->flags2E8 | 0x8;
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_mika_wingflap);
+            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_mika_wingflap);
             bs->current = 0;
         }
     }

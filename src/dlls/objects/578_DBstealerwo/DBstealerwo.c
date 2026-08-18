@@ -463,7 +463,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
     {
         ((BaddieState*)baddie)->animSpeedA = ((BaddieState*)baddie)->animSpeedA * (k = 0.5f);
         ((BaddieState*)baddie)->animSpeedB *= k;
-        obj = (GameObject*)(int)((BaddieState*)baddie)->targetObj;
+        obj = (GameObject*)((BaddieState*)baddie)->targetObj;
         tmpA = sub->objGroup;
         tmpB = sub->msgMode;
         baddie = (int)sub->msgStack;
@@ -488,7 +488,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
     if (d < 150.0f && randomGetRange(0, n) == 0)
     {
         ((BaddieState*)baddie)->animSpeedB = ((BaddieState*)baddie)->animSpeedA = 0.0f;
-        obj = (GameObject*)(int)((BaddieState*)baddie)->targetObj;
+        obj = (GameObject*)((BaddieState*)baddie)->targetObj;
         tmpC = sub->objGroup;
         tmpD = sub->msgMode;
         baddie = (int)sub->msgStack;
@@ -824,7 +824,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, BaddieState* baddie, f32 t)
     if (found == 0)
     {
         if (obj ==
-            objGetNearestTypeTo(DBSTEALERWORM_OBJGROUP, (GameObject*)(int)baddie->targetObj, 0))
+            objGetNearestTypeTo(DBSTEALERWORM_OBJGROUP, (GameObject*)baddie->targetObj, 0))
         {
             sub->savedTargetObj = (int)baddie->targetObj;
             {
@@ -2045,7 +2045,7 @@ void dbstealerworm_launchIceBall(GameObject* obj, BaddieState* baddie)
 void dbstealerworm_processEffectFlags(GameObject* obj, GroundBaddieState* baddie)
 {
     int i;
-    DbStealerwormControl* state = (DbStealerwormControl*)(int)baddie->control;
+    DbStealerwormControl* state = (DbStealerwormControl*)baddie->control;
     if ((state->flags14 & DBWORM_FLAG14_ATTACK) && baddie->baddie.targetObj != 0)
     {
         ((void (*)(GameObject*, int))dbstealerworm_launchIceBall)(obj, (int)baddie);
@@ -2175,7 +2175,7 @@ s16 dbstealerworm_getControlMode(GameObject* obj)
 
 int dbstealerworm_getExtraSize(void)
 {
-    return 0x460;
+    return sizeof(GroundBaddieState) + sizeof(DbStealerwormControl);
 }
 int dbstealerworm_getObjectTypeId(void)
 {

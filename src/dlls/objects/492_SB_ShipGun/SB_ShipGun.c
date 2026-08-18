@@ -282,7 +282,7 @@ void SB_ShipGun_update(GameObject* obj) {
         case SB_SHIPGUN_PHASE_DEATH_TRIGGER:
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (state->health == 0) {
-                spawnExplosion((GameObject*)(int)obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosion(obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
                 state->phase = SB_SHIPGUN_PHASE_EXPLODED;
             } else {
                 state->phase = SB_SHIPGUN_PHASE_SMOLDERING;
