@@ -211,7 +211,7 @@ GameObject* objGetNearestType(int group, float* point, float* maxDistance) {
     entry = gObjectTypeList + index;
     while (index < limit) {
         if (*entry != 0) {
-            distanceSq = PSVECSquareDistance((Vec*)point, &(*entry)->anim.worldPos);
+            distanceSq = PSVECSquareDistance((Vec*)point, &((GameObject*)*entry)->anim.worldPos);
             if (distanceSq < bestDistanceSq) {
                 bestDistanceSq = distanceSq;
                 nearest = *entry;

@@ -6,7 +6,6 @@
 #include "main/camera_object.h"
 #include "main/dll/DR/dr_types.h"
 #include "main/camera_interface.h"
-#include "main/objanim_internal.h"
 #include "main/resource.h"
 
 typedef struct CamcontrolTriggeredAction CamcontrolTriggeredAction;
@@ -165,8 +164,8 @@ int Camera_getTargetKind(void);
 int Camera_getMinimapInfoText(void);
 void camcontrol_updateTargetReticle(GameObject* fallbackTarget, int unused2, u32 renderArg2, u32 renderArg3,
                                     u32 renderArg4, u32 renderArg5);
-int camcontrol_aButtonIconTextureCallback(GameObject* obj, void** modelPtr, u32 renderOpIndex);
-int camcontrol_lockIconTextureCallback(GameObject* obj, int* modelPtr, int renderOpIndex);
+int camcontrol_aButtonIconTextureCallback(GameObject* obj, ObjModel* model, u32 renderOpIndex);
+int camcontrol_lockIconTextureCallback(GameObject* obj, ObjModel* model, int renderOpIndex);
 void camcontrol_initialiseTargetReticle(void);
 GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAnimComponent* focus);
 void camcontrol_updateMoveAverage(CamcontrolCameraState* cameraState, ObjAnimComponent* focus);

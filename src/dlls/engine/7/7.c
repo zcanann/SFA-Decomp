@@ -609,7 +609,7 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
         size = 16.0f;
     }
     j = 0;
-    e = (SnowQuad*)((u8*)p + 0x1008);
+    e = p->quads;
     negSize = -size;
     halfNeg = 64.0f * negSize;
     for (; j < 20; j++)
@@ -983,7 +983,7 @@ void snowCloudUpdateFlakes(u8* snow)
     f32 s3;
 
     cam = Camera_GetCurrent();
-    e = (SnowQuad*)(snow + 0x1008);
+    e = ((NewCloud*)snow)->quads;
     if (((NewCloud*)snow)->cloudType == 0)
     {
         for (i = 0; i < 20; i++)
@@ -1776,7 +1776,7 @@ void newclouds_run(void)
             activeCount++;
         }
         i++;
-        slotOffset += 4;
+        slotOffset += sizeof(void*);
     }
     if (activeCount != 0)
     {

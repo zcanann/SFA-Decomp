@@ -50,7 +50,7 @@ void BombPlantingSpot_update(GameObject* obj) {
 
 void BombPlantingSpot_init(GameObject* obj, const BombPlantingSpotPlacement* placement) {
     obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
-    obj->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->anim.rotX = placement->rotXByte << 8;
 }
 
 ObjectDescriptor gBombPlantingSpotObjDescriptor = {

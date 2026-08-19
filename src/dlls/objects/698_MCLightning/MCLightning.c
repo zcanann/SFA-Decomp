@@ -75,8 +75,9 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
         int i;
         for (i = 0; i < count; i++)
         {
-            int* candidate = (int*)objs[i];
-            if (*(u8*)(*(int*)((int)candidate + 0x4c) + 0x1b) == state->targetLinkId)
+            GameObject* candidate = objs[i];
+            McLightningSetup* candidateSetup = (McLightningSetup*)candidate->anim.placementData;
+            if (candidateSetup->linkId == state->targetLinkId)
                 break;
         }
         if (i == count)
@@ -86,8 +87,9 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
         else
         {
             McLightningState* foundState;
+            GameObject* target = objs[i];
             state->boltHandle = lightningCreate(
-                (const Vec3f*)&obj->anim.localPosX, (const Vec3f*)&((GameObject*)objs[i])->anim.localPosX, state->boltParamA,
+                (const Vec3f*)&obj->anim.localPosX, (const Vec3f*)&target->anim.localPosX, state->boltParamA,
                 state->boltParamB, state->boltParamC, state->boltParamD, 0);
             state->flags.phase = MCLIGHTNING_PHASE_ACTIVE;
             state->boltFrameTimer = 0.0f;

@@ -5,6 +5,7 @@
 #include "global.h"
 #include "main/objprint_character_api.h"
 #include "main/dll/curve_walker.h"
+#include "main/dll/curves_collision_state.h"
 #include "game/objects/object.h"
 #include "main/objprint_sound_api.h"
 #include "main/pi_dolphin_path_api.h"

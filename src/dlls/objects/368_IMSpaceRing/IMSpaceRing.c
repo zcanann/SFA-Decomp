@@ -21,9 +21,11 @@ void imSpaceRing_free(void) {
 }
 
 void imSpaceRing_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    if (visible != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
+    if (visible == 0) {
+        return;
     }
+
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
 void imSpaceRing_hitDetect(void) {
@@ -47,7 +49,7 @@ void imSpaceRing_update(GameObject* obj) {
 }
 
 void imSpaceRing_init(GameObject* obj, const IMSpaceRingPlacement* placement) {
-    obj->anim.rotX = (s16)((s32)placement->initialRotX << 8);
+    obj->anim.rotX = placement->initialRotX << 8;
     IM_SPACE_RING_SPIN_AXIS(obj) = randomGetRange(0, 1);
 }
 

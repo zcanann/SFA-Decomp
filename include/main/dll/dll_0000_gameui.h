@@ -50,6 +50,17 @@ typedef struct
 
 typedef struct
 {
+    s16 bitA;
+    s16 bitB;
+    u8 thresh;
+    u8 unk5;
+    s16 alt;
+} PauseMenuTokenEntry;
+
+STATIC_ASSERT(sizeof(PauseMenuTokenEntry) == 0x8);
+
+typedef struct
+{
     u8 pad000[0x190];
     int times190[12]; /* 0x190 */
     void* textures1C0[0x66]; /* 0x1c0 */
@@ -80,14 +91,7 @@ typedef struct
 {
     u8 pad000[0x210];
 
-    struct
-    {
-        s16 bitA;
-        s16 bitB;
-        u8 thresh;
-        u8 unk5;
-        s16 alt;
-    } tokens[4]; /* 0x210 */
+    PauseMenuTokenEntry tokens[4]; /* 0x210 */
     u8 pad230[0x490]; /* 0x230 */
     struct
     {
@@ -121,9 +125,9 @@ typedef struct
 {
     u8 pad000[0x1c0];
     Texture* hudTextures[102]; /* 0x1c0 */
-    u8 pad358[0x448 - 0x358];
+    u8 pad358[offsetof(CMenuHud, itemFlags) - (0x1c0 + sizeof(Texture*) * 102)];
     u8 itemFlags[64]; /* 0x448 */
-    u8 pad488[0x948 - 0x488];
+    u8 pad488[offsetof(CMenuHud, textureIds) - offsetof(CMenuHud, itemFlags) - 64];
     s16 itemSlots[64]; /* 0x948 */
     Texture* itemTextures[64]; /* 0x9c8 */
     f32 itemFade[13]; /* 0xac8 */

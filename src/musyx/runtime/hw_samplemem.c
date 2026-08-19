@@ -58,38 +58,29 @@ void hwRemoveSample(SAMPLE_HEADER* sample, void* ptr)
     aramRemoveData(ptr, size);
 }
 
-void hwSyncSampleMem(void)
-{
+void hwSyncSampleMem(void) {
     aramSyncTransferQueue();
 }
 
-void hwFrameDone(void)
-{
+void hwFrameDone(void) {
 }
 
-void sndSetHooks(const SalHooks* hooks)
-{
+void sndSetHooks(const SalHooks* hooks) {
     salHooks = *hooks;
 }
 
-void hwDisableHRTF(void)
-{
+void hwDisableHRTF(void) {
     dspHRTFOn = 0;
 }
 
-u32 hwGetVirtualSampleID(u32 voice)
-{
-    DSPvoice* entry;
-
-    entry = &dspVoice[voice];
-    if (entry->state == DSP_VOICE_STATE_INACTIVE)
-    {
+u32 hwGetVirtualSampleID(u32 voice) {
+    DSPvoice* entry = &dspVoice[voice];
+    if (entry->state == DSP_VOICE_STATE_INACTIVE) {
         return -1;
     }
     return entry->virtualSampleID;
 }
 
-u32 hwVoiceInStartup(u32 voice)
-{
+u32 hwVoiceInStartup(u32 voice) {
     return dspVoice[voice].state == DSP_VOICE_STATE_STARTUP;
 }

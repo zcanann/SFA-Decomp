@@ -29,7 +29,7 @@ int chuka_getObjectTypeId(void)
     return 0x0;
 }
 
-void chuka_free(int obj)
+void chuka_free(GameObject* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }

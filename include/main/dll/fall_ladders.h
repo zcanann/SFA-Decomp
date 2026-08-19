@@ -6,6 +6,6 @@
 #include "game/objects/object.h"
 
 void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state);
-void pinPon_updateIdle(GameObject* obj, int state);
+void pinPon_updateIdle(GameObject* obj, void* state);
 
 #endif /* MAIN_DLL_DLL_10A_H_ */

@@ -3,6 +3,7 @@
 #include "main/audio/sfx_stop_channel_api.h"
 #include "dolphin/mtx.h"
 #include "main/frame_timing.h"
+#include "main/expgfx_internal.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_text_color_api.h"
 #include "string.h"
@@ -11,6 +12,7 @@
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/modgfx_types.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "game/objects/object.h"
 #include "game/objects/object_interface.h"
@@ -90,7 +92,7 @@ STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 ModgfxSpawnContext gModgfxSpawnContext;
-ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x300 / sizeof(ModgfxPendingSpawn)];
+ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x20];
 void partfx_freeEffectsBySequence(s16 a, int b);
 #define MODGFX_ZERO 0.0f
 #define MODGFX_ONE  1.0f

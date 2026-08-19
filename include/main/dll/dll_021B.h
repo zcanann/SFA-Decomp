@@ -35,7 +35,7 @@ STATIC_ASSERT(offsetof(Dll21BPlacement, driveGameBit) == 0x1e);
 
 int dll_21B_getExtraSize_ret_4(void);
 int dll_21B_getObjectTypeId(void);
-void dll_21B_free(int obj);
+void dll_21B_free(GameObject* obj);
 void dll_21B_render_nop(void);
 void dll_21B_hitDetect_nop(void);
 void dll_21B_update(GameObject* obj);

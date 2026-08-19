@@ -26,5 +26,5 @@ ObjectDescriptor gReStartMarkObjDescriptor = {
 
 void ReStartMark_init(GameObject* obj, ReStartMarkPlacement* placement) {
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
-    obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_HIDDEN);
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
 }

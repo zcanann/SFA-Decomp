@@ -94,7 +94,7 @@ void mtx44Perspective(f32* matrix, u16* perspectiveNorm, f32 fovY, f32 aspect, f
     }
 
     if (perspectiveNorm != NULL) {
-        if ((f32)(nearPlane + farPlane) <= 2.0f) {
+        if (nearPlane + farPlane <= 2.0f) {
             *perspectiveNorm = 0xFFFF;
         } else {
             *perspectiveNorm = (u16)(131072.0f / (nearPlane + farPlane));

@@ -6,6 +6,6 @@
 void guardClaw_update(GameObject* obj, u8* state);
 void gcRobotPatrol_update(GameObject* obj, u8* state);
 void guardClaw_init(GameObject* obj, u8* state);
-void gcRobotPatrol_init(GameObject* obj, int state);
+void gcRobotPatrol_init(GameObject* obj, void* state);
 
 #endif /* H_MAIN_DLL_SEQOBJ11E_BADDIE_H */

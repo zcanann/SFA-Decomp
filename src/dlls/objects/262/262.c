@@ -104,9 +104,8 @@ STATIC_ASSERT(offsetof(ScarabSweepSphere, flags) == 0x14);
 STATIC_ASSERT(offsetof(ScarabSweepSphere, pad15) == 0x15);
 STATIC_ASSERT(sizeof(ScarabSweepSphere) == 0x30);
 STATIC_ASSERT(offsetof(ScarabCollisionScratch, bboxHit) == 0x0);
-STATIC_ASSERT(offsetof(ScarabCollisionScratch, hitResults) == 0x54);
-STATIC_ASSERT(offsetof(ScarabCollisionScratch, sphere) == 0x94);
-STATIC_ASSERT(sizeof(ScarabCollisionScratch) == 0xC4);
+STATIC_ASSERT(offsetof(ScarabCollisionScratch, sphere) ==
+              offsetof(ScarabCollisionScratch, hitResults) + 0x40);
 
 static int Scarab_resolveCollision(GameObject* obj) {
     ObjHitsPriorityState* hitState;

@@ -134,7 +134,6 @@ void inpSetGlobalMIDIDirtyFlag(u8 channel, u8 set, u32 flags)
  */
 void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
 {
-    InpMidiState* st = (InpMidiState*)lbl_803CD760;
     u32 i;
 
     if (channel == 0xFF)
@@ -189,7 +188,7 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
             break;
         }
 
-        st->fxCtrl[channel][ctrl] = value & 0x7f;
+        gInpMidiCtrl[channel][ctrl] = value & 0x7f;
         for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiSet && channel == synthVoice[i].midi)

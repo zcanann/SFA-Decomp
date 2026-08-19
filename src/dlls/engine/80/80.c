@@ -15,6 +15,23 @@
 
 CameraModeCrawlState* gCameraModeCrawlState;
 
+typedef struct CameraModeCrawlDefaultHandlerVTable {
+    void (*slots[6])(void);
+    void (*updatePitch)(f32 targetY, f32 distance, CameraObject* camera);
+} CameraModeCrawlDefaultHandlerVTable;
+
+typedef struct CameraModeCrawlDefaultHandler {
+    CameraModeCrawlDefaultHandlerVTable* vtable;
+} CameraModeCrawlDefaultHandler;
+
+typedef struct CameraModeCrawlDefaultHandlerEntry {
+    u16 actionId;
+    u8 pad02[2];
+    CameraModeCrawlDefaultHandler* handler;
+    u8 priority;
+    u8 pad09[3];
+} CameraModeCrawlDefaultHandlerEntry;
+
 void CameraModeCrawl_copyToCurrent(void* actionData, int recordSize) {
     CameraObject* camera;
     GameObject* target;

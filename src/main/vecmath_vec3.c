@@ -27,22 +27,16 @@ void Vec3_ReflectAgainstNormal(f32* normal, f32* velocity, f32* out)
     }
 }
 
-void Vec3_ScaleAdd(const f32* base, const f32* vector, f32 scale, f32* out)
-{
+void Vec3_ScaleAdd(const f32* base, const f32* vector, f32 scale, f32* out) {
     out[0] = scale * vector[0] + base[0];
     out[1] = scale * vector[1] + base[1];
     out[2] = scale * vector[2] + base[2];
 }
 
-f32 Vec3_Normalize(f32* vector)
-{
-    f32 length;
-    f32 inverseLength;
-
-    length = sqrtf(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
-    if (length != 0.0f)
-    {
-        inverseLength = 1.0f / length;
+f32 Vec3_Normalize(f32* vector) {
+    f32 length = sqrtf(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
+    if (length != 0.0f) {
+        f32 inverseLength = 1.0f / length;
         vector[0] *= inverseLength;
         vector[1] *= inverseLength;
         vector[2] *= inverseLength;

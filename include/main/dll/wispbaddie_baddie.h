@@ -3,8 +3,8 @@
 
 #include "global.h"
 
-void battleDroidUpdate(int obj, int state);
-void battleDroidUpdateAttack(int obj, int state);
-void battleDroidInit(int unused, char* p);
+void battleDroidUpdate(GameObject* obj, void* state);
+void battleDroidUpdateAttack(GameObject* obj, void* state);
+void battleDroidInit(GameObject* unused, char* p);
 
 #endif /* H_MAIN_DLL_WISPBADDIE_BADDIE_H */

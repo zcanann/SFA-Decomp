@@ -1068,6 +1068,12 @@ CreditEntry gCreditEntries[] = {
     {0x4F1, 0xB4},  {0x4F2, 0xB4}, {0x56D, 0xB4},  {0x526, 0xB4},
 };
 
+
+
+u8 gTitleScreenMtx[0x34];
+void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
+u8 gTitleScreenSfxFlagGrid[0x48];
+
 ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     {
         0,
@@ -1087,7 +1093,3 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     },
     0,
 };
-
-u8 gTitleScreenMtx[0x34];
-void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
-u8 gTitleScreenSfxFlagGrid[0x48];

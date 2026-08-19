@@ -8,6 +8,8 @@
 #include "main/dll/baddie_state.h"
 #include "main/objprint_character_api.h"
 
+struct PlayerMoveSlot;
+
 typedef struct PlayerStatus {
     s8 health;
     s8 maxHealth;
@@ -98,15 +100,9 @@ typedef struct PlayerState {
     u8 pad3F5[0x3F6 - 0x3F5];
     ByteFlags flags3F6;
     u8 fallSeverity; /* fall/landing severity tier (0-3) set from the fall height-difference (hdiff vs lbl_803E8104/8108/810C thresholds); selects the landing move/sfx (move 0xa/0x90) and at >=2 fires camera shake + a ground-impact ObjHits; reset to 0 on state change */
-    union {
-        int moveAnimTable; /* raw address view retained for incomplete call sites */
-        s16* moveAnimIds;  /* anim/move-id table fed to ObjAnim_SetCurrentMove */
-    };
-    union {
-        int prevMoveAnimTable; /* raw address view retained for incomplete call sites */
-        s16* prevMoveAnimIds;  /* moveAnimIds as of the previous playerSetMovingAnims call; compared against moveAnimIds to detect a locomotion-table switch */
-    };
-    int moveParams; /* ptr to a 0x60 locomotion-parameter block (gPlayerDefaultMoveParams); deref'd as f32 speed thresholds/limits at +4/+c/+10/+14/+18/+1c */
+    s16* moveAnimIds;     /* anim/move-id table fed to ObjAnim_SetCurrentMove */
+    s16* prevMoveAnimIds; /* moveAnimIds as of the previous playerSetMovingAnims call; compared against moveAnimIds to detect a locomotion-table switch */
+    f32* moveParamValues; /* 0x60 locomotion-parameter block (gPlayerDefaultMoveParams): speed thresholds/limits at [1]/[3]/[4]/[5]/[6]/[7] */
     f32 maxSpeed;
     f32 currentSpeed; /* player current movement speed; clamped to [0, maxSpeed], scaled by friction */
     u8 fallFrames; /* frames spent in the falling/airborne path (gravity applied to velocityY each tick); ++ per frame clamped to 10, reset to 0 on landing/state-entry; >5 (with flag 0x3f1:b01) fires the landing rumble + footstep sfx */
@@ -129,14 +125,14 @@ typedef struct PlayerState {
     f32 stickTargetX; /* analog-stick-driven target X; clamped to deadzone range, pairs with stickDirection */
     f32 stickTargetY; /* analog-stick-driven target Y */
     u8 pad44C[0x450 - 0x44C];
-    int paramCurve0; /* Catmull-Rom curve-data ptr (resource base+0x450); Curve_EvalCatmullRom(...) at speed u, feeds unk438 */
-    int paramCurve1; /* curve-data ptr (base+0x4f4); feeds unk428 */
-    int paramCurve2; /* curve-data ptr (base+0x598); feeds unk42C */
-    int paramCurve3; /* curve-data ptr (base+0x650); feeds unk430 */
-    int paramCurve4; /* curve-data ptr (base+0x6f4); feeds unk434 */
-    int leanCurve;   /* Catmull-Rom curve-data ptr indexed by targetYawRateSigned (lean), feeds leanCurveScale */
+    f32* paramCurve0; /* Catmull-Rom curve-data ptr (resource base+0x450); Curve_EvalCatmullRom(...) at speed u, feeds unk438 */
+    f32* paramCurve1; /* curve-data ptr (base+0x4f4); feeds unk428 */
+    f32* paramCurve2; /* curve-data ptr (base+0x598); feeds unk42C */
+    f32* paramCurve3; /* curve-data ptr (base+0x650); feeds unk430 */
+    f32* paramCurve4; /* curve-data ptr (base+0x6f4); feeds unk434 */
+    f32* leanCurve;  /* Catmull-Rom curve-data ptr indexed by targetYawRateSigned (lean), feeds leanCurveScale */
     u8 pad468[0x46C - 0x468];
-    int spawnedObject; /* object handle from objSetupObject (player-spawned, e.g. staff/projectile setup) */
+    GameObject* spawnedObject; /* object from objSetupObject (player-spawned, e.g. staff/projectile setup) */
     f32 inputMagnitude;
     int inputHeading;
     s16 targetYaw; /* desired heading; copied into yaw when applied */
@@ -190,12 +186,12 @@ typedef struct PlayerState {
     f32 savedLocalPosX; /* localPosX saved at the vertical-move start (backed up before localPos is overwritten with moveStartPosX) */
     f32 savedLocalPosZ; /* localPosZ saved at the vertical-move start (backed up before localPos is overwritten with moveStartPosZ) */
     f32 moveDirX;       /* move direction vector X; (moveDirX,moveDirY,moveDirZ) is negated when flag set and fed to getAngle()->targetYaw and playerSetMoveBlendFromPlane */
-    u8 pad510[0x514 - 0x510];
+    f32 moveNormalY;
     f32 moveDirY;       /* move direction vector Y */
     f32 moveDirZ;       /* move direction vector Z */
     f32 blendPlane[4];
     f32 moveStartPosX;  /* localPosX assigned at the vertical-move start */
-    u8 pad530[0x534 - 0x530];
+    f32 moveStartSurfaceY;
     f32 moveStartPosZ;  /* localPosZ assigned at the vertical-move start */
     f32 blendAnchor[3]; /* planar anchor vector (X at +0, Z at +8) fed to playerSetMoveBlendFromPlane; dotted with the blend plane to form the interpolation factor; written in another TU */
     s16 eventCountdown; /* move-blend/event countdown from playerSetMoveBlendFromPlane; written each frame then pushed as the ObjAnim EVENT_COUNTDOWN state word (ObjAnim_WriteStateWord) */
@@ -203,7 +199,8 @@ typedef struct PlayerState {
     ByteFlags flags547;
     u8 pad548[0x549 - 0x548];
     s8 climbMoveVariant; /* 0x549: climb-move variant flag (set in another TU); when nonzero selects the alternate climb move table (lbl_803DC69C vs 698), the faster baddie.moveSpeed (lbl_803E7EF8 vs 8008) and the 0x40 blend flag */
-    u8 pad54A[0x54C - 0x54A];
+    s8 wallSurfaceType;
+    u8 pad54B;
     f32 spanTopY;    /* upper Y bound of the collision span (interpolated from SweepHit.g* at hit.gt); localPosY is clamped/checked against [spanBottomY, spanTopY] */
     f32 spanBottomY; /* lower Y bound of the collision span (interpolated from SweepHit.fz0/fz1) */
     u8 pad554[0x560 - 0x554];
@@ -219,9 +216,9 @@ typedef struct PlayerState {
     f32 slopeTangentZ; /* ground-tangent Z component (= groundNormalX) */
     f32 slopePlaneD; /* signed plane-distance term for the slope-tangent plane: -(point . slopeTangent), computed when the ground tangent is captured */
     f32 climbStartPosX; /* localPosX assigned at the climb move start (getAngle drives targetYaw from 0x56c/groundNormalZ) */
-    u8 pad590[0x594 - 0x590];
+    f32 climbStartPosY;
     f32 climbStartPosZ; /* localPosZ assigned at the climb move start */
-    u8 pad598[0x5A4 - 0x598];
+    f32 unk598[3]; /* 0x598: blend-anchor vector passed to playerSetMoveBlendFromPlane alongside groundNormalX */
     s16 animEventState; /* anim event-state word written each frame via ObjAnim_WriteStateWord(...EVENT_STATE); from playerSetMoveBlendFromPlane or a scaled move-blend factor */
     s16 moveAltToggle; /* alternating selector for a paired repeating move: !=0 picks move 0x15, ==0 picks 0x16; XOR-toggled each cycle (e.g. left/right climb step) */
     f32 leapSpeed;   /* leap/launch speed magnitude filled by playerBuildLedgeClimbProbe (base = &leapSpeed): threshold-compared vs lbl_803E8040/8048 to pick the jump move (0xe/0x16/0x12) then normalized (leapSpeed-lo)/(hi-lo) into the move blend */
@@ -232,13 +229,13 @@ typedef struct PlayerState {
     f32 moveStartZ;
     int launchYaw; /* heading captured (*(s16*)obj) when a jump/launch move starts; base angle for the airborne arc yaw (case 7) */
     f32 launchDirX; /* planar launch/arc direction vector X; getAngle(launchDirX,launchDirZ) sets targetYaw, worldPos = k*launchDir + launchAnchor (jump case 7 airborne arc) */
-    u8 pad5C8[0x5CC - 0x5C8];
+    f32 launchDirY;
     f32 launchDirZ;
-    u8 pad5D0[0x5D4 - 0x5D0];
+    f32 launchPlaneD;
     f32 launchAnchorX; /* launch base world position (X,Y,Z); world->local transformed like moveEnd; worldPos = k*launchDir + launchAnchor */
     f32 launchAnchorY;
     f32 launchAnchorZ;
-    u8 pad5E0[0x5EC - 0x5E0];
+    f32 launchReference[3];
     f32 moveEndX; /* local-space target position for the move lerp (paired with moveStart) */
     f32 moveEndY;
     f32 moveEndZ;
@@ -305,7 +302,7 @@ typedef struct PlayerState {
     u16 buttonsJustPressed;
     u16 buttonsJustPressedIfNotBusy;
     u8 pad6E6[0x6E8 - 0x6E6];
-    int moveSequence; /* pointer to the active s16 move/anim descriptor (entries at +2/+8/+a) */
+    s16* moveSequence; /* the active s16 move/anim descriptor (entries at [1]/[4]/[5]) */
     u8 moveSequenceFlags; /* behavior bits 0x1/0x4/0x8 selecting blend/progress handling */
     u8 pad6ED[0x6F0 - 0x6ED];
     f32 orientationAxes[9]; /* 0x6F0: the actor's world orientation axes, refreshed
@@ -388,7 +385,7 @@ typedef struct PlayerState {
     f32 animSpeedStart; /* 0x88c: initial baddie.animSpeedA magnitude at move start (set as animSpeedA = -animSpeedStart) */
     f32 pushVelX; /* planar push/displacement velocity X: eased toward a target push via interpolate, decayed by powfBitEstimate, snapped to 0 near zero; added to the transformed world position */
     f32 pushVelZ;
-    int stateHandler; /* staged state/anim handler fn-ptr (stored as int); copied into baddie.stateExitFn on anim change */
+    BaddieStateExitFn stateHandler; /* staged state/anim handler; copied into baddie.stateExitFn on anim change */
     s16 unk89C;
     u8 pad89E[0x8A0 - 0x89E];
     u16 periodicHitTimer; /* accumulates dt; on crossing 0x78 wraps (-=0x78) and fires a periodic ObjHits position-hit */
@@ -412,7 +409,7 @@ typedef struct PlayerState {
     u8 staffActionRequest; /* pending staff grow/shrink action: 0=none,1=shrink,2=begin-grow,4=grow */
     u8 pad8B5[0x8B8 - 0x8B5];
     u8 queuedBitCount; /* count (0..4) of queued bit-index bytes stored in the following array at 0x8b9; a "case 1" push appends a byte and increments this, clamped to 4; on state init the loop ORs (1 << each stored byte) into the bitmask at 0x310 then this is reset to 0 */
-    u8 pad8B9[0x8BF - 0x8B9]; /* queued bit-index byte array filled by the queuedBitCount push API */
+    u8 queuedBits[0x8BF - 0x8B9]; /* queued bit-index byte array filled by the queuedBitCount push API */
     u8 unk8BF;
     u8 moveChainIndex; /* 0x8c0: branch index into the current move slot's next-move table (slot+0x15+moveChainIndex selects the follow-up moveSlotIndex); set 0 or from state+0x34b */
     u8 attackVariantMode; /* 0x8c1: attack/swing variant (0/1/2) chosen from moveSlotIndex (0x11->0, 0xf/0x1b/else->1/2); read as `mode`, selects camera-flag bits 0x100/0x200/0x400 */
@@ -438,7 +435,7 @@ typedef struct PlayerState {
     u8 pad8D5[0x8D8 - 0x8D5];
     u16 pendingFxFlags; /* one-shot particle-effect request bits (1/2/8 spray-splash, 4 landing burst); set on events, cleared after the FX is spawned */
     u8 pad8DA[0x8DC - 0x8DA];
-    int triggerGameBitPtr; /* 0x8dc: pointer (from ObjMsg 0x7000a param) to the sequence-trigger's s16 descriptor; *ptr = gamebit index (mainGetBit/mainSetBits), *(ptr+2) copied into unk688 */
+    s16* triggerGameBitPtr; /* 0x8dc: pointer (from ObjMsg 0x7000a param) to the sequence-trigger's s16 descriptor; *ptr = gamebit index (mainGetBit/mainSetBits), *(ptr+2) copied into unk688 */
 } PlayerState;
 
 STATIC_ASSERT(offsetof(PlayerState, cameraSlideVector) == 0x1A4);

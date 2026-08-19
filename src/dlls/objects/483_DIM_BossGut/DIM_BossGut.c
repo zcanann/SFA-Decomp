@@ -208,12 +208,9 @@ enum {
 void DIM_BossGut2_update(GameObject* obj) {
     DimBossGut2State* state;
     int result;
-    u32 randomThreshold;
     u32 brightness;
     DimBossGut2Control* control;
     DimBossGut2Control* lightOwner;
-    f32 heightDiff;
-    f32 xyScale;
     ModelLightStruct* light;
     u32 msgB;
     u32 msgA;

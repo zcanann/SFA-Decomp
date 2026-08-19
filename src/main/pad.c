@@ -612,6 +612,7 @@ int initControllers(void)
         triggersReleased++;
         triggersPressed++;
         statuses++;
+        secondStatus++;
     }
 
     gPadStatusBufferIndex = 0;

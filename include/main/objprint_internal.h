@@ -50,8 +50,8 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
         i = 0;
         for (k = 0; k < (s32)(u32)table->jointCount; k++)
         {
-            if ((int)*(u8*)(*(int*)&table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
-                (int)*(u8*)(*(int*)&table->jointData + i) == key)
+            if ((int)*(u8*)(table->jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + i + 1) != 0xff &&
+                (int)*(u8*)(table->jointData + i) == key)
             {
                 found = (s16*)&((ObjJointPose18*)(obj)->anim.jointPoseData)[k];
             }

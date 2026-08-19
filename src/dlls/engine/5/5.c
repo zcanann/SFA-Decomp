@@ -669,7 +669,7 @@ void skyGetObjectLightDirection(GameObject* obj, f32* x, f32* y, f32* z)
             {
                 if ((u8*)obj->anim.modelState != NULL)
                 {
-                    found = *(u8**)((u8*)obj->anim.modelState + 0x3c);
+                    found = obj->anim.modelState->lastSelectedLight;
                 }
                 cur = lights[0];
                 if (found != lights[0] && found != NULL)
@@ -738,7 +738,7 @@ void skyGetObjectLightDirection(GameObject* obj, f32* x, f32* y, f32* z)
     }
     if ((u8*)obj->anim.modelState != NULL)
     {
-        *(u8**)((u8*)obj->anim.modelState + 0x3c) = cur;
+        obj->anim.modelState->lastSelectedLight = cur;
     }
 }
 
@@ -1866,8 +1866,6 @@ void skyUpdateTimeOfDay(void)
     int i;
     int count;
     f32 val;
-    u8* p;
-    int idx;
 
     time = 0.0f;
     env = (u8*)saveGameGetEnvState();

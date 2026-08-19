@@ -19,11 +19,8 @@ int shTricky_getExtraSize(void) {
 }
 
 void shTricky_update(GameObject* obj) {
-    ShTrickyState* state;
-    GameObject* tricky;
-
-    state = obj->extra;
-    tricky = getTrickyObject();
+    ShTrickyState* state = obj->extra;
+    GameObject* tricky = getTrickyObject();
     if (tricky == NULL) {
         return;
     }
@@ -58,15 +55,14 @@ void shTricky_update(GameObject* obj) {
 }
 
 void shTricky_init(GameObject* obj) {
-    ShTrickyState* state;
-
-    state = obj->extra;
+    ShTrickyState* state = obj->extra;
     if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0) {
         state->phase = SH_TRICKY_PHASE_COMPLETE;
     } else {
         state->phase = SH_TRICKY_PHASE_WAIT_TRIGGER;
     }
-    obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
+
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 ObjectDescriptor gSHTrickyObjDescriptor = {

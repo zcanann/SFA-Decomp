@@ -209,17 +209,15 @@ int explodable_getExtraSize(void) {
 }
 
 void explodable_free(GameObject* obj, int keepChildren) {
-    int stateAddress;
+    ExplodableState* state;
     int fragmentIndex = -1;
-    int childSlotAddress;
     GameObject* child;
 
-    stateAddress = (int)obj->extra;
+    state = (ExplodableState*)obj->extra;
     objFreeObjectType(obj, EXPLODABLE_OBJECT_GROUP);
     if (keepChildren == 0) {
-        childSlotAddress = stateAddress - 4;
-        while (childSlotAddress += 4, ++fragmentIndex < EXPLODABLE_FRAGMENT_COUNT) {
-            child = ((ExplodableState*)childSlotAddress)->children[0];
+        while (++fragmentIndex < EXPLODABLE_FRAGMENT_COUNT) {
+            child = state->children[fragmentIndex];
             if (child != NULL) {
                 Obj_FreeObject(child);
             }
@@ -285,7 +283,6 @@ void explodable_update(GameObject* obj) {
 }
 
 void explodable_init(GameObject* obj, ExplodablePlacement* placementAddress) {
-    int stateAddress = (int)obj->extra;
     int recipeIndex;
     ExplodableBreakRecipe* recipes;
     u32 fragmentCount;

@@ -248,9 +248,11 @@ void LaserBeam_update(GameObject* obj) {
                         state->knockbackTargetZ = beamDirectionZ * pushDistance + player->anim.localPosZ;
                         beamKind = state->beamKind;
                         if (beamKind == 0 || beamKind == 1) {
-                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_HIT, state->messagePayload, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_HIT, (GameObject*)state->messagePayload,
+                                                0);
                         } else if ((u8)(beamKind - 2) <= 1 || beamKind == 30) {
-                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, state->messagePayload, 0);
+                            ObjMsg_SendToObject(player, LASERBEAM_MSG_PLAYER_BURST, (GameObject*)state->messagePayload,
+                                                0);
                         }
                         state->damageCooldown = 2;
                     }

@@ -1,7 +1,6 @@
 #include "musyx/aram.h"
 #include "musyx/aram_queue.h"
 #include "musyx/sal_dsp.h"
-#include "musyx/snd_reverb.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/ar.h"
 

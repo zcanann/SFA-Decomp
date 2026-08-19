@@ -61,7 +61,6 @@ typedef struct
     u16 r, g, b, a;
 } SubtitleCmd;
 
-
 /*
  * In-string formatting control codes (Unicode PUA, 0xe000..0xf8ff) and the
  * per-window horizontal alignment they select (win[0x12]). The align codes

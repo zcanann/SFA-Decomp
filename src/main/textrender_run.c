@@ -85,6 +85,18 @@ typedef struct GameTextStringTable
     int offsets[];
 } GameTextStringTable;
 
+typedef struct GameTextDiscDef
+{
+    u16 identifier;
+    u16 count;
+    u8 boxId;
+    u8 alignH;
+    u8 alignV;
+    u8 language;
+    s32 strings;
+} GameTextDiscDef;
+STATIC_ASSERT(sizeof(GameTextDiscDef) == 0xc);
+
 static void gameTextLoadCancelCallback(s32 result, DVDCommandBlock* block);
 static void gameTextLoadCompleteCallback(s32 status, DVDFileInfo* fileInfo);
 
@@ -174,7 +186,7 @@ void gameTextSetCharset(int charset, int flags)
         GameTextSlot* cmd;
         gGameTextCommandCount = i + 1;
         cmd = &gGameTextCommandSlots[i];
-        cmd->opcode = GAMETEXT_COMMAND_SET_CHARSET;
+        cmd->opcode = 0xf;
         cmd->arg0 = charset;
     }
 }
@@ -380,7 +392,7 @@ void gameTextRun(void)
     {
         switch (cmd->opcode)
         {
-        case GAMETEXT_COMMAND_SET_COLOR:
+        case 3:
         {
             u8 c1, c2, c3;
             c3 = cmd->arg3;
@@ -438,24 +450,24 @@ void gameTextRun(void)
                 gCurTextBox = &gTextBoxes[cmd->arg0];
             }
             break;
-        case GAMETEXT_COMMAND_CALL_DRAW_FUNC:
+        case 9:
             ((void (*)(void))cmd->arg0)();
             break;
-        case GAMETEXT_COMMAND_SET_CURSOR:
+        case 10:
         {
             u16 b1 = cmd->arg1;
             gGameTextCursorX = (u16)cmd->arg0;
             gGameTextCursorY = b1;
             break;
         }
-        case GAMETEXT_COMMAND_RESET_CURSOR:
+        case 11:
             gGameTextCursorX = 0;
             gGameTextCursorY = 0;
             break;
-        case GAMETEXT_COMMAND_SET_SHADOW_ENABLED:
+        case 12:
             gGameTextShadowEnabled = cmd->arg0;
             break;
-        case GAMETEXT_COMMAND_SET_SHADOW_COLOR:
+        case 14:
         {
             u8 e1, e2;
             e2 = cmd->arg2;
@@ -733,7 +745,7 @@ void gameTextLoadForCurMap(int sourceId)
         return;
     }
 
-    slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    slot = runtime->loadSlots;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do
     {
@@ -764,7 +776,7 @@ void gameTextLoadForCurMap(int sourceId)
     *(dirPtr = &runtime->fonts[sourceId].dirId) = (u8)curGameTextDir;
     *(langPtr = &runtime->fonts[sourceId].languageId) = curLanguage;
 
-    slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    slot = runtime->loadSlots;
     freeSlot = (slot->active == 0)       ? slot
                : ((++slot)->active == 0) ? slot
                : ((++slot)->active == 0) ? slot
@@ -784,10 +796,10 @@ void gameTextLoadForCurMap(int sourceId)
         freeSlot->languageId = slotLang;
         freeSlot->active = 1;
         freeSlot->sourceId = sourceId;
-        sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
+        sprintf(runtime->path, sGameTextMapPathFormat,
                 sMapDirectoryNameTable[slotDir], sLanguageNameTable[slotLang].name);
         setFileInfo(&freeSlot->fileInfo);
-        freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
+        freeSlot->loadHandle = loadFileByPathAsync(runtime->path,
                                                    &freeSlot->loadedSize, 1, gameTextLoadCompleteCallback);
         setFileInfo(NULL);
         *dirPtr = GAMETEXT_INVALID_DIR;

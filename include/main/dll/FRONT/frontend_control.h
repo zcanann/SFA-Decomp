@@ -13,8 +13,10 @@ typedef struct FrontendSaveSlot {
     char* taskTexts[5];
     u8 isOccupied;
     u8 chaptersUnlocked;
-    u8 pad22[0x24 - 0x22];
+    u8 padding[2];
 } FrontendSaveSlot;
+
+#define FRONTEND_SAVE_SLOT_COUNT 3
 
 void saveFileSelect_checkCheatCodes(void);
 void saveSelect_drawText(int unused, int alpha);

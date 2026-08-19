@@ -79,6 +79,11 @@ STATIC_ASSERT(offsetof(Shader, alphaOverride) == 0x43);
 #define SHADER_FLAG_DECAL_LAYER        0x100000
 #define SHADER_FLAG_FORCE_BLEND        0x40000000
 
+/* A model render callback normally returns zero for the standard material
+ * setup or one after supplying its own GX state. This third result suppresses
+ * the display list associated with the current render op. */
+#define OBJMODEL_RENDER_CALLBACK_SKIP_DRAW 2
+
 typedef struct ModelRenderOpTextureRefs
 {
     void* texture0;
@@ -168,7 +173,8 @@ typedef struct ModelFileHeader {
     u16 shaderFlags;
     u16 vertexCount;
     u16 normalCount;
-    u8 unkE8[4];
+    u16 colorCount;
+    u16 texCoordCount;
     union {
         u16 animationCount; /* nonzero = per-joint matrix buffers */
         u16 moveCount;
@@ -448,8 +454,8 @@ typedef struct ObjModelChain {
     u8 enabled;
 } ObjModelChain;
 
-typedef void (*ObjModelChainUpdateCallback)(int animState, int* model, f32* vector, int callbackArg, int nodeIndex,
-                                            f32 phase);
+typedef void (*ObjModelChainUpdateCallback)(ModelFileHeader* file, ObjModel* model, f32* vector, int callbackArg,
+                                            int nodeIndex, f32 phase);
 
 STATIC_ASSERT(sizeof(ObjModelChainNode) == 0x54);
 STATIC_ASSERT(sizeof(ObjModelChainEntry) == 0x0C);
@@ -501,7 +507,8 @@ void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);
-void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback);
+void ObjModelChain_Update(ObjModel* model, ModelFileHeader* file, ObjModelChain* chain,
+                          ObjModelChainUpdateCallback callback);
 void ObjModelChain_ResetFirstUpdate(ObjModelChain* chain);
 
 #endif

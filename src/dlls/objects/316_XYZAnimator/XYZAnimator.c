@@ -222,7 +222,7 @@ void XyzAnimator_update(GameObject* obj) {
     int value;
 
     blockAddress = (MapBlockData*)mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
-    if ((u32)blockAddress == 0) {
+    if (blockAddress == NULL) {
         state->passCount = 0;
         return;
     }

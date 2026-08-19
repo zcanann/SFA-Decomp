@@ -1,10 +1,8 @@
 /* Clears sequence-event state and supplies otherwise minimal callbacks. */
 #include "dlls/objects/324.h"
-
 #include "main/object_render.h"
 #include "main/objseq.h"
 
-/* 1.0f model render scale from the shared scalar pool. */
 int dll_144_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     animUpdate->movementState = 0;
     return 0;
@@ -22,11 +20,11 @@ void dll_144_free(void) {
 }
 
 void dll_144_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 isVisible = visible;
-
-    if (isVisible != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
+    if (visible == 0) {
+        return;
     }
+
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
 void dll_144_hitDetect(void) {

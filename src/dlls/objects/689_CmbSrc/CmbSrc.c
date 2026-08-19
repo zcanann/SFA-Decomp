@@ -329,7 +329,7 @@ void cmbsrc_setExternalActive(GameObject* obj, u8 active)
 
 int cmbsrc_getExtraSize(void)
 {
-    return CMBSRC_EXTRA_STATE_BYTES;
+    return sizeof(CmbSrcState);
 }
 
 int cmbsrc_getObjectTypeId(void)

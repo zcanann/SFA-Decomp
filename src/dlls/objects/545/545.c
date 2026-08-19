@@ -3,7 +3,7 @@
 #include "main/dll/WM/dll_020D_wmseqpoint.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
 #include "sys/objects.h"
@@ -41,7 +41,7 @@ int SeqPoint_SeqFn(GameObject* obj, int param2, ObjSeqState* ctx);
 int SeqPoint_getExtraSize(void);
 int SeqPoint_getObjectTypeId(void);
 void SeqPoint_free(void);
-void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void SeqPoint_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 visible);
 void SeqPoint_hitDetect(void);
 void SeqPoint_update(GameObject* obj);
 void SeqPoint_init(GameObject* obj, WmSeqPointMapData* data);
@@ -113,7 +113,7 @@ void SeqPoint_free(void)
 {
 }
 
-void SeqPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+void SeqPoint_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)

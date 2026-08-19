@@ -18,8 +18,6 @@
 #include "musyx/synth_handle.h"
 #include "musyx/synth_queue.h"
 
-#define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
-
 /* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
 #define SND_OUTPUTMODE_MONO     0 /* mono downmix */
 #define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
@@ -165,7 +163,7 @@ void sndOutputMode(int mode)
         u32 i;
         for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
-            *(u64*)((u8*)synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
+            *(u64*)&synthVoice[i].cFlagsHi |= 0x0000200000000000ULL;
         }
         streamOutputModeChanged();
     }

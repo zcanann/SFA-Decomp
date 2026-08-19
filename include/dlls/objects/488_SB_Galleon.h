@@ -141,7 +141,7 @@ typedef int (*SBGalleonVtblFn)(GameObject* galleon);
 
 /* Class-specific callbacks following the standard eight object callbacks. */
 typedef struct SBGalleonVtbl {
-    u32 reserved00[8];
+    ObjectInterface reserved00;
     SBGalleonVtblFn onPartDestroyed;
     SBGalleonVtblFn getStage;
     SBGalleonVtblFn getPhase;

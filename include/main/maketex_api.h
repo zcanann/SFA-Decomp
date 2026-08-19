@@ -41,6 +41,7 @@ extern u32 gSaveCardChecksumHi;
 extern u32 gSaveCardChecksumLo;
 extern u8* gSaveCardImageBuffer;
 extern u32 gSaveCardSerialHi;
+extern u32 gSaveCardSerialLo;
 extern u8 gSaveCardIdentityCheckEnabled;
 extern volatile s32 gSaveCardState;
 

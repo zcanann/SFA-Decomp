@@ -5,7 +5,7 @@
 #include "main/dll/expgfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/object_render_legacy.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_play_api.h"
 
@@ -173,7 +173,7 @@ void VFP_Platform_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
     s32 isVisible = visible;
     if (isVisible != 0 && state->axisMode != 0x63)
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, 1.0f);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

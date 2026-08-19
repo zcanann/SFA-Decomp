@@ -1,6 +1,7 @@
 #ifndef MAIN_OBJFX_H_
 #define MAIN_OBJFX_H_
 
+#include "dolphin/mtx/vec_types.h"
 #include "global.h"
 #include "game/objects/object.h"
 #include "main/objfx_hit_emitter_api.h"

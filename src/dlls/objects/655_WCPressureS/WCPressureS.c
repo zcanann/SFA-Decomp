@@ -74,7 +74,7 @@ int wcpressures_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
 }
 
 int wcpressures_getExtraSize(void) {
-    return WCPRESSURES_EXTRA_SIZE;
+    return sizeof(WCPressuresState);
 }
 
 int wcpressures_getObjectTypeId(GameObject* obj) {

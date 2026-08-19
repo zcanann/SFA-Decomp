@@ -75,11 +75,13 @@
 typedef void (*SmallBasketBreakEffectFn)(GameObject* obj, int arg1, int arg2, int arg3, int arg4, int arg5);
 
 /* Known fields shared by the 0x24- and 0x30-byte child placement records. */
-typedef struct SmallBasketCollisionResults {
-    f32 hitInfo[4][4]; /* 0x00 */
-    f32 radii[4];      /* 0x40 */
-    s8 hitAxes[12];    /* 0x50 */
-    u32 solidFlags[4]; /* 0x5C */
+typedef union SmallBasketCollisionResults {
+    TrackHitResults record;
+    struct {
+        f32 hitInfo[4][4];
+        f32 radii[4];
+        s8 hitAxes[12];
+    };
 } SmallBasketCollisionResults;
 
 typedef struct SmallBasketResource {
@@ -91,8 +93,7 @@ typedef struct SmallBasketResource {
 STATIC_ASSERT(offsetof(SmallBasketCollisionResults, hitInfo) == 0x0);
 STATIC_ASSERT(offsetof(SmallBasketCollisionResults, radii) == 0x40);
 STATIC_ASSERT(offsetof(SmallBasketCollisionResults, hitAxes) == 0x50);
-STATIC_ASSERT(offsetof(SmallBasketCollisionResults, solidFlags) == 0x5C);
-STATIC_ASSERT(sizeof(SmallBasketCollisionResults) == 0x6C);
+STATIC_ASSERT(sizeof(SmallBasketCollisionResults) == sizeof(TrackHitResults));
 
 STATIC_ASSERT(offsetof(SmallBasketResource, pad00) == 0x0);
 STATIC_ASSERT(offsetof(SmallBasketResource, spawnBreakEffect) == 0x4);
@@ -119,9 +120,9 @@ void SmallBasket_handleHit(GameObject* obj, GameObject* player, SmallBasketState
     } hitInfo;
     PartFxSpawnParams effectParams;
     int hitType;
-    int* objectCursor;
+    GameObject** objectCursor;
     int objectIndex;
-    int* objectGroup;
+    GameObject** objectGroup;
     f32 sourceY;
     f32 candidateY;
     f32 zero;
@@ -142,17 +143,17 @@ void SmallBasket_handleHit(GameObject* obj, GameObject* player, SmallBasketState
                     }
                     return;
                 }
-                objectGroup = (int*)objGetAllOfType(SMALLBASKET_OBJECT_GROUP, &hitInfo.objectCount);
+                objectGroup = objGetAllOfType(SMALLBASKET_OBJECT_GROUP, &hitInfo.objectCount);
                 objectIndex = 0;
                 objectCursor = objectGroup;
                 for (; objectIndex < hitInfo.objectCount; objectIndex++) {
-                    if (ObjHits_IsObjectEnabled((ObjAnimComponent*)*objectCursor) != 0) {
-                        candidateY = ((GameObject*)*objectCursor)->anim.localPosY;
+                    if (ObjHits_IsObjectEnabled(&(*objectCursor)->anim) != 0) {
+                        candidateY = (*objectCursor)->anim.localPosY;
                         sourceY = obj->anim.localPosY;
                         if (candidateY > sourceY && candidateY < sourceY + gSmallBasketChainHitHeight) {
-                            if (Vec_xzDistance((f32*)(*objectCursor + 0x18), &obj->anim.worldPosX) <
+                            if (Vec_xzDistance(&(*objectCursor)->anim.worldPosX, &obj->anim.worldPosX) <
                                 gSmallBasketChainHitRadius) {
-                                ObjHits_RecordObjectHit((GameObject*)*objectCursor, hitInfo.hitObject, 5, 1,
+                                ObjHits_RecordObjectHit(*objectCursor, hitInfo.hitObject, 5, 1,
                                                         0);
                             }
                         }
@@ -518,7 +519,7 @@ int SmallBasket_resolveCollision(GameObject* obj) {
         gSmallBasketHitVelocity[1] = hitResults.hitInfo[hitIndex][1];
         gSmallBasketHitVelocity[2] = hitResults.hitInfo[hitIndex][2];
         gSmallBasketHitVelocity[3] = hitResults.hitInfo[hitIndex][3];
-        if (hitResults.solidFlags[hitIndex] != 0) {
+        if (hitResults.record.objects[hitIndex] != 0) {
             hitState->contactFlags |= OBJHITS_CONTACT_FLAG_KIND_NONZERO;
             obj->anim.localPosX = hitState->contactPosX;
             obj->anim.localPosY = hitState->contactPosY;

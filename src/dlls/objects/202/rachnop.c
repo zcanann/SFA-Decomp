@@ -93,7 +93,7 @@
 
 extern f32 gDusterWallProbeOffsets[];
 
-void rachnopFindWallPlane(GameObject* obj, int state);
+void rachnopFindWallPlane(GameObject* obj, void* state);
 
 static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
 {
@@ -111,7 +111,7 @@ static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
     return d;
 }
 
-void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, int state, u16* outAngle, float* outDistance)
+void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, void* state, u16* outAngle, float* outDistance)
 {
     f32 targetPos[3];
     f32 tmpA[3];
@@ -129,52 +129,53 @@ void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, int state, u16* ou
     GameObject* targetObj;
     int delta;
     u32 angle;
+    EnemyState* fs = (EnemyState*)state;
 
-    vecA[0] = ((EnemyState*)state)->wallPlane.anchorX;
-    vecA[1] = ((EnemyState*)state)->wallPlane.anchorY;
-    vecA[2] = ((EnemyState*)state)->wallPlane.anchorZ;
+    vecA[0] = fs->wallPlane.anchorX;
+    vecA[1] = fs->wallPlane.anchorY;
+    vecA[2] = fs->wallPlane.anchorZ;
     PSVECSubtract((Vec*)vecA, &obj->anim.localPos, (Vec*)tmpA);
-    d = PSVECDotProduct((Vec*)tmpA, (Vec*)(state + 0x344));
-    vecA[0] = *(f32*)(state + 0x344) * d + obj->anim.localPosX;
-    vecA[1] = *(f32*)(state + 0x348) * d + (objY = obj->anim.localPosY);
-    vecA[2] = *(f32*)(state + 0x34c) * d + obj->anim.localPosZ;
+    d = PSVECDotProduct((Vec*)tmpA, (Vec*)fs->wallPlane.normal);
+    vecA[0] = fs->wallPlane.normal[0] * d + obj->anim.localPosX;
+    vecA[1] = fs->wallPlane.normal[1] * d + (objY = obj->anim.localPosY);
+    vecA[2] = fs->wallPlane.normal[2] * d + obj->anim.localPosZ;
     axisA[0] = 0.0f;
     axisA[1] = 1.0f;
     axisA[2] = 0.0f;
-    PSVECCrossProduct((Vec*)axisA, (Vec*)((EnemyState*)state)->wallPlane.normal, (Vec*)crossA);
+    PSVECCrossProduct((Vec*)axisA, (Vec*)fs->wallPlane.normal, (Vec*)crossA);
     PSVECNormalize((Vec*)crossA, (Vec*)crossA);
     if (crossA[0] != 0.0f)
     {
-        dxDiff = (obj->anim.localPosX - ((EnemyState*)state)->wallPlane.anchorX) / crossA[0];
+        dxDiff = (obj->anim.localPosX - fs->wallPlane.anchorX) / crossA[0];
     }
     else
     {
-        dxDiff = (obj->anim.localPosZ - ((EnemyState*)state)->wallPlane.anchorZ) / crossA[2];
+        dxDiff = (obj->anim.localPosZ - fs->wallPlane.anchorZ) / crossA[2];
     }
-    targetObj = ((EnemyState*)state)->trackedObj;
+    targetObj = fs->trackedObj;
     targetPos[0] = targetObj->anim.localPosX;
     targetPos[1] = 10.0f + targetObj->anim.localPosY;
     targetPos[2] = targetObj->anim.localPosZ;
-    vecB[0] = ((EnemyState*)state)->wallPlane.anchorX;
-    vecB[1] = ((EnemyState*)state)->wallPlane.anchorY;
-    vecB[2] = ((EnemyState*)state)->wallPlane.anchorZ;
+    vecB[0] = fs->wallPlane.anchorX;
+    vecB[1] = fs->wallPlane.anchorY;
+    vecB[2] = fs->wallPlane.anchorZ;
     PSVECSubtract((Vec*)vecB, (Vec*)targetPos, (Vec*)tmpB);
-    d = PSVECDotProduct((Vec*)tmpB, (Vec*)(state + 0x344));
-    vecB[0] = *(f32*)(state + 0x344) * d + targetPos[0];
-    vecB[1] = *(f32*)(state + 0x348) * d + (dy = targetPos[1]);
-    vecB[2] = *(f32*)(state + 0x34c) * d + targetPos[2];
+    d = PSVECDotProduct((Vec*)tmpB, (Vec*)fs->wallPlane.normal);
+    vecB[0] = fs->wallPlane.normal[0] * d + targetPos[0];
+    vecB[1] = fs->wallPlane.normal[1] * d + (dy = targetPos[1]);
+    vecB[2] = fs->wallPlane.normal[2] * d + targetPos[2];
     axisB[0] = 0.0f;
     axisB[1] = 1.0f;
     axisB[2] = 0.0f;
-    PSVECCrossProduct((Vec*)axisB, (Vec*)(state + 0x344), (Vec*)crossB);
+    PSVECCrossProduct((Vec*)axisB, (Vec*)fs->wallPlane.normal, (Vec*)crossB);
     PSVECNormalize((Vec*)crossB, (Vec*)crossB);
     if (crossB[0] != 0.0f)
     {
-        d = (targetPos[0] - ((EnemyState*)state)->wallPlane.anchorX) / crossB[0];
+        d = (targetPos[0] - fs->wallPlane.anchorX) / crossB[0];
     }
     else
     {
-        d = (targetPos[2] - ((EnemyState*)state)->wallPlane.anchorZ) / crossB[2];
+        d = (targetPos[2] - fs->wallPlane.anchorZ) / crossB[2];
     }
     dxDiff = dxDiff - d;
     dy = objY - dy;
@@ -196,7 +197,7 @@ void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, int state, u16* ou
     *outDistance = sqrtf(dxDiff * dxDiff + dy * dy);
 }
 
-u32 fireflyLanternSteerTowardTarget(short* obj, int state, u32 turnTime, f32 maxDistance)
+u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 maxDistance)
 {
     f32 moveTarget[3];
     f32 moveDelta[3];
@@ -374,7 +375,7 @@ void wallPlaneClampMoveTarget(float* outPos, WallPlaneState* plane, float latera
     outPos[2] = scale * plane->normal[2] + outPos[2];
 }
 
-void rachnopFindWallPlane(GameObject* obj, int state)
+void rachnopFindWallPlane(GameObject* obj, void* state)
 {
     u8 didHit;
     float* probeOffsets;
@@ -390,6 +391,7 @@ void rachnopFindWallPlane(GameObject* obj, int state)
     float sideAxis[3];
     float dv[3];
     float hit[18];
+    EnemyState* fs = (EnemyState*)state;
 
     didHit = 0;
     probeOffsets = gDusterWallProbeOffsets;
@@ -408,45 +410,45 @@ void rachnopFindWallPlane(GameObject* obj, int state)
     {
         obj->anim.localPosX = (hit[17] - (15.0f)) * ((minv[0] - maxv[0]) / (50.0f)) + maxv[0];
         obj->anim.localPosZ = (hit[17] - (15.0f)) * ((minv[2] - maxv[2]) / (50.0f)) + maxv[2];
-        ((EnemyState*)state)->wallPlane.normal[0] = hit[7];
-        ((EnemyState*)state)->wallPlane.normal[1] = hit[8];
-        ((EnemyState*)state)->wallPlane.normal[2] = hit[9];
-        ((EnemyState*)state)->wallPlane.normalW = hit[10];
-        ((EnemyState*)state)->wallPlane.anchorY = (hit[3] > hit[4]) ? hit[3] : hit[4];
-        ((EnemyState*)state)->wallPlane.boundMin = (hit[15] < hit[16]) ? hit[15] : hit[16];
+        fs->wallPlane.normal[0] = hit[7];
+        fs->wallPlane.normal[1] = hit[8];
+        fs->wallPlane.normal[2] = hit[9];
+        fs->wallPlane.normalW = hit[10];
+        fs->wallPlane.anchorY = (hit[3] > hit[4]) ? hit[3] : hit[4];
+        fs->wallPlane.boundMin = (hit[15] < hit[16]) ? hit[15] : hit[16];
         av[0] = 0.0f;
         av[1] = 1.0f;
         av[2] = 0.0f;
-        PSVECCrossProduct((Vec*)av, (Vec*)(state + DUSTER_WALL_PLANE_OFFSET), (Vec*)sideAxis0);
+        PSVECCrossProduct((Vec*)av, (Vec*)fs->wallPlane.normal, (Vec*)sideAxis0);
         PSVECNormalize((Vec*)sideAxis0, (Vec*)sideAxis0);
-        ((EnemyState*)state)->wallPlane.anchorX = hit[1];
-        ((EnemyState*)state)->wallPlane.anchorZ = hit[5];
+        fs->wallPlane.anchorX = hit[1];
+        fs->wallPlane.anchorZ = hit[5];
         cv[0] = hit[2];
         cv[2] = hit[6];
-        bv[0] = ((EnemyState*)state)->wallPlane.anchorX;
-        bv[1] = ((EnemyState*)state)->wallPlane.anchorY;
-        bv[2] = ((EnemyState*)state)->wallPlane.anchorZ;
+        bv[0] = fs->wallPlane.anchorX;
+        bv[1] = fs->wallPlane.anchorY;
+        bv[2] = fs->wallPlane.anchorZ;
         PSVECSubtract((Vec*)bv, (Vec*)cv, (Vec*)toAnchor);
-        dot = PSVECDotProduct((Vec*)toAnchor, (Vec*)(state + DUSTER_WALL_PLANE_OFFSET));
-        bv[0] = ((EnemyState*)state)->wallPlane.normal[0] * dot + cv[0];
-        bv[1] = ((EnemyState*)state)->wallPlane.normal[1] * dot + cv[1];
-        bv[2] = ((EnemyState*)state)->wallPlane.normal[2] * dot + cv[2];
+        dot = PSVECDotProduct((Vec*)toAnchor, (Vec*)fs->wallPlane.normal);
+        bv[0] = fs->wallPlane.normal[0] * dot + cv[0];
+        bv[1] = fs->wallPlane.normal[1] * dot + cv[1];
+        bv[2] = fs->wallPlane.normal[2] * dot + cv[2];
         dv[0] = 0.0f;
         dv[1] = 1.0f;
         dv[2] = 0.0f;
-        PSVECCrossProduct((Vec*)dv, (Vec*)(state + DUSTER_WALL_PLANE_OFFSET), (Vec*)sideAxis);
+        PSVECCrossProduct((Vec*)dv, (Vec*)fs->wallPlane.normal, (Vec*)sideAxis);
         PSVECNormalize((Vec*)sideAxis, (Vec*)sideAxis);
         if (sideAxis[0] != 0.0f)
         {
-            ((EnemyState*)state)->wallPlane.axisLimit =
-                (cv[0] - ((EnemyState*)state)->wallPlane.anchorX) / sideAxis[0];
+            fs->wallPlane.axisLimit =
+                (cv[0] - fs->wallPlane.anchorX) / sideAxis[0];
         }
         else
         {
-            ((EnemyState*)state)->wallPlane.axisLimit =
-                (cv[2] - ((EnemyState*)state)->wallPlane.anchorZ) / sideAxis[2];
+            fs->wallPlane.axisLimit =
+                (cv[2] - fs->wallPlane.anchorZ) / sideAxis[2];
         }
-        ((EnemyState*)state)->userData1 = 1;
+        fs->userData1 = 1;
     }
 }
 
@@ -470,7 +472,7 @@ void rachnopUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     return;
 }
 
-void rachnopUpdateIdle(GameObject* obj, int state)
+void rachnopUpdateIdle(GameObject* obj, void* state)
 {
     int cond;
 
@@ -494,7 +496,7 @@ void rachnopUpdateIdle(GameObject* obj, int state)
     return;
 }
 
-void rachnopUpdateApproach(GameObject* obj, int state)
+void rachnopUpdateApproach(GameObject* obj, void* state)
 {
     int cond;
 
@@ -519,7 +521,7 @@ void rachnopUpdateApproach(GameObject* obj, int state)
     return;
 }
 
-void rachnopUpdateAttack(GameObject* obj, int state)
+void rachnopUpdateAttack(GameObject* obj, void* state)
 {
     short move;
     int cond;
@@ -565,7 +567,7 @@ void rachnopUpdateAttack(GameObject* obj, int state)
     return;
 }
 
-void rachnopInit(u32 unused, int state)
+void rachnopInit(GameObject* unused, void* state)
 {
     float fa;
     float fb;

@@ -52,28 +52,22 @@ u32 hwChangeStudio(u32 slot)
     }
 }
 
-void hwGetPos(void* buffer, u32 streamPos, u32 byteCount, u8 streamHandle, void (*callback)(u32), u32 callbackArg)
-{
-    u32 offset;
-    u8* addr;
+void hwGetPos(void* buffer, u32 streamPos, u32 byteCount, u8 streamHandle, void (*callback)(u32), u32 callbackArg) {
     u32 streamLength;
-
-    addr = buffer;
-    offset = aramGetStreamBufferAddress(streamHandle, &streamLength);
+    u8* addr = buffer;
+    u32 offset = aramGetStreamBufferAddress(streamHandle, &streamLength);
     byteCount += streamPos & 0x1f;
     streamPos &= 0xffffffe0;
-    byteCount = (byteCount + 0x1f) & ~0x1f;
+    byteCount = byteCount + 0x1f & ~0x1f;
     addr += streamPos;
     DCStoreRange(addr, byteCount);
     aramUploadData(addr, offset + streamPos, byteCount, 1, callback, callbackArg);
 }
 
-void* hwFlushStream(u8 streamHandle)
-{
+void* hwFlushStream(u8 streamHandle) {
     return (void*)aramGetStreamBufferAddress(streamHandle, 0);
 }
 
-void* hwTransAddr(void* samples)
-{
+void* hwTransAddr(void* samples) {
     return samples;
 }

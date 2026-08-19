@@ -3,10 +3,7 @@
  * into object state and resets the running offsets on a cold load.
  */
 #include "dlls/objects/309_texscroll.h"
-
 #include "main/object_render.h"
-
-#define TEXSCROLL_RENDER_SCALE 1.0f
 
 int TexScroll_getExtraSize(void) {
     return sizeof(TexScrollState);
@@ -20,10 +17,11 @@ void TexScroll_free(void) {
 }
 
 void TexScroll_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 visibility = visible;
-    if (visibility != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, TEXSCROLL_RENDER_SCALE);
+    if (visible == 0) {
+        return;
     }
+
+    objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
 }
 
 void TexScroll_hitDetect(void) {

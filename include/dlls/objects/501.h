@@ -6,6 +6,8 @@
 #include "game/objects/object_setup.h"
 #include "main/objseq.h"
 
+typedef struct ModelLightStruct ModelLightStruct;
+
 /*
  * Only the placement prefix consumed by this DLL is modeled. The active-target
  * retail placement width is not available, so this does not claim a complete

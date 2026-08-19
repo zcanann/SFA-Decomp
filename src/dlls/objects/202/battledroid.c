@@ -82,7 +82,7 @@
 
 /* Baddie-family animation data shared with the sequence-driver TUs. */
 
-void battleDroidUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int code, int wpad0, int wpad1,
+void battleDroidUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int code, int wpad0, int wpad1,
                                   Vec* wpad2, int wpad3)
 {
     if (code == 0x10)
@@ -95,17 +95,17 @@ void battleDroidUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int 
     }
 }
 
-void battleDroidUpdate(int obj, int state)
+void battleDroidUpdate(GameObject* obj, void* state)
 {
 }
 
-void battleDroidUpdateAttack(int obj, int state)
+void battleDroidUpdateAttack(GameObject* obj, void* state)
 {
     f32* pos = (f32*)((EnemyState*)state)->trackedObj;
     baddieTurnTowardPoint((GameObject*)obj, state, pos[3], pos[5], 0xf, 0);
 }
 
-void battleDroidInit(int unused, char* p)
+void battleDroidInit(GameObject* unused, char* p)
 {
     f32 moveSpeedScale;
     ((EnemyState*)p)->sightRange = 60.0f;

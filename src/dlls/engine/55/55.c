@@ -560,7 +560,7 @@ void OptionsScreen_render(int arg)
     int fade;
     TitleMenuItem** item;
     int i;
-    u16* panel = (u16*)gOptionsPanelTable + gOptionsActivePanel * 8;
+    OptionsScreenPanelConfig* panel = &gOptionsPanelTable[gOptionsActivePanel];
 
     if (shouldShowCredits() != 0)
     {
@@ -584,16 +584,16 @@ void OptionsScreen_render(int arg)
     }
 
     titleScreenDrawMenuFrame(fade, 0, 0);
-    if (panel[5] != 0xffff)
+    if (panel->selectionTextId != 0xffff)
     {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel[5]) + 4)) + 0x1e) = fade;
-        gameTextShow(panel[5]);
+        *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel->selectionTextId) + 4)) + 0x1e) = fade;
+        gameTextShow(panel->selectionTextId);
     }
-    if (panel[6] != 0xffff)
+    if (panel->headingTextId != 0xffff)
     {
         gameTextSetColor(0xff, 0xff, 0xff, fade);
-        gameTextShow(panel[6]);
+        gameTextShow(panel->headingTextId);
     }
 
     item = gOptionsMenuItems;

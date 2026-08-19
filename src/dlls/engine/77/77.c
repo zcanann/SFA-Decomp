@@ -138,8 +138,8 @@ void CameraModeNpcSpeak_init(CameraObject* camera, int unused, CameraModeNpcSpea
     int orbitAngleOffset;
     int positiveOrbitDelta, negativeOrbitDelta;
     GameObject* focusedNpc;
-    f32 cameraZ, cameraY, cameraX;
-    u8 traceWork[sizeof(CamcontrolTraceWork)];
+    f32 cameraPos[3];
+    CamcontrolTraceWork traceWork;
 
     if (gCameraModeNpcSpeakState == NULL) {
         gCameraModeNpcSpeakState = (CameraModeNpcSpeakState*)mmAlloc(sizeof(CameraModeNpcSpeakState), 15, 0);
@@ -291,9 +291,10 @@ void CameraModeNpcSpeak_init(CameraObject* camera, int unused, CameraModeNpcSpea
         }
     }
 
-    CameraModeNpcSpeak_solveOrbitPosition((GameObject*)camera->anim.targetObj, &cameraX, &cameraY, &cameraZ);
-    camcontrol_traceMove(&camera->anim.worldPosX, &cameraX, &gCameraModeNpcSpeakState->cameraX, traceWork, 3, 1, 1,
-                         4.0f);
+    CameraModeNpcSpeak_solveOrbitPosition((GameObject*)camera->anim.targetObj, &cameraPos[0], &cameraPos[1],
+                                          &cameraPos[2]);
+    camcontrol_traceMove(&camera->anim.worldPosX, cameraPos, &gCameraModeNpcSpeakState->cameraX, (u8*)&traceWork, 3,
+                         1, 1, 4.0f);
 }
 
 void CameraModeNpcSpeak_release(void) {

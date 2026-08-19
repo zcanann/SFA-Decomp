@@ -20,6 +20,7 @@
 #include "main/objfx.h"
 #include "main/objHitReact_types.h"
 #include "main/dll/dll_005A_staffcollision.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/resource.h"
 #include "dolphin/mtx.h"
 #include "main/dll/objpathtransform_struct.h"
@@ -1400,7 +1401,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     sub = (void*)obj->anim.dll;
     if (sub != NULL) {
         if ((obj->objectFlags & OBJECT_OBJFLAG_HIDDEN) == 0) {
-            vfn = *(void (**)(GameObject*, int, int, int, int, int))(*(int*)sub + 0x10);
+            vfn = (void (*)(GameObject*, int, int, int, int, int))((ObjectInterface*)*(ObjectInterfaceHandle)sub)->render;
             if (vfn != NULL) {
                 vfn(obj, a, b, c, d, flag);
             }

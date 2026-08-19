@@ -7,6 +7,7 @@
 #include "game/objects/object.h"
 #include "main/checkpoint_interface.h"
 #include "main/checkpoint_route.h"
+#include "main/dll/curves_collision_state.h"
 #include "main/objseq.h"
 
 typedef struct SnowBikeRouteFlags {
@@ -87,23 +88,14 @@ typedef struct SnowBikeState {
     s8 collisionHitType;    /* 0x065: path-collision secondaryHitType (-1 = use plain non-Ex setup) */
     u8 pad066[0x2];
     f32 pathProgress;             /* 0x068 */
-    u8 pad06C[0x100];
+    f32 matrix06C[16];
+    f32 matrix0AC[16];
+    f32 matrix0EC[16];
+    f32 matrix12C[16];
     f32 refPosX;             /* 0x16c: position reference X */
     f32 refPosY;             /* 0x170: position reference Y */
     f32 refPosZ;             /* 0x174: position reference Z */
-    u8 attachment[0xB8];    /* 0x178: path-control block lives in here; passed as
-                               gPathControlInterface->attachObject(obj, state + 0x178) */
-    u8 dampPresetModeRaw;   /* 0x230: un-latched preset selector copied into dampPresetMode */
-    u8 pad231[0xDF];
-    s16 unk310;             /* 0x310 */
-    s16 unk312;             /* 0x312 */
-    u8 pad314[0xBF];
-    s8 unk3D3;              /* 0x3d3 */
-    u8 pad3D4[0x2];
-    u8 unk3D6;              /* 0x3d6 */
-    u8 pad3D7[0x2];
-    s8 unk3D9;              /* 0x3d9 */
-    u8 pad3DA[0x6];
+    CurvesCollisionState pathState; /* 0x178 */
     f32 collisionFxDamping;             /* 0x3e0 */
     f32 collisionFxTimer;             /* 0x3e4 */
     f32 modelMtxPosX;       /* 0x3e8: model matrix position */
@@ -161,7 +153,9 @@ typedef struct SnowBikeState {
     f32 localVelX;             /* 0x494 */
     f32 localVelY;             /* 0x498 */
     f32 localVelZ;             /* 0x49c: local-frame velocity Z (PSVECMag/PSVECScale treat 0x494 as a Vec) */
-    u8 pad4A0[0xC];
+    f32 liftOffsetX;
+    f32 liftOffsetY;
+    f32 liftOffsetZ;
     f32 collisionBounceScale; /* 0x4ac: collision velocity-retention scalar (localVel *= dot*collisionBounceScale + K on hit) */
     f32 liftAccel;          /* 0x4b0: vertical accel integrated into localVelY (localVelY += liftAccel*dt); also scales turn force */
     u8 dampPresetMode;      /* 0x4b4: latched mode (copied from unk230) selecting the spring-target preset in the damp update switch */
@@ -206,7 +200,6 @@ typedef struct SnowBikeState {
 STATIC_ASSERT(offsetof(SnowBikeState, trails) == 0x4C8);
 STATIC_ASSERT(offsetof(SnowBikeState, activeTrails) == 0x510);
 STATIC_ASSERT(offsetof(SnowBikeState, refPosX) == 0x16C);
-STATIC_ASSERT(offsetof(SnowBikeState, unk3D6) == 0x3D6);
 STATIC_ASSERT(offsetof(SnowBikeState, collisionFxDamping) == 0x3E0);
 STATIC_ASSERT(offsetof(SnowBikeState, impactShakeTimer) == 0x424);
 STATIC_ASSERT(offsetof(SnowBikeState, routeFlags) == 0x428);
@@ -224,7 +217,7 @@ s32 SnowBike_isAtRankGate(GameObject* obj);
 int SnowBike_SeqFn(GameObject* obj, int unused, ObjSeqState* seq);
 void SnowBike_onSeqFree(GameObject* obj);
 void SnowBike_buildOrientationMatrices(GameObject* obj, int state);
-void SnowBike_InitTuning(GameObject* obj, int state);
+void SnowBike_InitTuning(GameObject* obj, SnowBikeState* state);
 f32 SnowBike_func13(GameObject* obj, f32* out);
 void SnowBike_getPlayerAnim(GameObject* obj, f32* outFloat, s32* outBool);
 void SnowBike_setMountState(GameObject* obj, int type);

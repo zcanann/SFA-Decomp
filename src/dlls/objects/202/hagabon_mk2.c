@@ -184,7 +184,7 @@ ObjModelChainDesc* gCrawlerModelChainIds[] = {
     &gHagabonMK2ModelChain0, &gHagabonMK2ModelChain1, &gHagabonMK2ModelChain2, &gHagabonMK2ModelChain3, &gHagabonMK2ModelChain4,
 };
 
-void crawler_rotateVectorYaw(int unused1, int* unused2, f32* vec, int unused3, int nodeIndex, f32 phase)
+void crawler_rotateVectorYaw(ModelFileHeader* unused1, ObjModel* unused2, f32* vec, int unused3, int nodeIndex, f32 phase)
 {
     f32 mtx[12];
     f32 a;
@@ -193,15 +193,15 @@ void crawler_rotateVectorYaw(int unused1, int* unused2, f32* vec, int unused3, i
     PSMTXMultVecSR((MtxPtr)mtx, (Vec*)vec, (Vec*)vec);
 }
 
-void hagabonMK2_stopLoopSfx(int obj, u8* state)
+void hagabonMK2_stopLoopSfx(GameObject* obj, u8* state)
 {
     Sfx_StopFromObject((GameObject*)obj, SFXTRIG_baddie_rach_death);
 }
 
-void hagabonMK2_updateWhileFrozen(int obj, u8* st, GameObject* attacker, int cmd, int wpad0, int wpad1, Vec* wpad2,
+void hagabonMK2_updateWhileFrozen(GameObject* obj, u8* st, GameObject* attacker, int cmd, int wpad0, int wpad1, Vec* wpad2,
                                   int wpad3)
 {
-    int objI = obj;
+    GameObject* objI = obj;
     if (cmd == 0x11)
     {
     }
@@ -300,7 +300,7 @@ void hagabonMK2_updateB(GameObject* obj, u8* state)
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         i = ((EnemyState*)state)->userData1;
-        baddieSetMove(obj, (int)state, gCrawlerSeqTable[i].moveId, gCrawlerSeqTable[i].spd, 0, 0);
+        baddieSetMove(obj, state, gCrawlerSeqTable[i].moveId, gCrawlerSeqTable[i].spd, 0, 0);
         ((EnemyState*)state)->userData1 = gCrawlerSeqTable[((EnemyState*)state)->userData1].next;
     }
 
@@ -432,7 +432,7 @@ void hagabonMK2_update(GameObject* obj, u8* state)
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         i = ((EnemyState*)state)->userData1;
-        baddieSetMove(obj, (int)state, gCrawlerSeqTable[i].moveId, gCrawlerSeqTable[i].spd, 0, 0);
+        baddieSetMove(obj, state, gCrawlerSeqTable[i].moveId, gCrawlerSeqTable[i].spd, 0, 0);
         ((EnemyState*)state)->userData1 = gCrawlerSeqTable[((EnemyState*)state)->userData1].next;
     }
     pw = powfBitEstimate(((EnemyState*)state)->drag, timeDelta);
@@ -500,7 +500,7 @@ void hagabonMK2_init(GameObject* obj, EnemyState* st)
     st->pathStep *= 3.0f;
     {
         u32 idx = st->userData1;
-        baddieSetMove(obj, (int)st, gCrawlerSeqTable[idx].moveId, gCrawlerSeqTable[idx].spd, 0, 0);
+        baddieSetMove(obj, st, gCrawlerSeqTable[idx].moveId, gCrawlerSeqTable[idx].spd, 0, 0);
     }
     st->crawler.emergeTimer = 15.0f;
     ObjHits_SetHitVolumeMasks(&obj->anim, 0xe, 1, 0xfff);

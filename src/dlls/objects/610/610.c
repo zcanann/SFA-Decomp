@@ -193,7 +193,7 @@ int drakormissile_isFadingOut(GameObject* obj)
 
 int drakormissile_getExtraSize(void)
 {
-    return DRAKORMISSILE_EXTRA_SIZE;
+    return sizeof(DrakorMissileState);
 }
 
 int drakormissile_getObjectTypeId(void)

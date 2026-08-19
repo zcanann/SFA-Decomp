@@ -58,10 +58,12 @@ void dll502_update(GameObject* obj) {
 }
 
 void dll502_init(GameObject* obj, const Dll1F6PlacementView* placement) {
-    if (obj->anim.romDefNo != DLL1F6_SEQUENCE_TIED) {
-        obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
-        ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
+    if (obj->anim.romDefNo == DLL1F6_SEQUENCE_TIED) {
+        return;
     }
+
+    obj->anim.rotX = placement->rotXByte << 8;
+    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
 }
 
 void dll502_release(void) {

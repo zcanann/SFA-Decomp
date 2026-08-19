@@ -202,7 +202,8 @@ void dfshLaserBeam_update(GameObject* obj) {
                         state->knockbackTargetX = beamDirectionX * pushDistance + player->anim.localPosX;
                         state->knockbackTargetZ = beamDirectionZ * pushDistance + player->anim.localPosZ;
                         if ((state->proximityMode == 0) || (state->proximityMode == 1)) {
-                            ObjMsg_SendToObject(player, DFSH_LASER_BEAM_MSG_PLAYER_HIT, state->messagePayload, 0);
+                            ObjMsg_SendToObject(player, DFSH_LASER_BEAM_MSG_PLAYER_HIT,
+                                                (GameObject*)state->messagePayload, 0);
                         }
                         state->damageCooldown = 0x14;
                     } else {

@@ -13,6 +13,6 @@
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
 
-void sharpClawInit(int obj, u8* state);
+void sharpClawInit(GameObject* obj, u8* state);
 
 #endif

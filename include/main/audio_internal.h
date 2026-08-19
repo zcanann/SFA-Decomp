@@ -9,7 +9,11 @@
 #include "dolphin/mtx/vec.h"
 #include "game/objects/object.h"
 
+#define AUDIO_ARQ_REQUEST_COUNT 16
+#define MUSIC_CHANNEL_COUNT 16
 #define SFX_OBJECT_CHANNEL_COUNT 56
+#define SFX_LOOPED_OBJECT_TABLE_OBJECT_COLUMN \
+    (offsetof(SfxLoopedObjectSoundTable, objects) / sizeof(GameObject*))
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN 2
 #define SFX_LOOPED_OBJECT_STOP_FLAG 0x40
@@ -100,7 +104,7 @@ STATIC_ASSERT(sizeof(MusicTrigger) == 0x10);
 typedef struct SfxLoopedObjectSoundTable {
     u8 flags[0x80];
     u16 ids[0x80];
-    u32 objects[0x80];
+    GameObject* objects[0x80];
 } SfxLoopedObjectSoundTable;
 
 typedef struct SfxObjectChannel {
@@ -174,7 +178,7 @@ typedef struct SfxTriggerCacheEntry {
 
 extern u8 gSfxLoopedObjectSoundFlags[0x80];
 extern u16 gSfxLoopedObjectSoundIds[0x80];
-extern u32 gSfxLoopedObjectSoundObjects[0x80];
+extern GameObject* gSfxLoopedObjectSoundObjects[0x80];
 extern u16 gSfxLoopedObjectSoundCount;
 extern SfxObjectChannel gSfxObjectChannels[];
 extern u8 gSfxGlobalReverbLevel;

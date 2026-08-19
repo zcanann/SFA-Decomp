@@ -1131,6 +1131,11 @@ void Lightfoot_initialise(void) {
     gLightfootSubstateHandlers[2] = Lightfoot_UpdateProximityInteractionState;
 }
 
+
+
+LightfootStateHandler gLightfootStateHandlers[DLL1B5_STATE_HANDLER_COUNT];
+LightfootSubstateHandler gLightfootSubstateHandlers[DLL1B5_SUBSTATE_HANDLER_COUNT];
+
 ObjectDescriptor gLightfootObjDescriptor = {
     0,
     0,
@@ -1147,6 +1152,3 @@ ObjectDescriptor gLightfootObjDescriptor = {
     (ObjectDescriptorCallback)Lightfoot_getObjectTypeId,
     Lightfoot_getExtraSize,
 };
-
-LightfootStateHandler gLightfootStateHandlers[DLL1B5_STATE_HANDLER_COUNT];
-LightfootSubstateHandler gLightfootSubstateHandlers[DLL1B5_SUBSTATE_HANDLER_COUNT];

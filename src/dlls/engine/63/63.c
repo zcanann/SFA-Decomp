@@ -55,9 +55,8 @@ int dll_3F_frameStart_ret_0(void)
     return 0;
 }
 
-void dll_3F_release(void)
-{
-    textureFree((Texture*)(gDll3FTexture));
+void dll_3F_release(void) {
+    textureFree(gDll3FTexture);
 }
 
 void dll_3F_initialise(void)

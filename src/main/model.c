@@ -12,6 +12,7 @@
 #include "main/mm.h"
 #include "game/objects/object.h"
 #include "main/object_transform.h"
+#include "main/objHitReact_types.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/PPCArch.h"
@@ -350,7 +351,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
         {
             outFlags |= 0x20;
         }
-        modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount,
+        modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
                                     (u8*)gModelJointScratchBuffer, flags, outFlags | 0x40);
     }
     else
@@ -400,7 +401,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
                 }
                 work.eventCountdown = slotEvent;
                 modelAnimUpdateChannels(file, &work, 2);
-                modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount,
+                modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
                                             (u8*)gModelJointScratchBuffer, flags, blendMask);
                 if (blendMask != 0)
                 {
@@ -440,7 +441,7 @@ void modelAnimEvalChannels(u8* dst, ObjModel* model, ObjAnimState* channel, f32 
             {
                 outFlags |= 0x20;
             }
-            modelAnimBuildJointMatrices(&mtxBuf, dst, &work, file->jointData, file->jointCount,
+            modelAnimBuildJointMatrices((int*)&mtxBuf, dst, &work, file->jointData, file->jointCount,
                                         (u8*)gModelJointScratchBuffer, flags, outFlags);
         }
     }
@@ -580,8 +581,8 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     {
         ((ModelFileHeader*)hdr)->animationHeaderBuffer = NULL;
         ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
-        buf += ((ModelFileHeader*)hdr)->animationCount * 4;
-        padBytes += ((ModelFileHeader*)hdr)->animationCount * 4;
+        buf += ((ModelFileHeader*)hdr)->animationCount * (int)sizeof(u8*);
+        padBytes += ((ModelFileHeader*)hdr)->animationCount * (int)sizeof(u8*);
         while (padBytes & 7)
         {
             buf++;
@@ -674,7 +675,7 @@ int modelGetAmapSize(int modelId, int amapFlag, int animCount)
     }
     else
     {
-        totalSize += animCount * 4;
+        totalSize += animCount * (int)sizeof(u8*);
         while (totalSize & 7)
         {
             totalSize++;
@@ -1107,7 +1108,7 @@ static void modelChainUpdateNodes(ObjModel* model, ModelFileHeader* file, ObjMod
         work.z = entry->nodes[i - 1].localOffset.z;
         if (callback != NULL)
         {
-            callback((int)file, (int*)model, (f32*)&work, callbackArg, i, chain->phase);
+            callback(file, model, (f32*)&work, callbackArg, i, chain->phase);
         }
         PSVECAdd(&work, &entry->nodes[i].localOffset, &work);
         PSMTXMultVec(tmp, &work, &work);
@@ -1318,7 +1319,7 @@ static void modelChainInitNodesFromJoints(int* obj, ModelFileHeader* b, int* des
     }
 }
 
-void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjModelChainUpdateCallback callback)
+void ObjModelChain_Update(ObjModel* model, ModelFileHeader* file, ObjModelChain* chain, ObjModelChainUpdateCallback callback)
 {
     int off;
     int i;
@@ -1331,18 +1332,18 @@ void ObjModelChain_Update(int* model, int animState, ObjModelChain* chain, ObjMo
         {
             if (chain->firstUpdateDone == 0)
             {
-                modelChainInitNodesFromJoints(model, (ModelFileHeader*)animState, (int*)((u8*)chain->entries + off));
+                modelChainInitNodesFromJoints((int*)model, file, (int*)((u8*)chain->entries + off));
             }
             if (getHudHiddenFrameCount() == 0)
             {
-                modelChainApplyDampingAndJitter((ObjModel*)model, (ModelFileHeader*)animState, chain,
+                modelChainApplyDampingAndJitter(model, file, chain,
                                                 (ObjModelChainEntry*)((u8*)chain->entries + off));
-                modelChainUpdateNodes((ObjModel*)model, (ModelFileHeader*)animState, chain,
+                modelChainUpdateNodes(model, file, chain,
                                       (ObjModelChainEntry*)((u8*)chain->entries + off), callback, i);
             }
             else
             {
-                modelChainUpdateNodesPassive((ObjModel*)model, (ModelFileHeader*)animState, chain,
+                modelChainUpdateNodesPassive(model, file, chain,
                                              (ObjModelChainEntry*)((u8*)chain->entries + off));
             }
             off += 0xc;
@@ -1529,18 +1530,18 @@ void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA,
 
 void model_multMtxs(u8* model, f32* out)
 {
-    u8* hdr = (u8*)((ObjModel*)model)->file;
+    ModelFileHeader* hdr = ((ObjModel*)model)->file;
     u32 i;
-    for (i = 0; i < hdr[0xf3]; i++)
+    for (i = 0; i < hdr->jointCount; i++)
     {
         int j = i;
-        u8* h = (u8*)((ObjModel*)model)->file;
-        u32 cnt = h[0xf3];
+        ModelFileHeader* h = ((ObjModel*)model)->file;
+        u32 cnt = h->jointCount;
         int lim;
         MtxPtr base;
         if (cnt != 0)
         {
-            lim = cnt + h[0xf4];
+            lim = cnt + h->extraJointCount;
         }
         else
         {

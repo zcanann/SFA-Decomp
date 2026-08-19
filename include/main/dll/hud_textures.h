@@ -10,7 +10,7 @@
  * maybetemplate.c and dll_0000_gameui.c; unobserved ranges padded.
  */
 typedef struct HudTextures {
-    u8 pad0[0x28 - 0x0];
+    void* pad0[0x28 / 4];
     void * tex28;
     void * tex2C;
     void * tex30;

@@ -370,7 +370,7 @@ typedef struct ObjModelState {
   u8 pad38[0x3A - 0x38];
   u8 shadowTintA;
   u8 shadowTintB;
-  u8 pad3C[0x40 - 0x3C];
+  void *lastSelectedLight;
   u8 shadowAlpha;
   u8 pad41[0x44 - 0x41];
 } ObjModelState;
@@ -466,7 +466,7 @@ typedef struct ObjAnimComponent {
   f32 activeMoveProgress;
   s16 currentMove;
   s16 activeMove;
-  void *targetObj; /* attention/track target (GameObject*): camera focus/track
+  void* targetObj; /* attention/track target (GameObject*): camera focus/track
                      sites across CAM TUs + baddieControl.c 0xA4-as-pointer
                      census - general object field, not camera-specific */
   f32 hitboxScale;

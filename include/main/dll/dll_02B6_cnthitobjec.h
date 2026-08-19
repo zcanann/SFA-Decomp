@@ -4,6 +4,7 @@
 #include "game/objects/object.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_setup.h"
+#include "main/objseq.h"
 
 #define CNTHIT_MODE_VISIBLE_OBJECT 2
 #define CNTHIT_PROFILE_COUNT 3

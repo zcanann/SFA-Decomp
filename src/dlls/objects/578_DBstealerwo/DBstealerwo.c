@@ -754,7 +754,6 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, BaddieState* baddie, f32 t)
     DbStealerwormControl* sub;
     GroundBaddieState* blob = (obj)->extra;
     int c30;
-    int tmpA;
     int tmpB;
     int found;
     int i;
@@ -2555,6 +2554,10 @@ typedef struct DbStealerwormObjDescriptorLayout
     char debugStrings[0x5C];
 } DbStealerwormObjDescriptorLayout;
 
+
+
+int gDBStealerWormStateHandlersA[17];
+
 DbStealerwormObjDescriptorLayout gDBstealerwormObjDescriptor = {
     0,
     0,
@@ -2577,5 +2580,3 @@ DbStealerwormObjDescriptorLayout gDBstealerwormObjDescriptor = {
     " Stack -------------------\n\000%i : %s : Opand %i \n\000\000\000\000 HAS BALL : %x= %x\n\000 THROW "
     "CHANCE %i \n",
 };
-
-int gDBStealerWormStateHandlersA[17];

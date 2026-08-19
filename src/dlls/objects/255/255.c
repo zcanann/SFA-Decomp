@@ -223,7 +223,7 @@ void MagicDust_update(GameObject* obj) {
         if (obj->anim.modelState != NULL) {
             obj->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
-        state->unk25B = 1;
+        state->path.subtype = 1;
         if ((state->flags & MAGICGEM_FLAG_MOTION_MASK) == 0) {
             obj->anim.velocityX *= MAGICGEM_VELOCITY_DAMPING;
             obj->anim.velocityZ *= MAGICGEM_VELOCITY_DAMPING;
@@ -274,7 +274,7 @@ void MagicDust_update(GameObject* obj) {
             (*gPathControlInterface)->update((void*)obj, (void*)state, timeDelta);
             (*gPathControlInterface)->apply((void*)obj, (void*)state);
             (*gPathControlInterface)->advance((void*)obj, (void*)state, timeDelta);
-            if (state->contacted != 0) {
+            if (state->path.surfaceCounter != 0) {
                 f32 velocityX = -obj->anim.velocityX;
                 f32 velocityY = -obj->anim.velocityY;
                 f32 velocityZ = -obj->anim.velocityZ;
@@ -282,7 +282,7 @@ void MagicDust_update(GameObject* obj) {
                 if (speed > MAGICGEM_BOUNCE_SFX_SPEED) {
                     Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh3_c_16b);
                 }
-                if (state->contactNormalY >= MAGICGEM_FLOOR_NORMAL_THRESHOLD) {
+                if (state->path.segmentHits.planes[0][1] >= MAGICGEM_FLOOR_NORMAL_THRESHOLD) {
                     obj->anim.velocityY = -obj->anim.velocityY;
                     obj->anim.velocityY *= MAGICGEM_BOUNCE_RESTITUTION_Y;
                 } else {

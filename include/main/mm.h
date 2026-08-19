@@ -27,8 +27,8 @@ void mmFreeDeferred(void* p);
 void mmInit(void);
 
 int mmSetFreeDelay(int v);
-int mmSetDelay2(int v);
-int mmSetDelay(int v);
+int testAndSet_onlyUseHeaps1and2(int v);
+int testAndSet_onlyUseHeap3(int v);
 int mmGetRegionForPtr(u8* ptr);
 int getHeapItemSize(void* ptr);
 void mmFreeTick(int arg);

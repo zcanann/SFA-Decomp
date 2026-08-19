@@ -33,9 +33,6 @@ STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == offsetof(LandedArwin
 #define STAFF_ACTIVATED_PARTICLE_ID    0x7C3
 #define STAFF_ACTIVATED_GAME_BIT_NONE  -1
 
-#define STAFF_ACTIVATED_FLAG_ACTIVE_SHIFT 7
-#define STAFF_ACTIVATED_FLAG_LOCKED_SHIFT 6
-
 #define STAFF_ACTIVATED_LIFT_MAX_SIZE_VARIANT 2
 #define STAFF_ACTIVATED_LIFT_MOVE_HEIGHT      0x800
 #define STAFF_ACTIVATED_LIFT_SFX_HEIGHT       0x40
@@ -61,13 +58,10 @@ s16 gStaffActivatedScarabObjectIds[4] = {
 };
 
 void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state) {
-    u32 flagByte;
     s32 previousHeight;
     s32 rumbleStrength;
 
-    flagByte = state->flagByte;
-    if ((flagByte >> STAFF_ACTIVATED_FLAG_ACTIVE_SHIFT & 1) == 0u ||
-        (flagByte >> STAFF_ACTIVATED_FLAG_LOCKED_SHIFT & 1) != 0u) {
+    if (!state->flags.active || state->flags.locked) {
         return;
     }
     if (state->liftReset == 0) {

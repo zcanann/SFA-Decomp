@@ -52,7 +52,7 @@ Dll9AThreeIndexList gDll9ATriangleIndices = {{0, 1, 2}, 0};
 Dll9ASingleIndexList gDll9ASingleVertexIndex = {2, 0};
 Dll9AThreeIndexList gDll9AAllVertexIndices = {{0, 1, 2}, 0};
 
-extern u32 gDll9AEffectVertexData[sizeof(Dll9AEffectResourceView) / sizeof(u32)];
+extern u16 gDll9AEffectVertexData[sizeof(Dll9AEffectResourceView) / sizeof(u16)];
 
 const Dll9ASequenceTemplate gDll9ASequenceTemplate = {
     {{0, 10, 40, 60, 40, 0, 0}},
@@ -249,8 +249,9 @@ void dll_9A_release(void) {
 void dll_9A_initialise(void) {
 }
 
-u32 gDll9AEffectVertexData[sizeof(Dll9AEffectResourceView) / sizeof(u32)] = {
-    0x000000e6, 0x07080000, 0x001f0000, 0xff1a0708, 0x001f001f, 0x00000000, 0x0000000f, 0x00100000,
+u16 gDll9AEffectVertexData[sizeof(Dll9AEffectResourceView) / sizeof(u16)] = {
+    0x0000, 0x00e6, 0x0708, 0x0000, 0x001f, 0x0000, 0xff1a, 0x0708, 0x001f,
+    0x001f, 0x0000, 0x0000, 0x0000, 0x000f, 0x0010, 0x0000,
 };
 
 Dll9AResourceDescriptor gDll9AResourceDescriptor = {

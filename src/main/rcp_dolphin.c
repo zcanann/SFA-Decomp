@@ -30,6 +30,7 @@
 #include "main/gx_scissor_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_hud_color_api.h"
 #include "main/shader_init_api.h"
 
 u8 gRcpDistortSlotIndex;

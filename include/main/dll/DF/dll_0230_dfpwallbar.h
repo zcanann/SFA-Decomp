@@ -25,7 +25,7 @@ typedef struct ChukaPlacement
 
 int chuka_getExtraSize(void);
 int chuka_getObjectTypeId(void);
-void chuka_free(int obj);
+void chuka_free(GameObject* obj);
 void chuka_render(void);
 void chuka_hitDetect(GameObject* obj);
 void chuka_update(GameObject* obj);

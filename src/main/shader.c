@@ -869,7 +869,7 @@ void mapLoadUnloadObjects(int flag)
         GameObject** objs = ObjList_GetObjects(&i, &objCount);
         while (i < objCount)
         {
-            obj = (GameObject*)objs[i];
+            obj = objs[i];
             fp = obj->anim.placement;
             i++;
             unload = 0;
@@ -2806,7 +2806,7 @@ static void mapBuildRomListIndex(MapRomListPage* p, MapRomListIndex* tbl, int id
                         (*gCheckpointInterface)->addRouteEntry((CheckpointRouteEntry*)cur);
                     if (found == 0)
                     {
-                        tbl->curvesOffset = (int)cur - (int)p->objects;
+                        tbl->curvesOffset = (int)(cur - (char*)p->objects);
                         found = 1;
                     }
                 }
@@ -2814,7 +2814,7 @@ static void mapBuildRomListIndex(MapRomListPage* p, MapRomListIndex* tbl, int id
                 {
                     if ((mask & (1 << ((ObjPlacement*)cur)->loadRange)) == 0)
                     {
-                        tbl->groupOffset[((ObjPlacement*)cur)->loadRange] = (int)cur - (int)p->objects;
+                        tbl->groupOffset[((ObjPlacement*)cur)->loadRange] = (int)(cur - (char*)p->objects);
                         mask |= 1 << ((ObjPlacement*)cur)->loadRange;
                     }
                 }

@@ -6,14 +6,12 @@
 #include "dlls/objects/246_Area.h"
 #include "game/objects/object.h"
 
-#define AREA_OBJECT_TYPE_ID 0
-
 int area_getExtraSize(void) {
     return 0;
 }
 
 int area_getObjectTypeId(void) {
-    return AREA_OBJECT_TYPE_ID;
+    return 0;
 }
 
 void area_free(void) {
@@ -29,7 +27,7 @@ void area_update(void) {
 }
 
 void area_init(GameObject* obj) {
-    obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void area_release(void) {

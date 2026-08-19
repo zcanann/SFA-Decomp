@@ -112,7 +112,7 @@ enum MikaladonVerticalPhase
 /* mikaladon_update: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
 
-void mikaladon_updateWhileFrozen(int obj, u8* state, GameObject* attacker, int msg, int wpad0, int wpad1, Vec* wpad2,
+void mikaladon_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int msg, int wpad0, int wpad1, Vec* wpad2,
                                  int wpad3)
 {
     if (msg == 16 || msg == 17)

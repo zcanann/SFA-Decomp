@@ -16,6 +16,7 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -48,7 +49,6 @@
 #define DBPROTECTION_GAMEBIT_CYCLE_B_DONE     0xa3f
 #define DBPROTECTION_GAMEBIT_TRANSITION_ARMED 0x9f
 #define DBPROTECTION_GAMEBIT_TRANSITION_USED  0xa0
-#define DBPROTECTION_GAMEBIT_TRANSITION_READY 0x91c
 #define DBPROTECTION_GAMEBIT_MUTE_SFX         0xa71
 #define DBPROTECTION_ENVFX_A                  0x467e7
 #define DBPROTECTION_ENVFX_B                  0x467e8
@@ -437,9 +437,9 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             state->phaseCounter = 5;
             state->headingLatch = 200;
             {
-                int sfxObj = (int)sbGetPropeller();
-                Sfx_StopFromObject((GameObject*)sfxObj, SFXTRIG_swtst1_c);
-                Sfx_PlayFromObject((GameObject*)sfxObj, SFXTRIG_mv_curtainloop16);
+                GameObject* sfxObj = sbGetPropeller();
+                Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
+                Sfx_PlayFromObject(sfxObj, SFXTRIG_mv_curtainloop16);
             }
             mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         } else if (state->phaseCounter >= 4) {
@@ -755,7 +755,7 @@ void SB_Galleon_updateShield(GameObject* obj) {
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
         mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
-        mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0) {
+        mainGetBit(GAMEBIT_ITEM_WMGoldKey_Got) != 0) {
         gSB_GalleonTransitionPending = 1;
         mainSetBits(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);
         (*gScreenTransitionInterface)->start(0xa, SCREEN_TRANSITION_BLACK);
@@ -1132,11 +1132,11 @@ int SB_Galleon_getObjectTypeId(void) {
 void SB_Galleon_free(GameObject* obj, int leavingMap) {
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     if (gSbGalleonSkyTexA != NULL) {
-        textureFree((Texture*)((void*)gSbGalleonSkyTexA));
+        textureFree(gSbGalleonSkyTexA);
         gSbGalleonSkyTexA = NULL;
     }
     if (gSbGalleonSkyTexB != NULL) {
-        textureFree((Texture*)((void*)gSbGalleonSkyTexB));
+        textureFree(gSbGalleonSkyTexB);
         gSbGalleonSkyTexB = NULL;
     }
     objFreeObjectType(obj, SBGALLEON_OBJGROUP);

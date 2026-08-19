@@ -5,6 +5,7 @@
 #include "game/objects/object.h"
 #include "main/objprint_character_api.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/curves_collision_state.h"
 
 typedef struct SHthorntailPlacement {
     union {
@@ -45,12 +46,18 @@ typedef struct SHthorntailState {
     u8 freezeFrameCounter;
     u8 hitReactState;
     u8 unknown641[0x644 - 0x641];
-    u8 moveScratch[0x7DC - 0x644];
-    s16 moveControlPitch;
-    s16 moveControlRoll;
-    u8 unknown7E0[0x89F - 0x7E0];
-    u8 activeMoveValid;
-    u8 unknown8A0[0x8AC - 0x8A0];
+    union {
+        CurvesCollisionState pathState;
+        u8 moveScratch[sizeof(CurvesCollisionState)];
+        struct {
+            u8 unknownPathStart[offsetof(CurvesCollisionState, tiltPitch)];
+            s16 moveControlPitch;
+            s16 moveControlRoll;
+            u8 unknownPathTiltToSubtype[offsetof(CurvesCollisionState, subtype) -
+                                        (offsetof(CurvesCollisionState, tiltRoll) + sizeof(s16))];
+            u8 activeMoveValid;
+        };
+    };
     u8 hitReactScratch[0x8B0 - 0x8AC];
     CharacterEyeAnimState eyeAnimState;
     u8 pad8D8[0x8];

@@ -14,21 +14,16 @@ typedef struct HwAdsrEnvelope
     u16 releaseTime;
 } HwAdsrEnvelope;
 
-void hwSetADSR(int slot, u32* adsr, u8 mode)
-{
-    HwAdsrEnvelope* envelope;
+void hwSetADSR(int slot, u32* adsr, u8 mode) {
     u32 value;
-
-    envelope = (HwAdsrEnvelope*)adsr;
-    switch (mode)
-    {
+    HwAdsrEnvelope* envelope = (HwAdsrEnvelope*)adsr;
+    switch (mode) {
     case 0:
         dspVoice[slot].adsr.mode = ADSR_MODE_LINEAR;
         dspVoice[slot].adsr.aTime = envelope->attack;
         dspVoice[slot].adsr.dTime = envelope->decay;
 
-        if ((value = envelope->sustain << 3) > 0x7fff)
-        {
+        if ((value = envelope->sustain << 3) > 0x7fff) {
             value = 0x7fff;
         }
 

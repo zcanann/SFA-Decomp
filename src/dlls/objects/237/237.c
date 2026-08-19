@@ -251,7 +251,7 @@ void collectible_updateLooseMotion(GameObject* obj) {
     (*gPathControlInterface)->update(obj, &state->pathState, timeDelta);
     (*gPathControlInterface)->apply(obj, &state->pathState);
     (*gPathControlInterface)->advance(obj, &state->pathState, timeDelta);
-    if (state->bounceHitFlag != 0) {
+    if (state->pathState.surfaceCounter != 0) {
         f32 inverseVelocityX = -obj->anim.velocityX;
         f32 inverseVelocityY = -obj->anim.velocityY;
         f32 inverseVelocityZ = -obj->anim.velocityZ;
@@ -264,9 +264,9 @@ void collectible_updateLooseMotion(GameObject* obj) {
             inverseVelocityZ = inverseVelocityZ * inverseSpeed;
         }
         {
-            f32 normalX = state->bounceNormalX;
-            f32 normalY = state->bounceNormalY;
-            f32 normalZ = state->bounceNormalZ;
+            f32 normalX = state->pathState.segmentHits.planes[0][0];
+            f32 normalY = state->pathState.segmentHits.planes[0][1];
+            f32 normalZ = state->pathState.segmentHits.planes[0][2];
             f32 projectionScale =
                 2.0f * (inverseVelocityX * normalX + inverseVelocityY * normalY + inverseVelocityZ * normalZ);
             obj->anim.velocityX = normalX * projectionScale;

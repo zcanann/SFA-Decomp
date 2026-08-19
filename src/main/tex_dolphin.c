@@ -68,8 +68,8 @@
 #include "main/objseq_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/lightmap_render_queue_api.h"
+#include "main/lightmap_internal.h"
 #include "main/objprint_dolphin_internal.h"
-#include "main/dll/ppcwgpipe_struct.h"
 
 u8 gCloudLayerOverlayColor[4] = {0x20, 0x20, 0x20, 0};
 GXColor gTexShaderAmbColor = {0xFF, 0xFF, 0xFF, 0xFF};
@@ -188,7 +188,7 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
     Texture** noiseTextures;
     MapBlockBoundsRec* bounds[1];
     u8 passCount;
-    int byteBase;
+    u8* byteBase;
     u32 bits;
     int bitPos;
     u32 flags;
@@ -197,11 +197,11 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
     bitPos = state->bit;
     {
         int off = bitPos >> 3;
-        byteBase = (int)state->instrs;
-        bits = *(u8*)(byteBase + off);
+        byteBase = state->instrs;
+        bits = byteBase[off];
         byteBase += off;
-        bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
-        bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
+        bits = bits | (u32)(byteBase[1] << 8);
+        bits = bits | (u32)(byteBase[2] << 16);
     }
     state->bit = bitPos + 8;
     /* extract this cursor's 8-bit field (LSB-first: shift out the bits already
@@ -247,7 +247,7 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
 {
     Shader* shader;
     u32 shaderIdx;
-    int byteBase;
+    u8* byteBase;
     GXColor fogColor;
     u32 bits;
     u32 bitPos;
@@ -257,11 +257,11 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     bitPos = state->bit;
     {
         int off = (int)bitPos >> 3;
-        byteBase = (int)state->instrs;
-        bits = *(u8*)(byteBase + off);
+        byteBase = state->instrs;
+        bits = byteBase[off];
         byteBase += off;
-        bits |= (u32) * (u8*)(byteBase + 1) << 8;
-        bits |= (u32) * (u8*)(byteBase + 2) << 16;
+        bits |= (u32)byteBase[1] << 8;
+        bits |= (u32)byteBase[2] << 16;
         state->bit = bitPos + 6;
         shaderIdx = (bits >> (bitPos & 7)) & 0x3f;
         shader = &blockData->shaders[shaderIdx];
@@ -936,7 +936,7 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     }
     if ((SHADER_FLAGS(shader) & 1) != 0 || (SHADER_FLAGS(shader) & 0x40000) != 0 ||
         (SHADER_FLAGS(shader) & 0x800) != 0 || (SHADER_FLAGS(shader) & 0x1000) != 0) {
-        GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&gTexShaderAmbColor);
+        GXSetChanAmbColor(GX_COLOR0, gTexShaderAmbColor);
         if ((SHADER_FLAGS(shader) & 0x40000) != 0) {
             GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         } else {
@@ -1446,7 +1446,7 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type)
     count = block->polyGroupCount;
     for (i = 0; i < count; i++)
     {
-        entry = (MapTriGroup*)((int)block->polygonGroups + offset);
+        entry = (MapTriGroup*)((u8*)block->polygonGroups + offset);
         if (type == (int)((entry->flags & 0xff000000) >> 24))
         {
             total += entry[1].firstTri - entry->firstTri;

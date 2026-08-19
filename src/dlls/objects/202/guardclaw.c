@@ -179,7 +179,7 @@ void guardClaw_update(GameObject* obj, u8* state)
             (u8)((obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         if ((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
         {
-            groundBaddieHandlePaidTrigger((int)obj, state);
+            groundBaddieHandlePaidTrigger(obj, state);
         }
     }
     else
@@ -246,7 +246,7 @@ void guardClaw_update(GameObject* obj, u8* state)
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_eggsnatch_carry3);
             }
             baddieSetMove(
-                obj, (int)state, animTbl[((EnemyState*)state)->userData1 * 12],
+                obj, state, animTbl[((EnemyState*)state)->userData1 * 12],
                 *(f32*)((u8*)gSeq11EStateTable + ((EnemyState*)state)->userData1 * 12), 0, 0xf);
         }
     }

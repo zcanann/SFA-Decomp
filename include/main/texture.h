@@ -31,7 +31,10 @@ typedef struct Texture {
     u16 refCount;
     u16 animationFrameCount;
     u8 unk12[2];
-    u16 animationFrameStep;
+    union {
+        u16 animationFrameStep;
+        u16 expgfxLinkGroup;
+    };
     u8 format;
     u8 wrapS;
     u8 wrapT;
@@ -41,7 +44,7 @@ typedef struct Texture {
     u8 minLod;
     u8 maxLod;
     u8 unk1E[2];
-    u32 gxTexObj[8];
+    u32 gxTexObj[sizeof(GXTexObj) / sizeof(u32)];
     u32 *tmemAddr;
     u32 dataSize;
     u8 preloaded;

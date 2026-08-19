@@ -4,6 +4,8 @@
 #include "types.h"
 #include "main/lightningeffect.h"
 
+struct GameObject;
+
 typedef struct PushcartState97
 {
     u8 flag_80 : 1;

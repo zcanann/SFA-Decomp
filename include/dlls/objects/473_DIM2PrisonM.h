@@ -8,6 +8,7 @@
 #include "main/objprint_character_api.h"
 
 typedef struct ObjSeqState ObjSeqState;
+typedef struct ObjModel ObjModel;
 
 /* The active-target snowmines2 placement is a fixed nine-word (0x24-byte) record. */
 typedef struct Dim2PrisonMammothPlacement {
@@ -65,7 +66,7 @@ void dim2prisonmammoth_update(GameObject* obj);
 void dim2prisonmammoth_init(GameObject* obj, const Dim2PrisonMammothPlacement* placement);
 void dim2prisonmammoth_release(void);
 void dim2prisonmammoth_initialise(void);
-void dim2prisonmammoth_updateModelChain(GameObject* obj, int* model);
+void dim2prisonmammoth_updateModelChain(GameObject* obj, ObjModel* model);
 
 extern ObjectDescriptor10WithPadding gDIM2PrisonMammothObjDescriptor;
 

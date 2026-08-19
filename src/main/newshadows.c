@@ -302,6 +302,9 @@ f32 gStandardAspectRatio = 1.3333334f;
  * Clears the active flag when the entry matches the needle. */
 
 extern Texture* gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
+extern Texture* gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
+extern NewShadowCastSlot gNewShadowCastSlots[NEW_SHADOW_MAX_CASTERS];
+extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 extern Texture* gNewShadowNoiseTexFrames[0x10];
 extern f32 gNewShadowPlacements[0x112];
 u8 gSurfaceSfxTable[0xD8] = {

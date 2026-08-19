@@ -875,8 +875,8 @@ void SaveSelectScreen_initialise(void)
     int i;
     SaveSelectPanel* panel;
 
-    saveFileSelect_saveSlotsBase = mmAlloc(0x6c, 5, 0);
-    lbl_803DD6AC = mmAlloc(0x6c, 5, 0);
+    saveFileSelect_saveSlotsBase = mmAlloc(sizeof(FrontendSaveSlot) * FRONTEND_SAVE_SLOT_COUNT, 5, 0);
+    lbl_803DD6AC = mmAlloc(sizeof(FrontendSaveSlot) * FRONTEND_SAVE_SLOT_COUNT, 5, 0);
     gSaveSelectTexture = textureLoadAsset(SAVESELECTSCREEN_TEXTURE_ID);
     gameTextLoadDir(0x15);
 

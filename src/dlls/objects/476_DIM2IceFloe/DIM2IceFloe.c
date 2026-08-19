@@ -5,6 +5,7 @@
  */
 #include "dlls/objects/476_DIM2IceFloe.h"
 
+#include "dlls/objects/472_DIM2PathGen.h"
 #include "main/curve.h"
 #include "main/dll/player_api.h"
 #include "main/frame_timing.h"
@@ -70,8 +71,9 @@ void dim2icefloe_update(GameObject* obj) {
             obj->anim.alpha = alpha;
             if ((state->flags & DIM2_ICE_FLOE_FLAG_CURVE_READY) == 0) {
                 state->followedObject = ObjList_FindObjectById(state->targetObjectId);
-                state->curve.count = (*(VtableFn*)((char*)*state->followedObject->anim.dll + 0x20))(
-                    state->followedObject, &state->curve.px, &state->curve.py, &state->curve.pz, 0);
+                state->curve.count = DIM2_PATH_GENERATOR_INTERFACE(state->followedObject)
+                                         ->getCurveVals(state->followedObject, &state->curve.px, &state->curve.py,
+                                                        &state->curve.pz, NULL);
                 state->curve.dir = 0;
                 state->curve.eval = Curve_EvalHermite;
                 state->curve.coeffFn = Curve_BuildHermiteCoeffs;

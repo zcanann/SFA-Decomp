@@ -282,7 +282,7 @@ GameObject* drlasercannon_getTrackedTarget(GameObject* obj, int* cooldownTimer)
 
 int DR_LaserCannon_getExtraSize(void)
 {
-    return DR_LASERCANNON_EXTRA_SIZE;
+    return sizeof(DrLaserCannonState);
 }
 
 int DR_LaserCannon_getObjectTypeId(void)

@@ -47,21 +47,16 @@ void VFP_Block1_hitDetect(void)
 {
 }
 
-void VFP_Block1_update(GameObject* obj)
-{
-    GameObject* player = (GameObject*)Obj_GetPlayerObject();
+void VFP_Block1_update(GameObject* obj) {
+    GameObject* player = Obj_GetPlayerObject();
     f32 dist = Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX);
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
-    {
-        if (dist < 90.0f)
-        {
+
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
+        if (dist < 90.0f) {
             Sfx_PlayFromObject(obj, SFXTRIG_mv_mushdizzylp12);
         }
-    }
-    else
-    {
-        if (dist >= 90.0f)
-        {
+    } else {
+        if (dist >= 90.0f) {
             Sfx_StopObjectChannel(obj, 0x40);
         }
     }

@@ -10,7 +10,6 @@
 #include "main/model_light.h"
 #include "main/objseq.h"
 
-#define DIMBOSS_RUNTIME_SIZE            0x4C8
 #define DIMBOSS_GAMEBIT_ICICLE_DEFEATED 0x20E
 
 typedef struct DIMbossSteamFlags {
@@ -88,48 +87,11 @@ typedef struct DIMbossHitDetectAnimHandlerTable {
 } DIMbossHitDetectAnimHandlerTable;
 
 /*
- * DIMboss_getExtraSize() allocates the complete 0x4C8-byte owner state.
- * The canonical ground-baddie view and the class-specific view describe the
- * same storage; topState is the boss role of GroundBaddieState.control.
+ * DIMboss_getExtraSize() allocates the complete owner state, which is exactly a
+ * GroundBaddieState; topState is the boss role of GroundBaddieState.control.
  */
 typedef struct DIMbossRuntime {
-    union {
-        GroundBaddieState groundBaddie;
-        struct {
-            u8 unknown000[0x25F];
-            u8 physicsActive;
-            u8 unknown260[0x270 - 0x260];
-            s16 substate;
-            u8 unknown272[0x274 - 0x272];
-            s16 controlMode;
-            u8 unknown276[0x2D0 - 0x276];
-            int targetObj;
-            u8 unknown2D4[0x314 - 0x2D4];
-            s32 eventFlags;
-            u8 unknown318[0x346 - 0x318];
-            u8 moveDone;
-            u8 unknown347[0x349 - 0x347];
-            u8 hasTarget;
-            u8 unknown34A[0x34F - 0x34A];
-            s8 lastHitPriority;
-            u8 unknown350[0x354 - 0x350];
-            s8 hitPoints;
-            u8 unknown355[0x35C - 0x355];
-            u8 moveScratch[0x3E0 - 0x35C];
-            u32 savedPendingParentObj;
-            u8 unknown3E4[0x3F4 - 0x3E4];
-            s16 gameBitB;
-            s16 gameBitC;
-            u8 unknown3F8[0x400 - 0x3F8];
-            u16 flags400;
-            s16 targetState;
-            u8 unknown404;
-            u8 subMode;
-            u8 unknown406[0x40C - 0x406];
-            DIMbossTopState* topState;
-            u8 unknown410[DIMBOSS_RUNTIME_SIZE - 0x410];
-        };
-    };
+    GroundBaddieState groundBaddie;
 } DIMbossRuntime;
 
 /*
@@ -172,25 +134,7 @@ STATIC_ASSERT(sizeof(DIMbossAnimHandlerTable) == 0x18);
 STATIC_ASSERT(sizeof(DIMbossHitDetectAnimHandlerTable) == 0x30);
 
 STATIC_ASSERT(offsetof(DIMbossRuntime, groundBaddie) == 0x000);
-STATIC_ASSERT(offsetof(DIMbossRuntime, physicsActive) == 0x25F);
-STATIC_ASSERT(offsetof(DIMbossRuntime, substate) == 0x270);
-STATIC_ASSERT(offsetof(DIMbossRuntime, controlMode) == 0x274);
-STATIC_ASSERT(offsetof(DIMbossRuntime, targetObj) == 0x2D0);
-STATIC_ASSERT(offsetof(DIMbossRuntime, eventFlags) == 0x314);
-STATIC_ASSERT(offsetof(DIMbossRuntime, moveDone) == 0x346);
-STATIC_ASSERT(offsetof(DIMbossRuntime, hasTarget) == 0x349);
-STATIC_ASSERT(offsetof(DIMbossRuntime, lastHitPriority) == 0x34F);
-STATIC_ASSERT(offsetof(DIMbossRuntime, hitPoints) == 0x354);
-STATIC_ASSERT(offsetof(DIMbossRuntime, moveScratch) == 0x35C);
-STATIC_ASSERT(offsetof(DIMbossRuntime, savedPendingParentObj) == 0x3E0);
-STATIC_ASSERT(offsetof(DIMbossRuntime, gameBitB) == 0x3F4);
-STATIC_ASSERT(offsetof(DIMbossRuntime, gameBitC) == 0x3F6);
-STATIC_ASSERT(offsetof(DIMbossRuntime, flags400) == 0x400);
-STATIC_ASSERT(offsetof(DIMbossRuntime, targetState) == 0x402);
-STATIC_ASSERT(offsetof(DIMbossRuntime, subMode) == 0x405);
-STATIC_ASSERT(offsetof(DIMbossRuntime, topState) == 0x40C);
-STATIC_ASSERT(offsetof(DIMbossRuntime, topState) == offsetof(DIMbossRuntime, groundBaddie.control));
-STATIC_ASSERT(sizeof(DIMbossRuntime) == DIMBOSS_RUNTIME_SIZE);
+STATIC_ASSERT(sizeof(DIMbossRuntime) == sizeof(GroundBaddieState));
 
 STATIC_ASSERT(offsetof(DIMbossPlacementView, base) == 0x00);
 STATIC_ASSERT(offsetof(DIMbossPlacementView, eventId) == 0x2C);
@@ -233,7 +177,7 @@ void DIMboss_free(GameObject* obj);
 void DIMboss_render(GameObject* obj, u32 renderArg2, u32 renderArg3, u32 renderArg4, u32 renderArg5, s8 visible);
 void DIMboss_hitDetect(GameObject* obj);
 void DIMboss_update(GameObject* obj);
-void DIMboss_init(GameObject* obj, u32 params, int isAltVariant);
+void DIMboss_init(GameObject* obj, void* params, int isAltVariant);
 void DIMboss_release(void);
 void DIMboss_initialise(void);
 void DIMboss_initialiseAnimTables(void);

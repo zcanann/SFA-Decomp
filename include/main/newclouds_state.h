@@ -45,7 +45,8 @@ STATIC_ASSERT(sizeof(SnowFlake) == 0x18);
 typedef struct NewCloud {
     void* owner;
     SnowFlake* flakes;
-    u8 unk0008[0x1370];
+    u8 unk0008[0x1000];
+    SnowQuad quads[20];
     f32 flakeMinX;
     u8 unk137C[0x4];
     f32 flakeMinZ;

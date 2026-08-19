@@ -5,6 +5,7 @@
 #include "types.h"
 #include "global.h"
 #include "main/dll/duster_api.h"
+#include "main/dll/curves_collision_state.h"
 #include "main/objprint_character_api.h"
 #include "main/objseq.h"
 
@@ -251,14 +252,14 @@ void enemy_setHealthZero(GameObject* obj);
 void enemy_trackPlayer(GameObject* obj);
 u8 enemy_getFreezeRecoverSeconds(GameObject* obj);
 void enemy_getCurveParams(GameObject* obj, int* outIdx, f32* outA, f32* outB);
-void baddieTurnTowardPoint(GameObject* obj, int state, f32 targetX, f32 targetZ, int divisor, int angleBias);
+void baddieTurnTowardPoint(GameObject* obj, void* state, f32 targetX, f32 targetZ, int divisor, int angleBias);
 f32 enemy_getHealthFraction(GameObject* obj);
 f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);
 f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);
 void sidekickToy_updateCurveTargetLatch(GameObject* obj);
-void baddieAfterUpdateBonesCb(GameObject* obj, int* bones);
+void baddieAfterUpdateBonesCb(GameObject* obj, struct ObjModel* bones);
 int enemy_getExtraSize(void);
 int enemy_getObjectTypeId(void);
 void enemy_release(void);

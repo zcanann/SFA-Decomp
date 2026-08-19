@@ -105,7 +105,7 @@
 
 int wcpushblock_getExtraSize(void)
 {
-    return WCPUSHBLOCK_EXTRA_SIZE;
+    return sizeof(WCPushBlockRuntimeState);
 }
 
 int wcpushblock_getObjectTypeId(GameObject* obj)

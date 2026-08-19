@@ -359,6 +359,8 @@ extern char lbl_803A87F0[];
 extern GameObject* gGameUiProjballObject;
 extern GameObject* gGameUiCommCubeObjects[2];
 extern GameObject* gGameUiCommunicatorObjects[2];
+extern GameObject* gCMenuRingObjs[3];
+extern GameObject* gCMenuRingFrontObjs[3];
 extern u8 gHudMagicCostPreview;
 extern u8 gHudForceShowMask;
 extern u8 gTrickyHudShowNearestInfo;
@@ -4096,16 +4098,16 @@ void cMenuUpdateRingRotation(void)
 void drawTrickyHudOverlay(int obj, int unused1, int unused2)
 {
     GameObject* player;
-    int tricky;
+    GameObject* tricky;
     int iconIndex;
     player = Obj_GetPlayerObject();
-    tricky = (int)getTrickyObject();
+    tricky = getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
     hudDrawTimedElement(obj, &gHudItemInfoPopup);
-    if ((void*)tricky != 0)
+    if (tricky != NULL)
     {
-        gTrickyHudItemMask = HUD_TRICKY_INTERFACE(tricky)->updateSideCommandPrompts((GameObject*)tricky);
-        gTrickyHudActionMask = HUD_TRICKY_INTERFACE(tricky)->getAvailableCommands((GameObject*)tricky);
+        gTrickyHudItemMask = HUD_TRICKY_INTERFACE(tricky)->updateSideCommandPrompts(tricky);
+        gTrickyHudActionMask = HUD_TRICKY_INTERFACE(tricky)->getAvailableCommands(tricky);
     }
     else
     {
@@ -4115,9 +4117,9 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
     drawViewFinderHud();
     if ((*gCameraInterface)->getMode() != CAMERA_MODE_VIEWFINDER_RESOURCE_ID &&
         (player->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
-        (void*)tricky != 0 && getHudHiddenFrameCount() == 0)
+        tricky != NULL && getHudHiddenFrameCount() == 0)
     {
-        HUD_TRICKY_INTERFACE(tricky)->getCurrentCommandType((GameObject*)tricky, &iconIndex);
+        HUD_TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)
@@ -4946,6 +4948,7 @@ static inline void pauseMenuSetSpellStoneIcons(GridEntry* entries, u8 count)
 
 void pauseMenuDrawStatusPage(GameObject* player)
 {
+    TrickyHud* hud = (TrickyHud*)lbl_803A87F0;
     s8 i8;
     s32 ty1;
     s32 alpha;
@@ -8837,6 +8840,7 @@ void cMenuSelectItemByTarget(int idx, s16 target, s8 flag)
 
 void cMenuSelectFirstEnabledItem(int idx, s8 flag)
 {
+    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     CMenuSection* entry;
     s16* posPtr;
     u8 prev = 1;

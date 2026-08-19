@@ -182,7 +182,7 @@ void spittingEbaUpdateTimeOfDay(int obj, int state)
     return;
 }
 
-void spittingEbaUpdateWhileFrozen(int obj, u8* state, GameObject* attacker, int eventKind, int unused2, int damage,
+void spittingEbaUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int unused2, int damage,
                                   Vec* wpad0, int wpad1)
 {
     if (eventKind == 0x10)
