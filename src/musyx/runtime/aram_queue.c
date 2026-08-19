@@ -35,18 +35,12 @@ static void aramQueueCallback(u32 requestAddress)
  * ARQPostRequest, then bumps the head/count and restores interrupts.
  * If the queue is full, just unlocks and retries (busy-loop).
  */
-void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32), u32 callbackArg)
-{
-    AramTransferQueue* queue;
-    BOOL irq;
+void aramUploadData(void* src, u32 dst, u32 size, u32 mode, void (*callback)(u32), u32 callbackArg) {
+    AramTransferQueue* queue = mode != 0 ? &aramHighPriorityQueue : &aramNormalPriorityQueue;
 
-    queue = (mode != 0) ? &aramHighPriorityQueue : &aramNormalPriorityQueue;
-
-    while (1)
-    {
-        irq = OSDisableInterrupts();
-        if (queue->count < ARAM_TRANSFER_QUEUE_CAPACITY)
-        {
+    while (1) {
+        BOOL irq = OSDisableInterrupts();
+        if (queue->count < ARAM_TRANSFER_QUEUE_CAPACITY) {
             queue->slots[queue->head].request.owner = 0x2a;
             queue->slots[queue->head].request.type = ARQ_TYPE_MRAM_TO_ARAM;
             queue->slots[queue->head].request.priority = (mode != 0) ? ARQ_PRIORITY_HIGH : ARQ_PRIORITY_LOW;

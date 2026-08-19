@@ -2,6 +2,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/dll_00A6_modgfx.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
@@ -13,7 +14,7 @@
 #define VFP_LAVASTAR_PARTFX                     0x3a4
 
 
-void* gVfpLavaPoolEffectResource;
+DllA6Interface** gVfpLavaPoolEffectResource;
 
 typedef struct VfpLavaStarState
 {

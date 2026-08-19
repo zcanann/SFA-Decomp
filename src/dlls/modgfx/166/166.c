@@ -7,8 +7,8 @@
 #include "main/vecmath.h"
 
 typedef struct DllA6ThreeIndexList {
-    s16 indices[3];
-    s16 opaqueTail;
+    u8 indices[6];
+    u8 opaqueTail[2];
 } DllA6ThreeIndexList;
 
 STATIC_ASSERT(offsetof(DllA6ThreeIndexList, indices) == 0x00);
@@ -36,8 +36,8 @@ STATIC_ASSERT(sizeof(DllA6SequenceParams) == 0x10);
 extern u8 gDllA6EffectResourceData[sizeof(DllA6EffectResourceView)];
 extern DllA6SequenceParams gDllA6SequenceParams;
 
-DllA6ThreeIndexList gDllA6TriangleIndices = {{0, 1, 2}, 0};
-DllA6ThreeIndexList gDllA6VertexIndices = {{0, 1, 2}, 0};
+DllA6ThreeIndexList gDllA6TriangleIndices = {{0, 0, 0, 1, 0, 2}, {0, 0}};
+DllA6ThreeIndexList gDllA6VertexIndices = {{0, 0, 0, 1, 0, 2}, {0, 0}};
 
 void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 flags) {
     ModgfxSpawnPacket packet;
@@ -180,7 +180,7 @@ void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         }
     }
     (*gModgfxInterface)
-        ->spawnEffect(&packet, 0, 3, gDllA6EffectResourceData, 1, gDllA6TriangleIndices.indices, 0x26a, 0);
+        ->spawnEffect(&packet, 0, 3, gDllA6EffectResourceData, 1, (s16*)gDllA6TriangleIndices.indices, 0x26a, 0);
 }
 
 void dll_A6_release(void) {

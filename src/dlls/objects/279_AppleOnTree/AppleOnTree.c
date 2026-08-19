@@ -204,7 +204,7 @@ void appleontree_handleCollectableHit(GameObject* obj) {
         return;
 
     if (mainGetBit(GAMEBIT_SawApple) == 0) {
-        (*gObjectTriggerInterface)->setObjects(APPLE_ON_TREE_PICKUP_TRIGGER_ID, 0, 0);
+        (*gObjectTriggerInterface)->setObjects(APPLE_ON_TREE_PICKUP_TRIGGER_ID, NULL, 0);
         state->triggerGameBit = APPLE_ON_TREE_GAME_BIT_NONE;
         state->pickupMessageValue = 0;
         state->pickupMessageArgument = 1.0f;

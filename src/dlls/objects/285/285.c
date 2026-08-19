@@ -139,11 +139,11 @@ void TreasureChest_update(GameObject* obj) {
             playerPullOutStaff(Obj_GetPlayerObject(), TREASURE_CHEST_STAFF_MODE);
             nearestCollectible = objGetNearestTypeTo(COLLECTIBLE_OBJECT_GROUP, obj, &nearestDist);
             if (nearestCollectible != 0) {
-                (*gObjectTriggerInterface)->setObjects((int)nearestCollectible->anim.romDefNo, 0, 0);
+                (*gObjectTriggerInterface)->setObjects((int)nearestCollectible->anim.romDefNo, NULL, 0);
                 (*gObjectTriggerInterface)
                     ->runSequence(TREASURE_CHEST_COLLECTIBLE_SEQUENCE, obj, TREASURE_CHEST_SEQUENCE_ARG_NONE);
             } else {
-                (*gObjectTriggerInterface)->setObjects(placement->triggerObjectId, 0, 0);
+                (*gObjectTriggerInterface)->setObjects(placement->triggerObjectId, NULL, 0);
                 (*gObjectTriggerInterface)
                     ->runSequence(TREASURE_CHEST_DEFAULT_SEQUENCE, obj, TREASURE_CHEST_SEQUENCE_ARG_NONE);
             }

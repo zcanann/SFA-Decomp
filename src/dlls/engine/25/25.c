@@ -29,7 +29,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/player_status.h"
-#include "main/dll/dll19_state.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/baddie_state.h"
 #include "main/object_transform.h"
@@ -123,12 +122,12 @@ int dll_19_isBaddieControlObject(GameObject* obj)
 
 f32 dll_19_getHealthFraction(GameObject* obj)
 {
-    Dll19State* p_b8 = (Dll19State*)(obj)->extra;
+    BaddieState* p_b8 = (BaddieState*)(obj)->extra;
     GroundBaddiePlacement* p_4c = (GroundBaddiePlacement*)(obj)->anim.placementData;
     u8 denom = p_4c->hitPoints;
     if (denom != 0)
     {
-        s8 numer = p_b8->progressNumerator;
+        s8 numer = p_b8->hitPoints;
         if (numer != 0)
         {
             return (f32)numer / denom;
@@ -399,7 +398,7 @@ int dll_19_processMessages(GameObject* obj, void* state, void* hitbox, s16 gameB
 int dll_19_updateHitReaction(GameObject* obj, void* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
                   s16 substate, void* hitPosOut)
 {
-    u8* state = obj->extra;
+    GroundBaddieState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
     int hit;
     int sphereIndex;
@@ -498,8 +497,8 @@ int dll_19_updateHitReaction(GameObject* obj, void* baddieState, void* hitbox, s
                         ((BaddieState*)baddieState)->hasTarget = 0;
                     }
                 }
-                ((Dll19State*)state)->oscValue = 1.0f;
-                ((Dll19State*)state)->oscVelocity = 12.0f;
+                state->glowAlpha = 1.0f;
+                state->glowRate = 12.0f;
                 if (tableA != NULL)
                 {
                     if (tableA[hit - 2] != -1)

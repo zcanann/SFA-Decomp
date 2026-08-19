@@ -15,7 +15,7 @@
 #include "main/resource.h"
 #include "main/vecmath.h"
 
-void* gDll299Resource;
+DllA6Interface** gDll299Resource;
 
 #define DLL299_RESOURCE_ID 0xa6
 
@@ -56,7 +56,7 @@ void dll_299_update(GameObject* obj)
 {
     if (randomGetRange(0, 2) == 0)
     {
-        (*(Dll299Vtable**)gDll299Resource)->slot1((int)obj, 1, 0, 4, -1, 0);
+        (*gDll299Resource)->spawn(obj, 1, NULL, 4, -1, 0);
     }
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);
     (*gPartfxInterface)->spawnObject((void*)obj, DLL0299_PARTFX_AMBIENT, NULL, 4, -1, NULL);

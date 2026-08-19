@@ -61,26 +61,20 @@ void MikaBombShadow_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg
 }
 
 void MikaBombShadow_hitDetect(GameObject* obj) {
-    (void)obj;
 }
 
 void MikaBombShadow_update(GameObject* obj) {
-    GameObject* bomb;
-    MikaBombShadowState* state;
-    f32 one = 1.0f;
-    f32 scaleFactor;
-    f32 alpha;
+    GameObject* bomb = obj->ownerObj;
+    MikaBombShadowState* state = obj->extra;
+    f32 scaleFactor = 1.0f - (bomb->anim.localPosY - obj->anim.localPosY) / state->groundOffset;
+    obj->anim.modelState->shadowScale = 14.0f * scaleFactor + 1.0f;
 
-    bomb = obj->ownerObj;
-    state = obj->extra;
-    scaleFactor = one - (bomb->anim.localPosY - obj->anim.localPosY) / state->groundOffset;
-    obj->anim.modelState->shadowScale = 14.0f * scaleFactor + one;
-    alpha = scaleFactor;
-    alpha *= 1.5f;
-    if (alpha > one) {
-        alpha = one;
+    scaleFactor *= 1.5f;
+    if (scaleFactor > 1.0f) {
+        scaleFactor = 1.0f;
     }
-    obj->anim.modelState->shadowAlphaStep = (s16)(16384.0f * alpha);
+
+    obj->anim.modelState->shadowAlphaStep = 16384.0f * scaleFactor;
 }
 
 void MikaBombShadow_init(GameObject* obj) {

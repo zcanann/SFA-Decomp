@@ -4,12 +4,7 @@
 #include "game/objects/object.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_setup.h"
-
-typedef struct Dll299Vtable
-{
-    void* pad;
-    void (*slot1)(int, int, int, int, int, int);
-} Dll299Vtable;
+#include "main/dll/dll_00A6_modgfx.h"
 
 typedef struct Dll299State
 {
@@ -27,7 +22,7 @@ STATIC_ASSERT(sizeof(Dll299State) == 2);
 STATIC_ASSERT(offsetof(Dll299Setup, id) == 0x1E);
 
 extern ObjectDescriptor dll_299;
-extern void* gDll299Resource;
+extern DllA6Interface** gDll299Resource;
 
 int dll_299_getExtraSize_ret_2(void);
 int dll_299_getObjectTypeId(void);

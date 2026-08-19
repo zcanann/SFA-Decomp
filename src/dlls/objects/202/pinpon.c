@@ -209,7 +209,7 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     f32 dvec[3];
     f32 fval;
 
-    curve = (RomCurveWalker*)*state;
+    curve = *(RomCurveWalker**)state;
     if (((EnemyState*)state)->controlFlags & 0x80000000U)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_windlift_loop);
@@ -217,7 +217,7 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     if (((((EnemyState*)state)->controlFlags & 0x2000U) != 0) &&
         ((Curve_AdvanceAlongPath(&curve->curve, 0.0f) != 0 || curve->atSegmentEnd != 0) &&
          ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, 700.0f, (int*)&gPinPonCurveInitData, -1) !=
+        ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, 700.0f, (int*)&gPinPonCurveInitData, -1) !=
          0))
     {
         ((EnemyState*)state)->controlFlags &= ~0x2000LL;
