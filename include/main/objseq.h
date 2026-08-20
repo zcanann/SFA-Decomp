@@ -60,7 +60,7 @@ typedef struct ObjectTriggerInterface {
     void (*setGlobal2)(s16 value);
     void (*setXrot)(int index, int xrot);
     ObjSeqTurnToPlayerFn func20;
-    int (*setObjects)(int a, int b, int c);
+    int (*setObjects)(int a, struct GameObject *b, int c);
     int (*setOverridePos)(f32 x, f32 y, f32 z);
     int (*setRunSequenceWorldSpace)(int unused, int mode);
 } ObjectTriggerInterface;

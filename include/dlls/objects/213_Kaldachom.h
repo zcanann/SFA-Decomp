@@ -37,32 +37,7 @@ typedef struct KaldachomControl {
 typedef int (*KaldachomStateHandler)(GameObject* obj, GroundBaddieState* state);
 
 typedef struct KaldachomState {
-    union {
-        GroundBaddieState ground;
-        struct {
-            u8 pad000[0x270];          /* 0x000 */
-            s16 substate;              /* 0x270 */
-            u8 pad272[0x274 - 0x272];  /* 0x272 */
-            s16 controlMode;           /* 0x274 */
-            u8 pad276[0x2D0 - 0x276];  /* 0x276 */
-            GameObject* targetObj;     /* 0x2D0 */
-            u8 pad2D4[0x3E8 - 0x2D4];  /* 0x2D4 */
-            f32 glowAlpha;             /* 0x3E8 */
-            f32 unk3EC;                /* 0x3EC */
-            s16 spawnsLinkedObj;       /* 0x3F0 */
-            s16 gameBitA;              /* 0x3F2 */
-            s16 gameBitB;              /* 0x3F4 */
-            u8 pad3F6[0x3FE - 0x3F6];  /* 0x3F6 */
-            u16 aggroRange;            /* 0x3FE */
-            u16 flags400;              /* 0x400 */
-            s16 targetState;           /* 0x402 */
-            u8 pad404;                  /* 0x404 */
-            u8 subMode;                /* 0x405 */
-            u8 aggression;             /* 0x406 */
-            u8 pad407[0x40C - 0x407];  /* 0x407 */
-            KaldachomControl* control; /* 0x40C */
-        };
-    };
+    GroundBaddieState ground;
     KaldachomControl controlData; /* 0x410 */
 } KaldachomState;
 
@@ -89,20 +64,6 @@ STATIC_ASSERT(offsetof(KaldachomControl, soundFlags) == 0x4B);
 STATIC_ASSERT(sizeof(KaldachomControl) == 0x4C);
 
 STATIC_ASSERT(offsetof(KaldachomState, ground) == 0x0);
-STATIC_ASSERT(offsetof(KaldachomState, substate) == 0x270);
-STATIC_ASSERT(offsetof(KaldachomState, controlMode) == 0x274);
-STATIC_ASSERT(offsetof(KaldachomState, targetObj) == 0x2D0);
-STATIC_ASSERT(offsetof(KaldachomState, glowAlpha) == 0x3E8);
-STATIC_ASSERT(offsetof(KaldachomState, unk3EC) == 0x3EC);
-STATIC_ASSERT(offsetof(KaldachomState, spawnsLinkedObj) == 0x3F0);
-STATIC_ASSERT(offsetof(KaldachomState, gameBitA) == 0x3F2);
-STATIC_ASSERT(offsetof(KaldachomState, gameBitB) == 0x3F4);
-STATIC_ASSERT(offsetof(KaldachomState, aggroRange) == 0x3FE);
-STATIC_ASSERT(offsetof(KaldachomState, flags400) == 0x400);
-STATIC_ASSERT(offsetof(KaldachomState, targetState) == 0x402);
-STATIC_ASSERT(offsetof(KaldachomState, subMode) == 0x405);
-STATIC_ASSERT(offsetof(KaldachomState, aggression) == 0x406);
-STATIC_ASSERT(offsetof(KaldachomState, control) == 0x40C);
 STATIC_ASSERT(offsetof(KaldachomState, controlData) == 0x410);
 STATIC_ASSERT(sizeof(KaldachomState) == 0x45C);
 

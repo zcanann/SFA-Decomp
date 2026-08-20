@@ -51,7 +51,6 @@ void cannonclaw_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, i
 }
 
 void cannonclaw_hitDetect(GameObject* obj) {
-    (void)obj;
 }
 
 void cannonclaw_update(GameObject* obj) {

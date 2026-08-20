@@ -8,6 +8,15 @@
 
 typedef void (*DllA6SpawnFn)(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 flags);
 
+/* Two-slot view of the DLL 0xA6 resource used by DLL 0x299: only the spawn
+   slot at +4 is reached, and it is called with two trailing arguments the
+   DllA6SpawnFn prototype does not name. */
+typedef struct DllA6Interface {
+    ResourceDescriptorCallback reserved;
+    void (*spawn)(GameObject* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 flags, int unusedA,
+                  int unusedB);
+} DllA6Interface;
+
 typedef struct DllA6ResourceDescriptor {
     u32 metadata[4];
     ResourceDescriptorCallback initialise;

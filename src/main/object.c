@@ -754,30 +754,25 @@ int objMove(GameObject* obj, f32 dx, f32 dy, f32 dz)
     return 0;
 }
 
-GameObject* getTrickyObject(void)
-{
+GameObject* getTrickyObject(void) {
     int count;
-    GameObject** objs = (GameObject**)objGetAllOfType(1, &count);
-    if (count != 0)
-    {
+    GameObject** objs = objGetAllOfType(1, &count);
+    if (count != 0) {
         return objs[0];
     }
     return NULL;
 }
 
-GameObject* Obj_GetPlayerObject(void)
-{
+GameObject* Obj_GetPlayerObject(void) {
     int count;
     GameObject** objs = objGetAllOfType(0, &count);
-    if (count != 0)
-    {
+    if (count != 0) {
         return objs[0];
     }
     return NULL;
 }
 
-void mapSetupPlayer(void)
-{
+void mapSetupPlayer(void) {
     u8* base;
     int playerNo;
     int mapType;

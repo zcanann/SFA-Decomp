@@ -65,7 +65,7 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
                 obj->anim.worldPosX = obj->anim.localPosX;
                 obj->anim.worldPosY = obj->anim.localPosY;
                 obj->anim.worldPosZ = obj->anim.localPosZ;
-                spawnExplosionLegacy((int)obj, 80.0f, 1, 1, 0, 0, 0, 0, 0);
+                spawnExplosion(obj, 80.0f, 1, 1, 0, 0, 0, 0, 0);
                 state->exploded = 1;
                 obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }

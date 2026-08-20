@@ -15839,7 +15839,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state)
                         r = *(f32*)((char*)p + 8) / *(f32*)(*(int*)((char*)p + 0x50) + 4);
                     }
                     mainSetBits(*((PlayerState*)inner)->triggerGameBitPtr, 1);
-                    (*gObjectTriggerInterface)->setObjects(*(s16*)((char*)p + 0x46), 0, 0);
+                    (*gObjectTriggerInterface)->setObjects(*(s16*)((char*)p + 0x46), NULL, 0);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 }
             }
@@ -15855,7 +15855,7 @@ void playerProcessMessages(GameObject* obj, int inner, int state)
                     *(f32*)((char*)p + 8) = *(f32*)((char*)p + 8) * k;
                     r = *(f32*)((char*)p + 8) / *(f32*)(*(int*)((char*)p + 0x50) + 4);
                 }
-                (*gObjectTriggerInterface)->setObjects(p->anim.romDefNo, 0, 0);
+                (*gObjectTriggerInterface)->setObjects(p->anim.romDefNo, NULL, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             }
             ((PlayerState*)inner)->interactObject = (GameObject*)p;
@@ -16559,8 +16559,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 f32 spd;
                 f32 dy2;
                 (*gObjectTriggerInterface)
-                    ->setObjects(*(s16*)((int)((GameObject*)obj)->ownerObj + 0x46),
-                                 (int)((GameObject*)obj)->ownerObj, 0);
+                    ->setObjects(((GameObject*)((GameObject*)obj)->ownerObj)->anim.romDefNo,
+                                 ((GameObject*)obj)->ownerObj, 0);
                 {
                     GameObject* prt = ((GameObject*)obj)->ownerObj;
                     obj2 = (int)prt->extra;

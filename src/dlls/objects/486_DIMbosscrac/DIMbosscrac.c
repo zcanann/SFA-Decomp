@@ -62,9 +62,9 @@ void DIMbosscrackpar_init(GameObject* obj, DIMbosscrackparPlacementView* placeme
     obj->anim.rotX = 0;
     obj->anim.rootMotionScale = 0.1f;
     obj->animEventCallback = DIMbosscrackpar_SeqFn;
-    obj->anim.rotX = (s16)((s32)placement->rotationXByte << 8);
-    obj->anim.rotY = (s16)((s32)placement->rotationYByte << 8);
-    obj->anim.rotZ = (s16)((s32)placement->rotationZByte << 8);
+    obj->anim.rotX = placement->rotationXByte << 8;
+    obj->anim.rotY = placement->rotationYByte << 8;
+    obj->anim.rotZ = placement->rotationZByte << 8;
 }
 
 void DIMbosscrackpar_release(void) {

@@ -390,17 +390,17 @@ void dbegg_computeFlocking(GameObject* obj, f32* vel)
     f32 sumX;
     f32 sumZ;
     int count;
-    int* objCursor;
+    GameObject** objCursor;
     GameObject* sibling;
     int i;
 
-    int* objList;
+    GameObject** objList;
     sumZ = sumX = 0.0f;
-    objList = (int*)objGetAllOfType(DBEGG_SIBLING_OBJGROUP, &count);
+    objList = objGetAllOfType(DBEGG_SIBLING_OBJGROUP, &count);
     for (i = 0, objCursor = objList, limit = 7.0f; i < count; i++)
     {
         f32 dy;
-        sibling = (GameObject*)*objCursor;
+        sibling = *objCursor;
         dy = sibling->anim.localPosY - obj->anim.localPosY;
         if (dy <= limit && dy >= -7.0f)
         {

@@ -831,11 +831,11 @@ void player_updateVel(char* p, char* obj, void* stateFns)
     float fcos, fsin;
     f32 vx;
     f32 vz;
-    if (((s32)(s8) * (obj + 0x34c) & 1) != 0)
+    if (((s32)((BaddieState*)obj)->movementFlags & 1) != 0)
     {
         fcos = mathSinf(PLAYER_MOVE_PI * (float)(s32)((GameObject*)p)->anim.rotX / PLAYER_MOVE_HALF_CIRCLE);
         fsin = mathCosf(PLAYER_MOVE_PI * (float)(s32)((GameObject*)p)->anim.rotX / PLAYER_MOVE_HALF_CIRCLE);
-        if (((s32)(s8) * (obj + 0x34c) & 8) != 0)
+        if (((s32)((BaddieState*)obj)->movementFlags & 8) != 0)
         {
             ((BaddieState*)obj)->animSpeedA =
                 -((GameObject*)p)->anim.velocityZ * fsin - ((GameObject*)p)->anim.velocityX * fcos;

@@ -141,6 +141,16 @@ typedef struct
 
 typedef struct
 {
+    u8 pad[4];
+    u32 sfxId;
+    u8 pad2;
+    u8 shakeAmt;
+    u8 rumbleAmt;
+    u8 flags;
+} CrawlerSubDesc;
+
+typedef struct
+{
     CrawlerSeq12* tbl0; // 0x0  anim move ids
     CrawlerSeq12* tbl4;  // 0x4  chained move table
     CrawlerSeq12* tbl8;  // 0x8  random move table
@@ -444,8 +454,8 @@ void firecrawler_spawnProjectile(GameObject* obj, u8* state)
         setup->color[1] = 4;
         setup->color[2] = 0xff;
         setup->color[3] = 0xff;
-        child = (GameObject*)((int)objSetupObject((ObjPlacement*)setup, 5, -1, -1, 0));
-        if ((u32)child != 0)
+        child = objSetupObject(setup, 5, -1, -1, 0);
+        if (child != NULL)
         {
             f32 dur = 60.0f * ((f32)((EnemyState*)state)->targetDist / ((EnemyState*)state)->aggroRange);
             child->anim.velocityX = (((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosX -
@@ -547,14 +557,8 @@ void crawlerPlayMoveEventFx(GameObject* obj, u8* state)
 
 void crawler_onHit(GameObject* obj, u8* state, GameObject* attacker, int cmd, int p5, int damage, Vec* wpad0, int wpad1)
 {
-    typedef struct
-    {
-        u8 pad[0x14];
-        CrawlerSeq16* seq; // 0x14
-        u8 pad2[8];
-    } CrawlerDesc;
     u8 idx;
-    CrawlerDesc* d = (CrawlerDesc*)gCrawlerDescriptorTable;
+    CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
     CrawlerSeq16* tbl = d[(idx = ((EnemyState*)state)->userData2)].seq;
 
     if (cmd == 0xe)
@@ -1203,20 +1207,11 @@ void crawler_updateB(GameObject* obj, u8* state)
 
 void crawler_update(GameObject* obj, u8* state)
 {
-    typedef struct
-    {
-        u8 pad[0xc];
-        CrawlerSeq12* tC;
-        CrawlerSeq12* t10;
-        CrawlerSeq16* t14;
-        CrawlerSeq12* t18;
-        u8 pad2[4];
-    } CrawlerDescL;
-    CrawlerDescL* d = (CrawlerDescL*)gCrawlerDescriptorTable;
-    CrawlerSeq12* t9 = d[((EnemyState*)state)->userData2].t10;
-    CrawlerSeq12* t8 = d[((EnemyState*)state)->userData2].t18;
-    CrawlerSeq12* t7 = d[((EnemyState*)state)->userData2].tC;
-    CrawlerSeq16* t6 = d[((EnemyState*)state)->userData2].t14;
+    CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
+    CrawlerSeq12* t9 = d[((EnemyState*)state)->userData2].tbl10;
+    CrawlerSeq12* t8 = d[((EnemyState*)state)->userData2].tbl18;
+    CrawlerSeq12* t7 = d[((EnemyState*)state)->userData2].tblC;
+    CrawlerSeq16* t6 = d[((EnemyState*)state)->userData2].seq;
     f32 cap;
     int i;
     CrawlerSeq12* p;

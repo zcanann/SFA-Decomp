@@ -79,9 +79,8 @@ void spitembeam_update(GameObject* obj)
     }
 }
 
-void spitembeam_init(GameObject* obj)
-{
-    obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
+void spitembeam_init(GameObject* obj) {
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void spitembeam_release(void)
