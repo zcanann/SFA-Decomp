@@ -44,6 +44,16 @@ typedef void (*BaddieStateExitFn)(struct GameObject* obj, struct BaddieState* st
  */
 typedef struct BaddieState {
     int flags0; /* actor-state flags; player climbing sets bit 0x200000 */
+    /*
+     * 0x004..0x26C is a CurvesCollisionState. The collision engine (DLL 21)
+     * writes the region through the curves names; the player and the baddies
+     * read it back through the padded view below. Two independent paddings over
+     * one set of bytes is exactly how the two descriptions drift apart, so the
+     * union states the aliasing instead of leaving it to be rediscovered.
+     */
+    union {
+        CurvesCollisionState curvesCollision;
+        struct {
     int flags4; /* secondary actor-state flags; player climbing sets bits 0x100000/0x8000000 */
     u8 unk08[0x14 - 0x8];
     f32 posX; /* copied into spawned contact objects as position */
@@ -90,6 +100,8 @@ typedef struct BaddieState {
 #define BADDIE_SURFACE_HAS_NEARBY_FLOOR 0x10
     s8 surfaceFlags; /* per-frame ground/surface contact flags, same field the dll_00C9 enemy view calls surfaceFlags; bits 0x1/0x2/0x10/0x20 are ground-contact channels (mask 0x33 = "touching ground at all") */
     u8 unk265[0x26C - 0x265];
+        };
+    };
     s16 unk26C; /* the shared player-interface init writes its two mode arguments here */
     s16 unk26E;
     s16 substate; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
@@ -187,6 +199,9 @@ typedef struct BaddieState {
 } BaddieState;
 
 STATIC_ASSERT(sizeof(BaddieState) == 0x35C);
+STATIC_ASSERT(offsetof(BaddieState, curvesCollision) == 0x004);
+STATIC_ASSERT(offsetof(BaddieState, unk26C) ==
+              offsetof(BaddieState, curvesCollision) + CURVES_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(BaddieState, controlMode) == 0x274);
 STATIC_ASSERT(offsetof(BaddieState, moveJustStartedB) == 0x27B);
 STATIC_ASSERT(offsetof(BaddieState, trackedObj) == 0x29C);

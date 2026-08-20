@@ -20,6 +20,14 @@ struct ObjModelChain;
  */
 typedef struct EnemyState {
     u8 unk0[0x4 - 0x0];
+    /*
+     * 0x004..0x26C is a CurvesCollisionState, the same aliasing BaddieState
+     * carries: DLL 21 writes the region through the curves names and the
+     * baddie code reads it back through the padded view below.
+     */
+    union {
+        CurvesCollisionState curvesCollision;
+        struct {
     u32 flags; /* head word of the embedded gPathControlInterface record at +4 */
     u8 unk8[0x19C - 0x8];
     s16 spawnRotY; /* engine-maintained pitch pair; the family handlers restore anim.rotY/rotZ from it after a move change */
@@ -33,6 +41,8 @@ typedef struct EnemyState {
     u8 unk262[0x264 - 0x262];
     s8 surfaceFlags; /* ENEMY_SURFACE_FLAG_* */
     u8 unk265[0x26C - 0x265];
+        };
+    };
     CharacterEyeAnimState eyeAnimState;
     u8 unk294[0x29C - 0x294];
     GameObject* trackedObj; /* current engagement target */
@@ -201,6 +211,9 @@ typedef struct EnemyState {
 } EnemyState;
 
 STATIC_ASSERT(sizeof(EnemyState) == 0x370);
+STATIC_ASSERT(offsetof(EnemyState, curvesCollision) == 0x004);
+STATIC_ASSERT(offsetof(EnemyState, eyeAnimState) ==
+              offsetof(EnemyState, curvesCollision) + CURVES_COLLISION_STATE_SIZE);
 STATIC_ASSERT(offsetof(EnemyState, flags) == 0x004);
 STATIC_ASSERT(offsetof(EnemyState, prevLookDirX) == 0x2C4);
 STATIC_ASSERT(offsetof(EnemyState, spawnRotY) == 0x19C);
