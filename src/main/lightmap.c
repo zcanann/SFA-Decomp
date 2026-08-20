@@ -389,9 +389,9 @@ void getVisibleObjects(s8* opacity)
         if (i >= part)
         {
             *cur = objUpdateOpacity(o);
-            if (*cur != 0 || (o->anim.modelInstance->flags & 0x200000) != 0)
+            if (*cur != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0)
             {
-                if ((o->anim.modelInstance->flags & 0x80000) != 0)
+                if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0)
                 {
                     *(f32*)&o->anim.targetObj =
                         (f32)(o->anim.modelInstance->fixedSortDepth * 100);
@@ -433,12 +433,12 @@ void getVisibleObjects(s8* opacity)
                     key = 0;
                     model = Obj_GetActiveModel(o);
                     if (o->anim.renderAlpha == 0xff && (o->anim.flags & 0x80) == 0 &&
-                        ((tf = o->anim.modelInstance->flags) & 0x40000) == 0 &&
+                        ((tf = o->anim.modelInstance->flags) & OBJDEF_FLAG_FORCE_ALPHA_SORT) == 0 &&
                         model->renderAttachment == NULL)
                     {
                         key |= 0x80000000;
                         sortDepth = 1000 - (depthInt & 0xffff);
-                        if ((tf & 0x800000) != 0 && (o->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) == 0)
+                        if ((tf & OBJDEF_FLAG_RUNTIME_BATCHABLE) != 0 && (o->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) == 0)
                         {
                             key |= 0x40000000LL;
                             key |= (o->anim.romDefNo & 0x3ff) << 20;
@@ -526,7 +526,7 @@ static void renderObjects(s8* opacity) {
                 dq->deferred[0] = (u32)obj;
             }
         } else {
-            if ((flags & 0x800000) == 0) {
+            if ((flags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
                 (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, (GameObject*)obj, 1);

@@ -17378,7 +17378,7 @@ void playerDoHitDetection(struct GameObject* obj)
         {
             ObjAnimComponent* h = *(void**)((char*)inner + 0xdc);
             if (h != NULL &&
-                ((fl = h->modelInstance->flags) & OBJMODEL_FLAG_SKIP_RESET_UPDATE) != 0 &&
+                ((fl = h->modelInstance->flags) & OBJDEF_FLAG_HITBOX_GROUP) != 0 &&
                 (fl & 0x8000) == 0)
             {
                 Obj_SetParent((GameObject*)obj, (GameObject*)h, 1);

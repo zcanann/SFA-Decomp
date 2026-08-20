@@ -550,9 +550,9 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
         obj->anim.rootMotionScale = 1.0f;
     obj->anim.rotX = 0;
     obj->anim.rotY = 0;
-    if ((modelState->flags & 0x2000) == 0)
+    if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z) == 0)
         obj->anim.rotZ = 0;
-    if (modelState->flags & 0x20)
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE)
     {
         memcpy(&savedLocalPos, &obj->anim.localPos, sizeof(Vec3f));
         memcpy(&savedWorldPos, &obj->anim.worldPos, sizeof(Vec3f));
@@ -646,7 +646,7 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
             w0 += 3;
         }
     }
-    if (modelState->flags & 0x20)
+    if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE)
     {
         memcpy(&obj->anim.localPos, &savedLocalPos, sizeof(Vec3f));
         memcpy(&obj->anim.worldPos, &savedWorldPos, sizeof(Vec3f));
@@ -738,7 +738,7 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
 
         triangleBuffer = triangleTable;
         idxOut = collectShadowTrackTriangles(obj, triangleBuffer, gShadowDrawScratch, (int)gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
-                             (f32)(int)vtx[2], renderMode, modelState->flags & 0x40000);
+                             (f32)(int)vtx[2], renderMode, modelState->flags & OBJ_MODEL_STATE_SHADOW_ALT_TRACK_SURFACE);
         gShadowTrackTriangleBuffer = triangleBuffer;
         gShadowTrackTriangleCount = idxOut;
         gShadowTrackGridOrigin = (int)vtx;
@@ -897,7 +897,8 @@ void playerShadowClearPositionOverride(GameObject* obj)
     ObjModelState* modelState = obj->anim.modelState;
     if (modelState == NULL)
         return;
-    modelState->flags &= ~0x2020;
+    modelState->flags &=
+        ~(OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE | OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z);
 }
 
 void playerShadowSetPositionOverride(GameObject* obj, f32 x, f32 y, f32 z)

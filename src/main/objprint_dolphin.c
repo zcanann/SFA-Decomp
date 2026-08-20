@@ -73,7 +73,7 @@
 extern s32 gModelMtxCacheState;
 extern s32 gObjFuzzLayerIndex;
 extern u8 gObjFuzzPassActive;
-extern u32 lbl_803DB468;
+extern GXColor lbl_803DB468;
 
 static const GXColor sObjFuzzSavedEnvColor = {0xD8, 0xE0, 0xFF, 0xFF};
 static const GXColorS10 sObjFuzzWhiteColorS10 = {0xFF, 0xFF, 0xFF, 0xFF};
@@ -165,7 +165,7 @@ int objMatrixToRotation(f32* m, s16* outA, s16* outB, s16* outC)
 }
 
 
-void modelBuildPosNrmMtxs(u8* def, int* model, f32* mtxA, f32* mtxB)
+void modelBuildPosNrmMtxs(ModelFileHeader* def, int* model, f32* mtxA, f32* mtxB)
 {
     void* cache;
     int count;
@@ -176,7 +176,7 @@ void modelBuildPosNrmMtxs(u8* def, int* model, f32* mtxA, f32* mtxB)
     f32 fill;
 
     cache = getCache();
-    count = (s32)(u32)def[0xf3] + (s32)(u32)def[0xf4];
+    count = (s32)(u32)def->jointCount + (s32)(u32)def->extraJointCount;
     dstA = (MtxPtr)((u8*)cache + 0x2700);
     mid = (MtxPtr)cache;
     dstB = (MtxPtr)((u8*)cache + 0x12c0);
@@ -298,7 +298,7 @@ const IndTexMtx23 sObjFuzzShellIndMtxB = {{{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.5f
 
 extern u8 gObjFuzzPhaseLatched;
 
-extern u32 lbl_803DB470;
+extern GXColor lbl_803DB470;
 extern int lbl_803DB498;
 extern int lbl_803DB49C;
 
@@ -430,8 +430,8 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
             modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
-            GXSetChanAmbColor(GX_ALPHA0, *(GXColor*)&lbl_803DB470);
-            GXSetChanMatColor(GX_ALPHA0, *(GXColor*)&lbl_803DB468);
+            GXSetChanAmbColor(GX_ALPHA0, lbl_803DB470);
+            GXSetChanMatColor(GX_ALPHA0, lbl_803DB468);
             modelLightStruct_loadChannelLight(2, lt, obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);
@@ -464,7 +464,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
     }
     GXSetCullMode(GX_CULL_BACK);
     {
-        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, lbl_803DB468);
     }
     gxSetZMode_(1, GX_LEQUAL, 0);
     gxSetPeControl_ZCompLoc_(1);
@@ -725,7 +725,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx)
     GXSetCullMode(GX_CULL_BACK);
     if ((model->file->flags & 0x100) != 0)
     {
-        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, lbl_803DB468);
     }
     else
     {
@@ -765,9 +765,9 @@ u8 gObjOverrideColorPending;
 MtxPtr curObjMtx;
 u8 lbl_803DCC20;
 
-u32 lbl_803DB468 = 0xFFFFFFFF;
+GXColor lbl_803DB468 = {0xFF, 0xFF, 0xFF, 0xFF};
 u32 gObjGxDefaultChanColor = 0xFF;
-u32 lbl_803DB470 = 0;
+GXColor lbl_803DB470 = {0, 0, 0, 0};
 u32 gObjGxVtxDescCache = 0xFFFFFFFF;
 u8 gObjGxBlendModeCache = 0xFF;
 u8 gObjGxZCompLocCache = 0xFF;
@@ -805,8 +805,8 @@ void objFuzzSetupGxState(void* objArg)
         modelLightStruct_setDiffuseColor(renderHandle, 0xff, 0xff, 0xff, 0xff);
         modelLightChannels_reset(0);
         modelLightChannel_configure(2, 0, 0);
-        GXSetChanAmbColor(GX_ALPHA0, *(GXColor*)&lbl_803DB470);
-        GXSetChanMatColor(GX_ALPHA0, *(GXColor*)&lbl_803DB468);
+        GXSetChanAmbColor(GX_ALPHA0, lbl_803DB470);
+        GXSetChanMatColor(GX_ALPHA0, lbl_803DB468);
         modelLightStruct_loadChannelLight(2, renderHandle, (GameObject*)obj);
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
@@ -830,7 +830,7 @@ void objFuzzSetupGxState(void* objArg)
     GXSetNumIndStages(0);
     GXSetNumTexGens(2);
     GXSetCullMode(GX_CULL_BACK);
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, lbl_803DB468);
     gxSetZMode_(1, GX_LEQUAL, 0);
     gxSetPeControl_ZCompLoc_(1);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
@@ -1024,7 +1024,7 @@ static void objSetupLightChannels(u8* model, GameObject* obj)
             }
             else
             {
-                GXSetChanMatColor(ch, *(GXColor*)&lbl_803DB468);
+                GXSetChanMatColor(ch, lbl_803DB468);
             }
             {
                 int i;
@@ -1042,7 +1042,7 @@ static void objSetupLightChannels(u8* model, GameObject* obj)
         {
             if (f & 1)
             {
-                GXSetChanMatColor(chan & 0xff, *(GXColor*)&lbl_803DB468);
+                GXSetChanMatColor(chan & 0xff, lbl_803DB468);
             }
             else
             {
@@ -1085,8 +1085,8 @@ static void objSetupLightChannels(u8* model, GameObject* obj)
                         }
                         modelLightChannel_configure(*sp, 2, 0);
                         modelLightStruct_loadChannelLight(*sp, *lp, obj);
-                        GXSetChanAmbColor(*sp, *(GXColor*)&lbl_803DB470);
-                        GXSetChanMatColor(*sp, *(GXColor*)&lbl_803DB468);
+                        GXSetChanAmbColor(*sp, lbl_803DB470);
+                        GXSetChanMatColor(*sp, lbl_803DB468);
                         lp++;
                         sp++;
                     }
@@ -1113,7 +1113,7 @@ static void objSetupLightChannels(u8* model, GameObject* obj)
 extern u8 gObjGxPosMtxIdTable[12];
 
 
-static void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
+static void modelLoadMtxsToGx(ModelFileHeader* hdr, int* model, MtxBitStream* bs, f32* mtx)
 {
     char* cache = (char*)getCache();
     if (gModelMtxCacheState == 1)
@@ -1122,11 +1122,11 @@ static void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
         char* sourceMtx;
         char* posMtx;
         int i;
-        obj = ((ModelFileHeader*)obj)->jointCount + ((ModelFileHeader*)obj)->extraJointCount;
+        int count = hdr->jointCount + hdr->extraJointCount;
         sourceMtx = cacheBase + 0x2700;
         posMtx = cacheBase;
         cacheQueueWait(0);
-        for (i = 0; i < obj; i++)
+        for (i = 0; i < count; i++)
         {
             PSMTXConcat((MtxPtr)mtx, (MtxPtr)(f32*)sourceMtx, (MtxPtr)(f32*)posMtx);
             sourceMtx += 0x40;
@@ -1190,7 +1190,7 @@ static void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* 
     {
         if (skip == 0)
         {
-            modelBuildPosNrmMtxs(hdr, model, mtx, m1);
+            modelBuildPosNrmMtxs((ModelFileHeader*)hdr, model, mtx, m1);
         }
         else
         {
@@ -2258,7 +2258,7 @@ static void modelDoAltRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, int
     bs.pos += 4;
     ModelHeader_setupPosTexFmt(m, (void*)((ModelFileHeader*)m)->renderOps, &bs, p4);
     bs.pos += 4;
-    modelLoadMtxsToGx((int)m, am, &bs, cm);
+    modelLoadMtxsToGx((ModelFileHeader*)m, am, &bs, cm);
     {
         ModelDisplayListEntry* dl;
         int idx;
@@ -2422,7 +2422,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         sh = o->anim.modelState->shadowCastSlot->mode;
         if (sh == 0xff)
         {
-            GXSetTevColor(GX_TEVREG2, *(GXColor*)&lbl_803DB468);
+            GXSetTevColor(GX_TEVREG2, lbl_803DB468);
             GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
         }
         else
@@ -2454,7 +2454,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, lbl_803DB468);
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
@@ -2542,7 +2542,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
         }
         break;
         case 4:
-            modelLoadMtxsToGx((int)m, am, &bs, vm);
+            modelLoadMtxsToGx((ModelFileHeader*)m, am, &bs, vm);
             break;
         case 5:
             done = 1;
@@ -2822,7 +2822,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
             sh = o->anim.modelState->shadowCastSlot->mode;
             if (sh == 0xff)
             {
-                GXSetTevColor(GX_TEVREG2, *(GXColor*)&lbl_803DB468);
+                GXSetTevColor(GX_TEVREG2, lbl_803DB468);
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
             }
             else
@@ -2850,7 +2850,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
+        GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, lbl_803DB468);
         gxSetPeControl_ZCompLoc_(1);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
@@ -2876,7 +2876,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
         objSetupLightChannels(m, obj);
         if (((ModelFileHeader*)m)->flags & 0x100)
         {
-            GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(GXColor*)&lbl_803DB468);
+            GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, lbl_803DB468);
         }
         else
         {

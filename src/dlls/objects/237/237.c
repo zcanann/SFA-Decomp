@@ -42,7 +42,6 @@
 #define COLLECTIBLE_PICKUP_CATEGORY_HEALTH 4
 
 #define COLLECTIBLE_OBJECT_TYPE_ID   0x13
-#define COLLECTIBLE_MODEL_FLAG_COLOR 0x10000
 
 #define COLLECTIBLE_NO_GAME_BIT              -1
 #define COLLECTIBLE_HIT_REGION_UNRESOLVED    -2
@@ -486,7 +485,7 @@ void collectible_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, 
 
     if (visible != 0 && state->despawnTimer == zero && obj->userData1 == 0 &&
         (obj->anim.romDefNo == COLLECTIBLE_SEQ_ID_TRUTH_HORN || state->visibilityBitClear == 0)) {
-        if ((obj->anim.modelInstance->flags & COLLECTIBLE_MODEL_FLAG_COLOR) != 0 && state->useColor != 0) {
+        if ((obj->anim.modelInstance->flags & OBJDEF_FLAG_COLLECTIBLE_TINTED) != 0 && state->useColor != 0) {
             objSetColorFilter(state->colorR, state->colorG,
                         state->colorB);
         }
@@ -651,7 +650,7 @@ void collectible_init(GameObject* obj, CollectibleSetup* setup) {
         if (modelData != NULL) {
             state->pickupRadius = (f32)(((ObjDefHitVolume*)modelData)->bounds[0] << 2);
         }
-        if ((obj->anim.modelInstance->flags & COLLECTIBLE_MODEL_FLAG_COLOR) != 0 && state->useColor != 0) {
+        if ((obj->anim.modelInstance->flags & OBJDEF_FLAG_COLLECTIBLE_TINTED) != 0 && state->useColor != 0) {
             state->colorR = setup->colorR;
             state->colorG = setup->colorG;
             state->colorB = setup->colorB;

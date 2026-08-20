@@ -75,10 +75,76 @@ typedef s16 ObjAnimPackedEvent;
 #define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
 #define OBJANIM_U32_DOUBLE(value)                                                                  \
     ((double)((u64)(((u64)(u32)(OBJANIM_DOUBLE_CONVERSION_HIGH_WORD) << 32) | (u32)((value)))))
-#define OBJ_MODEL_STATE_SHADOW_VISIBLE 0x04
-#define OBJ_MODEL_STATE_SHADOW_INIT_CALLBACK_RAN 0x08
-#define OBJ_MODEL_STATE_SHADOW_FADE_OUT 0x1000
-#define OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD 0x10000
+/*
+ * ObjModelState.flags -- per-object shadow state, retail offset 0x30.
+ *
+ * Only six of these bits are ever tested, and that is measured rather than
+ * inferred: every load of modelState+0x30 across all 2064 objects in the retail
+ * build was disassembled and every mask applied to the loaded word decoded.
+ * The complete set of readers is
+ *
+ *   0x00004  getVisibleObjects, renderObjects        lightmap.c
+ *   0x00020  objDrawShadowCasterMesh, renderShadows  shadow_dolphin.c, newshadows.c
+ *   0x01000  objShadowUpdateAlpha                    shadow_dolphin.c
+ *   0x02000  objDrawShadowCasterMesh                 shadow_dolphin.c
+ *   0x10000  objShadowUpdateAlpha                    shadow_dolphin.c
+ *   0x40000  objShadowRender                         shadow_dolphin.c
+ *
+ * Every other bit is written by object init code and read by nothing, on either
+ * target -- most likely leftovers of the shadow system that newshadows.c
+ * replaced. They are preserved exactly because they are retail behaviour, and
+ * named OBJ_MODEL_STATE_UNREAD_* so that no call site can imply an effect that
+ * does not exist.
+ */
+typedef enum ObjModelStateFlag {
+  /* Shadow is eligible to draw. objShadowAlloc seeds flags with exactly this
+   * bit, and lightmap.c drops the object from the shadow queues without it. */
+  OBJ_MODEL_STATE_SHADOW_VISIBLE = 0x00004,
+
+  /* Set once by Obj_RunInitCallback after an object's init callback returns.
+   * Nothing tests it. */
+  OBJ_MODEL_STATE_SHADOW_INIT_CALLBACK_RAN = 0x00008,
+
+  /* Draw the shadow at modelState->overrideWorldPos rather than the object's
+   * own position: both renderers swap the override into anim.localPos/worldPos,
+   * draw, then swap the real position back. Cleared together with
+   * OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z by playerShadowClearPositionOverride. */
+  OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE = 0x00020,
+
+  /* objShadowUpdateAlpha ramps shadowAlphaStep down instead of up, and releases
+   * shadowCastSlot once it reaches 0. */
+  OBJ_MODEL_STATE_SHADOW_FADE_OUT = 0x01000,
+
+  /* Keep anim.rotZ when building the shadow's world matrix. rotX and rotY are
+   * always zeroed; without this bit rotZ is zeroed too, flattening the shadow
+   * to the ground plane. */
+  OBJ_MODEL_STATE_SHADOW_KEEP_ROT_Z = 0x02000,
+
+  /* Freeze shadowAlphaStep where it is: objShadowUpdateAlpha neither ramps up
+   * nor down. FADE_OUT wins if both are set. */
+  OBJ_MODEL_STATE_SHADOW_ALPHA_HOLD = 0x10000,
+
+  /* Passed by objShadowRender as collectShadowTrackTriangles' kindSelector: set
+   * gathers track triangles whose flags carry 0x4, clear gathers 0x8. No object
+   * in the retail build sets this, so the 0x4 path never runs. */
+  OBJ_MODEL_STATE_SHADOW_ALT_TRACK_SURFACE = 0x40000,
+
+  /* Written at init, read by nothing -- see the header comment above. Writers:
+   *   0x0010  the ten init sites that set 0x810/0xa10/0xc10, plus CRrockfall
+   *   0x0080  CRrockfall_init
+   *   0x0200  the six init sites that set 0xa10
+   *   0x0400  DIMCannon_init (0xc10), CRrockfall_init (0xc00)
+   *   0x0800  every 0x810/0xa10/0xc10/0xc00 init site
+   *   0x4000  snowclaw/imSnowClaw/dll_16C init, DB_egg, DBstealerworm, player
+   *   0x8000  DIMCannon_init, 263_init, DIM2PrisonMammoth_init */
+  OBJ_MODEL_STATE_UNREAD_0010 = 0x00010,
+  OBJ_MODEL_STATE_UNREAD_0080 = 0x00080,
+  OBJ_MODEL_STATE_UNREAD_0200 = 0x00200,
+  OBJ_MODEL_STATE_UNREAD_0400 = 0x00400,
+  OBJ_MODEL_STATE_UNREAD_0800 = 0x00800,
+  OBJ_MODEL_STATE_UNREAD_4000 = 0x04000,
+  OBJ_MODEL_STATE_UNREAD_8000 = 0x08000
+} ObjModelStateFlag;
 
 /*
  * Shared state used by the object-animation helpers around main/objanim.c.
@@ -184,7 +250,6 @@ typedef struct ObjAnimRootCurve {
   ObjAnimRootCurveAxis axes[1];
 } ObjAnimRootCurve;
 
-#define OBJMODEL_FLAG_SKIP_RESET_UPDATE 0x40
 
 typedef struct ObjDefHitVolume {
   s16 jointOffsetX;
@@ -623,35 +688,98 @@ STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
 #define OBJDEF_RENDERFLAG_DEFERRED_RENDER  0x10
 
 /*
- * ObjDef.flags (ObjDef+0x48, u32) bit names. Baked into the loaded model-def
- * data; roles are the cross-file consensus from how each bit gates behavior.
- * Field is u32, so a bare int constant folds identically for & tests.
- *  - 0x800 DEFERRED_RENDER: routes the object down the same deferred-render
- *    path as renderFlags OBJDEF_RENDERFLAG_DEFERRED_RENDER (0x10). Every read
- *    site OR's the two together: object.c selects the deferred render callback
- *    objCausticReflectionRenderCb when set; lightmap.c queues the object into the
- *    deferred object list and picks the extended (0x1f) shadow render mode.
- *    Consensus across object.c and lightmap.c, each read paired
- *    with the named renderFlags 0x10 bit to the same behavior.
+ * ObjDef.flags -- retail offset 0x44 (object.c reads it out of the file blob at
+ * that offset and byte-swaps it, so it is native-endian in memory).
+ *
+ * Which bits matter was measured, not guessed: every load of ObjDef+0x44 in the
+ * retail build was disassembled and every mask applied to the loaded word
+ * decoded, then cross-checked against this repo's own reader sites. Bits with no
+ * reader on either target are deliberately left unnamed -- unlike
+ * ObjModelStateFlag, nothing here writes a dead bit, the values just arrive in
+ * the data file.
+ *
+ * Names marked (wiki) came from the Rena SFA wiki and are kept only where no
+ * reader contradicts them.
  */
-#define OBJDEF_FLAG_DEFERRED_RENDER 0x800
-/*
- * Remaining ObjDef.flags (ObjFileStructFlags44) bits transcribed from the Rena
- * SFA wiki. 0x400000 and 0x800000 are confirmed live in this repo
- * (objGetTotalDataSize gates extra alloc on 0x400000; loadCharacter runtime-sets
- * 0x800000 after model loading); the rest are wiki-only guesses, unused so far.
- */
-#define OBJDEF_FLAG_HAS_MODELS            0x00000001
-#define OBJDEF_FLAG_DIFFERENT_LIGHT_COLOR 0x00000010
-#define OBJDEF_FLAG_RELATED_TO_MODELS     0x00000020
-#define OBJDEF_FLAG_HAS_CHILDREN          0x00000040
-#define OBJDEF_FLAG_ENABLE_CULLING        0x00000400
-#define OBJDEF_FLAG_CAN_HOLD_PLAYER       0x00008000
-#define OBJDEF_FLAG_DIFFERENT_CULLING     0x00080000
-#define OBJDEF_FLAG_KEEP_HITBOX_INVISIBLE 0x00200000
-#define OBJDEF_FLAG_HAS_EVENT             0x00400000
-#define OBJDEF_FLAG_LOADED_MODELS         0x00800000
-#define OBJDEF_FLAG_RELATED_TO_HIT_DETECT 0x01000000
+typedef enum ObjDefFlag {
+  /* Loads as a single-model object (OBJLOAD_FLAG_SINGLE_MODEL), pins
+   * gObjPartitionPivot, and partitions gObjList in Obj_UpdateAllObjects. Object
+   * DLLs also use it as the "this object has hit volumes worth transforming"
+   * guard, always paired with anim.hitVolumeTransforms != NULL. (wiki) */
+  OBJDEF_FLAG_HAS_MODELS = 0x00000001,
+
+  /* modellight.c skips modelLightStruct_loadDiffuseGXLight's usual diffuse
+   * setup for these objects. (wiki) */
+  OBJDEF_FLAG_DIFFERENT_LIGHT_COLOR = 0x00000010,
+
+  /* loadCharacter clears bit 0 of the model-load config word instead of setting
+   * it. (wiki) */
+  OBJDEF_FLAG_RELATED_TO_MODELS = 0x00000020,
+
+  /* The object lives in OBJECT_OBJGROUP_HITBOX: Obj_RegisterObject adds it to
+   * that group and forces activeHitboxMode to 0x5a, objFreeObjDef removes it,
+   * objSetSlot refuses mode 0x5a without it, and ObjHitReact_UpdateResetObjects
+   * skips it in the per-frame reset pass. Several DLLs use
+   * "HITBOX_GROUP set and CAN_HOLD_PLAYER clear" as the test for an object the
+   * player can be parented to.
+   *
+   * This bit previously had two contradictory names -- OBJMODEL_FLAG_SKIP_RESET_UPDATE
+   * and the wiki's OBJDEF_FLAG_HAS_CHILDREN. Every reader is about the hitbox
+   * group, so both are gone. */
+  OBJDEF_FLAG_HITBOX_GROUP = 0x00000040,
+
+  /* loadCharacter seeds ObjAnimComponent.flags 0x80 from this, which lightmap.c
+   * then tests to exclude the object from the opaque fast-sort path. */
+  OBJDEF_FLAG_TRANSLUCENT = 0x00000080,
+
+  /* Read by modelDoRenderInstrs and objprint_dolphin's render setup. (wiki) */
+  OBJDEF_FLAG_ENABLE_CULLING = 0x00000400,
+
+  /* Routes the object down the same deferred-render path as renderFlags
+   * OBJDEF_RENDERFLAG_DEFERRED_RENDER (0x10); every read site ORs the two
+   * together. object.c installs objCausticReflectionRenderCb as the render
+   * callback; lightmap.c queues the object into the deferred object list and
+   * picks the extended (0x1f) shadow render mode. */
+  OBJDEF_FLAG_DEFERRED_RENDER = 0x00000800,
+
+  /* (wiki) Note the polarity: all four readers -- two player wall/ledge probes,
+   * playerDoHitDetection, and the parenting test above -- act when this bit is
+   * CLEAR. Worth confirming against retail before relying on the name. */
+  OBJDEF_FLAG_CAN_HOLD_PLAYER = 0x00008000,
+
+  /* Only collectible_init and collectible_render read this, on either target:
+   * it gates the per-instance color tint. Was COLLECTIBLE_MODEL_FLAG_COLOR,
+   * defined locally in 237.c. */
+  OBJDEF_FLAG_COLLECTIBLE_TINTED = 0x00010000,
+
+  /* Excluded from lightmap.c's opaque fast-sort path, and loadCharacter seeds
+   * GameObject.objectFlags 0x80 from it. */
+  OBJDEF_FLAG_FORCE_ALPHA_SORT = 0x00040000,
+
+  /* lightmap.c sorts the object by ObjDef.fixedSortDepth * 100 rather than by
+   * projected camera depth. Was the wiki's DIFFERENT_CULLING, which no reader
+   * supports. */
+  OBJDEF_FLAG_FIXED_SORT_DEPTH = 0x00080000,
+
+  /* lightmap.c still queues the object for render when objUpdateOpacity returns
+   * 0. DR_CloudRun sets and clears it at runtime around its fade. Was the
+   * wiki's KEEP_HITBOX_INVISIBLE. */
+  OBJDEF_FLAG_RENDER_WHEN_INVISIBLE = 0x00200000,
+
+  /* objGetTotalDataSize allocates the anim move-event table for these, and
+   * loadCharacter ORs it into the model-load config word. (wiki, confirmed) */
+  OBJDEF_FLAG_HAS_EVENT = 0x00400000,
+
+  /* Not a file bit: loadCharacter sets it while loading an object and clears it
+   * again if any of the object's models lacks ObjModel file flag 0x8000 (or
+   * 0x4000 for the multi-model path). lightmap.c then groups such objects by
+   * romDefNo in the sort key and skips their per-object renderEffects call.
+   * Was the wiki's LOADED_MODELS, which describes the set but not the clear. */
+  OBJDEF_FLAG_RUNTIME_BATCHABLE = 0x00800000,
+
+  /* trackIntersectBroadphase. (wiki) */
+  OBJDEF_FLAG_RELATED_TO_HIT_DETECT = 0x01000000
+} ObjDefFlag;
 STATIC_ASSERT(offsetof(ObjDef, hitboxStateIndex) == 0x60);
 STATIC_ASSERT(offsetof(ObjDef, primaryHitboxRadius) == 0x62);
 STATIC_ASSERT(offsetof(ObjDef, lateralResponseWeight) == 0x63);

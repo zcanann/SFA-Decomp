@@ -696,7 +696,7 @@ void renderShadows(int unused0, int unused1, int unused2)
         Camera_SetCurrentViewIndex(1);
         if (alpha <= 4)
             continue;
-        if ((modelState->flags & 0x20) != 0)
+        if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) != 0)
         {
             memcpy(mc48, &obj->anim.localPos, sizeof(Vec3f));
             memcpy(mc54p, &obj->anim.worldPos, sizeof(Vec3f));
@@ -890,7 +890,7 @@ void renderShadows(int unused0, int unused1, int unused2)
             obj->anim.modelState->shadowCastSlot = castSlot;
         }
         slotIdx++;
-        if ((modelState->flags & 0x20) != 0)
+        if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) != 0)
         {
             memcpy(&obj->anim.localPos, mc48, sizeof(Vec3f));
             memcpy(&obj->anim.worldPos, mc54p, sizeof(Vec3f));
