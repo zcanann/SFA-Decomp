@@ -655,6 +655,6 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32* p)
     gLightmapDrawQueue[gLightmapDrawQueueCount].a = a;
     gLightmapDrawQueue[gLightmapDrawQueueCount].b = b;
     gLightmapDrawQueue[gLightmapDrawQueueCount].key = t | 0x38000000;
-    gLightmapDrawQueue[gLightmapDrawQueueCount].d = 7;
+    gLightmapDrawQueue[gLightmapDrawQueueCount].type = 7;
     gLightmapDrawQueueCount++;
 }

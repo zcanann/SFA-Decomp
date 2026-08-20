@@ -191,9 +191,9 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
     }
     else
     {
-        guard = mmSetDelay(0) & 0xff;
+        guard = mmSetForceHeap3Only(0) & 0xff;
         fileInfo = mmAlloc(sizeof(DVDFileInfo), 0xFACEFEED, 0);
-        mmSetDelay(guard);
+        mmSetForceHeap3Only(guard);
     }
     if (DVDOpen(path, fileInfo) == 0)
     {
@@ -202,9 +202,9 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
     }
     size = fileInfo->length;
     alignedSize = (size + 0x1f) & ~0x1f;
-    guard = mmSetDelay(0) & 0xff;
+    guard = mmSetForceHeap3Only(0) & 0xff;
     buf = mmAlloc(alignedSize, 0x7d7d7d7d, 0);
-    mmSetDelay(guard);
+    mmSetForceHeap3Only(guard);
     if (buf == NULL)
     {
         mm_free(fileInfo);

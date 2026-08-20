@@ -87,21 +87,8 @@ WarpDestination gRcpPendingWarpDest;
 extern GXColor gTexShaderFogColor;
 extern GXColor gTexLightmapFogColor;
 
-/*
- * TexShadowRow - 0x10-stride rows of the pending-shadow queue at the head of
- * gLightmapDrawQueue (indexed by gLightmapDrawQueueCount, bumped after each lightmapQueueShadowRow push).
- * mapBlockRender_callList writes type (4/5 = object shadow, 6 = indirect
- * lightmap) into the queued shadow row.
- */
-typedef struct TexShadowRow
-{
-    int unk0;
-    int unk4;
-    int unk8;
-    int type;
-} TexShadowRow;
 
-extern TexShadowRow gLightmapDrawQueue[];
+extern LightSortEntry gLightmapDrawQueue[];
 
 static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, float* xform)
 {
@@ -499,21 +486,21 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
     u32 flags;
     u32 bits;
     int bitPos;
-    int byteBase;
+    u8* byteBase;
 
     {
-        TexShadowRow* texGlobals;
+        LightSortEntry* texGlobals;
         MapBlockBoundsRec* bounds[1];
 
         texGlobals = gLightmapDrawQueue;
         bitPos = state->bit;
         {
             int off = bitPos >> 3;
-            byteBase = (int)state->instrs;
-            bits = *(u8*)(byteBase + off);
+            byteBase = state->instrs;
+            bits = byteBase[off];
             byteBase += off;
-            bits = bits | (u32)(*(u8*)(byteBase + 1) << 8);
-            bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
+            bits = bits | (u32)(byteBase[1] << 8);
+            bits = bits | (u32)(byteBase[2] << 16);
         }
         state->bit = bitPos + 8;
         bounds[0] = &block->displayLists[(bits >> (bitPos & 7)) & 0xff];
@@ -679,7 +666,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
 {
     int layerIdx;
     ShaderLayer* layer;
-    int texture;
+    Texture* texture;
     f32 (*texMtx)[4];
     int overrideIdx;
     int remain;
@@ -691,7 +678,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
 
     kColor = lbl_803DEBB0;
     if ((shader->layerCount == 2) &&
-        (texture = (int)Shader_getLayer(shader, 1),
+        (texture = (Texture*)Shader_getLayer(shader, 1),
          (((ShaderLayer*)texture)->typeBits & 0x7f) == 9u))
     {
         layer = Shader_getLayer(shader, 0);
@@ -699,7 +686,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
             u8 overrideType;
             if ((overrideType = layer->materialId) != '\0')
             {
-                int layerTextureId = layer->textureIndex;
+                Texture* layerTextureId = layer->texture;
                 MapTextureOverride* overrides;
                 overrideIdx = 0;
                 overrides = (MapTextureOverride*)(int)gMapTextureOverrides;
@@ -707,11 +694,11 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
                 for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--)
                 {
                     if (((overrideEntry->refCount > 0) &&
-                         ((u32)overrideEntry->textureId == layerTextureId)) &&
+                         (overrideEntry->texture == layerTextureId)) &&
                         ((int)overrideType == overrideEntry->type))
                     {
-                        texture = (int)textureGetAnimationFrame((Texture*)layerTextureId,
-                                                                overrides[overrideIdx].frame);
+                        texture = textureGetAnimationFrame(layerTextureId,
+                                                           overrides[overrideIdx].frame);
                         break;
                     }
                     overrideEntry = overrideEntry + 1;
@@ -720,7 +707,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
             }
             else
             {
-                texture = layer->textureIndex;
+                texture = layer->texture;
             }
         }
         if (layer->scrollMtx != 0xff)
@@ -736,7 +723,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
         {
             texMtx = NULL;
         }
-        addTexLayerStageKColor((Texture*)texture, texMtx, 0, (GXColor*)&kColor);
+        addTexLayerStageKColor(texture, texMtx, 0, (GXColor*)&kColor);
         if ((SHADER_FLAGS(shader) & 0x100) != 0)
         {
             addSmallReflectionTevStage();
@@ -746,7 +733,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
             u8 overrideType;
             if ((overrideType = layer->materialId) != '\0')
             {
-                int layerTextureId = layer->textureIndex;
+                Texture* layerTextureId = layer->texture;
                 MapTextureOverride* overrides;
                 overrideIdx = 0;
                 overrides = (MapTextureOverride*)(int)gMapTextureOverrides;
@@ -754,11 +741,11 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
                 for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--)
                 {
                     if (((overrideEntry->refCount > 0) &&
-                         ((u32)overrideEntry->textureId == layerTextureId)) &&
+                         (overrideEntry->texture == layerTextureId)) &&
                         ((int)overrideType == overrideEntry->type))
                     {
-                        texture = (int)textureGetAnimationFrame((Texture*)layerTextureId,
-                                                                overrides[overrideIdx].frame);
+                        texture = textureGetAnimationFrame(layerTextureId,
+                                                           overrides[overrideIdx].frame);
                         break;
                     }
                     overrideEntry = overrideEntry + 1;
@@ -767,7 +754,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
             }
             else
             {
-                texture = layer->textureIndex;
+                texture = layer->texture;
             }
         }
         if (layer->scrollMtx != 0xff)
@@ -783,17 +770,17 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
         {
             texMtx = NULL;
         }
-        addTexLayerStage((Texture*)texture, texMtx, 9);
+        addTexLayerStage(texture, texMtx, 9);
         addVertexColorKAlphaStage((GXColor*)&kColor);
     }
     else
     {
         for (layerIdx = 0; layerIdx < (int)(u32)shader->layerCount; layerIdx = layerIdx + 1)
         {
-            int layerTextureId;
+            Texture* layerTextureId;
             layer = Shader_getLayer(shader, layerIdx);
-            layerTextureId = layer->textureIndex;
-            if ((u32)layerTextureId != 0)
+            layerTextureId = layer->texture;
+            if (layerTextureId != NULL)
             {
                 u8 overrideType;
                 {
@@ -806,11 +793,11 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
                         for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--)
                         {
                             if (((overrideEntry->refCount > 0) &&
-                                 ((u32)overrideEntry->textureId == layerTextureId)) &&
+                                 (overrideEntry->texture == layerTextureId)) &&
                                 ((int)overrideType == overrideEntry->type))
                             {
-                                texture = (int)textureGetAnimationFrame(
-                                    (Texture*)layerTextureId, overrides[overrideIdx].frame);
+                                texture = textureGetAnimationFrame(
+                                    layerTextureId, overrides[overrideIdx].frame);
                                 break;
                             }
                             overrideEntry = overrideEntry + 1;
@@ -841,7 +828,7 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
                     }
                     else
                     {
-                        addTexLayerStage((Texture*)texture, texMtx, layerByte);
+                        addTexLayerStage(texture, texMtx, layerByte);
                     }
                 }
             }
