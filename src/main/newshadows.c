@@ -604,10 +604,10 @@ void renderObjectShadowTexture(GameObject* obj)
     obj->anim.modelState->shadowOffsetY -= 64.0f * obj->anim.modelState->shadowScale;
 }
 
-static void sortShadowEntriesDescending(ShadowSortEntry* arr, int count) {
+static void sortShadowEntriesDescending(NewShadowCaster* arr, int count) {
     int gap = 1;
     int i, j;
-    ShadowSortEntry tmp;
+    NewShadowCaster tmp;
     int limit = (count - 1) / 9;
     while (gap <= limit) {
         gap = gap * 3 + 1;
@@ -616,7 +616,7 @@ static void sortShadowEntriesDescending(ShadowSortEntry* arr, int count) {
         for (i = gap + 1; i <= count; i++) {
             tmp = arr[i - 1];
             j = i;
-            while (j > gap && arr[j - gap - 1].dist < tmp.dist) {
+            while (j > gap && arr[j - gap - 1].scale < tmp.scale) {
                 arr[j - 1] = arr[j - gap - 1];
                 j -= gap;
             }
@@ -660,7 +660,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     if (gNewShadowCasterCount == 0)
         return;
     CameraShake_Disable();
-    sortShadowEntriesDescending((ShadowSortEntry*)shadowData->casters, gNewShadowCasterCount);
+    sortShadowEntriesDescending(shadowData->casters, gNewShadowCasterCount);
     Camera_SetCurrentViewIndex(1);
     slot = Camera_GetCurrent();
     savedFovY = Camera_GetFovY();
