@@ -51,7 +51,12 @@ typedef struct LightfootControlState {
 } LightfootControlState;
 
 typedef struct LightfootButtonTimingControlState {
-    u8 unknown00[0x18];
+    const s16* moveIds;
+    const f32* moveSpeeds;
+    f32 completionTimer;
+    f32 pulseTimer;
+    f32 lifeTimer;
+    f32 wanderTimer;
     u16 phase;
     u16 previousPhase2;
     u16 previousPhase;
@@ -63,7 +68,7 @@ typedef struct LightfootButtonTimingControlState {
 
 typedef struct LightfootState {
     GroundBaddieState groundBaddie;
-    u8 unknown410[0x440 - 0x410];
+    u8 unknown410[sizeof(LightfootControlState)];
 } LightfootState;
 
 STATIC_ASSERT(offsetof(LightfootPlacement, base) == 0x00);
@@ -90,11 +95,12 @@ STATIC_ASSERT(offsetof(LightfootControlState, challengeCompletePending) == 0x2E)
 STATIC_ASSERT(sizeof(LightfootControlState) == 0x30);
 STATIC_ASSERT(offsetof(LightfootControlState, completionCountdown) == 0x2C);
 
-STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, phase) == 0x18);
-STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, previousPhase2) == 0x1A);
-STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, previousPhase) == 0x1C);
-STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, animationIndex) == 0x24);
-STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, difficulty) == 0x2D);
+STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, phase) == offsetof(LightfootControlState, unknown18));
+STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, previousPhase2) == offsetof(LightfootControlState, unknown18) + 2);
+STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, previousPhase) == offsetof(LightfootControlState, unknown18) + 4);
+STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, animationIndex) == offsetof(LightfootControlState, moveIndex));
+STATIC_ASSERT(offsetof(LightfootButtonTimingControlState, difficulty) == offsetof(LightfootControlState, unknown2D));
+STATIC_ASSERT(sizeof(LightfootButtonTimingControlState) == sizeof(LightfootControlState));
 
 STATIC_ASSERT(sizeof(LightfootState) == 0x440);
 STATIC_ASSERT(offsetof(LightfootState, groundBaddie) == 0x000);

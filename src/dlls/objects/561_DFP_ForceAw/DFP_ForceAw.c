@@ -350,7 +350,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
 }
 
 /*
- * DragonRock Palace force-field object (DLL 0x231; "DFP_ForceAw"),
+ * Ocean Force Point Temple force-field object (DLL 0x231; "DFP_ForceAw"),
  * implemented on the shared TrickyCurve state machine and sfxplayer: a
  * curve-driven hazard/barrier with per-state update handlers.
  */

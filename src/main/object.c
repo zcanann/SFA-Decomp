@@ -2278,43 +2278,32 @@ int ObjList_PartitionForRender(int* out)
 
     *out = gObjCount;
     i = gObjPartitionPivot;
-    if (i != 0)
-    {
+    if (i != 0) {
         return i;
     }
     i = 0;
     j = gObjCount - 1;
     hi = j;
-    while (i <= j)
-    {
+    while (i <= j) {
         int stop;
 
         stop = 0;
-        while (i <= hi && stop == 0)
-        {
-            if (((ObjAnimComponent*)gObjList[i])->modelInstance->flags & 1)
-            {
+        while (i <= hi && stop == 0) {
+            if (((ObjAnimComponent*)gObjList[i])->modelInstance->flags & OBJDEF_FLAG_HAS_MODELS) {
                 i++;
-            }
-            else
-            {
+            } else {
                 stop = -1;
             }
         }
         stop = 0;
-        while (j >= 0 && stop == 0)
-        {
-            if (!(((ObjAnimComponent*)gObjList[j])->modelInstance->flags & 1))
-            {
+        while (j >= 0 && stop == 0) {
+            if (!(((ObjAnimComponent*)gObjList[j])->modelInstance->flags & OBJDEF_FLAG_HAS_MODELS)) {
                 j--;
-            }
-            else
-            {
+            } else {
                 stop = -1;
             }
         }
-        if (i < j)
-        {
+        if (i < j) {
             swapObj = gObjList[i];
             gObjList[i] = gObjList[j];
             gObjList[j] = swapObj;

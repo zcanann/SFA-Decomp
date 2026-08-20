@@ -25,12 +25,10 @@
 #define SB_CAGE_KYTE_CHIRP_TIMER_MAX 600
 
 int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
-    int holdTimer = obj->userData1;
-
-    (void)unused;
-    if (holdTimer > 0) {
-        obj->userData1 = holdTimer - 1;
+    if (obj->userData1 > 0) {
+        obj->userData1--;
     }
+
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     animUpdate->flags = -2;
     animUpdate->movementState = 0;
@@ -87,7 +85,7 @@ void SB_CageKyte_update(GameObject* obj) {
 
 void SB_CageKyte_init(GameObject* obj) {
     obj->animEventCallback = SB_CageKyte_SeqFn;
-    obj->objectFlags = (u16)((u32)obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED));
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void SB_CageKyte_release(void) {

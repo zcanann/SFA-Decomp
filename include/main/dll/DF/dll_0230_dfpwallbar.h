@@ -9,7 +9,7 @@ typedef struct ChukaPlacement
 {
     ObjPlacement base;
     s8 rotXByte;   /* 0x18 high byte of initial rotX (<<8) */
-    u8 modeIndex;  /* 0x19 mode selector; copied to ChukaState.modeIndex (indexes gChukaModeTable) */
+    u8 rowIndex;    /* 0x19 index into the safe-floor-tile table */
     s16 rotZInit;  /* 0x1A initial rotZ */
     s16 barHeight; /* 0x1C model-scale height divisor (rootMotionScale) */
     s16 unk1E;

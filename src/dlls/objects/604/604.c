@@ -415,7 +415,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
                     ObjModelState* gx = obj->anim.modelState;
                     if (gx != 0)
                     {
-                        gx->flags |= 0x1000;
+                        gx->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
                     }
                 }
                 seq->flags &= ~4;

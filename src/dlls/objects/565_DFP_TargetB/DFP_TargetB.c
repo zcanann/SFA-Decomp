@@ -1,5 +1,5 @@
 /*
- * DragonRock Palace target block. The player knocks it along a path; it
+ * Ocean Force Point Temple target block. The player knocks it along a path; it
  * raycasts for hits, snaps to stored path points, plays impact/loop SFX,
  * and reports completion.
  */
@@ -21,16 +21,11 @@
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 
-#define DFPTARGETBLOCK_POINT_OFFSET_X 0x04
-#define DFPTARGETBLOCK_POINT_OFFSET_Y 0x08
-#define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
-#define DFPTARGETBLOCK_POINT_STRIDE   0x0C
-
 f32 gTargetBlockHomeZ;
 f32 gTargetBlockHomeX;
 s32 gTargetBlockHomePos[] = {0, 0, 0};
 
-void dfptargetblock_resolveCollisionPoints(GameObject* obj, DfpTargetBlockCollisionPoints* collisionPoints)
+void dfptargetblock_resolveCollisionPoints(GameObject* obj, DfpTargetBlockState* state)
 {
     u8* point;
     f32 probe[3];
@@ -42,13 +37,13 @@ void dfptargetblock_resolveCollisionPoints(GameObject* obj, DfpTargetBlockCollis
     int i;
 
     i = 0;
-    point = collisionPoints->pointData;
-    while (i < collisionPoints->count)
+    point = (u8*)state;
+    while (i < state->floorPointCount)
     {
-        probe[0] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_X) + obj->anim.localPosX;
+        probe[0] = *(f32*)(point + offsetof(DfpTargetBlockState, floorPoints[0].x)) + obj->anim.localPosX;
         originalX = probe[0];
-        probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->anim.localPosY;
-        probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->anim.localPosZ;
+        probe[1] = *(f32*)(point + offsetof(DfpTargetBlockState, floorPoints[0].y)) + obj->anim.localPosY;
+        probe[2] = *(f32*)(point + offsetof(DfpTargetBlockState, floorPoints[0].z)) + obj->anim.localPosZ;
         originalZ = probe[2];
         if (trackGetLineIntersect(&obj->anim.localPosX, probe, (0.5f), 1, &hit, obj, 8, -1, 0, 0) != 0)
         {
@@ -71,7 +66,7 @@ void dfptargetblock_resolveCollisionPoints(GameObject* obj, DfpTargetBlockCollis
             Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1_1d0);
             return;
         }
-        point += DFPTARGETBLOCK_POINT_STRIDE;
+        point += sizeof(Vec3f);
         i++;
     }
 }
@@ -241,7 +236,7 @@ void dfptargetblock_hitDetect(GameObject* obj)
         }
     }
 
-    dfptargetblock_resolveCollisionPoints(obj, (DfpTargetBlockCollisionPoints*)state);
+    dfptargetblock_resolveCollisionPoints(obj, state);
 
     dx = home->posX - obj->anim.localPosX;
     dz = home->posZ - obj->anim.localPosZ;
@@ -349,12 +344,6 @@ void dfptargetblock_update(GameObject* obj)
     return;
 }
 
-static inline int* ZBomb_GetActiveModel(GameObject* obj)
-{
-    ObjAnimComponent* objAnim = &obj->anim;
-    return (int*)objAnim->banks[objAnim->bankIndex];
-}
-
 void dfptargetblock_init(GameObject* obj, DfpTargetBlockPlacement* placement)
 {
     int j;
@@ -367,7 +356,7 @@ void dfptargetblock_init(GameObject* obj, DfpTargetBlockPlacement* placement)
     Vec3f point;
 
     state = obj->extra;
-    model = (ModelFileHeader*)*ZBomb_GetActiveModel(obj);
+    model = obj->anim.modelBanks[obj->anim.bankIndex]->file;
     obj->objectFlags = obj->objectFlags | OBJECT_OBJFLAG_HIDDEN;
     if (obj->anim.romDefNo == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {

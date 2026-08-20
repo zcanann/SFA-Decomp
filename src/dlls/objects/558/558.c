@@ -1,5 +1,5 @@
 /*
- * DragonRock Palace door switch (DLL 0x22E) - a legacy/disabled object.
+ * Ocean Force Point Temple door switch (DLL 0x22E) - a legacy/disabled object.
  * Every callback is either empty or logs
  * "<doorswitch Init>No Longer supported" via OSReport; the object holds no
  * extra state.

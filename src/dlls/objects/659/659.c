@@ -121,7 +121,7 @@ void suntemple_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
 void suntemple_hitDetect(GameObject* obj)
 {
     GameObject* gameObj = obj;
-    if ((gameObj->anim.modelInstance->flags & 1) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
+    if ((gameObj->anim.modelInstance->flags & OBJDEF_FLAG_HAS_MODELS) != 0 && gameObj->anim.hitVolumeTransforms != NULL)
     {
         objUpdateHitVolumeTransforms(obj);
     }

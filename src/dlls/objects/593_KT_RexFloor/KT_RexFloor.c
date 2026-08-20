@@ -390,23 +390,24 @@ void KT_RexFloorSwitch_update(GameObject* obj)
 void KT_RexFloorSwitch_init(GameObject* obj, const KtrexfloorswitchPlacement* placement)
 {
     KtrexfloorswitchState* extra = obj->extra;
-    int curve;
+    int curveId;
+    RomCurvePathNode* curve;
     obj->anim.rotX = (s16)(placement->rotByte << 8);
     extra->chargeTimer = (f32)(u32)placement->chargeReload;
     obj->userData1 = 1;
     obj->userData2 = 1;
     {
         KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)obj->anim.placementData;
-        curve = (*gRomCurveInterface)->find(
+        curveId = (*gRomCurveInterface)->find(
             pl->curveX, pl->baseHeight, pl->curveZ, &gKTrexFloorSwitchCurveFindResult, 1, 0);
     }
-    if (curve != -1)
+    if (curveId != -1)
     {
-        curve = (int)(*gRomCurveInterface)->getById(curve);
-        if ((u32)curve != 0)
+        curve = (RomCurvePathNode*)(*gRomCurveInterface)->getById(curveId);
+        if (curve != NULL)
         {
-            obj->anim.localPosX = ((RomCurvePathNode*)curve)->x;
-            obj->anim.localPosZ = ((RomCurvePathNode*)curve)->z;
+            obj->anim.localPosX = curve->x;
+            obj->anim.localPosZ = curve->z;
         }
     }
 }

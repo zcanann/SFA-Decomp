@@ -38,7 +38,7 @@ void dll_FC_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int f
 void dll_FC_hitDetect(GameObject* obj) {
     ObjAnimComponent* anim = (ObjAnimComponent*)obj;
 
-    if ((anim->modelInstance->flags & 1u) == 0u) {
+    if ((anim->modelInstance->flags & OBJDEF_FLAG_HAS_MODELS) == 0) {
         return;
     }
     if (anim->hitVolumeTransforms == NULL) {

@@ -15,26 +15,25 @@ typedef struct DfpLevelControlPlacement
 STATIC_ASSERT(offsetof(DfpLevelControlPlacement, mode) == 0x1A);
 STATIC_ASSERT(sizeof(DfpLevelControlPlacement) == 0x1C);
 
-/* gDFP_LevelControlObjDescriptor from slot02 onwards: the export table other
-   objects reach through obj->anim.dll. */
+/* Export table reached by the electric-floor puzzle objects through anim.dll. */
 typedef struct DfpLevelControlInterface
 {
     void* pad00[8];
-    void (*copyPuzzleValues)(GameObject* controller, u8* out);
+    void (*copySafeFloorTiles)(GameObject* controller, u8* out);
 } DfpLevelControlInterface;
 
 #define DFP_LEVEL_CONTROL_INTERFACE(controller) \
     ((DfpLevelControlInterface*)*((GameObject*)(controller))->anim.dll)
 
-STATIC_ASSERT(offsetof(DfpLevelControlInterface, copyPuzzleValues) == 0x20);
+STATIC_ASSERT(offsetof(DfpLevelControlInterface, copySafeFloorTiles) == 0x20);
 
 extern ObjectDescriptor11ExtraSize gDFP_LevelControlObjDescriptor;
-extern s16 gDFPLevelControlPuzzleValues[10];
+extern s16 gDFPLevelControlSafeFloorTiles[10];
 
-void DFP_LevelControl_updateMapAct2(GameObject* obj);
-void DFP_LevelControl_updateMapAct1(GameObject* obj);
-int DFP_LevelControl_sequenceCallback(GameObject* obj);
-void DFP_LevelControl_copyPuzzleValues(int unused, u8* out);
+void DFP_LevelControl_updateAct2(GameObject* obj);
+void DFP_LevelControl_updateAct1(GameObject* obj);
+int DFP_LevelControl_animCallback(GameObject* obj);
+void DFP_LevelControl_copySafeFloorTiles(GameObject* unused, u8* out);
 int DFP_LevelControl_getExtraSize(void);
 int DFP_LevelControl_getObjectTypeId(void);
 void DFP_LevelControl_free(GameObject* obj);

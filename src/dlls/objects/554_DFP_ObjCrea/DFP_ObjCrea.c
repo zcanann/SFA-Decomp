@@ -1,5 +1,5 @@
 /*
- * DragonRock Palace object creator (DLL 0x22A; "DFP_ObjCreator") - a
+ * Ocean Force Point Temple object creator (DLL 0x22A; "DFP_ObjCreator") - a
  * spawner object that periodically creates child objects from a stored
  * placement template, gated by a gamebit and a spawn-period timer.
  */

@@ -459,7 +459,7 @@ void player_rotateTowardEnemy(GameObject* obj, int* ctx, int spd)
     enemy = (GameObject*)((BaddieState*)ctx)->targetObj;
     if (enemy != 0)
     {
-        if ((u32)enemy->anim.parent == (u32)obj->anim.parent)
+        if (enemy->anim.parent == obj->anim.parent)
         {
             dx = enemy->anim.localPosX - obj->anim.localPosX;
             dz = enemy->anim.localPosZ - obj->anim.localPosZ;

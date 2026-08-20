@@ -971,7 +971,7 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
             GXInitLightPos(&light->diffuseLightObj, light->viewX, light->viewY, light->viewZ);
         }
         GXInitLightDir(&light->diffuseLightObj, light->viewDirX, light->viewDirY, light->viewDirZ);
-        if (obj != NULL && (obj->anim.modelInstance->flags & 0x10) == 0)
+        if (obj != NULL && (obj->anim.modelInstance->flags & OBJDEF_FLAG_DIFFERENT_LIGHT_COLOR) == 0)
         {
             GXColor color;
             f32 amt;

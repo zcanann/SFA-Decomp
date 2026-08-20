@@ -13,12 +13,6 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
-typedef struct CmbSrcColorIndexPair
-{
-    u32 a;
-    u32 b;
-} CmbSrcColorIndexPair;
-
 #define DFP_ROTATEP_EFFECT_RING_COUNT       4
 #define DFP_ROTATEP_EFFECT_HANDLES_PER_RING 2
 #define DFP_ROTATEP_MODE_SEQUENCE           2
@@ -43,23 +37,29 @@ typedef struct CmbSrcColorIndexPair
 #define DFP_ROTATEP_SFX_RING_HIT            0x409
 #define DFP_ROTATEP_HIT_TYPE_RING_TARGET    0x13
 
-int gDFP_RotatePEffectHandles[8];
+GameObject* gDFP_RotatePEffectHandles[8];
+
+typedef struct CmbSrcColorIndexPair
+{
+    u32 a;
+    u32 b;
+} CmbSrcColorIndexPair;
 
 static const CmbSrcColorIndexPair sDFPRotatePColorIndices = {0x00040005, 0x0006000B};
 
-#define DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS(handleExpr, obj, rot, angleStep)                                          \
+#define DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep)                                          \
     do                                                                                                                 \
     {                                                                                                                  \
-        if ((void*)(handleExpr) != NULL)                                                                               \
+        if ((handle) != NULL)                                                                                          \
         {                                                                                                              \
-            *(f32*)((handleExpr) + 0xc) = 0.0f;                                                                        \
-            *(f32*)((handleExpr) + 0x10) = 60.0f;                                                                      \
-            *(f32*)((handleExpr) + 0x14) = 93.0f;                                                                      \
-            (rot)[0] = (s16)(*(s16*)(obj) + (angleStep));                                                              \
-            vecRotateZXY((rot), (f32*)((handleExpr) + 0xc));                                                           \
-            *(f32*)((handleExpr) + 0xc) += *(f32*)((obj) + 0xc);                                                       \
-            *(f32*)((handleExpr) + 0x10) += *(f32*)((obj) + 0x10);                                                     \
-            *(f32*)((handleExpr) + 0x14) += *(f32*)((obj) + 0x14);                                                     \
+            (handle)->anim.localPosX = 0.0f;                                                                            \
+            (handle)->anim.localPosY = 60.0f;                                                                           \
+            (handle)->anim.localPosZ = 93.0f;                                                                           \
+            (rot)[0] = (s16)((obj)->anim.rotX + (angleStep));                                                          \
+            vecRotateZXY((rot), &(handle)->anim.localPosX);                                                            \
+            (handle)->anim.localPosX += (obj)->anim.localPosX;                                                          \
+            (handle)->anim.localPosY += (obj)->anim.localPosY;                                                          \
+            (handle)->anim.localPosZ += (obj)->anim.localPosZ;                                                          \
         }                                                                                                              \
     } while (0)
 
@@ -70,7 +70,7 @@ void DFP_RotateP_updateEffectHandleRing(GameObject* obj)
         s16 rotation[4];
         f32 baseVec[4];
     } buf;
-    int* handles;
+    GameObject** handles;
     DFPRotatePState* state = (DFPRotatePState*)obj->extra;
     s16 i;
 
@@ -105,18 +105,18 @@ void DFP_RotateP_updateEffectHandleRing(GameObject* obj)
 
     for (i = 0; i < DFP_ROTATEP_EFFECT_RING_COUNT; i++)
     {
-        DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING], (int)obj,
-                                             buf.rotation, i * DFP_ROTATEP_EFFECT_RING_ROT_STEP);
-        DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1], (int)obj,
-                                             buf.rotation, i * DFP_ROTATEP_EFFECT_RING_ROT_STEP);
+        DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING], obj, buf.rotation,
+                                               i * DFP_ROTATEP_EFFECT_RING_ROT_STEP);
+        DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1], obj, buf.rotation,
+                                               i * DFP_ROTATEP_EFFECT_RING_ROT_STEP);
     }
 }
 
 int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
 {
     u32 colorIndexWords[2];
-    int* handles;
-    int* pair;
+    GameObject** handles;
+    GameObject** pair;
     CmbSrcMapData* setup;
     int handleOffset;
     s16* colorIndices;
@@ -130,7 +130,7 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
 
     handleOffset = (ringIndex & 0xff) * 8;
     handles = gDFP_RotatePEffectHandles;
-    if (*(void**)((int)handles + handleOffset) == NULL)
+    if (*(GameObject**)((char*)handles + handleOffset) == NULL)
     {
         setup = (CmbSrcMapData*)Obj_AllocObjectSetup(DFP_ROTATEP_RING_VISUAL_SETUP_SIZE,
                                                      DFP_ROTATEP_RING_VISUAL_OBJECT_ID);
@@ -162,15 +162,15 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
         setup->radius = 0.5f;
         setup->flags = 0xd2;
         setup->behaviorFlags = 0;
-        *(int*)((int)handles + handleOffset) = (int)objSetupObject(&setup->base, DFP_ROTATEP_RING_SETUP_MODE,
-                                                                    obj->anim.mapEventSlot, -1, obj->anim.parent);
+        *(GameObject**)((char*)handles + handleOffset) = objSetupObject(
+            &setup->base, DFP_ROTATEP_RING_SETUP_MODE, obj->anim.mapEventSlot, -1, obj->anim.parent);
     }
 
     {
         u8* pairBase = (u8*)gDFP_RotatePEffectHandles + 4;
-        pair = (int*)(pairBase + ((ringIndex & 0xff) * 8));
+        pair = (GameObject**)(pairBase + ((ringIndex & 0xff) * 8));
     }
-    if (*(void**)pair == NULL)
+    if (*pair == NULL)
     {
         setup = (CmbSrcMapData*)Obj_AllocObjectSetup(DFP_ROTATEP_RING_HIT_SETUP_SIZE, DFP_ROTATEP_RING_HIT_OBJECT_ID);
         setup->base.color[2] = 0xff;
@@ -180,8 +180,8 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
         setup->base.posX = obj->anim.localPosX;
         setup->base.posY = obj->anim.localPosY;
         setup->base.posZ = obj->anim.localPosZ;
-        *pair = (int)objSetupObject(&setup->base, DFP_ROTATEP_RING_SETUP_MODE, obj->anim.mapEventSlot, -1,
-                                    obj->anim.parent);
+        *pair = objSetupObject(&setup->base, DFP_ROTATEP_RING_SETUP_MODE, obj->anim.mapEventSlot, -1,
+                               obj->anim.parent);
     }
 
     return 1;
@@ -227,22 +227,22 @@ int DFP_RotateP_getObjectTypeId(void)
 
 void DFP_RotateP_free(GameObject* obj, int flag)
 {
-    u32* handles;
+    GameObject** handles;
     s16 i;
 
     if (flag == 0)
     {
-        handles = (u32*)gDFP_RotatePEffectHandles;
+        handles = gDFP_RotatePEffectHandles;
         for (i = 0; i < DFP_ROTATEP_EFFECT_RING_COUNT; i++)
         {
             if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] != 0)
             {
-                Obj_FreeObject((GameObject*)handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING]);
+                Obj_FreeObject(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING]);
             }
             handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] = 0;
             if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1] != 0)
             {
-                Obj_FreeObject((GameObject*)handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]);
+                Obj_FreeObject(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]);
             }
             handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1] = 0;
             Sfx_PlayFromObject(obj, DFP_ROTATEP_TIMEOUT_RESET_SFX);
@@ -250,8 +250,6 @@ void DFP_RotateP_free(GameObject* obj, int flag)
     }
     gameTimerStop();
 }
-
-#undef DFP_ROTATEP_UPDATE_EFFECT_HANDLE_POS
 
 void DFP_RotateP_render(void)
 {
@@ -263,7 +261,7 @@ void DFP_RotateP_hitDetect(void)
 
 void DFP_RotateP_update(GameObject* obj)
 {
-    u32* handles;
+    GameObject** handles;
     s16 i;
     s16 hitType;
     u8 mode;
@@ -311,17 +309,17 @@ void DFP_RotateP_update(GameObject* obj)
             }
             if (isGameTimerDisabled() != 0)
             {
-                handles = (u32*)gDFP_RotatePEffectHandles;
+                handles = gDFP_RotatePEffectHandles;
                 for (i = 0; i < DFP_ROTATEP_EFFECT_RING_COUNT; i++)
                 {
                     if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] != 0)
                     {
-                        Obj_FreeObject((GameObject*)handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING]);
+                        Obj_FreeObject(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING]);
                     }
                     handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] = 0;
                     if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1] != 0)
                     {
-                        Obj_FreeObject((GameObject*)handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]);
+                        Obj_FreeObject(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]);
                     }
                     handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1] = 0;
                     Sfx_PlayFromObject(obj, DFP_ROTATEP_SFX_TIMEOUT_RESET);
@@ -332,14 +330,14 @@ void DFP_RotateP_update(GameObject* obj)
                 mainSetBits(DFP_ROTATEP_GAMEBIT_RING_ACTIVE, 0);
             }
             DFP_RotateP_updateEffectHandleRing(obj);
-            handles = (u32*)gDFP_RotatePEffectHandles;
+            handles = gDFP_RotatePEffectHandles;
             for (i = 0; i < DFP_ROTATEP_EFFECT_RING_COUNT; i++)
             {
                 if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] != 0)
                 {
                     hitObj = NULL;
-                    hitType = ObjHits_GetPriorityHit(
-                        (GameObject*)(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]), &hitObj, 0x0, 0x0);
+                    hitType = ObjHits_GetPriorityHit(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1], &hitObj, 0x0,
+                                                     0x0);
                     if (hitType == DFP_ROTATEP_HIT_TYPE_RING_TARGET)
                     {
                         mode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
@@ -347,12 +345,12 @@ void DFP_RotateP_update(GameObject* obj)
                         {
                             if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] != 0)
                             {
-                                Obj_FreeObject((GameObject*)handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING]);
+                                Obj_FreeObject(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING]);
                             }
                             handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING] = 0;
                             if (handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1] != 0)
                             {
-                                Obj_FreeObject((GameObject*)handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]);
+                                Obj_FreeObject(handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1]);
                             }
                             handles[i * DFP_ROTATEP_EFFECT_HANDLES_PER_RING + 1] = 0;
                             Sfx_PlayFromObject(0, DFP_ROTATEP_SFX_RING_HIT);

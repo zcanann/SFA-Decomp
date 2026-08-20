@@ -2606,7 +2606,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
         Obj_BuildWorldTransformMatrix(obj, wm, 0);
     }
     gObjShadowNear = 0;
-    if (((ObjAnimComponent*)obj)->modelInstance->flags & 0x400)
+    if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJDEF_FLAG_ENABLE_CULLING)
     {
         GameObject* player = Obj_GetPlayerObject();
         GameObject* cam = (*gCameraInterface)->getCamera();

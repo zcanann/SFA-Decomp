@@ -15,12 +15,12 @@ typedef struct DfpfloorbarPlacement DfpfloorbarPlacement;
 typedef struct DfpFloorbarState
 {
     s16 triggerGameBit;
-    s16 completionGameBit;
-    u8 active;
-    u8 modeIndex;
-    u8 requiredScore;
-    u8 lastSequenceValue;
-    int* linkedObject;
+    s16 loweredGameBit;
+    u8 lowered;
+    u8 rowIndex;
+    u8 safeTileIndex;
+    u8 previousShowSolutionState;
+    int* levelController;
 } DfpFloorbarState;
 
 int dfpfloorbar_SeqFn(void);
@@ -33,7 +33,7 @@ void DFP_Floorbar_update(GameObject* obj);
 void DFP_Floorbar_init(GameObject* obj, DfpfloorbarPlacement* params);
 void DFP_Floorbar_release(void);
 void DFP_Floorbar_initialise(void);
-extern u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE];
+extern u8 gDFPFloorbarSafeFloorTiles[DFPFLOORBAR_MODE_TABLE_STORAGE];
 extern ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor;
 
 #endif /* MAIN_DLL_BADDIE_DLL_022F_DFPFLOORBAR_H_ */

@@ -58,7 +58,7 @@ STATIC_ASSERT(sizeof(DfpTargetBlockState) == 0x6C);
 
 void dfptargetblock_update(GameObject *obj);
 void dfptargetblock_resolveCollisionPoints(GameObject* obj,
-                                           DfpTargetBlockCollisionPoints* collisionPoints);
+                                           DfpTargetBlockState* state);
 void dfptargetblock_init(GameObject *obj, DfpTargetBlockPlacement* placement);
 int dfptargetblock_getExtraSize(void);
 int dfptargetblock_getObjectTypeId(void);

@@ -17,39 +17,31 @@
 #include "main/camera.h"
 #include "main/vecmath.h"
 
-static f32 ARWSpeedStr_randomSpread(f32 spread)
-{
-    return (f32)randomGetRange((int)-spread, (int)spread);
+static f32 ARWSpeedStr_randomSpread(f32 spread) {
+    return randomGetRange(-spread, spread);
 }
 
-int ARWSpeedStr_getExtraSize(void)
-{
+int ARWSpeedStr_getExtraSize(void) {
     return sizeof(ARWSpeedStrState);
 }
 
-int ARWSpeedStr_getObjectTypeId(void)
-{
+int ARWSpeedStr_getObjectTypeId(void) {
     return 0;
 }
 
-void ARWSpeedStr_free(void)
-{
+void ARWSpeedStr_free(void) {
 }
 
-void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
+void ARWSpeedStr_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
-void ARWSpeedStr_hitDetect(void)
-{
+void ARWSpeedStr_hitDetect(void) {
 }
 
-void ARWSpeedStr_update(GameObject* obj)
-{
+void ARWSpeedStr_update(GameObject* obj) {
     ARWSpeedStrState* state = obj->extra;
-    if (state->flags == 0)
-    {
+    if (state->flags == 0) {
         Vec cameraOffset;
         cameraOffset.x = ARWSpeedStr_randomSpread(state->spreadX);
         cameraOffset.y = ARWSpeedStr_randomSpread(state->spreadY);

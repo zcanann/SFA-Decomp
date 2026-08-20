@@ -59,7 +59,7 @@ extern char gVideoFlipWaitQueue;
 extern int gDispCopyYScaleLines;
 extern GXColor gEfbCopyClearColor;
 extern u8 gDispCopyFilterWeights[8];
-extern char gVideoFlipQueueBuffer[0x78];
+extern char gVideoFlipQueueBuffer[10 * 3 * sizeof(void*)];
 extern f32 gFrameElapsedMs;
 extern f32 gFrameStepRemainder;
 extern u8 gGpuHangRecoveryEnabled;
