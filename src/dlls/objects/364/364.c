@@ -296,7 +296,7 @@ void imSnowClaw_init(GameObject* obj, IMSnowClawPlacement* placement) {
 
     obj->animEventCallback = imSnowClaw_sequenceCallback;
     if (obj->anim.modelState != NULL) {
-        obj->anim.modelState->flags |= 0x4000;
+        obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_4000;
         obj->anim.modelState->shadowTintA = 100;
         obj->anim.modelState->shadowTintB = 150;
     }

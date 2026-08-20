@@ -112,7 +112,7 @@ void AudioAramReadAllocAsync(void* source, u32 size, void** outBuf, AudioArqRequ
     idx = gAudioArqRequestIndex;
     gAudioArqRequestIndex = idx + 1;
     entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
+    if (idx + 1 >= AUDIO_ARQ_REQUEST_COUNT)
     {
         gAudioArqRequestIndex = 0;
     }
@@ -239,7 +239,7 @@ void AudioAramReadCompleteCallback(u32 request)
     int i;
     AudioArqRequestEntry* p = (AudioArqRequestEntry*)request;
     AudioArqRequestEntry* e = gAudioArqRequests;
-    for (i = 0; i < 16; i++)
+    for (i = 0; i < AUDIO_ARQ_REQUEST_COUNT; i++)
     {
         if (p == e)
         {
@@ -257,7 +257,7 @@ void AudioAramWriteSync(void* addr, u32 dest, u32 size)
     idx = gAudioArqRequestIndex;
     gAudioArqRequestIndex = idx + 1;
     entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
+    if (idx + 1 >= AUDIO_ARQ_REQUEST_COUNT)
     {
         gAudioArqRequestIndex = 0;
     }

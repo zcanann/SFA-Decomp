@@ -459,7 +459,7 @@ void gunpowderBarrel_updatePhysics(GameObject* obj) {
             u32 flags;
             ObjHits_AddContactObject(contactObject, obj);
             flags = contactObject->anim.modelInstance->flags;
-            if ((flags & OBJDEF_FLAG_HITBOX_GROUP) && !(flags & 0x8000)) {
+            if ((flags & OBJDEF_FLAG_HITBOX_GROUP) && !(flags & OBJDEF_FLAG_CAN_HOLD_PLAYER)) {
                 state->queuedHitObject = contactObject;
             } else if (state->accumulatedFallVelocity < -100.0f) {
                 state->detonationTrigger = GUNPOWDER_BARREL_DETONATION_TRIGGER_IMPACT;
