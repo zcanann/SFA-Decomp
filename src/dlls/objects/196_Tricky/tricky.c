@@ -170,10 +170,10 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_VERTICAL_MOVE           0x80  /* apply verticalDelta to localPosY */
 #define TRICKY_STATE_FLAG_ROTATE                  0x100 /* interpolate rotation toward targetYaw target */
 #define TRICKY_STATE_FLAG_SEQUENCE_CALLBACK       0x1u
+#define TRICKY_STATE_FLAG_STUCK_VOICE_PENDING     0x2u
 #define TRICKY_STATE_FLAG_FOOD_WARNING_PENDING    0x4u
 #define TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED 0x8u
 #define TRICKY_STATE_FLAG_SEQUENCE_LATCHED        0x200u
-#define TRICKY_STATE_TARGET_DIRTY_FLAG            0x400u
 #define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE     0x4000u
 #define TRICKY_STATE_FLAG_COMMAND_ACTIVE          0x10u
 #define TRICKY_STATE_FLAG_GROUND_SNAP             0x2000u
@@ -2901,7 +2901,7 @@ void tricky_stateGoToWarpPoint(GameObject* self, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -3210,7 +3210,7 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state);
             {                                                                                                          \
                 u32 m;                                                                                                 \
                 u32 flags = ((TrickyState*)(st))->stateFlags;                                                          \
-                m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;                                                                   \
+                m = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;                                                             \
                 ((TrickyState*)(st))->stateFlags = flags & m;                                                          \
             }                                                                                                          \
             ((TrickyState*)(st))->linkedWalkGroup = 0;                                                                 \
@@ -3855,7 +3855,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 {
                     u32 mask;
                     u32 flags = state->stateFlags;
-                    mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                     state->stateFlags = flags & mask;
                 }
                 state->linkedWalkGroup = 0;
@@ -3903,7 +3903,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 {
                     u32 mask;
                     u32 flags = state->stateFlags;
-                    mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                     state->stateFlags = flags & mask;
                 }
                 state->linkedWalkGroup = 0;
@@ -4024,7 +4024,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
                 {
                     u32 mask;
                     u32 flags = state->stateFlags;
-                    mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                     state->stateFlags = flags & mask;
                 }
                 state->linkedWalkGroup = 0;
@@ -4119,7 +4119,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
         TRICKY_STATE(st)->stateFlags = f2 & m;                                                                         \
     }
 
-#define TRICKY_CLEAR_TARGET_DIRTY(st) TRICKY_CLEAR_FLAG(st, TRICKY_STATE_TARGET_DIRTY_FLAG)
+#define TRICKY_CLEAR_TARGET_DIRTY(st) TRICKY_CLEAR_FLAG(st, TRICKY_STATE_FLAG_PATH_PATCHES_VALID)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st)                                                                               \
     {                                                                                                                  \
@@ -4997,7 +4997,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -5187,7 +5187,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                     {
                         u32 mask;
                         u32 flags = state->stateFlags;
-                        mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                        mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                         state->stateFlags = flags & mask;
                     }
                     state->linkedWalkGroup = 0;
@@ -5309,7 +5309,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                             {
                                 u32 mask;
                                 u32 flags = other->stateFlags;
-                                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                                 other->stateFlags = flags & mask;
                             }
                             other->linkedWalkGroup = 0;
@@ -5952,7 +5952,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
         {
             u32 mask;
             u32 flags = state->stateFlags;
-            mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+            mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
             state->stateFlags = flags & mask;
         }
         state->linkedWalkGroup = 0;
@@ -5974,7 +5974,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
     result = trickyUpdateMovementState(obj, threshold, state);
     if (result != 1) {
         if (result == 2) {
-            if ((state->stateFlags & 2) != 0) {
+            if ((state->stateFlags & TRICKY_STATE_FLAG_STUCK_VOICE_PENDING) != 0) {
                 tex = obj->extra;
                 if (tex->soundSuppressed == 0u) {
                     move = (obj)->anim.currentMove;
@@ -6130,7 +6130,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -6150,7 +6150,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -6526,7 +6526,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
                 case 0x31:
                     break;
                 case 0xd:
-                    transitionFlag = state->stateFlags & 0x08000000;
+                    transitionFlag = state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING;
                     if (transitionFlag != 0) {
                         trickyRequestMove(obj, 0x31, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     }
@@ -6737,7 +6737,7 @@ int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj) {
                 u32 mask;
                 u32 flags = state->stateFlags;
 
-                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -6776,7 +6776,7 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
                 {
                     u32 mask;
                     u32 flags = state->stateFlags;
-                    mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                     state->stateFlags = flags & mask;
                 }
                 state->linkedWalkGroup = 0;
@@ -7594,7 +7594,7 @@ void Tricky_update(GameObject* obj) {
                             {
                                 u32 mask;
                                 u32 flags = trickyState->stateFlags;
-                                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                                mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                                 trickyState->stateFlags = flags & mask;
                             }
                             trickyState->linkedWalkGroup = 0;
@@ -7614,7 +7614,7 @@ void Tricky_update(GameObject* obj) {
                                 {
                                     u32 mask;
                                     u32 flags = trickyState->stateFlags;
-                                    mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                                    mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                                     trickyState->stateFlags = flags & mask;
                                 }
                                 trickyState->linkedWalkGroup = 0;
@@ -7657,7 +7657,7 @@ void Tricky_update(GameObject* obj) {
                 {
                     u32 mask;
                     u32 flags = trickyState->stateFlags;
-                    mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
+                    mask = ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
                     trickyState->stateFlags = flags & mask;
                 }
                 trickyState->linkedWalkGroup = 0;
@@ -7667,7 +7667,7 @@ void Tricky_update(GameObject* obj) {
     ((GameObject*)obj)->anim.resetHitboxFlags = ((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
     trickyState->heightUpdateActive = 1;
     ((TrickyHandlerFn*)(base + TRICKY_HANDLER_TABLE_OFFSET))[trickyState->stateIndex](obj, (void*)state);
-    trickyState->stateFlags &= ~(u64)0x2;
+    trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
     trickyState->animTransitionTimer += timeDelta;
     if (trickyState->animTransitionTimer > 15.0f) {
         if (((GameObject*)obj)->anim.currentMove != trickyState->moveId) {
