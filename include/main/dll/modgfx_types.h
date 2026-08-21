@@ -4,8 +4,7 @@
 #include "game/objects/object.h"
 #include "main/vec_types.h"
 
-typedef struct
-{
+typedef struct {
     u32 mode;
     f32 x, y, z;
     void* tex;
@@ -18,78 +17,63 @@ STATIC_ASSERT(offsetof(GfxCmd, tex) == 0x10);
 STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
 STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
 
-typedef struct ModgfxSpawnPacket
-{
-    union
-    {
+typedef struct ModgfxSpawnPacket {
+    union {
         GfxCmd* cmds;
         GfxCmd* commands;
     };
-    union
-    {
+    union {
         int ctx;
         GameObject* sourceObj;
     };
     u8 pad08[0x18];
-    union
-    {
+    union {
         f32 col[3];
         f32 velocity[3];
     };
-    union
-    {
+    union {
         f32 pos[3];
         f32 position[3];
     };
     f32 scale;
-    union
-    {
+    union {
         u32 v3c;
         u32 drawGroupStride;
     };
-    union
-    {
+    union {
         u32 v40;
         u32 drawGroupCount;
     };
-    union
-    {
+    union {
         s16 v44;
         s16 sourceMode;
     };
-    union
-    {
+    union {
         s16 hw[7];
         s16 sequenceParams[7];
     };
     u32 flags;
-    union
-    {
+    union {
         u8 v58;
         u8 modeByte;
     };
-    union
-    {
+    union {
         u8 v59;
         u8 initialStateByte;
     };
-    union
-    {
+    union {
         u8 v5a;
         u8 byte5A;
     };
-    union
-    {
+    union {
         u8 v5b;
         u8 textureFrameTimer;
     };
-    union
-    {
+    union {
         u8 v5c;
         u8 sourceYawIndex;
     };
-    union
-    {
+    union {
         s8 count;
         s8 commandCount;
     };
@@ -137,8 +121,7 @@ STATIC_ASSERT(offsetof(ModgfxSpawnPacket, commandCount) == 0x5D);
 STATIC_ASSERT(offsetof(ModgfxSpawnPacket, entries) == 0x60);
 STATIC_ASSERT(sizeof(ModgfxSpawnPacket) == 0x360);
 
-typedef struct ModgfxEffectVertex
-{
+typedef struct ModgfxEffectVertex {
     s16 positionX;
     s16 positionY;
     s16 positionZ;
@@ -153,8 +136,7 @@ STATIC_ASSERT(offsetof(ModgfxEffectVertex, texCoordS) == 0x06);
 STATIC_ASSERT(offsetof(ModgfxEffectVertex, texCoordT) == 0x08);
 STATIC_ASSERT(sizeof(ModgfxEffectVertex) == 0x0A);
 
-typedef struct ModgfxVertexData
-{
+typedef struct ModgfxVertexData {
     s16 posX;
     s16 posY;
     s16 posZ;
@@ -167,8 +149,7 @@ typedef struct ModgfxVertexData
     u8 alpha;
 } ModgfxVertexData;
 
-typedef struct ModgfxVertexGroupCmd
-{
+typedef struct ModgfxVertexGroupCmd {
     u8 unk00[4];
     f32 valueX; /* rgb r / scale x / alpha */
     f32 valueY;
@@ -178,8 +159,7 @@ typedef struct ModgfxVertexGroupCmd
 } ModgfxVertexGroupCmd;
 STATIC_ASSERT(offsetof(ModgfxVertexGroupCmd, valueX) == 0x04);
 
-typedef struct ModgfxActiveEffect
-{
+typedef struct ModgfxActiveEffect {
     int instanceHandle;
     int ownerToken;
     u8 pad08[0x98 - 0x08];
@@ -193,8 +173,7 @@ typedef struct ModgfxActiveEffect
     u8 keepSharedResource;
 } ModgfxActiveEffect;
 
-typedef struct ModgfxPendingSpawn
-{
+typedef struct ModgfxPendingSpawn {
     int modelOrResource;
     float posX;
     float posY;
@@ -205,8 +184,7 @@ typedef struct ModgfxPendingSpawn
     u8 pad17;
 } ModgfxPendingSpawn;
 
-typedef struct ModgfxSpawnContext
-{
+typedef struct ModgfxSpawnContext {
     ModgfxPendingSpawn* pendingSpawns;
     void* attachedSource;
     u8 pad08[0x20 - 0x08];
@@ -226,15 +204,14 @@ typedef struct ModgfxSpawnContext
     u8 initialStateByte; /* 0x59: copied into PartfxEffectState.initialStateByte on spawn */
     u8 byte5A;
     u8 textureFrameTimer; /* 0x5B: copied into PartfxEffectState.textureFrameTimer on spawn */
-    u8 sourceYawIndex; /* 0x5C: copied into PartfxEffectState.sourceYawIndex on spawn */
+    u8 sourceYawIndex;    /* 0x5C: copied into PartfxEffectState.sourceYawIndex on spawn */
     s8 pendingSpawnCount;
     u8 pad5E[0x60 - 0x5E];
 } ModgfxSpawnContext;
 
 #define PARTFX_STAGE_COUNT 7
 
-typedef struct PartfxEffectState
-{
+typedef struct PartfxEffectState {
     GameObject* instanceObject;
     void* sourceObject;
     void* auxSequenceBuffer;
@@ -265,13 +242,11 @@ typedef struct PartfxEffectState
     u32 flags;
     s32 initialDelayFrames;
     f32 alphaValues[4];
-    union
-    {
+    union {
         f32 blendColorR;
         f32 sourceAlphaStep;
     };
-    union
-    {
+    union {
         f32 blendColorG;
         f32 sourceAlphaCurrent;
     };
@@ -304,7 +279,7 @@ typedef struct PartfxEffectState
     s16 vec120;
     s16 vec122;
     s16 vec124;
-    s8 byte126;
+    s8 spawnGeneration;
     u8 pad127[0x12C - 0x127];
     void* inlineData;
     u8 activeVertexBufferIndex;

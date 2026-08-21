@@ -33,8 +33,7 @@
 #include "dolphin/gx/GXTransform.h"
 #include "track/intersect_api.h"
 
-typedef union Dll0BDescriptorTable
-{
+typedef union Dll0BDescriptorTable {
     u32 words[30];
     u64 align8;
 } Dll0BDescriptorTable;
@@ -53,7 +52,7 @@ ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
 s16 gModgfxSequenceParamIndex;
 s16 gModgfxLastSpawnHandle;
 f32 gModgfxMotionStep;
-u8 lbl_803DD282;
+u8 gModgfxSpawnGeneration;
 s16 gPartfxSequenceIdCounter;
 
 #define DLL0B_OBJFLAG_RENDERED 0x800
@@ -100,38 +99,28 @@ void partfx_freeEffectsBySequence(s16 a, int b);
 s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int colorCount,
                        s16* colorData, int textureAssetId, void* textureResource);
 
-s16 dll_0B_getLastSpawnHandle(void)
-{
+s16 dll_0B_getLastSpawnHandle(void) {
     return gModgfxLastSpawnHandle;
 }
 
-void dll_0B_addSequenceFlags(u32 flags)
-{
+void dll_0B_addSequenceFlags(u32 flags) {
     gModgfxSpawnContext.flags |= flags;
 }
 
-void dll_0B_spawnSequence(void* a, void* b, void* c, void* d, void* e, int f, void* g)
-{
+void dll_0B_spawnSequence(void* a, void* b, void* c, void* d, void* e, int f, void* g) {
     gModgfxSpawnContext.pendingSpawns = gModgfxPendingSpawnQueue;
     gModgfxSpawnContext.pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
-    if (g == NULL && f == 0)
-    {
+    if (g == NULL && f == 0) {
         gModgfxSpawnContext.flags |= 0x2000000LL;
-    }
-    else
-    {
+    } else {
         gModgfxSpawnContext.flags |= 0x4000000LL;
     }
-    if (gModgfxSpawnContext.flags & 1)
-    {
-        if (gModgfxSpawnContext.attachedSource != NULL)
-        {
+    if (gModgfxSpawnContext.flags & 1) {
+        if (gModgfxSpawnContext.attachedSource != NULL) {
             gModgfxSpawnContext.posX += ((ObjAnimComponent*)gModgfxSpawnContext.attachedSource)->worldPosX;
             gModgfxSpawnContext.posY += ((ObjAnimComponent*)gModgfxSpawnContext.attachedSource)->worldPosY;
             gModgfxSpawnContext.posZ += ((ObjAnimComponent*)gModgfxSpawnContext.attachedSource)->worldPosZ;
-        }
-        else
-        {
+        } else {
             gModgfxSpawnContext.posX += ((ObjAnimComponent*)a)->localPosX;
             gModgfxSpawnContext.posY += ((ObjAnimComponent*)a)->localPosY;
             gModgfxSpawnContext.posZ += ((ObjAnimComponent*)a)->localPosZ;
@@ -140,28 +129,23 @@ void dll_0B_spawnSequence(void* a, void* b, void* c, void* d, void* e, int f, vo
     gModgfxLastSpawnHandle = dll_0B_spawnEffect(&gModgfxSpawnContext, 0, (int)c, b, (int)e, d, f, g);
 }
 
-void dll_0B_setSequenceParams(void* params)
-{
+void dll_0B_setSequenceParams(void* params) {
     memcpy(gModgfxSpawnContext.sequenceParams, params, 0xe);
 }
 
-void dll_0B_setSequenceParamValue(s16 value)
-{
+void dll_0B_setSequenceParamValue(s16 value) {
     gModgfxSpawnContext.sequenceParams[gModgfxSequenceParamIndex] = value;
 }
 
-void dll_0B_setSequenceParamIndex(s16 x)
-{
+void dll_0B_setSequenceParamIndex(s16 x) {
     gModgfxSequenceParamIndex = x;
 }
 
-void dll_0B_nextSequenceParam(void)
-{
+void dll_0B_nextSequenceParam(void) {
     gModgfxSequenceParamIndex++;
 }
 
-void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10)
-{
+void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10) {
     u32 sequenceIndex = gModgfxSequenceParamIndex;
     gModgfxPendingSpawnWriteCursor->sequenceIndex = sequenceIndex;
     gModgfxPendingSpawnWriteCursor->param14 = param14;
@@ -173,16 +157,14 @@ void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float 
     gModgfxPendingSpawnWriteCursor++;
 }
 
-void dll_0B_resetSequenceSpawns(void)
-{
+void dll_0B_resetSequenceSpawns(void) {
     ModgfxPendingSpawn* cursor = gModgfxPendingSpawnQueue;
     gModgfxPendingSpawnStartCursor = cursor;
     gModgfxPendingSpawnWriteCursor = cursor;
     gModgfxSequenceParamIndex = 0;
 }
 
-void dll_0B_beginSequence(void* source, u8 mode, u8 flagByte, int word40, int word3C)
-{
+void dll_0B_beginSequence(void* source, u8 mode, u8 flagByte, int word40, int word3C) {
     f32 fz;
     f32 fz2;
     memset(&gModgfxSpawnContext, 0, sizeof(gModgfxSpawnContext));
@@ -205,11 +187,9 @@ void dll_0B_beginSequence(void* source, u8 mode, u8 flagByte, int word40, int wo
     gModgfxSpawnContext.textureFrameTimer = 0;
 }
 
-
 /* Per-bone particle vertex update + draw. */
 
-void modgfx_scrollTexCoords(PartfxEffectState* state, f32* in)
-{
+void modgfx_scrollTexCoords(PartfxEffectState* state, f32* in) {
     int i;
     s32 dy, dx;
     ModgfxVertexData* slot;
@@ -226,46 +206,40 @@ void modgfx_scrollTexCoords(PartfxEffectState* state, f32* in)
 
     ovx = 0;
     ovy = 0;
-    for (i = 0; i < state->vertexCount; i++)
-    {
+    for (i = 0; i < state->vertexCount; i++) {
         cur->texCoordS = prev->texCoordS;
         cur->texCoordT = prev->texCoordT;
         cur->texCoordS = (s16)(cur->texCoordS + dx);
-        if ((s32)cur->texCoordS > 0x100)
+        if ((s32)cur->texCoordS > 0x100) {
             ovx++;
-        if ((s32)cur->texCoordS < -0x100)
+        }
+        if ((s32)cur->texCoordS < -0x100) {
             ovx++;
+        }
         cur->texCoordT = (s16)(cur->texCoordT + dy);
-        if ((s32)cur->texCoordT > 0x100)
+        if ((s32)cur->texCoordT > 0x100) {
             ovy++;
-        if ((s32)cur->texCoordT < -0x100)
+        }
+        if ((s32)cur->texCoordT < -0x100) {
             ovy++;
+        }
         cur++;
         prev++;
     }
 
     slot = state->vertexBuffers[state->activeVertexBufferIndex];
-    for (j = 0; j < state->vertexCount; j++)
-    {
-        if ((s32)ovx == state->vertexCount)
-        {
-            if ((s32)slot->texCoordS > 0x100)
-            {
+    for (j = 0; j < state->vertexCount; j++) {
+        if ((s32)ovx == state->vertexCount) {
+            if ((s32)slot->texCoordS > 0x100) {
                 slot->texCoordS -= 0x100;
-            }
-            else
-            {
+            } else {
                 slot->texCoordS += 0x100;
             }
         }
-        if ((s32)ovy == state->vertexCount)
-        {
-            if ((s32)slot->texCoordT > 0x100)
-            {
+        if ((s32)ovy == state->vertexCount) {
+            if ((s32)slot->texCoordT > 0x100) {
                 slot->texCoordT -= 0x100;
-            }
-            else
-            {
+            } else {
                 slot->texCoordT += 0x100;
             }
         }
@@ -275,8 +249,7 @@ void modgfx_scrollTexCoords(PartfxEffectState* state, f32* in)
 
 void* gPartfxActiveEffects[0x32];
 
-void modgfx_captureFrameBaseVertices(PartfxEffectState* state)
-{
+void modgfx_captureFrameBaseVertices(PartfxEffectState* state) {
     int i;
     ModgfxVertexData* dst;
     ModgfxVertexData* src;
@@ -284,8 +257,7 @@ void modgfx_captureFrameBaseVertices(PartfxEffectState* state)
     f32 zero;
     src = state->vertexBuffers[1 - state->activeVertexBufferIndex];
     dst = state->vertexBuffers[2];
-    for (i = 0; i < state->vertexCount; i++)
-    {
+    for (i = 0; i < state->vertexCount; i++) {
         dst->posX = src->posX;
         dst->posY = src->posY;
         dst->posZ = src->posZ;
@@ -312,30 +284,31 @@ void modgfx_captureFrameBaseVertices(PartfxEffectState* state)
     state->scaleVectors[3].z = zero;
 }
 
-void modgfx_stepVertexColor(void* state, void* p, int reinit)
-{
+void modgfx_stepVertexColor(void* state, void* p, int reinit) {
     u8* buf = ((u8**)((char*)state + 0x78))[((PartfxEffectState*)state)->activeVertexBufferIndex];
     int j;
 
-    if (reinit == 1)
-    {
+    if (reinit == 1) {
         f32 tr = ((ModgfxVertexGroupCmd*)p)->valueX;
         f32 tg = ((ModgfxVertexGroupCmd*)p)->valueY;
         f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
-        if (((PartfxEffectState*)state)->stageFrameCountdown != 0)
-        {
-            ((PartfxEffectState*)state)->blendColorR = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc];
-            ((PartfxEffectState*)state)->blendColorG = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd];
-            ((PartfxEffectState*)state)->blendColorB = (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe];
+        if (((PartfxEffectState*)state)->stageFrameCountdown != 0) {
+            ((PartfxEffectState*)state)->blendColorR =
+                (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc];
+            ((PartfxEffectState*)state)->blendColorG =
+                (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd];
+            ((PartfxEffectState*)state)->blendColorB =
+                (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe];
             ((PartfxEffectState*)state)->blendColorStepR =
-                (tr - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc]) / (f32) ((PartfxEffectState*)state)->stageFrameCountdown;
+                (tr - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc]) /
+                (f32)((PartfxEffectState*)state)->stageFrameCountdown;
             ((PartfxEffectState*)state)->blendColorStepG =
-                (tg - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd]) / (f32) ((PartfxEffectState*)state)->stageFrameCountdown;
+                (tg - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd]) /
+                (f32)((PartfxEffectState*)state)->stageFrameCountdown;
             ((PartfxEffectState*)state)->blendColorStepB =
-                (tb - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe]) / (f32) ((PartfxEffectState*)state)->stageFrameCountdown;
-        }
-        else
-        {
+                (tb - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe]) /
+                (f32)((PartfxEffectState*)state)->stageFrameCountdown;
+        } else {
             ((PartfxEffectState*)state)->blendColorR = tr;
             ((PartfxEffectState*)state)->blendColorG = tg;
             ((PartfxEffectState*)state)->blendColorB = tb;
@@ -350,49 +323,35 @@ void modgfx_stepVertexColor(void* state, void* p, int reinit)
     ((PartfxEffectState*)state)->blendColorR += ((PartfxEffectState*)state)->blendColorStepR;
     ((PartfxEffectState*)state)->blendColorG += ((PartfxEffectState*)state)->blendColorStepG;
     ((PartfxEffectState*)state)->blendColorB += ((PartfxEffectState*)state)->blendColorStepB;
-    if (((PartfxEffectState*)state)->blendColorR < MODGFX_ZERO)
-    {
+    if (((PartfxEffectState*)state)->blendColorR < MODGFX_ZERO) {
         ((PartfxEffectState*)state)->blendColorR = MODGFX_ZERO;
-    }
-    else if (((PartfxEffectState*)state)->blendColorR > 255.0f)
-    {
+    } else if (((PartfxEffectState*)state)->blendColorR > 255.0f) {
         ((PartfxEffectState*)state)->blendColorR = 255.0f;
     }
-    if (((PartfxEffectState*)state)->blendColorG < MODGFX_ZERO)
-    {
+    if (((PartfxEffectState*)state)->blendColorG < MODGFX_ZERO) {
         ((PartfxEffectState*)state)->blendColorG = MODGFX_ZERO;
-    }
-    else if (((PartfxEffectState*)state)->blendColorG > 255.0f)
-    {
+    } else if (((PartfxEffectState*)state)->blendColorG > 255.0f) {
         ((PartfxEffectState*)state)->blendColorG = 255.0f;
     }
-    if (((PartfxEffectState*)state)->blendColorB < MODGFX_ZERO)
-    {
+    if (((PartfxEffectState*)state)->blendColorB < MODGFX_ZERO) {
         ((PartfxEffectState*)state)->blendColorB = MODGFX_ZERO;
-    }
-    else if (((PartfxEffectState*)state)->blendColorB > 255.0f)
-    {
+    } else if (((PartfxEffectState*)state)->blendColorB > 255.0f) {
         ((PartfxEffectState*)state)->blendColorB = 255.0f;
     }
-    for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
-    {
+    for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++) {
         buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xc] = (int)((PartfxEffectState*)state)->blendColorR;
         buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xd] = (int)((PartfxEffectState*)state)->blendColorG;
         buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xe] = (int)((PartfxEffectState*)state)->blendColorB;
     }
 }
 
-void modgfx_stepPosition(PartfxEffectState* state, ModgfxVertexGroupCmd* cmd, int reinit)
-{
+void modgfx_stepPosition(PartfxEffectState* state, ModgfxVertexGroupCmd* cmd, int reinit) {
 
-    if (reinit == 1)
-    {
+    if (reinit == 1) {
         s16* cf = state->stageDurations;
-        if (cf[state->currentStage] == 0)
-        {
+        if (cf[state->currentStage] == 0) {
             int flags = state->flags;
-            if ((flags & 0x4) != 0 || (flags & 0x80000) != 0)
-            {
+            if ((flags & 0x4) != 0 || (flags & 0x80000) != 0) {
                 s16 buf[12];
                 f32* fbuf = (f32*)&buf[4];
                 s16 posBase;
@@ -410,48 +369,33 @@ void modgfx_stepPosition(PartfxEffectState* state, ModgfxVertexGroupCmd* cmd, in
             state->posStepX = cmd->valueX;
             state->posStepY = cmd->valueY;
             state->posStepZ = cmd->valueZ;
-        }
-        else
-        {
-            state->posStepX =
-                cmd->valueX / (f32)(s32)state->stageFrameCountdown;
-            state->posStepY =
-                cmd->valueY / (f32)(s32)state->stageFrameCountdown;
-            state->posStepZ =
-                cmd->valueZ / (f32)(s32)state->stageFrameCountdown;
+        } else {
+            state->posStepX = cmd->valueX / (f32)(s32)state->stageFrameCountdown;
+            state->posStepY = cmd->valueY / (f32)(s32)state->stageFrameCountdown;
+            state->posStepZ = cmd->valueZ / (f32)(s32)state->stageFrameCountdown;
         }
         state->drawPosX = state->drawPosX + state->posStepX;
         state->drawPosY = state->drawPosY + state->posStepY;
         state->drawPosZ = state->drawPosZ + state->posStepZ;
-    }
-    else
-    {
-        state->drawPosX =
-            state->posStepX * gModgfxMotionStep + state->drawPosX;
-        state->drawPosY =
-            state->posStepY * gModgfxMotionStep + state->drawPosY;
-        state->drawPosZ =
-            state->posStepZ * gModgfxMotionStep + state->drawPosZ;
+    } else {
+        state->drawPosX = state->posStepX * gModgfxMotionStep + state->drawPosX;
+        state->drawPosY = state->posStepY * gModgfxMotionStep + state->drawPosY;
+        state->drawPosZ = state->posStepZ * gModgfxMotionStep + state->drawPosZ;
     }
 }
 
 /* Integer-vector lerp setup. On the reinit step, snap or step-interpolate the rotation offset triple
  * toward the rounded params, then advance it by the per-step delta. */
-void modgfx_stepS16VectorLerp(PartfxEffectState* state, f32* params, int reinit)
-{
-    if (reinit == 1)
-    {
+void modgfx_stepS16VectorLerp(PartfxEffectState* state, f32* params, int reinit) {
+    if (reinit == 1) {
         s16 tx = params[1];
         s16 ty = params[2];
         s16 tz = params[3];
-        if (state->stageFrameCountdown != 0)
-        {
+        if (state->stageFrameCountdown != 0) {
             state->rotStepZ = (s16)((tx - state->rotOffsetZ) / state->stageFrameCountdown);
             state->rotStepY = (s16)((ty - state->rotOffsetY) / state->stageFrameCountdown);
             state->rotStepX = (s16)((tz - state->rotOffsetX) / state->stageFrameCountdown);
-        }
-        else
-        {
+        } else {
             state->rotOffsetZ = tx;
             state->rotStepZ = 0;
             state->rotOffsetY = ty;
@@ -465,28 +409,21 @@ void modgfx_stepS16VectorLerp(PartfxEffectState* state, f32* params, int reinit)
     state->rotOffsetX += state->rotStepX;
 }
 
-void modgfx_stepVertexAlpha(PartfxEffectState* state, ModgfxVertexGroupCmd* command, int reinit, u8 channelIndex)
-{
+void modgfx_stepVertexAlpha(PartfxEffectState* state, ModgfxVertexGroupCmd* command, int reinit, u8 channelIndex) {
     int alphaIndex = channelIndex * 2;
     ModgfxVertexData* vertices = state->vertexBuffers[state->activeVertexBufferIndex];
     ModgfxVertexData* baseVertices = state->vertexBuffers[2];
     int i;
 
-    if (reinit == 1)
-    {
+    if (reinit == 1) {
         f32 target = command->valueX;
         s16 frames = state->stageFrameCountdown;
 
-        if (frames != 0)
-        {
-            state->alphaValues[alphaIndex] =
-                (target - (f32)baseVertices[command->indices[0]].alpha) / frames;
+        if (frames != 0) {
+            state->alphaValues[alphaIndex] = (target - (f32)baseVertices[command->indices[0]].alpha) / frames;
             state->alphaValues[alphaIndex + 1] = (f32)baseVertices[command->indices[0]].alpha;
-        }
-        else
-        {
-            for (i = 0; i < command->indexCount; i++)
-            {
+        } else {
+            for (i = 0; i < command->indexCount; i++) {
                 baseVertices[command->indices[i]].alpha = target;
                 vertices[command->indices[i]].alpha = baseVertices[command->indices[i]].alpha;
             }
@@ -495,51 +432,41 @@ void modgfx_stepVertexAlpha(PartfxEffectState* state, ModgfxVertexGroupCmd* comm
     }
 
     state->alphaValues[alphaIndex + 1] += state->alphaValues[alphaIndex] * gModgfxMotionStep;
-    if (state->alphaValues[alphaIndex + 1] < 0.0f)
-    {
+    if (state->alphaValues[alphaIndex + 1] < 0.0f) {
         state->alphaValues[alphaIndex + 1] = 0.0f;
-    }
-    else if (state->alphaValues[alphaIndex + 1] > 255.0f)
-    {
+    } else if (state->alphaValues[alphaIndex + 1] > 255.0f) {
         state->alphaValues[alphaIndex + 1] = 255.0f;
     }
 
-    for (i = 0; i < command->indexCount; i++)
-    {
+    for (i = 0; i < command->indexCount; i++) {
         vertices[command->indices[i]].alpha = state->alphaValues[alphaIndex + 1];
         baseVertices[command->indices[i]].alpha = vertices[command->indices[i]].alpha;
     }
 }
 
-void modgfx_stepVertexScale(PartfxEffectState* state, ModgfxVertexGroupCmd* command, int reinit, u8 channelIndex)
-{
+void modgfx_stepVertexScale(PartfxEffectState* state, ModgfxVertexGroupCmd* command, int reinit, u8 channelIndex) {
     int scaleIndex = channelIndex * 2;
     int i;
     ModgfxVertexData* vertices;
     ModgfxVertexData* baseVertices;
 
-    if (reinit == 1)
-    {
+    if (reinit == 1) {
         f32 targetX = command->valueX;
         f32 targetY = command->valueY;
         f32 targetZ = command->valueZ;
 
-        if (state->stageFrameCountdown != 0)
-        {
+        if (state->stageFrameCountdown != 0) {
             state->scaleVectors[scaleIndex + 1].x =
                 (targetX - state->scaleVectors[scaleIndex].x) / (f32)state->stageFrameCountdown;
             state->scaleVectors[scaleIndex + 1].y =
                 (targetY - state->scaleVectors[scaleIndex].y) / (f32)state->stageFrameCountdown;
             state->scaleVectors[scaleIndex + 1].z =
                 (targetZ - state->scaleVectors[scaleIndex].z) / (f32)state->stageFrameCountdown;
-        }
-        else
-        {
+        } else {
             baseVertices = state->vertexBuffers[2];
             vertices = state->vertexBuffers[state->activeVertexBufferIndex];
 
-            for (i = 0; i < command->indexCount; i++)
-            {
+            for (i = 0; i < command->indexCount; i++) {
                 baseVertices[command->indices[i]].posX *= targetX;
                 baseVertices[command->indices[i]].posY *= targetY;
                 baseVertices[command->indices[i]].posZ *= targetZ;
@@ -559,20 +486,16 @@ void modgfx_stepVertexScale(PartfxEffectState* state, ModgfxVertexGroupCmd* comm
         baseVertices = state->vertexBuffers[2];
         vertices = state->vertexBuffers[state->activeVertexBufferIndex];
 
-        for (i = 0; i < command->indexCount; i++)
-        {
-            if (state->scaleVectors[scaleIndex].x != 1.0f)
-            {
+        for (i = 0; i < command->indexCount; i++) {
+            if (state->scaleVectors[scaleIndex].x != 1.0f) {
                 vertices[command->indices[i]].posX =
                     state->scaleVectors[scaleIndex].x * baseVertices[command->indices[i]].posX;
             }
-            if (state->scaleVectors[scaleIndex].y != 1.0f)
-            {
+            if (state->scaleVectors[scaleIndex].y != 1.0f) {
                 vertices[command->indices[i]].posY =
                     state->scaleVectors[scaleIndex].y * baseVertices[command->indices[i]].posY;
             }
-            if (state->scaleVectors[scaleIndex].z != 1.0f)
-            {
+            if (state->scaleVectors[scaleIndex].z != 1.0f) {
                 vertices[command->indices[i]].posZ =
                     state->scaleVectors[scaleIndex].z * baseVertices[command->indices[i]].posZ;
             }
@@ -580,14 +503,12 @@ void modgfx_stepVertexScale(PartfxEffectState* state, ModgfxVertexGroupCmd* comm
     }
 }
 
-void modgfx_restoreBaseVertices(PartfxEffectState* state)
-{
+void modgfx_restoreBaseVertices(PartfxEffectState* state) {
     int i;
     ModgfxVertexData* src;
     ModgfxVertexData* dst = state->vertexBuffers[state->activeVertexBufferIndex];
     src = state->vertexBuffers[2];
-    for (i = 0; i < state->vertexCount; i++)
-    {
+    for (i = 0; i < state->vertexCount; i++) {
         dst->posX = src->posX;
         dst->posY = src->posY;
         dst->posZ = src->posZ;
@@ -600,31 +521,27 @@ void modgfx_restoreBaseVertices(PartfxEffectState* state)
     }
 }
 
-void partfx_freeEffectsBySequence(s16 sequenceId, int forceAll)
-{
+void partfx_freeEffectsBySequence(s16 sequenceId, int forceAll) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] == NULL)
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        if (arr[i] == NULL) {
             continue;
-        if (sequenceId != arr[i]->sequenceId && forceAll == 0)
+        }
+        if (sequenceId != arr[i]->sequenceId && forceAll == 0) {
             continue;
-        if (arr[i]->auxAllocation != NULL)
-        {
+        }
+        if (arr[i]->auxAllocation != NULL) {
             mm_free(arr[i]->auxAllocation);
         }
-        if (arr[i]->instanceObject != NULL)
-        {
+        if (arr[i]->instanceObject != NULL) {
             Obj_FreeObject(arr[i]->instanceObject);
         }
         arr[i]->inlineData = NULL;
-        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
-        {
+        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL) {
             textureFree((Texture*)(arr[i]->textureResource));
         }
-        if (arr[i]->textureIsBorrowed == 0)
-        {
+        if (arr[i]->textureIsBorrowed == 0) {
             arr[i]->textureResource = NULL;
         }
         mm_free(arr[i]);
@@ -633,65 +550,51 @@ void partfx_freeEffectsBySequence(s16 sequenceId, int forceAll)
 }
 /* Flag every active effect whose owner object has the 0x800 state bit
  * by setting its frameUpdated flag. */
-void dll_0B_markSourceFrameUpdated(void)
-{
+void dll_0B_markSourceFrameUpdated(void) {
     PartfxEffectState* effect;
     GameObject* sourceObject;
     int i;
     PartfxEffectState** effects = (PartfxEffectState**)gPartfxActiveEffects;
 
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
         effect = effects[i];
-        if (effect != NULL)
-        {
+        if (effect != NULL) {
             sourceObject = effect->sourceObject;
-            if (sourceObject != NULL && (sourceObject->objectFlags & DLL0B_OBJFLAG_RENDERED) != 0)
-            {
+            if (sourceObject != NULL && (sourceObject->objectFlags & DLL0B_OBJFLAG_RENDERED) != 0) {
                 effect->frameUpdated = 1;
             }
         }
     }
 }
 
-void dll_0B_func0D(void* source)
-{
+void dll_0B_func0D(void* source) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] != NULL && arr[i]->sourceObject == source)
-        {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        if (arr[i] != NULL && arr[i]->sourceObject == source) {
             arr[i]->releaseRequested = 1;
         }
     }
 }
 
-void dll_0B_func0C(void* source, char value)
-{
+void dll_0B_func0C(void* source, char value) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] != NULL && arr[i]->sourceObject == source)
-        {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        if (arr[i] != NULL && arr[i]->sourceObject == source) {
             arr[i]->byte13B = value;
         }
     }
 }
-void dll_0B_func0B(void)
-{
-    lbl_803DD282++;
+void dll_0B_nextSpawnGeneration(void) {
+    gModgfxSpawnGeneration++;
 }
 
-void dll_0B_releaseHandle(s16* p)
-{
+void dll_0B_releaseHandle(s16* p) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] != NULL && *p == arr[i]->sequenceId)
-        {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        if (arr[i] != NULL && *p == arr[i]->sequenceId) {
             arr[i]->releaseRequested = 1;
         }
     }
@@ -969,21 +872,15 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
     return 0;
 }
 
-void dll_0B_detachSource(void* param)
-{
+void dll_0B_detachSource(void* param) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
 
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] != NULL && arr[i]->sourceObject == param)
-        {
-            if ((int)arr[i]->flags & 0x10000)
-            {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        if (arr[i] != NULL && arr[i]->sourceObject == param) {
+            if ((int)arr[i]->flags & 0x10000) {
                 partfx_freeEffectsBySequence(arr[i]->sequenceId, 0);
-            }
-            else
-            {
+            } else {
                 arr[i]->sourcePosX = ((GameObject*)arr[i]->sourceObject)->anim.worldPosX;
                 arr[i]->sourcePosY = ((GameObject*)arr[i]->sourceObject)->anim.worldPosY;
                 arr[i]->sourcePosZ = ((GameObject*)arr[i]->sourceObject)->anim.worldPosZ;
@@ -991,14 +888,12 @@ void dll_0B_detachSource(void* param)
                 arr[i]->sourceRotZ = ((GameObject*)arr[i]->sourceObject)->anim.rotZ;
                 arr[i]->sourceRotY = ((GameObject*)arr[i]->sourceObject)->anim.rotY;
                 arr[i]->sourceRotX = ((GameObject*)arr[i]->sourceObject)->anim.rotX;
-                if ((int)arr[i]->flags & 0x2)
-                {
+                if ((int)arr[i]->flags & 0x2) {
                     arr[i]->velocityX += ((GameObject*)arr[i]->sourceObject)->anim.velocityX;
                     arr[i]->velocityY += ((GameObject*)arr[i]->sourceObject)->anim.velocityY;
                     arr[i]->velocityZ += ((GameObject*)arr[i]->sourceObject)->anim.velocityZ;
                 }
-                if (!((int)arr[i]->flags & 0x200000))
-                {
+                if (!((int)arr[i]->flags & 0x200000)) {
                     arr[i]->flags |= 0x200000;
                 }
                 arr[i]->sourceObject = 0;
@@ -1007,27 +902,24 @@ void dll_0B_detachSource(void* param)
     }
 }
 
-void dll_0B_freeSourceEffects(void* source)
-{
+void dll_0B_freeSourceEffects(void* source) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
-        if (arr[i] == NULL)
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
+        if (arr[i] == NULL) {
             continue;
-        if (arr[i]->sourceObject != source)
+        }
+        if (arr[i]->sourceObject != source) {
             continue;
-        if (arr[i]->instanceObject != NULL)
-        {
+        }
+        if (arr[i]->instanceObject != NULL) {
             Obj_FreeObject(arr[i]->instanceObject);
         }
         arr[i]->inlineData = NULL;
-        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
-        {
+        if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL) {
             textureFree((Texture*)(arr[i]->textureResource));
         }
-        if (arr[i]->textureIsBorrowed == 0)
-        {
+        if (arr[i]->textureIsBorrowed == 0) {
             arr[i]->textureResource = NULL;
         }
         mm_free(arr[i]);
@@ -1035,22 +927,19 @@ void dll_0B_freeSourceEffects(void* source)
     }
 }
 
-static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
-{
-    for (; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; p++, i++)
-    {
-        if (*p == NULL)
+static inline int modgfx_findFreeEffectSlot(void** p, int found, int i) {
+    for (; i < PARTFX_ACTIVE_EFFECT_COUNT && found == 0; p++, i++) {
+        if (*p == NULL) {
             found = 1;
+        }
     }
-    if (found)
-    {
+    if (found) {
         return i - 1;
     }
     return -1;
 }
 
-void dll_0B_releaseAll(void)
-{
+void dll_0B_releaseAll(void) {
     partfx_freeEffectsBySequence(0, 1);
 }
 
@@ -1061,8 +950,7 @@ typedef void (*ExpResFn6)(void*, int, void*, int, int, void*);
 
 #define PENDING_SPAWNS ((char*)((PartfxEffectState*)eff)->emitterCommands)
 
-void dll_0B_updateActiveEffects(void)
-{
+void dll_0B_updateActiveEffects(void) {
     int emOff;
     int emIdx;
     int* eff;
@@ -1082,30 +970,27 @@ void dll_0B_updateActiveEffects(void)
 
     emIdx = 0;
     gExpgfxUpdatingActivePools = 2;
-    if (renderModeSetOrGet(-1) == 1)
-    {
+    if (renderModeSetOrGet(-1) == 1) {
         return;
     }
     gModgfxMotionStep = timeDelta;
     pp = (int**)gPartfxActiveEffects;
-    for (slot = 0; slot < PARTFX_ACTIVE_EFFECT_COUNT; slot++)
-    {
+    for (slot = 0; slot < PARTFX_ACTIVE_EFFECT_COUNT; slot++) {
         reprocess = 1;
-        while (reprocess)
-        {
+        while (reprocess) {
             reprocess = 0;
             eff = pp[slot];
-            if (eff == NULL)
+            if (eff == NULL) {
                 break;
-            if (((PartfxEffectState*)eff)->sequenceId == -1)
+            }
+            if (((PartfxEffectState*)eff)->sequenceId == -1) {
                 break;
+            }
             active = 0;
             ((PartfxEffectState*)eff)->frameUpdated = 0;
-            if (((PartfxEffectState*)eff)->stageFrameCountdown < 0 || ((PartfxEffectState*)eff)->currentStage == -1)
-            {
+            if (((PartfxEffectState*)eff)->stageFrameCountdown < 0 || ((PartfxEffectState*)eff)->currentStage == -1) {
                 ((PartfxEffectState*)eff)->currentStage += 1;
-                if (((PartfxEffectState*)eff)->currentStage > 6)
-                {
+                if (((PartfxEffectState*)eff)->currentStage > 6) {
                     partfx_freeEffectsBySequence(((PartfxEffectState*)eff)->sequenceId, 0);
                     break;
                 }
@@ -1113,13 +998,10 @@ void dll_0B_updateActiveEffects(void)
                     ((PartfxEffectState*)eff)->stageDurations[((PartfxEffectState*)eff)->currentStage];
                 active = 1;
                 ((ExpFn2)modgfx_captureFrameBaseVertices)(eff, 0);
-            }
-            else if (((PartfxEffectState*)eff)->requestedStage != 0)
-            {
+            } else if (((PartfxEffectState*)eff)->requestedStage != 0) {
                 ((PartfxEffectState*)eff)->currentStage = ((PartfxEffectState*)eff)->requestedStage;
                 ((PartfxEffectState*)eff)->requestedStage = 0;
-                if (((PartfxEffectState*)eff)->currentStage > 6)
-                {
+                if (((PartfxEffectState*)eff)->currentStage > 6) {
                     partfx_freeEffectsBySequence(((PartfxEffectState*)eff)->sequenceId, 0);
                     break;
                 }
@@ -1134,8 +1016,7 @@ void dll_0B_updateActiveEffects(void)
             feFlag = 0;
             emIdx = 0;
             emOff = 0;
-            for (; emIdx < ((PartfxEffectState*)eff)->emitterCount; emOff += sizeof(ModgfxPendingSpawn), emIdx++)
-            {
+            for (; emIdx < ((PartfxEffectState*)eff)->emitterCount; emOff += sizeof(ModgfxPendingSpawn), emIdx++) {
                 s16 frameIndex;
                 char* pendingSpawns;
                 ModgfxPendingSpawn* emitter;
@@ -1144,31 +1025,31 @@ void dll_0B_updateActiveEffects(void)
                 frameIndex = ((PartfxEffectState*)eff)->currentStage;
                 pendingSpawns = PENDING_SPAWNS;
                 emitter = (ModgfxPendingSpawn*)(pendingSpawns + emOff);
-                if (frameIndex != emitter->sequenceIndex)
+                if (frameIndex != emitter->sequenceIndex) {
                     continue;
+                }
                 flags = emitter->modelOrResource;
-                if ((flags & 0x1000) && emitter->posX > MODGFX_ZERO && frameIndex > 0)
-                {
-                    ((PartfxEffectState*)eff)->currentStage = ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->param14;
+                if ((flags & 0x1000) && emitter->posX > MODGFX_ZERO && frameIndex > 0) {
+                    ((PartfxEffectState*)eff)->currentStage =
+                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->param14;
                     ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->posX =
                         ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->posX - MODGFX_ONE;
                     ((PartfxEffectState*)eff)->stageFrameCountdown = -1;
                     break;
                 }
-                if (flags & 0x2000)
-                {
-                    if (((PartfxEffectState*)eff)->releaseRequested != 0)
-                    {
+                if (flags & 0x2000) {
+                    if (((PartfxEffectState*)eff)->releaseRequested != 0) {
                         ((PartfxEffectState*)eff)->releaseRequested = 0;
-                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->modelOrResource = 0;
-                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->modelOrResource = 0x20;
+                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->modelOrResource =
+                            0;
+                        ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->modelOrResource =
+                            0x20;
                         ((PartfxEffectState*)eff)->stageFrameCountdown = -1;
                         reprocess = 1;
                         feFlag = 0;
                         break;
                     }
-                    if (((PartfxEffectState*)eff)->currentStage > 0)
-                    {
+                    if (((PartfxEffectState*)eff)->currentStage > 0) {
                         feFlag = 1;
                         ((PartfxEffectState*)eff)->currentStage =
                             ((ModgfxPendingSpawn*)(pendingSpawns + emIdx * sizeof(ModgfxPendingSpawn)))->param14;
@@ -1177,8 +1058,7 @@ void dll_0B_updateActiveEffects(void)
                         break;
                     }
                 }
-                if (flags & 0x10000000)
-                {
+                if (flags & 0x10000000) {
                     tmpl.posX = ((PartfxEffectState*)eff)->drawPosX;
                     tmpl.posY = ((PartfxEffectState*)eff)->drawPosY;
                     tmpl.posZ = ((PartfxEffectState*)eff)->drawPosZ;
@@ -1186,28 +1066,24 @@ void dll_0B_updateActiveEffects(void)
                     rot.y = MODGFX_ZERO;
                     rot.z = MODGFX_ZERO;
                     rot.scale = MODGFX_ONE;
-                    if ((int)((PartfxEffectState*)eff)->flags & 1)
-                    {
+                    if ((int)((PartfxEffectState*)eff)->flags & 1) {
                         rot.rotX = ((PartfxEffectState*)eff)->sourceRotX;
-                    }
-                    else
-                    {
+                    } else {
                         rot.rotX = *(s16*)((int*)((PartfxEffectState*)eff)->sourceObject);
                     }
                     rot.rotY = 0;
                     rot.rotZ = 0;
                     vecRotateZXY(&rot.rotX, &tmpl.posX);
-                    if (*(void**)eff == NULL && Obj_CanSetupObject())
-                    {
+                    if (*(void**)eff == NULL && Obj_CanSetupObject()) {
                         int* o;
-                        if (((int)((PartfxEffectState*)eff)->flags & 1) == 0)
-                        {
-                            tmpl.posX = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosX + tmpl.posX;
-                            tmpl.posY = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosY + tmpl.posY;
-                            tmpl.posZ = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosZ + tmpl.posZ;
-                        }
-                        else
-                        {
+                        if (((int)((PartfxEffectState*)eff)->flags & 1) == 0) {
+                            tmpl.posX =
+                                ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosX + tmpl.posX;
+                            tmpl.posY =
+                                ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosY + tmpl.posY;
+                            tmpl.posZ =
+                                ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosZ + tmpl.posZ;
+                        } else {
                             tmpl.posX = ((PartfxEffectState*)eff)->sourcePosX + tmpl.posX;
                             tmpl.posY = ((PartfxEffectState*)eff)->sourcePosY + tmpl.posY;
                             tmpl.posZ = ((PartfxEffectState*)eff)->sourcePosZ + tmpl.posZ;
@@ -1218,17 +1094,15 @@ void dll_0B_updateActiveEffects(void)
                         ((ObjPlacement*)o)->posZ = tmpl.posZ;
                         *eff = (int)objSetupObject((ObjPlacement*)o, 5, -1, -1, NULL);
                         ((PartfxEffectState*)eff)->instanceObject->userData2 = 1;
-                    }
-                    else if (*(void**)eff != NULL)
-                    {
-                        if (((int)((PartfxEffectState*)eff)->flags & 1) == 0)
-                        {
-                            tmpl.posX = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosX + tmpl.posX;
-                            tmpl.posY = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosY + tmpl.posY;
-                            tmpl.posZ = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosZ + tmpl.posZ;
-                        }
-                        else
-                        {
+                    } else if (*(void**)eff != NULL) {
+                        if (((int)((PartfxEffectState*)eff)->flags & 1) == 0) {
+                            tmpl.posX =
+                                ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosX + tmpl.posX;
+                            tmpl.posY =
+                                ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosY + tmpl.posY;
+                            tmpl.posZ =
+                                ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosZ + tmpl.posZ;
+                        } else {
                             tmpl.posX = ((PartfxEffectState*)eff)->sourcePosX + tmpl.posX;
                             tmpl.posY = ((PartfxEffectState*)eff)->sourcePosY + tmpl.posY;
                             tmpl.posZ = ((PartfxEffectState*)eff)->sourcePosZ + tmpl.posZ;
@@ -1237,24 +1111,23 @@ void dll_0B_updateActiveEffects(void)
                         ((PartfxEffectState*)eff)->instanceObject->anim.worldPosY = tmpl.posY;
                         ((PartfxEffectState*)eff)->instanceObject->anim.worldPosZ = tmpl.posZ;
                     }
-                    if (*(void**)eff != NULL)
-                    {
+                    if (*(void**)eff != NULL) {
                         int* o = *(int**)eff;
                         int* list = *(int**)((char*)(int*)((GameObject*)o)->anim.hitReactState + 0x50);
-                        if (list != NULL)
-                        {
-                            if (*(s16*)((char*)list + 0x44) == (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX)
-                            {
+                        if (list != NULL) {
+                            if (*(s16*)((char*)list + 0x44) ==
+                                (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX) {
                                 Obj_FreeObject((GameObject*)o);
                                 *eff = 0;
                                 ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->modelOrResource ^= 0x10000000;
                                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->posZ >= MODGFX_ZERO &&
-                                    (int*)((PartfxEffectState*)eff)->sourceObject != NULL)
-                                {
+                                    (int*)((PartfxEffectState*)eff)->sourceObject != NULL) {
                                     (*gPartfxInterface)
                                         ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                      (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * sizeof(ModgfxPendingSpawn)))->posZ, &tmpl,
-                                                      0x200001, -1, 0);
+                                                      (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS +
+                                                                                  emIdx * sizeof(ModgfxPendingSpawn)))
+                                                          ->posZ,
+                                                      &tmpl, 0x200001, -1, 0);
                                 }
                                 ((PartfxEffectState*)eff)->requestedStage =
                                     ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emIdx * 0x18))->posY;
@@ -1264,69 +1137,53 @@ void dll_0B_updateActiveEffects(void)
                     }
                 }
                 ObjList_GetObjects(&objIdx, &objCount);
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x2)
-                {
-                    modgfx_stepVertexScale((PartfxEffectState*)eff,
-                                           (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff), active, scaleGroupIndex);
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x2) {
+                    modgfx_stepVertexScale((PartfxEffectState*)eff, (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff),
+                                           active, scaleGroupIndex);
                     scaleGroupIndex++;
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4)
-                {
-                    modgfx_stepVertexAlpha((PartfxEffectState*)eff,
-                                           (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff), active, alphaGroupIndex);
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4) {
+                    modgfx_stepVertexAlpha((PartfxEffectState*)eff, (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff),
+                                           active, alphaGroupIndex);
                     alphaGroupIndex++;
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8) {
                     ((ExpFn4)modgfx_stepVertexColor)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100) {
                     ModgfxPendingSpawn* em = (ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff);
                     ((PartfxEffectState*)eff)->rotOffsetZ += (s16)(em->posX * gModgfxMotionStep);
                     ((PartfxEffectState*)eff)->rotOffsetY += (s16)(em->posY * gModgfxMotionStep);
                     ((PartfxEffectState*)eff)->rotOffsetX += (s16)(em->posZ * gModgfxMotionStep);
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80) {
                     ((ExpFn4)modgfx_stepS16VectorLerp)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8000000)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8000000) {
                     ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posZ = randomGetRange(0, 0xffff);
                     ((ExpFn4)modgfx_stepS16VectorLerp)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4000)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4000) {
                     ((ExpFn4)modgfx_scrollTexCoords)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x10000 && active != 0)
-                {
-                    if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14 == -1)
-                    {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x10000 && active != 0) {
+                    if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14 == -1) {
                         Sfx_StopObjectChannel((GameObject*)((PartfxEffectState*)eff)->sourceObject, 0x40);
-                    }
-                    else
-                    {
+                    } else {
                         Sfx_PlayFromObject((GameObject*)((PartfxEffectState*)eff)->sourceObject,
                                            (u16)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14);
                     }
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100000)
-                {
-                    if (active == 1)
-                    {
-                        if (((PartfxEffectState*)eff)->stageFrameCountdown != 0)
-                        {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100000) {
+                    if (active == 1) {
+                        if (((PartfxEffectState*)eff)->stageFrameCountdown != 0) {
                             ((PartfxEffectState*)eff)->sourceAlphaStep =
                                 (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX -
                                  (f32)(u32)(*(GameObject**)&((PartfxEffectState*)eff)->sourceObject)->anim.alpha) /
                                 (f32)((PartfxEffectState*)eff)->stageFrameCountdown;
                             ((PartfxEffectState*)eff)->sourceAlphaCurrent =
                                 (f32)(u32)(*(GameObject**)&((PartfxEffectState*)eff)->sourceObject)->anim.alpha;
-                        }
-                        else
-                        {
+                        } else {
                             ((PartfxEffectState*)eff)->sourceAlphaStep =
                                 ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX -
                                 (f32)(u32)(*(GameObject**)&((PartfxEffectState*)eff)->sourceObject)->anim.alpha;
@@ -1335,23 +1192,18 @@ void dll_0B_updateActiveEffects(void)
                     }
                     ((PartfxEffectState*)eff)->sourceAlphaCurrent =
                         ((PartfxEffectState*)eff)->sourceAlphaCurrent + ((PartfxEffectState*)eff)->sourceAlphaStep;
-                    if (((PartfxEffectState*)eff)->sourceAlphaCurrent > 255.0f)
-                    {
+                    if (((PartfxEffectState*)eff)->sourceAlphaCurrent > 255.0f) {
                         ((PartfxEffectState*)eff)->sourceAlphaCurrent = 255.0f;
-                    }
-                    else if (((PartfxEffectState*)eff)->sourceAlphaCurrent < MODGFX_ZERO)
-                    {
+                    } else if (((PartfxEffectState*)eff)->sourceAlphaCurrent < MODGFX_ZERO) {
                         ((PartfxEffectState*)eff)->sourceAlphaCurrent = MODGFX_ZERO;
                     }
                     (*(GameObject**)&((PartfxEffectState*)eff)->sourceObject)->anim.alpha =
                         ((PartfxEffectState*)eff)->sourceAlphaCurrent;
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x400000)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x400000) {
                     ((ExpFn4)modgfx_stepPosition)(eff, PENDING_SPAWNS + emOff, active, 0);
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80000000)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x80000000) {
                     ModgfxPendingSpawn* em = (ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff);
                     ((PartfxEffectState*)eff)->posStepX =
                         em->posX * gModgfxMotionStep + ((PartfxEffectState*)eff)->posStepX;
@@ -1360,127 +1212,94 @@ void dll_0B_updateActiveEffects(void)
                     ((PartfxEffectState*)eff)->posStepZ =
                         em->posZ * gModgfxMotionStep + ((PartfxEffectState*)eff)->posStepZ;
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x800000)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x800000) {
                     if ((((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x1000000) &&
-                        MODGFX_ZERO == ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posY)
-                    {
-                        for (k = 0; k < (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX; k++)
-                        {
-                            if (randomGetRange(0, (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posZ) == 0)
-                            {
-                                if ((int)((PartfxEffectState*)eff)->flags & 1)
-                                {
+                        MODGFX_ZERO == ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posY) {
+                        for (k = 0; k < (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX; k++) {
+                            if (randomGetRange(0, (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posZ) == 0) {
+                                if ((int)((PartfxEffectState*)eff)->flags & 1) {
                                     (*gPartfxInterface)
                                         ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                      ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, NULL, 0x10001, -1,
-                                                      NULL);
-                                }
-                                else
-                                {
+                                                      ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, NULL,
+                                                      0x10001, -1, NULL);
+                                } else {
                                     (*gPartfxInterface)
                                         ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                      ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, NULL, 0x10001, -1,
-                                                      NULL);
+                                                      ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, NULL,
+                                                      0x10001, -1, NULL);
                                 }
                             }
                         }
-                    }
-                    else if (MODGFX_ZERO == ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posY)
-                    {
-                        for (k = 0; k < (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX; k++)
-                        {
-                            if ((int)((PartfxEffectState*)eff)->flags & 1)
-                            {
+                    } else if (MODGFX_ZERO == ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posY) {
+                        for (k = 0; k < (int)((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posX; k++) {
+                            if ((int)((PartfxEffectState*)eff)->flags & 1) {
                                 (*gPartfxInterface)
                                     ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, eff + 3, 0x10002, -1,
-                                                  NULL);
-                            }
-                            else
-                            {
+                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, eff + 3,
+                                                  0x10002, -1, NULL);
+                            } else {
                                 (*gPartfxInterface)
                                     ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, NULL, 0x10002, -1,
-                                                  NULL);
+                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, NULL,
+                                                  0x10002, -1, NULL);
                             }
                         }
-                    }
-                    else if (MODGFX_ONE == ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posY)
-                    {
-                        if (((int)((PartfxEffectState*)eff)->flags & 1) == 0)
-                        {
+                    } else if (MODGFX_ONE == ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->posY) {
+                        if (((int)((PartfxEffectState*)eff)->flags & 1) == 0) {
                             tmpl.posX = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosX +
-                                     ((PartfxEffectState*)eff)->drawPosX;
+                                        ((PartfxEffectState*)eff)->drawPosX;
                             tmpl.posY = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosY +
-                                     ((PartfxEffectState*)eff)->drawPosY;
+                                        ((PartfxEffectState*)eff)->drawPosY;
                             tmpl.posZ = ((GameObject*)((PartfxEffectState*)eff)->sourceObject)->anim.worldPosZ +
-                                     ((PartfxEffectState*)eff)->drawPosZ;
-                            if ((int*)((PartfxEffectState*)eff)->sourceObject != NULL)
-                            {
+                                        ((PartfxEffectState*)eff)->drawPosZ;
+                            if ((int*)((PartfxEffectState*)eff)->sourceObject != NULL) {
                                 (*gPartfxInterface)
                                     ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, &tmpl, 0x10001, -1,
-                                                  NULL);
+                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, &tmpl,
+                                                  0x10001, -1, NULL);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             tmpl.posX = ((PartfxEffectState*)eff)->drawPosX;
                             tmpl.posY = ((PartfxEffectState*)eff)->drawPosY;
                             tmpl.posZ = ((PartfxEffectState*)eff)->drawPosZ;
-                            if ((int*)((PartfxEffectState*)eff)->sourceObject != NULL)
-                            {
+                            if ((int*)((PartfxEffectState*)eff)->sourceObject != NULL) {
                                 (*gPartfxInterface)
                                     ->spawnObject((int*)((PartfxEffectState*)eff)->sourceObject,
-                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, &tmpl, 0x10001, -1,
-                                                  NULL);
+                                                  ((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14, &tmpl,
+                                                  0x10001, -1, NULL);
                             }
                         }
                     }
                 }
-                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4000000)
-                {
+                if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x4000000) {
                     res = Resource_Acquire((u16)(((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->param14 + 0x58), 1);
-                    if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x1000000)
-                    {
-                        for (k = 0; k < (int)*(f32*)((emOff + (int)PENDING_SPAWNS) + 0x4); k++)
-                        {
-                            if (randomGetRange(0, 5) == 0)
-                            {
-                                if ((int)((PartfxEffectState*)eff)->flags & 1)
-                                {
+                    if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x1000000) {
+                        for (k = 0; k < (int)*(f32*)((emOff + (int)PENDING_SPAWNS) + 0x4); k++) {
+                            if (randomGetRange(0, 5) == 0) {
+                                if ((int)((PartfxEffectState*)eff)->flags & 1) {
                                     (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 3, 1, -1, NULL);
-                                }
-                                else
-                                {
-                                    ((ExpResFn6)(*(ObjectInterface**)res)->init)((int*)((PartfxEffectState*)eff)->sourceObject, 0,
-                                                                    NULL, 1, -1, NULL);
+                                } else {
+                                    ((ExpResFn6)(*(ObjectInterface**)res)->init)(
+                                        (int*)((PartfxEffectState*)eff)->sourceObject, 0, NULL, 1, -1, NULL);
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        for (k = 0; k < (int)*(f32*)((emOff + (int)PENDING_SPAWNS) + 0x4); k++)
-                        {
-                            if ((int)((PartfxEffectState*)eff)->flags & 1)
-                            {
+                    } else {
+                        for (k = 0; k < (int)*(f32*)((emOff + (int)PENDING_SPAWNS) + 0x4); k++) {
+                            if ((int)((PartfxEffectState*)eff)->flags & 1) {
                                 (*(ExpResFn6*)(*(int*)res + 4))(NULL, 0, eff + 3, 1, -1, NULL);
-                            }
-                            else
-                            {
-                                ((ExpResFn6)(*(ObjectInterface**)res)->init)((int*)((PartfxEffectState*)eff)->sourceObject, 0, NULL,
-                                                                1, -1, NULL);
+                            } else {
+                                ((ExpResFn6)(*(ObjectInterface**)res)->init)(
+                                    (int*)((PartfxEffectState*)eff)->sourceObject, 0, NULL, 1, -1, NULL);
                             }
                         }
                     }
                     Resource_Release(res);
                 }
             }
-            if (feFlag == 0)
-            {
-                ((PartfxEffectState*)eff)->stageFrameCountdown = ((PartfxEffectState*)eff)->stageFrameCountdown - framesThisStep;
+            if (feFlag == 0) {
+                ((PartfxEffectState*)eff)->stageFrameCountdown =
+                    ((PartfxEffectState*)eff)->stageFrameCountdown - framesThisStep;
             }
         }
         gExpgfxUpdatingActivePools = 0;
@@ -1488,8 +1307,7 @@ void dll_0B_updateActiveEffects(void)
 }
 
 s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int colorCount,
-                       s16* colorData, int textureAssetId, void* textureResource)
-{
+                       s16* colorData, int textureAssetId, void* textureResource) {
     int off;
     int i;
     int spawnCount;
@@ -1506,45 +1324,37 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     i = 0;
     off = i;
     slot = modgfx_findFreeEffectSlot(gPartfxActiveEffects, off, i);
-    if (slot == -1)
-    {
+    if (slot == -1) {
         return 0;
     }
     {
         off = 0;
         spawnCount = context->pendingSpawnCount;
-        for (i = 0; i < spawnCount; i++, off += 0x18)
-        {
+        for (i = 0; i < spawnCount; i++, off += 0x18) {
             ModgfxPendingSpawn* item = (ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off);
-            if ((item->modelOrResource & 0xf7fff180) == 0 && item->param14 != 0)
-            {
+            if ((item->modelOrResource & 0xf7fff180) == 0 && item->param14 != 0) {
                 total += item->param14;
             }
         }
     }
 
     base0 = 0;
-    if ((context->flags & 0x800) == 0)
-    {
+    if ((context->flags & 0x800) == 0) {
         base0 = (int)(long)((colorCount * 3) << 4) + ((vertexCount * 3) << 4);
     }
 
     arr = (PartfxEffectState**)gPartfxActiveEffects;
     arr[slot] = (PartfxEffectState*)mmAlloc(
-        sizeof(PartfxEffectState) + base0 + 0x100 + spawnCount * sizeof(ModgfxPendingSpawn) + total * 2,
-        0x15, 0);
-    if (arr[slot] == NULL)
-    {
+        sizeof(PartfxEffectState) + base0 + 0x100 + spawnCount * sizeof(ModgfxPendingSpawn) + total * 2, 0x15, 0);
+    if (arr[slot] == NULL) {
         partfx_freeEffectsBySequence(0, 0);
         return -1;
     }
 
-    arr[slot]->inlineData =
-        (u8*)arr[slot] + sizeof(PartfxEffectState);
+    arr[slot]->inlineData = (u8*)arr[slot] + sizeof(PartfxEffectState);
     {
         u8* bufp = arr[slot]->inlineData;
-        if ((context->flags & 0x800) == 0)
-        {
+        if ((context->flags & 0x800) == 0) {
             arr[slot]->colorBuffers[0] = bufp;
             bufp += colorCount * 16;
             arr[slot]->colorBuffers[1] = bufp;
@@ -1562,18 +1372,13 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
         arr[slot]->baseColorBuffer = bufp + 0x80;
     }
 
-    if (context->drawGroupCount != 0)
-    {
+    if (context->drawGroupCount != 0) {
         divThresh = colorCount / context->drawGroupCount;
-    }
-    else
-    {
+    } else {
         divThresh = colorCount;
     }
-    if ((context->flags & 0x800) == 0)
-    {
-        for (i = 0, off = i; i < 3; off += 4, i++)
-        {
+    if ((context->flags & 0x800) == 0) {
+        for (i = 0, off = i; i < 3; off += 4, i++) {
             s16* sd;
             int j;
             int bias;
@@ -1583,10 +1388,8 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
             bias = 0;
             j = 0;
             sd = colorData;
-            for (; j < colorCount; j++)
-            {
-                if ((context->flags & 0x8000000) && j == divThresh)
-                {
+            for (; j < colorCount; j++) {
+                if ((context->flags & 0x8000000) && j == divThresh) {
                     bias = context->drawGroupStride;
                 }
                 dstc[1] = sd[0] - bias;
@@ -1600,39 +1403,28 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
 
     arr[slot]->textureResource = NULL;
     arr[slot]->textureIsBorrowed = 0;
-    if (textureResource != NULL)
-    {
+    if (textureResource != NULL) {
         arr[slot]->textureResource = textureResource;
         arr[slot]->textureIsBorrowed = 1;
-    }
-    else if (textureAssetId != 0)
-    {
+    } else if (textureAssetId != 0) {
         arr[slot]->textureResource = textureLoadAsset(textureAssetId);
         arr[slot]->textureIsBorrowed = 0;
     }
 
-    if ((context->flags & 0x800) == 0)
-    {
-        for (i = 0, off = i; i < 3; off += 4, i++)
-        {
+    if ((context->flags & 0x800) == 0) {
+        for (i = 0, off = i; i < 3; off += 4, i++) {
             int j;
             s16* sb;
             u8* dstv;
             dstv = (u8*)((PartfxEffectState*)((u8*)arr[slot] + off))->vertexBuffers[0];
             sb = vertexData;
-            for (j = 0; j < vertexCount; j++)
-            {
+            for (j = 0; j < vertexCount; j++) {
                 *(s16*)(dstv + 0) = sb[0];
                 *(s16*)(dstv + 2) = sb[1];
                 *(s16*)(dstv + 4) = sb[2];
-                if (arr[slot]->textureResource != NULL)
-                {
-                    *(s16*)(dstv + 8) =
-                        128.0f *
-                        ((f32)sb[3] / (f32)((Texture*)arr[slot]->textureResource)->width);
-                    *(s16*)(dstv + 0xa) =
-                        128.0f *
-                        ((f32)sb[4] / (f32)((Texture*)arr[slot]->textureResource)->height);
+                if (arr[slot]->textureResource != NULL) {
+                    *(s16*)(dstv + 8) = 128.0f * ((f32)sb[3] / (f32)((Texture*)arr[slot]->textureResource)->width);
+                    *(s16*)(dstv + 0xa) = 128.0f * ((f32)sb[4] / (f32)((Texture*)arr[slot]->textureResource)->height);
                 }
                 dstv[0xc] = 0xff;
                 dstv[0xd] = 0xff;
@@ -1666,77 +1458,49 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     emitterAddress += 0x100;
     arr[slot]->emitterCommands = (u8*)emitterAddress;
     arr[slot]->auxSequenceBuffer = NULL;
-    if (total != 0)
-    {
+    if (total != 0) {
         arr[slot]->auxSequenceBuffer =
-            (u8*)arr[slot]->emitterCommands +
-            context->pendingSpawnCount * sizeof(ModgfxPendingSpawn);
+            (u8*)arr[slot]->emitterCommands + context->pendingSpawnCount * sizeof(ModgfxPendingSpawn);
     }
 
     {
         u8* dst = arr[slot]->auxSequenceBuffer;
-        for (i = 0, off = i; i < arr[slot]->emitterCount; off += 0x18, i++)
-        {
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->sequenceIndex = ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->sequenceIndex;
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->param14 = ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->param14;
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->param10 = 0;
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->modelOrResource =
+        for (i = 0, off = i; i < arr[slot]->emitterCount; off += 0x18, i++) {
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->sequenceIndex =
+                ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->sequenceIndex;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14 =
+                ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->param14;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = 0;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->modelOrResource =
                 ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->modelOrResource;
-            if ((((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                     ->modelOrResource &
-                 0xf7fff180) == 0 &&
-                ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                        ->param14 != 0)
-            {
+            if ((((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->modelOrResource & 0xf7fff180) == 0 &&
+                ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14 != 0) {
                 int k;
-                ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                    ->param10 = 0;
-                *(u8**)&((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands +
-                                               off))
-                     ->param10 = dst;
-                dst += ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands +
-                                              off))
-                           ->param14 *
-                       2;
-                for (k = 0;
-                     k <
-                     ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands +
-                                            off))
-                         ->param14;
-                     k++)
-                {
-                    *(s16*)(*(u8**)&((ModgfxPendingSpawn*)((u8*)arr[slot]
-                                                               ->emitterCommands +
-                                                           off))
-                                 ->param10 +
-                            k * 2) =
+                ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = 0;
+                *(u8**)&((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = dst;
+                dst += ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14 * 2;
+                for (k = 0; k < ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14; k++) {
+                    *(s16*)(*(u8**)&((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 + k * 2) =
                         *(s16*)(*(u8**)((u8*)&((ModgfxPendingSpawn*)context->pendingSpawns)->param10 + off) + k * 2);
                 }
             }
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->posX = ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->posX;
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->posY = ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->posY;
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))
-                ->posZ = ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->posZ;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->posX =
+                ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->posX;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->posY =
+                ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->posY;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->posZ =
+                ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->posZ;
         }
     }
 
     arr[slot]->currentStage = -1;
-    arr[slot]->stageFrameCountdown =
-        arr[slot]
-            ->stageDurations[arr[slot]->currentStage];
+    arr[slot]->stageFrameCountdown = arr[slot]->stageDurations[arr[slot]->currentStage];
     arr[slot]->flags = context->flags;
     arr[slot]->drawPosX = context->posX;
     arr[slot]->drawPosY = context->posY;
     arr[slot]->drawPosZ = context->posZ;
     arr[slot]->renderScale = context->scale;
-    if ((int)arr[slot]->flags & 1)
-    {
+    if ((int)arr[slot]->flags & 1) {
         arr[slot]->sourcePosX = context->posX;
         arr[slot]->sourcePosY = context->posY;
         arr[slot]->sourcePosZ = context->posZ;
@@ -1778,12 +1542,11 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     arr[slot]->velocityY = context->vecY;
     arr[slot]->velocityZ = context->vecZ;
     gPartfxSequenceIdCounter += 1;
-    if (gPartfxSequenceIdCounter > 0x4e20)
-    {
+    if (gPartfxSequenceIdCounter > 0x4e20) {
         gPartfxSequenceIdCounter = 0;
     }
     arr[slot]->sequenceId = gPartfxSequenceIdCounter;
-    arr[slot]->byte126 = lbl_803DD282;
+    arr[slot]->spawnGeneration = gModgfxSpawnGeneration;
     arr[slot]->vertexCount = vertexCount;
     arr[slot]->colorVertexCount = colorCount;
     arr[slot]->sourceObject = context->attachedSource;
@@ -1797,22 +1560,14 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     arr[slot]->byte13B = 0;
     arr[slot]->frameUpdated = 0;
     arr[slot]->textureFrameTimer = context->textureFrameTimer;
-    if (arr[slot]->textureFrameTimer != 0)
-    {
-        arr[slot]->textureFrameStep =
-            0x3c / arr[slot]->textureFrameTimer;
-    }
-    else
-    {
+    if (arr[slot]->textureFrameTimer != 0) {
+        arr[slot]->textureFrameStep = 0x3c / arr[slot]->textureFrameTimer;
+    } else {
         arr[slot]->textureFrameStep = 0;
     }
-    if (arr[slot]->textureFrameStep != 0)
-    {
-        arr[slot]->textureFrameFadeStep =
-            0xff / arr[slot]->textureFrameStep;
-    }
-    else
-    {
+    if (arr[slot]->textureFrameStep != 0) {
+        arr[slot]->textureFrameFadeStep = 0xff / arr[slot]->textureFrameStep;
+    } else {
         arr[slot]->textureFrameFadeStep = 0;
     }
     arr[slot]->textureFrame = 0;
@@ -1820,28 +1575,23 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     return arr[slot]->sequenceId;
 }
 
-void dll_0B_onMapSetup(void)
-{
+void dll_0B_onMapSetup(void) {
     int i;
 
     partfx_freeEffectsBySequence(0, 1);
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
         gPartfxActiveEffects[i] = NULL;
     }
 }
 
-void dll_0B_release(void)
-{
+void dll_0B_release(void) {
     partfx_freeEffectsBySequence(0, 1);
 }
 
-void dll_0B_initialise(void)
-{
+void dll_0B_initialise(void) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
-    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++)
-    {
+    for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
         arr[i] = NULL;
     }
 }
@@ -1861,7 +1611,7 @@ Dll0BDescriptorTable dll_0B_funcs = {{0x00000000,
                                       (u32)dll_0B_detachSource,
                                       (u32)dll_0B_renderEffects,
                                       (u32)dll_0B_releaseHandle,
-                                      (u32)dll_0B_func0B,
+                                      (u32)dll_0B_nextSpawnGeneration,
                                       (u32)dll_0B_func0C,
                                       (u32)dll_0B_func0D,
                                       (u32)dll_0B_markSourceFrameUpdated,
