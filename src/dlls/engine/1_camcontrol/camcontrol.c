@@ -140,6 +140,23 @@ enum CamcontrolReticleConstants {
     CAMCONTROL_RETICLE_OBJECT_ID = 0x1FE
 };
 
+enum CamcontrolTargetScanFlags {
+    CAMCONTROL_INTERACT_FLAG_TARGET_EXCLUDED = 0x20,
+    CAMCONTROL_TARGET_FLAG_IGNORE_VERTICAL_DELTA = 0x80,
+    CAMCONTROL_HIT_VOLUME_FLAG_TRACE_LOS = 0x20
+};
+
+enum CamcontrolTargetScanConstants {
+    CAMCONTROL_TARGET_CANDIDATE_COUNT = 8,
+    CAMCONTROL_TARGET_RANGE_SHIFT = 2,
+    CAMCONTROL_VOX_OCCUPANCY_CLEAR = 1
+};
+
+#define CAMCONTROL_TARGET_SCAN_BLOCKED_FLAGS (INTERACT_FLAG_DISABLED | CAMCONTROL_INTERACT_FLAG_TARGET_EXCLUDED)
+#define CAMCONTROL_TARGET_MIN_Y_DELTA        -100.0f
+#define CAMCONTROL_TARGET_MAX_Y_DELTA        20.0f
+#define CAMCONTROL_TARGET_TRACE_HEIGHT       20.0f
+
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
 
 s16 gCamcontrolTargetHelpTextId = -1;
@@ -422,7 +439,8 @@ void camcontrol_initialiseTargetReticle(void) {
 
 static inline int camcontrol_isTargetCandidate(GameObject* obj, ObjHitVolumeRuntimeBounds* bounds) {
     int accept;
-    if (bounds != NULL && obj->anim.alpha == 0xff && !(obj->anim.resetHitboxFlags & 0x28) &&
+    if (bounds != NULL && obj->anim.alpha == 0xff &&
+        !(obj->anim.resetHitboxFlags & CAMCONTROL_TARGET_SCAN_BLOCKED_FLAGS) &&
         ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) || (obj->anim.modelInstance->flags & OBJDEF_FLAG_HAS_MODELS)) &&
         !(obj->anim.flags & OBJANIM_FLAG_HIDDEN) && !(obj->objectFlags & OBJECT_OBJFLAG_FREED) &&
         (gCamcontrolTargetClassMask &
@@ -441,8 +459,8 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
     int gridFromStorage[3];
     int gridToStorage[3];
     int traceOutStorage[3];
-    GameObject* targets[8];
-    f32 dist[8];
+    GameObject* targets[CAMCONTROL_TARGET_CANDIDATE_COUNT];
+    f32 dist[CAMCONTROL_TARGET_CANDIDATE_COUNT];
     GameObject** ptr;
     int bestPri;
     GameObject* obj;
@@ -480,22 +498,23 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
         if ((int)obj->anim.modelInstance->hitVolumes[obj->hitVolumeIndex].priorityUnsigned < bestPri) {
             continue;
         }
-        if ((obj->anim.resetHitboxFlags & 0x80) || (bounds[obj->hitVolumeIndex].flags & 0x80)) {
+        if ((obj->anim.resetHitboxFlags & CAMCONTROL_TARGET_FLAG_IGNORE_VERTICAL_DELTA) ||
+            (bounds[obj->hitVolumeIndex].flags & CAMCONTROL_TARGET_FLAG_IGNORE_VERTICAL_DELTA)) {
             dy = 0.0f;
         } else {
             dy = focus->worldPosY - obj->anim.hitVolumeTransforms[obj->hitVolumeIndex].centerY;
         }
-        if (!(dy > -100.0f)) {
+        if (!(dy > CAMCONTROL_TARGET_MIN_Y_DELTA)) {
             continue;
         }
-        if (!(dy < 20.0f)) {
+        if (!(dy < CAMCONTROL_TARGET_MAX_Y_DELTA)) {
             continue;
         }
         dx = focus->worldPosX - obj->anim.hitVolumeTransforms[obj->hitVolumeIndex].centerX;
         dz = focus->worldPosZ - obj->anim.hitVolumeTransforms[obj->hitVolumeIndex].centerZ;
         distsq = dx * dx + dz * dz;
         entry = &bounds[obj->hitVolumeIndex];
-        range = (f32)(int)(entry->bounds[2] << 2);
+        range = (f32)(int)(entry->bounds[2] << CAMCONTROL_TARGET_RANGE_SHIFT);
         if (!(distsq < range * range)) {
             continue;
         }
@@ -525,7 +544,7 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
         dist[i] = distsq;
         targets[i] = obj;
         count++;
-        if (count == 8) {
+        if (count == CAMCONTROL_TARGET_CANDIDATE_COUNT) {
             break;
         }
     }
@@ -533,9 +552,9 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
         best = targets[0];
         row = best->anim.modelInstance->hitVolumes;
         row += best->hitVolumeIndex;
-        if (row->flags & 0x20) {
+        if (row->flags & CAMCONTROL_HIT_VOLUME_FLAG_TRACE_LOS) {
             worldFrom[0] = focus->worldPosX;
-            worldFrom[1] = 20.0f + focus->worldPosY;
+            worldFrom[1] = CAMCONTROL_TARGET_TRACE_HEIGHT + focus->worldPosY;
             worldFrom[2] = focus->worldPosZ;
             worldTo[0] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointX;
             worldTo[1] = best->anim.hitVolumeTransforms[best->hitVolumeIndex].jointY;
@@ -545,7 +564,7 @@ GameObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraState, ObjAni
             voxmaps_worldToGrid(worldTo, (s16*)gridToStorage);
             if ((u8)voxmaps_traceLine((VoxPos*)gridFromStorage, (VoxPos*)gridToStorage, (VoxPos*)traceOutStorage,
                                       occOut, 0) == 0 &&
-                occOut[0] != 1) {
+                occOut[0] != CAMCONTROL_VOX_OCCUPANCY_CLEAR) {
                 return NULL;
             }
         }
