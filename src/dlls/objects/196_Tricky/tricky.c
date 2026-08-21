@@ -131,6 +131,7 @@ extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E241C;
+extern f32 lbl_803E2420;
 
 extern const char sTrickyShouldNeverStopCirclingError[];
 
@@ -450,6 +451,7 @@ __declspec(section ".sdata2") f32 lbl_803E2410 = -100000.0f;
 __declspec(section ".sdata2") f32 lbl_803E2414 = 8.0f;
 __declspec(section ".sdata2") f32 lbl_803E2418 = 340282346638528859811704183484516925440.0f;
 __declspec(section ".sdata2") f32 lbl_803E241C = -0.15f;
+__declspec(section ".sdata2") f32 lbl_803E2420 = 0.05f;
 
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     f32 bestPriorityDist;
