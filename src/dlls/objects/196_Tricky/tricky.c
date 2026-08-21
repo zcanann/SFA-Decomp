@@ -4224,6 +4224,19 @@ typedef enum TrickyGuardState {
     TRICKY_GUARD_UP_FROM_GROWL = 8,
 } TrickyGuardState;
 
+#define TRICKY_GUARD_POST_DISTANCE       15.0f
+#define TRICKY_GUARD_APPROACH_RADIUS     5.0f
+#define TRICKY_GUARD_BADDIE_RADIUS       15.0f
+#define TRICKY_GUARD_FLAME_DONE_PROGRESS 0.95f
+#define TRICKY_GUARD_GROWL_RANDOM_RATE   10
+#define TRICKY_GUARD_GROWL_MAX_SECONDS   150.0f
+#define TRICKY_GUARD_GROWL_LEASH_DIST_SQ 2500.0f
+#define TRICKY_GUARD_GROWL_DOWN_BLEND    0.01f
+#define TRICKY_GUARD_GROWL_UP_BLEND      -0.01f
+#define TRICKY_GUARD_FLAME_SFX_ID        0x29d
+#define TRICKY_GUARD_GROWL_SFX_ID        0x299
+#define TRICKY_GUARD_GROWL_SFX_PARAM     0x100
+
 char sTrickyGuardDebugTextBlock[] = {
     0x47, 0x55, 0x41, 0x52, 0x44, 0x5F, 0x49, 0x4E, 0x49, 0x54, 0x0A, 0x00, 0x47, 0x55, 0x41, 0x52, 0x44, 0x5F, 0x46,
     0x49, 0x4E, 0x44, 0x49, 0x4E, 0x47, 0x0A, 0x00, 0x00, 0x47, 0x55, 0x41, 0x52, 0x44, 0x5F, 0x54, 0x4F, 0x53, 0x50,
@@ -4253,24 +4266,26 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosPtr, 0x0);
         trickyState->guardPoint[0] =
             (f32)(trickyState->followObj->anim.worldPosX -
-                  15.0f * mathSinf((TRICKY_PI * trickyState->followObj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS));
+                  TRICKY_GUARD_POST_DISTANCE *
+                      mathSinf((TRICKY_PI * trickyState->followObj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS));
         trickyState->guardPoint[1] = trickyState->followObj->anim.worldPosY;
         trickyState->guardPoint[2] =
             (f32)(trickyState->followObj->anim.worldPosZ -
-                  15.0f * mathCosf((TRICKY_PI * trickyState->followObj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS));
+                  TRICKY_GUARD_POST_DISTANCE *
+                      mathCosf((TRICKY_PI * trickyState->followObj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS));
         trickyState->guardCanSpawnHelpers = 0;
         trickyState->substate = TRICKY_GUARD_FINDING;
         break;
     case TRICKY_GUARD_FINDING:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_FINDING);
-        trickyUpdateMovementState(obj, 5.0f, trickyState);
+        trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState);
         if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, 0x0)) {
             trickyState->substate = TRICKY_GUARD_TO_SPOT;
         }
         break;
     case TRICKY_GUARD_TO_SPOT:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_TOSPOT);
-        if (trickyUpdateMovementState(obj, 5.0f, trickyState) == 0) {
+        if (trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState) == 0) {
             if (trickyState->targetPosPtr != trickyState->guardPoint) {
                 trickyState->targetPosPtr = trickyState->guardPoint;
                 TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
@@ -4283,7 +4298,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         }
     case TRICKY_GUARD_TO_FRONT:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_TOFRONT);
-        if (trickyUpdateMovementState(obj, 5.0f, trickyState) == 0) {
+        if (trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState) == 0) {
             if (skeetla_isInWater(trickyState) != 0) {
                 trickyRequestMove(obj, 0x8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 (trickyState)->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4298,7 +4313,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_GUARD_TO_BADDIE:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_TOBADDIE);
-        if (trickyUpdateMovementState(obj, 15.0f, trickyState) == 0) {
+        if (trickyUpdateMovementState(obj, TRICKY_GUARD_BADDIE_RADIUS, trickyState) == 0) {
             trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (*trickyState->progressPtr != 0 && trickyState->guardCanSpawnHelpers != 0) {
                 if ((u8)Obj_IsLoadingLocked() != 0) {
@@ -4320,7 +4335,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                 trickyRequestMove(obj, 0x34, TRICKY_LAND_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 trickyState->substate = TRICKY_GUARD_FLAME;
             } else {
-                trickyRequestMove(obj, 0x32, 0.01f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+                trickyRequestMove(obj, 0x32, TRICKY_GUARD_GROWL_DOWN_BLEND, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 trickyState->substate = TRICKY_GUARD_DOWN_TO_GROWL;
             }
         } else {
@@ -4338,7 +4353,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         }
     case TRICKY_GUARD_FLAME:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_FLAME);
-        if (obj->anim.currentMoveProgress >= 0.95f) {
+        if (obj->anim.currentMoveProgress >= TRICKY_GUARD_FLAME_DONE_PROGRESS) {
             TRICKY_MARK_HELPERS_FINISHED(trickyState);
             for (i2 = 0, slot2 = (void**)trickyState; i2 < TRICKY_GUARD_HELPER_COUNT; i2++) {
                 objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_FROM_STATE_BASE(slot2));
@@ -4351,7 +4366,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
 
                 if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
                     if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &flameSoundState->soundState, 0x29d, 0, -1, 0);
+                        objSoundStartTimed(obj, &flameSoundState->soundState, TRICKY_GUARD_FLAME_SFX_ID, 0, -1, 0);
                     }
                 }
             }
@@ -4373,7 +4388,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_GUARD_DOWN_TO_GROWL:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_DOWNTOGROWL);
-        if (obj->anim.currentMoveProgress >= 0.95f) {
+        if (obj->anim.currentMoveProgress >= TRICKY_GUARD_FLAME_DONE_PROGRESS) {
             trickyRequestMove(obj, 0x33, TRICKY_LAND_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->guardTimer = 0.0f;
             growlSoundState = obj->extra;
@@ -4382,7 +4397,8 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
 
                 if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
                     if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &growlSoundState->soundState, 0x299, 0x100, -1, 0);
+                        objSoundStartTimed(obj, &growlSoundState->soundState, TRICKY_GUARD_GROWL_SFX_ID,
+                                           TRICKY_GUARD_GROWL_SFX_PARAM, -1, 0);
                     }
                 }
             }
@@ -4395,23 +4411,25 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_GUARD_GROWL:
         trickyDebugPrint(strBase + TRICKY_DBG_GUARD_GROWL);
-        if (randomGetRange(0, 10) == 0) {
+        if (randomGetRange(0, TRICKY_GUARD_GROWL_RANDOM_RATE) == 0) {
             randomSoundState = obj->extra;
             if (!randomSoundState->soundSuppressed) {
                 s16 move = obj->anim.currentMove;
 
                 if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
                     if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &randomSoundState->soundState, 0x299, 0x100, -1, 0);
+                        objSoundStartTimed(obj, &randomSoundState->soundState, TRICKY_GUARD_GROWL_SFX_ID,
+                                           TRICKY_GUARD_GROWL_SFX_PARAM, -1, 0);
                     }
                 }
             }
         }
         trickyState->guardTimer = trickyState->guardTimer + timeDelta;
-        if ((trickyState->guardTimer >= 150.0f &&
-             getXZDistanceSquared(trickyState->targetPosPtr, &obj->anim.worldPosX) >= 2500.0f) ||
+        if ((trickyState->guardTimer >= TRICKY_GUARD_GROWL_MAX_SECONDS &&
+             getXZDistanceSquared(trickyState->targetPosPtr, &obj->anim.worldPosX) >=
+                 TRICKY_GUARD_GROWL_LEASH_DIST_SQ) ||
             trickyGuardIsBaddieTargetValid(trickyState) == 0) {
-            trickyRequestMove(obj, 0x32, -0.01f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+            trickyRequestMove(obj, 0x32, TRICKY_GUARD_GROWL_UP_BLEND, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->substate = TRICKY_GUARD_UP_FROM_GROWL;
         } else {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
@@ -4473,7 +4491,7 @@ int trickyGuardFindBaddieTarget(TrickyState* trickyState) {
             TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
             trickyState->linkedWalkGroup = 0;
         }
-        trickyState->substate = 4;
+        trickyState->substate = TRICKY_GUARD_TO_BADDIE;
         return 1;
     }
     return 0;
@@ -4751,7 +4769,7 @@ void tricky_state06_nop(void) {
  * After init: at each segment end it gathers the valid branch nodes
  * (gated by the node-set's per-branch mask byte), picks the nearest to
  * the current owner, retargets the walker, then accelerates/decays the
- * roll speed toward CANNONBALL_SFX_TIMER limits, advances and moves the
+ * roll speed toward CANNONBALL_ROLL_SPEED_LIMIT, advances and moves the
  * ball. Off the walk grid it sets CANNONBALL_HIDE_FLAG. The sfx timer
  * periodically plays the rolling sound (0x29b) on object channel 0x10
  * when the current move is outside the 0x29..0x2f window.
@@ -4763,6 +4781,16 @@ void tricky_state06_nop(void) {
  * curve link and scratch708 the rolling-sfx countdown. */
 #define CANNONBALL_HIDE_FLAG        0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
+#define CANNONBALL_BRANCH_COUNT     4
+#define CANNONBALL_ROLL_DECAY_STEP  -0.01f
+#define CANNONBALL_ROLL_SPEED_LIMIT 1.2f
+#define CANNONBALL_INIT_WALK_RADIUS 5.0f
+#define CANNONBALL_ROUTE_BACKSTEP   -10.0f
+#define CANNONBALL_ROUTE_FORESTEP   10.0f
+#define CANNONBALL_SFX_TIMER_MIN    200
+#define CANNONBALL_SFX_TIMER_MAX    600
+#define CANNONBALL_ROLL_SFX_ID      0x29b
+#define CANNONBALL_ROLL_SFX_PARAM   0x1000
 
 /* lbl_803E2*: this DLL's f32 route/speed constants. */
 
@@ -4792,7 +4820,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
                 nodeSet = (RomCurveDef*)ball->route.nodeA4;
                 mask = 1;
                 link = nodeSet->linkIds;
-                for (bit = 0; bit < 4; bit++) {
+                for (bit = 0; bit < CANNONBALL_BRANCH_COUNT; bit++) {
                     node = *link++;
                     if (node > -1 && ((nodeSet->blockedLinkMask & mask) == 0)) {
                         nodeIds[nodeCount++] = node;
@@ -4808,7 +4836,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
             nodeSet2 = (RomCurveDef*)ball->route.nodeA4;
             mask2 = 1;
             link2 = nodeSet2->linkIds;
-            for (bit = 0; bit < 4; bit++) {
+            for (bit = 0; bit < CANNONBALL_BRANCH_COUNT; bit++) {
                 node2 = *link2++;
                 if (node2 > -1 && ((nodeSet2->blockedLinkMask & mask2) != 0)) {
                     nodeIds[nodeCount++] = node2;
@@ -4836,19 +4864,19 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
 
         speed = ball->speed;
         if ((u8)(ball->stateFlags & CANNONBALL_SPEED_DECAY_FLAG) != 0) {
-            speed += -0.01f * timeDelta;
+            speed += CANNONBALL_ROLL_DECAY_STEP * timeDelta;
             if (speed < 0.0f) {
                 speed = 0.0f;
             }
-        } else if (speed > 1.2f) {
+        } else if (speed > CANNONBALL_ROLL_SPEED_LIMIT) {
             speed += gTrickySpeedDecayStep * timeDelta;
-            if (speed < 1.2f) {
-                speed = 1.2f;
+            if (speed < CANNONBALL_ROLL_SPEED_LIMIT) {
+                speed = CANNONBALL_ROLL_SPEED_LIMIT;
             }
         } else {
             speed += gTrickySmallSpeedStep * timeDelta;
-            if (speed > 1.2f) {
-                speed = 1.2f;
+            if (speed > CANNONBALL_ROLL_SPEED_LIMIT) {
+                speed = CANNONBALL_ROLL_SPEED_LIMIT;
             }
         }
 
@@ -4864,11 +4892,11 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
 
         ball->scratch708.f -= timeDelta;
         if (ball->scratch708.f < 0.0f) {
-            ball->scratch708.f = (f32)(int)randomGetRange(200, 600);
-            trickyPlayVoice(obj, obj->extra, 0x29b, 0x1000);
+            ball->scratch708.f = (f32)(int)randomGetRange(CANNONBALL_SFX_TIMER_MIN, CANNONBALL_SFX_TIMER_MAX);
+            trickyPlayVoice(obj, obj->extra, CANNONBALL_ROLL_SFX_ID, CANNONBALL_ROLL_SFX_PARAM);
         }
     } else {
-        trickyUpdateMovementState(obj, 5.0f, ball);
+        trickyUpdateMovementState(obj, CANNONBALL_INIT_WALK_RADIUS, ball);
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) ==
             (walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&ball->scratch700.curve->x, NULL))) {
             curve = ball->scratch700.curve;
@@ -4891,9 +4919,9 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
 
             RomCurve_setupHermiteSegment(&ball->route, curveArg, fromNode, targetNode);
             if (ball->route.reverse != 0) {
-                RomCurve_stepClamped(&ball->route, -10.0f);
+                RomCurve_stepClamped(&ball->route, CANNONBALL_ROUTE_BACKSTEP);
             } else {
-                RomCurve_stepClamped(&ball->route, 10.0f);
+                RomCurve_stepClamped(&ball->route, CANNONBALL_ROUTE_FORESTEP);
             }
 
             ball->scratch708.f = 0.0f;
