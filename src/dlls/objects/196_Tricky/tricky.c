@@ -4266,20 +4266,20 @@ char sTrickyGuardDebugTextBlock[] = {
 };
 
 void trickyGuard(GameObject* obj, TrickyState* trickyState) {
-    char* strBase = gTrickyDebugStringTable;
-    int i;
+    char* debugText = gTrickyDebugStringTable;
+    int helperIndex;
     TrickyState* flameSoundState;
     TrickyState* growlSoundState;
     TrickyState* randomSoundState;
-    void** slot;
-    void** slot2;
-    int i2;
-    FlameblastPlacement* setup;
-    f32* newTarget;
+    void** helperSlot;
+    void** finishSlot;
+    int finishIndex;
+    FlameblastPlacement* helperSetup;
+    f32* guardTargetPos;
 
     switch (trickyState->substate) {
     case TRICKY_GUARD_INIT:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_INIT);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_INIT);
         trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosPtr, 0x0);
         trickyState->guardPoint[0] =
             (f32)(trickyState->followObj->anim.worldPosX -
@@ -4294,14 +4294,14 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         trickyState->substate = TRICKY_GUARD_FINDING;
         break;
     case TRICKY_GUARD_FINDING:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_FINDING);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_FINDING);
         trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState);
         if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, 0x0)) {
             trickyState->substate = TRICKY_GUARD_TO_SPOT;
         }
         break;
     case TRICKY_GUARD_TO_SPOT:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_TOSPOT);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_TOSPOT);
         if (trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState) == 0) {
             if (trickyState->targetPosPtr != trickyState->guardPoint) {
                 trickyState->targetPosPtr = trickyState->guardPoint;
@@ -4314,36 +4314,37 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             break;
         }
     case TRICKY_GUARD_TO_FRONT:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_TOFRONT);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_TOFRONT);
         if (trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState) == 0) {
             if (skeetla_isInWater(trickyState) != 0) {
                 trickyRequestMove(obj, 0x8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 (trickyState)->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
                 (trickyState)->particleTimer = 0.0f;
-                trickyDebugPrint(strBase + TRICKY_DBG_IN_WATER);
+                trickyDebugPrint(debugText + TRICKY_DBG_IN_WATER);
             } else {
                 trickyRequestMove(obj, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
-                trickyDebugPrint(strBase + TRICKY_DBG_OUT_OF_WATER);
+                trickyDebugPrint(debugText + TRICKY_DBG_OUT_OF_WATER);
             }
         }
         trickyGuardFindBaddieTarget(trickyState);
         break;
     case TRICKY_GUARD_TO_BADDIE:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_TOBADDIE);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_TOBADDIE);
         if (trickyUpdateMovementState(obj, TRICKY_GUARD_BADDIE_RADIUS, trickyState) == 0) {
             trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (*trickyState->progressPtr != 0 && trickyState->guardCanSpawnHelpers != 0) {
                 if ((u8)Obj_IsLoadingLocked() != 0) {
                     trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
-                    for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++) {
-                        setup = (FlameblastPlacement*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
-                                                                           TRICKY_GUARD_HELPER_DEF_ID);
-                        setup->base.color[0] = 2;
-                        setup->base.color[1] = 1;
-                        setup->streamIndex = i;
-                        TRICKY_FLAME_CHILD_FROM_STATE_BASE(slot) =
-                            (void*)objSetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-                        slot++;
+                    for (helperIndex = 0, helperSlot = (void**)trickyState; helperIndex < TRICKY_GUARD_HELPER_COUNT;
+                         helperIndex++) {
+                        helperSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
+                                                                                 TRICKY_GUARD_HELPER_DEF_ID);
+                        helperSetup->base.color[0] = 2;
+                        helperSetup->base.color[1] = 1;
+                        helperSetup->streamIndex = helperIndex;
+                        TRICKY_FLAME_CHILD_FROM_STATE_BASE(helperSlot) =
+                            (void*)objSetupObject(&helperSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                        helperSlot++;
                     }
                     Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
                     Sfx_AddLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
@@ -4359,9 +4360,9 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosPtr, 0x0)) {
                 break;
             }
-            newTarget = &trickyState->followObj->anim.worldPosX;
-            if (trickyState->targetPosPtr != newTarget) {
-                trickyState->targetPosPtr = newTarget;
+            guardTargetPos = &trickyState->followObj->anim.worldPosX;
+            if (trickyState->targetPosPtr != guardTargetPos) {
+                trickyState->targetPosPtr = guardTargetPos;
                 TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                 trickyState->linkedWalkGroup = 0;
             }
@@ -4369,12 +4370,13 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             break;
         }
     case TRICKY_GUARD_FLAME:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_FLAME);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_FLAME);
         if (obj->anim.currentMoveProgress >= TRICKY_GUARD_FLAME_DONE_PROGRESS) {
             TRICKY_MARK_HELPERS_FINISHED(trickyState);
-            for (i2 = 0, slot2 = (void**)trickyState; i2 < TRICKY_GUARD_HELPER_COUNT; i2++) {
-                objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_FROM_STATE_BASE(slot2));
-                slot2++;
+            for (finishIndex = 0, finishSlot = (void**)trickyState; finishIndex < TRICKY_GUARD_HELPER_COUNT;
+                 finishIndex++) {
+                objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_FROM_STATE_BASE(finishSlot));
+                finishSlot++;
             }
             Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
             flameSoundState = obj->extra;
@@ -4389,9 +4391,9 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             }
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (trickyGuardFindBaddieTarget(trickyState) == 0) {
-                newTarget = &trickyState->followObj->anim.worldPosX;
-                if (trickyState->targetPosPtr != newTarget) {
-                    trickyState->targetPosPtr = newTarget;
+                guardTargetPos = &trickyState->followObj->anim.worldPosX;
+                if (trickyState->targetPosPtr != guardTargetPos) {
+                    trickyState->targetPosPtr = guardTargetPos;
                     TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                     trickyState->linkedWalkGroup = 0;
                 }
@@ -4404,7 +4406,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         }
         break;
     case TRICKY_GUARD_DOWN_TO_GROWL:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_DOWNTOGROWL);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_DOWNTOGROWL);
         if (obj->anim.currentMoveProgress >= TRICKY_GUARD_FLAME_DONE_PROGRESS) {
             trickyRequestMove(obj, 0x33, TRICKY_LAND_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->guardTimer = 0.0f;
@@ -4427,7 +4429,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         }
         break;
     case TRICKY_GUARD_GROWL:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_GROWL);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_GROWL);
         if (randomGetRange(0, TRICKY_GUARD_GROWL_RANDOM_RATE) == 0) {
             randomSoundState = obj->extra;
             if (!randomSoundState->soundSuppressed) {
@@ -4455,13 +4457,13 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         }
         break;
     case TRICKY_GUARD_UP_FROM_GROWL:
-        trickyDebugPrint(strBase + TRICKY_DBG_GUARD_UPFROMGROWL);
+        trickyDebugPrint(debugText + TRICKY_DBG_GUARD_UPFROMGROWL);
         if (obj->anim.currentMoveProgress <= gTrickySmallSpeedStep) {
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (trickyGuardFindBaddieTarget(trickyState) == 0) {
-                newTarget = &trickyState->followObj->anim.worldPosX;
-                if (trickyState->targetPosPtr != newTarget) {
-                    trickyState->targetPosPtr = newTarget;
+                guardTargetPos = &trickyState->followObj->anim.worldPosX;
+                if (trickyState->targetPosPtr != guardTargetPos) {
+                    trickyState->targetPosPtr = guardTargetPos;
                     TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                     trickyState->linkedWalkGroup = 0;
                 }
@@ -4473,38 +4475,38 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
 }
 
 int trickyGuardFindBaddieTarget(TrickyState* trickyState) {
-    int count;
-    f32 d;
-    f32 bestDist;
-    GameObject** objectCursor;
-    s16 i;
-    GameObject** groupObjects;
-    GameObject* best = NULL;
+    int candidateCount;
+    f32 distanceSq;
+    f32 bestDistanceSq;
+    GameObject** candidateCursor;
+    s16 candidateIndex;
+    GameObject** candidateObjects;
+    GameObject* bestTarget = NULL;
 
-    groupObjects = (GameObject**)objGetAllOfType(TRICKY_GUARD_APPROACH_GROUP, &count);
-    i = 0;
-    objectCursor = groupObjects;
-    for (; i < count; i++) {
-        d = getXZDistanceSquared(&(*objectCursor)->anim.worldPosX, trickyState->guardPoint);
-        if (best == NULL) {
+    candidateObjects = (GameObject**)objGetAllOfType(TRICKY_GUARD_APPROACH_GROUP, &candidateCount);
+    candidateIndex = 0;
+    candidateCursor = candidateObjects;
+    for (; candidateIndex < candidateCount; candidateIndex++) {
+        distanceSq = getXZDistanceSquared(&(*candidateCursor)->anim.worldPosX, trickyState->guardPoint);
+        if (bestTarget == NULL) {
             if (trickyState->guardWalkGroup ==
-                Objfsa_GetWalkGroupIndexAtPoint(&(*objectCursor)->anim.worldPosX, NULL)) {
-                bestDist = d;
-                best = *objectCursor;
+                Objfsa_GetWalkGroupIndexAtPoint(&(*candidateCursor)->anim.worldPosX, NULL)) {
+                bestDistanceSq = distanceSq;
+                bestTarget = *candidateCursor;
             }
-        } else if (d < bestDist) {
+        } else if (distanceSq < bestDistanceSq) {
             if (trickyState->guardWalkGroup ==
-                Objfsa_GetWalkGroupIndexAtPoint(&(*objectCursor)->anim.worldPosX, NULL)) {
-                bestDist = d;
-                best = *objectCursor;
+                Objfsa_GetWalkGroupIndexAtPoint(&(*candidateCursor)->anim.worldPosX, NULL)) {
+                bestDistanceSq = distanceSq;
+                bestTarget = *candidateCursor;
             }
         }
-        objectCursor++;
+        candidateCursor++;
     }
-    if (best != NULL) {
-        trickyState->guardTarget = best;
-        if (trickyState->targetPosPtr != &best->anim.worldPosX) {
-            trickyState->targetPosPtr = &best->anim.worldPosX;
+    if (bestTarget != NULL) {
+        trickyState->guardTarget = bestTarget;
+        if (trickyState->targetPosPtr != &bestTarget->anim.worldPosX) {
+            trickyState->targetPosPtr = &bestTarget->anim.worldPosX;
             TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
             trickyState->linkedWalkGroup = 0;
         }
