@@ -652,6 +652,15 @@ void tricky_trackTumbleweed();
 
 typedef void (*TrickyStateHandler)(void* obj, void* state);
 
+typedef struct TrickyPathPointCollisionData {
+    f32 point[3];
+    TrickyStateHandler stateHandlers[31];
+} TrickyPathPointCollisionData;
+
+STATIC_ASSERT(offsetof(TrickyPathPointCollisionData, point) == 0x0);
+STATIC_ASSERT(offsetof(TrickyPathPointCollisionData, stateHandlers) == 0xC);
+STATIC_ASSERT(sizeof(TrickyPathPointCollisionData) == 0x88);
+
 #define TRICKY_HANDLER_TABLE_OFFSET          0x24
 #define TRICKY_SUBSTATE_HANDLER_TABLE_OFFSET 0x6c
 
@@ -751,40 +760,41 @@ char gTrickyDebugStringTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x41, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-f32 gTrickyPathPointCollision[3] = {0.0f, 0.0f, 0.0f};
-
-TrickyStateHandler gTrickyStateHandlers[] = {
-    (TrickyStateHandler)tricky_attachToWalkGroup,
-    (TrickyStateHandler)tricky_stateFollowPlayer,
-    (TrickyStateHandler)tricky_stateFindSecretDig,
-    (TrickyStateHandler)trickyDigTunnel,
-    (TrickyStateHandler)tricky_state04_nop,
-    (TrickyStateHandler)tricky_updateBallRoll,
-    (TrickyStateHandler)tricky_state06_nop,
-    (TrickyStateHandler)trickyFlame,
-    (TrickyStateHandler)trickyGuard,
-    (TrickyStateHandler)tricky_moveToFollowTarget,
-    (TrickyStateHandler)tricky_idleAndEat,
-    (TrickyStateHandler)tricky_fetchBall,
-    (TrickyStateHandler)trickyUpdateCirclingTargetPosition,
-    (TrickyStateHandler)trickyUpdateCircling,
-    (TrickyStateHandler)trickyGrowl,
-    (TrickyStateHandler)tricky_stateIdleWander,
-    (TrickyStateHandler)tricky_trackTumbleweed,
-    (TrickyStateHandler)tricky_stateGoToWarpPoint,
-    (TrickyStateHandler)tricky_substateFollowIdle,
-    (TrickyStateHandler)tricky_substateReturnToHeel,
-    (TrickyStateHandler)tricky_substateWaitQueuedMove,
-    (TrickyStateHandler)tricky_substateSleep,
-    (TrickyStateHandler)tricky_substateHowlCall,
-    (TrickyStateHandler)tricky_substateWaitMoveEnd,
-    (TrickyStateHandler)tricky_substateFidgetB,
-    (TrickyStateHandler)tricky_substateFidgetA,
-    (TrickyStateHandler)tricky_substateIdlePick,
-    (TrickyStateHandler)tricky_substateDigForFood,
-    (TrickyStateHandler)tricky_substateBegForFood,
-    (TrickyStateHandler)tricky_substateFlameBreath,
-    (TrickyStateHandler)tricky_substateApproachThorntail,
+TrickyPathPointCollisionData gTrickyPathPointCollision = {
+    {0.0f, 0.0f, 0.0f},
+    {
+        (TrickyStateHandler)tricky_attachToWalkGroup,
+        (TrickyStateHandler)tricky_stateFollowPlayer,
+        (TrickyStateHandler)tricky_stateFindSecretDig,
+        (TrickyStateHandler)trickyDigTunnel,
+        (TrickyStateHandler)tricky_state04_nop,
+        (TrickyStateHandler)tricky_updateBallRoll,
+        (TrickyStateHandler)tricky_state06_nop,
+        (TrickyStateHandler)trickyFlame,
+        (TrickyStateHandler)trickyGuard,
+        (TrickyStateHandler)tricky_moveToFollowTarget,
+        (TrickyStateHandler)tricky_idleAndEat,
+        (TrickyStateHandler)tricky_fetchBall,
+        (TrickyStateHandler)trickyUpdateCirclingTargetPosition,
+        (TrickyStateHandler)trickyUpdateCircling,
+        (TrickyStateHandler)trickyGrowl,
+        (TrickyStateHandler)tricky_stateIdleWander,
+        (TrickyStateHandler)tricky_trackTumbleweed,
+        (TrickyStateHandler)tricky_stateGoToWarpPoint,
+        (TrickyStateHandler)tricky_substateFollowIdle,
+        (TrickyStateHandler)tricky_substateReturnToHeel,
+        (TrickyStateHandler)tricky_substateWaitQueuedMove,
+        (TrickyStateHandler)tricky_substateSleep,
+        (TrickyStateHandler)tricky_substateHowlCall,
+        (TrickyStateHandler)tricky_substateWaitMoveEnd,
+        (TrickyStateHandler)tricky_substateFidgetB,
+        (TrickyStateHandler)tricky_substateFidgetA,
+        (TrickyStateHandler)tricky_substateIdlePick,
+        (TrickyStateHandler)tricky_substateDigForFood,
+        (TrickyStateHandler)tricky_substateBegForFood,
+        (TrickyStateHandler)tricky_substateFlameBreath,
+        (TrickyStateHandler)tricky_substateApproachThorntail,
+    },
 };
 
 ObjectDescriptor21 gTrickyObjDescriptor = {
@@ -8018,7 +8028,8 @@ void Tricky_init(GameObject* obj) {
     pathState = (int)&state->pathControlFlags;
     (*gPathControlInterface)->init((void*)pathState, 1, 0xa7, 1);
     (*gPathControlInterface)
-        ->setLocalPointCollision((void*)pathState, 1, gTrickyPathPointCollision, &gTrickyPathPointCollisionRadius, 2);
+        ->setLocalPointCollision((void*)pathState, 1, gTrickyPathPointCollision.point, &gTrickyPathPointCollisionRadius,
+                                 2);
     (*gPathControlInterface)
         ->setup((void*)pathState, 2, gTrickyDebugStringTable, gTrickyPathControlSetupParams, startPath);
     (*gPathControlInterface)->attachObject((void*)obj, (void*)pathState);
