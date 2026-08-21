@@ -137,8 +137,8 @@ u8 gNwMammothPathSetupDataB[] = {
 u8 gNwMammothStateFlags[NW_MAMMOTH_STATE_COUNT] = {0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04,
                                                    0x00, 0x29, 0x29, 0x28, 0x28, 0x28, 0x29, 0x29,
                                                    0x29, 0x29, 0x29, 0x04, 0x09, 0x03, 0x09, 0x00};
-int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
-int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
+int gNwMammothRescueBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
+int gNwMammothRescueBushClearedGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
 
 ObjectDescriptor gNW_mammothObjDescriptor = {
     0,
@@ -334,11 +334,11 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
         {
             int i = 0;
             for (; i < n; i++) {
-                if (mainGetBit(gNwMammothBushGameBits[i]) != 0) {
-                    mainSetBits(gNwMammothBushGameBits[i], 0);
+                if (mainGetBit(gNwMammothRescueBushClearedGameBits[i]) != 0) {
+                    mainSetBits(gNwMammothRescueBushClearedGameBits[i], 0);
                 }
                 {
-                    int* o2 = (int*)ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
+                    int* o2 = (int*)ObjList_FindObjectById(gNwMammothRescueBushObjectIds[i]);
                     if ((int*)playerGetTargetObject((GameObject*)state->playerObject) == o2) {
                         enemy_setTrackedObj((GameObject*)o2, state->playerObject);
                     } else {
@@ -367,7 +367,7 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
             state->triggerList = gNwMammothGatekeeperCollectionTriggerList;
             if (state->trackedObject == NULL) {
                 NwMammothPlacement* setup = (NwMammothPlacement*)obj->anim.placementData;
-                if (tw2 != NULL && tw2->anim.romDefNo == 0x3fb) {
+                if (tw2 != NULL && tw2->anim.romDefNo == TUMBLEWEED_BUSH_SIBLING_B) {
                     if (getXZDistanceSquared(&obj->anim.worldPosX, &tw2->anim.worldPosX) <
                         (f32)(s32)(setup->triggerDistance * setup->triggerDistance)) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {

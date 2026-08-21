@@ -38,7 +38,6 @@
 #define TUMBLEWEED_BUSH_SEQUENCE_C           0x4b9
 #define TUMBLEWEED_BUSH_SEQUENCE_D           0x4be
 #define TUMBLEWEED_BUSH_SIBLING_A            0x39d
-#define TUMBLEWEED_BUSH_SIBLING_B            0x3fb
 #define TUMBLEWEED_BUSH_SIBLING_C            0x4ba
 #define TUMBLEWEED_BUSH_SIBLING_D            0x4c1
 #define TUMBLEWEED_BUSH_OBJECT_GROUP         0x31
@@ -162,7 +161,7 @@ s8 tumbleweedbush_spawnSibling(GameObject* obj) {
 
     {
         GameObject* spawnedObj = objSetupObject((ObjPlacement*)newPlacement, TUMBLEWEED_BUSH_SIBLING_SETUP_FLAGS,
-                                                 obj->anim.mapEventSlot, -1, obj->anim.parent);
+                                                obj->anim.mapEventSlot, -1, obj->anim.parent);
 
         state->pieceObjects[freePieceIndex] = spawnedObj;
         {
@@ -360,8 +359,8 @@ void tumbleweedbush_updateDetachedPiece(GameObject* piece, TumbleweedState* stat
     f32 groundDistance;
 
     piece->anim.velocityX /= TUMBLEWEED_PIECE_HORIZONTAL_DAMPING;
-    if (trackGetHeightAboveGround(piece, piece->anim.localPosX, piece->anim.localPosY, piece->anim.localPosZ, &groundDistance, 0) !=
-        0) {
+    if (trackGetHeightAboveGround(piece, piece->anim.localPosX, piece->anim.localPosY, piece->anim.localPosZ,
+                                  &groundDistance, 0) != 0) {
         if (groundDistance > TUMBLEWEED_PIECE_GROUND_CLEARANCE) {
             piece->anim.velocityY += TUMBLEWEED_PIECE_GRAVITY * timeDelta;
         } else {
@@ -444,8 +443,7 @@ void tumbleweed_updateRollingMotion(GameObject* obj, TumbleweedState* state) {
 
     groundHits[0] = NULL;
     nearestHeightDelta = 10000.0f;
-    hitCount =
-        trackGetHeight(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, groundHits, 0, 0);
+    hitCount = trackGetHeight(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, groundHits, 0, 0);
     for (hitIndex = 0, nearestHitIndex = 0, hitEntry = groundHits[0]; hitIndex < hitCount; hitIndex++) {
         heightDelta = obj->anim.localPosY - (*hitEntry)->height;
         if (heightDelta < 0.0f) {
@@ -910,8 +908,7 @@ void tumbleweed_updateEffects(GameObject* obj) {
         state->flags &= ~TUMBLEWEED_EFFECT_FLAG_DESPAWN;
     }
 
-    if ((state->flags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
-        (obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
+    if ((state->flags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 && (obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
         if ((int)(u8)(++state->hitPulseCounter) % TUMBLEWEED_HIT_PULSE_PERIOD != 0) {
             objfx_spawnPulseBurst(obj, obj->anim.rootMotionScale, 1, 0, 0, NULL);
