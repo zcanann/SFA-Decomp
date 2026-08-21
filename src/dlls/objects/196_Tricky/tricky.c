@@ -3279,7 +3279,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                     state->cooldownB.ptr = ct;
                     if (ct != NULL) {
                         state->followObj = state->cooldownB.obj;
-                        state->unk724 = 0;
+                        state->circlingWarpDetour = NULL;
                         state->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                         break;
                     }
@@ -3320,7 +3320,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                     state->cooldownB.ptr = ct;
                     if (ct != NULL) {
                         state->followObj = state->cooldownB.obj;
-                        state->unk724 = 0;
+                        state->circlingWarpDetour = NULL;
                         state->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                         break;
                     }
@@ -3496,26 +3496,26 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                 warpCursor++;
             }
             {
-                GameObject* circlingObstacle = state->unk724;
-                if (circlingObstacle != NULL &&
-                    (circlingObstacle->objectFlags & ANIMOBJD2_OBJFLAG_FREED)) {
-                    state->unk724 = 0;
+                GameObject* circlingWarpDetour = state->circlingWarpDetour;
+                if (circlingWarpDetour != NULL &&
+                    (circlingWarpDetour->objectFlags & ANIMOBJD2_OBJFLAG_FREED)) {
+                    state->circlingWarpDetour = NULL;
                     TRICKY_RETARGET((u8*)state, state->playerObj);
                 }
             }
             if (bestWarp != NULL) {
-                if (state->unk724 == NULL) {
+                if (state->circlingWarpDetour == NULL) {
                     TRICKY_BARK((int*)obj, 0x35b, 0x500, orbitCfg);
                 }
-                if (state->unk724 == NULL || state->unk724 != bestWarp) {
-                    state->unk724 = bestWarp;
-                    TRICKY_RETARGET((u8*)state, state->unk724);
+                if (state->circlingWarpDetour == NULL || state->circlingWarpDetour != bestWarp) {
+                    state->circlingWarpDetour = bestWarp;
+                    TRICKY_RETARGET((u8*)state, state->circlingWarpDetour);
                 }
             }
         }
         {
             u8 orbitMovementStatus;
-            if (state->unk724 != NULL) {
+            if (state->circlingWarpDetour != NULL) {
                 orbitMovementStatus = trickyUpdateMovementState(obj, 5.0f, state);
             } else {
                 orbitMovementStatus = trickyUpdateMovementState(obj, gTrickyMaxDistance, state);
