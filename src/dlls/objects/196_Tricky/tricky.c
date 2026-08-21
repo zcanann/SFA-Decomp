@@ -173,6 +173,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_FOOD_WARNING_PENDING    0x4u
 #define TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED 0x8u
 #define TRICKY_STATE_FLAG_SEQUENCE_LATCHED        0x200u
+#define TRICKY_STATE_TARGET_DIRTY_FLAG            0x400u
 #define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE     0x4000u
 #define TRICKY_STATE_FLAG_COMMAND_ACTIVE          0x10u
 #define TRICKY_STATE_FLAG_GROUND_SNAP             0x2000u
@@ -2829,7 +2830,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
             }
         }
     }
-    if ((state->stateFlags & 0x00100000) != 0) {
+    if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
         state->speed = TRICKY_FAST_MOVE_BLEND_SPEED * timeDelta + state->speed;
         if (state->speed > TRICKY_FOLLOW_MAX_SPEED) {
             state->speed = TRICKY_FOLLOW_MAX_SPEED;
@@ -2900,7 +2901,7 @@ void tricky_stateGoToWarpPoint(GameObject* self, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~0x400;
+                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -3200,8 +3201,6 @@ typedef struct AnimObjD2DripSetup {
 } AnimObjD2DripSetup;
 
 void* trickyFindCirclingTarget(GameObject* obj, void* state);
-
-#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400LL
 
 #define TRICKY_RETARGET(st, X)                                                                                         \
     {                                                                                                                  \
@@ -4998,7 +4997,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~0x400;
+                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -5188,7 +5187,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                     {
                         u32 mask;
                         u32 flags = state->stateFlags;
-                        mask = ~0x400;
+                        mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                         state->stateFlags = flags & mask;
                     }
                     state->linkedWalkGroup = 0;
@@ -5310,7 +5309,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                             {
                                 u32 mask;
                                 u32 flags = other->stateFlags;
-                                mask = ~0x400;
+                                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                                 other->stateFlags = flags & mask;
                             }
                             other->linkedWalkGroup = 0;
@@ -5953,7 +5952,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
         {
             u32 mask;
             u32 flags = state->stateFlags;
-            mask = ~0x400;
+            mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
             state->stateFlags = flags & mask;
         }
         state->linkedWalkGroup = 0;
@@ -6131,7 +6130,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~0x400;
+                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
@@ -6151,7 +6150,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~0x400;
+                mask = ~TRICKY_STATE_TARGET_DIRTY_FLAG;
                 state->stateFlags = flags & mask;
             }
             state->linkedWalkGroup = 0;
