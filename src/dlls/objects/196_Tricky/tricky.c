@@ -3380,7 +3380,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->stateWord728 != 0) {
                 if (*state->progressPtr < 2) {
                     state->stateWord728 = 0;
-                    if (Obj_CanSetupObject() != 0) {
+                    if ((u8)Obj_CanSetupObject() != 0) {
                         state->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                         TRICKY_RESET((u8*)state);
                         if (state->child == NULL) {
@@ -3458,7 +3458,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             break;
         }
         if (obj->anim.currentMoveProgress > 0.3f) {
-            if (Obj_CanSetupObject() != 0) {
+            if ((u8)Obj_CanSetupObject() != 0) {
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 {
                     int i = 0;
@@ -5539,7 +5539,7 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
     switch (obj->anim.currentMove) {
     case 0x1a:
         if (obj->anim.currentMoveProgress > 0.25f && (state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
-            if (Obj_CanSetupObject() != 0) {
+            if ((u8)Obj_CanSetupObject() != 0) {
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, p = (u8*)state; i < 7; p += 4, i++) {
                     setup = (FlameblastPlacement*)Obj_AllocObjectSetup(0x24, TRICKY_CHILD_OBJ_FLAMEBLAST);
@@ -5919,7 +5919,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         }
         state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
-    if (state->child == NULL && Obj_CanSetupObject() != 0) {
+    if (state->child == NULL && (u8)Obj_CanSetupObject() != 0) {
         e = (u8*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
         slots[0] = -1;
         slots[1] = -1;
@@ -6709,7 +6709,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                     Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
                     objSoundStartTimed(obj, &((TrickyState*)childSlot)->soundState, 0x29d, 0, -1, 0);
                 }
-            } else if (Obj_CanSetupObject()) {
+            } else if ((u8)Obj_CanSetupObject()) {
                 ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (childIndex = 0, spawnSlot = (u8*)state; childIndex < CHILD_OBJECT_COUNT;
                      spawnSlot += sizeof(GameObject*), childIndex++) {
@@ -6727,7 +6727,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         case TRICKY_SEQUENCE_EVENT_SPAWN_BADGE:
             mainSetBits(GAMEBIT_Tricky_LoadBadge, 1);
             if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && ((TrickyState*)state)->spawnedChild == NULL &&
-                Obj_CanSetupObject()) {
+                (u8)Obj_CanSetupObject()) {
                 mapGetLoadedMapFlags(blockFlags);
                 if (blockFlags[0xd] != 0) {
                     setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_A);
@@ -6982,7 +6982,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         state->commandRequestBits = 0;
         if ((cond) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->promptBDespawnTimer = 60.0f;
-            if ((state->childB == NULL) && (Obj_CanSetupObject() != 0)) {
+            if ((state->childB == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 bitVal = randomGetRange(0, 1);
                 promptId = *(u16*)((int)promptTable + bitVal * 2);
                 ref = (int)obj->extra;
@@ -7029,7 +7029,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         }
         if ((promptA) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->promptADespawnTimer = 60.0f;
-            if ((state->childA == NULL) && (Obj_CanSetupObject() != 0)) {
+            if ((state->childA == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 if (randomGetRange(0, 3) == 0) {
                     if (promptB) {
                         refB = obj->extra;
@@ -7379,7 +7379,7 @@ void Tricky_update(GameObject* obj) {
     pair = sTrickyImpressSfxPair;
     Objfsa_UpdateWalkGroupPatches();
     if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && (void*)trickyState->spawnedChild == NULL &&
-        Obj_CanSetupObject()) {
+        (u8)Obj_CanSetupObject()) {
         mapGetLoadedMapFlags(blockFlags);
         if (blockFlags[0xd] != 0) {
             setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_A);
@@ -7510,7 +7510,7 @@ void Tricky_update(GameObject* obj) {
                     switch (trickyState->followObj->anim.romDefNo) {
                     case SKEETLA_LINKED_SOURCE_ID_OBJ_A:
                         if (*trickyState->progressPtr < 4) {
-                            if (Obj_CanSetupObject()) {
+                            if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
@@ -7521,7 +7521,7 @@ void Tricky_update(GameObject* obj) {
                         break;
                     case SKEETLA_LINKED_SOURCE_ID_OBJ_B:
                         if (*trickyState->progressPtr < 4) {
-                            if (Obj_CanSetupObject()) {
+                            if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
@@ -7538,7 +7538,7 @@ void Tricky_update(GameObject* obj) {
                         break;
                     case 0x195:
                         if (*trickyState->progressPtr < 2) {
-                            if (Obj_CanSetupObject()) {
+                            if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
@@ -7549,7 +7549,7 @@ void Tricky_update(GameObject* obj) {
                         break;
                     case 0x352:
                         if (*trickyState->progressPtr < 4) {
-                            if (Obj_CanSetupObject()) {
+                            if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
@@ -7610,7 +7610,7 @@ void Tricky_update(GameObject* obj) {
                     break;
                 case 4:
                     if (*trickyState->progressPtr < 4) {
-                        if (Obj_CanSetupObject()) {
+                        if ((u8)Obj_CanSetupObject()) {
                             trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                             TRICKY_RESET_COMMAND(state);
                             TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
@@ -7656,7 +7656,7 @@ void Tricky_update(GameObject* obj) {
                     }
                     break;
                 case 5:
-                    if (Obj_CanSetupObject()) {
+                    if ((u8)Obj_CanSetupObject()) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_FETCH_BALL;
                         setup = Obj_AllocObjectSetup(0x18, TRICKY_CHILD_OBJ_SIDEKICK_BALL);
                         setup->color[3] = 0xff;
