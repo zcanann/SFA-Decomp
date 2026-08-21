@@ -223,12 +223,6 @@ extern char sSidekickCommandDebugTextBlock[];
     (TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION | TRICKY_STATE_FLAG_BACKSTEP | TRICKY_STATE_FLAG_VERTICAL_MOVE)
 #define TRICKY_MOVE_ACTIVE_FLAG_MASK 0x060001e0LL
 
-#define TRICKY_RENDER_PATH_POINT_X_FROM_STATE_BASE(base)                                                               \
-    ((float*)((base) + offsetof(TrickyState, pathPointPositions[0].x)))
-#define TRICKY_RENDER_PATH_POINT_Y_FROM_STATE_BASE(base)                                                               \
-    ((float*)((base) + offsetof(TrickyState, pathPointPositions[0].y)))
-#define TRICKY_RENDER_PATH_POINT_Z_FROM_STATE_BASE(base)                                                               \
-    ((float*)((base) + offsetof(TrickyState, pathPointPositions[0].z)))
 #define TRICKY_CURVE_LINK_IDS_OFFSET                     offsetof(RomCurveDef, linkIds)
 #define TRICKY_CURVE_LINK_ID_FROM_NODE_OFFSET(node, off) (*(int*)((node) + (off) + TRICKY_CURVE_LINK_IDS_OFFSET))
 #define TRICKY_CURVE_LINK_ID_FROM_NODE_INDEX(node, idx)  (((int*)((char*)(node) + TRICKY_CURVE_LINK_IDS_OFFSET))[idx])
@@ -7165,9 +7159,9 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
         i = 0;
         pathPoint = (int)pathState;
         do {
-            ObjPath_GetPointWorldPosition(obj, i + 4, TRICKY_RENDER_PATH_POINT_X_FROM_STATE_BASE(pathPoint),
-                                          TRICKY_RENDER_PATH_POINT_Y_FROM_STATE_BASE(pathPoint),
-                                          TRICKY_RENDER_PATH_POINT_Z_FROM_STATE_BASE(pathPoint), 0);
+            ObjPath_GetPointWorldPosition(obj, i + 4, &((TrickyState*)pathPoint)->pathPointPositions[0].x,
+                                          &((TrickyState*)pathPoint)->pathPointPositions[0].y,
+                                          &((TrickyState*)pathPoint)->pathPointPositions[0].z, 0);
             pathPoint = pathPoint + 0xc;
             i = i + 1;
         } while (i < 4);
