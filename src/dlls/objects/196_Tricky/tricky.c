@@ -5529,11 +5529,11 @@ int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
 }
 
 int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
-    int i;
-    int j;
+    int spawnIndex;
+    int cleanupIndex;
     TrickyState* sfxState;
-    u8* p;
-    u8* q;
+    u8* spawnChildCursor;
+    u8* cleanupChildCursor;
     FlameblastPlacement* setup;
 
     switch (obj->anim.currentMove) {
@@ -5541,12 +5541,13 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
         if (obj->anim.currentMoveProgress > 0.25f && (state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
             if ((u8)Obj_CanSetupObject() != 0) {
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
-                for (i = 0, p = (u8*)state; i < 7; p += 4, i++) {
+                for (spawnIndex = 0, spawnChildCursor = (u8*)state; spawnIndex < 7;
+                     spawnChildCursor += 4, spawnIndex++) {
                     setup = (FlameblastPlacement*)Obj_AllocObjectSetup(0x24, TRICKY_CHILD_OBJ_FLAMEBLAST);
                     setup->base.color[0] = 2;
                     setup->base.color[1] = 1;
-                    setup->streamIndex = i;
-                    ((TrickyState*)p)->flameChildren[0] =
+                    setup->streamIndex = spawnIndex;
+                    ((TrickyState*)spawnChildCursor)->flameChildren[0] =
                         objSetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
@@ -5556,8 +5557,9 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
             if (state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) {
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-                for (j = 0, q = (u8*)state; j < 7; q += 4, j++) {
-                    objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_FROM_STATE_BASE(q));
+                for (cleanupIndex = 0, cleanupChildCursor = (u8*)state; cleanupIndex < 7;
+                     cleanupChildCursor += 4, cleanupIndex++) {
+                    objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_FROM_STATE_BASE(cleanupChildCursor));
                 }
                 Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
                 sfxState = obj->extra;
