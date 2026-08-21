@@ -32,7 +32,6 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 
-extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
 #define SHTHORNTAIL_TIMER_DONE_THRESHOLD                  0.0f
 #define SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ              40000.0f
@@ -123,9 +122,11 @@ extern char sSHthorntailAngleYawDebug[];
 #define SHTHORNTAIL_PATH_CHANNEL                          4
 
 typedef struct SHthorntailLinkedConfigRow {
-    s32 configToken;
-    s32 linkedConfigTokens[SHTHORNTAIL_LINKED_CONFIG_COUNT];
+    u32 configToken;
+    u32 linkedConfigTokens[SHTHORNTAIL_LINKED_CONFIG_COUNT];
 } SHthorntailLinkedConfigRow;
+
+extern SHthorntailLinkedConfigRow gSHthorntailDataTables[];
 
 typedef struct SHthorntailDataTables {
     SHthorntailLinkedConfigRow linkedConfigRows[SHTHORNTAIL_LINKED_CONFIG_GROUP_COUNT];
@@ -172,7 +173,6 @@ u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable[] = {1, 0x40};
 
 #define SHTHORNTAIL_OBJECT_TYPE_ID            0x4D7
 #define SHTHORNTAIL_LINKED_EVENT_OBJECT_GROUP 3
-#define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES   0x10
 #define PLAYER_POS_OFFSET                     offsetof(GameObject, anim.worldPosX)
 #define SHTHORNTAIL_PLACEMENT(obj)            ((SHthorntailPlacement*)(obj)->anim.placementData)
 
@@ -182,7 +182,7 @@ static inline s16 SHthorntail_getLinkedGameBit(const SHthorntailPlacement* place
 
 int SHthorntail_HasNearbyPendingEventObject(GameObject* obj) {
     GameObject** objects;
-    u32* linkedConfigRow;
+    SHthorntailLinkedConfigRow* linkedConfigRow;
     int count;
     int index;
     s8 groupIndex;
@@ -192,20 +192,23 @@ int SHthorntail_HasNearbyPendingEventObject(GameObject* obj) {
     linkedEventPending = 0;
     groupIndex = -1;
     matchCount = 0;
-    linkedConfigRow = gSHthorntailDataTables[0];
+    linkedConfigRow = gSHthorntailDataTables;
     for (index = 0; index < 6; index++) {
-        if (SHTHORNTAIL_PLACEMENT(obj)->configToken == linkedConfigRow[0]) {
+        if ((u32)SHTHORNTAIL_PLACEMENT(obj)->configToken == linkedConfigRow->configToken) {
             groupIndex = index;
             break;
         }
-        linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES);
+        linkedConfigRow++;
     }
     objects = (GameObject**)objGetAllOfType(SHTHORNTAIL_LINKED_EVENT_OBJECT_GROUP, &count);
     for (index = 0; index < count; index++) {
         if ((objects[index]->anim.romDefNo == SHTHORNTAIL_OBJECT_TYPE_ID) &&
-            ((SHTHORNTAIL_PLACEMENT(objects[index])->configToken == gSHthorntailDataTables[groupIndex][1]) ||
-             (SHTHORNTAIL_PLACEMENT(objects[index])->configToken == gSHthorntailDataTables[groupIndex][2]) ||
-             (SHTHORNTAIL_PLACEMENT(objects[index])->configToken == gSHthorntailDataTables[groupIndex][3]))) {
+            (((u32)SHTHORNTAIL_PLACEMENT(objects[index])->configToken ==
+              gSHthorntailDataTables[groupIndex].linkedConfigTokens[0]) ||
+             ((u32)SHTHORNTAIL_PLACEMENT(objects[index])->configToken ==
+              gSHthorntailDataTables[groupIndex].linkedConfigTokens[1]) ||
+             ((u32)SHTHORNTAIL_PLACEMENT(objects[index])->configToken ==
+              gSHthorntailDataTables[groupIndex].linkedConfigTokens[2]))) {
             enemy_setTrackedObj(objects[index], obj);
             if ((vec3f_distanceSquared(&objects[index]->anim.worldPosX, &obj->anim.worldPosX) <
                  SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
@@ -314,10 +317,10 @@ u32 SHthorntail_chooseNextState(GameObject* object, SHthorntailState* state, SHt
     return SHTHORNTAIL_STATE_MOVE_2;
 }
 
-u32 gSHthorntailDataTables[][4] = {
-    {0x00044318, 0x0004467F, 0x00044677, 0x0004467B}, {0x000442FB, 0x00044641, 0x0004463F, 0x00044640},
-    {0x00044309, 0x00044646, 0x00044648, 0x00044649}, {0x00044302, 0x0004432F, 0x0004431C, 0x0004432E},
-    {0x000442F4, 0x0004463D, 0x0004463C, 0x0004463E}, {0x00044310, 0x00044636, 0x00044634, 0x00044637},
+SHthorntailLinkedConfigRow gSHthorntailDataTables[] = {
+    {0x00044318, {0x0004467F, 0x00044677, 0x0004467B}}, {0x000442FB, {0x00044641, 0x0004463F, 0x00044640}},
+    {0x00044309, {0x00044646, 0x00044648, 0x00044649}}, {0x00044302, {0x0004432F, 0x0004431C, 0x0004432E}},
+    {0x000442F4, {0x0004463D, 0x0004463C, 0x0004463E}}, {0x00044310, {0x00044636, 0x00044634, 0x00044637}},
 };
 
 f32 gSHthorntailPathHeaders[12] = {-8.0f, 0.0f, -8.0f, 8.0f, 0.0f, -8.0f, 8.0f, 0.0f, 8.0f, -8.0f, 0.0f, 8.0f};
@@ -696,7 +699,8 @@ typedef struct SHthorntailTailSwingEffectScratch {
 #define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables)     ((u16*)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
 #define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables)     ((u8*)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
 
-void SHthorntail_updateLevelControlMode1(GameObject* objectId, SHthorntailState* runtime, SHthorntailPlacement* placement) {
+void SHthorntail_updateLevelControlMode1(GameObject* objectId, SHthorntailState* runtime,
+                                         SHthorntailPlacement* placement) {
     GameObject* playerObj;
     int randomIdleWait;
     u8 closeToPlayer;
@@ -877,8 +881,8 @@ u32 SHthorntail_updateLevelControlState(GameObject* obj, int unused, ObjSeqState
         characterDoEyeAnims(obj, &runtime->eyeAnimState);
     }
     runtime->activeMoveValid = 0;
-    objAudioDispatchAnimEvents(obj, &animUpdate->animEvents, 8, runtime->renderPathPoints,
-                               &runtime->pathState, 1.0f, 1.0f);
+    objAudioDispatchAnimEvents(obj, &animUpdate->animEvents, 8, runtime->renderPathPoints, &runtime->pathState, 1.0f,
+                               1.0f);
     return 0;
 }
 
@@ -907,9 +911,9 @@ void SHthorntail_render(GameObject* obj, int renderArg2, int renderArg3, int ren
     dll_2E_setTargetFromPathPoint(obj, (MoveLibState*)runtime, 0);
     pointIndex = 0;
     do {
-        ObjPath_GetPointWorldPosition(obj, pointIndex, &runtime->renderPathPoints[0].x, &runtime->renderPathPoints[0].y,
-                                      &runtime->renderPathPoints[0].z, 0);
-        runtime = (SHthorntailState*)((u8*)runtime + sizeof(Vec));
+        ObjPath_GetPointWorldPosition(obj, pointIndex, &runtime->renderPathPoints[pointIndex].x,
+                                      &runtime->renderPathPoints[pointIndex].y,
+                                      &runtime->renderPathPoints[pointIndex].z, 0);
         pointIndex = pointIndex + 1;
     } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
@@ -993,8 +997,7 @@ void SHthorntail_update(GameObject* obj) {
                 obj->anim.resetHitboxFlags |= SHTHORNTAIL_OBJECT_STATUS_FREEZE_FRAME;
             }
         }
-        if ((int)(obj)->anim.currentMove !=
-            SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState]) {
+        if ((int)(obj)->anim.currentMove != SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState]) {
             ObjAnim_SetCurrentMove(obj, SHTHORNTAIL_STATE_MOVE_IDS(stateTables)[runtime->behaviorState],
                                    SHTHORNTAIL_TIMER_DONE_THRESHOLD, 0);
             runtime->storedFacingAngle = obj->anim.rotX;
@@ -1013,31 +1016,25 @@ void SHthorntail_update(GameObject* obj) {
             }
             negSinFacing = -mathSinf((3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f);
             negCosFacing = -mathCosf((3.1415927f * (f32)(s32)runtime->storedFacingAngle) / 32768.0f);
-            obj->anim.localPosX =
-                negSinFacing * -animEvents.rootDeltaZ + obj->anim.localPosX;
-            obj->anim.localPosZ =
-                negCosFacing * -animEvents.rootDeltaZ + obj->anim.localPosZ;
-            obj->anim.localPosX =
-                negCosFacing * -animEvents.rootDeltaX + obj->anim.localPosX;
-            obj->anim.localPosZ =
-                negSinFacing * animEvents.rootDeltaX + obj->anim.localPosZ;
+            obj->anim.localPosX = negSinFacing * -animEvents.rootDeltaZ + obj->anim.localPosX;
+            obj->anim.localPosZ = negCosFacing * -animEvents.rootDeltaZ + obj->anim.localPosZ;
+            obj->anim.localPosX = negCosFacing * -animEvents.rootDeltaX + obj->anim.localPosX;
+            obj->anim.localPosZ = negSinFacing * animEvents.rootDeltaX + obj->anim.localPosZ;
             obj->anim.rotX += animEvents.rootPitch;
         }
-        for (i = 0, eventId = (s8*)&animEvents; i < animEvents.triggerCount; i = i + 1) {
-            if (eventId[0x13] == '\0') {
+        for (i = 0, eventId = animEvents.triggeredIds; i < animEvents.triggerCount; i = i + 1) {
+            if (*eventId == '\0') {
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0) {
-                    Sfx_PlayFromObject(obj,
-                                       SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
+                    Sfx_PlayFromObject(obj, SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
-            } else if ((eventId[0x13] == '\a') &&
+            } else if ((*eventId == '\a') &&
                        (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0)) {
                 Sfx_PlayFromObject((GameObject*)(u32)obj,
                                    SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
             eventId++;
         }
-        objAudioDispatchAnimEvents(obj, &animEvents, 8, runtime->renderPathPoints,
-                                   runtime->moveScratch, 1.0f, 1.0f);
+        objAudioDispatchAnimEvents(obj, &animEvents, 8, runtime->renderPathPoints, runtime->moveScratch, 1.0f, 1.0f);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
              SHTHORNTAIL_STATE_FLAG_DISABLE_MOVE_CONTROL) != 0) {
             runtime->movementControlFlags = runtime->movementControlFlags & ~1;
@@ -1060,8 +1057,8 @@ void SHthorntail_update(GameObject* obj) {
         if (config->leashRadius != '\0') {
             leashDistance = getXZDistanceSquared(&obj->anim.worldPosX, (float*)&config->homePosition);
             if ((leashDistance > (f32)(s32)((u32)config->leashRadius * (u32)config->leashRadius)) &&
-                (ref = ViewFrustum_IsSphereVisible(&obj->anim.localPosX, obj->anim.hitboxScale *
-                                                                          obj->anim.rootMotionScale),
+                (ref = ViewFrustum_IsSphereVisible(&obj->anim.localPosX,
+                                                   obj->anim.hitboxScale * obj->anim.rootMotionScale),
                  ref == 0)) {
                 ref = getAngle(obj->anim.localPosX - config->homePosition.x,
                                obj->anim.localPosZ - config->homePosition.z);
@@ -1071,8 +1068,7 @@ void SHthorntail_update(GameObject* obj) {
         runtime->activeMoveValid = 1;
         activeConfigToken = gSHthorntailActiveConfigToken;
         if (activeConfigToken == SHTHORNTAIL_CONFIG_TOKEN_NONE) {
-            gSHthorntailActiveConfigToken =
-                ((SHthorntailPlacement*)(obj)->anim.placementData)->configToken;
+            gSHthorntailActiveConfigToken = ((SHthorntailPlacement*)(obj)->anim.placementData)->configToken;
             obj->anim.velocityY = -(0.17f * timeDelta - obj->anim.velocityY);
             (*gPathControlInterface)->update((void*)obj, &runtime->pathState, timeDelta);
             (*gPathControlInterface)->apply((void*)obj, &runtime->pathState);
@@ -1080,8 +1076,7 @@ void SHthorntail_update(GameObject* obj) {
             obj->anim.rotY = runtime->moveControlPitch;
             obj->anim.rotZ = runtime->moveControlRoll;
         } else {
-            if ((u32)activeConfigToken ==
-                (u32)((SHthorntailPlacement*)(obj)->anim.placementData)->configToken) {
+            if ((u32)activeConfigToken == (u32)((SHthorntailPlacement*)(obj)->anim.placementData)->configToken) {
                 gSHthorntailActiveConfigToken = SHTHORNTAIL_CONFIG_TOKEN_NONE;
             }
             if (('\x02' <= runtime->behaviorState) && (runtime->behaviorState <= '\x06')) {
