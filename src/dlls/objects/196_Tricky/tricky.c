@@ -198,6 +198,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_FEED_VOICE_PENDING      0x40000000LL
 #define TRICKY_STATE_FLAG_IMPRESS_PENDING_U32     0x80000000U
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING_WIDE     0x8000000LL
+#define TRICKY_STATE_CHILD_ACTIVITY_FLAGS         (TRICKY_STATE_FLAG_CHILDREN_ACTIVE | TRICKY_STATE_FLAG_CHILDREN_CLEANUP)
 
 #define TRICKY_MOVE_FLAG_KEEP_PROGRESS        0x01000000
 #define TRICKY_MOVE_FLAG_ROOT_TRANSLATE       0x02000000
@@ -515,7 +516,7 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     } stk;
     u8 i = 0x14;
     u32 flags = state->stateFlags;
-    if ((flags & 0x1800) == 0) {
+    if ((flags & TRICKY_STATE_CHILD_ACTIVITY_FLAGS) == 0) {
         return;
     }
     stk.dx = state->renderPosX - obj->anim.worldPosX;
@@ -525,11 +526,11 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     stk.hx = obj->anim.rotX;
     stk.hy = obj->anim.rotY;
     stk.hz = obj->anim.rotZ;
-    if ((flags & 0x800) == 0) {
+    if ((flags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
         while (i-- != 0) {
             (*gPartfxInterface)->spawnObject(obj, TRICKY_PATH_PARTFX, &stk, 2, -1, NULL);
         }
-        state->stateFlags = state->stateFlags & ~0x1000LL;
+        state->stateFlags = state->stateFlags & ~(u64)TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     }
 }
 
