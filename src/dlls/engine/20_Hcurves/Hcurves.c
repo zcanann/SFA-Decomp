@@ -537,7 +537,7 @@ int RomCurve_setupHermiteSegment(RomCurveWalker* state, void* fromCurve, void* t
 }
 
 
-void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
+void* Objfsa_FindNearestCurveType24(f32* pos, int walkGroupFilter, int subtypeFilter)
 {
     int count;
     RomCurveDef* hit;
@@ -550,8 +550,8 @@ void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
     {
         hit = *list;
         if (hit != 0 && hit->type == ROMCURVE_TYPE_TRICKY &&
-            (p4_filter == -1 || hit->walkGroup == p4_filter) &&
-            (p5_filter == -1 || hit->unk1A == p5_filter))
+            (walkGroupFilter == -1 || hit->walkGroup == walkGroupFilter) &&
+            (subtypeFilter == -1 || hit->subtype == subtypeFilter))
         {
             f32 dx = pos[0] - hit->x;
             f32 dy = pos[1] - hit->y;
@@ -572,7 +572,7 @@ void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
 }
 
 
-void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filter)
+void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int walkGroupFilter, int subtypeFilter)
 {
     int count;
     RomCurveDef** list;
@@ -590,8 +590,8 @@ void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filte
     {
         hit = *list;
         if (hit != 0 && hit->type == ROMCURVE_TYPE_TRICKY &&
-            (p4_filter == -1 || hit->walkGroup == p4_filter) &&
-            (p5_filter == -1 || hit->unk1A == p5_filter))
+            (walkGroupFilter == -1 || hit->walkGroup == walkGroupFilter) &&
+            (subtypeFilter == -1 || hit->subtype == subtypeFilter))
         {
             gbId = hit->requiredBit;
             if (gbId == -1 || mainGetBit(gbId) != 0)

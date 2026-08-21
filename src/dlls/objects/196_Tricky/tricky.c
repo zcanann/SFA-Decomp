@@ -1355,7 +1355,8 @@ void* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int 
                     if ((requiredBit == -1) || (mainGetBit(requiredBit) != 0)) {
                         forbiddenBit = entry->forbiddenBit;
                         if ((forbiddenBit == -1) || (mainGetBit(forbiddenBit) == 0)) {
-                            if ((((RomCurveDef*)routeDef)->unk1A != 9) || (entry->unk1A != 8)) {
+                            if ((((RomCurveDef*)routeDef)->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) ||
+                                (entry->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A)) {
                                 count++;
                             }
                         }
@@ -1586,9 +1587,10 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
             for (j = 0; j < 4; j++) {
                 linkCurveId = curve->linkIds[j];
                 if ((linkCurveId > -1) && (curve->linkWalkGroups[j] == linkSelector)) {
-                    if (curve->unk1A == 8) {
+                    if (curve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A) {
                         linkedCurve = (*gRomCurveInterface)->getById(linkCurveId);
-                        if ((linkedCurve != NULL) && (linkedCurve->unk1A == 9)) {
+                        if ((linkedCurve != NULL) &&
+                            (linkedCurve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
                             continue;
                         }
                     }
@@ -2265,8 +2267,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
                     trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
                     didMove = moveTricky(obj, &state->route.posX);
-                    switch (prevNode->unk1A) {
-                    case 1:
+                    switch (prevNode->subtype) {
+                    case ROMCURVE_TRICKY_SUBTYPE_JUMP:
                         node = state->route.nodeA0;
                         state->dirX = node->x - obj->anim.worldPosX;
                         state->dirZ = node->z - obj->anim.worldPosZ;
@@ -2283,7 +2285,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         state->movementState = TRICKY_MOVE_JUMP_PREP;
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
-                    case 5:
+                    case ROMCURVE_TRICKY_SUBTYPE_JUMPUP:
                         node = state->route.nodeA0;
                         state->dirX = node->x - obj->anim.worldPosX;
                         state->dirZ = node->z - obj->anim.worldPosZ;
@@ -2307,7 +2309,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         TRICKY_ADVANCE_ROUTE_TO_END(state);
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
-                    case 6:
+                    case ROMCURVE_TRICKY_SUBTYPE_JUMPDOWN:
                         node = state->route.nodeA0;
                         state->dirX = node->x - obj->anim.worldPosX;
                         state->dirZ = node->z - obj->anim.worldPosZ;
@@ -2325,8 +2327,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         TRICKY_ADVANCE_ROUTE_TO_END(state);
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
-                    case 2:
-                    case 7:
+                    case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
+                    case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_B:
                         state->stateFlags = state->stateFlags | TRICKY_STATE_FLAG_GROUND_SNAP;
                     default:
                         state->movementState = TRICKY_MOVE_WALK_NODES;
@@ -2374,7 +2376,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             state->speed = (v < 0.0f) ? 0.0f : v;
         }
         routeNode = state->route.nodeA0;
-        if ((((RomCurveDef*)state->route.node9C)->unk1A != 9) && (routeNode->unk1A != 9)) {
+        if ((((RomCurveDef*)state->route.node9C)->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) &&
+            (routeNode->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
             int i;
             u8 step;
             char found;
@@ -2431,10 +2434,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             node = trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
             if (node != 0) {
                 RomCurve_advanceToNextSegment(&state->route, node);
-                routeNodeType = ((RomCurveDef*)state->route.node9C)->unk1A;
+                routeNodeType = ((RomCurveDef*)state->route.node9C)->subtype;
                 switch (routeNodeType) {
-                case 2:
-                case 7:
+                case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
+                case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_B:
                     prod = state->stateFlags;
                     if ((prod & TRICKY_STATE_FLAG_GROUND_SNAP) != 0) {
                         state->stateFlags = prod & ~(u64)TRICKY_STATE_FLAG_GROUND_SNAP;
@@ -2462,15 +2465,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         didMove = moveTricky(obj, &state->route.posX);
-        routeNodeType = ((RomCurveDef*)state->route.nodeA0)->unk1A;
+        routeNodeType = ((RomCurveDef*)state->route.nodeA0)->subtype;
         switch (routeNodeType) {
-        case 1:
+        case ROMCURVE_TRICKY_SUBTYPE_JUMP:
             state->movementState = TRICKY_MOVE_JUMP_RUNUP;
             break;
-        case 5:
+        case ROMCURVE_TRICKY_SUBTYPE_JUMPUP:
             state->movementState = TRICKY_MOVE_JUMPUP_RUNUP;
             break;
-        case 6:
+        case ROMCURVE_TRICKY_SUBTYPE_JUMPDOWN:
             state->movementState = TRICKY_MOVE_JUMPDOWN_RUNUP;
             break;
         }
