@@ -6549,6 +6549,7 @@ typedef void (*TrickyHandlerFn)(void* obj, void* state);
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_OBJGROUP                        1
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE           84
+#define TRICKY_HELPER_WARP_OBJECT_ID           0x25 /* "warp" transporter / WarpPoint */
 
 typedef enum TrickySequenceEvent {
     TRICKY_SEQUENCE_EVENT_TOGGLE_FLAME_CHILDREN = 1,
@@ -6559,7 +6560,7 @@ typedef enum TrickySequenceEvent {
 } TrickySequenceEvent;
 
 int gTrickyUnusedSbss;
-u32 gTrickyHelperObject;
+u32 gTrickyWarpHelperObject;
 
 GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
     GameObject** objs;
@@ -6677,11 +6678,11 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_GUARD_REQUEST;
         state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
     }
-    if (gTrickyHelperObject == 0) {
-        int setup = (int)Obj_AllocObjectSetup(0x18, 0x25);
-        gTrickyHelperObject = (int)objSetupObject((ObjPlacement*)setup, 4, -1, -1, obj->anim.parent);
+    if (gTrickyWarpHelperObject == 0) {
+        int setup = (int)Obj_AllocObjectSetup(0x18, TRICKY_HELPER_WARP_OBJECT_ID);
+        gTrickyWarpHelperObject = (int)objSetupObject((ObjPlacement*)setup, 4, -1, -1, obj->anim.parent);
     }
-    state->statusFlag7 = 1;
+    state->ownsWarpHelperObject = 1;
 }
 
 static inline int trickyGetState(GameObject* obj) {
@@ -7188,9 +7189,9 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
         ObjLink_DetachChild(obj, state->spawnedChild);
         Obj_FreeObject((GameObject*)state->spawnedChild);
     }
-    if ((state->statusFlag7 != 0u) && (gTrickyHelperObject != 0)) {
-        Obj_FreeObject((GameObject*)gTrickyHelperObject);
-        gTrickyHelperObject = 0;
+    if ((state->ownsWarpHelperObject != 0u) && (gTrickyWarpHelperObject != 0)) {
+        Obj_FreeObject((GameObject*)gTrickyWarpHelperObject);
+        gTrickyWarpHelperObject = 0;
     }
     return;
 }
@@ -7438,7 +7439,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
     {
-        int flagsByte = trickyState->flags358;
+        int flagsByte = trickyState->sideCommandHitFlags;
         trickyDebugPrint(base + TRICKY_DBG_SIDECOMMAND_HITS, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8,
                          flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
     }

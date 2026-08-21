@@ -132,7 +132,7 @@ typedef struct TrickyState {
             s16 targetYaw; /* target facing angle: set from targetYaw (skeetla); tricky interpolates anim.rotX toward it (diff = targetYaw - rotX) under TRICKY_STATE_FLAG_ROTATE */
         };
         struct {
-            u8 statusFlag7 : 1;
+            u8 ownsWarpHelperObject : 1;
             u8 soundSuppressed : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
             u8 heightTracking : 1; /* statusFlags bit 5 */
             u8 statusFlagsLow : 5;
@@ -217,7 +217,7 @@ typedef struct TrickyState {
     u8 pad324[0x353 - 0x324];
     u8 heightUpdateActive; /* set 1 at update-cycle start; cleared to 0 when the object leaves its map block or a ground-snap fires; while (s8)set the water-level / tracked-height float update runs, else velocityY is zeroed (tricky sets, trickyfollow/skeetla clear+read) */
     u8 pad354[0x358 - 0x354];
-    s8 flags358; /* bit-flag byte: all 8 bits are decomposed individually (&1..&0x80) for the state debug print (tricky) */
+    s8 sideCommandHitFlags; /* bit-flag byte decomposed for the "sidecommand hits" debug print */
     u8 pad359[0x360 - 0x359];
     void* lastContactObj;
     f32 contactTimer;
