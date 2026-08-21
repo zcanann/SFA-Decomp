@@ -775,7 +775,7 @@ GameObject* dll_19_findAggroTarget(GameObject* self, void* state, f32 frange, in
                     traced = voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (trackGetLineIntersect(&self->anim.localPosX, gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+                        if (trackGetLineIntersect(&self->anim.localPosX, gridIn, 1.0f, 0, (TrackLineIntersectResult*)bboxOut,
                                                self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
@@ -821,7 +821,7 @@ int dll_19_shouldDropTarget(GameObject* obj, void* state, f32 distThreshold, int
                 pos[0] = player->anim.localPosX;
                 pos[1] = 10.0f + player->anim.localPosY;
                 pos[2] = player->anim.localPosZ;
-                if (trackGetLineIntersect(&obj->anim.localPosX, pos, 1.0f, 0, (TrackBBoxHit*)out,
+                if (trackGetLineIntersect(&obj->anim.localPosX, pos, 1.0f, 0, (TrackLineIntersectResult*)out,
                                        obj, 4, -1, 0, 0) != 0)
                 {
                     result = 1;
@@ -1243,7 +1243,7 @@ u8 dll_19_getClearDirectionMask(GameObject* obj, void* state, f32 dist)
         }
         if (ok != 0)
         {
-            if (trackGetLineIntersect(&obj->anim.localPosX, world, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+            if (trackGetLineIntersect(&obj->anim.localPosX, world, 1.0f, 0, (TrackLineIntersectResult*)bboxOut,
                                    obj, ((Dll19State*)state)->bboxTraceFlags, -1, 0, 0) != 0)
             {
                 ok = 0;

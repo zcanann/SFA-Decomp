@@ -63,7 +63,7 @@ void dll_1DA_update(GameObject* obj) {
     int hitCount;
     TrackGroundHit** groundHits;
     int groundHitIndex;
-    TrackBBoxHit collision;
+    TrackLineIntersectResult collision;
 
     state = obj->extra;
     if (state->grounded != 0) {

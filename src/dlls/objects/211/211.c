@@ -1200,7 +1200,7 @@ void dll_D3_update(GameObject* obj)
     int rc;
     int hits;
     f32 vec[4];
-    TrackBBoxHit hitResult;
+    TrackLineIntersectResult hitResult;
 #define searchRadius vec[0]
 #define dx           vec[1]
 #define dy           vec[2]

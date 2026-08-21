@@ -84,7 +84,7 @@ static int mmpMoonRock_probeFloor(GameObject* obj, f32 x, f32 y, f32 z, f32 maxY
 }
 
 void mmpMoonRock_handleImpact(GameObject* obj) {
-    TrackBBoxHit hitScratch;
+    TrackLineIntersectResult hitScratch;
     GameObject* priorityObjectOut;
     MMPMoonRockState* state;
     int hit;

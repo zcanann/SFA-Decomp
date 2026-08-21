@@ -60,7 +60,7 @@ typedef struct GunpowderBarrelTimerInterface {
 STATIC_ASSERT(offsetof(GunpowderBarrelTimerInterface, render) == 0x10);
 
 typedef union GunpowderBarrelCollisionScratch {
-    TrackBBoxHit hit;
+    TrackLineIntersectResult hit;
     f32 words[24];
 } GunpowderBarrelCollisionScratch;
 

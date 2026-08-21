@@ -164,7 +164,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                 f32 x1, f32 y1, f32 z1, u8 flags);
 int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
                        int flagsArg);
-int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
+int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                                  GameObject* target, s8 lineMask, s8 segment, s8 yTolerance,
                                  GameObject* sourceObj);
 
@@ -407,7 +407,7 @@ void trackInvalidateDynamicSlotsForObject(GameObject* target)
  * a refresh has been requested. */
 /* trackSweepCircleAgainstLines -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *hit with the last hit. */
-int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
+int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                                  GameObject* target, s8 lineMask, s8 segment, s8 yTolerance,
                                  GameObject* sourceObj)
 {
@@ -964,7 +964,7 @@ u8 querySlot;
     return NULL;
 }
 
-int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* out, GameObject* self,
+int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* out, GameObject* self,
                       s8 lineMask, s8 segment, int slot, s8 yTolerance)
 {
     f32 worldStart[3];

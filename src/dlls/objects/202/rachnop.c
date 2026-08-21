@@ -403,7 +403,7 @@ void rachnopFindWallPlane(GameObject* obj, void* state)
         minv[0] = obj->anim.localPosX - probeOffsets[i * 2 + 0];
         minv[1] = obj->anim.localPosY;
         minv[2] = obj->anim.localPosZ - probeOffsets[i * 2 + 1];
-        didHit = trackGetLineIntersect(maxv, minv, 0.0f, 3, (TrackBBoxHit*)hit,
+        didHit = trackGetLineIntersect(maxv, minv, 0.0f, 3, (TrackLineIntersectResult*)hit,
                                     obj, 5, 3, 0xff, 0);
     }
     if (didHit != 0)

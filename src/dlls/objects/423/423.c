@@ -427,7 +427,7 @@ void EdibleMushroom_hitDetect(GameObject* obj) {
     int hitCount;
     TrackGroundHit** hits;
     int i;
-    TrackBBoxHit bboxHit;
+    TrackLineIntersectResult bboxHit;
 
     state = obj->extra;
     placement = (EdibleMushroomPlacement*)obj->anim.placementData;

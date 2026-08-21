@@ -899,7 +899,7 @@ u8 baddie_canSeeTarget(GameObject* obj, EnemyState* state, void* from, void* to)
     s16 fromGrid[4];
     Vec probe;
     Vec delta;
-    TrackBBoxHit bboxHit;
+    TrackLineIntersectResult bboxHit;
     s16 setupId;
     u8 visible;
     int keepGroundOffset;
@@ -957,7 +957,7 @@ void baddie_updateSightQuadrants(GameObject* obj, EnemyState* state, f32 radius)
     Vec probe;
     struct VisBits16 visibilityBits;
     Vec delta;
-    TrackBBoxHit bboxHit;
+    TrackLineIntersectResult bboxHit;
     s16 baseAngle;
     u16 i;
     u8 visible;

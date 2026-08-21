@@ -4,7 +4,7 @@
 #include "types.h"
 #include "global.h"
 #include "game/objects/object.h"
-#include "main/track_bbox_hit.h"
+#include "main/track_line_intersect_result.h"
 #include "main/track_hit_results.h"
 
 #define CURVES_COLLISION_STATE_SIZE                   0x268
@@ -32,7 +32,7 @@ typedef struct CurvesCollisionState {
     f32* localPointRadii;
     f32 localPointWorld[4][3];  /* 0x0E4 localPointPositions transformed to world */
     f32 localPointTarget[4][3]; /* 0x114 raised copies; bbox-swept against localPointWorld */
-    TrackBBoxHit localHit;      /* 0x144 trackGetLineIntersect result for the local points */
+    TrackLineIntersectResult localHit;      /* 0x144 trackGetLineIntersect result for the local points */
     s16 tiltPitch;       /* 0x198 smoothed toward tiltPitchTarget */
     s16 tiltRoll;        /* 0x19A */
     s16 tiltPitchTarget; /* 0x19C from surface normal */

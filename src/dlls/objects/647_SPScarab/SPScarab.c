@@ -90,7 +90,7 @@ void SPScarab_update(GameObject* obj)
     f32 distance;
     f32 phase;
     f32 outV[3];
-    TrackBBoxHit hit_buf;
+    TrackLineIntersectResult hit_buf;
 
     state = (SpscarabState*)obj->extra;
     placement = (SpscarabPlacement*)obj->anim.placementData;

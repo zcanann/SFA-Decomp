@@ -269,7 +269,7 @@ int playerStateIceSpell(GameObject* obj, PlayerState* state, f32 fv);
 void playerStagedRestoreDefaultControl(GameObject* obj, BaddieState* state);
 int playerState00(GameObject* obj, PlayerState* state);
 void playerGetMovementOrFacingDirection(GameObject* obj, int state, f32* out);
-int playerBuildWallPlaneProbe(int p1, int p2, TrackBBoxHit* src, f32* vec, int out, int flag);
+int playerBuildWallPlaneProbe(int p1, int p2, TrackLineIntersectResult* src, f32* vec, int out, int flag);
 int playerBuildLedgeClimbProbe(int a, int b, void* c, int d, f32* e, f32 distance);
 void playerRestoreAfterSequence(GameObject* obj, int p2, void* p3);
 void playerCastIceSpell(GameObject* unused);
@@ -315,7 +315,7 @@ void playerUpdateTargetSelection(GameObject* obj, PlayerState* inner, PlayerStat
 void playerAnimate(GameObject* obj, PlayerState* state, f32 fv);
 void playerInitFuncPtrs(void);
 int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
-int player_probeClimbable(GameObject* obj, int p4, TrackBBoxHit* src, int dst, int flag);
+int player_probeClimbable(GameObject* obj, int p4, TrackLineIntersectResult* src, int dst, int flag);
 int playerStateClimbLedge(int obj, int state, f32 fv);
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag);
 s16 playerSetMoveBlendFromPlane(GameObject* obj, int baseMoveId, int blendMoveId, int* blendAnchor, int* blendPlane,
@@ -3520,7 +3520,7 @@ int playerStateStaffBoost(GameObject* obj, PlayerState* state, f32 fv) {
         toVec[0] = fromVec[0] - 100.0f * mathSinf(3.1415927f * (f32)(int)inner->targetYaw / 32768.0f);
         toVec[1] = fromVec[1];
         toVec[2] = fromVec[2] - 100.0f * mathCosf(3.1415927f * (f32)(int)inner->targetYaw / 32768.0f);
-        if (trackGetLineIntersect(fromVec, toVec, 0.0f, 3, (TrackBBoxHit*)hitBuf, obj, 1, 1, 0xff, 0) != 0)
+        if (trackGetLineIntersect(fromVec, toVec, 0.0f, 3, (TrackLineIntersectResult*)hitBuf, obj, 1, 1, 0xff, 0) != 0)
         {
             gPlayerStaffBoostTargetY = *(f32*)(hitBuf + 0x3c) - 30.0f;
         }
@@ -6775,7 +6775,7 @@ int playerStateClimbWall(GameObject* obj, struct PlayerState* stateArg)
             pnt[2] = -(30.0f * inner->groundNormalZ - inner->savedPosZ);
             {
                 int r = trackGetLineIntersect(&inner->savedPosX, pnt, 0.0f, 3,
-                                           (TrackBBoxHit*)&hit, obj, 1, 3, 0xff, 0);
+                                           (TrackLineIntersectResult*)&hit, obj, 1, 3, 0xff, 0);
                 if (r != 0)
                 {
                     obj->anim.localPosX = pnt[0];
@@ -10374,7 +10374,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
         f32 y;
         f32 z;
     } pfx;
-    TrackBBoxHit buf;
+    TrackLineIntersectResult buf;
     u8 useAlt;
     f32 hd;
     f32 dp;
@@ -10889,7 +10889,7 @@ void playerGetMovementOrFacingDirection(GameObject* obj, int state, f32* out)
  * climbStep) and return 1; return 0 when no ladder is in range. Called per
  * candidate direction from the player move handler.
  */
-int player_probeClimbable(GameObject* obj, int p4, TrackBBoxHit* src, int dst, int flag)
+int player_probeClimbable(GameObject* obj, int p4, TrackLineIntersectResult* src, int dst, int flag)
 {
     TrackGroundHit** hits;
     f32 pos[3];
@@ -10994,7 +10994,7 @@ int player_probeClimbable(GameObject* obj, int p4, TrackBBoxHit* src, int dst, i
     return 0;
 }
 
-int playerBuildWallPlaneProbe(int p1, int p2, TrackBBoxHit* src, f32* vec, int out, int flag)
+int playerBuildWallPlaneProbe(int p1, int p2, TrackLineIntersectResult* src, f32* vec, int out, int flag)
 {
     f32 p48;
     f32 m44;
