@@ -28,6 +28,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import threading
+import os
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -37,12 +38,17 @@ _lock = threading.Lock()
 
 
 def compile_command(target: str) -> str | None:
+    ninja_target = target.replace("/", "\\") if os.name == "nt" else target
     with _lock:
-        if target in _cache:
-            return _cache[target]
-    r = subprocess.run(["bash", "--noprofile", "--norc",
-                        "tools/locked_ninja.sh", "-t", "commands", target],
-                       cwd=REPO, capture_output=True, text=True)
+        if ninja_target in _cache:
+            return _cache[ninja_target]
+    if os.name == "nt":
+        r = subprocess.run(["ninja", "-t", "commands", ninja_target],
+                           cwd=REPO, capture_output=True, text=True)
+    else:
+        r = subprocess.run(["bash", "--noprofile", "--norc",
+                            "tools/locked_ninja.sh", "-t", "commands", target],
+                           cwd=REPO, capture_output=True, text=True)
     if r.returncode != 0:
         return None
     lines = [l for l in r.stdout.splitlines() if l.strip()]
@@ -52,25 +58,33 @@ def compile_command(target: str) -> str | None:
     if "download_tool.py" in cmd:
         return None
     with _lock:
-        _cache[target] = cmd
+        _cache[ninja_target] = cmd
     return cmd
 
 
 def direct_build(unit_object: str, version: str = "GSAE01") -> bool:
     rel = unit_object.replace(f"build/{version}/obj/", f"build/{version}/src/")
     out = REPO / rel
+    ninja_target = rel.replace("/", "\\") if os.name == "nt" else rel
     try:
         out.unlink()
     except FileNotFoundError:
         pass
     cmd = compile_command(rel)
     if cmd is None:
-        r = subprocess.run(["bash", "--noprofile", "--norc",
-                            "tools/locked_ninja.sh", rel],
-                           cwd=REPO, capture_output=True, text=True)
+        if os.name == "nt":
+            r = subprocess.run(["ninja", ninja_target],
+                               cwd=REPO, capture_output=True, text=True)
+        else:
+            r = subprocess.run(["bash", "--noprofile", "--norc",
+                                "tools/locked_ninja.sh", rel],
+                               cwd=REPO, capture_output=True, text=True)
         return r.returncode == 0 and out.is_file()
-    r = subprocess.run(["bash", "--noprofile", "--norc", "-c", cmd],
-                       cwd=REPO, capture_output=True, text=True)
+    if os.name == "nt":
+        r = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True, shell=True)
+    else:
+        r = subprocess.run(["bash", "--noprofile", "--norc", "-c", cmd],
+                           cwd=REPO, capture_output=True, text=True)
     return r.returncode == 0 and out.is_file()
 
 
