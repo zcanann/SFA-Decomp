@@ -4119,7 +4119,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
         TRICKY_STATE(st)->stateFlags = f2 & m;                                                                         \
     }
 
-#define TRICKY_CLEAR_TARGET_DIRTY(st) TRICKY_CLEAR_FLAG(st, TRICKY_STATE_FLAG_PATH_PATCHES_VALID)
+#define TRICKY_INVALIDATE_PATH_PATCHES(st) TRICKY_CLEAR_FLAG(st, TRICKY_STATE_FLAG_PATH_PATCHES_VALID)
 
 #define TRICKY_MARK_HELPERS_FINISHED(st)                                                                               \
     {                                                                                                                  \
@@ -4265,7 +4265,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         if (trickyUpdateMovementState(obj, 5.0f, trickyState) == 0) {
             if (trickyState->targetPosPtr != trickyState->guardPoint) {
                 trickyState->targetPosPtr = trickyState->guardPoint;
-                TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+                TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                 trickyState->linkedWalkGroup = 0;
             }
             trickyState->substate = TRICKY_GUARD_TO_FRONT;
@@ -4322,7 +4322,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             newTarget = &trickyState->followObj->anim.worldPosX;
             if (trickyState->targetPosPtr != newTarget) {
                 trickyState->targetPosPtr = newTarget;
-                TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+                TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                 trickyState->linkedWalkGroup = 0;
             }
             trickyState->substate = TRICKY_GUARD_TO_SPOT;
@@ -4352,7 +4352,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                 newTarget = &trickyState->followObj->anim.worldPosX;
                 if (trickyState->targetPosPtr != newTarget) {
                     trickyState->targetPosPtr = newTarget;
-                    TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+                    TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                     trickyState->linkedWalkGroup = 0;
                 }
                 trickyState->substate = TRICKY_GUARD_TO_SPOT;
@@ -4419,7 +4419,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                 newTarget = &trickyState->followObj->anim.worldPosX;
                 if (trickyState->targetPosPtr != newTarget) {
                     trickyState->targetPosPtr = newTarget;
-                    TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+                    TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                     trickyState->linkedWalkGroup = 0;
                 }
                 trickyState->substate = TRICKY_GUARD_TO_SPOT;
@@ -4462,7 +4462,7 @@ int trickyGuardFindBaddieTarget(TrickyState* trickyState) {
         trickyState->guardTarget = best;
         if (trickyState->targetPosPtr != &best->anim.worldPosX) {
             trickyState->targetPosPtr = &best->anim.worldPosX;
-            TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+            TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
             trickyState->linkedWalkGroup = 0;
         }
         trickyState->substate = 4;
@@ -4513,7 +4513,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
             target = &trickyState->flameNode0->x;
             if (trickyState->targetPosPtr != target) {
                 trickyState->targetPosPtr = target;
-                TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+                TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                 (trickyState)->linkedWalkGroup = 0;
             }
             trickyState->substate = TRICKY_FLAME_FINDING_IN;
@@ -4522,7 +4522,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
             target = &trickyState->flameNode1->x;
             if (trickyState->targetPosPtr != target) {
                 trickyState->targetPosPtr = target;
-                TRICKY_CLEAR_TARGET_DIRTY(trickyState);
+                TRICKY_INVALIDATE_PATH_PATCHES(trickyState);
                 (trickyState)->linkedWalkGroup = 0;
             }
             trickyState->substate = TRICKY_FLAME_FINDING_OUT;
