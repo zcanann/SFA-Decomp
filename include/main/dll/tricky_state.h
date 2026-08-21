@@ -291,6 +291,30 @@ typedef struct TrickyState {
             TrickyScratch cannonballScratch710;
             u8 cannonballPad714[0x71C - 0x714];
         };
+        struct {
+            s32 circlingDirection;
+            s32 circlingAngle;
+            f32 circlingTargetX;
+            f32 circlingTargetY;
+            f32 circlingTargetZ;
+            u8 circlingPad714[0x71C - 0x714];
+        };
+        struct {
+            TrickyScratch tumbleweedCountLatch;
+            f32 tumbleweedTargetX;
+            f32 tumbleweedTargetY;
+            f32 tumbleweedTargetZ;
+            GameObject* tumbleweedTargetObj;
+            u8 tumbleweedPad714[0x71C - 0x714];
+        };
+        struct {
+            f32 secretDigPressTimer;
+            f32 secretDigOriginX;
+            f32 secretDigOriginZ;
+            struct RomCurveDef* secretDigCurve;
+            f32 secretDigWhineTimer;
+            u8 secretDigPad714[0x71C - 0x714];
+        };
         GameObject* flameChildren[7]; /* flame/dig helpers spawned and retired as one seven-object group */
     };
     union {
@@ -422,6 +446,21 @@ STATIC_ASSERT(offsetof(TrickyState, fetchCarryDelayTimer) == 0x704);
 STATIC_ASSERT(offsetof(TrickyState, fetchThrowRetryTimer) == 0x708);
 STATIC_ASSERT(offsetof(TrickyState, cannonballStartCurve) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, cannonballRollSfxTimer) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, circlingDirection) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, circlingAngle) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, circlingTargetX) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, circlingTargetY) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, circlingTargetZ) == 0x710);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedCountLatch) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetX) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetY) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetZ) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetObj) == 0x710);
+STATIC_ASSERT(offsetof(TrickyState, secretDigPressTimer) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, secretDigOriginX) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, secretDigOriginZ) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, secretDigCurve) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, secretDigWhineTimer) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, statusFlags) == 0x58);
 STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
 STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);

@@ -4021,21 +4021,22 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
     switch (state->substate) {
     case 0:
         newBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
-        state->scratch700.nib.hi = newBit;
-        state->scratch710.ptr = NULL;
+        state->tumbleweedCountLatch.nib.hi = newBit;
+        state->tumbleweedTargetObj = NULL;
         state->substate = 1;
     case 1:
         currentBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
-        bitIndex = state->scratch700.nib.hi;
+        bitIndex = state->tumbleweedCountLatch.nib.hi;
         if (bitIndex != currentBit) {
-            state->scratch700.nib.hi++;
+            state->tumbleweedCountLatch.nib.hi++;
             **(u8**)state -= 2;
         }
         targetPos = NW_mammoth_getSpawnPosition(state->followObj);
         trackedObj = tumbleweedbush_findNearestActive(targetPos);
         if (trackedObj != 0 && **(u8**)state != 0) {
-            if (trackedObj != state->scratch710.obj && (u8*)state->targetPosPtr != (u8*)&state->scratch704) {
-                state->targetPosPtr = &state->scratch704.f;
+            if (trackedObj != state->tumbleweedTargetObj &&
+                (u8*)state->targetPosPtr != (u8*)&state->tumbleweedTargetX) {
+                state->targetPosPtr = &state->tumbleweedTargetX;
                 {
                     u32 mask;
                     u32 flags = state->stateFlags;
@@ -4052,9 +4053,9 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
                 dz = dz / distance;
             }
             distance = 50.0f;
-            state->scratch704.f = -(distance * dx - trackedObj->anim.worldPosX);
-            state->scratch708.f = trackedObj->anim.worldPosY;
-            state->scratch70C.f = -(distance * dz - trackedObj->anim.worldPosZ);
+            state->tumbleweedTargetX = -(distance * dx - trackedObj->anim.worldPosX);
+            state->tumbleweedTargetY = trackedObj->anim.worldPosY;
+            state->tumbleweedTargetZ = -(distance * dz - trackedObj->anim.worldPosZ);
             if (trickyUpdateMovementState(obj, 5.0f, state) == 0) {
                 if (0.0f == state->waterLevel) {
                     inWater = 0;
