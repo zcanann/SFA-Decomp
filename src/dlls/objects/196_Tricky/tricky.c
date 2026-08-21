@@ -170,6 +170,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_VERTICAL_MOVE          0x80  /* apply verticalDelta to localPosY */
 #define TRICKY_STATE_FLAG_ROTATE                 0x100 /* interpolate rotation toward targetYaw target */
 #define TRICKY_STATE_FLAG_COMMAND_ACTIVE         0x10u
+#define TRICKY_STATE_FLAG_GROUND_SNAP            0x2000u
 #define TRICKY_STATE_FLAG_RECALL_REQUEST         0x10000u
 #define TRICKY_STATE_FLAG_HEEL_REQUEST           0x20000u
 #define TRICKY_STATE_FLAG_GUARD_REQUEST          0x40000u
@@ -182,6 +183,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_TURN_SELECT_CLEAR_MASK      0xef2fffff
 #define TRICKY_STATE_TURN_RIGHT_FLAGS            0x900000LL
 #define TRICKY_STATE_TURN_LEFT_FLAGS             0x500000LL
+#define TRICKY_STATE_DIG_TUNNEL_FLAGS            0x2010LL
 #define TRICKY_STATE_FLAG_TURNING_U32            0x10000000
 #define TRICKY_STATE_FLAG_TURNING                0x10000000LL
 #define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32   0x20000000U
@@ -822,7 +824,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     if (state->groundSnapCounter != 0) {
         state->groundSnapCounter -= 1;
         doGroundSnap = 1;
-    } else if ((state->stateFlags & 0x2000) != 0) {
+    } else if ((state->stateFlags & TRICKY_STATE_FLAG_GROUND_SNAP) != 0) {
         doGroundSnap = 1;
     }
 
@@ -2172,7 +2174,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         }
     }
     if (state->movementState < 5) {
-        state->stateFlags &= ~0x2000LL;
+        state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_GROUND_SNAP;
     }
     trickyDebugPrint(debugStrings + TRICKY_DBG_MOVEMENT_STATE, state->movementState);
     switch (state->movementState) {
@@ -2292,7 +2294,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         break;
                     case 2:
                     case 7:
-                        state->stateFlags = state->stateFlags | 0x2000;
+                        state->stateFlags = state->stateFlags | TRICKY_STATE_FLAG_GROUND_SNAP;
                     default:
                         state->movementState = TRICKY_MOVE_WALK_NODES;
                     }
@@ -2401,10 +2403,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 case 2:
                 case 7:
                     prod = state->stateFlags;
-                    if ((prod & 0x2000) != 0) {
-                        state->stateFlags = prod & ~0x2000LL;
+                    if ((prod & TRICKY_STATE_FLAG_GROUND_SNAP) != 0) {
+                        state->stateFlags = prod & ~(u64)TRICKY_STATE_FLAG_GROUND_SNAP;
                     } else {
-                        state->stateFlags = prod | 0x2000;
+                        state->stateFlags = prod | TRICKY_STATE_FLAG_GROUND_SNAP;
                     }
                     break;
                 }
@@ -5017,11 +5019,11 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         pos = (u8*)&((RomCurveDef*)state->scratch700.ptr)->x;
         trickyUpdateApproachSpeed(obj, 5.0f, state, (f32*)pos, 1);
         if (moveTricky(obj, (f32*)pos) == 0) {
-            state->stateFlags |= 0x2010;
+            state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
             state->substate = 3;
         } else {
             if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) == 0) {
-                state->stateFlags |= 0x2010;
+                state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
             }
         }
         break;
@@ -5124,7 +5126,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                 trickyRequestMove(obj, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
                 trickyDebugPrint((char*)(base + TRICKY_DBG_OUT_OF_WATER));
             }
-            state->stateFlags &= ~0x2010;
+            state->stateFlags &= ~TRICKY_STATE_DIG_TUNNEL_FLAGS;
             state->substate = 7;
         }
         break;
@@ -5404,7 +5406,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         state->homePosY = found->anim.worldPosY;
         state->homePosZ = found->anim.worldPosZ;
         state->stateFlags |= (u64)TRICKY_STATE_FLAG_POSITION_RELOCATED;
-        state->stateFlags &= ~0x2000LL;
+        state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_GROUND_SNAP;
     } else {
         state->cooldownA -= timeDelta;
         if (state->cooldownA < 0.0f) {
@@ -7375,7 +7377,7 @@ void Tricky_update(GameObject* obj) {
             trickyState->prevSpeed = z;
             trickyState->speed = z;
             trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_POSITION_RELOCATED;
-            trickyState->stateFlags &= ~(u64)0x2000;
+            trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_GROUND_SNAP;
             if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
                 u8* childCursor;
 
