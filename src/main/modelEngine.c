@@ -509,8 +509,9 @@ char sModelEngineTimerDotText[] = ".";
 #define MODELENGINE_TIMER_RUNNING   4
 
 extern ResourceDescriptor Carryable_funcs, boneParticleEffect_funcs, dll_19;
-extern ResourceDescriptor dll_219, dll_21B, dll_224, dll_28B, dll_2A3;
-extern ResourceDescriptor dll_2A4, dll_2E, dll_D3, expgfx_funcs;
+extern ResourceDescriptor gDll219ObjDescriptor, gDll21BObjDescriptor, gDll224ObjDescriptor, gDll28BObjDescriptor;
+extern ResourceDescriptor gDll2A3ObjDescriptor;
+extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor, expgfx_funcs;
 extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
@@ -1397,7 +1398,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gGrimbleObjDescriptor,
     (ResourceDescriptor*)&gTumbleWeedBushObjDescriptor,
     (ResourceDescriptor*)&gTumbleweedObjDescriptor,
-    &dll_D3,
+    &gDllD3ObjDescriptor,
     (ResourceDescriptor*)&gSkeetlaWallObjDescriptor,
     (ResourceDescriptor*)&gKaldachomObjDescriptor,
     (ResourceDescriptor*)&gKaldachomMeObjDescriptor,
@@ -1433,7 +1434,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gDoorF4ObjDescriptor,
     (ResourceDescriptor*)&gSidekickBallObjDescriptor,
     (ResourceDescriptor*)&gAreaObjDescriptor,
-    (ResourceDescriptor*)&dll_F7,
+    (ResourceDescriptor*)&gDllF7ObjDescriptor,
     (ResourceDescriptor*)&gLevelNameObjDescriptor,
     (ResourceDescriptor*)&gProjectileSwitchObjDescriptor,
     (ResourceDescriptor*)&gInvisibleHitSwitchObjDescriptor,
@@ -1723,9 +1724,9 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gVFP_LevelControlObjDescriptor,
     &gVFP_ObjCreatorObjDescriptor,
     &gVFP_MiniFireObjDescriptor,
-    &dll_219,
+    &gDll219ObjDescriptor,
     &gVFP_statueballObjDescriptor,
-    &dll_21B,
+    &gDll21BObjDescriptor,
     &gVFP_LaddersObjDescriptor,
     &gVFPLiftObjDescriptor,
     &gVFP_Block1ObjDescriptor,
@@ -1734,7 +1735,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gSeqPointObjDescriptor,
     &gVFPDragHeadObjDescriptor,
     &gVFP_coreplatObjDescriptor,
-    &dll_224,
+    &gDll224ObjDescriptor,
     &gVFP_flamepointObjDescriptor,
     &gVFP_lavapoolObjDescriptor,
     &gVFP_lavastarObjDescriptor,
@@ -1837,7 +1838,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gSPDrapeObjDescriptor,
     &gSPitembeamObjDescriptor,
     &gEarthWalkerObjDescriptor,
-    &dll_28B,
+    &gDll28BObjDescriptor,
     &gWCBouncyCraObjDescriptor,
     &gWCLevelContObjDescriptor,
     (ResourceDescriptor*)&gWCBeaconObjDescriptor,
@@ -1851,7 +1852,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gWCTempleDiaObjDescriptor,
     &gWCTempleBriObjDescriptor,
     (ResourceDescriptor*)&gWCFloorTileObjDescriptor,
-    (ResourceDescriptor*)&dll_299,
+    (ResourceDescriptor*)&gDll299ObjDescriptor,
     (ResourceDescriptor*)&gARWArwingObjDescriptor,
     (ResourceDescriptor*)&gArwingAndrossStuffObjDescriptor,
     (ResourceDescriptor*)&gARWArwingBoObjDescriptor,
@@ -1861,8 +1862,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gRingObjDescriptor,
     (ResourceDescriptor*)&gARWLevelConObjDescriptor,
     &gARWSpeedStrObjDescriptor,
-    &dll_2A3,
-    &dll_2A4,
+    &gDll2A3ObjDescriptor,
+    &gDll2A4ObjDescriptor,
     &gARWGeneratoObjDescriptor,
     &gARWSquadronObjDescriptor,
     &gARWProximitObjDescriptor,

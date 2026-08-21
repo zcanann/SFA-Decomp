@@ -43,6 +43,6 @@ void dll_21B_init(GameObject* obj, Dll21BPlacement* init);
 void dll_21B_release_nop(void);
 void dll_21B_initialise_nop(void);
 
-extern ObjectDescriptor dll_21B;
+extern ObjectDescriptor gDll21BObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_021B_H_ */

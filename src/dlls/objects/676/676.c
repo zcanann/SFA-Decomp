@@ -103,7 +103,7 @@ void dll_2A4_initialise_nop(void)
 {
 }
 
-ObjectDescriptor dll_2A4 = {
+ObjectDescriptor gDll2A4ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)dll_2A4_initialise_nop, (ObjectDescriptorCallback)dll_2A4_release_nop, 0,
     (ObjectDescriptorCallback)dll_2A4_init, (ObjectDescriptorCallback)dll_2A4_update,

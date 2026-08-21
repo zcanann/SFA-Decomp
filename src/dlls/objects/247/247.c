@@ -241,7 +241,7 @@ void dll_F7_release(void) {
 void dll_F7_initialise(void) {
 }
 
-ObjectDescriptor dll_F7 = {
+ObjectDescriptor gDllF7ObjDescriptor = {
     0,                                                /* reserved0 */
     0,                                                /* reserved1 */
     0,                                                /* reserved2 */

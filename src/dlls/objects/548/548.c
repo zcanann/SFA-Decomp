@@ -125,7 +125,7 @@ void dll_224_release_nop(void) {
 void dll_224_initialise_nop(void) {
 }
 
-ObjectDescriptor dll_224 = {
+ObjectDescriptor gDll224ObjDescriptor = {
     0,
     0,
     0,

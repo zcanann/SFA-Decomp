@@ -97,7 +97,7 @@ void dll_219_initialise_nop(void)
 {
 }
 
-ObjectDescriptor dll_219 = {
+ObjectDescriptor gDll219ObjDescriptor = {
     0,
     0,
     0,

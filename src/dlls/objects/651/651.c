@@ -138,7 +138,7 @@ void dll_28B_initialise(void)
     gDll28BSubstateHandlers[3] = dll_28B_substateHandler3;
 }
 
-ObjectDescriptor dll_28B = {
+ObjectDescriptor gDll28BObjDescriptor = {
     0,
     0,
     0,

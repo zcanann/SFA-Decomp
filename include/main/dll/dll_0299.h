@@ -21,7 +21,7 @@ typedef struct Dll299Setup
 STATIC_ASSERT(sizeof(Dll299State) == 2);
 STATIC_ASSERT(offsetof(Dll299Setup, id) == 0x1E);
 
-extern ObjectDescriptor dll_299;
+extern ObjectDescriptor gDll299ObjDescriptor;
 extern DllA6Interface** gDll299Resource;
 
 int dll_299_getExtraSize_ret_2(void);

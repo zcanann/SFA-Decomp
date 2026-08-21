@@ -29,6 +29,6 @@ void dll_219_init(GameObject* obj, Dll219Setup* placement);
 void dll_219_release_nop(void);
 void dll_219_initialise_nop(void);
 
-extern ObjectDescriptor dll_219;
+extern ObjectDescriptor gDll219ObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_0219_H_ */

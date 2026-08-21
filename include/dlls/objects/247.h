@@ -16,6 +16,6 @@ void dll_F7_init(GameObject* obj, DllF7Placement* placement);
 void dll_F7_release(void);
 void dll_F7_initialise(void);
 
-extern ObjectDescriptor dll_F7;
+extern ObjectDescriptor gDllF7ObjDescriptor;
 
 #endif /* DLLS_OBJECTS_247_H_ */
