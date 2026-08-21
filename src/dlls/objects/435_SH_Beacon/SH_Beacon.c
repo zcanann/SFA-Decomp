@@ -136,7 +136,7 @@ void sh_beacon_update(GameObject* obj) {
         }
         tricky = getTrickyObject();
         if ((tricky != NULL) && ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)) {
-            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, 1, 4);
+            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY, 4);
         }
     } else {
         if ((mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0) || (placement->litGameBit != GAMEBIT_Always1)) {

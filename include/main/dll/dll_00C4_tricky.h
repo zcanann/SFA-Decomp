@@ -5,6 +5,9 @@
 
 #define TRICKY_ITEM_ID_COUNT 5
 
+#define TRICKY_COMMAND_KIND_NORMAL   0
+#define TRICKY_COMMAND_KIND_PRIORITY 1
+
 typedef struct TrickyItemIdList {
     s32 ids[TRICKY_ITEM_ID_COUNT];
 } TrickyItemIdList;

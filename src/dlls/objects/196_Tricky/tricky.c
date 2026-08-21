@@ -486,7 +486,7 @@ int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
             f32 dist = getXZDistanceSquared(&state->playerObj->anim.worldPosX,
                                             &((TrickyCommand*)(ref + 0x748))->targetObj->anim.worldPosX);
 
-            if (((TrickyCommand*)(ref + 0x748))->kind == 1) {
+            if (((TrickyCommand*)(ref + 0x748))->kind == TRICKY_COMMAND_KIND_PRIORITY) {
                 if (dist < bestPriorityDist) {
                     bestPriorityDist = dist;
                     bestPriorityTarget = ((TrickyCommand*)(ref + 0x748))->targetObj;
