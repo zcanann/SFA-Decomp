@@ -131,9 +131,9 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOffBit) == 0x18);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOnBit) == 0x1A);
 
-static const u16 lbl_803E23C0[1] = {0x0A08};
+static const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
 static const TrickySfxPair sTrickyImpressSfxPair = {0x0356, 0x035C};
-static const u16 lbl_803E23C8[2] = {0x035A, 0x0351};
+static const u16 gTrickyQuestPromptSfxIds[2] = {0x035A, 0x0351};
 static const u16 gTrickySubstateSfxIdPairA[2] = {0x035C, 0x0361};
 static const u16 gTrickySubstateSfxIdPairB[2] = {0x035C, 0x0361};
 static const u16 gSkeetlaFootstepSfxIds01[2] = {0x0361, 0x0365};
@@ -6886,7 +6886,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     promptA = false;
     promptB = false;
     promptC = false;
-    promptTable[0] = *(u32*)lbl_803E23C8;
+    promptTable[0] = *(u32*)gTrickyQuestPromptSfxIds;
     bitVal = mainGetBit(GAMEBIT_Tricky_Usable);
     if (bitVal != 0) {
         if ((state->stateFlags & 0x10) != 0) {
@@ -7960,7 +7960,7 @@ void Tricky_init(GameObject* obj) {
     u16 startPath[4];
 
     state = obj->extra;
-    startPath[0] = lbl_803E23C0[0];
+    startPath[0] = gTrickyInitialPathControlStartId[0];
     mainSetBits(GAMEBIT_TrickyTalk, 0xff);
     if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
         mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
