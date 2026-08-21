@@ -371,8 +371,8 @@ f32* trickyGetQueuedPathParticlePos(GameObject* obj) {
 }
 
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes) {
-    int* objs;
-    int* tmpList;
+    GameObject** objs;
+    GameObject** tmpList;
     GameObject* closest;
     int i;
     f32 bestDistSq;
@@ -380,7 +380,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 
     bestDistSq = maxRadius;
     closest = 0;
-    tmpList = (int*)objGetAllOfType(3, &count);
+    tmpList = (GameObject**)objGetAllOfType(3, &count);
     bestDistSq = bestDistSq * bestDistSq;
     i = 0;
     objs = tmpList;
@@ -391,13 +391,13 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
         int v1, v2;
         s32 g1, g2;
 
-        if (dll_19_isBaddieControlObject((GameObject*)(*objs)) != 0) {
-            obj_extra = (*gBaddieControlInterface)->getHealthFraction((GameObject*)*objs);
+        if (dll_19_isBaddieControlObject(*objs) != 0) {
+            obj_extra = (*gBaddieControlInterface)->getHealthFraction(*objs);
         } else {
-            obj_extra = enemy_getHealthFraction((GameObject*)*objs);
+            obj_extra = enemy_getHealthFraction(*objs);
         }
 
-        data = (int*)((GameObject*)*objs)->anim.placementData;
+        data = (int*)(*objs)->anim.placementData;
         g1 = *(s16*)((char*)data + 0x18);
         if (g1 == -1) {
             v1 = 0;
@@ -411,11 +411,11 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
             v2 = mainGetBit(g2);
         }
 
-        if (objIsObjectType((GameObject*)*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > 0.0f && v1 == 0 && v2 != 0) {
-            if (((GameObject*)*objs)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
+        if (objIsObjectType(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > 0.0f && v1 == 0 && v2 != 0) {
+            if ((*objs)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
                 if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0) {
                     if (allowSpecialTypes == 0) {
-                        s16 m = ((GameObject*)*objs)->anim.romDefNo;
+                        s16 m = (*objs)->anim.romDefNo;
                         if (m == TRICKY_SEQID_VAMBAT || m == TRICKY_SEQID_WB ||
                             m == DLL1B5_SEQUENCE_ID_SC_BABY_LIGHTFOOT || m == TRICKY_SEQID_PINPON) {
                             continue;
@@ -423,10 +423,10 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
                     }
                     {
                         f32 dist =
-                            vec3f_distanceSquared(&origin->anim.worldPosX, &((GameObject*)*objs)->anim.worldPosX);
+                            vec3f_distanceSquared(&origin->anim.worldPosX, &(*objs)->anim.worldPosX);
                         if (dist < bestDistSq) {
                             bestDistSq = dist;
-                            closest = (GameObject*)*objs;
+                            closest = *objs;
                         }
                     }
                 }
