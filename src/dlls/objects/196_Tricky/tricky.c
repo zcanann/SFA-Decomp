@@ -226,18 +226,18 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_COMMAND_FROM_STATE_BASE(base)             ((TrickyCommand*)((base) + offsetof(TrickyState, commands)))
 #define TRICKY_COMMAND_TTL_FROM_STATE_BASE(base)         (*(s8*)((base) + offsetof(TrickyState, commands[0].ttl)))
 #define TRICKY_FLAME_CHILD_FROM_STATE_BASE(base)         (*(GameObject**)((u8*)(base) + offsetof(TrickyState, flameChildren)))
-#define TRICKY_RENDER_PATH_POINT_X_OFFSET                0x3D8
-#define TRICKY_RENDER_PATH_POINT_Y_OFFSET                0x3DC
-#define TRICKY_RENDER_PATH_POINT_Z_OFFSET                0x3E0
-#define TRICKY_RENDER_PATH_POINT_X_FROM_STATE_BASE(base) ((float*)((base) + TRICKY_RENDER_PATH_POINT_X_OFFSET))
-#define TRICKY_RENDER_PATH_POINT_Y_FROM_STATE_BASE(base) ((float*)((base) + TRICKY_RENDER_PATH_POINT_Y_OFFSET))
-#define TRICKY_RENDER_PATH_POINT_Z_FROM_STATE_BASE(base) ((float*)((base) + TRICKY_RENDER_PATH_POINT_Z_OFFSET))
+#define TRICKY_RENDER_PATH_POINT_X_FROM_STATE_BASE(base)                                                               \
+    ((float*)((base) + offsetof(TrickyState, pathPointPositions[0].x)))
+#define TRICKY_RENDER_PATH_POINT_Y_FROM_STATE_BASE(base)                                                               \
+    ((float*)((base) + offsetof(TrickyState, pathPointPositions[0].y)))
+#define TRICKY_RENDER_PATH_POINT_Z_FROM_STATE_BASE(base)                                                               \
+    ((float*)((base) + offsetof(TrickyState, pathPointPositions[0].z)))
 #define TRICKY_PATCH_ID_FROM_STATE_BASE(base)            (*(s16*)((base) + offsetof(TrickyState, patch)))
 #define TRICKY_PATCH_TARGET_X_FROM_STATE_BASE(base)      (*(f32*)((base) + offsetof(TrickyState, patchTargets[0].x)))
 #define TRICKY_PATCH_TARGET_Y_FROM_STATE_BASE(base)      (*(f32*)((base) + offsetof(TrickyState, patchTargets[0].y)))
 #define TRICKY_PATCH_TARGET_Z_FROM_STATE_BASE(base)      (*(f32*)((base) + offsetof(TrickyState, patchTargets[0].z)))
 #define OBJFSA_PATCH_GROUP_ID_FROM_INFO_BASE(base)       (*(u16*)((base) + offsetof(ObjfsaWalkGroupPatchInfo, patchGroupIds)))
-#define TRICKY_CURVE_LINK_IDS_OFFSET                     0x1C
+#define TRICKY_CURVE_LINK_IDS_OFFSET                     offsetof(RomCurveDef, linkIds)
 #define TRICKY_CURVE_LINK_ID_FROM_NODE_OFFSET(node, off) (*(int*)((node) + (off) + TRICKY_CURVE_LINK_IDS_OFFSET))
 #define TRICKY_CURVE_LINK_ID_FROM_NODE_INDEX(node, idx)  (((int*)((char*)(node) + TRICKY_CURVE_LINK_IDS_OFFSET))[idx])
 
