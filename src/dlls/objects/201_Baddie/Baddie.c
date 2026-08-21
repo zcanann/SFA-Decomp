@@ -2817,7 +2817,7 @@ void enemy_update(GameObject* obj)
     }
     if ((state->flags2E4 & 0x80000) != 0)
     {
-        if (tricky != NULL && mainGetBit(0x9e) != 0)
+        if (tricky != NULL && mainGetBit(GAMEBIT_SH_TrickyFindSecretUnlocked) != 0)
         {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }

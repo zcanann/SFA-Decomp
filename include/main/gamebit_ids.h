@@ -350,6 +350,7 @@ enum GameBitId {
     GAMEBIT_Always1 = 0x95,                              /* table 0; used for always-available shop items */
     GAMEBIT_Always0 = 0x96,                              /* table 0; used for never-available (unused) shop items */
     GAMEBIT_SH_KilledBloop7 = 0x99,                      /* table 1 */
+    GAMEBIT_SH_TrickyFindSecretUnlocked = 0x9E,           /* table 2; set by SH_queenear after the Queen EarthWalker accepts all required white grubtubs; unlocks Tricky's Find Secret prompt/dialogue consumers (distinct from Tricky ability-mask bits) */
     GAMEBIT_NpcTalkRelated009F = 0x9F,                   /* table 0; related to talking to NPCs */
     GAMEBIT_GalleonRelated00A0 = 0xA0,                   /* table 1 */
     GAMEBIT_WM_GalleonRelated00A4 = 0xA4,                /* table 1 */
