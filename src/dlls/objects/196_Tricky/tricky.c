@@ -182,6 +182,10 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_PATCH_TARGET_Z_FROM_STATE_BASE(base) (*(f32*)((base) + offsetof(TrickyState, patchTargets[0].z)))
 #define OBJFSA_PATCH_GROUP_ID_FROM_INFO_BASE(base) \
     (*(u16*)((base) + offsetof(ObjfsaWalkGroupPatchInfo, patchGroupIds)))
+#define TRICKY_CURVE_LINK_IDS_OFFSET 0x1C
+#define TRICKY_CURVE_LINK_ID_FROM_NODE_OFFSET(node, off) (*(int*)((node) + (off) + TRICKY_CURVE_LINK_IDS_OFFSET))
+#define TRICKY_CURVE_LINK_ID_FROM_NODE_INDEX(node, idx) \
+    (((int*)((char*)(node) + TRICKY_CURVE_LINK_IDS_OFFSET))[idx])
 
 /* The one partfx effect emitted along Tricky's queued impress path. */
 #define TRICKY_PATH_PARTFX 0x533
@@ -4921,11 +4925,11 @@ static inline void trickyAdvanceNode(TrickyState* state) {
     off = 0;
     for (k = 4; k != 0; k--) {
         linkNode = state->scratch704.ptr;
-        linkId = *(int*)(linkNode + off + 0x1c);
+        linkId = TRICKY_CURVE_LINK_ID_FROM_NODE_OFFSET(linkNode, off);
         if (linkId > -1 && linkId != ((RomCurveDef*)state->scratch700.ptr)->id) {
             state->scratch700.ptr = linkNode;
             state->scratch704.ptr =
-                (u8*)(*gRomCurveInterface)->getById(((int*)((char*)state->scratch704.ptr + 0x1c))[idx]);
+                (u8*)(*gRomCurveInterface)->getById(TRICKY_CURVE_LINK_ID_FROM_NODE_INDEX(state->scratch704.ptr, idx));
             break;
         }
         off += 4;
@@ -5052,12 +5056,12 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                 off = 0;
                 for (k = 4; k != 0; k--) {
                     linkNode = state->scratch704.ptr;
-                    linkId = *(int*)(linkNode + off + 0x1c);
+                    linkId = TRICKY_CURVE_LINK_ID_FROM_NODE_OFFSET(linkNode, off);
                     if (linkId > -1 && linkId != ((RomCurveDef*)state->scratch700.ptr)->id) {
                         state->scratch700.ptr = linkNode;
                         state->scratch704.ptr =
                             (u8*)(*gRomCurveInterface)
-                                ->getById(((int*)((char*)state->scratch704.ptr + 0x1c))[idx]);
+                                ->getById(TRICKY_CURVE_LINK_ID_FROM_NODE_INDEX(state->scratch704.ptr, idx));
                         break;
                     }
                     off += 4;
