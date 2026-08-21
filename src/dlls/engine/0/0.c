@@ -25,6 +25,7 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "main/gametext_color_api.h"
 #include "main/dll/cmenu_item_table.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"
@@ -104,21 +105,6 @@
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
-typedef struct HudTrickyInterface
-{
-    void* unknown00[8];
-    int (*getAvailableCommands)(GameObject* tricky);
-    int (*updateSideCommandPrompts)(GameObject* tricky);
-    void* unknown28[8];
-    int (*getCurrentCommandType)(GameObject* tricky, int* commandType);
-} HudTrickyInterface;
-
-STATIC_ASSERT(offsetof(HudTrickyInterface, getAvailableCommands) == 0x20);
-STATIC_ASSERT(offsetof(HudTrickyInterface, updateSideCommandPrompts) == 0x24);
-STATIC_ASSERT(offsetof(HudTrickyInterface, getCurrentCommandType) == 0x48);
-
-#define HUD_TRICKY_INTERFACE(tricky) ((HudTrickyInterface*)*((GameObject*)(tricky))->anim.dll)
-
 u16 lbl_803DBA30 = 420;
 f32 gPauseMenuHoloPosY = 0.3f;
 f32 gPauseMenuHoloPosZ = -8.0f;
@@ -4106,8 +4092,8 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
     hudDrawTimedElement(obj, &gHudItemInfoPopup);
     if (tricky != NULL)
     {
-        gTrickyHudItemMask = HUD_TRICKY_INTERFACE(tricky)->updateSideCommandPrompts(tricky);
-        gTrickyHudActionMask = HUD_TRICKY_INTERFACE(tricky)->getAvailableCommands(tricky);
+        gTrickyHudItemMask = TRICKY_INTERFACE(tricky)->updateSideCommandPrompts(tricky);
+        gTrickyHudActionMask = TRICKY_INTERFACE(tricky)->getAvailableCommands(tricky);
     }
     else
     {
@@ -4119,7 +4105,7 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
         (player->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
         tricky != NULL && getHudHiddenFrameCount() == 0)
     {
-        HUD_TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
+        TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)
