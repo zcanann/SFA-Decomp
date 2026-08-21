@@ -600,11 +600,11 @@ int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     bestFallbackTarget = NULL;
 
     for (i = 0, ref = (int)state; i < state->commandCount; ref += sizeof(TrickyCommand), i++) {
-        if (((TrickyState*)ref)->commands[0].type == commandType) {
+        if (((TrickyState*)ref)->commands[0].commandType == commandType) {
             f32 dist = getXZDistanceSquared(&state->playerObj->anim.worldPosX,
                                             &((TrickyState*)ref)->commands[0].targetObj->anim.worldPosX);
 
-            if (((TrickyState*)ref)->commands[0].kind == TRICKY_COMMAND_KIND_PRIORITY) {
+            if (((TrickyState*)ref)->commands[0].commandKind == TRICKY_COMMAND_KIND_PRIORITY) {
                 if (dist < bestPriorityDist) {
                     bestPriorityDist = dist;
                     bestPriorityTarget = ((TrickyState*)ref)->commands[0].targetObj;
@@ -6924,16 +6924,16 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
     count = state->commandCount;
     for (remaining = count; remaining > 0; remaining--) {
         if (((TrickyState*)commandCursor)->commands[0].targetObj == targetObj) {
-            state->commands[commandIndex].ttl = TRICKY_COMMAND_TTL_FRAMES;
+            state->commands[commandIndex].ttlFrames = TRICKY_COMMAND_TTL_FRAMES;
             return;
         }
         commandCursor += sizeof(TrickyCommand);
         commandIndex++;
     }
     state->commands[count].targetObj = targetObj;
-    state->commands[state->commandCount].kind = commandKind;
-    state->commands[state->commandCount].type = commandType;
-    state->commands[state->commandCount].ttl = TRICKY_COMMAND_TTL_FRAMES;
+    state->commands[state->commandCount].commandKind = commandKind;
+    state->commands[state->commandCount].commandType = commandType;
+    state->commands[state->commandCount].ttlFrames = TRICKY_COMMAND_TTL_FRAMES;
     state->commandCount++;
 }
 
@@ -6987,7 +6987,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         if (state->commandRequestBits != 0) {
             for (i = 0; i < state->commandCount; i++) {
                 ref = (int)state + i * sizeof(TrickyCommand);
-                cmdByte = ((TrickyState*)ref)->commands[0].kind;
+                cmdByte = ((TrickyState*)ref)->commands[0].commandKind;
                 if (cmdByte == '\0') {
                     if (((TrickyState*)ref)->commands[0].targetObj->anim.romDefNo == TRICKY_OBJ_BLUE_MUSHROOM) {
                         promptB = true;
@@ -7521,7 +7521,7 @@ void Tricky_update(GameObject* obj) {
         commandCursor = state;
         count = trickyState->commandCount;
         for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
-            if (((TrickyState*)commandCursor)->commands[0].type == cmd) {
+            if (((TrickyState*)commandCursor)->commands[0].commandType == cmd) {
                 found = 1;
                 break;
             }
@@ -7611,7 +7611,7 @@ void Tricky_update(GameObject* obj) {
                         commandCursor = state;
                         count = trickyState->commandCount;
                         for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
-                            if (((TrickyState*)commandCursor)->commands[0].type == 3) {
+                            if (((TrickyState*)commandCursor)->commands[0].commandType == 3) {
                                 played = 1;
                             }
                         }
@@ -7893,7 +7893,7 @@ void Tricky_update(GameObject* obj) {
         u8* commandCursor = (u8*)state + i * sizeof(TrickyCommand);
 
         for (; i >= 0; commandCursor -= sizeof(TrickyCommand), i--) {
-            s8* commandTtl = (s8*)&((TrickyState*)commandCursor)->commands[0].ttl;
+            s8* commandTtl = (s8*)&((TrickyState*)commandCursor)->commands[0].ttlFrames;
 
             *commandTtl -= 1;
             if (*commandTtl == 0) {

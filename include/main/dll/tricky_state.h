@@ -69,11 +69,13 @@ typedef struct TrickyPackedSlots {
     u8 d : 2;
 } TrickyPackedSlots;
 
+#define MAX_COMM_PRESENT 10
+
 typedef struct TrickyCommand {
     GameObject* targetObj;
-    s8 kind;
-    s8 type;
-    u8 ttl;
+    s8 commandKind;
+    s8 commandType;
+    u8 ttlFrames;
     u8 pad7;
 } TrickyCommand;
 
@@ -365,8 +367,8 @@ typedef struct TrickyState {
     f32 moveHoldTimer; /* f32 countdown primed to randomGetRange(120,240) on entering idle move 0x29; counted down in move 0x2a and on reaching the floor advances to move 0x2b or 0x2c (tricky_substates) */
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
     f32 sparkleFxTimer;
-    TrickyCommand commands[10];
-    u8 commandCount; /* number of queued Tricky commands (0..10); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
+    TrickyCommand commands[MAX_COMM_PRESENT];
+    u8 commandCount; /* number of queued Tricky commands (0..MAX_COMM_PRESENT); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
     f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero, re-primed to gTrickyTimer600Frames; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
