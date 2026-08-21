@@ -6,6 +6,7 @@
  */
 #include "dlls/objects/400_ECSH_Cup.h"
 
+#include "dlls/objects/399_ECSH_Shrine.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
@@ -42,7 +43,6 @@ typedef enum ECSHCupAnimState {
     ECSH_CUP_ANIM_STATE_RUN_ACTIVE_SEQUENCE = 8,
 } ECSHCupAnimState;
 
-#define ECSH_CUP_SHRINE_OBJECT_GROUP      0xB
 #define ECSH_CUP_PARTFX_IDLE              0x270
 #define ECSH_CUP_PARTFX_TRANSITION        0x271
 #define ECSH_CUP_ACTIVE_HIT_VOLUME_SLOT   10
@@ -109,8 +109,7 @@ void ecshCup_update(GameObject* obj) {
     mode = -1;
     spiritCup = 0;
     if (gECSHCupShrineObject == NULL) {
-        gECSHCupShrineObject =
-            objGetNearestTypeTo(ECSH_CUP_SHRINE_OBJECT_GROUP, obj, &searchDistance);
+        gECSHCupShrineObject = objGetNearestTypeTo(ECSH_SHRINE_OBJECT_GROUP, obj, &searchDistance);
     }
     if (gECSHCupShrineObject != NULL && gECSHCupShrineObject->anim.classId != 0) {
         (*(ECSHShrineCallbackTable**)gECSHCupShrineObject->anim.dll)->getPhaseAndSpiritCup(&mode, &spiritCup);
@@ -250,8 +249,7 @@ void ecshCup_init(GameObject* obj, const ECSHCupPlacement* placement) {
     obj->anim.renderAlpha = 0;
     state->particleTimer = 0.0f;
     if (gECSHCupShrineObject == NULL) {
-        gECSHCupShrineObject =
-            objGetNearestTypeTo(ECSH_CUP_SHRINE_OBJECT_GROUP, obj, &searchDistance);
+        gECSHCupShrineObject = objGetNearestTypeTo(ECSH_SHRINE_OBJECT_GROUP, obj, &searchDistance);
     }
     ObjHits_EnableObject(obj);
     ObjHits_SetHitVolumeSlot(&obj->anim, ECSH_CUP_INACTIVE_HIT_VOLUME_SLOT, 0, 0);
