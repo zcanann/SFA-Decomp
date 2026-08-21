@@ -6668,25 +6668,25 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     return 0;
 }
 
-void Tricky_requestRecall(int* obj) {
-    TrickyState* state = ((GameObject*)obj)->extra;
+void Tricky_requestRecall(GameObject* obj) {
+    TrickyState* state = obj->extra;
     if (mainGetBit(GAMEBIT_Tricky_Usable)) {
         state->stateFlags |= 0x10000LL;
     }
 }
 
-int Tricky_isGuarding(int* obj) {
-    u8 mode = ((TrickyState*)((GameObject*)obj)->extra)->stateIndex;
+int Tricky_isGuarding(GameObject* obj) {
+    u8 mode = ((TrickyState*)obj->extra)->stateIndex;
     if (mode == 8 || mode == 0xe) {
         return 1;
     }
     return 0;
 }
 
-int Tricky_isPlayingBall(int* obj) {
+int Tricky_isPlayingBall(GameObject* obj) {
     u8 mode;
     int result;
-    mode = ((TrickyState*)((GameObject*)obj)->extra)->stateIndex;
+    mode = ((TrickyState*)obj->extra)->stateIndex;
     switch (mode) {
     case 5:
         result = 1;
@@ -6728,8 +6728,8 @@ int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj) {
     return 1;
 }
 
-void Tricky_commandPlayBall(int* obj, int commandEnabled, GameObject* targetObj) {
-    TrickyState* state = ((GameObject*)obj)->extra;
+void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* targetObj) {
+    TrickyState* state = obj->extra;
 
     if (commandEnabled != 0) {
         if (state->stateIndex == TRICKY_STATE_BALL_ROLL) {
@@ -6764,11 +6764,11 @@ void Tricky_commandPlayBall(int* obj, int commandEnabled, GameObject* targetObj)
     }
 }
 
-u8 Tricky_getEnergyMax(int* obj) {
-    return ((TrickyState*)((GameObject*)obj)->extra)->progressPtr[1];
+u8 Tricky_getEnergyMax(GameObject* obj) {
+    return ((TrickyState*)obj->extra)->progressPtr[1];
 }
-u8 Tricky_getEnergy(int* obj) {
-    return ((TrickyState*)((GameObject*)obj)->extra)->progressPtr[0];
+u8 Tricky_getEnergy(GameObject* obj) {
+    return ((TrickyState*)obj->extra)->progressPtr[0];
 }
 
 void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType) {
@@ -6802,8 +6802,8 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
     state->commandCount++;
 }
 
-int Tricky_getCurrentCommandType(int* obj, int* out) {
-    *out = ((TrickyState*)((GameObject*)obj)->extra)->commandPhase;
+int Tricky_getCurrentCommandType(GameObject* obj, int* out) {
+    *out = ((TrickyState*)obj->extra)->commandPhase;
     return 1;
 }
 
@@ -6996,7 +6996,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     return -1;
 }
 
-int Tricky_getAvailableCommands(void) {
+int Tricky_getAvailableCommands(GameObject* obj) {
     int r = 0;
     if (mainGetBit(GAMEBIT_Tricky_Usable) != 0) {
         r = TRICKY_ABILITY_FIND_SECRET | TRICKY_ABILITY_STAY;
