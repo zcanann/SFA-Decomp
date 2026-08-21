@@ -134,7 +134,7 @@ void CameraModeCombat_update(CameraObject* camera) {
             if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                 return;
             }
-            if (camera->targetFlags & 2) {
+            if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                 return;
             }
             (*gCameraInterface)->setTarget(0);
@@ -147,7 +147,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                 if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                     return;
                 }
-                if (camera->targetFlags & 2) {
+                if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                     return;
                 }
                 (*gCameraInterface)->setTarget(0);
@@ -161,7 +161,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                     if (target->anim.resetHitboxFlags & 0x40) {
                         return;
                     }
-                    if (camera->targetFlags & 2) {
+                    if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                         return;
                     }
                     (*gCameraInterface)->setTarget(0);
@@ -176,7 +176,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                             if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                                 return;
                             }
-                            if (camera->targetFlags & 2) {
+                            if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                                 return;
                             }
                             (*gCameraInterface)->setTarget(0);
@@ -212,7 +212,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                                 if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                                     return;
                                 }
-                                if (camera->targetFlags & 2) {
+                                if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                                     return;
                                 }
                                 (*gCameraInterface)->setTarget(0);

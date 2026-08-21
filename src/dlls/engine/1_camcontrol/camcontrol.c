@@ -130,7 +130,6 @@ enum CamcontrolReticleState {
 };
 
 enum CamcontrolTargetConstants {
-    CAMCONTROL_CAMERA_TARGET_FLAG_PROMPT_SUPPRESSED = 0x20,
     CAMCONTROL_HELP_TEXT_NONE = -1
 };
 
@@ -869,14 +868,15 @@ void camcontrol_applyQueuedAction(void) {
 }
 
 void Camera_applyTargetFlags(int targetFlagMode) {
-    gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags | ((targetFlagMode << 3) & 0x18));
+    gCamcontrolCamera->targetFlags =
+        (u8)(gCamcontrolCamera->targetFlags | ((targetFlagMode << 3) & CAMCONTROL_CAMERA_TARGET_FLAG_APPLY_MODE_MASK));
 }
 
 void Camera_setTargetFlag2(int enable) {
     if (enable != 0) {
-        gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags | 2);
+        gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags | CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT);
     } else {
-        gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags & ~2);
+        gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT);
     }
 }
 

@@ -152,7 +152,7 @@ void CameraModeStaffAnim_updateTargetAction(CameraObject* camera, GameObject* ta
     targetObj = (GameObject*)camera->currentTarget;
     if ((targetObj != NULL && (targetObj->anim.classId == 0x1c || targetObj->anim.classId == 0x2a) &&
          target->anim.classId == 1 && playerIsStaffActionPending(target) != 0) ||
-        (camera->targetFlags & 2) != 0) {
+        (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) != 0) {
         lockSlot = &camera->currentTarget;
         cam = *gCameraInterface;
         cam->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, sizeof(GameObject*), lockSlot, 0x3c, 0xff);
