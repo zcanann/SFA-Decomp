@@ -127,6 +127,10 @@ static const u16 gTrickySubstateSfxIdPairB[2] = {0x035C, 0x0361};
 static const u16 gSkeetlaFootstepSfxIds01[2] = {0x0361, 0x0365};
 static const u16 gSkeetlaFootstepSfxId2[1] = {0x0355};
 
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E2418;
+
 extern const char sTrickyShouldNeverStopCirclingError[];
 
 extern char sSidekickCommandDebugTextBlock[];
@@ -304,10 +308,10 @@ static inline int skeetla_isInWater(TrickyState* state) {
     if (0.0f == state->waterLevel) {
         return 0;
     }
-    if (-100000.0f == state->eventTime) {
+    if (lbl_803E2410 == state->eventTime) {
         return 1;
     }
-    if (state->currentTime - state->eventTime > 8.0f) {
+    if (state->currentTime - state->eventTime > lbl_803E2414) {
         return 1;
     }
     return 0;
@@ -440,6 +444,11 @@ void Tricky_emitQueuedPathParticles(u8* obj, u8* state) {
         ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x1000LL;
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803E2410 = -100000.0f;
+__declspec(section ".sdata2") f32 lbl_803E2414 = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E2418 = 340282346638528859811704183484516925440.0f;
+
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     f32 bestPriorityDist;
     f32 bestFallbackDist;
@@ -448,7 +457,7 @@ int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     GameObject* bestPriorityTarget;
     GameObject* bestFallbackTarget;
 
-    bestPriorityDist = 340282346638528859811704183484516925440.0f;
+    bestPriorityDist = lbl_803E2418;
     bestPriorityTarget = NULL;
     bestFallbackDist = bestPriorityDist;
     bestFallbackTarget = NULL;
@@ -653,9 +662,9 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
     if (((s8)state->heightUpdateActive != 0) && (state->heightTracking == 0u)) {
         if (0.0f == state->waterLevel) {
             doHeightSnap = 0;
-        } else if (-100000.0f == state->eventTime) {
+        } else if (lbl_803E2410 == state->eventTime) {
             doHeightSnap = 1;
-        } else if (state->currentTime - state->eventTime > 8.0f) {
+        } else if (state->currentTime - state->eventTime > lbl_803E2414) {
             doHeightSnap = 1;
         } else {
             doHeightSnap = 0;
@@ -1334,7 +1343,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
     state = obj->extra;
     curves = (*gRomCurveInterface)->getCurves(&count);
 
-    init = 340282346638528859811704183484516925440.0f;
+    init = lbl_803E2418;
     bd = bestDistances;
     rp = outRoutes;
     for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++) {
@@ -2649,7 +2658,7 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
 
     nearest = NULL;
     best = NULL;
-    minDist = 340282346638528859811704183484516925440.0f;
+    minDist = lbl_803E2418;
 
     if (trickyShouldGoToWarpPoint((GameObject*)self, state) == 0) {
         state->stateIndex = 1;
@@ -2701,9 +2710,9 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
 
     if (0.0f == state->waterLevel) {
         inWater = 0;
-    } else if (-100000.0f == state->eventTime) {
+    } else if (lbl_803E2410 == state->eventTime) {
         inWater = 1;
-    } else if (state->currentTime - state->eventTime > 8.0f) {
+    } else if (state->currentTime - state->eventTime > lbl_803E2414) {
         inWater = 1;
     } else {
         inWater = 0;
@@ -3335,15 +3344,15 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->unk724 != NULL) {
                 orbitMovementStatus = trickyUpdateMovementState(obj, 5.0f, state);
             } else {
-                orbitMovementStatus = trickyUpdateMovementState(obj, 340282346638528859811704183484516925440.0f, state);
+                orbitMovementStatus = trickyUpdateMovementState(obj, lbl_803E2418, state);
             }
             if (orbitMovementStatus != 1) {
                 int useSwimMove;
                 if (0.0f == state->waterLevel) {
                     useSwimMove = 0;
-                } else if (-100000.0f == state->eventTime) {
+                } else if (lbl_803E2410 == state->eventTime) {
                     useSwimMove = 1;
-                } else if (state->currentTime - state->eventTime > 8.0f) {
+                } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                     useSwimMove = 1;
                 } else {
                     useSwimMove = 0;
@@ -3502,9 +3511,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             if (status == 0) {
                 if (0.0f == state->waterLevel) {
                     useSwimAnim = 0;
-                } else if (-100000.0f == state->eventTime) {
+                } else if (lbl_803E2410 == state->eventTime) {
                     useSwimAnim = 1;
-                } else if (state->currentTime - state->eventTime > 8.0f) {
+                } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                     useSwimAnim = 1;
                 } else {
                     useSwimAnim = 0;
@@ -3540,9 +3549,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 if (state->scratch704.f > 0.0f) {
                     if (0.0f == state->waterLevel) {
                         useSwimAnim = 0;
-                    } else if (-100000.0f == state->eventTime) {
+                    } else if (lbl_803E2410 == state->eventTime) {
                         useSwimAnim = 1;
-                    } else if (state->currentTime - state->eventTime > 8.0f) {
+                    } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                         useSwimAnim = 1;
                     } else {
                         useSwimAnim = 0;
@@ -3560,9 +3569,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     if (state->scratch704.f <= 0.0f) {
                         if (0.0f == state->waterLevel) {
                             useSwimAnim = 0;
-                        } else if (-100000.0f == state->eventTime) {
+                        } else if (lbl_803E2410 == state->eventTime) {
                             useSwimAnim = 1;
-                        } else if (state->currentTime - state->eventTime > 8.0f) {
+                        } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                             useSwimAnim = 1;
                         } else {
                             useSwimAnim = 0;
@@ -3601,9 +3610,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             } else {
                 if (0.0f == state->waterLevel) {
                     useSwimAnim = 0;
-                } else if (-100000.0f == state->eventTime) {
+                } else if (lbl_803E2410 == state->eventTime) {
                     useSwimAnim = 1;
-                } else if (state->currentTime - state->eventTime > 8.0f) {
+                } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                     useSwimAnim = 1;
                 } else {
                     useSwimAnim = 0;
@@ -3663,9 +3672,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         if (status != 1) {
             if (0.0f == state->waterLevel) {
                 useSwimAnim = 0;
-            } else if (-100000.0f == state->eventTime) {
+            } else if (lbl_803E2410 == state->eventTime) {
                 useSwimAnim = 1;
-            } else if (state->currentTime - state->eventTime > 8.0f) {
+            } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                 useSwimAnim = 1;
             } else {
                 useSwimAnim = 0;
@@ -3709,9 +3718,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             if (trickyUpdateMovementState(obj, 30.0f, state) == 0) {
                 if (0.0f == state->waterLevel) {
                     useSwimAnim = 0;
-                } else if (-100000.0f == state->eventTime) {
+                } else if (lbl_803E2410 == state->eventTime) {
                     useSwimAnim = 1;
-                } else if (state->currentTime - state->eventTime > 8.0f) {
+                } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                     useSwimAnim = 1;
                 } else {
                     useSwimAnim = 0;
@@ -3756,9 +3765,9 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
             }
             if (0.0f == state->waterLevel) {
                 inWater = 0;
-            } else if (-100000.0f == state->eventTime) {
+            } else if (lbl_803E2410 == state->eventTime) {
                 inWater = 1;
-            } else if (state->currentTime - state->eventTime > 8.0f) {
+            } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                 inWater = 1;
             } else {
                 inWater = 0;
@@ -3840,9 +3849,9 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
             if (trickyUpdateMovementState(obj, 5.0f, state) == 0) {
                 if (0.0f == state->waterLevel) {
                     inWater = 0;
-                } else if (-100000.0f == state->eventTime) {
+                } else if (lbl_803E2410 == state->eventTime) {
                     inWater = 1;
-                } else if (state->currentTime - state->eventTime > 8.0f) {
+                } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                     inWater = 1;
                 } else {
                     inWater = 0;
@@ -3877,9 +3886,9 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
     if (result == 0) {
         if (0.0f == state->waterLevel) {
             inWater = 0;
-        } else if (-100000.0f == state->eventTime) {
+        } else if (lbl_803E2410 == state->eventTime) {
             inWater = 1;
-        } else if (state->currentTime - state->eventTime > 8.0f) {
+        } else if (state->currentTime - state->eventTime > lbl_803E2414) {
             inWater = 1;
         } else {
             inWater = 0;
@@ -4443,7 +4452,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
     case TRICKY_FLAME_TURNING_IN:
         trickyDebugPrint(strBase + 0x764);
         target = &trickyState->followObj->anim.worldPosX;
-        trickyUpdateApproachSpeed(obj, 340282346638528859811704183484516925440.0f, trickyState, target, 1);
+        trickyUpdateApproachSpeed(obj, lbl_803E2418, trickyState, target, 1);
         if (moveTricky(obj, target) == 0) {
             trickyRequestMove(obj, 0x1a, 0.004f, 0x4000000);
             trickyState->substate = TRICKY_FLAME_IN;
@@ -4917,9 +4926,9 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
         if (moveTricky((GameObject*)obj, (f32*)pos) == 0) {
             if (0.0f == state->waterLevel) {
                 inWater = 0;
-            } else if (-100000.0f == state->eventTime) {
+            } else if (lbl_803E2410 == state->eventTime) {
                 inWater = 1;
-            } else if (state->currentTime - state->eventTime > 8.0f) {
+            } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                 inWater = 1;
             } else {
                 inWater = 0;
@@ -5027,7 +5036,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         }
         break;
     case 2:
-        if (trickyUpdateMovementState(obj, 340282346638528859811704183484516925440.0f, state) == 0) {
+        if (trickyUpdateMovementState(obj, lbl_803E2418, state) == 0) {
             state->stateFlags |= 0x10;
             state->substate = 3;
             state->scratch700.f = 0.0f;
@@ -5146,9 +5155,9 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                     }
                     if (0.0f == state->waterLevel) {
                         inWater = 0;
-                    } else if (-100000.0f == state->eventTime) {
+                    } else if (lbl_803E2410 == state->eventTime) {
                         inWater = 1;
-                    } else if (state->currentTime - state->eventTime > 8.0f) {
+                    } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                         inWater = 1;
                     } else {
                         inWater = 0;
@@ -5226,9 +5235,9 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
             if (((int (**)(GameObject*, TrickyState*))(base + 0x6c))[state->substate](obj, state) == 0) {
                 if (0.0f == state->waterLevel) {
                     inWater = 0;
-                } else if (-100000.0f == state->eventTime) {
+                } else if (lbl_803E2410 == state->eventTime) {
                     inWater = 1;
-                } else if (state->currentTime - state->eventTime > 8.0f) {
+                } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                     inWater = 1;
                 } else {
                     inWater = 0;
@@ -5413,9 +5422,9 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
             if (0.0f == state->waterLevel) {
                 b = 0;
-            } else if (-100000.0f == state->eventTime) {
+            } else if (lbl_803E2410 == state->eventTime) {
                 b = 1;
-            } else if (state->currentTime - state->eventTime > 8.0f) {
+            } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                 b = 1;
             } else {
                 b = 0;
@@ -5448,7 +5457,7 @@ int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
         return 1;
     }
-    if ((u8)trickyUpdateMovementState(obj, 340282346638528859811704183484516925440.0f,
+    if ((u8)trickyUpdateMovementState(obj, lbl_803E2418,
                                       state) != 1) {
         if (state->childB != NULL) {
             sfxState = obj->extra;
@@ -5619,9 +5628,9 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
             if (0.0f == trickyState->waterLevel) {
                 b[0] = 0;
-            } else if (-100000.0f == trickyState->eventTime) {
+            } else if (lbl_803E2410 == trickyState->eventTime) {
                 b[0] = 1;
-            } else if (trickyState->currentTime - trickyState->eventTime > 8.0f) {
+            } else if (trickyState->currentTime - trickyState->eventTime > lbl_803E2414) {
                 b[0] = 1;
             } else {
                 b[0] = 0;
@@ -5806,9 +5815,9 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
         }
         if (0.0f == state->waterLevel) {
             inWater = 0;
-        } else if (-100000.0f == state->eventTime) {
+        } else if (lbl_803E2410 == state->eventTime) {
             inWater = 1;
-        } else if (state->currentTime - state->eventTime > 8.0f) {
+        } else if (state->currentTime - state->eventTime > lbl_803E2414) {
             inWater = 1;
         } else {
             inWater = 0;
@@ -6068,9 +6077,9 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     b->stateFlags |= 1;
                     if (0.0f == b->waterLevel) {
                         inWater = 0;
-                    } else if (-100000.0f == b->eventTime) {
+                    } else if (lbl_803E2410 == b->eventTime) {
                         inWater = 1;
-                    } else if (b->currentTime - b->eventTime > 8.0f) {
+                    } else if (b->currentTime - b->eventTime > lbl_803E2414) {
                         inWater = 1;
                     } else {
                         inWater = 0;
@@ -6106,9 +6115,9 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     b->stateFlags |= 0x4000;
                     if (0.0f == b->waterLevel) {
                         inWater = 0;
-                    } else if (-100000.0f == b->eventTime) {
+                    } else if (lbl_803E2410 == b->eventTime) {
                         inWater = 1;
-                    } else if (b->currentTime - b->eventTime > 8.0f) {
+                    } else if (b->currentTime - b->eventTime > lbl_803E2414) {
                         inWater = 1;
                     } else {
                         inWater = 0;
@@ -6146,9 +6155,9 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                 }
                 if (0.0f == b->waterLevel) {
                     inWater = 0;
-                } else if (-100000.0f == b->eventTime) {
+                } else if (lbl_803E2410 == b->eventTime) {
                     inWater = 1;
-                } else if (b->currentTime - b->eventTime > 8.0f) {
+                } else if (b->currentTime - b->eventTime > lbl_803E2414) {
                     inWater = 1;
                 } else {
                     inWater = 0;
@@ -6204,9 +6213,9 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
                             if (0.0f == state->waterLevel) {
                                 inWater = 0;
-                            } else if (-100000.0f == state->eventTime) {
+                            } else if (lbl_803E2410 == state->eventTime) {
                                 inWater = 1;
-                            } else if (state->currentTime - state->eventTime > 8.0f) {
+                            } else if (state->currentTime - state->eventTime > lbl_803E2414) {
                                 inWater = 1;
                             } else {
                                 inWater = 0;
@@ -6296,7 +6305,7 @@ u8* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
     d = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
     if ((d >= 360000.0f) || (state->cooldownA > 0.0f)) {
         if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, 19.0f) == 0) {
-            bestD = 340282346638528859811704183484516925440.0f;
+            bestD = lbl_803E2418;
             for (i = 0; i < count[0]; i++) {
                 f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
                 if (cd < d && cd < bestD) {
@@ -6337,9 +6346,9 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
 
             if (0.0f == state->waterLevel) {
                 isInWater = 0;
-            } else if (-100000.0f == state->eventTime) {
+            } else if (lbl_803E2410 == state->eventTime) {
                 isInWater = 1;
-            } else if ((state->currentTime - state->eventTime) > 8.0f) {
+            } else if ((state->currentTime - state->eventTime) > lbl_803E2414) {
                 isInWater = 1;
             } else {
                 isInWater = 0;
@@ -7184,7 +7193,7 @@ void Tricky_update(GameObject* obj) {
             trickyState->homePosZ = ((GameObject*)obj)->anim.worldPosZ;
             (*gPathControlInterface)->attachObject((void*)obj, &trickyState->pathControlFlags);
             if (((GameObject*)obj)->anim.currentMove == 8 || ((GameObject*)obj)->anim.currentMove == 7) {
-                trickyState->waterLevel = 8.0f;
+                trickyState->waterLevel = lbl_803E2414;
                 trickyState->eventTime = -10000.0f;
             } else {
                 trickyState->waterLevel = 0.0f;
@@ -7681,9 +7690,9 @@ void Tricky_update(GameObject* obj) {
     }
     if (0.0f == trickyState->waterLevel) {
         talking = 0;
-    } else if (-100000.0f == trickyState->eventTime) {
+    } else if (lbl_803E2410 == trickyState->eventTime) {
         talking = 1;
-    } else if (trickyState->currentTime - trickyState->eventTime > 8.0f) {
+    } else if (trickyState->currentTime - trickyState->eventTime > lbl_803E2414) {
         talking = 1;
     } else {
         talking = 0;
