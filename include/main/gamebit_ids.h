@@ -903,6 +903,7 @@ enum GameBitId {
     GAMEBIT_SHOP_Unk0D21 = 0xD21,                        /* table 0; set when entering shop */
     GAMEBIT_WM_KrystalCrystalized = 0xD27,               /* table 1 */
     GAMEBIT_SawStaffBoostPad = 0xD2A,                    /* table 2; StaffActivated checks for this (hardcoded) in some case relating to sequences */
+    GAMEBIT_NW_GateKeeperAirMeterActive = 0xD32,         /* SnowHorn Gate Keeper tumbleweed-rescue air-meter phase is active; set when the gatekeeper enlists Tricky/tumbleweed help, cleared when the air meter completes */
     GAMEBIT_SH_Related0D35 = 0xD35,                      /* table 3 */
     GAMEBIT_SH_Related0D36 = 0xD36,                      /* table 3 */
     GAMEBIT_WM_FlewTo = 0xD37,                           /* table 1; hint 419; ref warlock/HitAnimator target */
@@ -987,6 +988,7 @@ enum GameBitId {
     GAMEBIT_K6_Entered = 0xEA2,                          /* table 0; hint 421 */
     GAMEBIT_OFPBOT_StaffBoostEnabled = 0xEA5,            /* table 2; ref kraztest/StaffBoostP enabled */
     GAMEBIT_ToldGetSnowHornArtifact = 0xEA6,             /* table 0 */
+    GAMEBIT_NW_GateKeeperCommsPlayed = 0xEA7,            /* one-shot incoming-communication latch in the SnowHorn Gate Keeper post-rescue/default dialogue path */
     GAMEBIT_SH_Give200ScarabBag = 0xEA8,                 /* table 2; Triggers a respawn point save */
     GAMEBIT_SH_GiveMoonPassKey = 0xEA9,                  /* table 2; Triggers a respawn point save */
     GAMEBIT_ITEM_BadGuyAlert_Got = 0xEB0,                /* table 2; unused shop item */

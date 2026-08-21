@@ -305,7 +305,7 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
             state->runtimeFlags = state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK;
             state->stateIndex = 0xd;
             mainSetBits(GAMEBIT_NW_ReturnedTo, 1);
-            mainSetBits(0xd32, 1);
+            mainSetBits(GAMEBIT_NW_GateKeeperAirMeterActive, 1);
         }
         break;
     case 0xc:
@@ -415,7 +415,7 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
             Sfx_PlayFromObject(obj, SFXTRIG_menuups16k);
             (*gScreenTransitionInterface)->start(0x14, SCREEN_TRANSITION_BLACK);
             state->stateIndex = 0x12;
-            mainSetBits(0xd32, 0);
+            mainSetBits(GAMEBIT_NW_GateKeeperAirMeterActive, 0);
             state->runtimeFlags = state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_UI_MESSAGE;
             (*gGameUIInterface)->airMeterSetShutdown();
         }
@@ -434,8 +434,8 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
         if (mainGetBit(0x224) != 0) {
             state->triggerList = gNwMammothGatekeeperBit224TriggerList;
         } else {
-            if (mainGetBit(0xea7) == 0) {
-                mainSetBits(0xea7, 1);
+            if (mainGetBit(GAMEBIT_NW_GateKeeperCommsPlayed) == 0) {
+                mainSetBits(GAMEBIT_NW_GateKeeperCommsPlayed, 1);
                 mainSetBits(GAMEBIT_IncomingCommunication, 1);
             }
             state->triggerList = gNwMammothGatekeeperDefaultTriggerList;
