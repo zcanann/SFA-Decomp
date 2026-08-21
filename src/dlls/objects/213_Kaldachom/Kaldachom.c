@@ -410,10 +410,12 @@ void kaldachom_spawnMouthProjectile(GameObject* obj, KaldachomState* state, u8 u
     f32 travelTime;
     f32 heightOffset;
     f32 mouthY;
+    u8 canSetupObject;
 
     control = ((KaldachomControl*)state->ground.control);
     placement = (KaldachomPlacement*)obj->anim.placementData;
-    if (Obj_CanSetupObject() != 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
         heightOffset = 0.5f + (f32)(s32)placement->scale / 15.0f;
         setup = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
         if (useUpperMouthPoint != 0) {
