@@ -140,7 +140,17 @@ extern char sSidekickCommandDebugTextBlock[];
 /* Repeated Tricky movement-animation contract values. */
 #define TRICKY_FAST_MOVE_BLEND_SPEED 0.02f
 #define TRICKY_LAND_MOVE_BLEND_SPEED 0.005f
+#define TRICKY_TURN_MOVE_BLEND_SPEED 0.04f
 #define TRICKY_WATER_COOLDOWN_FRAMES 600.0f
+#define TRICKY_ROUTE_LOOKAHEAD_SCALE 1.5f
+#define TRICKY_ROUTE_REVERSE_STEP -2.0f
+#define TRICKY_YAW_STEP_RATE 512.0f
+#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
+#define TRICKY_TINY_MOVE_BLEND_SPEED 0.0001f
+#define TRICKY_FAST_WALK_MOVE_THRESHOLD 0.66f
+#define TRICKY_SLOW_WALK_MOVE_THRESHOLD 0.33f
+#define TRICKY_PI 3.1415927f
+#define TRICKY_ANGLE_HALF_TURN_UNITS 32768.0f
 
 /* The one partfx effect emitted along Tricky's queued impress path. */
 #define TRICKY_PATH_PARTFX 0x533
@@ -776,11 +786,11 @@ int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 sp
     f32 maxDist;
 
     result = 0;
-    maxDist = 1.5f * (speed * timeDelta);
+    maxDist = TRICKY_ROUTE_LOOKAHEAD_SCALE * (speed * timeDelta);
     maxSq = maxDist * maxDist;
     dist = getXZDistanceSquared(&route->posX, &obj->anim.worldPosX);
     if (route->reverse != 0) {
-        step = -2.0f;
+        step = TRICKY_ROUTE_REVERSE_STEP;
     } else {
         step = 2.0f;
     }
@@ -834,11 +844,11 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     }
 
     if (delta > 0x200) {
-        step = (s32)(512.0f * timeDelta);
+        step = (s32)(TRICKY_YAW_STEP_RATE * timeDelta);
         obj->anim.rotX = currentYaw - step;
         state->stateFlags |= 0x10000000LL;
     } else if (delta < -0x200) {
-        step = (s32)(512.0f * timeDelta);
+        step = (s32)(TRICKY_YAW_STEP_RATE * timeDelta);
         obj->anim.rotX = currentYaw + step;
         state->stateFlags |= 0x10000000LL;
     } else {
@@ -902,8 +912,8 @@ static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turn
     if (((state->dirX * state->dirX) + (state->dirZ * state->dirZ)) > 0.01f) {
         yaw = (s16)getAngle(-state->dirX, -state->dirZ);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
-        state->dirX = -mathSinf((3.1415927f * (f32)(int)*(s16*)obj) / 32768.0f);
-        state->dirZ = -mathCosf((3.1415927f * (f32)(int)*(s16*)obj) / 32768.0f);
+        state->dirX = -mathSinf((TRICKY_PI * (f32)(int)*(s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
+        state->dirZ = -mathCosf((TRICKY_PI * (f32)(int)*(s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
     }
 }
 
@@ -960,7 +970,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     adjustedPos[1] = prospectivePos[1];
     adjustedPos[2] = prospectivePos[2];
     trickyApplyObjectAvoidanceToStep(&obj->anim.worldPosX, adjustedPos, targetPos);
-    if (vec3f_distanceSquared(prospectivePos, adjustedPos) > 0.0001f) {
+    if (vec3f_distanceSquared(prospectivePos, adjustedPos) > TRICKY_AVOIDANCE_REPATH_EPSILON_SQ) {
         state->dirX = adjustedPos[0] - obj->anim.worldPosX;
         state->dirZ = adjustedPos[2] - obj->anim.worldPosZ;
         length = sqrtf((state->dirX * state->dirX) + (state->dirZ * state->dirZ));
@@ -973,7 +983,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     if (moveSpeed >= 0.05f) {
         skeetla_faceMoveVector(obj);
         if (skeetla_isInWater(state) != 0) {
-            trickyRequestMove(obj, 7, 0.0001f, 0x2000000);
+            trickyRequestMove(obj, 7, TRICKY_TINY_MOVE_BLEND_SPEED, 0x2000000);
             state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
             state->particleTimer = 0.0f;
             trickyDebugPrint(debugStrings + 0x184);
@@ -1006,15 +1016,15 @@ int moveTricky(GameObject* obj, f32* targetPos) {
 
             if (moveSpeed > 2.5f) {
                 state->voiceCooldown = 600.0f;
-                trickyRequestMove(obj, 0x30, 0.0001f, 0x3000000);
+                trickyRequestMove(obj, 0x30, TRICKY_TINY_MOVE_BLEND_SPEED, 0x3000000);
             } else if (moveSpeed > 1.0f) {
-                trickyRequestMove(obj, 5, 0.0001f, 0x3000000);
-            } else if (moveSpeed > 0.66f) {
-                trickyRequestMove(obj, 4, 0.0001f, 0x3000000);
-            } else if (moveSpeed > 0.33f) {
-                trickyRequestMove(obj, 2, 0.0001f, 0x3000000);
+                trickyRequestMove(obj, 5, TRICKY_TINY_MOVE_BLEND_SPEED, 0x3000000);
+            } else if (moveSpeed > TRICKY_FAST_WALK_MOVE_THRESHOLD) {
+                trickyRequestMove(obj, 4, TRICKY_TINY_MOVE_BLEND_SPEED, 0x3000000);
+            } else if (moveSpeed > TRICKY_SLOW_WALK_MOVE_THRESHOLD) {
+                trickyRequestMove(obj, 2, TRICKY_TINY_MOVE_BLEND_SPEED, 0x3000000);
             } else {
-                trickyRequestMove(obj, 1, 0.0001f, 0x3000000);
+                trickyRequestMove(obj, 1, TRICKY_TINY_MOVE_BLEND_SPEED, 0x3000000);
             }
             trickyDebugPrint(debugStrings + 0x1a0);
         }
@@ -1064,7 +1074,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                     }
                 }
                 obj->anim.rotX = previousYaw;
-                trickyRequestMove(obj, animId, 0.04f, 0x1000100);
+                trickyRequestMove(obj, animId, TRICKY_TURN_MOVE_BLEND_SPEED, 0x1000100);
             }
         }
 
@@ -1676,7 +1686,7 @@ char sTrickyDryLandDebugMessage[] = {
     do {                                                                                                               \
         if ((state)->route.reverse != 0) {                                                                             \
             while ((state)->route.atSegmentEnd != 0) {                                                                 \
-                RomCurve_stepClamped(&(state)->route, -2.0f);                                                          \
+                RomCurve_stepClamped(&(state)->route, TRICKY_ROUTE_REVERSE_STEP);                                                          \
             }                                                                                                          \
         } else {                                                                                                       \
             while ((state)->route.atSegmentEnd == 0) {                                                                 \
@@ -2068,7 +2078,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             state->dirZ = state->dirZ / len;
                         }
                         state->speed = 3.0f;
-                        trickyRequestMove(obj, 0x15, 0.0001f, 0x4000000);
+                        trickyRequestMove(obj, 0x15, TRICKY_TINY_MOVE_BLEND_SPEED, 0x4000000);
                         state->movementState = TRICKY_MOVE_JUMP_PREP;
                         state->voiceCooldown = 600.0f;
                         break;
@@ -2198,7 +2208,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                                 if (prod == 0) {
                                     RomCurve_stepClamped(&state->route, 2.0f);
                                 } else {
-                                    RomCurve_stepClamped(&state->route, -2.0f);
+                                    RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
                                 }
                                 state->route.reverse = prod;
                                 RomCurve_swapEndpointNodes(&state->route);
@@ -2292,7 +2302,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     state->dirZ = state->dirZ / len;
                 }
                 state->speed = 3.0f;
-                trickyRequestMove(obj, 0x15, 0.0001f, 0x4000000);
+                trickyRequestMove(obj, 0x15, TRICKY_TINY_MOVE_BLEND_SPEED, 0x4000000);
                 state->movementState = TRICKY_MOVE_JUMP_PREP;
                 state->voiceCooldown = 600.0f;
             }
@@ -3642,8 +3652,8 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         if ((obj)->anim.currentMoveProgress >= 0.65f) {
             status = state->scratch700.i;
             ((GameObject*)status)->anim.localPosY += 5.0f;
-            bob = -mathCosf(3.1415927f * (f32)(s32) * (short*)obj / 32768.0f);
-            sidekickBall_launch(state->scratch700.obj, obj, -mathSinf(3.1415927f * (f32)(s32) * (short*)obj / 32768.0f),
+            bob = -mathCosf(TRICKY_PI * (f32)(s32) * (short*)obj / TRICKY_ANGLE_HALF_TURN_UNITS);
+            sidekickBall_launch(state->scratch700.obj, obj, -mathSinf(TRICKY_PI * (f32)(s32) * (short*)obj / TRICKY_ANGLE_HALF_TURN_UNITS),
                                 1.0f, bob);
             state->substate = 2;
         }
@@ -4060,11 +4070,11 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         trickyState->guardWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosPtr, 0x0);
         trickyState->guardPoint[0] =
             (f32)(trickyState->followObj->anim.worldPosX -
-                  15.0f * mathSinf((3.1415927f * trickyState->followObj->anim.rotX) / 32768.0f));
+                  15.0f * mathSinf((TRICKY_PI * trickyState->followObj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS));
         trickyState->guardPoint[1] = trickyState->followObj->anim.worldPosY;
         trickyState->guardPoint[2] =
             (f32)(trickyState->followObj->anim.worldPosZ -
-                  15.0f * mathCosf((3.1415927f * trickyState->followObj->anim.rotX) / 32768.0f));
+                  15.0f * mathCosf((TRICKY_PI * trickyState->followObj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS));
         trickyState->guardCanSpawnHelpers = 0;
         trickyState->substate = TRICKY_GUARD_FINDING;
         break;
@@ -5507,7 +5517,7 @@ u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState) {
     switch (move) {
     case 0x23:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            trickyRequestMove(obj, 0x24, 0.04f, 0);
+            trickyRequestMove(obj, 0x24, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
         }
         break;
     case 0x24:
@@ -5532,7 +5542,7 @@ u32 tricky_substateFidgetB(GameObject* obj, TrickyState* trickyState) {
     switch (move) {
     case 0x21:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            trickyRequestMove(obj, 0x22, 0.04f, 0);
+            trickyRequestMove(obj, 0x22, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
         }
         break;
     case 0x22:
@@ -5977,7 +5987,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
     case 1:
         sv = randomGetRange(0x20, 0xff);
         sv = (s16)((obj->anim.rotX + sv) * 0x100);
-        ang = 3.1415927f * (f32)sv / 32768.0f;
+        ang = TRICKY_PI * (f32)sv / TRICKY_ANGLE_HALF_TURN_UNITS;
         state->wanderTargetX = (f32)(0.1 * -mathSinf(ang) + obj->anim.localPosX);
         state->wanderTargetY = obj->anim.localPosY;
         state->wanderTargetZ = (f32)(0.1f * -mathCosf(ang) + obj->anim.localPosZ);
@@ -6036,11 +6046,11 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
         trickyState->substate = 5;
         break;
     case 2:
-        trickyRequestMove(obj, 0x21, 0.04f, 0);
+        trickyRequestMove(obj, 0x21, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
         trickyState->substate = 6;
         break;
     case 3:
-        trickyRequestMove(obj, 0x23, 0.04f, 0);
+        trickyRequestMove(obj, 0x23, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
         trickyState->substate = 7;
         break;
     case 4:
@@ -6336,10 +6346,10 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
 
     if (tricky_handleFeedOrTalk(obj, state) == 0) {
         state->wanderTargetX =
-            (obj)->anim.worldPosX - mathSinf((3.1415927f * (f32) * (s16*)obj) / 32768.0f);
+            (obj)->anim.worldPosX - mathSinf((TRICKY_PI * (f32) * (s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
         state->wanderTargetY = (obj)->anim.worldPosY;
         state->wanderTargetZ =
-            (obj)->anim.worldPosZ - mathCosf((3.1415927f * (f32) * (s16*)obj) / 32768.0f);
+            (obj)->anim.worldPosZ - mathCosf((TRICKY_PI * (f32) * (s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
 
         if (trickyUpdateMovementState(obj, 15.0f, state) != 1) {
             state->idleSfxTimer -= timeDelta;
