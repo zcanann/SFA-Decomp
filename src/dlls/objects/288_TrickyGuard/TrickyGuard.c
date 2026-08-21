@@ -51,7 +51,7 @@ void TrickyGuardSpot_update(GameObject* obj) {
     if (state->guardTimer != 0) {
         if (tricky != NULL && TRICKY_INTERFACE(tricky)->isGuarding(tricky) == 0) {
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
-                TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_GUARD_COMMAND_KIND,
+                TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
                                                                     TRICKY_GUARD_COMMAND_TYPE);
             }
             obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);

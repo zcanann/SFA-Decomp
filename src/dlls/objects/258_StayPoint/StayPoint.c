@@ -23,7 +23,6 @@
 
 #define STAYPOINT_MODEL_VISIBLE_FLAG 0x01
 
-#define STAYPOINT_COMMAND_KIND 1
 #define STAYPOINT_COMMAND_TYPE 3
 
 void StayPoint_update(GameObject* obj) {
@@ -58,7 +57,7 @@ void StayPoint_update(GameObject* obj) {
                 objUpdateHitVolumeTransforms(obj);
             }
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
-                TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, STAYPOINT_COMMAND_KIND,
+                TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
                                                            STAYPOINT_COMMAND_TYPE);
             }
         }

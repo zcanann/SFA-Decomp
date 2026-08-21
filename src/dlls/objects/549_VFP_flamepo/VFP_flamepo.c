@@ -10,7 +10,6 @@
 #define VFP_FLAMEPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 
-#define VFP_FLAMEPOINT_TRICKY_COMMAND_KIND 1
 #define VFP_FLAMEPOINT_TRICKY_COMMAND_TYPE 4
 
 typedef struct VfpFlamePointData
@@ -88,7 +87,7 @@ void VFP_flamepoint_update(GameObject* obj)
                     if (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE)
                     {
                         TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj,
-                                                                   VFP_FLAMEPOINT_TRICKY_COMMAND_KIND,
+                                                                   TRICKY_COMMAND_KIND_PRIORITY,
                                                                    VFP_FLAMEPOINT_TRICKY_COMMAND_TYPE);
                     }
                     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
