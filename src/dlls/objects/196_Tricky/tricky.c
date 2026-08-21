@@ -5326,7 +5326,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
             state->pendingFollowRequest = 0;
             return;
         }
-        found = (GameObject*)Tricky_findNearestGroup4BObject(obj, state);
+        found = Tricky_findNearestGroup4BObject(obj, state);
     }
     if (found != NULL) {
         state->groundSnapCounter = 2;
@@ -6430,10 +6430,10 @@ typedef enum TrickySequenceEvent {
 int lbl_803DDA4C;
 u32 gTrickyHelperObject;
 
-u8* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
+GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
     GameObject** objs;
     int count[1];
-    u8* result;
+    GameObject* result;
     f32 d;
     f32 bestD;
     int i;
@@ -6448,7 +6448,7 @@ u8* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
                 f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
                 if (cd < d && cd < bestD) {
                     bestD = cd;
-                    result = (u8*)*objs;
+                    result = *objs;
                 }
                 objs++;
             }
