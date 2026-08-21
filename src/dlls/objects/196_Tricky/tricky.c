@@ -171,6 +171,10 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_ROTATE        0x100 /* interpolate rotation toward targetYaw target */
 #define TRICKY_STATE_FLAG_TURNING_U32   0x10000000
 #define TRICKY_STATE_FLAG_TURNING       0x10000000LL
+#define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32 0x20000000U
+#define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED     0x20000000LL
+#define TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32 0x40000000
+#define TRICKY_STATE_FLAG_FEED_VOICE_PENDING     0x40000000LL
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING_WIDE 0x8000000LL
 
 #define TRICKY_MOVE_FLAG_KEEP_PROGRESS        0x01000000
@@ -6062,11 +6066,11 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     }
     done = (*gSkyInterface)->getSunPosition(0);
     if (done == 0) {
-        trickyState->stateFlags = trickyState->stateFlags & ~0x20000000LL;
+        trickyState->stateFlags = trickyState->stateFlags & ~TRICKY_STATE_FLAG_SUN_VOICE_PLAYED;
     }
     done = (*gSkyInterface)->getSunPosition(0);
-    if ((done != 0) && ((trickyState->stateFlags & 0x20000000U) == 0)) {
-        trickyState->stateFlags = trickyState->stateFlags | 0x20000000LL;
+    if ((done != 0) && ((trickyState->stateFlags & TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32) == 0)) {
+        trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_SUN_VOICE_PLAYED;
         done = (int)obj->extra;
         if ((((TrickyState*)done)->soundSuppressed == 0U) &&
             ((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
@@ -6328,7 +6332,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     }
                     (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                     b->flag82EBit5 = 1;
-                    state->stateFlags |= 0x40000000LL;
+                    state->stateFlags |= TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
                 }
                 buttonDisable(0, PAD_BUTTON_A);
                 return 1;
@@ -7350,7 +7354,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->spawnedChild = (void*)objSetupObject((ObjPlacement*)setup, 4, -1, -1, ((GameObject*)obj)->anim.parent);
         ObjLink_AttachChild((GameObject*)obj, trickyState->spawnedChild, 3);
     }
-    if ((trickyState->stateFlags & 0x40000000) != 0) {
+    if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32) != 0) {
         u8* voiceCursor = *(u8**)state;
 
         if (*voiceCursor == *(voiceCursor + 1)) {
@@ -7358,7 +7362,7 @@ void Tricky_update(GameObject* obj) {
         } else {
             TRICKY_VOICE(obj, 0x363, 0x500);
         }
-        trickyState->stateFlags &= ~0x40000000LL;
+        trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
     {
         int flagsByte = trickyState->flags358;
