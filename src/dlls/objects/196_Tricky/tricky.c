@@ -153,8 +153,13 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_FAST_MOVE_BLEND_SPEED       0.02f
 #define TRICKY_LAND_MOVE_BLEND_SPEED       0.005f
 #define TRICKY_TURN_MOVE_BLEND_SPEED       0.04f
+#define TRICKY_TIMER_20_FRAMES             20.0f
 #define TRICKY_TIMER_600_FRAMES            600.0f
 #define TRICKY_WATER_COOLDOWN_FRAMES       TRICKY_TIMER_600_FRAMES
+#define TRICKY_CHILD_BLINK_PERIOD_FRAMES   30.0f
+#define TRICKY_CHILD_BLINK_HOLD_FRAMES     TRICKY_TIMER_20_FRAMES
+#define TRICKY_CHILD_BLINK_FORCE_FRAMES    150.0f
+#define TRICKY_CHILD_VOICE_PERIOD_FRAMES   2400.0f
 #define TRICKY_PATH_SEARCH_BULK_STEPS      0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES       500
 #define TRICKY_IDLE_VOICE_MAX_FRAMES       750
@@ -7939,27 +7944,27 @@ void Tricky_update(GameObject* obj) {
         trickyState->childPhaseTimer0 += timeDelta;
         trickyState->childPhaseTimer1 += timeDelta;
         trickyState->childPhaseTimer2 += timeDelta;
-        if (trickyState->childPhaseTimer2 > 30.0f) {
-            trickyState->childPhaseTimer2 -= 30.0f;
+        if (trickyState->childPhaseTimer2 > TRICKY_CHILD_BLINK_PERIOD_FRAMES) {
+            trickyState->childPhaseTimer2 -= TRICKY_CHILD_BLINK_PERIOD_FRAMES;
         }
-        if (trickyState->childPhaseTimer2 >= 20.0f) {
+        if (trickyState->childPhaseTimer2 >= TRICKY_CHILD_BLINK_HOLD_FRAMES) {
             trickyState->child->anim.flags = trickyState->child->anim.flags | 0x4000;
         } else {
             trickyState->child->anim.flags = trickyState->child->anim.flags & ~0x4000;
         }
-        if (trickyState->childPhaseTimer1 > 150.0f) {
+        if (trickyState->childPhaseTimer1 > TRICKY_CHILD_BLINK_FORCE_FRAMES) {
             if (trickyState->childPhaseTimer1 > TRICKY_TIMER_600_FRAMES) {
                 trickyState->childPhaseTimer1 -= TRICKY_TIMER_600_FRAMES;
             }
             trickyState->child->anim.flags = trickyState->child->anim.flags | 0x4000;
         }
-        if (trickyState->childPhaseTimer0 > 2400.0f) {
+        if (trickyState->childPhaseTimer0 > TRICKY_CHILD_VOICE_PERIOD_FRAMES) {
             if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
                 TRICKY_VOICE(obj, 0x392, 0x500);
             } else {
                 TRICKY_VOICE(obj, 0x298, 0x500);
             }
-            trickyState->childPhaseTimer0 -= 2400.0f;
+            trickyState->childPhaseTimer0 -= TRICKY_CHILD_VOICE_PERIOD_FRAMES;
         }
         ObjAnim_AdvanceCurrentMove(trickyState->child, 0.01f, timeDelta, 0);
     }

@@ -279,7 +279,7 @@ typedef struct TrickyState {
     };
     union {
         struct {
-            f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
+            f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
             TrickyScratch
                 cooldownB; /* .f: countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush). .ptr: reused in the animobjd2 orbit substate to hold the circling-target object, copied into followObj */
             union {
@@ -328,7 +328,7 @@ typedef struct TrickyState {
     TrickyCommand commands[10];
     u8 commandCount; /* number of queued Tricky commands (0..10); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
-    f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC, re-primed to lbl_803E2440; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
+    f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero, re-primed to gTrickyTimer600Frames; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
     f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching zero fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
     GameObject* childA;
@@ -338,15 +338,15 @@ typedef struct TrickyState {
     GameObject* child;
     TrickyPackedSlots packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (childA/childB/child) */
     u8 pad7BD[0x7C0 - 0x7BD];
-    f32 childPhaseTimer0; /* child-object periodic phase timer: reset to floor lbl_803E23DC when the child is attached, += timeDelta while it lives, wraps at lbl_803E2550 to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
-    f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24D8/lbl_803E2440 to toggle the child's 0x4000 anim flag */
-    f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24C8, gates the child's 0x4000 anim flag via lbl_803E2408 */
+    f32 childPhaseTimer0; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
+    f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
+    f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's 0x4000 anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
     u8 pendingFollowRequest;
     u8 pad7D1[0x7D4 - 0x7D1];
     GameObject* pendingFollowObj; /* target object handed off to a sibling Tricky */
     f32 footPoints[4][3];
-    f32 impressTimer; /* impress-move countdown: primed to lbl_803E2408 by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching floor lbl_803E23DC the flag is cleared and a TRICKY_VOICE line fires (tricky) */
+    f32 impressTimer; /* impress-move countdown: primed to gTrickyTimer20Frames by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching gTrickyFloatZero the flag is cleared and a TRICKY_VOICE line fires (tricky) */
     ObjAnimEventList
         animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootPitch drives the facing step, triggeredIds[] pick the bark sfx */
     f32 variantFadeTimer; /* model-variant crossfade countdown: primed to 20.0f, -= timeDelta; > 10 fades out, <= 10 swaps the texture selector and fades back in via timer/10 (tricky) */
