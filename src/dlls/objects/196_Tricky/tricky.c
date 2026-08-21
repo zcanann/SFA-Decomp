@@ -6422,8 +6422,8 @@ static inline int trickyGetState(GameObject* obj) {
 
 int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     int state;
-    ObjSeqState* sequence = animUpdate;
     int i;
+    ObjSeqState* sequence = animUpdate;
     u8* childSlot;
     int secondChildIndex;
     int childIndex;
