@@ -2777,24 +2777,24 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
-void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
-    u8* nearest;
+void tricky_stateGoToWarpPoint(GameObject* self, TrickyState* state) {
+    GameObject* nearest;
     f32 rejectDist;
     f32 minDist;
     f32 dist;
     f32 z;
-    u8** objs;
-    u8** objsList;
+    GameObject** objs;
+    GameObject** objsList;
     int count;
     int i;
     int inWater;
-    u8* best;
+    GameObject* best;
 
     nearest = NULL;
     best = NULL;
     minDist = gTrickyMaxDistance;
 
-    if (trickyShouldGoToWarpPoint((GameObject*)self, state) == 0) {
+    if (trickyShouldGoToWarpPoint(self, state) == 0) {
         state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
         state->substate = 0;
         z = 0.0f;
@@ -2808,14 +2808,14 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
         return;
     }
 
-    objsList = (u8**)objGetAllOfType(TRICKYWARP_OBJ_GROUP, &count);
+    objsList = (GameObject**)objGetAllOfType(TRICKYWARP_OBJ_GROUP, &count);
     i = 0;
     objs = objsList;
     rejectDist = 2500.0f;
     for (; i < count; i++) {
-        dist = getXZDistanceSquared((f32*)((u8*)state->playerObj + 0x18), (f32*)(*objs + 0x18));
+        dist = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
         if (dist > rejectDist) {
-            dist = getXZDistanceSquared((f32*)(self + 0x18), (f32*)(*objs + 0x18));
+            dist = getXZDistanceSquared(&self->anim.worldPosX, &(*objs)->anim.worldPosX);
             if (dist < minDist) {
                 best = *objs;
                 minDist = dist;
@@ -2826,9 +2826,9 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
 
     nearest = best;
     if (nearest != NULL) {
-        state->followObj = (GameObject*)nearest;
-        if ((u8*)state->targetPosPtr != nearest + 0x18) {
-            state->targetPosPtr = (f32*)(nearest + 0x18);
+        state->followObj = nearest;
+        if (state->targetPosPtr != &nearest->anim.worldPosX) {
+            state->targetPosPtr = &nearest->anim.worldPosX;
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
@@ -2837,7 +2837,7 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
             }
             state->linkedWalkGroup = 0;
         }
-        if (trickyUpdateMovementState((GameObject*)self, 15.0f, state) == 1) {
+        if (trickyUpdateMovementState(self, 15.0f, state) == 1) {
             return;
         }
     }
@@ -2853,12 +2853,12 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
     }
 
     if (inWater != 0) {
-        trickyRequestMove((GameObject*)self, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
+        trickyRequestMove(self, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
         state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
         state->particleTimer = 0.0f;
         trickyDebugPrint(sInWaterMessage);
     } else {
-        trickyRequestMove((GameObject*)self, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
+        trickyRequestMove(self, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
         trickyDebugPrint(sTrickyDryLandDebugMessage);
     }
 }
