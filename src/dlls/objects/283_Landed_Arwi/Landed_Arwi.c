@@ -440,6 +440,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
     f32 range;
     f32 yOffset;
     ObjAnimEventList events;
+    u8 canSetupObject;
 
     placement = (StaffActivatedPlacement*)obj->anim.placementData;
     if (!state->flags.damaged || (state->flags.impactHandled && state->hitStarted == 0u)) {
@@ -455,7 +456,8 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
 
             switch (placement->hitReactionType) {
             case LANDED_ARWING_REACTION_SPAWN_DEBRIS:
-                if (Obj_CanSetupObject() != 0) {
+                canSetupObject = Obj_CanSetupObject();
+                if (canSetupObject > 0) {
                     spawnIndex = 0;
                     yOffset = lbl_803E3BB8;
                     while (spawnIndex < placement->debrisCount) {

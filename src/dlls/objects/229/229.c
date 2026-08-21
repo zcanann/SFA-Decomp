@@ -97,8 +97,10 @@ ObjectDescriptor gShieldObjDescriptor = {
 GameObject* Shield_spawnOmniShield(GameObject* obj, f32 rootMotionScale) {
     ObjPlacement* setup;
     GameObject* shield;
+    u8 canSetupObject;
 
-    if (Obj_CanSetupObject() == 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return NULL;
     }
     setup = Obj_AllocObjectSetup(SHIELD_SPAWN_SETUP_SIZE, SHIELD_SEQID_OMNI_SHIELD);
