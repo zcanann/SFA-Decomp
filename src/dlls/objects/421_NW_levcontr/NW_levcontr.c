@@ -11,6 +11,7 @@
 
 #include "game/objects/object.h"
 #include "main/audio/music_api.h"
+#include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dlls/objects/430_SH_LevelCon.h"
@@ -189,7 +190,8 @@ void nwLevelControl_update(GameObject* obj) {
     GameBitLatch_Update((GameBitLatchState*)&state->flags, 8, -1, -1, 0x3a0, 0x35);
     GameBitLatch_Update((GameBitLatchState*)&state->flags, 0x10, -1, -1, 0x3a1, (int)state->dayNightMusicId);
     GameBitLatch_Update((GameBitLatchState*)&state->flags, 0x20, -1, -1, 0x393, 0x36);
-    GameBitLatch_Update((GameBitLatchState*)&state->flags, 0x40, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK, 0xc4);
+    GameBitLatch_Update((GameBitLatchState*)&state->flags, 0x40, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
+                        MUSICTRIG_PU3_Adventure_c4);
     timerActive = 0;
     gameBit = mainGetBit(GAMEBIT_SnowHornArtifact19F);
     rescueBit = mainGetBit(GAMEBIT_SnowHornArtifact19D);

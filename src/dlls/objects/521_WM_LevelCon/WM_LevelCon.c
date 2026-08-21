@@ -227,7 +227,8 @@ void WM_LevelControl_update(GameObject* obj) {
         if (state->frameCounter > 0x3C) {
             GameBitLatch_Update(&state->musicLatch, 1, -1, -1, 0xADA, 0xAC);
         }
-        GameBitLatch_Update(&state->musicLatch, 0x20, -1, -1, 0xCBB, 0xC4);
+        GameBitLatch_Update(&state->musicLatch, 0x20, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
+                            MUSICTRIG_PU3_Adventure_c4);
     }
     WM_LevelControl_updateSkyLighting(obj);
     state->frameCounter++;

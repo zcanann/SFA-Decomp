@@ -304,8 +304,10 @@ void gpshShrine_update(GameObject* obj) {
 
         /* This engine latch intentionally overlaps the shrine's phase and flags. */
         GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 2, -1, -1, 0xdd2, 0xb);
-        GameBitLatch_UpdateInverted((GameBitLatchState*)state->gameBitLatchStorage, 1, -1, -1, 0xcbb, 8);
-        GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 4, -1, -1, 0xcbb, 0xc4);
+        GameBitLatch_UpdateInverted((GameBitLatchState*)state->gameBitLatchStorage, 1, -1, -1,
+                                    GAMEBIT_SHRINE_MUSIC_LOCK, 8);
+        GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 4, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
+                            MUSICTRIG_PU3_Adventure_c4);
 
         if (state->phaseDelay > (zero = 0.0f)) {
             state->phaseDelay -= timeDelta;
