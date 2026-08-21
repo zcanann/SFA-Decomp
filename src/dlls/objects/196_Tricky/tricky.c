@@ -58,6 +58,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx.h"
 #include "dlls/objects/243_flameblast.h"
+#include "dlls/objects/235.h"
 #include "dlls/objects/312_GroundAnima.h"
 #include "main/dll/tumbleweedbush.h"
 #include "main/audio/sfx_looped_object_api.h"
@@ -1679,7 +1680,8 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
     int objectCount;
     void** objects;
     GameObject* obj;
-    u8* def;
+    SideRepelPlacement* repelPlacement;
+    ObjDef* modelDef;
     ObjHitsPriorityState* hitState;
     u16 minRadius;
     void** op;
@@ -1689,22 +1691,24 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
     objects = (void**)objGetAllOfType(SIDEREPEL_OBJGROUP, &count);
     for (i = 0, op = objects, scale = 0.1f; i < count; i++) {
         obj = *op;
-        def = (u8*)obj->anim.placementData;
+        repelPlacement = (SideRepelPlacement*)obj->anim.placementData;
         trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX,
-                                    scale * (f32)(u32) * (u16*)(def + 0x18), scale * (f32)(u32) * (u16*)(def + 0x1a));
+                                    scale * (f32)(u32)repelPlacement->minDistance,
+                                    scale * (f32)(u32)repelPlacement->moveDistance);
         op++;
     }
 
     objects = (void**)ObjList_GetObjects(&startIndex, &objectCount);
     for (i = startIndex, op = objects + i; i < objectCount; i++) {
         obj = *op;
-        def = (u8*)obj->anim.modelInstance;
-        minRadius = *(u16*)(def + 0x84);
+        modelDef = obj->anim.modelInstance;
+        minRadius = modelDef->avoidRadiusX;
         if (minRadius != 0) {
             hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             if ((hitState != NULL) && ((hitState->flags & 1) != 0)) {
                 trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX,
-                                            0.1f * (f32)(u32)minRadius, 0.1f * (f32)(u32) * (u16*)(def + 0x86));
+                                            0.1f * (f32)(u32)minRadius,
+                                            0.1f * (f32)(u32)modelDef->avoidRadiusZ);
             }
         }
         op++;

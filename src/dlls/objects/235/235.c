@@ -24,7 +24,8 @@ void siderepel_init(GameObject* obj, SideRepelPlacement* placement) {
     obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
     objAddObjectType(obj, SIDEREPEL_OBJECT_GROUP);
     if (obj->anim.hitReactState != NULL) {
-        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, (s16)(placement->radius >> SIDEREPEL_RADIUS_SHIFT));
+        ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
+                                  (s16)(placement->minDistance >> SIDEREPEL_RADIUS_SHIFT));
     }
 }
 
