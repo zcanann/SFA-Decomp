@@ -551,6 +551,7 @@ enum GameBitId {
     GAMEBIT_WM_FinaleQuakeActive = 0x38D,                /* Krazoa Palace finale: set by WM_Crystal (dll_020E) once fully risen after the 6th spirit is returned, gating the WM_sun bank-0 quake/envfx countdown until it clears and 0x38F fires */
     GAMEBIT_KrazTest1Related0390 = 0x390,                /* table 3; set when entering Krazoa test 1, cleared when talking to WarpStone */
     GAMEBIT_DBAY_ObjGroups = 0x397,                      /* table 3; size 32 */
+    GAMEBIT_NW_GeyserComplete = 0x398,                   /* SnowHorn Wastes geyser completion; set by NW_geyser after its disable bit hides it, consumed by NW_levcontr to re-enable the geyser object group */
     GAMEBIT_IM_WaterRelated03A0 = 0x3A0,                 /* table 3; set when getting out of water */
     GAMEBIT_IM_Done = 0x3A1,                             /* table 3; Tricky now follows you */
     GAMEBIT_IM_BikeRelated03A2 = 0x3A2,                  /* table 1; set when gaining control of bike, cleared at end */

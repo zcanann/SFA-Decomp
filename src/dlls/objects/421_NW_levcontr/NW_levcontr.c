@@ -9,6 +9,7 @@
  */
 #include "dlls/objects/421_NW_levcontr.h"
 
+#include "dlls/objects/416_NW_geyser.h"
 #include "game/objects/object.h"
 #include "main/audio/music_api.h"
 #include "main/audio/music_trigger_ids.h"
@@ -200,10 +201,11 @@ void nwLevelControl_update(GameObject* obj) {
     }
     mainSetBits(0xf31, timerActive);
     GameBitLatch_Update((GameBitLatchState*)&state->flags, 0x80, -1, -1, 0xf31, NW_LEVEL_CONTROL_TIMER_END_MUSIC_ID);
-    gameBit = mainGetBit(0x398);
+    gameBit = mainGetBit(GAMEBIT_NW_GeyserComplete);
     if ((gameBit != 0) &&
-        (status = (*gMapEventInterface)->getObjGroupStatus((int)obj->anim.mapEventSlot, 0x1f), status == 0)) {
-        (*gMapEventInterface)->setObjGroupStatus((int)obj->anim.mapEventSlot, 0x1f, 1);
+        (status = (*gMapEventInterface)->getObjGroupStatus((int)obj->anim.mapEventSlot, NW_GEYSER_OBJECT_GROUP),
+         status == 0)) {
+        (*gMapEventInterface)->setObjGroupStatus((int)obj->anim.mapEventSlot, NW_GEYSER_OBJECT_GROUP, 1);
     }
     if ((((int)state->flags & NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING) != 0) && isGameTimerDisabled() != 0) {
         Sfx_PlayFromObject(0, SFXTRIG_sc_lockon22);
