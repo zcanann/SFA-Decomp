@@ -6,6 +6,7 @@
 #include "dolphin/pad.h"
 #include "main/dll/dll_0044_cameramodeviewfinder.h"
 #include "main/dll/dll_0048_cameramodestatic.h"
+#include "main/dll/dll_0049_cameramodecombat.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_00C9_enemy.h"
@@ -896,8 +897,9 @@ void Camera_setLetterbox(int yOffset, int applyNow) {
 void Camera_minimapShowHelpTextForTarget(int renderArg2, int renderArg3, int renderArg4, int renderArg5) {
     if (isFrontEndUiActive() == 0) {
         gCamcontrolTargetHelpTextId = CAMCONTROL_HELP_TEXT_NONE;
-        camcontrol_updateTargetReticle(gCamcontrolCamera->targetReticleFocus, gCamcontrolActiveActionId == 0x49,
-                                       renderArg2, renderArg3, renderArg4, renderArg5);
+        camcontrol_updateTargetReticle(gCamcontrolCamera->targetReticleFocus,
+                                       gCamcontrolActiveActionId == CAMERA_MODE_COMBAT_RESOURCE_ID, renderArg2,
+                                       renderArg3, renderArg4, renderArg5);
         gCamcontrolCamera->targetReticleOverride = NULL;
     }
 }
