@@ -2058,51 +2058,51 @@ void allocLotsOfTextures(void)
     mmSetForceHeap3Only(saved);
 }
 
-int surfaceSfxSelectTrigger(u8 a, u8 b)
+int surfaceSfxSelectTrigger(u8 surfaceType, u8 soundId)
 {
-    u8* base = gSurfaceSfxTable;
-    int idx = (u8)a;
-    int t;
-    u8 v;
-    if (idx < 0 || idx >= 0x23)
-        t = 0;
+    u8* soundBank = gSurfaceSfxTable;
+    int surfaceIndex = (u8)surfaceType;
+    int surfaceEntry;
+    u8 triggerIndex;
+    if (surfaceIndex < 0 || surfaceIndex >= 0x23)
+        surfaceEntry = 0;
     else
-        t = base[idx + 0xb4];
-    v = t;
-    switch (b)
+        surfaceEntry = soundBank[surfaceIndex + 0xb4];
+    triggerIndex = surfaceEntry;
+    switch (soundId)
     {
     case 1:
-        v = t;
+        triggerIndex = surfaceEntry;
         break;
     case 3:
-        base += 0x14;
+        soundBank += 0x14;
         break;
     case 4:
-        base += 0x3c;
+        soundBank += 0x3c;
         break;
     case 5:
-        base += 0x64;
+        soundBank += 0x64;
         break;
     case 6:
-        base += 0x50;
+        soundBank += 0x50;
         break;
     case 8:
-        base += 0x78;
+        soundBank += 0x78;
         break;
     case 0xa:
-        base += 0x8c;
+        soundBank += 0x8c;
         break;
     case 9:
-        base += 0xa0;
+        soundBank += 0xa0;
         break;
     case 7:
-        base += 0x28;
+        soundBank += 0x28;
         break;
     default:
-        base += 0x28;
+        soundBank += 0x28;
         break;
     }
-    return *(u16*)(base + v * 2);
+    return *(u16*)(soundBank + triggerIndex * 2);
 }
 
 void objAudioDispatchEventMask(GameObject* obj, int eventMask, u8 type, void* points, void* state, f32 unused,
