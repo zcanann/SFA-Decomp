@@ -169,6 +169,9 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_BACKSTEP               0x40  /* apply backstepDelta offset */
 #define TRICKY_STATE_FLAG_VERTICAL_MOVE          0x80  /* apply verticalDelta to localPosY */
 #define TRICKY_STATE_FLAG_ROTATE                 0x100 /* interpolate rotation toward targetYaw target */
+#define TRICKY_STATE_FLAG_SEQUENCE_CALLBACK      0x1u
+#define TRICKY_STATE_FLAG_SEQUENCE_LATCHED       0x200u
+#define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE    0x4000u
 #define TRICKY_STATE_FLAG_COMMAND_ACTIVE         0x10u
 #define TRICKY_STATE_FLAG_GROUND_SNAP            0x2000u
 #define TRICKY_STATE_FLAG_RECALL_REQUEST         0x10000u
@@ -184,6 +187,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_TURN_RIGHT_FLAGS            0x900000LL
 #define TRICKY_STATE_TURN_LEFT_FLAGS             0x500000LL
 #define TRICKY_STATE_DIG_TUNNEL_FLAGS            0x2010LL
+#define TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK    0x4201
 #define TRICKY_STATE_FLAG_TURNING_U32            0x10000000
 #define TRICKY_STATE_FLAG_TURNING                0x10000000LL
 #define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32   0x20000000U
@@ -365,7 +369,7 @@ void tricky_updateModelVariantFade(GameObject* obj, TrickyState* state) {
         if (mainGetBit(1005) == 0) {
             mainSetBits(1005, 1);
             (*gObjectTriggerInterface)->runSequence(5, obj, -1);
-            state->stateFlags |= 0x4000;
+            state->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
             state->variantFadeTimer += 20.0f;
         }
         state->variantFadeTimer -= timeDelta;
@@ -6247,8 +6251,8 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                 c = state->progressPtr[1];
                 if (a == c) {
                     b = obj->extra;
-                    b->stateFlags |= 0x4000;
-                    b->stateFlags |= 1;
+                    b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
+                    b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_CALLBACK;
                     if (0.0f == b->waterLevel) {
                         inWater = 0;
                     } else if (gTrickyEventTimeSentinel == b->eventTime) {
@@ -6286,7 +6290,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                         state->progressValue = state->progressPtr[1];
                     }
                     b = obj->extra;
-                    b->stateFlags |= 0x4000;
+                    b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
                     if (0.0f == b->waterLevel) {
                         inWater = 0;
                     } else if (gTrickyEventTimeSentinel == b->eventTime) {
@@ -6323,9 +6327,9 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                 mainSetBits(GAMEBIT_TrickyTalk, 0xff);
                 b = obj->extra;
                 g = gu;
-                b->stateFlags |= 0x4000;
+                b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
                 if (g != 2) {
-                    b->stateFlags |= 1;
+                    b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_CALLBACK;
                 }
                 if (0.0f == b->waterLevel) {
                     inWater = 0;
@@ -6592,7 +6596,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     u8 blockFlags[120];
 
     state = trickyGetState(obj);
-    if ((((TrickyState*)state)->stateFlags & 0x200) == 0) {
+    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0) {
         ObjHits_DisableObject(obj);
         Sfx_StopObjectChannel(obj, 0x7f);
         if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
@@ -6611,9 +6615,9 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
             }
         }
         Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
-        ((TrickyState*)state)->stateFlags |= 0x200;
+        ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_LATCHED;
         if ((sequence->flags & 3) == 0) {
-            ((TrickyState*)state)->stateFlags |= 0x4000;
+            ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
         }
         if (((TrickyState*)state)->flag82EBit5 == 0) {
             ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
@@ -6686,7 +6690,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     Tricky_updateBlendChannelWeight(obj, (TrickyState*)state);
     objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, ((TrickyState*)state)->footPoints,
                                &((TrickyState*)state)->pathControlFlags, 1.0f, 1.0f);
-    if ((((TrickyState*)state)->stateFlags & 1) != 0) {
+    if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_CALLBACK) != 0) {
         sequence->flags &= ~0x40;
         characterDoEyeAnims(obj, &((TrickyState*)state)->eyeAnimState);
         return (*gObjectTriggerInterface)->func20(obj, sequence, 1, 0xf, 0x1e, 0, 0);
@@ -6909,7 +6913,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             commandMask &= ~0x10;
         }
         state->commandRequestBits = 0;
-        if ((cond) && ((state->stateFlags & 0x200) == 0)) {
+        if ((cond) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->promptBDespawnTimer = 60.0f;
             if ((state->childB == NULL) && (Obj_IsLoadingLocked() != 0)) {
                 bitVal = randomGetRange(0, 1);
@@ -6955,7 +6959,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                 objAnimFreeChildren(obj, state, &state->childB);
             }
         }
-        if ((promptA) && ((state->stateFlags & 0x200) == 0)) {
+        if ((promptA) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->promptADespawnTimer = 60.0f;
             if ((state->childA == NULL) && (Obj_IsLoadingLocked() != 0)) {
                 if (randomGetRange(0, 3) == 0) {
@@ -7119,7 +7123,8 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
                 }
                 break;
             }
-            if ((((state->stateFlags & 0x200) == 0) && (state->stateIndex == TRICKY_STATE_FETCH_BALL)) &&
+            if ((((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0) &&
+                 (state->stateIndex == TRICKY_STATE_FETCH_BALL)) &&
                 (state->substate >= 3)) {
                 if (state->substate != 3) {
                     state->scratch700.obj->anim.localPosX = state->renderPosX;
@@ -7334,9 +7339,9 @@ void Tricky_update(GameObject* obj) {
 
         trickyDebugPrint(base + TRICKY_DBG_SIDECOMMAND_ENERGY, *debugCursor, *(debugCursor + 1));
     }
-    if ((trickyState->stateFlags & 0x200) != 0) {
+    if ((trickyState->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) != 0) {
         ObjHits_EnableObject((GameObject*)obj);
-        if ((trickyState->stateFlags & 0x4000) == 0) {
+        if ((trickyState->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE) == 0) {
             TRICKY_RESET_COMMAND(state);
             trickyState->movementState = TRICKY_MOVE_WALK_WAIT;
             trickyState->prevSpeed = z;
@@ -7352,7 +7357,7 @@ void Tricky_update(GameObject* obj) {
                 trickyState->waterLevel = 0.0f;
             }
         }
-        *(s32*)&trickyState->stateFlags &= ~0x4201;
+        *(s32*)&trickyState->stateFlags &= ~TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK;
         if (trickyState->flag82EBit5 != 0) {
             trickyState->flag82EBit5 = 0;
         } else {
