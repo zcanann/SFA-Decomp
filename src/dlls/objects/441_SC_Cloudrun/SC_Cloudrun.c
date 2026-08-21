@@ -126,7 +126,7 @@ void sc_cloudrunnera_update(GameObject* obj) {
             if (obj->childObjs[0] != NULL) {
                 break;
             }
-            if (Obj_IsLoadingLocked() == 0) {
+            if (Obj_CanSetupObject() == 0) {
                 break;
             }
             setup = (CmbSrcMapData*)Obj_AllocObjectSetup(CMBSRC_PLACEMENT_BYTES, SC_CLOUDRUNNER_A_CHILD_OBJECT_ID);

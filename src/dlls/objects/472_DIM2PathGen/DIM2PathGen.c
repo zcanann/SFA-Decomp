@@ -124,7 +124,7 @@ void DIM2PathGenerator_update(GameObject* obj) {
         }
     }
 
-    if (Obj_IsLoadingLocked()) {
+    if (Obj_CanSetupObject()) {
         Dim2SnowBallPlacement* np =
             (Dim2SnowBallPlacement*)Obj_AllocObjectSetup(sizeof(Dim2SnowBallPlacement), state->spawnTypes[toggle]);
 

@@ -98,7 +98,7 @@ GameObject* Shield_spawnOmniShield(GameObject* obj, f32 rootMotionScale) {
     ObjPlacement* setup;
     GameObject* shield;
 
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return NULL;
     }
     setup = Obj_AllocObjectSetup(SHIELD_SPAWN_SETUP_SIZE, SHIELD_SEQID_OMNI_SHIELD);

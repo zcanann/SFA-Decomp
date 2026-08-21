@@ -79,7 +79,7 @@ void dll410_update(GameObject* obj) {
         if (state->spawnTimerRate != 0) {
             state->spawnTimer -= state->spawnTimerRate * framesThisStep;
         }
-        if (state->spawnTimer <= 0 && Obj_IsLoadingLocked() != 0) {
+        if (state->spawnTimer <= 0 && Obj_CanSetupObject() != 0) {
             spawnSetup = (EnemyPlacement*)Obj_AllocObjectSetup(sizeof(EnemyPlacement), DLL19A_CHILD_OBJECT_ID);
             spawnSetup->base.posX = placement->base.posX;
             spawnSetup->base.posY = placement->base.posY;

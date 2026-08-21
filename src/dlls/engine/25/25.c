@@ -153,7 +153,7 @@ void dll_19_changeWeapon(GameObject* cam, u8* ctx)
         Obj_FreeObject(cam->childObjs[0]);
         cam->childObjs[0] = NULL;
     }
-    if (Obj_IsLoadingLocked() != 0)
+    if (Obj_CanSetupObject() != 0)
     {
         if ((s8)ctx[1031] > 0)
         {
@@ -536,7 +536,7 @@ GameObject* dll_19_dropCollectable(GameObject* obj, int spawnType, int unused, i
     {
         return 0;
     }
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
     {
         return 0;
     }

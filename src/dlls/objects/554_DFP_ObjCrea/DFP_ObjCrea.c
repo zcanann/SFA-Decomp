@@ -94,7 +94,7 @@ void DFP_ObjCreator_update(GameObject* obj)
     DfpobjcreatorSetup* setup;
     GameObject* newObj;
 
-    if (Obj_IsLoadingLocked() != 0)
+    if (Obj_CanSetupObject() != 0)
     {
         switch (data->behaviorMode)
         {

@@ -210,7 +210,7 @@ void DR_CloudRunner_fireProjectile(GameObject* obj)
     GameObject* newObj;
     ObjPlacement* setup;
     f32 dist;
-        if (Obj_IsLoadingLocked() == 0)
+        if (Obj_CanSetupObject() == 0)
     {
         return;
     }
@@ -315,7 +315,7 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, CloudRunnerState* baddie)
         hitState->flags = hitState->flags | 0x200;
         ObjAnim_SetCurrentMove(obj, 0xd, 0.0f, 0);
         baddie->baddie.moveSpeed = 0.011f;
-        if (Obj_IsLoadingLocked() == 0)
+        if (Obj_CanSetupObject() == 0)
         {
             return 0;
         }

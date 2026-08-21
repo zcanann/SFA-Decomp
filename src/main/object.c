@@ -592,7 +592,7 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
     void* objF30;
     objF30 = src->anim.parent;
     type = src->anim.mapEventSlot;
-    if (getLoadedFileFlags(0) & 0x100000)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
     {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;
@@ -814,7 +814,7 @@ void mapSetupPlayer(void) {
             spawn.x = x;
             spawn.y = y;
             spawn.z = z;
-            if (getLoadedFileFlags(0) & 0x100000)
+            if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
             {
                 OSReport((char*)(base + 0x20), -1);
                 obj = 0;
@@ -2180,7 +2180,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objIndex, void* parent)
 {
     GameObject* obj;
-    if (getLoadedFileFlags(0) & 0x100000)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
     {
         OSReport(sObjSetupObjectLoadingLockedWarning, objIndex);
         return NULL;
@@ -2194,21 +2194,8 @@ GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objI
     return obj;
 }
 
-asm u8 Obj_IsLoadingLocked(void)
-{
-    nofralloc
-    stwu r1, -0x10(r1)
-    mflr r0
-    stw r0, 0x14(r1)
-    li r3, 0
-    bl getLoadedFileFlags
-    rlwinm r0, r3, 0, 11, 11
-    cntlzw r0, r0
-    srwi r3, r0, 5
-    lwz r0, 0x14(r1)
-    mtlr r0
-    addi r1, r1, 0x10
-    blr
+int Obj_CanSetupObject(void) {
+    return (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0;
 }
 void* getTablesBinEntry(int i)
 {

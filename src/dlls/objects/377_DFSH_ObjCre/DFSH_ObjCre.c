@@ -82,7 +82,7 @@ void dfshObjCreator_update(GameObject* obj) {
         state->spawnTimer = (s16)(state->spawnTimer - state->spawnTimerRate * (int)timeDelta);
     }
 
-    if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0) {
+    if (Obj_CanSetupObject() != 0 && state->spawnTimer <= 0) {
         sharpClawSetup = (EnemyPlacement*)Obj_AllocObjectSetup(sizeof(EnemyPlacement),
                                                                              DFSH_OBJ_CREATOR_SHARPCLAW_OBJECT_ID);
         sharpClawSetup->base.posX = placement->base.posX;

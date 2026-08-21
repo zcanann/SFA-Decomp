@@ -27,7 +27,7 @@ int DR_Creator_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     DrcreatorSetup* setup;
     GameObject* projectile;
     logPrintf(sDrCreatorTimeFormat, placement->behaviorMode, animUpdate->curFrame);
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
     {
         return 0;
     }
@@ -99,7 +99,7 @@ void DR_Creator_update(GameObject* obj)
     DrcreatorState* state = obj->extra;
     DrcreatorSetup* setup;
     GameObject* projectile;
-    if (Obj_IsLoadingLocked() != 0)
+    if (Obj_CanSetupObject() != 0)
     {
         switch (placement->behaviorMode)
         {

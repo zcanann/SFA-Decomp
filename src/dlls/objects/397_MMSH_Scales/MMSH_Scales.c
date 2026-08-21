@@ -121,7 +121,7 @@ void mmshScales_init(GameObject* obj, const MMSHScalesPlacement* placement) {
         }
         obj->userData1 = placement->animDataIndex + 1;
     }
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return;
     }
     childSetup =

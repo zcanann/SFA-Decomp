@@ -669,7 +669,7 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, GroundBaddieState* inner)
         ObjLink_DetachChild(obj, child);
         Obj_FreeObject(child);
     }
-    if (Obj_IsLoadingLocked())
+    if (Obj_CanSetupObject())
     {
         if (animState->weaponDefNo > 0)
         {

@@ -76,7 +76,7 @@ void andross_spawnBombCollector(GameObject* obj, AndrossState* state) {
     GameObject* target;
     ObjPlacement* setup;
 
-    if (!Obj_IsLoadingLocked()) {
+    if (!Obj_CanSetupObject()) {
         return;
     }
     target = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
@@ -127,7 +127,7 @@ void andross_spawnSuckAsteroid(GameObject* obj, AndrossState* state) {
     int yaw;
     s16 radialAngle;
 
-    if (!Obj_IsLoadingLocked()) {
+    if (!Obj_CanSetupObject()) {
         return;
     }
     yaw = gAndrossProjectileYaw;
@@ -158,7 +158,7 @@ void andross_spawnAsteroid(GameObject* obj, AndrossState* state) {
     int pitch;
     GfProjectileSetup* setup;
 
-    if (!Obj_IsLoadingLocked()) {
+    if (!Obj_CanSetupObject()) {
         return;
     }
     yawOffset = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
@@ -185,7 +185,7 @@ void andross_spawnAimedRing(GameObject* obj, AndrossState* state, int unused) {
     int yaw;
     GfProjectileSetup* setup;
 
-    if (!Obj_IsLoadingLocked()) {
+    if (!Obj_CanSetupObject()) {
         return;
     }
     dx = state->cachedPosX - state->arwingObj->anim.localPosX;
@@ -1289,7 +1289,7 @@ void andross_update(GameObject* boss) {
         }
         for (ringSpawnIndex = 0; ringSpawnIndex < 2; ringSpawnIndex++) {
             if (state->silverRing == NULL && state->actionTimer <= (spawnDelay = ringSpawnDelays[ringSpawnIndex]) &&
-                previousDuration > spawnDelay && Obj_IsLoadingLocked() != 0) {
+                previousDuration > spawnDelay && Obj_CanSetupObject() != 0) {
                 ringSetup =
                     (AndrossChildSetup*)Obj_AllocObjectSetup(sizeof(AndrossChildSetup), ANDROSS_CHILD_OBJ_SILVER_RING);
                 ringSetup->base.posX = state->cachedPosX;

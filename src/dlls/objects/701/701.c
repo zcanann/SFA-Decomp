@@ -53,7 +53,7 @@ void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
     int yaw;
     AndrossHandShotSetup* setup;
 
-    if (Obj_IsLoadingLocked())
+    if (Obj_CanSetupObject())
     {
         ObjPath_GetPointWorldPosition(obj, 0, &pt[0], &pt[1], &pt[2], 0);
         dx = pt[0] - state->arwingObj->anim.localPosX;

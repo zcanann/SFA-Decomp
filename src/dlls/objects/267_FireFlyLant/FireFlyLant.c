@@ -37,7 +37,7 @@ static const f32 sFireFlyLanternModelScale = 1.0f;
 static GameObject* FireFlyLantern_spawnFireFly(GameObject* obj) {
     LanternFireFlyPlacement* setup;
 
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return NULL;
     }
     setup = (LanternFireFlyPlacement*)Obj_AllocObjectSetup(sizeof(LanternFireFlyPlacement), LANTERN_FIRE_OBJECT_ID);

@@ -57,7 +57,7 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
                                                                                       \
         v = (u32)(SLOT);                                                              \
         idx = *(s16 *)((ModelFileHeader *)hdr)->animationHeaderBuffer;                \
-        if ((getLoadedFileFlags(0) & 0x100000) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
+        if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
             *(u16 *)(hdr + 4) == 3) {                                                 \
             if (v == 0) {                                                             \
                 if (ModelList_getHeader(gModelAnimCacheList, idx, &hp) == 0) {               \
@@ -597,7 +597,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
             animId = *(s16*)((u8*)gModelResourceBuffer + animIdx * 2);
             if (animId != -1)
             {
-                if ((getLoadedFileFlags(0) & 0x100000) && *(u16*)(hdr + 4) != 1 &&
+                if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) && *(u16*)(hdr + 4) != 1 &&
                     *(u16*)(hdr + 4) != 3)
                 {
                     atlasPtr = 0;
@@ -2164,7 +2164,7 @@ void* loadAnimation(ModelFileHeader* hdr, s16 id, int b, u8* bufout)
     int i;
     u32 ftype;
 
-    if ((getLoadedFileFlags(0) & 0x100000) != 0 && (ftype = hdr->modelId) != 1 && ftype != 3)
+    if ((getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) != 0 && (ftype = hdr->modelId) != 1 && ftype != 3)
     {
         return 0;
     }

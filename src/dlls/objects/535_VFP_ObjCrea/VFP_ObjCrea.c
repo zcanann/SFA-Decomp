@@ -59,7 +59,7 @@ void VFP_ObjCreator_update(GameObject* obj)
     VfpObjCreatorPlacement* placement = (VfpObjCreatorPlacement*)obj->anim.placementData;
     VfpObjCreatorState* state = obj->extra;
 
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
     {
         return;
     }

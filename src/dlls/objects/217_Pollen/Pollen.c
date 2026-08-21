@@ -134,7 +134,7 @@ u8 Pollen_burst(GameObject* obj) {
     u8 loadingLocked;
 
     state = obj->extra;
-    loadingLocked = Obj_IsLoadingLocked();
+    loadingLocked = Obj_CanSetupObject();
     if (loadingLocked == 0) {
         return loadingLocked;
     }

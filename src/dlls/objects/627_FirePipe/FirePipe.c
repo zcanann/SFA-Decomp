@@ -94,7 +94,7 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, GameObject* obj, ObjPlaceme
     GameObject* effectObj;
     int freeDelay;
 
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
     {
         return 0;
     }

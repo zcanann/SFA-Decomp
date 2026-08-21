@@ -123,7 +123,7 @@ s8 tumbleweedbush_spawnSibling(GameObject* obj) {
     if (siblingCount >= TUMBLEWEED_BUSH_MAX_SIBLINGS) {
         return -1;
     }
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return -1;
     }
 

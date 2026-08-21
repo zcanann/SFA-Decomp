@@ -119,7 +119,7 @@ void dll_1CE_update(GameObject* obj) {
     if ((u32)placement->contentsSpawnBitValue != mainGetBit(DLL1CE_CONTENTS_GATE_GAMEBIT)) {
         return;
     }
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return;
     }
     {

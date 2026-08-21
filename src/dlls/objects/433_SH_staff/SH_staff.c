@@ -300,7 +300,7 @@ int sh_staff_sequenceCallback(GameObject* obj, int unused, ObjSeqState* animUpda
     for (i = 0; i < SHSTAFF_HAZE_CHILD_COUNT; i++) {
         if (state->hazeSpawnPending[i] != 0) {
             int loadResult;
-            if (Obj_IsLoadingLocked() == 0) {
+            if (Obj_CanSetupObject() == 0) {
                 loadResult = 0;
             } else {
                 ObjPlacement* newSetup = Obj_AllocObjectSetup(SHSTAFF_HAZE_SETUP_SIZE, SHSTAFF_CHILD_OBJ_HAZE_FLAME);
@@ -414,7 +414,7 @@ void sh_staff_update(GameObject* obj) {
                 obj->anim.rotZ = (s16)(placement->rotZByte << 8);
                 obj->animEventCallback = sh_staff_sequenceCallback;
                 state->phase = SHSTAFF_PHASE_ARMED;
-                if (Obj_IsLoadingLocked() == 0) {
+                if (Obj_CanSetupObject() == 0) {
                     loadResult = 0;
                 } else {
                     ObjPlacement* newSetup =

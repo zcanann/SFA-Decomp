@@ -141,7 +141,7 @@ void WM_ObjCreator_update(GameObject* obj) {
 
     placement = (WMObjCreatorPlacementView*)obj->anim.placementData;
     state = obj->extra;
-    if (Obj_IsLoadingLocked() != 0) {
+    if (Obj_CanSetupObject() != 0) {
         switch (placement->spawnMode) {
         /* Spawn one WM_Galleon at the placement, unless one is already alive. */
         case WMOBJCREATOR_MODE_GALLEON: {

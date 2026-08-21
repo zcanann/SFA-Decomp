@@ -258,7 +258,7 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int fl
     f32 pz, py, px;
     GameObject* proj;
     ArwProjectileSetup* setup;
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
     setup = (ArwProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);

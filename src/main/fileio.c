@@ -104,7 +104,7 @@ void dvdCheckError(void)
     default:
         if (gDvdErrorPauseActive != 0)
         {
-            if ((getLoadedFileFlags(0) & ~0x100000) == 0)
+            if ((getLoadedFileFlags(0) & ~LOADED_FILE_FLAG_PI_LOCKED) == 0)
             {
                 if (getGameState() != 1 || DVDCheckDisk() != 0)
                 {

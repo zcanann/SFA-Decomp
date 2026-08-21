@@ -386,7 +386,7 @@ void kaldachom_spawnDustEffects(GameObject* obj, KaldachomControl* control) {
             ->spawnObject((void*)obj, KALDACHOM_PARTFX_DUST, 0, 4, 0xffffffff, &gKaldachomDustSpawnScratch);
         work--;
     } while (work != 0);
-    if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0')) {
+    if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_CanSetupObject(), loadLocked != '\0')) {
         setup = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
         setup->posX = obj->anim.localPosX;
         setup->posY = 10.0f + obj->anim.localPosY;
@@ -413,7 +413,7 @@ void kaldachom_spawnMouthProjectile(GameObject* obj, KaldachomState* state, u8 u
 
     control = ((KaldachomControl*)state->ground.control);
     placement = (KaldachomPlacement*)obj->anim.placementData;
-    if (Obj_IsLoadingLocked() != 0) {
+    if (Obj_CanSetupObject() != 0) {
         heightOffset = 0.5f + (f32)(s32)placement->scale / 15.0f;
         setup = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
         if (useUpperMouthPoint != 0) {

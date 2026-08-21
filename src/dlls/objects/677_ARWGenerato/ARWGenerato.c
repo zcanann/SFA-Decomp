@@ -34,7 +34,7 @@ void arwgenerato_spawnSquadronShipA(GameObject* obj, ARWGeneratorState* state, A
     ArwSquadronSetup* newObj;
     Vec3f dir;
 
-    if (Obj_IsLoadingLocked())
+    if (Obj_CanSetupObject())
     {
         newObj = (ArwSquadronSetup*)Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_A);
         newObj->base.posX =
@@ -65,7 +65,7 @@ void arwgenerato_spawnSquadronShipB(GameObject* obj, ARWGeneratorState* state, A
     ArwSquadronSetup* newObj;
     Vec3f dir;
 
-    if (Obj_IsLoadingLocked())
+    if (Obj_CanSetupObject())
     {
         newObj = (ArwSquadronSetup*)Obj_AllocObjectSetup(SPAWN_EXTRA_SIZE, OBJ_ID_SQUADRON_SHIP_B);
         newObj->base.posX =

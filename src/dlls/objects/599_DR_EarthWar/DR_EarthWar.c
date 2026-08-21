@@ -999,7 +999,7 @@ void DR_EarthWarrior_update(GameObject* obj)
     Obj_GetPlayerObject();
     ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumePriority = 0;
     ObjAnim_GetPriorityHitState(&obj->anim)->hitVolumeId = 0;
-    if (state->helperObj == NULL && Obj_IsLoadingLocked() != 0)
+    if (state->helperObj == NULL && Obj_CanSetupObject() != 0)
     {
         ObjPlacement* setup = Obj_AllocObjectSetup(0x18, DREARTHWARRIOR_CHILD_OBJ_HELPER);
         GameObject* newObj = objSetupObject(setup, 4, obj->anim.mapEventSlot, -1, obj->anim.parent);

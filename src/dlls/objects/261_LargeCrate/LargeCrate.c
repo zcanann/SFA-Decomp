@@ -135,7 +135,7 @@ STATIC_ASSERT(sizeof(LargeCratePickupPlacement) == LARGECRATE_PICKUP_PLACEMENT_S
 static void LargeCrate_spawnPickup(GameObject* obj) {
     LargeCratePickupPlacement* childPlacement;
 
-    if (Obj_IsLoadingLocked() != 0) {
+    if (Obj_CanSetupObject() != 0) {
         childPlacement = (LargeCratePickupPlacement*)Obj_AllocObjectSetup(LARGECRATE_PICKUP_PLACEMENT_SIZE, LARGECRATE_CHILD_OBJECT_PICKUP);
         childPlacement->base.posX = obj->anim.localPosX;
         childPlacement->base.posY = 2.0f + obj->anim.localPosY;
@@ -216,7 +216,7 @@ int LargeCrate_spawnDropContents(GameObject* obj, GameObject* player, LargeCrate
 
     zero = 0.0f;
     playerRef = player;
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return 0;
     }
     mainSetBits(state->brokenGameBit, 1);

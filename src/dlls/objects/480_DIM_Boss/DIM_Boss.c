@@ -666,7 +666,7 @@ int DIMbossHitDetect_resetIdleMove(GameObject* obj, u8* state) {
 void DIMboss_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity) {
     GameObject* spawnedObj;
     DimBossBlueWhiteEffectPlacement* setup;
-    if ((u8)Obj_IsLoadingLocked() != 0) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         setup = (DimBossBlueWhiteEffectPlacement*)Obj_AllocObjectSetup(36, DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT);
         setup->base.posX = source->x;
         setup->base.posY = source->y;

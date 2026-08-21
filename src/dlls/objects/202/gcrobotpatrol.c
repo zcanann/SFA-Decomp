@@ -130,7 +130,7 @@ GameObject* gcRobotLight_init(GameObject* obj, int childId)
 
     sub = (ObjPlacement*)(obj->anim.placementData);
     Obj_GetPlayerObject();
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
         return NULL;
     setup = (u8*)Obj_AllocObjectSetup(36, childId);
     ((ObjPlacement*)setup)->objectId = childId;

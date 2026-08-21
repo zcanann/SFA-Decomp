@@ -95,7 +95,7 @@ void gpshObjCreator_update(GameObject* obj) {
             obj->userData2 = 1;
         }
     }
-    if (Obj_IsLoadingLocked() == 0) {
+    if (Obj_CanSetupObject() == 0) {
         return;
     }
     if (!state->spawnTimer) {

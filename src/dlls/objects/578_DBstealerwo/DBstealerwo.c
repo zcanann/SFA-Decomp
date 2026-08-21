@@ -2016,7 +2016,7 @@ void dbstealerworm_launchIceBall(GameObject* obj, BaddieState* baddie)
     f32 dur;
     f32 t;
 
-    if (Obj_IsLoadingLocked() != 0)
+    if (Obj_CanSetupObject() != 0)
     {
         setup = Obj_AllocObjectSetup(0x24, DBSTEALERWORM_CHILD_OBJ_ICE_BALL_SMALL);
         setup->posX = (obj)->anim.localPosX;

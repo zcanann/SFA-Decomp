@@ -55,7 +55,7 @@ void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
     TreeAmbientEffectSetup* effectSetup;
     int idx;
 
-    if (Obj_IsLoadingLocked())
+    if (Obj_CanSetupObject())
     {
         effectSetup =
             (TreeAmbientEffectSetup*)Obj_AllocObjectSetup(TREE_AMBIENT_EFFECT_SETUP_SIZE, APPLE_ON_TREE_OBJECT_ID);

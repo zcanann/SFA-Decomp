@@ -157,7 +157,7 @@ SnowwormReactionTablePair gCrawlerReactionTables[] = {
 
 void snowworm_spawnProjectile(GameObject* obj)
 {
-    u8 locked = Obj_IsLoadingLocked();
+    u8 locked = Obj_CanSetupObject();
     if (locked != 0)
     {
         int* setup = (int*)Obj_AllocObjectSetup(0x24, KALDACHOM_SPIT_OBJ);

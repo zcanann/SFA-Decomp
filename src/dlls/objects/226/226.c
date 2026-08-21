@@ -405,7 +405,7 @@ void staffStartQuakeSpell(f32* pos) {
     gStaffQuakeSpellState.heightScale = 1.0f;
     CameraShake_StartDampened(5.0f, 10.0f, 4.0f);
     player = Obj_GetPlayerObject();
-    if (player != NULL && Obj_IsLoadingLocked() != 0) {
+    if (player != NULL && Obj_CanSetupObject() != 0) {
         PartFxSpawnParams v;
         ObjPlacement* setup;
         gStaffQuakeSpellState.active = 1;

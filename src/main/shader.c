@@ -2131,7 +2131,7 @@ void doPendingMapLoads(void)
             }
             {
                 int ff = getLoadedFileFlags(0);
-                if ((ff & ~0x100000) != 0)
+                if ((ff & ~LOADED_FILE_FLAG_PI_LOCKED) != 0)
                 {
                     if (gShaderCurMapEventId != 38 && gShaderCurMapEventId != 58 && gShaderCurMapEventId != 59 &&
                         gShaderCurMapEventId != 60 && gShaderCurMapEventId != 61 && gShaderCurMapEventId != 62 &&

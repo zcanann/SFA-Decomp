@@ -80,7 +80,7 @@ void sh_beacon_update(GameObject* obj) {
             ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_FireWeed_Count) != 0)) {
             gameBitDecrement(GAMEBIT_ITEM_FireWeed_Count);
             mainSetBits(placement->igniteGameBit, 1);
-            if (Obj_IsLoadingLocked() != 0) {
+            if (Obj_CanSetupObject() != 0) {
                 twinklePlacement = Obj_AllocObjectSetup(SH_BEACON_TWINKLE_SETUP_SIZE, SH_BEACON_TWINKLE_OBJECT_ID);
                 twinklePlacement->posX = obj->anim.localPosX;
                 twinklePlacement->posY = obj->anim.localPosY;
@@ -180,7 +180,7 @@ void sh_beacon_init(GameObject* obj, const ShBeaconPlacement* placement) {
         }
     }
 
-    if (state->mode != SH_BEACON_MODE_UNLIT && Obj_IsLoadingLocked() != 0) {
+    if (state->mode != SH_BEACON_MODE_UNLIT && Obj_CanSetupObject() != 0) {
         twinklePlacement = Obj_AllocObjectSetup(SH_BEACON_TWINKLE_SETUP_SIZE, SH_BEACON_TWINKLE_OBJECT_ID);
         twinklePlacement->posX = obj->anim.localPosX;
         twinklePlacement->posY = obj->anim.localPosY;

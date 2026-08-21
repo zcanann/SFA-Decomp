@@ -80,7 +80,7 @@ void breakableCarryable_update(GameObject* obj) {
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, BREAKABLE_CARRYABLE_HITBOX_RADIUS);
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, BREAKABLE_CARRYABLE_HIT_VOLUME_SLOT,
                                      BREAKABLE_CARRYABLE_HITBOX_TYPE, 0);
-            if (Obj_IsLoadingLocked() != 0) {
+            if (Obj_CanSetupObject() != 0) {
                 setup = Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
                 setup->posX = obj->anim.localPosX;
                 setup->posY = obj->anim.localPosY;

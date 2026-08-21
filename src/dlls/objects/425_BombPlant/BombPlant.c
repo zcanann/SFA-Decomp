@@ -116,7 +116,7 @@ void BombPlant_spawnSpore(GameObject* obj, BombPlantState* unusedState) {
     (void)unusedState;
 
     placement = (BombPlantPlacement*)obj->anim.placementData;
-    if (Obj_IsLoadingLocked()) {
+    if (Obj_CanSetupObject()) {
         MatrixTransform transform;
         f32 matrix[16];
         f32 offsetZ;

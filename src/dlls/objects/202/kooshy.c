@@ -104,7 +104,7 @@ void kooshy_spawnProjectile(GameObject* obj, void* state)
     ObjPlacement* fx;
     GameObject* newObj;
 
-    if ((u8)Obj_IsLoadingLocked() != 0)
+    if ((u8)Obj_CanSetupObject() != 0)
     {
         fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, KALDACHOM_SPIT_OBJ);
         fx->posX = (obj)->anim.localPosX;

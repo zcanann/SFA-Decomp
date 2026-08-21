@@ -219,7 +219,7 @@ void SB_ShipGun_update(GameObject* obj) {
                 state->pitchAngle = -SB_SHIPGUN_MAX_PITCH;
             }
             state->fireTimer -= framesThisStep;
-            if ((state->fireTimer < 0) && (Obj_IsLoadingLocked() != 0)) {
+            if ((state->fireTimer < 0) && (Obj_CanSetupObject() != 0)) {
                 Obj_GetWorldPosition(obj, &posX, &posY, &posZ);
                 spawnArgs.posX = 0.0f;
                 spawnArgs.posY = 0.0f;

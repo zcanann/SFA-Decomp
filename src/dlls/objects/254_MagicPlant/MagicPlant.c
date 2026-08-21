@@ -205,7 +205,7 @@ void MagicPlant_spawnChild(GameObject* obj, int objectId) {
 
     placementData = (u8*)obj->anim.placementData;
     state = obj->extra;
-    if (Obj_IsLoadingLocked() != 0) {
+    if (Obj_CanSetupObject() != 0) {
         placement = (CollectibleSetup*)Obj_AllocObjectSetup(sizeof(CollectibleSetup), objectId);
         placement->unk1A = MAGICPLANT_CHILD_UNK1A;
         placement->counterGameBit = MAGICPLANT_CHILD_SENTINEL;

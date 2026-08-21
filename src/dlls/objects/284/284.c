@@ -138,7 +138,7 @@ void staffactivated_spawnMapEventDebris(GameObject* obj) {
     tricky = getTrickyObject();
     state = obj->extra;
 
-    if ((*gMapEventInterface)->shouldNotSaveTime(placement->base.ident) != 0 && Obj_IsLoadingLocked() != 0) {
+    if ((*gMapEventInterface)->shouldNotSaveTime(placement->base.ident) != 0 && Obj_CanSetupObject() != 0) {
         (*gMapEventInterface)->addTime(placement->base.ident, 60.0f * placement->timedEventSeconds);
         if (tricky != NULL) {
             trickyImpress(tricky);

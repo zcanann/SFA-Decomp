@@ -123,7 +123,7 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
 
     *(CmbSrcColorIndexPair*)colorIndexWords = sDFPRotatePColorIndices;
 
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
     {
         return 0;
     }

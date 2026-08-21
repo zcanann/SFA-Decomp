@@ -103,7 +103,7 @@ void spittingEbaSpawnPollen(GameObject* obj, int state)
     float velY;
     float cosPitch;
 
-    loadLocked = Obj_IsLoadingLocked();
+    loadLocked = Obj_CanSetupObject();
     if ((loadLocked & 0xff) != 0)
     {
         a[0] = obj->anim.localPosX;

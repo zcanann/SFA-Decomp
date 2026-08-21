@@ -48,7 +48,7 @@ void dimsnowball1c2_hitDetect(void) {
 }
 
 void dimsnowball1c2_update(GameObject* obj) {
-    if (Obj_IsLoadingLocked()) {
+    if (Obj_CanSetupObject()) {
         DimSnowBallSpawnerState* state = obj->extra;
 
         if ((state->spawnCountdown -= framesThisStep) <= 0) {

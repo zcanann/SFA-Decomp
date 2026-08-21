@@ -912,7 +912,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
 void* textureLoadAsset(int asset)
 {
     void* out = NULL;
-    if (getLoadedFileFlags(0) & 0x100000)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
         return NULL;
     loadTextureFile(&out, asset);
     return out;

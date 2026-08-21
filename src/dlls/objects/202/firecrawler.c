@@ -415,7 +415,7 @@ void firecrawler_spawnFireHole(GameObject* obj, u8* state)
     FirePipeMapData* setup;
     GameObject* child;
     (void)state;
-    if (Obj_IsLoadingLocked() != 0)
+    if (Obj_CanSetupObject() != 0)
     {
         setup = (FirePipeMapData*)Obj_AllocObjectSetup(0x24, FIREHOLE_OBJ_ID);
         ObjPath_GetPointWorldPosition(obj, 0, &setup->base.posX, &setup->base.posY, &setup->base.posZ, 0);
@@ -443,7 +443,7 @@ void firecrawler_spawnFireHole(GameObject* obj, u8* state)
 
 void firecrawler_spawnProjectile(GameObject* obj, u8* state)
 {
-    u8 locked = Obj_IsLoadingLocked();
+    u8 locked = Obj_CanSetupObject();
     if (locked != 0)
     {
         GameObject* child;

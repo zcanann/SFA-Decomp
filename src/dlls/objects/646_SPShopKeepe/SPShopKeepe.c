@@ -932,7 +932,7 @@ void ShopKeeper_spawnScarabs(GameObject* obj, ShopkeeperState* state, int count)
     f32 groundHeight;
     ShopkeeperSpawnSetup* setup;
 
-    if (Obj_IsLoadingLocked() == 0)
+    if (Obj_CanSetupObject() == 0)
         return;
 
     (*gMapEventInterface)->setObjGroupStatus((s32)(obj)->anim.mapEventSlot, 6, 1);
