@@ -58,6 +58,8 @@
 
 #define GPSH_SHRINE_PLAYER_ANIM_STATE_FLAG 0x80
 #define GPSH_SHRINE_REWARD_MAP_ACT         5
+#define GPSH_SHRINE_TIMER_ID               0x1D
+#define GPSH_SHRINE_TIMER_DURATION         0x4E
 
 enum {
     GPSH_SHRINE_ANIM_EVENT_ACTIVATE = 3,
@@ -304,7 +306,7 @@ void gpshShrine_update(GameObject* obj) {
 
         /* This engine latch intentionally overlaps the shrine's phase and flags. */
         GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 2, -1, -1,
-                            GAMEBIT_GPSH_TestKnowledgeRunning, 0xb);
+                            GAMEBIT_GPSH_TestKnowledgeRunning, MUSICTRIG_krazoa_tunnel_2);
         GameBitLatch_UpdateInverted((GameBitLatchState*)state->gameBitLatchStorage, 1, -1, -1,
                                     GAMEBIT_SHRINE_MUSIC_LOCK, 8);
         GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 4, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
@@ -344,7 +346,7 @@ void gpshShrine_update(GameObject* obj) {
                 if (state->puzzleFlags.activated == 1) {
                     mainSetBits(GAMEBIT_GPSH_SpawnKnowledgeSymbols, 1);
                     state->phase = GPSH_SHRINE_PHASE_PUZZLE_ACTIVE;
-                    gameTimerInit(0x1d, 0x4e);
+                    gameTimerInit(GPSH_SHRINE_TIMER_ID, GPSH_SHRINE_TIMER_DURATION);
                     timerSetToCountUp();
                 }
                 break;
