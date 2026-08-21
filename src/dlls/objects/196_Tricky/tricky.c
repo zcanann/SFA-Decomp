@@ -7314,7 +7314,7 @@ void Tricky_update(GameObject* obj) {
         ObjLink_AttachChild((GameObject*)obj, trickyState->spawnedChild, 3);
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32) != 0) {
-        u8* voiceCursor = *(u8**)state;
+        u8* voiceCursor = trickyState->progressPtr;
 
         if (*voiceCursor == *(voiceCursor + 1)) {
             TRICKY_VOICE(obj, 0x364, 0x500);
@@ -7329,7 +7329,7 @@ void Tricky_update(GameObject* obj) {
                          flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
     }
     {
-        u8* debugCursor = *(u8**)state;
+        u8* debugCursor = trickyState->progressPtr;
 
         trickyDebugPrint(base + TRICKY_DBG_SIDECOMMAND_ENERGY, *debugCursor, *(debugCursor + 1));
     }
@@ -7432,7 +7432,7 @@ void Tricky_update(GameObject* obj) {
                     TRICKY_VOICE(obj, 0x13c, 0);
                     switch (trickyState->followObj->anim.romDefNo) {
                     case 0x1ca:
-                        if (**(u8**)state < 4) {
+                        if (*trickyState->progressPtr < 4) {
                             if (Obj_IsLoadingLocked()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
@@ -7443,7 +7443,7 @@ void Tricky_update(GameObject* obj) {
                         }
                         break;
                     case 0x160:
-                        if (**(u8**)state < 4) {
+                        if (*trickyState->progressPtr < 4) {
                             if (Obj_IsLoadingLocked()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
@@ -7460,7 +7460,7 @@ void Tricky_update(GameObject* obj) {
                         trickyState->stateIndex = TRICKY_STATE_MOVE_TO_FOLLOW_TARGET;
                         break;
                     case 0x195:
-                        if (**(u8**)state < 2) {
+                        if (*trickyState->progressPtr < 2) {
                             if (Obj_IsLoadingLocked()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
@@ -7471,7 +7471,7 @@ void Tricky_update(GameObject* obj) {
                         }
                         break;
                     case 0x352:
-                        if (**(u8**)state < 4) {
+                        if (*trickyState->progressPtr < 4) {
                             if (Obj_IsLoadingLocked()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
@@ -7531,7 +7531,7 @@ void Tricky_update(GameObject* obj) {
                     }
                     break;
                 case 4:
-                    if (**(u8**)state < 4) {
+                    if (*trickyState->progressPtr < 4) {
                         if (Obj_IsLoadingLocked()) {
                             trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                             TRICKY_RESET_COMMAND(state);
