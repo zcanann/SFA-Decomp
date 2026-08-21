@@ -7,6 +7,7 @@ import bisect
 import re
 import struct
 import subprocess
+import tempfile
 from pathlib import Path
 
 from function_objdump import load_units, resolve_unit
@@ -24,9 +25,15 @@ def run(*args: str | Path) -> str:
 
 
 def section_bytes(objcopy: Path, obj: Path) -> bytes:
-    return subprocess.check_output(
-        [str(objcopy), "-O", "binary", "--only-section=.sdata2", str(obj), "/dev/stdout"]
-    )
+    with tempfile.NamedTemporaryFile(delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+    try:
+        subprocess.check_call(
+            [str(objcopy), "-O", "binary", "--only-section=.sdata2", str(obj), str(tmp_path)]
+        )
+        return tmp_path.read_bytes()
+    finally:
+        tmp_path.unlink(missing_ok=True)
 
 
 def symbol_tables(objdump: Path, obj: Path) -> tuple[list[tuple[int, str]], dict[str, int]]:

@@ -1187,7 +1187,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
             }
 
             if (moveSpeed > 2.5f) {
-                state->voiceCooldown = 600.0f;
+                state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                 trickyRequestMove(obj, 0x30, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
             } else if (moveSpeed > 1.0f) {
                 trickyRequestMove(obj, 5, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
