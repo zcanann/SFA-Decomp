@@ -1703,7 +1703,10 @@ void spawnDimExplosion(u8* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u8 flag
                              u8 flag20, u8 f1cinit)
 {
     DimExplosionPlacement* setup;
-    if (Obj_CanSetupObject() != 0)
+    u8 canSetupObject;
+
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
         setup->base.color[0] = 2;
@@ -1755,7 +1758,10 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
                     u8 f1cinit)
 {
     DimExplosionPlacement* setup;
-    if (Obj_CanSetupObject() != 0)
+    u8 canSetupObject;
+
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
         setup->base.color[0] = 2;
@@ -1848,6 +1854,7 @@ int expgfx_acquireResourceEntry(int resourceId)
     int minEvictionScore;
     ExpgfxResourceEntry* entry;
     ExpgfxResourceHandle* resourceHandle;
+    u8 canSetupObject;
 
     i = 0;
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++)
@@ -1894,7 +1901,8 @@ int expgfx_acquireResourceEntry(int resourceId)
             return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
         }
     }
-    if (Obj_CanSetupObject() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
     }
