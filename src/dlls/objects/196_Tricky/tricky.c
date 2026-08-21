@@ -175,11 +175,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED 0x8u
 #define TRICKY_STATE_FLAG_SEQUENCE_LATCHED        0x200u
 #define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE     0x4000u
-#define TRICKY_STATE_FLAG_COMMAND_ACTIVE          0x10u
 #define TRICKY_STATE_FLAG_GROUND_SNAP             0x2000u
-#define TRICKY_STATE_FLAG_RECALL_REQUEST          0x10000u
-#define TRICKY_STATE_FLAG_HEEL_REQUEST            0x20000u
-#define TRICKY_STATE_FLAG_GUARD_REQUEST           0x40000u
 #define TRICKY_STATE_FLAG_POSITION_RELOCATED      0x80000u
 #define TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS    0x30002LL
 #define TRICKY_STATE_FLAG_TURN_REQUEST            0x100000u
@@ -3222,10 +3218,10 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state);
         f32 z = 0.0f;                                                                                                  \
         ((TrickyState*)(st))->cooldownA = z;                                                                           \
         ((TrickyState*)(st))->cooldownB.f = z;                                                                         \
-        ((TrickyState*)(st))->stateFlags &= 0xFFFFFFEFLL;                                                              \
-        ((TrickyState*)(st))->stateFlags &= 0xFFFEFFFFLL;                                                              \
-        ((TrickyState*)(st))->stateFlags &= 0xFFFDFFFFLL;                                                              \
-        ((TrickyState*)(st))->stateFlags &= 0xFFFBFFFFLL;                                                              \
+        ((TrickyState*)(st))->stateFlags &= (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;                                    \
+        ((TrickyState*)(st))->stateFlags &= (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;                                    \
+        ((TrickyState*)(st))->stateFlags &= (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;                                      \
+        ((TrickyState*)(st))->stateFlags &= (u64)~TRICKY_STATE_FLAG_GUARD_REQUEST;                                     \
         ((TrickyState*)(st))->commandPhase = 0xFF;                                                                     \
     }
 #define TRICKY_RESET(st)                                                                                               \
@@ -4102,12 +4098,10 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
 /* Tricky flame/guard AI. Spawns Tricky's flameblast (def 0x4F0) for the
  * fire-breath/guard behaviour. */
 
-#define TRICKY_STATE_HELPERS_ACTIVE_FLAG   0x00000800
-#define TRICKY_STATE_HELPERS_FINISHED_FLAG 0x00001000
-#define TRICKY_GUARD_HELPER_COUNT          7
-#define TRICKY_GUARD_APPROACH_GROUP        3
-#define TRICKY_GUARD_HELPER_SETUP_SIZE     0x24
-#define TRICKY_GUARD_HELPER_DEF_ID         0x04F0
+#define TRICKY_GUARD_HELPER_COUNT      7
+#define TRICKY_GUARD_APPROACH_GROUP    3
+#define TRICKY_GUARD_HELPER_SETUP_SIZE 0x24
+#define TRICKY_GUARD_HELPER_DEF_ID     0x04F0
 
 #define TRICKY_STATE(st) ((TrickyState*)(st))
 
@@ -4123,8 +4117,8 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
 
 #define TRICKY_MARK_HELPERS_FINISHED(st)                                                                               \
     {                                                                                                                  \
-        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_HELPERS_ACTIVE_FLAG);                                                       \
-        TRICKY_STATE(st)->stateFlags |= TRICKY_STATE_HELPERS_FINISHED_FLAG;                                            \
+        TRICKY_CLEAR_FLAG(st, TRICKY_STATE_FLAG_CHILDREN_ACTIVE);                                                      \
+        TRICKY_STATE(st)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;                                            \
     }
 
 #define TRICKY_STATE_CLEAR_RESET_FLAGS(st)                                                                             \
@@ -4294,7 +4288,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (*trickyState->progressPtr != 0 && trickyState->guardCanSpawnHelpers != 0) {
                 if ((u8)Obj_IsLoadingLocked() != 0) {
-                    trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_HELPERS_ACTIVE_FLAG;
+                    trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                     for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++) {
                         setup = (FlameblastPlacement*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
                                                                            TRICKY_GUARD_HELPER_DEF_ID);
@@ -4579,9 +4573,9 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         }
         do {
             if (obj->anim.currentMoveProgress > 0.25f) {
-                if ((trickyState->stateFlags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0) {
+                if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
                     if ((u8)Obj_IsLoadingLocked() != 0) {
-                        trickyState->stateFlags |= TRICKY_STATE_HELPERS_ACTIVE_FLAG;
+                        trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                         for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++) {
                             setup = (FlameblastPlacement*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
                                                                                TRICKY_GUARD_HELPER_DEF_ID);
@@ -4657,9 +4651,9 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         trickyDebugPrint(strBase + TRICKY_DBG_FLAME_IN);
         do {
             if (obj->anim.currentMoveProgress > 0.25f) {
-                if ((trickyState->stateFlags & TRICKY_STATE_HELPERS_ACTIVE_FLAG) == 0) {
+                if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
                     if ((u8)Obj_IsLoadingLocked() != 0) {
-                        trickyState->stateFlags |= TRICKY_STATE_HELPERS_ACTIVE_FLAG;
+                        trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                         for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++) {
                             setup = (FlameblastPlacement*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
                                                                                TRICKY_GUARD_HELPER_DEF_ID);
@@ -5528,7 +5522,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
         {
             u32 mask;
             u32 flags = state->stateFlags;
-            mask = ~0x10;
+            mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags = flags & mask;
         }
         state->substate = 0;
@@ -5556,7 +5550,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
         {
             u32 mask;
             u32 flags = state->stateFlags;
-            mask = ~0x10;
+            mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags = flags & mask;
         }
         state->substate = 0;
@@ -5620,7 +5614,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
-                mask = ~0x10;
+                mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->stateFlags = flags & mask;
             }
             state->substate = 0;
@@ -5822,7 +5816,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
             {
                 u32 mask;
                 u32 flags = trickyState->stateFlags;
-                mask = ~0x10;
+                mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 trickyState->stateFlags = flags & mask;
             }
             trickyState->substate = 0;
@@ -6862,10 +6856,10 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             state->commandRequestBits = 0;
         }
-        commandMask = state->commandRequestBits | 9;
+        commandMask = state->commandRequestBits | (TRICKY_ABILITY_CALL | TRICKY_ABILITY_STAY);
         if (((state->stateIndex == TRICKY_STATE_GUARD) || (state->stateIndex == TRICKY_STATE_CIRCLING)) ||
             ((state->stateIndex == TRICKY_STATE_GROWL && (state->substate == 1)))) {
-            commandMask |= 0x10;
+            commandMask |= TRICKY_ABILITY_FLAME;
             promptA = true;
         } else {
             if (trickyFindNearestUsableBaddie(state->playerObj, 200.0f, 1) != NULL) {
@@ -6893,18 +6887,18 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             ref = playerIsInNormalControlUndisguisedOnLand((GameObject*)(ref));
             if ((ref != 0) && (bitVal = mainGetBit(GAMEBIT_NoBallsAllowed), bitVal == 0)) {
                 if (playerGetFlags3F0Bit5(state->playerObj) == 0) {
-                    commandMask |= 0x20;
+                    commandMask |= TRICKY_ABILITY_THROW_BALL;
                 }
             }
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) == 0) {
-            commandMask &= ~1;
+            commandMask &= ~TRICKY_ABILITY_CALL;
         }
         if (mainGetBit(0x9e) == 0) {
             commandMask &= ~4;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0) {
-            commandMask &= ~0x10;
+            commandMask &= ~TRICKY_ABILITY_FLAME;
         }
         state->commandRequestBits = 0;
         if ((cond) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {

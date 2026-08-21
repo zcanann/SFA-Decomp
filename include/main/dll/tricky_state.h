@@ -18,6 +18,10 @@
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING                                                                               \
     0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
 #define TRICKY_STATE_FLAG_PATH_PATCHES_VALID 0x400 /* patch[] and patchTargets[] describe targetPosPtr */
+#define TRICKY_STATE_FLAG_COMMAND_ACTIVE     0x10u /* sidekick command/flame/dig/guard action is active */
+#define TRICKY_STATE_FLAG_RECALL_REQUEST     0x10000u
+#define TRICKY_STATE_FLAG_HEEL_REQUEST       0x20000u
+#define TRICKY_STATE_FLAG_GUARD_REQUEST      0x40000u
 
 /* TrickyState.movementState - the walk/jump phase selector switched on in
  * trickyUpdateMovementState. The names are the ones the retail debug build
@@ -129,8 +133,7 @@ typedef struct TrickyState {
         };
         struct {
             u8 statusFlag7 : 1;
-            u8 soundSuppressed
-                : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
+            u8 soundSuppressed : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
             u8 heightTracking : 1; /* statusFlags bit 5 */
             u8 statusFlagsLow : 5;
         };
@@ -156,7 +159,7 @@ typedef struct TrickyState {
     f32 homePosY;
     f32 homePosZ;
     Vec patchExitPos;
-    u32 pathControlFlags; /* head word of the embedded gPathControlInterface record */
+    u32 pathControlFlags;             /* head word of the embedded gPathControlInterface record */
     u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 nearestSpecialDeltaY;         /* signed dy to the nearest special-surface (type 0xe) floor hit */
     u8 pad1BC[0x25F - 0x1BC];
@@ -344,15 +347,15 @@ typedef struct TrickyState {
     GameObject* pendingFollowObj; /* target object handed off to a sibling Tricky */
     f32 footPoints[4][3];
     f32 impressTimer; /* impress-move countdown: primed to lbl_803E2408 by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching floor lbl_803E23DC the flag is cleared and a TRICKY_VOICE line fires (tricky) */
-    ObjAnimEventList animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootPitch drives the facing step, triggeredIds[] pick the bark sfx */
+    ObjAnimEventList
+        animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootPitch drives the facing step, triggeredIds[] pick the bark sfx */
     f32 variantFadeTimer; /* model-variant crossfade countdown: primed to 20.0f, -= timeDelta; > 10 fades out, <= 10 swaps the texture selector and fades back in via timer/10 (tricky) */
-    u8 modelVariant; /* progress/10; indexes model bank color */
+    u8 modelVariant;      /* progress/10; indexes model bank color */
     u8 progressValue; /* map-event progress byte written out via **progressPtr; computed as base+(count<<2), clamped to a max byte (tricky writes to progressPtr, substates computes/clamps) */
     union {
         u8 flags82E; /* bit flags 5/6/7 (tricky/tricky_substates) */
         struct {
-            u8 blendPending
-                : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
+            u8 blendPending : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
             u8 blendActive : 1; /* bit 6: blend channel 1 ramp is running */
             u8 flag82EBit5 : 1;
             u8 flags82ERest : 5;
