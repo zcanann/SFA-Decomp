@@ -550,7 +550,7 @@ void tricky_trackTumbleweed();
 
 typedef void (*TrickyStateHandler)(void* obj, void* state);
 
-char lbl_8031D2E8[] = {
+char gTrickyDebugStringTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x41, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
@@ -854,8 +854,8 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
  * particles for the object Tricky is linked to.
  */
 
-f32 lbl_803DBC40[2] = {0.05f, 8.5f};
-f32 lbl_803DBC48 = 8.0f;
+f32 gTrickyPathControlSetupParams[2] = {0.05f, 8.5f};
+f32 gTrickyPathPointCollisionRadius = 8.0f;
 char sSkeetlaVelDebugFmt[] = "Vel %f\n";
 char sSkeetlaVelDebugPadding[4] = "";
 
@@ -928,7 +928,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     f32 length;
     int td;
 
-    debugStrings = lbl_8031D2E8;
+    debugStrings = gTrickyDebugStringTable;
     state = obj->extra;
     moveSpeed = state->speed;
     trickyDebugPrint(sSkeetlaVelDebugFmt, moveSpeed);
@@ -1588,7 +1588,7 @@ char sInWaterMessage[] = {
     0x69, 0x6E, 0x20, 0x77, 0x61, 0x74, 0x65, 0x72, 0x0A, 0x00,
 };
 
-char lbl_8031D478[] = {
+char sTrickyDryLandDebugMessage[] = {
     0x6F, 0x75, 0x74, 0x20, 0x6F, 0x66, 0x20, 0x77, 0x61, 0x74, 0x65, 0x72, 0x0A, 0x00, 0x00, 0x00, 0x6D, 0x6F, 0x76,
     0x65, 0x54, 0x72, 0x69, 0x63, 0x6B, 0x79, 0x3A, 0x20, 0x6F, 0x75, 0x74, 0x20, 0x6F, 0x66, 0x20, 0x77, 0x61, 0x74,
     0x65, 0x72, 0x0A, 0x00, 0x00, 0x00, 0x54, 0x75, 0x72, 0x6E, 0x69, 0x6E, 0x67, 0x20, 0x69, 0x6E, 0x20, 0x77, 0x61,
@@ -1688,7 +1688,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     int patchIdWriteCursor;
     RomCurveDef* routeNode;
     f32* target;
-    char* debugStrings = lbl_8031D2E8;
+    char* debugStrings = gTrickyDebugStringTable;
     int objectWalkGroup;
     int targetWalkGroup;
     u8 didMove = 1;
@@ -2729,7 +2729,7 @@ void tricky_stateGoToWarpPoint(u8* self, TrickyState* state) {
         trickyDebugPrint(sInWaterMessage);
     } else {
         trickyRequestMove((GameObject*)self, 0, 0.005f, 0);
-        trickyDebugPrint(lbl_8031D478);
+        trickyDebugPrint(sTrickyDryLandDebugMessage);
     }
 }
 
@@ -2843,7 +2843,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
     void** slot;
     FlameblastPlacement* setup;
     void** slot2;
-    char* strBase = lbl_8031D2E8;
+    char* strBase = gTrickyDebugStringTable;
 
     switch (trickyState->substate) {
     case TRICKYGROWL_WINDUP:
@@ -3087,7 +3087,7 @@ static inline int trickyAcquireCirclingTarget(TrickyState* state) {
     }
 
 void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
-    char* str = lbl_8031D2E8;
+    char* str = gTrickyDebugStringTable;
     u8 ok;
     int hasTarget;
     GameObject* bestWarp = NULL;
@@ -3567,7 +3567,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                         trickyDebugPrint(sInWaterMessage);
                     } else {
                         trickyRequestMove(obj, 0, 0.005f, 0);
-                        trickyDebugPrint(lbl_8031D478);
+                        trickyDebugPrint(sTrickyDryLandDebugMessage);
                     }
                     state->scratch704.f -= timeDelta;
                     if (state->scratch704.f <= 0.0f) {
@@ -3628,7 +3628,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     trickyDebugPrint(sInWaterMessage);
                 } else {
                     trickyRequestMove(obj, 0, 0.005f, 0);
-                    trickyDebugPrint(lbl_8031D478);
+                    trickyDebugPrint(sTrickyDryLandDebugMessage);
                 }
             }
         }
@@ -3690,7 +3690,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 trickyDebugPrint(sInWaterMessage);
             } else {
                 trickyRequestMove(obj, 0, 0.005f, 0);
-                trickyDebugPrint(lbl_8031D478);
+                trickyDebugPrint(sTrickyDryLandDebugMessage);
             }
             return;
         }
@@ -3794,7 +3794,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
                     trickyRequestMove(obj, 13, 0.005f, 0);
                     break;
                 }
-                trickyDebugPrint(lbl_8031D478);
+                trickyDebugPrint(sTrickyDryLandDebugMessage);
             }
         }
     }
@@ -3867,7 +3867,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
                     trickyDebugPrint(sInWaterMessage);
                 } else {
                     trickyRequestMove(obj, 0, 0.005f, 0);
-                    trickyDebugPrint(lbl_8031D478);
+                    trickyDebugPrint(sTrickyDryLandDebugMessage);
                 }
             }
         } else {
@@ -3904,7 +3904,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
             trickyDebugPrint(sInWaterMessage);
         } else {
             trickyRequestMove(obj, 0, 0.005f, 0);
-            trickyDebugPrint(lbl_8031D478);
+            trickyDebugPrint(sTrickyDryLandDebugMessage);
         }
     }
 }
@@ -4038,7 +4038,7 @@ char sTrickyGuardDebugTextBlock[] = {
 };
 
 void trickyGuard(GameObject* obj, TrickyState* trickyState) {
-    char* strBase = lbl_8031D2E8;
+    char* strBase = gTrickyDebugStringTable;
     int i;
     TrickyState* flameSoundState;
     TrickyState* growlSoundState;
@@ -4305,7 +4305,7 @@ char sTrickyFlameDebugTextBlock[] = {
 };
 
 void trickyFlame(GameObject* obj, TrickyState* trickyState) {
-    char* strBase = lbl_8031D2E8;
+    char* strBase = gTrickyDebugStringTable;
     void** slot;
     int i;
     void** slot2;
@@ -4790,7 +4790,7 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
     u16 id;
     f32 vz, vx, spd, z, vxx;
 
-    base = (u8*)lbl_8031D2E8;
+    base = (u8*)gTrickyDebugStringTable;
     sfxTable = *(u32*)gTrickySubstateSfxIdPairB;
     switch (state->substate) {
     case 0:
@@ -5115,7 +5115,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     int inWater;
     f32 z;
 
-    base = (u8*)lbl_8031D2E8;
+    base = (u8*)gTrickyDebugStringTable;
     found = NULL;
     if ((state->stateFlags & 0x10) == 0) {
         if (state->pendingFollowRequest != 0) {
@@ -5440,7 +5440,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
                 trickyDebugPrint(sInWaterMessage);
             } else {
                 trickyRequestMove(obj, 0, 0.005f, 0);
-                trickyDebugPrint(lbl_8031D478);
+                trickyDebugPrint(sTrickyDryLandDebugMessage);
             }
             {
                 u32 mask;
@@ -5646,7 +5646,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 trickyDebugPrint(sInWaterMessage);
             } else {
                 trickyRequestMove(obj, 0, 0.005f, 0);
-                trickyDebugPrint(lbl_8031D478);
+                trickyDebugPrint(sTrickyDryLandDebugMessage);
             }
             {
                 u32 mask;
@@ -6095,7 +6095,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                         trickyDebugPrint(sInWaterMessage);
                     } else {
                         trickyRequestMove(obj, 0, 0.005f, 0);
-                        trickyDebugPrint(lbl_8031D478);
+                        trickyDebugPrint(sTrickyDryLandDebugMessage);
                     }
                     (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
                     b->flag82EBit5 = 1;
@@ -6133,7 +6133,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                         trickyDebugPrint(sInWaterMessage);
                     } else {
                         trickyRequestMove(obj, 0, 0.005f, 0);
-                        trickyDebugPrint(lbl_8031D478);
+                        trickyDebugPrint(sTrickyDryLandDebugMessage);
                     }
                     (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
                     b->flag82EBit5 = 1;
@@ -6173,7 +6173,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     trickyDebugPrint(sInWaterMessage);
                 } else {
                     trickyRequestMove(obj, 0, 0.005f, 0);
-                    trickyDebugPrint(lbl_8031D478);
+                    trickyDebugPrint(sTrickyDryLandDebugMessage);
                 }
                 (*gObjectTriggerInterface)->runSequence(g, (void*)obj, -1);
                 b->flag82EBit5 = 1;
@@ -6377,7 +6377,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
                     trickyRequestMove(obj, 0xd, 0.005f, 0);
                     break;
                 }
-                trickyDebugPrint(lbl_8031D478);
+                trickyDebugPrint(sTrickyDryLandDebugMessage);
             }
         }
     }
@@ -7147,7 +7147,7 @@ void Tricky_update(GameObject* obj) {
     TrickyItemIdList cmdQuery;
     TrickySfxPair pair;
 
-    base = lbl_8031D2E8;
+    base = gTrickyDebugStringTable;
     state = (int)((GameObject*)obj)->extra;
     trickyState = (TrickyState*)state;
     found = 0;
@@ -7798,8 +7798,9 @@ void Tricky_init(GameObject* obj) {
     model->textureRefs->swapSelector = state->modelVariant;
     pathState = (int)&state->pathControlFlags;
     (*gPathControlInterface)->init((void*)pathState, 1, 0xa7, 1);
-    (*gPathControlInterface)->setLocalPointCollision((void*)pathState, 1, gTrickyPathPointCollision, &lbl_803DBC48, 2);
-    (*gPathControlInterface)->setup((void*)pathState, 2, lbl_8031D2E8, lbl_803DBC40, startPath);
+    (*gPathControlInterface)
+        ->setLocalPointCollision((void*)pathState, 1, gTrickyPathPointCollision, &gTrickyPathPointCollisionRadius, 2);
+    (*gPathControlInterface)->setup((void*)pathState, 2, gTrickyDebugStringTable, gTrickyPathControlSetupParams, startPath);
     (*gPathControlInterface)->attachObject((void*)obj, (void*)pathState);
     doNothing_onTrickyInit();
     Objfsa_UpdateWalkGroupPatches();
