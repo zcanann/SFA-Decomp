@@ -1062,13 +1062,6 @@ char sSkeetlaVelDebugFmt[] = "Vel %f\n";
 /* Unreferenced zero bytes trail the debug format in retail .sdata. */
 u8 gap_09_803DBC54_sdata[4] = {0};
 
-/* group owned by another DLL, queried here */
-
-/* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
- * this many linked route candidates (status[8] / f32 bestDistances[8]). */
-
-/* attacker romDefNo that triggers the staff-impact sfx (retail OBJECTS.bin). */
-
 static inline f32 skeetla_pathSpeedDelta(GameObject* obj) {
     TrickyState* state = (TrickyState*)obj->extra;
     f32* currentPathPoint;
@@ -1413,34 +1406,36 @@ void* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId) {
     return (state)->cachedRouteEntry;
 }
 
-int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** routes, u8* routeFlags, int pathId) {
-    RomCurveDef** initRouteCursor;
+int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
+                                  int targetWalkGroup) {
+    RomCurveDef** initCandidateCursor;
     u8* searchCursor;
-    RomCurveDef** routeCursor;
+    RomCurveDef** candidateCursor;
     u8* initSearchCursor;
     s8* statusCursor;
-    s8 i;
+    s8 searchPass;
     s8 status[TRICKY_ROUTE_CANDIDATE_COUNT];
     s8 initIndex;
-    s8 k;
-    s8 routeIndex;
+    s8 bulkIndex;
+    s8 candidateIndex;
     s8 failedCount;
 
-    for (initIndex = 0, initRouteCursor = routes, initSearchCursor = (u8*)state;
+    for (initIndex = 0, initCandidateCursor = candidateRoutes, initSearchCursor = (u8*)state;
          initIndex < TRICKY_ROUTE_CANDIDATE_COUNT; initIndex++) {
-        if (*initRouteCursor != NULL) {
-            pathSearchBegin((PathSearch*)(initSearchCursor + offsetof(TrickyState, pathSearches)), *initRouteCursor,
-                            state->targetPosPtr, pathId, routeFlags[initIndex]);
+        if (*initCandidateCursor != NULL) {
+            pathSearchBegin((PathSearch*)(initSearchCursor + offsetof(TrickyState, pathSearches)),
+                            *initCandidateCursor, state->targetPosPtr, targetWalkGroup,
+                            candidateRouteFlags[initIndex]);
         }
-        initRouteCursor++;
+        initCandidateCursor++;
         initSearchCursor += sizeof(PathSearch);
     }
 
-    for (i = 0; i < 100; i++) {
+    for (searchPass = 0; searchPass < 100; searchPass++) {
         failedCount = 0;
-        for (routeIndex = 0, routeCursor = routes, searchCursor = (u8*)state, statusCursor = status;
-             routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
-            if (*routeCursor != NULL) {
+        for (candidateIndex = 0, candidateCursor = candidateRoutes, searchCursor = (u8*)state, statusCursor = status;
+             candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
+            if (*candidateCursor != NULL) {
                 *statusCursor = pathSearchStep((PathSearch*)(searchCursor + offsetof(TrickyState, pathSearches)), 1);
             } else {
                 *statusCursor = -1;
@@ -1448,28 +1443,30 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** routes, u8* 
 
             switch (*statusCursor) {
             case 1:
-                return routeIndex;
+                return candidateIndex;
             case -1:
-                *routeCursor = NULL;
+                *candidateCursor = NULL;
                 failedCount++;
                 break;
             }
-            routeCursor++;
+            candidateCursor++;
             searchCursor += sizeof(PathSearch);
             statusCursor++;
         }
 
         switch (failedCount) {
         case 7:
-            for (k = 0, routeCursor = routes; k < TRICKY_ROUTE_CANDIDATE_COUNT; k++) {
-                if (*routeCursor != NULL) {
-                    status[(int)k] = pathSearchStep(&state->pathSearches[(int)k], TRICKY_PATH_SEARCH_BULK_STEPS);
-                    if (status[(int)k] == 1) {
-                        return k;
+            for (bulkIndex = 0, candidateCursor = candidateRoutes; bulkIndex < TRICKY_ROUTE_CANDIDATE_COUNT;
+                 bulkIndex++) {
+                if (*candidateCursor != NULL) {
+                    status[(int)bulkIndex] =
+                        pathSearchStep(&state->pathSearches[(int)bulkIndex], TRICKY_PATH_SEARCH_BULK_STEPS);
+                    if (status[(int)bulkIndex] == 1) {
+                        return bulkIndex;
                     }
                     return -1;
                 }
-                routeCursor++;
+                candidateCursor++;
             }
         case 8:
             return -1;
