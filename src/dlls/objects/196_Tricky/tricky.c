@@ -155,6 +155,9 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_TURN_MOVE_BLEND_SPEED       0.04f
 #define TRICKY_TIMER_600_FRAMES            600.0f
 #define TRICKY_WATER_COOLDOWN_FRAMES       TRICKY_TIMER_600_FRAMES
+#define TRICKY_PATH_SEARCH_BULK_STEPS      0x1f4
+#define TRICKY_IDLE_VOICE_MIN_FRAMES       500
+#define TRICKY_IDLE_VOICE_MAX_FRAMES       750
 #define TRICKY_ROUTE_LOOKAHEAD_SCALE       1.5f
 #define TRICKY_ROUTE_REVERSE_STEP          -2.0f
 #define TRICKY_YAW_STEP_RATE               512.0f
@@ -1373,7 +1376,7 @@ void* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId) {
     }
 
     pathSearchBegin(&state->pathSearches[8], (RomCurveDef*)route, state->targetPosPtr, pathId, state->route.reverse);
-    if (pathSearchStep(&state->pathSearches[8], 0x1f4) != 1) {
+    if (pathSearchStep(&state->pathSearches[8], TRICKY_PATH_SEARCH_BULK_STEPS) != 1) {
         return NULL;
     }
 
@@ -1433,7 +1436,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** routes, u8* 
         case 7:
             for (k = 0, routeCursor = routes; k < TRICKY_ROUTE_CANDIDATE_COUNT; k++) {
                 if (*routeCursor != NULL) {
-                    status[(int)k] = pathSearchStep(&state->pathSearches[(int)k], 0x1f4);
+                    status[(int)k] = pathSearchStep(&state->pathSearches[(int)k], TRICKY_PATH_SEARCH_BULK_STEPS);
                     if (status[(int)k] == 1) {
                         return k;
                     }
@@ -3943,7 +3946,8 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
         if (trickyUpdateMovementState(obj, 5.0f, state) == 0) {
             state->idleSfxTimer -= timeDelta;
             if (state->idleSfxTimer <= 0.0f) {
-                state->idleSfxTimer = (f32)(s32)randomGetRange(500, 750);
+                state->idleSfxTimer =
+                    (f32)(s32)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
                 extra = obj->extra;
                 if (extra->soundSuppressed == 0) {
                     move = obj->anim.currentMove;
@@ -5319,7 +5323,8 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                 if (tricky_handleFeedOrTalk(obj, state) == 0 && trickyUpdateMovementState(obj, 5.0f, state) == 0) {
                     state->idleSfxTimer -= timeDelta;
                     if (state->idleSfxTimer <= 0.0f) {
-                        state->idleSfxTimer = (f32)(int)randomGetRange(500, 0x2ee);
+                        state->idleSfxTimer =
+                            (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
                         sfxState = obj->extra;
                         if (sfxState->soundSuppressed == 0 &&
                             (obj->anim.currentMove >= 0x30 || obj->anim.currentMove < 0x29) &&
@@ -6491,7 +6496,8 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
         if (trickyUpdateMovementState(obj, 15.0f, state) != 1) {
             state->idleSfxTimer -= timeDelta;
             if (state->idleSfxTimer <= 0.0f) {
-                state->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
+                state->idleSfxTimer =
+                    (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
                 sfxState = obj->extra;
                 sfxDisabled = sfxState->soundSuppressed;
                 if ((sfxDisabled == 0) && (((obj)->anim.currentMove >= 0x30) || ((obj)->anim.currentMove < 0x29)) &&
@@ -7510,7 +7516,8 @@ void Tricky_update(GameObject* obj) {
                             case 0x546:
                             case 0x7c3:
                                 trickyState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
-                                trickyState->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
+                                trickyState->idleSfxTimer = (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES,
+                                                                                     TRICKY_IDLE_VOICE_MAX_FRAMES);
                                 break;
                             case 0x6f0:
                                 trickyState->stateIndex = TRICKY_STATE_GROWL;
@@ -7638,7 +7645,8 @@ void Tricky_update(GameObject* obj) {
         } else if ((flags & TRICKY_STATE_FLAG_GUARD_REQUEST) != 0) {
             trickyState->followObj = (GameObject*)obj;
             trickyState->stateIndex = TRICKY_STATE_IDLE_WANDER;
-            trickyState->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
+            trickyState->idleSfxTimer =
+                (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
             {
                 u32 mask;
                 u32 flags = trickyState->stateFlags;
