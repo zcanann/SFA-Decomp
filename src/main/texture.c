@@ -532,13 +532,13 @@ void textureFree(Texture* tex)
                         continue;
                     next = *(u8**)iter;
                     if (((Texture*)iter)->preloaded != 0)
-                        findSomething((void*)((Texture*)iter)->tmemAddr);
+                        newshadows_releaseTextureEntry((void*)((Texture*)iter)->tmemAddr);
                     if (((Texture*)iter)->cached == 0)
                         mm_free(iter);
                     iter = next;
                 }
                 if (((Texture*)tex)->preloaded != 0)
-                    findSomething((void*)((Texture*)tex)->tmemAddr);
+                    newshadows_releaseTextureEntry((void*)((Texture*)tex)->tmemAddr);
                 if (((Texture*)tex)->cached == 0)
                     mm_free(tex);
                 gLoadedTextures[i].key = -1;

@@ -1227,12 +1227,12 @@ void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY)
    placements ([0]=lifetime 8..16 frames, [1..2]=pos, [3]=outer size, [4]=inner size),
    renders 16 noise animation frames through evalNoisePlacements, then the caustic texture. */
 
-void findSomething(void* needle)
+void newshadows_releaseTextureEntry(void* textureEntry)
 {
     int i;
     for (i = 0; i < NEW_SHADOW_ENTRY_CAPACITY; ++i)
     {
-        if (gNewShadowEntries[i].isActive != 0 && &gNewShadowEntries[i] == needle)
+        if (gNewShadowEntries[i].isActive != 0 && &gNewShadowEntries[i] == textureEntry)
         {
             gNewShadowEntries[i].isActive = 0;
             return;

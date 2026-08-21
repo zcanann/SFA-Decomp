@@ -7,7 +7,7 @@
 void updateReflectionTextures(void);
 void selectReflectionTexture(int id);
 void* textureAlloc512(void);
-void findSomething(void* needle);
+void newshadows_releaseTextureEntry(void* textureEntry);
 
 
 /* extern-cleanup: defining-file public prototypes */
