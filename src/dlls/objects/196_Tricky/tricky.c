@@ -130,6 +130,7 @@ static const u16 gSkeetlaFootstepSfxId2[1] = {0x0355};
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
 extern f32 lbl_803E2418;
+extern f32 lbl_803E241C;
 
 extern const char sTrickyShouldNeverStopCirclingError[];
 
@@ -448,6 +449,7 @@ void Tricky_emitQueuedPathParticles(u8* obj, u8* state) {
 __declspec(section ".sdata2") f32 lbl_803E2410 = -100000.0f;
 __declspec(section ".sdata2") f32 lbl_803E2414 = 8.0f;
 __declspec(section ".sdata2") f32 lbl_803E2418 = 340282346638528859811704183484516925440.0f;
+__declspec(section ".sdata2") f32 lbl_803E241C = -0.15f;
 
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     f32 bestPriorityDist;
@@ -1996,7 +1998,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         RomCurveDef* node;
     case TRICKY_MOVE_WALK_WAIT:
         trickyDebugPrint(debugStrings + 0x41c);
-        v = -0.15f * timeDelta + previousSpeed;
+        v = lbl_803E241C * timeDelta + previousSpeed;
         state->speed = (v < 0.0f) ? 0.0f : v;
         if (0.0f == state->speed) {
             didMove = 0;
@@ -2148,7 +2150,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_WALK_NODES:
         trickyDebugPrint(debugStrings + 0x490);
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = -0.15f * timeDelta + previousSpeed;
+            v = lbl_803E241C * timeDelta + previousSpeed;
             state->speed = (v < 0.0f) ? 0.0f : v;
         }
         routeNode = state->route.nodeA0;
@@ -2258,7 +2260,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         v = 0.05f * timeDelta + previousSpeed;
         state->speed = (v > 3.0f) ? 3.0f : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = -0.15f * timeDelta + previousSpeed;
+            v = lbl_803E241C * timeDelta + previousSpeed;
             state->speed = (v < 0.0f) ? 0.0f : v;
         }
         TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
@@ -2297,7 +2299,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 v = 0.0f;
             }
         } else if (previousSpeed > (v = 2.3f)) {
-            k = -0.15f * timeDelta + previousSpeed;
+            k = lbl_803E241C * timeDelta + previousSpeed;
             v = (k < v) ? v : k;
         } else {
             k = 0.05f * timeDelta + previousSpeed;
@@ -2396,7 +2398,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         v = 0.05f * timeDelta + previousSpeed;
         state->speed = (v > 3.0f) ? 3.0f : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = -0.15f * timeDelta + previousSpeed;
+            v = lbl_803E241C * timeDelta + previousSpeed;
             state->speed = (v < 0.0f) ? 0.0f : v;
         }
         TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
@@ -2461,7 +2463,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         v = 0.05f * timeDelta + previousSpeed;
         state->speed = (v > 3.0f) ? 3.0f : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = -0.15f * timeDelta + previousSpeed;
+            v = lbl_803E241C * timeDelta + previousSpeed;
             state->speed = (v < 0.0f) ? 0.0f : v;
         }
         TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
@@ -2551,7 +2553,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     stoppingDistance = 0.05f;
     projectedSpeed = state->speed;
     deltaTime = timeDelta;
-    deceleration = -0.15f * deltaTime;
+    deceleration = lbl_803E241C * deltaTime;
     while (projectedSpeed > 0.0f) {
         stoppingDistance = projectedSpeed * deltaTime + stoppingDistance;
         projectedSpeed = projectedSpeed + deceleration;
@@ -2562,7 +2564,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     targetDistanceSq = getXZDistanceSquared(targetPos, &obj->anim.worldPosX);
     if (targetDistanceSq < stoppingRadiusSq) {
         candidateSpeed = state->speed;
-        candidateSpeed = candidateSpeed + -0.15f * timeDelta;
+        candidateSpeed = candidateSpeed + lbl_803E241C * timeDelta;
         state->speed = (candidateSpeed < 0.0f) ? 0.0f : candidateSpeed;
         return;
     }
@@ -2576,7 +2578,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         vecRotateZXY(&rotation.angle, targetDelta);
         if (targetDelta[2] > 0.0f) {
             candidateSpeed = state->speed;
-            candidateSpeed = candidateSpeed + -0.15f * timeDelta;
+            candidateSpeed = candidateSpeed + lbl_803E241C * timeDelta;
             state->speed = (candidateSpeed < 0.0f) ? 0.0f : candidateSpeed;
             return;
         }
@@ -2610,7 +2612,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
             if (candidateSpeed > 0.0f) {
                 f32 curSpeed = state->speed;
                 if (candidateSpeed < curSpeed) {
-                    f32 step = -0.15f * timeDelta + curSpeed;
+                    f32 step = lbl_803E241C * timeDelta + curSpeed;
                     state->speed = (step < candidateSpeed) ? candidateSpeed : step;
                     return;
                 } else {
@@ -4639,7 +4641,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
                 speed = 0.0f;
             }
         } else if (speed > 1.2f) {
-            speed += -0.15f * timeDelta;
+            speed += lbl_803E241C * timeDelta;
             if (speed < 1.2f) {
                 speed = 1.2f;
             }
