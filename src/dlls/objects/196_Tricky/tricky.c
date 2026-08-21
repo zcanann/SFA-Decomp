@@ -436,29 +436,29 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
     return closest;
 }
 
-void Tricky_emitQueuedPathParticles(u8* obj, u8* state) {
+void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     struct {
         s16 hx, hy, hz;
         f32 fk;
         f32 dx, dy, dz;
     } stk;
     u8 i = 0x14;
-    u32 flags = ((TrickyState*)state)->stateFlags;
+    u32 flags = state->stateFlags;
     if ((flags & 0x1800) == 0) {
         return;
     }
-    stk.dx = ((TrickyState*)state)->renderPosX - ((GameObject*)obj)->anim.worldPosX;
-    stk.dy = ((TrickyState*)state)->renderPosY - ((GameObject*)obj)->anim.worldPosY;
-    stk.dz = ((TrickyState*)state)->renderPosZ - ((GameObject*)obj)->anim.worldPosZ;
+    stk.dx = state->renderPosX - obj->anim.worldPosX;
+    stk.dy = state->renderPosY - obj->anim.worldPosY;
+    stk.dz = state->renderPosZ - obj->anim.worldPosZ;
     stk.fk = 1.0f;
-    stk.hx = ((GameObject*)obj)->anim.rotX;
-    stk.hy = ((GameObject*)obj)->anim.rotY;
-    stk.hz = ((GameObject*)obj)->anim.rotZ;
+    stk.hx = obj->anim.rotX;
+    stk.hy = obj->anim.rotY;
+    stk.hz = obj->anim.rotZ;
     if ((flags & 0x800) == 0) {
         while (i-- != 0) {
             (*gPartfxInterface)->spawnObject(obj, TRICKY_PATH_PARTFX, &stk, 2, -1, NULL);
         }
-        ((TrickyState*)state)->stateFlags = ((TrickyState*)state)->stateFlags & ~0x1000LL;
+        state->stateFlags = state->stateFlags & ~0x1000LL;
     }
 }
 
@@ -7112,7 +7112,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
                 objRenderModelAndHitVolumes(state->scratch700.obj, p2, p3, p4, p5, 1.0f);
             }
         }
-        Tricky_emitQueuedPathParticles((u8*)obj, (u8*)state);
+        Tricky_emitQueuedPathParticles(obj, state);
         ObjPath_GetPointWorldPositionArray(obj, 4, 4, (float*)state->footPoints);
         state->particleTimer = state->particleTimer - timeDelta;
         if (state->particleTimer > 0.0f) {

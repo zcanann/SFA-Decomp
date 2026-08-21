@@ -30,7 +30,7 @@ void debugPrintDraw(void* context);
 void objAnimFreeChildren(GameObject* obj, TrickyState* state, GameObject** child);
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
 void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
-void Tricky_emitQueuedPathParticles(u8* obj, u8* state);
+void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType);
 void tricky_updateModelVariantFade(GameObject* obj, TrickyState* state);
 
