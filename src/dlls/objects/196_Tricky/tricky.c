@@ -1059,7 +1059,8 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
 f32 gTrickyPathControlSetupParams[2] = {0.05f, 8.5f};
 f32 gTrickyPathPointCollisionRadius = 8.0f;
 char sSkeetlaVelDebugFmt[] = "Vel %f\n";
-char sSkeetlaVelDebugPadding[4] = "";
+/* Unreferenced zero bytes trail the debug format in retail .sdata. */
+u8 gap_09_803DBC54_sdata[4] = {0};
 
 /* group owned by another DLL, queried here */
 
