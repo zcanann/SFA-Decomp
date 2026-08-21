@@ -5018,8 +5018,12 @@ void tricky_state04_nop(void) {
  * key off (which RomCurveDef leaves in its pad).
  */
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state);
-const TrickyItemIdList gTrickyCmdQueryInit = {{0, 1, 3, 4, 5}};
-const TrickyItemIdList gTrickyFoodItemIds = {{0, 1, 3, 4, 5}};
+const TrickyItemIdList gTrickyCmdQueryInit = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
+                                               TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
+                                               TRICKY_COMMAND_TYPE_THROW_BALL}};
+const TrickyItemIdList gTrickyFoodItemIds = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
+                                              TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
+                                              TRICKY_COMMAND_TYPE_THROW_BALL}};
 
 static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
     TrickyState* sfxState = obj->extra;
@@ -5942,7 +5946,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         state->substate = 0;
         return 1;
     }
-    if (cMenuGetSelectedItem() == 0xc1) {
+    if (cMenuGetSelectedItem() == GAMEBIT_ITEM_TrickyFood_Count) {
         state->substate = 0;
         return 1;
     }
@@ -6334,16 +6338,16 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
     n = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
     if (n != 0) {
         getYButtonItem(item);
-        if (item[0] == 0xc1) {
+        if (item[0] == GAMEBIT_ITEM_TrickyFood_Count) {
             flag = 1;
         }
-        if (cMenuGetSelectedItem() == 0xc1) {
+        if (cMenuGetSelectedItem() == GAMEBIT_ITEM_TrickyFood_Count) {
             flag = 1;
         }
     }
     if (flag != 0) {
         if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
-            if ((*gGameUIInterface)->isItemBeingUsed(0xc1) != 0) {
+            if ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
                 a = *state->progressPtr;
                 c = state->progressPtr[1];
                 if (a == c) {
@@ -7513,7 +7517,7 @@ void Tricky_update(GameObject* obj) {
         int cmd;
 
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0 &&
-            (*gGameUIInterface)->isItemBeingUsed(0xc1) != 0) {
+            (*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
             cmd = 0;
         } else {
             cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed(cmdQuery.ids, TRICKY_ITEM_ID_COUNT);

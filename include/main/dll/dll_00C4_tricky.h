@@ -8,6 +8,11 @@
 #define TRICKY_COMMAND_KIND_NORMAL   0
 #define TRICKY_COMMAND_KIND_PRIORITY 1
 
+/*
+ * Sidekick command active IDs. These are also the activeGameBit values in
+ * gCMenuTrickyAbilities; BADDIE is a prompt-only branch that uses the shared
+ * Find Secret icon slot but has no normal C-menu entry.
+ */
 #define TRICKY_COMMAND_TYPE_CALL        0
 #define TRICKY_COMMAND_TYPE_FIND_SECRET 1
 #define TRICKY_COMMAND_TYPE_BADDIE      2

@@ -105,7 +105,7 @@ typedef struct TrickyState {
     u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
     u8 movementState;      /* follow-handler phase selector (discrete 0..5; gates the pathing/seed branches) */
     u8 substate;           /* anim-sequence substate 0..7 */
-    u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with 9 into the prompt mask, tested != 0, cleared to 0 (tricky) */
+    u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with Call+Stay into the prompt mask, tested != 0, cleared to 0 (tricky) */
     u8 unk0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];

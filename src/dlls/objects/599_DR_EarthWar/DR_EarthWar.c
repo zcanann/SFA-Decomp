@@ -1036,7 +1036,7 @@ void DR_EarthWarrior_update(GameObject* obj)
     if ((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
     {
         state->sub.flags994.b10 = 1;
-        if ((*gGameUIInterface)->isItemBeingUsed(0xc1) != 0)
+        if ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_TrickyFood_Count) != 0)
         {
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);
             buttonDisable(0, PAD_BUTTON_A);
