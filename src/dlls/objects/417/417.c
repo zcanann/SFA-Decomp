@@ -85,8 +85,6 @@ u8 gNwMammothArtifactCompleteTriggerList[4] = {1, 2, 0, 0};
 #define NW_MAMMOTH_TRIGGER_RANDOM_MIN     1
 #define NW_MAMMOTH_CURVE_PARAM            0x19
 
-#define NW_MAMMOTH_TRICKY_COMMAND_TYPE 1
-
 typedef struct NwMammothTumbleweedInterface {
     void* pad00[11];
     void (*startHoming)(GameObject* tumbleweed, f32* targetPos);
@@ -367,7 +365,7 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
             if (tw2 != NULL) {
                 GameObject* tk = getTrickyObject();
                 TRICKY_INTERFACE(tk)->sideCommandEnable(tk, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                        NW_MAMMOTH_TRICKY_COMMAND_TYPE);
+                                                        TRICKY_COMMAND_TYPE_FIND_SECRET);
             }
             state->triggerList = gNwMammothGatekeeperCollectionTriggerList;
             if (state->trackedObject == NULL) {

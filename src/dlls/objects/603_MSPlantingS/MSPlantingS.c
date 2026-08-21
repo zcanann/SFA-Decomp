@@ -52,8 +52,6 @@
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
 
-#define MSPLANTING_TRICKY_COMMAND_TYPE 4
-
 int MoonSeedPlantingSpot_SeqFn(GameObject* obj)
 {
     MoonSeedPlantingSpotState* state = obj->extra;
@@ -264,7 +262,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
             {
                 objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
                 TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                           MSPLANTING_TRICKY_COMMAND_TYPE);
+                                                           TRICKY_COMMAND_TYPE_FLAME);
             }
             else
             {

@@ -7,8 +7,6 @@
 
 #define TRICKY_GUARD_SPOT_STATE_SIZE 0x8
 
-#define TRICKY_GUARD_COMMAND_TYPE 3
-
 /* Only the accessed placement prefix is recovered; the complete retail width is not established. */
 typedef struct TrickyGuardSpotPlacement {
     ObjPlacement base;        /* 0x00 */

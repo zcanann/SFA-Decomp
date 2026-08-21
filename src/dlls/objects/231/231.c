@@ -137,7 +137,8 @@ void FlammableVine_update(GameObject* obj) {
         if (tricky != NULL && canUse != 0) {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
-                TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY, 4);
+                TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                            TRICKY_COMMAND_TYPE_FLAME);
             }
         }
     }

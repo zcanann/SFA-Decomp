@@ -7529,21 +7529,21 @@ void Tricky_update(GameObject* obj) {
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0 &&
             trickyShouldGoToWarpPoint((GameObject*)obj, (TrickyState*)state) == 2) {
             trickyState->stateIndex = TRICKY_STATE_GO_TO_WARP_POINT;
-        } else if (trickyState->stateIndex == TRICKY_STATE_GUARD && cmd == 4) {
+        } else if (trickyState->stateIndex == TRICKY_STATE_GUARD && cmd == TRICKY_COMMAND_TYPE_FLAME) {
             *(u8*)&trickyState->wanderTargetZ = *(u8*)&trickyState->wanderTargetZ ^ 1;
-        } else if (trickyState->stateIndex == TRICKY_STATE_CIRCLING && cmd == 4 && found == 0) {
+        } else if (trickyState->stateIndex == TRICKY_STATE_CIRCLING && cmd == TRICKY_COMMAND_TYPE_FLAME && found == 0) {
             trickyState->stateWord728 = 1;
-        } else if (trickyState->stateIndex == TRICKY_STATE_GROWL && cmd == 4) {
+        } else if (trickyState->stateIndex == TRICKY_STATE_GROWL && cmd == TRICKY_COMMAND_TYPE_FLAME) {
             trickyState->stateWord728 = 1;
-        } else if (cmd == 0) {
+        } else if (cmd == TRICKY_COMMAND_TYPE_CALL) {
             trickyState->stateFlags |= TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS;
         } else {
             flags = trickyState->stateFlags;
             if ((flags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
                 switch (cmd) {
-                case 1:
+                case TRICKY_COMMAND_TYPE_FIND_SECRET:
                     trickyState->commandPhase = TRICKY_COMMAND_PHASE_DIG;
-                    trickySelectQueuedCommandTarget(trickyState, 1);
+                    trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FIND_SECRET);
                     TRICKY_VOICE(obj, 0x13c, 0);
                     switch (trickyState->followObj->anim.romDefNo) {
                     case SKEETLA_LINKED_SOURCE_ID_OBJ_A:
@@ -7605,13 +7605,13 @@ void Tricky_update(GameObject* obj) {
                         break;
                     }
                     break;
-                case 3:
+                case TRICKY_COMMAND_TYPE_STAY:
                     played = 0;
                     if (trickyState->commandPhase == TRICKY_COMMAND_PHASE_GUARD) {
                         commandCursor = state;
                         count = trickyState->commandCount;
                         for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
-                            if (((TrickyState*)commandCursor)->commands[0].commandType == 3) {
+                            if (((TrickyState*)commandCursor)->commands[0].commandType == TRICKY_COMMAND_TYPE_STAY) {
                                 played = 1;
                             }
                         }
@@ -7620,7 +7620,7 @@ void Tricky_update(GameObject* obj) {
                     }
                     if (played != 0) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_GUARD;
-                        if (trickySelectQueuedCommandTarget(trickyState, 3) != 0) {
+                        if (trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_STAY) != 0) {
                             switch (trickyState->followObj->anim.romDefNo) {
                             case 0x36:
                             case 0x104:
@@ -7646,7 +7646,7 @@ void Tricky_update(GameObject* obj) {
                         }
                     }
                     break;
-                case 4:
+                case TRICKY_COMMAND_TYPE_FLAME:
                     if (*trickyState->progressPtr < 4) {
                         if ((u8)Obj_CanSetupObject()) {
                             trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7655,7 +7655,7 @@ void Tricky_update(GameObject* obj) {
                         }
                     } else {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_FLAME;
-                        trickySelectQueuedCommandTarget(trickyState, 4);
+                        trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FLAME);
                         trickyState->stateIndex = TRICKY_STATE_FLAME;
                         switch (trickyState->followObj->anim.romDefNo) {
                         case 0x1c9:
@@ -7693,7 +7693,7 @@ void Tricky_update(GameObject* obj) {
                         }
                     }
                     break;
-                case 5:
+                case TRICKY_COMMAND_TYPE_THROW_BALL:
                     if ((u8)Obj_CanSetupObject()) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_FETCH_BALL;
                         setup = Obj_AllocObjectSetup(0x18, TRICKY_CHILD_OBJ_SIDEKICK_BALL);
@@ -7743,7 +7743,7 @@ void Tricky_update(GameObject* obj) {
                     }
                     break;
                 }
-            } else if (cmd == 3) {
+            } else if (cmd == TRICKY_COMMAND_TYPE_STAY) {
                 trickyState->stateFlags = flags | (u64)TRICKY_STATE_FLAG_GUARD_REQUEST;
             }
         }

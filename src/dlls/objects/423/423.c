@@ -512,7 +512,8 @@ void EdibleMushroom_update(GameObject* obj) {
             state->currentTargetDistance = sqrtf(distEnemy);
         }
         if (state->currentTargetDistance < (f32)(u32)placement->retreatTriggerDistance) {
-            TRICKY_INTERFACE(enemy)->sideCommandEnable(enemy, obj, TRICKY_COMMAND_KIND_NORMAL, 1);
+            TRICKY_INTERFACE(enemy)->sideCommandEnable(enemy, obj, TRICKY_COMMAND_KIND_NORMAL,
+                                                       TRICKY_COMMAND_TYPE_FIND_SECRET);
         }
     }
 

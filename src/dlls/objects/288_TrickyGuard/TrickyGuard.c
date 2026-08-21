@@ -51,7 +51,7 @@ void TrickyGuardSpot_update(GameObject* obj) {
         if (tricky != NULL && TRICKY_INTERFACE(tricky)->isGuarding(tricky) == 0) {
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
                 TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                            TRICKY_GUARD_COMMAND_TYPE);
+                                                            TRICKY_COMMAND_TYPE_STAY);
             }
             obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
             objUpdateHitVolumeTransforms(obj);

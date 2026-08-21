@@ -63,7 +63,7 @@ void dimtruthhornice_update(GameObject* obj) {
             if (tricky != NULL) {
                 if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
                     TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                               4);
+                                                               TRICKY_COMMAND_TYPE_FLAME);
                 }
                 obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             }

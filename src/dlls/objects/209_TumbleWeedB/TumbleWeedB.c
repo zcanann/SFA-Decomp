@@ -428,8 +428,6 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
 #define TUMBLEWEED_SECONDARY_OBJECT_GROUP 0x31
 #define TUMBLEWEED_BUSH_REMOVE_PIECE_SLOT 8
 
-#define TUMBLEWEED_TRICKY_COMMAND_TYPE 1
-
 f32 gTumbleweedCollisionPointData[2] = {25.0f, 0.0f};
 
 void tumbleweed_updateRollingMotion(GameObject* obj, TumbleweedState* state) {
@@ -642,7 +640,7 @@ void tumbleweed_updateStateMachine(GameObject* obj) {
                 f32 trickyOffsetX, trickyOffsetZ, trickyDistanceSquared;
                 if (targetDistanceSquared < 30625.0f) {
                     TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_NORMAL,
-                                                                TUMBLEWEED_TRICKY_COMMAND_TYPE);
+                                                                TRICKY_COMMAND_TYPE_FIND_SECRET);
                 }
                 trickyOffsetX = obj->anim.localPosX - tricky->anim.localPosX;
                 trickyOffsetZ = obj->anim.localPosZ - tricky->anim.localPosZ;

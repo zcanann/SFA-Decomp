@@ -52,8 +52,6 @@ s16 gKytesMumQuestEventSfxTable[4] = {0x336, 0x337, 0x337, 0};
 #define KYTESMUM_OBJGROUP        0x3
 #define KYTESMUM_TARGET_OBJGROUP 0x1
 
-#define KYTESMUM_TRICKY_COMMAND_TYPE 2
-
 #define KYTESMUM_OBJECT_TYPE_ID  0x43
 #define KYTESMUM_EXTRA_SIZE      0x6ec
 #define KYTESMUM_HIT_VOLUME_SLOT 0xb
@@ -377,7 +375,7 @@ void kytesmum_update(GameObject* obj)
     {
         TRICKY_INTERFACE(nearest)
             ->sideCommandEnable(nearest, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                KYTESMUM_TRICKY_COMMAND_TYPE);
+                                TRICKY_COMMAND_TYPE_BADDIE);
     }
 }
 
