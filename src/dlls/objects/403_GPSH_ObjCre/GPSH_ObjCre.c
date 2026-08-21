@@ -78,6 +78,7 @@ void gpshObjCreator_hitDetect(void) {
 void gpshObjCreator_update(GameObject* obj) {
     GPSHObjCreatorState* state;
     GPSHObjCreatorChildSetup* childSetup;
+    u8 canSetupObject;
 
     state = obj->extra;
     if (mainGetBit(GAMEBIT_GPSH_ResetSymbolCreators) != 0) {
@@ -95,7 +96,8 @@ void gpshObjCreator_update(GameObject* obj) {
             obj->userData2 = 1;
         }
     }
-    if (Obj_CanSetupObject() == 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return;
     }
     if (!state->spawnTimer) {

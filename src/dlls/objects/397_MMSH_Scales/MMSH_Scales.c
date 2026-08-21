@@ -105,6 +105,7 @@ void mmshScales_init(GameObject* obj, const MMSHScalesPlacement* placement) {
     MMSHScalesState* state = obj->extra;
     MMSHScalesChildSetup* childSetup;
     int cachedAnimDataIndexPlusOne;
+    u8 canSetupObject;
 
     state->sequence.gameBit = placement->sequenceGameBit;
     state->sequence.flags = MMSH_SCALES_SEQUENCE_FLAGS;
@@ -121,7 +122,8 @@ void mmshScales_init(GameObject* obj, const MMSHScalesPlacement* placement) {
         }
         obj->userData1 = placement->animDataIndex + 1;
     }
-    if (Obj_CanSetupObject() == 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return;
     }
     childSetup =
