@@ -165,37 +165,39 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_PI                          3.1415927f
 #define TRICKY_ANGLE_HALF_TURN_UNITS       32768.0f
 
-#define TRICKY_STATE_FLAG_SIDESTEP               0x20  /* apply sidestepDelta lateral offset */
-#define TRICKY_STATE_FLAG_BACKSTEP               0x40  /* apply backstepDelta offset */
-#define TRICKY_STATE_FLAG_VERTICAL_MOVE          0x80  /* apply verticalDelta to localPosY */
-#define TRICKY_STATE_FLAG_ROTATE                 0x100 /* interpolate rotation toward targetYaw target */
-#define TRICKY_STATE_FLAG_SEQUENCE_CALLBACK      0x1u
-#define TRICKY_STATE_FLAG_SEQUENCE_LATCHED       0x200u
-#define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE    0x4000u
-#define TRICKY_STATE_FLAG_COMMAND_ACTIVE         0x10u
-#define TRICKY_STATE_FLAG_GROUND_SNAP            0x2000u
-#define TRICKY_STATE_FLAG_RECALL_REQUEST         0x10000u
-#define TRICKY_STATE_FLAG_HEEL_REQUEST           0x20000u
-#define TRICKY_STATE_FLAG_GUARD_REQUEST          0x40000u
-#define TRICKY_STATE_FLAG_POSITION_RELOCATED     0x80000u
-#define TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS   0x30002LL
-#define TRICKY_STATE_FLAG_TURN_REQUEST           0x100000u
-#define TRICKY_STATE_FLAG_TURN_REQUEST_PREV      0x200000u
-#define TRICKY_STATE_FLAG_TURN_LEFT              0x400000u
-#define TRICKY_STATE_FLAG_TURN_RIGHT             0x800000u
-#define TRICKY_STATE_TURN_SELECT_CLEAR_MASK      0xef2fffff
-#define TRICKY_STATE_TURN_RIGHT_FLAGS            0x900000LL
-#define TRICKY_STATE_TURN_LEFT_FLAGS             0x500000LL
-#define TRICKY_STATE_DIG_TUNNEL_FLAGS            0x2010LL
-#define TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK    0x4201
-#define TRICKY_STATE_FLAG_TURNING_U32            0x10000000
-#define TRICKY_STATE_FLAG_TURNING                0x10000000LL
-#define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32   0x20000000U
-#define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED       0x20000000LL
-#define TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32 0x40000000
-#define TRICKY_STATE_FLAG_FEED_VOICE_PENDING     0x40000000LL
-#define TRICKY_STATE_FLAG_IMPRESS_PENDING_U32    0x80000000U
-#define TRICKY_STATE_FLAG_MOVE_ADVANCING_WIDE    0x8000000LL
+#define TRICKY_STATE_FLAG_SIDESTEP                0x20  /* apply sidestepDelta lateral offset */
+#define TRICKY_STATE_FLAG_BACKSTEP                0x40  /* apply backstepDelta offset */
+#define TRICKY_STATE_FLAG_VERTICAL_MOVE           0x80  /* apply verticalDelta to localPosY */
+#define TRICKY_STATE_FLAG_ROTATE                  0x100 /* interpolate rotation toward targetYaw target */
+#define TRICKY_STATE_FLAG_SEQUENCE_CALLBACK       0x1u
+#define TRICKY_STATE_FLAG_FOOD_WARNING_PENDING    0x4u
+#define TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED 0x8u
+#define TRICKY_STATE_FLAG_SEQUENCE_LATCHED        0x200u
+#define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE     0x4000u
+#define TRICKY_STATE_FLAG_COMMAND_ACTIVE          0x10u
+#define TRICKY_STATE_FLAG_GROUND_SNAP             0x2000u
+#define TRICKY_STATE_FLAG_RECALL_REQUEST          0x10000u
+#define TRICKY_STATE_FLAG_HEEL_REQUEST            0x20000u
+#define TRICKY_STATE_FLAG_GUARD_REQUEST           0x40000u
+#define TRICKY_STATE_FLAG_POSITION_RELOCATED      0x80000u
+#define TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS    0x30002LL
+#define TRICKY_STATE_FLAG_TURN_REQUEST            0x100000u
+#define TRICKY_STATE_FLAG_TURN_REQUEST_PREV       0x200000u
+#define TRICKY_STATE_FLAG_TURN_LEFT               0x400000u
+#define TRICKY_STATE_FLAG_TURN_RIGHT              0x800000u
+#define TRICKY_STATE_TURN_SELECT_CLEAR_MASK       0xef2fffff
+#define TRICKY_STATE_TURN_RIGHT_FLAGS             0x900000LL
+#define TRICKY_STATE_TURN_LEFT_FLAGS              0x500000LL
+#define TRICKY_STATE_DIG_TUNNEL_FLAGS             0x2010LL
+#define TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK     0x4201
+#define TRICKY_STATE_FLAG_TURNING_U32             0x10000000
+#define TRICKY_STATE_FLAG_TURNING                 0x10000000LL
+#define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32    0x20000000U
+#define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED        0x20000000LL
+#define TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32  0x40000000
+#define TRICKY_STATE_FLAG_FEED_VOICE_PENDING      0x40000000LL
+#define TRICKY_STATE_FLAG_IMPRESS_PENDING_U32     0x80000000U
+#define TRICKY_STATE_FLAG_MOVE_ADVANCING_WIDE     0x8000000LL
 
 #define TRICKY_MOVE_FLAG_KEEP_PROGRESS        0x01000000
 #define TRICKY_MOVE_FLAG_ROOT_TRANSLATE       0x02000000
@@ -866,20 +868,20 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         lastContactObj = NULL;
     }
 
-    if ((state->stateFlags & 8) != 0) {
+    if ((state->stateFlags & TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED) != 0) {
         state->contactTimer += timeDelta;
         if (state->contactTimer >= 40.0f) {
             if (vec3f_distanceSquared(&obj->anim.worldPosX, &Obj_GetPlayerObject()->anim.worldPosX) > 400.0f) {
                 state->contactTimer -= 40.0f;
                 obj->anim.modelInstance->runtimeSourceHitMask = 0x7f;
-                state->stateFlags &= ~8LL;
+                state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED;
             }
         }
     } else if ((state->lastContactObj != NULL) && (lastContactObj == state->lastContactObj)) {
         state->contactTimer += timeDelta;
         if (state->contactTimer >= 10.0f) {
             state->contactTimer -= 10.0f;
-            state->stateFlags |= 8;
+            state->stateFlags |= TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED;
             obj->anim.modelInstance->runtimeSourceHitMask = 0x7e;
         }
     } else {
@@ -3198,7 +3200,6 @@ typedef struct AnimObjD2DripSetup {
 
 void* trickyFindCirclingTarget(GameObject* obj, void* state);
 
-#define TRICKY_STATE_FLAG_4            0x4
 #define TRICKY_STATE_FLAG_800          0x800
 #define TRICKY_STATE_FLAG_1000         0x1000
 #define TRICKY_STATE_FLAG_8000000      0x8000000
@@ -3362,7 +3363,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                 if (*state->progressPtr < 2) {
                     state->stateWord728 = 0;
                     if (Obj_IsLoadingLocked() != 0) {
-                        state->stateFlags |= TRICKY_STATE_FLAG_4;
+                        state->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                         TRICKY_RESET((u8*)state);
                         if (state->child == NULL) {
                             AnimObjD2DripSetup* setup =
@@ -7440,7 +7441,7 @@ void Tricky_update(GameObject* obj) {
                     case 0x1ca:
                         if (**(u8**)state < 4) {
                             if (Obj_IsLoadingLocked()) {
-                                trickyState->stateFlags |= 4;
+                                trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
@@ -7451,7 +7452,7 @@ void Tricky_update(GameObject* obj) {
                     case 0x160:
                         if (**(u8**)state < 4) {
                             if (Obj_IsLoadingLocked()) {
-                                trickyState->stateFlags |= 4;
+                                trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
@@ -7468,7 +7469,7 @@ void Tricky_update(GameObject* obj) {
                     case 0x195:
                         if (**(u8**)state < 2) {
                             if (Obj_IsLoadingLocked()) {
-                                trickyState->stateFlags |= 4;
+                                trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
@@ -7479,7 +7480,7 @@ void Tricky_update(GameObject* obj) {
                     case 0x352:
                         if (**(u8**)state < 4) {
                             if (Obj_IsLoadingLocked()) {
-                                trickyState->stateFlags |= 4;
+                                trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                                 TRICKY_RESET_COMMAND(state);
                                 TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                             }
@@ -7539,7 +7540,7 @@ void Tricky_update(GameObject* obj) {
                 case 4:
                     if (**(u8**)state < 4) {
                         if (Obj_IsLoadingLocked()) {
-                            trickyState->stateFlags |= 4;
+                            trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                             TRICKY_RESET_COMMAND(state);
                             TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
                         }
@@ -7799,7 +7800,7 @@ void Tricky_update(GameObject* obj) {
     if (trickyState->cooldownC < 0.0f) {
         trickyState->cooldownC = 0.0f;
     }
-    if ((trickyState->stateFlags & 4) != 0) {
+    if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FOOD_WARNING_PENDING) != 0) {
         st = ((GameObject*)obj)->extra;
         if (st->soundSuppressed != 0) {
             played = 0;
@@ -7825,7 +7826,7 @@ void Tricky_update(GameObject* obj) {
             }
         }
         if (played != 0) {
-            trickyState->stateFlags &= ~(u64)0x4;
+            trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
         }
     }
     trickyState->voiceCooldown -= timeDelta;
