@@ -5,7 +5,7 @@
 #include "types.h"
 #include "main/dll/tricky_state.h"
 
-void trickyDigTunnel(u8* obj, TrickyState* state);
+void trickyDigTunnel(GameObject* obj, TrickyState* state);
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state);
 void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state);
 int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state);

@@ -4908,7 +4908,7 @@ char sTrickyDigTunnelDebugTextBlock[] = {
     0x44, 0x49, 0x47, 0x54, 0x55, 0x4E, 0x4E, 0x45, 0x4C, 0x5F, 0x57, 0x41, 0x49, 0x54, 0x0A, 0x00,
 };
 
-void trickyDigTunnel(u8* obj, TrickyState* state) {
+void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u32 sfxTable;
     u8* base;
     RomCurveDef* pc;
@@ -4949,8 +4949,8 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
         state->substate = 1;
     case 1:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_FINDING));
-        trickyUpdateMovementState((GameObject*)obj, 5.0f, state);
-        gidx = Objfsa_GetWalkGroupIndexAtPoint(&((GameObject*)obj)->anim.worldPosX, NULL);
+        trickyUpdateMovementState(obj, 5.0f, state);
+        gidx = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
         if (((RomCurveDef*)state->scratch708.ptr)->walkGroup == gidx) {
             state->movementState = TRICKY_MOVE_WALK_FREE;
             state->substate = 2;
@@ -4959,23 +4959,23 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
     case 2:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_GOINGTOSTART));
         pos = (u8*)&((RomCurveDef*)state->scratch700.ptr)->x;
-        trickyUpdateApproachSpeed((GameObject*)obj, 5.0f, state, (f32*)pos, 1);
-        if (moveTricky((GameObject*)obj, (f32*)pos) == 0) {
+        trickyUpdateApproachSpeed(obj, 5.0f, state, (f32*)pos, 1);
+        if (moveTricky(obj, (f32*)pos) == 0) {
             state->stateFlags |= 0x2010;
             state->substate = 3;
         } else {
-            if (Objfsa_GetWalkGroupIndexAtPoint(&((GameObject*)obj)->anim.worldPosX, NULL) == 0) {
+            if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) == 0) {
                 state->stateFlags |= 0x2010;
             }
         }
         break;
     case 3:
-        trickyRequestMove((GameObject*)obj, 0xe, 0.033f, 0x4000000);
+        trickyRequestMove(obj, 0xe, 0.033f, 0x4000000);
         state->dirX = ((RomCurveDef*)state->scratch704.ptr)->x -
                                       ((RomCurveDef*)state->scratch700.ptr)->x;
         state->dirZ = ((RomCurveDef*)state->scratch704.ptr)->z -
                                       ((RomCurveDef*)state->scratch700.ptr)->z;
-        Sfx_AddLoopedObjectSound((GameObject*)obj, SFXTRIG_trwhin1);
+        Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
         state->scratch70C.f = (f32)(int)randomGetRange(0x14, 0xb4);
         state->substate = 4;
     case 4:
@@ -4984,25 +4984,25 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
         if (state->scratch70C.f <= 0.0f) {
             state->scratch70C.f = (f32)(int)randomGetRange(0x14, 0xb4);
             state->scratch70C.f *= 100.0f;
-            ptr = ((GameObject*)obj)->extra;
+            ptr = obj->extra;
             if (((TrickyState*)ptr)->soundSuppressed == 0 &&
-                (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
-                Sfx_IsPlayingFromObjectChannel((GameObject*)obj, 0x10) == 0) {
-                objSoundStartTimed((GameObject*)obj, &((TrickyState*)ptr)->soundState, 0x360, 0x500, -1, 0);
+                (obj->anim.currentMove >= 0x30 || obj->anim.currentMove < 0x29) &&
+                Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+                objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, 0x360, 0x500, -1, 0);
             }
         }
         spd = GROUND_ANIMATOR_INTERFACE(state->followObj)
-                  ->applyPress(state->followObj, (GameObject*)obj);
-        ((GameObject*)obj)->anim.localPosX =
+                  ->applyPress(state->followObj, obj);
+        obj->anim.localPosX =
             state->dirX * spd + ((RomCurveDef*)state->scratch700.ptr)->x;
-        ((GameObject*)obj)->anim.localPosZ =
+        obj->anim.localPosZ =
             state->dirZ * spd + ((RomCurveDef*)state->scratch700.ptr)->z;
-        vx = ((TrickyState*)((GameObject*)obj)->extra)->dirX;
+        vx = ((TrickyState*)obj->extra)->dirX;
         vxx = vx * vx;
-        vz = ((TrickyState*)((GameObject*)obj)->extra)->dirZ;
+        vz = ((TrickyState*)obj->extra)->dirZ;
         spd = vz * vz;
         if (vxx + spd > 0.01f) {
-            trickyTurnTowardYaw((GameObject*)obj, getAngle(-vx, -vz));
+            trickyTurnTowardYaw(obj, getAngle(-vx, -vz));
         }
         if (GROUND_ANIMATOR_INTERFACE(state->followObj)
                 ->isFullySunk(state->followObj) != 0) {
@@ -5030,24 +5030,24 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
                 }
             }
             **(u8**)state -= 4;
-            Sfx_RemoveLoopedObjectSound((GameObject*)obj, SFXTRIG_trwhin1);
+            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = 5;
             id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
-            ptr = ((GameObject*)obj)->extra;
+            ptr = obj->extra;
             if (((TrickyState*)ptr)->soundSuppressed == 0 &&
-                (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
-                Sfx_IsPlayingFromObjectChannel((GameObject*)obj, 0x10) == 0) {
-                objSoundStartTimed((GameObject*)obj, &((TrickyState*)ptr)->soundState, id, 0x500, -1, 0);
+                (obj->anim.currentMove >= 0x30 || obj->anim.currentMove < 0x29) &&
+                Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+                objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, id, 0x500, -1, 0);
             }
         }
         break;
     case 5:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_TOEND1),
-                         Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
+                         Vec_xzDistance(&obj->anim.worldPosX,
                                         &((RomCurveDef*)state->scratch704.ptr)->x));
         pos = (u8*)&((RomCurveDef*)state->scratch704.ptr)->x;
-        trickyUpdateApproachSpeed((GameObject*)obj, 5.0f, state, (f32*)pos, 1);
-        if (moveTricky((GameObject*)obj, (f32*)pos) == 0) {
+        trickyUpdateApproachSpeed(obj, 5.0f, state, (f32*)pos, 1);
+        if (moveTricky(obj, (f32*)pos) == 0) {
             trickyAdvanceNode(state);
             state->substate = 6;
         }
@@ -5055,8 +5055,8 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
     case 6:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_TOEND2));
         pos = (u8*)&((RomCurveDef*)state->scratch704.ptr)->x;
-        trickyUpdateApproachSpeed((GameObject*)obj, 5.0f, state, (f32*)pos, 1);
-        if (moveTricky((GameObject*)obj, (f32*)pos) == 0) {
+        trickyUpdateApproachSpeed(obj, 5.0f, state, (f32*)pos, 1);
+        if (moveTricky(obj, (f32*)pos) == 0) {
             if (0.0f == state->waterLevel) {
                 inWater = 0;
             } else if (gTrickyEventTimeSentinel == state->eventTime) {
@@ -5067,12 +5067,12 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
                 inWater = 0;
             }
             if (inWater != 0) {
-                trickyRequestMove((GameObject*)obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
+                trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
                 state->particleTimer = 0.0f;
                 trickyDebugPrint((char*)(base + TRICKY_DBG_IN_WATER));
             } else {
-                trickyRequestMove((GameObject*)obj, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
+                trickyRequestMove(obj, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
                 trickyDebugPrint((char*)(base + TRICKY_DBG_OUT_OF_WATER));
             }
             state->stateFlags &= ~0x2010;
@@ -5085,7 +5085,7 @@ void trickyDigTunnel(u8* obj, TrickyState* state) {
         {
             int currentGroup;
 
-            currentGroup = Objfsa_GetWalkGroupIndexAtPoint(&((GameObject*)obj)->anim.worldPosX, NULL);
+            currentGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
             if (currentGroup == gidx) {
                 state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
                 state->substate = 0;
