@@ -893,6 +893,7 @@ enum GameBitId {
     GAMEBIT_SHOP_Unk0CEF = 0xCEF,                        /* table 0; set when entering shop, cleared when leaving */
     GAMEBIT_NoBallsAllowed = 0xD00,                      /* table 3; Disables/despawns Tricky's ball */
     GAMEBIT_SH_EnteredWell = 0xD06,                      /* table 2; hint 271 */
+    GAMEBIT_NW_TrickySharpClawDefeated = 0xD11,          /* consumed by NW_tricky: when set, the SnowHorn Wastes SharpClaws stop chasing Tricky and the controller advances to the command-learning phase */
     GAMEBIT_NW_Key_Used = 0xD16,                         /* table 2; ref wastes/HitAnimator target */
     GAMEBIT_WMRelated0D1B = 0xD1B,                       /* table 1 */
     GAMEBIT_WMRelated0D1C = 0xD1C,                       /* table 1 */

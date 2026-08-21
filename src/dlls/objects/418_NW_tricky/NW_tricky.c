@@ -23,9 +23,8 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/objtype.h"
 
-#define NW_TRICKY_SHARPCLAW_DEFEATED_GAMEBIT 0xD11
-#define NW_TRICKY_SHARPCLAW_OBJECT_GROUP     3
-#define NW_TRICKY_SHARPCLAW_SEQUENCE_ID      0x13A
+#define NW_TRICKY_SHARPCLAW_OBJECT_GROUP 3
+#define NW_TRICKY_SHARPCLAW_SEQUENCE_ID  0x13A
 
 #define NW_TRICKY_SOUND_CHANNEL                 16
 #define NW_TRICKY_SOUND_VOLUME                  0x1000
@@ -94,7 +93,7 @@ void nwTricky_update(GameObject* obj) {
 
     switch (state->phase) {
     case NW_TRICKY_PHASE_CHASED_BY_SHARPCLAW:
-        if (mainGetBit(NW_TRICKY_SHARPCLAW_DEFEATED_GAMEBIT)) {
+        if (mainGetBit(GAMEBIT_NW_TrickySharpClawDefeated)) {
             herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_SHARPCLAW_OBJECT_GROUP, &herdObjectCount);
             for (herdObjectIndex = 0, completedHerdScan = herdObjects; herdObjectIndex < herdObjectCount;
                  completedHerdScan++, herdObjectIndex++) {
