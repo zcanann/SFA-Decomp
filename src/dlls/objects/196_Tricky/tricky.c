@@ -366,7 +366,7 @@ GameObject* trickyGetStayPoint(GameObject* obj) {
 int trickyGetAimPitchOffset(GameObject* obj) {
     return ((TrickyState*)obj->extra)->modelAnchorRotY;
 }
-void* trickyGetQueuedPathParticlePos(GameObject* obj) {
+f32* trickyGetQueuedPathParticlePos(GameObject* obj) {
     return &((TrickyState*)obj->extra)->renderPosX;
 }
 
