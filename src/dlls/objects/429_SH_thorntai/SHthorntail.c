@@ -473,15 +473,15 @@ void SHthorntail_updateState(GameObject* obj, SHthorntailState* runtime) {
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
             runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
             randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN, SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
-            runtime->comboTimer = (float)randomValue;
+            runtime->closeAttackWaitTimer = (float)randomValue;
             randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MIN, SHTHORNTAIL_CLOSE_ATTACK_REPEAT_MAX);
-            runtime->comboRepeatCount = randomValue;
+            runtime->closeAttackRepeatCount = randomValue;
         }
         break;
     case SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT:
-        runtime->comboTimer = runtime->comboTimer - (float)framesThisStep;
-        if (runtime->comboTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
-            if (runtime->comboRepeatCount <= 0) {
+        runtime->closeAttackWaitTimer = runtime->closeAttackWaitTimer - (float)framesThisStep;
+        if (runtime->closeAttackWaitTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
+            if (runtime->closeAttackRepeatCount <= 0) {
                 runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER;
             } else {
                 runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_REPEAT;
@@ -492,8 +492,8 @@ void SHthorntail_updateState(GameObject* obj, SHthorntailState* runtime) {
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
             runtime->behaviorState = SHTHORNTAIL_STATE_CLOSE_ATTACK_WAIT;
             randomValue = randomGetRange(SHTHORNTAIL_CLOSE_ATTACK_WAIT_MIN, SHTHORNTAIL_CLOSE_ATTACK_WAIT_MAX);
-            runtime->comboTimer = (float)randomValue;
-            runtime->comboRepeatCount--;
+            runtime->closeAttackWaitTimer = (float)randomValue;
+            runtime->closeAttackRepeatCount--;
         }
         break;
     case SHTHORNTAIL_STATE_CLOSE_ATTACK_RECOVER:
@@ -945,7 +945,7 @@ void SHthorntail_update(GameObject* obj) {
     runtime = obj->extra;
     config = (SHthorntailPlacement*)(obj)->anim.placementData;
     if (runtime->behaviorState == '\f') {
-        if (runtime->effectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
+        if (runtime->tailSwingEffectTimer <= SHTHORNTAIL_TIMER_DONE_THRESHOLD) {
             if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
                 ObjPath_GetPointWorldPosition(obj, 4, &effectScratch.position.x, &effectScratch.position.y,
                                               &effectScratch.position.z, 0);
@@ -953,9 +953,9 @@ void SHthorntail_update(GameObject* obj) {
                     ->spawnObject((void*)obj, SHTHORNTAIL_PARTFX_TAILSWING, effectScratch.particleParams, 0x200001, -1,
                                   NULL);
             }
-            runtime->effectTimer = 30.0f;
+            runtime->tailSwingEffectTimer = 30.0f;
         }
-        runtime->effectTimer = runtime->effectTimer - timeDelta;
+        runtime->tailSwingEffectTimer = runtime->tailSwingEffectTimer - timeDelta;
     }
     runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_LEVELCONTROL_READY;
     if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] & SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) != 0) {
