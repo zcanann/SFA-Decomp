@@ -10,8 +10,8 @@
 typedef struct ObjSeqState ObjSeqState;
 
 typedef enum NwTrickyPhase {
-    NW_TRICKY_PHASE_HERDING = 0,
-    NW_TRICKY_PHASE_ENERGY = 1,
+    NW_TRICKY_PHASE_CHASED_BY_SHARPCLAW = 0,
+    NW_TRICKY_PHASE_LEARNING_COMMANDS = 1,
 } NwTrickyPhase;
 
 typedef struct NwTrickyState {
