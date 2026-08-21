@@ -6870,7 +6870,7 @@ u8 Tricky_getEnergy(GameObject* obj) {
 
 void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType) {
     int remaining;
-    u8* commandEntry;
+    u8* commandCursor;
     u32 count;
     int commandIndex;
     TrickyState* state;
@@ -6882,14 +6882,14 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
     }
     state->commandRequestBits = (u8)(state->commandRequestBits | (1 << commandType));
     commandIndex = 0;
-    commandEntry = (u8*)state;
+    commandCursor = (u8*)state;
     count = state->commandCount;
     for (remaining = count; remaining > 0; remaining--) {
-        if (TRICKY_COMMAND_FROM_STATE_BASE(commandEntry)->targetObj == targetObj) {
+        if (TRICKY_COMMAND_FROM_STATE_BASE(commandCursor)->targetObj == targetObj) {
             state->commands[commandIndex].ttl = TRICKY_COMMAND_TTL_FRAMES;
             return;
         }
-        commandEntry += sizeof(TrickyCommand);
+        commandCursor += sizeof(TrickyCommand);
         commandIndex++;
     }
     state->commands[count].targetObj = targetObj;
@@ -7357,7 +7357,7 @@ void Tricky_update(GameObject* obj) {
         int index;
     } childLoop;
     int i;
-    int ref;
+    int commandCursor;
     ObjPlacement* setup;
     int count;
     u32 flags;
@@ -7480,10 +7480,10 @@ void Tricky_update(GameObject* obj) {
         } else {
             cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed(cmdQuery.ids, TRICKY_ITEM_ID_COUNT);
         }
-        ref = state;
+        commandCursor = state;
         count = trickyState->commandCount;
-        for (i = 0; i < count; i++, ref += sizeof(TrickyCommand)) {
-            if (TRICKY_COMMAND_FROM_STATE_BASE(ref)->type == cmd) {
+        for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
+            if (TRICKY_COMMAND_FROM_STATE_BASE(commandCursor)->type == cmd) {
                 found = 1;
                 break;
             }
@@ -7570,10 +7570,10 @@ void Tricky_update(GameObject* obj) {
                 case 3:
                     played = 0;
                     if (trickyState->commandPhase == TRICKY_COMMAND_PHASE_GUARD) {
-                        ref = state;
+                        commandCursor = state;
                         count = trickyState->commandCount;
-                        for (i = 0; i < count; i++, ref += sizeof(TrickyCommand)) {
-                            if (TRICKY_COMMAND_FROM_STATE_BASE(ref)->type == 3) {
+                        for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
+                            if (TRICKY_COMMAND_FROM_STATE_BASE(commandCursor)->type == 3) {
                                 played = 1;
                             }
                         }
@@ -7852,12 +7852,12 @@ void Tricky_update(GameObject* obj) {
     trickyState->prevSpeed = trickyState->speed;
     i = trickyState->commandCount - 1;
     {
-        u8* cur = (u8*)state + i * sizeof(TrickyCommand);
+        u8* commandCursor = (u8*)state + i * sizeof(TrickyCommand);
 
-        for (; i >= 0; cur -= sizeof(TrickyCommand), i--) {
-            TRICKY_COMMAND_TTL_FROM_STATE_BASE(cur) -= 1;
-            if (TRICKY_COMMAND_TTL_FROM_STATE_BASE(cur) == 0) {
-                memmove(TRICKY_COMMAND_FROM_STATE_BASE(cur),
+        for (; i >= 0; commandCursor -= sizeof(TrickyCommand), i--) {
+            TRICKY_COMMAND_TTL_FROM_STATE_BASE(commandCursor) -= 1;
+            if (TRICKY_COMMAND_TTL_FROM_STATE_BASE(commandCursor) == 0) {
+                memmove(TRICKY_COMMAND_FROM_STATE_BASE(commandCursor),
                         TRICKY_COMMAND_FROM_STATE_BASE(state + (i + 1) * sizeof(TrickyCommand)),
                         (trickyState->commandCount - i - 1) * sizeof(TrickyCommand));
                 trickyState->commandCount -= 1;
