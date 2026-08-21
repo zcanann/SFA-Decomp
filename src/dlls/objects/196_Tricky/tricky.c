@@ -119,6 +119,17 @@ typedef struct {
     u16 b;
 } TrickySfxPair;
 
+typedef struct TrickyBaddieTargetPlacement {
+    u8 pad0[0x14];
+    s32 mapEventId;
+    s16 gateOffBit;
+    s16 gateOnBit;
+} TrickyBaddieTargetPlacement;
+
+STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
+STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOffBit) == 0x18);
+STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOnBit) == 0x1A);
+
 static const u16 lbl_803E23C0[1] = {0x0A08};
 static const TrickySfxPair sTrickyImpressSfxPair = {0x0356, 0x035C};
 static const u16 lbl_803E23C8[2] = {0x035A, 0x0351};
@@ -386,7 +397,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
     objs = tmpList;
 
     for (; i < count; objs++, i++) {
-        int* data;
+        TrickyBaddieTargetPlacement* placement;
         f32 obj_extra;
         int v1, v2;
         s32 g1, g2;
@@ -397,14 +408,14 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
             obj_extra = enemy_getHealthFraction(*objs);
         }
 
-        data = (int*)(*objs)->anim.placementData;
-        g1 = *(s16*)((char*)data + 0x18);
+        placement = (TrickyBaddieTargetPlacement*)(*objs)->anim.placementData;
+        g1 = placement->gateOffBit;
         if (g1 == -1) {
             v1 = 0;
         } else {
             v1 = mainGetBit(g1);
         }
-        g2 = *(s16*)((char*)data + 0x1a);
+        g2 = placement->gateOnBit;
         if (g2 == -1) {
             v2 = 1;
         } else {
@@ -413,7 +424,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 
         if (objIsObjectType(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > 0.0f && v1 == 0 && v2 != 0) {
             if ((*objs)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
-                if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0) {
+                if ((*gMapEventInterface)->shouldNotSaveTime(placement->mapEventId) != 0) {
                     if (allowSpecialTypes == 0) {
                         s16 m = (*objs)->anim.romDefNo;
                         if (m == TRICKY_SEQID_VAMBAT || m == TRICKY_SEQID_WB ||
