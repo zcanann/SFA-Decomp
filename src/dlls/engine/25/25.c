@@ -139,6 +139,7 @@ f32 dll_19_getHealthFraction(GameObject* obj)
 void dll_19_changeWeapon(GameObject* cam, u8* ctx)
 {
     Dll19ChildObjectIdTable childObjectIds = gDll19ChildObjectIds;
+    u8 canSetupObject;
 
     if ((s8)ctx[1031] == (s8)ctx[1033])
     {
@@ -153,7 +154,8 @@ void dll_19_changeWeapon(GameObject* cam, u8* ctx)
         Obj_FreeObject(cam->childObjs[0]);
         cam->childObjs[0] = NULL;
     }
-    if (Obj_CanSetupObject() != 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         if ((s8)ctx[1031] > 0)
         {
@@ -528,6 +530,7 @@ GameObject* dll_19_dropCollectable(GameObject* obj, int spawnType, int unused, i
     f32 savedX, savedY, savedZ;
     f32 nearDist;
     f32 scale;
+    u8 canSetupObject;
 
     scale = 0.0f;
     *(IdPair*)ids1 = sDll19DropObjectIds;
@@ -536,7 +539,8 @@ GameObject* dll_19_dropCollectable(GameObject* obj, int spawnType, int unused, i
     {
         return 0;
     }
-    if (Obj_CanSetupObject() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return 0;
     }
