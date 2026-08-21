@@ -173,7 +173,7 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_RECALL_REQUEST         0x10000u
 #define TRICKY_STATE_FLAG_HEEL_REQUEST           0x20000u
 #define TRICKY_STATE_FLAG_GUARD_REQUEST          0x40000u
-#define TRICKY_STATE_FLAG_WARP_RETURNED          0x80000u
+#define TRICKY_STATE_FLAG_POSITION_RELOCATED     0x80000u
 #define TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS   0x30002LL
 #define TRICKY_STATE_FLAG_TURN_REQUEST           0x100000u
 #define TRICKY_STATE_FLAG_TURN_REQUEST_PREV      0x200000u
@@ -810,14 +810,14 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     nearestDistance = 100.0f;
 
     if ((objPosToMapBlockIdx(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) == -1) &&
-        ((state->stateFlags & 0x80000) == 0)) {
+        ((state->stateFlags & TRICKY_STATE_FLAG_POSITION_RELOCATED) == 0)) {
         state->heightUpdateActive = 0;
         obj->anim.localPosX = obj->anim.previousLocalPosX;
         obj->anim.localPosY = obj->anim.previousLocalPosY;
         obj->anim.localPosZ = obj->anim.previousLocalPosZ;
     }
 
-    state->stateFlags &= ~0x80000LL;
+    state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_POSITION_RELOCATED;
 
     if (state->groundSnapCounter != 0) {
         state->groundSnapCounter -= 1;
@@ -5403,7 +5403,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         state->homePosX = found->anim.worldPosX;
         state->homePosY = found->anim.worldPosY;
         state->homePosZ = found->anim.worldPosZ;
-        state->stateFlags |= (u64)TRICKY_STATE_FLAG_WARP_RETURNED;
+        state->stateFlags |= (u64)TRICKY_STATE_FLAG_POSITION_RELOCATED;
         state->stateFlags &= ~0x2000LL;
     } else {
         state->cooldownA -= timeDelta;
@@ -7374,7 +7374,7 @@ void Tricky_update(GameObject* obj) {
             z = 0.0f;
             trickyState->prevSpeed = z;
             trickyState->speed = z;
-            trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_WARP_RETURNED;
+            trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_POSITION_RELOCATED;
             trickyState->stateFlags &= ~(u64)0x2000;
             if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
                 u8* childCursor;
