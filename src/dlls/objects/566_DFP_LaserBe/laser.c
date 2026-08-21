@@ -4,52 +4,42 @@
  */
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
-#include "main/textblock.h"
 
-int laser_getExtraSize(void)
-{
+int laser_getExtraSize(void) {
     return 0;
 }
 
-int laser_getObjectTypeId(void)
-{
+int laser_getObjectTypeId(void) {
     return 0;
 }
 
-void laser_freeUnsupported(void)
-{
-    OSReport(sTextBlockInitNoLongerSupported);
+void laser_freeUnsupported(void) {
+    OSReport(sLaserTextBlockInitNoLongerSupported);
     return;
 }
 
-void laser_renderUnsupported(void)
-{
-    OSReport(sTextBlockInitNoLongerSupported);
+void laser_renderUnsupported(void) {
+    OSReport(sLaserTextBlockInitNoLongerSupported);
     return;
 }
 
-void laser_hitDetectUnsupported(void)
-{
+void laser_hitDetectUnsupported(void) {
 }
 
-void laser_updateUnsupported(void)
-{
-    OSReport(sTextBlockInitNoLongerSupported);
+void laser_updateUnsupported(void) {
+    OSReport(sLaserTextBlockInitNoLongerSupported);
     return;
 }
 
-void laser_init(void)
-{
+void laser_init(void) {
     OSReport(sLaserInitNoLongerSupported);
     return;
 }
 
-void laser_releaseUnsupported(void)
-{
+void laser_releaseUnsupported(void) {
 }
 
-void laser_initialiseUnsupported(void)
-{
+void laser_initialiseUnsupported(void) {
 }
 
 ObjectDescriptor gLaserUnsupportedObjDescriptor = {
@@ -69,5 +59,5 @@ ObjectDescriptor gLaserUnsupportedObjDescriptor = {
     laser_getExtraSize,
 };
 
-char sTextBlockInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";
+char sLaserTextBlockInitNoLongerSupported[] = "<textblock.c Init>No Longer supported \n";
 char sLaserInitNoLongerSupported[] = "<laser.c Init>No Longer supported \n";
