@@ -3708,13 +3708,13 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
 
     switch (state->substate) {
     case 0:
-        state->scratch700.ptr = state->followObj;
-        state->scratch704.f = 180.0f;
+        state->fetchBallObj = state->followObj;
+        state->fetchCarryDelayTimer = 180.0f;
         state->substate = 1;
         state->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
         /* fall through */
     case 1:
-        if (sidekickBall_isHeldOrMoving(state->scratch700.obj) != 0) {
+        if (sidekickBall_isHeldOrMoving(state->fetchBallObj) != 0) {
             status = trickyUpdateMovementState(obj, 13.0f, state);
             if (status == 0) {
                 if (0.0f == state->waterLevel) {
@@ -3733,7 +3733,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 }
                 state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->substate = 3;
-                sidekickBall_setIdle(state->scratch700.obj, obj);
+                sidekickBall_setIdle(state->fetchBallObj, obj);
             } else if (status == 2) {
                 extra = obj->extra;
                 if (extra->soundSuppressed == 0) {
@@ -3754,7 +3754,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         } else {
             status = trickyUpdateMovementState(obj, 20.0f, state);
             if (status == 0) {
-                if (state->scratch704.f > 0.0f) {
+                if (state->fetchCarryDelayTimer > 0.0f) {
                     if (0.0f == state->waterLevel) {
                         useSwimAnim = 0;
                     } else if (gTrickyEventTimeSentinel == state->eventTime) {
@@ -3773,8 +3773,8 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                         trickyRequestMove(obj, 0, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
                         trickyDebugPrint(sTrickyDryLandDebugMessage);
                     }
-                    state->scratch704.f -= timeDelta;
-                    if (state->scratch704.f <= 0.0f) {
+                    state->fetchCarryDelayTimer -= timeDelta;
+                    if (state->fetchCarryDelayTimer <= 0.0f) {
                         if (0.0f == state->waterLevel) {
                             useSwimAnim = 0;
                         } else if (gTrickyEventTimeSentinel == state->eventTime) {
@@ -3785,16 +3785,16 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                             useSwimAnim = 0;
                         }
                         if (useSwimAnim != 0) {
-                            state->scratch704.f = 180.0f;
+                            state->fetchCarryDelayTimer = 180.0f;
                         } else {
-                            state->scratch708.f = 60.0f;
+                            state->fetchThrowRetryTimer = 60.0f;
                         }
                     }
                 } else {
                     trickyRequestMove(obj, 16, TRICKY_FAST_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
-                    state->scratch708.f -= timeDelta;
-                    if (state->scratch708.f <= 0.0f) {
-                        state->scratch704.f = 180.0f;
+                    state->fetchThrowRetryTimer -= timeDelta;
+                    if (state->fetchThrowRetryTimer <= 0.0f) {
+                        state->fetchCarryDelayTimer = 180.0f;
                     }
                 }
             } else if (status == 1) {
@@ -3900,7 +3900,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             return;
         }
         if (sidekickBall_isIdle(state->followObj) != 0) {
-            state->scratch704.f = 180.0f;
+            state->fetchCarryDelayTimer = 180.0f;
             state->substate = 1;
         }
         break;
@@ -3948,7 +3948,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, 19.0f) == 0) {
         Obj_FreeObject(state->followObj);
     } else {
-        sidekickBall_keepAlive(state->scratch700.obj);
+        sidekickBall_keepAlive(state->fetchBallObj);
     }
 }
 
@@ -4782,8 +4782,9 @@ void tricky_state06_nop(void) {
 
 /* The "ball" is the Tricky cannonball's TrickyState extra block: substate is
  * the init-done byte, speed the roll speed, stateFlags the flag word, route the
- * embedded RomCurveWalker, followObj/playerObj the owner links, scratch700 the
- * curve link and scratch708 the rolling-sfx countdown. */
+ * embedded RomCurveWalker, followObj/playerObj the owner links,
+ * cannonballStartCurve the curve link, and cannonballRollSfxTimer the rolling
+ * SFX countdown. */
 #define CANNONBALL_HIDE_FLAG        0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 #define CANNONBALL_BRANCH_COUNT     4
@@ -4895,16 +4896,16 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
             ball->stateFlags |= CANNONBALL_HIDE_FLAG;
         }
 
-        ball->scratch708.f -= timeDelta;
-        if (ball->scratch708.f < 0.0f) {
-            ball->scratch708.f = (f32)(int)randomGetRange(CANNONBALL_SFX_TIMER_MIN, CANNONBALL_SFX_TIMER_MAX);
+        ball->cannonballRollSfxTimer -= timeDelta;
+        if (ball->cannonballRollSfxTimer < 0.0f) {
+            ball->cannonballRollSfxTimer = (f32)(int)randomGetRange(CANNONBALL_SFX_TIMER_MIN, CANNONBALL_SFX_TIMER_MAX);
             trickyPlayVoice(obj, obj->extra, CANNONBALL_ROLL_SFX_ID, CANNONBALL_ROLL_SFX_PARAM);
         }
     } else {
         trickyUpdateMovementState(obj, CANNONBALL_INIT_WALK_RADIUS, ball);
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) ==
-            (walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&ball->scratch700.curve->x, NULL))) {
-            curve = ball->scratch700.curve;
+            (walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&ball->cannonballStartCurve->x, NULL))) {
+            curve = ball->cannonballStartCurve;
 
             fromNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(curve, 0));
             toNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(curve, 0));
@@ -4929,7 +4930,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
                 RomCurve_stepClamped(&ball->route, CANNONBALL_ROUTE_FORESTEP);
             }
 
-            ball->scratch708.f = 0.0f;
+            ball->cannonballRollSfxTimer = 0.0f;
             ball->substate = 1;
         }
     }
@@ -6824,11 +6825,11 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
             if (busy != 0) {
                 return;
             }
-            state->scratch700.ptr = Objfsa_FindNearestEnabledCurveType24(&targetObj->anim.worldPosX, -1, 3);
+            state->cannonballStartCurve = Objfsa_FindNearestEnabledCurveType24(&targetObj->anim.worldPosX, -1, 3);
             state->scratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
             state->stateIndex = TRICKY_STATE_BALL_ROLL;
             state->followObj = targetObj;
-            nextTarget = &state->scratch700.curve->x;
+            nextTarget = &state->cannonballStartCurve->x;
             if ((void*)state->targetPosPtr != nextTarget) {
                 state->targetPosPtr = (f32*)nextTarget;
                 {

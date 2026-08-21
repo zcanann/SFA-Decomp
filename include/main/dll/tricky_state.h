@@ -275,6 +275,22 @@ typedef struct TrickyState {
             TrickyScratch scratch710;
             u8 pad714[0x71C - 0x714];
         };
+        struct {
+            GameObject* fetchBallObj; /* sidekick ball object being fetched/returned */
+            f32 fetchCarryDelayTimer;
+            f32 fetchThrowRetryTimer;
+            TrickyScratch fetchScratch70C;
+            TrickyScratch fetchScratch710;
+            u8 fetchPad714[0x71C - 0x714];
+        };
+        struct {
+            struct RomCurveDef* cannonballStartCurve;
+            TrickyScratch cannonballScratch704;
+            f32 cannonballRollSfxTimer;
+            TrickyScratch cannonballScratch70C;
+            TrickyScratch cannonballScratch710;
+            u8 cannonballPad714[0x71C - 0x714];
+        };
         GameObject* flameChildren[7]; /* flame/dig helpers spawned and retired as one seven-object group */
     };
     union {
@@ -401,6 +417,11 @@ STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, scratch704) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, fetchBallObj) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, fetchCarryDelayTimer) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, fetchThrowRetryTimer) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, cannonballStartCurve) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, cannonballRollSfxTimer) == 0x708);
 STATIC_ASSERT(offsetof(TrickyState, statusFlags) == 0x58);
 STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
 STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);
