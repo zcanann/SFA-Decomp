@@ -7460,7 +7460,7 @@ void Tricky_update(GameObject* obj) {
                     trickySelectQueuedCommandTarget(trickyState, 1);
                     TRICKY_VOICE(obj, 0x13c, 0);
                     switch (trickyState->followObj->anim.romDefNo) {
-                    case 0x1ca:
+                    case SKEETLA_LINKED_SOURCE_ID_OBJ_A:
                         if (*trickyState->progressPtr < 4) {
                             if (Obj_IsLoadingLocked()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7471,7 +7471,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_FIND_SECRET_DIG;
                         }
                         break;
-                    case 0x160:
+                    case SKEETLA_LINKED_SOURCE_ID_OBJ_B:
                         if (*trickyState->progressPtr < 4) {
                             if (Obj_IsLoadingLocked()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7482,7 +7482,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_DIG_TUNNEL;
                         }
                         break;
-                    case 0x6a:
+                    case TRICKY_OBJ_BLUE_MUSHROOM:
                     case 0x193:
                     case 0x3fb:
                     case 0x658:
