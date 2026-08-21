@@ -175,6 +175,13 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_STATE_FLAG_GUARD_REQUEST          0x40000u
 #define TRICKY_STATE_FLAG_WARP_RETURNED          0x80000u
 #define TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS   0x30002LL
+#define TRICKY_STATE_FLAG_TURN_REQUEST           0x100000u
+#define TRICKY_STATE_FLAG_TURN_REQUEST_PREV      0x200000u
+#define TRICKY_STATE_FLAG_TURN_LEFT              0x400000u
+#define TRICKY_STATE_FLAG_TURN_RIGHT             0x800000u
+#define TRICKY_STATE_TURN_SELECT_CLEAR_MASK      0xef2fffff
+#define TRICKY_STATE_TURN_RIGHT_FLAGS            0x900000LL
+#define TRICKY_STATE_TURN_LEFT_FLAGS             0x500000LL
 #define TRICKY_STATE_FLAG_TURNING_U32            0x10000000
 #define TRICKY_STATE_FLAG_TURNING                0x10000000LL
 #define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED_U32   0x20000000U
@@ -973,17 +980,17 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
         delta += 0xffff;
     }
 
-    if ((state->stateFlags & 0x100000) != 0) {
-        state->stateFlags |= 0x200000LL;
+    if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
+        state->stateFlags |= (u64)TRICKY_STATE_FLAG_TURN_REQUEST_PREV;
     } else {
-        state->stateFlags &= ~0x200000LL;
+        state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_TURN_REQUEST_PREV;
     }
-    state->stateFlags &= 0xef2fffff;
+    state->stateFlags &= TRICKY_STATE_TURN_SELECT_CLEAR_MASK;
 
     if (delta > 0x10) {
-        state->stateFlags |= 0x900000LL;
+        state->stateFlags |= TRICKY_STATE_TURN_RIGHT_FLAGS;
     } else if (delta < -0x10) {
-        state->stateFlags |= 0x500000LL;
+        state->stateFlags |= TRICKY_STATE_TURN_LEFT_FLAGS;
     } else {
         obj->anim.rotX = targetYaw;
         return 0;
@@ -1184,7 +1191,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         skeetla_updateFacingFromMoveVector(obj, &turnDelta);
         td = turnDelta;
 
-        if ((state->stateFlags & 0x100000) != 0) {
+        if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
             if (skeetla_isInWater(state) != 0) {
                 trickyDebugPrint(debugStrings + TRICKY_DBG_TURN_IN_WATER);
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
@@ -1196,7 +1203,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
 
                 trickyDebugPrint(debugStrings + TRICKY_DBG_TURN_OUT_OF_WATER);
                 flags = state->stateFlags;
-                if ((flags & 0x400000) != 0) {
+                if ((flags & TRICKY_STATE_FLAG_TURN_LEFT) != 0) {
                     if ((td >= 0 ? td : -td) > 0x3555) {
                         animId = 0x27;
                     } else {
@@ -1207,7 +1214,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                             animId = 9;
                         }
                     }
-                } else if ((flags & 0x800000) != 0) {
+                } else if ((flags & TRICKY_STATE_FLAG_TURN_RIGHT) != 0) {
                     if ((td >= 0 ? td : -td) > 0x3555) {
                         animId = 0x28;
                     } else {
@@ -1227,7 +1234,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
 
         state->speed = 0.05f;
         stateFlags = state->stateFlags;
-        if (((stateFlags & 0x100000) == 0) && ((stateFlags & 0x200000) == 0)) {
+        if (((stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) == 0) &&
+            ((stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST_PREV) == 0)) {
             return 0;
         }
     }
