@@ -77,6 +77,7 @@ s8 tumbleweedbush_spawnSibling(GameObject* obj) {
     GameObject** objects;
     int siblingCount;
     TumbleweedBushPlacement* newPlacement;
+    u8 canSetupObject;
 
     state = obj->extra;
     placement = (TumbleweedBushPlacement*)obj->anim.placementData;
@@ -123,7 +124,8 @@ s8 tumbleweedbush_spawnSibling(GameObject* obj) {
     if (siblingCount >= TUMBLEWEED_BUSH_MAX_SIBLINGS) {
         return -1;
     }
-    if (Obj_CanSetupObject() == 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return -1;
     }
 

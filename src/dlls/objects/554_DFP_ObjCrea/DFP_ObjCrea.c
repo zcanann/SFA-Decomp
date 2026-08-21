@@ -93,8 +93,10 @@ void DFP_ObjCreator_update(GameObject* obj)
     DfpObjCreatorState* state = obj->extra;
     DfpobjcreatorSetup* setup;
     GameObject* newObj;
+    u8 canSetupObject;
 
-    if (Obj_CanSetupObject() != 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         switch (data->behaviorMode)
         {

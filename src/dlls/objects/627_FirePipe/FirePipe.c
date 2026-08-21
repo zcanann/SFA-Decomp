@@ -93,8 +93,10 @@ int firepipe_spawnEffectObject(FirePipeExtra* extra, GameObject* obj, ObjPlaceme
     int i;
     GameObject* effectObj;
     int freeDelay;
+    u8 canSetupObject;
 
-    if (Obj_CanSetupObject() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return 0;
     }

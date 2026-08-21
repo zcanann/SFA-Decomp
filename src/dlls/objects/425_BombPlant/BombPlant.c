@@ -112,11 +112,13 @@ static inline void BombPlant_tryBeginGrow(GameObject* obj, BombPlantState* state
 void BombPlant_spawnSpore(GameObject* obj, BombPlantState* unusedState) {
     BombPlantSporePlacement* spore;
     BombPlantPlacement* placement;
+    u8 canSetupObject;
 
     (void)unusedState;
 
     placement = (BombPlantPlacement*)obj->anim.placementData;
-    if (Obj_CanSetupObject()) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
         MatrixTransform transform;
         f32 matrix[16];
         f32 offsetZ;

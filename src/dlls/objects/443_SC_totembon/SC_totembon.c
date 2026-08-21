@@ -101,8 +101,10 @@ void sc_totembond_spawnGameBitOrbs(GameObject* obj, ScTotemBondState* state, f32
     const u8* definition;
     s8 i;
     s8 orbIndex;
+    u8 canSetupObject;
 
-    if (Obj_CanSetupObject() != 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
         i = 0;
         orbIndex = 1;
         angleOffset = 0;

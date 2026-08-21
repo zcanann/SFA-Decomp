@@ -77,10 +77,12 @@ void sc_musictree_spawnAmbientEffect(GameObject* obj, ScMusicTreeState* state, i
     ScMusicTreePlacement* placement = (ScMusicTreePlacement*)obj->anim.placementData;
     int pathIndex;
     AppleOnTreePlacement* effectPlacement;
+    u8 canSetupObject;
 
     (void)unused;
 
-    if (Obj_CanSetupObject() != 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
         effectPlacement =
             (AppleOnTreePlacement*)Obj_AllocObjectSetup(APPLE_ON_TREE_PLACEMENT_SIZE, APPLE_ON_TREE_OBJECT_ID);
         effectPlacement->base.color[0] = placement->base.color[0];

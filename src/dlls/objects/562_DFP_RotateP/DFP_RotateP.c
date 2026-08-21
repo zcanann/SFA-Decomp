@@ -120,10 +120,12 @@ int DFP_RotateP_ensureEffectHandlePair(GameObject* obj, u8 ringIndex)
     CmbSrcMapData* setup;
     int handleOffset;
     s16* colorIndices;
+    u8 canSetupObject;
 
     *(CmbSrcColorIndexPair*)colorIndexWords = sDFPRotatePColorIndices;
 
-    if (Obj_CanSetupObject() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return 0;
     }
