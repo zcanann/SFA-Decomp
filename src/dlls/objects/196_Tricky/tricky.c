@@ -4824,9 +4824,8 @@ void tricky_state04_nop(void) {
  * Tricky companion behaviour states (part of the tricky DLL, 0x00C4).
  *
  * Each function here is one entry of Tricky's per-frame substate machine,
- * dispatched off state[0xa] (the substate index) either directly or through
- * the function-pointer table walked in tricky_stateFollowPlayer
- * (((TrickyFnRow*)(base + state[0xa]*4))->fn). They drive Tricky along ROM
+ * dispatched off TrickyState::substate either directly or through the
+ * function-pointer table walked in tricky_stateFollowPlayer. They drive Tricky along ROM
  * curve paths (rom_curve_interface), follow/feed the player, run the dig
  * and flame-breath sequences, pick random idle moves and emit the matching
  * object sounds (audio/sfx). tricky_handleFeedOrTalk handles the shared
@@ -5249,8 +5248,8 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                             }
                             other->linkedWalkGroup = 0;
                         }
-                        ((u8*)other)[0xa] = 0;
-                        ((u8*)other)[0x8] = 10;
+                        other->substate = 0;
+                        other->stateIndex = 10;
                     } else {
                         other->pendingFollowRequest = 1;
                         other->pendingFollowObj = target;
@@ -6902,7 +6901,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                 state->packedSlots.promptBSlot = bitVal;
                 spawnedObj =
                     (int)objSetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, obj->anim.parent);
-                *(u32*)((u8*)state + 0x7b0) = spawnedObj; /* raw: arrow form shifts bytes */
+                state->childB = (GameObject*)spawnedObj;
                 ObjLink_AttachChild(obj, state->childB,
                                     state->packedSlots.promptBSlot);
             }
@@ -6961,7 +6960,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                 state->packedSlots.promptASlot = bitVal;
                 spawnedObj =
                     (int)objSetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, obj->anim.parent);
-                *(u32*)((u8*)state + 0x7a8) = spawnedObj; /* raw: arrow form shifts bytes */
+                state->childA = (GameObject*)spawnedObj;
                 ObjLink_AttachChild(obj, state->childA,
                                     state->packedSlots.promptASlot);
             }
