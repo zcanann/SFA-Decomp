@@ -674,7 +674,7 @@ STATIC_ASSERT(offsetof(ObjDef, renderFlags) == 0x5F);
  * paths; the roles are the cross-file consensus from how each bit gates
  * behavior. Field is u8, so a bare int constant folds identically for & tests.
  *  - 0x4 PROJECTED_SHADOW: the model's shadow is a dynamically rendered
- *    projected shadow (own 512 render target, textureAlloc512 in
+ *    projected shadow (own 512 render target, newshadows_allocTexture512 in
  *    track_dolphin; freed via mm_free not textureFree in object.c; forces the
  *    front-cull z-write shadow pass in objprint_dolphin; shadow-slot mode 2 in
  *    newshadows). Consensus across object.c/newshadows.c/track_dolphin.c/

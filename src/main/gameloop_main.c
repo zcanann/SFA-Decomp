@@ -856,7 +856,7 @@ void init(void)
         if (once == 0)
         {
             mmSetForceHeap3Only(1);
-            newShadowsInitProceduralTextures();
+            newshadows_initProceduralTextures();
         }
         once = 1;
         runLoadingScreens();

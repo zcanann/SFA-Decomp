@@ -565,7 +565,7 @@ int andross_getObjectTypeId(void) {
 }
 
 void andross_free(GameObject* obj) {
-    freeNewShadowDistortionTexture();
+    newshadows_freeDistortionTexture();
     Rcp_DisableDistortionFilter();
 }
 
@@ -1680,7 +1680,7 @@ void andross_init(GameObject* obj, ObjPlacement* setup) {
     state->handsInitialized = 1;
     ObjHits_SetTargetMask(obj, 4);
     obj->animEventCallback = andross_SeqFn;
-    createNewShadowDistortionTexture();
+    newshadows_createDistortionTexture();
     andross_setModelAlpha(Obj_GetActiveModel(obj)->file, 0.0f);
     mainSetBits(GAMEBIT_AndrossRelated000D, 0);
     unlockLevel(0, 0, 1);

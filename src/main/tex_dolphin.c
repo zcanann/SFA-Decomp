@@ -218,7 +218,7 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
         PSMTXConcat(viewMtx, passMtx, passMtx);
         GXLoadPosMtxImm(passMtx, GX_PNMTX0);
         indMtx = gTexIndMtxTable;
-        getNewShadowNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
+        newshadows_getNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
         selectTexture(noiseTextures[(u8)i], 1);
         {
             f32 s = (f32)((i & 0xff) + 1) * gTexIndMtxScale;

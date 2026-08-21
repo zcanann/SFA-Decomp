@@ -439,7 +439,7 @@ void lightningRender(LightningEffect* p)
     gxTevColor1TexAlphaStage();
     gxTevCommitStages();
     gxSetAdditiveBlendZTest();
-    getNewShadowLightningTexture(&tex);
+    newshadows_getLightningTexture(&tex);
     selectTexture(tex, 0);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
