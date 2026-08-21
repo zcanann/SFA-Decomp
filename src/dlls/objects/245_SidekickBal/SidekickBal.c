@@ -385,9 +385,9 @@ u8 trickyBallMove(GameObject* obj) {
 
     if (state->hasCollisionNormal != 0) {
         hasCollisionNormal = 1;
-        collisionNormal.x = state->collisionNormal[0];
-        collisionNormal.y = state->collisionNormal[1];
-        collisionNormal.z = state->collisionNormal[2];
+        collisionNormal.x = state->collisionNormal.x;
+        collisionNormal.y = state->collisionNormal.y;
+        collisionNormal.z = state->collisionNormal.z;
     }
 
     if (hasCollisionNormal != 0) {

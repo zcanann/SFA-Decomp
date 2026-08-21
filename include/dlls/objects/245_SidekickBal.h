@@ -1,6 +1,7 @@
 #ifndef DLLS_OBJECTS_245_SIDEKICKBAL_H_
 #define DLLS_OBJECTS_245_SIDEKICKBAL_H_
 
+#include "dolphin/mtx/vec.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "main/dll/curves_collision_state.h"
@@ -18,7 +19,7 @@ typedef struct SidekickBallState {
         CurvesCollisionState pathControl; /* 0x000: gPathControlInterface state block */
         struct {
             u8 pathControlPrefix[0x68]; /* 0x000 */
-            f32 collisionNormal[3];     /* 0x068 */
+            Vec collisionNormal;        /* 0x068 */
             u8 pad074[0x140];           /* 0x074 */
             f32 floorHeight;            /* 0x1B4 */
             u8 pad1B8[4];               /* 0x1B8 */
