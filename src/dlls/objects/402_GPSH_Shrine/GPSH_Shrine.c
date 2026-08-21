@@ -222,7 +222,7 @@ void gpshShrine_free(GameObject* obj) {
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
     Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
     mainSetBits(GAMEBIT_IN_KRAZOA_SHRINE, 0);
-    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, mainGetBit(0xc91) == 0);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, mainGetBit(GAMEBIT_GPSH_TestKnowledgeCompleted) == 0);
 }
 
 void gpshShrine_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
@@ -248,43 +248,43 @@ void gpshShrine_update(GameObject* obj) {
     int objectCount;
     GPSHShrineState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
-    u8 gameBit0149;
-    u8 gameBit014C;
-    u8 gameBit014D;
-    u8 gameBit014E;
-    u8 gameBit014A;
-    u8 gameBit014B;
+    u8 symbol1Solved;
+    u8 symbol4Solved;
+    u8 symbol5Solved;
+    u8 symbol6Solved;
+    u8 symbol2Solved;
+    u8 symbol3Solved;
     GameObject** objects;
     f32 idleSfxTimer;
     f32 zero;
 
     objectCount = 0;
     if (player != NULL) {
-        gameBit0149 = mainGetBit(0x149);
-        gameBit014C = mainGetBit(0x14c);
-        gameBit014D = mainGetBit(0x14d);
-        gameBit014E = mainGetBit(0x14e);
-        gameBit014A = mainGetBit(0x14a);
-        gameBit014B = mainGetBit(0x14b);
-        if (gameBit0149 == 0 || gameBit014C == 0 || gameBit014D == 0 || gameBit014E == 0 || gameBit014A == 0 ||
-            gameBit014B == 0) {
-            if (!state->puzzleFlags.gameBit0149Latched && gameBit0149 != 0) {
-                state->puzzleFlags.gameBit0149Latched = 1;
+        symbol1Solved = mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol1Solved);
+        symbol4Solved = mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol4Solved);
+        symbol5Solved = mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol5Solved);
+        symbol6Solved = mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol6Solved);
+        symbol2Solved = mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol2Solved);
+        symbol3Solved = mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol3Solved);
+        if (symbol1Solved == 0 || symbol4Solved == 0 || symbol5Solved == 0 || symbol6Solved == 0 ||
+            symbol2Solved == 0 || symbol3Solved == 0) {
+            if (!state->puzzleFlags.symbol1SolvedLatched && symbol1Solved != 0) {
+                state->puzzleFlags.symbol1SolvedLatched = 1;
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            } else if (!state->puzzleFlags.gameBit014CLatched && gameBit014C != 0) {
-                state->puzzleFlags.gameBit014CLatched = 1;
+            } else if (!state->puzzleFlags.symbol4SolvedLatched && symbol4Solved != 0) {
+                state->puzzleFlags.symbol4SolvedLatched = 1;
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            } else if (!state->puzzleFlags.gameBit014DLatched && gameBit014D != 0) {
-                state->puzzleFlags.gameBit014DLatched = 1;
+            } else if (!state->puzzleFlags.symbol5SolvedLatched && symbol5Solved != 0) {
+                state->puzzleFlags.symbol5SolvedLatched = 1;
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            } else if (!state->puzzleFlags.gameBit014ELatched && gameBit014E != 0) {
-                state->puzzleFlags.gameBit014ELatched = 1;
+            } else if (!state->puzzleFlags.symbol6SolvedLatched && symbol6Solved != 0) {
+                state->puzzleFlags.symbol6SolvedLatched = 1;
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            } else if (!state->puzzleFlags.gameBit014ALatched && gameBit014A != 0) {
-                state->puzzleFlags.gameBit014ALatched = 1;
+            } else if (!state->puzzleFlags.symbol2SolvedLatched && symbol2Solved != 0) {
+                state->puzzleFlags.symbol2SolvedLatched = 1;
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-            } else if (!state->puzzleFlags.gameBit014BLatched && gameBit014B != 0) {
-                state->puzzleFlags.gameBit014BLatched = 1;
+            } else if (!state->puzzleFlags.symbol3SolvedLatched && symbol3Solved != 0) {
+                state->puzzleFlags.symbol3SolvedLatched = 1;
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
         }
@@ -303,7 +303,8 @@ void gpshShrine_update(GameObject* obj) {
         unlockLevel(mapGetDirIdx(0x22), 1, 0);
 
         /* This engine latch intentionally overlaps the shrine's phase and flags. */
-        GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 2, -1, -1, 0xdd2, 0xb);
+        GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 2, -1, -1,
+                            GAMEBIT_GPSH_TestKnowledgeRunning, 0xb);
         GameBitLatch_UpdateInverted((GameBitLatchState*)state->gameBitLatchStorage, 1, -1, -1,
                                     GAMEBIT_SHRINE_MUSIC_LOCK, 8);
         GameBitLatch_Update((GameBitLatchState*)state->gameBitLatchStorage, 4, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
@@ -327,7 +328,7 @@ void gpshShrine_update(GameObject* obj) {
                 if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
                     state->phase = GPSH_SHRINE_PHASE_BEGIN;
                     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 0);
-                    mainSetBits(GPSH_SHRINE_RESET_SYMBOL_CREATORS_GAMEBIT, 0);
+                    mainSetBits(GAMEBIT_GPSH_ResetSymbolCreators, 0);
                     mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 1);
                     (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                     Music_Trigger(MUSICTRIG_DIM_Snow, 1);
@@ -341,7 +342,7 @@ void gpshShrine_update(GameObject* obj) {
                 break;
             case GPSH_SHRINE_PHASE_WAIT_FOR_PUZZLE:
                 if (state->puzzleFlags.activated == 1) {
-                    mainSetBits(GPSH_SHRINE_ACTIVATE_SYMBOL_SPAWNS_GAMEBIT, 1);
+                    mainSetBits(GAMEBIT_GPSH_SpawnKnowledgeSymbols, 1);
                     state->phase = GPSH_SHRINE_PHASE_PUZZLE_ACTIVE;
                     gameTimerInit(0x1d, 0x4e);
                     timerSetToCountUp();
@@ -349,22 +350,22 @@ void gpshShrine_update(GameObject* obj) {
                 break;
             case GPSH_SHRINE_PHASE_PUZZLE_ACTIVE:
                 state->solvedCount = 0;
-                if (mainGetBit(0x149)) {
+                if (mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol1Solved)) {
                     state->solvedCount += 1;
                 }
-                if (mainGetBit(0x14b)) {
+                if (mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol3Solved)) {
                     state->solvedCount += 1;
                 }
-                if (mainGetBit(0x14e)) {
+                if (mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol6Solved)) {
                     state->solvedCount += 1;
                 }
-                if (mainGetBit(0x14d)) {
+                if (mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol5Solved)) {
                     state->solvedCount += 1;
                 }
-                if (mainGetBit(0x14c)) {
+                if (mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol4Solved)) {
                     state->solvedCount += 1;
                 }
-                if (mainGetBit(0x14a)) {
+                if (mainGetBit(GAMEBIT_GPSH_KnowledgeSymbol2Solved)) {
                     state->solvedCount += 1;
                 }
                 if (state->solvedCount == 6) {
@@ -408,7 +409,7 @@ void gpshShrine_update(GameObject* obj) {
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 5, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, 10, 1);
                     (*gMapEventInterface)->setObjGroupStatus(0xd, GPSH_SHRINE_OBJ_GROUP, 1);
-                    mainSetBits(0xc91, 1);
+                    mainSetBits(GAMEBIT_GPSH_TestKnowledgeCompleted, 1);
                     mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 0);
                 }
                 break;
@@ -417,23 +418,23 @@ void gpshShrine_update(GameObject* obj) {
                 state->puzzleFlags.activated = 0;
                 mainSetBits(GAMEBIT_GPSH_TestKnowledgeRunning, 0);
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
-                mainSetBits(0x149, 0);
-                mainSetBits(0x14c, 0);
-                mainSetBits(0x14d, 0);
-                mainSetBits(0x14e, 0);
-                mainSetBits(0x14a, 0);
-                mainSetBits(0x14b, 0);
-                mainSetBits(0x14b, 0);
-                mainSetBits(GPSH_SHRINE_RESET_SYMBOL_CREATORS_GAMEBIT, 1);
-                mainSetBits(GPSH_SHRINE_ACTIVATE_SYMBOL_SPAWNS_GAMEBIT, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol1Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol4Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol5Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol6Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol2Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol3Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol3Solved, 0);
+                mainSetBits(GAMEBIT_GPSH_ResetSymbolCreators, 1);
+                mainSetBits(GAMEBIT_GPSH_SpawnKnowledgeSymbols, 0);
                 mainSetBits(0xe37, 0);
                 mainSetBits(0xe3a, 0);
-                state->puzzleFlags.gameBit0149Latched = 0;
-                state->puzzleFlags.gameBit014CLatched = 0;
-                state->puzzleFlags.gameBit014DLatched = 0;
-                state->puzzleFlags.gameBit014ELatched = 0;
-                state->puzzleFlags.gameBit014ALatched = 0;
-                state->puzzleFlags.gameBit014BLatched = 0;
+                state->puzzleFlags.symbol1SolvedLatched = 0;
+                state->puzzleFlags.symbol4SolvedLatched = 0;
+                state->puzzleFlags.symbol5SolvedLatched = 0;
+                state->puzzleFlags.symbol6SolvedLatched = 0;
+                state->puzzleFlags.symbol2SolvedLatched = 0;
+                state->puzzleFlags.symbol3SolvedLatched = 0;
                 break;
             }
         }
@@ -454,12 +455,12 @@ void gpshShrine_init(GameObject* obj, const void* placement) {
     state->puzzleFlags.activated = 0;
     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
     mainSetBits(0x12b, 0);
-    mainSetBits(0x149, 0);
-    mainSetBits(0x14c, 0);
-    mainSetBits(0x14d, 0);
-    mainSetBits(0x14e, 0);
-    mainSetBits(0x14a, 0);
-    mainSetBits(0x14b, 0);
+    mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol1Solved, 0);
+    mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol4Solved, 0);
+    mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol5Solved, 0);
+    mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol6Solved, 0);
+    mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol2Solved, 0);
+    mainSetBits(GAMEBIT_GPSH_KnowledgeSymbol3Solved, 0);
     obj->userData1 = 1;
     if (state->light == NULL) {
         state->light = objCreateLight(NULL, 1);

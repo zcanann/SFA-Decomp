@@ -424,6 +424,13 @@ enum GameBitId {
     GAMEBIT_WM_Spirit1Related_0143 = 0x143,              /* table 0; set when collecting first spirit; cleared when it enters krazoa head */
     GAMEBIT_MC_ActNo = 0x144,                            /* table 1; size 4; Magic Cave */
     GAMEBIT_MC_ObjGroups = 0x145,                        /* table 3; size 32 */
+    GAMEBIT_GPSH_SpawnKnowledgeSymbols = 0x148,          /* Test of Knowledge symbol creator latch; GPSH_Shrine sets it when the puzzle starts and GPSH_ObjCre consumes it to spawn the six pickup symbols */
+    GAMEBIT_GPSH_KnowledgeSymbol1Solved = 0x149,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol2Solved = 0x14A,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol3Solved = 0x14B,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol4Solved = 0x14C,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol5Solved = 0x14D,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol6Solved = 0x14E,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
     GAMEBIT_SH_WarpStoneRelated015A = 0x15A,             /* table 2; set during intro speech */
     GAMEBIT_CC_UsedCannon = 0x15C,                       /* table 2; hint 402; Used cannon to open route to Ocean Force Point */
     GAMEBIT_OFP_Opened = 0x162,                          /* table 2; hint 338; ref capeclaw/HitAnimator target */
@@ -641,6 +648,7 @@ enum GameBitId {
     GAMEBIT_ITEM_MapCF_Got = 0x5A1,                      /* table 2; Have CloudRunner Fortress Map */
     GAMEBIT_ITEM_MapLV_Got = 0x5A2,                      /* table 2; Have LightFoot Village Map */
     GAMEBIT_ITEM_MapSH_Got = 0x5A3,                      /* table 2; Have ThornTail Hollow Map */
+    GAMEBIT_GPSH_ResetSymbolCreators = 0x5AF,            /* Test of Knowledge reset latch; re-arms the six GPSH_ObjCre symbol spawners after success, timeout, or reset */
     GAMEBIT_NW_SnowHown05BA = 0x5BA,                     /* table 0; related to riding SnowHorn */
     GAMEBIT_NW_SnowHown05BB = 0x5BB,                     /* table 0; related to riding SnowHorn */
     GAMEBIT_ITEM_OpenPortal_Got = 0x5BD,                 /* table 2; ref hollow/MagicCaveTo Collected */
@@ -868,6 +876,7 @@ enum GameBitId {
     GAMEBIT_ITEM_Spirit5_Got = 0xC85,                    /* table 2; hint 417 */
     GAMEBIT_LINKE_TunnelOpen = 0xC8B,                    /* table 2; broke open wind tunnel in LinkE */
     GAMEBIT_ITEM_PDA_Got = 0xC8D,                        /* table 2; Set when landing at TTH */
+    GAMEBIT_GPSH_TestKnowledgeCompleted = 0xC91,         /* set when the Test of Knowledge succeeds; GPSH free keeps the shrine music lock active until this bit is set */
     GAMEBIT_Tricky_SaidGoodBye = 0xC92,                  /* table 2; hint 418 */
     GAMEBIT_ITEM_CCGoldBar1_NotReturned = 0xCA3,         /* table 2 */
     GAMEBIT_ITEM_CCGoldBar2_NotReturned = 0xCA4,         /* table 2 */

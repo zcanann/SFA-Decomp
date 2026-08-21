@@ -11,6 +11,7 @@
 #include "main/audio/sfx_limited_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/object_render.h"
 #include "main/objfx.h"
@@ -79,7 +80,7 @@ void gpshObjCreator_update(GameObject* obj) {
     GPSHObjCreatorChildSetup* childSetup;
 
     state = obj->extra;
-    if (mainGetBit(GPSH_SHRINE_RESET_SYMBOL_CREATORS_GAMEBIT) != 0) {
+    if (mainGetBit(GAMEBIT_GPSH_ResetSymbolCreators) != 0) {
         obj->userData2 = 0;
         state->flags.childSpawned = 0;
         obj->anim.renderAlpha = GPSH_OBJ_CREATOR_FULL_ALPHA;
@@ -89,7 +90,7 @@ void gpshObjCreator_update(GameObject* obj) {
         return;
     }
     if (obj->userData2 == 0) {
-        if (mainGetBit(GPSH_SHRINE_ACTIVATE_SYMBOL_SPAWNS_GAMEBIT) != 0) {
+        if (mainGetBit(GAMEBIT_GPSH_SpawnKnowledgeSymbols) != 0) {
             state->spawnTimer = GPSH_OBJ_CREATOR_SPAWN_DELAY;
             obj->userData2 = 1;
         }
@@ -119,7 +120,7 @@ void gpshObjCreator_update(GameObject* obj) {
         childSetup->yawByte = (u8)(obj->anim.rotX >> GPSH_OBJ_CREATOR_YAW_SHIFT);
         childSetup->unknown1A = gGPSHObjCreatorChildParam1AValues[state->childTypeIndex];
         objSetupObject(&childSetup->base, GPSH_OBJ_CREATOR_CHILD_SETUP_FLAGS, obj->anim.mapEventSlot,
-                        GPSH_OBJ_CREATOR_NO_OBJECT_INDEX, obj->anim.parent);
+                       GPSH_OBJ_CREATOR_NO_OBJECT_INDEX, obj->anim.parent);
     }
 }
 
