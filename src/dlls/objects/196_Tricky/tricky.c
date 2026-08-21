@@ -730,7 +730,7 @@ ObjectDescriptor21 gTrickyObjDescriptor = {
     (ObjectDescriptorCallback)Tricky_getCurrentCommandType,
 };
 
-void trickyUpdateCollisionAndPathState(u8* obj) {
+void trickyUpdateCollisionAndPathState(GameObject* obj) {
     TrickyState* state;
     f32 hitOffsetY;
     GameObject* lastContactObj;
@@ -742,17 +742,16 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
     int doHeightSnap;
     int hitKind;
 
-    state = (TrickyState*)((GameObject*)obj)->extra;
+    state = (TrickyState*)obj->extra;
     doGroundSnap = 0;
     nearestDistance = 100.0f;
 
-    if ((objPosToMapBlockIdx(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                             ((GameObject*)obj)->anim.worldPosZ) == -1) &&
+    if ((objPosToMapBlockIdx(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) == -1) &&
         ((state->stateFlags & 0x80000) == 0)) {
         state->heightUpdateActive = 0;
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.previousLocalPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.previousLocalPosZ;
+        obj->anim.localPosX = obj->anim.previousLocalPosX;
+        obj->anim.localPosY = obj->anim.previousLocalPosY;
+        obj->anim.localPosZ = obj->anim.previousLocalPosZ;
     }
 
     state->stateFlags &= ~0x80000LL;
@@ -765,10 +764,8 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
     }
 
     if (doGroundSnap != 0) {
-        trackGetNearestGroundOffset((GameObject*)obj, ((GameObject*)obj)->anim.worldPosX,
-                                    ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ, &hitOffsetY,
-                                    0);
-        ((GameObject*)obj)->anim.localPosY -= hitOffsetY;
+        trackGetNearestGroundOffset(obj, obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ, &hitOffsetY, 0);
+        obj->anim.localPosY -= hitOffsetY;
         state->heightUpdateActive = 0;
     }
 
@@ -784,18 +781,18 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
         }
 
         if (doHeightSnap != 0) {
-            ((GameObject*)obj)->anim.velocityY = 0.0f;
-            ((GameObject*)obj)->anim.localPosY = state->currentTime - 0.01f;
+            obj->anim.velocityY = 0.0f;
+            obj->anim.localPosY = state->currentTime - 0.01f;
         } else {
-            ((GameObject*)obj)->anim.velocityY += -0.17f * timeDelta;
-            ((GameObject*)obj)->anim.localPosY += ((GameObject*)obj)->anim.velocityY * timeDelta;
+            obj->anim.velocityY += -0.17f * timeDelta;
+            obj->anim.localPosY += obj->anim.velocityY * timeDelta;
         }
     } else {
-        ((GameObject*)obj)->anim.velocityY = 0.0f;
+        obj->anim.velocityY = 0.0f;
     }
 
-    lastContactObj = (GameObject*)((GameObject*)obj)->anim.hitReactState->activeHit;
-    if ((((GameObject*)obj)->anim.hitReactState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) == 0 ||
+    lastContactObj = (GameObject*)obj->anim.hitReactState->activeHit;
+    if (((obj->anim.hitReactState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) == 0) ||
         (lastContactObj->anim.romDefNo == 0x1f)) {
         lastContactObj = NULL;
     }
@@ -803,9 +800,9 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
     if ((state->stateFlags & 8) != 0) {
         state->contactTimer += timeDelta;
         if (state->contactTimer >= 40.0f) {
-            if (vec3f_distanceSquared((f32*)(obj + 0x18), &Obj_GetPlayerObject()->anim.worldPosX) > 400.0f) {
+            if (vec3f_distanceSquared(&obj->anim.worldPosX, &Obj_GetPlayerObject()->anim.worldPosX) > 400.0f) {
                 state->contactTimer -= 40.0f;
-                ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7f;
+                obj->anim.modelInstance->runtimeSourceHitMask = 0x7f;
                 state->stateFlags &= ~8LL;
             }
         }
@@ -814,15 +811,14 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
         if (state->contactTimer >= 10.0f) {
             state->contactTimer -= 10.0f;
             state->stateFlags |= 8;
-            ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7e;
+            obj->anim.modelInstance->runtimeSourceHitMask = 0x7e;
         }
     } else {
         state->contactTimer = 0.0f;
     }
 
     state->lastContactObj = lastContactObj;
-    hitKind = ObjHits_PollPriorityHitWithCooldown((GameObject*)obj, &state->hitCooldown, &lastContactObj,
-                                                  (hitPosPtr = hitPos));
+    hitKind = ObjHits_PollPriorityHitWithCooldown(obj, &state->hitCooldown, &lastContactObj, (hitPosPtr = hitPos));
     state->light = hitKind;
 
     switch (state->light) {
@@ -845,7 +841,7 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
         objfx_spawnHitEmitterAtPos(hitPosPtr, 8, 0xff, 0x20, 0x20);
         objDoHitParticleFx(obj, 0.014f, lightArgs, 4, 0);
         if (lastContactObj->anim.romDefNo == SKEETLA_ATTACKER_SEQID_STAFF) {
-            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_stftest_var);
+            Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
         }
         break;
     case 0x1f:
@@ -857,8 +853,8 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
         (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
     }
 
-    if ((coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0xe) ||
-        (objGetNearestTypeTo(SKEETLA_TARGET_OBJGROUP, (GameObject*)obj, &nearestDistance) != NULL)) {
+    if ((coordsToMapCell(obj->anim.localPosX, obj->anim.localPosZ) == 0xe) ||
+        (objGetNearestTypeTo(SKEETLA_TARGET_OBJGROUP, obj, &nearestDistance) != NULL)) {
         state->pathControlFlags &= ~4;
     } else {
         state->pathControlFlags |= 4;
@@ -868,8 +864,8 @@ void trickyUpdateCollisionAndPathState(u8* obj) {
     (*gPathControlInterface)->apply(obj, &state->pathControlFlags);
     (*gPathControlInterface)->advance(obj, &state->pathControlFlags, timeDelta);
 
-    ((GameObject*)obj)->anim.rotY = state->pathRotY;
-    ((GameObject*)obj)->anim.rotZ = state->pathRotZ;
+    obj->anim.rotY = state->pathRotY;
+    obj->anim.rotZ = state->pathRotZ;
 }
 
 int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 speed) {
@@ -7813,7 +7809,7 @@ void Tricky_update(GameObject* obj) {
     if (trickyState->voiceCooldown > 0.0f) {
         TRICKY_VOICE(obj, 0x29c, 0x100);
     }
-    trickyUpdateCollisionAndPathState((u8*)obj);
+    trickyUpdateCollisionAndPathState(obj);
     if ((trickyState->stateFlags & 0x80000000) != 0) {
         trickyState->impressTimer -= timeDelta;
         if (trickyState->impressTimer <= 0.0f) {
