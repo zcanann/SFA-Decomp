@@ -131,13 +131,13 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOffBit) == 0x18);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOnBit) == 0x1A);
 
-static const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
-static const TrickySfxPair sTrickyImpressSfxPair = {0x0356, 0x035C};
-static const u16 gTrickyQuestPromptSfxIds[2] = {0x035A, 0x0351};
-static const u16 gTrickySubstateSfxIdPairA[2] = {0x035C, 0x0361};
-static const u16 gTrickySubstateSfxIdPairB[2] = {0x035C, 0x0361};
-static const u16 gSkeetlaFootstepSfxIds01[2] = {0x0361, 0x0365};
-static const u16 gSkeetlaFootstepSfxId2[1] = {0x0355};
+const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
+const TrickySfxPair sTrickyImpressSfxPair = {0x0356, 0x035C};
+const u16 gTrickyQuestPromptSfxIds[2] = {0x035A, 0x0351};
+const u16 gTrickySubstateSfxIdPairA[2] = {0x035C, 0x0361};
+const u16 gTrickySubstateSfxIdPairB[2] = {0x035C, 0x0361};
+const u16 gSkeetlaFootstepSfxIds01[2] = {0x0361, 0x0365};
+const u16 gSkeetlaFootstepSfxId2[1] = {0x0355};
 
 extern f32 gTrickyEventTimeSentinel;
 extern f32 gTrickyEventStaleSeconds;
