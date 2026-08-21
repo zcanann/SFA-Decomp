@@ -78,7 +78,7 @@ typedef struct TrickyCommand {
 } TrickyCommand;
 
 typedef struct TrickyJumpArc {
-    f32 duration;  /* 0x00: horizontal distance / lbl_803E24A4 */
+    f32 duration;  /* 0x00: horizontal distance / Tricky follow vertical divisor */
     f32 time;      /* 0x04: elapsed arc time (init 0, += timeDelta) */
     f32 riseCoeff; /* 0x08: linear vertical coefficient */
     f32 baseY;     /* 0x0C: launch worldPosY */
@@ -179,7 +179,7 @@ typedef struct TrickyState {
     u16 targetHeightDelta; /* (s16)(actionTargetObj.worldPosY - self.worldPosY): vertical offset to target */
     u8 pad2A8[0x2AC - 0x2A8];
     f32 waterLevel;
-    f32 eventTime;   /* recorded event timestamp (sentinel == lbl_803E2410 means unset) */
+    f32 eventTime;   /* recorded event timestamp (gTrickyEventTimeSentinel means unset) */
     f32 currentTime; /* running time reference; (currentTime - eventTime) > threshold gates the swim anim */
     f32 lookDirX;    /* look/aim direction: yaw = getAngle(-X,-Z), pitch = getAngle(Y, hyp(X,Z)) */
     f32 lookDirY;
@@ -321,7 +321,7 @@ typedef struct TrickyState {
             u8 guardCanSpawnHelpers; /* cleared on guard entry; gates the helper-spawn branch (trickyGuard) */
         };
     };
-    f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to lbl_803E2440 (tricky_substates) */
+    f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to gTrickyTimer600Frames (tricky_substates) */
     f32 moveHoldTimer; /* f32 countdown primed to randomGetRange(120,240) on entering idle move 0x29; counted down in move 0x2a and on reaching the floor advances to move 0x2b or 0x2c (tricky_substates) */
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
     f32 sparkleFxTimer;
@@ -330,7 +330,7 @@ typedef struct TrickyState {
     u8 pad799[0x79C - 0x799];
     f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC, re-primed to lbl_803E2440; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
-    f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching floor lbl_803E23DC fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
+    f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching zero fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
     GameObject* childA;
     f32 promptADespawnTimer;
     GameObject* childB;

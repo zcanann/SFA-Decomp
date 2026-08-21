@@ -1767,7 +1767,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
  * the per-frame movement step that resolves the target's walk/patch group and
  * drives motion through a substate machine and RomCurveWalker route;
  * trickyUpdateApproachSpeed ramps the follow speed toward a target point. The
- * lbl_803E2xxx externs are this DLL's .sdata2 float constants.
+ * The named gTricky* scalar constants are this DLL's .sdata2 movement tuning pool.
  */
 
 char sInWaterMessage[] = {
@@ -3671,7 +3671,7 @@ const char sTrickyShouldNeverStopCirclingError[] = "error tricky should never st
  * currentTime to pick a swim anim vs a ground anim. tricky_fetchBall and tricky_idleAndEat play a
  * localized bark sfx unless one is already on object channel 16. Debug strings
  * are emitted via
- * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the lbl_803E*
+ * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the gTricky*
  * floats are pooled .sdata2 tuning constants shared throughout this DLL.
  *
  * tricky_fetchBall's case numbering/fallthrough (0 into 1, 4 into 5 via the label
@@ -4792,7 +4792,7 @@ void tricky_state06_nop(void) {
 #define CANNONBALL_ROLL_SFX_ID      0x29b
 #define CANNONBALL_ROLL_SFX_PARAM   0x1000
 
-/* lbl_803E2*: this DLL's f32 route/speed constants. */
+/* Tricky-owned f32 route/speed constants live in this DLL's .sdata2 pool. */
 
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* toNode;
@@ -6501,7 +6501,7 @@ typedef enum TrickySequenceEvent {
     TRICKY_SEQUENCE_EVENT_SHOW_SHADOW = 0x2C,
 } TrickySequenceEvent;
 
-int lbl_803DDA4C;
+int gTrickyUnusedSbss;
 u32 gTrickyHelperObject;
 
 GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
