@@ -1403,7 +1403,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     for (initIndex = 0, initCandidateCursor = candidateRoutes, initSearchCursor = (u8*)state;
          initIndex < TRICKY_ROUTE_CANDIDATE_COUNT; initIndex++) {
         if (*initCandidateCursor != NULL) {
-            pathSearchBegin((PathSearch*)(initSearchCursor + offsetof(TrickyState, pathSearches)), *initCandidateCursor,
+            pathSearchBegin(&((TrickyState*)initSearchCursor)->pathSearches[0], *initCandidateCursor,
                             state->targetPosPtr, targetWalkGroup, candidateRouteFlags[initIndex]);
         }
         initCandidateCursor++;
@@ -1415,7 +1415,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
         for (candidateIndex = 0, candidateCursor = candidateRoutes, searchCursor = (u8*)state, statusCursor = status;
              candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
             if (*candidateCursor != NULL) {
-                *statusCursor = pathSearchStep((PathSearch*)(searchCursor + offsetof(TrickyState, pathSearches)), 1);
+                *statusCursor = pathSearchStep(&((TrickyState*)searchCursor)->pathSearches[0], 1);
             } else {
                 *statusCursor = -1;
             }
@@ -5762,14 +5762,12 @@ u32 tricky_substateFidgetB(GameObject* obj, TrickyState* trickyState) {
 u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
     TrickyState* ref;
     int val;
-    int idx;
 
     if (tricky_handleFeedOrTalk(obj, trickyState) != 0) {
         return 1;
     }
     for (val = 0; val < trickyState->animEvents.triggerCount; val++) {
-        idx = val + offsetof(TrickyState, animEvents.triggeredIds);
-        if (*((s8*)trickyState + idx) != 0) {
+        if (trickyState->animEvents.triggeredIds[val] != 0) {
             continue;
         }
         ref = obj->extra;
@@ -5828,8 +5826,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
             }
         }
         for (val = 0; val < trickyState->animEvents.triggerCount; val++) {
-            b[0] = val + offsetof(TrickyState, animEvents.triggeredIds);
-            bval = *((char*)trickyState + b[0]);
+            bval = trickyState->animEvents.triggeredIds[val];
             if (bval == '\0') {
                 objSoundStartTimed(obj, &trickyState->soundState, 0x390, 0x500, -1, 0);
             } else if (bval == '\a') {
