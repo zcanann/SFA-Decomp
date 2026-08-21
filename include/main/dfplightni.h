@@ -6,6 +6,7 @@
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 #include "dlls/object_descriptor.h"
+#include "main/gamebit_ids.h"
 #include "main/lightningeffect.h"
 
 #define DFPLIGHTNI_OBJECT_DEF_ID 0x0345
@@ -14,8 +15,8 @@
 #define DFPLIGHTNI_OBJECT_DEF_SIZE 0xA0
 #define DFPLIGHTNI_PLACEMENT_SIZE 0x24
 
-#define DFPLIGHTNI_EVENT_TIMER_GAMEBIT 0x5e5
-#define DFPLIGHTNI_BLOCKED_GAMEBIT 0xe57
+#define DFPLIGHTNI_ZAPPED_PLAYER_GAMEBIT GAMEBIT_OFP_ZappedByFloorTiles
+#define DFPLIGHTNI_PUZZLE_COMPLETE_GAMEBIT GAMEBIT_OFP_ElectricFloorPuzzleAct1Complete
 #define DFPLIGHTNI_SFX_ID 0x4c3
 #define DFPLIGHTNI_SFX_MAX_COUNT 2
 

@@ -648,7 +648,8 @@ enum GameBitId {
     GAMEBIT_ITEM_FireflyNotShown_Count = 0x5D6,          /* table 2; size 5 */
     GAMEBIT_DR_ObjGroups = 0x5DB,                        /* table 3; size 32 */
     GAMEBIT_DRBOT_ObjGroups = 0x5DC,                     /* table 3; size 32 */
-    GAMEBIT_DRBOT_SpellPuzzleActive = 0x5E4,             /* DragonRock Palace spell-puzzle active gate: 1 while the level controller's solution roll is engaged, gating dfpfloorbar/dfpwallbar (chuka) puzzle-mode behavior */
+    GAMEBIT_OFP_PuzzlePadShowSolution = 0x5E4,           /* Ocean Force Point electric-floor solution display is active while the puzzle pad is pressed */
+    GAMEBIT_OFP_ZappedByFloorTiles = 0x5E5,              /* player stepped on an electrified Ocean Force Point floor tile */
     GAMEBIT_ITEM_SpellStone2_Used = 0x5F3,               /* table 2; hint 342 */
     GAMEBIT_ITEM_SpellStone4_Used = 0x5F4,               /* table 2; hint 405 */
     GAMEBIT_ITEM_DeletedSpell5FC_Got = 0x5FC,            /* table 2; in spell bits table but does nothing */
@@ -659,6 +660,7 @@ enum GameBitId {
     GAMEBIT_LV_DoneTests = 0x61C,                        /* table 2; hint 349 */
     GAMEBIT_SHOP_ScarabGameRunning = 0x626,              /* table 0; ref swapstore/HitAnimator target */
     GAMEBIT_DR_RescuedHighTop = 0x632,                   /* table 2; hint 391; ref dragrock/HitAnimator target */
+    GAMEBIT_OFP_PuzzlePadPressed = 0x635,                /* Ocean Force Point electric-floor puzzle pad is pressed */
     GAMEBIT_SC_totempuzzle_running = 0x639,              /* table 2 */
     GAMEBIT_ITEM_SpellStone3_Got = 0x63C,                /* table 2; hint 373 */
     GAMEBIT_TumbleweedRelated642 = 0x642,                /* table 0 */
@@ -671,6 +673,7 @@ enum GameBitId {
     GAMEBIT_DR_ActNo = 0x76E,                            /* table 1; size 4 */
     GAMEBIT_DRBOT_ActNo = 0x76F,                         /* table 1; size 4 */
     GAMEBIT_ITEM_DeletedSpell777_Got = 0x777,            /* table 2; in spell bits table but does nothing */
+    GAMEBIT_OFP_LoadBlockSlidePuzzle2 = 0x7A1,           /* loads Ocean Force Point object group 6, the lower block-slide puzzle */
     GAMEBIT_DR_EarthWarriorUnknown_2 = 0x7BC,            /* set by DR_EarthWar.c when mounted and cleared when dismounted */
     GAMEBIT_ITEM_SpellStone7BD_Got = 0x7BD,              /* table 2; unused? */
     GAMEBIT_ITEM_SpellStone7BF_Got = 0x7BF,              /* table 1 */
@@ -920,6 +923,8 @@ enum GameBitId {
     GAMEBIT_VFP_OpenedPathTo = 0xDBF,                    /* table 2; hint 300; ref moonpass/HitAnimator target */
     GAMEBIT_CFRelated0DCA = 0xDCA,                       /* table 0 */
     GAMEBIT_CFRaceRelated0DCB = 0xDCB,                   /* table 0 */
+    GAMEBIT_OFP_MusicLatch = 0xDCE,                      /* Ocean Force Point level-controller music latch */
+    GAMEBIT_VFP_MusicLatch = 0xDCF,                      /* Volcano Force Point level-controller music latch */
     GAMEBIT_LINKD_ObjGroups = 0xDD1,                     /* table 3; size 32 */
     GAMEBIT_GPSH_TestKnowledgeRunning = 0xDD2,           /* GPSH shrine (Test Of Knowledge) trial-active latch - set on activation, cleared on solve/timeout/reset; gates MUSICTRIG_krazoa_tunnel_2 via GameBitLatch_Update, mirroring GAMEBIT_ECSH_TestObservRunning */
     GAMEBIT_ITEM_CheatToken0_Got = 0xDDC,                /* table 2; Display Credits */
@@ -950,6 +955,8 @@ enum GameBitId {
     GAMEBIT_DR_RescuedEarthWalker = 0xE27,               /* table 2; hint 388 */
     GAMEBIT_DR_DestroyedRobots = 0xE3F,                  /* table 2; hint 390 */
     GAMEBIT_WM_KrystalRelated0E49 = 0xE49,               /* table 0; set when she looks around in the crystal */
+    GAMEBIT_OFP_ElectricFloorPuzzleAct1Complete = 0xE57, /* disables the act 1 electric-floor puzzle and lowers its floor bars */
+    GAMEBIT_OFP_ElectricFloorPuzzleAct2Complete = 0xE58, /* disables the act 2 electric-floor puzzle and lowers its floor bars */
     GAMEBIT_SH_Got6WhiteShrooms = 0xE5B,                 /* table 2; hint 274 */
     GAMEBIT_IM_DestroyedBox1 = 0xE5D,                    /* table 2; blocking cannon */
     GAMEBIT_IM_DestroyedBox2 = 0xE5E,                    /* table 2 */

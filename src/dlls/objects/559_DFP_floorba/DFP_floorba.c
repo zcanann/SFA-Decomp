@@ -1,10 +1,7 @@
 /*
- * DragonRock Palace floor bar (DLL 0x22F; "DFP_floorbar") - a rising/
- * falling floor bar in the spell puzzle. It links to the puzzle
- * controller object (romDefNo 0x431) to read the per-mode required score
- * table, lowers itself while sequence game bits are set, and raises when
- * the player stands in the correct scoring zone (matched against
- * requiredScore); a wrong zone trips game bit 0x5e5 to reset.
+ * Ocean Force Point Temple floor bar (DLL 0x22F; "DFP_floorbar") - a
+ * rising/falling row of the electric-floor puzzle. It links to the level
+ * controller object (romDefNo 0x431) to read the safe tile for each row.
  */
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/dll_000A_expgfx.h"
@@ -25,11 +22,11 @@ struct DfpfloorbarPlacement
     f32 posY;
     u8 pad10[0x18 - 0x10];
     u8 rotXByte;  /* 0x18: <<8 seeds anim.rotX */
-    u8 modeIndex; /* 0x19: selects the mode-table row */
+    u8 rowIndex;  /* 0x19: selects the safe-floor-tile row */
     u8 pad1A[0x1C - 0x1A];
     s16 travelRange;       /* 0x1C: nonzero scales rootMotionScale */
     s16 triggerGameBit;    /* 0x1E */
-    s16 completionGameBit; /* 0x20 */
+    s16 loweredGameBit;    /* 0x20 */
 };
 
 /* anim.romDefNo of the puzzle controller object this bar links to (docblock:
@@ -57,7 +54,7 @@ void DFP_Floorbar_free(GameObject* obj)
 
     state = (DfpFloorbarState*)obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    state->linkedObject = NULL;
+    state->levelController = NULL;
     return;
 }
 
@@ -72,20 +69,20 @@ void DFP_Floorbar_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
 
 void DFP_Floorbar_hitDetect(GameObject* obj)
 {
-    GameObject* linkedObject;
+    GameObject* levelController;
     int** state;
     s32 hitFlag;
     state = (int**)obj->extra;
-    linkedObject = (GameObject*)state[2];
-    if (linkedObject == NULL)
+    levelController = (GameObject*)state[2];
+    if (levelController == NULL)
         return;
-    hitFlag = linkedObject->anim.flags & 0x40;
+    hitFlag = levelController->anim.flags & 0x40;
     if (hitFlag == 0)
         return;
     state[2] = NULL;
 }
 
-u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
+u8 gDFPFloorbarSafeFloorTiles[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
@@ -93,10 +90,10 @@ void DFP_Floorbar_update(GameObject* obj)
 {
     DfpfloorbarPlacement* placement = (DfpfloorbarPlacement*)(obj)->anim.placementData;
     DfpFloorbarState* state = (obj)->extra;
-    s16 score = -1;
+    s16 tileSteppedOn = -1;
     int mode;
-    u8 active;
-    u32 sequenceValue;
+    u8 lowered;
+    u32 showSolutionState;
     GameObject* playerObj;
     f32 yDelta;
     f32 xMid;
@@ -108,16 +105,16 @@ void DFP_Floorbar_update(GameObject* obj)
     switch ((u8)mode)
     {
     case 1:
-        if (state->modeIndex > 5)
+        if (state->rowIndex > 5)
             return;
-        if (mainGetBit(0xe57) != 0)
+        if (mainGetBit(GAMEBIT_OFP_ElectricFloorPuzzleAct1Complete) != 0)
         {
             (obj)->anim.localPosY = placement->posY - 3.2f;
             return;
         }
         break;
     case 2:
-        if (mainGetBit(0xe58) != 0)
+        if (mainGetBit(GAMEBIT_OFP_ElectricFloorPuzzleAct2Complete) != 0)
         {
             (obj)->anim.localPosY = placement->posY - 3.2f;
             return;
@@ -125,14 +122,15 @@ void DFP_Floorbar_update(GameObject* obj)
         break;
     }
 
-    sequenceValue = (u8)mainGetBit(GAMEBIT_DRBOT_SpellPuzzleActive);
-    if (mainGetBit(0x5e5) != 0 || sequenceValue != state->lastSequenceValue)
+    showSolutionState = (u8)mainGetBit(GAMEBIT_OFP_PuzzlePadShowSolution);
+    if (mainGetBit(GAMEBIT_OFP_ZappedByFloorTiles) != 0 ||
+        showSolutionState != state->previousShowSolutionState)
     {
-        state->active = 0;
+        state->lowered = 0;
     }
-    state->lastSequenceValue = sequenceValue;
+    state->previousShowSolutionState = showSolutionState;
 
-    if (state->linkedObject == NULL)
+    if (state->levelController == NULL)
     {
         GameObject** items;
         int idx_init;
@@ -144,23 +142,23 @@ void DFP_Floorbar_update(GameObject* obj)
         {
             if (((GameObject*)items[idx])->anim.romDefNo == DFPFLOORBAR_CONTROLLER_SEQID)
             {
-                state->linkedObject = (int*)items[idx];
+                state->levelController = (int*)items[idx];
                 idx = count;
             }
         }
-        if (state->linkedObject == NULL)
+        if (state->levelController == NULL)
             return;
     }
 
     {
-        GameObject* objPtr = (GameObject*)state->linkedObject;
-        DFP_LEVEL_CONTROL_INTERFACE(objPtr)->copyPuzzleValues(objPtr, gDfpfloorbarModeTable);
+        GameObject* objPtr = (GameObject*)state->levelController;
+        DFP_LEVEL_CONTROL_INTERFACE(objPtr)->copySafeFloorTiles(objPtr, gDFPFloorbarSafeFloorTiles);
     }
 
-    state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];
+    state->safeTileIndex = gDFPFloorbarSafeFloorTiles[state->rowIndex];
 
-    active = state->active;
-    if (active != 0 && (obj)->anim.localPosY > placement->posY - 3.2f)
+    lowered = state->lowered;
+    if (lowered != 0 && (obj)->anim.localPosY > placement->posY - 3.2f)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_1c8);
         (obj)->anim.localPosY = (obj)->anim.localPosY - timeDelta / 12.0f;
@@ -171,13 +169,13 @@ void DFP_Floorbar_update(GameObject* obj)
         return;
     }
 
-    if (state->requiredScore == 0)
+    if (state->safeTileIndex == 0)
         return;
-    if (active == 0)
+    if (lowered == 0)
     {
         (obj)->anim.localPosY = placement->posY;
     }
-    if (state->active != 0)
+    if (state->lowered != 0)
         return;
 
     playerObj = Obj_GetPlayerObject();
@@ -197,28 +195,28 @@ void DFP_Floorbar_update(GameObject* obj)
         {
             if (xMid >= 150.0f)
             {
-                score = 4;
+                tileSteppedOn = 4;
             }
             else if (xMid >= 100.0f)
             {
-                score = 3;
+                tileSteppedOn = 3;
             }
             else if (xMid >= 50.0f)
             {
-                score = 2;
+                tileSteppedOn = 2;
             }
             else if (xMid >= 0.0f)
             {
-                score = 1;
+                tileSteppedOn = 1;
             }
 
-            if (score == (s16)state->requiredScore)
+            if (tileSteppedOn == (s16)state->safeTileIndex)
             {
-                state->active = 1;
+                state->lowered = 1;
                 return;
             }
 
-            mainSetBits(0x5e5, 1);
+            mainSetBits(GAMEBIT_OFP_ZappedByFloorTiles, 1);
         }
     }
 }
@@ -230,19 +228,19 @@ void DFP_Floorbar_init(GameObject* obj, DfpfloorbarPlacement* params)
 
     obj->anim.rotX = (s16)((s8)placement->rotXByte << 8);
     obj->animEventCallback = dfpfloorbar_SeqFn;
-    state->modeIndex = placement->modeIndex;
+    state->rowIndex = placement->rowIndex;
     state->triggerGameBit = placement->triggerGameBit;
-    state->completionGameBit = placement->completionGameBit;
-    state->linkedObject = NULL;
+    state->loweredGameBit = placement->loweredGameBit;
+    state->levelController = NULL;
 
     if (placement->travelRange != 0)
     {
         obj->anim.rootMotionScale = 1.0f / ((f32)(s32)placement->travelRange / 1000.0f);
     }
 
-    if (mainGetBit((int)state->completionGameBit) != 0)
+    if (mainGetBit((int)state->loweredGameBit) != 0)
     {
-        state->active = 1;
+        state->lowered = 1;
         obj->anim.localPosY = placement->posY - 3.2f;
     }
 }
@@ -253,14 +251,14 @@ void DFP_Floorbar_release(void)
 
 void DFP_Floorbar_initialise(void)
 {
-    u8* modeRow = gDfpfloorbarModeTable;
+    u8* safeFloorRows = gDFPFloorbarSafeFloorTiles;
     int i;
 
-    for (i = 0; i < DFPFLOORBAR_MODE_ROW_COUNT; i++, modeRow += DFPFLOORBAR_MODE_ROW_SIZE)
+    for (i = 0; i < DFPFLOORBAR_MODE_ROW_COUNT; i++, safeFloorRows += DFPFLOORBAR_MODE_ROW_SIZE)
     {
-        modeRow[0] = 0;
-        modeRow[1] = 0;
-        modeRow[2] = 0;
+        safeFloorRows[0] = 0;
+        safeFloorRows[1] = 0;
+        safeFloorRows[2] = 0;
     }
 }
 

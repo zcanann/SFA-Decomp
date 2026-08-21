@@ -43,7 +43,7 @@ STATIC_ASSERT(offsetof(DFPRotatePPlacement, unknown19) == 0x19);
 STATIC_ASSERT(offsetof(DFPRotatePPlacement, eventGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(DFPRotatePPlacement, activationGameBit) == 0x20);
 
-extern int gDFP_RotatePEffectHandles[8];
+extern GameObject* gDFP_RotatePEffectHandles[8];
 
 int DFP_RotateP_getExtraSize(void);
 int DFP_RotateP_getObjectTypeId(void);

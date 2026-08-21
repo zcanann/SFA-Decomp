@@ -16,13 +16,6 @@ typedef struct NewShadowEntry
 
 typedef struct
 {
-    int id;
-    f32 dist;
-    int flags;
-} ShadowSortEntry;
-
-typedef struct
-{
     GameObject* obj;
     f32 scale;
     u8 flags;

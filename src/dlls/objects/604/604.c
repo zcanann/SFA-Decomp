@@ -415,7 +415,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
                     ObjModelState* gx = obj->anim.modelState;
                     if (gx != 0)
                     {
-                        gx->flags |= 0x1000;
+                        gx->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
                     }
                 }
                 seq->flags &= ~4;
@@ -813,7 +813,7 @@ void snowclaw_init(GameObject* obj, SnowclawPlacement* placement)
     (obj)->animEventCallback = snowclaw_animEventCallback;
     if ((obj)->anim.modelState != NULL)
     {
-        (obj)->anim.modelState->flags |= 0x4000;
+        (obj)->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_4000;
         (obj)->anim.modelState->shadowTintA = 0x64;
         (obj)->anim.modelState->shadowTintB = 0x96;
     }

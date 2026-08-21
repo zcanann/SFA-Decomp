@@ -575,35 +575,35 @@ void Lightfoot_ProcessHitResponseFlags(GameObject* obj, BaddieState* inner)
     if (inner->eventFlags & 4)
     {
         inner->eventFlags &= ~4;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_sc_spotfox02);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
     }
     if (inner->eventFlags & 2)
     {
         inner->eventFlags &= ~2;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_sc_spotfox02);
+        Sfx_PlayFromObject(obj, SFXTRIG_sc_spotfox02);
     }
     if (inner->eventFlags & 1)
     {
         inner->eventFlags &= ~1;
         if (randomGetRange(0, 2) == 0)
         {
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_skeep_mumb4);
+            Sfx_PlayFromObject(obj, SFXTRIG_skeep_mumb4);
         }
     }
     if (inner->eventFlags & 0x80)
     {
         inner->eventFlags &= ~0x80;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_wp_swdtest322);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322);
     }
     if (inner->eventFlags & 0x200)
     {
         inner->eventFlags &= ~0x200;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_sk_trwhin3);
+        Sfx_PlayFromObject(obj, SFXTRIG_sk_trwhin3);
     }
     if (inner->eventFlags & 0x40)
     {
         inner->eventFlags &= ~0x40;
-        Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_wp_swdtest322_135);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest322_135);
     }
     if (inner->eventFlags & 0x800)
     {
@@ -737,8 +737,8 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     f32 scale;
     f32 zero;
     f32 fv;
-    f32 snd[3];
-    f32 arr[6];
+    Vec snd;
+    Vec arr[2];
 
     timerRec = inner->control;
     fv = timerRec->lifeTimer;
@@ -757,14 +757,14 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
         case 1:
             inner->configFlags = inner->configFlags | 1;
             mainSetBits(placement->eventGameBit, 1);
-            arr[3] = 0.0f;
-            arr[4] = gLightfootPulseSpawnOffsetY[0];
-            arr[5] = 0.0f;
+            arr[1].x = 0.0f;
+            arr[1].y = gLightfootPulseSpawnOffsetY[0];
+            arr[1].z = 0.0f;
             j = 0x19;
             scale = 0.8f;
             for (; j != 0; j--)
             {
-                objfx_spawnPulseBurst(obj, scale * obj->anim.rootMotionScale, 3, 0, 0, arr);
+                objfx_spawnPulseBurst(obj, scale * obj->anim.rootMotionScale, 3, 0, 0, (f32*)arr);
             }
             break;
         }
@@ -785,11 +785,11 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             {
                 mode = 0;
             }
-            snd[0] = 0.0f;
-            snd[1] = gLightfootPulseSpawnOffsetY[0];
-            snd[2] = 0.0f;
+            snd.x = 0.0f;
+            snd.y = gLightfootPulseSpawnOffsetY[0];
+            snd.z = 0.0f;
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
-            objfx_spawnPulseBurst(obj, gLightfootPulseBurstScale[0] * obj->anim.rootMotionScale, 3, mode, 0, snd);
+            objfx_spawnPulseBurst(obj, gLightfootPulseBurstScale[0] * obj->anim.rootMotionScale, 3, mode, 0, (f32*)&snd);
         }
     }
     inner->flags400 = inner->flags400 | 2;
@@ -856,7 +856,7 @@ void Lightfoot_update(GameObject* obj) {
     LightfootState* inner = obj->extra;
     int workValue = obj->anim.placementDataAddress;
     LightfootControlState* control = inner->groundBaddie.control;
-    f32 pulseOffset[3];
+    Vec pulseOffset;
     f32 effectParams[6];
     u8 effectCount;
     f32 terminalLifeTimer;
@@ -979,11 +979,11 @@ void Lightfoot_update(GameObject* obj) {
             } else {
                 workValue = 0;
             }
-            pulseOffset[0] = 0.0f;
-            pulseOffset[1] = gLightfootPulseSpawnOffsetY[0];
-            pulseOffset[2] = 0.0f;
+            pulseOffset.x = 0.0f;
+            pulseOffset.y = gLightfootPulseSpawnOffsetY[0];
+            pulseOffset.z = 0.0f;
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_foot_metal_scuff_455);
-            objfx_spawnPulseBurst(obj, gLightfootPulseBurstScale[0] * obj->anim.rootMotionScale, 3, workValue, 0, pulseOffset);
+            objfx_spawnPulseBurst(obj, gLightfootPulseBurstScale[0] * obj->anim.rootMotionScale, 3, workValue, 0, (f32*)&pulseOffset);
         }
         control->wanderTimer -= timeDelta;
     }

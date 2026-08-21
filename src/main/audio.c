@@ -112,7 +112,7 @@ void AudioAramReadAllocAsync(void* source, u32 size, void** outBuf, AudioArqRequ
     idx = gAudioArqRequestIndex;
     gAudioArqRequestIndex = idx + 1;
     entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
+    if (idx + 1 >= AUDIO_ARQ_REQUEST_COUNT)
     {
         gAudioArqRequestIndex = 0;
     }
@@ -239,7 +239,7 @@ void AudioAramReadCompleteCallback(u32 request)
     int i;
     AudioArqRequestEntry* p = (AudioArqRequestEntry*)request;
     AudioArqRequestEntry* e = gAudioArqRequests;
-    for (i = 0; i < 16; i++)
+    for (i = 0; i < AUDIO_ARQ_REQUEST_COUNT; i++)
     {
         if (p == e)
         {
@@ -257,7 +257,7 @@ void AudioAramWriteSync(void* addr, u32 dest, u32 size)
     idx = gAudioArqRequestIndex;
     gAudioArqRequestIndex = idx + 1;
     entry = &gAudioArqRequests[idx];
-    if (idx + 1 >= 0x10)
+    if (idx + 1 >= AUDIO_ARQ_REQUEST_COUNT)
     {
         gAudioArqRequestIndex = 0;
     }
@@ -685,7 +685,7 @@ int audioInit(void)
         gAudioInitStarted = 1;
         gAudioPendingLoadFlags = 0;
         gAudioCompletedLoadFlags = 0;
-        mmSetDelay(1);
+        mmSetForceHeap3Only(1);
         if (gAudioHardwareInitialized)
         {
             return 1;
@@ -730,7 +730,7 @@ int audioInit(void)
         Sfx_InitObjectChannels();
         AudioStream_Init();
         audioLoadTriggerData();
-        mmSetDelay(1);
+        mmSetForceHeap3Only(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
         gAudioStarfoxMPoolDataHandle =
             loadFileByPathAsync(base + 0x228, NULL, 0, poolDataMLoadedCallback);
@@ -740,7 +740,7 @@ int audioInit(void)
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
         gAudioStarfoxMSampleDirectoryHandle =
             loadFileByPathAsync(base + 0x250, NULL, 0, sampleDirectoryMLoadedCallback);
-        mmSetDelay(0);
+        mmSetForceHeap3Only(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
         gAudioStarfoxMSampleBufferHandle =
             loadFileByPathAsync(base + 0x264, NULL, 0, sampleBufferMLoadedCallback);
@@ -749,7 +749,7 @@ int audioInit(void)
         {
             return 0xff;
         }
-        mmSetDelay(0);
+        mmSetForceHeap3Only(0);
     }
     if (!gAudioMusicGroupReady && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
         (gAudioCompletedLoadFlags & AUDIO_LOAD_M_PROJECT) && (gAudioCompletedLoadFlags & AUDIO_LOAD_M_POOL) &&
@@ -761,7 +761,7 @@ int audioInit(void)
         mm_free(gAudioStarfoxMSampleBufferHandle);
         mmSetFreeDelay(delay);
         gAudioMusicGroupReady = 1;
-        mmSetDelay(1);
+        mmSetForceHeap3Only(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
         gAudioStarfoxSPoolDataHandle =
             loadFileByPathAsync(base + 0x278, NULL, 0, poolDataSLoadedCallback);
@@ -771,7 +771,7 @@ int audioInit(void)
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
         gAudioStarfoxSSampleDirectoryHandle =
             loadFileByPathAsync(base + 0x2a0, NULL, 0, sampleDirectorySLoadedCallback);
-        mmSetDelay(0);
+        mmSetForceHeap3Only(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
         gAudioStarfoxSSampleBufferHandle =
             loadFileByPathAsync(base + 0x2b4, NULL, 0, sampleBufferSLoadedCallback);
@@ -1250,10 +1250,10 @@ u8 musicInitMidiWad(void)
         gMusicChannelCounterA = 1;
         gMusicChannelCounterB = 1;
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
-        saved = mmSetDelay(0) & 0xff;
+        saved = mmSetForceHeap3Only(0) & 0xff;
         gMidiWadFileData =
             loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
-        mmSetDelay(saved);
+        mmSetForceHeap3Only(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
     {

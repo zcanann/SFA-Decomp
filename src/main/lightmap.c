@@ -170,7 +170,7 @@ MapBlockData* mapGetBlock(int i)
     return gMapBlocks[i];
 }
 
-extern LightmapQEnt gLightmapDrawQueue[];
+extern LightSortEntry gLightmapDrawQueue[];
 
 s8* mapGetBlockIdx(int layer)
 {
@@ -389,9 +389,9 @@ void getVisibleObjects(s8* opacity)
         if (i >= part)
         {
             *cur = objUpdateOpacity(o);
-            if (*cur != 0 || (o->anim.modelInstance->flags & 0x200000) != 0)
+            if (*cur != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0)
             {
-                if ((o->anim.modelInstance->flags & 0x80000) != 0)
+                if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0)
                 {
                     *(f32*)&o->anim.targetObj =
                         (f32)(o->anim.modelInstance->fixedSortDepth * 100);
@@ -433,12 +433,12 @@ void getVisibleObjects(s8* opacity)
                     key = 0;
                     model = Obj_GetActiveModel(o);
                     if (o->anim.renderAlpha == 0xff && (o->anim.flags & 0x80) == 0 &&
-                        ((tf = o->anim.modelInstance->flags) & 0x40000) == 0 &&
+                        ((tf = o->anim.modelInstance->flags) & OBJDEF_FLAG_FORCE_ALPHA_SORT) == 0 &&
                         model->renderAttachment == NULL)
                     {
                         key |= 0x80000000;
                         sortDepth = 1000 - (depthInt & 0xffff);
-                        if ((tf & 0x800000) != 0 && (o->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) == 0)
+                        if ((tf & OBJDEF_FLAG_RUNTIME_BATCHABLE) != 0 && (o->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) == 0)
                         {
                             key |= 0x40000000LL;
                             key |= (o->anim.romDefNo & 0x3ff) << 20;
@@ -451,7 +451,7 @@ void getVisibleObjects(s8* opacity)
                             (o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0)
                         {
                             renderShadowType3(o, 7, 0x50);
-                            gLightmapDrawQueue[gLightmapDrawQueueCount].d = 1;
+                            gLightmapDrawQueue[gLightmapDrawQueueCount].type = 1;
                             gLightmapDrawQueueCount++;
                         }
                     }
@@ -467,13 +467,13 @@ void getVisibleObjects(s8* opacity)
                             mode = 7;
                         }
                         renderShadowType3(o, mode, 0);
-                        gLightmapDrawQueue[gLightmapDrawQueueCount].d = 0;
+                        gLightmapDrawQueue[gLightmapDrawQueueCount].type = 0;
                         gLightmapDrawQueueCount++;
                         if ((o->anim.modelInstance->renderFlags & 0x20) != 0 &&
                             (o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0)
                         {
                             renderShadowType3(o, 7, 0x50);
-                            gLightmapDrawQueue[gLightmapDrawQueueCount].d = 1;
+                            gLightmapDrawQueue[gLightmapDrawQueueCount].type = 1;
                             gLightmapDrawQueueCount++;
                         }
                     }
@@ -507,7 +507,7 @@ static void renderObjects(s8* opacity) {
     int slot;
     GameObject** objects;
     LightmapDrawQueue* qbase;
-    LightmapQEnt* q;
+    LightSortEntry* q;
     LightmapDrawQueue* dq;
 
     qbase = (LightmapDrawQueue*)gLightmapDrawQueue;
@@ -526,13 +526,13 @@ static void renderObjects(s8* opacity) {
                 dq->deferred[0] = (u32)obj;
             }
         } else {
-            if ((flags & 0x800000) == 0) {
+            if ((flags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
                 (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, (GameObject*)obj, 1);
             p = (int*)obj->anim.modelState;
             if (p != NULL && obj->anim.modelState->shadowCastSlot != NULL) {
-                LightmapQEnt* qe;
+                LightSortEntry* qe;
                 int qi;
                 u32 shadowKind;
 
@@ -540,12 +540,12 @@ static void renderObjects(s8* opacity) {
                 shadowKind = 2;
                 qi = gLightmapDrawQueueCount;
                 qe = &q[qi];
-                qe->d = shadowKind;
+                qe->type = shadowKind;
                 gLightmapDrawQueueCount = qi + 1;
             } else if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH &&
                        (obj->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
                        (obj->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE)) {
-                LightmapQEnt* qe;
+                LightSortEntry* qe;
                 int qi;
                 u32 shadowKind;
 
@@ -553,7 +553,7 @@ static void renderObjects(s8* opacity) {
                 shadowKind = 3;
                 qi = gLightmapDrawQueueCount;
                 qe = &q[qi];
-                qe->d = shadowKind;
+                qe->type = shadowKind;
                 gLightmapDrawQueueCount = qi + 1;
             }
         }

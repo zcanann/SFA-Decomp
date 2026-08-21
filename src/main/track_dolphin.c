@@ -971,7 +971,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
     f32 worldEnd[3];
     f32 localStart[3];
     f32 localEnd[3];
-    u32* objects;
+    GameObject** objects;
     int count;
     int i;
     u32 parentAddress;
@@ -995,7 +995,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
         memcpy(worldStart, startPos, 0xc);
         memcpy(worldEnd, endPos, 0xc);
     }
-    objects = (u32*)objGetAllOfType(6, &count);
+    objects = objGetAllOfType(6, &count);
     for (i = 0; i < count; i++)
     {
         GameObject* target = (GameObject*)objects[i];
@@ -3407,7 +3407,7 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
                 f32 r, c;
 
                 resetObj = *resetObjects;
-                if (flag80 && (resetObj->modelInstance->flags & 0x01000000))
+                if (flag80 && (resetObj->modelInstance->flags & OBJDEF_FLAG_RELATED_TO_HIT_DETECT))
                     continue;
                 hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
                 if (hitState == NULL)

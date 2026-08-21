@@ -1,5 +1,5 @@
 /*
- * DragonRock Palace torch (DLL 0x22B; "DFP_Torch") - a lightable torch.
+ * Ocean Force Point Temple torch (DLL 0x22B; "DFP_Torch") - a lightable torch.
  * Tracks lit state and a flicker/burn timer, plays flame particle and
  * sfx effects while lit, and latches its lit-state gamebit.
  */

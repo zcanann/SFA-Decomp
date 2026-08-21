@@ -2994,7 +2994,7 @@ void ObjHitReact_UpdateResetObjects(void) {
     objectOffset = 0;
     for (; objectIndex < gObjHitReactResetObjectCount; objectIndex = objectIndex + 1) {
         obj = gObjHitReactResetObjects[objectIndex];
-        if (((obj->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) &&
+        if (((obj->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP) == 0) &&
             (obj->activeHitboxMode != OBJHITREACT_DISABLED_HITBOX_MODE)) {
             Obj_UpdateObject((GameObject*)obj);
         }

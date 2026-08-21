@@ -76,6 +76,7 @@ typedef struct SeqRunFlags
     u8 useWorldSpace : 1;
 } SeqRunFlags;
 
+#define OBJSEQ_LINKED_PAIRS_PER_SLOT 16
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
@@ -1064,7 +1065,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags)
             slot = i;
             *(s16*)p = 1;
             blk = (ObjSeqLinkedPair*)(base + i * 0x80);
-            for (j = 0; j < 16; j++)
+            for (j = 0; j < OBJSEQ_LINKED_PAIRS_PER_SLOT; j++)
             {
                 blk->seqObj = NULL;
                 blk++;
@@ -1340,7 +1341,7 @@ int ObjSeq_start(int seqIdx, GameObject* obj, int flags)
                 *(int*)((u8*)&st->handles[0] + obj->seqIndex * 4) =
                     ((ObjPlacement*)newObj->anim.placementData)->ident;
                 mapFlags = obj->anim.modelInstance->flags;
-                if ((mapFlags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(mapFlags & 0x8000))
+                if ((mapFlags & OBJDEF_FLAG_HITBOX_GROUP) && !(mapFlags & OBJDEF_FLAG_CAN_HOLD_PLAYER))
                 {
                     parent = obj;
                     z = y = x = 0.0f;
@@ -1445,7 +1446,7 @@ static inline GameObject* objSeqFindLinkedObject(u8* seqObj, GameObject* candida
     j = 0;
     slotBase = (ObjSeqLinkedPair*)(gObjSeqRuntimeBuffer + ((ObjSeqState*)seqObj)->slot * 0x80);
     entry = slotBase;
-    for (; j < 16; j++)
+    for (; j < OBJSEQ_LINKED_PAIRS_PER_SLOT; j++)
     {
         if (entry->seqObj == candidate)
         {
@@ -4210,7 +4211,7 @@ void* ObjSeq_ToggleCommand3Target(GameObject* obj, u8* seq, ObjSeqPlacement* pla
             slotOff = (s8)((ObjSeqState*)seq)->slot * 0x80;
             slotBase = (ObjSeqLinkedPair*)(gObjSeqRuntimeBuffer + slotOff);
             entry = slotBase;
-            for (; j < 16; j++)
+            for (; j < OBJSEQ_LINKED_PAIRS_PER_SLOT; j++)
             {
                 if (entry->seqObj == NULL || entry->seqObj == activeObj)
                 {

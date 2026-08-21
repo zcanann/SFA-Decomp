@@ -1,5 +1,5 @@
 /*
- * DragonRock Palace statue. Its animation callback drives the effect
+ * Ocean Force Point Temple statue. Its animation callback drives the effect
  * GameBits from sequence events, while the object update keeps the statue's
  * looped sound alive and stops it once the sequence has completed.
  */

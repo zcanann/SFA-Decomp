@@ -33,7 +33,6 @@
 
 #define MMP_LEVEL_CONTROL_GAMEBIT_ENVIRONMENT_A 0xD47
 #define MMP_LEVEL_CONTROL_GAMEBIT_ENVIRONMENT_B 0xF33
-#define MMP_LEVEL_CONTROL_GAMEBIT_INIT_CLEAR    0xDCF
 #define MMP_LEVEL_CONTROL_GAMEBIT_MUSIC_LATCH_A 0x389
 
 #define MMP_LEVEL_CONTROL_MAP_ID        0x12
@@ -191,7 +190,7 @@ void mmpLevelControl_init(GameObject* obj) {
     Music_Trigger(MUSICTRIG_LVF_Tracking_f2, 0);
     Music_Trigger(MUSICTRIG_CRF_Swim, 0);
     Music_Trigger(MUSICTRIG_cldrnr_walkabout, 0);
-    mainSetBits(MMP_LEVEL_CONTROL_GAMEBIT_INIT_CLEAR, 0);
+    mainSetBits(GAMEBIT_VFP_MusicLatch, 0);
 }
 
 void mmpLevelControl_release(void) {

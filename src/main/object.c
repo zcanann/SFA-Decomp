@@ -728,7 +728,7 @@ void objSetSlot(GameObject* obj, s8 slot)
 {
     if (slot == 0x5a)
     {
-        if ((obj->anim.modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0)
+        if ((obj->anim.modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP) == 0)
         {
             return;
         }
@@ -914,7 +914,7 @@ static void objFreeObjdef(u8* obj, int flag)
     }
     gTitleMenuControlInterface->vtable->func15(obj);
     (*gExpgfxInterface)->freeOwner3((u32)(GameObject*)obj);
-    if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
+    if (((ObjAnimComponent*)obj)->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP)
     {
         objFreeObjectType((GameObject*)obj, OBJECT_OBJGROUP_HITBOX);
         if (flag == 0)
@@ -1685,7 +1685,7 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
         break;
     }
     size += extra;
-    if ((flags & 0x40) || (modelDef->flags & 0x400000))
+    if ((flags & 0x40) || (modelDef->flags & OBJDEF_FLAG_HAS_EVENT))
     {
         size = roundUpTo8(roundUpTo4(size) + sizeof(ObjAnimEventTable)) + 0x50;
     }
@@ -1774,10 +1774,10 @@ void Obj_RegisterObject(GameObject* obj, int flags)
     {
         mapLoadForObject(id, obj);
     }
-    if (object->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE)
+    if (object->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP)
     {
         objAddObjectType(obj, OBJECT_OBJGROUP_HITBOX);
-        if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
+        if (object->activeHitboxMode != 0x5a && (object->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP))
         {
             object->activeHitboxMode = 0x5a;
         }
@@ -1877,11 +1877,11 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.anim.classId = modelDef->category;
     tmpl.anim.rootMotionScale = modelDef->rootMotionScaleBase;
     tmpl.anim.flags = 2;
-    if (modelDef->flags & 0x80)
+    if (modelDef->flags & OBJDEF_FLAG_TRANSLUCENT)
     {
         tmpl.anim.flags = tmpl.anim.flags | 0x80;
     }
-    if (modelDef->flags & 0x40000)
+    if (modelDef->flags & OBJDEF_FLAG_FORCE_ALPHA_SORT)
     {
         tmpl.objectFlags = tmpl.objectFlags | 0x80;
     }
@@ -1938,7 +1938,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         }
         break;
     }
-    if (modelDef->flags & 0x20)
+    if (modelDef->flags & OBJDEF_FLAG_RELATED_TO_MODELS)
     {
         loadFlags = fnFlags & ~1;
     }
@@ -2082,7 +2082,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     {
         obj->extra = NULL;
     }
-    if ((loadFlags & OBJLOAD_FLAG_ANIM_EVENTS) || (obj->anim.modelInstance->flags & 0x400000))
+    if ((loadFlags & OBJLOAD_FLAG_ANIM_EVENTS) || (obj->anim.modelInstance->flags & OBJDEF_FLAG_HAS_EVENT))
     {
         seq2[0] = obj->anim.romDefNo;
         alignedCursor = roundUpTo4(cursor);
@@ -2278,43 +2278,32 @@ int ObjList_PartitionForRender(int* out)
 
     *out = gObjCount;
     i = gObjPartitionPivot;
-    if (i != 0)
-    {
+    if (i != 0) {
         return i;
     }
     i = 0;
     j = gObjCount - 1;
     hi = j;
-    while (i <= j)
-    {
+    while (i <= j) {
         int stop;
 
         stop = 0;
-        while (i <= hi && stop == 0)
-        {
-            if (((ObjAnimComponent*)gObjList[i])->modelInstance->flags & 1)
-            {
+        while (i <= hi && stop == 0) {
+            if (((ObjAnimComponent*)gObjList[i])->modelInstance->flags & OBJDEF_FLAG_HAS_MODELS) {
                 i++;
-            }
-            else
-            {
+            } else {
                 stop = -1;
             }
         }
         stop = 0;
-        while (j >= 0 && stop == 0)
-        {
-            if (!(((ObjAnimComponent*)gObjList[j])->modelInstance->flags & 1))
-            {
+        while (j >= 0 && stop == 0) {
+            if (!(((ObjAnimComponent*)gObjList[j])->modelInstance->flags & OBJDEF_FLAG_HAS_MODELS)) {
                 j--;
-            }
-            else
-            {
+            } else {
                 stop = -1;
             }
         }
-        if (i < j)
-        {
+        if (i < j) {
             swapObj = gObjList[i];
             gObjList[i] = gObjList[j];
             gObjList[j] = swapObj;
@@ -2476,7 +2465,7 @@ void Obj_UpdateAllObjects(u8 flags)
         Obj_UpdateObject((GameObject*)obj);
         obj = *(int*)(obj + off);
     }
-    while (obj != 0 && (((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE))
+    while (obj != 0 && (((ObjAnimComponent*)obj)->modelInstance->flags & OBJDEF_FLAG_HITBOX_GROUP))
     {
         Obj_UpdateObject((GameObject*)obj);
         ((GameObject*)obj)->anim.transformMatrixIndex = Obj_BuildTransformMatrixSlot((GameObject*)obj);

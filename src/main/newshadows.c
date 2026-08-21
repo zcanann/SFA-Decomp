@@ -604,10 +604,10 @@ void renderObjectShadowTexture(GameObject* obj)
     obj->anim.modelState->shadowOffsetY -= 64.0f * obj->anim.modelState->shadowScale;
 }
 
-static void sortShadowEntriesDescending(ShadowSortEntry* arr, int count) {
+static void sortShadowEntriesDescending(NewShadowCaster* arr, int count) {
     int gap = 1;
     int i, j;
-    ShadowSortEntry tmp;
+    NewShadowCaster tmp;
     int limit = (count - 1) / 9;
     while (gap <= limit) {
         gap = gap * 3 + 1;
@@ -616,7 +616,7 @@ static void sortShadowEntriesDescending(ShadowSortEntry* arr, int count) {
         for (i = gap + 1; i <= count; i++) {
             tmp = arr[i - 1];
             j = i;
-            while (j > gap && arr[j - gap - 1].dist < tmp.dist) {
+            while (j > gap && arr[j - gap - 1].scale < tmp.scale) {
                 arr[j - 1] = arr[j - gap - 1];
                 j -= gap;
             }
@@ -660,7 +660,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     if (gNewShadowCasterCount == 0)
         return;
     CameraShake_Disable();
-    sortShadowEntriesDescending((ShadowSortEntry*)shadowData->casters, gNewShadowCasterCount);
+    sortShadowEntriesDescending(shadowData->casters, gNewShadowCasterCount);
     Camera_SetCurrentViewIndex(1);
     slot = Camera_GetCurrent();
     savedFovY = Camera_GetFovY();
@@ -696,7 +696,7 @@ void renderShadows(int unused0, int unused1, int unused2)
         Camera_SetCurrentViewIndex(1);
         if (alpha <= 4)
             continue;
-        if ((modelState->flags & 0x20) != 0)
+        if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) != 0)
         {
             memcpy(mc48, &obj->anim.localPos, sizeof(Vec3f));
             memcpy(mc54p, &obj->anim.worldPos, sizeof(Vec3f));
@@ -890,7 +890,7 @@ void renderShadows(int unused0, int unused1, int unused2)
             obj->anim.modelState->shadowCastSlot = castSlot;
         }
         slotIdx++;
-        if ((modelState->flags & 0x20) != 0)
+        if ((modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) != 0)
         {
             memcpy(&obj->anim.localPos, mc48, sizeof(Vec3f));
             memcpy(&obj->anim.worldPos, mc54p, sizeof(Vec3f));
@@ -1385,7 +1385,7 @@ void newShadowsInitProceduralTextures(void)
     int placedCount;
     int frame;
 
-    savedHeap = mmSetDelay(1);
+    savedHeap = mmSetForceHeap3Only(1);
     placedCount = 0;
     placementAttempts = 0;
     placement = gNewShadowPlacements;
@@ -1507,7 +1507,7 @@ void newShadowsInitProceduralTextures(void)
 
     gNewShadowReflectionScrollX = 0.0f;
     gNewShadowReflectionScrollY = 0.0f;
-    mmSetDelay(savedHeap);
+    mmSetForceHeap3Only(savedHeap);
 }
 
 
@@ -1783,7 +1783,7 @@ void allocLotsOfTextures(void)
     f32 v;
     int bumpRowOff;
 
-    u8 saved = mmSetDelay(1);
+    u8 saved = mmSetForceHeap3Only(1);
 
     renderTargets[0] = textureAlloc(0x100, 0x100, 0, 0, 0, 0, 0, 1, 1);
     renderTargets[1] = textureAlloc(0x100, 0x100, 1, 0, 0, 0, 0, 0, 0);
@@ -2055,7 +2055,7 @@ void allocLotsOfTextures(void)
         }
     }
     GXInvalidateTexAll();
-    mmSetDelay(saved);
+    mmSetForceHeap3Only(saved);
 }
 
 int surfaceSfxSelectTrigger(u8 a, u8 b)

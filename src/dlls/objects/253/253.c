@@ -16,7 +16,6 @@
 #define DLL_FD_TARGET_SEARCH_RADIUS 1e+02f
 
 #define DLL_FD_TARGET_INTERACT_FLAG  0x20
-#define DLL_FD_MODEL_HIT_DETECT_FLAG 0x1
 #define DLL_FD_NO_GAME_BIT           -1
 #define DLL_FD_NO_EVENT              -1
 #define DLL_FD_NO_SEQUENCE           -1
@@ -40,7 +39,7 @@ void dll_FD_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int f
 }
 
 void dll_FD_hitDetect(GameObject* obj) {
-    if (((obj->anim.modelInstance->flags & DLL_FD_MODEL_HIT_DETECT_FLAG) != 0) &&
+    if (((obj->anim.modelInstance->flags & OBJDEF_FLAG_HAS_MODELS) != 0) &&
         (obj->anim.hitVolumeTransforms != NULL)) {
         objUpdateHitVolumeTransforms(obj);
     }

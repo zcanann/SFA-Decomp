@@ -4,8 +4,8 @@
 #include "game/objects/object.h"
 #include "main/dll/baddie_state.h"
 
-extern int gDBStealerWormStateHandlersA[];
-extern int gDBStealerWormStateHandlersB[];
+extern void* gDBStealerWormStateHandlersA[];
+extern void* gDBStealerWormStateHandlersB[];
 
 int dbstealerworm_stateHandlerA00(GameObject* obj, BaddieState* baddie);
 int dbstealerworm_stateHandlerA01(GameObject* obj, BaddieState* baddie);
@@ -22,7 +22,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, BaddieState* baddie, f32 t);
 int dbstealerworm_stateHandlerA0C(GameObject* obj, BaddieState* baddie, f32 t);
 int dbstealerworm_stateHandlerA0D(GameObject* obj, BaddieState* baddie);
 int dbstealerworm_stateHandlerA0E(GameObject* obj, BaddieState* baddie);
-int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t);
+int dbstealerworm_stateHandlerA0F(GameObject* obj, BaddieState* baddie, f32 t);
 int dbstealerworm_stateHandlerB00(GameObject* obj, BaddieState* baddie);
 int dbstealerworm_stateHandlerB01(GameObject* obj, BaddieState* baddie);
 int dbstealerworm_stateHandlerB02(GameObject* obj, BaddieState* baddie);

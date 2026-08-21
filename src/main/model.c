@@ -56,7 +56,7 @@ void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
         u8 *hp;                                                                       \
                                                                                       \
         v = (u32)(SLOT);                                                              \
-        idx = **(s16 **)(hdr + 0x6c);                                                 \
+        idx = *(s16 *)((ModelFileHeader *)hdr)->animationHeaderBuffer;                \
         if ((getLoadedFileFlags(0) & 0x100000) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
             *(u16 *)(hdr + 4) == 3) {                                                 \
             if (v == 0) {                                                             \

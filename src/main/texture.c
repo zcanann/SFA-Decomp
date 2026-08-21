@@ -117,7 +117,7 @@ void texRestructRefs(int mode)
     OSReport(strs + 0x1164);
     printHeapStats(1);
     OSReport(strs + 0x1194);
-    mmSetDelay2(1);
+    mmSetForceHeaps1and2Only(1);
     for (i = 0; i < gLoadedTextureCount; i++)
     {
         tex = gLoadedTextures[i].texture;
@@ -145,7 +145,7 @@ void texRestructRefs(int mode)
             }
         }
     }
-    mmSetDelay2(-1);
+    mmSetForceHeaps1and2Only(-1);
     OSReport(strs + 0x1238);
     printHeapStats(1);
     defragMemory(2);

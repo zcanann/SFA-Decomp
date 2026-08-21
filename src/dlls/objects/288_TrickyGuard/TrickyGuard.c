@@ -66,10 +66,9 @@ void TrickyGuardSpot_update(GameObject* obj) {
 
 void TrickyGuardSpot_init(GameObject* obj, TrickyGuardSpotPlacement* placement) {
     TrickyGuardSpotState* state = obj->extra;
-
     objAddObjectType(obj, TRICKY_GUARD_SPOT_GROUP);
-    state->guardTimer = placement->guardDurationSeconds * TRICKY_GUARD_SPOT_FRAMES_PER_SECOND;
-    obj->anim.rotX = (s16)(s32)placement->rotationX;
+    state->guardTimer = placement->guardDurationSeconds * 60;
+    obj->anim.rotX = placement->rotationX;
 }
 
 ObjectDescriptor gTrickyGuardSpotObjDescriptor = {

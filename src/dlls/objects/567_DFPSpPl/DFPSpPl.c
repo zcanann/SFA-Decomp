@@ -1,5 +1,5 @@
 /*
- * DragonRock Palace spellstone placement. It remains enabled while its
+ * Ocean Force Point Temple spellstone placement. It remains enabled while its
  * activation GameBit is set; when the placement sequence completes it sets
  * the completion GameBit, clears the activation bit, and disables itself.
  */

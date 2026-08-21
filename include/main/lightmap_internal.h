@@ -13,18 +13,20 @@ typedef struct EnvironmentUpdateInterface
 
 extern EnvironmentUpdateInterface** gEnvironmentUpdateInterface;
 
+/*
+ * One 0x10-stride row of gLightmapDrawQueue, the render/shadow queue shared by
+ * lightmap.c, lightmap_draw.c and tex_dolphin.c. lightmap_draw.c sorts the rows
+ * by key; mapBlockRender_callList writes type (4/5 = object shadow,
+ * 6 = indirect lightmap) into the row it queues, and lightmap.c writes the
+ * object-shadow kinds 0..3 and 7 into the same field.
+ */
 typedef struct
 {
     u32 a;
     u32 b;
     u32 key;
-    u32 d;
+    u32 type;
 } LightSortEntry;
-
-typedef struct
-{
-    u32 a, b, c, d;
-} LightmapQEnt;
 
 typedef struct MapLayerBuffers
 {

@@ -195,8 +195,10 @@ void VFP_LevelControl_update(GameObject* obj)
         break;
     }
 
-    GameBitLatch_Update((GameBitLatchState*)state->latch.raw, 1, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_A);
-    GameBitLatch_Update((GameBitLatchState*)state->latch.raw, 2, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_B);
+    GameBitLatch_Update((GameBitLatchState*)state->latch.raw, 1, -1, -1, GAMEBIT_VFP_MusicLatch,
+                        VFP_MUSIC_A);
+    GameBitLatch_Update((GameBitLatchState*)state->latch.raw, 2, -1, -1, GAMEBIT_VFP_MusicLatch,
+                        VFP_MUSIC_B);
 }
 
 void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup)
@@ -220,7 +222,7 @@ void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup)
     state->unk02[5] = 0;
     obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
     Rcp_EnableHeatEffect();
-    mainSetBits(GAMEBIT_VFP_LATCH, 1);
+    mainSetBits(GAMEBIT_VFP_MusicLatch, 1);
     unlockLevel(0, 0, 1);
     if (mainGetBit(GAMEBIT_VFP_SEQ_DONE) != 0)
     {

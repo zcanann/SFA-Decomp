@@ -46,10 +46,10 @@ int gMmRegion0Size;
 int gMmOpCount;
 u8 gMmTextureAllocationState;
 int gMmNextAllocId;
-int mmDelay; //when not zero, force using heap 3 only
+int gMmForceHeap3Only; //when not zero, force using heap 3 only
 
 int gMmRegion0SpawnEnabled = 1;
-int mmDelay2 = -1; //when == 1, force using heaps 1 and 2 only (for texture reregion)
+int gMmForceHeaps1and2Only = -1; //when == 1, force using heaps 1 and 2 only (for texture reregion)
 char sMmStoreAllocationTag[] = "mmStore";
 
 typedef struct MmRegion
@@ -297,24 +297,24 @@ int mmCreateMemoryStore(int size)
     return store->handle;
 }
 
-int mmSetDelay2(int v)
+int mmSetForceHeaps1and2Only(int v)
 {
     gMmOpCount++;
     {
-        int old = mmDelay2;
-        mmDelay2 = v;
+        int old = gMmForceHeaps1and2Only;
+        gMmForceHeaps1and2Only = v;
         return old;
     }
 }
 
 extern MmRegion gMmRegionTable[MM_REGION_CAPACITY];
 
-int mmSetDelay(int v)
+int mmSetForceHeap3Only(int v)
 {
     gMmOpCount++;
     {
-        int old = mmDelay;
-        mmDelay = v;
+        int old = gMmForceHeap3Only;
+        gMmForceHeap3Only = v;
         return old;
     }
 }
@@ -895,7 +895,7 @@ void* mmAlloc(int size, int type, int flag)
     ok = 1;
     for (i = 0; ok && i < 100; i++)
     {
-        if (mmDelay2 == 1)
+        if (gMmForceHeaps1and2Only == 1)
         {
             //texture reregion happening. prefer heap 1, fall back to 2.
             result = (void*)mmAllocFromRegion(1, size, type, flag);
@@ -908,7 +908,7 @@ void* mmAlloc(int size, int type, int flag)
                 return result;
             }
         }
-        else if (mmDelay != 0)
+        else if (gMmForceHeap3Only != 0)
         {
             result = (void*)mmAllocFromRegion(3, size, type, flag);
             if (result == 0)
@@ -1065,10 +1065,10 @@ void* stackCreate(int count, int size)
     u8* next;
     int n;
 
-    n = mmSetDelay2(2);
+    n = mmSetForceHeaps1and2Only(2);
     prev = n;
     stack = mmAlloc(size * count + sizeof(StackPool), 0x11, 0);
-    mmSetDelay2(prev);
+    mmSetForceHeaps1and2Only(prev);
     stack->itemSize = size;
     stack->itemCount = count;
     stack->usedCount = 0;

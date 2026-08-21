@@ -674,7 +674,7 @@ void defragMemory(int mode)
         char* p4;
         void* n;
         int i;
-        mmSetDelay2(1);
+        mmSetForceHeaps1and2Only(1);
         i = 0;
         {
             char* hi = (char*)base + 0x20000;
@@ -746,7 +746,7 @@ void defragMemory(int mode)
             p4 += 1;
             i++;
         } while (i <= 0x57);
-        mmSetDelay2(-1);
+        mmSetForceHeaps1and2Only(-1);
     }
     base = (u8*)((char*)base + 0x20000);
     while (done == 0 && pass < 10)
@@ -5240,10 +5240,10 @@ u8 initLoadFiles(void)
         if (((gAssetLoadInFlightFlags & 0x100) == 0 || (gAssetLoadInFlightFlags & 0x400) == 0) &&
             ((gAssetLoadCompletedFlags & 0x100) == 0 || (gAssetLoadCompletedFlags & 0x400) == 0))
         {
-            int saved = mmSetDelay(0);
+            int saved = mmSetForceHeap3Only(0);
             mapLoadDataFile(5, MLDF_FILEID_TEX0_BIN_A);
             mapLoadDataFile(5, MLDF_FILEID_TEX0_TAB_A);
-            mmSetDelay(saved);
+            mmSetForceHeap3Only(saved);
         }
         else if ((gAssetLoadCompletedFlags & 0x100) != 0 && (gAssetLoadCompletedFlags & 0x400) != 0)
         {

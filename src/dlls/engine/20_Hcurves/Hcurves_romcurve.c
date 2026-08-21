@@ -653,7 +653,7 @@ void RomCurve_setNextNode(void* walker, void* curve)
 {
     RomCurveWalker* state = walker;
     f32 t;
-    if (curve != 0 && (u32)curve != (u32)state->nodeA4)
+    if (curve != 0 && curve != state->nodeA4)
     {
         state->nodeA4 = curve;
         state->hermX2[1] = ((RomCurveDef*)state->nodeA4)->x;

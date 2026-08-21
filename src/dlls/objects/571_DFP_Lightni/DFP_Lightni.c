@@ -59,7 +59,7 @@ void DFP_Lightni_render(GameObject* obj)
         state = dfplightni_getState(obj);
         if (state->timer >= DFPLIGHTNI_TIMER_MAX)
         {
-            eventActive = mainGetBit(DFPLIGHTNI_EVENT_TIMER_GAMEBIT);
+            eventActive = mainGetBit(DFPLIGHTNI_ZAPPED_PLAYER_GAMEBIT);
             if (state->effectHandle != 0)
             {
                 lightningRender(state->effectHandle);
@@ -141,7 +141,7 @@ void DFP_Lightni_update(GameObject* obj)
                 }
                 radiusX = state->radiusX;
                 radiusY = state->radiusY;
-                eventBlocked = mainGetBit(DFPLIGHTNI_BLOCKED_GAMEBIT);
+                eventBlocked = mainGetBit(DFPLIGHTNI_PUZZLE_COMPLETE_GAMEBIT);
                 if (eventBlocked == 0)
                 {
                     f32 clampX;

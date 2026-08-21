@@ -651,7 +651,7 @@ void SaveSelectScreen_render(int param)
                 gameTextAppendStr(gSaveSelectTextBuffers[slotIndex], gSaveSelectSlotTextIds[slotIndex]);
                 slotOffset += sizeof(FrontendSaveSlot);
                 slotIndex++;
-            } while (slotIndex < 3);
+            } while (slotIndex < FRONTEND_SAVE_SLOT_COUNT);
         }
         break;
     }

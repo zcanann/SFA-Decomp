@@ -26,7 +26,7 @@ void objSetOverrideColor(u8 red, u8 green, u8 blue);
 void objRenderModel(GameObject* obj);
 void objSetCurrentMatrix(MtxPtr mtx);
 void modelInitMtxs(ModelFileHeader* modelFile, ObjModel* model);
-void modelBuildPosNrmMtxs(u8* modelFile, int* model, f32* matrix, f32* matrix2);
+void modelBuildPosNrmMtxs(ModelFileHeader* modelFile, int* model, f32* matrix, f32* matrix2);
 int objMatrixToRotation(f32* matrix, s16* outX, s16* outY, s16* outZ);
 int objFuzzShellRenderCb(GameObject* obj, int* model, int renderOpIndex);
 int objFuzzRenderCb(GameObject* obj, ObjModel* model, int renderOpIndex);
