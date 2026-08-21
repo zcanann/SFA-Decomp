@@ -153,7 +153,8 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_FAST_MOVE_BLEND_SPEED 0.02f
 #define TRICKY_LAND_MOVE_BLEND_SPEED 0.005f
 #define TRICKY_TURN_MOVE_BLEND_SPEED 0.04f
-#define TRICKY_WATER_COOLDOWN_FRAMES 600.0f
+#define TRICKY_TIMER_600_FRAMES 600.0f
+#define TRICKY_WATER_COOLDOWN_FRAMES TRICKY_TIMER_600_FRAMES
 #define TRICKY_ROUTE_LOOKAHEAD_SCALE 1.5f
 #define TRICKY_ROUTE_REVERSE_STEP -2.0f
 #define TRICKY_YAW_STEP_RATE 512.0f
@@ -2221,7 +2222,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         state->speed = TRICKY_FOLLOW_MAX_SPEED;
                         trickyRequestMove(obj, 0x15, TRICKY_TINY_MOVE_BLEND_SPEED, 0x4000000);
                         state->movementState = TRICKY_MOVE_JUMP_PREP;
-                        state->voiceCooldown = 600.0f;
+                        state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case 5:
                         node = state->route.nodeA0;
@@ -2244,7 +2245,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPUP;
                         TRICKY_ADVANCE_ROUTE_TO_END(state);
-                        state->voiceCooldown = 600.0f;
+                        state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case 6:
                         node = state->route.nodeA0;
@@ -2263,7 +2264,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPDOWN;
                         TRICKY_ADVANCE_ROUTE_TO_END(state);
-                        state->voiceCooldown = 600.0f;
+                        state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case 2:
                     case 7:
@@ -2449,7 +2450,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->speed = TRICKY_FOLLOW_MAX_SPEED;
                 trickyRequestMove(obj, 0x15, TRICKY_TINY_MOVE_BLEND_SPEED, 0x4000000);
                 state->movementState = TRICKY_MOVE_JUMP_PREP;
-                state->voiceCooldown = 600.0f;
+                state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
         break;
@@ -2598,7 +2599,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPUP;
                 TRICKY_ADVANCE_ROUTE_TO_END(state);
-                state->voiceCooldown = 600.0f;
+                state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
         break;
@@ -2661,7 +2662,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPDOWN;
                 TRICKY_ADVANCE_ROUTE_TO_END(state);
-                state->voiceCooldown = 600.0f;
+                state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
         break;
@@ -2800,7 +2801,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         }
     }
     if ((state->stateFlags & 0x00100000) != 0) {
-        state->speed = 0.02f * timeDelta + state->speed;
+        state->speed = TRICKY_FAST_MOVE_BLEND_SPEED * timeDelta + state->speed;
         if (state->speed > TRICKY_FOLLOW_MAX_SPEED) {
             state->speed = TRICKY_FOLLOW_MAX_SPEED;
         }
@@ -5853,7 +5854,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
             Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
             objSoundStartTimed(obj, &sfxState->soundState, 0x29a, 0x100, -1, 0);
         }
-        state->sfxRepeatTimer = 600.0f;
+        state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
     if (state->child == NULL && Obj_IsLoadingLocked() != 0) {
         e = (u8*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
@@ -6056,7 +6057,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     if (*trickyState->progressPtr <= 3) {
         trickyRequestMove(obj, 0x14, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
         trickyState->substate = 3;
-        trickyState->sfxRepeatTimer = 600.0f;
+        trickyState->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
         return 1;
     }
     trickyState->idleTimer -= timeDelta;
@@ -6066,7 +6067,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
         if (*trickyState->progressPtr <= 7) {
             trickyRequestMove(obj, 0x14, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
             trickyState->substate = 3;
-            trickyState->sfxRepeatTimer = 600.0f;
+            trickyState->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
             return 1;
         }
         if (trickyState->cooldownA > 0.0f) {
@@ -6378,7 +6379,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                 objSoundStartTimed(obj, &sfxState->soundState, 0x34f, 0x500, -1, 0);
             }
         } else {
-            state->cooldownB.f += 600.0f;
+            state->cooldownB.f += TRICKY_TIMER_600_FRAMES;
             if (state->substate != 0xb) {
                 if (state->stateFlags & 0x10) {
                     if (state->cooldownB.f > 3000.0f) {
@@ -7909,8 +7910,8 @@ void Tricky_update(GameObject* obj) {
             trickyState->child->anim.flags = trickyState->child->anim.flags & ~0x4000;
         }
         if (trickyState->childPhaseTimer1 > 150.0f) {
-            if (trickyState->childPhaseTimer1 > 600.0f) {
-                trickyState->childPhaseTimer1 -= 600.0f;
+            if (trickyState->childPhaseTimer1 > TRICKY_TIMER_600_FRAMES) {
+                trickyState->childPhaseTimer1 -= TRICKY_TIMER_600_FRAMES;
             }
             trickyState->child->anim.flags = trickyState->child->anim.flags | 0x4000;
         }
