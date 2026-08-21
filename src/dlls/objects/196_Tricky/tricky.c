@@ -2259,7 +2259,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMP_RUNUP:
         trickyDebugPrint(debugStrings + 0x49c);
-        v = 0.05f * timeDelta + previousSpeed;
+        v = lbl_803E2420 * timeDelta + previousSpeed;
         state->speed = (v > 3.0f) ? 3.0f : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
             v = lbl_803E241C * timeDelta + previousSpeed;
@@ -2304,7 +2304,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             k = lbl_803E241C * timeDelta + previousSpeed;
             v = (k < v) ? v : k;
         } else {
-            k = 0.05f * timeDelta + previousSpeed;
+            k = lbl_803E2420 * timeDelta + previousSpeed;
             v = (k > v) ? v : k;
         }
         state->speed = v;
@@ -2397,7 +2397,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     }
     case TRICKY_MOVE_JUMPUP_RUNUP:
         trickyDebugPrint(debugStrings + 0x4c4);
-        v = 0.05f * timeDelta + previousSpeed;
+        v = lbl_803E2420 * timeDelta + previousSpeed;
         state->speed = (v > 3.0f) ? 3.0f : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
             v = lbl_803E241C * timeDelta + previousSpeed;
@@ -2462,7 +2462,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMPDOWN_RUNUP:
         trickyDebugPrint(debugStrings + 0x4e8);
-        v = 0.05f * timeDelta + previousSpeed;
+        v = lbl_803E2420 * timeDelta + previousSpeed;
         state->speed = (v > 3.0f) ? 3.0f : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
             v = lbl_803E241C * timeDelta + previousSpeed;
@@ -2552,7 +2552,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     f32* currentPathPoint;
     TrickyState* objectState;
 
-    stoppingDistance = 0.05f;
+    stoppingDistance = lbl_803E2420;
     projectedSpeed = state->speed;
     deltaTime = timeDelta;
     deceleration = lbl_803E241C * deltaTime;
@@ -2620,11 +2620,11 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
                 } else {
                     f32 step;
                     if (candidateSpeed > 3.0f) {
-                        step = 0.05f * timeDelta + curSpeed;
+                        step = lbl_803E2420 * timeDelta + curSpeed;
                         state->speed = (step > 3.0f) ? 3.0f : step;
                         return;
                     }
-                    step = 0.05f * timeDelta + curSpeed;
+                    step = lbl_803E2420 * timeDelta + curSpeed;
                     state->speed = (step > candidateSpeed) ? candidateSpeed : step;
                     return;
                 }
@@ -2640,7 +2640,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     }
     {
         f32 step = state->speed;
-        step = step + 0.05f * timeDelta;
+        step = step + lbl_803E2420 * timeDelta;
         state->speed = (step > 3.0f) ? 3.0f : step;
     }
 }
@@ -4223,7 +4223,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_GUARD_UP_FROM_GROWL:
         trickyDebugPrint(strBase + 0x6c8);
-        if (obj->anim.currentMoveProgress <= 0.05f) {
+        if (obj->anim.currentMoveProgress <= lbl_803E2420) {
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_RESET_FLAG_10;
             if (trickyGuardFindBaddieTarget(trickyState) == 0) {
                 newTarget = &trickyState->followObj->anim.worldPosX;
@@ -4648,7 +4648,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
                 speed = 1.2f;
             }
         } else {
-            speed += 0.05f * timeDelta;
+            speed += lbl_803E2420 * timeDelta;
             if (speed > 1.2f) {
                 speed = 1.2f;
             }
