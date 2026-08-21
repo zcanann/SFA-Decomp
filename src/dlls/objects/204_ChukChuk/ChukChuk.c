@@ -52,9 +52,11 @@ void chukChuk_spawnAimedIceBall(GameObject* obj) {
     GameObject* projectile;
     GameObject* player;
     f32 travelTime;
+    u8 canSetupObject;
 
     state = obj->extra;
-    if (Obj_CanSetupObject() != 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
         projectilePlacement = Obj_AllocObjectSetup(CHUKCHUK_ICEBALL_SETUP_SIZE, CHUKCHUK_CHILD_OBJ_ICEBALL);
         projectilePlacement->posX = obj->anim.localPosX;
         projectilePlacement->posY = 5.0f + obj->anim.localPosY;

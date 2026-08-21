@@ -156,6 +156,7 @@ void MikaBomb_init(GameObject* obj) {
     f32 groundDistance;
     ObjPlacement* shadowSetup;
     f32 zeroVelocity;
+    u8 canSetupObject;
 
     ObjHits_DisableObject(obj);
     obj->anim.alpha = 0xff;
@@ -168,7 +169,8 @@ void MikaBomb_init(GameObject* obj) {
     obj->anim.rotZ = 0;
     trackGetHeightAboveGround(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &groundDistance, 0);
     state->groundY = obj->anim.localPosY - groundDistance;
-    if (Obj_CanSetupObject() != 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0) {
         shadowSetup = Obj_AllocObjectSetup(MIKABOMB_SHADOW_SETUP_SIZE, MIKABOMB_CHILD_OBJ_SHADOW);
         shadowSetup->posX = obj->anim.localPosX;
         shadowSetup->posY = obj->anim.localPosY;

@@ -110,6 +110,7 @@ void animatedobj_update(GameObject* obj) {
     GameObject* other;
     int eventIndex;
     GameObject* child;
+    u8 canSetupObject;
 
     sequence = &((AnimatedObjState*)obj->extra)->sequence;
     placement = (AnimatedObjPlacement*)obj->anim.placementData;
@@ -149,7 +150,8 @@ void animatedobj_update(GameObject* obj) {
             for (eventIndex = 0; eventIndex < sequence->eventCount; eventIndex++) {
                 switch (sequence->eventIds[eventIndex]) {
                 case ANIMATEDOBJ_SEQEV_ATTACH_STAFF:
-                    if (Obj_CanSetupObject() != 0) {
+                    canSetupObject = Obj_CanSetupObject();
+                    if (canSetupObject > 0) {
                         child = objSetupObject(Obj_AllocObjectSetup(sizeof(ObjPlacement), ANIMATEDOBJ_CHILD_OBJ_STAFF),
                                                 4, -1, -1, NULL);
                         ObjLink_AttachChild(obj, child, 0);
