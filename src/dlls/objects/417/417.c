@@ -138,7 +138,12 @@ u8 gNwMammothStateFlags[NW_MAMMOTH_STATE_COUNT] = {0x04, 0x14, 0x14, 0x04, 0x14,
                                                    0x00, 0x29, 0x29, 0x28, 0x28, 0x28, 0x29, 0x29,
                                                    0x29, 0x29, 0x29, 0x04, 0x09, 0x03, 0x09, 0x00};
 int gNwMammothRescueBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
-int gNwMammothRescueBushClearedGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
+int gNwMammothRescueBushClearedGameBits[4] = {
+    GAMEBIT_NW_RescueBush1Cleared,
+    GAMEBIT_NW_RescueBush2Cleared,
+    GAMEBIT_NW_RescueBush3Cleared,
+    GAMEBIT_NW_RescueBush4Cleared,
+};
 
 ObjectDescriptor gNW_mammothObjDescriptor = {
     0,

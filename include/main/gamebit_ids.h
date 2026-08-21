@@ -1019,6 +1019,10 @@ enum GameBitId {
     GAMEBIT_TitleScreenRelated0F15 = 0xF15,              /* table 2; set at some point on file select */
     GAMEBIT_ArwingRelated0F16 = 0xF16,                   /* table 2; set in 1st Arwing level - if cleared, immediately sets again */
     GAMEBIT_SB_CanShootPropeller = 0xF1E,                /* table 0 */
+    GAMEBIT_NW_RescueBush1Cleared = 0xF22,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
+    GAMEBIT_NW_RescueBush2Cleared = 0xF23,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
+    GAMEBIT_NW_RescueBush3Cleared = 0xF24,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
+    GAMEBIT_NW_RescueBush4Cleared = 0xF25,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
     GAMEBIT_ITEM_CheatToken0_Used = 0xF34,               /* table 2; Display Credits */
     GAMEBIT_ITEM_CheatToken3_Used = 0xF35,               /* table 2; Dino Language */
     GAMEBIT_ITEM_CheatToken2_Used = 0xF36,               /* table 2; Music Test */
