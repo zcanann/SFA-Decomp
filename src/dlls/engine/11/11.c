@@ -567,7 +567,7 @@ void dll_0B_markSourceFrameUpdated(void) {
     }
 }
 
-void dll_0B_func0D(void* source) {
+void dll_0B_requestSourceRelease(void* source) {
     PartfxEffectState** arr = (PartfxEffectState**)gPartfxActiveEffects;
     int i;
     for (i = 0; i < PARTFX_ACTIVE_EFFECT_COUNT; i++) {
@@ -1613,7 +1613,7 @@ Dll0BDescriptorTable dll_0B_funcs = {{0x00000000,
                                       (u32)dll_0B_releaseHandle,
                                       (u32)dll_0B_nextSpawnGeneration,
                                       (u32)dll_0B_func0C,
-                                      (u32)dll_0B_func0D,
+                                      (u32)dll_0B_requestSourceRelease,
                                       (u32)dll_0B_markSourceFrameUpdated,
                                       (u32)dll_0B_beginSequence,
                                       (u32)dll_0B_resetSequenceSpawns,

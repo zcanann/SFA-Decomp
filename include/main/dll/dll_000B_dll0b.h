@@ -22,7 +22,7 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
 void dll_0B_releaseHandle(s16* p);
 void dll_0B_nextSpawnGeneration(void);
 void dll_0B_func0C(void* source, char value);
-void dll_0B_func0D(void* source);
+void dll_0B_requestSourceRelease(void* source);
 void dll_0B_markSourceFrameUpdated(void);
 void dll_0B_beginSequence(void* source, u8 mode, u8 flagByte, int word40, int word3C);
 void dll_0B_resetSequenceSpawns(void);

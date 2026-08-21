@@ -14,6 +14,8 @@ typedef s16 (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCoun
                                    void* colors, int textureAssetId, void* textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16* handle);
 typedef void (*ModgfxNextSpawnGenerationFn)(void);
+typedef void (*ModgfxSetSourceByte13BFn)(void* sourceObject, char value);
+typedef void (*ModgfxRequestSourceReleaseFn)(void* sourceObject);
 typedef void (*ModgfxBeginSequenceFn)(void* sourceObject, int sourceMode, int effectType, int word40, int word3C);
 typedef void (*ModgfxResetSequenceSpawnsFn)(void);
 typedef void (*ModgfxAddSequenceSpawnFn)(int modelOrResource, f32 posX, f32 posY, f32 posZ, s16 param14, void* param10);
@@ -37,7 +39,8 @@ typedef struct ModgfxInterface {
     ModgfxRenderEffectsFn renderEffects;
     ModgfxReleaseHandleFn releaseHandle;
     ModgfxNextSpawnGenerationFn nextSpawnGeneration;
-    u8 pad28[0x30 - 0x28];
+    ModgfxSetSourceByte13BFn setSourceByte13B;
+    ModgfxRequestSourceReleaseFn requestSourceRelease;
     ModgfxMarkSourceFrameUpdatedFn markSourceFrameUpdated;
     ModgfxBeginSequenceFn beginSequence;
     ModgfxResetSequenceSpawnsFn resetSequenceSpawns;
@@ -59,6 +62,8 @@ STATIC_ASSERT(offsetof(ModgfxInterface, detachSource) == 0x18);
 STATIC_ASSERT(offsetof(ModgfxInterface, renderEffects) == 0x1C);
 STATIC_ASSERT(offsetof(ModgfxInterface, releaseHandle) == 0x20);
 STATIC_ASSERT(offsetof(ModgfxInterface, nextSpawnGeneration) == 0x24);
+STATIC_ASSERT(offsetof(ModgfxInterface, setSourceByte13B) == 0x28);
+STATIC_ASSERT(offsetof(ModgfxInterface, requestSourceRelease) == 0x2C);
 STATIC_ASSERT(offsetof(ModgfxInterface, markSourceFrameUpdated) == 0x30);
 STATIC_ASSERT(offsetof(ModgfxInterface, beginSequence) == 0x34);
 STATIC_ASSERT(offsetof(ModgfxInterface, resetSequenceSpawns) == 0x38);
