@@ -139,11 +139,11 @@ const u16 gTrickySubstateSfxIdPairB[2] = {0x035C, 0x0361};
 const u16 gSkeetlaFootstepSfxIds01[2] = {0x0361, 0x0365};
 const u16 gSkeetlaFootstepSfxId2[1] = {0x0355};
 
-extern f32 gTrickyEventTimeSentinel;
-extern f32 gTrickyEventStaleSeconds;
-extern f32 gTrickyMaxDistance;
-extern f32 gTrickySpeedDecayStep;
-extern f32 gTrickySmallSpeedStep;
+#define gTrickyEventTimeSentinel (-100000.0f)
+#define gTrickyEventStaleSeconds (8.0f)
+#define gTrickyMaxDistance       (340282346638528859811704183484516925440.0f)
+#define gTrickySpeedDecayStep    (-0.15f)
+#define gTrickySmallSpeedStep    (0.05f)
 
 extern const char sTrickyShouldNeverStopCirclingError[];
 
@@ -548,12 +548,6 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
         state->stateFlags = state->stateFlags & ~(u64)TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     }
 }
-
-__declspec(section ".sdata2") f32 gTrickyEventTimeSentinel = -100000.0f;
-__declspec(section ".sdata2") f32 gTrickyEventStaleSeconds = 8.0f;
-__declspec(section ".sdata2") f32 gTrickyMaxDistance = 340282346638528859811704183484516925440.0f;
-__declspec(section ".sdata2") f32 gTrickySpeedDecayStep = -0.15f;
-__declspec(section ".sdata2") f32 gTrickySmallSpeedStep = 0.05f;
 
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     f32 bestPriorityDist;
