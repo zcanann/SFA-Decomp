@@ -3200,9 +3200,6 @@ typedef struct AnimObjD2DripSetup {
 
 void* trickyFindCirclingTarget(GameObject* obj, void* state);
 
-#define TRICKY_STATE_FLAG_800          0x800
-#define TRICKY_STATE_FLAG_1000         0x1000
-#define TRICKY_STATE_FLAG_8000000      0x8000000
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400LL
 #define TRICKY_STATE_RESET_FLAG_10     TRICKY_STATE_FLAG_COMMAND_ACTIVE
 #define TRICKY_STATE_RESET_FLAG_10000  TRICKY_STATE_FLAG_RECALL_REQUEST
@@ -3441,7 +3438,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         }
         if (obj->anim.currentMoveProgress > 0.3f) {
             if (Obj_IsLoadingLocked() != 0) {
-                state->stateFlags |= TRICKY_STATE_FLAG_800;
+                state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 {
                     int i = 0;
                     u8* p = (u8*)state;
@@ -3467,9 +3464,9 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         u32 fl;
         trickyDebugPrint(str + TRICKY_DBG_BADDIEALERT_FLAME);
         fl = state->stateFlags;
-        if (fl & TRICKY_STATE_FLAG_8000000) {
-            state->stateFlags = fl & ~(u64)TRICKY_STATE_FLAG_800;
-            state->stateFlags |= TRICKY_STATE_FLAG_1000;
+        if (fl & TRICKY_STATE_FLAG_MOVE_ADVANCING) {
+            state->stateFlags = fl & ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
+            state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
             {
                 u8* p;
                 int i = 0;
