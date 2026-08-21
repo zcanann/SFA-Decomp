@@ -227,13 +227,18 @@ typedef struct TrickyState {
         eyeAnimState; /* 0x378: head-aim / eye-blink record; lookAtPos is followObj's captured world position */
     u8 pad3A0[0x3A8 - 0x3A0];
     ObjSoundState soundState; /* 0x3A8: object-channel sound playback state */
-    f32 sparkPos0X;           /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
-    f32 sparkPos0Y;
-    f32 sparkPos0Z;
-    f32 sparkPos1X; /* spark particle emit point 1 */
-    f32 sparkPos1Y;
-    f32 sparkPos1Z;
-    u8 pad3F0[0x408 - 0x3F0];
+    union {
+        struct {
+            f32 sparkPos0X; /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
+            f32 sparkPos0Y;
+            f32 sparkPos0Z;
+            f32 sparkPos1X; /* spark particle emit point 1 */
+            f32 sparkPos1Y;
+            f32 sparkPos1Z;
+            u8 pad3F0[0x408 - 0x3F0];
+        };
+        Vec pathPointPositions[4]; /* ObjPath points 4..7 refreshed by Tricky_render */
+    };
     f32 renderPosX; /* copied to a child object's localPos during Tricky_render */
     f32 renderPosY;
     f32 renderPosZ;
@@ -388,6 +393,9 @@ STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, scratch704) == 0x704);

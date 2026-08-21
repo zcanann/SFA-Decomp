@@ -169,6 +169,12 @@ extern char sSidekickCommandDebugTextBlock[];
     (*(s8*)((base) + offsetof(TrickyState, commands[0].ttl)))
 #define TRICKY_FLAME_CHILD_FROM_STATE_BASE(base) \
     (*(GameObject**)((u8*)(base) + offsetof(TrickyState, flameChildren)))
+#define TRICKY_RENDER_PATH_POINT_X_OFFSET 0x3D8
+#define TRICKY_RENDER_PATH_POINT_Y_OFFSET 0x3DC
+#define TRICKY_RENDER_PATH_POINT_Z_OFFSET 0x3E0
+#define TRICKY_RENDER_PATH_POINT_X_FROM_STATE_BASE(base) ((float*)((base) + TRICKY_RENDER_PATH_POINT_X_OFFSET))
+#define TRICKY_RENDER_PATH_POINT_Y_FROM_STATE_BASE(base) ((float*)((base) + TRICKY_RENDER_PATH_POINT_Y_OFFSET))
+#define TRICKY_RENDER_PATH_POINT_Z_FROM_STATE_BASE(base) ((float*)((base) + TRICKY_RENDER_PATH_POINT_Z_OFFSET))
 
 /* The one partfx effect emitted along Tricky's queued impress path. */
 #define TRICKY_PATH_PARTFX 0x533
@@ -7100,8 +7106,9 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
         i = 0;
         pathPoint = (int)pathState;
         do {
-            ObjPath_GetPointWorldPosition(obj, i + 4, (float*)(pathPoint + 0x3d8), (float*)(pathPoint + 0x3dc),
-                                          (float*)(pathPoint + 0x3e0), 0);
+            ObjPath_GetPointWorldPosition(obj, i + 4, TRICKY_RENDER_PATH_POINT_X_FROM_STATE_BASE(pathPoint),
+                                          TRICKY_RENDER_PATH_POINT_Y_FROM_STATE_BASE(pathPoint),
+                                          TRICKY_RENDER_PATH_POINT_Z_FROM_STATE_BASE(pathPoint), 0);
             pathPoint = pathPoint + 0xc;
             i = i + 1;
         } while (i < 4);
