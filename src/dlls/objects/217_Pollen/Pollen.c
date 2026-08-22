@@ -126,16 +126,16 @@ void Pollen_update(GameObject* obj) {
     }
 }
 
-u8 Pollen_burst(GameObject* obj) {
+int Pollen_burst(GameObject* obj) {
     int burstCounter;
     PollenState* state;
     ObjPlacement* fragmentSetup;
     GameObject* fragment;
-    u8 loadingLocked;
+    int loadingLocked;
 
     state = obj->extra;
     loadingLocked = Obj_CanSetupObject();
-    if (loadingLocked == 0) {
+    if ((u8)loadingLocked == 0) {
         return loadingLocked;
     }
     burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;

@@ -5149,7 +5149,7 @@ main/rand.c:
 
 main/trig_float_helpers.c:
 	.text       start:0x80292DEC end:0x8029312C
-	.sdata2     start:0x803E7C18 end:0x803E7C1C
+	.sdata2     start:0x803E7C20 end:0x803E7C70
 
 main/math_8029312c.c:
 	.text       start:0x8029312C end:0x80293234

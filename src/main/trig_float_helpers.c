@@ -2,6 +2,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/trig_float_helpers.h"
 
+extern const float sFastReciprocalTwo;
 extern const float sAngleVec2FastSinLinear;
 extern const float sAngleVec2FastSinCubic;
 extern const float sAngleVec2FastCosBias;
@@ -27,8 +28,8 @@ float fastReciprocal(float value) {
     float reciprocal;
 
     reciprocal = __fres(value);
-    reciprocal *= 2.0f - value * reciprocal;
-    reciprocal *= 2.0f - value * reciprocal;
+    reciprocal *= sFastReciprocalTwo - value * reciprocal;
+    reciprocal *= sFastReciprocalTwo - value * reciprocal;
 
     return reciprocal;
 }

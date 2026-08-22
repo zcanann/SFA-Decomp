@@ -31,7 +31,7 @@ void Pollen_free(GameObject* obj);
 void Pollen_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible);
 void Pollen_hitDetect(GameObject* obj);
 void Pollen_update(GameObject* obj);
-u8 Pollen_burst(GameObject* obj);
+int Pollen_burst(GameObject* obj);
 void Pollen_init(GameObject* obj);
 void Pollen_release(void);
 void Pollen_initialise(void);
