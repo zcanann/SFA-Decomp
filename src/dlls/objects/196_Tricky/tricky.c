@@ -197,7 +197,6 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_AUDIO_EVENT_MIN_SPEED        0.2f
 #define TRICKY_AMBIENT_ACTIVITY_BASE        200.0f
 #define TRICKY_AMBIENT_WANDER_SCALE         0.1
-#define TRICKY_AVOIDANCE_BLEND_STEP_DIVISOR 8.0f
 #define TRICKY_POSITION_OFFSET_SCALE        0.1f
 #define TRICKY_PATH_SEARCH_BULK_STEPS       0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES        500
@@ -1795,6 +1794,10 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     }
 }
 
+const f32 gTrickyAvoidanceBlendStepScale[1] = {0.125f};
+
+#define TRICKY_AVOIDANCE_BLEND_STEP_SCALE (gTrickyAvoidanceBlendStepScale[0])
+
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance,
                                  f32 moveDistance) {
     f32 projection[3];
@@ -1863,7 +1866,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
         moveDistance = sqrtf(limitDistanceSq);
         {
             f32 blend = moveDistance - sqrtf(centerToEnd);
-            moveDistance = moveDistance - (blend / TRICKY_AVOIDANCE_BLEND_STEP_DIVISOR);
+            moveDistance = moveDistance - (blend * TRICKY_AVOIDANCE_BLEND_STEP_SCALE);
         }
     }
 
