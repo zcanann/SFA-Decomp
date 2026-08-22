@@ -1081,7 +1081,7 @@ void HighTop_hitDetect(GameObject* obj)
             (*gGameUIInterface)->airMeterShutdown();
             runtime->flagsC49.b7 = 0;
             mainSetBits(0x634, 0);
-            if (Obj_CanSetupObject() != 0)
+            if ((u8)Obj_CanSetupObject() != 0)
             {
                 HighTopDeathSpawn* spawn = (HighTopDeathSpawn*)Obj_AllocObjectSetup(0x2c, HIGHTOP_DEATH_SPAWN_OBJ_ID);
                 spawn->base.color[0] = 2;
