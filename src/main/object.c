@@ -23,6 +23,7 @@
 #include "main/mapEvent.h"
 #include "main/object_transform.h"
 #include "main/objHitReact.h"
+#include "main/objanim.h"
 #include "main/obj_contact.h"
 #include "main/objtype.h"
 #include "main/obj_list.h"
@@ -161,8 +162,7 @@ char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
 char sObjUnknownTypeUsingDummyObjectWarning[] =
     "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
 
-void Obj_RunInitCallback(GameObject* obj, int cb, int unused);
-void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
+void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused);
 
 void doNothing_afterRenderObject(void)
 {
@@ -1119,7 +1119,6 @@ static inline void Obj_FreeDeferredObjects(void)
 
 u8* loadObjectFile(int id)
 {
-    extern void* loadModLines(int idx, s16* outCount);
     int size;
     int base;
     ObjDef* buf;
@@ -1396,7 +1395,7 @@ void Obj_UpdateObject(GameObject* obj)
     }
 }
 
-void Obj_RunInitCallback(GameObject* obj, int cb, int unused)
+void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused)
 {
     s16 mode = obj->anim.romDefNo;
     switch (mode)
@@ -1734,7 +1733,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
 void Obj_RegisterObject(GameObject* obj, int flags)
 {
-    extern void Obj_RunInitCallback(GameObject* obj, void* cb, int unused);
     ObjAnimComponent* object;
     int id;
     int prev;
@@ -1818,7 +1816,6 @@ void Obj_RegisterObject(GameObject* obj, int flags)
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
-    extern void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
     int id;
     int offsets[20];
     void* models[20];
