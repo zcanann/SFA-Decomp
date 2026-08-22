@@ -2651,7 +2651,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     state->arcMoveProgress = (adj + k) / 24.0f;
                 } else {
                     k = (k - 6.0f) / (v - 12.0f);
-                    state->arcMoveProgress = k / TRICKY_FLOAT_TWO + TRICKY_FOLLOW_ARC_QUARTER_PROGRESS;
+                    state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + k * TRICKY_FOLLOW_ARC_HALF_PROGRESS;
                 }
             }
             Obj_SetParent(obj, NULL, 0);
