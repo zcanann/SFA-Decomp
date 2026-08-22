@@ -5,6 +5,47 @@
 #include "main/acosf_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
+extern const float sArcHalf;
+extern const float sArcZero;
+extern const float sArcHalfPiF;
+extern const float sArcTwo;
+extern const float sArcSinFastCoeff1;
+extern const float sArcSinFastCoeff3;
+extern const float sArcOneF;
+extern const double sArcHalfPiD;
+extern const float sArcPiF;
+extern const float sArcSinCoeff3;
+extern const float sArcSinCoeff5;
+extern const float sArcSinCoeff7;
+extern const float sArcSinCoeff9;
+extern const float sArcSinCoeff11;
+extern const double sArcPiD;
+extern const float sAtan2FastCoeff1;
+extern const float sAtan2FastCoeff3;
+extern const float sAtanFastCoeff1;
+extern const float sAtanFastCoeff3;
+extern const float sAtanFastCoeff5;
+extern const float sAtan2Coeff1;
+extern const float sAtan2Coeff3;
+extern const float sAtan2Coeff5;
+extern const float sAtan2Coeff7;
+extern const double sAtanCoeff1;
+extern const double sAtanCoeff3;
+extern const double sAtanCoeff5;
+extern const double sAtanCoeff7;
+extern const double sAtanCoeff9;
+extern const double sAtanCoeff11;
+extern const double sAtanCoeff13;
+extern const double sAtanCoeff15;
+extern const double sAtanCoeff17;
+extern const double sAtanCoeff19;
+extern const double sAtanCoeff21;
+extern const double sAtanCoeff23;
+extern const double sAtanCoeff25;
+extern const double sAtanCoeff27;
+extern const double sAtanCoeff29;
+extern const double sAtanCoeff31;
+extern const double sArcOneD;
 
 float asinf(float value) {
     float absoluteValue = __fabsf(value);
@@ -12,18 +53,18 @@ float asinf(float value) {
     float polynomial;
     float root;
 
-    if (absoluteValue <= 0.5f) {
+    if (absoluteValue <= sArcHalf) {
         reduced = value * value;
-        return value * (0.19452852f * reduced + 0.9981575f);
+        return value * (sArcSinFastCoeff3 * reduced + sArcSinFastCoeff1);
     }
 
-    reduced = 0.5f - 0.5f * absoluteValue;
+    reduced = sArcHalf - sArcHalf * absoluteValue;
     root = sqrtfHighPrecision(reduced);
-    polynomial = root * (0.19452852f * reduced + 0.9981575f);
-    if (value >= 0.0f) {
-        return 1.5707964f - 2.0f * polynomial;
+    polynomial = root * (sArcSinFastCoeff3 * reduced + sArcSinFastCoeff1);
+    if (value >= sArcZero) {
+        return sArcHalfPiF - sArcTwo * polynomial;
     }
-    return 2.0f * polynomial - 1.5707964f;
+    return sArcTwo * polynomial - sArcHalfPiF;
 }
 
 float acosf_fast(float value) {
@@ -32,18 +73,18 @@ float acosf_fast(float value) {
     float polynomial;
     float root;
 
-    if (absoluteValue <= 0.5f) {
+    if (absoluteValue <= sArcHalf) {
         reduced = value * value;
-        return 1.5707964f - value * (0.19452852f * reduced + 0.9981575f);
+        return sArcHalfPiF - value * (sArcSinFastCoeff3 * reduced + sArcSinFastCoeff1);
     }
 
-    reduced = 0.5f - 0.5f * absoluteValue;
+    reduced = sArcHalf - sArcHalf * absoluteValue;
     root = sqrtfHighPrecision(reduced);
-    polynomial = root * (0.19452852f * reduced + 0.9981575f);
-    if (value >= 0.0f) {
-        return 2.0f * polynomial;
+    polynomial = root * (sArcSinFastCoeff3 * reduced + sArcSinFastCoeff1);
+    if (value >= sArcZero) {
+        return sArcTwo * polynomial;
     }
-    return 3.1415927f - 2.0f * polynomial;
+    return sArcPiF - sArcTwo * polynomial;
 }
 
 float acosf(float value) {
@@ -52,21 +93,28 @@ float acosf(float value) {
     float polynomial;
     float root;
 
-    if (absoluteValue <= 0.5f) {
+    if (absoluteValue <= sArcHalf) {
         reduced = value * value;
-        return 1.5707964f - value * (reduced * (reduced * (reduced * (reduced * (0.044916496f * reduced + 0.022284873f) + 0.045945134f)
-                                      + 0.074900925f) + 0.16666986f) + 1.0f);
+        return sArcHalfPiF -
+               value *
+                   (reduced *
+                        (reduced * (reduced * (reduced * (sArcSinCoeff11 * reduced + sArcSinCoeff9) + sArcSinCoeff7) +
+                                    sArcSinCoeff5) +
+                         sArcSinCoeff3) +
+                    sArcOneF);
     }
 
-    reduced = 0.5f - 0.5f * absoluteValue;
+    reduced = sArcHalf - sArcHalf * absoluteValue;
     root = sqrtfHighPrecision(reduced);
-    polynomial = root
-        * (reduced * (reduced * (reduced * (reduced * (0.044916496f * reduced + 0.022284873f) + 0.045945134f) + 0.074900925f)
-            + 0.16666986f) + 1.0f);
-    if (value >= 0.0f) {
-        return 2.0f * polynomial;
+    polynomial =
+        root * (reduced * (reduced * (reduced * (reduced * (sArcSinCoeff11 * reduced + sArcSinCoeff9) + sArcSinCoeff7) +
+                                      sArcSinCoeff5) +
+                           sArcSinCoeff3) +
+                sArcOneF);
+    if (value >= sArcZero) {
+        return sArcTwo * polynomial;
     }
-    return 3.1415927f - 2.0f * polynomial;
+    return sArcPiF - sArcTwo * polynomial;
 }
 
 float atanf_fast(float value) {
@@ -77,17 +125,17 @@ float atanf_fast(float value) {
     float positiveResult;
     float negativeResult;
 
-    if (absoluteValue <= 1.0f) {
+    if (absoluteValue <= sArcOneF) {
         squared = value * value;
-        return value * (squared * (0.07803718f * squared + -0.28706065f) + 0.99494934f);
+        return value * (squared * (sAtanFastCoeff5 * squared + sAtanFastCoeff3) + sAtanFastCoeff1);
     }
 
     reciprocal = fastReciprocal(absoluteValue);
     squared = reciprocal * reciprocal;
-    polynomial = squared * (0.07803718f * squared + -0.28706065f) + 0.99494934f;
-    positiveResult = 1.5707964f - reciprocal * polynomial;
-    negativeResult = reciprocal * polynomial - 1.5707964f;
-    if (value >= 0.0f) {
+    polynomial = squared * (sAtanFastCoeff5 * squared + sAtanFastCoeff3) + sAtanFastCoeff1;
+    positiveResult = sArcHalfPiF - reciprocal * polynomial;
+    negativeResult = reciprocal * polynomial - sArcHalfPiF;
+    if (value >= sArcZero) {
         return positiveResult;
     }
     return negativeResult;
@@ -99,14 +147,39 @@ float atanf(float value) {
     double squared;
     float result;
 
-    if (absoluteValue <= 1.0f) {
+    if (absoluteValue <= sArcOneF) {
         squared = value * value;
-        return (float)(value * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (-0.00009545564651489258 * squared + 0.0008865618705749518) + -0.0038832764327526095)
-                                       + 0.010781633704900742) + -0.021653463803231715) + 0.034329998614266506)
-                                    + -0.04621516760962549) + 0.05642012785770931) + -0.06598304215265671)
-                                 + 0.0767790623192377) + -0.09088734552851294) + 0.11110886338281603)
-                              + -0.14285699432451082) + 0.19999999438016125) + -0.3333333332339238)
-                           + 0.9999999999994954));
+        return (
+            float)(value *
+                   (squared *
+                        (squared *
+                             (squared *
+                                  (squared *
+                                       (squared *
+                                            (squared *
+                                                 (squared *
+                                                      (squared *
+                                                           (squared *
+                                                                (squared *
+                                                                     (squared *
+                                                                          (squared *
+                                                                               (squared *
+                                                                                    (squared * (sAtanCoeff31 * squared +
+                                                                                                sAtanCoeff29) +
+                                                                                     sAtanCoeff27) +
+                                                                                sAtanCoeff25) +
+                                                                           sAtanCoeff23) +
+                                                                      sAtanCoeff21) +
+                                                                 sAtanCoeff19) +
+                                                            sAtanCoeff17) +
+                                                       sAtanCoeff15) +
+                                                  sAtanCoeff13) +
+                                             sAtanCoeff11) +
+                                        sAtanCoeff9) +
+                                   sAtanCoeff7) +
+                              sAtanCoeff5) +
+                         sAtanCoeff3) +
+                    sAtanCoeff1));
     }
 
     /* Unsequenced modification and access of `reduced`: undefined behaviour in C.
@@ -115,15 +188,40 @@ float atanf(float value) {
        and reduced to swapped FPRs (f30/f29) and breaks atanf. Compilers that evaluate the
        left operand first read `reduced` uninitialised and return NaN for every |value| > 1;
        non-MWCC consumers must patch this locally. */
-    squared = reduced * (reduced = 1.0 / absoluteValue);
-    result = (float)(1.5707963267948966
-                     - reduced * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (squared * (-0.00009545564651489258 * squared + 0.0008865618705749518) + -0.0038832764327526095)
-                                        + 0.010781633704900742) + -0.021653463803231715) + 0.034329998614266506)
-                                     + -0.04621516760962549) + 0.05642012785770931) + -0.06598304215265671)
-                                  + 0.0767790623192377) + -0.09088734552851294) + 0.11110886338281603)
-                               + -0.14285699432451082) + 0.19999999438016125) + -0.3333333332339238)
-                            + 0.9999999999994954));
-    if (value >= 0.0f) {
+    squared = reduced * (reduced = sArcOneD / absoluteValue);
+    result =
+        (float)(sArcHalfPiD -
+                reduced *
+                    (squared *
+                         (squared *
+                              (squared *
+                                   (squared *
+                                        (squared *
+                                             (squared *
+                                                  (squared *
+                                                       (squared *
+                                                            (squared *
+                                                                 (squared *
+                                                                      (squared *
+                                                                           (squared *
+                                                                                (squared * (squared * (sAtanCoeff31 *
+                                                                                                           squared +
+                                                                                                       sAtanCoeff29) +
+                                                                                            sAtanCoeff27) +
+                                                                                 sAtanCoeff25) +
+                                                                            sAtanCoeff23) +
+                                                                       sAtanCoeff21) +
+                                                                  sAtanCoeff19) +
+                                                             sAtanCoeff17) +
+                                                        sAtanCoeff15) +
+                                                   sAtanCoeff13) +
+                                              sAtanCoeff11) +
+                                         sAtanCoeff9) +
+                                    sAtanCoeff7) +
+                               sAtanCoeff5) +
+                          sAtanCoeff3) +
+                     sAtanCoeff1));
+    if (value >= sArcZero) {
         return result;
     }
     return -result;
@@ -138,8 +236,8 @@ typedef union FloatWord {
 #define ATAN_SIGNS_POS_X_NEG_Y 0x80000000
 #define ATAN_SIGNS_NEG_X_POS_Y 0x40000000
 
-static inline u32 float_bits(const float *value) {
-    return ((const FloatWord *)value)->bits;
+static inline u32 float_bits(const float* value) {
+    return ((const FloatWord*)value)->bits;
 }
 
 float atan2f_fast(float y, float x) {
@@ -153,24 +251,23 @@ float atan2f_fast(float y, float x) {
     if (absoluteX > absoluteY) {
         axisRatio = absoluteY / absoluteX;
         ratioSquared = axisRatio * axisRatio;
-        firstQuadrantAngle = axisRatio * (-0.18951416f * ratioSquared + 0.97056276f);
+        firstQuadrantAngle = axisRatio * (sAtan2FastCoeff3 * ratioSquared + sAtan2FastCoeff1);
     } else {
         axisRatio = absoluteX / absoluteY;
         ratioSquared = axisRatio * axisRatio;
-        firstQuadrantAngle = 1.5707964f - axisRatio * (-0.18951416f * ratioSquared + 0.97056276f);
+        firstQuadrantAngle = sArcHalfPiF - axisRatio * (sAtan2FastCoeff3 * ratioSquared + sAtan2FastCoeff1);
     }
 
-    quadrantSigns = (((const FloatWord*)&y)->bits & 0x80000000) |
-                    ((((const FloatWord*)&x)->bits & 0x80000000) >> 1);
+    quadrantSigns = (((const FloatWord*)&y)->bits & 0x80000000) | ((((const FloatWord*)&x)->bits & 0x80000000) >> 1);
     switch (quadrantSigns) {
-        case ATAN_SIGNS_POS_X_POS_Y:
-            return firstQuadrantAngle;
-        case ATAN_SIGNS_POS_X_NEG_Y:
-            return -firstQuadrantAngle;
-        case ATAN_SIGNS_NEG_X_POS_Y:
-            return 3.1415927f - firstQuadrantAngle;
-        default:
-            return firstQuadrantAngle - 3.1415927f;
+    case ATAN_SIGNS_POS_X_POS_Y:
+        return firstQuadrantAngle;
+    case ATAN_SIGNS_POS_X_NEG_Y:
+        return -firstQuadrantAngle;
+    case ATAN_SIGNS_NEG_X_POS_Y:
+        return sArcPiF - firstQuadrantAngle;
+    default:
+        return firstQuadrantAngle - sArcPiF;
     }
 }
 
@@ -185,23 +282,28 @@ float atan2f(float y, float x) {
     if (absoluteX > absoluteY) {
         axisRatio = absoluteY / absoluteX;
         ratioSquared = axisRatio * axisRatio;
-        firstQuadrantAngle = axisRatio * (ratioSquared * (ratioSquared * (-0.038254466f * ratioSquared + 0.14498249f) + -0.3205333f) + 0.99913347f);
+        firstQuadrantAngle =
+            axisRatio * (ratioSquared * (ratioSquared * (sAtan2Coeff7 * ratioSquared + sAtan2Coeff5) + sAtan2Coeff3) +
+                         sAtan2Coeff1);
     } else {
         axisRatio = absoluteX / absoluteY;
         ratioSquared = axisRatio * axisRatio;
-        firstQuadrantAngle = 1.5707964f - axisRatio * (ratioSquared * (ratioSquared * (-0.038254466f * ratioSquared + 0.14498249f) + -0.3205333f) + 0.99913347f);
+        firstQuadrantAngle =
+            sArcHalfPiF -
+            axisRatio * (ratioSquared * (ratioSquared * (sAtan2Coeff7 * ratioSquared + sAtan2Coeff5) + sAtan2Coeff3) +
+                         sAtan2Coeff1);
     }
 
     quadrantSigns = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
     switch (quadrantSigns) {
-        case ATAN_SIGNS_POS_X_POS_Y:
-            return firstQuadrantAngle;
-        case ATAN_SIGNS_POS_X_NEG_Y:
-            return -firstQuadrantAngle;
-        case ATAN_SIGNS_NEG_X_POS_Y:
-            return 3.1415927f - firstQuadrantAngle;
-        default:
-            return firstQuadrantAngle - 3.1415927f;
+    case ATAN_SIGNS_POS_X_POS_Y:
+        return firstQuadrantAngle;
+    case ATAN_SIGNS_POS_X_NEG_Y:
+        return -firstQuadrantAngle;
+    case ATAN_SIGNS_NEG_X_POS_Y:
+        return sArcPiF - firstQuadrantAngle;
+    default:
+        return firstQuadrantAngle - sArcPiF;
     }
 }
 
@@ -216,28 +318,127 @@ float atan2fHighPrecision(float y, float x) {
     if (absoluteX >= absoluteY) {
         axisRatio = absoluteY / absoluteX;
         ratioSquared = axisRatio * axisRatio;
-        firstQuadrantAngle = axisRatio * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (-0.00009545564651489258 * ratioSquared + 0.0008865618705749518) + -0.0038832764327526095) + 0.010781633704900742)
-                       + -0.021653463803231715) + 0.034329998614266506) + -0.04621516760962549) + 0.05642012785770931)
-                    + -0.06598304215265671) + 0.0767790623192377) + -0.09088734552851294) + 0.11110886338281603)
-                 + -0.14285699432451082) + 0.19999999438016125) + -0.3333333332339238) + 0.9999999999994954);
+        firstQuadrantAngle =
+            axisRatio *
+            (ratioSquared *
+                 (ratioSquared *
+                      (ratioSquared *
+                           (ratioSquared *
+                                (ratioSquared *
+                                     (ratioSquared *
+                                          (ratioSquared *
+                                               (ratioSquared *
+                                                    (ratioSquared *
+                                                         (ratioSquared *
+                                                              (ratioSquared *
+                                                                   (ratioSquared *
+                                                                        (ratioSquared *
+                                                                             (ratioSquared *
+                                                                                  (sAtanCoeff31 * ratioSquared +
+                                                                                   sAtanCoeff29) +
+                                                                              sAtanCoeff27) +
+                                                                         sAtanCoeff25) +
+                                                                    sAtanCoeff23) +
+                                                               sAtanCoeff21) +
+                                                          sAtanCoeff19) +
+                                                     sAtanCoeff17) +
+                                                sAtanCoeff15) +
+                                           sAtanCoeff13) +
+                                      sAtanCoeff11) +
+                                 sAtanCoeff9) +
+                            sAtanCoeff7) +
+                       sAtanCoeff5) +
+                  sAtanCoeff3) +
+             sAtanCoeff1);
     } else {
         axisRatio = absoluteX / absoluteY;
         ratioSquared = axisRatio * axisRatio;
-        firstQuadrantAngle = 1.5707963267948966 - axisRatio * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (ratioSquared * (-0.00009545564651489258 * ratioSquared + 0.0008865618705749518) + -0.0038832764327526095) + 0.010781633704900742)
-                       + -0.021653463803231715) + 0.034329998614266506) + -0.04621516760962549) + 0.05642012785770931)
-                    + -0.06598304215265671) + 0.0767790623192377) + -0.09088734552851294) + 0.11110886338281603)
-                 + -0.14285699432451082) + 0.19999999438016125) + -0.3333333332339238) + 0.9999999999994954);
+        firstQuadrantAngle =
+            sArcHalfPiD -
+            axisRatio *
+                (ratioSquared *
+                     (ratioSquared *
+                          (ratioSquared *
+                               (ratioSquared *
+                                    (ratioSquared *
+                                         (ratioSquared *
+                                              (ratioSquared *
+                                                   (ratioSquared *
+                                                        (ratioSquared *
+                                                             (ratioSquared *
+                                                                  (ratioSquared *
+                                                                       (ratioSquared *
+                                                                            (ratioSquared *
+                                                                                 (ratioSquared *
+                                                                                      (sAtanCoeff31 * ratioSquared +
+                                                                                       sAtanCoeff29) +
+                                                                                  sAtanCoeff27) +
+                                                                             sAtanCoeff25) +
+                                                                        sAtanCoeff23) +
+                                                                   sAtanCoeff21) +
+                                                              sAtanCoeff19) +
+                                                         sAtanCoeff17) +
+                                                    sAtanCoeff15) +
+                                               sAtanCoeff13) +
+                                          sAtanCoeff11) +
+                                     sAtanCoeff9) +
+                                sAtanCoeff7) +
+                           sAtanCoeff5) +
+                      sAtanCoeff3) +
+                 sAtanCoeff1);
     }
 
     quadrantSigns = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
     switch (quadrantSigns) {
-        case ATAN_SIGNS_POS_X_POS_Y:
-            return (float)firstQuadrantAngle;
-        case ATAN_SIGNS_POS_X_NEG_Y:
-            return (float)-firstQuadrantAngle;
-        case ATAN_SIGNS_NEG_X_POS_Y:
-            return (float)(3.141592653589793 - firstQuadrantAngle);
-        default:
-            return (float)(firstQuadrantAngle - 3.141592653589793);
+    case ATAN_SIGNS_POS_X_POS_Y:
+        return (float)firstQuadrantAngle;
+    case ATAN_SIGNS_POS_X_NEG_Y:
+        return (float)-firstQuadrantAngle;
+    case ATAN_SIGNS_NEG_X_POS_Y:
+        return (float)(sArcPiD - firstQuadrantAngle);
+    default:
+        return (float)(firstQuadrantAngle - sArcPiD);
     }
 }
+
+const float sArcHalf = 0.5f;
+const float sArcZero = 0.0f;
+const float sArcHalfPiF = 1.5707964f;
+const float sArcTwo = 2.0f;
+const float sArcSinFastCoeff1 = 0.9981575f;
+const float sArcSinFastCoeff3 = 0.19452852f;
+const float sArcOneF = 1.0f;
+const double sArcHalfPiD = 1.5707963267948966;
+const float sArcPiF = 3.1415927f;
+const float sArcSinCoeff3 = 0.16666986f;
+const float sArcSinCoeff5 = 0.074900925f;
+const float sArcSinCoeff7 = 0.045945134f;
+const float sArcSinCoeff9 = 0.022284873f;
+const float sArcSinCoeff11 = 0.044916496f;
+const double sArcPiD = 3.141592653589793;
+const float sAtan2FastCoeff1 = 0.97056276f;
+const float sAtan2FastCoeff3 = -0.18951416f;
+const float sAtanFastCoeff1 = 0.99494934f;
+const float sAtanFastCoeff3 = -0.28706065f;
+const float sAtanFastCoeff5 = 0.07803718f;
+const float sAtan2Coeff1 = 0.99913347f;
+const float sAtan2Coeff3 = -0.3205333f;
+const float sAtan2Coeff5 = 0.14498249f;
+const float sAtan2Coeff7 = -0.038254466f;
+const double sAtanCoeff1 = 0.9999999999994954;
+const double sAtanCoeff3 = -0.3333333332339238;
+const double sAtanCoeff5 = 0.19999999438016125;
+const double sAtanCoeff7 = -0.14285699432451082;
+const double sAtanCoeff9 = 0.11110886338281603;
+const double sAtanCoeff11 = -0.09088734552851294;
+const double sAtanCoeff13 = 0.0767790623192377;
+const double sAtanCoeff15 = -0.06598304215265671;
+const double sAtanCoeff17 = 0.05642012785770931;
+const double sAtanCoeff19 = -0.04621516760962549;
+const double sAtanCoeff21 = 0.034329998614266506;
+const double sAtanCoeff23 = -0.021653463803231715;
+const double sAtanCoeff25 = 0.010781633704900742;
+const double sAtanCoeff27 = -0.0038832764327526095;
+const double sAtanCoeff29 = 0.0008865618705749518;
+const double sAtanCoeff31 = -0.00009545564651489258;
+const double sArcOneD = 1.0;
