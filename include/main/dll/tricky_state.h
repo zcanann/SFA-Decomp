@@ -105,7 +105,7 @@ typedef struct TrickyState {
     u8 movementState;      /* TRICKY_MOVE_* path/jump phase selector */
     u8 substate;           /* per-state handler substate */
     u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with Call+Stay into the prompt mask, tested != 0, cleared to 0 (tricky) */
-    u8 unk0C;
+    u8 pad0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
     f32 prevSpeed;
@@ -165,7 +165,7 @@ typedef struct TrickyState {
     f32 nearestSpecialDeltaY;         /* signed dy to the nearest special-surface (type 0xe) floor hit */
     u8 pad1BC[0x25F - 0x1BC];
     s8 physicsActive; /* same actor-record slot as BaddieState.physicsActive (free-fall physics enable) */
-    u8 unk260;
+    u8 pad260;
     u8 bboxTraceFlags; /* same actor-record slot as BaddieState.bboxTraceFlags */
     u8 pad262[0x264 - 0x262];
     u8 surfaceFlags; /* TRICKY_SURFACE_FLAG_* (HAS_NEARBY_FLOOR etc.) */
@@ -207,7 +207,7 @@ typedef struct TrickyState {
     f32 base;
     f32 animPlaySpeed;
     f32 currentMoveProgress;
-    f32 unk310;
+    f32 pathSpeed; /* shared actor path-speed slot (EnemyState.pathSpeed); not read by Tricky */
     f32 moveSpeedScale0; /* animPlaySpeed = K / (K2 * scale) for moveId0 */
     f32 moveSpeedScale1; /* paired with moveId1 */
     f32 moveSpeedScale2; /* paired with moveId2 */
@@ -450,6 +450,9 @@ STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
+STATIC_ASSERT(offsetof(TrickyState, physicsActive) == 0x25F);
+STATIC_ASSERT(offsetof(TrickyState, bboxTraceFlags) == 0x261);
+STATIC_ASSERT(offsetof(TrickyState, pathSpeed) == 0x310);
 STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
