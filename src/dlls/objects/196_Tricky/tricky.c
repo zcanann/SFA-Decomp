@@ -895,15 +895,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     }
 
     if (((s8)state->heightUpdateActive != 0) && (state->heightTracking == 0u)) {
-        if (gTrickyFloatZero == state->waterLevel) {
-            doHeightSnap = 0;
-        } else if (gTrickyEventTimeSentinel == state->eventTime) {
-            doHeightSnap = 1;
-        } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-            doHeightSnap = 1;
-        } else {
-            doHeightSnap = 0;
-        }
+        doHeightSnap = skeetla_isInWater(state);
 
         if (doHeightSnap != 0) {
             obj->anim.velocityY = gTrickyFloatZero;
@@ -2971,15 +2963,7 @@ void tricky_stateGoToWarpPoint(GameObject* self, TrickyState* state) {
         }
     }
 
-    if (gTrickyFloatZero == state->waterLevel) {
-        inWater = 0;
-    } else if (gTrickyEventTimeSentinel == state->eventTime) {
-        inWater = 1;
-    } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-        inWater = 1;
-    } else {
-        inWater = 0;
-    }
+    inWater = skeetla_isInWater(state);
 
     if (inWater != 0) {
         trickyRequestMove(self, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
@@ -3602,15 +3586,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             }
             if (orbitMovementStatus != 1) {
                 int useSwimMove;
-                if (gTrickyFloatZero == state->waterLevel) {
-                    useSwimMove = 0;
-                } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                    useSwimMove = 1;
-                } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                    useSwimMove = 1;
-                } else {
-                    useSwimMove = 0;
-                }
+                useSwimMove = skeetla_isInWater(state);
                 if (useSwimMove != 0) {
                     trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -3763,15 +3739,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         if (sidekickBall_isHeldOrMoving(state->fetchBallObj) != 0) {
             status = trickyUpdateMovementState(obj, 13.0f, state);
             if (status == 0) {
-                if (gTrickyFloatZero == state->waterLevel) {
-                    useSwimAnim = 0;
-                } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                    useSwimAnim = 1;
-                } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                    useSwimAnim = 1;
-                } else {
-                    useSwimAnim = 0;
-                }
+                useSwimAnim = skeetla_isInWater(state);
                 if (useSwimAnim != 0) {
                     trickyRequestMove(obj, 28, 0.03f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 } else {
@@ -3801,15 +3769,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             status = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state);
             if (status == 0) {
                 if (state->fetchCarryDelayTimer > gTrickyFloatZero) {
-                    if (gTrickyFloatZero == state->waterLevel) {
-                        useSwimAnim = 0;
-                    } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                        useSwimAnim = 1;
-                    } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                        useSwimAnim = 1;
-                    } else {
-                        useSwimAnim = 0;
-                    }
+                    useSwimAnim = skeetla_isInWater(state);
                     if (useSwimAnim != 0) {
                         trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -3821,15 +3781,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     }
                     state->fetchCarryDelayTimer -= timeDelta;
                     if (state->fetchCarryDelayTimer <= gTrickyFloatZero) {
-                        if (gTrickyFloatZero == state->waterLevel) {
-                            useSwimAnim = 0;
-                        } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                            useSwimAnim = 1;
-                        } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                            useSwimAnim = 1;
-                        } else {
-                            useSwimAnim = 0;
-                        }
+                        useSwimAnim = skeetla_isInWater(state);
                         if (useSwimAnim != 0) {
                             state->fetchCarryDelayTimer = 180.0f;
                         } else {
@@ -3862,15 +3814,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     }
                 }
             } else {
-                if (gTrickyFloatZero == state->waterLevel) {
-                    useSwimAnim = 0;
-                } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                    useSwimAnim = 1;
-                } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                    useSwimAnim = 1;
-                } else {
-                    useSwimAnim = 0;
-                }
+                useSwimAnim = skeetla_isInWater(state);
                 if (useSwimAnim != 0) {
                     trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -3925,15 +3869,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
     case 7:
         status = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state);
         if (status != 1) {
-            if (gTrickyFloatZero == state->waterLevel) {
-                useSwimAnim = 0;
-            } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                useSwimAnim = 1;
-            } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                useSwimAnim = 1;
-            } else {
-                useSwimAnim = 0;
-            }
+            useSwimAnim = skeetla_isInWater(state);
             if (useSwimAnim != 0) {
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -3971,15 +3907,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             state->substate = 5;
         case 5:
             if (trickyUpdateMovementState(obj, 30.0f, state) == 0) {
-                if (gTrickyFloatZero == state->waterLevel) {
-                    useSwimAnim = 0;
-                } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                    useSwimAnim = 1;
-                } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                    useSwimAnim = 1;
-                } else {
-                    useSwimAnim = 0;
-                }
+                useSwimAnim = skeetla_isInWater(state);
                 if (useSwimAnim != 0) {
                     trickyRequestMove(obj, 29, 0.03f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 } else {
@@ -4019,15 +3947,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
                     }
                 }
             }
-            if (gTrickyFloatZero == state->waterLevel) {
-                inWater = 0;
-            } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                inWater = 1;
-            } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                inWater = 1;
-            } else {
-                inWater = 0;
-            }
+            inWater = skeetla_isInWater(state);
             if (inWater != 0) {
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4103,15 +4023,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
             state->tumbleweedTargetY = trackedObj->anim.worldPosY;
             state->tumbleweedTargetZ = -(distance * dz - trackedObj->anim.worldPosZ);
             if (trickyUpdateMovementState(obj, 5.0f, state) == 0) {
-                if (gTrickyFloatZero == state->waterLevel) {
-                    inWater = 0;
-                } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                    inWater = 1;
-                } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                    inWater = 1;
-                } else {
-                    inWater = 0;
-                }
+                inWater = skeetla_isInWater(state);
                 if (inWater != 0) {
                     trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4140,15 +4052,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
 
     result = trickyUpdateMovementState(obj, TRICKY_ANIM_TRANSITION_FRAMES, state);
     if (result == 0) {
-        if (gTrickyFloatZero == state->waterLevel) {
-            inWater = 0;
-        } else if (gTrickyEventTimeSentinel == state->eventTime) {
-            inWater = 1;
-        } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-            inWater = 1;
-        } else {
-            inWater = 0;
-        }
+        inWater = skeetla_isInWater(state);
         if (inWater != 0) {
             trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
             state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -5202,15 +5106,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         pos = (u8*)&((RomCurveDef*)state->scratch704.ptr)->x;
         trickyUpdateApproachSpeed(obj, 5.0f, state, (f32*)pos, 1);
         if (moveTricky(obj, (f32*)pos) == 0) {
-            if (gTrickyFloatZero == state->waterLevel) {
-                inWater = 0;
-            } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                inWater = 1;
-            } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                inWater = 1;
-            } else {
-                inWater = 0;
-            }
+            inWater = skeetla_isInWater(state);
             if (inWater != 0) {
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -5431,15 +5327,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                             objSoundStartTimed(obj, &sfxState->soundState, 0x360, 0x500, -1, 0);
                         }
                     }
-                    if (gTrickyFloatZero == state->waterLevel) {
-                        inWater = 0;
-                    } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                        inWater = 1;
-                    } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                        inWater = 1;
-                    } else {
-                        inWater = 0;
-                    }
+                    inWater = skeetla_isInWater(state);
                     if (inWater != 0) {
                         trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -5512,15 +5400,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         {
             if (((int (**)(GameObject*, TrickyState*))(base + TRICKY_SUBSTATE_HANDLER_TABLE_OFFSET))[state->substate](
                     obj, state) == 0) {
-                if (gTrickyFloatZero == state->waterLevel) {
-                    inWater = 0;
-                } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                    inWater = 1;
-                } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                    inWater = 1;
-                } else {
-                    inWater = 0;
-                }
+                inWater = skeetla_isInWater(state);
                 if (inWater != 0) {
                     trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -5700,15 +5580,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
     }
     case 47:
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            if (gTrickyFloatZero == state->waterLevel) {
-                b = 0;
-            } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                b = 1;
-            } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                b = 1;
-            } else {
-                b = 0;
-            }
+            b = skeetla_isInWater(state);
             if (b != 0) {
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -5901,15 +5773,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         break;
     case 0x2b:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            if (gTrickyFloatZero == trickyState->waterLevel) {
-                b[0] = 0;
-            } else if (gTrickyEventTimeSentinel == trickyState->eventTime) {
-                b[0] = 1;
-            } else if (trickyState->currentTime - trickyState->eventTime > gTrickyEventStaleSeconds) {
-                b[0] = 1;
-            } else {
-                b[0] = 0;
-            }
+            b[0] = skeetla_isInWater(trickyState);
             if (b[0] != 0) {
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 trickyState->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6088,15 +5952,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
                 }
             }
         }
-        if (gTrickyFloatZero == state->waterLevel) {
-            inWater = 0;
-        } else if (gTrickyEventTimeSentinel == state->eventTime) {
-            inWater = 1;
-        } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-            inWater = 1;
-        } else {
-            inWater = 0;
-        }
+        inWater = skeetla_isInWater(state);
         if (inWater != 0) {
             return 0;
         }
@@ -6351,15 +6207,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     b = obj->extra;
                     b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
                     b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_CALLBACK;
-                    if (gTrickyFloatZero == b->waterLevel) {
-                        inWater = 0;
-                    } else if (gTrickyEventTimeSentinel == b->eventTime) {
-                        inWater = 1;
-                    } else if (b->currentTime - b->eventTime > gTrickyEventStaleSeconds) {
-                        inWater = 1;
-                    } else {
-                        inWater = 0;
-                    }
+                    inWater = skeetla_isInWater(b);
                     if (inWater != 0) {
                         trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         b->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6389,15 +6237,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     }
                     b = obj->extra;
                     b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
-                    if (gTrickyFloatZero == b->waterLevel) {
-                        inWater = 0;
-                    } else if (gTrickyEventTimeSentinel == b->eventTime) {
-                        inWater = 1;
-                    } else if (b->currentTime - b->eventTime > gTrickyEventStaleSeconds) {
-                        inWater = 1;
-                    } else {
-                        inWater = 0;
-                    }
+                    inWater = skeetla_isInWater(b);
                     if (inWater != 0) {
                         trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         b->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6429,15 +6269,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                 if (g != 2) {
                     b->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_CALLBACK;
                 }
-                if (gTrickyFloatZero == b->waterLevel) {
-                    inWater = 0;
-                } else if (gTrickyEventTimeSentinel == b->eventTime) {
-                    inWater = 1;
-                } else if (b->currentTime - b->eventTime > gTrickyEventStaleSeconds) {
-                    inWater = 1;
-                } else {
-                    inWater = 0;
-                }
+                inWater = skeetla_isInWater(b);
                 if (inWater != 0) {
                     trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     b->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6487,15 +6319,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                     if (state->cooldownB.f > 3000.0f) {
                         state->cooldownB.f *= 0.5f;
                         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
-                            if (gTrickyFloatZero == state->waterLevel) {
-                                inWater = 0;
-                            } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                                inWater = 1;
-                            } else if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
-                                inWater = 1;
-                            } else {
-                                inWater = 0;
-                            }
+                            inWater = skeetla_isInWater(state);
                             if (inWater == 0) {
                                 state->substate = 0xb;
                                 return;
@@ -6618,15 +6442,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
                 }
             }
 
-            if (gTrickyFloatZero == state->waterLevel) {
-                isInWater = 0;
-            } else if (gTrickyEventTimeSentinel == state->eventTime) {
-                isInWater = 1;
-            } else if ((state->currentTime - state->eventTime) > gTrickyEventStaleSeconds) {
-                isInWater = 1;
-            } else {
-                isInWater = 0;
-            }
+            isInWater = skeetla_isInWater(state);
 
             if (isInWater) {
                 trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
