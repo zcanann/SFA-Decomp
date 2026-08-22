@@ -349,8 +349,8 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
         } else if (target < state->blendWeight) {
             state->blendVelocity = state->blendVelocity - TRICKY_FLOAT_0_004 * timeDelta;
             state->blendWeight = state->blendVelocity * timeDelta + state->blendWeight;
-            if (state->blendWeight < gTrickyFloatZero) {
-                state->blendWeight = state->blendVelocity = gTrickyFloatZero;
+            if (state->blendWeight < 0.0f) {
+                state->blendWeight = state->blendVelocity = 0.0f;
             }
             if (state->blendWeight < target) {
                 if (state->blendVelocity > TRICKY_FLOAT_NEG_0_01) {
@@ -2855,8 +2855,8 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     }
     if ((state->stateFlags & TRICKY_STATE_FLAG_TURNING_U32) != 0) {
         state->speed = TRICKY_FLOAT_NEG_0_01 * timeDelta + state->speed;
-        if (state->speed < gTrickyFloatZero) {
-            state->speed = gTrickyFloatZero;
+        if (state->speed < 0.0f) {
+            state->speed = 0.0f;
         }
         return;
     }
@@ -4929,8 +4929,8 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
         speed = ball->speed;
         if ((u8)(ball->stateFlags & CANNONBALL_SPEED_DECAY_FLAG) != 0) {
             speed += CANNONBALL_ROLL_DECAY_STEP * timeDelta;
-            if (speed < gTrickyFloatZero) {
-                speed = gTrickyFloatZero;
+            if (speed < 0.0f) {
+                speed = 0.0f;
             }
         } else if (speed > CANNONBALL_ROLL_SPEED_LIMIT) {
             speed += gTrickySpeedDecayStep * timeDelta;
@@ -5514,8 +5514,8 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_GROUND_SNAP;
     } else {
         state->cooldownA -= timeDelta;
-        if (state->cooldownA < gTrickyFloatZero) {
-            state->cooldownA = gTrickyFloatZero;
+        if (state->cooldownA < 0.0f) {
+            state->cooldownA = 0.0f;
         }
         tricky_handlePlayerContact(obj, state);
         {
@@ -6475,8 +6475,8 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
     int inWater;
 
     state->cooldownB.f -= timeDelta;
-    if (state->cooldownB.f < gTrickyFloatZero) {
-        state->cooldownB.f = gTrickyFloatZero;
+    if (state->cooldownB.f < 0.0f) {
+        state->cooldownB.f = 0.0f;
     }
     if (ObjHits_GetPriorityHit(obj, hit, 0, 0) != 0 && hit[0]->ownerObj != NULL &&
         ((GameObject*)hit[0]->ownerObj)->anim.classId == 1) {
@@ -7920,8 +7920,8 @@ void Tricky_update(GameObject* obj) {
         trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
     }
     trickyState->cooldownC -= timeDelta;
-    if (trickyState->cooldownC < gTrickyFloatZero) {
-        trickyState->cooldownC = gTrickyFloatZero;
+    if (trickyState->cooldownC < 0.0f) {
+        trickyState->cooldownC = 0.0f;
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FOOD_WARNING_PENDING) != 0) {
         st = ((GameObject*)obj)->extra;
@@ -7953,8 +7953,8 @@ void Tricky_update(GameObject* obj) {
         }
     }
     trickyState->voiceCooldown -= timeDelta;
-    if (trickyState->voiceCooldown < gTrickyFloatZero) {
-        trickyState->voiceCooldown = gTrickyFloatZero;
+    if (trickyState->voiceCooldown < 0.0f) {
+        trickyState->voiceCooldown = 0.0f;
     }
     if (trickyState->voiceCooldown > gTrickyFloatZero) {
         TRICKY_VOICE(obj, 0x29c, 0x100);
