@@ -163,6 +163,10 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_VISIBILITY_PROBE_RADIUS   19.0f
 #define TRICKY_RECALL_COOLDOWN_FRAMES    1200.0f
 #define TRICKY_AUDIO_EVENT_MIN_SPEED     0.2f
+#define TRICKY_AMBIENT_ACTIVITY_BASE     200.0f
+#define TRICKY_AMBIENT_WANDER_SCALE       0.1
+#define TRICKY_AVOIDANCE_BLEND_STEP_DIVISOR 8.0f
+#define TRICKY_POSITION_OFFSET_SCALE      0.1f
 #define TRICKY_PATH_SEARCH_BULK_STEPS    0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES     500
 #define TRICKY_IDLE_VOICE_MAX_FRAMES     750
@@ -1764,7 +1768,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
         moveDistance = sqrtf(limitDistanceSq);
         {
             f32 blend = moveDistance - sqrtf(centerToEnd);
-            moveDistance = moveDistance - (blend / 8.0f);
+            moveDistance = moveDistance - (blend / TRICKY_AVOIDANCE_BLEND_STEP_DIVISOR);
         }
     }
 
@@ -1789,7 +1793,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
     int i;
 
     objects = (void**)objGetAllOfType(SIDEREPEL_OBJGROUP, &count);
-    for (i = 0, op = objects, scale = 0.1f; i < count; i++) {
+    for (i = 0, op = objects, scale = TRICKY_POSITION_OFFSET_SCALE; i < count; i++) {
         obj = *op;
         repelPlacement = (SideRepelPlacement*)obj->anim.placementData;
         trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX,
@@ -1806,8 +1810,9 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
         if (minRadius != 0) {
             hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             if ((hitState != NULL) && ((hitState->flags & 1) != 0)) {
-                trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX, 0.1f * (f32)(u32)minRadius,
-                                            0.1f * (f32)(u32)modelDef->avoidRadiusZ);
+                trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX,
+                                            TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)minRadius,
+                                            TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)modelDef->avoidRadiusZ);
             }
         }
         op++;
@@ -6016,7 +6021,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
         return 1;
     }
     if (trickyState->flag728Bit7 != 0U) {
-        trickyState->idleTimer = 200.0f;
+        trickyState->idleTimer = TRICKY_AMBIENT_ACTIVITY_BASE;
         trickyState->flag728Bit7 = 0;
         trickyState->flag728Bit6 = 1;
     }
@@ -6110,7 +6115,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
 
     lo = 1;
     hi = 3;
-    arr[0] = 200.0f;
+    arr[0] = TRICKY_AMBIENT_ACTIVITY_BASE;
     found = objGetNearestTypeTo(SHTHORNTAIL_OBJECT_GROUP, obj, arr);
     if (found != NULL && ((found)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
         lo = 0;
@@ -6139,9 +6144,9 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
         sv = randomGetRange(0x20, 0xff);
         sv = (s16)((obj->anim.rotX + sv) * 0x100);
         ang = TRICKY_PI * (f32)sv / TRICKY_ANGLE_HALF_TURN_UNITS;
-        state->wanderTargetX = (f32)(0.1 * -mathSinf(ang) + obj->anim.localPosX);
+        state->wanderTargetX = (f32)(TRICKY_AMBIENT_WANDER_SCALE * -mathSinf(ang) + obj->anim.localPosX);
         state->wanderTargetY = obj->anim.localPosY;
-        state->wanderTargetZ = (f32)(0.1f * -mathCosf(ang) + obj->anim.localPosZ);
+        state->wanderTargetZ = (f32)(TRICKY_POSITION_OFFSET_SCALE * -mathCosf(ang) + obj->anim.localPosZ);
         if ((u8*)state->targetPosPtr != (u8*)&state->wanderTargetX) {
             state->targetPosPtr = &state->wanderTargetX;
             {
@@ -6834,7 +6839,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             commandMask |= TRICKY_ABILITY_FLAME;
             promptA = true;
         } else {
-            if (trickyFindNearestUsableBaddie(state->playerObj, 200.0f, 1) != NULL) {
+            if (trickyFindNearestUsableBaddie(state->playerObj, TRICKY_AMBIENT_ACTIVITY_BASE, 1) != NULL) {
                 promptA = true;
                 promptC = true;
             }
