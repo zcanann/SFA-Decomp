@@ -253,7 +253,8 @@ typedef struct TrickyState {
     u8 routeSeedDir;
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
-    u8* cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
+    RomCurveDef*
+        cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
     RomCurveDef* validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
     u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
     u16 walkGroup;       /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */

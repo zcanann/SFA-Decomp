@@ -1353,7 +1353,7 @@ static inline RomCurveDef* skeetla_validateRouteEntry(RomCurveDef* entry) {
     return NULL;
 }
 
-RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int linkSelector,
+RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef* routeDef, int linkSelector,
                                                int routeFlagValue) {
     RomCurveDef* candidates[4];
     RomCurveDef* entry;
@@ -1371,17 +1371,17 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDe
     count = 0;
     mask = 1;
     while (i < 4) {
-        curveId = ((RomCurveDef*)routeDef)->linkIds[i];
-        if ((curveId > -1) && (((((RomCurveDef*)routeDef)->blockedLinkMask & mask) ^ routeFlagValue) == 0)) {
+        curveId = routeDef->linkIds[i];
+        if ((curveId > -1) && ((((routeDef->blockedLinkMask & mask) ^ routeFlagValue) == 0))) {
             candidates[count] = (*gRomCurveInterface)->getById(curveId);
             if (candidates[count] != NULL) {
                 entry = candidates[count];
-                if ((linkSelector == 0) || (((RomCurveDef*)routeDef)->linkWalkGroups[count] == linkSelector)) {
+                if ((linkSelector == 0) || (routeDef->linkWalkGroups[count] == linkSelector)) {
                     requiredBit = entry->requiredBit;
                     if ((requiredBit == -1) || (mainGetBit(requiredBit) != 0)) {
                         forbiddenBit = entry->forbiddenBit;
                         if ((forbiddenBit == -1) || (mainGetBit(forbiddenBit) == 0)) {
-                            if ((((RomCurveDef*)routeDef)->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) ||
+                            if ((routeDef->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) ||
                                 (entry->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A)) {
                                 count++;
                             }
@@ -1509,7 +1509,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     return -1;
 }
 
-RomCurveDef* trickySelectRouteEntry(TrickyState* state, u8* routeDef, u8 routeFlagValue) {
+RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeFlagValue) {
     RomCurveDef* entry;
 
     entry = NULL;
@@ -2290,12 +2290,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         if (TRICKY_FLOAT_TEN > dist) {
             state->route.reverse = state->routeSeedDir;
             prevNode = state->routeSeedNode;
-            node = trickySelectRouteEntry(state, (u8*)prevNode, state->routeSeedDir);
+            node = trickySelectRouteEntry(state, prevNode, state->routeSeedDir);
             if (node == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
                 RomCurveDef* nextNode =
-                    trickySelectRouteEntry(state, (u8*)node, state->routeSeedDir);
+                    trickySelectRouteEntry(state, node, state->routeSeedDir);
                 if (nextNode == 0) {
                     state->movementState = TRICKY_MOVE_WALK_WAIT;
                 } else {
