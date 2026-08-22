@@ -26,7 +26,7 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
                                                int routeFlagValue);
 RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId);
 RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeFlagValue);
-int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
+int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** routeCandidates, u8* routeCandidateFlags,
                                   int targetWalkGroup);
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes);
 void skeetla_spawnLinkedSparks(GameObject* obj);

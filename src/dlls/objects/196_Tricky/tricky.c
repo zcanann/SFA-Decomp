@@ -1448,67 +1448,68 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId)
     return (state)->cachedRouteEntry;
 }
 
-int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
+int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** routeCandidates, u8* routeCandidateFlags,
                                   int targetWalkGroup) {
-    RomCurveDef** initCandidateCursor;
-    u8* initSearchCursor;
-    RomCurveDef** candidateCursor;
-    s8* statusCursor;
-    u8* searchCursor;
+    RomCurveDef** initRouteCursor;
+    u8* initPathSearchCursor;
+    RomCurveDef** routeCursor;
+    s8* routeStatusCursor;
+    u8* pathSearchCursor;
     s8 searchPass;
-    s8 status[TRICKY_ROUTE_CANDIDATE_COUNT];
-    s8 initIndex;
-    s8 candidateIndex;
-    s8 failedCount;
+    s8 routeStatuses[TRICKY_ROUTE_CANDIDATE_COUNT];
+    s8 initRouteIndex;
+    s8 routeIndex;
+    s8 failedRouteCount;
 
-    for (initIndex = 0, initCandidateCursor = candidateRoutes, initSearchCursor = (u8*)state;
-         initIndex < TRICKY_ROUTE_CANDIDATE_COUNT; initIndex++) {
-        if (*initCandidateCursor != NULL) {
-            pathSearchBegin((PathSearch*)(initSearchCursor + offsetof(TrickyState, pathSearches)),
-                            *initCandidateCursor, state->targetPosPtr, targetWalkGroup,
-                            candidateRouteFlags[initIndex]);
+    for (initRouteIndex = 0, initRouteCursor = routeCandidates, initPathSearchCursor = (u8*)state;
+         initRouteIndex < TRICKY_ROUTE_CANDIDATE_COUNT; initRouteIndex++) {
+        if (*initRouteCursor != NULL) {
+            pathSearchBegin((PathSearch*)(initPathSearchCursor + offsetof(TrickyState, pathSearches)),
+                            *initRouteCursor, state->targetPosPtr, targetWalkGroup,
+                            routeCandidateFlags[initRouteIndex]);
         }
-        initCandidateCursor++;
-        initSearchCursor += sizeof(PathSearch);
+        initRouteCursor++;
+        initPathSearchCursor += sizeof(PathSearch);
     }
 
     for (searchPass = 0; searchPass < 100; searchPass++) {
-        failedCount = 0;
-        for (candidateIndex = 0, candidateCursor = candidateRoutes, searchCursor = (u8*)state, statusCursor = status;
-             candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
-            if (*candidateCursor != NULL) {
-                *statusCursor =
-                    pathSearchStep((PathSearch*)(searchCursor + offsetof(TrickyState, pathSearches)), 1);
+        failedRouteCount = 0;
+        for (routeIndex = 0, routeCursor = routeCandidates, pathSearchCursor = (u8*)state,
+             routeStatusCursor = routeStatuses;
+             routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
+            if (*routeCursor != NULL) {
+                *routeStatusCursor =
+                    pathSearchStep((PathSearch*)(pathSearchCursor + offsetof(TrickyState, pathSearches)), 1);
             } else {
-                *statusCursor = -1;
+                *routeStatusCursor = -1;
             }
 
-            switch (*statusCursor) {
+            switch (*routeStatusCursor) {
             case 1:
-                return candidateIndex;
+                return routeIndex;
             case -1:
-                *candidateCursor = NULL;
-                failedCount++;
+                *routeCursor = NULL;
+                failedRouteCount++;
                 break;
             }
-            candidateCursor++;
-            searchCursor += sizeof(PathSearch);
-            statusCursor++;
+            routeCursor++;
+            pathSearchCursor += sizeof(PathSearch);
+            routeStatusCursor++;
         }
 
-        switch (failedCount) {
+        switch (failedRouteCount) {
         case 7:
-            for (searchPass = 0, candidateCursor = candidateRoutes; searchPass < TRICKY_ROUTE_CANDIDATE_COUNT;
+            for (searchPass = 0, routeCursor = routeCandidates; searchPass < TRICKY_ROUTE_CANDIDATE_COUNT;
                  searchPass++) {
-                if (*candidateCursor != NULL) {
-                    status[(int)searchPass] =
+                if (*routeCursor != NULL) {
+                    routeStatuses[(int)searchPass] =
                         pathSearchStep(&state->pathSearches[(int)searchPass], TRICKY_PATH_SEARCH_BULK_STEPS);
-                    if (status[(int)searchPass] == 1) {
+                    if (routeStatuses[(int)searchPass] == 1) {
                         return searchPass;
                     }
                     return -1;
                 }
-                candidateCursor++;
+                routeCursor++;
             }
         case 8:
             return -1;
