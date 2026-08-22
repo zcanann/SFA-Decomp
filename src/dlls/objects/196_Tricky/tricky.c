@@ -1143,7 +1143,9 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     char* debugStrings;
     TrickyState* state;
     f32 moveSpeed;
+    f32 speedStep;
     f32 length;
+    f32 step;
     int td;
 
     debugStrings = gTrickyDebugStringTable;
@@ -1159,10 +1161,13 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         state->dirZ /= length;
     }
 
-    if (moveSpeed < gTrickySmallSpeedStep) {
-        prospectivePos[0] = (gTrickySmallSpeedStep * state->dirX) * timeDelta + obj->anim.worldPosX;
+    speedStep = gTrickySmallSpeedStep;
+    if (moveSpeed < speedStep) {
+        step = speedStep * state->dirX;
+        prospectivePos[0] = step * timeDelta + obj->anim.worldPosX;
         prospectivePos[1] = obj->anim.worldPosY;
-        prospectivePos[2] = (gTrickySmallSpeedStep * state->dirZ) * timeDelta + obj->anim.worldPosZ;
+        step = speedStep * state->dirZ;
+        prospectivePos[2] = step * timeDelta + obj->anim.worldPosZ;
     } else {
         prospectivePos[0] = timeDelta * (state->dirX * moveSpeed) + obj->anim.worldPosX;
         prospectivePos[1] = obj->anim.worldPosY;
