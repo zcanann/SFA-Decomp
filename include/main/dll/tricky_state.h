@@ -214,7 +214,7 @@ typedef struct TrickyState {
     u8 moveId0;          /* ObjAnim_SetCurrentMove move id */
     u8 moveId1;
     u8 moveId2;
-    u8 flags323; /* anim-active bit flags (0x1/0x2/0x4/0x8) */
+    u8 rootMotionFlags; /* shared actor root-motion bit flags (0x1/0x2/0x4/0x8), same slot as EnemyState.rootMotionFlags */
     u8 pad324[0x353 - 0x324];
     u8 heightUpdateActive; /* set 1 at update-cycle start; cleared to 0 when the object leaves its map block or a ground-snap fires; while (s8)set the water-level / tracked-height float update runs, else velocityY is zeroed (tricky sets, trickyfollow/skeetla clear+read) */
     u8 pad354[0x358 - 0x354];
@@ -450,6 +450,7 @@ STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
+STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, scratch704) == 0x704);
