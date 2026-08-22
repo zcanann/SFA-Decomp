@@ -172,12 +172,10 @@ const u16 gSkeetlaFootstepSfxIds01[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SF
 const u16 gSkeetlaFootstepSfxId2[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 
 const f32 gTrickyFloatZero[1] = {0.0f};
-static const f32 sTrickyFloatTen[1] = {10.0f};
-static const f32 sTrickyFloat0_004[1] = {0.004f};
 
 #define gTrickyFloatZero              (gTrickyFloatZero[0])
-#define TRICKY_FLOAT_TEN              (sTrickyFloatTen[0])
-#define TRICKY_FLOAT_0_004            (sTrickyFloat0_004[0])
+#define TRICKY_FLOAT_TEN              10.0f
+#define TRICKY_FLOAT_0_004            0.004f
 #define TRICKY_MODEL_FADE_ALPHA_SCALE (sTrickyModelFadeAlphaScale[0])
 
 extern const char sTrickyShouldNeverStopCirclingError[];
@@ -1182,6 +1180,7 @@ static inline f32 skeetla_pathSpeedDelta(GameObject* obj) {
     f32 dz;
     f32 previousSpeed;
     f32 currentSpeed;
+    f32 delta;
 
     currentPathPoint = state->targetPosPtr;
     if (state->targetPosPtr == state->previousPathPoint) {
@@ -1192,9 +1191,12 @@ static inline f32 skeetla_pathSpeedDelta(GameObject* obj) {
         dx = currentPathPoint[0] - obj->anim.worldPosX;
         dz = currentPathPoint[2] - obj->anim.worldPosZ;
         currentSpeed = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
-        return currentSpeed - previousSpeed;
+        delta = currentSpeed - previousSpeed;
+    } else {
+        delta = gTrickyFloatZero;
     }
-    return gTrickyFloatZero;
+
+    return delta;
 }
 
 static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut) {
@@ -1245,6 +1247,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     f32 speedStep;
     f32 length;
     f32 step;
+    f32 pathSpeedDelta;
     s16 ignoredTurnDelta;
     int td;
 
@@ -1297,9 +1300,14 @@ int moveTricky(GameObject* obj, f32* targetPos) {
             trickyDebugPrint(debugStrings + TRICKY_DBG_IN_WATER);
         } else {
             if (state->stateIndex == TRICKY_STATE_FOLLOW_PLAYER) {
-                if ((skeetla_pathSpeedDelta(obj) >= gTrickyFloatZero
-                         ? skeetla_pathSpeedDelta(obj)
-                         : -skeetla_pathSpeedDelta(obj)) > gTrickyFloatZero) {
+                pathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                if (pathSpeedDelta >= gTrickyFloatZero) {
+                    pathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                } else {
+                    pathSpeedDelta = -skeetla_pathSpeedDelta(obj);
+                }
+
+                if (pathSpeedDelta > gTrickyFloatZero) {
                     state->sfxIntervalTimer -= timeDelta;
                     if (state->sfxIntervalTimer <= gTrickyFloatZero) {
                         state->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
