@@ -1521,7 +1521,7 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId)
         return NULL;
     }
 
-    if ((state->cachedPathId == pathId) && (*(u32*)&state->cachedRouteEntry == route)) {
+    if ((state->cachedPathId == pathId) && (state->cachedRouteId == route)) {
         state->cachedRouteEntry = pathSearchGetNextPoint(&state->pathSearches[8]);
         if (state->cachedRouteEntry == NULL) {
             return NULL;
@@ -5178,9 +5178,9 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         state->digTunnelStartNode.ptr = pc;
         state->digTunnelExitNode.ptr = (u8*)(*gRomCurveInterface)->getById(pc->linkIds[1]);
         if (((RomCurveDef*)state->digTunnelExitNode.ptr)->walkGroup != 0) {
-            *(u32*)&state->digTunnelExitNode.ptr = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
+            state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
             state->digTunnelEntryNode.u = state->digTunnelEntryNode.u ^ state->digTunnelExitNode.u;
-            *(u32*)&state->digTunnelExitNode.ptr = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
+            state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
         }
         ptr = (u8*)&((RomCurveDef*)state->digTunnelEntryNode.ptr)->x;
         if (state->targetPosPtr != (f32*)ptr) {
@@ -7331,14 +7331,14 @@ void Tricky_hitDetect(GameObject* obj) {
         }
         for (; i < count[0]; i++) {
             height = XyzAnimator_getCoordinate(*objects, XYZ_ANIMATOR_COORD_WORLD_Y);
-            if (*(s32*)&state->heightTrackObjId == -1) {
+            if (state->heightTrackObjId == -1) {
                 dy = (height - obj->anim.localPosY >= gTrickyFloatZero) ? height - obj->anim.localPosY
                                                                         : -(height - obj->anim.localPosY);
                 if (dy < 6.0f) {
                     state->heightTrackObjId = (*objects)->anim.placement->ident;
                 }
             }
-            if (state->heightTrackObjId == (u32)(*objects)->anim.placement->ident) {
+            if ((u32)state->heightTrackObjId == (u32)(*objects)->anim.placement->ident) {
                 th = state->trackedHeight;
                 z = gTrickyFloatZero;
                 if ((th != z) && (th == height)) {
@@ -7506,7 +7506,7 @@ void Tricky_update(GameObject* obj) {
                 trickyState->waterLevel = gTrickyFloatZero;
             }
         }
-        *(s32*)&trickyState->stateFlags &= ~TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK;
+        trickyState->stateFlags &= ~TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK;
         if (trickyState->sequencePreserveBlend != 0) {
             trickyState->sequencePreserveBlend = 0;
         } else {

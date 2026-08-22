@@ -144,7 +144,7 @@ typedef struct TrickyState {
             u32 warpCooldownLo : 1;
         };
     };
-    u32 heightTrackObjId;
+    s32 heightTrackObjId; /* object ident being height-tracked; -1 while searching for a nearby XYZ animator */
     f32 trackedHeight;
     TrickyJumpArc jumpArc; /* 0x64: ballistic hop arc */
     u8 pad84[0x8C - 0x84];
@@ -261,8 +261,10 @@ typedef struct TrickyState {
     u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
     u8 pad537[1];
     PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
-    RomCurveDef*
-        cachedRouteEntry; /* cached route-entry pointer (validated via skeetla_validateRouteEntry; one u32-spelled site launders) */
+    union {
+        RomCurveDef* cachedRouteEntry; /* cached route-entry pointer validated via skeetla_validateRouteEntry */
+        u32 cachedRouteId;             /* route id/pointer word used as the cache key before the next point is fetched */
+    };
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32* previousPathPoint;
     f32 previousPathX;
