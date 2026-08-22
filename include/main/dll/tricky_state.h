@@ -304,11 +304,11 @@ typedef struct TrickyState {
             u8 digTunnelPad714[0x71C - 0x714];
         };
         struct {
-            s32 circlingDirection;
-            s32 circlingAngle;
-            f32 circlingTargetX;
-            f32 circlingTargetY;
-            f32 circlingTargetZ;
+            TrickyScratch circlingDirection;
+            TrickyScratch circlingAngle;
+            TrickyScratch circlingTargetX;
+            TrickyScratch circlingTargetY;
+            TrickyScratch circlingTargetZ;
             u8 circlingPad714[0x71C - 0x714];
         };
         struct {

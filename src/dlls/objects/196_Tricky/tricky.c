@@ -3793,15 +3793,15 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state) {
     s32 absDelta;
 
     if (((TrickyState*)state)->substate == ANIMOBJD2_SUBSTATE_ACQUIRE) {
-        ((TrickyState*)state)->scratch700.i = randomGetRange(0, 1);
-        if (((TrickyState*)state)->scratch700.i == 0) {
-            ((TrickyState*)state)->scratch700.i = -1;
+        ((TrickyState*)state)->circlingDirection.i = randomGetRange(0, 1);
+        if (((TrickyState*)state)->circlingDirection.i == 0) {
+            ((TrickyState*)state)->circlingDirection.i = -1;
         }
-        ((TrickyState*)state)->scratch704.i = angle;
+        ((TrickyState*)state)->circlingAngle.i = angle;
         ((TrickyState*)state)->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
-    delta = angle - (s32)(u16)((TrickyState*)state)->scratch704.u;
+    delta = angle - (s32)(u16)((TrickyState*)state)->circlingAngle.u;
     if (delta > 0x8000) {
         delta -= 0xFFFF;
     }
@@ -3815,15 +3815,15 @@ void trickyUpdateCirclingTargetPosition(void* objPtr, void* state) {
         absDelta = -delta;
     }
     if (absDelta < 0x2000) {
-        ((TrickyState*)state)->scratch704.i =
-            ((TrickyState*)state)->scratch704.i + (((TrickyState*)state)->scratch700.i << 11);
+        ((TrickyState*)state)->circlingAngle.i =
+            ((TrickyState*)state)->circlingAngle.i + (((TrickyState*)state)->circlingDirection.i << 11);
     }
 
-    ((TrickyState*)state)->scratch708.f = ((TrickyState*)state)->followObj->anim.worldPosX -
-                                          50.0f * fsin16Precise((u16)((TrickyState*)state)->scratch704.i);
-    ((TrickyState*)state)->scratch70C.f = ((TrickyState*)state)->followObj->anim.worldPosY;
-    ((TrickyState*)state)->scratch710.f = ((TrickyState*)state)->followObj->anim.worldPosZ -
-                                          50.0f * fcos16Precise((u16)((TrickyState*)state)->scratch704.i);
+    ((TrickyState*)state)->circlingTargetX.f = ((TrickyState*)state)->followObj->anim.worldPosX -
+                                               50.0f * fsin16Precise((u16)((TrickyState*)state)->circlingAngle.i);
+    ((TrickyState*)state)->circlingTargetY.f = ((TrickyState*)state)->followObj->anim.worldPosY;
+    ((TrickyState*)state)->circlingTargetZ.f = ((TrickyState*)state)->followObj->anim.worldPosZ -
+                                               50.0f * fcos16Precise((u16)((TrickyState*)state)->circlingAngle.i);
 
     if (trickyUpdateMovementState(objPtr, 5.0f, state) == 0) {
         trickyReportError(sTrickyShouldNeverStopCirclingError);
