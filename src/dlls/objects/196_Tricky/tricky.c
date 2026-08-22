@@ -1211,7 +1211,7 @@ static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turn
     }
 }
 
-static inline void skeetla_faceMoveVector(GameObject* obj) {
+static void skeetla_faceMoveVector(GameObject* obj) {
     s16 ignoredTurnDelta;
 
     skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
@@ -1252,6 +1252,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     f32 speedStep;
     f32 length;
     f32 step;
+    s16 ignoredTurnDelta;
     int td;
 
     debugStrings = gTrickyDebugStringTable;
@@ -1295,7 +1296,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     }
 
     if (moveSpeed >= gTrickySmallSpeedStep) {
-        skeetla_faceMoveVector(obj);
+        skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
         if (skeetla_isInWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;

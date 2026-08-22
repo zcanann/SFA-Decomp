@@ -3524,12 +3524,14 @@ The 408-byte `.sdata2` gap in `dlls/objects/196_Tricky/tricky` decomposes into f
   minted `-2.0f` first; that slot was interned earlier by item C's dead helper.
   `trickyAdvanceRouteTargetAhead` mints only `1.5f`. Forcing the order costs 12-13 of 63 instruction
   words and breaks a 100% function.
-- **E — pool placement achieved, fails the byte gate.** Best shape is to make the trivial wrapper
-  `skeetla_faceMoveVector` the dead static (it still inlines the real helper, so `pi/32768/bias` mint
-  at retail's relative position) rather than the helper itself. Costs `moveTricky` 100 → 99.95840: same
-  stream, same size, one live range recoloured r26 → r28. Twelve ordering probes are identical — this
-  is the >=5-saved-register regime (7 saved GPRs) where the rotation model says every ordering knob is
-  flat. Rejected variant kept at `scratchpad/deliver/itemE_wrapper_static_REJECTED.patch`.
+- **E — LANDED 2026-08-22.** Keeping the trivial wrapper `skeetla_faceMoveVector` as the stripped
+  static source-order minter, while spelling the live `moveTricky` site as a direct
+  `skeetla_updateFacingFromMoveVector` call, restores the tail pool order and makes `.sdata2`
+  byte-exact under the current `noautoinline` TU profile. The plain-static called form is not viable
+  with that profile because it leaves a real live call and drops `moveTricky` to 92.273. The landed
+  form keeps the function size stable and costs only the existing near-match row
+  (`moveTricky` 99.534 → 99.493) while recovering the full section data; `banned_shapes_check` reports
+  no regrowth.
 
 Also refuted: non-static `inline` behaves exactly like `static inline` (mints nothing).
 
