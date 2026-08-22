@@ -718,9 +718,9 @@ typedef struct
     f32 v[3];
 } SnowVec3;
 
-const SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
-const SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
-const SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 sNewCloudDefaultStartPos = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 sNewCloudDefaultEndPos = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 sSnowCloudDefaultDirection = {{0.0f, 0.0f, 0.0f}};
 
 static const SnowFlakeUVs kSnowFlakeUVs = {{-48, 0, 176, 0, 64, 256}};
 
@@ -1061,7 +1061,7 @@ static void snowReposSnowCloud(int cloudId)
     f32 from[3];
     f32 to[3];
 
-    *(SnowVec3*)dir = lbl_802C1FC0;
+    *(SnowVec3*)dir = sSnowCloudDefaultDirection;
     if (renderModeSetOrGet(-1) == 1)
     {
         return;
@@ -1974,8 +1974,8 @@ void newclouds_updateEnvfxAct(GameObject* objA, GameObject* objB, u8* params)
     f32 posB[3];
     f32 vec[3];
 
-    *(SnowVec3*)posA = lbl_802C1FA8;
-    *(SnowVec3*)posB = lbl_802C1FB4;
+    *(SnowVec3*)posA = sNewCloudDefaultStartPos;
+    *(SnowVec3*)posB = sNewCloudDefaultEndPos;
     env = (u8*)saveGameGetEnvState();
     if (params == NULL)
     {
