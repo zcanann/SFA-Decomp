@@ -326,7 +326,12 @@ def main():
         for n in range(len(ss)):
             if time.time() - t0 > a.time_budget:
                 print("# time budget hit"); break
-            src_file.write_bytes(render(n).encode("latin-1"))
+            try:
+                candidate_src = render(n)
+            except SystemExit as e:
+                print(e)
+                continue
+            src_file.write_bytes(candidate_src.encode("latin-1"))
             if not rebuild(unit["object"], a.version):
                 print(f"  [{n}] BUILD FAIL"); continue
             fz = fuzzy_measure(unit, a.symbol, a.version)
