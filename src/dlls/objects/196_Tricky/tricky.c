@@ -1105,8 +1105,8 @@ static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turn
     if (((state->dirX * state->dirX) + (state->dirZ * state->dirZ)) > 0.01f) {
         yaw = (s16)getAngle(-state->dirX, -state->dirZ);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
-        state->dirX = -mathSinf((TRICKY_PI * (f32)(int)*(s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
-        state->dirZ = -mathCosf((TRICKY_PI * (f32)(int)*(s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
+        state->dirX = -mathSinf((TRICKY_PI * (f32)(int)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
+        state->dirZ = -mathCosf((TRICKY_PI * (f32)(int)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
     }
 }
 
@@ -4012,11 +4012,11 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
         bitIndex = state->tumbleweedCountLatch.nib.hi;
         if (bitIndex != currentBit) {
             state->tumbleweedCountLatch.nib.hi++;
-            **(u8**)state -= 2;
+            *state->progressPtr -= 2;
         }
         targetPos = NW_mammoth_getSpawnPosition(state->followObj);
         trackedObj = tumbleweedbush_findNearestActive(targetPos);
-        if (trackedObj != 0 && **(u8**)state != 0) {
+        if (trackedObj != 0 && *state->progressPtr != 0) {
             if (trackedObj != state->tumbleweedTargetObj &&
                 (u8*)state->targetPosPtr != (u8*)&state->tumbleweedTargetX) {
                 state->targetPosPtr = &state->tumbleweedTargetX;
@@ -5095,7 +5095,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                     idx++;
                 }
             }
-            **(u8**)state -= 4;
+            *state->progressPtr -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = 5;
             id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
@@ -5266,7 +5266,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         obj->anim.localPosZ = state->scratch708.f - state->dirZ * spd;
         if (GROUND_ANIMATOR_INTERFACE(pc)->isFullySunk((GameObject*)pc) != 0) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
-            **(u8**)state -= 4;
+            *state->progressPtr -= 4;
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
             state->substate = 0;
             z = gTrickyFloatZero;
