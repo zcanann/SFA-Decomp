@@ -437,6 +437,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_0126_trigger.h"
+#include "main/dll/DF/dll_0233_dfpstatue1.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/dll/dll_023F_dbegg.h"
 #include "main/dll/dll_025A_staticcamera.h"
@@ -537,7 +538,6 @@ extern ResourceDescriptor gDFP_seqpointObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
 extern ResourceDescriptor gDfperchwitchObjDescriptor, gDfpfloorbarObjDescriptor, gDfplightniObjDescriptor,
     gDfppowerslObjDescriptor;
-extern ResourceDescriptor gDfpstatue1ObjDescriptor;
 extern ResourceDescriptor gDoorswitchObjDescriptor, gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLaserCannonObjDescriptor,
@@ -1757,7 +1757,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gChukaObjDescriptor,
     &gTrickyCurveObjDescriptor,
     &gDFP_RotatePObjDescriptor,
-    &gDfpstatue1ObjDescriptor,
+    (ResourceDescriptor*)&gDfpstatue1ObjDescriptor,
     &gDfperchwitchObjDescriptor,
     (ResourceDescriptor*)&gDfptargetblockObjDescriptor,
     &gLaserUnsupportedObjDescriptor,
