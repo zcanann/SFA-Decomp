@@ -7,6 +7,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/objseq.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct SnowHornEntry
 {
@@ -121,5 +122,7 @@ void DIMSnowHorn1_update(GameObject* obj);
 void DIMSnowHorn1_release(void);
 void DIMSnowHorn1_initialise(void);
 void DIMSnowHorn1_init(GameObject* obj, DIMSnowHorn1Placement* p2, int p3);
+
+extern ObjectDescriptor24 gDIMSnowHorn1ObjDescriptor;
 
 #endif /* MAIN_DLL_DIM_DLL_0256_DIMSNOWHORN1_H_ */
