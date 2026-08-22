@@ -1169,10 +1169,10 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     speedStep = gTrickySmallSpeedStep;
     if (moveSpeed < speedStep) {
         step = speedStep * state->dirX;
-        prospectivePos[0] = step * timeDelta + obj->anim.worldPosX;
+        prospectivePos[0] = timeDelta * step + obj->anim.worldPosX;
         prospectivePos[1] = obj->anim.worldPosY;
         step = speedStep * state->dirZ;
-        prospectivePos[2] = step * timeDelta + obj->anim.worldPosZ;
+        prospectivePos[2] = timeDelta * step + obj->anim.worldPosZ;
     } else {
         prospectivePos[0] = timeDelta * (state->dirX * moveSpeed) + obj->anim.worldPosX;
         prospectivePos[1] = obj->anim.worldPosY;
