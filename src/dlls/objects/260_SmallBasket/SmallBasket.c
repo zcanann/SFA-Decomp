@@ -207,7 +207,7 @@ int SmallBasket_spawnContents(GameObject* obj, GameObject* player, SmallBasketSt
     if (enableGameBit != -1) {
         mainSetBits(enableGameBit, 1);
     }
-    if (Obj_CanSetupObject() == 0) {
+    if ((u8)Obj_CanSetupObject() == 0) {
         return 0;
     }
     hitVelocity = gSmallBasketHitVelocity;

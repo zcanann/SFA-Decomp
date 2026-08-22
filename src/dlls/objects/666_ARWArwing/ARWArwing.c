@@ -536,7 +536,7 @@ void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)
     f32 pz, py, px;
     ArwingBombSetup* setup;
     u8 bombsLeft;
-    if (Obj_CanSetupObject() == 0)
+    if ((u8)Obj_CanSetupObject() == 0)
         return;
     bombsLeft = arwing->bombCount;
     if (bombsLeft == 0)
@@ -603,7 +603,7 @@ void arwarwing_spawnLaserShot(GameObject* obj, ArwingState* state, int side, int
 {
     f32 pz, py, px;
     GameObject* proj;
-    if (Obj_CanSetupObject() == 0)
+    if ((u8)Obj_CanSetupObject() == 0)
         return;
     if (side == 0)
     {
@@ -1074,7 +1074,7 @@ int arwarwing_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
             arwarwing_warpByCourse(obj);
             break;
         case 0xa:
-            if (Obj_CanSetupObject())
+            if ((u8)Obj_CanSetupObject())
             {
                 ArwProjectileSetup* setup =
                     (ArwProjectileSetup*)Obj_AllocObjectSetup(0x24, ARWARWING_CHILD_OBJ_BOMB);
