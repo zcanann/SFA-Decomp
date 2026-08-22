@@ -1924,6 +1924,10 @@ char sTrickyDryLandDebugMessage[] = {
 #define TRICKY_FOLLOW_ARC_HALF_PROGRESS         0.5f
 #define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      0.25f
 #define TRICKY_FOLLOW_ARC_COEFFICIENT           -0.017f
+#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       24.0f
+#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       6.0f
+#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         12.0f
+#define TRICKY_FOLLOW_JUMP_LAND_SPEED           0.75f
 
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
     u8* cachedPatchIdCursor;
@@ -2637,18 +2641,18 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             baseZ = arc->baseZ;
             obj->anim.localPosZ = (arc->landZ - baseZ) * (arc->time / arc->duration) + baseZ;
             v = arc->duration;
-            if (v <= 24.0f) {
+            if (v <= TRICKY_FOLLOW_ARC_PROGRESS_WINDOW) {
                 state->arcMoveProgress = arc->time / v;
             } else {
                 k = arc->time;
-                if (k <= 6.0f) {
-                    state->arcMoveProgress = k / 24.0f;
-                } else if (k >= v - 6.0f) {
+                if (k <= TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
+                    state->arcMoveProgress = k / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
+                } else if (k >= v - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
                     f32 adj;
-                    adj = 24.0f - v;
-                    state->arcMoveProgress = (adj + k) / 24.0f;
+                    adj = TRICKY_FOLLOW_ARC_PROGRESS_WINDOW - v;
+                    state->arcMoveProgress = (adj + k) / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
                 } else {
-                    k = (k - 6.0f) / (v - 12.0f);
+                    k = (k - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) / (v - TRICKY_FOLLOW_ARC_MIDDLE_WINDOW);
                     state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + k * TRICKY_FOLLOW_ARC_HALF_PROGRESS;
                 }
             }
@@ -2719,7 +2723,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             }
         }
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            state->speed = 0.75f;
+            state->speed = TRICKY_FOLLOW_JUMP_LAND_SPEED;
             moveTricky(obj, &state->route.posX);
             state->movementState = TRICKY_MOVE_WALK_NODES;
         }
