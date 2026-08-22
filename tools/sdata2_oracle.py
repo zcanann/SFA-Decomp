@@ -15,6 +15,8 @@ Usage:
     python3 tools/sdata2_oracle.py                 creation-order sweep
     python3 tools/sdata2_oracle.py --unclaimed     attribute unclaimed pool
     python3 tools/sdata2_oracle.py --unit NAME     per-word detail for a unit
+    python3 tools/sdata2_oracle.py --unit NAME --compare-src
+                                                   compare retail vs built source
 
 Reads only the carved retail objects under build/<version>/obj.
 """
@@ -134,12 +136,39 @@ def unit_rows(objdump, objcopy, obj, tmp):
                 address=address,
                 name=name,
                 size=size,
+                raw=data[address:address + size].hex(),
                 first=first.get(address),
                 value="%g" % struct.unpack(">f", word)[0] if len(word) == 4 else "",
                 magic=word == MAGIC_HI,
             )
         )
     return functions, rows
+
+
+def source_object(build: Path, unit_name: str) -> Path:
+    rel = Path(unit_name)
+    if rel.suffix == ".c":
+        rel = rel.with_suffix(".o")
+    return build / "src" / rel
+
+
+def format_value(row):
+    if row is None:
+        return "-"
+    raw = row["raw"]
+    words = [raw[i:i + 8] for i in range(0, len(raw), 8)]
+    if row["size"] == 4:
+        return f"{row['value']} {words[0]}"
+    return " ".join(words)
+
+
+def format_first(functions, row):
+    if row is None:
+        return "-"
+    index = row["first"]
+    if index is None:
+        return "-"
+    return f"{index}:{functions[index][1]}"
 
 
 def sweep(args, root, build, objdump, objcopy, tmp):
@@ -252,18 +281,63 @@ def detail(args, root, build, objdump, objcopy, tmp):
     raise SystemExit(f"unit not found: {args.unit}")
 
 
+def compare_src(args, root, build, objdump, objcopy, tmp):
+    units = json.load(open(build / "config.json"))["units"]
+    for unit in units:
+        if unit["name"] != args.unit:
+            continue
+        retail_obj = root / unit["object"]
+        src_obj = source_object(build, unit["name"])
+        if not src_obj.exists():
+            raise SystemExit(f"built source object not found: {src_obj}")
+        retail = unit_rows(objdump, objcopy, retail_obj, tmp)
+        source = unit_rows(objdump, objcopy, src_obj, tmp)
+        if retail is None:
+            raise SystemExit(f"{args.unit} carves no retail .sdata2")
+        if source is None:
+            raise SystemExit(f"{args.unit} built source object has no .sdata2")
+        retail_functions, retail_rows = retail
+        source_functions, source_rows = source
+        width = max(len(retail_rows), len(source_rows))
+        print(f"# .sdata2 retail/source compare: {args.unit}")
+        print("%4s  %-34s %-20s %-28s | %-34s %-20s %-28s  %s" %
+              ("idx", "retail", "r-value/raw", "r-first", "source", "s-value/raw", "s-first", "mark"))
+        for i in range(width):
+            r = retail_rows[i] if i < len(retail_rows) else None
+            s = source_rows[i] if i < len(source_rows) else None
+            r_name = f"+{r['address']:04x} {r['name']}" if r is not None else "-"
+            s_name = f"+{s['address']:04x} {s['name']}" if s is not None else "-"
+            mark = ""
+            if r is None or s is None:
+                mark = "COUNT"
+            elif r["raw"] != s["raw"]:
+                mark = "RAW"
+            elif r["name"] != s["name"]:
+                mark = "NAME"
+            print("%4d  %-34s %-20s %-28s | %-34s %-20s %-28s  %s" %
+                  (i, r_name[:34], format_value(r)[:20], format_first(retail_functions, r)[:28],
+                   s_name[:34], format_value(s)[:20], format_first(source_functions, s)[:28], mark))
+        return
+    raise SystemExit(f"unit not found: {args.unit}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-v", "--version", default="GSAE01")
     parser.add_argument("--unclaimed", action="store_true")
     parser.add_argument("--unit")
+    parser.add_argument("--compare-src", action="store_true")
     args = parser.parse_args()
+    if args.compare_src and not args.unit:
+        parser.error("--compare-src requires --unit")
     root = Path(__file__).resolve().parent.parent
     build = root / "build" / args.version
     objdump = root / "build/binutils/powerpc-eabi-objdump"
     objcopy = root / "build/binutils/powerpc-eabi-objcopy"
     tmp = Path(tempfile.mkdtemp())
-    if args.unit:
+    if args.compare_src:
+        compare_src(args, root, build, objdump, objcopy, tmp)
+    elif args.unit:
         detail(args, root, build, objdump, objcopy, tmp)
     elif args.unclaimed:
         unclaimed(args, root, build, objdump, objcopy, tmp)
