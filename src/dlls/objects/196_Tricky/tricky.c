@@ -7382,33 +7382,33 @@ void Tricky_hitDetect(GameObject* obj) {
 #define TRICKY_SPAWN_FOOD_BUBBLE(obj, state)                                                                           \
     if (((TrickyState*)(state))->child == NULL) {                                                                      \
         ObjPlacement* setup_;                                                                                          \
-        s8 used_[4];                                                                                                   \
-        int slot_;                                                                                                     \
+        s8 occupiedSlots_[4];                                                                                          \
+        int freeSlot_;                                                                                                 \
         setup_ = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);                                                    \
-        used_[0] = -1;                                                                                                 \
-        used_[1] = -1;                                                                                                 \
-        used_[2] = -1;                                                                                                 \
+        occupiedSlots_[0] = -1;                                                                                        \
+        occupiedSlots_[1] = -1;                                                                                        \
+        occupiedSlots_[2] = -1;                                                                                        \
         if (((TrickyState*)(state))->childA != NULL) {                                                                 \
-            used_[((TrickyState*)(state))->packedSlots.promptASlot] = 1;                                               \
+            occupiedSlots_[((TrickyState*)(state))->packedSlots.promptASlot] = 1;                                      \
         }                                                                                                              \
         if (((TrickyState*)(state))->childB != NULL) {                                                                 \
-            used_[((TrickyState*)(state))->packedSlots.promptBSlot] = 1;                                               \
+            occupiedSlots_[((TrickyState*)(state))->packedSlots.promptBSlot] = 1;                                      \
         }                                                                                                              \
         if (((TrickyState*)(state))->child != NULL) {                                                                  \
-            used_[((TrickyState*)(state))->packedSlots.zzzSlot] = 1;                                                   \
+            occupiedSlots_[((TrickyState*)(state))->packedSlots.zzzSlot] = 1;                                          \
         }                                                                                                              \
-        if (used_[0] == -1) {                                                                                          \
-            slot_ = 0;                                                                                                 \
-        } else if (used_[1] == -1) {                                                                                   \
-            slot_ = 1;                                                                                                 \
-        } else if (used_[2] == -1) {                                                                                   \
-            slot_ = 2;                                                                                                 \
-        } else if (used_[3] == -1) {                                                                                   \
-            slot_ = 3;                                                                                                 \
+        if (occupiedSlots_[0] == -1) {                                                                                 \
+            freeSlot_ = 0;                                                                                             \
+        } else if (occupiedSlots_[1] == -1) {                                                                          \
+            freeSlot_ = 1;                                                                                             \
+        } else if (occupiedSlots_[2] == -1) {                                                                          \
+            freeSlot_ = 2;                                                                                             \
+        } else if (occupiedSlots_[3] == -1) {                                                                          \
+            freeSlot_ = 3;                                                                                             \
         } else {                                                                                                       \
-            slot_ = -1;                                                                                                \
+            freeSlot_ = -1;                                                                                            \
         }                                                                                                              \
-        ((TrickyState*)(state))->packedSlots.zzzSlot = slot_;                                                          \
+        ((TrickyState*)(state))->packedSlots.zzzSlot = freeSlot_;                                                      \
         ((TrickyState*)(state))->child = objSetupObject(setup_, 4, -1, -1, ((GameObject*)(obj))->anim.parent);         \
         ObjLink_AttachChild((GameObject*)(obj), ((TrickyState*)(state))->child,                                        \
                             ((TrickyState*)(state))->packedSlots.zzzSlot);                                             \
@@ -7422,7 +7422,7 @@ void Tricky_update(GameObject* obj) {
     char* base;
     int state;
     TrickyState* trickyState;
-    int found;
+    int commandAlreadyQueued;
     int sfxId;
     TrickyState* st;
     struct {
@@ -7446,7 +7446,7 @@ void Tricky_update(GameObject* obj) {
     base = gTrickyDebugStringTable;
     state = (int)obj->extra;
     trickyState = (TrickyState*)state;
-    found = 0;
+    commandAlreadyQueued = 0;
     cmdQuery = gTrickyCmdQueryInit;
     pair = sTrickyImpressSfxPair;
     Objfsa_UpdateWalkGroupPatches();
@@ -7543,37 +7543,38 @@ void Tricky_update(GameObject* obj) {
         trickyState->followObj = NULL;
     }
     {
-        int cmd;
+        int requestedCommand;
 
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0 &&
             (*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
-            cmd = 0;
+            requestedCommand = 0;
         } else {
-            cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed(cmdQuery.ids, TRICKY_ITEM_ID_COUNT);
+            requestedCommand = (*gGameUIInterface)->isOneOfItemsBeingUsed(cmdQuery.ids, TRICKY_ITEM_ID_COUNT);
         }
         commandCursor = state;
         count = trickyState->commandCount;
         for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
-            if (((TrickyState*)commandCursor)->commands[0].commandType == cmd) {
-                found = 1;
+            if (((TrickyState*)commandCursor)->commands[0].commandType == requestedCommand) {
+                commandAlreadyQueued = 1;
                 break;
             }
         }
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0 &&
             trickyShouldGoToWarpPoint(obj, (TrickyState*)state) == 2) {
             trickyState->stateIndex = TRICKY_STATE_GO_TO_WARP_POINT;
-        } else if (trickyState->stateIndex == TRICKY_STATE_GUARD && cmd == TRICKY_COMMAND_TYPE_FLAME) {
+        } else if (trickyState->stateIndex == TRICKY_STATE_GUARD && requestedCommand == TRICKY_COMMAND_TYPE_FLAME) {
             trickyState->guardCanSpawnHelpers = trickyState->guardCanSpawnHelpers ^ 1;
-        } else if (trickyState->stateIndex == TRICKY_STATE_CIRCLING && cmd == TRICKY_COMMAND_TYPE_FLAME && found == 0) {
+        } else if (trickyState->stateIndex == TRICKY_STATE_CIRCLING &&
+                   requestedCommand == TRICKY_COMMAND_TYPE_FLAME && commandAlreadyQueued == 0) {
             trickyState->flameCommandPending = 1;
-        } else if (trickyState->stateIndex == TRICKY_STATE_GROWL && cmd == TRICKY_COMMAND_TYPE_FLAME) {
+        } else if (trickyState->stateIndex == TRICKY_STATE_GROWL && requestedCommand == TRICKY_COMMAND_TYPE_FLAME) {
             trickyState->flameCommandPending = 1;
-        } else if (cmd == TRICKY_COMMAND_TYPE_CALL) {
+        } else if (requestedCommand == TRICKY_COMMAND_TYPE_CALL) {
             trickyState->stateFlags |= TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS;
         } else {
             flags = trickyState->stateFlags;
             if ((flags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
-                switch (cmd) {
+                switch (requestedCommand) {
                 case TRICKY_COMMAND_TYPE_FIND_SECRET:
                     trickyState->commandPhase = TRICKY_COMMAND_PHASE_DIG;
                     trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FIND_SECRET);
@@ -7775,7 +7776,7 @@ void Tricky_update(GameObject* obj) {
                     }
                     break;
                 }
-            } else if (cmd == TRICKY_COMMAND_TYPE_STAY) {
+            } else if (requestedCommand == TRICKY_COMMAND_TYPE_STAY) {
                 trickyState->stateFlags = flags | (u64)TRICKY_STATE_FLAG_GUARD_REQUEST;
             }
         }
