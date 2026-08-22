@@ -93,10 +93,9 @@ typedef struct TrickyJumpArc {
 struct RomCurveDef;
 
 /*
- * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers
- * in grenade.c (trickyFn_* / trickyFoodFn_* / trickyFlameFn_* take it as
- * "state"). Field widths mirror the deref widths observed in grenade.c;
- * unobserved ranges are padded (observed in grenade.c, weaponE6.c, collectable.c, sidekickToy.c).
+ * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers.
+ * Field widths mirror the deref widths observed across Tricky, Skeetla, and
+ * companion command handlers; unobserved ranges are padded.
  * Tricky_getExtraSize returns 0x83C; sizeof kept at the 0x840 alloc rounding.
  */
 typedef struct TrickyState {

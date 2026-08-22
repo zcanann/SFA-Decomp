@@ -5090,7 +5090,7 @@ void tricky_state04_nop(void) {
  * object sounds (audio/sfx). tricky_handleFeedOrTalk handles the shared
  * feeding/Y-button-item interaction and is called as a guard at the top of
  * most states. Water-vs-land animation selection (the repeated
- * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
+ * waterLevel/eventTime/currentTime ladder) chooses swim vs walk anims throughout.
  */
 
 /* GameCube controller button mask */
