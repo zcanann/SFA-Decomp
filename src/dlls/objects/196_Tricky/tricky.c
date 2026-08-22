@@ -706,11 +706,24 @@ int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
 #define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
 #define SKEETLA_PARTICLE_SPARK_A       0xca
 #define SKEETLA_PARTICLE_SPARK_B       0xcb
+#define SKEETLA_CONTACT_OBJ_PROJBALL   0x1f /* "projball" (DLL 0xE3) */
 
 /* attacker romDefNo that triggers the staff-impact sfx (retail OBJECTS.bin). */
 #define SKEETLA_ATTACKER_SEQID_STAFF 0x69
 /* "staff" (DLL 0xE2) */
 #define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
+#define TRICKY_HITMASK_ALL_SOURCES   0x7f
+#define TRICKY_HITMASK_NO_LOW_SOURCE 0x7e
+
+enum TrickyDamageType {
+    TRICKY_DAMAGE_INSTANT_DEATH = 0x01,
+    TRICKY_DAMAGE_DIM2_SNOWBALL = 0x04,
+    TRICKY_DAMAGE_BOMB_PLANT_EXPLOSION = 0x05,
+    TRICKY_DAMAGE_MMP_CRATERF = 0x09,
+    TRICKY_DAMAGE_MMP_BARREL = 0x0a,
+    TRICKY_DAMAGE_PROJBALL = 0x0e,
+    TRICKY_DAMAGE_FIRE = 0x1f,
+};
 #define SKEETLA_PARTICLE_RANDOM_RATE 4
 void tricky_state06_nop(void);
 void trickyFlame();
@@ -955,7 +968,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
 
     lastContactObj = (GameObject*)obj->anim.hitReactState->activeHit;
     if (((obj->anim.hitReactState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) == 0) ||
-        (lastContactObj->anim.romDefNo == 0x1f)) {
+        (lastContactObj->anim.romDefNo == SKEETLA_CONTACT_OBJ_PROJBALL)) {
         lastContactObj = NULL;
     }
 
@@ -965,7 +978,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
             if (vec3f_distanceSquared(&obj->anim.worldPosX, &Obj_GetPlayerObject()->anim.worldPosX) >
                 TRICKY_FLOAT_400) {
                 state->contactTimer -= TRICKY_FLOAT_40;
-                obj->anim.modelInstance->runtimeSourceHitMask = 0x7f;
+                obj->anim.modelInstance->runtimeSourceHitMask = TRICKY_HITMASK_ALL_SOURCES;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED;
             }
         }
@@ -975,7 +988,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         if (contactTimer >= TRICKY_FLOAT_TEN) {
             state->contactTimer = contactTimer - TRICKY_FLOAT_TEN;
             state->stateFlags |= TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED;
-            obj->anim.modelInstance->runtimeSourceHitMask = 0x7e;
+            obj->anim.modelInstance->runtimeSourceHitMask = TRICKY_HITMASK_NO_LOW_SOURCE;
         }
     } else {
         state->contactTimer = gTrickyFloatZero;
@@ -986,11 +999,11 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     state->light = hitKind;
 
     switch (state->light) {
-    case 1:
+    case TRICKY_DAMAGE_INSTANT_DEATH:
     case 2:
-    case 4:
-    case 5:
-    case 0xe:
+    case TRICKY_DAMAGE_DIM2_SNOWBALL:
+    case TRICKY_DAMAGE_BOMB_PLANT_EXPLOSION:
+    case TRICKY_DAMAGE_PROJBALL:
     case 0xf:
     case 0x11:
     case 0x13:
@@ -998,8 +1011,8 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         break;
     case 7:
     case 8:
-    case 9:
-    case 0xa:
+    case TRICKY_DAMAGE_MMP_CRATERF:
+    case TRICKY_DAMAGE_MMP_BARREL:
     case 0xb:
     case 0xc:
         objfx_spawnHitEmitterAtPos(hitPosPtr, 8, 0xff, 0x20, 0x20);
@@ -1008,7 +1021,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
             Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
         }
         break;
-    case 0x1f:
+    case TRICKY_DAMAGE_FIRE:
         state->particleTimer = TRICKY_FLOAT_300;
         break;
     }
