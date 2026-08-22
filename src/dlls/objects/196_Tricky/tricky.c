@@ -131,13 +131,45 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, disableGameBit) == 0x18);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 
+/* Rena audio enum names for Tricky voice lines. */
+#define TRICKY_VOICE_SFX_TIRED                 0x298
+#define TRICKY_VOICE_SFX_GROWL                 0x299
+#define TRICKY_VOICE_SFX_ROLLING               0x29b
+#define TRICKY_VOICE_SFX_FINISH_FLAME          0x29d
+#define TRICKY_VOICE_SFX_WAIT_UP_FOX           0x34d
+#define TRICKY_VOICE_SFX_WAIT_FOR_ME           0x34e
+#define TRICKY_VOICE_SFX_HEY                   0x34f
+#define TRICKY_VOICE_SFX_GET_OFF               0x350
+#define TRICKY_VOICE_SFX_LOOK_AT_THIS          0x351
+#define TRICKY_VOICE_SFX_IM_HUNGRY             0x352
+#define TRICKY_VOICE_SFX_YAWN2                 0x353
+#define TRICKY_VOICE_SFX_YAWN                  0x354
+#define TRICKY_VOICE_SFX_LETS_PLAY             0x355
+#define TRICKY_VOICE_SFX_COOL                  0x356
+#define TRICKY_VOICE_SFX_SNIFF                 0x357
+#define TRICKY_VOICE_SFX_BAD_GUY               0x358
+#define TRICKY_VOICE_SFX_FOOD                  0x359
+#define TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR 0x35a
+#define TRICKY_VOICE_SFX_GET_MFOX              0x35b
+#define TRICKY_VOICE_SFX_YEAH                  0x35c
+#define TRICKY_VOICE_SFX_IM_NOT_DOING_IT       0x35d
+#define TRICKY_VOICE_SFX_HELLO                 0x35e
+#define TRICKY_VOICE_SFX_HI_FELLA              0x35f
+#define TRICKY_VOICE_SFX_DUM_DE_DUM            0x360
+#define TRICKY_VOICE_SFX_LAUGH                 0x361
+#define TRICKY_VOICE_SFX_CHEWING               0x362
+#define TRICKY_VOICE_SFX_MMMM_TASTY            0x363
+#define TRICKY_VOICE_SFX_IM_STUFFED            0x364
+#define TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING    0x365
+#define TRICKY_VOICE_SFX_SCARED                0x392
+
 const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
-const TrickySfxPair sTrickyImpressSfxPair = {0x0356, 0x035C};
-const u16 gTrickyQuestPromptSfxIds[2] = {0x035A, 0x0351};
-const u16 gTrickySubstateSfxIdPairA[2] = {0x035C, 0x0361};
-const u16 gTrickySubstateSfxIdPairB[2] = {0x035C, 0x0361};
-const u16 gSkeetlaFootstepSfxIds01[2] = {0x0361, 0x0365};
-const u16 gSkeetlaFootstepSfxId2[1] = {0x0355};
+const TrickySfxPair sTrickyImpressSfxPair = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
+const u16 gTrickyQuestPromptSfxIds[2] = {TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR, TRICKY_VOICE_SFX_LOOK_AT_THIS};
+const u16 gTrickySubstateSfxIdPairA[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
+const u16 gTrickySubstateSfxIdPairB[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
+const u16 gSkeetlaFootstepSfxIds01[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING};
+const u16 gSkeetlaFootstepSfxId2[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 
 const f32 gTrickyFloatZero[1] = {0.0f};
 static const f32 sTrickyFloatTen[1] = {10.0f};
@@ -189,16 +221,6 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_ANIM_TURN_RIGHT_LARGE        0x28
 #define TRICKY_TURN_LARGE_ANGLE             0x3555
 #define TRICKY_TURN_MEDIUM_ANGLE            0x2000
-#define TRICKY_VOICE_SFX_TIRED              0x298
-#define TRICKY_VOICE_SFX_GROWL              0x299
-#define TRICKY_VOICE_SFX_ROLLING            0x29b
-#define TRICKY_VOICE_SFX_FINISH_FLAME       0x29d
-#define TRICKY_VOICE_SFX_WAIT_UP_FOX        0x34d
-#define TRICKY_VOICE_SFX_WAIT_FOR_ME        0x34e
-#define TRICKY_VOICE_SFX_DUM_DE_DUM         0x360
-#define TRICKY_VOICE_SFX_MMMM_TASTY         0x363
-#define TRICKY_VOICE_SFX_IM_STUFFED         0x364
-#define TRICKY_VOICE_SFX_SCARED             0x392
 #define TRICKY_COMMAND_TTL_FRAMES           3
 #define TRICKY_COMMAND_PHASE_IDLE           -1
 #define TRICKY_COMMAND_PHASE_NONE           0
@@ -3622,7 +3644,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             }
             if (bestWarp != NULL) {
                 if (state->circlingWarpDetour == NULL) {
-                    TRICKY_BARK((int*)obj, 0x35b, 0x500, orbitCfg);
+                    TRICKY_BARK((int*)obj, TRICKY_VOICE_SFX_GET_MFOX, 0x500, orbitCfg);
                 }
                 if (state->circlingWarpDetour == NULL || state->circlingWarpDetour != bestWarp) {
                     state->circlingWarpDetour = bestWarp;
@@ -5683,7 +5705,7 @@ int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
             if (sfxState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                 Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &sfxState->soundState, 0x357, 0, -1, 0);
+                objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_SNIFF, 0, -1, 0);
             }
             trickyRequestMove(obj, 0x26, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
             state->substate = 5;
@@ -5771,7 +5793,7 @@ u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
         if ((int)(obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
             (int)(obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
             if (((int (*)(GameObject*, int))Sfx_IsPlayingFromObjectChannel)(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &ref->soundState, 0x357, 0, 0xffffffff, 0);
+                objSoundStartTimed(obj, &ref->soundState, TRICKY_VOICE_SFX_SNIFF, 0, 0xffffffff, 0);
             }
         }
     }
@@ -5929,7 +5951,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         if (sfxState->soundSuppressed == 0 &&
             ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
             Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &sfxState->soundState, 0x354, 0x1000, -1, 0);
+            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_YAWN, 0x1000, -1, 0);
         }
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->substate = 4;
@@ -6075,7 +6097,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
         if ((((TrickyState*)done)->soundSuppressed == 0U) &&
             ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
              !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL))) {
-            objSoundStartTimed(obj, &((TrickyState*)done)->soundState, 0x353, 0x500, 0xffffffff, 0);
+            objSoundStartTimed(obj, &((TrickyState*)done)->soundState, TRICKY_VOICE_SFX_YAWN2, 0x500, 0xffffffff, 0);
         }
         return 0;
     }
@@ -6104,7 +6126,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
                      (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                       (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
                      !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL))) {
-                    objSoundStartTimed(obj, &extra->soundState, 0x357, 0, 0xffffffff, 0);
+                    objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_SNIFF, 0, 0xffffffff, 0);
                 }
                 trickyRequestMove(obj, 0x26, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
                 trickyState->substate = 5;
@@ -6195,7 +6217,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
         if (sfxState->soundSuppressed == 0 &&
             (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
             Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &sfxState->soundState, 0x354, 0x1000, -1, 0);
+            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_YAWN, 0x1000, -1, 0);
         }
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->substate = 4;
@@ -6219,7 +6241,7 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
         if (state->soundSuppressed == 0U) {
             if ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
                 if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                    objSoundStartTimed(obj, &state->soundState, 0x357, 0, 0xffffffff, 0);
+                    objSoundStartTimed(obj, &state->soundState, TRICKY_VOICE_SFX_SNIFF, 0, 0xffffffff, 0);
                 }
             }
         }
@@ -6378,7 +6400,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
             if (sfxState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                 Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &sfxState->soundState, 0x34f, 0x500, -1, 0);
+                objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_HEY, 0x500, -1, 0);
             }
         } else {
             state->cooldownB.f += TRICKY_TIMER_600_FRAMES;
@@ -6398,7 +6420,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                             (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                              obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                             Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &sfxState->soundState, 0x350, 0x500, -1, 0);
+                            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF, 0x500, -1, 0);
                         }
                     } else {
                         sfxState = obj->extra;
@@ -6406,7 +6428,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                             (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                              obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                             Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &sfxState->soundState, 0x350, 0x500, -1, 0);
+                            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF, 0x500, -1, 0);
                         }
                     }
                 } else {
@@ -6415,7 +6437,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                         (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                          obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                         Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &sfxState->soundState, 0x350, 0x500, -1, 0);
+                        objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF, 0x500, -1, 0);
                     }
                     state->substate = 10;
                     state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
@@ -6436,6 +6458,31 @@ typedef void (*TrickyHandlerFn)(void* obj, void* state);
 #define TRICKY_CHILD_OBJ_EXCLAMATION   0x175 /* "TrickyExcla..." */
 #define TRICKY_CHILD_OBJ_SIDEKICK_BALL 0x112 /* "SidekickBal..." (DLL 0xF5 sidekickball) */
 #define TRICKY_OBJ_BLUE_MUSHROOM       0x6a  /* "BlueMushroo..." (DLL 0x1A7) */
+
+/* Command-target romDefNo values from the Rena object definition enum. */
+#define TRICKY_TARGET_OBJ_WCTEMPLE_PRESSURE  0x36
+#define TRICKY_TARGET_OBJ_SH_BEACON          0x3c
+#define TRICKY_TARGET_OBJ_CCEYE_VINES        0x102
+#define TRICKY_TARGET_OBJ_STAY_POINT         0x104
+#define TRICKY_TARGET_OBJ_CF_DOOR_LIGHT      0x131
+#define TRICKY_TARGET_OBJ_DIM_LOG_FIRE       0x191
+#define TRICKY_TARGET_OBJ_LINK_BLUE_MUSHROOM 0x193
+#define TRICKY_TARGET_OBJ_BURNABLE_VINE      0x194
+#define TRICKY_TARGET_OBJ_NW_MAMMOTH         0x195
+#define TRICKY_TARGET_OBJ_LINK_SNOW_PRESSURE 0x19f
+#define TRICKY_TARGET_OBJ_DIM_ICE_WALL       0x1c9
+#define TRICKY_TARGET_OBJ_SH_PRESSURE        0x26c
+#define TRICKY_TARGET_OBJ_DR_CHIMMEY         0x470
+#define TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT   0x546
+#define TRICKY_TARGET_OBJ_VFP_FLAMEPOINT     0x551
+#define TRICKY_TARGET_OBJ_MS_PLANTING_SEED   0x54c
+#define TRICKY_TARGET_OBJ_SH_WHITEMUSHROOM   0x658
+#define TRICKY_TARGET_OBJ_ICE_HOLE           0x6f9
+#define TRICKY_TARGET_OBJ_TRICKY_GUARD       0x6f0
+#define TRICKY_TARGET_OBJ_DIM_TRUTH_HORN     0x718
+#define TRICKY_TARGET_OBJ_SC_PRESSURE        0x7c3
+#define TRICKY_TARGET_OBJ_TUMBLEWEED2        0x3fb
+#define TRICKY_TARGET_OBJ_WC_BEACON          0x50f
 
 /* GameObject.objectFlags bit (distinct field from stateFlags above). */
 #define TRICKY_OBJFLAG_PARENT_SLACK            0x1000
@@ -6962,13 +7009,13 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                             (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                                (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
                               !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
-                            objSoundStartTimed(obj, &refB->soundState, 0x359, 0x500, 0xffffffff, 0);
+                            objSoundStartTimed(obj, &refB->soundState, TRICKY_VOICE_SFX_FOOD, 0x500, 0xffffffff, 0);
                         }
                     } else if ((((promptC) && (refC = obj->extra, refC->soundSuppressed == 0)) &&
                                 ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                                   (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)))) &&
                                !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)) {
-                        objSoundStartTimed(obj, &refC->soundState, 0x358, 0x500, 0xffffffff, 0);
+                        objSoundStartTimed(obj, &refC->soundState, TRICKY_VOICE_SFX_BAD_GUY, 0x500, 0xffffffff, 0);
                     }
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_EXCLAMATION);
@@ -7457,12 +7504,12 @@ void Tricky_update(GameObject* obj) {
                         }
                         break;
                     case TRICKY_OBJ_BLUE_MUSHROOM:
-                    case 0x193:
-                    case 0x3fb:
-                    case 0x658:
+                    case TRICKY_TARGET_OBJ_LINK_BLUE_MUSHROOM:
+                    case TRICKY_TARGET_OBJ_TUMBLEWEED2:
+                    case TRICKY_TARGET_OBJ_SH_WHITEMUSHROOM:
                         trickyState->stateIndex = TRICKY_STATE_MOVE_TO_FOLLOW_TARGET;
                         break;
-                    case 0x195:
+                    case TRICKY_TARGET_OBJ_NW_MAMMOTH:
                         if (*trickyState->progressPtr < 2) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7510,19 +7557,19 @@ void Tricky_update(GameObject* obj) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_GUARD;
                         if (trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_STAY) != 0) {
                             switch (trickyState->followObj->anim.romDefNo) {
-                            case 0x36:
-                            case 0x104:
-                            case 0x131:
-                            case 0x19f:
-                            case 0x26c:
+                            case TRICKY_TARGET_OBJ_WCTEMPLE_PRESSURE:
+                            case TRICKY_TARGET_OBJ_STAY_POINT:
+                            case TRICKY_TARGET_OBJ_CF_DOOR_LIGHT:
+                            case TRICKY_TARGET_OBJ_LINK_SNOW_PRESSURE:
+                            case TRICKY_TARGET_OBJ_SH_PRESSURE:
                             case 0x475:
-                            case 0x546:
-                            case 0x7c3:
+                            case TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT:
+                            case TRICKY_TARGET_OBJ_SC_PRESSURE:
                                 trickyState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
                                 trickyState->idleSfxTimer = (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES,
                                                                                      TRICKY_IDLE_VOICE_MAX_FRAMES);
                                 break;
-                            case 0x6f0:
+                            case TRICKY_TARGET_OBJ_TRICKY_GUARD:
                                 trickyState->stateIndex = TRICKY_STATE_GROWL;
                                 break;
                             default:
@@ -7546,32 +7593,32 @@ void Tricky_update(GameObject* obj) {
                         trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FLAME);
                         trickyState->stateIndex = TRICKY_STATE_FLAME;
                         switch (trickyState->followObj->anim.romDefNo) {
-                        case 0x1c9:
+                        case TRICKY_TARGET_OBJ_DIM_ICE_WALL:
                             trickyState->actionCallback = dimicewall_countdownCallback;
                             break;
-                        case 0x718:
+                        case TRICKY_TARGET_OBJ_DIM_TRUTH_HORN:
                             trickyState->actionCallback = dimtruthhornice_countdownCallback;
                             break;
-                        case 0x551:
+                        case TRICKY_TARGET_OBJ_VFP_FLAMEPOINT:
                             trickyState->actionCallback = vfpflamepoint_countdownCallback;
                             break;
-                        case 0x191:
+                        case TRICKY_TARGET_OBJ_DIM_LOG_FIRE:
                             trickyState->actionCallback = dimlogfire_countdownCallback;
                             break;
-                        case 0x470:
+                        case TRICKY_TARGET_OBJ_DR_CHIMMEY:
                             trickyState->actionCallback = drchimmey_countdownCallback;
                             break;
-                        case 0x102:
-                        case 0x194:
+                        case TRICKY_TARGET_OBJ_CCEYE_VINES:
+                        case TRICKY_TARGET_OBJ_BURNABLE_VINE:
                         case 0x542:
-                        case 0x54c:
-                        case 0x6f9:
+                        case TRICKY_TARGET_OBJ_MS_PLANTING_SEED:
+                        case TRICKY_TARGET_OBJ_ICE_HOLE:
                             trickyState->actionCallback = NULL;
                             break;
-                        case 0x3c:
+                        case TRICKY_TARGET_OBJ_SH_BEACON:
                             trickyState->actionCallback = (TrickyActionCallback)sh_beacon_resetFadeTimerCallback;
                             break;
-                        case 0x50f:
+                        case TRICKY_TARGET_OBJ_WC_BEACON:
                             trickyState->actionCallback = (TrickyActionCallback)wcbeacon_aButtonCallback;
                             break;
                         default:
