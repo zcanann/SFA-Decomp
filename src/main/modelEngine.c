@@ -441,6 +441,7 @@
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/dll/dll_023F_dbegg.h"
 #include "main/dll/dll_025A_staticcamera.h"
+#include "main/dll/dll_025B_msplantings.h"
 #include "main/dll/dll_0269_explodeplan.h"
 #include "main/dll/dll_0272_hightop.h"
 #include "main/dll/dll_0273_firepipe.h"
@@ -478,6 +479,7 @@
 #include "main/dll/dll_02AD_softbody.h"
 #include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/dll/VF/platform1.h"
+#include "main/dll/WM/dll_0210_wmplanets.h"
 #include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
 #include "main/gametext_box_api.h"
@@ -551,7 +553,6 @@ extern ResourceDescriptor gKtFallingrocksObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKtRexObjDescriptor, gKytesMumObjDescriptor;
 extern ResourceDescriptor gLaserObjDescriptor, gLaserUnsupportedObjDescriptor;
-extern ResourceDescriptor gMoonSeedPlantingSpotObjDescriptor;
 extern ResourceDescriptor gPointLightObjDescriptor;
 extern ResourceDescriptor gProjectedLightObjDescriptor, gProximityMineObjDescriptor;
 extern ResourceDescriptor gRingObjDescriptor, gSB_CloudRunnerObjDescriptor;
@@ -571,7 +572,6 @@ extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor
 extern ResourceDescriptor gWCLevelContObjDescriptor,
     gWCPushBlockObjDescriptor, gWCTempleBriObjDescriptor,
     gWCTileObjDescriptor;
-extern ResourceDescriptor gWM_PlanetsObjDescriptor;
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_WallCrawlerObjDescriptor, gWM_newcrystalObjDescriptor,
     gWM_seqpointObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor, gWaterFlowWeObjDescriptor;
@@ -1722,7 +1722,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gWM_seqpointObjDescriptor,
     &gWM_sunObjDescriptor,
     &gWM_SpiritSetObjDescriptor,
-    &gWM_PlanetsObjDescriptor,
+    (ResourceDescriptor*)&gWM_PlanetsObjDescriptor,
     &gWM_WallCrawlerObjDescriptor,
     &gDll212NullResourceDescriptor,
     &gWM_VConsoleNullResourceDescriptor,
@@ -1797,7 +1797,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDR_CloudRunnerObjDescriptor,
     &gSB_CloudRunnerObjDescriptor,
     (ResourceDescriptor*)&gStaticCameraObjDescriptor,
-    &gMoonSeedPlantingSpotObjDescriptor,
+    (ResourceDescriptor*)&gMoonSeedPlantingSpotObjDescriptor,
     &gSnowClawObjDescriptor,
     &gCrCloudRaceObjDescriptor,
     &gSpellStoneObjDescriptor,

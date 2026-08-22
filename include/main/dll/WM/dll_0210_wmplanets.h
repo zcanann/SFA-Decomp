@@ -4,6 +4,7 @@
 #include "global.h"
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct WmPlanetsState
 {
@@ -50,5 +51,7 @@ void WM_Planets_update(GameObject* obj);
 void WM_Planets_init(GameObject* obj, WmPlanetsMapData* mapData);
 void WM_Planets_release(void);
 void WM_Planets_initialise(void);
+
+extern ObjectDescriptor gWM_PlanetsObjDescriptor;
 
 #endif /* MAIN_DLL_WM_DLL_0210_WMPLANETS_H_ */

@@ -29,7 +29,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_025B_msplantings.h"
 #include "main/frame_timing.h"
-#include "dlls/object_descriptor.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A

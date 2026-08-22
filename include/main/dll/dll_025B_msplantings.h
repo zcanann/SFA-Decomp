@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "game/objects/object.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct MoonSeedPlantingSpotPlacement
 {
@@ -43,5 +44,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj);
 void MoonSeedPlantingSpot_init(GameObject* obj, MoonSeedPlantingSpotPlacement* init);
 void MoonSeedPlantingSpot_release(void);
 void MoonSeedPlantingSpot_initialise(void);
+
+extern ObjectDescriptor14 gMoonSeedPlantingSpotObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_025B_MSPLANTINGS_H_ */
