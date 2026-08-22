@@ -119,7 +119,7 @@ int WM_GeneralScales_sequenceCallback(int objectHandle, int unusedArg2, ObjSeqSt
             state->phase = WM_GENERAL_SCALES_PHASE_IDLE;
             break;
         case WM_GENERAL_SCALES_SEQUENCE_EVENT_DRAW_SWORD:
-            if (((GameObject*)objectHandle)->childObjs[0] == NULL && Obj_CanSetupObject() != 0) {
+            if (((GameObject*)objectHandle)->childObjs[0] == NULL && (u8)Obj_CanSetupObject() != 0) {
                 CFCratePlacement* setup =
                     (CFCratePlacement*)Obj_AllocObjectSetup(sizeof(CFCratePlacement), CFCRATE_OBJ_SCALESSWORD);
                 setup->base.posX = ((GameObject*)objectHandle)->anim.localPosX;

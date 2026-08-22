@@ -72,7 +72,7 @@ void magicmaker_update(GameObject* obj) {
     GameObject* groupObject;
 
     placement = (ObjPlacement*)obj->anim.placementData;
-    if (Obj_CanSetupObject() != 0) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         if (mainGetBit(MAGICMAKER_SPAWN_GAMEBIT) != 0u) {
             mainSetBits(MAGICMAKER_SPAWN_GAMEBIT, 0);
             groupObjects = (GameObject**)objGetAllOfType(COLLECTIBLE_OBJECT_GROUP, &groupObjectCount);
