@@ -15,10 +15,9 @@
  * point lights within a radius; pointlight_setEffectState is the entry point
  * it calls.
  */
+#include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "dlls/object_descriptor.h"
-#include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 #include "main/objtype.h"
 #include "main/sky.h"
 #include "sys/objects.h"

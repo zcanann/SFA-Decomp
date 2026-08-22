@@ -303,6 +303,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/dll/LGT/dll_02AA_lgtdirectionallight.h"
+#include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/dll/dll_0043_cameramodestaffanim.h"
@@ -437,12 +438,15 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_0126_trigger.h"
+#include "main/dll/DF/dll_022D_dfpseqpoint.h"
 #include "main/dll/DF/dll_0233_dfpstatue1.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/dll/dll_023F_dbegg.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/dll_025B_msplantings.h"
+#include "main/dll/DR/dll_0254_ktfallingrocks.h"
 #include "main/dll/dll_0269_explodeplan.h"
+#include "main/dll/dll_0263_gmmazewell.h"
 #include "main/dll/dll_0272_hightop.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -536,7 +540,6 @@ extern ResourceDescriptor gChukaObjDescriptor;
 extern ResourceDescriptor gControlLightObjDescriptor, gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDBstealerwormObjDescriptor, gDFP_LevelControlObjDescriptor,
     gDFP_ObjCreatorObjDescriptor, gDFP_TorchObjDescriptor;
-extern ResourceDescriptor gDFP_seqpointObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
 extern ResourceDescriptor gDfperchwitchObjDescriptor, gDfpfloorbarObjDescriptor, gDfplightniObjDescriptor,
     gDfppowerslObjDescriptor;
@@ -548,12 +551,9 @@ extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
 extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
 extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
-extern ResourceDescriptor gGmMazeWellObjDescriptor;
-extern ResourceDescriptor gKtFallingrocksObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKtRexObjDescriptor, gKytesMumObjDescriptor;
 extern ResourceDescriptor gLaserObjDescriptor, gLaserUnsupportedObjDescriptor;
-extern ResourceDescriptor gPointLightObjDescriptor;
 extern ResourceDescriptor gProjectedLightObjDescriptor, gProximityMineObjDescriptor;
 extern ResourceDescriptor gRingObjDescriptor, gSB_CloudRunnerObjDescriptor;
 extern ResourceDescriptor gSPDrapeObjDescriptor, gSPitembeamObjDescriptor, gSeqPointObjDescriptor;
@@ -1751,7 +1751,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDFP_ObjCreatorObjDescriptor,
     &gDFP_TorchObjDescriptor,
     &gDll22CObjDescriptor,
-    &gDFP_seqpointObjDescriptor,
+    (ResourceDescriptor*)&gDFP_seqpointObjDescriptor,
     &gDoorswitchObjDescriptor,
     &gDfpfloorbarObjDescriptor,
     &gChukaObjDescriptor,
@@ -1790,7 +1790,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gKtRexFloorSwitchObjDescriptor,
     &gKtLazerwallObjDescriptor,
     &gKtLazerlightObjDescriptor,
-    &gKtFallingrocksObjDescriptor,
+    (ResourceDescriptor*)&gKtFallingrocksObjDescriptor,
     &gSnowBikeObjDescriptor,
     (ResourceDescriptor*)&gDIMSnowHorn1ObjDescriptor,
     (ResourceDescriptor*)&gDR_EarthWarriorObjDescriptor,
@@ -1805,7 +1805,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gProximityMineObjDescriptor,
     &gDrLaserCannonObjDescriptor,
     &gDrakorMissileObjDescriptor,
-    &gGmMazeWellObjDescriptor,
+    (ResourceDescriptor*)&gGmMazeWellObjDescriptor,
     &gDll264NullResourceDescriptor,
     &gDrCreatorObjDescriptor,
     &gKytesMumObjDescriptor,
@@ -1875,7 +1875,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gARWSquadronObjDescriptor,
     &gARWProximitObjDescriptor,
     &gARWBlockerObjDescriptor,
-    &gPointLightObjDescriptor,
+    (ResourceDescriptor*)&gPointLightObjDescriptor,
     (ResourceDescriptor*)&gDirectionalLightObjDescriptor,
     &gProjectedLightObjDescriptor,
     &gControlLightObjDescriptor,

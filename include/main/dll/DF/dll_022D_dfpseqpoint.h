@@ -4,6 +4,7 @@
 #include "game/objects/object.h"
 #include "main/objseq.h"
 #include "game/objects/object_setup.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct DfpSeqPointPlacement
 {
@@ -37,5 +38,7 @@ void DFP_seqpoint_init(GameObject* obj, u8* init);
 int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate);
 void DFP_seqpoint_release(void);
 void DFP_seqpoint_initialise(void);
+
+extern ObjectDescriptor gDFP_seqpointObjDescriptor;
 
 #endif /* MAIN_DLL_DF_DLL_022D_DFPSEQPOINT_H_ */

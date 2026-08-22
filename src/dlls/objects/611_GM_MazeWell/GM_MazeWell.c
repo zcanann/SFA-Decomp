@@ -14,7 +14,7 @@
  * is suppressed (INTERACT_FLAG_PROMPT_SUPPRESSED) whenever no watched
  * event is currently ready.
  */
-#include "dlls/object_descriptor.h"
+#include "main/dll/dll_0263_gmmazewell.h"
 #include "main/audio/music_api.h"
 #include "main/dll/DR/dll_0250_ktrex.h"
 #include "main/dll/dll_0015_save_settings.h"
@@ -26,7 +26,6 @@
 #include "sys/objects.h"
 #include "main/objseq.h"
 #include "main/textrender_api.h"
-#include "main/dll/dll_0263_gmmazewell.h"
 #include "main/object_render.h"
 #include "dolphin/pad.h"
 #include "main/shader_api.h"
