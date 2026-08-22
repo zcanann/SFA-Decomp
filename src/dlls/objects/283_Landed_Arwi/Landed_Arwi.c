@@ -373,7 +373,7 @@ void landed_arwing_update(GameObject* obj) {
     state = obj->extra;
     player = Obj_GetPlayerObject();
     if (state->childObject == NULL) {
-        if (Obj_CanSetupObject() != 0) {
+        if ((u8)Obj_CanSetupObject() != 0) {
             child = (GameObject*)objSetupObject(
                 Obj_AllocObjectSetup(LANDED_ARWING_CHILD_OBJECT_SETUP_SIZE, LANDED_ARWING_GADGET_OBJECT_ID), 4, -1, -1,
                 0);
