@@ -865,6 +865,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     u8 doGroundSnap;
     int doHeightSnap;
     int hitKind;
+    f32 contactTimer;
 
     state = (TrickyState*)obj->extra;
     doGroundSnap = 0;
@@ -933,8 +934,9 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         }
     } else if ((state->lastContactObj != NULL) && (lastContactObj == state->lastContactObj)) {
         state->contactTimer += timeDelta;
-        if (state->contactTimer >= TRICKY_FLOAT_TEN) {
-            state->contactTimer -= TRICKY_FLOAT_TEN;
+        contactTimer = state->contactTimer;
+        if (contactTimer >= TRICKY_FLOAT_TEN) {
+            state->contactTimer = contactTimer - TRICKY_FLOAT_TEN;
             state->stateFlags |= TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED;
             obj->anim.modelInstance->runtimeSourceHitMask = 0x7e;
         }
