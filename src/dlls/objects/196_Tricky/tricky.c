@@ -387,6 +387,12 @@ const f32 gTrickyRouteLookaheadScale[1] = {1.5f};
 const f32 gTrickyYawStepRate[1] = {512.0f};
 const f32 gTrickyPi[1] = {3.1415927f};
 const f32 gTrickyAngleHalfTurnUnits[1] = {32768.0f};
+const f32 gTrickyAvoidanceRepathEpsilonSq[1] = {0.0001f};
+const f32 gTrickyRunMoveThreshold[1] = {2.5f};
+const f32 gTrickyFastWalkMoveThreshold[1] = {0.66f};
+const f32 gTrickySlowWalkMoveThreshold[1] = {0.33f};
+const f32 gTrickyTurnMoveBlendSpeed[1] = {0.04f};
+const f32 gTrickyAnimTransitionFrames[1] = {15.0f};
 
 #define gTrickyEventTimeSentinel           (gTrickyEventTimeSentinel[0])
 #define gTrickyEventStaleSeconds           (gTrickyEventStaleSeconds[0])
@@ -407,13 +413,13 @@ const f32 gTrickyAngleHalfTurnUnits[1] = {32768.0f};
 #define TRICKY_YAW_STEP_RATE               (gTrickyYawStepRate[0])
 #define TRICKY_PI                          (gTrickyPi[0])
 #define TRICKY_ANGLE_HALF_TURN_UNITS       (gTrickyAngleHalfTurnUnits[0])
-#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
-#define TRICKY_TINY_MOVE_BLEND_SPEED       0.0001f
-#define TRICKY_RUN_MOVE_THRESHOLD          2.5f
-#define TRICKY_FAST_WALK_MOVE_THRESHOLD    0.66f
-#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    0.33f
-#define TRICKY_TURN_MOVE_BLEND_SPEED       0.04f
-#define TRICKY_ANIM_TRANSITION_FRAMES      15.0f
+#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ (gTrickyAvoidanceRepathEpsilonSq[0])
+#define TRICKY_TINY_MOVE_BLEND_SPEED       (gTrickyAvoidanceRepathEpsilonSq[0])
+#define TRICKY_RUN_MOVE_THRESHOLD          (gTrickyRunMoveThreshold[0])
+#define TRICKY_FAST_WALK_MOVE_THRESHOLD    (gTrickyFastWalkMoveThreshold[0])
+#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    (gTrickySlowWalkMoveThreshold[0])
+#define TRICKY_TURN_MOVE_BLEND_SPEED       (gTrickyTurnMoveBlendSpeed[0])
+#define TRICKY_ANIM_TRANSITION_FRAMES      (gTrickyAnimTransitionFrames[0])
 
 void tricky_updateModelVariantFade(GameObject* obj, TrickyState* state) {
     u8 ratio = state->progressPtr[2] / 10;
