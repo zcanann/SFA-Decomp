@@ -348,13 +348,13 @@ typedef struct TrickyState {
     };
     union {
         struct {
-            u8 stateFlags728; /* flag byte: 0/1 boolean sets (tricky/animobjd2) plus a bit-5 test (tricky_substates) */
+            u8 idleActivityFlags; /* ambient-idle latches plus Thorntail approach voice/move latch */
             u8 pad729[0x72C - 0x729];
         };
         struct {
-            u8 flag728Bit7 : 1;
-            u8 flag728Bit6 : 1;
-            u8 flag728Bit5 : 1;
+            u8 idleActivityPending : 1;
+            u8 idleActivityDelayActive : 1;
+            u8 thorntailIdleMovePending : 1;
             u8 flag728Rest : 5;
         };
         s32 stateWord728; /* full-width boolean/state view used by growl, circling and idle handlers */
@@ -408,7 +408,7 @@ typedef struct TrickyState {
         struct {
             u8 blendPending : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
             u8 blendActive : 1; /* bit 6: blend channel 1 ramp is running */
-            u8 flag82EBit5 : 1;
+            u8 sequencePreserveBlend : 1;
             u8 flags82ERest : 5;
         };
     };

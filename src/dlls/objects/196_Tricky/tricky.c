@@ -5616,13 +5616,13 @@ int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
         state->wanderTargetY = pos[1];
         state->wanderTargetZ = pos[2];
     }
-    if (state->flag728Bit5 != 0) {
+    if (state->thorntailIdleMovePending != 0) {
         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) != 0) {
             return 0;
         }
         tricky_startRandomIdleMove((GameObject*)(obj), state);
     } else if ((u8)trickyUpdateMovementState(obj, 30.0f, state) != 1) {
-        state->flag728Bit5 = 1;
+        state->thorntailIdleMovePending = 1;
         sfxId = randomGetRange(862, 863);
         tex = obj->extra;
         if (tex->soundSuppressed == 0) {
@@ -6149,7 +6149,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
         }
         return tricky_updateIdleBehavior(obj, state);
     }
-    state->flag728Bit7 = 1;
+    state->idleActivityPending = 1;
     return 1;
 }
 
@@ -6168,18 +6168,18 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
         trickyState->cooldownC = gTrickyFloatZero;
         return 1;
     }
-    if (trickyState->flag728Bit7 != 0U) {
+    if (trickyState->idleActivityPending != 0U) {
         trickyState->idleTimer = TRICKY_AMBIENT_ACTIVITY_BASE;
-        trickyState->flag728Bit7 = 0;
-        trickyState->flag728Bit6 = 1;
+        trickyState->idleActivityPending = 0;
+        trickyState->idleActivityDelayActive = 1;
     }
-    if (trickyState->flag728Bit6 != 0U) {
+    if (trickyState->idleActivityDelayActive != 0U) {
         trickyState->idleTimer -= timeDelta;
         if (trickyState->idleTimer <= gTrickyFloatZero) {
             trickyState->cooldownA = TRICKY_FLOAT_300;
             bitVal = randomGetRange(200, 500);
             trickyState->idleTimer = (f32)(s32)bitVal;
-            trickyState->flag728Bit6 = 0;
+            trickyState->idleActivityDelayActive = 0;
             trickyState->substate = 1;
         }
         return 0;
@@ -6285,7 +6285,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             }
             state->linkedWalkGroup = 0;
         }
-        state->flag728Bit5 = 0;
+        state->thorntailIdleMovePending = 0;
         state->substate = 0xc;
         break;
     case 1:
@@ -6409,7 +6409,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                         trickyDebugPrint(sTrickyDryLandDebugMessage);
                     }
                     (*gObjectTriggerInterface)->runSequence(3, (void*)obj, -1);
-                    b->flag82EBit5 = 1;
+                    b->sequencePreserveBlend = 1;
                 } else {
                     d = c - a;
                     cnt = (u32)d >> 2;
@@ -6439,7 +6439,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                         trickyDebugPrint(sTrickyDryLandDebugMessage);
                     }
                     (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-                    b->flag82EBit5 = 1;
+                    b->sequencePreserveBlend = 1;
                     state->stateFlags |= TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
                 }
                 buttonDisable(0, PAD_BUTTON_A);
@@ -6471,7 +6471,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     trickyDebugPrint(sTrickyDryLandDebugMessage);
                 }
                 (*gObjectTriggerInterface)->runSequence(g, (void*)obj, -1);
-                b->flag82EBit5 = 1;
+                b->sequencePreserveBlend = 1;
                 buttonDisable(0, PAD_BUTTON_A);
                 return 1;
             }
@@ -6761,7 +6761,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         if ((sequence->flags & 3) == 0) {
             ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
         }
-        if (((TrickyState*)state)->flag82EBit5 == 0) {
+        if (((TrickyState*)state)->sequencePreserveBlend == 0) {
             ObjModel_ClearBlendChannels(Obj_GetActiveModel(obj));
             ((TrickyState*)state)->blendActive = 0;
         }
@@ -7506,8 +7506,8 @@ void Tricky_update(GameObject* obj) {
             }
         }
         *(s32*)&trickyState->stateFlags &= ~TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK;
-        if (trickyState->flag82EBit5 != 0) {
-            trickyState->flag82EBit5 = 0;
+        if (trickyState->sequencePreserveBlend != 0) {
+            trickyState->sequencePreserveBlend = 0;
         } else {
             trickyState->blendPending = 1;
         }
