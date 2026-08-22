@@ -898,7 +898,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         doHeightSnap = skeetla_isInWater(state);
 
         if (doHeightSnap != 0) {
-            obj->anim.velocityY = gTrickyFloatZero;
+            obj->anim.velocityY = 0.0f;
             obj->anim.localPosY = state->currentTime - 0.01f;
         } else {
             obj->anim.velocityY += TRICKY_FLOAT_NEG_0_17 * timeDelta;
