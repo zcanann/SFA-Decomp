@@ -112,7 +112,7 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
 void arwsquadron_applyCommandParams(GameObject* obj, ArwSquadronState* state)
 {
     SquadCmdFlags* flags = &state->flags.cmd;
-    ArwSquadronPathCommand* cmds = (ArwSquadronPathCommand*)state->curve.node9C;
+    ArwSquadronPathCommand* cmds = (ArwSquadronPathCommand*)state->curve.previousNode;
     int i;
 
     if (cmds->signature == 0x28)

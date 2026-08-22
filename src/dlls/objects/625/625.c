@@ -284,32 +284,32 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
     {
         return 1;
     }
-    cur = curve->nodeA0;
-    if (cur == NULL || curve->nodeA4 == NULL)
+    cur = curve->currentNode;
+    if (cur == NULL || curve->nextNode == NULL)
     {
         return 1;
     }
-    curve->node9C = cur;
-    curve->nodeA0 = curve->nodeA4;
+    curve->previousNode = cur;
+    curve->currentNode = curve->nextNode;
     memcpy(curve->hermX, curve->hermX2, 16);
     memcpy(curve->hermY, curve->hermY2, 16);
     memcpy(curve->hermZ, curve->hermZ2, 16);
     if (curve->reverse != 0)
     {
-        result = drakorhoverpad_pickMaskedNextPoint((RomCurveDef*)curve->nodeA0, -1, maxIndex);
+        result = drakorhoverpad_pickMaskedNextPoint((RomCurveDef*)curve->currentNode, -1, maxIndex);
     }
     else
     {
-        result = drakorhoverpad_pickUnmaskedNextPoint((RomCurveDef*)curve->nodeA0, -1, maxIndex);
+        result = drakorhoverpad_pickUnmaskedNextPoint((RomCurveDef*)curve->currentNode, -1, maxIndex);
     }
     if (result != -1)
     {
-        curve->nodeA4 = (*gRomCurveInterface)->getById(result);
-        if (curve->nodeA4 != NULL)
+        curve->nextNode = (*gRomCurveInterface)->getById(result);
+        if (curve->nextNode != NULL)
         {
-#define CM_SLOT  ((RomCurveDef**)&curve->nodeA0)
-#define AMP_SLOT ((RomCurveDef**)&curve->node9C)
-#define TGT_SLOT ((RomCurveDef**)&curve->nodeA4)
+#define CM_SLOT  ((RomCurveDef**)&curve->currentNode)
+#define AMP_SLOT ((RomCurveDef**)&curve->previousNode)
+#define TGT_SLOT ((RomCurveDef**)&curve->nextNode)
 #define CM_NODE  (*CM_SLOT)
 #define AMP_NODE (*AMP_SLOT)
 #define TGT_NODE (*TGT_SLOT)
@@ -378,7 +378,7 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
     }
     else
     {
-        curve->nodeA4 = NULL;
+        curve->nextNode = NULL;
     }
     return 1;
 }
@@ -884,8 +884,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
         c = curve->reverse;
         if ((c == 0 && curve->atSegmentEnd != 0) || (c != 0 && curve->atSegmentEnd == 0))
         {
-            if (drakorhoverpad_handlePathPointEvent(obj, (u8)((RomCurveDef*)curve->nodeA0)->action,
-                                                    (u8)((RomCurveDef*)curve->nodeA4)->action, &evOut) != 0)
+            if (drakorhoverpad_handlePathPointEvent(obj, (u8)((RomCurveDef*)curve->currentNode)->action,
+                                                    (u8)((RomCurveDef*)curve->nextNode)->action, &evOut) != 0)
             {
                 drakorhoverpad_update(curve, evOut);
             }

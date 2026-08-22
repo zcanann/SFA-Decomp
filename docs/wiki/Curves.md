@@ -179,7 +179,8 @@ Cross-references verified by reading the source at the paths below.
     two-kinds-vs-the-rest split the wiki describes.
 - `RomCurveWalker` (`include/main/dll/curve_walker.h`) is the walker state the RomCurve_*
   family operates on (`phase`, `posX/Y/Z`, `tangentX/Y/Z`, `reverse`, per-axis hermite
-  coefficient sets, and `node94..nodeA4` curve-node history/current/next pointers).
+  coefficient sets, `eval`/`coeffFn` callbacks, and `previousNode`/`currentNode`/`nextNode`
+  route-node pointers).
 - `RomCurveSegmentProjection` (`include/main/dll/rom_curve_segment_projection.h`) and
   `RomCurveInterface` (`include/main/dll/rom_curve_interface.h`, the `gRomCurveInterface`
   vtable every consuming DLL goes through) round out the curve-following API surface.
