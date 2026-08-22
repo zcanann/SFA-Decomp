@@ -5,6 +5,7 @@ This wraps the checks that matter while iterating on Tricky:
   * build the source object
   * print the unit fuzzy rows for non-exact functions
   * print the current .sdata2 content report
+  * optionally summarize strucdiff counts for named functions
   * optionally run ndiff for named functions
 """
 
@@ -18,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 UNIT = "dlls/objects/196_Tricky/tricky.c"
+REPORT_UNIT = "main/dlls/objects/196_Tricky/tricky"
 OBJ_TARGET = "build/GSAE01/src/dlls/objects/196_Tricky/tricky.o"
 NONEXACT = (
     "trickyFindReachableRouteIndex",
@@ -77,9 +79,20 @@ def ndiff(functions: list[str]) -> None:
         print_command_output(f"ndiff {func}", tail)
 
 
+def strucdiff(functions: list[str]) -> None:
+    rows: list[str] = []
+    for func in functions:
+        proc = run(["python", "tools/strucdiff.py", REPORT_UNIT, func, "0"], check=False)
+        first = proc.stdout.splitlines()[0] if proc.stdout.splitlines() else proc.stdout.rstrip()
+        rows.append(f"{func}: {first}")
+    print_command_output("strucdiff", "\n".join(rows))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-build", action="store_true", help="skip rebuilding tricky.o")
+    ap.add_argument("--struc", nargs="*", default=[], help="functions to summarize with tools/strucdiff.py")
+    ap.add_argument("--all-struc", action="store_true", help="run strucdiff for the known non-exact functions")
     ap.add_argument("--ndiff", nargs="*", default=[], help="functions to run through tools/ndiff.py")
     ap.add_argument("--all-ndiff", action="store_true", help="run ndiff for the known non-exact functions")
     args = ap.parse_args()
@@ -88,6 +101,11 @@ def main() -> int:
         build()
     unit_rows()
     pool()
+    struc_funcs = list(args.struc)
+    if args.all_struc:
+        struc_funcs.extend(NONEXACT)
+    if struc_funcs:
+        strucdiff(struc_funcs)
     funcs = list(args.ndiff)
     if args.all_ndiff:
         funcs.extend(NONEXACT)
