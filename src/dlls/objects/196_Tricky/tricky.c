@@ -1345,8 +1345,8 @@ static inline RomCurveDef* skeetla_validateRouteEntry(RomCurveDef* entry) {
     if (entry == NULL) {
         return NULL;
     }
-    if (((((RomCurveDef*)entry)->requiredBit == -1) || (mainGetBit(((RomCurveDef*)entry)->requiredBit) != 0)) &&
-        ((((RomCurveDef*)entry)->forbiddenBit == -1) || (mainGetBit(((RomCurveDef*)entry)->forbiddenBit) == 0))) {
+    if (((entry->requiredBit == -1) || (mainGetBit(entry->requiredBit) != 0)) &&
+        ((entry->forbiddenBit == -1) || (mainGetBit(entry->forbiddenBit) == 0))) {
         return entry;
     }
 
@@ -1396,10 +1396,10 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
     }
 
     if (count != 0) {
-        bestDistance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &((RomCurveDef*)candidates[0])->x);
+        bestDistance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[0]->x);
         bestIndex = 0;
         for (i = 1; i < count; i++) {
-            distance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &((RomCurveDef*)candidates[i])->x);
+            distance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[i]->x);
             if (distance < bestDistance) {
                 bestDistance = distance;
                 bestIndex = i;
