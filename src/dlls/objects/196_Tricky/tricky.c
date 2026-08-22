@@ -4784,7 +4784,6 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* curveArg;
     RomCurveDef* candidateNode;
     RomCurveDef* targetNode;
-    int walkGroup;
     f32 speed;
     f64 distance;
     f64 bestDistance;
@@ -4873,7 +4872,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     } else {
         trickyUpdateMovementState(obj, CANNONBALL_INIT_WALK_RADIUS, ball);
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) ==
-            (walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&ball->cannonballStartCurve->x, NULL))) {
+            Objfsa_GetWalkGroupIndexAtPoint(&ball->cannonballStartCurve->x, NULL)) {
             curve = ball->cannonballStartCurve;
 
             fromNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(curve, 0));
