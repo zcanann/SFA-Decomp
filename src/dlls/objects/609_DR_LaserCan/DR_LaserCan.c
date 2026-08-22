@@ -480,7 +480,7 @@ void DR_LaserCannon_update(GameObject* obj)
                                                   (const Vec3f*)&state->muzzleX, (Vec3f*)hitPos) != 0)
                     {
                         cannonState = (obj)->extra;
-                        if (Obj_CanSetupObject() == 0)
+                        if ((u8)Obj_CanSetupObject() == 0)
                         {
                             spawned = NULL;
                         }
