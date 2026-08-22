@@ -6918,7 +6918,7 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
                 return;
             }
             state->cannonballStartCurve = Objfsa_FindNearestEnabledCurveType24(&targetObj->anim.worldPosX, -1, 3);
-            state->scratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
+            state->cannonballScratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
             state->stateIndex = TRICKY_STATE_BALL_ROLL;
             state->followObj = targetObj;
             nextTarget = &state->cannonballStartCurve->x;
