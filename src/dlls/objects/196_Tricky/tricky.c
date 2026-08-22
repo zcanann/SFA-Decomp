@@ -123,13 +123,13 @@ typedef struct {
 typedef struct TrickyBaddieTargetPlacement {
     u8 pad0[0x14];
     s32 mapEventId;
-    s16 gateOffBit;
-    s16 gateOnBit;
+    s16 disableGameBit;
+    s16 enableGameBit;
 } TrickyBaddieTargetPlacement;
 
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
-STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOffBit) == 0x18);
-STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, gateOnBit) == 0x1A);
+STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, disableGameBit) == 0x18);
+STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 
 const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
 const TrickySfxPair sTrickyImpressSfxPair = {0x0356, 0x035C};
@@ -490,69 +490,69 @@ f32* trickyGetQueuedPathParticlePos(GameObject* obj) {
 }
 
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes) {
-    GameObject** objs;
-    GameObject** tmpList;
-    GameObject* closest;
+    GameObject** baddieCursor;
+    GameObject** baddieList;
+    GameObject* closestBaddie;
     int i;
     f32 bestDistSq;
     int count;
 
     bestDistSq = maxRadius;
-    closest = 0;
-    tmpList = (GameObject**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &count);
+    closestBaddie = 0;
+    baddieList = (GameObject**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &count);
     bestDistSq = bestDistSq * bestDistSq;
     i = 0;
-    objs = tmpList;
+    baddieCursor = baddieList;
 
-    for (; i < count; objs++, i++) {
+    for (; i < count; baddieCursor++, i++) {
         TrickyBaddieTargetPlacement* placement;
-        f32 obj_extra;
-        int v1, v2;
-        s32 g1, g2;
+        f32 healthFraction;
+        int disabledByBit, enabledByBit;
+        s32 disableGameBit, enableGameBit;
 
-        if (dll_19_isBaddieControlObject(*objs) != 0) {
-            obj_extra = (*gBaddieControlInterface)->getHealthFraction(*objs);
+        if (dll_19_isBaddieControlObject(*baddieCursor) != 0) {
+            healthFraction = (*gBaddieControlInterface)->getHealthFraction(*baddieCursor);
         } else {
-            obj_extra = enemy_getHealthFraction(*objs);
+            healthFraction = enemy_getHealthFraction(*baddieCursor);
         }
 
-        placement = (TrickyBaddieTargetPlacement*)(*objs)->anim.placementData;
-        g1 = placement->gateOffBit;
-        if (g1 == -1) {
-            v1 = 0;
+        placement = (TrickyBaddieTargetPlacement*)(*baddieCursor)->anim.placementData;
+        disableGameBit = placement->disableGameBit;
+        if (disableGameBit == -1) {
+            disabledByBit = 0;
         } else {
-            v1 = mainGetBit(g1);
+            disabledByBit = mainGetBit(disableGameBit);
         }
-        g2 = placement->gateOnBit;
-        if (g2 == -1) {
-            v2 = 1;
+        enableGameBit = placement->enableGameBit;
+        if (enableGameBit == -1) {
+            enabledByBit = 1;
         } else {
-            v2 = mainGetBit(g2);
+            enabledByBit = mainGetBit(enableGameBit);
         }
 
-        if (objIsObjectType(*objs, TRICKY_INTERACTABLE_OBJGROUP) == 0 && obj_extra > gTrickyFloatZero && v1 == 0 &&
-            v2 != 0) {
-            if ((*objs)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
+        if (objIsObjectType(*baddieCursor, TRICKY_INTERACTABLE_OBJGROUP) == 0 && healthFraction > gTrickyFloatZero &&
+            disabledByBit == 0 && enabledByBit != 0) {
+            if ((*baddieCursor)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
                 if ((*gMapEventInterface)->shouldNotSaveTime(placement->mapEventId) != 0) {
                     if (allowSpecialTypes == 0) {
-                        s16 m = (*objs)->anim.romDefNo;
-                        if (m == TRICKY_SEQID_VAMBAT || m == TRICKY_SEQID_WB ||
-                            m == DLL1B5_SEQUENCE_ID_SC_BABY_LIGHTFOOT || m == TRICKY_SEQID_PINPON) {
+                        s16 romDefNo = (*baddieCursor)->anim.romDefNo;
+                        if (romDefNo == TRICKY_SEQID_VAMBAT || romDefNo == TRICKY_SEQID_WB ||
+                            romDefNo == DLL1B5_SEQUENCE_ID_SC_BABY_LIGHTFOOT || romDefNo == TRICKY_SEQID_PINPON) {
                             continue;
                         }
                     }
                     {
-                        f32 dist = vec3f_distanceSquared(&origin->anim.worldPosX, &(*objs)->anim.worldPosX);
+                        f32 dist = vec3f_distanceSquared(&origin->anim.worldPosX, &(*baddieCursor)->anim.worldPosX);
                         if (dist < bestDistSq) {
                             bestDistSq = dist;
-                            closest = *objs;
+                            closestBaddie = *baddieCursor;
                         }
                     }
                 }
             }
         }
     }
-    return closest;
+    return closestBaddie;
 }
 
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
