@@ -6990,8 +6990,8 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     u16* setup;
     u32 spawnedObj;
     u8 i;
-    char flagsB[4];
-    char flagsA[4];
+    char questPromptOccupiedSlots[4];
+    char exclamationPromptOccupiedSlots[4];
     u32 promptTable[4];
 
     state = obj->extra;
@@ -7063,25 +7063,25 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     objSoundStartTimed(obj, &((TrickyState*)ref)->soundState, promptId, 0x500, 0xffffffff, 0);
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_QUEST);
-                flagsB[0] = -1;
-                flagsB[1] = -1;
-                flagsB[2] = -1;
+                questPromptOccupiedSlots[0] = -1;
+                questPromptOccupiedSlots[1] = -1;
+                questPromptOccupiedSlots[2] = -1;
                 if (state->childA != NULL) {
-                    flagsB[state->packedSlots.promptASlot] = '\x01';
+                    questPromptOccupiedSlots[state->packedSlots.promptASlot] = '\x01';
                 }
                 if (state->childB != NULL) {
-                    flagsB[state->packedSlots.promptBSlot] = '\x01';
+                    questPromptOccupiedSlots[state->packedSlots.promptBSlot] = '\x01';
                 }
                 if (state->child != NULL) {
-                    flagsB[state->packedSlots.zzzSlot] = '\x01';
+                    questPromptOccupiedSlots[state->packedSlots.zzzSlot] = '\x01';
                 }
-                if (flagsB[0] == -1) {
+                if (questPromptOccupiedSlots[0] == -1) {
                     bitVal = 0;
-                } else if (flagsB[1] == -1) {
+                } else if (questPromptOccupiedSlots[1] == -1) {
                     bitVal = 1;
-                } else if (flagsB[2] == -1) {
+                } else if (questPromptOccupiedSlots[2] == -1) {
                     bitVal = 2;
-                } else if (flagsB[3] == -1) {
+                } else if (questPromptOccupiedSlots[3] == -1) {
                     bitVal = 3;
                 } else {
                     bitVal = 0xffffffff;
@@ -7117,25 +7117,25 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     }
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_EXCLAMATION);
-                flagsA[0] = -1;
-                flagsA[1] = -1;
-                flagsA[2] = -1;
+                exclamationPromptOccupiedSlots[0] = -1;
+                exclamationPromptOccupiedSlots[1] = -1;
+                exclamationPromptOccupiedSlots[2] = -1;
                 if (state->childA != NULL) {
-                    flagsA[state->packedSlots.promptASlot] = '\x01';
+                    exclamationPromptOccupiedSlots[state->packedSlots.promptASlot] = '\x01';
                 }
                 if (state->childB != NULL) {
-                    flagsA[state->packedSlots.promptBSlot] = '\x01';
+                    exclamationPromptOccupiedSlots[state->packedSlots.promptBSlot] = '\x01';
                 }
                 if (state->child != NULL) {
-                    flagsA[state->packedSlots.zzzSlot] = '\x01';
+                    exclamationPromptOccupiedSlots[state->packedSlots.zzzSlot] = '\x01';
                 }
-                if (flagsA[0] == -1) {
+                if (exclamationPromptOccupiedSlots[0] == -1) {
                     bitVal = 0;
-                } else if (flagsA[1] == -1) {
+                } else if (exclamationPromptOccupiedSlots[1] == -1) {
                     bitVal = 1;
-                } else if (flagsA[2] == -1) {
+                } else if (exclamationPromptOccupiedSlots[2] == -1) {
                     bitVal = 2;
-                } else if (flagsA[3] == -1) {
+                } else if (exclamationPromptOccupiedSlots[3] == -1) {
                     bitVal = 3;
                 } else {
                     bitVal = 0xffffffff;
