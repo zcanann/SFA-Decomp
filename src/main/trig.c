@@ -10,6 +10,21 @@ extern const float sTrigApproxCosLinear;
 extern const float sTrigApproxCosQuadratic;
 extern const float sTrigApproxSinLinear;
 extern const float sTrigApproxSinCubic;
+extern const float sTrigSinLinear;
+extern const float sTrigSinCubic;
+extern const float sTrigSinQuintic;
+extern const float sTrigUnit;
+extern const float sTrigCosQuadratic;
+extern const float sTrigCosQuartic;
+extern const float sTrigCosSextic;
+extern const float sTrigPreciseSinLinear;
+extern const float sTrigPreciseSinCubic;
+extern const float sTrigPreciseSinQuintic;
+extern const float sTrigPreciseSinSeptic;
+extern const float sTrigPreciseCosQuadratic;
+extern const float sTrigPreciseCosQuartic;
+extern const float sTrigPreciseCosSextic;
+extern const float sTrigPreciseCosOctic;
 
 float fsin16Approx(int angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
@@ -39,15 +54,15 @@ float fsin16(int angle) {
     switch (angle & 0xE000) {
     case 0x0000:
     case 0xE000:
-        return x * (x2 * (6.424445e-26f * x2 + -2.294029e-15f) + 0.00002396833f);
+        return x * (x2 * (sTrigSinQuintic * x2 + sTrigSinCubic) + sTrigSinLinear);
     case 0x2000:
     case 0x4000:
-        return (x2 * (x2 * (-2.575884e-31f * x2 + 1.3747608e-20f) + -2.8724248e-10f) + 1.0f);
+        return (x2 * (x2 * (sTrigCosSextic * x2 + sTrigCosQuartic) + sTrigCosQuadratic) + sTrigUnit);
     case 0x6000:
     case 0x8000:
-        return -(x * (x2 * (6.424445e-26f * x2 + -2.294029e-15f) + 0.00002396833f));
+        return -(x * (x2 * (sTrigSinQuintic * x2 + sTrigSinCubic) + sTrigSinLinear));
     default:
-        return -(x2 * (x2 * (-2.575884e-31f * x2 + 1.3747608e-20f) + -2.8724248e-10f) + 1.0f);
+        return -(x2 * (x2 * (sTrigCosSextic * x2 + sTrigCosQuartic) + sTrigCosQuadratic) + sTrigUnit);
     }
 }
 
@@ -59,15 +74,21 @@ float fsin16Precise(int angle) {
     switch (angle & 0xE000) {
     case 0x0000:
     case 0xE000:
-        return y * (y2 * (y2 * (-8.8444e-37f * y2 + 6.590636e-26f) + -2.2949214e-15f) + 0.000023968449f);
+        return y * (y2 * (y2 * (sTrigPreciseSinSeptic * y2 + sTrigPreciseSinQuintic) + sTrigPreciseSinCubic) +
+                    sTrigPreciseSinLinear);
     case 0x2000:
     case 0x4000:
-        return y2 * (y2 * (y2 * (2.655e-42f * y2 + -2.632911e-31f) + 1.3751435e-20f) + -2.8724328e-10f) + 1.0f;
+        return y2 * (y2 * (y2 * (sTrigPreciseCosOctic * y2 + sTrigPreciseCosSextic) + sTrigPreciseCosQuartic) +
+                     sTrigPreciseCosQuadratic) +
+               sTrigUnit;
     case 0x6000:
     case 0x8000:
-        return -(y * (y2 * (y2 * (-8.8444e-37f * y2 + 6.590636e-26f) + -2.2949214e-15f) + 0.000023968449f));
+        return -(y * (y2 * (y2 * (sTrigPreciseSinSeptic * y2 + sTrigPreciseSinQuintic) + sTrigPreciseSinCubic) +
+                      sTrigPreciseSinLinear));
     default:
-        return -(y2 * (y2 * (y2 * (2.655e-42f * y2 + -2.632911e-31f) + 1.3751435e-20f) + -2.8724328e-10f) + 1.0f);
+        return -(y2 * (y2 * (y2 * (sTrigPreciseCosOctic * y2 + sTrigPreciseCosSextic) + sTrigPreciseCosQuartic) +
+                       sTrigPreciseCosQuadratic) +
+                 sTrigUnit);
     }
 }
 
@@ -146,12 +167,6 @@ float fcos16Approx(int angle) {
     }
 }
 
-const float sTrigApproxCosBias = 0.99999f;
-const float sTrigApproxCosLinear = -2.8707542e-10f;
-const float sTrigApproxCosQuadratic = 1.3332733e-20f;
-const float sTrigApproxSinLinear = 0.000023945184f;
-const float sTrigApproxSinCubic = -2.2078018e-15f;
-
 float fcos16(int angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
@@ -160,15 +175,15 @@ float fcos16(int angle) {
     switch (angle & 0xE000) {
     case 0x0000:
     case 0xE000:
-        return y2 * (y2 * (-2.575884e-31f * y2 + 1.3747608e-20f) + -2.8724248e-10f) + 1.0f;
+        return y2 * (y2 * (sTrigCosSextic * y2 + sTrigCosQuartic) + sTrigCosQuadratic) + sTrigUnit;
     case 0x2000:
     case 0x4000:
-        return -(y * (y2 * (6.424445e-26f * y2 + -2.294029e-15f) + 0.00002396833f));
+        return -(y * (y2 * (sTrigSinQuintic * y2 + sTrigSinCubic) + sTrigSinLinear));
     case 0x6000:
     case 0x8000:
-        return -(y2 * (y2 * (-2.575884e-31f * y2 + 1.3747608e-20f) + -2.8724248e-10f) + 1.0f);
+        return -(y2 * (y2 * (sTrigCosSextic * y2 + sTrigCosQuartic) + sTrigCosQuadratic) + sTrigUnit);
     default:
-        return y * (y2 * (6.424445e-26f * y2 + -2.294029e-15f) + 0.00002396833f);
+        return y * (y2 * (sTrigSinQuintic * y2 + sTrigSinCubic) + sTrigSinLinear);
     }
 }
 
@@ -180,17 +195,44 @@ float fcos16Precise(int angle) {
     switch (angle & 0xE000) {
     case 0x0000:
     case 0xE000:
-        return y2 * (y2 * (y2 * (2.655e-42f * y2 + -2.632911e-31f) + 1.3751435e-20f) + -2.8724328e-10f) + 1.0f;
+        return y2 * (y2 * (y2 * (sTrigPreciseCosOctic * y2 + sTrigPreciseCosSextic) + sTrigPreciseCosQuartic) +
+                     sTrigPreciseCosQuadratic) +
+               sTrigUnit;
     case 0x2000:
     case 0x4000:
-        return -(y * (y2 * (y2 * (-8.8444e-37f * y2 + 6.590636e-26f) + -2.2949214e-15f) + 0.000023968449f));
+        return -(y * (y2 * (y2 * (sTrigPreciseSinSeptic * y2 + sTrigPreciseSinQuintic) + sTrigPreciseSinCubic) +
+                      sTrigPreciseSinLinear));
     case 0x6000:
     case 0x8000:
-        return -(y2 * (y2 * (y2 * (2.655e-42f * y2 + -2.632911e-31f) + 1.3751435e-20f) + -2.8724328e-10f) + 1.0f);
+        return -(y2 * (y2 * (y2 * (sTrigPreciseCosOctic * y2 + sTrigPreciseCosSextic) + sTrigPreciseCosQuartic) +
+                       sTrigPreciseCosQuadratic) +
+                 sTrigUnit);
     default:
-        return y * (y2 * (y2 * (-8.8444e-37f * y2 + 6.590636e-26f) + -2.2949214e-15f) + 0.000023968449f);
+        return y * (y2 * (y2 * (sTrigPreciseSinSeptic * y2 + sTrigPreciseSinQuintic) + sTrigPreciseSinCubic) +
+                    sTrigPreciseSinLinear);
     }
 }
+
+const float sTrigApproxCosBias = 0.99999f;
+const float sTrigApproxCosLinear = -2.8707542e-10f;
+const float sTrigApproxCosQuadratic = 1.3332733e-20f;
+const float sTrigApproxSinLinear = 0.000023945184f;
+const float sTrigApproxSinCubic = -2.2078018e-15f;
+const float sTrigSinLinear = 0.00002396833f;
+const float sTrigSinCubic = -2.294029e-15f;
+const float sTrigSinQuintic = 6.424445e-26f;
+const float sTrigUnit = 1.0f;
+const float sTrigCosQuadratic = -2.8724248e-10f;
+const float sTrigCosQuartic = 1.3747608e-20f;
+const float sTrigCosSextic = -2.575884e-31f;
+const float sTrigPreciseSinLinear = 0.000023968449f;
+const float sTrigPreciseSinCubic = -2.2949214e-15f;
+const float sTrigPreciseSinQuintic = 6.590636e-26f;
+const float sTrigPreciseSinSeptic = -8.8444e-37f;
+const float sTrigPreciseCosQuadratic = -2.8724328e-10f;
+const float sTrigPreciseCosQuartic = 1.3751435e-20f;
+const float sTrigPreciseCosSextic = -2.632911e-31f;
+const float sTrigPreciseCosOctic = 2.655e-42f;
 
 float fcos16HighPrecision(int angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
