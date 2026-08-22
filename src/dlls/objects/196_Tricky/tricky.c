@@ -159,6 +159,8 @@ extern char sSidekickCommandDebugTextBlock[];
 #define TRICKY_CHILD_BLINK_HOLD_FRAMES   TRICKY_TIMER_20_FRAMES
 #define TRICKY_CHILD_BLINK_FORCE_FRAMES  150.0f
 #define TRICKY_CHILD_VOICE_PERIOD_FRAMES 2400.0f
+#define TRICKY_REMOTE_RECALL_DISTANCE_SQ 360000.0f
+#define TRICKY_VISIBILITY_PROBE_RADIUS   19.0f
 #define TRICKY_PATH_SEARCH_BULK_STEPS    0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES     500
 #define TRICKY_IDLE_VOICE_MAX_FRAMES     750
@@ -3727,6 +3729,12 @@ const char sTrickyShouldNeverStopCirclingError[] = "error tricky should never st
  * do not renumber or "un-nest" case 5.
  */
 
+#define TRICKY_FETCH_CARRY_DELAY_FRAMES 180.0f
+#define TRICKY_FETCH_BALL_REACH_RADIUS  13.0f
+#define TRICKY_FETCH_PICKUP_BLEND_SPEED 0.03f
+#define TRICKY_FETCH_THROW_DELAY_FRAMES 60.0f
+#define TRICKY_FETCH_LAUNCH_PROGRESS    0.65f
+
 #define TRICKY_CLEAR_RESET_FLAGS(st)                                                                                   \
     {                                                                                                                  \
         ((TrickyState*)(st))->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;                                    \
@@ -3752,19 +3760,19 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
     switch (state->substate) {
     case 0:
         state->fetchBallObj = state->followObj;
-        state->fetchCarryDelayTimer = 180.0f;
+        state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
         state->substate = 1;
         state->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
         /* fall through */
     case 1:
         if (sidekickBall_isHeldOrMoving(state->fetchBallObj) != 0) {
-            status = trickyUpdateMovementState(obj, 13.0f, state);
+            status = trickyUpdateMovementState(obj, TRICKY_FETCH_BALL_REACH_RADIUS, state);
             if (status == 0) {
                 useSwimAnim = skeetla_isInWater(state);
                 if (useSwimAnim != 0) {
-                    trickyRequestMove(obj, 28, 0.03f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+                    trickyRequestMove(obj, 28, TRICKY_FETCH_PICKUP_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 } else {
-                    trickyRequestMove(obj, 17, 0.03f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+                    trickyRequestMove(obj, 17, TRICKY_FETCH_PICKUP_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 }
                 state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->substate = 3;
@@ -3804,16 +3812,16 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     if (state->fetchCarryDelayTimer <= gTrickyFloatZero) {
                         useSwimAnim = skeetla_isInWater(state);
                         if (useSwimAnim != 0) {
-                            state->fetchCarryDelayTimer = 180.0f;
+                            state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
                         } else {
-                            state->fetchThrowRetryTimer = 60.0f;
+                            state->fetchThrowRetryTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
                         }
                     }
                 } else {
                     trickyRequestMove(obj, 16, TRICKY_FAST_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                     state->fetchThrowRetryTimer -= timeDelta;
                     if (state->fetchThrowRetryTimer <= gTrickyFloatZero) {
-                        state->fetchCarryDelayTimer = 180.0f;
+                        state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
                     }
                 }
             } else if (status == 1) {
@@ -3849,7 +3857,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         }
         break;
     case 6:
-        if ((obj)->anim.currentMoveProgress >= 0.65f) {
+        if ((obj)->anim.currentMoveProgress >= TRICKY_FETCH_LAUNCH_PROGRESS) {
             status = state->scratch700.i;
             ((GameObject*)status)->anim.localPosY += 5.0f;
             bob = -mathCosf(TRICKY_PI * (f32)(s32) * (short*)obj / TRICKY_ANGLE_HALF_TURN_UNITS);
@@ -3903,7 +3911,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             return;
         }
         if (sidekickBall_isIdle(state->followObj) != 0) {
-            state->fetchCarryDelayTimer = 180.0f;
+            state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
             state->substate = 1;
         }
         break;
@@ -3930,9 +3938,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             if (trickyUpdateMovementState(obj, 30.0f, state) == 0) {
                 useSwimAnim = skeetla_isInWater(state);
                 if (useSwimAnim != 0) {
-                    trickyRequestMove(obj, 29, 0.03f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+                    trickyRequestMove(obj, 29, TRICKY_FETCH_PICKUP_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 } else {
-                    trickyRequestMove(obj, 19, 0.03f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+                    trickyRequestMove(obj, 19, TRICKY_FETCH_PICKUP_BLEND_SPEED, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 }
                 state->substate = 6;
             }
@@ -3940,7 +3948,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         break;
     }
     if (((state->stateFlags & TRICKY_STATE_FLAG_RECALL_REQUEST) != 0) &&
-        ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, 19.0f) == 0) {
+        ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
         Obj_FreeObject(state->followObj);
     } else {
         sidekickBall_keepAlive(state->fetchBallObj);
@@ -6418,8 +6426,8 @@ GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state)
     result = 0;
     objs = objGetAllOfType(TRICKYWARP_OBJ_GROUP, count);
     d = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
-    if ((d >= 360000.0f) || (state->cooldownA > gTrickyFloatZero)) {
-        if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, 19.0f) == 0) {
+    if ((d >= TRICKY_REMOTE_RECALL_DISTANCE_SQ) || (state->cooldownA > gTrickyFloatZero)) {
+        if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
             bestD = gTrickyMaxDistance;
             for (i = 0; i < count[0]; i++) {
                 f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
@@ -7742,7 +7750,7 @@ void Tricky_update(GameObject* obj) {
         }
     }
     if (getXZDistanceSquared(&obj->anim.worldPosX, &trickyState->playerObj->anim.worldPosX) >=
-            360000.0f &&
+            TRICKY_REMOTE_RECALL_DISTANCE_SQ &&
         mainGetBit(GAMEBIT_Tricky_Usable) != 0) {
         trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
     }
