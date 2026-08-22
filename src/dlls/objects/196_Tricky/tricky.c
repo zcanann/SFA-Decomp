@@ -230,7 +230,8 @@ extern char sSidekickCommandDebugTextBlock[];
 /* The one partfx effect emitted along Tricky's queued impress path. */
 #define TRICKY_PATH_PARTFX 0x533
 
-#define TRICKY_BADDIE_TARGET_OBJGROUP 49 /* baddie object group scanned by trickyFindNearestUsableBaddie */
+#define TRICKY_BADDIE_OBJGROUP       3
+#define TRICKY_INTERACTABLE_OBJGROUP 49 /* things Tricky can activate; excluded from baddie targeting */
 /* creatures excluded from Tricky's baddie targeting (retail OBJECTS.bin names). */
 #define TRICKY_SEQID_WHIRLPOOL 2129 /* "Whirlpool" (DLL 0xC9) */
 #define TRICKY_SEQID_VAMBAT    1022 /* "Vambat" (DLL 0xC9) */
@@ -498,7 +499,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 
     bestDistSq = maxRadius;
     closest = 0;
-    tmpList = (GameObject**)objGetAllOfType(3, &count);
+    tmpList = (GameObject**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &count);
     bestDistSq = bestDistSq * bestDistSq;
     i = 0;
     objs = tmpList;
@@ -529,7 +530,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
             v2 = mainGetBit(g2);
         }
 
-        if (objIsObjectType(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > gTrickyFloatZero && v1 == 0 &&
+        if (objIsObjectType(*objs, TRICKY_INTERACTABLE_OBJGROUP) == 0 && obj_extra > gTrickyFloatZero && v1 == 0 &&
             v2 != 0) {
             if ((*objs)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
                 if ((*gMapEventInterface)->shouldNotSaveTime(placement->mapEventId) != 0) {
@@ -3648,7 +3649,7 @@ void* trickyFindCirclingTarget(GameObject* obj, void* state) {
 
     target = (GameObject*)playerGetTargetObject(((TrickyState*)state)->playerObj);
     if (target != NULL) {
-        list = (void**)objGetAllOfType(3, &count);
+        list = (void**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &count);
         for (i = 0; i < count; i++) {
             if ((GameObject*)*list == target) {
                 d1 = Vec_xzDistance(&obj->anim.worldPosX, &target->anim.worldPosX);
