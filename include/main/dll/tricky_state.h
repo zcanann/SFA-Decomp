@@ -295,6 +295,14 @@ typedef struct TrickyState {
             u8 cannonballPad714[0x71C - 0x714];
         };
         struct {
+            TrickyScratch digTunnelStartNode;
+            TrickyScratch digTunnelExitNode;
+            TrickyScratch digTunnelEntryNode;
+            TrickyScratch digTunnelWhineTimer;
+            TrickyScratch digTunnelScratch710;
+            u8 digTunnelPad714[0x71C - 0x714];
+        };
+        struct {
             s32 circlingDirection;
             s32 circlingAngle;
             f32 circlingTargetX;
@@ -449,6 +457,10 @@ STATIC_ASSERT(offsetof(TrickyState, fetchCarryDelayTimer) == 0x704);
 STATIC_ASSERT(offsetof(TrickyState, fetchThrowRetryTimer) == 0x708);
 STATIC_ASSERT(offsetof(TrickyState, cannonballStartCurve) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, cannonballRollSfxTimer) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelStartNode) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelExitNode) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelEntryNode) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelWhineTimer) == 0x70C);
 STATIC_ASSERT(offsetof(TrickyState, circlingDirection) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, circlingAngle) == 0x704);
 STATIC_ASSERT(offsetof(TrickyState, circlingTargetX) == 0x708);
