@@ -13,13 +13,20 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 
-
 #define PORTAL_SPELL_INDEX_OPEN_PORTAL      3
 #define PORTAL_SPELL_DOOR_OPEN_SEQUENCE     0
 #define PORTAL_SPELL_DOOR_TIMER_INACTIVE    -1
 #define PORTAL_SPELL_DOOR_ROTATION_SHIFT    8
 #define PORTAL_SPELL_DOOR_CANCEL_ANY_SPELL  -1
 #define PORTAL_SPELL_DOOR_SEQUENCE_ARG_NONE -1
+
+const f32 gPortalSpellDoorModelScale[1] = {1.0f};
+const f32 gPortalSpellDoorRootMotionScale[1] = {3.1499999f};
+const f32 gPortalSpellDoorOpenAmountScale[1] = {0.5f};
+
+#define PORTAL_SPELL_DOOR_MODEL_SCALE       (gPortalSpellDoorModelScale[0])
+#define PORTAL_SPELL_DOOR_ROOT_MOTION_SCALE (gPortalSpellDoorRootMotionScale[0])
+#define PORTAL_SPELL_DOOR_OPEN_AMOUNT_SCALE (gPortalSpellDoorOpenAmountScale[0])
 
 int PortalSpellDoor_getExtraSize(void) {
     return sizeof(PortalSpellDoorState);
@@ -33,10 +40,11 @@ void PortalSpellDoor_free(GameObject* obj) {
     (void)obj;
 }
 
-void PortalSpellDoor_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
+void PortalSpellDoor_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5,
+                            s8 visible) {
     s32 visibleValue = visible;
     if (visibleValue != 0) {
-        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
+        objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, PORTAL_SPELL_DOOR_MODEL_SCALE);
     }
 }
 
@@ -88,10 +96,13 @@ void PortalSpellDoor_update(GameObject* obj) {
 
 void PortalSpellDoor_init(GameObject* obj, PortalSpellDoorPlacement* placement) {
     PortalSpellDoorState* state = obj->extra;
+    f32 scaledHitbox;
+
     obj->anim.rotX = (s16)((s32)placement->rotXByte << PORTAL_SPELL_DOOR_ROTATION_SHIFT);
     obj->anim.rotY = (s16)((s32)placement->rotY << PORTAL_SPELL_DOOR_ROTATION_SHIFT);
-    obj->anim.rootMotionScale = 3.1499999f;
-    state->openAmount = obj->anim.hitboxScale * obj->anim.rootMotionScale / 2.0f;
+    obj->anim.rootMotionScale = PORTAL_SPELL_DOOR_ROOT_MOTION_SCALE;
+    scaledHitbox = obj->anim.hitboxScale * obj->anim.rootMotionScale;
+    state->openAmount = scaledHitbox * PORTAL_SPELL_DOOR_OPEN_AMOUNT_SCALE;
     if (mainGetBit(placement->openedGameBit) != 0) {
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         obj->objectFlags |= OBJECT_OBJFLAG_UPDATE_DISABLED | OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED;
