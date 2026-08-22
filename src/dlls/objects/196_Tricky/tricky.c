@@ -6472,7 +6472,9 @@ typedef void (*TrickyHandlerFn)(void* obj, void* state);
 #define TRICKY_TARGET_OBJ_LINK_SNOW_PRESSURE 0x19f
 #define TRICKY_TARGET_OBJ_DIM_ICE_WALL       0x1c9
 #define TRICKY_TARGET_OBJ_SH_PRESSURE        0x26c
+#define TRICKY_TARGET_OBJ_DFP_TRANSLA        0x352
 #define TRICKY_TARGET_OBJ_DR_CHIMMEY         0x470
+#define TRICKY_TARGET_OBJ_DR_COLLAPSE        0x475
 #define TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT   0x546
 #define TRICKY_TARGET_OBJ_VFP_FLAMEPOINT     0x551
 #define TRICKY_TARGET_OBJ_MS_PLANTING_SEED   0x54c
@@ -6483,6 +6485,7 @@ typedef void (*TrickyHandlerFn)(void* obj, void* state);
 #define TRICKY_TARGET_OBJ_SC_PRESSURE        0x7c3
 #define TRICKY_TARGET_OBJ_TUMBLEWEED2        0x3fb
 #define TRICKY_TARGET_OBJ_WC_BEACON          0x50f
+#define TRICKY_TARGET_OBJ_ARW_TIMED_MIN      0x542
 
 /* GameObject.objectFlags bit (distinct field from stateFlags above). */
 #define TRICKY_OBJFLAG_PARENT_SLACK            0x1000
@@ -7520,7 +7523,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_TRACK_TUMBLEWEED;
                         }
                         break;
-                    case 0x352:
+                    case TRICKY_TARGET_OBJ_DFP_TRANSLA:
                         if (*trickyState->progressPtr < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7562,7 +7565,7 @@ void Tricky_update(GameObject* obj) {
                             case TRICKY_TARGET_OBJ_CF_DOOR_LIGHT:
                             case TRICKY_TARGET_OBJ_LINK_SNOW_PRESSURE:
                             case TRICKY_TARGET_OBJ_SH_PRESSURE:
-                            case 0x475:
+                            case TRICKY_TARGET_OBJ_DR_COLLAPSE:
                             case TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT:
                             case TRICKY_TARGET_OBJ_SC_PRESSURE:
                                 trickyState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
@@ -7610,7 +7613,7 @@ void Tricky_update(GameObject* obj) {
                             break;
                         case TRICKY_TARGET_OBJ_CCEYE_VINES:
                         case TRICKY_TARGET_OBJ_BURNABLE_VINE:
-                        case 0x542:
+                        case TRICKY_TARGET_OBJ_ARW_TIMED_MIN:
                         case TRICKY_TARGET_OBJ_MS_PLANTING_SEED:
                         case TRICKY_TARGET_OBJ_ICE_HOLE:
                             trickyState->actionCallback = NULL;
