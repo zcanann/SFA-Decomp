@@ -254,14 +254,14 @@ typedef struct TrickyState {
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
     u8* cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
-    void* validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
+    RomCurveDef* validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
     u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
     u16 walkGroup;       /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
     u16 savedWalkGroup;  /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
     u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
     u8 pad537[1];
     PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
-    void*
+    RomCurveDef*
         cachedRouteEntry; /* cached route-entry pointer (validated via skeetla_validateRouteEntry; one u32-spelled site launders) */
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32* previousPathPoint;

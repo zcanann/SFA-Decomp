@@ -22,9 +22,10 @@ typedef struct SkeetlaParticleSpawnArgs {
 
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
 int moveTricky(GameObject* obj, f32* targetPos);
-void* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int linkSelector, int routeFlagValue);
-void* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId);
-void* trickySelectRouteEntry(TrickyState* state, u8* routeDef, u8 routeFlagValue);
+RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int linkSelector,
+                                               int routeFlagValue);
+RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId);
+RomCurveDef* trickySelectRouteEntry(TrickyState* state, u8* routeDef, u8 routeFlagValue);
 int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
                                   int targetWalkGroup);
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes);

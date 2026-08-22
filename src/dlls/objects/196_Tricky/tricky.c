@@ -1341,7 +1341,7 @@ int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags) {
     return 0;
 }
 
-static inline void* skeetla_validateRouteEntry(void* entry) {
+static inline RomCurveDef* skeetla_validateRouteEntry(RomCurveDef* entry) {
     if (entry == NULL) {
         return NULL;
     }
@@ -1353,8 +1353,9 @@ static inline void* skeetla_validateRouteEntry(void* entry) {
     return NULL;
 }
 
-void* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int linkSelector, int routeFlagValue) {
-    void* candidates[4];
+RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int linkSelector,
+                                               int routeFlagValue) {
+    RomCurveDef* candidates[4];
     RomCurveDef* entry;
     f32 bestDistance;
     f32 distance;
@@ -1410,7 +1411,7 @@ void* trickyFindNearestLinkedRouteEntry(TrickyState* context, u8* routeDef, int 
     return NULL;
 }
 
-void* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId) {
+RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId) {
     if (pathId == 0) {
         return NULL;
     }
@@ -1508,8 +1509,8 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     return -1;
 }
 
-void* trickySelectRouteEntry(TrickyState* state, u8* routeDef, u8 routeFlagValue) {
-    void* entry;
+RomCurveDef* trickySelectRouteEntry(TrickyState* state, u8* routeDef, u8 routeFlagValue) {
+    RomCurveDef* entry;
 
     entry = NULL;
 
@@ -2293,7 +2294,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             if (node == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
-                u8* nextNode = trickySelectRouteEntry(state, (u8*)node, state->routeSeedDir);
+                RomCurveDef* nextNode =
+                    trickySelectRouteEntry(state, (u8*)node, state->routeSeedDir);
                 if (nextNode == 0) {
                     state->movementState = TRICKY_MOVE_WALK_WAIT;
                 } else {
@@ -2527,7 +2529,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            u8* nextRouteNode = trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
+            RomCurveDef* nextRouteNode =
+                trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
             if (nextRouteNode == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
@@ -2667,7 +2670,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            u8* nextRouteNode = trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
+            RomCurveDef* nextRouteNode =
+                trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
             if (nextRouteNode == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
@@ -2733,7 +2737,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            u8* nextRouteNode = trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
+            RomCurveDef* nextRouteNode =
+                trickySelectRouteEntry(state, state->route.nodeA4, routeDirection & 0xff);
             if (nextRouteNode == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
