@@ -32,13 +32,9 @@
 
 #define QUEEN_EARTH_WALKER_TARGET_OBJECT_GROUP 0xF
 
-#define QUEEN_EARTH_WALKER_REQUIRED_FEED_COUNT   6
-#define QUEEN_EARTH_WALKER_LOOPING_SFX_CHANNEL   0x7F
-#define QUEEN_EARTH_WALKER_PORTAL_SPELL_ID       3
-#define QUEEN_EARTH_WALKER_PORTAL_SPELL_DISTANCE 1e+04f
-#define QUEEN_EARTH_WALKER_TRICKY_FEED_DISTANCE  2.25e+04f
-#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MIN      2.0f
-#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MAX      5.0f
+#define QUEEN_EARTH_WALKER_REQUIRED_FEED_COUNT 6
+#define QUEEN_EARTH_WALKER_LOOPING_SFX_CHANNEL 0x7F
+#define QUEEN_EARTH_WALKER_PORTAL_SPELL_ID     3
 
 /* QueenEarthWalkerState::flags bits */
 #define QUEEN_EARTH_WALKER_FLAG_STARTED   0x01 /* First update ran; per-act logic engaged. */
@@ -54,6 +50,18 @@ typedef enum QueenEarthWalkerAnimEvent {
     QUEEN_EARTH_WALKER_ANIM_EVENT_BEGIN_TARGETING = 2,
     QUEEN_EARTH_WALKER_ANIM_EVENT_END_TARGETING = 3,
 } QueenEarthWalkerAnimEvent;
+
+const f32 gQueenEarthWalkerHeadLookBlend[1] = {0.0f};
+const f32 gQueenEarthWalkerPortalSpellDistance[1] = {10000.0f};
+const f32 gQueenEarthWalkerTrickyFeedDistance[1] = {22500.0f};
+const f32 gQueenEarthWalkerAttackTimerMin[1] = {2.0f};
+const f32 gQueenEarthWalkerAttackTimerMax[1] = {5.0f};
+
+#define QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND          (gQueenEarthWalkerHeadLookBlend[0])
+#define QUEEN_EARTH_WALKER_PORTAL_SPELL_DISTANCE_SQ (gQueenEarthWalkerPortalSpellDistance[0])
+#define QUEEN_EARTH_WALKER_TRICKY_FEED_DISTANCE_SQ  (gQueenEarthWalkerTrickyFeedDistance[0])
+#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MIN         (gQueenEarthWalkerAttackTimerMin[0])
+#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MAX         (gQueenEarthWalkerAttackTimerMax[0])
 
 u8 gQueenEarthWalkerEventTableAct1[QUEEN_EARTH_WALKER_EVENT_TABLE_SIZE] = {1, 0, 0, 0};
 u8 gQueenEarthWalkerEventTableAct2[QUEEN_EARTH_WALKER_EVENT_TABLE_SIZE] = {1, 0x14, 0, 0};
@@ -141,7 +149,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, int unusedArg, ObjSeq
             state->look.targetX = player->anim.localPosX;
             state->look.targetY = player->anim.localPosY;
             state->look.targetZ = player->anim.localPosZ;
-            characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+            characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
         }
         animUpdate->flags &= ~0x40;
         if ((state->flags & QUEEN_EARTH_WALKER_FLAG_EYE_ANIMS) != 0) {
@@ -165,7 +173,8 @@ void sh_queenearthwalker_updatePortal(GameObject* obj, QueenEarthWalkerState* st
     } else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (playerHasSpell(player, QUEEN_EARTH_WALKER_PORTAL_SPELL_ID) != 0 &&
-            getXZDistanceSquared(&player->anim.worldPosX, &obj->anim.worldPosX) < QUEEN_EARTH_WALKER_PORTAL_SPELL_DISTANCE) {
+            getXZDistanceSquared(&player->anim.worldPosX, &obj->anim.worldPosX) <
+                QUEEN_EARTH_WALKER_PORTAL_SPELL_DISTANCE_SQ) {
             mainSetBits(0x23b, 1);
         }
     } else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0) {
@@ -179,7 +188,7 @@ void sh_queenearthwalker_updatePortal(GameObject* obj, QueenEarthWalkerState* st
     state->look.targetX = player->anim.localPosX;
     state->look.targetY = player->anim.localPosY;
     state->look.targetZ = player->anim.localPosZ;
-    characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+    characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
 }
 
 void sh_queenearthwalker_updateFeeding(GameObject* obj, QueenEarthWalkerState* state) {
@@ -201,7 +210,7 @@ void sh_queenearthwalker_updateFeeding(GameObject* obj, QueenEarthWalkerState* s
             if (getYButtonItem(&triggerId) == 0 || triggerId != GAMEBIT_ITEM_WhiteShroom_Count) {
                 tricky = getTrickyObject();
                 if (tricky != NULL && getXZDistanceSquared(&tricky->anim.worldPosX, &obj->anim.worldPosX) <
-                                          QUEEN_EARTH_WALKER_TRICKY_FEED_DISTANCE) {
+                                          QUEEN_EARTH_WALKER_TRICKY_FEED_DISTANCE_SQ) {
                     Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
                 } else {
                     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
@@ -244,7 +253,7 @@ void sh_queenearthwalker_updateFeeding(GameObject* obj, QueenEarthWalkerState* s
         state->look.targetX = player->anim.localPosX;
         state->look.targetY = player->anim.localPosY;
         state->look.targetZ = player->anim.localPosZ;
-        characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+        characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
         break;
     default:
         break;
@@ -288,7 +297,7 @@ void sh_queenearthwalker_update(GameObject* obj) {
             state->look.targetX = player->anim.localPosX;
             state->look.targetY = player->anim.localPosY;
             state->look.targetZ = player->anim.localPosZ;
-            characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+            characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
             break;
         case 5:
             sh_queenearthwalker_updatePortal(obj, state);
@@ -304,7 +313,7 @@ void sh_queenearthwalker_update(GameObject* obj) {
             state->look.targetX = player->anim.localPosX;
             state->look.targetY = player->anim.localPosY;
             state->look.targetZ = player->anim.localPosZ;
-            characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+            characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
             break;
         case 7:
             if (mainGetBit(0x199) != 0) {
@@ -317,7 +326,7 @@ void sh_queenearthwalker_update(GameObject* obj) {
             state->look.targetX = player->anim.localPosX;
             state->look.targetY = player->anim.localPosY;
             state->look.targetZ = player->anim.localPosZ;
-            characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+            characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
             break;
         case 8:
             player = Obj_GetPlayerObject();
@@ -325,7 +334,7 @@ void sh_queenearthwalker_update(GameObject* obj) {
             state->look.targetX = player->anim.localPosX;
             state->look.targetY = player->anim.localPosY;
             state->look.targetZ = player->anim.localPosZ;
-            characterHeadLookCalm(obj, (s16*)&state->look, 0.0f);
+            characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
             break;
         case 0:
         case 1:
@@ -386,7 +395,7 @@ void sh_queenearthwalker_update(GameObject* obj) {
     currentMove = obj->anim.currentMove;
     targetMove = gQueenEarthWalkerMoveTable[state->stateIndex];
     if (currentMove != targetMove) {
-        ObjAnim_SetCurrentMove(obj, targetMove, 0.0f, 0);
+        ObjAnim_SetCurrentMove(obj, targetMove, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND, 0);
     }
     ObjAnim_AdvanceCurrentMove(obj, gQueenEarthWalkerMoveSpeedTable[state->stateIndex], timeDelta, NULL);
 
