@@ -4,7 +4,7 @@
 This wraps the checks that matter while iterating on Tricky:
   * build the source object
   * print the unit fuzzy rows for non-exact functions
-  * count current .sdata2 word mismatches
+  * print the current .sdata2 content report
   * optionally run ndiff for named functions
 """
 
@@ -67,12 +67,7 @@ def unit_rows() -> None:
 
 def pool() -> None:
     proc = run(["python", "tools/pool_content_check.py", "--sections", ".sdata2", UNIT], check=False)
-    mismatch_rows = [
-        line
-        for line in proc.stdout.splitlines()
-        if "[PERM]" in line or re.match(r"\s+\+0x[0-9a-fA-F]+", line)
-    ]
-    print_command_output("sdata2", "\n".join(mismatch_rows))
+    print_command_output("sdata2", proc.stdout)
 
 
 def ndiff(functions: list[str]) -> None:

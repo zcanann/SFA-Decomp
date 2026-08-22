@@ -312,6 +312,7 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
     ObjModel* model;
     f32 target;
     f32 max;
+    f32 blendWeight;
     Obj_GetActiveModel(obj);
     if (state->blendPending) {
         model = Obj_GetActiveModel(obj);
@@ -341,8 +342,9 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
         } else if (target < state->blendWeight) {
             state->blendVelocity = state->blendVelocity - TRICKY_FLOAT_0_004 * timeDelta;
             state->blendWeight = state->blendVelocity * timeDelta + state->blendWeight;
-            if (state->blendWeight < 0.0f) {
-                state->blendWeight = state->blendVelocity = 0.0f;
+            blendWeight = state->blendWeight;
+            if (blendWeight < gTrickyFloatZero) {
+                state->blendWeight = state->blendVelocity = gTrickyFloatZero;
             }
             if (state->blendWeight < target) {
                 if (state->blendVelocity > -0.01f) {
