@@ -1445,7 +1445,6 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     s8 searchPass;
     s8 status[TRICKY_ROUTE_CANDIDATE_COUNT];
     s8 initIndex;
-    s8 bulkIndex;
     s8 candidateIndex;
     s8 failedCount;
 
@@ -1484,13 +1483,13 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
 
         switch (failedCount) {
         case 7:
-            for (bulkIndex = 0, candidateCursor = candidateRoutes; bulkIndex < TRICKY_ROUTE_CANDIDATE_COUNT;
-                 bulkIndex++) {
+            for (searchPass = 0, candidateCursor = candidateRoutes; searchPass < TRICKY_ROUTE_CANDIDATE_COUNT;
+                 searchPass++) {
                 if (*candidateCursor != NULL) {
-                    status[(int)bulkIndex] =
-                        pathSearchStep(&state->pathSearches[(int)bulkIndex], TRICKY_PATH_SEARCH_BULK_STEPS);
-                    if (status[(int)bulkIndex] == 1) {
-                        return bulkIndex;
+                    status[(int)searchPass] =
+                        pathSearchStep(&state->pathSearches[(int)searchPass], TRICKY_PATH_SEARCH_BULK_STEPS);
+                    if (status[(int)searchPass] == 1) {
+                        return searchPass;
                     }
                     return -1;
                 }
