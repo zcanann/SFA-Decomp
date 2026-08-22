@@ -1440,10 +1440,10 @@ void* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId) {
 int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
                                   int targetWalkGroup) {
     RomCurveDef** initCandidateCursor;
-    u8* searchCursor;
-    RomCurveDef** candidateCursor;
     u8* initSearchCursor;
+    RomCurveDef** candidateCursor;
     s8* statusCursor;
+    u8* searchCursor;
     s8 searchPass;
     s8 status[TRICKY_ROUTE_CANDIDATE_COUNT];
     s8 initIndex;
