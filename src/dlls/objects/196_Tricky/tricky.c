@@ -1450,8 +1450,9 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     for (initIndex = 0, initCandidateCursor = candidateRoutes, initSearchCursor = (u8*)state;
          initIndex < TRICKY_ROUTE_CANDIDATE_COUNT; initIndex++) {
         if (*initCandidateCursor != NULL) {
-            pathSearchBegin(&((TrickyState*)initSearchCursor)->pathSearches[0], *initCandidateCursor,
-                            state->targetPosPtr, targetWalkGroup, candidateRouteFlags[initIndex]);
+            pathSearchBegin((PathSearch*)(initSearchCursor + offsetof(TrickyState, pathSearches)),
+                            *initCandidateCursor, state->targetPosPtr, targetWalkGroup,
+                            candidateRouteFlags[initIndex]);
         }
         initCandidateCursor++;
         initSearchCursor += sizeof(PathSearch);
@@ -1462,7 +1463,8 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
         for (candidateIndex = 0, candidateCursor = candidateRoutes, searchCursor = (u8*)state, statusCursor = status;
              candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
             if (*candidateCursor != NULL) {
-                *statusCursor = pathSearchStep(&((TrickyState*)searchCursor)->pathSearches[0], 1);
+                *statusCursor =
+                    pathSearchStep((PathSearch*)(searchCursor + offsetof(TrickyState, pathSearches)), 1);
             } else {
                 *statusCursor = -1;
             }
