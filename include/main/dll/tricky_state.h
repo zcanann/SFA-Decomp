@@ -102,8 +102,8 @@ typedef struct TrickyState {
     u8* progressPtr;       /* MapEventInterface getTrickyEnergy() result */
     GameObject* playerObj; /* owning player/sidekick object */
     u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
-    u8 movementState;      /* follow-handler phase selector (discrete 0..5; gates the pathing/seed branches) */
-    u8 substate;           /* anim-sequence substate 0..7 */
+    u8 movementState;      /* TRICKY_MOVE_* path/jump phase selector */
+    u8 substate;           /* per-state handler substate */
     u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with Call+Stay into the prompt mask, tested != 0, cleared to 0 (tricky) */
     u8 unk0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
@@ -354,21 +354,21 @@ typedef struct TrickyState {
             u8 idleActivityPending : 1;
             u8 idleActivityDelayActive : 1;
             u8 thorntailIdleMovePending : 1;
-            u8 flag728Rest : 5;
+            u8 idleActivityFlagsRest : 5;
         };
-        s32 stateWord728; /* full-width boolean/state view used by growl, circling and idle handlers */
+        s32 flameCommandPending; /* full-width flag: queued Flame command consumed by growl/circling handlers */
         f32 guardTimer; /* guard/flame state dwell timer: += / -= timeDelta against 150/60 thresholds (trickyGuard/trickyFlame) */
     };
     union {
         struct {
             f32 wanderTargetX; /* wander/return target position X that targetPosPtr is pointed at (&wanderTargetX); written from anim world/local posX plus a sin offset (tricky/tricky_substates) */
             f32 wanderTargetY; /* wander target position Y (written from anim world/local posY) */
-            f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset; a rare u8-overlay at this offset toggles a state bit (tricky/tricky_substates) */
+            f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset */
         };
         struct {
             GameObject* guardTarget; /* baddie object the guard is approaching (trickyGuard) */
             s32 guardWalkGroup;      /* walk group the guard post lies in (trickyGuard) */
-            u8 guardCanSpawnHelpers; /* cleared on guard entry; gates the helper-spawn branch (trickyGuard) */
+            u8 guardCanSpawnHelpers; /* toggled by Flame while guarding; gates the helper-spawn branch (trickyGuard) */
         };
     };
     f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to gTrickyTimer600Frames (tricky_substates) */
@@ -403,12 +403,12 @@ typedef struct TrickyState {
     u8 modelVariant;      /* progress/10; indexes model bank color */
     u8 progressValue; /* map-event progress byte written out via **progressPtr; computed as base+(count<<2), clamped to a max byte (tricky writes to progressPtr, substates computes/clamps) */
     union {
-        u8 flags82E; /* bit flags 5/6/7 (tricky/tricky_substates) */
+        u8 blendControlFlags; /* raw blend-channel control byte (bitfield view used by Tricky_updateBlendChannelWeight) */
         struct {
             u8 blendPending : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
             u8 blendActive : 1; /* bit 6: blend channel 1 ramp is running */
             u8 sequencePreserveBlend : 1;
-            u8 flags82ERest : 5;
+            u8 blendControlFlagsRest : 5;
         };
     };
     u8 pad82F[0x830 - 0x82F];
@@ -422,7 +422,7 @@ STATIC_ASSERT(sizeof(TrickyState) == 0x840);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
-STATIC_ASSERT(offsetof(TrickyState, stateWord728) == 0x728);
+STATIC_ASSERT(offsetof(TrickyState, flameCommandPending) == 0x728);
 STATIC_ASSERT(offsetof(TrickyState, actionCallback) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, circlingWarpDetour) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, idleTimer) == 0x724);
@@ -488,7 +488,7 @@ STATIC_ASSERT(offsetof(TrickyState, footPoints) == 0x7D8);
 STATIC_ASSERT(offsetof(TrickyState, impressTimer) == 0x808);
 STATIC_ASSERT(offsetof(TrickyState, animEvents) == 0x80C);
 STATIC_ASSERT(offsetof(TrickyState, variantFadeTimer) == 0x828);
-STATIC_ASSERT(offsetof(TrickyState, flags82E) == 0x82E);
+STATIC_ASSERT(offsetof(TrickyState, blendControlFlags) == 0x82E);
 STATIC_ASSERT(offsetof(TrickyState, blendWeight) == 0x830);
 STATIC_ASSERT(offsetof(TrickyState, blendVelocity) == 0x834);
 STATIC_ASSERT(offsetof(TrickyState, particleTimer) == 0x838);

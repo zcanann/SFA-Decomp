@@ -3248,12 +3248,12 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
             trickyState->substate = TRICKYGROWL_FACE_TARGET;
             trickyRequestMove(obj, TRICKY_ANIM_GROWL_WINDUP, TRICKY_LAND_MOVE_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
-            trickyState->stateWord728 = 0;
+            trickyState->flameCommandPending = 0;
         }
         break;
     case TRICKYGROWL_FACE_TARGET:
         trickyDebugPrint(strBase + TRICKY_DBG_GROWLAT_GROWLING);
-        if (*trickyState->progressPtr != 0 && trickyState->stateWord728 != 0) {
+        if (*trickyState->progressPtr != 0 && trickyState->flameCommandPending != 0) {
             trickyState->substate = TRICKYGROWL_DIG_START;
         } else {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
@@ -3292,7 +3292,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             trickyState->substate = TRICKYGROWL_DIG_END;
-            trickyState->stateWord728 = 0;
+            trickyState->flameCommandPending = 0;
         }
         break;
     case TRICKYGROWL_DIG_END:
@@ -3483,7 +3483,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         ok = trickyUpdateMovementState(obj, 50.0f, state);
         hasTarget = trickyAcquireCirclingTarget(state);
         if (hasTarget != 0) {
-            if (state->stateWord728 == 0) {
+            if (state->flameCommandPending == 0) {
                 {
                     void* ct = trickyFindCirclingTarget((GameObject*)(obj), state);
                     state->cooldownB.ptr = ct;
@@ -3520,11 +3520,11 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         break;
     }
     case ANIMOBJD2_SUBSTATE_APPROACH: {
-        trickyDebugPrint(str + TRICKY_DBG_BADDIEALERT_BARK, *state->progressPtr, state->stateWord728);
+        trickyDebugPrint(str + TRICKY_DBG_BADDIEALERT_BARK, *state->progressPtr, state->flameCommandPending);
         ok = trickyUpdateMovementState(obj, 50.0f, state);
         hasTarget = trickyAcquireCirclingTarget(state);
         if (hasTarget != 0) {
-            if (state->stateWord728 == 0) {
+            if (state->flameCommandPending == 0) {
                 {
                     void* ct = trickyFindCirclingTarget((GameObject*)(obj), state);
                     state->cooldownB.ptr = ct;
@@ -3543,9 +3543,9 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (ok == 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_GROWL_WINDUP, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
             }
-            if (state->stateWord728 != 0) {
+            if (state->flameCommandPending != 0) {
                 if (*state->progressPtr < 2) {
-                    state->stateWord728 = 0;
+                    state->flameCommandPending = 0;
                     if ((u8)Obj_CanSetupObject() != 0) {
                         state->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
                         TRICKY_RESET((u8*)state);
@@ -3616,7 +3616,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->substate = ANIMOBJD2_SUBSTATE_SPAWN;
-            state->stateWord728 = 0;
+            state->flameCommandPending = 0;
         }
         break;
     }
@@ -3685,7 +3685,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         } else {
             target = (GameObject*)Player_GetTargetObject((int)state->playerObj);
         }
-        if (target != state->cooldownB.obj || state->stateWord728 != 0) {
+        if (target != state->cooldownB.obj || state->flameCommandPending != 0) {
             TRICKY_RETARGET((u8*)state, state->followObj);
             state->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
         } else {
@@ -7570,11 +7570,11 @@ void Tricky_update(GameObject* obj) {
             trickyShouldGoToWarpPoint(obj, (TrickyState*)state) == 2) {
             trickyState->stateIndex = TRICKY_STATE_GO_TO_WARP_POINT;
         } else if (trickyState->stateIndex == TRICKY_STATE_GUARD && cmd == TRICKY_COMMAND_TYPE_FLAME) {
-            *(u8*)&trickyState->wanderTargetZ = *(u8*)&trickyState->wanderTargetZ ^ 1;
+            trickyState->guardCanSpawnHelpers = trickyState->guardCanSpawnHelpers ^ 1;
         } else if (trickyState->stateIndex == TRICKY_STATE_CIRCLING && cmd == TRICKY_COMMAND_TYPE_FLAME && found == 0) {
-            trickyState->stateWord728 = 1;
+            trickyState->flameCommandPending = 1;
         } else if (trickyState->stateIndex == TRICKY_STATE_GROWL && cmd == TRICKY_COMMAND_TYPE_FLAME) {
-            trickyState->stateWord728 = 1;
+            trickyState->flameCommandPending = 1;
         } else if (cmd == TRICKY_COMMAND_TYPE_CALL) {
             trickyState->stateFlags |= TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS;
         } else {
@@ -7777,7 +7777,7 @@ void Tricky_update(GameObject* obj) {
                             }
                             trickyState->stateIndex = TRICKY_STATE_CIRCLING;
                             trickyState->substate = 0;
-                            trickyState->stateWord728 = 0;
+                            trickyState->flameCommandPending = 0;
                         }
                     }
                     break;
