@@ -4563,7 +4563,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         trickyDebugPrint(strBase + TRICKY_DBG_FLAME_OUT);
         {
             s16 srcAng = (s16)(trickyState->flameNode0->yaw << 8);
-            s16 delta = (s16)(srcAng - (u16) * (s16*)obj);
+            s16 delta = (s16)(srcAng - (u16)obj->anim.rotX);
             int absDelta;
             if (delta > 0x8000) {
                 delta = (s16)(delta - 0xFFFF);
@@ -6438,10 +6438,10 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
 
     if (tricky_handleFeedOrTalk(obj, state) == 0) {
         state->wanderTargetX =
-            (obj)->anim.worldPosX - mathSinf((TRICKY_PI * (f32) * (s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
+            obj->anim.worldPosX - mathSinf((TRICKY_PI * (f32)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
         state->wanderTargetY = (obj)->anim.worldPosY;
         state->wanderTargetZ =
-            (obj)->anim.worldPosZ - mathCosf((TRICKY_PI * (f32) * (s16*)obj) / TRICKY_ANGLE_HALF_TURN_UNITS);
+            obj->anim.worldPosZ - mathCosf((TRICKY_PI * (f32)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
 
         if (trickyUpdateMovementState(obj, TRICKY_ANIM_TRANSITION_FRAMES, state) != 1) {
             state->idleSfxTimer -= timeDelta;
