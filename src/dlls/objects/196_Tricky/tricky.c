@@ -1267,82 +1267,82 @@ static inline void skeetla_playFootstepSfx(GameObject* obj, u16 sfxId) {
 }
 
 int moveTricky(GameObject* obj, f32* targetPos) {
-    f32 prospectivePos[3];
-    f32 adjustedPos[3];
+    f32 desiredNextPos[3];
+    f32 avoidanceNextPos[3];
     u16 sfxIds[3];
     u16 sfxId;
-    char* debugStrings;
+    char* debugText;
     TrickyState* state;
-    f32 moveSpeed;
-    f32 speedStep;
-    f32 length;
-    f32 step;
-    f32 pathSpeedDelta;
-    s16 ignoredTurnDelta;
-    int td;
+    f32 currentSpeed;
+    f32 minMoveSpeed;
+    f32 dirLength;
+    f32 componentSpeed;
+    f32 animPathSpeedDelta;
+    s16 turnDeltaScratch;
+    int turnDeltaAbs;
 
-    debugStrings = gTrickyDebugStringTable;
+    debugText = gTrickyDebugStringTable;
     state = obj->extra;
-    moveSpeed = state->speed;
-    trickyDebugPrint(sSkeetlaVelDebugFmt, moveSpeed);
+    currentSpeed = state->speed;
+    trickyDebugPrint(sSkeetlaVelDebugFmt, currentSpeed);
 
     state->dirX = targetPos[0] - obj->anim.worldPosX;
     state->dirZ = targetPos[2] - obj->anim.worldPosZ;
-    length = sqrtf((state->dirX * state->dirX) + (state->dirZ * state->dirZ));
-    if (gTrickyFloatZero != length) {
-        state->dirX /= length;
-        state->dirZ /= length;
+    dirLength = sqrtf((state->dirX * state->dirX) + (state->dirZ * state->dirZ));
+    if (gTrickyFloatZero != dirLength) {
+        state->dirX /= dirLength;
+        state->dirZ /= dirLength;
     }
 
-    speedStep = gTrickySmallSpeedStep;
-    if (moveSpeed < speedStep) {
-        step = speedStep * state->dirX;
-        prospectivePos[0] = timeDelta * step + obj->anim.worldPosX;
-        prospectivePos[1] = obj->anim.worldPosY;
-        step = speedStep * state->dirZ;
-        prospectivePos[2] = timeDelta * step + obj->anim.worldPosZ;
+    minMoveSpeed = gTrickySmallSpeedStep;
+    if (currentSpeed < minMoveSpeed) {
+        componentSpeed = minMoveSpeed * state->dirX;
+        desiredNextPos[0] = timeDelta * componentSpeed + obj->anim.worldPosX;
+        desiredNextPos[1] = obj->anim.worldPosY;
+        componentSpeed = minMoveSpeed * state->dirZ;
+        desiredNextPos[2] = timeDelta * componentSpeed + obj->anim.worldPosZ;
     } else {
-        prospectivePos[0] = timeDelta * (state->dirX * moveSpeed) + obj->anim.worldPosX;
-        prospectivePos[1] = obj->anim.worldPosY;
-        prospectivePos[2] = timeDelta * (state->dirZ * moveSpeed) + obj->anim.worldPosZ;
+        desiredNextPos[0] = timeDelta * (state->dirX * currentSpeed) + obj->anim.worldPosX;
+        desiredNextPos[1] = obj->anim.worldPosY;
+        desiredNextPos[2] = timeDelta * (state->dirZ * currentSpeed) + obj->anim.worldPosZ;
     }
 
-    adjustedPos[0] = prospectivePos[0];
-    adjustedPos[1] = prospectivePos[1];
-    adjustedPos[2] = prospectivePos[2];
-    trickyApplyObjectAvoidanceToStep(&obj->anim.worldPosX, adjustedPos, targetPos);
-    if (vec3f_distanceSquared(prospectivePos, adjustedPos) > TRICKY_AVOIDANCE_REPATH_EPSILON_SQ) {
-        state->dirX = adjustedPos[0] - obj->anim.worldPosX;
-        state->dirZ = adjustedPos[2] - obj->anim.worldPosZ;
-        length = sqrtf((state->dirX * state->dirX) + (state->dirZ * state->dirZ));
-        if (gTrickyFloatZero != length) {
-            state->dirX /= length;
-            state->dirZ /= length;
+    avoidanceNextPos[0] = desiredNextPos[0];
+    avoidanceNextPos[1] = desiredNextPos[1];
+    avoidanceNextPos[2] = desiredNextPos[2];
+    trickyApplyObjectAvoidanceToStep(&obj->anim.worldPosX, avoidanceNextPos, targetPos);
+    if (vec3f_distanceSquared(desiredNextPos, avoidanceNextPos) > TRICKY_AVOIDANCE_REPATH_EPSILON_SQ) {
+        state->dirX = avoidanceNextPos[0] - obj->anim.worldPosX;
+        state->dirZ = avoidanceNextPos[2] - obj->anim.worldPosZ;
+        dirLength = sqrtf((state->dirX * state->dirX) + (state->dirZ * state->dirZ));
+        if (gTrickyFloatZero != dirLength) {
+            state->dirX /= dirLength;
+            state->dirZ /= dirLength;
         }
     }
 
-    if (moveSpeed >= gTrickySmallSpeedStep) {
-        skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
+    if (currentSpeed >= gTrickySmallSpeedStep) {
+        skeetla_updateFacingFromMoveVector(obj, &turnDeltaScratch);
         if (skeetla_isInWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
             state->particleTimer = gTrickyFloatZero;
-            trickyDebugPrint(debugStrings + TRICKY_DBG_IN_WATER);
+            trickyDebugPrint(debugText + TRICKY_DBG_IN_WATER);
         } else {
             if (state->stateIndex == TRICKY_STATE_FOLLOW_PLAYER) {
                 if (skeetla_pathSpeedDelta(obj) >= gTrickyFloatZero) {
-                    pathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                    animPathSpeedDelta = skeetla_pathSpeedDelta(obj);
                 } else {
-                    pathSpeedDelta = skeetla_pathSpeedDelta(obj);
-                    pathSpeedDelta = -pathSpeedDelta;
+                    animPathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                    animPathSpeedDelta = -animPathSpeedDelta;
                 }
 
-                if (pathSpeedDelta > gTrickyFloatZero) {
+                if (animPathSpeedDelta > gTrickyFloatZero) {
                     state->sfxIntervalTimer -= timeDelta;
                     if (state->sfxIntervalTimer <= gTrickyFloatZero) {
                         state->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            if (moveSpeed > 1.0f) {
+                            if (currentSpeed > 1.0f) {
                                 sfxId = randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME);
                                 skeetla_playFootstepSfx(obj, sfxId);
                             } else {
@@ -1361,35 +1361,35 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                 }
             }
 
-            if (moveSpeed > TRICKY_RUN_MOVE_THRESHOLD) {
+            if (currentSpeed > TRICKY_RUN_MOVE_THRESHOLD) {
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                 trickyRequestMove(obj, TRICKY_ANIM_LAND_RUN_LOOP, TRICKY_TINY_MOVE_BLEND_SPEED,
                                   TRICKY_MOVE_FLAG_WALK_LOOP);
-            } else if (moveSpeed > 1.0f) {
+            } else if (currentSpeed > 1.0f) {
                 trickyRequestMove(obj, TRICKY_ANIM_RUN, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
-            } else if (moveSpeed > TRICKY_FAST_WALK_MOVE_THRESHOLD) {
+            } else if (currentSpeed > TRICKY_FAST_WALK_MOVE_THRESHOLD) {
                 trickyRequestMove(obj, TRICKY_ANIM_WALK_FAST, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
-            } else if (moveSpeed > TRICKY_SLOW_WALK_MOVE_THRESHOLD) {
+            } else if (currentSpeed > TRICKY_SLOW_WALK_MOVE_THRESHOLD) {
                 trickyRequestMove(obj, TRICKY_ANIM_WALK_MEDIUM, TRICKY_TINY_MOVE_BLEND_SPEED,
                                   TRICKY_MOVE_FLAG_WALK_LOOP);
             } else {
                 trickyRequestMove(obj, TRICKY_ANIM_WALK_SLOW, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
             }
-            trickyDebugPrint(debugStrings + TRICKY_DBG_MOVE_OUT_OF_WATER);
+            trickyDebugPrint(debugText + TRICKY_DBG_MOVE_OUT_OF_WATER);
         }
     } else {
         s16 previousYaw;
         s16 turnDelta;
-        u32 stateFlags;
+        u32 flagsSnapshot;
 
         previousYaw = obj->anim.rotX;
         turnDelta = 0;
         skeetla_updateFacingFromMoveVector(obj, &turnDelta);
-        td = turnDelta;
+        turnDeltaAbs = turnDelta;
 
         if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
             if (skeetla_isInWater(state) != 0) {
-                trickyDebugPrint(debugStrings + TRICKY_DBG_TURN_IN_WATER);
+                trickyDebugPrint(debugText + TRICKY_DBG_TURN_IN_WATER);
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->cooldownC = TRICKY_WATER_COOLDOWN_FRAMES;
                 state->particleTimer = gTrickyFloatZero;
@@ -1397,25 +1397,25 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                 int animId;
                 u32 flags;
 
-                trickyDebugPrint(debugStrings + TRICKY_DBG_TURN_OUT_OF_WATER);
+                trickyDebugPrint(debugText + TRICKY_DBG_TURN_OUT_OF_WATER);
                 flags = state->stateFlags;
                 if ((flags & TRICKY_STATE_FLAG_TURN_LEFT) != 0) {
-                    if ((td >= 0 ? td : -td) > TRICKY_TURN_LARGE_ANGLE) {
+                    if ((turnDeltaAbs >= 0 ? turnDeltaAbs : -turnDeltaAbs) > TRICKY_TURN_LARGE_ANGLE) {
                         animId = TRICKY_ANIM_TURN_LEFT_LARGE;
                     } else {
-                        td = td >= 0 ? turnDelta : -td;
-                        if (td > TRICKY_TURN_MEDIUM_ANGLE) {
+                        turnDeltaAbs = turnDeltaAbs >= 0 ? turnDelta : -turnDeltaAbs;
+                        if (turnDeltaAbs > TRICKY_TURN_MEDIUM_ANGLE) {
                             animId = TRICKY_ANIM_TURN_LEFT_MEDIUM;
                         } else {
                             animId = TRICKY_ANIM_TURN_LEFT_SMALL;
                         }
                     }
                 } else if ((flags & TRICKY_STATE_FLAG_TURN_RIGHT) != 0) {
-                    if ((td >= 0 ? td : -td) > TRICKY_TURN_LARGE_ANGLE) {
+                    if ((turnDeltaAbs >= 0 ? turnDeltaAbs : -turnDeltaAbs) > TRICKY_TURN_LARGE_ANGLE) {
                         animId = TRICKY_ANIM_TURN_RIGHT_LARGE;
                     } else {
-                        td = td >= 0 ? turnDelta : -td;
-                        if (td > TRICKY_TURN_MEDIUM_ANGLE) {
+                        turnDeltaAbs = turnDeltaAbs >= 0 ? turnDelta : -turnDeltaAbs;
+                        if (turnDeltaAbs > TRICKY_TURN_MEDIUM_ANGLE) {
                             animId = TRICKY_ANIM_TURN_RIGHT_MEDIUM;
                         } else {
                             animId = TRICKY_ANIM_TURN_RIGHT_SMALL;
@@ -1429,9 +1429,9 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         }
 
         state->speed = gTrickySmallSpeedStep;
-        stateFlags = state->stateFlags;
-        if (((stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) == 0) &&
-            ((stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST_PREV) == 0)) {
+        flagsSnapshot = state->stateFlags;
+        if (((flagsSnapshot & TRICKY_STATE_FLAG_TURN_REQUEST) == 0) &&
+            ((flagsSnapshot & TRICKY_STATE_FLAG_TURN_REQUEST_PREV) == 0)) {
             return 0;
         }
     }
