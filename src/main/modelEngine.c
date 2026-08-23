@@ -440,8 +440,11 @@
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_0126_trigger.h"
 #include "main/dll/DF/dll_022D_dfpseqpoint.h"
+#include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "main/dll/DF/dll_0233_dfpstatue1.h"
+#include "main/dll/DF/dll_0234_dfperchwitch.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
+#include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 #include "main/dll/dll_023F_dbegg.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/dll_025B_msplantings.h"
@@ -543,9 +546,8 @@ extern ResourceDescriptor gControlLightObjDescriptor, gCrCloudRaceObjDescriptor,
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDBstealerwormObjDescriptor, gDFP_LevelControlObjDescriptor,
     gDFP_ObjCreatorObjDescriptor, gDFP_TorchObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
-extern ResourceDescriptor gDfperchwitchObjDescriptor, gDfpfloorbarObjDescriptor, gDfplightniObjDescriptor,
-    gDfppowerslObjDescriptor;
-extern ResourceDescriptor gDoorswitchObjDescriptor, gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
+extern ResourceDescriptor gDfplightniObjDescriptor, gDfppowerslObjDescriptor;
+extern ResourceDescriptor gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLaserCannonObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
@@ -1753,13 +1755,13 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDFP_TorchObjDescriptor,
     &gDll22CObjDescriptor,
     (ResourceDescriptor*)&gDFP_seqpointObjDescriptor,
-    &gDoorswitchObjDescriptor,
-    &gDfpfloorbarObjDescriptor,
+    (ResourceDescriptor*)&gDoorswitchObjDescriptor,
+    (ResourceDescriptor*)&gDfpfloorbarObjDescriptor,
     &gChukaObjDescriptor,
     &gTrickyCurveObjDescriptor,
     &gDFP_RotatePObjDescriptor,
     (ResourceDescriptor*)&gDfpstatue1ObjDescriptor,
-    &gDfperchwitchObjDescriptor,
+    (ResourceDescriptor*)&gDfperchwitchObjDescriptor,
     (ResourceDescriptor*)&gDfptargetblockObjDescriptor,
     (ResourceDescriptor*)&gLaserUnsupportedObjDescriptor,
     (ResourceDescriptor*)&gLaserObjDescriptor,
