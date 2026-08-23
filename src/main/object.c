@@ -1228,6 +1228,7 @@ void objGetWeaponDa(u8* obj, int objType, ObjWeaponDaTable* weaponDaTable, int k
     }
 }
 
+#pragma dont_inline on
 void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load)
 {
     int i;
@@ -1264,6 +1265,7 @@ void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u
         i += 3;
     }
 }
+#pragma dont_inline reset
 
 void Obj_UpdateObject(GameObject* obj)
 {
