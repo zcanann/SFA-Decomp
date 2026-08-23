@@ -7078,7 +7078,7 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
         trickyReportError(sSidekickCommandDebugTextBlock);
         return;
     }
-    state->commandRequestBits = (u8)(state->commandRequestBits | (1 << commandType));
+    state->commandRequestBits = (u8)(state->commandRequestBits | TRICKY_COMMAND_TYPE_TO_ABILITY(commandType));
     commandIndex = 0;
     commandCursor = (u8*)state;
     count = state->commandCount;
@@ -7172,7 +7172,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             commandMask &= ~TRICKY_ABILITY_CALL;
         }
         if (mainGetBit(GAMEBIT_SH_TrickyFindSecretUnlocked) == 0) {
-            commandMask &= ~4;
+            commandMask &= ~TRICKY_ABILITY_BADDIE;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0) {
             commandMask &= ~TRICKY_ABILITY_FLAME;

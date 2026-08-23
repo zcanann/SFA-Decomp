@@ -20,6 +20,8 @@
 #define TRICKY_COMMAND_TYPE_FLAME       4
 #define TRICKY_COMMAND_TYPE_THROW_BALL  5
 
+#define TRICKY_COMMAND_TYPE_TO_ABILITY(commandType) (1 << (commandType))
+
 typedef struct TrickyItemIdList {
     s32 ids[TRICKY_ITEM_ID_COUNT];
 } TrickyItemIdList;
