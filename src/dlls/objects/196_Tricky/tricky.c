@@ -7510,73 +7510,75 @@ void Tricky_hitDetect(GameObject* obj) {
 }
 
 /* Tricky sidekick command state machine and per-frame update. */
-#define TRICKY_RESET_COMMAND(statePtr)                                                                                 \
-    ((TrickyState*)(statePtr))->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;                                               \
-    ((TrickyState*)(statePtr))->substate = 0;                                                                          \
-    zero = gTrickyFloatZero;                                                                                           \
-    ((TrickyState*)(statePtr))->cooldownA = zero;                                                                      \
-    ((TrickyState*)(statePtr))->cooldownB.f = zero;                                                                    \
-    ((TrickyState*)(statePtr))->stateFlags =                                                                           \
-        ((TrickyState*)(statePtr))->stateFlags & (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;                               \
-    ((TrickyState*)(statePtr))->stateFlags =                                                                           \
-        ((TrickyState*)(statePtr))->stateFlags & (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;                               \
-    ((TrickyState*)(statePtr))->stateFlags =                                                                           \
-        ((TrickyState*)(statePtr))->stateFlags & (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;                                 \
-    ((TrickyState*)(statePtr))->stateFlags =                                                                           \
-        ((TrickyState*)(statePtr))->stateFlags & (u64)~TRICKY_STATE_FLAG_GUARD_REQUEST;                                \
-    ((TrickyState*)(statePtr))->commandPhase = TRICKY_COMMAND_PHASE_IDLE
+static inline f32 trickyResetCommandState(TrickyState* state) {
+    f32 zero;
 
-#define TRICKY_VOICE(obj, sfx, vol)                                                                                    \
-    {                                                                                                                  \
-        voiceState = ((GameObject*)obj)->extra;                                                                        \
-        if (voiceState->soundSuppressed == 0) {                                                                        \
-            if (((GameObject*)obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END ||                                       \
-                ((GameObject*)obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {                                        \
-                if (Sfx_IsPlayingFromObjectChannel((GameObject*)(obj), TRICKY_VOICE_CHANNEL) == 0) {                   \
-                    objSoundStartTimed((GameObject*)(obj), &voiceState->soundState, (sfx), (vol), 0xffffffff, 0);      \
-                }                                                                                                      \
-            }                                                                                                          \
-        }                                                                                                              \
-    }
+    state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
+    state->substate = 0;
+    zero = gTrickyFloatZero;
+    state->cooldownA = zero;
+    state->cooldownB.f = zero;
+    state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
+    state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
+    state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
+    state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_GUARD_REQUEST;
+    state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
+    return zero;
+}
 
-#define TRICKY_SPAWN_FOOD_BUBBLE(obj, statePtr)                                                                        \
-    if (((TrickyState*)(statePtr))->foodChild == NULL) {                                                                   \
-        ObjPlacement* setup_;                                                                                          \
-        s8 occupiedSlots_[4];                                                                                          \
-        int freeSlot_;                                                                                                 \
-        setup_ = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);                                                    \
-        occupiedSlots_[0] = -1;                                                                                        \
-        occupiedSlots_[1] = -1;                                                                                        \
-        occupiedSlots_[2] = -1;                                                                                        \
-        if (((TrickyState*)(statePtr))->exclamationPromptChild != NULL) {                                                              \
-            occupiedSlots_[((TrickyState*)(statePtr))->packedSlots.exclamationPromptSlot] = 1;                                   \
-        }                                                                                                              \
-        if (((TrickyState*)(statePtr))->questPromptChild != NULL) {                                                              \
-            occupiedSlots_[((TrickyState*)(statePtr))->packedSlots.questPromptSlot] = 1;                                   \
-        }                                                                                                              \
-        if (((TrickyState*)(statePtr))->foodChild != NULL) {                                                               \
-            occupiedSlots_[((TrickyState*)(statePtr))->packedSlots.foodChildSlot] = 1;                                       \
-        }                                                                                                              \
-        if (occupiedSlots_[0] == -1) {                                                                                 \
-            freeSlot_ = 0;                                                                                             \
-        } else if (occupiedSlots_[1] == -1) {                                                                          \
-            freeSlot_ = 1;                                                                                             \
-        } else if (occupiedSlots_[2] == -1) {                                                                          \
-            freeSlot_ = 2;                                                                                             \
-        } else if (occupiedSlots_[3] == -1) {                                                                          \
-            freeSlot_ = 3;                                                                                             \
-        } else {                                                                                                       \
-            freeSlot_ = -1;                                                                                            \
-        }                                                                                                              \
-        ((TrickyState*)(statePtr))->packedSlots.foodChildSlot = freeSlot_;                                                   \
-        ((TrickyState*)(statePtr))->foodChild = objSetupObject(setup_, 4, -1, -1, ((GameObject*)(obj))->anim.parent);      \
-        ObjLink_AttachChild((GameObject*)(obj), ((TrickyState*)(statePtr))->foodChild,                                     \
-                            ((TrickyState*)(statePtr))->packedSlots.foodChildSlot);                                          \
-        zero = gTrickyFloatZero;                                                                                       \
-        ((TrickyState*)(statePtr))->foodVoiceTimer = zero;                                                           \
-        ((TrickyState*)(statePtr))->foodForceBlinkTimer = zero;                                                           \
-        ((TrickyState*)(statePtr))->foodBlinkTimer = zero;                                                           \
+static inline void trickyPlaySidekickVoice(GameObject* obj, u16 sfxId, int volume) {
+    TrickyState* voiceState;
+
+    voiceState = obj->extra;
+    if (voiceState->soundSuppressed == 0) {
+        if (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
+            if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
+                objSoundStartTimed(obj, &voiceState->soundState, sfxId, volume, 0xffffffff, 0);
+            }
+        }
     }
+}
+
+static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
+    if (state->foodChild == NULL) {
+        ObjPlacement* setup;
+        s8 occupiedSlots[4];
+        int freeSlot;
+        f32 zero;
+
+        setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
+        occupiedSlots[0] = -1;
+        occupiedSlots[1] = -1;
+        occupiedSlots[2] = -1;
+        if (state->exclamationPromptChild != NULL) {
+            occupiedSlots[state->packedSlots.exclamationPromptSlot] = 1;
+        }
+        if (state->questPromptChild != NULL) {
+            occupiedSlots[state->packedSlots.questPromptSlot] = 1;
+        }
+        if (state->foodChild != NULL) {
+            occupiedSlots[state->packedSlots.foodChildSlot] = 1;
+        }
+        if (occupiedSlots[0] == -1) {
+            freeSlot = 0;
+        } else if (occupiedSlots[1] == -1) {
+            freeSlot = 1;
+        } else if (occupiedSlots[2] == -1) {
+            freeSlot = 2;
+        } else if (occupiedSlots[3] == -1) {
+            freeSlot = 3;
+        } else {
+            freeSlot = -1;
+        }
+        state->packedSlots.foodChildSlot = freeSlot;
+        state->foodChild = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
+        ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
+        zero = gTrickyFloatZero;
+        state->foodVoiceTimer = zero;
+        state->foodForceBlinkTimer = zero;
+        state->foodBlinkTimer = zero;
+    }
+}
 
 void Tricky_update(GameObject* obj) {
     extern const f32 gTrickyAnimTransitionFrames[1];
@@ -7628,9 +7630,9 @@ void Tricky_update(GameObject* obj) {
         TrickyStats* stats = trickyState->stats;
 
         if (stats->energy == stats->maxEnergy) {
-            TRICKY_VOICE(obj, TRICKY_VOICE_SFX_IM_STUFFED, 0x500);
+            trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_IM_STUFFED, 0x500);
         } else {
-            TRICKY_VOICE(obj, TRICKY_VOICE_SFX_MMMM_TASTY, 0x500);
+            trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_MMMM_TASTY, 0x500);
         }
         trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
@@ -7647,7 +7649,7 @@ void Tricky_update(GameObject* obj) {
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) != 0) {
         ObjHits_EnableObject(obj);
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE) == 0) {
-            TRICKY_RESET_COMMAND(state);
+            zero = trickyResetCommandState(trickyState);
             trickyState->movementState = TRICKY_MOVE_WALK_WAIT;
             trickyState->prevSpeed = zero;
             trickyState->speed = zero;
@@ -7698,11 +7700,11 @@ void Tricky_update(GameObject* obj) {
                     objSetAnimSpeedTo1(*trickyFlameChildSlotAtCursor(childCursor));
                 }
                 Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
-                TRICKY_VOICE(obj, TRICKY_VOICE_SFX_FINISH_FLAME, 0);
+                trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_FINISH_FLAME, 0);
             }
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         }
-        TRICKY_RESET_COMMAND(state);
+        zero = trickyResetCommandState(trickyState);
         trickyState->followObj = NULL;
     }
     {
@@ -7741,14 +7743,14 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_FIND_SECRET:
                     trickyState->commandPhase = TRICKY_COMMAND_PHASE_DIG;
                     trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FIND_SECRET);
-                    TRICKY_VOICE(obj, 0x13c, 0);
+                    trickyPlaySidekickVoice(obj, 0x13c, 0);
                     switch (trickyState->followObj->anim.romDefNo) {
                     case SKEETLA_LINKED_SOURCE_ID_OBJ_A:
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
+                                zero = trickyResetCommandState(trickyState);
+                                trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
                             trickyState->stateIndex = TRICKY_STATE_FIND_SECRET_DIG;
@@ -7758,8 +7760,8 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
+                                zero = trickyResetCommandState(trickyState);
+                                trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
                             trickyState->stateIndex = TRICKY_STATE_DIG_TUNNEL;
@@ -7775,8 +7777,8 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 2) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
+                                zero = trickyResetCommandState(trickyState);
+                                trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
                             trickyState->stateIndex = TRICKY_STATE_TRACK_TUMBLEWEED;
@@ -7786,8 +7788,8 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                TRICKY_RESET_COMMAND(state);
-                                TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
+                                zero = trickyResetCommandState(trickyState);
+                                trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
                             trickyState->stateIndex = TRICKY_STATE_FIND_SECRET_DIG;
@@ -7797,7 +7799,7 @@ void Tricky_update(GameObject* obj) {
                         trickyState->stateIndex = TRICKY_STATE_GROWL;
                         break;
                     default:
-                        TRICKY_RESET_COMMAND(state);
+                        zero = trickyResetCommandState(trickyState);
                         trickyReportError(debugTextBase + TRICKY_DBG_COMMAND_WRONG_OBJECT);
                         break;
                     }
@@ -7848,8 +7850,8 @@ void Tricky_update(GameObject* obj) {
                     if (trickyState->stats->energy < 4) {
                         if ((u8)Obj_CanSetupObject()) {
                             trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                            TRICKY_RESET_COMMAND(state);
-                            TRICKY_SPAWN_FOOD_BUBBLE(obj, state);
+                            zero = trickyResetCommandState(trickyState);
+                            trickySpawnFoodBubble(obj, trickyState);
                         }
                     } else {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_FLAME;
@@ -7885,7 +7887,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->actionCallback = (TrickyActionCallback)wcbeacon_aButtonCallback;
                             break;
                         default:
-                            TRICKY_RESET_COMMAND(state);
+                            zero = trickyResetCommandState(trickyState);
                             trickyReportError(debugTextBase + TRICKY_DBG_COMMAND_WRONG_OBJECT);
                             break;
                         }
@@ -7951,10 +7953,10 @@ void Tricky_update(GameObject* obj) {
     if ((flags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
         if ((flags & TRICKY_STATE_FLAG_RECALL_REQUEST) != 0) {
             if ((flags & TRICKY_STATE_FLAG_HEEL_REQUEST) != 0) {
-                TRICKY_RESET_COMMAND(state);
+                zero = trickyResetCommandState(trickyState);
                 trickyState->commandPhase = TRICKY_COMMAND_PHASE_NONE;
             } else {
-                TRICKY_RESET_COMMAND(state);
+                zero = trickyResetCommandState(trickyState);
             }
             trickyState->cooldownA = TRICKY_RECALL_COOLDOWN_FRAMES;
         } else if ((flags & TRICKY_STATE_FLAG_GUARD_REQUEST) != 0) {
@@ -8142,7 +8144,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->voiceCooldown = gTrickyFloatZero;
     }
     if (trickyState->voiceCooldown > gTrickyFloatZero) {
-        TRICKY_VOICE(obj, 0x29c, 0x100);
+        trickyPlaySidekickVoice(obj, 0x29c, 0x100);
     }
     trickyUpdateCollisionAndPathState(obj);
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_IMPRESS_PENDING_U32) != 0) {
@@ -8150,7 +8152,7 @@ void Tricky_update(GameObject* obj) {
         if (trickyState->impressTimer <= gTrickyFloatZero) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_IMPRESS_PENDING_U32;
             impressSfxId = ((u16*)&impressSfxPair)[randomGetRange(0, 1)];
-            TRICKY_VOICE(obj, impressSfxId, 0x500);
+            trickyPlaySidekickVoice(obj, impressSfxId, 0x500);
         }
     }
     trickyUpdateColorVariant(obj, (TrickyState*)state);
@@ -8214,9 +8216,9 @@ void Tricky_update(GameObject* obj) {
         }
         if (trickyState->foodVoiceTimer > TRICKY_CHILD_VOICE_PERIOD_FRAMES) {
             if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
-                TRICKY_VOICE(obj, TRICKY_VOICE_SFX_SCARED, 0x500);
+                trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_SCARED, 0x500);
             } else {
-                TRICKY_VOICE(obj, TRICKY_VOICE_SFX_TIRED, 0x500);
+                trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_TIRED, 0x500);
             }
             trickyState->foodVoiceTimer -= TRICKY_CHILD_VOICE_PERIOD_FRAMES;
         }
