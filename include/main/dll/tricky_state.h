@@ -64,9 +64,9 @@ typedef union TrickyScratch {
 typedef int (*TrickyActionCallback)(GameObject* obj, int amount);
 
 typedef struct TrickyPackedSlots {
-    u8 promptASlot : 2;
-    u8 promptBSlot : 2;
-    u8 zzzSlot : 2;
+    u8 exclamationPromptSlot : 2;
+    u8 questPromptSlot : 2;
+    u8 foodChildSlot : 2;
     u8 d : 2;
 } TrickyPackedSlots;
 
@@ -387,16 +387,16 @@ typedef struct TrickyState {
     f32 waterIdleTimer; /* countdown primed to TRICKY_WATER_COOLDOWN_FRAMES when water movement starts; Tricky_update clamps it toward zero, and idle behavior consumes a positive value to force TRICKY_ANIM_WATER_IDLE */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
     f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching zero fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
-    GameObject* childA;
-    f32 promptADespawnTimer;
-    GameObject* childB;
-    f32 promptBDespawnTimer;
-    GameObject* child;
-    TrickyPackedSlots packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (childA/childB/child) */
+    GameObject* exclamationPromptChild;
+    f32 exclamationPromptTimer;
+    GameObject* questPromptChild;
+    f32 questPromptTimer;
+    GameObject* foodChild;
+    TrickyPackedSlots packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (exclamationPromptChild/questPromptChild/foodChild) */
     u8 pad7BD[0x7C0 - 0x7BD];
-    f32 childPhaseTimer0; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
-    f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
-    f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's 0x4000 anim flag via gTrickyTimer20Frames */
+    f32 foodVoiceTimer; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
+    f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
+    f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's 0x4000 anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
     u8 pendingFollowRequest;
     u8 pad7D1[0x7D4 - 0x7D1];
@@ -489,11 +489,11 @@ STATIC_ASSERT(offsetof(TrickyState, secretDigWhineTimer) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, statusFlags) == 0x58);
 STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
 STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);
-STATIC_ASSERT(offsetof(TrickyState, childA) == 0x7A8);
-STATIC_ASSERT(offsetof(TrickyState, promptADespawnTimer) == 0x7AC);
-STATIC_ASSERT(offsetof(TrickyState, childB) == 0x7B0);
-STATIC_ASSERT(offsetof(TrickyState, promptBDespawnTimer) == 0x7B4);
-STATIC_ASSERT(offsetof(TrickyState, child) == 0x7B8);
+STATIC_ASSERT(offsetof(TrickyState, exclamationPromptChild) == 0x7A8);
+STATIC_ASSERT(offsetof(TrickyState, exclamationPromptTimer) == 0x7AC);
+STATIC_ASSERT(offsetof(TrickyState, questPromptChild) == 0x7B0);
+STATIC_ASSERT(offsetof(TrickyState, questPromptTimer) == 0x7B4);
+STATIC_ASSERT(offsetof(TrickyState, foodChild) == 0x7B8);
 STATIC_ASSERT(offsetof(TrickyState, packedSlots) == 0x7BC);
 STATIC_ASSERT(offsetof(TrickyState, footPoints) == 0x7D8);
 STATIC_ASSERT(offsetof(TrickyState, impressTimer) == 0x808);
