@@ -2832,7 +2832,7 @@ void enemy_update(GameObject* obj)
         if (tricky != NULL && (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
             TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                        TRICKY_COMMAND_TYPE_BADDIE);
+                                                        TRICKY_COMMAND_TYPE_DISTRACT);
         }
     }
     baddie_updateWhileFrozen(obj, (u8*)state, 0);

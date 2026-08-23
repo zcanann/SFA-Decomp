@@ -375,7 +375,7 @@ void kytesmum_update(GameObject* obj)
     {
         TRICKY_INTERFACE(nearest)
             ->sideCommandEnable(nearest, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                TRICKY_COMMAND_TYPE_BADDIE);
+                                TRICKY_COMMAND_TYPE_DISTRACT);
     }
 }
 

@@ -7172,7 +7172,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             commandMask &= ~TRICKY_ABILITY_CALL;
         }
         if (mainGetBit(GAMEBIT_SH_TrickyFindSecretUnlocked) == 0) {
-            commandMask &= ~TRICKY_ABILITY_BADDIE;
+            commandMask &= ~TRICKY_ABILITY_DISTRACT;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0) {
             commandMask &= ~TRICKY_ABILITY_FLAME;
