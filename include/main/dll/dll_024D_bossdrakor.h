@@ -81,7 +81,7 @@ typedef struct BossDrakorTuning
     int unk38[9];
     f32 missileBaseSpeeds[3];
     f32 missileLeadFactors[3];
-    int unk74[3];
+    int airMeterThresholds[3];
 } BossDrakorTuning;
 
 STATIC_ASSERT(sizeof(BossDrakorTuning) == 0x80);
@@ -89,7 +89,7 @@ STATIC_ASSERT(offsetof(BossDrakorTuning, unk14) == 0x14);
 STATIC_ASSERT(offsetof(BossDrakorTuning, unk38) == 0x38);
 STATIC_ASSERT(offsetof(BossDrakorTuning, missileBaseSpeeds) == 0x5c);
 STATIC_ASSERT(offsetof(BossDrakorTuning, missileLeadFactors) == 0x68);
-STATIC_ASSERT(offsetof(BossDrakorTuning, unk74) == 0x74);
+STATIC_ASSERT(offsetof(BossDrakorTuning, airMeterThresholds) == 0x74);
 
 extern BossDrakorTuning gBossDrakorTurnMoveStates;
 
