@@ -343,8 +343,8 @@ typedef struct TrickyState {
         f32 guardPoint
             [3]; /* trickyGuard: guard-post position (home pos - 15 units along facing); trickyFlame clears [0]/[1] with 0.0f on exit */
         struct {
-            struct RomCurveDef* flameNode0; /* trickyFlame: Objfsa_FindNearestCurveType24 result */
-            struct RomCurveDef* flameNode1; /* trickyFlame: getById(flameNode0->linkIds[0]) */
+            struct RomCurveDef* flameEdgeNode;   /* trickyFlame: Objfsa_FindNearestCurveType24 result */
+            struct RomCurveDef* flameReturnNode; /* trickyFlame: getById(flameEdgeNode->linkIds[0]) */
         };
     };
     union {
