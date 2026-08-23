@@ -138,7 +138,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
     }
     if (state->spawnedObject == NULL)
     {
-        if (Obj_IsLoadingLocked())
+        if ((u8)Obj_CanSetupObject())
         {
             spawned = Obj_AllocObjectSetup(32, DRCAGEWITH_CHILD_OBJ);
             spawned->color[0] = 2;

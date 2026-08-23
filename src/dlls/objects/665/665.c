@@ -82,7 +82,7 @@ void dll_299_initialise_nop(void)
 {
 }
 
-ObjectDescriptor dll_299 = {
+ObjectDescriptor gDll299ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)dll_299_initialise_nop, (ObjectDescriptorCallback)dll_299_release_nop, 0,
     (ObjectDescriptorCallback)dll_299_init, (ObjectDescriptorCallback)dll_299_update,

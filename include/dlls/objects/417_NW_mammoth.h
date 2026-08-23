@@ -12,12 +12,47 @@
 #define NW_MAMMOTH_PLACEMENT_SIZE   0x24
 #define NW_MAMMOTH_PATH_POINT_COUNT 4
 
+typedef enum NwMammothBehaviorMode {
+    NW_MAMMOTH_BEHAVIOR_FEED_QUEST = 0,
+    NW_MAMMOTH_BEHAVIOR_MODE1_PATROL = 1,
+    NW_MAMMOTH_BEHAVIOR_ARTIFACT_QUEST = 2,
+    NW_MAMMOTH_BEHAVIOR_PATROL = 3,
+    NW_MAMMOTH_BEHAVIOR_GATEKEEPER = 4,
+} NwMammothBehaviorMode;
+
+typedef enum NwMammothStateIndex {
+    NW_MAMMOTH_STATE_FEED_INTRO = 0,
+    NW_MAMMOTH_STATE_FEED_FIRST_ROOT = 1,
+    NW_MAMMOTH_STATE_FEED_SECOND_ROOT = 2,
+    NW_MAMMOTH_STATE_FEED_SATISFIED = 3,
+    NW_MAMMOTH_STATE_ARTIFACT_PROMPT = 4,
+    NW_MAMMOTH_STATE_ARTIFACT_COLLECTED = 5,
+    NW_MAMMOTH_STATE_ARTIFACT_COMPLETE = 6,
+    NW_MAMMOTH_STATE_PATROL_PAUSED = 7,
+    NW_MAMMOTH_STATE_PATROL_MOVING = 8,
+    NW_MAMMOTH_STATE_GATEKEEPER_IDLE = 9,
+    NW_MAMMOTH_STATE_GATEKEEPER_ALERT = 10,
+    NW_MAMMOTH_STATE_GATEKEEPER_PROMPT = 11,
+    NW_MAMMOTH_STATE_GATEKEEPER_RESUME_RESCUE = 12,
+    NW_MAMMOTH_STATE_GATEKEEPER_COLLECTING = 13,
+    NW_MAMMOTH_STATE_GATEKEEPER_HOMING_TUMBLEWEED = 14,
+    NW_MAMMOTH_STATE_GATEKEEPER_BREAK_TUMBLEWEED = 15,
+    NW_MAMMOTH_STATE_GATEKEEPER_RESCUED_SEQUENCE = 16,
+    NW_MAMMOTH_STATE_GATEKEEPER_RESCUE_COMPLETE = 17,
+    NW_MAMMOTH_STATE_GATEKEEPER_TRANSITION = 18,
+    NW_MAMMOTH_STATE_GATEKEEPER_POST_RESCUE = 19,
+    NW_MAMMOTH_STATE_SLEEP_START = 20,
+    NW_MAMMOTH_STATE_SLEEPING = 21,
+    NW_MAMMOTH_STATE_WAKE_UP = 22,
+    NW_MAMMOTH_STATE_COUNT = 24,
+} NwMammothStateIndex;
+
 typedef struct NwMammothPlacement {
     ObjPlacement base;
     s16 triggerDistance;
     u8 unknown1A[2];
     s8 modelIndex;
-    s8 behaviorMode;
+    s8 behaviorMode; /* NwMammothBehaviorMode */
     u8 unknown1E[NW_MAMMOTH_PLACEMENT_SIZE - 0x1E];
 } NwMammothPlacement;
 
@@ -48,8 +83,8 @@ typedef struct NwMammothState {
     CurvesCollisionState pathState;
     u8 hitReactState;
     u8 unknown3D5[0x408 - 0x3D5];
-    u8 stateIndex;
-    u8 daytimeStateIndex;
+    u8 stateIndex;        /* NwMammothStateIndex */
+    u8 daytimeStateIndex; /* NwMammothStateIndex saved before the sleep cycle */
     u8 unknown40A[2];
     CharacterEyeAnimState eyeAnim;
     u8 unknown434[0x43C - 0x434];

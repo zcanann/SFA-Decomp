@@ -4,6 +4,7 @@
 #include "game/objects/object.h"
 #include "global.h"
 #include "game/objects/object_setup.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct KtfallingrocksPlacement
 {
@@ -28,5 +29,7 @@ void ktfallingrocks_update(GameObject* obj);
 void ktfallingrocks_init(GameObject* obj);
 void ktfallingrocks_release(void);
 void ktfallingrocks_initialise(void);
+
+extern ObjectDescriptor gKtFallingrocksObjDescriptor;
 
 #endif /* MAIN_DLL_DR_DLL_0254_KTFALLINGROCKS_H_ */

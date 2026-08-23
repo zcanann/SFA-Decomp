@@ -1,8 +1,10 @@
 #ifndef DLLS_OBJECTS_245_SIDEKICKBAL_H_
 #define DLLS_OBJECTS_245_SIDEKICKBAL_H_
 
+#include "dolphin/mtx/vec.h"
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
+#include "main/dll/curves_collision_state.h"
 
 typedef enum SidekickBallMode {
     SIDEKICK_BALL_IDLE = 0,
@@ -13,38 +15,44 @@ typedef enum SidekickBallMode {
 } SidekickBallMode;
 
 typedef struct SidekickBallState {
-    u8 unk000[0x68];        /* 0x000 */
-    f32 collisionNormal[3]; /* 0x068 */
-    u8 pad074[0x140];       /* 0x074 */
-    f32 floorHeight;        /* 0x1B4 */
-    u8 pad1B8[4];           /* 0x1B8 */
-    f32 floorBaseY;         /* 0x1BC */
-    u8 pad1C0[0x9B];        /* 0x1C0 */
-    u8 hittableLatch;       /* 0x25B */
-    u8 pad25C[5];           /* 0x25C */
-    s8 hasCollisionNormal;  /* 0x261 */
-    u8 pad262[6];           /* 0x262 */
-    f32 primaryRadius;      /* 0x268 */
-    f32 fadeTimer;          /* 0x26C */
-    u8 pad270[4];           /* 0x270 */
-    u8 ballMode;            /* 0x274: SidekickBallMode */
-    u8 onPathPoint;         /* 0x275 */
-    u8 pad276[0x22];        /* 0x276 */
-    f32 unk298;             /* 0x298 */
-    u8 pad29C[0x14];        /* 0x29C */
-    f32 previousPosX;       /* 0x2B0 */
-    f32 previousPosY;       /* 0x2B4 */
-    f32 previousPosZ;       /* 0x2B8 */
-    u8 pad2BC[4];           /* 0x2BC */
-    f32 floorY;             /* 0x2C0 */
-    f32 floorDepth;         /* 0x2C4 */
-    u8 triggerArmed;        /* 0x2C8 */
-    u8 triggerHit;          /* 0x2C9 */
-    u8 sendHoldMessage;     /* 0x2CA */
-    u8 pad2CB;              /* 0x2CB */
+    union {
+        CurvesCollisionState pathControl; /* 0x000: gPathControlInterface state block */
+        struct {
+            u8 pathControlPrefix[0x68]; /* 0x000 */
+            Vec collisionNormal;        /* 0x068 */
+            u8 pad074[0x140];           /* 0x074 */
+            f32 floorHeight;            /* 0x1B4 */
+            u8 pad1B8[4];               /* 0x1B8 */
+            f32 floorBaseY;             /* 0x1BC */
+            u8 pad1C0[0x9B];            /* 0x1C0 */
+            u8 hittableLatch;           /* 0x25B */
+            u8 pad25C[5];               /* 0x25C */
+            s8 hasCollisionNormal;      /* 0x261 */
+            u8 pad262[6];               /* 0x262 */
+        };
+    };
+    f32 primaryRadius;  /* 0x268 */
+    f32 fadeTimer;      /* 0x26C */
+    u8 pad270[4];       /* 0x270 */
+    u8 ballMode;        /* 0x274: SidekickBallMode */
+    u8 onPathPoint;     /* 0x275 */
+    u8 pad276[0x22];    /* 0x276 */
+    f32 unk298;         /* 0x298 */
+    u8 pad29C[0x14];    /* 0x29C */
+    f32 previousPosX;   /* 0x2B0 */
+    f32 previousPosY;   /* 0x2B4 */
+    f32 previousPosZ;   /* 0x2B8 */
+    u8 pad2BC[4];       /* 0x2BC */
+    f32 floorY;         /* 0x2C0 */
+    f32 floorDepth;     /* 0x2C4 */
+    u8 triggerArmed;    /* 0x2C8 */
+    u8 triggerHit;      /* 0x2C9 */
+    u8 sendHoldMessage; /* 0x2CA */
+    u8 pad2CB;          /* 0x2CB */
 } SidekickBallState;
 
-STATIC_ASSERT(offsetof(SidekickBallState, unk000) == 0x0);
+STATIC_ASSERT(offsetof(SidekickBallState, pathControl) == 0x0);
+STATIC_ASSERT(offsetof(SidekickBallState, pathControlPrefix) == 0x0);
 STATIC_ASSERT(offsetof(SidekickBallState, collisionNormal) == 0x68);
 STATIC_ASSERT(offsetof(SidekickBallState, pad074) == 0x74);
 STATIC_ASSERT(offsetof(SidekickBallState, floorHeight) == 0x1B4);

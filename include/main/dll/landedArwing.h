@@ -7,7 +7,7 @@
 #include "main/dll/baddie_state.h"
 
 /*
- * Per-object extra block for the landed-arwing baddie (dll_D3) -- the 0x94-byte
+ * Per-object extra block for the landed-arwing baddie (DLL slot 0xD3) -- the 0x94-byte
  * GroundBaddieState::control region, memset in dll_D3_init. Shared by
  * treasurechest.c (dll_D3_*), landedArwing.c, staffAction.c (the
  * landedarwing_* movement helpers) and backpack.c (LandedArwing_Update*

@@ -26,6 +26,14 @@ ObjectDescriptor gKaldachomMeObjDescriptor = {
     KaldachomMe_getExtraSize,
 };
 
+const f32 gKaldachomOne[1] = {1.0f};
+const f32 gKaldachomZero[1] = {0.0f};
+const f32 gKaldachomLinkedMouthStep[1] = {0.025f};
+
+#define KALDACHOMME_ONE               (gKaldachomOne[0])
+#define KALDACHOMME_ZERO              (gKaldachomZero[0])
+#define KALDACHOMME_LINKED_MOUTH_STEP (gKaldachomLinkedMouthStep[0])
+
 void kaldachomme_setLinkedMouthMode(GameObject* obj, KaldachomMeLinkedMode mode) {
     KaldachomMeState* state;
     GameObject* linkedObj;
@@ -80,15 +88,15 @@ void kaldachomme_setLinkedMouthMode(GameObject* obj, KaldachomMeLinkedMode mode)
     if (state != NULL) {
         switch (mode) {
         case KALDACHOMME_LINKED_MODE_MOVE_0:
-            state->targetProgress = 1.0f;
-            state->progress = 0.0f;
-            state->step = 0.025f;
+            state->targetProgress = KALDACHOMME_ONE;
+            state->progress = KALDACHOMME_ZERO;
+            state->step = KALDACHOMME_LINKED_MOUTH_STEP;
             state->moveId = 0;
             break;
         case KALDACHOMME_LINKED_MODE_MOVE_1:
-            state->targetProgress = 1.0f;
-            state->progress = 0.0f;
-            state->step = 0.025f;
+            state->targetProgress = KALDACHOMME_ONE;
+            state->progress = KALDACHOMME_ZERO;
+            state->step = KALDACHOMME_LINKED_MOUTH_STEP;
             state->moveId = 1;
             break;
         }
@@ -109,7 +117,7 @@ void KaldachomMe_free(GameObject* obj) {
 
 void KaldachomMe_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
     if (visible != 0) {
-        objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
+        objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, KALDACHOMME_ONE);
     }
 }
 
@@ -128,7 +136,7 @@ void KaldachomMe_update(GameObject* obj) {
     target = state->targetProgress;
     if (current != target) {
         step = state->step;
-        if (step > 0.0f) {
+        if (step > KALDACHOMME_ZERO) {
             if (current < target) {
                 state->progress = current + step * timeDelta;
             } else {
@@ -150,7 +158,7 @@ void KaldachomMe_init(GameObject* obj, KaldachomMePlacement* placement) {
     obj->anim.rotY = (s16)(placement->rotYByte << 8);
     obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
-    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
+    ObjAnim_SetCurrentMove(obj, 0, KALDACHOMME_ZERO, 0);
 }
 
 void KaldachomMe_release(void) {

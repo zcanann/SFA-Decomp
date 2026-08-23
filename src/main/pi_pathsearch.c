@@ -267,7 +267,8 @@ void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx) {
                     if (requiredBit == -1 || mainGetBit(requiredBit) != 0) {
                         forbiddenBit = linked->forbiddenBit;
                         if (forbiddenBit == -1 || mainGetBit(forbiddenBit) == 0) {
-                            if (!(linked->unk1A == 8 && point->unk1A == 9)) {
+                            if (!(linked->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A &&
+                                  point->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
                                 f32 d = vec3f_distanceSquared(&point->x, &linked->x);
                                 pathSearchAddNeighbor(search, node, idx,
                                                       (u32)((f32)node->routeDistance + d), linked);

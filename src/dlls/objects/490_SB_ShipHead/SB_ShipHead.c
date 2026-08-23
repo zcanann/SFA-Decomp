@@ -190,7 +190,7 @@ void SB_ShipHead_update(GameObject* obj) {
     }
     if ((((object->anim.currentMove == 1) && (object->anim.currentMoveProgress >= 0.5f)) &&
          (gSbShipHeadHasFiredFireball == 0)) &&
-        (Obj_IsLoadingLocked() != 0)) {
+        ((u8)Obj_CanSetupObject() != 0)) {
         gSbShipHeadHasFiredFireball = 1;
         object->userData1 = object->userData1 + framesThisStep;
         Sfx_PlayFromObject(obj, SFXTRIG_gcexp1_c);
@@ -218,7 +218,7 @@ void SB_ShipHead_update(GameObject* obj) {
         ((GameObject*)result)->userData1 = 0x78;
         ((GameObject*)result)->userData2 = (int)state->target;
     }
-    if ((firingCue == 1) && (Obj_IsLoadingLocked() != 0)) {
+    if ((firingCue == 1) && ((u8)Obj_CanSetupObject() != 0)) {
         Sfx_PlayFromObject(obj, SFXTRIG_gcexp1_c);
         player = Obj_GetPlayerObject();
         placementBytes = (ObjPlacement*)Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJECT_ID);

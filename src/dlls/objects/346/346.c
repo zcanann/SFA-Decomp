@@ -27,8 +27,10 @@ GameObject* explodable_spawnFragmentObject(GameObject* obj, int fragmentObjectId
                                            int fragmentIndex) {
     ExplodedPlacement* fragmentPlacement;
     f32 scale;
+    u8 canSetupObject;
 
-    if (Obj_IsLoadingLocked() == 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return 0;
     }
     fragmentPlacement = (ExplodedPlacement*)Obj_AllocObjectSetup(sizeof(ExplodedPlacement), fragmentObjectId);

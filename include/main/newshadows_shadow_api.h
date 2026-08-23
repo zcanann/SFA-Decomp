@@ -5,7 +5,7 @@
 #include "main/texture.h"
 
 void newshadows_getShadowTextureTable4x8(Texture*** tableOut, int* columnsOut, int* rowsOut);
-u32 getNewShadowSmallDiskTexture(void);
+u32 newshadows_getSmallDiskTexture(void);
 void getObjectShadowDrawParams(GameObject* obj, Texture** outTexture, f32* outScale, int* outX, int* outY);
 void queueObjectShadow(GameObject* obj);
 void renderObjectShadowTexture(GameObject* obj);

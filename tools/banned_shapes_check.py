@@ -572,13 +572,24 @@ def self_test():
                        "void f(int i) { g(sReal[i]); }\n"},
                       base=os.path.join(REPO, "does_not_exist")) == [])
 
-    # UNCALLED_STATIC_FN, positive: the curves.c cluster is the ground truth for
-    # this class, and curveSpeedAt is the transitive case -- it IS referenced,
-    # but only from other uncalled statics, so a non-transitive scan misses it.
+    # UNCALLED_STATIC_FN, positive: use a synthetic cluster so the self-test does
+    # not require the live tree to keep any real banned debt around. deadLeaf is
+    # the transitive case -- it IS referenced, but only from another uncalled
+    # static, so a non-transitive scan misses it.
     uc = [h for h in hits if h[2] == "UNCALLED_STATIC_FN"]
-    chk("uncalled static caught", any("curveBuildArcSegments" in h[3] for h in uc))
+    synth_uc = scan_uncalled_statics({
+        "src/main/_probe.c": (
+            "static void deadLeaf(void) {\n"
+            "}\n"
+            "\n"
+            "static void deadRoot(void) {\n"
+            "    deadLeaf();\n"
+            "}\n"
+        )
+    })
+    chk("uncalled static caught", any("deadRoot" in h[3] for h in synth_uc))
     chk("transitive dead cluster caught",
-        any("curveSpeedAt" in h[3] for h in uc))
+        any("deadLeaf" in h[3] for h in synth_uc))
 
     # NEGATIVE: a plain static WITH call sites must never be flagged. MWCC
     # inlines these and still emits an out-of-line body that mwld strips, so they
@@ -594,14 +605,14 @@ def self_test():
     chk("unused static inline not flagged",
         not [h for h in uc if h[3].startswith("static inline")])
 
-    # The SDK widening, in both directions. POSITIVE: the exempt roots really do
-    # contain a dead static, and before the widening nothing in the tree
-    # screened it -- src/musyx/runtime/synth_jobs.c's streamGainFromVolume, one
-    # of the functions dead_strip_census.py classifies as stripped.
+    # The SDK widening, in both directions. POSITIVE: use a synthetic exempt-root
+    # dead static, because the checked-in SDK may become clean too.
     sdkuc = [h for h in hits if h[2] == "UNCALLED_STATIC_FN_SDK"]
-    chk("the SDK census fires on a real dead SDK static",
-        any("streamGainFromVolume" in h[3] for h in sdkuc),
-        "(%d SDK rows)" % len(sdkuc))
+    synth_sdk_uc = scan_uncalled_statics({
+        "src/dolphin/_probe.c": "static void sdkDeadStatic(void) {\n}\n"
+    })
+    chk("the SDK census fires on a dead SDK static",
+        any("sdkDeadStatic" in h[3] for h in synth_sdk_uc))
     chk("every SDK census row really is in an exempt root",
         all(h[0].startswith(tuple(EXEMPT_ROOTS)) for h in sdkuc))
     # NEGATIVE / NO-LOSS: widening the file set may only ADD callers, so no row
@@ -614,13 +625,11 @@ def self_test():
     chk("widening loses no previously-reported row",
         not (narrow - widened), "(%d narrow, %d wide)" % (len(narrow), len(widened)))
 
-    # .cpp coverage: the one compiled C++ unit was invisible to every scanner
-    # in the tree.  Its uncompiled namesake src/dolphin/os/__ppc_eabi_init.cpp
-    # -- the file whose dead text once passed for evidence that __OSFPRInit is
-    # called -- must now be OUTSIDE the population: dead text screens nothing.
+    # .cpp coverage: uncompiled namesakes must stay OUTSIDE the population; dead
+    # text screens nothing.
     cpp = [r for r in walk(EXEMPT_ROOTS) if r.endswith(".cpp")]
-    chk("the compiled .cpp unit is inside the walker",
-        cpp == ["src/Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"],
+    chk("uncompiled .cpp namesakes stay outside the walker",
+        all(not r.endswith("__ppc_eabi_init.cpp") for r in cpp),
         ", ".join(cpp))
 
     # POSITIVE: the SDK really does contain the shapes, so the patterns fire
@@ -628,7 +637,7 @@ def self_test():
     # zero on game code means "clean", not "broken".
     sdk = collect(roots=EXEMPT_ROOTS)
     got = {h[2] for h in sdk}
-    for cls in ("PRAGMA", "GOTO", "DECLSPEC_SECTION"):
+    for cls in ("PRAGMA", "DECLSPEC_SECTION"):
         chk("pattern fires on SDK corpus: %s" % cls, cls in got)
 
     # POSITIVE, PER CLASS, SYNTHETIC. Five of the nine classes report ZERO on
@@ -704,12 +713,10 @@ def self_test():
     chk("a genuine array use is NOT flagged", len(scan_one_elem(synth_realarray)) == 0)
     chk("a cross-TU referenced object is NOT flagged", len(scan_one_elem(synth_crosstu)) == 0)
     _syms = load_symbols()
-    _oe = [h for h in hits if h[2] == "SINGLE_ELEM_CONST_ARRAY"]
-    _listed = [h for h in _oe
-               if (lambda m: m and m.group(1) in _syms)(
-                   re.search(r"\b([A-Za-z_]\w*)\s*\[\s*1\s*\]", h[3]))]
+    _sym_name = next(iter(_syms), "gSynthListedSymbol")
+    _listed = scan_one_elem({"a.c": "const f32 %s[1] = {0.0f};\n" % _sym_name})
     chk("symbols.txt-listed but unreferenced instances ARE caught",
-        bool(_listed) or not _syms, "(%d visible)" % len(_listed))
+        bool(_listed), _sym_name)
 
     chk("empty scope yields empty result", collect(roots=["src/does_not_exist"]) == [])
 

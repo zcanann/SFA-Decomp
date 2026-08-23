@@ -815,7 +815,7 @@ int iceBaddie_updateOpenHitState(GameObject* obj, GroundBaddieState* state) {
 void iceBaddie_spawnIceBall(GameObject* obj, IceBaddieControl* control) {
     IceBallSetup* setup;
     GameObject* projectile;
-    if ((u8)Obj_IsLoadingLocked() != 0) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         setup = (IceBallSetup*)Obj_AllocObjectSetup(36, ICEBADDIE_CHILD_OBJ_ICEBALL);
         setup->base.posX = control->projectileTransform[3];
         setup->base.posY = control->projectileTransform[4];

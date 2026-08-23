@@ -29,7 +29,7 @@ void dfptargetblock_resolveCollisionPoints(GameObject* obj, DfpTargetBlockState*
 {
     u8* point;
     f32 probe[3];
-    TrackBBoxHit hit;
+    TrackLineIntersectResult hit;
     f32 originalX;
     f32 originalZ;
     f32 deltaX;

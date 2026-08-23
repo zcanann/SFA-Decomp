@@ -360,7 +360,8 @@ void GroundAnimator_update(GameObject* obj) {
         }
         obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (tricky != NULL && (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
-            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, 1, 1);
+            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                       TRICKY_COMMAND_TYPE_FIND_SECRET);
         }
     } else {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;

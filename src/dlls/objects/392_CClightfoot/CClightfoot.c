@@ -361,7 +361,7 @@ void ccLightfoot_update(GameObject* obj) {
         if (mainGetBit(CC_LIGHTFOOT_ENCOUNTER_TRIGGERED_GAMEBIT) != 0) {
             state->phase = CC_LIGHTFOOT_PHASE_DESPAWN;
         } else {
-            if (Obj_IsLoadingLocked() != 0) {
+            if ((u8)Obj_CanSetupObject() != 0) {
                 state->attachedWeapon = objSetupObject(
                     Obj_AllocObjectSetup(CC_LIGHTFOOT_WEAPON_SETUP_SIZE, CC_LIGHTFOOT_WEAPON_OBJECT_DEF), 5, -1, -1,
                     obj->anim.parent);

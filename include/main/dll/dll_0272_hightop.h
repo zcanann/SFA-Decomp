@@ -10,6 +10,7 @@
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 #include "main/objprint_sound_api.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct HtInitData
 {
@@ -165,5 +166,6 @@ extern u8 gHighTopAmbientSoundDef[8];
 extern f32 gHighTopCurveFollowSpeedFactor;
 extern s16 lbl_803DC314[2];
 extern u8 gHighTopConfigTable[];
+extern ObjectDescriptor24 gHighTopObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_0272_HIGHTOP_H_ */

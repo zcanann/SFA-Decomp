@@ -7,7 +7,7 @@
  * scattered within +/-200 units, plays the rockfall sfx, then clears the
  * bit so the burst only fires once per trigger.
  */
-#include "dlls/object_descriptor.h"
+#include "main/dll/DR/dll_0254_ktfallingrocks.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/expgfx_interface.h"
@@ -16,7 +16,6 @@
 #include "main/vecmath.h"
 
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/DR/dll_0254_ktfallingrocks.h"
 
 int ktfallingrocks_getExtraSize(void)
 {

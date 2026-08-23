@@ -350,6 +350,7 @@ enum GameBitId {
     GAMEBIT_Always1 = 0x95,                              /* table 0; used for always-available shop items */
     GAMEBIT_Always0 = 0x96,                              /* table 0; used for never-available (unused) shop items */
     GAMEBIT_SH_KilledBloop7 = 0x99,                      /* table 1 */
+    GAMEBIT_SH_TrickyFindSecretUnlocked = 0x9E,           /* table 2; set by SH_queenear after the Queen EarthWalker accepts all required white grubtubs; unlocks Tricky's Find Secret prompt/dialogue consumers (distinct from Tricky ability-mask bits) */
     GAMEBIT_NpcTalkRelated009F = 0x9F,                   /* table 0; related to talking to NPCs */
     GAMEBIT_GalleonRelated00A0 = 0xA0,                   /* table 1 */
     GAMEBIT_WM_GalleonRelated00A4 = 0xA4,                /* table 1 */
@@ -423,6 +424,13 @@ enum GameBitId {
     GAMEBIT_WM_Spirit1Related_0143 = 0x143,              /* table 0; set when collecting first spirit; cleared when it enters krazoa head */
     GAMEBIT_MC_ActNo = 0x144,                            /* table 1; size 4; Magic Cave */
     GAMEBIT_MC_ObjGroups = 0x145,                        /* table 3; size 32 */
+    GAMEBIT_GPSH_SpawnKnowledgeSymbols = 0x148,          /* Test of Knowledge symbol creator latch; GPSH_Shrine sets it when the puzzle starts and GPSH_ObjCre consumes it to spawn the six pickup symbols */
+    GAMEBIT_GPSH_KnowledgeSymbol1Solved = 0x149,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol2Solved = 0x14A,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol3Solved = 0x14B,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol4Solved = 0x14C,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol5Solved = 0x14D,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
+    GAMEBIT_GPSH_KnowledgeSymbol6Solved = 0x14E,         /* Test of Knowledge symbol-solved bit; one of the six GPSH pickup symbols has been collected */
     GAMEBIT_SH_WarpStoneRelated015A = 0x15A,             /* table 2; set during intro speech */
     GAMEBIT_CC_UsedCannon = 0x15C,                       /* table 2; hint 402; Used cannon to open route to Ocean Force Point */
     GAMEBIT_OFP_Opened = 0x162,                          /* table 2; hint 338; ref capeclaw/HitAnimator target */
@@ -550,6 +558,7 @@ enum GameBitId {
     GAMEBIT_WM_FinaleQuakeActive = 0x38D,                /* Krazoa Palace finale: set by WM_Crystal (dll_020E) once fully risen after the 6th spirit is returned, gating the WM_sun bank-0 quake/envfx countdown until it clears and 0x38F fires */
     GAMEBIT_KrazTest1Related0390 = 0x390,                /* table 3; set when entering Krazoa test 1, cleared when talking to WarpStone */
     GAMEBIT_DBAY_ObjGroups = 0x397,                      /* table 3; size 32 */
+    GAMEBIT_NW_GeyserComplete = 0x398,                   /* SnowHorn Wastes geyser completion; set by NW_geyser after its disable bit hides it, consumed by NW_levcontr to re-enable the geyser object group */
     GAMEBIT_IM_WaterRelated03A0 = 0x3A0,                 /* table 3; set when getting out of water */
     GAMEBIT_IM_Done = 0x3A1,                             /* table 3; Tricky now follows you */
     GAMEBIT_IM_BikeRelated03A2 = 0x3A2,                  /* table 1; set when gaining control of bike, cleared at end */
@@ -639,6 +648,7 @@ enum GameBitId {
     GAMEBIT_ITEM_MapCF_Got = 0x5A1,                      /* table 2; Have CloudRunner Fortress Map */
     GAMEBIT_ITEM_MapLV_Got = 0x5A2,                      /* table 2; Have LightFoot Village Map */
     GAMEBIT_ITEM_MapSH_Got = 0x5A3,                      /* table 2; Have ThornTail Hollow Map */
+    GAMEBIT_GPSH_ResetSymbolCreators = 0x5AF,            /* Test of Knowledge reset latch; re-arms the six GPSH_ObjCre symbol spawners after success, timeout, or reset */
     GAMEBIT_NW_SnowHown05BA = 0x5BA,                     /* table 0; related to riding SnowHorn */
     GAMEBIT_NW_SnowHown05BB = 0x5BB,                     /* table 0; related to riding SnowHorn */
     GAMEBIT_ITEM_OpenPortal_Got = 0x5BD,                 /* table 2; ref hollow/MagicCaveTo Collected */
@@ -866,6 +876,7 @@ enum GameBitId {
     GAMEBIT_ITEM_Spirit5_Got = 0xC85,                    /* table 2; hint 417 */
     GAMEBIT_LINKE_TunnelOpen = 0xC8B,                    /* table 2; broke open wind tunnel in LinkE */
     GAMEBIT_ITEM_PDA_Got = 0xC8D,                        /* table 2; Set when landing at TTH */
+    GAMEBIT_GPSH_TestKnowledgeCompleted = 0xC91,         /* set when the Test of Knowledge succeeds; GPSH free keeps the shrine music lock active until this bit is set */
     GAMEBIT_Tricky_SaidGoodBye = 0xC92,                  /* table 2; hint 418 */
     GAMEBIT_ITEM_CCGoldBar1_NotReturned = 0xCA3,         /* table 2 */
     GAMEBIT_ITEM_CCGoldBar2_NotReturned = 0xCA4,         /* table 2 */
@@ -892,6 +903,7 @@ enum GameBitId {
     GAMEBIT_SHOP_Unk0CEF = 0xCEF,                        /* table 0; set when entering shop, cleared when leaving */
     GAMEBIT_NoBallsAllowed = 0xD00,                      /* table 3; Disables/despawns Tricky's ball */
     GAMEBIT_SH_EnteredWell = 0xD06,                      /* table 2; hint 271 */
+    GAMEBIT_NW_TrickySharpClawDefeated = 0xD11,          /* consumed by NW_tricky: when set, the SnowHorn Wastes SharpClaws stop chasing Tricky and the controller advances to the command-learning phase */
     GAMEBIT_NW_Key_Used = 0xD16,                         /* table 2; ref wastes/HitAnimator target */
     GAMEBIT_WMRelated0D1B = 0xD1B,                       /* table 1 */
     GAMEBIT_WMRelated0D1C = 0xD1C,                       /* table 1 */
@@ -902,6 +914,7 @@ enum GameBitId {
     GAMEBIT_SHOP_Unk0D21 = 0xD21,                        /* table 0; set when entering shop */
     GAMEBIT_WM_KrystalCrystalized = 0xD27,               /* table 1 */
     GAMEBIT_SawStaffBoostPad = 0xD2A,                    /* table 2; StaffActivated checks for this (hardcoded) in some case relating to sequences */
+    GAMEBIT_NW_GateKeeperAirMeterActive = 0xD32,         /* SnowHorn Gate Keeper tumbleweed-rescue air-meter phase is active; set when the gatekeeper enlists Tricky/tumbleweed help, cleared when the air meter completes */
     GAMEBIT_SH_Related0D35 = 0xD35,                      /* table 3 */
     GAMEBIT_SH_Related0D36 = 0xD36,                      /* table 3 */
     GAMEBIT_WM_FlewTo = 0xD37,                           /* table 1; hint 419; ref warlock/HitAnimator target */
@@ -986,6 +999,7 @@ enum GameBitId {
     GAMEBIT_K6_Entered = 0xEA2,                          /* table 0; hint 421 */
     GAMEBIT_OFPBOT_StaffBoostEnabled = 0xEA5,            /* table 2; ref kraztest/StaffBoostP enabled */
     GAMEBIT_ToldGetSnowHornArtifact = 0xEA6,             /* table 0 */
+    GAMEBIT_NW_GateKeeperCommsPlayed = 0xEA7,            /* one-shot incoming-communication latch in the SnowHorn Gate Keeper post-rescue/default dialogue path */
     GAMEBIT_SH_Give200ScarabBag = 0xEA8,                 /* table 2; Triggers a respawn point save */
     GAMEBIT_SH_GiveMoonPassKey = 0xEA9,                  /* table 2; Triggers a respawn point save */
     GAMEBIT_ITEM_BadGuyAlert_Got = 0xEB0,                /* table 2; unused shop item */
@@ -1015,6 +1029,10 @@ enum GameBitId {
     GAMEBIT_TitleScreenRelated0F15 = 0xF15,              /* table 2; set at some point on file select */
     GAMEBIT_ArwingRelated0F16 = 0xF16,                   /* table 2; set in 1st Arwing level - if cleared, immediately sets again */
     GAMEBIT_SB_CanShootPropeller = 0xF1E,                /* table 0 */
+    GAMEBIT_NW_RescueBush1Cleared = 0xF22,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
+    GAMEBIT_NW_RescueBush2Cleared = 0xF23,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
+    GAMEBIT_NW_RescueBush3Cleared = 0xF24,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
+    GAMEBIT_NW_RescueBush4Cleared = 0xF25,               /* SnowHorn Gate Keeper rescue: tumbleweed bush cleared marker reset by NW_levcontr and consumed by NW_mammoth */
     GAMEBIT_ITEM_CheatToken0_Used = 0xF34,               /* table 2; Display Credits */
     GAMEBIT_ITEM_CheatToken3_Used = 0xF35,               /* table 2; Dino Language */
     GAMEBIT_ITEM_CheatToken2_Used = 0xF36,               /* table 2; Music Test */

@@ -83,7 +83,7 @@ typedef struct ScarabSweepSphere {
 } ScarabSweepSphere;
 
 typedef struct ScarabCollisionScratch {
-    TrackBBoxHit bboxHit;     /* 0x00 */
+    TrackLineIntersectResult bboxHit;     /* 0x00 */
     u8 hitResults[0x40];      /* 0x54 */
     ScarabSweepSphere sphere; /* 0x94 */
 } ScarabCollisionScratch;

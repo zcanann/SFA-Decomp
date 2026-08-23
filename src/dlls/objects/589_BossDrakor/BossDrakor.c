@@ -320,7 +320,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
             player = Obj_GetPlayerObject();
             if ((state)->flags198.b40)
             {
-                if (Obj_IsLoadingLocked() != 0)
+                if ((u8)Obj_CanSetupObject() != 0)
                 {
                     setup = Obj_AllocObjectSetup(0x20, BOSSDRAKOR_CHILD_OBJ_MISSILE);
                     setup->posX = s->homePosX;
@@ -369,7 +369,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
         case 2:
             if (!(state)->flags198.b40)
             {
-                if (Obj_IsLoadingLocked() != 0)
+                if ((u8)Obj_CanSetupObject() != 0)
                 {
                     setup = Obj_AllocObjectSetup(0x24, BOSSDRAKOR_CHILD_OBJ_ATTACK);
                     setup->color[0] = 2;

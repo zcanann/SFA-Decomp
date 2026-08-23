@@ -82,14 +82,14 @@ u8 mapBlockFlag;
 u8 gIntersectRebuildCooldown;
 u8 gTrackSweepHitCount;
 MapDynamicSlot* gMapDynamicSlots;
-u8 lbl_803DCF44;
-u32 lbl_803DCF40;
+u8 gIntersectLineTableReady;
+u32 gIntersectLineSortOrderBuffer;
 int gIntersectLineIndexTable;
 f32* gIntersectPoints;
 int gIntersectLinePool;
 TrackTriangle* gTrackTriangleBuffer;
 
-f32 lbl_803DB660 = 0.01f;
+f32 gTrackCollisionEpsilon = 0.01f;
 
 
 /* TrackTriangle -- the 0x4c-byte collision triangle record packed into
@@ -164,7 +164,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
                 f32 x1, f32 y1, f32 z1, u8 flags);
 int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
                        int flagsArg);
-int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
+int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                                  GameObject* target, s8 lineMask, s8 segment, s8 yTolerance,
                                  GameObject* sourceObj);
 
@@ -407,7 +407,7 @@ void trackInvalidateDynamicSlotsForObject(GameObject* target)
  * a refresh has been requested. */
 /* trackSweepCircleAgainstLines -- sweep a 2D segment (with radius) against the intersection
  * line table, sliding/clipping the end point; fills *hit with the last hit. */
-int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* hit,
+int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* hit,
                                  GameObject* target, s8 lineMask, s8 segment, s8 yTolerance,
                                  GameObject* sourceObj)
 {
@@ -754,10 +754,10 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                                     posX[1] -= t1 * lb[3];
                                     posZ[1] -= t1 * la[3];
                                     j = 0;
-                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
+                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < gTrackCollisionEpsilon)
                                     {
-                                        posX[1] += lbl_803DB660 * lb[3];
-                                        posZ[1] += lbl_803DB660 * la[3];
+                                        posX[1] += gTrackCollisionEpsilon * lb[3];
+                                        posZ[1] += gTrackCollisionEpsilon * la[3];
                                         j++;
                                         if (j > 0xa)
                                         {
@@ -772,10 +772,10 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                                     posX[1] = cx;
                                     posZ[1] = cz;
                                     j = 0;
-                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < lbl_803DB660)
+                                    while (ld[3] + (posX[1] * lb[3] + posZ[1] * la[3]) < gTrackCollisionEpsilon)
                                     {
-                                        posX[1] += lbl_803DB660 * lb[3];
-                                        posZ[1] += lbl_803DB660 * la[3];
+                                        posX[1] += gTrackCollisionEpsilon * lb[3];
+                                        posZ[1] += gTrackCollisionEpsilon * la[3];
                                         j++;
                                         if (j > 0xa)
                                         {
@@ -964,7 +964,7 @@ u8 querySlot;
     return NULL;
 }
 
-int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackBBoxHit* out, GameObject* self,
+int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, TrackLineIntersectResult* out, GameObject* self,
                       s8 lineMask, s8 segment, int slot, s8 yTolerance)
 {
     f32 worldStart[3];
@@ -1296,7 +1296,7 @@ void trackIntersect(void)
     f32 blockX;
     f32 blockZ;
 
-    lbl_803DCF44 = 0;
+    gIntersectLineTableReady = 0;
     if (gIntersectRebuildCooldown != 0 && getHudHiddenFrameCount() == 0)
     {
         gIntersectRebuildCooldown--;
@@ -1432,11 +1432,11 @@ void trackIntersect(void)
         }
     }
 
-    if (lbl_803DCF40 != 0)
+    if (gIntersectLineSortOrderBuffer != 0)
     {
         for (i = 0; i < gIntersectLineCount; i++)
         {
-            *(s16*)(lbl_803DCF40 + i * 2) = i;
+            *(s16*)(gIntersectLineSortOrderBuffer + i * 2) = i;
         }
         sortComplete = 0;
         while (sortComplete == 0)
@@ -1448,13 +1448,13 @@ void trackIntersect(void)
                 int firstType;
 
                 lineBytes = (u8*)gIntersectLinePool;
-                sortOrder = (s16*)(lbl_803DCF40 + lineOffset);
+                sortOrder = (s16*)(gIntersectLineSortOrderBuffer + lineOffset);
                 firstLine = sortOrder[0];
                 firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
                 if (firstType < ((s8)lineBytes[(secondLine = sortOrder[1]) * sizeof(IntersectLine) + 3] & 0x3f))
                 {
                     sortOrder[0] = secondLine;
-                    *(s16*)(lbl_803DCF40 + lineOffset + sizeof(s16)) = firstLine;
+                    *(s16*)(gIntersectLineSortOrderBuffer + lineOffset + sizeof(s16)) = firstLine;
                     sortComplete = 0;
                 }
             }
@@ -1512,7 +1512,7 @@ void trackIntersect(void)
         int pi = previousType * 2;
         gIntersectSegmentTypeTable[pi + 1] = gIntersectLineCount;
     }
-    lbl_803DCF44 = 1;
+    gIntersectLineTableReady = 1;
 }
 
 void trackSetLinesEnabledByParam(int matchVal, GameObject* obj, int flag)
@@ -2190,7 +2190,7 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
         radius = *(f32*)(slotp + 0x40);
         typeSlotp = slotBase + i;
         type = typeSlotp[0x54];
-        maxStep = radius + lbl_803DB660;
+        maxStep = radius + gTrackCollisionEpsilon;
         rdatap[0] = radius;
         rdatap[1] = radius * radius;
         bounces = 0;

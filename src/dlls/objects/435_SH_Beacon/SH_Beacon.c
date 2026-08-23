@@ -71,6 +71,7 @@ void sh_beacon_update(GameObject* obj) {
     ObjPlacement* twinklePlacement;
     int pulseMode;
     ShBeaconState* ignitingState;
+    u8 canSetupObject;
 
     state = obj->extra;
     placement = (ShBeaconPlacement*)obj->anim.placementData;
@@ -80,7 +81,8 @@ void sh_beacon_update(GameObject* obj) {
             ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_FireWeed_Count) != 0)) {
             gameBitDecrement(GAMEBIT_ITEM_FireWeed_Count);
             mainSetBits(placement->igniteGameBit, 1);
-            if (Obj_IsLoadingLocked() != 0) {
+            canSetupObject = Obj_CanSetupObject();
+            if (canSetupObject > 0) {
                 twinklePlacement = Obj_AllocObjectSetup(SH_BEACON_TWINKLE_SETUP_SIZE, SH_BEACON_TWINKLE_OBJECT_ID);
                 twinklePlacement->posX = obj->anim.localPosX;
                 twinklePlacement->posY = obj->anim.localPosY;
@@ -136,7 +138,8 @@ void sh_beacon_update(GameObject* obj) {
         }
         tricky = getTrickyObject();
         if ((tricky != NULL) && ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)) {
-            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, 1, 4);
+            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                        TRICKY_COMMAND_TYPE_FLAME);
         }
     } else {
         if ((mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0) || (placement->litGameBit != GAMEBIT_Always1)) {
@@ -168,6 +171,7 @@ void sh_beacon_update(GameObject* obj) {
 void sh_beacon_init(GameObject* obj, const ShBeaconPlacement* placement) {
     ShBeaconState* state;
     ObjPlacement* twinklePlacement;
+    u8 canSetupObject;
 
     state = obj->extra;
     obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
@@ -180,7 +184,7 @@ void sh_beacon_init(GameObject* obj, const ShBeaconPlacement* placement) {
         }
     }
 
-    if (state->mode != SH_BEACON_MODE_UNLIT && Obj_IsLoadingLocked() != 0) {
+    if (state->mode != SH_BEACON_MODE_UNLIT && (canSetupObject = Obj_CanSetupObject()) > 0) {
         twinklePlacement = Obj_AllocObjectSetup(SH_BEACON_TWINKLE_SETUP_SIZE, SH_BEACON_TWINKLE_OBJECT_ID);
         twinklePlacement->posX = obj->anim.localPosX;
         twinklePlacement->posY = obj->anim.localPosY;

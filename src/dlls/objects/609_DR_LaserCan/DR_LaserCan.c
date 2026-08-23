@@ -480,7 +480,7 @@ void DR_LaserCannon_update(GameObject* obj)
                                                   (const Vec3f*)&state->muzzleX, (Vec3f*)hitPos) != 0)
                     {
                         cannonState = (obj)->extra;
-                        if (Obj_IsLoadingLocked() == 0)
+                        if ((u8)Obj_CanSetupObject() == 0)
                         {
                             spawned = NULL;
                         }
@@ -568,7 +568,8 @@ void DR_LaserCannon_update(GameObject* obj)
         GameObject* tricky = getTrickyObject();
         if (tricky != NULL)
         {
-            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, 1, 2);
+            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                        TRICKY_COMMAND_TYPE_BADDIE);
         }
     }
     hit = ObjAnim_AdvanceCurrentMove(obj, state->animStepScale, timeDelta, 0);

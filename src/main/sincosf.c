@@ -4,6 +4,7 @@
 extern const float gSinCosSinCoeff1;
 extern const float gSinCosSinCoeff3;
 extern const float gSinCosSinCoeff5;
+extern const float gSinCosZero;
 extern const float gSinCosCosCoeff0;
 extern const float gSinCosCosCoeff2;
 extern const float gSinCosCosCoeff4;
@@ -20,33 +21,34 @@ void mathSinCosf(float angle, float* outSin, float* outCos) {
         gSinCosCosCoeff0;
 
     switch (quadrant & 6) {
-        case 0:
-            sinApprox = angle >= 0.0f ? sinApprox : -sinApprox;
-            *outSin = sinApprox;
-            *outCos = cosApprox;
-            break;
-        case 2:
-            cosApprox = angle >= 0.0f ? cosApprox : -cosApprox;
-            *outSin = cosApprox;
-            *outCos = -sinApprox;
-            break;
-        case 4:
-            if (angle >= 0.0f) {
-                sinApprox = -sinApprox;
-            }
-            *outSin = sinApprox;
-            *outCos = -cosApprox;
-            break;
-        default:
-            if (angle >= 0.0f) {
-                cosApprox = -cosApprox;
-            }
-            *outSin = cosApprox;
-            *outCos = sinApprox;
-            break;
+    case 0:
+        sinApprox = angle >= gSinCosZero ? sinApprox : -sinApprox;
+        *outSin = sinApprox;
+        *outCos = cosApprox;
+        break;
+    case 2:
+        cosApprox = angle >= gSinCosZero ? cosApprox : -cosApprox;
+        *outSin = cosApprox;
+        *outCos = -sinApprox;
+        break;
+    case 4:
+        if (angle >= gSinCosZero) {
+            sinApprox = -sinApprox;
+        }
+        *outSin = sinApprox;
+        *outCos = -cosApprox;
+        break;
+    default:
+        if (angle >= gSinCosZero) {
+            cosApprox = -cosApprox;
+        }
+        *outSin = cosApprox;
+        *outCos = sinApprox;
+        break;
     }
 }
 
+const float gSinCosZero = 0.0f;
 const float gSinCosSinCoeff1 = 0.78539425f;
 const float gSinCosSinCoeff3 = -0.08071397f;
 const float gSinCosSinCoeff5 = 0.0024270867f;

@@ -198,7 +198,7 @@ void mikaladon_update(GameObject* obj, EnemyState* state)
             if (state->userData2 > MIKALADON_DROP_INTERVAL)
             {
                 state->userData2 = 0;
-                if (Obj_IsLoadingLocked() != 0)
+                if ((u8)Obj_CanSetupObject() != 0)
                 {
                     mikaladonDropPayload(obj);
                 }

@@ -57,30 +57,20 @@
 #include "main/objseq.h"
 #include "main/dll/dll_002E_moveLib.h"
 
-static const f32 gWcEarthWalkerCurveAdvanceStep = 0.5f;
-static const f32 gWcEarthWalkerApproachPlayerDistance = 200.0f;
-static const f32 gWcEarthWalkerChaseMoveSpeed = 0.012f;
-static const f32 gWcEarthWalkerWalkMoveSpeed = 0.005f;
-
-int earthwalker_SeqFn(GameObject* ewObj, int unused, ObjSeqState* animUpdate, int shouldAdvanceMove)
-{
+int earthwalker_SeqFn(GameObject* ewObj, int unused, ObjSeqState* animUpdate, int shouldAdvanceMove) {
     EarthWalkerState* ewState = ewObj->extra;
     int i;
 
     ewState->flags &= ~1;
     characterDoEyeAnims(ewObj, &ewState->eyeAnimState);
-    if (dll_2E_updateSequenceTurn(ewObj, animUpdate, (MoveLibState*)ewState, 0, 0) != 0)
-    {
+    if (dll_2E_updateSequenceTurn(ewObj, animUpdate, (MoveLibState*)ewState, 0, 0) != 0) {
         return 0;
     }
-    if ((s8)shouldAdvanceMove != 0)
-    {
+    if ((s8)shouldAdvanceMove != 0) {
         ObjAnim_AdvanceCurrentMove(ewObj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
     }
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             getEnvfxActImmediately((void*)ewObj, (void*)ewObj, 509, 0);
             break;
@@ -92,37 +82,30 @@ int earthwalker_SeqFn(GameObject* ewObj, int unused, ObjSeqState* animUpdate, in
     return 0;
 }
 
-int earthwalker_getExtraSize(void)
-{
+int earthwalker_getExtraSize(void) {
     return 0x660;
 }
 
-int earthwalker_getObjectTypeId(void)
-{
+int earthwalker_getObjectTypeId(void) {
     return 0;
 }
 
-void earthwalker_free(void)
-{
+void earthwalker_free(void) {
 }
 
-void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
+void earthwalker_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
     EarthWalkerState* state = obj->extra;
 
-    if (visible != 0)
-    {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6CE0);
         dll_2E_setTargetFromPathPoint(obj, (MoveLibState*)state, 0);
     }
 }
 
-void earthwalker_hitDetect(GameObject* obj)
-{
+void earthwalker_hitDetect(GameObject* obj) {
     EarthWalkerState* ewState = obj->extra;
 
-    if (obj->anim.currentMove == 0x203)
-    {
+    if (obj->anim.currentMove == 0x203) {
         characterClampJointVecs(obj, objGetLookAtJointKeys(), ewState->hitTriggerId, 0, 0x186a0);
     }
 }
@@ -144,53 +127,40 @@ ObjectDescriptor gEarthWalkerObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)earthwalker_getExtraSize,
 };
 
-
-
-void earthwalker_update(GameObject* obj)
-{
+void earthwalker_update(GameObject* obj) {
     GameObject* ewObj = obj;
     EarthWalkerState* ewState = ewObj->extra;
     int prevAnim;
 
     if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
-                                                     &ewState->hitReactStepScale)) != 0)
-    {
+                                                     &ewState->hitReactStepScale)) != 0) {
         return;
     }
 
-    if (ewState->encounterType >= 4 && ewState->encounterType <= 8)
-    {
-        if (ewObj->anim.currentMove != 0x203)
-        {
+    if (ewState->encounterType >= 4 && ewState->encounterType <= 8) {
+        if (ewObj->anim.currentMove != 0x203) {
             ObjAnim_SetCurrentMove(obj, 0x203, gEarthWalkerMoveStartProgress, 0);
         }
-    }
-    else
-    {
-        if (ewObj->anim.currentMove != 2)
-        {
+    } else {
+        if (ewObj->anim.currentMove != 2) {
             ObjAnim_SetCurrentMove(obj, 2, gEarthWalkerMoveStartProgress, 0);
         }
     }
 
     prevAnim = ewState->animPhase;
     dll_2E_updateLookAt(obj, (MoveLibState*)ewState);
-    if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 && ewState->animPhase == 1)
-    {
+    if (ewState->encounterType >= 4 && ewState->encounterType <= 7 && prevAnim != 1 && ewState->animPhase == 1) {
         Sfx_PlayFromObject(obj, SFXTRIG_mammoth);
     }
 
     characterDoEyeAnims(obj, &ewState->eyeAnimState);
-    if (ewState->flags & 1)
-    {
+    if (ewState->flags & 1) {
         return;
     }
 
-    switch (ewState->interactionState)
-    {
+    switch (ewState->interactionState) {
     case 0:
-        if (ewObj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
-        {
+        if (ewObj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
             buttonDisable(0, PAD_BUTTON_A);
             mainSetBits(0x7fb, 1);
             ewState->interactionState = 2;
@@ -200,208 +170,120 @@ void earthwalker_update(GameObject* obj)
     case 1:
         break;
     case 2:
-        if (ewObj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
-        {
+        if (ewObj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
             int newState;
-            switch (ewState->encounterType)
-            {
+            switch (ewState->encounterType) {
             case 0:
-                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2)
-                {
-                    if (ewState->lastTriggeredState == 0x14)
-                    {
+                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2) {
+                    if (ewState->lastTriggeredState == 0x14) {
                         newState = 0x15;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 0x14;
                     }
-                }
-                else if ((s32)mainGetBit(0xc90) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc90) != 0) {
                     newState = 5;
-                }
-                else if ((s32)mainGetBit(0xc36) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc36) != 0) {
                     newState = 4;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0) {
                     newState = 3;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0) {
                     newState = 3;
-                }
-                else if (ewState->lastTriggeredState == 0)
-                {
+                } else if (ewState->lastTriggeredState == 0) {
                     newState = 1;
-                }
-                else if (ewState->lastTriggeredState == 1)
-                {
+                } else if (ewState->lastTriggeredState == 1) {
                     newState = 2;
-                }
-                else
-                {
+                } else {
                     newState = 0;
                 }
                 break;
             case 9:
-                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2)
-                {
-                    if (ewState->lastTriggeredState == 0x16)
-                    {
+                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2) {
+                    if (ewState->lastTriggeredState == 0x16) {
                         newState = 0x17;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 0x16;
                     }
-                }
-                else if ((s32)mainGetBit(0xc90) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc90) != 0) {
                     newState = 0xa;
-                }
-                else if ((s32)mainGetBit(0xc36) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc36) != 0) {
                     newState = 9;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0) {
                     newState = 8;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0) {
                     newState = 8;
-                }
-                else if (ewState->lastTriggeredState == 6)
-                {
+                } else if (ewState->lastTriggeredState == 6) {
                     newState = 7;
-                }
-                else
-                {
+                } else {
                     newState = 6;
                 }
                 break;
             case 10:
-                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2)
-                {
-                    if (ewState->lastTriggeredState == 0x18)
-                    {
+                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2) {
+                    if (ewState->lastTriggeredState == 0x18) {
                         newState = 0x19;
-                    }
-                    else if (ewState->lastTriggeredState == 0x19)
-                    {
+                    } else if (ewState->lastTriggeredState == 0x19) {
                         newState = 0x1a;
-                    }
-                    else if (ewState->lastTriggeredState == 0x1a)
-                    {
+                    } else if (ewState->lastTriggeredState == 0x1a) {
                         newState = 0x1b;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 0x18;
                     }
-                }
-                else if ((s32)mainGetBit(0xc90) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc90) != 0) {
                     newState = 0xf;
-                }
-                else if ((s32)mainGetBit(0xc36) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc36) != 0) {
                     newState = 0xe;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0) {
                     newState = 0xd;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
-                {
-                    if (ewState->lastTriggeredState == 0xb)
-                    {
+                } else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0) {
+                    if (ewState->lastTriggeredState == 0xb) {
                         newState = 0xc;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 0xb;
                     }
                 }
                 break;
             case 11:
-                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2)
-                {
-                    if (ewState->lastTriggeredState == 0x1c)
-                    {
+                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2) {
+                    if (ewState->lastTriggeredState == 0x1c) {
                         newState = 0x1d;
-                    }
-                    else if (ewState->lastTriggeredState == 0x1d)
-                    {
+                    } else if (ewState->lastTriggeredState == 0x1d) {
                         newState = 0x1e;
-                    }
-                    else if (ewState->lastTriggeredState == 0x1e)
-                    {
+                    } else if (ewState->lastTriggeredState == 0x1e) {
                         newState = 0x1f;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 0x1c;
                     }
-                }
-                else if ((s32)mainGetBit(0xc90) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc90) != 0) {
                     newState = 0x13;
-                }
-                else if ((s32)mainGetBit(0xc36) != 0)
-                {
-                    if (ewState->lastTriggeredState == 0x11)
-                    {
+                } else if ((s32)mainGetBit(0xc36) != 0) {
+                    if (ewState->lastTriggeredState == 0x11) {
                         newState = 0x12;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 0x11;
                     }
-                }
-                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0) {
                     newState = 0x10;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0) {
                     newState = 0x10;
                 }
                 break;
             case 1:
-                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2)
-                {
-                    if ((s32)mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
-                    {
+                if ((*gMapEventInterface)->getMapAct(ewObj->anim.mapEventSlot) == 2) {
+                    if ((s32)mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0) {
                         ewObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                         newState = -1;
-                    }
-                    else if ((s32)mainGetBit(GAMEBIT_WC_PlacedSunMoonStones) != 0)
-                    {
+                    } else if ((s32)mainGetBit(GAMEBIT_WC_PlacedSunMoonStones) != 0) {
                         newState = 9;
-                    }
-                    else
-                    {
+                    } else {
                         newState = 8;
                     }
-                }
-                else if ((s32)mainGetBit(0xc90) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc90) != 0) {
                     newState = 7;
-                }
-                else if ((s32)mainGetBit(0xc36) != 0)
-                {
+                } else if ((s32)mainGetBit(0xc36) != 0) {
                     newState = 6;
-                }
-                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
-                {
+                } else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0) {
                     newState = 5;
-                }
-                else
-                {
+                } else {
                     newState = 0;
                 }
                 break;
@@ -424,20 +306,16 @@ void earthwalker_update(GameObject* obj)
                 newState = 3;
                 break;
             case 8:
-                if (mainGetBit(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0)
-                {
+                if (mainGetBit(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE) == 0) {
                     newState = 4;
                     buttonDisable(0, PAD_BUTTON_A);
                     mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
-                }
-                else
-                {
+                } else {
                     newState = 0;
                 }
                 break;
             }
-            if (newState != -1)
-            {
+            if (newState != -1) {
                 buttonDisable(0, PAD_BUTTON_A);
                 (*gObjectTriggerInterface)->runSequence(newState, (void*)obj, -1);
                 ewState->lastTriggeredState = newState;
@@ -448,8 +326,7 @@ void earthwalker_update(GameObject* obj)
 
     ObjAnim_AdvanceCurrentMove(obj, gEarthWalkerAnimAdvanceRate, timeDelta, 0);
 }
-void earthwalker_init(GameObject* obj, EarthWalkerPlacement* setup)
-{
+void earthwalker_init(GameObject* obj, EarthWalkerPlacement* setup) {
     EarthWalkerState* ewState = obj->extra;
     int local;
 
@@ -464,68 +341,52 @@ void earthwalker_init(GameObject* obj, EarthWalkerPlacement* setup)
     ewState->moveLibFlags611 |= 2;
     obj->anim.rotX = (s16)(setup->spawnRot << 8);
     ewState->encounterType = setup->encounterType;
-    if (ewState->encounterType == 1)
-    {
-        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 || (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 2)
-        {
+    if (ewState->encounterType == 1) {
+        if ((int)mainGetBit(GAMEBIT_WC_FoundKing) != 0 ||
+            (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 2) {
             ewState->interactionState = 2;
-        }
-        else
-        {
+        } else {
             ewState->interactionState = 0;
         }
-    }
-    else
-    {
+    } else {
         ewState->interactionState = 2;
     }
     ewState->lastTriggeredState = -1;
 }
 
-void earthwalker_release(void)
-{
+void earthwalker_release(void) {
 }
 
-void earthwalker_initialise(void)
-{
+void earthwalker_initialise(void) {
 }
 
-int dll_28B_substateHandler3(GameObject* obj, BaddieState* ai)
-{
+int dll_28B_substateHandler3(GameObject* obj, BaddieState* ai) {
     Dll28BAiState* state = *(Dll28BAiState**)&obj->extra;
 
-    if (ai->moveJustStartedB != 0)
-    {
+    if (ai->moveJustStartedB != 0) {
         state->flagsAC0 &= ~1;
         (*gPlayerInterface)->setState((void*)obj, (void*)ai, 3);
-    }
-    else if (ai->moveDone != 0)
-    {
+    } else if (ai->moveDone != 0) {
         return 3;
     }
     return 0;
 }
 
-int dll_28B_substateHandler2(GameObject* obj, BaddieState* ai)
-{
+int dll_28B_substateHandler2(GameObject* obj, BaddieState* ai) {
     Dll28BAiState* state = *(Dll28BAiState**)&obj->extra;
     f32 dist;
 
-    if (ai->moveJustStartedB != 0)
-    {
+    if (ai->moveJustStartedB != 0) {
         state->flagsAC0 |= 1;
         (*gPlayerInterface)->setState((void*)obj, (void*)ai, 1);
     }
     state->randomTimer -= timeDelta;
     dist = state->playerDistance;
-    if (dist > gWcEarthWalkerFarPlayerDistance)
-    {
+    if (dist > gWcEarthWalkerFarPlayerDistance) {
         return 2;
     }
-    if (dist < gWcEarthWalkerNearPlayerDistance)
-    {
-        if (state->randomTimer <= gWcEarthWalkerIdleTimerThreshold)
-        {
+    if (dist < gWcEarthWalkerNearPlayerDistance) {
+        if (state->randomTimer <= gWcEarthWalkerIdleTimerThreshold) {
             state->randomTimer = randomGetRange(0x78, 0xfa);
             return 4;
         }
@@ -533,22 +394,28 @@ int dll_28B_substateHandler2(GameObject* obj, BaddieState* ai)
     return 0;
 }
 
-int dll_28B_substateHandler1(GameObject* obj, BaddieState* ai)
-{
+const f32 gWcEarthWalkerCurveAdvanceStep[1] = {0.5f};
+const f32 gWcEarthWalkerApproachPlayerDistance[1] = {200.0f};
+const f32 gWcEarthWalkerChaseMoveSpeed[1] = {0.012f};
+const f32 gWcEarthWalkerWalkMoveSpeed[1] = {0.005f};
+
+#define WC_EARTHWALKER_CURVE_ADVANCE_STEP   (gWcEarthWalkerCurveAdvanceStep[0])
+#define WC_EARTHWALKER_APPROACH_PLAYER_DIST (gWcEarthWalkerApproachPlayerDistance[0])
+#define WC_EARTHWALKER_CHASE_MOVE_SPEED     (gWcEarthWalkerChaseMoveSpeed[0])
+#define WC_EARTHWALKER_WALK_MOVE_SPEED      (gWcEarthWalkerWalkMoveSpeed[0])
+
+int dll_28B_substateHandler1(GameObject* obj, BaddieState* ai) {
     Dll28BAiState* state = *(Dll28BAiState**)&obj->extra;
     RomCurveWalker* route = &state->route;
 
-    if (ai->moveJustStartedB != 0)
-    {
+    if (ai->moveJustStartedB != 0) {
         state->flagsAC0 &= ~1;
         (*gPlayerInterface)->setState((void*)obj, (void*)ai, 2);
     }
-    if (Curve_AdvanceAlongPath(&route->curve, gWcEarthWalkerCurveAdvanceStep) != 0 || route->atSegmentEnd != 0)
-    {
+    if (Curve_AdvanceAlongPath(&route->curve, WC_EARTHWALKER_CURVE_ADVANCE_STEP) != 0 || route->atSegmentEnd != 0) {
         (*gRomCurveInterface)->goNextPoint(route);
     }
-    if (state->playerDistance < gWcEarthWalkerApproachPlayerDistance)
-    {
+    if (state->playerDistance < WC_EARTHWALKER_APPROACH_PLAYER_DIST) {
         return 3;
     }
     return 0;
@@ -570,25 +437,21 @@ int dll_28B_substateHandler1(GameObject* obj, BaddieState* ai)
  *                    frame timer) when near; 3 requests setState 3 and
  *                    -> 3 when the move finishes.
  */
-int dll_28B_substateHandler0(void)
-{
+int dll_28B_substateHandler0(void) {
     return 0x2;
 }
 
-int dll_28B_stateHandler3(GameObject* obj, BaddieState* ai)
-{
+int dll_28B_stateHandler3(GameObject* obj, BaddieState* ai) {
     GameObject* player = (GameObject*)Obj_GetPlayerObject();
 
-    if (ai->moveJustStartedA != 0)
-    {
-        ai->moveSpeed = gWcEarthWalkerChaseMoveSpeed;
+    if (ai->moveJustStartedA != 0) {
+        ai->moveSpeed = WC_EARTHWALKER_CHASE_MOVE_SPEED;
         getAngle(obj->anim.localPosX - player->anim.localPosX, obj->anim.localPosZ - player->anim.localPosZ);
     }
     return 0;
 }
 
-int dll_28B_stateHandler2(GameObject* obj, BaddieState* ai)
-{
+int dll_28B_stateHandler2(GameObject* obj, BaddieState* ai) {
     Dll28BAiState* state = *(Dll28BAiState**)&obj->extra;
 
     obj->anim.velocityX = oneOverTimeDelta * (state->route.posX - obj->anim.localPosX);
@@ -602,16 +465,13 @@ int dll_28B_stateHandler2(GameObject* obj, BaddieState* ai)
     return 0;
 }
 
-int dll_28B_stateHandler1(GameObject* obj, BaddieState* ai)
-{
-    if (ai->moveJustStartedA != 0)
-    {
-        ai->moveSpeed = gWcEarthWalkerWalkMoveSpeed;
+int dll_28B_stateHandler1(GameObject* obj, BaddieState* ai) {
+    if (ai->moveJustStartedA != 0) {
+        ai->moveSpeed = WC_EARTHWALKER_WALK_MOVE_SPEED;
     }
     return 0;
 }
 
-int dll_28B_stateHandler0(void)
-{
+int dll_28B_stateHandler0(void) {
     return 0x2;
 }

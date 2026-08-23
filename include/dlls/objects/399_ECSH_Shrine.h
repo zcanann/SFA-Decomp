@@ -7,6 +7,8 @@
 #include "main/model_light.h"
 #include "main/objseq.h"
 
+#define ECSH_SHRINE_OBJECT_GROUP 0xB
+
 typedef struct ECSHShrineState {
     ModelLightStruct* light;
     f32 animTimer;

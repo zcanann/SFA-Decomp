@@ -733,6 +733,7 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
     f32 savedY;
     f32 savedZ;
     f32 v;
+    u8 canSetupObject;
 
     (void)state;
     parentSetup = (ObjPlacement*)obj->anim.placementData;
@@ -744,7 +745,8 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
     {
         return 0;
     }
-    if (Obj_IsLoadingLocked() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return 0;
     }
@@ -859,6 +861,7 @@ void baddieInstantiateWeapon(GameObject* obj, EnemyState* state)
     BaddieInstantiateWeaponPlacement* parentSetup;
     void* child;
     ObjPlacement* setup;
+    u8 canSetupObject;
 
     parentSetup = (BaddieInstantiateWeaponPlacement*)obj->anim.placementData;
     if ((state->spawnedWeaponRomDefNo != state->weaponRomDefNo) && (obj->anim.alpha != 0))
@@ -869,7 +872,8 @@ void baddieInstantiateWeapon(GameObject* obj, EnemyState* state)
             ObjLink_DetachChild(obj, child);
             Obj_FreeObject((GameObject*)child);
         }
-        if (Obj_IsLoadingLocked() != 0)
+        canSetupObject = Obj_CanSetupObject();
+        if (canSetupObject > 0)
         {
             if (state->weaponRomDefNo > 0)
             {
@@ -895,7 +899,7 @@ u8 baddie_canSeeTarget(GameObject* obj, EnemyState* state, void* from, void* to)
     s16 fromGrid[4];
     Vec probe;
     Vec delta;
-    TrackBBoxHit bboxHit;
+    TrackLineIntersectResult bboxHit;
     s16 setupId;
     u8 visible;
     int keepGroundOffset;
@@ -953,7 +957,7 @@ void baddie_updateSightQuadrants(GameObject* obj, EnemyState* state, f32 radius)
     Vec probe;
     struct VisBits16 visibilityBits;
     Vec delta;
-    TrackBBoxHit bboxHit;
+    TrackLineIntersectResult bboxHit;
     s16 baseAngle;
     u16 i;
     u8 visible;
@@ -2817,7 +2821,7 @@ void enemy_update(GameObject* obj)
     }
     if ((state->flags2E4 & 0x80000) != 0)
     {
-        if (tricky != NULL && mainGetBit(0x9e) != 0)
+        if (tricky != NULL && mainGetBit(GAMEBIT_SH_TrickyFindSecretUnlocked) != 0)
         {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -2827,7 +2831,8 @@ void enemy_update(GameObject* obj)
         }
         if (tricky != NULL && (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
         {
-            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, 1, 2);
+            TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                        TRICKY_COMMAND_TYPE_BADDIE);
         }
     }
     baddie_updateWhileFrozen(obj, (u8*)state, 0);

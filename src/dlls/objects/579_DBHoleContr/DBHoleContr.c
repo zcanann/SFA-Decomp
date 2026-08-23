@@ -37,7 +37,7 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
         case 1:
             if (mainGetBit((s32)data->triggerSeqId + 2601) != 0)
                 continue;
-            if (Obj_IsLoadingLocked() == 0)
+            if ((u8)Obj_CanSetupObject() == 0)
                 continue;
             res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
             if (res == NULL)

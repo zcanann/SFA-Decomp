@@ -5,21 +5,19 @@
 #include "global.h"
 #include "game/objects/object.h"
 
-typedef struct TrackGroundHit
-{
+typedef struct TrackGroundHit {
     f32 height;
     f32 normalX;
     f32 normalY;
     f32 normalZ;
     GameObject* object;
-    u8 surfaceType;
+    s8 surfaceType;
     u8 pad15[3];
 } TrackGroundHit;
 
 STATIC_ASSERT(sizeof(TrackGroundHit) == 0x18);
 
-typedef struct TrackQueryBounds
-{
+typedef struct TrackQueryBounds {
     s32 minX;
     s32 minY;
     s32 minZ;
@@ -30,12 +28,11 @@ typedef struct TrackQueryBounds
 
 STATIC_ASSERT(sizeof(TrackQueryBounds) == 0x18);
 
-typedef struct TrackHitResults
-{
+typedef struct TrackHitResults {
     f32 planes[4][4];
     f32 radii[4];
-    u8 surfaceTypes[4];
-    u8 queryTypes[4];
+    s8 surfaceTypes[4];
+    s8 queryTypes[4];
     u8 triangleFlags[4];
     GameObject* objects[4];
     s16 hitCount;

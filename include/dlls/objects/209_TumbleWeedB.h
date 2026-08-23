@@ -8,6 +8,7 @@
 struct TumbleweedState;
 
 #define TUMBLEWEED_BUSH_PIECE_CAPACITY 3
+#define TUMBLEWEED_BUSH_SIBLING_B      0x3FB
 
 typedef struct TumbleweedBushState {
     f32 scale;                                                /* 0x00 */

@@ -15,7 +15,7 @@ void Obj_UpdateAllObjects(u8 flags);
 int objMove(GameObject* obj, f32 dx, f32 dy, f32 dz);
 int objIsFrozen(GameObject* obj);
 GameObject* ObjList_FindObjectById(u32 objectId);
-u8 Obj_IsLoadingLocked(void);
+int Obj_CanSetupObject(void);
 ObjModel* Obj_GetActiveModel(GameObject* obj);
 void Obj_BuildInverseWorldTransformMatrix(GameObject* obj, f32* out);
 void Obj_BuildWorldTransformMatrix(GameObject* obj, f32* mtx, int flags);

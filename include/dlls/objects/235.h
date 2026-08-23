@@ -7,7 +7,8 @@
 
 typedef struct SideRepelPlacement {
     ObjPlacement base; /* 0x00 */
-    u16 radius;        /* 0x18: hit-sphere radius before the 1/8 scale */
+    u16 minDistance;  /* 0x18: avoidance distance before Tricky's 0.1 scale */
+    u16 moveDistance; /* 0x1A: push distance before Tricky's 0.1 scale */
 } SideRepelPlacement;
 
 typedef struct SideRepelState {
@@ -15,7 +16,8 @@ typedef struct SideRepelState {
 } SideRepelState;
 
 STATIC_ASSERT(offsetof(SideRepelPlacement, base) == 0x0);
-STATIC_ASSERT(offsetof(SideRepelPlacement, radius) == 0x18);
+STATIC_ASSERT(offsetof(SideRepelPlacement, minDistance) == 0x18);
+STATIC_ASSERT(offsetof(SideRepelPlacement, moveDistance) == 0x1A);
 STATIC_ASSERT(sizeof(SideRepelPlacement) == 0x1C);
 
 STATIC_ASSERT(offsetof(SideRepelState, unused) == 0x0);

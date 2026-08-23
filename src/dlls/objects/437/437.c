@@ -657,6 +657,7 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, GroundBaddieState* inner)
     LightfootControlState* animState = inner->control;
     GameObject* child;
     ObjPlacement* setup;
+    u8 canSetupObject;
 
     if (animState->weaponDefNoSentinel == animState->weaponDefNo)
         return;
@@ -669,7 +670,8 @@ void Lightfoot_UpdateAttachedChild(GameObject* obj, GroundBaddieState* inner)
         ObjLink_DetachChild(obj, child);
         Obj_FreeObject(child);
     }
-    if (Obj_IsLoadingLocked())
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         if (animState->weaponDefNo > 0)
         {

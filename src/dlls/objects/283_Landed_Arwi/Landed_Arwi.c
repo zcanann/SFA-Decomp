@@ -373,7 +373,7 @@ void landed_arwing_update(GameObject* obj) {
     state = obj->extra;
     player = Obj_GetPlayerObject();
     if (state->childObject == NULL) {
-        if (Obj_IsLoadingLocked() != 0) {
+        if ((u8)Obj_CanSetupObject() != 0) {
             child = (GameObject*)objSetupObject(
                 Obj_AllocObjectSetup(LANDED_ARWING_CHILD_OBJECT_SETUP_SIZE, LANDED_ARWING_GADGET_OBJECT_ID), 4, -1, -1,
                 0);
@@ -440,6 +440,7 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
     f32 range;
     f32 yOffset;
     ObjAnimEventList events;
+    u8 canSetupObject;
 
     placement = (StaffActivatedPlacement*)obj->anim.placementData;
     if (!state->flags.damaged || (state->flags.impactHandled && state->hitStarted == 0u)) {
@@ -455,7 +456,8 @@ void landed_arwing_updateHitReaction(GameObject* obj, LandedArwingHitReactionSta
 
             switch (placement->hitReactionType) {
             case LANDED_ARWING_REACTION_SPAWN_DEBRIS:
-                if (Obj_IsLoadingLocked() != 0) {
+                canSetupObject = Obj_CanSetupObject();
+                if (canSetupObject > 0) {
                     spawnIndex = 0;
                     yOffset = lbl_803E3BB8;
                     while (spawnIndex < placement->debrisCount) {

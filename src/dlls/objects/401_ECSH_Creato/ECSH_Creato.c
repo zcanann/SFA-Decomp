@@ -71,6 +71,7 @@ void ecshCreator_update(GameObject* obj) {
     Dll82Interface** effectResource;
     EnemyPlacement* spawnSetup;
     GameObject* sharpClaw;
+    u8 canSetupObject;
 
     placement = (const ECSHCreatorPlacement*)obj->anim.placementData;
     state = obj->extra;
@@ -86,7 +87,8 @@ void ecshCreator_update(GameObject* obj) {
     if (state->spawnTimerRate != 0) {
         state->spawnTimer -= state->spawnTimerRate * framesThisStep;
     }
-    if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0 && state->spawnTimer <= 0) {
         spawnSetup = mmAlloc(sizeof(EnemyPlacement), ECSH_CREATOR_SETUP_ALLOC_TYPE, ECSH_CREATOR_SETUP_ALLOC_FLAGS);
         spawnSetup->base.posX = placement->base.posX;
         spawnSetup->base.posY = placement->base.posY;

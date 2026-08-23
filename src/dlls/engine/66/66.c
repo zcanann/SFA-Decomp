@@ -160,7 +160,7 @@ void CameraModeNormal_updateTargetAction(CameraObject* camera, GameObject* targe
              (((classId = ((GameObject*)camera->currentTarget)->anim.classId) == 0x1c) || (classId == 0x2a)) &&
              (target->anim.classId == 1) && ((cond = playerIsStaffActionPending(target)) != 0) &&
              ((cond = playerCanEnterStaffCombatCamera(target)) != 0)) ||
-            ((camera->targetFlags & 2) != 0)) {
+            ((camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) != 0)) {
             Camera_setBlendCurveMode(1);
             (*gCameraInterface)
                 ->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, sizeof(camera->currentTarget),

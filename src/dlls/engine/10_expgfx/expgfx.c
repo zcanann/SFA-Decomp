@@ -1703,7 +1703,10 @@ void spawnDimExplosion(u8* src, f32 x, f32 y, f32 z, f32 scale, u8 kind, u8 flag
                              u8 flag20, u8 f1cinit)
 {
     DimExplosionPlacement* setup;
-    if (Obj_IsLoadingLocked() != 0)
+    u8 canSetupObject;
+
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
         setup->base.color[0] = 2;
@@ -1755,7 +1758,10 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
                     u8 f1cinit)
 {
     DimExplosionPlacement* setup;
-    if (Obj_IsLoadingLocked() != 0)
+    u8 canSetupObject;
+
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         setup = (DimExplosionPlacement*)Obj_AllocObjectSetup(sizeof(DimExplosionPlacement), DIM_EXPLOSION_OBJECT_ID);
         setup->base.color[0] = 2;
@@ -1811,7 +1817,7 @@ void spawnExplosion(GameObject* src, f32 scale, u8 kind, u8 flag4, u8 flag8, u8 
  * frees it (via textureFree, guarded by gExpgfxTextureFreeInProgress) once its
  * eviction score hits zero. expgfx_acquireResourceEntry returns the slot index
  * for a resource: it reuses a matching live entry, else loads into a free slot,
- * else - only while loading is locked (Obj_IsLoadingLocked) - evicts the
+ * else - only while object setup is allowed (Obj_CanSetupObject) - evicts the
  * lowest-scoring entry and reloads. A texture whose refCount has reached
  * EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT is treated as busy and rejected.
  */
@@ -1848,6 +1854,7 @@ int expgfx_acquireResourceEntry(int resourceId)
     int minEvictionScore;
     ExpgfxResourceEntry* entry;
     ExpgfxResourceHandle* resourceHandle;
+    u8 canSetupObject;
 
     i = 0;
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++)
@@ -1894,7 +1901,8 @@ int expgfx_acquireResourceEntry(int resourceId)
             return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
         }
     }
-    if (Obj_IsLoadingLocked() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
     }

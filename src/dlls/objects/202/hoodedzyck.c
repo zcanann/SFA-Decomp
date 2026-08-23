@@ -179,7 +179,7 @@ void hoodedZyck_updateIdle(GameObject* obj, void* state)
         toPos[0] = (obj)->anim.localPosX - 10.0f * sinYaw;
         toPos[1] = 5.0f + (obj)->anim.localPosY;
         toPos[2] = (obj)->anim.localPosZ - 10.0f * cosYaw;
-        groundHit = trackGetLineIntersect(fromPos, toPos, 0.0f, 3, (TrackBBoxHit*)hitOut,
+        groundHit = trackGetLineIntersect(fromPos, toPos, 0.0f, 3, (TrackLineIntersectResult*)hitOut,
                                        obj,
                                        (u32)((EnemyState*)state)->bboxTraceFlags,
                                        0xffffffff, 0xff, 0);
@@ -216,8 +216,8 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
     int turnRaw;
     u8 noHit;
     u16 mag;
-    TrackBBoxHit bufA;
-    TrackBBoxHit bufB;
+    TrackLineIntersectResult bufA;
+    TrackLineIntersectResult bufB;
     f32 tgtA[3];
     f32 posA[3];
     f32 tgtB[3];

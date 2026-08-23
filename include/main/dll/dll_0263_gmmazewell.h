@@ -4,6 +4,7 @@
 #include "game/objects/object.h"
 #include "global.h"
 #include "main/objseq.h"
+#include "dlls/object_descriptor.h"
 
 typedef struct GmmazewellState
 {
@@ -22,5 +23,7 @@ void GM_MazeWell_free(void);
 void GM_MazeWell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible);
 void GM_MazeWell_update(GameObject* obj);
 void GM_MazeWell_init(GameObject* obj);
+
+extern ObjectDescriptor gGmMazeWellObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_0263_GMMAZEWELL_H_ */

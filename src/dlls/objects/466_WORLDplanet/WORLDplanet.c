@@ -243,7 +243,7 @@ void worldplanet_update(GameObject* obj) {
         ObjPlacement* def;
         state->foxSpawnTimer = randomGetRange(WORLDPLANET_FOX_SPAWN_MIN_FRAMES, WORLDPLANET_FOX_SPAWN_MAX_FRAMES);
         def = (ObjPlacement*)(obj)->anim.placementData;
-        if (Obj_IsLoadingLocked() != 0) {
+        if ((u8)Obj_CanSetupObject() != 0) {
             WorldPlanetFoxSpawnSetup* setup = (WorldPlanetFoxSpawnSetup*)Obj_AllocObjectSetup(
                 WORLDPLANET_FOX_SPAWN_SETUP_SIZE, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
             setup->base.color[0] = def->color[0];

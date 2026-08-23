@@ -4,37 +4,36 @@
 #include "types.h"
 #include "main/texture.h"
 
-void updateReflectionTextures(void);
-void selectReflectionTexture(int id);
-void* textureAlloc512(void);
-void findSomething(void* needle);
-
+void newshadows_captureReflectionTextures(void);
+void newshadows_loadReflectionColorTexture(int id);
+void* newshadows_allocTexture512(void);
+void newshadows_releaseTextureEntry(void* textureEntry);
 
 /* extern-cleanup: defining-file public prototypes */
-void newShadowsInitProceduralTextures(void);
-f32 getNewShadowDistortionWaveOffset(void);
-void drawReflectionTexture(void);
-void newShadowsBeginFrame(void);
-void freeNewShadowDistortionTexture(void);
-void createNewShadowDistortionTexture(void);
+void newshadows_initProceduralTextures(void);
+f32 newshadows_getDistortionWaveOffset(void);
+void newshadows_drawReflectionTexture(void);
+void newshadows_beginFrame(void);
+void newshadows_freeDistortionTexture(void);
+void newshadows_createDistortionTexture(void);
 
-u32 getReflectionTexture1(void);
-void getReflectionTexture2(u32* out);
-void getNewShadowCausticTexture(u32* out);
-void getNewShadowDiskTexture(u32* out);
+u32 newshadows_getReflectionColorTexture(void);
+void newshadows_getReflectionDepthTexture(u32* out);
+void newshadows_getCausticTexture(u32* out);
+void newshadows_getDiskTexture(u32* out);
 void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY);
-u32 getNewShadowReflectionGradientTexture(void);
-void getNewShadowSnowFlashTexture(u32* out);
-void getNewShadowHeatHazeTexture(Texture** out);
-void getNewShadowRingTexture(Texture** out);
-void getNewShadowLightningTexture(Texture** out);
-void getNewShadowHeavyFogTexture(Texture** out);
-void getNewShadowDistortionTexture(Texture** out);
-void getNewShadowRadialTexture(Texture** out);
-void getNewShadowRampTexture(u32* out);
-void loadNewShadowBumpTexture(int texMapId);
-void selectWhirlpoolTexture(int id);
-void getNewShadowNoiseTextureFrames(Texture*** tableOut, int* frameCountOut);
-void loadNewShadowSmallReflectionTexture(int id);
+u32 newshadows_getReflectionGradientTexture(void);
+void newshadows_getSnowFlashTexture(u32* out);
+void newshadows_getHeatHazeTexture(Texture** out);
+void newshadows_getRingTexture(Texture** out);
+void newshadows_getLightningTexture(Texture** out);
+void newshadows_getHeavyFogTexture(Texture** out);
+void newshadows_getDistortionTexture(Texture** out);
+void newshadows_getRadialTexture(Texture** out);
+void newshadows_getRampTexture(u32* out);
+void newshadows_loadBumpTexture(int texMapId);
+void newshadows_loadWhirlpoolTexture(int id);
+void newshadows_getNoiseTextureFrames(Texture*** tableOut, int* frameCountOut);
+void newshadows_loadSmallReflectionTexture(int id);
 
 #endif /* MAIN_NEWSHADOWS_H_ */

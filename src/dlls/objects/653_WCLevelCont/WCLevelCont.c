@@ -810,7 +810,8 @@ void wclevelcont_syncProgressBits(WcLevelControlState* state)
     GameBitLatch_Update(&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
     GameBitLatch_Update(&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
     GameBitLatch_Update(&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
-    GameBitLatch_Update(&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
+    GameBitLatch_Update(&state->gameBitLatch, 0x40, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
+                        MUSICTRIG_PU3_Adventure_c4);
     flag = 0;
     if (mainGetBit(GAMEBIT_WC_PushBlockTimerActive) == 0 &&
         (mainGetBit(0xda9) != 0 || gameTimerIsRunning() != 0))

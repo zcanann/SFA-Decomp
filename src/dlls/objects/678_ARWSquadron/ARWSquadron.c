@@ -112,7 +112,7 @@ void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
 void arwsquadron_applyCommandParams(GameObject* obj, ArwSquadronState* state)
 {
     SquadCmdFlags* flags = &state->flags.cmd;
-    ArwSquadronPathCommand* cmds = (ArwSquadronPathCommand*)state->curve.node9C;
+    ArwSquadronPathCommand* cmds = (ArwSquadronPathCommand*)state->curve.previousNode;
     int i;
 
     if (cmds->signature == 0x28)
@@ -258,7 +258,9 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int fl
     f32 pz, py, px;
     GameObject* proj;
     ArwProjectileSetup* setup;
-    if (Obj_IsLoadingLocked() == 0)
+    u8 canSetupObject;
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
         return;
     ObjPath_GetPointWorldPosition(obj, pathIdx, &px, &py, &pz, 0);
     setup = (ArwProjectileSetup*)Obj_AllocObjectSetup(0x20, ARWSQUADRON_CHILD_OBJ_PROJECTILE);

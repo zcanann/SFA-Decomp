@@ -6,17 +6,14 @@
 #include "main/model_light.h"
 #include "main/objseq.h"
 
-#define GPSH_SHRINE_RESET_SYMBOL_CREATORS_GAMEBIT  0x5AF
-#define GPSH_SHRINE_ACTIVATE_SYMBOL_SPAWNS_GAMEBIT 0x148
-
 typedef struct GPSHShrinePuzzleFlags {
     u8 activated : 1;
-    u8 gameBit0149Latched : 1;
-    u8 gameBit014CLatched : 1;
-    u8 gameBit014DLatched : 1;
-    u8 gameBit014ELatched : 1;
-    u8 gameBit014ALatched : 1;
-    u8 gameBit014BLatched : 1;
+    u8 symbol1SolvedLatched : 1;
+    u8 symbol4SolvedLatched : 1;
+    u8 symbol5SolvedLatched : 1;
+    u8 symbol6SolvedLatched : 1;
+    u8 symbol2SolvedLatched : 1;
+    u8 symbol3SolvedLatched : 1;
     u8 unknown01 : 1;
 } GPSHShrinePuzzleFlags;
 

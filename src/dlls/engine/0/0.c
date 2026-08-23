@@ -25,6 +25,7 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "main/gametext_color_api.h"
 #include "main/dll/cmenu_item_table.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"
@@ -104,21 +105,6 @@
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
-typedef struct HudTrickyInterface
-{
-    void* unknown00[8];
-    int (*getAvailableCommands)(GameObject* tricky);
-    int (*updateSideCommandPrompts)(GameObject* tricky);
-    void* unknown28[8];
-    int (*getCurrentCommandType)(GameObject* tricky, int* commandType);
-} HudTrickyInterface;
-
-STATIC_ASSERT(offsetof(HudTrickyInterface, getAvailableCommands) == 0x20);
-STATIC_ASSERT(offsetof(HudTrickyInterface, updateSideCommandPrompts) == 0x24);
-STATIC_ASSERT(offsetof(HudTrickyInterface, getCurrentCommandType) == 0x48);
-
-#define HUD_TRICKY_INTERFACE(tricky) ((HudTrickyInterface*)*((GameObject*)(tricky))->anim.dll)
-
 u16 lbl_803DBA30 = 420;
 f32 gPauseMenuHoloPosY = 0.3f;
 f32 gPauseMenuHoloPosZ = -8.0f;
@@ -1054,7 +1040,7 @@ int pauseMenuHoloRenderFn(int* this, int* p2, int p3)
     mtex[2][3] = 1.0f;
     GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    getNewShadowDiskTexture((u32*)&tex2);
+    newshadows_getDiskTexture((u32*)&tex2);
     selectTexture((Texture*)((void*)tex2), 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)&gTrickyHudIconKColor);
@@ -2547,9 +2533,12 @@ u8 lbl_8031B560[] = {
 };
 
 CMenuItemDef gCMenuTrickyAbilities[] = {
-    {1, -1, 0, 3201, 3201, 0, 1015, 0x00, 0x00}, {32, -1, 5, 3204, 3204, 6, 1016, 0x00, 0x00},
-    {2, -1, 1, 3202, 3202, 1, 1017, 0x00, 0x00}, {16, -1, 4, 3203, 3203, 2, 1018, 0x00, 0x00},
-    {8, -1, 3, 3205, 3205, 4, 1020, 0x00, 0x00}, {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
+    {TRICKY_ABILITY_CALL, -1, TRICKY_COMMAND_TYPE_CALL, 3201, 3201, 0, 1015, 0x00, 0x00},
+    {TRICKY_ABILITY_THROW_BALL, -1, TRICKY_COMMAND_TYPE_THROW_BALL, 3204, 3204, 6, 1016, 0x00, 0x00},
+    {TRICKY_ABILITY_FIND_SECRET, -1, TRICKY_COMMAND_TYPE_FIND_SECRET, 3202, 3202, 1, 1017, 0x00, 0x00},
+    {TRICKY_ABILITY_FLAME, -1, TRICKY_COMMAND_TYPE_FLAME, 3203, 3203, 2, 1018, 0x00, 0x00},
+    {TRICKY_ABILITY_STAY, -1, TRICKY_COMMAND_TYPE_STAY, 3205, 3205, 4, 1020, 0x00, 0x00},
+    {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
 CMenuSection gCMenuSections[] = {
@@ -2559,7 +2548,14 @@ CMenuSection gCMenuSections[] = {
     {NULL, 0, 0, 0x0, 0x0},
 };
 
-s16 gTrickyHudIconTextureIds[] = {0x0C81, 0x0C82, 0x0C82, 0x0C85, 0x0C83, 0x0C84};
+s16 gTrickyHudIconTextureIds[] = {
+    0x0C81, /* TRICKY_COMMAND_TYPE_CALL */
+    0x0C82, /* TRICKY_COMMAND_TYPE_FIND_SECRET */
+    0x0C82, /* TRICKY_COMMAND_TYPE_BADDIE */
+    0x0C85, /* TRICKY_COMMAND_TYPE_STAY */
+    0x0C83, /* TRICKY_COMMAND_TYPE_FLAME */
+    0x0C84, /* TRICKY_COMMAND_TYPE_THROW_BALL */
+};
 
 s16 gHudTextureIds[] = {
     3012, 3013, 3016, 3017, 3018, 3019, 3020, 3038, 3039, 3061, 3108, 3109, 3110, 3111, 3070, 3071, 3072,
@@ -4106,8 +4102,8 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
     hudDrawTimedElement(obj, &gHudItemInfoPopup);
     if (tricky != NULL)
     {
-        gTrickyHudItemMask = HUD_TRICKY_INTERFACE(tricky)->updateSideCommandPrompts(tricky);
-        gTrickyHudActionMask = HUD_TRICKY_INTERFACE(tricky)->getAvailableCommands(tricky);
+        gTrickyHudItemMask = TRICKY_INTERFACE(tricky)->updateSideCommandPrompts(tricky);
+        gTrickyHudActionMask = TRICKY_INTERFACE(tricky)->getAvailableCommands(tricky);
     }
     else
     {
@@ -4119,7 +4115,7 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
         (player->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
         tricky != NULL && getHudHiddenFrameCount() == 0)
     {
-        HUD_TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
+        TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)

@@ -132,66 +132,70 @@ void staffactivated_spawnMapEventDebris(GameObject* obj) {
     f32 speed;
     s32 rotationDelta;
     MatrixTransform rotation;
+    u8 canSetupObject;
 
     placement = (StaffActivatedPlacement*)obj->anim.placementData;
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
     state = obj->extra;
 
-    if ((*gMapEventInterface)->shouldNotSaveTime(placement->base.ident) != 0 && Obj_IsLoadingLocked() != 0) {
-        (*gMapEventInterface)->addTime(placement->base.ident, 60.0f * placement->timedEventSeconds);
-        if (tricky != NULL) {
-            trickyImpress(tricky);
-        }
-
-        zero = 0.0f;
-        scarabIndex = 0;
-        while (scarabIndex < placement->scarabCount) {
-            scarabPlacement = (ScarabPlacement*)Obj_AllocObjectSetup(
-                SCARAB_PLACEMENT_SIZE, gStaffActivatedScarabObjectIds[placement->scarabObjectSet]);
-            scarabPlacement->base.posX = state->targetX;
-            scarabPlacement->base.posY = obj->anim.localPosY;
-            scarabPlacement->base.posZ = state->targetZ;
-            scarabPlacement->activeTimer = STAFF_ACTIVATED_SCARAB_ACTIVE_FRAMES;
-
-            scarab = objSetupObject(&scarabPlacement->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-            scarab->anim.velocityX = obj->anim.localPosX - player->anim.localPosX;
-            scarab->anim.velocityZ = obj->anim.localPosZ - player->anim.localPosZ;
-
-            speedSquared =
-                (scarab->anim.velocityX * scarab->anim.velocityX) + (scarab->anim.velocityZ * scarab->anim.velocityZ);
-            if (speedSquared != zero) {
-                speed = sqrtf(speedSquared);
-                scarab->anim.velocityX = scarab->anim.velocityX / speed;
-                scarab->anim.velocityZ = scarab->anim.velocityZ / speed;
+    if ((*gMapEventInterface)->shouldNotSaveTime(placement->base.ident) != 0) {
+        canSetupObject = Obj_CanSetupObject();
+        if (canSetupObject > 0) {
+            (*gMapEventInterface)->addTime(placement->base.ident, 60.0f * placement->timedEventSeconds);
+            if (tricky != NULL) {
+                trickyImpress(tricky);
             }
 
-            scarab->anim.velocityX =
-                scarab->anim.velocityX *
-                (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
-            scarab->anim.velocityZ =
-                scarab->anim.velocityZ *
-                (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
-            scarab->anim.velocityY = STAFF_ACTIVATED_SCARAB_Y_VELOCITY;
+            zero = 0.0f;
+            scarabIndex = 0;
+            while (scarabIndex < placement->scarabCount) {
+                scarabPlacement = (ScarabPlacement*)Obj_AllocObjectSetup(
+                    SCARAB_PLACEMENT_SIZE, gStaffActivatedScarabObjectIds[placement->scarabObjectSet]);
+                scarabPlacement->base.posX = state->targetX;
+                scarabPlacement->base.posY = obj->anim.localPosY;
+                scarabPlacement->base.posZ = state->targetZ;
+                scarabPlacement->activeTimer = STAFF_ACTIVATED_SCARAB_ACTIVE_FRAMES;
 
-            rotation.x = zero;
-            rotation.y = zero;
-            rotation.z = zero;
-            rotation.scale = lbl_803E3BBC;
-            rotation.rotZ = 0;
-            rotation.rotY = 0;
-            rotation.rotX = randomGetRange(-10000, 10000);
-            vecRotateZXY(&rotation.rotX, &scarab->anim.velocityX);
+                scarab = objSetupObject(&scarabPlacement->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                scarab->anim.velocityX = obj->anim.localPosX - player->anim.localPosX;
+                scarab->anim.velocityZ = obj->anim.localPosZ - player->anim.localPosZ;
 
-            rotationDelta = scarab->anim.rotX - (u16)getAngle(scarab->anim.velocityX, -scarab->anim.velocityZ);
-            if (rotationDelta > 0x8000) {
-                rotationDelta -= 0xFFFF;
+                speedSquared = (scarab->anim.velocityX * scarab->anim.velocityX) +
+                               (scarab->anim.velocityZ * scarab->anim.velocityZ);
+                if (speedSquared != zero) {
+                    speed = sqrtf(speedSquared);
+                    scarab->anim.velocityX = scarab->anim.velocityX / speed;
+                    scarab->anim.velocityZ = scarab->anim.velocityZ / speed;
+                }
+
+                scarab->anim.velocityX =
+                    scarab->anim.velocityX *
+                    (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
+                scarab->anim.velocityZ =
+                    scarab->anim.velocityZ *
+                    (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
+                scarab->anim.velocityY = STAFF_ACTIVATED_SCARAB_Y_VELOCITY;
+
+                rotation.x = zero;
+                rotation.y = zero;
+                rotation.z = zero;
+                rotation.scale = lbl_803E3BBC;
+                rotation.rotZ = 0;
+                rotation.rotY = 0;
+                rotation.rotX = randomGetRange(-10000, 10000);
+                vecRotateZXY(&rotation.rotX, &scarab->anim.velocityX);
+
+                rotationDelta = scarab->anim.rotX - (u16)getAngle(scarab->anim.velocityX, -scarab->anim.velocityZ);
+                if (rotationDelta > 0x8000) {
+                    rotationDelta -= 0xFFFF;
+                }
+                if (rotationDelta < -0x8000) {
+                    rotationDelta += 0xFFFF;
+                }
+                scarab->anim.rotX = rotationDelta;
+                scarabIndex++;
             }
-            if (rotationDelta < -0x8000) {
-                rotationDelta += 0xFFFF;
-            }
-            scarab->anim.rotX = rotationDelta;
-            scarabIndex++;
         }
     }
 }

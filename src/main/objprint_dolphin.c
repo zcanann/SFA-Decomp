@@ -340,7 +340,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
         return 1;
     }
     gObjFuzzPassActive = 1;
-    getNewShadowNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
+    newshadows_getNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
     fz = (f32)gObjFuzzLayerIndex / (f32)(s32)noiseFrameCount;
     fz = fz * fz;
     fz = fz / 2.0f;
@@ -373,7 +373,7 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx)
     GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getNewShadowCausticTexture((u32*)&t164);
+    newshadows_getCausticTexture((u32*)&t164);
     selectTexture(t164, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, 0.5f * sx, 0.5f * sy, 0.0f);
@@ -519,7 +519,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx)
         return 0;
     }
     gObjFuzzPassActive = 1;
-    getNewShadowNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
+    newshadows_getNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
     if (lbl_803DCC35 != 0)
     {
         fz = 0.0f;
@@ -652,7 +652,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx)
         stage = 2;
         coord = 1;
     }
-    getNewShadowCausticTexture((u32*)&texRef4);
+    newshadows_getCausticTexture((u32*)&texRef4);
     selectTexture(texRef4, 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, 0.5f * sx, 0.5f * sy, 0.0f);

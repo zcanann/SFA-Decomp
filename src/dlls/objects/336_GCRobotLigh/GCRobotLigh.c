@@ -58,7 +58,7 @@ void gcRobotLightBeam_render(void) {
 void gcRobotLightBeam_hitDetect(GameObject* obj) {
     GameObject* hitObject;
     f32 playerPosition[3];
-    TrackBBoxHit bboxHit;
+    TrackLineIntersectResult bboxHit;
     GcRobotLightBeamState* state = obj->extra;
 
     state->statusFlags.playerCaught = FALSE;

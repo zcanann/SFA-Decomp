@@ -3,6 +3,7 @@
 #include "dlls/objects/274.h"
 #include "dlls/objects/356_CFLevelCont.h"
 
+#include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
@@ -205,7 +206,8 @@ void cflevelcontrol_update(GameObject* obj) {
     GameBitLatch_Update(&state->gameBitLatch, 0x10, -1, -1, GAMEBIT_CFRelated0E1D, 0x36);
     GameBitLatch_Update(&state->gameBitLatch, 0x1000, -1, -1, GAMEBIT_CFRelated0E1D, 0xF1);
     GameBitLatch_Update(&state->gameBitLatch, 2, -1, -1, GAMEBIT_CFRelated0B46, 0xAF);
-    GameBitLatch_Update(&state->gameBitLatch, 0x800, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK, 0xC4);
+    GameBitLatch_Update(&state->gameBitLatch, 0x800, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK,
+                        MUSICTRIG_PU3_Adventure_c4);
 }
 
 void cflevelcontrol_init(GameObject* obj, CfLevelControlPlacement* unusedPlacement) {

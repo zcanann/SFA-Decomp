@@ -523,8 +523,10 @@ void dll_CE_spawnIceBall(GameObject* obj, GroundBaddieState* state) {
     f32 distanceRatio;
     ObjPlacement* setup;
     GameObject* projectile;
+    u8 canSetupObject;
 
-    if (Obj_IsLoadingLocked() == 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         setup = Obj_AllocObjectSetup(DLL_CE_CHILD_SETUP_SIZE, DLL_CE_CHILD_OBJ);
         setup->posX = obj->anim.localPosX;
         setup->posY = 15.0f + obj->anim.localPosY;

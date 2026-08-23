@@ -510,7 +510,7 @@ void setupCausticBaseTevStages(void* viewMtx)
     mtx40[1][3] = 0.0f;
     GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getNewShadowCausticTexture((u32*)&obj7c);
+    newshadows_getCausticTexture((u32*)&obj7c);
     if (obj7c != NULL)
     {
         void* obj = obj7c->gxTexObj;
@@ -539,7 +539,7 @@ void setupCausticBaseTevStages(void* viewMtx)
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getNewShadowRampTexture((u32*)&obj80);
+    newshadows_getRampTexture((u32*)&obj80);
     if (obj80 != NULL)
     {
         void* obj = obj80->gxTexObj;
@@ -591,7 +591,7 @@ void addShadowFalloffTevStages(void)
     f32 tmp;
     f32 t;
 
-    obj1 = (Texture*)getNewShadowFalloffTexture();
+    obj1 = (Texture*)newshadows_getFalloffTexture();
     C_MTXLightOrtho(mtx1, 25.0f, -25.0f, -25.0f, 25.0f, 0.5f, 0.5f, 0.5f, 0.5f);
     GXLoadTexMtxImm(mtx1, gRcpNextPostTexMtx, GX_MTX3x4);
     GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
@@ -664,7 +664,7 @@ void addShadowFalloffTevStages(void)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    obj2 = (Texture*)getNewShadowInverseRampTexture();
+    obj2 = (Texture*)newshadows_getInverseRampTexture();
     id = gRcpNextTexMap;
     if (obj2 != NULL)
     {
@@ -720,7 +720,7 @@ void addWavyCausticTevStage(void)
     int id;
     f32 v;
     indmtx = sWavyCausticIndMtx;
-    v = 0.5f * getNewShadowDistortionWaveOffset();
+    v = 0.5f * newshadows_getDistortionWaveOffset();
     indmtx.m[0][0] = v;
     indmtx.m[1][2] = v;
     if (gRcpNextTexCoord > 0)
@@ -734,7 +734,7 @@ void addWavyCausticTevStage(void)
     GXSetIndTexCoordScale(gRcpNextIndTexStage, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
     GXSetTevIndirect(gRcpNextTevStage, gRcpNextIndTexStage, GX_ITF_8, GX_ITB_ST, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    getNewShadowCausticTexture((u32*)&tex);
+    newshadows_getCausticTexture((u32*)&tex);
     id = gRcpNextTexMap + 1;
     if (tex != NULL)
     {
@@ -756,7 +756,7 @@ void addWavyCausticTevStage(void)
     GXSetTevAlphaIn(gRcpNextTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    selectReflectionTexture(gRcpNextTexMap);
+    newshadows_loadReflectionColorTexture(gRcpNextTexMap);
     gRcpNextIndTexStage = gRcpNextIndTexStage + 1;
     gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
     gRcpNextTexCoord = gRcpNextTexCoord + 1;
@@ -773,7 +773,7 @@ void addWavyCausticTevStage(void)
 
 void addSmallReflectionTevStage(void)
 {
-    loadNewShadowSmallReflectionTexture(gRcpNextTexMap);
+    newshadows_loadSmallReflectionTexture(gRcpNextTexMap);
     GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(gRcpNextTevStage);
     GXSetTevKColorSel(gRcpNextTevStage, GX_TEV_KCSEL_1_4);
@@ -851,7 +851,7 @@ void setupHeatShimmerTevStages(char* p1)
     m2.m[0][1] = sv;
     m2.m[1][0] = -sv;
     m2.m[1][1] = cv;
-    getNewShadowHeatHazeTexture(&tex2c);
+    newshadows_getHeatHazeTexture(&tex2c);
     if (tex2c != 0)
     {
         GXTexObj* obj = textureGetGXTexObj(tex2c);
@@ -878,7 +878,7 @@ void setupHeatShimmerTevStages(char* p1)
     }
     GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
-    getNewShadowCausticTexture((u32*)&tex30);
+    newshadows_getCausticTexture((u32*)&tex30);
     if (tex30 != 0)
     {
         void* obj = textureGetGXTexObj(tex30);
@@ -1024,7 +1024,7 @@ void addWarpedRingTevStages(void)
     GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
     GXLoadTexMtxImm(m1b8, gRcpNextPostTexMtx + 3, GX_MTX3x4);
     GXSetTexCoordGen2(gRcpNextTexCoord + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx + 3);
-    getNewShadowRingTexture(&tex1c);
+    newshadows_getRingTexture(&tex1c);
     {
         int id = gRcpNextTexMap;
         if (tex1c != 0)
@@ -1103,7 +1103,7 @@ void addWarpedRingTevStages(void)
     GXSetTevSwapMode(gRcpNextTevStage + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getNewShadowCausticTexture((u32*)&tex18);
+    newshadows_getCausticTexture((u32*)&tex18);
     {
         int id2 = gRcpNextTexMap + 1;
         if (tex18 != 0)
@@ -1161,7 +1161,7 @@ void renderHeavyFog(void* fogColor)
     GXLoadTexMtxImm(mcc, gRcpNextPostTexMtx, GX_MTX3x4);
     GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
     GXSetTevKColor(gRcpNextKColor, *(GXColor*)fogColor);
-    getNewShadowHeavyFogTexture(&tex20);
+    newshadows_getHeavyFogTexture(&tex20);
     {
         int id = gRcpNextTexMap;
         if (tex20 != 0)
@@ -1236,7 +1236,7 @@ void renderHeavyFog(void* fogColor)
         GXSetTevSwapMode(gRcpNextTevStage + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        getNewShadowCausticTexture((u32*)&tex1c);
+        newshadows_getCausticTexture((u32*)&tex1c);
         {
             int id2 = gRcpNextTexMap + 1;
             if (tex1c != 0)
@@ -1398,7 +1398,7 @@ void addPointLightAccumStages(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        getNewShadowRadialTexture(&src);
+        newshadows_getRadialTexture(&src);
         GXLoadTexMtxImm(matA, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
         GXLoadTexMtxImm(matB, gRcpNextPostTexMtx + 3, GX_MTX3x4);
@@ -1481,7 +1481,7 @@ void addFirstPointLightStages(f32 scale, int* colorIn, f32* pos, u8* chanColor)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        getNewShadowRadialTexture(&src);
+        newshadows_getRadialTexture(&src);
         GXLoadTexMtxImm(matA, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
         GXLoadTexMtxImm(matB, gRcpNextPostTexMtx + 3, GX_MTX3x4);
@@ -1569,7 +1569,7 @@ void addPointLightDirectStages(f32 scale, int* colorIn, f32* pos)
         matB[2][1] = 0.0f;
         matB[2][2] = 0.0f;
         matB[2][3] = 1.0f;
-        getNewShadowRadialTexture(&src);
+        newshadows_getRadialTexture(&src);
         GXLoadTexMtxImm(matA, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
         GXLoadTexMtxImm(matB, gRcpNextPostTexMtx + 3, GX_MTX3x4);
@@ -1738,7 +1738,7 @@ void addCastShadowTevStages(u8* objInst)
     GXSetTevSwapMode(gRcpNextTevStage + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(gRcpNextTevStage + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
     GXSetTevAlphaOp(gRcpNextTevStage + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getNewShadowRampTexture((u32*)&src);
+    newshadows_getRampTexture((u32*)&src);
     id = gRcpNextTexMap;
     if (src != NULL)
     {

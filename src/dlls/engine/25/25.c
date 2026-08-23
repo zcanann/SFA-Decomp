@@ -139,6 +139,7 @@ f32 dll_19_getHealthFraction(GameObject* obj)
 void dll_19_changeWeapon(GameObject* cam, u8* ctx)
 {
     Dll19ChildObjectIdTable childObjectIds = gDll19ChildObjectIds;
+    u8 canSetupObject;
 
     if ((s8)ctx[1031] == (s8)ctx[1033])
     {
@@ -153,7 +154,8 @@ void dll_19_changeWeapon(GameObject* cam, u8* ctx)
         Obj_FreeObject(cam->childObjs[0]);
         cam->childObjs[0] = NULL;
     }
-    if (Obj_IsLoadingLocked() != 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0)
     {
         if ((s8)ctx[1031] > 0)
         {
@@ -528,6 +530,7 @@ GameObject* dll_19_dropCollectable(GameObject* obj, int spawnType, int unused, i
     f32 savedX, savedY, savedZ;
     f32 nearDist;
     f32 scale;
+    u8 canSetupObject;
 
     scale = 0.0f;
     *(IdPair*)ids1 = sDll19DropObjectIds;
@@ -536,7 +539,8 @@ GameObject* dll_19_dropCollectable(GameObject* obj, int spawnType, int unused, i
     {
         return 0;
     }
-    if (Obj_IsLoadingLocked() == 0)
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0)
     {
         return 0;
     }
@@ -771,7 +775,7 @@ GameObject* dll_19_findAggroTarget(GameObject* self, void* state, f32 frange, in
                     traced = voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (trackGetLineIntersect(&self->anim.localPosX, gridIn, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+                        if (trackGetLineIntersect(&self->anim.localPosX, gridIn, 1.0f, 0, (TrackLineIntersectResult*)bboxOut,
                                                self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
@@ -817,7 +821,7 @@ int dll_19_shouldDropTarget(GameObject* obj, void* state, f32 distThreshold, int
                 pos[0] = player->anim.localPosX;
                 pos[1] = 10.0f + player->anim.localPosY;
                 pos[2] = player->anim.localPosZ;
-                if (trackGetLineIntersect(&obj->anim.localPosX, pos, 1.0f, 0, (TrackBBoxHit*)out,
+                if (trackGetLineIntersect(&obj->anim.localPosX, pos, 1.0f, 0, (TrackLineIntersectResult*)out,
                                        obj, 4, -1, 0, 0) != 0)
                 {
                     result = 1;
@@ -1239,7 +1243,7 @@ u8 dll_19_getClearDirectionMask(GameObject* obj, void* state, f32 dist)
         }
         if (ok != 0)
         {
-            if (trackGetLineIntersect(&obj->anim.localPosX, world, 1.0f, 0, (TrackBBoxHit*)bboxOut,
+            if (trackGetLineIntersect(&obj->anim.localPosX, world, 1.0f, 0, (TrackLineIntersectResult*)bboxOut,
                                    obj, ((Dll19State*)state)->bboxTraceFlags, -1, 0, 0) != 0)
             {
                 ok = 0;

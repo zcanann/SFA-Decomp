@@ -23,6 +23,7 @@
 #include "main/mapEvent.h"
 #include "main/object_transform.h"
 #include "main/objHitReact.h"
+#include "main/objanim.h"
 #include "main/obj_contact.h"
 #include "main/objtype.h"
 #include "main/obj_list.h"
@@ -161,8 +162,7 @@ char sObjFreeNonExistentObjectWarning[] = "Tried to free non-existent object\n";
 char sObjUnknownTypeUsingDummyObjectWarning[] =
     "Warning: Unknown object type '%d/%d romdefno %d', using DummyObject (128)\n";
 
-void Obj_RunInitCallback(GameObject* obj, int cb, int unused);
-void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
+void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused);
 
 void doNothing_afterRenderObject(void)
 {
@@ -592,7 +592,7 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup)
     void* objF30;
     objF30 = src->anim.parent;
     type = src->anim.mapEventSlot;
-    if (getLoadedFileFlags(0) & 0x100000)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
     {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;
@@ -814,7 +814,7 @@ void mapSetupPlayer(void) {
             spawn.x = x;
             spawn.y = y;
             spawn.z = z;
-            if (getLoadedFileFlags(0) & 0x100000)
+            if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
             {
                 OSReport((char*)(base + 0x20), -1);
                 obj = 0;
@@ -974,7 +974,7 @@ static void objFreeObjdef(u8* obj, int flag)
         }
         if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL)
         {
-            curTex = (void*)getNewShadowSmallDiskTexture();
+            curTex = (void*)newshadows_getSmallDiskTexture();
             tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex)
             {
@@ -1119,7 +1119,6 @@ static inline void Obj_FreeDeferredObjects(void)
 
 u8* loadObjectFile(int id)
 {
-    extern void* loadModLines(int idx, s16* outCount);
     int size;
     int base;
     ObjDef* buf;
@@ -1396,7 +1395,7 @@ void Obj_UpdateObject(GameObject* obj)
     }
 }
 
-void Obj_RunInitCallback(GameObject* obj, int cb, int unused)
+void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused)
 {
     s16 mode = obj->anim.romDefNo;
     switch (mode)
@@ -1734,7 +1733,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
 void Obj_RegisterObject(GameObject* obj, int flags)
 {
-    extern void Obj_RunInitCallback(GameObject* obj, void* cb, int unused);
     ObjAnimComponent* object;
     int id;
     int prev;
@@ -1818,7 +1816,6 @@ void Obj_RegisterObject(GameObject* obj, int flags)
 
 void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused)
 {
-    extern void ObjAnim_LoadMoveEvents(u8* obj, int dummy, ObjAnimEventTable* eventTable, u32 moveId, u8 load);
     int id;
     int offsets[20];
     void* models[20];
@@ -2180,7 +2177,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objIndex, void* parent)
 {
     GameObject* obj;
-    if (getLoadedFileFlags(0) & 0x100000)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
     {
         OSReport(sObjSetupObjectLoadingLockedWarning, objIndex);
         return NULL;
@@ -2194,21 +2191,8 @@ GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objI
     return obj;
 }
 
-asm u8 Obj_IsLoadingLocked(void)
-{
-    nofralloc
-    stwu r1, -0x10(r1)
-    mflr r0
-    stw r0, 0x14(r1)
-    li r3, 0
-    bl getLoadedFileFlags
-    rlwinm r0, r3, 0, 11, 11
-    cntlzw r0, r0
-    srwi r3, r0, 5
-    lwz r0, 0x14(r1)
-    mtlr r0
-    addi r1, r1, 0x10
-    blr
+int Obj_CanSetupObject(void) {
+    return (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) == 0;
 }
 void* getTablesBinEntry(int i)
 {

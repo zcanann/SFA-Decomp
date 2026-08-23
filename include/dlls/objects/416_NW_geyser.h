@@ -5,6 +5,8 @@
 #include "game/objects/object_fwd.h"
 #include "main/objseq.h"
 
+#define NW_GEYSER_OBJECT_GROUP 0x1F
+
 extern ObjectDescriptor gNWGeyserObjDescriptor;
 
 int nwGeyser_processAnimEvents(GameObject* obj, int unusedArg, ObjSeqState* animUpdate);

@@ -32,39 +32,23 @@
 #define MAGIC_CAVE_TOP_EXIT_SEQUENCE     1
 #define MAGIC_CAVE_TOP_SEQUENCE_ARG_NONE -1
 
-#define MAGIC_CAVE_TOP_RANGE_SCALE      2
-#define MAGIC_CAVE_TOP_WARP_DISTANCE_SQ 225.0f
+#define MAGIC_CAVE_TOP_RANGE_SCALE 2
 
-#define MAGIC_CAVE_TOP_RUMBLE_START_DISTANCE_SQ 14400.0f
-#define MAGIC_CAVE_TOP_RUMBLE_STOP_DISTANCE_SQ  3600.0f
-#define MAGIC_CAVE_TOP_RUMBLE_PULSE_DISTANCE_SQ 8100.0f
-#define MAGIC_CAVE_TOP_RUMBLE_STRENGTH          3.0f
-#define MAGIC_CAVE_TOP_RUMBLE_DURATION          300.0f
-#define MAGIC_CAVE_TOP_STAFF_GLOW_MODE          5
-#define MAGIC_CAVE_TOP_STAFF_GLOW_DISABLED      0
-#define MAGIC_CAVE_TOP_STAFF_GLOW_ACTIVE        2
+#define MAGIC_CAVE_TOP_STAFF_GLOW_MODE     5
+#define MAGIC_CAVE_TOP_STAFF_GLOW_DISABLED 0
+#define MAGIC_CAVE_TOP_STAFF_GLOW_ACTIVE   2
+#define MAGIC_CAVE_TOP_ALPHA_OPAQUE        0xFF
 
-#define MAGIC_CAVE_TOP_FADE_MAX  100.0f
-#define MAGIC_CAVE_TOP_ALPHA_MAX 255.0f
-
-#define MAGIC_CAVE_TOP_BURST_SCALE              0.5f
-#define MAGIC_CAVE_TOP_BURST_MODE               2
-#define MAGIC_CAVE_TOP_BURST_FLAGS              0
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_EFFECT     1
-#define MAGIC_CAVE_TOP_BURST_SECONDARY_EFFECT   5
-#define MAGIC_CAVE_TOP_BURST_DEFAULT_KIND       2
-#define MAGIC_CAVE_TOP_BURST_ALTERNATE_KIND     5
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_CHANCE     0x32
-#define MAGIC_CAVE_TOP_BURST_SECONDARY_CHANCE   0x14
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_HEIGHT     40.0f
-#define MAGIC_CAVE_TOP_BURST_SECONDARY_HEIGHT   5.0f
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE      18.0f
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_LOW  8.0f
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_HIGH 80.0f
-#define MAGIC_CAVE_TOP_BURST_SECONDARY_ANGLE    10.0f
-
-#define MAGIC_CAVE_TOP_TEXTURE_SWAP_DEFAULT 22
-#define MAGIC_CAVE_TOP_TEXTURE_SWAP_ALT     23
+#define MAGIC_CAVE_TOP_BURST_MODE             2
+#define MAGIC_CAVE_TOP_BURST_FLAGS            0
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_EFFECT   1
+#define MAGIC_CAVE_TOP_BURST_SECONDARY_EFFECT 5
+#define MAGIC_CAVE_TOP_BURST_DEFAULT_KIND     2
+#define MAGIC_CAVE_TOP_BURST_ALTERNATE_KIND   5
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_CHANCE   0x32
+#define MAGIC_CAVE_TOP_BURST_SECONDARY_CHANCE 0x14
+#define MAGIC_CAVE_TOP_TEXTURE_SWAP_DEFAULT   22
+#define MAGIC_CAVE_TOP_TEXTURE_SWAP_ALT       23
 
 #define MAGIC_CAVE_TOP_WALLED_CITY_MAP_SLOT 0xD
 #define MAGIC_CAVE_TOP_WARP_TRANSITION_TYPE 0
@@ -74,6 +58,39 @@
 #define MAGIC_CAVE_TOP_CAMERA_FLAGS        0
 #define MAGIC_CAVE_TOP_CAMERA_BLEND_FRAMES 0x1E
 #define MAGIC_CAVE_TOP_CAMERA_PRIORITY     0xFF
+
+const f32 gMagicCaveTopWarpDistSq[1] = {225.0f};
+const f32 gMagicCaveTopRumbleStartDistSq[1] = {14400.0f};
+const f32 lbl_803E3C38[1] = {0.0f};
+const f32 gMagicCaveTopRumbleStopDistSq[1] = {3600.0f};
+const f32 gMagicCaveTopRumblePulseDistSq[1] = {8100.0f};
+const f32 gMagicCaveTopRumbleStrength[1] = {3.0f};
+const f32 gMagicCaveTopRumbleDuration[1] = {300.0f};
+const f32 gMagicCaveTopFadeMax[1] = {100.0f};
+const f32 gMagicCaveTopAlphaMax[1] = {255.0f};
+const f32 gMagicCaveTopBurstHeight1[1] = {40.0f};
+const f32 gMagicCaveTopBurstRadius[1] = {0.5f};
+const f32 gMagicCaveTopBurstSpreadX[1] = {18.0f};
+const f32 gMagicCaveTopBurstSpreadY[1] = {8.0f};
+const f32 gMagicCaveTopBurstSpreadZ[1] = {80.0f};
+const f32 gMagicCaveTopBurstHeight2[1] = {5.0f};
+
+#define MAGIC_CAVE_TOP_WARP_DISTANCE_SQ         (gMagicCaveTopWarpDistSq[0])
+#define MAGIC_CAVE_TOP_RUMBLE_START_DISTANCE_SQ (gMagicCaveTopRumbleStartDistSq[0])
+#define MAGIC_CAVE_TOP_ZERO                     (lbl_803E3C38[0])
+#define MAGIC_CAVE_TOP_RUMBLE_STOP_DISTANCE_SQ  (gMagicCaveTopRumbleStopDistSq[0])
+#define MAGIC_CAVE_TOP_RUMBLE_PULSE_DISTANCE_SQ (gMagicCaveTopRumblePulseDistSq[0])
+#define MAGIC_CAVE_TOP_RUMBLE_STRENGTH          (gMagicCaveTopRumbleStrength[0])
+#define MAGIC_CAVE_TOP_RUMBLE_DURATION          (gMagicCaveTopRumbleDuration[0])
+#define MAGIC_CAVE_TOP_FADE_MAX                 (gMagicCaveTopFadeMax[0])
+#define MAGIC_CAVE_TOP_ALPHA_MAX                (gMagicCaveTopAlphaMax[0])
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_HEIGHT     (gMagicCaveTopBurstHeight1[0])
+#define MAGIC_CAVE_TOP_BURST_SCALE              (gMagicCaveTopBurstRadius[0])
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE      (gMagicCaveTopBurstSpreadX[0])
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_LOW  (gMagicCaveTopBurstSpreadY[0])
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_HIGH (gMagicCaveTopBurstSpreadZ[0])
+#define MAGIC_CAVE_TOP_BURST_SECONDARY_HEIGHT   (gMagicCaveTopBurstHeight2[0])
+#define MAGIC_CAVE_TOP_BURST_SECONDARY_ANGLE    10.0f
 
 int MagicCaveTop_getExtraSize(void) {
     return sizeof(MagicCaveTopState);
@@ -182,7 +199,7 @@ void MagicCaveTop_update(GameObject* obj) {
         }
         if ((state->flags & MAGIC_CAVE_TOP_FLAG_RUMBLE_DISABLED) == 0) {
             if (distanceSquared >= MAGIC_CAVE_TOP_RUMBLE_START_DISTANCE_SQ) {
-                state->rumbleTimer = 0.0f;
+                state->rumbleTimer = MAGIC_CAVE_TOP_ZERO;
                 state->flags &= ~MAGIC_CAVE_TOP_FLAG_RUMBLE_COMPLETE;
             } else if ((state->flags & MAGIC_CAVE_TOP_FLAG_RUMBLE_COMPLETE) == 0) {
                 if ((state->flags & MAGIC_CAVE_TOP_FLAG_RUMBLE_ACTIVE) != 0) {
@@ -247,13 +264,13 @@ void MagicCaveTop_update(GameObject* obj) {
         }
     }
     if (isVisible != 0) {
-        if (state->fadeTimer == 0.0f) {
+        if (MAGIC_CAVE_TOP_ZERO == state->fadeTimer) {
             Sfx_PlayFromObject(obj, SFXTRIG_door_creak);
         }
         state->fadeTimer += timeDelta;
         if (state->fadeTimer > MAGIC_CAVE_TOP_FADE_MAX) {
             state->fadeTimer = MAGIC_CAVE_TOP_FADE_MAX;
-            obj->anim.alpha = MAGIC_CAVE_TOP_ALPHA_MAX;
+            obj->anim.alpha = MAGIC_CAVE_TOP_ALPHA_OPAQUE;
         } else {
             obj->anim.alpha = (u8)(int)(MAGIC_CAVE_TOP_ALPHA_MAX * (state->fadeTimer / MAGIC_CAVE_TOP_FADE_MAX));
         }
@@ -261,7 +278,7 @@ void MagicCaveTop_update(GameObject* obj) {
         obj->anim.alpha = 0;
     }
     if (obj->anim.alpha != 0) {
-        effectOriginXZ = 0.0f;
+        effectOriginXZ = MAGIC_CAVE_TOP_ZERO;
         effectParams.position[0] = effectOriginXZ;
         effectParams.position[1] = MAGIC_CAVE_TOP_BURST_PRIMARY_HEIGHT;
         effectParams.position[2] = effectOriginXZ;

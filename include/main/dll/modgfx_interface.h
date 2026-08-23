@@ -8,30 +8,27 @@ typedef void (*ModgfxOnMapSetupFn)(void);
 typedef void (*ModgfxUpdateActiveEffectsFn)(int unused0, int unused1, int unused2);
 typedef void (*ModgfxReleaseAllFn)(void);
 typedef void (*ModgfxFreeSourceEffectsFn)(void* sourceObject);
-typedef int (*ModgfxRenderEffectsFn)(void* drawContext, int arg1, int arg2,
-                                     u8 sourceOnly, void* sourceObject);
+typedef int (*ModgfxRenderEffectsFn)(void* drawContext, int arg1, int arg2, u8 sourceOnly, void* sourceObject);
 typedef void (*ModgfxMarkSourceFrameUpdatedFn)(void* unused);
-typedef s16 (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCount,
-                                   void* vertices, int colorCount, void* colors,
-                                   int textureAssetId, void* textureResource);
+typedef s16 (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCount, void* vertices, int colorCount,
+                                   void* colors, int textureAssetId, void* textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16* handle);
-typedef void (*ModgfxBeginSequenceFn)(void* sourceObject, int sourceMode,
-                                      int effectType, int word40, int word3C);
+typedef void (*ModgfxNextSpawnGenerationFn)(void);
+typedef void (*ModgfxSetSourceByte13BFn)(void* sourceObject, char value);
+typedef void (*ModgfxRequestSourceReleaseFn)(void* sourceObject);
+typedef void (*ModgfxBeginSequenceFn)(void* sourceObject, int sourceMode, int effectType, int word40, int word3C);
 typedef void (*ModgfxResetSequenceSpawnsFn)(void);
-typedef void (*ModgfxAddSequenceSpawnFn)(int modelOrResource, f32 posX, f32 posY,
-                                         f32 posZ, s16 param14, void* param10);
+typedef void (*ModgfxAddSequenceSpawnFn)(int modelOrResource, f32 posX, f32 posY, f32 posZ, s16 param14, void* param10);
 typedef void (*ModgfxNextSequenceParamFn)(void);
 typedef void (*ModgfxSetSequenceParamIndexFn)(s16 index);
 typedef void (*ModgfxSetSequenceParamValueFn)(s16 value);
 typedef void (*ModgfxSetSequenceParamsFn)(void* params);
-typedef void (*ModgfxSpawnSequenceFn)(void* sourceObject, void* vertices,
-                                      int vertexCount, void* colors, int colorCount,
+typedef void (*ModgfxSpawnSequenceFn)(void* sourceObject, void* vertices, int vertexCount, void* colors, int colorCount,
                                       int textureAssetId, void* textureResource);
 typedef void (*ModgfxAddSequenceFlagsFn)(u32 flags);
 typedef s16 (*ModgfxGetLastSpawnHandleFn)(void);
 
-typedef struct ModgfxInterface
-{
+typedef struct ModgfxInterface {
     u8 pad00[0x04];
     ModgfxOnMapSetupFn onMapSetup;
     ModgfxSpawnEffectFn spawnEffect;
@@ -41,7 +38,9 @@ typedef struct ModgfxInterface
     ModgfxDetachSourceFn detachSource;
     ModgfxRenderEffectsFn renderEffects;
     ModgfxReleaseHandleFn releaseHandle;
-    u8 pad24[0x30 - 0x24];
+    ModgfxNextSpawnGenerationFn nextSpawnGeneration;
+    ModgfxSetSourceByte13BFn setSourceByte13B;
+    ModgfxRequestSourceReleaseFn requestSourceRelease;
     ModgfxMarkSourceFrameUpdatedFn markSourceFrameUpdated;
     ModgfxBeginSequenceFn beginSequence;
     ModgfxResetSequenceSpawnsFn resetSequenceSpawns;
@@ -62,6 +61,9 @@ STATIC_ASSERT(offsetof(ModgfxInterface, freeSourceEffects) == 0x14);
 STATIC_ASSERT(offsetof(ModgfxInterface, detachSource) == 0x18);
 STATIC_ASSERT(offsetof(ModgfxInterface, renderEffects) == 0x1C);
 STATIC_ASSERT(offsetof(ModgfxInterface, releaseHandle) == 0x20);
+STATIC_ASSERT(offsetof(ModgfxInterface, nextSpawnGeneration) == 0x24);
+STATIC_ASSERT(offsetof(ModgfxInterface, setSourceByte13B) == 0x28);
+STATIC_ASSERT(offsetof(ModgfxInterface, requestSourceRelease) == 0x2C);
 STATIC_ASSERT(offsetof(ModgfxInterface, markSourceFrameUpdated) == 0x30);
 STATIC_ASSERT(offsetof(ModgfxInterface, beginSequence) == 0x34);
 STATIC_ASSERT(offsetof(ModgfxInterface, resetSequenceSpawns) == 0x38);

@@ -8,20 +8,18 @@
 #include "game/objects/object_setup.h"
 #include "main/vecmath.h"
 
-typedef struct WcHitBits
-{
+typedef struct WcHitBits {
     u8 hit : 1;
     u8 _r299 : 7;
 } WcHitBits;
 
-typedef struct WmwallcrawlerState
-{
+typedef struct WmwallcrawlerState {
     CurvesCollisionState pathState; /* 0x000: PathControlInterface state block */
-    f32 triggerRadius;      /* 0x268: aggro radius, from placement; rescaled after each dive */
-    f32 fleeChaseThreshold; /* 0x26C: distance threshold; >thr+eps -> CHASE, <thr -> FLEE drains lifeTimer */
-    f32 homeX;              /* 0x270: home position, from placement */
-    f32 homeY;              /* 0x274 */
-    f32 homeZ;              /* 0x278 */
+    f32 triggerRadius;              /* 0x268: aggro radius, from placement; rescaled after each dive */
+    f32 fleeChaseThreshold;         /* 0x26C: distance threshold; >thr+eps -> CHASE, <thr -> FLEE drains lifeTimer */
+    f32 homeX;                      /* 0x270: home position, from placement */
+    f32 homeY;                      /* 0x274 */
+    f32 homeZ;                      /* 0x278 */
     u8 pad27C[0x284 - 0x27C];
     f32 animSpeed;      /* 0x284: ObjAnim_AdvanceCurrentMove rate */
     s16 attackTimer;    /* 0x288: strike cooldown (float-param, timerCountDown) */
@@ -51,8 +49,7 @@ STATIC_ASSERT(offsetof(WmwallcrawlerState, variant) == 0x298);
 STATIC_ASSERT(offsetof(WmwallcrawlerState, hitBits) == 0x299);
 STATIC_ASSERT(sizeof(WmwallcrawlerState) == 0x29C);
 
-typedef struct WmwallcrawlerMapData
-{
+typedef struct WmwallcrawlerMapData {
     ObjPlacement base;
     s8 rotXByte;        /* 0x18: rotX in 1/256 turns */
     u8 variant;         /* 0x19: index into the flag table gWallCrawlerVariantFlags */
@@ -67,7 +64,6 @@ STATIC_ASSERT(offsetof(WmwallcrawlerMapData, triggerRadius) == 0x1A);
 STATIC_ASSERT(offsetof(WmwallcrawlerMapData, heightOffset) == 0x1C);
 STATIC_ASSERT(offsetof(WmwallcrawlerMapData, counterGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmwallcrawlerMapData) == 0x20);
-
 
 int wmwallcrawler_animEventCallback(GameObject* obj);
 void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit);

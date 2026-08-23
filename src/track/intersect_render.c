@@ -212,7 +212,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
     handle1 = *(int*)Shader_getLayer(renderOp, 0);
     selectTexture((Texture*)textureIdxToPtr(handle1), 0);
-    selectReflectionTexture(1);
+    newshadows_loadReflectionColorTexture(1);
     tex2 = textureIdxToPtr(renderOp->auxTextureIndex);
     wrapBit = (tex2->maxLod - tex2->minLod > 0) ? GX_TRUE : GX_FALSE;
     GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height,
@@ -436,9 +436,9 @@ void screenImageDraw(u8 alpha)
     f32 fB;
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    getNewShadowCausticTexture((u32*)&handle);
-    updateReflectionTextures();
-    selectReflectionTexture(0);
+    newshadows_getCausticTexture((u32*)&handle);
+    newshadows_captureReflectionTextures();
+    newshadows_loadReflectionColorTexture(0);
     selectTexture(handle, 1);
     gScreenImageKColor0.a = alpha;
     GXSetTevKColor(GX_KCOLOR0, gScreenImageKColor0);
@@ -605,8 +605,8 @@ void doSpiritVisionFilter(void)
 {
 
 
-    updateReflectionTextures();
-    selectReflectionTexture(0);
+    newshadows_captureReflectionTextures();
+    newshadows_loadReflectionColorTexture(0);
     GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_GREEN, GX_CH_BLUE, GX_CH_RED, GX_CH_ALPHA);
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
     GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN, GX_CH_ALPHA);
@@ -735,8 +735,8 @@ void doColorFilter(u8* mod)
         c2.b = (u8)(c2.b + s2);
     }
 
-    updateReflectionTextures();
-    selectReflectionTexture(0);
+    newshadows_captureReflectionTextures();
+    newshadows_loadReflectionColorTexture(0);
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
     GXSetTevSwapModeTable(GX_TEV_SWAP2, GX_CH_GREEN, GX_CH_GREEN, GX_CH_GREEN, GX_CH_ALPHA);
     GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE, GX_CH_ALPHA);
@@ -890,10 +890,10 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     proj3 += 1.0f;
     c0.a = (u8)(((u32)(16777216.0f * proj3) & 0x00FF0000) >> 16);
 
-    selectReflectionTexture(0);
-    getReflectionTexture2((u32*)&handle1);
+    newshadows_loadReflectionColorTexture(0);
+    newshadows_getReflectionDepthTexture((u32*)&handle1);
     selectTexture(handle1, 1);
-    getNewShadowRadialTexture(&handle2);
+    newshadows_getRadialTexture(&handle2);
     selectTexture(handle2, 2);
 
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
@@ -937,7 +937,7 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     GXSetTevKColor(GX_KCOLOR2, c2);
     GXSetTevColor(GX_TEVREG0, c3);
 
-    getNewShadowDistortionTexture(&handle3);
+    newshadows_getDistortionTexture(&handle3);
     selectTexture(handle3, 3);
 
     {
@@ -1093,10 +1093,10 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
-    tex = (void*)getNewShadowReflectionGradientTexture();
-    selectReflectionTexture(0);
+    tex = (void*)newshadows_getReflectionGradientTexture();
+    newshadows_loadReflectionColorTexture(0);
     selectTexture((Texture*)tex, 1);
-    selectWhirlpoolTexture(2);
+    newshadows_loadWhirlpoolTexture(2);
 
     GXLoadTexMtxImm(gCameraLightPerspectiveFlipYMatrix, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX7);
@@ -1319,12 +1319,12 @@ void setupQuakeSpellRingGxState(u8 alpha)
     Mtx mtx;
 
     Camera_GetViewMatrix();
-    selectReflectionTexture(0);
+    newshadows_loadReflectionColorTexture(0);
     GXLoadTexMtxImm(gCameraLightPerspectiveFlipYMatrix, GX_PTTEXMTX6, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
     newshadows_getReflectionScrollOffsets(&a, &b);
     a *= 8.0f;
-    getNewShadowCausticTexture((u32*)&handle1);
+    newshadows_getCausticTexture((u32*)&handle1);
     selectTexture(handle1, 1);
     PSMTXScale((f32(*)[4])tex_mtx, 4.0f, 4.0f, 4.0f);
     tex_mtx[0][3] = a;
@@ -1354,7 +1354,7 @@ void setupQuakeSpellRingGxState(u8 alpha)
     mtx[2][3] = 1.0f;
     GXLoadTexMtxImm(mtx, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_TRUE, GX_PTTEXMTX7);
-    getNewShadowDiskTexture((u32*)&handle2);
+    newshadows_getDiskTexture((u32*)&handle2);
     selectTexture(handle2, 2);
     c.a = alpha;
     GXSetTevKColor(GX_KCOLOR0, c);
@@ -1463,7 +1463,7 @@ int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot)
     normalTexMtx[2][3] = 1.0f;
     GXLoadTexMtxImm(normalTexMtx, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_TRUE, GX_PTTEXMTX7);
-    getNewShadowDiskTexture((u32*)&diskTextureHandle);
+    newshadows_getDiskTexture((u32*)&diskTextureHandle);
     selectTexture(diskTextureHandle, 0);
     konstColor.a = object->anim.renderAlpha;
     GXSetTevKColor(GX_KCOLOR0, konstColor);
@@ -1827,13 +1827,13 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
         f31_val = 1.0f;
     }
 
-    selectReflectionTexture(0);
+    newshadows_loadReflectionColorTexture(0);
     GXLoadTexMtxImm(gCameraLightPerspectiveFlipYMatrix, GX_PTTEXMTX6, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
     newshadows_getReflectionScrollOffsets(&scrollX, &scrollY);
     scrollX *= 4.0f;
     scrollY *= 4.0f;
-    getNewShadowCausticTexture((u32*)&handle1);
+    newshadows_getCausticTexture((u32*)&handle1);
     selectTexture(handle1, 1);
 
     PSMTXScale(mtx_ec, 4.0f, 4.0f, 4.0f);
@@ -1893,7 +1893,7 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     GXLoadTexMtxImm((f32(*)[4])mtx_8c, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX3x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTTEXMTX7);
 
-    getNewShadowDiskTexture((u32*)&handle2);
+    newshadows_getDiskTexture((u32*)&handle2);
     selectTexture(handle2, 2);
 
     GXSetNumIndStages(2);
@@ -2896,7 +2896,7 @@ void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow,
     v.z = mtx[2][3];
     PSMTXMultVec(shadow->depthMtx, &v, &v);
     z = -v.z;
-    getNewShadowRampTexture((u32*)&handle);
+    newshadows_getRampTexture((u32*)&handle);
     selectTexture(handle, 1);
     m58[0][0] = 0.0f;
     m58[0][1] = 0.0f;
@@ -3067,7 +3067,7 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
     PSMTXMultVec(shadow->depthMtx, (Vec*)vec3, (Vec*)vec3);
     f31_val = -vec3[2];
 
-    getNewShadowRampTexture((u32*)&handle);
+    newshadows_getRampTexture((u32*)&handle);
     selectTexture(handle, 1);
 
     {
@@ -3536,7 +3536,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     c0 = sApertureColorBlack;
     c1 = sApertureColorEdge;
     c2 = sApertureColorCentre;
-    getNewShadowRadialTexture(&handle);
+    newshadows_getRadialTexture(&handle);
     selectTexture(handle, 0);
     {
         f32 dec = 0.5f;
@@ -3661,9 +3661,9 @@ void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u
     }
     c_K2.a = flashAlpha;
 
-    getReflectionTexture2((u32*)&handle1);
+    newshadows_getReflectionDepthTexture((u32*)&handle1);
     selectTexture(handle1, 0);
-    getNewShadowSnowFlashTexture((u32*)&handle2);
+    newshadows_getSnowFlashTexture((u32*)&handle2);
     selectTexture(handle2, 1);
 
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
@@ -3832,15 +3832,15 @@ void doHeatEffect(u8 alpha)
     a1 = (alpha * 0xff) >> 8;
     a2 = (k * alpha) >> 8;
 
-    selectReflectionTexture(0);
-    getReflectionTexture2((u32*)&handle1);
+    newshadows_loadReflectionColorTexture(0);
+    newshadows_getReflectionDepthTexture((u32*)&handle1);
     selectTexture(handle1, 1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
     fA *= 10.0f;
     fB *= 10.0f;
-    getNewShadowCausticTexture((u32*)&handle2);
+    newshadows_getCausticTexture((u32*)&handle2);
     selectTexture(handle2, 2);
 
     mathSinCosf(3.142f * fA, &mulX, &mulY);
@@ -3970,7 +3970,7 @@ void renderMotionBlur(f32 alpha)
     Mtx mtx;
 
     gMotionBlurKColor.a = 255.0f * alpha;
-    selectReflectionTexture(0);
+    newshadows_loadReflectionColorTexture(0);
     GXSetTevKColor(GX_KCOLOR0, gMotionBlurKColor);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     PSMTXIdentity(mtx);
@@ -4062,8 +4062,8 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     Camera_ProjectWorldPoint(wx, wy, wz, &px, &py, &pz, &pw);
     pz += 1.0f;
     c0.a = (u8)(((u32)(16777216.0f * pz) & 0x00FF0000) >> 16);
-    selectReflectionTexture(0);
-    getReflectionTexture2((u32*)&handle);
+    newshadows_loadReflectionColorTexture(0);
+    newshadows_getReflectionDepthTexture((u32*)&handle);
     selectTexture(handle, 1);
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
 
@@ -4338,7 +4338,7 @@ void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
     f32 (*indBase[1])[2][3];
 
     indBase[0] = gWaterReflectionIndTexMtx;
-    selectReflectionTexture(0);
+    newshadows_loadReflectionColorTexture(0);
     selectTexture(handle1, 1);
     selectTexture(handle2, 2);
 
@@ -4450,7 +4450,7 @@ void setupReflectionIndirectTev(u8 flag)
 {
     f32 mtx[6];
 
-    selectReflectionTexture(1);
+    newshadows_loadReflectionColorTexture(1);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     mtx[0] = 0.0f;
@@ -4500,7 +4500,7 @@ void setupReflectionDistortTev(Texture* texHandle)
     f32 indMtx[6];
     Mtx scaleMtx;
 
-    selectReflectionTexture(0);
+    newshadows_loadReflectionColorTexture(0);
     selectTexture(texHandle, 1);
     newshadows_getReflectionScrollOffsets(&sOff, &tOff);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
@@ -4590,8 +4590,8 @@ void setupReflectionBumpDistortTev(void* texture)
     f32 indMtx[6];
     Mtx scaleMtx;
 
-    selectReflectionTexture(0);
-    loadNewShadowBumpTexture(1);
+    newshadows_loadReflectionColorTexture(0);
+    newshadows_loadBumpTexture(1);
     newshadows_getReflectionScrollOffsets(&sOff, &tOff);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
@@ -4689,9 +4689,9 @@ void setupWaterCausticTev(void)
     GXColor temp;
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    selectReflectionTexture(0);
+    newshadows_loadReflectionColorTexture(0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getNewShadowCausticTexture((u32*)&handle1);
+    newshadows_getCausticTexture((u32*)&handle1);
     selectTexture(handle1, 1);
 
     PSMTXScale(mtx_cc, 1.0f, 1.0f, 1.0f);

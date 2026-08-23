@@ -65,8 +65,6 @@
 #define PRESSURESWITCHFB_PARTICLE_ARG3     0x12
 
 #define PRESSURESWITCHFB_MOVEMENT_SFX_CHANNEL 8
-#define PRESSURESWITCHFB_TRICKY_COMMAND_KIND  1
-#define PRESSURESWITCHFB_TRICKY_COMMAND_TYPE  3
 
 int PressureSwitchFB_animEventCallback(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     s16 sequenceId;
@@ -325,8 +323,8 @@ void PressureSwitchFB_update(GameObject* obj) {
             (mainGetBit(placement->pressedGameBit) == 0)) {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
-                TRICKY_INTERFACE(trickyObj)->sideCommandEnable(trickyObj, obj, PRESSURESWITCHFB_TRICKY_COMMAND_KIND,
-                                                               PRESSURESWITCHFB_TRICKY_COMMAND_TYPE);
+                TRICKY_INTERFACE(trickyObj)->sideCommandEnable(trickyObj, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                               TRICKY_COMMAND_TYPE_STAY);
             }
         }
     }

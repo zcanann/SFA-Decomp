@@ -37,6 +37,12 @@ def run(cmd: str) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, shell=True, cwd=REPO, capture_output=True, text=True)
 
 
+def run_ninja(target: str) -> subprocess.CompletedProcess:
+    if os.name == "nt":
+        return subprocess.run(["ninja", target], cwd=REPO, capture_output=True, text=True)
+    return run(f"bash --noprofile --norc tools/locked_ninja.sh {target}")
+
+
 def measure(unit_suffix: str, version: str, retries: int = 4):
     """Regenerate the report and read one unit's fuzzy.
 
@@ -48,7 +54,7 @@ def measure(unit_suffix: str, version: str, retries: int = 4):
     for attempt in range(retries):
         if report.exists():
             report.unlink()
-        run(f"bash --noprofile --norc tools/locked_ninja.sh build/{version}/report.json")
+        run_ninja(f"build/{version}/report.json")
         try:
             raw = report.read_bytes()          # snapshot before a peer can unlink it
             data = json.loads(raw)
@@ -71,6 +77,8 @@ def main() -> None:
     ap.add_argument("--obj", help="object path to force-rebuild (default: derived from object_key)")
     ap.add_argument("--profile-prefix", default="cflags_dll",
                     help="which configure.py cflag lists to sweep (default cflags_dll)")
+    ap.add_argument("--profile", action="append",
+                    help="specific cflag profile to test; repeat to test several")
     args = ap.parse_args()
 
     obj = args.obj or f"build/{args.version}/src/{args.object_key[:-2]}.o"
@@ -92,6 +100,12 @@ def main() -> None:
     old_line = f'Object({status}, "{args.object_key}", cflags={current}{tail})'
     profiles = sorted(set(
         re.findall(rf"^({re.escape(args.profile_prefix)}[a-z_0-9]*) =", orig, re.M)))
+    if args.profile:
+        requested = set(args.profile)
+        unknown = sorted(requested - set(profiles))
+        if unknown:
+            sys.exit(f"profile(s) do not match '{args.profile_prefix}*': {', '.join(unknown)}")
+        profiles = [prof for prof in profiles if prof in requested]
     if not profiles:
         sys.exit(f"no profiles matching '{args.profile_prefix}*' in configure.py")
     print(f"unit={args.unit_suffix}  current={current}  profiles={len(profiles)}\n")
@@ -107,7 +121,7 @@ def main() -> None:
             objp = REPO / obj
             if objp.exists():
                 objp.unlink()
-            if run(f"bash --noprofile --norc tools/locked_ninja.sh {obj}").returncode != 0 or not objp.exists():
+            if run_ninja(obj).returncode != 0 or not objp.exists():
                 print(f"{prof:<62} BUILD-FAIL")
                 continue
             fz = measure(args.unit_suffix, args.version)
@@ -120,7 +134,7 @@ def main() -> None:
         objp = REPO / obj
         if objp.exists():
             objp.unlink()
-        run(f"bash --noprofile --norc tools/locked_ninja.sh {obj}")
+        run_ninja(obj)
         measure(args.unit_suffix, args.version)
         print("\n-- configure.py restored --")
 

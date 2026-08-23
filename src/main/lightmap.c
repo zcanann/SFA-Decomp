@@ -364,7 +364,7 @@ void getVisibleObjects(s8* opacity)
     f32 a, b;
     f32 depth;
 
-    newShadowsBeginFrame();
+    newshadows_beginFrame();
     objects = ObjList_GetObjects((int*)0, 0);
     part = ObjList_PartitionForRender(&count);
     i = 0;
@@ -698,7 +698,7 @@ void sceneDraw(void)
     gVisibleObjectSortKeyCount = 1;
     lbl_803DCEAC = 0;
     gGlowLightCount = 0;
-    drawReflectionTexture();
+    newshadows_drawReflectionTexture();
     gLightmapDrawQueueCount = 0;
     getVisibleObjects(buf);
     Rcp_UpdateDistortionTextures();
@@ -754,7 +754,7 @@ void sceneDraw(void)
     }
     if (getHudHiddenFrameCount() == 0)
     {
-        updateReflectionTextures();
+        newshadows_captureReflectionTextures();
     }
     if (bEnableBlurFilter != 0)
     {
@@ -814,7 +814,7 @@ void sceneDraw(void)
     (*gNewCloudsInterface)->renderSnowClouds(0);
     if (bEnableDistortionFilter != 0)
     {
-        updateReflectionTextures();
+        newshadows_captureReflectionTextures();
         doDistortionFilter((f32*)(q + 0x4108), distortionFilterAngle2,
                            distortionFilterColor, distortionFilterAngle1);
     }

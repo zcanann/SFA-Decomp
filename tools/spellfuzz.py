@@ -52,6 +52,7 @@ import os
 import re
 import shlex
 import signal
+import shutil
 import subprocess
 import sys
 import time
@@ -79,31 +80,38 @@ def read_bytes_text(path):
     return path.read_bytes().decode("latin-1")
 
 
+def norm_ninja_path(path):
+    return re.sub(r"/+", "/", path.replace("\\", "/"))
+
+
 def parse_build_edge(src_obj):
     text = read_bytes_text(ROOT / "build.ninja")
-    logical = []
-    pending = ""
-    for line in text.split("\n"):
-        if line.endswith("$"):
-            pending += line[:-1]
-            continue
-        logical.append(pending + line)
-        pending = ""
-    if pending:
-        logical.append(pending)
-    edge_re = re.compile(r"^build %s:\s+(\S+)\s" % re.escape(src_obj))
+    lines = text.splitlines()
+    wanted_obj = norm_ninja_path(src_obj)
     varlines = {}
     found = False
-    for line in logical:
-        if not found:
-            if edge_re.match(line):
-                found = True
+
+    for i, line in enumerate(lines):
+        m = re.match(r"^build\s+(\S+):\s+(\S+)\s", line)
+        if not m or norm_ninja_path(m.group(1)) != wanted_obj:
             continue
-        m = re.match(r"^\s+(\w+) = (.*)$", line)
-        if m:
-            varlines[m.group(1)] = re.sub(r"\s+", " ", m.group(2)).strip()
-        else:
-            break
+
+        found = True
+        j = i + 1
+        while j < len(lines) and (lines[j].startswith(" ") or not lines[j].strip()):
+            m = re.match(r"^\s+(\w+) = (.*)$", lines[j])
+            if not m:
+                j += 1
+                continue
+
+            name, value = m.group(1), m.group(2)
+            while value.rstrip().endswith("$") and j + 1 < len(lines):
+                value = value.rstrip()[:-1] + " " + lines[j + 1].strip()
+                j += 1
+            varlines[name] = re.sub(r"\s+", " ", value).strip()
+            j += 1
+        break
+
     if not found or "cflags" not in varlines:
         raise SystemExit("build edge for %s not found in build.ninja" % src_obj)
     cflags = shlex.split(varlines["cflags"])
@@ -692,18 +700,24 @@ class Compiler:
         self.timeout = timeout
 
     def compile(self, src_path, out_dir):
-        cmd = ["perl", "-e", "alarm shift; exec @ARGV", str(self.timeout),
-               str(ROOT / "build/tools/wibo"),
-               str(ROOT / "build/tools/sjiswrap.exe"),
-               self.mw] + self.cflags + ["-c", str(src_path), "-o",
-                                         str(out_dir)]
+        sjiswrap = ROOT / "build/tools/sjiswrap.exe"
+        wibo = ROOT / "build/tools/wibo"
+        base_cmd = [str(sjiswrap), self.mw] + self.cflags + [
+            "-c", str(src_path), "-o", str(out_dir)
+        ]
+        if wibo.exists() and shutil.which("perl"):
+            cmd = ["perl", "-e", "alarm shift; exec @ARGV", str(self.timeout),
+                   str(wibo)] + base_cmd
+        else:
+            cmd = base_cmd
         try:
             r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
                                timeout=self.timeout + 30,
                                start_new_session=True)
         except subprocess.TimeoutExpired:
-            subprocess.run(["pkill", "-f", "mwcceppc.exe"],
-                           capture_output=True)
+            if shutil.which("pkill"):
+                subprocess.run(["pkill", "-f", "mwcceppc.exe"],
+                               capture_output=True)
             return None, "TIMEOUT"
         obj = out_dir / (src_path.stem + ".o")
         if r.returncode != 0 or not obj.exists():
@@ -745,7 +759,7 @@ def main():
     pre, post = text[:fstart], text[fend:]
 
     mw_version, cflags = parse_build_edge(args.src_obj)
-    retail = ROOT / args.src_obj.replace("/src/", "/obj/", 1)
+    retail = ROOT / args.src_obj.replace("\\", "/").replace("/src/", "/obj/", 1)
     if not retail.exists():
         raise SystemExit("retail carve %s missing" % retail)
 

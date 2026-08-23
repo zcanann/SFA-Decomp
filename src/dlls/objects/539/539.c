@@ -156,7 +156,7 @@ void dll_21B_initialise_nop(void)
 {
 }
 
-ObjectDescriptor dll_21B = {
+ObjectDescriptor gDll21BObjDescriptor = {
     0,
     0,
     0,

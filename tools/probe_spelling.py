@@ -105,14 +105,15 @@ def run(src, obj, unit_name, fns, variants):
                 candidate = candidate.replace(old, new)
             if missing:
                 continue
-            open(path, "wb").write(candidate.encode("utf-8"))
+            candidate_bytes = candidate.encode("utf-8")
+            open(path, "wb").write(candidate_bytes)
+            last_written = candidate_bytes
             sha = build(obj)
             if sha is None:
                 print(f"  BUILDFAIL {label}", flush=True)
                 continue
             unit, per_fn = score(unit_name, fns)
             print(f"unit={unit} {per_fn} sha={sha}  <= {label}", flush=True)
-            last_written = candidate.encode("utf-8")
     finally:
         # Restore only if the file still holds what this probe last wrote. In the
         # shared worktree a sibling lane can commit into the same file mid-probe;

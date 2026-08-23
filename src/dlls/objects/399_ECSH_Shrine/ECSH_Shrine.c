@@ -54,8 +54,6 @@ STATIC_ASSERT(offsetof(ECSHShrinePuzzleScratch, nextCupSlotMap) == 0x3C);
 STATIC_ASSERT(sizeof(ECSHShrinePuzzleScratch) == 0x48);
 STATIC_ASSERT(sizeof(ECSHShrineCupPosition) == 0x08);
 
-#define ECSH_SHRINE_OBJ_GROUP 0xB
-
 #define ECSH_SHRINE_CAMERA_MODE_STATIC 0x48
 
 #define ECSH_SHRINE_ENVFX_A 0x221
@@ -402,7 +400,7 @@ void ecshShrine_free(GameObject* obj) {
         ModelLightStruct_free(state->light);
         state->light = NULL;
     }
-    objFreeObjectType(obj, ECSH_SHRINE_OBJ_GROUP);
+    objFreeObjectType(obj, ECSH_SHRINE_OBJECT_GROUP);
     mainSetBits(GAMEBIT_IN_KRAZOA_SHRINE, 0);
     mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
     mainSetBits(GAMEBIT_WMRelated0A7F, 1);
@@ -422,7 +420,7 @@ void ecshShrine_render(GameObject* obj, int renderArg2, int renderArg3, int rend
     }
     objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, ECSH_SHRINE_RENDER_SCALE);
     objDoParticleFx(obj, ECSH_SHRINE_PARTICLE_SCALE, ECSH_SHRINE_PARTICLE_TYPE, ECSH_SHRINE_PARTICLE_EXTRA_SCALE,
-                           state->light);
+                    state->light);
 }
 
 void ecshShrine_hitDetect(void) {
@@ -493,11 +491,11 @@ void ecshShrine_update(GameObject* obj) {
     while (ObjMsg_Pop(obj, (u32*)&messageArgA, (u32*)&messageArgB, (u32*)&messageArgC) != 0) {
     }
     GameBitLatch_Update(&state->gameBitLatch, ECSH_SHRINE_STATE_FLAG_TEST_RUNNING, ECSH_SHRINE_NO_GAMEBIT,
-                          ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_ECSH_TestObservRunning, MUSICTRIG_krazoa_doors_open);
+                        ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_ECSH_TestObservRunning, MUSICTRIG_krazoa_doors_open);
     GameBitLatch_UpdateInverted(&state->gameBitLatch, ECSH_SHRINE_STATE_FLAG_MUSIC_LATCH_01, ECSH_SHRINE_NO_GAMEBIT,
-                                  ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_vfp_walkabout);
+                                ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_vfp_walkabout);
     GameBitLatch_Update(&state->gameBitLatch, ECSH_SHRINE_STATE_FLAG_MUSIC_LATCH_10, ECSH_SHRINE_NO_GAMEBIT,
-                          ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_PU3_Adventure_c4);
+                        ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_PU3_Adventure_c4);
     if (state->cooldownTimer > (zero = 0.0f)) {
         state->cooldownTimer = state->cooldownTimer - timeDelta;
         if (state->cooldownTimer <= zero) {
@@ -571,8 +569,7 @@ void ecshShrine_update(GameObject* obj) {
             if (state->animTimer > (timerValue = 0.0f)) {
                 if (state->animState == 1 && state->shuffleSfxPlayed == 0 &&
                     state->animTimer < state->shuffleSfxThreshold) {
-                    if (randomGetRange(0, ECSH_SHRINE_SHUFFLE_SFX_ROLL_MAX) >
-                        ECSH_SHRINE_SHUFFLE_SFX_ROLL_THRESHOLD) {
+                    if (randomGetRange(0, ECSH_SHRINE_SHUFFLE_SFX_ROLL_MAX) > ECSH_SHRINE_SHUFFLE_SFX_ROLL_THRESHOLD) {
                         Sfx_PlayFromObject(obj, SFXTRIG_spirit_voice_var);
                     }
                     state->shuffleSfxPlayed = 1;
@@ -612,8 +609,8 @@ void ecshShrine_update(GameObject* obj) {
                         }
                     } else {
                         state->shuffleSfxPlayed = 0;
-                        state->shuffleSfxThreshold = (f32)randomGetRange(ECSH_SHRINE_SHUFFLE_SFX_DELAY_MIN,
-                                                                              ECSH_SHRINE_SHUFFLE_SFX_DELAY_MAX);
+                        state->shuffleSfxThreshold =
+                            (f32)randomGetRange(ECSH_SHRINE_SHUFFLE_SFX_DELAY_MIN, ECSH_SHRINE_SHUFFLE_SFX_DELAY_MAX);
                         Sfx_PlayFromObject(obj, SFXTRIG_spirit_basketspin);
                         state->animState = 0;
                         state->animTimer = ECSH_SHRINE_SHUFFLE_START_TIMER;
@@ -827,7 +824,7 @@ void ecshShrine_init(GameObject* obj, const s8* placement) {
     byteValue = mainGetBit(GAMEBIT_K1_SHRINE_INTRO_TEXT_TRIGGER);
     state->introTextLatch = byteValue;
     gECSHShrineActiveObject = obj;
-    objAddObjectType(obj, ECSH_SHRINE_OBJ_GROUP);
+    objAddObjectType(obj, ECSH_SHRINE_OBJECT_GROUP);
     obj->userData1 = ECSH_SHRINE_LOAD_TIMER_START;
     if (state->light == NULL) {
         state->light = objCreateLight(NULL, 1);

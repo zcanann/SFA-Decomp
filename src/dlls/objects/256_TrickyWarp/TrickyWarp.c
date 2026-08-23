@@ -25,7 +25,7 @@
 
 void TrickyWarp_free(GameObject* obj) {
     TrickyWarpState* state = obj->extra;
-    if (state->active != 0) {
+    if (state->registeredAsWarpCandidate != 0) {
         objFreeObjectType(obj, TRICKYWARP_OBJ_GROUP);
     }
 }
@@ -41,13 +41,13 @@ void TrickyWarp_update(GameObject* obj) {
     state = obj->extra;
     isReachable = TrickyWarp_isPlayerReachable(obj, state);
     if (isReachable != 0) {
-        if (state->active == 0) {
-            state->active = 1;
+        if (state->registeredAsWarpCandidate == 0) {
+            state->registeredAsWarpCandidate = 1;
             objAddObjectType(obj, TRICKYWARP_OBJ_GROUP);
         }
     } else {
-        if (state->active != 0) {
-            state->active = 0;
+        if (state->registeredAsWarpCandidate != 0) {
+            state->registeredAsWarpCandidate = 0;
             objFreeObjectType(obj, TRICKYWARP_OBJ_GROUP);
         }
     }
@@ -70,9 +70,9 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state) {
     if (getTrickyObject() == NULL) {
         return 0;
     }
-    if (state->patchGroup == TRICKYWARP_PATCH_GROUP_NONE) {
-        state->patchGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.localPosX, 0);
-        if (state->patchGroup != TRICKYWARP_PATCH_GROUP_NONE) {
+    if (state->warpPointWalkGroup == TRICKYWARP_PATCH_GROUP_NONE) {
+        state->warpPointWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.localPosX, 0);
+        if (state->warpPointWalkGroup != TRICKYWARP_PATCH_GROUP_NONE) {
             curveEntries = (RomCurveDef**)(*gRomCurveInterface)->getCurves(&curveCount);
             nodeCount = 0;
             for (curveIndex = 0; curveIndex < curveCount; curveIndex++) {
@@ -80,8 +80,8 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state) {
                 if (curveEntry->type == ROMCURVE_TYPE_TRICKYWARP &&
                     curveEntry->walkGroup == TRICKYWARP_PATCH_GROUP_NONE) {
                     for (linkIndex = 0; linkIndex < TRICKYWARP_CURVE_LINK_COUNT; linkIndex++) {
-                        if (curveEntry->linkWalkGroups[linkIndex] == state->patchGroup) {
-                            state->curveNodeIds[nodeCount] = curveEntry->id;
+                        if (curveEntry->linkWalkGroups[linkIndex] == state->warpPointWalkGroup) {
+                            state->linkedWarpCurveIds[nodeCount] = curveEntry->id;
                             nodeCount++;
                             break;
                         }
@@ -98,17 +98,16 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state) {
     player = Obj_GetPlayerObject();
     playerPatchGroup = Objfsa_GetWalkGroupIndexAtPoint(&player->anim.localPosX, 0);
     if (playerPatchGroup != TRICKYWARP_PATCH_GROUP_NONE) {
-        if (playerPatchGroup == state->patchGroup) {
+        if (playerPatchGroup == state->warpPointWalkGroup) {
             return 1;
         }
         for (curveIndex = 0; curveIndex < TRICKYWARP_CURVE_NODE_CAPACITY; curveIndex++) {
-            if (state->curveNodeIds[curveIndex] == TRICKYWARP_CURVE_NODE_ID_NONE) {
+            if (state->linkedWarpCurveIds[curveIndex] == TRICKYWARP_CURVE_NODE_ID_NONE) {
                 break;
             }
-            curveNode = (RomCurveDef*)(*gRomCurveInterface)->getById(state->curveNodeIds[curveIndex]);
+            curveNode = (RomCurveDef*)(*gRomCurveInterface)->getById(state->linkedWarpCurveIds[curveIndex]);
             if (curveNode != NULL) {
-                if (curveNode->requiredBit == TRICKYWARP_GAMEBIT_NONE ||
-                    mainGetBit(curveNode->requiredBit) != 0) {
+                if (curveNode->requiredBit == TRICKYWARP_GAMEBIT_NONE || mainGetBit(curveNode->requiredBit) != 0) {
                     if (curveNode->forbiddenBit == TRICKYWARP_GAMEBIT_NONE ||
                         mainGetBit(curveNode->forbiddenBit) == 0) {
                         if (curveNode->linkWalkGroups[0] == playerPatchGroup) {
@@ -128,7 +127,7 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state) {
             }
         }
     }
-    return getPatchGroup(&player->anim.localPosX, state->patchGroup);
+    return getPatchGroup(&player->anim.localPosX, state->warpPointWalkGroup);
 }
 
 void TrickyWarp_init(GameObject* obj, TrickyWarpPlacement* placement) {

@@ -29,13 +29,13 @@ typedef struct RomCurveWalker {
             void *coeffY; /* 0x88: active coordinate array, Y */
             void *coeffZ; /* 0x8C: active coordinate array, Z */
             s32 moveNetwork; /* 0x90: control-point count/network state */
-            void *node94; /* 0x94: curve evaluation callback */
-            void *node98; /* 0x98: coefficient callback */
+            CurveEvalFn eval; /* 0x94: curve evaluation callback */
+            CurveCoeffFn coeffFn; /* 0x98: coefficient callback */
         };
     };
-    void *node9C;
-    void *nodeA0; /* current node */
-    void *nodeA4; /* next node */
+    void *previousNode; /* previous route node */
+    void *currentNode; /* current route node */
+    void *nextNode; /* next route node */
     f32 hermX[4]; /* 0xA8: hermite endpoints+tangents, X */
     f32 hermX2[4]; /* 0xB8: previous-segment X set */
     f32 hermY[4]; /* 0xC8 */

@@ -431,7 +431,7 @@ void pushable_resolveCollisions(GameObject* obj, PushableState* state) {
     MatrixTransform transform;
     f32 transformMtx[16];
     f32 worldPoints[21];
-    TrackBBoxHit collision;
+    TrackLineIntersectResult collision;
 
     placement = (PushableObjectDef*)obj->anim.placementData;
     probeCoordinates = (f32*)state->probeLocal;

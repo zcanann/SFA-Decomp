@@ -44,6 +44,7 @@ void imSpaceRingGenerator_update(GameObject* obj) {
     IMSpaceRingGeneratorState* state;
     int objectIndex;
     int objectCount;
+    u8 canSetupObject;
 
     placement = obj->anim.placement;
     state = obj->extra;
@@ -77,7 +78,7 @@ void imSpaceRingGenerator_update(GameObject* obj) {
         }
         obj->anim.alpha = alpha;
 
-        if (IM_SPACE_RING_GENERATOR_HAS_SPAWNED(obj) == 0 && Obj_IsLoadingLocked() != 0) {
+        if (IM_SPACE_RING_GENERATOR_HAS_SPAWNED(obj) == 0 && (canSetupObject = Obj_CanSetupObject()) > 0) {
             for (ringIndex = 0; ringIndex < IM_SPACE_RING_GENERATOR_CHILD_COUNT; ringIndex++) {
                 ringPlacement = (IMSpaceRingPlacement*)Obj_AllocObjectSetup(sizeof(IMSpaceRingPlacement),
                                                                             IM_SPACE_RING_GENERATOR_CHILD_OBJECT_ID);

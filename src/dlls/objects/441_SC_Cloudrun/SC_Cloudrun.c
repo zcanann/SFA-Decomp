@@ -70,6 +70,7 @@ void sc_cloudrunnera_update(GameObject* obj) {
     ObjSeqState* sequence = obj->extra;
     ScCloudrunnerAPlacement* placement;
     int objectIndex, objectCount;
+    u8 canSetupObject;
 
     placement = (ScCloudrunnerAPlacement*)(obj)->anim.placementData;
     if (placement == NULL) {
@@ -126,7 +127,8 @@ void sc_cloudrunnera_update(GameObject* obj) {
             if (obj->childObjs[0] != NULL) {
                 break;
             }
-            if (Obj_IsLoadingLocked() == 0) {
+            canSetupObject = Obj_CanSetupObject();
+            if (canSetupObject == 0) {
                 break;
             }
             setup = (CmbSrcMapData*)Obj_AllocObjectSetup(CMBSRC_PLACEMENT_BYTES, SC_CLOUDRUNNER_A_CHILD_OBJECT_ID);

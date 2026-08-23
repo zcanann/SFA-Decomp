@@ -666,7 +666,7 @@ int DIMbossHitDetect_resetIdleMove(GameObject* obj, u8* state) {
 void DIMboss_spawnBlueWhiteEffect(DIMbossEffectMarker* source, f32* velocity) {
     GameObject* spawnedObj;
     DimBossBlueWhiteEffectPlacement* setup;
-    if ((u8)Obj_IsLoadingLocked() != 0) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         setup = (DimBossBlueWhiteEffectPlacement*)Obj_AllocObjectSetup(36, DIM2LIFT_CHILD_OBJ_BLUE_WHITE_EFFECT);
         setup->base.posX = source->x;
         setup->base.posY = source->y;
@@ -1217,7 +1217,8 @@ void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMboss
         gDIMbossSequenceFlags |= DIMBOSS_SEQUENCE_FLAG_TONSIL_GUARD_ACTIVE;
     }
     if (runtime->groundBaddie.targetState == DIMBOSS_PHASE_LAUNCH_LIFT) {
-        TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, 1, 2);
+        TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                   TRICKY_COMMAND_TYPE_BADDIE);
         gameObj->hitVolumeIndex = 1;
     } else {
         gameObj->hitVolumeIndex = 2;

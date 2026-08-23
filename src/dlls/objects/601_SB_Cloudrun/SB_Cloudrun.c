@@ -110,7 +110,7 @@ void SB_CloudRunner_SpawnFromPath(GameObject* path, u8* unusedState)
     f32 outVec[3];
     MatrixTransform rotation;
 
-    if (Obj_IsLoadingLocked() == 0)
+    if ((u8)Obj_CanSetupObject() == 0)
     {
         return;
     }

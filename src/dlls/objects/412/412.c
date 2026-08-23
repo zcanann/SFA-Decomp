@@ -49,6 +49,7 @@ void dll412_update(GameObject* obj) {
     Dll19CState* state;
     Dll82Interface** effectResource;
     ObjPlacement* childSetup;
+    u8 canSetupObject;
 
     placement = (const Dll19CPlacement*)obj->anim.placementData;
     state = obj->extra;
@@ -71,7 +72,8 @@ void dll412_update(GameObject* obj) {
     if (state->spawnTimerRate != 0) {
         state->spawnTimer = (s16)(state->spawnTimer - state->spawnTimerRate * framesThisStep);
     }
-    if (state->spawnTimer <= 0 && placement->disableChildSpawn == 0 && Obj_IsLoadingLocked() != 0) {
+    if (state->spawnTimer <= 0 && placement->disableChildSpawn == 0 &&
+        (canSetupObject = Obj_CanSetupObject()) > 0) {
         childSetup = Obj_AllocObjectSetup(sizeof(ObjPlacement), DLL19C_CHILD_OBJECT_ID);
         childSetup->posX = placement->base.posX;
         childSetup->posY = DLL19C_CHILD_HEIGHT_OFFSET + placement->base.posY;

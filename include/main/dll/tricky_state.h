@@ -18,6 +18,10 @@
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING                                                                               \
     0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
 #define TRICKY_STATE_FLAG_PATH_PATCHES_VALID 0x400 /* patch[] and patchTargets[] describe targetPosPtr */
+#define TRICKY_STATE_FLAG_COMMAND_ACTIVE     0x10u /* sidekick command/flame/dig/guard action is active */
+#define TRICKY_STATE_FLAG_RECALL_REQUEST     0x10000u
+#define TRICKY_STATE_FLAG_HEEL_REQUEST       0x20000u
+#define TRICKY_STATE_FLAG_GUARD_REQUEST      0x40000u
 
 /* TrickyState.movementState - the walk/jump phase selector switched on in
  * trickyUpdateMovementState. The names are the ones the retail debug build
@@ -65,16 +69,18 @@ typedef struct TrickyPackedSlots {
     u8 d : 2;
 } TrickyPackedSlots;
 
+#define MAX_COMM_PRESENT 10
+
 typedef struct TrickyCommand {
     GameObject* targetObj;
-    s8 kind;
-    s8 type;
-    u8 ttl;
+    s8 commandKind;
+    s8 commandType;
+    u8 ttlFrames;
     u8 pad7;
 } TrickyCommand;
 
 typedef struct TrickyJumpArc {
-    f32 duration;  /* 0x00: horizontal distance / lbl_803E24A4 */
+    f32 duration;  /* 0x00: horizontal distance / Tricky follow vertical divisor */
     f32 time;      /* 0x04: elapsed arc time (init 0, += timeDelta) */
     f32 riseCoeff; /* 0x08: linear vertical coefficient */
     f32 baseY;     /* 0x0C: launch worldPosY */
@@ -87,20 +93,19 @@ typedef struct TrickyJumpArc {
 struct RomCurveDef;
 
 /*
- * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers
- * in grenade.c (trickyFn_* / trickyFoodFn_* / trickyFlameFn_* take it as
- * "state"). Field widths mirror the deref widths observed in grenade.c;
- * unobserved ranges are padded (observed in grenade.c, weaponE6.c, collectable.c, sidekickToy.c).
+ * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers.
+ * Field widths mirror the deref widths observed across Tricky, Skeetla, and
+ * companion command handlers; unobserved ranges are padded.
  * Tricky_getExtraSize returns 0x83C; sizeof kept at the 0x840 alloc rounding.
  */
 typedef struct TrickyState {
     u8* progressPtr;       /* MapEventInterface getTrickyEnergy() result */
     GameObject* playerObj; /* owning player/sidekick object */
     u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
-    u8 movementState;      /* follow-handler phase selector (discrete 0..5; gates the pathing/seed branches) */
-    u8 substate;           /* anim-sequence substate 0..7 */
-    u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with 9 into the prompt mask, tested != 0, cleared to 0 (tricky) */
-    u8 unk0C;
+    u8 movementState;      /* TRICKY_MOVE_* path/jump phase selector */
+    u8 substate;           /* per-state handler substate */
+    u8 commandRequestBits; /* pending-command request bitmask: |= (1 << commandType) on enqueue, OR'd with Call+Stay into the prompt mask, tested != 0, cleared to 0 (tricky) */
+    u8 pad0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
     f32 prevSpeed;
@@ -128,9 +133,8 @@ typedef struct TrickyState {
             s16 targetYaw; /* target facing angle: set from targetYaw (skeetla); tricky interpolates anim.rotX toward it (diff = targetYaw - rotX) under TRICKY_STATE_FLAG_ROTATE */
         };
         struct {
-            u8 statusFlag7 : 1;
-            u8 soundSuppressed
-                : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
+            u8 ownsWarpHelperObject : 1;
+            u8 soundSuppressed : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
             u8 heightTracking : 1; /* statusFlags bit 5 */
             u8 statusFlagsLow : 5;
         };
@@ -140,7 +144,7 @@ typedef struct TrickyState {
             u32 warpCooldownLo : 1;
         };
     };
-    u32 heightTrackObjId;
+    s32 heightTrackObjId; /* object ident being height-tracked; -1 while searching for a nearby XYZ animator */
     f32 trackedHeight;
     TrickyJumpArc jumpArc; /* 0x64: ballistic hop arc */
     u8 pad84[0x8C - 0x84];
@@ -156,12 +160,12 @@ typedef struct TrickyState {
     f32 homePosY;
     f32 homePosZ;
     Vec patchExitPos;
-    u32 pathControlFlags; /* head word of the embedded gPathControlInterface record */
+    u32 pathControlFlags;             /* head word of the embedded gPathControlInterface record */
     u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 nearestSpecialDeltaY;         /* signed dy to the nearest special-surface (type 0xe) floor hit */
     u8 pad1BC[0x25F - 0x1BC];
     s8 physicsActive; /* same actor-record slot as BaddieState.physicsActive (free-fall physics enable) */
-    u8 unk260;
+    u8 pad260;
     u8 bboxTraceFlags; /* same actor-record slot as BaddieState.bboxTraceFlags */
     u8 pad262[0x264 - 0x262];
     u8 surfaceFlags; /* TRICKY_SURFACE_FLAG_* (HAS_NEARBY_FLOOR etc.) */
@@ -176,7 +180,7 @@ typedef struct TrickyState {
     u16 targetHeightDelta; /* (s16)(actionTargetObj.worldPosY - self.worldPosY): vertical offset to target */
     u8 pad2A8[0x2AC - 0x2A8];
     f32 waterLevel;
-    f32 eventTime;   /* recorded event timestamp (sentinel == lbl_803E2410 means unset) */
+    f32 eventTime;   /* recorded event timestamp (gTrickyEventTimeSentinel means unset) */
     f32 currentTime; /* running time reference; (currentTime - eventTime) > threshold gates the swim anim */
     f32 lookDirX;    /* look/aim direction: yaw = getAngle(-X,-Z), pitch = getAngle(Y, hyp(X,Z)) */
     f32 lookDirY;
@@ -203,18 +207,18 @@ typedef struct TrickyState {
     f32 base;
     f32 animPlaySpeed;
     f32 currentMoveProgress;
-    f32 unk310;
+    f32 pathSpeed; /* shared actor path-speed slot (EnemyState.pathSpeed); not read by Tricky */
     f32 moveSpeedScale0; /* animPlaySpeed = K / (K2 * scale) for moveId0 */
     f32 moveSpeedScale1; /* paired with moveId1 */
     f32 moveSpeedScale2; /* paired with moveId2 */
     u8 moveId0;          /* ObjAnim_SetCurrentMove move id */
     u8 moveId1;
     u8 moveId2;
-    u8 flags323; /* anim-active bit flags (0x1/0x2/0x4/0x8) */
+    u8 rootMotionFlags; /* shared actor root-motion bit flags (0x1/0x2/0x4/0x8), same slot as EnemyState.rootMotionFlags */
     u8 pad324[0x353 - 0x324];
     u8 heightUpdateActive; /* set 1 at update-cycle start; cleared to 0 when the object leaves its map block or a ground-snap fires; while (s8)set the water-level / tracked-height float update runs, else velocityY is zeroed (tricky sets, trickyfollow/skeetla clear+read) */
     u8 pad354[0x358 - 0x354];
-    s8 flags358; /* bit-flag byte: all 8 bits are decomposed individually (&1..&0x80) for the state debug print (tricky) */
+    s8 sideCommandHitFlags; /* bit-flag byte decomposed for the "sidecommand hits" debug print */
     u8 pad359[0x360 - 0x359];
     void* lastContactObj;
     f32 contactTimer;
@@ -227,13 +231,18 @@ typedef struct TrickyState {
         eyeAnimState; /* 0x378: head-aim / eye-blink record; lookAtPos is followObj's captured world position */
     u8 pad3A0[0x3A8 - 0x3A0];
     ObjSoundState soundState; /* 0x3A8: object-channel sound playback state */
-    f32 sparkPos0X;           /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
-    f32 sparkPos0Y;
-    f32 sparkPos0Z;
-    f32 sparkPos1X; /* spark particle emit point 1 */
-    f32 sparkPos1Y;
-    f32 sparkPos1Z;
-    u8 pad3F0[0x408 - 0x3F0];
+    union {
+        struct {
+            f32 sparkPos0X; /* spark particle emit point 0 (skeetla_spawnLinkedSparks args.xyz) */
+            f32 sparkPos0Y;
+            f32 sparkPos0Z;
+            f32 sparkPos1X; /* spark particle emit point 1 */
+            f32 sparkPos1Y;
+            f32 sparkPos1Z;
+            u8 pad3F0[0x408 - 0x3F0];
+        };
+        Vec pathPointPositions[4]; /* ObjPath points 4..7 refreshed by Tricky_render */
+    };
     f32 renderPosX; /* copied to a child object's localPos during Tricky_render */
     f32 renderPosY;
     f32 renderPosZ;
@@ -243,16 +252,19 @@ typedef struct TrickyState {
     u8 routeSeedDir;
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
-    u8* cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
-    void* validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
+    RomCurveDef*
+        cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
+    RomCurveDef* validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
     u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
     u16 walkGroup;       /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
     u16 savedWalkGroup;  /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
     u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
     u8 pad537[1];
     PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
-    void*
-        cachedRouteEntry; /* cached route-entry pointer (validated via skeetla_validateRouteEntry; one u32-spelled site launders) */
+    union {
+        RomCurveDef* cachedRouteEntry; /* cached route-entry pointer validated via skeetla_validateRouteEntry */
+        u32 cachedRouteId;             /* route id/pointer word used as the cache key before the next point is fetched */
+    };
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32* previousPathPoint;
     f32 previousPathX;
@@ -267,16 +279,63 @@ typedef struct TrickyState {
             TrickyScratch scratch710;
             u8 pad714[0x71C - 0x714];
         };
+        struct {
+            GameObject* fetchBallObj; /* sidekick ball object being fetched/returned */
+            f32 fetchCarryDelayTimer;
+            f32 fetchThrowRetryTimer;
+            TrickyScratch fetchScratch70C;
+            TrickyScratch fetchScratch710;
+            u8 fetchPad714[0x71C - 0x714];
+        };
+        struct {
+            struct RomCurveDef* cannonballStartCurve;
+            TrickyScratch cannonballScratch704;
+            f32 cannonballRollSfxTimer;
+            TrickyScratch cannonballScratch70C;
+            TrickyScratch cannonballScratch710;
+            u8 cannonballPad714[0x71C - 0x714];
+        };
+        struct {
+            TrickyScratch digTunnelStartNode;
+            TrickyScratch digTunnelExitNode;
+            TrickyScratch digTunnelEntryNode;
+            TrickyScratch digTunnelWhineTimer;
+            TrickyScratch digTunnelScratch710;
+            u8 digTunnelPad714[0x71C - 0x714];
+        };
+        struct {
+            TrickyScratch circlingDirection;
+            TrickyScratch circlingAngle;
+            TrickyScratch circlingTargetX;
+            TrickyScratch circlingTargetY;
+            TrickyScratch circlingTargetZ;
+            u8 circlingPad714[0x71C - 0x714];
+        };
+        struct {
+            TrickyScratch tumbleweedCountLatch;
+            f32 tumbleweedTargetX;
+            f32 tumbleweedTargetY;
+            f32 tumbleweedTargetZ;
+            GameObject* tumbleweedTargetObj;
+            u8 tumbleweedPad714[0x71C - 0x714];
+        };
+        struct {
+            f32 secretDigPressTimer;
+            f32 secretDigOriginX;
+            f32 secretDigOriginZ;
+            struct RomCurveDef* secretDigCurve;
+            f32 secretDigWhineTimer;
+            u8 secretDigPad714[0x71C - 0x714];
+        };
         GameObject* flameChildren[7]; /* flame/dig helpers spawned and retired as one seven-object group */
     };
     union {
         struct {
-            f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
+            f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
             TrickyScratch
                 cooldownB; /* .f: countdown paired with cooldownA: -= timeDelta, clamped to floor; == floor gates a move, > floor gates fidget/contact-sfx (tricky/substates/weapone6/tumbleweedbush). .ptr: reused in the animobjd2 orbit substate to hold the circling-target object, copied into followObj */
             union {
-                void* unk724; /* .ptr: in the circling substate, the warp detour currently being routed to (trickyUpdateCircling) */
-                GameObject* circlingObstacle;
+                GameObject* circlingWarpDetour; /* active trickywarp detour while orbiting a circling target */
                 f32 idleTimer;
                 TrickyActionCallback actionCallback;
             };
@@ -290,40 +349,40 @@ typedef struct TrickyState {
     };
     union {
         struct {
-            u8 stateFlags728; /* flag byte: 0/1 boolean sets (tricky/animobjd2) plus a bit-5 test (tricky_substates) */
+            u8 idleActivityFlags; /* ambient-idle latches plus Thorntail approach voice/move latch */
             u8 pad729[0x72C - 0x729];
         };
         struct {
-            u8 flag728Bit7 : 1;
-            u8 flag728Bit6 : 1;
-            u8 flag728Bit5 : 1;
-            u8 flag728Rest : 5;
+            u8 idleActivityPending : 1;
+            u8 idleActivityDelayActive : 1;
+            u8 thorntailIdleMovePending : 1;
+            u8 idleActivityFlagsRest : 5;
         };
-        s32 stateWord728; /* full-width boolean/state view used by growl, circling and idle handlers */
+        s32 flameCommandPending; /* full-width flag: queued Flame command consumed by growl/circling handlers */
         f32 guardTimer; /* guard/flame state dwell timer: += / -= timeDelta against 150/60 thresholds (trickyGuard/trickyFlame) */
     };
     union {
         struct {
             f32 wanderTargetX; /* wander/return target position X that targetPosPtr is pointed at (&wanderTargetX); written from anim world/local posX plus a sin offset (tricky/tricky_substates) */
             f32 wanderTargetY; /* wander target position Y (written from anim world/local posY) */
-            f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset; a rare u8-overlay at this offset toggles a state bit (tricky/tricky_substates) */
+            f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset */
         };
         struct {
             GameObject* guardTarget; /* baddie object the guard is approaching (trickyGuard) */
             s32 guardWalkGroup;      /* walk group the guard post lies in (trickyGuard) */
-            u8 guardCanSpawnHelpers; /* cleared on guard entry; gates the helper-spawn branch (trickyGuard) */
+            u8 guardCanSpawnHelpers; /* toggled by Flame while guarding; gates the helper-spawn branch (trickyGuard) */
         };
     };
-    f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to lbl_803E2440 (tricky_substates) */
+    f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to gTrickyTimer600Frames (tricky_substates) */
     f32 moveHoldTimer; /* f32 countdown primed to randomGetRange(120,240) on entering idle move 0x29; counted down in move 0x2a and on reaching the floor advances to move 0x2b or 0x2c (tricky_substates) */
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
     f32 sparkleFxTimer;
-    TrickyCommand commands[10];
-    u8 commandCount; /* number of queued Tricky commands (0..10); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
+    TrickyCommand commands[MAX_COMM_PRESENT];
+    u8 commandCount; /* number of queued Tricky commands (0..MAX_COMM_PRESENT); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
-    f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to floor lbl_803E23DC, re-primed to lbl_803E2440; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
+    f32 cooldownC; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero, re-primed to gTrickyTimer600Frames; same clamp-to-floor idiom as cooldownA/B (tricky/substates/weapone6/skeetla/animobjd2/mmp) */
     f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
-    f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching floor lbl_803E23DC fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
+    f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching zero fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
     GameObject* childA;
     f32 promptADespawnTimer;
     GameObject* childB;
@@ -331,27 +390,27 @@ typedef struct TrickyState {
     GameObject* child;
     TrickyPackedSlots packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (childA/childB/child) */
     u8 pad7BD[0x7C0 - 0x7BD];
-    f32 childPhaseTimer0; /* child-object periodic phase timer: reset to floor lbl_803E23DC when the child is attached, += timeDelta while it lives, wraps at lbl_803E2550 to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
-    f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24D8/lbl_803E2440 to toggle the child's 0x4000 anim flag */
-    f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at lbl_803E24C8, gates the child's 0x4000 anim flag via lbl_803E2408 */
+    f32 childPhaseTimer0; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
+    f32 childPhaseTimer1; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
+    f32 childPhaseTimer2; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's 0x4000 anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
     u8 pendingFollowRequest;
     u8 pad7D1[0x7D4 - 0x7D1];
     GameObject* pendingFollowObj; /* target object handed off to a sibling Tricky */
     f32 footPoints[4][3];
-    f32 impressTimer; /* impress-move countdown: primed to lbl_803E2408 by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching floor lbl_803E23DC the flag is cleared and a TRICKY_VOICE line fires (tricky) */
-    ObjAnimEventList animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootPitch drives the facing step, triggeredIds[] pick the bark sfx */
+    f32 impressTimer; /* impress-move countdown: primed to gTrickyTimer20Frames by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching gTrickyFloatZero the flag is cleared and a TRICKY_VOICE line fires (tricky) */
+    ObjAnimEventList
+        animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootPitch drives the facing step, triggeredIds[] pick the bark sfx */
     f32 variantFadeTimer; /* model-variant crossfade countdown: primed to 20.0f, -= timeDelta; > 10 fades out, <= 10 swaps the texture selector and fades back in via timer/10 (tricky) */
-    u8 modelVariant; /* progress/10; indexes model bank color */
+    u8 modelVariant;      /* progress/10; indexes model bank color */
     u8 progressValue; /* map-event progress byte written out via **progressPtr; computed as base+(count<<2), clamped to a max byte (tricky writes to progressPtr, substates computes/clamps) */
     union {
-        u8 flags82E; /* bit flags 5/6/7 (tricky/tricky_substates) */
+        u8 blendControlFlags; /* raw blend-channel control byte (bitfield view used by Tricky_updateBlendChannelWeight) */
         struct {
-            u8 blendPending
-                : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
+            u8 blendPending : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
             u8 blendActive : 1; /* bit 6: blend channel 1 ramp is running */
-            u8 flag82EBit5 : 1;
-            u8 flags82ERest : 5;
+            u8 sequencePreserveBlend : 1;
+            u8 blendControlFlagsRest : 5;
         };
     };
     u8 pad82F[0x830 - 0x82F];
@@ -365,9 +424,9 @@ STATIC_ASSERT(sizeof(TrickyState) == 0x840);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
-STATIC_ASSERT(offsetof(TrickyState, stateWord728) == 0x728);
+STATIC_ASSERT(offsetof(TrickyState, flameCommandPending) == 0x728);
 STATIC_ASSERT(offsetof(TrickyState, actionCallback) == 0x724);
-STATIC_ASSERT(offsetof(TrickyState, circlingObstacle) == 0x724);
+STATIC_ASSERT(offsetof(TrickyState, circlingWarpDetour) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, idleTimer) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, guardTarget) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, sfxRepeatTimer) == 0x738);
@@ -388,11 +447,41 @@ STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
+STATIC_ASSERT(offsetof(TrickyState, physicsActive) == 0x25F);
+STATIC_ASSERT(offsetof(TrickyState, bboxTraceFlags) == 0x261);
+STATIC_ASSERT(offsetof(TrickyState, pathSpeed) == 0x310);
+STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, scratch704) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, fetchBallObj) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, fetchCarryDelayTimer) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, fetchThrowRetryTimer) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, cannonballStartCurve) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, cannonballRollSfxTimer) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelStartNode) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelExitNode) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelEntryNode) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, digTunnelWhineTimer) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, circlingDirection) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, circlingAngle) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, circlingTargetX) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, circlingTargetY) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, circlingTargetZ) == 0x710);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedCountLatch) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetX) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetY) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetZ) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetObj) == 0x710);
+STATIC_ASSERT(offsetof(TrickyState, secretDigPressTimer) == 0x700);
+STATIC_ASSERT(offsetof(TrickyState, secretDigOriginX) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, secretDigOriginZ) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, secretDigCurve) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, secretDigWhineTimer) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, statusFlags) == 0x58);
-STATIC_ASSERT(offsetof(TrickyState, unk724) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
 STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);
 STATIC_ASSERT(offsetof(TrickyState, childA) == 0x7A8);
@@ -405,7 +494,7 @@ STATIC_ASSERT(offsetof(TrickyState, footPoints) == 0x7D8);
 STATIC_ASSERT(offsetof(TrickyState, impressTimer) == 0x808);
 STATIC_ASSERT(offsetof(TrickyState, animEvents) == 0x80C);
 STATIC_ASSERT(offsetof(TrickyState, variantFadeTimer) == 0x828);
-STATIC_ASSERT(offsetof(TrickyState, flags82E) == 0x82E);
+STATIC_ASSERT(offsetof(TrickyState, blendControlFlags) == 0x82E);
 STATIC_ASSERT(offsetof(TrickyState, blendWeight) == 0x830);
 STATIC_ASSERT(offsetof(TrickyState, blendVelocity) == 0x834);
 STATIC_ASSERT(offsetof(TrickyState, particleTimer) == 0x838);

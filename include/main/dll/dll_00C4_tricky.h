@@ -5,6 +5,21 @@
 
 #define TRICKY_ITEM_ID_COUNT 5
 
+#define TRICKY_COMMAND_KIND_NORMAL   0
+#define TRICKY_COMMAND_KIND_PRIORITY 1
+
+/*
+ * Sidekick command active IDs. These are also the activeGameBit values in
+ * gCMenuTrickyAbilities; BADDIE is a prompt-only branch that uses the shared
+ * Find Secret icon slot but has no normal C-menu entry.
+ */
+#define TRICKY_COMMAND_TYPE_CALL        0
+#define TRICKY_COMMAND_TYPE_FIND_SECRET 1
+#define TRICKY_COMMAND_TYPE_BADDIE      2
+#define TRICKY_COMMAND_TYPE_STAY        3
+#define TRICKY_COMMAND_TYPE_FLAME       4
+#define TRICKY_COMMAND_TYPE_THROW_BALL  5
+
 typedef struct TrickyItemIdList {
     s32 ids[TRICKY_ITEM_ID_COUNT];
 } TrickyItemIdList;
@@ -53,11 +68,11 @@ STATIC_ASSERT(offsetof(TrickyCompanionInterface, getCurrentCommandType) == 0x48)
 
 void trickyReportError(const char* fmt, ...);
 void trickyDebugPrint(const char* fmt, ...);
-u8* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state);
+GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state);
 void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state);
 void tricky_stateIdleWander(GameObject* obj, TrickyState* state);
 int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj);
-void Tricky_commandPlayBall(int* obj, int commandEnabled, GameObject* targetObj);
+void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* targetObj);
 void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType);
 int Tricky_updateSideCommandPrompts(GameObject* obj);
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
@@ -67,12 +82,12 @@ void Tricky_update(GameObject* obj);
 void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
 int Tricky_getExtraSize(void);
-u8 Tricky_getEnergyMax(int* obj);
-u8 Tricky_getEnergy(int* obj);
-int Tricky_getCurrentCommandType(int* obj, int* out);
-void Tricky_requestRecall(int* obj);
-int Tricky_isGuarding(int* obj);
-int Tricky_isPlayingBall(int* obj);
-int Tricky_getAvailableCommands(void);
+u8 Tricky_getEnergyMax(GameObject* obj);
+u8 Tricky_getEnergy(GameObject* obj);
+int Tricky_getCurrentCommandType(GameObject* obj, int* out);
+void Tricky_requestRecall(GameObject* obj);
+int Tricky_isGuarding(GameObject* obj);
+int Tricky_isPlayingBall(GameObject* obj);
+int Tricky_getAvailableCommands(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_00C4_TRICKY_H_ */

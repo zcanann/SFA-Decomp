@@ -532,13 +532,13 @@ void textureFree(Texture* tex)
                         continue;
                     next = *(u8**)iter;
                     if (((Texture*)iter)->preloaded != 0)
-                        findSomething((void*)((Texture*)iter)->tmemAddr);
+                        newshadows_releaseTextureEntry((void*)((Texture*)iter)->tmemAddr);
                     if (((Texture*)iter)->cached == 0)
                         mm_free(iter);
                     iter = next;
                 }
                 if (((Texture*)tex)->preloaded != 0)
-                    findSomething((void*)((Texture*)tex)->tmemAddr);
+                    newshadows_releaseTextureEntry((void*)((Texture*)tex)->tmemAddr);
                 if (((Texture*)tex)->cached == 0)
                     mm_free(tex);
                 gLoadedTextures[i].key = -1;
@@ -912,7 +912,7 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
 void* textureLoadAsset(int asset)
 {
     void* out = NULL;
-    if (getLoadedFileFlags(0) & 0x100000)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
         return NULL;
     loadTextureFile(&out, asset);
     return out;

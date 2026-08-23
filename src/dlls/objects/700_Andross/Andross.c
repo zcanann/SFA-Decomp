@@ -75,8 +75,10 @@ void andross_spawnBombCollector(GameObject* obj, AndrossState* state) {
     f32 maxDist = 10000.0f;
     GameObject* target;
     ObjPlacement* setup;
+    u8 canSetupObject;
 
-    if (!Obj_IsLoadingLocked()) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return;
     }
     target = ObjList_FindNearestObjectByDefNo(obj, 0x7e5, &maxDist);
@@ -126,8 +128,10 @@ void andross_spawnSuckAsteroid(GameObject* obj, AndrossState* state) {
     GameObject* projectile;
     int yaw;
     s16 radialAngle;
+    u8 canSetupObject;
 
-    if (!Obj_IsLoadingLocked()) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return;
     }
     yaw = gAndrossProjectileYaw;
@@ -157,8 +161,10 @@ void andross_spawnAsteroid(GameObject* obj, AndrossState* state) {
     int yawOffset;
     int pitch;
     GfProjectileSetup* setup;
+    u8 canSetupObject;
 
-    if (!Obj_IsLoadingLocked()) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return;
     }
     yawOffset = (s16)(randomGetRange(-0x1f40, 0x1f40) - 0x8000);
@@ -184,8 +190,10 @@ void andross_spawnAimedRing(GameObject* obj, AndrossState* state, int unused) {
     f32 dx, dz, horizontalDistance;
     int yaw;
     GfProjectileSetup* setup;
+    u8 canSetupObject;
 
-    if (!Obj_IsLoadingLocked()) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0) {
         return;
     }
     dx = state->cachedPosX - state->arwingObj->anim.localPosX;
@@ -557,7 +565,7 @@ int andross_getObjectTypeId(void) {
 }
 
 void andross_free(GameObject* obj) {
-    freeNewShadowDistortionTexture();
+    newshadows_freeDistortionTexture();
     Rcp_DisableDistortionFilter();
 }
 
@@ -1262,6 +1270,7 @@ void andross_update(GameObject* boss) {
         u8 ringSpawnIndex;
         AndrossChildSetup* ringSetup;
         s16 spawnDelay;
+        u8 canSetupObject;
 
         if (actionChanged) {
             andross_setMove(boss, 0x13);
@@ -1289,20 +1298,23 @@ void andross_update(GameObject* boss) {
         }
         for (ringSpawnIndex = 0; ringSpawnIndex < 2; ringSpawnIndex++) {
             if (state->silverRing == NULL && state->actionTimer <= (spawnDelay = ringSpawnDelays[ringSpawnIndex]) &&
-                previousDuration > spawnDelay && Obj_IsLoadingLocked() != 0) {
-                ringSetup =
-                    (AndrossChildSetup*)Obj_AllocObjectSetup(sizeof(AndrossChildSetup), ANDROSS_CHILD_OBJ_SILVER_RING);
-                ringSetup->base.posX = state->cachedPosX;
-                ringSetup->base.posY = state->cachedPosY;
-                ringSetup->base.posZ = state->cachedPosZ;
-                ringSetup->base.color[0] = 1;
-                ringSetup->base.color[1] = 1;
-                ringSetup->flags = -1;
-                state->silverRing = loadObjectAtObject(boss, &ringSetup->base);
-                if (state->silverRing != NULL) {
-                    state->silverRing->anim.alpha = 0xff;
-                    state->silverRing->anim.renderAlpha = 0xff;
-                    state->silverRingLifetime = gAndrossSpawnedObjectLifetime;
+                previousDuration > spawnDelay) {
+                canSetupObject = Obj_CanSetupObject();
+                if (canSetupObject > 0) {
+                    ringSetup = (AndrossChildSetup*)Obj_AllocObjectSetup(sizeof(AndrossChildSetup),
+                                                                         ANDROSS_CHILD_OBJ_SILVER_RING);
+                    ringSetup->base.posX = state->cachedPosX;
+                    ringSetup->base.posY = state->cachedPosY;
+                    ringSetup->base.posZ = state->cachedPosZ;
+                    ringSetup->base.color[0] = 1;
+                    ringSetup->base.color[1] = 1;
+                    ringSetup->flags = -1;
+                    state->silverRing = loadObjectAtObject(boss, &ringSetup->base);
+                    if (state->silverRing != NULL) {
+                        state->silverRing->anim.alpha = 0xff;
+                        state->silverRing->anim.renderAlpha = 0xff;
+                        state->silverRingLifetime = gAndrossSpawnedObjectLifetime;
+                    }
                 }
             }
         }
@@ -1668,7 +1680,7 @@ void andross_init(GameObject* obj, ObjPlacement* setup) {
     state->handsInitialized = 1;
     ObjHits_SetTargetMask(obj, 4);
     obj->animEventCallback = andross_SeqFn;
-    createNewShadowDistortionTexture();
+    newshadows_createDistortionTexture();
     andross_setModelAlpha(Obj_GetActiveModel(obj)->file, 0.0f);
     mainSetBits(GAMEBIT_AndrossRelated000D, 0);
     unlockLevel(0, 0, 1);

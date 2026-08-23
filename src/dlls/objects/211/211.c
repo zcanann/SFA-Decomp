@@ -220,7 +220,7 @@ u8 gStaffActionHitReactionDamage[32] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00,
 };
 
-ObjectDescriptor dll_D3 = {
+ObjectDescriptor gDllD3ObjDescriptor = {
     0,
     0,
     0,
@@ -1200,7 +1200,7 @@ void dll_D3_update(GameObject* obj)
     int rc;
     int hits;
     f32 vec[4];
-    TrackBBoxHit hitResult;
+    TrackLineIntersectResult hitResult;
 #define searchRadius vec[0]
 #define dx           vec[1]
 #define dy           vec[2]

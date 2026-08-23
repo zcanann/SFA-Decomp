@@ -29,7 +29,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_025B_msplantings.h"
 #include "main/frame_timing.h"
-#include "dlls/object_descriptor.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -51,9 +50,6 @@
 
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
-
-#define MSPLANTING_TRICKY_COMMAND_KIND 1
-#define MSPLANTING_TRICKY_COMMAND_TYPE 4
 
 int MoonSeedPlantingSpot_SeqFn(GameObject* obj)
 {
@@ -264,8 +260,8 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
                 getXZDistanceSquared(&player->anim.worldPosX, &obj->anim.worldPosX) <= 10000.0f)
             {
                 objfx_spawnDirectionalBurst((void*)obj, 5, 1.0f, 5, 1, 0x28, 7.0f, NULL, 0);
-                TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, MSPLANTING_TRICKY_COMMAND_KIND,
-                                                           MSPLANTING_TRICKY_COMMAND_TYPE);
+                TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
+                                                           TRICKY_COMMAND_TYPE_FLAME);
             }
             else
             {

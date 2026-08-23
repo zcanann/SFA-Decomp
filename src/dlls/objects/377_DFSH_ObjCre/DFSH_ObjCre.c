@@ -59,6 +59,7 @@ void dfshObjCreator_update(GameObject* obj) {
     DFSHObjCreatorState* state;
     Dll82Interface** effectResource;
     EnemyPlacement* sharpClawSetup;
+    u8 canSetupObject;
 
     placement = (const DFSHObjCreatorPlacement*)obj->anim.placementData;
     state = obj->extra;
@@ -82,7 +83,8 @@ void dfshObjCreator_update(GameObject* obj) {
         state->spawnTimer = (s16)(state->spawnTimer - state->spawnTimerRate * (int)timeDelta);
     }
 
-    if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject > 0 && state->spawnTimer <= 0) {
         sharpClawSetup = (EnemyPlacement*)Obj_AllocObjectSetup(sizeof(EnemyPlacement),
                                                                              DFSH_OBJ_CREATOR_SHARPCLAW_OBJECT_ID);
         sharpClawSetup->base.posX = placement->base.posX;

@@ -61,7 +61,7 @@ void duster_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
 
 void duster_hitDetect(GameObject* obj) {
     DusterObjectState* state;
-    TrackBBoxHit hit;
+    TrackLineIntersectResult hit;
     int hitResult;
     state = obj->extra;
     hitResult = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 6.0f, 2,

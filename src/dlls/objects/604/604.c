@@ -189,7 +189,7 @@ void snowclaw_spawnDropBomb(GameObject* obj, GameObject* owner, int launchMode, 
     GameObject* spawned;
 
     player = Obj_GetPlayerObject();
-    if (Obj_IsLoadingLocked() != 0)
+    if ((u8)Obj_CanSetupObject() != 0)
     {
         setup = (SnowClawBombSetup*)Obj_AllocObjectSetup(0x24, SNOWCLAW_CHILD_OBJ_DROP_BOMB);
         setup->head.objectId = SNOWCLAW_CHILD_OBJ_DROP_BOMB;
@@ -461,7 +461,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
             obj->childObjs[0] = NULL;
             obj->childCount = 0;
         }
-        if (s->dropIndex > 0 && Obj_IsLoadingLocked() != 0)
+        if (s->dropIndex > 0 && (u8)Obj_CanSetupObject() != 0)
         {
             obj->childObjs[0] =
                 objSetupObject(Obj_AllocObjectSetup(
@@ -722,7 +722,7 @@ void snowclaw_update(GameObject* obj)
             obj->childObjs[0] = NULL;
             obj->childCount = 0;
         }
-        if (s->dropIndex > 0 && Obj_IsLoadingLocked() != 0)
+        if (s->dropIndex > 0 && (u8)Obj_CanSetupObject() != 0)
         {
             obj->childObjs[0] =
                 objSetupObject(Obj_AllocObjectSetup(

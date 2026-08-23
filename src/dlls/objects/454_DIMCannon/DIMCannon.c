@@ -113,9 +113,11 @@ void DIMCannon_spawnBall(GameObject* obj, u8 variant) {
     f32 launchScale;
     f32 angle;
     GameObject* objHandle = obj;
+    u8 canSetupObject;
 
     placement = *(DimCannonPlacement**)&obj->anim.placementData;
-    if (Obj_IsLoadingLocked() == 0 || (state = obj->extra)->shouldSpawnProjectile == 0 || state->launchDelay > 0) {
+    canSetupObject = Obj_CanSetupObject();
+    if (canSetupObject == 0 || (state = obj->extra)->shouldSpawnProjectile == 0 || state->launchDelay > 0) {
         return;
     }
 

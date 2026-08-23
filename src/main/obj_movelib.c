@@ -276,7 +276,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, RomCurveWalker* rou
             if ((*gRomCurveInterface)->goNextPointIndexed(route, *pickIdx) != 0)
                 result = -1;
             else
-                result = ((RomCurveDef*)route->node9C)->action;
+                result = ((RomCurveDef*)route->previousNode)->action;
             *pickIdx = 0;
         }
         speed = 2.0f * advanceStep;
@@ -325,7 +325,7 @@ int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32
             if ((*gRomCurveInterface)->goNextPoint(route) != 0)
                 result = -1;
             else
-                result = ((RomCurveDef*)route->node9C)->action;
+                result = ((RomCurveDef*)route->previousNode)->action;
         }
         speed = 2.0f * advanceStep;
     }

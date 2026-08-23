@@ -155,11 +155,11 @@ void WM_LevelControl_updateSkyLighting(GameObject* obj) {
 
     WmLevelControl_blendColor(gWmLevelControlBlendedSkyColor, gWmLevelControlSkyColorFrom, gWmLevelControlSkyColorTo);
     skySetAmbientColor(1, gWmLevelControlBlendedSkyColor[0], gWmLevelControlBlendedSkyColor[1],
-                     gWmLevelControlBlendedSkyColor[2]);
+                       gWmLevelControlBlendedSkyColor[2]);
 
     WmLevelControl_blendColor(gWmLevelControlBlendedFogColor, gWmLevelControlFogColorFrom, gWmLevelControlFogColorTo);
     skySetMoonColor(1, gWmLevelControlBlendedFogColor[0], gWmLevelControlBlendedFogColor[1],
-                       gWmLevelControlBlendedFogColor[2]);
+                    gWmLevelControlBlendedFogColor[2]);
 
     gWmLevelControlBlendedLightIntensity =
         gWmLevelControlBlendFactor * gWmLevelControlLightIntensityRange[0] + gWmLevelControlLightIntensityBase[0];
@@ -227,7 +227,7 @@ void WM_LevelControl_update(GameObject* obj) {
         if (state->frameCounter > 0x3C) {
             GameBitLatch_Update(&state->musicLatch, 1, -1, -1, 0xADA, 0xAC);
         }
-        GameBitLatch_Update(&state->musicLatch, 0x20, -1, -1, 0xCBB, 0xC4);
+        GameBitLatch_Update(&state->musicLatch, 0x20, -1, -1, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_PU3_Adventure_c4);
     }
     WM_LevelControl_updateSkyLighting(obj);
     state->frameCounter++;
@@ -241,8 +241,8 @@ void WM_LevelControl_init(GameObject* obj) {
     objAddObjectType(obj, WM_LEVEL_CONTROL_OBJ_GROUP);
     unlockLevel(mapGetDirIdx(0xB), 0, 0);
     state = obj->extra;
-    state->unknown0B = 0;
-    state->unknown06 = 0x1E;
+    state->modeFlags = 0;
+    state->spiritDelayFrames = 0x1E;
     state->messageTimer = gWmLevelControlIntroMessageDuration;
     state->musicLatch.activeMask = 0;
     lockLevel(0xF, 0);
@@ -273,7 +273,7 @@ void WM_LevelControl_init(GameObject* obj) {
         mainSetBits(GAMEBIT_WMRelated0A7F, 1);
         mainSetBits(GAMEBIT_WM_Warp3Enabled, 0);
         mainSetBits(GAMEBIT_WM_Warp4Enabled, 1);
-        state->unknown04 = -1;
+        state->mode4SpiritMarker = -1;
         break;
     case 5:
         mainSetBits(GAMEBIT_WMRelated0D1B, 1);
@@ -294,9 +294,9 @@ void WM_LevelControl_init(GameObject* obj) {
         mainSetBits(GAMEBIT_WM_Warp4Enabled, 0);
         break;
     case 7:
-        state->unknown08 = 700;
-        state->unknown0A = 0x1E;
-        state->unknown06 = state->unknown0A;
+        state->mode7TimerFrames = 700;
+        state->mode7DelayFrames = 0x1E;
+        state->spiritDelayFrames = state->mode7DelayFrames;
         state->musicLatchesDisabled = 1;
         break;
     }

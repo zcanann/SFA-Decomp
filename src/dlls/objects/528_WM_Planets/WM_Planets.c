@@ -4,7 +4,6 @@
  * Each planet circles its spawn point while rotating at independently
  * randomized rates.
  */
-#include "dlls/object_descriptor.h"
 #include "main/dll/WM/dll_0210_wmplanets.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"

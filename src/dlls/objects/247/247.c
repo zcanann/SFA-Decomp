@@ -124,6 +124,7 @@ void dll_F7_update(GameObject* obj) {
     DllF7HitEffect hitEffect;
     f32 radius;
     u32 hitVolume;
+    u8 canSetupObject;
 
     hitEffect.color = sStaffHitEffectColor;
     if (state->broken != 0) {
@@ -170,7 +171,7 @@ void dll_F7_update(GameObject* obj) {
         if ((int)placement->completeGameBit != -1) {
             mainSetBits((int)placement->completeGameBit, 1);
         }
-        if (state->alternateMode == 0 && Obj_IsLoadingLocked() != 0) {
+        if (state->alternateMode == 0 && (canSetupObject = Obj_CanSetupObject()) > 0) {
             CollectibleSetup* setup =
                 (CollectibleSetup*)Obj_AllocObjectSetup(sizeof(CollectibleSetup), COLLECTIBLE_ITEM_ENERGY_EGG);
             setup->hideGameBit = -1;
@@ -240,7 +241,7 @@ void dll_F7_release(void) {
 void dll_F7_initialise(void) {
 }
 
-ObjectDescriptor dll_F7 = {
+ObjectDescriptor gDllF7ObjDescriptor = {
     0,                                                /* reserved0 */
     0,                                                /* reserved1 */
     0,                                                /* reserved2 */

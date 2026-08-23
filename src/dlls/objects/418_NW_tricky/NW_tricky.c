@@ -1,10 +1,11 @@
 /*
  * NW_tricky (DLL 0x1A2) - SnowHorn Wastes controller for Tricky.
  *
- * The herding phase directs the matching group-3 objects toward whichever of
- * the player or Tricky is nearer and offers live configured targets to
- * Tricky's play-ball command. The energy phase synchronizes Tricky's talk
- * state with the map-event energy gauge.
+ * The SnowHorn tutorial first keeps the matching SharpClaw actors chasing
+ * whichever of the player or Tricky is nearer and offers live configured
+ * targets to Tricky's play-ball command. The follow-up sidekick-command
+ * learning phase synchronizes Tricky's talk state with the map-event energy
+ * gauge.
  */
 #include "dlls/objects/418_NW_tricky.h"
 
@@ -22,13 +23,12 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/objtype.h"
 
-#define NW_TRICKY_HERDING_COMPLETE_GAMEBIT 0xD11
-#define NW_TRICKY_HERD_OBJECT_GROUP        3
-#define NW_TRICKY_HERD_OBJECT_SEQUENCE_ID  0x13A
+#define NW_TRICKY_SHARPCLAW_OBJECT_GROUP 3
+#define NW_TRICKY_SHARPCLAW_SEQUENCE_ID  0x13A
 
-#define NW_TRICKY_SOUND_CHANNEL       16
-#define NW_TRICKY_SOUND_VOLUME        0x1000
-#define NW_TRICKY_HERD_SOUND_INTERVAL 600.0f
+#define NW_TRICKY_SOUND_CHANNEL                 16
+#define NW_TRICKY_SOUND_VOLUME                  0x1000
+#define NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES 600.0f
 
 #define NW_TRICKY_PLAY_BALL_COMMAND_ENABLED 1
 #define NW_TRICKY_MINIMUM_TARGET_HEALTH     0.0f
@@ -92,17 +92,17 @@ void nwTricky_update(GameObject* obj) {
     }
 
     switch (state->phase) {
-    case NW_TRICKY_PHASE_HERDING:
-        if (mainGetBit(NW_TRICKY_HERDING_COMPLETE_GAMEBIT)) {
-            herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_HERD_OBJECT_GROUP, &herdObjectCount);
+    case NW_TRICKY_PHASE_CHASED_BY_SHARPCLAW:
+        if (mainGetBit(GAMEBIT_NW_TrickySharpClawDefeated)) {
+            herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_SHARPCLAW_OBJECT_GROUP, &herdObjectCount);
             for (herdObjectIndex = 0, completedHerdScan = herdObjects; herdObjectIndex < herdObjectCount;
                  completedHerdScan++, herdObjectIndex++) {
-                if ((*completedHerdScan)->anim.romDefNo == NW_TRICKY_HERD_OBJECT_SEQUENCE_ID) {
+                if ((*completedHerdScan)->anim.romDefNo == NW_TRICKY_SHARPCLAW_SEQUENCE_ID) {
                     enemy_setTrackedObj(*completedHerdScan, player);
                 }
             }
             mainSetBits(GAMEBIT_Tricky_Usable, 1);
-            state->phase = NW_TRICKY_PHASE_ENERGY;
+            state->phase = NW_TRICKY_PHASE_LEARNING_COMMANDS;
         } else {
             if (mainGetBit(GAMEBIT_ITEM_TrickyStayFind_Got)) {
                 if (TRICKY_INTERFACE(tricky)->isPlayingBall(tricky) == 0) {
@@ -114,24 +114,23 @@ void nwTricky_update(GameObject* obj) {
                      targetIndex < NW_TRICKY_PLAY_BALL_TARGET_ID_COUNT; targetId++, targetIndex++) {
                     target = ObjList_FindObjectById(*targetId);
                     if (target != NULL && enemy_getHealthFraction(target) > minimumHealth) {
-                        TRICKY_INTERFACE(tricky)->commandPlayBall(
-                            tricky, NW_TRICKY_PLAY_BALL_COMMAND_ENABLED, target);
+                        TRICKY_INTERFACE(tricky)->commandPlayBall(tricky, NW_TRICKY_PLAY_BALL_COMMAND_ENABLED, target);
                         break;
                     }
                 }
 
                 state->phaseTimer += timeDelta;
                 phaseTimer = state->phaseTimer;
-                if (phaseTimer >= NW_TRICKY_HERD_SOUND_INTERVAL) {
-                    state->phaseTimer = phaseTimer - NW_TRICKY_HERD_SOUND_INTERVAL;
+                if (phaseTimer >= NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES) {
+                    state->phaseTimer = phaseTimer - NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES;
                     trickyTryPlaySound(tricky, SFXwp_rolovr_6, NW_TRICKY_SOUND_VOLUME);
                 }
             }
 
-            herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_HERD_OBJECT_GROUP, &herdObjectCount);
+            herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_SHARPCLAW_OBJECT_GROUP, &herdObjectCount);
             for (herdObjectIndex = 0, activeHerdScan = herdObjects; herdObjectIndex < herdObjectCount;
                  activeHerdScan++, herdObjectIndex++) {
-                if ((*activeHerdScan)->anim.romDefNo == NW_TRICKY_HERD_OBJECT_SEQUENCE_ID) {
+                if ((*activeHerdScan)->anim.romDefNo == NW_TRICKY_SHARPCLAW_SEQUENCE_ID) {
                     playerDistanceSquared =
                         vec3f_distanceSquared(&(*activeHerdScan)->anim.worldPosX, &player->anim.worldPosX);
                     if (vec3f_distanceSquared(&(*activeHerdScan)->anim.worldPosX, &tricky->anim.worldPosX) <
@@ -144,7 +143,7 @@ void nwTricky_update(GameObject* obj) {
             }
         }
         break;
-    case NW_TRICKY_PHASE_ENERGY:
+    case NW_TRICKY_PHASE_LEARNING_COMMANDS:
         if (!(tricky->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK)) {
             state->phaseTimer += timeDelta;
         }

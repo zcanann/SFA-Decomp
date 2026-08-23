@@ -414,30 +414,30 @@ static inline int RomCurve_pickRandomControlPointId_2B(RomCurveDef* curve)
 }
 
 #define ROMCURVE_REFRESH_CONTROL(secondNode)                                                                           \
-    state->hermX2[0] = ((RomCurveDef*)state->nodeA0)->x;                                                         \
+    state->hermX2[0] = ((RomCurveDef*)state->currentNode)->x;                                                         \
     state->hermX2[1] = ((RomCurveDef*)state->secondNode)->x;                                                     \
-    t = (float)(u32)((RomCurveDef*)state->nodeA0)->tangentMag *                                                        \
-        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA0)->yaw << 8) /                    \
+    t = (float)(u32)((RomCurveDef*)state->currentNode)->tangentMag *                                                        \
+        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->currentNode)->yaw << 8) /                    \
                  ROMCURVE_HALF_CIRCLE_ANGLE);                                                                          \
     state->hermX2[2] = ROMCURVE_TANGENT_SCALE * t;                                                                     \
     t = (float)(u32)((RomCurveDef*)state->secondNode)->tangentMag *                                                    \
         mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->secondNode)->yaw << 8) /                \
                  ROMCURVE_HALF_CIRCLE_ANGLE);                                                                          \
     state->hermX2[3] = ROMCURVE_TANGENT_SCALE * t;                                                                     \
-    state->hermY2[0] = ((RomCurveDef*)state->nodeA0)->y;                                                         \
+    state->hermY2[0] = ((RomCurveDef*)state->currentNode)->y;                                                         \
     state->hermY2[1] = ((RomCurveDef*)state->secondNode)->y;                                                     \
-    t = (float)(u32)((RomCurveDef*)state->nodeA0)->tangentMag *                                                        \
-        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA0)->pitch << 8) /                    \
+    t = (float)(u32)((RomCurveDef*)state->currentNode)->tangentMag *                                                        \
+        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->currentNode)->pitch << 8) /                    \
                  ROMCURVE_HALF_CIRCLE_ANGLE);                                                                          \
     state->hermY2[2] = ROMCURVE_TANGENT_SCALE * t;                                                                     \
     t = (float)(u32)((RomCurveDef*)state->secondNode)->tangentMag *                                                    \
         mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->secondNode)->pitch << 8) /                \
                  ROMCURVE_HALF_CIRCLE_ANGLE);                                                                          \
     state->hermY2[3] = ROMCURVE_TANGENT_SCALE * t;                                                                     \
-    state->hermZ2[0] = ((RomCurveDef*)state->nodeA0)->z;                                                         \
+    state->hermZ2[0] = ((RomCurveDef*)state->currentNode)->z;                                                         \
     state->hermZ2[1] = ((RomCurveDef*)state->secondNode)->z;                                                     \
-    t = (float)(u32)((RomCurveDef*)state->nodeA0)->tangentMag *                                                        \
-        mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA0)->yaw << 8) /                    \
+    t = (float)(u32)((RomCurveDef*)state->currentNode)->tangentMag *                                                        \
+        mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->currentNode)->yaw << 8) /                    \
                  ROMCURVE_HALF_CIRCLE_ANGLE);                                                                          \
     state->hermZ2[2] = ROMCURVE_TANGENT_SCALE * t;                                                                     \
     t = (float)(u32)((RomCurveDef*)state->secondNode)->tangentMag *                                                    \
@@ -463,8 +463,8 @@ int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int s
         stateBytes = (char*)state;
         if (state->reverse != 0)
         {
-            state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
-            nextId = RomCurve_pickRandomControlPointId_2A(state->nodeA0);
+            state->currentNode = Objfsa_FindRomCurveById(startCurveId);
+            nextId = RomCurve_pickRandomControlPointId_2A(state->currentNode);
             if (nextId == -1)
             {
                 return 1;
@@ -473,20 +473,20 @@ int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int s
         }
 
         currentCurve = Objfsa_FindRomCurveById(startCurveId);
-        state->nodeA0 = currentCurve;
+        state->currentNode = currentCurve;
         if (currentCurve == 0)
         {
-            state->nodeA0 = NULL;
+            state->currentNode = NULL;
             return 1;
         }
 
         if (state->reverse != 0)
         {
-            nextId = RomCurve_pickRandomControlPointId_2B(state->nodeA0);
+            nextId = RomCurve_pickRandomControlPointId_2B(state->currentNode);
         }
         else
         {
-            nextId = RomCurve_pickRandomControlPointId_2A(state->nodeA0);
+            nextId = RomCurve_pickRandomControlPointId_2A(state->currentNode);
         }
         if (nextId == -1)
         {
@@ -494,21 +494,21 @@ int RomCurve_initFromCurveId(RomCurveWalker* state, GameObject* unusedObj, int s
         }
 
         nextCurve = Objfsa_FindRomCurveById(nextId);
-        state->nodeA4 = nextCurve;
+        state->nextNode = nextCurve;
         if (nextCurve == 0)
         {
-            state->nodeA4 = NULL;
+            state->nextNode = NULL;
             return 1;
         }
 
-        ROMCURVE_REFRESH_CONTROL(nodeA4);
+        ROMCURVE_REFRESH_CONTROL(nextNode);
         if (RomCurve_goNextPoint(state) != 0)
         {
             return 1;
         }
 
-        state->node94 = Curve_EvalHermite;
-        state->node98 = Curve_BuildHermiteCoeffs;
+        state->eval = Curve_EvalHermite;
+        state->coeffFn = Curve_BuildHermiteCoeffs;
         state->coeffX = state->hermX;
         state->coeffY = state->hermY;
         state->coeffZ = state->hermZ;
@@ -590,39 +590,39 @@ int RomCurve_goNextPointIndexed(RomCurveWalker* state, int pickIdx)
     }
 
     stateBytes = (char*)state;
-    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
+    if (state->currentNode == NULL || state->nextNode == NULL)
     {
         return 1;
     }
 
-    state->node9C = state->nodeA0;
-    state->nodeA0 = state->nodeA4;
+    state->previousNode = state->currentNode;
+    state->currentNode = state->nextNode;
     memcpy(state->hermX, state->hermX2, sizeof(state->hermX));
     memcpy(state->hermY, state->hermY2, sizeof(state->hermY));
     memcpy(state->hermZ, state->hermZ2, sizeof(state->hermZ));
 
     if (state->reverse != 0)
     {
-        nextId = RomCurve_getControlPointId(state->nodeA0, -1, pickIdx);
+        nextId = RomCurve_getControlPointId(state->currentNode, -1, pickIdx);
     }
     else
     {
-        nextId = RomCurve_getUnblockedControlPointId(state->nodeA0, -1, pickIdx);
+        nextId = RomCurve_getUnblockedControlPointId(state->currentNode, -1, pickIdx);
     }
 
     if (nextId != -1)
     {
         nextCurve = Objfsa_FindRomCurveById(nextId);
-        state->nodeA4 = nextCurve;
-        if (state->nodeA4 != NULL)
+        state->nextNode = nextCurve;
+        if (state->nextNode != NULL)
         {
             if (state->reverse != 0)
             {
-                ROMCURVE_REFRESH_CONTROL(node9C);
+                ROMCURVE_REFRESH_CONTROL(previousNode);
             }
             else
             {
-                ROMCURVE_REFRESH_CONTROL(nodeA4);
+                ROMCURVE_REFRESH_CONTROL(nextNode);
             }
 
             if (state->moveNetwork != 0)
@@ -643,7 +643,7 @@ int RomCurve_goNextPointIndexed(RomCurveWalker* state, int pickIdx)
     }
     else
     {
-        state->nodeA4 = NULL;
+        state->nextNode = NULL;
     }
     return 1;
 }
@@ -653,20 +653,20 @@ void RomCurve_setNextNode(void* walker, void* curve)
 {
     RomCurveWalker* state = walker;
     f32 t;
-    if (curve != 0 && curve != state->nodeA4)
+    if (curve != 0 && curve != state->nextNode)
     {
-        state->nodeA4 = curve;
-        state->hermX2[1] = ((RomCurveDef*)state->nodeA4)->x;
-        t = (float)(u32)((RomCurveDef*)state->nodeA4)->tangentMag *
-            mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA4)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+        state->nextNode = curve;
+        state->hermX2[1] = ((RomCurveDef*)state->nextNode)->x;
+        t = (float)(u32)((RomCurveDef*)state->nextNode)->tangentMag *
+            mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nextNode)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
         state->hermX2[3] = ROMCURVE_TANGENT_SCALE * t;
-        state->hermY2[1] = ((RomCurveDef*)state->nodeA4)->y;
-        t = (float)(u32)((RomCurveDef*)state->nodeA4)->tangentMag *
-            mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA4)->pitch << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+        state->hermY2[1] = ((RomCurveDef*)state->nextNode)->y;
+        t = (float)(u32)((RomCurveDef*)state->nextNode)->tangentMag *
+            mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nextNode)->pitch << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
         state->hermY2[3] = ROMCURVE_TANGENT_SCALE * t;
-        state->hermZ2[1] = ((RomCurveDef*)state->nodeA4)->z;
-        t = (float)(u32)((RomCurveDef*)state->nodeA4)->tangentMag *
-            mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA4)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+        state->hermZ2[1] = ((RomCurveDef*)state->nextNode)->z;
+        t = (float)(u32)((RomCurveDef*)state->nextNode)->tangentMag *
+            mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nextNode)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
         state->hermZ2[3] = ROMCURVE_TANGENT_SCALE * t;
     }
 }
@@ -682,42 +682,42 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
     {
         return 0;
     }
-    if (state->nodeA0 == 0 || state->node9C == 0)
+    if (state->currentNode == 0 || state->previousNode == 0)
     {
         return 1;
     }
 
     savedPhase = state->phase;
     state->reverse = closed;
-    tmpCurve = state->node9C;
-    state->node9C = state->nodeA4;
-    state->nodeA4 = tmpCurve;
+    tmpCurve = state->previousNode;
+    state->previousNode = state->nextNode;
+    state->nextNode = tmpCurve;
 
-    state->hermX2[0] = ((RomCurveDef*)state->nodeA0)->x;
-    state->hermX2[1] = ((RomCurveDef*)state->nodeA4)->x;
-    t = (float)(u32)((RomCurveDef*)state->nodeA0)->tangentMag *
-        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA0)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+    state->hermX2[0] = ((RomCurveDef*)state->currentNode)->x;
+    state->hermX2[1] = ((RomCurveDef*)state->nextNode)->x;
+    t = (float)(u32)((RomCurveDef*)state->currentNode)->tangentMag *
+        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->currentNode)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
     state->hermX2[2] = ROMCURVE_TANGENT_SCALE * t;
-    t = (float)(u32)((RomCurveDef*)state->nodeA4)->tangentMag *
-        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA4)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+    t = (float)(u32)((RomCurveDef*)state->nextNode)->tangentMag *
+        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nextNode)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
     state->hermX2[3] = ROMCURVE_TANGENT_SCALE * t;
 
-    state->hermY2[0] = ((RomCurveDef*)state->nodeA0)->y;
-    state->hermY2[1] = ((RomCurveDef*)state->nodeA4)->y;
-    t = (float)(u32)((RomCurveDef*)state->nodeA0)->tangentMag *
-        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA0)->pitch << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+    state->hermY2[0] = ((RomCurveDef*)state->currentNode)->y;
+    state->hermY2[1] = ((RomCurveDef*)state->nextNode)->y;
+    t = (float)(u32)((RomCurveDef*)state->currentNode)->tangentMag *
+        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->currentNode)->pitch << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
     state->hermY2[2] = ROMCURVE_TANGENT_SCALE * t;
-    t = (float)(u32)((RomCurveDef*)state->nodeA4)->tangentMag *
-        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA4)->pitch << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+    t = (float)(u32)((RomCurveDef*)state->nextNode)->tangentMag *
+        mathSinf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nextNode)->pitch << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
     state->hermY2[3] = ROMCURVE_TANGENT_SCALE * t;
 
-    state->hermZ2[0] = ((RomCurveDef*)state->nodeA0)->z;
-    state->hermZ2[1] = ((RomCurveDef*)state->nodeA4)->z;
-    t = (float)(u32)((RomCurveDef*)state->nodeA0)->tangentMag *
-        mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA0)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+    state->hermZ2[0] = ((RomCurveDef*)state->currentNode)->z;
+    state->hermZ2[1] = ((RomCurveDef*)state->nextNode)->z;
+    t = (float)(u32)((RomCurveDef*)state->currentNode)->tangentMag *
+        mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->currentNode)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
     state->hermZ2[2] = ROMCURVE_TANGENT_SCALE * t;
-    t = (float)(u32)((RomCurveDef*)state->nodeA4)->tangentMag *
-        mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nodeA4)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
+    t = (float)(u32)((RomCurveDef*)state->nextNode)->tangentMag *
+        mathCosf(ROMCURVE_ANGLE_PI * (float)((s32)((RomCurveDef*)state->nextNode)->yaw << 8) / ROMCURVE_HALF_CIRCLE_ANGLE);
     state->hermZ2[3] = ROMCURVE_TANGENT_SCALE * t;
 
     if (RomCurve_goNextPoint(state) != 0)
@@ -725,8 +725,8 @@ int RomCurve_setClosed(RomCurveWalker* state, int closed)
         return 1;
     }
 
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
+    state->eval = Curve_EvalHermite;
+    state->coeffFn = Curve_BuildHermiteCoeffs;
     state->coeffX = state->hermX;
     state->coeffY = state->hermY;
     state->coeffZ = state->hermZ;
@@ -748,40 +748,40 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
         return 1;
     }
     stateBytes = (char*)state;
-    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
+    if (state->currentNode == NULL || state->nextNode == NULL)
     {
         return 1;
     }
 
-    state->node9C = state->nodeA0;
-    state->nodeA0 = state->nodeA4;
+    state->previousNode = state->currentNode;
+    state->currentNode = state->nextNode;
     memcpy(state->hermX, state->hermX2, sizeof(state->hermX));
     memcpy(state->hermY, state->hermY2, sizeof(state->hermY));
     memcpy(state->hermZ, state->hermZ2, sizeof(state->hermZ));
 
     if (state->reverse != 0)
     {
-        neighborId = RomCurve_pickRandomControlPointId_2B(state->nodeA0);
+        neighborId = RomCurve_pickRandomControlPointId_2B(state->currentNode);
     }
     else
     {
-        neighborId = RomCurve_pickRandomControlPointId_2A(state->nodeA0);
+        neighborId = RomCurve_pickRandomControlPointId_2A(state->currentNode);
     }
 
     if (neighborId != -1)
     {
         nextCurve = Objfsa_FindRomCurveById(neighborId);
 
-        state->nodeA4 = nextCurve;
-        if (state->nodeA4 != NULL)
+        state->nextNode = nextCurve;
+        if (state->nextNode != NULL)
         {
             if (state->reverse != 0)
             {
-                ROMCURVE_REFRESH_CONTROL(node9C);
+                ROMCURVE_REFRESH_CONTROL(previousNode);
             }
             else
             {
-                ROMCURVE_REFRESH_CONTROL(nodeA4);
+                ROMCURVE_REFRESH_CONTROL(nextNode);
             }
 
             if (state->moveNetwork != 0)
@@ -801,7 +801,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     }
     else
     {
-        state->nodeA4 = NULL;
+        state->nextNode = NULL;
     }
     return 1;
 }
@@ -831,8 +831,8 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
     {
         if (state->reverse != 0)
         {
-            state->nodeA0 = Objfsa_FindRomCurveById(curveId);
-            nextId = RomCurve_pickRandomControlPointId_2A(state->nodeA0);
+            state->currentNode = Objfsa_FindRomCurveById(curveId);
+            nextId = RomCurve_pickRandomControlPointId_2A(state->currentNode);
             if (nextId == -1)
             {
                 return 1;
@@ -841,20 +841,20 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
         }
 
         currentCurve = Objfsa_FindRomCurveById(curveId);
-        state->nodeA0 = currentCurve;
+        state->currentNode = currentCurve;
         if (currentCurve == 0)
         {
-            state->nodeA0 = NULL;
+            state->currentNode = NULL;
             return 1;
         }
 
         if (state->reverse != 0)
         {
-            nextId = RomCurve_pickRandomControlPointId_2B(state->nodeA0);
+            nextId = RomCurve_pickRandomControlPointId_2B(state->currentNode);
         }
         else
         {
-            nextId = RomCurve_pickRandomControlPointId_2A(state->nodeA0);
+            nextId = RomCurve_pickRandomControlPointId_2A(state->currentNode);
         }
         if (nextId == -1)
         {
@@ -862,10 +862,10 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
         }
 
         nextCurve = Objfsa_FindRomCurveById(nextId);
-        state->nodeA4 = nextCurve;
+        state->nextNode = nextCurve;
         if (nextCurve == 0)
         {
-            state->nodeA4 = NULL;
+            state->nextNode = NULL;
             return 1;
         }
 
@@ -873,14 +873,14 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
         {
             if (state->reverse != 0)
             {
-                distanceCurve = (RomCurveDef*)state->nodeA4;
+                distanceCurve = (RomCurveDef*)state->nextNode;
                 dx = distanceCurve->x - (obj)->anim.localPosX;
                 dy = distanceCurve->y - (obj)->anim.localPosY;
                 dz = distanceCurve->z - (obj)->anim.localPosZ;
             }
             else
             {
-                distanceCurve = (RomCurveDef*)state->nodeA0;
+                distanceCurve = (RomCurveDef*)state->currentNode;
                 dx = distanceCurve->x - (obj)->anim.localPosX;
                 dy = distanceCurve->y - (obj)->anim.localPosY;
                 dz = distanceCurve->z - (obj)->anim.localPosZ;
@@ -892,14 +892,14 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
             }
         }
 
-        ROMCURVE_REFRESH_CONTROL(nodeA4);
+        ROMCURVE_REFRESH_CONTROL(nextNode);
         if (RomCurve_goNextPoint(state) != 0)
         {
             return 1;
         }
 
-        state->node94 = Curve_EvalHermite;
-        state->node98 = Curve_BuildHermiteCoeffs;
+        state->eval = Curve_EvalHermite;
+        state->coeffFn = Curve_BuildHermiteCoeffs;
         state->coeffX = state->hermX;
         state->coeffY = state->hermY;
         state->coeffZ = state->hermZ;
@@ -959,8 +959,8 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (((int (*)(f32*, f32*, f32, int, TrackBBoxHit*, GameObject*, s8, int, int, int))trackGetLineIntersect)(
-                             &(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0, (TrackBBoxHit*)bboxHit, obj,
+                        (((int (*)(f32*, f32*, f32, int, TrackLineIntersectResult*, GameObject*, s8, int, int, int))trackGetLineIntersect)(
+                             &(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0, (TrackLineIntersectResult*)bboxHit, obj,
                              bboxMode, -1, 0, 0) == 0))
                     {
                         bestDistance = distance;
@@ -975,8 +975,8 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (((int (*)(f32*, f32*, f32, int, TrackBBoxHit*, GameObject*, s8, int, int, int))trackGetLineIntersect)(
-                             &(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0, (TrackBBoxHit*)bboxHit, obj,
+                        (((int (*)(f32*, f32*, f32, int, TrackLineIntersectResult*, GameObject*, s8, int, int, int))trackGetLineIntersect)(
+                             &(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0, (TrackLineIntersectResult*)bboxHit, obj,
                              bboxMode, -1, 0, 0) == 0))
                     {
                         bestActionDistance = distance;

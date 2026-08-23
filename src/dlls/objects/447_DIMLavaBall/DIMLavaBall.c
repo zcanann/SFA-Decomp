@@ -97,7 +97,7 @@ void lavaball1bf_update(GameObject* obj) {
             state->fireEnabled = 0;
         }
     }
-    if (state->projectile == NULL && Obj_IsLoadingLocked() != 0) {
+    if (state->projectile == NULL && (u8)Obj_CanSetupObject() != 0) {
         DimLavaProjectilePlacement* projectilePlacement =
             (DimLavaProjectilePlacement*)Obj_AllocObjectSetup(sizeof(DimLavaProjectilePlacement),
                                                                DIM_LAVA_PROJECTILE_SEQUENCE_ID);

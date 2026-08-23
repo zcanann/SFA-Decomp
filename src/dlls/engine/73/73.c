@@ -23,6 +23,18 @@ enum CameraModeCombatRomDefNo {
     CAMERA_MODE_COMBAT_DIM_BOSS_ROM_DEF_NO = 0x200,
 };
 
+enum CameraModeCombatConstants {
+    CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES = 0x1E,
+    CAMERA_MODE_COMBAT_LETTERBOX_TARGET_OFFSET = 0x30
+};
+
+#define CAMERA_MODE_COMBAT_HIT_VOLUME_BLEND_STEP  0.02f
+#define CAMERA_MODE_COMBAT_TARGET_HEIGHT          20.0f
+#define CAMERA_MODE_COMBAT_DIM_BOSS_HEIGHT_BONUS  20.0f
+#define CAMERA_MODE_COMBAT_TARGET_LEAD_SCALE      0.35f
+#define CAMERA_MODE_COMBAT_LOOK_TARGET_Y_OFFSET   5.0f
+#define CAMERA_MODE_COMBAT_DEFAULT_FOLLOW_DISTANCE 200.0f
+
 s32 gCameraModeCombatPreviousYawDelta;
 CameraModeCombatState* gCameraModeCombatState;
 
@@ -45,7 +57,7 @@ void CameraModeCombat_evaluateTargetPosition(CameraObject* camera, f32* outX, f3
     t = gCameraModeCombatState->hitVolumeBlendWeight;
     lim = 0.0f;
     if (t > lim) {
-        gCameraModeCombatState->hitVolumeBlendWeight = t - 0.02f * timeDelta;
+        gCameraModeCombatState->hitVolumeBlendWeight = t - CAMERA_MODE_COMBAT_HIT_VOLUME_BLEND_STEP * timeDelta;
         t = gCameraModeCombatState->hitVolumeBlendWeight;
         if (gCameraModeCombatState->hitVolumeBlendWeight < lim) {
             gCameraModeCombatState->hitVolumeBlendWeight = lim;
@@ -134,12 +146,14 @@ void CameraModeCombat_update(CameraObject* camera) {
             if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                 return;
             }
-            if (camera->targetFlags & 2) {
+            if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                 return;
             }
             (*gCameraInterface)->setTarget(0);
         }
-        (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
+        (*gCameraInterface)
+            ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES,
+                      CAMCONTROL_QUEUE_SENTINEL);
     } else {
         focus = (GameObject*)camera->anim.targetObj;
         if (focus->anim.classId == 1 && playerCanUseCombatTargeting(focus) == 0) {
@@ -147,12 +161,14 @@ void CameraModeCombat_update(CameraObject* camera) {
                 if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                     return;
                 }
-                if (camera->targetFlags & 2) {
+                if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                     return;
                 }
                 (*gCameraInterface)->setTarget(0);
             }
-            (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
+            (*gCameraInterface)
+                ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES,
+                          CAMCONTROL_QUEUE_SENTINEL);
         } else {
             target = (GameObject*)camera->targetObj;
             if (target == NULL || (target->objectFlags & OBJECT_OBJFLAG_FREED) ||
@@ -161,12 +177,14 @@ void CameraModeCombat_update(CameraObject* camera) {
                     if (target->anim.resetHitboxFlags & 0x40) {
                         return;
                     }
-                    if (camera->targetFlags & 2) {
+                    if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                         return;
                     }
                     (*gCameraInterface)->setTarget(0);
                 }
-                (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
+                (*gCameraInterface)
+                    ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES,
+                              CAMCONTROL_QUEUE_SENTINEL);
             } else {
                 hitVolumes = target->anim.hitVolumeTransforms;
                 if (hitVolumes != NULL) {
@@ -176,18 +194,20 @@ void CameraModeCombat_update(CameraObject* camera) {
                             if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                                 return;
                             }
-                            if (camera->targetFlags & 2) {
+                            if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                                 return;
                             }
                             (*gCameraInterface)->setTarget(0);
                         }
-                        (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
+                        (*gCameraInterface)
+                            ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES,
+                                      CAMCONTROL_QUEUE_SENTINEL);
                     } else {
-                        ty = 20.0f + focus->anim.worldPosY;
+                        ty = CAMERA_MODE_COMBAT_TARGET_HEIGHT + focus->anim.worldPosY;
                         classId = target->anim.classId;
                         if (classId == 0x1c || classId == 0x6d || classId == 0x2a) {
                             if (target->anim.romDefNo == CAMERA_MODE_COMBAT_DIM_BOSS_ROM_DEF_NO) {
-                                ty += 20.0f;
+                                ty += CAMERA_MODE_COMBAT_DIM_BOSS_HEIGHT_BONUS;
                             }
                             if (target->anim.modelInstance->hitVolumeCount > 1) {
                                 CameraModeCombat_evaluateTargetPosition(camera, &dx, &dy, &dz, &ty);
@@ -197,7 +217,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                                 dz = hitVolumes[target->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
                             }
                         } else {
-                            ty = 20.0f + focus->anim.worldPosY;
+                            ty = CAMERA_MODE_COMBAT_TARGET_HEIGHT + focus->anim.worldPosY;
                             dx = hitVolumes[target->hitVolumeIndex].centerX - focus->anim.worldPosX;
                             dy = hitVolumes[target->hitVolumeIndex].centerY - ty;
                             dz = hitVolumes[target->hitVolumeIndex].centerZ - focus->anim.worldPosZ;
@@ -205,24 +225,26 @@ void CameraModeCombat_update(CameraObject* camera) {
                         fa = dx * dx;
                         fb = dz * dz;
                         dist = sqrtf(fa + fb);
-                        camera->letterboxTargetOffset = 0x30;
+                        camera->letterboxTargetOffset = CAMERA_MODE_COMBAT_LETTERBOX_TARGET_OFFSET;
                         camera->letterboxStep = 1;
                         if (dist > range) {
                             if (camera->targetObj != NULL) {
                                 if (((GameObject*)camera->targetObj)->anim.resetHitboxFlags & 0x40) {
                                     return;
                                 }
-                                if (camera->targetFlags & 2) {
+                                if (camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) {
                                     return;
                                 }
                                 (*gCameraInterface)->setTarget(0);
                             }
-                            (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0x1e, 0xff);
+                            (*gCameraInterface)
+                                ->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL,
+                                          CAMERA_MODE_COMBAT_EXIT_BLEND_FRAMES, CAMCONTROL_QUEUE_SENTINEL);
                         } else {
                             cameraGetPrevPos2(focus, &prevX, &prevY, &prevZ);
-                            px = 0.35f * dx + focus->anim.worldPosX;
-                            py = 5.0f + ty;
-                            pz = 0.35f * dz + focus->anim.worldPosZ;
+                            px = CAMERA_MODE_COMBAT_TARGET_LEAD_SCALE * dx + focus->anim.worldPosX;
+                            py = CAMERA_MODE_COMBAT_LOOK_TARGET_Y_OFFSET + ty;
+                            pz = CAMERA_MODE_COMBAT_TARGET_LEAD_SCALE * dz + focus->anim.worldPosZ;
                             ang = getAngle(dx, dz);
                             binAngleDelta = (ang & 0xffff) + 0x8000;
                             diff = (int)camera->anim.rotX - ((0x8000 - binAngleDelta) & 0xffff);
@@ -392,7 +414,7 @@ void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** target
             if (target->anim.classId != 0x6d) {
                 gCameraModeCombatState->followDistance = sqrtf(dx * dx + dz * dz);
             } else {
-                gCameraModeCombatState->followDistance = 200.0f;
+                gCameraModeCombatState->followDistance = CAMERA_MODE_COMBAT_DEFAULT_FOLLOW_DISTANCE;
             }
             gCameraModeCombatState->unk10 = 0;
         }

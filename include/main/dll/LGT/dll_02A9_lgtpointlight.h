@@ -5,6 +5,7 @@
 #include "main/dll/LGT/lgt_types.h"
 #include "main/vec_types.h"
 #include "game/objects/object_setup.h"
+#include "dlls/object_descriptor.h"
 
 extern const f32 gPointLightInitialDirection[4];
 
@@ -84,5 +85,7 @@ void PointLight_update(GameObject* obj);
 void PointLight_init(GameObject* obj, PointLightSetup* setup);
 void PointLight_release(void);
 void PointLight_initialise(void);
+
+extern ObjectDescriptor gPointLightObjDescriptor;
 
 #endif /* MAIN_DLL_LGT_DLL_02A9_LGTPOINTLIGHT_H_ */
