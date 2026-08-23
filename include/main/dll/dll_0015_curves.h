@@ -82,7 +82,7 @@ void RomCurve_release(void);
 void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* state);
 void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* state);
 void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* state);
-void curves_updateSurfaceTilt(short* obj, int state);
+void curves_updateSurfaceTilt(GameObject* obj, int state);
 void curves_snapToNearestSurface(GameObject* obj, CurvesCollisionState* state);
 void curves_resolveWaterFloorCeiling(GameObject* obj, CurvesCollisionState* state);
 void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* state);

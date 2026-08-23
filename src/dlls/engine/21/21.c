@@ -378,7 +378,7 @@ void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* colli
     }
 }
 
-void curves_updateSurfaceTilt(short* obj, int state) {
+void curves_updateSurfaceTilt(GameObject* obj, int state) {
     CurvesCollisionState* collision;
     f32 normalZ;
     short pitch;
@@ -391,9 +391,9 @@ void curves_updateSurfaceTilt(short* obj, int state) {
 
     collision = (CurvesCollisionState*)state;
     if (((s8)collision->surfaceFlags & 0x10) != 0) {
-        outVec[0] = -*obj;
-        if (*(short**)(obj + 0x18) != NULL) {
-            outVec[0] = outVec[0] - **(short**)(obj + 0x18);
+        outVec[0] = -obj->anim.rotX;
+        if (obj->anim.parent != NULL) {
+            outVec[0] = outVec[0] - ((GameObject*)obj->anim.parent)->anim.rotX;
         }
         outVec[1] = 0;
         outVec[2] = 0;
@@ -1014,7 +1014,7 @@ void curves_advanceCollision(GameObject* curveObj, CurvesCollisionState* state, 
                 curves_snapToNearestSurface(curveObj, collision);
             }
             if ((s32)(state->flags & 0x80) != 0) {
-                curves_updateSurfaceTilt((short*)curveObj, (int)state);
+                curves_updateSurfaceTilt(curveObj, (int)state);
             }
             if ((s32)(state->flags & 1) != 0) {
                 curves_resolveWaterFloorCeiling(curveObj, collision);
