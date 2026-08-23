@@ -172,10 +172,12 @@ const u16 gSkeetlaFootstepSfxIds01[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SF
 const u16 gSkeetlaFootstepSfxId2[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 
 const f32 gTrickyFloatZero[1] = {0.0f};
+const f32 sTrickyFloatTen[1] = {10.0f};
+const f32 sTrickyFloat0_004[1] = {0.004f};
 
 #define gTrickyFloatZero              (gTrickyFloatZero[0])
-#define TRICKY_FLOAT_TEN              10.0f
-#define TRICKY_FLOAT_0_004            0.004f
+#define TRICKY_FLOAT_TEN              (sTrickyFloatTen[0])
+#define TRICKY_FLOAT_0_004            (sTrickyFloat0_004[0])
 #define TRICKY_MODEL_FADE_ALPHA_SCALE (sTrickyModelFadeAlphaScale[0])
 
 extern const char sTrickyShouldNeverStopCirclingError[];
