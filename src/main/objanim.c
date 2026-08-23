@@ -457,28 +457,28 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16* axis, int sampleIndex)
 
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float* phaseOut)
 {
-    s16* samplePair;
-    f32 blendDelta;
-    f32 moveDelta;
+    s16* axisSamples;
+    f32 blendDistanceDelta;
+    f32 moveDistanceDelta;
     ObjAnimBank* bank;
-    ObjAnimRootCurve* curve;
-    f32 previousDistance;
+    ObjAnimRootCurve* moveCurve;
+    f32 segmentStartDistance;
     ObjAnimMoveData* moveData;
     ObjAnimState* state;
     ObjAnimRootCurve* blendCurve;
     ObjModelInstance* model;
     s16* moveSamples;
     s16* blendSamples;
-    s16 axisFirstSample;
-    f32 nextDistance;
+    s16 axisMarker;
+    f32 segmentEndDistance;
     int sampleIndex;
-    f32 targetDistance;
-    f32 sampleProgress;
+    f32 targetTravelDistance;
+    f32 curveProgress;
     f32 phase;
     int lastSample;
     f32 phaseStep;
-    f32 sampleFraction;
-    f32 rootScale;
+    f32 curveFraction;
+    f32 moveRootScale;
     int segmentCount;
     int segmentOffset;
     f32 sampleCount;
@@ -500,7 +500,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     state = bank->currentState;
     rootMotionScale = objAnim->rootMotionScale;
     model = objAnim->modelInstance;
-    targetDistance = distance * (rootMotionScale / model->rootMotionScaleBase);
+    targetTravelDistance = distance * (rootMotionScale / model->rootMotionScaleBase);
     blendSamples = NULL;
 
     if (state->eventState != 0)
@@ -550,38 +550,38 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     }
     if (moveData->rootCurveOffset != 0)
     {
-        curve = ObjAnim_GetMoveDataRootCurve(moveData);
+        moveCurve = ObjAnim_GetMoveDataRootCurve(moveData);
 
-        rootScale = curve->scale * rootMotionScale;
-        segmentCount = curve->sampleCount - 1;
-        moveSamples = ObjAnim_GetRootCurveAxisData(curve);
+        moveRootScale = moveCurve->scale * rootMotionScale;
+        segmentCount = moveCurve->sampleCount - 1;
+        moveSamples = ObjAnim_GetRootCurveAxisData(moveCurve);
         hasFirstAxis = 0;
-        axisFirstSample = *moveSamples;
-        if (axisFirstSample != 0)
+        axisMarker = *moveSamples;
+        if (axisMarker != 0)
         {
             hasFirstAxis = 1;
         }
-        if (axisFirstSample == 0)
+        if (axisMarker == 0)
         {
             moveSamples++;
         }
         if (hasFirstAxis == 0)
         {
-            axisFirstSample = *moveSamples;
-            if (axisFirstSample == 0)
+            axisMarker = *moveSamples;
+            if (axisMarker == 0)
             {
                 moveSamples++;
             }
         }
-        axisFirstSample = *moveSamples;
-        if (axisFirstSample != 0)
+        axisMarker = *moveSamples;
+        if (axisMarker != 0)
         {
             moveSamples++;
             segmentOffset = segmentCount * 2;
             lastSample = moveSamples[segmentCount];
             if (lastSample < 0)
             {
-                rootScale = -rootScale;
+                moveRootScale = -moveRootScale;
             }
             if (lastSample == 0)
             {
@@ -590,9 +590,9 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
 
             sampleCount = segmentCount;
             phaseStep = OBJANIM_PROGRESS_ONE / sampleCount;
-            sampleProgress = sampleCount * objAnim->currentMoveProgress;
-            sampleIndex = sampleProgress;
-            sampleFraction = sampleProgress - sampleIndex;
+            curveProgress = sampleCount * objAnim->currentMoveProgress;
+            sampleIndex = curveProgress;
+            curveFraction = curveProgress - sampleIndex;
 
             if (blendSamples != NULL)
             {
@@ -600,25 +600,27 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
                 {
                     blendScale = -blendScale;
                 }
-                previousDistance = rootScale * (moveWeight * moveSamples[sampleIndex]);
-                previousDistance += blendScale * (blendWeight * blendSamples[sampleIndex]);
-                nextDistance = rootScale * (moveWeight * moveSamples[sampleIndex + 1]);
-                nextDistance += blendScale * (blendWeight * blendSamples[sampleIndex + 1]);
+                segmentStartDistance = moveRootScale * (moveWeight * moveSamples[sampleIndex]);
+                segmentStartDistance += blendScale * (blendWeight * blendSamples[sampleIndex]);
+                segmentEndDistance = moveRootScale * (moveWeight * moveSamples[sampleIndex + 1]);
+                segmentEndDistance += blendScale * (blendWeight * blendSamples[sampleIndex + 1]);
             }
             else
             {
-                previousDistance = rootScale * moveSamples[sampleIndex];
-                nextDistance = rootScale * moveSamples[sampleIndex + 1];
+                segmentStartDistance = moveRootScale * moveSamples[sampleIndex];
+                segmentEndDistance = moveRootScale * moveSamples[sampleIndex + 1];
             }
 
-            targetDistance += previousDistance + sampleFraction * (nextDistance - previousDistance);
-            phase = phaseStep - (phaseStep * sampleFraction);
+            targetTravelDistance += segmentStartDistance + curveFraction * (segmentEndDistance - segmentStartDistance);
+            phase = phaseStep - (phaseStep * curveFraction);
             foundPhase = 0;
             do
             {
-                if (nextDistance > targetDistance)
+                if (segmentEndDistance > targetTravelDistance)
                 {
-                    phase -= (phaseStep * (nextDistance - targetDistance)) / (nextDistance - previousDistance);
+                    phase -=
+                        (phaseStep * (segmentEndDistance - targetTravelDistance)) /
+                        (segmentEndDistance - segmentStartDistance);
                     foundPhase = 1;
                 }
                 else
@@ -628,19 +630,19 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
                     {
                         sampleIndex = 0;
                     }
-                    previousDistance = nextDistance;
+                    segmentStartDistance = segmentEndDistance;
                     if (blendSamples != NULL)
                     {
-                        samplePair = &moveSamples[sampleIndex];
-                        moveDelta = rootScale * ((f32)samplePair[1] - samplePair[0]);
-                        samplePair = &blendSamples[sampleIndex];
-                        blendDelta = blendScale * ((f32)samplePair[1] - samplePair[0]);
-                        nextDistance += (moveDelta * moveWeight) + (blendDelta * blendWeight);
+                        axisSamples = &moveSamples[sampleIndex];
+                        moveDistanceDelta = moveRootScale * ((f32)axisSamples[1] - axisSamples[0]);
+                        axisSamples = &blendSamples[sampleIndex];
+                        blendDistanceDelta = blendScale * ((f32)axisSamples[1] - axisSamples[0]);
+                        segmentEndDistance += (moveDistanceDelta * moveWeight) + (blendDistanceDelta * blendWeight);
                     }
                     else
                     {
-                        samplePair = &moveSamples[sampleIndex];
-                        nextDistance += rootScale * ((f32)samplePair[1] - samplePair[0]);
+                        axisSamples = &moveSamples[sampleIndex];
+                        segmentEndDistance += moveRootScale * ((f32)axisSamples[1] - axisSamples[0]);
                     }
                     phase += phaseStep;
                 }
