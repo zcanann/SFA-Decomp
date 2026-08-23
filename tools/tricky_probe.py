@@ -31,14 +31,18 @@ NONEXACT = (
 
 
 def run(args: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    proc = subprocess.run(
         args,
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        check=check,
     )
+    if check and proc.returncode != 0:
+        print_command_output("failed command", " ".join(args))
+        print_command_output("failed output", proc.stdout)
+        proc.check_returncode()
+    return proc
 
 
 def print_command_output(title: str, output: str) -> None:
