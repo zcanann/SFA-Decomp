@@ -5025,11 +5025,11 @@ void tricky_state06_nop(void) {
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* toNode;
     u8 nodeCount = 0;
-    int node;
-    RomCurveDef* nodeSet;
-    s32* link;
-    u32 mask;
-    int bit;
+    int branchCurveId;
+    RomCurveDef* branchNode;
+    s32* branchLinkId;
+    u32 branchMask;
+    int branchIndex;
     int i;
     RomCurveDef* curve;
     RomCurveDef* fromNode;
@@ -5044,31 +5044,31 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     if (ball->substate != 0) {
         if (ball->route.reverse == 0) {
             if (ball->route.atSegmentEnd != 0) {
-                nodeSet = (RomCurveDef*)ball->route.nextNode;
-                mask = 1;
-                link = nodeSet->linkIds;
-                for (bit = 0; bit < CANNONBALL_BRANCH_COUNT; bit++) {
-                    node = *link++;
-                    if (node > -1 && ((nodeSet->blockedLinkMask & mask) == 0)) {
-                        nodeIds[nodeCount++] = node;
+                branchNode = (RomCurveDef*)ball->route.nextNode;
+                branchMask = 1;
+                branchLinkId = branchNode->linkIds;
+                for (branchIndex = 0; branchIndex < CANNONBALL_BRANCH_COUNT; branchIndex++) {
+                    branchCurveId = *branchLinkId++;
+                    if (branchCurveId > -1 && ((branchNode->blockedLinkMask & branchMask) == 0)) {
+                        nodeIds[nodeCount++] = branchCurveId;
                     }
-                    mask <<= 1;
+                    branchMask <<= 1;
                 }
             }
         } else if (ball->route.atSegmentEnd == 0) {
-            int node2;
-            RomCurveDef* nodeSet2;
-            s32* link2;
-            u32 mask2;
-            nodeSet2 = (RomCurveDef*)ball->route.nextNode;
-            mask2 = 1;
-            link2 = nodeSet2->linkIds;
-            for (bit = 0; bit < CANNONBALL_BRANCH_COUNT; bit++) {
-                node2 = *link2++;
-                if (node2 > -1 && ((nodeSet2->blockedLinkMask & mask2) != 0)) {
-                    nodeIds[nodeCount++] = node2;
+            int reverseBranchCurveId;
+            RomCurveDef* reverseBranchNode;
+            s32* reverseBranchLinkId;
+            u32 reverseBranchMask;
+            reverseBranchNode = (RomCurveDef*)ball->route.nextNode;
+            reverseBranchMask = 1;
+            reverseBranchLinkId = reverseBranchNode->linkIds;
+            for (branchIndex = 0; branchIndex < CANNONBALL_BRANCH_COUNT; branchIndex++) {
+                reverseBranchCurveId = *reverseBranchLinkId++;
+                if (reverseBranchCurveId > -1 && ((reverseBranchNode->blockedLinkMask & reverseBranchMask) != 0)) {
+                    nodeIds[nodeCount++] = reverseBranchCurveId;
                 }
-                mask2 <<= 1;
+                reverseBranchMask <<= 1;
             }
         }
 
@@ -5076,14 +5076,14 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
             targetNode = (*gRomCurveInterface)->getById(nodeIds[0]);
             bestDistance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &targetNode->x);
 
-            for (i = 1, link = &nodeIds[1]; i < nodeCount; i++) {
-                candidateNode = (*gRomCurveInterface)->getById(*link);
+            for (i = 1, branchLinkId = &nodeIds[1]; i < nodeCount; i++) {
+                candidateNode = (*gRomCurveInterface)->getById(*branchLinkId);
                 distance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &candidateNode->x);
                 if (distance < bestDistance) {
                     targetNode = candidateNode;
                     bestDistance = distance;
                 }
-                link++;
+                branchLinkId++;
             }
 
             RomCurve_advanceToNextSegment(&ball->route, targetNode);
