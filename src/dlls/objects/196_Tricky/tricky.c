@@ -4954,8 +4954,11 @@ void tricky_state06_nop(void) {
 #define CANNONBALL_ROLL_SFX_ID      TRICKY_VOICE_SFX_ROLLING
 #define CANNONBALL_ROLL_SFX_PARAM   0x1000
 
-#define CANNONBALL_ROLL_SPEED_LIMIT 1.2f
-#define CANNONBALL_ROUTE_BACKSTEP   -10.0f
+const f32 gCannonballRollSpeedLimit[1] = {1.2f};
+const f32 gCannonballRouteBackstep[1] = {-10.0f};
+
+#define CANNONBALL_ROLL_SPEED_LIMIT (gCannonballRollSpeedLimit[0])
+#define CANNONBALL_ROUTE_BACKSTEP   (gCannonballRouteBackstep[0])
 
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* toNode;
