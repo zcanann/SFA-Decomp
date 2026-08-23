@@ -7,6 +7,10 @@
 /*
  * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
+const f32 gObjAnimProgressOne[1] = {1.0f};
+
+#define OBJANIM_PROGRESS_ONE (gObjAnimProgressOne[0])
+
 void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId,
                           int eventState)
 {
@@ -61,7 +65,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAni
         blendFrameLength = (float)state->blendFrameData->frameLength;
         if (blendFrameType == OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            blendFrameLength = blendFrameLength - 1.0f;
+            blendFrameLength = blendFrameLength - OBJANIM_PROGRESS_ONE;
         }
         if (blendFrameLength != state->frameLength)
         {
@@ -180,18 +184,18 @@ int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaT
     previousProgress = objAnim->activeMoveProgress;
     progressDelta = moveStepScale * deltaTime;
     objAnim->activeMoveProgress = previousProgress + progressDelta;
-    if (objAnim->activeMoveProgress >= 1.0f)
+    if (objAnim->activeMoveProgress >= OBJANIM_PROGRESS_ONE)
     {
         if (state->frameType != OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            while (objAnim->activeMoveProgress >= 1.0f)
+            while (objAnim->activeMoveProgress >= OBJANIM_PROGRESS_ONE)
             {
-                objAnim->activeMoveProgress -= 1.0f;
+                objAnim->activeMoveProgress -= OBJANIM_PROGRESS_ONE;
             }
         }
         else
         {
-            objAnim->activeMoveProgress = 1.0f;
+            objAnim->activeMoveProgress = OBJANIM_PROGRESS_ONE;
         }
         wrapped = 1;
     }
@@ -201,7 +205,7 @@ int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaT
         {
             while (objAnim->activeMoveProgress < 0.0f)
             {
-                objAnim->activeMoveProgress += 1.0f;
+                objAnim->activeMoveProgress += OBJANIM_PROGRESS_ONE;
             }
         }
         else
@@ -282,11 +286,15 @@ int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaT
     return wrapped;
 }
 
+const f32 gObjAnimSetMoveProgressMax[1] = {0.999f};
+
+#define OBJANIM_SET_MOVE_PROGRESS_MAX (gObjAnimSetMoveProgressMax[0])
+
 int Object_ObjAnimSetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress)
 {
-    if (moveProgress > 0.999f)
+    if (moveProgress > OBJANIM_SET_MOVE_PROGRESS_MAX)
     {
-        moveProgress = 0.999f;
+        moveProgress = OBJANIM_SET_MOVE_PROGRESS_MAX;
     }
     else if (moveProgress < 0.0f)
     {
@@ -309,9 +317,9 @@ Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 move
     ObjAnimMoveData* moveData;
     float eventCountdownStep;
     objAnim = (ObjAnimComponent*)objAnimHandle;
-    if (moveProgress > 1.0f)
+    if (moveProgress > OBJANIM_PROGRESS_ONE)
     {
-        moveProgress = 1.0f;
+        moveProgress = OBJANIM_PROGRESS_ONE;
     }
     else if (moveProgress < 0.0f)
     {
@@ -367,7 +375,7 @@ Object_ObjAnimSetMove(void* objAnimHandle, int moveId, f32 moveProgress, u8 move
     state->frameLength = (float)state->moveFrameData->frameLength;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED)
     {
-        state->frameLength = state->frameLength - 1.0f;
+        state->frameLength = state->frameLength - OBJANIM_PROGRESS_ONE;
     }
     frameStep = moveData->frameControl & OBJANIM_FRAME_STEP_MASK;
     if (frameStep != 0)
@@ -498,7 +506,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     if (state->eventState != 0)
     {
         blendWeight = state->eventState / 16384.0f;
-        moveWeight = 1.0f - blendWeight;
+        moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
         if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
         {
             moveData =
@@ -581,7 +589,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
             }
 
             sampleCount = segmentCount;
-            phaseStep = 1.0f / sampleCount;
+            phaseStep = OBJANIM_PROGRESS_ONE / sampleCount;
             sampleProgress = sampleCount * objAnim->currentMoveProgress;
             sampleIndex = sampleProgress;
             sampleFraction = sampleProgress - sampleIndex;
@@ -648,6 +656,10 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     return 0;
 }
 
+const f32 gObjAnimMoveStepScaleMin[1] = {-1.0f};
+
+#define OBJANIM_MOVE_STEP_SCALE_MIN (gObjAnimMoveStepScaleMin[0])
+
 int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
 {
     int segmentCount;
@@ -694,9 +706,9 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
 
     objAnim = (ObjAnimComponent*)objAnimHandle;
     wrapped = 0;
-    clampedStepScale = (moveStepScale < -1.0f)
-                           ? -1.0f
-                           : ((moveStepScale > 1.0f) ? 1.0f : moveStepScale);
+    clampedStepScale = (moveStepScale < OBJANIM_MOVE_STEP_SCALE_MIN)
+                           ? OBJANIM_MOVE_STEP_SCALE_MIN
+                           : ((moveStepScale > OBJANIM_PROGRESS_ONE) ? OBJANIM_PROGRESS_ONE : moveStepScale);
 
     bank = objAnim->banks[objAnim->bankIndex];
     if (bank->animDef->moveCount == 0)
@@ -761,18 +773,18 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
     previousProgress = objAnim->currentMoveProgress;
     progressDelta = clampedStepScale * deltaTime;
     objAnim->currentMoveProgress = previousProgress + progressDelta;
-    if (objAnim->currentMoveProgress >= 1.0f)
+    if (objAnim->currentMoveProgress >= OBJANIM_PROGRESS_ONE)
     {
         if (state->frameType != OBJANIM_FRAME_TYPE_CLAMPED)
         {
-            while (objAnim->currentMoveProgress >= 1.0f)
+            while (objAnim->currentMoveProgress >= OBJANIM_PROGRESS_ONE)
             {
-                objAnim->currentMoveProgress -= 1.0f;
+                objAnim->currentMoveProgress -= OBJANIM_PROGRESS_ONE;
             }
         }
         else
         {
-            objAnim->currentMoveProgress = 1.0f;
+            objAnim->currentMoveProgress = OBJANIM_PROGRESS_ONE;
         }
         wrapped = 1;
     }
@@ -782,7 +794,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         {
             while (objAnim->currentMoveProgress < 0.0f)
             {
-                objAnim->currentMoveProgress += 1.0f;
+                objAnim->currentMoveProgress += OBJANIM_PROGRESS_ONE;
             }
         }
         else
@@ -889,7 +901,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         if (state->eventState != 0)
         {
             blendWeight = state->eventState / 16384.0f;
-            moveWeight = 1.0f - blendWeight;
+            moveWeight = OBJANIM_PROGRESS_ONE - blendWeight;
             if ((bank->animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0)
             {
                 moveData =
@@ -906,7 +918,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
         else
         {
             blendWeight = 0.0f;
-            moveWeight = 1.0f;
+            moveWeight = OBJANIM_PROGRESS_ONE;
         }
 
         axisIndex = 0;
@@ -1013,9 +1025,9 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
 
 int ObjAnim_SetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress)
 {
-    if (moveProgress > 0.999f)
+    if (moveProgress > OBJANIM_SET_MOVE_PROGRESS_MAX)
     {
-        moveProgress = 0.999f;
+        moveProgress = OBJANIM_SET_MOVE_PROGRESS_MAX;
     }
     else if (moveProgress < 0.0f)
     {
@@ -1041,9 +1053,9 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
 
     objAnim = (ObjAnimComponent*)objAnimHandle;
     requestedMoveId = moveId;
-    if (moveProgress > 1.0f)
+    if (moveProgress > OBJANIM_PROGRESS_ONE)
     {
-        moveProgress = 1.0f;
+        moveProgress = OBJANIM_PROGRESS_ONE;
     }
     else if (moveProgress < 0.0f)
     {
@@ -1122,7 +1134,7 @@ int ObjAnim_SetCurrentMove(void* objAnimHandle, int moveId, f32 moveProgress, u8
     state->frameLength = (float)state->moveFrameData->frameLength;
     if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED)
     {
-        state->frameLength = state->frameLength - 1.0f;
+        state->frameLength = state->frameLength - OBJANIM_PROGRESS_ONE;
     }
     frameStep = moveData->frameControl & OBJANIM_FRAME_STEP_MASK;
     if ((frameStep != 0) && ((moveControlFlags & OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN) == 0))
