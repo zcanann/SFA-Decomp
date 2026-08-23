@@ -1256,13 +1256,20 @@ static inline void skeetla_faceMoveVector(GameObject* obj) {
     skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
-#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
-#define TRICKY_TINY_MOVE_BLEND_SPEED       0.0001f
-#define TRICKY_RUN_MOVE_THRESHOLD          2.5f
-#define TRICKY_FAST_WALK_MOVE_THRESHOLD    0.66f
-#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    0.33f
-#define TRICKY_TURN_MOVE_BLEND_SPEED       0.04f
-#define TRICKY_ANIM_TRANSITION_FRAMES      15.0f
+const f32 gTrickyAvoidanceRepathEpsilonSq[1] = {0.0001f};
+const f32 gTrickyRunMoveThreshold[1] = {2.5f};
+const f32 gTrickyFastWalkMoveThreshold[1] = {0.66f};
+const f32 gTrickySlowWalkMoveThreshold[1] = {0.33f};
+const f32 gTrickyTurnMoveBlendSpeed[1] = {0.04f};
+const f32 gTrickyAnimTransitionFrames[1] = {15.0f};
+
+#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ (gTrickyAvoidanceRepathEpsilonSq[0])
+#define TRICKY_TINY_MOVE_BLEND_SPEED       TRICKY_AVOIDANCE_REPATH_EPSILON_SQ
+#define TRICKY_RUN_MOVE_THRESHOLD          (gTrickyRunMoveThreshold[0])
+#define TRICKY_FAST_WALK_MOVE_THRESHOLD    (gTrickyFastWalkMoveThreshold[0])
+#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    (gTrickySlowWalkMoveThreshold[0])
+#define TRICKY_TURN_MOVE_BLEND_SPEED       (gTrickyTurnMoveBlendSpeed[0])
+#define TRICKY_ANIM_TRANSITION_FRAMES      (gTrickyAnimTransitionFrames[0])
 
 static inline void skeetla_playFootstepSfx(GameObject* obj, u16 sfxId) {
     TrickyState* state = obj->extra;
