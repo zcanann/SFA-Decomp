@@ -2069,7 +2069,7 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
             }                                                                                                          \
         } else {                                                                                                       \
             while ((state)->route.atSegmentEnd == 0) {                                                                 \
-                RomCurve_stepClamped(&(state)->route, 2.0f);                                                           \
+                RomCurve_stepClamped(&(state)->route, TRICKY_FLOAT_TWO);                                               \
             }                                                                                                          \
         }                                                                                                              \
     } while (0)
@@ -2632,7 +2632,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             case 1:
                                 prod = (state->route.reverse ^ 1) & 0xff;
                                 if (prod == 0) {
-                                    RomCurve_stepClamped(&state->route, 2.0f);
+                                    RomCurve_stepClamped(&state->route, TRICKY_FLOAT_TWO);
                                 } else {
                                     RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
                                 }
@@ -2738,7 +2738,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_JUMP_PREP:
         trickyDebugPrint(debugStrings + TRICKY_DBG_JUMP_PREP);
         if ((u8)(state->stateFlags & TRICKY_STATE_FLAG_TURNING_U32)) {
-            v = -0.01f * timeDelta + previousSpeed;
+            v = TRICKY_FLOAT_NEG_0_01 * timeDelta + previousSpeed;
             if (v < gTrickyFloatZero) {
                 v = gTrickyFloatZero;
             }
@@ -2762,7 +2762,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             dz = ((TrickyState*)obj->extra)->dirZ;
             sqz = dz;
             sqz = sqz * sqz;
-            if (sqx + sqz > 0.01f) {
+            if (sqx + sqz > TRICKY_FLOAT_0_01) {
                 trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
             }
         }
@@ -2808,7 +2808,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         arc->time = arc->time + timeDelta;
         if (arc->time >= arc->duration) {
             obj->anim.localPosY = ((RomCurveDef*)state->route.currentNode)->y;
-            state->arcMoveProgress = 1.0f;
+            state->arcMoveProgress = TRICKY_FLOAT_ONE;
             state->movementState = TRICKY_MOVE_WALK_NODES;
         } else {
             f32 baseX = arc->baseX;
@@ -2897,7 +2897,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             dz = ((TrickyState*)obj->extra)->dirZ;
             sqx = dz;
             sqx = sqx * sqx;
-            if (sqz + sqx > 0.01f) {
+            if (sqz + sqx > TRICKY_FLOAT_0_01) {
                 trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
             }
         }
@@ -3037,7 +3037,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         }
     }
     if ((state->stateFlags & TRICKY_STATE_FLAG_TURNING_U32) != 0) {
-        state->speed = -0.01f * timeDelta + state->speed;
+        state->speed = TRICKY_FLOAT_NEG_0_01 * timeDelta + state->speed;
         if (state->speed < 0.0f) {
             state->speed = 0.0f;
         }
