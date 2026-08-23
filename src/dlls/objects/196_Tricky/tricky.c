@@ -2064,7 +2064,9 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
 #define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         12.0f
 #define TRICKY_FOLLOW_JUMP_LAND_SPEED           0.75f
 
-#define TRICKY_DEFAULT_STOPPING_RADIUS 5.0f
+const f32 gTrickyDefaultStoppingRadius[1] = {5.0f};
+
+#define TRICKY_DEFAULT_STOPPING_RADIUS (gTrickyDefaultStoppingRadius[0])
 
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
     u8* cachedPatchIdCursor;
