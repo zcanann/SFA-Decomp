@@ -11,7 +11,7 @@ typedef struct TrackGroundHit {
     f32 normalY;
     f32 normalZ;
     GameObject* object;
-    s8 surfaceType;
+    u8 surfaceType;
     u8 pad15[3];
 } TrackGroundHit;
 
