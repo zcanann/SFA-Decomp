@@ -172,8 +172,15 @@ const u16 gSkeetlaFootstepSfxIds01[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SF
 const u16 gSkeetlaFootstepSfxId2[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 
 #define gTrickyFloatZero              0.0f
-#define TRICKY_FLOAT_TEN              10.0f
-#define TRICKY_FLOAT_0_004            0.004f
+#define sTrickyFloatTen               10.0f
+#define sTrickyFloat0_004             0.004f
+#define sTrickyFloatOne               1.0f
+#define sTrickyFloat0_01              0.01f
+#define sTrickyFloat0_7               0.7f
+#define sTrickyFloatNeg0_01           -0.01f
+#define sTrickyFloatTwo               2.0f
+#define TRICKY_FLOAT_TEN              sTrickyFloatTen
+#define TRICKY_FLOAT_0_004            sTrickyFloat0_004
 #define TRICKY_MODEL_FADE_ALPHA_SCALE (sTrickyModelFadeAlphaScale[0])
 
 extern const char sTrickyShouldNeverStopCirclingError[];
@@ -203,7 +210,8 @@ extern const f32 gTrickyChildVoicePeriodFrames[1];
 #define TRICKY_AUDIO_EVENT_MIN_SPEED        (gTrickyAudioEventMinSpeed[0])
 #define TRICKY_AMBIENT_ACTIVITY_BASE        (gTrickyAmbientActivityBase[0])
 #define TRICKY_AMBIENT_WANDER_SCALE         (gTrickyAmbientWanderScale[0])
-#define TRICKY_POSITION_OFFSET_SCALE        0.1f
+#define gTrickyPositionOffsetScale          0.1f
+#define TRICKY_POSITION_OFFSET_SCALE        gTrickyPositionOffsetScale
 #define TRICKY_PATH_SEARCH_BULK_STEPS       0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES        500
 #define TRICKY_IDLE_VOICE_MAX_FRAMES        750
@@ -2060,20 +2068,34 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
         }                                                                                                              \
     } while (0)
 
-#define TRICKY_FOLLOW_MAX_SPEED                 3.0f
-#define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   0.0135f
-#define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   0.00975f
-#define TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR   32.865f
-#define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      0.0125f
-#define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR 33.114f
-#define TRICKY_FOLLOW_ARC_SPEED                 2.3f
-#define TRICKY_FOLLOW_ARC_HALF_PROGRESS         0.5f
-#define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      0.25f
-#define TRICKY_FOLLOW_ARC_COEFFICIENT           -0.017f
-#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       24.0f
-#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       6.0f
-#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         12.0f
-#define TRICKY_FOLLOW_JUMP_LAND_SPEED           0.75f
+#define gTrickyFollowMaxSpeed                 3.0f
+#define gTrickyFollowAnim17Speed              0.0135f
+#define gTrickyFollowAnim18Speed              0.00975f
+#define gTrickyFollowVerticalDeltaDivisorA    32.865f
+#define gTrickyFollowJumpdownBlendSpeed       0.0125f
+#define gTrickyFollowVerticalDeltaDivisorB    33.114f
+#define gTrickyFollowArcSpeed                 2.3f
+#define gTrickyFollowArcHalfProgress          0.5f
+#define gTrickyFollowArcQuarterProgress       0.25f
+#define gTrickyFollowArcCoefficient           -0.017f
+#define gTrickyFollowArcProgressWindow        24.0f
+#define gTrickyFollowArcEndpointWindow        6.0f
+#define gTrickyFollowArcMiddleWindow          12.0f
+#define gTrickyFollowJumpLandSpeed            0.75f
+#define TRICKY_FOLLOW_MAX_SPEED                 gTrickyFollowMaxSpeed
+#define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   gTrickyFollowAnim17Speed
+#define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   gTrickyFollowAnim18Speed
+#define TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR   gTrickyFollowVerticalDeltaDivisorA
+#define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      gTrickyFollowJumpdownBlendSpeed
+#define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR gTrickyFollowVerticalDeltaDivisorB
+#define TRICKY_FOLLOW_ARC_SPEED                 gTrickyFollowArcSpeed
+#define TRICKY_FOLLOW_ARC_HALF_PROGRESS         gTrickyFollowArcHalfProgress
+#define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      gTrickyFollowArcQuarterProgress
+#define TRICKY_FOLLOW_ARC_COEFFICIENT           gTrickyFollowArcCoefficient
+#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       gTrickyFollowArcProgressWindow
+#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       gTrickyFollowArcEndpointWindow
+#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         gTrickyFollowArcMiddleWindow
+#define TRICKY_FOLLOW_JUMP_LAND_SPEED           gTrickyFollowJumpLandSpeed
 
 const f32 gTrickyDefaultStoppingRadius[1] = {5.0f};
 
