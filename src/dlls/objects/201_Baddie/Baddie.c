@@ -106,7 +106,7 @@ typedef struct
     u8 pad1[3];
     s8 events[8];
     s8 eventCount;
-} TrickyMoveResult;
+} EnemyMoveResult;
 
 struct TrickyCommandSpawnPair
 {
@@ -134,17 +134,17 @@ typedef struct BaddieInstantiateWeaponPlacement
     u8 pad14[0x18 - 0x14];
 } BaddieInstantiateWeaponPlacement;
 
-struct VisBits16
+struct BaddieSightQuadrantBits
 {
     u32 w[4];
 };
 
-STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
+STATIC_ASSERT(sizeof(struct BaddieSightQuadrantBits) == 0x10);
 
-const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
-const StaffCollisionColorArgs gTrickyFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
+const struct BaddieSightQuadrantBits gBaddieSightQuadrantBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
+const StaffCollisionColorArgs gBaddieFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
 
-GameObject* gTrickyNearestObject;
+GameObject* gBaddieRewardObject;
 StaffCollisionInterface** gBaddieStaffCollisionInterface;
 
 /* object groups: the enemy's own group / secondary group left on a message */
@@ -211,7 +211,7 @@ static const u16 lbl_803E2568[1] = { 0xB };
 void baddie_updateEngagementState(GameObject* obj, EnemyState* sub);
 void baddieTurnTowardTarget(GameObject* node, EnemyState* sub);
 void baddie_decodePlayerAttackFlags(EnemyState* state, u32 flags, f32 f, u16 hitStunFrames);
-void Tricky_findNearbyFloorHeights(GameObject* obj, EnemyState* state, f32* nearestFloorY, f32* nearestSpecialY);
+void enemy_findNearbyFloorHeights(GameObject* obj, EnemyState* state, f32* nearestFloorY, f32* nearestSpecialY);
 
 void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state)
 {
@@ -392,7 +392,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
     u16 hitStun;
 
     player = Obj_GetPlayerObject();
-    colors = gTrickyFrozenFxColors;
+    colors = gBaddieFrozenFxColors;
     result = 2;
     if ((((EnemyState*)state)->controlFlags & 0x1800) == 0)
     {
@@ -794,23 +794,23 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
                 obj->anim.worldPosZ = parentSetup->posZ;
             }
             nearestDistance = 750.0f;
-            gTrickyNearestObject = objGetNearestTypeTo(COLLECTIBLE_OBJECT_GROUP, obj, &nearestDistance);
+            gBaddieRewardObject = objGetNearestTypeTo(COLLECTIBLE_OBJECT_GROUP, obj, &nearestDistance);
             obj->anim.worldPosX = savedX;
             obj->anim.worldPosY = savedY;
             obj->anim.worldPosZ = savedZ;
-            if (gTrickyNearestObject != NULL)
+            if (gBaddieRewardObject != NULL)
             {
                 v = obj->anim.localPosX;
-                gTrickyNearestObject->anim.worldPosX = v;
-                gTrickyNearestObject->anim.localPosX = v;
+                gBaddieRewardObject->anim.worldPosX = v;
+                gBaddieRewardObject->anim.localPosX = v;
                 v = 15.0f + obj->anim.localPosY;
-                gTrickyNearestObject->anim.worldPosY = v;
-                gTrickyNearestObject->anim.localPosY = v;
+                gBaddieRewardObject->anim.worldPosY = v;
+                gBaddieRewardObject->anim.localPosY = v;
                 v = obj->anim.localPosZ;
-                gTrickyNearestObject->anim.worldPosZ = v;
-                gTrickyNearestObject->anim.localPosZ = v;
+                gBaddieRewardObject->anim.worldPosZ = v;
+                gBaddieRewardObject->anim.localPosZ = v;
             }
-            return (int)gTrickyNearestObject;
+            return (int)gBaddieRewardObject;
         default:
             return 0;
         }
@@ -848,12 +848,12 @@ int baddie_spawnRewardDrops(GameObject* obj, int state, int spawnBits, u32 useAl
     setup->color[1] = parentSetup->color[1];
     setup->color[3] = parentSetup->color[3];
     nearest = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-    gTrickyNearestObject = (GameObject*)nearest;
+    gBaddieRewardObject = (GameObject*)nearest;
     if ((nearest->anim.romDefNo == TRICKY_OBJ_APPLE) || (nearest->anim.romDefNo == TRICKY_CHILD_OBJ_ENERGY_EGG))
     {
         ((void (*)(GameObject*, f32, f32, f32))nearest->anim.dll[0][11])(nearest, 0.0f, 1.0f, 0.0f);
     }
-    return (int)gTrickyNearestObject;
+    return (int)gBaddieRewardObject;
 }
 
 void baddieInstantiateWeapon(GameObject* obj, EnemyState* state)
@@ -955,7 +955,7 @@ void baddie_updateSightQuadrants(GameObject* obj, EnemyState* state, f32 radius)
     s16 probeGrid[4];
     s16 baseGrid[4];
     Vec probe;
-    struct VisBits16 visibilityBits;
+    struct BaddieSightQuadrantBits visibilityBits;
     Vec delta;
     TrackLineIntersectResult bboxHit;
     s16 baseAngle;
@@ -964,7 +964,7 @@ void baddie_updateSightQuadrants(GameObject* obj, EnemyState* state, f32 radius)
     s16 setupId;
     f32 angle;
 
-    visibilityBits = gTrickyVisibilityBitsInit;
+    visibilityBits = gBaddieSightQuadrantBitsInit;
     probe.x = obj->anim.localPosX;
     probe.y = 20.0f + obj->anim.localPosY;
     probe.z = obj->anim.localPosZ;
@@ -1032,7 +1032,7 @@ void baddie_updateSightQuadrants(GameObject* obj, EnemyState* state, f32 radius)
     }
 }
 
-void Tricky_applyFloorResponse(GameObject* obj, EnemyState* state)
+void enemy_applyFloorResponse(GameObject* obj, EnemyState* state)
 {
     f32 nearestFloorY;
     f32 nearestSpecialY;
@@ -1043,7 +1043,7 @@ void Tricky_applyFloorResponse(GameObject* obj, EnemyState* state)
     flags = state->flags2E4;
     if ((flags & ENEMY_FLAG2E4_FLOOR_RESPONSE_MASK) != 0)
     {
-        Tricky_findNearbyFloorHeights(obj, state, &nearestFloorY, &nearestSpecialY);
+        enemy_findNearbyFloorHeights(obj, state, &nearestFloorY, &nearestSpecialY);
         flags = state->flags2E4;
         if ((flags & ENEMY_FLAG2E4_USE_SPECIAL_FLOOR_Y) != 0)
         {
@@ -1108,7 +1108,7 @@ void Tricky_applyFloorResponse(GameObject* obj, EnemyState* state)
     }
 }
 
-void Tricky_findNearbyFloorHeights(GameObject* obj, EnemyState* state, f32* nearestFloorY, f32* nearestSpecialY)
+void enemy_findNearbyFloorHeights(GameObject* obj, EnemyState* state, f32* nearestFloorY, f32* nearestSpecialY)
 {
     TrackGroundHit** hitList[2];
     u16 hitCount;
@@ -1182,7 +1182,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
     f32 vel;
     f32 phase;
     f32 outY;
-    TrickyMoveResult res;
+    EnemyMoveResult res;
     MatrixTransform rec;
     f32 mtx[16];
 
@@ -1591,7 +1591,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state)
                 ((GameObject*)obj)->anim.velocityZ * powfBitEstimate(state->drag, timeDelta);
         }
     }
-    Tricky_applyFloorResponse((GameObject*)(obj), state);
+    enemy_applyFloorResponse((GameObject*)(obj), state);
     if (((state->flags2E4 & 0x400000) != 0) || ((state->controlFlags & 0x8100000) != 0))
     {
         if ((state->flags2F1 & 0x80) == 0)
