@@ -3110,8 +3110,10 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         }
     }
     if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
-        state->speed = TRICKY_FAST_MOVE_BLEND_SPEED * timeDelta + state->speed;
-        if (state->speed > TRICKY_FOLLOW_MAX_SPEED) {
+        f32 speed = TRICKY_FAST_MOVE_BLEND_SPEED * timeDelta + state->speed;
+        state->speed = speed;
+        speed = state->speed;
+        if (speed > TRICKY_FOLLOW_MAX_SPEED) {
             state->speed = TRICKY_FOLLOW_MAX_SPEED;
         }
         return;
