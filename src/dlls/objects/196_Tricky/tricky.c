@@ -7323,28 +7323,28 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
 
 void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRender) {
     int i;
-    TrickyState* pathState;
-    int pathPoint;
-    s16* pathInfo;
+    TrickyState* renderState;
+    int pathPointCursor;
+    s16* modelAnchorPose;
     TrickyState* state;
 
     if (doRender != '\0') {
         state = obj->extra;
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
-        pathState = obj->extra;
+        renderState = obj->extra;
         i = 0;
-        pathPoint = (int)pathState;
+        pathPointCursor = (int)renderState;
         do {
-            ObjPath_GetPointWorldPosition(obj, i + 4, &((TrickyState*)pathPoint)->pathPointPositions[0].x,
-                                          &((TrickyState*)pathPoint)->pathPointPositions[0].y,
-                                          &((TrickyState*)pathPoint)->pathPointPositions[0].z, 0);
-            pathPoint = pathPoint + 0xc;
+            ObjPath_GetPointWorldPosition(obj, i + 4, &((TrickyState*)pathPointCursor)->pathPointPositions[0].x,
+                                          &((TrickyState*)pathPointCursor)->pathPointPositions[0].y,
+                                          &((TrickyState*)pathPointCursor)->pathPointPositions[0].z, 0);
+            pathPointCursor = pathPointCursor + 0xc;
             i = i + 1;
         } while (i < 4);
-        ObjPath_GetPointWorldPosition(obj, 8, &pathState->renderPosX, &pathState->renderPosY, &pathState->renderPosZ,
-                                      0);
-        pathInfo = objFindJointPoseVector(obj, 0);
-        pathState->modelAnchorRotY = pathInfo[1];
+        ObjPath_GetPointWorldPosition(obj, 8, &renderState->renderPosX, &renderState->renderPosY,
+                                      &renderState->renderPosZ, 0);
+        modelAnchorPose = objFindJointPoseVector(obj, 0);
+        renderState->modelAnchorRotY = modelAnchorPose[1];
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             switch (state->stateIndex) {
             case 2:
