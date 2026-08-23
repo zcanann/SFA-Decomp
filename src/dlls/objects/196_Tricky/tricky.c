@@ -5040,7 +5040,7 @@ void tricky_state06_nop(void) {
 #define CANNONBALL_HIDE_FLAG        0x10
 #define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
 #define CANNONBALL_BRANCH_COUNT     4
-#define CANNONBALL_ROLL_DECAY_STEP  -0.01f
+#define CANNONBALL_ROLL_DECAY_STEP  TRICKY_FLOAT_NEG_0_01
 #define CANNONBALL_INIT_WALK_RADIUS TRICKY_DEFAULT_STOPPING_RADIUS
 #define CANNONBALL_ROUTE_FORESTEP   TRICKY_FLOAT_TEN
 #define CANNONBALL_SFX_TIMER_MIN    200
@@ -5121,8 +5121,8 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
         speed = ball->speed;
         if ((u8)(ball->stateFlags & CANNONBALL_SPEED_DECAY_FLAG) != 0) {
             speed += CANNONBALL_ROLL_DECAY_STEP * timeDelta;
-            if (speed < 0.0f) {
-                speed = 0.0f;
+            if (speed < gTrickyFloatZero) {
+                speed = gTrickyFloatZero;
             }
         } else if (speed > CANNONBALL_ROLL_SPEED_LIMIT) {
             speed += gTrickySpeedDecayStep * timeDelta;
@@ -8059,8 +8059,8 @@ void Tricky_update(GameObject* obj) {
         trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
     }
     trickyState->cooldownC -= timeDelta;
-    if (trickyState->cooldownC < 0.0f) {
-        trickyState->cooldownC = 0.0f;
+    if (trickyState->cooldownC < gTrickyFloatZero) {
+        trickyState->cooldownC = gTrickyFloatZero;
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FOOD_WARNING_PENDING) != 0) {
         st = obj->extra;
@@ -8092,8 +8092,8 @@ void Tricky_update(GameObject* obj) {
         }
     }
     trickyState->voiceCooldown -= timeDelta;
-    if (trickyState->voiceCooldown < 0.0f) {
-        trickyState->voiceCooldown = 0.0f;
+    if (trickyState->voiceCooldown < gTrickyFloatZero) {
+        trickyState->voiceCooldown = gTrickyFloatZero;
     }
     if (trickyState->voiceCooldown > gTrickyFloatZero) {
         TRICKY_VOICE(obj, 0x29c, 0x100);
@@ -8111,7 +8111,7 @@ void Tricky_update(GameObject* obj) {
     Tricky_updateBlendChannelWeight(obj, (TrickyState*)state);
     if (trickyState->speed > TRICKY_AUDIO_EVENT_MIN_SPEED) {
         objAudioDispatchAnimEvents(obj, &trickyState->animEvents, 1, trickyState->footPoints,
-                                   &trickyState->pathControlFlags, trickyState->speed, 1.0f);
+                                   &trickyState->pathControlFlags, trickyState->speed, TRICKY_FLOAT_ONE);
     }
     if (gTrickyFloatZero == trickyState->waterLevel) {
         talking = 0;
@@ -8170,13 +8170,13 @@ void Tricky_update(GameObject* obj) {
             }
             trickyState->childPhaseTimer0 -= TRICKY_CHILD_VOICE_PERIOD_FRAMES;
         }
-        ObjAnim_AdvanceCurrentMove(trickyState->child, 0.01f, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(trickyState->child, TRICKY_FLOAT_0_01, timeDelta, 0);
     }
     if (trickyState->childB != NULL) {
-        ObjAnim_AdvanceCurrentMove(trickyState->childB, 0.01f, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(trickyState->childB, TRICKY_FLOAT_0_01, timeDelta, 0);
     }
     if (trickyState->childA != NULL) {
-        ObjAnim_AdvanceCurrentMove(trickyState->childA, 0.01f, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(trickyState->childA, TRICKY_FLOAT_0_01, timeDelta, 0);
     }
 }
 
