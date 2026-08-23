@@ -2215,6 +2215,7 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
     PartFxSpawnParams effectParams;
     StaffCollisionColorArgs effectColorArgs;
     int hitSphereIndex;
+    u8* hitReactRow;
 
     objAnim = &obj->anim;
     effectColorArgs = gObjHitReactEffectColorArgs;
@@ -2237,7 +2238,9 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
         effectParams.rotY = 0;
         effectParams.rotX = 0;
         animDef = bank->animDef;
-        hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
+        hitReactRow = (u8*)animDef->hitReactTable;
+        hitReactRow += hitSphereIndex * sizeof(ModelHitSphereDef);
+        hitSphereIndex = *(s8*)(hitReactRow + offsetof(ModelHitSphereDef, sphereIndex));
         if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK)) {
             OSReport(sObjHitReactSphereOverflowString, hitSphereIndex);
             hitSphereIndex = 0;
