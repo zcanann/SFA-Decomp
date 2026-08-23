@@ -7521,7 +7521,7 @@ void Tricky_update(GameObject* obj) {
         int index;
     } childLoop;
     int i;
-    int commandCursor;
+    int commandQueueCursor;
     ObjPlacement* setup;
     int count;
     u32 flags;
@@ -7643,10 +7643,10 @@ void Tricky_update(GameObject* obj) {
         } else {
             requestedCommand = (*gGameUIInterface)->isOneOfItemsBeingUsed(cmdQuery.ids, TRICKY_ITEM_ID_COUNT);
         }
-        commandCursor = state;
+        commandQueueCursor = state;
         count = trickyState->commandCount;
-        for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
-            if (((TrickyState*)commandCursor)->commands[0].commandType == requestedCommand) {
+        for (i = 0; i < count; i++, commandQueueCursor += sizeof(TrickyCommand)) {
+            if (((TrickyState*)commandQueueCursor)->commands[0].commandType == requestedCommand) {
                 commandAlreadyQueued = 1;
                 break;
             }
@@ -7734,10 +7734,10 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_STAY:
                     played = 0;
                     if (trickyState->commandPhase == TRICKY_COMMAND_PHASE_GUARD) {
-                        commandCursor = state;
+                        commandQueueCursor = state;
                         count = trickyState->commandCount;
-                        for (i = 0; i < count; i++, commandCursor += sizeof(TrickyCommand)) {
-                            if (((TrickyState*)commandCursor)->commands[0].commandType == TRICKY_COMMAND_TYPE_STAY) {
+                        for (i = 0; i < count; i++, commandQueueCursor += sizeof(TrickyCommand)) {
+                            if (((TrickyState*)commandQueueCursor)->commands[0].commandType == TRICKY_COMMAND_TYPE_STAY) {
                                 played = 1;
                             }
                         }
@@ -8011,14 +8011,14 @@ void Tricky_update(GameObject* obj) {
     trickyState->prevSpeed = trickyState->speed;
     i = trickyState->commandCount - 1;
     {
-        u8* commandCursor = (u8*)state + i * sizeof(TrickyCommand);
+        u8* expiringCommandCursor = (u8*)state + i * sizeof(TrickyCommand);
 
-        for (; i >= 0; commandCursor -= sizeof(TrickyCommand), i--) {
-            s8* commandTtl = (s8*)&((TrickyState*)commandCursor)->commands[0].ttlFrames;
+        for (; i >= 0; expiringCommandCursor -= sizeof(TrickyCommand), i--) {
+            s8* ttlFrames = (s8*)&((TrickyState*)expiringCommandCursor)->commands[0].ttlFrames;
 
-            *commandTtl -= 1;
-            if (*commandTtl == 0) {
-                memmove(&((TrickyState*)commandCursor)->commands[0],
+            *ttlFrames -= 1;
+            if (*ttlFrames == 0) {
+                memmove(&((TrickyState*)expiringCommandCursor)->commands[0],
                         &((TrickyState*)(state + (i + 1) * sizeof(TrickyCommand)))->commands[0],
                         (trickyState->commandCount - i - 1) * sizeof(TrickyCommand));
                 trickyState->commandCount -= 1;
