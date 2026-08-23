@@ -2074,36 +2074,36 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
         }                                                                                                              \
     } while (0)
 
-#define gTrickyFollowMaxSpeed                 3.0f
-#define gTrickyFollowAnim17Speed              0.0135f
-#define gTrickyFollowAnim18Speed              0.00975f
-#define gTrickyFollowVerticalDeltaDivisorA    32.865f
-#define gTrickyFollowJumpdownBlendSpeed       0.0125f
-#define gTrickyFollowVerticalDeltaDivisorB    33.114f
-#define gTrickyFollowArcSpeed                 2.3f
-#define gTrickyFollowArcHalfProgress          0.5f
-#define gTrickyFollowArcQuarterProgress       0.25f
-#define gTrickyFollowArcCoefficient           -0.017f
-#define gTrickyFollowArcProgressWindow        24.0f
-#define gTrickyFollowArcEndpointWindow        6.0f
-#define gTrickyFollowArcMiddleWindow          12.0f
-#define gTrickyFollowJumpLandSpeed            0.75f
-#define TRICKY_FOLLOW_MAX_SPEED                 gTrickyFollowMaxSpeed
-#define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   gTrickyFollowAnim17Speed
-#define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   gTrickyFollowAnim18Speed
-#define TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR   gTrickyFollowVerticalDeltaDivisorA
-#define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      gTrickyFollowJumpdownBlendSpeed
-#define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR gTrickyFollowVerticalDeltaDivisorB
-#define TRICKY_FOLLOW_ARC_SPEED                 gTrickyFollowArcSpeed
-#define TRICKY_FOLLOW_ARC_HALF_PROGRESS         gTrickyFollowArcHalfProgress
-#define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      gTrickyFollowArcQuarterProgress
-#define TRICKY_FOLLOW_ARC_COEFFICIENT           gTrickyFollowArcCoefficient
-#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       gTrickyFollowArcProgressWindow
-#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       gTrickyFollowArcEndpointWindow
-#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         gTrickyFollowArcMiddleWindow
-#define TRICKY_FOLLOW_JUMP_LAND_SPEED           gTrickyFollowJumpLandSpeed
+#define TRICKY_FOLLOW_MAX_SPEED                 (gTrickyFollowMaxSpeed[0])
+#define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   (gTrickyFollowAnim17Speed[0])
+#define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   (gTrickyFollowAnim18Speed[0])
+#define TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR   (gTrickyFollowVerticalDeltaDivisorA[0])
+#define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      (gTrickyFollowJumpdownBlendSpeed[0])
+#define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR (gTrickyFollowVerticalDeltaDivisorB[0])
+#define TRICKY_FOLLOW_ARC_SPEED                 (gTrickyFollowArcSpeed[0])
+#define TRICKY_FOLLOW_ARC_HALF_PROGRESS         (gTrickyFollowArcHalfProgress[0])
+#define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      (gTrickyFollowArcQuarterProgress[0])
+#define TRICKY_FOLLOW_ARC_COEFFICIENT           (gTrickyFollowArcCoefficient[0])
+#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       (gTrickyFollowArcProgressWindow[0])
+#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       (gTrickyFollowArcEndpointWindow[0])
+#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         (gTrickyFollowArcMiddleWindow[0])
+#define TRICKY_FOLLOW_JUMP_LAND_SPEED           (gTrickyFollowJumpLandSpeed[0])
 
 const f32 gTrickyDefaultStoppingRadius[1] = {5.0f};
+const f32 gTrickyFollowMaxSpeed[1] = {3.0f};
+const f32 gTrickyFollowAnim17Speed[1] = {0.0135f};
+const f32 gTrickyFollowAnim18Speed[1] = {0.00975f};
+const f32 gTrickyFollowVerticalDeltaDivisorA[1] = {32.865f};
+const f32 gTrickyFollowJumpdownBlendSpeed[1] = {0.0125f};
+const f32 gTrickyFollowVerticalDeltaDivisorB[1] = {33.114f};
+const f32 gTrickyFollowArcSpeed[1] = {2.3f};
+const f32 gTrickyFollowArcHalfProgress[1] = {0.5f};
+const f32 gTrickyFollowArcQuarterProgress[1] = {0.25f};
+const f32 gTrickyFollowArcCoefficient[1] = {-0.017f};
+const f32 gTrickyFollowArcProgressWindow[1] = {24.0f};
+const f32 gTrickyFollowArcEndpointWindow[1] = {6.0f};
+const f32 gTrickyFollowArcMiddleWindow[1] = {12.0f};
+const f32 gTrickyFollowJumpLandSpeed[1] = {0.75f};
 
 #define TRICKY_DEFAULT_STOPPING_RADIUS (gTrickyDefaultStoppingRadius[0])
 
@@ -2771,7 +2771,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             obj->anim.localPosX = timeDelta * (state->dirX * state->speed) + obj->anim.localPosX;
             obj->anim.localPosZ = timeDelta * (state->dirZ * state->speed) + obj->anim.localPosZ;
         } else {
-            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed / 4.0f, &state->moveProgress);
+            ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed * TRICKY_FOLLOW_ARC_QUARTER_PROGRESS,
+                                          &state->moveProgress);
             obj->anim.localPosX =
                 timeDelta * (state->dirX * (state->speed * (k = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS))) +
                 obj->anim.localPosX;
@@ -3725,7 +3726,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->cooldownA < gTrickyFloatZero) {
                 f32 rv;
                 rv = (s32)randomGetRange(0xc8, 0x258);
-                state->cooldownA = rv / 2.0f;
+                state->cooldownA = rv * TRICKY_FOLLOW_ARC_HALF_PROGRESS;
                 TRICKY_BARK((int*)obj, TRICKY_VOICE_SFX_ROLLING, 0x1000, approachCfg);
             }
         }
