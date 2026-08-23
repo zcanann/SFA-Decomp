@@ -277,7 +277,7 @@ is unconfirmed.
 | `0x20` | Throw Ball | ball object, see Playing section above |
 
 `Tricky_getAvailableCommands` (`src/dlls/objects/196_Tricky/tricky.c:8581`) computes exactly this bitmask at runtime:
-base `0x02|0x08` once `GAMEBIT_Tricky_Usable (0x4E4)` is set, `|= 0x01` if
+base `0x02|0x08` once `GAMEBIT_Tricky_Unlocked_Sidekick_Commands (0x4E4)` is set, `|= 0x01` if
 `GAMEBIT_ITEM_TrickyCall_Got (0xDD)`, `|= 0x20` if `GAMEBIT_ITEM_TrickyBall_Bought (0x25)`, `|= 0x10`
 if `GAMEBIT_ITEM_TrickyFlame_Got (0x245)` — all four GameBits already named in
 `include/main/gamebits.h`. `src/main/dll/maybetemplate.c` reads this same mask back out of Tricky's vtable

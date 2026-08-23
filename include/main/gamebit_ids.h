@@ -623,7 +623,7 @@ enum GameBitId {
     GAMEBIT_IM_PushBlock_Placed = 0x4D3,                 /* table 2 */
     GAMEBIT_CF_AllPowerBasesPowered = 0x4E0,             /* table 1; set after all three power-base bits are set */
     GAMEBIT_TrickyTalk = 0x4E3,                          /* table 0; size 8; if < FF, can talk to Tricky, but he won't say anything */
-    GAMEBIT_Tricky_Usable = 0x4E4,                       /* table 2; can use Tricky commands */
+    GAMEBIT_Tricky_Unlocked_Sidekick_Commands = 0x4E4,   /* table 2; DP names this Tricky_Unlocked_Sidekick_Commands; unlocks Tricky's sidekick command menu */
     GAMEBIT_TrickyWarpEnabled = 0x4E5,                   /* table 2; Tricky may use off-screen warp points */
     GAMEBIT_ITEM_SpellStone1_Used = 0x4E9,               /* table 2; hint 305 */
     GAMEBIT_FoundSpellStoneWarpPad = 0x4FA,              /* table 2; hint 372; ref temple/HitAnimator target */

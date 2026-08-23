@@ -571,7 +571,7 @@ void trickyImpress(GameObject* obj) {
 /* GameBit-gated recall request. Returns 1 only when Tricky is already in an active command. */
 int Tricky_requestRecallAndCheckBusy(GameObject* obj) {
     TrickyState* state = obj->extra;
-    if ((u32)mainGetBit(GAMEBIT_Tricky_Usable) != 0u) {
+    if ((u32)mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0u) {
         state->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0u) {
             return 1;
@@ -6965,7 +6965,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
 
 void Tricky_requestRecall(GameObject* obj) {
     TrickyState* state = obj->extra;
-    if (mainGetBit(GAMEBIT_Tricky_Usable)) {
+    if (mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands)) {
         state->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
     }
 }
@@ -7128,7 +7128,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     promptB = false;
     promptC = false;
     promptTable[0] = *(u32*)gTrickyQuestPromptSfxIds;
-    bitVal = mainGetBit(GAMEBIT_Tricky_Usable);
+    bitVal = mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands);
     if (bitVal != 0) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             state->commandRequestBits = 0;
@@ -7286,7 +7286,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
 
 int Tricky_getAvailableCommands(GameObject* obj) {
     int r = 0;
-    if (mainGetBit(GAMEBIT_Tricky_Usable) != 0) {
+    if (mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
         r = TRICKY_ABILITY_FIND_SECRET | TRICKY_ABILITY_STAY;
         if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0) {
             r |= TRICKY_ABILITY_CALL;
@@ -8068,7 +8068,7 @@ void Tricky_update(GameObject* obj) {
     }
     if (getXZDistanceSquared(&obj->anim.worldPosX, &trickyState->playerObj->anim.worldPosX) >=
             TRICKY_REMOTE_RECALL_DISTANCE_SQ &&
-        mainGetBit(GAMEBIT_Tricky_Usable) != 0) {
+        mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
         trickyState->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
     }
     trickyState->cooldownC -= timeDelta;

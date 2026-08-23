@@ -7877,7 +7877,7 @@ void cMenuRun(void)
     switch (yButtonState)
     {
     case 2:
-        if (!mainGetBit(GAMEBIT_Tricky_Usable))
+        if (!mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
@@ -8604,7 +8604,7 @@ void GameUI_frameEnd(void)
                         gCMenuButtons |= 0x80000;
                         trickyProximity = 1;
                     }
-                    else if (tricky != 0 && mainGetBit(GAMEBIT_Tricky_Usable) &&
+                    else if (tricky != 0 && mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) &&
                              Camera_getTargetKind() == CAMCONTROL_TARGET_KIND_SUPPRESSED)
                     {
                         gCMenuButtons |= 0x20000;

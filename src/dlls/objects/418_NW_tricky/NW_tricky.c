@@ -62,7 +62,7 @@ int nwTricky_getExtraSize(void) {
 void nwTricky_free(GameObject* unusedObj) {
     (void)unusedObj;
 
-    mainSetBits(GAMEBIT_Tricky_Usable, 1);
+    mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
 }
 
 void nwTricky_update(GameObject* obj) {
@@ -101,12 +101,12 @@ void nwTricky_update(GameObject* obj) {
                     enemy_setTrackedObj(*completedHerdScan, player);
                 }
             }
-            mainSetBits(GAMEBIT_Tricky_Usable, 1);
+            mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
             state->phase = NW_TRICKY_PHASE_LEARNING_COMMANDS;
         } else {
             if (mainGetBit(GAMEBIT_ITEM_TrickyStayFind_Got)) {
                 if (TRICKY_INTERFACE(tricky)->isPlayingBall(tricky) == 0) {
-                    mainSetBits(GAMEBIT_Tricky_Usable, 0);
+                    mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 0);
                     state->phaseTimer = 0.0f;
                 }
 

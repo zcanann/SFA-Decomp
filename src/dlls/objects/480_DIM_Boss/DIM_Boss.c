@@ -1715,7 +1715,7 @@ void DIMboss_init(GameObject* obj, void* params, int isAltVariant) {
     topState->effect = NULL;
     gDimBossHitReactionIndex = 0;
     gDIMbossSequenceFlags = 0;
-    mainSetBits(GAMEBIT_Tricky_Usable, 1);
+    mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
     dll_2E_initState(obj, &gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
     dll_2E_setMoveTables(&gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = &gDIMbossAnimController.modeBits;

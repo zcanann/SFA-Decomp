@@ -353,7 +353,7 @@ void GroundAnimator_update(GameObject* obj) {
     if ((state->flags & GROUND_ANIMATOR_STATE_COMPLETE) == 0 && findCommandEnabled != 0) {
         GameObject* tricky = getTrickyObject();
 
-        if (tricky != NULL && mainGetBit(GAMEBIT_Tricky_Usable) != 0) {
+        if (tricky != NULL && mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         } else {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
