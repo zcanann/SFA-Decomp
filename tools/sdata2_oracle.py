@@ -20,7 +20,9 @@ Usage:
     python3 tools/sdata2_oracle.py --compare-src-sweep
                                                    summarize retail/source pool drift
 
-Reads only the carved retail objects under build/<version>/obj.
+The row reports read the carved retail objects under build/<version>/obj.  The
+--compare-src mode also prints the active DOL split-claim byte status so object
+symbol/order drift is not mistaken for a final data-content mismatch.
 """
 
 from __future__ import annotations
@@ -34,6 +36,73 @@ import tempfile
 from pathlib import Path
 
 MAGIC_HI = bytes.fromhex("43300000")
+
+
+class DolImage:
+    def __init__(self, path: Path):
+        self.data = path.read_bytes()
+        self.sections = []
+        for i in range(18):
+            offset = struct.unpack_from(">I", self.data, i * 4)[0]
+            address = struct.unpack_from(">I", self.data, 0x48 + i * 4)[0]
+            size = struct.unpack_from(">I", self.data, 0x90 + i * 4)[0]
+            if size:
+                self.sections.append((address, address + size, offset))
+
+    def read(self, address: int, size: int) -> bytes | None:
+        for start, end, offset in self.sections:
+            if start <= address and address + size <= end:
+                rel = address - start
+                return self.data[offset + rel:offset + rel + size]
+        return None
+
+
+def split_claims(root: Path, version: str, unit_name: str, section_name: str):
+    path = root / "config" / version / "splits.txt"
+    current = None
+    claims = []
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.split("#", 1)[0].rstrip()
+        if not line:
+            continue
+        if not raw_line[0].isspace() and line.endswith(":"):
+            current = line[:-1]
+            continue
+        if current != unit_name:
+            continue
+        fields = line.split()
+        if len(fields) >= 3 and fields[0] == section_name:
+            start = int(fields[1].split(":", 1)[1], 16)
+            end = int(fields[2].split(":", 1)[1], 16)
+            claims.append((start, end))
+    return claims
+
+
+def claim_status(root: Path, version: str, unit_name: str, src_obj: Path, objcopy: Path, tmp: Path) -> str:
+    claims = split_claims(root, version, unit_name, ".sdata2")
+    if not claims:
+        return "active DOL claim .sdata2: none"
+    dol = DolImage(root / "orig" / version / "sys" / "main.dol")
+    source = section(objcopy, src_obj, ".sdata2", tmp)
+    retail = b""
+    for start, end in claims:
+        chunk = dol.read(start, end - start)
+        if chunk is None:
+            return f"active DOL claim .sdata2: unmapped at 0x{start:08x}"
+        retail += chunk
+    compare = source[:len(retail)]
+    if compare == retail and len(source) == len(retail):
+        return f"active DOL claim .sdata2: exact bytes (0x{len(retail):x} B)"
+    bad = 0
+    for off in range(0, min(len(compare), len(retail)) & ~3, 4):
+        if compare[off:off + 4] != retail[off:off + 4]:
+            bad += 1
+    if len(source) != len(retail):
+        size = f", source size 0x{len(source):x} vs claim 0x{len(retail):x}"
+    else:
+        size = ""
+    words = max(1, len(retail) // 4)
+    return f"active DOL claim .sdata2: {bad}/{words} words differ{size}"
 
 
 def run(objdump: Path, *args) -> str:
@@ -306,6 +375,7 @@ def compare_src(args, root, build, objdump, objcopy, tmp):
         source_functions, source_rows = source
         width = max(len(retail_rows), len(source_rows))
         print(f"# .sdata2 retail/source compare: {args.unit}")
+        print(f"# {claim_status(root, args.version, unit['name'], src_obj, objcopy, tmp)}")
         print("%4s  %-34s %-20s %-28s | %-34s %-20s %-28s  %s" %
               ("idx", "retail", "r-value/raw", "r-first", "source", "s-value/raw", "s-first", "mark"))
         for i in range(width):
