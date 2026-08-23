@@ -14,12 +14,6 @@ typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 typedef struct ProjectedShadowTexture ProjectedShadowTexture;
 typedef struct Texture Texture;
 
-typedef struct ObjAnimHitReactRow {
-  u8 pad00[0x16];
-  s8 entryIndex;
-  u8 pad17;
-} ObjAnimHitReactRow;
-
 typedef struct ObjAnimFrameCommand {
   u8 opcode;
   u8 frameLength;
@@ -583,8 +577,6 @@ typedef struct ObjAnimEventList {
   s8 triggerCount;
 } ObjAnimEventList;
 
-STATIC_ASSERT(sizeof(ObjAnimHitReactRow) == 0x18);
-STATIC_ASSERT(offsetof(ObjAnimHitReactRow, entryIndex) == 0x16);
 STATIC_ASSERT(offsetof(ObjAnimFrameCommand, frameLength) == 0x01);
 
 STATIC_ASSERT(offsetof(ObjAnimDef, flags) == 0x02);
@@ -925,7 +917,7 @@ static inline ObjAnimState *ObjAnim_GetCurrentState(ObjAnimComponent *objAnim) {
 }
 
 static inline s32 ObjAnim_GetHitReactEntryIndex(ObjAnimDef *animDef, s32 sphereIndex) {
-  return ((ObjAnimHitReactRow *)animDef->hitReactTable)[sphereIndex].entryIndex;
+  return ((ModelHitSphereDef *)animDef->hitReactTable)[sphereIndex].sphereIndex;
 }
 
 static inline ObjAnimMoveData *ObjAnim_GetMoveData(ObjAnimDef *animDef, ObjAnimState *state,
