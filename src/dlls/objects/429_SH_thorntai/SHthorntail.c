@@ -193,7 +193,7 @@ int SHthorntail_HasNearbyPendingEventObject(GameObject* obj) {
     groupIndex = -1;
     matchCount = 0;
     linkedConfigRow = gSHthorntailDataTables;
-    for (index = 0; index < 6; index++) {
+    for (index = 0; index < SHTHORNTAIL_LINKED_CONFIG_GROUP_COUNT; index++) {
         if ((u32)SHTHORNTAIL_PLACEMENT(obj)->configToken == linkedConfigRow->configToken) {
             groupIndex = index;
             break;
