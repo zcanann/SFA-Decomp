@@ -1261,13 +1261,13 @@ static inline void skeetla_faceMoveVector(GameObject* obj) {
     skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
-#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
-#define TRICKY_TINY_MOVE_BLEND_SPEED       0.0001f
-#define TRICKY_RUN_MOVE_THRESHOLD          2.5f
-#define TRICKY_FAST_WALK_MOVE_THRESHOLD    0.66f
-#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    0.33f
-#define TRICKY_TURN_MOVE_BLEND_SPEED       0.04f
-#define TRICKY_ANIM_TRANSITION_FRAMES      15.0f
+#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ (gTrickyAvoidanceRepathEpsilonSq[0])
+#define TRICKY_TINY_MOVE_BLEND_SPEED       (gTrickyAvoidanceRepathEpsilonSq[0])
+#define TRICKY_RUN_MOVE_THRESHOLD          (gTrickyRunMoveThreshold[0])
+#define TRICKY_FAST_WALK_MOVE_THRESHOLD    (gTrickyFastWalkMoveThreshold[0])
+#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    (gTrickySlowWalkMoveThreshold[0])
+#define TRICKY_TURN_MOVE_BLEND_SPEED       (gTrickyTurnMoveBlendSpeed[0])
+#define TRICKY_ANIM_TRANSITION_FRAMES      (gTrickyAnimTransitionFrames[0])
 
 static inline void skeetla_playFootstepSfx(GameObject* obj, u16 sfxId) {
     TrickyState* state = obj->extra;
@@ -1279,6 +1279,11 @@ static inline void skeetla_playFootstepSfx(GameObject* obj, u16 sfxId) {
 }
 
 int moveTricky(GameObject* obj, f32* targetPos) {
+    extern const f32 gTrickyAvoidanceRepathEpsilonSq[1];
+    extern const f32 gTrickyRunMoveThreshold[1];
+    extern const f32 gTrickyFastWalkMoveThreshold[1];
+    extern const f32 gTrickySlowWalkMoveThreshold[1];
+    extern const f32 gTrickyTurnMoveBlendSpeed[1];
     f32 desiredNextPos[3];
     f32 avoidanceNextPos[3];
     u16 sfxIds[3];
@@ -1449,7 +1454,15 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     return 1;
 }
 
+const f32 gTrickyAvoidanceRepathEpsilonSq[1] = {0.0001f};
+const f32 gTrickyRunMoveThreshold[1] = {2.5f};
+const f32 gTrickyFastWalkMoveThreshold[1] = {0.66f};
+const f32 gTrickySlowWalkMoveThreshold[1] = {0.33f};
+const f32 gTrickyTurnMoveBlendSpeed[1] = {0.04f};
+const f32 gTrickyAnimTransitionFrames[1] = {15.0f};
+
 int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags) {
+    extern const f32 gTrickyAnimTransitionFrames[1];
     TrickyState* state = obj->extra;
     f32 fz;
     if (state->moveId == newState) {
@@ -2110,6 +2123,8 @@ const f32 gTrickyFollowJumpLandSpeed[1] = {0.75f};
 #define TRICKY_DEFAULT_STOPPING_RADIUS (gTrickyDefaultStoppingRadius[0])
 
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
+    extern const f32 gTrickyAvoidanceRepathEpsilonSq[1];
+    extern const f32 gTrickyRunMoveThreshold[1];
     u8* cachedPatchIdCursor;
     u8* cachedPatchTargetCursor;
     int targetPatchGroup;
@@ -4251,6 +4266,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
+    extern const f32 gTrickyAnimTransitionFrames[1];
     int inWater;
     float dx;
     float dz;
@@ -4325,6 +4341,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
+    extern const f32 gTrickyAnimTransitionFrames[1];
     int inWater;
     int result;
 
@@ -4491,6 +4508,7 @@ char sTrickyGuardDebugTextBlock[] = "GUARD_INIT\n"
                                     "\0";
 
 void trickyGuard(GameObject* obj, TrickyState* trickyState) {
+    extern const f32 gTrickyAnimTransitionFrames[1];
     char* debugText = gTrickyDebugStringTable;
     int helperIndex;
     TrickyState* flameSoundState;
@@ -5955,6 +5973,7 @@ int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
 }
 
 u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState) {
+    extern const f32 gTrickyTurnMoveBlendSpeed[1];
     short move;
     int foodResult;
 
@@ -5979,6 +5998,7 @@ u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState) {
 }
 
 u32 tricky_substateFidgetB(GameObject* obj, TrickyState* trickyState) {
+    extern const f32 gTrickyTurnMoveBlendSpeed[1];
     short move;
     int foodResult;
 
@@ -6454,6 +6474,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
+    extern const f32 gTrickyTurnMoveBlendSpeed[1];
     int idleChoice;
     TrickyState* voiceState;
 
@@ -6758,6 +6779,7 @@ GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state)
 }
 
 void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
+    extern const f32 gTrickyAnimTransitionFrames[1];
     TrickyState* sfxState;
     int isInWater;
     u32 sfxDisabled;
@@ -7551,6 +7573,7 @@ void Tricky_hitDetect(GameObject* obj) {
     }
 
 void Tricky_update(GameObject* obj) {
+    extern const f32 gTrickyAnimTransitionFrames[1];
     char* debugTextBase;
     int state;
     TrickyState* trickyState;
