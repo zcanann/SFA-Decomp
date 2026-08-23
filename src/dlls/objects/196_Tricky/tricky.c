@@ -5283,22 +5283,26 @@ char sTrickyDigTunnelDebugTextBlock[] = "DIGTUNNEL_FINDING\n"
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     TrickyPackedSfxPair sfxTable;
     u8* base;
-    RomCurveDef* pc;
-    u8* pos;
+    RomCurveDef* tunnelNode;
+    u8* targetPosBytes;
     u8* ptr;
-    int gidx;
+    int walkGroup;
     int inWater;
-    u16 id;
-    f32 vz, vx, spd, z, vxx;
+    u16 sfxId;
+    f32 dirZ;
+    f32 dirX;
+    f32 pressDistance;
+    f32 z;
+    f32 dirXSq;
 
     base = (u8*)gTrickyDebugStringTable;
     sfxTable.raw = *(u32*)gTrickySubstateSfxIdPairB;
     switch (state->substate) {
     case 0:
-        pc = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, 2);
-        state->digTunnelEntryNode.ptr = (u8*)(*gRomCurveInterface)->getById(pc->linkIds[0]);
-        state->digTunnelStartNode.ptr = pc;
-        state->digTunnelExitNode.ptr = (u8*)(*gRomCurveInterface)->getById(pc->linkIds[1]);
+        tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, 2);
+        state->digTunnelEntryNode.ptr = (u8*)(*gRomCurveInterface)->getById(tunnelNode->linkIds[0]);
+        state->digTunnelStartNode.ptr = tunnelNode;
+        state->digTunnelExitNode.ptr = (u8*)(*gRomCurveInterface)->getById(tunnelNode->linkIds[1]);
         if (((RomCurveDef*)state->digTunnelExitNode.ptr)->walkGroup != 0) {
             state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
             state->digTunnelEntryNode.u = state->digTunnelEntryNode.u ^ state->digTunnelExitNode.u;
@@ -5319,17 +5323,17 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     case 1:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_FINDING));
         trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
-        gidx = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
-        if (((RomCurveDef*)state->digTunnelEntryNode.ptr)->walkGroup == gidx) {
+        walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
+        if (((RomCurveDef*)state->digTunnelEntryNode.ptr)->walkGroup == walkGroup) {
             state->movementState = TRICKY_MOVE_WALK_FREE;
             state->substate = 2;
         }
         break;
     case 2:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_GOINGTOSTART));
-        pos = (u8*)&((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)pos, 1);
-        if (moveTricky(obj, (f32*)pos) == 0) {
+        targetPosBytes = (u8*)&((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
+        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)targetPosBytes, 1);
+        if (moveTricky(obj, (f32*)targetPosBytes) == 0) {
             state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
             state->substate = 3;
         } else {
@@ -5361,15 +5365,15 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                 objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM, 0x500, -1, 0);
             }
         }
-        spd = GROUND_ANIMATOR_INTERFACE(state->followObj)->applyPress(state->followObj, obj);
-        obj->anim.localPosX = state->dirX * spd + ((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
-        obj->anim.localPosZ = state->dirZ * spd + ((RomCurveDef*)state->digTunnelStartNode.ptr)->z;
-        vx = ((TrickyState*)obj->extra)->dirX;
-        vxx = vx * vx;
-        vz = ((TrickyState*)obj->extra)->dirZ;
-        spd = vz * vz;
-        if (vxx + spd > 0.01f) {
-            trickyTurnTowardYaw(obj, getAngle(-vx, -vz));
+        pressDistance = GROUND_ANIMATOR_INTERFACE(state->followObj)->applyPress(state->followObj, obj);
+        obj->anim.localPosX = state->dirX * pressDistance + ((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
+        obj->anim.localPosZ = state->dirZ * pressDistance + ((RomCurveDef*)state->digTunnelStartNode.ptr)->z;
+        dirX = ((TrickyState*)obj->extra)->dirX;
+        dirXSq = dirX * dirX;
+        dirZ = ((TrickyState*)obj->extra)->dirZ;
+        pressDistance = dirZ * dirZ;
+        if (dirXSq + pressDistance > 0.01f) {
+            trickyTurnTowardYaw(obj, getAngle(-dirX, -dirZ));
         }
         if (GROUND_ANIMATOR_INTERFACE(state->followObj)->isFullySunk(state->followObj) != 0) {
             {
@@ -5398,30 +5402,30 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             state->stats->energy -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = 5;
-            id = sfxTable.ids[randomGetRange(0, 1)];
+            sfxId = sfxTable.ids[randomGetRange(0, 1)];
             ptr = obj->extra;
             if (((TrickyState*)ptr)->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                 Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, id, 0x500, -1, 0);
+                objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, sfxId, 0x500, -1, 0);
             }
         }
         break;
     case 5:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_TOEND1),
                          Vec_xzDistance(&obj->anim.worldPosX, &((RomCurveDef*)state->digTunnelExitNode.ptr)->x));
-        pos = (u8*)&((RomCurveDef*)state->digTunnelExitNode.ptr)->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)pos, 1);
-        if (moveTricky(obj, (f32*)pos) == 0) {
+        targetPosBytes = (u8*)&((RomCurveDef*)state->digTunnelExitNode.ptr)->x;
+        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)targetPosBytes, 1);
+        if (moveTricky(obj, (f32*)targetPosBytes) == 0) {
             trickyAdvanceNode(state);
             state->substate = 6;
         }
         break;
     case 6:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_TOEND2));
-        pos = (u8*)&((RomCurveDef*)state->digTunnelExitNode.ptr)->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)pos, 1);
-        if (moveTricky(obj, (f32*)pos) == 0) {
+        targetPosBytes = (u8*)&((RomCurveDef*)state->digTunnelExitNode.ptr)->x;
+        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)targetPosBytes, 1);
+        if (moveTricky(obj, (f32*)targetPosBytes) == 0) {
             inWater = skeetla_isInWater(state);
             if (inWater != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
@@ -5438,12 +5442,12 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         break;
     case 7:
         trickyDebugPrint((char*)(base + TRICKY_DBG_DIGTUNNEL_WAIT));
-        gidx = Objfsa_GetWalkGroupIndexAtPoint(&state->playerObj->anim.worldPosX, NULL);
+        walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&state->playerObj->anim.worldPosX, NULL);
         {
             int currentGroup;
 
             currentGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
-            if (currentGroup == gidx) {
+            if (currentGroup == walkGroup) {
                 state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
                 state->substate = 0;
                 z = gTrickyFloatZero;
@@ -5466,15 +5470,15 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
 
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     TrickyPackedSfxPair sfxTable;
-    u8* ptr;
-    GameObject* pc;
-    int ret;
-    f32 spd;
-    f32 dist;
+    u8* curveBytes;
+    GameObject* followObj;
+    int movementResult;
+    f32 pressDistance;
+    f32 dirLength;
     f32 z;
 
     sfxTable.raw = *(u32*)gTrickySubstateSfxIdPairA;
-    pc = state->followObj;
+    followObj = state->followObj;
     switch (state->substate) {
     case 0:
         state->secretDigCurve = Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1, 2);
@@ -5485,13 +5489,13 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         }
         state->substate = 1;
     case 1:
-        ret = trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
-        if (ret == 0) {
+        movementResult = trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
+        if (movementResult == 0) {
             if (state->secretDigCurve != NULL) {
                 state->substate = 2;
-                ptr = (u8*)&state->secretDigCurve->x;
-                if (state->targetPosPtr != (f32*)ptr) {
-                    state->targetPosPtr = (f32*)ptr;
+                curveBytes = (u8*)&state->secretDigCurve->x;
+                if (state->targetPosPtr != (f32*)curveBytes) {
+                    state->targetPosPtr = (f32*)curveBytes;
                     {
                         u32 mask;
                         u32 flags = state->stateFlags;
@@ -5509,7 +5513,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
                                   TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             }
-        } else if (ret == 2) {
+        } else if (movementResult == 2) {
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
             state->substate = 0;
             z = gTrickyFloatZero;
@@ -5543,15 +5547,15 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->substate = 4;
             state->secretDigOriginX = obj->anim.worldPosX;
             state->secretDigOriginZ = obj->anim.worldPosZ;
-            ptr = (u8*)state->secretDigCurve;
-            if (ptr != NULL) {
-                pc = state->followObj;
-                state->dirX = ((RomCurveDef*)ptr)->x - pc->anim.worldPosX;
-                state->dirZ = ((RomCurveDef*)ptr)->z - pc->anim.worldPosZ;
-                dist = sqrtf(state->dirX * state->dirX + state->dirZ * state->dirZ);
-                if (gTrickyFloatZero != dist) {
-                    state->dirX = state->dirX / dist;
-                    state->dirZ = state->dirZ / dist;
+            curveBytes = (u8*)state->secretDigCurve;
+            if (curveBytes != NULL) {
+                followObj = state->followObj;
+                state->dirX = ((RomCurveDef*)curveBytes)->x - followObj->anim.worldPosX;
+                state->dirZ = ((RomCurveDef*)curveBytes)->z - followObj->anim.worldPosZ;
+                dirLength = sqrtf(state->dirX * state->dirX + state->dirZ * state->dirZ);
+                if (gTrickyFloatZero != dirLength) {
+                    state->dirX = state->dirX / dirLength;
+                    state->dirZ = state->dirZ / dirLength;
                 }
             }
         }
@@ -5563,10 +5567,10 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->secretDigWhineTimer *= TRICKY_FLOAT_100;
             trickyPlayWhineSfx(TRICKY_VOICE_SFX_DUM_DE_DUM, obj);
         }
-        spd = GROUND_ANIMATOR_INTERFACE(pc)->applyPress((GameObject*)pc, obj);
-        obj->anim.localPosX = state->secretDigOriginX - state->dirX * spd;
-        obj->anim.localPosZ = state->secretDigOriginZ - state->dirZ * spd;
-        if (GROUND_ANIMATOR_INTERFACE(pc)->isFullySunk((GameObject*)pc) != 0) {
+        pressDistance = GROUND_ANIMATOR_INTERFACE(followObj)->applyPress((GameObject*)followObj, obj);
+        obj->anim.localPosX = state->secretDigOriginX - state->dirX * pressDistance;
+        obj->anim.localPosZ = state->secretDigOriginZ - state->dirZ * pressDistance;
+        if (GROUND_ANIMATOR_INTERFACE(followObj)->isFullySunk((GameObject*)followObj) != 0) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->stats->energy -= 4;
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
