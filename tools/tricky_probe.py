@@ -25,8 +25,10 @@ NONEXACT = (
     "trickyFindReachableRouteIndex",
     "moveTricky",
     "tricky_updateBallRoll",
+    "trickyUpdateApproachSpeed",
     "trickyUpdateMovementState",
     "trickyGuard",
+    "Tricky_update",
 )
 
 

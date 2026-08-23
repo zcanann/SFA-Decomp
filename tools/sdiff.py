@@ -117,7 +117,7 @@ def insns(s, blind):
                     sym = 'POOL'
                 else:
                     sym = re.sub(
-                        r'^(@\d+|lbl_[0-9A-Fa-f]{6,}|jumptable_[0-9A-Fa-f]{6,})$',
+                        r'^(@\d+|lbl_[0-9A-Fa-f]{6,}|jumptable_(?:[0-9A-Fa-f]{6,}|[A-Za-z_]\w*))$',
                         'POOL', sym)
             out.append('RELOC ' + sym)
     return out
