@@ -182,6 +182,13 @@ extern char sSidekickCommandDebugTextBlock[];
 
 extern const f32 gTrickyTimer30Frames[1];
 extern const f32 gTrickyTimer150Frames[1];
+extern const f32 gTrickyVisibilityProbeRadius[1];
+extern const f32 gTrickyRemoteRecallDistanceSq[1];
+extern const f32 gTrickyRecallCooldownFrames[1];
+extern const f32 gTrickyAudioEventMinSpeed[1];
+extern const f32 gTrickyAmbientActivityBase[1];
+extern const f64 gTrickyAmbientWanderScale[1];
+extern const f32 gTrickyChildVoicePeriodFrames[1];
 
 /* Repeated Tricky movement-animation contract values. */
 #define TRICKY_TIMER_20_FRAMES              (gTrickyTimer20Frames[0])
@@ -189,13 +196,13 @@ extern const f32 gTrickyTimer150Frames[1];
 #define TRICKY_CHILD_BLINK_PERIOD_FRAMES    (gTrickyTimer30Frames[0])
 #define TRICKY_CHILD_BLINK_HOLD_FRAMES      TRICKY_TIMER_20_FRAMES
 #define TRICKY_CHILD_BLINK_FORCE_FRAMES     (gTrickyTimer150Frames[0])
-#define TRICKY_CHILD_VOICE_PERIOD_FRAMES    2400.0f
-#define TRICKY_REMOTE_RECALL_DISTANCE_SQ    360000.0f
-#define TRICKY_VISIBILITY_PROBE_RADIUS      19.0f
-#define TRICKY_RECALL_COOLDOWN_FRAMES       1200.0f
-#define TRICKY_AUDIO_EVENT_MIN_SPEED        0.2f
-#define TRICKY_AMBIENT_ACTIVITY_BASE        200.0f
-#define TRICKY_AMBIENT_WANDER_SCALE         0.1
+#define TRICKY_CHILD_VOICE_PERIOD_FRAMES    (gTrickyChildVoicePeriodFrames[0])
+#define TRICKY_REMOTE_RECALL_DISTANCE_SQ    (gTrickyRemoteRecallDistanceSq[0])
+#define TRICKY_VISIBILITY_PROBE_RADIUS      (gTrickyVisibilityProbeRadius[0])
+#define TRICKY_RECALL_COOLDOWN_FRAMES       (gTrickyRecallCooldownFrames[0])
+#define TRICKY_AUDIO_EVENT_MIN_SPEED        (gTrickyAudioEventMinSpeed[0])
+#define TRICKY_AMBIENT_ACTIVITY_BASE        (gTrickyAmbientActivityBase[0])
+#define TRICKY_AMBIENT_WANDER_SCALE         (gTrickyAmbientWanderScale[0])
 #define TRICKY_POSITION_OFFSET_SCALE        0.1f
 #define TRICKY_PATH_SEARCH_BULK_STEPS       0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES        500
@@ -3070,6 +3077,31 @@ const f32 gTrickyCirclingCloseDistanceSq[1] = {3600.0f};
 const f32 gTrickyCirclingFarDistanceSq[1] = {5625.0f};
 const f32 gTrickyCirclingChargeRadius[1] = {55.0f};
 const f32 gTrickyCirclingSpawnProgress[1] = {0.3f};
+const f32 gTrickyFetchCarryDelayFrames[1] = {180.0f};
+const f32 gTrickyFetchBallReachRadius[1] = {13.0f};
+const f32 gTrickyFetchPickupBlendSpeed[1] = {0.03f};
+const f32 gTrickyFetchThrowDelayFrames[1] = {60.0f};
+const f32 gTrickyFetchLaunchProgress[1] = {0.65f};
+const f32 gTrickyVisibilityProbeRadius[1] = {19.0f};
+const f32 gTrickyFlameHelperReleaseProgress[1] = {0.8f};
+const f32 gCannonballRollSpeedLimit[1] = {1.2f};
+const f32 gCannonballRouteBackstep[1] = {-10.0f};
+const f32 gTrickyDigTunnelBlendSpeed[1] = {0.033f};
+const f32 gTrickySecretDigScanDistanceSq[1] = {10000.0f};
+const f32 gTrickyIdleWanderBlendSpeed[1] = {0.0025f};
+const f32 gTrickyIdlePickBlendSpeed[1] = {0.0075f};
+const f32 gTrickyHowlCallBlendSpeed[1] = {0.003f};
+const f32 gTrickyAmbientActivityBase[1] = {200.0f};
+const f64 gTrickyAmbientWanderScale[1] = {0.1};
+const f32 gTrickyAmbientHowlBlendSpeed[1] = {0.015f};
+const f32 gTrickyContactFlameThreshold[1] = {3000.0f};
+const f32 gTrickyRemoteRecallDistanceSq[1] = {360000.0f};
+const f32 gTrickyPathParticleScale[1] = {0.4f};
+const f32 gTrickyFirepipeHeightDistSq[1] = {841.0f};
+const f32 gTrickyLostEventTime[1] = {-10000.0f};
+const f32 gTrickyRecallCooldownFrames[1] = {1200.0f};
+const f32 gTrickyAudioEventMinSpeed[1] = {0.2f};
+const f32 gTrickyChildVoicePeriodFrames[1] = {2400.0f};
 
 #define TRICKY_CLOSE_DISTANCE_SQ          (gTrickyCloseDistanceSq[0])
 #define TRICKY_TIMER_30_FRAMES            (gTrickyTimer30Frames[0])
@@ -3081,6 +3113,22 @@ const f32 gTrickyCirclingSpawnProgress[1] = {0.3f};
 #define TRICKY_CIRCLING_FAR_DISTANCE_SQ   (gTrickyCirclingFarDistanceSq[0])
 #define TRICKY_CIRCLING_CHARGE_RADIUS     (gTrickyCirclingChargeRadius[0])
 #define TRICKY_CIRCLING_SPAWN_PROGRESS    (gTrickyCirclingSpawnProgress[0])
+#define TRICKY_FETCH_CARRY_DELAY_FRAMES   (gTrickyFetchCarryDelayFrames[0])
+#define TRICKY_FETCH_BALL_REACH_RADIUS    (gTrickyFetchBallReachRadius[0])
+#define TRICKY_FETCH_PICKUP_BLEND_SPEED   (gTrickyFetchPickupBlendSpeed[0])
+#define TRICKY_FETCH_THROW_DELAY_FRAMES   (gTrickyFetchThrowDelayFrames[0])
+#define TRICKY_FETCH_LAUNCH_PROGRESS      (gTrickyFetchLaunchProgress[0])
+#define TRICKY_FLAME_HELPER_RELEASE_PROGRESS (gTrickyFlameHelperReleaseProgress[0])
+#define TRICKY_DIG_TUNNEL_BLEND_SPEED     (gTrickyDigTunnelBlendSpeed[0])
+#define TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ (gTrickySecretDigScanDistanceSq[0])
+#define TRICKY_IDLE_WANDER_BLEND_SPEED    (gTrickyIdleWanderBlendSpeed[0])
+#define TRICKY_IDLE_PICK_BLEND_SPEED      (gTrickyIdlePickBlendSpeed[0])
+#define TRICKY_HOWL_CALL_BLEND_SPEED      (gTrickyHowlCallBlendSpeed[0])
+#define TRICKY_AMBIENT_HOWL_BLEND_SPEED   (gTrickyAmbientHowlBlendSpeed[0])
+#define TRICKY_CONTACT_FLAME_THRESHOLD    (gTrickyContactFlameThreshold[0])
+#define TRICKY_PATH_PARTICLE_SCALE        (gTrickyPathParticleScale[0])
+#define TRICKY_FIREPIPE_HEIGHT_DIST_SQ    (gTrickyFirepipeHeightDistSq[0])
+#define TRICKY_LOST_EVENT_TIME            (gTrickyLostEventTime[0])
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
@@ -3900,20 +3948,6 @@ const char sTrickyShouldNeverStopCirclingError[] = "error tricky should never st
  * inside the if) is ground truth from the retail jump table at 0x8031D910 --
  * do not renumber or "un-nest" case 5.
  */
-
-#define TRICKY_FETCH_CARRY_DELAY_FRAMES 180.0f
-#define TRICKY_FETCH_BALL_REACH_RADIUS  13.0f
-#define TRICKY_FETCH_PICKUP_BLEND_SPEED 0.03f
-#define TRICKY_FETCH_THROW_DELAY_FRAMES 60.0f
-#define TRICKY_FETCH_LAUNCH_PROGRESS    0.65f
-#define TRICKY_IDLE_WANDER_BLEND_SPEED  0.0025f
-#define TRICKY_IDLE_PICK_BLEND_SPEED    0.0075f
-#define TRICKY_HOWL_CALL_BLEND_SPEED    0.003f
-#define TRICKY_AMBIENT_HOWL_BLEND_SPEED 0.015f
-#define TRICKY_CONTACT_FLAME_THRESHOLD  3000.0f
-#define TRICKY_PATH_PARTICLE_SCALE      0.4f
-#define TRICKY_FIREPIPE_HEIGHT_DIST_SQ  841.0f
-#define TRICKY_LOST_EVENT_TIME          -10000.0f
 
 #define TRICKY_CLEAR_RESET_FLAGS(st)                                                                                   \
     {                                                                                                                  \
@@ -4816,7 +4850,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                 } else {
                     TrickyActionCallback callback = trickyState->actionCallback;
                     if (callback != NULL && callback(trickyState->followObj, 1) == 0) {
-                    } else if (obj->anim.currentMoveProgress > 0.8f) {
+                    } else if (obj->anim.currentMoveProgress > TRICKY_FLAME_HELPER_RELEASE_PROGRESS) {
                         TRICKY_MARK_HELPERS_FINISHED(trickyState);
                         for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++) {
                             objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_AT_CURSOR(slot));
@@ -4842,7 +4876,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         } while (0);
         if (dieFlag == 0) {
             trickyState->substate = TRICKY_FLAME_TO_END;
-            (trickyState)->guardTimer = 60.0f;
+            (trickyState)->guardTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
         }
         break;
     case TRICKY_FLAME_FINDING_IN:
@@ -4895,7 +4929,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                 } else {
                     TrickyActionCallback callback = trickyState->actionCallback;
                     if (callback != NULL && callback(trickyState->followObj, 1) == 0) {
-                    } else if (obj->anim.currentMoveProgress > 0.8f) {
+                    } else if (obj->anim.currentMoveProgress > TRICKY_FLAME_HELPER_RELEASE_PROGRESS) {
                         TRICKY_MARK_HELPERS_FINISHED(trickyState);
                         for (i2 = 0, slot2 = (void**)trickyState; i2 < TRICKY_GUARD_HELPER_COUNT; i2++) {
                             objSetAnimSpeedTo1(TRICKY_FLAME_CHILD_AT_CURSOR(slot2));
@@ -4984,9 +5018,6 @@ void tricky_state06_nop(void) {
 #define CANNONBALL_SFX_TIMER_MAX    600
 #define CANNONBALL_ROLL_SFX_ID      TRICKY_VOICE_SFX_ROLLING
 #define CANNONBALL_ROLL_SFX_PARAM   0x1000
-
-const f32 gCannonballRollSpeedLimit[1] = {1.2f};
-const f32 gCannonballRouteBackstep[1] = {-10.0f};
 
 #define CANNONBALL_ROLL_SPEED_LIMIT (gCannonballRollSpeedLimit[0])
 #define CANNONBALL_ROUTE_BACKSTEP   (gCannonballRouteBackstep[0])
@@ -5266,7 +5297,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         }
         break;
     case 3:
-        trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, 0.033f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+        trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
+                          TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
         state->dirX =
             ((RomCurveDef*)state->digTunnelExitNode.ptr)->x - ((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
         state->dirZ =
@@ -5405,7 +5437,8 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     case 0:
         state->secretDigCurve = Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1, 2);
         if (state->secretDigCurve != NULL &&
-            getXZDistanceSquared(&state->followObj->anim.worldPosX, &state->secretDigCurve->x) > 10000.0f) {
+            getXZDistanceSquared(&state->followObj->anim.worldPosX, &state->secretDigCurve->x) >
+            TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ) {
             state->secretDigCurve = NULL;
         }
         state->substate = 1;
@@ -5431,7 +5464,8 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 state->secretDigPressTimer = gTrickyFloatZero;
                 state->secretDigWhineTimer = (f32)(int)randomGetRange(0x28, 0x50);
                 Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
-                trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, 0.033f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+                trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
+                                  TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             }
         } else if (ret == 2) {
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
@@ -5456,13 +5490,14 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->substate = 3;
             state->secretDigPressTimer = gTrickyFloatZero;
             Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
-            trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, 0.033f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+            trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
+                              TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
         }
         break;
     case 3:
         state->secretDigPressTimer += timeDelta;
         state->secretDigWhineTimer -= timeDelta;
-        if (state->secretDigPressTimer >= 60.0f) {
+        if (state->secretDigPressTimer >= TRICKY_FETCH_THROW_DELAY_FRAMES) {
             state->substate = 4;
             state->secretDigOriginX = obj->anim.worldPosX;
             state->secretDigOriginZ = obj->anim.worldPosZ;
@@ -6548,7 +6583,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
         ((GameObject*)hit[0]->ownerObj)->anim.classId == 1) {
         fv = state->cooldownB.f;
         if (fv <= gTrickyFloatZero) {
-            state->cooldownB.f += 180.0f;
+            state->cooldownB.f += TRICKY_FETCH_CARRY_DELAY_FRAMES;
             sfxState = obj->extra;
             if (sfxState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
@@ -7107,7 +7142,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         }
         state->commandRequestBits = 0;
         if ((cond) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
-            state->promptBDespawnTimer = 60.0f;
+            state->promptBDespawnTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->childB == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 bitVal = randomGetRange(0, 1);
                 promptId = *(u16*)((int)promptTable + bitVal * 2);
@@ -7154,7 +7189,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             }
         }
         if ((promptA) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
-            state->promptADespawnTimer = 60.0f;
+            state->promptADespawnTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->childA == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 if (randomGetRange(0, 3) == 0) {
                     if (promptB) {
