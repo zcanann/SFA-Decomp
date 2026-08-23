@@ -181,6 +181,11 @@ const u16 gSkeetlaFootstepSfxId2[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 #define sTrickyFloatTwo               2.0f
 #define TRICKY_FLOAT_TEN              sTrickyFloatTen
 #define TRICKY_FLOAT_0_004            sTrickyFloat0_004
+#define TRICKY_FLOAT_ONE              sTrickyFloatOne
+#define TRICKY_FLOAT_0_01             sTrickyFloat0_01
+#define TRICKY_FLOAT_0_7              sTrickyFloat0_7
+#define TRICKY_FLOAT_NEG_0_01         sTrickyFloatNeg0_01
+#define TRICKY_FLOAT_TWO              sTrickyFloatTwo
 #define TRICKY_MODEL_FADE_ALPHA_SCALE (sTrickyModelFadeAlphaScale[0])
 
 extern const char sTrickyShouldNeverStopCirclingError[];
@@ -435,15 +440,15 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
         if (target > state->blendWeight) {
             state->blendVelocity = TRICKY_FLOAT_0_004 * timeDelta + state->blendVelocity;
             state->blendWeight = state->blendVelocity * timeDelta + state->blendWeight;
-            if (state->blendWeight > (max = 1.0f)) {
+            if (state->blendWeight > (max = TRICKY_FLOAT_ONE)) {
                 state->blendVelocity = gTrickyFloatZero;
                 state->blendWeight = max;
             } else if (state->blendWeight > target) {
-                if (state->blendVelocity < 0.01f) {
+                if (state->blendVelocity < TRICKY_FLOAT_0_01) {
                     state->blendVelocity = gTrickyFloatZero;
                     state->blendWeight = target;
                 } else {
-                    state->blendVelocity *= 0.7f;
+                    state->blendVelocity *= TRICKY_FLOAT_0_7;
                 }
             }
         } else if (target < state->blendWeight) {
@@ -454,15 +459,16 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
                 state->blendWeight = state->blendVelocity = gTrickyFloatZero;
             }
             if (state->blendWeight < target) {
-                if (state->blendVelocity > -0.01f) {
+                if (state->blendVelocity > TRICKY_FLOAT_NEG_0_01) {
                     state->blendVelocity = gTrickyFloatZero;
                     state->blendWeight = target;
                 } else {
-                    state->blendVelocity *= 0.7f;
+                    state->blendVelocity *= TRICKY_FLOAT_0_7;
                 }
             }
         }
-        ObjModel_SetBlendChannelWeight(Obj_GetActiveModel(obj), 1, 2.0f * state->blendWeight - 1.0f);
+        ObjModel_SetBlendChannelWeight(Obj_GetActiveModel(obj), 1,
+                                       TRICKY_FLOAT_TWO * state->blendWeight - TRICKY_FLOAT_ONE);
     }
 }
 
