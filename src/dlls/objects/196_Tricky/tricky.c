@@ -119,6 +119,11 @@ typedef struct {
     u16 b;
 } TrickySfxPair;
 
+typedef union {
+    u32 raw;
+    u16 ids[2];
+} TrickyPackedSfxPair;
+
 typedef struct TrickyBaddieTargetPlacement {
     u8 pad0[0x14];
     s32 mapEventId;
@@ -5276,7 +5281,7 @@ char sTrickyDigTunnelDebugTextBlock[] = "DIGTUNNEL_FINDING\n"
                                         "DIGTUNNEL_WAIT\n";
 
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
-    u32 sfxTable;
+    TrickyPackedSfxPair sfxTable;
     u8* base;
     RomCurveDef* pc;
     u8* pos;
@@ -5287,7 +5292,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     f32 vz, vx, spd, z, vxx;
 
     base = (u8*)gTrickyDebugStringTable;
-    sfxTable = *(u32*)gTrickySubstateSfxIdPairB;
+    sfxTable.raw = *(u32*)gTrickySubstateSfxIdPairB;
     switch (state->substate) {
     case 0:
         pc = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, 2);
@@ -5393,7 +5398,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             state->stats->energy -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = 5;
-            id = *(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2);
+            id = sfxTable.ids[randomGetRange(0, 1)];
             ptr = obj->extra;
             if (((TrickyState*)ptr)->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
@@ -5460,7 +5465,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
-    u32 sfxTable;
+    TrickyPackedSfxPair sfxTable;
     u8* ptr;
     GameObject* pc;
     int ret;
@@ -5468,7 +5473,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     f32 dist;
     f32 z;
 
-    sfxTable = *(u32*)gTrickySubstateSfxIdPairA;
+    sfxTable.raw = *(u32*)gTrickySubstateSfxIdPairA;
     pc = state->followObj;
     switch (state->substate) {
     case 0:
@@ -5578,7 +5583,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 mm = -1;
                 state->commandPhase = mm;
             }
-            trickyPlayWhineSfx(*(u16*)((char*)&sfxTable + randomGetRange(0, 1) * 2), obj);
+            trickyPlayWhineSfx(sfxTable.ids[randomGetRange(0, 1)], obj);
         }
         break;
     }
