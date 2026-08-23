@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0017_SAVEGAME_API_H_
 
 #include "main/dll/savedata_struct.h"
+#include "main/mapEventTypes.h"
 
 #define SAVEGAME_OBJECT_POSITION_COUNT  0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
@@ -51,7 +52,7 @@ u8 SaveGame_getCurChar(void);
 void SaveGame_setCharacter(u8 c);
 void* SaveGame_getPlayerStats(void);
 void* SaveGame_getCurCharPos(void);
-void* SaveGame_getSidekickStats(void);
+TrickyStats* SaveGame_getTrickyStats(void);
 void SaveGame_gplayAddTime(int id, f32 time);
 int SaveGame_gplayDidTimeExpire(int id);
 f32 SaveGame_gplayGetTimeRemaining(int id);

@@ -45,7 +45,7 @@ typedef struct SaveGameTimeEntry
 typedef struct SaveGameData
 {
     PlayerStatus characterStatus[2];
-    u8 pad18[0x1C - 0x18];
+    TrickyStats trickyStats;
     char playerName[4];
     u8 currentCharacter;
     u8 newFileFlag;
@@ -73,6 +73,7 @@ typedef struct SaveGameData
 
 STATIC_ASSERT(offsetof(SaveGameData, playerName) == 0x1C);
 STATIC_ASSERT(sizeof(((SaveGameData*)0)->characterStatus) == 0x18);
+STATIC_ASSERT(offsetof(SaveGameData, trickyStats) == 0x18);
 STATIC_ASSERT(offsetof(SaveGameData, currentCharacter) == 0x20);
 STATIC_ASSERT(offsetof(SaveGameData, positions) == 0x168);
 STATIC_ASSERT(offsetof(SaveGameData, taskHintIds) == 0x558);
@@ -521,7 +522,7 @@ s8 slot;
     ((SaveGameData*)save)->characterStatus[1].magic = 0;
     ((SaveGameData*)save)->characterStatus[1].healCountMax = 1;
     ((SaveGameData*)save)->characterPositions[1].mapDataFileId = -1;
-    save[0x19] = 0x14;
+    ((SaveGameData*)save)->trickyStats.maxEnergy = 0x14;
     ((SaveGameData*)save)->camActionNo = -1;
     ((SaveGameData*)save)->env.unk00 = 4.3e+04f;
     ((SaveGameData*)save)->env.skyEnvfxActIds[0] = -1;
@@ -1014,9 +1015,9 @@ void SaveGame_gplayAddTime(int id, f32 time)
     *(f32*)((int)gSaveGameData + 0x6f4 + (i << 3)) = total;
 }
 
-void* SaveGame_getSidekickStats(void)
+TrickyStats* SaveGame_getTrickyStats(void)
 {
-    return gSaveGameData + 0x18;
+    return &((SaveGameData*)gSaveGameData)->trickyStats;
 }
 
 void* SaveGame_getCurCharPos(void)
@@ -1293,7 +1294,7 @@ typedef struct SaveGameDllInterface {
     ObjectDescriptorCallback getState;
     ObjectDescriptorCallback getPlayerStats;
     ObjectDescriptorCallback getCurCharPos;
-    ObjectDescriptorCallback getSidekickStats;
+    ObjectDescriptorCallback getTrickyStats;
     ObjectDescriptorCallback slot28;
     ObjectDescriptorCallback slot29;
     ObjectDescriptorCallback slot2A;
@@ -1352,7 +1353,7 @@ SaveGameDllInterface SaveGame_funcs = {
     (ObjectDescriptorCallback)SaveGame_getState,
     (ObjectDescriptorCallback)SaveGame_getPlayerStats,
     (ObjectDescriptorCallback)SaveGame_getCurCharPos,
-    (ObjectDescriptorCallback)SaveGame_getSidekickStats,
+    (ObjectDescriptorCallback)SaveGame_getTrickyStats,
     0,
     0,
     0,

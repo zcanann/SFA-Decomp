@@ -32,6 +32,6 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType);
-void tricky_updateModelVariantFade(GameObject* obj, TrickyState* state);
+void trickyUpdateColorVariant(GameObject* obj, TrickyState* state);
 
 #endif

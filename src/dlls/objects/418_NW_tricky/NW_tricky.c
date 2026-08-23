@@ -148,7 +148,7 @@ void nwTricky_update(GameObject* obj) {
             state->phaseTimer += timeDelta;
         }
         if (mainGetBit(GAMEBIT_TrickyTalk) == NW_TRICKY_ENERGY_LOW_GAMEBIT_VALUE) {
-            if ((*gMapEventInterface)->getTrickyEnergy()[0] >= NW_TRICKY_MINIMUM_ENERGY) {
+            if ((*gMapEventInterface)->getTrickyStats()->energy >= NW_TRICKY_MINIMUM_ENERGY) {
                 mainSetBits(GAMEBIT_TrickyTalk, NW_TRICKY_ENERGY_READY_GAMEBIT_VALUE);
             }
         }
@@ -156,7 +156,7 @@ void nwTricky_update(GameObject* obj) {
         if (phaseTimer >= NW_TRICKY_ENERGY_UPDATE_INTERVAL) {
             state->phaseTimer = phaseTimer - NW_TRICKY_ENERGY_UPDATE_INTERVAL;
             if (mainGetBit(GAMEBIT_TrickyTalk) == NW_TRICKY_ENERGY_READY_GAMEBIT_VALUE) {
-                if ((*gMapEventInterface)->getTrickyEnergy()[0] < NW_TRICKY_MINIMUM_ENERGY) {
+                if ((*gMapEventInterface)->getTrickyStats()->energy < NW_TRICKY_MINIMUM_ENERGY) {
                     mainSetBits(GAMEBIT_TrickyTalk, NW_TRICKY_ENERGY_LOW_GAMEBIT_VALUE);
                 }
             }

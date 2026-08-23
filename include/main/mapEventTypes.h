@@ -3,6 +3,19 @@
 
 #include "global.h"
 
+typedef struct TrickyStats {
+    u8 energy;
+    u8 maxEnergy;
+    u8 ballReturnCount; /* increments per successful fetch; color selector changes every 10 returns */
+    u8 unknown03;
+} TrickyStats;
+
+STATIC_ASSERT(sizeof(TrickyStats) == 0x4);
+STATIC_ASSERT(offsetof(TrickyStats, energy) == 0x0);
+STATIC_ASSERT(offsetof(TrickyStats, maxEnergy) == 0x1);
+STATIC_ASSERT(offsetof(TrickyStats, ballReturnCount) == 0x2);
+STATIC_ASSERT(offsetof(TrickyStats, unknown03) == 0x3);
+
 typedef struct MapEventInterface {
     u8 pad00[0x1C];
     void (*savePoint)(void *position, s16 angle, int flags, int map);
@@ -31,7 +44,7 @@ typedef struct MapEventInterface {
     u8 *(*getLast)(void);
     void *(*getCurCharacterState)(void);
     u8 *(*getCurCharPos)(void);
-    u8 *(*getTrickyEnergy)(void);
+    TrickyStats* (*getTrickyStats)(void);
 } MapEventInterface;
 
 extern MapEventInterface **gMapEventInterface;
@@ -65,6 +78,6 @@ STATIC_ASSERT(offsetof(MapEventInterface, setCharacter) == 0x78);
 STATIC_ASSERT(offsetof(MapEventInterface, getLast) == 0x88);
 STATIC_ASSERT(offsetof(MapEventInterface, getCurCharacterState) == 0x8C);
 STATIC_ASSERT(offsetof(MapEventInterface, getCurCharPos) == 0x90);
-STATIC_ASSERT(offsetof(MapEventInterface, getTrickyEnergy) == 0x94);
+STATIC_ASSERT(offsetof(MapEventInterface, getTrickyStats) == 0x94);
 
 #endif /* MAIN_MAPEVENTTYPES_H_ */
