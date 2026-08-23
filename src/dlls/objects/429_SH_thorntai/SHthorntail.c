@@ -927,8 +927,7 @@ void SHthorntail_update(GameObject* obj) {
     SHthorntailState* runtime;
     SHthorntailPlacement* config;
     int i;
-    s8* eventId;
-    u8 hitResult;
+    u32 hitResult;
     u8 mode;
     ObjHitReactEntry* hitReactEntries;
     int val;
@@ -964,9 +963,9 @@ void SHthorntail_update(GameObject* obj) {
         hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
     }
     val = 0x19;
-    hitResult = runtime->hitReactState =
-        ObjHitReact_Update(obj, hitReactEntries, val, runtime->hitReactState, (float*)runtime->hitReactScratch);
-    if (hitResult == 0) {
+    hitResult = ObjHitReact_Update(obj, hitReactEntries, val, runtime->hitReactState, (float*)runtime->hitReactScratch);
+    runtime->hitReactState = hitResult;
+    if ((u8)hitResult == 0) {
         mode = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
         runtime->locomotionMode = mode;
         switch (config->controlMode) {
@@ -1022,17 +1021,16 @@ void SHthorntail_update(GameObject* obj) {
             obj->anim.localPosZ = negSinFacing * animEvents.rootDeltaX + obj->anim.localPosZ;
             obj->anim.rotX += animEvents.rootPitch;
         }
-        for (i = 0, eventId = animEvents.triggeredIds; i < animEvents.triggerCount; i = i + 1) {
-            if (*eventId == '\0') {
+        for (i = 0; i < animEvents.triggerCount; i = i + 1) {
+            if (animEvents.triggeredIds[i] == '\0') {
                 if (SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState] != 0) {
                     Sfx_PlayFromObject(obj, SHTHORNTAIL_STATE_TRIGGER0_SFX(stateTables)[runtime->behaviorState]);
                 }
-            } else if ((*eventId == '\a') &&
+            } else if ((animEvents.triggeredIds[i] == '\a') &&
                        (SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState] != 0)) {
                 Sfx_PlayFromObject((GameObject*)(u32)obj,
                                    SHTHORNTAIL_STATE_TRIGGER7_SFX(stateTables)[runtime->behaviorState]);
             }
-            eventId++;
         }
         objAudioDispatchAnimEvents(obj, &animEvents, 8, runtime->renderPathPoints, runtime->moveScratch, 1.0f, 1.0f);
         if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
