@@ -51,17 +51,11 @@ typedef enum QueenEarthWalkerAnimEvent {
     QUEEN_EARTH_WALKER_ANIM_EVENT_END_TARGETING = 3,
 } QueenEarthWalkerAnimEvent;
 
-const f32 gQueenEarthWalkerHeadLookBlend[1] = {0.0f};
-const f32 gQueenEarthWalkerPortalSpellDistance[1] = {10000.0f};
-const f32 gQueenEarthWalkerTrickyFeedDistance[1] = {22500.0f};
-const f32 gQueenEarthWalkerAttackTimerMin[1] = {2.0f};
-const f32 gQueenEarthWalkerAttackTimerMax[1] = {5.0f};
-
-#define QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND          (gQueenEarthWalkerHeadLookBlend[0])
-#define QUEEN_EARTH_WALKER_PORTAL_SPELL_DISTANCE_SQ (gQueenEarthWalkerPortalSpellDistance[0])
-#define QUEEN_EARTH_WALKER_TRICKY_FEED_DISTANCE_SQ  (gQueenEarthWalkerTrickyFeedDistance[0])
-#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MIN         (gQueenEarthWalkerAttackTimerMin[0])
-#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MAX         (gQueenEarthWalkerAttackTimerMax[0])
+#define QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND          0.0f
+#define QUEEN_EARTH_WALKER_PORTAL_SPELL_DISTANCE_SQ 10000.0f
+#define QUEEN_EARTH_WALKER_TRICKY_FEED_DISTANCE_SQ  22500.0f
+#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MIN         2.0f
+#define QUEEN_EARTH_WALKER_ATTACK_TIMER_MAX         5.0f
 
 u8 gQueenEarthWalkerEventTableAct1[QUEEN_EARTH_WALKER_EVENT_TABLE_SIZE] = {1, 0, 0, 0};
 u8 gQueenEarthWalkerEventTableAct2[QUEEN_EARTH_WALKER_EVENT_TABLE_SIZE] = {1, 0x14, 0, 0};
