@@ -7,9 +7,7 @@
 /*
  * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
-const f32 gObjAnimProgressOne[1] = {1.0f};
-
-#define OBJANIM_PROGRESS_ONE (gObjAnimProgressOne[0])
+#define OBJANIM_PROGRESS_ONE 1.0f
 
 void ObjAnim_SetBlendMove(ObjAnimComponent* objAnim, ObjAnimDef* animDef, ObjAnimState* state, u32 moveId,
                           int eventState)
@@ -286,9 +284,7 @@ int Object_ObjAnimAdvanceMove(void* objAnimHandle, f32 moveStepScale, f32 deltaT
     return wrapped;
 }
 
-const f32 gObjAnimSetMoveProgressMax[1] = {0.999f};
-
-#define OBJANIM_SET_MOVE_PROGRESS_MAX (gObjAnimSetMoveProgressMax[0])
+#define OBJANIM_SET_MOVE_PROGRESS_MAX 0.999f
 
 int Object_ObjAnimSetMoveProgress(ObjAnimComponent* objAnim, f32 moveProgress)
 {
@@ -658,9 +654,7 @@ int ObjAnim_SampleRootCurvePhase(ObjAnimComponent* objAnim, f32 distance, float*
     return 0;
 }
 
-const f32 gObjAnimMoveStepScaleMin[1] = {-1.0f};
-
-#define OBJANIM_MOVE_STEP_SCALE_MIN (gObjAnimMoveStepScaleMin[0])
+#define OBJANIM_MOVE_STEP_SCALE_MIN -1.0f
 
 int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events)
 {
