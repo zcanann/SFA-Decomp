@@ -70,6 +70,7 @@
 #include "main/dll/savegame.h"
 #include "main/dll/pausemenu.h"
 #include "main/gametext_internal.h"
+#include "main/gametext_shared_internal.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
 #include "main/model_engine.h"
@@ -8178,6 +8179,38 @@ void cMenuRun(void)
     *cursor = gCMenuSelIndex;
 }
 
+#if !(defined(VERSION_GSAE01) || defined(VERSION_GSAJ01))
+void gameUiDrawNpcDialogueText(int a, int b, int c)
+{
+    TextSlot* box = gameTextGetBox(0x7c);
+    if (curGameText == 0xffff || gNpcDialogueTextAlpha == 0) {
+        return;
+    }
+    gameTextSetColor(0xff, 0xff, 0xff, (u8)gNpcDialogueTextAlpha);
+    if (gNpcDialoguePageFrames != -1) {
+        int boxId;
+        char* str;
+        u32 ch;
+        int len;
+        str = gameTextGetPhrase(curGameText, gNpcDialoguePhraseState.display.charIndex);
+        ch = utf8GetNextChar((u8*)str, &len);
+        boxId = 0x7a;
+        if (ch == TEXT_CTRL_FONT) {
+            ch = utf8GetNextChar((u8*)str + len, &len);
+            if (ch == GAMETEXT_FONT_FACE) {
+                boxId = 0x7c;
+            }
+        }
+        box = gameTextGetBox(boxId);
+        box->alpha = gNpcDialogueTextAlpha;
+        gameTextAppendStr(str, boxId);
+    } else {
+        box->alpha = gNpcDialogueTextAlpha;
+        gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
+    }
+}
+#endif
+
 void gameUiUpdateNpcDialogue(void)
 {
     Obj_GetPlayerObject();
@@ -8376,7 +8409,9 @@ void GameUI_hudDraw(int a, int b, int c)
 {
     void* player = Obj_GetPlayerObject();
     void* arwing = (void*)getArwing();
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
     TextSlot* box;
+#endif
 
     if (getScreenBlankFrameCount() != 0)
     {
@@ -8387,6 +8422,7 @@ void GameUI_hudDraw(int a, int b, int c)
     {
         drawArwingHud(a, b, c);
         pauseMenuDraw(a, b, c);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
         box = gameTextGetBox(0x7c);
         if (curGameText != 0xffff && gNpcDialogueTextAlpha != 0)
         {
@@ -8401,6 +8437,9 @@ void GameUI_hudDraw(int a, int b, int c)
                 gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
             }
         }
+#else
+        gameUiDrawNpcDialogueText(a, b, c);
+#endif
         pauseMenuDrawText(a, b, c);
     }
     else
@@ -8433,6 +8472,7 @@ void GameUI_hudDraw(int a, int b, int c)
         if (player != 0)
         {
             hudDrawButtons(a, b, c);
+#if defined(VERSION_GSAE01) || defined(VERSION_GSAJ01)
             box = gameTextGetBox(0x7c);
             if (curGameText != 0xffff && gNpcDialogueTextAlpha != 0)
             {
@@ -8447,6 +8487,9 @@ void GameUI_hudDraw(int a, int b, int c)
                     gameTextQueueReveal(curGameText, &gNpcDialoguePhraseState.display);
                 }
             }
+#else
+            gameUiDrawNpcDialogueText(a, b, c);
+#endif
             drawTrickyHudOverlay(a, b, c);
         }
         if (gTimeListPromptSelection != 0)
