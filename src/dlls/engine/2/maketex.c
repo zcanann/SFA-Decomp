@@ -3,6 +3,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/fileio.h"
 #include "main/frame_timing.h"
+#include "main/gametext_internal.h"
 #include "main/maketex.h"
 #include "main/maketex_api.h"
 #include "main/maketex_random_api.h"
@@ -41,7 +42,23 @@ static inline int maketex_indexOf(int* p, int n, int target)
     }
     return -1;
 }
+
+/* Offsets of this TU's memory card string literals from sMemoryCardFileNameString:
+ * the two banner comment titles and the banner/icon asset file names. Rev 1 emits
+ * the file names first because the comment writer became a separate function. */
+#ifdef VERSION_GSAE01_rev1
+#define MEMCARD_STR_FILES 0xa0
+#define MEMCARD_STR_TITLES 0x124
+#else
+#define MEMCARD_STR_TITLES 0xa0
+#define MEMCARD_STR_FILES 0xc4
+#endif
+
 void loadMemCardImages(void);
+#ifdef VERSION_GSAE01_rev1
+void loadMemCardComments(void);
+#endif
+
 static inline u64 saveGame_checksum(u64* p, int count)
 {
     u64 x[1];
@@ -244,12 +261,17 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, void* cbC, void*
                         {
                             int writeResult;
                             *(u64*)(gSaveCardIoBuffer + 0xa40) = t;
-                            writeResult = saveGame_doWrite(2);
-                            if (writeResult == 0)
+#ifdef VERSION_GSAE01_rev1
+                            if (cb == NULL)
+#endif
                             {
-                                writeResult = saveGame_doWrite(1);
+                                writeResult = saveGame_doWrite(2);
+                                if (writeResult == 0)
+                                {
+                                    writeResult = saveGame_doWrite(1);
+                                }
+                                result = writeResult;
                             }
-                            result = writeResult;
                         }
                     }
                 }
@@ -302,6 +324,9 @@ void loadMemCardImages(void)
     u64 a2[1];
 
     a[0] = 0;
+#ifdef VERSION_GSAE01_rev1
+    loadMemCardComments();
+#else
     if (gGameTextFontIsSjis != 0)
     {
         gSaveCardImageBuffer[0x00] = 0x83;
@@ -336,39 +361,40 @@ void loadMemCardImages(void)
         gSaveCardImageBuffer[0x1d] = 0x5b;
         gSaveCardImageBuffer[0x1e] = 0x00;
         gSaveCardImageBuffer[0x1f] = 0x00;
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + 0xa0);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + MEMCARD_STR_TITLES);
     }
     else
     {
         sprintf((char*)gSaveCardImageBuffer, names);
-        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + 0xb4);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + MEMCARD_STR_TITLES + 0x14);
     }
-    if (DVDOpen(names + 0xc4, &fi))
+#endif
+    if (DVDOpen(names + MEMCARD_STR_FILES, &fi))
     {
         DVDRead(&fi, gSaveCardImageBuffer + 0x40, 0x1800, 0x20);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0xd0, &fi))
+    if (DVDOpen(names + MEMCARD_STR_FILES + 0xc, &fi))
     {
         DVDRead(&fi, gSaveCardImageBuffer + 0x1840, 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0xe8, &fi))
+    if (DVDOpen(names + MEMCARD_STR_FILES + 0x24, &fi))
     {
         DVDRead(&fi, gSaveCardImageBuffer + 0x1c40, 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0x100, &fi))
+    if (DVDOpen(names + MEMCARD_STR_FILES + 0x3c, &fi))
     {
         DVDRead(&fi, gSaveCardImageBuffer + 0x2040, 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0x118, &fi))
+    if (DVDOpen(names + MEMCARD_STR_FILES + 0x54, &fi))
     {
         DVDRead(&fi, gSaveCardImageBuffer + 0x2440, 0x400, 0);
         DVDClose(&fi);
     }
-    if (DVDOpen(names + 0x130, &fi))
+    if (DVDOpen(names + MEMCARD_STR_FILES + 0x6c, &fi))
     {
         DVDRead(&fi, gSaveCardImageBuffer + 0x2840, 0x200, 0);
         DVDClose(&fi);
@@ -399,6 +425,55 @@ void loadMemCardImages(void)
     DCFlushRange(gSaveCardImageBuffer, 0x4000);
 }
 
+#ifdef VERSION_GSAE01_rev1
+/* Writes the two memory card comment lines (Shift-JIS title for Japanese). */
+void loadMemCardComments(void)
+{
+    char* names = sMemoryCardFileNameString;
+
+    if (getCurLanguage() == LANGUAGE_JAPANESE)
+    {
+        gSaveCardImageBuffer[0x00] = 0x83;
+        gSaveCardImageBuffer[0x01] = 0x58;
+        gSaveCardImageBuffer[0x02] = 0x83;
+        gSaveCardImageBuffer[0x03] = 0x5e;
+        gSaveCardImageBuffer[0x04] = 0x81;
+        gSaveCardImageBuffer[0x05] = 0x5b;
+        gSaveCardImageBuffer[0x06] = 0x83;
+        gSaveCardImageBuffer[0x07] = 0x74;
+        gSaveCardImageBuffer[0x08] = 0x83;
+        gSaveCardImageBuffer[0x09] = 0x48;
+        gSaveCardImageBuffer[0x0a] = 0x83;
+        gSaveCardImageBuffer[0x0b] = 0x62;
+        gSaveCardImageBuffer[0x0c] = 0x83;
+        gSaveCardImageBuffer[0x0d] = 0x4e;
+        gSaveCardImageBuffer[0x0e] = 0x83;
+        gSaveCardImageBuffer[0x0f] = 0x58;
+        gSaveCardImageBuffer[0x10] = 0x83;
+        gSaveCardImageBuffer[0x11] = 0x41;
+        gSaveCardImageBuffer[0x12] = 0x83;
+        gSaveCardImageBuffer[0x13] = 0x68;
+        gSaveCardImageBuffer[0x14] = 0x83;
+        gSaveCardImageBuffer[0x15] = 0x78;
+        gSaveCardImageBuffer[0x16] = 0x83;
+        gSaveCardImageBuffer[0x17] = 0x93;
+        gSaveCardImageBuffer[0x18] = 0x83;
+        gSaveCardImageBuffer[0x19] = 0x60;
+        gSaveCardImageBuffer[0x1a] = 0x83;
+        gSaveCardImageBuffer[0x1b] = 0x83;
+        gSaveCardImageBuffer[0x1c] = 0x81;
+        gSaveCardImageBuffer[0x1d] = 0x5b;
+        gSaveCardImageBuffer[0x1e] = 0x00;
+        gSaveCardImageBuffer[0x1f] = 0x00;
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + MEMCARD_STR_TITLES);
+    }
+    else
+    {
+        sprintf((char*)gSaveCardImageBuffer, names);
+        sprintf((char*)(gSaveCardImageBuffer + 0x20), names + MEMCARD_STR_TITLES + 0x14);
+    }
+}
+#endif
 
 /* Mounts the memory card, validates its serial number, opens or creates the
  * save file (writing the card image buffer for a fresh file), and maps any
