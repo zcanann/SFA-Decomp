@@ -1310,7 +1310,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                 if (skeetla_pathSpeedDelta(obj) >= gTrickyFloatZero) {
                     pathSpeedDelta = skeetla_pathSpeedDelta(obj);
                 } else {
-                    pathSpeedDelta = -skeetla_pathSpeedDelta(obj);
+                    pathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                    pathSpeedDelta = -pathSpeedDelta;
                 }
 
                 if (pathSpeedDelta > gTrickyFloatZero) {
