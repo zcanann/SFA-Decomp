@@ -16,5 +16,7 @@ int isPointWithinPatchGroup(f32* point, u32 patchGroupIndex, int groupId);
 int isInWalkGroupOrPatch(f32* point);
 int Objfsa_FindWalkGroupIndexAtPoint(f32* point);
 int Objfsa_GetPatchGroupIdAtPoint(f32* point);
+void doNothing_onTrickyFree(void);
+void doNothing_onTrickyInit(void);
 
 #endif /* MAIN_DLL_HCURVES_API_H_ */
