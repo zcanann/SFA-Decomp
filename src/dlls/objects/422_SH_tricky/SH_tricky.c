@@ -29,7 +29,7 @@ void shTricky_update(GameObject* obj) {
     case SH_TRICKY_PHASE_WAIT_TRIGGER:
         if (mainGetBit(SH_TRICKY_TRIGGER_GAMEBIT) != 0) {
             mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 0);
-            mainSetBits(GAMEBIT_TrickyWarpEnabled, 0);
+            mainSetBits(GAMEBIT_Tricky_Spawns, 0);
             mainSetBits(GAMEBIT_MaybeHaveTricky, 1);
             state->phase = SH_TRICKY_PHASE_REQUEST_DELAY;
         }
@@ -45,7 +45,7 @@ void shTricky_update(GameObject* obj) {
     case SH_TRICKY_PHASE_WAIT_RETURN_TO_QUEEN:
         if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0) {
             mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
-            mainSetBits(GAMEBIT_TrickyWarpEnabled, 1);
+            mainSetBits(GAMEBIT_Tricky_Spawns, 1);
             mainSetBits(GAMEBIT_MaybeHaveTricky, 0);
         }
         break;

@@ -189,7 +189,7 @@ void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
     if (mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
     {
         mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 0);
-        mainSetBits(GAMEBIT_TrickyWarpEnabled, 0);
+        mainSetBits(GAMEBIT_Tricky_Spawns, 0);
         if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff)
             mainSetBits(GAMEBIT_TrickyTalk, randomGetRange(6, 7));
     }
