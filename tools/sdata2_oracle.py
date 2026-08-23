@@ -393,8 +393,51 @@ def compare_src(args, root, build, objdump, objcopy, tmp):
             print("%4d  %-34s %-20s %-28s | %-34s %-20s %-28s  %s" %
                   (i, r_name[:34], format_value(r)[:20], format_first(retail_functions, r)[:28],
                    s_name[:34], format_value(s)[:20], format_first(source_functions, s)[:28], mark))
+        summarize_order_drift(retail_functions, retail_rows, source_functions, source_rows)
         return
     raise SystemExit(f"unit not found: {args.unit}")
+
+
+def summarize_order_drift(retail_functions, retail_rows, source_functions, source_rows):
+    width = min(len(retail_rows), len(source_rows))
+    runs = []
+    start = None
+    for i in range(width):
+        if retail_rows[i]["raw"] != source_rows[i]["raw"]:
+            if start is None:
+                start = i
+        elif start is not None:
+            runs.append((start, i))
+            start = None
+    if start is not None:
+        runs.append((start, width))
+    if not runs:
+        return
+
+    printed_header = False
+    for start, end in runs:
+        retail_run = retail_rows[start:end]
+        source_run = source_rows[start:end]
+        retail_raw = [row["raw"] for row in retail_run]
+        source_raw = [row["raw"] for row in source_run]
+        if sorted(retail_raw) != sorted(source_raw):
+            continue
+        if not printed_header:
+            print()
+            print("# order-drift runs: same .sdata2 atoms, different creation order")
+            printed_header = True
+        print(f"#   idx {start}-{end - 1} ({end - start} entries)")
+        print("#     retail: " + " -> ".join(order_atom(retail_functions, row) for row in retail_run))
+        print("#     source: " + " -> ".join(order_atom(source_functions, row) for row in source_run))
+        if any(row["raw"].startswith("43300000") for row in retail_run + source_run):
+            print("#     hint: includes an int-to-double bias; check declaration order around the first cast user")
+
+
+def order_atom(functions, row):
+    first = row["first"]
+    fn = functions[first][1] if first is not None else "-"
+    raw = row["raw"][:8]
+    return f"{row['name']}[{raw}]@{fn}"
 
 
 def compare_src_sweep(args, root, build, objdump, objcopy, tmp):
