@@ -240,7 +240,7 @@ void sh_queenearthwalker_updateFeeding(GameObject* obj, QueenEarthWalkerState* s
         break;
     case 2:
         (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-        mainSetBits(GAMEBIT_SH_TrickyFindSecretUnlocked, 1);
+        mainSetBits(GAMEBIT_Tricky_Learned_Distract, 1);
         state->stateIndex = 3;
         break;
     case 3:

@@ -60,12 +60,12 @@ u8 gNwMammothFeedFirstRootTriggerList[4] = {1, 1, 0, 0};
 u8 gNwMammothFeedSecondRootTriggerList[4] = {1, 3, 0, 0};
 u8 gNwMammothFeedSatisfiedTriggerList[4] = {1, 5, 0, 0};
 u8 gNwMammothMode1DefaultTriggerList[4] = {2, 0, 1, 0};
-u8 gNwMammothMode1TrickyFindSecretTriggerList[4] = {2, 3, 4, 0};
+u8 gNwMammothMode1TrickyDistractTriggerList[4] = {2, 3, 4, 0};
 u8 gNwMammothMode1RescuedTriggerList[4] = {3, 2, 3, 4};
 u8 gNwMammothMode1ArtifactObtainedTriggerList[4] = {2, 5, 6, 0};
 u8 gNwMammothMode1ArtifactCompleteTriggerList[4] = {1, 7, 0, 0};
 u8 gNwMammothPatrolDefaultTriggerList[4] = {2, 8, 9, 0};
-u8 gNwMammothPatrolTrickyFindSecretTriggerList[4] = {3, 0x0A, 0x0B, 0x0C};
+u8 gNwMammothPatrolTrickyDistractTriggerList[4] = {3, 0x0A, 0x0B, 0x0C};
 u8 gNwMammothPatrolRescuedTriggerList[4] = {2, 0x0B, 0x0C, 0};
 u8 gNwMammothPatrolArtifactObtainedTriggerList[4] = {2, 0x0D, 0x0E, 0};
 u8 gNwMammothPatrolArtifactCompleteTriggerList[4] = {1, 0x0F, 0, 0};
@@ -524,8 +524,8 @@ void NW_mammoth_updatePatrol(GameObject* obj, NwMammothState* state, NwMammothPl
             state->triggerList = gNwMammothMode1ArtifactObtainedTriggerList;
         } else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0) {
             state->triggerList = gNwMammothMode1RescuedTriggerList;
-        } else if (mainGetBit(GAMEBIT_SH_TrickyFindSecretUnlocked) != 0) {
-            state->triggerList = gNwMammothMode1TrickyFindSecretTriggerList;
+        } else if (mainGetBit(GAMEBIT_Tricky_Learned_Distract) != 0) {
+            state->triggerList = gNwMammothMode1TrickyDistractTriggerList;
         } else {
             state->triggerList = gNwMammothMode1DefaultTriggerList;
         }
@@ -535,8 +535,8 @@ void NW_mammoth_updatePatrol(GameObject* obj, NwMammothState* state, NwMammothPl
         state->triggerList = gNwMammothPatrolArtifactObtainedTriggerList;
     } else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0) {
         state->triggerList = gNwMammothPatrolRescuedTriggerList;
-    } else if (mainGetBit(GAMEBIT_SH_TrickyFindSecretUnlocked) != 0) {
-        state->triggerList = gNwMammothPatrolTrickyFindSecretTriggerList;
+    } else if (mainGetBit(GAMEBIT_Tricky_Learned_Distract) != 0) {
+        state->triggerList = gNwMammothPatrolTrickyDistractTriggerList;
     } else {
         state->triggerList = gNwMammothPatrolDefaultTriggerList;
     }
