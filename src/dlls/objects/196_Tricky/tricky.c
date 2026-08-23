@@ -8194,8 +8194,12 @@ void Tricky_update(GameObject* obj) {
         trickyState->foodVoiceTimer += timeDelta;
         trickyState->foodForceBlinkTimer += timeDelta;
         trickyState->foodBlinkTimer += timeDelta;
-        if (trickyState->foodBlinkTimer > TRICKY_CHILD_BLINK_PERIOD_FRAMES) {
-            trickyState->foodBlinkTimer -= TRICKY_CHILD_BLINK_PERIOD_FRAMES;
+        {
+            f32 blinkTimer = trickyState->foodBlinkTimer;
+
+            if (blinkTimer > TRICKY_CHILD_BLINK_PERIOD_FRAMES) {
+                trickyState->foodBlinkTimer = blinkTimer - TRICKY_CHILD_BLINK_PERIOD_FRAMES;
+            }
         }
         if (trickyState->foodBlinkTimer >= TRICKY_CHILD_BLINK_HOLD_FRAMES) {
             trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags | 0x4000;
