@@ -716,10 +716,10 @@ void Camera_setBlendCurveMode(u8 mode) {
 
 void camcontrol_applyState(CamcontrolCameraState* camera) {
     Camera* view;
-    int itmp;
+    int blendedAngleDelta;
     f32 mag;
     f32 blendFactor;
-    f32 delta[3];
+    f32 worldDelta[3];
 
     Camera_SetCurrentViewIndex(0);
     view = Camera_GetCurrent();
@@ -727,16 +727,16 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
     view->pitch = camera->pitch;
     view->roll = camera->roll;
     if (camera->smoothingFlags.b0 != 0u) {
-        PSVECSubtract((Vec*)&camera->worldX, (Vec*)&view->x, (Vec*)delta);
-        mag = PSVECMag((Vec*)delta);
+        PSVECSubtract((Vec*)&camera->worldX, (Vec*)&view->x, (Vec*)worldDelta);
+        mag = PSVECMag((Vec*)worldDelta);
         if (mag > 0.0f) {
-            PSVECNormalize((Vec*)delta, (Vec*)delta);
+            PSVECNormalize((Vec*)worldDelta, (Vec*)worldDelta);
         }
         blendFactor = interpolate(mag, 0.22f, timeDelta);
         mag = (blendFactor < 0.0f) ? 0.0f : ((blendFactor > 3.0f * timeDelta) ? 3.0f * timeDelta : blendFactor);
-        view->x = mag * delta[0] + view->x;
-        view->y = mag * delta[1] + view->y;
-        view->z = mag * delta[2] + view->z;
+        view->x = mag * worldDelta[0] + view->x;
+        view->y = mag * worldDelta[1] + view->y;
+        view->z = mag * worldDelta[2] + view->z;
     } else {
         view->x = camera->worldX;
         view->y = camera->worldY;
@@ -775,8 +775,8 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
             if (camera->blendDeltaYaw < -0x8000) {
                 camera->blendDeltaYaw = (camera->blendDeltaYaw + 0x10000) - 1;
             }
-            itmp = (int)((f32)camera->blendDeltaYaw * blendFactor);
-            view->yaw = camera->blendStartYaw - itmp;
+            blendedAngleDelta = (int)((f32)camera->blendDeltaYaw * blendFactor);
+            view->yaw = camera->blendStartYaw - blendedAngleDelta;
         }
         if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_PITCH) != 0) {
             camera->blendDeltaPitch = camera->blendStartPitch - (u16)view->pitch;
@@ -786,8 +786,8 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
             if (camera->blendDeltaPitch < -0x8000) {
                 camera->blendDeltaPitch = (camera->blendDeltaPitch + 0x10000) - 1;
             }
-            itmp = (int)((f32)camera->blendDeltaPitch * blendFactor);
-            view->pitch = camera->blendStartPitch - itmp;
+            blendedAngleDelta = (int)((f32)camera->blendDeltaPitch * blendFactor);
+            view->pitch = camera->blendStartPitch - blendedAngleDelta;
         }
         if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_ROLL) != 0) {
             camera->blendDeltaRoll = camera->blendStartRoll - (u16)view->roll;
@@ -797,8 +797,8 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
             if (camera->blendDeltaRoll < -0x8000) {
                 camera->blendDeltaRoll = (camera->blendDeltaRoll + 0x10000) - 1;
             }
-            itmp = (int)((f32)camera->blendDeltaRoll * blendFactor);
-            view->roll = camera->blendStartRoll - itmp;
+            blendedAngleDelta = (int)((f32)camera->blendDeltaRoll * blendFactor);
+            view->roll = camera->blendStartRoll - blendedAngleDelta;
         }
     }
     Camera_SetFovY(gCamcontrolFovY);
