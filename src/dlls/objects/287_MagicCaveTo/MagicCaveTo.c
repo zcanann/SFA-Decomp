@@ -59,37 +59,21 @@
 #define MAGIC_CAVE_TOP_CAMERA_BLEND_FRAMES 0x1E
 #define MAGIC_CAVE_TOP_CAMERA_PRIORITY     0xFF
 
-const f32 gMagicCaveTopWarpDistSq[1] = {225.0f};
-const f32 gMagicCaveTopRumbleStartDistSq[1] = {14400.0f};
-const f32 lbl_803E3C38[1] = {0.0f};
-const f32 gMagicCaveTopRumbleStopDistSq[1] = {3600.0f};
-const f32 gMagicCaveTopRumblePulseDistSq[1] = {8100.0f};
-const f32 gMagicCaveTopRumbleStrength[1] = {3.0f};
-const f32 gMagicCaveTopRumbleDuration[1] = {300.0f};
-const f32 gMagicCaveTopFadeMax[1] = {100.0f};
-const f32 gMagicCaveTopAlphaMax[1] = {255.0f};
-const f32 gMagicCaveTopBurstHeight1[1] = {40.0f};
-const f32 gMagicCaveTopBurstRadius[1] = {0.5f};
-const f32 gMagicCaveTopBurstSpreadX[1] = {18.0f};
-const f32 gMagicCaveTopBurstSpreadY[1] = {8.0f};
-const f32 gMagicCaveTopBurstSpreadZ[1] = {80.0f};
-const f32 gMagicCaveTopBurstHeight2[1] = {5.0f};
-
-#define MAGIC_CAVE_TOP_WARP_DISTANCE_SQ         (gMagicCaveTopWarpDistSq[0])
-#define MAGIC_CAVE_TOP_RUMBLE_START_DISTANCE_SQ (gMagicCaveTopRumbleStartDistSq[0])
-#define MAGIC_CAVE_TOP_ZERO                     (lbl_803E3C38[0])
-#define MAGIC_CAVE_TOP_RUMBLE_STOP_DISTANCE_SQ  (gMagicCaveTopRumbleStopDistSq[0])
-#define MAGIC_CAVE_TOP_RUMBLE_PULSE_DISTANCE_SQ (gMagicCaveTopRumblePulseDistSq[0])
-#define MAGIC_CAVE_TOP_RUMBLE_STRENGTH          (gMagicCaveTopRumbleStrength[0])
-#define MAGIC_CAVE_TOP_RUMBLE_DURATION          (gMagicCaveTopRumbleDuration[0])
-#define MAGIC_CAVE_TOP_FADE_MAX                 (gMagicCaveTopFadeMax[0])
-#define MAGIC_CAVE_TOP_ALPHA_MAX                (gMagicCaveTopAlphaMax[0])
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_HEIGHT     (gMagicCaveTopBurstHeight1[0])
-#define MAGIC_CAVE_TOP_BURST_SCALE              (gMagicCaveTopBurstRadius[0])
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE      (gMagicCaveTopBurstSpreadX[0])
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_LOW  (gMagicCaveTopBurstSpreadY[0])
-#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_HIGH (gMagicCaveTopBurstSpreadZ[0])
-#define MAGIC_CAVE_TOP_BURST_SECONDARY_HEIGHT   (gMagicCaveTopBurstHeight2[0])
+#define MAGIC_CAVE_TOP_WARP_DISTANCE_SQ         225.0f
+#define MAGIC_CAVE_TOP_RUMBLE_START_DISTANCE_SQ 14400.0f
+#define MAGIC_CAVE_TOP_ZERO                     0.0f
+#define MAGIC_CAVE_TOP_RUMBLE_STOP_DISTANCE_SQ  3600.0f
+#define MAGIC_CAVE_TOP_RUMBLE_PULSE_DISTANCE_SQ 8100.0f
+#define MAGIC_CAVE_TOP_RUMBLE_STRENGTH          3.0f
+#define MAGIC_CAVE_TOP_RUMBLE_DURATION          300.0f
+#define MAGIC_CAVE_TOP_FADE_MAX                 100.0f
+#define MAGIC_CAVE_TOP_ALPHA_MAX                255.0f
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_HEIGHT     40.0f
+#define MAGIC_CAVE_TOP_BURST_SCALE              0.5f
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE      18.0f
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_LOW  8.0f
+#define MAGIC_CAVE_TOP_BURST_PRIMARY_ANGLE_HIGH 80.0f
+#define MAGIC_CAVE_TOP_BURST_SECONDARY_HEIGHT   5.0f
 #define MAGIC_CAVE_TOP_BURST_SECONDARY_ANGLE    10.0f
 
 int MagicCaveTop_getExtraSize(void) {
