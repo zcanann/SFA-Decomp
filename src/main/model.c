@@ -977,7 +977,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     }
     pos = roundUpTo4(pos);
     *(int*)&((ObjModel*)out2)->textureRefs = pos;
-    pos += ((ModelFileHeader*)p)->renderOpCount * 0xc;
+    pos += ((ModelFileHeader*)p)->renderOpCount * sizeof(ModelRenderOpTextureRefs);
     k = 0;
     o2 = 0;
     for (; k < (int)((ModelFileHeader*)p)->renderOpCount; k++)
