@@ -691,7 +691,7 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
 int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     f32 bestPriorityDist;
     f32 bestFallbackDist;
-    int commandCursorAddr;
+    TrickyState* commandCursor;
     int commandIndex;
     GameObject* bestPriorityTarget;
     GameObject* bestFallbackTarget;
@@ -701,21 +701,20 @@ int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
     bestFallbackDist = bestPriorityDist;
     bestFallbackTarget = NULL;
 
-    for (commandIndex = 0, commandCursorAddr = (int)state; commandIndex < state->commandCount;
-         commandCursorAddr += sizeof(TrickyCommand), commandIndex++) {
-        if (((TrickyState*)commandCursorAddr)->commands[0].commandType == commandType) {
-            f32 dist =
-                getXZDistanceSquared(&state->playerObj->anim.worldPosX,
-                                     &((TrickyState*)commandCursorAddr)->commands[0].targetObj->anim.worldPosX);
+    for (commandIndex = 0, commandCursor = state; commandIndex < state->commandCount;
+         commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand)), commandIndex++) {
+        if (commandCursor->commands[0].commandType == commandType) {
+            f32 dist = getXZDistanceSquared(&state->playerObj->anim.worldPosX,
+                                            &commandCursor->commands[0].targetObj->anim.worldPosX);
 
-            if (((TrickyState*)commandCursorAddr)->commands[0].commandKind == TRICKY_COMMAND_KIND_PRIORITY) {
+            if (commandCursor->commands[0].commandKind == TRICKY_COMMAND_KIND_PRIORITY) {
                 if (dist < bestPriorityDist) {
                     bestPriorityDist = dist;
-                    bestPriorityTarget = ((TrickyState*)commandCursorAddr)->commands[0].targetObj;
+                    bestPriorityTarget = commandCursor->commands[0].targetObj;
                 }
             } else if (dist < bestFallbackDist) {
                 bestFallbackDist = dist;
-                bestFallbackTarget = ((TrickyState*)commandCursorAddr)->commands[0].targetObj;
+                bestFallbackTarget = commandCursor->commands[0].targetObj;
             }
         }
     }
@@ -7243,7 +7242,7 @@ u8 Tricky_getEnergy(GameObject* obj) {
 
 void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType) {
     int remaining;
-    u8* commandCursor;
+    TrickyState* commandCursor;
     u32 count;
     int commandIndex;
     TrickyState* state;
@@ -7255,14 +7254,14 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
     }
     state->commandRequestBits = (u8)(state->commandRequestBits | TRICKY_COMMAND_TYPE_TO_ABILITY(commandType));
     commandIndex = 0;
-    commandCursor = (u8*)state;
+    commandCursor = state;
     count = state->commandCount;
     for (remaining = count; remaining > 0; remaining--) {
-        if (((TrickyState*)commandCursor)->commands[0].targetObj == targetObj) {
+        if (commandCursor->commands[0].targetObj == targetObj) {
             state->commands[commandIndex].ttlFrames = TRICKY_COMMAND_TTL_FRAMES;
             return;
         }
-        commandCursor += sizeof(TrickyCommand);
+        commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand));
         commandIndex++;
     }
     state->commands[count].targetObj = targetObj;
@@ -7737,7 +7736,7 @@ void Tricky_update(GameObject* obj) {
         int index;
     } childLoop;
     int i;
-    int commandCursorAddr;
+    TrickyState* commandCursor;
     ObjPlacement* placementSetup;
     int count;
     u32 flags;
@@ -7860,10 +7859,10 @@ void Tricky_update(GameObject* obj) {
         } else {
             requestedCommand = (*gGameUIInterface)->isOneOfItemsBeingUsed(commandItemQuery.ids, TRICKY_ITEM_ID_COUNT);
         }
-        commandCursorAddr = state;
+        commandCursor = (TrickyState*)state;
         count = trickyState->commandCount;
-        for (i = 0; i < count; i++, commandCursorAddr += sizeof(TrickyCommand)) {
-            if (((TrickyState*)commandCursorAddr)->commands[0].commandType == requestedCommand) {
+        for (i = 0; i < count; i++, commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand))) {
+            if (commandCursor->commands[0].commandType == requestedCommand) {
                 commandAlreadyQueued = 1;
                 break;
             }
@@ -7951,11 +7950,11 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_STAY:
                     accepted = 0;
                     if (trickyState->commandPhase == TRICKY_COMMAND_PHASE_GUARD) {
-                        commandCursorAddr = state;
+                        commandCursor = (TrickyState*)state;
                         count = trickyState->commandCount;
-                        for (i = 0; i < count; i++, commandCursorAddr += sizeof(TrickyCommand)) {
-                            if (((TrickyState*)commandCursorAddr)->commands[0].commandType ==
-                                TRICKY_COMMAND_TYPE_STAY) {
+                        for (i = 0; i < count;
+                             i++, commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand))) {
+                            if (commandCursor->commands[0].commandType == TRICKY_COMMAND_TYPE_STAY) {
                                 accepted = 1;
                             }
                         }
@@ -8231,14 +8230,14 @@ void Tricky_update(GameObject* obj) {
     trickyState->prevSpeed = trickyState->speed;
     i = trickyState->commandCount - 1;
     {
-        u8* expiringCommandCursor = (u8*)state + i * sizeof(TrickyCommand);
+        TrickyState* expiringCommandCursor = (TrickyState*)(state + i * sizeof(TrickyCommand));
 
-        for (; i >= 0; expiringCommandCursor -= sizeof(TrickyCommand), i--) {
-            s8* ttlFrames = (s8*)&((TrickyState*)expiringCommandCursor)->commands[0].ttlFrames;
+        for (; i >= 0; expiringCommandCursor = (TrickyState*)((u8*)expiringCommandCursor - sizeof(TrickyCommand)), i--) {
+            s8* ttlFrames = (s8*)&expiringCommandCursor->commands[0].ttlFrames;
 
             *ttlFrames -= 1;
             if (*ttlFrames == 0) {
-                memmove(&((TrickyState*)expiringCommandCursor)->commands[0],
+                memmove(&expiringCommandCursor->commands[0],
                         &((TrickyState*)(state + (i + 1) * sizeof(TrickyCommand)))->commands[0],
                         (trickyState->commandCount - i - 1) * sizeof(TrickyCommand));
                 trickyState->commandCount -= 1;
