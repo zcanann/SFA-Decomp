@@ -3717,7 +3717,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                                 free_ = -1;
                             }
                             state->packedSlots.foodChildSlot = free_;
-                            state->foodChild = (void*)objSetupObject((ObjPlacement*)setup, 4, -1, -1, obj->anim.parent);
+                            state->foodChild = objSetupObject(&setup->head, 4, -1, -1, obj->anim.parent);
                             ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
                             {
                                 f32 z3 = gTrickyFloatZero;
@@ -3786,7 +3786,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                         setup->head.color[1] = 1;
                         setup->index = i;
                         *trickyFlameChildSlotAtCursor(p) =
-                            objSetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                            objSetupObject(&setup->head, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                         p += 4;
                     }
                 }
@@ -4624,7 +4624,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                         helperSetup->base.color[1] = 1;
                         helperSetup->streamIndex = helperIndex;
                         *trickyFlameChildSlotAtCursor(helperSlot) =
-                            (void*)objSetupObject(&helperSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                            objSetupObject(&helperSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                         helperSlot++;
                     }
                     Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
@@ -4964,7 +4964,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                             flameSetup->base.color[0] = 2;
                             flameSetup->base.color[1] = 1;
                             flameSetup->streamIndex = flameScratch;
-                            *trickyFlameChildSlotAtCursor(flameChildCursor) = (void*)objSetupObject(
+                            *trickyFlameChildSlotAtCursor(flameChildCursor) = objSetupObject(
                                 &flameSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                             flameChildCursor++;
                         }
@@ -5075,7 +5075,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                             flameSetup->base.color[0] = 2;
                             flameSetup->base.color[1] = 1;
                             flameSetup->streamIndex = flameScratch;
-                            *trickyFlameChildSlotAtCursor(flameChildCursor) = (void*)objSetupObject(
+                            *trickyFlameChildSlotAtCursor(flameChildCursor) = objSetupObject(
                                 &flameSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                             flameChildCursor++;
                         }
@@ -5956,7 +5956,7 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
                     setup->base.color[1] = 1;
                     setup->streamIndex = spawnIndex;
                     *trickyFlameChildSlotAtCursor(spawnChildCursor) =
-                        objSetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+                        objSetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
                 Sfx_AddLoopedObjectSound((GameObject*)obj, SFXTRIG_trpopn_c);
@@ -6288,7 +6288,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
 int tricky_substateSleep(GameObject* obj, TrickyState* state) {
     s8 slots[4];
     TrickyState* sfxState;
-    u8* e;
+    ObjPlacement* e;
     int idx;
     f32 z;
 
@@ -6311,7 +6311,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
     if (state->foodChild == NULL && (u8)Obj_CanSetupObject() != 0) {
-        e = (u8*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
+        e = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
         slots[0] = -1;
         slots[1] = -1;
         slots[2] = -1;
@@ -6336,7 +6336,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
             idx = -1;
         }
         state->packedSlots.foodChildSlot = idx;
-        state->foodChild = objSetupObject((ObjPlacement*)e, 4, -1, -1, (obj)->anim.parent);
+        state->foodChild = objSetupObject(e, 4, -1, -1, (obj)->anim.parent);
         ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
         z = gTrickyFloatZero;
         state->foodVoiceTimer = z;
@@ -7766,7 +7766,7 @@ void Tricky_update(GameObject* obj) {
         } else {
             placementSetup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_B);
         }
-        trickyState->spawnedChild = (void*)objSetupObject((ObjPlacement*)placementSetup, 4, -1, -1, obj->anim.parent);
+        trickyState->spawnedChild = objSetupObject(placementSetup, 4, -1, -1, obj->anim.parent);
         ObjLink_AttachChild(obj, trickyState->spawnedChild, 3);
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32) != 0) {
@@ -8045,8 +8045,7 @@ void Tricky_update(GameObject* obj) {
                         placementSetup->posX = obj->anim.worldPosX;
                         placementSetup->posY = obj->anim.worldPosY;
                         placementSetup->posZ = obj->anim.worldPosZ;
-                        trickyState->followObj =
-                            objSetupObject((ObjPlacement*)placementSetup, 5, -1, -1, obj->anim.parent);
+                        trickyState->followObj = objSetupObject(placementSetup, 5, -1, -1, obj->anim.parent);
                         targetPos = &trickyState->followObj->anim.worldPosX;
                         if (trickyState->targetPosPtr != targetPos) {
                             trickyState->targetPosPtr = targetPos;
