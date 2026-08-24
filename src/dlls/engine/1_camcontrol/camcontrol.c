@@ -78,18 +78,6 @@ enum CamcontrolActionConstants {
     CAMCONTROL_SAVED_ACTION_NONE = -1
 };
 
-typedef struct CamcontrolHandlerVTable {
-    void (*func00)(void);
-    void (*activate)(CamcontrolCameraState* camera, int startFlags, void* actionData);
-    void (*update)(CamcontrolCameraState* camera);
-    void (*release)(CamcontrolCameraState* camera);
-    void (*actionCallback)(void* actionData, int dataSize);
-} CamcontrolHandlerVTable;
-
-typedef struct CamcontrolHandler {
-    CamcontrolHandlerVTable* vtable;
-} CamcontrolHandler;
-
 typedef struct CamcontrolHandlerEntry {
     u16 actionId;
     u8 pad02[2];
