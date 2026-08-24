@@ -4432,8 +4432,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
 
 int trickyGuardFindBaddieTarget(TrickyState* state);
 
-static inline int trickyGuardIsBaddieTargetValid(TrickyState* state) {
-    GameObject* target = state->guardTarget;
+static inline int trickyGuardIsBaddieTargetValid(GameObject* target) {
     int count;
     GameObject** objects;
     s16 i;
@@ -4699,7 +4698,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                 }
                 trickyState->substate = TRICKY_GUARD_TO_SPOT;
             }
-        } else if (trickyGuardIsBaddieTargetValid(trickyState) != 0) {
+        } else if (trickyGuardIsBaddieTargetValid(trickyState->guardTarget) != 0) {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
 
             trickyTurnTowardYaw(obj, getAngle(-(target[0] - obj->anim.worldPosX), -(target[2] - obj->anim.worldPosZ)));
@@ -4723,7 +4722,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                 }
             }
             trickyState->substate = TRICKY_GUARD_GROWL;
-        } else if (trickyGuardIsBaddieTargetValid(trickyState) != 0) {
+        } else if (trickyGuardIsBaddieTargetValid(trickyState->guardTarget) != 0) {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
 
             trickyTurnTowardYaw(obj, getAngle(-(target[0] - obj->anim.worldPosX), -(target[2] - obj->anim.worldPosZ)));
@@ -4748,7 +4747,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         if ((trickyState->guardTimer >= TRICKY_GUARD_GROWL_MAX_SECONDS &&
              getXZDistanceSquared(trickyState->targetPosPtr, &obj->anim.worldPosX) >=
                  TRICKY_GUARD_GROWL_LEASH_DIST_SQ) ||
-            trickyGuardIsBaddieTargetValid(trickyState) == 0) {
+            trickyGuardIsBaddieTargetValid(trickyState->guardTarget) == 0) {
             trickyRequestMove(obj, TRICKY_ANIM_GUARD_GROWL, TRICKY_GUARD_GROWL_UP_BLEND,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->substate = TRICKY_GUARD_UP_FROM_GROWL;
