@@ -7282,12 +7282,12 @@ int Tricky_getCurrentCommandType(GameObject* obj, int* out) {
 int Tricky_updateSideCommandPrompts(GameObject* obj) {
     TrickyState* state;
     u32 commandMask;
-    char cmdByte;
-    u16 promptId;
-    u8 cond;
-    u8 promptA;
-    u8 promptB;
-    u8 promptC;
+    char commandKind;
+    u16 questPromptSfxId;
+    u8 showQuestPrompt;
+    u8 showExclamationPrompt;
+    u8 showFoodVoicePrompt;
+    u8 showBaddieVoicePrompt;
     u32 bitVal;
     int ref;
     TrickyState* refB;
@@ -7297,14 +7297,14 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     u8 i;
     char questPromptOccupiedSlots[4];
     char exclamationPromptOccupiedSlots[4];
-    u32 promptTable[4];
+    u32 questPromptSfxPair[4];
 
     state = obj->extra;
-    cond = false;
-    promptA = false;
-    promptB = false;
-    promptC = false;
-    promptTable[0] = *(u32*)gTrickyQuestPromptSfxIds;
+    showQuestPrompt = false;
+    showExclamationPrompt = false;
+    showFoodVoicePrompt = false;
+    showBaddieVoicePrompt = false;
+    questPromptSfxPair[0] = *(u32*)gTrickyQuestPromptSfxIds;
     bitVal = mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands);
     if (bitVal != 0) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
@@ -7314,24 +7314,24 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         if (((state->stateIndex == TRICKY_STATE_GUARD) || (state->stateIndex == TRICKY_STATE_CIRCLING)) ||
             ((state->stateIndex == TRICKY_STATE_GROWL && (state->substate == 1)))) {
             commandMask |= TRICKY_ABILITY_FLAME;
-            promptA = true;
+            showExclamationPrompt = true;
         } else {
             if (trickyFindNearestUsableBaddie(state->playerObj, TRICKY_AMBIENT_ACTIVITY_BASE, 1) != NULL) {
-                promptA = true;
-                promptC = true;
+                showExclamationPrompt = true;
+                showBaddieVoicePrompt = true;
             }
         }
         if (state->commandRequestBits != 0) {
             for (i = 0; i < state->commandCount; i++) {
                 ref = (int)state + i * sizeof(TrickyCommand);
-                cmdByte = ((TrickyState*)ref)->commands[0].commandKind;
-                if (cmdByte == '\0') {
+                commandKind = ((TrickyState*)ref)->commands[0].commandKind;
+                if (commandKind == '\0') {
                     if (((TrickyState*)ref)->commands[0].targetObj->anim.romDefNo == TRICKY_OBJ_BLUE_MUSHROOM) {
-                        promptB = true;
+                        showFoodVoicePrompt = true;
                     }
-                    promptA = true;
-                } else if (cmdByte == '\x01') {
-                    cond = true;
+                    showExclamationPrompt = true;
+                } else if (commandKind == '\x01') {
+                    showQuestPrompt = true;
                 }
             }
         }
@@ -7355,17 +7355,17 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             commandMask &= ~TRICKY_ABILITY_FLAME;
         }
         state->commandRequestBits = 0;
-        if ((cond) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
+        if ((showQuestPrompt) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->questPromptTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->questPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 bitVal = randomGetRange(0, 1);
-                promptId = ((u16*)promptTable)[bitVal];
+                questPromptSfxId = ((u16*)questPromptSfxPair)[bitVal];
                 ref = (int)obj->extra;
                 if ((((TrickyState*)ref)->soundSuppressed == 0) &&
                     (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                        (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
                       !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
-                    objSoundStartTimed(obj, &((TrickyState*)ref)->soundState, promptId, 0x500, 0xffffffff, 0);
+                    objSoundStartTimed(obj, &((TrickyState*)ref)->soundState, questPromptSfxId, 0x500, 0xffffffff, 0);
                 }
                 setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_QUEST);
                 questPromptOccupiedSlots[0] = -1;
@@ -7402,11 +7402,11 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                 objAnimFreeChildren(obj, state, &state->questPromptChild);
             }
         }
-        if ((promptA) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
+        if ((showExclamationPrompt) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->exclamationPromptTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->exclamationPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 if (randomGetRange(0, 3) == 0) {
-                    if (promptB) {
+                    if (showFoodVoicePrompt) {
                         refB = obj->extra;
                         if ((refB->soundSuppressed == 0) &&
                             (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
@@ -7414,7 +7414,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                               !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
                             objSoundStartTimed(obj, &refB->soundState, TRICKY_VOICE_SFX_FOOD, 0x500, 0xffffffff, 0);
                         }
-                    } else if ((((promptC) && (refC = obj->extra, refC->soundSuppressed == 0)) &&
+                    } else if ((((showBaddieVoicePrompt) && (refC = obj->extra, refC->soundSuppressed == 0)) &&
                                 ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
                                   (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)))) &&
                                !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)) {

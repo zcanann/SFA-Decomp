@@ -67,7 +67,7 @@ typedef struct TrickyPackedSlots {
     u8 exclamationPromptSlot : 2;
     u8 questPromptSlot : 2;
     u8 foodChildSlot : 2;
-    u8 d : 2;
+    u8 unusedPromptSlotBits : 2;
 } TrickyPackedSlots;
 
 #define MAX_COMM_PRESENT 10
