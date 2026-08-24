@@ -606,7 +606,7 @@ int playerStopRidingObject(GameObject* obj)
     sub = inner->focusObject;
     if ((void*)sub != NULL)
     {
-        (*(void (**)(int, int))((char*)*sub->anim.dll + 0x3c))((int)sub, VEHICLE_NoRider);
+        VEHICLE_INTERFACE(sub)->setMountState(sub, VEHICLE_NoRider);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         obj->anim.flags &= ~8;
         obj->anim.modelState->flags = obj->anim.modelState->flags & 0xFFFFFEFFFLL;
