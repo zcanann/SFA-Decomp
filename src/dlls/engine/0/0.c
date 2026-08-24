@@ -2551,7 +2551,7 @@ CMenuSection gCMenuSections[] = {
 s16 gTrickyHudIconTextureIds[] = {
     0x0C81, /* TRICKY_COMMAND_TYPE_CALL */
     0x0C82, /* TRICKY_COMMAND_TYPE_FIND_SECRET */
-    0x0C82, /* TRICKY_COMMAND_TYPE_BADDIE */
+    0x0C82, /* TRICKY_COMMAND_TYPE_DISTRACT */
     0x0C85, /* TRICKY_COMMAND_TYPE_STAY */
     0x0C83, /* TRICKY_COMMAND_TYPE_FLAME */
     0x0C84, /* TRICKY_COMMAND_TYPE_THROW_BALL */
@@ -2748,7 +2748,7 @@ char sTemplateProgressCounterFormat[] = "%02d/%02d";
 void pauseMenuDrawStatus(void)
 {
     int statusOffset;
-    u8* trickyEnergy;
+    TrickyStats* trickyStats;
     f32* opacity;
     u8* base;
     TrickyHud* hud;
@@ -2771,7 +2771,7 @@ void pauseMenuDrawStatus(void)
     hud = (TrickyHud*)base;
     player = Obj_GetPlayerObject();
     getTrickyObject();
-    trickyEnergy = (*gMapEventInterface)->getTrickyEnergy();
+    trickyStats = (*gMapEventInterface)->getTrickyStats();
     statuses[HUD_STATUS_HEALTH] = playerGetCurHealth(player);
     statuses[HUD_STATUS_MAX_HEALTH] = playerGetMaxHealth(player);
     statuses[HUD_STATUS_TRICKY_FOOD] = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
@@ -2823,7 +2823,7 @@ void pauseMenuDrawStatus(void)
     statuses[HUD_STATUS_MOON_SEEDS] = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
     statuses[HUD_STATUS_FUEL_CELLS] = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
     statuses[HUD_STATUS_SCARABS] = playerGetMoney(player);
-    statuses[HUD_STATUS_TRICKY_ENERGY] = *trickyEnergy;
+    statuses[HUD_STATUS_TRICKY_ENERGY] = trickyStats->energy;
     if ((((gHudForceShowMask & 1) != 0) ||
          ((0.0f == (*gScreenTransitionInterface)->getProgress()) &&
           ((*gCameraInterface)->getMode() != CAMERA_MODE_VIEWFINDER_RESOURCE_ID) &&
@@ -7877,7 +7877,7 @@ void cMenuRun(void)
     switch (yButtonState)
     {
     case 2:
-        if (!mainGetBit(GAMEBIT_Tricky_Usable))
+        if (!mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands))
         {
             yButtonState = 0;
             yButtonItemTextureId = -1;
@@ -8604,7 +8604,7 @@ void GameUI_frameEnd(void)
                         gCMenuButtons |= 0x80000;
                         trickyProximity = 1;
                     }
-                    else if (tricky != 0 && mainGetBit(GAMEBIT_Tricky_Usable) &&
+                    else if (tricky != 0 && mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) &&
                              Camera_getTargetKind() == CAMCONTROL_TARGET_KIND_SUPPRESSED)
                     {
                         gCMenuButtons |= 0x20000;

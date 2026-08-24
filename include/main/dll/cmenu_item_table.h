@@ -107,13 +107,16 @@ typedef struct CMenuSection
 
 /*
  * Tricky ability bits: Tricky_getAvailableCommands()'s return value and
- * gTrickyHudActionMask/gTrickyHudItemMask (cmenu.c). Matches the "bit" column
- * of gCMenuTrickyAbilities above.
+ * gTrickyHudActionMask/gTrickyHudItemMask (cmenu.c). Most values match the
+ * "bit" column of gCMenuTrickyAbilities above. DISTRACT is the prompt-only
+ * Baddie Alert sidekick slot: it can light Tricky's "bad guy" prompt but has no
+ * normal C-menu row.
  */
 enum TrickyAbilityBit
 {
     TRICKY_ABILITY_CALL        = 0x01, /* Call Tricky - whistle, come to player */
     TRICKY_ABILITY_FIND_SECRET = 0x02, /* dig up buried items */
+    TRICKY_ABILITY_DISTRACT    = 0x04, /* prompt-only Baddie Alert target */
     TRICKY_ABILITY_STAY        = 0x08, /* hold position (pressure plates) */
     TRICKY_ABILITY_FLAME       = 0x10, /* fire breath */
     TRICKY_ABILITY_THROW_BALL  = 0x20, /* fetch ball bought from the shop */

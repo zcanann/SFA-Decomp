@@ -82,7 +82,7 @@ void IMIceMountain_exitWorldMap(GameObject* obj, IMIceMountainState* state) {
         } else {
             playerMode = 0;
         }
-        mainSetBits(GAMEBIT_TrickyWarpEnabled, 1);
+        mainSetBits(GAMEBIT_Tricky_Spawns, 1);
         (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, 1, 1);
         if (playerMode == IM_ICE_MOUNTAIN_PLAYER_MODE_WORLDMAP) {
             (*gGameUIInterface)->setCMenuShouldClose(1);
@@ -191,7 +191,7 @@ void IMIceMountain_updateEventState(GameObject* obj) {
         }
         if (state->warpCountdown > 0) {
             if (--state->warpCountdown == 0) {
-                mainSetBits(GAMEBIT_TrickyWarpEnabled, 0);
+                mainSetBits(GAMEBIT_Tricky_Spawns, 0);
                 warpToMap(IM_ICE_MOUNTAIN_EXIT_MAP, 0);
             }
         }

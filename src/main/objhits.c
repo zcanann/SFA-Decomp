@@ -2208,16 +2208,17 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
     ObjAnimDef* animDef;
     ObjAnimComponent* objAnim;
     int moveEnded;
-    int hitType;
+    int priorityHitType;
     ObjHitReactEntry* reactionEntry;
-    StaffCollisionInterface** effectResource;
-    bool sfxActive;
-    PartFxSpawnParams effectParams;
-    StaffCollisionColorArgs effectColorArgs;
+    StaffCollisionInterface** staffCollisionResource;
+    bool isSfxPlaying;
+    PartFxSpawnParams hitEffectParams;
+    StaffCollisionColorArgs hitEffectColor;
     int hitSphereIndex;
+    u8* hitSphereDefRow;
 
     objAnim = &obj->anim;
-    effectColorArgs = gObjHitReactEffectColorArgs;
+    hitEffectColor = gObjHitReactEffectColorArgs;
     if ((reactionState & OBJHITREACT_REACTION_STATE_MASK) != OBJHITREACT_REACTION_STATE_INACTIVE) {
         OSReport(sObjHitReactHitstateFrameString, objAnim->currentMoveProgress);
         moveEnded = ObjAnim_AdvanceCurrentMove(obj, (double)*reactionStepScale, (double)timeDelta, NULL);
@@ -2226,44 +2227,48 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
             reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
         }
     }
-    hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, &hitSphereIndex, 0, &effectParams.posX,
-                                                 &effectParams.posY, &effectParams.posZ);
-    if (hitType != 0) {
+    priorityHitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, &hitSphereIndex, 0,
+                                                         &hitEffectParams.posX, &hitEffectParams.posY,
+                                                         &hitEffectParams.posZ);
+    if (priorityHitType != 0) {
         ObjAnimBank* bank = ObjAnim_GetActiveBank(objAnim);
-        effectParams.posX = effectParams.posX + playerMapOffsetX;
-        effectParams.posZ = effectParams.posZ + playerMapOffsetZ;
-        effectParams.scale = gObjHitsScalarOne[0];
-        effectParams.rotZ = 0;
-        effectParams.rotY = 0;
-        effectParams.rotX = 0;
+        hitEffectParams.posX = hitEffectParams.posX + playerMapOffsetX;
+        hitEffectParams.posZ = hitEffectParams.posZ + playerMapOffsetZ;
+        hitEffectParams.scale = gObjHitsScalarOne[0];
+        hitEffectParams.rotZ = 0;
+        hitEffectParams.rotY = 0;
+        hitEffectParams.rotX = 0;
         animDef = bank->animDef;
-        hitSphereIndex = ObjAnim_GetHitReactEntryIndex(animDef, hitSphereIndex);
+        hitSphereDefRow = (u8*)animDef->hitReactTable;
+        hitSphereDefRow += hitSphereIndex * sizeof(ModelHitSphereDef);
+        hitSphereIndex = *(s8*)(hitSphereDefRow + offsetof(ModelHitSphereDef, sphereIndex));
         if (hitSphereIndex >= (int)(reactionEntryCount & OBJHITREACT_ENTRY_COUNT_MASK)) {
             OSReport(sObjHitReactSphereOverflowString, hitSphereIndex);
             hitSphereIndex = 0;
         }
         reactionEntry = &reactionEntryTable[hitSphereIndex];
-        if (hitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
+        if (priorityHitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
             if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
-                 !sfxActive)) {
+                (isSfxPlaying = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
+                 !isSfxPlaying)) {
                 Sfx_PlayFromObject(obj, reactionEntry->primaryHitSfxId);
             }
             if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-                (sfxActive = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
-                 !sfxActive)) {
+                (isSfxPlaying = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
+                 !isSfxPlaying)) {
                 Sfx_PlayFromObject(obj, reactionEntry->secondaryHitSfxId);
             }
             if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
-                effectResource = Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
-                (*effectResource)
-                    ->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &effectParams,
-                            OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE, &effectColorArgs);
-                if (effectResource != NULL) {
-                    Resource_Release(effectResource);
+                staffCollisionResource =
+                    Resource_Acquire(OBJHITREACT_HIT_EFFECT_ID, OBJHITREACT_HIT_EFFECT_RESOURCE_COUNT);
+                (*staffCollisionResource)
+                    ->spawn(OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &hitEffectParams,
+                            OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS, OBJHITREACT_HIT_EFFECT_NO_SOURCE, &hitEffectColor);
+                if (staffCollisionResource != NULL) {
+                    Resource_Release(staffCollisionResource);
                 }
             } else {
-                objDoHitParticleFx((void*)obj, 0.014f, &effectParams, OBJHITREACT_ALT_EFFECT_COUNT, NULL);
+                objDoHitParticleFx((void*)obj, 0.014f, &hitEffectParams, OBJHITREACT_ALT_EFFECT_COUNT, NULL);
             }
         }
         if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&

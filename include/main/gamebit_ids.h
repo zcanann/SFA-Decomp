@@ -350,7 +350,7 @@ enum GameBitId {
     GAMEBIT_Always1 = 0x95,                              /* table 0; used for always-available shop items */
     GAMEBIT_Always0 = 0x96,                              /* table 0; used for never-available (unused) shop items */
     GAMEBIT_SH_KilledBloop7 = 0x99,                      /* table 1 */
-    GAMEBIT_SH_TrickyFindSecretUnlocked = 0x9E,           /* table 2; set by SH_queenear after the Queen EarthWalker accepts all required white grubtubs; unlocks Tricky's Find Secret prompt/dialogue consumers (distinct from Tricky ability-mask bits) */
+    GAMEBIT_Tricky_Learned_Distract = 0x9E,               /* table 2; DP names this Tricky_Learned_Distract; set by SH_queenear after the Queen EarthWalker accepts all required white grubtubs; gates Tricky's Baddie Alert/Distract prompt */
     GAMEBIT_NpcTalkRelated009F = 0x9F,                   /* table 0; related to talking to NPCs */
     GAMEBIT_GalleonRelated00A0 = 0xA0,                   /* table 1 */
     GAMEBIT_WM_GalleonRelated00A4 = 0xA4,                /* table 1 */
@@ -623,8 +623,8 @@ enum GameBitId {
     GAMEBIT_IM_PushBlock_Placed = 0x4D3,                 /* table 2 */
     GAMEBIT_CF_AllPowerBasesPowered = 0x4E0,             /* table 1; set after all three power-base bits are set */
     GAMEBIT_TrickyTalk = 0x4E3,                          /* table 0; size 8; if < FF, can talk to Tricky, but he won't say anything */
-    GAMEBIT_Tricky_Usable = 0x4E4,                       /* table 2; can use Tricky commands */
-    GAMEBIT_TrickyWarpEnabled = 0x4E5,                   /* table 2; Tricky may use off-screen warp points */
+    GAMEBIT_Tricky_Unlocked_Sidekick_Commands = 0x4E4,   /* table 2; DP names this Tricky_Unlocked_Sidekick_Commands; unlocks Tricky's sidekick command menu */
+    GAMEBIT_Tricky_Spawns = 0x4E5,                       /* table 2; DP names this Tricky_Spawns; gates Tricky warp-helper/spawn placement */
     GAMEBIT_ITEM_SpellStone1_Used = 0x4E9,               /* table 2; hint 305 */
     GAMEBIT_FoundSpellStoneWarpPad = 0x4FA,              /* table 2; hint 372; ref temple/HitAnimator target */
     GAMEBIT_VFP_ActNo = 0x4FE,                           /* table 2; size 4 */

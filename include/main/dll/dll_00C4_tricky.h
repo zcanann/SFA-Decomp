@@ -10,15 +10,17 @@
 
 /*
  * Sidekick command active IDs. These are also the activeGameBit values in
- * gCMenuTrickyAbilities; BADDIE is a prompt-only branch that uses the shared
- * Find Secret icon slot but has no normal C-menu entry.
+ * gCMenuTrickyAbilities; DISTRACT is the prompt-only Baddie Alert branch that
+ * uses the shared Find Secret icon slot but has no normal C-menu entry.
  */
 #define TRICKY_COMMAND_TYPE_CALL        0
 #define TRICKY_COMMAND_TYPE_FIND_SECRET 1
-#define TRICKY_COMMAND_TYPE_BADDIE      2
+#define TRICKY_COMMAND_TYPE_DISTRACT    2
 #define TRICKY_COMMAND_TYPE_STAY        3
 #define TRICKY_COMMAND_TYPE_FLAME       4
 #define TRICKY_COMMAND_TYPE_THROW_BALL  5
+
+#define TRICKY_COMMAND_TYPE_TO_ABILITY(commandType) (1 << (commandType))
 
 typedef struct TrickyItemIdList {
     s32 ids[TRICKY_ITEM_ID_COUNT];

@@ -26,13 +26,9 @@ ObjectDescriptor gKaldachomMeObjDescriptor = {
     KaldachomMe_getExtraSize,
 };
 
-const f32 gKaldachomOne[1] = {1.0f};
-const f32 gKaldachomZero[1] = {0.0f};
-const f32 gKaldachomLinkedMouthStep[1] = {0.025f};
-
-#define KALDACHOMME_ONE               (gKaldachomOne[0])
-#define KALDACHOMME_ZERO              (gKaldachomZero[0])
-#define KALDACHOMME_LINKED_MOUTH_STEP (gKaldachomLinkedMouthStep[0])
+#define KALDACHOMME_ONE               1.0f
+#define KALDACHOMME_ZERO              0.0f
+#define KALDACHOMME_LINKED_MOUTH_STEP 0.025f
 
 void kaldachomme_setLinkedMouthMode(GameObject* obj, KaldachomMeLinkedMode mode) {
     KaldachomMeState* state;

@@ -1,7 +1,8 @@
 /*
  * DIM_tricky (DLL 0x1D0) - DIM Tricky companion object.
  * A simple 1-byte state machine (states 0-3) that watches game bit 0xA1B to
- * trigger a Tricky companion-pickup sequence: clears bits 0x4E4/0x4E5, then
+ * trigger a Tricky companion-pickup sequence: clears the sidekick command and
+ * warp-enabled bits, then
  * asks Tricky to move to this object through his export table.
  */
 #include "sys/objects/lifecycle.h"
@@ -65,8 +66,8 @@ void dim_tricky_update(GameObject* obj)
     case DIMTRICKY_STATE_WAIT_TRIGGER:
         if (mainGetBit(DIMTRICKY_TRIGGER_GAMEBIT) != 0)
         {
-            mainSetBits(GAMEBIT_Tricky_Usable, 0);
-            mainSetBits(GAMEBIT_TrickyWarpEnabled, 0);
+            mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 0);
+            mainSetBits(GAMEBIT_Tricky_Spawns, 0);
             state->phase = DIMTRICKY_STATE_HAND_CONTROL;
         }
         break;

@@ -569,7 +569,7 @@ void DR_LaserCannon_update(GameObject* obj)
         if (tricky != NULL)
         {
             TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                        TRICKY_COMMAND_TYPE_BADDIE);
+                                                        TRICKY_COMMAND_TYPE_DISTRACT);
         }
     }
     hit = ObjAnim_AdvanceCurrentMove(obj, state->animStepScale, timeDelta, 0);

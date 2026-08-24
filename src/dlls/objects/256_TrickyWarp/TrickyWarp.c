@@ -64,7 +64,7 @@ int TrickyWarp_isPlayerReachable(GameObject* obj, TrickyWarpState* state) {
     GameObject* player;
     int playerPatchGroup;
 
-    if (mainGetBit(GAMEBIT_TrickyWarpEnabled) == 0) {
+    if (mainGetBit(GAMEBIT_Tricky_Spawns) == 0) {
         return 0;
     }
     if (getTrickyObject() == NULL) {

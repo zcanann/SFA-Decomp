@@ -62,7 +62,7 @@ int nwTricky_getExtraSize(void) {
 void nwTricky_free(GameObject* unusedObj) {
     (void)unusedObj;
 
-    mainSetBits(GAMEBIT_Tricky_Usable, 1);
+    mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
 }
 
 void nwTricky_update(GameObject* obj) {
@@ -101,12 +101,12 @@ void nwTricky_update(GameObject* obj) {
                     enemy_setTrackedObj(*completedHerdScan, player);
                 }
             }
-            mainSetBits(GAMEBIT_Tricky_Usable, 1);
+            mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
             state->phase = NW_TRICKY_PHASE_LEARNING_COMMANDS;
         } else {
             if (mainGetBit(GAMEBIT_ITEM_TrickyStayFind_Got)) {
                 if (TRICKY_INTERFACE(tricky)->isPlayingBall(tricky) == 0) {
-                    mainSetBits(GAMEBIT_Tricky_Usable, 0);
+                    mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 0);
                     state->phaseTimer = 0.0f;
                 }
 
@@ -148,7 +148,7 @@ void nwTricky_update(GameObject* obj) {
             state->phaseTimer += timeDelta;
         }
         if (mainGetBit(GAMEBIT_TrickyTalk) == NW_TRICKY_ENERGY_LOW_GAMEBIT_VALUE) {
-            if ((*gMapEventInterface)->getTrickyEnergy()[0] >= NW_TRICKY_MINIMUM_ENERGY) {
+            if ((*gMapEventInterface)->getTrickyStats()->energy >= NW_TRICKY_MINIMUM_ENERGY) {
                 mainSetBits(GAMEBIT_TrickyTalk, NW_TRICKY_ENERGY_READY_GAMEBIT_VALUE);
             }
         }
@@ -156,7 +156,7 @@ void nwTricky_update(GameObject* obj) {
         if (phaseTimer >= NW_TRICKY_ENERGY_UPDATE_INTERVAL) {
             state->phaseTimer = phaseTimer - NW_TRICKY_ENERGY_UPDATE_INTERVAL;
             if (mainGetBit(GAMEBIT_TrickyTalk) == NW_TRICKY_ENERGY_READY_GAMEBIT_VALUE) {
-                if ((*gMapEventInterface)->getTrickyEnergy()[0] < NW_TRICKY_MINIMUM_ENERGY) {
+                if ((*gMapEventInterface)->getTrickyStats()->energy < NW_TRICKY_MINIMUM_ENERGY) {
                     mainSetBits(GAMEBIT_TrickyTalk, NW_TRICKY_ENERGY_LOW_GAMEBIT_VALUE);
                 }
             }

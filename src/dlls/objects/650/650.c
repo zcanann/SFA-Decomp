@@ -394,15 +394,10 @@ int dll_28B_substateHandler2(GameObject* obj, BaddieState* ai) {
     return 0;
 }
 
-const f32 gWcEarthWalkerCurveAdvanceStep[1] = {0.5f};
-const f32 gWcEarthWalkerApproachPlayerDistance[1] = {200.0f};
-const f32 gWcEarthWalkerChaseMoveSpeed[1] = {0.012f};
-const f32 gWcEarthWalkerWalkMoveSpeed[1] = {0.005f};
-
-#define WC_EARTHWALKER_CURVE_ADVANCE_STEP   (gWcEarthWalkerCurveAdvanceStep[0])
-#define WC_EARTHWALKER_APPROACH_PLAYER_DIST (gWcEarthWalkerApproachPlayerDistance[0])
-#define WC_EARTHWALKER_CHASE_MOVE_SPEED     (gWcEarthWalkerChaseMoveSpeed[0])
-#define WC_EARTHWALKER_WALK_MOVE_SPEED      (gWcEarthWalkerWalkMoveSpeed[0])
+#define WC_EARTHWALKER_CURVE_ADVANCE_STEP   0.5f
+#define WC_EARTHWALKER_APPROACH_PLAYER_DIST 200.0f
+#define WC_EARTHWALKER_CHASE_MOVE_SPEED     0.012f
+#define WC_EARTHWALKER_WALK_MOVE_SPEED      0.005f
 
 int dll_28B_substateHandler1(GameObject* obj, BaddieState* ai) {
     Dll28BAiState* state = *(Dll28BAiState**)&obj->extra;

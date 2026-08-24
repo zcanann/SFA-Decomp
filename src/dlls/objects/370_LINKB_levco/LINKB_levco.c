@@ -66,12 +66,12 @@ void linkbLevelControl_update(GameObject* obj) {
     LINKBLevelControlState* state;
     GameObject* tricky;
     GameObject* player;
-    u8* trickyEnergy;
+    TrickyStats* trickyStats;
 
     state = obj->extra;
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
-    trickyEnergy = (*gMapEventInterface)->getTrickyEnergy();
+    trickyStats = (*gMapEventInterface)->getTrickyStats();
     if ((*gSkyInterface)->getSunPosition(NULL) != 0) {
         if (state->musicTriggerId != -1) {
             state->musicTriggerId = -1;
@@ -126,7 +126,7 @@ void linkbLevelControl_update(GameObject* obj) {
             }
             break;
         case LINKB_LEVEL_CONTROL_STAGE_2:
-            if (trickyEnergy[0] != 0) {
+            if (trickyStats->energy != 0) {
                 trickySetSoundSuppressed(tricky, 1);
                 if (state->trickyHitCount-- == -1 && (tricky->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
                     mainSetBits(LINKB_GAMEBIT_STAGE_3, 1);
@@ -171,12 +171,12 @@ void linkbLevelControl_update(GameObject* obj) {
         if ((tricky->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
             state->trickyTalkTimer += timeDelta;
         }
-        if (mainGetBit(GAMEBIT_TrickyTalk) == 1 && trickyEnergy[0] >= 4) {
+        if (mainGetBit(GAMEBIT_TrickyTalk) == 1 && trickyStats->energy >= 4) {
             mainSetBits(GAMEBIT_TrickyTalk, 0xFF);
         }
         if (state->trickyTalkTimer >= LINKB_LEVEL_CONTROL_TRICKY_TALK_INTERVAL) {
             state->trickyTalkTimer -= LINKB_LEVEL_CONTROL_TRICKY_TALK_INTERVAL;
-            if (mainGetBit(GAMEBIT_TrickyTalk) == 0xFF && trickyEnergy[0] < 4) {
+            if (mainGetBit(GAMEBIT_TrickyTalk) == 0xFF && trickyStats->energy < 4) {
                 mainSetBits(GAMEBIT_TrickyTalk, 1);
             }
         }

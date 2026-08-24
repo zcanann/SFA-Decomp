@@ -1218,7 +1218,7 @@ void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMboss
     }
     if (runtime->groundBaddie.targetState == DIMBOSS_PHASE_LAUNCH_LIFT) {
         TRICKY_INTERFACE(tricky)->sideCommandEnable((GameObject*)tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                   TRICKY_COMMAND_TYPE_BADDIE);
+                                                   TRICKY_COMMAND_TYPE_DISTRACT);
         gameObj->hitVolumeIndex = 1;
     } else {
         gameObj->hitVolumeIndex = 2;
@@ -1715,7 +1715,7 @@ void DIMboss_init(GameObject* obj, void* params, int isAltVariant) {
     topState->effect = NULL;
     gDimBossHitReactionIndex = 0;
     gDIMbossSequenceFlags = 0;
-    mainSetBits(GAMEBIT_Tricky_Usable, 1);
+    mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
     dll_2E_initState(obj, &gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
     dll_2E_setMoveTables(&gDIMbossAnimController, &localVec, &localVec, 6);
     animFlagsByte = &gDIMbossAnimController.modeBits;

@@ -93,7 +93,7 @@ s16 sStaffSwipeTextureIdTable[4] = {0xC7F, 0x3EC, 0, 0};
 /* per-swipe trail record (stride 0x18, 3 records) */
 typedef struct StaffSwipeSlot {
     u8* vertexData;
-    f32 unk4;
+    f32 start;
     f32 lengthScale;
     u16 startIndex;
     u16 endIndex;
@@ -207,13 +207,11 @@ void staffUpdateAttackEffects(GameObject* obj, GameObject* player) {
                 burstScale = 0.4f;
             }
             if (staffState->glowAttackType == 7) {
-                objfx_spawnArcedBurst(obj, staffState->glowAttackType, 0.5f,
-                                      staffState->glowEnable, 1, (int)(30.0f * burstScale), 0.5f, 0.5f,
-                                      45.0f * chargeLevel, NULL, 0);
+                objfx_spawnArcedBurst(obj, staffState->glowAttackType, 0.5f, staffState->glowEnable, 1,
+                                      (int)(30.0f * burstScale), 0.5f, 0.5f, 45.0f * chargeLevel, NULL, 0);
             } else {
-                objfx_spawnArcedBurst(obj, staffState->glowAttackType, 1.0f,
-                                      staffState->glowEnable, 1, (int)(30.0f * burstScale), 1.0f, 1.0f,
-                                      45.0f * chargeLevel, NULL, 0);
+                objfx_spawnArcedBurst(obj, staffState->glowAttackType, 1.0f, staffState->glowEnable, 1,
+                                      (int)(30.0f * burstScale), 1.0f, 1.0f, 45.0f * chargeLevel, NULL, 0);
             }
         }
         playerGetMoveAndChargeLevel(player, &moveId, &chargeLevel);
@@ -432,8 +430,7 @@ void staffStartQuakeSpell(f32* pos) {
             ((ObjAnimComponent*)gStaffQuakeSpellState.object)->bankIndex = 1;
         }
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)gStaffQuakeSpellState.object, 1);
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)gStaffQuakeSpellState.object,
-                                 STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)gStaffQuakeSpellState.object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
         ((GameObject*)gStaffQuakeSpellState.object)->anim.rootMotionScale = 0.05f;
         ((GameObject*)gStaffQuakeSpellState.object)->anim.alpha = 0xff;
     }
@@ -459,8 +456,7 @@ void staffDrawQuakeSpellRing(void) {
         scale = gStaffQuakeSpellState.scale;
         PSMTXScale(mScale, scale, scale * gStaffQuakeSpellState.heightScale, scale);
         PSMTXConcat(mScale, mRot, mScale);
-        PSMTXTrans(mTrans, gStaffQuakeSpellState.posX - playerMapOffsetX,
-                   gStaffQuakeSpellState.posY,
+        PSMTXTrans(mTrans, gStaffQuakeSpellState.posX - playerMapOffsetX, gStaffQuakeSpellState.posY,
                    gStaffQuakeSpellState.posZ - playerMapOffsetZ);
         PSMTXConcat(mView, mTrans, mView);
         PSMTXConcat(mView, mScale, mResult);
@@ -796,7 +792,7 @@ void objSetAnimField48to0(GameObject* obj) {
     state->activeSlot = NULL;
 }
 
-void staff_startSwipe(GameObject* obj, s16 idx, f32 arg2, f32 lengthScale) {
+void staff_startSwipe(GameObject* obj, s16 idx, f32 start, f32 lengthScale) {
     StaffSwipeSlot* slot;
     int n;
     StaffSwipeSlot* slots = (StaffSwipeSlot*)obj->extra;
@@ -807,7 +803,7 @@ void staff_startSwipe(GameObject* obj, s16 idx, f32 arg2, f32 lengthScale) {
         }
     }
     slot->flags = (u8)(slot->flags | 0x3);
-    slot->unk4 = arg2;
+    slot->start = start;
     slot->lengthScale = lengthScale;
     slot->startIndex = 0;
     slot->endIndex = 0;

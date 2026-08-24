@@ -19,8 +19,12 @@ Usage:
                                                    compare retail vs built source
     python3 tools/sdata2_oracle.py --compare-src-sweep
                                                    summarize retail/source pool drift
+    python3 tools/sdata2_oracle.py --order-drift-sweep
+                                                   list source-order pool drift
 
-Reads only the carved retail objects under build/<version>/obj.
+The row reports read the carved retail objects under build/<version>/obj.  The
+--compare-src mode also prints the active DOL split-claim byte status so object
+symbol/order drift is not mistaken for a final data-content mismatch.
 """
 
 from __future__ import annotations
@@ -34,6 +38,73 @@ import tempfile
 from pathlib import Path
 
 MAGIC_HI = bytes.fromhex("43300000")
+
+
+class DolImage:
+    def __init__(self, path: Path):
+        self.data = path.read_bytes()
+        self.sections = []
+        for i in range(18):
+            offset = struct.unpack_from(">I", self.data, i * 4)[0]
+            address = struct.unpack_from(">I", self.data, 0x48 + i * 4)[0]
+            size = struct.unpack_from(">I", self.data, 0x90 + i * 4)[0]
+            if size:
+                self.sections.append((address, address + size, offset))
+
+    def read(self, address: int, size: int) -> bytes | None:
+        for start, end, offset in self.sections:
+            if start <= address and address + size <= end:
+                rel = address - start
+                return self.data[offset + rel:offset + rel + size]
+        return None
+
+
+def split_claims(root: Path, version: str, unit_name: str, section_name: str):
+    path = root / "config" / version / "splits.txt"
+    current = None
+    claims = []
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.split("#", 1)[0].rstrip()
+        if not line:
+            continue
+        if not raw_line[0].isspace() and line.endswith(":"):
+            current = line[:-1]
+            continue
+        if current != unit_name:
+            continue
+        fields = line.split()
+        if len(fields) >= 3 and fields[0] == section_name:
+            start = int(fields[1].split(":", 1)[1], 16)
+            end = int(fields[2].split(":", 1)[1], 16)
+            claims.append((start, end))
+    return claims
+
+
+def claim_status(root: Path, version: str, unit_name: str, src_obj: Path, objcopy: Path, tmp: Path) -> str:
+    claims = split_claims(root, version, unit_name, ".sdata2")
+    if not claims:
+        return "active DOL claim .sdata2: none"
+    dol = DolImage(root / "orig" / version / "sys" / "main.dol")
+    source = section(objcopy, src_obj, ".sdata2", tmp)
+    retail = b""
+    for start, end in claims:
+        chunk = dol.read(start, end - start)
+        if chunk is None:
+            return f"active DOL claim .sdata2: unmapped at 0x{start:08x}"
+        retail += chunk
+    compare = source[:len(retail)]
+    if compare == retail and len(source) == len(retail):
+        return f"active DOL claim .sdata2: exact bytes (0x{len(retail):x} B)"
+    bad = 0
+    for off in range(0, min(len(compare), len(retail)) & ~3, 4):
+        if compare[off:off + 4] != retail[off:off + 4]:
+            bad += 1
+    if len(source) != len(retail):
+        size = f", source size 0x{len(source):x} vs claim 0x{len(retail):x}"
+    else:
+        size = ""
+    words = max(1, len(retail) // 4)
+    return f"active DOL claim .sdata2: {bad}/{words} words differ{size}"
 
 
 def run(objdump: Path, *args) -> str:
@@ -306,6 +377,7 @@ def compare_src(args, root, build, objdump, objcopy, tmp):
         source_functions, source_rows = source
         width = max(len(retail_rows), len(source_rows))
         print(f"# .sdata2 retail/source compare: {args.unit}")
+        print(f"# {claim_status(root, args.version, unit['name'], src_obj, objcopy, tmp)}")
         print("%4s  %-34s %-20s %-28s | %-34s %-20s %-28s  %s" %
               ("idx", "retail", "r-value/raw", "r-first", "source", "s-value/raw", "s-first", "mark"))
         for i in range(width):
@@ -323,8 +395,61 @@ def compare_src(args, root, build, objdump, objcopy, tmp):
             print("%4d  %-34s %-20s %-28s | %-34s %-20s %-28s  %s" %
                   (i, r_name[:34], format_value(r)[:20], format_first(retail_functions, r)[:28],
                    s_name[:34], format_value(s)[:20], format_first(source_functions, s)[:28], mark))
+        summarize_order_drift(retail_functions, retail_rows, source_functions, source_rows)
         return
     raise SystemExit(f"unit not found: {args.unit}")
+
+
+def summarize_order_drift(retail_functions, retail_rows, source_functions, source_rows):
+    runs = order_drift_runs(retail_rows, source_rows)
+    if not runs:
+        return
+
+    print()
+    print("# order-drift runs: same .sdata2 atoms, different creation order")
+    for start, end in runs:
+        retail_run = retail_rows[start:end]
+        source_run = source_rows[start:end]
+        print(f"#   idx {start}-{end - 1} ({end - start} entries)")
+        print("#     retail: " + " -> ".join(order_atom(retail_functions, row) for row in retail_run))
+        print("#     source: " + " -> ".join(order_atom(source_functions, row) for row in source_run))
+        if any(row["raw"].startswith("43300000") for row in retail_run + source_run):
+            print("#     hint: includes an int-to-double bias; check declaration order around the first cast user")
+
+
+def order_drift_runs(retail_rows, source_rows):
+    width = min(len(retail_rows), len(source_rows))
+    runs = []
+    start = None
+    for i in range(width):
+        if retail_rows[i]["raw"] != source_rows[i]["raw"]:
+            if start is None:
+                start = i
+        elif start is not None:
+            runs.append((start, i))
+            start = None
+    if start is not None:
+        runs.append((start, width))
+    if not runs:
+        return []
+
+    drift = []
+    for start, end in runs:
+        retail_run = retail_rows[start:end]
+        source_run = source_rows[start:end]
+        retail_raw = [row["raw"] for row in retail_run]
+        source_raw = [row["raw"] for row in source_run]
+        if sorted(retail_raw) != sorted(source_raw):
+            continue
+        drift.append((start, end))
+    return drift
+
+
+def order_atom(functions, row):
+    first = row["first"]
+    fn = functions[first][1] if first is not None else "-"
+    raw = row["raw"][:8]
+    return f"{row['name']}[{raw}]@{fn}"
 
 
 def compare_src_sweep(args, root, build, objdump, objcopy, tmp):
@@ -368,6 +493,48 @@ def compare_src_sweep(args, root, build, objdump, objcopy, tmp):
     print(f"{len(rows)} source-built units have .sdata2 count, raw, or name drift.")
 
 
+def order_drift_sweep(args, root, build, objdump, objcopy, tmp):
+    units = json.load(open(build / "config.json"))["units"]
+    rows = []
+    for unit in units:
+        if unit.get("autogenerated"):
+            continue
+        retail_obj = root / unit["object"]
+        src_obj = source_object(build, unit["name"])
+        if not retail_obj.exists() or not src_obj.exists():
+            continue
+        retail = unit_rows(objdump, objcopy, retail_obj, tmp)
+        source = unit_rows(objdump, objcopy, src_obj, tmp)
+        if retail is None or source is None:
+            continue
+        retail_functions, retail_rows = retail
+        source_functions, source_rows = source
+        runs = order_drift_runs(retail_rows, source_rows)
+        if runs:
+            rows.append((unit["name"], retail_functions, retail_rows, source_functions, source_rows, runs))
+
+    print("%-56s %5s %5s %5s %s" % ("unit", "runs", "words", "magic", "first drift"))
+    for name, retail_functions, retail_rows, source_functions, source_rows, runs in sorted(
+        rows, key=lambda row: (-sum(end - start for start, end in row[5]), row[0])
+    ):
+        words = sum(end - start for start, end in runs)
+        magic = sum(
+            1
+            for start, end in runs
+            if any(row["raw"].startswith("43300000") for row in retail_rows[start:end] + source_rows[start:end])
+        )
+        start, end = runs[0]
+        first = (
+            "retail "
+            + " -> ".join(order_atom(retail_functions, row) for row in retail_rows[start:end])
+            + " | source "
+            + " -> ".join(order_atom(source_functions, row) for row in source_rows[start:end])
+        )
+        print("%-56s %5d %5d %5d %s" % (name, len(runs), words, magic, first[:180]))
+    print()
+    print(f"{len(rows)} source-built units have same-atom .sdata2 order drift.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-v", "--version", default="GSAE01")
@@ -375,11 +542,14 @@ def main():
     parser.add_argument("--unit")
     parser.add_argument("--compare-src", action="store_true")
     parser.add_argument("--compare-src-sweep", action="store_true")
+    parser.add_argument("--order-drift-sweep", action="store_true")
     args = parser.parse_args()
     if args.compare_src and not args.unit:
         parser.error("--compare-src requires --unit")
     if args.compare_src_sweep and args.unit:
         parser.error("--compare-src-sweep does not take --unit")
+    if args.order_drift_sweep and args.unit:
+        parser.error("--order-drift-sweep does not take --unit")
     root = Path(__file__).resolve().parent.parent
     build = root / "build" / args.version
     objdump = root / "build/binutils/powerpc-eabi-objdump"
@@ -389,6 +559,8 @@ def main():
         compare_src(args, root, build, objdump, objcopy, tmp)
     elif args.compare_src_sweep:
         compare_src_sweep(args, root, build, objdump, objcopy, tmp)
+    elif args.order_drift_sweep:
+        order_drift_sweep(args, root, build, objdump, objcopy, tmp)
     elif args.unit:
         detail(args, root, build, objdump, objcopy, tmp)
     elif args.unclaimed:

@@ -175,16 +175,13 @@ is unconfirmed.
   "Bad Guy Alert (unused)", gated by `aval` GameBit `0x0096` = `GAMEBIT_Always0`
   (`include/main/gamebits.h:335`, commented *"used for never-available (unused) shop items"*),
   i.e. permanently unavailable by construction. No re-derivation needed here.
-- **Increased Food Capacity**: `SaveGame_getTrickyEnergy` (`.text:0x800E9B70`,
-  `src/main/dll/dll_0017_savegame.c:1027`) returns `gSaveGameData + 0x18`. `Tricky_init`
-  (`src/dlls/objects/196_Tricky/tricky.c:9697`) stores this pointer as `TrickyState.progressPtr` via
-  `(*gMapEventInterface)->getTrickyEnergy()` (`include/main/mapEventTypes.h:34`, vtable offset
-  `0x94`). Byte `[0]` of that record is consumed as an energy counter elsewhere (decremented by
-  Flame/attack use in `src/dlls/objects/196_Tricky/tricky.c`); byte `[2]` drives
-  `modelVariant` (below). **Not found**: a
-  distinct "maximum energy" field — only one energy-like byte and the ball-progress byte are
-  identified in this pass, so the wiki's "current and maximum, max always 20" claim isn't yet
-  pinned to two separate save bytes here. `GAMEBIT_ITEM_TrickyFood_Count = 0xC1` (table 2, size 4,
+- **Increased Food Capacity**: `SaveGame_getTrickyStats` (`.text:0x800E9B70`,
+  `src/dlls/engine/23/23.c`) returns the `TrickyStats` record at save-data offset `0x18` through
+  `(*gMapEventInterface)->getTrickyStats()` (vtable offset `0x94`). The four-byte record now exposes
+  `energy` at `+0`, `maxEnergy` at `+1`, `ballReturnCount` at `+2`, and one unknown byte at `+3`.
+  New-game initialization writes `20` to `maxEnergy`; feeding clamps `pendingEnergy` against it,
+  while Flame and other abilities decrement `energy`. `GAMEBIT_ITEM_TrickyFood_Count = 0xC1`
+  (table 2, size 4,
   `include/main/gamebits.h`) is a **different**, unrelated counter — the player's carried GrubTub
   Fungus inventory, not Tricky's own energy meter.
 - **Kyte**: confirmed and better-documented in our own code than the wiki:
@@ -208,10 +205,9 @@ is unconfirmed.
   player or Tricky is missing/dead, or `GAMEBIT_NoBallsAllowed = 0xD00` ("Disables/despawns
   Tricky's ball", `include/main/gamebit_ids.h`) is set — this is the "if it suddenly becomes disabled
   (e.g. boss awake) it will just disappear" behavior from the wiki.
-- Color-per-10-retrieves: `Tricky_init` (`src/dlls/objects/196_Tricky/tricky.c:9706`) computes
-  `modelVariant = progressPtr[2] / 10` and stores it in `TrickyState.modelVariant`
-  (`tricky_state.h`, already commented `/* progress/10; indexes model bank color */` before this
-  pass), then writes it into the active model's color-bank byte. This is an exact structural match
+- Color-per-10-retrieves: `Tricky_init` computes
+  `colorVariant = stats->ballReturnCount / 10` and stores it in `TrickyState.colorVariant`, then
+  writes it into the active model's RGB channel-remap selector. This is an exact structural match
   to "every 10 successful retrieves (up to 239) changes color" — `239 / 10 = 23`, i.e. `0..23`
   model-bank variants, consistent with a `u8` progress counter the game caps below `240`.
   Whether "colors change how often he talks" is separately implemented was not chased further in
@@ -281,7 +277,7 @@ is unconfirmed.
 | `0x20` | Throw Ball | ball object, see Playing section above |
 
 `Tricky_getAvailableCommands` (`src/dlls/objects/196_Tricky/tricky.c:8581`) computes exactly this bitmask at runtime:
-base `0x02|0x08` once `GAMEBIT_Tricky_Usable (0x4E4)` is set, `|= 0x01` if
+base `0x02|0x08` once `GAMEBIT_Tricky_Unlocked_Sidekick_Commands (0x4E4)` is set, `|= 0x01` if
 `GAMEBIT_ITEM_TrickyCall_Got (0xDD)`, `|= 0x20` if `GAMEBIT_ITEM_TrickyBall_Bought (0x25)`, `|= 0x10`
 if `GAMEBIT_ITEM_TrickyFlame_Got (0x245)` — all four GameBits already named in
 `include/main/gamebits.h`. `src/main/dll/maybetemplate.c` reads this same mask back out of Tricky's vtable

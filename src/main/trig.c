@@ -25,6 +25,20 @@ extern const float sTrigPreciseCosQuadratic;
 extern const float sTrigPreciseCosQuartic;
 extern const float sTrigPreciseCosSextic;
 extern const float sTrigPreciseCosOctic;
+extern const double sTrigHighPrecisionAngleScale;
+extern const double sTrigHighPrecisionSinCoeff1;
+extern const double sTrigHighPrecisionSinCoeff3;
+extern const double sTrigHighPrecisionSinCoeff5;
+extern const double sTrigHighPrecisionSinCoeff7;
+extern const double sTrigHighPrecisionSinCoeff9;
+extern const double sTrigHighPrecisionSinCoeff11;
+extern const double sTrigHighPrecisionCosCoeff0;
+extern const double sTrigHighPrecisionCosCoeff2;
+extern const double sTrigHighPrecisionCosCoeff4;
+extern const double sTrigHighPrecisionCosCoeff6;
+extern const double sTrigHighPrecisionCosCoeff8;
+extern const double sTrigHighPrecisionCosCoeff10;
+extern const double sTrigHighPrecisionCosCoeff12;
 
 float fsin16Approx(int angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
@@ -95,7 +109,7 @@ float fsin16Precise(int angle) {
 float fsin16HighPrecision(int angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
-    double reducedAngle = 0.000023968449810713143 * reducedFloat;
+    double reducedAngle = sTrigHighPrecisionAngleScale * reducedFloat;
     double reducedSquared = reducedAngle * reducedAngle;
 
     switch (angle & 0xE000) {
@@ -104,46 +118,46 @@ float fsin16HighPrecision(int angle) {
         return (float)(reducedAngle *
                        (reducedSquared *
                             (reducedSquared *
-                                 (reducedSquared * (reducedSquared * (-0.00000002473889883359452 * reducedSquared +
-                                                                      0.0000027554973093759717) +
-                                                    -0.00019841261464659544) +
-                                  0.008333333318980809) +
-                             -0.16666666666563978) +
-                        0.9999999999999805));
+                                 (reducedSquared * (reducedSquared * (sTrigHighPrecisionSinCoeff11 * reducedSquared +
+                                                                      sTrigHighPrecisionSinCoeff9) +
+                                                    sTrigHighPrecisionSinCoeff7) +
+                                  sTrigHighPrecisionSinCoeff5) +
+                             sTrigHighPrecisionSinCoeff3) +
+                        sTrigHighPrecisionSinCoeff1));
     case 0x2000:
     case 0x4000:
         return (float)((
             reducedSquared *
-                (reducedSquared *
-                     (reducedSquared * (reducedSquared * (reducedSquared * (2.048770813211803e-09 * reducedSquared +
-                                                                            -0.0000002755268200651971) +
-                                                          0.000024801561642773723) +
-                                        -0.001388888881954176) +
-                      0.041666666665824886) +
-                 -0.4999999999999672) +
-            1.0));
+                (reducedSquared * (reducedSquared * (reducedSquared * (reducedSquared * (sTrigHighPrecisionCosCoeff12 *
+                                                                                             reducedSquared +
+                                                                                         sTrigHighPrecisionCosCoeff10) +
+                                                                       sTrigHighPrecisionCosCoeff8) +
+                                                     sTrigHighPrecisionCosCoeff6) +
+                                   sTrigHighPrecisionCosCoeff4) +
+                 sTrigHighPrecisionCosCoeff2) +
+            sTrigHighPrecisionCosCoeff0));
     case 0x6000:
     case 0x8000:
         return (float)(-(
             reducedAngle *
             (reducedSquared *
-                 (reducedSquared * (reducedSquared * (reducedSquared * (-0.00000002473889883359452 * reducedSquared +
-                                                                        0.0000027554973093759717) +
-                                                      -0.00019841261464659544) +
-                                    0.008333333318980809) +
-                  -0.16666666666563978) +
-             0.9999999999999805)));
+                 (reducedSquared * (reducedSquared * (reducedSquared * (sTrigHighPrecisionSinCoeff11 * reducedSquared +
+                                                                        sTrigHighPrecisionSinCoeff9) +
+                                                      sTrigHighPrecisionSinCoeff7) +
+                                    sTrigHighPrecisionSinCoeff5) +
+                  sTrigHighPrecisionSinCoeff3) +
+             sTrigHighPrecisionSinCoeff1)));
     default:
         return (float)(-(
             reducedSquared *
-                (reducedSquared *
-                     (reducedSquared * (reducedSquared * (reducedSquared * (2.048770813211803e-09 * reducedSquared +
-                                                                            -0.0000002755268200651971) +
-                                                          0.000024801561642773723) +
-                                        -0.001388888881954176) +
-                      0.041666666665824886) +
-                 -0.4999999999999672) +
-            1.0));
+                (reducedSquared * (reducedSquared * (reducedSquared * (reducedSquared * (sTrigHighPrecisionCosCoeff12 *
+                                                                                             reducedSquared +
+                                                                                         sTrigHighPrecisionCosCoeff10) +
+                                                                       sTrigHighPrecisionCosCoeff8) +
+                                                     sTrigHighPrecisionCosCoeff6) +
+                                   sTrigHighPrecisionCosCoeff4) +
+                 sTrigHighPrecisionCosCoeff2) +
+            sTrigHighPrecisionCosCoeff0));
     }
 }
 
@@ -213,6 +227,61 @@ float fcos16Precise(int angle) {
     }
 }
 
+float fcos16HighPrecision(int angle) {
+    s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
+    float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
+    double reducedAngle = sTrigHighPrecisionAngleScale * reducedFloat;
+    double reducedSquared = reducedAngle * reducedAngle;
+
+    switch (angle & 0xE000) {
+    case 0x0000:
+    case 0xE000:
+        return (float)((
+            reducedSquared *
+                (reducedSquared * (reducedSquared * (reducedSquared * (reducedSquared * (sTrigHighPrecisionCosCoeff12 *
+                                                                                             reducedSquared +
+                                                                                         sTrigHighPrecisionCosCoeff10) +
+                                                                       sTrigHighPrecisionCosCoeff8) +
+                                                     sTrigHighPrecisionCosCoeff6) +
+                                   sTrigHighPrecisionCosCoeff4) +
+                 sTrigHighPrecisionCosCoeff2) +
+            sTrigHighPrecisionCosCoeff0));
+    case 0x2000:
+    case 0x4000:
+        return (float)(-(
+            reducedAngle *
+            (reducedSquared *
+                 (reducedSquared * (reducedSquared * (reducedSquared * (sTrigHighPrecisionSinCoeff11 * reducedSquared +
+                                                                        sTrigHighPrecisionSinCoeff9) +
+                                                      sTrigHighPrecisionSinCoeff7) +
+                                    sTrigHighPrecisionSinCoeff5) +
+                  sTrigHighPrecisionSinCoeff3) +
+             sTrigHighPrecisionSinCoeff1)));
+    case 0x6000:
+    case 0x8000:
+        return (float)(-(
+            reducedSquared *
+                (reducedSquared * (reducedSquared * (reducedSquared * (reducedSquared * (sTrigHighPrecisionCosCoeff12 *
+                                                                                             reducedSquared +
+                                                                                         sTrigHighPrecisionCosCoeff10) +
+                                                                       sTrigHighPrecisionCosCoeff8) +
+                                                     sTrigHighPrecisionCosCoeff6) +
+                                   sTrigHighPrecisionCosCoeff4) +
+                 sTrigHighPrecisionCosCoeff2) +
+            sTrigHighPrecisionCosCoeff0));
+    default:
+        return (float)(reducedAngle *
+                       (reducedSquared *
+                            (reducedSquared *
+                                 (reducedSquared * (reducedSquared * (sTrigHighPrecisionSinCoeff11 * reducedSquared +
+                                                                      sTrigHighPrecisionSinCoeff9) +
+                                                    sTrigHighPrecisionSinCoeff7) +
+                                  sTrigHighPrecisionSinCoeff5) +
+                             sTrigHighPrecisionSinCoeff3) +
+                        sTrigHighPrecisionSinCoeff1));
+    }
+}
+
 const float sTrigApproxCosBias = 0.99999f;
 const float sTrigApproxCosLinear = -2.8707542e-10f;
 const float sTrigApproxCosQuadratic = 1.3332733e-20f;
@@ -233,58 +302,17 @@ const float sTrigPreciseCosQuadratic = -2.8724328e-10f;
 const float sTrigPreciseCosQuartic = 1.3751435e-20f;
 const float sTrigPreciseCosSextic = -2.632911e-31f;
 const float sTrigPreciseCosOctic = 2.655e-42f;
-
-float fcos16HighPrecision(int angle) {
-    s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
-    float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
-    double reducedAngle = 0.000023968449810713143 * reducedFloat;
-    double reducedSquared = reducedAngle * reducedAngle;
-
-    switch (angle & 0xE000) {
-    case 0x0000:
-    case 0xE000:
-        return (float)((
-            reducedSquared *
-                (reducedSquared *
-                     (reducedSquared * (reducedSquared * (reducedSquared * (2.048770813211803e-09 * reducedSquared +
-                                                                            -0.0000002755268200651971) +
-                                                          0.000024801561642773723) +
-                                        -0.001388888881954176) +
-                      0.041666666665824886) +
-                 -0.4999999999999672) +
-            1.0));
-    case 0x2000:
-    case 0x4000:
-        return (float)(-(
-            reducedAngle *
-            (reducedSquared *
-                 (reducedSquared * (reducedSquared * (reducedSquared * (-0.00000002473889883359452 * reducedSquared +
-                                                                        0.0000027554973093759717) +
-                                                      -0.00019841261464659544) +
-                                    0.008333333318980809) +
-                  -0.16666666666563978) +
-             0.9999999999999805)));
-    case 0x6000:
-    case 0x8000:
-        return (float)(-(
-            reducedSquared *
-                (reducedSquared *
-                     (reducedSquared * (reducedSquared * (reducedSquared * (2.048770813211803e-09 * reducedSquared +
-                                                                            -0.0000002755268200651971) +
-                                                          0.000024801561642773723) +
-                                        -0.001388888881954176) +
-                      0.041666666665824886) +
-                 -0.4999999999999672) +
-            1.0));
-    default:
-        return (float)(reducedAngle *
-                       (reducedSquared *
-                            (reducedSquared *
-                                 (reducedSquared * (reducedSquared * (-0.00000002473889883359452 * reducedSquared +
-                                                                      0.0000027554973093759717) +
-                                                    -0.00019841261464659544) +
-                                  0.008333333318980809) +
-                             -0.16666666666563978) +
-                        0.9999999999999805));
-    }
-}
+const double sTrigHighPrecisionAngleScale = 0.000023968449810713143;
+const double sTrigHighPrecisionSinCoeff1 = 0.9999999999999805;
+const double sTrigHighPrecisionSinCoeff3 = -0.16666666666563978;
+const double sTrigHighPrecisionSinCoeff5 = 0.008333333318980809;
+const double sTrigHighPrecisionSinCoeff7 = -0.00019841261464659544;
+const double sTrigHighPrecisionSinCoeff9 = 0.0000027554973093759717;
+const double sTrigHighPrecisionSinCoeff11 = -0.00000002473889883359452;
+const double sTrigHighPrecisionCosCoeff0 = 1.0;
+const double sTrigHighPrecisionCosCoeff2 = -0.4999999999999672;
+const double sTrigHighPrecisionCosCoeff4 = 0.041666666665824886;
+const double sTrigHighPrecisionCosCoeff6 = -0.001388888881954176;
+const double sTrigHighPrecisionCosCoeff8 = 0.000024801561642773723;
+const double sTrigHighPrecisionCosCoeff10 = -0.0000002755268200651971;
+const double sTrigHighPrecisionCosCoeff12 = 2.048770813211803e-09;
