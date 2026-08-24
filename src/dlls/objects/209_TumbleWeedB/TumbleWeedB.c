@@ -203,7 +203,7 @@ void TumbleWeedBush_free(GameObject* obj) {
     (void)obj;
 }
 
-const f32 gTumbleweedBushRenderScale[1] = {1.0f};
+const f32 gTumbleweedBushRenderScale[] = {1.0f};
 
 void TumbleWeedBush_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible) {
     s32 visibleInt = visible;
@@ -265,8 +265,8 @@ void TumbleWeedBush_update(GameObject* obj) {
     }
 }
 
-const f32 gTumbleweedBushInitScale[1] = {0.0f};
-const f32 gTumbleweedBushHitRadius[1] = {15.0f};
+const f32 gTumbleweedBushInitScale[] = {0.0f};
+const f32 gTumbleweedBushHitRadius[] = {15.0f};
 
 void TumbleWeedBush_init(GameObject* obj, TumbleweedBushPlacement* placement, int flags) {
     TumbleweedBushState* state;

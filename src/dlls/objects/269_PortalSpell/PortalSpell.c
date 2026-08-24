@@ -20,9 +20,9 @@
 #define PORTAL_SPELL_DOOR_CANCEL_ANY_SPELL  -1
 #define PORTAL_SPELL_DOOR_SEQUENCE_ARG_NONE -1
 
-const f32 gPortalSpellDoorModelScale[1] = {1.0f};
-const f32 gPortalSpellDoorRootMotionScale[1] = {3.1499999f};
-const f32 gPortalSpellDoorOpenAmountScale[1] = {0.5f};
+const f32 gPortalSpellDoorModelScale[] = {1.0f};
+const f32 gPortalSpellDoorRootMotionScale[] = {3.1499999f};
+const f32 gPortalSpellDoorOpenAmountScale[] = {0.5f};
 
 #define PORTAL_SPELL_DOOR_MODEL_SCALE       (gPortalSpellDoorModelScale[0])
 #define PORTAL_SPELL_DOOR_ROOT_MOTION_SCALE (gPortalSpellDoorRootMotionScale[0])
