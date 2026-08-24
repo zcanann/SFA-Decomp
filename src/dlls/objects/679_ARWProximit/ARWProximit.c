@@ -58,9 +58,9 @@ void arwproximit_free(GameObject* obj)
     }
 }
 
-const f32 gARWProximitZero[1] = {0.0f};
-const f32 gARWProximitShotDownExplosionSize[1] = {100.0f};
-const f32 gARWProximitDetonateExplosionSize[1] = {127.0f};
+const f32 gARWProximitZero[] = {0.0f};
+const f32 gARWProximitShotDownExplosionSize[] = {100.0f};
+const f32 gARWProximitDetonateExplosionSize[] = {127.0f};
 
 void arwproximit_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {

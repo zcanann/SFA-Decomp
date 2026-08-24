@@ -125,8 +125,8 @@ int DIMbosstonsil_startIdleHitReaction(GameObject* obj, GroundBaddieState* state
     state->baddie.moveSpeed = 0.01f;
     return 0;
 }
-const f32 gDIMbosstonsilThirty[1] = {30.0f};
-const f32 gDIMbosstonsilFifty[1] = {50.0f};
+const f32 gDIMbosstonsilThirty[] = {30.0f};
+const f32 gDIMbosstonsilFifty[] = {50.0f};
 
 void DIMbosstonsil_checkHit(GameObject* obj, GroundBaddieState* state) {
     GameObject* hitObj;

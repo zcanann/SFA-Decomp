@@ -566,9 +566,9 @@ void Lightfoot_RecordCompletedChallengeTargetHit(GameObject* obj, GroundBaddieSt
  * collision query tests. Low byte = behaviour flags; the high bits select the
  * map-surface type (consumed by trackBuildBlockTriangles).
  */
-const f32 gLightfootPulseTimerInterval[1] = {15.0f};
-const f32 gLightfootPulseSpawnOffsetY[1] = {35.0f};
-const f32 gLightfootPulseBurstScale[1] = {0.2f};
+const f32 gLightfootPulseTimerInterval[] = {15.0f};
+const f32 gLightfootPulseSpawnOffsetY[] = {35.0f};
+const f32 gLightfootPulseBurstScale[] = {0.2f};
 
 void Lightfoot_ProcessHitResponseFlags(GameObject* obj, BaddieState* inner)
 {

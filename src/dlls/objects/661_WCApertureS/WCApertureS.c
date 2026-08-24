@@ -94,7 +94,7 @@ void wcapertures_free(GameObject* obj)
     }
 }
 
-const f32 gWcAperturesZero[1] = {0.0f};
+const f32 gWcAperturesZero[] = {0.0f};
 
 void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {

@@ -39,7 +39,7 @@
 #define FIREFLY_AMP_MAX           0x3c
 #define FIREFLY_RADIUS_MARGIN     0x14
 
-static const f32 sFireFlyDespawnDelay[1] = {180.0f};
+static const f32 sFireFlyDespawnDelay[] = {180.0f};
 
 
 int firefly_animEventCallback(GameObject* obj)

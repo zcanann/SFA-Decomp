@@ -94,7 +94,7 @@ int BombPlant_animEventCallback(GameObject* obj) {
     return 0;
 }
 
-const f32 gBombPlantGrowRangeSq[1] = {6400.0f};
+const f32 gBombPlantGrowRangeSq[] = {6400.0f};
 
 static inline void BombPlant_tryBeginGrow(GameObject* obj, BombPlantState* state) {
     GameObject* player;
