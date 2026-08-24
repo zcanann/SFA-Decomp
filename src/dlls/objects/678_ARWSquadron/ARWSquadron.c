@@ -56,7 +56,7 @@
 union ArwSquadronConstU32 { u32 u; };
 const union ArwSquadronConstU32 gArwSquadronDefaultCurveMode = { 0x28 };
 
-const f32 gArwSquadronRangeZBehind[1] = {-100.0f};
+const f32 gArwSquadronRangeZBehind[] = {-100.0f};
 
 static inline int arwsquadron_isPlayerWithinRangeZ(GameObject* obj, f32 range)
 {
