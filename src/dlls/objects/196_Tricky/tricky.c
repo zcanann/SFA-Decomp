@@ -583,17 +583,21 @@ int Tricky_requestRecallAndCheckBusy(GameObject* obj) {
 PPCWGPipe GXWGFifo : (0xCC008000);
 
 f32 trickyGetAnimSpeed(GameObject* obj) {
-    return ((TrickyState*)obj->extra)->speed;
+    TrickyState* state = obj->extra;
+    return state->speed;
 }
 
 GameObject* trickyGetStayPoint(GameObject* obj) {
-    return ((TrickyState*)obj->extra)->followObj;
+    TrickyState* state = obj->extra;
+    return state->followObj;
 }
 int trickyGetAimPitchOffset(GameObject* obj) {
-    return ((TrickyState*)obj->extra)->modelAnchorRotY;
+    TrickyState* state = obj->extra;
+    return state->modelAnchorRotY;
 }
 f32* trickyGetQueuedPathParticlePos(GameObject* obj) {
-    return &((TrickyState*)obj->extra)->renderPosX;
+    TrickyState* state = obj->extra;
+    return &state->renderPosX;
 }
 
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes) {
@@ -7145,7 +7149,8 @@ void Tricky_requestRecall(GameObject* obj) {
 }
 
 int Tricky_isGuarding(GameObject* obj) {
-    u8 mode = ((TrickyState*)obj->extra)->stateIndex;
+    TrickyState* state = obj->extra;
+    u8 mode = state->stateIndex;
     if (mode == 8 || mode == 0xe) {
         return 1;
     }
@@ -7153,9 +7158,12 @@ int Tricky_isGuarding(GameObject* obj) {
 }
 
 int Tricky_isPlayingBall(GameObject* obj) {
+    TrickyState* state;
     u8 mode;
     int result;
-    mode = ((TrickyState*)obj->extra)->stateIndex;
+
+    state = obj->extra;
+    mode = state->stateIndex;
     switch (mode) {
     case 5:
         result = 1;
@@ -7234,10 +7242,12 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
 }
 
 u8 Tricky_getEnergyMax(GameObject* obj) {
-    return ((TrickyState*)obj->extra)->stats->maxEnergy;
+    TrickyState* state = obj->extra;
+    return state->stats->maxEnergy;
 }
 u8 Tricky_getEnergy(GameObject* obj) {
-    return ((TrickyState*)obj->extra)->stats->energy;
+    TrickyState* state = obj->extra;
+    return state->stats->energy;
 }
 
 void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType) {
@@ -7272,7 +7282,8 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
 }
 
 int Tricky_getCurrentCommandType(GameObject* obj, int* out) {
-    *out = ((TrickyState*)obj->extra)->commandPhase;
+    TrickyState* state = obj->extra;
+    *out = state->commandPhase;
     return 1;
 }
 
@@ -7476,7 +7487,7 @@ int Tricky_getAvailableCommands(GameObject* obj) {
 }
 
 int Tricky_getExtraSize(void) {
-    return 0x83c;
+    return offsetof(TrickyState, pad83C);
 }
 
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
