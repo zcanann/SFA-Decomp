@@ -119,7 +119,7 @@ enum TrickyAbilityBit
     TRICKY_ABILITY_DISTRACT    = 0x04, /* prompt-only Baddie Alert target */
     TRICKY_ABILITY_STAY        = 0x08, /* hold position (pressure plates) */
     TRICKY_ABILITY_FLAME       = 0x10, /* fire breath */
-    TRICKY_ABILITY_THROW_BALL  = 0x20, /* fetch ball bought from the shop */
+    TRICKY_ABILITY_PLAY_BALL   = 0x20, /* sidekick Play command / ball bought from the shop */
 };
 
 /*

@@ -283,7 +283,7 @@ extern const f32 gTrickyChildVoicePeriodFrames[1];
 #define TRICKY_COMMAND_PHASE_DIG         1
 #define TRICKY_COMMAND_PHASE_GUARD       3
 #define TRICKY_COMMAND_PHASE_FLAME       4
-#define TRICKY_COMMAND_PHASE_FETCH_BALL  5
+#define TRICKY_COMMAND_PHASE_PLAY_BALL   5
 
 #define TRICKY_STATE_FLAG_SIDESTEP                0x20  /* apply sidestepDelta lateral offset */
 #define TRICKY_STATE_FLAG_BACKSTEP                0x40  /* apply backstepDelta offset */
@@ -5400,10 +5400,10 @@ void tricky_state04_nop(void) {
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state);
 const TrickyItemIdList gTrickyCmdQueryInit = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
                                                TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
-                                               TRICKY_COMMAND_TYPE_THROW_BALL}};
+                                               TRICKY_COMMAND_TYPE_PLAY_BALL}};
 const TrickyItemIdList gTrickyFoodItemIds = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
                                               TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
-                                              TRICKY_COMMAND_TYPE_THROW_BALL}};
+                                              TRICKY_COMMAND_TYPE_PLAY_BALL}};
 
 static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
     TrickyState* sfxState = obj->extra;
@@ -7341,7 +7341,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             ref = playerIsInNormalControlUndisguisedOnLand((GameObject*)(ref));
             if ((ref != 0) && (bitVal = mainGetBit(GAMEBIT_NoBallsAllowed), bitVal == 0)) {
                 if (playerGetFlags3F0Bit5(state->playerObj) == 0) {
-                    commandMask |= TRICKY_ABILITY_THROW_BALL;
+                    commandMask |= TRICKY_ABILITY_PLAY_BALL;
                 }
             }
         }
@@ -7469,7 +7469,7 @@ int Tricky_getAvailableCommands(GameObject* obj) {
             r |= TRICKY_ABILITY_CALL;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
-            r |= TRICKY_ABILITY_THROW_BALL;
+            r |= TRICKY_ABILITY_PLAY_BALL;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
             r |= TRICKY_ABILITY_FLAME;
@@ -8037,9 +8037,9 @@ void Tricky_update(GameObject* obj) {
                         }
                     }
                     break;
-                case TRICKY_COMMAND_TYPE_THROW_BALL:
+                case TRICKY_COMMAND_TYPE_PLAY_BALL:
                     if ((u8)Obj_CanSetupObject()) {
-                        trickyState->commandPhase = TRICKY_COMMAND_PHASE_FETCH_BALL;
+                        trickyState->commandPhase = TRICKY_COMMAND_PHASE_PLAY_BALL;
                         placementSetup = Obj_AllocObjectSetup(0x18, TRICKY_CHILD_OBJ_SIDEKICK_BALL);
                         placementSetup->color[3] = 0xff;
                         placementSetup->color[0] = 2;
