@@ -133,7 +133,7 @@ void player_followCurve(GameObject* obj, int* state, f32 cx, f32 cz, f32 t, int 
     }
 }
 
-const f32 gPlayerMoveOne[1] = {1.0f};
+const f32 gPlayerMoveOne[] = {1.0f};
 
 void player_applyVelocityStep(GameObject* obj, int* ctx, f32 t)
 {

@@ -103,7 +103,7 @@ void CameraModeForceBehind_update(CameraObject* camera) {
                                    (GameObject*)camera->anim.parent);
 }
 
-const f32 gCamForceBehindEaseRate[1] = {0.25f};
+const f32 gCamForceBehindEaseRate[] = {0.25f};
 
 void CameraModeForceBehind_init(CameraObject* camera, int unused, CameraModeForceBehindInitParams* params) {
     GameObject* target = (GameObject*)camera->anim.targetObj;
