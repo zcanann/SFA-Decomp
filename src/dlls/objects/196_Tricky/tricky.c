@@ -7289,7 +7289,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     int ref;
     TrickyState* refB;
     TrickyState* refC;
-    u16* setup;
+    ObjPlacement* setup;
     u32 spawnedObj;
     u8 i;
     char questPromptOccupiedSlots[4];
@@ -7364,7 +7364,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                       !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
                     objSoundStartTimed(obj, &((TrickyState*)ref)->soundState, promptId, 0x500, 0xffffffff, 0);
                 }
-                setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_QUEST);
+                setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_QUEST);
                 questPromptOccupiedSlots[0] = -1;
                 questPromptOccupiedSlots[1] = -1;
                 questPromptOccupiedSlots[2] = -1;
@@ -7389,7 +7389,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     bitVal = 0xffffffff;
                 }
                 state->packedSlots.questPromptSlot = bitVal;
-                spawnedObj = (int)objSetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, obj->anim.parent);
+                spawnedObj = (int)objSetupObject(setup, 4, -1, 0xffffffff, obj->anim.parent);
                 state->questPromptChild = (GameObject*)spawnedObj;
                 ObjLink_AttachChild(obj, state->questPromptChild, state->packedSlots.questPromptSlot);
             }
@@ -7418,7 +7418,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                         objSoundStartTimed(obj, &refC->soundState, TRICKY_VOICE_SFX_BAD_GUY, 0x500, 0xffffffff, 0);
                     }
                 }
-                setup = (u16*)Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_EXCLAMATION);
+                setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_EXCLAMATION);
                 exclamationPromptOccupiedSlots[0] = -1;
                 exclamationPromptOccupiedSlots[1] = -1;
                 exclamationPromptOccupiedSlots[2] = -1;
@@ -7443,7 +7443,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     bitVal = 0xffffffff;
                 }
                 state->packedSlots.exclamationPromptSlot = bitVal;
-                spawnedObj = (int)objSetupObject((ObjPlacement*)setup, 4, -1, 0xffffffff, obj->anim.parent);
+                spawnedObj = (int)objSetupObject(setup, 4, -1, 0xffffffff, obj->anim.parent);
                 state->exclamationPromptChild = (GameObject*)spawnedObj;
                 ObjLink_AttachChild(obj, state->exclamationPromptChild, state->packedSlots.exclamationPromptSlot);
             }
