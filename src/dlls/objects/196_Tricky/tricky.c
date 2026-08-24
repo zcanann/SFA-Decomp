@@ -7729,7 +7729,6 @@ static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
 void Tricky_update(GameObject* obj) {
     char* debugTextBase;
     TrickyDebugCollisionData* debugData;
-    int state;
     TrickyState* trickyState;
     int commandAlreadyQueued;
     int impressSfxId;
@@ -7754,8 +7753,7 @@ void Tricky_update(GameObject* obj) {
 
     debugTextBase = gTrickyDebugStringTable;
     debugData = (TrickyDebugCollisionData*)debugTextBase;
-    state = (int)obj->extra;
-    trickyState = (TrickyState*)state;
+    trickyState = obj->extra;
     commandAlreadyQueued = 0;
     commandItemQuery = gTrickyCmdQueryInit;
     impressSfxPair = sTrickyImpressSfxPair;
@@ -7840,7 +7838,7 @@ void Tricky_update(GameObject* obj) {
 
                 trickyState->stateFlags = trickyState->stateFlags & ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-                childCursor = (u8*)state;
+                childCursor = (u8*)trickyState;
                 for (; childLoop.index < 7; childCursor += 4, childLoop.index++) {
                     objSetAnimSpeedTo1(*trickyFlameChildSlotAtCursor(childCursor));
                 }
@@ -7861,7 +7859,7 @@ void Tricky_update(GameObject* obj) {
         } else {
             requestedCommand = (*gGameUIInterface)->isOneOfItemsBeingUsed(commandItemQuery.ids, TRICKY_ITEM_ID_COUNT);
         }
-        commandCursor = (TrickyState*)state;
+        commandCursor = trickyState;
         count = trickyState->commandCount;
         for (i = 0; i < count; i++, commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand))) {
             if (commandCursor->commands[0].commandType == requestedCommand) {
@@ -7870,7 +7868,7 @@ void Tricky_update(GameObject* obj) {
             }
         }
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0 &&
-            trickyShouldGoToWarpPoint(obj, (TrickyState*)state) == 2) {
+            trickyShouldGoToWarpPoint(obj, trickyState) == 2) {
             trickyState->stateIndex = TRICKY_STATE_GO_TO_WARP_POINT;
         } else if (trickyState->stateIndex == TRICKY_STATE_GUARD && requestedCommand == TRICKY_COMMAND_TYPE_FLAME) {
             trickyState->guardCanSpawnHelpers = trickyState->guardCanSpawnHelpers ^ 1;
@@ -7952,7 +7950,7 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_STAY:
                     accepted = 0;
                     if (trickyState->commandPhase == TRICKY_COMMAND_PHASE_GUARD) {
-                        commandCursor = (TrickyState*)state;
+                        commandCursor = trickyState;
                         count = trickyState->commandCount;
                         for (i = 0; i < count;
                              i++, commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand))) {
@@ -8129,7 +8127,7 @@ void Tricky_update(GameObject* obj) {
     }
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
     trickyState->heightUpdateActive = 1;
-    debugData->pathPointCollision.stateHandlers[trickyState->stateIndex](obj, (void*)state);
+    debugData->pathPointCollision.stateHandlers[trickyState->stateIndex](obj, (void*)trickyState);
     trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
     trickyState->animTransitionTimer += timeDelta;
     if (trickyState->animTransitionTimer > TRICKY_ANIM_TRANSITION_FRAMES) {
@@ -8231,7 +8229,7 @@ void Tricky_update(GameObject* obj) {
     trickyState->prevSpeed = trickyState->speed;
     i = trickyState->commandCount - 1;
     {
-        TrickyState* expiringCommandCursor = (TrickyState*)(state + i * sizeof(TrickyCommand));
+        TrickyState* expiringCommandCursor = (TrickyState*)((u8*)trickyState + i * sizeof(TrickyCommand));
 
         for (; i >= 0; expiringCommandCursor = (TrickyState*)((u8*)expiringCommandCursor - sizeof(TrickyCommand)), i--) {
             s8* ttlFrames = (s8*)&expiringCommandCursor->commands[0].ttlFrames;
@@ -8239,7 +8237,7 @@ void Tricky_update(GameObject* obj) {
             *ttlFrames -= 1;
             if (*ttlFrames == 0) {
                 memmove(&expiringCommandCursor->commands[0],
-                        &((TrickyState*)(state + (i + 1) * sizeof(TrickyCommand)))->commands[0],
+                        &((TrickyState*)((u8*)trickyState + (i + 1) * sizeof(TrickyCommand)))->commands[0],
                         (trickyState->commandCount - i - 1) * sizeof(TrickyCommand));
                 trickyState->commandCount -= 1;
             }
@@ -8299,8 +8297,8 @@ void Tricky_update(GameObject* obj) {
             trickyPlaySidekickVoice(obj, impressSfxId, 0x500);
         }
     }
-    trickyUpdateColorVariant(obj, (TrickyState*)state);
-    Tricky_updateBlendChannelWeight(obj, (TrickyState*)state);
+    trickyUpdateColorVariant(obj, trickyState);
+    Tricky_updateBlendChannelWeight(obj, trickyState);
     if (trickyState->speed > TRICKY_AUDIO_EVENT_MIN_SPEED) {
         objAudioDispatchAnimEvents(obj, &trickyState->animEvents, 1, trickyState->footPoints,
                                    &trickyState->pathControlFlags, trickyState->speed, TRICKY_FLOAT_ONE);
