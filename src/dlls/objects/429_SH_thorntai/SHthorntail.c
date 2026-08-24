@@ -149,6 +149,26 @@ typedef struct SHthorntailDataTables {
     u8 levelMode0Locomotion8ImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
 } SHthorntailDataTables;
 
+STATIC_ASSERT(offsetof(SHthorntailDataTables, linkedConfigRows) == 0x000);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, pathHeaders) == 0x060);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, pathControlData) == 0x090);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, normalHitReactEntries) == 0x0A0);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, heavyHitReactEntries) == 0x294);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, stateMoveIds) == 0x488);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, stateMoveStepScales) == 0x4AC);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, stateFlags) == 0x4F0);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, stateTrigger0Sfx) == 0x504);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, stateTrigger7Sfx) == 0x528);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0DefaultImpactSfxTable) == 0x53C);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion1ImpactSfxVariants) == 0x54C);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion2ClearImpactSfxVariants) == 0x558);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion2SetImpactSfxVariants) == 0x564);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion3ClearImpactSfxVariants) == 0x570);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion3SetImpactSfxVariants) == 0x57C);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion5ClearImpactSfxVariants) == 0x588);
+STATIC_ASSERT(offsetof(SHthorntailDataTables, levelMode0Locomotion8ImpactSfxVariants) == 0x594);
+STATIC_ASSERT(sizeof(SHthorntailDataTables) == 0x5A0);
+
 typedef struct SHthorntailPathParams {
     u8 values[4];
 } SHthorntailPathParams;
@@ -681,23 +701,16 @@ typedef struct SHthorntailTailSwingEffectScratch {
 #define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL               0x7F
 #define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG              0x40
 
-#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET 0x0A0
-#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET  0x294
-#define SHTHORNTAIL_STATE_MOVE_IDS_OFFSET           0x488
-#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET   0x4AC
-#define SHTHORNTAIL_STATE_FLAGS_OFFSET              0x4F0
-#define SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET       0x504
-#define SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET       0x528
-
-#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(tables)                                                                   \
-    ((ObjHitReactEntry*)((tables) + SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET))
-#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(tables)                                                                    \
-    ((ObjHitReactEntry*)((tables) + SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET))
-#define SHTHORNTAIL_STATE_MOVE_IDS(tables)         ((s16*)((tables) + SHTHORNTAIL_STATE_MOVE_IDS_OFFSET))
-#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES(tables) ((f32*)((tables) + SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET))
-#define SHTHORNTAIL_STATE_FLAGS(tables)            ((u8*)((tables) + SHTHORNTAIL_STATE_FLAGS_OFFSET))
-#define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables)     ((u16*)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
-#define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables)     ((u8*)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
+#define SHTHORNTAIL_TABLE_FIELD(tables, type, field) ((type*)((tables) + offsetof(SHthorntailDataTables, field)))
+#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(tables) \
+    SHTHORNTAIL_TABLE_FIELD(tables, ObjHitReactEntry, normalHitReactEntries)
+#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(tables) \
+    SHTHORNTAIL_TABLE_FIELD(tables, ObjHitReactEntry, heavyHitReactEntries)
+#define SHTHORNTAIL_STATE_MOVE_IDS(tables)         SHTHORNTAIL_TABLE_FIELD(tables, s16, stateMoveIds)
+#define SHTHORNTAIL_STATE_MOVE_STEP_SCALES(tables) SHTHORNTAIL_TABLE_FIELD(tables, f32, stateMoveStepScales)
+#define SHTHORNTAIL_STATE_FLAGS(tables)            SHTHORNTAIL_TABLE_FIELD(tables, u8, stateFlags)
+#define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables)     SHTHORNTAIL_TABLE_FIELD(tables, u16, stateTrigger0Sfx)
+#define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables)     SHTHORNTAIL_TABLE_FIELD(tables, u8, stateTrigger7Sfx)
 
 void SHthorntail_updateLevelControlMode1(GameObject* objectId, SHthorntailState* runtime,
                                          SHthorntailPlacement* placement) {
