@@ -274,7 +274,7 @@ is unconfirmed.
 | `0x02` | Find Secret | `trickyDigTunnel` (`src/dlls/objects/196_Tricky/tricky.c`) — dig up buried items |
 | `0x08` | Tricky Stay! | not separately traced in this pass beyond the ability bit itself |
 | `0x10` | Use Flame | `trickyFlame` (`src/dlls/objects/196_Tricky/tricky.c`) |
-| `0x20` | Throw Ball | ball object, see Playing section above |
+| `0x20` | Play Ball | ball object, see Playing section above |
 
 `Tricky_getAvailableCommands` (`src/dlls/objects/196_Tricky/tricky.c:8581`) computes exactly this bitmask at runtime:
 base `0x02|0x08` once `GAMEBIT_Tricky_Unlocked_Sidekick_Commands (0x4E4)` is set, `|= 0x01` if
@@ -299,6 +299,6 @@ enum TrickyAbilityBit
     TRICKY_ABILITY_FIND_SECRET = 0x02, /* dig up buried items */
     TRICKY_ABILITY_STAY        = 0x08, /* hold position (pressure plates) */
     TRICKY_ABILITY_FLAME       = 0x10, /* fire breath */
-    TRICKY_ABILITY_THROW_BALL  = 0x20, /* fetch ball bought from the shop */
+    TRICKY_ABILITY_PLAY_BALL   = 0x20, /* sidekick Play command / ball bought from the shop */
 };
 ```

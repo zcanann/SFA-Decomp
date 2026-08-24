@@ -159,7 +159,7 @@ Concrete, high-confidence naming/enum/struct opportunities the agents surfaced w
 - Add named TexScroll table-entry struct for shader.c's lbl_803DCE68 (0x3a-slot, 0x10-stride scroll-matrix table) matching the wiki's Scrolling section, replacing raw pointer arithmetic in mapTextureScrollAcquire/mapTextureScrollSetStep.
 
 ### Tricky
-- enum TrickyAbilityBit {TRICKY_ABILITY_CALL=0x01, TRICKY_ABILITY_FIND_SECRET=0x02, TRICKY_ABILITY_STAY=0x08, TRICKY_ABILITY_FLAME=0x10, TRICKY_ABILITY_THROW_BALL=0x20} to replace the raw hex literals in Tricky_getAvailableCommands (`src/dlls/objects/196_Tricky/tricky.c`)
+- enum TrickyAbilityBit {TRICKY_ABILITY_CALL=0x01, TRICKY_ABILITY_FIND_SECRET=0x02, TRICKY_ABILITY_STAY=0x08, TRICKY_ABILITY_FLAME=0x10, TRICKY_ABILITY_PLAY_BALL=0x20} to replace the raw hex literals in Tricky_getAvailableCommands (`src/dlls/objects/196_Tricky/tricky.c`)
 - Name the TrickyState 0x748..0x798 queued-command array fields (targetObj/commandKind/commandType/status, stride 8, count unk798, cap 10 = MAX_COMM_PRESENT) instead of leaving pad744 opaque
 - Consider fixing/annotating the 325767.0f vs 32767.0f literal in ObjSeq_func20 (src/main/maketex.c:1216) as a known retail typo rather than leaving it unexplained
 
