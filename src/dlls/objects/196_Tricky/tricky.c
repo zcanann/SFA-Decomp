@@ -5455,6 +5455,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     RomCurveDef* tunnelNode;
     u8* targetPosBytes;
     u8* ptr;
+    TrickyState* voiceState;
     int walkGroup;
     int inWater;
     u16 sfxId;
@@ -5527,11 +5528,11 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         if (state->digTunnelWhineTimer.f <= gTrickyFloatZero) {
             state->digTunnelWhineTimer.f = (f32)(int)randomGetRange(0x14, 0xb4);
             state->digTunnelWhineTimer.f *= TRICKY_FLOAT_100;
-            ptr = obj->extra;
-            if (((TrickyState*)ptr)->soundSuppressed == 0 &&
+            voiceState = obj->extra;
+            if (voiceState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                 Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM, 0x500, -1, 0);
+                objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM, 0x500, -1, 0);
             }
         }
         pressDistance = GROUND_ANIMATOR_INTERFACE(state->followObj)->applyPress(state->followObj, obj);
@@ -5572,11 +5573,11 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = 5;
             sfxId = sfxTable.ids[randomGetRange(0, 1)];
-            ptr = obj->extra;
-            if (((TrickyState*)ptr)->soundSuppressed == 0 &&
+            voiceState = obj->extra;
+            if (voiceState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
                 Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &((TrickyState*)ptr)->soundState, sfxId, 0x500, -1, 0);
+                objSoundStartTimed(obj, &voiceState->soundState, sfxId, 0x500, -1, 0);
             }
         }
         break;
