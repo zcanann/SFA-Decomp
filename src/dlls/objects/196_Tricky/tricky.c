@@ -7290,7 +7290,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     TrickyState* refB;
     TrickyState* refC;
     ObjPlacement* setup;
-    u32 spawnedObj;
+    GameObject* spawnedObj;
     u8 i;
     char questPromptOccupiedSlots[4];
     char exclamationPromptOccupiedSlots[4];
@@ -7356,7 +7356,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             state->questPromptTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->questPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 bitVal = randomGetRange(0, 1);
-                promptId = *(u16*)((int)promptTable + bitVal * 2);
+                promptId = ((u16*)promptTable)[bitVal];
                 ref = (int)obj->extra;
                 if ((((TrickyState*)ref)->soundSuppressed == 0) &&
                     (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
@@ -7389,8 +7389,8 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     bitVal = 0xffffffff;
                 }
                 state->packedSlots.questPromptSlot = bitVal;
-                spawnedObj = (int)objSetupObject(setup, 4, -1, 0xffffffff, obj->anim.parent);
-                state->questPromptChild = (GameObject*)spawnedObj;
+                spawnedObj = objSetupObject(setup, 4, -1, 0xffffffff, obj->anim.parent);
+                state->questPromptChild = spawnedObj;
                 ObjLink_AttachChild(obj, state->questPromptChild, state->packedSlots.questPromptSlot);
             }
         } else if (state->questPromptChild != NULL) {
@@ -7443,8 +7443,8 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     bitVal = 0xffffffff;
                 }
                 state->packedSlots.exclamationPromptSlot = bitVal;
-                spawnedObj = (int)objSetupObject(setup, 4, -1, 0xffffffff, obj->anim.parent);
-                state->exclamationPromptChild = (GameObject*)spawnedObj;
+                spawnedObj = objSetupObject(setup, 4, -1, 0xffffffff, obj->anim.parent);
+                state->exclamationPromptChild = spawnedObj;
                 ObjLink_AttachChild(obj, state->exclamationPromptChild, state->packedSlots.exclamationPromptSlot);
             }
         } else if (state->exclamationPromptChild != NULL) {
