@@ -346,7 +346,7 @@ STATIC_ASSERT(sizeof(ObjModelBlendChannel) == 0x10);
  * buffers are selected by flags bits 0/1.
  */
 typedef struct ModelJointWork {
-    u8 *unk00;
+    Vec *jointPositions;
     f32 *jointRadii;
     f32 *radiiSq;
     f32 *jointLengths;
@@ -356,6 +356,7 @@ typedef struct ModelJointWork {
 } ModelJointWork;
 
 STATIC_ASSERT(sizeof(ModelJointWork) == 0x1C);
+STATIC_ASSERT(offsetof(ModelJointWork, jointPositions) == 0x00);
 STATIC_ASSERT(offsetof(ModelJointWork, jointRadii) == 0x04);
 STATIC_ASSERT(offsetof(ModelJointWork, jointLengths) == 0x0C);
 STATIC_ASSERT(offsetof(ModelJointWork, jointCullDistances) == 0x10);

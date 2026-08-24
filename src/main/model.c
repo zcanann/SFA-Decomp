@@ -725,7 +725,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
     }
     {
-        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitVolumeCount << 4;
+        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitVolumeCount * sizeof(ObjModelHitSphere);
         sizes[1] = hitSphereBytes << 1;
     }
     sizes[3] = 0;
@@ -746,7 +746,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || forceBlendChannels != 0)
     {
-        sizes[4] = sizes[4] + 0x30;
+        sizes[4] = sizes[4] + sizeof(ObjModelBlendChannel) * 3;
         total = sizes[3] + sizes[4] + (int)sizeof(ObjModel);
         total = (sizes[6] + sizes[1] + 8) + total;
     }
@@ -908,35 +908,35 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->blendChannels = pos;
-        pos += 0x30;
+        pos += sizeof(ObjModelBlendChannel) * 3;
         q = (u8*)((ObjModel*)out2)->blendChannels;
-        *(s8*)(q + 0xc) = -1;
-        *(s8*)(q + 0xd) = -1;
+        ((ObjModelBlendChannel*)q)->morphTargetA = -1;
+        ((ObjModelBlendChannel*)q)->morphTargetB = -1;
         f = 0.0f;
-        *(f32*)(q + 0) = f;
-        *(f32*)(q + 4) = f;
-        *(f32*)(q + 8) = f;
+        ((ObjModelBlendChannel*)q)->weight = f;
+        ((ObjModelBlendChannel*)q)->targetWeight = f;
+        ((ObjModelBlendChannel*)q)->weightRate = f;
         q = (u8*)((ObjModel*)out2)->blendChannels;
-        *(s8*)(q + 0x1c) = -1;
-        *(s8*)(q + 0x1d) = -1;
-        *(f32*)(q + 0x10) = f;
-        *(f32*)(q + 0x14) = f;
-        *(f32*)(q + 0x18) = f;
+        ((ObjModelBlendChannel*)q)[1].morphTargetA = -1;
+        ((ObjModelBlendChannel*)q)[1].morphTargetB = -1;
+        ((ObjModelBlendChannel*)q)[1].weight = f;
+        ((ObjModelBlendChannel*)q)[1].targetWeight = f;
+        ((ObjModelBlendChannel*)q)[1].weightRate = f;
         q = (u8*)((ObjModel*)out2)->blendChannels;
-        *(s8*)(q + 0x2c) = -1;
-        *(s8*)(q + 0x2d) = -1;
-        *(f32*)(q + 0x20) = f;
-        *(f32*)(q + 0x24) = f;
-        *(f32*)(q + 0x28) = f;
+        ((ObjModelBlendChannel*)q)[2].morphTargetA = -1;
+        ((ObjModelBlendChannel*)q)[2].morphTargetB = -1;
+        ((ObjModelBlendChannel*)q)[2].weight = f;
+        ((ObjModelBlendChannel*)q)[2].targetWeight = f;
+        ((ObjModelBlendChannel*)q)[2].weightRate = f;
     }
     if (szs[1] > 0)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->hitVolumeSphereBuffers[0] = pos;
         o2 = ((ModelFileHeader*)p)->hitVolumeCount;
-        pos += o2 * 0x10;
+        pos += o2 * sizeof(ObjModelHitSphere);
         *(int*)&((ObjModel*)out2)->hitVolumeSphereBuffers[1] = pos;
-        pos += ((ModelFileHeader*)p)->hitVolumeCount * 0x10;
+        pos += ((ModelFileHeader*)p)->hitVolumeCount * sizeof(ObjModelHitSphere);
         *(int*)&((ObjModel*)out2)->activeHitVolumeSpheres =
             *(int*)&((ObjModel*)out2)->hitVolumeSphereBuffers[0];
     }
@@ -945,9 +945,9 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c)
     {
         pos = roundUpTo4(pos);
         *(int*)&((ObjModel*)out2)->skeletonJointData = pos;
-        pos += 0x1c;
-        *(int*)&((ObjModel*)out2)->skeletonJointData->unk00 = pos;
-        pos += ((ModelFileHeader*)p)->jointCount * 0xc;
+        pos += sizeof(ModelJointWork);
+        *(int*)&((ObjModel*)out2)->skeletonJointData->jointPositions = pos;
+        pos += ((ModelFileHeader*)p)->jointCount * sizeof(Vec);
         *(int*)&((ObjModel*)out2)->skeletonJointData->jointRadii = pos;
         pos += ((ModelFileHeader*)p)->jointCount * 4;
         *(int*)&((ObjModel*)out2)->skeletonJointData->radiiSq = pos;
