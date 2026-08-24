@@ -1,14 +1,28 @@
 #ifndef MAIN_DLL_PROJGFX_INTERFACE_H_
 #define MAIN_DLL_PROJGFX_INTERFACE_H_
 
+#include "game/objects/object_fwd.h"
 #include "global.h"
 
+typedef void (*ProjgfxResourceSpawnFn)(GameObject* obj, int unused1, int unused2, int spawnFlags, int modelId,
+                                       int effectId, int unused3);
 typedef void (*ProjgfxOnMapSetupFn)(void);
 typedef int (*ProjgfxRetMinusOneFn)(void);
 typedef void (*ProjgfxNopFn)(void);
 typedef int (*ProjgfxGetObjectTypeIdFn)(void);
 typedef void (*ProjgfxSetZScaleUnsupportedFn)(void);
 typedef void (*ProjgfxRayHitUnsupportedFn)(void);
+
+typedef struct ProjgfxResourceVTable {
+    u8 pad00[4];
+    ProjgfxResourceSpawnFn spawnEffect;
+} ProjgfxResourceVTable;
+
+typedef struct ProjgfxResource {
+    ProjgfxResourceVTable* vtable;
+} ProjgfxResource;
+
+STATIC_ASSERT(offsetof(ProjgfxResourceVTable, spawnEffect) == 0x04);
 
 typedef struct ProjgfxInterface
 {

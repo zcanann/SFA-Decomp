@@ -1,4 +1,5 @@
 #include "dlls/object_descriptor.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "string.h"
@@ -259,23 +260,20 @@ void player_updateParticles(GameObject* obj, int unused, int effectId, int count
 
 void player_doProjGfx(GameObject* obj, int unusedA, int resIdBase, int count, int unusedB, int mode)
 {
-    /* res: acquired projectile-gfx resource; its vtable slot [+4] is the
-     * per-instance spawn entry, dispatched `count` times with a mode-selected
-     * flag (1/2/4). */
-    void* res = Resource_Acquire((u16)(resIdBase + 0x58), 1);
+    ModgfxResource* res = Resource_Acquire((u16)(resIdBase + 0x58), 1);
     while (count != 0)
     {
         if (mode == 0)
         {
-            (*(void (*)(GameObject*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, 0, 1, -1, 0);
+            res->vtable->spawnEffect(obj, 0, 0, 1, -1, 0);
         }
         else if (mode == 1)
         {
-            (*(void (*)(GameObject*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, 0, 2, -1, 0);
+            res->vtable->spawnEffect(obj, 0, 0, 2, -1, 0);
         }
         else if (mode == 2)
         {
-            (*(void (*)(GameObject*, int, int, int, int, int))(*(int*)(*(int*)res + 4)))(obj, 0, 0, 4, -1, 0);
+            res->vtable->spawnEffect(obj, 0, 0, 4, -1, 0);
         }
         count--;
     }
