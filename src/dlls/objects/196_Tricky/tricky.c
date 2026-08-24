@@ -6900,7 +6900,7 @@ typedef enum TrickySequenceEvent {
 } TrickySequenceEvent;
 
 int gTrickyUnusedSbss;
-u32 gTrickyWarpHelperObject;
+GameObject* gTrickyWarpHelperObject;
 
 GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
     GameObject** objs;
@@ -7011,8 +7011,8 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
         state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
     }
     if (gTrickyWarpHelperObject == 0) {
-        int setup = (int)Obj_AllocObjectSetup(0x18, TRICKY_HELPER_WARP_OBJECT_ID);
-        gTrickyWarpHelperObject = (int)objSetupObject((ObjPlacement*)setup, 4, -1, -1, obj->anim.parent);
+        ObjPlacement* setup = Obj_AllocObjectSetup(0x18, TRICKY_HELPER_WARP_OBJECT_ID);
+        gTrickyWarpHelperObject = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
     }
     state->ownsWarpHelperObject = 1;
 }
@@ -7481,7 +7481,7 @@ int Tricky_getExtraSize(void) {
 
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
     int i;
-    int childSlot;
+    u8* childSlot;
     TrickyState* state;
     u32 objId = (u32)obj;
 
@@ -7501,14 +7501,14 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
         state->stateFlags = state->stateFlags & ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
         state->stateFlags = state->stateFlags | TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
         i = 0;
-        childSlot = (int)state;
+        childSlot = (u8*)state;
         do {
-            objSetAnimSpeedTo1(*trickyFlameChildSlotAtCursor((void*)childSlot));
-            childSlot = childSlot + 4;
+            objSetAnimSpeedTo1(*trickyFlameChildSlotAtCursor(childSlot));
+            childSlot = childSlot + sizeof(GameObject*);
             i = i + 1;
         } while (i < 7);
         Sfx_RemoveLoopedObjectSound((GameObject*)objId, SFXTRIG_trpopn_c);
-        childSlot = (int)obj->extra;
+        childSlot = obj->extra;
         if ((((TrickyState*)childSlot)->soundSuppressed == 0) &&
             (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
               (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0)))) {
@@ -7525,7 +7525,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
         Obj_FreeObject(state->spawnedChild);
     }
     if ((state->ownsWarpHelperObject != 0u) && (gTrickyWarpHelperObject != 0)) {
-        Obj_FreeObject((GameObject*)gTrickyWarpHelperObject);
+        Obj_FreeObject(gTrickyWarpHelperObject);
         gTrickyWarpHelperObject = 0;
     }
     return;
