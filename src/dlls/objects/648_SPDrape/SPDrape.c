@@ -75,7 +75,7 @@ void spdrape_hitDetect(void)
 {
 }
 
-const f32 gSpDrapeZero[1] = {0.0f};
+const f32 gSpDrapeZero[] = {0.0f};
 
 void spdrape_update(GameObject* obj)
 {

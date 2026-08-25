@@ -5,6 +5,7 @@
 
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/frame_timing.h"
 #include "main/mm.h"
@@ -143,7 +144,7 @@ void CameraModeClimb_init(CameraObject* camera, int mode, CameraModeClimbTransit
     f32 defaultMinHeight;
     f32 defaultMaxHeight;
     f32 defaultRelPos;
-    int handler;
+    CamcontrolDefaultHandlerEntry* handler;
 
     if (gCameraModeClimbState == NULL) {
         gCameraModeClimbState = (CameraModeClimbState*)mmAlloc(sizeof(CameraModeClimbState), 0xf, 0);
@@ -165,9 +166,9 @@ void CameraModeClimb_init(CameraObject* camera, int mode, CameraModeClimbTransit
     case 1:
     default:
         memset(gCameraModeClimbState, 0, sizeof(CameraModeClimbState));
-        handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-        (*(VtableFn*)(**(int**)(handler + 4) + 0x20))(&defaultDistB, &defaultDistA, &defaultMinHeight,
-                                                      &defaultMaxHeight, &defaultRelPos);
+        handler = (*gCameraInterface)->getDefaultHandlerEntry();
+        handler->handler->vtable->getSettings(&defaultDistB, &defaultDistA, &defaultMinHeight, &defaultMaxHeight,
+                                               &defaultRelPos);
         (*gCameraInterface)
             ->getRelativePosition(camera, &outX, &outY, &outZ, &defaultDistXZ,
                                   (f32)(u16)gCameraModeClimbState->relativePosition, 0);

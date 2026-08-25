@@ -117,6 +117,70 @@ STATIC_ASSERT(offsetof(CamcontrolCameraState, frameFlags) == 0x140);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, targetFlags) == 0x141);
 STATIC_ASSERT(offsetof(CamcontrolCameraState, smoothingFlags) == 0x143);
 
+typedef void (*CamcontrolHandlerReservedFn)(void);
+typedef void (*CamcontrolHandlerActivateFn)(CamcontrolCameraState* camera, int startFlags, void* actionData);
+typedef void (*CamcontrolHandlerUpdateFn)(CamcontrolCameraState* camera);
+typedef void (*CamcontrolHandlerReleaseFn)(CamcontrolCameraState* camera);
+typedef void (*CamcontrolHandlerActionCallbackFn)(void* actionData, int dataSize);
+typedef void (*CamcontrolDefaultHandlerFollowFn)(void* camera, ObjAnimComponent* target);
+typedef void (*CamcontrolDefaultHandlerUpdatePitchFn)(void* camera, double targetY, double distance);
+typedef void (*CamcontrolDefaultHandlerUpdateSlideFn)(void* camera, GameObject* target, f32 upperBound, f32 lowerBound);
+typedef void (*CamcontrolDefaultHandlerGetSettingsFn)(f32* minDistance, f32* maxDistance, f32* lowerHeightOffset,
+                                                      f32* upperHeightOffset, f32* targetHeight);
+typedef void (*CamcontrolDefaultHandlerUpdateVerticalBoundsFn)(void* camera, int flags, int collisionFlag,
+                                                               f32* upperBound, f32* lowerBound);
+
+typedef struct CamcontrolHandlerVTable {
+    CamcontrolHandlerReservedFn reserved18;
+    CamcontrolHandlerActivateFn activate;
+    CamcontrolHandlerUpdateFn update;
+    CamcontrolHandlerReleaseFn release;
+    CamcontrolHandlerActionCallbackFn actionCallback;
+} CamcontrolHandlerVTable;
+
+typedef struct CamcontrolDefaultHandlerVTable {
+    CamcontrolHandlerReservedFn reserved18;
+    CamcontrolHandlerActivateFn activate;
+    CamcontrolHandlerUpdateFn update;
+    CamcontrolHandlerReleaseFn release;
+    CamcontrolHandlerActionCallbackFn actionCallback;
+    CamcontrolDefaultHandlerFollowFn follow;
+    CamcontrolDefaultHandlerUpdatePitchFn updatePitch;
+    CamcontrolDefaultHandlerUpdateSlideFn updateSlide;
+    CamcontrolDefaultHandlerGetSettingsFn getSettings;
+    CamcontrolDefaultHandlerUpdateVerticalBoundsFn updateVerticalBounds;
+} CamcontrolDefaultHandlerVTable;
+
+typedef struct CamcontrolHandler {
+    CamcontrolHandlerVTable* vtable;
+} CamcontrolHandler;
+
+typedef struct CamcontrolDefaultHandler {
+    CamcontrolDefaultHandlerVTable* vtable;
+} CamcontrolDefaultHandler;
+
+typedef struct CamcontrolDefaultHandlerEntry {
+    u16 actionId;
+    u8 pad02[2];
+    CamcontrolDefaultHandler* handler;
+    u8 priority;
+    u8 pad09[3];
+} CamcontrolDefaultHandlerEntry;
+
+STATIC_ASSERT(sizeof(CamcontrolHandlerVTable) == 0x14);
+STATIC_ASSERT(offsetof(CamcontrolHandlerVTable, activate) == 0x04);
+STATIC_ASSERT(offsetof(CamcontrolHandlerVTable, actionCallback) == 0x10);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerVTable, follow) == 0x14);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerVTable, updatePitch) == 0x18);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerVTable, updateSlide) == 0x1C);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerVTable, getSettings) == 0x20);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerVTable, updateVerticalBounds) == 0x24);
+STATIC_ASSERT(sizeof(CamcontrolHandler) == 0x04);
+STATIC_ASSERT(sizeof(CamcontrolDefaultHandler) == 0x04);
+STATIC_ASSERT(sizeof(CamcontrolDefaultHandlerEntry) == 0x0C);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerEntry, handler) == 0x04);
+STATIC_ASSERT(offsetof(CamcontrolDefaultHandlerEntry, priority) == 0x08);
+
 enum CamcontrolBlendFlags {
     CAMCONTROL_BLEND_YAW = 0x01,
     CAMCONTROL_BLEND_PITCH = 0x02,

@@ -1,8 +1,11 @@
 #ifndef MAIN_DLL_MODGFX_INTERFACE_H_
 #define MAIN_DLL_MODGFX_INTERFACE_H_
 
+#include "game/objects/object_fwd.h"
 #include "global.h"
 
+typedef void (*ModgfxResourceSpawnFn)(GameObject* obj, int unused1, int unused2, int spawnFlags, int modelId,
+                                      int unused3);
 typedef void (*ModgfxDetachSourceFn)(void* sourceObject);
 typedef void (*ModgfxOnMapSetupFn)(void);
 typedef void (*ModgfxUpdateActiveEffectsFn)(int unused0, int unused1, int unused2);
@@ -27,6 +30,17 @@ typedef void (*ModgfxSpawnSequenceFn)(void* sourceObject, void* vertices, int ve
                                       int textureAssetId, void* textureResource);
 typedef void (*ModgfxAddSequenceFlagsFn)(u32 flags);
 typedef s16 (*ModgfxGetLastSpawnHandleFn)(void);
+
+typedef struct ModgfxResourceVTable {
+    u8 pad00[4];
+    ModgfxResourceSpawnFn spawnEffect;
+} ModgfxResourceVTable;
+
+typedef struct ModgfxResource {
+    ModgfxResourceVTable* vtable;
+} ModgfxResource;
+
+STATIC_ASSERT(offsetof(ModgfxResourceVTable, spawnEffect) == 0x04);
 
 typedef struct ModgfxInterface {
     u8 pad00[0x04];

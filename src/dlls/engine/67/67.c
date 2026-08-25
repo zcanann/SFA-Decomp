@@ -23,11 +23,9 @@
 
 CameraModeStaffAnimState* gCameraModeStaffAnimState;
 
-typedef void (*CameraModeStaffAnimBoundsCallback)(CameraObject* camera, GameObject* target, f32 min, f32 max);
-
 u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera) {
     CamcontrolCameraState work;
-    int handler;
+    CamcontrolDefaultHandlerEntry* handler;
     int i;
     f32 pathT;
 
@@ -42,12 +40,12 @@ u8 CameraModeStaffAnim_samplePath(f32* outX, f32* height, f32* outZ, GameObject*
     Obj_TransformLocalPointToWorld((double)work.prevLocalX, (double)work.prevLocalY, (double)work.prevLocalZ,
                                    &work.prevWorldX, &work.prevWorldY, &work.prevWorldZ, work.localFrameObj);
     work.focusObj = &target->anim;
-    handler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(VtableFn*)(**(int**)(handler + 4) + 0x14))(&work, target);
+    handler = (*gCameraInterface)->getDefaultHandlerEntry();
+    handler->handler->vtable->follow(&work, &target->anim);
     Obj_TransformLocalPointToWorld(work.localX, work.localY, work.localZ, &work.worldX, &work.worldY, &work.worldZ,
                                    work.localFrameObj);
-    (*(VtableFn*)(**(int**)(handler + 4) + 0x24))(&work, 1, 3, &gCameraModeStaffAnimState->curveMin,
-                                                  &gCameraModeStaffAnimState->curveMax);
+    handler->handler->vtable->updateVerticalBounds(&work, 1, 3, &gCameraModeStaffAnimState->curveMin,
+                                                   &gCameraModeStaffAnimState->curveMax);
     i = gCameraModeStaffAnimState->pathCurve.count + -3;
     for (; i < gCameraModeStaffAnimState->pathCurve.count; i = i + 1) {
         gCameraModeStaffAnimState->pointsX[i] = work.localX;
@@ -232,10 +230,11 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
         Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                        &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                        (GameObject*)camera->anim.parentAddress);
-        (*(CameraModeStaffAnimBoundsCallback*)(**(int**)(defaultHandler + 4) + 0x1c))(camera, target, -100000.0f,
-                                                                                      100000.0f);
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x24))(camera, 1, 3, &gCameraModeStaffAnimState->curveMin,
-                                                             &gCameraModeStaffAnimState->curveMax);
+        ((CamcontrolDefaultHandlerEntry*)defaultHandler)->handler->vtable->updateSlide(camera, target, -100000.0f,
+                                                                                       100000.0f);
+        ((CamcontrolDefaultHandlerEntry*)defaultHandler)
+            ->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->curveMin,
+                                                    &gCameraModeStaffAnimState->curveMax);
         if ((camera->anim.currentMove != 0) || (camera->cameraCollisionActive != 0)) {
             gCameraModeStaffAnimState->initialiseCurve[4] = gCameraModeStaffAnimState->initialiseCurve[4] + timeDelta;
         }
@@ -261,7 +260,8 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             yawDelta = yawDelta + 0xffff;
         }
         camera->anim.rotX += yawDelta;
-        (*(VtableFn*)(**(int**)(defaultHandler + 4) + 0x18))(camera, (double)target->anim.worldPosY, (double)relDistXZ);
+        ((CamcontrolDefaultHandlerEntry*)defaultHandler)
+            ->handler->vtable->updatePitch(camera, (double)target->anim.worldPosY, (double)relDistXZ);
         if (needsReset != 0) {
             (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
         }
@@ -279,7 +279,7 @@ static inline f32 CameraModeStaffAnim_angleToRadians(int angle) {
 
 void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffAnimSettings* settings) {
     GameObject* target;
-    int view;
+    CamcontrolDefaultHandlerEntry* view;
     f32 sinFacing;
     f32 cosFacing;
     f32 relAngleRad;
@@ -309,8 +309,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
     }
     memset(gCameraModeStaffAnimState, 0, sizeof(CameraModeStaffAnimState));
 
-    view = (int)(*gCameraInterface)->getDefaultHandlerEntry();
-    (*(void (**)(f32*, f32*, f32*, int, f32*))(**(int**)(view + 4) + 0x20))(
+    view = (*gCameraInterface)->getDefaultHandlerEntry();
+    view->handler->vtable->getSettings(
         &gCameraModeStaffAnimState->actionParamX, &gCameraModeStaffAnimState->unknown08,
         &gCameraModeStaffAnimState->actionParamZ, 0, &gCameraModeStaffAnimState->actionParamY);
 

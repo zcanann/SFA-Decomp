@@ -203,7 +203,7 @@ int dll_CB_moveHandler0(GameObject* obj, GroundBaddieState* state, f32 timeDelta
     return 0;
 }
 
-const f32 gDllCBDefaultAnimSpeed[1] = {0.1f};
+const f32 gDllCBDefaultAnimSpeed[] = {0.1f};
 
 void dll_CB_seekAndUpdate(GameObject* obj, ObjSeqState* sequenceState, GroundBaddieState* objectState,
                           GroundBaddieState* state) {

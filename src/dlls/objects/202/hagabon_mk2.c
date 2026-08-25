@@ -125,11 +125,11 @@ typedef struct
     f32 z;     /* 0x14 */
 } CrawlerSfxParams;
 
-static const f32 gHagabonMK2LightAttenNear[1] = {100.0f};
+static const f32 gHagabonMK2LightAttenNear[] = {100.0f};
 
-static const f32 gHagabonMK2LightAttenFar[1] = {150.0f};
+static const f32 gHagabonMK2LightAttenFar[] = {150.0f};
 
-static const f32 gHagabonMK2LightIntensity[1] = {0.5f};
+static const f32 gHagabonMK2LightIntensity[] = {0.5f};
 
 static inline void crawler_createEngineLight(GameObject* obj, u8* state)
 {

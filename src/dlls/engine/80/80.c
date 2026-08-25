@@ -6,6 +6,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "game/objects/object.h"
 #include "main/camera_interface.h"
+#include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/dll_0042_cameramodenormal.h"
 #include "main/frame_timing.h"
 #include "main/mm.h"
@@ -14,23 +15,6 @@
 #include "main/vecmath.h"
 
 CameraModeCrawlState* gCameraModeCrawlState;
-
-typedef struct CameraModeCrawlDefaultHandlerVTable {
-    void (*slots[6])(void);
-    void (*updatePitch)(f32 targetY, f32 distance, CameraObject* camera);
-} CameraModeCrawlDefaultHandlerVTable;
-
-typedef struct CameraModeCrawlDefaultHandler {
-    CameraModeCrawlDefaultHandlerVTable* vtable;
-} CameraModeCrawlDefaultHandler;
-
-typedef struct CameraModeCrawlDefaultHandlerEntry {
-    u16 actionId;
-    u8 pad02[2];
-    CameraModeCrawlDefaultHandler* handler;
-    u8 priority;
-    u8 pad09[3];
-} CameraModeCrawlDefaultHandlerEntry;
 
 void CameraModeCrawl_copyToCurrent(void* actionData, int recordSize) {
     CameraObject* camera;
@@ -88,7 +72,7 @@ void CameraModeCrawl_update(CameraObject* camera) {
     f32 relativeY;
     f32 relativeZ;
     f32 relativeDistanceXZ;
-    int defaultHandler;
+    CamcontrolDefaultHandlerEntry* defaultHandler;
 
     if (target == NULL) {
         return;
@@ -115,7 +99,7 @@ void CameraModeCrawl_update(CameraObject* camera) {
         camera->anim.rotX = (s16)(0x8000 - getAngle(relativeX, relativeZ));
         camera->anim.rotY = 2048;
     } else {
-        defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+        defaultHandler = (*gCameraInterface)->getDefaultHandlerEntry();
         (*gCameraInterface)
             ->getRelativePosition(camera, &relativeX, &relativeY, &relativeZ, &relativeDistanceXZ, 35.0f, 0);
         {
@@ -129,8 +113,7 @@ void CameraModeCrawl_update(CameraObject* camera) {
             yawDelta = yawDelta + 0xffff;
         }
         camera->anim.rotX += yawDelta;
-        (*(void (**)(CameraObject*, f32, f32))(*(int*)(*(int*)(defaultHandler + 4)) + 24))(
-            camera, target->anim.worldPosY, relativeDistanceXZ);
+        defaultHandler->handler->vtable->updatePitch(camera, target->anim.worldPosY, relativeDistanceXZ);
     }
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,

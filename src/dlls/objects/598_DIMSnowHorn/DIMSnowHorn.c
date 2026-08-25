@@ -1239,8 +1239,8 @@ static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, GameObject* found)
     return angleDelta;
 }
 
-const f32 gDIMSnowHorn1OverrideOffsetY[1] = {-30.0f};
-const f32 gDIMSnowHorn1OverrideOffsetZ[1] = {-20.0f};
+const f32 gDIMSnowHorn1OverrideOffsetY[] = {-30.0f};
+const f32 gDIMSnowHorn1OverrideOffsetZ[] = {-20.0f};
 
 void DIMSnowHorn1_update(GameObject* obj)
 {

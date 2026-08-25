@@ -1341,7 +1341,7 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
             va[0] = *(f32*)(r + 0x6c);
             va[1] = *(f32*)(r + 0x74);
             va[2] = *(f32*)(r + 0x7c);
-            (*(void (**)(int, int, Vec*))(*(int*)staff->anim.dll + 0x28))((int)staff, obj, &vb);
+            STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)obj, &vb);
             va[0] = va[0] - vb.x;
             va[1] = va[1] - vb.y;
             va[2] = va[2] - vb.z;

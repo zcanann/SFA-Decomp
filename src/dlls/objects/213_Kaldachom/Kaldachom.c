@@ -506,9 +506,9 @@ ObjectDescriptor12 gKaldachomObjDescriptor = {
     (ObjectDescriptorCallback)kaldachom_func0B,
 };
 
-const f32 gKaldachomTextureIdScale[1] = {127.0f};
-const f32 gKaldachomPi[1] = {3.1415927f};
-const f32 gKaldachomAngleUnitScale[1] = {32768.0f};
+const f32 gKaldachomTextureIdScale[] = {127.0f};
+const f32 gKaldachomPi[] = {3.1415927f};
+const f32 gKaldachomAngleUnitScale[] = {32768.0f};
 
 void kaldachom_updateCombat(GameObject* obj, GroundBaddieState* objectStateAddress, GroundBaddieState* stateAddress) {
     KaldachomControl* control;

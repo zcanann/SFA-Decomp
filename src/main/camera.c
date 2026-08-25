@@ -942,8 +942,8 @@ void Camera_SetFovY(f32 fovY) {
     gCameraFovY = fovY;
 }
 
-const f32 gCameraDefaultFarPlane[1] = {10000.0f};
-const f32 gCameraDefaultPosition[1] = {200.0f};
+const f32 gCameraDefaultFarPlane[] = {10000.0f};
+const f32 gCameraDefaultPosition[] = {200.0f};
 
 void Camera_InitState(void) {
     CameraMatrixStorage* storage = (CameraMatrixStorage*)gObjInverseYawTransformMatrices;

@@ -22,23 +22,16 @@
 #include "main/objtype.h"
 #include "sys/objects/lifecycle.h"
 
-#define GRIMBLE_OBJECT_GROUP                      3
-#define GRIMBLE_PATH_OBJECT_GROUP                 0x17
-#define GRIMBLE_PARTICLE_TRAIL_FLAGS              0x60
-#define GRIMBLE_PARTICLE_BURST_FLAG               0x100
-#define GRIMBLE_BONE_EFFECT_ID                    0x52a
-#define GRIMBLE_PATH_MIN_PROGRESS                 0.3f
-#define GRIMBLE_PATH_MAX_PROGRESS                 6.7f
-#define GRIMBLE_PATH_SAMPLE_OFFSET                0.1f
-#define GRIMBLE_TARGET_MIN_PROGRESS               1.0f
-#define GRIMBLE_TARGET_MAX_PROGRESS               6.0f
-#define GRIMBLE_PATH_INTERFACE_OFFSET             0x68
-#define GRIMBLE_PATH_INITIALISE_CALLBACK_OFFSET   0x20
-#define GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET       0x24
-#define GRIMBLE_PATH_ADVANCE_CALLBACK_OFFSET      0x28
-#define GRIMBLE_PATH_FIND_NEAREST_CALLBACK_OFFSET 0x30
-#define GRIMBLE_PATH_GET_ROTATION_CALLBACK_OFFSET 0x34
-
+#define GRIMBLE_OBJECT_GROUP         3
+#define GRIMBLE_PATH_OBJECT_GROUP    0x17
+#define GRIMBLE_PARTICLE_TRAIL_FLAGS 0x60
+#define GRIMBLE_PARTICLE_BURST_FLAG  0x100
+#define GRIMBLE_BONE_EFFECT_ID       0x52a
+#define GRIMBLE_PATH_MIN_PROGRESS    0.3f
+#define GRIMBLE_PATH_MAX_PROGRESS    6.7f
+#define GRIMBLE_PATH_SAMPLE_OFFSET   0.1f
+#define GRIMBLE_TARGET_MIN_PROGRESS  1.0f
+#define GRIMBLE_TARGET_MAX_PROGRESS  6.0f
 void* gGrimbleStateHandlersB[6];
 
 int grimble_stateHandlerB05(GameObject* obj, GroundBaddieState* state) {
@@ -107,8 +100,7 @@ int grimble_stateHandlerB02(GameObject* obj, GroundBaddieState* state) {
             (*gPlayerInterface)->setState(obj, state, 6);
         } else if (state->baddie.controlMode != 1) {
             if (dx > 2.5f) {
-                if (state->baddie.controlMode != 4 &&
-                    (state->baddie.controlMode != 5 || state->baddie.moveDone != 0)) {
+                if (state->baddie.controlMode != 4 && (state->baddie.controlMode != 5 || state->baddie.moveDone != 0)) {
                     (*gPlayerInterface)->setState(obj, state, 1);
                 }
             }
@@ -258,23 +250,18 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* state, f32 speed
     }
     state->baddie.moveSpeed = 0.03f;
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, speed, 1);
-    (*(void (**)(void*, void*, f32))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                     GRIMBLE_PATH_ADVANCE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, &control->pathProgress,
-        state->baddie.animSpeedA*(f32)(1 - (control->reversed << 1)));
+    control->pathObj->pathInterface->callbacks->advance(control->pathObj, &control->pathProgress,
+                                                        state->baddie.animSpeedA * (f32)(1 - (control->reversed << 1)));
     if (control->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         control->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
     } else if (control->pathProgress > GRIMBLE_PATH_MAX_PROGRESS) {
         control->pathProgress = GRIMBLE_PATH_MAX_PROGRESS;
     }
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y,
-        &pathDelta.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress, &aheadSample.x, &aheadSample.y,
-        &aheadSample.z);
+    control->pathObj->pathInterface->callbacks->sample(
+        control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y, &pathDelta.z);
+    control->pathObj->pathInterface->callbacks->sample(control->pathObj,
+                                                       GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
+                                                       &aheadSample.x, &aheadSample.y, &aheadSample.z);
     pathDelta.x = pathDelta.x - aheadSample.x;
     pathDelta.y = pathDelta.y - aheadSample.y;
     pathDelta.z = pathDelta.z - aheadSample.z;
@@ -309,14 +296,11 @@ int grimble_stateHandlerA05(GameObject* obj, GroundBaddieState* state) {
         state->baddie.moveDone = 0;
     }
     state->baddie.moveSpeed = 0.03f;
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y,
-        &pathDelta.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress, &aheadSample.x, &aheadSample.y,
-        &aheadSample.z);
+    control->pathObj->pathInterface->callbacks->sample(
+        control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y, &pathDelta.z);
+    control->pathObj->pathInterface->callbacks->sample(control->pathObj,
+                                                       GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
+                                                       &aheadSample.x, &aheadSample.y, &aheadSample.z);
     pathDelta.x = pathDelta.x - aheadSample.x;
     pathDelta.y = pathDelta.y - aheadSample.y;
     pathDelta.z = pathDelta.z - aheadSample.z;
@@ -348,14 +332,11 @@ int grimble_stateHandlerA04(GameObject* obj, GroundBaddieState* state) {
         state->baddie.moveDone = 0;
     }
     state->baddie.moveSpeed = 0.03f;
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y,
-        &pathDelta.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress, &aheadSample.x, &aheadSample.y,
-        &aheadSample.z);
+    control->pathObj->pathInterface->callbacks->sample(
+        control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y, &pathDelta.z);
+    control->pathObj->pathInterface->callbacks->sample(control->pathObj,
+                                                       GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
+                                                       &aheadSample.x, &aheadSample.y, &aheadSample.z);
     pathDelta.x = pathDelta.x - aheadSample.x;
     pathDelta.y = pathDelta.y - aheadSample.y;
     pathDelta.z = pathDelta.z - aheadSample.z;
@@ -390,14 +371,11 @@ int grimble_stateHandlerA03(GameObject* obj, GroundBaddieState* state) {
         state->baddie.moveDone = 0;
     }
     state->baddie.moveSpeed = 0.025f;
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y,
-        &pathDelta.z);
-    (*(void (**)(void*, f32, f32*, f32*, f32*))(**(int**)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET) +
-                                                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(
-        (void*)control->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress, &aheadSample.x, &aheadSample.y,
-        &aheadSample.z);
+    control->pathObj->pathInterface->callbacks->sample(
+        control->pathObj, control->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &pathDelta.x, &pathDelta.y, &pathDelta.z);
+    control->pathObj->pathInterface->callbacks->sample(control->pathObj,
+                                                       GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
+                                                       &aheadSample.x, &aheadSample.y, &aheadSample.z);
     pathDelta.x = pathDelta.x - aheadSample.x;
     pathDelta.y = pathDelta.y - aheadSample.y;
     pathDelta.z = pathDelta.z - aheadSample.z;
@@ -434,26 +412,18 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
     }
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.03f;
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, timeStep, 9);
-    (*(void (**)(int, f32*, f32))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_ADVANCE_CALLBACK_OFFSET))(controlData->pathObj, &controlData->pathProgress,
-                                               ((GroundBaddieState*)state)->baddie.animSpeedA *
-                                                   (f32)(1 - (controlData->reversed << 1)));
+    controlData->pathObj->pathInterface->callbacks->advance(controlData->pathObj, &controlData->pathProgress,
+                                                            ((GroundBaddieState*)state)->baddie.animSpeedA *
+                                                                (f32)(1 - (controlData->reversed << 1)));
     if (controlData->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
     } else if (controlData->pathProgress > GRIMBLE_PATH_MAX_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MAX_PROGRESS;
     }
-    (*(void (**)(int, f32, f32*, f32*, f32*))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(controlData->pathObj,
-                                              controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET,
-                                              &deltaX, &deltaY, &deltaZ);
-    (*(void (**)(int, f32, f32*, f32*, f32*))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(controlData->pathObj,
-                                              GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress,
-                                              &aheadX, &aheadY, &aheadZ);
+    controlData->pathObj->pathInterface->callbacks->sample(
+        controlData->pathObj, controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &deltaX, &deltaY, &deltaZ);
+    controlData->pathObj->pathInterface->callbacks->sample(
+        controlData->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress, &aheadX, &aheadY, &aheadZ);
     deltaX = deltaX - aheadX;
     deltaY = deltaY - aheadY;
     deltaZ = deltaZ - aheadZ;
@@ -461,8 +431,8 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
     horizontalRunDouble = horizontalRun;
     deltaX = horizontalRun;
     pathAngle = getAngle(deltaY, horizontalRunDouble);
-    obj->anim.rotY = (1.0f - 2.0f * obj->anim.currentMoveProgress) *
-                     (f32)(s16)(pathAngle * ((controlData->reversed << 1) - 1));
+    obj->anim.rotY =
+        (1.0f - 2.0f * obj->anim.currentMoveProgress) * (f32)(s16)(pathAngle * ((controlData->reversed << 1) - 1));
     if (((GroundBaddieState*)state)->baddie.moveDone != 0) {
         (*gBaddieControlInterface)
             ->getTargetGeometry(obj, (GameObject*)((GroundBaddieState*)state)->baddie.targetObj, 0x10, &zone,
@@ -509,11 +479,9 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeStep) {
             ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
-    (*(void (**)(int, f32*, f32))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_ADVANCE_CALLBACK_OFFSET))(controlData->pathObj, &controlData->pathProgress,
-                                               50.4f * (((GroundBaddieState*)state)->baddie.moveSpeed *
-                                                        (f32)(1 - (controlData->reversed << 1))));
+    controlData->pathObj->pathInterface->callbacks->advance(
+        controlData->pathObj, &controlData->pathProgress,
+        50.4f * (((GroundBaddieState*)state)->baddie.moveSpeed * (f32)(1 - (controlData->reversed << 1))));
     if (controlData->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
         hitEdge = 1;
@@ -526,16 +494,10 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeStep) {
     if (hitEdge != 0) {
         return 7;
     }
-    (*(void (**)(int, f32, f32*, f32*, f32*))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(controlData->pathObj,
-                                              controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET,
-                                              &deltaX, &deltaY, &deltaZ);
-    (*(void (**)(int, f32, f32*, f32*, f32*))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(controlData->pathObj,
-                                              GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress,
-                                              &aheadX, &aheadY, &aheadZ);
+    controlData->pathObj->pathInterface->callbacks->sample(
+        controlData->pathObj, controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &deltaX, &deltaY, &deltaZ);
+    controlData->pathObj->pathInterface->callbacks->sample(
+        controlData->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress, &aheadX, &aheadY, &aheadZ);
     deltaX = deltaX - aheadX;
     deltaY = deltaY - aheadY;
     deltaZ = deltaZ - aheadZ;
@@ -564,11 +526,9 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
     }
     ((GroundBaddieState*)state)->baddie.moveSpeed = 0.03f;
     (*gPlayerInterface)->updateAnimRootMotion(obj, state, timeStep, 1);
-    (*(void (**)(int, f32*, f32))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_ADVANCE_CALLBACK_OFFSET))(controlData->pathObj, &controlData->pathProgress,
-                                               ((GroundBaddieState*)state)->baddie.animSpeedA *
-                                                   (f32)(1 - (controlData->reversed << 1)));
+    controlData->pathObj->pathInterface->callbacks->advance(controlData->pathObj, &controlData->pathProgress,
+                                                            ((GroundBaddieState*)state)->baddie.animSpeedA *
+                                                                (f32)(1 - (controlData->reversed << 1)));
     if (controlData->pathProgress < GRIMBLE_PATH_MIN_PROGRESS) {
         controlData->pathProgress = GRIMBLE_PATH_MIN_PROGRESS;
     } else if (controlData->pathProgress > GRIMBLE_PATH_MAX_PROGRESS) {
@@ -581,8 +541,7 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
         controlData->pathProgress < 5.0f) {
         return 3;
     }
-    if ((controlData->reversed ^
-         (controlData->pathProgress >= controlData->targetProgress)) != 0 &&
+    if ((controlData->reversed ^ (controlData->pathProgress >= controlData->targetProgress)) != 0 &&
         ((GroundBaddieState*)state)->baddie.moveDone != 0) {
         return 3;
     }
@@ -591,16 +550,10 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
             ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         Sfx_PlayFromObject(obj, SFXTRIG_mv_persquk1);
     }
-    (*(void (**)(int, f32, f32*, f32*, f32*))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(controlData->pathObj,
-                                              controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET,
-                                              &deltaX, &deltaY, &deltaZ);
-    (*(void (**)(int, f32, f32*, f32*, f32*))(
-        *(int*)(*(int*)(controlData->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-        GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(controlData->pathObj,
-                                              GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress,
-                                              &aheadX, &aheadY, &aheadZ);
+    controlData->pathObj->pathInterface->callbacks->sample(
+        controlData->pathObj, controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &deltaX, &deltaY, &deltaZ);
+    controlData->pathObj->pathInterface->callbacks->sample(
+        controlData->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress, &aheadX, &aheadY, &aheadZ);
     deltaX = deltaX - aheadX;
     deltaY = deltaY - aheadY;
     deltaZ = deltaZ - aheadZ;
@@ -622,7 +575,7 @@ void grimble_attachNearestPath(GameObject* obj) {
     f32 candidateProgress;
     f32 pathQueryAux;
     f32 targetProgress;
-    int* pathObjects;
+    GrimblePathObject** pathObjects;
     GroundBaddieState* state;
     int pathObjectIndex;
     int rotationDelta;
@@ -630,35 +583,28 @@ void grimble_attachNearestPath(GameObject* obj) {
     GrimbleControl* control;
 
     state = obj->extra;
-    pathObjects = (void*)objGetAllOfType(GRIMBLE_PATH_OBJECT_GROUP, &pathObjectCount);
+    pathObjects = (GrimblePathObject**)objGetAllOfType(GRIMBLE_PATH_OBJECT_GROUP, &pathObjectCount);
     if (pathObjectCount != 0) {
         control = state->control;
         control->candidatePathObj = 0;
         control->nearestDist = 200.0f;
         for (pathObjectIndex = 0; pathObjectIndex < pathObjectCount; pathObjectIndex++) {
-            if ((*(int (**)(int, f32, f32, f32, f32*, f32*, f32*))(
-                    *(int*)(*(int*)(pathObjects[pathObjectIndex] + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-                    GRIMBLE_PATH_FIND_NEAREST_CALLBACK_OFFSET))(pathObjects[pathObjectIndex], obj->anim.localPosX,
-                                                                obj->anim.localPosY, obj->anim.localPosZ, &pathDistance,
-                                                                &candidateProgress, &pathQueryAux) != 0 &&
+            if (pathObjects[pathObjectIndex]->pathInterface->callbacks->findNearest(
+                    pathObjects[pathObjectIndex], obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                    &pathDistance, &candidateProgress, &pathQueryAux) != 0 &&
                 pathDistance < control->nearestDist) {
                 control->candidatePathObj = pathObjects[pathObjectIndex];
                 control->nearestDist = pathDistance;
                 control->candidateProgress = candidateProgress;
             }
         }
-        if ((void*)control->candidatePathObj != NULL) {
+        if (control->candidatePathObj != NULL) {
             control->pathObj = control->candidatePathObj;
             control->pathProgress = control->candidateProgress;
-            (*(void (**)(int, char*))(*(int*)(*(int*)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-                                      GRIMBLE_PATH_INITIALISE_CALLBACK_OFFSET))(control->pathObj,
-                                                                                (char*)control->pathState);
-            (*(void (**)(int, f32, f32*, f32*, f32*))(
-                *(int*)(*(int*)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-                GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(control->pathObj, control->pathProgress, &control->pathPosX,
-                                                      &control->pathPosY, &control->pathPosZ);
-            control->baseRotX = (*(s16(**)(int))(*(int*)(*(int*)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-                                                 GRIMBLE_PATH_GET_ROTATION_CALLBACK_OFFSET))(control->pathObj);
+            control->pathObj->pathInterface->callbacks->initialise(control->pathObj, control->pathState);
+            control->pathObj->pathInterface->callbacks->sample(
+                control->pathObj, control->pathProgress, &control->pathPosX, &control->pathPosY, &control->pathPosZ);
+            control->baseRotX = control->pathObj->pathInterface->callbacks->getRotation(control->pathObj);
             control->savedPathProgress = control->pathProgress;
             control->unk46 = 0;
             control->anchorPosY = control->pathPosY;
@@ -677,8 +623,8 @@ void grimble_attachNearestPath(GameObject* obj) {
             }
             control->reversed = sameDirection;
             obj->anim.rotX = control->baseRotX + (!control->reversed << 15);
-            targetProgress = control->pathProgress -
-                             (f32)((control->reversed << 1) - 1) * ((f32)randomGetRange(10, 60) / 10.0f);
+            targetProgress =
+                control->pathProgress - (f32)((control->reversed << 1) - 1) * ((f32)randomGetRange(10, 60) / 10.0f);
             control->targetProgress = targetProgress;
             targetProgress = control->targetProgress;
             targetProgress =
@@ -746,20 +692,18 @@ void grimble_update(GameObject* obj) {
             state->baddie.moveJustStartedB = 1;
             obj->anim.alpha = 0;
         }
-    } else if ((void*)control->candidatePathObj != NULL) {
+    } else if (control->candidatePathObj != NULL) {
         GameObject* target;
         int hitReaction;
 
         (*gPlayerInterface)->update(obj, state, 1.0f, 1.0f, gGrimbleStateHandlersA, gGrimbleStateHandlersB);
-        (*(void (**)(int, f32, f32*, f32*, f32*))(
-            *(int*)(*(int*)(control->pathObj + GRIMBLE_PATH_INTERFACE_OFFSET)) +
-            GRIMBLE_PATH_SAMPLE_CALLBACK_OFFSET))(control->pathObj, control->pathProgress, &obj->anim.localPosX,
-                                                  &obj->anim.localPosY, &obj->anim.localPosZ);
+        control->pathObj->pathInterface->callbacks->sample(
+            control->pathObj, control->pathProgress, &obj->anim.localPosX, &obj->anim.localPosY, &obj->anim.localPosZ);
         (*gBaddieControlInterface)
             ->processMessages(obj, state, &state->routeNav, state->gameBitB, &state->subMode, 0, 0, 0);
         hitReaction = (*gBaddieControlInterface)
-                          ->updateHitReaction(obj, state, &state->routeNav, state->gameBitB,
-                                              gGrimbleHitReactionMoves, gGrimbleHitReactionDamage, 3, NULL);
+                          ->updateHitReaction(obj, state, &state->routeNav, state->gameBitB, gGrimbleHitReactionMoves,
+                                              gGrimbleHitReactionDamage, 3, NULL);
         if (hitReaction == 0xe) {
             state->subMode = 2;
             state->baddie.targetObj = Obj_GetPlayerObject();

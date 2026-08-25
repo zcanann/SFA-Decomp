@@ -94,9 +94,9 @@
 #define MAGICPLANT_FIREBAT_SEQID 0x7c6
 
 
-static const f32 gVambatZero[1] = {0.0f};
+static const f32 gVambatZero[] = {0.0f};
 
-static const f32 gVambatHeartbeatPeriod[1] = {60.0f};
+static const f32 gVambatHeartbeatPeriod[] = {60.0f};
 
 int gVambatCurveInitData[2] = {2, 3};
 

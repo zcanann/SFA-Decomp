@@ -67,7 +67,7 @@ typedef struct TrickyPackedSlots {
     u8 exclamationPromptSlot : 2;
     u8 questPromptSlot : 2;
     u8 foodChildSlot : 2;
-    u8 d : 2;
+    u8 unusedPromptSlotBits : 2;
 } TrickyPackedSlots;
 
 #define MAX_COMM_PRESENT 10
@@ -503,5 +503,6 @@ STATIC_ASSERT(offsetof(TrickyState, blendControlFlags) == 0x82E);
 STATIC_ASSERT(offsetof(TrickyState, blendWeight) == 0x830);
 STATIC_ASSERT(offsetof(TrickyState, blendVelocity) == 0x834);
 STATIC_ASSERT(offsetof(TrickyState, particleTimer) == 0x838);
+STATIC_ASSERT(offsetof(TrickyState, pad83C) == 0x83C);
 
 #endif /* MAIN_DLL_TRICKY_STATE_H_ */

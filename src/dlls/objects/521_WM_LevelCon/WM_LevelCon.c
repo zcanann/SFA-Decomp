@@ -81,10 +81,10 @@ static void WmLevelControl_holdBlendWhileRestoring(void) {
     }
 }
 
-const f32 gWmLevelControlBlendDecayPerTick[1] = {0.02f};
-const f32 gWmLevelControlLightIntensityBase[1] = {32.0f};
-const f32 gWmLevelControlLightIntensityRange[1] = {128.0f};
-const f32 gWmLevelControlOverrideLightIntensity[1] = {100.0f};
+const f32 gWmLevelControlBlendDecayPerTick[] = {0.02f};
+const f32 gWmLevelControlLightIntensityBase[] = {32.0f};
+const f32 gWmLevelControlLightIntensityRange[] = {128.0f};
+const f32 gWmLevelControlOverrideLightIntensity[] = {100.0f};
 
 static void WmLevelControl_blendColor(u8* output, const u8* from, const u8* to) {
     {

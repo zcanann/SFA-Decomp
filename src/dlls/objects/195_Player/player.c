@@ -606,7 +606,7 @@ int playerStopRidingObject(GameObject* obj)
     sub = inner->focusObject;
     if ((void*)sub != NULL)
     {
-        (*(void (**)(int, int))((char*)*sub->anim.dll + 0x3c))((int)sub, VEHICLE_NoRider);
+        VEHICLE_INTERFACE(sub)->setMountState(sub, VEHICLE_NoRider);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         obj->anim.flags &= ~8;
         obj->anim.modelState->flags = obj->anim.modelState->flags & 0xFFFFFEFFFLL;
@@ -16488,12 +16488,12 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 ((PlayerState*)inner)->moveSequence = 0;
                 if ((u32)obj2 != 0 && ((GameObject*)obj2)->anim.romDefNo == 0x22)
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, inner, 0x16);
+                    (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x16);
                     ((PlayerState*)inner)->baddie.stateExitFn = NULL;
                 }
                 else
                 {
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, inner, 0x18);
+                    (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x18);
                     *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))playerStagedClearActiveMove;
                 }
                 break;
@@ -16519,13 +16519,13 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             }
             case 6:
                 (*gObjectTriggerInterface)->setCamVars(CAMERA_MODE_VIEWFINDER_RESOURCE_ID, 0, 0, 0);
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, inner, 0x17);
+                (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x17);
                 ((PlayerState*)inner)->baddie.stateExitFn = NULL;
                 break;
             case 7:
                 seq->flags &= ~3;
                 obj2 = (int)((GameObject*)obj)->extra;
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, obj2, 0x3e);
+                (*gPlayerInterface)->setState((void*)obj, (void*)obj2, 0x3e);
                 ((PlayerState*)obj2)->baddie.stateExitFn = NULL;
                 ((PlayerState*)obj2)->flags360 |= 1LL;
                 ((GameObject*)obj)->anim.flags |= 8;
@@ -16534,7 +16534,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 seq->flags = seq->savedFlags;
                 obj2 = (int)((GameObject*)obj)->extra;
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, obj2, 1);
+                (*gPlayerInterface)->setState((void*)obj, (void*)obj2, 1);
                 *(void (**)(int, int))(obj2 + 0x304) = (void (*)(int, int))playerStagedRestoreDefaultControl;
                 ((PlayerState*)obj2)->flags360 &= ~0x1LL;
                 ((GameObject*)obj)->anim.flags &= ~8;
@@ -16619,7 +16619,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         }
                     }
                     ((PlayerState*)va)->flags360 |= 0x800000LL;
-                    (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, va, 1);
+                    (*gPlayerInterface)->setState((void*)obj, (void*)va, 1);
                     *(void (**)(int, int))(va + 0x304) = (void (*)(int, int))playerStagedRestoreDefaultControl;
                 }
                 break;
@@ -16653,11 +16653,11 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 staffToggle((GameObject*)(obj), 0);
                 break;
             case 0x1d:
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, inner, 0x1a);
+                (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x1a);
                 *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))playerStagedClearActiveMove;
                 break;
             case 0x1e:
-                (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, inner, 1);
+                (*gPlayerInterface)->setState((void*)obj, (void*)inner, 1);
                 *(void (**)(int, int))((char*)inner + 0x304) = (void (*)(int, int))playerStagedRestoreDefaultControl;
                 break;
             case 0x1f:

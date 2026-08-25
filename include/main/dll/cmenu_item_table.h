@@ -99,7 +99,7 @@ typedef struct CMenuSection
  *  bit    text   ability        icon     notes
  *  ----   ----   -------        ----     -----
  *  0x01   0x3f7  Call Tricky    0xc81    whistle; Tricky comes to you
- *  0x20   0x3f8  Throw Ball     0xc84    ball bought from the shop
+ *  0x20   0x3f8  Play Ball      0xc84    ball bought from the shop
  *  0x02   0x3f9  Find Secret    0xc82    Tricky digs up buried items
  *  0x10   0x3fa  Use Flame      0xc83    fire breath (burns MoonSeeds, etc.)
  *  0x08   0x3fc  Tricky Stay!   0xc85    hold position (pressure plates)
@@ -119,7 +119,7 @@ enum TrickyAbilityBit
     TRICKY_ABILITY_DISTRACT    = 0x04, /* prompt-only Baddie Alert target */
     TRICKY_ABILITY_STAY        = 0x08, /* hold position (pressure plates) */
     TRICKY_ABILITY_FLAME       = 0x10, /* fire breath */
-    TRICKY_ABILITY_THROW_BALL  = 0x20, /* fetch ball bought from the shop */
+    TRICKY_ABILITY_PLAY_BALL   = 0x20, /* sidekick Play command / ball bought from the shop */
 };
 
 /*

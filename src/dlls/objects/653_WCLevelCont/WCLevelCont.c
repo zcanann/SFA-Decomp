@@ -33,8 +33,8 @@
 
 u8 gWcTileGridB[8][8];
 
-const f32 gWcLevelContZero[1] = {0.0f};
-const f32 gWcPushBlockTileResetTime[1] = {20.0f};
+const f32 gWcLevelContZero[] = {0.0f};
+const f32 gWcPushBlockTileResetTime[] = {20.0f};
 
 void wclevelcont_updateAct2State(GameObject* obj, WcLevelControlState* state)
 {

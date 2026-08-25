@@ -114,7 +114,7 @@ void ARWArwingGu_hitDetect(void)
 {
 }
 
-static const f32 gArwingGuAlphaMax[1] = {255.0f};
+static const f32 gArwingGuAlphaMax[] = {255.0f};
 
 void ARWArwingGu_update(GameObject* obj)
 {

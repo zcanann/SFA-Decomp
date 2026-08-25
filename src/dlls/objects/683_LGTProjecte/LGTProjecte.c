@@ -54,7 +54,7 @@ void ProjectedLight_hitDetect(void)
 {
 }
 
-const f32 gProjectedLightOne[1] = {1.0f};
+const f32 gProjectedLightOne[] = {1.0f};
 
 void ProjectedLight_update(GameObject* obj)
 {

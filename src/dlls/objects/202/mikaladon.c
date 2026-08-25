@@ -88,9 +88,9 @@
 /* guardClaw_update: state-table driver: walks the 12-byte gSeq11EStateTable state
  * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
 
-const f32 gMikaladonZero[1] = {0.0f};
+const f32 gMikaladonZero[] = {0.0f};
 
-const f32 gMikaladonDefaultPeriod[1] = {60.0f};
+const f32 gMikaladonDefaultPeriod[] = {60.0f};
 
 enum MikaladonVerticalPhase
 {

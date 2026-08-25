@@ -87,13 +87,13 @@ const DimExplosionTextureTable gExplosionTexTable = {{0x5e1, 0x5f7, 0x5f8, 0x5f9
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-static const int sExplosionQuadColorA[1] = {-1};
-static const f32 sExplosionBaseScale[1] = {1.0f};
-static const f32 sExplosionLifeScale[1] = {15.0f};
-static const f32 sExplosionFadeInExponent[1] = {10.0f};
-static const f32 sExplosionColorMax[1] = {255.0f};
-static const f32 sExplosionFadeOutExponent[1] = {25.0f};
-static const f32 sExplosionSpawnDelay[1] = {8.0f};
+static const int sExplosionQuadColorA[] = {-1};
+static const f32 sExplosionBaseScale[] = {1.0f};
+static const f32 sExplosionLifeScale[] = {15.0f};
+static const f32 sExplosionFadeInExponent[] = {10.0f};
+static const f32 sExplosionColorMax[] = {255.0f};
+static const f32 sExplosionFadeOutExponent[] = {25.0f};
+static const f32 sExplosionSpawnDelay[] = {8.0f};
 
 void explosion_spawnFlame(GameObject* obj, u8 generation, f32 speed, f32 x, f32 y, f32 z) {
     DimExplosionPlacement* placement = (DimExplosionPlacement*)(obj)->anim.placementData;
@@ -203,12 +203,12 @@ void explosion_computeColor(f32 age, f32 lifetime, u8 colorMode, u8* outputColor
     }
 }
 
-static const f32 sExplosionFlickerExponent[1] = {3.0f};
-static const f32 sExplosionChildOffsetStep[1] = {0.09f};
-static const f32 sExplosionZero[1] = {0.0f};
-static const f64 sExplosionPi[1] = {3.142};
-static const f32 sExplosionAngleScale[1] = {32768.0f};
-static const f32 sExplosionSpeedScale[1] = {0.00390625f};
+static const f32 sExplosionFlickerExponent[] = {3.0f};
+static const f32 sExplosionChildOffsetStep[] = {0.09f};
+static const f32 sExplosionZero[] = {0.0f};
+static const f64 sExplosionPi[] = {3.142};
+static const f32 sExplosionAngleScale[] = {32768.0f};
+static const f32 sExplosionSpeedScale[] = {0.00390625f};
 
 int explosion_getExtraSize(void) {
     return sizeof(DimExplosionState);

@@ -102,7 +102,7 @@ void DFropenode_buildRopeSegmentMesh(const LightmapVertex* templateVertices, int
     out[5].z += endZ;
 }
 
-const f32 gDFropenodeOneHundredth[1] = {0.01f};
+const f32 gDFropenodeOneHundredth[] = {0.01f};
 
 static inline void DFropenode_applyRopeSway(DFropenodeRope* rope) {
     DFropenodeRopeNode* nodes = rope->nodes;
