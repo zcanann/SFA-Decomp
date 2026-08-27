@@ -11,15 +11,9 @@ typedef struct ObjSeqState ObjSeqState;
 
 /* Only the accessed placement prefix is recovered; the complete retail width is not established. */
 typedef struct SeqObjectPlacement {
-    ObjPlacement base; /* 0x00 */
-    union {
-        s16 openGameBit;
-        s16 usedGameBit; /* SeqObj2 view */
-    }; /* 0x18 */
-    union {
-        s16 triggerGameBit;
-        s16 requiredGameBit; /* SeqObj2 view */
-    }; /* 0x1A */
+    ObjPlacement base;     /* 0x00 */
+    s16 openGameBit;       /* 0x18 */
+    s16 triggerGameBit;    /* 0x1A */
     u8 initialYaw;         /* 0x1C: rotation in 1/256 turns */
     u8 flags;              /* 0x1D */
     s8 sequenceId;         /* 0x1E: or -1 */
@@ -37,9 +31,7 @@ typedef struct SeqObjectState {
 
 STATIC_ASSERT(offsetof(SeqObjectPlacement, base) == 0x0);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);
-STATIC_ASSERT(offsetof(SeqObjectPlacement, usedGameBit) == 0x18);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerGameBit) == 0x1A);
-STATIC_ASSERT(offsetof(SeqObjectPlacement, requiredGameBit) == 0x1A);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, initialYaw) == 0x1C);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, flags) == 0x1D);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, sequenceId) == 0x1E);
