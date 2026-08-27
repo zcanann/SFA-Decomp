@@ -45,9 +45,6 @@
 #define TUMBLEWEED_BUSH_SIBLING_SETUP_SIZE   0x20
 #define TUMBLEWEED_BUSH_SIBLING_SETUP_FLAGS  5
 #define TUMBLEWEED_BUSH_ACTIVE_PIECE_PHASE   7
-#define TUMBLEWEED_BUSH_QUERY_STATE_SLOT     8
-#define TUMBLEWEED_BUSH_SET_ORIGIN_SLOT      9
-#define TUMBLEWEED_BUSH_DETACH_SLOT          10
 #define TUMBLEWEED_BUSH_HIT_EFFECT_ID        8
 #define TUMBLEWEED_BUSH_HIT_COLOR_R          0xff
 #define TUMBLEWEED_BUSH_HIT_COLOR_G          0xff
@@ -169,8 +166,7 @@ s8 tumbleweedbush_spawnSibling(GameObject* obj) {
         {
             GameObject* spawnedPiece = state->pieceObjects[freePieceIndex];
 
-            ((void (*)(GameObject*, f32, f32))(*spawnedPiece->anim.dll)[TUMBLEWEED_BUSH_SET_ORIGIN_SLOT])(
-                spawnedPiece, obj->anim.localPosX, obj->anim.localPosZ);
+            TUMBLEWEED_INTERFACE(spawnedPiece)->setHome(spawnedPiece, obj->anim.localPosX, obj->anim.localPosZ);
         }
     }
     state->spawnedCount++;
@@ -242,7 +238,7 @@ void TumbleWeedBush_update(GameObject* obj) {
                             continue;
                         }
                     }
-                    ((void (*)(GameObject*))(*(*pieceSlot)->anim.dll)[TUMBLEWEED_BUSH_DETACH_SLOT])(*pieceSlot);
+                    TUMBLEWEED_INTERFACE(*pieceSlot)->fall(*pieceSlot);
                 }
             }
         }
@@ -258,7 +254,7 @@ void TumbleWeedBush_update(GameObject* obj) {
     for (; (u8)pieceIndex < state->pieceCount; pieceIndex++) {
         pieceSlot = &state->pieceObjects[(u8)pieceIndex];
         if (*pieceSlot != NULL) {
-            if (((int (*)(GameObject*))(*(*pieceSlot)->anim.dll)[TUMBLEWEED_BUSH_QUERY_STATE_SLOT])(*pieceSlot) > 1) {
+            if (TUMBLEWEED_INTERFACE(*pieceSlot)->getPhase(*pieceSlot) > 1) {
                 *pieceSlot = NULL;
             }
         }
@@ -426,8 +422,6 @@ ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
 #define TUMBLEWEED_MESSAGE_PICKUP         0x7000b /* player collected: award and burst */
 #define TUMBLEWEED_OBJECT_GROUP           3
 #define TUMBLEWEED_SECONDARY_OBJECT_GROUP 0x31
-#define TUMBLEWEED_BUSH_REMOVE_PIECE_SLOT 8
-
 f32 gTumbleweedCollisionPointData[2] = {25.0f, 0.0f};
 
 void tumbleweed_updateRollingMotion(GameObject* obj, TumbleweedState* state) {
@@ -586,7 +580,7 @@ void tumbleweed_free(GameObject* obj) {
         GameObject* bush = objects[objectIndex];
 
         if (bushSeqId == bush->anim.romDefNo) {
-            ((void (*)(GameObject*, GameObject*))(*bush->anim.dll)[TUMBLEWEED_BUSH_REMOVE_PIECE_SLOT])(bush, obj);
+            TUMBLEWEED_BUSH_INTERFACE(bush)->removePieceReference(bush, obj);
         }
         objectIndex++;
     }

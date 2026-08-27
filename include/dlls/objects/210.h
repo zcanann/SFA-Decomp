@@ -50,9 +50,9 @@ typedef struct TumbleweedPlacement {
 
 typedef struct TumbleweedState {
     CurvesCollisionState pathState; /* 0x000 */
-    u16 distToTarget; /* 0x268 */
-    u16 triggerRange; /* 0x26A */
-    f32 targetScale;  /* 0x26C */
+    u16 distToTarget;               /* 0x268 */
+    u16 triggerRange;               /* 0x26A */
+    f32 targetScale;                /* 0x26C */
     union {
         f32 growRate;     /* 0x270 */
         f32 despawnTimer; /* 0x270 */
@@ -76,6 +76,18 @@ typedef struct TumbleweedState {
     f32 unk29C;            /* 0x29C */
     f32 phaseTimer;        /* 0x2A0 */
 } TumbleweedState;
+
+typedef struct TumbleweedInterface {
+    ObjectInterface base;
+    int (*getPhase)(GameObject* obj);
+    void (*setHome)(GameObject* obj, f32 x, f32 z);
+    void (*fall)(GameObject* obj);
+    void (*gravitateToPoint)(GameObject* obj, f32* targetPos);
+    int (*isGravitating)(GameObject* obj);
+    void (*setPlayer)(GameObject* obj, GameObject* target);
+} TumbleweedInterface;
+
+#define TUMBLEWEED_INTERFACE(tumbleweed) ((TumbleweedInterface*)*((GameObject*)(tumbleweed))->anim.dll)
 
 STATIC_ASSERT(offsetof(TumbleweedPlacement, base) == 0x0);
 STATIC_ASSERT(offsetof(TumbleweedPlacement, variant) == 0x1B);
@@ -103,6 +115,14 @@ STATIC_ASSERT(offsetof(TumbleweedState, pickupMsgValue) == 0x29A);
 STATIC_ASSERT(offsetof(TumbleweedState, unk29C) == 0x29C);
 STATIC_ASSERT(offsetof(TumbleweedState, phaseTimer) == 0x2A0);
 STATIC_ASSERT(sizeof(TumbleweedState) == 0x2A4);
+
+STATIC_ASSERT(offsetof(TumbleweedInterface, getPhase) == 0x20);
+STATIC_ASSERT(offsetof(TumbleweedInterface, setHome) == 0x24);
+STATIC_ASSERT(offsetof(TumbleweedInterface, fall) == 0x28);
+STATIC_ASSERT(offsetof(TumbleweedInterface, gravitateToPoint) == 0x2C);
+STATIC_ASSERT(offsetof(TumbleweedInterface, isGravitating) == 0x30);
+STATIC_ASSERT(offsetof(TumbleweedInterface, setPlayer) == 0x34);
+STATIC_ASSERT(sizeof(TumbleweedInterface) == 0x38);
 
 void tumbleweed_updateRollingMotion(GameObject* obj, TumbleweedState* state);
 void tumbleweed_setPlayer(GameObject* obj, GameObject* target);
