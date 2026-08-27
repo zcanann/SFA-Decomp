@@ -81,12 +81,15 @@ typedef struct GroundAnimatorInterface {
     void* pad00[8];
     f32 (*applyPress)(GameObject* obj, GameObject* sidekick);
     u8 (*isFullySunk)(GameObject* obj);
+    u8 (*getMagicCaveIndex)(GameObject* obj);
 } GroundAnimatorInterface;
 
 #define GROUND_ANIMATOR_INTERFACE(digSite) ((GroundAnimatorInterface*)*((GameObject*)(digSite))->anim.dll)
 
 STATIC_ASSERT(offsetof(GroundAnimatorInterface, applyPress) == 0x20);
 STATIC_ASSERT(offsetof(GroundAnimatorInterface, isFullySunk) == 0x24);
+STATIC_ASSERT(offsetof(GroundAnimatorInterface, getMagicCaveIndex) == 0x28);
+STATIC_ASSERT(sizeof(GroundAnimatorInterface) == 0x2C);
 
 u8 GroundAnimator_isFullySunk(GameObject* obj);
 f32 GroundAnimator_applyPress(GameObject* obj, GameObject* sidekick);
