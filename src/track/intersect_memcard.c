@@ -35,11 +35,15 @@
 
 typedef void (*GXSetAlphaCompareIntFn)(int comp0, int ref0, int op, int comp1, int ref1);
 
+typedef struct ReflectionTextureMatrixLayout {
+    Mtx modelView;
+    Mtx lightPerspective;
+    Mtx lightPerspectiveFlipY;
+    Mtx lightPerspectiveScaled;
+} ReflectionTextureMatrixLayout;
 
-
-
-
-
+STATIC_ASSERT(offsetof(ReflectionTextureMatrixLayout, lightPerspectiveFlipY) == 0x60);
+STATIC_ASSERT(offsetof(ReflectionTextureMatrixLayout, lightPerspectiveScaled) == 0x90);
 
 char sMemoryCardFileNameString[20] = "Star Fox Adventures";
 
@@ -56,13 +60,12 @@ u32 gSaveCardSerialLo;
 u32 gSaveCardSerialHi;
 char* gSaveCardIoBuffer;
 void* gSaveCardWorkArea;
-void loadReflectionTexMtxs(void)
-{
-    f32* base = (f32*)&gCameraModelViewMatrix;
+void loadReflectionTexMtxs(void) {
+    u8* base = (u8*)&gCameraModelViewMatrix;
     Mtx tmp;
-    PSMTXConcat((void*)(base + 36), (void*)(int)base, tmp);
+    PSMTXConcat((void*)(base + offsetof(ReflectionTextureMatrixLayout, lightPerspectiveScaled)), (void*)(int)base, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX0, GX_MTX3x4);
-    PSMTXConcat((void*)(base + 24), (void*)(int)base, tmp);
+    PSMTXConcat((void*)(base + offsetof(ReflectionTextureMatrixLayout, lightPerspectiveFlipY)), (void*)(int)base, tmp);
     GXLoadTexMtxImm(tmp, GX_TEXMTX2, GX_MTX3x4);
 }
 
