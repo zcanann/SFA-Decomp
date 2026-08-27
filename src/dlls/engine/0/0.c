@@ -8879,6 +8879,30 @@ static inline void gameUiClearItemSlots(CMenuHud* gameUi)
     }
 }
 
+static inline void gameUiClearItemSlotsSecondPass(CMenuHud* gameUi)
+{
+    u8 slot;
+    int index;
+    Texture** itemTexture;
+    s16* itemSlot;
+    u8* itemFlag;
+
+    for (slot = 0; slot < 64; slot++)
+    {
+        index = slot;
+        itemTexture = (Texture**)((u8*)&gameUi->itemTextures + index * sizeof(Texture*));
+        if (*itemTexture != NULL)
+        {
+            textureFree(*itemTexture);
+            *itemTexture = NULL;
+        }
+        itemSlot = (s16*)((u8*)&gameUi->itemSlots + index * sizeof(s16));
+        *itemSlot = -1;
+        itemFlag = (u8*)&gameUi->itemFlags + index;
+        *itemFlag = 1;
+    }
+}
+
 static inline void gameUiReleaseMenuResources(CMenuHud* gameUi)
 {
     gameUiResetMenuState();
@@ -8927,7 +8951,7 @@ void GameUI_release(void)
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = NULL;
 
-    gameUiClearItemSlots(gameUi);
+    gameUiClearItemSlotsSecondPass(gameUi);
 
     textureFree(gGameUiBlinkTexture);
 }
