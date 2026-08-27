@@ -217,7 +217,7 @@ void MagicDust_update(GameObject* obj) {
             if (obj->anim.modelState != NULL) {
                 obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
-            (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
+            (*gPathControlInterface)->attachObject((void*)obj, &state->path);
             return;
         }
         if (obj->anim.modelState != NULL) {
@@ -271,9 +271,9 @@ void MagicDust_update(GameObject* obj) {
             return;
         }
         if ((state->flags & MAGICGEM_FLAG_MOTION_MASK) == 0) {
-            (*gPathControlInterface)->update((void*)obj, (void*)state, timeDelta);
-            (*gPathControlInterface)->apply((void*)obj, (void*)state);
-            (*gPathControlInterface)->advance((void*)obj, (void*)state, timeDelta);
+            (*gPathControlInterface)->update((void*)obj, &state->path, timeDelta);
+            (*gPathControlInterface)->apply((void*)obj, &state->path);
+            (*gPathControlInterface)->advance((void*)obj, &state->path, timeDelta);
             if (state->path.surfaceCounter != 0) {
                 f32 velocityX = -obj->anim.velocityX;
                 f32 velocityY = -obj->anim.velocityY;
@@ -420,10 +420,10 @@ void MagicDust_init(GameObject* obj, CollectibleSetup* placement) {
     }
     state->collectRadius = MAGICGEM_COLLECT_RADIUS;
     if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0) {
-        (*gPathControlInterface)->init((void*)state, 0, MAGICGEM_PATH_FLAGS, 0);
+        (*gPathControlInterface)->init(&state->path, 0, MAGICGEM_PATH_FLAGS, 0);
         (*gPathControlInterface)
-            ->setup((void*)state, MAGICGEM_PATH_POINT_COUNT, sMagicGemPathData, &state->collectRadius, pathParams);
-        (*gPathControlInterface)->attachObject((void*)obj, (void*)state);
+            ->setup(&state->path, MAGICGEM_PATH_POINT_COUNT, sMagicGemPathData, &state->collectRadius, pathParams);
+        (*gPathControlInterface)->attachObject((void*)obj, &state->path);
     }
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     if ((state->flags & MAGICGEM_FLAG_BURST1) != 0) {

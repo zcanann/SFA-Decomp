@@ -7,7 +7,7 @@
 #include "main/dll/curves_collision_state.h"
 #include "dlls/objects/237.h"
 
-#define MAGICGEM_STATE_SIZE     0x288
+#define MAGICGEM_STATE_SIZE 0x288
 
 #define MAGICGEM_DEF_GREEN  0x2C4
 #define MAGICGEM_DEF_RED    0x2CD
@@ -28,21 +28,22 @@
 /* MagicDust_getExtraSize allocates the complete 0x288-byte state block. */
 typedef struct MagicGemState {
     CurvesCollisionState path; /* 0x000 */
-    f32 collectRadius;       /* 0x268: added to the base pickup radius */
-    f32 burstTimer;          /* 0x26C: time until the next burst phase */
-    u16 burstEffectId;       /* 0x270 */
-    u16 ambientEffectId;     /* 0x272 */
-    s16 sfxId;               /* 0x274: collection sound */
-    s16 unk276;              /* 0x276 */
-    s16 ambientTimer;        /* 0x278 */
-    u8 flags;                /* 0x27A: MAGICGEM_FLAG_* */
-    u8 bounceCount;          /* 0x27B */
-    u8 mode;                 /* 0x27C: particle-colour row */
-    u8 pad27D[3];            /* 0x27D */
-    s16 pickupMsgArg;        /* 0x280 */
-    u8 pad282[6];            /* 0x282 */
+    f32 collectRadius;         /* 0x268: added to the base pickup radius */
+    f32 burstTimer;            /* 0x26C: time until the next burst phase */
+    u16 burstEffectId;         /* 0x270 */
+    u16 ambientEffectId;       /* 0x272 */
+    s16 sfxId;                 /* 0x274: collection sound */
+    s16 unk276;                /* 0x276 */
+    s16 ambientTimer;          /* 0x278 */
+    u8 flags;                  /* 0x27A: MAGICGEM_FLAG_* */
+    u8 bounceCount;            /* 0x27B */
+    u8 mode;                   /* 0x27C: particle-colour row */
+    u8 pad27D[3];              /* 0x27D */
+    s16 pickupMsgArg;          /* 0x280 */
+    u8 pad282[6];              /* 0x282 */
 } MagicGemState;
 
+STATIC_ASSERT(offsetof(MagicGemState, path) == 0x000);
 STATIC_ASSERT(offsetof(MagicGemState, collectRadius) == 0x268);
 STATIC_ASSERT(offsetof(MagicGemState, burstTimer) == 0x26C);
 STATIC_ASSERT(offsetof(MagicGemState, burstEffectId) == 0x270);
