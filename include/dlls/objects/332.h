@@ -119,15 +119,17 @@ void babyCloudRunner_turnTowardTarget(GameObject* obj, GameObject* target, BabyC
 /* gBabyCloudRunnerObjDescriptor from slot02 onwards: the export table other
    objects reach through obj->anim.dll. */
 typedef struct BabyCloudRunnerInterface {
-    void* pad00[9];
-    void (*tryCapture)(void* object);
+    void* pad00[8];
+    int (*func0A)(GameObject* object);
+    int (*tryCapture)(GameObject* object);
 } BabyCloudRunnerInterface;
 
 #define BABY_CLOUD_RUNNER_INTERFACE(baby) ((BabyCloudRunnerInterface*)*((GameObject*)(baby))->anim.dll)
 
+STATIC_ASSERT(offsetof(BabyCloudRunnerInterface, func0A) == 0x20);
 STATIC_ASSERT(offsetof(BabyCloudRunnerInterface, tryCapture) == 0x24);
 
-int babyCloudRunner_tryCapture(void* object);
+int babyCloudRunner_tryCapture(GameObject* object);
 int babyCloudRunner_func0A(GameObject* obj);
 int babyCloudRunner_sequenceCallback(GameObject* obj, int unused, ObjSeqState* animUpdate);
 int babyCloudRunner_getExtraSize(void);
