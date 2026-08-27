@@ -209,6 +209,13 @@ typedef struct ModgfxSpawnContext {
     u8 pad5E[0x60 - 0x5E];
 } ModgfxSpawnContext;
 
+STATIC_ASSERT(sizeof(ModgfxPendingSpawn) == sizeof(GfxCmd));
+STATIC_ASSERT(offsetof(ModgfxPendingSpawn, modelOrResource) == offsetof(GfxCmd, mode));
+STATIC_ASSERT(offsetof(ModgfxPendingSpawn, posX) == offsetof(GfxCmd, x));
+STATIC_ASSERT(offsetof(ModgfxPendingSpawn, param10) == offsetof(GfxCmd, tex));
+STATIC_ASSERT(offsetof(ModgfxPendingSpawn, param14) == offsetof(GfxCmd, flags));
+STATIC_ASSERT(offsetof(ModgfxPendingSpawn, sequenceIndex) == offsetof(GfxCmd, layer));
+
 #define PARTFX_STAGE_COUNT 7
 
 typedef struct PartfxEffectState {
