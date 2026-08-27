@@ -281,7 +281,8 @@ void staffactivated_free(GameObject* obj) {
     objFreeObjectType(obj, STAFF_ACTIVATED_OBJECT_GROUP);
 }
 
-void staffactivated_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
+void staffactivated_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5,
+                           s8 visible) {
     objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, lbl_803E3BBC);
 }
 
