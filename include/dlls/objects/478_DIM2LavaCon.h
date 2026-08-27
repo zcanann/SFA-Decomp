@@ -34,6 +34,21 @@ typedef struct Dim2LavaControlState {
     int musicTriggerId;
 } Dim2LavaControlState;
 
+/* gDIM2LavaControlObjDescriptor from slot02 onwards: the export table other
+ * objects reach through obj->anim.dll. */
+typedef struct Dim2LavaControlInterface {
+    ObjectInterface object;
+    void (*tickCountdown)(GameObject* obj);
+} Dim2LavaControlInterface;
+
+typedef struct Dim2LavaControlDescriptor {
+    ObjectDescriptor descriptor;
+    void (*tickCountdown)(GameObject* obj);
+    ObjectDescriptorCallback slot0B;
+} Dim2LavaControlDescriptor;
+
+#define DIM2_LAVA_CONTROL_INTERFACE(control) ((Dim2LavaControlInterface*)*((GameObject*)(control))->anim.dll)
+
 STATIC_ASSERT(offsetof(Dim2LavaControlPlacementView, base) == 0x00);
 STATIC_ASSERT(offsetof(Dim2LavaControlPlacementView, unknown18) == 0x18);
 STATIC_ASSERT(offsetof(Dim2LavaControlPlacementView, countdownInitialValue) == 0x1A);
@@ -50,6 +65,15 @@ STATIC_ASSERT(offsetof(Dim2LavaControlState, musicLatch) == 0x08);
 STATIC_ASSERT(offsetof(Dim2LavaControlState, musicTriggerId) == 0x0C);
 STATIC_ASSERT(sizeof(Dim2LavaControlState) == 0x10);
 
+STATIC_ASSERT(offsetof(Dim2LavaControlInterface, object) == 0x00);
+STATIC_ASSERT(offsetof(Dim2LavaControlInterface, tickCountdown) == 0x20);
+STATIC_ASSERT(sizeof(Dim2LavaControlInterface) == 0x24);
+
+STATIC_ASSERT(offsetof(Dim2LavaControlDescriptor, descriptor) == 0x00);
+STATIC_ASSERT(offsetof(Dim2LavaControlDescriptor, tickCountdown) == 0x38);
+STATIC_ASSERT(offsetof(Dim2LavaControlDescriptor, slot0B) == 0x3C);
+STATIC_ASSERT(sizeof(Dim2LavaControlDescriptor) == 0x40);
+
 void dim2lavacontrol_tickCountdown(GameObject* obj);
 int dim2lavacontrol_getExtraSize(void);
 void dim2lavacontrol_free(void);
@@ -59,6 +83,6 @@ void dim2lavacontrol_update(GameObject* obj);
 void dim2lavacontrol_init(GameObject* obj, const Dim2LavaControlPlacementView* placement);
 
 extern u8 gDim2LavaHeatAlphaTargets[DIM2_LAVA_CONTROL_HEAT_ALPHA_TARGET_COUNT];
-extern ObjectDescriptor12 gDIM2LavaControlObjDescriptor;
+extern Dim2LavaControlDescriptor gDIM2LavaControlObjDescriptor;
 
 #endif /* DLLS_OBJECTS_478_DIM2LAVACON_H_ */
