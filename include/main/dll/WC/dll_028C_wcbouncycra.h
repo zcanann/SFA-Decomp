@@ -3,9 +3,9 @@
 
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/WC/wc_block_state.h"
 
-typedef struct WCBlockGridInterface
-{
+typedef struct WCBlockGridInterface {
     char pad0[0x20];
     void (*getCellWorldA)(int obj, s16 cellX, s16 cellZ, f32* worldX, f32* worldZ, struct WCBlockGridInterface* self);
     char pad24[0x0C];
@@ -16,19 +16,7 @@ typedef struct WCBlockGridInterface
     void (*getCellXYB)(u8 tileIndex, s16* cellX, s16* cellZ, struct WCBlockGridInterface* self);
 } WCBlockGridInterface;
 
-typedef struct WCBlockState
-{
-    u8 pad00[0x268];
-    GameObject* controller;
-    u8 pad26C[0x27E - 0x26C];
-    s16 cellX;
-    s16 cellZ;
-    u8 pad282[1];
-    u8 tileIndex;
-} WCBlockState;
-
-typedef struct WCBouncyCrateState
-{
+typedef struct WCBouncyCrateState {
     f32 homeY;
     u8 pad04[4];
     s16 cooldown;
@@ -36,10 +24,6 @@ typedef struct WCBouncyCrateState
     u8 bounceCount;
 } WCBouncyCrateState;
 
-STATIC_ASSERT(offsetof(WCBlockState, controller) == 0x268);
-STATIC_ASSERT(offsetof(WCBlockState, cellX) == 0x27E);
-STATIC_ASSERT(offsetof(WCBlockState, cellZ) == 0x280);
-STATIC_ASSERT(offsetof(WCBlockState, tileIndex) == 0x283);
 STATIC_ASSERT(sizeof(WCBouncyCrateState) == 0x0C);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, cooldown) == 0x08);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, flags) == 0x0A);
@@ -65,7 +49,5 @@ void WCBouncyCra_update(GameObject* obj);
 void WCBouncyCra_init(GameObject* obj, ObjPlacement* setup);
 void WCBouncyCra_release(void);
 void WCBouncyCra_initialise(void);
-
-int wcblock_isPlayerAwayFromStoredCell(GameObject* obj, WCBlockState* state, GameObject* player);
 
 #endif

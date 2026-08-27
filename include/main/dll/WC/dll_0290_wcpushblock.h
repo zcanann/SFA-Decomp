@@ -4,6 +4,7 @@
 #include "global.h"
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/WC/wc_block_state.h"
 
 #define WCPUSHBLOCK_GAMEBIT_A_SOLVED 0x812
 #define WCPUSHBLOCK_GAMEBIT_A_FADE   0x808
@@ -12,15 +13,13 @@
 #define WCPUSHBLOCK_GAMEBIT_B_FADE   0x809
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT  0x811
 
-typedef struct PushBlockFlags
-{
+typedef struct PushBlockFlags {
     u8 phase : 3;
     u8 sfxActive : 1;
     u8 pad : 4;
 } PushBlockFlags;
 
-typedef struct WCPushBlockSetup
-{
+typedef struct WCPushBlockSetup {
     ObjPlacement base;
     u8 unk18;
     s8 modelIndex;
@@ -28,19 +27,8 @@ typedef struct WCPushBlockSetup
     u8 pad1C[0x24 - 0x1C];
 } WCPushBlockSetup;
 
-typedef struct WCPushBlockRuntimeState
-{
-    u8 pad00[0x268];
-    GameObject* controller;
-    f32 targetX;
-    f32 targetZ;
-    f32 baseY;
-    f32 bobY;
-    u16 bobAngle;
-    s16 tileX;
-    s16 tileY;
-    u8 pushDir;
-    u8 initialTile;
+typedef struct WCPushBlockRuntimeState {
+    WCBlockState block;
     u8 moveResult;
     PushBlockFlags flags;
     u8 pad286[2];
@@ -48,16 +36,16 @@ typedef struct WCPushBlockRuntimeState
 
 STATIC_ASSERT(sizeof(PushBlockFlags) == 1);
 STATIC_ASSERT(sizeof(WCPushBlockRuntimeState) == 0x288);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, controller) == 0x268);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, targetX) == 0x26C);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, targetZ) == 0x270);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, baseY) == 0x274);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, bobY) == 0x278);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, bobAngle) == 0x27C);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, tileX) == 0x27E);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, tileY) == 0x280);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, pushDir) == 0x282);
-STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, initialTile) == 0x283);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.controller) == 0x268);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.targetX) == 0x26C);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.targetZ) == 0x270);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.baseY) == 0x274);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.bobY) == 0x278);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.bobAngle) == 0x27C);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.cellX) == 0x27E);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.cellZ) == 0x280);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.pushDir) == 0x282);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, block.tileIndex) == 0x283);
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, moveResult) == 0x284);
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, flags) == 0x285);
 STATIC_ASSERT(sizeof(WCPushBlockSetup) == 0x24);
