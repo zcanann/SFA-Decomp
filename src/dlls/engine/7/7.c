@@ -87,6 +87,13 @@ typedef struct WindSource
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
 extern NewCloud* gNewClouds[8];
 
+typedef struct NewCloudRuntimeStorageLayout {
+    Texture* layerTextures[4];
+    NewCloud* clouds[8];
+} NewCloudRuntimeStorageLayout;
+
+STATIC_ASSERT(offsetof(NewCloudRuntimeStorageLayout, clouds) == 0x10);
+
 #define NC_CLOUD ((u8 *)gNewClouds[((CloudSpawnParams *)params)->cloudIndex])
 #define D7_CLOUD (*cloudSlot)
 extern char sSnowPrintSnowCloudInvalidCloudId[];
@@ -1612,7 +1619,7 @@ void newclouds_run(void)
     while (i < 8)
     {
         cloudSlot = (u8**)((u8*)clouds + slotOffset);
-        cloudSlot = (u8**)((u8*)cloudSlot + 16);
+        cloudSlot = (u8**)((u8*)cloudSlot + offsetof(NewCloudRuntimeStorageLayout, clouds));
         p = *cloudSlot;
         if (p != NULL &&
             (*(u8**)p == NULL || (((GameObject*)*(u8**)p)->objectFlags & OBJECT_OBJFLAG_FREED)))
