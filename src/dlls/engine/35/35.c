@@ -65,34 +65,34 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.sourcePosY = src->posY;
         p.sourcePosZ = src->posZ;
         p.sourceScale = src->scale;
-        p.rot2 = src->rotZ;
-        p.rot1 = src->rotY;
-        p.rot0 = src->rotX;
-        p.srcFlag = srcByte;
+        p.sourceVecZ = src->rotZ;
+        p.sourceVecY = src->rotY;
+        p.sourceVecX = src->rotX;
+        p.modelIdByte = srcByte;
     }
-    p.flagsA = 0;
-    p.flagsB = 0;
-    p.idByte = id;
-    p.model = obj;
-    p.posX = 0.0f;
-    p.posY = 0.0f;
-    p.posZ = 0.0f;
-    p.velX = 0.0f;
-    p.velY = 0.0f;
-    p.velZ = 0.0f;
+    p.behaviorFlags = 0;
+    p.renderFlags = 0;
+    p.effectIdByte = id;
+    p.attachedSource = obj;
+    p.startPosX = 0.0f;
+    p.startPosY = 0.0f;
+    p.startPosZ = 0.0f;
+    p.velocityX = 0.0f;
+    p.velocityY = 0.0f;
+    p.velocityZ = 0.0f;
     p.scale = 0.0f;
-    p.count = 0;
-    p.unk04 = -1;
-    p.alpha = 0xff;
+    p.lifetimeFrames = 0;
+    p.quadVertex3Pad06 = -1;
+    p.initialAlpha = 0xff;
     p.linkGroup = 0;
-    p.kind = 0;
-    p.colD = 0xffff;
-    p.colE = 0xffff;
-    p.colF = 0xffff;
-    p.colA = 0xffff;
-    p.colB = 0xffff;
-    p.colC = 0xffff;
-    p.unk40 = 0;
+    p.textureId = 0;
+    p.colorWord0 = 0xffff;
+    p.colorWord1 = 0xffff;
+    p.colorWord2 = 0xffff;
+    p.overrideColor0 = 0xffff;
+    p.overrideColor1 = 0xffff;
+    p.overrideColor2 = 0xffff;
+    p.textureSetupFlags = 0;
     if (src == NULL)
     {
         gEffect10DefaultSrcParams.posX = 0.0f;
@@ -107,116 +107,116 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     switch (id)
     {
     case 0x32a:
-        p.count = (int)(50.0f * src->scale + 20.0f);
-        p.scale = 0.0008f * (f32)(int)p.count;
-        p.flagsA = 0x8100200;
-        p.kind = 0x57;
+        p.lifetimeFrames = (int)(50.0f * src->scale + 20.0f);
+        p.scale = 0.0008f * (f32)(int)p.lifetimeFrames;
+        p.behaviorFlags = 0x8100200;
+        p.textureId = 0x57;
         p.sourcePosX = src->posX;
         p.sourcePosY = src->posY;
         p.sourcePosZ = src->posZ;
         p.sourceScale = 1.0f;
-        p.rot2 = 0;
-        p.rot1 = 0;
-        p.rot0 = src->rotX;
-        p.alpha = 0xff;
+        p.sourceVecZ = 0;
+        p.sourceVecY = 0;
+        p.sourceVecX = src->rotX;
+        p.initialAlpha = 0xff;
         break;
     case 0x32b:
-        p.count = (int)(src->scale * (f32)randomGetRange(0x96, 0xc8) + 50.0f);
-        p.scale = 0.00014f * (f32)(int)p.count;
-        p.flagsA = 0x8100200;
-        p.kind = 0x56;
+        p.lifetimeFrames = (int)(src->scale * (f32)randomGetRange(0x96, 0xc8) + 50.0f);
+        p.scale = 0.00014f * (f32)(int)p.lifetimeFrames;
+        p.behaviorFlags = 0x8100200;
+        p.textureId = 0x56;
         p.sourcePosX = src->posX;
         p.sourcePosY = src->posY;
         p.sourcePosZ = src->posZ;
         p.sourceScale = 1.0f;
-        p.rot2 = 0;
-        p.rot1 = 0;
-        p.rot0 = 0;
-        p.alpha = 0xff;
+        p.sourceVecZ = 0;
+        p.sourceVecY = 0;
+        p.sourceVecX = 0;
+        p.initialAlpha = 0xff;
         break;
     case 0x32c:
         p.scale = 0.02f * (f32)randomGetRange(2, 4);
-        p.count = 200;
-        p.flagsA = 0x8100200;
-        p.kind = 0x56;
+        p.lifetimeFrames = 200;
+        p.behaviorFlags = 0x8100200;
+        p.textureId = 0x56;
         p.sourcePosX = src->posX;
         p.sourcePosY = src->posY;
         p.sourcePosZ = src->posZ;
         p.sourceScale = 1.0f;
-        p.rot2 = 0;
-        p.rot1 = 0;
-        p.rot0 = 0;
-        p.alpha = 0xff;
+        p.sourceVecZ = 0;
+        p.sourceVecY = 0;
+        p.sourceVecX = 0;
+        p.initialAlpha = 0xff;
         break;
     case 0x32d:
         p.scale = 0.025f;
-        p.count = 0x32;
-        p.flagsA = 0x180200;
-        p.flagsB = 0x1000000;
-        p.kind = 0x60;
-        p.alpha = 0xff;
+        p.lifetimeFrames = 0x32;
+        p.behaviorFlags = 0x180200;
+        p.renderFlags = 0x1000000;
+        p.textureId = 0x60;
+        p.initialAlpha = 0xff;
         break;
     case 0x32e:
     {
         u16 color;
 
-        p.velX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
-        p.velY = 0.002f * (f32)randomGetRange(0xa, 0x50);
-        p.velZ = 0.004f * (f32)randomGetRange(-0x28, 0x28);
+        p.velocityX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
+        p.velocityY = 0.002f * (f32)randomGetRange(0xa, 0x50);
+        p.velocityZ = 0.004f * (f32)randomGetRange(-0x28, 0x28);
         p.scale = 0.0001f * (f32)randomGetRange(5, 0x19);
-        p.count = randomGetRange(0x64, 0x78);
-        p.rot0 = randomGetRange(0, 0xffff);
-        p.rot1 = randomGetRange(0, 0xffff);
-        p.rot0 = randomGetRange(0, 0xffff);
+        p.lifetimeFrames = randomGetRange(0x64, 0x78);
+        p.sourceVecX = randomGetRange(0, 0xffff);
+        p.sourceVecY = randomGetRange(0, 0xffff);
+        p.sourceVecX = randomGetRange(0, 0xffff);
         p.sourcePosX = (f32)randomGetRange(0xe6, 0x320);
         p.sourcePosY = (f32)randomGetRange(0xe6, 0x320);
         p.sourcePosZ = (f32)randomGetRange(0xe6, 0x320);
-        p.flagsB = 0x1000020;
-        p.flagsA = 0x86000008;
+        p.renderFlags = 0x1000020;
+        p.behaviorFlags = 0x86000008;
         color = randomGetRange(0x8000, 0xffff);
-        p.colD = color;
-        p.colA = color;
-        p.colB = p.colE = 0xffff;
-        p.colC = p.colF = 0xffff;
-        p.kind = 0x3a3;
+        p.colorWord0 = color;
+        p.overrideColor0 = color;
+        p.overrideColor1 = p.colorWord1 = 0xffff;
+        p.overrideColor2 = p.colorWord2 = 0xffff;
+        p.textureId = 0x3a3;
         break;
     }
     case 0x32f:
-        p.posX = src->posX;
-        p.posY = src->posY;
-        p.posZ = src->posZ;
-        p.velX = 0.0035f * (f32)randomGetRange(-100, 100);
-        p.velY = 0.0035f * (f32)randomGetRange(-100, 100);
-        p.velZ = 0.0035f * (f32)randomGetRange(-100, 100);
+        p.startPosX = src->posX;
+        p.startPosY = src->posY;
+        p.startPosZ = src->posZ;
+        p.velocityX = 0.0035f * (f32)randomGetRange(-100, 100);
+        p.velocityY = 0.0035f * (f32)randomGetRange(-100, 100);
+        p.velocityZ = 0.0035f * (f32)randomGetRange(-100, 100);
         p.scale = src->scale * (0.00065f * (f32)randomGetRange(4, 5));
-        p.count = randomGetRange(0xf, 0x23);
-        p.alpha = 0xff;
-        p.flagsA = 0x80110;
-        p.flagsB = 0x8400c00;
-        p.kind = 0xc79;
+        p.lifetimeFrames = randomGetRange(0xf, 0x23);
+        p.initialAlpha = 0xff;
+        p.behaviorFlags = 0x80110;
+        p.renderFlags = 0x8400c00;
+        p.textureId = 0xc79;
         break;
     case 0x330:
-        p.posX = 0.001f * (f32)randomGetRange(-100, 100) + src->posX;
-        p.posY = 0.001f * (f32)randomGetRange(-100, 100) + src->posY;
-        p.posZ = 0.001f * (f32)randomGetRange(-100, 100) + src->posZ;
-        p.velX = 0.005f * (f32)randomGetRange(-100, 100);
-        p.velY = 0.005f * (f32)randomGetRange(-100, 100);
-        p.velZ = 0.005f * (f32)randomGetRange(-100, 100);
+        p.startPosX = 0.001f * (f32)randomGetRange(-100, 100) + src->posX;
+        p.startPosY = 0.001f * (f32)randomGetRange(-100, 100) + src->posY;
+        p.startPosZ = 0.001f * (f32)randomGetRange(-100, 100) + src->posZ;
+        p.velocityX = 0.005f * (f32)randomGetRange(-100, 100);
+        p.velocityY = 0.005f * (f32)randomGetRange(-100, 100);
+        p.velocityZ = 0.005f * (f32)randomGetRange(-100, 100);
         p.scale = 0.004f * src->scale;
-        p.count = randomGetRange(0xf, 0x23);
-        p.alpha = 0xff;
-        p.flagsA = 0x80100;
-        p.flagsB = 0x4400c00;
-        p.kind = 0xc74;
+        p.lifetimeFrames = randomGetRange(0xf, 0x23);
+        p.initialAlpha = 0xff;
+        p.behaviorFlags = 0x80100;
+        p.renderFlags = 0x4400c00;
+        p.textureId = 0xc74;
         break;
     case 0x332:
-        p.velX = 0.01f * (f32)randomGetRange(-0x14, 0x14);
-        p.velY = 0.01f;
-        p.velZ = 0.01f * (f32)randomGetRange(-0x14, 0x14);
+        p.velocityX = 0.01f * (f32)randomGetRange(-0x14, 0x14);
+        p.velocityY = 0.01f;
+        p.velocityZ = 0.01f * (f32)randomGetRange(-0x14, 0x14);
         p.scale = 0.0052f;
-        p.count = 0x96;
-        p.flagsA = 0xa100100;
-        p.kind = 0x62;
+        p.lifetimeFrames = 0x96;
+        p.behaviorFlags = 0xa100100;
+        p.textureId = 0x62;
         break;
     case 0x336:
     {
@@ -230,23 +230,23 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         {
             scale = 1.0f;
         }
-        p.posX = scale * (f32)randomGetRange(-10, 10);
-        p.posY = scale * (f32)randomGetRange(-10, 10);
-        p.posZ = scale * (f32)randomGetRange(-10, 10);
-        p.velX = scale * (0.02f * (f32)randomGetRange(-0xf, 0xf));
-        p.velY = scale * (0.02f * (f32)randomGetRange(-0xf, 0xf));
-        p.velZ = scale * (0.02f * (f32)randomGetRange(-0xf, 0xf));
+        p.startPosX = scale * (f32)randomGetRange(-10, 10);
+        p.startPosY = scale * (f32)randomGetRange(-10, 10);
+        p.startPosZ = scale * (f32)randomGetRange(-10, 10);
+        p.velocityX = scale * (0.02f * (f32)randomGetRange(-0xf, 0xf));
+        p.velocityY = scale * (0.02f * (f32)randomGetRange(-0xf, 0xf));
+        p.velocityZ = scale * (0.02f * (f32)randomGetRange(-0xf, 0xf));
         p.scale = 0.0004f * (f32)randomGetRange(8, 10);
-        p.count = 0x50;
-        p.flagsA = 0x80480404;
-        p.flagsB = 0x20;
-        p.colF = 0;
-        p.colE = 0;
-        p.colD = 0;
-        p.colC = 0;
-        p.colB = 0;
-        p.colA = 0;
-        p.kind = 0xc9d;
+        p.lifetimeFrames = 0x50;
+        p.behaviorFlags = 0x80480404;
+        p.renderFlags = 0x20;
+        p.colorWord2 = 0;
+        p.colorWord1 = 0;
+        p.colorWord0 = 0;
+        p.overrideColor2 = 0;
+        p.overrideColor1 = 0;
+        p.overrideColor0 = 0;
+        p.textureId = 0xc9d;
         break;
     }
     case 0x337:
@@ -264,51 +264,51 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         if (mode == 0)
         {
             p.scale = 0.02f;
-            p.count = 1;
-            p.flagsA = 0x480000;
+            p.lifetimeFrames = 1;
+            p.behaviorFlags = 0x480000;
         }
         else if (mode == 1)
         {
             p.scale = 0.04f;
-            p.count = 1;
-            p.flagsA = 0x480000;
-            p.alpha = 0x32;
+            p.lifetimeFrames = 1;
+            p.behaviorFlags = 0x480000;
+            p.initialAlpha = 0x32;
         }
         else if (mode == 2)
         {
-            p.velX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velZ = 0.02f * (f32)randomGetRange(-10, 10);
+            p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityZ = 0.02f * (f32)randomGetRange(-10, 10);
             p.scale = 0.005f;
-            p.count = randomGetRange(0x1e, 0x28);
-            p.flagsA = 0x3000000;
-            p.flagsB = 0x600000;
+            p.lifetimeFrames = randomGetRange(0x1e, 0x28);
+            p.behaviorFlags = 0x3000000;
+            p.renderFlags = 0x600000;
         }
         else if (mode == 3)
         {
-            p.posX = (f32)randomGetRange(-10, 10);
-            p.posY = (f32)randomGetRange(-10, 10);
-            p.posZ = (f32)randomGetRange(-10, 10);
-            p.velX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velZ = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.startPosX = (f32)randomGetRange(-10, 10);
+            p.startPosY = (f32)randomGetRange(-10, 10);
+            p.startPosZ = (f32)randomGetRange(-10, 10);
+            p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityZ = 0.02f * (f32)randomGetRange(-0xf, 0xf);
             p.scale = 0.0004f * (f32)randomGetRange(8, 10);
-            p.count = 0x1e;
-            p.alpha = 0xb4;
-            p.flagsA = 0x80480404;
+            p.lifetimeFrames = 0x1e;
+            p.initialAlpha = 0xb4;
+            p.behaviorFlags = 0x80480404;
         }
         else
         {
-            p.posX = (f32)randomGetRange(-3, 3);
-            p.posY = (f32)randomGetRange(-3, 3);
-            p.posZ = (f32)randomGetRange(-3, 3);
+            p.startPosX = (f32)randomGetRange(-3, 3);
+            p.startPosY = (f32)randomGetRange(-3, 3);
+            p.startPosZ = (f32)randomGetRange(-3, 3);
             p.scale = 0.003f;
-            p.count = 100;
-            p.flagsA = 0x80480000;
-            p.flagsB = 0x400000;
-            p.alpha = 0x7f;
+            p.lifetimeFrames = 100;
+            p.behaviorFlags = 0x80480000;
+            p.renderFlags = 0x400000;
+            p.initialAlpha = 0x7f;
         }
-        p.kind = 0xc7e;
+        p.textureId = 0xc7e;
         break;
     }
     case 0x338:
@@ -326,200 +326,200 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         if (mode == 0)
         {
             p.scale = 0.02f;
-            p.count = 1;
-            p.flagsA = 0x480000;
+            p.lifetimeFrames = 1;
+            p.behaviorFlags = 0x480000;
         }
         else if (mode == 1)
         {
             p.scale = 0.04f;
-            p.count = 1;
-            p.flagsA = 0x480000;
-            p.alpha = 0x32;
+            p.lifetimeFrames = 1;
+            p.behaviorFlags = 0x480000;
+            p.initialAlpha = 0x32;
         }
         else if (mode == 2)
         {
-            p.velX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velZ = 0.02f * (f32)randomGetRange(-10, 10);
+            p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityZ = 0.02f * (f32)randomGetRange(-10, 10);
             p.scale = 0.005f;
-            p.count = randomGetRange(0x1e, 0x28);
-            p.flagsA = 0x3000000;
-            p.flagsB = 0x600000;
+            p.lifetimeFrames = randomGetRange(0x1e, 0x28);
+            p.behaviorFlags = 0x3000000;
+            p.renderFlags = 0x600000;
         }
         else if (mode == 3)
         {
-            p.posX = (f32)randomGetRange(-10, 10);
-            p.posY = (f32)randomGetRange(-10, 10);
-            p.posZ = (f32)randomGetRange(-10, 10);
-            p.velX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-            p.velZ = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.startPosX = (f32)randomGetRange(-10, 10);
+            p.startPosY = (f32)randomGetRange(-10, 10);
+            p.startPosZ = (f32)randomGetRange(-10, 10);
+            p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
+            p.velocityZ = 0.02f * (f32)randomGetRange(-0xf, 0xf);
             p.scale = 0.0004f * (f32)randomGetRange(8, 10);
-            p.count = 0x1e;
-            p.alpha = 0xb4;
-            p.flagsA = 0x80480404;
+            p.lifetimeFrames = 0x1e;
+            p.initialAlpha = 0xb4;
+            p.behaviorFlags = 0x80480404;
         }
         else
         {
-            p.posX = (f32)randomGetRange(-3, 3);
-            p.posY = (f32)randomGetRange(-3, 3);
-            p.posZ = (f32)randomGetRange(-3, 3);
+            p.startPosX = (f32)randomGetRange(-3, 3);
+            p.startPosY = (f32)randomGetRange(-3, 3);
+            p.startPosZ = (f32)randomGetRange(-3, 3);
             p.scale = 0.003f;
-            p.count = 100;
-            p.flagsA = 0x80480000;
-            p.flagsB = 0x400000;
-            p.alpha = 0x7f;
+            p.lifetimeFrames = 100;
+            p.behaviorFlags = 0x80480000;
+            p.renderFlags = 0x400000;
+            p.initialAlpha = 0x7f;
         }
-        p.kind = 0x4f9;
+        p.textureId = 0x4f9;
         break;
     }
     case 0x340:
-        p.velX = 0.02f * (f32)randomGetRange(-100, 100);
-        p.velY = 0.02f * (f32)randomGetRange(10, 200);
-        p.velZ = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityX = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityY = 0.02f * (f32)randomGetRange(10, 200);
+        p.velocityZ = 0.02f * (f32)randomGetRange(-100, 100);
         p.scale = 0.0001f * (f32)randomGetRange(8, 0xb);
-        p.count = 0x4b;
-        p.flagsA = 0x1080000;
-        p.kind = 0xc0f;
+        p.lifetimeFrames = 0x4b;
+        p.behaviorFlags = 0x1080000;
+        p.textureId = 0xc0f;
         break;
     case 0x342:
-        p.velX = 0.02f * (f32)randomGetRange(-100, 100);
-        p.velY = 0.012f * (f32)randomGetRange(0x14, 100);
-        p.velZ = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityX = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityY = 0.012f * (f32)randomGetRange(0x14, 100);
+        p.velocityZ = 0.02f * (f32)randomGetRange(-100, 100);
         p.scale = 0.0015f;
-        p.count = 0x28;
-        p.flagsA = 0x1080200;
-        p.kind = 0xc0f;
+        p.lifetimeFrames = 0x28;
+        p.behaviorFlags = 0x1080200;
+        p.textureId = 0xc0f;
         break;
     case 0x343:
-        p.velX = 0.02f * (f32)randomGetRange(-100, 100);
-        p.velY = 0.02f * (f32)randomGetRange(10, 200);
-        p.velZ = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityX = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityY = 0.02f * (f32)randomGetRange(10, 200);
+        p.velocityZ = 0.02f * (f32)randomGetRange(-100, 100);
         p.scale = 0.00015f * (f32)randomGetRange(8, 0xb);
-        p.count = randomGetRange(0x41, 0x4b);
-        p.flagsA = 0x1080000;
-        p.flagsB = 0x5000000;
-        p.kind = 0x77;
-        p.alpha = randomGetRange(0x46, 100);
+        p.lifetimeFrames = randomGetRange(0x41, 0x4b);
+        p.behaviorFlags = 0x1080000;
+        p.renderFlags = 0x5000000;
+        p.textureId = 0x77;
+        p.initialAlpha = randomGetRange(0x46, 100);
         break;
     case 0x344:
-        p.velX = 0.02f * (f32)randomGetRange(-100, 100);
-        p.velY = 0.012f * (f32)randomGetRange(0x14, 100);
-        p.velZ = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityX = 0.02f * (f32)randomGetRange(-100, 100);
+        p.velocityY = 0.012f * (f32)randomGetRange(0x14, 100);
+        p.velocityZ = 0.02f * (f32)randomGetRange(-100, 100);
         p.scale = 0.00015f * (f32)randomGetRange(5, 10);
-        p.count = 0x28;
-        p.flagsA = 0x1080200;
-        p.kind = 0x77;
-        p.alpha = 0x7f;
+        p.lifetimeFrames = 0x28;
+        p.behaviorFlags = 0x1080200;
+        p.textureId = 0x77;
+        p.initialAlpha = 0x7f;
         break;
     case 0x345:
-        p.velX = 0.02f * (f32)randomGetRange(-10, 10);
-        p.velY = 0.02f * (f32)randomGetRange(0x14, 0x28);
-        p.velZ = 0.02f * (f32)randomGetRange(-10, 10);
-        p.posX = (f32)randomGetRange(-10, 10);
-        p.posY = -4.0f;
-        p.posZ = (f32)randomGetRange(-10, 10);
+        p.velocityX = 0.02f * (f32)randomGetRange(-10, 10);
+        p.velocityY = 0.02f * (f32)randomGetRange(0x14, 0x28);
+        p.velocityZ = 0.02f * (f32)randomGetRange(-10, 10);
+        p.startPosX = (f32)randomGetRange(-10, 10);
+        p.startPosY = -4.0f;
+        p.startPosZ = (f32)randomGetRange(-10, 10);
         p.scale = 0.009f;
-        p.count = randomGetRange(0x14, 0x23);
-        p.flagsA = 0x1080200;
-        p.flagsB = 0x5000000;
-        p.kind = 0x60;
-        p.alpha = randomGetRange(0x96, 200);
+        p.lifetimeFrames = randomGetRange(0x14, 0x23);
+        p.behaviorFlags = 0x1080200;
+        p.renderFlags = 0x5000000;
+        p.textureId = 0x60;
+        p.initialAlpha = randomGetRange(0x96, 200);
         break;
     case 0x346:
-        p.posX = src->posX;
-        p.posY = src->posY;
-        p.posZ = src->posZ;
+        p.startPosX = src->posX;
+        p.startPosY = src->posY;
+        p.startPosZ = src->posZ;
         p.scale = 0.001f * (f32)randomGetRange(5, 0x19) + src->scale;
-        p.count = 0x1e0;
+        p.lifetimeFrames = 0x1e0;
         p.linkGroup = 0;
-        p.flagsA = 0x480014;
-        p.kind = 0xdf;
+        p.behaviorFlags = 0x480014;
+        p.textureId = 0xdf;
         break;
     case 0x347:
-        p.velX = 0.02f * (f32)randomGetRange(-0x1e, 0x1e);
-        p.velY = 0.02f * (f32)randomGetRange(-5, 10);
-        p.velZ = 0.02f * (f32)randomGetRange(-0x1e, 0x1e);
-        p.posX = 0.0f;
-        p.posY = (f32)randomGetRange(10, 0x1e);
-        p.posZ = 0.0f;
+        p.velocityX = 0.02f * (f32)randomGetRange(-0x1e, 0x1e);
+        p.velocityY = 0.02f * (f32)randomGetRange(-5, 10);
+        p.velocityZ = 0.02f * (f32)randomGetRange(-0x1e, 0x1e);
+        p.startPosX = 0.0f;
+        p.startPosY = (f32)randomGetRange(10, 0x1e);
+        p.startPosZ = 0.0f;
         p.scale = 0.01f;
-        p.count = 0x32;
-        p.flagsA = 0x8a000208;
-        p.kind = 0x60;
-        p.colD = 0x7f00;
-        p.colE = 0x6400;
-        p.colF = 0;
-        p.colA = 0x5a00;
-        p.colB = 0;
-        p.colC = 0;
-        p.flagsB = 0x20;
-        p.alpha = 0x7f;
+        p.lifetimeFrames = 0x32;
+        p.behaviorFlags = 0x8a000208;
+        p.textureId = 0x60;
+        p.colorWord0 = 0x7f00;
+        p.colorWord1 = 0x6400;
+        p.colorWord2 = 0;
+        p.overrideColor0 = 0x5a00;
+        p.overrideColor1 = 0;
+        p.overrideColor2 = 0;
+        p.renderFlags = 0x20;
+        p.initialAlpha = 0x7f;
         break;
     case 0x34c:
         p.scale = 0.025f;
-        p.count = 0x32;
-        p.flagsA = 0x180200;
-        p.flagsB = 0x1000000;
-        p.kind = 0x2b;
-        p.alpha = 0x9d;
+        p.lifetimeFrames = 0x32;
+        p.behaviorFlags = 0x180200;
+        p.renderFlags = 0x1000000;
+        p.textureId = 0x2b;
+        p.initialAlpha = 0x9d;
         break;
     case 0x34d:
     {
         u16 color;
 
-        p.velX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
-        p.velY = 0.002f * (f32)randomGetRange(10, 0x50);
-        p.velZ = 0.004f * (f32)randomGetRange(-0x28, 0x28);
+        p.velocityX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
+        p.velocityY = 0.002f * (f32)randomGetRange(10, 0x50);
+        p.velocityZ = 0.004f * (f32)randomGetRange(-0x28, 0x28);
         p.scale = 0.0001f * (f32)randomGetRange(5, 0x19);
-        p.count = randomGetRange(0x64, 0x78);
-        p.rot0 = randomGetRange(0, 0xffff);
-        p.rot1 = randomGetRange(0, 0xffff);
-        p.rot0 = randomGetRange(0, 0xffff);
+        p.lifetimeFrames = randomGetRange(0x64, 0x78);
+        p.sourceVecX = randomGetRange(0, 0xffff);
+        p.sourceVecY = randomGetRange(0, 0xffff);
+        p.sourceVecX = randomGetRange(0, 0xffff);
         p.sourcePosX = (f32)randomGetRange(0xe6, 0x320);
         p.sourcePosY = (f32)randomGetRange(0xe6, 0x320);
         p.sourcePosZ = (f32)randomGetRange(0xe6, 0x320);
-        p.flagsB = 0x1000020;
-        p.flagsA = 0x86000008;
+        p.renderFlags = 0x1000020;
+        p.behaviorFlags = 0x86000008;
         color = randomGetRange(0, 0x2ee0) + 0x3caf;
-        p.colD = color;
-        p.colA = color;
-        color = p.colA - randomGetRange(0, 0x2710);
-        p.colE = color;
-        p.colB = color;
-        color = p.colA - randomGetRange(0x2710, 0x3caf);
-        p.colF = color;
-        p.colC = color;
-        p.kind = 0x3a3;
+        p.colorWord0 = color;
+        p.overrideColor0 = color;
+        color = p.overrideColor0 - randomGetRange(0, 0x2710);
+        p.colorWord1 = color;
+        p.overrideColor1 = color;
+        color = p.overrideColor0 - randomGetRange(0x2710, 0x3caf);
+        p.colorWord2 = color;
+        p.overrideColor2 = color;
+        p.textureId = 0x3a3;
         break;
     }
     case 0x34e:
     {
         u16 color;
 
-        p.velX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
-        p.velY = 0.002f * (f32)randomGetRange(10, 0x50);
-        p.velZ = 0.004f * (f32)randomGetRange(-0x28, 0x28);
-        p.posY = (f32)randomGetRange(5, 0x1e);
+        p.velocityX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
+        p.velocityY = 0.002f * (f32)randomGetRange(10, 0x50);
+        p.velocityZ = 0.004f * (f32)randomGetRange(-0x28, 0x28);
+        p.startPosY = (f32)randomGetRange(5, 0x1e);
         p.scale = 0.0001f * (f32)randomGetRange(5, 0x19);
-        p.count = randomGetRange(0x64, 0x78);
-        p.rot0 = randomGetRange(0, 0xffff);
-        p.rot1 = randomGetRange(0, 0xffff);
-        p.rot0 = randomGetRange(0, 0xffff);
+        p.lifetimeFrames = randomGetRange(0x64, 0x78);
+        p.sourceVecX = randomGetRange(0, 0xffff);
+        p.sourceVecY = randomGetRange(0, 0xffff);
+        p.sourceVecX = randomGetRange(0, 0xffff);
         p.sourcePosX = (f32)randomGetRange(0xe6, 0x320);
         p.sourcePosY = (f32)randomGetRange(0xe6, 0x320);
         p.sourcePosZ = (f32)randomGetRange(0xe6, 0x320);
-        p.flagsB = 0x1000020;
-        p.flagsA = 0x86000008;
+        p.renderFlags = 0x1000020;
+        p.behaviorFlags = 0x86000008;
         color = randomGetRange(0, 0x2ee0) + 0x3caf;
-        p.colD = color;
-        p.colA = color;
-        p.colE = 0x7530;
-        p.colB = 0x7530;
-        color = p.colA - randomGetRange(0x2710, 0x3caf);
-        p.colF = color;
-        p.colC = color;
-        p.kind = 0x3a3;
+        p.colorWord0 = color;
+        p.overrideColor0 = color;
+        p.colorWord1 = 0x7530;
+        p.overrideColor1 = 0x7530;
+        color = p.overrideColor0 - randomGetRange(0x2710, 0x3caf);
+        p.colorWord2 = color;
+        p.overrideColor2 = color;
+        p.textureId = 0x3a3;
         break;
     }
     case 0x331:
@@ -531,24 +531,24 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     default:
         return -1;
     }
-    p.flagsA = p.flagsA | flags;
-    if (((p.flagsA & EFFECT10_FLAGA_POS_RELATIVE) != 0) && ((p.flagsA & EFFECT10_FLAGA_UNK2) != 0))
+    p.behaviorFlags = p.behaviorFlags | flags;
+    if (((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0) && ((p.behaviorFlags & EFFECT10_FLAGA_UNK2) != 0))
     {
-        p.flagsA ^= 2LL;
+        p.behaviorFlags ^= 2LL;
     }
-    if ((p.flagsA & EFFECT10_FLAGA_POS_RELATIVE) != 0)
+    if ((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0)
     {
         if (hasSrc != 0)
         {
-            p.posX = p.posX + p.sourcePosX;
-            p.posY = p.posY + p.sourcePosY;
-            p.posZ = p.posZ + p.sourcePosZ;
+            p.startPosX = p.startPosX + p.sourcePosX;
+            p.startPosY = p.startPosY + p.sourcePosY;
+            p.startPosZ = p.startPosZ + p.sourcePosZ;
         }
-        else if (p.model != NULL)
+        else if (p.attachedSource != NULL)
         {
-            p.posX = p.posX + ((GameObject*)p.model)->anim.worldPosX;
-            p.posY = p.posY + ((GameObject*)p.model)->anim.worldPosY;
-            p.posZ = p.posZ + ((GameObject*)p.model)->anim.worldPosZ;
+            p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
+            p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;
+            p.startPosZ = p.startPosZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
         }
     }
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
