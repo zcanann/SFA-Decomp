@@ -59,11 +59,29 @@ typedef struct
 
 STATIC_ASSERT(sizeof(PauseMenuTokenEntry) == 0x8);
 
+typedef enum HudStatusSlot
+{
+    HUD_STATUS_HEALTH,
+    HUD_STATUS_TRICKY_FOOD,
+    HUD_STATUS_MAGIC,
+    HUD_STATUS_SCARABS,
+    HUD_STATUS_BOMB_SPORES,
+    HUD_STATUS_UNKNOWN_5,
+    HUD_STATUS_UNKNOWN_6,
+    HUD_STATUS_MAX_HEALTH,
+    HUD_STATUS_MAX_MAGIC,
+    HUD_STATUS_TRICKY_ENERGY,
+    HUD_STATUS_FIREFLIES,
+    HUD_STATUS_MOON_SEEDS,
+    HUD_STATUS_FUEL_CELLS,
+    HUD_STATUS_COUNT
+} HudStatusSlot;
+
 typedef struct
 {
     u8 pad000[0x190];
     int times190[12]; /* 0x190 */
-    void* textures1C0[0x66]; /* 0x1c0 */
+    Texture* hudTextures[0x66]; /* 0x1c0 */
     s16 texIds358[0x28]; /* 0x358 */
     void* textures3A8[0x28]; /* 0x3a8 */
     u8 itemFlags[0x40]; /* 0x448 */
@@ -75,9 +93,15 @@ typedef struct
     int usedBits[0x40]; /* 0x648 */
     int activeBits[0x40]; /* 0x748 */
     int ownedBits[0x40]; /* 0x848 */
-    s16 textureIds[0x40]; /* 0x948 */
+    s16 itemSlots[0x40]; /* 0x948 */
     struct Texture* itemTextures[0x40]; /* 0x9c8 */
-    u8 padAC8[0xf0]; /* 0xac8 */
+    f32 statusAnimation[HUD_STATUS_COUNT]; /* 0xac8 */
+    f32 statusOpacity[HUD_STATUS_COUNT]; /* 0xafc */
+    int statusPrevious[HUD_STATUS_COUNT]; /* 0xb30 */
+    u8 statusGameBitSet[HUD_STATUS_COUNT]; /* 0xb64 */
+    u8 padB71[0xB74 - 0xB71];
+    int statusValue[HUD_STATUS_COUNT]; /* 0xb74 */
+    u8 padBA8[0xBB8 - 0xBA8];
     int visibleItemStates[7]; /* 0xbb8 */
     void* visibleItemTextures[7]; /* 0xbd4 */
     struct GameObject* ringIcons[3]; /* 0xbf0 */
@@ -86,6 +110,14 @@ typedef struct
     struct GameObject* anims[4]; /* 0xc20 */
     struct GameObject* menuObjects[2]; /* 0xc30 */
 } CMenuHud;
+
+STATIC_ASSERT(offsetof(CMenuHud, hudTextures) == 0x1C0);
+STATIC_ASSERT(offsetof(CMenuHud, itemSlots) == 0x948);
+STATIC_ASSERT(offsetof(CMenuHud, statusAnimation) == 0xAC8);
+STATIC_ASSERT(offsetof(CMenuHud, statusOpacity) == 0xAFC);
+STATIC_ASSERT(offsetof(CMenuHud, statusPrevious) == 0xB30);
+STATIC_ASSERT(offsetof(CMenuHud, statusGameBitSet) == 0xB64);
+STATIC_ASSERT(offsetof(CMenuHud, statusValue) == 0xB74);
 
 typedef struct
 {
@@ -120,22 +152,6 @@ typedef struct
     GridEntry gridF70[19]; /* 0xf70 */
     int flags11D0[12]; /* 0x11d0 */
 } PauseTbl;
-
-typedef struct
-{
-    u8 pad000[0x1c0];
-    Texture* hudTextures[102]; /* 0x1c0 */
-    u8 pad358[offsetof(CMenuHud, itemFlags) - (0x1c0 + sizeof(Texture*) * 102)];
-    u8 itemFlags[64]; /* 0x448 */
-    u8 pad488[offsetof(CMenuHud, textureIds) - offsetof(CMenuHud, itemFlags) - 64];
-    s16 itemSlots[64]; /* 0x948 */
-    Texture* itemTextures[64]; /* 0x9c8 */
-    f32 itemFade[13]; /* 0xac8 */
-    f32 counterOpacity[13]; /* 0xafc */
-    int previousItemValues[13]; /* 0xb30 */
-    u8 itemGotFlags[13]; /* 0xb64 */
-    int displayedItemValues[13]; /* 0xb74 */
-} GameUiHud;
 
 extern u32 gGameUiHudAnimObjIds[6];
 

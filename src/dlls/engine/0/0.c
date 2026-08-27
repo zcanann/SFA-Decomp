@@ -264,53 +264,6 @@ typedef struct GameUiMatrixWorkspace
     f32 object[3][4];
 } GameUiMatrixWorkspace;
 
-typedef enum HudStatusSlot
-{
-    HUD_STATUS_HEALTH,
-    HUD_STATUS_TRICKY_FOOD,
-    HUD_STATUS_MAGIC,
-    HUD_STATUS_SCARABS,
-    HUD_STATUS_BOMB_SPORES,
-    HUD_STATUS_UNKNOWN_5,
-    HUD_STATUS_UNKNOWN_6,
-    HUD_STATUS_MAX_HEALTH,
-    HUD_STATUS_MAX_MAGIC,
-    HUD_STATUS_TRICKY_ENERGY,
-    HUD_STATUS_FIREFLIES,
-    HUD_STATUS_MOON_SEEDS,
-    HUD_STATUS_FUEL_CELLS,
-    HUD_STATUS_COUNT
-} HudStatusSlot;
-
-typedef struct TrickyHud
-{
-    u8 pad000[0x1c0];
-    void* icons[0x55]; /* 0x1c0 */
-    void* icon314;     /* 0x314 */
-    void* icon318;     /* 0x318 */
-    void* icon31c;     /* 0x31c */
-    u8 pad320[0x348 - 0x320];
-    void* icon348; /* 0x348 */
-    u8 pad34C[0x354 - 0x34c];
-    void* icon354; /* 0x354 */
-    u8 pad358[0xAC8 - 0x358];
-    f32 statusAnimation[HUD_STATUS_COUNT]; /* 0xac8 */
-    f32 statusOpacity[HUD_STATUS_COUNT];   /* 0xafc */
-    int statusPrevious[HUD_STATUS_COUNT];  /* 0xb30 */
-    u8 statusGameBitSet[HUD_STATUS_COUNT]; /* 0xb64 */
-    u8 padB71[0xB74 - 0xB71];
-    int statusValue[HUD_STATUS_COUNT]; /* 0xb74 */
-} TrickyHud;
-
-STATIC_ASSERT(offsetof(TrickyHud, icon314) == 0x314);
-STATIC_ASSERT(offsetof(TrickyHud, icon348) == 0x348);
-STATIC_ASSERT(offsetof(TrickyHud, icon354) == 0x354);
-STATIC_ASSERT(offsetof(TrickyHud, statusAnimation) == 0xAC8);
-STATIC_ASSERT(offsetof(TrickyHud, statusOpacity) == 0xAFC);
-STATIC_ASSERT(offsetof(TrickyHud, statusPrevious) == 0xB30);
-STATIC_ASSERT(offsetof(TrickyHud, statusGameBitSet) == 0xB64);
-STATIC_ASSERT(offsetof(TrickyHud, statusValue) == 0xB74);
-
 #define TRICKY_OBJFLAG_PARENT_SLACK 0x1000
 
 /* command-menu ring pair (both retail-named "CommandMenu...") and the
@@ -2009,7 +1962,7 @@ void GameUI_setInputOverride(int buttons, s16 stickX, s16 stickY)
 
 void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
 {
-    TrickyHud* base = (TrickyHud*)lbl_803A87F0;
+    CMenuHud* base = (CMenuHud*)lbl_803A87F0;
     int i;
     void* tricky;
     u8 alpha;
@@ -2063,7 +2016,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
                     sel = 0x12;
                 else
                     sel = (b74 & 3) + 0x12;
-                drawTexture(*(void**)((u8*)&base->icons[0] + sel * 4), (f32)(int)((u8)i * 0x21 + 0x1e), 31.0f,
+                drawTexture(*(void**)((u8*)&base->hudTextures[0] + sel * 4), (f32)(int)((u8)i * 0x21 + 0x1e), 31.0f,
                             alpha, 0x100);
             }
         }
@@ -2081,11 +2034,12 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
         magicId = 0x64;
     if ((u8)magicId != 0)
     {
-        drawTexture(base->icons[(u8)magicId], (f32)(int)(s16)((u8)krazoa ? 0x104 : 0x122), 31.0f, alpha, 0x100);
+        drawTexture(base->hudTextures[(u8)magicId], (f32)(int)(s16)((u8)krazoa ? 0x104 : 0x122), 31.0f, alpha,
+                    0x100);
     }
     if ((u8)krazoa != 0)
     {
-        drawTexture(base->icons[0x62], (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), 31.0f, alpha, 0x100);
+        drawTexture(base->hudTextures[0x62], (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), 31.0f, alpha, 0x100);
     }
     if (alpha != 0 && tricky != NULL)
     {
@@ -2094,23 +2048,23 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
               base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] < 150.0f &&
               ((int)base->statusOpacity[HUD_STATUS_TRICKY_ENERGY] & 8)))
         {
-            drawTexture(base->icons[0x55], 30.0f, 92.0f, alpha, 0x100);
+            drawTexture(base->hudTextures[0x55], 30.0f, 92.0f, alpha, 0x100);
         }
         for (i = 0; (u8)i < 0x14u; i += 4)
         {
             int b98 = base->statusValue[HUD_STATUS_TRICKY_ENERGY];
             if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0)
             {
-                drawScaledTexture(base->icons[0x57], (f32)(int)(((u8)i * 0xf) / 4 + 0x40), 102.0f, alpha, 0x100, 6,
-                                  0x12, 0);
-                drawPartialTexture(base->icons[0x56], (f32)(int)(((u8)i * 0xf) / 4 + 0x46), 102.0f, alpha, 0x100, 7,
-                                   0x12, 6, 0);
+                drawScaledTexture(base->hudTextures[0x57], (f32)(int)(((u8)i * 0xf) / 4 + 0x40), 102.0f, alpha,
+                                  0x100, 6, 0x12, 0);
+                drawPartialTexture(base->hudTextures[0x56], (f32)(int)(((u8)i * 0xf) / 4 + 0x46), 102.0f, alpha,
+                                   0x100, 7, 0x12, 6, 0);
             }
             else
             {
                 int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
                 int yo = ((u8)i * 0xf) / 4;
-                drawTexture(*(void**)((u8*)&base->icons[0] + sel * 4), (f32)(int)(yo + 0x40), 102.0f, alpha,
+                drawTexture(*(void**)((u8*)&base->hudTextures[0] + sel * 4), (f32)(int)(yo + 0x40), 102.0f, alpha,
                             0x100);
             }
         }
@@ -2121,7 +2075,7 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3)
         {
         case 0x47:
         case 0x48:
-            drawTexture(base->icons[0x65], 30.0f, (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
+            drawTexture(base->hudTextures[0x65], 30.0f, (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
             break;
         }
     }
@@ -2751,7 +2705,7 @@ void pauseMenuDrawStatus(void)
     TrickyStats* trickyStats;
     f32* opacity;
     u8* base;
-    TrickyHud* hud;
+    CMenuHud* hud;
     int magicDelta;
     f32 nextOpacity;
     int displayedValue;
@@ -2768,7 +2722,7 @@ void pauseMenuDrawStatus(void)
     int statuses[HUD_STATUS_COUNT];
 
     base = (u8*)lbl_803A87F0;
-    hud = (TrickyHud*)base;
+    hud = (CMenuHud*)base;
     player = Obj_GetPlayerObject();
     getTrickyObject();
     trickyStats = (*gMapEventInterface)->getTrickyStats();
@@ -3219,14 +3173,14 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
                 gameTextShowStr(label.text, 0x93, 0x246, 0x2A + (gCMenuScrollTimer + k));
             }
         }
-        drawTexture(((CMenuHud*)base)->textures1C0[0x21], 537.0f, 175.0f,
+        drawTexture(((CMenuHud*)base)->hudTextures[0x21], 537.0f, 175.0f,
                     (u8)(fade * gCMenuHighlightFade / 0xFF),
                     0x100);
-        drawScaledTexture(((CMenuHud*)base)->textures1C0[0x21], 571.0f, 175.0f,
+        drawScaledTexture(((CMenuHud*)base)->hudTextures[0x21], 571.0f, 175.0f,
                           (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100, 0x12, 10, 1);
-        drawScaledTexture(((CMenuHud*)base)->textures1C0[0x21], 537.0f, 209.0f,
+        drawScaledTexture(((CMenuHud*)base)->hudTextures[0x21], 537.0f, 209.0f,
                           (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100, 0x12, 10, 2);
-        drawScaledTexture(((CMenuHud*)base)->textures1C0[0x21], 571.0f, 209.0f,
+        drawScaledTexture(((CMenuHud*)base)->hudTextures[0x21], 571.0f, 209.0f,
                           (u8)(fade * gCMenuHighlightFade / 0xFF), 0x100, 0x12, 10, 3);
         if ((player != NULL) && (objIsCurModelNotZero(player) != 0))
         {
@@ -3259,12 +3213,12 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
     }
     if (gHudStatusAlpha != zero)
     {
-        drawTexture(((CMenuHud*)base)->textures1C0[0], 519.0f, 30.0f, gHudStatusAlpha, 0x100);
-        drawTexture(((CMenuHud*)base)->textures1C0[1], 561.0f, 41.0f, gHudStatusAlpha, 0x100);
-        drawTexture(((CMenuHud*)base)->textures1C0[2], 581.0f, 46.0f, gHudStatusAlpha, 0x100);
+        drawTexture(((CMenuHud*)base)->hudTextures[0], 519.0f, 30.0f, gHudStatusAlpha, 0x100);
+        drawTexture(((CMenuHud*)base)->hudTextures[1], 561.0f, 41.0f, gHudStatusAlpha, 0x100);
+        drawTexture(((CMenuHud*)base)->hudTextures[2], 581.0f, 46.0f, gHudStatusAlpha, 0x100);
         if ((gHudAButtonFlashTimer & 8) == 0)
         {
-            drawTexture(((CMenuHud*)base)->textures1C0[9], 560.0f, 54.0f, gHudStatusAlpha, 0x100);
+            drawTexture(((CMenuHud*)base)->hudTextures[9], 560.0f, 54.0f, gHudStatusAlpha, 0x100);
         }
         if ((aButtonIcon != 0) && (aButtonIcon != 0x1C))
         {
@@ -3317,21 +3271,21 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], 0x219 - wid, 62.0f, gHudStatusAlpha,
+                drawScaledTexture(((CMenuHud*)base)->hudTextures[8], 0x219 - wid, 62.0f, gHudStatusAlpha,
                                   0x100, wid, 0x16, 0);
-                drawTexture(((CMenuHud*)base)->textures1C0[7], 0x20D - wid, 62.0f, gHudStatusAlpha, 0x100);
+                drawTexture(((CMenuHud*)base)->hudTextures[7], 0x20D - wid, 62.0f, gHudStatusAlpha, 0x100);
             }
             else
             {
-                drawTexture(((CMenuHud*)base)->textures1C0[7], 508.0f, 62.0f, gHudStatusAlpha, 0x100);
+                drawTexture(((CMenuHud*)base)->hudTextures[7], 508.0f, 62.0f, gHudStatusAlpha, 0x100);
             }
             prevAButtonIcon = aButtonIcon;
-            drawTexture(((CMenuHud*)base)->textures1C0[5], 537.0f, 62.0f, gHudStatusAlpha, 0x100);
+            drawTexture(((CMenuHud*)base)->hudTextures[5], 537.0f, 62.0f, gHudStatusAlpha, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
-            drawTexture(((CMenuHud*)base)->textures1C0[3], 537.0f, 62.0f, gHudStatusAlpha, 0x100);
+            drawTexture(((CMenuHud*)base)->hudTextures[3], 537.0f, 62.0f, gHudStatusAlpha, 0x100);
             prevAButtonIcon = 0;
             gHudAButtonFlashTimer = 0;
         }
@@ -3379,21 +3333,21 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2)
                 {
                     wid = 1;
                 }
-                drawScaledTexture(((CMenuHud*)base)->textures1C0[8], 0x219 - wid, 87.0f, gHudStatusAlpha,
+                drawScaledTexture(((CMenuHud*)base)->hudTextures[8], 0x219 - wid, 87.0f, gHudStatusAlpha,
                                   0x100, wid, 0x16, 0);
-                drawTexture(((CMenuHud*)base)->textures1C0[7], 0x20D - wid, 87.0f, gHudStatusAlpha, 0x100);
+                drawTexture(((CMenuHud*)base)->hudTextures[7], 0x20D - wid, 87.0f, gHudStatusAlpha, 0x100);
             }
             else
             {
-                drawTexture(((CMenuHud*)base)->textures1C0[7], 525.0f, 87.0f, gHudStatusAlpha, 0x100);
+                drawTexture(((CMenuHud*)base)->hudTextures[7], 525.0f, 87.0f, gHudStatusAlpha, 0x100);
             }
             gHudPrevBButtonIcon = bButtonIcon;
-            drawTexture(((CMenuHud*)base)->textures1C0[6], 537.0f, 86.0f, gHudStatusAlpha, 0x100);
+            drawTexture(((CMenuHud*)base)->hudTextures[6], 537.0f, 86.0f, gHudStatusAlpha, 0x100);
             gameTextSetCharset(prevCharset, 3);
         }
         else
         {
-            drawTexture(((CMenuHud*)base)->textures1C0[4], 537.0f, 86.0f, gHudStatusAlpha, 0x100);
+            drawTexture(((CMenuHud*)base)->hudTextures[4], 537.0f, 86.0f, gHudStatusAlpha, 0x100);
             gHudPrevBButtonIcon = 0;
         }
         if (hudYButtonItemIconTexture != NULL)
@@ -3624,7 +3578,7 @@ int cMenuSetItems(CMenuItemDef* itemsArg, char useTricky)
     s16 saved[CMENU_ITEM_SLOT_COUNT];
 
     base = (CMenuHud*)lbl_803A87F0;
-    ids = base->textureIds;
+    ids = base->itemSlots;
     w1 = ids;
     dst = saved;
     w2 = dst;
@@ -4944,7 +4898,7 @@ static inline void pauseMenuSetSpellStoneIcons(GridEntry* entries, u8 count)
 
 void pauseMenuDrawStatusPage(GameObject* player)
 {
-    TrickyHud* hud = (TrickyHud*)lbl_803A87F0;
+    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     s8 i8;
     s32 ty1;
     s32 alpha;
@@ -5463,7 +5417,7 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag)
             {
                 ofs -= 0x14;
             }
-            t1c0 = (int*)((u8*)&hud->textures1C0[0] + idv * 4);
+            t1c0 = (int*)((u8*)&hud->hudTextures[0] + idv * 4);
             pauseMenuDrawElement((void*)*t1c0, x, y, ofs, (u8)v, spd, flag);
         }
     }
@@ -8059,7 +8013,7 @@ void cMenuRun(void)
                                 else
                                 {
                                     Sfx_PlayFromObject(0, SFXTRIG_menu_spin);
-                                    yButtonItemTextureId = hud->textureIds[gCMenuSelIndex];
+                                    yButtonItemTextureId = hud->itemSlots[gCMenuSelIndex];
                                     yButtonItem = cMenuSelectedItem;
                                     gYButtonActiveBit = gCMenuSelActiveBit;
                                     gYButtonUsedBit = gCMenuSelUsedBit;
@@ -8901,7 +8855,7 @@ void CMenu_SetShouldClose(int val)
     shouldCloseCMenu = val;
 }
 
-static inline void gameUiClearItemSlots(GameUiHud* gameUi)
+static inline void gameUiClearItemSlots(CMenuHud* gameUi)
 {
     int index;
     Texture** itemTexture;
@@ -8925,7 +8879,7 @@ static inline void gameUiClearItemSlots(GameUiHud* gameUi)
     }
 }
 
-static inline void gameUiReleaseMenuResources(GameUiHud* gameUi)
+static inline void gameUiReleaseMenuResources(CMenuHud* gameUi)
 {
     gameUiResetMenuState();
     gameUiClearItemSlots(gameUi);
@@ -8945,11 +8899,11 @@ static inline void gameUiReleaseMenuResources(GameUiHud* gameUi)
 
 void GameUI_release(void)
 {
-    GameUiHud* gameUi;
+    CMenuHud* gameUi;
     int i;
     Texture** texture;
 
-    gameUi = (GameUiHud*)lbl_803A87F0;
+    gameUi = (CMenuHud*)lbl_803A87F0;
     for (i = 0, texture = gameUi->hudTextures; i < ARRAY_COUNT(gameUi->hudTextures); texture++, i++)
     {
         if (*texture != NULL)
@@ -8986,7 +8940,7 @@ void GameUI_release(void)
 
 void GameUI_releaseMenuResources(void)
 {
-    GameUiHud* gameUi = (GameUiHud*)lbl_803A87F0;
+    CMenuHud* gameUi = (CMenuHud*)lbl_803A87F0;
 
     gameUiReleaseMenuResources(gameUi);
 }
