@@ -86,9 +86,9 @@ int gunpowderBarrel_canBeGrabbed(GameObject* obj) {
 void gunpowderBarrel_clearHeldState(GameObject* obj) {
     GunpowderBarrelState* state = obj->extra;
     f32 zero = 0.0f;
-    state->throwVelocityY = zero;
-    state->throwVelocityX = zero;
-    state->throwVelocityZ = zero;
+    state->throwVelocity.y = zero;
+    state->throwVelocity.x = zero;
+    state->throwVelocity.z = zero;
     state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
     state->accumulatedFallVelocity = zero;
@@ -116,13 +116,13 @@ void gunpowderBarrel_launchAtTarget(GameObject* obj, u8 usePlayerStrength) {
     f32 originalX, originalY, originalZ;
 
     playerState = ((GameObject*)Obj_GetPlayerObject())->extra;
-    state->throwVelocityX = 0.0f;
+    state->throwVelocity.x = 0.0f;
     if (usePlayerStrength != 0) {
-        state->throwVelocityY = 0.75f * playerState->baddie.inputMagnitude + 2.2f;
-        state->throwVelocityZ = -0.75f * playerState->baddie.inputMagnitude + -2.2f;
+        state->throwVelocity.y = 0.75f * playerState->baddie.inputMagnitude + 2.2f;
+        state->throwVelocity.z = -0.75f * playerState->baddie.inputMagnitude + -2.2f;
     } else {
-        state->throwVelocityY = 1.5f;
-        state->throwVelocityZ = -1.5f;
+        state->throwVelocity.y = 1.5f;
+        state->throwVelocity.z = -1.5f;
     }
     zero = 0.0f;
     transform.x = zero;
@@ -132,7 +132,7 @@ void gunpowderBarrel_launchAtTarget(GameObject* obj, u8 usePlayerStrength) {
     transform.rotZ = 0;
     transform.rotY = 0;
     transform.rotX = state->launchYaw;
-    vecRotateZXY(&transform.rotX, &state->throwVelocityX);
+    vecRotateZXY(&transform.rotX, &state->throwVelocity.x);
     state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     Sfx_PlayFromObject(obj, SFXTRIG_barrel_throw_d3);
     state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
@@ -202,9 +202,9 @@ void gunpowderBarrel_addThrowVelocity(GameObject* obj, f32* velocity) {
     if (state->fuseFrames != 0) {
         return;
     }
-    state->throwVelocityY = state->throwVelocityY + velocity[1];
-    state->throwVelocityX = state->throwVelocityX + velocity[0];
-    state->throwVelocityZ = state->throwVelocityZ + velocity[2];
+    state->throwVelocity.y = state->throwVelocity.y + velocity[1];
+    state->throwVelocity.x = state->throwVelocity.x + velocity[0];
+    state->throwVelocity.z = state->throwVelocity.z + velocity[2];
     state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
 }
 
@@ -388,28 +388,28 @@ void gunpowderBarrel_updatePhysics(GameObject* obj) {
         return;
     }
     if (state->detonationTrigger == 0 &&
-        ((state->motionFlags & GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT) || state->throwVelocityY > 0.01f)) {
+        ((state->motionFlags & GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT) || state->throwVelocity.y > 0.01f)) {
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, GUNPOWDER_BARREL_HIT_VOLUME_SLOT_BODY, 1, 0);
         ObjHits_EnableObject(obj);
     }
     if (!state->heldFlags.playerHeld) {
-        state->throwVelocityY -= 0.12f * timeDelta;
+        state->throwVelocity.y -= 0.12f * timeDelta;
     }
     {
-        f32 velX = state->throwVelocityX;
-        state->throwVelocityX = (velX < -5.0f) ? -5.0f : ((velX > 5.0f) ? 5.0f : velX);
+        f32 velX = state->throwVelocity.x;
+        state->throwVelocity.x = (velX < -5.0f) ? -5.0f : ((velX > 5.0f) ? 5.0f : velX);
     }
     {
-        f32 velY = state->throwVelocityY;
-        state->throwVelocityY = (velY < -5.0f) ? -5.0f : ((velY > 5.0f) ? 5.0f : velY);
+        f32 velY = state->throwVelocity.y;
+        state->throwVelocity.y = (velY < -5.0f) ? -5.0f : ((velY > 5.0f) ? 5.0f : velY);
     }
     {
-        f32 velZ = state->throwVelocityZ;
-        state->throwVelocityZ = (velZ < -5.0f) ? -5.0f : ((velZ > 5.0f) ? 5.0f : velZ);
+        f32 velZ = state->throwVelocity.z;
+        state->throwVelocity.z = (velZ < -5.0f) ? -5.0f : ((velZ > 5.0f) ? 5.0f : velZ);
     }
-    obj->anim.velocityX = state->throwVelocityX;
-    obj->anim.velocityY = state->throwVelocityY;
-    obj->anim.velocityZ = state->throwVelocityZ;
+    obj->anim.velocityX = state->throwVelocity.x;
+    obj->anim.velocityY = state->throwVelocity.y;
+    obj->anim.velocityZ = state->throwVelocity.z;
     deltaTime = timeDelta;
     objMove(obj, obj->anim.velocityX * deltaTime, obj->anim.velocityY * deltaTime, obj->anim.velocityZ * deltaTime);
     state->heldFlags.onGround = 0;
@@ -451,9 +451,9 @@ void gunpowderBarrel_updatePhysics(GameObject* obj) {
         obj->anim.velocityX = z;
         obj->anim.velocityY = z;
         obj->anim.velocityZ = z;
-        state->throwVelocityX = z;
-        state->throwVelocityY = z;
-        state->throwVelocityZ = z;
+        state->throwVelocity.x = z;
+        state->throwVelocity.y = z;
+        state->throwVelocity.z = z;
         if (contactObject != 0) {
             u32 flags;
             ObjHits_AddContactObject(contactObject, obj);
@@ -469,7 +469,7 @@ void gunpowderBarrel_updatePhysics(GameObject* obj) {
         }
         state->accumulatedFallVelocity = 0.0f;
     } else {
-        if (state->throwVelocityY < -0.2f) {
+        if (state->throwVelocity.y < -0.2f) {
             gunpowderBarrel_homeOnTarget(obj, state->homingHeadingA, state->homingHeadingB);
         }
         if (!state->heldFlags.held && !state->heldFlags.playerHeld) {
@@ -574,16 +574,16 @@ void gunpowderBarrel_hitDetect(GameObject* barrel) {
             capturedVelocity[1] = capturedVelocity[1] * inverseDeltaTime;
             capturedVelocity[2] = capturedVelocity[2] * inverseDeltaTime;
         }
-        state->throwVelocityX = ((f32*)capturedVelocity)[0] + state->throwVelocityX;
-        state->throwVelocityY = ((f32*)capturedVelocity)[1] + state->throwVelocityY;
-        state->throwVelocityZ = ((f32*)capturedVelocity)[2] + state->throwVelocityZ;
+        state->throwVelocity.x = ((f32*)capturedVelocity)[0] + state->throwVelocity.x;
+        state->throwVelocity.y = ((f32*)capturedVelocity)[1] + state->throwVelocity.y;
+        state->throwVelocity.z = ((f32*)capturedVelocity)[2] + state->throwVelocity.z;
         {
             f32 zero = 0.0f;
             capturedVelocity[1] = zero;
-            state->throwVelocityX = 0.5f * state->throwVelocityX;
-            state->throwVelocityY = 0.5f * state->throwVelocityY;
-            state->throwVelocityZ = 0.5f * state->throwVelocityZ;
-            state->throwVelocityY = zero;
+            state->throwVelocity.x = 0.5f * state->throwVelocity.x;
+            state->throwVelocity.y = 0.5f * state->throwVelocity.y;
+            state->throwVelocity.z = 0.5f * state->throwVelocity.z;
+            state->throwVelocity.y = zero;
         }
         state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     }
@@ -603,16 +603,16 @@ void gunpowderBarrel_hitDetect(GameObject* barrel) {
             collisionNormal[1] = collision.hit.normalY;
             collisionNormal[2] = collision.hit.normalZ;
             Vec3_ReflectAgainstNormal(collisionNormal, &barrel->anim.velocityX, &barrel->anim.velocityX);
-            Vec3_ReflectAgainstNormal(collisionNormal, &state->throwVelocityX, &state->throwVelocityX);
+            Vec3_ReflectAgainstNormal(collisionNormal, &state->throwVelocity.x, &state->throwVelocity.x);
 
             {
                 f32 damping = 0.2f;
                 barrel->anim.velocityX = damping * barrel->anim.velocityX;
                 barrel->anim.velocityY = damping * barrel->anim.velocityY;
                 barrel->anim.velocityZ = damping * barrel->anim.velocityZ;
-                state->throwVelocityX = damping * state->throwVelocityX;
-                state->throwVelocityY = damping * state->throwVelocityY;
-                state->throwVelocityZ = damping * state->throwVelocityZ;
+                state->throwVelocity.x = damping * state->throwVelocity.x;
+                state->throwVelocity.y = damping * state->throwVelocity.y;
+                state->throwVelocity.z = damping * state->throwVelocity.z;
             }
 
             if (state->impactSoundCooldown > 60.0f) {
@@ -660,7 +660,7 @@ void gunpowderBarrel_update(GameObject* obj) {
     if (timerIsActive(&state->releaseTimer) != 0) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         timerCountDown(&state->releaseTimer);
-        memset(&state->throwVelocityX, 0, 0xc);
+        memset(&state->throwVelocity.x, 0, 0xc);
         memset((void*)&obj->anim.velocityX, 0, 0xc);
         return;
     }
@@ -747,7 +747,7 @@ void gunpowderBarrel_update(GameObject* obj) {
                 s16toFloat(&state->respawnTimer, GUNPOWDER_BARREL_RESPAWN_DURATION_FRAMES);
                 return;
             }
-            memset(&state->throwVelocityX, 0, 0xc);
+            memset(&state->throwVelocity.x, 0, 0xc);
             memset((void*)&obj->anim.velocityX, 0, 0xc);
             state->motionFlags &= ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
             ObjHits_RefreshObjectState(obj);
@@ -797,9 +797,9 @@ void gunpowderBarrel_update(GameObject* obj) {
                 ObjHits_SyncObjectPositionIfDirty(obj);
                 gunpowderBarrel_launchAtTarget(obj, 0);
             } else if (state->fuseFrames == 0) {
-                obj->anim.velocityX = state->throwVelocityX = mathSinf(3.1415927f * (f32)player->anim.rotX / 32768.0f);
-                obj->anim.velocityY = state->throwVelocityY = 0.0f;
-                obj->anim.velocityZ = state->throwVelocityZ = mathCosf(3.1415927f * (f32)player->anim.rotX / 32768.0f);
+                obj->anim.velocityX = state->throwVelocity.x = mathSinf(3.1415927f * (f32)player->anim.rotX / 32768.0f);
+                obj->anim.velocityY = state->throwVelocity.y = 0.0f;
+                obj->anim.velocityZ = state->throwVelocity.z = mathCosf(3.1415927f * (f32)player->anim.rotX / 32768.0f);
                 obj->anim.localPosX =
                     gGunpowderBarrelReleaseOffset * -mathSinf(3.1415927f * (f32)player->anim.rotX / 32768.0f) +
                     obj->anim.localPosX;
@@ -828,10 +828,10 @@ void gunpowderBarrel_update(GameObject* obj) {
     if (state->heldFlags.playerHeld != 0) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if (state->heldFlags.pendingThrowVelocityCapture != 0 && state->heldFlags.playerHeld != 0) {
-            state->throwVelocityX = obj->anim.velocityX;
-            state->throwVelocityY = obj->anim.velocityY;
-            state->throwVelocityZ = obj->anim.velocityZ;
-            state->throwVelocityY = 0.0f;
+            state->throwVelocity.x = obj->anim.velocityX;
+            state->throwVelocity.y = obj->anim.velocityY;
+            state->throwVelocity.z = obj->anim.velocityZ;
+            state->throwVelocity.y = 0.0f;
             state->heldFlags.pendingThrowVelocityCapture = 0;
         }
     }

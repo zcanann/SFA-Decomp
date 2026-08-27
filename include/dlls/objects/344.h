@@ -50,14 +50,7 @@ typedef struct GunpowderBarrelState {
     u8 fuseFrames;
     f32 respawnTimer;
     f32 releaseTimer;
-    union {
-        struct {
-            f32 throwVelocityX;
-            f32 throwVelocityY;
-            f32 throwVelocityZ;
-        };
-        Vec3f throwVelocity;
-    };
+    Vec3f throwVelocity;
     f32 hitRadius;
     f32 unknown30;
     f32 radiusGrowthPerFrame;
@@ -101,9 +94,7 @@ STATIC_ASSERT(offsetof(GunpowderBarrelState, detonationTrigger) == 0x16);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, fuseFrames) == 0x17);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, respawnTimer) == 0x18);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, releaseTimer) == 0x1C);
-STATIC_ASSERT(offsetof(GunpowderBarrelState, throwVelocityX) == 0x20);
-STATIC_ASSERT(offsetof(GunpowderBarrelState, throwVelocityY) == 0x24);
-STATIC_ASSERT(offsetof(GunpowderBarrelState, throwVelocityZ) == 0x28);
+STATIC_ASSERT(offsetof(GunpowderBarrelState, throwVelocity) == 0x20);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, hitRadius) == 0x2C);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, unknown30) == 0x30);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, radiusGrowthPerFrame) == 0x34);
