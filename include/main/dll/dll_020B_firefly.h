@@ -2,18 +2,13 @@
 #define MAIN_DLL_DLL_020B_FIREFLY_H_
 
 #include "game/objects/object.h"
-#include "global.h"
 #include "game/objects/object_setup.h"
+#include "global.h"
+#include "main/dll/firefly_flight_state.h"
 
 #define FIREFLY_EXTRA_SIZE 0x88
 
-typedef struct FireFlyActiveBits
-{
-    u8 active : 1; /* 0x6C & 0x80: lit and wandering */
-} FireFlyActiveBits;
-
-typedef struct FireFlyMapData
-{
+typedef struct FireFlyMapData {
     ObjPlacement base;
     u8 pad18[2];
     s16 variantParam; /* 0x1A: only 0x7F is read (arms the 3600-frame life timer) */
@@ -21,36 +16,8 @@ typedef struct FireFlyMapData
     s16 requiredGameBit; /* 0x20: game bit gating activation (-1 = none) */
 } FireFlyMapData;
 
-typedef struct FireFlyState
-{
-    void* light;           /* 0x00: point-light handle (modelLightStruct) */
-    f32 splineX[4];        /* 0x04: B-spline control points (X) */
-    f32 splineY[4];        /* 0x14 */
-    f32 splineZ[4];        /* 0x24 */
-    f32 targetX;           /* 0x34: next wander target */
-    f32 targetY;           /* 0x38 */
-    f32 targetZ;           /* 0x3C */
-    f32 splineT;           /* 0x40: spline parameter; >1 shifts a new segment in */
-    f32 splineSpeed;       /* 0x44: dT per frame, re-rolled each segment */
-    f32 proximityAlpha;    /* 0x48: glow brightness, eased toward the near/far bound */
-    f32 playerRadius;      /* 0x4C: player XZ distance that brightens the glow */
-    f32 radius;            /* 0x50: wander radius the next target is drawn from */
-    f32 posX;              /* 0x54: centre the wander targets orbit */
-    f32 posY;              /* 0x58 */
-    f32 posZ;              /* 0x5C */
-    s16 angle;             /* 0x60: heading of the next wander target */
-    s16 angleStep;         /* 0x62 */
-    s16 ampMax;            /* 0x64: upper bound of the target's Y offset */
-    u8 kind;               /* 0x66: trail/near particle-fx colour */
-    u8 unk67;
-    u8 pathAge; /* 0x68: spline segments consumed; 4+ stops re-targeting */
-    u8 pad69[0x6B - 0x69];
-    u8 firstFrame; /* 0x6B: first target takes the full ampMax rise, then clears */
-    FireFlyActiveBits activeFlags;
-    u8 pad6D[0x70 - 0x6D];
-    f32 despawnTimer; /* 0x70: post-collect frames; sparkles above 170, frees at 0 */
-    f32 lifeTimer;    /* 0x74: expiry despawns the timed placement variant */
-    f32 unk78;        /* 0x78 */
+typedef struct FireFlyState {
+    FireFlyFlightState flight;
     u8 flags; /* 0x7C: player-touch latch */
     u8 pad7D[0x80 - 0x7D];
     s16 messageParam; /* 0x80: outparam for the talk message */
@@ -59,20 +26,19 @@ typedef struct FireFlyState
 
 STATIC_ASSERT(offsetof(FireFlyMapData, variantParam) == 0x1A);
 STATIC_ASSERT(offsetof(FireFlyMapData, requiredGameBit) == 0x20);
-STATIC_ASSERT(offsetof(FireFlyState, light) == 0x00);
-STATIC_ASSERT(offsetof(FireFlyState, splineX) == 0x04);
-STATIC_ASSERT(offsetof(FireFlyState, splineY) == 0x14);
-STATIC_ASSERT(offsetof(FireFlyState, splineZ) == 0x24);
-STATIC_ASSERT(offsetof(FireFlyState, targetX) == 0x34);
-STATIC_ASSERT(offsetof(FireFlyState, splineT) == 0x40);
-STATIC_ASSERT(offsetof(FireFlyState, radius) == 0x50);
-STATIC_ASSERT(offsetof(FireFlyState, angle) == 0x60);
-STATIC_ASSERT(offsetof(FireFlyState, firstFrame) == 0x6B);
-STATIC_ASSERT(offsetof(FireFlyState, unk78) == 0x78);
-STATIC_ASSERT(offsetof(FireFlyState, kind) == 0x66);
-STATIC_ASSERT(offsetof(FireFlyState, activeFlags) == 0x6C);
-STATIC_ASSERT(offsetof(FireFlyState, despawnTimer) == 0x70);
-STATIC_ASSERT(offsetof(FireFlyState, lifeTimer) == 0x74);
+STATIC_ASSERT(offsetof(FireFlyState, flight) == 0x00);
+STATIC_ASSERT(offsetof(FireFlyState, flight.ownerData) == 0x00);
+STATIC_ASSERT(offsetof(FireFlyState, flight.splineX) == 0x04);
+STATIC_ASSERT(offsetof(FireFlyState, flight.targetX) == 0x34);
+STATIC_ASSERT(offsetof(FireFlyState, flight.splineT) == 0x40);
+STATIC_ASSERT(offsetof(FireFlyState, flight.radius) == 0x50);
+STATIC_ASSERT(offsetof(FireFlyState, flight.angle) == 0x60);
+STATIC_ASSERT(offsetof(FireFlyState, flight.kind) == 0x66);
+STATIC_ASSERT(offsetof(FireFlyState, flight.firstFrame) == 0x6B);
+STATIC_ASSERT(offsetof(FireFlyState, flight.activeFlags) == 0x6C);
+STATIC_ASSERT(offsetof(FireFlyState, flight.despawnTimer) == 0x70);
+STATIC_ASSERT(offsetof(FireFlyState, flight.lifeTimer) == 0x74);
+STATIC_ASSERT(offsetof(FireFlyState, flight.unk78) == 0x78);
 STATIC_ASSERT(offsetof(FireFlyState, flags) == 0x7C);
 STATIC_ASSERT(offsetof(FireFlyState, messageParam) == 0x80);
 STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
@@ -90,8 +56,5 @@ void firefly_hitDetect(void);
 void firefly_release(void);
 void firefly_initialise(void);
 int firefly_animEventCallback(GameObject* obj);
-void firefly_initFlightRec(GameObject* obj, FireFlyState* record);
-void firefly_pickWanderTarget(GameObject* obj, FireFlyState* record);
-void firefly_shiftPathHistory(GameObject* obj, FireFlyState* record);
 
 #endif /* MAIN_DLL_DLL_020B_FIREFLY_H_ */
