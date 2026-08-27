@@ -29,6 +29,7 @@
 #include "main/dll/player_state_api.h"
 #include "main/dll/player_motion_api.h"
 #include "dlls/objects/229_Shield.h"
+#include "dlls/objects/239.h"
 #include "dlls/objects/284.h"
 #include "dlls/objects/315_WallAnimato.h"
 #include "dlls/objects/332.h"
@@ -5732,8 +5733,7 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
                 a = inner->stickTargetX;
                 b = inner->stickTargetY;
             }
-            res = (*(u8 (*)(int, int, int, f32, f32))(*(int*)((char*)sub->anim.dll[0] + 0x20)))(
-                (int)sub, obj, direction, a, b);
+            res = PUSHABLE_INTERFACE(sub)->push(sub, (GameObject*)obj, direction, a, b);
             if (res == 1)
             {
                 inner->latchedStickDir = 1;
@@ -10637,7 +10637,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             {
                 continue;
             }
-            if ((*(int (*)(int)) * (int*)((char*)target->anim.dll[0] + 0x2c))((int)target) != 0 &&
+            if (PUSHABLE_INTERFACE(target)->isRestored(target) != 0 &&
                 ((PlayerState*)state2)->baddie.inputMagnitude > 0.1f && hd <= 2.0f + lbl_803DC6C0)
             {
                 switch (playerBuildLedgeClimbProbe(obj, state, &buf, state + 0x5a8, end, hd))
