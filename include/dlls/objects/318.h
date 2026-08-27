@@ -4,6 +4,7 @@
 #include "dlls/object_descriptor.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
+#include "main/dll/curves_collision_state.h"
 
 typedef enum DimBossIceSmashPlacementFlag {
     DIM_BOSS_ICE_SMASH_PLACEMENT_HOMING = 0x01,
@@ -60,28 +61,23 @@ typedef struct DimBossIceSmashPlacement {
 
 /* DIMBossIceSmash_getExtraSize proves the complete 0x2A0-byte allocation. */
 typedef struct DimBossIceSmashState {
-    u8 pad000[0x68];      /* 0x000 */
-    f32 collisionNormalX; /* 0x068 */
-    f32 collisionNormalY; /* 0x06C */
-    f32 collisionNormalZ; /* 0x070 */
-    u8 pad074[0x1ED];     /* 0x074 */
-    s8 hasCollision;      /* 0x261: signed access is codegen-sensitive */
-    u8 pad262[0x0A];      /* 0x262 */
-    f32 spawnScaleX;      /* 0x26C */
-    f32 spawnScaleY;      /* 0x270 */
-    f32 spawnScaleZ;      /* 0x274 */
-    f32 angVelX;          /* 0x278 */
-    f32 angVelY;          /* 0x27C */
-    f32 angVelZ;          /* 0x280 */
-    f32 angAccelX;        /* 0x284 */
-    f32 angAccelY;        /* 0x288 */
-    f32 angAccelZ;        /* 0x28C */
-    f32 accelX;           /* 0x290 */
-    f32 accelY;           /* 0x294 */
-    f32 accelZ;           /* 0x298 */
-    s16 timer;            /* 0x29C */
-    u8 stateFlags;        /* 0x29E: DimBossIceSmashStateFlag */
-    u8 directionFlags;    /* 0x29F: DimBossIceSmashDirectionFlag */
+    CurvesCollisionState path; /* 0x000 */
+    u8 pad268[4];              /* 0x268 */
+    f32 spawnScaleX;           /* 0x26C */
+    f32 spawnScaleY;           /* 0x270 */
+    f32 spawnScaleZ;           /* 0x274 */
+    f32 angVelX;               /* 0x278 */
+    f32 angVelY;               /* 0x27C */
+    f32 angVelZ;               /* 0x280 */
+    f32 angAccelX;             /* 0x284 */
+    f32 angAccelY;             /* 0x288 */
+    f32 angAccelZ;             /* 0x28C */
+    f32 accelX;                /* 0x290 */
+    f32 accelY;                /* 0x294 */
+    f32 accelZ;                /* 0x298 */
+    s16 timer;                 /* 0x29C */
+    u8 stateFlags;             /* 0x29E: DimBossIceSmashStateFlag */
+    u8 directionFlags;         /* 0x29F: DimBossIceSmashDirectionFlag */
 } DimBossIceSmashState;
 
 STATIC_ASSERT(offsetof(DimBossIceSmashPlacement, base) == 0x00);
@@ -112,10 +108,8 @@ STATIC_ASSERT(offsetof(DimBossIceSmashPlacement, homingTargetX) == 0x42);
 STATIC_ASSERT(offsetof(DimBossIceSmashPlacement, homingTargetY) == 0x44);
 STATIC_ASSERT(offsetof(DimBossIceSmashPlacement, homingTargetZ) == 0x46);
 
-STATIC_ASSERT(offsetof(DimBossIceSmashState, collisionNormalX) == 0x068);
-STATIC_ASSERT(offsetof(DimBossIceSmashState, collisionNormalY) == 0x06C);
-STATIC_ASSERT(offsetof(DimBossIceSmashState, collisionNormalZ) == 0x070);
-STATIC_ASSERT(offsetof(DimBossIceSmashState, hasCollision) == 0x261);
+STATIC_ASSERT(offsetof(DimBossIceSmashState, path) == 0x000);
+STATIC_ASSERT(offsetof(DimBossIceSmashState, pad268) == 0x268);
 STATIC_ASSERT(offsetof(DimBossIceSmashState, spawnScaleX) == 0x26C);
 STATIC_ASSERT(offsetof(DimBossIceSmashState, spawnScaleY) == 0x270);
 STATIC_ASSERT(offsetof(DimBossIceSmashState, spawnScaleZ) == 0x274);
