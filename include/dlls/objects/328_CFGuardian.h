@@ -27,17 +27,7 @@ typedef struct CfGuardianPlacement {
  * contract.
  */
 typedef struct CfGuardianState {
-    union {
-        MoveLibState moveLib;
-        struct {
-            u8 pad000[0x7C];
-            f32 targetPosY;
-            f32 velocityY;
-            u8 pad084[0x58D];
-            u8 flags611;
-            u8 pad612[0x12];
-        };
-    };
+    MoveLibState moveLib;
     ObjSoundState soundState;
     CharacterEyeAnimState eyeAnimState;
     u8 pad67C[0x10];
@@ -65,9 +55,7 @@ STATIC_ASSERT(offsetof(CfGuardianPlacement, initialYaw) == 0x18);
 STATIC_ASSERT(offsetof(CfGuardianPlacement, variant) == 0x19);
 
 STATIC_ASSERT(offsetof(CfGuardianState, moveLib) == 0x000);
-STATIC_ASSERT(offsetof(CfGuardianState, targetPosY) == 0x07C);
-STATIC_ASSERT(offsetof(CfGuardianState, velocityY) == 0x080);
-STATIC_ASSERT(offsetof(CfGuardianState, flags611) == 0x611);
+STATIC_ASSERT(offsetof(CfGuardianState, moveLib.modeBits) == 0x611);
 STATIC_ASSERT(offsetof(CfGuardianState, soundState) == 0x624);
 STATIC_ASSERT(offsetof(CfGuardianState, eyeAnimState) == 0x654);
 STATIC_ASSERT(offsetof(CfGuardianState, linkedObjects) == 0x68C);
