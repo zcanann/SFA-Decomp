@@ -31,7 +31,7 @@
 #define WM_COLUMN_MODEL_SCALE                  1.0f
 
 int WM_Column_getExtraSize(void) {
-    return WM_COLUMN_STATE_SIZE;
+    return sizeof(CarryableState);
 }
 
 int WM_Column_getObjectTypeId(void) {
@@ -59,12 +59,12 @@ void WM_Column_update(GameObject* obj) {
     int objectIndex;
     int objectCount;
     GameObject* candidate;
-    WMColumnState* state;
+    CarryableState* state;
     GameObject* player;
 
     state = obj->extra;
     nearestDistance = WM_COLUMN_INITIAL_SEARCH_DISTANCE;
-    if ((*gCarryableInterface)->updateHeld(obj, obj->extra) != 0) {
+    if ((*gCarryableInterface)->updateHeld(obj, (CarryableState*)obj->extra) != 0) {
         if ((obj->userData1 & WM_COLUMN_USER_FLAG_CLEAR_SPOT_ON_GRAB) != 0) {
             objects = ObjList_GetObjects(&objectIndex, &objectCount);
             for (; objectIndex < objectCount; objectIndex++) {
@@ -128,7 +128,7 @@ void WM_Column_update(GameObject* obj) {
 }
 
 void WM_Column_init(GameObject* obj, WMColumnPlacement* placement) {
-    WMColumnState* state = obj->extra;
+    CarryableState* state = obj->extra;
 
     obj->anim.rotX = (s16)(placement->initialYaw << WM_COLUMN_ROTATION_SHIFT);
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;

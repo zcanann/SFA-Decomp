@@ -3,19 +3,20 @@
 
 #include "global.h"
 #include "game/objects/object.h"
+#include "main/carryable_state.h"
 
-typedef void (*CarryableInitFn)(GameObject* obj, void* state, int arg2);
-typedef int (*CarryableUpdateHeldFn)(GameObject* obj, void* state);
+typedef void (*CarryableInitFn)(GameObject* obj, CarryableState* state, int arg2);
+typedef int (*CarryableUpdateHeldFn)(GameObject* obj, CarryableState* state);
 typedef int (*CarryableUpdateRenderStateFn)(GameObject* obj, int visible);
 typedef void (*CarryableFreeFn)(GameObject* obj);
-typedef s32 (*CarryableGetCarryStateFn)(void* state);
-typedef s32 (*CarryableWasJustGrabbedFn)(void* state);
-typedef u8 (*CarryableGetSurfaceTypeFn)(void* state);
-typedef void (*CarryableSetGravityEnabledFn)(void* state, u8 enabled);
-typedef void (*CarryableSetDropDisabledFn)(void* state, u8 disabled);
-typedef s32 (*CarryableGetDropDisabledFn)(void* state);
-typedef void (*CarryableSetSuppressPositionSaveFn)(void* state, u8 suppress);
-typedef void (*CarryableStopCarryingFn)(GameObject* obj, void* state);
+typedef s32 (*CarryableGetCarryStateFn)(CarryableState* state);
+typedef s32 (*CarryableWasJustGrabbedFn)(CarryableState* state);
+typedef u8 (*CarryableGetSurfaceTypeFn)(CarryableState* state);
+typedef void (*CarryableSetGravityEnabledFn)(CarryableState* state, u8 enabled);
+typedef void (*CarryableSetDropDisabledFn)(CarryableState* state, u8 disabled);
+typedef s32 (*CarryableGetDropDisabledFn)(CarryableState* state);
+typedef void (*CarryableSetSuppressPositionSaveFn)(CarryableState* state, u8 suppress);
+typedef void (*CarryableStopCarryingFn)(GameObject* obj, CarryableState* state);
 
 typedef struct CarryableInterface {
     u8 pad00[0x04];
@@ -44,6 +45,6 @@ STATIC_ASSERT(offsetof(CarryableInterface, setSuppressPositionSave) == 0x2C);
 STATIC_ASSERT(offsetof(CarryableInterface, stopCarrying) == 0x30);
 STATIC_ASSERT(sizeof(CarryableInterface) == 0x34);
 
-extern CarryableInterface **gCarryableInterface;
+extern CarryableInterface** gCarryableInterface;
 
 #endif /* MAIN_CARRYABLE_INTERFACE_H_ */

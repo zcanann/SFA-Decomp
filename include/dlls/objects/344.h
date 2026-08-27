@@ -5,6 +5,7 @@
 #include "main/vec_types.h"
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
+#include "main/carryable_state.h"
 
 typedef enum GunpowderBarrelObjectGroup {
     GUNPOWDER_BARREL_OBJECT_GROUP = 0x19,
@@ -39,9 +40,8 @@ typedef struct GunpowderBarrelConfigFlags {
 } GunpowderBarrelConfigFlags;
 
 typedef struct GunpowderBarrelState {
-    u8 pad00[0x07];
-    u8 unknown07;
-    u8 pad08[0x04];
+    CarryableState carryable;
+    u8 pad0A[0x02];
     GameObject* queuedHitObject;
     GameObject* linkedTimerObject;
     u8 pad14;
@@ -92,7 +92,7 @@ STATIC_ASSERT(sizeof(GunpowderBarrelPlacement) == 0x24);
 STATIC_ASSERT(sizeof(GunpowderBarrelHeldFlags) == 0x01);
 STATIC_ASSERT(sizeof(GunpowderBarrelConfigFlags) == 0x01);
 
-STATIC_ASSERT(offsetof(GunpowderBarrelState, unknown07) == 0x07);
+STATIC_ASSERT(offsetof(GunpowderBarrelState, carryable) == 0x00);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, queuedHitObject) == 0x0C);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, linkedTimerObject) == 0x10);
 STATIC_ASSERT(offsetof(GunpowderBarrelState, pad14) == 0x14);
