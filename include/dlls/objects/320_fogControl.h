@@ -31,14 +31,9 @@ typedef struct FogControlPlacement {
 /* FogControl_getExtraSize proves the complete 0x08-byte allocation. */
 typedef struct FogControlState {
     f32 blend; /* 0x00 */
-    union {
-        u8 flags; /* 0x04 */
-        struct {
-            u8 enabled : 1;
-            u8 fullyBlended : 1;
-            u8 unused : 6;
-        };
-    };
+    u8 enabled : 1;
+    u8 fullyBlended : 1;
+    u8 unused : 6;
     u8 pad05[3]; /* 0x05 */
 } FogControlState;
 
@@ -53,7 +48,6 @@ STATIC_ASSERT(offsetof(FogControlPlacement, depthOffset) == 0x22);
 STATIC_ASSERT(offsetof(FogControlPlacement, depthScale) == 0x24);
 
 STATIC_ASSERT(offsetof(FogControlState, blend) == 0x00);
-STATIC_ASSERT(offsetof(FogControlState, flags) == 0x04);
 STATIC_ASSERT(offsetof(FogControlState, pad05) == 0x05);
 STATIC_ASSERT(sizeof(FogControlState) == 0x08);
 
