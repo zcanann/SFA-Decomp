@@ -5,6 +5,7 @@
 #include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 #include "main/dll/partfx_interface.h"
+#include "main/carryable_state.h"
 
 #define MMP_MOON_ROCK_SEQUENCE_ID 0x519
 
@@ -28,7 +29,8 @@ STATIC_ASSERT(offsetof(MMPMoonRockPlacement, pickupGateGameBit) == 0x20);
 STATIC_ASSERT(offsetof(MMPMoonRockPlacement, unknown22) == 0x22);
 
 typedef struct MMPMoonRockState {
-    u8 carryableState[0xC];
+    CarryableState carryable;
+    u8 pad0A[2];
     f32 baseY;
     f32 unknown10;
     f32 resetTimer;
@@ -45,7 +47,7 @@ typedef struct MMPMoonRockState {
 } MMPMoonRockState;
 
 STATIC_ASSERT(sizeof(MMPMoonRockState) == 0x30);
-STATIC_ASSERT(offsetof(MMPMoonRockState, carryableState) == 0x00);
+STATIC_ASSERT(offsetof(MMPMoonRockState, carryable) == 0x00);
 STATIC_ASSERT(offsetof(MMPMoonRockState, baseY) == 0x0C);
 STATIC_ASSERT(offsetof(MMPMoonRockState, unknown10) == 0x10);
 STATIC_ASSERT(offsetof(MMPMoonRockState, resetTimer) == 0x14);

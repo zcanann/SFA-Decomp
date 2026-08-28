@@ -6,6 +6,7 @@
  */
 #include "dlls/objects/471_DIM2SnowBal.h"
 #include "dlls/objects/472_DIM2PathGen.h"
+#include "dlls/objects/478_DIM2LavaCon.h"
 
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_api.h"
@@ -121,7 +122,7 @@ void dim2snowball_update(GameObject* obj) {
                 objects = ObjList_GetObjects(&objectIndex, &objectCount);
                 sharpClaw = dim2snowball_findSharpClaw(objects, &objectIndex, &objectCount);
                 if (sharpClaw != NULL) {
-                    ((void (*)(GameObject*))sharpClaw->anim.dll[0][8])(sharpClaw);
+                    DIM2_LAVA_CONTROL_INTERFACE(sharpClaw)->tickCountdown(sharpClaw);
                 }
                 Sfx_PlayFromObject(obj, SFXTRIG_en_nlite1_c);
             }

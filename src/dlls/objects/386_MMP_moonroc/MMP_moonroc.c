@@ -228,7 +228,7 @@ void mmpMoonRock_reconcilePlacement(GameObject* obj, u8 place, u8 mode) {
             pedestalCount = mainGetBit(MMP_MOON_ROCK_PEDESTAL_COUNT_GAMEBIT);
             inventoryCount = mainGetBit(MMP_MOON_ROCK_INVENTORY_COUNT_GAMEBIT);
             if (place == 0) {
-                (*gCarryableInterface)->setGravityEnabled(state, 1);
+                (*gCarryableInterface)->setGravityEnabled(&state->carryable, 1);
                 if (ventPlacement->disableGameBit != -1) {
                     mainSetBits(ventPlacement->disableGameBit, 0);
                 }
@@ -252,7 +252,7 @@ void mmpMoonRock_reconcilePlacement(GameObject* obj, u8 place, u8 mode) {
                 obj->anim.localPosZ = state->homeZ;
                 saveGame_saveObjectPos(obj);
             } else {
-                (*gCarryableInterface)->setGravityEnabled(state, 0);
+                (*gCarryableInterface)->setGravityEnabled(&state->carryable, 0);
                 if (ventPlacement->disableGameBit != -1) {
                     mainSetBits(ventPlacement->disableGameBit, 1);
                 }
@@ -361,7 +361,7 @@ static inline u8 mmpMoonRock_spacingIsClear(GameObject* obj, int stateAddress) {
         GameObject* otherRock = (GameObject*)*list;
         if (otherRock != obj && otherRock->anim.romDefNo == MMP_MOON_ROCK_SEQUENCE_ID &&
             Vec_xzDistance(&obj->anim.worldPosX, &otherRock->anim.worldPosX) < minimumSpacing) {
-            (*gCarryableInterface)->setDropDisabled((void*)stateAddress, 1);
+            (*gCarryableInterface)->setDropDisabled((CarryableState*)stateAddress, 1);
             return 0;
         }
         list++;
@@ -413,7 +413,7 @@ void mmpMoonRock_update(GameObject* obj) {
     } else if ((state->flags & MMP_MOON_ROCK_FLAG_PLACED) == 0) {
         if (placementOrObjects->pickupGateGameBit != -1 && mainGetBit(placementOrObjects->pickupGateGameBit) == 0) {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-        } else if ((*gCarryableInterface)->updateHeld(obj, obj->extra) != 0) {
+        } else if ((*gCarryableInterface)->updateHeld(obj, (CarryableState*)obj->extra) != 0) {
             isHeld = 1;
         }
     } else {
@@ -432,7 +432,7 @@ void mmpMoonRock_update(GameObject* obj) {
             state->flags &= ~MMP_MOON_ROCK_FLAG_ICON_PLACE;
         }
         stateAddress = (int)obj->extra;
-        (*gCarryableInterface)->setDropDisabled((void*)stateAddress, 0);
+        (*gCarryableInterface)->setDropDisabled((CarryableState*)stateAddress, 0);
         spacingClear = mmpMoonRock_spacingIsClear(obj, stateAddress);
         if (spacingClear != 0) {
             state->flags |= MMP_MOON_ROCK_FLAG_ACTION_PENDING;
@@ -506,17 +506,17 @@ void mmpMoonRock_init(GameObject* obj, const MMPMoonRockPlacement* placement) {
         if ((u8)(kind - 3) <= 1 || kind == 6) {
             state->flags = state->flags | MMP_MOON_ROCK_FLAG_PLACED;
         }
-        (*gCarryableInterface)->setGravityEnabled(state, 0);
+        (*gCarryableInterface)->setGravityEnabled(&state->carryable, 0);
     } else {
-        (*gCarryableInterface)->setGravityEnabled(state, 1);
+        (*gCarryableInterface)->setGravityEnabled(&state->carryable, 1);
     }
     {
         f32 y = obj->anim.localPosY;
         state->baseY = y;
         state->unknown10 = y;
     }
-    (*gCarryableInterface)->init(obj, obj->extra, 0x32);
-    (*gCarryableInterface)->setSuppressPositionSave(state, 1);
+    (*gCarryableInterface)->init(obj, (CarryableState*)obj->extra, 0x32);
+    (*gCarryableInterface)->setSuppressPositionSave(&state->carryable, 1);
     objAddObjectType(obj, MMP_MOON_ROCK_OBJECT_GROUP);
     state->homeX = obj->anim.localPosX;
     state->homeY = obj->anim.localPosY;

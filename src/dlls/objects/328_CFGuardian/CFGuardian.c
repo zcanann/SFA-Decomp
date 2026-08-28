@@ -306,8 +306,8 @@ int cfguardian_flyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 speed, 
         if (pathComplete != 0) {
             obj->userData1 = -1;
         }
-        if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &groundDistance,
-                                 0) == 0) {
+        if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                        &groundDistance, 0) == 0) {
             obj->anim.localPosY = obj->anim.localPosY - groundDistance;
         }
     }
@@ -492,7 +492,7 @@ int cfguardian_updateMain(GameObject* obj) {
                 }
                 obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
                 trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
-                                     &groundDistance, 0);
+                                            &groundDistance, 0);
                 obj->anim.rotX = (s16)((0xc0 << (obj->anim.rotX + 8)) >> 1);
                 ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_IMMOVABLE;
                 if (groundDistance <= 1.0f) {
@@ -502,8 +502,7 @@ int cfguardian_updateMain(GameObject* obj) {
                     obj->userData1 = 0;
                     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
                     {
-                        RomCurveDef* homePoint =
-                            (RomCurveDef*)cfguardian_findRomCurvePointNearObject(obj, 0, 0, 2);
+                        RomCurveDef* homePoint = (RomCurveDef*)cfguardian_findRomCurvePointNearObject(obj, 0, 0, 2);
                         f32 homeDistY;
                         state->home.x = homePoint->x;
                         state->home.y = homePoint->y;
@@ -767,8 +766,8 @@ int cfguardian_updateMain(GameObject* obj) {
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, framesThisStep,
-                                   (ObjAnimEventList*)scratch.eventBuffer) != 0 &&
+    if (ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, framesThisStep, (ObjAnimEventList*)scratch.eventBuffer) !=
+            0 &&
         (state->stateFlags & CFGUARDIAN_STATE_MOVE_LATCHED) != 0 && obj->anim.currentMove != CFGUARDIAN_MOVE_FLY &&
         obj->anim.currentMove != CFGUARDIAN_MOVE_LANDING) {
         state->stateFlags &= ~CFGUARDIAN_STATE_MOVE_LATCHED;
@@ -879,7 +878,7 @@ void cfguardian_init(GameObject* obj, CfGuardianPlacement* placement) {
     state->moveSpeed = 0.0f;
     state->unknownA90 = 6;
     state->stateFlags = 0;
-    state->flags611 = state->flags611 | 0x28;
+    state->moveLib.modeBits = state->moveLib.modeBits | 0x28;
     state->chatterState = CFGUARDIAN_CHATTER_READY;
     state->chatterAlt = 0;
     state->chatterPick = 0;
@@ -898,7 +897,7 @@ void cfguardian_init(GameObject* obj, CfGuardianPlacement* placement) {
     dll_2E_setReattackDelay(&state->moveLib, 0x12c, 0x64);
     dll_2E_setMoveTables(&state->moveLib, &hitboxTemplateB, &hitboxTemplateA, 4);
     seqPairTablePrepare(gCfGuardianSeqStreamTable, CFGUARDIAN_SEQUENCE_TABLE_ENTRY_COUNT);
-    state->flags611 = state->flags611 | 0x2;
+    state->moveLib.modeBits = state->moveLib.modeBits | 0x2;
 }
 
 void cfguardian_release(void) {

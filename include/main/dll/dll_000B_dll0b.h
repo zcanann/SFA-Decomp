@@ -26,7 +26,7 @@ void dll_0B_requestSourceRelease(void* source);
 void dll_0B_markSourceFrameUpdated(void);
 void dll_0B_beginSequence(void* source, u8 mode, u8 flagByte, int word40, int word3C);
 void dll_0B_resetSequenceSpawns(void);
-void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10);
+void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float posZ, s16 param14, void* param10);
 void dll_0B_nextSequenceParam(void);
 void dll_0B_setSequenceParamIndex(s16 x);
 void dll_0B_setSequenceParamValue(s16 value);

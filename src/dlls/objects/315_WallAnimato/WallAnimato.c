@@ -12,12 +12,12 @@
 #include "main/objtype.h"
 #include "sys/objects/lifecycle.h"
 
-#define WALL_ANIMATOR_DONE_TIMER               3000
-#define WALL_ANIMATOR_GROUP_SECONDARY          0x31
-#define WALL_ANIMATOR_NEARBY_GROUP             5
-#define WALL_ANIMATOR_PARTFX_DEBRIS            0xCA
-#define WALL_ANIMATOR_PARTFX_DUST              0xCB
-#define WALL_ANIMATOR_PARTFX_FLAGS             0x200001
+#define WALL_ANIMATOR_DONE_TIMER      3000
+#define WALL_ANIMATOR_GROUP_SECONDARY 0x31
+#define WALL_ANIMATOR_NEARBY_GROUP    5
+#define WALL_ANIMATOR_PARTFX_DEBRIS   0xCA
+#define WALL_ANIMATOR_PARTFX_DUST     0xCB
+#define WALL_ANIMATOR_PARTFX_FLAGS    0x200001
 
 u8 WallAnimator_getEnergyCost(GameObject* obj) {
     WallAnimatorPlacement* placement = (WallAnimatorPlacement*)obj->anim.placementData;
@@ -131,7 +131,7 @@ void WallAnimator_update(GameObject* obj) {
             obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
                 TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
-                                                           TRICKY_COMMAND_TYPE_FIND_SECRET);
+                                                            TRICKY_COMMAND_TYPE_FIND_SECRET);
             }
             objUpdateHitVolumeTransforms(obj);
         }

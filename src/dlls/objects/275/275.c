@@ -77,13 +77,13 @@ extern const char sSeqObjDiagnosticFormats[];
 extern const char sSeqObjNeedAndUsedBitFormat[];
 
 static int SeqObj2_animEventCallback(GameObject* obj, int* unused, ObjSeqState* animUpdate) {
-    SeqObjectPlacement* placement;
+    SeqObj2Placement* placement;
     SeqObj2State* state;
     int eventIndex;
 
     (void)unused;
 
-    placement = (SeqObjectPlacement*)obj->anim.placementData;
+    placement = (SeqObj2Placement*)obj->anim.placementData;
     state = obj->extra;
     for (eventIndex = 0; eventIndex < animUpdate->eventCount; eventIndex++) {
         int eventId = animUpdate->eventIds[eventIndex];
@@ -123,13 +123,13 @@ void SeqObj2_hitDetect(void) {
 
 void SeqObj2_update(GameObject* obj) {
     SeqObj2State* state;
-    SeqObjectPlacement* placement;
+    SeqObj2Placement* placement;
     SeqObj2DataLayout* data;
     u32 sequenceParam;
 
     data = (SeqObj2DataLayout*)&gSeqObj2ObjDescriptor;
     state = obj->extra;
-    placement = (SeqObjectPlacement*)obj->anim.placementData;
+    placement = (SeqObj2Placement*)obj->anim.placementData;
 
     if ((state->flags & SEQ_OBJ2_STATE_PREEMPT_SEQUENCE) != 0) {
         if ((placement->flags & SEQ_OBJ2_FLAG_CLEAR_REQUIRED_BEFORE_PREEMPT) != 0) {
@@ -174,7 +174,7 @@ void SeqObj2_update(GameObject* obj) {
     }
 }
 
-void SeqObj2_init(GameObject* obj, SeqObjectPlacement* placement) {
+void SeqObj2_init(GameObject* obj, SeqObj2Placement* placement) {
     SeqObj2State* state;
 
     state = obj->extra;

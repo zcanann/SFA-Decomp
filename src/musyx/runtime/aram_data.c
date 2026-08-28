@@ -14,6 +14,13 @@ typedef struct AramStreamBufferEntry
 
 STATIC_ASSERT(sizeof(AramStreamBufferEntry) == 0x10);
 
+typedef struct AramRuntimeStorage {
+    AramTransferQueues transferQueues;
+    AramStreamBufferEntry streamBuffers[ARAM_STREAM_BUFFER_COUNT];
+} AramRuntimeStorage;
+
+STATIC_ASSERT(offsetof(AramRuntimeStorage, streamBuffers) == 0x508);
+
 extern AramTransferQueues aramNormalPriorityQueue;
 
 
@@ -83,15 +90,15 @@ void aramInitStreamBuffers(void)
 
     aramQueueWrite = 0;
     aramQueueValid = 0;
-    buffers = (AramStreamBufferEntry*)(base + sizeof(AramTransferQueues));
+    buffers = (AramStreamBufferEntry*)(base + offsetof(AramRuntimeStorage, streamBuffers));
     aramStreamFreeList = buffers;
 
     for (i = 1; i < ARAM_STREAM_BUFFER_COUNT; i++)
     {
-        ((AramStreamBufferEntry*)(base + sizeof(AramTransferQueues)))[i - 1].next =
-            &((AramStreamBufferEntry*)(base + sizeof(AramTransferQueues)))[i];
+        ((AramStreamBufferEntry*)(base + offsetof(AramRuntimeStorage, streamBuffers)))[i - 1].next =
+            &((AramStreamBufferEntry*)(base + offsetof(AramRuntimeStorage, streamBuffers)))[i];
     }
-    ((AramStreamBufferEntry*)(base + sizeof(AramTransferQueues)))[i - 1].next = NULL;
+    ((AramStreamBufferEntry*)(base + offsetof(AramRuntimeStorage, streamBuffers)))[i - 1].next = NULL;
     aramStream = aramTop;
 }
 

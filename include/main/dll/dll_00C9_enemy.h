@@ -4,7 +4,7 @@
 #include "game/objects/object.h"
 #include "types.h"
 #include "global.h"
-#include "main/dll/duster_api.h"
+#include "main/dll/wall_plane_state.h"
 #include "main/dll/curves_collision_state.h"
 #include "main/objprint_character_api.h"
 #include "main/objseq.h"

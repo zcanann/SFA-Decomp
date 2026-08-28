@@ -19,9 +19,9 @@ typedef struct PushableState {
     f32 cullDistance;              /* 0x00C */
     f32 scale;                     /* 0x010 */
     f32 renderTimer;               /* 0x014 */
-    Vec3f probeLocal[4];   /* 0x018 */
-    Vec3f cornerLocal[4];  /* 0x048 */
-    Vec3f cornerWorld[4];  /* 0x078 */
+    Vec3f probeLocal[4];           /* 0x018 */
+    Vec3f cornerLocal[4];          /* 0x048 */
+    Vec3f cornerWorld[4];          /* 0x078 */
     u32 modelFlags;                /* 0x0A8: bits set by pushable_setModelFlag */
     s16 gameBit;                   /* 0x0AC */
     s16 gameBit2;                  /* 0x0AE */
@@ -66,6 +66,43 @@ typedef struct PushableState {
     u8 savePosEnabled;             /* 0x146 */
     u8 pad147;                     /* 0x147 */
 } PushableState;
+
+typedef int (*PushablePushCallback)(GameObject* obj, GameObject* target, int active, f32 pushX, f32 pushZ);
+typedef int (*PushableIsWithinCullDistanceCallback)(GameObject* obj, GameObject* other);
+typedef void (*PushableSetModelFlagCallback)(GameObject* obj, int modelNo);
+typedef int (*PushableIsRestoredCallback)(GameObject* obj);
+
+/* Complete runtime interface beginning at gPushableObjDescriptor's slot02. */
+typedef struct PushableInterface {
+    ObjectInterface base;
+    PushablePushCallback push;
+    PushableIsWithinCullDistanceCallback isWithinCullDistance;
+    PushableSetModelFlagCallback setModelFlag;
+    PushableIsRestoredCallback isRestored;
+} PushableInterface;
+
+typedef struct PushableDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectInterfaceCallback slot02;
+    ObjectInterfaceCallback init;
+    ObjectInterfaceCallback update;
+    ObjectInterfaceCallback hitDetect;
+    ObjectInterfaceCallback render;
+    ObjectInterfaceCallback free;
+    ObjectInterfaceCallback getObjectTypeId;
+    ObjectInterfaceExtraSizeCallback getExtraSize;
+    PushablePushCallback push;
+    PushableIsWithinCullDistanceCallback isWithinCullDistance;
+    PushableSetModelFlagCallback setModelFlag;
+    PushableIsRestoredCallback isRestored;
+} PushableDescriptor;
+
+#define PUSHABLE_INTERFACE(pushable) ((PushableInterface*)*((GameObject*)(pushable))->anim.dll)
 
 typedef struct PushableObjectDef {
     ObjPlacement base; /* 0x00 */
@@ -136,6 +173,25 @@ STATIC_ASSERT(offsetof(PushableState, savePosEnabled) == 0x146);
 STATIC_ASSERT(offsetof(PushableState, pad147) == 0x147);
 STATIC_ASSERT(sizeof(PushableState) == 0x148);
 
+STATIC_ASSERT(offsetof(PushableInterface, base) == 0x00);
+STATIC_ASSERT(offsetof(PushableInterface, push) == 0x20);
+STATIC_ASSERT(offsetof(PushableInterface, isWithinCullDistance) == 0x24);
+STATIC_ASSERT(offsetof(PushableInterface, setModelFlag) == 0x28);
+STATIC_ASSERT(offsetof(PushableInterface, isRestored) == 0x2C);
+STATIC_ASSERT(sizeof(PushableInterface) == 0x30);
+
+STATIC_ASSERT(offsetof(PushableDescriptor, reserved0) == 0x00);
+STATIC_ASSERT(offsetof(PushableDescriptor, slotCountAndFlags) == 0x0C);
+STATIC_ASSERT(offsetof(PushableDescriptor, initialise) == 0x10);
+STATIC_ASSERT(offsetof(PushableDescriptor, release) == 0x14);
+STATIC_ASSERT(offsetof(PushableDescriptor, slot02) == 0x18);
+STATIC_ASSERT(offsetof(PushableDescriptor, getExtraSize) == 0x34);
+STATIC_ASSERT(offsetof(PushableDescriptor, push) == 0x38);
+STATIC_ASSERT(offsetof(PushableDescriptor, isWithinCullDistance) == 0x3C);
+STATIC_ASSERT(offsetof(PushableDescriptor, setModelFlag) == 0x40);
+STATIC_ASSERT(offsetof(PushableDescriptor, isRestored) == 0x44);
+STATIC_ASSERT(sizeof(PushableDescriptor) == 0x48);
+
 STATIC_ASSERT(offsetof(PushableObjectDef, base) == 0x0);
 STATIC_ASSERT(offsetof(PushableObjectDef, gameBit) == 0x18);
 STATIC_ASSERT(offsetof(PushableObjectDef, gameBit2) == 0x1A);
@@ -172,6 +228,6 @@ extern int gPushableSavedIdentCount;
 extern int gPushableSavedIdents[0x28];
 extern char sPushPullObjectHitpointOverflow[];
 extern const PushableRadii gPushableDefaultBox;
-extern ObjectDescriptor14 gPushableObjDescriptor;
+extern PushableDescriptor gPushableObjDescriptor;
 
 #endif /* DLLS_OBJECTS_239_H_ */

@@ -205,10 +205,10 @@ void DIMBossIceSmash_update(GameObject* obj) {
             obj->anim.rotY = state->angVelY * timeDelta + (f32)obj->anim.rotY;
             obj->anim.rotZ = state->angVelZ * timeDelta + (f32)obj->anim.rotZ;
             if ((placement->flags & DIM_BOSS_ICE_SMASH_PLACEMENT_PATH_CONTROL) != 0) {
-                (*gPathControlInterface)->update(obj, state, timeDelta);
-                (*gPathControlInterface)->apply(obj, state);
-                (*gPathControlInterface)->advance(obj, state, timeDelta);
-                if (state->hasCollision != 0) {
+                (*gPathControlInterface)->update(obj, &state->path, timeDelta);
+                (*gPathControlInterface)->apply(obj, &state->path);
+                (*gPathControlInterface)->advance(obj, &state->path, timeDelta);
+                if (state->path.surfaceCounter != 0) {
                     nx = -obj->anim.velocityX;
                     ny = -obj->anim.velocityY;
                     nz = -obj->anim.velocityZ;
@@ -219,9 +219,9 @@ void DIMBossIceSmash_update(GameObject* obj) {
                         ny = ny * inv;
                         nz = nz * inv;
                     }
-                    fx = state->collisionNormalX;
-                    fy = state->collisionNormalY;
-                    fz = state->collisionNormalZ;
+                    fx = state->path.segmentHits.planes[0][0];
+                    fy = state->path.segmentHits.planes[0][1];
+                    fz = state->path.segmentHits.planes[0][2];
                     dot = 2.0f * (nz * fz + (nx * fx + ny * fy));
                     obj->anim.velocityX = fx * dot;
                     obj->anim.velocityY = fy * dot;
@@ -275,9 +275,10 @@ void DIMBossIceSmash_init(GameObject* obj, DimBossIceSmashPlacement* placement) 
     state->stateFlags = initState;
     gDIMBossIceSmashActivationStarted = 0;
     if ((placement->flags & DIM_BOSS_ICE_SMASH_PLACEMENT_PATH_CONTROL) != 0) {
-        (*gPathControlInterface)->init(state, 0, DIM_BOSS_ICE_SMASH_PATH_INIT_FLAGS, 1);
-        (*gPathControlInterface)->setup(state, 1, gDIMBossIceSmashPathPoint, gDIMBossIceSmashPathParams, pathParams);
-        (*gPathControlInterface)->attachObject(obj, state);
+        (*gPathControlInterface)->init(&state->path, 0, DIM_BOSS_ICE_SMASH_PATH_INIT_FLAGS, 1);
+        (*gPathControlInterface)
+            ->setup(&state->path, 1, gDIMBossIceSmashPathPoint, gDIMBossIceSmashPathParams, pathParams);
+        (*gPathControlInterface)->attachObject(obj, &state->path);
     }
 }
 

@@ -31,6 +31,15 @@
 static const f32 gAudioStreamEndPosInfinite = 9.0e9f;
 static const f32 gAudioStreamFramesPerSecond = 60.0f;
 
+typedef struct AudioStreamDataLayout {
+    int fadeTable[3];
+    char dvdCancelStreamWarning[0x30];
+    char streamDirectory[0xC];
+} AudioStreamDataLayout;
+
+STATIC_ASSERT(offsetof(AudioStreamDataLayout, dvdCancelStreamWarning) == 0xC);
+STATIC_ASSERT(offsetof(AudioStreamDataLayout, streamDirectory) == 0x3C);
+
 u8 gAudioStreamVolumeLeft = 0xFF;
 u8 gAudioStreamVolumeRight = 0xFF;
 u8 gAudioStreamPlayAddrCallbackDone = 1;
@@ -296,7 +305,9 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
     gAudioStreamDvdState = 0;
 
-    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, sAdpExtension) != 0)
+    if (concatThreeStrings(path, (void*)0x40,
+                           (char*)fadeTbl + offsetof(AudioStreamDataLayout, streamDirectory), s->name,
+                           sAdpExtension) != 0)
     {
         if (DVDOpen(path, &dvd[0]->prepared.fileInfo) == 0)
         {
@@ -309,7 +320,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
             AISetStreamVolRight(0);
             if (DVDCancelStreamAsync(&dvd[0]->currentCommand, AudioStream_CancelCallback) == 0)
             {
-                OSReport((char*)fadeTbl + 0xC);
+                OSReport((char*)fadeTbl +
+                         offsetof(AudioStreamDataLayout, dvdCancelStreamWarning));
                 gAudioStreamPlaying = 0;
             }
             gAudioStreamPreparedId = 0;

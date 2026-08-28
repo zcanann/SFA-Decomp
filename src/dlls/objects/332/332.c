@@ -139,20 +139,21 @@ void babyCloudRunner_turnTowardTarget(GameObject* obj, GameObject* target, BabyC
             } else {
                 turnAnimStep = -(s16)yawStep >> BABYCLOUDRUNNER_TURN_ANIM_SHIFT;
             }
-            ObjAnim_AdvanceCurrentMove(obj, (f32)(s16)turnAnimStep / BABYCLOUDRUNNER_TURN_ANIM_RATE_DIVISOR,
-                                       timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove(obj, (f32)(s16)turnAnimStep / BABYCLOUDRUNNER_TURN_ANIM_RATE_DIVISOR, timeDelta,
+                                       0);
         }
     }
 }
 
-int babyCloudRunner_tryCapture(void* object) {
+int babyCloudRunner_tryCapture(GameObject* object) {
     GameObject* obj;
     int shouldCapture;
     BabyCloudRunnerPlacement* rangePlacement;
     BabyCloudRunnerState* state;
     BabyCloudRunnerPlacement* gameBitPlacement;
     GameObject* player;
-    obj = object;
+    /* Preserve the generic-pointer aliasing shape of the descriptor callback. */
+    obj = (void*)object;
     state = obj->extra;
     gameBitPlacement = (BabyCloudRunnerPlacement*)obj->anim.placement;
     player = Obj_GetPlayerObject();
@@ -411,8 +412,8 @@ void babyCloudRunner_update(GameObject* obj) {
                             gBabyCloudRunnerPlayerFarDist) {
                             enemy_setTrackedObj(nearbyObject, obj);
                             if (obj->anim.currentMove != BABYCLOUDRUNNER_MOVE_SURFACE) {
-                                ObjAnim_SetCurrentMove(obj, BABYCLOUDRUNNER_MOVE_SURFACE,
-                                                       obj->anim.currentMoveProgress, 0);
+                                ObjAnim_SetCurrentMove(obj, BABYCLOUDRUNNER_MOVE_SURFACE, obj->anim.currentMoveProgress,
+                                                       0);
                             }
                             ObjAnim_AdvanceCurrentMove(obj, 0.01f, timeDelta, 0);
                         } else {
@@ -438,8 +439,7 @@ void babyCloudRunner_update(GameObject* obj) {
                     }
                     (*gGameUIInterface)->runAirMeter((int)state->countdownTimer);
                 }
-                if (inRange == 0 &&
-                    objGetNearestTypeTo(BABYCLOUDRUNNER_PRIMARY_OBJECT_GROUP, obj, &radius) != NULL) {
+                if (inRange == 0 && objGetNearestTypeTo(BABYCLOUDRUNNER_PRIMARY_OBJECT_GROUP, obj, &radius) != NULL) {
                     inRange = 1;
                 }
                 if (mainGetBit(state->runnerIndex + GAMEBIT_CFRelated0B2E) != 0) {

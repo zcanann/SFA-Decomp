@@ -47,8 +47,8 @@ void modgfx_stepVertexAlpha(PartfxEffectState* state, ModgfxVertexGroupCmd* comm
 void modgfx_stepVertexScale(PartfxEffectState* state, ModgfxVertexGroupCmd* command, int reinit, u8 channelIndex);
 void modgfx_restoreBaseVertices(PartfxEffectState* state);
 
-ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
-ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
+GfxCmd* gModgfxPendingSpawnStartCursor;
+GfxCmd* gModgfxPendingSpawnWriteCursor;
 s16 gModgfxSequenceParamIndex;
 s16 gModgfxLastSpawnHandle;
 f32 gModgfxMotionStep;
@@ -91,7 +91,7 @@ STATIC_ASSERT(offsetof(PartfxEffectState, emitterCount) == 0x139);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 ModgfxSpawnContext gModgfxSpawnContext;
-ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x20];
+GfxCmd gModgfxPendingSpawnQueue[0x20];
 void partfx_freeEffectsBySequence(s16 a, int b);
 #define MODGFX_ZERO 0.0f
 #define MODGFX_ONE  1.0f
@@ -108,7 +108,7 @@ void dll_0B_addSequenceFlags(u32 flags) {
 }
 
 void dll_0B_spawnSequence(void* a, void* b, void* c, void* d, void* e, int f, void* g) {
-    gModgfxSpawnContext.pendingSpawns = gModgfxPendingSpawnQueue;
+    gModgfxSpawnContext.pendingSpawns = (ModgfxPendingSpawn*)gModgfxPendingSpawnQueue;
     gModgfxSpawnContext.pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
     if (g == NULL && f == 0) {
         gModgfxSpawnContext.flags |= 0x2000000LL;
@@ -145,20 +145,20 @@ void dll_0B_nextSequenceParam(void) {
     gModgfxSequenceParamIndex++;
 }
 
-void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float posZ, s16 param14, int param10) {
+void dll_0B_addSequenceSpawn(int modelOrResource, float posX, float posY, float posZ, s16 param14, void* param10) {
     u32 sequenceIndex = gModgfxSequenceParamIndex;
-    gModgfxPendingSpawnWriteCursor->sequenceIndex = sequenceIndex;
-    gModgfxPendingSpawnWriteCursor->param14 = param14;
-    gModgfxPendingSpawnWriteCursor->param10 = param10;
-    gModgfxPendingSpawnWriteCursor->modelOrResource = modelOrResource;
-    gModgfxPendingSpawnWriteCursor->posX = posX;
-    gModgfxPendingSpawnWriteCursor->posY = posY;
-    gModgfxPendingSpawnWriteCursor->posZ = posZ;
+    gModgfxPendingSpawnWriteCursor->layer = sequenceIndex;
+    gModgfxPendingSpawnWriteCursor->flags = param14;
+    gModgfxPendingSpawnWriteCursor->tex = param10;
+    gModgfxPendingSpawnWriteCursor->mode = modelOrResource;
+    gModgfxPendingSpawnWriteCursor->x = posX;
+    gModgfxPendingSpawnWriteCursor->y = posY;
+    gModgfxPendingSpawnWriteCursor->z = posZ;
     gModgfxPendingSpawnWriteCursor++;
 }
 
 void dll_0B_resetSequenceSpawns(void) {
-    ModgfxPendingSpawn* cursor = gModgfxPendingSpawnQueue;
+    GfxCmd* cursor = gModgfxPendingSpawnQueue;
     gModgfxPendingSpawnStartCursor = cursor;
     gModgfxPendingSpawnWriteCursor = cursor;
     gModgfxSequenceParamIndex = 0;

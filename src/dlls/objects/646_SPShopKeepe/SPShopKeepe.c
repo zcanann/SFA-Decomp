@@ -14,7 +14,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/shopkeeperstate_struct.h"
-#include "main/dll/pushcartstate97_types.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
@@ -691,8 +690,6 @@ void ShopKeeper_startScarabGame(GameObject* obj)
     state->flags9D4 = 0;
 }
 
-STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
-
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
@@ -1077,4 +1074,3 @@ void ShopKeeper_initialise(void)
     gShopKeeperStateHandlers[7] = ShopKeeper_state7Handler;
     gShopKeeperDefaultStateHandler = ShopKeeper_defaultStateHandler;
 }
-

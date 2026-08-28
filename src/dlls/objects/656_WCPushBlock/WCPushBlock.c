@@ -20,6 +20,8 @@
  * (wclevelcont_updateAct1State / wclevelcont_updateAct2State), not here.
  * Offsets/bit values inferred from code.
  */
+#include "main/dll/WC/dll_0290_wcpushblock.h"
+
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
@@ -30,8 +32,6 @@
 #include "main/objtype.h"
 #include "sys/objects.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
-#include "main/dll/WC/dll_028C_wcbouncycra.h"
-#include "main/dll/WC/dll_0290_wcpushblock.h"
 #include "main/dll/player_api.h"
 #include "game/objects/object.h"
 #include "main/objfx.h"
@@ -89,52 +89,45 @@
 
 #define WCPUSHBLOCK_REQUIRED_LOCK_COUNT 4U
 
-#define WCPUSHBLOCK_CONTROLLER(state)   (((WCPushBlockRuntimeState*)(state))->controller)
+#define WCPUSHBLOCK_CONTROLLER(state)   (((WCPushBlockRuntimeState*)(state))->block.controller)
 #define WCPUSHBLOCK_IFACE               WC_LEVEL_CONT_INTERFACE(WCPUSHBLOCK_CONTROLLER(state))
-#define WCPUSHBLOCK_TARGET_X(state)     (((WCPushBlockRuntimeState*)(state))->targetX)
-#define WCPUSHBLOCK_TARGET_Z(state)     (((WCPushBlockRuntimeState*)(state))->targetZ)
-#define WCPUSHBLOCK_BASE_Y(state)       (((WCPushBlockRuntimeState*)(state))->baseY)
-#define WCPUSHBLOCK_BOB_Y(state)        (((WCPushBlockRuntimeState*)(state))->bobY)
-#define WCPUSHBLOCK_BOB_ANGLE(state)    (((WCPushBlockRuntimeState*)(state))->bobAngle)
-#define WCPUSHBLOCK_TILE_X(state)       (((WCPushBlockRuntimeState*)(state))->tileX)
-#define WCPUSHBLOCK_TILE_Y(state)       (((WCPushBlockRuntimeState*)(state))->tileY)
-#define WCPUSHBLOCK_PUSH_DIR(state)     (((WCPushBlockRuntimeState*)(state))->pushDir)
-#define WCPUSHBLOCK_INITIAL_TILE(state) (((WCPushBlockRuntimeState*)(state))->initialTile)
+#define WCPUSHBLOCK_TARGET_X(state)     (((WCPushBlockRuntimeState*)(state))->block.targetX)
+#define WCPUSHBLOCK_TARGET_Z(state)     (((WCPushBlockRuntimeState*)(state))->block.targetZ)
+#define WCPUSHBLOCK_BASE_Y(state)       (((WCPushBlockRuntimeState*)(state))->block.baseY)
+#define WCPUSHBLOCK_BOB_Y(state)        (((WCPushBlockRuntimeState*)(state))->block.bobY)
+#define WCPUSHBLOCK_BOB_ANGLE(state)    (((WCPushBlockRuntimeState*)(state))->block.bobAngle)
+#define WCPUSHBLOCK_TILE_X(state)       (((WCPushBlockRuntimeState*)(state))->block.cellX)
+#define WCPUSHBLOCK_TILE_Y(state)       (((WCPushBlockRuntimeState*)(state))->block.cellZ)
+#define WCPUSHBLOCK_PUSH_DIR(state)     (((WCPushBlockRuntimeState*)(state))->block.pushDir)
+#define WCPUSHBLOCK_INITIAL_TILE(state) (((WCPushBlockRuntimeState*)(state))->block.tileIndex)
 #define WCPUSHBLOCK_MOVE_RESULT(state)  (((WCPushBlockRuntimeState*)(state))->moveResult)
 #define WCPUSHBLOCK_FLAGS(state)        (((WCPushBlockRuntimeState*)(state))->flags)
 
-int wcpushblock_getExtraSize(void)
-{
+int wcpushblock_getExtraSize(void) {
     return sizeof(WCPushBlockRuntimeState);
 }
 
-int wcpushblock_getObjectTypeId(GameObject* obj)
-{
+int wcpushblock_getObjectTypeId(GameObject* obj) {
     ObjAnimComponent* objAnim = &obj->anim;
     int modelIndex = ((WCPushBlockSetup*)obj->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
-    if (modelIndex >= modelCount)
-    {
+    if (modelIndex >= modelCount) {
         modelIndex = 0;
     }
     return (modelIndex << WCPUSHBLOCK_RENDER_TYPE_SHIFT) | WCPUSHBLOCK_RENDER_TYPE_BASE;
 }
 
-void wcpushblock_free(void)
-{
+void wcpushblock_free(void) {
 }
 
-void wcpushblock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible != 0)
-    {
+void wcpushblock_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E6D54);
     }
 }
 
-void wcpushblock_hitDetect(void)
-{
+void wcpushblock_hitDetect(void) {
 }
 
 ObjectDescriptor gWCPushBlockObjDescriptor = {
@@ -154,9 +147,7 @@ ObjectDescriptor gWCPushBlockObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)wcpushblock_getExtraSize,
 };
 
-
-void wcpushblock_update(GameObject* obj)
-{
+void wcpushblock_update(GameObject* obj) {
 
     f32 dt;
     ObjAnimComponent* objAnim = &obj->anim;
@@ -167,51 +158,36 @@ void wcpushblock_update(GameObject* obj)
     ObjTextureRuntimeSlot* tex;
     int reachedTarget;
 
-    if ((void*)WCPUSHBLOCK_CONTROLLER(state) == 0)
-    {
-        WCPUSHBLOCK_CONTROLLER(state) =
-            (GameObject*)objGetNearestTypeTo(WCPUSHBLOCK_CONTROLLER_GROUP, obj, &range);
+    if ((void*)WCPUSHBLOCK_CONTROLLER(state) == 0) {
+        WCPUSHBLOCK_CONTROLLER(state) = (GameObject*)objGetNearestTypeTo(WCPUSHBLOCK_CONTROLLER_GROUP, obj, &range);
         objAnim->alpha = 0;
         return;
     }
     tex = objFindTexture(obj, 0, 0);
-    if (tex != 0)
-    {
+    if (tex != 0) {
         tex->textureId = WCPUSHBLOCK_TEXTURE_DEFAULT;
     }
     obj->objectFlags &= ~WCPUSHBLOCK_OBJFLAG_LOCKED;
 
-    if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_SOLVED)
-    {
-        if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-        {
-            if (mainGetBit(WCPUSHBLOCK_GAMEBIT_A_SOLVED) != 0)
-            {
+    if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_SOLVED) {
+        if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
+            if (mainGetBit(WCPUSHBLOCK_GAMEBIT_A_SOLVED) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SOLVED;
-                WCPUSHBLOCK_IFACE->getSolvedTileXYA(WCPUSHBLOCK_INITIAL_TILE(state), &state->tileX, &state->tileY,
-                                                    WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_IFACE->getSolvedTileXYA(WCPUSHBLOCK_INITIAL_TILE(state), &state->block.cellX,
+                                                    &state->block.cellZ, WCPUSHBLOCK_IFACE);
                 WCPUSHBLOCK_IFACE->tileAToWorldPos(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                   &obj->anim.localPosX,
-                                                   &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
-            }
-            else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0)
-            {
+                                                   &obj->anim.localPosX, &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
+            } else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_A_FADE) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_FADE_OUT;
             }
-        }
-        else
-        {
-            if (mainGetBit(WCPUSHBLOCK_GAMEBIT_B_SOLVED) != 0)
-            {
+        } else {
+            if (mainGetBit(WCPUSHBLOCK_GAMEBIT_B_SOLVED) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SOLVED;
-                WCPUSHBLOCK_IFACE->getSolvedTileXYB(WCPUSHBLOCK_INITIAL_TILE(state), &state->tileX, &state->tileY,
-                                                    WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_IFACE->getSolvedTileXYB(WCPUSHBLOCK_INITIAL_TILE(state), &state->block.cellX,
+                                                    &state->block.cellZ, WCPUSHBLOCK_IFACE);
                 WCPUSHBLOCK_IFACE->tileBToWorldPos(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                   &obj->anim.localPosX,
-                                                   &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
-            }
-            else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0)
-            {
+                                                   &obj->anim.localPosX, &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
+            } else if (mainGetBit(WCPUSHBLOCK_GAMEBIT_B_FADE) != 0) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_FADE_OUT;
             }
         }
@@ -219,47 +195,35 @@ void wcpushblock_update(GameObject* obj)
 
     {
         u32 phase = WCPUSHBLOCK_FLAGS(state).phase;
-        if (phase != WCPUSHBLOCK_PHASE_FADE_OUT && phase != WCPUSHBLOCK_PHASE_FADE_IN)
-        {
-            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-            {
-                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50,
-                                    lbl_803E6D60, lbl_803E6D5C, lbl_803E6D60, NULL, 0);
-            }
-            else
-            {
-                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50,
-                                    lbl_803E6D60, lbl_803E6D5C, lbl_803E6D60, NULL, 0);
+        if (phase != WCPUSHBLOCK_PHASE_FADE_OUT && phase != WCPUSHBLOCK_PHASE_FADE_IN) {
+            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
+                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_A, 1, 50, lbl_803E6D60,
+                                    lbl_803E6D5C, lbl_803E6D60, NULL, 0);
+            } else {
+                objfx_spawnBoxBurst(obj, 1, lbl_803E6D5C, WCPUSHBLOCK_BOX_BURST_VARIANT_B, 1, 50, lbl_803E6D60,
+                                    lbl_803E6D5C, lbl_803E6D60, NULL, 0);
             }
         }
     }
 
-    switch (WCPUSHBLOCK_FLAGS(state).phase)
-    {
+    switch (WCPUSHBLOCK_FLAGS(state).phase) {
     case WCPUSHBLOCK_PHASE_INIT_MOVE:
-        if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-        {
-            WCPUSHBLOCK_IFACE->getInitialTileXYA(WCPUSHBLOCK_INITIAL_TILE(state), &state->tileX, &state->tileY,
-                                                 WCPUSHBLOCK_IFACE);
+        if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
+            WCPUSHBLOCK_IFACE->getInitialTileXYA(WCPUSHBLOCK_INITIAL_TILE(state), &state->block.cellX,
+                                                 &state->block.cellZ, WCPUSHBLOCK_IFACE);
             WCPUSHBLOCK_IFACE->tileAToWorldPos(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                               &obj->anim.localPosX, &obj->anim.localPosZ,
-                                               WCPUSHBLOCK_IFACE);
-        }
-        else
-        {
-            WCPUSHBLOCK_IFACE->getInitialTileXYB(WCPUSHBLOCK_INITIAL_TILE(state), &state->tileX, &state->tileY,
-                                                 WCPUSHBLOCK_IFACE);
+                                               &obj->anim.localPosX, &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
+        } else {
+            WCPUSHBLOCK_IFACE->getInitialTileXYB(WCPUSHBLOCK_INITIAL_TILE(state), &state->block.cellX,
+                                                 &state->block.cellZ, WCPUSHBLOCK_IFACE);
             WCPUSHBLOCK_IFACE->tileBToWorldPos(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                               &obj->anim.localPosX, &obj->anim.localPosZ,
-                                               WCPUSHBLOCK_IFACE);
+                                               &obj->anim.localPosX, &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
         }
         WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_IDLE;
         break;
-    case WCPUSHBLOCK_PHASE_IDLE:
-    {
+    case WCPUSHBLOCK_PHASE_IDLE: {
         int a = objAnim->alpha + framesThisStep * 8;
-        if (a > WCPUSHBLOCK_ALPHA_OPAQUE)
-        {
+        if (a > WCPUSHBLOCK_ALPHA_OPAQUE) {
             a = WCPUSHBLOCK_ALPHA_OPAQUE;
         }
         objAnim->alpha = a;
@@ -269,88 +233,62 @@ void wcpushblock_update(GameObject* obj)
             obj->anim.velocityX = zero;
             obj->anim.velocityZ = zero;
         }
-        if (playerIsPushingObject(player, obj, &state->pushDir) != 0)
-        {
-            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-            {
-                if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveA(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, -1, 0, WCPUSHBLOCK_IFACE);
+        if (playerIsPushingObject(player, obj, &state->block.pushDir) != 0) {
+            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
+                if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveA(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, -1, 0, WCPUSHBLOCK_IFACE);
+                } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveA(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, 1, 0, WCPUSHBLOCK_IFACE);
+                } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveA(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, 0, -1, WCPUSHBLOCK_IFACE);
+                } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveA(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, 0, 1, WCPUSHBLOCK_IFACE);
                 }
-                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveA(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, 1, 0, WCPUSHBLOCK_IFACE);
-                }
-                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveA(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, 0, -1, WCPUSHBLOCK_IFACE);
-                }
-                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveA(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, 0, 1, WCPUSHBLOCK_IFACE);
-                }
-            }
-            else
-            {
-                if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveB(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, -1, 0, WCPUSHBLOCK_IFACE);
-                }
-                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveB(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, 1, 0, WCPUSHBLOCK_IFACE);
-                }
-                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveB(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, 0, -1, WCPUSHBLOCK_IFACE);
-                }
-                else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z)
-                {
-                    WCPUSHBLOCK_MOVE_RESULT(state) =
-                        WCPUSHBLOCK_IFACE->traceMoveB(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                      &state->targetX, &state->targetZ, 0, 1, WCPUSHBLOCK_IFACE);
+            } else {
+                if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveB(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, -1, 0, WCPUSHBLOCK_IFACE);
+                } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveB(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, 1, 0, WCPUSHBLOCK_IFACE);
+                } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveB(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, 0, -1, WCPUSHBLOCK_IFACE);
+                } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z) {
+                    WCPUSHBLOCK_MOVE_RESULT(state) = WCPUSHBLOCK_IFACE->traceMoveB(
+                        obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), &state->block.targetX,
+                        &state->block.targetZ, 0, 1, WCPUSHBLOCK_IFACE);
                 }
             }
             if (WCPUSHBLOCK_TARGET_X(state) == obj->anim.localPosX &&
-                WCPUSHBLOCK_TARGET_Z(state) == obj->anim.localPosY)
-            {
+                WCPUSHBLOCK_TARGET_Z(state) == obj->anim.localPosY) {
                 ;
-            }
-            else
-            {
+            } else {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_SLIDING;
             }
         }
         break;
-    case WCPUSHBLOCK_PHASE_SLIDING:
-    {
+    case WCPUSHBLOCK_PHASE_SLIDING: {
         f32 zero = lbl_803E6D64;
         f32 vx = obj->anim.velocityX;
-        if (zero != vx || zero != obj->anim.velocityZ)
-        {
-            f32 speed =
-                sqrtf(vx * vx + obj->anim.velocityZ * obj->anim.velocityZ) - lbl_803E6D68;
-            if (speed < lbl_803E6D64)
-            {
+        if (zero != vx || zero != obj->anim.velocityZ) {
+            f32 speed = sqrtf(vx * vx + obj->anim.velocityZ * obj->anim.velocityZ) - lbl_803E6D68;
+            if (speed < lbl_803E6D64) {
                 speed = lbl_803E6D64;
             }
             sfxVolume = lbl_803E6D54 + gWcPushBlockSlideSfxVolumeRange * speed / gWcPushBlockSlideSfxMaxSpeed;
-            if (sfxVolume > gWcPushBlockSlideSfxMaxVolume)
-            {
+            if (sfxVolume > gWcPushBlockSlideSfxMaxVolume) {
                 sfxVolume = gWcPushBlockSlideSfxMaxVolume;
             }
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_c8);
@@ -362,89 +300,65 @@ void wcpushblock_update(GameObject* obj)
         objMove(obj, obj->anim.velocityX * dt, lbl_803E6D64, obj->anim.velocityZ * dt);
         reachedTarget = 0;
         {
-            if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X)
-            {
-                if (obj->anim.velocityX < gWcPushBlockMaxSlideSpeed)
-                {
-                    obj->anim.velocityX =
-                        gWcPushBlockSlideAccel * timeDelta + obj->anim.velocityX;
+            if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_X) {
+                if (obj->anim.velocityX < gWcPushBlockMaxSlideSpeed) {
+                    obj->anim.velocityX = gWcPushBlockSlideAccel * timeDelta + obj->anim.velocityX;
                 }
                 {
                     f32 tx;
-                    if (obj->anim.localPosX >= (tx = WCPUSHBLOCK_TARGET_X(state)))
-                    {
+                    if (obj->anim.localPosX >= (tx = WCPUSHBLOCK_TARGET_X(state))) {
                         obj->anim.localPosX = tx;
                         reachedTarget = 1;
                     }
                 }
-            }
-            else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X)
-            {
-                if (obj->anim.velocityX > gWcPushBlockMinSlideSpeed)
-                {
-                    obj->anim.velocityX =
-                        obj->anim.velocityX - gWcPushBlockSlideAccel * timeDelta;
+            } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_X) {
+                if (obj->anim.velocityX > gWcPushBlockMinSlideSpeed) {
+                    obj->anim.velocityX = obj->anim.velocityX - gWcPushBlockSlideAccel * timeDelta;
                 }
                 {
                     f32 tx;
-                    if (obj->anim.localPosX <= (tx = WCPUSHBLOCK_TARGET_X(state)))
-                    {
+                    if (obj->anim.localPosX <= (tx = WCPUSHBLOCK_TARGET_X(state))) {
                         obj->anim.localPosX = tx;
                         reachedTarget = 1;
                     }
                 }
-            }
-            else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z)
-            {
-                if (obj->anim.velocityZ < gWcPushBlockMaxSlideSpeed)
-                {
-                    obj->anim.velocityZ =
-                        gWcPushBlockSlideAccel * timeDelta + obj->anim.velocityZ;
+            } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_POS_Z) {
+                if (obj->anim.velocityZ < gWcPushBlockMaxSlideSpeed) {
+                    obj->anim.velocityZ = gWcPushBlockSlideAccel * timeDelta + obj->anim.velocityZ;
                 }
                 {
                     f32 tz;
-                    if (obj->anim.localPosZ >= (tz = WCPUSHBLOCK_TARGET_Z(state)))
-                    {
+                    if (obj->anim.localPosZ >= (tz = WCPUSHBLOCK_TARGET_Z(state))) {
                         obj->anim.localPosZ = tz;
                         reachedTarget = 1;
                     }
                 }
-            }
-            else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z)
-            {
-                if (obj->anim.velocityZ > gWcPushBlockMinSlideSpeed)
-                {
-                    obj->anim.velocityZ =
-                        obj->anim.velocityZ - gWcPushBlockSlideAccel * timeDelta;
+            } else if (WCPUSHBLOCK_PUSH_DIR(state) == WCPUSHBLOCK_DIR_NEG_Z) {
+                if (obj->anim.velocityZ > gWcPushBlockMinSlideSpeed) {
+                    obj->anim.velocityZ = obj->anim.velocityZ - gWcPushBlockSlideAccel * timeDelta;
                 }
                 {
                     f32 tz;
-                    if (obj->anim.localPosZ <= (tz = WCPUSHBLOCK_TARGET_Z(state)))
-                    {
+                    if (obj->anim.localPosZ <= (tz = WCPUSHBLOCK_TARGET_Z(state))) {
                         obj->anim.localPosZ = tz;
                         reachedTarget = 1;
                     }
                 }
             }
         }
-        if (obj->anim.velocityX > gWcPushBlockMaxSlideSpeed)
-        {
+        if (obj->anim.velocityX > gWcPushBlockMaxSlideSpeed) {
             obj->anim.velocityX = gWcPushBlockMaxSlideSpeed;
         }
-        if (obj->anim.velocityX < gWcPushBlockMinSlideSpeed)
-        {
+        if (obj->anim.velocityX < gWcPushBlockMinSlideSpeed) {
             obj->anim.velocityX = gWcPushBlockMinSlideSpeed;
         }
-        if (obj->anim.velocityZ > gWcPushBlockMaxSlideSpeed)
-        {
+        if (obj->anim.velocityZ > gWcPushBlockMaxSlideSpeed) {
             obj->anim.velocityZ = gWcPushBlockMaxSlideSpeed;
         }
-        if (obj->anim.velocityZ < gWcPushBlockMinSlideSpeed)
-        {
+        if (obj->anim.velocityZ < gWcPushBlockMinSlideSpeed) {
             obj->anim.velocityZ = gWcPushBlockMinSlideSpeed;
         }
-        if (reachedTarget == 0)
-        {
+        if (reachedTarget == 0) {
             break;
         }
         {
@@ -454,62 +368,42 @@ void wcpushblock_update(GameObject* obj)
         }
         {
             u32 moveResult = WCPUSHBLOCK_MOVE_RESULT(state);
-            if (moveResult == WCPUSHBLOCK_MOVE_RESULT_LOCKED)
-            {
+            if (moveResult == WCPUSHBLOCK_MOVE_RESULT_LOCKED) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_LOCKED;
-                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-                {
-                    if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_A_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT)
-                    {
+                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
+                    if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_A_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT) {
+                        Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_ca);
+                    }
+                } else {
+                    if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_B_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT) {
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_ca);
                     }
                 }
-                else
-                {
-                    if (gameBitIncrement(WCPUSHBLOCK_GAMEBIT_B_COUNT) != WCPUSHBLOCK_REQUIRED_LOCK_COUNT)
-                    {
-                        Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_ca);
-                    }
-                }
-            }
-            else if (moveResult == WCPUSHBLOCK_MOVE_RESULT_CONTINUE)
-            {
+            } else if (moveResult == WCPUSHBLOCK_MOVE_RESULT_CONTINUE) {
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_IDLE;
-                if (WCPUSHBLOCK_FLAGS(state).sfxActive != 0)
-                {
+                if (WCPUSHBLOCK_FLAGS(state).sfxActive != 0) {
                     WCPUSHBLOCK_FLAGS(state).sfxActive = 0;
                     Sfx_PlayFromObject(obj, SFXTRIG_mv_bflconc1);
                 }
-            }
-            else
-            {
-                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-                {
+            } else {
+                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                     mainSetBits(WCPUSHBLOCK_GAMEBIT_A_FADE, 1);
-                }
-                else
-                {
+                } else {
                     mainSetBits(WCPUSHBLOCK_GAMEBIT_B_FADE, 1);
                 }
             }
         }
-        if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_FADE_OUT)
-        {
-            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-            {
+        if (WCPUSHBLOCK_FLAGS(state).phase != WCPUSHBLOCK_PHASE_FADE_OUT) {
+            if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
                 WCPUSHBLOCK_IFACE->setTileA(0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
-                WCPUSHBLOCK_IFACE->worldPosToTileA(obj, obj->anim.localPosX,
-                                                   obj->anim.localPosZ, &state->tileX, &state->tileY,
-                                                   WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_IFACE->worldPosToTileA(obj, obj->anim.localPosX, obj->anim.localPosZ, &state->block.cellX,
+                                                   &state->block.cellZ, WCPUSHBLOCK_IFACE);
                 WCPUSHBLOCK_IFACE->setTileA(WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state),
                                             WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
-            }
-            else
-            {
+            } else {
                 WCPUSHBLOCK_IFACE->setTileB(0, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
-                WCPUSHBLOCK_IFACE->worldPosToTileB(obj, obj->anim.localPosX,
-                                                   obj->anim.localPosZ, &state->tileX, &state->tileY,
-                                                   WCPUSHBLOCK_IFACE);
+                WCPUSHBLOCK_IFACE->worldPosToTileB(obj, obj->anim.localPosX, obj->anim.localPosZ, &state->block.cellX,
+                                                   &state->block.cellZ, WCPUSHBLOCK_IFACE);
                 WCPUSHBLOCK_IFACE->setTileB(WCPUSHBLOCK_INITIAL_TILE(state), WCPUSHBLOCK_TILE_X(state),
                                             WCPUSHBLOCK_TILE_Y(state), WCPUSHBLOCK_IFACE);
             }
@@ -517,58 +411,46 @@ void wcpushblock_update(GameObject* obj)
         break;
     case WCPUSHBLOCK_PHASE_FADE_OUT:
         ObjHits_DisableObject(obj);
-        if (objAnim->alpha == WCPUSHBLOCK_ALPHA_OPAQUE)
-        {
+        if (objAnim->alpha == WCPUSHBLOCK_ALPHA_OPAQUE) {
             Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_cb);
         }
         {
             int a = objAnim->alpha - (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
-            if (a < 0)
-            {
+            if (a < 0) {
                 a = 0;
             }
             objAnim->alpha = a;
         }
-        if (objAnim->alpha == 0)
-        {
-            if (wcblock_isPlayerAwayFromStoredCell(obj, (WCBlockState*)state, Obj_GetPlayerObject()) != 0)
-            {
-                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A)
-                {
-                    WCPUSHBLOCK_IFACE->getInitialTileXYA(WCPUSHBLOCK_INITIAL_TILE(state), &state->tileX, &state->tileY,
-                                                         WCPUSHBLOCK_IFACE);
+        if (objAnim->alpha == 0) {
+            if (wcblock_isPlayerAwayFromStoredCell(obj, &state->block, Obj_GetPlayerObject()) != 0) {
+                if (objAnim->bankIndex == WCPUSHBLOCK_VARIANT_A) {
+                    WCPUSHBLOCK_IFACE->getInitialTileXYA(WCPUSHBLOCK_INITIAL_TILE(state), &state->block.cellX,
+                                                         &state->block.cellZ, WCPUSHBLOCK_IFACE);
                     WCPUSHBLOCK_IFACE->tileAToWorldPos(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                       &obj->anim.localPosX,
-                                                       &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
-                }
-                else
-                {
-                    WCPUSHBLOCK_IFACE->getInitialTileXYB(WCPUSHBLOCK_INITIAL_TILE(state), &state->tileX, &state->tileY,
-                                                         WCPUSHBLOCK_IFACE);
+                                                       &obj->anim.localPosX, &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
+                } else {
+                    WCPUSHBLOCK_IFACE->getInitialTileXYB(WCPUSHBLOCK_INITIAL_TILE(state), &state->block.cellX,
+                                                         &state->block.cellZ, WCPUSHBLOCK_IFACE);
                     WCPUSHBLOCK_IFACE->tileBToWorldPos(obj, WCPUSHBLOCK_TILE_X(state), WCPUSHBLOCK_TILE_Y(state),
-                                                       &obj->anim.localPosX,
-                                                       &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
+                                                       &obj->anim.localPosX, &obj->anim.localPosZ, WCPUSHBLOCK_IFACE);
                 }
                 WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_FADE_IN;
             }
         }
         break;
     case WCPUSHBLOCK_PHASE_FADE_IN:
-        if (objAnim->alpha == 0)
-        {
+        if (objAnim->alpha == 0) {
             ObjHits_EnableObject(obj);
             Sfx_PlayFromObject(0, SFXTRIG_en_cvdrip1c_cc);
         }
         {
             int a = objAnim->alpha + (framesThisStep << WCPUSHBLOCK_ALPHA_STEP_SHIFT);
-            if (a > WCPUSHBLOCK_ALPHA_OPAQUE)
-            {
+            if (a > WCPUSHBLOCK_ALPHA_OPAQUE) {
                 a = WCPUSHBLOCK_ALPHA_OPAQUE;
             }
             objAnim->alpha = a;
         }
-        if (objAnim->alpha >= WCPUSHBLOCK_ALPHA_OPAQUE)
-        {
+        if (objAnim->alpha >= WCPUSHBLOCK_ALPHA_OPAQUE) {
             WCPUSHBLOCK_FLAGS(state).phase = WCPUSHBLOCK_PHASE_IDLE;
         }
         break;
@@ -576,8 +458,7 @@ void wcpushblock_update(GameObject* obj)
         objAnim->alpha = WCPUSHBLOCK_ALPHA_OPAQUE;
     case WCPUSHBLOCK_PHASE_LOCKED:
         tex = objFindTexture(obj, 0, 0);
-        if (tex != 0)
-        {
+        if (tex != 0) {
             tex->textureId = WCPUSHBLOCK_TEXTURE_LOCKED;
         }
         obj->objectFlags |= WCPUSHBLOCK_OBJFLAG_LOCKED;
@@ -591,32 +472,24 @@ void wcpushblock_update(GameObject* obj)
     obj->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
 
-
-void wcpushblock_init(GameObject* obj, WCPushBlockSetup* setup)
-{
+void wcpushblock_init(GameObject* obj, WCPushBlockSetup* setup) {
     ObjAnimComponent* objAnim = &obj->anim;
     WCPushBlockRuntimeState* state = obj->extra;
 
     objAnim->alpha = 0;
     objAnim->bankIndex = setup->modelIndex;
-    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
-    {
+    if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
     ObjHitbox_SetStateIndex(obj, obj->anim.hitReactState, objAnim->bankIndex);
-    state->initialTile = setup->initialTile;
-    state->baseY = 5.0f + setup->base.posY;
+    state->block.tileIndex = setup->initialTile;
+    state->block.baseY = 5.0f + setup->base.posY;
 }
 
-
-void wcpushblock_release(void)
-{
+void wcpushblock_release(void) {
 }
 
-
-void wcpushblock_initialise(void)
-{
+void wcpushblock_initialise(void) {
 }
-
 
 #undef WCPUSHBLOCK_IFACE

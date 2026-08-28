@@ -5,8 +5,9 @@
  * variants, the Wall City hit-ID puzzle, a floating ice block, a metal block,
  * and the Volcano Force Point curtain block.
  */
-#include "main/vecmath.h"
 #include "dlls/objects/239.h"
+
+#include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
@@ -182,7 +183,7 @@ STATIC_ASSERT(sizeof(PushableCollisionProbe) == 0x30);
 int gPushableSavedIdentCount;
 int gPushableSavedIdents[0x28];
 
-ObjectDescriptor14 gPushableObjDescriptor = {
+PushableDescriptor gPushableObjDescriptor = {
     0,                                                  /* reserved0 */
     0,                                                  /* reserved1 */
     0,                                                  /* reserved2 */
@@ -196,18 +197,17 @@ ObjectDescriptor14 gPushableObjDescriptor = {
     (ObjectDescriptorCallback)pushable_render,          /* render */
     (ObjectDescriptorCallback)pushable_free,            /* free */
     (ObjectDescriptorCallback)pushable_getObjectTypeId, /* getObjectTypeId */
-    pushable_getExtraSize,    /* slot09 */
-    (ObjectDescriptorCallback)pushable_push,        /* slot0A */
-    (ObjectDescriptorCallback)pushable_isWithinCullDistance,          /* slot0B */
-    (ObjectDescriptorCallback)pushable_setModelFlag,      /* slot0C */
-    (ObjectDescriptorCallback)pushable_isRestored,         /* slot0D */
+    pushable_getExtraSize,                              /* slot09 */
+    pushable_push,                                      /* slot0A */
+    pushable_isWithinCullDistance,                      /* slot0B */
+    pushable_setModelFlag,                              /* slot0C */
+    pushable_isRestored,                                /* slot0D */
 };
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
 const PushableRadii gPushableDefaultBox = {{0.0f, 0.0f, 0.0f, 0.0f}};
 
-static void pushable_driftEyePos(f32* pos, f32 driftSpeed, f32 limit)
-{
+static void pushable_driftEyePos(f32* pos, f32 driftSpeed, f32 limit) {
     *pos += driftSpeed;
     if (*pos > limit) {
         *pos = limit;
@@ -303,8 +303,7 @@ int pushable_updateMagicGem(GameObject* obj, PushableState* state) {
         return 1;
     }
     if (state->nearestObj == NULL) {
-        state->nearestObj =
-            objGetNearestTypeTo(PUSHABLE_MAGIC_GEM_TARGET_OBJECT_GROUP, obj, nearestDistance);
+        state->nearestObj = objGetNearestTypeTo(PUSHABLE_MAGIC_GEM_TARGET_OBJECT_GROUP, obj, nearestDistance);
     }
     if (state->nearestObj == NULL) {
         return 0;
@@ -340,8 +339,8 @@ int pushable_updateMagicGem(GameObject* obj, PushableState* state) {
         state->blinkInterval =
             PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
             (f32)randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
-        state->blinkStep = state->blinkInterval / (f32)randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN,
-                                                                           PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
+        state->blinkStep = state->blinkInterval /
+                           (f32)randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
         state->blinkPhase = PUSHABLE_ZERO;
     }
     if (texture != NULL) {
@@ -381,9 +380,8 @@ void pushable_initMagicGem(GameObject* obj, PushableState* state) {
     sharedValue = PUSHABLE_MAGIC_GEM_EYE_DRIFT_SPEED;
     state->eyeDriftSpeedX = sharedValue;
     state->eyeDriftSpeedY = sharedValue;
-    state->blinkInterval =
-        PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
-        (f32)randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
+    state->blinkInterval = PUSHABLE_MAGIC_GEM_BLINK_INTERVAL_SCALE *
+                           (f32)randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_WAIT_MIN, PUSHABLE_MAGIC_GEM_BLINK_WAIT_MAX);
     state->blinkStep = state->blinkInterval /
                        (f32)randomGetRange(PUSHABLE_MAGIC_GEM_BLINK_TIME_MIN, PUSHABLE_MAGIC_GEM_BLINK_TIME_MAX);
     sharedValue = PUSHABLE_ZERO;
@@ -466,8 +464,8 @@ void pushable_resolveCollisions(GameObject* obj, PushableState* state) {
                                   &worldPoints[pointIndex * 3 + 1], &worldPoints[pointIndex * 3 + 2]);
             if ((1 << pointIndex & PUSHABLE_POINT_MASK) != 0) {
                 if (trackGetLineIntersect((f32*)&state->cornerWorld[pointIndex], &worldPoints[pointIndex * 3],
-                                       PUSHABLE_COLLISION_RADIUS, 1, &collision, obj, 8, 0xd, (u8)(pointIndex + 3),
-                                       10) == 0) {
+                                          PUSHABLE_COLLISION_RADIUS, 1, &collision, obj, 8, 0xd, (u8)(pointIndex + 3),
+                                          10) == 0) {
                     unresolvedMask = (s8)(unresolvedMask & ~(1 << pointIndex));
                 } else {
                     int angle;
@@ -603,7 +601,8 @@ u32 pushable_SeqFn(GameObject* obj, MatrixTransform* referenceTransform, ObjSeqS
     if (obj->userData2 == 0) {
         obj->userData2 = PUSHABLE_SEQUENCE_DEFAULT_USERDATA;
     }
-    if ((obj->anim.romDefNo == PUSHABLE_SEQ_ID_MAGIC_GEM_21E) || (obj->anim.romDefNo == PUSHABLE_SEQ_ID_MAGIC_GEM_411)) {
+    if ((obj->anim.romDefNo == PUSHABLE_SEQ_ID_MAGIC_GEM_21E) ||
+        (obj->anim.romDefNo == PUSHABLE_SEQ_ID_MAGIC_GEM_411)) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if ((obj->anim.hitboxTransformState->contactObjectCount > 0) &&
             ((((GameObject*)obj->anim.hitboxTransformState->contactObjects[0])->anim.classId ==
@@ -737,7 +736,8 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
         blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitBuffer, 8);
         if (blocked == 0) {
-            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked =
+                trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -758,7 +758,8 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
         blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitBuffer, 8);
         if (blocked == 0) {
-            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked =
+                trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -779,7 +780,8 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         trackIntersectBroadphase(NULL, &sweep, 0x208, 1);
         blocked = trackGetIntersect(NULL, probeStart, probeEnd, 1, &hitBuffer, 8);
         if (blocked == 0) {
-            blocked = trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
+            blocked =
+                trackGetLineIntersect(probeStart, probeEnd, collisionProbe->radii[0], 0, NULL, obj, 1, -1, 0xff, 0);
         }
         if (blocked != 0) {
             f32 pushAmount;
@@ -842,8 +844,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
             localPoint = (f32*)state;
             delta = deltas;
             for (; pointIndex < state->pointCount; pointIndex++) {
-                Obj_TransformLocalPointToWorld(localPoint[6], localPoint[7],
-                                               localPoint[8], worldPoint, worldPoint + 1,
+                Obj_TransformLocalPointToWorld(localPoint[6], localPoint[7], localPoint[8], worldPoint, worldPoint + 1,
                                                worldPoint + 2, obj);
                 delta[0] = obj->anim.localPosX - worldPoint[0];
                 delta[1] = obj->anim.localPosY - worldPoint[1];
@@ -901,8 +902,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         pointIndex = 0;
         localPoint = (f32*)state;
         for (; pointIndex < state->pointCount; pointIndex++) {
-            Matrix_TransformPoint(modelMtx, localPoint[6], localPoint[7],
-                                  localPoint[8], &localPoint[30],
+            Matrix_TransformPoint(modelMtx, localPoint[6], localPoint[7], localPoint[8], &localPoint[30],
                                   &localPoint[31], &localPoint[32]);
             localPoint += 3;
         }

@@ -63,9 +63,9 @@ void SH_LevelControl_free(void);
 int SH_LevelControl_sequenceCallback(void* obj, void* unused, struct ObjSeqState* updateState);
 void SH_LevelControl_updateTotemPuzzleMapState(void* obj, void* state);
 void GameBitLatch_Update(GameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit, s16 latchBit,
-                           int musicId);
+                         int musicId);
 void GameBitLatch_UpdateInverted(GameBitLatchState* state, int mask, s16 clearIfSetBit, s16 clearIfClearBit,
-                                   s16 latchBit, int musicId);
+                                 s16 latchBit, int musicId);
 void SH_LevelControl_update(GameObject* obj);
 void SH_LevelControl_init(GameObject* obj);
 

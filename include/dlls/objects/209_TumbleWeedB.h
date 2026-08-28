@@ -37,6 +37,13 @@ typedef struct TumbleweedBushPlacement {
     u8 variant;        /* 0x23 */
 } TumbleweedBushPlacement;
 
+typedef struct TumbleweedBushInterface {
+    ObjectInterface base;
+    void (*removePieceReference)(GameObject* bush, GameObject* piece);
+} TumbleweedBushInterface;
+
+#define TUMBLEWEED_BUSH_INTERFACE(bush) ((TumbleweedBushInterface*)*((GameObject*)(bush))->anim.dll)
+
 STATIC_ASSERT(offsetof(TumbleweedBushState, scale) == 0x0);
 STATIC_ASSERT(offsetof(TumbleweedBushState, triggerRadius) == 0x8);
 STATIC_ASSERT(offsetof(TumbleweedBushState, pieceObjects) == 0xC);
@@ -55,6 +62,9 @@ STATIC_ASSERT(offsetof(TumbleweedBushPlacement, radiusByte) == 0x1B);
 STATIC_ASSERT(offsetof(TumbleweedBushPlacement, scale) == 0x1C);
 STATIC_ASSERT(offsetof(TumbleweedBushPlacement, variant) == 0x23);
 STATIC_ASSERT(sizeof(TumbleweedBushPlacement) == 0x24);
+
+STATIC_ASSERT(offsetof(TumbleweedBushInterface, removePieceReference) == 0x20);
+STATIC_ASSERT(sizeof(TumbleweedBushInterface) == 0x24);
 
 s8 tumbleweedbush_spawnSibling(GameObject* obj);
 void tumbleweedbush_removePieceReference(GameObject* obj, GameObject* piece);

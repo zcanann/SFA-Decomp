@@ -61,20 +61,17 @@ typedef struct StaffActivatedFlags {
 } StaffActivatedFlags;
 
 typedef struct StaffActivatedState {
-    f32 targetX;            /* 0x00 */
-    f32 targetZ;            /* 0x04 */
-    u8 pad08[4];            /* 0x08 */
-    s32 liftVelocity;       /* 0x0C */
-    s32 previousLiftHeight; /* 0x10 */
-    s32 liftHeight;         /* 0x14 */
-    s32 peakLiftHeight;     /* 0x18 */
-    u8 liftReset;           /* 0x1C */
-    union {
-        u8 flagByte;
-        StaffActivatedFlags flags;
-    }; /* 0x1D */
-    u8 pad1E[2];     /* 0x1E */
-    f32 hitCooldown; /* 0x20 */
+    f32 targetX;               /* 0x00 */
+    f32 targetZ;               /* 0x04 */
+    u8 pad08[4];               /* 0x08 */
+    s32 liftVelocity;          /* 0x0C */
+    s32 previousLiftHeight;    /* 0x10 */
+    s32 liftHeight;            /* 0x14 */
+    s32 peakLiftHeight;        /* 0x18 */
+    u8 liftReset;              /* 0x1C */
+    StaffActivatedFlags flags; /* 0x1D */
+    u8 pad1E[2];               /* 0x1E */
+    f32 hitCooldown;           /* 0x20 */
 } StaffActivatedState;
 
 STATIC_ASSERT(offsetof(StaffActivatedPlacement, base) == 0x0);
@@ -105,7 +102,6 @@ STATIC_ASSERT(offsetof(StaffActivatedState, previousLiftHeight) == 0x10);
 STATIC_ASSERT(offsetof(StaffActivatedState, liftHeight) == 0x14);
 STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
 STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1C);
-STATIC_ASSERT(offsetof(StaffActivatedState, flagByte) == 0x1D);
 STATIC_ASSERT(offsetof(StaffActivatedState, flags) == 0x1D);
 STATIC_ASSERT(offsetof(StaffActivatedState, pad1E) == 0x1E);
 STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);

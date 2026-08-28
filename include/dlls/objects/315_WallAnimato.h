@@ -22,13 +22,10 @@ typedef struct WallAnimatorPlacement {
 /* WallAnimator_getExtraSize proves the complete 0x08-byte allocation. */
 typedef struct WallAnimatorState {
     s32 timer; /* 0x00 */
-    union {
-        u8 status; /* 0x04 */
-        struct {
-            u8 complete : 1; /* 0x80 */
-            u8 unused : 7;
-        };
-    };
+    struct {
+        u8 complete : 1; /* 0x80 */
+        u8 unused : 7;
+    }; /* 0x04 */
     u8 pad05[3]; /* 0x05 */
 } WallAnimatorState;
 
@@ -42,7 +39,6 @@ STATIC_ASSERT(offsetof(WallAnimatorPlacement, pad26) == 0x26);
 STATIC_ASSERT(sizeof(WallAnimatorPlacement) == 0x28);
 
 STATIC_ASSERT(offsetof(WallAnimatorState, timer) == 0x00);
-STATIC_ASSERT(offsetof(WallAnimatorState, status) == 0x04);
 STATIC_ASSERT(offsetof(WallAnimatorState, pad05) == 0x05);
 STATIC_ASSERT(sizeof(WallAnimatorState) == 0x08);
 
