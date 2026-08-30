@@ -51,7 +51,7 @@ typedef struct TrickyCompanionInterface {
     void (*requestRecall)(GameObject* tricky);
     u8 (*isPlayingBall)(GameObject* tricky);
     u8 (*isGuarding)(GameObject* tricky);
-    int (*getCurrentCommandType)(GameObject* tricky, int* commandType);
+    int (*getCurrentCommandPhase)(GameObject* tricky, int* commandPhase);
 } TrickyCompanionInterface;
 
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, getAvailableCommands) == 0x20);
@@ -64,7 +64,7 @@ STATIC_ASSERT(offsetof(TrickyCompanionInterface, requestMoveToObject) == 0x38);
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, requestRecall) == 0x3C);
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, isPlayingBall) == 0x40);
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, isGuarding) == 0x44);
-STATIC_ASSERT(offsetof(TrickyCompanionInterface, getCurrentCommandType) == 0x48);
+STATIC_ASSERT(offsetof(TrickyCompanionInterface, getCurrentCommandPhase) == 0x48);
 
 #define TRICKY_INTERFACE(tricky) ((TrickyCompanionInterface*)*((GameObject*)(tricky))->anim.dll)
 
@@ -86,7 +86,7 @@ void Tricky_hitDetect(GameObject* obj);
 int Tricky_getExtraSize(void);
 u8 Tricky_getEnergyMax(GameObject* obj);
 u8 Tricky_getEnergy(GameObject* obj);
-int Tricky_getCurrentCommandType(GameObject* obj, int* out);
+int Tricky_getCurrentCommandPhase(GameObject* obj, int* outCommandPhase);
 void Tricky_requestRecall(GameObject* obj);
 int Tricky_isGuarding(GameObject* obj);
 int Tricky_isPlayingBall(GameObject* obj);

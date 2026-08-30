@@ -4069,7 +4069,7 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
         (player->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
         tricky != NULL && getHudHiddenFrameCount() == 0)
     {
-        TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
+        TRICKY_INTERFACE(tricky)->getCurrentCommandPhase(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)

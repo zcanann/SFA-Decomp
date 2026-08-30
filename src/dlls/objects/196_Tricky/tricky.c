@@ -993,7 +993,7 @@ ObjectDescriptor21 gTrickyObjDescriptor = {
         (ObjectDescriptorCallback)Tricky_isPlayingBall,
         (ObjectDescriptorCallback)Tricky_isGuarding,
     },
-    (ObjectDescriptorCallback)Tricky_getCurrentCommandType,
+    (ObjectDescriptorCallback)Tricky_getCurrentCommandPhase,
 };
 
 void trickyUpdateCollisionAndPathState(GameObject* obj) {
@@ -7285,9 +7285,9 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
     state->commandCount++;
 }
 
-int Tricky_getCurrentCommandType(GameObject* obj, int* out) {
+int Tricky_getCurrentCommandPhase(GameObject* obj, int* outCommandPhase) {
     TrickyState* state = obj->extra;
-    *out = state->commandPhase;
+    *outCommandPhase = state->commandPhase;
     return 1;
 }
 
