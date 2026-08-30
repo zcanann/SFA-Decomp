@@ -383,7 +383,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate) {
         case 0:
         default:
             animUpdate->flags = -1;
-            animUpdate->flags &= ~0x40;
+            animUpdate->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
             break;
         }
     }

@@ -7044,7 +7044,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     state = obj->extra;
     if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0) {
         ObjHits_DisableObject(obj);
-        Sfx_StopObjectChannel(obj, 0x7f);
+        Sfx_StopObjectChannel(obj, SFX_OBJECT_CHANNEL_MASK_ALL);
         if ((state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
             state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
@@ -7063,7 +7063,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         }
         Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         state->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_LATCHED;
-        if ((sequence->flags & 3) == 0) {
+        if ((sequence->flags & OBJSEQ_TARGET_MOTION_FLAGS) == 0) {
             state->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
         }
         if (state->sequencePreserveBlend == 0) {
@@ -7137,7 +7137,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     Tricky_updateBlendChannelWeight(obj, state);
     objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->pathControlFlags, 1.0f, 1.0f);
     if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_CALLBACK) != 0) {
-        sequence->flags &= ~0x40;
+        sequence->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
         characterDoEyeAnims(obj, &state->eyeAnimState);
         return (*gObjectTriggerInterface)->func20(obj, sequence, 1, 0xf, 0x1e, 0, 0);
     }

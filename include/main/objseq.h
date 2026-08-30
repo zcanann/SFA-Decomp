@@ -26,6 +26,11 @@ struct GameObject;
 typedef int (*ObjSeqTurnToPlayerFn)(struct GameObject* obj, struct ObjSeqState* state, s16 turnDegrees,
                                     s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft);
 
+#define OBJSEQ_FLAG_APPLY_CURVE_POSITION 0x01
+#define OBJSEQ_FLAG_APPLY_HEADING        0x02
+#define OBJSEQ_TARGET_MOTION_FLAGS       (OBJSEQ_FLAG_APPLY_CURVE_POSITION | OBJSEQ_FLAG_APPLY_HEADING)
+#define OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS  0x40
+
 struct ObjAnimComponent;
 
 typedef struct ObjectTriggerInterface {

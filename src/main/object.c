@@ -1454,7 +1454,7 @@ void Obj_FreeObject(GameObject* obj)
         return;
     }
     Sfx_RemoveLoopedObjectSoundForObject(obj);
-    Sfx_StopObjectChannel(obj, 0x7f);
+    Sfx_StopObjectChannel(obj, SFX_OBJECT_CHANNEL_MASK_ALL);
     if (obj->objectFlags & OBJECT_FLAG_IN_UPDATE_LIST)
     {
         for (i = 0; i < gObjCount; i++)
