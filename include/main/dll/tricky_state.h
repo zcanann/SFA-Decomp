@@ -70,6 +70,13 @@ typedef struct TrickyPackedSlots {
     u8 unusedPromptSlotBits : 2;
 } TrickyPackedSlots;
 
+#define TRICKY_COMMAND_PHASE_IDLE      -1
+#define TRICKY_COMMAND_PHASE_NONE      0
+#define TRICKY_COMMAND_PHASE_DIG       1
+#define TRICKY_COMMAND_PHASE_GUARD     3
+#define TRICKY_COMMAND_PHASE_FLAME     4
+#define TRICKY_COMMAND_PHASE_PLAY_BALL 5
+
 #define MAX_COMM_PRESENT 10
 
 typedef struct TrickyCommand {

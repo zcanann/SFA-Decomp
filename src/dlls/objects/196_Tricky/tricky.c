@@ -285,12 +285,6 @@ extern const f32 gTrickyAnimTransitionFrames[1];
 #define TRICKY_TURN_LARGE_ANGLE          0x3555
 #define TRICKY_TURN_MEDIUM_ANGLE         0x2000
 #define TRICKY_COMMAND_TTL_FRAMES        3
-#define TRICKY_COMMAND_PHASE_IDLE        -1
-#define TRICKY_COMMAND_PHASE_NONE        0
-#define TRICKY_COMMAND_PHASE_DIG         1
-#define TRICKY_COMMAND_PHASE_GUARD       3
-#define TRICKY_COMMAND_PHASE_FLAME       4
-#define TRICKY_COMMAND_PHASE_PLAY_BALL   5
 
 #define TRICKY_STATE_FLAG_SIDESTEP                0x20  /* apply sidestepDelta lateral offset */
 #define TRICKY_STATE_FLAG_BACKSTEP                0x40  /* apply backstepDelta offset */
@@ -7294,7 +7288,7 @@ int Tricky_getCurrentCommandPhase(GameObject* obj, int* outCommandPhase) {
 int Tricky_updateSideCommandPrompts(GameObject* obj) {
     TrickyState* state;
     u32 commandMask;
-    char commandKind;
+    s8 commandKind;
     u16 questPromptSfxId;
     u8 showQuestPrompt;
     u8 showExclamationPrompt;
@@ -7337,12 +7331,12 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             for (i = 0; i < state->commandCount; i++) {
                 ref = (int)state + i * sizeof(TrickyCommand);
                 commandKind = ((TrickyState*)ref)->commands[0].commandKind;
-                if (commandKind == '\0') {
+                if (commandKind == TRICKY_COMMAND_KIND_NORMAL) {
                     if (((TrickyState*)ref)->commands[0].targetObj->anim.romDefNo == TRICKY_OBJ_BLUE_MUSHROOM) {
                         showFoodVoicePrompt = true;
                     }
                     showExclamationPrompt = true;
-                } else if (commandKind == '\x01') {
+                } else if (commandKind == TRICKY_COMMAND_KIND_PRIORITY) {
                     showQuestPrompt = true;
                 }
             }
