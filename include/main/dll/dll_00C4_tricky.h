@@ -3,7 +3,7 @@
 
 #include "game/objects/object.h"
 
-#define TRICKY_ITEM_ID_COUNT 5
+#define TRICKY_COMMAND_QUERY_COUNT 5
 
 #define TRICKY_COMMAND_KIND_NORMAL   0
 #define TRICKY_COMMAND_KIND_PRIORITY 1
@@ -22,14 +22,14 @@
 
 #define TRICKY_COMMAND_TYPE_TO_FLAG(commandType) (1 << (commandType))
 
-typedef struct TrickyItemIdList {
-    s32 ids[TRICKY_ITEM_ID_COUNT];
-} TrickyItemIdList;
+typedef struct TrickyCommandTypeList {
+    s32 commandTypes[TRICKY_COMMAND_QUERY_COUNT];
+} TrickyCommandTypeList;
 
-STATIC_ASSERT(sizeof(TrickyItemIdList) == 0x14);
+STATIC_ASSERT(sizeof(TrickyCommandTypeList) == 0x14);
 
-extern const TrickyItemIdList gTrickyCmdQueryInit;
-extern const TrickyItemIdList gTrickyFoodItemIds;
+extern const TrickyCommandTypeList gTrickyCommandQueryInit;
+extern const TrickyCommandTypeList gTrickyFoodCommandQuery;
 #include "types.h"
 #include "main/dll/tricky_state.h"
 #include "main/objseq.h"

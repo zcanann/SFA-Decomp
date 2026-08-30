@@ -5411,12 +5411,12 @@ void tricky_state04_nop(void) {
  * key off (which RomCurveDef leaves in its pad).
  */
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state);
-const TrickyItemIdList gTrickyCmdQueryInit = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
-                                               TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
-                                               TRICKY_COMMAND_TYPE_PLAY_BALL}};
-const TrickyItemIdList gTrickyFoodItemIds = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
-                                              TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
-                                              TRICKY_COMMAND_TYPE_PLAY_BALL}};
+const TrickyCommandTypeList gTrickyCommandQueryInit = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
+                                                        TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
+                                                        TRICKY_COMMAND_TYPE_PLAY_BALL}};
+const TrickyCommandTypeList gTrickyFoodCommandQuery = {{TRICKY_COMMAND_TYPE_CALL, TRICKY_COMMAND_TYPE_FIND_SECRET,
+                                                        TRICKY_COMMAND_TYPE_STAY, TRICKY_COMMAND_TYPE_FLAME,
+                                                        TRICKY_COMMAND_TYPE_PLAY_BALL}};
 
 static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
     TrickyState* sfxState = obj->extra;
@@ -6004,9 +6004,9 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
     TrickyState* tex;
     int result;
     short move;
-    TrickyItemIdList buf;
+    TrickyCommandTypeList commandQuery;
 
-    buf = gTrickyFoodItemIds;
+    commandQuery = gTrickyFoodCommandQuery;
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
         state->cooldownB.f = gTrickyFloatZero;
         {
@@ -6018,7 +6018,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
         state->substate = 0;
         return 1;
     }
-    result = (*gGameUIInterface)->isOneOfItemsBeingUsed(buf.ids, TRICKY_ITEM_ID_COUNT);
+    result = (*gGameUIInterface)->isOneOfItemsBeingUsed(commandQuery.commandTypes, TRICKY_COMMAND_QUERY_COUNT);
     switch (result) {
     case 0:
     case 1:
@@ -7761,14 +7761,14 @@ void Tricky_update(GameObject* obj) {
     f32 zero;
     f32 moveProgress;
     u8 loadedMapFlags[120];
-    TrickyItemIdList commandItemQuery;
+    TrickyCommandTypeList sideCommandQuery;
     TrickySfxPair impressSfxPair;
 
     debugTextBase = gTrickyDebugStringTable;
     debugData = (TrickyDebugCollisionData*)debugTextBase;
     trickyState = obj->extra;
     commandAlreadyQueued = 0;
-    commandItemQuery = gTrickyCmdQueryInit;
+    sideCommandQuery = gTrickyCommandQueryInit;
     impressSfxPair = sTrickyImpressSfxPair;
     Objfsa_UpdateWalkGroupPatches();
     if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && (void*)trickyState->spawnedChild == NULL &&
@@ -7870,7 +7870,8 @@ void Tricky_update(GameObject* obj) {
             (*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
             requestedCommand = 0;
         } else {
-            requestedCommand = (*gGameUIInterface)->isOneOfItemsBeingUsed(commandItemQuery.ids, TRICKY_ITEM_ID_COUNT);
+            requestedCommand =
+                (*gGameUIInterface)->isOneOfItemsBeingUsed(sideCommandQuery.commandTypes, TRICKY_COMMAND_QUERY_COUNT);
         }
         commandCursor = trickyState;
         count = trickyState->commandCount;
