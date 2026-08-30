@@ -77,6 +77,7 @@
 #include "main/game_ui_interface.h"
 #include "main/sky_interface.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "dolphin/pad.h"
 #include "main/pad.h"
 #include "main/dll/tricky_api.h"
 #include "main/objprint_api.h"
@@ -771,9 +772,9 @@ int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType c
 /* attacker romDefNo that triggers the staff-impact sfx (retail OBJECTS.bin). */
 #define SKEETLA_ATTACKER_SEQID_STAFF 0x69
 /* "staff" (DLL 0xE2) */
-#define SKEETLA_PARTICLE_SPAWN_FLAGS 0x200001
-#define TRICKY_HITMASK_ALL_SOURCES   0x7f
-#define TRICKY_HITMASK_NO_LOW_SOURCE 0x7e
+#define TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS 0x200001
+#define TRICKY_HITMASK_ALL_SOURCES         0x7f
+#define TRICKY_HITMASK_NO_LOW_SOURCE       0x7e
 
 enum TrickyDamageType {
     TRICKY_DAMAGE_INSTANT_DEATH = 0x01,
@@ -1824,10 +1825,12 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     }
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 
     args.x = state->sparkPos1X;
@@ -1836,10 +1839,12 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     args.objectId = obj->anim.rotX;
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject(obj, SKEETLA_PARTICLE_SPARK_A, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
-        (*gPartfxInterface)->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
+        (*gPartfxInterface)
+            ->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 }
 
@@ -3279,8 +3284,7 @@ void tricky_stateGoToWarpPoint(GameObject* self, TrickyState* state) {
  * "2" when the player sits within 2500.0f squared units of Tricky.
  */
 
-#define MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK 0x1000
-#define PRESSURESWITCHFB_REMOVE_GROUP_ID    0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
+#define PRESSURESWITCHFB_REMOVE_GROUP_ID 0x53 /* DLL 0xFB pressureswitchfb (self-registers) */
 
 int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state) {
     int result = 0;
@@ -3299,7 +3303,7 @@ int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state) {
     if (st->commandPhase != TRICKY_COMMAND_PHASE_GUARD) {
         GameObject* playerObj = st->playerObj;
 
-        if ((playerObj->objectFlags & MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK) != 0) {
+        if ((playerObj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0) {
             if (coordsToMapCell(tricky->anim.localPosX, tricky->anim.localPosZ) == 0x38) {
                 if ((mainGetBit(0x385) == 0) && (mainGetBit(0x384) != 0)) {
                     if ((mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) ||
@@ -3509,8 +3513,6 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
  *                                   drives the shared TRICKY_* state macros.
  */
 
-/* group owned by another DLL, queried here */
-#define ANIMOBJD2_OBJFLAG_FREED 0x40
 /* Objects spawned by the trickyUpdateCircling state machine (retail OBJECTS.bin names
    "TrickyFood" and "flameblast"). */
 #define ANIMOBJD2_TRICKY_FOOD_OBJ_ID 0x17b
@@ -3895,7 +3897,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             }
             {
                 GameObject* circlingWarpDetour = state->circlingWarpDetour;
-                if (circlingWarpDetour != NULL && (circlingWarpDetour->objectFlags & ANIMOBJD2_OBJFLAG_FREED)) {
+                if (circlingWarpDetour != NULL && (circlingWarpDetour->objectFlags & OBJECT_OBJFLAG_FREED)) {
                     state->circlingWarpDetour = NULL;
                     {
                         f32* px = &state->playerObj->anim.worldPosX;
@@ -5396,9 +5398,6 @@ void tricky_state04_nop(void) {
  * waterLevel/eventTime/currentTime ladder) chooses swim vs walk anims throughout.
  */
 
-/* GameCube controller button mask */
-#define PAD_BUTTON_A 0x100
-
 /* child objects spawned by this TU (retail OBJECTS.bin names) */
 #define TRICKY_CHILD_OBJ_FOOD 0x17b /* "TrickyFood" */
 
@@ -6076,7 +6075,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
         spawnBuf.posY = (obj)->anim.worldPosY;
         spawnBuf.posZ = (obj)->anim.worldPosZ;
         spawnBuf.scale = 0.7f;
-        (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
         break;
     }
     case TRICKY_ANIM_DIG_FOOD_END:
@@ -6267,7 +6266,9 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 fxBuf.posX = trickyState->renderPosX;
                 fxBuf.posY = 2.0f + trickyState->renderPosY;
                 fxBuf.posZ = trickyState->renderPosZ;
-                (*gPartfxInterface)->spawnObject((void*)obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, 0x200001, -1, NULL);
+                (*gPartfxInterface)
+                    ->spawnObject((void*)obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS,
+                                  -1, NULL);
             }
             trickyState->howlSparkleTimer = TRICKY_TIMER_30_FRAMES;
         }
@@ -6897,8 +6898,6 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
 #define TRICKY_TARGET_OBJ_WC_BEACON          0x50f
 #define TRICKY_TARGET_OBJ_ARW_TIMED_MIN      0x542
 
-/* GameObject.objectFlags bit (distinct field from stateFlags above). */
-#define TRICKY_OBJFLAG_PARENT_SLACK            0x1000
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_OBJGROUP                        1
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE           84
@@ -7180,7 +7179,7 @@ int Tricky_isPlayingBall(GameObject* obj) {
 
 int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj) {
     TrickyState* state = obj->extra;
-    s32 objBlocked = obj->objectFlags & TRICKY_OBJFLAG_PARENT_SLACK;
+    s32 objBlocked = obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK;
 
     if (objBlocked != 0) {
         return 0;
@@ -8362,15 +8361,15 @@ void Tricky_update(GameObject* obj) {
             }
         }
         if (trickyState->foodBlinkTimer >= TRICKY_CHILD_BLINK_HOLD_FRAMES) {
-            trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags | 0x4000;
+            trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags | OBJANIM_FLAG_HIDDEN;
         } else {
-            trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags & ~0x4000;
+            trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags & ~OBJANIM_FLAG_HIDDEN;
         }
         if (trickyState->foodForceBlinkTimer > TRICKY_CHILD_BLINK_FORCE_FRAMES) {
             if (trickyState->foodForceBlinkTimer > TRICKY_TIMER_600_FRAMES) {
                 trickyState->foodForceBlinkTimer -= TRICKY_TIMER_600_FRAMES;
             }
-            trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags | 0x4000;
+            trickyState->foodChild->anim.flags = trickyState->foodChild->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
         if (trickyState->foodVoiceTimer > TRICKY_CHILD_VOICE_PERIOD_FRAMES) {
             if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) {

@@ -404,8 +404,8 @@ typedef struct TrickyState {
         packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (exclamationPromptChild/questPromptChild/foodChild) */
     u8 pad7BD[0x7C0 - 0x7BD];
     f32 foodVoiceTimer; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
-    f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
-    f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's 0x4000 anim flag via gTrickyTimer20Frames */
+    f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's hidden anim flag */
+    f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's hidden anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
     u8 pendingFollowRequest;
     u8 pad7D1[0x7D4 - 0x7D1];
