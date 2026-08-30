@@ -275,6 +275,7 @@ extern const f32 gTrickyChildVoicePeriodFrames[1];
 #define TRICKY_ANIM_GUARD_GROWL          0x32
 #define TRICKY_ANIM_GROWL_WINDUP         0x33
 #define TRICKY_ANIM_DIG                  0x34
+#define TRICKY_PARTFX_HOWL_SPARKLE       0x7f0
 #define TRICKY_TURN_LARGE_ANGLE          0x3555
 #define TRICKY_TURN_MEDIUM_ANGLE         0x2000
 #define TRICKY_COMMAND_TTL_FRAMES        3
@@ -6222,11 +6223,11 @@ u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
 }
 
 int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
-    char bval;
+    char triggerId;
     short move;
-    float fval;
-    int b[1];
-    int val;
+    float sparkleTimer;
+    int inWater[1];
+    int eventIndex;
     PartFxSpawnParams fxBuf;
 
     if (tricky_handleFeedOrTalk(obj, trickyState) != 0) {
@@ -6247,37 +6248,37 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 (trickyState->cooldownB.f > gTrickyFloatZero)) {
                 trickyRequestMove(obj, TRICKY_ANIM_HOWL_END, 0.01f, 0);
             } else {
-                val = (*gSkyInterface)->getSunPosition(0);
-                if (val == 0) {
+                eventIndex = (*gSkyInterface)->getSunPosition(0);
+                if (eventIndex == 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_HOWL_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
                     trickyState->substate = 9;
                 }
             }
         }
-        for (val = 0; val < trickyState->animEvents.triggerCount; val++) {
-            bval = trickyState->animEvents.triggeredIds[val];
-            if (bval == '\0') {
+        for (eventIndex = 0; eventIndex < trickyState->animEvents.triggerCount; eventIndex++) {
+            triggerId = trickyState->animEvents.triggeredIds[eventIndex];
+            if (triggerId == '\0') {
                 objSoundStartTimed(obj, &trickyState->soundState, 0x390, 0x500, -1, 0);
-            } else if (bval == '\a') {
+            } else if (triggerId == '\a') {
                 objSoundStartTimed(obj, &trickyState->soundState, 0x391, 0x100, -1, 0);
             }
         }
-        fval = trickyState->sparkleFxTimer - timeDelta;
-        trickyState->sparkleFxTimer = fval;
-        if (fval <= gTrickyFloatZero) {
+        sparkleTimer = trickyState->howlSparkleTimer - timeDelta;
+        trickyState->howlSparkleTimer = sparkleTimer;
+        if (sparkleTimer <= gTrickyFloatZero) {
             if (((obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
                 fxBuf.posX = trickyState->renderPosX;
                 fxBuf.posY = 2.0f + trickyState->renderPosY;
                 fxBuf.posZ = trickyState->renderPosZ;
-                (*gPartfxInterface)->spawnObject((void*)obj, 0x7f0, &fxBuf, 0x200001, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, 0x200001, -1, NULL);
             }
-            trickyState->sparkleFxTimer = TRICKY_TIMER_30_FRAMES;
+            trickyState->howlSparkleTimer = TRICKY_TIMER_30_FRAMES;
         }
         break;
     case TRICKY_ANIM_HOWL_END:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            b[0] = skeetla_isInWater(trickyState);
-            if (b[0] != 0) {
+            inWater[0] = skeetla_isInWater(trickyState);
+            if (inWater[0] != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 trickyState->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
                 trickyState->particleTimer = gTrickyFloatZero;

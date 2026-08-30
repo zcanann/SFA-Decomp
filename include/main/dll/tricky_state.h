@@ -379,7 +379,7 @@ typedef struct TrickyState {
     f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to gTrickyTimer600Frames (tricky_substates) */
     f32 moveHoldTimer; /* f32 countdown primed to randomGetRange(120,240) on entering idle move 0x29; counted down in move 0x2a and on reaching the floor advances to move 0x2b or 0x2c (tricky_substates) */
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
-    f32 sparkleFxTimer;
+    f32 howlSparkleTimer; /* howl-call particle countdown; emits the 0x7F0 sparkle effect every 30 frames */
     TrickyCommand commands[MAX_COMM_PRESENT];
     u8 commandCount; /* number of queued Tricky commands (0..MAX_COMM_PRESENT); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
@@ -491,6 +491,7 @@ STATIC_ASSERT(offsetof(TrickyState, secretDigOriginZ) == 0x708);
 STATIC_ASSERT(offsetof(TrickyState, secretDigCurve) == 0x70C);
 STATIC_ASSERT(offsetof(TrickyState, secretDigWhineTimer) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, statusFlags) == 0x58);
+STATIC_ASSERT(offsetof(TrickyState, howlSparkleTimer) == 0x744);
 STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
 STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);
 STATIC_ASSERT(offsetof(TrickyState, exclamationPromptChild) == 0x7A8);
