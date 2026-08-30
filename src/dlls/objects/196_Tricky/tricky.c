@@ -205,13 +205,6 @@ extern const f32 gTrickyAudioEventMinSpeed[1];
 extern const f32 gTrickyAmbientActivityBase[1];
 extern const f64 gTrickyAmbientWanderScale[1];
 extern const f32 gTrickyChildVoicePeriodFrames[1];
-extern const f32 gTrickyAvoidanceRepathEpsilonSq[1];
-extern const f32 gTrickyRunMoveThreshold[1];
-extern const f32 gTrickyFastWalkMoveThreshold[1];
-extern const f32 gTrickySlowWalkMoveThreshold[1];
-extern const f32 gTrickyTurnMoveBlendSpeed[1];
-extern const f32 gTrickyAnimTransitionFrames[1];
-
 /* Repeated Tricky movement-animation contract values. */
 #define TRICKY_TIMER_20_FRAMES           (gTrickyTimer20Frames[0])
 #define TRICKY_WATER_COOLDOWN_FRAMES     TRICKY_TIMER_600_FRAMES
@@ -1266,6 +1259,13 @@ static inline void skeetla_faceMoveVector(GameObject* obj) {
     skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
+const f32 gTrickyAvoidanceRepathEpsilonSq[] = {0.0001f};
+const f32 gTrickyRunMoveThreshold[] = {2.5f};
+const f32 gTrickyFastWalkMoveThreshold[] = {0.66f};
+const f32 gTrickySlowWalkMoveThreshold[] = {0.33f};
+const f32 gTrickyTurnMoveBlendSpeed[] = {0.04f};
+const f32 gTrickyAnimTransitionFrames[] = {15.0f};
+
 #define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ (gTrickyAvoidanceRepathEpsilonSq[0])
 #define TRICKY_TINY_MOVE_BLEND_SPEED       (gTrickyAvoidanceRepathEpsilonSq[0])
 #define TRICKY_RUN_MOVE_THRESHOLD          (gTrickyRunMoveThreshold[0])
@@ -1453,13 +1453,6 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     }
     return 1;
 }
-
-const f32 gTrickyAvoidanceRepathEpsilonSq[] = {0.0001f};
-const f32 gTrickyRunMoveThreshold[] = {2.5f};
-const f32 gTrickyFastWalkMoveThreshold[] = {0.66f};
-const f32 gTrickySlowWalkMoveThreshold[] = {0.33f};
-const f32 gTrickyTurnMoveBlendSpeed[] = {0.04f};
-const f32 gTrickyAnimTransitionFrames[] = {15.0f};
 
 int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags) {
     TrickyState* state = obj->extra;
