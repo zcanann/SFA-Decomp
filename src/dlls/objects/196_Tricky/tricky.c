@@ -3355,7 +3355,7 @@ int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state) {
  * being outside [0x29,0x30), and no sfx already playing on channel 0x10.
  */
 
-#define CHILD_OBJECT_COUNT          7
+#define TRICKY_FLAME_CHILD_COUNT    7
 #define TRICKY_CHILD_OBJ_FLAMEBLAST 0x4f0 /* "flameblast" (DLL 0xF3) */
 
 enum {
@@ -3435,7 +3435,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
         if (trickyUpdateMovementState(obj, TRICKY_GROWL_DIG_START_RADIUS, trickyState) == 0) {
             if ((u8)Obj_CanSetupObject() != 0) {
                 trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
-                for (i = 0, slot = (void**)trickyState; i < CHILD_OBJECT_COUNT; slot++, i++) {
+                for (i = 0, slot = (void**)trickyState; i < TRICKY_FLAME_CHILD_COUNT; slot++, i++) {
                     setup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FLAMEBLAST);
                     setup->base.color[0] = 2;
                     setup->base.color[1] = 1;
@@ -3459,7 +3459,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
         if (obj->anim.currentMoveProgress >= TRICKY_FLAME_DONE_PROGRESS) {
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
             trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-            for (j = 0, slot2 = (void**)trickyState; j < CHILD_OBJECT_COUNT; slot2++, j++) {
+            for (j = 0, slot2 = (void**)trickyState; j < TRICKY_FLAME_CHILD_COUNT; slot2++, j++) {
                 objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(slot2));
             }
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
@@ -4441,9 +4441,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
 /* Tricky flame/guard AI. Spawns Tricky's flameblast (def 0x4F0) for the
  * fire-breath/guard behaviour. */
 
-#define TRICKY_GUARD_HELPER_COUNT   7
 #define TRICKY_GUARD_APPROACH_GROUP 3
-#define TRICKY_GUARD_HELPER_DEF_ID  0x04F0
 
 int trickyGuardFindBaddieTarget(TrickyState* state);
 
@@ -4483,7 +4481,7 @@ static inline void trickyStopFlameChildren(GameObject* obj, TrickyState* state) 
         int childIndex = 0;
         u8* childState = (u8*)state;
 
-        for (; childIndex < CHILD_OBJECT_COUNT; childState += sizeof(GameObject*), childIndex++) {
+        for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childState += sizeof(GameObject*), childIndex++) {
             objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(childState));
         }
     }
@@ -4497,7 +4495,7 @@ static inline void trickySpawnFlameChildren(GameObject* obj, TrickyState* state)
         int childIndex = 0;
         u8* childState = (u8*)state;
 
-        for (; childIndex < CHILD_OBJECT_COUNT; childState += sizeof(GameObject*), childIndex++) {
+        for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childState += sizeof(GameObject*), childIndex++) {
             FlameblastPlacement* setup =
                 (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FLAMEBLAST);
 
@@ -4631,10 +4629,10 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             if (trickyState->stats->energy != 0 && trickyState->guardCanSpawnHelpers != 0) {
                 if ((u8)Obj_CanSetupObject() != 0) {
                     trickyState->stateFlags = trickyState->stateFlags | TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
-                    for (helperIndex = 0, helperSlot = (void**)trickyState; helperIndex < TRICKY_GUARD_HELPER_COUNT;
+                    for (helperIndex = 0, helperSlot = (void**)trickyState; helperIndex < TRICKY_FLAME_CHILD_COUNT;
                          helperIndex++) {
                         helperSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*helperSetup),
-                                                                                 TRICKY_GUARD_HELPER_DEF_ID);
+                                                                                 TRICKY_CHILD_OBJ_FLAMEBLAST);
                         helperSetup->base.color[0] = 2;
                         helperSetup->base.color[1] = 1;
                         helperSetup->streamIndex = helperIndex;
@@ -4682,7 +4680,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                 trickyState->stateFlags = f2 & m;
             }
             trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-            for (finishIndex = 0, finishSlot = (void**)trickyState; finishIndex < TRICKY_GUARD_HELPER_COUNT;
+            for (finishIndex = 0, finishSlot = (void**)trickyState; finishIndex < TRICKY_FLAME_CHILD_COUNT;
                  finishIndex++) {
                 objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(finishSlot));
                 finishSlot++;
@@ -4973,9 +4971,9 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                     if ((u8)Obj_CanSetupObject() != 0) {
                         trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                         for (flameScratch = 0, flameChildCursor = (void**)trickyState;
-                             flameScratch < TRICKY_GUARD_HELPER_COUNT; flameScratch++) {
+                             flameScratch < TRICKY_FLAME_CHILD_COUNT; flameScratch++) {
                             flameSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*flameSetup),
-                                                                                    TRICKY_GUARD_HELPER_DEF_ID);
+                                                                                    TRICKY_CHILD_OBJ_FLAMEBLAST);
                             flameSetup->base.color[0] = 2;
                             flameSetup->base.color[1] = 1;
                             flameSetup->streamIndex = flameScratch;
@@ -4998,7 +4996,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                         }
                         trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
                         for (flameScratch = 0, flameChildCursor = (void**)trickyState;
-                             flameScratch < TRICKY_GUARD_HELPER_COUNT; flameScratch++) {
+                             flameScratch < TRICKY_FLAME_CHILD_COUNT; flameScratch++) {
                             objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(flameChildCursor));
                             flameChildCursor++;
                         }
@@ -5084,9 +5082,9 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                     if ((u8)Obj_CanSetupObject() != 0) {
                         trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                         for (flameScratch = 0, flameChildCursor = (void**)trickyState;
-                             flameScratch < TRICKY_GUARD_HELPER_COUNT; flameScratch++) {
+                             flameScratch < TRICKY_FLAME_CHILD_COUNT; flameScratch++) {
                             flameSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*flameSetup),
-                                                                                    TRICKY_GUARD_HELPER_DEF_ID);
+                                                                                    TRICKY_CHILD_OBJ_FLAMEBLAST);
                             flameSetup->base.color[0] = 2;
                             flameSetup->base.color[1] = 1;
                             flameSetup->streamIndex = flameScratch;
@@ -5109,7 +5107,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                         }
                         trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
                         for (releaseChildIndex = 0, releaseChildCursor = (void**)trickyState;
-                             releaseChildIndex < TRICKY_GUARD_HELPER_COUNT; releaseChildIndex++) {
+                             releaseChildIndex < TRICKY_FLAME_CHILD_COUNT; releaseChildIndex++) {
                             objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(releaseChildCursor));
                             releaseChildCursor++;
                         }
@@ -7051,7 +7049,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
             state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-            for (childIndex = 0, childSlot = (u8*)state; childIndex < CHILD_OBJECT_COUNT;
+            for (childIndex = 0, childSlot = (u8*)state; childIndex < TRICKY_FLAME_CHILD_COUNT;
                  childSlot += sizeof(GameObject*), childIndex++) {
                 objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(childSlot));
             }
@@ -7081,7 +7079,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
             if ((state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-                for (secondChildIndex = 0, childSlot = (u8*)state; secondChildIndex < CHILD_OBJECT_COUNT;
+                for (secondChildIndex = 0, childSlot = (u8*)state; secondChildIndex < TRICKY_FLAME_CHILD_COUNT;
                      childSlot += sizeof(GameObject*), secondChildIndex++) {
                     objSetAnimSpeedTo1(*trickyChildObjectSlotAtCursor(childSlot));
                 }
@@ -7095,7 +7093,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 }
             } else if ((u8)Obj_CanSetupObject()) {
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
-                for (childIndex = 0, spawnSlot = (u8*)state; childIndex < CHILD_OBJECT_COUNT;
+                for (childIndex = 0, spawnSlot = (u8*)state; childIndex < TRICKY_FLAME_CHILD_COUNT;
                      spawnSlot += sizeof(GameObject*), childIndex++) {
                     setup = Obj_AllocObjectSetup(sizeof(FlameblastPlacement), TRICKY_CHILD_OBJ_FLAMEBLAST);
                     ((FlameblastPlacement*)setup)->base.color[0] = 2;
