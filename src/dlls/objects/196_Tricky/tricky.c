@@ -205,6 +205,12 @@ extern const f32 gTrickyAudioEventMinSpeed[1];
 extern const f32 gTrickyAmbientActivityBase[1];
 extern const f64 gTrickyAmbientWanderScale[1];
 extern const f32 gTrickyChildVoicePeriodFrames[1];
+extern const f32 gTrickyAvoidanceRepathEpsilonSq[1];
+extern const f32 gTrickyRunMoveThreshold[1];
+extern const f32 gTrickyFastWalkMoveThreshold[1];
+extern const f32 gTrickySlowWalkMoveThreshold[1];
+extern const f32 gTrickyTurnMoveBlendSpeed[1];
+extern const f32 gTrickyAnimTransitionFrames[1];
 
 /* Repeated Tricky movement-animation contract values. */
 #define TRICKY_TIMER_20_FRAMES           (gTrickyTimer20Frames[0])
@@ -1284,11 +1290,6 @@ static inline void skeetla_playFootstepSfx(GameObject* obj, u16 sfxId) {
 }
 
 int moveTricky(GameObject* obj, f32* targetPos) {
-    extern const f32 gTrickyAvoidanceRepathEpsilonSq[1];
-    extern const f32 gTrickyRunMoveThreshold[1];
-    extern const f32 gTrickyFastWalkMoveThreshold[1];
-    extern const f32 gTrickySlowWalkMoveThreshold[1];
-    extern const f32 gTrickyTurnMoveBlendSpeed[1];
     f32 desiredNextPos[3];
     f32 avoidanceNextPos[3];
     u16 sfxIds[3];
