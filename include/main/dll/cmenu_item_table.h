@@ -88,15 +88,15 @@ typedef struct CMenuSection
  */
 
 /*
- * Tricky abilities (gCMenuTrickyAbilities, the useTricky == 1 section).
+ * Tricky sidekick command flags (gCMenuTrickyAbilities, the useTricky == 1 section).
  *
  * Unlike collectables, the tricky table is NOT gated by GameBits: ownedGameBit
- * is instead a single ABILITY BIT tested against gTrickyHudActionMask (shown)
+ * is instead a single command flag tested against gTrickyHudActionMask (shown)
  * and gTrickyHudItemMask (usable). Both masks are recomputed every frame by
  * drawTrickyHudOverlay() from the Tricky object's vtable (+0x20 = action mask,
  * +0x24 = usable mask); with no Tricky companion both are forced to 0.
  *
- *  bit    text   ability        icon     notes
+ *  bit    text   command        icon     notes
  *  ----   ----   -------        ----     -----
  *  0x01   0x3f7  Call Tricky    0xc81    whistle; Tricky comes to you
  *  0x20   0x3f8  Play Ball      0xc84    ball bought from the shop
@@ -106,20 +106,19 @@ typedef struct CMenuSection
  */
 
 /*
- * Tricky ability bits: Tricky_getAvailableCommands()'s return value and
+ * Tricky sidekick command flags: Tricky_getAvailableCommands()'s return value and
  * gTrickyHudActionMask/gTrickyHudItemMask (cmenu.c). Most values match the
  * "bit" column of gCMenuTrickyAbilities above. DISTRACT is the prompt-only
  * Baddie Alert sidekick slot: it can light Tricky's "bad guy" prompt but has no
  * normal C-menu row.
  */
-enum TrickyAbilityBit
-{
-    TRICKY_ABILITY_CALL        = 0x01, /* Call Tricky - whistle, come to player */
-    TRICKY_ABILITY_FIND_SECRET = 0x02, /* dig up buried items */
-    TRICKY_ABILITY_DISTRACT    = 0x04, /* prompt-only Baddie Alert target */
-    TRICKY_ABILITY_STAY        = 0x08, /* hold position (pressure plates) */
-    TRICKY_ABILITY_FLAME       = 0x10, /* fire breath */
-    TRICKY_ABILITY_PLAY_BALL   = 0x20, /* sidekick Play command / ball bought from the shop */
+enum TrickyCommandFlag {
+    TRICKY_COMMAND_FLAG_CALL = 0x01,        /* Call Tricky - whistle, come to player */
+    TRICKY_COMMAND_FLAG_FIND_SECRET = 0x02, /* dig up buried items */
+    TRICKY_COMMAND_FLAG_DISTRACT = 0x04,    /* prompt-only Baddie Alert target */
+    TRICKY_COMMAND_FLAG_STAY = 0x08,        /* hold position (pressure plates) */
+    TRICKY_COMMAND_FLAG_FLAME = 0x10,       /* fire breath */
+    TRICKY_COMMAND_FLAG_PLAY_BALL = 0x20,   /* sidekick Play command / ball bought from the shop */
 };
 
 /*

@@ -106,7 +106,7 @@ typedef struct TrickyState {
     u8 movementState;         /* TRICKY_MOVE_* path/jump phase selector */
     u8 substate;              /* per-state handler substate */
     u8 sideCommandPromptMask; /* transient sidekick command prompt bitmask:
-                                 |= TRICKY_COMMAND_TYPE_TO_ABILITY(commandType) when another object enables a command,
+                                 |= TRICKY_COMMAND_TYPE_TO_FLAG(commandType) when another object enables a command,
                                  OR'd with Call+Stay into the UI prompt mask, tested != 0, cleared to 0 (tricky) */
     u8 pad0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */

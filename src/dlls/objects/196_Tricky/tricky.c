@@ -7268,7 +7268,7 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, 
         trickyReportError(sSidekickCommandDebugTextBlock);
         return;
     }
-    state->sideCommandPromptMask = (u8)(state->sideCommandPromptMask | TRICKY_COMMAND_TYPE_TO_ABILITY(commandType));
+    state->sideCommandPromptMask = (u8)(state->sideCommandPromptMask | TRICKY_COMMAND_TYPE_TO_FLAG(commandType));
     commandIndex = 0;
     commandCursor = state;
     count = state->commandCount;
@@ -7324,10 +7324,10 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             state->sideCommandPromptMask = 0;
         }
-        commandMask = state->sideCommandPromptMask | (TRICKY_ABILITY_CALL | TRICKY_ABILITY_STAY);
+        commandMask = state->sideCommandPromptMask | (TRICKY_COMMAND_FLAG_CALL | TRICKY_COMMAND_FLAG_STAY);
         if (((state->stateIndex == TRICKY_STATE_GUARD) || (state->stateIndex == TRICKY_STATE_CIRCLING)) ||
             ((state->stateIndex == TRICKY_STATE_GROWL && (state->substate == 1)))) {
-            commandMask |= TRICKY_ABILITY_FLAME;
+            commandMask |= TRICKY_COMMAND_FLAG_FLAME;
             showExclamationPrompt = true;
         } else {
             if (trickyFindNearestUsableBaddie(state->playerObj, TRICKY_AMBIENT_ACTIVITY_BASE, 1) != NULL) {
@@ -7355,18 +7355,18 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             ref = playerIsInNormalControlUndisguisedOnLand((GameObject*)(ref));
             if ((ref != 0) && (bitVal = mainGetBit(GAMEBIT_NoBallsAllowed), bitVal == 0)) {
                 if (playerGetFlags3F0Bit5(state->playerObj) == 0) {
-                    commandMask |= TRICKY_ABILITY_PLAY_BALL;
+                    commandMask |= TRICKY_COMMAND_FLAG_PLAY_BALL;
                 }
             }
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) == 0) {
-            commandMask &= ~TRICKY_ABILITY_CALL;
+            commandMask &= ~TRICKY_COMMAND_FLAG_CALL;
         }
         if (mainGetBit(GAMEBIT_Tricky_Learned_Distract) == 0) {
-            commandMask &= ~TRICKY_ABILITY_DISTRACT;
+            commandMask &= ~TRICKY_COMMAND_FLAG_DISTRACT;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) == 0) {
-            commandMask &= ~TRICKY_ABILITY_FLAME;
+            commandMask &= ~TRICKY_COMMAND_FLAG_FLAME;
         }
         state->sideCommandPromptMask = 0;
         if ((showQuestPrompt) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
@@ -7478,15 +7478,15 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
 int Tricky_getAvailableCommands(GameObject* obj) {
     int r = 0;
     if (mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
-        r = TRICKY_ABILITY_FIND_SECRET | TRICKY_ABILITY_STAY;
+        r = TRICKY_COMMAND_FLAG_FIND_SECRET | TRICKY_COMMAND_FLAG_STAY;
         if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0) {
-            r |= TRICKY_ABILITY_CALL;
+            r |= TRICKY_COMMAND_FLAG_CALL;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
-            r |= TRICKY_ABILITY_PLAY_BALL;
+            r |= TRICKY_COMMAND_FLAG_PLAY_BALL;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
-            r |= TRICKY_ABILITY_FLAME;
+            r |= TRICKY_COMMAND_FLAG_FLAME;
         }
     }
     return r;
