@@ -103,11 +103,11 @@ typedef struct TrickyState {
     TrickyStats* stats;    /* persisted energy and ball-play statistics */
     GameObject* playerObj; /* owning player/sidekick object */
     u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
-    u8 movementState;      /* TRICKY_MOVE_* path/jump phase selector */
-    u8 substate;           /* per-state handler substate */
-    u8 commandRequestBits; /* pending-command request bitmask:
-                              |= TRICKY_COMMAND_TYPE_TO_ABILITY(commandType) on enqueue, OR'd with
-                              Call+Stay into the prompt mask, tested != 0, cleared to 0 (tricky) */
+    u8 movementState;         /* TRICKY_MOVE_* path/jump phase selector */
+    u8 substate;              /* per-state handler substate */
+    u8 sideCommandPromptMask; /* transient sidekick command prompt bitmask:
+                                 |= TRICKY_COMMAND_TYPE_TO_ABILITY(commandType) when another object enables a command,
+                                 OR'd with Call+Stay into the UI prompt mask, tested != 0, cleared to 0 (tricky) */
     u8 pad0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
@@ -137,8 +137,7 @@ typedef struct TrickyState {
         };
         struct {
             u8 ownsWarpHelperObject : 1;
-            u8 soundSuppressed
-                : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
+            u8 soundSuppressed : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
             u8 heightTracking : 1; /* statusFlags bit 5 */
             u8 statusFlagsLow : 5;
         };
@@ -392,7 +391,8 @@ typedef struct TrickyState {
     GameObject* questPromptChild;
     f32 questPromptTimer;
     GameObject* foodChild;
-    TrickyPackedSlots packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (exclamationPromptChild/questPromptChild/foodChild) */
+    TrickyPackedSlots
+        packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (exclamationPromptChild/questPromptChild/foodChild) */
     u8 pad7BD[0x7C0 - 0x7BD];
     f32 foodVoiceTimer; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
     f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
@@ -411,8 +411,7 @@ typedef struct TrickyState {
     union {
         u8 blendControlFlags; /* raw blend-channel control byte (bitfield view used by Tricky_updateBlendChannelWeight) */
         struct {
-            u8 blendPending
-                : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
+            u8 blendPending : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
             u8 blendActive : 1; /* bit 6: blend channel 1 ramp is running */
             u8 sequencePreserveBlend : 1;
             u8 blendControlFlagsRest : 5;
@@ -448,6 +447,7 @@ STATIC_ASSERT(offsetof(TrickyState, playerObj) == 0x4);
 STATIC_ASSERT(offsetof(TrickyState, stateIndex) == 0x8);
 STATIC_ASSERT(offsetof(TrickyState, substate) == 0xA);
 STATIC_ASSERT(offsetof(TrickyState, movementState) == 0x9);
+STATIC_ASSERT(offsetof(TrickyState, sideCommandPromptMask) == 0xB);
 STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
