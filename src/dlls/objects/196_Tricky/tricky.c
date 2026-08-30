@@ -1254,7 +1254,7 @@ static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turn
     }
 }
 
-static inline void skeetla_faceMoveVector(GameObject* obj) {
+static void skeetla_faceMoveVector(GameObject* obj) {
     s16 ignoredTurnDelta;
 
     skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
@@ -1296,6 +1296,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     f32 dirLength;
     f32 componentSpeed;
     f32 animPathSpeedDelta;
+    s16 turnDeltaScratch;
     int turnDeltaAbs;
 
     debugText = gTrickyDebugStringTable;
@@ -1339,7 +1340,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     }
 
     if (currentSpeed >= gTrickySmallSpeedStep) {
-        skeetla_faceMoveVector(obj);
+        skeetla_updateFacingFromMoveVector(obj, &turnDeltaScratch);
         if (skeetla_isInWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4479,10 +4480,10 @@ static inline void trickyStopFlameChildren(GameObject* obj, TrickyState* state) 
     state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     {
         int childIndex = 0;
-        u8* childState = (u8*)state;
+        GameObject** childSlot = state->flameChildren;
 
-        for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childState += sizeof(GameObject*), childIndex++) {
-            objSetAnimSpeedTo1(*trickyFlameChildSlotFromStateCursor(childState));
+        for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childSlot++, childIndex++) {
+            objSetAnimSpeedTo1(*childSlot);
         }
     }
     Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
@@ -4493,17 +4494,16 @@ static inline void trickySpawnFlameChildren(GameObject* obj, TrickyState* state)
     state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
     {
         int childIndex = 0;
-        u8* childState = (u8*)state;
+        GameObject** childSlot = state->flameChildren;
 
-        for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childState += sizeof(GameObject*), childIndex++) {
+        for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childSlot++, childIndex++) {
             FlameblastPlacement* setup =
                 (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FLAMEBLAST);
 
             setup->base.color[0] = 2;
             setup->base.color[1] = 1;
             setup->streamIndex = childIndex;
-            *trickyFlameChildSlotFromStateCursor(childState) =
-                objSetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+            *childSlot = objSetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
         }
     }
     Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_3db);
