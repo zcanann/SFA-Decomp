@@ -3529,13 +3529,24 @@ enum AnimObjD2Substate {
     ANIMOBJD2_SUBSTATE_ORBIT = 5     /* orbit and pick the best target */
 };
 
+/* Head-only prompt child setup used for TrickyFood, quest, exclamation, and badge bubbles. */
+typedef struct TrickyPromptChildSetup {
+    ObjPlacement base; /* 0x00 */
+    u8 pad18[0x20 - 0x18];
+} TrickyPromptChildSetup;
+
+STATIC_ASSERT(sizeof(TrickyPromptChildSetup) == 0x20);
+
 /* Spawn-setup buffer seeded in the substate-3 drip burst (defNo 0x4f0).
  * Reuses ObjPlacement's color head and adds a signed stream index at 0x1a. */
 typedef struct AnimObjD2DripSetup {
     ObjPlacement head; /* 0x00: color[0..1] written */
     u8 pad18[0x1a - 0x18];
     s16 index; /* 0x1a */
+    u8 pad1C[0x24 - 0x1C];
 } AnimObjD2DripSetup;
+
+STATIC_ASSERT(sizeof(AnimObjD2DripSetup) == 0x24);
 
 GameObject* trickyFindCirclingTarget(GameObject* obj, TrickyState* state);
 
@@ -3695,8 +3706,8 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                             state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
                         }
                         if (state->foodChild == NULL) {
-                            AnimObjD2DripSetup* setup =
-                                (AnimObjD2DripSetup*)Obj_AllocObjectSetup(0x20, ANIMOBJD2_TRICKY_FOOD_OBJ_ID);
+                            TrickyPromptChildSetup* setup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(
+                                sizeof(*setup), ANIMOBJD2_TRICKY_FOOD_OBJ_ID);
                             s8 slots[4];
                             int free_;
                             slots[0] = -1;
@@ -3723,7 +3734,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                                 free_ = -1;
                             }
                             state->packedSlots.foodChildSlot = free_;
-                            state->foodChild = objSetupObject(&setup->head, 4, -1, -1, obj->anim.parent);
+                            state->foodChild = objSetupObject(&setup->base, 4, -1, -1, obj->anim.parent);
                             ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
                             {
                                 f32 z3 = gTrickyFloatZero;
@@ -3775,7 +3786,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         break;
     }
     case ANIMOBJD2_SUBSTATE_SPAWN:
-        if (obj->anim.currentMove != 0x34) {
+        if (obj->anim.currentMove != TRICKY_ANIM_DIG) {
             break;
         }
         if (obj->anim.currentMoveProgress > TRICKY_CIRCLING_SPAWN_PROGRESS) {
@@ -3786,7 +3797,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                     u8* p = (u8*)state;
                     for (; i < TRICKY_FLAME_CHILD_COUNT; i++) {
                         AnimObjD2DripSetup* setup =
-                            (AnimObjD2DripSetup*)Obj_AllocObjectSetup(0x24, ANIMOBJD2_FLAMEBLAST_OBJ_ID);
+                            (AnimObjD2DripSetup*)Obj_AllocObjectSetup(sizeof(*setup), ANIMOBJD2_FLAMEBLAST_OBJ_ID);
                         setup->head.color[0] = 2;
                         setup->head.color[1] = 1;
                         setup->index = i;
@@ -6312,7 +6323,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
     if (state->foodChild == NULL && (u8)Obj_CanSetupObject() != 0) {
-        e = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
+        e = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_FOOD);
         slots[0] = -1;
         slots[1] = -1;
         slots[2] = -1;
@@ -7013,7 +7024,7 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
         state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
     }
     if (gTrickyWarpHelperObject == 0) {
-        ObjPlacement* setup = Obj_AllocObjectSetup(0x18, TRICKY_HELPER_WARP_OBJECT_ID);
+        ObjPlacement* setup = Obj_AllocObjectSetup(sizeof(ObjPlacement), TRICKY_HELPER_WARP_OBJECT_ID);
         gTrickyWarpHelperObject = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
     }
     state->ownsWarpHelperObject = 1;
@@ -7099,9 +7110,9 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
             if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && state->spawnedChild == NULL && (u8)Obj_CanSetupObject()) {
                 mapGetLoadedMapFlags(blockFlags);
                 if (blockFlags[0xd] != 0) {
-                    setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_A);
+                    setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_A);
                 } else {
-                    setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_B);
+                    setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_B);
                 }
                 state->spawnedChild = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
                 ObjLink_AttachChild(obj, state->spawnedChild, 3);
@@ -7368,7 +7379,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                       !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
                     objSoundStartTimed(obj, &((TrickyState*)ref)->soundState, questPromptSfxId, 0x500, 0xffffffff, 0);
                 }
-                setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_QUEST);
+                setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_QUEST);
                 questPromptOccupiedSlots[0] = -1;
                 questPromptOccupiedSlots[1] = -1;
                 questPromptOccupiedSlots[2] = -1;
@@ -7422,7 +7433,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                         objSoundStartTimed(obj, &refC->soundState, TRICKY_VOICE_SFX_BAD_GUY, 0x500, 0xffffffff, 0);
                     }
                 }
-                setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_EXCLAMATION);
+                setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_EXCLAMATION);
                 exclamationPromptOccupiedSlots[0] = -1;
                 exclamationPromptOccupiedSlots[1] = -1;
                 exclamationPromptOccupiedSlots[2] = -1;
@@ -7689,12 +7700,12 @@ static inline void trickyPlaySidekickVoice(GameObject* obj, u16 sfxId, int volum
 
 static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
     if (state->foodChild == NULL) {
-        ObjPlacement* setup;
+        TrickyPromptChildSetup* setup;
         s8 occupiedSlots[4];
         int freeSlot;
         f32 zero;
 
-        setup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_FOOD);
+        setup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FOOD);
         occupiedSlots[0] = -1;
         occupiedSlots[1] = -1;
         occupiedSlots[2] = -1;
@@ -7719,7 +7730,7 @@ static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
             freeSlot = -1;
         }
         state->packedSlots.foodChildSlot = freeSlot;
-        state->foodChild = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
+        state->foodChild = objSetupObject(&setup->base, 4, -1, -1, obj->anim.parent);
         ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
         zero = gTrickyFloatZero;
         state->foodVoiceTimer = zero;
@@ -7764,9 +7775,9 @@ void Tricky_update(GameObject* obj) {
         (u8)Obj_CanSetupObject()) {
         mapGetLoadedMapFlags(loadedMapFlags);
         if (loadedMapFlags[0xd] != 0) {
-            placementSetup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_A);
+            placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_A);
         } else {
-            placementSetup = Obj_AllocObjectSetup(0x20, TRICKY_CHILD_OBJ_BADGE_B);
+            placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_B);
         }
         trickyState->spawnedChild = objSetupObject(placementSetup, 4, -1, -1, obj->anim.parent);
         ObjLink_AttachChild(obj, trickyState->spawnedChild, 3);
@@ -8043,7 +8054,7 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_PLAY_BALL:
                     if ((u8)Obj_CanSetupObject()) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_PLAY_BALL;
-                        placementSetup = Obj_AllocObjectSetup(0x18, TRICKY_CHILD_OBJ_SIDEKICK_BALL);
+                        placementSetup = Obj_AllocObjectSetup(sizeof(ObjPlacement), TRICKY_CHILD_OBJ_SIDEKICK_BALL);
                         placementSetup->color[3] = 0xff;
                         placementSetup->color[0] = 2;
                         placementSetup->posX = obj->anim.worldPosX;
