@@ -42,8 +42,12 @@
 #include "main/obj_query.h"
 #include "main/objhits.h"
 
+#define ABS_EXPR(value) ((value) >= 0.0f ? value : -value)
+
 const f32 gDrakorHoverpadSpeedStep = 2.0f;
 f32 gDrakorHoverpadMtx[16];
+
+#define DRAKORHOVERPAD_SPEED_STEP (*(f32*)&gDrakorHoverpadSpeedStep)
 
 f32 gDrakorHoverpadSteerMaxSpeed = 5.0f;
 s16 lbl_803DC2FC = 3;
@@ -57,7 +61,7 @@ void drakorhoverpad_resetPendingMotion(GameObject* obj)
     if (g->p6 != 0)
     {
         g->p6 = 0;
-        p->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep);
+        p->commandSpeed = DRAKORHOVERPAD_SPEED_STEP;
     }
 }
 
@@ -153,12 +157,14 @@ void drakorhoverpad_getCameraPosition(GameObject* obj, f32* ox, f32* oy, f32* oz
 
 static inline f32 drakorhoverpad_nodeWobbleSin(RomCurveDef** slot, int angle)
 {
-    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathSinf(3.1415927f * (f32)angle / 32768.0f));
+    return DRAKORHOVERPAD_SPEED_STEP *
+           ((f32)(u32)(*slot)->tangentMag * mathSinf(3.1415927f * (f32)angle / 32768.0f));
 }
 
 static inline f32 drakorhoverpad_nodeWobbleCos(RomCurveDef** slot, int angle)
 {
-    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathCosf(3.1415927f * (f32)angle / 32768.0f));
+    return DRAKORHOVERPAD_SPEED_STEP *
+           ((f32)(u32)(*slot)->tangentMag * mathCosf(3.1415927f * (f32)angle / 32768.0f));
 }
 
 int drakorhoverpad_getDismountSide(void)
@@ -188,19 +194,6 @@ int drakorhoverpad_canMount(GameObject* obj)
 {
     DrakorHoverpadState* p = obj->extra;
     return p->pathFlags.f04;
-}
-
-static void drakorhoverpad_setupPathCurve(GameObject* obj, u8* p)
-{
-    int curveArg = 0x2a;
-
-    (*gRomCurveInterface)->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, 300.0f, &curveArg, -1);
-    Curve_AdvanceAlongPath((Curve*)(p + 4), 0.01f);
-}
-
-static f32 drakorhoverpad_nodeWobbleSpeed(RomCurveDef** slot, int angle)
-{
-    return (*(f32*)&gDrakorHoverpadSpeedStep) * ((f32)(u32)(*slot)->tangentMag * mathSinf(3.1415927f * (f32)angle / 32768.0f));
 }
 
 int drakorhoverpad_pickMaskedNextPoint(RomCurveDef* pad, int exclude, int maxIndex);
@@ -435,7 +428,7 @@ int drakorhoverpad_init(GameObject* obj)
         if (f->state == 3)
         {
             f->state = 0;
-            p->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep);
+            p->commandSpeed = DRAKORHOVERPAD_SPEED_STEP;
         }
         if (f->state == 4)
         {
@@ -446,7 +439,7 @@ int drakorhoverpad_init(GameObject* obj)
         {
             if (p->commandSpeed == 0.0f)
             {
-                p->commandSpeed = (f->b01 != 0) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+                p->commandSpeed = (f->b01 != 0) ? -2.0f : DRAKORHOVERPAD_SPEED_STEP;
             }
         }
         Sfx_PlayFromObject(obj, SFXTRIG_id_309);
@@ -538,7 +531,7 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         else
         {
             p->targetSpeed +=
-                (p->commandSpeed < 0.0f) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+                (p->commandSpeed < 0.0f) ? -2.0f : DRAKORHOVERPAD_SPEED_STEP;
         }
         break;
     case 9:
@@ -554,7 +547,7 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         else
         {
             p->targetSpeed +=
-                (p->commandSpeed < 0.0f) ? -2.0f : (*(f32*)&gDrakorHoverpadSpeedStep);
+                (p->commandSpeed < 0.0f) ? -2.0f : DRAKORHOVERPAD_SPEED_STEP;
         }
         break;
     case 5:
@@ -690,13 +683,13 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         {
             absP = -cur;
         }
-        if ((*(f32*)&gDrakorHoverpadSpeedStep) == absP)
+        if (DRAKORHOVERPAD_SPEED_STEP == absP)
         {
             p->commandSpeed = cur * half;
         }
         else
         {
-            p->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep) * cur;
+            p->commandSpeed = DRAKORHOVERPAD_SPEED_STEP * cur;
         }
         Sfx_PlayFromObject(obj, SFXTRIG_id_309);
         break;
@@ -794,14 +787,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
     Vec diff;
     f32 curvePos[3];
     f32 phase;
-    f32 wobbleY;
-    f32 limit;
-    f32 absH;
-    f32 absV;
     GameObject* nearest;
-    s16 yawDelta;
     int c;
-    int angle;
     int clamped;
     f32 spd;
 
@@ -820,7 +807,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
             (obj)->anim.localPosX = p->curve.posX;
             (obj)->anim.localPosY = p->curve.posY;
             (obj)->anim.localPosZ = p->curve.posZ;
-            p->commandSpeed = (*(f32*)&gDrakorHoverpadSpeedStep);
+            p->commandSpeed = 2.0f;
             Sfx_PlayFromObject(obj, SFXTRIG_id_308);
             Sfx_PlayFromObject(obj, SFXTRIG_id_30a);
         }
@@ -829,37 +816,31 @@ void drakorhoverpad_updateMain(GameObject* obj)
     curve = &p->curve;
     if (g->f08 != 0)
     {
-        angle = (s16)getAngle(sqrtf(curve->tangentX * curve->tangentX + curve->tangentZ * curve->tangentZ),
-                              curve->tangentY);
+        int angle = (s16)getAngle(sqrtf(curve->tangentX * curve->tangentX + curve->tangentZ * curve->tangentZ),
+                                  curve->tangentY);
+        f32 wobbleY;
+        f32 limit;
+
         phase = 3.1415927f * (f32)angle / 32768.0f;
         wobbleY = -0.7f * mathCosf(phase);
         limit = 0.1f * (0.7f * mathSinf(phase));
-        if (f->b40 != 0)
-        {
-            absH = (p->commandSpeed >= 0.0f) ? p->commandSpeed : -p->commandSpeed;
-            absV = (p->speed >= 0.0f)
-                       ? p->speed
-                       : -p->speed;
-            if (absV > absH + (*(f32*)&gDrakorHoverpadSpeedStep))
-            {
-                limit = limit + (*(f32*)&gDrakorHoverpadSpeedStep);
+        if (f->b40 != 0) {
+            f32 absH = ABS_EXPR(p->commandSpeed);
+            f32 absV = ABS_EXPR(p->speed);
+
+            if (absV > absH + 2.0f) {
+                limit += 2.0f;
             }
         }
-        if (f->state != 0)
-        {
-            limit = limit + (*(f32*)&gDrakorHoverpadSpeedStep);
+        if (f->state != 0) {
+            limit += 2.0f;
         }
-        p->speed = p->targetSpeed +
-                                                           (p->speed + wobbleY);
-        absV = p->speed;
-        absH = (absV >= 0.0f) ? absV : -absV;
-        if (absH < limit)
-        {
+        p->speed = p->targetSpeed + (p->speed + wobbleY);
+
+        if (ABS_EXPR(p->speed) < limit) {
             p->speed = p->commandSpeed;
-        }
-        else
-        {
-            p->speed += (absV > p->commandSpeed) ? -limit : limit;
+        } else {
+            p->speed += p->speed > p->commandSpeed ? -limit : limit;
         }
         ObjHits_SetHitVolumeSlot(&obj->anim, DRAKORHOVERPAD_HIT_VOLUME_SLOT, 1, 0);
     }
@@ -867,7 +848,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
     {
         ObjHits_DisableObject(obj);
         p->speed = p->commandSpeed;
-        gDrakorHoverpadSteerMaxSpeed = (*(f32*)&gDrakorHoverpadSpeedStep) * p->commandSpeed;
+        gDrakorHoverpadSteerMaxSpeed = 2.0f * p->commandSpeed;
     }
     if (p->speed < 0.0f)
     {
@@ -904,7 +885,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
         nearest = objGetNearestTypeTo(BOSSDRAKOR_OBJGROUP, obj, 0);
         if (nearest != NULL)
         {
-            yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
+            s16 yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
             if (yawDelta < -0x200)
             {
                 yawDelta = -0x200;
@@ -934,34 +915,27 @@ void drakorhoverpad_updateMain(GameObject* obj)
     else
     {
         s16 yawDelta;
+
         phase = sqrtf(curve->tangentX * curve->tangentX + curve->tangentZ * curve->tangentZ);
-        yawDelta = (s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) - (obj)->anim.rotX;
-        (obj)->anim.rotY = (s16)getAngle(curve->tangentY, phase);
-        if (yawDelta < -0x800)
-        {
+        yawDelta = (s16)(getAngle(curve->tangentX, curve->tangentZ) + 0x8000) - obj->anim.rotX;
+        obj->anim.rotY = (s16)getAngle(curve->tangentY, phase);
+        if (yawDelta < -0x800) {
             clamped = -0x800;
-        }
-        else if (yawDelta > 0x800)
-        {
+        } else if (yawDelta > 0x800) {
             clamped = 0x800;
-        }
-        else
-        {
+        } else {
             clamped = yawDelta;
         }
         c = (s16)clamped;
-        (obj)->anim.rotZ = (s16)((p->speed < 0.0f) ? c : -c);
-        (obj)->anim.rotX += (s16)((c < -0x100) ? -0x100 : (c > 0x100) ? 0x100 : c);
-        c = (obj)->anim.rotY;
-        if (c < -0x64)
-        {
+        obj->anim.rotZ = (s16)(p->speed < 0.0f ? c : -c);
+        obj->anim.rotX += (s16)(c < -0x100 ? -0x100 : c > 0x100 ? 0x100 : c);
+        c = obj->anim.rotY;
+        if (c < -0x64) {
             c = -0x64;
-        }
-        else if (c > 0x64)
-        {
+        } else if (c > 0x64) {
             c = 0x64;
         }
-        (obj)->anim.rotY = c;
+        obj->anim.rotY = c;
     }
     PSVECSubtract((Vec*)curvePos, &obj->anim.localPos, &diff);
     /* snapshot the shared steer speed before building the call args (the
