@@ -192,10 +192,10 @@ typedef struct TrickyState {
     f32 freezeEffectTimer; /* counts down by timeDelta while frozen; resets when the shatter effect fires */
     f32 freezeStunTimer;
     f32 freezeRecoverTimer;
-    u32 flags2DC;     /* flag word */
-    u32 flags2E0;     /* flag word tested alongside flags2DC (bits 0x100/0x800/0x1000) */
-    u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
-    u32 flags2E8;     /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
+    u32 controlFlags;     /* shared EnemyState actor-control slot at 0x2DC */
+    u32 prevControlFlags; /* controlFlags snapshot, tested for newly-raised control bits in the shared actor code */
+    u32 flags2E4;         /* shared EnemyState flags2E4 slot */
+    u32 flags2E8;         /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
     u16 impactSfxId;
     u8 pad2EE[0x2EF - 0x2EE];
     u8 actionId;     /* current action/move selector (0..5); compared against prevActionId to detect change */
@@ -457,6 +457,10 @@ STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
 STATIC_ASSERT(offsetof(TrickyState, physicsActive) == 0x25F);
 STATIC_ASSERT(offsetof(TrickyState, bboxTraceFlags) == 0x261);
+STATIC_ASSERT(offsetof(TrickyState, controlFlags) == 0x2DC);
+STATIC_ASSERT(offsetof(TrickyState, prevControlFlags) == 0x2E0);
+STATIC_ASSERT(offsetof(TrickyState, flags2E4) == 0x2E4);
+STATIC_ASSERT(offsetof(TrickyState, flags2E8) == 0x2E8);
 STATIC_ASSERT(offsetof(TrickyState, pathSpeed) == 0x310);
 STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
