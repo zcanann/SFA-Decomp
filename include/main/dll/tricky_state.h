@@ -190,20 +190,22 @@ typedef struct TrickyState {
     f32 lookDirZ;
     u8 pad2C4[0x2D0 - 0x2C4];
     f32 freezeEffectTimer; /* counts down by timeDelta while frozen; resets when the shatter effect fires */
-    f32 freezeStunTimer;
+    f32 repeatHitCooldown; /* shared EnemyState repeat-hit guard slot */
     f32 freezeRecoverTimer;
     u32 controlFlags;     /* shared EnemyState actor-control slot at 0x2DC */
     u32 prevControlFlags; /* controlFlags snapshot, tested for newly-raised control bits in the shared actor code */
     u32 flags2E4;         /* shared EnemyState flags2E4 slot */
     u32 flags2E8;         /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
-    u16 impactSfxId;
+    u16 hitStunFrames;    /* shared EnemyState hit-reaction duration slot */
     u8 pad2EE[0x2EF - 0x2EE];
     u8 actionId;     /* current action/move selector (0..5); compared against prevActionId to detect change */
     u8 prevActionId; /* previous frame's actionId */
-    u8 flags2F1;     /* bit flags (0x8/0x10/0x80) gating the spawn/anim paths */
+    u8 flags2F1;     /* decoded player-attack flags; shared with EnemyState hit/freeze handling */
     u8 pad2F2[0x2F5 - 0x2F2];
-    u8 spawnBits;
-    u8 pad2F6[0x2F8 - 0x2F6];
+    u8 spawnBits;             /* reward-drop selector decoded from the player attack flags */
+    u8 frozenFadeCounter : 5; /* countdown gating the frozen-shatter fade-in sfx */
+    u8 unk2F6 : 3;
+    u8 pad2F7[0x2F8 - 0x2F7];
     u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 pad2FA[0x300 - 0x2FA];
     f32 gravity; /* fall acceleration: velocityY -= gravity*dt, posY -= K*gravity*dt^2 */
@@ -457,10 +459,16 @@ STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
 STATIC_ASSERT(offsetof(TrickyState, physicsActive) == 0x25F);
 STATIC_ASSERT(offsetof(TrickyState, bboxTraceFlags) == 0x261);
+STATIC_ASSERT(offsetof(TrickyState, freezeEffectTimer) == 0x2D0);
+STATIC_ASSERT(offsetof(TrickyState, repeatHitCooldown) == 0x2D4);
+STATIC_ASSERT(offsetof(TrickyState, freezeRecoverTimer) == 0x2D8);
 STATIC_ASSERT(offsetof(TrickyState, controlFlags) == 0x2DC);
 STATIC_ASSERT(offsetof(TrickyState, prevControlFlags) == 0x2E0);
 STATIC_ASSERT(offsetof(TrickyState, flags2E4) == 0x2E4);
 STATIC_ASSERT(offsetof(TrickyState, flags2E8) == 0x2E8);
+STATIC_ASSERT(offsetof(TrickyState, hitStunFrames) == 0x2EC);
+STATIC_ASSERT(offsetof(TrickyState, flags2F1) == 0x2F1);
+STATIC_ASSERT(offsetof(TrickyState, spawnBits) == 0x2F5);
 STATIC_ASSERT(offsetof(TrickyState, pathSpeed) == 0x310);
 STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
