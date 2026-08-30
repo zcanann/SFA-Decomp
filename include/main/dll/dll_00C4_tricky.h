@@ -5,20 +5,24 @@
 
 #define TRICKY_COMMAND_QUERY_COUNT 5
 
-#define TRICKY_COMMAND_KIND_NORMAL   0
-#define TRICKY_COMMAND_KIND_PRIORITY 1
+enum TrickyCommandKind {
+    TRICKY_COMMAND_KIND_NORMAL = 0,
+    TRICKY_COMMAND_KIND_PRIORITY = 1
+};
 
 /*
  * Sidekick command active IDs. These are also the activeGameBit values in
  * gCMenuTrickyAbilities; DISTRACT is the prompt-only Baddie Alert branch that
  * uses the shared Find Secret icon slot but has no normal C-menu entry.
  */
-#define TRICKY_COMMAND_TYPE_CALL        0
-#define TRICKY_COMMAND_TYPE_FIND_SECRET 1
-#define TRICKY_COMMAND_TYPE_DISTRACT    2
-#define TRICKY_COMMAND_TYPE_STAY        3
-#define TRICKY_COMMAND_TYPE_FLAME       4
-#define TRICKY_COMMAND_TYPE_PLAY_BALL   5
+enum TrickyCommandType {
+    TRICKY_COMMAND_TYPE_CALL = 0,
+    TRICKY_COMMAND_TYPE_FIND_SECRET = 1,
+    TRICKY_COMMAND_TYPE_DISTRACT = 2,
+    TRICKY_COMMAND_TYPE_STAY = 3,
+    TRICKY_COMMAND_TYPE_FLAME = 4,
+    TRICKY_COMMAND_TYPE_PLAY_BALL = 5
+};
 
 #define TRICKY_COMMAND_TYPE_TO_FLAG(commandType) (1 << (commandType))
 
@@ -43,7 +47,8 @@ typedef struct TrickyCompanionInterface {
     void* pad00[8];
     int (*getAvailableCommands)(GameObject* tricky);
     int (*updateSideCommandPrompts)(GameObject* tricky);
-    void (*sideCommandEnable)(GameObject* tricky, GameObject* target, int commandKind, int commandType);
+    void (*sideCommandEnable)(GameObject* tricky, GameObject* target, enum TrickyCommandKind commandKind,
+                              enum TrickyCommandType commandType);
     u8 (*getEnergy)(GameObject* tricky);
     u8 (*getEnergyMax)(GameObject* tricky);
     void (*commandPlayBall)(GameObject* tricky, int enabled, GameObject* target);
@@ -75,7 +80,8 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state);
 void tricky_stateIdleWander(GameObject* obj, TrickyState* state);
 int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj);
 void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* targetObj);
-void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType);
+void sideCommandEnable(GameObject* obj, GameObject* targetObj, enum TrickyCommandKind commandKind,
+                       enum TrickyCommandType commandType);
 int Tricky_updateSideCommandPrompts(GameObject* obj);
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
 void Tricky_init(GameObject* obj);

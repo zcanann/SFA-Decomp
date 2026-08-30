@@ -686,7 +686,7 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     }
 }
 
-int trickySelectQueuedCommandTarget(TrickyState* state, int commandType) {
+int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType commandType) {
     f32 bestPriorityDist;
     f32 bestFallbackDist;
     TrickyState* commandCursor;
@@ -4095,7 +4095,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     move = (obj)->anim.currentMove;
                     if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &extra->soundState, 861, 1280, -1, 0);
+                            objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_IM_NOT_DOING_IT, 1280, -1, 0);
                         }
                     }
                 }
@@ -4160,7 +4160,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                         }
                     }
                     if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &extra->soundState, 865, 1280, -1, 0);
+                        objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_LAUGH, 1280, -1, 0);
                     }
                 }
             } else {
@@ -4294,7 +4294,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
                     move = obj->anim.currentMove;
                     if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &extra->soundState, 864, 1280, -1, 0);
+                            objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM, 1280, -1, 0);
                         }
                     }
                 }
@@ -5921,7 +5921,7 @@ int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
         tricky_startRandomIdleMove(obj, state);
     } else if ((u8)trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, state) != 1) {
         state->thorntailIdleMovePending = 1;
-        sfxId = randomGetRange(862, 863);
+        sfxId = randomGetRange(TRICKY_VOICE_SFX_HELLO, TRICKY_VOICE_SFX_HI_FELLA);
         tex = obj->extra;
         if (tex->soundSuppressed == 0) {
             move = obj->anim.currentMove;
@@ -6017,7 +6017,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
             move = (obj)->anim.currentMove;
             if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
                 if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                    objSoundStartTimed(obj, &tex->soundState, 861, 1280, -1, 0);
+                    objSoundStartTimed(obj, &tex->soundState, TRICKY_VOICE_SFX_IM_NOT_DOING_IT, 1280, -1, 0);
                 }
             }
         }
@@ -6436,7 +6436,8 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
                     currentMove = (obj)->anim.currentMove;
                     if (currentMove >= TRICKY_VOICE_MOVE_END || currentMove < TRICKY_VOICE_MOVE_MIN) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &voiceState->soundState, 861, 1280, -1, 0);
+                            objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_IM_NOT_DOING_IT, 1280, -1,
+                                               0);
                         }
                     }
                 }
@@ -7241,7 +7242,8 @@ u8 Tricky_getEnergy(GameObject* obj) {
     return state->stats->energy;
 }
 
-void sideCommandEnable(GameObject* obj, GameObject* targetObj, int commandKind, int commandType) {
+void sideCommandEnable(GameObject* obj, GameObject* targetObj, enum TrickyCommandKind commandKind,
+                       enum TrickyCommandType commandType) {
     int remaining;
     TrickyState* commandCursor;
     u32 count;

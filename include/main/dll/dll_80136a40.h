@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_80136A40_H_
 
 #include "game/objects/object.h"
+#include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/tricky_state.h"
 #include "types.h"
 #include "main/debug.h"
@@ -31,7 +32,7 @@ void objAnimFreeChildren(GameObject* obj, TrickyState* state, GameObject** child
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
 void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);
-int trickySelectQueuedCommandTarget(TrickyState* state, int commandType);
+int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType commandType);
 void trickyUpdateColorVariant(GameObject* obj, TrickyState* state);
 
 #endif
