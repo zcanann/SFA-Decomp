@@ -136,10 +136,13 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, disableGameBit) == 0x18);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 
-/* Rena audio enum names for Tricky voice lines. */
+/* Tricky voice trigger ids, with unnamed ids decoded against retail audio/data/Sfx.bin. */
+#define TRICKY_VOICE_SFX_FIND_SECRET_SNIFF     0x13c /* SFXnewtricky_01j, distinct trigger params */
 #define TRICKY_VOICE_SFX_TIRED                 0x298
 #define TRICKY_VOICE_SFX_GROWL                 0x299
+#define TRICKY_VOICE_SFX_SLEEP_BREATH          0x29a /* SFXsk_trbrth2/3, SFXsk_trgrwl1/2 */
 #define TRICKY_VOICE_SFX_ROLLING               0x29b
+#define TRICKY_VOICE_SFX_TOY_BARK              0x29c /* SFXsk_toysq2_c, SFXsk_trbark1/2 */
 #define TRICKY_VOICE_SFX_FINISH_FLAME          0x29d
 #define TRICKY_VOICE_SFX_WAIT_UP_FOX           0x34d
 #define TRICKY_VOICE_SFX_WAIT_FOR_ME           0x34e
@@ -166,6 +169,8 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 #define TRICKY_VOICE_SFX_MMMM_TASTY            0x363
 #define TRICKY_VOICE_SFX_IM_STUFFED            0x364
 #define TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING    0x365
+#define TRICKY_VOICE_SFX_SNORE_IN              0x390
+#define TRICKY_VOICE_SFX_SNORE_OUT             0x391
 #define TRICKY_VOICE_SFX_SCARED                0x392
 
 const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
@@ -6259,9 +6264,9 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         for (eventIndex = 0; eventIndex < trickyState->animEvents.triggerCount; eventIndex++) {
             triggerId = trickyState->animEvents.triggeredIds[eventIndex];
             if (triggerId == '\0') {
-                objSoundStartTimed(obj, &trickyState->soundState, 0x390, 0x500, -1, 0);
+                objSoundStartTimed(obj, &trickyState->soundState, TRICKY_VOICE_SFX_SNORE_IN, 0x500, -1, 0);
             } else if (triggerId == '\a') {
-                objSoundStartTimed(obj, &trickyState->soundState, 0x391, 0x100, -1, 0);
+                objSoundStartTimed(obj, &trickyState->soundState, TRICKY_VOICE_SFX_SNORE_OUT, 0x100, -1, 0);
             }
         }
         sparkleTimer = trickyState->howlSparkleTimer - timeDelta;
@@ -6324,7 +6329,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         if (sfxState->soundSuppressed == 0 &&
             ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
             Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &sfxState->soundState, 0x29a, 0x100, -1, 0);
+            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_SLEEP_BREATH, 0x100, -1, 0);
         }
         state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
@@ -6889,6 +6894,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
 #define TRICKY_TARGET_OBJ_DIM_ICE_WALL       0x1c9
 #define TRICKY_TARGET_OBJ_SH_PRESSURE        0x26c
 #define TRICKY_TARGET_OBJ_DFP_TRANSLA        0x352
+#define TRICKY_TARGET_OBJ_DFP_TARGET_B       0x358
 #define TRICKY_TARGET_OBJ_DR_CHIMMEY         0x470
 #define TRICKY_TARGET_OBJ_DR_COLLAPSE        0x475
 #define TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT   0x546
@@ -7912,7 +7918,7 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_FIND_SECRET:
                     trickyState->commandPhase = TRICKY_COMMAND_PHASE_DIG;
                     trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FIND_SECRET);
-                    trickyPlaySidekickVoice(obj, 0x13c, 0);
+                    trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_FIND_SECRET_SNIFF, 0);
                     switch (trickyState->followObj->anim.romDefNo) {
                     case SKEETLA_LINKED_SOURCE_ID_OBJ_A:
                         if (trickyState->stats->energy < 4) {
@@ -7964,7 +7970,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_FIND_SECRET_DIG;
                         }
                         break;
-                    case 0x358:
+                    case TRICKY_TARGET_OBJ_DFP_TARGET_B:
                         trickyState->stateIndex = TRICKY_STATE_GROWL;
                         break;
                     default:
@@ -8313,7 +8319,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->voiceCooldown = gTrickyFloatZero;
     }
     if (trickyState->voiceCooldown > gTrickyFloatZero) {
-        trickyPlaySidekickVoice(obj, 0x29c, 0x100);
+        trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_TOY_BARK, 0x100);
     }
     trickyUpdateCollisionAndPathState(obj);
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_IMPRESS_PENDING_U32) != 0) {
