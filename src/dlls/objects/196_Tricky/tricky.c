@@ -137,41 +137,43 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, disableGameBit) == 0x18);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 
 /* Tricky voice trigger ids, with unnamed ids decoded against retail audio/data/Sfx.bin. */
-#define TRICKY_VOICE_SFX_FIND_SECRET_SNIFF     0x13c /* SFXnewtricky_01j, distinct trigger params */
-#define TRICKY_VOICE_SFX_TIRED                 0x298
-#define TRICKY_VOICE_SFX_GROWL                 0x299
-#define TRICKY_VOICE_SFX_SLEEP_BREATH          0x29a /* SFXsk_trbrth2/3, SFXsk_trgrwl1/2 */
-#define TRICKY_VOICE_SFX_ROLLING               0x29b
-#define TRICKY_VOICE_SFX_TOY_BARK              0x29c /* SFXsk_toysq2_c, SFXsk_trbark1/2 */
-#define TRICKY_VOICE_SFX_FINISH_FLAME          0x29d
-#define TRICKY_VOICE_SFX_WAIT_UP_FOX           0x34d
-#define TRICKY_VOICE_SFX_WAIT_FOR_ME           0x34e
-#define TRICKY_VOICE_SFX_HEY                   0x34f
-#define TRICKY_VOICE_SFX_GET_OFF               0x350
-#define TRICKY_VOICE_SFX_LOOK_AT_THIS          0x351
-#define TRICKY_VOICE_SFX_IM_HUNGRY             0x352
-#define TRICKY_VOICE_SFX_YAWN2                 0x353
-#define TRICKY_VOICE_SFX_YAWN                  0x354
-#define TRICKY_VOICE_SFX_LETS_PLAY             0x355
-#define TRICKY_VOICE_SFX_COOL                  0x356
-#define TRICKY_VOICE_SFX_SNIFF                 0x357
-#define TRICKY_VOICE_SFX_BAD_GUY               0x358
-#define TRICKY_VOICE_SFX_FOOD                  0x359
-#define TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR 0x35a
-#define TRICKY_VOICE_SFX_GET_MFOX              0x35b
-#define TRICKY_VOICE_SFX_YEAH                  0x35c
-#define TRICKY_VOICE_SFX_IM_NOT_DOING_IT       0x35d
-#define TRICKY_VOICE_SFX_HELLO                 0x35e
-#define TRICKY_VOICE_SFX_HI_FELLA              0x35f
-#define TRICKY_VOICE_SFX_DUM_DE_DUM            0x360
-#define TRICKY_VOICE_SFX_LAUGH                 0x361
-#define TRICKY_VOICE_SFX_CHEWING               0x362
-#define TRICKY_VOICE_SFX_MMMM_TASTY            0x363
-#define TRICKY_VOICE_SFX_IM_STUFFED            0x364
-#define TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING    0x365
-#define TRICKY_VOICE_SFX_SNORE_IN              0x390
-#define TRICKY_VOICE_SFX_SNORE_OUT             0x391
-#define TRICKY_VOICE_SFX_SCARED                0x392
+typedef enum TrickyVoiceSfxId {
+    TRICKY_VOICE_SFX_FIND_SECRET_SNIFF = 0x13c, /* SFXnewtricky_01j, distinct trigger params */
+    TRICKY_VOICE_SFX_TIRED = 0x298,
+    TRICKY_VOICE_SFX_GROWL = 0x299,
+    TRICKY_VOICE_SFX_SLEEP_BREATH = 0x29a, /* SFXsk_trbrth2/3, SFXsk_trgrwl1/2 */
+    TRICKY_VOICE_SFX_ROLLING = 0x29b,
+    TRICKY_VOICE_SFX_TOY_BARK = 0x29c, /* SFXsk_toysq2_c, SFXsk_trbark1/2 */
+    TRICKY_VOICE_SFX_FINISH_FLAME = 0x29d,
+    TRICKY_VOICE_SFX_WAIT_UP_FOX = 0x34d,
+    TRICKY_VOICE_SFX_WAIT_FOR_ME = 0x34e,
+    TRICKY_VOICE_SFX_HEY = 0x34f,
+    TRICKY_VOICE_SFX_GET_OFF = 0x350,
+    TRICKY_VOICE_SFX_LOOK_AT_THIS = 0x351,
+    TRICKY_VOICE_SFX_IM_HUNGRY = 0x352,
+    TRICKY_VOICE_SFX_YAWN2 = 0x353,
+    TRICKY_VOICE_SFX_YAWN = 0x354,
+    TRICKY_VOICE_SFX_LETS_PLAY = 0x355,
+    TRICKY_VOICE_SFX_COOL = 0x356,
+    TRICKY_VOICE_SFX_SNIFF = 0x357,
+    TRICKY_VOICE_SFX_BAD_GUY = 0x358,
+    TRICKY_VOICE_SFX_FOOD = 0x359,
+    TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR = 0x35a,
+    TRICKY_VOICE_SFX_GET_MFOX = 0x35b,
+    TRICKY_VOICE_SFX_YEAH = 0x35c,
+    TRICKY_VOICE_SFX_IM_NOT_DOING_IT = 0x35d,
+    TRICKY_VOICE_SFX_HELLO = 0x35e,
+    TRICKY_VOICE_SFX_HI_FELLA = 0x35f,
+    TRICKY_VOICE_SFX_DUM_DE_DUM = 0x360,
+    TRICKY_VOICE_SFX_LAUGH = 0x361,
+    TRICKY_VOICE_SFX_CHEWING = 0x362,
+    TRICKY_VOICE_SFX_MMMM_TASTY = 0x363,
+    TRICKY_VOICE_SFX_IM_STUFFED = 0x364,
+    TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING = 0x365,
+    TRICKY_VOICE_SFX_SNORE_IN = 0x390,
+    TRICKY_VOICE_SFX_SNORE_OUT = 0x391,
+    TRICKY_VOICE_SFX_SCARED = 0x392,
+} TrickyVoiceSfxId;
 
 const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
 const TrickyVoiceSfxPair sTrickyImpressSfxPair = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
