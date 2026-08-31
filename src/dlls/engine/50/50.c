@@ -27,10 +27,10 @@ u8 gTitleScreenInitDvdErrorLatched;
 #define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
 
 Texture* gTitleScreenInitLoadingTextures[4];
-extern f32 lbl_803E1CF0;
-extern f32 gTitleScreenInitAlphaMax;
-extern f32 gTitleScreenInitFadeFrames;
-extern f32 lbl_803E1D00;
+extern const f32 gTitleScreenInitTextureLodZero;
+extern const f32 gTitleScreenInitAlphaMax;
+extern const f32 gTitleScreenInitFadeFrames;
+extern const f32 lbl_803E1D00;
 
 void runLoadingScreens(void)
 {
@@ -162,8 +162,8 @@ static inline void initLoadingScreenTexturesBody(void)
         texObj = (GXTexObj*)textureHeader->gxTexObj;
         GXInitTexObj(texObj, (u8*)textureHeader + sizeof(Texture), textureHeader->width, textureHeader->height,
                      textureHeader->format, textureHeader->wrapS, textureHeader->wrapT, 0);
-        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, lbl_803E1CF0, lbl_803E1CF0,
-                        lbl_803E1CF0, 0, 0, 0);
+        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, gTitleScreenInitTextureLodZero,
+                        gTitleScreenInitTextureLodZero, gTitleScreenInitTextureLodZero, 0, 0, 0);
         GXInitTexObjUserData(texObj, textureHeader);
         textureFormat = GXGetTexObjFmt(texObj);
         textureWidth = GXGetTexObjWidth(texObj);
@@ -230,3 +230,10 @@ ObjectDescriptor6 TitleScreenInit_funcs = {
     (ObjectDescriptorCallback)TitleScreenInit_frameEnd,
     (ObjectDescriptorCallback)TitleScreenInit_render,
 };
+
+const f32 gTitleScreenInitTextureLodZero = 0.0f;
+const f32 gTitleScreenInitAlphaMax = 255.0f;
+const f32 gTitleScreenInitFadeFrames = 30.0f;
+const f32 lbl_803E1CFC = 0.0f;
+const f32 lbl_803E1D00 = 0.0f;
+const f32 lbl_803E1D04 = 0.0f;
