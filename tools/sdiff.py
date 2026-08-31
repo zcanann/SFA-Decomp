@@ -21,13 +21,14 @@ and worth reading -- but note the converse is NOT a defect to fix: retail naming
 float that we emit anonymously is the documented phantom (CLAUDE.md), and is almost always
 already byte-identical. Confirm against the section bytes before believing it.
 
-Usage:  python3 tools/sdiff.py <unit> <symbol>
+Usage:  python3 tools/sdiff.py [--map] <unit> <symbol>
         unit accepts either form: "main/shader.c" or "main/main/shader"
 """
 import re
 import subprocess
 import sys
 import difflib
+from collections import Counter
 
 BRANCH = re.compile(r'^(b|ba|bl|bla|bc|bca|bcl|bdnz|bdz|b[a-z]{1,3}[+-]?)\s')
 
@@ -123,11 +124,32 @@ def insns(s, blind):
     return out
 
 
+def reg_map(regions):
+    """Count same-shape register differences from the raw diff regions."""
+    counts = Counter()
+    strip_regs = lambda s: re.sub(r'\b[rf]\d+\b', 'REG', s)
+    reg_re = re.compile(r'\b([rf]\d+)\b')
+    for _tag, _i1, _i2, _j1, _j2, target_lines, current_lines in regions:
+        if len(target_lines) != len(current_lines):
+            continue
+        for target, current in zip(target_lines, current_lines):
+            if target.startswith('RELOC') or current.startswith('RELOC'):
+                continue
+            if strip_regs(target) != strip_regs(current):
+                continue
+            for target_reg, current_reg in zip(reg_re.findall(target), reg_re.findall(current)):
+                if target_reg != current_reg:
+                    counts[(target_reg, current_reg)] += 1
+    return counts
+
+
 def main():
-    if len(sys.argv) != 3:
+    show_map = '--map' in sys.argv[1:]
+    argv = [arg for arg in sys.argv[1:] if arg != '--map']
+    if len(argv) != 2:
         print(__doc__)
         return 2
-    units, sym = norm_unit(sys.argv[1]), sys.argv[2]
+    units, sym = norm_unit(argv[0]), argv[1]
     r = None
     for unit in units:
         r = subprocess.run([sys.executable, 'tools/function_objdump.py', unit, sym],
@@ -142,6 +164,7 @@ def main():
         return 1
     tgt, cur = r.stdout.split('===== current')
 
+    raw_regions = []
     for blind in (False, True):
         T, C = insns(tgt, blind), insns(cur, blind)
         sm = difflib.SequenceMatcher(a=T, b=C, autojunk=False)
@@ -152,6 +175,8 @@ def main():
                 continue
             n += max(i2 - i1, j2 - j1)
             regions.append((tag, i1, i2, j1, j2, T[i1:i2], C[j1:j2]))
+        if not blind:
+            raw_regions = regions
         print(('REGBLIND' if blind else 'RAW'), 'target', len(T), 'cur', len(C), 'diff', n)
         if blind and POOL_FOLDED:
             u = sorted(set(POOL_FOLDED))
@@ -165,6 +190,14 @@ def main():
             for tag, i1, i2, j1, j2, a, b in regions:
                 print(' ', tag, 'T[%d:%d]:' % (i1, i2), a,
                       '\n      C[%d:%d]:' % (j1, j2), b)
+    if show_map:
+        counts = reg_map(raw_regions)
+        if counts:
+            print('REGMAP target->current')
+            for (target_reg, current_reg), count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
+                print(' ', target_reg, '->', current_reg, count)
+        else:
+            print('REGMAP no same-shape register differences')
     return 0
 
 
