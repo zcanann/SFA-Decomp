@@ -4269,8 +4269,8 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                         break;
                     }
                     move = (obj)->anim.currentMove;
-                    if (move < 48) {
-                        if (move >= 41) {
+                    if (move < TRICKY_VOICE_MOVE_END) {
+                        if (move >= TRICKY_VOICE_MOVE_MIN) {
                             break;
                         }
                     }
@@ -7005,6 +7005,8 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
 #define TRICKY_SPAWN_ROMDEF_QUEST         0x17c /* TrickyQuest */
 #define TRICKY_SPAWN_ROMDEF_EXCLAMATION   0x175 /* TrickyExcla */
 #define TRICKY_SPAWN_ROMDEF_SIDEKICK_BALL 0x112 /* SidekickBal (DLL 0xF5) */
+#define TRICKY_BADGE_MAP_FLAG_INDEX       0x0d
+#define TRICKY_BADGE_CHILD_SLOT           3
 #define TRICKY_ROMDEF_BLUE_MUSHROOM       0x6a  /* BlueMushroo */
 
 /* Values compared against GameObject.anim.romDefNo in the sidekick command dispatcher.
@@ -7246,13 +7248,13 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
             mainSetBits(GAMEBIT_Tricky_LoadBadge, 1);
             if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && state->spawnedChild == NULL && (u8)Obj_CanSetupObject()) {
                 mapGetLoadedMapFlags(blockFlags);
-                if (blockFlags[0xd] != 0) {
+                if (blockFlags[TRICKY_BADGE_MAP_FLAG_INDEX] != 0) {
                     setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_A);
                 } else {
                     setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_B);
                 }
                 state->spawnedChild = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
-                ObjLink_AttachChild(obj, state->spawnedChild, 3);
+                ObjLink_AttachChild(obj, state->spawnedChild, TRICKY_BADGE_CHILD_SLOT);
             }
             break;
         case TRICKY_SEQUENCE_EVENT_STORE_ENERGY:
@@ -7920,13 +7922,13 @@ void Tricky_update(GameObject* obj) {
     if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && (void*)trickyState->spawnedChild == NULL &&
         (u8)Obj_CanSetupObject()) {
         mapGetLoadedMapFlags(loadedMapFlags);
-        if (loadedMapFlags[0xd] != 0) {
+        if (loadedMapFlags[TRICKY_BADGE_MAP_FLAG_INDEX] != 0) {
             placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_A);
         } else {
             placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_B);
         }
         trickyState->spawnedChild = objSetupObject(placementSetup, 4, -1, -1, obj->anim.parent);
-        ObjLink_AttachChild(obj, trickyState->spawnedChild, 3);
+        ObjLink_AttachChild(obj, trickyState->spawnedChild, TRICKY_BADGE_CHILD_SLOT);
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FEED_VOICE_PENDING_U32) != 0) {
         TrickyStats* stats = trickyState->stats;
@@ -7959,7 +7961,7 @@ void Tricky_update(GameObject* obj) {
             trickyState->homePosY = obj->anim.worldPosY;
             trickyState->homePosZ = obj->anim.worldPosZ;
             (*gPathControlInterface)->attachObject((void*)obj, &trickyState->pathControlFlags);
-            if (obj->anim.currentMove == 8 || obj->anim.currentMove == 7) {
+            if (obj->anim.currentMove == TRICKY_ANIM_SWIM_TURN || obj->anim.currentMove == TRICKY_ANIM_SWIM) {
                 trickyState->waterLevel = gTrickyEventStaleSeconds;
                 trickyState->eventTime = TRICKY_LOST_EVENT_TIME;
             } else {
