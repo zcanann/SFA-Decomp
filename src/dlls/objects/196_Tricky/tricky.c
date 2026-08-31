@@ -7013,51 +7013,65 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
     }
 }
 
-/* group owned by another DLL, queried here */
-
 /* child/reward objects spawned by this DLL (retail OBJECTS.bin remap-source names) */
-#define TRICKY_SPAWN_ROMDEF_BADGE_A       0x244 /* TrickyBadge */
-#define TRICKY_SPAWN_ROMDEF_BADGE_B       0x254 /* TrickyBadge */
-#define TRICKY_SPAWN_ROMDEF_QUEST         0x17c /* TrickyQuest */
-#define TRICKY_SPAWN_ROMDEF_EXCLAMATION   0x175 /* TrickyExcla */
-#define TRICKY_SPAWN_ROMDEF_SIDEKICK_BALL 0x112 /* SidekickBal (DLL 0xF5) */
-#define TRICKY_BADGE_MAP_FLAG_INDEX       0x0d
-#define TRICKY_BADGE_CHILD_SLOT           3
-#define TRICKY_ROMDEF_BLUE_MUSHROOM       0x6a  /* BlueMushroo */
+typedef enum TrickySpawnRomDefNo {
+    TRICKY_SPAWN_ROMDEF_SIDEKICK_BALL = 0x112, /* SidekickBal (DLL 0xF5) */
+    TRICKY_SPAWN_ROMDEF_EXCLAMATION = 0x175,   /* TrickyExcla */
+    TRICKY_SPAWN_ROMDEF_QUEST = 0x17c,         /* TrickyQuest */
+    TRICKY_SPAWN_ROMDEF_BADGE_A = 0x244,       /* TrickyBadge */
+    TRICKY_SPAWN_ROMDEF_BADGE_B = 0x254,       /* TrickyBadge */
+} TrickySpawnRomDefNo;
 
-/* Values compared against GameObject.anim.romDefNo in the sidekick command dispatcher.
- * Most are object-catalog remap-source IDs rather than OBJECTS.bin def_id rows. */
-#define TRICKY_COMMAND_TARGET_WCTEMPLEPRE      0x36
-#define TRICKY_COMMAND_TARGET_SH_BEACON        0x3c
-#define TRICKY_COMMAND_TARGET_CCEYE_VINES      0x102
-#define TRICKY_COMMAND_TARGET_STAY_POINT       0x104
-#define TRICKY_COMMAND_TARGET_CF_DOOR_LIGHT    0x131
-#define TRICKY_COMMAND_TARGET_DIM_LOG_FIRE     0x191
-#define TRICKY_COMMAND_TARGET_LINK_BLUE_MUSH   0x193
-#define TRICKY_COMMAND_TARGET_BURNABLE_VINE    0x194
-#define TRICKY_COMMAND_TARGET_NW_MAMMOTH_G     0x195
-#define TRICKY_COMMAND_TARGET_LINK_SNOW_PRESS  0x19f
-#define TRICKY_COMMAND_TARGET_DIM_ICE_WALL     0x1c9
-#define TRICKY_COMMAND_TARGET_SH_PRESSURE      0x26c
-#define TRICKY_COMMAND_TARGET_DFP_TRANSLA      0x352
-#define TRICKY_COMMAND_TARGET_DFP_TARGET_B     0x358
-#define TRICKY_COMMAND_TARGET_DR_CHIMMEY       0x470
-#define TRICKY_COMMAND_TARGET_DR_COLLAPSE      0x475
-#define TRICKY_COMMAND_TARGET_VFP_PUZZLE_POINT 0x546
-#define TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT   0x551
-#define TRICKY_COMMAND_TARGET_MS_PLANTING_SEED 0x54c
-#define TRICKY_COMMAND_TARGET_SH_WHITEMUSH     0x658
-#define TRICKY_COMMAND_TARGET_ICE_HOLE         0x6f9
-#define TRICKY_COMMAND_TARGET_TRICKY_GUARD     0x6f0
-#define TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN   0x718
-#define TRICKY_COMMAND_TARGET_SC_PRESSURE      0x7c3
-#define TRICKY_COMMAND_TARGET_TUMBLEWEED2      0x3fb
-#define TRICKY_COMMAND_TARGET_WC_BEACON        0x50f
-#define TRICKY_COMMAND_TARGET_ARW_TIMED_MIN    0x542
+typedef enum TrickyPromptAttachment {
+    TRICKY_BADGE_MAP_FLAG_INDEX = 0x0d,
+    TRICKY_BADGE_CHILD_SLOT = 3,
+} TrickyPromptAttachment;
 
-#define TRICKY_OBJGROUP              1
+typedef enum TrickyCommandTargetRomDefNo {
+    TRICKY_ROMDEF_BLUE_MUSHROOM = 0x6a,              /* BlueMushroo */
+    TRICKY_COMMAND_TARGET_WCTEMPLEPRE = 0x36,        /* WCTemplePre */
+    TRICKY_COMMAND_TARGET_SH_BEACON = 0x3c,          /* SH_Beacon */
+    TRICKY_COMMAND_TARGET_CCEYE_VINES = 0x102,       /* CCeyeVines */
+    TRICKY_COMMAND_TARGET_STAY_POINT = 0x104,        /* StayPoint */
+    TRICKY_COMMAND_TARGET_CF_DOOR_LIGHT = 0x131,
+    TRICKY_COMMAND_TARGET_DIM_LOG_FIRE = 0x191,      /* DIMLogFire */
+    TRICKY_COMMAND_TARGET_LINK_BLUE_MUSH = 0x193,    /* LINK_BlueMu */
+    TRICKY_COMMAND_TARGET_BURNABLE_VINE = 0x194,     /* BurnableVin */
+    TRICKY_COMMAND_TARGET_NW_MAMMOTH_G = 0x195,
+    TRICKY_COMMAND_TARGET_LINK_SNOW_PRESS = 0x19f,   /* LINK_SnowPr */
+    TRICKY_COMMAND_TARGET_DIM_ICE_WALL = 0x1c9,      /* DIMIceWall */
+    TRICKY_COMMAND_TARGET_SH_PRESSURE = 0x26c,       /* SH_Pressure */
+    TRICKY_COMMAND_TARGET_DFP_TRANSLA = 0x352,       /* DFP_transla */
+    TRICKY_COMMAND_TARGET_DFP_TARGET_B = 0x358,
+    TRICKY_COMMAND_TARGET_TUMBLEWEED2 = 0x3fb,       /* Tumbleweed2 */
+    TRICKY_COMMAND_TARGET_DR_CHIMMEY = 0x470,        /* DR_Chimmey */
+    TRICKY_COMMAND_TARGET_DR_COLLAPSE = 0x475,
+    TRICKY_COMMAND_TARGET_WC_BEACON = 0x50f,         /* WCBeacon */
+    TRICKY_COMMAND_TARGET_ARW_TIMED_MIN = 0x542,
+    TRICKY_COMMAND_TARGET_VFP_PUZZLE_POINT = 0x546,  /* VFP_PuzzleP */
+    TRICKY_COMMAND_TARGET_MS_PLANTING_SEED = 0x54c,  /* MSPlantingS */
+    TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT = 0x551,    /* VFP_flamepo */
+    TRICKY_COMMAND_TARGET_SH_WHITEMUSH = 0x658,      /* SH_whitemus */
+    TRICKY_COMMAND_TARGET_TRICKY_GUARD = 0x6f0,      /* TrickyGuard */
+    TRICKY_COMMAND_TARGET_ICE_HOLE = 0x6f9,
+    TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN = 0x718,    /* DIMTruthHor */
+    TRICKY_COMMAND_TARGET_SC_PRESSURE = 0x7c3,       /* SC_Pressure */
+} TrickyCommandTargetRomDefNo;
+
+typedef enum TrickyObjectGroup {
+    TRICKY_OBJGROUP = 1,
+} TrickyObjectGroup;
+
+typedef enum TrickySpawnObjectId {
+    TRICKY_HELPER_WARP_OBJECT_ID = 0x25, /* "warp" transporter / WarpPoint */
+} TrickySpawnObjectId;
+
+typedef enum TrickySidekickBallSetupValue {
+    TRICKY_SIDEKICK_BALL_COLOR_VARIANT = 2,
+    TRICKY_SIDEKICK_BALL_ALPHA = 0xff,
+} TrickySidekickBallSetupValue;
+
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
-#define TRICKY_HELPER_WARP_OBJECT_ID 0x25 /* "warp" transporter / WarpPoint */
 
 typedef enum TrickySequenceEvent {
     TRICKY_SEQUENCE_EVENT_TOGGLE_FLAME_CHILDREN = 1,
@@ -8223,8 +8237,8 @@ void Tricky_update(GameObject* obj) {
                     if ((u8)Obj_CanSetupObject()) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_PLAY_BALL;
                         placementSetup = Obj_AllocObjectSetup(sizeof(ObjPlacement), TRICKY_SPAWN_ROMDEF_SIDEKICK_BALL);
-                        placementSetup->color[3] = 0xff;
-                        placementSetup->color[0] = 2;
+                        placementSetup->color[3] = TRICKY_SIDEKICK_BALL_ALPHA;
+                        placementSetup->color[0] = TRICKY_SIDEKICK_BALL_COLOR_VARIANT;
                         placementSetup->posX = obj->anim.worldPosX;
                         placementSetup->posY = obj->anim.worldPosY;
                         placementSetup->posZ = obj->anim.worldPosZ;
