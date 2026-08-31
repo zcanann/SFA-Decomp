@@ -285,6 +285,12 @@ extern const f32 gTrickyChildVoicePeriodFrames[1];
 #define TRICKY_ANIM_GROWL_WINDUP         0x33
 #define TRICKY_ANIM_DIG                  0x34
 #define TRICKY_PARTFX_HOWL_SPARKLE       0x7f0
+#define TRICKY_YAW_HALF_TURN             0x8000
+#define TRICKY_YAW_QUARTER_TURN          0x4000
+#define TRICKY_YAW_WRAP_RANGE            0xffff
+#define TRICKY_TURN_REQUEST_DEADBAND     0x10
+#define TRICKY_TURN_STEP_DEADBAND        0x200
+#define TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE 0x1000
 #define TRICKY_TURN_LARGE_ANGLE          0x3555
 #define TRICKY_TURN_MEDIUM_ANGLE         0x2000
 #define TRICKY_WATER_FOOTSTEP_SFX_ID     0x433
@@ -1165,11 +1171,11 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     wrappedYaw = (u16)(s16)targetYaw;
     currentYaw = obj->anim.rotX;
     delta = currentYaw - wrappedYaw;
-    if (delta > 0x8000) {
-        delta -= 0xffff;
+    if (delta > TRICKY_YAW_HALF_TURN) {
+        delta -= TRICKY_YAW_WRAP_RANGE;
     }
-    if (delta < -0x8000) {
-        delta += 0xffff;
+    if (delta < -TRICKY_YAW_HALF_TURN) {
+        delta += TRICKY_YAW_WRAP_RANGE;
     }
 
     if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
@@ -1179,20 +1185,20 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     }
     state->stateFlags &= TRICKY_STATE_TURN_SELECT_CLEAR_MASK;
 
-    if (delta > 0x10) {
+    if (delta > TRICKY_TURN_REQUEST_DEADBAND) {
         state->stateFlags |= TRICKY_STATE_TURN_RIGHT_FLAGS;
-    } else if (delta < -0x10) {
+    } else if (delta < -TRICKY_TURN_REQUEST_DEADBAND) {
         state->stateFlags |= TRICKY_STATE_TURN_LEFT_FLAGS;
     } else {
         obj->anim.rotX = targetYaw;
         return 0;
     }
 
-    if (delta > 0x200) {
+    if (delta > TRICKY_TURN_STEP_DEADBAND) {
         step = (s32)(TRICKY_YAW_STEP_RATE * timeDelta);
         obj->anim.rotX = currentYaw - step;
         state->stateFlags |= TRICKY_STATE_FLAG_TURNING;
-    } else if (delta < -0x200) {
+    } else if (delta < -TRICKY_TURN_STEP_DEADBAND) {
         step = (s32)(TRICKY_YAW_STEP_RATE * timeDelta);
         obj->anim.rotX = currentYaw + step;
         state->stateFlags |= TRICKY_STATE_FLAG_TURNING;
@@ -1208,7 +1214,7 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
  *
  * moveTricky steers toward a target point with object-avoidance
  * (trickyApplyObjectAvoidanceToStep) and picks a walk/run/turn anim plus
- * footstep sfx by speed. The RomCurve helpers (trickySelectRouteEntry and
+ * follow voice barks by speed. The RomCurve helpers (trickySelectRouteEntry and
  * friends) choose and walk the spline route Tricky follows, gated by game
  * bits on each curve. skeetla_spawnLinkedSparks emits the contact-spark
  * particles for the object Tricky is linked to.
@@ -1280,6 +1286,9 @@ const f32 gTrickyAnimTransitionFrames[] = {15.0f};
 #define TRICKY_SLOW_WALK_MOVE_THRESHOLD    (gTrickySlowWalkMoveThreshold[0])
 #define TRICKY_TURN_MOVE_BLEND_SPEED       (gTrickyTurnMoveBlendSpeed[0])
 #define TRICKY_ANIM_TRANSITION_FRAMES      (gTrickyAnimTransitionFrames[0])
+#define TRICKY_FOLLOW_VOICE_MIN_FRAMES     600
+#define TRICKY_FOLLOW_VOICE_MAX_FRAMES     1200
+#define TRICKY_FAST_FOLLOW_VOICE_THRESHOLD TRICKY_FLOAT_ONE
 
 static inline void trickyPlayMovementVoice(GameObject* obj, u16 sfxId) {
     TrickyState* state = obj->extra;
@@ -1293,7 +1302,7 @@ static inline void trickyPlayMovementVoice(GameObject* obj, u16 sfxId) {
 int moveTricky(GameObject* obj, f32* targetPos) {
     f32 desiredNextPos[3];
     f32 avoidanceNextPos[3];
-    u16 sfxIds[3];
+    u16 slowFollowVoiceSfxIds[3];
     u16 sfxId;
     char* debugText;
     TrickyState* state;
@@ -1301,8 +1310,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     f32 minMoveSpeed;
     f32 dirLength;
     f32 componentSpeed;
-    f32 animPathSpeedDelta;
-    s16 turnDeltaScratch;
+    f32 pathSpeedDeltaAbs;
+    s16 turnDelta;
     int turnDeltaAbs;
 
     debugText = gTrickyDebugStringTable;
@@ -1346,7 +1355,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     }
 
     if (currentSpeed >= gTrickySmallSpeedStep) {
-        trickyUpdateFacingFromMoveVector(obj, &turnDeltaScratch);
+        trickyUpdateFacingFromMoveVector(obj, &turnDelta);
         if (skeetla_isInWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -1355,29 +1364,30 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         } else {
             if (state->stateIndex == TRICKY_STATE_FOLLOW_PLAYER) {
                 if (trickyGetPathSpeedDelta(obj) >= gTrickyFloatZero) {
-                    animPathSpeedDelta = trickyGetPathSpeedDelta(obj);
+                    pathSpeedDeltaAbs = trickyGetPathSpeedDelta(obj);
                 } else {
-                    animPathSpeedDelta = trickyGetPathSpeedDelta(obj);
-                    animPathSpeedDelta = -animPathSpeedDelta;
+                    pathSpeedDeltaAbs = trickyGetPathSpeedDelta(obj);
+                    pathSpeedDeltaAbs = -pathSpeedDeltaAbs;
                 }
 
-                if (animPathSpeedDelta > gTrickyFloatZero) {
+                if (pathSpeedDeltaAbs > gTrickyFloatZero) {
                     state->sfxIntervalTimer -= timeDelta;
                     if (state->sfxIntervalTimer <= gTrickyFloatZero) {
-                        state->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
+                        state->sfxIntervalTimer =
+                            (f32)(int)randomGetRange(TRICKY_FOLLOW_VOICE_MIN_FRAMES, TRICKY_FOLLOW_VOICE_MAX_FRAMES);
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            if (currentSpeed > 1.0f) {
+                            if (currentSpeed > TRICKY_FAST_FOLLOW_VOICE_THRESHOLD) {
                                 sfxId = randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME);
                                 trickyPlayMovementVoice(obj, sfxId);
                             } else {
-                                *(u32*)sfxIds = *(u32*)gTrickySlowFollowVoiceSfxIds;
-                                sfxIds[2] = gTrickySlowFollowBallVoiceSfxId[0];
+                                *(u32*)slowFollowVoiceSfxIds = *(u32*)gTrickySlowFollowVoiceSfxIds;
+                                slowFollowVoiceSfxIds[2] = gTrickySlowFollowBallVoiceSfxId[0];
                                 if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
                                     randomGetRange(0, 2);
                                 } else {
                                     randomGetRange(0, 1);
                                 }
-                                sfxId = sfxIds[randomGetRange(0, 2)];
+                                sfxId = slowFollowVoiceSfxIds[randomGetRange(0, 2)];
                                 trickyPlayMovementVoice(obj, sfxId);
                             }
                         }
@@ -1389,7 +1399,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                 trickyRequestMove(obj, TRICKY_ANIM_LAND_RUN_LOOP, TRICKY_TINY_MOVE_BLEND_SPEED,
                                   TRICKY_MOVE_FLAG_WALK_LOOP);
-            } else if (currentSpeed > 1.0f) {
+            } else if (currentSpeed > TRICKY_FAST_FOLLOW_VOICE_THRESHOLD) {
                 trickyRequestMove(obj, TRICKY_ANIM_RUN, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
             } else if (currentSpeed > TRICKY_FAST_WALK_MOVE_THRESHOLD) {
                 trickyRequestMove(obj, TRICKY_ANIM_WALK_FAST, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_WALK_LOOP);
@@ -2063,18 +2073,18 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
         routeYaw =                                                                                                     \
             getAngle((state)->prevLocalPosX - (state)->route.posX, (state)->prevLocalPosZ - (state)->route.posZ);      \
         yawDelta = previousYaw - (u16)routeYaw;                                                                        \
-        if (0x8000 < yawDelta) {                                                                                       \
-            yawDelta = yawDelta - 0xffff;                                                                              \
+        if (TRICKY_YAW_HALF_TURN < yawDelta) {                                                                         \
+            yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;                                                               \
         }                                                                                                              \
-        if (yawDelta < -0x8000) {                                                                                      \
-            yawDelta = yawDelta + 0xffff;                                                                              \
+        if (yawDelta < -TRICKY_YAW_HALF_TURN) {                                                                        \
+            yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;                                                               \
         }                                                                                                              \
-        if (yawDelta > 0x4000) {                                                                                       \
-            yawDelta -= 0x8000;                                                                                        \
-        } else if (yawDelta < -0x4000) {                                                                               \
-            yawDelta += 0x8000;                                                                                        \
+        if (yawDelta > TRICKY_YAW_QUARTER_TURN) {                                                                      \
+            yawDelta -= TRICKY_YAW_HALF_TURN;                                                                          \
+        } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {                                                              \
+            yawDelta += TRICKY_YAW_HALF_TURN;                                                                          \
         }                                                                                                              \
-        if (0x1000 < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {                                                       \
+        if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {                             \
             (state)->speed = (previousSpeed);                                                                          \
             trickyUpdateApproachSpeed((obj), TRICKY_RUN_MOVE_THRESHOLD, (state), &(state)->route.posX, 1);             \
         }                                                                                                              \
@@ -4036,11 +4046,11 @@ void trickyUpdateCirclingTargetPosition(GameObject* obj, TrickyState* state) {
     }
 
     angleDelta = targetAngle - (s32)(u16)state->circlingAngle.u;
-    if (angleDelta > 0x8000) {
-        angleDelta -= 0xFFFF;
+    if (angleDelta > TRICKY_YAW_HALF_TURN) {
+        angleDelta -= TRICKY_YAW_WRAP_RANGE;
     }
-    if (angleDelta < -0x8000) {
-        angleDelta += 0xFFFF;
+    if (angleDelta < -TRICKY_YAW_HALF_TURN) {
+        angleDelta += TRICKY_YAW_WRAP_RANGE;
     }
 
     if (angleDelta >= 0) {
@@ -4972,16 +4982,16 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
             s16 flameYaw = (s16)(trickyState->flameEdgeNode->yaw << 8);
             s16 turnDelta = (s16)(flameYaw - (u16)obj->anim.rotX);
             int turnDeltaAbs;
-            if (turnDelta > 0x8000) {
-                turnDelta = (s16)(turnDelta - 0xFFFF);
+            if (turnDelta > TRICKY_YAW_HALF_TURN) {
+                turnDelta = (s16)(turnDelta - TRICKY_YAW_WRAP_RANGE);
             }
-            if (turnDelta < -0x8000) {
-                turnDelta = (s16)(turnDelta + 0xFFFF);
+            if (turnDelta < -TRICKY_YAW_HALF_TURN) {
+                turnDelta = (s16)(turnDelta + TRICKY_YAW_WRAP_RANGE);
             }
             turnDeltaAbs = turnDelta;
             turnDeltaAbs = (turnDeltaAbs >= 0) ? turnDeltaAbs : -turnDeltaAbs;
-            if (turnDeltaAbs >= 0x4000) {
-                flameYaw = (s16)(flameYaw + 0x8000);
+            if (turnDeltaAbs >= TRICKY_YAW_QUARTER_TURN) {
+                flameYaw = (s16)(flameYaw + TRICKY_YAW_HALF_TURN);
             }
             trickyTurnTowardYaw(obj, flameYaw);
         }
@@ -8224,11 +8234,11 @@ void Tricky_update(GameObject* obj) {
         int rotationStep;
 
         rotationDiff = trickyState->targetYaw - (u16)obj->anim.rotX;
-        if (rotationDiff > 0x8000) {
-            rotationDiff -= 0xffff;
+        if (rotationDiff > TRICKY_YAW_HALF_TURN) {
+            rotationDiff -= TRICKY_YAW_WRAP_RANGE;
         }
-        if (rotationDiff < -0x8000) {
-            rotationDiff += 0xffff;
+        if (rotationDiff < -TRICKY_YAW_HALF_TURN) {
+            rotationDiff += TRICKY_YAW_WRAP_RANGE;
         }
         rotationStep = (int)((f32)trickyState->animEvents.rootPitch * trickyState->rotStepScale);
         if ((rotationDiff >= 0 ? rotationDiff : -rotationDiff) >= 4) {
