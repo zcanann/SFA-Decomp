@@ -994,6 +994,11 @@ typedef enum TrickyFollowSubstate {
     TRICKY_FOLLOW_SUBSTATE_APPROACH_THORNTAIL = 12,
 } TrickyFollowSubstate;
 
+typedef enum TrickyPendingFollowRequest {
+    TRICKY_PENDING_FOLLOW_NONE = 0,
+    TRICKY_PENDING_FOLLOW_HANDOFF = 1,
+} TrickyPendingFollowRequest;
+
 char gTrickyDebugStringTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x41, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -5917,9 +5922,9 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     debugData = (TrickyDebugCollisionData*)debugTextBase;
     found = NULL;
     if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
-        if (state->pendingFollowRequest != 0) {
+        if (state->pendingFollowRequest != TRICKY_PENDING_FOLLOW_NONE) {
             switch ((int)state->pendingFollowRequest) {
-            case 1: {
+            case TRICKY_PENDING_FOLLOW_HANDOFF: {
                 target = state->pendingFollowObj;
                 followState = obj->extra;
                 if ((obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
@@ -5938,7 +5943,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                         followState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
                         followState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
                     } else {
-                        followState->pendingFollowRequest = 1;
+                        followState->pendingFollowRequest = TRICKY_PENDING_FOLLOW_HANDOFF;
                         followState->pendingFollowObj = target;
                         followState->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
                     }
@@ -5984,7 +5989,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
             default:
                 break;
             }
-            state->pendingFollowRequest = 0;
+            state->pendingFollowRequest = TRICKY_PENDING_FOLLOW_NONE;
             return;
         }
         found = Tricky_findNearestGroup4BObject(obj, state);
@@ -7347,7 +7352,7 @@ int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj) {
         state->substate = 0;
         state->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
     } else {
-        state->pendingFollowRequest = 1;
+        state->pendingFollowRequest = TRICKY_PENDING_FOLLOW_HANDOFF;
         state->pendingFollowObj = targetObj;
         state->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
     }

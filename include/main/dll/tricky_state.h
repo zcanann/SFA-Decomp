@@ -408,7 +408,7 @@ typedef struct TrickyState {
     f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's hidden anim flag */
     f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's hidden anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
-    u8 pendingFollowRequest;
+    u8 pendingFollowRequest; /* TrickyPendingFollowRequest byte: 0 none, 1 queued follow-target handoff */
     u8 pad7D1[0x7D4 - 0x7D1];
     GameObject* pendingFollowObj; /* target object handed off to a sibling Tricky */
     f32 footPoints[4][3];
