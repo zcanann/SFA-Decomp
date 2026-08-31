@@ -922,6 +922,36 @@ typedef enum TrickyStateId {
     TRICKY_STATE_GO_TO_WARP_POINT = 17,
 } TrickyStateId;
 
+typedef enum TrickyDigTunnelSubstate {
+    TRICKY_DIG_TUNNEL_INIT = 0,
+    TRICKY_DIG_TUNNEL_FINDING_ENTRY = 1,
+    TRICKY_DIG_TUNNEL_GOING_TO_START = 2,
+    TRICKY_DIG_TUNNEL_START_DIGGING = 3,
+    TRICKY_DIG_TUNNEL_DIGGING = 4,
+    TRICKY_DIG_TUNNEL_TO_EXIT_1 = 5,
+    TRICKY_DIG_TUNNEL_TO_EXIT_2 = 6,
+    TRICKY_DIG_TUNNEL_WAIT_FOR_PLAYER_GROUP = 7,
+} TrickyDigTunnelSubstate;
+
+typedef enum TrickySecretDigSubstate {
+    TRICKY_SECRET_DIG_SCAN_CURVE = 0,
+    TRICKY_SECRET_DIG_APPROACH_TARGET = 1,
+    TRICKY_SECRET_DIG_APPROACH_CURVE = 2,
+    TRICKY_SECRET_DIG_START_PRESS = 3,
+    TRICKY_SECRET_DIG_PRESSING = 4,
+} TrickySecretDigSubstate;
+
+typedef enum TrickyFetchBallSubstate {
+    TRICKY_FETCH_BALL_INIT = 0,
+    TRICKY_FETCH_BALL_CHASE = 1,
+    TRICKY_FETCH_BALL_THROW_DONE = 2,
+    TRICKY_FETCH_BALL_PICKUP_START = 3,
+    TRICKY_FETCH_BALL_CARRY_TO_PLAYER = 4,
+    TRICKY_FETCH_BALL_APPROACH_THROW_POINT = 5,
+    TRICKY_FETCH_BALL_LAUNCH = 6,
+    TRICKY_FETCH_BALL_WAIT_FOR_IDLE = 7,
+} TrickyFetchBallSubstate;
+
 char gTrickyDebugStringTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x41, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -4108,13 +4138,13 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
     f32* targetPos;
 
     switch (state->substate) {
-    case 0:
+    case TRICKY_FETCH_BALL_INIT:
         state->fetchBallObj = state->followObj;
         state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
-        state->substate = 1;
+        state->substate = TRICKY_FETCH_BALL_CHASE;
         state->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
         /* fall through */
-    case 1:
+    case TRICKY_FETCH_BALL_CHASE:
         if (sidekickBall_isHeldOrMoving(state->fetchBallObj) != 0) {
             status = trickyUpdateMovementState(obj, TRICKY_FETCH_BALL_REACH_RADIUS, state);
             if (status == 0) {
@@ -4127,7 +4157,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                                       TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 }
                 state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                state->substate = 3;
+                state->substate = TRICKY_FETCH_BALL_PICKUP_START;
                 sidekickBall_setIdle(state->fetchBallObj, obj);
             } else if (status == 2) {
                 extra = obj->extra;
@@ -4141,7 +4171,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     }
                 }
                 state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                state->substate = 0;
+                state->substate = TRICKY_FETCH_BALL_INIT;
                 resetTimer = gTrickyFloatZero;
                 state->cooldownA = resetTimer;
                 state->cooldownB.f = resetTimer;
@@ -4219,7 +4249,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             }
         }
         break;
-    case 6:
+    case TRICKY_FETCH_BALL_LAUNCH:
         if ((obj)->anim.currentMoveProgress >= TRICKY_FETCH_LAUNCH_PROGRESS) {
             status = (int)state->fetchBallObj;
             ((GameObject*)status)->anim.localPosY += TRICKY_DEFAULT_STOPPING_RADIUS;
@@ -4227,10 +4257,10 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             sidekickBall_launch(state->fetchBallObj, obj,
                                 -mathSinf(TRICKY_PI * (f32)(s32) * (short*)obj / TRICKY_ANGLE_HALF_TURN_UNITS), 1.0f,
                                 bob);
-            state->substate = 2;
+            state->substate = TRICKY_FETCH_BALL_THROW_DONE;
         }
         break;
-    case 2:
+    case TRICKY_FETCH_BALL_THROW_DONE:
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
             state->colorFadeTimer = TRICKY_TIMER_20_FRAMES;
             if (state->stats->ballReturnCount >= TRICKY_BALL_RETURN_COUNT_MAX) {
@@ -4244,7 +4274,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->stateFlags = flags & mask;
             }
-            state->substate = 7;
+            state->substate = TRICKY_FETCH_BALL_WAIT_FOR_IDLE;
             targetPos = &state->followObj->anim.worldPosX;
             if (state->targetPosPtr != targetPos) {
                 state->targetPosPtr = targetPos;
@@ -4258,7 +4288,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             }
         }
         break;
-    case 7:
+    case TRICKY_FETCH_BALL_WAIT_FOR_IDLE:
         status = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state);
         if (status != 1) {
             useSwimAnim = skeetla_isInWater(state);
@@ -4275,15 +4305,15 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         }
         if (sidekickBall_isIdle(state->followObj) != 0) {
             state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
-            state->substate = 1;
+            state->substate = TRICKY_FETCH_BALL_CHASE;
         }
         break;
-    case 3:
+    case TRICKY_FETCH_BALL_PICKUP_START:
         if ((obj)->anim.currentMoveProgress >= TRICKY_FOLLOW_ARC_HALF_PROGRESS) {
-            state->substate = 4;
+            state->substate = TRICKY_FETCH_BALL_CARRY_TO_PLAYER;
         }
         break;
-    case 4:
+    case TRICKY_FETCH_BALL_CARRY_TO_PLAYER:
         if ((obj)->anim.currentMoveProgress >= TRICKY_FLAME_DONE_PROGRESS) {
             targetPos = &state->playerObj->anim.worldPosX;
             if (state->targetPosPtr != targetPos) {
@@ -4296,8 +4326,8 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 }
                 state->linkedWalkGroup = 0;
             }
-            state->substate = 5;
-        case 5:
+            state->substate = TRICKY_FETCH_BALL_APPROACH_THROW_POINT;
+        case TRICKY_FETCH_BALL_APPROACH_THROW_POINT:
             if (trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, state) == 0) {
                 useSwimAnim = skeetla_isInWater(state);
                 if (useSwimAnim != 0) {
@@ -4307,7 +4337,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     trickyRequestMove(obj, TRICKY_ANIM_FETCH_THROW_LAND, TRICKY_FETCH_PICKUP_BLEND_SPEED,
                                       TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
                 }
-                state->substate = 6;
+                state->substate = TRICKY_FETCH_BALL_LAUNCH;
             }
         }
         break;
@@ -5513,7 +5543,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     debugTextBase = gTrickyDebugStringTable;
     sfxTable.raw = *(u32*)gTrickyDigTunnelCompleteSfxIds;
     switch (state->substate) {
-    case 0:
+    case TRICKY_DIG_TUNNEL_INIT:
         tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
         state->digTunnelEntryNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[0]);
         state->digTunnelStartNode.curve = tunnelNode;
@@ -5534,38 +5564,38 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             }
             state->linkedWalkGroup = 0;
         }
-        state->substate = 1;
-    case 1:
+        state->substate = TRICKY_DIG_TUNNEL_FINDING_ENTRY;
+    case TRICKY_DIG_TUNNEL_FINDING_ENTRY:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_FINDING);
         trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
         walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
         if (state->digTunnelEntryNode.curve->walkGroup == walkGroup) {
             state->movementState = TRICKY_MOVE_WALK_FREE;
-            state->substate = 2;
+            state->substate = TRICKY_DIG_TUNNEL_GOING_TO_START;
         }
         break;
-    case 2:
+    case TRICKY_DIG_TUNNEL_GOING_TO_START:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_GOINGTOSTART);
         targetPos = &state->digTunnelStartNode.curve->x;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
         if (moveTricky(obj, targetPos) == 0) {
             state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
-            state->substate = 3;
+            state->substate = TRICKY_DIG_TUNNEL_START_DIGGING;
         } else {
             if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) == 0) {
                 state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
             }
         }
         break;
-    case 3:
+    case TRICKY_DIG_TUNNEL_START_DIGGING:
         trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
                           TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
         state->dirX = state->digTunnelExitNode.curve->x - state->digTunnelStartNode.curve->x;
         state->dirZ = state->digTunnelExitNode.curve->z - state->digTunnelStartNode.curve->z;
         Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
         state->digTunnelWhineTimer.f = (f32)(int)randomGetRange(0x14, 0xb4);
-        state->substate = 4;
-    case 4:
+        state->substate = TRICKY_DIG_TUNNEL_DIGGING;
+    case TRICKY_DIG_TUNNEL_DIGGING:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_DIGGING);
         state->digTunnelWhineTimer.f -= timeDelta;
         if (state->digTunnelWhineTimer.f <= gTrickyFloatZero) {
@@ -5616,7 +5646,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             }
             state->stats->energy -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
-            state->substate = 5;
+            state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_1;
             sfxId = sfxTable.ids[randomGetRange(0, 1)];
             voiceState = obj->extra;
             if (voiceState->soundSuppressed == 0 &&
@@ -5626,17 +5656,17 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             }
         }
         break;
-    case 5:
+    case TRICKY_DIG_TUNNEL_TO_EXIT_1:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_TOEND1,
                          Vec_xzDistance(&obj->anim.worldPosX, &state->digTunnelExitNode.curve->x));
         targetPos = &state->digTunnelExitNode.curve->x;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
         if (moveTricky(obj, targetPos) == 0) {
             trickyAdvanceNode(state);
-            state->substate = 6;
+            state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_2;
         }
         break;
-    case 6:
+    case TRICKY_DIG_TUNNEL_TO_EXIT_2:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_TOEND2);
         targetPos = &state->digTunnelExitNode.curve->x;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
@@ -5652,10 +5682,10 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                 trickyDebugPrint(debugTextBase + TRICKY_DBG_OUT_OF_WATER);
             }
             state->stateFlags &= ~TRICKY_STATE_DIG_TUNNEL_FLAGS;
-            state->substate = 7;
+            state->substate = TRICKY_DIG_TUNNEL_WAIT_FOR_PLAYER_GROUP;
         }
         break;
-    case 7:
+    case TRICKY_DIG_TUNNEL_WAIT_FOR_PLAYER_GROUP:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_WAIT);
         walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&state->playerObj->anim.worldPosX, NULL);
         {
@@ -5664,7 +5694,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             currentGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
             if (currentGroup == walkGroup) {
                 state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                state->substate = 0;
+                state->substate = TRICKY_DIG_TUNNEL_INIT;
                 resetValue = gTrickyFloatZero;
                 state->cooldownA = resetValue;
                 state->cooldownB.f = resetValue;
@@ -5696,7 +5726,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     sfxTable.raw = *(u32*)gTrickySecretDigCompleteSfxIds;
     followObj = state->followObj;
     switch (state->substate) {
-    case 0:
+    case TRICKY_SECRET_DIG_SCAN_CURVE:
         state->secretDigCurve =
             Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1,
                                                  ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
@@ -5705,12 +5735,12 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ) {
             state->secretDigCurve = NULL;
         }
-        state->substate = 1;
-    case 1:
+        state->substate = TRICKY_SECRET_DIG_APPROACH_TARGET;
+    case TRICKY_SECRET_DIG_APPROACH_TARGET:
         movementResult = trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
         if (movementResult == 0) {
             if (state->secretDigCurve != NULL) {
-                state->substate = 2;
+                state->substate = TRICKY_SECRET_DIG_APPROACH_CURVE;
                 curvePos = &state->secretDigCurve->x;
                 if (state->targetPosPtr != curvePos) {
                     state->targetPosPtr = curvePos;
@@ -5724,7 +5754,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 }
             } else {
                 state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                state->substate = 3;
+                state->substate = TRICKY_SECRET_DIG_START_PRESS;
                 state->secretDigPressTimer = gTrickyFloatZero;
                 state->secretDigWhineTimer = (f32)(int)randomGetRange(0x28, 0x50);
                 Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
@@ -5733,7 +5763,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             }
         } else if (movementResult == 2) {
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            state->substate = 0;
+            state->substate = TRICKY_SECRET_DIG_SCAN_CURVE;
             z = gTrickyFloatZero;
             state->cooldownA = z;
             state->cooldownB.f = z;
@@ -5748,21 +5778,21 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             }
         }
         break;
-    case 2:
+    case TRICKY_SECRET_DIG_APPROACH_CURVE:
         if (trickyUpdateMovementState(obj, gTrickyMaxDistance, state) == 0) {
             state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            state->substate = 3;
+            state->substate = TRICKY_SECRET_DIG_START_PRESS;
             state->secretDigPressTimer = gTrickyFloatZero;
             Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
             trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
         }
         break;
-    case 3:
+    case TRICKY_SECRET_DIG_START_PRESS:
         state->secretDigPressTimer += timeDelta;
         state->secretDigWhineTimer -= timeDelta;
         if (state->secretDigPressTimer >= TRICKY_FETCH_THROW_DELAY_FRAMES) {
-            state->substate = 4;
+            state->substate = TRICKY_SECRET_DIG_PRESSING;
             state->secretDigOriginX = obj->anim.worldPosX;
             state->secretDigOriginZ = obj->anim.worldPosZ;
             curve = state->secretDigCurve;
@@ -5778,7 +5808,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             }
         }
         break;
-    case 4:
+    case TRICKY_SECRET_DIG_PRESSING:
         state->secretDigWhineTimer -= timeDelta;
         if (state->secretDigWhineTimer <= gTrickyFloatZero) {
             state->secretDigWhineTimer = (f32)(int)randomGetRange(0x28, 0x50);
@@ -5792,7 +5822,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->stats->energy -= 4;
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            state->substate = 0;
+            state->substate = TRICKY_SECRET_DIG_SCAN_CURVE;
             z = gTrickyFloatZero;
             state->cooldownA = z;
             state->cooldownB.f = z;
