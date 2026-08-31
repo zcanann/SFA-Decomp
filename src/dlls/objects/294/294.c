@@ -67,6 +67,31 @@
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/map_load.h"
 
+ObjectDescriptor gTriggerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)Trigger_initialise,
+    (ObjectDescriptorCallback)Trigger_release,
+    0,
+    (ObjectDescriptorCallback)Trigger_init,
+    (ObjectDescriptorCallback)Trigger_update,
+    (ObjectDescriptorCallback)Trigger_hitDetect,
+    (ObjectDescriptorCallback)Trigger_render,
+    (ObjectDescriptorCallback)Trigger_free,
+    (ObjectDescriptorCallback)Trigger_getObjectTypeId,
+    Trigger_getExtraSize,
+};
+
+char sMoonrockTriggerIdentFormat[] = "!!!!!!!!!!! TRIGGER %d  ident %d\n";
+char sTriggerDebugTextBlock[] = "initialise\n\0"
+                                "Trigger [%d], Environment Effect, Action Num [%d], Range [%d]\0\0\0"
+                                "^^^^^^^^\n^^^^^^^^\nLOAD %d\n\0\0"
+                                "^^^^^^^^\n^^^^^^^^\nFREE %d\n\0\0"
+                                "^^^^^^^^\n^^^^^^^^\nLEVELLOCKED level %d  bucket %d\n\0\0"
+                                "^^^^^^^^\n^^^^^^^^\nLEVELUNLOCKED level %d  bucket %d\n\0\0\0";
+
 typedef struct MmpTriggerPlaneState {
     u8 header[0xC];     /* 0x00 */
     f32 normalX;        /* 0x0C plane normal */
@@ -239,7 +264,7 @@ static void triggerEvalPlaneCrossing(GameObject* obj, GameObject* seqObj) {
 
         if ((localPos.x >= -state->clipHalfExtent) && (localPos.x <= state->clipHalfExtent) &&
             (localPos.y >= -state->clipHalfExtent) && (localPos.y <= state->clipHalfExtent)) {
-            OSReport("!!!!!!!!!!! TRIGGER %d  ident %d\n", triggerState, ((ObjPlacement*)data)->ident);
+            OSReport(sMoonrockTriggerIdentFormat, triggerState, ((ObjPlacement*)data)->ident);
             objInterpretSeq(obj, seqObj, triggerState, (int)farDist);
         }
     }
@@ -301,7 +326,7 @@ void MmpGyservent_setup(GameObject* obj, MMPTriggerGeyserPlacement* placement) {
     state->reach = 100.0f * obj->anim.rootMotionScale;
     state->nearRadiusSq = (145.0f * obj->anim.rootMotionScale) * (145.0f * obj->anim.rootMotionScale);
     if (placement->base.ident == MMP_GYSERVENT_DEBUG_IDENT) {
-        OSReport("initialise\n");
+        OSReport(sTriggerDebugTextBlock);
     }
 #undef rotMtx
 }
@@ -403,6 +428,7 @@ void triggerEvalEndpointSpheres(GameObject* obj, GameObject* seqObj) {
 #define TRIGGER_SFLAG_SEED_TARGET       0x40 /* first hit: seed target position from current, not previous */
 
 void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range) {
+    char* desc = (char*)&gTriggerObjDescriptor;
     u8* state = obj->extra;
     u8* p = (u8*)obj->anim.placementData + 0x18;
     u8 i = 0;
@@ -578,8 +604,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
             break;
         case 10:
             getEnvfxAct(obj, seqObj, (u16)((p[2] << 8) | p[3]), range);
-            OSReport("Trigger [%d], Environment Effect, Action Num [%d], Range [%d]", (int)obj->anim.classId,
-                     (p[2] << 8) | p[3], range);
+            OSReport(desc + 0x68, (int)obj->anim.classId, (p[2] << 8) | p[3], range);
             break;
         case 0xd:
             getLActions(obj, seqObj, (u16)((p[2] << 8) | p[3]), legCode, range, 0);
@@ -661,23 +686,23 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
             id = (p[2] << 8) | p[3];
             mapLoadDataFiles(id);
             loadModelAndAnimTabs();
-            OSReport("^^^^^^^^\n^^^^^^^^\nLOAD %d\n", id);
+            OSReport(desc + 0xa8, id);
             break;
         case 0x28:
             id = (p[2] << 8) | p[3];
             mapUnload(id, 0x20000000);
-            OSReport("^^^^^^^^\n^^^^^^^^\nFREE %d\n", id);
+            OSReport(desc + 0xc4, id);
             break;
         case 0x2e:
             defragMemory(0);
             break;
         case 0x2a:
             lockLevel(p[2], p[3]);
-            OSReport("^^^^^^^^\n^^^^^^^^\nLEVELLOCKED level %d  bucket %d\n", p[2], p[3]);
+            OSReport(desc + 0xe0, p[2], p[3]);
             break;
         case 0x2b:
             unlockLevel(p[2], p[3], 0);
-            OSReport("^^^^^^^^\n^^^^^^^^\nLEVELUNLOCKED level %d  bucket %d\n", p[2], p[3]);
+            OSReport(desc + 0x114, p[2], p[3]);
             break;
         case 0x2f:
             t = (int)objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, 0);
@@ -760,8 +785,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
         case 0x23:
             switch (p[2]) {
             case 0:
-                (*gMapEventInterface)
-                    ->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 0);
+                (*gMapEventInterface)->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 0);
                 break;
             case 1:
                 (*gMapEventInterface)->clearRestartPoint();
@@ -770,8 +794,7 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 (*gMapEventInterface)->gotoRestartPoint();
                 break;
             case 3:
-                (*gMapEventInterface)
-                    ->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 1);
+                (*gMapEventInterface)->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 1);
                 break;
             }
             break;
@@ -1148,20 +1171,3 @@ void Trigger_release(void) {
 
 void Trigger_initialise(void) {
 }
-
-ObjectDescriptor gTriggerObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    Trigger_initialise,
-    Trigger_release,
-    0,
-    (ObjectDescriptorCallback)Trigger_init,
-    Trigger_update,
-    (ObjectDescriptorCallback)Trigger_hitDetect,
-    Trigger_render,
-    (ObjectDescriptorCallback)Trigger_free,
-    (ObjectDescriptorCallback)Trigger_getObjectTypeId,
-    Trigger_getExtraSize,
-};
