@@ -32,21 +32,23 @@
  * "JUMPDOWN or JUMPUP", "JUMPDOWN_RUNUP"). The two states sharing the
  * "JUMPDOWN or JUMPUP" text are told apart by the sign of the verticalDelta
  * each one seeds: 0x0C climbs to the node, 0x0E descends to it. */
-#define TRICKY_MOVE_WALK_WAIT        0
-#define TRICKY_MOVE_WALK_FREE        1
-#define TRICKY_MOVE_WALK_START_PATCH 2
-#define TRICKY_MOVE_WALK_END_PATCH   3
-#define TRICKY_MOVE_WALK_PATCH_EXIT  4
-#define TRICKY_MOVE_CURVE_SETUP      5
-#define TRICKY_MOVE_WALK_TO_NODE     6
-#define TRICKY_MOVE_WALK_NODES       7
-#define TRICKY_MOVE_JUMP_RUNUP       8
-#define TRICKY_MOVE_JUMP_PREP        9
-#define TRICKY_MOVE_JUMPING          10
-#define TRICKY_MOVE_JUMPUP_RUNUP     11
-#define TRICKY_MOVE_JUMPUP           12
-#define TRICKY_MOVE_JUMPDOWN_RUNUP   13
-#define TRICKY_MOVE_JUMPDOWN         14
+typedef enum TrickyMovementState {
+    TRICKY_MOVE_WALK_WAIT = 0,
+    TRICKY_MOVE_WALK_FREE = 1,
+    TRICKY_MOVE_WALK_START_PATCH = 2,
+    TRICKY_MOVE_WALK_END_PATCH = 3,
+    TRICKY_MOVE_WALK_PATCH_EXIT = 4,
+    TRICKY_MOVE_CURVE_SETUP = 5,
+    TRICKY_MOVE_WALK_TO_NODE = 6,
+    TRICKY_MOVE_WALK_NODES = 7,
+    TRICKY_MOVE_JUMP_RUNUP = 8,
+    TRICKY_MOVE_JUMP_PREP = 9,
+    TRICKY_MOVE_JUMPING = 10,
+    TRICKY_MOVE_JUMPUP_RUNUP = 11,
+    TRICKY_MOVE_JUMPUP = 12,
+    TRICKY_MOVE_JUMPDOWN_RUNUP = 13,
+    TRICKY_MOVE_JUMPDOWN = 14,
+} TrickyMovementState;
 
 typedef union TrickyScratch {
     GameObject* obj;
@@ -70,12 +72,14 @@ typedef struct TrickyPackedSlots {
     u8 unusedPromptSlotBits : 2;
 } TrickyPackedSlots;
 
-#define TRICKY_COMMAND_PHASE_IDLE      -1
-#define TRICKY_COMMAND_PHASE_NONE      0
-#define TRICKY_COMMAND_PHASE_DIG       1
-#define TRICKY_COMMAND_PHASE_GUARD     3
-#define TRICKY_COMMAND_PHASE_FLAME     4
-#define TRICKY_COMMAND_PHASE_PLAY_BALL 5
+typedef enum TrickyCommandPhase {
+    TRICKY_COMMAND_PHASE_IDLE = -1,
+    TRICKY_COMMAND_PHASE_NONE = 0,
+    TRICKY_COMMAND_PHASE_DIG = 1,
+    TRICKY_COMMAND_PHASE_GUARD = 3,
+    TRICKY_COMMAND_PHASE_FLAME = 4,
+    TRICKY_COMMAND_PHASE_PLAY_BALL = 5,
+} TrickyCommandPhase;
 
 #define MAX_COMM_PRESENT 10
 
