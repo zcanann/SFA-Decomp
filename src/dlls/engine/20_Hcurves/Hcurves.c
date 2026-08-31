@@ -1203,12 +1203,6 @@ inline int objfsaExitOutside(ObjfsaWalkGroup* g, s16 ex, s16 ez)
     return edge != 4;
 }
 
-static void objfsaSetPlaneNormal(ObjfsaPatchPlane* pl, f32 dxn, f32 dzn)
-{
-    pl->normalX = (s16)(32767.0f * dxn);
-    pl->normalZ = (s16)(32767.0f * dzn);
-}
-
 void Objfsa_UpdateWalkGroupPatches(void)
 {
     char* slotPtr;
