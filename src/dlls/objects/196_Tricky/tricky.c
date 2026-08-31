@@ -958,6 +958,16 @@ typedef enum TrickyFetchBallSubstate {
     TRICKY_FETCH_BALL_WAIT_FOR_IDLE = 7,
 } TrickyFetchBallSubstate;
 
+typedef enum TrickyCannonballSubstate {
+    TRICKY_CANNONBALL_INIT = 0,
+    TRICKY_CANNONBALL_ROLLING = 1,
+} TrickyCannonballSubstate;
+
+typedef enum TrickyTumbleweedSubstate {
+    TRICKY_TUMBLEWEED_INIT = 0,
+    TRICKY_TUMBLEWEED_CHASE = 1,
+} TrickyTumbleweedSubstate;
+
 typedef enum TrickyFollowSubstate {
     TRICKY_FOLLOW_SUBSTATE_IDLE = 0,
     TRICKY_FOLLOW_SUBSTATE_RETURN_TO_HEEL = 1,
@@ -4433,12 +4443,12 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
     u8 newBit;
 
     switch (state->substate) {
-    case 0:
+    case TRICKY_TUMBLEWEED_INIT:
         newBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
         state->tumbleweedCountLatch.nib.hi = newBit;
         state->tumbleweedTargetObj = NULL;
-        state->substate = 1;
-    case 1:
+        state->substate = TRICKY_TUMBLEWEED_CHASE;
+    case TRICKY_TUMBLEWEED_CHASE:
         currentBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
         bitIndex = state->tumbleweedCountLatch.nib.hi;
         if (bitIndex != currentBit) {
@@ -5353,7 +5363,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     f64 distance;
     f64 bestDistance;
 
-    if (ball->substate != 0) {
+    if (ball->substate != TRICKY_CANNONBALL_INIT) {
         if (ball->route.reverse == 0) {
             if (ball->route.atSegmentEnd != 0) {
                 branchNode = (RomCurveDef*)ball->route.nextNode;
@@ -5467,7 +5477,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
             }
 
             ball->cannonballRollSfxTimer = gTrickyFloatZero;
-            ball->substate = 1;
+            ball->substate = TRICKY_CANNONBALL_ROLLING;
         }
     }
 }
@@ -7321,7 +7331,7 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
 
     if (commandEnabled != 0) {
         if (state->stateIndex == TRICKY_STATE_BALL_ROLL) {
-            if (state->substate != 0) {
+            if (state->substate != TRICKY_CANNONBALL_INIT) {
                 state->followObj = targetObj;
             }
         } else {
@@ -7347,7 +7357,7 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
                 }
                 state->linkedWalkGroup = 0;
             }
-            state->substate = 0;
+            state->substate = TRICKY_CANNONBALL_INIT;
         }
     } else {
         state->stateFlags |= (u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
@@ -7790,7 +7800,7 @@ static inline f32 trickyResetCommandState(TrickyState* state) {
     f32 resetValue;
 
     state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-    state->substate = 0;
+    state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
     resetValue = gTrickyFloatZero;
     state->cooldownA = resetValue;
     state->cooldownB.f = resetValue;
@@ -8189,7 +8199,7 @@ void Tricky_update(GameObject* obj) {
                             }
                             trickyState->linkedWalkGroup = 0;
                         }
-                        trickyState->substate = 0;
+                        trickyState->substate = TRICKY_FETCH_BALL_INIT;
                         trickyState->stateIndex = TRICKY_STATE_FETCH_BALL;
                     }
                     break;
@@ -8212,7 +8222,7 @@ void Tricky_update(GameObject* obj) {
                                 trickyState->linkedWalkGroup = 0;
                             }
                             trickyState->stateIndex = TRICKY_STATE_CIRCLING;
-                            trickyState->substate = 0;
+                            trickyState->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
                             trickyState->flameCommandPending = 0;
                         }
                     }
