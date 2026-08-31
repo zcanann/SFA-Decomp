@@ -7078,10 +7078,9 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
     state->ownsWarpHelperObject = 1;
 }
 
-int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
+int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
     TrickyState* state;
     int i;
-    ObjSeqState* sequence = animUpdate;
     u8* childSlot;
     int secondChildIndex;
     int childIndex;
@@ -7187,7 +7186,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_CALLBACK) != 0) {
         sequence->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
         characterDoEyeAnims(obj, &state->eyeAnimState);
-        return (*gObjectTriggerInterface)->func20(obj, sequence, 1, 0xf, 0x1e, 0, 0);
+        return (*gObjectTriggerInterface)->turnToFacePlayer(obj, sequence, 1, 0xf, 0x1e, 0, 0);
     }
     return 0;
 }

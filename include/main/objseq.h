@@ -23,8 +23,8 @@ typedef struct SeqByte136
 typedef struct ObjSeqState ObjSeqState;
 struct GameObject;
 
-typedef int (*ObjSeqTurnToPlayerFn)(struct GameObject* obj, struct ObjSeqState* state, s16 turnDegrees,
-                                    s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft);
+typedef int (*ObjSeqTurnToFacePlayerFn)(struct GameObject* obj, struct ObjSeqState* state, s16 turnDegrees,
+                                        s16 yawThreshold, s16 maxAngle, s16 animRight, s16 animLeft);
 
 #define OBJSEQ_FLAG_APPLY_CURVE_POSITION 0x01
 #define OBJSEQ_FLAG_APPLY_HEADING        0x02
@@ -64,7 +64,7 @@ typedef struct ObjectTriggerInterface {
     s16 (*getGlobal2)(void);
     void (*setGlobal2)(s16 value);
     void (*setXrot)(int index, int xrot);
-    ObjSeqTurnToPlayerFn func20;
+    ObjSeqTurnToFacePlayerFn turnToFacePlayer;
     int (*setObjects)(int a, struct GameObject *b, int c);
     int (*setOverridePos)(f32 x, f32 y, f32 z);
     int (*setRunSequenceWorldSpace)(int unused, int mode);
@@ -103,7 +103,7 @@ STATIC_ASSERT(offsetof(ObjectTriggerInterface, setGlobal1) == 0x68);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, getGlobal2) == 0x6C);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setGlobal2) == 0x70);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setXrot) == 0x74);
-STATIC_ASSERT(offsetof(ObjectTriggerInterface, func20) == 0x78);
+STATIC_ASSERT(offsetof(ObjectTriggerInterface, turnToFacePlayer) == 0x78);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setObjects) == 0x7C);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setOverridePos) == 0x80);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setRunSequenceWorldSpace) == 0x84);

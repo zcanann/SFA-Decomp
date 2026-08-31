@@ -85,7 +85,7 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, enum TrickyComman
 int Tricky_updateSideCommandPrompts(GameObject* obj);
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
 void Tricky_init(GameObject* obj);
-int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate);
+int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence);
 void Tricky_update(GameObject* obj);
 void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
