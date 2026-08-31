@@ -8918,7 +8918,7 @@ int playerState08(GameObject* obj, struct PlayerState* state, f32 fv) {
                 inner->flags3F4.b08 = 1;
             }
             player = Obj_GetPlayerObject();
-            if (Obj_CanSetupObject() == 0) {
+            if ((u8)Obj_CanSetupObject() == 0) {
                 att = NULL;
             } else {
                 ObjPlacement* setup = Obj_AllocObjectSetup(0x24, 0x62d);
@@ -8942,7 +8942,7 @@ int playerState08(GameObject* obj, struct PlayerState* state, f32 fv) {
         (objGetAllOfType(LANTERNFIREFLY_OBJGROUP, &cnt30), cnt30 == 0))
     {
         gameBitDecrement(0x13d);
-        if (Obj_CanSetupObject() != 0)
+        if ((u8)Obj_CanSetupObject() != 0)
         {
             ObjPlacement* setup = Obj_AllocObjectSetup(0x24, 0x43b);
             setup->objectId = 0x43b;
@@ -11575,7 +11575,7 @@ void playerCastIceSpell(GameObject* unused) {
     ObjPlacement* setup;
     s8 i;
 
-    if (!Obj_CanSetupObject()) {
+    if ((u8)Obj_CanSetupObject() == 0) {
         return;
     }
     for (i = 0; i < 7; i++) {
@@ -14886,7 +14886,7 @@ void playerStaffInit(GameObject* obj, PlayerState* state)
     GameObject* child;
     int b;
 
-    if (gPlayerPathObject == NULL && Obj_CanSetupObject())
+    if (gPlayerPathObject == NULL && (u8)Obj_CanSetupObject() != 0)
     {
         child = objSetupObject(Obj_AllocObjectSetup(0x18, 0x69), 4, -1, -1, obj->anim.parent);
         gPlayerPathObject = child;
@@ -15941,7 +15941,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         Shield_setMode(gPlayerStaffObject, 0);
     }
     playerStaffInit((GameObject*)obj, (PlayerState*)inner);
-    if ((void*)gPlayerEggObject == NULL && Obj_CanSetupObject() != 0)
+    if ((void*)gPlayerEggObject == NULL && (u8)Obj_CanSetupObject() != 0)
     {
         ObjLink_AttachChild((GameObject*)obj,
                             (GameObject*)(gPlayerEggObject =
@@ -15957,7 +15957,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             ((GameObject*)gPlayerEggObject)->anim.flags |= 0x4000;
         }
     }
-    if (gPlayerStaffObject == NULL && Obj_CanSetupObject() != 0)
+    if (gPlayerStaffObject == NULL && (u8)Obj_CanSetupObject() != 0)
     {
         gPlayerStaffObject =
             (GameObject*)objSetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1, ((GameObject*)obj)->anim.parent);
@@ -16091,7 +16091,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             }
             ObjPath_GetPointWorldPosition((GameObject*)obj, 5, &px, &py, &pz, 0);
             dx = ((GameObject*)obj)->anim.worldPosX - npos[0];
-            dy = (((GameObject*)obj)->anim.worldPosY + ((PlayerState*)inner)->pathBearingEyeY) - npos[1];
+            dy = (((PlayerState*)inner)->pathBearingEyeY + ((GameObject*)obj)->anim.worldPosY) - npos[1];
             dz = ((GameObject*)obj)->anim.worldPosZ - npos[2];
             {
                 s16 ang = (s16)getAngle(dx, dz);
@@ -17600,13 +17600,13 @@ void playerUpdate(GameObject* obj)
             playerProcessMessages(obj, (int)inner, (int)inner);
             playerUpdateTargetSelection(obj, (PlayerState*)inner, (PlayerState*)inner);
             playerStaffInit(obj, (PlayerState*)inner);
-            if (gPlayerEggObject == 0 && Obj_CanSetupObject() != 0)
+            if ((void*)gPlayerEggObject == NULL && (u8)Obj_CanSetupObject() != 0)
             {
                 gPlayerEggObject = (int)objSetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1, -1,
                                                         obj->anim.parent);
                 ObjLink_AttachChild(obj, (GameObject*)gPlayerEggObject, 3);
             }
-            if (gPlayerEggObject != 0)
+            if ((void*)gPlayerEggObject != NULL)
             {
                 ((GameObject*)gPlayerEggObject)->anim.parent = (void*)obj->anim.parent;
                 if (((PlayerState*)inner)->characterId == 0)
@@ -17614,7 +17614,7 @@ void playerUpdate(GameObject* obj)
                     *(s16*)(gPlayerEggObject + 6) = *(s16*)(gPlayerEggObject + 6) | 0x4000;
                 }
             }
-            if (gPlayerStaffObject == NULL && Obj_CanSetupObject() != 0)
+            if (gPlayerStaffObject == NULL && (u8)Obj_CanSetupObject() != 0)
             {
                 gPlayerStaffObject = (GameObject*)objSetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1,
                                                                   obj->anim.parent);
