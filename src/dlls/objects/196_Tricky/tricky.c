@@ -958,6 +958,22 @@ typedef enum TrickyFetchBallSubstate {
     TRICKY_FETCH_BALL_WAIT_FOR_IDLE = 7,
 } TrickyFetchBallSubstate;
 
+typedef enum TrickyFollowSubstate {
+    TRICKY_FOLLOW_SUBSTATE_IDLE = 0,
+    TRICKY_FOLLOW_SUBSTATE_RETURN_TO_HEEL = 1,
+    TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE = 2,
+    TRICKY_FOLLOW_SUBSTATE_SLEEP = 3,
+    TRICKY_FOLLOW_SUBSTATE_HOWL_CALL = 4,
+    TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END = 5,
+    TRICKY_FOLLOW_SUBSTATE_FIDGET_B = 6,
+    TRICKY_FOLLOW_SUBSTATE_FIDGET_A = 7,
+    TRICKY_FOLLOW_SUBSTATE_IDLE_PICK = 8,
+    TRICKY_FOLLOW_SUBSTATE_DIG_FOR_FOOD = 9,
+    TRICKY_FOLLOW_SUBSTATE_BEG_FOR_FOOD = 10,
+    TRICKY_FOLLOW_SUBSTATE_FLAME_BREATH = 11,
+    TRICKY_FOLLOW_SUBSTATE_APPROACH_THORNTAIL = 12,
+} TrickyFollowSubstate;
+
 char gTrickyDebugStringTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x41, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -3262,7 +3278,7 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
 
     if (trickyShouldGoToWarpPoint(obj, state) == 0) {
         state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetValue = gTrickyFloatZero;
         state->cooldownA = resetValue;
         state->cooldownB.f = resetValue;
@@ -4469,7 +4485,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
             }
         } else {
             state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            state->substate = 0;
+            state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
             resetTimer = gTrickyFloatZero;
             state->cooldownA = resetTimer;
             state->cooldownB.f = resetTimer;
@@ -5883,7 +5899,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                             }
                             followState->linkedWalkGroup = 0;
                         }
-                        followState->substate = 0;
+                        followState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
                         followState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
                     } else {
                         followState->pendingFollowRequest = 1;
@@ -5941,7 +5957,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         state->groundSnapCounter = 2;
         (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
         state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetValue = gTrickyFloatZero;
         state->cooldownA = resetValue;
         state->cooldownB.f = resetValue;
@@ -6068,7 +6084,7 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
                     objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_FINISH_FLAME,
                                        TRICKY_VOICE_PITCH_BASE, -1, 0);
                 }
-                state->substate = 10;
+                state->substate = TRICKY_FOLLOW_SUBSTATE_BEG_FOR_FOOD;
             }
         }
         break;
@@ -6093,7 +6109,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
             mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags = flags & mask;
         }
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         return 1;
     }
     result = (*gGameUIInterface)->isOneOfItemsBeingUsed(commandQuery.commandTypes, TRICKY_COMMAND_QUERY_COUNT);
@@ -6122,7 +6138,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
             mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags = flags & mask;
         }
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
     }
     if ((u8)trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state) == TRICKY_MOVEMENT_IN_PROGRESS) {
         return 1;
@@ -6178,7 +6194,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
                 mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->stateFlags = flags & mask;
             }
-            state->substate = 0;
+            state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
         break;
     }
@@ -6200,7 +6216,7 @@ int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
                 objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE, -1, 0);
             }
             trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
-            state->substate = 5;
+            state->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
         } else {
             switch (randomGetRange(0, 6)) {
             case 0:
@@ -6236,7 +6252,7 @@ u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_ANIM_IDLE_FIDGET_A_END:
         if (((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) && ((int)randomGetRange(0, 3) == 0)) {
-            trickyState->substate = 0;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
         break;
     }
@@ -6260,7 +6276,7 @@ u32 tricky_substateFidgetB(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_ANIM_IDLE_FIDGET_B_END:
         if (((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) && ((int)randomGetRange(0, 3) == 0)) {
-            trickyState->substate = 0;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
         break;
     }
@@ -6295,7 +6311,7 @@ u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
         if (trickyState->moveId == (int)(obj)->anim.currentMove) {
-            trickyState->substate = 0;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
     }
     return 1;
@@ -6330,7 +6346,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 eventIndex = (*gSkyInterface)->getSunPosition(0);
                 if (eventIndex == 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_HOWL_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
-                    trickyState->substate = 9;
+                    trickyState->substate = TRICKY_FOLLOW_SUBSTATE_DIG_FOR_FOOD;
                 }
             }
         }
@@ -6376,7 +6392,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
                 mask = ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 trickyState->stateFlags = flags & mask;
             }
-            trickyState->substate = 0;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
         break;
     }
@@ -6391,11 +6407,11 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
     f32 childTimerReset;
 
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         return 1;
     }
     if (cMenuGetSelectedItem() == GAMEBIT_ITEM_TrickyFood_Count) {
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         return 1;
     }
     state->sfxRepeatTimer -= timeDelta;
@@ -6452,7 +6468,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
             objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH, -1, 0);
         }
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-        state->substate = 4;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_HOWL_CALL;
         state->moveHoldTimer = (f32)(int)randomGetRange(0x78, 0xf0);
     }
     return 1;
@@ -6467,7 +6483,7 @@ u32 tricky_substateWaitQueuedMove(GameObject* obj, TrickyState* trickyState) {
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
         if (trickyState->moveId == (int)(obj)->anim.currentMove) {
-            trickyState->substate = 0;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
     }
     return 1;
@@ -6483,11 +6499,11 @@ u32 tricky_substateReturnToHeel(GameObject* obj, TrickyState* trickyState) {
     result = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, (TrickyState*)trickyState);
     if (result == 1) {
         if (gTrickyFloatZero == trickyState->cooldownA) {
-            trickyState->substate = 0;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
         return 1;
     }
-    trickyState->substate = 0;
+    trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
     return 0;
 }
 
@@ -6562,7 +6578,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     }
     if (trickyState->waterIdleTimer > gTrickyFloatZero) {
         trickyRequestMove(obj, TRICKY_ANIM_WATER_IDLE, 0.01f, 0);
-        trickyState->substate = 2;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE;
         trickyState->waterIdleTimer = gTrickyFloatZero;
         return 1;
     }
@@ -6578,7 +6594,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
             randomDelay = randomGetRange(200, 500);
             trickyState->idleTimer = (f32)(s32)randomDelay;
             trickyState->idleActivityDelayActive = 0;
-            trickyState->substate = 1;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_RETURN_TO_HEEL;
         }
         return 0;
     }
@@ -6603,7 +6619,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     }
     if (trickyState->stats->energy <= 3) {
         trickyRequestMove(obj, TRICKY_ANIM_HUNGRY_IDLE, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
-        trickyState->substate = 3;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_SLEEP;
         trickyState->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
         return 1;
     }
@@ -6613,7 +6629,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
         trickyState->idleTimer = (f32)(s32)randomDelay;
         if (trickyState->stats->energy <= 7) {
             trickyRequestMove(obj, TRICKY_ANIM_HUNGRY_IDLE, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
-            trickyState->substate = 3;
+            trickyState->substate = TRICKY_FOLLOW_SUBSTATE_SLEEP;
             trickyState->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
             return 1;
         }
@@ -6630,7 +6646,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
                                        0xffffffff, 0);
                 }
                 trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
-                trickyState->substate = 5;
+                trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
             } else {
                 randomDelay = randomGetRange(0, 6);
                 switch ((int)randomDelay) {
@@ -6686,7 +6702,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             state->linkedWalkGroup = 0;
         }
         state->thorntailIdleMovePending = 0;
-        state->substate = 0xc;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_APPROACH_THORNTAIL;
         break;
     case 1:
         wanderYaw = randomGetRange(0x20, 0xff);
@@ -6705,12 +6721,12 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             }
             state->linkedWalkGroup = 0;
         }
-        state->substate = 8;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE_PICK;
         break;
     case 2:
         trickyRequestMove(obj, TRICKY_ANIM_AMBIENT_HOWL, TRICKY_AMBIENT_HOWL_BLEND_SPEED, 0);
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-        state->substate = 9;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_DIG_FOR_FOOD;
         break;
     case 3:
         trickyRequestMove(obj, TRICKY_ANIM_HOWL_START, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
@@ -6721,7 +6737,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
             objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH, -1, 0);
         }
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-        state->substate = 4;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_HOWL_CALL;
         state->moveHoldTimer = (f32)(int)randomGetRange(0x78, 0xf0);
         break;
     }
@@ -6735,7 +6751,7 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
     switch (idleChoice) {
     case 0:
         trickyRequestMove(obj, TRICKY_ANIM_LAND_IDLE, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
-        trickyState->substate = 2;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE;
         break;
     case 1:
         voiceState = obj->extra;
@@ -6748,19 +6764,19 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
             }
         }
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
-        trickyState->substate = 5;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
         break;
     case 2:
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_FIDGET_B_START, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
-        trickyState->substate = 6;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_FIDGET_B;
         break;
     case 3:
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_FIDGET_A_START, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
-        trickyState->substate = 7;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_FIDGET_A;
         break;
     case 4:
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_WANDER, TRICKY_IDLE_WANDER_BLEND_SPEED, 0);
-        trickyState->substate = 2;
+        trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE;
         break;
     }
 }
@@ -6906,14 +6922,14 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
             }
         } else {
             state->cooldownB.f += TRICKY_TIMER_600_FRAMES;
-            if (state->substate != 0xb) {
+            if (state->substate != TRICKY_FOLLOW_SUBSTATE_FLAME_BREATH) {
                 if (state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) {
                     if (state->cooldownB.f > TRICKY_CONTACT_FLAME_THRESHOLD) {
                         state->cooldownB.f *= TRICKY_FOLLOW_ARC_HALF_PROGRESS;
                         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
                             inWater = skeetla_isInWater(state);
                             if (inWater == 0) {
-                                state->substate = 0xb;
+                                state->substate = TRICKY_FOLLOW_SUBSTATE_FLAME_BREATH;
                                 return;
                             }
                         }
@@ -6944,7 +6960,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                         objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF,
                                            TRICKY_VOICE_PITCH_NORMAL, -1, 0);
                     }
-                    state->substate = 10;
+                    state->substate = TRICKY_FOLLOW_SUBSTATE_BEG_FOR_FOOD;
                     state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 }
             }
@@ -7106,7 +7122,7 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
 
         state->walkGroup = pathBytes[0];
         state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        state->substate = 0;
+        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetTimer = gTrickyFloatZero;
         state->cooldownA = resetTimer;
         state->cooldownB.f = resetTimer;
@@ -7246,7 +7262,7 @@ void Tricky_requestRecall(GameObject* obj) {
 int Tricky_isGuarding(GameObject* obj) {
     TrickyState* state = obj->extra;
     u8 mode = state->stateIndex;
-    if (mode == 8 || mode == 0xe) {
+    if (mode == TRICKY_STATE_GUARD || mode == TRICKY_STATE_GROWL) {
         return 1;
     }
     return 0;
@@ -7260,7 +7276,7 @@ int Tricky_isPlayingBall(GameObject* obj) {
     state = obj->extra;
     mode = state->stateIndex;
     switch (mode) {
-    case 5:
+    case TRICKY_STATE_BALL_ROLL:
         result = 1;
         break;
     default:
@@ -7418,7 +7434,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         }
         commandMask = state->sideCommandPromptMask | (TRICKY_COMMAND_FLAG_CALL | TRICKY_COMMAND_FLAG_STAY);
         if (((state->stateIndex == TRICKY_STATE_GUARD) || (state->stateIndex == TRICKY_STATE_CIRCLING)) ||
-            ((state->stateIndex == TRICKY_STATE_GROWL && (state->substate == 1)))) {
+            ((state->stateIndex == TRICKY_STATE_GROWL && (state->substate == TRICKYGROWL_FACE_TARGET)))) {
             commandMask |= TRICKY_COMMAND_FLAG_FLAME;
             showExclamationPrompt = true;
         } else {
@@ -7676,15 +7692,15 @@ void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
                 skeetla_spawnLinkedSparks(obj);
                 break;
             case 3:
-                if (state->substate == 4) {
+                if (state->substate == TRICKY_DIG_TUNNEL_DIGGING) {
                     skeetla_spawnLinkedSparks(obj);
                 }
                 break;
             }
             if ((((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0) &&
                  (state->stateIndex == TRICKY_STATE_FETCH_BALL)) &&
-                (state->substate >= 3)) {
-                if (state->substate != 3) {
+                (state->substate >= TRICKY_FETCH_BALL_PICKUP_START)) {
+                if (state->substate != TRICKY_FETCH_BALL_PICKUP_START) {
                     state->fetchBallObj->anim.localPosX = state->renderPosX;
                     state->fetchBallObj->anim.localPosY = state->renderPosY;
                     state->fetchBallObj->anim.localPosZ = state->renderPosZ;
