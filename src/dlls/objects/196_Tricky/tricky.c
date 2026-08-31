@@ -283,6 +283,7 @@ extern const f32 gTrickyChildVoicePeriodFrames[1];
 #define TRICKY_PARTFX_HOWL_SPARKLE       0x7f0
 #define TRICKY_TURN_LARGE_ANGLE          0x3555
 #define TRICKY_TURN_MEDIUM_ANGLE         0x2000
+#define TRICKY_WATER_FOOTSTEP_SFX_ID     0x433
 #define TRICKY_COMMAND_TTL_FRAMES        3
 
 #define TRICKY_STATE_FLAG_SIDESTEP                0x20  /* apply sidestepDelta lateral offset */
@@ -6909,10 +6910,9 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
 #define TRICKY_TARGET_OBJ_WC_BEACON          0x50f
 #define TRICKY_TARGET_OBJ_ARW_TIMED_MIN      0x542
 
-#define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
-#define TRICKY_OBJGROUP                        1
-#define TRICKY_BBOX_HIT_SCRATCH_SIZE           84
-#define TRICKY_HELPER_WARP_OBJECT_ID           0x25 /* "warp" transporter / WarpPoint */
+#define TRICKY_OBJGROUP              1
+#define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
+#define TRICKY_HELPER_WARP_OBJECT_ID 0x25 /* "warp" transporter / WarpPoint */
 
 typedef enum TrickySequenceEvent {
     TRICKY_SEQUENCE_EVENT_TOGGLE_FLAME_CHILDREN = 1,
@@ -7641,11 +7641,11 @@ void Tricky_hitDetect(GameObject* obj) {
             state->trackedHeight = gTrickyFloatZero;
         }
     } else {
-        firepipeObj = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
+        firepipeObj = ObjList_FindObjectById(XYZ_ANIMATOR_DRAGON_ROCK_FIREPIPE_IDENT);
         if ((firepipeObj != 0) && (getXZDistanceSquared(&obj->anim.worldPosX, &firepipeObj->anim.worldPosX) <
                                    TRICKY_FIREPIPE_HEIGHT_DIST_SQ)) {
             state->heightTracking = 1;
-            state->heightTrackObjId = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
+            state->heightTrackObjId = XYZ_ANIMATOR_DRAGON_ROCK_FIREPIPE_IDENT;
             state->trackedHeight = gTrickyFloatZero;
         }
     }
@@ -8237,7 +8237,7 @@ void Tricky_update(GameObject* obj) {
     } else {
         trickyState->eyeAnimState.lookAtActive = 0;
     }
-    if (obj->anim.currentMove == 0x2a) {
+    if (obj->anim.currentMove == TRICKY_ANIM_HOWL_HOLD) {
         characterHeadLookRelax(obj, &trickyState->eyeAnimState);
         characterCloseEyes(obj, &trickyState->eyeAnimState);
     } else {
@@ -8291,13 +8291,13 @@ void Tricky_update(GameObject* obj) {
             accepted = 0;
         } else {
             switch (obj->anim.currentMove) {
-            case 0x29:
-            case 0x2a:
-            case 0x2b:
-            case 0x2c:
-            case 0x2d:
-            case 0x2e:
-            case 0x2f:
+            case TRICKY_ANIM_HOWL_START:
+            case TRICKY_ANIM_HOWL_HOLD:
+            case TRICKY_ANIM_HOWL_END:
+            case TRICKY_ANIM_DIG_FOOD_START_A:
+            case TRICKY_ANIM_DIG_FOOD_START_B:
+            case TRICKY_ANIM_DIG_FOOD_LOOP:
+            case TRICKY_ANIM_DIG_FOOD_END:
                 accepted = 0;
                 break;
             default:
@@ -8356,7 +8356,7 @@ void Tricky_update(GameObject* obj) {
             case 0:
             case 1:
             case 2:
-                waterFootstepSfxId = 0x433;
+                waterFootstepSfxId = TRICKY_WATER_FOOTSTEP_SFX_ID;
                 break;
             }
         }

@@ -211,7 +211,7 @@ typedef struct TrickyState {
     u8 pad2F2[0x2F5 - 0x2F2];
     u8 spawnBits;             /* reward-drop selector decoded from the player attack flags */
     u8 frozenFadeCounter : 5; /* countdown gating the frozen-shatter fade-in sfx */
-    u8 unk2F6 : 3;
+    u8 unusedFrozenFadeBits : 3;
     u8 pad2F7[0x2F8 - 0x2F7];
     u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 pad2FA[0x300 - 0x2FA];
