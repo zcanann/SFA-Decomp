@@ -178,7 +178,7 @@ typedef struct ModgfxPendingSpawn {
     float posX;
     float posY;
     float posZ;
-    int param10;
+    void* param10;
     s16 param14;
     u8 sequenceIndex;
     u8 pad17;
