@@ -1074,7 +1074,7 @@ void dll_0B_updateActiveEffects(void) {
                     rot.rotY = 0;
                     rot.rotZ = 0;
                     vecRotateZXY(&rot.rotX, &tmpl.posX);
-                    if (*(void**)eff == NULL && Obj_CanSetupObject()) {
+                    if (*(void**)eff == NULL && (u8)Obj_CanSetupObject()) {
                         int* o;
                         if (((int)((PartfxEffectState*)eff)->flags & 1) == 0) {
                             tmpl.posX =
