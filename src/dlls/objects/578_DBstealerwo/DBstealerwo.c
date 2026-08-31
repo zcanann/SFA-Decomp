@@ -1687,7 +1687,8 @@ int dbstealerworm_turnToFaceObject(GameObject* obj, GameObject* otherObj, f32 ya
         speed = -speed;
     }
     cur = state->animSpeedA;
-    k = timeDelta * 0.25f;
+    k = timeDelta;
+    k *= 0.25f;
     prod = speed * (1.0f - (f32)yaw / 65536.0f);
     state->animSpeedA = k * (prod - cur) + cur;
     state->animSpeedB = 0.0f;
@@ -1722,7 +1723,8 @@ int dbstealerworm_turnToFaceObjectVertical(GameObject* obj, GameObject* otherObj
         }
     }
     cur = state->animSpeedA;
-    k = timeDelta * 0.25f;
+    k = timeDelta;
+    k *= 0.25f;
     prod = speed * (1.0f - (f32)yaw / 65536.0f);
     state->animSpeedA = k * (prod - cur) + cur;
     state->animSpeedB = 0.0f;
