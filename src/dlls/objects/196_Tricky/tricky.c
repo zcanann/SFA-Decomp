@@ -783,16 +783,16 @@ enum TrickyDamageType {
 };
 #define SKEETLA_PARTICLE_RANDOM_RATE 4
 void tricky_state06_nop(void);
-void trickyFlame();
-void trickyGuard();
-void tricky_moveToFollowTarget();
-void tricky_idleAndEat();
-void tricky_fetchBall();
+void trickyFlame(GameObject* obj, TrickyState* trickyState);
+void trickyGuard(GameObject* obj, TrickyState* trickyState);
+void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state);
+void tricky_idleAndEat(GameObject* obj, TrickyState* state);
+void tricky_fetchBall(GameObject* obj, TrickyState* state);
 void trickyUpdateCirclingTargetPosition(GameObject* obj, TrickyState* state);
-void trickyUpdateCircling();
-void tricky_trackTumbleweed();
+void trickyUpdateCircling(GameObject* obj, TrickyState* state);
+void tricky_trackTumbleweed(GameObject* obj, TrickyState* state);
 
-typedef void (*TrickyStateHandler)(void* obj, void* state);
+typedef void (*TrickyStateHandler)(GameObject* obj, TrickyState* state);
 typedef int (*TrickySubstateHandler)(GameObject* obj, TrickyState* state);
 
 typedef struct TrickyPathPointCollisionData {
@@ -914,24 +914,24 @@ char gTrickyDebugStringTable[] = {
 TrickyPathPointCollisionData gTrickyPathPointCollision = {
     {0.0f, 0.0f, 0.0f},
     {
-        (TrickyStateHandler)tricky_attachToWalkGroup,
-        (TrickyStateHandler)tricky_stateFollowPlayer,
-        (TrickyStateHandler)tricky_stateFindSecretDig,
-        (TrickyStateHandler)trickyDigTunnel,
+        tricky_attachToWalkGroup,
+        tricky_stateFollowPlayer,
+        tricky_stateFindSecretDig,
+        trickyDigTunnel,
         (TrickyStateHandler)tricky_state04_nop,
-        (TrickyStateHandler)tricky_updateBallRoll,
+        tricky_updateBallRoll,
         (TrickyStateHandler)tricky_state06_nop,
-        (TrickyStateHandler)trickyFlame,
-        (TrickyStateHandler)trickyGuard,
-        (TrickyStateHandler)tricky_moveToFollowTarget,
-        (TrickyStateHandler)tricky_idleAndEat,
-        (TrickyStateHandler)tricky_fetchBall,
-        (TrickyStateHandler)trickyUpdateCirclingTargetPosition,
-        (TrickyStateHandler)trickyUpdateCircling,
-        (TrickyStateHandler)trickyGrowl,
-        (TrickyStateHandler)tricky_stateIdleWander,
-        (TrickyStateHandler)tricky_trackTumbleweed,
-        (TrickyStateHandler)tricky_stateGoToWarpPoint,
+        trickyFlame,
+        trickyGuard,
+        tricky_moveToFollowTarget,
+        tricky_idleAndEat,
+        tricky_fetchBall,
+        trickyUpdateCirclingTargetPosition,
+        trickyUpdateCircling,
+        trickyGrowl,
+        tricky_stateIdleWander,
+        tricky_trackTumbleweed,
+        tricky_stateGoToWarpPoint,
     },
     {
         (TrickySubstateHandler)tricky_substateFollowIdle,
@@ -5431,20 +5431,20 @@ static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
 
 static inline void trickyAdvanceNode(TrickyState* state) {
     int idx;
-    u8* linkNode;
+    RomCurveDef* linkNode;
     int linkId;
     int off;
     int k;
     idx = 0;
     off = 0;
     for (k = 4; k != 0; k--) {
-        linkNode = state->digTunnelExitNode.ptr;
-        linkId = *(int*)(linkNode + off + offsetof(RomCurveDef, linkIds));
-        if (linkId > -1 && linkId != ((RomCurveDef*)state->digTunnelStartNode.ptr)->id) {
-            state->digTunnelStartNode.ptr = linkNode;
-            state->digTunnelExitNode.ptr =
-                (u8*)(*gRomCurveInterface)
-                    ->getById(((int*)((char*)state->digTunnelExitNode.ptr + offsetof(RomCurveDef, linkIds)))[idx]);
+        linkNode = state->digTunnelExitNode.curve;
+        linkId = *(int*)((u8*)linkNode + off + offsetof(RomCurveDef, linkIds));
+        if (linkId > -1 && linkId != state->digTunnelStartNode.curve->id) {
+            state->digTunnelStartNode.curve = linkNode;
+            state->digTunnelExitNode.curve =
+                (*gRomCurveInterface)
+                    ->getById(((int*)((char*)state->digTunnelExitNode.curve + offsetof(RomCurveDef, linkIds)))[idx]);
             break;
         }
         off += 4;
@@ -5468,8 +5468,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     TrickyPackedSfxPair sfxTable;
     char* debugTextBase;
     RomCurveDef* tunnelNode;
-    u8* targetPosBytes;
-    u8* entryPosBytes;
+    f32* targetPos;
+    f32* entryPos;
     TrickyState* voiceState;
     int walkGroup;
     int inWater;
@@ -5485,17 +5485,17 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     switch (state->substate) {
     case 0:
         tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, 2);
-        state->digTunnelEntryNode.ptr = (u8*)(*gRomCurveInterface)->getById(tunnelNode->linkIds[0]);
-        state->digTunnelStartNode.ptr = tunnelNode;
-        state->digTunnelExitNode.ptr = (u8*)(*gRomCurveInterface)->getById(tunnelNode->linkIds[1]);
-        if (((RomCurveDef*)state->digTunnelExitNode.ptr)->walkGroup != 0) {
+        state->digTunnelEntryNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[0]);
+        state->digTunnelStartNode.curve = tunnelNode;
+        state->digTunnelExitNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[1]);
+        if (state->digTunnelExitNode.curve->walkGroup != 0) {
             state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
             state->digTunnelEntryNode.u = state->digTunnelEntryNode.u ^ state->digTunnelExitNode.u;
             state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
         }
-        entryPosBytes = (u8*)&((RomCurveDef*)state->digTunnelEntryNode.ptr)->x;
-        if (state->targetPosPtr != (f32*)entryPosBytes) {
-            state->targetPosPtr = (f32*)entryPosBytes;
+        entryPos = &state->digTunnelEntryNode.curve->x;
+        if (state->targetPosPtr != entryPos) {
+            state->targetPosPtr = entryPos;
             {
                 u32 mask;
                 u32 flags = state->stateFlags;
@@ -5509,16 +5509,16 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_FINDING);
         trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
         walkGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
-        if (((RomCurveDef*)state->digTunnelEntryNode.ptr)->walkGroup == walkGroup) {
+        if (state->digTunnelEntryNode.curve->walkGroup == walkGroup) {
             state->movementState = TRICKY_MOVE_WALK_FREE;
             state->substate = 2;
         }
         break;
     case 2:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_GOINGTOSTART);
-        targetPosBytes = (u8*)&((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)targetPosBytes, 1);
-        if (moveTricky(obj, (f32*)targetPosBytes) == 0) {
+        targetPos = &state->digTunnelStartNode.curve->x;
+        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
+        if (moveTricky(obj, targetPos) == 0) {
             state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
             state->substate = 3;
         } else {
@@ -5530,10 +5530,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     case 3:
         trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
                           TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
-        state->dirX =
-            ((RomCurveDef*)state->digTunnelExitNode.ptr)->x - ((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
-        state->dirZ =
-            ((RomCurveDef*)state->digTunnelExitNode.ptr)->z - ((RomCurveDef*)state->digTunnelStartNode.ptr)->z;
+        state->dirX = state->digTunnelExitNode.curve->x - state->digTunnelStartNode.curve->x;
+        state->dirZ = state->digTunnelExitNode.curve->z - state->digTunnelStartNode.curve->z;
         Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
         state->digTunnelWhineTimer.f = (f32)(int)randomGetRange(0x14, 0xb4);
         state->substate = 4;
@@ -5551,8 +5549,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             }
         }
         pressDistance = GROUND_ANIMATOR_INTERFACE(state->followObj)->applyPress(state->followObj, obj);
-        obj->anim.localPosX = state->dirX * pressDistance + ((RomCurveDef*)state->digTunnelStartNode.ptr)->x;
-        obj->anim.localPosZ = state->dirZ * pressDistance + ((RomCurveDef*)state->digTunnelStartNode.ptr)->z;
+        obj->anim.localPosX = state->dirX * pressDistance + state->digTunnelStartNode.curve->x;
+        obj->anim.localPosZ = state->dirZ * pressDistance + state->digTunnelStartNode.curve->z;
         dirX = ((TrickyState*)obj->extra)->dirX;
         dirXSq = dirX * dirX;
         dirZ = ((TrickyState*)obj->extra)->dirZ;
@@ -5564,20 +5562,20 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             {
                 int linkOffset;
                 int linkId;
-                u8* exitNodeBytes;
+                RomCurveDef* exitNode;
                 int linkIndex;
                 int remainingLinks;
 
                 linkIndex = 0;
                 linkOffset = 0;
                 for (remainingLinks = 4; remainingLinks != 0; remainingLinks--) {
-                    exitNodeBytes = state->digTunnelExitNode.ptr;
-                    linkId = *(int*)(exitNodeBytes + linkOffset + offsetof(RomCurveDef, linkIds));
-                    if (linkId > -1 && linkId != ((RomCurveDef*)state->digTunnelStartNode.ptr)->id) {
-                        state->digTunnelStartNode.ptr = exitNodeBytes;
-                        state->digTunnelExitNode.ptr =
-                            (u8*)(*gRomCurveInterface)
-                                ->getById(((int*)((char*)state->digTunnelExitNode.ptr +
+                    exitNode = state->digTunnelExitNode.curve;
+                    linkId = *(int*)((u8*)exitNode + linkOffset + offsetof(RomCurveDef, linkIds));
+                    if (linkId > -1 && linkId != state->digTunnelStartNode.curve->id) {
+                        state->digTunnelStartNode.curve = exitNode;
+                        state->digTunnelExitNode.curve =
+                            (*gRomCurveInterface)
+                                ->getById(((int*)((char*)state->digTunnelExitNode.curve +
                                                   offsetof(RomCurveDef, linkIds)))[linkIndex]);
                         break;
                     }
@@ -5599,19 +5597,19 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         break;
     case 5:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_TOEND1,
-                         Vec_xzDistance(&obj->anim.worldPosX, &((RomCurveDef*)state->digTunnelExitNode.ptr)->x));
-        targetPosBytes = (u8*)&((RomCurveDef*)state->digTunnelExitNode.ptr)->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)targetPosBytes, 1);
-        if (moveTricky(obj, (f32*)targetPosBytes) == 0) {
+                         Vec_xzDistance(&obj->anim.worldPosX, &state->digTunnelExitNode.curve->x));
+        targetPos = &state->digTunnelExitNode.curve->x;
+        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
+        if (moveTricky(obj, targetPos) == 0) {
             trickyAdvanceNode(state);
             state->substate = 6;
         }
         break;
     case 6:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_DIGTUNNEL_TOEND2);
-        targetPosBytes = (u8*)&((RomCurveDef*)state->digTunnelExitNode.ptr)->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, (f32*)targetPosBytes, 1);
-        if (moveTricky(obj, (f32*)targetPosBytes) == 0) {
+        targetPos = &state->digTunnelExitNode.curve->x;
+        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
+        if (moveTricky(obj, targetPos) == 0) {
             inWater = skeetla_isInWater(state);
             if (inWater != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
@@ -5656,7 +5654,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
 
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     TrickyPackedSfxPair sfxTable;
-    u8* curveBytes;
+    RomCurveDef* curve;
+    f32* curvePos;
     GameObject* followObj;
     int movementResult;
     f32 pressDistance;
@@ -5679,9 +5678,9 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         if (movementResult == 0) {
             if (state->secretDigCurve != NULL) {
                 state->substate = 2;
-                curveBytes = (u8*)&state->secretDigCurve->x;
-                if (state->targetPosPtr != (f32*)curveBytes) {
-                    state->targetPosPtr = (f32*)curveBytes;
+                curvePos = &state->secretDigCurve->x;
+                if (state->targetPosPtr != curvePos) {
+                    state->targetPosPtr = curvePos;
                     {
                         u32 mask;
                         u32 flags = state->stateFlags;
@@ -5733,11 +5732,11 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->substate = 4;
             state->secretDigOriginX = obj->anim.worldPosX;
             state->secretDigOriginZ = obj->anim.worldPosZ;
-            curveBytes = (u8*)state->secretDigCurve;
-            if (curveBytes != NULL) {
+            curve = state->secretDigCurve;
+            if (curve != NULL) {
                 followObj = state->followObj;
-                state->dirX = ((RomCurveDef*)curveBytes)->x - followObj->anim.worldPosX;
-                state->dirZ = ((RomCurveDef*)curveBytes)->z - followObj->anim.worldPosZ;
+                state->dirX = curve->x - followObj->anim.worldPosX;
+                state->dirZ = curve->z - followObj->anim.worldPosZ;
                 dirLength = sqrtf(state->dirX * state->dirX + state->dirZ * state->dirZ);
                 if (gTrickyFloatZero != dirLength) {
                     state->dirX = state->dirX / dirLength;
@@ -8154,7 +8153,7 @@ void Tricky_update(GameObject* obj) {
     }
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
     trickyState->heightUpdateActive = 1;
-    debugData->pathPointCollision.stateHandlers[trickyState->stateIndex](obj, (void*)trickyState);
+    debugData->pathPointCollision.stateHandlers[trickyState->stateIndex](obj, trickyState);
     trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
     trickyState->animTransitionTimer += timeDelta;
     if (trickyState->animTransitionTimer > TRICKY_ANIM_TRANSITION_FRAMES) {
