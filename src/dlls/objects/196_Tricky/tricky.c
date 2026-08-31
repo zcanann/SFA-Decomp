@@ -1510,49 +1510,49 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
     f32 bestDistance;
     f32 distance;
     u16 mask;
-    u16 i;
-    u16 count;
+    u16 linkSlot;
+    u16 candidateCount;
     u16 bestIndex;
     int curveId;
     s16 requiredBit;
     s16 forbiddenBit;
 
-    i = 0;
-    count = 0;
+    linkSlot = 0;
+    candidateCount = 0;
     mask = 1;
-    while (i < 4) {
-        curveId = routeDef->linkIds[i];
+    while (linkSlot < 4) {
+        curveId = routeDef->linkIds[linkSlot];
         if ((curveId > -1) && ((((routeDef->blockedLinkMask & mask) ^ routeFlagValue) == 0))) {
-            candidates[count] = (*gRomCurveInterface)->getById(curveId);
-            if (candidates[count] != NULL) {
-                entry = candidates[count];
-                if ((linkSelector == 0) || (routeDef->linkWalkGroups[count] == linkSelector)) {
+            candidates[candidateCount] = (*gRomCurveInterface)->getById(curveId);
+            if (candidates[candidateCount] != NULL) {
+                entry = candidates[candidateCount];
+                if ((linkSelector == 0) || (routeDef->linkWalkGroups[candidateCount] == linkSelector)) {
                     requiredBit = entry->requiredBit;
                     if ((requiredBit == -1) || (mainGetBit(requiredBit) != 0)) {
                         forbiddenBit = entry->forbiddenBit;
                         if ((forbiddenBit == -1) || (mainGetBit(forbiddenBit) == 0)) {
                             if ((routeDef->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) ||
                                 (entry->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A)) {
-                                count++;
+                                candidateCount++;
                             }
                         }
                     }
                 }
             }
         }
-        i++;
+        linkSlot++;
         mask <<= 1;
         routeFlagValue <<= 1;
     }
 
-    if (count != 0) {
+    if (candidateCount != 0) {
         bestDistance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[0]->x);
         bestIndex = 0;
-        for (i = 1; i < count; i++) {
-            distance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[i]->x);
+        for (linkSlot = 1; linkSlot < candidateCount; linkSlot++) {
+            distance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[linkSlot]->x);
             if (distance < bestDistance) {
                 bestDistance = distance;
-                bestIndex = i;
+                bestIndex = linkSlot;
             }
         }
 
@@ -1561,12 +1561,12 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
     return NULL;
 }
 
-RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId) {
+RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int pathId) {
     if (pathId == 0) {
         return NULL;
     }
 
-    if ((state->cachedPathId == pathId) && (state->cachedRouteId == route)) {
+    if ((state->cachedPathId == pathId) && (state->cachedRouteEntry == route)) {
         state->cachedRouteEntry = pathSearchGetNextPoint(&state->pathSearches[8]);
         if (state->cachedRouteEntry == NULL) {
             return NULL;
@@ -1578,7 +1578,7 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, u32 route, int pathId)
         }
     }
 
-    pathSearchBegin(&state->pathSearches[8], (RomCurveDef*)route, state->targetPosPtr, pathId, state->route.reverse);
+    pathSearchBegin(&state->pathSearches[8], route, state->targetPosPtr, pathId, state->route.reverse);
     if (pathSearchStep(&state->pathSearches[8], TRICKY_PATH_SEARCH_BULK_STEPS) != 1) {
         return NULL;
     }
@@ -1672,7 +1672,7 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
     if (entry == NULL) {
         entry = trickyFindNearestLinkedRouteEntry(state, routeDef, state->walkGroup, routeFlagValue & 0xff);
         if (entry == NULL) {
-            entry = trickyFindPathRouteEntry(state, (u32)routeDef, state->walkGroup);
+            entry = trickyFindPathRouteEntry(state, routeDef, state->walkGroup);
         }
 
         if (entry == NULL) {
@@ -1680,7 +1680,7 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
                 entry =
                     trickyFindNearestLinkedRouteEntry(state, routeDef, state->savedWalkGroup, routeFlagValue & 0xff);
                 if (entry == NULL) {
-                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, state->savedWalkGroup);
+                    entry = trickyFindPathRouteEntry(state, routeDef, state->savedWalkGroup);
                 }
                 if (entry != NULL) {
                     state->walkGroup = state->savedWalkGroup;
@@ -1703,45 +1703,45 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
 
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes) {
     f32 bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT];
-    int i;
-    RomCurveDef** curves;
+    int candidateSlot;
+    RomCurveDef** allCurves;
     int linkCurveId;
-    int count;
-    RomCurveDef** cp;
+    int curveCount;
+    RomCurveDef** curveCursor;
     int curveIdx;
     RomCurveDef* linkedCurve;
     f32 curveX;
     f32 targetXDistanceSquared;
     f32 targetZDistanceSquared;
     f32 curveZ;
-    f32* p;
+    f32* targetPos;
     f32 score;
-    f32 init;
+    f32 initialBestDistance;
     RomCurveDef* curve;
-    u8 j;
+    u8 routeSlot;
     u8 routeFlags;
-    u8 k;
-    f32* bd;
-    RomCurveDef** rp;
+    u8 shiftSlot;
+    f32* bestDistanceCursor;
+    RomCurveDef** bestRouteCursor;
     TrickyState* state;
 
     state = obj->extra;
-    curves = (*gRomCurveInterface)->getCurves(&count);
+    allCurves = (*gRomCurveInterface)->getCurves(&curveCount);
 
-    init = gTrickyMaxDistance;
-    bd = bestDistances;
-    rp = outRoutes;
-    for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++) {
-        *bd++ = init;
-        *rp++ = NULL;
+    initialBestDistance = gTrickyMaxDistance;
+    bestDistanceCursor = bestDistances;
+    bestRouteCursor = outRoutes;
+    for (candidateSlot = 0; candidateSlot < TRICKY_ROUTE_CANDIDATE_COUNT; candidateSlot++) {
+        *bestDistanceCursor++ = initialBestDistance;
+        *bestRouteCursor++ = NULL;
     }
 
     if (linkSelector == 0) {
         return;
     }
 
-    for (curveIdx = 0, cp = curves; curveIdx < count; cp++, curveIdx++) {
-        curve = *cp;
+    for (curveIdx = 0, curveCursor = allCurves; curveIdx < curveCount; curveCursor++, curveIdx++) {
+        curve = *curveCursor;
         if ((curve->type != 0x24) || (curve->walkGroup != 0)) {
             continue;
         }
@@ -1751,11 +1751,11 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
         }
 
         curveZ = curve->z;
-        p = state->targetPosPtr;
+        targetPos = state->targetPosPtr;
         {
-            targetZDistanceSquared = (p[2] - curveZ) * (p[2] - curveZ);
+            targetZDistanceSquared = (targetPos[2] - curveZ) * (targetPos[2] - curveZ);
             curveX = curve->x;
-            targetXDistanceSquared = (p[0] - curveX) * (p[0] - curveX);
+            targetXDistanceSquared = (targetPos[0] - curveX) * (targetPos[0] - curveX);
             {
                 f32 objectXDistanceSquared = (obj->anim.worldPosX - curveX) * (obj->anim.worldPosX - curveX);
                 f32 objectZDistanceSquared = (obj->anim.worldPosZ - curveZ) * (obj->anim.worldPosZ - curveZ);
@@ -1764,9 +1764,9 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
             }
         }
         if (score < bestDistances[7]) {
-            for (j = 0; j < 4; j++) {
-                linkCurveId = curve->linkIds[j];
-                if ((linkCurveId > -1) && (curve->linkWalkGroups[j] == linkSelector)) {
+            for (routeSlot = 0; routeSlot < 4; routeSlot++) {
+                linkCurveId = curve->linkIds[routeSlot];
+                if ((linkCurveId > -1) && (curve->linkWalkGroups[routeSlot] == linkSelector)) {
                     if (curve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A) {
                         linkedCurve = (*gRomCurveInterface)->getById(linkCurveId);
                         if ((linkedCurve != NULL) && (linkedCurve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
@@ -1774,26 +1774,26 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
                         }
                     }
 
-                    routeFlags = (u8)(curve->blockedLinkMask >> j);
+                    routeFlags = (u8)(curve->blockedLinkMask >> routeSlot);
                     break;
                 }
             }
 
-            if (j == 4) {
+            if (routeSlot == 4) {
                 continue;
             }
 
-            for (j = 0; j < TRICKY_ROUTE_CANDIDATE_COUNT; j++) {
-                if (score < bestDistances[j]) {
-                    for (k = 7; k > j; k--) {
-                        outRouteFlags[k] = outRouteFlags[k - 1];
-                        outRoutes[k] = outRoutes[k - 1];
-                        bestDistances[k] = bestDistances[k - 1];
+            for (routeSlot = 0; routeSlot < TRICKY_ROUTE_CANDIDATE_COUNT; routeSlot++) {
+                if (score < bestDistances[routeSlot]) {
+                    for (shiftSlot = 7; shiftSlot > routeSlot; shiftSlot--) {
+                        outRouteFlags[shiftSlot] = outRouteFlags[shiftSlot - 1];
+                        outRoutes[shiftSlot] = outRoutes[shiftSlot - 1];
+                        bestDistances[shiftSlot] = bestDistances[shiftSlot - 1];
                     }
 
-                    outRouteFlags[j] = (routeFlags & 1) ^ 1;
-                    outRoutes[j] = curve;
-                    bestDistances[j] = score;
+                    outRouteFlags[routeSlot] = (routeFlags & 1) ^ 1;
+                    outRoutes[routeSlot] = curve;
+                    bestDistances[routeSlot] = score;
                     break;
                 }
             }
@@ -5249,7 +5249,7 @@ void tricky_state06_nop(void) {
 #define CANNONBALL_ROUTE_BACKSTEP   (gCannonballRouteBackstep[0])
 
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
-    RomCurveDef* toNode;
+    RomCurveDef* blockedNode;
     u8 nodeCount = 0;
     int branchCurveId;
     RomCurveDef* branchNode;
@@ -5257,12 +5257,12 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     u32 branchMask;
     int branchIndex;
     int i;
-    RomCurveDef* curve;
-    RomCurveDef* fromNode;
+    RomCurveDef* segmentStartCurve;
+    RomCurveDef* startCurve;
+    RomCurveDef* unblockedNode;
     s32 nodeIds[4];
-    RomCurveDef* curveArg;
-    RomCurveDef* candidateNode;
-    RomCurveDef* targetNode;
+    RomCurveDef* branchCandidateNode;
+    RomCurveDef* nextSegmentNode;
     f32 speed;
     f64 distance;
     f64 bestDistance;
@@ -5299,20 +5299,20 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
         }
 
         if (nodeCount != 0) {
-            targetNode = (*gRomCurveInterface)->getById(nodeIds[0]);
-            bestDistance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &targetNode->x);
+            nextSegmentNode = (*gRomCurveInterface)->getById(nodeIds[0]);
+            bestDistance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &nextSegmentNode->x);
 
             for (i = 1, branchLinkId = &nodeIds[1]; i < nodeCount; i++) {
-                candidateNode = (*gRomCurveInterface)->getById(*branchLinkId);
-                distance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &candidateNode->x);
+                branchCandidateNode = (*gRomCurveInterface)->getById(*branchLinkId);
+                distance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &branchCandidateNode->x);
                 if (distance < bestDistance) {
-                    targetNode = candidateNode;
+                    nextSegmentNode = branchCandidateNode;
                     bestDistance = distance;
                 }
                 branchLinkId++;
             }
 
-            RomCurve_advanceToNextSegment(&ball->route, targetNode);
+            RomCurve_advanceToNextSegment(&ball->route, nextSegmentNode);
         }
 
         speed = ball->speed;
@@ -5352,25 +5352,28 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
         trickyUpdateMovementState(obj, CANNONBALL_INIT_WALK_RADIUS, ball);
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) ==
             Objfsa_GetWalkGroupIndexAtPoint(&ball->cannonballStartCurve->x, NULL)) {
-            curve = ball->cannonballStartCurve;
+            startCurve = ball->cannonballStartCurve;
 
-            fromNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(curve, 0));
-            toNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(curve, 0));
+            unblockedNode =
+                (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(startCurve, 0));
+            blockedNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(startCurve, 0));
 
-            bestDistance = getXZDistanceSquared(&ball->playerObj->anim.worldPosX, &fromNode->x);
-            distance = getXZDistanceSquared(&ball->playerObj->anim.worldPosX, &toNode->x);
+            bestDistance = getXZDistanceSquared(&ball->playerObj->anim.worldPosX, &unblockedNode->x);
+            distance = getXZDistanceSquared(&ball->playerObj->anim.worldPosX, &blockedNode->x);
 
-            curveArg = curve;
+            segmentStartCurve = startCurve;
             if (bestDistance > distance) {
-                targetNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(fromNode, 0));
+                nextSegmentNode =
+                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(unblockedNode, 0));
                 ball->route.reverse = 0;
             } else {
-                fromNode = toNode;
-                targetNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(toNode, 0));
+                unblockedNode = blockedNode;
+                nextSegmentNode =
+                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(blockedNode, 0));
                 ball->route.reverse = 1;
             }
 
-            RomCurve_setupHermiteSegment(&ball->route, curveArg, fromNode, targetNode);
+            RomCurve_setupHermiteSegment(&ball->route, segmentStartCurve, unblockedNode, nextSegmentNode);
             if (ball->route.reverse != 0) {
                 RomCurve_stepClamped(&ball->route, CANNONBALL_ROUTE_BACKSTEP);
             } else {

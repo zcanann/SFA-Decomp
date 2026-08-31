@@ -274,8 +274,9 @@ typedef struct TrickyState {
     u8 pad537[1];
     PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
     union {
-        RomCurveDef* cachedRouteEntry; /* cached route-entry pointer validated via skeetla_validateRouteEntry */
-        u32 cachedRouteId; /* route id/pointer word used as the cache key before the next point is fetched */
+        RomCurveDef*
+            cachedRouteEntry; /* path-search start/next-point cache slot, validated via skeetla_validateRouteEntry */
+        u32 cachedRouteId;    /* raw view of cachedRouteEntry retained for consumers still recovered as word keys */
     };
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32* previousPathPoint;
