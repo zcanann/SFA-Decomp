@@ -145,7 +145,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, int unusedArg, ObjSeq
             state->look.targetZ = player->anim.localPosZ;
             characterHeadLookCalm(obj, (s16*)&state->look, QUEEN_EARTH_WALKER_HEAD_LOOK_BLEND);
         }
-        animUpdate->flags &= ~0x40;
+        animUpdate->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
         if ((state->flags & QUEEN_EARTH_WALKER_FLAG_EYE_ANIMS) != 0) {
             characterCloseEyes(obj, &state->look);
         } else {

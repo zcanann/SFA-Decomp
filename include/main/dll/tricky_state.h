@@ -70,6 +70,13 @@ typedef struct TrickyPackedSlots {
     u8 unusedPromptSlotBits : 2;
 } TrickyPackedSlots;
 
+#define TRICKY_COMMAND_PHASE_IDLE      -1
+#define TRICKY_COMMAND_PHASE_NONE      0
+#define TRICKY_COMMAND_PHASE_DIG       1
+#define TRICKY_COMMAND_PHASE_GUARD     3
+#define TRICKY_COMMAND_PHASE_FLAME     4
+#define TRICKY_COMMAND_PHASE_PLAY_BALL 5
+
 #define MAX_COMM_PRESENT 10
 
 typedef struct TrickyCommand {
@@ -103,11 +110,11 @@ typedef struct TrickyState {
     TrickyStats* stats;    /* persisted energy and ball-play statistics */
     GameObject* playerObj; /* owning player/sidekick object */
     u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
-    u8 movementState;      /* TRICKY_MOVE_* path/jump phase selector */
-    u8 substate;           /* per-state handler substate */
-    u8 commandRequestBits; /* pending-command request bitmask:
-                              |= TRICKY_COMMAND_TYPE_TO_ABILITY(commandType) on enqueue, OR'd with
-                              Call+Stay into the prompt mask, tested != 0, cleared to 0 (tricky) */
+    u8 movementState;         /* TRICKY_MOVE_* path/jump phase selector */
+    u8 substate;              /* per-state handler substate */
+    u8 sideCommandPromptMask; /* transient sidekick command prompt bitmask:
+                                 |= TRICKY_COMMAND_TYPE_TO_FLAG(commandType) when another object enables a command,
+                                 OR'd with Call+Stay into the UI prompt mask, tested != 0, cleared to 0 (tricky) */
     u8 pad0C;
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
@@ -137,8 +144,7 @@ typedef struct TrickyState {
         };
         struct {
             u8 ownsWarpHelperObject : 1;
-            u8 soundSuppressed
-                : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
+            u8 soundSuppressed : 1; /* statusFlags bit 6: suppresses barks/voice sfx (trickySetSoundSuppressed / trickyTryPlaySound) */
             u8 heightTracking : 1; /* statusFlags bit 5 */
             u8 statusFlagsLow : 5;
         };
@@ -191,20 +197,22 @@ typedef struct TrickyState {
     f32 lookDirZ;
     u8 pad2C4[0x2D0 - 0x2C4];
     f32 freezeEffectTimer; /* counts down by timeDelta while frozen; resets when the shatter effect fires */
-    f32 freezeStunTimer;
+    f32 repeatHitCooldown; /* shared EnemyState repeat-hit guard slot */
     f32 freezeRecoverTimer;
-    u32 flags2DC;     /* flag word */
-    u32 flags2E0;     /* flag word tested alongside flags2DC (bits 0x100/0x800/0x1000) */
-    u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
-    u32 flags2E8;     /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
-    u16 impactSfxId;
+    u32 controlFlags;     /* shared EnemyState actor-control slot at 0x2DC */
+    u32 prevControlFlags; /* controlFlags snapshot, tested for newly-raised control bits in the shared actor code */
+    u32 flags2E4;         /* shared EnemyState flags2E4 slot */
+    u32 flags2E8;         /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
+    u16 hitStunFrames;    /* shared EnemyState hit-reaction duration slot */
     u8 pad2EE[0x2EF - 0x2EE];
     u8 actionId;     /* current action/move selector (0..5); compared against prevActionId to detect change */
     u8 prevActionId; /* previous frame's actionId */
-    u8 flags2F1;     /* bit flags (0x8/0x10/0x80) gating the spawn/anim paths */
+    u8 flags2F1;     /* decoded player-attack flags; shared with EnemyState hit/freeze handling */
     u8 pad2F2[0x2F5 - 0x2F2];
-    u8 spawnBits;
-    u8 pad2F6[0x2F8 - 0x2F6];
+    u8 spawnBits;             /* reward-drop selector decoded from the player attack flags */
+    u8 frozenFadeCounter : 5; /* countdown gating the frozen-shatter fade-in sfx */
+    u8 unk2F6 : 3;
+    u8 pad2F7[0x2F8 - 0x2F7];
     u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 pad2FA[0x300 - 0x2FA];
     f32 gravity; /* fall acceleration: velocityY -= gravity*dt, posY -= K*gravity*dt^2 */
@@ -380,7 +388,7 @@ typedef struct TrickyState {
     f32 sfxRepeatTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an SFX and re-primes to gTrickyTimer600Frames (tricky_substates) */
     f32 moveHoldTimer; /* f32 countdown primed to randomGetRange(120,240) on entering idle move 0x29; counted down in move 0x2a and on reaching the floor advances to move 0x2b or 0x2c (tricky_substates) */
     f32 idleSfxTimer; /* f32 countdown: -= timeDelta, on reaching floor fires an idle vocalization SFX and re-primes to randomGetRange(500,750) (tricky/substates/weapone6) */
-    f32 sparkleFxTimer;
+    f32 howlSparkleTimer; /* howl-call particle countdown; emits the 0x7F0 sparkle effect every 30 frames */
     TrickyCommand commands[MAX_COMM_PRESENT];
     u8 commandCount; /* number of queued Tricky commands (0..MAX_COMM_PRESENT); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
@@ -392,11 +400,12 @@ typedef struct TrickyState {
     GameObject* questPromptChild;
     f32 questPromptTimer;
     GameObject* foodChild;
-    TrickyPackedSlots packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (exclamationPromptChild/questPromptChild/foodChild) */
+    TrickyPackedSlots
+        packedSlots; /* 0x7BC: 2-bit anim-slot index per attached child (exclamationPromptChild/questPromptChild/foodChild) */
     u8 pad7BD[0x7C0 - 0x7BD];
     f32 foodVoiceTimer; /* child-object periodic phase timer: reset to gTrickyFloatZero when the child is attached, += timeDelta while it lives, wraps at gTrickyChildVoicePeriodFrames to (re)issue a TRICKY_VOICE line (tricky/substates/animobjd2) */
-    f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's 0x4000 anim flag */
-    f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's 0x4000 anim flag via gTrickyTimer20Frames */
+    f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's hidden anim flag */
+    f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's hidden anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
     u8 pendingFollowRequest;
     u8 pad7D1[0x7D4 - 0x7D1];
@@ -411,8 +420,7 @@ typedef struct TrickyState {
     union {
         u8 blendControlFlags; /* raw blend-channel control byte (bitfield view used by Tricky_updateBlendChannelWeight) */
         struct {
-            u8 blendPending
-                : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
+            u8 blendPending : 1; /* bit 7: requests priming of model blend channel 1 (Tricky_updateBlendChannelWeight consumes) */
             u8 blendActive : 1; /* bit 6: blend channel 1 ramp is running */
             u8 sequencePreserveBlend : 1;
             u8 blendControlFlagsRest : 5;
@@ -448,6 +456,7 @@ STATIC_ASSERT(offsetof(TrickyState, playerObj) == 0x4);
 STATIC_ASSERT(offsetof(TrickyState, stateIndex) == 0x8);
 STATIC_ASSERT(offsetof(TrickyState, substate) == 0xA);
 STATIC_ASSERT(offsetof(TrickyState, movementState) == 0x9);
+STATIC_ASSERT(offsetof(TrickyState, sideCommandPromptMask) == 0xB);
 STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
@@ -457,6 +466,16 @@ STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
 STATIC_ASSERT(offsetof(TrickyState, physicsActive) == 0x25F);
 STATIC_ASSERT(offsetof(TrickyState, bboxTraceFlags) == 0x261);
+STATIC_ASSERT(offsetof(TrickyState, freezeEffectTimer) == 0x2D0);
+STATIC_ASSERT(offsetof(TrickyState, repeatHitCooldown) == 0x2D4);
+STATIC_ASSERT(offsetof(TrickyState, freezeRecoverTimer) == 0x2D8);
+STATIC_ASSERT(offsetof(TrickyState, controlFlags) == 0x2DC);
+STATIC_ASSERT(offsetof(TrickyState, prevControlFlags) == 0x2E0);
+STATIC_ASSERT(offsetof(TrickyState, flags2E4) == 0x2E4);
+STATIC_ASSERT(offsetof(TrickyState, flags2E8) == 0x2E8);
+STATIC_ASSERT(offsetof(TrickyState, hitStunFrames) == 0x2EC);
+STATIC_ASSERT(offsetof(TrickyState, flags2F1) == 0x2F1);
+STATIC_ASSERT(offsetof(TrickyState, spawnBits) == 0x2F5);
 STATIC_ASSERT(offsetof(TrickyState, pathSpeed) == 0x310);
 STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
@@ -487,6 +506,7 @@ STATIC_ASSERT(offsetof(TrickyState, secretDigOriginZ) == 0x708);
 STATIC_ASSERT(offsetof(TrickyState, secretDigCurve) == 0x70C);
 STATIC_ASSERT(offsetof(TrickyState, secretDigWhineTimer) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, statusFlags) == 0x58);
+STATIC_ASSERT(offsetof(TrickyState, howlSparkleTimer) == 0x744);
 STATIC_ASSERT(offsetof(TrickyState, commands) == 0x748);
 STATIC_ASSERT(offsetof(TrickyState, commandCount) == 0x798);
 STATIC_ASSERT(offsetof(TrickyState, exclamationPromptChild) == 0x7A8);

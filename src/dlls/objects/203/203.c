@@ -303,7 +303,7 @@ int dll_CB_seqFn(GameObject* obj, int unused, ObjSeqState* sequenceState) {
         case DLL_CB_SUBMODE_CURVE:
         default:
             sequenceState->flags = -1;
-            sequenceState->flags &= ~OBJSEQ_CONTROL_RESTART_AT_SAVED_FRAME;
+            sequenceState->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
             path = (RomCurveWalker*)state->path;
             if ((state->flags400 & BADDIE_FLAG400_PATH_ACTIVE) != 0) {
                 if ((Curve_AdvanceAlongPath((Curve*)path, state->baddie.animSpeedA) != 0 || path->atSegmentEnd != 0) &&

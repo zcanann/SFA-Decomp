@@ -2487,11 +2487,11 @@ u8 lbl_8031B560[] = {
 };
 
 CMenuItemDef gCMenuTrickyAbilities[] = {
-    {TRICKY_ABILITY_CALL, -1, TRICKY_COMMAND_TYPE_CALL, 3201, 3201, 0, 1015, 0x00, 0x00},
-    {TRICKY_ABILITY_PLAY_BALL, -1, TRICKY_COMMAND_TYPE_PLAY_BALL, 3204, 3204, 6, 1016, 0x00, 0x00},
-    {TRICKY_ABILITY_FIND_SECRET, -1, TRICKY_COMMAND_TYPE_FIND_SECRET, 3202, 3202, 1, 1017, 0x00, 0x00},
-    {TRICKY_ABILITY_FLAME, -1, TRICKY_COMMAND_TYPE_FLAME, 3203, 3203, 2, 1018, 0x00, 0x00},
-    {TRICKY_ABILITY_STAY, -1, TRICKY_COMMAND_TYPE_STAY, 3205, 3205, 4, 1020, 0x00, 0x00},
+    {TRICKY_COMMAND_FLAG_CALL, -1, TRICKY_COMMAND_TYPE_CALL, 3201, 3201, 0, 1015, 0x00, 0x00},
+    {TRICKY_COMMAND_FLAG_PLAY_BALL, -1, TRICKY_COMMAND_TYPE_PLAY_BALL, 3204, 3204, 6, 1016, 0x00, 0x00},
+    {TRICKY_COMMAND_FLAG_FIND_SECRET, -1, TRICKY_COMMAND_TYPE_FIND_SECRET, 3202, 3202, 1, 1017, 0x00, 0x00},
+    {TRICKY_COMMAND_FLAG_FLAME, -1, TRICKY_COMMAND_TYPE_FLAME, 3203, 3203, 2, 1018, 0x00, 0x00},
+    {TRICKY_COMMAND_FLAG_STAY, -1, TRICKY_COMMAND_TYPE_STAY, 3205, 3205, 4, 1020, 0x00, 0x00},
     {-1, -1, -1, -1, 0, 0, 0, 0x00, 0x00},
 };
 
@@ -4069,7 +4069,7 @@ void drawTrickyHudOverlay(int obj, int unused1, int unused2)
         (player->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
         tricky != NULL && getHudHiddenFrameCount() == 0)
     {
-        TRICKY_INTERFACE(tricky)->getCurrentCommandType(tricky, &iconIndex);
+        TRICKY_INTERFACE(tricky)->getCurrentCommandPhase(tricky, &iconIndex);
         if (gTrickyHudCachedIconTexture != 0)
         {
             if (gTrickyHudCachedIconIndex != iconIndex)
