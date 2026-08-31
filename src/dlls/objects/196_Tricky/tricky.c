@@ -1216,11 +1216,11 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
 
 f32 gTrickyPathControlSetupParams[2] = {0.05f, 8.5f};
 f32 gTrickyPathPointCollisionRadius = 8.0f;
-char sSkeetlaVelDebugFmt[] = "Vel %f\n";
+char sTrickyVelocityDebugFmt[] = "Vel %f\n";
 /* Unreferenced zero bytes trail the debug format in retail .sdata. */
 u8 gap_09_803DBC54_sdata[4] = {0};
 
-static inline f32 skeetla_pathSpeedDelta(GameObject* obj) {
+static inline f32 trickyGetPathSpeedDelta(GameObject* obj) {
     TrickyState* state = (TrickyState*)obj->extra;
     f32* currentPathPoint;
     f32 dx;
@@ -1246,7 +1246,7 @@ static inline f32 skeetla_pathSpeedDelta(GameObject* obj) {
     return delta;
 }
 
-static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut) {
+static inline void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut) {
     TrickyState* state;
     int yaw;
 
@@ -1260,10 +1260,10 @@ static inline void skeetla_updateFacingFromMoveVector(GameObject* obj, s16* turn
     }
 }
 
-static void skeetla_faceMoveVector(GameObject* obj) {
+static void trickyFaceMoveVector(GameObject* obj) {
     s16 ignoredTurnDelta;
 
-    skeetla_updateFacingFromMoveVector(obj, &ignoredTurnDelta);
+    trickyUpdateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
 const f32 gTrickyAvoidanceRepathEpsilonSq[] = {0.0001f};
@@ -1281,7 +1281,7 @@ const f32 gTrickyAnimTransitionFrames[] = {15.0f};
 #define TRICKY_TURN_MOVE_BLEND_SPEED       (gTrickyTurnMoveBlendSpeed[0])
 #define TRICKY_ANIM_TRANSITION_FRAMES      (gTrickyAnimTransitionFrames[0])
 
-static inline void skeetla_playFootstepSfx(GameObject* obj, u16 sfxId) {
+static inline void trickyPlayMovementVoice(GameObject* obj, u16 sfxId) {
     TrickyState* state = obj->extra;
     if (((TrickyState*)obj->extra)->soundSuppressed == 0u &&
         ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END) || (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
@@ -1308,7 +1308,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     debugText = gTrickyDebugStringTable;
     state = obj->extra;
     currentSpeed = state->speed;
-    trickyDebugPrint(sSkeetlaVelDebugFmt, currentSpeed);
+    trickyDebugPrint(sTrickyVelocityDebugFmt, currentSpeed);
 
     state->dirX = targetPos[0] - obj->anim.worldPosX;
     state->dirZ = targetPos[2] - obj->anim.worldPosZ;
@@ -1346,7 +1346,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     }
 
     if (currentSpeed >= gTrickySmallSpeedStep) {
-        skeetla_updateFacingFromMoveVector(obj, &turnDeltaScratch);
+        trickyUpdateFacingFromMoveVector(obj, &turnDeltaScratch);
         if (skeetla_isInWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -1354,10 +1354,10 @@ int moveTricky(GameObject* obj, f32* targetPos) {
             trickyDebugPrint(debugText + TRICKY_DBG_IN_WATER);
         } else {
             if (state->stateIndex == TRICKY_STATE_FOLLOW_PLAYER) {
-                if (skeetla_pathSpeedDelta(obj) >= gTrickyFloatZero) {
-                    animPathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                if (trickyGetPathSpeedDelta(obj) >= gTrickyFloatZero) {
+                    animPathSpeedDelta = trickyGetPathSpeedDelta(obj);
                 } else {
-                    animPathSpeedDelta = skeetla_pathSpeedDelta(obj);
+                    animPathSpeedDelta = trickyGetPathSpeedDelta(obj);
                     animPathSpeedDelta = -animPathSpeedDelta;
                 }
 
@@ -1368,7 +1368,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
                             if (currentSpeed > 1.0f) {
                                 sfxId = randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME);
-                                skeetla_playFootstepSfx(obj, sfxId);
+                                trickyPlayMovementVoice(obj, sfxId);
                             } else {
                                 *(u32*)sfxIds = *(u32*)gTrickySlowFollowVoiceSfxIds;
                                 sfxIds[2] = gTrickySlowFollowBallVoiceSfxId[0];
@@ -1378,7 +1378,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                                     randomGetRange(0, 1);
                                 }
                                 sfxId = sfxIds[randomGetRange(0, 2)];
-                                skeetla_playFootstepSfx(obj, sfxId);
+                                trickyPlayMovementVoice(obj, sfxId);
                             }
                         }
                     }
@@ -1408,7 +1408,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
 
         previousYaw = obj->anim.rotX;
         turnDelta = 0;
-        skeetla_updateFacingFromMoveVector(obj, &turnDelta);
+        trickyUpdateFacingFromMoveVector(obj, &turnDelta);
         turnDeltaAbs = turnDelta;
 
         if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
