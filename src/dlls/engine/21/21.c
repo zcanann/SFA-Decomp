@@ -486,7 +486,7 @@ void curves_resolveWaterFloorCeiling(GameObject* obj, CurvesCollisionState* coll
                     collision->floorY[0] = point->height;
                     collision->floorGap[0] = collision->points[0][1] - point->height;
                     if ((s8)collision->segmentHits.surfaceTypes[0] == -1) {
-                        collision->segmentHits.surfaceTypes[0] = point->surfaceType;
+                        *(u8*)&collision->segmentHits.surfaceTypes[0] = point->surfaceType;
                     }
                     foundBelow = 1;
                 } else if ((point->height >= (CURVES_SURFACE_EPSILON + collision->points[0][1])) &&
