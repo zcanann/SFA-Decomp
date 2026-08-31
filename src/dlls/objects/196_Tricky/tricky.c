@@ -764,12 +764,12 @@ int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType c
 #define SKEETLA_TARGET_OBJGROUP 5
 /* Per-node fan-out limit: status[]/bestDistances[]/outRoutes[] hold at most
  * this many linked route candidates (status[8] / f32 bestDistances[8]). */
-#define TRICKY_ROUTE_CANDIDATE_COUNT   8
-#define SKEETLA_LINKED_SOURCE_ID_OBJ_A 0x1ca
-#define SKEETLA_LINKED_SOURCE_ID_OBJ_B 0x160
-#define SKEETLA_PARTICLE_SPARK_A       0xca
-#define SKEETLA_PARTICLE_SPARK_B       0xcb
-#define SKEETLA_CONTACT_OBJ_PROJBALL   0x1f /* "projball" (DLL 0xE3) */
+#define TRICKY_ROUTE_CANDIDATE_COUNT              8
+#define SKEETLA_LINKED_SOURCE_ROMDEF_GROUND_ANIMA 0x1ca
+#define SKEETLA_LINKED_SOURCE_ROMDEF_WALL_ANIMATO 0x160
+#define SKEETLA_PARTICLE_SPARK_A                  0xca
+#define SKEETLA_PARTICLE_SPARK_B                  0xcb
+#define SKEETLA_CONTACT_OBJ_PROJBALL              0x1f /* "projball" (DLL 0xE3) */
 
 /* attacker romDefNo that triggers the staff-impact sfx (retail OBJECTS.bin). */
 #define SKEETLA_ATTACKER_SEQID_STAFF 0x69
@@ -1819,9 +1819,9 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     args.y = state->sparkPos0Y;
     args.z = state->sparkPos0Z;
     args.objectId = obj->anim.rotX;
-    if (linkedObj->anim.romDefNo == SKEETLA_LINKED_SOURCE_ID_OBJ_A) {
+    if (linkedObj->anim.romDefNo == SKEETLA_LINKED_SOURCE_ROMDEF_GROUND_ANIMA) {
         args.sourceId = (u8)((u32(*)(GameObject*))linkedObj->anim.dll[0][10])(linkedObj);
-    } else if (linkedObj->anim.romDefNo == SKEETLA_LINKED_SOURCE_ID_OBJ_B) {
+    } else if (linkedObj->anim.romDefNo == SKEETLA_LINKED_SOURCE_ROMDEF_WALL_ANIMATO) {
         args.sourceId = (u8)((u32(*)(GameObject*))linkedObj->anim.dll[0][10])(linkedObj);
     } else {
         args.sourceId = 0;
@@ -3349,8 +3349,8 @@ int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state) {
  * being outside [0x29,0x30), and no sfx already playing on channel 0x10.
  */
 
-#define TRICKY_FLAME_CHILD_COUNT    7
-#define TRICKY_CHILD_OBJ_FLAMEBLAST 0x4f0 /* "flameblast" (DLL 0xF3) */
+#define TRICKY_FLAME_CHILD_COUNT       7
+#define TRICKY_SPAWN_ROMDEF_FLAMEBLAST 0x4f0 /* flameblast remap-source romDefNo (DLL 0xF3) */
 
 enum {
     TRICKYGROWL_WINDUP = 0,
@@ -3431,7 +3431,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
                 trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (spawnIndex = 0, spawnSlot = (void**)trickyState; spawnIndex < TRICKY_FLAME_CHILD_COUNT;
                      spawnSlot++, spawnIndex++) {
-                    setup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FLAMEBLAST);
+                    setup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
                     setup->base.color[0] = 2;
                     setup->base.color[1] = 1;
                     setup->streamIndex = spawnIndex;
@@ -4506,7 +4506,7 @@ static inline void trickySpawnFlameChildren(GameObject* obj, TrickyState* state)
 
         for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childSlot++, childIndex++) {
             FlameblastPlacement* setup =
-                (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FLAMEBLAST);
+                (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
 
             setup->base.color[0] = 2;
             setup->base.color[1] = 1;
@@ -4640,7 +4640,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
                     for (helperIndex = 0, helperSlot = (void**)trickyState; helperIndex < TRICKY_FLAME_CHILD_COUNT;
                          helperIndex++) {
                         helperSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*helperSetup),
-                                                                                 TRICKY_CHILD_OBJ_FLAMEBLAST);
+                                                                                 TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
                         helperSetup->base.color[0] = 2;
                         helperSetup->base.color[1] = 1;
                         helperSetup->streamIndex = helperIndex;
@@ -4980,8 +4980,8 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                         trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                         for (flameScratch = 0, flameChildCursor = (void**)trickyState;
                              flameScratch < TRICKY_FLAME_CHILD_COUNT; flameScratch++) {
-                            flameblastSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*flameblastSetup),
-                                                                                         TRICKY_CHILD_OBJ_FLAMEBLAST);
+                            flameblastSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(
+                                sizeof(*flameblastSetup), TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
                             flameblastSetup->base.color[0] = 2;
                             flameblastSetup->base.color[1] = 1;
                             flameblastSetup->streamIndex = flameScratch;
@@ -5091,8 +5091,8 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                         trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                         for (flameScratch = 0, flameChildCursor = (void**)trickyState;
                              flameScratch < TRICKY_FLAME_CHILD_COUNT; flameScratch++) {
-                            flameblastSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*flameblastSetup),
-                                                                                         TRICKY_CHILD_OBJ_FLAMEBLAST);
+                            flameblastSetup = (FlameblastPlacement*)Obj_AllocObjectSetup(
+                                sizeof(*flameblastSetup), TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
                             flameblastSetup->base.color[0] = 2;
                             flameblastSetup->base.color[1] = 1;
                             flameblastSetup->streamIndex = flameScratch;
@@ -5409,8 +5409,8 @@ void tricky_state04_nop(void) {
  * waterLevel/eventTime/currentTime ladder) chooses swim vs walk anims throughout.
  */
 
-/* child objects spawned by this TU (retail OBJECTS.bin names) */
-#define TRICKY_CHILD_OBJ_FOOD 0x17b /* "TrickyFood" */
+/* child objects spawned by this TU (retail OBJECTS.bin remap-source names) */
+#define TRICKY_SPAWN_ROMDEF_FOOD 0x17b /* TrickyFood */
 
 /*
  * A ROM/FSA walk-curve node as Tricky's tunnel/follow states see it (via the
@@ -5973,7 +5973,7 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (spawnIndex = 0, spawnChildCursor = (u8*)state; spawnIndex < TRICKY_FLAME_CHILD_COUNT;
                      spawnChildCursor += sizeof(GameObject*), spawnIndex++) {
-                    setup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FLAMEBLAST);
+                    setup = (FlameblastPlacement*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
                     setup->base.color[0] = 2;
                     setup->base.color[1] = 1;
                     setup->streamIndex = spawnIndex;
@@ -6335,7 +6335,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
     if (state->foodChild == NULL && (u8)Obj_CanSetupObject() != 0) {
-        setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_FOOD);
+        setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_FOOD);
         occupiedSlots[0] = -1;
         occupiedSlots[1] = -1;
         occupiedSlots[2] = -1;
@@ -6873,42 +6873,43 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
 
 /* group owned by another DLL, queried here */
 
-/* child/reward objects spawned by this DLL (retail OBJECTS.bin names) */
-#define TRICKY_CHILD_OBJ_BADGE_A       0x244 /* "TrickyBadge" */
-#define TRICKY_CHILD_OBJ_BADGE_B       0x254 /* "TrickyBadge" */
-#define TRICKY_CHILD_OBJ_QUEST         0x17c /* "TrickyQuest..." */
-#define TRICKY_CHILD_OBJ_EXCLAMATION   0x175 /* "TrickyExcla..." */
-#define TRICKY_CHILD_OBJ_SIDEKICK_BALL 0x112 /* "SidekickBal..." (DLL 0xF5 sidekickball) */
-#define TRICKY_OBJ_BLUE_MUSHROOM       0x6a  /* "BlueMushroo..." (DLL 0x1A7) */
+/* child/reward objects spawned by this DLL (retail OBJECTS.bin remap-source names) */
+#define TRICKY_SPAWN_ROMDEF_BADGE_A       0x244 /* TrickyBadge */
+#define TRICKY_SPAWN_ROMDEF_BADGE_B       0x254 /* TrickyBadge */
+#define TRICKY_SPAWN_ROMDEF_QUEST         0x17c /* TrickyQuest */
+#define TRICKY_SPAWN_ROMDEF_EXCLAMATION   0x175 /* TrickyExcla */
+#define TRICKY_SPAWN_ROMDEF_SIDEKICK_BALL 0x112 /* SidekickBal (DLL 0xF5) */
+#define TRICKY_ROMDEF_BLUE_MUSHROOM       0x6a  /* BlueMushroo */
 
-/* Command-target romDefNo values from the Rena object definition enum. */
-#define TRICKY_TARGET_OBJ_WCTEMPLE_PRESSURE  0x36
-#define TRICKY_TARGET_OBJ_SH_BEACON          0x3c
-#define TRICKY_TARGET_OBJ_CCEYE_VINES        0x102
-#define TRICKY_TARGET_OBJ_STAY_POINT         0x104
-#define TRICKY_TARGET_OBJ_CF_DOOR_LIGHT      0x131
-#define TRICKY_TARGET_OBJ_DIM_LOG_FIRE       0x191
-#define TRICKY_TARGET_OBJ_LINK_BLUE_MUSHROOM 0x193
-#define TRICKY_TARGET_OBJ_BURNABLE_VINE      0x194
-#define TRICKY_TARGET_OBJ_NW_MAMMOTH         0x195
-#define TRICKY_TARGET_OBJ_LINK_SNOW_PRESSURE 0x19f
-#define TRICKY_TARGET_OBJ_DIM_ICE_WALL       0x1c9
-#define TRICKY_TARGET_OBJ_SH_PRESSURE        0x26c
-#define TRICKY_TARGET_OBJ_DFP_TRANSLA        0x352
-#define TRICKY_TARGET_OBJ_DFP_TARGET_B       0x358
-#define TRICKY_TARGET_OBJ_DR_CHIMMEY         0x470
-#define TRICKY_TARGET_OBJ_DR_COLLAPSE        0x475
-#define TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT   0x546
-#define TRICKY_TARGET_OBJ_VFP_FLAMEPOINT     0x551
-#define TRICKY_TARGET_OBJ_MS_PLANTING_SEED   0x54c
-#define TRICKY_TARGET_OBJ_SH_WHITEMUSHROOM   0x658
-#define TRICKY_TARGET_OBJ_ICE_HOLE           0x6f9
-#define TRICKY_TARGET_OBJ_TRICKY_GUARD       0x6f0
-#define TRICKY_TARGET_OBJ_DIM_TRUTH_HORN     0x718
-#define TRICKY_TARGET_OBJ_SC_PRESSURE        0x7c3
-#define TRICKY_TARGET_OBJ_TUMBLEWEED2        0x3fb
-#define TRICKY_TARGET_OBJ_WC_BEACON          0x50f
-#define TRICKY_TARGET_OBJ_ARW_TIMED_MIN      0x542
+/* Values compared against GameObject.anim.romDefNo in the sidekick command dispatcher.
+ * Most are object-catalog remap-source IDs rather than OBJECTS.bin def_id rows. */
+#define TRICKY_COMMAND_TARGET_WCTEMPLEPRE      0x36
+#define TRICKY_COMMAND_TARGET_SH_BEACON        0x3c
+#define TRICKY_COMMAND_TARGET_CCEYE_VINES      0x102
+#define TRICKY_COMMAND_TARGET_STAY_POINT       0x104
+#define TRICKY_COMMAND_TARGET_CF_DOOR_LIGHT    0x131
+#define TRICKY_COMMAND_TARGET_DIM_LOG_FIRE     0x191
+#define TRICKY_COMMAND_TARGET_LINK_BLUE_MUSH   0x193
+#define TRICKY_COMMAND_TARGET_BURNABLE_VINE    0x194
+#define TRICKY_COMMAND_TARGET_NW_MAMMOTH_G     0x195
+#define TRICKY_COMMAND_TARGET_LINK_SNOW_PRESS  0x19f
+#define TRICKY_COMMAND_TARGET_DIM_ICE_WALL     0x1c9
+#define TRICKY_COMMAND_TARGET_SH_PRESSURE      0x26c
+#define TRICKY_COMMAND_TARGET_DFP_TRANSLA      0x352
+#define TRICKY_COMMAND_TARGET_DFP_TARGET_B     0x358
+#define TRICKY_COMMAND_TARGET_DR_CHIMMEY       0x470
+#define TRICKY_COMMAND_TARGET_DR_COLLAPSE      0x475
+#define TRICKY_COMMAND_TARGET_VFP_PUZZLE_POINT 0x546
+#define TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT   0x551
+#define TRICKY_COMMAND_TARGET_MS_PLANTING_SEED 0x54c
+#define TRICKY_COMMAND_TARGET_SH_WHITEMUSH     0x658
+#define TRICKY_COMMAND_TARGET_ICE_HOLE         0x6f9
+#define TRICKY_COMMAND_TARGET_TRICKY_GUARD     0x6f0
+#define TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN   0x718
+#define TRICKY_COMMAND_TARGET_SC_PRESSURE      0x7c3
+#define TRICKY_COMMAND_TARGET_TUMBLEWEED2      0x3fb
+#define TRICKY_COMMAND_TARGET_WC_BEACON        0x50f
+#define TRICKY_COMMAND_TARGET_ARW_TIMED_MIN    0x542
 
 #define TRICKY_OBJGROUP              1
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
@@ -7104,7 +7105,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 state->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (childIndex = 0, spawnSlot = (u8*)state; childIndex < TRICKY_FLAME_CHILD_COUNT;
                      spawnSlot += sizeof(GameObject*), childIndex++) {
-                    setup = Obj_AllocObjectSetup(sizeof(FlameblastPlacement), TRICKY_CHILD_OBJ_FLAMEBLAST);
+                    setup = Obj_AllocObjectSetup(sizeof(FlameblastPlacement), TRICKY_SPAWN_ROMDEF_FLAMEBLAST);
                     ((FlameblastPlacement*)setup)->base.color[0] = 2;
                     ((FlameblastPlacement*)setup)->base.color[1] = 1;
                     ((FlameblastPlacement*)setup)->streamIndex = childIndex;
@@ -7120,9 +7121,9 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
             if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && state->spawnedChild == NULL && (u8)Obj_CanSetupObject()) {
                 mapGetLoadedMapFlags(blockFlags);
                 if (blockFlags[0xd] != 0) {
-                    setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_A);
+                    setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_A);
                 } else {
-                    setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_B);
+                    setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_B);
                 }
                 state->spawnedChild = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
                 ObjLink_AttachChild(obj, state->spawnedChild, 3);
@@ -7349,7 +7350,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                 commandKind = ((TrickyState*)promptScratch)->commands[0].commandKind;
                 if (commandKind == TRICKY_COMMAND_KIND_NORMAL) {
                     if (((TrickyState*)promptScratch)->commands[0].targetObj->anim.romDefNo ==
-                        TRICKY_OBJ_BLUE_MUSHROOM) {
+                        TRICKY_ROMDEF_BLUE_MUSHROOM) {
                         showFoodVoicePrompt = true;
                     }
                     showExclamationPrompt = true;
@@ -7391,7 +7392,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     objSoundStartTimed(obj, &((TrickyState*)promptScratch)->soundState, questPromptSfxId, 0x500,
                                        0xffffffff, 0);
                 }
-                promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_QUEST);
+                promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_QUEST);
                 questPromptOccupiedSlots[0] = -1;
                 questPromptOccupiedSlots[1] = -1;
                 questPromptOccupiedSlots[2] = -1;
@@ -7448,7 +7449,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                                            0xffffffff, 0);
                     }
                 }
-                promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_EXCLAMATION);
+                promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_EXCLAMATION);
                 exclamationPromptOccupiedSlots[0] = -1;
                 exclamationPromptOccupiedSlots[1] = -1;
                 exclamationPromptOccupiedSlots[2] = -1;
@@ -7722,7 +7723,7 @@ static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
         int freeSlot;
         f32 childTimerReset;
 
-        setup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_CHILD_OBJ_FOOD);
+        setup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_SPAWN_ROMDEF_FOOD);
         occupiedSlots[0] = -1;
         occupiedSlots[1] = -1;
         occupiedSlots[2] = -1;
@@ -7792,9 +7793,9 @@ void Tricky_update(GameObject* obj) {
         (u8)Obj_CanSetupObject()) {
         mapGetLoadedMapFlags(loadedMapFlags);
         if (loadedMapFlags[0xd] != 0) {
-            placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_A);
+            placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_A);
         } else {
-            placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_CHILD_OBJ_BADGE_B);
+            placementSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_BADGE_B);
         }
         trickyState->spawnedChild = objSetupObject(placementSetup, 4, -1, -1, obj->anim.parent);
         ObjLink_AttachChild(obj, trickyState->spawnedChild, 3);
@@ -7920,7 +7921,7 @@ void Tricky_update(GameObject* obj) {
                     trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FIND_SECRET);
                     trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_FIND_SECRET_SNIFF, 0);
                     switch (trickyState->followObj->anim.romDefNo) {
-                    case SKEETLA_LINKED_SOURCE_ID_OBJ_A:
+                    case SKEETLA_LINKED_SOURCE_ROMDEF_GROUND_ANIMA:
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7931,7 +7932,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_FIND_SECRET_DIG;
                         }
                         break;
-                    case SKEETLA_LINKED_SOURCE_ID_OBJ_B:
+                    case SKEETLA_LINKED_SOURCE_ROMDEF_WALL_ANIMATO:
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7942,13 +7943,13 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_DIG_TUNNEL;
                         }
                         break;
-                    case TRICKY_OBJ_BLUE_MUSHROOM:
-                    case TRICKY_TARGET_OBJ_LINK_BLUE_MUSHROOM:
-                    case TRICKY_TARGET_OBJ_TUMBLEWEED2:
-                    case TRICKY_TARGET_OBJ_SH_WHITEMUSHROOM:
+                    case TRICKY_ROMDEF_BLUE_MUSHROOM:
+                    case TRICKY_COMMAND_TARGET_LINK_BLUE_MUSH:
+                    case TRICKY_COMMAND_TARGET_TUMBLEWEED2:
+                    case TRICKY_COMMAND_TARGET_SH_WHITEMUSH:
                         trickyState->stateIndex = TRICKY_STATE_MOVE_TO_FOLLOW_TARGET;
                         break;
-                    case TRICKY_TARGET_OBJ_NW_MAMMOTH:
+                    case TRICKY_COMMAND_TARGET_NW_MAMMOTH_G:
                         if (trickyState->stats->energy < 2) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7959,7 +7960,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_TRACK_TUMBLEWEED;
                         }
                         break;
-                    case TRICKY_TARGET_OBJ_DFP_TRANSLA:
+                    case TRICKY_COMMAND_TARGET_DFP_TRANSLA:
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
@@ -7970,7 +7971,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->stateIndex = TRICKY_STATE_FIND_SECRET_DIG;
                         }
                         break;
-                    case TRICKY_TARGET_OBJ_DFP_TARGET_B:
+                    case TRICKY_COMMAND_TARGET_DFP_TARGET_B:
                         trickyState->stateIndex = TRICKY_STATE_GROWL;
                         break;
                     default:
@@ -7997,19 +7998,19 @@ void Tricky_update(GameObject* obj) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_GUARD;
                         if (trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_STAY) != 0) {
                             switch (trickyState->followObj->anim.romDefNo) {
-                            case TRICKY_TARGET_OBJ_WCTEMPLE_PRESSURE:
-                            case TRICKY_TARGET_OBJ_STAY_POINT:
-                            case TRICKY_TARGET_OBJ_CF_DOOR_LIGHT:
-                            case TRICKY_TARGET_OBJ_LINK_SNOW_PRESSURE:
-                            case TRICKY_TARGET_OBJ_SH_PRESSURE:
-                            case TRICKY_TARGET_OBJ_DR_COLLAPSE:
-                            case TRICKY_TARGET_OBJ_VFP_PUZZLE_POINT:
-                            case TRICKY_TARGET_OBJ_SC_PRESSURE:
+                            case TRICKY_COMMAND_TARGET_WCTEMPLEPRE:
+                            case TRICKY_COMMAND_TARGET_STAY_POINT:
+                            case TRICKY_COMMAND_TARGET_CF_DOOR_LIGHT:
+                            case TRICKY_COMMAND_TARGET_LINK_SNOW_PRESS:
+                            case TRICKY_COMMAND_TARGET_SH_PRESSURE:
+                            case TRICKY_COMMAND_TARGET_DR_COLLAPSE:
+                            case TRICKY_COMMAND_TARGET_VFP_PUZZLE_POINT:
+                            case TRICKY_COMMAND_TARGET_SC_PRESSURE:
                                 trickyState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
                                 trickyState->idleSfxTimer = (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES,
                                                                                      TRICKY_IDLE_VOICE_MAX_FRAMES);
                                 break;
-                            case TRICKY_TARGET_OBJ_TRICKY_GUARD:
+                            case TRICKY_COMMAND_TARGET_TRICKY_GUARD:
                                 trickyState->stateIndex = TRICKY_STATE_GROWL;
                                 break;
                             default:
@@ -8033,32 +8034,32 @@ void Tricky_update(GameObject* obj) {
                         trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FLAME);
                         trickyState->stateIndex = TRICKY_STATE_FLAME;
                         switch (trickyState->followObj->anim.romDefNo) {
-                        case TRICKY_TARGET_OBJ_DIM_ICE_WALL:
+                        case TRICKY_COMMAND_TARGET_DIM_ICE_WALL:
                             trickyState->actionCallback = dimicewall_countdownCallback;
                             break;
-                        case TRICKY_TARGET_OBJ_DIM_TRUTH_HORN:
+                        case TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN:
                             trickyState->actionCallback = dimtruthhornice_countdownCallback;
                             break;
-                        case TRICKY_TARGET_OBJ_VFP_FLAMEPOINT:
+                        case TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT:
                             trickyState->actionCallback = vfpflamepoint_countdownCallback;
                             break;
-                        case TRICKY_TARGET_OBJ_DIM_LOG_FIRE:
+                        case TRICKY_COMMAND_TARGET_DIM_LOG_FIRE:
                             trickyState->actionCallback = dimlogfire_countdownCallback;
                             break;
-                        case TRICKY_TARGET_OBJ_DR_CHIMMEY:
+                        case TRICKY_COMMAND_TARGET_DR_CHIMMEY:
                             trickyState->actionCallback = drchimmey_countdownCallback;
                             break;
-                        case TRICKY_TARGET_OBJ_CCEYE_VINES:
-                        case TRICKY_TARGET_OBJ_BURNABLE_VINE:
-                        case TRICKY_TARGET_OBJ_ARW_TIMED_MIN:
-                        case TRICKY_TARGET_OBJ_MS_PLANTING_SEED:
-                        case TRICKY_TARGET_OBJ_ICE_HOLE:
+                        case TRICKY_COMMAND_TARGET_CCEYE_VINES:
+                        case TRICKY_COMMAND_TARGET_BURNABLE_VINE:
+                        case TRICKY_COMMAND_TARGET_ARW_TIMED_MIN:
+                        case TRICKY_COMMAND_TARGET_MS_PLANTING_SEED:
+                        case TRICKY_COMMAND_TARGET_ICE_HOLE:
                             trickyState->actionCallback = NULL;
                             break;
-                        case TRICKY_TARGET_OBJ_SH_BEACON:
+                        case TRICKY_COMMAND_TARGET_SH_BEACON:
                             trickyState->actionCallback = (TrickyActionCallback)sh_beacon_resetFadeTimerCallback;
                             break;
-                        case TRICKY_TARGET_OBJ_WC_BEACON:
+                        case TRICKY_COMMAND_TARGET_WC_BEACON:
                             trickyState->actionCallback = (TrickyActionCallback)wcbeacon_aButtonCallback;
                             break;
                         default:
@@ -8071,7 +8072,7 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_PLAY_BALL:
                     if ((u8)Obj_CanSetupObject()) {
                         trickyState->commandPhase = TRICKY_COMMAND_PHASE_PLAY_BALL;
-                        placementSetup = Obj_AllocObjectSetup(sizeof(ObjPlacement), TRICKY_CHILD_OBJ_SIDEKICK_BALL);
+                        placementSetup = Obj_AllocObjectSetup(sizeof(ObjPlacement), TRICKY_SPAWN_ROMDEF_SIDEKICK_BALL);
                         placementSetup->color[3] = 0xff;
                         placementSetup->color[0] = 2;
                         placementSetup->posX = obj->anim.worldPosX;
