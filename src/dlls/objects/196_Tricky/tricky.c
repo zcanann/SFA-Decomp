@@ -998,6 +998,21 @@ typedef enum TrickyFollowSubstate {
     TRICKY_FOLLOW_SUBSTATE_APPROACH_THORNTAIL = 12,
 } TrickyFollowSubstate;
 
+typedef enum TrickyAmbientActivity {
+    TRICKY_AMBIENT_ACTIVITY_APPROACH_THORNTAIL = 0,
+    TRICKY_AMBIENT_ACTIVITY_WANDER = 1,
+    TRICKY_AMBIENT_ACTIVITY_DIG_FOR_FOOD = 2,
+    TRICKY_AMBIENT_ACTIVITY_HOWL = 3,
+} TrickyAmbientActivity;
+
+typedef enum TrickyRandomIdleMove {
+    TRICKY_RANDOM_IDLE_LAND_IDLE = 0,
+    TRICKY_RANDOM_IDLE_PICK = 1,
+    TRICKY_RANDOM_IDLE_FIDGET_B = 2,
+    TRICKY_RANDOM_IDLE_FIDGET_A = 3,
+    TRICKY_RANDOM_IDLE_WANDER = 4,
+} TrickyRandomIdleMove;
+
 typedef enum TrickyPendingFollowRequest {
     TRICKY_PENDING_FOLLOW_NONE = 0,
     TRICKY_PENDING_FOLLOW_HANDOFF = 1,
@@ -6264,11 +6279,11 @@ int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
             state->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
         } else {
             switch (randomGetRange(0, 6)) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
+            case TRICKY_RANDOM_IDLE_LAND_IDLE:
+            case TRICKY_RANDOM_IDLE_PICK:
+            case TRICKY_RANDOM_IDLE_FIDGET_B:
+            case TRICKY_RANDOM_IDLE_FIDGET_A:
+            case TRICKY_RANDOM_IDLE_WANDER:
                 tricky_startRandomIdleMove(obj, state);
                 break;
             default:
@@ -6695,11 +6710,11 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
             } else {
                 randomDelay = randomGetRange(0, 6);
                 switch ((int)randomDelay) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                case 4:
+                case TRICKY_RANDOM_IDLE_LAND_IDLE:
+                case TRICKY_RANDOM_IDLE_PICK:
+                case TRICKY_RANDOM_IDLE_FIDGET_B:
+                case TRICKY_RANDOM_IDLE_FIDGET_A:
+                case TRICKY_RANDOM_IDLE_WANDER:
                     tricky_startRandomIdleMove(obj, trickyState);
                     break;
                 default:
@@ -6722,18 +6737,18 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
     int wanderYaw;
     f32 wanderAngle;
 
-    minActivity = 1;
-    maxActivity = 3;
+    minActivity = TRICKY_AMBIENT_ACTIVITY_WANDER;
+    maxActivity = TRICKY_AMBIENT_ACTIVITY_HOWL;
     searchRadius[0] = TRICKY_AMBIENT_ACTIVITY_BASE;
     found = objGetNearestTypeTo(SHTHORNTAIL_OBJECT_GROUP, obj, searchRadius);
     if (found != NULL && ((found)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-        minActivity = 0;
+        minActivity = TRICKY_AMBIENT_ACTIVITY_APPROACH_THORNTAIL;
     }
     if ((*gSkyInterface)->getSunPosition(0) == 0 || mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) == 0) {
-        maxActivity = 2;
+        maxActivity = TRICKY_AMBIENT_ACTIVITY_DIG_FOR_FOOD;
     }
     switch (randomGetRange(minActivity, maxActivity)) {
-    case 0:
+    case TRICKY_AMBIENT_ACTIVITY_APPROACH_THORNTAIL:
         state->followObj = found;
         objGetJointWorldPosition(found, 0, &state->wanderTargetX);
         if ((u8*)state->targetPosPtr != (u8*)&state->wanderTargetX) {
@@ -6749,7 +6764,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
         state->thorntailIdleMovePending = 0;
         state->substate = TRICKY_FOLLOW_SUBSTATE_APPROACH_THORNTAIL;
         break;
-    case 1:
+    case TRICKY_AMBIENT_ACTIVITY_WANDER:
         wanderYaw = randomGetRange(0x20, 0xff);
         wanderYaw = (s16)((obj->anim.rotX + wanderYaw) * 0x100);
         wanderAngle = TRICKY_PI * (f32)wanderYaw / TRICKY_ANGLE_HALF_TURN_UNITS;
@@ -6768,12 +6783,12 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
         }
         state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE_PICK;
         break;
-    case 2:
+    case TRICKY_AMBIENT_ACTIVITY_DIG_FOR_FOOD:
         trickyRequestMove(obj, TRICKY_ANIM_AMBIENT_HOWL, TRICKY_AMBIENT_HOWL_BLEND_SPEED, 0);
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->substate = TRICKY_FOLLOW_SUBSTATE_DIG_FOR_FOOD;
         break;
-    case 3:
+    case TRICKY_AMBIENT_ACTIVITY_HOWL:
         trickyRequestMove(obj, TRICKY_ANIM_HOWL_START, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
         sfxState = obj->extra;
         if (sfxState->soundSuppressed == 0 &&
@@ -6792,13 +6807,13 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
     int idleChoice;
     TrickyState* voiceState;
 
-    idleChoice = randomGetRange(0, 4);
+    idleChoice = randomGetRange(TRICKY_RANDOM_IDLE_LAND_IDLE, TRICKY_RANDOM_IDLE_WANDER);
     switch (idleChoice) {
-    case 0:
+    case TRICKY_RANDOM_IDLE_LAND_IDLE:
         trickyRequestMove(obj, TRICKY_ANIM_LAND_IDLE, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE;
         break;
-    case 1:
+    case TRICKY_RANDOM_IDLE_PICK:
         voiceState = obj->extra;
         if (voiceState->soundSuppressed == 0U) {
             if ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
@@ -6811,15 +6826,15 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
         break;
-    case 2:
+    case TRICKY_RANDOM_IDLE_FIDGET_B:
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_FIDGET_B_START, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_FIDGET_B;
         break;
-    case 3:
+    case TRICKY_RANDOM_IDLE_FIDGET_A:
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_FIDGET_A_START, TRICKY_TURN_MOVE_BLEND_SPEED, 0);
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_FIDGET_A;
         break;
-    case 4:
+    case TRICKY_RANDOM_IDLE_WANDER:
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_WANDER, TRICKY_IDLE_WANDER_BLEND_SPEED, 0);
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE;
         break;
