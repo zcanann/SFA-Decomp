@@ -516,7 +516,7 @@ void trickyUpdateColorVariant(GameObject* obj, TrickyState* state) {
     u8 colorVariant = state->stats->ballReturnCount / TRICKY_BALL_RETURNS_PER_COLOR;
 
     if (state->colorVariant != colorVariant) {
-        f32 t;
+        f32 fadeTimer;
         if (mainGetBit(TRICKY_COLOR_CHANGE_SEEN_GAMEBIT) == 0) {
             mainSetBits(TRICKY_COLOR_CHANGE_SEEN_GAMEBIT, 1);
             (*gObjectTriggerInterface)->runSequence(TRICKY_COLOR_CHANGE_SEQUENCE_ID, obj, -1);
@@ -524,12 +524,12 @@ void trickyUpdateColorVariant(GameObject* obj, TrickyState* state) {
             state->colorFadeTimer += TRICKY_TIMER_20_FRAMES;
         }
         state->colorFadeTimer -= timeDelta;
-        t = state->colorFadeTimer;
-        if (!(t > TRICKY_TIMER_20_FRAMES)) {
-            if (t > gTrickyFloatZero) {
+        fadeTimer = state->colorFadeTimer;
+        if (!(fadeTimer > TRICKY_TIMER_20_FRAMES)) {
+            if (fadeTimer > gTrickyFloatZero) {
                 f32 alpha;
-                if (t > TRICKY_FLOAT_TEN) {
-                    alpha = 1.0f - (t - TRICKY_FLOAT_TEN) / TRICKY_FLOAT_TEN;
+                if (fadeTimer > TRICKY_FLOAT_TEN) {
+                    alpha = 1.0f - (fadeTimer - TRICKY_FLOAT_TEN) / TRICKY_FLOAT_TEN;
                 } else {
                     Obj_GetActiveModel(obj)->textureRefs->swapSelector = colorVariant;
                     alpha = state->colorFadeTimer / TRICKY_FLOAT_TEN;
@@ -599,18 +599,18 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
     GameObject** baddieCursor;
     GameObject** baddieList;
     GameObject* closestBaddie;
-    int i;
+    int baddieIndex;
     f32 bestDistSq;
-    int count;
+    int baddieCount;
 
     bestDistSq = maxRadius;
     closestBaddie = 0;
-    baddieList = (GameObject**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &count);
+    baddieList = (GameObject**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &baddieCount);
     bestDistSq = bestDistSq * bestDistSq;
-    i = 0;
+    baddieIndex = 0;
     baddieCursor = baddieList;
 
-    for (; i < count; baddieCursor++, i++) {
+    for (; baddieIndex < baddieCount; baddieCursor++, baddieIndex++) {
         TrickyBaddieTargetPlacement* placement;
         f32 healthFraction;
         int disabledByBit, enabledByBit;
@@ -7481,20 +7481,20 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
 }
 
 int Tricky_getAvailableCommands(GameObject* obj) {
-    int r = 0;
+    int commandMask = 0;
     if (mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
-        r = TRICKY_COMMAND_FLAG_FIND_SECRET | TRICKY_COMMAND_FLAG_STAY;
+        commandMask = TRICKY_COMMAND_FLAG_FIND_SECRET | TRICKY_COMMAND_FLAG_STAY;
         if (mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0) {
-            r |= TRICKY_COMMAND_FLAG_CALL;
+            commandMask |= TRICKY_COMMAND_FLAG_CALL;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
-            r |= TRICKY_COMMAND_FLAG_PLAY_BALL;
+            commandMask |= TRICKY_COMMAND_FLAG_PLAY_BALL;
         }
         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
-            r |= TRICKY_COMMAND_FLAG_FLAME;
+            commandMask |= TRICKY_COMMAND_FLAG_FLAME;
         }
     }
-    return r;
+    return commandMask;
 }
 
 int Tricky_getExtraSize(void) {
@@ -7613,14 +7613,14 @@ void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
 void Tricky_hitDetect(GameObject* obj) {
     f32 dy;
     f32 y;
-    GameObject** objects;
-    int i;
+    GameObject** xyzAnimatorObjects;
+    int objectIndex;
     GameObject* firepipeObj;
     TrickyState* state;
-    f32 height;
-    f32 z;
-    f32 th;
-    int count[2];
+    f32 animatorHeight;
+    f32 zero;
+    f32 previousTrackedHeight;
+    int objectCount[2];
 
     state = obj->extra;
     y = obj->anim.localPosY;
@@ -7643,33 +7643,34 @@ void Tricky_hitDetect(GameObject* obj) {
     }
     if (state->heightTracking != 0u) {
         {
-            GameObject** t = (GameObject**)objGetAllOfType(XYZ_ANIMATOR_OBJECT_GROUP, count);
-            i = 0;
-            objects = t;
+            GameObject** objectList = (GameObject**)objGetAllOfType(XYZ_ANIMATOR_OBJECT_GROUP, objectCount);
+            objectIndex = 0;
+            xyzAnimatorObjects = objectList;
         }
-        for (; i < count[0]; i++) {
-            height = XyzAnimator_getCoordinate(*objects, XYZ_ANIMATOR_COORD_WORLD_Y);
+        for (; objectIndex < objectCount[0]; objectIndex++) {
+            animatorHeight = XyzAnimator_getCoordinate(*xyzAnimatorObjects, XYZ_ANIMATOR_COORD_WORLD_Y);
             if (state->heightTrackObjId == -1) {
-                dy = (height - obj->anim.localPosY >= gTrickyFloatZero) ? height - obj->anim.localPosY
-                                                                        : -(height - obj->anim.localPosY);
+                dy = (animatorHeight - obj->anim.localPosY >= gTrickyFloatZero)
+                         ? animatorHeight - obj->anim.localPosY
+                         : -(animatorHeight - obj->anim.localPosY);
                 if (dy < TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
-                    state->heightTrackObjId = (*objects)->anim.placement->ident;
+                    state->heightTrackObjId = (*xyzAnimatorObjects)->anim.placement->ident;
                 }
             }
-            if ((u32)state->heightTrackObjId == (u32)(*objects)->anim.placement->ident) {
-                th = state->trackedHeight;
-                z = gTrickyFloatZero;
-                if ((th != z) && (th == height)) {
+            if ((u32)state->heightTrackObjId == (u32)(*xyzAnimatorObjects)->anim.placement->ident) {
+                previousTrackedHeight = state->trackedHeight;
+                zero = gTrickyFloatZero;
+                if ((previousTrackedHeight != zero) && (previousTrackedHeight == animatorHeight)) {
                     state->heightTracking = 0;
                 } else {
-                    obj->anim.localPosY = height;
-                    state->trackedHeight = height;
+                    obj->anim.localPosY = animatorHeight;
+                    state->trackedHeight = animatorHeight;
                 }
                 break;
             }
-            objects = objects + 1;
+            xyzAnimatorObjects = xyzAnimatorObjects + 1;
         }
-        if (i == count[0]) {
+        if (objectIndex == objectCount[0]) {
             state->heightTracking = 0;
         }
     }
