@@ -198,8 +198,14 @@ typedef struct EnemyState {
         } crawler;
         struct {
             u8 activeEventIndex; /* row index shared by the parallel 12-byte event tables (FamilyTable tbl8 in the controller, tbl24 in the hit handler) */
-            u8 idleRow; /* 12-byte IdleRow index, chained through row+9 */
-            u8 idleRowStarted;
+            union {
+                u8 idleRow; /* 12-byte IdleRow index, chained through row+9 */
+                u8 queuedEventIndex; /* delayed event row selected by wispBaddieQueueNextEvent */
+            };
+            union {
+                u8 idleRowStarted;
+                u8 eventQueued; /* latch paired with queuedEventIndex */
+            };
         } sharpClaw;
     } familyData;
     GameObject* lastHitObject;

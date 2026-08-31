@@ -464,6 +464,7 @@ u32 gGroundBaddieModelChainIds[4] = {6, 7, 8, 9};
 
 u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
 {
+    EnemyState* enemyState = (EnemyState*)state;
     u8* base = gBaddieMoveProgressTable;
     u8* sequenceBase;
     WispEventRow* eventRows;
@@ -479,19 +480,19 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
     WispEventRow* row;
     u32 sf2;
 
-    sequenceIndex = ((EnemyState*)state)->userData2;
+    sequenceIndex = enemyState->userData2;
     sequenceBase = base + sequenceIndex * 0x28;
     eventRows = *(WispEventRow**)(sequenceBase + 0x1444);
-    stateFlags = ((EnemyState*)state)->controlFlags;
+    stateFlags = enemyState->controlFlags;
     if ((stateFlags & 0x4000) != 0)
     {
         return 0;
     }
-    if (((EnemyState*)state)->sharpClaw.seqTimer && ((EnemyState*)state)->phaseAngle != 0)
+    if (enemyState->sharpClaw.seqTimer && enemyState->phaseAngle != 0)
     {
         return 0;
     }
-    eventFlags = ((EnemyState*)state)->flags2F1;
+    eventFlags = enemyState->flags2F1;
     ei = eventFlags & 0x1f;
     eventIndex = ei;
     if ((ei & 0x10) != 0)
@@ -514,15 +515,15 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
     }
     if ((u8)allowNewEvent != 0)
     {
-        if ((eventFlags != 0 || ((EnemyState*)state)->sharpClaw.eventDelayTimer) &&
+        if ((eventFlags != 0 || enemyState->sharpClaw.eventDelayTimer) &&
             (stateFlags & 0x40) == 0 && flag20 == 0)
         {
-            if (((EnemyState*)state)->sharpClaw.eventDelayTimer)
+            if (enemyState->sharpClaw.eventDelayTimer)
             {
-                ((EnemyState*)state)->sharpClaw.eventDelayTimer = ((EnemyState*)state)->sharpClaw.eventDelayTimer - timeDelta;
-                if (((EnemyState*)state)->sharpClaw.eventDelayTimer <= 0.0f)
+                enemyState->sharpClaw.eventDelayTimer = enemyState->sharpClaw.eventDelayTimer - timeDelta;
+                if (enemyState->sharpClaw.eventDelayTimer <= 0.0f)
                 {
-                    ((EnemyState*)state)->sharpClaw.eventDelayTimer = 0.0f;
+                    enemyState->sharpClaw.eventDelayTimer = 0.0f;
                 }
                 else
                 {
@@ -532,31 +533,31 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
             else
             {
                 eventTableIndex = sequenceIndex * 2;
-                ((EnemyState*)state)->sharpClaw.eventDelayTimer =
-                    ((EnemyState*)state)->intervalTimer +
-                    (f32)(int)randomGetRange(base[eventTableIndex + 0x152c], base[eventTableIndex + 0x152d]);
-                ((EnemyState*)state)->intervalTimer = 0.0f;
+                enemyState->sharpClaw.eventDelayTimer =
+                    enemyState->intervalTimer + (f32)(int)randomGetRange(base[eventTableIndex + 0x152c],
+                                                                         base[eventTableIndex + 0x152d]);
+                enemyState->intervalTimer = 0.0f;
                 return 0;
             }
         }
     }
-    if ((((u8)allowNewEvent != 0 && ((EnemyState*)state)->flags2F1 != 0 && eventRows[eventIndex].moveId != 0) ||
-         (((EnemyState*)state)->flags2F1 & 0x20) != 0) &&
-        !(((EnemyState*)state)->familyData.sharpClaw.activeEventIndex == eventIndex && ((EnemyState*)state)->sharpClaw.moveHoldTimer != 0.0f))
+    if ((((u8)allowNewEvent != 0 && enemyState->flags2F1 != 0 && eventRows[eventIndex].moveId != 0) ||
+         (enemyState->flags2F1 & 0x20) != 0) &&
+        !(enemyState->familyData.sharpClaw.activeEventIndex == eventIndex && enemyState->sharpClaw.moveHoldTimer != 0.0f))
     {
-        sf2 = ((EnemyState*)state)->controlFlags;
-        if ((sf2 & 0x800080) != 0 || (((EnemyState*)state)->flags2F1 & 0x20) != 0)
+        sf2 = enemyState->controlFlags;
+        if ((sf2 & 0x800080) != 0 || (enemyState->flags2F1 & 0x20) != 0)
         {
             blendTimer = 60.0f * (blendScale * (row = &eventRows[eventIndex])->blend);
-            ((EnemyState*)state)->sharpClaw.moveHoldDuration = blendTimer;
-            ((EnemyState*)state)->sharpClaw.moveHoldTimer = blendTimer;
-            ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags | 0x40;
-            ((EnemyState*)state)->curveIndex = ((EnemyState*)state)->curveIndex | 0x80;
-            ((EnemyState*)state)->curveParamA = 0;
-            ((EnemyState*)state)->curveParamB = 0;
+            enemyState->sharpClaw.moveHoldDuration = blendTimer;
+            enemyState->sharpClaw.moveHoldTimer = blendTimer;
+            enemyState->controlFlags = enemyState->controlFlags | 0x40;
+            enemyState->curveIndex = enemyState->curveIndex | 0x80;
+            enemyState->curveParamA = 0;
+            enemyState->curveParamB = 0;
             Baddie_SetMove(obj, state, row->moveId, blendScale * row->blend, 0, row->flags & 0xff);
             ObjAnim_SetMoveProgress(&obj->anim, *(f32*)(base + row->moveId * 4));
-            ((EnemyState*)state)->familyData.sharpClaw.activeEventIndex = eventIndex;
+            enemyState->familyData.sharpClaw.activeEventIndex = eventIndex;
             return 1;
         }
         if ((sf2 & 0x40000000) != 0)
@@ -565,32 +566,31 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
         }
         return 0;
     }
-    if (((EnemyState*)state)->sharpClaw.moveHoldTimer)
+    if (enemyState->sharpClaw.moveHoldTimer)
     {
-        GameObject* pos = (GameObject*)((EnemyState*)state)->trackedObj;
+        GameObject* pos = (GameObject*)enemyState->trackedObj;
         baddieTurnTowardPoint(obj, state, pos->anim.localPosX, pos->anim.localPosZ, 0xf, 0);
-        if (((EnemyState*)state)->animPlaySpeed > 0.0166f)
+        if (enemyState->animPlaySpeed > 0.0166f)
         {
-            ((EnemyState*)state)->animPlaySpeed = ((EnemyState*)state)->animPlaySpeed - 0.005f;
+            enemyState->animPlaySpeed = enemyState->animPlaySpeed - 0.005f;
         }
-        if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
+        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            eventTableIndex = ((EnemyState*)state)->familyData.sharpClaw.activeEventIndex;
+            eventTableIndex = enemyState->familyData.sharpClaw.activeEventIndex;
             Baddie_SetMove(obj, state, eventRows[eventTableIndex].moveId,
-                           eventRows[((EnemyState*)state)->familyData.sharpClaw.activeEventIndex].blend, 0,
+                           eventRows[enemyState->familyData.sharpClaw.activeEventIndex].blend, 0,
                            eventRows[eventTableIndex].flags & 0xff);
             ObjAnim_SetMoveProgress(
-                &obj->anim, *(f32*)(base + eventRows[((EnemyState*)state)->familyData.sharpClaw.activeEventIndex].moveId * 4));
+                &obj->anim, *(f32*)(base + eventRows[enemyState->familyData.sharpClaw.activeEventIndex].moveId * 4));
         }
-        ((EnemyState*)state)->sharpClaw.moveHoldTimer = ((EnemyState*)state)->sharpClaw.moveHoldTimer - timeDelta;
-        if (((EnemyState*)state)->sharpClaw.moveHoldTimer <= 0.0f)
+        enemyState->sharpClaw.moveHoldTimer = enemyState->sharpClaw.moveHoldTimer - timeDelta;
+        if (enemyState->sharpClaw.moveHoldTimer <= 0.0f)
         {
-            ((EnemyState*)state)->sharpClaw.moveHoldTimer = 0.0f;
-            ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags & ~0x40LL;
-            ((EnemyState*)state)->controlFlags =
-                ((EnemyState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
-            ((EnemyState*)state)->curveIndex = ((EnemyState*)state)->curveIndex & ~0x80;
-            ((EnemyState*)state)->familyData.sharpClaw.activeEventIndex = 0;
+            enemyState->sharpClaw.moveHoldTimer = 0.0f;
+            enemyState->controlFlags = enemyState->controlFlags & ~0x40LL;
+            enemyState->controlFlags = enemyState->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
+            enemyState->curveIndex = enemyState->curveIndex & ~0x80;
+            enemyState->familyData.sharpClaw.activeEventIndex = 0;
             return 0;
         }
         else
@@ -644,30 +644,31 @@ void wispBaddiePlayMoveEventSfx(GameObject* obj, void* animState)
 
 void wispBaddieQueueNextEvent(GameObject* obj, int delta)
 {
-    u8* inner = ((GameObject*)obj)->extra;
-    u8* ptr = gBaddieFamilyTables[inner[0x33b]].tbl4;
-    inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
-    inner[0x33e] = 1;
+    EnemyState* state = (EnemyState*)obj->extra;
+    u8* ptr = gBaddieFamilyTables[state->userData2].tbl4;
+    state->familyData.sharpClaw.queuedEventIndex = (u8)(delta + (u32)ptr[8] + 1);
+    state->familyData.sharpClaw.eventQueued = 1;
 }
 
 u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int msgId, int arrIdx, int damage,
                                 Vec* hitPos, int sector, f32 hDist, f32 vDist)
 {
+    EnemyState* enemyState = (EnemyState*)state;
     u8* animRows;
     u8* rowsC;
     u8* rowsB;
     u8* trig;
     u8 ret;
 
-    animRows = gBaddieFamilyTables[((EnemyState*)state)->userData2].tbl10;
-    rowsC = gBaddieFamilyTables[((EnemyState*)state)->userData2].tbl24;
-    rowsB = gBaddieFamilyTables[((EnemyState*)state)->userData2].tbl1c;
-    trig = gBaddieFamilyTables[((EnemyState*)state)->userData2].tbl20;
+    animRows = gBaddieFamilyTables[enemyState->userData2].tbl10;
+    rowsC = gBaddieFamilyTables[enemyState->userData2].tbl24;
+    rowsB = gBaddieFamilyTables[enemyState->userData2].tbl1c;
+    trig = gBaddieFamilyTables[enemyState->userData2].tbl20;
     ret = 0;
 
-    if (((EnemyState*)state)->userData2 == 5)
+    if (enemyState->userData2 == 5)
     {
-        ((EnemyState*)state)->flags2E8 |= 0x10;
+        enemyState->flags2E8 |= 0x10;
         return 0;
     }
     if (msgId == 0xe)
@@ -680,10 +681,10 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
     }
     if (msgId == 0x10)
     {
-        ((EnemyState*)state)->flags2E8 |= 0x28;
+        enemyState->flags2E8 |= 0x28;
         return 0;
     }
-    if ((((EnemyState*)state)->controlFlags & 0x40) != 0 ||
+    if ((enemyState->controlFlags & 0x40) != 0 ||
         (trig[arrIdx] != 0 && ((u32)(msgId - 0xe) <= 1 || msgId == 0x13)))
     {
         if (msgId != 0x11)
@@ -694,23 +695,24 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
                 Sfx_PlayFromObject(obj, SFXTRIG_swdout1);
                 Sfx_PlayFromObject(obj, SFXTRIG_gethit02);
             }
-            ((EnemyState*)state)->flags2E8 |= 0x10;
+            enemyState->flags2E8 |= 0x10;
             {
                 IdleRow* rows = (IdleRow*)rowsC;
-                Baddie_SetMove(obj, state, rows[state[0x33c]].anim, *(f32*)(rowsC + state[0x33c] * 12), 0,
-                               (u8)rows[state[0x33c]].flags);
+                Baddie_SetMove(obj, state, rows[enemyState->familyData.sharpClaw.activeEventIndex].anim,
+                               *(f32*)(rowsC + enemyState->familyData.sharpClaw.activeEventIndex * 12), 0,
+                               (u8)rows[enemyState->familyData.sharpClaw.activeEventIndex].flags);
             }
             ObjAnim_SetMoveProgress(&obj->anim,
-                                    *(f32*)(gBaddieMoveProgressTable + rowsC[state[0x33c] * 12 + 8] * 4));
-            if (rowsC[state[0x33c] * 12 + 0xa] != 0)
+                                    *(f32*)(gBaddieMoveProgressTable + rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 8] * 4));
+            if (rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 0xa] != 0)
             {
-                state[0x33a] = rowsC[state[0x33c] * 12 + 0xa];
+                enemyState->userData1 = rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 0xa];
             }
-            ret = rowsC[((EnemyState*)state)->familyData.sharpClaw.activeEventIndex * 12 + 9];
-            ((EnemyState*)state)->sharpClaw.moveHoldTimer = ((EnemyState*)state)->sharpClaw.moveHoldDuration;
+            ret = rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 9];
+            enemyState->sharpClaw.moveHoldTimer = enemyState->sharpClaw.moveHoldDuration;
             z = 0.0f;
-            ((EnemyState*)state)->sharpClaw.eventDelayTimer = z;
-            ((EnemyState*)state)->intervalTimer = z;
+            enemyState->sharpClaw.eventDelayTimer = z;
+            enemyState->intervalTimer = z;
         }
     }
     else
@@ -724,28 +726,28 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
         }
         else
         {
-            amount = ((EnemyState*)state)->flags2F1 & 0x1f;
-            if ((u32)(((EnemyState*)state)->flags2F1 & 0x1f) > 0x18)
+            amount = enemyState->flags2F1 & 0x1f;
+            if ((u32)(enemyState->flags2F1 & 0x1f) > 0x18)
             {
                 amount = 0;
             }
         }
         z = 0.0f;
-        ((EnemyState*)state)->sharpClaw.eventDelayTimer = z;
-        if (state[0x2f1] & 0x18)
+        enemyState->sharpClaw.eventDelayTimer = z;
+        if (enemyState->flags2F1 & 0x18)
         {
-            if (state[0x2f1] & 1)
+            if (enemyState->flags2F1 & 1)
             {
-                ((EnemyState*)state)->intervalTimer = 50.0f;
+                enemyState->intervalTimer = 50.0f;
             }
             else
             {
-                ((EnemyState*)state)->intervalTimer = 30.0f;
+                enemyState->intervalTimer = 30.0f;
             }
         }
         else
         {
-            ((EnemyState*)state)->intervalTimer = z;
+            enemyState->intervalTimer = z;
         }
         if (((EnemyState*)state)->sharpClaw.seqTimer && ((EnemyState*)state)->phaseAngle != 0)
         {
