@@ -116,14 +116,14 @@
 #include "main/newshadows_audio_api.h"
 
 typedef struct {
-    u16 a;
-    u16 b;
-} TrickySfxPair;
+    u16 first;
+    u16 second;
+} TrickyVoiceSfxPair;
 
 typedef union {
     u32 raw;
     u16 ids[2];
-} TrickyPackedSfxPair;
+} TrickyVoiceSfxPairWord;
 
 typedef struct TrickyBaddieTargetPlacement {
     u8 pad0[0x14];
@@ -174,12 +174,12 @@ STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 #define TRICKY_VOICE_SFX_SCARED                0x392
 
 const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
-const TrickySfxPair sTrickyImpressSfxPair = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
+const TrickyVoiceSfxPair sTrickyImpressSfxPair = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
 const u16 gTrickyQuestPromptSfxIds[2] = {TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR, TRICKY_VOICE_SFX_LOOK_AT_THIS};
-const u16 gTrickySubstateSfxIdPairA[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
-const u16 gTrickySubstateSfxIdPairB[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
-const u16 gSkeetlaFootstepSfxIds01[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING};
-const u16 gSkeetlaFootstepSfxId2[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
+const u16 gTrickySecretDigCompleteSfxIds[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
+const u16 gTrickyDigTunnelCompleteSfxIds[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
+const u16 gTrickySlowFollowVoiceSfxIds[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING};
+const u16 gTrickySlowFollowBallVoiceSfxId[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 
 #define gTrickyFloatZero              0.0f
 #define sTrickyFloatTen               10.0f
@@ -1370,8 +1370,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                                 sfxId = randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME);
                                 skeetla_playFootstepSfx(obj, sfxId);
                             } else {
-                                *(u32*)sfxIds = *(u32*)gSkeetlaFootstepSfxIds01;
-                                sfxIds[2] = gSkeetlaFootstepSfxId2[0];
+                                *(u32*)sfxIds = *(u32*)gTrickySlowFollowVoiceSfxIds;
+                                sfxIds[2] = gTrickySlowFollowBallVoiceSfxId[0];
                                 if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
                                     randomGetRange(0, 2);
                                 } else {
@@ -5483,7 +5483,7 @@ char sTrickyDigTunnelDebugTextBlock[] = "DIGTUNNEL_FINDING\n"
                                         "DIGTUNNEL_WAIT\n";
 
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
-    TrickyPackedSfxPair sfxTable;
+    TrickyVoiceSfxPairWord sfxTable;
     char* debugTextBase;
     RomCurveDef* tunnelNode;
     f32* targetPos;
@@ -5499,7 +5499,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     f32 dirXSq;
 
     debugTextBase = gTrickyDebugStringTable;
-    sfxTable.raw = *(u32*)gTrickySubstateSfxIdPairB;
+    sfxTable.raw = *(u32*)gTrickyDigTunnelCompleteSfxIds;
     switch (state->substate) {
     case 0:
         tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, 2);
@@ -5672,7 +5672,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
-    TrickyPackedSfxPair sfxTable;
+    TrickyVoiceSfxPairWord sfxTable;
     RomCurveDef* curve;
     f32* curvePos;
     GameObject* followObj;
@@ -5681,7 +5681,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     f32 dirLength;
     f32 z;
 
-    sfxTable.raw = *(u32*)gTrickySubstateSfxIdPairA;
+    sfxTable.raw = *(u32*)gTrickySecretDigCompleteSfxIds;
     followObj = state->followObj;
     switch (state->substate) {
     case 0:
@@ -7807,7 +7807,7 @@ void Tricky_update(GameObject* obj) {
     f32 moveProgress;
     u8 loadedMapFlags[120];
     TrickyCommandTypeList sideCommandQuery;
-    TrickySfxPair impressSfxPair;
+    TrickyVoiceSfxPair impressSfxPair;
 
     debugTextBase = gTrickyDebugStringTable;
     debugData = (TrickyDebugCollisionData*)debugTextBase;
