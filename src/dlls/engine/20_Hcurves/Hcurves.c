@@ -537,7 +537,7 @@ int RomCurve_setupHermiteSegment(RomCurveWalker* state, void* fromCurve, void* t
 }
 
 
-void* Objfsa_FindNearestCurveType24(f32* pos, int walkGroupFilter, int subtypeFilter)
+RomCurveDef* Objfsa_FindNearestCurveType24(f32* pos, int walkGroupFilter, int subtypeFilter)
 {
     int count;
     RomCurveDef* hit;
@@ -572,7 +572,7 @@ void* Objfsa_FindNearestCurveType24(f32* pos, int walkGroupFilter, int subtypeFi
 }
 
 
-void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int walkGroupFilter, int subtypeFilter)
+RomCurveDef* Objfsa_FindNearestEnabledCurveType24(f32* pos, int walkGroupFilter, int subtypeFilter)
 {
     int count;
     RomCurveDef** list;

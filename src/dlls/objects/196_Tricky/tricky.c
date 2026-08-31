@@ -4915,7 +4915,9 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
     switch (trickyState->substate) {
     case TRICKY_FLAME_NONE:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_FLAME_NONE);
-        trickyState->flameEdgeNode = Objfsa_FindNearestCurveType24(&trickyState->followObj->anim.worldPosX, -1, 4);
+        trickyState->flameEdgeNode =
+            Objfsa_FindNearestCurveType24(&trickyState->followObj->anim.worldPosX, -1,
+                                          ROMCURVE_TRICKY_SUBTYPE_FLAME_EDGE);
         if (trickyState->flameEdgeNode->walkGroup != 0) {
             targetPos = &trickyState->flameEdgeNode->x;
             if (trickyState->targetPosPtr != targetPos) {
@@ -5512,7 +5514,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     sfxTable.raw = *(u32*)gTrickyDigTunnelCompleteSfxIds;
     switch (state->substate) {
     case 0:
-        tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, 2);
+        tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
         state->digTunnelEntryNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[0]);
         state->digTunnelStartNode.curve = tunnelNode;
         state->digTunnelExitNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[1]);
@@ -5695,7 +5697,9 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     followObj = state->followObj;
     switch (state->substate) {
     case 0:
-        state->secretDigCurve = Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1, 2);
+        state->secretDigCurve =
+            Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1,
+                                                 ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
         if (state->secretDigCurve != NULL &&
             getXZDistanceSquared(&state->followObj->anim.worldPosX, &state->secretDigCurve->x) >
                 TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ) {
@@ -7269,7 +7273,9 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
             if (busy != 0) {
                 return;
             }
-            state->cannonballStartCurve = Objfsa_FindNearestEnabledCurveType24(&targetObj->anim.worldPosX, -1, 3);
+            state->cannonballStartCurve =
+                Objfsa_FindNearestEnabledCurveType24(&targetObj->anim.worldPosX, -1,
+                                                     ROMCURVE_TRICKY_SUBTYPE_CANNONBALL_ROUTE);
             state->cannonballScratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
             state->stateIndex = TRICKY_STATE_BALL_ROLL;
             state->followObj = targetObj;
