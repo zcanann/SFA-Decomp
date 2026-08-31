@@ -662,26 +662,22 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 }
 
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
-    struct {
-        s16 hx, hy, hz;
-        f32 fk;
-        f32 dx, dy, dz;
-    } stk;
-    u8 i = 0x14;
+    PartFxSpawnParams particleParams;
+    u8 spawnCount = 0x14;
     u32 flags = state->stateFlags;
     if ((flags & TRICKY_STATE_CHILD_ACTIVITY_FLAGS) == 0) {
         return;
     }
-    stk.dx = state->renderPosX - obj->anim.worldPosX;
-    stk.dy = state->renderPosY - obj->anim.worldPosY;
-    stk.dz = state->renderPosZ - obj->anim.worldPosZ;
-    stk.fk = 1.0f;
-    stk.hx = obj->anim.rotX;
-    stk.hy = obj->anim.rotY;
-    stk.hz = obj->anim.rotZ;
+    particleParams.posX = state->renderPosX - obj->anim.worldPosX;
+    particleParams.posY = state->renderPosY - obj->anim.worldPosY;
+    particleParams.posZ = state->renderPosZ - obj->anim.worldPosZ;
+    particleParams.scale = 1.0f;
+    particleParams.rotX = obj->anim.rotX;
+    particleParams.rotY = obj->anim.rotY;
+    particleParams.rotZ = obj->anim.rotZ;
     if ((flags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
-        while (i-- != 0) {
-            (*gPartfxInterface)->spawnObject(obj, TRICKY_PATH_PARTFX, &stk, 2, -1, NULL);
+        while (spawnCount-- != 0) {
+            (*gPartfxInterface)->spawnObject(obj, TRICKY_PATH_PARTFX, &particleParams, 2, -1, NULL);
         }
         state->stateFlags = state->stateFlags & ~(u64)TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     }
@@ -3977,10 +3973,12 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
 
 GameObject* trickyFindCirclingTarget(GameObject* obj, TrickyState* state) {
     GameObject* target;
-    GameObject** list;
-    int count;
-    int i;
-    f32 d1, d2, d3;
+    GameObject** baddieList;
+    int baddieCount;
+    int baddieIndex;
+    f32 trickyToTarget;
+    f32 trickyToPlayer;
+    f32 targetToPlayer;
 
     target = state->followObj;
     if (target->anim.romDefNo == ANIMOBJD2_CIRCLE_TARGET_SEQID) {
@@ -3989,18 +3987,18 @@ GameObject* trickyFindCirclingTarget(GameObject* obj, TrickyState* state) {
 
     target = (GameObject*)playerGetTargetObject(state->playerObj);
     if (target != NULL) {
-        list = objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &count);
-        for (i = 0; i < count; i++) {
-            if (*list == target) {
-                d1 = Vec_xzDistance(&obj->anim.worldPosX, &target->anim.worldPosX);
-                d2 = Vec_xzDistance(&obj->anim.worldPosX, &state->playerObj->anim.worldPosX);
-                d3 = Vec_xzDistance(&target->anim.worldPosX, &state->playerObj->anim.worldPosX);
-                if ((d1 + d2) < 2.0f * d3) {
+        baddieList = objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &baddieCount);
+        for (baddieIndex = 0; baddieIndex < baddieCount; baddieIndex++) {
+            if (*baddieList == target) {
+                trickyToTarget = Vec_xzDistance(&obj->anim.worldPosX, &target->anim.worldPosX);
+                trickyToPlayer = Vec_xzDistance(&obj->anim.worldPosX, &state->playerObj->anim.worldPosX);
+                targetToPlayer = Vec_xzDistance(&target->anim.worldPosX, &state->playerObj->anim.worldPosX);
+                if ((trickyToTarget + trickyToPlayer) < 2.0f * targetToPlayer) {
                     return target;
                 }
                 break;
             }
-            list++;
+            baddieList++;
         }
     }
     return NULL;
@@ -4010,33 +4008,33 @@ void trickyUpdateCirclingTargetPosition(GameObject* obj, TrickyState* state) {
     GameObject* target = state->followObj;
     f32 dx = target->anim.worldPosX - obj->anim.worldPosX;
     f32 dz = target->anim.worldPosZ - obj->anim.worldPosZ;
-    int angle = atan2Angle16(dx, dz);
-    s32 delta;
-    s32 absDelta;
+    int targetAngle = atan2Angle16(dx, dz);
+    s32 angleDelta;
+    s32 absAngleDelta;
 
     if (state->substate == ANIMOBJD2_SUBSTATE_ACQUIRE) {
         state->circlingDirection.i = randomGetRange(0, 1);
         if (state->circlingDirection.i == 0) {
             state->circlingDirection.i = -1;
         }
-        state->circlingAngle.i = angle;
+        state->circlingAngle.i = targetAngle;
         state->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
-    delta = angle - (s32)(u16)state->circlingAngle.u;
-    if (delta > 0x8000) {
-        delta -= 0xFFFF;
+    angleDelta = targetAngle - (s32)(u16)state->circlingAngle.u;
+    if (angleDelta > 0x8000) {
+        angleDelta -= 0xFFFF;
     }
-    if (delta < -0x8000) {
-        delta += 0xFFFF;
+    if (angleDelta < -0x8000) {
+        angleDelta += 0xFFFF;
     }
 
-    if (delta >= 0) {
-        absDelta = delta;
+    if (angleDelta >= 0) {
+        absAngleDelta = angleDelta;
     } else {
-        absDelta = -delta;
+        absAngleDelta = -angleDelta;
     }
-    if (absDelta < 0x2000) {
+    if (absAngleDelta < 0x2000) {
         state->circlingAngle.i = state->circlingAngle.i + (state->circlingDirection.i << 11);
     }
 
