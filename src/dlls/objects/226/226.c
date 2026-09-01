@@ -13,6 +13,7 @@
  * in staffDoGrowShrinkAnim.
  *
  */
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/model.h"
 #include "dolphin/mtx.h"
 #include "main/texture.h"
@@ -39,7 +40,6 @@
 #include "main/curve.h"
 #include "dolphin/gx/GXDraw.h"
 #include "dolphin/gx/GXEnum.h"
-#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_005A_staffcollision.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
@@ -59,7 +59,7 @@
 #include "track/intersect_render_setup_api.h"
 #include "main/dll/partfx_interface.h"
 
-extern void* gStaffSwipeTextures[2];
+extern Texture* gStaffSwipeTextures[2];
 extern StaffCollisionInterface** gStaffSwipeResource;
 
 #define STAFF_CONTACT_HIT_VOLUME_COUNT 36
@@ -90,72 +90,24 @@ s16 sStaffSwipeTextureIdTable[4] = {0xC7F, 0x3EC, 0, 0};
 /* swipe/attack lingering trail: single follow-up spawn after the burst cluster */
 #define STAFF_PARTFX_SWIPE_TRAIL 0x7b3
 
-/* per-swipe trail record (stride 0x18, 3 records) */
-typedef struct StaffSwipeSlot {
-    u8* vertexData;
-    f32 start;
-    f32 lengthScale;
-    u16 startIndex;
-    u16 endIndex;
-    s16 idx;
-    s16 vertexCount;
-    u8 flags;
-    u8 pad15[0x18 - 0x15];
-} StaffSwipeSlot;
+#define CLAMP_EXPR(value, low, high) ((value) < (low) ? (low) : ((value) > (high) ? (high) : (value)))
+#define STAFF_SWIPE_SLOT_COUNT       3
+#define STAFF_SWIPE_VERTEX_CAPACITY  3000
+#define STAFF_SWIPE_VERTEX_LIMIT     (STAFF_SWIPE_VERTEX_CAPACITY - 2)
+#define STAFF_SWIPE_FLAG_START       1
+#define STAFF_SWIPE_FLAG_ACTIVE      2
 
-typedef struct StaffState {
-    StaffSwipeSlot slots[3];
-    void* activeSlot; /* 0x48: active swipe slot pointer */
-    u8 pad4C[4];
-    f32 moveSpeed; /* 0x50: current-move advance speed */
-    f32 geometryPointAX[2];
-    f32 geometryPointAY[2];
-    f32 geometryPointAZ[2];
-    f32 geometryPointBX[2];
-    f32 geometryPointBY[2];
-    f32 geometryPointBZ[2];
-    u8 pad84[4];
-    s16 hitReactValue;
-    u8 pad8A[2];
-    f32 anchorX;
-    f32 anchorY;
-    f32 anchorZ;
-    f32 progress;
-    u8 pad9C[0xAA - 0x9C];
-    u8 unkAA;
-    u8 padAB[0xB0 - 0xAB];
-    s16 unkB0;
-    s16 fieldB2;
-    u8 padB4[5];
-    s8 swipeTextureIndex; /* 0xB9 */
-    u8 glowEnable;        /* 0xBA */
-    u8 glowAttackType;    /* 0xBB */
-    u8 hudSuppressed;     /* 0xBC */
-} StaffState;
-typedef struct StaffQuakeSpellState {
-    f32 posX;        /* 0x00 */
-    f32 posY;        /* 0x04 */
-    f32 posZ;        /* 0x08 */
-    f32 scale;       /* 0x0C: torus scale (PSMTXScale + hitbox radius) */
-    f32 radius;      /* 0x10: GXDrawTorus radius */
-    f32 heightScale; /* 0x14: y-axis scale multiplier */
-    f32 fade;        /* 0x18: fade/alpha driver (quakeSpellTextureFn arg, anim.alpha) */
-    int* object;     /* 0x1C: spawned quake-spell object */
-    u8 active;       /* 0x20: spell active flag */
-    u8 pad21[7];
-} StaffQuakeSpellState;
+typedef struct StaffWeaponSample {
+    s16 endpointA[3];
+    s16 endpointB[3];
+} StaffWeaponSample;
+
+STATIC_ASSERT(sizeof(StaffWeaponSample) == 0x0C);
+
 extern StaffQuakeSpellState gStaffQuakeSpellState;
 typedef struct SwipeColorTable {
     StaffCollisionColorArgs colors[4];
 } SwipeColorTable;
-typedef struct SwipeVertex {
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 life;
-    s16 alpha;
-    s16 pad12;
-} SwipeVertex;
 typedef struct StaffEffectParams {
     u16 id;
     u16 a;
@@ -183,6 +135,11 @@ static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
 static inline void swipeTexCoord2f32(const f32 s, const f32 t) {
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
+}
+
+static inline f32 staffGetSwipeAlpha(f32 age) {
+    f32 fade = 255.0f * (age / 8.0f);
+    return 255.0f - CLAMP_EXPR(fade, 0.0f, 255.0f);
 }
 
 void staffUpdateAttackEffects(GameObject* obj, GameObject* player) {
@@ -371,17 +328,17 @@ static void staffUpdateQuakeSpell(void) {
     if (q->active != 0) {
         f32 fade;
         q->scale += 5.5f;
-        ObjHitbox_SetSphereRadius((ObjAnimComponent*)q->object, q->scale);
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)q->object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
+        ObjHitbox_SetSphereRadius(&q->object->anim, q->scale);
+        ObjHits_SetHitVolumeSlot(&q->object->anim, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
         gStaffQuakeSpellState.fade += -4.0f;
         fade = gStaffQuakeSpellState.fade;
         gStaffQuakeSpellState.radius *= 0.97f;
         gStaffQuakeSpellState.heightScale *= 1.01f;
-        ((GameObject*)q->object)->anim.alpha = fade;
-        ((GameObject*)q->object)->anim.rootMotionScale += 0.07f;
+        q->object->anim.alpha = fade;
+        q->object->anim.rootMotionScale += 0.07f;
         if (gStaffQuakeSpellState.fade < 1.0f) {
             q->active = 0;
-            Obj_FreeObject((GameObject*)q->object);
+            Obj_FreeObject(q->object);
             q->object = NULL;
         }
     }
@@ -392,7 +349,7 @@ void staffStartQuakeSpell(f32* pos) {
     u8 canSetupObject;
 
     if (gStaffQuakeSpellState.active != 0) {
-        Obj_FreeObject((GameObject*)gStaffQuakeSpellState.object);
+        Obj_FreeObject(gStaffQuakeSpellState.object);
         gStaffQuakeSpellState.object = NULL;
     }
     gStaffQuakeSpellState.posX = pos[0];
@@ -425,14 +382,14 @@ void staffStartQuakeSpell(f32* pos) {
         setup->posY = gStaffQuakeSpellState.posY;
         setup->posZ = gStaffQuakeSpellState.posZ;
         gStaffQuakeSpellState.object =
-            (int*)objSetupObject((ObjPlacement*)setup, 5, player->anim.mapEventSlot, -1, player->anim.parent);
+            (GameObject*)objSetupObject((ObjPlacement*)setup, 5, player->anim.mapEventSlot, -1, player->anim.parent);
         if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0) {
-            ((ObjAnimComponent*)gStaffQuakeSpellState.object)->bankIndex = 1;
+            gStaffQuakeSpellState.object->anim.bankIndex = 1;
         }
-        ObjHitbox_SetSphereRadius((ObjAnimComponent*)gStaffQuakeSpellState.object, 1);
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)gStaffQuakeSpellState.object, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
-        ((GameObject*)gStaffQuakeSpellState.object)->anim.rootMotionScale = 0.05f;
-        ((GameObject*)gStaffQuakeSpellState.object)->anim.alpha = 0xff;
+        ObjHitbox_SetSphereRadius(&gStaffQuakeSpellState.object->anim, 1);
+        ObjHits_SetHitVolumeSlot(&gStaffQuakeSpellState.object->anim, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
+        gStaffQuakeSpellState.object->anim.rootMotionScale = 0.05f;
+        gStaffQuakeSpellState.object->anim.alpha = 0xff;
     }
 }
 
@@ -475,7 +432,7 @@ void staffDrawSwipe(GameObject* obj, StaffState* swipe) {
     StaffSwipeSlot* swp;
     int i;
 
-    selectTexture((Texture*)gStaffSwipeTextures[swipe->swipeTextureIndex], 0);
+    selectTexture(gStaffSwipeTextures[swipe->swipeTextureIndex], 0);
     gxTevResetStages();
     gxTevTextureTimesRasStage();
     gxTevCommitStages();
@@ -492,14 +449,14 @@ void staffDrawSwipe(GameObject* obj, StaffState* swipe) {
     GXSetCurrentMtx(GX_PNMTX0);
 
     i = 0;
-    swp = (StaffSwipeSlot*)swipe;
-    for (; i < 3; i++) {
-        if ((swp->flags & 2) && swp->vertexCount >= 4) {
+    for (; i < STAFF_SWIPE_SLOT_COUNT; i++) {
+        swp = &swipe->slots[i];
+        if ((swp->flags & STAFF_SWIPE_FLAG_ACTIVE) && swp->vertexCount >= 4) {
             SwipeVertex* vp;
             int j;
             f32 v1, v0, u;
             j = swp->startIndex;
-            vp = (SwipeVertex*)(swp->vertexData + j * 20);
+            vp = &swp->vertexData[j];
             for (; j < swp->endIndex - 2; j += 2) {
                 u = 0.5f;
                 v0 = 0.0f;
@@ -520,187 +477,162 @@ void staffDrawSwipe(GameObject* obj, StaffState* swipe) {
                 vp += 2;
             }
         }
-        swp++;
     }
 }
-void staff_setupSwipe(int unused1, StaffState* swipe, int unused3, int objArg) {
-    ObjWeaponDaTable* weaponDaTable;
-    StaffSwipeSlot* slot;
-    GameObject* obj;
-    ObjAnimState* model2;
-    s16* tbl;
-    int count;
-    int count2;
-    int ibase;
-    int first;
-    SwipeVertex* vp;
-    int idx[4];
-    f32 ptAx[4];
-    f32 ptAy[4];
-    f32 ptAz[4];
-    f32 ptBx[4];
-    f32 ptBy[4];
-    f32 ptBz[4];
-    f32 sinv, cosv, vidx, flb, tmax, step, fla, angle, frac, acc, prog, m4;
-    int ang;
+void staff_setupSwipe(int unusedStaff, StaffState* state, int unusedContext, int playerArg) {
+    StaffWeaponSample* samples;
+    int sampleCount;
+    int subdivisions;
+    int sampleIndex;
+    int refreshControlPoints;
+    SwipeVertex* vertices;
+    int sampleIndices[4];
+    f32 endpointAX[4];
+    f32 endpointAY[4];
+    f32 endpointAZ[4];
+    f32 endpointBX[4];
+    f32 endpointBY[4];
+    f32 endpointBZ[4];
+    f32 sinAngle, cosAngle, samplePosition, endPosition, lastFrame, step, startPosition, angle, splineT, movementT,
+        swipeEnd, frame;
+    int yaw;
 
-    obj = (GameObject*)objArg;
-    if (swipe->activeSlot == NULL || swipe->hudSuppressed != 0) {
-        return;
-    }
     {
-        ang = obj->anim.rotX;
-        if ((s16*)obj->anim.parent != NULL) {
-            ang += *(s16*)obj->anim.parent;
+        ObjAnimState* animation;
+        StaffSwipeSlot* slot;
+        GameObject* player;
+
+        player = (GameObject*)playerArg;
+        if (state->activeSlot == NULL || state->hudSuppressed != 0) {
+            return;
         }
-        angle = (gStaffPi[0] * (f32)(int)-ang) / gStaffAngleUnitScale[0];
-        sinv = mathSinf(angle);
-        cosv = mathCosf(angle);
-        model2 = ((ObjAnimBank*)Obj_GetActiveModel(obj))->currentState;
-        weaponDaTable = obj->anim.weaponDaTable;
-        if (weaponDaTable != NULL && weaponDaTable->byteCount > 0) {
-            f32 sw;
-            slot = swipe->activeSlot;
-            count = (int)(2.0f * model2->frameLength);
-            prog = slot->lengthScale * model2->frameLength;
-            if (slot->flags & 1) {
-                swipe->anchorX = obj->anim.worldPosX;
-                swipe->anchorY = obj->anim.worldPosY;
-                swipe->anchorZ = obj->anim.worldPosZ;
-                swipe->progress = 0.0f;
-                slot->flags &= ~1;
+        yaw = player->anim.rotX;
+        if (player->anim.parentAnim != NULL) {
+            yaw += player->anim.parentAnim->rotX;
+        }
+        angle = (gStaffPi[0] * (f32)(int)-yaw) / gStaffAngleUnitScale[0];
+        sinAngle = mathSinf(angle);
+        cosAngle = mathCosf(angle);
+        animation = Obj_GetActiveModel(player)->currentState;
+        if (player->anim.weaponDaTable != NULL && player->anim.weaponDaTable->byteCount > 0) {
+            f32 previousFrame;
+            slot = state->activeSlot;
+            sampleCount = (int)(2.0f * animation->frameLength);
+            swipeEnd = slot->lengthScale * animation->frameLength;
+            if (slot->flags & STAFF_SWIPE_FLAG_START) {
+                state->anchorX = player->anim.worldPosX;
+                state->anchorY = player->anim.worldPosY;
+                state->anchorZ = player->anim.worldPosZ;
+                state->progress = 0.0f;
+                slot->flags &= ~STAFF_SWIPE_FLAG_START;
             }
-            sw = swipe->progress;
-            m4 = model2->framePhase;
-            tmax = m4;
-            if (sw > prog) {
-                swipe->progress = m4;
+            previousFrame = state->progress;
+            frame = animation->framePhase;
+            lastFrame = frame;
+            if (previousFrame > swipeEnd) {
+                state->progress = frame;
                 return;
             }
-            if (m4 > prog) {
-                tmax = prog;
+            if (frame > swipeEnd) {
+                lastFrame = swipeEnd;
             }
-            tbl = obj->anim.weaponDaTable->entries;
-            if (sw >= 0.0f) {
-                sw *= 40.0f;
-                fla = fastFloorf(sw) / 40.0f;
-                fla *= 2.0f;
-                tmax *= 40.0f;
-                flb = fastFloorf(tmax) / 40.0f;
-                flb *= 2.0f;
-                ibase = fla;
-                frac = fla - ibase;
-                count2 = (int)((flb - fla) / 0.1f);
-                if (count2 == 0) {
-                    if (model2->framePhase > prog) {
-                        swipe->progress = model2->framePhase;
+            samples = (StaffWeaponSample*)player->anim.weaponDaTable->entries;
+            if (previousFrame >= 0.0f) {
+                previousFrame *= 40.0f;
+                startPosition = fastFloorf(previousFrame) / 40.0f;
+                startPosition *= 2.0f;
+                lastFrame *= 40.0f;
+                endPosition = fastFloorf(lastFrame) / 40.0f;
+                endPosition *= 2.0f;
+                sampleIndex = startPosition;
+                splineT = startPosition - sampleIndex;
+                subdivisions = (int)((endPosition - startPosition) / 0.1f);
+                if (subdivisions == 0) {
+                    if (animation->framePhase > swipeEnd) {
+                        state->progress = animation->framePhase;
                     }
                     return;
                 }
-                acc = 0.0f;
-                step = 1.0f / count2;
-                first = 1;
-                while (count2 != 0) {
-                    if (slot->endIndex == 2998) {
-                        count2 = 0;
+                movementT = 0.0f;
+                step = 1.0f / subdivisions;
+                refreshControlPoints = 1;
+                while (subdivisions != 0) {
+                    if (slot->endIndex == STAFF_SWIPE_VERTEX_LIMIT) {
+                        subdivisions = 0;
                     } else {
-                        frac += 0.1f;
-                        if (frac >= 1.0f) {
-                            frac -= 1.0f;
-                            ibase += 1;
-                            first = 1;
+                        splineT += 0.1f;
+                        if (splineT >= 1.0f) {
+                            splineT -= 1.0f;
+                            sampleIndex += 1;
+                            refreshControlPoints = 1;
                         }
-                        acc += step;
-                        if (first) {
+                        movementT += step;
+                        if (refreshControlPoints) {
                             int n;
-                            int* pidx;
-                            f32 *pAx, *pAy, *pAz, *pBx, *pBy, *pBz;
-                            idx[0] = ibase - 1;
-                            idx[1] = ibase;
-                            idx[2] = ibase + 1;
-                            idx[3] = ibase + 2;
-                            if (ibase - 1 < 0) {
-                                idx[0] = 0;
+                            sampleIndices[0] = sampleIndex - 1;
+                            sampleIndices[1] = sampleIndex;
+                            sampleIndices[2] = sampleIndex + 1;
+                            sampleIndices[3] = sampleIndex + 2;
+                            if (sampleIndex - 1 < 0) {
+                                sampleIndices[0] = 0;
                             }
-                            if (idx[1] >= count) {
-                                idx[1] = count;
+                            if (sampleIndices[1] >= sampleCount) {
+                                sampleIndices[1] = sampleCount;
                             }
-                            if (idx[2] >= count) {
-                                idx[2] = count;
+                            if (sampleIndices[2] >= sampleCount) {
+                                sampleIndices[2] = sampleCount;
                             }
-                            if (idx[3] >= count) {
-                                idx[3] = count;
+                            if (sampleIndices[3] >= sampleCount) {
+                                sampleIndices[3] = sampleCount;
                             }
-                            pidx = idx;
-                            pAx = ptAx;
-                            pAy = ptAy;
-                            pAz = ptAz;
-                            pBx = ptBx;
-                            pBy = ptBy;
-                            pBz = ptBz;
-                            for (n = 4; n != 0; n--) {
+                            for (n = 0; n < 4; n++) {
                                 f32 t1, t2;
-                                *pAx = (f32)tbl[*pidx * 6] / 255.0f;
-                                *pAy = (f32)tbl[*pidx * 6 + 1] / 255.0f;
-                                *pAz = (f32)tbl[*pidx * 6 + 2] / 255.0f;
-                                *pBx = (f32)tbl[*pidx * 6 + 3] / 255.0f;
-                                *pBy = (f32)tbl[*pidx * 6 + 4] / 255.0f;
-                                *pBz = (f32)tbl[*pidx * 6 + 5] / 255.0f;
-                                t1 = cosv * *pAx - sinv * *pAz;
-                                t2 = sinv * *pAx + cosv * *pAz;
-                                *pAx = t1;
-                                *pAz = t2;
-                                t2 = sinv * *pBx + cosv * *pBz;
-                                t1 = cosv * *pBx - sinv * *pBz;
-                                *pBx = t1;
-                                *pBz = t2;
-                                pidx++;
-                                pAx++;
-                                pAy++;
-                                pAz++;
-                                pBx++;
-                                pBy++;
-                                pBz++;
+                                endpointAX[n] = (f32)samples[sampleIndices[n]].endpointA[0] / 255.0f;
+                                endpointAY[n] = (f32)samples[sampleIndices[n]].endpointA[1] / 255.0f;
+                                endpointAZ[n] = (f32)samples[sampleIndices[n]].endpointA[2] / 255.0f;
+                                endpointBX[n] = (f32)samples[sampleIndices[n]].endpointB[0] / 255.0f;
+                                endpointBY[n] = (f32)samples[sampleIndices[n]].endpointB[1] / 255.0f;
+                                endpointBZ[n] = (f32)samples[sampleIndices[n]].endpointB[2] / 255.0f;
+                                t1 = cosAngle * endpointAX[n] - sinAngle * endpointAZ[n];
+                                t2 = sinAngle * endpointAX[n] + cosAngle * endpointAZ[n];
+                                endpointAX[n] = t1;
+                                endpointAZ[n] = t2;
+                                t2 = sinAngle * endpointBX[n] + cosAngle * endpointBZ[n];
+                                t1 = cosAngle * endpointBX[n] - sinAngle * endpointBZ[n];
+                                endpointBX[n] = t1;
+                                endpointBZ[n] = t2;
                             }
-                            first = 0;
+                            refreshControlPoints = 0;
                         }
-                        vp = (SwipeVertex*)(slot->vertexData + slot->endIndex * 20);
-                        vp[0].x = Curve_EvalBSpline(ptBx, frac, NULL);
-                        vp[0].y = Curve_EvalBSpline(ptBy, frac, NULL);
-                        vp[0].z = Curve_EvalBSpline(ptBz, frac, NULL);
-                        vp[0].x += swipe->anchorX + acc * (obj->anim.worldPosX - swipe->anchorX);
-                        vp[0].y += swipe->anchorY + acc * (obj->anim.worldPosY - swipe->anchorY);
-                        vp[0].z += swipe->anchorZ + acc * (obj->anim.worldPosZ - swipe->anchorZ);
-                        vidx = ibase + frac;
-                        vp[0].life = vidx;
-                        {
-                            f32 t = 255.0f * ((flb - vp[0].life) / 8.0f);
-                            f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
-                            vp[0].alpha = 255.0f - clamped;
-                        }
-                        vp[1].x = Curve_EvalBSpline(ptAx, frac, NULL);
-                        vp[1].y = Curve_EvalBSpline(ptAy, frac, NULL);
-                        vp[1].z = Curve_EvalBSpline(ptAz, frac, NULL);
-                        vp[1].x += swipe->anchorX + acc * (obj->anim.worldPosX - swipe->anchorX);
-                        vp[1].y += swipe->anchorY + acc * (obj->anim.worldPosY - swipe->anchorY);
-                        vp[1].z += swipe->anchorZ + acc * (obj->anim.worldPosZ - swipe->anchorZ);
-                        vp[1].life = vidx;
-                        {
-                            f32 t = 255.0f * ((flb - vp[1].life) / 8.0f);
-                            f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
-                            vp[1].alpha = 255.0f - clamped;
-                        }
+                        vertices = &slot->vertexData[slot->endIndex];
+                        vertices[0].x = Curve_EvalBSpline(endpointBX, splineT, NULL);
+                        vertices[0].y = Curve_EvalBSpline(endpointBY, splineT, NULL);
+                        vertices[0].z = Curve_EvalBSpline(endpointBZ, splineT, NULL);
+                        vertices[0].x += state->anchorX + movementT * (player->anim.worldPosX - state->anchorX);
+                        vertices[0].y += state->anchorY + movementT * (player->anim.worldPosY - state->anchorY);
+                        vertices[0].z += state->anchorZ + movementT * (player->anim.worldPosZ - state->anchorZ);
+                        samplePosition = sampleIndex + splineT;
+                        vertices[0].life = samplePosition;
+                        vertices[0].alpha = staffGetSwipeAlpha(endPosition - vertices[0].life);
+                        vertices[1].x = Curve_EvalBSpline(endpointAX, splineT, NULL);
+                        vertices[1].y = Curve_EvalBSpline(endpointAY, splineT, NULL);
+                        vertices[1].z = Curve_EvalBSpline(endpointAZ, splineT, NULL);
+                        vertices[1].x += state->anchorX + movementT * (player->anim.worldPosX - state->anchorX);
+                        vertices[1].y += state->anchorY + movementT * (player->anim.worldPosY - state->anchorY);
+                        vertices[1].z += state->anchorZ + movementT * (player->anim.worldPosZ - state->anchorZ);
+                        vertices[1].life = samplePosition;
+                        vertices[1].alpha = staffGetSwipeAlpha(endPosition - vertices[1].life);
                         slot->vertexCount += 2;
                         slot->endIndex += 2;
-                        count2 -= 1;
+                        subdivisions -= 1;
                     }
                 }
             }
         }
-        swipe->anchorX = obj->anim.worldPosX;
-        swipe->anchorY = obj->anim.worldPosY;
-        swipe->anchorZ = obj->anim.worldPosZ;
-        swipe->progress = model2->framePhase;
+        state->anchorX = player->anim.worldPosX;
+        state->anchorY = player->anim.worldPosY;
+        state->anchorZ = player->anim.worldPosZ;
+        state->progress = animation->framePhase;
     }
 }
 
@@ -728,7 +660,7 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused) {
 }
 
 void staff_getHitGeometryPoints(GameObject* obj, f32* outA, f32* outB) {
-    StaffState* state = *(StaffState**)&obj->extra;
+    StaffState* state = obj->extra;
     outA[0] = state->geometryPointAX[0];
     outA[1] = state->geometryPointAY[0];
     outA[2] = state->geometryPointAZ[0];
@@ -795,21 +727,22 @@ void objSetAnimField48to0(GameObject* obj) {
 void staff_startSwipe(GameObject* obj, s16 idx, f32 start, f32 lengthScale) {
     StaffSwipeSlot* slot;
     int n;
-    StaffSwipeSlot* slots = (StaffSwipeSlot*)obj->extra;
-    for (n = 0; n < 3; n++) {
+    StaffState* state = obj->extra;
+    StaffSwipeSlot* slots = state->slots;
+    for (n = 0; n < STAFF_SWIPE_SLOT_COUNT; n++) {
         slot = &slots[n];
-        if ((slot->flags & 0x2) == 0) {
+        if ((slot->flags & STAFF_SWIPE_FLAG_ACTIVE) == 0) {
             break;
         }
     }
-    slot->flags = (u8)(slot->flags | 0x3);
+    slot->flags = (u8)(slot->flags | STAFF_SWIPE_FLAG_START | STAFF_SWIPE_FLAG_ACTIVE);
     slot->start = start;
     slot->lengthScale = lengthScale;
     slot->startIndex = 0;
     slot->endIndex = 0;
     slot->vertexCount = 0;
     slot->idx = idx;
-    ((StaffState*)slots)->activeSlot = slot;
+    state->activeSlot = slot;
 }
 
 void staff_setHitReactValue(GameObject* obj, s32 value) {
@@ -879,9 +812,9 @@ void staff_hitDetectGeometry(GameObject* obj) {
     }
 }
 
-void staff_updateSwipe(GameObject* obj, GameObject* p4, int p5) {
-    StaffState* inner = (StaffState*)(int)obj->extra;
-    staff_setupSwipe((int)obj, inner, p5, (int)p4);
+void staff_updateSwipe(GameObject* obj, GameObject* player, int context) {
+    StaffState* inner = obj->extra;
+    staff_setupSwipe((int)obj, inner, context, (int)player);
     if (getHudHiddenFrameCount() != 0) {
         inner->hudSuppressed = 1;
     } else {
@@ -892,7 +825,7 @@ void staff_updateSwipe(GameObject* obj, GameObject* p4, int p5) {
 void staff_func0B(void) {
 }
 
-void* gStaffSwipeTextures[2];
+Texture* gStaffSwipeTextures[2];
 s16* gStaffSwipeTextureIds;
 StaffCollisionInterface** gStaffSwipeResource;
 
@@ -934,8 +867,8 @@ void staff_free(GameObject* obj) {
     StaffSwipeSlot* slot;
     int i;
     i = 0;
-    slot = (StaffSwipeSlot*)obj->extra;
-    for (; i < 3; i++) {
+    slot = ((StaffState*)obj->extra)->slots;
+    for (; i < STAFF_SWIPE_SLOT_COUNT; i++) {
         mm_free(slot->vertexData);
         slot++;
     }
@@ -952,58 +885,46 @@ void staffDrawSwipe(GameObject* obj, StaffState* swipe);
 void staff_hitDetect(void) {
 }
 
+static inline s16 staffClampSwipeAlpha(s16 alpha) {
+    return CLAMP_EXPR(alpha, 0, 255);
+}
+
 void staff_update(GameObject* obj) {
     StaffState* state = obj->extra;
-    StaffSwipeSlot* swp;
+    StaffSwipeSlot* slot;
     int n;
     ObjModel* model = Obj_GetActiveModel(obj);
     model->bufferFlags &= ~0x8;
     ObjAnim_AdvanceCurrentMove(obj, state->moveSpeed, timeDelta, NULL);
 
-    swp = (StaffSwipeSlot*)state;
-    for (n = 3; n != 0; n--) {
-        if (swp->flags & 2) {
-            int j;
-            SwipeVertex* vp;
-            j = swp->startIndex;
-            vp = (SwipeVertex*)(swp->vertexData + j * 20);
-            for (; j < swp->endIndex; j += 2) {
-                if (swp == state->activeSlot) {
-                    f32 t = 255.0f * ((2.0f * state->progress - vp[0].life) / 8.0f);
-                    f32 clamped = (t < 0.0f) ? 0.0f : ((t > 255.0f) ? 255.0f : t);
-                    vp[0].alpha = 255.0f - clamped;
-                    vp[1].alpha = vp[0].alpha;
+    for (n = 0; n < STAFF_SWIPE_SLOT_COUNT; n++) {
+        slot = &state->slots[n];
+        if (slot->flags & STAFF_SWIPE_FLAG_ACTIVE) {
+            SwipeVertex* vertices;
+            int vertexIndex;
+
+            vertexIndex = slot->startIndex;
+            vertices = &slot->vertexData[vertexIndex];
+            for (; vertexIndex < slot->endIndex; vertexIndex += 2) {
+                if (slot == state->activeSlot) {
+                    vertices[0].alpha = staffGetSwipeAlpha(2.0f * state->progress - vertices[0].life);
+                    vertices[1].alpha = vertices[0].alpha;
                 } else {
-                    vp[0].alpha = -(16.0f * timeDelta - (f32)(int)vp[0].alpha);
-                    vp[1].alpha = vp[0].alpha;
+                    vertices[0].alpha = -(16.0f * timeDelta - (f32)(int)vertices[0].alpha);
+                    vertices[1].alpha = vertices[0].alpha;
                 }
-                {
-                    int c = vp[0].alpha;
-                    if (c < 0) {
-                        c = 0;
-                    } else if (c > 255) {
-                        c = 255;
-                    }
-                    vp[0].alpha = c;
-                    c = vp[1].alpha;
-                    if (c < 0) {
-                        c = 0;
-                    } else if (c > 255) {
-                        c = 255;
-                    }
-                    vp[1].alpha = c;
+                vertices[0].alpha = staffClampSwipeAlpha(vertices[0].alpha);
+                vertices[1].alpha = staffClampSwipeAlpha(vertices[1].alpha);
+                if (vertices[0].alpha <= 0 && vertices[1].alpha <= 0) {
+                    slot->vertexCount += -2;
+                    slot->startIndex += 2;
                 }
-                if (vp[0].alpha <= 0 && vp[1].alpha <= 0) {
-                    swp->vertexCount += -2;
-                    swp->startIndex += 2;
-                }
-                vp += 2;
+                vertices += 2;
             }
-            if ((u8*)swp != *(u8**)((u8*)state + 0x48) && swp->vertexCount == 0) {
-                swp->flags &= ~2;
+            if (slot != state->activeSlot && slot->vertexCount == 0) {
+                slot->flags &= ~STAFF_SWIPE_FLAG_ACTIVE;
             }
         }
-        swp++;
     }
 
     staffUpdateAttackEffects(obj, (GameObject*)obj->ownerObj);
@@ -1025,24 +946,21 @@ void staff_init(GameObject* obj) {
         hitState->trackContactMask = 0x109;
     }
     i = 0;
-    slot = (StaffSwipeSlot*)state;
-    for (; i < 3; i++) {
-        slot->vertexData = (u8*)mmAlloc(0xEA60, 0x1a, 0);
+    for (; i < STAFF_SWIPE_SLOT_COUNT; i++) {
+        slot = &state->slots[i];
+        slot->vertexData = mmAlloc(sizeof(SwipeVertex) * STAFF_SWIPE_VERTEX_CAPACITY, 0x1a, 0);
         slot->idx = -1;
-        slot++;
     }
     gStaffQuakeSpellState.active = 0;
     gStaffQuakeSpellState.object = 0;
 }
 
 void staff_release(void) {
-    void** p;
     int i;
     if (gStaffSwipeTextures[0] != NULL) {
-        for (i = 0, p = gStaffSwipeTextures; i < 2; i++) {
-            textureFree(*p);
-            *p = NULL;
-            p++;
+        for (i = 0; i < 2; i++) {
+            textureFree(gStaffSwipeTextures[i]);
+            gStaffSwipeTextures[i] = NULL;
         }
     }
     if (gStaffSwipeResource != NULL) {

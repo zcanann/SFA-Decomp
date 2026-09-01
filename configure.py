@@ -1393,7 +1393,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/223_Hagabon/Hagabon.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/224_SwarmBaddie/SwarmBaddie.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/225_WispBaddie/WispBaddie.c"),
-            Object(NonMatching, "dlls/objects/226/226.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/226/226.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/227/227.c", section_alignments={".data": 4}),
             Object(MatchingFor("GSAE01"), "dlls/objects/228/228.c", cflags=cflags_dll_noopt_nocse),
             Object(NonMatching, "dlls/objects/229/229.c"),
