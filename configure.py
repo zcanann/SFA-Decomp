@@ -1655,7 +1655,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/485_DIM_BossSpi/DIM_BossSpi.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/486_DIMbosscrac/DIMbosscrac.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/487_DIMbossfire/DIMbossfire.c"),
-            Object(NonMatching, "dlls/objects/488_SB_Galleon/SB_Galleon.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/488_SB_Galleon/SB_Galleon.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dlls/objects/489_SB_Propelle/SB_Propelle.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/490_SB_ShipHead/SB_ShipHead.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/491_SB_ShipMast/SB_ShipMast.c"),
