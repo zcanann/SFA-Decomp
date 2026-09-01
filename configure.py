@@ -1745,7 +1745,7 @@ config.libs = [
             Object(Matching, "dlls/objects/575_DB_egg/DB_egg.c", cflags=cflags_dll_noopt_noloopinv),
             Object(MatchingFor("GSAE01"), "dlls/objects/576_GCRobotBlas/GCRobotBlas.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/577_DrakorEnerg/DrakorEnerg.c"),
-            Object(NonMatching, "dlls/objects/578_DBstealerwo/DBstealerwo.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(MatchingFor("GSAE01"), "dlls/objects/578_DBstealerwo/DBstealerwo.c", cflags=cflags_dll_noopt_noloopinv),
             Object(MatchingFor("GSAE01"), "dlls/objects/579_DBHoleContr/DBHoleContr.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/580/580.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/581/581.c"),

@@ -256,6 +256,29 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, BaddieState* baddie) {
 #define DBSTEALERWORM_SEQID                    0x539 /* retail "DBstealerwo..." (DLL 0x242) */
 #define DBSTEALERWORM_CHILD_OBJ_ICE_BALL_SMALL 0x30a
 
+static inline void dbstealerworm_queueMessage(RingBufferQueue* messageQueue, int code, int mode, int objGroup) {
+    DbStealerwormMessageFrame message;
+
+    message.code = code;
+    message.mode = mode;
+    message.objGroup = objGroup;
+    if (Stack_IsFull(messageQueue) == 0) {
+        Stack_Push(messageQueue, &message);
+    }
+}
+
+static inline void dbstealerworm_updateTurnSpeed(BaddieState* state, s16 yaw, f32 speed) {
+    f32 smoothing;
+    f32 currentSpeed;
+    f32 targetSpeed;
+
+    currentSpeed = state->animSpeedA;
+    smoothing = timeDelta / 4.0f;
+    targetSpeed = speed * (1.0f - (f32)yaw / 65536.0f);
+    state->animSpeedA = smoothing * (targetSpeed - currentSpeed) + currentSpeed;
+    state->animSpeedB = 0.0f;
+}
+
 /* small dust burst (spawned 3x when DBWORM_FLAG14_FX_DUST is set) */
 #define DBSTEALERWORM_PARTFX_DUST 0x345
 /* spray burst (spawned 10x when DBWORM_FLAG14_FX_SPRAY is set) */
@@ -651,213 +674,140 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, BaddieState* baddie, f32 t) {
 }
 
 int dbstealerworm_stateHandlerA0B(GameObject* obj, BaddieState* baddie, f32 t) {
-
-    DbStealerwormControl* sub;
-    GroundBaddieState* blob = (obj)->extra;
-    int c30;
-    int tmpB;
-    int found;
-    int i;
-    int q;
-    int j;
-    RingBufferQueue* mq;
-    GameObject** objs;
+    DbStealerwormControl* control;
+    GroundBaddieState* groundState = obj->extra;
+    int messageObjGroup;
+    GameObject* claimedTarget;
+    int targetClaimed;
+    int objectIndex;
+    GameObject* targetObject;
+    int jointIndex;
+    RingBufferQueue* waitQueue;
+    RingBufferQueue* claimQueue;
+    RingBufferQueue* claimHoldQueue;
+    RingBufferQueue* claimScriptQueue;
+    RingBufferQueue* claimTargetQueue;
+    RingBufferQueue* trackQueue;
+    RingBufferQueue* trackHoldQueue;
+    RingBufferQueue* trackTargetQueue;
+    RingBufferQueue* faceQueue;
+    RingBufferQueue* faceIdleQueue;
+    GameObject** objects;
     GameObject* player;
-    s16 d;
-    int flag;
-    int zero;
-    int* ptr;
-    int* keys;
-    s16* vec;
-    f32 frac;
-    int msg0[3];
-    int msgA[3];
-    int msgB[3];
-    int msgC[3];
-    int msgD[3];
-    int msgE[3];
-    int msgF[3];
-    int msgG[3];
-    int msgH[3];
-    int msgI[3];
-    int cnt1;
-    int cnt2;
-    f32 yawf;
+    s16 playerYawDelta;
+    int facingPlayer;
+    GameObject** objectList;
+    int* jointKeys;
+    Vec3s* jointRotation;
+    f32 turnSpeed;
+    int objectCount;
+    int wormCount;
+    f32 playerYaw;
 
-    sub = (DbStealerwormControl*)blob->control;
-    c30 = sub->messageObjGroup;
-    sub->flags14 |= DBWORM_FLAG14_FX_DUST;
-    sub->flags15 &= ~4;
-    if (objIsObjectType(baddie->targetObj, c30) == 0) {
-        objGetAllOfType(c30, &cnt1);
-        if (cnt1 == 0) {
+    control = (DbStealerwormControl*)groundState->control;
+    messageObjGroup = control->messageObjGroup;
+    control->flags14 |= DBWORM_FLAG14_FX_DUST;
+    control->flags15 &= ~4;
+    if (objIsObjectType(baddie->targetObj, messageObjGroup) == 0) {
+        objGetAllOfType(messageObjGroup, &objectCount);
+        if (objectCount == 0) {
             player = Obj_GetPlayerObject();
-            mq = sub->messageStack;
-            msg0[0] = 0xf;
-            msg0[1] = 1;
-            msg0[2] = (int)player;
-            if (Stack_IsFull(mq) == 0) {
-                Stack_Push(mq, msg0);
-            }
-            sub->advanceMessage = 1;
+            waitQueue = control->messageStack;
+            dbstealerworm_queueMessage(waitQueue, 0xf, 1, (int)player);
+            control->advanceMessage = 1;
             return 0;
         }
     }
-    q = (int)baddie->targetObj;
-    found = 0;
-    ptr = (int*)objGetAllOfType(DBSTEALERWORM_OBJGROUP, &cnt2);
-    for (i = 0, objs = (GameObject**)ptr; i < cnt2; i++) {
-        if (((GameObject*)*objs)->anim.romDefNo == DBSTEALERWORM_SEQID) {
-            tmpB = DB_STEALERWORM_INTERFACE(*objs)->handleMessage((GameObject*)*objs, 0x83, NULL);
-            if ((u32)tmpB == q) {
-                found = 1;
+    targetObject = baddie->targetObj;
+    targetClaimed = 0;
+    objectList = (GameObject**)objGetAllOfType(DBSTEALERWORM_OBJGROUP, &wormCount);
+    for (objectIndex = 0, objects = objectList; objectIndex < wormCount; objectIndex++) {
+        if ((*objects)->anim.romDefNo == DBSTEALERWORM_SEQID) {
+            claimedTarget = (GameObject*)DB_STEALERWORM_INTERFACE(*objects)->handleMessage(*objects, 0x83, NULL);
+            if (claimedTarget == targetObject) {
+                targetClaimed = 1;
             }
         }
-        objs++;
+        objects++;
     }
-    if (found == 0) {
-        if (obj == objGetNearestTypeTo(DBSTEALERWORM_OBJGROUP, (GameObject*)baddie->targetObj, 0)) {
-            sub->savedTargetObj = (int)baddie->targetObj;
-            {
-                int tmpB;
-                int tmpA;
-                tmpA = sub->messageObjGroup;
-                tmpB = sub->messageMode;
-                mq = sub->messageStack;
-                msgA[0] = sub->messageCode;
-                msgA[1] = tmpB;
-                msgA[2] = tmpA;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgA);
-                }
-            }
-            {
-                mq = sub->messageStack;
-                msgB[0] = 0xc;
-                msgB[1] = 0;
-                msgB[2] = 3;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgB);
-                }
-            }
-            sub->advanceMessage = 1;
-            {
-                mq = sub->messageStack;
-                msgC[0] = 9;
-                msgC[1] = 0;
-                msgC[2] = c30;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgC);
-                }
-            }
-            sub->advanceMessage = 1;
-            {
-                int tD;
-                tD = sub->savedTargetObj;
-                mq = sub->messageStack;
-                msgD[0] = 7;
-                msgD[1] = 1;
-                msgD[2] = tD;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgD);
-                }
-            }
-            sub->advanceMessage = 1;
-            return 0;
-        }
+    if (targetClaimed == 0 && obj == objGetNearestTypeTo(DBSTEALERWORM_OBJGROUP, baddie->targetObj, 0)) {
+        int messageMode;
+        int messageArg;
+        int savedTarget;
+
+        control->savedTargetObj = (int)baddie->targetObj;
+        messageArg = control->messageObjGroup;
+        messageMode = control->messageMode;
+        claimQueue = control->messageStack;
+        dbstealerworm_queueMessage(claimQueue, control->messageCode, messageMode, messageArg);
+        claimHoldQueue = control->messageStack;
+        dbstealerworm_queueMessage(claimHoldQueue, 0xc, 0, 3);
+        control->advanceMessage = 1;
+        claimScriptQueue = control->messageStack;
+        dbstealerworm_queueMessage(claimScriptQueue, 9, 0, messageObjGroup);
+        control->advanceMessage = 1;
+        savedTarget = control->savedTargetObj;
+        claimTargetQueue = control->messageStack;
+        dbstealerworm_queueMessage(claimTargetQueue, 7, 1, savedTarget);
+        control->advanceMessage = 1;
+        return 0;
     }
-    sub = (DbStealerwormControl*)blob->control;
+    control = (DbStealerwormControl*)groundState->control;
     baddie->stateTag = 0x1f;
     if (baddie->moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 0xf, 0.0f, 0);
         baddie->moveDone = 0;
     }
-    if (sub->savedTargetObject != NULL) {
-        if (objIsObjectType(baddie->targetObj, c30) != 0) {
-            {
-                int tEb;
-                int tEa;
-                tEa = sub->messageObjGroup;
-                tEb = sub->messageMode;
-                mq = sub->messageStack;
-                msgE[0] = sub->messageCode;
-                msgE[1] = tEb;
-                msgE[2] = tEa;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgE);
-                }
-            }
-            {
-                mq = sub->messageStack;
-                msgF[0] = 0xc;
-                msgF[1] = 0;
-                msgF[2] = 3;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgF);
-                }
-            }
-            sub->advanceMessage = 1;
-            {
-                int tG;
-                tG = sub->savedTargetObj;
-                mq = sub->messageStack;
-                msgG[0] = 0xd;
-                msgG[1] = 1;
-                msgG[2] = tG;
-                if (Stack_IsFull(mq) == 0) {
-                    Stack_Push(mq, msgG);
-                }
-            }
-            sub->advanceMessage = 1;
-            return 0;
-        }
+    if (control->savedTargetObject != NULL && objIsObjectType(baddie->targetObj, messageObjGroup) != 0) {
+        int messageMode;
+        int messageArg;
+        int savedTarget;
+
+        messageArg = control->messageObjGroup;
+        messageMode = control->messageMode;
+        trackQueue = control->messageStack;
+        dbstealerworm_queueMessage(trackQueue, control->messageCode, messageMode, messageArg);
+        trackHoldQueue = control->messageStack;
+        dbstealerworm_queueMessage(trackHoldQueue, 0xc, 0, 3);
+        control->advanceMessage = 1;
+        savedTarget = control->savedTargetObj;
+        trackTargetQueue = control->messageStack;
+        dbstealerworm_queueMessage(trackTargetQueue, 0xd, 1, savedTarget);
+        control->advanceMessage = 1;
+        return 0;
     }
-    frac = blob->aggression / 40.0f;
-    dbstealerworm_turnToFaceObject(obj, baddie->targetObj, 200.0f, frac, 0.2f, t);
-    if (sub->flags44.flag20 != 0) {
-        dbstealerworm_avoidObjects(obj, gDbStealerwormWaitAvoidGroups, gDbStealerwormWaitAvoidWeights, 4, frac);
+    turnSpeed = groundState->aggression / 40.0f;
+    dbstealerworm_turnToFaceObject(obj, baddie->targetObj, 200.0f, turnSpeed, 0.2f, t);
+    if (control->flags44.flag20 != 0) {
+        dbstealerworm_avoidObjects(obj, gDbStealerwormWaitAvoidGroups, gDbStealerwormWaitAvoidWeights, 4, turnSpeed);
     }
     player = Obj_GetPlayerObject();
-    d = Obj_GetYawDeltaToObject(obj, player, &yawf);
-    flag = 0;
-    if ((d >= 0 ? d : -d) < 0x1c71 && yawf < 30.0f) {
-        flag = 1;
+    playerYawDelta = Obj_GetYawDeltaToObject(obj, player, &playerYaw);
+    facingPlayer = 0;
+    if ((playerYawDelta >= 0 ? playerYawDelta : -playerYawDelta) < 0x1c71 && playerYaw < 30.0f) {
+        facingPlayer = 1;
     }
-    if (flag != 0) {
-        keys = objGetLookAtJointKeys();
-        zero = 0;
-        for (j = 1, keys = keys + 1; j < 9; keys++, j++) {
-            vec = objFindJointPoseVector(obj, *keys);
-            if (vec != 0) {
-                vec[2] = zero;
-                vec[0] = zero;
+    if (facingPlayer != 0) {
+        int messageMode;
+        int messageArg;
+
+        jointKeys = objGetLookAtJointKeys();
+        for (jointIndex = 1, jointKeys++; jointIndex < 9; jointKeys++, jointIndex++) {
+            jointRotation = (Vec3s*)objFindJointPoseVector(obj, *jointKeys);
+            if (jointRotation != NULL) {
+                jointRotation->z = 0;
+                jointRotation->x = 0;
             }
         }
         player = Obj_GetPlayerObject();
         baddie->targetObj = player;
-        {
-            int tHb;
-            int tHa;
-            tHa = sub->messageObjGroup;
-            tHb = sub->messageMode;
-            mq = sub->messageStack;
-            msgH[0] = sub->messageCode;
-            msgH[1] = tHb;
-            msgH[2] = tHa;
-            if (Stack_IsFull(mq) == 0) {
-                Stack_Push(mq, msgH);
-            }
-        }
-        {
-            mq = sub->messageStack;
-            msgI[0] = 2;
-            msgI[1] = 0;
-            msgI[2] = 0;
-            if (Stack_IsFull(mq) == 0) {
-                Stack_Push(mq, msgI);
-            }
-        }
-        sub->advanceMessage = 1;
+        messageArg = control->messageObjGroup;
+        messageMode = control->messageMode;
+        faceQueue = control->messageStack;
+        dbstealerworm_queueMessage(faceQueue, control->messageCode, messageMode, messageArg);
+        faceIdleQueue = control->messageStack;
+        dbstealerworm_queueMessage(faceIdleQueue, 2, 0, 0);
+        control->advanceMessage = 1;
     }
     return 0;
 }
@@ -1029,14 +979,10 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
     int flag;
     s16 d;
     int zero;
-    s16* vec;
+    Vec3s* jointRotation;
     s16 sa;
     s16 sb;
     f32 frac;
-    int msgA[3];
-    int msgB[3];
-    int msgC[3];
-    int msgD[3];
     f32 yawf;
 
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
@@ -1052,19 +998,9 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
             tmpA = sub->messageObjGroup;
             tmpB = sub->messageMode;
             q = (int)sub->messageStack;
-            msgA[0] = sub->messageCode;
-            msgA[1] = tmpB;
-            msgA[2] = tmpA;
-            if (Stack_IsFull((RingBufferQueue*)q) == 0) {
-                Stack_Push((RingBufferQueue*)q, msgA);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)q, sub->messageCode, tmpB, tmpA);
             q = (int)sub->messageStack;
-            msgB[0] = 9;
-            msgB[1] = 0;
-            msgB[2] = h;
-            if (Stack_IsFull((RingBufferQueue*)q) == 0) {
-                Stack_Push((RingBufferQueue*)q, msgB);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)q, 9, 0, h);
             sub->advanceMessage = 1;
             sub->heldScriptSlot = -1;
         }
@@ -1093,10 +1029,10 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
             ptr = objGetLookAtJointKeys();
             zero = 0;
             for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++) {
-                vec = objFindJointPoseVector(obj, *ptr);
-                if (vec != 0) {
-                    vec[2] = zero;
-                    vec[0] = zero;
+                jointRotation = (Vec3s*)objFindJointPoseVector(obj, *ptr);
+                if (jointRotation != NULL) {
+                    jointRotation->z = zero;
+                    jointRotation->x = zero;
                 }
             }
             player = Obj_GetPlayerObject();
@@ -1104,19 +1040,9 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
             tmp2A = sub->messageObjGroup;
             tmp2B = sub->messageMode;
             ptr = (int*)sub->messageStack;
-            msgC[0] = sub->messageCode;
-            msgC[1] = tmp2B;
-            msgC[2] = tmp2A;
-            if (Stack_IsFull((RingBufferQueue*)ptr) == 0) {
-                Stack_Push((RingBufferQueue*)ptr, msgC);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)ptr, sub->messageCode, tmp2B, tmp2A);
             ptr = (int*)sub->messageStack;
-            msgD[0] = 2;
-            msgD[1] = 0;
-            msgD[2] = 0;
-            if (Stack_IsFull((RingBufferQueue*)ptr) == 0) {
-                Stack_Push((RingBufferQueue*)ptr, msgD);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)ptr, 2, 0, 0);
             sub->advanceMessage = 1;
         }
     }
@@ -1124,10 +1050,10 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
         p2 = objGetLookAtJointKeys();
         zero = 0;
         for (i2 = 1, p2 = p2 + 1; i2 < 9; p2++, i2++) {
-            vec = objFindJointPoseVector(obj, *p2);
-            if (vec != 0) {
-                vec[2] = zero;
-                vec[0] = zero;
+            jointRotation = (Vec3s*)objFindJointPoseVector(obj, *p2);
+            if (jointRotation != NULL) {
+                jointRotation->z = zero;
+                jointRotation->x = zero;
             }
         }
     } else if (sub->linkedObject == NULL) {
@@ -1151,10 +1077,10 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
         i3 = 1;
         p3 = p3 + 1;
         for (; i3 < 9; i3++) {
-            vec = objFindJointPoseVector(obj, *p3);
-            if (vec != 0) {
-                vec[2] = sb;
-                vec[0] = sa;
+            jointRotation = (Vec3s*)objFindJointPoseVector(obj, *p3);
+            if (jointRotation != NULL) {
+                jointRotation->z = sb;
+                jointRotation->x = sa;
             }
             p3++;
         }
@@ -1166,8 +1092,8 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
     GroundBaddieState* blob = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
     s16 h;
-    register int q;
-    register int* ptr;
+    int q;
+    int* ptr;
     int* p2;
     int i2;
     int* p3;
@@ -1180,14 +1106,10 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
     int flag;
     s16 d;
     int zero;
-    s16* vec;
+    Vec3s* jointRotation;
     s16 sa;
     s16 sb;
     f32 frac;
-    int msgA[3];
-    int msgB[3];
-    int msgC[3];
-    int msgD[3];
     f32 yawf;
 
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
@@ -1204,19 +1126,9 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
             tmpA = sub->messageObjGroup;
             tmpB = sub->messageMode;
             q = (int)sub->messageStack;
-            msgA[0] = sub->messageCode;
-            msgA[1] = tmpB;
-            msgA[2] = tmpA;
-            if (Stack_IsFull((RingBufferQueue*)q) == 0) {
-                Stack_Push((RingBufferQueue*)q, msgA);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)q, sub->messageCode, tmpB, tmpA);
             q = (int)sub->messageStack;
-            msgB[0] = 9;
-            msgB[1] = 0;
-            msgB[2] = h;
-            if (Stack_IsFull((RingBufferQueue*)q) == 0) {
-                Stack_Push((RingBufferQueue*)q, msgB);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)q, 9, 0, h);
             sub->advanceMessage = 1;
             sub->heldScriptSlot = -1;
         }
@@ -1256,10 +1168,10 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
             ptr = objGetLookAtJointKeys();
             zero = 0;
             for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++) {
-                vec = objFindJointPoseVector(obj, *ptr);
-                if (vec != 0) {
-                    vec[2] = zero;
-                    vec[0] = zero;
+                jointRotation = (Vec3s*)objFindJointPoseVector(obj, *ptr);
+                if (jointRotation != NULL) {
+                    jointRotation->z = zero;
+                    jointRotation->x = zero;
                 }
             }
             player = Obj_GetPlayerObject();
@@ -1267,19 +1179,9 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
             tmp2A = sub->messageObjGroup;
             tmp2B = sub->messageMode;
             ptr = (int*)sub->messageStack;
-            msgC[0] = sub->messageCode;
-            msgC[1] = tmp2B;
-            msgC[2] = tmp2A;
-            if (Stack_IsFull((RingBufferQueue*)ptr) == 0) {
-                Stack_Push((RingBufferQueue*)ptr, msgC);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)ptr, sub->messageCode, tmp2B, tmp2A);
             ptr = (int*)sub->messageStack;
-            msgD[0] = 2;
-            msgD[1] = 0;
-            msgD[2] = 0;
-            if (Stack_IsFull((RingBufferQueue*)ptr) == 0) {
-                Stack_Push((RingBufferQueue*)ptr, msgD);
-            }
+            dbstealerworm_queueMessage((RingBufferQueue*)ptr, 2, 0, 0);
             sub->advanceMessage = 1;
         }
     }
@@ -1287,10 +1189,10 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
         p2 = objGetLookAtJointKeys();
         zero = 0;
         for (i2 = 1, p2 = p2 + 1; i2 < 9; p2++, i2++) {
-            vec = objFindJointPoseVector(obj, *p2);
-            if (vec != 0) {
-                vec[2] = zero;
-                vec[0] = zero;
+            jointRotation = (Vec3s*)objFindJointPoseVector(obj, *p2);
+            if (jointRotation != NULL) {
+                jointRotation->z = zero;
+                jointRotation->x = zero;
             }
         }
     } else if (sub->linkedObject == NULL) {
@@ -1314,10 +1216,10 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
         i3 = 1;
         p3 = p3 + 1;
         for (; i3 < 9; i3++) {
-            vec = objFindJointPoseVector(obj, *p3);
-            if (vec != 0) {
-                vec[2] = sb;
-                vec[0] = sa;
+            jointRotation = (Vec3s*)objFindJointPoseVector(obj, *p3);
+            if (jointRotation != NULL) {
+                jointRotation->z = sb;
+                jointRotation->x = sa;
             }
             p3++;
         }
@@ -1663,9 +1565,6 @@ int dbstealerworm_turnToFaceObject(GameObject* obj, GameObject* otherObj, f32 ya
     f32 zero;
     f32 a;
     f32 ratio;
-    f32 k;
-    f32 cur;
-    f32 prod;
 
     yaw = Obj_GetYawDeltaToObject(obj, otherObj, &yawF);
     zero = 0.0f;
@@ -1686,12 +1585,7 @@ int dbstealerworm_turnToFaceObject(GameObject* obj, GameObject* otherObj, f32 ya
     if (ratio < 0.0f) {
         speed = -speed;
     }
-    cur = state->animSpeedA;
-    k = timeDelta;
-    k *= 0.25f;
-    prod = speed * (1.0f - (f32)yaw / 65536.0f);
-    state->animSpeedA = k * (prod - cur) + cur;
-    state->animSpeedB = 0.0f;
+    dbstealerworm_updateTurnSpeed(state, yaw, speed);
     return 0;
 }
 
@@ -1702,9 +1596,6 @@ int dbstealerworm_turnToFaceObjectVertical(GameObject* obj, GameObject* otherObj
     s16 yaw;
     f32 dy;
     f32 zero;
-    f32 k;
-    f32 cur;
-    f32 prod;
 
     if (obj == NULL || otherObj == NULL) {
         return 0;
@@ -1722,12 +1613,7 @@ int dbstealerworm_turnToFaceObjectVertical(GameObject* obj, GameObject* otherObj
             return 1;
         }
     }
-    cur = state->animSpeedA;
-    k = timeDelta;
-    k *= 0.25f;
-    prod = speed * (1.0f - (f32)yaw / 65536.0f);
-    state->animSpeedA = k * (prod - cur) + cur;
-    state->animSpeedB = 0.0f;
+    dbstealerworm_updateTurnSpeed(state, yaw, speed);
     return 0;
 }
 
