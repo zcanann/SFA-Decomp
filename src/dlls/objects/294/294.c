@@ -427,64 +427,162 @@ void triggerEvalEndpointSpheres(GameObject* obj, GameObject* seqObj) {
 #define TRIGGER_CMD_OVERRIDE_DISABLED   0x20 /* run even when SFLAG_DISABLED is set */
 #define TRIGGER_SFLAG_SEED_TARGET       0x40 /* first hit: seed target position from current, not previous */
 
+typedef enum TriggerCommandOpcode {
+    TRIGGER_COMMAND_PLAYER_STATE = 0x01,
+    TRIGGER_COMMAND_MUSIC_ACTION = 0x03,
+    TRIGGER_COMMAND_SFX = 0x04,
+    TRIGGER_COMMAND_UNUSED_05 = 0x05,
+    TRIGGER_COMMAND_CAMERA_ACTION = 0x06,
+    TRIGGER_COMMAND_RENDER_CONTROL = 0x08,
+    TRIGGER_COMMAND_ENVFX_ACTION = 0x0A,
+    TRIGGER_COMMAND_SEQUENCE = 0x0B,
+    TRIGGER_COMMAND_ACTIVATE_TRIGGER = 0x0C,
+    TRIGGER_COMMAND_LIGHTING_ACTION = 0x0D,
+    TRIGGER_COMMAND_SET_PLAYER_MODEL = 0x10,
+    TRIGGER_COMMAND_SET_TRICKY_TALK = 0x11,
+    TRIGGER_COMMAND_UPDATE_GAME_BIT = 0x12,
+    TRIGGER_COMMAND_SHOW_OBJECT_GROUP = 0x13,
+    TRIGGER_COMMAND_HIDE_OBJECT_GROUP = 0x14,
+    TRIGGER_COMMAND_REQUIRE_TEXTURES = 0x15,
+    TRIGGER_COMMAND_FREE_TEXTURES = 0x16,
+    TRIGGER_COMMAND_SET_MAP_ACT = 0x18,
+    TRIGGER_COMMAND_SHOW_MAP_OBJECT_GROUP = 0x1A,
+    TRIGGER_COMMAND_HIDE_MAP_OBJECT_GROUP = 0x1B,
+    TRIGGER_COMMAND_ENVIRONMENT = 0x1C,
+    TRIGGER_COMMAND_SET_ITEM_AVAILABILITY = 0x1D,
+    TRIGGER_COMMAND_SET_OTHER_MAP_ACT = 0x1E,
+    TRIGGER_COMMAND_SAVE_POINT = 0x1F,
+    TRIGGER_COMMAND_CHANGE_MAP_LAYER = 0x20,
+    TRIGGER_COMMAND_TOGGLE_GAME_BIT_FIELD = 0x21,
+    TRIGGER_COMMAND_TOGGLE_OBJECT_GROUP = 0x22,
+    TRIGGER_COMMAND_RESTART_POINT = 0x23,
+    TRIGGER_COMMAND_TRICKY = 0x26,
+    TRIGGER_COMMAND_LOAD_MAP = 0x27,
+    TRIGGER_COMMAND_UNLOAD_MAP = 0x28,
+    TRIGGER_COMMAND_LOCK_LEVEL = 0x2A,
+    TRIGGER_COMMAND_UNLOCK_LEVEL = 0x2B,
+    TRIGGER_COMMAND_SET_SEQUENCE_SCALE = 0x2C,
+    TRIGGER_COMMAND_DIALOGUE = 0x2D,
+    TRIGGER_COMMAND_DEFRAG_TEXTURES = 0x2E,
+    TRIGGER_COMMAND_ADD_TIMER_SECONDS = 0x2F,
+} TriggerCommandOpcode;
+
+static inline u32 triggerCommandGetArgument(TriggerCommand* command) {
+    return (command->param1 << 8) | command->param2;
+}
+
+static inline void triggerBitsSet(u16 argument) {
+    s32 gameBitId;
+    u32 value;
+
+    gameBitId = argument & 0x3fff;
+    argument >>= 14;
+
+    value = mainGetBit(gameBitId);
+    if (argument == 0) {
+        value = 0;
+    } else if (argument == 1) {
+        value = 0xffffffff;
+    } else if (argument == 2) {
+        value = ~value;
+    }
+    mainSetBits(gameBitId, value);
+}
+
+static inline void triggerBitsToggle(u16 argument) {
+    s32 gameBitId;
+    u32 value;
+
+    gameBitId = argument & 0x1fff;
+    argument >>= 13;
+
+    value = mainGetBit(gameBitId);
+    value ^= 1 << argument;
+    mainSetBits(gameBitId, value);
+}
+
+static inline void triggerTextureLoad(u16 tableId) {
+    s32* table;
+    s32* textureId;
+    s32 id;
+    Texture* texture;
+
+    table = getTablesBinEntry(tableId + 2);
+    if (table != NULL) {
+        for (textureId = table; (id = *textureId) != -1; textureId++) {
+            texture = getLoadedTexture(id);
+            if (texture == NULL) {
+                crash(0x32, 3, 0, *textureId, 0, 0, 0, 0);
+            }
+        }
+    }
+}
+
+static inline void triggerTextureFree(u16 tableId) {
+    s32* table;
+    s32* textureId;
+    s32 id;
+    Texture* texture;
+
+    table = getTablesBinEntry(tableId + 2);
+    if (table != NULL) {
+        for (textureId = table; (id = *textureId) != -1; textureId++) {
+            texture = getLoadedTexture(id);
+            if (texture != NULL) {
+                textureFree(texture);
+            }
+        }
+    }
+}
+
 void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range) {
     char* desc = (char*)&gTriggerObjDescriptor;
-    u8* state = obj->extra;
-    u8* p = (u8*)obj->anim.placementData + 0x18;
-    u8 i = 0;
-    u8 b;
-    u8 sflags;
-    u8 groupStatus;
-    int t;
-    int t2;
-    int* tbl;
-    u32 op;
-    u32 v;
-    u32 bit;
-    u32 sel;
-    s16 angleDiff;
-    int ang;
-    int count;
-    int first;
-    int id;
+    TriggerState* state = (TriggerState*)obj->extra;
+    TriggerPlacement* placement = (TriggerPlacement*)obj->anim.placementData;
+    TriggerCommand* command;
+    u8 i;
+    u8 flags;
+    u8 status;
 
-    for (; i < 8; i++, p += 4) {
-        if (p[1] == 0) {
+    command = placement->commands;
+    i = 0;
+    for (; i < ARRAY_SIZE(placement->commands); i++, command++) {
+        if (command->id == 0) {
             continue;
         }
-        sflags = *state;
-        if ((sflags & TRIGGER_SFLAG_DISABLED) != 0 && (*p & TRIGGER_CMD_OVERRIDE_DISABLED) == 0) {
+        status = state->status;
+        if ((status & TRIGGER_SFLAG_DISABLED) != 0 && (command->condition & TRIGGER_CMD_OVERRIDE_DISABLED) == 0) {
             continue;
         }
-        b = *p;
-        if ((b & TRIGGER_CMD_UNCONDITIONAL) == 0) {
+        flags = command->condition;
+        if ((flags & TRIGGER_CMD_UNCONDITIONAL) == 0) {
             if (legCode == 1) {
-                if ((b & TRIGGER_CMD_ON_ENTER) == 0) {
+                if ((flags & TRIGGER_CMD_ON_ENTER) == 0) {
                     continue;
                 }
-                if ((sflags & TRIGGER_SFLAG_ENTERED) != 0 && (b & TRIGGER_CMD_ONCE_ENTER) == 0) {
+                if ((status & TRIGGER_SFLAG_ENTERED) != 0 && (flags & TRIGGER_CMD_ONCE_ENTER) == 0) {
                     continue;
                 }
             } else if (legCode == -1) {
-                if ((b & TRIGGER_CMD_ON_EXIT) == 0) {
+                if ((flags & TRIGGER_CMD_ON_EXIT) == 0) {
                     continue;
                 }
-                if ((sflags & TRIGGER_SFLAG_EXITED) != 0 && (b & TRIGGER_CMD_ONCE_EXIT) == 0) {
+                if ((status & TRIGGER_SFLAG_EXITED) != 0 && (flags & TRIGGER_CMD_ONCE_EXIT) == 0) {
                     continue;
                 }
             } else {
                 continue;
             }
-        } else if ((b & TRIGGER_CMD_ON_ENTER) != 0) {
+        } else if ((flags & TRIGGER_CMD_ON_ENTER) != 0) {
             if (legCode < 0) {
                 continue;
             }
-        } else if ((b & TRIGGER_CMD_ON_EXIT) != 0 && legCode > 0) {
+        } else if ((flags & TRIGGER_CMD_ON_EXIT) != 0 && legCode > 0) {
             continue;
         }
-        switch (p[1]) {
-        case 1:
-            switch (p[2]) {
+        switch (command->id) {
+        case TRIGGER_COMMAND_PLAYER_STATE:
+            switch (command->param1) {
             case 0:
             case 1:
             case 2:
@@ -494,151 +592,162 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
             case 6:
             case 7:
                 break;
-            case 8:
-                t = (int)Obj_GetPlayerObject();
-                if ((void*)t != NULL) {
-                    playerSetStateValue((GameObject*)t, 1, 0.0f);
-                }
-                break;
-            case 9:
-                t = (int)Obj_GetPlayerObject();
-                if ((void*)t != NULL) {
-                    playerSetStateValue((GameObject*)t, 10, 0.0f);
-                }
-                break;
-            case 10:
-                t = (int)Obj_GetPlayerObject();
-                if ((void*)t != NULL) {
-                    playerSetStateValue((GameObject*)t, 0xb, 0.0f);
-                }
-                break;
-            case 0xb:
-                t = (int)Obj_GetPlayerObject();
-                if ((void*)t != NULL) {
-                    playerSetStateValue((GameObject*)t, 1, 14.0f);
+            case 8: {
+                GameObject* player = Obj_GetPlayerObject();
+                if (player != NULL) {
+                    playerSetStateValue(player, 1, 0.0f);
                 }
                 break;
             }
+            case 9: {
+                GameObject* player = Obj_GetPlayerObject();
+                if (player != NULL) {
+                    playerSetStateValue(player, 10, 0.0f);
+                }
+                break;
+            }
+            case 10: {
+                GameObject* player = Obj_GetPlayerObject();
+                if (player != NULL) {
+                    playerSetStateValue(player, 0xb, 0.0f);
+                }
+                break;
+            }
+            case 0xb: {
+                GameObject* player = Obj_GetPlayerObject();
+                if (player != NULL) {
+                    playerSetStateValue(player, 1, 14.0f);
+                }
+                break;
+            }
+            }
             break;
-        case 4:
+        case TRIGGER_COMMAND_SFX:
             if (legCode >= 0) {
-                Sfx_PlayFromObject(obj, (u16)((p[2] << 8) | p[3]));
+                Sfx_PlayFromObject(obj, (u16)triggerCommandGetArgument(command));
             } else {
-                Sfx_StopFromObject(obj, (u16)((p[2] << 8) | p[3]));
+                Sfx_StopFromObject(obj, (u16)triggerCommandGetArgument(command));
             }
             break;
-        case 6:
-            (*gCameraInterface)->loadTriggeredCamAction(p[2], p[3], 0);
+        case TRIGGER_COMMAND_CAMERA_ACTION:
+            (*gCameraInterface)->loadTriggeredCamAction(command->param1, command->param2, 0);
             break;
-        case 8:
-            switch (p[2]) {
+        case TRIGGER_COMMAND_RENDER_CONTROL:
+            switch (command->param1) {
             case 0:
-                if (p[3] > 1) {
-                    p[3] = 1;
+                if (command->param2 > 1) {
+                    command->param2 = 1;
                 }
-                setDrawCloudsAndLights(p[3]);
+                setDrawCloudsAndLights(command->param2);
                 break;
             case 1:
-                if (p[3] > 1) {
-                    p[3] = 1;
+                if (command->param2 > 1) {
+                    command->param2 = 1;
                 }
-                setDisableAntiAlias(p[3]);
+                setDisableAntiAlias(command->param2);
                 break;
             case 2:
-                if (p[3] > 1) {
-                    p[3] = 1;
+                if (command->param2 > 1) {
+                    command->param2 = 1;
                 }
-                setDrawLights(p[3]);
+                setDrawLights(command->param2);
                 break;
             case 3:
-                if (p[3] > 1) {
-                    p[3] = 1;
+                if (command->param2 > 1) {
+                    command->param2 = 1;
                 }
-                (*gCloudActionInterface)->func09Nop(p[3]);
+                (*gCloudActionInterface)->func09Nop(command->param2);
                 break;
             case 4:
-                (*gPlayerShadowInterface)->setMode(p[3]);
+                (*gPlayerShadowInterface)->setMode(command->param2);
                 break;
             case 5:
-                waterFxSetDisabled(p[3]);
+                waterFxSetDisabled(command->param2);
                 break;
             case 6:
-                if (p[3] != 0) {
+                if (command->param2 != 0) {
                     skySetSlotFlag80(7, 1);
                 } else {
                     skySetSlotFlag80(7, 0);
                 }
                 break;
             case 7:
-                if (p[3] != 0) {
+                if (command->param2 != 0) {
                     setRenderFlag20000(1);
                 } else {
                     setRenderFlag20000(0);
                 }
                 break;
             case 8:
-                if (p[3] != 0) {
+                if (command->param2 != 0) {
                     Rcp_EnableHeatEffect();
                 } else {
                     Rcp_DisableHeatEffect();
                 }
                 break;
             case 9:
-                skySetLightIndex(skyGetCurrentLightIndex() ^ 1, (f32)(u32)p[3]);
+                skySetLightIndex(skyGetCurrentLightIndex() ^ 1, (f32)(u32)command->param2);
                 break;
             case 10:
-                skySetLightIndex(0, (f32)(u32)p[3]);
+                skySetLightIndex(0, (f32)(u32)command->param2);
                 break;
             case 0xb:
-                skySetLightIndex(1, (f32)(u32)p[3]);
+                skySetLightIndex(1, (f32)(u32)command->param2);
                 break;
             }
             break;
-        case 5:
-            if (!((TriggerState*)state)->rangeSq) {
+        case TRIGGER_COMMAND_UNUSED_05:
+            if (!state->rangeSq) {
                 break;
             }
-            if (((TriggerState*)state)->rangeSq) {
+            if (state->rangeSq) {
                 break;
             }
             break;
-        case 10:
-            getEnvfxAct(obj, seqObj, (u16)((p[2] << 8) | p[3]), range);
-            OSReport(desc + 0x68, (int)obj->anim.classId, (p[2] << 8) | p[3], range);
+        case TRIGGER_COMMAND_ENVFX_ACTION:
+            getEnvfxAct(obj, seqObj, (u16)triggerCommandGetArgument(command), range);
+            OSReport(desc + 0x68, (int)obj->anim.classId, triggerCommandGetArgument(command), range);
             break;
-        case 0xd:
-            getLActions(obj, seqObj, (u16)((p[2] << 8) | p[3]), legCode, range, 0);
+        case TRIGGER_COMMAND_LIGHTING_ACTION:
+            getLActions(obj, seqObj, (u16)triggerCommandGetArgument(command), legCode, range, 0);
             break;
-        case 0xb:
-            switch (p[2]) {
+        case TRIGGER_COMMAND_SEQUENCE: {
+            GameObject* target;
+
+            switch (command->param1) {
             case 0:
             case 3:
-                t = (int)objGetNearestTypeTo(TARGET_OBJGROUP, obj, 0);
-                if ((void*)t != NULL) {
-                    (*gObjectTriggerInterface)->runSequence(p[3], (void*)t, -1);
+                target = objGetNearestTypeTo(TARGET_OBJGROUP, obj, 0);
+                if (target != NULL) {
+                    (*gObjectTriggerInterface)->runSequence(command->param2, target, -1);
                 }
                 break;
             case 1:
-                (*gObjectTriggerInterface)->setFlag(p[3], 1);
+                (*gObjectTriggerInterface)->setFlag(command->param2, 1);
                 break;
             case 2:
-                (*gObjectTriggerInterface)->setFlag(p[3], 0);
+                (*gObjectTriggerInterface)->setFlag(command->param2, 0);
                 break;
             }
             break;
-        case 0xc: {
+        }
+        case TRIGGER_COMMAND_ACTIVATE_TRIGGER: {
             GameObject** objects;
+            GameObject* trigger;
+            TriggerPlacement* triggerPlacement;
+            int count;
+            int first;
             u16 triggerId;
 
-            triggerId = (u16)((p[2] << 8) | p[3]);
+            triggerId = triggerCommandGetArgument(command);
             objects = ObjList_GetObjects(&first, &count);
             for (; first < count; first++) {
-                t2 = (int)objects[first];
-                tbl = (int*)((GameObject*)t2)->anim.placementData;
-                if (tbl == NULL) {
+                trigger = objects[first];
+                triggerPlacement = (TriggerPlacement*)trigger->anim.placementData;
+                if (triggerPlacement == NULL) {
                     continue;
                 }
-                switch (((TriggerPlacement*)tbl)->typeId) {
+                switch (triggerPlacement->base.objectId) {
                 case 0x4b:
                 case 0x4c:
                 case 0x4d:
@@ -647,116 +756,102 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 case 0x50:
                 case 0x54:
                 case 0x230:
-                    if (((TriggerPlacement*)tbl)->triggerId == triggerId) {
-                        objInterpretSeq((GameObject*)t2, seqObj, legCode, range);
+                    if (triggerPlacement->triggerId == triggerId) {
+                        objInterpretSeq(trigger, seqObj, legCode, range);
                     }
                     break;
                 }
             }
             break;
         }
-        case 0x10:
-            Obj_SetActiveModelIndex(Obj_GetPlayerObject(), p[2]);
+        case TRIGGER_COMMAND_SET_PLAYER_MODEL:
+            Obj_SetActiveModelIndex(Obj_GetPlayerObject(), command->param1);
             break;
-        case 0x12:
-            op = (u16)((p[2] << 8) | p[3]);
-            bit = op & 0x3fff;
-            v = mainGetBit(bit);
-            sel = op >> 14 & 3;
-            if (sel == 0) {
-                v = 0;
-            } else if (sel == 1) {
-                v = 0xffffffff;
-            } else if (sel == 2) {
-                v = ~v;
-            }
-            mainSetBits(bit, v);
+        case TRIGGER_COMMAND_UPDATE_GAME_BIT: {
+            triggerBitsSet(triggerCommandGetArgument(command));
             break;
-        case 0x21:
-            op = (u16)((p[2] << 8) | p[3]);
-            bit = op & 0x1fff;
-            v = mainGetBit(bit);
-            v ^= 1 << (op >> 13 & 7);
-            mainSetBits(bit, v);
+        }
+        case TRIGGER_COMMAND_TOGGLE_GAME_BIT_FIELD: {
+            triggerBitsToggle(triggerCommandGetArgument(command));
             break;
-        case 0x13:
-            (*gMapEventInterface)->setObjGroupStatus((int)obj->anim.mapEventSlot, (p[2] << 8) | p[3], 1);
+        }
+        case TRIGGER_COMMAND_SHOW_OBJECT_GROUP:
+            (*gMapEventInterface)
+                ->setObjGroupStatus((int)obj->anim.mapEventSlot, triggerCommandGetArgument(command), 1);
             break;
-        case 0x27:
-            id = (p[2] << 8) | p[3];
-            mapLoadDataFiles(id);
+        case TRIGGER_COMMAND_LOAD_MAP: {
+            int mapId = triggerCommandGetArgument(command);
+
+            mapLoadDataFiles(mapId);
             loadModelAndAnimTabs();
-            OSReport(desc + 0xa8, id);
+            OSReport(desc + 0xa8, mapId);
             break;
-        case 0x28:
-            id = (p[2] << 8) | p[3];
-            mapUnload(id, 0x20000000);
-            OSReport(desc + 0xc4, id);
+        }
+        case TRIGGER_COMMAND_UNLOAD_MAP: {
+            int mapId = triggerCommandGetArgument(command);
+
+            mapUnload(mapId, 0x20000000);
+            OSReport(desc + 0xc4, mapId);
             break;
-        case 0x2e:
+        }
+        case TRIGGER_COMMAND_DEFRAG_TEXTURES:
             defragMemory(0);
             break;
-        case 0x2a:
-            lockLevel(p[2], p[3]);
-            OSReport(desc + 0xe0, p[2], p[3]);
+        case TRIGGER_COMMAND_LOCK_LEVEL:
+            lockLevel(command->param1, command->param2);
+            OSReport(desc + 0xe0, command->param1, command->param2);
             break;
-        case 0x2b:
-            unlockLevel(p[2], p[3], 0);
-            OSReport(desc + 0x114, p[2], p[3]);
+        case TRIGGER_COMMAND_UNLOCK_LEVEL:
+            unlockLevel(command->param1, command->param2, 0);
+            OSReport(desc + 0x114, command->param1, command->param2);
             break;
-        case 0x2f:
-            t = (int)objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, 0);
-            if ((void*)t != NULL) {
-                timer_addDuration((GameObject*)(t), p[3] * 0x3c);
+        case TRIGGER_COMMAND_ADD_TIMER_SECONDS: {
+            GameObject* timer = objGetNearestTypeTo(TIMER_OBJECT_GROUP, obj, 0);
+
+            if (timer != NULL) {
+                timer_addDuration(timer, command->param2 * 0x3c);
             }
             break;
-        case 0x14:
-            (*gMapEventInterface)->setObjGroupStatus((int)obj->anim.mapEventSlot, (p[2] << 8) | p[3], 0);
+        }
+        case TRIGGER_COMMAND_HIDE_OBJECT_GROUP:
+            (*gMapEventInterface)
+                ->setObjGroupStatus((int)obj->anim.mapEventSlot, triggerCommandGetArgument(command), 0);
             break;
-        case 0x22:
-            id = (p[2] << 8) | p[3];
-            groupStatus = (u8)(*gMapEventInterface)->getObjGroupStatus((int)obj->anim.mapEventSlot, id);
-            (*gMapEventInterface)->setObjGroupStatus((int)obj->anim.mapEventSlot, id, groupStatus ^ 1);
+        case TRIGGER_COMMAND_TOGGLE_OBJECT_GROUP: {
+            int groupId = triggerCommandGetArgument(command);
+            u8 groupStatus = (u8)(*gMapEventInterface)->getObjGroupStatus((int)obj->anim.mapEventSlot, groupId);
+
+            (*gMapEventInterface)->setObjGroupStatus((int)obj->anim.mapEventSlot, groupId, groupStatus ^ 1);
             break;
-        case 0x15:
-            t = (int)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
-            if ((void*)t != NULL) {
-                for (tbl = (int*)t; *tbl != -1; tbl++) {
-                    if ((void*)getLoadedTexture(*tbl) == NULL) {
-                        crash(0x32, 3, 0, *tbl, 0, 0, 0, 0);
-                    }
-                }
-            }
+        }
+        case TRIGGER_COMMAND_REQUIRE_TEXTURES: {
+            triggerTextureLoad(triggerCommandGetArgument(command));
             break;
-        case 0x16:
-            t = (int)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
-            if ((void*)t != NULL) {
-                for (tbl = (int*)t; *tbl != -1; tbl++) {
-                    t2 = (int)getLoadedTexture(*tbl);
-                    if ((void*)t2 != NULL) {
-                        textureFree((Texture*)((u8*)t2));
-                    }
-                }
-            }
+        }
+        case TRIGGER_COMMAND_FREE_TEXTURES: {
+            triggerTextureFree(triggerCommandGetArgument(command));
             break;
-        case 0x18:
-            (*gMapEventInterface)->setMapAct((int)obj->anim.mapEventSlot, (p[2] << 8) | p[3]);
+        }
+        case TRIGGER_COMMAND_SET_MAP_ACT:
+            (*gMapEventInterface)->setMapAct((int)obj->anim.mapEventSlot, triggerCommandGetArgument(command));
             break;
-        case 0x1a:
-            (*gMapEventInterface)->setObjGroupStatus(p[3], p[2], 1);
+        case TRIGGER_COMMAND_SHOW_MAP_OBJECT_GROUP:
+            (*gMapEventInterface)->setObjGroupStatus(command->param2, command->param1, 1);
             break;
-        case 0x1b:
-            (*gMapEventInterface)->setObjGroupStatus(p[3], p[2], 0);
+        case TRIGGER_COMMAND_HIDE_MAP_OBJECT_GROUP:
+            (*gMapEventInterface)->setObjGroupStatus(command->param2, command->param1, 0);
             break;
-        case 0x1e:
-            (*gMapEventInterface)->setMapAct(p[3], p[2]);
+        case TRIGGER_COMMAND_SET_OTHER_MAP_ACT:
+            (*gMapEventInterface)->setMapAct(command->param2, command->param1);
             break;
-        case 0x11:
-            mainSetBits(GAMEBIT_TrickyTalk, (p[2] << 8) | p[3]);
+        case TRIGGER_COMMAND_SET_TRICKY_TALK:
+            mainSetBits(GAMEBIT_TrickyTalk, triggerCommandGetArgument(command));
             break;
-        case 0x1f:
-            t = (int)Obj_GetPlayerObject();
-            angleDiff = obj->anim.rotX - (u16) * (s16*)t;
+        case TRIGGER_COMMAND_SAVE_POINT: {
+            GameObject* player = Obj_GetPlayerObject();
+            s16 angleDiff = obj->anim.rotX - (u16)player->anim.rotX;
+            int angle;
+
             if (angleDiff > 0x8000) {
                 angleDiff = (angleDiff - 0x10000) + 1;
             }
@@ -764,28 +859,32 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 angleDiff = (angleDiff + 0x10000) - 1;
             }
             if (angleDiff >= 0) {
-                ang = angleDiff;
+                angle = angleDiff;
             } else {
-                ang = -angleDiff;
+                angle = -angleDiff;
             }
-            if (ang > 0x4000) {
+            if (angle > 0x4000) {
                 (*gMapEventInterface)
-                    ->savePoint(&obj->anim.localPosX, (int)(s16)(obj->anim.rotX + 0x8000), p[3], getCurMapLayer());
+                    ->savePoint(&obj->anim.localPosX, (int)(s16)(obj->anim.rotX + 0x8000), command->param2,
+                                getCurMapLayer());
             } else {
-                (*gMapEventInterface)->savePoint(&obj->anim.localPosX, (int)obj->anim.rotX, p[3], getCurMapLayer());
+                (*gMapEventInterface)
+                    ->savePoint(&obj->anim.localPosX, (int)obj->anim.rotX, command->param2, getCurMapLayer());
             }
             break;
-        case 0x20:
-            if (p[2] == 0) {
+        }
+        case TRIGGER_COMMAND_CHANGE_MAP_LAYER:
+            if (command->param1 == 0) {
                 goToNextMapLayer();
             } else {
                 goToPrevMapLayer();
             }
             break;
-        case 0x23:
-            switch (p[2]) {
+        case TRIGGER_COMMAND_RESTART_POINT:
+            switch (command->param1) {
             case 0:
-                (*gMapEventInterface)->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 0);
+                (*gMapEventInterface)
+                    ->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 0);
                 break;
             case 1:
                 (*gMapEventInterface)->clearRestartPoint();
@@ -794,29 +893,32 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 (*gMapEventInterface)->gotoRestartPoint();
                 break;
             case 3:
-                (*gMapEventInterface)->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 1);
+                (*gMapEventInterface)
+                    ->restartPoint((void*)&obj->anim.localPos, (int)obj->anim.rotX, getCurMapLayer(), 1);
                 break;
             }
             break;
-        case 0x26:
-            t = (int)getTrickyObject();
-            if ((void*)t != NULL) {
-                switch (p[2]) {
+        case TRIGGER_COMMAND_TRICKY: {
+            GameObject* tricky = getTrickyObject();
+
+            if (tricky != NULL) {
+                switch (command->param1) {
                 case 0:
-                    TRICKY_INTERFACE(t)->requestRecall((GameObject*)t);
+                    TRICKY_INTERFACE(tricky)->requestRecall(tricky);
                     break;
                 case 1:
                     Obj_FreeObject(getTrickyObject());
                     break;
-                case 2:
-                    t2 = (int)objGetNearestTypeTo(TRICKY_TARGET_OBJGROUP, (GameObject*)t, 0);
-                    if ((void*)t2 == NULL) {
-                        t2 = (int)objGetNearestTypeTo(TRICKY_TARGET_OBJGROUP_FALLBACK, (GameObject*)t, 0);
+                case 2: {
+                    GameObject* target = objGetNearestTypeTo(TRICKY_TARGET_OBJGROUP, tricky, 0);
+                    if (target == NULL) {
+                        target = objGetNearestTypeTo(TRICKY_TARGET_OBJGROUP_FALLBACK, tricky, 0);
                     }
-                    if ((void*)t2 != NULL) {
-                        TRICKY_INTERFACE(t)->requestMoveToObject((GameObject*)t, (GameObject*)t2);
+                    if (target != NULL) {
+                        TRICKY_INTERFACE(tricky)->requestMoveToObject(tricky, target);
                     }
                     break;
+                }
                 case 3:
                     mainSetBits(GAMEBIT_NoBallsAllowed, 0);
                     break;
@@ -826,19 +928,20 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 }
             }
             break;
-        case 0x1c:
-            switch (p[2]) {
+        }
+        case TRIGGER_COMMAND_ENVIRONMENT:
+            switch (command->param1) {
             case 0:
-                mainSetBits(GAMEBIT_ENV_disableDayFX1, p[3] == 0);
+                mainSetBits(GAMEBIT_ENV_disableDayFX1, command->param2 == 0);
                 break;
             case 1:
-                mainSetBits(GAMEBIT_ENV_disableDayFX2, p[3] == 0);
+                mainSetBits(GAMEBIT_ENV_disableDayFX2, command->param2 == 0);
                 break;
             case 2:
-                mainSetBits(GAMEBIT_ENV_disableDayFX3, p[3] == 0);
+                mainSetBits(GAMEBIT_ENV_disableDayFX3, command->param2 == 0);
                 break;
             case 3:
-                switch (p[3]) {
+                switch (command->param2) {
                 case 0:
                     mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
                     getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
@@ -862,8 +965,8 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 break;
             }
             break;
-        case 0x1d:
-            if (p[2] != 0) {
+        case TRIGGER_COMMAND_SET_ITEM_AVAILABILITY:
+            if (command->param1 != 0) {
                 mainSetBits(GAMEBIT_ITEM_DinoHorn_Disabled, 0);
                 mainSetBits(GAMEBIT_ITEM_Firefly_Disabled, 0);
                 mainSetBits(GAMEBIT_Tricky_CantFeed, 0);
@@ -873,24 +976,23 @@ void objInterpretSeq(GameObject* obj, GameObject* seqObj, s8 legCode, int range)
                 mainSetBits(GAMEBIT_Tricky_CantFeed, 1);
             }
             break;
-        case 0x2c:
-            *(f32*)seqObj->extra = 0.1f * (f32)(s32)((p[2] << 8) | p[3]);
+        case TRIGGER_COMMAND_SET_SEQUENCE_SCALE:
+            *(f32*)seqObj->extra = 0.1f * (f32)(s32)triggerCommandGetArgument(command);
             break;
-        case 0x2d:
-            t = (int)Obj_GetPlayerObject();
-            if ((void*)t != NULL) {
-                (*gGameUIInterface)->showNpcDialogue((p[2] << 8) | p[3], 0x14, 0x8c, 1);
+        case TRIGGER_COMMAND_DIALOGUE:
+            if (Obj_GetPlayerObject() != NULL) {
+                (*gGameUIInterface)->showNpcDialogue(triggerCommandGetArgument(command), 0x14, 0x8c, 1);
             } else if ((void*)getArwing() != NULL) {
-                headDisplayOpen((p[2] << 8) | p[3]);
+                headDisplayOpen(triggerCommandGetArgument(command));
             }
             break;
         }
     }
     if (legCode > 0) {
-        *state |= TRIGGER_SFLAG_ENTERED;
-        mainSetBits(((TriggerState*)state)->gameBit, 1);
+        state->status |= TRIGGER_SFLAG_ENTERED;
+        mainSetBits(state->gameBit, 1);
     } else if (legCode < 0) {
-        *state |= TRIGGER_SFLAG_EXITED;
+        state->status |= TRIGGER_SFLAG_EXITED;
     }
 }
 
@@ -903,30 +1005,34 @@ int Trigger_getObjectTypeId(void) {
 
 void Trigger_free(GameObject* obj) {
     u8 i;
-    u8* entry = (u8*)(obj)->anim.placementData + 0x18;
+    TriggerPlacement* placement;
+    TriggerCommand* command;
+
+    placement = (TriggerPlacement*)obj->anim.placementData;
+    command = placement->commands;
     i = 0;
 
-    while (i < 8) {
-        if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4) {
-            Sfx_StopFromObject(obj, (u16)((entry[2] << 8) | entry[3]));
+    while (i < ARRAY_SIZE(placement->commands)) {
+        if ((command->condition & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 &&
+            command->id != TRIGGER_COMMAND_MUSIC_ACTION && command->id == TRIGGER_COMMAND_SFX) {
+            Sfx_StopFromObject(obj, (u16)triggerCommandGetArgument(command));
         }
         i++;
-        entry += 4;
+        command++;
     }
 }
 
 /* group owned by another DLL, queried here */
 
-/* Env-effect ids co-activated by the type-3 command (p[3] sub-case); the A set
+/* Env-effect ids co-activated by the type-3 command (command->param2 sub-case); the A set
    runs for sub-cases 0/1, the B set for sub-case 2. Opaque distinct roles per index. */
 
 /*
- * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
+ * TriggerState+0 status byte (`state->status`). See objInterpretSeq / Trigger_hitDetect.
  */
 
 /*
- * Per-command-entry flags byte (entry[0] in the 4-byte command records at
- * placementData+0x18). Gates whether the entry runs for a given activation leg.
+ * TriggerCommand.condition gates whether a command runs for a given activation leg.
  */
 
 void Trigger_render(void) {
@@ -947,7 +1053,7 @@ void Trigger_hitDetect(GameObject* obj) {
     f32 dist[1];
 
     dist[0] = 200.0f;
-    if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4) {
+    if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->base.objectId == 0xf4) {
         triggerObj = Obj_GetPlayerObject();
         if (triggerObj != NULL) {
             inside = (int)playerGetFocusObject(triggerObj);
@@ -1031,7 +1137,7 @@ void Trigger_hitDetect(GameObject* obj) {
                         break;
                     }
                 }
-                switch (((TriggerPlacement*)def)->typeId) {
+                switch (((TriggerPlacement*)def)->base.objectId) {
                 case 0x4b:
                     if (ok) {
                         ((void (*)(GameObject*, GameObject*))triggerEvalEndpointSpheres)(obj, target);
@@ -1121,7 +1227,7 @@ void Trigger_init(GameObject* obj, u8* params) {
 
     objSetSlot(obj, 0x28);
     state = obj->extra;
-    switch (((TriggerPlacement*)params)->typeId) {
+    switch (((TriggerPlacement*)params)->base.objectId) {
     case 0x4b:
         range = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
         ((TriggerState*)state)->rangeSq = range * range;

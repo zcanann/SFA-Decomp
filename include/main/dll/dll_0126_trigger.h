@@ -4,19 +4,25 @@
 #include "global.h"
 #include "main/dll/dll_0126_trigger_api.h"
 #include "game/objects/object.h"
+#include "game/objects/object_setup.h"
 #include "dlls/object_descriptor.h"
 
 /* flag byte at TriggerState + 0x8A; bit7 = the 0x54 once-only latch */
-typedef struct
-{
+typedef struct {
     u8 bit7 : 1;
     u8 lo : 7;
 } TriggerFlags8A;
 
-typedef struct TriggerPlacement
-{
-    s16 typeId; /* 0x0: object-sequence type id dispatched by Trigger_init */
-    u8 pad2[0x38 - 0x2];
+typedef struct TriggerCommand {
+    u8 condition;
+    u8 id;
+    u8 param1;
+    u8 param2;
+} TriggerCommand;
+
+typedef struct TriggerPlacement {
+    ObjPlacement base;
+    TriggerCommand commands[8];
     s16 triggerId; /* 0x38: id matched against dispatched trigger message id */
     u8 size[3];    /* 0x3A: dimensions (x,y,z) */
     u8 rot[2];     /* 0x3D: rotation (x,y), range 0-255 */
@@ -27,8 +33,7 @@ typedef struct TriggerPlacement
     s16 gateBitSrc[4];      /* 0x48/0x4a/0x4c/0x4e: game-bit ids copied into TriggerState.gateBits */
 } TriggerPlacement;
 
-typedef struct ObjInterpretSeqPlacement
-{
+typedef struct ObjInterpretSeqPlacement {
     u8 pad0[0x2 - 0x0];
     s8 commandVariant; /* 0x2: sub-selector dispatched per interpret-seq opcode */
     u8 pad3[0x4 - 0x3];
@@ -37,9 +42,9 @@ typedef struct ObjInterpretSeqPlacement
     u8 pad7[0x8 - 0x7];
 } ObjInterpretSeqPlacement;
 
-typedef struct TriggerState
-{
-    u8 pad0[0x4 - 0x0];
+typedef struct TriggerState {
+    u8 status;
+    u8 pad1[0x4 - 0x1];
     f32 rangeSq;
     u32 timer;
     u8 padC[0x1C - 0xC];
@@ -57,7 +62,9 @@ typedef struct TriggerState
 } TriggerState;
 
 STATIC_ASSERT(offsetof(TriggerState, flags8A) == 0x8A);
-STATIC_ASSERT(offsetof(TriggerPlacement, typeId) == 0x0);
+STATIC_ASSERT(sizeof(TriggerCommand) == 4);
+STATIC_ASSERT(offsetof(TriggerPlacement, base.objectId) == 0x0);
+STATIC_ASSERT(offsetof(TriggerPlacement, commands) == 0x18);
 STATIC_ASSERT(offsetof(TriggerPlacement, triggerId) == 0x38);
 STATIC_ASSERT(offsetof(TriggerPlacement, size) == 0x3A);
 STATIC_ASSERT(offsetof(TriggerPlacement, rot) == 0x3D);
@@ -69,6 +76,7 @@ STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, commandVariant) == 0x2);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk4) == 0x4);
 STATIC_ASSERT(offsetof(ObjInterpretSeqPlacement, unk6) == 0x6);
 STATIC_ASSERT(offsetof(TriggerState, rangeSq) == 0x4);
+STATIC_ASSERT(offsetof(TriggerState, status) == 0x0);
 STATIC_ASSERT(offsetof(TriggerState, timer) == 0x8);
 STATIC_ASSERT(offsetof(TriggerState, targetPosX) == 0x1C);
 STATIC_ASSERT(offsetof(TriggerState, gameBit) == 0x80);
