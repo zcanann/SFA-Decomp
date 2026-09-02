@@ -886,14 +886,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
         if (nearest != NULL)
         {
             s16 yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
-            if (yawDelta < -0x200)
-            {
-                yawDelta = -0x200;
-            }
-            else if (yawDelta > 0x200)
-            {
-                yawDelta = 0x200;
-            }
+            yawDelta = (yawDelta < -0x200) ? -0x200 : ((yawDelta > 0x200) ? 0x200 : yawDelta);
             c = yawDelta;
             (obj)->anim.rotX += (s16)c;
             if ((obj)->anim.rotY != 0)

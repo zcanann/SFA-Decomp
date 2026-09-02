@@ -303,14 +303,7 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
             {
                 s16 yaw = Obj_GetYawDeltaToObject(obj, other, &range);
                 int t;
-                if (yaw < -300)
-                {
-                    yaw = -300;
-                }
-                else if (yaw > 300)
-                {
-                    yaw = 300;
-                }
+                yaw = (yaw < -300) ? -300 : ((yaw > 300) ? 300 : yaw);
                 t = yaw;
                 ((EnemyState*)state)->phaseAngle = t;
                 t = yaw >= 0 ? yaw : -yaw;

@@ -9,7 +9,6 @@
 #include "main/frame_timing.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
-#define OBJ_YAW_DELTA_RETURNS_S16
 #include "main/obj_query.h"
 #include "main/object_render.h"
 #include "main/object_update_list.h"

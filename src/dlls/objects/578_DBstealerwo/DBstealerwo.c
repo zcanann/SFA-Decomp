@@ -48,7 +48,6 @@
 #include "main/objtype.h"
 #include "main/obj_message.h"
 #include "main/obj_path.h"
-#define OBJ_YAW_DELTA_RETURNS_S16
 #include "main/obj_query.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00E2_staff_api.h"

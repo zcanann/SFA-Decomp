@@ -22,7 +22,6 @@
 #include "main/objtype.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
-#include "main/obj_query.h"
 #include "main/obj_trigger.h"
 #include "sys/objects.h"
 #include "main/frame_timing.h"
@@ -70,6 +69,8 @@
 #include "main/dll/dll_024E_drakordthornbush.h"
 #include "dlls/object_descriptor.h"
 #include "main/audio/sfx_play_api.h"
+
+int Obj_GetYawDeltaToObject(GameObject* obj, GameObject* target, f32* distanceOut);
 
 f32 gBossDrakorMissileTargetScatterFactor = 3.0f;
 f32 gBossDrakorMissileInitialSpeedFactor = 8.0f;

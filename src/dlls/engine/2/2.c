@@ -17,7 +17,6 @@
 #include "sys/objects/lifecycle.h"
 #include "sys/objects.h"
 #include "main/obj_list.h"
-#include "main/obj_query.h"
 #include "main/objseq.h"
 #include "util/carry.h"
 #include "main/mm.h"
@@ -70,6 +69,8 @@
 #include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
+
+int Obj_GetYawDeltaToObject(GameObject* obj, GameObject* target, f32* distanceOut);
 
 typedef struct SeqRunFlags
 {
