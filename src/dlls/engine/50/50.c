@@ -27,10 +27,6 @@ u8 gTitleScreenInitDvdErrorLatched;
 #define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
 
 Texture* gTitleScreenInitLoadingTextures[4];
-extern const f32 gTitleScreenInitTextureLodZero;
-extern const f32 gTitleScreenInitAlphaMax;
-extern const f32 gTitleScreenInitFadeFrames;
-extern const f32 lbl_803E1D00;
 
 void runLoadingScreens(void)
 {
@@ -48,7 +44,7 @@ void runLoadingScreens(void)
         u8 alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x1e)
         {
-            alpha = ((gTitleScreenInitAlphaMax * gTitleScreenInitLoadingFrameCounter) / gTitleScreenInitFadeFrames);
+            alpha = ((255.0f * gTitleScreenInitLoadingFrameCounter) / 30.0f);
         }
         else if (gTitleScreenInitLoadingFrameCounter < 0xd2)
         {
@@ -56,8 +52,7 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = ((gTitleScreenInitAlphaMax * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) /
-                     gTitleScreenInitFadeFrames);
+            alpha = ((255.0f * (f32)(0xf0 - gTitleScreenInitLoadingFrameCounter)) / 30.0f);
         }
 
         textureSlot = gTitleScreenInitLoadingTextures[0];
@@ -82,8 +77,7 @@ void runLoadingScreens(void)
         int alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x10e)
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0xf0)) /
-                          gTitleScreenInitFadeFrames);
+            alpha = (int)((255.0f * (f32)(gTitleScreenInitLoadingFrameCounter - 0xf0)) / 30.0f);
         }
         else if (gTitleScreenInitLoadingFrameCounter < 0x1c2)
         {
@@ -91,8 +85,7 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) /
-                          gTitleScreenInitFadeFrames);
+            alpha = (int)((255.0f * (f32)(0x1e0 - gTitleScreenInitLoadingFrameCounter)) / 30.0f);
         }
         drawTexture(gTitleScreenInitLoadingTextures[1],
                     (f32)(u32)((int)(0x280 - (u32)(gTitleScreenInitLoadingTextures[1])->width) >> 1),
@@ -104,8 +97,7 @@ void runLoadingScreens(void)
         int alpha;
         if (gTitleScreenInitLoadingFrameCounter < 0x1fe)
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(gTitleScreenInitLoadingFrameCounter - 0x1e0)) /
-                          gTitleScreenInitFadeFrames);
+            alpha = (int)((255.0f * (f32)(gTitleScreenInitLoadingFrameCounter - 0x1e0)) / 30.0f);
         }
         else if (gTitleScreenInitLoadingFrameCounter < 0x23a)
         {
@@ -113,8 +105,7 @@ void runLoadingScreens(void)
         }
         else
         {
-            alpha = (int)((gTitleScreenInitAlphaMax * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) /
-                          gTitleScreenInitFadeFrames);
+            alpha = (int)((255.0f * (f32)(0x258 - gTitleScreenInitLoadingFrameCounter)) / 30.0f);
         }
         drawTexture(gTitleScreenInitLoadingTextures[2],
                     (f32)(u32)((int)(0x280 - (u32)(gTitleScreenInitLoadingTextures[2])->width) >> 1),
@@ -162,8 +153,7 @@ static inline void initLoadingScreenTexturesBody(void)
         texObj = (GXTexObj*)textureHeader->gxTexObj;
         GXInitTexObj(texObj, (u8*)textureHeader + sizeof(Texture), textureHeader->width, textureHeader->height,
                      textureHeader->format, textureHeader->wrapS, textureHeader->wrapT, 0);
-        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, gTitleScreenInitTextureLodZero,
-                        gTitleScreenInitTextureLodZero, gTitleScreenInitTextureLodZero, 0, 0, 0);
+        GXInitTexObjLOD(texObj, textureHeader->minFilter, textureHeader->magFilter, 0.0f, 0.0f, 0.0f, 0, 0, 0);
         GXInitTexObjUserData(texObj, textureHeader);
         textureFormat = GXGetTexObjFmt(texObj);
         textureWidth = GXGetTexObjWidth(texObj);
@@ -194,7 +184,7 @@ int TitleScreenInit_frameStart(void)
     if (gTitleScreenInitFrameStartPending != 0)
     {
         gTitleScreenInitFrameStartPending = 0;
-        lbl_803DD5F4 = lbl_803E1D00;
+        lbl_803DD5F4 = 0.0f;
         loadUiDll(4);
     }
     return 0;
@@ -207,7 +197,7 @@ void TitleScreenInit_release(void)
 void TitleScreenInit_initialise(void)
 {
     gTitleScreenInitFrameStartPending = 1;
-    lbl_803DD5F4 = lbl_803E1D00;
+    lbl_803DD5F4 = 0.0f;
     mapUnload(TITLESCREENINIT_MAP_PRIOR, 0x10000000);
     setForceLoadImmediately();
     loadMapAndParent(TITLESCREENINIT_MAP_TITLE);
@@ -230,10 +220,3 @@ ObjectDescriptor6 TitleScreenInit_funcs = {
     (ObjectDescriptorCallback)TitleScreenInit_frameEnd,
     (ObjectDescriptorCallback)TitleScreenInit_render,
 };
-
-const f32 gTitleScreenInitTextureLodZero = 0.0f;
-const f32 gTitleScreenInitAlphaMax = 255.0f;
-const f32 gTitleScreenInitFadeFrames = 30.0f;
-const f32 lbl_803E1CFC = 0.0f;
-const f32 lbl_803E1D00 = 0.0f;
-const f32 lbl_803E1D04 = 0.0f;

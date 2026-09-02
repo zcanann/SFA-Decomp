@@ -1194,7 +1194,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/47/47.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/48/48.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/49/49.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "dlls/engine/50/50.c", cflags=cflags_dll_noopt_nocse_noprop),
+            Object(NonMatching, "dlls/engine/50/50.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(MatchingFor("GSAE01"), "dlls/engine/51/51.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/52_n_attractmode/n_attractmode.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/53/53.c", cflags=cflags_dll_noopt_noinline, section_alignments={".data": 4}),
