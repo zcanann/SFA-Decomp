@@ -198,36 +198,26 @@ const u16 gTrickySlowFollowBallVoiceSfxId[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 #define TRICKY_FLOAT_0_7              sTrickyFloat0_7
 #define TRICKY_FLOAT_NEG_0_01         sTrickyFloatNeg0_01
 #define TRICKY_FLOAT_TWO              sTrickyFloatTwo
-#define TRICKY_COLOR_FADE_ALPHA_SCALE (sTrickyColorFadeAlphaScale[0])
+#define TRICKY_COLOR_FADE_ALPHA_SCALE 196.0f
 
 extern const char sTrickyShouldNeverStopCirclingError[];
 
 extern char sSidekickCommandDebugTextBlock[];
 
-extern const f32 gTrickyTimer30Frames[1];
-extern const f32 gTrickyTimer150Frames[1];
-extern const f32 gTrickyVisibilityProbeRadius[1];
-extern const f32 gTrickyRemoteRecallDistanceSq[1];
-extern const f32 gTrickyRecallCooldownFrames[1];
-extern const f32 gTrickyAudioEventMinSpeed[1];
-extern const f32 gTrickyAmbientActivityBase[1];
 extern const f64 gTrickyAmbientWanderScale[1];
-extern const f32 gTrickyChildVoicePeriodFrames[1];
 /* Repeated Tricky movement-animation contract values. */
-#define TRICKY_TIMER_20_FRAMES           (gTrickyTimer20Frames[0])
+#define TRICKY_TIMER_20_FRAMES           20.0f
 #define TRICKY_WATER_COOLDOWN_FRAMES     TRICKY_TIMER_600_FRAMES
-#define TRICKY_CHILD_BLINK_PERIOD_FRAMES (gTrickyTimer30Frames[0])
+#define TRICKY_CHILD_BLINK_PERIOD_FRAMES 30.0f
 #define TRICKY_CHILD_BLINK_HOLD_FRAMES   TRICKY_TIMER_20_FRAMES
-#define TRICKY_CHILD_BLINK_FORCE_FRAMES  (gTrickyTimer150Frames[0])
-#define TRICKY_CHILD_VOICE_PERIOD_FRAMES (gTrickyChildVoicePeriodFrames[0])
-#define TRICKY_REMOTE_RECALL_DISTANCE_SQ (gTrickyRemoteRecallDistanceSq[0])
-#define TRICKY_VISIBILITY_PROBE_RADIUS   (gTrickyVisibilityProbeRadius[0])
-#define TRICKY_RECALL_COOLDOWN_FRAMES    (gTrickyRecallCooldownFrames[0])
-#define TRICKY_AUDIO_EVENT_MIN_SPEED     (gTrickyAudioEventMinSpeed[0])
-#define TRICKY_AMBIENT_ACTIVITY_BASE     (gTrickyAmbientActivityBase[0])
+#define TRICKY_CHILD_BLINK_FORCE_FRAMES  150.0f
+#define TRICKY_CHILD_VOICE_PERIOD_FRAMES 2400.0f
+#define TRICKY_REMOTE_RECALL_DISTANCE_SQ 360000.0f
+#define TRICKY_VISIBILITY_PROBE_RADIUS   19.0f
+#define TRICKY_RECALL_COOLDOWN_FRAMES    1200.0f
+#define TRICKY_AUDIO_EVENT_MIN_SPEED     0.2f
+#define TRICKY_AMBIENT_ACTIVITY_BASE     200.0f
 #define TRICKY_AMBIENT_WANDER_SCALE      (gTrickyAmbientWanderScale[0])
-#define gTrickyPositionOffsetScale       0.1f
-#define TRICKY_POSITION_OFFSET_SCALE     gTrickyPositionOffsetScale
 #define TRICKY_PATH_SEARCH_BULK_STEPS    0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES     500
 #define TRICKY_IDLE_VOICE_MAX_FRAMES     750
@@ -495,47 +485,26 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
     }
 }
 
-const f32 gTrickyTimer20Frames[] = {20.0f};
-static const f32 sTrickyColorFadeAlphaScale[] = {196.0f};
-const f32 gTrickyEventTimeSentinel[] = {-100000.0f};
-const f32 gTrickyEventStaleSeconds[] = {8.0f};
-const f32 gTrickyMaxDistance[] = {340282346638528859811704183484516925440.0f};
-const f32 gTrickySpeedDecayStep[] = {-0.15f};
-const f32 gTrickySmallSpeedStep[] = {0.05f};
-static const f32 sTrickyFloat100[] = {100.0f};
-static const f32 sTrickyFloatNeg0_17[] = {-0.17f};
-static const f32 sTrickyFloat40[] = {40.0f};
-static const f32 sTrickyFloat400[] = {400.0f};
-static const f32 sTrickyFloat0_014[] = {0.014f};
-static const f32 sTrickyFloat300[] = {300.0f};
-const f32 gTrickyFastMoveBlendSpeed[] = {0.02f};
-const f32 gTrickyTimer600Frames[] = {600.0f};
-const f32 gTrickyLandMoveBlendSpeed[] = {0.005f};
-const f32 gTrickyRouteReverseStep[] = {-2.0f};
-const f32 gTrickyRouteLookaheadScale[] = {1.5f};
-const f32 gTrickyYawStepRate[] = {512.0f};
-const f32 gTrickyPi[] = {3.1415927f};
-const f32 gTrickyAngleHalfTurnUnits[] = {32768.0f};
 
-#define gTrickyEventTimeSentinel         (gTrickyEventTimeSentinel[0])
-#define gTrickyEventStaleSeconds         (gTrickyEventStaleSeconds[0])
-#define gTrickyMaxDistance               (gTrickyMaxDistance[0])
-#define gTrickySpeedDecayStep            (gTrickySpeedDecayStep[0])
-#define gTrickySmallSpeedStep            (gTrickySmallSpeedStep[0])
-#define TRICKY_FLOAT_100                 (sTrickyFloat100[0])
-#define TRICKY_FLOAT_NEG_0_17            (sTrickyFloatNeg0_17[0])
-#define TRICKY_FLOAT_40                  (sTrickyFloat40[0])
-#define TRICKY_FLOAT_400                 (sTrickyFloat400[0])
-#define TRICKY_FLOAT_0_014               (sTrickyFloat0_014[0])
-#define TRICKY_FLOAT_300                 (sTrickyFloat300[0])
-#define TRICKY_FAST_MOVE_BLEND_SPEED     (gTrickyFastMoveBlendSpeed[0])
-#define TRICKY_TIMER_600_FRAMES          (gTrickyTimer600Frames[0])
-#define TRICKY_LAND_MOVE_BLEND_SPEED     (gTrickyLandMoveBlendSpeed[0])
-#define TRICKY_ROUTE_REVERSE_STEP        (gTrickyRouteReverseStep[0])
-#define TRICKY_ROUTE_LOOKAHEAD_SCALE     (gTrickyRouteLookaheadScale[0])
-#define TRICKY_YAW_STEP_RATE             (gTrickyYawStepRate[0])
-#define TRICKY_PI                        (gTrickyPi[0])
-#define TRICKY_ANGLE_HALF_TURN_UNITS     (gTrickyAngleHalfTurnUnits[0])
+#define TRICKY_EVENT_TIME_SENTINEL -100000.0f
+#define TRICKY_EVENT_STALE_SECONDS 8.0f
+#define TRICKY_MAX_DISTANCE 340282346638528859811704183484516925440.0f
+#define TRICKY_SPEED_DECAY_STEP -0.15f
+#define TRICKY_SMALL_SPEED_STEP 0.05f
+#define TRICKY_FLOAT_100                 100.0f
+#define TRICKY_FLOAT_NEG_0_17            -0.17f
+#define TRICKY_FLOAT_40                  40.0f
+#define TRICKY_FLOAT_400                 400.0f
+#define TRICKY_FLOAT_0_014               0.014f
+#define TRICKY_FLOAT_300                 300.0f
+#define TRICKY_FAST_MOVE_BLEND_SPEED     0.02f
+#define TRICKY_TIMER_600_FRAMES          600.0f
+#define TRICKY_LAND_MOVE_BLEND_SPEED     0.005f
+#define TRICKY_ROUTE_REVERSE_STEP        -2.0f
+#define TRICKY_ROUTE_LOOKAHEAD_SCALE     1.5f
+#define TRICKY_YAW_STEP_RATE             512.0f
+#define TRICKY_PI                        3.1415927f
+#define TRICKY_ANGLE_HALF_TURN_UNITS     32768.0f
 #define TRICKY_BALL_RETURNS_PER_COLOR    10
 #define TRICKY_BALL_RETURN_COUNT_MAX     0xef
 #define TRICKY_COLOR_CHANGE_SEEN_GAMEBIT 1005
@@ -576,10 +545,10 @@ static inline int skeetla_isInWater(TrickyState* state) {
     if (gTrickyFloatZero == state->waterLevel) {
         return 0;
     }
-    if (gTrickyEventTimeSentinel == state->eventTime) {
+    if (TRICKY_EVENT_TIME_SENTINEL == state->eventTime) {
         return 1;
     }
-    if (state->currentTime - state->eventTime > gTrickyEventStaleSeconds) {
+    if (state->currentTime - state->eventTime > TRICKY_EVENT_STALE_SECONDS) {
         return 1;
     }
     return 0;
@@ -721,7 +690,7 @@ int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType c
     GameObject* bestPriorityTarget;
     GameObject* bestFallbackTarget;
 
-    bestPriorityDist = gTrickyMaxDistance;
+    bestPriorityDist = TRICKY_MAX_DISTANCE;
     bestPriorityTarget = NULL;
     bestFallbackDist = bestPriorityDist;
     bestFallbackTarget = NULL;
@@ -1368,20 +1337,14 @@ static void trickyFaceMoveVector(GameObject* obj) {
     trickyUpdateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
-const f32 gTrickyAvoidanceRepathEpsilonSq[] = {0.0001f};
-const f32 gTrickyRunMoveThreshold[] = {2.5f};
-const f32 gTrickyFastWalkMoveThreshold[] = {0.66f};
-const f32 gTrickySlowWalkMoveThreshold[] = {0.33f};
-const f32 gTrickyTurnMoveBlendSpeed[] = {0.04f};
-const f32 gTrickyAnimTransitionFrames[] = {15.0f};
 
-#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ (gTrickyAvoidanceRepathEpsilonSq[0])
-#define TRICKY_TINY_MOVE_BLEND_SPEED       (gTrickyAvoidanceRepathEpsilonSq[0])
-#define TRICKY_RUN_MOVE_THRESHOLD          (gTrickyRunMoveThreshold[0])
-#define TRICKY_FAST_WALK_MOVE_THRESHOLD    (gTrickyFastWalkMoveThreshold[0])
-#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    (gTrickySlowWalkMoveThreshold[0])
-#define TRICKY_TURN_MOVE_BLEND_SPEED       (gTrickyTurnMoveBlendSpeed[0])
-#define TRICKY_ANIM_TRANSITION_FRAMES      (gTrickyAnimTransitionFrames[0])
+#define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
+#define TRICKY_TINY_MOVE_BLEND_SPEED       0.0001f
+#define TRICKY_RUN_MOVE_THRESHOLD          2.5f
+#define TRICKY_FAST_WALK_MOVE_THRESHOLD    0.66f
+#define TRICKY_SLOW_WALK_MOVE_THRESHOLD    0.33f
+#define TRICKY_TURN_MOVE_BLEND_SPEED       0.04f
+#define TRICKY_ANIM_TRANSITION_FRAMES      15.0f
 #define TRICKY_FOLLOW_VOICE_MIN_FRAMES     600
 #define TRICKY_FOLLOW_VOICE_MAX_FRAMES     1200
 #define TRICKY_FAST_FOLLOW_VOICE_THRESHOLD TRICKY_FLOAT_ONE
@@ -1423,7 +1386,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         state->dirZ /= dirLength;
     }
 
-    minMoveSpeed = gTrickySmallSpeedStep;
+    minMoveSpeed = TRICKY_SMALL_SPEED_STEP;
     if (currentSpeed < minMoveSpeed) {
         componentSpeed = minMoveSpeed * state->dirX;
         desiredNextPos[0] = timeDelta * componentSpeed + obj->anim.worldPosX;
@@ -1450,7 +1413,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         }
     }
 
-    if (currentSpeed >= gTrickySmallSpeedStep) {
+    if (currentSpeed >= TRICKY_SMALL_SPEED_STEP) {
         trickyUpdateFacingFromMoveVector(obj, &turnDelta);
         if (skeetla_isInWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
@@ -1558,7 +1521,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
             }
         }
 
-        state->speed = gTrickySmallSpeedStep;
+        state->speed = TRICKY_SMALL_SPEED_STEP;
         flagsSnapshot = state->stateFlags;
         if (((flagsSnapshot & TRICKY_STATE_FLAG_TURN_REQUEST) == 0) &&
             ((flagsSnapshot & TRICKY_STATE_FLAG_TURN_REQUEST_PREV) == 0)) {
@@ -1844,7 +1807,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
     state = obj->extra;
     allCurves = (*gRomCurveInterface)->getCurves(&curveCount);
 
-    initialBestDistance = gTrickyMaxDistance;
+    initialBestDistance = TRICKY_MAX_DISTANCE;
     bestDistanceCursor = bestDistances;
     bestRouteCursor = outRoutes;
     for (candidateSlot = 0; candidateSlot < TRICKY_ROUTE_CANDIDATE_COUNT; candidateSlot++) {
@@ -1964,6 +1927,7 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
 const f32 gTrickyAvoidanceBlendStepScale[] = {0.125f};
 
 #define TRICKY_AVOIDANCE_BLEND_STEP_SCALE (gTrickyAvoidanceBlendStepScale[0])
+#define TRICKY_POSITION_OFFSET_SCALE      0.1f
 
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance,
                                  f32 moveDistance) {
@@ -2199,38 +2163,25 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
         }                                                                                                              \
     } while (0)
 
-#define TRICKY_FOLLOW_MAX_SPEED                 (gTrickyFollowMaxSpeed[0])
-#define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   (gTrickyFollowAnim17Speed[0])
-#define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   (gTrickyFollowAnim18Speed[0])
-#define TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR   (gTrickyFollowVerticalDeltaDivisorA[0])
-#define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      (gTrickyFollowJumpdownBlendSpeed[0])
-#define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR (gTrickyFollowVerticalDeltaDivisorB[0])
-#define TRICKY_FOLLOW_ARC_SPEED                 (gTrickyFollowArcSpeed[0])
+#define TRICKY_FOLLOW_MAX_SPEED                 3.0f
+#define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   0.0135f
+#define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   0.00975f
+#define TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR   32.865f
+#define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      0.0125f
+#define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR 33.114f
+#define TRICKY_FOLLOW_ARC_SPEED                 2.3f
 #define TRICKY_FOLLOW_ARC_HALF_PROGRESS         (gTrickyFollowArcHalfProgress[0])
 #define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      (gTrickyFollowArcQuarterProgress[0])
-#define TRICKY_FOLLOW_ARC_COEFFICIENT           (gTrickyFollowArcCoefficient[0])
-#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       (gTrickyFollowArcProgressWindow[0])
-#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       (gTrickyFollowArcEndpointWindow[0])
-#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         (gTrickyFollowArcMiddleWindow[0])
-#define TRICKY_FOLLOW_JUMP_LAND_SPEED           (gTrickyFollowJumpLandSpeed[0])
+#define TRICKY_FOLLOW_ARC_COEFFICIENT           -0.017f
+#define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       24.0f
+#define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       6.0f
+#define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         12.0f
+#define TRICKY_FOLLOW_JUMP_LAND_SPEED           0.75f
 
-const f32 gTrickyDefaultStoppingRadius[] = {5.0f};
-const f32 gTrickyFollowMaxSpeed[] = {3.0f};
-const f32 gTrickyFollowAnim17Speed[] = {0.0135f};
-const f32 gTrickyFollowAnim18Speed[] = {0.00975f};
-const f32 gTrickyFollowVerticalDeltaDivisorA[] = {32.865f};
-const f32 gTrickyFollowJumpdownBlendSpeed[] = {0.0125f};
-const f32 gTrickyFollowVerticalDeltaDivisorB[] = {33.114f};
-const f32 gTrickyFollowArcSpeed[] = {2.3f};
 const f32 gTrickyFollowArcHalfProgress[] = {0.5f};
 const f32 gTrickyFollowArcQuarterProgress[] = {0.25f};
-const f32 gTrickyFollowArcCoefficient[] = {-0.017f};
-const f32 gTrickyFollowArcProgressWindow[] = {24.0f};
-const f32 gTrickyFollowArcEndpointWindow[] = {6.0f};
-const f32 gTrickyFollowArcMiddleWindow[] = {12.0f};
-const f32 gTrickyFollowJumpLandSpeed[] = {0.75f};
 
-#define TRICKY_DEFAULT_STOPPING_RADIUS (gTrickyDefaultStoppingRadius[0])
+#define TRICKY_DEFAULT_STOPPING_RADIUS 5.0f
 
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
     TrickyState* cachedPatchIdCursor;
@@ -2575,7 +2526,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         RomCurveDef* node;
     case TRICKY_MOVE_WALK_WAIT:
         trickyDebugPrint(debugStrings + TRICKY_DBG_WALK_WAIT);
-        v = gTrickySpeedDecayStep * timeDelta + previousSpeed;
+        v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
         state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         if (gTrickyFloatZero == state->speed) {
             didMove = 0;
@@ -2731,7 +2682,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_WALK_NODES:
         trickyDebugPrint(debugStrings + TRICKY_DBG_WALK_NODES);
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = gTrickySpeedDecayStep * timeDelta + previousSpeed;
+            v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
         routeNode = state->route.currentNode;
@@ -2839,10 +2790,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMP_RUNUP:
         trickyDebugPrint(debugStrings + TRICKY_DBG_JUMP_RUN_UP);
-        v = gTrickySmallSpeedStep * timeDelta + previousSpeed;
+        v = TRICKY_SMALL_SPEED_STEP * timeDelta + previousSpeed;
         state->speed = (v > TRICKY_FOLLOW_MAX_SPEED) ? TRICKY_FOLLOW_MAX_SPEED : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = gTrickySpeedDecayStep * timeDelta + previousSpeed;
+            v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
         TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
@@ -2882,10 +2833,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 v = gTrickyFloatZero;
             }
         } else if (previousSpeed > (v = TRICKY_FOLLOW_ARC_SPEED)) {
-            k = gTrickySpeedDecayStep * timeDelta + previousSpeed;
+            k = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             v = (k < v) ? v : k;
         } else {
-            k = gTrickySmallSpeedStep * timeDelta + previousSpeed;
+            k = TRICKY_SMALL_SPEED_STEP * timeDelta + previousSpeed;
             v = (k > v) ? v : k;
         }
         state->speed = v;
@@ -2981,10 +2932,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     }
     case TRICKY_MOVE_JUMPUP_RUNUP:
         trickyDebugPrint(debugStrings + TRICKY_DBG_JUMP_UP_RUN_UP);
-        v = gTrickySmallSpeedStep * timeDelta + previousSpeed;
+        v = TRICKY_SMALL_SPEED_STEP * timeDelta + previousSpeed;
         state->speed = (v > TRICKY_FOLLOW_MAX_SPEED) ? TRICKY_FOLLOW_MAX_SPEED : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = gTrickySpeedDecayStep * timeDelta + previousSpeed;
+            v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
         TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
@@ -3049,10 +3000,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMPDOWN_RUNUP:
         trickyDebugPrint(debugStrings + TRICKY_DBG_JUMPDOWN_RUNUP);
-        v = gTrickySmallSpeedStep * timeDelta + previousSpeed;
+        v = TRICKY_SMALL_SPEED_STEP * timeDelta + previousSpeed;
         state->speed = (v > TRICKY_FOLLOW_MAX_SPEED) ? TRICKY_FOLLOW_MAX_SPEED : v;
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            v = gTrickySpeedDecayStep * timeDelta + previousSpeed;
+            v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
         TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
@@ -3143,10 +3094,10 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     f32* currentPathPoint;
     TrickyState* objectState;
 
-    stoppingDistance = gTrickySmallSpeedStep;
+    stoppingDistance = TRICKY_SMALL_SPEED_STEP;
     projectedSpeed = state->speed;
     deltaTime = timeDelta;
-    deceleration = gTrickySpeedDecayStep * deltaTime;
+    deceleration = TRICKY_SPEED_DECAY_STEP * deltaTime;
     while (projectedSpeed > gTrickyFloatZero) {
         stoppingDistance = projectedSpeed * deltaTime + stoppingDistance;
         projectedSpeed = projectedSpeed + deceleration;
@@ -3157,7 +3108,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     targetDistanceSq = getXZDistanceSquared(targetPos, &obj->anim.worldPosX);
     if (targetDistanceSq < stoppingRadiusSq) {
         candidateSpeed = state->speed;
-        candidateSpeed = candidateSpeed + gTrickySpeedDecayStep * timeDelta;
+        candidateSpeed = candidateSpeed + TRICKY_SPEED_DECAY_STEP * timeDelta;
         state->speed = (candidateSpeed < gTrickyFloatZero) ? gTrickyFloatZero : candidateSpeed;
         return;
     }
@@ -3171,7 +3122,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         vecRotateZXY(&rotation.angle, targetDelta);
         if (targetDelta[2] > gTrickyFloatZero) {
             candidateSpeed = state->speed;
-            candidateSpeed = candidateSpeed + gTrickySpeedDecayStep * timeDelta;
+            candidateSpeed = candidateSpeed + TRICKY_SPEED_DECAY_STEP * timeDelta;
             state->speed = (candidateSpeed < gTrickyFloatZero) ? gTrickyFloatZero : candidateSpeed;
             return;
         }
@@ -3205,17 +3156,17 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
             if (candidateSpeed > gTrickyFloatZero) {
                 f32 curSpeed = state->speed;
                 if (candidateSpeed < curSpeed) {
-                    f32 step = gTrickySpeedDecayStep * timeDelta + curSpeed;
+                    f32 step = TRICKY_SPEED_DECAY_STEP * timeDelta + curSpeed;
                     state->speed = (step < candidateSpeed) ? candidateSpeed : step;
                     return;
                 } else {
                     f32 step;
                     if (candidateSpeed > TRICKY_FOLLOW_MAX_SPEED) {
-                        step = gTrickySmallSpeedStep * timeDelta + curSpeed;
+                        step = TRICKY_SMALL_SPEED_STEP * timeDelta + curSpeed;
                         state->speed = (step > TRICKY_FOLLOW_MAX_SPEED) ? TRICKY_FOLLOW_MAX_SPEED : step;
                         return;
                     }
-                    step = gTrickySmallSpeedStep * timeDelta + curSpeed;
+                    step = TRICKY_SMALL_SPEED_STEP * timeDelta + curSpeed;
                     state->speed = (step > candidateSpeed) ? candidateSpeed : step;
                     return;
                 }
@@ -3233,77 +3184,43 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     }
     {
         f32 step = state->speed;
-        step = step + gTrickySmallSpeedStep * timeDelta;
+        step = step + TRICKY_SMALL_SPEED_STEP * timeDelta;
         state->speed = (step > TRICKY_FOLLOW_MAX_SPEED) ? TRICKY_FOLLOW_MAX_SPEED : step;
     }
 }
 
-const f32 gTrickyCloseDistanceSq[] = {2500.0f};
-const f32 gTrickyTimer30Frames[] = {30.0f};
-const f32 gTrickyGrowlDigStartRadius[] = {25.0f};
-const f32 gTrickyFlameDoneProgress[] = {0.95f};
-const f32 gTrickyCirclingApproachRadius[] = {50.0f};
-const f32 gTrickyTimer150Frames[] = {150.0f};
-const f32 gTrickyCirclingCloseDistanceSq[] = {3600.0f};
-const f32 gTrickyCirclingFarDistanceSq[] = {5625.0f};
-const f32 gTrickyCirclingChargeRadius[] = {55.0f};
-const f32 gTrickyCirclingSpawnProgress[] = {0.3f};
-const f32 gTrickyFetchCarryDelayFrames[] = {180.0f};
-const f32 gTrickyFetchBallReachRadius[] = {13.0f};
-const f32 gTrickyFetchPickupBlendSpeed[] = {0.03f};
-const f32 gTrickyFetchThrowDelayFrames[] = {60.0f};
-const f32 gTrickyFetchLaunchProgress[] = {0.65f};
-const f32 gTrickyVisibilityProbeRadius[] = {19.0f};
-const f32 gTrickyFlameHelperReleaseProgress[] = {0.8f};
-const f32 gCannonballRollSpeedLimit[] = {1.2f};
-const f32 gCannonballRouteBackstep[] = {-10.0f};
-const f32 gTrickyDigTunnelBlendSpeed[] = {0.033f};
-const f32 gTrickySecretDigScanDistanceSq[] = {10000.0f};
-const f32 gTrickyIdleWanderBlendSpeed[] = {0.0025f};
-const f32 gTrickyIdlePickBlendSpeed[] = {0.0075f};
-const f32 gTrickyHowlCallBlendSpeed[] = {0.003f};
-const f32 gTrickyAmbientActivityBase[] = {200.0f};
 const f64 gTrickyAmbientWanderScale[] = {0.1};
-const f32 gTrickyAmbientHowlBlendSpeed[] = {0.015f};
-const f32 gTrickyContactFlameThreshold[] = {3000.0f};
-const f32 gTrickyRemoteRecallDistanceSq[] = {360000.0f};
-const f32 gTrickyPathParticleScale[] = {0.4f};
-const f32 gTrickyFirepipeHeightDistSq[] = {841.0f};
-const f32 gTrickyLostEventTime[] = {-10000.0f};
-const f32 gTrickyRecallCooldownFrames[] = {1200.0f};
-const f32 gTrickyAudioEventMinSpeed[] = {0.2f};
-const f32 gTrickyChildVoicePeriodFrames[] = {2400.0f};
 
-#define TRICKY_CLOSE_DISTANCE_SQ             (gTrickyCloseDistanceSq[0])
-#define TRICKY_TIMER_30_FRAMES               (gTrickyTimer30Frames[0])
-#define TRICKY_GROWL_DIG_START_RADIUS        (gTrickyGrowlDigStartRadius[0])
-#define TRICKY_FLAME_DONE_PROGRESS           (gTrickyFlameDoneProgress[0])
-#define TRICKY_CIRCLING_APPROACH_RADIUS      (gTrickyCirclingApproachRadius[0])
-#define TRICKY_TIMER_150_FRAMES              (gTrickyTimer150Frames[0])
-#define TRICKY_CIRCLING_CLOSE_DISTANCE_SQ    (gTrickyCirclingCloseDistanceSq[0])
-#define TRICKY_CIRCLING_FAR_DISTANCE_SQ      (gTrickyCirclingFarDistanceSq[0])
-#define TRICKY_CIRCLING_CHARGE_RADIUS        (gTrickyCirclingChargeRadius[0])
-#define TRICKY_CIRCLING_SPAWN_PROGRESS       (gTrickyCirclingSpawnProgress[0])
-#define TRICKY_FETCH_CARRY_DELAY_FRAMES      (gTrickyFetchCarryDelayFrames[0])
-#define TRICKY_FETCH_BALL_REACH_RADIUS       (gTrickyFetchBallReachRadius[0])
-#define TRICKY_FETCH_PICKUP_BLEND_SPEED      (gTrickyFetchPickupBlendSpeed[0])
-#define TRICKY_FETCH_THROW_DELAY_FRAMES      (gTrickyFetchThrowDelayFrames[0])
-#define TRICKY_FETCH_LAUNCH_PROGRESS         (gTrickyFetchLaunchProgress[0])
+#define TRICKY_CLOSE_DISTANCE_SQ             2500.0f
+#define TRICKY_TIMER_30_FRAMES               30.0f
+#define TRICKY_GROWL_DIG_START_RADIUS        25.0f
+#define TRICKY_FLAME_DONE_PROGRESS           0.95f
+#define TRICKY_CIRCLING_APPROACH_RADIUS      50.0f
+#define TRICKY_TIMER_150_FRAMES              150.0f
+#define TRICKY_CIRCLING_CLOSE_DISTANCE_SQ    3600.0f
+#define TRICKY_CIRCLING_FAR_DISTANCE_SQ      5625.0f
+#define TRICKY_CIRCLING_CHARGE_RADIUS        55.0f
+#define TRICKY_CIRCLING_SPAWN_PROGRESS       0.3f
+#define TRICKY_FETCH_CARRY_DELAY_FRAMES      180.0f
+#define TRICKY_FETCH_BALL_REACH_RADIUS       13.0f
+#define TRICKY_FETCH_PICKUP_BLEND_SPEED      0.03f
+#define TRICKY_FETCH_THROW_DELAY_FRAMES      60.0f
+#define TRICKY_FETCH_LAUNCH_PROGRESS         0.65f
 #define TRICKY_FETCH_VOICE_MIN_FRAMES        150
 #define TRICKY_FETCH_VOICE_MAX_FRAMES        300
-#define TRICKY_FLAME_HELPER_RELEASE_PROGRESS (gTrickyFlameHelperReleaseProgress[0])
-#define TRICKY_DIG_TUNNEL_BLEND_SPEED        (gTrickyDigTunnelBlendSpeed[0])
-#define TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ   (gTrickySecretDigScanDistanceSq[0])
-#define TRICKY_IDLE_WANDER_BLEND_SPEED       (gTrickyIdleWanderBlendSpeed[0])
-#define TRICKY_IDLE_PICK_BLEND_SPEED         (gTrickyIdlePickBlendSpeed[0])
+#define TRICKY_FLAME_HELPER_RELEASE_PROGRESS 0.8f
+#define TRICKY_DIG_TUNNEL_BLEND_SPEED        0.033f
+#define TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ   10000.0f
+#define TRICKY_IDLE_WANDER_BLEND_SPEED       0.0025f
+#define TRICKY_IDLE_PICK_BLEND_SPEED         0.0075f
 #define TRICKY_IDLE_ACTIVITY_DELAY_MIN_FRAMES 200
 #define TRICKY_IDLE_ACTIVITY_DELAY_MAX_FRAMES 500
-#define TRICKY_HOWL_CALL_BLEND_SPEED         (gTrickyHowlCallBlendSpeed[0])
-#define TRICKY_AMBIENT_HOWL_BLEND_SPEED      (gTrickyAmbientHowlBlendSpeed[0])
-#define TRICKY_CONTACT_FLAME_THRESHOLD       (gTrickyContactFlameThreshold[0])
-#define TRICKY_PATH_PARTICLE_SCALE           (gTrickyPathParticleScale[0])
-#define TRICKY_FIREPIPE_HEIGHT_DIST_SQ       (gTrickyFirepipeHeightDistSq[0])
-#define TRICKY_LOST_EVENT_TIME               (gTrickyLostEventTime[0])
+#define TRICKY_HOWL_CALL_BLEND_SPEED         0.003f
+#define TRICKY_AMBIENT_HOWL_BLEND_SPEED      0.015f
+#define TRICKY_CONTACT_FLAME_THRESHOLD       3000.0f
+#define TRICKY_PATH_PARTICLE_SCALE           0.4f
+#define TRICKY_FIREPIPE_HEIGHT_DIST_SQ       841.0f
+#define TRICKY_LOST_EVENT_TIME               -10000.0f
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
@@ -3322,7 +3239,7 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
 
     selectedWarp = NULL;
     bestWarp = NULL;
-    bestTrickyDistSq = gTrickyMaxDistance;
+    bestTrickyDistSq = TRICKY_MAX_DISTANCE;
 
     if (trickyShouldGoToWarpPoint(obj, state) == 0) {
         state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
@@ -4078,7 +3995,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->circlingWarpDetour != NULL) {
                 orbitMovementStatus = trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
             } else {
-                orbitMovementStatus = trickyUpdateMovementState(obj, gTrickyMaxDistance, state);
+                orbitMovementStatus = trickyUpdateMovementState(obj, TRICKY_MAX_DISTANCE, state);
             }
             if (orbitMovementStatus != TRICKY_MOVEMENT_IN_PROGRESS) {
                 int useSwimMove;
@@ -4910,7 +4827,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_GUARD_UP_FROM_GROWL:
         trickyDebugPrint(debugText + TRICKY_DBG_GUARD_UPFROMGROWL);
-        if (obj->anim.currentMoveProgress <= gTrickySmallSpeedStep) {
+        if (obj->anim.currentMoveProgress <= TRICKY_SMALL_SPEED_STEP) {
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (trickyGuardFindBaddieTarget(trickyState) == 0) {
                 guardTargetPos = &trickyState->followObj->anim.worldPosX;
@@ -5207,7 +5124,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
     case TRICKY_FLAME_TURNING_IN:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_FLAME_TURNING_IN);
         targetPos = &trickyState->followObj->anim.worldPosX;
-        trickyUpdateApproachSpeed(obj, gTrickyMaxDistance, trickyState, targetPos, 1);
+        trickyUpdateApproachSpeed(obj, TRICKY_MAX_DISTANCE, trickyState, targetPos, 1);
         if (moveTricky(obj, targetPos) == 0) {
             trickyRequestMove(obj, TRICKY_ANIM_FLAME_BREATH, TRICKY_FLOAT_0_004, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->substate = TRICKY_FLAME_IN;
@@ -5383,8 +5300,8 @@ void tricky_state06_nop(void) {
 #define CANNONBALL_ROLL_SFX_ID      TRICKY_VOICE_SFX_ROLLING
 #define CANNONBALL_ROLL_SFX_PITCH   TRICKY_VOICE_PITCH_HIGH
 
-#define CANNONBALL_ROLL_SPEED_LIMIT (gCannonballRollSpeedLimit[0])
-#define CANNONBALL_ROUTE_BACKSTEP   (gCannonballRouteBackstep[0])
+#define CANNONBALL_ROLL_SPEED_LIMIT 1.2f
+#define CANNONBALL_ROUTE_BACKSTEP   -10.0f
 
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* blockedNode;
@@ -5460,12 +5377,12 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
                 speed = gTrickyFloatZero;
             }
         } else if (speed > CANNONBALL_ROLL_SPEED_LIMIT) {
-            speed += gTrickySpeedDecayStep * timeDelta;
+            speed += TRICKY_SPEED_DECAY_STEP * timeDelta;
             if (speed < CANNONBALL_ROLL_SPEED_LIMIT) {
                 speed = CANNONBALL_ROLL_SPEED_LIMIT;
             }
         } else {
-            speed += gTrickySmallSpeedStep * timeDelta;
+            speed += TRICKY_SMALL_SPEED_STEP * timeDelta;
             if (speed > CANNONBALL_ROLL_SPEED_LIMIT) {
                 speed = CANNONBALL_ROLL_SPEED_LIMIT;
             }
@@ -5864,7 +5781,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         }
         break;
     case TRICKY_SECRET_DIG_APPROACH_CURVE:
-        if (trickyUpdateMovementState(obj, gTrickyMaxDistance, state) == TRICKY_MOVEMENT_REACHED_TARGET) {
+        if (trickyUpdateMovementState(obj, TRICKY_MAX_DISTANCE, state) == TRICKY_MOVEMENT_REACHED_TARGET) {
             state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->substate = TRICKY_SECRET_DIG_START_PRESS;
             state->secretDigPressTimer = gTrickyFloatZero;
@@ -6267,7 +6184,7 @@ int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
         return 1;
     }
-    if ((u8)trickyUpdateMovementState(obj, gTrickyMaxDistance, state) != TRICKY_MOVEMENT_IN_PROGRESS) {
+    if ((u8)trickyUpdateMovementState(obj, TRICKY_MAX_DISTANCE, state) != TRICKY_MOVEMENT_IN_PROGRESS) {
         if (state->questPromptChild != NULL) {
             sfxState = obj->extra;
             if (sfxState->soundSuppressed == 0 &&
@@ -7112,7 +7029,7 @@ GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state)
     d = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
     if ((d >= TRICKY_REMOTE_RECALL_DISTANCE_SQ) || (state->cooldownA > gTrickyFloatZero)) {
         if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
-            bestD = gTrickyMaxDistance;
+            bestD = TRICKY_MAX_DISTANCE;
             for (i = 0; i < count[0]; i++) {
                 f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
                 if (cd < d && cd < bestD) {
@@ -8011,7 +7928,7 @@ void Tricky_update(GameObject* obj) {
             trickyState->homePosZ = obj->anim.worldPosZ;
             (*gPathControlInterface)->attachObject((void*)obj, &trickyState->pathControlFlags);
             if (obj->anim.currentMove == TRICKY_ANIM_SWIM_TURN || obj->anim.currentMove == TRICKY_ANIM_SWIM) {
-                trickyState->waterLevel = gTrickyEventStaleSeconds;
+                trickyState->waterLevel = TRICKY_EVENT_STALE_SECONDS;
                 trickyState->eventTime = TRICKY_LOST_EVENT_TIME;
             } else {
                 trickyState->waterLevel = gTrickyFloatZero;
@@ -8519,9 +8436,9 @@ void Tricky_update(GameObject* obj) {
     }
     if (gTrickyFloatZero == trickyState->waterLevel) {
         waterFootstepActive = 0;
-    } else if (gTrickyEventTimeSentinel == trickyState->eventTime) {
+    } else if (TRICKY_EVENT_TIME_SENTINEL == trickyState->eventTime) {
         waterFootstepActive = 1;
-    } else if (trickyState->currentTime - trickyState->eventTime > gTrickyEventStaleSeconds) {
+    } else if (trickyState->currentTime - trickyState->eventTime > TRICKY_EVENT_STALE_SECONDS) {
         waterFootstepActive = 1;
     } else {
         waterFootstepActive = 0;
