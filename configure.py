@@ -1499,7 +1499,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/329/329.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/330_CFPowerBase/CFPowerBase.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/331_CFMainCryst/CFMainCryst.c"),
-            Object(NonMatching, "dlls/objects/332/332.c", cflags=cflags_dll_noopt_nocse_noinline),
+            Object(NonMatching, "dlls/objects/332/332.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/333_LaserBeam/LaserBeam.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/334_CFPrisonGua/CFPrisonGua.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/335_CFPrisonUnc/CFPrisonUnc.c"),

@@ -9,6 +9,7 @@
 #include "main/frame_timing.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
+#define OBJ_YAW_DELTA_RETURNS_S16
 #include "main/obj_query.h"
 #include "main/object_render.h"
 #include "main/object_update_list.h"
@@ -113,15 +114,16 @@ int babyCloudRunner_updateBurrowAnimation(GameObject* obj) {
 }
 
 void babyCloudRunner_turnTowardTarget(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove) {
-    int yawStep;
+    s16 yawStep;
     characterAimHeadAtTarget(obj, target, &state->eyeAnimState, BABYCLOUDRUNNER_HEAD_AIM_LIMIT, 0, 3);
     yawStep = Obj_GetYawDeltaToObject(obj, target, 0);
-    obj->anim.rotX += (yawStep >>= BABYCLOUDRUNNER_TURN_YAW_SHIFT);
+    yawStep >>= BABYCLOUDRUNNER_TURN_YAW_SHIFT;
+    obj->anim.rotX += yawStep;
     if (playMove == 0) {
         return;
     }
-    if ((s16)yawStep > -BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE &&
-        (s16)yawStep < BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE) {
+    if (yawStep > -BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE &&
+        yawStep < BABYCLOUDRUNNER_TURN_ALIGNMENT_TOLERANCE) {
         if (state->turnLatch != 0) {
             state->turnLatch = 0;
             ObjAnim_SetCurrentMove(obj, BABYCLOUDRUNNER_MOVE_IDLE_A, 0.0f, 0);
@@ -134,10 +136,10 @@ void babyCloudRunner_turnTowardTarget(GameObject* obj, GameObject* target, BabyC
             ObjAnim_SetCurrentMove(obj, BABYCLOUDRUNNER_MOVE_TURN, 0.0f, 0);
         } else {
             int turnAnimStep;
-            if ((int)(s16)yawStep > 0) {
-                turnAnimStep = (s16)yawStep >> BABYCLOUDRUNNER_TURN_ANIM_SHIFT;
+            if (yawStep > 0) {
+                turnAnimStep = yawStep >> BABYCLOUDRUNNER_TURN_ANIM_SHIFT;
             } else {
-                turnAnimStep = -(s16)yawStep >> BABYCLOUDRUNNER_TURN_ANIM_SHIFT;
+                turnAnimStep = -yawStep >> BABYCLOUDRUNNER_TURN_ANIM_SHIFT;
             }
             ObjAnim_AdvanceCurrentMove(obj, (f32)(s16)turnAnimStep / BABYCLOUDRUNNER_TURN_ANIM_RATE_DIVISOR, timeDelta,
                                        0);
@@ -214,7 +216,7 @@ int babyCloudRunner_sequenceCallback(GameObject* obj, int unused, ObjSeqState* a
     GameObject* player;
     BabyCloudRunnerPlacement* placement = (BabyCloudRunnerPlacement*)obj->anim.placement;
     s8 inRange;
-    int yaw;
+    s16 yaw;
     int halfInner;
     f32 dx;
     f32 dz;
@@ -287,7 +289,7 @@ int babyCloudRunner_sequenceCallback(GameObject* obj, int unused, ObjSeqState* a
         animUpdate->flags &= ~BABYCLOUDRUNNER_SEQUENCE_HIT_VOLUME_FLAG;
         yaw = Obj_GetYawDeltaToObject(obj, player, 0);
         characterAimHeadAtTarget(obj, player, &state->eyeAnimState, BABYCLOUDRUNNER_HEAD_AIM_LIMIT, 0, 3);
-        obj->anim.rotX += (s16)yaw / 8;
+        obj->anim.rotX += yaw / 8;
         if (inRange != 0) {
             animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
         } else {
@@ -298,7 +300,7 @@ int babyCloudRunner_sequenceCallback(GameObject* obj, int unused, ObjSeqState* a
         animUpdate->flags &= ~BABYCLOUDRUNNER_SEQUENCE_HIT_VOLUME_FLAG;
         yaw = Obj_GetYawDeltaToObject(obj, (GameObject*)getTrickyObject(), 0);
         characterAimHeadAtTarget(obj, getTrickyObject(), &state->eyeAnimState, BABYCLOUDRUNNER_HEAD_AIM_LIMIT, 0, 3);
-        obj->anim.rotX += (s16)yaw / 8;
+        obj->anim.rotX += yaw / 8;
         break;
     }
     return 0;
