@@ -1553,7 +1553,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/383/383.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/384_MMP_asteroi/MMP_asteroi.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/385_MMP_trenchF/MMP_trenchF.c"),
-            Object(NonMatching, "dlls/objects/386_MMP_moonroc/MMP_moonroc.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/386_MMP_moonroc/MMP_moonroc.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/387_MMP_gyserve/MMP_gyserve.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/388/388.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/389_CCgasvent/CCgasvent.c"),
