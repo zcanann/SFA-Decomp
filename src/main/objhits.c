@@ -1879,9 +1879,12 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
     ObjModel* modelBank;
     int i;
     ModelFileHeader* modelFile;
-    ModelHitSphereDef* hitVolumes;
+    ModelHitSphereDef* hitVolume;
+    int hitVolumeOffset;
     float* curSpheres;
-    int prevSpheres;
+    float* prevSpheres;
+    float* curSphere;
+    float* prevSphere;
     ObjHitsPriorityState* stateB;
     int pointCount;
     TrackQueryBounds bounds;
@@ -1897,14 +1900,18 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
         if ((stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) {
             modelBank = ObjHits_GetActiveModel(objB);
             modelFile = modelBank->file;
-            hitVolumes = (ModelHitSphereDef*)modelFile->hitVolumes;
             bits = modelBank->bufferFlags >> 2 & 1;
             curSpheres = (f32*)modelBank->hitVolumeSphereBuffers[bits];
-            prevSpheres = (int)modelBank->hitVolumeSphereBuffers[bits ^ 1];
+            prevSpheres = (f32*)modelBank->hitVolumeSphereBuffers[bits ^ 1];
             pointCount = 0;
-            for (i = 0; i < (int)(u32)modelFile->hitVolumeCount; i = i + 1) {
-                if ((i == hitVolumes[i].sphereIndex) && ((mask2 & 1 << hitVolumes[i].maskBit) != 0)) {
-                    bits = hitVolumes[i].linkedSpheres;
+            hitVolumeOffset = 0;
+            curSphere = curSpheres;
+            prevSphere = prevSpheres;
+            for (i = 0; i < (int)(u32)modelFile->hitVolumeCount;
+                 hitVolumeOffset += sizeof(ModelHitSphereDef), curSphere += 4, prevSphere += 4, i = i + 1) {
+                hitVolume = (ModelHitSphereDef*)(modelFile->hitVolumes + hitVolumeOffset);
+                if ((i == hitVolume->sphereIndex) && ((mask2 & 1 << hitVolume->maskBit) != 0)) {
+                    bits = hitVolume->linkedSpheres;
                     if (bits != 0) {
                         for (; (u16)bits != 0; bits = (u16)((bits & 0xffff) << 4)) {
                             sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
@@ -1928,14 +1935,13 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                         }
                     } else {
                         if (pointCount < 4) {
-                            endPoints[pointCount * 3] = playerMapOffsetX + curSpheres[i * 4 + 1];
-                            endPoints[pointCount * 3 + 1] = curSpheres[i * 4 + 2];
-                            endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curSpheres[i * 4 + 3];
-                            startPoints[pointCount * 3] = playerMapOffsetX + ((float*)prevSpheres)[i * 4 + 1];
-                            startPoints[pointCount * 3 + 1] = ((float*)prevSpheres)[i * 4 + 2];
-                            startPoints[pointCount * 3 + 2] =
-                                playerMapOffsetZ + ((float*)prevSpheres)[i * 4 + 3];
-                            hb.radii[pointCount] = curSpheres[i * 4];
+                            endPoints[pointCount * 3] = playerMapOffsetX + curSphere[1];
+                            endPoints[pointCount * 3 + 1] = curSphere[2];
+                            endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curSphere[3];
+                            startPoints[pointCount * 3] = playerMapOffsetX + prevSphere[1];
+                            startPoints[pointCount * 3 + 1] = prevSphere[2];
+                            startPoints[pointCount * 3 + 2] = playerMapOffsetZ + prevSphere[3];
+                            hb.radii[pointCount] = curSphere[0];
                             hb.surfaceTypes[pointCount] = -1;
                             hb.queryTypes[pointCount] = 7;
                             pointCount = pointCount + 1;

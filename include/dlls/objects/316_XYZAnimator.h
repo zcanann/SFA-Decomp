@@ -27,6 +27,8 @@ typedef enum XyzAnimatorObjectGroup {
     XYZ_ANIMATOR_OBJECT_GROUP = 0x51,
 } XyzAnimatorObjectGroup;
 
+#define XYZ_ANIMATOR_DRAGON_ROCK_FIREPIPE_IDENT 0x46406
+
 /*
  * The setup fields through mode are evidenced by this TU. The complete record
  * extent after 0x2C is not yet proven, so do not use sizeof(XyzAnimatorPlacement).

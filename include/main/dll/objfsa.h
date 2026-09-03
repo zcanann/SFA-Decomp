@@ -27,7 +27,7 @@ int curves_findNearObj(struct GameObject* obj,int *curveTypes,int typeCount,int 
 f32 curves_getPathLength(struct RomCurveDef *a, struct RomCurveDef *b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(struct RomCurveDef* curve,float *outX,float *outY,float *outZ,f32 phase);
 struct RomCurveDef* RomCurve_findProjectedCurveFromStart(struct RomCurveDef* curve, f32 x, f32 y, f32 z, f32* outPhase);
-void* Objfsa_FindNearestCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
-void* Objfsa_FindNearestEnabledCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
+struct RomCurveDef* Objfsa_FindNearestCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
+struct RomCurveDef* Objfsa_FindNearestEnabledCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
 
 #endif /* MAIN_DLL_OBJFSA_H_ */

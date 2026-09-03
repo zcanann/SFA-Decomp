@@ -517,7 +517,7 @@ void XyzAnimator_init(GameObject* obj) {
     objAddObjectType(obj, XYZ_ANIMATOR_OBJECT_GROUP);
     mapId = obj->anim.placement->ident;
     switch (mapId) {
-    case 0x46406:
+    case XYZ_ANIMATOR_DRAGON_ROCK_FIREPIPE_IDENT:
     case 0x4BAB1:
         state->loopSfxId = 0x7D;
         break;

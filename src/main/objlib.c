@@ -1049,7 +1049,7 @@ void ObjPath_GetPointWorldPosition(GameObject* obj, int pointIndex, float* outX,
     }
 }
 
-int Obj_GetYawDeltaToObject(GameObject* obj, GameObject* target, float* distOut) {
+s16 Obj_GetYawDeltaToObject(GameObject* obj, GameObject* target, float* distOut) {
     int yawDelta;
     float dx;
     float dz;

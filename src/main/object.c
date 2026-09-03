@@ -1077,6 +1077,7 @@ static void objFreeObjdef(u8* obj, int flag)
 
 void Obj_RegisterObject(GameObject* obj, int b);
 
+#pragma dont_inline on
 void* loadModLines(int idx, s16* outCount)
 {
     void* result;
@@ -1102,6 +1103,7 @@ void* loadModLines(int idx, s16* outCount)
     *outCount = (u32)size / 20;
     return result;
 }
+#pragma dont_inline reset
 
 static inline void Obj_FreeDeferredObjects(void)
 {
@@ -1397,6 +1399,7 @@ void Obj_UpdateObject(GameObject* obj)
     }
 }
 
+#pragma dont_inline on
 void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused)
 {
     s16 mode = obj->anim.romDefNo;
@@ -1441,6 +1444,7 @@ void Obj_RunInitCallback(GameObject* obj, void* placementData, int unused)
         obj->externalVelZ = zero;
     }
 }
+#pragma dont_inline reset
 
 void Obj_FreeObject(GameObject* obj)
 {

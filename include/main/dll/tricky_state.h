@@ -32,21 +32,23 @@
  * "JUMPDOWN or JUMPUP", "JUMPDOWN_RUNUP"). The two states sharing the
  * "JUMPDOWN or JUMPUP" text are told apart by the sign of the verticalDelta
  * each one seeds: 0x0C climbs to the node, 0x0E descends to it. */
-#define TRICKY_MOVE_WALK_WAIT        0
-#define TRICKY_MOVE_WALK_FREE        1
-#define TRICKY_MOVE_WALK_START_PATCH 2
-#define TRICKY_MOVE_WALK_END_PATCH   3
-#define TRICKY_MOVE_WALK_PATCH_EXIT  4
-#define TRICKY_MOVE_CURVE_SETUP      5
-#define TRICKY_MOVE_WALK_TO_NODE     6
-#define TRICKY_MOVE_WALK_NODES       7
-#define TRICKY_MOVE_JUMP_RUNUP       8
-#define TRICKY_MOVE_JUMP_PREP        9
-#define TRICKY_MOVE_JUMPING          10
-#define TRICKY_MOVE_JUMPUP_RUNUP     11
-#define TRICKY_MOVE_JUMPUP           12
-#define TRICKY_MOVE_JUMPDOWN_RUNUP   13
-#define TRICKY_MOVE_JUMPDOWN         14
+typedef enum TrickyMovementState {
+    TRICKY_MOVE_WALK_WAIT = 0,
+    TRICKY_MOVE_WALK_FREE = 1,
+    TRICKY_MOVE_WALK_START_PATCH = 2,
+    TRICKY_MOVE_WALK_END_PATCH = 3,
+    TRICKY_MOVE_WALK_PATCH_EXIT = 4,
+    TRICKY_MOVE_CURVE_SETUP = 5,
+    TRICKY_MOVE_WALK_TO_NODE = 6,
+    TRICKY_MOVE_WALK_NODES = 7,
+    TRICKY_MOVE_JUMP_RUNUP = 8,
+    TRICKY_MOVE_JUMP_PREP = 9,
+    TRICKY_MOVE_JUMPING = 10,
+    TRICKY_MOVE_JUMPUP_RUNUP = 11,
+    TRICKY_MOVE_JUMPUP = 12,
+    TRICKY_MOVE_JUMPDOWN_RUNUP = 13,
+    TRICKY_MOVE_JUMPDOWN = 14,
+} TrickyMovementState;
 
 typedef union TrickyScratch {
     GameObject* obj;
@@ -70,12 +72,14 @@ typedef struct TrickyPackedSlots {
     u8 unusedPromptSlotBits : 2;
 } TrickyPackedSlots;
 
-#define TRICKY_COMMAND_PHASE_IDLE      -1
-#define TRICKY_COMMAND_PHASE_NONE      0
-#define TRICKY_COMMAND_PHASE_DIG       1
-#define TRICKY_COMMAND_PHASE_GUARD     3
-#define TRICKY_COMMAND_PHASE_FLAME     4
-#define TRICKY_COMMAND_PHASE_PLAY_BALL 5
+typedef enum TrickyCommandPhase {
+    TRICKY_COMMAND_PHASE_IDLE = -1,
+    TRICKY_COMMAND_PHASE_NONE = 0,
+    TRICKY_COMMAND_PHASE_DIG = 1,
+    TRICKY_COMMAND_PHASE_GUARD = 3,
+    TRICKY_COMMAND_PHASE_FLAME = 4,
+    TRICKY_COMMAND_PHASE_PLAY_BALL = 5,
+} TrickyCommandPhase;
 
 #define MAX_COMM_PRESENT 10
 
@@ -211,7 +215,7 @@ typedef struct TrickyState {
     u8 pad2F2[0x2F5 - 0x2F2];
     u8 spawnBits;             /* reward-drop selector decoded from the player attack flags */
     u8 frozenFadeCounter : 5; /* countdown gating the frozen-shatter fade-in sfx */
-    u8 unk2F6 : 3;
+    u8 unusedFrozenFadeBits : 3;
     u8 pad2F7[0x2F8 - 0x2F7];
     u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 pad2FA[0x300 - 0x2FA];
@@ -274,8 +278,9 @@ typedef struct TrickyState {
     u8 pad537[1];
     PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
     union {
-        RomCurveDef* cachedRouteEntry; /* cached route-entry pointer validated via skeetla_validateRouteEntry */
-        u32 cachedRouteId; /* route id/pointer word used as the cache key before the next point is fetched */
+        RomCurveDef*
+            cachedRouteEntry; /* path-search start/next-point cache slot, validated via skeetla_validateRouteEntry */
+        u32 cachedRouteId;    /* raw view of cachedRouteEntry retained for consumers still recovered as word keys */
     };
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
     f32* previousPathPoint;
@@ -407,7 +412,7 @@ typedef struct TrickyState {
     f32 foodForceBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer150Frames/gTrickyTimer600Frames to toggle the child's hidden anim flag */
     f32 foodBlinkTimer; /* child-object periodic phase timer: += timeDelta, wraps at gTrickyTimer30Frames, gates the child's hidden anim flag via gTrickyTimer20Frames */
     GameObject* spawnedChild;
-    u8 pendingFollowRequest;
+    u8 pendingFollowRequest; /* TrickyPendingFollowRequest byte: 0 none, 1 queued follow-target handoff */
     u8 pad7D1[0x7D4 - 0x7D1];
     GameObject* pendingFollowObj; /* target object handed off to a sibling Tricky */
     f32 footPoints[4][3];

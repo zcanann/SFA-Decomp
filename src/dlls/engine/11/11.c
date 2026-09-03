@@ -1074,7 +1074,7 @@ void dll_0B_updateActiveEffects(void) {
                     rot.rotY = 0;
                     rot.rotZ = 0;
                     vecRotateZXY(&rot.rotX, &tmpl.posX);
-                    if (*(void**)eff == NULL && Obj_CanSetupObject()) {
+                    if (*(void**)eff == NULL && (u8)Obj_CanSetupObject()) {
                         int* o;
                         if (((int)((PartfxEffectState*)eff)->flags & 1) == 0) {
                             tmpl.posX =
@@ -1470,13 +1470,13 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
                 ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->sequenceIndex;
             ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14 =
                 ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->param14;
-            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = 0;
+            ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = NULL;
             ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->modelOrResource =
                 ((ModgfxPendingSpawn*)((u8*)context->pendingSpawns + off))->modelOrResource;
             if ((((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->modelOrResource & 0xf7fff180) == 0 &&
                 ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14 != 0) {
                 int k;
-                ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = 0;
+                ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = NULL;
                 *(u8**)&((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param10 = dst;
                 dst += ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14 * 2;
                 for (k = 0; k < ((ModgfxPendingSpawn*)((u8*)arr[slot]->emitterCommands + off))->param14; k++) {

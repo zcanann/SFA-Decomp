@@ -91,7 +91,7 @@ typedef struct EnemyState {
     u8 curveParamB;
     u8 spawnBits; /* reward-drop selector decoded from the player attack flags */
     u8 frozenFadeCounter : 5; /* countdown gating the frozen-shatter fade-in sfx */
-    u8 unk2F6 : 3;
+    u8 unusedFrozenFadeBits : 3;
     u8 unk2F7[0x2F8 - 0x2F7];
     u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
     u8 unk2FA[0x2FC - 0x2FA];
@@ -198,8 +198,14 @@ typedef struct EnemyState {
         } crawler;
         struct {
             u8 activeEventIndex; /* row index shared by the parallel 12-byte event tables (FamilyTable tbl8 in the controller, tbl24 in the hit handler) */
-            u8 idleRow; /* 12-byte IdleRow index, chained through row+9 */
-            u8 idleRowStarted;
+            union {
+                u8 idleRow; /* 12-byte IdleRow index, chained through row+9 */
+                u8 queuedEventIndex; /* delayed event row selected by wispBaddieQueueNextEvent */
+            };
+            union {
+                u8 idleRowStarted;
+                u8 eventQueued; /* latch paired with queuedEventIndex */
+            };
         } sharpClaw;
     } familyData;
     GameObject* lastHitObject;

@@ -529,7 +529,7 @@ void warpstone_update(GameObject* obj) {
     int advanceResult;
     GameObject* target;
     s16* modelVec;
-    int yawDelta;
+    s16 yawDelta;
     int moveId;
 
     state = (obj)->extra;

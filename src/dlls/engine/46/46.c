@@ -524,7 +524,7 @@ void dll_2E_setLockTarget(MoveLibState* state, GameObject* target)
 
 void dll_2E_updateLookAt(GameObject* obj, MoveLibState* s)
 {
-    register int yawDelta;
+    register s16 yawDelta;
     register int seqHandle;
     register u32 target;
     GameObject* targetObj;
@@ -662,7 +662,7 @@ void dll_2E_updateLookAt(GameObject* obj, MoveLibState* s)
                 if ((s->modeBits & 0x10) != 0)
                 {
                     objSetLookAtFlip(0, 1);
-                    yawDelta = yawDelta + -0x8000;
+                    yawDelta += -0x8000;
                 }
                 ival = (short)yawDelta;
                 ival = (ival >= 0) ? ival : -ival;
@@ -710,7 +710,7 @@ void dll_2E_updateLookAt(GameObject* obj, MoveLibState* s)
 int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning, PostControl* control, float* turnSpeed,
                        s16* moves, f32* targetPos)
 {
-    int yawDelta;
+    s16 yawDelta;
     int* jointKeys;
     s16 hitResult;
     int turnAmount;
@@ -765,7 +765,7 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
 
     if (control->blocked == 0)
     {
-        if (((s16)yawDelta > -control->yawLimit) && ((s16)yawDelta < control->yawLimit))
+        if ((yawDelta > -control->yawLimit) && (yawDelta < control->yawLimit))
         {
             *turnSpeed = 0.005f;
             *turning = 0;
@@ -780,12 +780,12 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
     }
     else if (*turning != 0)
     {
-        if (((s16)yawDelta > 0) && (obj->anim.currentMove != moves[1]))
+        if ((yawDelta > 0) && (obj->anim.currentMove != moves[1]))
         {
             ObjAnim_SetCurrentMove(obj, moves[1], 0.0f, 0);
             ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x1e);
         }
-        if (((s16)yawDelta < 0) && (obj->anim.currentMove != moves[0]))
+        if ((yawDelta < 0) && (obj->anim.currentMove != moves[0]))
         {
             ObjAnim_SetCurrentMove(obj, moves[0], 0.0f, 0);
             ObjAnim_SetCurrentEventStepFrames(&obj->anim, 0x1e);
@@ -793,7 +793,7 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
 
         if (hitResult == 0)
         {
-            turnAmount = (s16)yawDelta;
+            turnAmount = yawDelta;
             if (turnAmount > 0)
             {
                 turnAmount = turnAmount / 0x14;
@@ -806,7 +806,7 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
         }
         else
         {
-            turnAmount = (s16)yawDelta;
+            turnAmount = yawDelta;
             if (turnAmount > 0)
             {
                 turnAmount = (turnAmount - 0x500) / 0x14;

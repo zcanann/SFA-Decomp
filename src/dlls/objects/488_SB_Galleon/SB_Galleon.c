@@ -58,6 +58,8 @@
 #define DBPROTECTION_TRICKY_TARGET_SEQID 0x8c
 #define DBPROTECTION_GAMEBIT_DIVE_ACTIVE 0xf1e
 
+#define CLAMP_EXPR(value, low, high) ((value) < (low) ? (low) : ((value) > (high) ? (high) : (value)))
+
 extern s8 gSB_GalleonTransitionPending;
 
 ObjectDescriptor15 gSB_GalleonObjDescriptor = {
@@ -83,6 +85,7 @@ ObjectDescriptor15 gSB_GalleonObjDescriptor = {
 };
 
 void SB_Galleon_updateFlight(GameObject* obj) {
+    int nextState;
     ObjPlacement* spawnData;
     SBGalleonState* state;
     f32 tx;
@@ -189,9 +192,9 @@ void SB_Galleon_updateFlight(GameObject* obj) {
         state->wanderB = -(amp * timeDelta - state->wanderB);
     }
     wander = state->wanderA;
-    state->wanderA = (wander < 0.0f) ? 0.0f : (wander > 35.0f) ? 35.0f : wander;
+    state->wanderA = CLAMP_EXPR(wander, 0.0f, 35.0f);
     wander = state->wanderB;
-    state->wanderB = (wander < 0.0f) ? 0.0f : (wander > 35.0f) ? 35.0f : wander;
+    state->wanderB = CLAMP_EXPR(wander, 0.0f, 35.0f);
     switch (state->phase) {
     case 0:
         camShake = 120.0f;
@@ -457,9 +460,8 @@ void SB_Galleon_updateFlight(GameObject* obj) {
     case 6:
     case 7:
     case 8: {
-        int nextState;
         camShake = 120.0f;
-        Sfx_StopObjectChannel((int)obj, 2);
+        Sfx_StopObjectChannel(obj, 2);
         (*gCameraInterface)->releaseAction(&camShake, 0);
         obj->userData1 = 3;
         if (state->headingLatch != 0) {
@@ -629,7 +631,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
                 obj->anim.localPosX = spawnData->posX;
                 obj->anim.localPosY = -1.0f;
                 obj->anim.localPosZ = spawnData->posZ;
-                Sfx_StopObjectChannel((int)obj, 1);
+                Sfx_StopObjectChannel(obj, 1);
                 (*gMapEventInterface)->setObjGroupStatus(obj->anim.hostedMapSlot, 2, 1);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
                 return;
@@ -918,7 +920,7 @@ void SB_Galleon_updateSkyLighting(GameObject* obj, SBGalleonState* state) {
     SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyColorC[2], gSbGalleonSkyColorCStart[2], gSbGalleonSkyColorCEnd[2],
                                     gSbGalleonSkyBlendFactor);
     skySetMoonColor(SBGALLEON_SKY_LIGHT_SLOT, gSbGalleonSkyColorC[0], gSbGalleonSkyColorC[1], gSbGalleonSkyColorC[2]);
-    gSbGalleonSkyLightIntensity = gSbGalleonSkyBlendFactor * 128.0f + 32.0f;
+    SB_Galleon_blendSkyColorChannel(&gSbGalleonSkyLightIntensity, 32, 160, gSbGalleonSkyBlendFactor);
     skySetOverrideLightDirectionEnabled(1);
     skySetOverrideLightDirection(
         gSbGalleonSkyBlendFactor * (overrideDirectionEnd.x - overrideDirectionStart.x) + overrideDirectionStart.x,
@@ -1039,7 +1041,7 @@ int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     }
     {
         f32 v = state->textAlpha;
-        state->textAlpha = (v < 0.0f) ? 0.0f : ((v > 255.0f) ? 255.0f : v);
+        state->textAlpha = CLAMP_EXPR(v, 0.0f, 255.0f);
     }
     if (state->textAlpha > 0.0f) {
         gameTextSetColor(0xff, 0xff, 0xff, state->textAlpha);
