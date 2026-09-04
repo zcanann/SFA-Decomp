@@ -65,6 +65,12 @@ detectable data-flow divergence by the memory-access-pattern instrument.
 
 ## Mission 2 — switch-lowered-break signature, tree-wide
 
+**Resolved 2026-09-04:** `DR_LaserCan` is now 100%. The residual below belonged
+to an incorrect scalar reconstruction: the N64 DLL proves a signed-angle array
+and clamp loop. With those restored, expression-form absolute value reproduces
+the branch pair without the extra copy. See [the evidence](DR_LaserCan_matching.md).
+The historical "unreachable residual" conclusion does not hold for that source.
+
 `tools/unfolded_branch_scan.py` (A102's instrument) over all 1005 units:
 retail 1274 in-range pairs, ours 1273, **exactly one disagreeing function**:
 `drlasercannon_aimAtTarget` (609_DR_LaserCan, retail 5 / ours 4). The site is
