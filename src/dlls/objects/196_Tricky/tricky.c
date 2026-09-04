@@ -8,13 +8,13 @@
  * (trickySelectQueuedCommandTarget), plus small state accessors.
  */
 
+#include "main/dll/tricky_state.h"
 #include "main/dll/partfx_interface.h"
 #include "main/vecmath.h"
 #include "main/objtype.h"
 #include "main/obj_link.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie_control_interface.h"
-#include "main/dll/tricky_state.h"
 #include "game/objects/object.h"
 #include "sys/objects.h"
 #include "main/model.h"
@@ -1777,9 +1777,9 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     state = obj->extra;
     linkedObj = state->followObj;
 
-    args.x = state->sparkPos0X;
-    args.y = state->sparkPos0Y;
-    args.z = state->sparkPos0Z;
+    args.x = state->pathPointPositions[0].x;
+    args.y = state->pathPointPositions[0].y;
+    args.z = state->pathPointPositions[0].z;
     args.objectId = obj->anim.rotX;
     if (linkedObj->anim.romDefNo == SKEETLA_LINKED_SOURCE_ROMDEF_GROUND_ANIMA) {
         args.sourceId = (u8)((u32(*)(GameObject*))linkedObj->anim.dll[0][10])(linkedObj);
@@ -1798,9 +1798,9 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
             ->spawnObject(obj, SKEETLA_PARTICLE_SPARK_B, &args, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
     }
 
-    args.x = state->sparkPos1X;
-    args.y = state->sparkPos1Y;
-    args.z = state->sparkPos1Z;
+    args.x = state->pathPointPositions[1].x;
+    args.y = state->pathPointPositions[1].y;
+    args.z = state->pathPointPositions[1].z;
     args.objectId = obj->anim.rotX;
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {
@@ -3153,7 +3153,7 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
         state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetValue = gTrickyFloatZero;
         state->cooldownA = resetValue;
-        state->cooldownB.f = resetValue;
+        state->playerContactTimer = resetValue;
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -3267,7 +3267,7 @@ int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state) {
  *   1  face target   - turns toward the followed object (extra+0x28), with a
  *                      random chance to bark again, until anim flag + timer hit
  *   2  dig start     - if loading isn't locked, spawns seven child objects
- *                      (Obj_AllocObjectSetup/objSetupObject into scratch700..),
+ *                      (Obj_AllocObjectSetup/objSetupObject into flameChildren[]),
  *                      plays/loops the dig sfx (0x3db/0x3dc) and runs TRICKY_ANIM_DIG
  *   3  dig end       - on move progress >= threshold, resets child anim speed,
  *                      stops the dig loop, barks (TRICKY_VOICE_SFX_FINISH_FLAME) and clears the
@@ -3388,7 +3388,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
             {
                 f32 resetValue = gTrickyFloatZero;
                 trickyState->cooldownA = resetValue;
-                trickyState->cooldownB.f = resetValue;
+                trickyState->playerContactTimer = resetValue;
             }
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
@@ -3498,7 +3498,7 @@ static inline int trickyAcquireCirclingTarget(TrickyState* state) {
         {
             f32 z = gTrickyFloatZero;
             state->cooldownA = z;
-            state->cooldownB.f = z;
+            state->playerContactTimer = z;
             state->stateFlags &= (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags &= (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
             state->stateFlags &= (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -3529,9 +3529,9 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->flameCommandPending == 0) {
                 {
                     GameObject* circlingTarget = trickyFindCirclingTarget(obj, state);
-                    state->cooldownB.ptr = circlingTarget;
+                    state->circlingTargetObj = circlingTarget;
                     if (circlingTarget != NULL) {
-                        state->followObj = state->cooldownB.obj;
+                        state->followObj = state->circlingTargetObj;
                         state->circlingWarpDetour = NULL;
                         state->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                         break;
@@ -3544,7 +3544,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                 {
                     f32 resetValue = gTrickyFloatZero;
                     state->cooldownA = resetValue;
-                    state->cooldownB.f = resetValue;
+                    state->playerContactTimer = resetValue;
                     state->stateFlags &= (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                     state->stateFlags &= (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
                     state->stateFlags &= (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -3572,9 +3572,9 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->flameCommandPending == 0) {
                 {
                     GameObject* circlingTarget = trickyFindCirclingTarget(obj, state);
-                    state->cooldownB.ptr = circlingTarget;
+                    state->circlingTargetObj = circlingTarget;
                     if (circlingTarget != NULL) {
-                        state->followObj = state->cooldownB.obj;
+                        state->followObj = state->circlingTargetObj;
                         state->circlingWarpDetour = NULL;
                         state->substate = ANIMOBJD2_SUBSTATE_ORBIT;
                         break;
@@ -3587,7 +3587,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                 {
                     f32 resetValue = gTrickyFloatZero;
                     state->cooldownA = resetValue;
-                    state->cooldownB.f = resetValue;
+                    state->playerContactTimer = resetValue;
                     state->stateFlags &= (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                     state->stateFlags &= (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
                     state->stateFlags &= (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -3609,7 +3609,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                         {
                             f32 resetValue = gTrickyFloatZero;
                             state->cooldownA = resetValue;
-                            state->cooldownB.f = resetValue;
+                            state->playerContactTimer = resetValue;
                             state->stateFlags &= (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                             state->stateFlags &= (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
                             state->stateFlags &= (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -3774,7 +3774,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
         } else {
             target = (GameObject*)Player_GetTargetObject((int)state->playerObj);
         }
-        if (target != state->cooldownB.obj || state->flameCommandPending != 0) {
+        if (target != state->circlingTargetObj || state->flameCommandPending != 0) {
             {
                 f32* px = &state->followObj->anim.worldPosX;
                 if (state->targetPosPtr != px) {
@@ -3917,15 +3917,15 @@ void trickyUpdateCirclingTargetPosition(GameObject* obj, TrickyState* state) {
     s32 absAngleDelta;
 
     if (state->substate == ANIMOBJD2_SUBSTATE_ACQUIRE) {
-        state->circlingDirection.i = randomGetRange(0, 1);
-        if (state->circlingDirection.i == 0) {
-            state->circlingDirection.i = -1;
+        state->circlingDirection = randomGetRange(0, 1);
+        if (state->circlingDirection == 0) {
+            state->circlingDirection = -1;
         }
-        state->circlingAngle.i = targetAngle;
+        state->circlingAngle = targetAngle;
         state->substate = ANIMOBJD2_SUBSTATE_APPROACH;
     }
 
-    angleDelta = targetAngle - (s32)(u16)state->circlingAngle.u;
+    angleDelta = targetAngle - (s32)(u16)state->circlingAngleBits;
     if (angleDelta > TRICKY_YAW_HALF_TURN) {
         angleDelta -= TRICKY_YAW_WRAP_RANGE;
     }
@@ -3939,14 +3939,14 @@ void trickyUpdateCirclingTargetPosition(GameObject* obj, TrickyState* state) {
         absAngleDelta = -angleDelta;
     }
     if (absAngleDelta < 0x2000) {
-        state->circlingAngle.i = state->circlingAngle.i + (state->circlingDirection.i << 11);
+        state->circlingAngle = state->circlingAngle + (state->circlingDirection << 11);
     }
 
-    state->circlingTargetX.f =
-        state->followObj->anim.worldPosX - TRICKY_CIRCLING_APPROACH_RADIUS * fsin16Precise((u16)state->circlingAngle.i);
-    state->circlingTargetY.f = state->followObj->anim.worldPosY;
-    state->circlingTargetZ.f =
-        state->followObj->anim.worldPosZ - TRICKY_CIRCLING_APPROACH_RADIUS * fcos16Precise((u16)state->circlingAngle.i);
+    state->circlingTargetPos.x =
+        state->followObj->anim.worldPosX - TRICKY_CIRCLING_APPROACH_RADIUS * fsin16Precise((u16)state->circlingAngle);
+    state->circlingTargetPos.y = state->followObj->anim.worldPosY;
+    state->circlingTargetPos.z =
+        state->followObj->anim.worldPosZ - TRICKY_CIRCLING_APPROACH_RADIUS * fcos16Precise((u16)state->circlingAngle);
 
     if (trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state) == TRICKY_MOVEMENT_REACHED_TARGET) {
         trickyReportError(sTrickyShouldNeverStopCirclingError);
@@ -4025,7 +4025,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 state->substate = TRICKY_FETCH_BALL_INIT;
                 resetTimer = gTrickyFloatZero;
                 state->cooldownA = resetTimer;
-                state->cooldownB.f = resetTimer;
+                state->playerContactTimer = resetTimer;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -4236,14 +4236,14 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
     switch (state->substate) {
     case TRICKY_TUMBLEWEED_INIT:
         newBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
-        state->tumbleweedCountLatch.nib.hi = newBit;
+        state->tumbleweedCount = newBit;
         state->tumbleweedTargetObj = NULL;
         state->substate = TRICKY_TUMBLEWEED_CHASE;
     case TRICKY_TUMBLEWEED_CHASE:
         currentBit = mainGetBit(GAMEBIT_NW_MammothTumbleweedCount);
-        bitIndex = state->tumbleweedCountLatch.nib.hi;
+        bitIndex = state->tumbleweedCount;
         if (bitIndex != currentBit) {
-            state->tumbleweedCountLatch.nib.hi++;
+            state->tumbleweedCount++;
             state->stats->energy -= 2;
         }
         targetPos = NW_mammoth_getSpawnPosition(state->followObj);
@@ -4280,7 +4280,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
             state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
             resetTimer = gTrickyFloatZero;
             state->cooldownA = resetTimer;
-            state->cooldownB.f = resetTimer;
+            state->playerContactTimer = resetTimer;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -5271,8 +5271,8 @@ static inline void trickyAdvanceNode(TrickyState* state) {
     for (k = 4; k != 0; k--) {
         linkNode = state->digTunnelExitNode.curve;
         linkId = *(int*)((u8*)linkNode + off + offsetof(RomCurveDef, linkIds));
-        if (linkId > -1 && linkId != state->digTunnelStartNode.curve->id) {
-            state->digTunnelStartNode.curve = linkNode;
+        if (linkId > -1 && linkId != state->digTunnelStartNode->id) {
+            state->digTunnelStartNode = linkNode;
             state->digTunnelExitNode.curve =
                 (*gRomCurveInterface)
                     ->getById(((int*)((char*)state->digTunnelExitNode.curve + offsetof(RomCurveDef, linkIds)))[idx]);
@@ -5301,12 +5301,12 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     case TRICKY_DIG_TUNNEL_INIT:
         tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
         state->digTunnelEntryNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[0]);
-        state->digTunnelStartNode.curve = tunnelNode;
+        state->digTunnelStartNode = tunnelNode;
         state->digTunnelExitNode.curve = (*gRomCurveInterface)->getById(tunnelNode->linkIds[1]);
         if (state->digTunnelExitNode.curve->walkGroup != 0) {
-            state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
-            state->digTunnelEntryNode.u = state->digTunnelEntryNode.u ^ state->digTunnelExitNode.u;
-            state->digTunnelExitNode.u = state->digTunnelExitNode.u ^ state->digTunnelEntryNode.u;
+            state->digTunnelExitNode.bits = state->digTunnelExitNode.bits ^ state->digTunnelEntryNode.bits;
+            state->digTunnelEntryNode.bits = state->digTunnelEntryNode.bits ^ state->digTunnelExitNode.bits;
+            state->digTunnelExitNode.bits = state->digTunnelExitNode.bits ^ state->digTunnelEntryNode.bits;
         }
         entryPos = &state->digTunnelEntryNode.curve->x;
         if (state->targetPosPtr != entryPos) {
@@ -5331,7 +5331,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         break;
     case TRICKY_DIG_TUNNEL_GOING_TO_START:
         trickyDebugPrint("DIGTUNNEL_GOINGTOSTART\n");
-        targetPos = &state->digTunnelStartNode.curve->x;
+        targetPos = &state->digTunnelStartNode->x;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
         if (moveTricky(obj, targetPos) == 0) {
             state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
@@ -5345,19 +5345,19 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     case TRICKY_DIG_TUNNEL_START_DIGGING:
         trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_ARC_RETURN, TRICKY_DIG_TUNNEL_BLEND_SPEED,
                           TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
-        state->dirX = state->digTunnelExitNode.curve->x - state->digTunnelStartNode.curve->x;
-        state->dirZ = state->digTunnelExitNode.curve->z - state->digTunnelStartNode.curve->z;
+        state->dirX = state->digTunnelExitNode.curve->x - state->digTunnelStartNode->x;
+        state->dirZ = state->digTunnelExitNode.curve->z - state->digTunnelStartNode->z;
         Sfx_AddLoopedObjectSound(obj, SFXTRIG_trwhin1);
-        state->digTunnelWhineTimer.f =
+        state->digTunnelWhineTimer =
             (f32)(int)randomGetRange(TRICKY_DIG_TUNNEL_WHINE_MIN_FRAMES, TRICKY_DIG_TUNNEL_WHINE_MAX_FRAMES);
         state->substate = TRICKY_DIG_TUNNEL_DIGGING;
     case TRICKY_DIG_TUNNEL_DIGGING:
         trickyDebugPrint("DIGTUNNEL_DIGGING\n");
-        state->digTunnelWhineTimer.f -= timeDelta;
-        if (state->digTunnelWhineTimer.f <= gTrickyFloatZero) {
-            state->digTunnelWhineTimer.f =
+        state->digTunnelWhineTimer -= timeDelta;
+        if (state->digTunnelWhineTimer <= gTrickyFloatZero) {
+            state->digTunnelWhineTimer =
                 (f32)(int)randomGetRange(TRICKY_DIG_TUNNEL_WHINE_MIN_FRAMES, TRICKY_DIG_TUNNEL_WHINE_MAX_FRAMES);
-            state->digTunnelWhineTimer.f *= TRICKY_FLOAT_100;
+            state->digTunnelWhineTimer *= TRICKY_FLOAT_100;
             voiceState = obj->extra;
             if (voiceState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
@@ -5367,8 +5367,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             }
         }
         pressDistance = GROUND_ANIMATOR_INTERFACE(state->followObj)->applyPress(state->followObj, obj);
-        obj->anim.localPosX = state->dirX * pressDistance + state->digTunnelStartNode.curve->x;
-        obj->anim.localPosZ = state->dirZ * pressDistance + state->digTunnelStartNode.curve->z;
+        obj->anim.localPosX = state->dirX * pressDistance + state->digTunnelStartNode->x;
+        obj->anim.localPosZ = state->dirZ * pressDistance + state->digTunnelStartNode->z;
         dirX = ((TrickyState*)obj->extra)->dirX;
         dirXSq = dirX * dirX;
         dirZ = ((TrickyState*)obj->extra)->dirZ;
@@ -5389,8 +5389,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                 for (remainingLinks = 4; remainingLinks != 0; remainingLinks--) {
                     exitNode = state->digTunnelExitNode.curve;
                     linkId = *(int*)((u8*)exitNode + linkOffset + offsetof(RomCurveDef, linkIds));
-                    if (linkId > -1 && linkId != state->digTunnelStartNode.curve->id) {
-                        state->digTunnelStartNode.curve = exitNode;
+                    if (linkId > -1 && linkId != state->digTunnelStartNode->id) {
+                        state->digTunnelStartNode = exitNode;
                         state->digTunnelExitNode.curve =
                             (*gRomCurveInterface)
                                 ->getById(((int*)((char*)state->digTunnelExitNode.curve +
@@ -5445,7 +5445,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
                 state->substate = TRICKY_DIG_TUNNEL_INIT;
                 resetValue = gTrickyFloatZero;
                 state->cooldownA = resetValue;
-                state->cooldownB.f = resetValue;
+                state->playerContactTimer = resetValue;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
                 state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -5513,7 +5513,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->substate = TRICKY_SECRET_DIG_SCAN_CURVE;
             z = gTrickyFloatZero;
             state->cooldownA = z;
-            state->cooldownB.f = z;
+            state->playerContactTimer = z;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -5573,7 +5573,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->substate = TRICKY_SECRET_DIG_SCAN_CURVE;
             z = gTrickyFloatZero;
             state->cooldownA = z;
-            state->cooldownB.f = z;
+            state->playerContactTimer = z;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
             state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -5678,7 +5678,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetValue = gTrickyFloatZero;
         state->cooldownA = resetValue;
-        state->cooldownB.f = resetValue;
+        state->playerContactTimer = resetValue;
         state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_RECALL_REQUEST;
         state->stateFlags &= ~(u64)TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -5820,7 +5820,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
 
     commandQuery = gTrickyFoodCommandQuery;
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
-        state->cooldownB.f = gTrickyFloatZero;
+        state->playerContactTimer = gTrickyFloatZero;
         {
             u32 mask;
             u32 flags = state->stateFlags;
@@ -5849,7 +5849,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
         }
         break;
     }
-    if (gTrickyFloatZero == state->cooldownB.f) {
+    if (gTrickyFloatZero == state->playerContactTimer) {
         {
             u32 mask;
             u32 flags = state->stateFlags;
@@ -5883,7 +5883,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
     case TRICKY_ANIM_DIG_FOOD_LOOP: {
         if (((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) &&
             (((state->stateFlags & TRICKY_STATE_FLAG_RECALL_REQUEST) != 0 || randomGetRange(0, 2) == 0) ||
-             state->cooldownB.f > gTrickyFloatZero)) {
+             state->playerContactTimer > gTrickyFloatZero)) {
             trickyRequestMove(obj, TRICKY_ANIM_DIG_FOOD_END, 0.01f, 0);
         }
         spawnBuf.posX = (obj)->anim.worldPosX;
@@ -6047,7 +6047,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         trickyState->moveHoldTimer = trickyState->moveHoldTimer - timeDelta;
         if (trickyState->moveHoldTimer <= gTrickyFloatZero) {
             if (((trickyState->stateFlags & TRICKY_STATE_FLAG_RECALL_REQUEST) != 0) ||
-                (trickyState->cooldownB.f > gTrickyFloatZero)) {
+                (trickyState->playerContactTimer > gTrickyFloatZero)) {
                 trickyRequestMove(obj, TRICKY_ANIM_HOWL_END, 0.01f, 0);
             } else {
                 eventIndex = (*gSkyInterface)->getSunPosition(0);
@@ -6575,15 +6575,15 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
     f32 fv;
     int inWater;
 
-    state->cooldownB.f -= timeDelta;
-    if (state->cooldownB.f < 0.0f) {
-        state->cooldownB.f = 0.0f;
+    state->playerContactTimer -= timeDelta;
+    if (state->playerContactTimer < 0.0f) {
+        state->playerContactTimer = 0.0f;
     }
     if (ObjHits_GetPriorityHit(obj, hit, 0, 0) != 0 && hit[0]->ownerObj != NULL &&
         ((GameObject*)hit[0]->ownerObj)->anim.classId == 1) {
-        fv = state->cooldownB.f;
+        fv = state->playerContactTimer;
         if (fv <= gTrickyFloatZero) {
-            state->cooldownB.f += TRICKY_FETCH_CARRY_DELAY_FRAMES;
+            state->playerContactTimer += TRICKY_FETCH_CARRY_DELAY_FRAMES;
             sfxState = obj->extra;
             if (sfxState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
@@ -6591,11 +6591,11 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                 objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_HEY, TRICKY_VOICE_PITCH_NORMAL, -1, 0);
             }
         } else {
-            state->cooldownB.f += TRICKY_TIMER_600_FRAMES;
+            state->playerContactTimer += TRICKY_TIMER_600_FRAMES;
             if (state->substate != TRICKY_FOLLOW_SUBSTATE_FLAME_BREATH) {
                 if (state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) {
-                    if (state->cooldownB.f > TRICKY_CONTACT_FLAME_THRESHOLD) {
-                        state->cooldownB.f *= TRICKY_FOLLOW_ARC_HALF_PROGRESS;
+                    if (state->playerContactTimer > TRICKY_CONTACT_FLAME_THRESHOLD) {
+                        state->playerContactTimer *= TRICKY_FOLLOW_ARC_HALF_PROGRESS;
                         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
                             inWater = trickyIsInDeepWater(state);
                             if (inWater == 0) {
@@ -6811,7 +6811,7 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
         state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetTimer = gTrickyFloatZero;
         state->cooldownA = resetTimer;
-        state->cooldownB.f = resetTimer;
+        state->playerContactTimer = resetTimer;
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
         state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
@@ -7018,7 +7018,7 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
             }
             state->cannonballStartCurve = Objfsa_FindNearestEnabledCurveType24(
                 &targetObj->anim.worldPosX, -1, ROMCURVE_TRICKY_SUBTYPE_CANNONBALL_ROUTE);
-            state->cannonballScratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
+            state->cannonballRandomValue = (f32)(int)randomGetRange(0x168, 0x28);
             state->stateIndex = TRICKY_STATE_BALL_ROLL;
             state->followObj = targetObj;
             nextTarget = &state->cannonballStartCurve->x;
@@ -7476,7 +7476,7 @@ static inline f32 trickyResetCommandState(TrickyState* state) {
     state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
     resetValue = gTrickyFloatZero;
     state->cooldownA = resetValue;
-    state->cooldownB.f = resetValue;
+    state->playerContactTimer = resetValue;
     state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
     state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_RECALL_REQUEST;
     state->stateFlags = state->stateFlags & (u64)~TRICKY_STATE_FLAG_HEEL_REQUEST;
