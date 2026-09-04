@@ -111,7 +111,7 @@ MWCC GC/1.3+ elides a redundant load/store-forward whenever the address's proven
 | dll_98_spawnEffect | dlls/modgfx/152/152 | 1040 | 99.769 | 1 | 1 | 6G/0F | 1 | store-forward vs reload (7 spellings walled; spellfuzz.py depth-2 grammar over the defect neighbourhood: 121 legal variants incl. chain/`(s32)(a=x)`/temp-park/fresh-temp, every one still forwards — the chain spellings drop the second `extsh` and go one instruction SHORT (259/260) without producing the `lha`) |
 | mathSinCosf | main/sincosf | 320 | 98.750 | 1 | 1 | 2G/5F | 1 | un-elided parameter-home fmr copy; profile already maximal |
 | mathTanf | dolphin/MSL_C/PPCEABI/bare/H/math_8029454c | 148 | 97.297 | 1 | 1 | 0G/4F | 1 | un-elided parameter-home fmr copy; profile already maximal |
-| gameUiLoadResources | dlls/engine/0/0 | 896 | 98.661 | 4 | 3 | 7G/3F | 14 | symbol-provenance-load-cse (the 6-fn reload family) |
+| gameUiLoadResources | dlls/engine/0/0 | 896 | 100.000 | 0 | 0 | 7G/3F | 12 | Resolved 2026-09-04: GC/1.3 reproduces retail pointer reloads; corrected color declarations preserve the whole TU's existing matches. See engine_0_matching.md. |
 | renderClouds | dlls/engine/9/9 | 1612 | 99.491 | 6 | 2 | 6G/1F | 1 | global-load-CSE volatile purge (renderClouds closed) |
 | beginLoadingMap | main/shader | 2324 | 99.776 | 7 | 1 | 3G/0F | 8 | symbol-provenance-load-cse (the 6-fn reload family) |
 | sceneDraw | main/lightmap | 1500 | 98.880 | 19 | 4 | 4G/0F | 3 | symbol-provenance-load-cse (the 6-fn reload family) |
@@ -387,7 +387,7 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | objDrawShadowCasterMesh | main/shadow_dolphin | 1132 | 99.509 | 12 | 1 | 7G/2F | 2 | priced 23b li/mr remat family (named member) + r7/r8 scratch swap and one addi slide; verified |
 | gameTextFinalizeLoad | main/textrender_run | 1592 | 99.837 | 12 | 0 | 11G/0F | 4 | add-canon words closed by biased-base form C (value-use member decay: `numStrings * 4 + (u32)stringTable->offsets` emits base-first add + trailing addi; the priced-15 verdict predated the lever); residual is the coloured hdr-sum + one scratch swap, probed and walled |
 | GameUI_release | dlls/engine/0/0 | 336 | 98.929 | 14 | 0 | 7G/0F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
-| pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 99.851 | 19 | 0 | 8G/5F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
+| pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 99.911 | 12 | 0 | 8G/5F | 12 | Updated 2026-09-04: recovered missing sprintf capacity argument and original spellstone sum; alpha register differences remain. |
 | pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 99.506 | 22 | 0 | 12G/7F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | drawArwingHud | dlls/engine/0/0 | 1064 | 99.436 | 27 | 0 | 10G/1F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | hudDrawCommunicatorAlert | dlls/engine/0/0 | 632 | 100.000 | 0 | 0 | — | — | RESOLVED 2026-09-04: u16 texture-scale API view, repeated draw expressions, and segment-derived fade; see [engine_0_matching.md](engine_0_matching.md) |

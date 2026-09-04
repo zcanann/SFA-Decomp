@@ -1,8 +1,54 @@
 # Engine 0: HUD declaration and source-shape recovery
 
 EN v1.0, 2026-09-04. The unit is `src/dlls/engine/0/0.c`, containing the
-command menu, HUD, communicator, and pause menus. It remains `NonMatching`
-with the existing GC/2.0, `-inline noauto` profile.
+command menu, HUD, communicator, and pause menus. It remains `NonMatching`:
+106 of 118 functions match exactly. All 118 now have the retail instruction
+count. The whole TU uses GC/1.3, `-inline noauto`, and signed `char`.
+
+## Color declarations and the compiler fingerprint
+
+`gameTextSetColor` is implemented with four `u8` channels in
+`src/main/textrender_gettext.c`, but Game UI previously saw four `int`
+parameters. Recovering that byte contract also lets `hudDrawCounter` accept
+`u8 alpha` and call `drawTexture` directly, removing its incompatible
+function-pointer cast. Float expressions pass directly to the narrow
+parameters; the score-screen pulse locals are bytes. These changes preserve
+every baseline function's instruction bytes under GC/2.0.
+
+The two local pause-menu texture helpers similarly accept `u16 scale`.
+Their implementations already consumed the low 16 bits. Removing the old
+intermediate integer conversions in their callers preserves their code.
+The shared color header has a Game UI opt-in, so other callers retain their
+existing declarations.
+
+The resource loader provides evidence beyond an aggregate compiler score:
+retail reloads three communicator object pointers immediately after storing
+them. With the same source, GC/1.3 emits those loads and matches all 896
+bytes. GC/1.3.2, GC/1.3.2r, and GC/2.0 forward the stored pointers. The older
+compiler's previous indirect-call regression in `hudDrawCounter` disappears
+with the corrected declaration; retail's direct call is now reproduced.
+
+GC/1.3 preserves all 105 previously exact functions and fixes the loader.
+It also removes the extra instruction in `drawViewFinderHud`, improving that
+function from 99.36948% to 99.4498%. Signed `char` preserves the existing
+byte comparisons. Unsigned compound-assignment masks preserve the retail
+operations on `gCMenuButtons`; comparison masks retain their original types.
+This supports the compiler profile without claiming a recovered historical
+build script or changing the confirmed TU boundary.
+
+## Status-page call recovery
+
+The scarab counter's format is `"%d/%d"`. Its reconstructed `sprintf` call
+omitted the capacity argument. Retail's `lbz r6` supplies that argument and
+also tests whether the capacity is zero. Passing `gPauseMenuScarabCapacity`
+restores both instructions.
+
+The spellstone count is one sum of four `mainGetBit` calls, in the same
+source order used by the other menu logic. MWCC emits the retail call and
+addition order from that expression; the manually staged count temporaries
+were changing its registers. Together these fixes improve
+`pauseMenuDrawStatusPage` from 99.85141% to 99.91085%. Twelve instruction words
+still differ, all in the alpha registers.
 
 ## A solved residual: communicator pulse rendering
 
@@ -62,48 +108,48 @@ of the current C-menu loader, including separate-array probes, did not
 reproduce the EN pointer and register structure. No sibling files were
 changed.
 
-## Remaining leads, not closed compiler walls
+## Constant ownership and remaining work
 
-- **Resource loader:** EN reloads three object pointers immediately after
-  storing them. GC/2.0 forwards the just-stored value in the current source.
-  GC/1.3 reproduces the complete loader exactly in an isolated compiler
-  probe. However, it changes other functions, including turning the
-  `hudDrawCounter` function-pointer cast into an indirect call where retail
-  calls directly. Signed `char` and unsigned assignment masks explain some
-  additional version differences, but do not establish the TU's original
-  compiler. Keep the existing profile until independent provenance or a
-  coherent whole-unit reconstruction resolves this.
+Three former external constants are now emitted by their consumers:
+the backdrop's `f32` scale of 435.2, the podium's `f32` base Y of -2.1,
+and division by 1024.0f for the ring transforms. These preserve every
+instruction byte. The float locals preserve the retail loads and conversion
+precision; substituting literals directly can instead fold the conversion
+or change the precision of an intermediate constant.
+
+The source `.sdata2` grows from 936 to 948 bytes toward the retail 980.
+Its fuzzy match improves from 97.28601% to 97.92531%. No duplicate named
+constants or explicit section placement are needed.
+
 - **Release:** only three instruction words differ, all using `r26` where
-  retail uses `r27` for the initial texture iterator. This is a much smaller
-  residual than the older worklist records.
-- **Constant ownership:** target `.sdata2` is 980 bytes; source emits 936.
-  Eight currently external constants have values absent from the emitted
-  pool: `gGameUiPi`, `lbl_803E1F30`, `lbl_803E1F34`, `lbl_803E209C`,
-  `lbl_803E20B8`, `lbl_803E2128`, `gPauseMenuPodiumBaseY`, and
-  `gPauseMenuRingScale`. Replacing them with literals changes constant
-  folding and breaks previously exact functions. Appending named constant
-  definitions does not recover the pool layout either. Their ownership
-  model remains unresolved; do not force sections or duplicate literals.
+  retail uses `r27` for the initial texture iterator.
+- **Constant ownership:** five external constants remain absent from the
+  emitted pool: `gGameUiPi`, `lbl_803E1F30`, `lbl_803E1F34`,
+  `lbl_803E20B8`, and `lbl_803E2128`. Their values plus pool alignment
+  account for the remaining size difference. Replacing them with literals
+  or float locals changes folding, conversion reuse, or register allocation.
+  Appending named definitions puts them in `.sdata`. Their source ownership
+  remains unresolved; do not force sections or duplicate literals.
 
 ## Validation
 
-| Measure | Before | After |
-| --- | ---: | ---: |
-| Exact functions | 104 / 118 | 105 / 118 |
-| Exact code bytes | 44,208 / 75,188 | 44,840 / 75,188 |
-| TU fuzzy match | 99.79481% | 99.80385% |
-| Exact assigned data bytes | 8,972 / 9,952 | 8,972 / 9,952 |
+| Measure | Before communicator fix | After communicator fix | Current |
+| --- | ---: | ---: | ---: |
+| Exact functions | 104 / 118 | 105 / 118 | 106 / 118 |
+| Exact code bytes | 44,208 / 75,188 | 44,840 / 75,188 | 45,736 / 75,188 |
+| TU fuzzy match | 99.79481% | 99.80385% | 99.82726% |
+| Exact assigned data bytes | 8,972 / 9,952 | 8,972 / 9,952 | 8,972 / 9,952 |
 
-The baseline is commit `e4b437c778`. The TU formatting pass preserves the
-raw object hash of the combined source changes. Function boundaries,
-compiler configuration, and data declarations remain unchanged. All six
-non-text sections retain their bytes and sizes, and all non-text global
-symbols retain their offsets and sizes. Comparing 2,682 pre-existing source
-objects after the builds finds only engine 0 changed.
+The current pass starts at commit `2793989679`. All non-pool data sections
+retain their bytes, sizes, and named symbol offsets. GC/1.3 changes five
+data relocations from named arrays to section-plus-offset references; they
+resolve to the same locations. Comparing 2,682 pre-existing source objects
+after the builds finds only engine 0 changed.
 
 Use the normal object build and objdiff report, plus
 `python3 tools/fnbytes.py 0 hudDrawCommunicatorAlert`, to reproduce the
-function comparison. The strict EN checksum build and `ninja all_source`
-both pass within their 30-second limits. Formatting checks also pass.
+function comparison, or substitute `gameUiLoadResources` for the loader.
+The strict EN checksum build and `ninja all_source` both pass within their
+30-second limits (about 16 seconds each). Formatting checks also pass.
 The strict build still uses retail code for this `NonMatching` TU and is
-not proof that the remaining thirteen functions match.
+not proof that the remaining twelve functions match.
