@@ -83,9 +83,15 @@ typedef struct TrickyCommand {
     GameObject* targetObj;
     s8 commandKind;
     s8 commandType;
-    u8 ttlFrames;
+    s8 ttlFrames;
     u8 pad7;
 } TrickyCommand;
+
+STATIC_ASSERT(offsetof(TrickyCommand, targetObj) == 0);
+STATIC_ASSERT(offsetof(TrickyCommand, commandKind) == 4);
+STATIC_ASSERT(offsetof(TrickyCommand, commandType) == 5);
+STATIC_ASSERT(offsetof(TrickyCommand, ttlFrames) == 6);
+STATIC_ASSERT(sizeof(TrickyCommand) == 8);
 
 typedef struct TrickyJumpArc {
     f32 duration;  /* 0x00: horizontal distance / Tricky follow vertical divisor */

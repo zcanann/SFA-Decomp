@@ -633,7 +633,6 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
 int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType commandType) {
     f32 bestPriorityDist;
     f32 bestFallbackDist;
-    TrickyState* commandCursor;
     int commandIndex;
     GameObject* bestPriorityTarget;
     GameObject* bestFallbackTarget;
@@ -643,20 +642,19 @@ int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType c
     bestFallbackDist = bestPriorityDist;
     bestFallbackTarget = NULL;
 
-    for (commandIndex = 0, commandCursor = state; commandIndex < state->commandCount;
-         commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand)), commandIndex++) {
-        if (commandCursor->commands[0].commandType == commandType) {
+    for (commandIndex = 0; commandIndex < state->commandCount; commandIndex++) {
+        if (state->commands[commandIndex].commandType == commandType) {
             f32 dist = getXZDistanceSquared(&state->playerObj->anim.worldPosX,
-                                            &commandCursor->commands[0].targetObj->anim.worldPosX);
+                                            &state->commands[commandIndex].targetObj->anim.worldPosX);
 
-            if (commandCursor->commands[0].commandKind == TRICKY_COMMAND_KIND_PRIORITY) {
+            if (state->commands[commandIndex].commandKind == TRICKY_COMMAND_KIND_PRIORITY) {
                 if (dist < bestPriorityDist) {
                     bestPriorityDist = dist;
-                    bestPriorityTarget = commandCursor->commands[0].targetObj;
+                    bestPriorityTarget = state->commands[commandIndex].targetObj;
                 }
             } else if (dist < bestFallbackDist) {
                 bestFallbackDist = dist;
-                bestFallbackTarget = commandCursor->commands[0].targetObj;
+                bestFallbackTarget = state->commands[commandIndex].targetObj;
             }
         }
     }
@@ -1518,65 +1516,49 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, in
 
 int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
                                   int targetWalkGroup) {
-    RomCurveDef** beginRouteCursor;
-    u8* searchCursor;
-    RomCurveDef** routeCursor;
-    RomCurveDef** fallbackRouteCursor;
-    u8* beginSearchCursor;
-    s8* statusCursor;
     s8 searchPass;
     s8 routeStatus[TRICKY_ROUTE_CANDIDATE_COUNT];
-    s8 beginIndex;
-    s8 fallbackIndex;
+    s8 routeIndex;
     s8 candidateIndex;
     s8 inactiveCandidateCount;
 
-    for (beginIndex = 0, beginRouteCursor = candidateRoutes, beginSearchCursor = (u8*)state;
-         beginIndex < TRICKY_ROUTE_CANDIDATE_COUNT; beginIndex++) {
-        if (*beginRouteCursor != NULL) {
-            pathSearchBegin(&((TrickyState*)beginSearchCursor)->pathSearches[0], *beginRouteCursor, state->targetPosPtr,
-                            targetWalkGroup, candidateRouteFlags[beginIndex]);
+    for (routeIndex = 0; routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
+        if (candidateRoutes[routeIndex] != NULL) {
+            pathSearchBegin(&state->pathSearches[routeIndex], candidateRoutes[routeIndex], state->targetPosPtr,
+                            targetWalkGroup, candidateRouteFlags[routeIndex]);
         }
-        beginRouteCursor++;
-        beginSearchCursor += sizeof(PathSearch);
     }
 
     for (searchPass = 0; searchPass < 100; searchPass++) {
         inactiveCandidateCount = 0;
-        for (candidateIndex = 0, routeCursor = candidateRoutes, searchCursor = (u8*)state, statusCursor = routeStatus;
-             candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
-            if (*routeCursor != NULL) {
-                *statusCursor = pathSearchStep(&((TrickyState*)searchCursor)->pathSearches[0], 1);
+        for (candidateIndex = 0; candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
+            if (candidateRoutes[candidateIndex] != NULL) {
+                routeStatus[candidateIndex] = pathSearchStep(&state->pathSearches[candidateIndex], 1);
             } else {
-                *statusCursor = -1;
+                routeStatus[candidateIndex] = -1;
             }
 
-            switch (*statusCursor) {
+            switch (routeStatus[candidateIndex]) {
             case 1:
                 return candidateIndex;
             case -1:
-                *routeCursor = NULL;
+                candidateRoutes[candidateIndex] = NULL;
                 inactiveCandidateCount++;
                 break;
             }
-            routeCursor++;
-            searchCursor += sizeof(PathSearch);
-            statusCursor++;
         }
 
         switch (inactiveCandidateCount) {
         case 7:
-            for (fallbackIndex = 0, fallbackRouteCursor = candidateRoutes; fallbackIndex < TRICKY_ROUTE_CANDIDATE_COUNT;
-                 fallbackIndex++) {
-                if (*fallbackRouteCursor != NULL) {
-                    routeStatus[(int)fallbackIndex] =
-                        pathSearchStep(&state->pathSearches[(int)fallbackIndex], TRICKY_PATH_SEARCH_BULK_STEPS);
-                    if (routeStatus[(int)fallbackIndex] == 1) {
-                        return fallbackIndex;
+            for (routeIndex = 0; routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
+                if (candidateRoutes[routeIndex] != NULL) {
+                    routeStatus[(int)routeIndex] =
+                        pathSearchStep(&state->pathSearches[(int)routeIndex], TRICKY_PATH_SEARCH_BULK_STEPS);
+                    if (routeStatus[(int)routeIndex] == 1) {
+                        return routeIndex;
                     }
                     return -1;
                 }
-                fallbackRouteCursor++;
             }
         case 8:
             return -1;
@@ -6652,9 +6634,6 @@ u8 Tricky_getEnergy(GameObject* obj) {
 
 void sideCommandEnable(GameObject* obj, GameObject* targetObj, enum TrickyCommandKind commandKind,
                        enum TrickyCommandType commandType) {
-    int remaining;
-    TrickyState* commandCursor;
-    u32 count;
     int commandIndex;
     TrickyState* state;
 
@@ -6664,18 +6643,13 @@ void sideCommandEnable(GameObject* obj, GameObject* targetObj, enum TrickyComman
         return;
     }
     state->sideCommandPromptMask = (u8)(state->sideCommandPromptMask | TRICKY_COMMAND_TYPE_TO_FLAG(commandType));
-    commandIndex = 0;
-    commandCursor = state;
-    count = state->commandCount;
-    for (remaining = count; remaining > 0; remaining--) {
-        if (commandCursor->commands[0].targetObj == targetObj) {
+    for (commandIndex = 0; commandIndex < state->commandCount; commandIndex++) {
+        if (state->commands[commandIndex].targetObj == targetObj) {
             state->commands[commandIndex].ttlFrames = TRICKY_COMMAND_TTL_FRAMES;
             return;
         }
-        commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand));
-        commandIndex++;
     }
-    state->commands[count].targetObj = targetObj;
+    state->commands[state->commandCount].targetObj = targetObj;
     state->commands[state->commandCount].commandKind = commandKind;
     state->commands[state->commandCount].commandType = commandType;
     state->commands[state->commandCount].ttlFrames = TRICKY_COMMAND_TTL_FRAMES;
@@ -6726,11 +6700,9 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         }
         if (state->sideCommandPromptMask != 0) {
             for (commandIndex = 0; commandIndex < state->commandCount; commandIndex++) {
-                promptScratch = (int)state + commandIndex * sizeof(TrickyCommand);
-                commandKind = ((TrickyState*)promptScratch)->commands[0].commandKind;
+                commandKind = state->commands[commandIndex].commandKind;
                 if (commandKind == TRICKY_COMMAND_KIND_NORMAL) {
-                    if (((TrickyState*)promptScratch)->commands[0].targetObj->anim.romDefNo ==
-                        TRICKY_ROMDEF_BLUE_MUSHROOM) {
+                    if (state->commands[commandIndex].targetObj->anim.romDefNo == TRICKY_ROMDEF_BLUE_MUSHROOM) {
                         showFoodVoicePrompt = true;
                     }
                     showExclamationPrompt = true;
@@ -6947,7 +6919,6 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
 void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender) {
     int pathPointIndex;
     TrickyState* renderState;
-    int pathPointCursor;
     s16* modelAnchorPose;
     TrickyState* state;
 
@@ -6956,13 +6927,10 @@ void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
         renderState = obj->extra;
         pathPointIndex = 0;
-        pathPointCursor = (int)renderState;
         do {
-            ObjPath_GetPointWorldPosition(obj, pathPointIndex + 4,
-                                          &((TrickyState*)pathPointCursor)->pathPointPositions[0].x,
-                                          &((TrickyState*)pathPointCursor)->pathPointPositions[0].y,
-                                          &((TrickyState*)pathPointCursor)->pathPointPositions[0].z, 0);
-            pathPointCursor = pathPointCursor + 0xc;
+            ObjPath_GetPointWorldPosition(obj, pathPointIndex + 4, &renderState->pathPointPositions[pathPointIndex].x,
+                                          &renderState->pathPointPositions[pathPointIndex].y,
+                                          &renderState->pathPointPositions[pathPointIndex].z, 0);
             pathPointIndex = pathPointIndex + 1;
         } while (pathPointIndex < 4);
         ObjPath_GetPointWorldPosition(obj, 8, &renderState->renderPosX, &renderState->renderPosY,
@@ -7144,7 +7112,6 @@ void Tricky_update(GameObject* obj) {
     int impressSfxId;
     TrickyState* voiceState;
     int i;
-    TrickyState* commandCursor;
     ObjPlacement* placementSetup;
     int count;
     u32 flags;
@@ -7257,10 +7224,8 @@ void Tricky_update(GameObject* obj) {
             requestedCommand =
                 (*gGameUIInterface)->isOneOfItemsBeingUsed(sideCommandQuery.commandTypes, TRICKY_COMMAND_QUERY_COUNT);
         }
-        commandCursor = trickyState;
-        count = trickyState->commandCount;
-        for (i = 0; i < count; i++, commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand))) {
-            if (commandCursor->commands[0].commandType == requestedCommand) {
+        for (i = 0; i < trickyState->commandCount; i++) {
+            if (trickyState->commands[i].commandType == requestedCommand) {
                 commandAlreadyQueued = 1;
                 break;
             }
@@ -7348,11 +7313,8 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_STAY:
                     accepted = 0;
                     if (trickyState->commandPhase == TRICKY_COMMAND_PHASE_GUARD) {
-                        commandCursor = trickyState;
-                        count = trickyState->commandCount;
-                        for (i = 0; i < count;
-                             i++, commandCursor = (TrickyState*)((u8*)commandCursor + sizeof(TrickyCommand))) {
-                            if (commandCursor->commands[0].commandType == TRICKY_COMMAND_TYPE_STAY) {
+                        for (i = 0; i < trickyState->commandCount; i++) {
+                            if (trickyState->commands[i].commandType == TRICKY_COMMAND_TYPE_STAY) {
                                 accepted = 1;
                             }
                         }
@@ -7606,20 +7568,12 @@ void Tricky_update(GameObject* obj) {
     }
     trickyState->prevSpeed = trickyState->speed;
     i = trickyState->commandCount - 1;
-    {
-        TrickyState* expiringCommandCursor = (TrickyState*)((u8*)trickyState + i * sizeof(TrickyCommand));
-
-        for (; i >= 0;
-             expiringCommandCursor = (TrickyState*)((u8*)expiringCommandCursor - sizeof(TrickyCommand)), i--) {
-            s8* ttlFrames = (s8*)&expiringCommandCursor->commands[0].ttlFrames;
-
-            *ttlFrames -= 1;
-            if (*ttlFrames == 0) {
-                memmove(&expiringCommandCursor->commands[0],
-                        &((TrickyState*)((u8*)trickyState + (i + 1) * sizeof(TrickyCommand)))->commands[0],
-                        (trickyState->commandCount - i - 1) * sizeof(TrickyCommand));
-                trickyState->commandCount -= 1;
-            }
+    for (; i >= 0; i--) {
+        trickyState->commands[i].ttlFrames -= 1;
+        if (trickyState->commands[i].ttlFrames == 0) {
+            memmove(&trickyState->commands[i], &trickyState->commands[i + 1],
+                    (trickyState->commandCount - i - 1) * sizeof(TrickyCommand));
+            trickyState->commandCount -= 1;
         }
     }
     if (getXZDistanceSquared(&obj->anim.worldPosX, &trickyState->playerObj->anim.worldPosX) >=
