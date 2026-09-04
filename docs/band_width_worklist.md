@@ -390,7 +390,7 @@ member). No row is misfiled — every row has a live ledger/memory anchor.
 | pauseMenuDrawStatusPage | dlls/engine/0/0 | 2692 | 99.851 | 19 | 0 | 8G/5F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | pauseMenuDrawGridCell | dlls/engine/0/0 | 1012 | 99.506 | 22 | 0 | 12G/7F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | drawArwingHud | dlls/engine/0/0 | 1064 | 99.436 | 27 | 0 | 10G/1F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
-| hudDrawCommunicatorAlert | dlls/engine/0/0 | 632 | 99.051 | 27 | 0 | 8G/5F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
+| hudDrawCommunicatorAlert | dlls/engine/0/0 | 632 | 100.000 | 0 | 0 | — | — | RESOLVED 2026-09-04: u16 texture-scale API view, repeated draw expressions, and segment-derived fade; see [engine_0_matching.md](engine_0_matching.md) |
 | textureLoad | main/texture | 1932 | 98.882 | 33 | 4 | 17G/0F | 3 | priced 24b (same mechanism as loadTextureFiles: orphan inline preheaders at tail) + width-17 recolour mass; verified |
 | pauseMenuDrawStatus | dlls/engine/0/0 | 2064 | 99.641 | 34 | 0 | 6G/2F | 14 | engine0-hud-walls cluster (store-forward rule + copy-survival + recolour) |
 | unloadMap | main/shader | 616 | 97.922 | 43 | 1 | 10G/0F | 8 | priced 23b li/mr remat family (named member) + width-10 recolour mass; verified |
