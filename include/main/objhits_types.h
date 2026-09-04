@@ -58,7 +58,8 @@ STATIC_ASSERT(sizeof(ObjHitboxTransformState) == 0x110);
 #define OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED 0x2000
 
 typedef struct ObjHitsPriorityState {
-  u8 pad00[0x0C];
+  struct GameObject* hitObject;
+  u8 pad04[0x08];
   f32 primaryRadiusSquared;
   f32 localPosX;
   f32 localPosY;

@@ -41,6 +41,27 @@ force_active:
   # though nothing references it by name; dropping it would shorten .data and
   # shift every later .data address.
   - gDbStealerwormCommandNames
+  # 597.c: the retail link retained the SnowBike race gamebit pairs, which
+  # SnowBike_init reaches through the path setup table base rather than by
+  # name; dropping them would shorten .data and shift every later .data address.
+  - gSnowBikeRaceGameBits
+  # SHthorntail.c: the retail link retained the per-state and talk-sequence
+  # tables that SHthorntail_update reaches through the linked-ident table base
+  # rather than by name; dropping them would shorten .data and shift every
+  # later .data address.
+  - gSHthorntailHitReactEntries
+  - gSHthorntailAsleepHitReactEntries
+  - gSHthorntailStateMoveIds
+  - gSHthorntailStateMoveStepScales
+  - gSHthorntailStateFlags
+  - gSHthorntailStatePrimaryEventSfx
+  - gSHthorntailStateSecondaryEventSfx
+  - gSHthorntailHerdAct1TalkSeqVariants
+  - gSHthorntailHerdAct2ClearTalkSeqVariants
+  - gSHthorntailHerdAct2SetTalkSeqVariants
+  - gSHthorntailHerdAct3ClearTalkSeqVariants
+  - gSHthorntailHerdAct3SetTalkSeqVariants
+  - gSHthorntailHerdAct5ClearTalkSeqVariants
   # BossDrakor.c: the retail link retained this unreferenced .sdata tail atom.
   - lbl_803DC19C
   # DIMSnowHorn.c: the retail link retained this unreferenced .sdata2 zero atom

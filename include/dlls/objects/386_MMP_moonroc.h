@@ -11,28 +11,28 @@
 
 typedef struct MMPMoonRockPlacement {
     ObjPlacement base;
-    u8 unknown18[2];
+    u8 pad18[2];
     s16 kindGameBit;
-    u8 unknown1C[2];
-    s16 unknown1E;
+    u8 pad1C[2];
+    s16 unk1E;
     s16 pickupGateGameBit;
-    u8 unknown22[2];
+    u8 pad22[2];
 } MMPMoonRockPlacement;
 
 STATIC_ASSERT(sizeof(MMPMoonRockPlacement) == 0x24);
 STATIC_ASSERT(offsetof(MMPMoonRockPlacement, base) == 0x00);
-STATIC_ASSERT(offsetof(MMPMoonRockPlacement, unknown18) == 0x18);
+STATIC_ASSERT(offsetof(MMPMoonRockPlacement, pad18) == 0x18);
 STATIC_ASSERT(offsetof(MMPMoonRockPlacement, kindGameBit) == 0x1A);
-STATIC_ASSERT(offsetof(MMPMoonRockPlacement, unknown1C) == 0x1C);
-STATIC_ASSERT(offsetof(MMPMoonRockPlacement, unknown1E) == 0x1E);
+STATIC_ASSERT(offsetof(MMPMoonRockPlacement, pad1C) == 0x1C);
+STATIC_ASSERT(offsetof(MMPMoonRockPlacement, unk1E) == 0x1E);
 STATIC_ASSERT(offsetof(MMPMoonRockPlacement, pickupGateGameBit) == 0x20);
-STATIC_ASSERT(offsetof(MMPMoonRockPlacement, unknown22) == 0x22);
+STATIC_ASSERT(offsetof(MMPMoonRockPlacement, pad22) == 0x22);
 
 typedef struct MMPMoonRockState {
     CarryableState carryable;
     u8 pad0A[2];
     f32 baseY;
-    f32 unknown10;
+    f32 savedBaseY;
     f32 resetTimer;
     f32 homeX;
     f32 homeY;
@@ -41,7 +41,7 @@ typedef struct MMPMoonRockState {
     u16 bobPhase;
     u16 rollPhase;
     u16 pitchPhase;
-    u8 unknown2C[2];
+    u8 pad2C[2];
     u8 kind;
     u8 heightLevel;
 } MMPMoonRockState;
@@ -49,7 +49,7 @@ typedef struct MMPMoonRockState {
 STATIC_ASSERT(sizeof(MMPMoonRockState) == 0x30);
 STATIC_ASSERT(offsetof(MMPMoonRockState, carryable) == 0x00);
 STATIC_ASSERT(offsetof(MMPMoonRockState, baseY) == 0x0C);
-STATIC_ASSERT(offsetof(MMPMoonRockState, unknown10) == 0x10);
+STATIC_ASSERT(offsetof(MMPMoonRockState, savedBaseY) == 0x10);
 STATIC_ASSERT(offsetof(MMPMoonRockState, resetTimer) == 0x14);
 STATIC_ASSERT(offsetof(MMPMoonRockState, homeX) == 0x18);
 STATIC_ASSERT(offsetof(MMPMoonRockState, homeY) == 0x1C);
@@ -58,7 +58,7 @@ STATIC_ASSERT(offsetof(MMPMoonRockState, flags) == 0x24);
 STATIC_ASSERT(offsetof(MMPMoonRockState, bobPhase) == 0x26);
 STATIC_ASSERT(offsetof(MMPMoonRockState, rollPhase) == 0x28);
 STATIC_ASSERT(offsetof(MMPMoonRockState, pitchPhase) == 0x2A);
-STATIC_ASSERT(offsetof(MMPMoonRockState, unknown2C) == 0x2C);
+STATIC_ASSERT(offsetof(MMPMoonRockState, pad2C) == 0x2C);
 STATIC_ASSERT(offsetof(MMPMoonRockState, kind) == 0x2E);
 STATIC_ASSERT(offsetof(MMPMoonRockState, heightLevel) == 0x2F);
 
