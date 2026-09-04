@@ -3682,6 +3682,19 @@ function offsets/sizes and every non-code section's bytes. This is a source-shap
 constraint supporting normal propagation, not a claim that the full compiler
 profile or remaining register assignments have been recovered.
 
+The flame-child recovery extends indexed access across 17 spawn/retirement loops,
+removing the state-base cursor helper, the duplicate flameblast placement overlay,
+and an artificial single-field loop-counter struct. Retail diagnostics distinguish
+state 13 (BADDIEALERT) from state 12's circling; animation 0x34 belongs to the
+growl/alert/guard flame attack, not digging. The flameblast callback formerly named
+`objSetAnimSpeedTo1` only sets `freeRequested`; its canonical API is now
+`flameblast_requestFree`. Flameblast remains byte-exact. Tricky text temporarily
+falls to 99.75482%: the changed handlers retain their mnemonic streams except
+`Tricky_update`, where the plain scalar counter exposes one additional zero load.
+Its text grows by four bytes; all non-code section bytes and all 58 constant-load
+value sequences remain unchanged. Do not restore the fake counter struct merely
+to suppress that load.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

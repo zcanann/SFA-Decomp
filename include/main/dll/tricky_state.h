@@ -12,6 +12,8 @@
 #include "main/pi_dolphin_path_api.h"
 #include "main/mapEventTypes.h"
 
+#define TRICKY_FLAME_CHILD_COUNT 7
+
 /* Tricky movement and command flags. */
 #define TRICKY_STATE_FLAG_CHILDREN_ACTIVE  0x800  /* spawned child objects are active */
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000 /* child objects torn down this cycle */
@@ -245,17 +247,17 @@ typedef struct TrickyState {
             struct RomCurveDef* secretDigCurve;
             f32 secretDigWhineTimer;
         };
-        GameObject* flameChildren[7]; /* flame/dig helpers spawned and retired as one seven-object group */
+        GameObject* flameChildren[TRICKY_FLAME_CHILD_COUNT]; /* staggered flameblasts retired as a group */
     };
     union {
         struct {
             f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
             union {
                 f32 playerContactTimer;
-                GameObject* circlingTargetObj;
+                GameObject* baddieAlertTarget;
             };
             union {
-                GameObject* circlingWarpDetour; /* active trickywarp detour while orbiting a circling target */
+                GameObject* baddieAlertWarp; /* active trickywarp detour while tracking the alert target */
                 f32 idleTimer;
                 TrickyActionCallback actionCallback;
             };
@@ -346,7 +348,7 @@ STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
 STATIC_ASSERT(offsetof(TrickyState, flameCommandPending) == 0x728);
 STATIC_ASSERT(offsetof(TrickyState, actionCallback) == 0x724);
-STATIC_ASSERT(offsetof(TrickyState, circlingWarpDetour) == 0x724);
+STATIC_ASSERT(offsetof(TrickyState, baddieAlertWarp) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, idleTimer) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, guardTarget) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, sfxRepeatTimer) == 0x738);
@@ -400,7 +402,7 @@ STATIC_ASSERT(offsetof(TrickyState, circlingTargetPos.y) == 0x70C);
 STATIC_ASSERT(offsetof(TrickyState, circlingTargetPos.z) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, tumbleweedPad701) == 0x701);
 STATIC_ASSERT(offsetof(TrickyState, playerContactTimer) == 0x720);
-STATIC_ASSERT(offsetof(TrickyState, circlingTargetObj) == 0x720);
+STATIC_ASSERT(offsetof(TrickyState, baddieAlertTarget) == 0x720);
 STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetX) == 0x704);
 STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetY) == 0x708);
 STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetZ) == 0x70C);

@@ -28,7 +28,7 @@
 #define FLAMEBLAST_INITIAL_PHASE_SCALE 3.4285715f
 #define FLAMEBLAST_INITIAL_HIT_DELAY   2
 
-void objSetAnimSpeedTo1(GameObject* obj) {
+void flameblast_requestFree(GameObject* obj) {
     ((FlameblastState*)obj->extra)->freeRequested = 1;
 }
 
@@ -114,18 +114,18 @@ void flameblast_init(GameObject* obj, FlameblastPlacement* placement) {
 }
 
 ObjectDescriptor gFlameblastObjDescriptor = {
-    0,                                              /* reserved0 */
-    0,                                              /* reserved1 */
-    0,                                              /* reserved2 */
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,               /* slotCountAndFlags */
-    0,                                              /* initialise */
-    0,                                              /* release */
-    0,                                              /* slot02 */
-    (ObjectDescriptorCallback)flameblast_init,      /* init */
-    (ObjectDescriptorCallback)flameblast_update,    /* update */
-    0,                                              /* hitDetect */
-    (ObjectDescriptorCallback)flameblast_render,    /* render */
-    0,                                              /* free */
-    0,                                              /* getObjectTypeId */
-    flameblast_getExtraSize,                        /* getExtraSize */
+    0,                                           /* reserved0 */
+    0,                                           /* reserved1 */
+    0,                                           /* reserved2 */
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,            /* slotCountAndFlags */
+    0,                                           /* initialise */
+    0,                                           /* release */
+    0,                                           /* slot02 */
+    (ObjectDescriptorCallback)flameblast_init,   /* init */
+    (ObjectDescriptorCallback)flameblast_update, /* update */
+    0,                                           /* hitDetect */
+    (ObjectDescriptorCallback)flameblast_render, /* render */
+    0,                                           /* free */
+    0,                                           /* getObjectTypeId */
+    flameblast_getExtraSize,                     /* getExtraSize */
 };
