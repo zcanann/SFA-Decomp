@@ -1072,16 +1072,15 @@ int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 sp
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     TrickyState* state;
     int currentYaw;
-    int wrappedYaw;
     int delta;
     int step;
 
     state = obj->extra;
     state->targetYaw = targetYaw;
 
-    wrappedYaw = (u16)(s16)targetYaw;
+    delta = (u16)(s16)targetYaw;
     currentYaw = obj->anim.rotX;
-    delta = currentYaw - wrappedYaw;
+    delta = currentYaw - delta;
     if (delta > TRICKY_YAW_HALF_TURN) {
         delta -= TRICKY_YAW_WRAP_RANGE;
     }
@@ -1681,7 +1680,8 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
         curveZ = curve->z;
         targetPos = state->targetPosPtr;
         {
-            targetZDistanceSquared = (targetPos[2] - curveZ) * (targetPos[2] - curveZ);
+            targetZDistanceSquared = targetPos[2] - curveZ;
+            targetZDistanceSquared *= targetZDistanceSquared;
             curveX = curve->x;
             targetXDistanceSquared = (targetPos[0] - curveX) * (targetPos[0] - curveX);
             {
@@ -5035,7 +5035,8 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         obj->anim.localPosX = state->dirX * pressDistance + state->digTunnelStartNode->x;
         obj->anim.localPosZ = state->dirZ * pressDistance + state->digTunnelStartNode->z;
         dirX = ((TrickyState*)obj->extra)->dirX;
-        dirXSq = dirX * dirX;
+        dirXSq = dirX;
+        dirXSq *= dirXSq;
         dirZ = ((TrickyState*)obj->extra)->dirZ;
         pressDistance = dirZ * dirZ;
         if (dirXSq + pressDistance > 0.01f) {
@@ -7142,7 +7143,6 @@ void Tricky_update(GameObject* obj) {
     int commandAlreadyQueued = 0;
     int impressSfxId;
     TrickyState* voiceState;
-    int childIndex;
     int i;
     TrickyState* commandCursor;
     ObjPlacement* placementSetup;
@@ -7226,8 +7226,8 @@ void Tricky_update(GameObject* obj) {
             obj->anim.worldPosY = trickyState->homePosY;
             obj->anim.worldPosZ = trickyState->homePosZ;
             ObjHits_SyncObjectPosition(obj);
-            childIndex = 0;
-            trickyState->movementState = childIndex;
+            i = 0;
+            trickyState->movementState = i;
             resetValue = 0.0f;
             trickyState->prevSpeed = resetValue;
             trickyState->speed = resetValue;
@@ -7236,8 +7236,8 @@ void Tricky_update(GameObject* obj) {
             if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0) {
                 trickyState->stateFlags &= ~TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 trickyState->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
-                for (; childIndex < TRICKY_FLAME_CHILD_COUNT; childIndex++) {
-                    flameblast_requestFree(trickyState->flameChildren[childIndex]);
+                for (; i < TRICKY_FLAME_CHILD_COUNT; i++) {
+                    flameblast_requestFree(trickyState->flameChildren[i]);
                 }
                 Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_FINISH_FLAME, TRICKY_VOICE_PITCH_BASE);
