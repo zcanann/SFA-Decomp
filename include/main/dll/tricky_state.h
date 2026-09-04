@@ -17,10 +17,10 @@
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING                                                                               \
     0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
 #define TRICKY_STATE_FLAG_PATH_PATCHES_VALID 0x400 /* patch[] and patchTargets[] describe targetPosPtr */
-#define TRICKY_STATE_FLAG_COMMAND_ACTIVE     0x10u /* sidekick command/flame/dig/guard action is active */
-#define TRICKY_STATE_FLAG_RECALL_REQUEST     0x10000u
-#define TRICKY_STATE_FLAG_HEEL_REQUEST       0x20000u
-#define TRICKY_STATE_FLAG_GUARD_REQUEST      0x40000u
+#define TRICKY_STATE_FLAG_COMMAND_ACTIVE     0x10  /* sidekick command/flame/dig/guard action is active */
+#define TRICKY_STATE_FLAG_RECALL_REQUEST     0x10000
+#define TRICKY_STATE_FLAG_HEEL_REQUEST       0x20000
+#define TRICKY_STATE_FLAG_GUARD_REQUEST      0x40000
 
 /* TrickyState.movementState - the walk/jump phase selector switched on in
  * trickyUpdateMovementState. The names come from the retained retail diagnostic

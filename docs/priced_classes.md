@@ -3660,6 +3660,16 @@ tools-side script left with the lane's topic file; classifications in
 
 ## 36. Two leads closed at mechanism level (2026-08-05)
 
+**Tricky counterexample (2026-09-04):** the 64-bit-promotion conclusion below is
+specific to the compiler used for that experiment, not evidence of original
+source types. `python tools/tricky_compiler_probe.py` shows GC/1.3 emitting
+`li; and` and `lis; or` from ordinary signed 32-bit masks in compound assignments;
+GC/1.3.2 and GC/2.0 fold the same snippets. Unsigned masks fold in all three.
+Tricky's GC/1.3 compile also reproduces retail's independent handler-array
+accesses without the former combined geometry/table overlay. With signed chars,
+ordinary masks, and direct calls, all 89 function lengths match and text improves
+from 99.95778% to 99.97226%. No claim about Player's compiler follows from this.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
