@@ -1349,7 +1349,7 @@ config.libs = [
             # dlls/objects
             Object(NonMatching, "dlls/objects/195_Player/player.c", cflags=cflags_dll_noopt_noautoinline),
             # Retail keeps 32-bit mask operations and adjacent dispatch-array offsets unfolded.
-            Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_noautoinline, extra_cflags=["-char signed"]),
+            Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", mw_version="GC/1.3", cflags=cflags_dll_noopt, extra_cflags=["-char signed"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/197/197.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c", cflags=cflags_dll_noopt_noprop),

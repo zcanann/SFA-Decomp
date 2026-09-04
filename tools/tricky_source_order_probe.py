@@ -7,6 +7,7 @@ ownership audit before adopting the transformed source.
 """
 
 import argparse
+import re
 import shlex
 import subprocess
 from pathlib import Path
@@ -22,7 +23,9 @@ UNIT = "main/dlls/objects/196_Tricky/tricky"
 SOURCE = Path(flag_probe.ROOT) / "src/dlls/objects/196_Tricky/tricky.c"
 
 
-def reorder(source, reverse):
+def reorder(source, reverse, inline_placement="keep"):
+    if inline_placement not in ("keep", "first", "last"):
+        raise ValueError(f"invalid inline placement: {inline_placement}")
     functions = []
     for name, opening, closing in fwdsub_scan.find_functions(fwdsub_scan.strip_comments(source)):
         assert brute_match.find_function_body(source, name) == (opening, closing), name
@@ -36,7 +39,15 @@ def reorder(source, reverse):
         declarations.extend([source[cursor:start], source[start:opening].rstrip() + ";\n"])
         cursor = end
     declarations.append(source[cursor:])
-    bodies = reversed(functions) if reverse else functions
+    bodies = list(reversed(functions)) if reverse else functions
+    if inline_placement != "keep":
+        inline_bodies = [
+            item for item in bodies
+            if re.search(r"\binline\b", source[item[0]:item[1]])
+        ]
+        ordinary_bodies = [item for item in bodies if item not in inline_bodies]
+        bodies = (inline_bodies + ordinary_bodies if inline_placement == "first"
+                  else ordinary_bodies + inline_bodies)
     return "".join(declarations) + "\n\n" + "\n\n".join(source[a:c] for a, _, c, _ in bodies)
 
 
@@ -53,13 +64,34 @@ def layout(path):
         return functions, sections
 
 
+def compile_command(base, source, directory, deferred=False, auto_inline="current"):
+    if auto_inline not in ("current", "on", "off"):
+        raise ValueError(f"invalid automatic inlining policy: {auto_inline}")
+    command = [arg for arg in base if arg != "-MMD"]
+    command[command.index("-c") + 1] = str(source)
+    command[command.index("-o") + 1] = str(directory)
+    if deferred:
+        command.extend(["-inline", "deferred"])
+    if auto_inline != "current":
+        command.extend(["-inline", "auto" if auto_inline == "on" else "noauto"])
+    return command
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reverse", action="store_true")
     parser.add_argument("--deferred", action="store_true")
+    parser.add_argument("--auto-inline", choices=["current", "on", "off"], default="current",
+                        help="Override automatic inlining independently of deferred emission")
     parser.add_argument("--literal-diagnostics", action="store_true")
+    parser.add_argument("--inline-placement", choices=["keep", "first", "last"], default="keep",
+                        help="Move explicit inline definitions without changing ordinary function order")
     args = parser.parse_args()
     tag = f"tricky_order_{int(args.reverse)}_{int(args.deferred)}_{int(args.literal_diagnostics)}"
+    if args.inline_placement != "keep":
+        tag += f"_inline_{args.inline_placement}"
+    if args.auto_inline != "current":
+        tag += f"_auto_{args.auto_inline}"
     directory = Path(flag_probe.SCRATCH) / tag
     directory.mkdir(parents=True, exist_ok=True)
     source = directory / "tricky.c"
@@ -73,13 +105,11 @@ def main():
         ]:
             text = text.replace(f"{declaration} {name}[] = {literal};", "")
             text = text.replace(name, literal)
-    source.write_text(reorder(text, args.reverse), encoding="ascii")
-    command = shlex.split(flag_probe.base_cmd(UNIT).replace("\\", "/"))
-    command = [arg for arg in command if arg != "-MMD"]
-    command[command.index("-c") + 1] = str(source)
-    command[command.index("-o") + 1] = str(directory)
-    if args.deferred:
-        command.extend(["-inline", "noauto,deferred"])
+    source.write_text(reorder(text, args.reverse, args.inline_placement), encoding="ascii")
+    command = compile_command(
+        shlex.split(flag_probe.base_cmd(UNIT).replace("\\", "/")),
+        source, directory, args.deferred, args.auto_inline,
+    )
     subprocess.run(command, cwd=flag_probe.ROOT, check=True, timeout=30)
     obj = source.with_suffix(".o")
     scores, error = flag_probe.score(UNIT, str(obj))

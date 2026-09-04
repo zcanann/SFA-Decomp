@@ -3695,6 +3695,16 @@ Its text grows by four bytes; all non-code section bytes and all 58 constant-loa
 value sequences remain unchanged. Do not restore the fake counter struct merely
 to suppress that load.
 
+Tricky's later GC/1.3 audit removes the inherited `noauto` override as well:
+the complete object SHA-256 is unchanged with the default automatic inlining.
+The source-order probe now varies automatic inlining independently of deferred
+emission and can move explicit inline definitions first or last. Neither change
+alters any allocated section in the reverse/deferred probe. Its leading 80 pool
+bytes match retail, but early water/speed literals still differ in order; moving
+inline definitions does not explain them. Independent GC/1.3 fixtures also show
+global `const float` scalars producing duplicate named/anonymous pool entries;
+static and local const scalars retain use order, not declaration order.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
