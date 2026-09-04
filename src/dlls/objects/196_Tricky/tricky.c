@@ -204,7 +204,6 @@ extern const char sTrickyShouldNeverStopCirclingError[];
 
 extern char sSidekickCommandDebugTextBlock[];
 
-extern const f64 gTrickyAmbientWanderScale[1];
 /* Repeated Tricky movement-animation contract values. */
 #define TRICKY_TIMER_20_FRAMES           20.0f
 #define TRICKY_WATER_COOLDOWN_FRAMES     TRICKY_TIMER_600_FRAMES
@@ -217,7 +216,7 @@ extern const f64 gTrickyAmbientWanderScale[1];
 #define TRICKY_RECALL_COOLDOWN_FRAMES    1200.0f
 #define TRICKY_AUDIO_EVENT_MIN_SPEED     0.2f
 #define TRICKY_AMBIENT_ACTIVITY_BASE     200.0f
-#define TRICKY_AMBIENT_WANDER_SCALE      (gTrickyAmbientWanderScale[0])
+#define TRICKY_AMBIENT_WANDER_SCALE      0.1
 #define TRICKY_PATH_SEARCH_BULK_STEPS    0x1f4
 #define TRICKY_IDLE_VOICE_MIN_FRAMES     500
 #define TRICKY_IDLE_VOICE_MAX_FRAMES     750
@@ -338,7 +337,7 @@ static inline GameObject** trickyFlameChildSlotFromStateCursor(void* cursor) {
 }
 
 /* The one partfx effect emitted along Tricky's queued impress path. */
-#define TRICKY_PATH_PARTFX 0x533
+#define TRICKY_PATH_PARTFX             0x533
 #define TRICKY_PATH_PARTFX_BURST_COUNT 0x14
 #define TRICKY_PATH_PARTFX_SPAWN_FLAGS 2
 
@@ -485,12 +484,11 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
     }
 }
 
-
-#define TRICKY_EVENT_TIME_SENTINEL -100000.0f
-#define TRICKY_EVENT_STALE_SECONDS 8.0f
-#define TRICKY_MAX_DISTANCE 340282346638528859811704183484516925440.0f
-#define TRICKY_SPEED_DECAY_STEP -0.15f
-#define TRICKY_SMALL_SPEED_STEP 0.05f
+#define TRICKY_EVENT_TIME_SENTINEL       -100000.0f
+#define TRICKY_EVENT_STALE_SECONDS       8.0f
+#define TRICKY_MAX_DISTANCE              340282346638528859811704183484516925440.0f
+#define TRICKY_SPEED_DECAY_STEP          -0.15f
+#define TRICKY_SMALL_SPEED_STEP          0.05f
 #define TRICKY_FLOAT_100                 100.0f
 #define TRICKY_FLOAT_NEG_0_17            -0.17f
 #define TRICKY_FLOAT_40                  40.0f
@@ -675,8 +673,8 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     particleParams.rotZ = obj->anim.rotZ;
     if ((flags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
         while (spawnCount-- != 0) {
-            (*gPartfxInterface)->spawnObject(obj, TRICKY_PATH_PARTFX, &particleParams, TRICKY_PATH_PARTFX_SPAWN_FLAGS,
-                                             -1, NULL);
+            (*gPartfxInterface)
+                ->spawnObject(obj, TRICKY_PATH_PARTFX, &particleParams, TRICKY_PATH_PARTFX_SPAWN_FLAGS, -1, NULL);
         }
         state->stateFlags = state->stateFlags & ~(u64)TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
     }
@@ -1337,7 +1335,6 @@ static void trickyFaceMoveVector(GameObject* obj) {
     trickyUpdateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
-
 #define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
 #define TRICKY_TINY_MOVE_BLEND_SPEED       0.0001f
 #define TRICKY_RUN_MOVE_THRESHOLD          2.5f
@@ -1924,9 +1921,7 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     }
 }
 
-const f32 gTrickyAvoidanceBlendStepScale[] = {0.125f};
-
-#define TRICKY_AVOIDANCE_BLEND_STEP_SCALE (gTrickyAvoidanceBlendStepScale[0])
+#define TRICKY_AVOIDANCE_BLEND_STEP_SCALE 0.125f
 #define TRICKY_POSITION_OFFSET_SCALE      0.1f
 
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance,
@@ -2052,8 +2047,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
  * Tricky sidekick follow/path-walk movement. trickyUpdateMovementState is
  * the per-frame movement step that resolves the target's walk/patch group and
  * drives motion through a substate machine and RomCurveWalker route;
- * trickyUpdateApproachSpeed ramps the follow speed toward a target point. The
- * The named gTricky* scalar constants are this DLL's .sdata2 movement tuning pool.
+ * trickyUpdateApproachSpeed ramps the follow speed toward a target point.
  */
 
 char sInWaterMessage[] = "in water\n";
@@ -2122,47 +2116,6 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
                                     "entered a non valid movementstate\n"
                                     "\0";
 
-#define TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed)                                                    \
-    do {                                                                                                               \
-        s16 previousYaw;                                                                                               \
-        s16 routeYaw;                                                                                                  \
-        s16 yawDelta;                                                                                                  \
-                                                                                                                       \
-        previousYaw =                                                                                                  \
-            getAngle((state)->prevLocalPosX - (obj)->anim.localPosX, (state)->prevLocalPosZ - (obj)->anim.localPosZ);  \
-        routeYaw =                                                                                                     \
-            getAngle((state)->prevLocalPosX - (state)->route.posX, (state)->prevLocalPosZ - (state)->route.posZ);      \
-        yawDelta = previousYaw - (u16)routeYaw;                                                                        \
-        if (TRICKY_YAW_HALF_TURN < yawDelta) {                                                                         \
-            yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;                                                               \
-        }                                                                                                              \
-        if (yawDelta < -TRICKY_YAW_HALF_TURN) {                                                                        \
-            yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;                                                               \
-        }                                                                                                              \
-        if (yawDelta > TRICKY_YAW_QUARTER_TURN) {                                                                      \
-            yawDelta -= TRICKY_YAW_HALF_TURN;                                                                          \
-        } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {                                                              \
-            yawDelta += TRICKY_YAW_HALF_TURN;                                                                          \
-        }                                                                                                              \
-        if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {                             \
-            (state)->speed = (previousSpeed);                                                                          \
-            trickyUpdateApproachSpeed((obj), TRICKY_RUN_MOVE_THRESHOLD, (state), &(state)->route.posX, 1);             \
-        }                                                                                                              \
-    } while (0)
-
-#define TRICKY_ADVANCE_ROUTE_TO_END(state)                                                                             \
-    do {                                                                                                               \
-        if ((state)->route.reverse != 0) {                                                                             \
-            while ((state)->route.atSegmentEnd != 0) {                                                                 \
-                RomCurve_stepClamped(&(state)->route, TRICKY_ROUTE_REVERSE_STEP);                                      \
-            }                                                                                                          \
-        } else {                                                                                                       \
-            while ((state)->route.atSegmentEnd == 0) {                                                                 \
-                RomCurve_stepClamped(&(state)->route, TRICKY_FLOAT_TWO);                                               \
-            }                                                                                                          \
-        }                                                                                                              \
-    } while (0)
-
 #define TRICKY_FOLLOW_MAX_SPEED                 3.0f
 #define TRICKY_FOLLOW_JUMPUP_FAST_BLEND_SPEED   0.0135f
 #define TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED   0.00975f
@@ -2170,16 +2123,13 @@ char sTrickyDryLandDebugMessage[] = "out of water\n"
 #define TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED      0.0125f
 #define TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR 33.114f
 #define TRICKY_FOLLOW_ARC_SPEED                 2.3f
-#define TRICKY_FOLLOW_ARC_HALF_PROGRESS         (gTrickyFollowArcHalfProgress[0])
-#define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      (gTrickyFollowArcQuarterProgress[0])
+#define TRICKY_FOLLOW_ARC_HALF_PROGRESS         0.5f
+#define TRICKY_FOLLOW_ARC_QUARTER_PROGRESS      0.25f
 #define TRICKY_FOLLOW_ARC_COEFFICIENT           -0.017f
 #define TRICKY_FOLLOW_ARC_PROGRESS_WINDOW       24.0f
 #define TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW       6.0f
 #define TRICKY_FOLLOW_ARC_MIDDLE_WINDOW         12.0f
 #define TRICKY_FOLLOW_JUMP_LAND_SPEED           0.75f
-
-const f32 gTrickyFollowArcHalfProgress[] = {0.5f};
-const f32 gTrickyFollowArcQuarterProgress[] = {0.25f};
 
 #define TRICKY_DEFAULT_STOPPING_RADIUS 5.0f
 
@@ -2573,7 +2523,28 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 } else {
                     RomCurve_setupHermiteSegment(&state->route, prevNode, node, nextNode);
                     RomCurve_stepClamped(&state->route, 0.1f);
-                    TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
+                    {
+                        s16 previousYaw = getAngle(state->prevLocalPosX - obj->anim.localPosX,
+                                                   state->prevLocalPosZ - obj->anim.localPosZ);
+                        s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX,
+                                                state->prevLocalPosZ - state->route.posZ);
+                        s16 yawDelta = previousYaw - (u16)routeYaw;
+                        if (TRICKY_YAW_HALF_TURN < yawDelta) {
+                            yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
+                        }
+                        if (yawDelta < -TRICKY_YAW_HALF_TURN) {
+                            yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
+                        }
+                        if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
+                            yawDelta -= TRICKY_YAW_HALF_TURN;
+                        } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
+                            yawDelta += TRICKY_YAW_HALF_TURN;
+                        }
+                        if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
+                            state->speed = previousSpeed;
+                            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+                        }
+                    }
                     trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
                     didMove = moveTricky(obj, &state->route.posX);
                     switch (prevNode->subtype) {
@@ -2615,7 +2586,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         state->verticalDelta = (((RomCurveDef*)state->route.currentNode)->y - obj->anim.worldPosY) /
                                                TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPUP;
-                        TRICKY_ADVANCE_ROUTE_TO_END(state);
+                        if (state->route.reverse != 0) {
+                            while (state->route.atSegmentEnd != 0) {
+                                RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
+                            }
+                        } else {
+                            while (state->route.atSegmentEnd == 0) {
+                                RomCurve_stepClamped(&state->route, TRICKY_FLOAT_TWO);
+                            }
+                        }
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_JUMPDOWN:
@@ -2634,7 +2613,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         state->verticalDelta = (obj->anim.worldPosY - ((RomCurveDef*)state->route.currentNode)->y) /
                                                TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPDOWN;
-                        TRICKY_ADVANCE_ROUTE_TO_END(state);
+                        if (state->route.reverse != 0) {
+                            while (state->route.atSegmentEnd != 0) {
+                                RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
+                            }
+                        } else {
+                            while (state->route.atSegmentEnd == 0) {
+                                RomCurve_stepClamped(&state->route, TRICKY_FLOAT_TWO);
+                            }
+                        }
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
@@ -2771,7 +2758,28 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             }
         }
         if ((state->savedWalkGroup == 0) || (objectWalkGroup != state->savedWalkGroup)) {
-            TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
+            {
+                s16 previousYaw =
+                    getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+                s16 routeYaw =
+                    getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+                s16 yawDelta = previousYaw - (u16)routeYaw;
+                if (TRICKY_YAW_HALF_TURN < yawDelta) {
+                    yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
+                }
+                if (yawDelta < -TRICKY_YAW_HALF_TURN) {
+                    yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
+                }
+                if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
+                    yawDelta -= TRICKY_YAW_HALF_TURN;
+                } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
+                    yawDelta += TRICKY_YAW_HALF_TURN;
+                }
+                if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
+                    state->speed = previousSpeed;
+                    trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+                }
+            }
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         didMove = moveTricky(obj, &state->route.posX);
@@ -2796,7 +2804,27 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
-        TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
+        {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            s16 yawDelta = previousYaw - (u16)routeYaw;
+            if (TRICKY_YAW_HALF_TURN < yawDelta) {
+                yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
+            }
+            if (yawDelta < -TRICKY_YAW_HALF_TURN) {
+                yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
+            }
+            if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
+                yawDelta -= TRICKY_YAW_HALF_TURN;
+            } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
+                yawDelta += TRICKY_YAW_HALF_TURN;
+            }
+            if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
+                state->speed = previousSpeed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+            }
+        }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
         routeDirection = state->route.reverse;
@@ -2890,7 +2918,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             state->arcMoveProgress = arc->time / arc->duration;
             state->speed = TRICKY_FOLLOW_ARC_SPEED;
             state->movementState = TRICKY_MOVE_JUMPING;
-            TRICKY_ADVANCE_ROUTE_TO_END(state);
+            if (state->route.reverse != 0) {
+                while (state->route.atSegmentEnd != 0) {
+                    RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
+                }
+            } else {
+                while (state->route.atSegmentEnd == 0) {
+                    RomCurve_stepClamped(&state->route, TRICKY_FLOAT_TWO);
+                }
+            }
         }
         break;
     case TRICKY_MOVE_JUMPING: {
@@ -2938,7 +2974,27 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
-        TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
+        {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            s16 yawDelta = previousYaw - (u16)routeYaw;
+            if (TRICKY_YAW_HALF_TURN < yawDelta) {
+                yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
+            }
+            if (yawDelta < -TRICKY_YAW_HALF_TURN) {
+                yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
+            }
+            if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
+                yawDelta -= TRICKY_YAW_HALF_TURN;
+            } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
+                yawDelta += TRICKY_YAW_HALF_TURN;
+            }
+            if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
+                state->speed = previousSpeed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+            }
+        }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
         routeDirection = state->route.reverse;
@@ -2969,7 +3025,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->verticalDelta = (((RomCurveDef*)state->route.currentNode)->y - obj->anim.worldPosY) /
                                        TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPUP;
-                TRICKY_ADVANCE_ROUTE_TO_END(state);
+                if (state->route.reverse != 0) {
+                    while (state->route.atSegmentEnd != 0) {
+                        RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
+                    }
+                } else {
+                    while (state->route.atSegmentEnd == 0) {
+                        RomCurve_stepClamped(&state->route, TRICKY_FLOAT_TWO);
+                    }
+                }
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
@@ -3006,7 +3070,27 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             v = TRICKY_SPEED_DECAY_STEP * timeDelta + previousSpeed;
             state->speed = (v < gTrickyFloatZero) ? gTrickyFloatZero : v;
         }
-        TRICKY_SLOW_FOR_SHARP_ROUTE_TURN(obj, state, previousSpeed);
+        {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            s16 yawDelta = previousYaw - (u16)routeYaw;
+            if (TRICKY_YAW_HALF_TURN < yawDelta) {
+                yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
+            }
+            if (yawDelta < -TRICKY_YAW_HALF_TURN) {
+                yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
+            }
+            if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
+                yawDelta -= TRICKY_YAW_HALF_TURN;
+            } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
+                yawDelta += TRICKY_YAW_HALF_TURN;
+            }
+            if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
+                state->speed = previousSpeed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+            }
+        }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
         routeDirection = state->route.reverse;
@@ -3032,7 +3116,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->verticalDelta = (obj->anim.worldPosY - ((RomCurveDef*)state->route.currentNode)->y) /
                                        TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPDOWN;
-                TRICKY_ADVANCE_ROUTE_TO_END(state);
+                if (state->route.reverse != 0) {
+                    while (state->route.atSegmentEnd != 0) {
+                        RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
+                    }
+                } else {
+                    while (state->route.atSegmentEnd == 0) {
+                        RomCurve_stepClamped(&state->route, TRICKY_FLOAT_TWO);
+                    }
+                }
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
@@ -3189,38 +3281,36 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     }
 }
 
-const f64 gTrickyAmbientWanderScale[] = {0.1};
-
-#define TRICKY_CLOSE_DISTANCE_SQ             2500.0f
-#define TRICKY_TIMER_30_FRAMES               30.0f
-#define TRICKY_GROWL_DIG_START_RADIUS        25.0f
-#define TRICKY_FLAME_DONE_PROGRESS           0.95f
-#define TRICKY_CIRCLING_APPROACH_RADIUS      50.0f
-#define TRICKY_TIMER_150_FRAMES              150.0f
-#define TRICKY_CIRCLING_CLOSE_DISTANCE_SQ    3600.0f
-#define TRICKY_CIRCLING_FAR_DISTANCE_SQ      5625.0f
-#define TRICKY_CIRCLING_CHARGE_RADIUS        55.0f
-#define TRICKY_CIRCLING_SPAWN_PROGRESS       0.3f
-#define TRICKY_FETCH_CARRY_DELAY_FRAMES      180.0f
-#define TRICKY_FETCH_BALL_REACH_RADIUS       13.0f
-#define TRICKY_FETCH_PICKUP_BLEND_SPEED      0.03f
-#define TRICKY_FETCH_THROW_DELAY_FRAMES      60.0f
-#define TRICKY_FETCH_LAUNCH_PROGRESS         0.65f
-#define TRICKY_FETCH_VOICE_MIN_FRAMES        150
-#define TRICKY_FETCH_VOICE_MAX_FRAMES        300
-#define TRICKY_FLAME_HELPER_RELEASE_PROGRESS 0.8f
-#define TRICKY_DIG_TUNNEL_BLEND_SPEED        0.033f
-#define TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ   10000.0f
-#define TRICKY_IDLE_WANDER_BLEND_SPEED       0.0025f
-#define TRICKY_IDLE_PICK_BLEND_SPEED         0.0075f
+#define TRICKY_CLOSE_DISTANCE_SQ              2500.0f
+#define TRICKY_TIMER_30_FRAMES                30.0f
+#define TRICKY_GROWL_DIG_START_RADIUS         25.0f
+#define TRICKY_FLAME_DONE_PROGRESS            0.95f
+#define TRICKY_CIRCLING_APPROACH_RADIUS       50.0f
+#define TRICKY_TIMER_150_FRAMES               150.0f
+#define TRICKY_CIRCLING_CLOSE_DISTANCE_SQ     3600.0f
+#define TRICKY_CIRCLING_FAR_DISTANCE_SQ       5625.0f
+#define TRICKY_CIRCLING_CHARGE_RADIUS         55.0f
+#define TRICKY_CIRCLING_SPAWN_PROGRESS        0.3f
+#define TRICKY_FETCH_CARRY_DELAY_FRAMES       180.0f
+#define TRICKY_FETCH_BALL_REACH_RADIUS        13.0f
+#define TRICKY_FETCH_PICKUP_BLEND_SPEED       0.03f
+#define TRICKY_FETCH_THROW_DELAY_FRAMES       60.0f
+#define TRICKY_FETCH_LAUNCH_PROGRESS          0.65f
+#define TRICKY_FETCH_VOICE_MIN_FRAMES         150
+#define TRICKY_FETCH_VOICE_MAX_FRAMES         300
+#define TRICKY_FLAME_HELPER_RELEASE_PROGRESS  0.8f
+#define TRICKY_DIG_TUNNEL_BLEND_SPEED         0.033f
+#define TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ    10000.0f
+#define TRICKY_IDLE_WANDER_BLEND_SPEED        0.0025f
+#define TRICKY_IDLE_PICK_BLEND_SPEED          0.0075f
 #define TRICKY_IDLE_ACTIVITY_DELAY_MIN_FRAMES 200
 #define TRICKY_IDLE_ACTIVITY_DELAY_MAX_FRAMES 500
-#define TRICKY_HOWL_CALL_BLEND_SPEED         0.003f
-#define TRICKY_AMBIENT_HOWL_BLEND_SPEED      0.015f
-#define TRICKY_CONTACT_FLAME_THRESHOLD       3000.0f
-#define TRICKY_PATH_PARTICLE_SCALE           0.4f
-#define TRICKY_FIREPIPE_HEIGHT_DIST_SQ       841.0f
-#define TRICKY_LOST_EVENT_TIME               -10000.0f
+#define TRICKY_HOWL_CALL_BLEND_SPEED          0.003f
+#define TRICKY_AMBIENT_HOWL_BLEND_SPEED       0.015f
+#define TRICKY_CONTACT_FLAME_THRESHOLD        3000.0f
+#define TRICKY_PATH_PARTICLE_SCALE            0.4f
+#define TRICKY_FIREPIPE_HEIGHT_DIST_SQ        841.0f
+#define TRICKY_LOST_EVENT_TIME                -10000.0f
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
@@ -4133,7 +4223,8 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         state->fetchBallObj = state->followObj;
         state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
         state->substate = TRICKY_FETCH_BALL_CHASE;
-        state->sfxIntervalTimer = (f32)(s32)randomGetRange(TRICKY_FETCH_VOICE_MIN_FRAMES, TRICKY_FETCH_VOICE_MAX_FRAMES);
+        state->sfxIntervalTimer =
+            (f32)(s32)randomGetRange(TRICKY_FETCH_VOICE_MIN_FRAMES, TRICKY_FETCH_VOICE_MAX_FRAMES);
         /* fall through */
     case TRICKY_FETCH_BALL_CHASE:
         if (sidekickBall_isHeldOrMoving(state->fetchBallObj) != 0) {
@@ -4940,9 +5031,8 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
     switch (trickyState->substate) {
     case TRICKY_FLAME_NONE:
         trickyDebugPrint(debugTextBase + TRICKY_DBG_FLAME_NONE);
-        trickyState->flameEdgeNode =
-            Objfsa_FindNearestCurveType24(&trickyState->followObj->anim.worldPosX, -1,
-                                          ROMCURVE_TRICKY_SUBTYPE_FLAME_EDGE);
+        trickyState->flameEdgeNode = Objfsa_FindNearestCurveType24(&trickyState->followObj->anim.worldPosX, -1,
+                                                                   ROMCURVE_TRICKY_SUBTYPE_FLAME_EDGE);
         if (trickyState->flameEdgeNode->walkGroup != 0) {
             targetPos = &trickyState->flameEdgeNode->x;
             if (trickyState->targetPosPtr != targetPos) {
@@ -5459,7 +5549,7 @@ void tricky_state04_nop(void) {
  */
 
 /* child objects spawned by this TU (retail OBJECTS.bin remap-source names) */
-#define TRICKY_SPAWN_ROMDEF_FOOD 0x17b /* TrickyFood */
+#define TRICKY_SPAWN_ROMDEF_FOOD           0x17b /* TrickyFood */
 #define TRICKY_DIG_TUNNEL_WHINE_MIN_FRAMES 0x14
 #define TRICKY_DIG_TUNNEL_WHINE_MAX_FRAMES 0xb4
 #define TRICKY_SECRET_DIG_WHINE_MIN_FRAMES 0x28
@@ -5728,9 +5818,8 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     followObj = state->followObj;
     switch (state->substate) {
     case TRICKY_SECRET_DIG_SCAN_CURVE:
-        state->secretDigCurve =
-            Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1,
-                                                 ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
+        state->secretDigCurve = Objfsa_FindNearestEnabledCurveType24(&state->followObj->anim.worldPosX, -1,
+                                                                     ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
         if (state->secretDigCurve != NULL &&
             getXZDistanceSquared(&state->followObj->anim.worldPosX, &state->secretDigCurve->x) >
                 TRICKY_SECRET_DIG_SCAN_DISTANCE_SQ) {
@@ -6960,34 +7049,34 @@ typedef enum TrickyPromptAttachment {
 } TrickyPromptAttachment;
 
 typedef enum TrickyCommandTargetRomDefNo {
-    TRICKY_ROMDEF_BLUE_MUSHROOM = 0x6a,              /* BlueMushroo */
-    TRICKY_COMMAND_TARGET_WCTEMPLEPRE = 0x36,        /* WCTemplePre */
-    TRICKY_COMMAND_TARGET_SH_BEACON = 0x3c,          /* SH_Beacon */
-    TRICKY_COMMAND_TARGET_CCEYE_VINES = 0x102,       /* CCeyeVines */
-    TRICKY_COMMAND_TARGET_STAY_POINT = 0x104,        /* StayPoint */
+    TRICKY_ROMDEF_BLUE_MUSHROOM = 0x6a,        /* BlueMushroo */
+    TRICKY_COMMAND_TARGET_WCTEMPLEPRE = 0x36,  /* WCTemplePre */
+    TRICKY_COMMAND_TARGET_SH_BEACON = 0x3c,    /* SH_Beacon */
+    TRICKY_COMMAND_TARGET_CCEYE_VINES = 0x102, /* CCeyeVines */
+    TRICKY_COMMAND_TARGET_STAY_POINT = 0x104,  /* StayPoint */
     TRICKY_COMMAND_TARGET_CF_DOOR_LIGHT = 0x131,
-    TRICKY_COMMAND_TARGET_DIM_LOG_FIRE = 0x191,      /* DIMLogFire */
-    TRICKY_COMMAND_TARGET_LINK_BLUE_MUSH = 0x193,    /* LINK_BlueMu */
-    TRICKY_COMMAND_TARGET_BURNABLE_VINE = 0x194,     /* BurnableVin */
+    TRICKY_COMMAND_TARGET_DIM_LOG_FIRE = 0x191,   /* DIMLogFire */
+    TRICKY_COMMAND_TARGET_LINK_BLUE_MUSH = 0x193, /* LINK_BlueMu */
+    TRICKY_COMMAND_TARGET_BURNABLE_VINE = 0x194,  /* BurnableVin */
     TRICKY_COMMAND_TARGET_NW_MAMMOTH_G = 0x195,
-    TRICKY_COMMAND_TARGET_LINK_SNOW_PRESS = 0x19f,   /* LINK_SnowPr */
-    TRICKY_COMMAND_TARGET_DIM_ICE_WALL = 0x1c9,      /* DIMIceWall */
-    TRICKY_COMMAND_TARGET_SH_PRESSURE = 0x26c,       /* SH_Pressure */
-    TRICKY_COMMAND_TARGET_DFP_TRANSLA = 0x352,       /* DFP_transla */
+    TRICKY_COMMAND_TARGET_LINK_SNOW_PRESS = 0x19f, /* LINK_SnowPr */
+    TRICKY_COMMAND_TARGET_DIM_ICE_WALL = 0x1c9,    /* DIMIceWall */
+    TRICKY_COMMAND_TARGET_SH_PRESSURE = 0x26c,     /* SH_Pressure */
+    TRICKY_COMMAND_TARGET_DFP_TRANSLA = 0x352,     /* DFP_transla */
     TRICKY_COMMAND_TARGET_DFP_TARGET_B = 0x358,
-    TRICKY_COMMAND_TARGET_TUMBLEWEED2 = 0x3fb,       /* Tumbleweed2 */
-    TRICKY_COMMAND_TARGET_DR_CHIMMEY = 0x470,        /* DR_Chimmey */
+    TRICKY_COMMAND_TARGET_TUMBLEWEED2 = 0x3fb, /* Tumbleweed2 */
+    TRICKY_COMMAND_TARGET_DR_CHIMMEY = 0x470,  /* DR_Chimmey */
     TRICKY_COMMAND_TARGET_DR_COLLAPSE = 0x475,
-    TRICKY_COMMAND_TARGET_WC_BEACON = 0x50f,         /* WCBeacon */
+    TRICKY_COMMAND_TARGET_WC_BEACON = 0x50f, /* WCBeacon */
     TRICKY_COMMAND_TARGET_ARW_TIMED_MIN = 0x542,
-    TRICKY_COMMAND_TARGET_VFP_PUZZLE_POINT = 0x546,  /* VFP_PuzzleP */
-    TRICKY_COMMAND_TARGET_MS_PLANTING_SEED = 0x54c,  /* MSPlantingS */
-    TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT = 0x551,    /* VFP_flamepo */
-    TRICKY_COMMAND_TARGET_SH_WHITEMUSH = 0x658,      /* SH_whitemus */
-    TRICKY_COMMAND_TARGET_TRICKY_GUARD = 0x6f0,      /* TrickyGuard */
+    TRICKY_COMMAND_TARGET_VFP_PUZZLE_POINT = 0x546, /* VFP_PuzzleP */
+    TRICKY_COMMAND_TARGET_MS_PLANTING_SEED = 0x54c, /* MSPlantingS */
+    TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT = 0x551,   /* VFP_flamepo */
+    TRICKY_COMMAND_TARGET_SH_WHITEMUSH = 0x658,     /* SH_whitemus */
+    TRICKY_COMMAND_TARGET_TRICKY_GUARD = 0x6f0,     /* TrickyGuard */
     TRICKY_COMMAND_TARGET_ICE_HOLE = 0x6f9,
-    TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN = 0x718,    /* DIMTruthHor */
-    TRICKY_COMMAND_TARGET_SC_PRESSURE = 0x7c3,       /* SC_Pressure */
+    TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN = 0x718, /* DIMTruthHor */
+    TRICKY_COMMAND_TARGET_SC_PRESSURE = 0x7c3,    /* SC_Pressure */
 } TrickyCommandTargetRomDefNo;
 
 typedef enum TrickyObjectGroup {
@@ -7323,9 +7412,8 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
             if (busy != 0) {
                 return;
             }
-            state->cannonballStartCurve =
-                Objfsa_FindNearestEnabledCurveType24(&targetObj->anim.worldPosX, -1,
-                                                     ROMCURVE_TRICKY_SUBTYPE_CANNONBALL_ROUTE);
+            state->cannonballStartCurve = Objfsa_FindNearestEnabledCurveType24(
+                &targetObj->anim.worldPosX, -1, ROMCURVE_TRICKY_SUBTYPE_CANNONBALL_ROUTE);
             state->cannonballScratch710.f = (f32)(int)randomGetRange(0x168, 0x28);
             state->stateIndex = TRICKY_STATE_BALL_ROLL;
             state->followObj = targetObj;
@@ -7603,7 +7691,7 @@ int Tricky_getAvailableCommands(GameObject* obj) {
 }
 
 int Tricky_getExtraSize(void) {
-    return offsetof(TrickyState, pad83C);
+    return sizeof(TrickyState);
 }
 
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {

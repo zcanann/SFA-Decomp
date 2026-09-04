@@ -108,7 +108,7 @@ struct RomCurveDef;
  * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers.
  * Field widths mirror the deref widths observed across Tricky, Skeetla, and
  * companion command handlers; unobserved ranges are padded.
- * Tricky_getExtraSize returns 0x83C; sizeof kept at the 0x840 alloc rounding.
+ * Tricky_getExtraSize returns 0x83C, including the final particle timer.
  */
 typedef struct TrickyState {
     TrickyStats* stats;    /* persisted energy and ball-play statistics */
@@ -435,10 +435,9 @@ typedef struct TrickyState {
     f32 blendWeight; /* model blend-channel 1 weight, ramped toward stats->energy/stats->maxEnergy and clamped to [0,1]; pushed to the channel as 2*weight-1 (tricky) */
     f32 blendVelocity; /* blendWeight ramp rate: += 0.004f*timeDelta toward the target, damped by 0.7f near it, zeroed at the clamp (tricky) */
     f32 particleTimer; /* f32 countdown decremented by timeDelta; while > threshold the queued particle effect keeps emitting; reset to a float sentinel on state entry (tricky/skeetla/weapone6/tricky_substates/mmp_cratercritter/animobjd2) */
-    u8 pad83C[0x840 - 0x83C];
 } TrickyState;
 
-STATIC_ASSERT(sizeof(TrickyState) == 0x840);
+STATIC_ASSERT(sizeof(TrickyState) == 0x83C);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
@@ -528,6 +527,5 @@ STATIC_ASSERT(offsetof(TrickyState, blendControlFlags) == 0x82E);
 STATIC_ASSERT(offsetof(TrickyState, blendWeight) == 0x830);
 STATIC_ASSERT(offsetof(TrickyState, blendVelocity) == 0x834);
 STATIC_ASSERT(offsetof(TrickyState, particleTimer) == 0x838);
-STATIC_ASSERT(offsetof(TrickyState, pad83C) == 0x83C);
 
 #endif /* MAIN_DLL_TRICKY_STATE_H_ */
