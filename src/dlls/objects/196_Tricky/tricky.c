@@ -115,16 +115,6 @@
 #include "main/pi_dolphin_path_api.h"
 #include "main/newshadows_audio_api.h"
 
-typedef struct {
-    u16 first;
-    u16 second;
-} TrickyVoiceSfxPair;
-
-typedef union {
-    u32 raw;
-    u16 ids[2];
-} TrickyVoiceSfxPairWord;
-
 typedef struct TrickyBaddieTargetPlacement {
     u8 pad0[0x14];
     s32 mapEventId;
@@ -174,13 +164,6 @@ typedef enum TrickyVoiceSfxId {
     TRICKY_VOICE_SFX_SNORE_OUT = 0x391,
     TRICKY_VOICE_SFX_SCARED = 0x392,
 } TrickyVoiceSfxId;
-
-const TrickyVoiceSfxPair sTrickyImpressSfxPair = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
-const u16 gTrickyQuestPromptSfxIds[2] = {TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR, TRICKY_VOICE_SFX_LOOK_AT_THIS};
-const u16 gTrickySecretDigCompleteSfxIds[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
-const u16 gTrickyDigTunnelCompleteSfxIds[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
-const u16 gTrickySlowFollowVoiceSfxIds[2] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING};
-const u16 gTrickySlowFollowBallVoiceSfxId[1] = {TRICKY_VOICE_SFX_LETS_PLAY};
 
 #define gTrickyFloatZero              0.0f
 #define sTrickyFloatTen               10.0f
@@ -1269,7 +1252,6 @@ static inline void trickyRequestIdleMove(GameObject* obj, TrickyState* state) {
 int moveTricky(GameObject* obj, f32* targetPos) {
     f32 desiredNextPos[3];
     f32 avoidanceNextPos[3];
-    u16 slowFollowVoiceSfxIds[3];
     u16 sfxId;
     TrickyState* state;
     f32 currentSpeed;
@@ -1345,8 +1327,9 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                                 sfxId = randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME);
                                 trickyPlayMovementVoice(obj, sfxId);
                             } else {
-                                *(u32*)slowFollowVoiceSfxIds = *(u32*)gTrickySlowFollowVoiceSfxIds;
-                                slowFollowVoiceSfxIds[2] = gTrickySlowFollowBallVoiceSfxId[0];
+                                u16 slowFollowVoiceSfxIds[3] = {TRICKY_VOICE_SFX_LAUGH,
+                                                                TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING,
+                                                                TRICKY_VOICE_SFX_LETS_PLAY};
                                 if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
                                     randomGetRange(0, 2);
                                 } else {
@@ -5301,7 +5284,7 @@ static inline void trickyAdvanceNode(TrickyState* state) {
 }
 
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
-    TrickyVoiceSfxPairWord sfxTable;
+    u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
     f32* targetPos;
     f32* entryPos;
@@ -5314,7 +5297,6 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     f32 resetValue;
     f32 dirXSq;
 
-    sfxTable.raw = *(u32*)gTrickyDigTunnelCompleteSfxIds;
     switch (state->substate) {
     case TRICKY_DIG_TUNNEL_INIT:
         tunnelNode = Objfsa_FindNearestCurveType24(state->targetPosPtr, -1, ROMCURVE_TRICKY_SUBTYPE_DIG_TUNNEL);
@@ -5422,7 +5404,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             state->stats->energy -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_1;
-            sfxId = sfxTable.ids[randomGetRange(0, 1)];
+            sfxId = sfxTable[randomGetRange(0, 1)];
             voiceState = obj->extra;
             if (voiceState->soundSuppressed == 0 &&
                 (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
@@ -5480,7 +5462,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
-    TrickyVoiceSfxPairWord sfxTable;
+    u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* curve;
     f32* curvePos;
     GameObject* followObj;
@@ -5489,7 +5471,6 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     f32 dirLength;
     f32 z;
 
-    sfxTable.raw = *(u32*)gTrickySecretDigCompleteSfxIds;
     followObj = state->followObj;
     switch (state->substate) {
     case TRICKY_SECRET_DIG_SCAN_CURVE:
@@ -5602,7 +5583,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                 idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
                 state->commandPhase = idleCommandPhase;
             }
-            trickyPlayWhineSfx(sfxTable.ids[randomGetRange(0, 1)], obj);
+            trickyPlayWhineSfx(sfxTable[randomGetRange(0, 1)], obj);
         }
         break;
     }
@@ -7106,14 +7087,14 @@ int Tricky_getCurrentCommandPhase(GameObject* obj, int* outCommandPhase) {
 }
 
 int Tricky_updateSideCommandPrompts(GameObject* obj) {
-    TrickyState* state;
+    TrickyState* state = obj->extra;
     u32 commandMask;
     s8 commandKind;
     u16 questPromptSfxId;
-    u8 showQuestPrompt;
-    u8 showExclamationPrompt;
-    u8 showFoodVoicePrompt;
-    u8 showBaddieVoicePrompt;
+    u8 showQuestPrompt = false;
+    u8 showExclamationPrompt = false;
+    u8 showFoodVoicePrompt = false;
+    u8 showBaddieVoicePrompt = false;
     u32 promptValue;
     int promptScratch;
     TrickyState* foodVoiceState;
@@ -7121,16 +7102,10 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     ObjPlacement* promptSetup;
     GameObject* promptObj;
     u8 commandIndex;
+    u16 questPromptSfxIds[2] = {TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR, TRICKY_VOICE_SFX_LOOK_AT_THIS};
     char questPromptOccupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
     char exclamationPromptOccupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
-    u32 questPromptSfxIds[4];
 
-    state = obj->extra;
-    showQuestPrompt = false;
-    showExclamationPrompt = false;
-    showFoodVoicePrompt = false;
-    showBaddieVoicePrompt = false;
-    questPromptSfxIds[0] = *(u32*)gTrickyQuestPromptSfxIds;
     promptValue = mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands);
     if (promptValue != 0) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
@@ -7186,7 +7161,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             state->questPromptTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->questPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 promptValue = randomGetRange(0, 1);
-                questPromptSfxId = ((u16*)questPromptSfxIds)[promptValue];
+                questPromptSfxId = questPromptSfxIds[promptValue];
                 promptScratch = (int)obj->extra;
                 if ((((TrickyState*)promptScratch)->soundSuppressed == 0) &&
                     (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
@@ -7565,8 +7540,8 @@ static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
 }
 
 void Tricky_update(GameObject* obj) {
-    TrickyState* trickyState;
-    int commandAlreadyQueued;
+    TrickyState* trickyState = obj->extra;
+    int commandAlreadyQueued = 0;
     int impressSfxId;
     TrickyState* voiceState;
     struct {
@@ -7584,13 +7559,8 @@ void Tricky_update(GameObject* obj) {
     f32 resetValue;
     f32 moveProgress;
     u8 loadedMapFlags[120];
-    TrickyCommandTypeList sideCommandQuery;
-    TrickyVoiceSfxPair impressSfxPair;
-
-    trickyState = obj->extra;
-    commandAlreadyQueued = 0;
-    sideCommandQuery = gTrickyCommandQueryInit;
-    impressSfxPair = sTrickyImpressSfxPair;
+    TrickyCommandTypeList sideCommandQuery = gTrickyCommandQueryInit;
+    u16 impressSfxIds[2] = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
     Objfsa_UpdateWalkGroupPatches();
     if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && (void*)trickyState->spawnedChild == NULL &&
         (u8)Obj_CanSetupObject()) {
@@ -8131,7 +8101,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->impressTimer -= timeDelta;
         if (trickyState->impressTimer <= gTrickyFloatZero) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_IMPRESS_PENDING_U32;
-            impressSfxId = ((u16*)&impressSfxPair)[randomGetRange(0, 1)];
+            impressSfxId = impressSfxIds[randomGetRange(0, 1)];
             trickyPlaySidekickVoice(obj, impressSfxId, TRICKY_VOICE_PITCH_NORMAL);
         }
     }
