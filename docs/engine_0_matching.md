@@ -85,12 +85,19 @@ the narrow declaration. Removing that cast restores its previous code
 exactly. Every other function preserves its baseline match, apart from the
 independent grid interpolation improvement below.
 
-## Grid interpolation
+## Grid interpolation and pulse
 
 In `pauseMenuDrawGridCell`, spelling the two interpolation terms as
 `pr / 512.0` instead of `pr * 0.001953125` reproduces the retail fused
 multiply-add operand order. The function improves from 99.545456% to
 99.624504%, with the same 253 instructions. Register differences remain.
+
+The pulse reflection now uses a conditional expression, narrowing the reflected
+value inside that expression before multiplying by the fade step. This reproduces
+retail's instruction and branch sequence, improving the function to 99.68379%.
+All 253 instructions remain; register differences still prevent an exact match.
+The other 117 function bodies, data contents, relocations, and named symbol
+offsets are unchanged. The exact-function count remains 106 / 118.
 
 ## Dinosaur Planet comparison
 
@@ -137,7 +144,7 @@ constants or explicit section placement are needed.
 | --- | ---: | ---: | ---: |
 | Exact functions | 104 / 118 | 105 / 118 | 106 / 118 |
 | Exact code bytes | 44,208 / 75,188 | 44,840 / 75,188 | 45,736 / 75,188 |
-| TU fuzzy match | 99.79481% | 99.80385% | 99.82726% |
+| TU fuzzy match | 99.79481% | 99.80385% | 99.82806% |
 | Exact assigned data bytes | 8,972 / 9,952 | 8,972 / 9,952 | 8,972 / 9,952 |
 
 The current pass starts at commit `2793989679`. All non-pool data sections

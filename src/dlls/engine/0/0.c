@@ -4738,10 +4738,7 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
             s16 idv = gPauseMenuActiveGrid[i].id;
             if (idv == 0x4a || idv == 0x4c) {
                 v = (s16)((s32)gPauseMenuHoloTime & 0x1f);
-                if (v & 0x10) {
-                    v ^= 0x1f;
-                }
-                v = (s16)((s16)v * div15);
+                v = (s16)(((v & 0x10) ? (s16)(v ^ 0x1f) : v) * div15);
             } else {
                 v = scaled;
             }
