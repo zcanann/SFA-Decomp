@@ -175,7 +175,6 @@ typedef enum TrickyVoiceSfxId {
     TRICKY_VOICE_SFX_SCARED = 0x392,
 } TrickyVoiceSfxId;
 
-const u16 gTrickyInitialPathControlStartId[1] = {0x0A08};
 const TrickyVoiceSfxPair sTrickyImpressSfxPair = {TRICKY_VOICE_SFX_COOL, TRICKY_VOICE_SFX_YEAH};
 const u16 gTrickyQuestPromptSfxIds[2] = {TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR, TRICKY_VOICE_SFX_LOOK_AT_THIS};
 const u16 gTrickySecretDigCompleteSfxIds[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
@@ -980,7 +979,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
 
     if ((objPosToMapBlockIdx(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) == -1) &&
         ((state->stateFlags & TRICKY_STATE_FLAG_POSITION_RELOCATED) == 0)) {
-        state->heightUpdateActive = 0;
+        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
         obj->anim.localPosX = obj->anim.previousLocalPosX;
         obj->anim.localPosY = obj->anim.previousLocalPosY;
         obj->anim.localPosZ = obj->anim.previousLocalPosZ;
@@ -998,10 +997,10 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     if (doGroundSnap != 0) {
         trackGetNearestGroundOffset(obj, obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ, &hitOffsetY, 0);
         obj->anim.localPosY -= hitOffsetY;
-        state->heightUpdateActive = 0;
+        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
     }
 
-    if (((s8)state->heightUpdateActive != 0) && (state->heightTracking == 0u)) {
+    if ((state->curvesCollision.subtype != CURVES_COLLISION_SUBTYPE_NONE) && (state->heightTracking == 0u)) {
         doHeightSnap = trickyIsInDeepWater(state);
 
         if (doHeightSnap != 0) {
@@ -1075,7 +1074,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         break;
     }
 
-    if ((s8)state->heightUpdateActive == 0) {
+    if (state->curvesCollision.subtype == CURVES_COLLISION_SUBTYPE_NONE) {
         (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
     }
 
@@ -1229,12 +1228,6 @@ static inline void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDe
         state->dirX = -mathSinf((TRICKY_PI * (f32)(int)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
         state->dirZ = -mathCosf((TRICKY_PI * (f32)(int)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
     }
-}
-
-static void trickyFaceMoveVector(GameObject* obj) {
-    s16 ignoredTurnDelta;
-
-    trickyUpdateFacingFromMoveVector(obj, &ignoredTurnDelta);
 }
 
 #define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
@@ -2808,7 +2801,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 }
             }
             Obj_SetParent(obj, NULL, 0);
-            state->heightUpdateActive = 0;
+            state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
         }
         break;
     }
@@ -2887,7 +2880,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_JUMPUP:
     case TRICKY_MOVE_JUMPDOWN:
         trickyDebugPrint("JUMPDOWN or JUMPUP\n");
-        state->heightUpdateActive = 0;
+        state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         {
             f32 dz;
@@ -7621,7 +7614,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
     {
-        int flagsByte = trickyState->sideCommandHitFlags;
+        int flagsByte = trickyState->curvesCollision.surfaceFlags;
         trickyDebugPrint("hits: %d %d %d %d %d %d %d %d", flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8,
                          flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
     }
@@ -7969,7 +7962,7 @@ void Tricky_update(GameObject* obj) {
         }
     }
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
-    trickyState->heightUpdateActive = 1;
+    trickyState->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_OBJECT;
     sTrickyStateHandlers[trickyState->stateIndex](obj, trickyState);
     trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
     trickyState->animTransitionTimer += timeDelta;
@@ -8221,14 +8214,12 @@ void Tricky_update(GameObject* obj) {
 }
 
 void Tricky_init(GameObject* obj) {
-    TrickyState* state;
+    TrickyState* state = obj->extra;
     ObjModel* model;
     CurvesCollisionState* collision;
     u32 colorVariant;
-    u16 startPath[4];
+    s8 queryTypes[2] = {0x0A, 0x08};
 
-    state = obj->extra;
-    startPath[0] = gTrickyInitialPathControlStartId[0];
     mainSetBits(GAMEBIT_TrickyTalk, TRICKY_TALK_SEQUENCE_NONE);
     if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
         mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
@@ -8258,11 +8249,11 @@ void Tricky_init(GameObject* obj) {
     model = Obj_GetActiveModel(obj);
     model->textureRefs->swapSelector = state->colorVariant;
     collision = &state->curvesCollision;
-    (*gPathControlInterface)->init(collision, 1, 0xa7, 1);
+    (*gPathControlInterface)->init(collision, 1, 0xa7, CURVES_COLLISION_SUBTYPE_OBJECT);
     (*gPathControlInterface)
         ->setLocalPointCollision(collision, 1, &gTrickyPathPointCollision, &gTrickyPathPointCollisionRadius, 2);
     (*gPathControlInterface)
-        ->setup(collision, 2, gTrickyCollisionSegmentPoints, gTrickyCollisionSegmentRadii, startPath);
+        ->setup(collision, 2, gTrickyCollisionSegmentPoints, gTrickyCollisionSegmentRadii, queryTypes);
     (*gPathControlInterface)->attachObject(obj, collision);
     doNothing_onTrickyInit();
     Objfsa_UpdateWalkGroupPatches();

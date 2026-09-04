@@ -11,9 +11,7 @@
 #include "main/pi_dolphin_path_api.h"
 #include "main/mapEventTypes.h"
 
-/* Shared TrickyState.stateFlags bits used across the Tricky sidekick / spawned
- * sibling handlers (tricky, tricky_substates, trickyfollow, tumbleweedbush,
- * weaponE6). */
+/* Tricky movement and command flags. */
 #define TRICKY_STATE_FLAG_CHILDREN_ACTIVE  0x800  /* spawned child objects are active */
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000 /* child objects torn down this cycle */
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING                                                                               \
@@ -25,8 +23,8 @@
 #define TRICKY_STATE_FLAG_GUARD_REQUEST      0x40000u
 
 /* TrickyState.movementState - the walk/jump phase selector switched on in
- * trickyUpdateMovementState. The names are the ones the retail debug build
- * printed for each case ("walk wait", "walk free", "walk start patch",
+ * trickyUpdateMovementState. The names come from the retained retail diagnostic
+ * strings for each case ("walk wait", "walk free", "walk start patch",
  * "walk end patch", "walk patch exit", "curve setup", "walk to node",
  * "walk nodes", "Jump run up", "Jump prep", "Jumping", "Jump up run up",
  * "JUMPDOWN or JUMPUP", "JUMPDOWN_RUNUP"). The two states sharing the
@@ -106,14 +104,13 @@ struct RomCurveDef;
 
 /*
  * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers.
- * Field widths mirror the deref widths observed across Tricky, Skeetla, and
- * companion command handlers; unobserved ranges are padded.
+ * DLL 21 owns the embedded collision record. Unobserved ranges are padded.
  * Tricky_getExtraSize returns 0x83C, including the final particle timer.
  */
 typedef struct TrickyState {
-    TrickyStats* stats;    /* persisted energy and ball-play statistics */
-    GameObject* playerObj; /* owning player/sidekick object */
-    u8 stateIndex; /* primary Tricky state selector (0..0x11); indexes the handlerBase[] per-state handler dispatch table and gates the state machine */
+    TrickyStats* stats;       /* persisted energy and ball-play statistics */
+    GameObject* playerObj;    /* owning player/sidekick object */
+    u8 stateIndex;            /* primary Tricky state selector (0..0x11), indexing the state handler table */
     u8 movementState;         /* TRICKY_MOVE_* path/jump phase selector */
     u8 substate;              /* per-state handler substate */
     u8 sideCommandPromptMask; /* transient sidekick command prompt bitmask:
@@ -174,67 +171,7 @@ typedef struct TrickyState {
     f32 homePosY;
     f32 homePosZ;
     Vec patchExitPos;
-    union {
-        CurvesCollisionState curvesCollision; /* DLL 21 owns the collision record at 0xF8..0x360. */
-        struct {
-            /* Legacy actor-helper views of the same storage. */
-            u8 padF8[0x1B8 - 0xF8];
-            f32 nearestSpecialDeltaY; /* signed dy to the nearest special-surface (type 0xe) floor hit */
-            u8 pad1BC[0x25F - 0x1BC];
-            s8 physicsActive; /* same actor-record slot as BaddieState.physicsActive (free-fall physics enable) */
-            u8 pad260;
-            u8 bboxTraceFlags; /* same actor-record slot as BaddieState.bboxTraceFlags */
-            u8 pad262[0x264 - 0x262];
-            u8 surfaceFlags; /* TRICKY_SURFACE_FLAG_* (HAS_NEARBY_FLOOR etc.) */
-            u8 pad265[0x29C - 0x265];
-            GameObject* actionTargetObj;
-            u16 turnOctant; /* (u16 angleDelta >> 13): which 1/8 sector the turn falls in; used as an anim mode */
-            u16 turnAngleDelta; /* signed angle to actionTargetObj minus world rotZ, normalized to +/-0x8000; feeds turnOctant (>>13) */
-            u16 targetDist;        /* distance to actionTargetObj: (s16)sqrt(dx^2+dy^2+dz^2) */
-            u16 targetHeightDelta; /* (s16)(actionTargetObj.worldPosY - self.worldPosY): vertical offset to target */
-            u8 pad2A8[0x2B8 - 0x2A8];
-            f32 lookDirX; /* look/aim direction: yaw = getAngle(-X,-Z), pitch = getAngle(Y, hyp(X,Z)) */
-            f32 lookDirY;
-            f32 lookDirZ;
-            u8 pad2C4[0x2D0 - 0x2C4];
-            f32 freezeEffectTimer; /* counts down by timeDelta while frozen; resets when the shatter effect fires */
-            f32 repeatHitCooldown; /* shared EnemyState repeat-hit guard slot */
-            f32 freezeRecoverTimer;
-            u32 controlFlags;     /* shared EnemyState actor-control slot at 0x2DC */
-            u32 prevControlFlags; /* controlFlags snapshot, tested for newly-raised control bits in the shared actor code */
-            u32 flags2E4;         /* shared EnemyState flags2E4 slot */
-            u32 flags2E8;         /* control/state flag word (bits 1/4/0x10/0x20/0x200/0x208) */
-            u16 hitStunFrames; /* shared EnemyState hit-reaction duration slot */
-            u8 pad2EE[0x2EF - 0x2EE];
-            u8 actionId;     /* current action/move selector (0..5); compared against prevActionId to detect change */
-            u8 prevActionId; /* previous frame's actionId */
-            u8 flags2F1;     /* decoded player-attack flags; shared with EnemyState hit/freeze handling */
-            u8 pad2F2[0x2F5 - 0x2F2];
-            u8 spawnBits;             /* reward-drop selector decoded from the player attack flags */
-            u8 frozenFadeCounter : 5; /* countdown gating the frozen-shatter fade-in sfx */
-            u8 unusedFrozenFadeBits : 3;
-            u8 pad2F7[0x2F8 - 0x2F7];
-            u16 animEventMask; /* per-frame bitmask OR'd from (1 << anim event index); fed to objAudioFn */
-            u8 pad2FA[0x300 - 0x2FA];
-            f32 gravity; /* fall acceleration: velocityY -= gravity*dt, posY -= K*gravity*dt^2 */
-            f32 base;
-            f32 animPlaySpeed;
-            f32 currentMoveProgress;
-            f32 pathSpeed;       /* shared actor path-speed slot (EnemyState.pathSpeed); not read by Tricky */
-            f32 moveSpeedScale0; /* animPlaySpeed = K / (K2 * scale) for moveId0 */
-            f32 moveSpeedScale1; /* paired with moveId1 */
-            f32 moveSpeedScale2; /* paired with moveId2 */
-            u8 moveId0;          /* ObjAnim_SetCurrentMove move id */
-            u8 moveId1;
-            u8 moveId2;
-            u8 rootMotionFlags; /* shared actor root-motion bit flags (0x1/0x2/0x4/0x8), same slot as EnemyState.rootMotionFlags */
-            u8 pad324[0x353 - 0x324];
-            u8 heightUpdateActive; /* set 1 at update-cycle start; cleared to 0 when the object leaves its map block or a ground-snap fires; while (s8)set the water-level / tracked-height float update runs, else velocityY is zeroed (tricky sets, trickyfollow/skeetla clear+read) */
-            u8 pad354[0x358 - 0x354];
-            s8 sideCommandHitFlags; /* bit-flag byte decomposed for the "sidecommand hits" debug print */
-            u8 pad359[0x360 - 0x359];
-        };
-    };
+    CurvesCollisionState curvesCollision;
     void* lastContactObj;
     f32 contactTimer;
     int light;      /* object link */
@@ -450,6 +387,8 @@ STATIC_ASSERT(offsetof(TrickyState, patchTargets) == 0xA0);
 STATIC_ASSERT(offsetof(TrickyState, linkedPatchPos) == 0xD4);
 STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision) == 0xF8);
+STATIC_ASSERT(offsetof(TrickyState, curvesCollision.subtype) == 0x353);
+STATIC_ASSERT(offsetof(TrickyState, curvesCollision.surfaceFlags) == 0x358);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision.tiltPitch) == 0x290);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision.tiltRoll) == 0x292);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultWaterDepth) == 0x2AC);
@@ -472,20 +411,6 @@ STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
-STATIC_ASSERT(offsetof(TrickyState, physicsActive) == 0x25F);
-STATIC_ASSERT(offsetof(TrickyState, bboxTraceFlags) == 0x261);
-STATIC_ASSERT(offsetof(TrickyState, freezeEffectTimer) == 0x2D0);
-STATIC_ASSERT(offsetof(TrickyState, repeatHitCooldown) == 0x2D4);
-STATIC_ASSERT(offsetof(TrickyState, freezeRecoverTimer) == 0x2D8);
-STATIC_ASSERT(offsetof(TrickyState, controlFlags) == 0x2DC);
-STATIC_ASSERT(offsetof(TrickyState, prevControlFlags) == 0x2E0);
-STATIC_ASSERT(offsetof(TrickyState, flags2E4) == 0x2E4);
-STATIC_ASSERT(offsetof(TrickyState, flags2E8) == 0x2E8);
-STATIC_ASSERT(offsetof(TrickyState, hitStunFrames) == 0x2EC);
-STATIC_ASSERT(offsetof(TrickyState, flags2F1) == 0x2F1);
-STATIC_ASSERT(offsetof(TrickyState, spawnBits) == 0x2F5);
-STATIC_ASSERT(offsetof(TrickyState, pathSpeed) == 0x310);
-STATIC_ASSERT(offsetof(TrickyState, rootMotionFlags) == 0x323);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, scratch704) == 0x704);

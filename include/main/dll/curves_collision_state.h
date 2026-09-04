@@ -61,7 +61,7 @@ typedef struct CurvesCollisionState {
     s8 primaryHitType;
     u8 localPointHitMask;
     u8 surfaceHitMask;
-    u8 surfaceFlags;
+    s8 surfaceFlags;
     s8 surfaceCounter;
     u8 updateMode;
     s8 secondaryHitType;
@@ -98,6 +98,7 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, subtype) == 0x25B);
 STATIC_ASSERT(offsetof(CurvesCollisionState, pointCounts) == 0x25C);
 STATIC_ASSERT(offsetof(CurvesCollisionState, primaryHitType) == 0x25D);
 STATIC_ASSERT(offsetof(CurvesCollisionState, localPointHitMask) == 0x25E);
+STATIC_ASSERT(offsetof(CurvesCollisionState, surfaceFlags) == 0x260);
 STATIC_ASSERT(offsetof(CurvesCollisionState, updateMode) == 0x262);
 STATIC_ASSERT(offsetof(CurvesCollisionState, secondaryHitType) == 0x263);
 STATIC_ASSERT(offsetof(CurvesCollisionState, activeTimer) == 0x264);
