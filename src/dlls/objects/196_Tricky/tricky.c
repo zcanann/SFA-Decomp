@@ -484,8 +484,8 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
     }
 }
 
-#define TRICKY_EVENT_TIME_SENTINEL       -100000.0f
-#define TRICKY_EVENT_STALE_SECONDS       8.0f
+#define TRICKY_NO_FLOOR_Y                -100000.0f
+#define TRICKY_SWIM_MIN_DEPTH            8.0f
 #define TRICKY_MAX_DISTANCE              340282346638528859811704183484516925440.0f
 #define TRICKY_SPEED_DECAY_STEP          -0.15f
 #define TRICKY_SMALL_SPEED_STEP          0.05f
@@ -539,14 +539,14 @@ void trickyUpdateColorVariant(GameObject* obj, TrickyState* state) {
     }
 }
 
-static inline int skeetla_isInWater(TrickyState* state) {
-    if (gTrickyFloatZero == state->waterLevel) {
+static inline int trickyIsInDeepWater(TrickyState* state) {
+    if (gTrickyFloatZero == state->curvesCollision.resultWaterDepth) {
         return 0;
     }
-    if (TRICKY_EVENT_TIME_SENTINEL == state->eventTime) {
+    if (TRICKY_NO_FLOOR_Y == state->curvesCollision.resultFloorY) {
         return 1;
     }
-    if (state->currentTime - state->eventTime > TRICKY_EVENT_STALE_SECONDS) {
+    if (state->curvesCollision.resultWaterY - state->curvesCollision.resultFloorY > TRICKY_SWIM_MIN_DEPTH) {
         return 1;
     }
     return 0;
@@ -985,9 +985,10 @@ typedef enum TrickyPendingFollowRequest {
     TRICKY_PENDING_FOLLOW_HANDOFF = 1,
 } TrickyPendingFollowRequest;
 
-char gTrickyDebugStringTable[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x41, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+/* The diagnostic offset views also use this symbol as the TU's data base. */
+Vec gTrickyCollisionSegmentPoints[2] = {
+    {0.0f, 0.0f, 0.0f},
+    {0.0f, 17.0f, 0.0f},
 };
 
 TrickyPathPointCollisionData gTrickyPathPointCollision = {
@@ -1100,11 +1101,11 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     }
 
     if (((s8)state->heightUpdateActive != 0) && (state->heightTracking == 0u)) {
-        doHeightSnap = skeetla_isInWater(state);
+        doHeightSnap = trickyIsInDeepWater(state);
 
         if (doHeightSnap != 0) {
             obj->anim.velocityY = 0.0f;
-            obj->anim.localPosY = state->currentTime - 0.01f;
+            obj->anim.localPosY = state->curvesCollision.resultWaterY - 0.01f;
         } else {
             obj->anim.velocityY += TRICKY_FLOAT_NEG_0_17 * timeDelta;
             obj->anim.localPosY += obj->anim.velocityY * timeDelta;
@@ -1174,22 +1175,22 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     }
 
     if ((s8)state->heightUpdateActive == 0) {
-        (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
+        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
     }
 
     if ((coordsToMapCell(obj->anim.localPosX, obj->anim.localPosZ) == 0xe) ||
         (objGetNearestTypeTo(SKEETLA_TARGET_OBJGROUP, obj, &nearestDistance) != NULL)) {
-        state->pathControlFlags &= ~4;
+        state->curvesCollision.flags &= ~4;
     } else {
-        state->pathControlFlags |= 4;
+        state->curvesCollision.flags |= 4;
     }
 
-    (*gPathControlInterface)->update(obj, &state->pathControlFlags, timeDelta);
-    (*gPathControlInterface)->apply(obj, &state->pathControlFlags);
-    (*gPathControlInterface)->advance(obj, &state->pathControlFlags, timeDelta);
+    (*gPathControlInterface)->update(obj, &state->curvesCollision, timeDelta);
+    (*gPathControlInterface)->apply(obj, &state->curvesCollision);
+    (*gPathControlInterface)->advance(obj, &state->curvesCollision, timeDelta);
 
-    obj->anim.rotY = state->pathRotY;
-    obj->anim.rotZ = state->pathRotZ;
+    obj->anim.rotY = state->curvesCollision.tiltPitch;
+    obj->anim.rotZ = state->curvesCollision.tiltRoll;
 }
 
 int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 speed) {
@@ -1283,7 +1284,7 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
  * particles for the object Tricky is linked to.
  */
 
-f32 gTrickyPathControlSetupParams[2] = {0.05f, 8.5f};
+f32 gTrickyCollisionSegmentRadii[2] = {0.05f, 8.5f};
 f32 gTrickyPathPointCollisionRadius = 8.0f;
 char sTrickyVelocityDebugFmt[] = "Vel %f\n";
 /* Unreferenced zero bytes trail the debug format in retail .sdata. */
@@ -1370,7 +1371,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     s16 turnDelta;
     int turnDeltaAbs;
 
-    debugText = gTrickyDebugStringTable;
+    debugText = (char*)gTrickyCollisionSegmentPoints;
     state = obj->extra;
     currentSpeed = state->speed;
     trickyDebugPrint(sTrickyVelocityDebugFmt, currentSpeed);
@@ -1412,7 +1413,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
 
     if (currentSpeed >= TRICKY_SMALL_SPEED_STEP) {
         trickyUpdateFacingFromMoveVector(obj, &turnDelta);
-        if (skeetla_isInWater(state) != 0) {
+        if (trickyIsInDeepWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
             state->particleTimer = gTrickyFloatZero;
@@ -1478,7 +1479,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         turnDeltaAbs = turnDelta;
 
         if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
-            if (skeetla_isInWater(state) != 0) {
+            if (trickyIsInDeepWater(state) != 0) {
                 trickyDebugPrint(debugText + TRICKY_DBG_TURN_IN_WATER);
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -1921,8 +1922,7 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     }
 }
 
-#define TRICKY_AVOIDANCE_BLEND_STEP_SCALE 0.125f
-#define TRICKY_POSITION_OFFSET_SCALE      0.1f
+#define TRICKY_POSITION_OFFSET_SCALE 0.1f
 
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance,
                                  f32 moveDistance) {
@@ -1992,7 +1992,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
         moveDistance = sqrtf(limitDistanceSq);
         {
             f32 blend = moveDistance - sqrtf(centerToEnd);
-            moveDistance = moveDistance - (blend * TRICKY_AVOIDANCE_BLEND_STEP_SCALE);
+            moveDistance = moveDistance - blend / 8.0f;
         }
     }
 
@@ -2141,7 +2141,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     TrickyState* cachedPatchIdWriteCursor;
     RomCurveDef* routeNode;
     f32* target;
-    char* debugStrings = gTrickyDebugStringTable;
+    char* debugStrings = (char*)gTrickyCollisionSegmentPoints;
     int objectWalkGroup;
     int targetWalkGroup;
     u8 didMove = 1;
@@ -2164,18 +2164,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     f32 sqz;
     f32 sqx;
     u8 walkGroupPair[2];
-    u8 routeFlags[8];
-    struct {
-        s16 angle; /* -anim.rotX */
-        s16 _pad0;
-        s16 _pad1;
-    } rot;
+    u8 routeFlags[TRICKY_ROUTE_CANDIDATE_COUNT];
+    S16Vec rotation;
     f32 delta[3];
     ObjfsaWalkGroupPatchInfo patchInfo;
-    RomCurveDef* routePtrs[9];
+    RomCurveDef* routePtrs[TRICKY_ROUTE_CANDIDATE_COUNT];
 
     if ((state->movementState < 5) && (isInWalkGroupOrPatch(&obj->anim.worldPosX) == 0)) {
-        (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
+        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
         obj->anim.localPosX = state->homePosX;
         obj->anim.localPosY = state->homePosY;
         obj->anim.localPosZ = state->homePosZ;
@@ -2682,10 +2678,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             delta[0] = tpos[0] - obj->anim.worldPosX;
             delta[1] = tpos[1] - obj->anim.worldPosY;
             delta[2] = tpos[2] - obj->anim.worldPosZ;
-            rot.angle = -obj->anim.rotX;
-            rot._pad0 = 0;
-            rot._pad1 = 0;
-            vecRotateZXY(&rot.angle, delta);
+            rotation.x = -obj->anim.rotX;
+            rotation.y = 0;
+            rotation.z = 0;
+            vecRotateZXY(&rotation.x, delta);
             if ((delta[2] > gTrickyFloatZero) && (gTrickyFloatZero != state->speed)) {
                 for (step = 0; step < 4; step++) {
                     u8 grp = routeNode->linkWalkGroups[step];
@@ -2958,7 +2954,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     state->arcMoveProgress = (adj + k) / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
                 } else {
                     k = (k - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) / (v - TRICKY_FOLLOW_ARC_MIDDLE_WINDOW);
-                    state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + k * TRICKY_FOLLOW_ARC_HALF_PROGRESS;
+                    state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + k / 2.0f;
                 }
             }
             Obj_SetParent(obj, NULL, 0);
@@ -3138,7 +3134,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             state->homePosY = obj->anim.worldPosY;
             state->homePosZ = obj->anim.worldPosZ;
         } else {
-            (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
+            (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
             obj->anim.localPosX = state->homePosX;
             obj->anim.localPosY = state->homePosY;
             obj->anim.localPosZ = state->homePosZ;
@@ -3166,11 +3162,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
 
 void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos,
                                u8 slowWhenFacingAway) {
-    struct {
-        s16 angle; /* -anim.rotX */
-        s16 _pad0;
-        s16 _pad1;
-    } rotation;
+    S16Vec rotation;
     f32 targetDelta[3];
     f32 deceleration;
     f32 deltaTime;
@@ -3208,10 +3200,10 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         targetDelta[0] = targetPos[0] - obj->anim.worldPosX;
         targetDelta[1] = targetPos[1] - obj->anim.worldPosY;
         targetDelta[2] = targetPos[2] - obj->anim.worldPosZ;
-        rotation.angle = -obj->anim.rotX;
-        rotation._pad0 = 0;
-        rotation._pad1 = 0;
-        vecRotateZXY(&rotation.angle, targetDelta);
+        rotation.x = -obj->anim.rotX;
+        rotation.y = 0;
+        rotation.z = 0;
+        vecRotateZXY(&rotation.x, targetDelta);
         if (targetDelta[2] > gTrickyFloatZero) {
             candidateSpeed = state->speed;
             candidateSpeed = candidateSpeed + TRICKY_SPEED_DECAY_STEP * timeDelta;
@@ -3310,7 +3302,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
 #define TRICKY_CONTACT_FLAME_THRESHOLD        3000.0f
 #define TRICKY_PATH_PARTICLE_SCALE            0.4f
 #define TRICKY_FIREPIPE_HEIGHT_DIST_SQ        841.0f
-#define TRICKY_LOST_EVENT_TIME                -10000.0f
+#define TRICKY_SWIM_SEED_FLOOR_Y              -10000.0f
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
@@ -3379,7 +3371,7 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
         }
     }
 
-    inWater = skeetla_isInWater(state);
+    inWater = trickyIsInDeepWater(state);
 
     if (inWater != 0) {
         trickyRequestMove(obj, 8, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
@@ -3504,7 +3496,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
     void** spawnSlot;
     FlameblastPlacement* setup;
     void** releaseSlot;
-    char* debugTextBase = gTrickyDebugStringTable;
+    char* debugTextBase = (char*)gTrickyCollisionSegmentPoints;
 
     switch (trickyState->substate) {
     case TRICKYGROWL_WINDUP:
@@ -3721,7 +3713,7 @@ static inline int trickyAcquireCirclingTarget(TrickyState* state) {
 }
 
 void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
-    char* debugTextBase = gTrickyDebugStringTable;
+    char* debugTextBase = (char*)gTrickyCollisionSegmentPoints;
     u8 movementStatus;
     int targetAcquired;
     GameObject* bestDetourWarp = NULL;
@@ -3771,7 +3763,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
                 state->substate = ANIMOBJD2_SUBSTATE_APPROACH;
                 resetValue = gTrickyFloatZero;
                 state->cooldownA = resetValue;
-                inWater = skeetla_isInWater(state);
+                inWater = trickyIsInDeepWater(state);
                 if (inWater != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -3893,7 +3885,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             if (state->cooldownA < gTrickyFloatZero) {
                 f32 rv;
                 rv = (s32)randomGetRange(0xc8, 0x258);
-                state->cooldownA = rv * TRICKY_FOLLOW_ARC_HALF_PROGRESS;
+                state->cooldownA = rv / 2.0f;
                 approachVoiceState = obj->extra;
                 if (!approachVoiceState->soundSuppressed) {
                     s16 currentMove = obj->anim.currentMove;
@@ -4089,7 +4081,7 @@ void trickyUpdateCircling(GameObject* obj, TrickyState* state) {
             }
             if (orbitMovementStatus != TRICKY_MOVEMENT_IN_PROGRESS) {
                 int useSwimMove;
-                useSwimMove = skeetla_isInWater(state);
+                useSwimMove = trickyIsInDeepWater(state);
                 if (useSwimMove != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4197,8 +4189,8 @@ const char sTrickyShouldNeverStopCirclingError[] = "error tricky should never st
  *                 gated by game bit 0x48b.
  *   tricky_moveToFollowTarget - simple swim-or-walk move toward the follow target.
  *
- * Common to all: water is detected by comparing waterLevel / eventTime /
- * currentTime to pick a swim anim vs a ground anim. tricky_fetchBall and tricky_idleAndEat play a
+ * Common to all: the collision results' water depth and floor/water heights
+ * select swim versus ground animations. tricky_fetchBall and tricky_idleAndEat play a
  * localized bark sfx unless one is already on object channel 16. Debug strings
  * are emitted via
  * trickyDebugPrint. tricky_state.h owns the TrickyState layout; the gTricky*
@@ -4230,7 +4222,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         if (sidekickBall_isHeldOrMoving(state->fetchBallObj) != 0) {
             status = trickyUpdateMovementState(obj, TRICKY_FETCH_BALL_REACH_RADIUS, state);
             if (status == TRICKY_MOVEMENT_REACHED_TARGET) {
-                useSwimAnim = skeetla_isInWater(state);
+                useSwimAnim = trickyIsInDeepWater(state);
                 if (useSwimAnim != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_FETCH_PICKUP_WATER, TRICKY_FETCH_PICKUP_BLEND_SPEED,
                                       TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
@@ -4271,7 +4263,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             status = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state);
             if (status == TRICKY_MOVEMENT_REACHED_TARGET) {
                 if (state->fetchCarryDelayTimer > gTrickyFloatZero) {
-                    useSwimAnim = skeetla_isInWater(state);
+                    useSwimAnim = trickyIsInDeepWater(state);
                     if (useSwimAnim != 0) {
                         trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4283,7 +4275,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     }
                     state->fetchCarryDelayTimer -= timeDelta;
                     if (state->fetchCarryDelayTimer <= gTrickyFloatZero) {
-                        useSwimAnim = skeetla_isInWater(state);
+                        useSwimAnim = trickyIsInDeepWater(state);
                         if (useSwimAnim != 0) {
                             state->fetchCarryDelayTimer = TRICKY_FETCH_CARRY_DELAY_FRAMES;
                         } else {
@@ -4319,7 +4311,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                     }
                 }
             } else {
-                useSwimAnim = skeetla_isInWater(state);
+                useSwimAnim = trickyIsInDeepWater(state);
                 if (useSwimAnim != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4374,7 +4366,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
     case TRICKY_FETCH_BALL_WAIT_FOR_IDLE:
         status = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state);
         if (status != TRICKY_MOVEMENT_IN_PROGRESS) {
-            useSwimAnim = skeetla_isInWater(state);
+            useSwimAnim = trickyIsInDeepWater(state);
             if (useSwimAnim != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4412,7 +4404,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             state->substate = TRICKY_FETCH_BALL_APPROACH_THROW_POINT;
         case TRICKY_FETCH_BALL_APPROACH_THROW_POINT:
             if (trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, state) == TRICKY_MOVEMENT_REACHED_TARGET) {
-                useSwimAnim = skeetla_isInWater(state);
+                useSwimAnim = trickyIsInDeepWater(state);
                 if (useSwimAnim != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_FETCH_THROW_WATER, TRICKY_FETCH_PICKUP_BLEND_SPEED,
                                       TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
@@ -4455,7 +4447,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
                     }
                 }
             }
-            inWater = skeetla_isInWater(state);
+            inWater = trickyIsInDeepWater(state);
             if (inWater != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4532,7 +4524,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
             state->tumbleweedTargetZ = -(distance * dz - trackedObj->anim.worldPosZ);
             if (trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state) ==
                 TRICKY_MOVEMENT_REACHED_TARGET) {
-                inWater = skeetla_isInWater(state);
+                inWater = trickyIsInDeepWater(state);
                 if (inWater != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4569,7 +4561,7 @@ void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state) {
 
     result = trickyUpdateMovementState(obj, TRICKY_ANIM_TRANSITION_FRAMES, state);
     if (result == TRICKY_MOVEMENT_REACHED_TARGET) {
-        inWater = skeetla_isInWater(state);
+        inWater = trickyIsInDeepWater(state);
         if (inWater != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
             state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -4698,7 +4690,7 @@ char sTrickyGuardDebugTextBlock[] = "GUARD_INIT\n"
                                     "\0";
 
 void trickyGuard(GameObject* obj, TrickyState* trickyState) {
-    char* debugText = gTrickyDebugStringTable;
+    char* debugText = (char*)gTrickyCollisionSegmentPoints;
     int helperIndex;
     TrickyState* flameSoundState;
     TrickyState* growlSoundState;
@@ -4755,7 +4747,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         trickyDebugPrint(debugText + TRICKY_DBG_GUARD_TOFRONT);
         if (trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState) ==
             TRICKY_MOVEMENT_REACHED_TARGET) {
-            if (skeetla_isInWater(trickyState) != 0) {
+            if (trickyIsInDeepWater(trickyState) != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 (trickyState)->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
                 (trickyState)->particleTimer = gTrickyFloatZero;
@@ -5018,7 +5010,7 @@ char sTrickyFlameDebugTextBlock[] = "FLAME_NONE\n"
                                     "\0\0\0";
 
 void trickyFlame(GameObject* obj, TrickyState* trickyState) {
-    char* debugTextBase = gTrickyDebugStringTable;
+    char* debugTextBase = (char*)gTrickyCollisionSegmentPoints;
     void** flameChildCursor;
     int flameScratch;
     void** releaseChildCursor;
@@ -5545,7 +5537,7 @@ void tricky_state04_nop(void) {
  * object sounds (audio/sfx). tricky_handleFeedOrTalk handles the shared
  * feeding/Y-button-item interaction and is called as a guard at the top of
  * most states. Water-vs-land animation selection (the repeated
- * waterLevel/eventTime/currentTime ladder) chooses swim vs walk anims throughout.
+ * collision water-depth/floor-height test) chooses swim vs walk anims throughout.
  */
 
 /* child objects spawned by this TU (retail OBJECTS.bin remap-source names) */
@@ -5629,7 +5621,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     f32 resetValue;
     f32 dirXSq;
 
-    debugTextBase = gTrickyDebugStringTable;
+    debugTextBase = (char*)gTrickyCollisionSegmentPoints;
     sfxTable.raw = *(u32*)gTrickyDigTunnelCompleteSfxIds;
     switch (state->substate) {
     case TRICKY_DIG_TUNNEL_INIT:
@@ -5762,7 +5754,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         targetPos = &state->digTunnelExitNode.curve->x;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
         if (moveTricky(obj, targetPos) == 0) {
-            inWater = skeetla_isInWater(state);
+            inWater = trickyIsInDeepWater(state);
             if (inWater != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -5943,7 +5935,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     int inWater;
     f32 resetValue;
 
-    debugTextBase = gTrickyDebugStringTable;
+    debugTextBase = (char*)gTrickyCollisionSegmentPoints;
     debugData = (TrickyDebugCollisionData*)debugTextBase;
     found = NULL;
     if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
@@ -5989,7 +5981,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                                                TRICKY_VOICE_PITCH_NORMAL, -1, 0);
                         }
                     }
-                    inWater = skeetla_isInWater(state);
+                    inWater = trickyIsInDeepWater(state);
                     if (inWater != 0) {
                         trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6021,7 +6013,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     }
     if (found != NULL) {
         state->groundSnapCounter = 2;
-        (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
+        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
         state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
         state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         resetValue = gTrickyFloatZero;
@@ -6061,7 +6053,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         tricky_handlePlayerContact(obj, state);
         {
             if (debugData->pathPointCollision.substateHandlers[state->substate](obj, state) == 0) {
-                inWater = skeetla_isInWater(state);
+                inWater = trickyIsInDeepWater(state);
                 if (inWater != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6244,7 +6236,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
     }
     case TRICKY_ANIM_DIG_FOOD_END:
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            b = skeetla_isInWater(state);
+            b = trickyIsInDeepWater(state);
             if (b != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6442,7 +6434,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_ANIM_HOWL_END:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
-            inWater[0] = skeetla_isInWater(trickyState);
+            inWater[0] = trickyIsInDeepWater(trickyState);
             if (inWater[0] != 0) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                 trickyState->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6623,7 +6615,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
                 }
             }
         }
-        inWater = skeetla_isInWater(state);
+        inWater = trickyIsInDeepWater(state);
         if (inWater != 0) {
             return 0;
         }
@@ -6881,7 +6873,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     interactionState = obj->extra;
                     interactionState->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
                     interactionState->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_CALLBACK;
-                    inWater = skeetla_isInWater(interactionState);
+                    inWater = trickyIsInDeepWater(interactionState);
                     if (inWater != 0) {
                         trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         interactionState->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6911,7 +6903,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                     }
                     interactionState = obj->extra;
                     interactionState->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE;
-                    inWater = skeetla_isInWater(interactionState);
+                    inWater = trickyIsInDeepWater(interactionState);
                     if (inWater != 0) {
                         trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                         interactionState->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6943,7 +6935,7 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
                 if (sequenceId != 2) {
                     interactionState->stateFlags |= TRICKY_STATE_FLAG_SEQUENCE_CALLBACK;
                 }
-                inWater = skeetla_isInWater(interactionState);
+                inWater = trickyIsInDeepWater(interactionState);
                 if (inWater != 0) {
                     trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
                     interactionState->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6993,7 +6985,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                     if (state->cooldownB.f > TRICKY_CONTACT_FLAME_THRESHOLD) {
                         state->cooldownB.f *= TRICKY_FOLLOW_ARC_HALF_PROGRESS;
                         if (mainGetBit(GAMEBIT_ITEM_TrickyFlame_Got) != 0) {
-                            inWater = skeetla_isInWater(state);
+                            inWater = trickyIsInDeepWater(state);
                             if (inWater == 0) {
                                 state->substate = TRICKY_FOLLOW_SUBSTATE_FLAME_BREATH;
                                 return;
@@ -7161,7 +7153,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
                 }
             }
 
-            isInWater = skeetla_isInWater(state);
+            isInWater = trickyIsInDeepWater(state);
 
             if (isInWater) {
                 trickyRequestMove(obj, TRICKY_ANIM_SWIM_TURN, TRICKY_FAST_MOVE_BLEND_SPEED, 0);
@@ -7325,7 +7317,7 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
     objAnimFreeChildren(obj, state, &state->foodChild);
     trickyUpdateColorVariant(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
-    objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->pathControlFlags, 1.0f, 1.0f);
+    objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->curvesCollision, 1.0f, 1.0f);
     if ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_CALLBACK) != 0) {
         sequence->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
         characterDoEyeAnims(obj, &state->eyeAnimState);
@@ -7966,7 +7958,7 @@ void Tricky_update(GameObject* obj) {
     TrickyCommandTypeList sideCommandQuery;
     TrickyVoiceSfxPair impressSfxPair;
 
-    debugTextBase = gTrickyDebugStringTable;
+    debugTextBase = (char*)gTrickyCollisionSegmentPoints;
     debugData = (TrickyDebugCollisionData*)debugTextBase;
     trickyState = obj->extra;
     commandAlreadyQueued = 0;
@@ -8014,12 +8006,12 @@ void Tricky_update(GameObject* obj) {
             trickyState->homePosX = obj->anim.worldPosX;
             trickyState->homePosY = obj->anim.worldPosY;
             trickyState->homePosZ = obj->anim.worldPosZ;
-            (*gPathControlInterface)->attachObject((void*)obj, &trickyState->pathControlFlags);
+            (*gPathControlInterface)->attachObject((void*)obj, &trickyState->curvesCollision);
             if (obj->anim.currentMove == TRICKY_ANIM_SWIM_TURN || obj->anim.currentMove == TRICKY_ANIM_SWIM) {
-                trickyState->waterLevel = TRICKY_EVENT_STALE_SECONDS;
-                trickyState->eventTime = TRICKY_LOST_EVENT_TIME;
+                trickyState->curvesCollision.resultWaterDepth = TRICKY_SWIM_MIN_DEPTH;
+                trickyState->curvesCollision.resultFloorY = TRICKY_SWIM_SEED_FLOOR_Y;
             } else {
-                trickyState->waterLevel = gTrickyFloatZero;
+                trickyState->curvesCollision.resultWaterDepth = gTrickyFloatZero;
             }
         }
         trickyState->stateFlags &= ~TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK;
@@ -8033,7 +8025,7 @@ void Tricky_update(GameObject* obj) {
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             trickyState->stateFlags &= ~(u64)TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             trickyState->groundSnapCounter = 2;
-            (*gPathControlInterface)->attachObject((void*)obj, &trickyState->pathControlFlags);
+            (*gPathControlInterface)->attachObject((void*)obj, &trickyState->curvesCollision);
             obj->anim.localPosX = trickyState->homePosX;
             obj->anim.localPosY = trickyState->homePosY;
             obj->anim.localPosZ = trickyState->homePosZ;
@@ -8520,13 +8512,14 @@ void Tricky_update(GameObject* obj) {
     Tricky_updateBlendChannelWeight(obj, trickyState);
     if (trickyState->speed > TRICKY_AUDIO_EVENT_MIN_SPEED) {
         objAudioDispatchAnimEvents(obj, &trickyState->animEvents, 1, trickyState->footPoints,
-                                   &trickyState->pathControlFlags, trickyState->speed, TRICKY_FLOAT_ONE);
+                                   &trickyState->curvesCollision, trickyState->speed, TRICKY_FLOAT_ONE);
     }
-    if (gTrickyFloatZero == trickyState->waterLevel) {
+    if (gTrickyFloatZero == trickyState->curvesCollision.resultWaterDepth) {
         waterFootstepActive = 0;
-    } else if (TRICKY_EVENT_TIME_SENTINEL == trickyState->eventTime) {
+    } else if (TRICKY_NO_FLOOR_Y == trickyState->curvesCollision.resultFloorY) {
         waterFootstepActive = 1;
-    } else if (trickyState->currentTime - trickyState->eventTime > TRICKY_EVENT_STALE_SECONDS) {
+    } else if (trickyState->curvesCollision.resultWaterY - trickyState->curvesCollision.resultFloorY >
+               TRICKY_SWIM_MIN_DEPTH) {
         waterFootstepActive = 1;
     } else {
         waterFootstepActive = 0;
@@ -8596,7 +8589,7 @@ void Tricky_update(GameObject* obj) {
 void Tricky_init(GameObject* obj) {
     TrickyState* state;
     ObjModel* model;
-    int pathState;
+    CurvesCollisionState* collision;
     u32 colorVariant;
     u16 startPath[4];
 
@@ -8630,14 +8623,13 @@ void Tricky_init(GameObject* obj) {
     state->colorVariant = colorVariant;
     model = Obj_GetActiveModel(obj);
     model->textureRefs->swapSelector = state->colorVariant;
-    pathState = (int)&state->pathControlFlags;
-    (*gPathControlInterface)->init((void*)pathState, 1, 0xa7, 1);
+    collision = &state->curvesCollision;
+    (*gPathControlInterface)->init(collision, 1, 0xa7, 1);
     (*gPathControlInterface)
-        ->setLocalPointCollision((void*)pathState, 1, gTrickyPathPointCollision.point, &gTrickyPathPointCollisionRadius,
-                                 2);
+        ->setLocalPointCollision(collision, 1, gTrickyPathPointCollision.point, &gTrickyPathPointCollisionRadius, 2);
     (*gPathControlInterface)
-        ->setup((void*)pathState, 2, gTrickyDebugStringTable, gTrickyPathControlSetupParams, startPath);
-    (*gPathControlInterface)->attachObject((void*)obj, (void*)pathState);
+        ->setup(collision, 2, gTrickyCollisionSegmentPoints, gTrickyCollisionSegmentRadii, startPath);
+    (*gPathControlInterface)->attachObject(obj, collision);
     doNothing_onTrickyInit();
     Objfsa_UpdateWalkGroupPatches();
     state->groundSnapCounter = 2;
