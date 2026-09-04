@@ -3670,6 +3670,18 @@ accesses without the former combined geometry/table overlay. With signed chars,
 ordinary masks, and direct calls, all 89 function lengths match and text improves
 from 99.95778% to 99.97226%. No claim about Player's compiler follows from this.
 
+The subsequent patch-cache recovery removes the Tricky-specific `nopropagation`
+override: ordinary indexed access to the four cached groups and positions now
+lowers to retail's base-pointer copies and fixed member displacements. With
+propagation disabled, the same loops retain redundant zero-index shifts and
+multiplications; explicit pointers to the array elements instead move the member
+offsets into their initializers. Reproduce the distinction with
+`python tools/tricky_compiler_probe.py --versions 1.3 --propagation on` and `off`.
+The full TU temporarily falls to 99.822075% text while preserving all 89 retail
+function offsets/sizes and every non-code section's bytes. This is a source-shape
+constraint supporting normal propagation, not a claim that the full compiler
+profile or remaining register assignments have been recovered.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

@@ -1245,10 +1245,10 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     minMoveSpeed = TRICKY_SMALL_SPEED_STEP;
     if (currentSpeed < minMoveSpeed) {
         componentSpeed = minMoveSpeed * state->dirX;
-        desiredNextPos[0] = timeDelta * componentSpeed + obj->anim.worldPosX;
+        desiredNextPos[0] = componentSpeed * timeDelta + obj->anim.worldPosX;
         desiredNextPos[1] = obj->anim.worldPosY;
         componentSpeed = minMoveSpeed * state->dirZ;
-        desiredNextPos[2] = timeDelta * componentSpeed + obj->anim.worldPosZ;
+        desiredNextPos[2] = componentSpeed * timeDelta + obj->anim.worldPosZ;
     } else {
         desiredNextPos[0] = timeDelta * (state->dirX * currentSpeed) + obj->anim.worldPosX;
         desiredNextPos[1] = obj->anim.worldPosY;
@@ -1278,12 +1278,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
             trickyDebugPrint(sTrickyInWaterMessage);
         } else {
             if (state->stateIndex == TRICKY_STATE_FOLLOW_PLAYER) {
-                if (trickyGetPathSpeedDelta(obj) >= 0.0f) {
-                    pathSpeedDeltaAbs = trickyGetPathSpeedDelta(obj);
-                } else {
-                    pathSpeedDeltaAbs = trickyGetPathSpeedDelta(obj);
-                    pathSpeedDeltaAbs = -pathSpeedDeltaAbs;
-                }
+                pathSpeedDeltaAbs =
+                    trickyGetPathSpeedDelta(obj) >= 0.0f ? trickyGetPathSpeedDelta(obj) : -trickyGetPathSpeedDelta(obj);
 
                 if (pathSpeedDeltaAbs > 0.0f) {
                     state->sfxIntervalTimer -= timeDelta;
@@ -1927,11 +1923,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
 #define TRICKY_DEFAULT_STOPPING_RADIUS 5.0f
 
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
-    TrickyState* cachedPatchIdCursor;
-    TrickyState* cachedPatchTargetCursor;
     int targetPatchGroup;
-    u8* patchInfoGroupCursor;
-    TrickyState* cachedPatchIdWriteCursor;
     RomCurveDef* routeNode;
     f32* target;
     int objectWalkGroup;
@@ -1942,7 +1934,6 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     s16 linkedWalkGroupId;
     u32 prod;
     int routeDirection;
-    TrickyState* cachedPatchTargetWriteCursor;
     int i;
     u8 patchSlot;
     f32* patchTarget;
@@ -1977,10 +1968,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     if ((objectWalkGroup != 0) && (state->activeWalkGroup != objectWalkGroup)) {
         state->activeWalkGroup = objectWalkGroup;
         state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-        state->patch[0] = 0;
-        state->patch[1] = 0;
-        state->patch[2] = 0;
-        state->patch[3] = 0;
+        state->cachedPatchGroups[0] = 0;
+        state->cachedPatchGroups[1] = 0;
+        state->cachedPatchGroups[2] = 0;
+        state->cachedPatchGroups[3] = 0;
     }
     targetWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(target, &patchInfo);
     if (((objectWalkGroup != 0) && (targetWalkGroup == 0)) &&
@@ -2008,23 +1999,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     if (targetWalkGroup == state->activeWalkGroup) {
 
         state->stateFlags |= TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-        i = 0;
-        patchMaskBit = 1;
-        patchInfoGroupCursor = (u8*)&patchInfo;
-        cachedPatchIdWriteCursor = state;
-        cachedPatchTargetWriteCursor = state;
-        for (; i < 4;
-             patchInfoGroupCursor += sizeof(patchInfo.patchGroupIds[0]),
-             cachedPatchIdWriteCursor = (TrickyState*)((u8*)cachedPatchIdWriteCursor + sizeof(state->patch[0])),
-             cachedPatchTargetWriteCursor =
-                 (TrickyState*)((u8*)cachedPatchTargetWriteCursor + sizeof(state->patchTargets[0])),
-             i++, patchMaskBit <<= 1) {
+        for (i = 0, patchMaskBit = 1; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++, patchMaskBit <<= 1) {
             if (patchInfo.patchMask & patchMaskBit) {
-                cachedPatchIdWriteCursor->patch[0] =
-                    ((ObjfsaWalkGroupPatchInfo*)patchInfoGroupCursor)->patchGroupIds[0];
-                cachedPatchTargetWriteCursor->patchTargets[0].x = target[0];
-                cachedPatchTargetWriteCursor->patchTargets[0].y = target[1];
-                cachedPatchTargetWriteCursor->patchTargets[0].z = target[2];
+                state->cachedPatchGroups[i] = patchInfo.patchGroupIds[i];
+                state->cachedPatchPositions[i].x = target[0];
+                state->cachedPatchPositions[i].y = target[1];
+                state->cachedPatchPositions[i].z = target[2];
             }
         }
     }
@@ -2037,7 +2017,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         if (wgProd != 0) {
             u16* ids = patchInfo.patchGroupIds;
 
-            for (i = 0, linkedWalkGroupId = wgProd; i < 4; ids++, i++) {
+            for (i = 0, linkedWalkGroupId = wgProd; i < OBJFSA_PATCHGROUP_PATCH_COUNT; ids++, i++) {
                 if ((wgProd == *ids) && (((1 << i) & patchInfo.patchMask) != 0)) {
                     state->linkedWalkGroup = linkedWalkGroupId;
                     state->linkedPatchPos.x = target[0];
@@ -2056,17 +2036,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     if ((state->stateFlags & TRICKY_STATE_FLAG_PATH_PATCHES_VALID) != 0) {
         int slotIdx;
 
-        slotIdx = 0;
-        cachedPatchIdCursor = state;
-        cachedPatchTargetCursor = state;
-        for (; slotIdx < 4;
-             cachedPatchIdCursor = (TrickyState*)((u8*)cachedPatchIdCursor + sizeof(state->patch[0])),
-             cachedPatchTargetCursor = (TrickyState*)((u8*)cachedPatchTargetCursor + sizeof(state->patchTargets[0])),
-             slotIdx++) {
-            if (cachedPatchIdCursor->patch[0] != 0) {
-                trickyDebugPrint("Patch %d: Last xyz %f %f %f\n", slotIdx, cachedPatchTargetCursor->patchTargets[0].x,
-                                 cachedPatchTargetCursor->patchTargets[0].y,
-                                 cachedPatchTargetCursor->patchTargets[0].z);
+        for (slotIdx = 0; slotIdx < OBJFSA_PATCHGROUP_PATCH_COUNT; slotIdx++) {
+            if (state->cachedPatchGroups[slotIdx] != 0) {
+                trickyDebugPrint("Patch %d: Last xyz %f %f %f\n", slotIdx, state->cachedPatchPositions[slotIdx].x,
+                                 state->cachedPatchPositions[slotIdx].y, state->cachedPatchPositions[slotIdx].z);
             }
         }
     }
@@ -2088,10 +2061,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 if (walkGroupLink != state->activeWalkGroup) {
                     state->activeWalkGroup = walkGroupLink;
                     state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                    state->patch[0] = 0;
-                    state->patch[1] = 0;
-                    state->patch[2] = 0;
-                    state->patch[3] = 0;
+                    state->cachedPatchGroups[0] = 0;
+                    state->cachedPatchGroups[1] = 0;
+                    state->cachedPatchGroups[2] = 0;
+                    state->cachedPatchGroups[3] = 0;
                 }
             } else if (state->movementState < 5) {
                 int i;
@@ -2099,17 +2072,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 if ((u32)targetPatchGroup != 0) {
                     if (targetWalkGroup == 0) {
                         if (objectWalkGroup != 0) {
-                            for (i = 0, cachedPatchIdCursor = state; i < 4;
-                                 cachedPatchIdCursor =
-                                     (TrickyState*)((u8*)cachedPatchIdCursor + sizeof(state->patch[0])),
-                                i++) {
-                                if (cachedPatchIdCursor->patch[0] == targetPatchGroup) {
+                            for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
+                                if (state->cachedPatchGroups[i] == targetPatchGroup) {
                                     patchSlot = i;
                                     state->movementState = TRICKY_MOVE_WALK_START_PATCH;
                                     break;
                                 }
                             }
-                            if (i == 4) {
+                            if (i == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                                 if (targetPatchGroup & (state->cachedWalkGroup == 0xff)) {
                                     state->walkGroup = (int)(targetPatchGroup & 0xff00) >> 8;
                                 } else {
@@ -2119,17 +2089,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             }
                         } else {
                             if ((u32)trickyPatch != 0) {
-                                for (i = 0, cachedPatchIdCursor = state; i < 4;
-                                     cachedPatchIdCursor =
-                                         (TrickyState*)((u8*)cachedPatchIdCursor + sizeof(state->patch[0])),
-                                    i++) {
-                                    if (cachedPatchIdCursor->patch[0] == trickyPatch) {
+                                for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
+                                    if (state->cachedPatchGroups[i] == trickyPatch) {
+                                        /* Retail overwrites the group here, leaving patchSlot uninitialized. */
                                         trickyPatch = i & 0xffff;
                                         state->movementState = TRICKY_MOVE_WALK_START_PATCH;
                                         break;
                                     }
                                 }
-                                if (i == 4) {
+                                if (i == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                                     Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, trickyPatch);
                                     state->movementState = TRICKY_MOVE_WALK_PATCH_EXIT;
                                 }
@@ -2140,17 +2108,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         }
                     } else {
                         if (objectWalkGroup != 0) {
-                            for (i = 0, cachedPatchIdCursor = state; i < 4;
-                                 cachedPatchIdCursor =
-                                     (TrickyState*)((u8*)cachedPatchIdCursor + sizeof(state->patch[0])),
-                                i++) {
-                                if (cachedPatchIdCursor->patch[0] == targetPatchGroup) {
+                            for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
+                                if (state->cachedPatchGroups[i] == targetPatchGroup) {
                                     patchSlot = i;
                                     state->movementState = TRICKY_MOVE_WALK_START_PATCH;
                                     break;
                                 }
                             }
-                            if (i == 4) {
+                            if (i == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                                 state->movementState = TRICKY_MOVE_CURVE_SETUP;
                             }
                         } else {
@@ -2199,17 +2164,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                                     state->movementState = TRICKY_MOVE_CURVE_SETUP;
                                 }
                             } else {
-                                for (i = 0, cachedPatchIdCursor = state; i < 4;
-                                     cachedPatchIdCursor =
-                                         (TrickyState*)((u8*)cachedPatchIdCursor + sizeof(state->patch[0])),
-                                    i++) {
-                                    if (cachedPatchIdCursor->patch[0] == targetWalkGroup) {
+                                for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
+                                    if (state->cachedPatchGroups[i] == targetWalkGroup) {
                                         patchSlot = i;
                                         state->movementState = TRICKY_MOVE_WALK_START_PATCH;
                                         break;
                                     }
                                 }
-                                if ((i == 4) || (targetWalkGroup != state->linkedWalkGroup)) {
+                                if ((i == OBJFSA_PATCHGROUP_PATCH_COUNT) ||
+                                    (targetWalkGroup != state->linkedWalkGroup)) {
                                     state->movementState = TRICKY_MOVE_CURVE_SETUP;
                                 }
                             }
@@ -2217,17 +2180,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             u16 p = getPatchGroup(&obj->anim.worldPosX, state->activeWalkGroup);
                             if (p != 0) {
                                 if (targetWalkGroup == state->activeWalkGroup) {
-                                    for (i = 0, cachedPatchIdCursor = state; i < 4;
-                                         cachedPatchIdCursor =
-                                             (TrickyState*)((u8*)cachedPatchIdCursor + sizeof(state->patch[0])),
-                                        i++) {
-                                        if (cachedPatchIdCursor->patch[0] == p) {
+                                    for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
+                                        if (state->cachedPatchGroups[i] == p) {
                                             patchSlot = i;
                                             state->movementState = TRICKY_MOVE_WALK_START_PATCH;
                                             break;
                                         }
                                     }
-                                    if (i == 4) {
+                                    if (i == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                                         Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, p);
                                         state->movementState = TRICKY_MOVE_WALK_PATCH_EXIT;
                                     }
@@ -2271,7 +2231,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_WALK_START_PATCH:
         trickyDebugPrint("walk start patch\n");
         state->speed = previousSpeed;
-        trickyUpdateApproachSpeed(obj, 0.0f, state, patchTarget = &state->patchTargets[patchSlot].x, 1);
+        trickyUpdateApproachSpeed(obj, 0.0f, state, patchTarget = &state->cachedPatchPositions[patchSlot].x, 1);
         didMove = moveTricky(obj, patchTarget);
         break;
     case TRICKY_MOVE_WALK_PATCH_EXIT:

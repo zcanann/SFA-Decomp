@@ -6,6 +6,7 @@
 #include "main/objprint_character_api.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/curves_collision_state.h"
+#include "main/dll/objfsa.h"
 #include "game/objects/object.h"
 #include "main/objprint_sound_api.h"
 #include "main/pi_dolphin_path_api.h"
@@ -16,7 +17,7 @@
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000 /* child objects torn down this cycle */
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING                                                                               \
     0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
-#define TRICKY_STATE_FLAG_PATH_PATCHES_VALID 0x400 /* patch[] and patchTargets[] describe targetPosPtr */
+#define TRICKY_STATE_FLAG_PATH_PATCHES_VALID 0x400 /* cached patch groups and positions describe targetPosPtr */
 #define TRICKY_STATE_FLAG_COMMAND_ACTIVE     0x10  /* sidekick command/flame/dig/guard action is active */
 #define TRICKY_STATE_FLAG_RECALL_REQUEST     0x10000
 #define TRICKY_STATE_FLAG_HEEL_REQUEST       0x20000
@@ -151,8 +152,8 @@ typedef struct TrickyState {
     f32 prevLocalPosX;
     f32 prevLocalPosY;
     f32 prevLocalPosZ;
-    s16 patch[4]; /* curve-walk patch values (dll_DF trickyUpdateMovementState) */
-    Vec patchTargets[4];
+    s16 cachedPatchGroups[OBJFSA_PATCHGROUP_PATCH_COUNT];
+    Vec cachedPatchPositions[OBJFSA_PATCHGROUP_PATCH_COUNT];
     u16 activeWalkGroup; /* current active walk-group id (getPatchGroup/walkGroupFn arg; tracked vs targetWg) */
     s16 linkedWalkGroup; /* walk-group/patch id linked to activeWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
     Vec linkedPatchPos;
@@ -349,7 +350,8 @@ STATIC_ASSERT(offsetof(TrickyState, circlingWarpDetour) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, idleTimer) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, guardTarget) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, sfxRepeatTimer) == 0x738);
-STATIC_ASSERT(offsetof(TrickyState, patchTargets) == 0xA0);
+STATIC_ASSERT(offsetof(TrickyState, cachedPatchGroups) == 0x98);
+STATIC_ASSERT(offsetof(TrickyState, cachedPatchPositions) == 0xA0);
 STATIC_ASSERT(offsetof(TrickyState, linkedPatchPos) == 0xD4);
 STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision) == 0xF8);
