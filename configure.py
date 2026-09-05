@@ -1698,7 +1698,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/522_WM_GeneralS/WM_GeneralS.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/523_FireFly/FireFly.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/524_WM_spiritpl/WM_spiritpl.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/525_WM_seqpoint/WM_seqpoint.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/525_WM_seqpoint/WM_seqpoint.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/526_WM_sun/WM_sun.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/527_WM_SpiritSe/WM_SpiritSe.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/528_WM_Planets/WM_Planets.c"),

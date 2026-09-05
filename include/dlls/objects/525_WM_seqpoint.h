@@ -1,13 +1,13 @@
-#ifndef MAIN_DLL_WM_DLL_020D_WMSEQPOINT_H_
-#define MAIN_DLL_WM_DLL_020D_WMSEQPOINT_H_
+#ifndef DLLS_OBJECTS_525_WM_SEQPOINT_H_
+#define DLLS_OBJECTS_525_WM_SEQPOINT_H_
 
+#include "dlls/object_descriptor.h"
 #include "game/objects/object.h"
 #include "global.h"
 #include "main/objseq.h"
 #include "game/objects/object_setup.h"
 
-typedef struct WmSeqPointState
-{
+typedef struct WmSeqPointState {
     f32 triggerRadius;    /* 0x00: proximity radius, from placement */
     s16 conditionGameBit; /* 0x04: game bit arming the trigger (-1 = none) */
     s16 disableGameBit;   /* 0x06: set once fired; disables the point when set externally (-1 = none) */
@@ -19,8 +19,7 @@ typedef struct WmSeqPointState
     u8 skyEnabledLatch;   /* 0x0F: sky state cached when the sky-toggle sequence starts */
 } WmSeqPointState;
 
-typedef struct WmSeqPointMapData
-{
+typedef struct WmSeqPointMapData {
     ObjPlacement base;
     s8 rotXByte;          /* 0x18: rotX in 1/256 turns */
     u8 triggerMode;       /* 0x19: WMSEQPOINT_TRIGGER_* */
@@ -47,16 +46,25 @@ STATIC_ASSERT(offsetof(WmSeqPointMapData, conditionGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(WmSeqPointMapData, disableGameBit) == 0x20);
 STATIC_ASSERT(sizeof(WmSeqPointMapData) == 0x24);
 
+/* Game bit and placement id per released-spirit indicator. */
+typedef struct WmSeqPointSpiritTarget {
+    int gameBit;
+    int placementId;
+} WmSeqPointSpiritTarget;
+
 void wmseqpoint_onSeqFree(GameObject* obj);
 int wmseqpoint_SeqFn(GameObject* obj, int unused, ObjSeqState* actor);
 int wmseqpoint_getExtraSize(void);
 int wmseqpoint_getObjectTypeId(void);
 void wmseqpoint_free(void);
-void wmseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void wmseqpoint_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void wmseqpoint_hitDetect(void);
 void wmseqpoint_update(GameObject* obj);
 void wmseqpoint_init(GameObject* obj, WmSeqPointMapData* setup);
 void wmseqpoint_release(void);
 void wmseqpoint_initialise(void);
 
-#endif /* MAIN_DLL_WM_DLL_020D_WMSEQPOINT_H_ */
+extern WmSeqPointSpiritTarget gWM_seqpointSpiritTargets[];
+extern ObjectDescriptor gWM_seqpointObjDescriptor;
+
+#endif /* DLLS_OBJECTS_525_WM_SEQPOINT_H_ */

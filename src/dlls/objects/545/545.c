@@ -1,6 +1,6 @@
 /* DLL 0x0221 */
 #include "dlls/object_descriptor.h"
-#include "main/dll/WM/dll_020D_wmseqpoint.h"
+#include "dlls/objects/525_WM_seqpoint.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/object_render.h"
