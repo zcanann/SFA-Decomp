@@ -181,8 +181,8 @@ void imSnowClaw_render(GameObject* obj, int renderArg2, int renderArg3, int rend
         if (mountActive != 0) {
             obj->anim.flags |= IM_SNOW_CLAW_MOUNT_ACTIVE_FLAG;
             visible = objUpdateOpacity(mount);
-            ((void (*)(GameObject*, GameObject*, int, int, int, int, int, int, int))imSnowClaw_syncMountTransform)(
-                obj, mount, renderArg2, renderArg3, renderArg4, renderArg5, visible, state->mountAlpha, 1);
+            imSnowClaw_syncMountTransform(obj, mount, renderArg2, renderArg3, renderArg4, renderArg5, visible,
+                                          state->mountAlpha, 1);
         } else {
             obj->anim.flags &= ~IM_SNOW_CLAW_MOUNT_ACTIVE_FLAG;
         }
@@ -207,8 +207,7 @@ void imSnowClaw_hitDetect(GameObject* obj) {
 
     if (mount != NULL) {
         if ((*(IMSnowClawMountInterface**)mount->anim.dll)->getRiderMode(mount) == 2) {
-            ((void (*)(GameObject*, GameObject*, int, int, int, int, int, int, int))imSnowClaw_syncMountTransform)(
-                obj, state->mount, 0, 0, 0, 0, 0, 0, 0);
+            imSnowClaw_syncMountTransform(obj, state->mount, 0, 0, 0, 0, 0, 0, 0);
         }
     }
 }
@@ -285,7 +284,7 @@ void imSnowClaw_update(GameObject* obj) {
         } else {
             state->mountAlpha = IM_SNOW_CLAW_FULL_ALPHA;
             if (obj->anim.modelState != NULL) {
-                obj->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+                obj->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
         }
     }
