@@ -4573,6 +4573,23 @@ changes retail call/inlining topology substantially; no build settings change.
 Narrowing the directly consumed Hcurves patch-query return to `u16` breaks
 the exact attachment caller, so its `int` API is retained.
 
+Compiler choice remains open: the whole-TU regression above uses source
+already shaped under GC/1.3, not an independent reconstruction for each
+compiler. Tricky previously stalled under GC/2.0; reaching code parity and
+better data under GC/1.3 does not establish the original compiler either.
+`python tools/tricky_compiler_probe.py --whole-tu --versions 1.3 1.3.2 2.0 --link`
+now makes the same-source comparison reproducible without modifying production
+objects or flags. It reports function scores and structural differences, then
+uses the existing diagnostic linker to check retained functions, sizes, literal
+pool contents and allocated sections. `--functions` selects focused whole-TU
+rows; the default fixture mode remains available for independent C hypotheses.
+Ignored compiler options and failed builds/reports are errors, not scores.
+
+Direct retail cross-check: all 45 current mismatch instruction sites (1 tunnel,
+10 movement/voice, 34 movement-state) have identical raw words in EN v1.0,
+EN rev1, JP, PAL v1.0 and PAL rev1. Both tunnel zero-initialization pairs also
+agree byte-for-byte. This corroborates the target, not compiler provenance.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
