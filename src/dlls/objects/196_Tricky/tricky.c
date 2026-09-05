@@ -5347,8 +5347,10 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* cent
     f32 limitDistanceSq;
     f32 targetToCenterSq;
     f32 startToTargetSq;
-    f32 slope;
-    f32 intercept;
+    struct {
+        f32 slope;
+        f32 intercept;
+    } stepLine;
     f32 perpSlope;
     f32 dz;
     f32 centerToStartSq;
@@ -5384,11 +5386,12 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* cent
         return;
     }
 
-    slope = (end[2] - start[2]) / (end[0] - start[0]);
-    intercept = start[2] - (slope * start[0]);
+    /* Intersect z = slope * x + intercept with the perpendicular through center. */
+    stepLine.slope = (end[2] - start[2]) / (end[0] - start[0]);
+    stepLine.intercept = start[2] - (stepLine.slope * start[0]);
     perpSlope = (start[0] - end[0]) / (end[2] - start[2]);
-    projection.x = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
-    projection.z = (slope * projection.x) + intercept;
+    projection.x = ((center[2] - (perpSlope * center[0])) - stepLine.intercept) / (stepLine.slope - perpSlope);
+    projection.z = (stepLine.slope * projection.x) + stepLine.intercept;
 
     if (!(getXZDistanceSquared(center, &projection.x) < minDistanceSq)) {
         return;

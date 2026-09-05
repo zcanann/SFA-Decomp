@@ -4147,6 +4147,18 @@ temporary. Allocated object bytes and named layouts are unchanged apart from
 the helper rename; eight call relocations follow that name. The diagnostic link
 remains at 130 differing text bytes, with all allocated non-text sections exact.
 
+The avoidance projection is now exact. Keeping the step line's slope and
+intercept together in a two-float local record reproduces retail's `f2`/`f3`
+coefficient allocation, eliminating all twelve operand differences in
+`trickyAdjustStepAroundPoint` (128 instructions, 512 bytes). Neither arithmetic
+order nor precision changes. This is evidence for a grouped coefficient
+representation, not proof of an original type name or a shared math-library API.
+Only that function's seventeen differing object bytes change; all other function
+bytes, allocated data and named symbol layouts remain unchanged from the
+prompt-slot checkpoint. There are 162 renamed anonymous relocation targets,
+with no other relocation changes. The diagnostic link falls from 130 to 113
+differing text bytes, and every allocated non-text section is still exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
