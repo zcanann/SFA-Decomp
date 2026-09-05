@@ -1972,6 +1972,10 @@ static inline int gameUiClampMagicWidth(int value, int capacity) {
     return value > 0 ? value : 0;
 }
 
+static inline int gameUiMagicPreviewWidth(s32 value) {
+    return value > 8 ? 8 : value;
+}
+
 void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     int total = lbl_803A9364[8];
     int middleCapacity = total - 0xd;
@@ -2049,10 +2053,10 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     if (rem4 != 0) {
         tex = hudTextures[0x2D];
         if (flags) {
-            pauseMenuDrawTextureRegion(tex, middleCapacity + (seg4 + 0x24) + lbl_803DBAD0, lbl_803DBAD4, elemAlpha,
-                                       alpha, rem4, 0x12, seg4, 0);
+            pauseMenuDrawTextureRegion(tex, middleCapacity + 0x24 + seg4 + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha,
+                                       rem4, 0x12, seg4, 0);
         } else {
-            drawPartialTexture(tex, middleCapacity + (seg4 + 0x24) + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, rem4,
+            drawPartialTexture(tex, middleCapacity + 0x24 + seg4 + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, rem4,
                                0x12, seg4, 0);
         }
     }
@@ -2066,7 +2070,7 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     if (previousCurrent == total) {
         previousCurrent++;
     }
-    previewFirstWidth = (previousCurrent > 8) ? 8 : previousCurrent;
+    previewFirstWidth = gameUiMagicPreviewWidth(previousCurrent);
     seg1 = seg1 - previewFirstWidth;
     rem1 = gameUiClampMagicWidth(previousCurrent - 8, middleCapacity);
     seg2 = seg2 - rem1;
@@ -2094,11 +2098,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     if (seg4 != 0) {
         tex = hudTextures[0x33];
         if (flags) {
-            gameUiDrawTextureRegion(tex, middleCapacity + (previousCurrent + 0x24) + lbl_803DBAD0, lbl_803DBAD4,
+            gameUiDrawTextureRegion(tex, middleCapacity + 0x24 + previousCurrent + lbl_803DBAD0, lbl_803DBAD4,
                                     elemAlpha, alpha, 0x100, seg4, 0x12, 0);
         } else {
-            drawScaledTexture(tex, middleCapacity + (previousCurrent + 0x24) + gHudMagicBarX, gHudMagicBarY, alpha,
-                              0x100, seg4, 0x12, 0);
+            drawScaledTexture(tex, middleCapacity + 0x24 + previousCurrent + gHudMagicBarX, gHudMagicBarY, alpha, 0x100,
+                              seg4, 0x12, 0);
         }
     }
 }
