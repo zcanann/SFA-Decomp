@@ -158,6 +158,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
                                u8 slowWhenFacingAway);
 static inline int trickyApproachTarget(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos);
 static inline void trickySetTargetPosition(TrickyState* state, f32* targetPos);
+static inline void trickyRestoreRecoveryPosition(GameObject* obj, TrickyState* state);
 void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state);
 int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state);
 void trickyGrowl(GameObject* obj, TrickyState* trickyState);
@@ -970,9 +971,9 @@ void Tricky_init(GameObject* obj) {
     state->sideCommandPromptMask = 0;
     state->previousPathPoint = NULL;
     state->lastWalkGroup = 0;
-    state->homePosX = (obj)->anim.worldPosX;
-    state->homePosY = (obj)->anim.worldPosY;
-    state->homePosZ = (obj)->anim.worldPosZ;
+    state->recoveryPos.x = (obj)->anim.worldPosX;
+    state->recoveryPos.y = (obj)->anim.worldPosY;
+    state->recoveryPos.z = (obj)->anim.worldPosZ;
     colorVariant = state->stats->ballReturnCount / TRICKY_BALL_RETURNS_PER_COLOR;
     state->colorVariant = colorVariant;
     model = Obj_GetActiveModel(obj);
@@ -1056,9 +1057,9 @@ void Tricky_update(GameObject* obj) {
             trickyState->movementState = TRICKY_MOVE_WALK_WAIT;
             trickyState->prevSpeed = resetValue;
             trickyState->speed = resetValue;
-            trickyState->homePosX = obj->anim.worldPosX;
-            trickyState->homePosY = obj->anim.worldPosY;
-            trickyState->homePosZ = obj->anim.worldPosZ;
+            trickyState->recoveryPos.x = obj->anim.worldPosX;
+            trickyState->recoveryPos.y = obj->anim.worldPosY;
+            trickyState->recoveryPos.z = obj->anim.worldPosZ;
             (*gPathControlInterface)->attachObject((void*)obj, &trickyState->curvesCollision);
             if (obj->anim.currentMove == TRICKY_ANIM_SWIM_TURN || obj->anim.currentMove == TRICKY_ANIM_SWIM) {
                 trickyState->curvesCollision.resultWaterDepth = TRICKY_SWIM_MIN_DEPTH;
@@ -1078,14 +1079,7 @@ void Tricky_update(GameObject* obj) {
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             trickyState->groundSnapCounter = 2;
-            (*gPathControlInterface)->attachObject((void*)obj, &trickyState->curvesCollision);
-            obj->anim.localPosX = trickyState->homePosX;
-            obj->anim.localPosY = trickyState->homePosY;
-            obj->anim.localPosZ = trickyState->homePosZ;
-            obj->anim.worldPosX = trickyState->homePosX;
-            obj->anim.worldPosY = trickyState->homePosY;
-            obj->anim.worldPosZ = trickyState->homePosZ;
-            ObjHits_SyncObjectPosition(obj);
+            trickyRestoreRecoveryPosition(obj, trickyState);
             trickyState->movementState = TRICKY_MOVE_WALK_WAIT;
             resetValue = 0.0f;
             trickyState->prevSpeed = resetValue;
@@ -3193,9 +3187,9 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         resetValue = 0.0f;
         state->prevSpeed = resetValue;
         state->speed = resetValue;
-        state->homePosX = found->anim.worldPosX;
-        state->homePosY = found->anim.worldPosY;
-        state->homePosZ = found->anim.worldPosZ;
+        state->recoveryPos.x = found->anim.worldPosX;
+        state->recoveryPos.y = found->anim.worldPosY;
+        state->recoveryPos.z = found->anim.worldPosZ;
         state->stateFlags |= TRICKY_STATE_FLAG_POSITION_RELOCATED;
         state->stateFlags &= ~TRICKY_STATE_FLAG_GROUND_SNAP;
     } else {
@@ -4864,6 +4858,17 @@ static inline void trickySetDirectionAlongRoute(GameObject* obj, TrickyState* st
     }
 }
 
+static inline void trickyRestoreRecoveryPosition(GameObject* obj, TrickyState* state) {
+    (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
+    obj->anim.localPosX = state->recoveryPos.x;
+    obj->anim.localPosY = state->recoveryPos.y;
+    obj->anim.localPosZ = state->recoveryPos.z;
+    obj->anim.worldPosX = state->recoveryPos.x;
+    obj->anim.worldPosY = state->recoveryPos.y;
+    obj->anim.worldPosZ = state->recoveryPos.z;
+    ObjHits_SyncObjectPosition(obj);
+}
+
 static inline void trickyInvalidatePatchCache(TrickyState* state) {
     state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
     state->cachedPatchGroups[0] = 0;
@@ -4901,14 +4906,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     RomCurveDef* routePtrs[TRICKY_ROUTE_CANDIDATE_COUNT];
 
     if ((state->movementState < 5) && (isInWalkGroupOrPatch(&obj->anim.worldPosX) == 0)) {
-        (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
-        obj->anim.localPosX = state->homePosX;
-        obj->anim.localPosY = state->homePosY;
-        obj->anim.localPosZ = state->homePosZ;
-        obj->anim.worldPosX = state->homePosX;
-        obj->anim.worldPosY = state->homePosY;
-        obj->anim.worldPosZ = state->homePosZ;
-        ObjHits_SyncObjectPosition(obj);
+        trickyRestoreRecoveryPosition(obj, state);
     }
     target = state->targetPosPtr;
     objectWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, 0);
@@ -5592,18 +5590,11 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     }
     if (state->movementState < 5) {
         if (isInWalkGroupOrPatch(&obj->anim.worldPosX) != 0) {
-            state->homePosX = obj->anim.worldPosX;
-            state->homePosY = obj->anim.worldPosY;
-            state->homePosZ = obj->anim.worldPosZ;
+            state->recoveryPos.x = obj->anim.worldPosX;
+            state->recoveryPos.y = obj->anim.worldPosY;
+            state->recoveryPos.z = obj->anim.worldPosZ;
         } else {
-            (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
-            obj->anim.localPosX = state->homePosX;
-            obj->anim.localPosY = state->homePosY;
-            obj->anim.localPosZ = state->homePosZ;
-            obj->anim.worldPosX = state->homePosX;
-            obj->anim.worldPosY = state->homePosY;
-            obj->anim.worldPosZ = state->homePosZ;
-            ObjHits_SyncObjectPosition(obj);
+            trickyRestoreRecoveryPosition(obj, state);
         }
     }
     {

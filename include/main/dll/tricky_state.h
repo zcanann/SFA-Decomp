@@ -171,9 +171,7 @@ typedef struct TrickyState {
     u16 lastWalkGroup;    /* last nonzero walk group accepted by movement; retained during off-group traversal */
     s16 linkedPatchGroup; /* cached patch ID for linkedPatchPos; retail's update compares a group-index product */
     Vec linkedPatchPos;
-    f32 homePosX; /* home position, init from obj world pos */
-    f32 homePosY;
-    f32 homePosZ;
+    Vec recoveryPos; /* fallback position; seeded on relocation and refreshed while inside walkable areas */
     Vec patchExitPos;
     CurvesCollisionState curvesCollision;
     void* lastContactObj;
@@ -366,6 +364,9 @@ STATIC_ASSERT(offsetof(TrickyState, cachedPatchPositions) == 0xA0);
 STATIC_ASSERT(offsetof(TrickyState, lastWalkGroup) == 0xD0);
 STATIC_ASSERT(offsetof(TrickyState, linkedPatchGroup) == 0xD2);
 STATIC_ASSERT(offsetof(TrickyState, linkedPatchPos) == 0xD4);
+STATIC_ASSERT(offsetof(TrickyState, recoveryPos.x) == 0xE0);
+STATIC_ASSERT(offsetof(TrickyState, recoveryPos.y) == 0xE4);
+STATIC_ASSERT(offsetof(TrickyState, recoveryPos.z) == 0xE8);
 STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision) == 0xF8);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision.subtype) == 0x353);

@@ -3981,6 +3981,22 @@ all retail function sizes, named symbol layouts, and allocated non-text bytes
 are unchanged. The diagnostic link has 159 differing text bytes, and Tricky
 text is 99.95145% with four functions still non-exact.
 
+The former `homePosX/Y/Z` at 0xE0-0xE8 are a recovery point, not a fixed home.
+Initialization, sequence completion, and warp relocation seed the point;
+ordinary movement refreshes it while inside a walk group or patch. Leaving
+that area, or losing an active command's target, restores local and world
+position from it and synchronizes collision position. The fields now form
+`Vec recoveryPos`, with all three offsets asserted. The three identical restore
+paths share `trickyRestoreRecoveryPosition`. Every allocated Tricky section,
+named symbol layout, and all 2871 other source objects remain byte-identical.
+
+Further focused probes did not improve matching: a byte-sized branch-scan
+index prevents the retail four-way unroll; optional facing output retains a
+null check and stack traffic; widening the movement voice ID delays retail's
+16-bit truncation until the final call. Facing-helper linkage, explicit inline,
+word-counter signedness, a three-point route-turn API, and typed avoidance
+point inputs were neutral. These experiments were not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
