@@ -4037,6 +4037,15 @@ registers. Only ten object text bytes change; named layouts and allocated
 non-text bytes are unchanged. The diagnostic link drops from 145 to 135
 differing text bytes, with all 89 retail function sizes still exact.
 
+The facing helper likewise receives the freshly loaded `TrickyState*` from
+its caller. The moving branch owns a local state pointer; the stationary
+branch passes its fresh load directly after saving the old yaw and clearing
+the turn delta. This removes the five remaining facing operand differences
+from `moveTricky`, leaving ten differences in its two voice guards. Only
+`moveTricky` and the linker-stripped facing helper change object bytes; named
+layouts and allocated non-text bytes are unchanged. The diagnostic link now
+has 130 differing text bytes and Tricky text is 99.96321%.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

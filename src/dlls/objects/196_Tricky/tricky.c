@@ -137,7 +137,7 @@ static void trickyRequestIdleMove(GameObject* obj, TrickyState* state);
 int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 speed);
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
 static inline f32 trickyGetPathSpeedDelta(GameObject* obj);
-static void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut);
+static void trickyUpdateFacingFromMoveVector(GameObject* obj, TrickyState* state, s16* turnDeltaOut);
 int moveTricky(GameObject* obj, f32* targetPos);
 int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags);
 static inline RomCurveDef* trickyValidateRouteEntry(RomCurveDef* entry);
@@ -5944,7 +5944,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     }
 
     if (currentSpeed >= TRICKY_SMALL_SPEED_STEP) {
-        trickyUpdateFacingFromMoveVector(obj, &turnDelta);
+        TrickyState* facingState = obj->extra;
+        trickyUpdateFacingFromMoveVector(obj, facingState, &turnDelta);
         if (trickyIsInDeepWater(state) != 0) {
             trickyRequestMove(obj, TRICKY_ANIM_SWIM, TRICKY_TINY_MOVE_BLEND_SPEED, TRICKY_MOVE_FLAG_ROOT_TRANSLATE);
             state->waterIdleTimer = TRICKY_WATER_COOLDOWN_FRAMES;
@@ -6005,7 +6006,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
 
         previousYaw = obj->anim.rotX;
         turnDelta = 0;
-        trickyUpdateFacingFromMoveVector(obj, &turnDelta);
+        trickyUpdateFacingFromMoveVector(obj, obj->extra, &turnDelta);
         turnDeltaAbs = turnDelta;
 
         if ((state->stateFlags & TRICKY_STATE_FLAG_TURN_REQUEST) != 0) {
@@ -6059,11 +6060,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     return TRICKY_MOVEMENT_IN_PROGRESS;
 }
 
-static void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut) {
-    TrickyState* state;
+static void trickyUpdateFacingFromMoveVector(GameObject* obj, TrickyState* state, s16* turnDeltaOut) {
     int yaw;
-
-    state = (TrickyState*)obj->extra;
 
     if (((state->dirX * state->dirX) + (state->dirZ * state->dirZ)) > 0.01f) {
         yaw = (s16)getAngle(-state->dirX, -state->dirZ);
