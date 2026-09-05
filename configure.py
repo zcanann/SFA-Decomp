@@ -1481,7 +1481,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/307_sfxPlayer/sfxPlayer.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/308_texscroll2/texscroll2.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/309_texscroll/texscroll.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/310_WaveAnimato/WaveAnimato.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/310_WaveAnimato/WaveAnimato.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dlls/objects/311_AlphaAnimat/AlphaAnimat.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/312_GroundAnima/GroundAnima.c"),
             Object(Matching, "dlls/objects/313_HitAnimator/HitAnimator.c", cflags=cflags_dll_noopt_noautoinline),
