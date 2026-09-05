@@ -444,7 +444,7 @@
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "main/dll/DF/dll_0233_dfpstatue1.h"
 #include "main/dll/DF/dll_0234_dfperchwitch.h"
-#include "main/dll/dll_0235_dfptargetblock.h"
+#include "dlls/objects/565_DFP_TargetB.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
 #include "main/dll/dll_023F_dbegg.h"
 #include "main/dll/dll_025A_staticcamera.h"

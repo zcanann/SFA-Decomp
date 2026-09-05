@@ -1736,7 +1736,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/562_DFP_RotateP/DFP_RotateP.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/563_DFP_Statue1/DFP_Statue1.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/564_DFP_PerchSw/DFP_PerchSw.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/565_DFP_TargetB/DFP_TargetB.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/565_DFP_TargetB/DFP_TargetB.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/566_DFP_LaserBe/laser.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/567_DFPSpPl/DFPSpPl.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/568_LINKA_levco/LINKA_levco.c"),
