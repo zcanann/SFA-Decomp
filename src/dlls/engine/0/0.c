@@ -27,7 +27,7 @@
 #include "main/gametext_color_api.h"
 #undef GAMETEXT_COLOR_U8_ARGS
 #include "main/dll/cmenu_item_table.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"

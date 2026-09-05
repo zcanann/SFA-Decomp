@@ -444,7 +444,7 @@
 #include "main/dll/dll_00C0_projcore2.h"
 #include "main/dll/dll_00C1_projcore3.h"
 #include "main/dll/dll_00C2_projdfp1r.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/CF/laser.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"

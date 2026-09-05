@@ -2,7 +2,7 @@
 
 #include "main/audio/music_api.h"
 #include "main/audio/music_trigger_ids.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"

@@ -8,7 +8,7 @@
  * (trickySelectQueuedCommandTarget), plus small state accessors.
  */
 
-#include "main/dll/tricky_state.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dll_001E_effect5.h"
 #include "main/vecmath.h"
@@ -24,7 +24,6 @@
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
-#include "main/dll/dll_80136a40.h"
 #include "dlls/objects/201_Baddie.h"
 #include "main/dll/dll_0019_dll19func0.h"
 #include "main/track_dolphin_api.h"
@@ -44,18 +43,12 @@
 #include "main/objfx.h"
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
-#include "main/dll/skeetla.h"
 #include "main/objprint_sound_api.h"
-#include "main/dll/dll_00C4_tricky.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/objfsa_query_api.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0014_api.h"
-#include "main/dll/skeetla_anim_api.h"
 #include "main/dll/Hcurves_api.h"
-#include "main/dll/baddie/MMP_critterspit.h"
-#include "main/dll/mmp_cratercritter.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx.h"
 #include "dlls/objects/243_flameblast.h"
@@ -71,11 +64,8 @@
 #include "dlls/objects/245_SidekickBal.h"
 #include "dlls/objects/417_NW_mammoth.h"
 #include "dlls/objects/429_SH_thorntai.h"
-#include "main/dll/tricky_substates.h"
 #include "dlls/objects/209_TumbleWeedB.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/dll/skeetla_route_api.h"
-#include "main/dll/tricky_rollroute.h"
 #include "main/game_ui_interface.h"
 #include "main/sky_interface.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -117,50 +107,18 @@
 #include "main/pi_dolphin_path_api.h"
 #include "main/newshadows_audio_api.h"
 
-void trickySetSoundSuppressed(GameObject* obj, int value);
-int trickyTryPlaySound(GameObject* obj, u16 sfxId, int mouthOpenAngle);
-void trickyFreePromptChild(GameObject* obj, TrickyState* state, GameObject** childRef);
-void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
-void trickyUpdateColorVariant(GameObject* obj, TrickyState* state);
 static int trickyIsInDeepWater(TrickyState* state);
-void trickyImpress(GameObject* obj);
-int Tricky_requestRecallAndCheckBusy(GameObject* obj);
-GameObject* trickyGetStayPoint(GameObject* obj);
-int trickyGetMouthYawOffset(GameObject* obj);
-f32* trickyGetMouthPosition(GameObject* obj);
-GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
-void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);
-int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType commandType);
 static f32 trickyDecelerate(f32 speed, f32 minSpeed);
 static f32 trickyAccelerate(f32 speed, f32 maxSpeed);
-void trickyUpdateCollisionAndPathState(GameObject* obj);
 static void trickyAdvanceToSegmentEnd(RomCurveWalker* route);
 static void trickyRequestIdleMove(GameObject* obj, TrickyState* state);
-int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 speed);
-int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
 static inline f32 trickyGetTargetDistanceRate(GameObject* obj);
 static void trickyUpdateFacingFromMoveVector(GameObject* obj, TrickyState* state, s16* turnDeltaOut);
 static inline void trickyTurnAlongMoveDirection(GameObject* obj);
-int moveTricky(GameObject* obj, f32* targetPos);
 static inline RomCurveDef* trickyValidateRouteEntry(RomCurveDef* entry);
-RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* state, RomCurveDef* routeDef, int targetWalkGroup,
-                                               int directionBits);
-RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int targetWalkGroup);
-int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteDirections,
-                                  int targetWalkGroup);
-RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeDirection);
-void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteDirections, s16 objectWalkGroup,
-                                     RomCurveDef** outRoutes);
-void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* center, f32 minDistance, f32 moveDistance);
-void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos);
-int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state);
-void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos,
-                               u8 slowWhenFacingAway);
 static inline int trickyApproachTarget(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos);
 static inline void trickySetTargetPosition(TrickyState* state, f32* targetPos);
 static inline void trickyRestoreRecoveryPosition(GameObject* obj, TrickyState* state);
-void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state);
-int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state);
 void trickyGrowl(GameObject* obj, TrickyState* trickyState);
 static inline int trickyAcquireBaddieAlertTarget(TrickyState* state);
 void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state);
@@ -177,53 +135,9 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState);
 int trickyGuardFindBaddieTarget(TrickyState* trickyState);
 void trickyFlame(GameObject* obj, TrickyState* trickyState);
 void tricky_state06_nop(void);
-void tricky_updateBallRoll(GameObject* obj, TrickyState* state);
-void tricky_state04_nop(void);
-void trickyDigTunnel(GameObject* obj, TrickyState* state);
-void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state);
-void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state);
-int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state);
-int tricky_substateFlameBreath(GameObject* obj, TrickyState* state);
-int tricky_substateBegForFood(GameObject* obj, TrickyState* state);
-int tricky_substateDigForFood(GameObject* obj, TrickyState* state);
-int tricky_substateIdlePick(GameObject* obj, TrickyState* state);
-u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState);
-u32 tricky_substateFidgetB(GameObject* obj, TrickyState* trickyState);
-u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState);
-int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState);
-int tricky_substateSleep(GameObject* obj, TrickyState* state);
-u32 tricky_substateWaitQueuedMove(GameObject* obj, TrickyState* trickyState);
-u32 tricky_substateReturnToHeel(GameObject* obj, TrickyState* trickyState);
-int tricky_substateFollowIdle(GameObject* obj, TrickyState* state);
-u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState);
-void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state);
-void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState);
-int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state);
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state);
-GameObject* trickyFindRecallWarp(GameObject* obj, TrickyState* state);
-void tricky_stateIdleWander(GameObject* obj, TrickyState* state);
-void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state);
-int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence);
-void Tricky_requestRecall(GameObject* obj);
-int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj);
-void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* targetObj);
-u8 Tricky_getEnergyMax(GameObject* obj);
-u8 Tricky_getEnergy(GameObject* obj);
-void sideCommandEnable(GameObject* obj, GameObject* targetObj, enum TrickyCommandKind commandKind,
-                       enum TrickyCommandType commandType);
-int Tricky_getCurrentCommandPhase(GameObject* obj, int* outCommandPhase);
-int Tricky_updateSideCommandPrompts(GameObject* obj);
-int Tricky_getAvailableCommands(GameObject* obj);
-int Tricky_getExtraSize(void);
-void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
-void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender);
-void Tricky_hitDetect(GameObject* obj);
 static inline void trickyResetCommandState(TrickyState* state);
 static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state);
-void Tricky_update(GameObject* obj);
-void Tricky_init(GameObject* obj);
-void trickyReportError(const char* fmt, ...);
-void trickyDebugPrint(const char* fmt, ...);
 
 typedef struct TrickyBaddieTargetPlacement {
     ObjPlacement base;

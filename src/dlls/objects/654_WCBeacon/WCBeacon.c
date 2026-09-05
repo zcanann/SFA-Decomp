@@ -15,10 +15,9 @@
  *    sequence once.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "sys/objects/lifecycle.h"
 #include "main/dll/WC/WCbeacon.h"
-#include "main/dll/dll_00C4_tricky.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"

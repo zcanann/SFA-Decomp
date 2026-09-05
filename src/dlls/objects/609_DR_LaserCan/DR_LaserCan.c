@@ -4,7 +4,7 @@
 
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/maketex_timer_api.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/vecmath.h"
 #include "sys/objects/lifecycle.h"

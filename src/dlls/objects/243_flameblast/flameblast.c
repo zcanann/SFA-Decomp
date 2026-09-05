@@ -6,7 +6,7 @@
  * delay, and retires when Tricky requests cleanup or is no longer present.
  */
 #include "dlls/objects/243_flameblast.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/frame_timing.h"
 #include "main/objfx.h"
 #include "main/vecmath.h"

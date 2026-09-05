@@ -51,7 +51,7 @@
 #include "main/render_lactions_api.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/dll/headdisplay.h"
 #include "main/sky.h"

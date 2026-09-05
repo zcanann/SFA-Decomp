@@ -14,7 +14,7 @@
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "sys/objects/lifecycle.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/debug.h"
 #include "main/render_envfx_api.h"
 #include "game/objects/object.h"

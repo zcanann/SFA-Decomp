@@ -19,7 +19,7 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/player_api.h"
 #include "main/objtype.h"
 

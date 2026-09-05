@@ -14,7 +14,7 @@
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/dll_0004_dummy04.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_005A_staffcollision.h"
 #include "main/dll/player_api.h"
 #include "main/fileio.h"

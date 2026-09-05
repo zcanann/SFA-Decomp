@@ -35,7 +35,7 @@
 #include "main/dll/viewfinder.h"
 #include "track/intersect_api.h"
 #include "main/lightmap.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_005A_staffcollision.h"
 #include "main/camera_shake_api.h"
 #include "main/dll/boneparticleeffect_interface.h"

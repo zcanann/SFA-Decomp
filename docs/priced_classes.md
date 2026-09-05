@@ -4641,6 +4641,31 @@ neutral; sharing turn-angle calculation still added ten register differences,
 and single-delta accumulation removed five target instructions. Those probes
 are not retained. Matching remains 87/89 functions and 41 linked text bytes.
 
+Tricky now has one canonical owner header, `include/dlls/objects/196_Tricky.h`.
+It contains the state, layout assertions, descriptor interface, query records
+and 76 signature-checked APIs formerly spread across ten Tricky-only headers,
+including misattributed Skeetla and MMP fragments. Direct consumers include the
+canonical owner. The mixed `dll_80136a40.h` now declares only its actual debug
+and fatal-error services; the unrelated game-UI `tricky_api.h` is untouched.
+Private implementation declarations and foreign placement views remain local.
+Movement API arguments now say stopping radius and slow-when-facing-away.
+
+All 119 Tricky function bodies, the state definitions/assertions and descriptor
+interface are preserved verbatim. Tricky's raw object is unchanged; 2,866 of
+2,872 source objects are raw-identical. The remaining six (`engine/7`, error
+display, gameloop_main, objprint_dolphin, pi_dolphin and pi_videoinit) only
+renumber anonymous symbols, with exact code, allocated data, named layouts and
+normalized relocations. Standalone-header compilation, source-path audit, both
+build gates, formatting and 79 tooling tests pass.
+
+Mixed-argument order probes retain the existing `(obj, radius, state)` API:
+float-first and float-last forms change argument setup in 18 functions without
+fixing the movement-state register swap. In an isolated tunnel context,
+reusing the approach result as the second loop's index emits the target `li` /
+`mr` initialization, but leaves seven to nine register differences across all
+six declaration orders. A separate result temporary returns to the existing
+one-instruction residual. None of these probes is retained in production.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

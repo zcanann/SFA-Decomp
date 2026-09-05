@@ -7,7 +7,7 @@
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
 #include "main/mm.h"

@@ -25,7 +25,7 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_looped_object_api.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/path_control_interface.h"
 #include "main/gamebit_ids.h"

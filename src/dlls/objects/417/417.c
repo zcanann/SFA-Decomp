@@ -8,7 +8,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/curve.h"
 #include "main/dll/dll_0000_gameui_api.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "dlls/objects/201_Baddie.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/path_control_interface.h"

@@ -6,7 +6,7 @@
  */
 #include "dlls/objects/251.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/gamebits_api.h"

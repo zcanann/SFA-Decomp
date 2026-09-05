@@ -10,7 +10,7 @@
 #include "dlls/objects/418_NW_tricky.h"
 
 #include "main/audio/sfx_ids.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "dlls/objects/201_Baddie.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
@@ -20,7 +20,6 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_stop_channel_api.h"
-#include "main/dll/dll_80136a40.h"
 #include "main/objtype.h"
 
 #define NW_TRICKY_SHARPCLAW_OBJECT_GROUP 3
