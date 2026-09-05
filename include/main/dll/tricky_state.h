@@ -16,8 +16,6 @@
 
 enum {
     TRICKY_ROUTE_CANDIDATE_COUNT = 8,
-    TRICKY_PATH_SEARCH_CACHE_INDEX = TRICKY_ROUTE_CANDIDATE_COUNT,
-    TRICKY_PATH_SEARCH_COUNT = TRICKY_ROUTE_CANDIDATE_COUNT + 1,
 };
 
 /* Tricky movement and command flags. */
@@ -202,10 +200,11 @@ typedef struct TrickyState {
     u16 savedWalkGroup;               /* destination snapshot taken before movement chooses a fallback route */
     u8 cachedRouteDirection;
     u8 pad537[1];
-    PathSearch pathSearches[TRICKY_PATH_SEARCH_COUNT]; /* eight candidates and one cached route search */
-    RomCurveDef* cachedRouteEntry;                     /* last point returned from the cached path search */
-    int cachedTargetWalkGroup;                         /* target walk group of that path search */
-    f32* previousTargetPosPtr;                         /* identity of the target whose position was saved last update */
+    PathSearch candidateSearches[TRICKY_ROUTE_CANDIDATE_COUNT];
+    PathSearch cachedPathSearch;
+    RomCurveDef* cachedRouteEntry; /* last point returned from the cached path search */
+    int cachedTargetWalkGroup;     /* target walk group of that path search */
+    f32* previousTargetPosPtr;     /* identity of the target whose position was saved last update */
     Vec previousTargetPos;
     union {
         struct {
@@ -392,8 +391,9 @@ STATIC_ASSERT(offsetof(TrickyState, cachedWalkGroup) == 0x530);
 STATIC_ASSERT(offsetof(TrickyState, walkGroup) == 0x532);
 STATIC_ASSERT(offsetof(TrickyState, savedWalkGroup) == 0x534);
 STATIC_ASSERT(offsetof(TrickyState, cachedRouteDirection) == 0x536);
-STATIC_ASSERT(offsetof(TrickyState, pathSearches) == 0x538);
-STATIC_ASSERT(offsetof(TrickyState, pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]) == 0x6B8);
+STATIC_ASSERT(offsetof(TrickyState, candidateSearches) == 0x538);
+STATIC_ASSERT(sizeof(((TrickyState*)0)->candidateSearches) == 0x180);
+STATIC_ASSERT(offsetof(TrickyState, cachedPathSearch) == 0x6B8);
 STATIC_ASSERT(offsetof(TrickyState, cachedRouteEntry) == 0x6E8);
 STATIC_ASSERT(offsetof(TrickyState, cachedTargetWalkGroup) == 0x6EC);
 STATIC_ASSERT(offsetof(TrickyState, playerObj) == 0x4);

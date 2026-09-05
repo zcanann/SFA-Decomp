@@ -940,15 +940,15 @@ void Tricky_init(GameObject* obj) {
     }
     (obj)->animEventCallback = tricky_SeqFn;
     objAddObjectType(obj, TRICKY_OBJGROUP);
-    pathSearchInit(&state->pathSearches[0]);
-    pathSearchInit(&state->pathSearches[1]);
-    pathSearchInit(&state->pathSearches[2]);
-    pathSearchInit(&state->pathSearches[3]);
-    pathSearchInit(&state->pathSearches[4]);
-    pathSearchInit(&state->pathSearches[5]);
-    pathSearchInit(&state->pathSearches[6]);
-    pathSearchInit(&state->pathSearches[7]);
-    pathSearchInit(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
+    pathSearchInit(&state->candidateSearches[0]);
+    pathSearchInit(&state->candidateSearches[1]);
+    pathSearchInit(&state->candidateSearches[2]);
+    pathSearchInit(&state->candidateSearches[3]);
+    pathSearchInit(&state->candidateSearches[4]);
+    pathSearchInit(&state->candidateSearches[5]);
+    pathSearchInit(&state->candidateSearches[6]);
+    pathSearchInit(&state->candidateSearches[7]);
+    pathSearchInit(&state->cachedPathSearch);
     state->stats = (*gMapEventInterface)->getTrickyStats();
     state->playerObj = Obj_GetPlayerObject();
     state->stateIndex = TRICKY_STATE_ATTACH_TO_WALKGROUP;
@@ -1713,15 +1713,15 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
     u32 objId = (u32)obj;
 
     state = obj->extra;
-    freeAndNull((void**)&state->pathSearches[0].nodes);
-    freeAndNull((void**)&state->pathSearches[1].nodes);
-    freeAndNull((void**)&state->pathSearches[2].nodes);
-    freeAndNull((void**)&state->pathSearches[3].nodes);
-    freeAndNull((void**)&state->pathSearches[4].nodes);
-    freeAndNull((void**)&state->pathSearches[5].nodes);
-    freeAndNull((void**)&state->pathSearches[6].nodes);
-    freeAndNull((void**)&state->pathSearches[7].nodes);
-    freeAndNull((void**)&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX].nodes);
+    freeAndNull((void**)&state->candidateSearches[0].nodes);
+    freeAndNull((void**)&state->candidateSearches[1].nodes);
+    freeAndNull((void**)&state->candidateSearches[2].nodes);
+    freeAndNull((void**)&state->candidateSearches[3].nodes);
+    freeAndNull((void**)&state->candidateSearches[4].nodes);
+    freeAndNull((void**)&state->candidateSearches[5].nodes);
+    freeAndNull((void**)&state->candidateSearches[6].nodes);
+    freeAndNull((void**)&state->candidateSearches[7].nodes);
+    freeAndNull((void**)&state->cachedPathSearch.nodes);
     objFreeObjectType(obj, TRICKY_OBJGROUP);
     (*gExpgfxInterface)->freeSource(objId);
     if ((shouldKeepFlameChildren == 0) && ((state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) != 0)) {
@@ -4927,16 +4927,16 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     }
                 }
                 if (linkIndex == ROMCURVE_LINK_COUNT) {
-                    pathSearchBegin(&state->pathSearches[0], state->route.nextNode, state->targetPosPtr,
+                    pathSearchBegin(&state->candidateSearches[0], state->route.nextNode, state->targetPosPtr,
                                     state->walkGroup, state->route.reverse);
-                    pathSearchBegin(&state->pathSearches[1], state->route.previousNode, state->targetPosPtr,
+                    pathSearchBegin(&state->candidateSearches[1], state->route.previousNode, state->targetPosPtr,
                                     state->walkGroup, state->route.reverse ^ 1);
                     searchResult = PATH_SEARCH_PENDING;
                     searchPass = 0;
                     while (++searchPass < 100 && searchResult != PATH_SEARCH_REACHED_TARGET) {
-                        searchResult = pathSearchStep(&state->pathSearches[0], 1);
+                        searchResult = pathSearchStep(&state->candidateSearches[0], 1);
                         if (searchResult != PATH_SEARCH_REACHED_TARGET) {
-                            searchResult = pathSearchStep(&state->pathSearches[1], 1);
+                            searchResult = pathSearchStep(&state->candidateSearches[1], 1);
                             switch (searchResult) {
                             case PATH_SEARCH_PENDING:
                                 break;
@@ -5571,7 +5571,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
 
     for (routeIndex = 0; routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
         if (candidateRoutes[routeIndex] != NULL) {
-            pathSearchBegin(&state->pathSearches[routeIndex], candidateRoutes[routeIndex], state->targetPosPtr,
+            pathSearchBegin(&state->candidateSearches[routeIndex], candidateRoutes[routeIndex], state->targetPosPtr,
                             targetWalkGroup, candidateRouteDirections[routeIndex]);
         }
     }
@@ -5580,7 +5580,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
         inactiveCandidateCount = 0;
         for (candidateIndex = 0; candidateIndex < TRICKY_ROUTE_CANDIDATE_COUNT; candidateIndex++) {
             if (candidateRoutes[candidateIndex] != NULL) {
-                routeStatus[candidateIndex] = pathSearchStep(&state->pathSearches[candidateIndex], 1);
+                routeStatus[candidateIndex] = pathSearchStep(&state->candidateSearches[candidateIndex], 1);
             } else {
                 routeStatus[candidateIndex] = PATH_SEARCH_EXHAUSTED;
             }
@@ -5600,7 +5600,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
             for (searchIndex = 0; searchIndex < TRICKY_ROUTE_CANDIDATE_COUNT; searchIndex++) {
                 if (candidateRoutes[searchIndex] != NULL) {
                     routeStatus[searchIndex] =
-                        pathSearchStep(&state->pathSearches[searchIndex], TRICKY_PATH_SEARCH_BULK_STEPS);
+                        pathSearchStep(&state->candidateSearches[searchIndex], TRICKY_PATH_SEARCH_BULK_STEPS);
                     if (routeStatus[searchIndex] == PATH_SEARCH_REACHED_TARGET) {
                         return searchIndex;
                     }
@@ -5621,7 +5621,7 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, in
     }
 
     if ((state->cachedTargetWalkGroup == targetWalkGroup) && (state->cachedRouteEntry == route)) {
-        state->cachedRouteEntry = pathSearchGetNextPoint(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
+        state->cachedRouteEntry = pathSearchGetNextPoint(&state->cachedPathSearch);
         if (state->cachedRouteEntry == NULL) {
             return NULL;
         }
@@ -5632,15 +5632,13 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, in
         }
     }
 
-    pathSearchBegin(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX], route, state->targetPosPtr, targetWalkGroup,
-                    state->route.reverse);
-    if (pathSearchStep(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX], TRICKY_PATH_SEARCH_BULK_STEPS) !=
-        PATH_SEARCH_REACHED_TARGET) {
+    pathSearchBegin(&state->cachedPathSearch, route, state->targetPosPtr, targetWalkGroup, state->route.reverse);
+    if (pathSearchStep(&state->cachedPathSearch, TRICKY_PATH_SEARCH_BULK_STEPS) != PATH_SEARCH_REACHED_TARGET) {
         return NULL;
     }
 
-    pathSearchBuildPath(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
-    state->cachedRouteEntry = pathSearchGetNextPoint(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
+    pathSearchBuildPath(&state->cachedPathSearch);
+    state->cachedRouteEntry = pathSearchGetNextPoint(&state->cachedPathSearch);
     state->cachedTargetWalkGroup = targetWalkGroup;
     return state->cachedRouteEntry;
 }

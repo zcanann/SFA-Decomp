@@ -4357,6 +4357,26 @@ code-neutral, while narrow indices worsened the instruction shape. Those extra
 locals and narrow forms are not retained. The ordinary signed word index and
 link ID agree with the retail full-word accesses; no compiler settings change.
 
+The route-search storage now separates eight `candidateSearches` records from
+one `cachedPathSearch`, rather than treating the cache as a ninth candidate.
+The retail candidate loops stop at eight and index records from `+0x538` with
+stride `0x30`; the two-direction movement probe reuses the first two records.
+`trickyFindPathRouteEntry` instead always accesses `+0x6B8`, retaining its own
+returned entry and target walk-group key at `+0x6E8` and `+0x6EC`. Assertions
+cover the candidate array's `0x180` bytes and the separate cache offset. The
+older Tricky layout has the same array/separate-record distinction, but its
+different candidate count is not used as EN sizing evidence.
+
+Ordinary eight-iteration initialization and cleanup loops were tested and
+rejected: MWCC leaves loops, reducing the retail 134/120 instruction counts
+to 128/109. The explicit calls remain. The retained field recovery preserves
+the complete Tricky object SHA256
+`52c8d8303d16663c1127575598bbf19dc7b349c5f39edc2926fae5aa759a8333`;
+all 2871 other source objects also remain byte-identical after rebuilding the
+shared-header consumers. Both build gates, formatting checks, and 72 tooling
+tests pass. The diagnostic link still has 71 differing text bytes and exact
+allocated non-text sections; this is layout recovery, not a matching gain.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
