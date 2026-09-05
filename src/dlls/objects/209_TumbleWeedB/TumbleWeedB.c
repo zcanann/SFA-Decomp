@@ -220,7 +220,6 @@ void TumbleWeedBush_update(GameObject* obj) {
     f32 sunTime;
     GameObject* hitObject;
     f32 deltaX, deltaZ, distance;
-    GameObject** pieceSlot;
     int pieceIndex;
 
     state = obj->extra;
@@ -231,14 +230,14 @@ void TumbleWeedBush_update(GameObject* obj) {
                                        TUMBLEWEED_BUSH_HIT_COLOR_G, TUMBLEWEED_BUSH_HIT_COLOR_B);
             Sfx_PlayFromObject(obj, SFXTRIG_wp_swdtest222_280);
             for (pieceIndex = 0; (u8)pieceIndex < state->pieceCount; pieceIndex++) {
-                pieceSlot = &state->pieceObjects[(u8)pieceIndex];
-                if (*pieceSlot != NULL) {
+                if (state->pieceObjects[(u8)pieceIndex] != NULL) {
                     if (obj->anim.romDefNo == TUMBLEWEED_BUSH_SEQUENCE_A) {
                         if ((*gSkyInterface)->getSunPosition(&sunTime) == 0) {
                             continue;
                         }
                     }
-                    TUMBLEWEED_INTERFACE(*pieceSlot)->fall(*pieceSlot);
+                    TUMBLEWEED_INTERFACE(state->pieceObjects[(u8)pieceIndex])
+                        ->fall(state->pieceObjects[(u8)pieceIndex]);
                 }
             }
         }
@@ -252,10 +251,10 @@ void TumbleWeedBush_update(GameObject* obj) {
     }
     pieceIndex = 0;
     for (; (u8)pieceIndex < state->pieceCount; pieceIndex++) {
-        pieceSlot = &state->pieceObjects[(u8)pieceIndex];
-        if (*pieceSlot != NULL) {
-            if (TUMBLEWEED_INTERFACE(*pieceSlot)->getPhase(*pieceSlot) > 1) {
-                *pieceSlot = NULL;
+        if (state->pieceObjects[(u8)pieceIndex] != NULL) {
+            if (TUMBLEWEED_INTERFACE(state->pieceObjects[(u8)pieceIndex])
+                    ->getPhase(state->pieceObjects[(u8)pieceIndex]) > 1) {
+                state->pieceObjects[(u8)pieceIndex] = NULL;
             }
         }
     }
@@ -331,17 +330,16 @@ GameObject* tumbleweedbush_findNearestActive(f32* position) {
         objects = objectList;
     }
     while (objectIndex < objectCount) {
-        if ((*objects)->anim.romDefNo == TUMBLEWEED_BUSH_SIBLING_B) {
-            if (((TumbleweedState*)(*objects)->extra)->phase > TUMBLEWEED_PHASE_ARMED) {
-                f32 distance = vec3f_distanceSquared(&(*objects)->anim.worldPosX, position);
+        if (objects[objectIndex]->anim.romDefNo == TUMBLEWEED_BUSH_SIBLING_B) {
+            if (((TumbleweedState*)objects[objectIndex]->extra)->phase > TUMBLEWEED_PHASE_ARMED) {
+                f32 distance = vec3f_distanceSquared(&objects[objectIndex]->anim.worldPosX, position);
 
                 if (distance < nearestDistance) {
                     nearestDistance = distance;
-                    nearestObj = *objects;
+                    nearestObj = objects[objectIndex];
                 }
             }
         }
-        objects++;
         objectIndex++;
     }
     return nearestObj;
@@ -717,7 +715,7 @@ void tumbleweed_updateStateMachine(GameObject* obj) {
             while (ObjMsg_Pop(obj, &messageId, 0, 0) != 0) {
                 if (messageId == TUMBLEWEED_MESSAGE_PICKUP) {
                     gameBitIncrement(GAMEBIT_ITEM_FireWeed_Count);
-                    ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_lockoff22);
+                    Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                     state->flags |= TUMBLEWEED_EFFECT_FLAGS_ALL;
                 }
             }

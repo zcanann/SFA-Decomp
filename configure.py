@@ -1383,7 +1383,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/206/206.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/207_CannonClaw/CannonClaw.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/208_Grimble/Grimble.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/209_TumbleWeedB/TumbleWeedB.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/209_TumbleWeedB/TumbleWeedB.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/211/211.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/212_SkeetlaWall/SkeetlaWall.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/213_Kaldachom/Kaldachom.c", cflags=cflags_dll_noopt_noautoinline),
