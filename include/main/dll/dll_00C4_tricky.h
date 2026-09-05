@@ -75,7 +75,7 @@ STATIC_ASSERT(offsetof(TrickyCompanionInterface, getCurrentCommandPhase) == 0x48
 
 void trickyReportError(const char* fmt, ...);
 void trickyDebugPrint(const char* fmt, ...);
-GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state);
+GameObject* trickyFindRecallWarp(GameObject* obj, TrickyState* state);
 void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state);
 void tricky_stateIdleWander(GameObject* obj, TrickyState* state);
 int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj);

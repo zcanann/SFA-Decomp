@@ -4057,6 +4057,18 @@ anonymous relocation symbols, demonstrating why equal fuzzy scores alone cannot
 establish object identity. Ignoring those names is reported separately, not
 treated as complete linker-semantic normalization.
 
+The state words at `0x71C..0x727` now have coherent follow, baddie-alert, guard,
+and flame views. Follow's heel timer holds the closer stopping radius, inhibits
+ambient activities, and permits offscreen recall; baddie bark uses the same word
+for its separately reset voice interval. The flame callback belongs beside its
+two curve-node references, not inside the follow timer view. Retail loads and
+stores establish each offset, and the layout assertions cover all three words
+of each recovered view. `trickyFindRecallWarp` at `0x80144E40` replaces the old
+group-number name: it chooses the nearest warp to the player that improves on
+Tricky's current distance, only while Tricky is offscreen. All function and
+allocated-section bytes remain unchanged; only that function's symbol name and
+call relocation change. All 2871 other source objects are byte-identical.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

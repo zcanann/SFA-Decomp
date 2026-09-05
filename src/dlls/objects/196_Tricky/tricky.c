@@ -199,7 +199,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state);
 void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState);
 int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state);
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state);
-GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state);
+GameObject* trickyFindRecallWarp(GameObject* obj, TrickyState* state);
 void tricky_stateIdleWander(GameObject* obj, TrickyState* state);
 void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state);
 int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence);
@@ -1235,32 +1235,33 @@ void Tricky_update(GameObject* obj) {
                         trickyState->stateIndex = TRICKY_STATE_FLAME;
                         switch (trickyState->followObj->anim.romDefNo) {
                         case TRICKY_COMMAND_TARGET_DIM_ICE_WALL:
-                            trickyState->actionCallback = dimicewall_countdownCallback;
+                            trickyState->flameTargetCallback = dimicewall_countdownCallback;
                             break;
                         case TRICKY_COMMAND_TARGET_DIM_TRUTH_HORN:
-                            trickyState->actionCallback = dimtruthhornice_countdownCallback;
+                            trickyState->flameTargetCallback = dimtruthhornice_countdownCallback;
                             break;
                         case TRICKY_COMMAND_TARGET_VFP_FLAMEPOINT:
-                            trickyState->actionCallback = vfpflamepoint_countdownCallback;
+                            trickyState->flameTargetCallback = vfpflamepoint_countdownCallback;
                             break;
                         case TRICKY_COMMAND_TARGET_DIM_LOG_FIRE:
-                            trickyState->actionCallback = dimlogfire_countdownCallback;
+                            trickyState->flameTargetCallback = dimlogfire_countdownCallback;
                             break;
                         case TRICKY_COMMAND_TARGET_DR_CHIMMEY:
-                            trickyState->actionCallback = drchimmey_countdownCallback;
+                            trickyState->flameTargetCallback = drchimmey_countdownCallback;
                             break;
                         case TRICKY_COMMAND_TARGET_CCEYE_VINES:
                         case TRICKY_COMMAND_TARGET_BURNABLE_VINE:
                         case TRICKY_COMMAND_TARGET_ARW_TIMED_MIN:
                         case TRICKY_COMMAND_TARGET_MS_PLANTING_SEED:
                         case TRICKY_COMMAND_TARGET_ICE_HOLE:
-                            trickyState->actionCallback = NULL;
+                            trickyState->flameTargetCallback = NULL;
                             break;
                         case TRICKY_COMMAND_TARGET_SH_BEACON:
-                            trickyState->actionCallback = (TrickyActionCallback)sh_beacon_resetFadeTimerCallback;
+                            trickyState->flameTargetCallback =
+                                (TrickyFlameTargetCallback)sh_beacon_resetFadeTimerCallback;
                             break;
                         case TRICKY_COMMAND_TARGET_WC_BEACON:
-                            trickyState->actionCallback = (TrickyActionCallback)wcbeacon_aButtonCallback;
+                            trickyState->flameTargetCallback = (TrickyFlameTargetCallback)wcbeacon_aButtonCallback;
                             break;
                         default:
                             trickyResetCommandState(trickyState);
@@ -1314,7 +1315,7 @@ void Tricky_update(GameObject* obj) {
             } else {
                 trickyResetCommandState(trickyState);
             }
-            trickyState->cooldownA = TRICKY_RECALL_COOLDOWN_FRAMES;
+            trickyState->followHeelTimer = TRICKY_RECALL_COOLDOWN_FRAMES;
         } else if ((flags & TRICKY_STATE_FLAG_GUARD_REQUEST) != 0) {
             trickyState->followObj = obj;
             trickyState->stateIndex = TRICKY_STATE_IDLE_WANDER;
@@ -1582,7 +1583,7 @@ static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
 static inline void trickyResetCommandState(TrickyState* state) {
     state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
     state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
-    state->cooldownA = 0.0f;
+    state->followHeelTimer = 0.0f;
     state->playerContactTimer = 0.0f;
     state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
     state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
@@ -2187,31 +2188,32 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
     }
 }
 
-GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
-    GameObject** objs;
-    int count;
-    GameObject* result;
-    f32 d;
-    f32 bestD;
-    int i;
+GameObject* trickyFindRecallWarp(GameObject* obj, TrickyState* state) {
+    GameObject** warpCursor;
+    int warpCount;
+    GameObject* nearestWarp;
+    f32 trickyToPlayerSq;
+    f32 nearestWarpToPlayerSq;
+    int warpIndex;
 
-    result = 0;
-    objs = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &count);
-    d = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
-    if ((d >= TRICKY_REMOTE_RECALL_DISTANCE_SQ) || (state->cooldownA > 0.0f)) {
+    nearestWarp = 0;
+    warpCursor = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
+    trickyToPlayerSq = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
+    if ((trickyToPlayerSq >= TRICKY_REMOTE_RECALL_DISTANCE_SQ) || (state->followHeelTimer > 0.0f)) {
         if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
-            bestD = TRICKY_MAX_DISTANCE;
-            for (i = 0; i < count; i++) {
-                f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
-                if (cd < d && cd < bestD) {
-                    bestD = cd;
-                    result = *objs;
+            nearestWarpToPlayerSq = TRICKY_MAX_DISTANCE;
+            for (warpIndex = 0; warpIndex < warpCount; warpIndex++) {
+                f32 warpToPlayerSq =
+                    getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*warpCursor)->anim.worldPosX);
+                if (warpToPlayerSq < trickyToPlayerSq && warpToPlayerSq < nearestWarpToPlayerSq) {
+                    nearestWarpToPlayerSq = warpToPlayerSq;
+                    nearestWarp = *warpCursor;
                 }
-                objs++;
+                warpCursor++;
             }
         }
     }
-    return result;
+    return nearestWarp;
 }
 
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
@@ -2448,7 +2450,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     if (trickyState->idleActivityDelayActive != 0U) {
         trickyState->idleTimer -= timeDelta;
         if (trickyState->idleTimer <= 0.0f) {
-            trickyState->cooldownA = 300.0f;
+            trickyState->followHeelTimer = 300.0f;
             randomDelay = randomGetRange(TRICKY_IDLE_ACTIVITY_DELAY_MIN_FRAMES, TRICKY_IDLE_ACTIVITY_DELAY_MAX_FRAMES);
             trickyState->idleTimer = (f32)(s32)randomDelay;
             trickyState->idleActivityDelayActive = 0;
@@ -2485,7 +2487,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
             trickyState->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
             return 1;
         }
-        if (trickyState->cooldownA > 0.0f) {
+        if (trickyState->followHeelTimer > 0.0f) {
             tricky_startRandomIdleMove(obj, trickyState);
         } else {
             if (trickyState->questPromptChild != NULL) {
@@ -2520,7 +2522,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
 
     state->followObj = state->playerObj;
     trickySetTargetPosition(state, &state->followObj->anim.worldPosX);
-    if (0.0f == state->cooldownA) {
+    if (0.0f == state->followHeelTimer) {
         {
             s8 idleCommandPhase;
             idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
@@ -2560,7 +2562,7 @@ u32 tricky_substateReturnToHeel(GameObject* obj, TrickyState* trickyState) {
     }
     result = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, (TrickyState*)trickyState);
     if (result == 1) {
-        if (0.0f == trickyState->cooldownA) {
+        if (0.0f == trickyState->followHeelTimer) {
             trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
         return 1;
@@ -2636,7 +2638,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         state->foodForceBlinkTimer = childTimerReset;
         state->foodBlinkTimer = childTimerReset;
     }
-    if ((*gSkyInterface)->getSunPosition(0) != 0 && state->cooldownA <= 0.0f &&
+    if ((*gSkyInterface)->getSunPosition(0) != 0 && state->followHeelTimer <= 0.0f &&
         mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0) {
         trickyRequestMove(obj, TRICKY_ANIM_HOWL_START, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
         trickyTryPlaySound(obj, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH);
@@ -2992,7 +2994,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
             state->pendingFollowRequest = TRICKY_PENDING_FOLLOW_NONE;
             return;
         }
-        found = Tricky_findNearestGroup4BObject(obj, state);
+        found = trickyFindRecallWarp(obj, state);
     }
     if (found != NULL) {
         state->groundSnapCounter = 2;
@@ -3016,9 +3018,9 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
         state->stateFlags |= TRICKY_STATE_FLAG_POSITION_RELOCATED;
         state->stateFlags &= ~TRICKY_STATE_FLAG_GROUND_SNAP;
     } else {
-        state->cooldownA -= timeDelta;
-        if (state->cooldownA < 0.0f) {
-            state->cooldownA = 0.0f;
+        state->followHeelTimer -= timeDelta;
+        if (state->followHeelTimer < 0.0f) {
+            state->followHeelTimer = 0.0f;
         }
         tricky_handlePlayerContact(obj, state);
         {
@@ -3433,7 +3435,7 @@ static inline int trickyUpdateFlameAction(GameObject* obj, TrickyState* state) {
                 trickySpawnFlameChildren(obj, state);
             }
         } else {
-            TrickyActionCallback callback = state->actionCallback;
+            TrickyFlameTargetCallback callback = state->flameTargetCallback;
             if (callback == NULL || callback(state->followObj, 1) != 0) {
                 if (obj->anim.currentMoveProgress > TRICKY_FLAME_HELPER_RELEASE_PROGRESS) {
                     trickyStopFlameChildren(obj, state);
@@ -4125,7 +4127,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 f32 resetValue;
                 state->substate = TRICKY_BADDIE_ALERT_BARK;
                 resetValue = 0.0f;
-                state->cooldownA = resetValue;
+                state->baddieBarkTimer = resetValue;
                 trickyRequestIdleMove(obj, state);
             }
         }
@@ -4212,11 +4214,11 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 state->substate = TRICKY_BADDIE_ALERT_GOTO;
                 break;
             }
-            state->cooldownA -= timeDelta;
-            if (state->cooldownA < 0.0f) {
+            state->baddieBarkTimer -= timeDelta;
+            if (state->baddieBarkTimer < 0.0f) {
                 f32 rv;
                 rv = (s32)randomGetRange(0xc8, 0x258);
-                state->cooldownA = rv / 2.0f;
+                state->baddieBarkTimer = rv / 2.0f;
                 trickyTryPlaySound(obj, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
             }
         }

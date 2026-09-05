@@ -65,7 +65,7 @@ typedef union TrickyCurveReference {
 
 STATIC_ASSERT(sizeof(TrickyCurveReference) == 4);
 
-typedef int (*TrickyActionCallback)(GameObject* obj, int amount);
+typedef int (*TrickyFlameTargetCallback)(GameObject* obj, int amount);
 
 typedef struct TrickyPackedSlots {
     u8 exclamationPromptSlot : 2;
@@ -259,21 +259,20 @@ typedef struct TrickyState {
     };
     union {
         struct {
-            f32 cooldownA; /* f32 countdown: -= timeDelta, clamped to gTrickyFloatZero; == floor gates a state/anim transition (tricky/substates/weapone6/tumbleweedbush/mmp) */
-            union {
-                f32 playerContactTimer;
-                GameObject* baddieAlertTarget;
-            };
-            union {
-                GameObject* baddieAlertWarp; /* active trickywarp detour while tracking the alert target */
-                f32 idleTimer;
-                TrickyActionCallback actionCallback;
-            };
+            f32 followHeelTimer; /* holds the closer heel radius and inhibits new ambient activities */
+            f32 playerContactTimer;
+            f32 idleTimer;
+        };
+        struct {
+            f32 baddieBarkTimer;
+            GameObject* baddieAlertTarget;
+            GameObject* baddieAlertWarp; /* active trickywarp detour while tracking the alert target */
         };
         f32 guardPoint[3]; /* guard-post position: home position minus 15 units along facing */
         struct {
             struct RomCurveDef* flameEdgeNode;   /* trickyFlame: Objfsa_FindNearestCurveType24 result */
             struct RomCurveDef* flameReturnNode; /* trickyFlame: getById(flameEdgeNode->linkIds[0]) */
+            TrickyFlameTargetCallback flameTargetCallback;
         };
     };
     union {
@@ -354,7 +353,13 @@ STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
 STATIC_ASSERT(offsetof(TrickyState, flameCommandPending) == 0x728);
-STATIC_ASSERT(offsetof(TrickyState, actionCallback) == 0x724);
+STATIC_ASSERT(offsetof(TrickyState, followHeelTimer) == 0x71C);
+STATIC_ASSERT(offsetof(TrickyState, playerContactTimer) == 0x720);
+STATIC_ASSERT(offsetof(TrickyState, baddieBarkTimer) == 0x71C);
+STATIC_ASSERT(offsetof(TrickyState, baddieAlertTarget) == 0x720);
+STATIC_ASSERT(offsetof(TrickyState, flameEdgeNode) == 0x71C);
+STATIC_ASSERT(offsetof(TrickyState, flameReturnNode) == 0x720);
+STATIC_ASSERT(offsetof(TrickyState, flameTargetCallback) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, baddieAlertWarp) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, idleTimer) == 0x724);
 STATIC_ASSERT(offsetof(TrickyState, guardTarget) == 0x72C);
