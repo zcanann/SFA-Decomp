@@ -3870,6 +3870,29 @@ at 99.92039%. An explicit render-point iterator, a direct approach-radius square
 and a shared fast/slow turn-delta local were not retained: they changed retail's
 offset placement, square/call order, or instruction count respectively.
 
+The path-search dependency now exposes its evidenced pending/reached/exhausted
+results and names the step argument `maxSteps`: it limits queue iterations, not
+elapsed time. Every direct consumer is in Tricky. The engine implementation's
+object remains byte-identical. Tricky's eight competing route searches and ninth
+cached-path workspace now share their capacities with the owning state layout.
+The direction probe's existing exhaustion-as-stop behavior is documented rather
+than mistaken for successful path discovery.
+
+With the status contract explicit, reusing the outer search counter to select
+the final surviving candidate makes `trickyFindReachableRouteIndex` exact (468
+bytes). That branch always returns, so the pass count is no longer needed. The
+same counter-reuse probes before status recovery retained all four register
+differences; the final code has none.
+
+Retail's "tricky last walk group" diagnostics and the field's nonzero updates
+identify the former `activeWalkGroup` as `lastWalkGroup` at 0xD0. It persists
+through off-group movement. Both updates now share patch-cache invalidation,
+while their full-width/16-bit comparisons remain at the call sites; forcing
+those through one integer setter added a conversion and changed signedness.
+Movement's bytes are unchanged. Only reachable-route search changes code, all
+non-code bytes and retail lengths remain exact, and the diagnostic game link
+has 222 differing text bytes. Overall Tricky text is 99.92189%.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

@@ -6,6 +6,7 @@
 #include "main/dll/rom_curve_def.h"
 #include "main/gamebits.h"
 #include "main/pi_dolphin.h"
+#include "main/pi_dolphin_path_api.h"
 #include "main/mm.h"
 #include "main/texture.h"
 #include "dolphin/os/OSInterrupt.h"
@@ -338,18 +339,18 @@ int pathSearchBuildPath(PathSearch* search) {
     return count;
 }
 
-int pathSearchStep(PathSearch* search, u32 n_) {
-    int n;
+int pathSearchStep(PathSearch* search, u32 maxSteps) {
+    int stepsRemaining;
     PathSearch* q = (PathSearch*)(int)search;
     int idx;
     int done;
     int result;
     PathSearchNode* elem;
     PathHeapEntry* heap;
-    n = n_;
+    stepsRemaining = maxSteps;
     done = 0;
-    result = 0;
-    while (done == 0 && n != 0) {
+    result = PATH_SEARCH_PENDING;
+    while (done == 0 && stepsRemaining != 0) {
         heap = q->heap;
         if (q->heapSize == 0) {
             idx = -1;
@@ -364,16 +365,16 @@ int pathSearchStep(PathSearch* search, u32 n_) {
             q->currentNode = idx;
             if (pathSearchNodeMatchesTarget(q, elem) != 0) {
                 done = 1;
-                result = 1;
+                result = PATH_SEARCH_REACHED_TARGET;
             } else {
                 elem->visited = 1;
                 pathSearchExpandNode(q, elem, idx);
             }
         } else {
             done = 1;
-            result = -1;
+            result = PATH_SEARCH_EXHAUSTED;
         }
-        n--;
+        stepsRemaining--;
     }
     return result;
 }

@@ -5,6 +5,12 @@
 
 typedef struct RomCurveDef RomCurveDef;
 
+typedef enum PathSearchStatus {
+    PATH_SEARCH_EXHAUSTED = -1,
+    PATH_SEARCH_PENDING = 0,
+    PATH_SEARCH_REACHED_TARGET = 1,
+} PathSearchStatus;
+
 typedef struct PathSearchNode {
     RomCurveDef* point;
     u32 distanceToTarget;
@@ -50,7 +56,7 @@ void pathSearchAddNeighbor(PathSearch* search, PathSearchNode* previousNode, int
 RomCurveDef* pathSearchGetNextPoint(PathSearch* search);
 int pathSearchBuildPath(PathSearch* search);
 void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx);
-int pathSearchStep(PathSearch* search, u32 timeout);
+int pathSearchStep(PathSearch* search, u32 maxSteps);
 int pathSearchBegin(PathSearch* search, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 routeFlags);
 
 #endif /* MAIN_PI_DOLPHIN_PATH_API_H_ */

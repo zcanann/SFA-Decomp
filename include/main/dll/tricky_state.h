@@ -14,6 +14,12 @@
 
 #define TRICKY_FLAME_CHILD_COUNT 7
 
+enum {
+    TRICKY_ROUTE_CANDIDATE_COUNT = 8,
+    TRICKY_PATH_SEARCH_CACHE_INDEX = TRICKY_ROUTE_CANDIDATE_COUNT,
+    TRICKY_PATH_SEARCH_COUNT = TRICKY_ROUTE_CANDIDATE_COUNT + 1,
+};
+
 /* Tricky movement and command flags. */
 #define TRICKY_STATE_FLAG_CHILDREN_ACTIVE  0x800  /* spawned child objects are active */
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000 /* child objects torn down this cycle */
@@ -162,8 +168,8 @@ typedef struct TrickyState {
     f32 prevLocalPosZ;
     s16 cachedPatchGroups[OBJFSA_PATCHGROUP_PATCH_COUNT];
     Vec cachedPatchPositions[OBJFSA_PATCHGROUP_PATCH_COUNT];
-    u16 activeWalkGroup; /* current active walk-group id (getPatchGroup/walkGroupFn arg; tracked vs targetWg) */
-    s16 linkedWalkGroup; /* walk-group/patch id linked to activeWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
+    u16 lastWalkGroup;   /* last nonzero walk group accepted by movement; retained during off-group traversal */
+    s16 linkedWalkGroup; /* walk-group/patch id linked to lastWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
     Vec linkedPatchPos;
     f32 homePosX; /* home position, init from obj world pos */
     f32 homePosY;
@@ -197,7 +203,7 @@ typedef struct TrickyState {
     u16 savedWalkGroup;  /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
     u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
     u8 pad537[1];
-    PathSearch pathSearches[9]; /* route-search workspaces, 0x538..0x6E8 */
+    PathSearch pathSearches[TRICKY_PATH_SEARCH_COUNT]; /* eight candidates and one cached route search */
     union {
         RomCurveDef*
             cachedRouteEntry; /* path-search start/next-point cache slot, validated via skeetla_validateRouteEntry */
@@ -357,6 +363,7 @@ STATIC_ASSERT(offsetof(TrickyState, guardTarget) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, sfxRepeatTimer) == 0x738);
 STATIC_ASSERT(offsetof(TrickyState, cachedPatchGroups) == 0x98);
 STATIC_ASSERT(offsetof(TrickyState, cachedPatchPositions) == 0xA0);
+STATIC_ASSERT(offsetof(TrickyState, lastWalkGroup) == 0xD0);
 STATIC_ASSERT(offsetof(TrickyState, linkedPatchPos) == 0xD4);
 STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision) == 0xF8);
@@ -371,7 +378,7 @@ STATIC_ASSERT(offsetof(TrickyState, routeSeedNode) == 0x418);
 STATIC_ASSERT(offsetof(TrickyState, route) == 0x420);
 STATIC_ASSERT(offsetof(TrickyState, route.reverse) == 0x4A0);
 STATIC_ASSERT(offsetof(TrickyState, pathSearches) == 0x538);
-STATIC_ASSERT(offsetof(TrickyState, pathSearches[8]) == 0x6B8);
+STATIC_ASSERT(offsetof(TrickyState, pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]) == 0x6B8);
 STATIC_ASSERT(offsetof(TrickyState, playerObj) == 0x4);
 STATIC_ASSERT(offsetof(TrickyState, stateIndex) == 0x8);
 STATIC_ASSERT(offsetof(TrickyState, substate) == 0xA);
