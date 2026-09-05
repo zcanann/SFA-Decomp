@@ -1,3 +1,4 @@
+#include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/226.h"
 #include "dlls/objects/201_Baddie.h"
 #include "dlls/object_descriptor.h"
@@ -575,7 +576,7 @@ extern ResourceDescriptor gRingObjDescriptor;
 extern ResourceDescriptor gSPDrapeObjDescriptor, gSPitembeamObjDescriptor, gSeqPointObjDescriptor;
 extern ResourceDescriptor gDFP_RotatePObjDescriptor, gShopItemObjDescriptor, gShopKeeperObjDescriptor,
     gShopObjDescriptor;
-extern ResourceDescriptor gSnowBikeObjDescriptor, gSnowClawObjDescriptor;
+extern ResourceDescriptor gSnowClawObjDescriptor;
 extern ResourceDescriptor gSpellStoneObjDescriptor;
 extern ResourceDescriptor gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
@@ -1806,7 +1807,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gKtLazerwallObjDescriptor,
     &gKtLazerlightObjDescriptor,
     (ResourceDescriptor*)&gKtFallingrocksObjDescriptor,
-    &gSnowBikeObjDescriptor,
+    (ResourceDescriptor*)&gSnowBikeObjDescriptor,
     (ResourceDescriptor*)&gDIMSnowHorn1ObjDescriptor,
     (ResourceDescriptor*)&gDR_EarthWarriorObjDescriptor,
     &gDR_CloudRunnerObjDescriptor,
