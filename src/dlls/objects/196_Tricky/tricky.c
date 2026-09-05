@@ -4569,9 +4569,7 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     }
 }
 
-static inline int trickyGetRouteTurnMagnitude(GameObject* obj, TrickyState* state) {
-    s16 previousYaw = getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
-    s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+static inline int trickyGetRouteTurnMagnitude(s16 previousYaw, s16 routeYaw) {
     s16 yawDelta = previousYaw - (u16)routeYaw;
     if (yawDelta > TRICKY_YAW_HALF_TURN) {
         yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
@@ -4961,9 +4959,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 } else {
                     RomCurve_setupHermiteSegment(&state->route, prevNode, node, nextNode);
                     RomCurve_stepClamped(&state->route, 0.1f);
-                    if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
-                        state->speed = speed;
-                        trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+                    {
+                        s16 previousYaw = getAngle(state->prevLocalPosX - obj->anim.localPosX,
+                                                   state->prevLocalPosZ - obj->anim.localPosZ);
+                        s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX,
+                                                state->prevLocalPosZ - state->route.posZ);
+                        if (trickyGetRouteTurnMagnitude(previousYaw, routeYaw) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+                            state->speed = speed;
+                            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+                        }
                     }
                     trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
                     moveResult = moveTricky(obj, &state->route.posX);
@@ -5127,7 +5131,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             }
         }
         if ((state->savedWalkGroup == 0) || (objectWalkGroup != state->savedWalkGroup)) {
-            if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            if (trickyGetRouteTurnMagnitude(previousYaw, routeYaw) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
                 state->speed = speed;
                 trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
             }
@@ -5153,9 +5160,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
             state->speed = trickyDecelerate(speed, 0.0f);
         }
-        if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
-            state->speed = speed;
-            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+        {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            if (trickyGetRouteTurnMagnitude(previousYaw, routeYaw) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+                state->speed = speed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+            }
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
@@ -5274,9 +5286,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
             state->speed = trickyDecelerate(speed, 0.0f);
         }
-        if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
-            state->speed = speed;
-            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+        {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            if (trickyGetRouteTurnMagnitude(previousYaw, routeYaw) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+                state->speed = speed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+            }
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
@@ -5322,9 +5339,14 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
             state->speed = trickyDecelerate(speed, 0.0f);
         }
-        if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
-            state->speed = speed;
-            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+        {
+            s16 previousYaw =
+                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+            if (trickyGetRouteTurnMagnitude(previousYaw, routeYaw) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+                state->speed = speed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
+            }
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);

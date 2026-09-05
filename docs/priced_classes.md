@@ -4026,6 +4026,17 @@ not hidden behind caller-specific helper copies. The remaining avoidance
 scalar also resisted all 288 planned swap/move/sample declaration orderings;
 the route-turn predicate and direct-angle-expression probes were neutral.
 
+The route-turn helper now accepts two signed headings rather than loading the
+object and route positions itself. Each slowdown check samples both headings
+in its own local scope. This recovers retail's `r21` for the first angle at all
+five sites, removing ten operand differences from `trickyUpdateMovementState`.
+Function-wide heading locals only move that value to `r22`; the fuzzy score
+alone does not distinguish that unsuccessful variation from the earlier `r23`.
+The remaining 34 movement differences swap the walk-group and movement-result
+registers. Only ten object text bytes change; named layouts and allocated
+non-text bytes are unchanged. The diagnostic link drops from 145 to 135
+differing text bytes, with all 89 retail function sizes still exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
