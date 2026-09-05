@@ -77,6 +77,14 @@ of every TU's compiler or an exhaustive rejection of possible GC/2.0 settings.
 The five-way control matrix, commands, identical-source hashes, full objects,
 and retail call audit are in `build/gc13_migration/239/`.
 
+Slot 429 (`SHthorntail`) independently shows the same pattern. Removing four
+prototype-identical casts around its snoring and pending-event helpers gives
+100% under GC/1.3 and 83.81869% under GC/2.0. GC/2.0 `-inline noauto` repairs
+the four callers but introduces two `SHthorntail_stepPathControl` calls absent
+from retail, leaving the TU at 96.55611%. The accepted GC/1.3 object differs
+from the original exact object only in compiler metadata. Its canonical header
+is unchanged; controls and call audits are in `build/gc13_migration/429/`.
+
 ## Reproducing the audit
 
 `tools/compiler_impact.py --all-mwcc-game --compiler GC/1.3 --output <new-directory>`
