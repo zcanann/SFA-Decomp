@@ -1487,7 +1487,7 @@ config.libs = [
             Object(Matching, "dlls/objects/313_HitAnimator/HitAnimator.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/314_VisAnimator/VisAnimator.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/315_WallAnimato/WallAnimato.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/316_XYZAnimator/XYZAnimator.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/316_XYZAnimator/XYZAnimator.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dlls/objects/317_ExplodeAnim/ExplodeAnim.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/318/318.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/319_TexFrameAni/TexFrameAni.c"),
