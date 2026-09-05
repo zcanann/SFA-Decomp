@@ -3741,6 +3741,25 @@ retail; the normal linker supplies the final four alignment bytes. The complete
 the strict matching-build ELF. The link probe now reports that whole-section
 comparison, in addition to checking the fate of the six static helper bodies.
 
+Flame lifecycle consolidation replaces ten retirement copies and seven spawn
+copies with the existing Tricky helpers, using canonical indexed child access.
+The former movement-state/loop-index coupling in `Tricky_update` is removed:
+the state is reset to `TRICKY_MOVE_WALK_WAIT`, and the retirement helper owns its
+index. This removes the extra zero load without a counter struct or other
+storage coercion. `Tricky_free` (480 bytes), `tricky_SeqFn` (1,168 bytes), and
+`tricky_substateFlameBreath` (448 bytes) are now exact. Growl, guard and flame
+also improve; `Tricky_update` has retail's length and only five register
+differences. Overall text rises from 99.78016% to 99.83353%.
+
+The approach-speed caller now reuses `trickyGetPathSpeedDelta`, and jump
+preparation uses the recovered acceleration/deceleration helpers. The former
+retains the retail opcode sequence with eight register differences, versus four
+before extraction; the latter is byte-neutral. Broader speed-clamp substitutions
+were not retained where they changed retail's conditional-assignment/ternary
+branch structure. The only remaining instruction-count difference is movement
+update's two additional register moves. The diagnostic link still has the exact
+40,744-byte `.sdata2` section.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
