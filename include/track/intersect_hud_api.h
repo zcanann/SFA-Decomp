@@ -7,18 +7,22 @@
 
 extern f32 hudMatrix[4][4];
 
-#ifdef INTERSECT_HUD_ALPHA_U8
+/* Game UI's retail callers use narrow alpha and scale arguments. */
+#ifdef INTERSECT_HUD_NARROW_ARGS
 #define INTERSECT_HUD_ALPHA_TYPE u8
+#define INTERSECT_HUD_SCALE_TYPE u16
 #else
 #define INTERSECT_HUD_ALPHA_TYPE int
+#define INTERSECT_HUD_SCALE_TYPE int
 #endif
 
-void drawTexture(void* texture, f32 x, f32 y, INTERSECT_HUD_ALPHA_TYPE alpha, int scale);
-void drawScaledTexture(void* texture, f32 x, f32 y, INTERSECT_HUD_ALPHA_TYPE alpha, int scale, int width, int height,
-                       int flags);
-void drawPartialTexture(void* texture, f32 x, f32 y, INTERSECT_HUD_ALPHA_TYPE alpha, int scale, int width, int height,
-                        int u, int v);
+void drawTexture(void* texture, f32 x, f32 y, INTERSECT_HUD_ALPHA_TYPE alpha, INTERSECT_HUD_SCALE_TYPE scale);
+void drawScaledTexture(void* texture, f32 x, f32 y, INTERSECT_HUD_ALPHA_TYPE alpha, INTERSECT_HUD_SCALE_TYPE scale,
+                       int width, int height, int flags);
+void drawPartialTexture(void* texture, f32 x, f32 y, INTERSECT_HUD_ALPHA_TYPE alpha, INTERSECT_HUD_SCALE_TYPE scale,
+                        int width, int height, int u, int v);
 #undef INTERSECT_HUD_ALPHA_TYPE
+#undef INTERSECT_HUD_SCALE_TYPE
 #ifdef INTERSECT_HUD_RECT_COLOR_POINTER
 void hudDrawRect(int x1, int y1, int x2, int y2, GXColor* color);
 #else

@@ -1142,7 +1142,9 @@ config.libs = [
         "progress_category": "game",
             "objects": [
             # dlls/engine
-            Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto"]),
+            # GC/1.3 retains the retail loader's post-store pointer reloads.
+            # See docs/engine_0_matching.md for the whole-TU comparison.
+            Object(NonMatching, "dlls/engine/0/0.c", mw_version="GC/1.3", extra_cflags=["-inline", "noauto", "-char", "signed"]),
             Object(NonMatching, "dlls/engine/1_camcontrol/camcontrol.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/2/2.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
@@ -1346,7 +1348,8 @@ config.libs = [
 
             # dlls/objects
             Object(NonMatching, "dlls/objects/195_Player/player.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", cflags=cflags_dll_noopt_noprop_noautoinline),
+            # Retail keeps 32-bit mask operations and adjacent dispatch-array offsets unfolded.
+            Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", mw_version="GC/1.3", cflags=cflags_dll_noopt, extra_cflags=["-char signed"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/197/197.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c", cflags=cflags_dll_noopt_noprop),
@@ -1776,7 +1779,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/606/606.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/607_CRFuelTank/CRFuelTank.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/608/608.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/objects/609_DR_LaserCan/DR_LaserCan.c", cflags=cflags_dll_noopt_noinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/609_DR_LaserCan/DR_LaserCan.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/610/610.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/611_GM_MazeWell/GM_MazeWell.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/612/612.c"),

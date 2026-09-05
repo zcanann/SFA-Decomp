@@ -37,7 +37,7 @@ STATIC_ASSERT(offsetof(FlameblastState, hitVolumeDelayCycles) == 0x11);
 STATIC_ASSERT(offsetof(FlameblastState, pad12) == 0x12);
 STATIC_ASSERT(sizeof(FlameblastState) == 0x14);
 
-void objSetAnimSpeedTo1(GameObject* obj);
+void flameblast_requestFree(GameObject* obj);
 int flameblast_seedVelocity(GameObject* obj, FlameblastState* state);
 int flameblast_getExtraSize(void);
 void flameblast_render(GameObject* obj);

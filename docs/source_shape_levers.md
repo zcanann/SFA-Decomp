@@ -450,6 +450,14 @@ the tell is the exit-edge materialisation in the target asm, not a wish to facto
 
 ### 11. A to-be-coalesced copy in the then-arm preserves a branch skeleton
 
+**2026-09-04 correction:** the `drlasercannon_aimAtTarget` closure below was
+conditional on an incorrect scalar reconstruction. Its N64 counterpart exposes
+a signed-angle array and clamp loop. Restoring that structure, converting the
+limit parameter in place, and retaining an expression-form absolute value makes
+the entire TU exact under its existing flags. See
+[DR_LaserCan evidence](DR_LaserCan_matching.md). The old prototype/extension-wall
+diagnosis is superseded.
+
 **Shape.** Retail keeps the guard's own join as a separate jump — `cmplwi; bne- BODY; b JOIN` —
 where we fold to `beq- JOIN`. Every control-flow respelling folds: empty then/else, `!ptr`,
 `||`, do/while+break, switch-break, while+break, even a diagnostic goto — MWCC's frontend
@@ -582,7 +590,7 @@ functions clean**. Only five carry any delta, and all five are dispositioned:
 
 | Δextsh | Δextsb | function | verdict |
 |---|---|---|---|
-| −4 | 0 | `DR_LaserCan::drlasercannon_aimAtTarget` | probed-to-priors (three type attacks already refuted) |
+| −4 | 0 | `DR_LaserCan::drlasercannon_aimAtTarget` | resolved 2026-09-04: restore N64-backed signed array and clamp loop; now 100% (see [evidence](DR_LaserCan_matching.md)) |
 | 0 | −1 | `shader::doPendingMapLoads` | flag-closed; local-removal refuted **−3.8** |
 | +1 | 0 | `modgfx/152::dll_98_spawnEffect` | store-forwarding residual, closed at compiler level |
 | +1 | 0 | `objects/332::babyCloudRunner_turnTowardTarget` | lever fires structurally, **score-neutral**, declined |

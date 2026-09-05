@@ -299,6 +299,7 @@
 #include "dlls/objects/521_WM_LevelCon.h"
 #include "dlls/objects/522_WM_GeneralS.h"
 #include "dlls/objects/599_DR_EarthWar.h"
+#include "dlls/objects/609_DR_LaserCan.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
@@ -549,7 +550,7 @@ extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor
 extern ResourceDescriptor gDfplightniObjDescriptor, gDfppowerslObjDescriptor;
 extern ResourceDescriptor gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
-extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLaserCannonObjDescriptor,
+extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
     gDrakorEnergyObjDescriptor;
 extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor;
@@ -1806,7 +1807,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gSpellStoneObjDescriptor,
     &gCrFuelTankObjDescriptor,
     &gProximityMineObjDescriptor,
-    &gDrLaserCannonObjDescriptor,
+    (ResourceDescriptor*)&gDrLaserCannonObjDescriptor,
     &gDrakorMissileObjDescriptor,
     (ResourceDescriptor*)&gGmMazeWellObjDescriptor,
     &gDll264NullResourceDescriptor,

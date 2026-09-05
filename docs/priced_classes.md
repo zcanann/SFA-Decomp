@@ -3660,6 +3660,51 @@ tools-side script left with the lane's topic file; classifications in
 
 ## 36. Two leads closed at mechanism level (2026-08-05)
 
+**Tricky counterexample (2026-09-04):** the 64-bit-promotion conclusion below is
+specific to the compiler used for that experiment, not evidence of original
+source types. `python tools/tricky_compiler_probe.py` shows GC/1.3 emitting
+`li; and` and `lis; or` from ordinary signed 32-bit masks in compound assignments;
+GC/1.3.2 and GC/2.0 fold the same snippets. Unsigned masks fold in all three.
+Tricky's GC/1.3 compile also reproduces retail's independent handler-array
+accesses without the former combined geometry/table overlay. With signed chars,
+ordinary masks, and direct calls, all 89 function lengths match and text improves
+from 99.95778% to 99.97226%. No claim about Player's compiler follows from this.
+
+The subsequent patch-cache recovery removes the Tricky-specific `nopropagation`
+override: ordinary indexed access to the four cached groups and positions now
+lowers to retail's base-pointer copies and fixed member displacements. With
+propagation disabled, the same loops retain redundant zero-index shifts and
+multiplications; explicit pointers to the array elements instead move the member
+offsets into their initializers. Reproduce the distinction with
+`python tools/tricky_compiler_probe.py --versions 1.3 --propagation on` and `off`.
+The full TU temporarily falls to 99.822075% text while preserving all 89 retail
+function offsets/sizes and every non-code section's bytes. This is a source-shape
+constraint supporting normal propagation, not a claim that the full compiler
+profile or remaining register assignments have been recovered.
+
+The flame-child recovery extends indexed access across 17 spawn/retirement loops,
+removing the state-base cursor helper, the duplicate flameblast placement overlay,
+and an artificial single-field loop-counter struct. Retail diagnostics distinguish
+state 13 (BADDIEALERT) from state 12's circling; animation 0x34 belongs to the
+growl/alert/guard flame attack, not digging. The flameblast callback formerly named
+`objSetAnimSpeedTo1` only sets `freeRequested`; its canonical API is now
+`flameblast_requestFree`. Flameblast remains byte-exact. Tricky text temporarily
+falls to 99.75482%: the changed handlers retain their mnemonic streams except
+`Tricky_update`, where the plain scalar counter exposes one additional zero load.
+Its text grows by four bytes; all non-code section bytes and all 58 constant-load
+value sequences remain unchanged. Do not restore the fake counter struct merely
+to suppress that load.
+
+Tricky's later GC/1.3 audit removes the inherited `noauto` override as well:
+the complete object SHA-256 is unchanged with the default automatic inlining.
+The source-order probe now varies automatic inlining independently of deferred
+emission and can move explicit inline definitions first or last. Neither change
+alters any allocated section in the reverse/deferred probe. Its leading 80 pool
+bytes match retail, but early water/speed literals still differ in order; moving
+inline definitions does not explain them. Independent GC/1.3 fixtures also show
+global `const float` scalars producing duplicate named/anonymous pool entries;
+static and local const scalars retain use order, not declaration order.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
