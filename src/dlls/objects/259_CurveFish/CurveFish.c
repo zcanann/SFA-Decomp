@@ -107,8 +107,8 @@ void CurveFish_update(GameObject* obj) {
                         ->getById((*gRomCurveInterface)
                                       ->find(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &curveQuery,
                                              CURVEFISH_QUERY_TYPE_COUNT, CURVEFISH_QUERY_ACTION_ANY));
-        secondNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(firstNode, 0));
-        thirdNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(secondNode, 0));
+        secondNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(firstNode, 0));
+        thirdNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(secondNode, 0));
 
         if (RomCurve_setupHermiteSegment(&state->route, firstNode, secondNode, thirdNode) != 0) {
             return;
@@ -181,7 +181,7 @@ void CurveFish_update(GameObject* obj) {
             }
 
             if (state->route.atSegmentEnd != 0) {
-                nextNode = (*gRomCurveInterface)->getRandomUnblockedLink((RomCurveDef*)state->route.nextNode, 0);
+                nextNode = (*gRomCurveInterface)->getRandomForwardLink((RomCurveDef*)state->route.nextNode, 0);
                 if (RomCurve_advanceToNextSegment(&state->route, (*gRomCurveInterface)->getById(nextNode)) != 0) {
                     state->mode = CURVEFISH_MODE_WAIT;
                     state->modeTimer = 0.0f;

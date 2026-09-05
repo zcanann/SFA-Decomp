@@ -3290,7 +3290,7 @@ void tricky_state04_nop(void) {
 }
 
 void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
-    RomCurveDef* blockedNode;
+    RomCurveDef* backwardNode;
     u8 nodeCount = 0;
     int branchCurveId;
     RomCurveDef* branchNode;
@@ -3313,7 +3313,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
                 branchMask = 1;
                 for (branchIndex = 0; branchIndex < ROMCURVE_LINK_COUNT; branchIndex++) {
                     branchCurveId = branchNode->linkIds[branchIndex];
-                    if (branchCurveId > -1 && ((branchNode->blockedLinkMask & branchMask) == 0)) {
+                    if (branchCurveId > -1 && ((branchNode->backwardLinkMask & branchMask) == 0)) {
                         nodeIds[nodeCount++] = branchCurveId;
                     }
                     branchMask <<= 1;
@@ -3327,7 +3327,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
             reverseBranchMask = 1;
             for (branchIndex = 0; branchIndex < ROMCURVE_LINK_COUNT; branchIndex++) {
                 reverseBranchCurveId = reverseBranchNode->linkIds[branchIndex];
-                if (reverseBranchCurveId > -1 && ((reverseBranchNode->blockedLinkMask & reverseBranchMask) != 0)) {
+                if (reverseBranchCurveId > -1 && ((reverseBranchNode->backwardLinkMask & reverseBranchMask) != 0)) {
                     nodeIds[nodeCount++] = reverseBranchCurveId;
                 }
                 reverseBranchMask <<= 1;
@@ -3390,20 +3390,20 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
             Objfsa_GetWalkGroupIndexAtPoint(&state->cannonballStartCurve->x, NULL)) {
             startCurve = state->cannonballStartCurve;
 
-            segmentNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(startCurve, 0));
-            blockedNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(startCurve, 0));
+            segmentNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(startCurve, 0));
+            backwardNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBackwardLink(startCurve, 0));
 
             bestDistance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &segmentNode->x);
-            distance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &blockedNode->x);
+            distance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &backwardNode->x);
 
             if (bestDistance > distance) {
                 nextSegmentNode =
-                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(segmentNode, 0));
+                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(segmentNode, 0));
                 state->route.reverse = 0;
             } else {
-                segmentNode = blockedNode;
+                segmentNode = backwardNode;
                 nextSegmentNode =
-                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(blockedNode, 0));
+                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBackwardLink(backwardNode, 0));
                 state->route.reverse = 1;
             }
 
@@ -5632,7 +5632,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
                         }
                     }
 
-                    routeFlags = (u8)(curve->blockedLinkMask >> routeSlot);
+                    routeFlags = (u8)(curve->backwardLinkMask >> routeSlot);
                     break;
                 }
             }
@@ -5804,7 +5804,7 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
     mask = 1;
     while (linkSlot < 4) {
         curveId = routeDef->linkIds[linkSlot];
-        if ((curveId > -1) && ((((routeDef->blockedLinkMask & mask) ^ routeFlagValue) == 0))) {
+        if ((curveId > -1) && ((((routeDef->backwardLinkMask & mask) ^ routeFlagValue) == 0))) {
             candidates[candidateCount] = (*gRomCurveInterface)->getById(curveId);
             if (candidates[candidateCount] != NULL) {
                 entry = candidates[candidateCount];

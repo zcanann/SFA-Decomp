@@ -5996,9 +5996,9 @@ int playerState1B(GameObject* obj, PlayerState* state, f32 fv) {
             inner->yaw = inner->targetYaw;
             sqrtf(inner->hitNormalX * inner->hitNormalX + inner->hitNormalZ * inner->hitNormalZ);
             obj->anim.rotY = 0;
-            found = (*gRomCurveInterface)->getRandomUnblockedLink(pt, -1);
+            found = (*gRomCurveInterface)->getRandomForwardLink(pt, -1);
             if (found == -1) {
-                found = (*gRomCurveInterface)->getRandomBlockedLink(pt, -1);
+                found = (*gRomCurveInterface)->getRandomBackwardLink(pt, -1);
             }
             pt2 = (*gRomCurveInterface)->getById(found);
             inner->curveEndX = pt2->x;

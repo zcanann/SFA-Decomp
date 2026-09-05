@@ -46,7 +46,7 @@ void RomCurve_initialise(void);
 #define ROMCURVE_HALF                 0.5f
 #define ROMCURVE_FIND_DISTANCE_INITIAL 3.4028235e38f
 
-int RomCurve_getUnblockedControlPointId(RomCurveDef* curve, int exclude, int pickIdx);
+int RomCurve_getForwardControlPointId(RomCurveDef* curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId(RomCurveDef* curve, int exclude, int pickIdx);
 int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW);
 
@@ -274,14 +274,14 @@ static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
     return NULL;
 }
 
-static inline int Objfsa_RomCurveIsBlocked(RomCurveDef* curve)
+static inline int Objfsa_RomCurveIsForwardEnd(RomCurveDef* curve)
 {
     int slot;
     RomCurveDef* c = curve;
 
     for (slot = 0; slot < 4; slot++)
     {
-        if (c->linkIds[slot] != -1 && (c->blockedLinkMask & (1 << slot)) == 0)
+        if (c->linkIds[slot] != -1 && (c->backwardLinkMask & (1 << slot)) == 0)
         {
             return 0;
         }
@@ -289,7 +289,7 @@ static inline int Objfsa_RomCurveIsBlocked(RomCurveDef* curve)
     return 1;
 }
 
-static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
+static inline int RomCurve_CollectForwardLinks(RomCurveDef* curve, int* ids)
 {
     int link;
     int count;
@@ -303,7 +303,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         link = *lp++;
-        if ((link > -1) && ((curve->blockedLinkMask & mask) == 0) && (link != 0))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) == 0) && (link != 0))
         {
             ids[count++] = link;
         }
@@ -312,7 +312,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
+static inline int RomCurve_CollectBackwardLinks(RomCurveDef* curve, int* ids)
 {
     int link;
     int count;
@@ -326,7 +326,7 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         link = *lp++;
-        if ((link > -1) && ((curve->blockedLinkMask & mask) != 0) && (link != 0))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) != 0) && (link != 0))
         {
             ids[count++] = link;
         }
@@ -365,7 +365,7 @@ static inline int RomCurve_pickRandomControlPointId_2A(RomCurveDef* curve)
     mask = 1;
     for (i = 0; i < 4; i = i + 1)
     {
-        if ((curve->linkIds[i] > -1) && ((curve->blockedLinkMask & mask) == 0) &&
+        if ((curve->linkIds[i] > -1) && ((curve->backwardLinkMask & mask) == 0) &&
             (curve->linkIds[i] != -1))
         {
             candidates[count++] = curve->linkIds[i];
@@ -395,7 +395,7 @@ static inline int RomCurve_pickRandomControlPointId_2B(RomCurveDef* curve)
     mask = 1;
     for (i = 0; i < 4; i = i + 1)
     {
-        if ((curve->linkIds[i] > -1) && ((curve->blockedLinkMask & mask) != 0) &&
+        if ((curve->linkIds[i] > -1) && ((curve->backwardLinkMask & mask) != 0) &&
             (curve->linkIds[i] != -1))
         {
             candidates[count++] = curve->linkIds[i];
@@ -529,7 +529,7 @@ int RomCurve_getControlPointId(RomCurveDef* curve, int exclude, int pickIdx)
     for (i = 0; i < 4; i++)
     {
         neighbor = curve->linkIds[i];
-        if (neighbor > -1 && ((s32)curve->blockedLinkMask & mask) != 0 && neighbor != exclude)
+        if (neighbor > -1 && ((s32)curve->backwardLinkMask & mask) != 0 && neighbor != exclude)
         {
             candidates[count++] = neighbor;
         }
@@ -548,7 +548,7 @@ int RomCurve_getControlPointId(RomCurveDef* curve, int exclude, int pickIdx)
     return -1;
 }
 
-int RomCurve_getUnblockedControlPointId(RomCurveDef* curve, int exclude, int pickIdx)
+int RomCurve_getForwardControlPointId(RomCurveDef* curve, int exclude, int pickIdx)
 {
     int candidates[4];
     int neighbor;
@@ -558,7 +558,7 @@ int RomCurve_getUnblockedControlPointId(RomCurveDef* curve, int exclude, int pic
     for (i = 0; i < 4; i++)
     {
         neighbor = curve->linkIds[i];
-        if (neighbor > -1 && ((s32)curve->blockedLinkMask & mask) == 0 && neighbor != exclude)
+        if (neighbor > -1 && ((s32)curve->backwardLinkMask & mask) == 0 && neighbor != exclude)
         {
             candidates[count++] = neighbor;
         }
@@ -607,7 +607,7 @@ int RomCurve_goNextPointIndexed(RomCurveWalker* state, int pickIdx)
     }
     else
     {
-        nextId = RomCurve_getUnblockedControlPointId(state->currentNode, -1, pickIdx);
+        nextId = RomCurve_getForwardControlPointId(state->currentNode, -1, pickIdx);
     }
 
     if (nextId != -1)
@@ -1301,7 +1301,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
     RomCurveDef* next;
     RomCurveDef* cur;
     int reachedForward;
-    int blocked;
+    int atForwardEnd;
     RomCurveDef* found;
     int nextId;
     f32 dx;
@@ -1327,15 +1327,15 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
         found = startNode;
         while (done == 0)
         {
-            blocked = Objfsa_RomCurveIsBlocked(found);
-            if (blocked != 0)
+            atForwardEnd = Objfsa_RomCurveIsForwardEnd(found);
+            if (atForwardEnd != 0)
             {
                 done = 1;
                 reachedForward = 0;
             }
             else
             {
-                count = RomCurve_CollectUnblockedLinks(found, cand1);
+                count = RomCurve_CollectForwardLinks(found, cand1);
                 if (count != 0)
                 {
                     nextId = cand1[randomGetRange(0, count - 1)];
@@ -1363,7 +1363,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
             posB = tmpPos;
         }
 
-        count = RomCurve_CollectUnblockedLinks(startNode, cand2);
+        count = RomCurve_CollectForwardLinks(startNode, cand2);
         if (count != 0)
         {
             nextId = cand2[randomGetRange(0, count - 1)];
@@ -1392,7 +1392,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
             }
             else
             {
-                count = RomCurve_CollectUnblockedLinks(startNode, cand3);
+                count = RomCurve_CollectForwardLinks(startNode, cand3);
                 if (count != 0)
                 {
                     nextId = cand3[randomGetRange(0, count - 1)];
@@ -1429,7 +1429,7 @@ void curves_getPos(RomCurveDef* curve, float* outX, float* outY, float* outZ, f3
     int candidates[4];
     int count;
 
-    count = RomCurve_CollectUnblockedLinks(curve, candidates);
+    count = RomCurve_CollectForwardLinks(curve, candidates);
     if (count != 0)
     {
         linkId = candidates[randomGetRange(0, count - 1)];
@@ -1465,7 +1465,7 @@ static inline int RomCurve_hasNoOpenLink(RomCurveDef* curve)
     for (k = 0; k < 4; k++)
     {
         if (curve->linkIds[k] != -1 &&
-            ((s8)curve->blockedLinkMask & (1 << k)) == 0)
+            ((s8)curve->backwardLinkMask & (1 << k)) == 0)
         {
             return 0;
         }
@@ -1504,7 +1504,7 @@ RomCurveDef* RomCurve_findProjectedCurveFromStart(RomCurveDef* curve, f32 x, f32
         for (k = 0; k < 4; k++)
         {
             n = curve->linkIds[k];
-            if (n > -1 && ((s8)(curve)->blockedLinkMask & mask[0]) == 0 && n != 0)
+            if (n > -1 && ((s8)(curve)->backwardLinkMask & mask[0]) == 0 && n != 0)
             {
                 candidates[count[0]++] = n;
             }
@@ -1694,7 +1694,7 @@ int curves_isPointInsideLoop(int curveId, f32 x, f32 y, f32 z, f32* outDistance)
         linkIndex = 0;
         while ((linkIndex < ROMCURVE_LINK_COUNT) && (nextCurveId == (int)ROMCURVE_LINK_ID_NONE))
         {
-            if ((curve->blockedLinkMask & (1 << linkIndex)) == 0)
+            if ((curve->backwardLinkMask & (1 << linkIndex)) == 0)
             {
                 nextCurveId = curve->linkIds[linkIndex];
             }
@@ -2158,7 +2158,7 @@ int curves_isNotPoint(RomCurveDef* curve)
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (curve->linkIds[i] != -1 && (curve->blockedLinkMask & (1 << i)) == 0)
+        if (curve->linkIds[i] != -1 && (curve->backwardLinkMask & (1 << i)) == 0)
         {
             return 0;
         }
@@ -2171,7 +2171,7 @@ int curves_isPoint(RomCurveDef* curve)
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (curve->linkIds[i] != -1 && (curve->blockedLinkMask & (1 << i)) != 0)
+        if (curve->linkIds[i] != -1 && (curve->backwardLinkMask & (1 << i)) != 0)
         {
             return 0;
         }
@@ -2217,14 +2217,14 @@ f32 curves_distToObj(GameObject* obj, u32 curveId)
 
 #define ROMCURVE_PLACEMENT_ANGLE(v) ((ROMCURVE_ANGLE_PI * (f32)((s32)(v) << 8)) / ROMCURVE_HALF_CIRCLE_ANGLE)
 
-static inline int RomCurve_noUnblockedLinks(RomCurveDef* curve)
+static inline int RomCurve_noForwardLinks(RomCurveDef* curve)
 {
     int bit;
     s32* lp = curve->linkIds;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
-        if ((s32)*lp++ != -1 && (curve->blockedLinkMask & (1 << bit)) == 0)
+        if ((s32)*lp++ != -1 && (curve->backwardLinkMask & (1 << bit)) == 0)
         {
             return 0;
         }
@@ -2232,14 +2232,14 @@ static inline int RomCurve_noUnblockedLinks(RomCurveDef* curve)
     return 1;
 }
 
-static inline int RomCurve_noBlockedLinks(RomCurveDef* curve)
+static inline int RomCurve_noBackwardLinks(RomCurveDef* curve)
 {
     int bit;
     s32* lp = curve->linkIds;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
-        if ((s32)*lp++ != -1 && (curve->blockedLinkMask & (1 << bit)) != 0)
+        if ((s32)*lp++ != -1 && (curve->backwardLinkMask & (1 << bit)) != 0)
         {
             return 0;
         }
@@ -2283,7 +2283,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
             segment.startZ = curve->z;
             for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++)
             {
-                if (((s32)curve->blockedLinkMask & (1 << linkIndex)) == 0)
+                if (((s32)curve->backwardLinkMask & (1 << linkIndex)) == 0)
                 {
                     linkId = curve->linkIds[linkIndex];
                     linkedCurve = RomCurve_FindByIdInline(linkId);
@@ -2365,13 +2365,13 @@ int RomCurve_buildRandomPoints(RomCurveDef* curve, f32* outX, f32* outY, f32* ou
     f32 tz;
     int idsA[ROMCURVE_LINK_COUNT];
 
-    done = RomCurve_noUnblockedLinks(curve) ? 1 : 0;
+    done = RomCurve_noForwardLinks(curve) ? 1 : 0;
     n = 0;
     if (!done)
     {
-        while (curve != NULL && !RomCurve_noUnblockedLinks(curve))
+        while (curve != NULL && !RomCurve_noForwardLinks(curve))
         {
-            count = RomCurve_CollectUnblockedLinks(curve, idsB);
+            count = RomCurve_CollectForwardLinks(curve, idsB);
             if (count != 0)
             {
                 id = idsB[randomGetRange(0, count - 1)];
@@ -2409,9 +2409,9 @@ int RomCurve_buildRandomPoints(RomCurveDef* curve, f32* outX, f32* outY, f32* ou
     }
     else
     {
-        while (curve != NULL && !RomCurve_noBlockedLinks(curve))
+        while (curve != NULL && !RomCurve_noBackwardLinks(curve))
         {
-            count = RomCurve_CollectBlockedLinks(curve, idsA);
+            count = RomCurve_CollectBackwardLinks(curve, idsA);
             if (count != 0)
             {
                 id = idsA[randomGetRange(0, count - 1)];
@@ -2456,9 +2456,9 @@ int RomCurve_countRandomPoints(RomCurveDef* curve)
     int ids[ROMCURVE_LINK_COUNT];
 
     count = 1;
-    while (curve != NULL && !RomCurve_noUnblockedLinks(curve))
+    while (curve != NULL && !RomCurve_noForwardLinks(curve))
     {
-        linkCount = RomCurve_CollectUnblockedLinks(curve, ids);
+        linkCount = RomCurve_CollectForwardLinks(curve, ids);
         if (linkCount != 0)
         {
             id = ids[randomGetRange(0, linkCount - 1)];
@@ -2553,11 +2553,11 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
         linkId = curve->linkIds[i];
         if (linkId != (int)ROMCURVE_LINK_ID_NONE)
         {
-            if ((curve->blockedLinkMask & (1 << i)) != 0)
+            if ((curve->backwardLinkMask & (1 << i)) != 0)
             {
                 outIds[0] = linkId;
             }
-            else if ((curve->blockedLinkMask & (1 << i)) == 0)
+            else if ((curve->backwardLinkMask & (1 << i)) == 0)
             {
                 outIds[2] = linkId;
             }
@@ -2580,7 +2580,7 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
         linkId = adjacent->linkIds[j];
         if (linkId != (int)ROMCURVE_LINK_ID_NONE)
         {
-            if ((adjacent->blockedLinkMask & (1 << j)) == 0)
+            if ((adjacent->backwardLinkMask & (1 << j)) == 0)
             {
                 outIds[3] = linkId;
             }
@@ -2711,7 +2711,7 @@ f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* s
     return distance;
 }
 
-int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId)
+int RomCurve_getRandomBackwardLink(RomCurveDef* curve, int excludeLinkId)
 {
     int link;
     int count;
@@ -2726,7 +2726,7 @@ int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1)
     {
         link = curve->linkIds[i];
-        if ((link > -1) && ((curve->blockedLinkMask & mask) != 0) && (link != excludeLinkId))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) != 0) && (link != excludeLinkId))
         {
             eligibleLinks[count++] = link;
         }
@@ -2762,7 +2762,7 @@ int RomCurve_getLinkIds(RomCurveDef* curve, int excludeLinkId, int* outIds)
     return count;
 }
 
-int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId)
+int RomCurve_getRandomForwardLink(RomCurveDef* curve, int excludeLinkId)
 {
     int link;
     int count;
@@ -2777,7 +2777,7 @@ int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i = i + 1)
     {
         link = curve->linkIds[i];
-        if ((link > -1) && ((curve->blockedLinkMask & mask) == 0) && (link != excludeLinkId))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) == 0) && (link != excludeLinkId))
         {
             eligibleLinks[count++] = link;
         }
@@ -2987,10 +2987,10 @@ typedef struct RomCurveDllInterface {
     ObjectDescriptorCallback findNearestOfType16;
     ObjectDescriptorCallback isPointInsideLoop;
     ObjectDescriptorCallback findEnclosingLoopOfType17;
-    ObjectDescriptorCallback getRandomUnblockedLink;
+    ObjectDescriptorCallback getRandomForwardLink;
     ObjectDescriptorCallback getLinkIds;
     ObjectDescriptorCallback getFarthestAdjacentLink;
-    ObjectDescriptorCallback getRandomBlockedLink;
+    ObjectDescriptorCallback getRandomBackwardLink;
     ObjectDescriptorCallback getNearestAdjacentLink;
     ObjectDescriptorCallback findShortestPathLink;
     ObjectDescriptorCallback getAdjacentWindow;
@@ -3006,7 +3006,7 @@ typedef struct RomCurveDllInterface {
     ObjectDescriptorCallback setClosed;
     ObjectDescriptorCallback setNextNode;
     ObjectDescriptorCallback goNextPointIndexed;
-    ObjectDescriptorCallback getUnblockedControlPointId;
+    ObjectDescriptorCallback getForwardControlPointId;
     ObjectDescriptorCallback getControlPointId;
     ObjectDescriptorCallback initFromCurveId;
 } RomCurveDllInterface;
@@ -3039,10 +3039,10 @@ RomCurveDllInterface RomCurve_funcs = {
     (ObjectDescriptorCallback)curves_findNearestOfType16,
     (ObjectDescriptorCallback)curves_isPointInsideLoop,
     (ObjectDescriptorCallback)curves_findEnclosingLoopOfType17,
-    (ObjectDescriptorCallback)RomCurve_getRandomUnblockedLink,
+    (ObjectDescriptorCallback)RomCurve_getRandomForwardLink,
     (ObjectDescriptorCallback)RomCurve_getLinkIds,
     (ObjectDescriptorCallback)RomCurve_getFarthestAdjacentLink,
-    (ObjectDescriptorCallback)RomCurve_getRandomBlockedLink,
+    (ObjectDescriptorCallback)RomCurve_getRandomBackwardLink,
     (ObjectDescriptorCallback)Objfsa_GetNearestAdjacentLink,
     (ObjectDescriptorCallback)RomCurve_findShortestPathLink,
     (ObjectDescriptorCallback)RomCurve_getAdjacentWindow,
@@ -3058,7 +3058,7 @@ RomCurveDllInterface RomCurve_funcs = {
     (ObjectDescriptorCallback)RomCurve_setClosed,
     (ObjectDescriptorCallback)RomCurve_setNextNode,
     (ObjectDescriptorCallback)RomCurve_goNextPointIndexed,
-    (ObjectDescriptorCallback)RomCurve_getUnblockedControlPointId,
+    (ObjectDescriptorCallback)RomCurve_getForwardControlPointId,
     (ObjectDescriptorCallback)RomCurve_getControlPointId,
     (ObjectDescriptorCallback)RomCurve_initFromCurveId,
 };

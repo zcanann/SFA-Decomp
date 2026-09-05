@@ -273,13 +273,13 @@ static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
     return NULL;
 }
 
-static inline int Objfsa_RomCurveIsBlocked(RomCurveDef* c)
+static inline int Objfsa_RomCurveIsForwardEnd(RomCurveDef* c)
 {
     int slot;
 
     for (slot = 0; slot < 4; slot++)
     {
-        if (c->linkIds[slot] != -1 && (c->blockedLinkMask & (1 << slot)) == 0)
+        if (c->linkIds[slot] != -1 && (c->backwardLinkMask & (1 << slot)) == 0)
         {
             return 0;
         }
@@ -287,7 +287,7 @@ static inline int Objfsa_RomCurveIsBlocked(RomCurveDef* c)
     return 1;
 }
 
-static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
+static inline int RomCurve_CollectForwardLinks(RomCurveDef* curve, int* ids)
 {
     int link;
     int count;
@@ -301,7 +301,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         link = *lp++;
-        if ((link > -1) && ((curve->blockedLinkMask & mask) == 0) && (link != 0))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) == 0) && (link != 0))
         {
             ids[count++] = link;
         }
@@ -310,7 +310,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
+static inline int RomCurve_CollectBackwardLinks(RomCurveDef* curve, int* ids)
 {
     int link;
     int count;
@@ -324,7 +324,7 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         link = *lp++;
-        if ((link > -1) && ((curve->blockedLinkMask & mask) != 0) && (link != 0))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) != 0) && (link != 0))
         {
             ids[count++] = link;
         }

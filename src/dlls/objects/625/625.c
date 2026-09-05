@@ -213,7 +213,7 @@ int drakorhoverpad_pickMaskedNextPoint(RomCurveDef* pad, int exclude, int maxInd
     for (i = 0; i < 4; i++)
     {
         pt = pad->linkIds[i];
-        if (pt > -1 && (pad->blockedLinkMask & bit) != 0 && pt != exclude)
+        if (pt > -1 && (pad->backwardLinkMask & bit) != 0 && pt != exclude)
         {
             collected[count++] = pt;
         }
@@ -247,7 +247,7 @@ int drakorhoverpad_pickUnmaskedNextPoint(RomCurveDef* pad, int exclude, int maxI
     for (i = 0; i < 4; i++)
     {
         pt = pad->linkIds[i];
-        if (pt > -1 && (pad->blockedLinkMask & bit) == 0 && pt != exclude)
+        if (pt > -1 && (pad->backwardLinkMask & bit) == 0 && pt != exclude)
         {
             collected[count++] = pt;
         }

@@ -4080,6 +4080,27 @@ express that contract. The wrapper keeps an `int` argument: narrowing it to
 inlined caller. The retained semantic correction leaves all 2872 source objects
 byte-identical, including Tricky and the shared mouth-update implementation.
 
+Curve byte `+0x1B` is now `backwardLinkMask`, not a blocked-edge mask. Tricky's
+forward ball scan accepts clear bits and its reverse scan accepts set bits;
+path-search expansion uses the same direction selector. The engine's adjacent
+window places a set-bit neighbor before the current point and a clear-bit
+neighbor after it. The public random-link selectors, forward control-point
+selector, and shared directional collectors now use forward/backward names.
+The mask remains signed, and all allocation, casts, widths and loop forms stay
+unchanged. Tricky's initial `backwardNode` is a valid route candidate, not a
+blocked destination.
+
+`python tools/orig/tricky_curve_links.py --files-root <EN-files>` provides the
+retail graph cross-check. EN has 5480 curve placements, including 1940 Tricky
+nodes with 4448 directed link references: 4439 have opposite-bit reciprocals,
+eight have same-bit reciprocals, and one has no reciprocal. Forty links resolve
+across romlists. The report preserves each exception with file, offset and ID;
+same-bit pairs are not rewritten or assumed impossible. It walks the encoded
+record widths (52, 56, 60 and 68 bytes), not `sizeof(RomCurveDef)`. Ten tests
+cover record boundaries, signed sentinels, reciprocal anomalies and ambiguous
+cross-map IDs. All 2871 other source objects are byte-identical; the curve
+engine changes only the three public symbol names and their relocations.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

@@ -249,9 +249,9 @@ void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx) {
     int t;
     point = (RomCurveDef*)node->point;
     if (search->routeFlags != 0) {
-        t = point->blockedLinkMask;
+        t = point->backwardLinkMask;
     } else {
-        t = ~point->blockedLinkMask;
+        t = ~point->backwardLinkMask;
     }
     bit = 0;
     link = (char*)point;
