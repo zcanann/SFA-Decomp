@@ -4046,6 +4046,17 @@ from `moveTricky`, leaving ten differences in its two voice guards. Only
 layouts and allocated non-text bytes are unchanged. The diagnostic link now
 has 130 differing text bytes and Tricky text is 99.96321%.
 
+For source experiments, `tools/tricky_probe.py --baseline-object <object>` now
+compares raw function bytes, allocated section bytes and layouts, defined
+allocated named-symbol layouts, and relocation records separately. The baseline
+is read before compilation, so it may be the current output object. Raw SHA256
+identity is reported independently; `--object-details` expands the comparison.
+This is an A/B check, not a substitute for retail objdiff or the diagnostic link.
+A direct-switch voice probe preserved function and section bytes but renumbered
+anonymous relocation symbols, demonstrating why equal fuzzy scores alone cannot
+establish object identity. Ignoring those names is reported separately, not
+treated as complete linker-semantic normalization.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

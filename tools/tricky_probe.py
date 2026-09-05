@@ -8,17 +8,20 @@ This wraps the checks that matter while iterating on Tricky:
   * optionally summarize strucdiff counts for named functions
   * optionally run ndiff for named functions
   * optionally verify allocated sections with the diagnostic game link
+  * optionally compare bytes, layouts, and relocations with a previous object
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
 
 import unitfuzzy
 import strucdiff as structural_diff
+from tricky_object_compare import compare_objects, comparison_summary, read_object
 
 ROOT = Path(__file__).resolve().parents[1]
 UNIT = "dlls/objects/196_Tricky/tricky.c"
@@ -106,10 +109,20 @@ def main() -> int:
     ap.add_argument("--ndiff", nargs="*", default=[], help="functions to run through tools/ndiff.py")
     ap.add_argument("--all-ndiff", action="store_true", help="run ndiff for the current non-exact functions")
     ap.add_argument("--link", action="store_true", help="run the diagnostic game link and allocated-section comparison")
+    ap.add_argument("--baseline-object", type=Path,
+                    help="compare with this object, read before building (may be the current output path)")
+    ap.add_argument("--object-details", action="store_true", help="print the full baseline comparison as JSON")
     args = ap.parse_args()
+    if args.object_details and args.baseline_object is None:
+        ap.error("--object-details requires --baseline-object")
 
+    baseline = read_object(args.baseline_object) if args.baseline_object is not None else None
     if not args.no_build:
         build()
+    if baseline is not None:
+        changes = compare_objects(baseline, read_object(ROOT / OBJ_TARGET))
+        report = json.dumps(changes, indent=2) if args.object_details else comparison_summary(changes)
+        print_command_output("object comparison (not a retail match verdict)", report)
     nonexact = unit_rows()
     pool()
     struc_funcs = list(args.struc)

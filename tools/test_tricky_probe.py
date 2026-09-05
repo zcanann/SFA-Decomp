@@ -2,6 +2,7 @@ import contextlib
 import io
 import subprocess
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import tricky_probe as probe
@@ -100,6 +101,50 @@ class TrickyProbeTests(unittest.TestCase):
         struc.assert_called_once_with(["residual", "another"])
         ndiff.assert_called_once_with(["residual", "another"])
         run.assert_called_once_with([probe.sys.executable, "tools/tricky_link_probe.py"])
+
+    def test_baseline_is_read_before_building_even_for_the_current_output(self):
+        events = []
+        path = probe.ROOT / probe.OBJ_TARGET
+
+        def read(current):
+            self.assertEqual(current, path)
+            events.append("read")
+            return len(events)
+
+        with (
+            patch.object(probe.sys, "argv", ["tricky_probe.py", "--baseline-object", str(path)]),
+            patch.object(probe, "read_object", side_effect=read),
+            patch.object(probe, "build", side_effect=lambda: events.append("build")),
+            patch.object(probe, "unit_rows", return_value=[]),
+            patch.object(probe, "pool"),
+            patch.object(probe, "compare_objects", return_value={"byte_identical": False}) as compare,
+            patch.object(probe, "comparison_summary", return_value="changed") as summary,
+            contextlib.redirect_stdout(io.StringIO()),
+        ):
+            self.assertEqual(probe.main(), 0)
+        self.assertEqual(events, ["read", "build", "read"])
+        compare.assert_called_once_with(1, 3)
+        summary.assert_called_once_with({"byte_identical": False})
+
+    def test_object_details_requires_a_baseline(self):
+        with (
+            patch.object(probe.sys, "argv", ["tricky_probe.py", "--object-details"]),
+            contextlib.redirect_stderr(io.StringIO()),
+            self.assertRaises(SystemExit) as error,
+        ):
+            probe.main()
+        self.assertEqual(error.exception.code, 2)
+
+    def test_missing_baseline_fails_before_build(self):
+        with (
+            patch.object(probe.sys, "argv", ["tricky_probe.py", "--baseline-object", "missing.o"]),
+            patch.object(probe, "read_object", side_effect=FileNotFoundError("missing.o")) as read,
+            patch.object(probe, "build") as build,
+            self.assertRaises(FileNotFoundError),
+        ):
+            probe.main()
+        read.assert_called_once_with(Path("missing.o"))
+        build.assert_not_called()
 
 
 if __name__ == "__main__":
