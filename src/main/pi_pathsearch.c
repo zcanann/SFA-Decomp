@@ -248,7 +248,7 @@ void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx) {
     int bit;
     int t;
     point = (RomCurveDef*)node->point;
-    if (search->routeFlags != 0) {
+    if (search->reverse != 0) {
         t = point->backwardLinkMask;
     } else {
         t = ~point->backwardLinkMask;
@@ -379,7 +379,7 @@ int pathSearchStep(PathSearch* search, u32 maxSteps) {
     return result;
 }
 
-int pathSearchBegin(PathSearch* queue, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 routeFlags) {
+int pathSearchBegin(PathSearch* queue, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 reverse) {
     PathSearchNode* node;
     int nodeCount;
 
@@ -387,7 +387,7 @@ int pathSearchBegin(PathSearch* queue, RomCurveDef* startPoint, f32* targetPosit
     queue->startPoint = startPoint;
     queue->targetPosition = targetPosition;
     queue->pathId = pathId;
-    queue->routeFlags = routeFlags & 1;
+    queue->reverse = reverse & 1;
     queue->closestDistance = 10000;
     nodeCount = queue->nodeCount;
     if (nodeCount == 0xfe) {

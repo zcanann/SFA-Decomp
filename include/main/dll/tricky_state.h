@@ -135,7 +135,7 @@ typedef struct TrickyState {
     u8 pad1C[0x20 - 0x1C];
     int moveId;            /* compared to anim.currentMove, passed to ObjAnim_SetCurrentMove */
     GameObject* followObj; /* the followed object (playerObj/target/found stores; dll vtable dispatched) */
-    f32* targetPosPtr;     /* current target/path position (compared to previousPathPoint; fed to pathSearchBegin) */
+    f32* targetPosPtr;     /* current target/path position (compared to previousTargetPosPtr; fed to pathSearchBegin) */
     f32 dirX;              /* normalized planar direction (pos delta / length) */
     f32 dirZ;
     f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */
@@ -190,28 +190,21 @@ typedef struct TrickyState {
     s16 mouthYawOffset;        /* joint-pose Y rotation added to the flame's horizontal heading */
     u8 pad416[0x418 - 0x416];
     struct RomCurveDef* routeSeedNode; /* candidate route node chosen before seeding route */
-    u8 routeSeedDir;
+    u8 routeSeedDirection;             /* 0 forward, 1 backward */
     u8 pad41D[0x420 - 0x41D];
     RomCurveWalker route;
-    RomCurveDef*
-        cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
+    RomCurveDef* cachedRouteDef;      /* route selection is cached by node, walk group and direction */
     RomCurveDef* validatedRouteEntry; /* route entry pointer validated via trickyValidateRouteEntry */
-    u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
-    u16 walkGroup;       /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
-    u16 savedWalkGroup;  /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
-    u8 cachedRouteFlags; /* cached (routeFlagValue & 0xff): route-select memo key stored alongside cachedRouteDef; compared == (routeFlagValue & 0xff) to reuse validatedRouteEntry (skeetla) */
+    u16 cachedWalkGroup;              /* destination walk group used for validatedRouteEntry */
+    u16 walkGroup;                    /* route destination walk group; may fall back during route selection */
+    u16 savedWalkGroup;               /* destination snapshot taken before movement chooses a fallback route */
+    u8 cachedRouteDirection;
     u8 pad537[1];
     PathSearch pathSearches[TRICKY_PATH_SEARCH_COUNT]; /* eight candidates and one cached route search */
-    union {
-        RomCurveDef*
-            cachedRouteEntry; /* path-search start/next-point cache slot, validated via trickyValidateRouteEntry */
-        u32 cachedRouteId;    /* raw view of cachedRouteEntry retained for consumers still recovered as word keys */
-    };
-    int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
-    f32* previousPathPoint;
-    f32 previousPathX;
-    f32 previousPathY;
-    f32 previousPathZ;
+    RomCurveDef* cachedRouteEntry;                     /* last point returned from the cached path search */
+    int cachedTargetWalkGroup;                         /* target walk group of that path search */
+    f32* previousTargetPosPtr;                         /* identity of the target whose position was saved last update */
+    Vec previousTargetPos;
     union {
         struct {
             GameObject* fetchBallObj; /* sidekick ball object being fetched/returned */
@@ -382,10 +375,19 @@ STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultWaterDepth) == 0x2AC);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultFloorY) == 0x2B0);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision.resultWaterY) == 0x2B4);
 STATIC_ASSERT(offsetof(TrickyState, routeSeedNode) == 0x418);
+STATIC_ASSERT(offsetof(TrickyState, routeSeedDirection) == 0x41C);
 STATIC_ASSERT(offsetof(TrickyState, route) == 0x420);
 STATIC_ASSERT(offsetof(TrickyState, route.reverse) == 0x4A0);
+STATIC_ASSERT(offsetof(TrickyState, cachedRouteDef) == 0x528);
+STATIC_ASSERT(offsetof(TrickyState, validatedRouteEntry) == 0x52C);
+STATIC_ASSERT(offsetof(TrickyState, cachedWalkGroup) == 0x530);
+STATIC_ASSERT(offsetof(TrickyState, walkGroup) == 0x532);
+STATIC_ASSERT(offsetof(TrickyState, savedWalkGroup) == 0x534);
+STATIC_ASSERT(offsetof(TrickyState, cachedRouteDirection) == 0x536);
 STATIC_ASSERT(offsetof(TrickyState, pathSearches) == 0x538);
 STATIC_ASSERT(offsetof(TrickyState, pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]) == 0x6B8);
+STATIC_ASSERT(offsetof(TrickyState, cachedRouteEntry) == 0x6E8);
+STATIC_ASSERT(offsetof(TrickyState, cachedTargetWalkGroup) == 0x6EC);
 STATIC_ASSERT(offsetof(TrickyState, playerObj) == 0x4);
 STATIC_ASSERT(offsetof(TrickyState, stateIndex) == 0x8);
 STATIC_ASSERT(offsetof(TrickyState, substate) == 0xA);
@@ -403,7 +405,10 @@ STATIC_ASSERT(offsetof(TrickyState, mouthPos) == 0x408);
 STATIC_ASSERT(offsetof(TrickyState, mouthPos.y) == 0x40C);
 STATIC_ASSERT(offsetof(TrickyState, mouthPos.z) == 0x410);
 STATIC_ASSERT(offsetof(TrickyState, mouthYawOffset) == 0x414);
-STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
+STATIC_ASSERT(offsetof(TrickyState, previousTargetPosPtr) == 0x6F0);
+STATIC_ASSERT(offsetof(TrickyState, previousTargetPos.x) == 0x6F4);
+STATIC_ASSERT(offsetof(TrickyState, previousTargetPos.y) == 0x6F8);
+STATIC_ASSERT(offsetof(TrickyState, previousTargetPos.z) == 0x6FC);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(sizeof(((TrickyState*)0)->flameChildren) == 0x1C);
 STATIC_ASSERT(offsetof(TrickyState, fetchBallObj) == 0x700);

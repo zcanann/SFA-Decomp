@@ -4101,6 +4101,33 @@ cover record boundaries, signed sentinels, reciprocal anomalies and ambiguous
 cross-map IDs. All 2871 other source objects are byte-identical; the curve
 engine changes only the three public symbol names and their relocations.
 
+The direction contract now reaches Tricky's ranked candidates, route seed,
+selection cache and `PathSearch.reverse`. The search initializer retains only
+the low direction bit; expansion chooses backward-mask bits for one and their
+complement for zero. Candidate ranking reverses the link toward Tricky's current
+walk group to obtain the outbound search direction. The cached path's integer
+key is a target walk group, not a path ID; its cached entry is solely a node
+pointer, so the unused integer union view is removed. Layout assertions cover
+the seed, both caches and the direction byte.
+
+The target snapshot at 0x6F0-0x6FC is now `previousTargetPosPtr` plus a `Vec`.
+`Tricky_update` captures the identity and coordinates of `targetPosPtr` at the
+end of its update. The renamed `trickyGetTargetDistanceRate` compares both old
+and new coordinates against Tricky's current position, scales each distance by
+`oneOverTimeDelta`, then subtracts. This isolates target radial motion rather
+than Tricky's own speed; the original evaluation and rounding order remain.
+The result drives approach-speed matching and the moving-target voice gate.
+
+Movement's reverse direction and ground-snap flag snapshot no longer share the
+misleading `prod` temporary. Keeping the direction declaration at function scope
+preserves its allocation; making both locals block-scoped adds twelve register
+differences. The nearest-entry scan's compacted-candidate index into
+`linkWalkGroups` is verified in retail and preserved, not repaired to `linkSlot`.
+All function bytes, allocated data and named layouts are unchanged. Only
+anonymous relocation names change in Tricky; all 2871 other source objects are
+byte-identical. The diagnostic link still has 130 differing text bytes and exact
+non-text sections, so these are source-recovery gains, not a new match claim.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

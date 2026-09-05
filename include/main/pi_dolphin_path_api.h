@@ -39,7 +39,7 @@ typedef struct PathSearch {
     s16 nodeCount;
     s16 heapSize;
     u32 closestDistance;
-    u8 routeFlags;
+    u8 reverse; /* requested direction's low bit: 0 forward, 1 backward */
     u8 padding29;
     s16 pathCount;
     s16 pathIndex;
@@ -49,6 +49,7 @@ typedef struct PathSearch {
 STATIC_ASSERT(sizeof(PathSearchNode) == 0x10);
 STATIC_ASSERT(sizeof(PathHeapEntry) == 0x8);
 STATIC_ASSERT(sizeof(PathSearch) == 0x30);
+STATIC_ASSERT(offsetof(PathSearch, reverse) == 0x28);
 
 void pathSearchInit(PathSearch* search);
 void pathSearchAddNeighbor(PathSearch* search, PathSearchNode* previousNode, int previousNodeIndex, u32 routeDistance,
@@ -57,6 +58,6 @@ RomCurveDef* pathSearchGetNextPoint(PathSearch* search);
 int pathSearchBuildPath(PathSearch* search);
 void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx);
 int pathSearchStep(PathSearch* search, u32 maxSteps);
-int pathSearchBegin(PathSearch* search, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 routeFlags);
+int pathSearchBegin(PathSearch* search, RomCurveDef* startPoint, f32* targetPosition, int pathId, u32 reverse);
 
 #endif /* MAIN_PI_DOLPHIN_PATH_API_H_ */

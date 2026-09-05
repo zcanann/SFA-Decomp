@@ -136,18 +136,19 @@ static void trickyAdvanceToSegmentEnd(RomCurveWalker* route);
 static void trickyRequestIdleMove(GameObject* obj, TrickyState* state);
 int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 speed);
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
-static inline f32 trickyGetPathSpeedDelta(GameObject* obj);
+static inline f32 trickyGetTargetDistanceRate(GameObject* obj);
 static void trickyUpdateFacingFromMoveVector(GameObject* obj, TrickyState* state, s16* turnDeltaOut);
 int moveTricky(GameObject* obj, f32* targetPos);
 int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags);
 static inline RomCurveDef* trickyValidateRouteEntry(RomCurveDef* entry);
-RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef* routeDef, int linkSelector,
-                                               int routeFlagValue);
-RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int pathId);
-int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
+RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* state, RomCurveDef* routeDef, int targetWalkGroup,
+                                               int directionBits);
+RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int targetWalkGroup);
+int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteDirections,
                                   int targetWalkGroup);
-RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeFlagValue);
-void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes);
+RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeDirection);
+void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteDirections, s16 objectWalkGroup,
+                                     RomCurveDef** outRoutes);
 void skeetla_spawnLinkedSparks(GameObject* obj);
 void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* center, f32 minDistance, f32 moveDistance);
 void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos);
@@ -962,7 +963,7 @@ void Tricky_init(GameObject* obj) {
     state->playerObj = Obj_GetPlayerObject();
     state->stateIndex = TRICKY_STATE_ATTACH_TO_WALKGROUP;
     state->sideCommandPromptMask = 0;
-    state->previousPathPoint = NULL;
+    state->previousTargetPosPtr = NULL;
     state->lastWalkGroup = 0;
     state->recoveryPos.x = (obj)->anim.worldPosX;
     state->recoveryPos.y = (obj)->anim.worldPosY;
@@ -1409,16 +1410,16 @@ void Tricky_update(GameObject* obj) {
     }
     objSoundUpdateMouth(obj, &trickyState->soundState);
     {
-        f32* pathCursor;
-        TrickyState* pathState;
+        f32* targetSnapshotPos;
+        TrickyState* targetSnapshotState;
 
-        pathState = obj->extra;
-        pathCursor = pathState->targetPosPtr;
-        pathState->previousPathPoint = pathCursor;
-        if (pathState->previousPathPoint != NULL) {
-            pathState->previousPathX = pathCursor[0];
-            pathState->previousPathY = pathCursor[1];
-            pathState->previousPathZ = pathCursor[2];
+        targetSnapshotState = obj->extra;
+        targetSnapshotPos = targetSnapshotState->targetPosPtr;
+        targetSnapshotState->previousTargetPosPtr = targetSnapshotPos;
+        if (targetSnapshotState->previousTargetPosPtr != NULL) {
+            targetSnapshotState->previousTargetPos.x = targetSnapshotPos[0];
+            targetSnapshotState->previousTargetPos.y = targetSnapshotPos[1];
+            targetSnapshotState->previousTargetPos.z = targetSnapshotPos[2];
         }
     }
     trickyState->prevSpeed = trickyState->speed;
@@ -2126,9 +2127,9 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
 
     pathBytes[0] = pathByte;
     if (pathByte == 0) {
-        int pathId = Objfsa_GetPatchGroupIdAtPoint(&obj->anim.worldPosX);
-        if (pathId != 0) {
-            walkPath_writeU16LE(pathId & 0xffff, pathBytes);
+        int patchGroup = Objfsa_GetPatchGroupIdAtPoint(&obj->anim.worldPosX);
+        if (patchGroup != 0) {
+            walkPath_writeU16LE(patchGroup & 0xffff, pathBytes);
         }
     }
     if (pathBytes[0] != 0) {
@@ -4531,10 +4532,10 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         return;
     }
     {
-        f32 pathSpeedRadius = TRICKY_DEFAULT_STOPPING_RADIUS + stoppingDistance;
-        f32 pathSpeedRadiusSq = pathSpeedRadius * pathSpeedRadius;
-        candidateSpeed = trickyGetPathSpeedDelta(obj);
-        if (targetDistanceSq < pathSpeedRadiusSq) {
+        f32 targetSpeedMatchRadius = TRICKY_DEFAULT_STOPPING_RADIUS + stoppingDistance;
+        f32 targetSpeedMatchRadiusSq = targetSpeedMatchRadius * targetSpeedMatchRadius;
+        candidateSpeed = trickyGetTargetDistanceRate(obj);
+        if (targetDistanceSq < targetSpeedMatchRadiusSq) {
             if (candidateSpeed > 0.0f) {
                 f32 curSpeed = state->speed;
                 if (candidateSpeed < curSpeed) {
@@ -4649,7 +4650,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     RomCurveDef* prevNode;
     u32 patchGroupForCheck;
     s16 linkedPatchGroupId;
-    u32 prod;
+    u32 reverseDirection;
     int routeDirection;
     int i;
     u8 patchSlot;
@@ -4661,7 +4662,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     f32 len;
     f32 sqx;
     u8 walkGroupPair[2];
-    u8 routeFlags[TRICKY_ROUTE_CANDIDATE_COUNT];
+    u8 routeDirections[TRICKY_ROUTE_CANDIDATE_COUNT];
     S16Vec rotation;
     f32 delta[3];
     ObjfsaWalkGroupPatchInfo patchInfo;
@@ -4949,13 +4950,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                          (int)getXZDistanceSquared(&state->routeSeedNode->x, &obj->anim.worldPosX));
         dist = getXZDistanceSquared(&state->routeSeedNode->x, &obj->anim.worldPosX);
         if (10.0f > dist) {
-            state->route.reverse = state->routeSeedDir;
+            state->route.reverse = state->routeSeedDirection;
             prevNode = state->routeSeedNode;
-            node = trickySelectRouteEntry(state, prevNode, state->routeSeedDir);
+            node = trickySelectRouteEntry(state, prevNode, state->routeSeedDirection);
             if (node == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
-                RomCurveDef* nextNode = trickySelectRouteEntry(state, node, state->routeSeedDir);
+                RomCurveDef* nextNode = trickySelectRouteEntry(state, node, state->routeSeedDirection);
                 if (nextNode == 0) {
                     state->movementState = TRICKY_MOVE_WALK_WAIT;
                 } else {
@@ -5028,13 +5029,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_CURVE_SETUP:
         trickyDebugPrint("curve setup\n");
-        trickyRankLinkedRouteCandidates(obj, routeFlags, (s16)objectWalkGroup, routePtrs);
-        i = trickyFindReachableRouteIndex(state, routePtrs, routeFlags, state->walkGroup);
+        trickyRankLinkedRouteCandidates(obj, routeDirections, (s16)objectWalkGroup, routePtrs);
+        i = trickyFindReachableRouteIndex(state, routePtrs, routeDirections, state->walkGroup);
         if (i == -1) {
             state->speed = speed;
             return TRICKY_MOVEMENT_BLOCKED;
         }
-        state->routeSeedDir = routeFlags[i];
+        state->routeSeedDirection = routeDirections[i];
         state->routeSeedNode = routePtrs[i];
         state->speed = speed;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->routeSeedNode->x, 1);
@@ -5081,13 +5082,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             case PATH_SEARCH_PENDING:
                                 break;
                             case PATH_SEARCH_REACHED_TARGET:
-                                prod = (state->route.reverse ^ 1) & 0xff;
-                                if (prod == 0) {
+                                reverseDirection = (state->route.reverse ^ 1) & 0xff;
+                                if (reverseDirection == 0) {
                                     RomCurve_stepClamped(&state->route, 2.0f);
                                 } else {
                                     RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
                                 }
-                                state->route.reverse = prod;
+                                state->route.reverse = reverseDirection;
                                 RomCurve_swapEndpointNodes(&state->route);
                                 break;
                             case PATH_SEARCH_EXHAUSTED:
@@ -5109,14 +5110,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 routeNodeType = state->route.previousNode->subtype;
                 switch (routeNodeType) {
                 case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
-                case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_B:
-                    prod = state->stateFlags;
-                    if ((prod & TRICKY_STATE_FLAG_GROUND_SNAP) != 0) {
+                case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_B: {
+                    u32 stateFlags = state->stateFlags;
+                    if ((stateFlags & TRICKY_STATE_FLAG_GROUND_SNAP) != 0) {
                         state->stateFlags &= ~TRICKY_STATE_FLAG_GROUND_SNAP;
                     } else {
-                        state->stateFlags = prod | TRICKY_STATE_FLAG_GROUND_SNAP;
+                        state->stateFlags = stateFlags | TRICKY_STATE_FLAG_GROUND_SNAP;
                     }
                     break;
+                }
                 }
             } else {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
@@ -5561,7 +5563,8 @@ void skeetla_spawnLinkedSparks(GameObject* obj) {
     }
 }
 
-void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes) {
+void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteDirections, s16 objectWalkGroup,
+                                     RomCurveDef** outRoutes) {
     f32 bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT];
     int candidateSlot;
     RomCurveDef** allCurves;
@@ -5578,7 +5581,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
     f32 initialBestDistance;
     RomCurveDef* curve;
     u8 routeSlot;
-    u8 routeFlags;
+    u8 linkDirectionBits;
     u8 shiftSlot;
     f32* bestDistanceCursor;
     RomCurveDef** bestRouteCursor;
@@ -5595,7 +5598,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
         *bestRouteCursor++ = NULL;
     }
 
-    if (linkSelector == 0) {
+    if (objectWalkGroup == 0) {
         return;
     }
 
@@ -5624,7 +5627,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
         if (score < bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT - 1]) {
             for (routeSlot = 0; routeSlot < ROMCURVE_LINK_COUNT; routeSlot++) {
                 linkCurveId = curve->linkIds[routeSlot];
-                if ((linkCurveId > -1) && (curve->linkWalkGroups[routeSlot] == linkSelector)) {
+                if ((linkCurveId > -1) && (curve->linkWalkGroups[routeSlot] == objectWalkGroup)) {
                     if (curve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A) {
                         linkedCurve = (*gRomCurveInterface)->getById(linkCurveId);
                         if ((linkedCurve != NULL) && (linkedCurve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
@@ -5632,7 +5635,7 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
                         }
                     }
 
-                    routeFlags = (u8)(curve->backwardLinkMask >> routeSlot);
+                    linkDirectionBits = (u8)(curve->backwardLinkMask >> routeSlot);
                     break;
                 }
             }
@@ -5644,12 +5647,12 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
             for (routeSlot = 0; routeSlot < TRICKY_ROUTE_CANDIDATE_COUNT; routeSlot++) {
                 if (score < bestDistances[routeSlot]) {
                     for (shiftSlot = TRICKY_ROUTE_CANDIDATE_COUNT - 1; shiftSlot > routeSlot; shiftSlot--) {
-                        outRouteFlags[shiftSlot] = outRouteFlags[shiftSlot - 1];
+                        outRouteDirections[shiftSlot] = outRouteDirections[shiftSlot - 1];
                         outRoutes[shiftSlot] = outRoutes[shiftSlot - 1];
                         bestDistances[shiftSlot] = bestDistances[shiftSlot - 1];
                     }
 
-                    outRouteFlags[routeSlot] = (routeFlags & 1) ^ 1;
+                    outRouteDirections[routeSlot] = (linkDirectionBits & 1) ^ 1;
                     outRoutes[routeSlot] = curve;
                     bestDistances[routeSlot] = score;
                     break;
@@ -5659,18 +5662,18 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
     }
 }
 
-RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeFlagValue) {
+RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeDirection) {
     RomCurveDef* entry;
 
     entry = NULL;
 
     if ((state->cachedRouteDef == routeDef) && (state->cachedWalkGroup == state->walkGroup) &&
-        (state->cachedRouteFlags == (routeFlagValue & 0xffu))) {
+        (state->cachedRouteDirection == (routeDirection & 0xffu))) {
         entry = trickyValidateRouteEntry(state->validatedRouteEntry);
     }
 
     if (entry == NULL) {
-        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, state->walkGroup, routeFlagValue & 0xff);
+        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, state->walkGroup, routeDirection & 0xff);
         if (entry == NULL) {
             entry = trickyFindPathRouteEntry(state, routeDef, state->walkGroup);
         }
@@ -5678,7 +5681,7 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
         if (entry == NULL) {
             if (state->savedWalkGroup != 0) {
                 entry =
-                    trickyFindNearestLinkedRouteEntry(state, routeDef, state->savedWalkGroup, routeFlagValue & 0xff);
+                    trickyFindNearestLinkedRouteEntry(state, routeDef, state->savedWalkGroup, routeDirection & 0xff);
                 if (entry == NULL) {
                     entry = trickyFindPathRouteEntry(state, routeDef, state->savedWalkGroup);
                 }
@@ -5688,7 +5691,7 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
             }
 
             if (entry == NULL) {
-                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeDirection & 0xff);
                 state->walkGroup = 0;
             }
         }
@@ -5697,11 +5700,11 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
     state->cachedRouteDef = routeDef;
     state->validatedRouteEntry = entry;
     state->cachedWalkGroup = state->walkGroup;
-    state->cachedRouteFlags = routeFlagValue;
+    state->cachedRouteDirection = routeDirection;
     return entry;
 }
 
-int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteFlags,
+int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRoutes, u8* candidateRouteDirections,
                                   int targetWalkGroup) {
     s8 searchIndex;
     s8 routeStatus[TRICKY_ROUTE_CANDIDATE_COUNT];
@@ -5712,7 +5715,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     for (routeIndex = 0; routeIndex < TRICKY_ROUTE_CANDIDATE_COUNT; routeIndex++) {
         if (candidateRoutes[routeIndex] != NULL) {
             pathSearchBegin(&state->pathSearches[routeIndex], candidateRoutes[routeIndex], state->targetPosPtr,
-                            targetWalkGroup, candidateRouteFlags[routeIndex]);
+                            targetWalkGroup, candidateRouteDirections[routeIndex]);
         }
     }
 
@@ -5755,12 +5758,12 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
     return -1;
 }
 
-RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int pathId) {
-    if (pathId == 0) {
+RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, int targetWalkGroup) {
+    if (targetWalkGroup == 0) {
         return NULL;
     }
 
-    if ((state->cachedPathId == pathId) && (state->cachedRouteEntry == route)) {
+    if ((state->cachedTargetWalkGroup == targetWalkGroup) && (state->cachedRouteEntry == route)) {
         state->cachedRouteEntry = pathSearchGetNextPoint(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
         if (state->cachedRouteEntry == NULL) {
             return NULL;
@@ -5768,11 +5771,11 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, in
 
         state->cachedRouteEntry = trickyValidateRouteEntry(state->cachedRouteEntry);
         if (state->cachedRouteEntry != NULL) {
-            return (state)->cachedRouteEntry;
+            return state->cachedRouteEntry;
         }
     }
 
-    pathSearchBegin(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX], route, state->targetPosPtr, pathId,
+    pathSearchBegin(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX], route, state->targetPosPtr, targetWalkGroup,
                     state->route.reverse);
     if (pathSearchStep(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX], TRICKY_PATH_SEARCH_BULK_STEPS) !=
         PATH_SEARCH_REACHED_TARGET) {
@@ -5781,12 +5784,12 @@ RomCurveDef* trickyFindPathRouteEntry(TrickyState* state, RomCurveDef* route, in
 
     pathSearchBuildPath(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
     state->cachedRouteEntry = pathSearchGetNextPoint(&state->pathSearches[TRICKY_PATH_SEARCH_CACHE_INDEX]);
-    state->cachedPathId = pathId;
-    return (state)->cachedRouteEntry;
+    state->cachedTargetWalkGroup = targetWalkGroup;
+    return state->cachedRouteEntry;
 }
 
-RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef* routeDef, int linkSelector,
-                                               int routeFlagValue) {
+RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* state, RomCurveDef* routeDef, int targetWalkGroup,
+                                               int directionBits) {
     RomCurveDef* candidates[4];
     RomCurveDef* entry;
     f32 bestDistance;
@@ -5804,11 +5807,12 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
     mask = 1;
     while (linkSlot < 4) {
         curveId = routeDef->linkIds[linkSlot];
-        if ((curveId > -1) && ((((routeDef->backwardLinkMask & mask) ^ routeFlagValue) == 0))) {
+        if ((curveId > -1) && ((((routeDef->backwardLinkMask & mask) ^ directionBits) == 0))) {
             candidates[candidateCount] = (*gRomCurveInterface)->getById(curveId);
             if (candidates[candidateCount] != NULL) {
                 entry = candidates[candidateCount];
-                if ((linkSelector == 0) || (routeDef->linkWalkGroups[candidateCount] == linkSelector)) {
+                /* Retail indexes the group by compacted candidate count, not linkSlot. */
+                if ((targetWalkGroup == 0) || (routeDef->linkWalkGroups[candidateCount] == targetWalkGroup)) {
                     requiredBit = entry->requiredBit;
                     if ((requiredBit == -1) || (mainGetBit(requiredBit) != 0)) {
                         forbiddenBit = entry->forbiddenBit;
@@ -5824,14 +5828,14 @@ RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* context, RomCurveDef
         }
         linkSlot++;
         mask <<= 1;
-        routeFlagValue <<= 1;
+        directionBits <<= 1;
     }
 
     if (candidateCount != 0) {
-        bestDistance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[0]->x);
+        bestDistance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &candidates[0]->x);
         bestIndex = 0;
         for (linkSlot = 1; linkSlot < candidateCount; linkSlot++) {
-            distance = getXZDistanceSquared(&context->playerObj->anim.worldPosX, &candidates[linkSlot]->x);
+            distance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &candidates[linkSlot]->x);
             if (distance < bestDistance) {
                 bestDistance = distance;
                 bestIndex = linkSlot;
@@ -5902,7 +5906,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
     f32 minMoveSpeed;
     f32 dirLength;
     f32 componentSpeed;
-    f32 pathSpeedDeltaAbs;
+    f32 targetDistanceRateAbs;
     s16 turnDelta;
     int turnDeltaAbs;
 
@@ -5955,10 +5959,10 @@ int moveTricky(GameObject* obj, f32* targetPos) {
             trickyDebugPrint("in water\n");
         } else {
             if (state->stateIndex == TRICKY_STATE_FOLLOW_PLAYER) {
-                pathSpeedDeltaAbs =
-                    trickyGetPathSpeedDelta(obj) >= 0.0f ? trickyGetPathSpeedDelta(obj) : -trickyGetPathSpeedDelta(obj);
+                targetDistanceRateAbs = trickyGetTargetDistanceRate(obj) >= 0.0f ? trickyGetTargetDistanceRate(obj)
+                                                                                 : -trickyGetTargetDistanceRate(obj);
 
-                if (pathSpeedDeltaAbs > 0.0f) {
+                if (targetDistanceRateAbs > 0.0f) {
                     state->sfxIntervalTimer -= timeDelta;
                     if (state->sfxIntervalTimer <= 0.0f) {
                         state->sfxIntervalTimer =
@@ -6081,25 +6085,26 @@ static inline void trickySetTargetPosition(TrickyState* state, f32* targetPos) {
     }
 }
 
-static inline f32 trickyGetPathSpeedDelta(GameObject* obj) {
+static inline f32 trickyGetTargetDistanceRate(GameObject* obj) {
     TrickyState* state = (TrickyState*)obj->extra;
-    f32* currentPathPoint;
+    f32* currentTargetPos;
     f32 dx;
     f32 dz;
-    f32 previousSpeed;
-    f32 currentSpeed;
+    f32 previousScaledDistance;
+    f32 currentScaledDistance;
     f32 delta;
 
-    currentPathPoint = state->targetPosPtr;
-    if (state->targetPosPtr == state->previousPathPoint) {
-        dx = state->previousPathX - obj->anim.worldPosX;
-        dz = state->previousPathZ - obj->anim.worldPosZ;
-        previousSpeed = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
+    /* Both samples use Tricky's current position, isolating the target's radial motion. */
+    currentTargetPos = state->targetPosPtr;
+    if (state->targetPosPtr == state->previousTargetPosPtr) {
+        dx = state->previousTargetPos.x - obj->anim.worldPosX;
+        dz = state->previousTargetPos.z - obj->anim.worldPosZ;
+        previousScaledDistance = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
 
-        dx = currentPathPoint[0] - obj->anim.worldPosX;
-        dz = currentPathPoint[2] - obj->anim.worldPosZ;
-        currentSpeed = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
-        delta = currentSpeed - previousSpeed;
+        dx = currentTargetPos[0] - obj->anim.worldPosX;
+        dz = currentTargetPos[2] - obj->anim.worldPosZ;
+        currentScaledDistance = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
+        delta = currentScaledDistance - previousScaledDistance;
     } else {
         delta = 0.0f;
     }
