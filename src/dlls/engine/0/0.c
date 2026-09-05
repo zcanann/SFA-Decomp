@@ -2827,11 +2827,10 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
         GXSetScissor(0, 0, 0x280, 0x1E0);
         hudDrawCMenu(cMenuArg0, cMenuArg1, cMenuArg2);
         i = 0;
-        k = 0;
-        for (; i < GCMENU_ITEM_ICON_COUNT; i++, k += 0x32) {
+        for (; i < GCMENU_ITEM_ICON_COUNT; i++) {
             if (gCMenuItemIcons[i] > 1) {
                 alpha = fade;
-                rowFade = gCMenuScrollTimer + k;
+                rowFade = gCMenuScrollTimer + (i * 50);
                 if (rowFade < gCMenuRowFadeInThreshold) {
                     alpha = fade + (rowFade - gCMenuRowFadeInThreshold) * 8;
                 }
@@ -2848,9 +2847,9 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 GXSetScissor(0, 0, 0x280, 0x1E0);
                 sprintf(label.text, lbl_803DBB58, gCMenuItemIcons[i]);
                 gameTextSetColor(0, 0, 0, fadedAlpha & 0xFF);
-                gameTextShowStr(label.text, 0x93, 0x247, 0x2B + (gCMenuScrollTimer + k));
+                gameTextShowStr(label.text, 0x93, 0x247, 0x2B + (gCMenuScrollTimer + (i * 50)));
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)fadedAlpha);
-                gameTextShowStr(label.text, 0x93, 0x246, 0x2A + (gCMenuScrollTimer + k));
+                gameTextShowStr(label.text, 0x93, 0x246, 0x2A + (gCMenuScrollTimer + (i * 50)));
             }
         }
         drawTexture(((CMenuHud*)base)->hudTextures[0x21], 537.0f, 175.0f, (u8)(fade * gCMenuHighlightFade / 0xFF),
@@ -3759,10 +3758,8 @@ void headDisplayDraw(void) {
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
             noiseX = randomGetRange(0, 0x1e) << 1;
             noiseY = randomGetRange(0, 0x1e) << 1;
-            drawY = width;
-            drawY += lineOffset;
-            drawPartialTexture(hudTextures[84], 490.0f, (f32)drawY, clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100,
-                               0x78, 2, noiseY, noiseX);
+            drawPartialTexture(hudTextures[84], 490.0f, (f32)(drawY = width + lineOffset),
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, noiseY, noiseX);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (0.3f + wave));
             if (clampedAlpha < 0) {
                 clampedAlpha = 0;

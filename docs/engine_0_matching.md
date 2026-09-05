@@ -1,9 +1,10 @@
 # Engine 0: HUD declaration and source-shape recovery
 
 EN v1.0, 2026-09-04. The unit is `src/dlls/engine/0/0.c`, containing the
-command menu, HUD, communicator, and pause menus. It remains `NonMatching`:
-106 of 118 functions match exactly. All 118 now have the retail instruction
-count. The whole TU uses GC/1.3, `-inline noauto`, and signed `char`.
+command menu, HUD, communicator, and pause menus. It remains `NonMatching`.
+The September 4 pass reached 106 of 118 exact functions; the September 5
+follow-up below starts with 108. All 118 have the retail instruction count.
+The whole TU uses GC/1.3, `-inline noauto`, and signed `char`.
 
 ## Color declarations and the compiler fingerprint
 
@@ -138,7 +139,7 @@ constants or explicit section placement are needed.
   Appending named definitions puts them in `.sdata`. Their source ownership
   remains unresolved; do not force sections or duplicate literals.
 
-## Validation
+## September 4 validation
 
 | Measure | Before communicator fix | After communicator fix | Current |
 | --- | ---: | ---: | ---: |
@@ -160,3 +161,38 @@ The strict EN checksum build and `ninja all_source` both pass within their
 30-second limits (about 16 seconds each). Formatting checks also pass.
 The strict build still uses retail code for this `NonMatching` TU and is
 not proof that the remaining twelve functions match.
+
+## September 5 follow-up
+
+A fresh build at `4d84859649` already uses GC/1.3 and has 108 exact
+functions, including the subsequently matched `GameUI_release` and
+`hudDrawMagicBar`. This pass preserves that compiler profile and TU boundary.
+
+The C-menu count-label loop now derives its row offset from `i * 50`.
+MWCC generates the induction variable itself, bringing `hudDrawButtons`
+from 99.666664% to 99.68513%. The head-display scanline computes and saves
+its Y coordinate in the first draw call, matching retail's placement of
+the calculation after loading the texture and X coordinate.
+`headDisplayDraw` improves from 98.802086% to 99.21875%.
+
+The TU code fuzzy score rises from **99.85679% to 99.86833%**. Exact code
+remains 48,544 / 75,188 bytes across **108 / 118 functions**. All 118
+functions retain the retail instruction count, and no function's score
+regresses. Only the two edited functions change instruction bytes.
+
+All six data sections retain their source-object bytes, sizes, alignment,
+and resolved data relocations. Every named symbol retains its size and
+offset. MWCC renumbers anonymous pool and switch-table symbols after the
+head-display edit; their layouts and contents remain unchanged.
+
+The TU is still `NonMatching`: ten functions have residual differences,
+and `.sdata2` still emits 948 of the retail pool's 980 bytes. Direct literal
+substitutions for the five missing constants change code generation; they
+were not retained. Declaration and scope probes also failed to eliminate
+the remaining differences. No partial compiler profile, forced section, or
+additional TU split is used.
+
+Validation: `python3 configure.py --matching`, strict default `ninja`, and
+`ninja all_source` pass within the required 30-second timeout per build.
+Formatting checks pass for the TU and its public API header. The strict
+checksum still links retail code for this `NonMatching` TU.
