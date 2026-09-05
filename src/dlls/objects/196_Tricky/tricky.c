@@ -124,7 +124,6 @@ void trickyUpdateColorVariant(GameObject* obj, TrickyState* state);
 static int trickyIsInDeepWater(TrickyState* state);
 void trickyImpress(GameObject* obj);
 int Tricky_requestRecallAndCheckBusy(GameObject* obj);
-f32 trickyGetAnimSpeed(GameObject* obj);
 GameObject* trickyGetStayPoint(GameObject* obj);
 int trickyGetMouthYawOffset(GameObject* obj);
 f32* trickyGetMouthPosition(GameObject* obj);
@@ -205,8 +204,6 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state);
 void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state);
 int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence);
 void Tricky_requestRecall(GameObject* obj);
-int Tricky_isGuarding(GameObject* obj);
-int Tricky_isPlayingBall(GameObject* obj);
 int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj);
 void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* targetObj);
 u8 Tricky_getEnergyMax(GameObject* obj);
@@ -1959,25 +1956,21 @@ int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj) {
     return 1;
 }
 
-int Tricky_isPlayingBall(GameObject* obj) {
+u8 Tricky_isPlayingBall(GameObject* obj) {
     TrickyState* state;
     u8 mode;
-    int result;
 
     state = obj->extra;
     mode = state->stateIndex;
     switch (mode) {
     case TRICKY_STATE_BALL_ROLL:
-        result = 1;
-        break;
+        return 1;
     default:
-        result = 0;
-        break;
+        return 0;
     }
-    return result;
 }
 
-int Tricky_isGuarding(GameObject* obj) {
+u8 Tricky_isGuarding(GameObject* obj) {
     TrickyState* state = obj->extra;
     u8 mode = state->stateIndex;
     if (mode == TRICKY_STATE_GUARD || mode == TRICKY_STATE_GROWL) {
@@ -6393,7 +6386,7 @@ GameObject* trickyGetStayPoint(GameObject* obj) {
     return state->followObj;
 }
 
-f32 trickyGetAnimSpeed(GameObject* obj) {
+f32 trickyGetSpeed(GameObject* obj) {
     TrickyState* state = obj->extra;
     return state->speed;
 }

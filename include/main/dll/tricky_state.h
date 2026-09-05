@@ -344,6 +344,7 @@ typedef struct TrickyState {
 } TrickyState;
 
 STATIC_ASSERT(sizeof(TrickyState) == 0x83C);
+STATIC_ASSERT(offsetof(TrickyState, speed) == 0x14);
 STATIC_ASSERT(offsetof(TrickyState, moveVector.x) == 0x2C);
 STATIC_ASSERT(offsetof(TrickyState, moveVector.z) == 0x30);
 STATIC_ASSERT(sizeof(((TrickyState*)0)->moveVector) == 8);

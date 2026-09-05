@@ -12,7 +12,7 @@
  * consumers include this instead of hand-writing a local extern.
  */
 f32* trickyGetMouthPosition(GameObject* obj);
-f32 trickyGetAnimSpeed(GameObject* tricky);
+f32 trickyGetSpeed(GameObject* tricky);
 GameObject* trickyGetStayPoint(GameObject* tricky);
 int trickyGetMouthYawOffset(GameObject* tricky);
 int Tricky_requestRecallAndCheckBusy(GameObject* tricky);

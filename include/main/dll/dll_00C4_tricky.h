@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_00C4_TRICKY_H_
 
 #include "game/objects/object.h"
+#include "game/objects/object_interface.h"
 
 #define TRICKY_COMMAND_QUERY_COUNT 5
 
@@ -44,7 +45,7 @@ extern ObjectDescriptor21 gTrickyObjDescriptor;
 /* gTrickyObjDescriptor from slot02 onwards: the export table other objects reach through
    obj->anim.dll. */
 typedef struct TrickyCompanionInterface {
-    void* pad00[8];
+    ObjectInterface base;
     int (*getAvailableCommands)(GameObject* tricky);
     int (*updateSideCommandPrompts)(GameObject* tricky);
     void (*sideCommandEnable)(GameObject* tricky, GameObject* target, enum TrickyCommandKind commandKind,
@@ -59,6 +60,8 @@ typedef struct TrickyCompanionInterface {
     int (*getCurrentCommandPhase)(GameObject* tricky, int* commandPhase);
 } TrickyCompanionInterface;
 
+STATIC_ASSERT(offsetof(TrickyCompanionInterface, base) == 0);
+STATIC_ASSERT(sizeof(TrickyCompanionInterface) == 0x4C);
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, getAvailableCommands) == 0x20);
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, updateSideCommandPrompts) == 0x24);
 STATIC_ASSERT(offsetof(TrickyCompanionInterface, sideCommandEnable) == 0x28);
@@ -94,8 +97,8 @@ u8 Tricky_getEnergyMax(GameObject* obj);
 u8 Tricky_getEnergy(GameObject* obj);
 int Tricky_getCurrentCommandPhase(GameObject* obj, int* outCommandPhase);
 void Tricky_requestRecall(GameObject* obj);
-int Tricky_isGuarding(GameObject* obj);
-int Tricky_isPlayingBall(GameObject* obj);
+u8 Tricky_isGuarding(GameObject* obj);
+u8 Tricky_isPlayingBall(GameObject* obj);
 int Tricky_getAvailableCommands(GameObject* obj);
 
 #endif /* MAIN_DLL_DLL_00C4_TRICKY_H_ */

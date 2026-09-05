@@ -2427,7 +2427,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 workA; /* tricky dist-sq; reused as cross-product lane in the trail block */
     f32 ambientScale;
     f32 attractRatio; /* attract speed ratio; reused as cross-product Z lane and trail inv-scale */
-    f32 trickyRange;
+    f32 trickySpeed;
     f32 playerRange;
     f32 dirX;
     f32 dirY;
@@ -2435,8 +2435,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
     attractRatio = 1.0f;
-    trickyRange = 0.0f;
-    playerRange = trickyRange;
+    trickySpeed = 0.0f;
+    playerRange = trickySpeed;
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
     cache = getCache();
@@ -2476,7 +2476,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
         Camera_GetCurrent();
         if (tricky != NULL)
         {
-            trickyRange = trickyGetAnimSpeed(tricky);
+            trickySpeed = trickyGetSpeed(tricky);
         }
         if (player != NULL)
         {
@@ -2609,12 +2609,12 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         attractRatio = playerRange / workB;
                     }
                     if (workB > 300.0f && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
-                        tricky != NULL && srcObj != NULL && trickyRange > 0.2f)
+                        tricky != NULL && srcObj != NULL && trickySpeed > 0.2f)
                     {
                         workVec[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
                         workVec[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
                         workA = workVec[0] * workVec[0] + workVec[2] * workVec[2];
-                        attractRatio = trickyRange / workB;
+                        attractRatio = trickySpeed / workB;
                     }
                     if (workA < workB)
                     {

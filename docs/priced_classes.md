@@ -4245,6 +4245,25 @@ Both build gates, 59 focused tests, and the diagnostic link pass. There remain
 three non-exact functions and 55 linked text-byte differences, with exact linked
 non-text sections. This removes source/prototype workarounds, not a new match.
 
+The companion export table now embeds the engine's `ObjectInterface` instead
+of eight opaque pointers, with its complete `0x4C` size and callback offsets
+asserted. The guard and ball getters return `u8`, agreeing with that table and
+the retail guard consumer's byte normalization at `0x801802A4`. Direct switch
+returns in the ball getter preserve its nine-instruction body without a new
+truncation; the guard getter remains ten instructions. The physical-speed
+getter at `0x80138F78` is now `trickyGetSpeed`: it reads state `+0x14`, not the
+animation rate at `+0x34`. Its sole direct consumer scales particle attraction
+velocity, and its local now reflects that role. Its existing denominator is
+preserved, not corrected based on the recovered name.
+
+All Tricky and particle-system function and allocated-section bytes are
+unchanged; only the getter symbol, its consumer relocation, and Tricky's
+anonymous names differ. The other 2,870 source objects remain byte-identical.
+Both build gates and all 59 focused tests pass; the diagnostic link still has
+55 differing text bytes and exact non-text sections. A separate sweep of all
+24 leading movement-dispatch declaration orders under the corrected patch API
+found no improvement over the existing 34 operand differences and was rejected.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
