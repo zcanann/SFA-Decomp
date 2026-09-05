@@ -21,7 +21,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/ship_battle_api.h"
+#include "dlls/objects/601_SB_Cloudrun.h"
 #include "main/dll/partfx_interface.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"

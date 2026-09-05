@@ -305,6 +305,7 @@
 #include "dlls/objects/544.h"
 #include "dlls/objects/592_KT_Rex.h"
 #include "dlls/objects/599_DR_EarthWar.h"
+#include "dlls/objects/601_SB_Cloudrun.h"
 #include "dlls/objects/609_DR_LaserCan.h"
 #include "dlls/objects/684_LGTControlL.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -570,7 +571,7 @@ extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKytesMumObjDescriptor;
 extern ResourceDescriptor gProjectedLightObjDescriptor, gProximityMineObjDescriptor;
-extern ResourceDescriptor gRingObjDescriptor, gSB_CloudRunnerObjDescriptor;
+extern ResourceDescriptor gRingObjDescriptor;
 extern ResourceDescriptor gSPDrapeObjDescriptor, gSPitembeamObjDescriptor, gSeqPointObjDescriptor;
 extern ResourceDescriptor gDFP_RotatePObjDescriptor, gShopItemObjDescriptor, gShopKeeperObjDescriptor,
     gShopObjDescriptor;
@@ -1809,7 +1810,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gDIMSnowHorn1ObjDescriptor,
     (ResourceDescriptor*)&gDR_EarthWarriorObjDescriptor,
     &gDR_CloudRunnerObjDescriptor,
-    &gSB_CloudRunnerObjDescriptor,
+    (ResourceDescriptor*)&gSB_CloudRunnerObjDescriptor,
     (ResourceDescriptor*)&gStaticCameraObjDescriptor,
     (ResourceDescriptor*)&gMoonSeedPlantingSpotObjDescriptor,
     &gSnowClawObjDescriptor,

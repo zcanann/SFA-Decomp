@@ -1079,7 +1079,7 @@ more as they are recovered.
 | 0x242 | dlls/objects/578_DBstealerwo/DBstealerwo.c | include/dlls/objects/578_DBstealerwo.h |
 | 0x250 | dlls/objects/592_KT_Rex/KT_Rex.c | include/dlls/objects/592_KT_Rex.h |
 | 0x256 | dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c | include/dlls/objects/598_DIMSnowHorn.h |
-| 0x259 | dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c | include/main/dll/WC/dll_0259_sbcloudrunner.h |
+| 0x259 | dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c | include/dlls/objects/601_SB_Cloudrun.h |
 | 0x263 | dlls/objects/611_GM_MazeWell/GM_MazeWell.c | include/dlls/objects/611_GM_MazeWell.h |
 | 0x283 | dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c | include/dlls/objects/643_DR_BarrelGr.h |
 | 0x287 | dlls/objects/647_SPScarab/SPScarab.c | include/main/dll/SP/dll_0287_spscarab.h |

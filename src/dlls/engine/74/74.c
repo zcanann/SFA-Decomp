@@ -3,7 +3,7 @@
  */
 #include "main/dll/dll_004A_cameramodeshipbattle.h"
 
-#include "main/dll/ship_battle_api.h"
+#include "dlls/objects/601_SB_Cloudrun.h"
 #include "main/frame_timing.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
