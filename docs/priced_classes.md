@@ -3760,6 +3760,23 @@ branch structure. The only remaining instruction-count difference is movement
 update's two additional register moves. The diagnostic link still has the exact
 40,744-byte `.sdata2` section.
 
+Shared voice and action recovery makes four more Tricky functions exact:
+`Tricky_update` (8,672 bytes), `trickyGuard` (2,276), `trickyGrowl` (1,096),
+and `trickyFlame` (2,224). Six guard/growl/alert gates now use the existing
+voice helper. The tired-food warning reuses `trickyTryPlaySound`, including its
+success result; its differently named animation exclusions are aliases for the
+same IDs. Passing the selected impress sound directly removes the last update
+register differences.
+
+Seven identical approach-speed/movement pairs in flame and tunnel digging now
+share `trickyApproachTarget`; tunnel digging remains exact. The two flame-action
+updates share their allocation gate, callback result, animation threshold and
+retirement through `trickyUpdateFlameAction`. These real call-site extractions
+remove the remaining flame register differences without storage tricks. Overall
+text rises to 99.84319%, with no new function-size differences and the complete
+linked `.sdata2` still exact. Movement update still has two extra instructions;
+the TU remains `NonMatching`.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

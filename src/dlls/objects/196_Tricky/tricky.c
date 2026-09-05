@@ -156,6 +156,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint);
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state);
 void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos,
                                u8 slowWhenFacingAway);
+static inline int trickyApproachTarget(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos);
 void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state);
 int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state);
 void trickyGrowl(GameObject* obj, TrickyState* trickyState);
@@ -807,8 +808,6 @@ typedef enum TrickyGuardState {
 #define TRICKY_GUARD_GROWL_LEASH_DIST_SQ TRICKY_CLOSE_DISTANCE_SQ
 #define TRICKY_GUARD_GROWL_DOWN_BLEND    0.01f
 #define TRICKY_GUARD_GROWL_UP_BLEND      -0.01f
-#define TRICKY_GUARD_GROWL_SFX_ID        TRICKY_VOICE_SFX_GROWL
-#define TRICKY_GUARD_GROWL_SFX_PITCH     TRICKY_VOICE_PITCH_LOW
 
 typedef enum TrickyFlameState {
     TRICKY_FLAME_NONE = 0,
@@ -1023,8 +1022,6 @@ void Tricky_init(GameObject* obj) {
 void Tricky_update(GameObject* obj) {
     TrickyState* trickyState = obj->extra;
     int commandAlreadyQueued = 0;
-    int impressSfxId;
-    TrickyState* voiceState;
     int i;
     ObjPlacement* placementSetup;
     int count;
@@ -1493,31 +1490,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->waterIdleTimer = 0.0f;
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_FOOD_WARNING_PENDING) != 0) {
-        voiceState = obj->extra;
-        if (voiceState->soundSuppressed != 0) {
-            accepted = 0;
-        } else {
-            switch (obj->anim.currentMove) {
-            case TRICKY_ANIM_HOWL_START:
-            case TRICKY_ANIM_HOWL_HOLD:
-            case TRICKY_ANIM_HOWL_END:
-            case TRICKY_ANIM_DIG_FOOD_START_A:
-            case TRICKY_ANIM_DIG_FOOD_START_B:
-            case TRICKY_ANIM_DIG_FOOD_LOOP:
-            case TRICKY_ANIM_DIG_FOOD_END:
-                accepted = 0;
-                break;
-            default:
-                if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) != 0) {
-                    accepted = 0;
-                } else {
-                    objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_TIRED, TRICKY_VOICE_PITCH_NORMAL,
-                                       0xffffffff, 0);
-                    accepted = 1;
-                }
-                break;
-            }
-        }
+        accepted = trickyTryPlaySound(obj, TRICKY_VOICE_SFX_TIRED, TRICKY_VOICE_PITCH_NORMAL);
         if (accepted != 0) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
         }
@@ -1534,8 +1507,7 @@ void Tricky_update(GameObject* obj) {
         trickyState->impressTimer -= timeDelta;
         if (trickyState->impressTimer <= 0.0f) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_IMPRESS_PENDING;
-            impressSfxId = impressSfxIds[randomGetRange(0, 1)];
-            trickyPlaySidekickVoice(obj, impressSfxId, TRICKY_VOICE_PITCH_NORMAL);
+            trickyPlaySidekickVoice(obj, impressSfxIds[randomGetRange(0, 1)], TRICKY_VOICE_PITCH_NORMAL);
         }
     }
     trickyUpdateColorVariant(obj, trickyState);
@@ -3467,7 +3439,6 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
-    f32* targetPos;
     f32* entryPos;
     TrickyState* voiceState;
     int walkGroup;
@@ -3507,9 +3478,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         break;
     case TRICKY_DIG_TUNNEL_GOING_TO_START:
         trickyDebugPrint("DIGTUNNEL_GOINGTOSTART\n");
-        targetPos = &state->digTunnelStartNode->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
-        if (moveTricky(obj, targetPos) == 0) {
+        if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelStartNode->x) == 0) {
             state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
             state->substate = TRICKY_DIG_TUNNEL_START_DIGGING;
         } else {
@@ -3593,18 +3562,14 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     case TRICKY_DIG_TUNNEL_TO_EXIT_1:
         trickyDebugPrint("DIGTUNNEL_TOEND1 %f\n",
                          Vec_xzDistance(&obj->anim.worldPosX, &state->digTunnelExitNode.curve->x));
-        targetPos = &state->digTunnelExitNode.curve->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
-        if (moveTricky(obj, targetPos) == 0) {
+        if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelExitNode.curve->x) == 0) {
             trickyAdvanceNode(state);
             state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_2;
         }
         break;
     case TRICKY_DIG_TUNNEL_TO_EXIT_2:
         trickyDebugPrint("DIGTUNNEL_TOEND2\n");
-        targetPos = &state->digTunnelExitNode.curve->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, targetPos, 1);
-        if (moveTricky(obj, targetPos) == 0) {
+        if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelExitNode.curve->x) == 0) {
             trickyRequestIdleMove(obj, state);
             state->stateFlags &= ~TRICKY_STATE_DIG_TUNNEL_FLAGS;
             state->substate = TRICKY_DIG_TUNNEL_WAIT_FOR_PLAYER_GROUP;
@@ -3814,8 +3779,31 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
 void tricky_state06_nop(void) {
 }
 
+static inline int trickyApproachTarget(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos) {
+    trickyUpdateApproachSpeed(obj, stoppingRadius, state, targetPos, 1);
+    return moveTricky(obj, targetPos);
+}
+
+static inline int trickyUpdateFlameAction(GameObject* obj, TrickyState* state) {
+    if (obj->anim.currentMoveProgress > TRICKY_FOLLOW_ARC_QUARTER_PROGRESS) {
+        if ((state->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
+            if ((u8)Obj_CanSetupObject() != 0) {
+                trickySpawnFlameChildren(obj, state);
+            }
+        } else {
+            TrickyActionCallback callback = state->actionCallback;
+            if (callback == NULL || callback(state->followObj, 1) != 0) {
+                if (obj->anim.currentMoveProgress > TRICKY_FLAME_HELPER_RELEASE_PROGRESS) {
+                    trickyStopFlameChildren(obj, state);
+                    return 0;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
 void trickyFlame(GameObject* obj, TrickyState* trickyState) {
-    int flameBreathActive;
     f32* targetPos;
     f32 resetValue;
 
@@ -3855,9 +3843,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_FLAME_GOING_TO_EDGE:
         trickyDebugPrint("FLAME_GOINGTOEDGE\n");
-        targetPos = &trickyState->flameEdgeNode->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, targetPos, 1);
-        moveTricky(obj, targetPos);
+        trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, &trickyState->flameEdgeNode->x);
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) == 0) {
             trickyState->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             trickyState->substate = TRICKY_FLAME_TO_START;
@@ -3865,9 +3851,8 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_FLAME_TO_START:
         trickyDebugPrint("FLAME_TOSTART\n");
-        targetPos = &trickyState->flameEdgeNode->x;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, targetPos, 1);
-        if (moveTricky(obj, targetPos) != 0) {
+        if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, &trickyState->flameEdgeNode->x) !=
+            0) {
             break;
         }
         trickyRequestMove(obj, TRICKY_ANIM_FLAME_BREATH, 0.004f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
@@ -3893,25 +3878,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
             }
             trickyTurnTowardYaw(obj, flameYaw);
         }
-        do {
-            if (obj->anim.currentMoveProgress > TRICKY_FOLLOW_ARC_QUARTER_PROGRESS) {
-                if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
-                    if ((u8)Obj_CanSetupObject() != 0) {
-                        trickySpawnFlameChildren(obj, trickyState);
-                    }
-                } else {
-                    TrickyActionCallback callback = trickyState->actionCallback;
-                    if (callback != NULL && callback(trickyState->followObj, 1) == 0) {
-                    } else if (obj->anim.currentMoveProgress > TRICKY_FLAME_HELPER_RELEASE_PROGRESS) {
-                        trickyStopFlameChildren(obj, trickyState);
-                        flameBreathActive = 0;
-                        break;
-                    }
-                }
-            }
-            flameBreathActive = 1;
-        } while (0);
-        if (flameBreathActive == 0) {
+        if (trickyUpdateFlameAction(obj, trickyState) == 0) {
             trickyState->substate = TRICKY_FLAME_TO_END;
             (trickyState)->guardTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
         }
@@ -3939,9 +3906,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_FLAME_TURNING_IN:
         trickyDebugPrint("FLAME_TURNING_IN\n");
-        targetPos = &trickyState->followObj->anim.worldPosX;
-        trickyUpdateApproachSpeed(obj, TRICKY_MAX_DISTANCE, trickyState, targetPos, 1);
-        if (moveTricky(obj, targetPos) == 0) {
+        if (trickyApproachTarget(obj, TRICKY_MAX_DISTANCE, trickyState, &trickyState->followObj->anim.worldPosX) == 0) {
             trickyRequestMove(obj, TRICKY_ANIM_FLAME_BREATH, 0.004f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->substate = TRICKY_FLAME_IN;
             trickyState->stats->energy -= 4;
@@ -3949,25 +3914,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         break;
     case TRICKY_FLAME_IN:
         trickyDebugPrint("FLAME_IN\n");
-        do {
-            if (obj->anim.currentMoveProgress > TRICKY_FOLLOW_ARC_QUARTER_PROGRESS) {
-                if ((trickyState->stateFlags & TRICKY_STATE_FLAG_CHILDREN_ACTIVE) == 0) {
-                    if ((u8)Obj_CanSetupObject() != 0) {
-                        trickySpawnFlameChildren(obj, trickyState);
-                    }
-                } else {
-                    TrickyActionCallback callback = trickyState->actionCallback;
-                    if (callback != NULL && callback(trickyState->followObj, 1) == 0) {
-                    } else if (obj->anim.currentMoveProgress > TRICKY_FLAME_HELPER_RELEASE_PROGRESS) {
-                        trickyStopFlameChildren(obj, trickyState);
-                        flameBreathActive = 0;
-                        break;
-                    }
-                }
-            }
-            flameBreathActive = 1;
-        } while (0);
-        if (flameBreathActive == 0) {
+        if (trickyUpdateFlameAction(obj, trickyState) == 0) {
             trickyState->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
             trickyState->substate = TRICKY_FLAME_NONE;
             resetValue = 0.0f;
@@ -3984,9 +3931,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         trickyDebugPrint("FLAME_TOEND\n");
         trickyState->guardTimer -= timeDelta;
         if (trickyState->guardTimer <= 0.0f) {
-            targetPos = &trickyState->flameReturnNode->x;
-            trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, targetPos, 1);
-            moveTricky(obj, targetPos);
+            trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, &trickyState->flameReturnNode->x);
             if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) != 0) {
                 trickyState->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
                 trickyState->substate = TRICKY_FLAME_NONE;
@@ -4047,8 +3992,6 @@ int trickyGuardFindBaddieTarget(TrickyState* trickyState) {
 }
 
 void trickyGuard(GameObject* obj, TrickyState* trickyState) {
-    TrickyState* growlSoundState;
-    TrickyState* randomSoundState;
     f32* guardTargetPos;
 
     switch (trickyState->substate) {
@@ -4160,17 +4103,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             trickyRequestMove(obj, TRICKY_ANIM_GROWL_WINDUP, TRICKY_LAND_MOVE_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->guardTimer = 0.0f;
-            growlSoundState = obj->extra;
-            if (!growlSoundState->soundSuppressed) {
-                s16 move = obj->anim.currentMove;
-
-                if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &growlSoundState->soundState, TRICKY_GUARD_GROWL_SFX_ID,
-                                           TRICKY_GUARD_GROWL_SFX_PITCH, -1, 0);
-                    }
-                }
-            }
+            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
             trickyState->substate = TRICKY_GUARD_GROWL;
         } else if (trickyGuardIsBaddieTargetValid(trickyState->guardTarget) != 0) {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
@@ -4181,17 +4114,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
     case TRICKY_GUARD_GROWL:
         trickyDebugPrint("GUARD_GROWL\n");
         if (randomGetRange(0, TRICKY_GUARD_GROWL_RANDOM_RATE) == 0) {
-            randomSoundState = obj->extra;
-            if (!randomSoundState->soundSuppressed) {
-                s16 move = obj->anim.currentMove;
-
-                if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &randomSoundState->soundState, TRICKY_GUARD_GROWL_SFX_ID,
-                                           TRICKY_GUARD_GROWL_SFX_PITCH, -1, 0);
-                    }
-                }
-            }
+            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
         }
         trickyState->guardTimer = trickyState->guardTimer + timeDelta;
         if ((trickyState->guardTimer >= TRICKY_GUARD_GROWL_MAX_SECONDS &&
@@ -4697,8 +4620,6 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
     GameObject* bestDetourWarp = NULL;
     f32 bestDetourSavings = 0.0f;
     int warpCount;
-    TrickyState* approachVoiceState;
-    TrickyState* orbitVoiceState;
 
     switch (state->substate) {
     case TRICKY_BADDIE_ALERT_GOTO: {
@@ -4853,16 +4774,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 f32 rv;
                 rv = (s32)randomGetRange(0xc8, 0x258);
                 state->cooldownA = rv / 2.0f;
-                approachVoiceState = obj->extra;
-                if (!approachVoiceState->soundSuppressed) {
-                    s16 currentMove = obj->anim.currentMove;
-                    if (currentMove >= TRICKY_VOICE_MOVE_END || currentMove < TRICKY_VOICE_MOVE_MIN) {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &approachVoiceState->soundState, TRICKY_VOICE_SFX_ROLLING,
-                                               TRICKY_VOICE_PITCH_HIGH, -1, 0);
-                        }
-                    }
-                }
+                trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
             }
         }
         break;
@@ -4958,16 +4870,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
             }
             if (bestDetourWarp != NULL) {
                 if (state->baddieAlertWarp == NULL) {
-                    orbitVoiceState = obj->extra;
-                    if (!orbitVoiceState->soundSuppressed) {
-                        s16 currentMove = obj->anim.currentMove;
-                        if (currentMove >= TRICKY_VOICE_MOVE_END || currentMove < TRICKY_VOICE_MOVE_MIN) {
-                            if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                                objSoundStartTimed(obj, &orbitVoiceState->soundState, TRICKY_VOICE_SFX_GET_MFOX,
-                                                   TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                            }
-                        }
-                    }
+                    trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GET_MFOX, TRICKY_VOICE_PITCH_NORMAL);
                 }
                 if (state->baddieAlertWarp == NULL || state->baddieAlertWarp != bestDetourWarp) {
                     state->baddieAlertWarp = bestDetourWarp;
@@ -5030,22 +4933,11 @@ static inline int trickyAcquireBaddieAlertTarget(TrickyState* state) {
 }
 
 void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
-    TrickyState* barkState;
-
     switch (trickyState->substate) {
     case TRICKYGROWL_WINDUP:
         trickyDebugPrint("GROWLAT_GOTO\n");
         if (trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, trickyState) == TRICKY_MOVEMENT_REACHED_TARGET) {
-            barkState = obj->extra;
-            if (barkState->soundSuppressed == 0u) {
-                s16 move = obj->anim.currentMove;
-                if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                    if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &barkState->soundState, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW,
-                                           -1, 0);
-                    }
-                }
-            }
+            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
             trickyState->substate = TRICKYGROWL_FACE_TARGET;
             trickyRequestMove(obj, TRICKY_ANIM_GROWL_WINDUP, TRICKY_LAND_MOVE_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
@@ -5060,16 +4952,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
             trickyTurnTowardYaw(obj, getAngle(-(target[0] - obj->anim.worldPosX), -(target[2] - obj->anim.worldPosZ)));
             if (randomGetRange(0, 10) == 0) {
-                barkState = obj->extra;
-                if (barkState->soundSuppressed == 0u) {
-                    s16 move = obj->anim.currentMove;
-                    if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &barkState->soundState, TRICKY_VOICE_SFX_GROWL,
-                                               TRICKY_VOICE_PITCH_LOW, -1, 0);
-                        }
-                    }
-                }
+                trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
             }
         }
         break;
