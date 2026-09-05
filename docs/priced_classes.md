@@ -4185,6 +4185,30 @@ Tricky remains at 85/89 exact functions and 113 linked text-byte differences;
 all linked non-text sections remain exact. This is source recovery, not a new
 match claim. Both the all-source build and strict DOL checksum pass.
 
+The animation request's float is a playback rate, not blend speed or the
+current pose phase. Retail `trickyRequestMove` stores it at state `+0x34`
+(`0x8013A40C`) for an already-current move or `+0x38` (`0x8013A43C`) for a
+pending move. The update installs the pending value, optionally derives the
+rate from root-motion travel, and passes it to `ObjAnim_AdvanceCurrentMove`.
+That consumer multiplies the clamped rate by animation length at `0x8002FAC8`
+before advancing phase with `deltaTime`. A zero rate instead lets Tricky set
+the pose explicitly from `arcMoveProgress`. The fields are now `animRate` and
+`pendingAnimRate`, with both offsets asserted. The request arguments, thirteen
+private rate constants, and twelve retail pool labels follow the same contract.
+The separate `0.02f` physical acceleration no longer uses an animation alias.
+The redundant request prototype is removed in favor of the included API header.
+Tricky's complete object remains SHA256
+`4e87352bf3cd0dcc776b1242f9a98db1f5613ee3cda2ff249e27be8b07799f57`.
+
+Further allocation hypotheses were rejected, not retained: grouping the two
+walk-group locals removes a branch and copy and leaves 149 operand differences;
+sharing ball scan/selection indices leaves 55 instead of 52, while sharing the
+forward/reverse scan locals leaves 76. A byte return from `trickyTryPlaySound`
+adds a truncation in its result-consuming `Tricky_update` caller without helping
+the discarded-result sites. Automatic rather than explicit inlining of recovery
+position and route-turn helpers preserves caller bytes and only emits unused
+helper bodies. None improves the four remaining retail mismatches.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

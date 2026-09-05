@@ -139,9 +139,9 @@ typedef struct TrickyState {
     struct {
         f32 x;
         f32 z;
-    } moveVector;     /* unit direction for movement; full start-to-exit displacement while tunneling */
-    f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */
-    f32 moveProgressTarget;
+    } moveVector;        /* unit direction for movement; full start-to-exit displacement while tunneling */
+    f32 animRate;        /* normalized move-phase advance per timeDelta unit; zero uses arcMoveProgress */
+    f32 pendingAnimRate; /* installed when moveId becomes the current animation */
     f32 arcMoveProgress; /* normalized jump-arc/tween progress (arc->time / arc->duration, clamped/eased); passed to ObjAnim_SetMoveProgress (trickyfollow sets, tricky reads) */
     f32 sidestepDelta;
     f32 backstepDelta;
@@ -347,6 +347,8 @@ STATIC_ASSERT(sizeof(TrickyState) == 0x83C);
 STATIC_ASSERT(offsetof(TrickyState, moveVector.x) == 0x2C);
 STATIC_ASSERT(offsetof(TrickyState, moveVector.z) == 0x30);
 STATIC_ASSERT(sizeof(((TrickyState*)0)->moveVector) == 8);
+STATIC_ASSERT(offsetof(TrickyState, animRate) == 0x34);
+STATIC_ASSERT(offsetof(TrickyState, pendingAnimRate) == 0x38);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
