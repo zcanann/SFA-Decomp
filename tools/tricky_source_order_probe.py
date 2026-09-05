@@ -8,7 +8,6 @@ ownership audit before adopting the transformed source.
 
 import argparse
 import re
-import shlex
 import subprocess
 from pathlib import Path
 
@@ -17,6 +16,7 @@ from elftools.elf.elffile import ELFFile
 import brute_match
 import flag_probe
 import fwdsub_scan
+from compiler_command import split_command_line
 
 
 UNIT = "main/dlls/objects/196_Tricky/tricky"
@@ -122,7 +122,7 @@ def main():
     text = literal_diagnostics(SOURCE.read_text(), selected_diagnostics)
     source.write_text(reorder(text, args.reverse, args.inline_placement), encoding="ascii")
     command = compile_command(
-        shlex.split(flag_probe.base_cmd(UNIT).replace("\\", "/")),
+        split_command_line(flag_probe.base_cmd(UNIT)),
         source, directory, args.deferred, args.auto_inline,
     )
     subprocess.run(command, cwd=flag_probe.ROOT, check=True, timeout=30)

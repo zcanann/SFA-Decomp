@@ -6,12 +6,12 @@ Outputs scratch objects and disassembly, not a compiler-provenance verdict.
 """
 
 import argparse
-import shlex
 import subprocess
 from pathlib import Path
 
 import flag_probe
 import strucdiff
+from compiler_command import split_command_line
 
 
 UNIT = "main/dlls/objects/196_Tricky/tricky"
@@ -50,7 +50,7 @@ def main():
     parser.add_argument("--propagation", choices=["current", "on", "off"], default="current")
     args = parser.parse_args()
     root = Path(flag_probe.ROOT)
-    base = shlex.split(flag_probe.base_cmd(UNIT).replace("\\", "/"))
+    base = split_command_line(flag_probe.base_cmd(UNIT))
     compiler_index = next(i for i, arg in enumerate(base) if Path(arg).name == "mwcceppc.exe")
     for version in args.versions:
         compiler = root / "build/compilers/GC" / version / "mwcceppc.exe"
