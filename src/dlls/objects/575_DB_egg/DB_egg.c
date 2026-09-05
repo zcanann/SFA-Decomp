@@ -34,7 +34,6 @@
 #include "main/dll/dbeggstate_struct.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/drakorenergystate_struct.h"
-#include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/objtype.h"
 #include "main/obj_message.h"
@@ -66,7 +65,6 @@
 /* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
 int dbegg_probeSurface(GameObject* obj, f32* out, f32 a, f32 b, int p3);
-STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
