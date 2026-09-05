@@ -1906,7 +1906,7 @@ config.libs = [
             Object(NonMatching, "main/mm.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/model.c", cflags=[*cflags_dll_noopt_noloopinv, "-inline", "noauto"]),
             Object(NonMatching, "main/object.c"),
-            Object(MatchingFor("GSAE01"), "main/skystars.c"),
+            Object(MatchingFor("GSAE01"), "main/skystars.c", mw_version="GC/1.3"),
             Object(NonMatching, "main/objanim.c", cflags=cflags_dll_noopt_nocse),
             Object(NonMatching, "main/lightmap.c", cflags=[*cflags_dll_noopt_noprop, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/lightmap_initmapblocks.c", cflags=[*cflags_dll_noopt_nocse_noprop, "-inline", "noauto"]),
