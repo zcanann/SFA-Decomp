@@ -176,9 +176,9 @@ typedef struct TrickyState {
     Vec recoveryPos; /* fallback position; seeded on relocation and refreshed while inside walkable areas */
     Vec patchExitPos;
     CurvesCollisionState curvesCollision;
-    void* lastContactObj;
+    GameObject* lastContactObj;
     f32 contactTimer;
-    int light;      /* object link */
+    int hitType;    /* current cooldown-filtered priority hit; zero when no hit is accepted */
     int modelChain; /* ObjModelChain handle toggled via ObjModelChain_SetEnabled */
     f32 hitCooldown;
     u8 groundSnapCounter; /* frame countdown that forces the ground-snap path: != 0 -> decrement and do the height snap; primed to 2 on state entry (tricky/skeetla) */
@@ -403,6 +403,7 @@ STATIC_ASSERT(offsetof(TrickyState, movementState) == 0x9);
 STATIC_ASSERT(offsetof(TrickyState, sideCommandPromptMask) == 0xB);
 STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
+STATIC_ASSERT(offsetof(TrickyState, hitType) == 0x368);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, soundState.mouthAngle) == 0x3BC);

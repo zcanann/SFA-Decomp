@@ -225,13 +225,12 @@ void trickyReportError(const char* fmt, ...);
 void trickyDebugPrint(const char* fmt, ...);
 
 typedef struct TrickyBaddieTargetPlacement {
-    u8 pad0[0x14];
-    s32 mapEventId;
+    ObjPlacement base;
     s16 disableGameBit;
     s16 enableGameBit;
 } TrickyBaddieTargetPlacement;
 
-STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, mapEventId) == 0x14);
+STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, base.ident) == 0x14);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, disableGameBit) == 0x18);
 STATIC_ASSERT(offsetof(TrickyBaddieTargetPlacement, enableGameBit) == 0x1A);
 
@@ -639,8 +638,6 @@ static TrickySubstateHandler sTrickySubstateHandlers[13] = {
 f32 gTrickyCollisionSegmentRadii[2] = {0.05f, 8.5f};
 f32 gTrickyPathPointCollisionRadius = 8.0f;
 char sTrickyVelocityDebugFmt[] = "Vel %f\n";
-/* Unreferenced zero bytes trail the debug format in retail .sdata. */
-u8 gap_09_803DBC54_sdata[4] = {0};
 
 #define TRICKY_AVOIDANCE_REPATH_EPSILON_SQ 0.0001f
 #define TRICKY_TINY_MOVE_ANIM_RATE         0.0001f
@@ -1602,7 +1599,7 @@ void Tricky_hitDetect(GameObject* obj) {
     f32 animatorHeight;
     f32 trackedHeightReset;
     f32 previousTrackedHeight;
-    int animatorCount[2];
+    int animatorCount;
 
     state = obj->extra;
     y = obj->anim.localPosY;
@@ -1625,11 +1622,11 @@ void Tricky_hitDetect(GameObject* obj) {
     }
     if (state->heightTracking != 0u) {
         {
-            GameObject** objectList = (GameObject**)objGetAllOfType(XYZ_ANIMATOR_OBJECT_GROUP, animatorCount);
+            GameObject** objectList = (GameObject**)objGetAllOfType(XYZ_ANIMATOR_OBJECT_GROUP, &animatorCount);
             animatorIndex = 0;
             xyzAnimatorCursor = objectList;
         }
-        for (; animatorIndex < animatorCount[0]; animatorIndex++) {
+        for (; animatorIndex < animatorCount; animatorIndex++) {
             animatorHeight = XyzAnimator_getCoordinate(*xyzAnimatorCursor, XYZ_ANIMATOR_COORD_WORLD_Y);
             if (state->heightTrackObjId == -1) {
                 dy = (animatorHeight - obj->anim.localPosY >= 0.0f) ? animatorHeight - obj->anim.localPosY
@@ -1651,7 +1648,7 @@ void Tricky_hitDetect(GameObject* obj) {
             }
             xyzAnimatorCursor = xyzAnimatorCursor + 1;
         }
-        if (animatorIndex == animatorCount[0]) {
+        if (animatorIndex == animatorCount) {
             state->heightTracking = 0;
         }
     }
@@ -2059,18 +2056,18 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
 }
 
 void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
-    u8 pathBytes[16];
-    u32 pathByte = (u8)Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
+    u8 walkGroupPair[2];
+    u32 walkGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
 
-    pathBytes[0] = pathByte;
-    if (pathByte == 0) {
+    walkGroupPair[0] = walkGroup;
+    if (walkGroup == 0) {
         int patchGroup = Objfsa_GetPatchGroupIdAtPoint(&obj->anim.worldPosX);
         if (patchGroup != 0) {
-            walkPath_writeU16LE(patchGroup, pathBytes);
+            walkPath_writeU16LE(patchGroup, walkGroupPair);
         }
     }
-    if (pathBytes[0] != 0) {
-        state->walkGroup = pathBytes[0];
+    if (walkGroupPair[0] != 0) {
+        state->walkGroup = walkGroupPair[0];
         trickyResetCommandState(state);
     }
     if (gTrickyWarpHelperObject == 0) {
@@ -2206,14 +2203,14 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
     u8 progressDelta;
     u8 foodCount;
     u8 foodNeeded;
-    s16 yButtonItem[4];
+    s16 yButtonItem;
 
     canFeed = 0;
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
     foodCount = mainGetBit(GAMEBIT_ITEM_TrickyFood_Count);
     if (foodCount != 0) {
-        getYButtonItem(yButtonItem);
-        if (yButtonItem[0] == GAMEBIT_ITEM_TrickyFood_Count) {
+        getYButtonItem(&yButtonItem);
+        if (yButtonItem == GAMEBIT_ITEM_TrickyFood_Count) {
             canFeed = 1;
         }
         if (cMenuGetSelectedItem() == GAMEBIT_ITEM_TrickyFood_Count) {
@@ -2316,7 +2313,7 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
 }
 
 void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
-    f32 searchRadius[2];
+    f32 searchRadius;
     u8 minActivity;
     u8 maxActivity;
     GameObject* found;
@@ -2325,8 +2322,8 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
 
     minActivity = TRICKY_AMBIENT_ACTIVITY_WANDER;
     maxActivity = TRICKY_AMBIENT_ACTIVITY_HOWL;
-    searchRadius[0] = TRICKY_AMBIENT_ACTIVITY_BASE;
-    found = objGetNearestTypeTo(SHTHORNTAIL_OBJECT_GROUP, obj, searchRadius);
+    searchRadius = TRICKY_AMBIENT_ACTIVITY_BASE;
+    found = objGetNearestTypeTo(SHTHORNTAIL_OBJECT_GROUP, obj, &searchRadius);
     if (found != NULL && ((found)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
         minActivity = TRICKY_AMBIENT_ACTIVITY_APPROACH_THORNTAIL;
     }
@@ -6099,14 +6096,13 @@ static void trickyRequestIdleMove(GameObject* obj, TrickyState* state) {
 void trickyUpdateCollisionAndPathState(GameObject* obj) {
     TrickyState* state;
     f32 hitOffsetY;
-    GameObject* lastContactObj;
+    GameObject* hitObj;
     f32 nearestDistance;
-    f32 hitPos[3];
-    f32 lightArgs[3];
+    PartFxSpawnParams hitEffectParams;
     f32* hitPosPtr;
     u8 doGroundSnap;
     int doHeightSnap;
-    int hitKind;
+    int hitType;
     f32 contactTimer;
 
     state = (TrickyState*)obj->extra;
@@ -6150,10 +6146,10 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         obj->anim.velocityY = 0.0f;
     }
 
-    lastContactObj = (GameObject*)obj->anim.hitReactState->activeHit;
+    hitObj = (GameObject*)obj->anim.hitReactState->activeHit;
     if (((obj->anim.hitReactState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) == 0) ||
-        (lastContactObj->anim.romDefNo == SKEETLA_CONTACT_OBJ_PROJBALL)) {
-        lastContactObj = NULL;
+        (hitObj->anim.romDefNo == SKEETLA_CONTACT_OBJ_PROJBALL)) {
+        hitObj = NULL;
     }
 
     if ((state->stateFlags & TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED) != 0) {
@@ -6165,7 +6161,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
                 state->stateFlags &= ~TRICKY_STATE_FLAG_CONTACT_MASK_SUPPRESSED;
             }
         }
-    } else if ((state->lastContactObj != NULL) && (lastContactObj == state->lastContactObj)) {
+    } else if ((state->lastContactObj != NULL) && (hitObj == state->lastContactObj)) {
         state->contactTimer += timeDelta;
         contactTimer = state->contactTimer;
         if (contactTimer >= 10.0f) {
@@ -6177,11 +6173,12 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
         state->contactTimer = 0.0f;
     }
 
-    state->lastContactObj = lastContactObj;
-    hitKind = ObjHits_PollPriorityHitWithCooldown(obj, &state->hitCooldown, &lastContactObj, (hitPosPtr = hitPos));
-    state->light = hitKind;
+    state->lastContactObj = hitObj;
+    hitType =
+        ObjHits_PollPriorityHitWithCooldown(obj, &state->hitCooldown, &hitObj, (hitPosPtr = &hitEffectParams.posX));
+    state->hitType = hitType;
 
-    switch (state->light) {
+    switch (state->hitType) {
     case TRICKY_DAMAGE_INSTANT_DEATH:
     case 2:
     case TRICKY_DAMAGE_DIM2_SNOWBALL:
@@ -6190,7 +6187,7 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     case 0xf:
     case 0x11:
     case 0x13:
-        objDoHitParticleFx(obj, 0.014f, lightArgs, 1, 0);
+        objDoHitParticleFx(obj, 0.014f, &hitEffectParams, 1, 0);
         break;
     case 7:
     case 8:
@@ -6199,8 +6196,8 @@ void trickyUpdateCollisionAndPathState(GameObject* obj) {
     case 0xb:
     case 0xc:
         objfx_spawnHitEmitterAtPos(hitPosPtr, 8, 0xff, 0x20, 0x20);
-        objDoHitParticleFx(obj, 0.014f, lightArgs, 4, 0);
-        if (lastContactObj->anim.romDefNo == SKEETLA_ATTACKER_SEQID_STAFF) {
+        objDoHitParticleFx(obj, 0.014f, &hitEffectParams, 4, 0);
+        if (hitObj->anim.romDefNo == SKEETLA_ATTACKER_SEQID_STAFF) {
             Sfx_PlayFromObject(obj, SFXTRIG_stftest_var);
         }
         break;
@@ -6349,7 +6346,7 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
         if (objIsObjectType(*baddieCursor, TRICKY_INTERACTABLE_OBJGROUP) == 0 && healthFraction > 0.0f &&
             disabledByBit == 0 && enabledByBit != 0) {
             if ((*baddieCursor)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
-                if ((*gMapEventInterface)->shouldNotSaveTime(placement->mapEventId) != 0) {
+                if ((*gMapEventInterface)->shouldNotSaveTime(placement->base.ident) != 0) {
                     if (allowSpecialTypes == 0) {
                         s16 romDefNo = (*baddieCursor)->anim.romDefNo;
                         if (romDefNo == TRICKY_SEQID_VAMBAT || romDefNo == TRICKY_SEQID_WB ||

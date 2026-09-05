@@ -4314,6 +4314,30 @@ identical under the corrected headers. Both build gates and 72 focused tests
 pass. A derived component index, changed local scope, and a register qualifier
 did not recover the original query allocation and were not retained.
 
+Tricky's hit-response stack now contains one `PartFxSpawnParams`, not separate
+`lightArgs[3]` and `hitPos[3]` arrays. Retail passes `sp+0x20` to the position
+query at `0x80139690` and `sp+0x14` to the particle helper at `0x801396CC`:
+the 12-byte difference is the packet's canonical position offset. Its prefix
+remains uninitialized, as in retail. State `+0x368` is the current
+cooldown-filtered priority `hitType`, not a light pointer; `lastContactObj` is
+a `GameObject*`. The target-filter placement view also uses `ObjPlacement`'s
+common header and `base.ident`, retaining the two signed game-bit gates.
+
+Four inflated stack declarations are corrected from the actual query contracts:
+one animator count, one ambient-search radius, one signed Y-button item ID,
+and a two-byte walk-group pair. The count, nearest-object, cooldown-hit, and
+Y-button query implementations match retail exactly. All these source changes
+preserve the complete Tricky object, including every stack-frame instruction.
+
+The synthetic four-byte `.sdata` tail is removed. MWCC emits 20 bytes with
+eight-byte section alignment; the next unit still begins at `0x803DBC58`.
+The diagnostic link retains exact allocated non-text sections and the same
+55 text-byte differences. Only the unused tail symbol and its four object
+bytes disappear; function bytes, other named layouts, and relocation records
+are unchanged. Tricky's resulting object SHA256 is
+`91ca38aff29f32a8c7e6677afb3d6b0c4de6eb7c3165b258f1e820ba431a63e7`.
+Both build gates pass, and all 2871 other source objects remain byte-identical.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
