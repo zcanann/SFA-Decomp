@@ -1,6 +1,7 @@
-#ifndef MAIN_DLL_DR_DLL_0250_KTREX_H_
-#define MAIN_DLL_DR_DLL_0250_KTREX_H_
+#ifndef DLLS_OBJECTS_592_KT_REX_H_
+#define DLLS_OBJECTS_592_KT_REX_H_
 
+#include "dlls/object_descriptor.h"
 #include "global.h"
 #include "main/dll/dll_005A_staffcollision.h"
 #include "game/objects/object.h"
@@ -12,15 +13,13 @@
 
 #define KTREX_LIGHTNING_COUNT 5
 
-typedef struct KtrexMsgBlob
-{
+typedef struct KtrexMsgBlob {
     int w[4];
 } KtrexMsgBlob;
 
 STATIC_ASSERT(sizeof(KtrexMsgBlob) == 0x10);
 
-typedef struct KTRexWork
-{
+typedef struct KTRexWork {
     s16 unk0;
     s16 unk2;
     s16 unk4;
@@ -31,14 +30,12 @@ typedef struct KTRexWork
     f32 posZ;
 } KTRexWork;
 
-typedef struct KtrexPlacement
-{
+typedef struct KtrexPlacement {
     u8 pad0[0x38];
     f32 laneSpeeds[3];
 } KtrexPlacement;
 
-typedef struct KtrexState
-{
+typedef struct KtrexState {
     u8 pad0[0x38];
     f32 unk38;
     u8 pad3C[0x274 - 0x3C];
@@ -46,8 +43,7 @@ typedef struct KtrexState
     u8 pad276[0x5A4 - 0x276];
 } KtrexState;
 
-typedef struct KTRexArenaState
-{
+typedef struct KTRexArenaState {
     RingBufferQueue* stack;
     f32 stateTimer;
     f32 laneLerpT;
@@ -96,14 +92,13 @@ typedef struct KTRexArenaState
     f32 breathSfxTimer;
 } KTRexArenaState;
 
-typedef struct KTRexLaneTuning
-{
+typedef struct KTRexLaneTuning {
     f32 speedMax[3];
     int curveIds[4][4];
 } KTRexLaneTuning;
 
-
-
+STATIC_ASSERT(sizeof(KtrexState) == 0x5A4);
+STATIC_ASSERT(offsetof(KtrexState, controlMode) == 0x274);
 STATIC_ASSERT(sizeof(KTRexWork) == 0x18);
 STATIC_ASSERT(offsetof(KTRexArenaState, spawnWork) == 0x10c);
 STATIC_ASSERT(offsetof(KTRexArenaState, light) == 0x178);
@@ -161,4 +156,24 @@ int ktrex_stateHandlerA09(GameObject* obj, GroundBaddieState* runtime);
 int ktrex_stateHandlerA10(GameObject* obj, GroundBaddieState* runtime);
 int ktrex_stateHandlerA11(GameObject* obj, GroundBaddieState* runtime);
 
-#endif /* MAIN_DLL_DR_DLL_0250_KTREX_H_ */
+int ktrex_shouldAdvanceArenaPhase(void);
+void ktrex_spawnRandomEnergyArc(GameObject* obj, int angle, f32 arcLen, int slot);
+int ktrex_stateHandlerA06(GameObject* obj, GroundBaddieState* runtime);
+int ktrex_stateHandlerA00(void);
+int ktrex_stateHandlerB00(GameObject* obj, GroundBaddieState* runtime);
+int ktrex_isPlayerInLaneThreatRange(GameObject* obj);
+void ktrex_func0B(void);
+int ktrex_getControlMode(GameObject* obj);
+int ktrex_getExtraSize(void);
+int ktrex_getObjectTypeId(void);
+void ktrex_free(GameObject* obj);
+void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
+void ktrex_hitDetect(GameObject* obj);
+void ktrex_update(GameObject* obj);
+void ktrex_init(GameObject* obj, char* arg, int flag);
+void ktrex_release(void);
+void ktrex_initialise(void);
+
+extern ObjectDescriptor12WithPadding gKtRexObjDescriptor;
+
+#endif /* DLLS_OBJECTS_592_KT_REX_H_ */

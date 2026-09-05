@@ -303,6 +303,7 @@
 #include "dlls/objects/525_WM_seqpoint.h"
 #include "dlls/objects/529.h"
 #include "dlls/objects/544.h"
+#include "dlls/objects/592_KT_Rex.h"
 #include "dlls/objects/599_DR_EarthWar.h"
 #include "dlls/objects/609_DR_LaserCan.h"
 #include "dlls/objects/684_LGTControlL.h"
@@ -567,7 +568,7 @@ extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescrip
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
 extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
-    gKtRexLevelObjDescriptor, gKtRexObjDescriptor, gKytesMumObjDescriptor;
+    gKtRexLevelObjDescriptor, gKytesMumObjDescriptor;
 extern ResourceDescriptor gProjectedLightObjDescriptor, gProximityMineObjDescriptor;
 extern ResourceDescriptor gRingObjDescriptor, gSB_CloudRunnerObjDescriptor;
 extern ResourceDescriptor gSPDrapeObjDescriptor, gSPitembeamObjDescriptor, gSeqPointObjDescriptor;
@@ -1799,7 +1800,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gBossDrakorObjDescriptor,
     &gDrakorDThornBushObjDescriptor,
     &gKtRexLevelObjDescriptor,
-    &gKtRexObjDescriptor,
+    (ResourceDescriptor*)&gKtRexObjDescriptor,
     &gKtRexFloorSwitchObjDescriptor,
     &gKtLazerwallObjDescriptor,
     &gKtLazerlightObjDescriptor,
