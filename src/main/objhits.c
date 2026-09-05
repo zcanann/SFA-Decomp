@@ -1501,10 +1501,10 @@ void ObjHits_ApplyPairResponse(GameObject* objA, GameObject* objB, f32 x, f32 y,
     animB = &objB->anim;
     stateA = (ObjHitsPriorityState*)animA->hitReactState;
     stateB = (ObjHitsPriorityState*)animB->hitReactState;
-    stateA->flags = stateA->flags | 8;
-    stateB->flags = stateB->flags | 8;
-    *(GameObject**)stateA = objB;
-    *(GameObject**)stateB = objA;
+    stateA->flags = stateA->flags | OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
+    stateB->flags = stateB->flags | OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
+    stateA->hitObject = objB;
+    stateB->hitObject = objA;
     if (animA->parent != NULL) {
         Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, animA->parent);
     } else {

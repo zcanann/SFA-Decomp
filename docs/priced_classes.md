@@ -4428,6 +4428,30 @@ signature does not restore it. Indexed point lookup changes eight bytes in
 `linkWalkGroups[i]` spelling swaps the address-add operands; a signed canonical
 `offsetof` expression preserves them.
 
+Tricky's fetch launch now accesses the ball directly instead of temporarily
+storing its pointer in the integer movement-status local. That local and the
+negative-cosine launch component are named `movementStatus` and `launchDirZ`.
+Circling/alert selection calls the canonical typed player-target API, and the
+alert detour scan uses the object query's `GameObject**` result throughout.
+Obsolete void casts no longer hide the animation-event and attachment types.
+
+The contact pointer is tied to its engine writer: `ObjHits_ApplyPairResponse`
+stores each partner in `ObjHitsPriorityState.hitObject` at offset zero and sets
+`OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED`. Tricky reads that same typed
+field/flag instead of laundering the reaction overlay's integer `activeHit`.
+The existing state views and allocation sizes are unchanged. The engine writer
+remains 380/380 exact, and its complete object is byte-identical. The shared
+header rebuild changes none of the other source objects.
+
+All Tricky function/section bytes and named layouts remain unchanged; bypassing
+the integer target wrapper only renumbers anonymous relocations. Object SHA256:
+`9368502a060182b128ca59b7279ed8d8d3f84dc364259129809b4bd1f2436855`.
+Both build gates, formatting, and 72 tooling tests pass; the diagnostic link
+still has 59 differing text bytes and exact allocated non-text sections.
+Rejected type probes: native `int` versus `s32` tunnel indices and walk-group
+locals are byte-neutral; widening the four prompt flags removes four retail
+instructions and is not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
