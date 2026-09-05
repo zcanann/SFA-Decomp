@@ -1,6 +1,6 @@
 import unittest
 
-from tricky_source_order_probe import compile_command, reorder
+from tricky_source_order_probe import DIAGNOSTICS, compile_command, literal_diagnostics, reorder
 
 
 SOURCE = """\
@@ -54,6 +54,23 @@ class SourceOrderTests(unittest.TestCase):
     def test_invalid_placement(self):
         with self.assertRaises(ValueError):
             reorder(SOURCE, False, "invalid")
+
+
+class DiagnosticTests(unittest.TestCase):
+    def test_selected_string_only(self):
+        source = '\n'.join(f'{decl} {name}[] = {literal};\nuse({name});'
+                           for name, decl, literal in DIAGNOSTICS)
+        name, _, literal = DIAGNOSTICS[2]
+        source = f'extern const char {name}[];\n' + source
+        result = literal_diagnostics(source, {name})
+        self.assertNotIn(name, result)
+        self.assertIn(f'use({literal});', result)
+        for other, declaration, value in DIAGNOSTICS[:2]:
+            self.assertIn(f'{declaration} {other}[] = {value};', result)
+            self.assertIn(f'use({other});', result)
+
+    def test_empty_selection_is_identity(self):
+        self.assertEqual(literal_diagnostics(SOURCE, set()), SOURCE)
 
 
 class CompilerPolicyTests(unittest.TestCase):

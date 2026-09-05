@@ -3705,6 +3705,32 @@ inline definitions does not explain them. Independent GC/1.3 fixtures also show
 global `const float` scalars producing duplicate named/anonymous pool entries;
 static and local const scalars retain use order, not declaration order.
 
+The next Tricky pool audit distinguishes explicit inlining from ordinary static
+functions that are automatically inlined and then dead-stripped by the linker.
+GC/1.3 emits their bodies and constants; the game's GC/1.3.2 link removes the
+unreferenced bodies while retaining constants used by their inlined callers.
+`python tools/tricky_link_probe.py` reproduces this against the complete game,
+substituting only Tricky's C object into the normal matching link inputs.
+
+Reverse source order with deferred emission reproduces the six leading local
+initializer templates without named data substitutes. Ordinary deep-water,
+idle-move and facing helpers explain early water/angle constants and both water
+diagnostics. The repeated acceleration/deceleration operations now use two
+ordinary static helpers at eight actual call sites. All five helper bodies are
+absent from the diagnostic linked ELF; all 89 retail functions remain. The
+descriptor ends the TU, and water/circling messages are direct string literals.
+
+The complete generated `.sdata2` is 404 bytes versus retail's 408: all bytes match
+except the swapped `-2.0f`/`1.5f` pair at offsets 0x88/0x8c and four trailing zero
+bytes. Objdiff reports 99.504944% for that pool, up from 82.04489%. All 58 retail
+constant-load sequences remain equal. `.data` bytes match through 0x8eb, leaving
+only five trailing zero bytes; its much lower anonymous-symbol fuzzy score is
+not a byte-equality verdict. Relocated jump-table entries still depend on the
+remaining text differences. The diagnostic link preserves the whole pool.
+Text is temporarily 99.78016%: movement update gains two register moves, while
+the pre-existing extra zero load in `Tricky_update` remains. Neither the
+diagnostic link nor the strict matching build proves Tricky's C is fully exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

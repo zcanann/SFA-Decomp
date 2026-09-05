@@ -21,6 +21,21 @@ import fwdsub_scan
 
 UNIT = "main/dlls/objects/196_Tricky/tricky"
 SOURCE = Path(flag_probe.ROOT) / "src/dlls/objects/196_Tricky/tricky.c"
+DIAGNOSTICS = (
+    ("sTrickyInWaterMessage", "static char", '"in water\\n"'),
+    ("sTrickyOutOfWaterMessage", "static char", '"out of water\\n"'),
+    ("sTrickyShouldNeverStopCirclingError", "const char", '"error tricky should never stop when circling\\n"'),
+)
+
+
+def literal_diagnostics(source, names):
+    for name, declaration, literal in DIAGNOSTICS:
+        if name not in names:
+            continue
+        source = source.replace(f"extern const char {name}[];", "")
+        source = source.replace(f"{declaration} {name}[] = {literal};", "")
+        source = source.replace(name, literal)
+    return source
 
 
 def reorder(source, reverse, inline_placement="keep"):
@@ -84,6 +99,9 @@ def main():
     parser.add_argument("--auto-inline", choices=["current", "on", "off"], default="current",
                         help="Override automatic inlining independently of deferred emission")
     parser.add_argument("--literal-diagnostics", action="store_true")
+    parser.add_argument("--literal-diagnostic", action="append", default=[],
+                        choices=[item[0] for item in DIAGNOSTICS],
+                        help="Inline only selected diagnostic strings; repeat to select more")
     parser.add_argument("--inline-placement", choices=["keep", "first", "last"], default="keep",
                         help="Move explicit inline definitions without changing ordinary function order")
     args = parser.parse_args()
@@ -92,19 +110,16 @@ def main():
         tag += f"_inline_{args.inline_placement}"
     if args.auto_inline != "current":
         tag += f"_auto_{args.auto_inline}"
+    selected_diagnostics = set(args.literal_diagnostic)
+    if args.literal_diagnostics:
+        selected_diagnostics.update(item[0] for item in DIAGNOSTICS)
+    elif selected_diagnostics:
+        tag += "_diag_" + "".join(str(i) for i, item in enumerate(DIAGNOSTICS)
+                                  if item[0] in selected_diagnostics)
     directory = Path(flag_probe.SCRATCH) / tag
     directory.mkdir(parents=True, exist_ok=True)
     source = directory / "tricky.c"
-    text = SOURCE.read_text()
-    if args.literal_diagnostics:
-        text = text.replace("extern const char sTrickyShouldNeverStopCirclingError[];", "")
-        for name, declaration, literal in [
-            ("sTrickyInWaterMessage", "static char", '"in water\\n"'),
-            ("sTrickyOutOfWaterMessage", "static char", '"out of water\\n"'),
-            ("sTrickyShouldNeverStopCirclingError", "const char", '"error tricky should never stop when circling\\n"'),
-        ]:
-            text = text.replace(f"{declaration} {name}[] = {literal};", "")
-            text = text.replace(name, literal)
+    text = literal_diagnostics(SOURCE.read_text(), selected_diagnostics)
     source.write_text(reorder(text, args.reverse, args.inline_placement), encoding="ascii")
     command = compile_command(
         shlex.split(flag_probe.base_cmd(UNIT).replace("\\", "/")),
