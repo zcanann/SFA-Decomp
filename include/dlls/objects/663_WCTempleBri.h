@@ -1,13 +1,13 @@
-#ifndef MAIN_DLL_WC_DLL_0297_WCTEMPLEBRI_H_
-#define MAIN_DLL_WC_DLL_0297_WCTEMPLEBRI_H_
+#ifndef DLLS_OBJECTS_663_WCTEMPLEBRI_H_
+#define DLLS_OBJECTS_663_WCTEMPLEBRI_H_
 
+#include "dlls/object_descriptor.h"
 #include "game/objects/object.h"
 #include "types.h"
 #include "main/objseq.h"
 #include "game/objects/object_setup.h"
 
-typedef struct WCTempleBriSetup
-{
+typedef struct WCTempleBriSetup {
     ObjPlacement base;
     s8 type;
     s8 modelIndex;
@@ -16,8 +16,7 @@ typedef struct WCTempleBriSetup
     u8 pad20[4];
 } WCTempleBriSetup;
 
-typedef struct WCTempleBriState
-{
+typedef struct WCTempleBriState {
     f32 minZ;
     f32 sortedOffsets[15];
     u8 partFlags[15];
@@ -46,7 +45,6 @@ STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == 0x19);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == 0x1e);
 
-
 void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state);
 int wctemplebri_SeqFn(GameObject* obj, int p2, ObjSeqState* animUpdate);
 int wctemplebri_getExtraSize(void);
@@ -59,4 +57,6 @@ void wctemplebri_initialise(void);
 void wctemplebri_update(GameObject* obj);
 void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup);
 
-#endif /* MAIN_DLL_WC_DLL_0297_WCTEMPLEBRI_H_ */
+extern ObjectDescriptor gWCTempleBriObjDescriptor;
+
+#endif /* DLLS_OBJECTS_663_WCTEMPLEBRI_H_ */

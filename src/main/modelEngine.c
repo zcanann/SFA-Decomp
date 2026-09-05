@@ -466,6 +466,7 @@
 #include "main/dll/WC/dll_028F_wcpressures.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
 #include "dlls/objects/662_WCTempleDia.h"
+#include "dlls/objects/663_WCTempleBri.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/dll/WC/WCbeacon.h"
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
@@ -579,7 +580,7 @@ extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescrip
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
     gVortexObjDescriptor, gWCBouncyCraObjDescriptor;
 extern ResourceDescriptor gWCLevelContObjDescriptor,
-    gWCPushBlockObjDescriptor, gWCTempleBriObjDescriptor,
+    gWCPushBlockObjDescriptor,
     gWCTileObjDescriptor;
 extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_WallCrawlerObjDescriptor, gWM_newcrystalObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor, gWaterFlowWeObjDescriptor;
@@ -1865,7 +1866,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gWCTempleObjDescriptor,
     (ResourceDescriptor*)&gWCApertureSObjDescriptor,
     (ResourceDescriptor*)&gWCTempleDiaObjDescriptor,
-    &gWCTempleBriObjDescriptor,
+    (ResourceDescriptor*)&gWCTempleBriObjDescriptor,
     (ResourceDescriptor*)&gWCFloorTileObjDescriptor,
     (ResourceDescriptor*)&gDll299ObjDescriptor,
     (ResourceDescriptor*)&gARWArwingObjDescriptor,
