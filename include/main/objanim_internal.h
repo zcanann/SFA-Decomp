@@ -375,8 +375,8 @@ typedef struct ObjDef {
   s16 mapLoadObjectId;
   s16 npcDialogueTextId;
   s16 helpTextIds[4];
-  u16 avoidRadiusX; /* 0x84: lateral extent of the side-step avoidance ellipse (scaled by 0.1); 0 disables avoidance for the object */
-  u16 avoidRadiusZ; /* 0x86: axial extent of the same ellipse */
+  u16 avoidMinDistance; /* 0x84: Tricky's minimum path clearance, scaled by 0.1; 0 disables avoidance */
+  u16 avoidMoveDistance; /* 0x86: radial distance for the redirected step, scaled by 0.1 */
   f32 shadowModelScaleBase;
   u8 maxLights;
   u8 modelLightMaskIndex;
@@ -627,8 +627,8 @@ STATIC_ASSERT(sizeof(ObjTextureSlotDef) == 0x02);
 STATIC_ASSERT(sizeof(ObjTextureRuntimeSlot) == 0x10);
 
 STATIC_ASSERT(sizeof(ObjDef) == 0x9C);
-STATIC_ASSERT(offsetof(ObjDef, avoidRadiusX) == 0x84);
-STATIC_ASSERT(offsetof(ObjDef, avoidRadiusZ) == 0x86);
+STATIC_ASSERT(offsetof(ObjDef, avoidMinDistance) == 0x84);
+STATIC_ASSERT(offsetof(ObjDef, avoidMoveDistance) == 0x86);
 STATIC_ASSERT(offsetof(ObjDef, name) == 0x91);
 STATIC_ASSERT(offsetof(ObjDef, shadowScaleBase) == 0x00);
 STATIC_ASSERT(offsetof(ObjDef, rootMotionScaleBase) == 0x04);

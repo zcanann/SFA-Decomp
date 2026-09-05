@@ -151,8 +151,8 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** candidateRou
 RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u8 routeFlagValue);
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes);
 void skeetla_spawnLinkedSparks(GameObject* obj);
-void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance, f32 moveDistance);
-void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint);
+void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* center, f32 minDistance, f32 moveDistance);
+void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos);
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state);
 void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos,
                                u8 slowWhenFacingAway);
@@ -5624,7 +5624,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
 
 /* group owned by another DLL, queried here */
 
-void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
+void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos) {
     int count;
     int startIndex;
     int objectCount;
@@ -5633,7 +5633,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
     SideRepelPlacement* repelPlacement;
     ObjDef* modelDef;
     ObjHitsPriorityState* hitState;
-    u16 minRadius;
+    u16 minDistance;
     GameObject** op;
     f32 scale;
     int i;
@@ -5642,7 +5642,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
     for (i = 0, op = objects, scale = TRICKY_POSITION_OFFSET_SCALE; i < count; i++) {
         obj = *op;
         repelPlacement = (SideRepelPlacement*)obj->anim.placementData;
-        trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX,
+        trickyAdjustStepAroundPoint(start, end, targetPos, &obj->anim.worldPosX,
                                     scale * (f32)(u32)repelPlacement->minDistance,
                                     scale * (f32)(u32)repelPlacement->moveDistance);
         op++;
@@ -5652,72 +5652,71 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint) {
     for (i = startIndex, op = objects + i; i < objectCount; i++) {
         obj = *op;
         modelDef = obj->anim.modelInstance;
-        minRadius = modelDef->avoidRadiusX;
-        if (minRadius != 0) {
+        minDistance = modelDef->avoidMinDistance;
+        if (minDistance != 0) {
             hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
-            if ((hitState != NULL) && ((hitState->flags & 1) != 0)) {
-                trickyAdjustStepAroundPoint(start, end, guardPoint, &obj->anim.worldPosX,
-                                            TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)minRadius,
-                                            TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)modelDef->avoidRadiusZ);
+            if ((hitState != NULL) && ((hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0)) {
+                trickyAdjustStepAroundPoint(start, end, targetPos, &obj->anim.worldPosX,
+                                            TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)minDistance,
+                                            TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)modelDef->avoidMoveDistance);
             }
         }
         op++;
     }
 }
 
-void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance,
-                                 f32 moveDistance) {
-    f32 projection[3];
+void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* center, f32 minDistance, f32 moveDistance) {
+    Vec projection;
     f32 dx;
-    f32 centerToEnd;
+    f32 centerToEndSq;
     f32 minDistanceSq;
     f32 limitDistanceSq;
-    f32 guardDistance;
-    f32 startGuardDistance;
+    f32 targetToCenterSq;
+    f32 startToTargetSq;
     f32 slope;
     f32 intercept;
     f32 perpSlope;
     f32 dz;
-    f32 centerToStart;
+    f32 centerToStartSq;
     f32 length;
     int useBlendedDistance;
 
     useBlendedDistance = 0;
-    centerToStart = getXZDistanceSquared(center, start);
-    centerToEnd = getXZDistanceSquared(center, end);
+    centerToStartSq = getXZDistanceSquared(center, start);
+    centerToEndSq = getXZDistanceSquared(center, end);
     minDistanceSq = minDistance * minDistance;
     limitDistanceSq = moveDistance * moveDistance;
 
-    if (centerToEnd > centerToStart) {
+    if (centerToEndSq > centerToStartSq) {
         return;
     }
 
-    guardDistance = getXZDistanceSquared(guardPoint, center);
-    if (guardDistance < minDistanceSq) {
+    targetToCenterSq = getXZDistanceSquared(targetPos, center);
+    if (targetToCenterSq < minDistanceSq) {
         return;
     }
 
-    startGuardDistance = getXZDistanceSquared(start, guardPoint);
-    if (getXZDistanceSquared(start, center) > startGuardDistance) {
+    startToTargetSq = getXZDistanceSquared(start, targetPos);
+    if (getXZDistanceSquared(start, center) > startToTargetSq) {
         return;
     }
 
-    if (centerToStart < limitDistanceSq) {
-        limitDistanceSq = centerToStart;
+    if (centerToStartSq < limitDistanceSq) {
+        limitDistanceSq = centerToStartSq;
         useBlendedDistance = 1;
     }
 
-    if (!(centerToEnd < limitDistanceSq)) {
+    if (!(centerToEndSq < limitDistanceSq)) {
         return;
     }
 
     slope = (end[2] - start[2]) / (end[0] - start[0]);
     intercept = start[2] - (slope * start[0]);
     perpSlope = (start[0] - end[0]) / (end[2] - start[2]);
-    projection[0] = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
-    projection[2] = (slope * projection[0]) + intercept;
+    projection.x = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
+    projection.z = (slope * projection.x) + intercept;
 
-    if (!(getXZDistanceSquared(center, projection) < minDistanceSq)) {
+    if (!(getXZDistanceSquared(center, &projection.x) < minDistanceSq)) {
         return;
     }
 
@@ -5732,7 +5731,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     if (useBlendedDistance != 0) {
         moveDistance = sqrtf(limitDistanceSq);
         {
-            f32 blend = moveDistance - sqrtf(centerToEnd);
+            f32 blend = moveDistance - sqrtf(centerToEndSq);
             moveDistance = moveDistance - blend / 8.0f;
         }
     }

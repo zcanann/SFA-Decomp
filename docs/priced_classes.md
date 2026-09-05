@@ -3934,6 +3934,24 @@ are unchanged. Movement retains its 8764-byte retail length, with 61 operand
 differences remaining (down from 72). Full linked non-text sections remain
 exact, and differing text bytes fall from 212 to 189; Tricky text is 99.94300%.
 
+The avoidance audit corrects `ObjDef` offsets 0x84/0x86: these are minimum
+clearance and radial movement distances, not the X/Z axes of an ellipse.
+Tricky passes them to the same arguments as `SideRepelPlacement::minDistance`
+and `moveDistance`. The first bounds the perpendicular projection's distance
+from the obstacle; the second bounds the endpoint distance and determines the
+redirected endpoint radius. When the start is already inside that radius, the
+step's radial advance is reduced to one eighth instead. The fields are now
+`avoidMinDistance`/`avoidMoveDistance`, preserving their `u16` widths and offsets.
+The third point argument is the movement target, not the guard-post position;
+squared-distance locals and the projected `Vec` now express those roles.
+All 668 rebuilt consumers, including the complete Tricky object, are
+byte-identical. This is a semantic correction, not a matching gain.
+
+The remaining branch collector requires an unsigned mask: a signed mask
+changes all eight retail `cmplwi` tests to `cmpwi`. Input-first collector
+arguments, an explicit state argument to the facing helper, and narrowing the
+unused fast-turn result's scope were byte-neutral and were not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

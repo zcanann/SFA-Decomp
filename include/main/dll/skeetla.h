@@ -30,7 +30,7 @@ int trickyFindReachableRouteIndex(TrickyState* state, RomCurveDef** routeCandida
                                   int targetWalkGroup);
 void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 linkSelector, RomCurveDef** outRoutes);
 void skeetla_spawnLinkedSparks(GameObject* obj);
-void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* center, f32 minDistance, f32 moveDistance);
-void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint);
+void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* targetPos, f32* center, f32 minDistance, f32 moveDistance);
+void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos);
 
 #endif /* MAIN_DLL_SKEETLA_H_ */
