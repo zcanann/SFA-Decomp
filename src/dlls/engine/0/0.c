@@ -7677,27 +7677,6 @@ static inline void gameUiClearItemSlots(CMenuHud* gameUi) {
     }
 }
 
-static inline void gameUiClearItemSlotsSecondPass(CMenuHud* gameUi) {
-    u8 slot;
-    int index;
-    Texture** itemTexture;
-    s16* itemSlot;
-    u8* itemFlag;
-
-    for (slot = 0; slot < 64; slot++) {
-        index = slot;
-        itemTexture = (Texture**)((u8*)&gameUi->itemTextures + index * sizeof(Texture*));
-        if (*itemTexture != NULL) {
-            textureFree(*itemTexture);
-            *itemTexture = NULL;
-        }
-        itemSlot = (s16*)((u8*)&gameUi->itemSlots + index * sizeof(s16));
-        *itemSlot = -1;
-        itemFlag = (u8*)&gameUi->itemFlags + index;
-        *itemFlag = 1;
-    }
-}
-
 static inline void gameUiReleaseMenuResources(CMenuHud* gameUi) {
     gameUiResetMenuState();
     gameUiClearItemSlots(gameUi);
@@ -7713,20 +7692,39 @@ static inline void gameUiReleaseMenuResources(CMenuHud* gameUi) {
     gTrickyHudCachedIconTexture = NULL;
 }
 
-void GameUI_release(void) {
+static inline void gameUiFreeResources(void) {
     CMenuHud* gameUi;
-    int i;
-    Texture** texture;
+    int textureIndex;
+    int finalItemIndex;
+    Texture** finalItemTexture;
+    int itemIndex;
+    Texture** itemTexture;
+    Texture** hudTexture;
+    u8 slot;
+    s16* itemSlot;
+    u8* itemFlag;
 
     gameUi = (CMenuHud*)lbl_803A87F0;
-    for (i = 0, texture = gameUi->hudTextures; i < ARRAY_COUNT(gameUi->hudTextures); texture++, i++) {
-        if (*texture != NULL) {
-            textureFree(*texture);
+    for (textureIndex = 0, hudTexture = gameUi->hudTextures; textureIndex < ARRAY_COUNT(gameUi->hudTextures);
+         hudTexture++, textureIndex++) {
+        if (*hudTexture != NULL) {
+            textureFree(*hudTexture);
         }
     }
 
     gameUiResetMenuState();
-    gameUiClearItemSlots(gameUi);
+    for (slot = 0; slot < 64; slot++) {
+        itemIndex = slot;
+        itemTexture = (Texture**)((u8*)&gameUi->itemTextures + itemIndex * sizeof(Texture*));
+        if (*itemTexture != NULL) {
+            textureFree(*itemTexture);
+            *itemTexture = NULL;
+        }
+        itemSlot = (s16*)((u8*)&gameUi->itemSlots + itemIndex * sizeof(s16));
+        *itemSlot = -1;
+        itemFlag = (u8*)&gameUi->itemFlags + itemIndex;
+        *itemFlag = 1;
+    }
 
     if (gPauseMenuGridBackdropTexture != NULL) {
         textureFree(gPauseMenuGridBackdropTexture);
@@ -7738,9 +7736,24 @@ void GameUI_release(void) {
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = NULL;
 
-    gameUiClearItemSlotsSecondPass(gameUi);
+    for (slot = 0; slot < 64; slot++) {
+        finalItemIndex = slot;
+        finalItemTexture = (Texture**)((u8*)&gameUi->itemTextures + finalItemIndex * sizeof(Texture*));
+        if (*finalItemTexture != NULL) {
+            textureFree(*finalItemTexture);
+            *finalItemTexture = NULL;
+        }
+        itemSlot = (s16*)((u8*)&gameUi->itemSlots + finalItemIndex * sizeof(s16));
+        *itemSlot = -1;
+        itemFlag = (u8*)&gameUi->itemFlags + finalItemIndex;
+        *itemFlag = 1;
+    }
 
     textureFree(gGameUiBlinkTexture);
+}
+
+void GameUI_release(void) {
+    gameUiFreeResources();
 }
 
 /* Lifecycle setters and initialization. */
