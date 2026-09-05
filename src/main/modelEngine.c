@@ -298,6 +298,7 @@
 #include "dlls/objects/519_WM_Worm.h"
 #include "dlls/objects/521_WM_LevelCon.h"
 #include "dlls/objects/522_WM_GeneralS.h"
+#include "dlls/objects/544.h"
 #include "dlls/objects/599_DR_EarthWar.h"
 #include "dlls/objects/609_DR_LaserCan.h"
 #include "dlls/objects/684_LGTControlL.h"
@@ -569,7 +570,7 @@ extern ResourceDescriptor gSpellStoneObjDescriptor, gStaffObjDescriptor;
 extern ResourceDescriptor gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
 extern ResourceDescriptor gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor, gVFP_Block1ObjDescriptor;
-extern ResourceDescriptor gVFP_DoorSwitchObjDescriptor, gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
+extern ResourceDescriptor gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
     gVFP_MiniFireObjDescriptor, gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor,
     gVFP_SpellPlaceObjDescriptor, gVFP_coreplatObjDescriptor, gVFP_flamepointObjDescriptor;
 extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor, gVFP_statueballObjDescriptor,
@@ -1743,7 +1744,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gVFPLiftObjDescriptor,
     &gVFP_Block1ObjDescriptor,
     &gVFP_PlatformObjDescriptor,
-    &gVFP_DoorSwitchObjDescriptor,
+    (ResourceDescriptor*)&gVFP_DoorSwitchObjDescriptor,
     &gSeqPointObjDescriptor,
     &gVFPDragHeadObjDescriptor,
     &gVFP_coreplatObjDescriptor,
