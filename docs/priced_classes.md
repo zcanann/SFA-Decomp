@@ -4608,6 +4608,21 @@ raw-byte identical after rebuilding the shared-header consumers. Tricky retains
 86/89 exact functions, exact allocated non-text sections, and 53 diagnostic-link
 text-byte differences. Both build gates and 79 tooling tests pass.
 
+The follow-voice selection now has one inline helper, `trickyPlayFollowVoice`,
+which owns the fast-follow range and slow-follow table while leaving timing and
+eligibility in `moveTricky`. This removes all ten remaining register differences
+in its two nested `trickyTryPlaySound` expansions: `moveTricky` is exact at 601
+instructions. The discarded ball-dependent random draw and subsequent table
+selection draw remain unchanged. This is matching evidence for a coherent
+helper boundary, not proof of its original name or compiler provenance.
+
+Only `moveTricky` changes (12 bytes); allocated data and named symbol layouts
+are unchanged. Anonymous relocation labels are renumbered, with no normalized
+relocation changes. Tricky reaches 87/89 exact functions and 99.97732% fuzzy;
+the diagnostic link falls from 53 to 41 text-byte differences, retaining the
+complete 404-byte literal pool and exact allocated non-text sections. Tunnel
+loop-local declarations and early-continue probes did not help and are restored.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

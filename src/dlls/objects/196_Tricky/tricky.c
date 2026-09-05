@@ -5730,6 +5730,22 @@ int trickyRequestMove(GameObject* obj, int newMoveId, f32 animRate, u32 flags) {
     return 0;
 }
 
+static inline void trickyPlayFollowVoice(GameObject* obj, f32 speed) {
+    if (speed > TRICKY_FAST_FOLLOW_VOICE_THRESHOLD) {
+        trickyTryPlaySound(obj, randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME),
+                           TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
+    } else {
+        u16 slowFollowVoiceSfxIds[3] = {TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING,
+                                        TRICKY_VOICE_SFX_LETS_PLAY};
+        if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
+            randomGetRange(0, 2);
+        } else {
+            randomGetRange(0, 1);
+        }
+        trickyTryPlaySound(obj, slowFollowVoiceSfxIds[randomGetRange(0, 2)], TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
+    }
+}
+
 int moveTricky(GameObject* obj, f32* targetPos) {
     f32 desiredNextPos[3];
     f32 avoidanceNextPos[3];
@@ -5786,22 +5802,7 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                         state->sfxIntervalTimer =
                             (f32)(int)randomGetRange(TRICKY_FOLLOW_VOICE_MIN_FRAMES, TRICKY_FOLLOW_VOICE_MAX_FRAMES);
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            if (currentSpeed > TRICKY_FAST_FOLLOW_VOICE_THRESHOLD) {
-                                trickyTryPlaySound(
-                                    obj, randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME),
-                                    TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
-                            } else {
-                                u16 slowFollowVoiceSfxIds[3] = {TRICKY_VOICE_SFX_LAUGH,
-                                                                TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING,
-                                                                TRICKY_VOICE_SFX_LETS_PLAY};
-                                if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
-                                    randomGetRange(0, 2);
-                                } else {
-                                    randomGetRange(0, 1);
-                                }
-                                trickyTryPlaySound(obj, slowFollowVoiceSfxIds[randomGetRange(0, 2)],
-                                                   TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
-                            }
+                            trickyPlayFollowVoice(obj, currentSpeed);
                         }
                     }
                 }
