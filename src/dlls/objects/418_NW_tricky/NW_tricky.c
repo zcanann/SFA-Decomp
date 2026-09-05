@@ -27,7 +27,7 @@
 #define NW_TRICKY_SHARPCLAW_SEQUENCE_ID  0x13A
 
 #define NW_TRICKY_SOUND_CHANNEL                 16
-#define NW_TRICKY_MOUTH_OPEN_ANGLE               0x1000
+#define NW_TRICKY_MOUTH_OPEN_ANGLE              0x1000
 #define NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES 600.0f
 
 #define NW_TRICKY_PLAY_BALL_COMMAND_ENABLED 1
@@ -72,9 +72,6 @@ void nwTricky_update(GameObject* obj) {
     GameObject* tricky;
     GameObject* player;
     GameObject** herdObjects;
-    GameObject** completedHerdScan;
-    GameObject** activeHerdScan;
-    int* targetId;
     int targetIndex;
     GameObject* target;
     f32 playerDistanceSquared;
@@ -95,10 +92,9 @@ void nwTricky_update(GameObject* obj) {
     case NW_TRICKY_PHASE_CHASED_BY_SHARPCLAW:
         if (mainGetBit(GAMEBIT_NW_TrickySharpClawDefeated)) {
             herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_SHARPCLAW_OBJECT_GROUP, &herdObjectCount);
-            for (herdObjectIndex = 0, completedHerdScan = herdObjects; herdObjectIndex < herdObjectCount;
-                 completedHerdScan++, herdObjectIndex++) {
-                if ((*completedHerdScan)->anim.romDefNo == NW_TRICKY_SHARPCLAW_SEQUENCE_ID) {
-                    enemy_setTrackedObj(*completedHerdScan, player);
+            for (herdObjectIndex = 0; herdObjectIndex < herdObjectCount; herdObjectIndex++) {
+                if (herdObjects[herdObjectIndex]->anim.romDefNo == NW_TRICKY_SHARPCLAW_SEQUENCE_ID) {
+                    enemy_setTrackedObj(herdObjects[herdObjectIndex], player);
                 }
             }
             mainSetBits(GAMEBIT_Tricky_Unlocked_Sidekick_Commands, 1);
@@ -110,9 +106,9 @@ void nwTricky_update(GameObject* obj) {
                     state->phaseTimer = 0.0f;
                 }
 
-                for (targetIndex = 0, targetId = targetIds.ids, minimumHealth = NW_TRICKY_MINIMUM_TARGET_HEALTH;
-                     targetIndex < NW_TRICKY_PLAY_BALL_TARGET_ID_COUNT; targetId++, targetIndex++) {
-                    target = ObjList_FindObjectById(*targetId);
+                for (targetIndex = 0, minimumHealth = NW_TRICKY_MINIMUM_TARGET_HEALTH;
+                     targetIndex < NW_TRICKY_PLAY_BALL_TARGET_ID_COUNT; targetIndex++) {
+                    target = ObjList_FindObjectById(targetIds.ids[targetIndex]);
                     if (target != NULL && enemy_getHealthFraction(target) > minimumHealth) {
                         TRICKY_INTERFACE(tricky)->commandPlayBall(tricky, NW_TRICKY_PLAY_BALL_COMMAND_ENABLED, target);
                         break;
@@ -128,16 +124,15 @@ void nwTricky_update(GameObject* obj) {
             }
 
             herdObjects = (GameObject**)objGetAllOfType(NW_TRICKY_SHARPCLAW_OBJECT_GROUP, &herdObjectCount);
-            for (herdObjectIndex = 0, activeHerdScan = herdObjects; herdObjectIndex < herdObjectCount;
-                 activeHerdScan++, herdObjectIndex++) {
-                if ((*activeHerdScan)->anim.romDefNo == NW_TRICKY_SHARPCLAW_SEQUENCE_ID) {
+            for (herdObjectIndex = 0; herdObjectIndex < herdObjectCount; herdObjectIndex++) {
+                if (herdObjects[herdObjectIndex]->anim.romDefNo == NW_TRICKY_SHARPCLAW_SEQUENCE_ID) {
                     playerDistanceSquared =
-                        vec3f_distanceSquared(&(*activeHerdScan)->anim.worldPosX, &player->anim.worldPosX);
-                    if (vec3f_distanceSquared(&(*activeHerdScan)->anim.worldPosX, &tricky->anim.worldPosX) <
+                        vec3f_distanceSquared(&herdObjects[herdObjectIndex]->anim.worldPosX, &player->anim.worldPosX);
+                    if (vec3f_distanceSquared(&herdObjects[herdObjectIndex]->anim.worldPosX, &tricky->anim.worldPosX) <
                         playerDistanceSquared) {
-                        enemy_setTrackedObj(*activeHerdScan, tricky);
+                        enemy_setTrackedObj(herdObjects[herdObjectIndex], tricky);
                     } else {
-                        enemy_setTrackedObj(*activeHerdScan, player);
+                        enemy_setTrackedObj(herdObjects[herdObjectIndex], player);
                     }
                 }
             }
