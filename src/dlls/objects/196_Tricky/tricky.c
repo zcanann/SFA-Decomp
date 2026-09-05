@@ -13,7 +13,6 @@
 #include "main/vecmath.h"
 #include "main/objtype.h"
 #include "main/obj_link.h"
-#include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie_control_interface.h"
 #include "game/objects/object.h"
 #include "sys/objects.h"
@@ -441,8 +440,6 @@ typedef enum TrickyAnimId {
 #define TRICKY_BALL_RETURN_COUNT_MAX     0xef
 #define TRICKY_COLOR_CHANGE_SEEN_GAMEBIT 1005
 #define TRICKY_COLOR_CHANGE_SEQUENCE_ID  5
-
-PPCWGPipe GXWGFifo : (0xCC008000);
 
 /*
  * Tricky per-frame collision, ground
@@ -4196,10 +4193,9 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         if ((obj)->anim.currentMoveProgress >= TRICKY_FETCH_LAUNCH_PROGRESS) {
             status = (int)state->fetchBallObj;
             ((GameObject*)status)->anim.localPosY += TRICKY_DEFAULT_STOPPING_RADIUS;
-            bob = -mathCosf(TRICKY_PI * (f32)(s32) * (short*)obj / TRICKY_ANGLE_HALF_TURN_UNITS);
+            bob = -mathCosf(TRICKY_PI * (f32)obj->anim.rotX / TRICKY_ANGLE_HALF_TURN_UNITS);
             sidekickBall_launch(state->fetchBallObj, obj,
-                                -mathSinf(TRICKY_PI * (f32)(s32) * (short*)obj / TRICKY_ANGLE_HALF_TURN_UNITS), 1.0f,
-                                bob);
+                                -mathSinf(TRICKY_PI * (f32)obj->anim.rotX / TRICKY_ANGLE_HALF_TURN_UNITS), 1.0f, bob);
             state->substate = TRICKY_FETCH_BALL_THROW_DONE;
         }
         break;
