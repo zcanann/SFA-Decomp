@@ -8,7 +8,7 @@
 
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/dll/player_api.h"
 #include "main/dll/player_target.h"
 #include "main/dll/waterfx_interface.h"

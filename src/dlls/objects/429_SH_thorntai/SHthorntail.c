@@ -9,7 +9,7 @@
 #include "dlls/object_descriptor.h"
 #include "sys/objects.h"
 #include "main/objtype.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "dolphin/os.h"
 #include "game/objects/object.h"
 #include "main/obj_trigger.h"

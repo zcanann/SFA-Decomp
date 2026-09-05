@@ -31,7 +31,7 @@
 #include "stdarg.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_80136a40.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/vi.h"

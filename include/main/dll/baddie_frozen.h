@@ -3,7 +3,7 @@
 
 #include "game/objects/object.h"
 #include "dolphin/mtx/vec_types.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 
 u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int hit, int p5, int p6, Vec* hitPos,
                              int sector, f32 hDist, f32 vDist);

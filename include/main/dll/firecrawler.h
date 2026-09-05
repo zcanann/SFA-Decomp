@@ -7,7 +7,7 @@
 #include "main/modellight_api.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
-#include "main/dll/baddie_setmove.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"

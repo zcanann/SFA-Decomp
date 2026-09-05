@@ -5,7 +5,7 @@
 #include "main/audio/music_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
 #include "main/frame_timing.h"

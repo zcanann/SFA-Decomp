@@ -25,7 +25,7 @@
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/dll/dll_80136a40.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/dll/dll_0019_dll19func0.h"
 #include "main/track_dolphin_api.h"
 #include "main/audio/sfx_channel_query_api.h"

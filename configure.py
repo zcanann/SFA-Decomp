@@ -1357,7 +1357,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/objects/200_DepthOfFieldPoint/DepthOfFieldPoint.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/201_Baddie/Baddie.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/201_Baddie/Baddie.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/202/battledroid.c"),
             Object(NonMatching, "dlls/objects/202/sharpclaw.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/202/guardclaw.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),

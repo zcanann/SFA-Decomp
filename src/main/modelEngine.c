@@ -1,3 +1,4 @@
+#include "dlls/objects/201_Baddie.h"
 #include "dlls/object_descriptor.h"
 #include "dlls/objects/198_AnimatedObj.h"
 #include "dlls/objects/199_DIM2RoofRub.h"
@@ -545,7 +546,7 @@ extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor, exp
 extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, gARWGeneratoObjDescriptor,
     gARWProximitObjDescriptor;
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
-extern ResourceDescriptor gBaddieObjDescriptor, gBossDrakorObjDescriptor;
+extern ResourceDescriptor gBossDrakorObjDescriptor;
 extern ResourceDescriptor gChukaObjDescriptor;
 extern ResourceDescriptor gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDBstealerwormObjDescriptor, gDFP_LevelControlObjDescriptor,
@@ -1402,7 +1403,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gAnimatedObjDescriptor,
     (ResourceDescriptor*)&gDIM2RoofRubObjDescriptor,
     (ResourceDescriptor*)&gDepthOfFieldPointObjDescriptor,
-    &gBaddieObjDescriptor,
+    (ResourceDescriptor*)&gBaddieObjDescriptor,
     (ResourceDescriptor*)&gIceBaddieObjDescriptor,
     (ResourceDescriptor*)&gDllCBObjDescriptor,
     (ResourceDescriptor*)&gChukChukObjDescriptor,

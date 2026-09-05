@@ -9,7 +9,7 @@
 #include "main/dll/dll_0049_cameramodecombat.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/dll/savegame.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/obj_query.h"

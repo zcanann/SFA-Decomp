@@ -112,7 +112,7 @@
 #define FEAR_TEST_METER_POSITION_INT
 #include "main/dll/dll_0000_gameui.h"
 #undef FEAR_TEST_METER_POSITION_INT
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/objtype.h"
 #include "main/obj_link.h"
 #include "main/obj_message.h"

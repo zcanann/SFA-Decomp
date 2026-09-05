@@ -36,7 +36,7 @@
 #include "main/objprint_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/pad.h"
 #include "main/objtype.h"
 #include "dolphin/pad.h"
