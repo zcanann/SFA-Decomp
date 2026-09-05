@@ -36,7 +36,7 @@ Both `ninja` and `ninja all_source` pass with 30-second timeouts after
 `python3 configure.py --matching`. Retail DOL SHA-1:
 `e750e8e894707a52446118a4b84f1b58b677b269`.
 
-## Reproducing the audit
+## Source recovery and compiler discriminator
 
 Subsequent source fixes migrate `main/gameloop.c`, `main/gameloop_main.c`, and
 `main/thp/n_options.c`: unsigned mask literals restore the immediate mask/XOR
@@ -44,6 +44,40 @@ instructions for cache alignment, game-bit inversion, and audio DMA buffer
 selection. The final source is exact under both compilers; formatted objects
 preserve the baseline sections, symbols, and relocations. This brings the
 migration to 746 GC/1.3 units and 42 temporary GC/2.0 overrides.
+
+Slots 544 and 525 remove legacy casted calls in favor of their canonical
+renderer/environment APIs. Slot 525 also corrects the shared sky flag query's
+return type to `u8`, supported by the callee's one-bit return and the caller's
+direct byte store. Its four adjacent consumers retain byte-identical objects.
+
+Slot 239 (`pushable`) provides a compiler discriminator under its existing
+whole-TU profile. Four casted calls become ordinary calls to
+`pushable_updateCurtain`, `pushable_initMagicGem` (twice), and
+`pushable_initWcPushBlock`. No types, data, or optimization flags change.
+
+| Source/profile | Whole TU | update | init | updateMagicGem |
+| --- | ---: | ---: | ---: | ---: |
+| Original, GC/2.0 | 100% | 100% | 100% | 100% |
+| Original, GC/1.3 | 99.4295% | 97.98883% | 96.829895% | 100% |
+| Clean, GC/1.3 | 100% | 100% | 100% | 100% |
+| Clean, GC/2.0 | 96.30786% | 64.13408% | 90.02577% | 100% |
+| Clean, GC/2.0 with `-inline noauto` | 99.227844% | 100% | 100% | 91.78626% |
+
+Retail and clean GC/1.3 retain the curtain and initialization calls while
+inlining both `pushable_driftEyePos` operations. GC/2.0 inlines the curtain and
+WC block initialization instead, expanding update from 716 to 972 bytes and
+init from 1,552 to 1,704 bytes. Disabling automatic inlining restores those
+calls but introduces two drift-eye helper calls that retail does not have.
+GC/1.3 reproduces the complete retail call/inlining topology without the casts.
+The accepted object differs from the original exact GC/2.0 object solely in
+compiler metadata, with no anonymous-symbol renumbering.
+
+This is evidence for GC/1.3 with the clean source and existing profile, not proof
+of every TU's compiler or an exhaustive rejection of possible GC/2.0 settings.
+The five-way control matrix, commands, identical-source hashes, full objects,
+and retail call audit are in `build/gc13_migration/239/`.
+
+## Reproducing the audit
 
 `tools/compiler_impact.py --all-mwcc-game --compiler GC/1.3 --output <new-directory>`
 includes every game-category MWCC unit. Add `--extra-cflags '-char signed'` to
