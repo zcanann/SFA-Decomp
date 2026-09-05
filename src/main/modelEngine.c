@@ -462,6 +462,7 @@
 #include "main/dll/dll_0272_hightop.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "dlls/objects/643_DR_BarrelGr.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
 #include "main/dll/WC/dll_0292_wctrexstatu.h"
@@ -556,7 +557,7 @@ extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDFP_LevelControlObjDesc
     gDFP_ObjCreatorObjDescriptor, gDFP_TorchObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
 extern ResourceDescriptor gDfplightniObjDescriptor, gDfppowerslObjDescriptor;
-extern ResourceDescriptor gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
+extern ResourceDescriptor gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
@@ -1848,7 +1849,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDrCloudPerObjDescriptor,
     (ResourceDescriptor*)&gDrEarthCalObjDescriptor,
     (ResourceDescriptor*)&gBarrelGenerObjDescriptor,
-    &gDrBarrelGrObjDescriptor,
+    (ResourceDescriptor*)&gDrBarrelGrObjDescriptor,
     &gShopItemObjDescriptor,
     &gShopObjDescriptor,
     &gShopKeeperObjDescriptor,

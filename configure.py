@@ -1816,7 +1816,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/640_DR_CloudPer/DR_CloudPer.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/641_DR_EarthCal/DR_EarthCal.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/642_BarrelGener/BarrelGener.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/644/644.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/645_SPShop/SPShop.c"),
             Object(Matching, "dlls/objects/646_SPShopKeepe/SPShopKeepe.c", cflags=cflags_dll_noopt_noautoinline),

@@ -1,6 +1,7 @@
-#ifndef MAIN_DLL_DR_DLL_0283_DRBARRELGR_H
-#define MAIN_DLL_DR_DLL_0283_DRBARRELGR_H
+#ifndef DLLS_OBJECTS_643_DR_BARRELGR_H_
+#define DLLS_OBJECTS_643_DR_BARRELGR_H_
 
+#include "dlls/object_descriptor.h"
 #include "global.h"
 #include "main/dll/curve_walker.h"
 #include "game/objects/object.h"
@@ -9,23 +10,20 @@
 extern f32 gDRBarrelGrThrowScale;
 extern f32 gDrBarrelGenGrabYOffset;
 
-typedef struct DrBarrelGrRenderParams
-{
+typedef struct DrBarrelGrRenderParams {
     s16 a;
     s16 b;
     s16 c;
     f32 d;
 } DrBarrelGrRenderParams;
 
-typedef struct DrBarrelGrFlags
-{
+typedef struct DrBarrelGrFlags {
     u8 bit80 : 1;
     u8 bit40 : 1;
     u8 pad : 6;
 } DrBarrelGrFlags;
 
-typedef struct DrbarrelgrPlacement
-{
+typedef struct DrbarrelgrPlacement {
     ObjPlacement head; /* 0x00 */
     s8 spawnYawByte;
     u8 speed;
@@ -35,8 +33,7 @@ typedef struct DrbarrelgrPlacement
     u8 pad22[0x28 - 0x22];
 } DrbarrelgrPlacement;
 
-typedef struct DrbarrelgrState
-{
+typedef struct DrbarrelgrState {
     s32 mode;
     s32 prevMode;
     GameObject* heldBarrel;
@@ -69,4 +66,6 @@ void DR_BarrelGr_init(GameObject* obj, DrbarrelgrPlacement* setup);
 void DR_BarrelGr_release(void);
 void DR_BarrelGr_initialise(void);
 
-#endif
+extern ObjectDescriptor gDrBarrelGrObjDescriptor;
+
+#endif /* DLLS_OBJECTS_643_DR_BARRELGR_H_ */
