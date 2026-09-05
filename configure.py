@@ -1587,7 +1587,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/411/411.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/412/412.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/413/413.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/414/414.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/414/414.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/415_NW_treebrid/NW_treebrid.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/416_NW_geyser/NW_geyser.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/417/417.c", cflags=cflags_dll_noopt_noautoinline),
