@@ -93,7 +93,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.behaviorFlags = 0x100111;
         cfg.textureId = 0xc10;
         break;
-    case 0xca:
+    case PARTFX_DIG_DEBRIS:
         if (spawnParams == 0)
             return 0;
         cfg.velocityX = 0.01f * (f32)(s32)randomGetRange(-0x14, 0x14);
@@ -105,7 +105,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         es.scale = 1.0f;
         es.rotZ = 0;
         es.rotY = 0;
-        es.rotX = spawnParams->rotX;
+        es.rotX = spawnParams->dig.yaw;
         vecRotateZXY(&es.rotX, &cfg.velocityX);
         cfg.scale = 0.002f * (f32)(s32)randomGetRange(4, 8);
         cfg.lifetimeFrames = 0x46;
@@ -113,15 +113,15 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x180108;
         cfg.renderFlags = 0x5000000;
-        if (spawnParams->unk4 == 0)
+        if (spawnParams->dig.variant == 0)
         {
             cfg.textureId = 0x2b;
         }
-        else if (spawnParams->unk4 == 1)
+        else if (spawnParams->dig.variant == 1)
         {
             cfg.textureId = 0x1a1;
         }
-        else if (spawnParams->unk4 == 2)
+        else if (spawnParams->dig.variant == 2)
         {
             cfg.textureId = 0xc10;
             cfg.renderFlags = cfg.renderFlags | 0x800;
@@ -131,7 +131,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.textureId = 0x2b;
         }
         break;
-    case 0xcb:
+    case PARTFX_DIG_DUST:
         if (spawnParams == 0)
             return 0;
         cfg.velocityX = 0.025f * (f32)(s32)randomGetRange(-0x14, 0x14);
@@ -143,7 +143,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         es.scale = 1.0f;
         es.rotZ = 0;
         es.rotY = 0;
-        es.rotX = spawnParams->rotX;
+        es.rotX = spawnParams->dig.yaw;
         vecRotateZXY(&es.rotX, &cfg.velocityX);
         cfg.scale = 0.0001f * (f32)(s32)randomGetRange(4, 8);
         cfg.lifetimeFrames = 0x46;
@@ -151,15 +151,15 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x1080100;
         cfg.renderFlags = 0x5000000;
-        if (spawnParams->unk4 == 0)
+        if (spawnParams->dig.variant == 0)
         {
             cfg.textureId = 0x2b;
         }
-        else if (spawnParams->unk4 == 1)
+        else if (spawnParams->dig.variant == 1)
         {
             cfg.textureId = 0x1a1;
         }
-        else if (spawnParams->unk4 == 2)
+        else if (spawnParams->dig.variant == 2)
         {
             cfg.textureId = 0xc10;
             cfg.renderFlags = cfg.renderFlags | 0x800;

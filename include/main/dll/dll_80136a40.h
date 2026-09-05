@@ -32,6 +32,7 @@ void trickyFreePromptChild(GameObject* obj, TrickyState* state, GameObject** chi
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
 void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);
+void Tricky_emitDigParticles(GameObject* obj);
 int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType commandType);
 void trickyUpdateColorVariant(GameObject* obj, TrickyState* state);
 

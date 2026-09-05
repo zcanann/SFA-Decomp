@@ -130,14 +130,16 @@ typedef struct TrickyState {
     s8 commandPhase; /* current command-dispatch phase selector (-1 idle, 1..5 active); compared == 3 / != 0 to gate the queued-command state machine (tricky/substates/weapone6/tumbleweedbush/mmp) */
     u8 padE[0x10 - 0xE];
     f32 prevSpeed;
-    f32 speed; /* planar speed magnitude, multiplied into dirX/dirZ */
+    f32 speed; /* planar speed magnitude, multiplied into moveVector */
     f32 animTransitionTimer;
     u8 pad1C[0x20 - 0x1C];
     int moveId;            /* compared to anim.currentMove, passed to ObjAnim_SetCurrentMove */
     GameObject* followObj; /* the followed object (playerObj/target/found stores; dll vtable dispatched) */
     f32* targetPosPtr;     /* current target/path position (compared to previousTargetPosPtr; fed to pathSearchBegin) */
-    f32 dirX;              /* normalized planar direction (pos delta / length) */
-    f32 dirZ;
+    struct {
+        f32 x;
+        f32 z;
+    } moveVector;     /* unit direction for movement; full start-to-exit displacement while tunneling */
     f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */
     f32 moveProgressTarget;
     f32 arcMoveProgress; /* normalized jump-arc/tween progress (arc->time / arc->duration, clamped/eased); passed to ObjAnim_SetMoveProgress (trickyfollow sets, tricky reads) */
@@ -342,6 +344,9 @@ typedef struct TrickyState {
 } TrickyState;
 
 STATIC_ASSERT(sizeof(TrickyState) == 0x83C);
+STATIC_ASSERT(offsetof(TrickyState, moveVector.x) == 0x2C);
+STATIC_ASSERT(offsetof(TrickyState, moveVector.z) == 0x30);
+STATIC_ASSERT(sizeof(((TrickyState*)0)->moveVector) == 8);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);

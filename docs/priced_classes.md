@@ -4159,6 +4159,32 @@ prompt-slot checkpoint. There are 162 renamed anonymous relocation targets,
 with no other relocation changes. The diagnostic link falls from 130 to 113
 differing text bytes, and every allocated non-text section is still exact.
 
+Tricky's digging path now uses the actual producer/consumer contract. The
+`0x1CA` command target is GroundAnima; `0x160` is WallAnimato. Tunnel digging
+calls the wall's `applyImpact` and `isComplete` slots, not the layout-compatible
+ground interface. The ground callback returns a press radius; the wall returns
+`timer / 3000.0f`. Consequently state `+0x2C/+0x30` is a planar `moveVector`,
+normalized for movement/ground digging but a full start-to-exit displacement
+for tunnel interpolation. Three matching normalization expansions share one
+inline helper; route traversal retains its separately rounded products.
+
+`Tricky_emitDigParticles` (`0x8013ADFC`) replaces the unrelated Skeetla/sparks
+name and duplicate packet overlay with `PartFxSpawnParams.dig`. Effect5's
+`0xCA/0xCB` cases read yaw at `+0` and a signed variant halfword at `+4`.
+Retail loads at `0x800BC5D8` and `0x800BC770` select textures `0x2B`, `0x1A1`,
+or `0xC10`; variant 2 also sets render flag `0x800`. No material names are
+inferred. Ground's getter (`0x80193100`) returns state byte `+0x2B`, initialized
+from placement halfword `+0x1E`. Wall's getter (`0x80194408`) narrows placement
+halfword `+0x1C` to `u8`. Both are `getDigParticleVariant`, not a cave index or
+energy cost, and the wall interface now agrees with its concrete return type.
+Effect IDs are defined once by Effect5 and used by both producers.
+
+All four affected units preserve function and allocated-section bytes, with
+only the three public symbol renames and anonymous relocation renumbering.
+Tricky remains at 85/89 exact functions and 113 linked text-byte differences;
+all linked non-text sections remain exact. This is source recovery, not a new
+match claim. Both the all-source build and strict DOL checksum pass.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

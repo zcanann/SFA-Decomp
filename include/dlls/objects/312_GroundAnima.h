@@ -12,18 +12,18 @@ typedef enum GroundAnimatorStateFlag {
 } GroundAnimatorStateFlag;
 
 typedef struct GroundAnimatorPlacement {
-    ObjPlacement base;   /* 0x00 */
-    s16 sunkGameBit;     /* 0x18 */
-    s16 enableGameBit;   /* 0x1A */
-    u8 pad1C[2];         /* 0x1C */
-    s16 magicCaveId;     /* 0x1E */
-    u8 maxSinkDepth;     /* 0x20: multiplied by 100 */
-    u8 sfxIndex;         /* 0x21 */
-    u8 disableAutoLink;  /* 0x22 */
-    u8 pad23[2];         /* 0x23 */
-    u8 animatorId;       /* 0x25: polygon-group type to animate */
-    u8 falloffRadius;    /* 0x26 */
-    u8 collectibleDepth; /* 0x27 */
+    ObjPlacement base;      /* 0x00 */
+    s16 sunkGameBit;        /* 0x18 */
+    s16 enableGameBit;      /* 0x1A */
+    u8 pad1C[2];            /* 0x1C */
+    s16 digParticleVariant; /* 0x1E */
+    u8 maxSinkDepth;        /* 0x20: multiplied by 100 */
+    u8 sfxIndex;            /* 0x21 */
+    u8 disableAutoLink;     /* 0x22 */
+    u8 pad23[2];            /* 0x23 */
+    u8 animatorId;          /* 0x25: polygon-group type to animate */
+    u8 falloffRadius;       /* 0x26 */
+    u8 collectibleDepth;    /* 0x27 */
 } GroundAnimatorPlacement;
 
 /* GroundAnimator_getExtraSize proves the complete 0x30-byte allocation. */
@@ -38,7 +38,7 @@ typedef struct GroundAnimatorState {
     s16 animatedGroupIndices[6]; /* 0x1C: matching polygon-group indices */
     s16 animatedVertexCount;     /* 0x28 */
     u8 animatedGroupCount;       /* 0x2A */
-    u8 magicCaveId;              /* 0x2B */
+    u8 digParticleVariant;       /* 0x2B */
     u8 vertexUpdateFrames;       /* 0x2C */
     u8 flags;                    /* 0x2D: GroundAnimatorStateFlag */
     u8 pad2E[2];                 /* 0x2E */
@@ -48,7 +48,7 @@ STATIC_ASSERT(offsetof(GroundAnimatorPlacement, base) == 0x00);
 STATIC_ASSERT(offsetof(GroundAnimatorPlacement, sunkGameBit) == 0x18);
 STATIC_ASSERT(offsetof(GroundAnimatorPlacement, enableGameBit) == 0x1A);
 STATIC_ASSERT(offsetof(GroundAnimatorPlacement, pad1C) == 0x1C);
-STATIC_ASSERT(offsetof(GroundAnimatorPlacement, magicCaveId) == 0x1E);
+STATIC_ASSERT(offsetof(GroundAnimatorPlacement, digParticleVariant) == 0x1E);
 STATIC_ASSERT(offsetof(GroundAnimatorPlacement, maxSinkDepth) == 0x20);
 STATIC_ASSERT(offsetof(GroundAnimatorPlacement, sfxIndex) == 0x21);
 STATIC_ASSERT(offsetof(GroundAnimatorPlacement, disableAutoLink) == 0x22);
@@ -68,27 +68,27 @@ STATIC_ASSERT(offsetof(GroundAnimatorState, collectibleDepth) == 0x18);
 STATIC_ASSERT(offsetof(GroundAnimatorState, animatedGroupIndices) == 0x1C);
 STATIC_ASSERT(offsetof(GroundAnimatorState, animatedVertexCount) == 0x28);
 STATIC_ASSERT(offsetof(GroundAnimatorState, animatedGroupCount) == 0x2A);
-STATIC_ASSERT(offsetof(GroundAnimatorState, magicCaveId) == 0x2B);
+STATIC_ASSERT(offsetof(GroundAnimatorState, digParticleVariant) == 0x2B);
 STATIC_ASSERT(offsetof(GroundAnimatorState, vertexUpdateFrames) == 0x2C);
 STATIC_ASSERT(offsetof(GroundAnimatorState, flags) == 0x2D);
 STATIC_ASSERT(offsetof(GroundAnimatorState, pad2E) == 0x2E);
 STATIC_ASSERT(sizeof(GroundAnimatorState) == 0x30);
 
-u8 GroundAnimator_getMagicCaveIndex(GameObject* obj);
+u8 GroundAnimator_getDigParticleVariant(GameObject* obj);
 /* gGroundAnimatorObjDescriptor from slot02 onwards: the export table Tricky
    reaches through obj->anim.dll while digging. */
 typedef struct GroundAnimatorInterface {
     void* pad00[8];
     f32 (*applyPress)(GameObject* obj, GameObject* sidekick);
     u8 (*isFullySunk)(GameObject* obj);
-    u8 (*getMagicCaveIndex)(GameObject* obj);
+    u8 (*getDigParticleVariant)(GameObject* obj);
 } GroundAnimatorInterface;
 
 #define GROUND_ANIMATOR_INTERFACE(digSite) ((GroundAnimatorInterface*)*((GameObject*)(digSite))->anim.dll)
 
 STATIC_ASSERT(offsetof(GroundAnimatorInterface, applyPress) == 0x20);
 STATIC_ASSERT(offsetof(GroundAnimatorInterface, isFullySunk) == 0x24);
-STATIC_ASSERT(offsetof(GroundAnimatorInterface, getMagicCaveIndex) == 0x28);
+STATIC_ASSERT(offsetof(GroundAnimatorInterface, getDigParticleVariant) == 0x28);
 STATIC_ASSERT(sizeof(GroundAnimatorInterface) == 0x2C);
 
 u8 GroundAnimator_isFullySunk(GameObject* obj);
