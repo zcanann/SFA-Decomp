@@ -463,7 +463,7 @@
 #include "main/dll/DR/dll_0254_ktfallingrocks.h"
 #include "main/dll/dll_0269_explodeplan.h"
 #include "dlls/objects/611_GM_MazeWell.h"
-#include "main/dll/dll_0272_hightop.h"
+#include "dlls/objects/626.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "dlls/objects/643_DR_BarrelGr.h"

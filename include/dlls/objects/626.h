@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DLL_0272_HIGHTOP_H_
-#define MAIN_DLL_DLL_0272_HIGHTOP_H_
+#ifndef DLLS_OBJECTS_626_H_
+#define DLLS_OBJECTS_626_H_
 
 #include "main/objprint_character_api.h"
 #include "global.h"
@@ -12,15 +12,17 @@
 #include "main/objprint_sound_api.h"
 #include "dlls/object_descriptor.h"
 
-typedef struct HtInitData
-{
+typedef struct HighTopPathParams {
+    u8 values[4];
+} HighTopPathParams;
+
+typedef struct HtInitData {
     s16 v[9];
 } HtInitData;
 
 STATIC_ASSERT(sizeof(HtInitData) == 0x12);
 
-typedef struct HighTopDeathSpawn
-{
+typedef struct HighTopDeathSpawn {
     ObjPlacement base;
     u8 pad18[2];
     s16 effectId;
@@ -29,8 +31,7 @@ typedef struct HighTopDeathSpawn
     u8 pad20[0xC];
 } HighTopDeathSpawn;
 
-typedef struct HighTopPlacement
-{
+typedef struct HighTopPlacement {
     ObjPlacement base;
     s8 rotByte;
     s8 spawnVariant;
@@ -39,8 +40,7 @@ typedef struct HighTopPlacement
     s16 gameBitId;
 } HighTopPlacement;
 
-typedef struct HighTopRuntime
-{
+typedef struct HighTopRuntime {
     BaddieState baddie;
     u8 pad35C[0x38c - 0x35c];
     CharacterEyeAnimState eyeAnimState; /* 0x38c: head-aim / eye-blink record (characterDoEyeAnims) */
@@ -150,8 +150,7 @@ int hightop_stateHandler07(GameObject* obj, HighTopRuntime* runtime);
 int hightop_stateHandler09(GameObject* obj, HighTopRuntime* runtime);
 int hightop_stateHandler10(GameObject* obj, HighTopRuntime* runtime);
 
-typedef struct HighTopTuning
-{
+typedef struct HighTopTuning {
     int shacklePathPoints[4];
     f32 unk10[22];
 } HighTopTuning;
@@ -168,4 +167,4 @@ extern s16 lbl_803DC314[2];
 extern u8 gHighTopConfigTable[];
 extern ObjectDescriptor24 gHighTopObjDescriptor;
 
-#endif /* MAIN_DLL_DLL_0272_HIGHTOP_H_ */
+#endif /* DLLS_OBJECTS_626_H_ */

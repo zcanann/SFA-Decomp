@@ -1724,7 +1724,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/623/623.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/624_DR_Rock/DR_Rock.c"),
             Object(NonMatching, "dlls/objects/625/625.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
-            Object(Matching, "dlls/objects/626/626.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(Matching, "dlls/objects/626/626.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "dlls/objects/627_FirePipe/FirePipe.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/628_DR_pulley/DR_pulley.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/629_DR_cradle/DR_cradle.c"),
