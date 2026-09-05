@@ -374,16 +374,10 @@ typedef enum TrickyAnimId {
 #define TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE     0x4000
 #define TRICKY_STATE_FLAG_GROUND_SNAP             0x2000
 #define TRICKY_STATE_FLAG_POSITION_RELOCATED      0x80000
-#define TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS    0x30002
 #define TRICKY_STATE_FLAG_TURN_REQUEST            0x100000
 #define TRICKY_STATE_FLAG_TURN_REQUEST_PREV       0x200000
 #define TRICKY_STATE_FLAG_TURN_LEFT               0x400000
 #define TRICKY_STATE_FLAG_TURN_RIGHT              0x800000
-#define TRICKY_STATE_TURN_SELECT_CLEAR_MASK       0xef2fffff
-#define TRICKY_STATE_TURN_RIGHT_FLAGS             0x900000
-#define TRICKY_STATE_TURN_LEFT_FLAGS              0x500000
-#define TRICKY_STATE_DIG_TUNNEL_FLAGS             0x2010
-#define TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK     0x4201
 #define TRICKY_STATE_FLAG_TURNING                 0x10000000
 #define TRICKY_STATE_FLAG_SUN_VOICE_PLAYED        0x20000000
 #define TRICKY_STATE_FLAG_FEED_VOICE_PENDING      0x40000000
@@ -396,7 +390,6 @@ typedef enum TrickyAnimId {
 #define TRICKY_MOVE_FLAG_WALK_LOOP            (TRICKY_MOVE_FLAG_KEEP_PROGRESS | TRICKY_MOVE_FLAG_ROOT_TRANSLATE)
 #define TRICKY_MOVE_FLAG_JUMP_ARC                                                                                      \
     (TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION | TRICKY_STATE_FLAG_BACKSTEP | TRICKY_STATE_FLAG_VERTICAL_MOVE)
-#define TRICKY_MOVE_ACTIVE_FLAG_MASK 0x060001e0
 
 /* The one partfx effect emitted along Tricky's queued impress path. */
 #define TRICKY_PATH_PARTFX             0x533
@@ -1047,7 +1040,8 @@ void Tricky_update(GameObject* obj) {
                 trickyState->curvesCollision.resultWaterDepth = 0.0f;
             }
         }
-        trickyState->stateFlags &= ~TRICKY_STATE_SEQUENCE_DONE_CLEAR_MASK;
+        trickyState->stateFlags &= ~(TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE | TRICKY_STATE_FLAG_SEQUENCE_LATCHED |
+                                     TRICKY_STATE_FLAG_SEQUENCE_CALLBACK);
         if (trickyState->sequencePreserveBlend != 0) {
             trickyState->sequencePreserveBlend = 0;
         } else {
@@ -1100,7 +1094,8 @@ void Tricky_update(GameObject* obj) {
         } else if (trickyState->stateIndex == TRICKY_STATE_GROWL && requestedCommand == TRICKY_COMMAND_TYPE_FLAME) {
             trickyState->flameCommandPending = 1;
         } else if (requestedCommand == TRICKY_COMMAND_TYPE_CALL) {
-            trickyState->stateFlags |= TRICKY_STATE_HEEL_RECALL_REQUEST_FLAGS;
+            trickyState->stateFlags |= TRICKY_STATE_FLAG_HEEL_REQUEST | TRICKY_STATE_FLAG_RECALL_REQUEST |
+                                       TRICKY_STATE_FLAG_STUCK_VOICE_PENDING;
         } else {
             flags = trickyState->stateFlags;
             if ((flags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
@@ -1324,7 +1319,9 @@ void Tricky_update(GameObject* obj) {
             } else {
                 ObjAnim_SetCurrentMove(obj, trickyState->moveId, 0.0f, 0);
             }
-            trickyState->stateFlags &= ~TRICKY_MOVE_ACTIVE_FLAG_MASK;
+            trickyState->stateFlags &=
+                ~(TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION | TRICKY_MOVE_FLAG_ROOT_TRANSLATE | TRICKY_STATE_FLAG_ROTATE |
+                  TRICKY_STATE_FLAG_VERTICAL_MOVE | TRICKY_STATE_FLAG_BACKSTEP | TRICKY_STATE_FLAG_SIDESTEP);
             trickyState->stateFlags |= trickyState->pendingStateFlags;
             trickyState->animTransitionTimer = 0.0f;
             trickyState->animRate = trickyState->pendingAnimRate;
@@ -1350,7 +1347,8 @@ void Tricky_update(GameObject* obj) {
         int rotationStep;
 
         rotationDiff = trickyWrapYawDelta(trickyState->targetYaw - (u16)obj->anim.rotX);
-        rotationStep = (int)((f32)trickyState->animEvents.rootPitch * trickyState->rotStepScale);
+        rotationStep =
+            (int)((f32)trickyState->animEvents.rootRotation[OBJANIM_ROOT_ROTATION_YAW] * trickyState->rotStepScale);
         if ((rotationDiff >= 0 ? rotationDiff : -rotationDiff) >= 4) {
             if ((rotationStep > 0 && rotationDiff > 0) || (rotationStep < 0 && rotationDiff < 0)) {
                 if ((rotationStep >= 0 ? rotationStep : -rotationStep) >
@@ -3064,11 +3062,11 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     case TRICKY_DIG_TUNNEL_GOING_TO_START:
         trickyDebugPrint("DIGTUNNEL_GOINGTOSTART\n");
         if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelStartNode->x) == 0) {
-            state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
+            state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE | TRICKY_STATE_FLAG_GROUND_SNAP;
             state->substate = TRICKY_DIG_TUNNEL_START_DIGGING;
         } else {
             if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) == 0) {
-                state->stateFlags |= TRICKY_STATE_DIG_TUNNEL_FLAGS;
+                state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE | TRICKY_STATE_FLAG_GROUND_SNAP;
             }
         }
         break;
@@ -3147,7 +3145,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         trickyDebugPrint("DIGTUNNEL_TOEND2\n");
         if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelExitNode.curve->x) == 0) {
             trickyRequestIdleMove(obj, state);
-            state->stateFlags &= ~TRICKY_STATE_DIG_TUNNEL_FLAGS;
+            state->stateFlags &= ~(TRICKY_STATE_FLAG_COMMAND_ACTIVE | TRICKY_STATE_FLAG_GROUND_SNAP);
             state->substate = TRICKY_DIG_TUNNEL_WAIT_FOR_PLAYER_GROUP;
         }
         break;
@@ -5951,12 +5949,13 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     } else {
         state->stateFlags &= ~TRICKY_STATE_FLAG_TURN_REQUEST_PREV;
     }
-    state->stateFlags &= TRICKY_STATE_TURN_SELECT_CLEAR_MASK;
+    state->stateFlags &= ~(u32)(TRICKY_STATE_FLAG_TURNING | TRICKY_STATE_FLAG_TURN_REQUEST |
+                                TRICKY_STATE_FLAG_TURN_LEFT | TRICKY_STATE_FLAG_TURN_RIGHT);
 
     if (delta > TRICKY_TURN_REQUEST_DEADBAND) {
-        state->stateFlags |= TRICKY_STATE_TURN_RIGHT_FLAGS;
+        state->stateFlags |= TRICKY_STATE_FLAG_TURN_REQUEST | TRICKY_STATE_FLAG_TURN_RIGHT;
     } else if (delta < -TRICKY_TURN_REQUEST_DEADBAND) {
-        state->stateFlags |= TRICKY_STATE_TURN_LEFT_FLAGS;
+        state->stateFlags |= TRICKY_STATE_FLAG_TURN_REQUEST | TRICKY_STATE_FLAG_TURN_LEFT;
     } else {
         obj->anim.rotX = targetYaw;
         return 0;

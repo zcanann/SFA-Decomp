@@ -59,12 +59,11 @@ typedef s16 ObjAnimPackedEvent;
 #define OBJANIM_ROOT_CURVE_Z_AXIS_OFFSET 10
 #define OBJANIM_ROOT_CURVE_AXIS_COUNT 6
 #define OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT 3
+#define OBJANIM_ROOT_CURVE_ROTATION_AXIS_COUNT 3
 #define OBJANIM_ROOT_CURVE_AXIS_X 0
 #define OBJANIM_ROOT_CURVE_AXIS_Y 1
 #define OBJANIM_ROOT_CURVE_AXIS_Z 2
-#define OBJANIM_ROOT_CURVE_AXIS_YAW 3
-#define OBJANIM_ROOT_CURVE_AXIS_PITCH 4
-#define OBJANIM_ROOT_CURVE_AXIS_ROLL 5
+#define OBJANIM_ROOT_ROTATION_YAW 1
 #define OBJANIM_DOUBLE_CONVERSION_HIGH_WORD 0x43300000
 #define OBJANIM_S32_DOUBLE_BIAS_XOR 0x80000000
 #define OBJANIM_U32_DOUBLE(value)                                                                  \
@@ -569,9 +568,7 @@ typedef struct ObjAnimEventList {
   f32 rootDeltaX;
   f32 rootDeltaY;
   f32 rootDeltaZ;
-  s16 rootYaw;
-  s16 rootPitch;
-  s16 rootRoll;
+  s16 rootRotation[OBJANIM_ROOT_CURVE_ROTATION_AXIS_COUNT]; /* Second channel drives object yaw. */
   u8 rootCurveValid;
   s8 triggeredIds[OBJANIM_EVENT_TRIGGER_CAPACITY];
   s8 triggerCount;
@@ -868,7 +865,9 @@ STATIC_ASSERT(offsetof(ObjWeaponDaTable, entries) == 0x04);
 
 STATIC_ASSERT(sizeof(ObjAnimEventList) == 0x1C);
 STATIC_ASSERT(offsetof(ObjAnimEventList, rootDeltaX) == 0x00);
-STATIC_ASSERT(offsetof(ObjAnimEventList, rootYaw) == 0x0C);
+STATIC_ASSERT(offsetof(ObjAnimEventList, rootRotation) == 0x0C);
+STATIC_ASSERT(sizeof(((ObjAnimEventList*)0)->rootRotation) == 0x06);
+STATIC_ASSERT(offsetof(ObjAnimEventList, rootRotation[OBJANIM_ROOT_ROTATION_YAW]) == 0x0E);
 STATIC_ASSERT(offsetof(ObjAnimEventList, rootCurveValid) == 0x12);
 STATIC_ASSERT(offsetof(ObjAnimEventList, triggeredIds) == 0x13);
 STATIC_ASSERT(offsetof(ObjAnimEventList, triggerCount) == 0x1B);

@@ -1032,7 +1032,7 @@ void SHthorntail_update(GameObject* obj) {
             obj->anim.localPosZ = negCosFacing * -animEvents.rootDeltaZ + obj->anim.localPosZ;
             obj->anim.localPosX = negCosFacing * -animEvents.rootDeltaX + obj->anim.localPosX;
             obj->anim.localPosZ = negSinFacing * animEvents.rootDeltaX + obj->anim.localPosZ;
-            obj->anim.rotX += animEvents.rootPitch;
+            obj->anim.rotX += animEvents.rootRotation[OBJANIM_ROOT_ROTATION_YAW];
         }
         for (i = 0; i < animEvents.triggerCount; i = i + 1) {
             if (animEvents.triggeredIds[i] == SHTHORNTAIL_ANIM_EVENT_PRIMARY) {

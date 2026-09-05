@@ -4590,6 +4590,24 @@ Direct retail cross-check: all 45 current mismatch instruction sites (1 tunnel,
 EN rev1, JP, PAL v1.0 and PAL rev1. Both tunnel zero-initialization pairs also
 agree byte-for-byte. This corroborates the target, not compiler provenance.
 
+Tricky's root-motion turn consumes rotation channel 1 at event-list offset
+`0x0E`, formerly mislabeled `rootPitch`. Thorntail's planar root-motion update
+and WarpStone's animation update likewise add that channel to object yaw.
+`ObjAnim_AdvanceCurrentMove` writes three consecutive rotation halfwords after
+its three translation channels; the exact 559-instruction producer now indexes
+an actual `rootRotation[3]` array instead of indexing across separate scalar
+members. Only the evidenced yaw index is named; the unused pitch/roll axis
+labels are removed rather than guessed. Assertions cover the six-byte array,
+its `0x0C` start, the yaw offset and the unchanged event-list size.
+
+Seven Tricky composite flag aliases are also removed in favor of the existing
+named bits at sequence completion, recall, animation replacement, tunnel entry
+and exit, and turn selection. The turn-clear expression retains the old
+unsigned mask type explicitly. Every one of the 2,872 source objects remains
+raw-byte identical after rebuilding the shared-header consumers. Tricky retains
+86/89 exact functions, exact allocated non-text sections, and 53 diagnostic-link
+text-byte differences. Both build gates and 79 tooling tests pass.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

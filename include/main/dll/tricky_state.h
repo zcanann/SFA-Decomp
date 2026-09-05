@@ -315,7 +315,7 @@ typedef struct TrickyState {
     f32 footPoints[4][3];
     f32 impressTimer; /* impress-move countdown: primed to gTrickyTimer20Frames by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching gTrickyFloatZero the flag is cleared and a TRICKY_VOICE line fires (tricky) */
     ObjAnimEventList
-        animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootPitch drives the facing step, triggeredIds[] pick the bark sfx */
+        animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootRotation yaw drives the facing step, triggeredIds[] pick the bark sfx */
     f32 colorFadeTimer; /* color-variant crossfade countdown: primed to 20.0f, -= timeDelta; > 10 fades out, <= 10 swaps the texture selector and fades back in via timer/10 (tricky) */
     u8 colorVariant;    /* stats->ballReturnCount / 10; indexes the model's RGB channel-remap table */
     u8 pendingEnergy;   /* energy after feeding, committed by TRICKY_SEQUENCE_EVENT_STORE_ENERGY */
