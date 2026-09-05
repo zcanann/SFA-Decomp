@@ -177,7 +177,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState);
 void tricky_state06_nop(void);
 void tricky_updateBallRoll(GameObject* obj, TrickyState* state);
 void tricky_state04_nop(void);
-static inline void trickyAdvanceNode(TrickyState* state);
+static inline void trickyAdvanceTunnelExit(TrickyState* state);
 void trickyDigTunnel(GameObject* obj, TrickyState* state);
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state);
 void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state);
@@ -3117,30 +3117,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             trickyTurnTowardYaw(obj, getAngle(-dirX, -dirZ));
         }
         if (WALL_ANIMATOR_INTERFACE(state->followObj)->isComplete(state->followObj) != 0) {
-            {
-                int linkOffset;
-                int linkId;
-                RomCurveDef* exitNode;
-                int linkIndex;
-                int remainingLinks;
-
-                linkIndex = 0;
-                linkOffset = 0;
-                for (remainingLinks = 4; remainingLinks != 0; remainingLinks--) {
-                    exitNode = state->digTunnelExitNode.curve;
-                    linkId = *(int*)((u8*)exitNode + linkOffset + offsetof(RomCurveDef, linkIds));
-                    if (linkId > -1 && linkId != state->digTunnelStartNode->id) {
-                        state->digTunnelStartNode = exitNode;
-                        state->digTunnelExitNode.curve =
-                            (*gRomCurveInterface)
-                                ->getById(((int*)((char*)state->digTunnelExitNode.curve +
-                                                  offsetof(RomCurveDef, linkIds)))[linkIndex]);
-                        break;
-                    }
-                    linkOffset += 4;
-                    linkIndex++;
-                }
-            }
+            trickyAdvanceTunnelExit(state);
             state->stats->energy -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_1;
@@ -3152,7 +3129,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         trickyDebugPrint("DIGTUNNEL_TOEND1 %f\n",
                          Vec_xzDistance(&obj->anim.worldPosX, &state->digTunnelExitNode.curve->x));
         if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelExitNode.curve->x) == 0) {
-            trickyAdvanceNode(state);
+            trickyAdvanceTunnelExit(state);
             state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_2;
         }
         break;
@@ -3179,26 +3156,19 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     }
 }
 
-static inline void trickyAdvanceNode(TrickyState* state) {
-    int idx;
+static inline void trickyAdvanceTunnelExit(TrickyState* state) {
     RomCurveDef* linkNode;
-    int linkId;
-    int off;
-    int k;
-    idx = 0;
-    off = 0;
-    for (k = 4; k != 0; k--) {
+    s32 linkId;
+    s32 linkIndex;
+    for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
         linkNode = state->digTunnelExitNode.curve;
-        linkId = *(int*)((u8*)linkNode + off + offsetof(RomCurveDef, linkIds));
+        linkId = linkNode->linkIds[linkIndex];
         if (linkId > -1 && linkId != state->digTunnelStartNode->id) {
             state->digTunnelStartNode = linkNode;
             state->digTunnelExitNode.curve =
-                (*gRomCurveInterface)
-                    ->getById(((int*)((char*)state->digTunnelExitNode.curve + offsetof(RomCurveDef, linkIds)))[idx]);
+                (*gRomCurveInterface)->getById(state->digTunnelExitNode.curve->linkIds[linkIndex]);
             break;
         }
-        off += 4;
-        idx++;
     }
 }
 

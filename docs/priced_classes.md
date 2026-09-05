@@ -4338,6 +4338,25 @@ are unchanged. Tricky's resulting object SHA256 is
 `91ca38aff29f32a8c7e6677afb3d6b0c4de6eb7c3165b258f1e820ba431a63e7`.
 Both build gates pass, and all 2871 other source objects remain byte-identical.
 
+Tunnel-exit advancement now uses one `trickyAdvanceTunnelExit` helper at both
+retail search sites. The search selects the first nonnegative link other than
+the previous tunnel node, then advances the previous/exit pair. It leaves the
+pair unchanged when no link qualifies and preserves the post-store link reload
+used for the curve lookup. The completion-only energy debit and sound removal
+remain in the caller. Both searches now index `RomCurveDef.linkIds` directly;
+the duplicate byte-offset loop and separate offset/count induction variables
+are removed.
+
+This accepts a measured source-recovery regression: `trickyDigTunnel` retains
+475 instructions but has eleven operand differences plus one zero-copy
+difference (100% to 99.705%). The diagnostic link rises from 55 to 71 differing
+text bytes, with every allocated non-text section still exact. No other
+function bytes or named symbol layouts change. All six declaration orders were
+tested; a separate remaining-link counter and a local link-array pointer were
+code-neutral, while narrow indices worsened the instruction shape. Those extra
+locals and narrow forms are not retained. The ordinary signed word index and
+link ID agree with the retail full-word accesses; no compiler settings change.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
