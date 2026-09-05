@@ -1683,9 +1683,8 @@ void Tricky_hitDetect(GameObject* obj) {
     return;
 }
 
-static inline void trickyUpdateAttachmentPoints(GameObject* obj) {
+static inline void trickyUpdateAttachmentPoints(GameObject* obj, TrickyState* state) {
     int pathPointIndex;
-    TrickyState* state = obj->extra;
     s16* mouthPose;
 
     for (pathPointIndex = 0; pathPointIndex < 4; pathPointIndex++) {
@@ -1704,7 +1703,7 @@ void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
     if (doRender != '\0') {
         state = obj->extra;
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
-        trickyUpdateAttachmentPoints(obj);
+        trickyUpdateAttachmentPoints(obj, obj->extra);
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             switch (state->stateIndex) {
             case TRICKY_STATE_FIND_SECRET_DIG:
@@ -5096,9 +5095,9 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         }
                     } else {
                         if (objectWalkGroup != 0) {
-                            u16 patchGroup;
+                            int patchGroup;
                             if (isPointWithinPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup,
-                                                        (patchGroup = targetWalkGroup * objectWalkGroup)) != 0) {
+                                                        (patchGroup = (u16)(targetWalkGroup * objectWalkGroup))) != 0) {
                                 if (state->linkedPatchGroup == patchGroup) {
                                     state->movementState = TRICKY_MOVE_WALK_END_PATCH;
                                 } else {

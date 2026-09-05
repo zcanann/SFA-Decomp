@@ -3966,6 +3966,21 @@ multiplies group indices at 0x8013B640 and 0x8013BB1C before comparing against
 those IDs. This inconsistency is preserved, not repaired into a packed ID.
 The field remains signed 16-bit storage with its own offset assertion.
 
+The second patch lookup now stores its explicitly truncated product in an
+`int` local. This lets MWCC reuse the dead target-walk-group register, as retail
+does, without conflating the two source values. Movement loses five further
+operand differences (44 remain). A wider temporary for the signed previous
+yaw was byte-neutral and was not retained.
+
+`Tricky_render` is exact (464 bytes) with the freshly loaded `obj->extra` passed
+into `trickyUpdateAttachmentPoints` explicitly. The render callback still keeps
+its pre-render state pointer for later effects; the attachment helper receives
+the post-render state. This recovers all ten remaining register operands while
+preserving the two distinct loads. Only rendering and movement change bytes;
+all retail function sizes, named symbol layouts, and allocated non-text bytes
+are unchanged. The diagnostic link has 159 differing text bytes, and Tricky
+text is 99.95145% with four functions still non-exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
