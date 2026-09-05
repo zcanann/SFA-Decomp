@@ -1933,7 +1933,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "track/intersect.c", cflags=cflags_dll_noopt_nocse_noautoinline, section_alignments={".data": 4}),
             Object(MatchingFor("GSAE01"), "track/intersect_screenmath.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "track/intersect_mtx44.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "track/intersect_render.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
+            Object(NonMatching, "track/intersect_render.c", cflags=cflags_dll_noopt),
             Object(Matching, "track/intersect_memcard.c", cflags=cflags_dll_noopt_noautoinline),
 
             # main/thp

@@ -46,47 +46,37 @@
 #include "track/intersect_hud_api.h"
 #include "track/intersect_internal.h"
 
-typedef void (*GXSetAlphaCompareIntFn)(int comp0, int ref0, int op, int comp1, int ref1);
-
-
-typedef struct
-{
+typedef struct {
     f32 m[6];
 } IndMtxInit;
 
-typedef struct
-{
+typedef struct {
     IndMtxInit ind;
     u32 blk[6][7];
 } IndStageInitData;
 
-static const IndStageInitData sIndStageInitData = {
-    {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
-    {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-     {2, 2, 2, 2, 2, 1, 0},
-     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-     {2, 2, 2, 1, 0, 0, 0},
-     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-     {2, 1, 0, 0, 0, 0, 0}}};
+static const IndStageInitData sIndStageInitData = {{{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
+                                                   {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+                                                    {2, 2, 2, 2, 2, 1, 0},
+                                                    {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+                                                    {2, 2, 2, 1, 0, 0, 0},
+                                                    {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+                                                    {2, 1, 0, 0, 0, 0, 0}}};
 static const IndMtxInit sIndMtxZeroInit = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}};
-
 
 extern GXColor gProjectedShadowFogColor;
 
-f32 gWaterReflectionIndTexMtx[3][2][3] = {
-    {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, -0.5f}},
-    {{0.0f, 0.8f, 0.0f}, {0.0f, 0.0f, 0.8f}},
-    {{0.0f, -0.2f, 0.0f}, {0.0f, 0.0f, 0.2f}}};
+f32 gWaterReflectionIndTexMtx[3][2][3] = {{{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, -0.5f}},
+                                          {{0.0f, 0.8f, 0.0f}, {0.0f, 0.0f, 0.8f}},
+                                          {{0.0f, -0.2f, 0.0f}, {0.0f, 0.0f, 0.2f}}};
 f32 gFrozenObjectIndTexMtx[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 gScreenImageIndTexMtx1[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 gScreenImageIndTexMtx2[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 gWhirlpoolIndTexMtx[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 
-extern inline float sqrtf(float x)
-{
+extern inline float sqrtf(float x) {
     volatile float y;
-    if (x > 0.0f)
-    {
+    if (x > 0.0f) {
         double guess = __frsqrte((double)x);
         guess = 0.5 * guess * (3.0 - guess * guess * x);
         guess = 0.5 * guess * (3.0 - guess * guess * x);
@@ -97,8 +87,7 @@ extern inline float sqrtf(float x)
     return x;
 }
 
-typedef struct StageCountTable
-{
+typedef struct StageCountTable {
     u8 count[7];
 } StageCountTable;
 
@@ -118,24 +107,17 @@ static const GXColor sColorFilterTevColor = {0x0A, 0x0A, 0x0A, 255};
 
 extern u32 gProjectedShadowFogColorBits;
 
-
-
-void gxSetPeControl_ZCompLoc_(u8 zCompLoc)
-{
-    if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0)
-    {
+void gxSetPeControl_ZCompLoc_(u8 zCompLoc) {
+    if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0) {
         GXSetZCompLoc(zCompLoc);
         gGxZCompLocCached = zCompLoc;
         gGxZCompLocValid = 1;
     }
 }
 
-
-void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable)
-{
+void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable) {
     if (gGxZModeCompareEnable != compareEnable || gGxZModeCompareFunc != compareFunc ||
-        gGxZModeUpdateEnable != updateEnable || gGxZModeValid == 0)
-    {
+        gGxZModeUpdateEnable != updateEnable || gGxZModeValid == 0) {
         GXSetZMode(compareEnable, compareFunc, updateEnable);
         gGxZModeCompareEnable = compareEnable;
         gGxZModeCompareFunc = compareFunc;
@@ -144,25 +126,21 @@ void gxSetZMode_(u8 compareEnable, int compareFunc, u8 updateEnable)
     }
 }
 
-void resetSomeGxFlags(void)
-{
+void resetSomeGxFlags(void) {
     gGxZModeValid = 0;
     gGxZCompLocValid = 0;
 }
 
-void setHudOpacity(u8 opacity)
-{
+void setHudOpacity(u8 opacity) {
     gHudTintAlpha = opacity;
 }
 
-void _gxSetFogParams(void)
-{
+void _gxSetFogParams(void) {
     GXColor c = gFogColor;
     GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, c);
 }
 
-void fogSetRange(f32 start, f32 end)
-{
+void fogSetRange(f32 start, f32 end) {
     f32 xc, yc, x, y;
     GXColor c;
 
@@ -181,22 +159,19 @@ void fogSetRange(f32 start, f32 end)
     GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, c);
 }
 
-void getFogColorRgb(u8* rgbOut)
-{
+void getFogColorRgb(u8* rgbOut) {
     rgbOut[0] = gFogColor.r;
     rgbOut[1] = gFogColor.g;
     rgbOut[2] = gFogColor.b;
 }
 
-void setFogColorRgb(u8 red, u8 green, u8 blue)
-{
+void setFogColorRgb(u8 red, u8 green, u8 blue) {
     gFogColor.r = red;
     gFogColor.g = green;
     gFogColor.b = blue;
 }
 
-int renderWhirlpool(void* obj_a, void** obj_b, int slot)
-{
+int renderWhirlpool(void* obj_a, void** obj_b, int slot) {
 
     Shader* renderOp;
     Texture* tex2;
@@ -215,8 +190,8 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     newshadows_loadReflectionColorTexture(1);
     tex2 = textureIdxToPtr(renderOp->auxTextureIndex);
     wrapBit = (tex2->maxLod - tex2->minLod > 0) ? GX_TRUE : GX_FALSE;
-    GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height,
-                 tex2->format, GX_REPEAT, GX_REPEAT, wrapBit);
+    GXInitTexObj((void*)tex2->gxTexObj, (u8*)tex2 + sizeof(Texture), tex2->width, tex2->height, tex2->format, GX_REPEAT,
+                 GX_REPEAT, wrapBit);
     selectTexture((Texture*)tex2, 2);
     GXLoadTexMtxImm(gCameraLightPerspectiveScaledMatrix, GX_PTTEXMTX6, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
@@ -229,20 +204,16 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
 
-    if (isHeavyFogEnabled() != 0)
-    {
+    if (isHeavyFogEnabled() != 0) {
         gWhirlpoolReflectionTintColor.r = gFogColor.r;
         gWhirlpoolReflectionTintColor.g = gFogColor.g;
         gWhirlpoolReflectionTintColor.b = gFogColor.b;
         gWhirlpoolReflectionTintColor.a = 0x80;
-    }
-    else
-    {
+    } else {
         (*gSkyInterface)
-            ->getCurrentAmbientAndLightColors(&gWhirlpoolReflectionTintColor.r,
-                                              &gWhirlpoolReflectionTintColor.g,
-                                              &gWhirlpoolReflectionTintColor.b,
-                                              &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
+            ->getCurrentAmbientAndLightColors(&gWhirlpoolReflectionTintColor.r, &gWhirlpoolReflectionTintColor.g,
+                                              &gWhirlpoolReflectionTintColor.b, &ignoredLightColor, &ignoredLightColor,
+                                              &ignoredLightColor);
         gWhirlpoolReflectionTintColor.r >>= 3;
         gWhirlpoolReflectionTintColor.g >>= 3;
         gWhirlpoolReflectionTintColor.b >>= 3;
@@ -255,18 +226,17 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, gWhirlpoolIndTexMtx, -1);
     GXSetIndTexMtx(GX_ITM_1, gWhirlpoolIndTexMtx, -2);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (isHeavyFogEnabled() != 0)
-    {
+    if (isHeavyFogEnabled() != 0) {
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVPREV);
-    }
-    else
-    {
+    } else {
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     }
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -291,80 +261,61 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetNumTevStages(3);
 
     pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback((ObjModel*)obj_b);
-    if (pcb != 0)
-    {
+    if (pcb != 0) {
         pcb(obj_a, obj_b, slot);
-    }
-    else
-    {
+    } else {
         u8 zCompLoc = 1;
         if (((GameObject*)obj_a)->anim.renderAlpha < 0xFF || (renderOp->flags & 0x40000000) != 0 ||
-            renderOp->alpha < 0xFF)
-        {
+            renderOp->alpha < 0xFF) {
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-            if ((model->flags & 0x400) != 0)
-            {
+            if ((model->flags & 0x400) != 0) {
                 if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 0;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-            }
-            else if ((model->flags & 0x2000) != 0)
-            {
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+            } else if ((model->flags & 0x2000) != 0) {
                 zCompLoc = 0;
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_GREATER, objGetAlphaCompareThreshold(), GX_AOP_AND, GX_GREATER, objGetAlphaCompareThreshold());
-            }
-            else
-            {
+                GXSetAlphaCompare(GX_GREATER, objGetAlphaCompareThreshold(), GX_AOP_AND, GX_GREATER,
+                                  objGetAlphaCompareThreshold());
+            } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
-        }
-        else
-        {
-            if ((renderOp->flags & 0x400) != 0)
-            {
+        } else {
+            if ((renderOp->flags & 0x400) != 0) {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if ((model->flags & 0x400) != 0)
-                {
+                if ((model->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
                         gGxZModeValid = 1;
                     }
-                }
-                else
-                {
+                } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
@@ -372,28 +323,21 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
-            }
-            else
-            {
+                GXSetAlphaCompare(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
+            } else {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if ((model->flags & 0x400) != 0)
-                {
+                if ((model->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
                         gGxZModeValid = 1;
                     }
-                }
-                else
-                {
+                } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
@@ -401,33 +345,27 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
-        if ((renderOp->flags & 0x400) != 0)
-        {
+        if ((renderOp->flags & 0x400) != 0) {
             zCompLoc = 0;
         }
-        if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0)
-        {
+        if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0) {
             GXSetZCompLoc(zCompLoc);
             gGxZCompLocCached = zCompLoc;
             gGxZCompLocValid = 1;
         }
     }
-    if ((renderOp->flags & 0x8) != 0)
-    {
+    if ((renderOp->flags & 0x8) != 0) {
         GXSetCullMode(GX_CULL_BACK);
-    }
-    else
-    {
+    } else {
         GXSetCullMode(GX_CULL_NONE);
     }
     return 1;
 }
 
-void screenImageDraw(u8 alpha)
-{
+void screenImageDraw(u8 alpha) {
 
     Mtx mtx_60;
     Mtx mtx_30;
@@ -472,12 +410,14 @@ void screenImageDraw(u8 alpha)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, gScreenImageIndTexMtx1, -3);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_0, GX_ITW_0, 0, 0, GX_ITBA_S);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_0, GX_ITW_0, 0, 0,
+                     GX_ITBA_S);
 
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_1, gScreenImageIndTexMtx2, -3);
-    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 1, 0, GX_ITBA_S);
+    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 1, 0,
+                     GX_ITBA_S);
 
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_ALPHA_BUMPN);
     GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
@@ -554,16 +494,15 @@ void screenImageDraw(u8 alpha)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -601,9 +540,7 @@ void screenImageDraw(u8 alpha)
     GXSetCurrentMtx(GX_PNMTX0);
 }
 
-void doSpiritVisionFilter(void)
-{
-
+void doSpiritVisionFilter(void) {
 
     newshadows_captureReflectionTextures();
     newshadows_loadReflectionColorTexture(0);
@@ -667,16 +604,15 @@ void doSpiritVisionFilter(void)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -714,8 +650,7 @@ void doSpiritVisionFilter(void)
     GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_ALPHA);
 }
 
-void doColorFilter(u8* mod)
-{
+void doColorFilter(u8* mod) {
     GXColor c0, c1, c2, c3;
 
     c0 = sColorFilterKColor0;
@@ -788,16 +723,15 @@ void doColorFilter(u8* mod)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -834,8 +768,7 @@ void doColorFilter(u8* mod)
     Camera_RebuildProjectionMatrix();
 }
 
-static inline f32 distortSqrtf(f32 x)
-{
+static inline f32 distortSqrtf(f32 x) {
     volatile float y;
     double guess = __frsqrte((double)x);
     guess = 0.5 * guess * (3.0 - guess * guess * x);
@@ -845,8 +778,7 @@ static inline f32 distortSqrtf(f32 x)
     return y;
 }
 
-void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
-{
+void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle) {
     Mtx mtx_d0;
     Mtx mtx_a0;
     Mtx mtx_70;
@@ -918,17 +850,15 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
         f32 r2 = gDistortionAlphaRadius / radius;
         f32 sr;
         sr = (r2 > 0.0f) ? distortSqrtf(r2) : r2;
-        if (sr > 1.0f)
-        {
+        if (sr > 1.0f) {
             c1.a = 0xFF;
-        }
-        else
-        {
+        } else {
             c1.a = 255.0f * sr;
         }
         sr *= 2.0f;
-        if (sr > 1.0f)
+        if (sr > 1.0f) {
             sr = 1.0f;
+        }
         c3.a = 255.0f * sr;
     }
 
@@ -942,8 +872,9 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
 
     {
         f32 ind_s = gDistortionIndMtxRadius / radius;
-        if (ind_s > 0.5f)
+        if (ind_s > 0.5f) {
             ind_s = 0.5f;
+        }
         indMtx[0] = ind_s;
         indMtx[1] = 0.0f;
         indMtx[2] = 0.0f;
@@ -966,9 +897,12 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indMtx, 1);
 
-    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE3, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE4, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE3, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE4, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
 
     GXSetNumTexGens(4);
     GXSetNumIndStages(1);
@@ -1033,16 +967,15 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_INVSRCALPHA, GX_BL_SRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -1079,8 +1012,7 @@ void doDistortionFilter(f32* pos, f32 radius, u8* mod, f32 angle)
     Camera_RebuildProjectionMatrix();
 }
 
-int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
-{
+int objFrozenRenderCb(void* obj_a, void** obj_b, int slot) {
     Mtx mtx_54;
     Mtx mtx_24;
     Shader* renderOp;
@@ -1101,15 +1033,12 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
     GXLoadTexMtxImm(gCameraLightPerspectiveFlipYMatrix, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX7);
 
-    if (model == 0 || model->normalCount != 0)
-    {
+    if (model == 0 || model->normalCount != 0) {
         PSMTXScale(mtx_54, gFrozenReflectionNormalScale, gFrozenReflectionNormalScale, 0.0f);
         mtx_54[2][3] = 1.0f;
         PSMTXTrans(mtx_24, 0.5f, 0.5f, 0.0f);
         PSMTXConcat(mtx_24, mtx_54, mtx_54);
-    }
-    else
-    {
+    } else {
         PSMTXScale(mtx_54, 0.0f, 0.0f, 0.0f);
         mtx_54[0][3] = 0.5f;
         mtx_54[1][3] = 0.5f;
@@ -1126,7 +1055,8 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, gFrozenObjectIndTexMtx, -1);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
@@ -1157,83 +1087,60 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
     GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_K1);
 
     pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback((ObjModel*)obj_b);
-    if (pcb != 0)
-    {
+    if (pcb != 0) {
         pcb(obj_a, obj_b, slot);
-    }
-    else
-    {
+    } else {
         u8 zCompLoc = 1;
-        int ref1;
-        if (((u8*)obj_a)[0x37] < 0xff || (renderOp->flags & 0x40000000) != 0 ||
-            renderOp->alpha < 0xff)
-        {
+        if (((u8*)obj_a)[0x37] < 0xff || (renderOp->flags & 0x40000000) != 0 || renderOp->alpha < 0xff) {
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-            if ((model->flags & 0x400) != 0)
-            {
+            if ((model->flags & 0x400) != 0) {
                 if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 0;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-            }
-            else if ((model->flags & 0x2000) != 0)
-            {
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+            } else if ((model->flags & 0x2000) != 0) {
                 zCompLoc = 0;
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                obj_a = (void*)objGetAlphaCompareThreshold();
-                ref1 = objGetAlphaCompareThreshold();
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_GREATER, ref1, GX_AOP_AND, GX_GREATER, (int)obj_a);
-            }
-            else
-            {
+                GXSetAlphaCompare(GX_GREATER, objGetAlphaCompareThreshold(), GX_AOP_AND, GX_GREATER,
+                                  objGetAlphaCompareThreshold());
+            } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
-        }
-        else
-        {
-            if ((renderOp->flags & 0x400) != 0)
-            {
+        } else {
+            if ((renderOp->flags & 0x400) != 0) {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if ((model->flags & 0x400) != 0)
-                {
+                if ((model->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
                         gGxZModeValid = 1;
                     }
-                }
-                else
-                {
+                } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
@@ -1241,28 +1148,21 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_GREATER, 192, GX_AOP_AND, GX_GREATER, 192);
-            }
-            else
-            {
+                GXSetAlphaCompare(GX_GREATER, 192, GX_AOP_AND, GX_GREATER, 192);
+            } else {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if ((model->flags & 0x400) != 0)
-                {
+                if ((model->flags & 0x400) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
                         gGxZModeValid = 1;
                     }
-                }
-                else
-                {
+                } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
@@ -1270,28 +1170,23 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
-        if ((renderOp->flags & 0x400) != 0)
-        {
+        if ((renderOp->flags & 0x400) != 0) {
             zCompLoc = 0;
         }
-        if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0)
-        {
+        if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0) {
             GXSetZCompLoc(zCompLoc);
             gGxZCompLocCached = zCompLoc;
             gGxZCompLocValid = 1;
         }
     }
     GXSetCullMode(GX_CULL_NONE);
-    if ((model->flags & 0x100) != 0)
-    {
+    if ((model->flags & 0x100) != 0) {
         fogColor = temp;
         GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogColor);
-    }
-    else
-    {
+    } else {
         fogColor = gFogColor;
         GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fogColor);
     }
@@ -1306,8 +1201,7 @@ int objFrozenRenderCb(void* obj_a, void** obj_b, int slot)
  * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
  * tex coord 0 by tex1.
  */
-void setupQuakeSpellRingGxState(u8 alpha)
-{
+void setupQuakeSpellRingGxState(u8 alpha) {
 
     Texture* handle1;
     Texture* handle2;
@@ -1339,7 +1233,8 @@ void setupQuakeSpellRingGxState(u8 alpha)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, ind_mtx, -3);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
     mtx[0][0] = 0.6f;
     mtx[0][1] = 0.0f;
     mtx[0][2] = 0.0f;
@@ -1378,8 +1273,8 @@ void setupQuakeSpellRingGxState(u8 alpha)
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -1387,8 +1282,7 @@ void setupQuakeSpellRingGxState(u8 alpha)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -1397,8 +1291,7 @@ void setupQuakeSpellRingGxState(u8 alpha)
     GXSetCullMode(GX_CULL_BACK);
 }
 
-void setupAdditiveTintedTexture(void* texture, u32* colorA, u32* colorB)
-{
+void setupAdditiveTintedTexture(void* texture, u32* colorA, u32* colorB) {
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     selectTexture((Texture*)texture, 0);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)colorA);
@@ -1419,16 +1312,15 @@ void setupAdditiveTintedTexture(void* texture, u32* colorA, u32* colorB)
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -1437,8 +1329,7 @@ void setupAdditiveTintedTexture(void* texture, u32* colorA, u32* colorB)
     GXSetCullMode(GX_CULL_BACK);
 }
 
-int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot)
-{
+int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot) {
     Texture* diskTextureHandle;
     GXColor konstColor;
     GXColor tintColor;
@@ -1473,16 +1364,13 @@ int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot)
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
     GXSetTevDirect(GX_TEVSTAGE0);
-    if (modelFile->flags24 & MODEL_FLAGS24_VERY_BRIGHT)
-    {
+    if (modelFile->flags24 & MODEL_FLAGS24_VERY_BRIGHT) {
         GXSetNumChans(1);
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_RASA);
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    }
-    else
-    {
+    } else {
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(0);
@@ -1503,16 +1391,15 @@ int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot)
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -1522,8 +1409,7 @@ int objModelNormalDiskRenderCb(GameObject* object, ObjModel* model, int slot)
     return 1;
 }
 
-int moonFxRenderCallback(u8* obj, void** objB, int slot)
-{
+int moonFxRenderCallback(u8* obj, void** objB, int slot) {
     GXColor colorK;
     GXColor colorFog;
     Mtx mtx;
@@ -1571,8 +1457,8 @@ int moonFxRenderCallback(u8* obj, void** objB, int slot)
     GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -1580,8 +1466,7 @@ int moonFxRenderCallback(u8* obj, void** objB, int slot)
         gGxZModeValid = 1;
     }
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -1591,8 +1476,7 @@ int moonFxRenderCallback(u8* obj, void** objB, int slot)
     return 1;
 }
 
-int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int slot)
-{
+int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int slot) {
     Mtx projectedTexMtx;
     Mtx normalTexMtx;
     Mtx transformMtx;
@@ -1620,7 +1504,8 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD0, GX_TEXMAP2);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indirectMtx, 0);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
     selectTexture((Texture*)baseTexture, 0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ONE);
@@ -1631,11 +1516,11 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
 
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD0, GX_TEXMAP2);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 1, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 1, 0,
+                     GX_ITBA_OFF);
     PSMTXScale(transformMtx, gTrackProjectedTexScale, gTrackProjectedTexScale, 1.0f);
     PSMTXConcat(transformMtx, gCameraLightPerspectiveFlipYMatrix, projectedTexMtx);
-    PSMTXTrans(transformMtx, 0.5f * (1.0f - gTrackProjectedTexScale),
-               0.5f * (1.0f - gTrackProjectedTexScale), 0.0f);
+    PSMTXTrans(transformMtx, 0.5f * (1.0f - gTrackProjectedTexScale), 0.5f * (1.0f - gTrackProjectedTexScale), 0.0f);
     PSMTXConcat(transformMtx, projectedTexMtx, projectedTexMtx);
     GXLoadTexMtxImm(projectedTexMtx, GX_PTTEXMTX6, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_POS, 0, GX_TRUE, GX_PTTEXMTX6);
@@ -1652,36 +1537,27 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
     postRenderCallback = (void (*)(GameObject*, ObjModel*, int))ObjModel_GetPostRenderCallback(model);
-    if (postRenderCallback != 0)
-    {
+    if (postRenderCallback != 0) {
         postRenderCallback(object, model, slot);
-    }
-    else
-    {
+    } else {
         u8 zCompLoc = 1;
         if (object->anim.renderAlpha < 0xff || (((Shader*)renderOp)->flags & SHADER_FLAG_FORCE_BLEND) != 0 ||
-            ((Shader*)renderOp)->alpha < 0xff)
-        {
+            ((Shader*)renderOp)->alpha < 0xff) {
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-            if ((modelFile->flags & MODEL_FLAG_NO_DEPTH_TEST) != 0)
-            {
+            if ((modelFile->flags & MODEL_FLAG_NO_DEPTH_TEST) != 0) {
                 if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 0;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-            }
-            else if ((modelFile->flags & MODEL_FLAG_ALPHA_Z_UPDATE) != 0)
-            {
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+            } else if ((modelFile->flags & MODEL_FLAG_ALPHA_Z_UPDATE) != 0) {
                 zCompLoc = 0;
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
@@ -1689,49 +1565,35 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
                     gGxZModeValid = 1;
                 }
                 {
-                    int firstAlphaThreshold;
-                    alphaValue = objGetAlphaCompareThreshold();
-                    firstAlphaThreshold = objGetAlphaCompareThreshold();
-                    ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_GREATER, firstAlphaThreshold, GX_AOP_AND,
-                                                               GX_GREATER, alphaValue);
+                    GXSetAlphaCompare(GX_GREATER, objGetAlphaCompareThreshold(), GX_AOP_AND, GX_GREATER,
+                                      objGetAlphaCompareThreshold());
                 }
-            }
-            else
-            {
+            } else {
                 if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                    gGxZModeValid == 0)
-                {
+                    gGxZModeValid == 0) {
                     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
                     gGxZModeCompareEnable = 1;
                     gGxZModeCompareFunc = 3;
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
-        }
-        else
-        {
-            if ((((Shader*)renderOp)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE) != 0)
-            {
+        } else {
+            if ((((Shader*)renderOp)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE) != 0) {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if ((modelFile->flags & MODEL_FLAG_NO_DEPTH_TEST) != 0)
-                {
+                if ((modelFile->flags & MODEL_FLAG_NO_DEPTH_TEST) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
                         gGxZModeValid = 1;
                     }
-                }
-                else
-                {
+                } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
@@ -1739,28 +1601,21 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
                         gGxZModeValid = 1;
                     }
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
-            }
-            else
-            {
+                GXSetAlphaCompare(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
+            } else {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if ((modelFile->flags & MODEL_FLAG_NO_DEPTH_TEST) != 0)
-                {
+                if ((modelFile->flags & MODEL_FLAG_NO_DEPTH_TEST) != 0) {
                     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_FALSE, GX_LEQUAL, GX_FALSE);
                         gGxZModeCompareEnable = 0;
                         gGxZModeCompareFunc = 3;
                         gGxZModeUpdateEnable = 0;
                         gGxZModeValid = 1;
                     }
-                }
-                else
-                {
+                } else {
                     if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
-                        gGxZModeValid == 0)
-                    {
+                        gGxZModeValid == 0) {
                         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
                         gGxZModeCompareEnable = 1;
                         gGxZModeCompareFunc = 3;
@@ -1768,33 +1623,27 @@ int objModelProjectedIndirectRenderCb(GameObject* object, ObjModel* model, int s
                         gGxZModeValid = 1;
                     }
                 }
-                ((GXSetAlphaCompareIntFn)GXSetAlphaCompare)(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
-        if ((((Shader*)renderOp)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE) != 0)
-        {
+        if ((((Shader*)renderOp)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE) != 0) {
             zCompLoc = 0;
         }
-        if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0)
-        {
+        if (gGxZCompLocCached != zCompLoc || gGxZCompLocValid == 0) {
             GXSetZCompLoc(zCompLoc);
             gGxZCompLocCached = zCompLoc;
             gGxZCompLocValid = 1;
         }
     }
-    if ((((Shader*)renderOp)->flags & SHADER_FLAG_BACKFACE_CULL) != 0)
-    {
+    if ((((Shader*)renderOp)->flags & SHADER_FLAG_BACKFACE_CULL) != 0) {
         GXSetCullMode(GX_CULL_BACK);
-    }
-    else
-    {
+    } else {
         GXSetCullMode(GX_CULL_NONE);
     }
     return 1;
 }
 
-u32 objCausticReflectionRenderCb(void* handle, void* model)
-{
+u32 objCausticReflectionRenderCb(void* handle, void* model) {
 
     Mtx mtx_ec;
     Mtx mtx_bc;
@@ -1809,8 +1658,7 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     f32* viewMtx;
 
     viewMtx = Camera_GetViewMatrix();
-    if (model != 0)
-    {
+    if (model != 0) {
         ObjModelJointMatrix* jm = ObjModel_GetJointMatrix((u8*)model, 0);
         f32 px, py, pz, dist;
         PSMTXConcat((f32(*)[4])viewMtx, (f32(*)[4])jm, mtx_8c);
@@ -1819,11 +1667,10 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
         pz = mtx_8c[2][3];
         dist = sqrtf(px * px + py * py + pz * pz);
         f31_val = 200.0f / dist;
-        if (f31_val > 1.0f)
+        if (f31_val > 1.0f) {
             f31_val = 1.0f;
-    }
-    else
-    {
+        }
+    } else {
         f31_val = 1.0f;
     }
 
@@ -1853,7 +1700,8 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indMtx_44, -4);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_0, GX_ITW_0, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_0, GX_ITW_0, 0, 0,
+                     GX_ITBA_OFF);
 
     PSMTXScale(mtx_bc, 0.83f, 0.83f, 0.83f);
     PSMTXRotRad(mtx_5c, 'z', 0.7853982f);
@@ -1876,7 +1724,8 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_1, (f32(*)[3])indMtx_2c, -4);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 1, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 1, 0,
+                     GX_ITBA_OFF);
 
     mtx_8c[0][0] = gCausticReflectionDiskScale;
     mtx_8c[0][1] = 0.0f;
@@ -1928,8 +1777,8 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -1937,8 +1786,7 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -1948,8 +1796,7 @@ u32 objCausticReflectionRenderCb(void* handle, void* model)
     return 1;
 }
 
-void hudDrawRect(int x1, int y1, int x2, int y2, GXColor color)
-{
+void hudDrawRect(int x1, int y1, int x2, int y2, GXColor color) {
     f32 zero = 0.0f;
 
     GXClearVtxDesc();
@@ -1958,8 +1805,8 @@ void hudDrawRect(int x1, int y1, int x2, int y2, GXColor color)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -2017,8 +1864,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, GXColor color)
     Camera_RebuildProjectionMatrix();
 }
 
-void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, GXColor* color)
-{
+void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, GXColor* color) {
     f32 zero = 0.0f;
     f32 scale = 4.0f;
     f32 fy4, fx4, fy3, fx3, fy2, fx2, fy1, fx1;
@@ -2037,8 +1883,8 @@ void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, 
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -2096,8 +1942,7 @@ void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, 
     Camera_RebuildProjectionMatrix();
 }
 
-void hudDrawTriangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, GXColor color)
-{
+void hudDrawTriangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, GXColor color) {
     f32 zero = 0.0f;
     f32 scale = 4.0f;
     f32 fy3, fx3, fy2, fx2, fy1, fx1;
@@ -2114,8 +1959,8 @@ void hudDrawTriangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, GXColor col
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -2166,8 +2011,7 @@ void hudDrawTriangle(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, GXColor col
     Camera_RebuildProjectionMatrix();
 }
 
-void drawOrthoTexturedQuad(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
-{
+void drawOrthoTexturedQuad(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z) {
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -2208,8 +2052,7 @@ void drawOrthoTexturedQuad(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u
     Camera_RebuildProjectionMatrix();
 }
 
-void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
-{
+void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2) {
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -2251,8 +2094,7 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
 }
 
 void drawPartialTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int width, int height, int u_offset,
-                        int v_offset)
-{
+                        int v_offset) {
     GXColor c;
     s32 alpha;
     s32 w;
@@ -2279,8 +2121,7 @@ void drawPartialTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if ((u32)((Texture*)obj)->imageOffset != 0)
-    {
+    if ((u32)((Texture*)obj)->imageOffset != 0) {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
         GXSetTevDirect(GX_TEVSTAGE1);
@@ -2290,9 +2131,7 @@ void drawPartialTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int
         GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetNumTevStages(2);
-    }
-    else
-    {
+    } else {
         GXSetNumTevStages(1);
     }
     GXSetNumIndStages(0);
@@ -2304,8 +2143,8 @@ void drawPartialTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int
     selectTextureWithSecondary((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -2362,8 +2201,7 @@ void drawPartialTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int
  * width 4*size_x and height 4*size_y in screen pixels. Used as the
  * "draw fullscreen tint" primitive by the dialog code in cardShowLoadingMsg.
  */
-void drawRect(f32 sx, f32 sy, int x, int y)
-{
+void drawRect(f32 sx, f32 sy, int x, int y) {
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -2383,16 +2221,15 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetNumTevStages(1);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 1 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 1 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 1;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 0 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 0 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_FALSE);
         gGxZCompLocCached = 0;
         gGxZCompLocValid = 1;
@@ -2423,8 +2260,7 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetColorUpdate(GX_TRUE);
 }
 
-void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int width, int height, int flags)
-{
+void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int width, int height, int flags) {
     GXColor c;
     s32 w, h;
     s32 alpha;
@@ -2451,8 +2287,7 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if ((u32)((Texture*)obj)->imageOffset != 0)
-    {
+    if ((u32)((Texture*)obj)->imageOffset != 0) {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
         GXSetTevDirect(GX_TEVSTAGE1);
@@ -2462,9 +2297,7 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
         GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetNumTevStages(2);
-    }
-    else
-    {
+    } else {
         GXSetNumTevStages(1);
     }
     GXSetNumIndStages(0);
@@ -2476,8 +2309,8 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
     selectTextureWithSecondary((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -2485,12 +2318,9 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
         gGxZModeValid = 1;
     }
     fbits = (u8)flags;
-    if ((fbits & 4) != 0)
-    {
+    if ((fbits & 4) != 0) {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    }
-    else
-    {
+    } else {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     }
     w = (s32)(((u32)(width << 2) * (u16)scale) >> 8);
@@ -2500,23 +2330,17 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
     {
         f32 ur = (f32)(u32)width / (f32)(u16)((Texture*)obj)->width;
         f32 vr = (f32)(u32)height / (f32)(u16)((Texture*)obj)->height;
-        if ((fbits & 1) != 0)
-        {
+        if ((fbits & 1) != 0) {
             u0 = ur;
             u1 = 0.0f;
-        }
-        else
-        {
+        } else {
             u0 = 0.0f;
             u1 = ur;
         }
-        if ((fbits & 2) != 0)
-        {
+        if ((fbits & 2) != 0) {
             v0 = vr;
             v1 = 0.0f;
-        }
-        else
-        {
+        } else {
             v0 = 0.0f;
             v1 = vr;
         }
@@ -2561,8 +2385,7 @@ void drawScaledTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale, int 
  * "raster passthrough" (TevColorIn 0xF/0xF/0xF/0xE) and "K-tint replace"
  * (TevColorIn 0xF/0xE/0x8/0xF).
  */
-void hudDrawColored(Texture* obj, int x, int y, u32* color, int scale, int flag)
-{
+void hudDrawColored(Texture* obj, int x, int y, u32* color, int scale, int flag) {
     f32 zero = 0.0f;
     f32 one = 1.0f;
 
@@ -2576,20 +2399,16 @@ void hudDrawColored(Texture* obj, int x, int y, u32* color, int scale, int flag)
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevDirect(GX_TEVSTAGE0);
-    if ((u8)flag != 0)
-    {
+    if ((u8)flag != 0) {
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_KONST);
-    }
-    else
-    {
+    } else {
         GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_ZERO);
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
-    if ((u32)((Texture*)obj)->imageOffset != 0)
-    {
+    if ((u32)((Texture*)obj)->imageOffset != 0) {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
@@ -2598,9 +2417,7 @@ void hudDrawColored(Texture* obj, int x, int y, u32* color, int scale, int flag)
         GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
         GXSetNumTevStages(2);
-    }
-    else
-    {
+    } else {
         GXSetNumTevStages(1);
     }
     GXSetNumIndStages(0);
@@ -2612,20 +2429,17 @@ void hudDrawColored(Texture* obj, int x, int y, u32* color, int scale, int flag)
     selectTextureWithSecondary((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u8)flag != 0)
-    {
+    if ((u8)flag != 0) {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    }
-    else
-    {
+    } else {
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     }
     {
@@ -2674,8 +2488,7 @@ void hudDrawColored(Texture* obj, int x, int y, u32* color, int scale, int flag)
  * tex stage that further K-multiplies by the texture. Final width and
  * height are 4 * asset_dim * scale >> 8 in screen pixels at z=-8.
  */
-void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
-{
+void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale) {
     f32 zero = 0.0f;
     f32 one = 1.0f;
     GXColor c;
@@ -2702,8 +2515,7 @@ void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if ((u32)((Texture*)obj)->imageOffset != 0)
-    {
+    if ((u32)((Texture*)obj)->imageOffset != 0) {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
         GXSetTevDirect(GX_TEVSTAGE1);
@@ -2713,9 +2525,7 @@ void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
         GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetNumTevStages(2);
-    }
-    else
-    {
+    } else {
         GXSetNumTevStages(1);
     }
     GXSetNumIndStages(0);
@@ -2727,8 +2537,8 @@ void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
     selectTextureWithSecondary((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -2773,8 +2583,7 @@ void drawTexture(void* obj, f32 sx, f32 sy, int alpha_mod, int scale)
     Camera_RebuildProjectionMatrix();
 }
 
-void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx)
-{
+void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx) {
     Mtx tmp;
 
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_ALPHA, GX_CH_RED, GX_CH_ALPHA, GX_CH_RED);
@@ -2800,16 +2609,15 @@ void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, G
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -2817,8 +2625,7 @@ void objectShadow_setupSwappedProjectedTexture(ProjectedShadowTexture* shadow, G
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx)
-{
+void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx) {
     Mtx tmp;
 
     PSMTXConcat(shadow->textureMtx, mtx, tmp);
@@ -2842,16 +2649,15 @@ void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor*
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -2859,8 +2665,8 @@ void objectShadow_setupProjectedTexture(ProjectedShadowTexture* shadow, GXColor*
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx, f32 depth)
-{
+void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx,
+                                                 f32 depth) {
     Mtx m58;
     Mtx m28;
     Vec v;
@@ -2926,16 +2732,15 @@ void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow,
     GXSetNumTevStages(2);
     GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, kc);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ZERO, GX_BL_INVSRCCLR, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -2943,10 +2748,8 @@ void objectShadow_setupProjectedTextureDepthFade(ProjectedShadowTexture* shadow,
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx, f32 scale)
-{
-    typedef struct
-    {
+void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, GXColor* colorPtr, Mtx mtx, f32 scale) {
+    typedef struct {
         u32 w[7];
     } Blk28;
     Mtx mtx_110;
@@ -2983,18 +2786,16 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
 
     selectTexture(shadow->texture, 0);
 
-    if (shadow->mode < 8)
-    {
+    if (shadow->mode < 8) {
         GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_RED);
         stage_idx = shadow->mode - 1;
-    }
-    else if (shadow->mode < 0x10)
-    {
+    } else if (shadow->mode < 0x10) {
         GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_ALPHA, GX_CH_ALPHA, GX_CH_ALPHA, GX_CH_ALPHA);
         stage_idx = shadow->mode - 9;
     }
-    if (stage_idx < 0)
+    if (stage_idx < 0) {
         stage_idx = 0;
+    }
 
     color2.r = 0x7F;
     color2.g = 0x7F;
@@ -3009,8 +2810,7 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
 
     stage_base = 0;
     stage_count = stab.count[stage_idx];
-    if (stage_count != 0)
-    {
+    if (stage_count != 0) {
         GXSetTevDirect(GX_TEVSTAGE0);
         GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP1);
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
@@ -3021,8 +2821,7 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
         stage_base = 1;
     }
 
-    if (stage_count > 1)
-    {
+    if (stage_count > 1) {
         GXSetTevDirect(stage_base);
         GXSetTevSwapMode(stage_base, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevOrder(stage_base, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
@@ -3033,8 +2832,7 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
         stage_base++;
     }
 
-    if (stage_count > 2)
-    {
+    if (stage_count > 2) {
         GXSetTevDirect(stage_base);
         GXSetTevSwapMode(stage_base, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevOrder(stage_base, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
@@ -3049,12 +2847,9 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
     GXSetTevSwapMode(stage_base, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevKColorSel(stage_base, GX_TEV_KCSEL_K0);
     GXSetTevOrder(stage_base, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    if (stage_count == 0)
-    {
+    if (stage_count == 0) {
         GXSetTevColorIn(stage_base, GX_CC_TEXC, GX_CC_C0, GX_CC_KONST, GX_CC_ZERO);
-    }
-    else
-    {
+    } else {
         GXSetTevColorIn(stage_base, GX_CC_CPREV, GX_CC_C0, GX_CC_KONST, GX_CC_ZERO);
     }
     GXSetTevAlphaIn(stage_base, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
@@ -3104,16 +2899,15 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
     GXSetFog(GX_FOG_PERSP_EXP, gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ, fog_var);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ZERO, GX_BL_INVSRCCLR, GX_LO_NOOP);
 
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3121,10 +2915,9 @@ void objectShadow_setupProjectedTextureChannel(ProjectedShadowTexture* shadow, G
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetOpaqueZWriteMode(void)
-{
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 || gGxZModeValid == 0)
-    {
+void gxSetOpaqueZWriteMode(void) {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 1 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -3132,8 +2925,7 @@ void gxSetOpaqueZWriteMode(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3141,10 +2933,9 @@ void gxSetOpaqueZWriteMode(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetOpaqueNoZWriteMode(void)
-{
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+void gxSetOpaqueNoZWriteMode(void) {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -3152,8 +2943,7 @@ void gxSetOpaqueNoZWriteMode(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3161,10 +2951,9 @@ void gxSetOpaqueNoZWriteMode(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetAdditiveBlendZTest(void)
-{
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+void gxSetAdditiveBlendZTest(void) {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -3172,8 +2961,7 @@ void gxSetAdditiveBlendZTest(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3181,10 +2969,9 @@ void gxSetAdditiveBlendZTest(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetAdditiveBlendNoZTest(void)
-{
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+void gxSetAdditiveBlendNoZTest(void) {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -3192,8 +2979,7 @@ void gxSetAdditiveBlendNoZTest(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3201,10 +2987,9 @@ void gxSetAdditiveBlendNoZTest(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetAlphaBlendNoZTest(void)
-{
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+void gxSetAlphaBlendNoZTest(void) {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -3212,8 +2997,7 @@ void gxSetAlphaBlendNoZTest(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3221,10 +3005,9 @@ void gxSetAlphaBlendNoZTest(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetAlphaBlendZTest(void)
-{
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+void gxSetAlphaBlendZTest(void) {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
@@ -3232,8 +3015,7 @@ void gxSetAlphaBlendZTest(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3241,8 +3023,7 @@ void gxSetAlphaBlendZTest(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxSetDebugTextMode(void)
-{
+void gxSetDebugTextMode(void) {
     GXSetCullMode(GX_CULL_NONE);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevDirect(GX_TEVSTAGE0);
@@ -3257,8 +3038,8 @@ void gxSetDebugTextMode(void)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetNumTevStages(1);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
@@ -3266,8 +3047,7 @@ void gxSetDebugTextMode(void)
         gGxZModeValid = 1;
     }
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3275,8 +3055,7 @@ void gxSetDebugTextMode(void)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void gxTevModulateRasStage(void)
-{
+void gxTevModulateRasStage(void) {
     GXSetTevOrder(gTevStageCursor, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_ZERO);
@@ -3289,8 +3068,7 @@ void gxTevModulateRasStage(void)
     gTevChanCount += 1;
 }
 
-void gxTevRasTimesColor1Stage(void)
-{
+void gxTevRasTimesColor1Stage(void) {
     GXSetTevOrder(gTevStageCursor, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_RASC, GX_CC_C1, GX_CC_ZERO);
@@ -3303,8 +3081,7 @@ void gxTevRasTimesColor1Stage(void)
     gTevChanCount += 1;
 }
 
-void textRenderSetup(void)
-{
+void textRenderSetup(void) {
     GXSetTevOrder(gTevStageCursor, gTevTexCoordCursor, gTevTexMapCursor, GX_COLOR_NULL);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_C1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
@@ -3320,8 +3097,7 @@ void textRenderSetup(void)
     gTevTexMapCursor += 1;
 }
 
-void gxTevAddColor1Stage(void)
-{
+void gxTevAddColor1Stage(void) {
     GXSetTevOrder(gTevStageCursor, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C1);
@@ -3334,8 +3110,7 @@ void gxTevAddColor1Stage(void)
     gTevChanCount += 1;
 }
 
-void gxTevPassRasStage(void)
-{
+void gxTevPassRasStage(void) {
     GXSetTevOrder(gTevStageCursor, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
@@ -3348,8 +3123,7 @@ void gxTevPassRasStage(void)
     gTevChanCount += 1;
 }
 
-void gxTevModulateColor1Stage(void)
-{
+void gxTevModulateColor1Stage(void) {
     GXSetTevOrder(gTevStageCursor, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
@@ -3362,8 +3136,7 @@ void gxTevModulateColor1Stage(void)
     gTevChanCount += 1;
 }
 
-void gxTevAddTextureFrameBlendStages(void)
-{
+void gxTevAddTextureFrameBlendStages(void) {
     GXSetTevOrder(gTevStageCursor, gTevTexCoordCursor, gTevTexMapCursor, GX_COLOR_NULL);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
@@ -3389,8 +3162,7 @@ void gxTevAddTextureFrameBlendStages(void)
     gTevTexMapCursor += 1;
 }
 
-void gxTevColor1TexAlphaStage(void)
-{
+void gxTevColor1TexAlphaStage(void) {
     GXSetTevOrder(gTevStageCursor, gTevTexCoordCursor, gTevTexMapCursor, GX_COLOR_NULL);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C1);
@@ -3406,8 +3178,7 @@ void gxTevColor1TexAlphaStage(void)
     gTevTexGenCount += 1;
 }
 
-void gxTevTextureTimesColor1Stage(void)
-{
+void gxTevTextureTimesColor1Stage(void) {
     GXSetTevOrder(gTevStageCursor, gTevTexCoordCursor, gTevTexMapCursor, GX_COLOR_NULL);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C1, GX_CC_ZERO);
@@ -3423,8 +3194,7 @@ void gxTevTextureTimesColor1Stage(void)
     gTevTexGenCount += 1;
 }
 
-void gxTevTextureTimesRasStage(void)
-{
+void gxTevTextureTimesRasStage(void) {
     GXSetTevOrder(gTevStageCursor, gTevTexCoordCursor, gTevTexMapCursor, GX_COLOR0A0);
     GXSetTevDirect(gTevStageCursor);
     GXSetTevColorIn(gTevStageCursor, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
@@ -3449,25 +3219,20 @@ void gxTevTextureTimesRasStage(void)
  * stage that K-multiplies the tint over the existing color, advancing
  * gTevStageCursor (TEV stage cursor) and gTevStageCount (stage count).
  */
-void gxTevCommitStages(void)
-{
+void gxTevCommitStages(void) {
     GXColor c;
 
     GXSetNumIndStages(gTevIndStageCount);
-    if (gTevChanCount != 0)
-    {
+    if (gTevChanCount != 0) {
         GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(1);
-    }
-    else
-    {
+    } else {
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(0);
     }
     GXSetNumTexGens(gTevTexGenCount);
-    if (gHudTintAlpha < 0xFF)
-    {
+    if (gHudTintAlpha < 0xFF) {
         c.a = gHudTintAlpha;
         GXSetTevKColor(GX_KCOLOR0, c);
         GXSetTevKAlphaSel(gTevStageCursor, GX_TEV_KASEL_K0_A);
@@ -3482,14 +3247,12 @@ void gxTevCommitStages(void)
         gTevStageCount++;
     }
     GXSetNumTevStages(gTevStageCount);
-    if (gTevChanCount != 0)
-    {
+    if (gTevChanCount != 0) {
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     }
 }
 
-void gxTevResetStages(void)
-{
+void gxTevResetStages(void) {
     gTevIndStageCount = 0;
     gTevChanCount = 0;
     gTevTexGenCount = 0;
@@ -3499,8 +3262,7 @@ void gxTevResetStages(void)
     gTevTexMapCursor = 0;
 }
 
-void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
-{
+void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a) {
     GXColor c;
     c.r = r;
     c.g = g;
@@ -3509,8 +3271,7 @@ void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
     GXSetTevColor(GX_TEVREG1, c);
 }
 
-void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
-{
+void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a) {
     GXColor c;
     c.r = r;
     c.g = g;
@@ -3527,8 +3288,7 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
  * coord matrix that scales the source texture by 1/sx and 1/sy with a
  * sub-pixel offset baked from -320.0f/50.
  */
-void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
-{
+void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag) {
     Texture* handle;
     GXColor c0, c1, c2;
     Mtx mtx;
@@ -3565,17 +3325,14 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_KONST);
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if (flag != 0)
-    {
+    if (flag != 0) {
         c0.a = a;
         GXSetTevKColor(GX_KCOLOR0, c0);
         GXSetTevColor(GX_TEVREG0, c1);
         GXSetTevColor(GX_TEVREG1, c2);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_A0, GX_CA_A1, GX_CA_KONST);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_COMP_RGB8_GT, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    }
-    else
-    {
+    } else {
         c0.a = (u8)((s32)a >> 2);
         GXSetTevKColor(GX_KCOLOR0, c0);
         GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
@@ -3592,16 +3349,15 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_INVSRCALPHA, GX_BL_SRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3630,8 +3386,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     GXSetCurrentMtx(GX_PNMTX0);
 }
 
-void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3)
-{
+void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3) {
     Mtx mtx_58;
     Mtx mtx_28;
     Texture* handle1;
@@ -3649,12 +3404,9 @@ void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u
     c_K1.a = alpha1;
     ratio1 = ((f32)(u32)Camera_GetCurrentViewYaw() - 32768.0f) / 8192.0f;
     ratio2 = ((f32)(u32)Camera_GetCurrentViewPitch() - 32768.0f) / 8192.0f;
-    if (getHudHiddenFrameCount() != 0)
-    {
+    if (getHudHiddenFrameCount() != 0) {
         angle = gSnowFlashOverlayAngle;
-    }
-    else
-    {
+    } else {
         f32 t = atanf_fast(((Vec*)vec)->x / ((Vec*)vec)->y);
         angle = gSnowFlashOverlayAngle + interpolate(t - gSnowFlashOverlayAngle, 0.05f, timeDelta);
         gSnowFlashOverlayAngle = angle;
@@ -3758,16 +3510,15 @@ void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 1 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 1 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LESS, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 1;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3804,8 +3555,7 @@ void drawSnowFlashOverlay(f32 s1, u8 flashAlpha, void* vec, f32 s2, u8 alpha0, u
     GXSetCurrentMtx(GX_PNMTX0);
 }
 
-void doHeatEffect(u8 alpha)
-{
+void doHeatEffect(u8 alpha) {
     Mtx mtx_44;
     f32 indMtx[6];
     Texture* handle2;
@@ -3821,12 +3571,9 @@ void doHeatEffect(u8 alpha)
 
     *(IndMtxInit*)indMtx = sIndStageInitData.ind;
     v = (s16)Camera_GetCurrentViewPitch();
-    if (v < 0)
-    {
+    if (v < 0) {
         k = (((u16)(int)v >> 8) - 0xc0) << 2;
-    }
-    else
-    {
+    } else {
         k = 0xff;
     }
     a1 = (alpha * 0xff) >> 8;
@@ -3861,7 +3608,8 @@ void doHeatEffect(u8 alpha)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP2);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indMtx, -6);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
 
     GXSetTevKColor(GX_KCOLOR0, gHeatEffectKColor);
     GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
@@ -3899,16 +3647,15 @@ void doHeatEffect(u8 alpha)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 1 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 1 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LESS, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 1;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -3965,8 +3712,7 @@ void doHeatEffect(u8 alpha)
  * 0..0x80 so the texture maps once across the screen. Used when fading
  * the screen to texture (e.g. boot logo / "now loading").
  */
-void renderMotionBlur(f32 alpha)
-{
+void renderMotionBlur(f32 alpha) {
     Mtx mtx;
 
     gMotionBlurKColor.a = 255.0f * alpha;
@@ -3982,16 +3728,15 @@ void renderMotionBlur(f32 alpha)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -4044,8 +3789,7 @@ void renderMotionBlur(f32 alpha)
     Camera_RebuildProjectionMatrix();
 }
 
-void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
-{
+void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5) {
     Mtx mtx_27;
     Mtx mtx_24;
     Mtx mtx_2A;
@@ -4105,10 +3849,8 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     GXSetNumChans(0);
 
     stage_base = 0;
-    if (param5 == 0)
-    {
-        if (param4 == 0)
-        {
+    if (param5 == 0) {
+        if (param4 == 0) {
             GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
             GXSetNumTevStages(7);
 
@@ -4120,9 +3862,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
             GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
             GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_SUB, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVREG2);
             stage_base = 1;
-        }
-        else
-        {
+        } else {
             GXSetNumTevStages(6);
         }
 
@@ -4138,12 +3878,9 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevDirect(stage_base + 1);
         GXSetTevOrder(stage_base + 1, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
         GXSetTevColorIn(stage_base + 1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_ZERO);
-        if (param4 == 0)
-        {
+        if (param4 == 0) {
             GXSetTevAlphaIn(stage_base + 1, GX_CA_APREV, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A2);
-        }
-        else
-        {
+        } else {
             GXSetTevAlphaIn(stage_base + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
         }
         GXSetTevSwapMode(stage_base + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -4185,9 +3922,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
         GXSetTevSwapMode(stage_base + 5, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(stage_base + 5, GX_TEV_ADD, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(stage_base + 5, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
-    }
-    else
-    {
+    } else {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetNumTevStages(7);
 
@@ -4260,16 +3995,15 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetCullMode(GX_CULL_NONE);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
         gGxZModeCompareEnable = 0;
         gGxZModeCompareFunc = 7;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -4325,8 +4059,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     Camera_RebuildProjectionMatrix();
 }
 
-void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
-{
+void setupWaterReflectionTev(Texture* handle1, Texture* handle2) {
     Mtx mtx_30;
     GXColor temp;
     GXColor temp2;
@@ -4335,7 +4068,7 @@ void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
     GXColor k2;
     GXColor tev1;
     GXColor tev2;
-    f32 (*indBase[1])[2][3];
+    f32(*indBase[1])[2][3];
 
     indBase[0] = gWaterReflectionIndTexMtx;
     newshadows_loadReflectionColorTexture(0);
@@ -4350,14 +4083,11 @@ void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
 
-    if (isHeavyFogEnabled() != 0)
-    {
+    if (isHeavyFogEnabled() != 0) {
         temp.r = gFogColor.r;
         temp.g = gFogColor.g;
         temp.b = gFogColor.b;
-    }
-    else
-    {
+    } else {
         u8 ignoredLightColor;
         (*gSkyInterface)
             ->getCurrentAmbientAndLightColors(&temp.r, &temp.g, &temp.b, &ignoredLightColor, &ignoredLightColor,
@@ -4365,35 +4095,38 @@ void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
     }
 
     k0 = gWaterReflectionKColorR;
-    ((void (*)(int, GXColor*))GXSetTevKColor)(0, &k0);
+    GXSetTevKColor(GX_KCOLOR0, k0);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     k1 = gWaterReflectionKColorG;
-    ((void (*)(int, GXColor*))GXSetTevKColor)(1, &k1);
+    GXSetTevKColor(GX_KCOLOR1, k1);
     GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_K1);
     k2 = gWaterReflectionKColorB;
-    ((void (*)(int, GXColor*))GXSetTevKColor)(2, &k2);
+    GXSetTevKColor(GX_KCOLOR2, k2);
     GXSetTevKColorSel(GX_TEVSTAGE2, GX_TEV_KCSEL_K2);
 
     temp.r = (u8)((int)temp.r >> 2);
     temp.g = (u8)((int)temp.g >> 2);
     temp.b = (u8)((int)temp.b >> 2);
     tev1 = temp;
-    ((void (*)(int, GXColor*))GXSetTevColor)(1, &tev1);
+    GXSetTevColor(GX_TEVREG0, tev1);
 
     temp2.r = (u8)(temp.r + 0xC0);
     temp2.g = (u8)(temp.g + 0xC0);
     temp2.b = (u8)(temp.b + 0xC0);
     tev2 = temp2;
-    ((void (*)(int, GXColor*))GXSetTevColor)(2, &tev2);
+    GXSetTevColor(GX_TEVREG1, tev2);
 
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, indBase[0][0], -1);
     GXSetIndTexMtx(GX_ITM_1, indBase[0][1], -1);
     GXSetIndTexMtx(GX_ITM_2, indBase[0][2], -1);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_S);
-    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_2, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_S);
+    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_2, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
     GXSetNumIndStages(1);
     GXSetNumTexGens(3);
     GXSetNumTevStages(4);
@@ -4429,16 +4162,15 @@ void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
     GXSetTevAlphaOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -4446,8 +4178,7 @@ void setupWaterReflectionTev(Texture* handle1, Texture* handle2)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void setupReflectionIndirectTev(u8 flag)
-{
+void setupReflectionIndirectTev(u8 flag) {
     f32 mtx[6];
 
     newshadows_loadReflectionColorTexture(1);
@@ -4462,7 +4193,8 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD0, GX_TEXMAP0);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (void*)mtx, -2);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_S);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_S);
     GXSetNumIndStages(1);
     GXSetNumTexGens(2);
     GXSetNumTevStages(2);
@@ -4476,12 +4208,9 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    if (flag != 0)
-    {
+    if (flag != 0) {
         GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-    }
-    else
-    {
+    } else {
         GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV, GX_CC_ZERO);
     }
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_ALPHA_BUMPN);
@@ -4491,8 +4220,7 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 }
 
-void setupReflectionDistortTev(Texture* texHandle)
-{
+void setupReflectionDistortTev(Texture* texHandle) {
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -4514,18 +4242,15 @@ void setupReflectionDistortTev(Texture* texHandle)
     indMtx[3] = 0.0f;
     indMtx[4] = 0.0f;
     indMtx[5] = 0.5f;
-    if (isHeavyFogEnabled())
-    {
+    if (isHeavyFogEnabled()) {
         gReflectionTintColor.r = gFogColor.r;
         gReflectionTintColor.g = gFogColor.g;
         gReflectionTintColor.b = gFogColor.b;
         gReflectionTintColor.a = 0x80;
-    }
-    else
-    {
+    } else {
         (*gSkyInterface)
-            ->getCurrentAmbientAndLightColors(&gReflectionTintColor.r, &gReflectionTintColor.g, &gReflectionTintColor.b, &ignoredLightColor,
-                                              &ignoredLightColor, &ignoredLightColor);
+            ->getCurrentAmbientAndLightColors(&gReflectionTintColor.r, &gReflectionTintColor.g, &gReflectionTintColor.b,
+                                              &ignoredLightColor, &ignoredLightColor, &ignoredLightColor);
         gReflectionTintColor.r = gReflectionTintColor.r >> 3;
         gReflectionTintColor.g = gReflectionTintColor.g >> 3;
         gReflectionTintColor.b = gReflectionTintColor.b >> 3;
@@ -4538,8 +4263,10 @@ void setupReflectionDistortTev(Texture* texHandle)
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indMtx, -1);
     GXSetIndTexMtx(GX_ITM_1, (f32(*)[3])indMtx, -2);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_S);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_S);
     GXSetNumIndStages(1);
     GXSetNumChans(1);
     GXSetNumTexGens(3);
@@ -4548,12 +4275,9 @@ void setupReflectionDistortTev(Texture* texHandle)
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (isHeavyFogEnabled())
-    {
+    if (isHeavyFogEnabled()) {
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVPREV);
-    }
-    else
-    {
+    } else {
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     }
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -4564,16 +4288,15 @@ void setupReflectionDistortTev(Texture* texHandle)
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -4581,8 +4304,7 @@ void setupReflectionDistortTev(Texture* texHandle)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-void setupReflectionBumpDistortTev(void* texture)
-{
+void setupReflectionBumpDistortTev(void* texture) {
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -4604,18 +4326,16 @@ void setupReflectionBumpDistortTev(void* texture)
     indMtx[3] = 0.0f;
     indMtx[4] = 0.25f;
     indMtx[5] = 0.0f;
-    if (isHeavyFogEnabled())
-    {
+    if (isHeavyFogEnabled()) {
         gReflectionBumpTintColor.r = gFogColor.r;
         gReflectionBumpTintColor.g = gFogColor.g;
         gReflectionBumpTintColor.b = gFogColor.b;
         gReflectionBumpTintColor.a = 0x80;
-    }
-    else
-    {
+    } else {
         (*gSkyInterface)
-            ->getCurrentAmbientAndLightColors(&gReflectionBumpTintColor.r, &gReflectionBumpTintColor.g, &gReflectionBumpTintColor.b, &ignoredLightColor,
-                                              &ignoredLightColor, &ignoredLightColor);
+            ->getCurrentAmbientAndLightColors(&gReflectionBumpTintColor.r, &gReflectionBumpTintColor.g,
+                                              &gReflectionBumpTintColor.b, &ignoredLightColor, &ignoredLightColor,
+                                              &ignoredLightColor);
         gReflectionBumpTintColor.r = gReflectionBumpTintColor.r >> 3;
         gReflectionBumpTintColor.g = gReflectionBumpTintColor.g >> 3;
         gReflectionBumpTintColor.b = gReflectionBumpTintColor.b >> 3;
@@ -4628,8 +4348,10 @@ void setupReflectionBumpDistortTev(void* texture)
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indMtx, -1);
     GXSetIndTexMtx(GX_ITM_1, (f32(*)[3])indMtx, -2);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_U);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0,
+                     GX_ITBA_U);
     GXSetNumIndStages(1);
     GXSetNumChans(1);
     GXSetNumTexGens(3);
@@ -4638,12 +4360,9 @@ void setupReflectionBumpDistortTev(void* texture)
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (isHeavyFogEnabled())
-    {
+    if (isHeavyFogEnabled()) {
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVPREV);
-    }
-    else
-    {
+    } else {
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     }
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
@@ -4654,16 +4373,15 @@ void setupReflectionBumpDistortTev(void* texture)
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;
@@ -4671,12 +4389,9 @@ void setupReflectionBumpDistortTev(void* texture)
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
 }
 
-
-
 /* .bss block 0x80391DC0-0x803967C0 */
 
-void setupWaterCausticTev(void)
-{
+void setupWaterCausticTev(void) {
 
     Mtx mtx_cc;
     Mtx mtx_9c;
@@ -4708,7 +4423,8 @@ void setupWaterCausticTev(void)
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])indMtx_54, -2);
-    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_0, GX_ITW_0, 0, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_0, GX_ITW_0, 0, 0,
+                     GX_ITBA_OFF);
 
     PSMTXScale(mtx_9c, 0.83f, 0.83f, 0.83f);
     PSMTXRotRad(mtx_6c, 'z', 0.7853982f);
@@ -4727,17 +4443,15 @@ void setupWaterCausticTev(void)
     GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
     GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_1, (f32(*)[3])indMtx_3c, -4);
-    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 1, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE1, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 1, 0,
+                     GX_ITBA_OFF);
 
-    if (isHeavyFogEnabled() != 0)
-    {
+    if (isHeavyFogEnabled() != 0) {
         gWaterCausticKColor.r = gFogColor.r;
         gWaterCausticKColor.g = gFogColor.g;
         gWaterCausticKColor.b = gFogColor.b;
         gWaterCausticKColor.a = 0x80;
-    }
-    else
-    {
+    } else {
         u8 ignoredLightColor;
         u8* p1;
         u8* p2;
@@ -4771,12 +4485,9 @@ void setupWaterCausticTev(void)
     GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_KONST, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
     GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_KONST);
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (isHeavyFogEnabled() != 0)
-    {
+    if (isHeavyFogEnabled() != 0) {
         GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVREG0);
-    }
-    else
-    {
+    } else {
         GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
     }
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
@@ -4788,8 +4499,10 @@ void setupWaterCausticTev(void)
     indMtx_24[4] = 0.0f;
     indMtx_24[5] = 0.0f;
     GXSetIndTexMtx(GX_ITM_2, (f32(*)[3])indMtx_24, -5);
-    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_0, GX_ITW_0, 0, 0, GX_ITBA_OFF);
-    GXSetTevIndirect(GX_TEVSTAGE3, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_2, GX_ITW_OFF, GX_ITW_OFF, 1, 0, GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE2, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_1, GX_ITW_0, GX_ITW_0, 0, 0,
+                     GX_ITBA_OFF);
+    GXSetTevIndirect(GX_TEVSTAGE3, GX_INDTEXSTAGE1, GX_ITF_8, GX_ITB_STU, GX_ITM_2, GX_ITW_OFF, GX_ITW_OFF, 1, 0,
+                     GX_ITBA_OFF);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
 
     GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
@@ -4808,16 +4521,15 @@ void setupWaterCausticTev(void)
 
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     GXSetCullMode(GX_CULL_NONE);
-    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
-    {
+    if ((u32)gGxZModeCompareEnable != 1 || gGxZModeCompareFunc != 3 || gGxZModeUpdateEnable != 0 ||
+        gGxZModeValid == 0) {
         GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
         gGxZModeCompareEnable = 1;
         gGxZModeCompareFunc = 3;
         gGxZModeUpdateEnable = 0;
         gGxZModeValid = 1;
     }
-    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0)
-    {
+    if ((u32)gGxZCompLocCached != 1 || gGxZCompLocValid == 0) {
         GXSetZCompLoc(GX_TRUE);
         gGxZCompLocCached = 1;
         gGxZCompLocValid = 1;

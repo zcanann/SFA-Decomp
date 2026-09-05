@@ -1437,7 +1437,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     }
 }
 
-int objGetAlphaCompareThreshold(void) {
+u8 objGetAlphaCompareThreshold(void) {
     return gObjAlphaCompareThreshold;
 }
 
