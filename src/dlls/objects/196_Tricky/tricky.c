@@ -31,6 +31,7 @@
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/dll/rom_curve_def.h"
+#include "main/dll/dll_0015_curves.h"
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/dll/path_control_interface.h"
@@ -1590,7 +1591,7 @@ static inline void trickyResetCommandState(TrickyState* state) {
 void Tricky_hitDetect(GameObject* obj) {
     f32 dy;
     f32 y;
-    GameObject** xyzAnimatorCursor;
+    GameObject** xyzAnimators;
     int animatorIndex;
     GameObject* firepipeObj;
     TrickyState* state;
@@ -1619,21 +1620,18 @@ void Tricky_hitDetect(GameObject* obj) {
         }
     }
     if (state->heightTracking != 0u) {
-        {
-            GameObject** objectList = (GameObject**)objGetAllOfType(XYZ_ANIMATOR_OBJECT_GROUP, &animatorCount);
-            animatorIndex = 0;
-            xyzAnimatorCursor = objectList;
-        }
+        xyzAnimators = objGetAllOfType(XYZ_ANIMATOR_OBJECT_GROUP, &animatorCount);
+        animatorIndex = 0;
         for (; animatorIndex < animatorCount; animatorIndex++) {
-            animatorHeight = XyzAnimator_getCoordinate(*xyzAnimatorCursor, XYZ_ANIMATOR_COORD_WORLD_Y);
+            animatorHeight = XyzAnimator_getCoordinate(xyzAnimators[animatorIndex], XYZ_ANIMATOR_COORD_WORLD_Y);
             if (state->heightTrackObjId == -1) {
                 dy = (animatorHeight - obj->anim.localPosY >= 0.0f) ? animatorHeight - obj->anim.localPosY
                                                                     : -(animatorHeight - obj->anim.localPosY);
                 if (dy < TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
-                    state->heightTrackObjId = (*xyzAnimatorCursor)->anim.placement->ident;
+                    state->heightTrackObjId = xyzAnimators[animatorIndex]->anim.placement->ident;
                 }
             }
-            if ((u32)state->heightTrackObjId == (u32)(*xyzAnimatorCursor)->anim.placement->ident) {
+            if ((u32)state->heightTrackObjId == (u32)xyzAnimators[animatorIndex]->anim.placement->ident) {
                 previousTrackedHeight = state->trackedHeight;
                 trackedHeightReset = 0.0f;
                 if ((previousTrackedHeight != trackedHeightReset) && (previousTrackedHeight == animatorHeight)) {
@@ -1644,7 +1642,6 @@ void Tricky_hitDetect(GameObject* obj) {
                 }
                 break;
             }
-            xyzAnimatorCursor = xyzAnimatorCursor + 1;
         }
         if (animatorIndex == animatorCount) {
             state->heightTracking = 0;
@@ -2122,7 +2119,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
 }
 
 GameObject* trickyFindRecallWarp(GameObject* obj, TrickyState* state) {
-    GameObject** warpCursor;
+    GameObject** warpObjects;
     int warpCount;
     GameObject* nearestWarp;
     f32 trickyToPlayerSq;
@@ -2130,19 +2127,18 @@ GameObject* trickyFindRecallWarp(GameObject* obj, TrickyState* state) {
     int warpIndex;
 
     nearestWarp = 0;
-    warpCursor = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
+    warpObjects = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
     trickyToPlayerSq = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
     if ((trickyToPlayerSq >= TRICKY_REMOTE_RECALL_DISTANCE_SQ) || (state->followHeelTimer > 0.0f)) {
         if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
             nearestWarpToPlayerSq = TRICKY_MAX_DISTANCE;
             for (warpIndex = 0; warpIndex < warpCount; warpIndex++) {
                 f32 warpToPlayerSq =
-                    getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*warpCursor)->anim.worldPosX);
+                    getXZDistanceSquared(&state->playerObj->anim.worldPosX, &warpObjects[warpIndex]->anim.worldPosX);
                 if (warpToPlayerSq < trickyToPlayerSq && warpToPlayerSq < nearestWarpToPlayerSq) {
                     nearestWarpToPlayerSq = warpToPlayerSq;
-                    nearestWarp = *warpCursor;
+                    nearestWarp = warpObjects[warpIndex];
                 }
-                warpCursor++;
             }
         }
     }
@@ -3976,7 +3972,7 @@ GameObject* trickyFindCirclingTarget(GameObject* obj, TrickyState* state) {
     if (target != NULL) {
         baddieList = objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &baddieCount);
         for (baddieIndex = 0; baddieIndex < baddieCount; baddieIndex++) {
-            if (*baddieList == target) {
+            if (baddieList[baddieIndex] == target) {
                 trickyToTarget = Vec_xzDistance(&obj->anim.worldPosX, &target->anim.worldPosX);
                 trickyToPlayer = Vec_xzDistance(&obj->anim.worldPosX, &state->playerObj->anim.worldPosX);
                 targetToPlayer = Vec_xzDistance(&target->anim.worldPosX, &state->playerObj->anim.worldPosX);
@@ -3985,7 +3981,6 @@ GameObject* trickyFindCirclingTarget(GameObject* obj, TrickyState* state) {
                 }
                 break;
             }
-            baddieList++;
         }
     }
     return NULL;
@@ -4130,7 +4125,6 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
         break;
     }
     case TRICKY_BADDIE_ALERT_TRACK_TARGET: {
-        GameObject** warpCursor;
         GameObject* target;
         GameObject* nearestBaddie = trickyFindNearestUsableBaddie(state->playerObj, TRICKY_TIMER_150_FRAMES, 0);
         if (nearestBaddie != NULL && nearestBaddie->anim.romDefNo == TRICKY_CIRCLING_PRIORITY_ROMDEF) {
@@ -4144,19 +4138,18 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
         } else {
             GameObject** warpList = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
             int warpIndex = 0;
-            warpCursor = warpList;
             for (; warpIndex < warpCount; warpIndex++) {
-                f32 warpToTarget = Vec_xzDistance(&warpCursor[0]->anim.worldPosX, &target->anim.worldPosX);
-                f32 warpToPlayer = Vec_xzDistance(&warpCursor[0]->anim.worldPosX, &state->playerObj->anim.worldPosX);
+                f32 warpToTarget = Vec_xzDistance(&warpList[warpIndex]->anim.worldPosX, &target->anim.worldPosX);
+                f32 warpToPlayer =
+                    Vec_xzDistance(&warpList[warpIndex]->anim.worldPosX, &state->playerObj->anim.worldPosX);
                 f32 targetToPlayer = Vec_xzDistance(&target->anim.worldPosX, &state->playerObj->anim.worldPosX);
                 if (warpToTarget + warpToPlayer > 2.0f * targetToPlayer) {
-                    f32 warpToTricky = Vec_xzDistance(&warpCursor[0]->anim.worldPosX, &obj->anim.worldPosX);
+                    f32 warpToTricky = Vec_xzDistance(&warpList[warpIndex]->anim.worldPosX, &obj->anim.worldPosX);
                     if (warpToPlayer - warpToTricky > bestDetourSavings) {
                         bestDetourSavings = warpToPlayer - warpToTricky;
-                        bestDetourWarp = warpCursor[0];
+                        bestDetourWarp = warpList[warpIndex];
                     }
                 }
-                warpCursor++;
             }
             {
                 GameObject* baddieAlertWarp = state->baddieAlertWarp;
@@ -4302,7 +4295,6 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
     f32 playerRejectDistSq;
     f32 bestTrickyDistSq;
     f32 distSq;
-    GameObject** warpCursor;
     GameObject** warpList;
     int warpCount;
     int warpIndex;
@@ -4317,20 +4309,18 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
         return;
     }
 
-    warpList = (GameObject**)objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
+    warpList = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
     warpIndex = 0;
-    warpCursor = warpList;
     playerRejectDistSq = TRICKY_CLOSE_DISTANCE_SQ;
     for (; warpIndex < warpCount; warpIndex++) {
-        distSq = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*warpCursor)->anim.worldPosX);
+        distSq = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &warpList[warpIndex]->anim.worldPosX);
         if (distSq > playerRejectDistSq) {
-            distSq = getXZDistanceSquared(&obj->anim.worldPosX, &(*warpCursor)->anim.worldPosX);
+            distSq = getXZDistanceSquared(&obj->anim.worldPosX, &warpList[warpIndex]->anim.worldPosX);
             if (distSq < bestTrickyDistSq) {
-                bestWarp = *warpCursor;
+                bestWarp = warpList[warpIndex];
                 bestTrickyDistSq = distSq;
             }
         }
-        warpCursor++;
     }
 
     selectedWarp = bestWarp;
@@ -4586,10 +4576,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         /* Retail multiplies indices, although Hcurves packs patch IDs into two bytes. */
         patchGroupProduct = targetWalkGroup * state->lastWalkGroup;
         if (patchGroupProduct != 0) {
-            u16* ids = patchInfo.patchGroupIds;
-
-            for (i = 0, linkedPatchGroupId = patchGroupProduct; i < OBJFSA_PATCHGROUP_PATCH_COUNT; ids++, i++) {
-                if ((patchGroupProduct == *ids) && (((1 << i) & patchInfo.patchMask) != 0)) {
+            for (i = 0, linkedPatchGroupId = patchGroupProduct; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
+                if ((patchGroupProduct == patchInfo.patchGroupIds[i]) && (((1 << i) & patchInfo.patchMask) != 0)) {
                     state->linkedPatchGroup = linkedPatchGroupId;
                     state->linkedPatchPos.x = target[0];
                     state->linkedPatchPos.y = target[1];
@@ -5277,23 +5265,21 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos) {
     ObjDef* modelDef;
     ObjHitsPriorityState* hitState;
     u16 minDistance;
-    GameObject** op;
     f32 scale;
     int i;
 
     objects = objGetAllOfType(SIDEREPEL_OBJGROUP, &count);
-    for (i = 0, op = objects, scale = TRICKY_POSITION_OFFSET_SCALE; i < count; i++) {
-        obj = *op;
+    for (i = 0, scale = TRICKY_POSITION_OFFSET_SCALE; i < count; i++) {
+        obj = objects[i];
         repelPlacement = (SideRepelPlacement*)obj->anim.placementData;
         trickyAdjustStepAroundPoint(start, end, targetPos, &obj->anim.worldPosX,
                                     scale * (f32)(u32)repelPlacement->minDistance,
                                     scale * (f32)(u32)repelPlacement->moveDistance);
-        op++;
     }
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
-    for (i = startIndex, op = objects + i; i < objectCount; i++) {
-        obj = *op;
+    for (i = startIndex; i < objectCount; i++) {
+        obj = objects[i];
         modelDef = obj->anim.modelInstance;
         minDistance = modelDef->avoidMinDistance;
         if (minDistance != 0) {
@@ -5304,7 +5290,6 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* targetPos) {
                                             TRICKY_POSITION_OFFSET_SCALE * (f32)(u32)modelDef->avoidMoveDistance);
             }
         }
-        op++;
     }
 }
 
@@ -5433,7 +5418,6 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteDirections, s1
     RomCurveDef** allCurves;
     int linkCurveId;
     int curveCount;
-    RomCurveDef** curveCursor;
     int curveIdx;
     RomCurveDef* linkedCurve;
     f32 targetXDistanceSquared;
@@ -5446,28 +5430,24 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteDirections, s1
     u8 routeSlot;
     u8 linkDirectionBits;
     u8 shiftSlot;
-    f32* bestDistanceCursor;
-    RomCurveDef** bestRouteCursor;
     TrickyState* state;
 
     state = obj->extra;
     allCurves = (*gRomCurveInterface)->getCurves(&curveCount);
 
     initialBestDistance = TRICKY_MAX_DISTANCE;
-    bestDistanceCursor = bestDistances;
-    bestRouteCursor = outRoutes;
     for (candidateSlot = 0; candidateSlot < TRICKY_ROUTE_CANDIDATE_COUNT; candidateSlot++) {
-        *bestDistanceCursor++ = initialBestDistance;
-        *bestRouteCursor++ = NULL;
+        bestDistances[candidateSlot] = initialBestDistance;
+        outRoutes[candidateSlot] = NULL;
     }
 
     if (objectWalkGroup == 0) {
         return;
     }
 
-    for (curveIdx = 0, curveCursor = allCurves; curveIdx < curveCount; curveCursor++, curveIdx++) {
-        curve = *curveCursor;
-        if ((curve->type != 0x24) || (curve->walkGroup != 0)) {
+    for (curveIdx = 0; curveIdx < curveCount; curveIdx++) {
+        curve = allCurves[curveIdx];
+        if ((curve->type != ROMCURVE_TYPE_TRICKY) || (curve->walkGroup != 0)) {
             continue;
         }
         if (((curve->requiredBit != -1) && (mainGetBit(curve->requiredBit) == 0)) ||
@@ -6277,7 +6257,6 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
 }
 
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes) {
-    GameObject** baddieCursor;
     GameObject** baddieList;
     GameObject* closestBaddie;
     int baddieIndex;
@@ -6286,24 +6265,23 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
 
     bestDistSq = maxRadius;
     closestBaddie = 0;
-    baddieList = (GameObject**)objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &baddieCount);
+    baddieList = objGetAllOfType(TRICKY_BADDIE_OBJGROUP, &baddieCount);
     bestDistSq = bestDistSq * bestDistSq;
     baddieIndex = 0;
-    baddieCursor = baddieList;
 
-    for (; baddieIndex < baddieCount; baddieCursor++, baddieIndex++) {
+    for (; baddieIndex < baddieCount; baddieIndex++) {
         TrickyBaddieTargetPlacement* placement;
         f32 healthFraction;
         int disabledByBit, enabledByBit;
         s32 disableGameBit, enableGameBit;
 
-        if (dll_19_isBaddieControlObject(*baddieCursor) != 0) {
-            healthFraction = (*gBaddieControlInterface)->getHealthFraction(*baddieCursor);
+        if (dll_19_isBaddieControlObject(baddieList[baddieIndex]) != 0) {
+            healthFraction = (*gBaddieControlInterface)->getHealthFraction(baddieList[baddieIndex]);
         } else {
-            healthFraction = enemy_getHealthFraction(*baddieCursor);
+            healthFraction = enemy_getHealthFraction(baddieList[baddieIndex]);
         }
 
-        placement = (TrickyBaddieTargetPlacement*)(*baddieCursor)->anim.placementData;
+        placement = (TrickyBaddieTargetPlacement*)baddieList[baddieIndex]->anim.placementData;
         disableGameBit = placement->disableGameBit;
         if (disableGameBit == -1) {
             disabledByBit = 0;
@@ -6317,22 +6295,23 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
             enabledByBit = mainGetBit(enableGameBit);
         }
 
-        if (objIsObjectType(*baddieCursor, TRICKY_INTERACTABLE_OBJGROUP) == 0 && healthFraction > 0.0f &&
+        if (objIsObjectType(baddieList[baddieIndex], TRICKY_INTERACTABLE_OBJGROUP) == 0 && healthFraction > 0.0f &&
             disabledByBit == 0 && enabledByBit != 0) {
-            if ((*baddieCursor)->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
+            if (baddieList[baddieIndex]->anim.romDefNo != TRICKY_SEQID_WHIRLPOOL) {
                 if ((*gMapEventInterface)->shouldNotSaveTime(placement->base.ident) != 0) {
                     if (allowSpecialTypes == 0) {
-                        s16 romDefNo = (*baddieCursor)->anim.romDefNo;
+                        s16 romDefNo = baddieList[baddieIndex]->anim.romDefNo;
                         if (romDefNo == TRICKY_SEQID_VAMBAT || romDefNo == TRICKY_SEQID_WB ||
                             romDefNo == DLL1B5_SEQUENCE_ID_SC_BABY_LIGHTFOOT || romDefNo == TRICKY_SEQID_PINPON) {
                             continue;
                         }
                     }
                     {
-                        f32 dist = vec3f_distanceSquared(&origin->anim.worldPosX, &(*baddieCursor)->anim.worldPosX);
+                        f32 dist =
+                            vec3f_distanceSquared(&origin->anim.worldPosX, &baddieList[baddieIndex]->anim.worldPosX);
                         if (dist < bestDistSq) {
                             bestDistSq = dist;
-                            closestBaddie = *baddieCursor;
+                            closestBaddie = baddieList[baddieIndex];
                         }
                     }
                 }

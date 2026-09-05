@@ -4473,6 +4473,24 @@ turn routine preserves 87 instructions but changes 27 operands / 28 bytes.
 None of these hypotheses explains a remaining retail mismatch, so no extra
 helper, stack padding, or scope-only cleanup is retained.
 
+An indexed-scan audit removes redundant pointer induction from eleven loops in
+nine Tricky functions: XYZ height tracking, recall-warp selection, circling
+membership, alert detours, warp approach, linked-patch caching, both avoidance
+lists, route-candidate initialization/curve scanning, and nearest-baddie search.
+Array bases stay fixed, callback-dependent entries are still reloaded, and
+scoring/filter order is unchanged. The two guard scans with signed 16-bit
+counters retain independent pointer progression; this pass does not assume
+that a wrapped counter is an equivalent array index. The route-type filter
+uses the canonical `ROMCURVE_TYPE_TRICKY` definition.
+
+Every function byte, allocated-section byte, and named layout remains unchanged
+under the existing whole-TU GC/1.3 profile. Only anonymous relocation names
+change (460 records); object SHA256 is
+`1a2aed10ac1a16b7a556ffcff66da709b169302a6f8fad25c1306e9d4b553293`.
+The diagnostic link retains exact non-text sections and 59 differing text bytes.
+Both build gates, formatting, and 72 tooling tests pass. No compiler settings,
+unit boundaries, or array capacities change.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
