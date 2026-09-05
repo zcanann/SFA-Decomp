@@ -1448,7 +1448,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/274/274.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/275/275.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/276_IMMultiSeq/IMMultiSeq.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/277/277.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/277/277.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dlls/objects/278_WM_Column/WM_Column.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/279_AppleOnTree/AppleOnTree.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/280_Duster/Duster.c"),
