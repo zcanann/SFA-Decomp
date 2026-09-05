@@ -2,7 +2,8 @@
 
 Rebuilds the current GC/2.0 and GC/1.3 game units using their configured
 compiler and a candidate compiler, preserving flags and section postprocessing.
-SDK/MSL/MusyX units and the foreign-toolchain decompressor stay unchanged.
+Use --all-mwcc-game to include older game-category math compiler overrides.
+SDK/MSL/MusyX units outside that category and the ProDG decompressor stay unchanged.
 Run configure.py --matching, ninja, and ninja all_source before this tool.
 This measures migration cost for the current source, not compiler provenance.
 """
@@ -32,7 +33,7 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2) + "\n")
 
 
-def compile_unit(unit, commands, output, compiler):
+def compile_unit(unit, commands, output, compiler, extra_cflags=()):
     result = {"name": unit["name"], "source": unit["metadata"]["source_path"],
               "currently_linked": unit["metadata"].get("complete", False)}
     original = ROOT / unit["base_path"]
@@ -47,6 +48,7 @@ def compile_unit(unit, commands, output, compiler):
         command = first.copy()
         if variant == "candidate":
             command[index] = str(ROOT / "build/compilers" / compiler / "mwcceppc.exe")
+            command.extend(extra_cflags)
         command = [token for token in command if token != "-MMD"]
         command[command.index("-o") + 1] = str(obj.parent)
         actions = [command]
@@ -91,7 +93,11 @@ def generate_report(project, rows, output, variant):
         if unit["name"] in lookup:
             result = lookup[unit["name"]][variant]
             # A failed candidate must stay absent, never silently use the baseline.
-            unit["base_path"] = result["object"]
+            if result["ok"]:
+                unit["base_path"] = result["object"]
+            else:
+                unit.pop("base_path", None)
+                unit.setdefault("metadata", {})["complete"] = False
     directory = output / (variant + "_report")
     write_json(directory / "objdiff.json", config)
     report = directory / "report.json"
@@ -106,6 +112,10 @@ def generate_report(project, rows, output, variant):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--compiler", default="GC/1.3")
+    parser.add_argument("--all-mwcc-game", action="store_true",
+                        help="include game-category MWCC units with older library compiler overrides")
+    parser.add_argument("--extra-cflags", default="",
+                        help="additional candidate-only compiler flags")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--jobs", type=int, default=6)
     args = parser.parse_args()
@@ -137,19 +147,21 @@ def main():
             continue
         executable = next(token for token in actions[0] if Path(token).name == "mwcceppc.exe")
         version = str(Path(executable).parent.relative_to("build/compilers"))
-        if version not in ("GC/2.0", "GC/1.3"):
+        if not args.all_mwcc_game and version not in ("GC/2.0", "GC/1.3"):
             excluded.append({"name": unit["name"], "reason": "library compiler " + version})
             continue
         selected.append(unit)
     start = time.monotonic()
     manifest = {"commit": run(["git", "rev-parse", "HEAD"]).stdout.strip(),
-                "candidate_compiler": args.compiler, "excluded_game_category_units": excluded,
+                "candidate_compiler": args.compiler, "extra_cflags": args.extra_cflags,
+                "excluded_game_category_units": excluded,
                 "selected_units": len(selected), "rows": []}
     write_json(output / "manifest.json", manifest)
     print(f"Rebuilding {len(selected)} game units twice; {len(excluded)} category entries excluded.", flush=True)
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
         pending = [pool.submit(compile_unit, unit, commands[unit["metadata"]["source_path"]],
-                               output, args.compiler) for unit in selected]
+                               output, args.compiler, split_command_line(args.extra_cflags))
+                   for unit in selected]
         for future in as_completed(pending):
             manifest["rows"].append(future.result())
             count = len(manifest["rows"])

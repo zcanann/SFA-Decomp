@@ -367,8 +367,10 @@ cflags_runtime_125 = [flag for flag in cflags_runtime if flag != "-gccinc"]
 
 # Game/DLL TUs the original build compiled with the scheduler and peephole
 # passes off (a per-TU compiler setting, not a per-function one).
+cflags_game = [*cflags_base, "-char signed"]
+
 cflags_dll_noopt = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule",
 ]
 
@@ -376,7 +378,7 @@ cflags_dll_noopt = [
 # small non-inline helpers are not auto-inlined (matches the original build,
 # which emits calls to trivial getters like Music_GetActivePriority).
 cflags_dll_noopt_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule",
     "-inline", "noauto",
 ]
@@ -387,34 +389,34 @@ cflags_dll_noopt_noautoinline_alwaysinline = [
 ]
 
 cflags_dll_noopt_noautoinline_level3 = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,level=3",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_level1 = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,level=1",
 ]
 
 cflags_dll_noopt_level2 = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,level=2",
 ]
 
 cflags_dll_noopt_noautoinline_deferred = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule",
     "-inline", "noauto,deferred",
 ]
 
 cflags_dll_nosched = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "noschedule",
 ]
 
 cflags_dll_noopt_nostrength = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nostrength",
 ]
 
@@ -424,86 +426,86 @@ cflags_dll_noopt_nostrength_noautoinline = [
 ]
 
 cflags_dll_noopt_nolifetimes_noloopinv_nostrength = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nolifetimes,noloopinvariants,nostrength",
 ]
 
 cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nolifetimes,noloopinvariants,nopropagation,nostrength",
 ]
 
 # ...plus common-subexpression elimination off (opt_common_subs off).
 cflags_dll_noopt_nocse = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse",
 ]
 
 # ...plus inlining off (dont_inline on).
 cflags_dll_noopt_nocse_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_nodead_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nodead",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_nodead_noloopinv_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nodead,noloopinvariants",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_nocse_nodead_nofpcontract_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nodead",
     "-inline", "noauto",
     "-fp_contract", "off",
 ]
 
 cflags_dll_noopt_nocse_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse",
     "-inline", "off",
 ]
 
 # ...plus copy/constant propagation off (opt_propagation off).
 cflags_dll_noopt_noprop = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation",
 ]
 
 # ...plus strength reduction off (keeps byte-array loop indices as a single indexed IV).
 cflags_dll_noopt_noprop_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_noprop_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_noprop_nostrength = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation,nostrength",
 ]
 
 cflags_dll_noopt_noprop_nostrength_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation,nostrength",
     "-inline", "noauto",
 ]
 
 # ...plus loop-invariant code motion off (opt_loop_invariants off).
 cflags_dll_noopt_noloopinv = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants",
 ]
 
@@ -513,7 +515,7 @@ cflags_dll_noopt_noloopinv_noautoinline = [
 ]
 
 cflags_dll_noopt_noloopinv_noprop_nospecunroll_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants,nopropagation",
     "-inline", "noauto",
     '-pragma "ppc_unroll_speculative off"',
@@ -526,38 +528,38 @@ cflags_dll_noopt_noloopinv_zerodata = [
 ]
 
 cflags_dll_noopt_noloopinv_noprop_zerodata = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants,nopropagation",
     '-pragma "explicit_zero_data on"',
 ]
 
 # ...plus register-lifetime optimization off (opt_lifetimes off).
 cflags_dll_noopt_nolifetimes_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nolifetimes",
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_nocse_noprop_nolifetimes_zerodata_noautoinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nopropagation,nolifetimes",
     '-pragma "explicit_zero_data on"',
     "-inline", "noauto",
 ]
 
 cflags_dll_noopt_nolifetimes = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nolifetimes",
 ]
 
 cflags_dll_noopt_noloopinv_nolifetimes = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes",
 ]
 
 # ...plus dead-code elimination off (opt_dead_code off).
 cflags_dll_noopt_noloopinv_nolifetimes_nodead = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes,nodead",
 ]
 
@@ -567,54 +569,54 @@ cflags_dll_noopt_noloopinv_nolifetimes_zerodata = [
 ]
 
 cflags_dll_noopt_noloopinv_nolifetimes_noprop_zerodata = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes,nopropagation",
     '-pragma "explicit_zero_data on"',
 ]
 
 cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,noloopinvariants,nolifetimes,nopropagation",
     '-pragma "explicit_zero_data on"',
 ]
 
 cflags_dll_noopt_nolifetimes_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nolifetimes",
     "-inline", "off",
 ]
 
 cflags_dll_nopeep = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole",
 ]
 
 # noopt (peephole+scheduler off) base, plus additional per-TU passes off.
 cflags_dll_noopt_nocse_noprop = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nopropagation",
 ]
 
 cflags_dll_noopt_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule",
     "-inline", "off",
 ]
 
 cflags_dll_noopt_noloopinv_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants",
     "-inline", "off",
 ]
 
 cflags_dll_noopt_nocse_noprop_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nopropagation",
     "-inline", "off",
 ]
 
 cflags_dll_noopt_nocse_noloopinv = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,noloopinvariants",
 ]
 
@@ -624,19 +626,19 @@ cflags_dll_noopt_nocse_noloopinv_noautoinline = [
 ]
 
 cflags_dll_noopt_noprop_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation",
     "-inline", "off",
 ]
 
 cflags_dll_noopt_nostrength_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nostrength",
     "-inline", "off",
 ]
 
 cflags_dll_noopt_nocse_noprop_noloopinv_noinline = [
-    *cflags_base,
+    *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nopropagation,noloopinvariants",
     "-inline", "off",
 ]
@@ -1137,41 +1139,41 @@ config.libs = [
     },
     {
         "lib": "main",
-        "mw_version": "GC/2.0",
+        "mw_version": "GC/1.3",
         "cflags": cflags_dll_noopt,
         "progress_category": "game",
             "objects": [
             # dlls/engine
             # GC/1.3 retains the retail loader's post-store pointer reloads.
             # See docs/engine_0_matching.md for the whole-TU comparison.
-            Object(NonMatching, "dlls/engine/0/0.c", mw_version="GC/1.3", extra_cflags=["-inline", "noauto", "-char", "signed"]),
-            Object(NonMatching, "dlls/engine/1_camcontrol/camcontrol.c"),
+            Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto", "-char", "signed"]),
+            Object(NonMatching, "dlls/engine/1_camcontrol/camcontrol.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/2/2.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
+            Object(NonMatching, "dlls/engine/2/2.c", cflags=cflags_dll_noopt_noloopinv_noautoinline, mw_version="GC/2.0"),
             Object(NonMatching, "dlls/engine/3/3.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/4/4.c"),
             Object(NonMatching, "dlls/engine/5/5.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/6/6.c"),
             Object(NonMatching, "dlls/engine/7/7.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/8/8.c"),
-            Object(NonMatching, "dlls/engine/9/9.c", mw_version="GC/1.3"),
+            Object(NonMatching, "dlls/engine/9/9.c"),
             Object(NonMatching, "dlls/engine/10_expgfx/expgfx.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/11/11.c", cflags=cflags_dll_noopt_noautoinline, section_alignments={".sdata2": 4}),
+            Object(NonMatching, "dlls/engine/11/11.c", cflags=cflags_dll_noopt_noautoinline, section_alignments={".sdata2": 4}, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/engine/12/12.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/13/13.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/14/14.c"),
-            Object(MatchingFor("GSAE01"), "dlls/engine/15/15.c", cflags=cflags_dll_noopt_nocse_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/engine/15/15.c", cflags=cflags_dll_noopt_nocse_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/engine/16/16.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/17/17.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/18/18.c"),
             Object(NonMatching, "dlls/engine/19/19.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/20_Hcurves/Hcurves.c"),
-            Object(NonMatching, "dlls/engine/20_Hcurves/Hcurves_romcurve.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/21/21.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "dlls/engine/20_Hcurves/Hcurves_romcurve.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(NonMatching, "dlls/engine/21/21.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(NonMatching, "dlls/engine/22/22.c", cflags=cflags_dll_noopt_noautoinline_level3),
-            Object(NonMatching, "dlls/engine/23/23.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "dlls/engine/23/23.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(NonMatching, "dlls/engine/24/24.c"),
-            Object(MatchingFor("GSAE01"), "dlls/engine/25/25.c"),
+            Object(MatchingFor("GSAE01"), "dlls/engine/25/25.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/engine/26/26.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/27/27.c"),
             Object(NonMatching, "dlls/engine/28/28.c"),
@@ -1200,7 +1202,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/51/51.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/52_n_attractmode/n_attractmode.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/53/53.c", cflags=cflags_dll_noopt_noinline, section_alignments={".data": 4}),
-            Object(MatchingFor("GSAE01"), "dlls/engine/54/54.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/engine/54/54.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/55/55.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/56/56.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/57/57.c"),
@@ -1212,13 +1214,13 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/63/63.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/64/64.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/65/65.c", extra_cflags=["-inline", "noauto"]),
-            Object(NonMatching, "dlls/engine/66/66.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "dlls/engine/66/66.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/engine/67/67.c"),
             Object(NonMatching, "dlls/engine/68/68.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/69/69.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/engine/70/70.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(NonMatching, "dlls/engine/71/71.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "dlls/engine/72/72.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_noinline),
+            Object(MatchingFor("GSAE01"), "dlls/engine/72/72.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/73/73.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/engine/74/74.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(MatchingFor("GSAE01"), "dlls/engine/75/75.c"),
@@ -1350,12 +1352,12 @@ config.libs = [
             Object(NonMatching, "dlls/objects/195_Player/player.c", cflags=cflags_dll_noopt_noautoinline),
             # Retail keeps 32-bit mask operations and adjacent dispatch-array offsets unfolded.
             # Deferred emission puts local initializer templates before the function literal pool.
-            Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", mw_version="GC/1.3", cflags=cflags_dll_noopt, extra_cflags=["-char signed", "-inline deferred"]),
+            Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", cflags=cflags_dll_noopt, extra_cflags=["-char signed", "-inline deferred"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/197/197.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/objects/200_DepthOfFieldPoint/DepthOfFieldPoint.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/201_Baddie/Baddie.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/201_Baddie/Baddie.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/202/battledroid.c"),
             Object(NonMatching, "dlls/objects/202/sharpclaw.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/202/guardclaw.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
@@ -1381,7 +1383,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/206/206.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/207_CannonClaw/CannonClaw.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/208_Grimble/Grimble.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/209_TumbleWeedB/TumbleWeedB.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/209_TumbleWeedB/TumbleWeedB.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/211/211.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/212_SkeetlaWall/SkeetlaWall.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/213_Kaldachom/Kaldachom.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1397,7 +1399,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/223_Hagabon/Hagabon.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/224_SwarmBaddie/SwarmBaddie.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/225_WispBaddie/WispBaddie.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/226/226.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/226/226.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/227/227.c", section_alignments={".data": 4}),
             Object(MatchingFor("GSAE01"), "dlls/objects/228/228.c", cflags=cflags_dll_noopt_nocse),
             Object(NonMatching, "dlls/objects/229/229.c"),
@@ -1408,9 +1410,9 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/234_Sideload/Sideload.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/235/235.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/236_InfoPoint/InfoPoint.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/237/237.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "dlls/objects/238_EffectBox/EffectBox.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/239/239.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "dlls/objects/237/237.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/238_EffectBox/EffectBox.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/239/239.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/240_WarpPoint/WarpPoint.c"),
             Object(NonMatching, "dlls/objects/241_InvHit/InvHit.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/242_iceblast/iceblast.c"),
@@ -1438,7 +1440,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/264_EndObject/EndObject.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/265/265.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/266_Fall_Ladder/Fall_Ladder.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/267_FireFlyLant/FireFlyLant.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_noinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/267_FireFlyLant/FireFlyLant.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/268_LanternFire/LanternFire.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/269_PortalSpell/PortalSpell.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/270/270.c"),
@@ -1448,10 +1450,10 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/274/274.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/275/275.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/276_IMMultiSeq/IMMultiSeq.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/277/277.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/277/277.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/278_WM_Column/WM_Column.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/279_AppleOnTree/AppleOnTree.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "dlls/objects/280_Duster/Duster.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/280_Duster/Duster.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/281_coldWaterCo/coldWaterCo.c"),
             Object(Matching, "dlls/objects/282/282.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/283_Landed_Arwi/Landed_Arwi.c"),
@@ -1465,7 +1467,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/291_fuelCell/fuelCell.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/292/292.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/293_curve/curve.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/294/294.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(MatchingFor("GSAE01"), "dlls/objects/294/294.c", cflags=cflags_dll_noopt_noloopinv, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/295/295.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/296_KT_Torch/KT_Torch.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/297_CampFire/CampFire.c"),
@@ -1481,13 +1483,13 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/307_sfxPlayer/sfxPlayer.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/308_texscroll2/texscroll2.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/309_texscroll/texscroll.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/310_WaveAnimato/WaveAnimato.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/310_WaveAnimato/WaveAnimato.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/311_AlphaAnimat/AlphaAnimat.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/312_GroundAnima/GroundAnima.c"),
             Object(Matching, "dlls/objects/313_HitAnimator/HitAnimator.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/314_VisAnimator/VisAnimator.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/315_WallAnimato/WallAnimato.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/316_XYZAnimator/XYZAnimator.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/316_XYZAnimator/XYZAnimator.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/317_ExplodeAnim/ExplodeAnim.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/318/318.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/319_TexFrameAni/TexFrameAni.c"),
@@ -1535,7 +1537,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/361_IMIceMounta/IMIceMounta.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/362_CRrockfall/CRrockfall.c", cflags=cflags_dll_noopt_noprop_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/363/363.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/364/364.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "dlls/objects/364/364.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/365_IMIcePillar/IMIcePillar.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/366_IMAnimSpace/IMAnimSpace.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/367_IMSpaceThru/IMSpaceThru.c"),
@@ -1585,13 +1587,13 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/411/411.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/412/412.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/413/413.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/414/414.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/414/414.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/415_NW_treebrid/NW_treebrid.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/416_NW_geyser/NW_geyser.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/417/417.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "dlls/objects/418_NW_tricky/NW_tricky.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/418_NW_tricky/NW_tricky.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/419/419.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/420/420.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/420/420.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/421_NW_levcontr/NW_levcontr.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/422_SH_tricky/SH_tricky.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/423/423.c", cflags=cflags_dll_noopt_noloopinv_nolifetimes_nodead),
@@ -1600,8 +1602,8 @@ config.libs = [
             Object(Matching, "dlls/objects/426_BombPlantSp/BombPlantSp.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/427_BombPlantin/BombPlantin.c"),
             Object(Matching, "dlls/objects/428_SH_queenear/SH_queenear.c", cflags=cflags_dll_noopt_noinline),
-            Object(MatchingFor("GSAE01"), "dlls/objects/429_SH_thorntai/SHthorntail.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "dlls/objects/430_SH_LevelCon/SH_LevelCon.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/429_SH_thorntai/SHthorntail.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/430_SH_LevelCon/SH_LevelCon.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/431_SH_swaplift/SH_swaplift.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/432_SH_swapston/SH_swapston.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/433_SH_staff/SH_staff.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1629,7 +1631,7 @@ config.libs = [
             Object(NonMatching, "dlls/objects/455_DIMLavaSmas/DIMLavaSmas.c", cflags=cflags_dll_noopt_noprop_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/456_DIMBridgeCo/DIMBridgeCo.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/457_DIMDismount/DIMDismount.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/458_DIMExplosio/DIMExplosio.c", cflags=cflags_dll_noopt_noinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/458_DIMExplosio/DIMExplosio.c", cflags=cflags_dll_noopt_noinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/459_DIMWoodDoor/DIMWoodDoor.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/460_DIMMagicBri/DIMMagicBri.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/461_DIM_LevelCo/DIM_LevelCo.c"),
@@ -1637,9 +1639,9 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/463/463.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/464_DIM_tricky/DIM_tricky.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/465_DIMTruthHor/DIMTruthHor.c"),
-            Object(NonMatching, "dlls/objects/466_WORLDplanet/WORLDplanet.c", mw_version="GC/1.3"),
+            Object(NonMatching, "dlls/objects/466_WORLDplanet/WORLDplanet.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/467/467.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "dlls/objects/468_WORLDAstero/WORLDAstero.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/468_WORLDAstero/WORLDAstero.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/469_DIM2Conveyo/DIM2Conveyo.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/470/470.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/objects/471_DIM2SnowBal/DIM2SnowBal.c"),
@@ -1654,12 +1656,12 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/480_DIM_Boss/DIM_Boss.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/481_DIM_BossGut/DIM_BossGut.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/482_DIM_BossTon/DIM_BossTon.c", cflags=cflags_dll_noopt_noprop),
-            Object(MatchingFor("GSAE01"), "dlls/objects/483_DIM_BossGut/DIM_BossGut.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "dlls/objects/483_DIM_BossGut/DIM_BossGut.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/484_MAGICMaker/MAGICMaker.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/485_DIM_BossSpi/DIM_BossSpi.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/486_DIMbosscrac/DIMbosscrac.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/487_DIMbossfire/DIMbossfire.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/488_SB_Galleon/SB_Galleon.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/488_SB_Galleon/SB_Galleon.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/489_SB_Propelle/SB_Propelle.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/490_SB_ShipHead/SB_ShipHead.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/491_SB_ShipMast/SB_ShipMast.c"),
@@ -1692,15 +1694,15 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/518_LightSource/LightSource.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/519_WM_Worm/WM_Worm.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/objects/520_WM_Wallpowe/WM_Wallpowe.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/521_WM_LevelCon/WM_LevelCon.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/521_WM_LevelCon/WM_LevelCon.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/522_WM_GeneralS/WM_GeneralS.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/523_FireFly/FireFly.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/524_WM_spiritpl/WM_spiritpl.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/525_WM_seqpoint/WM_seqpoint.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/525_WM_seqpoint/WM_seqpoint.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/526_WM_sun/WM_sun.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/527_WM_SpiritSe/WM_SpiritSe.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/528_WM_Planets/WM_Planets.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/529/529.c", cflags=cflags_dll_noopt_nodead_noloopinv_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/529/529.c", cflags=cflags_dll_noopt_nodead_noloopinv_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/530/530.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/531_WM_VConsole/WM_VConsole.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/532_WM_TransTop/WM_TransTop.c"),
@@ -1715,10 +1717,10 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/541/541.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/542_VFP_Block1/VFP_Block1.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/543/543.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/544/544.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/544/544.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/545/545.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/546_VFPDragHead/VFPDragHead.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/547_VFP_corepla/VFP_corepla.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/547_VFP_corepla/VFP_corepla.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/548/548.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/549_VFP_flamepo/VFP_flamepo.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/550_VFP_lavapoo/VFP_lavapoo.c"),
@@ -1728,7 +1730,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/554_DFP_ObjCrea/DFP_ObjCrea.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/555_DFP_Torch/DFP_Torch.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/objects/556/556.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/558/558.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/559_DFP_floorba/DFP_floorba.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/560_DFP_wallbar/DFP_wallbar.c"),
@@ -1736,7 +1738,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/562_DFP_RotateP/DFP_RotateP.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/563_DFP_Statue1/DFP_Statue1.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/564_DFP_PerchSw/DFP_PerchSw.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/565_DFP_TargetB/DFP_TargetB.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/565_DFP_TargetB/DFP_TargetB.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/566_DFP_LaserBe/laser.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/567_DFPSpPl/DFPSpPl.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/568_LINKA_levco/LINKA_levco.c"),
@@ -1749,7 +1751,7 @@ config.libs = [
             Object(Matching, "dlls/objects/575_DB_egg/DB_egg.c", cflags=cflags_dll_noopt_noloopinv),
             Object(MatchingFor("GSAE01"), "dlls/objects/576_GCRobotBlas/GCRobotBlas.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/577_DrakorEnerg/DrakorEnerg.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/578_DBstealerwo/DBstealerwo.c", cflags=cflags_dll_noopt_noloopinv),
+            Object(MatchingFor("GSAE01"), "dlls/objects/578_DBstealerwo/DBstealerwo.c", cflags=cflags_dll_noopt_noloopinv, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/579_DBHoleContr/DBHoleContr.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/580/580.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/581/581.c"),
@@ -1763,16 +1765,16 @@ config.libs = [
             Object(NonMatching, "dlls/objects/589_BossDrakor/BossDrakor.c", cflags=cflags_dll_noopt_nocse_noprop_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/590/590.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/objects/591_KT_RexLevel/KT_RexLevel.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/592_KT_Rex/KT_Rex.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "dlls/objects/592_KT_Rex/KT_Rex.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/593_KT_RexFloor/KT_RexFloor.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/594_KT_Lazerwal/KT_Lazerwal.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/595_KT_Lazerlig/KT_Lazerlig.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/596_KT_Fallingr/KT_Fallingr.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/597/597.c", cflags=cflags_dll_noopt),
-            Object(MatchingFor("GSAE01"), "dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/597/597.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/599_DR_EarthWar/DR_EarthWar.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/600_DR_CloudRun/DR_CloudRun.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
-            Object(MatchingFor("GSAE01"), "dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/602_StaticCamer/StaticCamer.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/603_MSPlantingS/MSPlantingS.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/604/604.c", cflags=cflags_dll_noopt_noloopinv_noinline),
@@ -1782,7 +1784,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/608/608.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/609_DR_LaserCan/DR_LaserCan.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/610/610.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/611_GM_MazeWell/GM_MazeWell.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/611_GM_MazeWell/GM_MazeWell.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/612/612.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/613_DR_Creator/DR_Creator.c"),
             Object(Matching, "dlls/objects/614_KytesMum/KytesMum.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1796,8 +1798,8 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/622/622.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/623/623.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/624_DR_Rock/DR_Rock.c"),
-            Object(NonMatching, "dlls/objects/625/625.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(Matching, "dlls/objects/626/626.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "dlls/objects/625/625.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(Matching, "dlls/objects/626/626.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(Matching, "dlls/objects/627_FirePipe/FirePipe.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/628_DR_pulley/DR_pulley.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/629_DR_cradle/DR_cradle.c"),
@@ -1814,7 +1816,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/640_DR_CloudPer/DR_CloudPer.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/641_DR_EarthCal/DR_EarthCal.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/642_BarrelGener/BarrelGener.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/644/644.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/645_SPShop/SPShop.c"),
             Object(Matching, "dlls/objects/646_SPShopKeepe/SPShopKeepe.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1833,8 +1835,8 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/659/659.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/660/660.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/661_WCApertureS/WCApertureS.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/662_WCTempleDia/WCTempleDia.c", cflags=cflags_dll_noopt_noinline),
-            Object(MatchingFor("GSAE01"), "dlls/objects/663_WCTempleBri/WCTempleBri.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "dlls/objects/662_WCTempleDia/WCTempleDia.c", cflags=cflags_dll_noopt_noinline, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/663_WCTempleBri/WCTempleBri.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/664_WCFloorTile/WCFloorTile.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/665/665.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/666_ARWArwing/ARWArwing.c", cflags=cflags_dll_noopt_noprop_noautoinline),
@@ -1855,7 +1857,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/681/681.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/682_LGTDirectio/LGTDirectio.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/683_LGTProjecte/LGTProjecte.c", cflags=cflags_dll_noopt_nocse),
-            Object(MatchingFor("GSAE01"), "dlls/objects/684_LGTControlL/LGTControlL.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_level1),
+            Object(MatchingFor("GSAE01"), "dlls/objects/684_LGTControlL/LGTControlL.c", cflags=cflags_dll_noopt_level1),
             Object(MatchingFor("GSAE01"), "dlls/objects/685/685.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/686_WaterFlowWe/WaterFlowWe.c", extra_cflags=["-opt", "nodeadstore"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/687/687.c", cflags=cflags_dll_noopt_nocse_noinline),
@@ -1879,14 +1881,14 @@ config.libs = [
 
             # main
             Object(NonMatching, "main/render.c"),
-            Object(Matching, "main/audio.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_nostrength_noautoinline),
+            Object(Matching, "main/audio.c", cflags=cflags_dll_noopt_nostrength_noautoinline),
             Object(MatchingFor("GSAE01"), "main/audio_sfx.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "main/audio_stream.c"),
             Object(MatchingFor("GSAE01"), "main/camera.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/curves.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/voxmaps.c", mw_version="GC/1.3"),
+            Object(NonMatching, "main/voxmaps.c"),
             Object(Matching, "main/modelEngine.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/pad.c", cflags=cflags_dll_noopt_nocse, mw_version="GC/1.3"),
+            Object(NonMatching, "main/pad.c", cflags=cflags_dll_noopt_nocse),
             Object(Matching, "main/fileio.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt_nolifetimes_noinline),
             Object(MatchingFor("GSAE01"), "main/gametext_measurebyid.c", cflags=cflags_dll_noopt_nocse_noinline),
@@ -1898,15 +1900,15 @@ config.libs = [
             Object(Matching, "main/textrender_drawbox.c"),
             Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength),
             Object(MatchingFor("GSAE01"), "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
+            Object(MatchingFor("GSAE01"), "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"], mw_version="GC/2.0"),
             Object(NonMatching, "main/gameloop_buttonobj.c", cflags=[*cflags_dll_nosched, "-inline", "noauto"]),
-            Object(MatchingFor("GSAE01"), "main/gameloop_main.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
+            Object(MatchingFor("GSAE01"), "main/gameloop_main.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"], mw_version="GC/2.0"),
             Object(NonMatching, "main/vecmath.c", cflags=cflags_dll_noopt_nostrength),
             Object(MatchingFor("GSAE01"), "main/vecmath_vec3.c"),
             Object(NonMatching, "main/mm.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/model.c", cflags=[*cflags_dll_noopt_noloopinv, "-inline", "noauto"]),
             Object(NonMatching, "main/object.c"),
-            Object(MatchingFor("GSAE01"), "main/skystars.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "main/skystars.c"),
             Object(NonMatching, "main/objanim.c", cflags=cflags_dll_noopt_nocse),
             Object(NonMatching, "main/lightmap.c", cflags=[*cflags_dll_noopt_noprop, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/lightmap_initmapblocks.c", cflags=[*cflags_dll_noopt_nocse_noprop, "-inline", "noauto"]),
@@ -1914,7 +1916,7 @@ config.libs = [
             Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/objlib.c"),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"]),
+            Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"], mw_version="GC/2.0"),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_videoinit.c", cflags=[*cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/pi_pathsearch.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
@@ -1924,19 +1926,19 @@ config.libs = [
             Object(NonMatching, "main/rcp_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/texture.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/tex_dolphin.c", cflags=cflags_dll_noopt_noautoinline, section_alignments={".data": 4}),
+            Object(NonMatching, "main/tex_dolphin.c", cflags=cflags_dll_noopt_noautoinline, section_alignments={".data": 4}, mw_version="GC/2.0"),
             Object(NonMatching, "main/shadow_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/track_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(NonMatching, "main/track_dolphin.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
             Object(NonMatching, "main/newshadows.c", cflags=cflags_dll_noopt_nodead_noautoinline),
             Object(MatchingFor("GSAE01"), "track/intersect.c", cflags=cflags_dll_noopt_nocse_noautoinline, section_alignments={".data": 4}),
             Object(MatchingFor("GSAE01"), "track/intersect_screenmath.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "track/intersect_mtx44.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "track/intersect_render.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "track/intersect_render.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(Matching, "track/intersect_memcard.c", cflags=cflags_dll_noopt_noautoinline),
 
             # main/thp
             Object(Matching, "main/thp/dll_3b.c", cflags=cflags_dll_noopt_noinline),
-            Object(MatchingFor("GSAE01"), "main/thp/n_options.c"),
+            Object(MatchingFor("GSAE01"), "main/thp/n_options.c", mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "main/thp/dll_3e.c", section_alignments={".sbss": 4}),
             Object(MatchingFor("GSAE01"), "main/thp/attractmovie.c"),
             Object(MatchingFor("GSAE01"), "main/thp/picmenu.c", cflags=cflags_dll_noopt_noinline, section_alignments={".sdata2": 4}),
@@ -1946,7 +1948,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/obj_movelib.c", cflags=cflags_dll_noopt_nocse),
 
             # MSL-derived game math
-            Object(MatchingFor("GSAE01"), "main/rand.c", mw_version="GC/1.2.5n", cflags=cflags_base, extra_cflags=["-O0"], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/rand.c", cflags=cflags_game, extra_cflags=["-O0"], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/math_80292d3c.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/trig_float_helpers.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/math_8029312c.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
