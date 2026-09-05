@@ -282,3 +282,34 @@ public API header. Nine functions remain non-exact, so the TU remains
 `NonMatching` and the full-TU goal is not complete. A diagnostic source-object
 link succeeds with every linked data byte intact; 506 text bytes still
 differ from the strict-build baseline.
+
+## September 5 viewfinder heading recovery
+
+Declaring the major-label opacity before the minor-label and heading locals
+improves `drawViewFinderHud` from **99.36948% to 99.51004%**, removing 30
+differing instruction words. A typed `f32 angleUnitsPerDegree` local for
+the existing 182.04445f conversion fixes the heading offset's `fnmsubs`
+operand order, reaching **99.518074%**. Adding `const` to that local restores
+the previous operand order, so the non-const spelling is retained.
+The function retains all 1,245 instructions; 105 words still differ,
+predominantly in floating-point registers.
+
+The TU reaches **99.89041%** fuzzy match, with **109 / 118** exact functions,
+**52,228 / 75,188** exact code bytes, and all **9,952** assigned data bytes
+exact. The other 117 function bodies, data layouts, exports, and resolved
+relocations are unchanged from the button-HUD improvement.
+
+This follows checks of declarations in nested scopes as well as the leading
+function blocks. Further grouped-declaration permutations, separating
+initializers from declarations, and changes to the segment helper's local
+declarations do not improve the result. Nine functions remain non-exact, so
+the TU stays `NonMatching`. Declaration-order sensitivity is measured here,
+not evidence of the historical source spelling.
+
+Validation: the strict checksum and `ninja all_source` builds both exit 0,
+and formatting checks pass. After finishing the shared-header rebuild in
+30-second-limited invocations, the final strict and all-source runs take
+20.39 and 22.79 seconds. The staging rebase preserves the complete source
+object byte for byte. A diagnostic source-object link leaves every data
+byte intact and reduces the residual text differences from 506 to **465**
+bytes.
