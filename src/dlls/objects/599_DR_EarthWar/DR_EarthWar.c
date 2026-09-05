@@ -1065,7 +1065,7 @@ void DR_EarthWarrior_update(GameObject* obj)
         obj->anim.velocityY = 0.0f;
         state->baddie.eventFlags &= ~7;
         objAudioDispatchEventMask(obj, state->baddie.eventFlags, state->sub.soundId, state->pathPoints,
-                                  &state->baddie.flags4, state->baddie.animSpeedA,
+                                  &state->baddie.curvesCollision, state->baddie.animSpeedA,
                                   (state->sub.soundId == 8) ? 2.5f : 2.75f);
         obj->anim.velocityY = saved;
     }

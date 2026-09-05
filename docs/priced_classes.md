@@ -4666,6 +4666,26 @@ reusing the approach result as the second loop's index emits the target `li` /
 six declaration orders. A separate result temporary returns to the existing
 one-instruction residual. None of these probes is retained in production.
 
+Tricky's foot-contact audio and water-impact path now takes the canonical
+`CurvesCollisionState`, not a miscast `BaddieState`. Retail audio loads at
+collision-relative `0xB8`, `0xC4`, `0x1B4`, `0x25B`, and `0x260` select the
+first segment's surface type and hit object, water depth, collision subtype,
+and surface flags. The Baddie collision record begins at `+4`; interpreting
+the incoming collision pointer as the enclosing actor had created five false
+overlay fields. Those unused aliases are removed, and direct actor consumers
+now pass their actual collision member. The water helper preserves its local-Y
+plus query-depth calculation and its speed argument through the typed interface.
+
+Both Tricky attachment arrays retain their independent storage and refresh
+order. `footPoints` is now `Vec[4]`, with a direct first-coordinate argument;
+both arrays assert their `0x30` size and `0x0C` stride. The audio dispatcher
+and water-impact helper remain exact at 276 and 79 instructions respectively.
+All 2,872 source objects are raw-byte identical after rebuilding the shared
+headers. Both build gates, 79 tooling tests, focused formatting and the Tricky
+source-path audit pass. Tricky remains 87/89 exact with 41 diagnostic-link text
+bytes differing and every allocated non-text section exact. This is corrected
+storage ownership and API evidence, not a new matching gain.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

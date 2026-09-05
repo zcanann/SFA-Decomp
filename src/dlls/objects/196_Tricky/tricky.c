@@ -1602,7 +1602,7 @@ void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
             }
         }
         Tricky_emitQueuedPathParticles(obj, state);
-        ObjPath_GetPointWorldPositionArray(obj, 4, 4, (float*)state->footPoints);
+        ObjPath_GetPointWorldPositionArray(obj, 4, 4, &state->footPoints[0].x);
         state->particleTimer = state->particleTimer - timeDelta;
         if (state->particleTimer > 0.0f) {
             objDoParticleFx(obj, TRICKY_PATH_PARTICLE_SCALE, 6, 1.0f, 0);

@@ -16836,7 +16836,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     ((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     objAudioDispatchAnimEvents((GameObject*)obj, &seq->animEvents, ((PlayerState*)inner)->animSoundId,
-                               (void*)((char*)inner + 0x3c4), (void*)((char*)inner + 4),
+                               (void*)((char*)inner + 0x3c4), &((PlayerState*)inner)->baddie.curvesCollision,
                                ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
     return result;
 }
@@ -17806,7 +17806,8 @@ void playerUpdate(GameObject* obj)
             ((GameObject*)obj)->anim.rotX = ((PlayerState*)inner)->targetYaw;
             objAudioDispatchEventMask(obj, ((PlayerState*)inner)->baddie.eventFlags,
                                       ((PlayerState*)inner)->animSoundId, (void*)(inner + 0x3c4),
-                                      (void*)(inner + 4), ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
+                                      &((PlayerState*)inner)->baddie.curvesCollision,
+                                      ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
         }
     }
 }

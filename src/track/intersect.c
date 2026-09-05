@@ -3,7 +3,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/baddie_state.h"
+#include "main/dll/curves_collision_state.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/waterfx_interface.h"
 #include "sys/objects.h"
@@ -55,9 +55,8 @@ typedef struct
 
 typedef void (*GXSetAlphaCompareIntFn)(int comp0, int ref0, int op, int comp1, int ref1);
 
-void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 type, void* points, void* state,
-                                f32 unused, f32 scale)
-{
+void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 type, void* points,
+                                CurvesCollisionState* collision, f32 speed, f32 scale) {
     Vec v;
     SplashFxParams ps;
     u8* tbl;
@@ -72,8 +71,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     GameObject* desc;
 
     tbl = gSurfaceSfxTable;
-    switch (type)
-    {
+    switch (type) {
     case 1:
         sfxTab = (u16*)tbl;
         break;
@@ -106,10 +104,8 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
         break;
     }
     flags = 0;
-    for (i = 0; i < events->triggerCount; i++)
-    {
-        switch (events->triggeredIds[i])
-        {
+    for (i = 0; i < events->triggerCount; i++) {
+        switch (events->triggeredIds[i]) {
         case 1:
             flags |= 1;
             vecIdx = 0;
@@ -128,29 +124,22 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
             break;
         }
     }
-    if (flags == 0)
-    {
+    if (flags == 0) {
         return;
     }
-    if (!(((BaddieState*)state)->contactSfxFlags & 0x10) && ((BaddieState*)state)->contactSfxMuted != 0)
-    {
+    if (!(collision->surfaceFlags & 0x10) && collision->subtype != CURVES_COLLISION_SUBTYPE_NONE) {
         return;
     }
-    n = ((BaddieState*)state)->surfaceSoundIndex;
-    if (n < 0 || n >= 0x23)
-    {
+    n = collision->segmentHits.surfaceTypes[0];
+    if (n < 0 || n >= 0x23) {
         n = 0;
-    }
-    else
-    {
+    } else {
         n = tbl[0xb4 + n];
     }
     sfx = n;
-    desc = (GameObject*)(((BaddieState*)state)->contactObj);
-    if (desc != NULL)
-    {
-        switch (desc->anim.romDefNo)
-        {
+    desc = collision->segmentHits.objects[0];
+    if (desc != NULL) {
+        switch (desc->anim.romDefNo) {
         case 0x5d:
         case 0x99:
         case 0x1db:
@@ -158,43 +147,33 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
             sfx = 4;
         }
     }
-    if (sfxTab != NULL)
-    {
+    if (sfxTab != NULL) {
         vec = (f32*)points + vecIdx * 3;
-        if (((BaddieState*)state)->waterDepth > 0.0f)
-        {
-            (*gWaterfxInterface)->spawnImpactSurface((u8*)obj, flags, (f32*)points, (u8*)state, unused);
+        if (collision->resultWaterDepth > 0.0f) {
+            (*gWaterfxInterface)->spawnImpactSurface((u8*)obj, flags, (f32*)points, collision, speed);
             sfx = 5;
         }
-        if (obj == Obj_GetPlayerObject())
-        {
-            if (((PlayerState*)obj->extra)->characterId == 1)
-            {
+        if (obj == Obj_GetPlayerObject()) {
+            if (((PlayerState*)obj->extra)->characterId == 1) {
                 Sfx_PlayFromObject(0, SFXTRIG_foot_ice_scuff);
             }
             Sfx_PlayFromObject(0, sfxTab[sfx]);
-        }
-        else
-        {
+        } else {
             Sfx_PlayAtPositionFromObject(obj, vec[0], vec[1], vec[2], sfxTab[sfx]);
         }
     }
-    if (i == 5)
-    {
+    if (i == 5) {
         return;
     }
     i = 0;
     scale = 0.5f * scale;
-    while (flags != 0)
-    {
+    while (flags != 0) {
         vec = (f32*)points + i * 3;
         v.x = vec[0];
         v.y = vec[1];
         v.z = vec[2];
-        if (flags & 1)
-        {
-            if (obj->anim.classId == 1 || obj->anim.romDefNo == 0x416)
-            {
+        if (flags & 1) {
+            if (obj->anim.classId == 1 || obj->anim.romDefNo == 0x416) {
                 waterFxSpawnContactEffect((u8*)obj, (f32*)&v, i & 1, sfx);
             }
             ps.pos.x = vec[0];
@@ -207,20 +186,15 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
             v.x = 0.25f * obj->anim.velocityX;
             v.y = 0.25f * obj->anim.velocityY;
             v.z = 0.25f * obj->anim.velocityZ;
-            if (sfx == 6 || sfx == 3)
-            {
+            if (sfx == 6 || sfx == 3) {
                 cnt = randomGetRange(2, 4);
-                while (cnt != 0)
-                {
+                while (cnt != 0) {
                     (*gPartfxInterface)->spawnObject(obj, 0x7e6, &ps, 0x200001, -1, &v);
                     cnt--;
                 }
-            }
-            else if (sfx == 2)
-            {
+            } else if (sfx == 2) {
                 cnt = randomGetRange(4, 8);
-                while (cnt != 0)
-                {
+                while (cnt != 0) {
                     (*gPartfxInterface)->spawnObject(obj, 0x7e6, &ps, 0x200001, -1, &v);
                     cnt--;
                 }

@@ -325,7 +325,7 @@ typedef struct TrickyState {
     u8 pendingFollowRequest; /* TrickyPendingFollowRequest byte: 0 none, 1 queued follow-target handoff */
     u8 pad7D1[0x7D4 - 0x7D1];
     GameObject* pendingFollowObj; /* target object handed off to a sibling Tricky */
-    f32 footPoints[4][3];
+    Vec footPoints[4];
     f32 impressTimer; /* impress-move countdown: primed to gTrickyTimer20Frames by trickyImpress (which sets stateFlags 0x80000000); while that flag is set, -= timeDelta each cycle, and on reaching gTrickyFloatZero the flag is cleared and a TRICKY_VOICE line fires (tricky) */
     ObjAnimEventList
         animEvents; /* 0x808+4: root-motion deltas and triggered anim-event ids filled by ObjAnim_AdvanceCurrentMove; rootDelta* scale the sidestep/vertical/backstep moves, rootRotation yaw drives the facing step, triggeredIds[] pick the bark sfx */
@@ -420,6 +420,8 @@ STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, soundState.mouthAngle) == 0x3BC);
 STATIC_ASSERT(offsetof(TrickyState, movementBarkTimer) == 0x7A0);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
+STATIC_ASSERT(sizeof(((TrickyState*)0)->pathPointPositions) == 0x30);
+STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[1]) - offsetof(TrickyState, pathPointPositions[0]) == 0x0C);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
 STATIC_ASSERT(offsetof(TrickyState, mouthPos) == 0x408);
@@ -474,6 +476,8 @@ STATIC_ASSERT(offsetof(TrickyState, questPromptTimer) == 0x7B4);
 STATIC_ASSERT(offsetof(TrickyState, foodChild) == 0x7B8);
 STATIC_ASSERT(offsetof(TrickyState, packedSlots) == 0x7BC);
 STATIC_ASSERT(offsetof(TrickyState, footPoints) == 0x7D8);
+STATIC_ASSERT(sizeof(((TrickyState*)0)->footPoints) == 0x30);
+STATIC_ASSERT(offsetof(TrickyState, footPoints[1]) - offsetof(TrickyState, footPoints[0]) == 0x0C);
 STATIC_ASSERT(offsetof(TrickyState, impressTimer) == 0x808);
 STATIC_ASSERT(offsetof(TrickyState, animEvents) == 0x80C);
 STATIC_ASSERT(offsetof(TrickyState, colorFadeTimer) == 0x828);

@@ -861,7 +861,7 @@ void enemy_applyFloorResponse(GameObject* obj, EnemyState* state) {
     }
     if ((state->flags2E4 & 0x00200000) != 0) {
         ObjPath_GetPointWorldPositionArray(obj, 2, 2, points);
-        objAudioDispatchEventMask(obj, state->animEventMask, 7, points, &state->flags, state->pathSpeed, 1.0f);
+        objAudioDispatchEventMask(obj, state->animEventMask, 7, points, &state->curvesCollision, state->pathSpeed, 1.0f);
     }
 }
 

@@ -1944,8 +1944,8 @@ int surfaceSfxSelectTrigger(u8 surfaceType, u8 soundId) {
     return *(u16*)(soundBank + triggerIndex * 2);
 }
 
-void objAudioDispatchEventMask(GameObject* obj, int eventMask, u8 type, void* points, void* state, f32 unused,
-                               f32 scale) {
+void objAudioDispatchEventMask(GameObject* obj, int eventMask, u8 type, void* points, CurvesCollisionState* collision,
+                               f32 speed, f32 scale) {
     ObjAnimEventList events;
     int bit;
     memset(&events, 0, sizeof(events));
@@ -1955,5 +1955,5 @@ void objAudioDispatchEventMask(GameObject* obj, int eventMask, u8 type, void* po
             events.triggerCount++;
         }
     }
-    objAudioDispatchAnimEvents(obj, &events, type, points, state, unused, scale);
+    objAudioDispatchAnimEvents(obj, &events, type, points, collision, speed, scale);
 }

@@ -89,6 +89,7 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, localHit) == 0x144);
 STATIC_ASSERT(offsetof(CurvesCollisionState, tiltPitch) == 0x198);
 STATIC_ASSERT(offsetof(CurvesCollisionState, surfaceNormalX) == 0x1A0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, resultFloorGap) == 0x1AC);
+STATIC_ASSERT(offsetof(CurvesCollisionState, resultWaterDepth) == 0x1B4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, floorGap) == 0x1C0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, waterY) == 0x200);
 STATIC_ASSERT(offsetof(CurvesCollisionState, waterNormalZ) == 0x230);

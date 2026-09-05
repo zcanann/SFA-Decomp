@@ -63,13 +63,9 @@ typedef struct BaddieState {
     f32 velX; /* copied into spawned contact objects as velocity */
     f32 velY;
     f32 velZ;
-    u8 unk44[0xB8 - 0x44];
-    s8 surfaceSoundIndex; /* 0..0x22 index into the per-type contact-sfx tables (objAudioDispatchAnimEvents) */
-    u8 padB9[0xBC - 0xB9];
+    u8 unk44[0xBC - 0x44];
     u8 paletteSlot; /* indexes the palette table (paletteIndex = gIceBaddiePaletteIndexTable[slot]) */
-    u8 unkBD[0xC4 - 0xBD];
-    void *contactObj; /* GameObject*; its anim.romDefNo (0x5d/0x99/0x1db/0x223) switches a sfx override (intersect.c) */
-    u8 unkC8[0x118 - 0xC8];
+    u8 unkBD[0x118 - 0xBD];
     f32 unk118; /* a local-space point carried through a reparent exactly like
         anim.localPos: player.c playerReparentPreservingWorldTransform pushes it to world space through the old
         parent and pulls it back through the new one. No other reader in the tree. */
@@ -81,16 +77,13 @@ typedef struct BaddieState {
     u8 unk1A0[0x1B0 - 0x1A0];
     f32 unk1B0; /* player.c compares it against 15 / 40 / 120 to gate landing and
         state-exit branches */
-    f32 waterDepth; /* compared > threshold to fire the waterfx splash path (intersect.c) */
-    u8 unk1B8[0x1C0 - 0x1B8];
+    u8 unk1B4[0x1C0 - 0x1B4];
     f32 waterSurfaceY; /* world-Y of the water surface under the actor, or the
         no-water sentinel; player.c copies it into PlayerState.waterSurfaceY and
         derives the submerged depth from it */
-    u8 unk1C4[0x25B - 0x1C4];
-    s8 contactSfxMuted; /* nonzero suppresses contact sfx unless contactSfxFlags bit 0x10 (intersect.c) */
-    u8 unk25C[0x25F - 0x25C];
+    u8 unk1C4[0x25F - 0x1C4];
     s8 physicsActive; /* enables the free-fall physics path: gravity integration (velY -= g*dt), floor bounce response; set when thrown/spat */
-    s8 contactSfxFlags; /* bit 0x10 allows contact sfx while contactSfxMuted is set (intersect.c) */
+    u8 unk260;
     u8 bboxTraceFlags; /* bbox trace filter handed to trackGetLineIntersect */
     u8 groundContact; /* nonzero while the actor is resting on a surface this frame; the shared controller and player.c re-derive velocity from the position delta when it or surfaceFlags bit 2 is set */
     u8 unk263;
