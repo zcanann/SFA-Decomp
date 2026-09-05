@@ -4514,6 +4514,44 @@ differences; replacing the magnitude local with direct signed-angle ternaries
 leaves 7 structural / 110 operand differences. The shared voice helper and the
 existing turn source are preserved, with no caller-specific helper copies.
 
+The movement-state audit corrects `TRICKY_STATE_FLAG_MOVE_ADVANCING` to
+`TRICKY_STATE_FLAG_MOVE_ENDED`. The producer at `ObjAnim_AdvanceCurrentMove`
+(`0x8002FA48`, exact 559 instructions) returns nonzero when updated progress
+is >= 1 or < 0, for both wrapping and clamped animations. It does not report
+ordinary advancement. `Tricky_update` dispatches behavior before refreshing
+the flag, so the howl, fidget, food, fetch, flame and jump-preparation handlers
+consume the previous animation tick's endpoint result. All 21 flag uses and
+the idle-wander snapshot now express that contract; the shared API documents
+the return condition without changing its prototype.
+
+Three evidenced XYZ records are now `Vec` members: `prevLocalPos` at `0x8C`,
+`tumbleweedTargetPos` at `0x704`, and `wanderTargetPos` at `0x72C`. The first
+captures the object's previous local position; the latter two feed the common
+target pointer, with wander also receiving `objGetJointWorldPosition` output.
+Every component offset and the allocation-backed `0x83C` state size are
+asserted. The four cached patch IDs are cleared by one capacity-bounded loop;
+both inlined expansions reproduce retail's four stores. Direct low-speed
+expressions and flag reads remove redundant snapshots, and jump-only distance
+scratch is scoped and named for the arc setup. Arithmetic order is preserved.
+
+All Tricky function bytes, allocated data and named layouts remain unchanged
+from the direct-voice checkpoint; 781 anonymous relocation names change.
+After integrating the upstream game compiler default, all 2,871 other source
+objects remain byte-identical across this header cleanup. Tricky stays at
+86/89 exact, 99.97430% fuzzy and 53 diagnostic-link text-byte differences,
+with exact allocated non-text sections. Object SHA256:
+`c5bcbd424c631584c8b617d9f08fe3f821b50f32d870cf81116039dd3c908304`.
+
+Rejected probes are restored: direct compound-square replacements reorder
+loads; removing the patch diagnostic copy changes argument setup; delaying
+the movement-result initialization adds 2 structural / 179 operand differences;
+an inner walk-group scope leaves 65 operands instead of 34. The tunnel's `!=`
+loop bound is inert. A bounded `moveTricky` declaration-order sweep built 73
+legal single-block variants plus a nested-scope cross-check without a gain.
+Returning the facing delta instead of writing through its output pointer
+keeps 601 instructions with `s16` but leaves 40 operand differences; `int`
+adds a narrowing instruction. None justifies changing the existing helper API.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

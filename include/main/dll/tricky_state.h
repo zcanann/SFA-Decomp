@@ -21,8 +21,8 @@ enum {
 /* Tricky movement and command flags. */
 #define TRICKY_STATE_FLAG_CHILDREN_ACTIVE  0x800  /* spawned child objects are active */
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000 /* child objects torn down this cycle */
-#define TRICKY_STATE_FLAG_MOVE_ADVANCING                                                                               \
-    0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
+/* Previous animation tick reached an endpoint, whether wrapping or clamping. */
+#define TRICKY_STATE_FLAG_MOVE_ENDED         0x8000000
 #define TRICKY_STATE_FLAG_PATH_PATCHES_VALID 0x400 /* cached patch groups and positions describe targetPosPtr */
 #define TRICKY_STATE_FLAG_COMMAND_ACTIVE     0x10  /* sidekick command/flame/dig/guard action is active */
 #define TRICKY_STATE_FLAG_RECALL_REQUEST     0x10000
@@ -163,9 +163,7 @@ typedef struct TrickyState {
     f32 trackedHeight;
     TrickyJumpArc jumpArc; /* 0x64: ballistic hop arc */
     u8 pad84[0x8C - 0x84];
-    f32 prevLocalPosX;
-    f32 prevLocalPosY;
-    f32 prevLocalPosZ;
+    Vec prevLocalPos;
     s16 cachedPatchGroups[OBJFSA_PATCHGROUP_PATCH_COUNT];
     Vec cachedPatchPositions[OBJFSA_PATCHGROUP_PATCH_COUNT];
     u16 lastWalkGroup;    /* last nonzero walk group accepted by movement; retained during off-group traversal */
@@ -237,9 +235,7 @@ typedef struct TrickyState {
             u8 tumbleweedCount : 4;
             u8 unusedTumbleweedCountBits : 4;
             u8 tumbleweedPad701[3];
-            f32 tumbleweedTargetX;
-            f32 tumbleweedTargetY;
-            f32 tumbleweedTargetZ;
+            Vec tumbleweedTargetPos;
             GameObject* tumbleweedTargetObj;
         };
         struct {
@@ -284,11 +280,7 @@ typedef struct TrickyState {
         f32 guardTimer; /* guard/flame state dwell timer: += / -= timeDelta against 150/60 thresholds (trickyGuard/trickyFlame) */
     };
     union {
-        struct {
-            f32 wanderTargetX; /* wander/return target position X that targetPosPtr is pointed at (&wanderTargetX); written from anim world/local posX plus a sin offset (tricky/tricky_substates) */
-            f32 wanderTargetY; /* wander target position Y (written from anim world/local posY) */
-            f32 wanderTargetZ; /* wander target position Z: anim world/local posZ plus a cos offset */
-        };
+        Vec wanderTargetPos; /* targetPosPtr can refer here for wandering or a captured joint position */
         struct {
             GameObject* guardTarget; /* baddie object the guard is approaching (trickyGuard) */
             s32 guardWalkGroup;      /* walk group the guard post lies in (trickyGuard) */
@@ -350,6 +342,9 @@ STATIC_ASSERT(sizeof(((TrickyState*)0)->moveVector) == 8);
 STATIC_ASSERT(offsetof(TrickyState, animRate) == 0x34);
 STATIC_ASSERT(offsetof(TrickyState, pendingAnimRate) == 0x38);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
+STATIC_ASSERT(offsetof(TrickyState, prevLocalPos.x) == 0x8C);
+STATIC_ASSERT(offsetof(TrickyState, prevLocalPos.y) == 0x90);
+STATIC_ASSERT(offsetof(TrickyState, prevLocalPos.z) == 0x94);
 STATIC_ASSERT(offsetof(TrickyState, guardPoint) == 0x71C);
 STATIC_ASSERT(offsetof(TrickyState, guardTimer) == 0x728);
 STATIC_ASSERT(offsetof(TrickyState, flameCommandPending) == 0x728);
@@ -401,7 +396,9 @@ STATIC_ASSERT(offsetof(TrickyState, stateIndex) == 0x8);
 STATIC_ASSERT(offsetof(TrickyState, substate) == 0xA);
 STATIC_ASSERT(offsetof(TrickyState, movementState) == 0x9);
 STATIC_ASSERT(offsetof(TrickyState, sideCommandPromptMask) == 0xB);
-STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
+STATIC_ASSERT(offsetof(TrickyState, wanderTargetPos.x) == 0x72C);
+STATIC_ASSERT(offsetof(TrickyState, wanderTargetPos.y) == 0x730);
+STATIC_ASSERT(offsetof(TrickyState, wanderTargetPos.z) == 0x734);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitType) == 0x368);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
@@ -440,9 +437,9 @@ STATIC_ASSERT(offsetof(TrickyState, circlingTargetPos.z) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, tumbleweedPad701) == 0x701);
 STATIC_ASSERT(offsetof(TrickyState, playerContactTimer) == 0x720);
 STATIC_ASSERT(offsetof(TrickyState, baddieAlertTarget) == 0x720);
-STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetX) == 0x704);
-STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetY) == 0x708);
-STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetZ) == 0x70C);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetPos.x) == 0x704);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetPos.y) == 0x708);
+STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetPos.z) == 0x70C);
 STATIC_ASSERT(offsetof(TrickyState, tumbleweedTargetObj) == 0x710);
 STATIC_ASSERT(offsetof(TrickyState, secretDigPressTimer) == 0x700);
 STATIC_ASSERT(offsetof(TrickyState, secretDigOriginX) == 0x704);
