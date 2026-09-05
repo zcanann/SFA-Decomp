@@ -1,4 +1,3 @@
-#define OBJFSA_PATCH_EXIT_U16
 #define TRACK_BBOX_FLAGS_S8
 #include "dolphin/os/OSReport.h"
 #include "main/dll/rom_curve_def.h"
@@ -652,14 +651,14 @@ void walkPath_writeU16LE(u32 v, u8* dst)
         }                                                                                                              \
     }
 
-int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id)
+int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 patchGroupId)
 {
     u8 i;
     f32 d1;
 
     for (i = 0; i < 256; i++)
     {
-        if (gObjfsaPatches[i].groupId == id)
+        if (gObjfsaPatches[i].groupId == patchGroupId)
             break;
     }
 

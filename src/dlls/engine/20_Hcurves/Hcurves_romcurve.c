@@ -1,4 +1,3 @@
-#define OBJFSA_PATCH_EXIT_U16
 #define TRACK_BBOX_FLAGS_S8
 #include "dlls/object_descriptor.h"
 #include "dolphin/os/OSReport.h"

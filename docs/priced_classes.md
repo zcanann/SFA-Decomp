@@ -4223,6 +4223,28 @@ layout, relocations, and every other function remain unchanged. Tricky is now
 86/89 exact, 99.98492% fuzzy, with 55 linked text-byte differences rather than
 113. All linked non-text sections remain exact.
 
+The patch-exit API no longer changes its third parameter between `int` and
+`u16` using `OBJFSA_PATCH_EXIT_U16`. The shared declaration now agrees with the
+Hcurves implementation's `u16 patchGroupId`; retail normalizes this argument at
+`0x800DB268`. Tricky's two patch-query temporaries and its patch-group product
+are also `u16`. Ordinary widening of the diagnostic copy preserves the retail
+copy/call order where masking an already-narrow value did not. All four call
+sites retain their exact instruction sequences, including the known wrong-slot
+write in the cached-patch branch. Both Hcurves objects remain byte-identical.
+
+The direction search likewise uses a byte pass counter, signed-byte result,
+and byte reversal temporary. `while (++searchPass < 100)` preserves its 99-pass
+limit and exhaustion-as-stop behavior without the imported casted assignment
+condition. The link scan keeps a separate counter and the canonical curve-link
+capacity. Typed arguments and locals eliminate sixteen manual width masks;
+two fixed-position patch approaches also reuse the existing approach helper.
+The indexed approach stays direct because extraction reorders argument setup.
+Every Tricky function and allocated-section byte is unchanged, as are all
+2,871 other source objects; only Tricky's anonymous relocation names change.
+Both build gates, 59 focused tests, and the diagnostic link pass. There remain
+three non-exact functions and 55 linked text-byte differences, with exact linked
+non-text sections. This removes source/prototype workarounds, not a new match.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

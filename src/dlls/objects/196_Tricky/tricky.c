@@ -4542,7 +4542,7 @@ static inline void trickyInvalidatePatchCache(TrickyState* state) {
 }
 
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
-    int targetPatchGroup;
+    u16 targetPatchGroup;
     RomCurveDef* routeNode;
     f32* target;
     int objectWalkGroup;
@@ -4551,7 +4551,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     RomCurveDef* prevNode;
     u32 patchGroupForCheck;
     s16 linkedPatchGroupId;
-    u32 reverseDirection;
+    u8 reverseDirection;
     int routeDirection;
     int i;
     u8 patchSlot;
@@ -4616,10 +4616,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     if ((targetWalkGroup != 0) && (targetWalkGroup == state->lastWalkGroup)) {
         state->linkedPatchGroup = 0;
     } else {
-        u32 patchGroupProduct;
+        u16 patchGroupProduct;
 
         /* Retail multiplies indices, although Hcurves packs patch IDs into two bytes. */
-        patchGroupProduct = targetWalkGroup * state->lastWalkGroup & 0xffff;
+        patchGroupProduct = targetWalkGroup * state->lastWalkGroup;
         if (patchGroupProduct != 0) {
             u16* ids = patchInfo.patchGroupIds;
 
@@ -4654,10 +4654,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                          state->linkedPatchPos.z);
     }
     {
-        int trickyPatch;
+        u16 trickyPatch;
 
-        targetPatchGroup = getPatchGroup(target, state->lastWalkGroup) & 0xffff;
-        trickyPatch = getPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup) & 0xffff;
+        targetPatchGroup = getPatchGroup(target, state->lastWalkGroup);
+        trickyPatch = getPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup);
         if ((targetWalkGroup != 0) && (objectWalkGroup == targetWalkGroup)) {
             state->movementState = TRICKY_MOVE_WALK_FREE;
         } else {
@@ -4671,7 +4671,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             } else if (state->movementState < 5) {
                 int i;
 
-                if ((u32)targetPatchGroup != 0) {
+                if (targetPatchGroup != 0) {
                     if (targetWalkGroup == 0) {
                         if (objectWalkGroup != 0) {
                             for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
@@ -4683,18 +4683,18 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             }
                             if (i == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                                 if (targetPatchGroup & (state->cachedWalkGroup == 0xff)) {
-                                    state->walkGroup = (int)(targetPatchGroup & 0xff00) >> 8;
+                                    state->walkGroup = (targetPatchGroup & 0xff00) >> 8;
                                 } else {
                                     state->walkGroup = targetPatchGroup & 0xff;
                                 }
                                 state->movementState = TRICKY_MOVE_CURVE_SETUP;
                             }
                         } else {
-                            if ((u32)trickyPatch != 0) {
+                            if (trickyPatch != 0) {
                                 for (i = 0; i < OBJFSA_PATCHGROUP_PATCH_COUNT; i++) {
                                     if (state->cachedPatchGroups[i] == trickyPatch) {
                                         /* Retail overwrites the group here, leaving patchSlot uninitialized. */
-                                        trickyPatch = i & 0xffff;
+                                        trickyPatch = i;
                                         state->movementState = TRICKY_MOVE_WALK_START_PATCH;
                                         break;
                                     }
@@ -4722,16 +4722,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             }
                         } else {
                             if (objectWalkGroup == 0 &&
-                                (u32)(targetPatchGroup =
-                                          getPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup) & 0xffff) != 0) {
+                                (targetPatchGroup = getPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup)) != 0) {
                                 if (state->linkedPatchGroup == targetPatchGroup) {
                                     state->movementState = TRICKY_MOVE_WALK_END_PATCH;
                                 } else {
-                                    Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, (u16)targetPatchGroup);
+                                    Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, targetPatchGroup);
                                     state->movementState = TRICKY_MOVE_WALK_PATCH_EXIT;
                                 }
                             } else {
-                                patchGroupForCheck = targetPatchGroup & 0xffff;
+                                patchGroupForCheck = targetPatchGroup;
                                 i = isPointWithinPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup,
                                                             patchGroupForCheck);
                                 trickyReportError("tricky error, target patch %d, targetWalkGroup %d, trickyWalkGroup "
@@ -4837,14 +4836,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_WALK_PATCH_EXIT:
         trickyDebugPrint("walk patch exit\n");
         state->speed = speed;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->patchExitPos.x, 1);
-        moveResult = moveTricky(obj, &state->patchExitPos.x);
+        moveResult = trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->patchExitPos.x);
         break;
     case TRICKY_MOVE_WALK_END_PATCH:
         trickyDebugPrint("walk end patch\n");
         state->speed = speed;
-        trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->linkedPatchPos.x, 1);
-        moveResult = moveTricky(obj, &state->linkedPatchPos.x);
+        moveResult = trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->linkedPatchPos.x);
         break;
     case TRICKY_MOVE_WALK_TO_NODE:
         trickyDebugPrint("walk to node %d %d\n", 10,
@@ -4951,39 +4948,40 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeNode = state->route.currentNode;
         if ((state->route.previousNode->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) &&
             (routeNode->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
-            int i;
-            u8 step;
-            char found;
-            f32* tpos = state->targetPosPtr;
-            delta[0] = tpos[0] - obj->anim.worldPosX;
-            delta[1] = tpos[1] - obj->anim.worldPosY;
-            delta[2] = tpos[2] - obj->anim.worldPosZ;
+            u8 searchPass;
+            u8 linkIndex;
+            s8 searchResult;
+            f32* targetPos = state->targetPosPtr;
+            delta[0] = targetPos[0] - obj->anim.worldPosX;
+            delta[1] = targetPos[1] - obj->anim.worldPosY;
+            delta[2] = targetPos[2] - obj->anim.worldPosZ;
             rotation.x = -obj->anim.rotX;
             rotation.y = 0;
             rotation.z = 0;
             vecRotateZXY(&rotation.x, delta);
             if ((delta[2] > 0.0f) && (0.0f != state->speed)) {
-                for (step = 0; step < 4; step++) {
-                    u8 grp = routeNode->linkWalkGroups[step];
-                    if (grp == state->walkGroup) {
+                for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
+                    u8 linkWalkGroup = routeNode->linkWalkGroups[linkIndex];
+                    if (linkWalkGroup == state->walkGroup) {
                         break;
                     }
                 }
-                if (step == 4) {
+                if (linkIndex == ROMCURVE_LINK_COUNT) {
                     pathSearchBegin(&state->pathSearches[0], state->route.nextNode, state->targetPosPtr,
                                     state->walkGroup, state->route.reverse);
                     pathSearchBegin(&state->pathSearches[1], state->route.previousNode, state->targetPosPtr,
                                     state->walkGroup, state->route.reverse ^ 1);
-                    found = PATH_SEARCH_PENDING;
-                    for (i = 0; (u8)(i = i + 1) < 100 && (found != PATH_SEARCH_REACHED_TARGET);) {
-                        found = pathSearchStep(&state->pathSearches[0], 1);
-                        if (found != PATH_SEARCH_REACHED_TARGET) {
-                            found = pathSearchStep(&state->pathSearches[1], 1);
-                            switch (found) {
+                    searchResult = PATH_SEARCH_PENDING;
+                    searchPass = 0;
+                    while (++searchPass < 100 && searchResult != PATH_SEARCH_REACHED_TARGET) {
+                        searchResult = pathSearchStep(&state->pathSearches[0], 1);
+                        if (searchResult != PATH_SEARCH_REACHED_TARGET) {
+                            searchResult = pathSearchStep(&state->pathSearches[1], 1);
+                            switch (searchResult) {
                             case PATH_SEARCH_PENDING:
                                 break;
                             case PATH_SEARCH_REACHED_TARGET:
-                                reverseDirection = (state->route.reverse ^ 1) & 0xff;
+                                reverseDirection = state->route.reverse ^ 1;
                                 if (reverseDirection == 0) {
                                     RomCurve_stepClamped(&state->route, 2.0f);
                                 } else {
@@ -4994,7 +4992,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                                 break;
                             case PATH_SEARCH_EXHAUSTED:
                                 /* End this direction probe even without a path. */
-                                found = 1;
+                                searchResult = 1;
                                 break;
                             }
                         }
@@ -5005,7 +5003,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            node = trickySelectRouteEntry(state, state->route.nextNode, routeDirection & 0xff);
+            node = trickySelectRouteEntry(state, state->route.nextNode, routeDirection);
             if (node != 0) {
                 RomCurve_advanceToNextSegment(&state->route, node);
                 routeNodeType = state->route.previousNode->subtype;
@@ -5026,7 +5024,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 break;
             }
         } else {
-            node = trickySelectRouteEntry(state, state->route.currentNode, routeDirection & 0xff);
+            node = trickySelectRouteEntry(state, state->route.currentNode, routeDirection);
             if (node == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
                 break;
@@ -5079,7 +5077,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            RomCurveDef* nextRouteNode = trickySelectRouteEntry(state, state->route.nextNode, routeDirection & 0xff);
+            RomCurveDef* nextRouteNode = trickySelectRouteEntry(state, state->route.nextNode, routeDirection);
             if (nextRouteNode == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
@@ -5205,7 +5203,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            RomCurveDef* nextRouteNode = trickySelectRouteEntry(state, state->route.nextNode, routeDirection & 0xff);
+            RomCurveDef* nextRouteNode = trickySelectRouteEntry(state, state->route.nextNode, routeDirection);
             if (nextRouteNode == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
@@ -5258,7 +5256,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         routeDirection = state->route.reverse;
         if (((routeDirection == 0) && (state->route.atSegmentEnd != 0)) ||
             ((routeDirection != 0 && (state->route.atSegmentEnd == 0)))) {
-            RomCurveDef* nextRouteNode = trickySelectRouteEntry(state, state->route.nextNode, routeDirection & 0xff);
+            RomCurveDef* nextRouteNode = trickySelectRouteEntry(state, state->route.nextNode, routeDirection);
             if (nextRouteNode == 0) {
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
@@ -5568,20 +5566,19 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
     entry = NULL;
 
     if ((state->cachedRouteDef == routeDef) && (state->cachedWalkGroup == state->walkGroup) &&
-        (state->cachedRouteDirection == (routeDirection & 0xffu))) {
+        (state->cachedRouteDirection == routeDirection)) {
         entry = trickyValidateRouteEntry(state->validatedRouteEntry);
     }
 
     if (entry == NULL) {
-        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, state->walkGroup, routeDirection & 0xff);
+        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, state->walkGroup, routeDirection);
         if (entry == NULL) {
             entry = trickyFindPathRouteEntry(state, routeDef, state->walkGroup);
         }
 
         if (entry == NULL) {
             if (state->savedWalkGroup != 0) {
-                entry =
-                    trickyFindNearestLinkedRouteEntry(state, routeDef, state->savedWalkGroup, routeDirection & 0xff);
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, state->savedWalkGroup, routeDirection);
                 if (entry == NULL) {
                     entry = trickyFindPathRouteEntry(state, routeDef, state->savedWalkGroup);
                 }
@@ -5591,7 +5588,7 @@ RomCurveDef* trickySelectRouteEntry(TrickyState* state, RomCurveDef* routeDef, u
             }
 
             if (entry == NULL) {
-                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeDirection & 0xff);
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeDirection);
                 state->walkGroup = 0;
             }
         }
