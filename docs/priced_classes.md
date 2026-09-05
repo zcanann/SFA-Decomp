@@ -3777,6 +3777,23 @@ text rises to 99.84319%, with no new function-size differences and the complete
 linked `.sdata2` still exact. Movement update still has two extra instructions;
 the TU remains `NonMatching`.
 
+The next target/command audit recovers `trickySetTargetPosition` across all 27
+copies of its pointer-change, patch-invalidation and linked-group reset contract.
+The tumbleweed caller retains its additional tracked-object-change condition.
+`trickyResetCommandState` now has a normal `void` API instead of returning a
+constant float zero, and 16 more command-exit copies reuse it. The old flame
+exit stores through `guardPoint[0/1]` are the same union storage as the follow
+state's two timers; after switching to Follow Player, the timer view is the
+appropriate one. Unused pointer/reset temporaries are removed.
+
+Target acquisition now returns success/failure directly after calling those
+helpers. This resolves all 277 register differences in `trickyUpdateBaddieAlert`
+(3,508 bytes), raising Tricky text to 99.92732%. A same-profile compilation of
+the previous checkpoint confirms that only this function's bytes change. All
+other function bytes, all non-code section bytes, SDA global offsets, and all
+2,176 symbol-normalized relocations are unchanged. The linked `.sdata2` remains
+exact, and movement update is still eight bytes longer than retail.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

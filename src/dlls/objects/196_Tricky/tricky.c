@@ -157,6 +157,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
 void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos,
                                u8 slowWhenFacingAway);
 static inline int trickyApproachTarget(GameObject* obj, f32 stoppingRadius, TrickyState* state, f32* targetPos);
+static inline void trickySetTargetPosition(TrickyState* state, f32* targetPos);
 void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state);
 int trickyShouldGoToWarpPoint(GameObject* tricky, TrickyState* state);
 void trickyGrowl(GameObject* obj, TrickyState* trickyState);
@@ -221,7 +222,7 @@ int Tricky_getExtraSize(void);
 void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
 void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
-static inline f32 trickyResetCommandState(TrickyState* state);
+static inline void trickyResetCommandState(TrickyState* state);
 static inline void trickyPlaySidekickVoice(GameObject* obj, u16 sfxId, int pitch);
 static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state);
 void Tricky_update(GameObject* obj);
@@ -1029,7 +1030,6 @@ void Tricky_update(GameObject* obj) {
     GameObject* nearestBaddie;
     int accepted;
     int waterFootstepActive;
-    f32* targetPos;
     f32 resetValue;
     f32 moveProgress;
     u8 loadedMapFlags[120];
@@ -1070,7 +1070,8 @@ void Tricky_update(GameObject* obj) {
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) != 0) {
         ObjHits_EnableObject(obj);
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_KEEP_STATE) == 0) {
-            resetValue = trickyResetCommandState(trickyState);
+            trickyResetCommandState(trickyState);
+            resetValue = 0.0f;
             trickyState->movementState = TRICKY_MOVE_WALK_WAIT;
             trickyState->prevSpeed = resetValue;
             trickyState->speed = resetValue;
@@ -1115,7 +1116,7 @@ void Tricky_update(GameObject* obj) {
             }
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
         }
-        resetValue = trickyResetCommandState(trickyState);
+        trickyResetCommandState(trickyState);
         trickyState->followObj = NULL;
     }
     {
@@ -1159,7 +1160,7 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                resetValue = trickyResetCommandState(trickyState);
+                                trickyResetCommandState(trickyState);
                                 trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
@@ -1170,7 +1171,7 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                resetValue = trickyResetCommandState(trickyState);
+                                trickyResetCommandState(trickyState);
                                 trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
@@ -1187,7 +1188,7 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 2) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                resetValue = trickyResetCommandState(trickyState);
+                                trickyResetCommandState(trickyState);
                                 trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
@@ -1198,7 +1199,7 @@ void Tricky_update(GameObject* obj) {
                         if (trickyState->stats->energy < 4) {
                             if ((u8)Obj_CanSetupObject()) {
                                 trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                                resetValue = trickyResetCommandState(trickyState);
+                                trickyResetCommandState(trickyState);
                                 trickySpawnFoodBubble(obj, trickyState);
                             }
                         } else {
@@ -1209,7 +1210,7 @@ void Tricky_update(GameObject* obj) {
                         trickyState->stateIndex = TRICKY_STATE_GROWL;
                         break;
                     default:
-                        resetValue = trickyResetCommandState(trickyState);
+                        trickyResetCommandState(trickyState);
                         trickyReportError("find command used on the wrong object\n");
                         break;
                     }
@@ -1257,7 +1258,7 @@ void Tricky_update(GameObject* obj) {
                     if (trickyState->stats->energy < 4) {
                         if ((u8)Obj_CanSetupObject()) {
                             trickyState->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                            resetValue = trickyResetCommandState(trickyState);
+                            trickyResetCommandState(trickyState);
                             trickySpawnFoodBubble(obj, trickyState);
                         }
                     } else {
@@ -1294,7 +1295,7 @@ void Tricky_update(GameObject* obj) {
                             trickyState->actionCallback = (TrickyActionCallback)wcbeacon_aButtonCallback;
                             break;
                         default:
-                            resetValue = trickyResetCommandState(trickyState);
+                            trickyResetCommandState(trickyState);
                             trickyReportError("find command used on the wrong object\n");
                             break;
                         }
@@ -1310,12 +1311,7 @@ void Tricky_update(GameObject* obj) {
                         placementSetup->posY = obj->anim.worldPosY;
                         placementSetup->posZ = obj->anim.worldPosZ;
                         trickyState->followObj = objSetupObject(placementSetup, 5, -1, -1, obj->anim.parent);
-                        targetPos = &trickyState->followObj->anim.worldPosX;
-                        if (trickyState->targetPosPtr != targetPos) {
-                            trickyState->targetPosPtr = targetPos;
-                            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                            trickyState->linkedWalkGroup = 0;
-                        }
+                        trickySetTargetPosition(trickyState, &trickyState->followObj->anim.worldPosX);
                         trickyState->substate = TRICKY_FETCH_BALL_INIT;
                         trickyState->stateIndex = TRICKY_STATE_FETCH_BALL;
                     }
@@ -1328,11 +1324,7 @@ void Tricky_update(GameObject* obj) {
                             trickyFindNearestUsableBaddie(trickyState->playerObj, TRICKY_TIMER_150_FRAMES, 0);
                         if (nearestBaddie != NULL) {
                             trickyState->followObj = nearestBaddie;
-                            if (trickyState->targetPosPtr != &nearestBaddie->anim.worldPosX) {
-                                trickyState->targetPosPtr = &nearestBaddie->anim.worldPosX;
-                                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                                trickyState->linkedWalkGroup = 0;
-                            }
+                            trickySetTargetPosition(trickyState, &nearestBaddie->anim.worldPosX);
                             trickyState->stateIndex = TRICKY_STATE_BADDIE_ALERT;
                             trickyState->substate = TRICKY_BADDIE_ALERT_GOTO;
                             trickyState->flameCommandPending = 0;
@@ -1349,10 +1341,10 @@ void Tricky_update(GameObject* obj) {
     if ((flags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
         if ((flags & TRICKY_STATE_FLAG_RECALL_REQUEST) != 0) {
             if ((flags & TRICKY_STATE_FLAG_HEEL_REQUEST) != 0) {
-                resetValue = trickyResetCommandState(trickyState);
+                trickyResetCommandState(trickyState);
                 trickyState->commandPhase = TRICKY_COMMAND_PHASE_NONE;
             } else {
-                resetValue = trickyResetCommandState(trickyState);
+                trickyResetCommandState(trickyState);
             }
             trickyState->cooldownA = TRICKY_RECALL_COOLDOWN_FRAMES;
         } else if ((flags & TRICKY_STATE_FLAG_GUARD_REQUEST) != 0) {
@@ -1362,11 +1354,7 @@ void Tricky_update(GameObject* obj) {
                 (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
             trickyState->commandPhase = TRICKY_COMMAND_PHASE_GUARD;
-            if (trickyState->targetPosPtr != &trickyState->wanderTargetX) {
-                trickyState->targetPosPtr = &trickyState->wanderTargetX;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                trickyState->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(trickyState, &trickyState->wanderTargetX);
         }
     }
     obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
@@ -1642,21 +1630,16 @@ static inline void trickyPlaySidekickVoice(GameObject* obj, u16 sfxId, int pitch
     }
 }
 
-/* Tricky sidekick command state machine and per-frame update. */
-static inline f32 trickyResetCommandState(TrickyState* state) {
-    f32 resetValue;
-
+static inline void trickyResetCommandState(TrickyState* state) {
     state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
     state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
-    resetValue = 0.0f;
-    state->cooldownA = resetValue;
-    state->playerContactTimer = resetValue;
+    state->cooldownA = 0.0f;
+    state->playerContactTimer = 0.0f;
     state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
     state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
     state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
     state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
     state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
-    return resetValue;
 }
 
 void Tricky_hitDetect(GameObject* obj) {
@@ -2066,7 +2049,6 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
             }
         } else {
             u32 busy = state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            void* nextTarget;
             if (busy != 0) {
                 return;
             }
@@ -2075,12 +2057,7 @@ void Tricky_commandPlayBall(GameObject* obj, int commandEnabled, GameObject* tar
             state->cannonballRandomValue = (f32)(int)randomGetRange(0x168, 0x28);
             state->stateIndex = TRICKY_STATE_BALL_ROLL;
             state->followObj = targetObj;
-            nextTarget = &state->cannonballStartCurve->x;
-            if ((void*)state->targetPosPtr != nextTarget) {
-                state->targetPosPtr = (f32*)nextTarget;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                state->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(state, &state->cannonballStartCurve->x);
             state->substate = TRICKY_CANNONBALL_INIT;
         }
     } else {
@@ -2097,11 +2074,7 @@ int Tricky_requestMoveToObject(GameObject* obj, GameObject* targetObj) {
     }
     if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
         state->followObj = targetObj;
-        if (state->targetPosPtr != &targetObj->anim.worldPosX) {
-            state->targetPosPtr = &targetObj->anim.worldPosX;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
+        trickySetTargetPosition(state, &targetObj->anim.worldPosX);
         state->substate = 0;
         state->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
     } else {
@@ -2230,19 +2203,8 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
         }
     }
     if (pathBytes[0] != 0) {
-        f32 resetTimer;
-
         state->walkGroup = pathBytes[0];
-        state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
-        resetTimer = 0.0f;
-        state->cooldownA = resetTimer;
-        state->playerContactTimer = resetTimer;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-        state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
+        trickyResetCommandState(state);
     }
     if (gTrickyWarpHelperObject == 0) {
         ObjPlacement* setup = Obj_AllocObjectSetup(sizeof(ObjPlacement), TRICKY_HELPER_WARP_OBJECT_ID);
@@ -2554,11 +2516,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
     case TRICKY_AMBIENT_ACTIVITY_APPROACH_THORNTAIL:
         state->followObj = found;
         objGetJointWorldPosition(found, 0, &state->wanderTargetX);
-        if ((u8*)state->targetPosPtr != (u8*)&state->wanderTargetX) {
-            state->targetPosPtr = &state->wanderTargetX;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
+        trickySetTargetPosition(state, &state->wanderTargetX);
         state->thorntailIdleMovePending = 0;
         state->substate = TRICKY_FOLLOW_SUBSTATE_APPROACH_THORNTAIL;
         break;
@@ -2569,11 +2527,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
         state->wanderTargetX = (f32)(TRICKY_AMBIENT_WANDER_SCALE * -mathSinf(wanderAngle) + obj->anim.localPosX);
         state->wanderTargetY = obj->anim.localPosY;
         state->wanderTargetZ = (f32)(TRICKY_POSITION_OFFSET_SCALE * -mathCosf(wanderAngle) + obj->anim.localPosZ);
-        if ((u8*)state->targetPosPtr != (u8*)&state->wanderTargetX) {
-            state->targetPosPtr = &state->wanderTargetX;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
+        trickySetTargetPosition(state, &state->wanderTargetX);
         state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE_PICK;
         break;
     case TRICKY_AMBIENT_ACTIVITY_DIG_FOR_FOOD:
@@ -2701,17 +2655,11 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
     TrickyState* voiceState;
     short currentMove;
     u8 movementResult;
-    f32* followBase;
     int inWater;
     float stoppingRadius;
 
     state->followObj = state->playerObj;
-    followBase = &state->followObj->anim.worldPosX;
-    if (state->targetPosPtr != followBase) {
-        state->targetPosPtr = followBase;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-        state->linkedWalkGroup = 0;
-    }
+    trickySetTargetPosition(state, &state->followObj->anim.worldPosX);
     if (0.0f == state->cooldownA) {
         {
             s8 idleCommandPhase;
@@ -3199,11 +3147,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                 if ((obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
                     if ((followState->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) {
                         followState->followObj = target;
-                        if (followState->targetPosPtr != &target->anim.worldPosX) {
-                            followState->targetPosPtr = &target->anim.worldPosX;
-                            followState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                            followState->linkedWalkGroup = 0;
-                        }
+                        trickySetTargetPosition(followState, &target->anim.worldPosX);
                         followState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
                         followState->stateIndex = TRICKY_STATE_IDLE_AND_EAT;
                     } else {
@@ -3261,20 +3205,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     if (found != NULL) {
         state->groundSnapCounter = 2;
         (*gPathControlInterface)->attachObject(obj, &state->curvesCollision);
-        state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
-        resetValue = 0.0f;
-        state->cooldownA = resetValue;
-        state->playerContactTimer = resetValue;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-        {
-            s8 idleCommandPhase;
-            idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-            state->commandPhase = idleCommandPhase;
-        }
+        trickyResetCommandState(state);
         obj->anim.localPosX = found->anim.localPosX;
         obj->anim.localPosY = found->anim.localPosY;
         obj->anim.localPosZ = found->anim.localPosZ;
@@ -3316,12 +3247,10 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* curve;
-    f32* curvePos;
     GameObject* followObj;
     int movementResult;
     f32 pressDistance;
     f32 dirLength;
-    f32 z;
 
     followObj = state->followObj;
     switch (state->substate) {
@@ -3339,12 +3268,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         if (movementResult == TRICKY_MOVEMENT_REACHED_TARGET) {
             if (state->secretDigCurve != NULL) {
                 state->substate = TRICKY_SECRET_DIG_APPROACH_CURVE;
-                curvePos = &state->secretDigCurve->x;
-                if (state->targetPosPtr != curvePos) {
-                    state->targetPosPtr = curvePos;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                    state->linkedWalkGroup = 0;
-                }
+                trickySetTargetPosition(state, &state->secretDigCurve->x);
             } else {
                 state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 state->substate = TRICKY_SECRET_DIG_START_PRESS;
@@ -3356,20 +3280,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
                                   TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             }
         } else if (movementResult == TRICKY_MOVEMENT_BLOCKED) {
-            state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            state->substate = TRICKY_SECRET_DIG_SCAN_CURVE;
-            z = 0.0f;
-            state->cooldownA = z;
-            state->playerContactTimer = z;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-            {
-                s8 idleCommandPhase;
-                idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                state->commandPhase = idleCommandPhase;
-            }
+            trickyResetCommandState(state);
         }
         break;
     case TRICKY_SECRET_DIG_APPROACH_CURVE:
@@ -3416,20 +3327,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
         if (GROUND_ANIMATOR_INTERFACE(followObj)->isFullySunk(followObj) != 0) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->stats->energy -= 4;
-            state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            state->substate = TRICKY_SECRET_DIG_SCAN_CURVE;
-            z = 0.0f;
-            state->cooldownA = z;
-            state->playerContactTimer = z;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-            {
-                s8 idleCommandPhase;
-                idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                state->commandPhase = idleCommandPhase;
-            }
+            trickyResetCommandState(state);
             trickyPlayWhineSfx(sfxTable[randomGetRange(0, 1)], obj);
         }
         break;
@@ -3439,14 +3337,12 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
-    f32* entryPos;
     TrickyState* voiceState;
     int walkGroup;
     u16 sfxId;
     f32 dirZ;
     f32 dirX;
     f32 pressDistance;
-    f32 resetValue;
     f32 dirXSq;
 
     switch (state->substate) {
@@ -3460,12 +3356,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             state->digTunnelEntryNode.bits = state->digTunnelEntryNode.bits ^ state->digTunnelExitNode.bits;
             state->digTunnelExitNode.bits = state->digTunnelExitNode.bits ^ state->digTunnelEntryNode.bits;
         }
-        entryPos = &state->digTunnelEntryNode.curve->x;
-        if (state->targetPosPtr != entryPos) {
-            state->targetPosPtr = entryPos;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
+        trickySetTargetPosition(state, &state->digTunnelEntryNode.curve->x);
         state->substate = TRICKY_DIG_TUNNEL_FINDING_ENTRY;
     case TRICKY_DIG_TUNNEL_FINDING_ENTRY:
         trickyDebugPrint("DIGTUNNEL_FINDING\n");
@@ -3583,20 +3474,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
 
             currentGroup = Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL);
             if (currentGroup == walkGroup) {
-                state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                state->substate = TRICKY_DIG_TUNNEL_INIT;
-                resetValue = 0.0f;
-                state->cooldownA = resetValue;
-                state->playerContactTimer = resetValue;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                {
-                    s8 idleCommandPhase;
-                    idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                    state->commandPhase = idleCommandPhase;
-                }
+                trickyResetCommandState(state);
             }
         }
         break;
@@ -3804,30 +3682,17 @@ static inline int trickyUpdateFlameAction(GameObject* obj, TrickyState* state) {
 }
 
 void trickyFlame(GameObject* obj, TrickyState* trickyState) {
-    f32* targetPos;
-    f32 resetValue;
-
     switch (trickyState->substate) {
     case TRICKY_FLAME_NONE:
         trickyDebugPrint("FLAME_NONE\n");
         trickyState->flameEdgeNode = Objfsa_FindNearestCurveType24(&trickyState->followObj->anim.worldPosX, -1,
                                                                    ROMCURVE_TRICKY_SUBTYPE_FLAME_EDGE);
         if (trickyState->flameEdgeNode->walkGroup != 0) {
-            targetPos = &trickyState->flameEdgeNode->x;
-            if (trickyState->targetPosPtr != targetPos) {
-                trickyState->targetPosPtr = targetPos;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                (trickyState)->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(trickyState, &trickyState->flameEdgeNode->x);
             trickyState->substate = TRICKY_FLAME_FINDING_IN;
         } else {
             trickyState->flameReturnNode = (*gRomCurveInterface)->getById(trickyState->flameEdgeNode->linkIds[0]);
-            targetPos = &trickyState->flameReturnNode->x;
-            if (trickyState->targetPosPtr != targetPos) {
-                trickyState->targetPosPtr = targetPos;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                (trickyState)->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(trickyState, &trickyState->flameReturnNode->x);
             trickyState->substate = TRICKY_FLAME_FINDING_OUT;
         }
         trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState);
@@ -3891,16 +3756,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
                 trickyState->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 trickyState->substate = TRICKY_FLAME_TURNING_IN;
             } else if (movementResult == TRICKY_MOVEMENT_BLOCKED) {
-                trickyState->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                trickyState->substate = TRICKY_FLAME_NONE;
-                resetValue = 0.0f;
-                trickyState->guardPoint[0] = resetValue;
-                trickyState->guardPoint[1] = resetValue;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                trickyState->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
+                trickyResetCommandState(trickyState);
             }
         }
         break;
@@ -3915,16 +3771,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
     case TRICKY_FLAME_IN:
         trickyDebugPrint("FLAME_IN\n");
         if (trickyUpdateFlameAction(obj, trickyState) == 0) {
-            trickyState->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            trickyState->substate = TRICKY_FLAME_NONE;
-            resetValue = 0.0f;
-            trickyState->guardPoint[0] = resetValue;
-            trickyState->guardPoint[1] = resetValue;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-            trickyState->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
+            trickyResetCommandState(trickyState);
         }
         break;
     case TRICKY_FLAME_TO_END:
@@ -3933,16 +3780,7 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState) {
         if (trickyState->guardTimer <= 0.0f) {
             trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, trickyState, &trickyState->flameReturnNode->x);
             if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) != 0) {
-                trickyState->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                trickyState->substate = TRICKY_FLAME_NONE;
-                resetValue = 0.0f;
-                trickyState->guardPoint[0] = resetValue;
-                trickyState->guardPoint[1] = resetValue;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                trickyState->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
+                trickyResetCommandState(trickyState);
             }
         }
         break;
@@ -3980,11 +3818,7 @@ int trickyGuardFindBaddieTarget(TrickyState* trickyState) {
     }
     if (bestTarget != NULL) {
         trickyState->guardTarget = bestTarget;
-        if (trickyState->targetPosPtr != &bestTarget->anim.worldPosX) {
-            trickyState->targetPosPtr = &bestTarget->anim.worldPosX;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            trickyState->linkedWalkGroup = 0;
-        }
+        trickySetTargetPosition(trickyState, &bestTarget->anim.worldPosX);
         trickyState->substate = TRICKY_GUARD_TO_BADDIE;
         return 1;
     }
@@ -3992,8 +3826,6 @@ int trickyGuardFindBaddieTarget(TrickyState* trickyState) {
 }
 
 void trickyGuard(GameObject* obj, TrickyState* trickyState) {
-    f32* guardTargetPos;
-
     switch (trickyState->substate) {
     case TRICKY_GUARD_INIT:
         trickyDebugPrint("GUARD_INIT\n");
@@ -4021,11 +3853,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         trickyDebugPrint("GUARD_TOSPOT\n");
         if (trickyUpdateMovementState(obj, TRICKY_GUARD_APPROACH_RADIUS, trickyState) ==
             TRICKY_MOVEMENT_REACHED_TARGET) {
-            if (trickyState->targetPosPtr != trickyState->guardPoint) {
-                trickyState->targetPosPtr = trickyState->guardPoint;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                trickyState->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(trickyState, trickyState->guardPoint);
             trickyState->substate = TRICKY_GUARD_TO_FRONT;
         } else {
             trickyGuardFindBaddieTarget(trickyState);
@@ -4068,12 +3896,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             if (trickyState->guardWalkGroup == Objfsa_GetWalkGroupIndexAtPoint(trickyState->targetPosPtr, 0x0)) {
                 break;
             }
-            guardTargetPos = &trickyState->followObj->anim.worldPosX;
-            if (trickyState->targetPosPtr != guardTargetPos) {
-                trickyState->targetPosPtr = guardTargetPos;
-                trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                trickyState->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(trickyState, &trickyState->followObj->anim.worldPosX);
             trickyState->substate = TRICKY_GUARD_TO_SPOT;
             break;
         }
@@ -4083,12 +3906,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             trickyStopFlameChildren(obj, trickyState);
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (trickyGuardFindBaddieTarget(trickyState) == 0) {
-                guardTargetPos = &trickyState->followObj->anim.worldPosX;
-                if (trickyState->targetPosPtr != guardTargetPos) {
-                    trickyState->targetPosPtr = guardTargetPos;
-                    trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                    trickyState->linkedWalkGroup = 0;
-                }
+                trickySetTargetPosition(trickyState, &trickyState->followObj->anim.worldPosX);
                 trickyState->substate = TRICKY_GUARD_TO_SPOT;
             }
         } else if (trickyGuardIsBaddieTargetValid(trickyState->guardTarget) != 0) {
@@ -4135,12 +3953,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
         if (obj->anim.currentMoveProgress <= TRICKY_SMALL_SPEED_STEP) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             if (trickyGuardFindBaddieTarget(trickyState) == 0) {
-                guardTargetPos = &trickyState->followObj->anim.worldPosX;
-                if (trickyState->targetPosPtr != guardTargetPos) {
-                    trickyState->targetPosPtr = guardTargetPos;
-                    trickyState->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                    trickyState->linkedWalkGroup = 0;
-                }
+                trickySetTargetPosition(trickyState, &trickyState->followObj->anim.worldPosX);
                 trickyState->substate = TRICKY_GUARD_TO_SPOT;
             }
         }
@@ -4220,7 +4033,6 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
     float dx;
     float dz;
     float distance;
-    f32 resetTimer;
     float* targetPos;
     GameObject* trackedObj;
     u32 currentBit;
@@ -4243,11 +4055,8 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
         targetPos = NW_mammoth_getSpawnPosition(state->followObj);
         trackedObj = tumbleweedbush_findNearestActive(targetPos);
         if (trackedObj != 0 && state->stats->energy != 0) {
-            if (trackedObj != state->tumbleweedTargetObj &&
-                (u8*)state->targetPosPtr != (u8*)&state->tumbleweedTargetX) {
-                state->targetPosPtr = &state->tumbleweedTargetX;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                state->linkedWalkGroup = 0;
+            if (trackedObj != state->tumbleweedTargetObj) {
+                trickySetTargetPosition(state, &state->tumbleweedTargetX);
             }
             dx = *targetPos - obj->anim.worldPosX;
             dz = targetPos[2] - obj->anim.worldPosZ;
@@ -4265,20 +4074,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
                 trickyRequestIdleMove(obj, state);
             }
         } else {
-            state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
-            resetTimer = 0.0f;
-            state->cooldownA = resetTimer;
-            state->playerContactTimer = resetTimer;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-            {
-                s8 idleCommandPhase;
-                idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                state->commandPhase = idleCommandPhase;
-            }
+            trickyResetCommandState(state);
         }
         break;
     }
@@ -4360,8 +4156,6 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
     int useSwimAnim;
     s16 move;
     f32 bob;
-    f32 resetTimer;
-    f32* targetPos;
 
     switch (state->substate) {
     case TRICKY_FETCH_BALL_INIT:
@@ -4397,20 +4191,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                         }
                     }
                 }
-                state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                state->substate = TRICKY_FETCH_BALL_INIT;
-                resetTimer = 0.0f;
-                state->cooldownA = resetTimer;
-                state->playerContactTimer = resetTimer;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                {
-                    s8 idleCommandPhase;
-                    idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                    state->commandPhase = idleCommandPhase;
-                }
+                trickyResetCommandState(state);
             }
         } else {
             status = trickyUpdateMovementState(obj, TRICKY_TIMER_20_FRAMES, state);
@@ -4480,12 +4261,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
             }
             state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
             state->substate = TRICKY_FETCH_BALL_WAIT_FOR_IDLE;
-            targetPos = &state->followObj->anim.worldPosX;
-            if (state->targetPosPtr != targetPos) {
-                state->targetPosPtr = targetPos;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                state->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(state, &state->followObj->anim.worldPosX);
         }
         break;
     case TRICKY_FETCH_BALL_WAIT_FOR_IDLE:
@@ -4506,12 +4282,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         break;
     case TRICKY_FETCH_BALL_CARRY_TO_PLAYER:
         if ((obj)->anim.currentMoveProgress >= TRICKY_FLAME_DONE_PROGRESS) {
-            targetPos = &state->playerObj->anim.worldPosX;
-            if (state->targetPosPtr != targetPos) {
-                state->targetPosPtr = targetPos;
-                state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                state->linkedWalkGroup = 0;
-            }
+            trickySetTargetPosition(state, &state->playerObj->anim.worldPosX);
             state->substate = TRICKY_FETCH_BALL_APPROACH_THROW_POINT;
         case TRICKY_FETCH_BALL_APPROACH_THROW_POINT:
             if (trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, state) == TRICKY_MOVEMENT_REACHED_TARGET) {
@@ -4616,7 +4387,6 @@ GameObject* trickyFindCirclingTarget(GameObject* obj, TrickyState* state) {
 
 void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
     u8 movementStatus;
-    int targetAcquired;
     GameObject* bestDetourWarp = NULL;
     f32 bestDetourSavings = 0.0f;
     int warpCount;
@@ -4625,8 +4395,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
     case TRICKY_BADDIE_ALERT_GOTO: {
         trickyDebugPrint("BADDIEALERT_GOTO\n");
         movementStatus = trickyUpdateMovementState(obj, TRICKY_CIRCLING_APPROACH_RADIUS, state);
-        targetAcquired = trickyAcquireBaddieAlertTarget(state);
-        if (targetAcquired != 0) {
+        if (trickyAcquireBaddieAlertTarget(state) != 0) {
             if (state->flameCommandPending == 0) {
                 {
                     GameObject* circlingTarget = trickyFindCirclingTarget(obj, state);
@@ -4640,18 +4409,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 }
             }
             if (movementStatus == TRICKY_MOVEMENT_BLOCKED) {
-                state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                state->substate = TRICKY_BADDIE_ALERT_GOTO;
-                {
-                    f32 resetValue = 0.0f;
-                    state->cooldownA = resetValue;
-                    state->playerContactTimer = resetValue;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                    state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                }
+                trickyResetCommandState(state);
                 break;
             }
             if (getXZDistanceSquared(&obj->anim.worldPosX, &state->followObj->anim.worldPosX) <
@@ -4668,8 +4426,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
     case TRICKY_BADDIE_ALERT_BARK: {
         trickyDebugPrint("BADDIEALERT_BARK %d %d\n", state->stats->energy, state->flameCommandPending);
         movementStatus = trickyUpdateMovementState(obj, TRICKY_CIRCLING_APPROACH_RADIUS, state);
-        targetAcquired = trickyAcquireBaddieAlertTarget(state);
-        if (targetAcquired != 0) {
+        if (trickyAcquireBaddieAlertTarget(state) != 0) {
             if (state->flameCommandPending == 0) {
                 {
                     GameObject* circlingTarget = trickyFindCirclingTarget(obj, state);
@@ -4683,18 +4440,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 }
             }
             if (movementStatus == TRICKY_MOVEMENT_BLOCKED) {
-                state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                state->substate = TRICKY_BADDIE_ALERT_GOTO;
-                {
-                    f32 resetValue = 0.0f;
-                    state->cooldownA = resetValue;
-                    state->playerContactTimer = resetValue;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                    state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                }
+                trickyResetCommandState(state);
                 break;
             }
             if (movementStatus == TRICKY_MOVEMENT_REACHED_TARGET) {
@@ -4705,18 +4451,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                     state->flameCommandPending = 0;
                     if ((u8)Obj_CanSetupObject() != 0) {
                         state->stateFlags |= TRICKY_STATE_FLAG_FOOD_WARNING_PENDING;
-                        state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-                        state->substate = TRICKY_BADDIE_ALERT_GOTO;
-                        {
-                            f32 resetValue = 0.0f;
-                            state->cooldownA = resetValue;
-                            state->playerContactTimer = resetValue;
-                            state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-                            state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-                            state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-                            state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-                            state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                        }
+                        trickyResetCommandState(state);
                         if (state->foodChild == NULL) {
                             TrickyPromptChildSetup* promptSetup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(
                                 sizeof(*promptSetup), TRICKY_SPAWN_ROMDEF_FOOD);
@@ -4782,8 +4517,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
     case TRICKY_BADDIE_ALERT_GOTO_FLAME: {
         trickyDebugPrint("BADDIEALLERT_GOTOFLAME\n");
         movementStatus = trickyUpdateMovementState(obj, TRICKY_BADDIE_ALERT_FLAME_RADIUS, state);
-        targetAcquired = trickyAcquireBaddieAlertTarget(state);
-        if (targetAcquired != 0 && movementStatus != TRICKY_MOVEMENT_IN_PROGRESS) {
+        if (trickyAcquireBaddieAlertTarget(state) != 0 && movementStatus != TRICKY_MOVEMENT_IN_PROGRESS) {
             trickyRequestMove(obj, TRICKY_ANIM_FLAME_ATTACK, TRICKY_LAND_MOVE_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
@@ -4825,14 +4559,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
             target = (GameObject*)Player_GetTargetObject((int)state->playerObj);
         }
         if (target != state->baddieAlertTarget || state->flameCommandPending != 0) {
-            {
-                f32* px = &state->followObj->anim.worldPosX;
-                if (state->targetPosPtr != px) {
-                    state->targetPosPtr = px;
-                    state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                    state->linkedWalkGroup = 0;
-                }
-            }
+            trickySetTargetPosition(state, &state->followObj->anim.worldPosX);
             state->substate = TRICKY_BADDIE_ALERT_GOTO;
         } else {
             void** warpList = (void**)objGetAllOfType(TRICKYWARP_OBJ_GROUP, &warpCount);
@@ -4858,14 +4585,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 GameObject* baddieAlertWarp = state->baddieAlertWarp;
                 if (baddieAlertWarp != NULL && (baddieAlertWarp->objectFlags & OBJECT_OBJFLAG_FREED)) {
                     state->baddieAlertWarp = NULL;
-                    {
-                        f32* px = &state->playerObj->anim.worldPosX;
-                        if (state->targetPosPtr != px) {
-                            state->targetPosPtr = px;
-                            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                            state->linkedWalkGroup = 0;
-                        }
-                    }
+                    trickySetTargetPosition(state, &state->playerObj->anim.worldPosX);
                 }
             }
             if (bestDetourWarp != NULL) {
@@ -4874,14 +4594,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 }
                 if (state->baddieAlertWarp == NULL || state->baddieAlertWarp != bestDetourWarp) {
                     state->baddieAlertWarp = bestDetourWarp;
-                    {
-                        f32* warpTargetPos = &state->baddieAlertWarp->anim.worldPosX;
-                        if (state->targetPosPtr != warpTargetPos) {
-                            state->targetPosPtr = warpTargetPos;
-                            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-                            state->linkedWalkGroup = 0;
-                        }
-                    }
+                    trickySetTargetPosition(state, &state->baddieAlertWarp->anim.worldPosX);
                 }
             }
         }
@@ -4902,34 +4615,12 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
 }
 
 static inline int trickyAcquireBaddieAlertTarget(TrickyState* state) {
-    int hasTarget;
-
     if ((state->followObj = trickyFindNearestUsableBaddie(state->playerObj, TRICKY_TIMER_150_FRAMES, 0)) != NULL) {
-        f32* targetPos = &state->followObj->anim.worldPosX;
-
-        if (state->targetPosPtr != targetPos) {
-            state->targetPosPtr = targetPos;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
-        hasTarget = 1;
-    } else {
-        state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        hasTarget = 0;
-        state->substate = hasTarget;
-        {
-            f32 z = 0.0f;
-            state->cooldownA = z;
-            state->playerContactTimer = z;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-            state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
-        }
+        trickySetTargetPosition(state, &state->followObj->anim.worldPosX);
+        return 1;
     }
-
-    return hasTarget;
+    trickyResetCommandState(state);
+    return 0;
 }
 
 void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
@@ -4974,21 +4665,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
         trickyDebugPrint("GROWLAT_FLAME\n");
         if (obj->anim.currentMoveProgress >= TRICKY_FLAME_DONE_PROGRESS) {
             trickyStopFlameChildren(obj, trickyState);
-            trickyState->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-            trickyState->substate = TRICKYGROWL_WINDUP;
-            {
-                f32 resetValue = 0.0f;
-                trickyState->cooldownA = resetValue;
-                trickyState->playerContactTimer = resetValue;
-            }
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-            trickyState->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-            {
-                s8 idleCommandPhase = TRICKY_COMMAND_PHASE_IDLE;
-                trickyState->commandPhase = idleCommandPhase;
-            }
+            trickyResetCommandState(trickyState);
         } else {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
             trickyTurnTowardYaw(obj, getAngle(-(target[0] - obj->anim.worldPosX), -(target[2] - obj->anim.worldPosZ)));
@@ -5048,7 +4725,6 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
     f32 playerRejectDistSq;
     f32 bestTrickyDistSq;
     f32 distSq;
-    f32 resetValue;
     GameObject** warpCursor;
     GameObject** warpList;
     int warpCount;
@@ -5060,16 +4736,7 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
     bestTrickyDistSq = TRICKY_MAX_DISTANCE;
 
     if (trickyShouldGoToWarpPoint(obj, state) == 0) {
-        state->stateIndex = TRICKY_STATE_FOLLOW_PLAYER;
-        state->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
-        resetValue = 0.0f;
-        state->cooldownA = resetValue;
-        state->playerContactTimer = resetValue;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_RECALL_REQUEST;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_HEEL_REQUEST;
-        state->stateFlags &= ~TRICKY_STATE_FLAG_GUARD_REQUEST;
-        state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
+        trickyResetCommandState(state);
         return;
     }
 
@@ -5092,11 +4759,7 @@ void tricky_stateGoToWarpPoint(GameObject* obj, TrickyState* state) {
     selectedWarp = bestWarp;
     if (selectedWarp != NULL) {
         state->followObj = selectedWarp;
-        if (state->targetPosPtr != &selectedWarp->anim.worldPosX) {
-            state->targetPosPtr = &selectedWarp->anim.worldPosX;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
+        trickySetTargetPosition(state, &selectedWarp->anim.worldPosX);
         if (trickyUpdateMovementState(obj, TRICKY_ANIM_TRANSITION_FRAMES, state) == TRICKY_MOVEMENT_IN_PROGRESS) {
             return;
         }
@@ -6817,6 +6480,14 @@ static void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut)
     }
 }
 
+static inline void trickySetTargetPosition(TrickyState* state, f32* targetPos) {
+    if (state->targetPosPtr != targetPos) {
+        state->targetPosPtr = targetPos;
+        state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
+        state->linkedWalkGroup = 0;
+    }
+}
+
 static inline f32 trickyGetPathSpeedDelta(GameObject* obj) {
     TrickyState* state = (TrickyState*)obj->extra;
     f32* currentPathPoint;
@@ -7127,14 +6798,7 @@ int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType c
         state->followObj = bestFallbackTarget;
     }
 
-    {
-        f32* targetPos = &state->followObj->anim.worldPosX;
-        if (state->targetPosPtr != targetPos) {
-            state->targetPosPtr = targetPos;
-            state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-            state->linkedWalkGroup = 0;
-        }
-    }
+    trickySetTargetPosition(state, &state->followObj->anim.worldPosX);
 
     state->substate = 0;
     return 1;
