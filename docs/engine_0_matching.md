@@ -196,3 +196,50 @@ Validation: `python3 configure.py --matching`, strict default `ninja`, and
 `ninja all_source` pass within the required 30-second timeout per build.
 Formatting checks pass for the TU and its public API header. The strict
 checksum still links retail code for this `NonMatching` TU.
+
+## September 5 complete constant-pool recovery
+
+The next pass starts at `0cd820cb40` and resolves the pool ownership left
+open above. All eleven references to TU-owned compiler literals now use
+their correctly typed values. Five values were missing from the source
+pool: float pi, 80.0f, 320.0f, 256.0f, and double 1/256. Six others were
+already emitted anonymously but still had external references in the C.
+The source now emits the complete **980-byte `.sdata2`**, including the
+retail alignment, with no duplicate named constants or forced sections.
+
+Float locals for the status icons, hint panel, grid cursor, and carousel
+retain retail's conversion precision and operand order. The timed HUD
+element uses a compound alpha update. These spellings preserve the exact
+functions that direct literal substitutions initially changed.
+
+The map and head-display shimmer calculations combine their two sine
+waves in one expression. This preserves the retail call order and restores
+the floating-point registers. The viewfinder line helper computes its
+corner offsets in the draw-call arguments, improving the grid's temporary
+registers. `headDisplayDraw` rises to 99.302086%; the viewfinder remains
+below its previous score at 99.36948% after the literal recovery.
+
+| Measure | Previous | Current |
+| --- | ---: | ---: |
+| Exact functions | 108 / 118 | 108 / 118 |
+| Exact code bytes | 48,544 / 75,188 | 48,544 / 75,188 |
+| Code fuzzy match | 99.86833% | 99.865135% |
+| Exact assigned data bytes | 8,972 / 9,952 | **9,952 / 9,952** |
+
+All 118 functions retain their retail instruction counts. Existing
+exports, non-pool data layouts, and resolved data relocations are
+unchanged. An undefined-symbol audit of the 1,042 active target objects
+finds no other TU consuming the eleven former literal symbols. Old build
+objects outside the active config are excluded from this audit.
+
+A diagnostic link replaces only engine 0's retail object with the rebuilt
+GC/1.3 object. It succeeds with no missing symbols, preserves every linked
+section address and size, and reproduces every linked data section byte
+for byte. Only `.text` differs: 563 bytes across the ten remaining
+non-exact functions. Thus the small code-fuzzy regression accompanies a
+complete, independently linked data recovery.
+
+Validation: strict checksum `ninja` and `ninja all_source` both exit 0
+within their 30-second limits. Formatting checks pass for the TU and
+`include/main/dll/dll_0000_gameui_api.h`. The TU remains `NonMatching`;
+the diagnostic source link does not yet reproduce the retail DOL.
