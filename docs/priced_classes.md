@@ -4552,6 +4552,27 @@ Returning the facing delta instead of writing through its output pointer
 keeps 601 instructions with `s16` but leaves 40 operand differences; `int`
 adds a narrowing instruction. None justifies changing the existing helper API.
 
+Tricky's literal-use audit removes false relationships inherited from the old
+named constant pool. Stopping/search radii no longer use frame-timer names,
+guard distances no longer alias animation-transition duration, and route
+stopping distance no longer aliases the running-speed threshold. Unrelated
+contact, prompt, dig and flame timers no longer borrow fetch timing names.
+Animation progress, minimum movement speed and stopping-distance bias are
+separated from acceleration constants. Four numeric-only timer macros are
+expanded to ordinary float literals, preserving their C types. The guard's
+150-unit limit is named in frames, not seconds: `pi_videoinit` computes
+`timeDelta = 60.0f * (0.001f * gFrameElapsedMs)`.
+
+The complete Tricky object remains raw-byte identical to the SHA256 above,
+including symbols and relocations. Both build gates, formatting and 72 tool
+tests pass; the diagnostic link still differs in 53 text bytes only.
+Rejected structural probes are restored: extracting the five route-turn
+slowdowns adds ten register differences, and expanding the facing helper into
+both `moveTricky` branches adds twenty. A whole-TU GC/1.3.2 scratch build also
+changes retail call/inlining topology substantially; no build settings change.
+Narrowing the directly consumed Hcurves patch-query return to `u16` breaks
+the exact attachment caller, so its `int` API is retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
