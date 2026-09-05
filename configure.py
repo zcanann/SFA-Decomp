@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
 
-###
-# Generates build files for the project.
-# This file also includes the project configuration,
-# such as compiler flags and the object matching status.
-#
-# Usage:
-#   python3 configure.py
-#   ninja
-#
-# Append --help to see available options.
-###
 
 import argparse
 import json
@@ -28,18 +17,15 @@ from tools.project import (
     is_windows,
 )
 
-# Retain the public type name for annotations until the matching-aware factory
-# below replaces it for object construction.
 Object = ProjectObject
 
-# Game versions
 DEFAULT_VERSION = 0
 VERSIONS = [
-    "GSAE01",  # 0
-    "GSAJ01",  # 1
-    "GSAP01",  # 2
-    "GSAE01_rev1",  # 3
-    "GSAP01_rev1",  # 4
+    "GSAE01",
+    "GSAJ01",
+    "GSAP01",
+    "GSAE01_rev1",
+    "GSAP01_rev1",
 ]
 
 
@@ -184,7 +170,6 @@ if not args.non_matching and config.version != "GSAE01":
         "omit --matching (EN v1.0 remains the strict matching target)"
     )
 
-# Apply arguments
 config.build_dir = args.build_dir
 config.dtk_path = args.dtk
 config.objdiff_path = args.objdiff
@@ -199,17 +184,12 @@ if config.ninja_path is None:
     if ninja_path is not None:
         config.ninja_path = Path(ninja_path)
 config.progress = args.progress
-# Only the active EN target has a supported final link and checksum.  Regional
-# configurations still compile every source unit and generate objdiff progress
-# reports, but their progress target must not force an unsupported DOL link.
 config.progress_requires_link = config.version == "GSAE01"
 if not is_windows():
     config.wrapper = args.wrapper
-# Don't build asm unless we're --non-matching
 if not config.non_matching:
     config.asm_dir = None
 
-# Tool versions
 config.binutils_tag = "2.42-1"
 config.compilers_tag = "20251118"
 config.dtk_tag = "v1.8.0"
@@ -217,7 +197,6 @@ config.objdiff_tag = "v3.5.1"
 config.sjiswrap_tag = "v1.2.2"
 config.wibo_tag = "1.1.0"
 
-# Project
 config.config_path = Path("config") / config.version / "config.yml"
 config.check_sha_path = Path("config") / config.version / "build.sha1"
 config.asflags = [
@@ -232,12 +211,10 @@ config.ldflags = [
     "-nodefaults",
 ]
 if args.debug:
-    config.ldflags.append("-g")  # Or -gdwarf-2 for Wii linkers
+    config.ldflags.append("-g")
 if args.map:
     config.ldflags.append("-mapunused")
-    # config.ldflags.append("-listclosure") # For Wii linkers
 
-# Use for any additional files that should cause a re-configure when modified
 config.reconfig_deps = []
 config.split_deps = [
     Path("config") / config.version / "splits.txt",
@@ -257,33 +234,14 @@ if matching_units_path.is_file():
     }
     config.reconfig_deps.append(matching_units_path)
 
-# Optional numeric ID for decomp.me preset
-# Can be overridden in libraries or objects
 config.scratch_preset_id = None
 
-# Foreign-toolchain rules. zlbDecompress is GCC-family, not MWCC: retail
-# carries "mcrxr cr0; addme." doloops, an idiom absent from the whole GC/2.0
-# refcorpus. The vintage is OLDER than anything vendored here - all five SN
-# ProDG releases (3.5, 3.5b140, 3.7, 3.8.1, 3.9.3) emit byte-identical
-# prologues that open stwu-before-mflr on 8-byte-aligned frames, while retail
-# opens mflr-before-stwu on an 84-byte (4-aligned) frame. --prodg-version
-# selects the release, so an acquired older cc1 can be tested by dropping it
-# in build/compilers/ProDG/<ver>.
-# NOTE: prologue shape alone does NOT discriminate MWCC from GCC - the matched
-# MWCC twin modelApplyBoneTransform opens mflr/stwu/stw/stmw too. Only the
-# mcrxr/addme idiom is decisive.
-# NOTE: rule prodg hardcodes its flags and never consumes $cflags, so
-# per-object cflags on this unit are silently discarded. The cc1 binary itself
-# does honour flags (-O2/-Os/-fno-schedule-insns all change output); an earlier
-# "cc1 ignores flags" note conflated the two.
 prodg_compilers = Path(args.compilers) if args.compilers else Path("build/compilers")
 prodg_binutils = Path(args.binutils) if args.binutils else Path("build/binutils")
 prodg_as = prodg_binutils / ("powerpc-eabi-as.exe" if is_windows() else "powerpc-eabi-as")
 prodg_dir = prodg_compilers / "ProDG" / args.prodg_version
 if is_windows():
     prodg_wrapper = ""
-    # Native Windows ninja runs commands without an implicit shell, so the
-    # "&&" chain must be wrapped in cmd /c (mirrors the mwcc_*extab rules).
     prodg_shell = "cmd /c "
 else:
     prodg_wrapper = f"{args.wrapper} " if args.wrapper else "build/tools/wibo "
@@ -312,8 +270,6 @@ if args.zlb_toolchain == "prodg":
 else:
     zlb_object_kwargs = {}
 
-# Base flags, common to most GC/Wii games.
-# Generally leave untouched, with overrides added below.
 cflags_base = [
     "-nodefaults",
     "-proc gekko",
@@ -321,7 +277,6 @@ cflags_base = [
     "-enum int",
     "-fp hardware",
     "-Cpp_exceptions off",
-    # "-W all",
     "-O4,p",
     "-inline auto",
     '-pragma "cats off"',
@@ -331,21 +286,18 @@ cflags_base = [
     "-RTTI off",
     "-fp_contract on",
     "-str reuse",
-    "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
+    "-multibyte",
     "-i include",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
 ]
 
-# Debug flags
 if args.debug:
-    # Or -sym dwarf-2 for Wii compilers
     cflags_base.extend(["-sym on", "-DDEBUG=1"])
 else:
     cflags_base.append("-DNDEBUG=1")
 
-# Warning flags
 if args.warn == "all":
     cflags_base.append("-W all")
 elif args.warn == "off":
@@ -353,7 +305,6 @@ elif args.warn == "off":
 elif args.warn == "error":
     cflags_base.append("-W error")
 
-# Metrowerks library flags
 cflags_runtime = [
     *cflags_base,
     "-use_lmw_stmw on",
@@ -365,8 +316,6 @@ cflags_runtime = [
 
 cflags_runtime_125 = [flag for flag in cflags_runtime if flag != "-gccinc"]
 
-# Game/DLL TUs the original build compiled with the scheduler and peephole
-# passes off (a per-TU compiler setting, not a per-function one).
 cflags_game = [*cflags_base, "-char signed"]
 
 cflags_dll_noopt = [
@@ -374,9 +323,6 @@ cflags_dll_noopt = [
     "-opt", "nopeephole,noschedule",
 ]
 
-# ...plus auto-inlining off: functions marked `inline` are still inlined, but
-# small non-inline helpers are not auto-inlined (matches the original build,
-# which emits calls to trivial getters like Music_GetActivePriority).
 cflags_dll_noopt_noautoinline = [
     *cflags_game,
     "-opt", "nopeephole,noschedule",
@@ -435,13 +381,11 @@ cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength = [
     "-opt", "nopeephole,noschedule,nocse,nolifetimes,noloopinvariants,nopropagation,nostrength",
 ]
 
-# ...plus common-subexpression elimination off (opt_common_subs off).
 cflags_dll_noopt_nocse = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nocse",
 ]
 
-# ...plus inlining off (dont_inline on).
 cflags_dll_noopt_nocse_noautoinline = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nocse",
@@ -473,13 +417,11 @@ cflags_dll_noopt_nocse_noinline = [
     "-inline", "off",
 ]
 
-# ...plus copy/constant propagation off (opt_propagation off).
 cflags_dll_noopt_noprop = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation",
 ]
 
-# ...plus strength reduction off (keeps byte-array loop indices as a single indexed IV).
 cflags_dll_noopt_noprop_noinline = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nopropagation",
@@ -503,7 +445,6 @@ cflags_dll_noopt_noprop_nostrength_noautoinline = [
     "-inline", "noauto",
 ]
 
-# ...plus loop-invariant code motion off (opt_loop_invariants off).
 cflags_dll_noopt_noloopinv = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants",
@@ -533,7 +474,6 @@ cflags_dll_noopt_noloopinv_noprop_zerodata = [
     '-pragma "explicit_zero_data on"',
 ]
 
-# ...plus register-lifetime optimization off (opt_lifetimes off).
 cflags_dll_noopt_nolifetimes_noautoinline = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nolifetimes",
@@ -557,7 +497,6 @@ cflags_dll_noopt_noloopinv_nolifetimes = [
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes",
 ]
 
-# ...plus dead-code elimination off (opt_dead_code off).
 cflags_dll_noopt_noloopinv_nolifetimes_nodead = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,noloopinvariants,nolifetimes,nodead",
@@ -591,7 +530,6 @@ cflags_dll_nopeep = [
     "-opt", "nopeephole",
 ]
 
-# noopt (peephole+scheduler off) base, plus additional per-TU passes off.
 cflags_dll_noopt_nocse_noprop = [
     *cflags_game,
     "-opt", "nopeephole,noschedule,nocse,nopropagation",
@@ -653,7 +591,6 @@ cflags_msl = [
 msl_math_extra = ["-schedule", "off"]
 msl_math_o0_cflags = [flag for flag in cflags_base if flag != "-O4,p"]
 
-# REL flags
 cflags_rel = [
     *cflags_base,
     "-sdata 0",
@@ -674,7 +611,6 @@ cflags_trk = [
 config.linker_version = "GC/1.3.2"
 
 
-# Helper function for Dolphin libraries
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
@@ -685,7 +621,6 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Helper function for Metrowerks Standard Library objects
 def MSLLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
@@ -696,7 +631,6 @@ def MSLLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Helper function for REL script objects
 def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
@@ -707,12 +641,11 @@ def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-Matching = config.version == "GSAE01"  # Object matches and should be linked
-NonMatching = False               # Object does not match and should not be linked
-Equivalent = config.non_matching  # Object should be linked when configured with --non-matching
+Matching = config.version == "GSAE01"
+NonMatching = False
+Equivalent = config.non_matching
 
 
-# Object is only matching for specific versions
 def MatchingFor(*versions):
     return config.version in versions
 
@@ -730,7 +663,7 @@ config.libs = [
         "lib": "Runtime.PPCEABI.H",
         "mw_version": config.linker_version,
         "cflags": cflags_runtime,
-        "progress_category": "sdk",  # str | List[str]
+        "progress_category": "sdk",
         "objects": [
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__start.c", mw_version="GC/1.2.5n", cflags=cflags_runtime_125),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.c", mw_version="GC/1.3"),
@@ -1143,9 +1076,6 @@ config.libs = [
         "cflags": cflags_dll_noopt,
         "progress_category": "game",
             "objects": [
-            # dlls/engine
-            # GC/1.3 retains the retail loader's post-store pointer reloads.
-            # See docs/engine_0_matching.md for the whole-TU comparison.
             Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto", "-char", "signed"]),
             Object(NonMatching, "dlls/engine/1_camcontrol/camcontrol.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1238,7 +1168,6 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/87/87.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/88/88.c"),
 
-            # dlls/modgfx
             Object(MatchingFor("GSAE01"), "dlls/modgfx/89/89.c"),
             Object(NonMatching, "dlls/modgfx/90/90.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/91/91.c"),
@@ -1322,7 +1251,6 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/modgfx/169/169.c"),
             Object(MatchingFor("GSAE01"), "dlls/modgfx/170/170.c"),
 
-            # dlls/projgfx
             Object(MatchingFor("GSAE01"), "dlls/projgfx/171/171.c"),
             Object(MatchingFor("GSAE01"), "dlls/projgfx/172/172.c"),
             Object(MatchingFor("GSAE01"), "dlls/projgfx/173/173.c"),
@@ -1348,10 +1276,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/projgfx/193/193.c"),
             Object(MatchingFor("GSAE01"), "dlls/projgfx/194/194.c"),
 
-            # dlls/objects
             Object(NonMatching, "dlls/objects/195_Player/player.c", cflags=cflags_dll_noopt_noautoinline),
-            # Retail keeps 32-bit mask operations and adjacent dispatch-array offsets unfolded.
-            # Deferred emission puts local initializer templates before the function literal pool.
             Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", cflags=cflags_dll_noopt, extra_cflags=["-char signed", "-inline deferred"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/197/197.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),
@@ -1879,7 +1804,6 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/703_AndrossLigh/AndrossLigh.c"),
             Object(NonMatching, "dlls/objects/704/704.c"),
 
-            # main
             Object(NonMatching, "main/render.c"),
             Object(Matching, "main/audio.c", cflags=cflags_dll_noopt_nostrength_noautoinline),
             Object(MatchingFor("GSAE01"), "main/audio_sfx.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1936,7 +1860,6 @@ config.libs = [
             Object(NonMatching, "track/intersect_render.c", cflags=cflags_dll_noopt),
             Object(Matching, "track/intersect_memcard.c", cflags=cflags_dll_noopt_noautoinline),
 
-            # main/thp
             Object(Matching, "main/thp/dll_3b.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "main/thp/n_options.c"),
             Object(MatchingFor("GSAE01"), "main/thp/dll_3e.c", section_alignments={".sbss": 4}),
@@ -1947,7 +1870,6 @@ config.libs = [
             Object(NonMatching, "main/dll_80136a40.c", cflags=cflags_dll_noopt_nostrength),
             Object(MatchingFor("GSAE01"), "main/obj_movelib.c", cflags=cflags_dll_noopt_nocse),
 
-            # MSL-derived game math
             Object(MatchingFor("GSAE01"), "main/rand.c", cflags=cflags_game, extra_cflags=["-O0"], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/math_80292d3c.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/trig_float_helpers.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
@@ -1960,44 +1882,28 @@ config.libs = [
 ]
 
 
-# Optional callback to adjust link order. This can be used to add, remove, or reorder objects.
-# This is called once per module, with the module ID and the current link order.
-#
-# For example, this adds "dummy.c" to the end of the DOL link order if configured with --non-matching.
-# "dummy.c" *must* be configured as a Matching (or Equivalent) object in order to be linked.
 def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
-    # Don't modify the link order for matching builds
     if not config.non_matching:
         return objects
-    if module_id == 0:  # DOL
+    if module_id == 0:
         return objects + ["dummy.c"]
     return objects
 
 
-# Uncomment to enable the link order callback.
-# config.link_order_callback = link_order_callback
 
 
-# Optional extra categories for progress tracking
-# Adjust as desired for your project
 config.progress_categories = [
     ProgressCategory("game", "Game Code"),
     ProgressCategory("sdk", "SDK Code"),
     ProgressCategory("third_party", "Third-Party Code"),
 ]
 config.progress_each_module = args.verbose
-# Optional extra arguments to `objdiff-cli report generate`
 config.progress_report_args = [
-    # Marks relocations as mismatching if the target value is different
-    # Default is "functionRelocDiffs=none", which is most lenient
-    # "--config functionRelocDiffs=data_value",
 ]
 
 if args.mode == "configure":
-    # Write build.ninja and objdiff.json
     generate_build(config)
 elif args.mode == "progress":
-    # Print progress information
     calculate_progress(config)
 else:
     sys.exit("Unknown mode: " + args.mode)
