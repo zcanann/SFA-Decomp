@@ -541,15 +541,15 @@ void worldplanet_update(GameObject* obj) {
                     Sfx_KeepAliveLoopedObjectSound(planetObj, SFXTRIG_crf_babyambi2);
                 }
                 planetObj->anim.localPosX = orbitRadius *
-                                                fsin16Approx((ang + tbl->orbitAngleOffsets[planetIdx]) & 0xffff) *
+                                                fsin16Approx(ang + tbl->orbitAngleOffsets[planetIdx]) *
                                                 fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosX;
                 planetObj->anim.localPosY = orbitRadius *
-                                                fsin16Approx((ang + tbl->orbitAngleOffsets[planetIdx]) & 0xffff) *
+                                                fsin16Approx(ang + tbl->orbitAngleOffsets[planetIdx]) *
                                                 fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosY;
                 planetObj->anim.localPosZ =
-                    orbitRadius * fcos16Approx((ang + tbl->orbitAngleOffsets[planetIdx]) & 0xffff) +
+                    orbitRadius * fcos16Approx(ang + tbl->orbitAngleOffsets[planetIdx]) +
                     (obj)->anim.localPosZ;
             }
         }

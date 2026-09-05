@@ -1,6 +1,8 @@
 # Game-code migration to GC/1.3
 
-The migration preserves EN v1.0's per-unit match measures and source linkage.
+The migration preserves EN v1.0's exact matched code/data/function counts and
+source linkage. Any change to an already-nonmatching function's fuzzy score is
+recorded separately below.
 The starting point is `6c4919813e`: 799 game-category units, 8,042 exact functions,
 2,214,856 matched code bytes (87.85165%), and 982,099 matched data bytes.
 
@@ -84,6 +86,18 @@ the four callers but introduces two `SHthorntail_stepPathControl` calls absent
 from retail, leaving the TU at 96.55611%. The accepted GC/1.3 object differs
 from the original exact object only in compiler metadata. Its canonical header
 is unchanged; controls and call audits are in `build/gc13_migration/429/`.
+
+Slot 468 (`WORLDAstero`) replaces eight trig function-pointer casts with direct
+calls. The public sine/cosine approximation headers now declare `u16` angles,
+matching their definitions and the retail parameter-home layout; three redundant
+WORLDplanet argument masks disappear. Both object TUs preserve their exact
+objects on GC/1.3 and GC/2.0. The shared API correction changes register
+allocation in the already-nonmatching `headDisplayDraw`: GC/1.3 fuzzy matching
+falls from 99.302086% to 98.6875%. Its instruction kinds/order, size, all data,
+symbol offsets, and relocations remain unchanged, as do all exact match counts.
+This allocation work remains open; no Game UI source or pool is rewritten to
+hide the inconsistent old prototype. The full dependency audit is under
+`build/gc13_migration/468/review/`.
 
 ## Reproducing the audit
 
