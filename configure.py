@@ -1951,7 +1951,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/trig_float_helpers.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/math_8029312c.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/acosf.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole,functions", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
-            Object(NonMatching, "main/trig.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/trig.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "main/sincosf.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
         ],
     },
