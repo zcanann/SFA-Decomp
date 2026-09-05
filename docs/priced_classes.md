@@ -3997,6 +3997,18 @@ null check and stack traffic; widening the movement voice ID delays retail's
 word-counter signedness, a three-point route-turn API, and typed avoidance
 point inputs were neutral. These experiments were not retained.
 
+Rechecking the ball-roll scan extraction removes the inferred branch-appender
+helper. Direct forward/reverse indexed loops recover all 32 scan-register
+differences, leaving 52 operand differences in the handler. No cursor arrays,
+storage overlays, compiler changes, or extra instructions are needed. Moving
+the helper's curve ID out of its loop body worsens allocation; returning the
+count adds instructions. A bounded probe built 208 declaration orderings for
+the direct-loop version without improving it; this did not exhaust the space.
+The diagnostic link drops from 159 to 127 differing text bytes, retaining exact
+allocated non-text sections. The curve lookup callback now accepts `u32`, as
+its existing implementation and direct-call declaration do; this corrects the
+API used by Tricky without changing other source objects.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

@@ -3482,22 +3482,13 @@ static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
 void tricky_state04_nop(void) {
 }
 
-static inline void trickyAppendRouteBranches(RomCurveDef* node, s32* nodeIds, int blocked, u8* nodeCount) {
-    u32 branchMask = 1;
-    int branchIndex;
-
-    for (branchIndex = 0; branchIndex < ROMCURVE_LINK_COUNT; branchIndex++) {
-        int curveId = node->linkIds[branchIndex];
-        if (curveId > -1 && ((node->blockedLinkMask & branchMask) != 0) == blocked) {
-            nodeIds[(*nodeCount)++] = curveId;
-        }
-        branchMask <<= 1;
-    }
-}
-
 void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
     RomCurveDef* blockedNode;
     u8 nodeCount = 0;
+    int branchCurveId;
+    RomCurveDef* branchNode;
+    u32 branchMask;
+    int branchIndex;
     int i;
     RomCurveDef* startCurve;
     RomCurveDef* segmentNode;
@@ -3511,10 +3502,29 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
     if (state->substate != TRICKY_CANNONBALL_INIT) {
         if (state->route.reverse == 0) {
             if (state->route.atSegmentEnd != 0) {
-                trickyAppendRouteBranches(state->route.nextNode, nodeIds, 0, &nodeCount);
+                branchNode = state->route.nextNode;
+                branchMask = 1;
+                for (branchIndex = 0; branchIndex < ROMCURVE_LINK_COUNT; branchIndex++) {
+                    branchCurveId = branchNode->linkIds[branchIndex];
+                    if (branchCurveId > -1 && ((branchNode->blockedLinkMask & branchMask) == 0)) {
+                        nodeIds[nodeCount++] = branchCurveId;
+                    }
+                    branchMask <<= 1;
+                }
             }
         } else if (state->route.atSegmentEnd == 0) {
-            trickyAppendRouteBranches(state->route.nextNode, nodeIds, 1, &nodeCount);
+            int reverseBranchCurveId;
+            RomCurveDef* reverseBranchNode;
+            u32 reverseBranchMask;
+            reverseBranchNode = state->route.nextNode;
+            reverseBranchMask = 1;
+            for (branchIndex = 0; branchIndex < ROMCURVE_LINK_COUNT; branchIndex++) {
+                reverseBranchCurveId = reverseBranchNode->linkIds[branchIndex];
+                if (reverseBranchCurveId > -1 && ((reverseBranchNode->blockedLinkMask & reverseBranchMask) != 0)) {
+                    nodeIds[nodeCount++] = reverseBranchCurveId;
+                }
+                reverseBranchMask <<= 1;
+            }
         }
 
         if (nodeCount != 0) {

@@ -45,7 +45,7 @@ STATIC_ASSERT(sizeof(RomCurvePathNode) == 0x3C);
 typedef void (*RomCurveVoidFn)(void);
 typedef RomCurveDef **(*RomCurveGetCurvesFn)(int *outCount);
 typedef int (*RomCurveFindFn)(f32 x,f32 y,f32 z,int *types,int typeCount,int action);
-typedef RomCurveDef *(*RomCurveGetByIdFn)(int curveId);
+typedef RomCurveDef *(*RomCurveGetByIdFn)(u32 curveId);
 typedef f32 (*RomCurveFindPositionFn)(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ);
 typedef f32 (*RomCurveDistanceToObjectFn)(struct GameObject *obj,u32 curveId);
 typedef int (*RomCurveFindByActionFn)(int action);
