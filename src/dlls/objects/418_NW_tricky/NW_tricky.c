@@ -27,7 +27,7 @@
 #define NW_TRICKY_SHARPCLAW_SEQUENCE_ID  0x13A
 
 #define NW_TRICKY_SOUND_CHANNEL                 16
-#define NW_TRICKY_SOUND_VOLUME                  0x1000
+#define NW_TRICKY_MOUTH_OPEN_ANGLE               0x1000
 #define NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES 600.0f
 
 #define NW_TRICKY_PLAY_BALL_COMMAND_ENABLED 1
@@ -123,7 +123,7 @@ void nwTricky_update(GameObject* obj) {
                 phaseTimer = state->phaseTimer;
                 if (phaseTimer >= NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES) {
                     state->phaseTimer = phaseTimer - NW_TRICKY_CALL_FOR_HELP_INTERVAL_FRAMES;
-                    trickyTryPlaySound(tricky, SFXwp_rolovr_6, NW_TRICKY_SOUND_VOLUME);
+                    trickyTryPlaySound(tricky, SFXwp_rolovr_6, NW_TRICKY_MOUTH_OPEN_ANGLE);
                 }
             }
 

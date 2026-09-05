@@ -4069,6 +4069,17 @@ Tricky's current distance, only while Tricky is offscreen. All function and
 allocated-section bytes remain unchanged; only that function's symbol name and
 call relocation change. All 2871 other source objects are byte-identical.
 
+The voice wrapper's third argument is a mouth-opening angle, not sound pitch or
+volume. Retail `objSoundStartTimed` (`0x800393F8`) negates it into the signed
+halfword at sound-state `+0x14`; `objSoundUpdateMouth` (`0x80038F38`) averages
+that target with mouth-joint rotation. The audio call receives only the object,
+channel and sound ID. Tricky's four voice constants, its public argument name,
+the shared sound definition/state fields, and NW Tricky's direct caller now
+express that contract. The wrapper keeps an `int` argument: narrowing it to
+`s16` changes retail's `mr r6,r30` into `extsh r6,r30`, without improving any
+inlined caller. The retained semantic correction leaves all 2872 source objects
+byte-identical, including Tricky and the shared mouth-update implementation.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

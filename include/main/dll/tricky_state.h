@@ -184,7 +184,7 @@ typedef struct TrickyState {
     CharacterEyeAnimState
         eyeAnimState; /* 0x378: head-aim / eye-blink record; lookAtPos is followObj's captured world position */
     u8 pad3A0[0x3A8 - 0x3A0];
-    ObjSoundState soundState;  /* 0x3A8: object-channel sound playback state */
+    ObjSoundState soundState;  /* 0x3A8: object-channel playback and mouth-animation state */
     Vec pathPointPositions[4]; /* ObjPath points 4..7 refreshed by Tricky_render */
     Vec mouthPos;              /* ObjPath point 8: carried ball, flame origin and mouth particles */
     s16 mouthYawOffset;        /* joint-pose Y rotation added to the flame's horizontal heading */
@@ -395,6 +395,7 @@ STATIC_ASSERT(offsetof(TrickyState, wanderTargetX) == 0x72C);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
+STATIC_ASSERT(offsetof(TrickyState, soundState.mouthAngle) == 0x3BC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);

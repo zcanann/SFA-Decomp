@@ -18,7 +18,7 @@ int trickyGetMouthYawOffset(GameObject* tricky);
 int Tricky_requestRecallAndCheckBusy(GameObject* tricky);
 void trickyImpress(GameObject* obj);
 void trickySetSoundSuppressed(GameObject* obj, int value);
-int trickyTryPlaySound(GameObject* obj, u16 sfxId, int volume);
+int trickyTryPlaySound(GameObject* obj, u16 sfxId, int mouthOpenAngle);
 void debugPrintInit(void);
 void debugPrintReset(void);
 void debugPrintfxy(int x, int y, char* fmt, ...);
