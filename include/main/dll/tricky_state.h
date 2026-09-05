@@ -168,8 +168,8 @@ typedef struct TrickyState {
     f32 prevLocalPosZ;
     s16 cachedPatchGroups[OBJFSA_PATCHGROUP_PATCH_COUNT];
     Vec cachedPatchPositions[OBJFSA_PATCHGROUP_PATCH_COUNT];
-    u16 lastWalkGroup;   /* last nonzero walk group accepted by movement; retained during off-group traversal */
-    s16 linkedWalkGroup; /* walk-group/patch id linked to lastWalkGroup: set to the intersected walk-group product, compared == targetWg/getPatchGroup results, cleared to 0 (trickyfollow/tricky_substates) */
+    u16 lastWalkGroup;    /* last nonzero walk group accepted by movement; retained during off-group traversal */
+    s16 linkedPatchGroup; /* cached patch ID for linkedPatchPos; retail's update compares a group-index product */
     Vec linkedPatchPos;
     f32 homePosX; /* home position, init from obj world pos */
     f32 homePosY;
@@ -197,7 +197,7 @@ typedef struct TrickyState {
     RomCurveWalker route;
     RomCurveDef*
         cachedRouteDef; /* route-select memo key: the routeDef the memo was resolved for, compared == routeDef then re-stored; when it + cachedWalkGroup + cachedRouteFlags all match, validatedRouteEntry is reused (skeetla) */
-    RomCurveDef* validatedRouteEntry; /* route entry pointer validated via skeetla_validateRouteEntry (skeetla) */
+    RomCurveDef* validatedRouteEntry; /* route entry pointer validated via trickyValidateRouteEntry */
     u16 cachedWalkGroup; /* route-select memo key: the walkGroup value that validatedRouteEntry was resolved for; compared == walkGroup (alongside cachedRouteDef/cachedRouteFlags) to reuse the cached entry, re-stored = walkGroup on a memo miss (skeetla); also gates the follow-slot walk-group update (trickyfollow) */
     u16 walkGroup;       /* current walk-group id (route/path selection; compared to targetWg and node group bytes) */
     u16 savedWalkGroup;  /* mirrored from walkGroup (dll_DF); retained group used to gate route re-seeding */
@@ -206,7 +206,7 @@ typedef struct TrickyState {
     PathSearch pathSearches[TRICKY_PATH_SEARCH_COUNT]; /* eight candidates and one cached route search */
     union {
         RomCurveDef*
-            cachedRouteEntry; /* path-search start/next-point cache slot, validated via skeetla_validateRouteEntry */
+            cachedRouteEntry; /* path-search start/next-point cache slot, validated via trickyValidateRouteEntry */
         u32 cachedRouteId;    /* raw view of cachedRouteEntry retained for consumers still recovered as word keys */
     };
     int cachedPathId; /* pathId the cachedRouteEntry was resolved for */
@@ -364,6 +364,7 @@ STATIC_ASSERT(offsetof(TrickyState, sfxRepeatTimer) == 0x738);
 STATIC_ASSERT(offsetof(TrickyState, cachedPatchGroups) == 0x98);
 STATIC_ASSERT(offsetof(TrickyState, cachedPatchPositions) == 0xA0);
 STATIC_ASSERT(offsetof(TrickyState, lastWalkGroup) == 0xD0);
+STATIC_ASSERT(offsetof(TrickyState, linkedPatchGroup) == 0xD2);
 STATIC_ASSERT(offsetof(TrickyState, linkedPatchPos) == 0xD4);
 STATIC_ASSERT(offsetof(TrickyState, patchExitPos) == 0xEC);
 STATIC_ASSERT(offsetof(TrickyState, curvesCollision) == 0xF8);

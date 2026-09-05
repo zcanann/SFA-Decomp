@@ -4882,7 +4882,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     u8 moveResult = TRICKY_MOVEMENT_IN_PROGRESS;
     RomCurveDef* prevNode;
     u32 patchGroupForCheck;
-    s16 linkedWalkGroupId;
+    s16 linkedPatchGroupId;
     u32 prod;
     int routeDirection;
     int i;
@@ -4953,17 +4953,18 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         }
     }
     if ((targetWalkGroup != 0) && (targetWalkGroup == state->lastWalkGroup)) {
-        state->linkedWalkGroup = 0;
+        state->linkedPatchGroup = 0;
     } else {
-        u32 wgProd;
+        u32 patchGroupProduct;
 
-        wgProd = targetWalkGroup * state->lastWalkGroup & 0xffff;
-        if (wgProd != 0) {
+        /* Retail multiplies indices, although Hcurves packs patch IDs into two bytes. */
+        patchGroupProduct = targetWalkGroup * state->lastWalkGroup & 0xffff;
+        if (patchGroupProduct != 0) {
             u16* ids = patchInfo.patchGroupIds;
 
-            for (i = 0, linkedWalkGroupId = wgProd; i < OBJFSA_PATCHGROUP_PATCH_COUNT; ids++, i++) {
-                if ((wgProd == *ids) && (((1 << i) & patchInfo.patchMask) != 0)) {
-                    state->linkedWalkGroup = linkedWalkGroupId;
+            for (i = 0, linkedPatchGroupId = patchGroupProduct; i < OBJFSA_PATCHGROUP_PATCH_COUNT; ids++, i++) {
+                if ((patchGroupProduct == *ids) && (((1 << i) & patchInfo.patchMask) != 0)) {
+                    state->linkedPatchGroup = linkedPatchGroupId;
                     state->linkedPatchPos.x = target[0];
                     state->linkedPatchPos.y = target[1];
                     state->linkedPatchPos.z = target[2];
@@ -4987,7 +4988,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             }
         }
     }
-    if (state->linkedWalkGroup != 0) {
+    if (state->linkedPatchGroup != 0) {
         trickyDebugPrint("Last Patch Point %f %f %f\n", state->linkedPatchPos.x, state->linkedPatchPos.y,
                          state->linkedPatchPos.z);
     }
@@ -5062,7 +5063,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             if (objectWalkGroup == 0 &&
                                 (u32)(targetPatchGroup =
                                           getPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup) & 0xffff) != 0) {
-                                if (state->linkedWalkGroup == targetPatchGroup) {
+                                if (state->linkedPatchGroup == targetPatchGroup) {
                                     state->movementState = TRICKY_MOVE_WALK_END_PATCH;
                                 } else {
                                     Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, (u16)targetPatchGroup);
@@ -5098,7 +5099,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             u16 patchGroup;
                             if (isPointWithinPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup,
                                                         (patchGroup = targetWalkGroup * objectWalkGroup)) != 0) {
-                                if (state->linkedWalkGroup == patchGroup) {
+                                if (state->linkedPatchGroup == patchGroup) {
                                     state->movementState = TRICKY_MOVE_WALK_END_PATCH;
                                 } else {
                                     state->movementState = TRICKY_MOVE_CURVE_SETUP;
@@ -5111,7 +5112,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                                         break;
                                     }
                                 }
-                                if ((i == OBJFSA_PATCHGROUP_PATCH_COUNT) || (patchGroup != state->linkedWalkGroup)) {
+                                if ((i == OBJFSA_PATCHGROUP_PATCH_COUNT) || (patchGroup != state->linkedPatchGroup)) {
                                     state->movementState = TRICKY_MOVE_CURVE_SETUP;
                                 }
                             }
@@ -5130,7 +5131,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                                         Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, p);
                                         state->movementState = TRICKY_MOVE_WALK_PATCH_EXIT;
                                     }
-                                } else if (state->linkedWalkGroup == p) {
+                                } else if (state->linkedPatchGroup == p) {
                                     state->movementState = TRICKY_MOVE_WALK_END_PATCH;
                                 } else {
                                     Objfsa_GetNearestPatchExit(target, &state->patchExitPos.x, p);
@@ -5490,15 +5491,15 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             if (duration <= TRICKY_FOLLOW_ARC_PROGRESS_WINDOW) {
                 state->arcMoveProgress = arc->time / duration;
             } else {
-                elapsedTime = arc->time;
-                if (elapsedTime <= TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
-                    state->arcMoveProgress = elapsedTime / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
-                } else if (elapsedTime >= duration - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
+                f32 progressTime = arc->time;
+                if (progressTime <= TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
+                    state->arcMoveProgress = progressTime / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
+                } else if (progressTime >= duration - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
                     f32 landingTimeOffset;
                     landingTimeOffset = TRICKY_FOLLOW_ARC_PROGRESS_WINDOW - duration;
-                    state->arcMoveProgress = (landingTimeOffset + elapsedTime) / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
+                    state->arcMoveProgress = (landingTimeOffset + progressTime) / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
                 } else {
-                    f32 middleProgress = (elapsedTime - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) /
+                    f32 middleProgress = (progressTime - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) /
                                          (duration - TRICKY_FOLLOW_ARC_MIDDLE_WINDOW);
                     state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + middleProgress / 2.0f;
                 }
@@ -6311,7 +6312,7 @@ static inline void trickySetTargetPosition(TrickyState* state, f32* targetPos) {
     if (state->targetPosPtr != targetPos) {
         state->targetPosPtr = targetPos;
         state->stateFlags &= ~TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
-        state->linkedWalkGroup = 0;
+        state->linkedPatchGroup = 0;
     }
 }
 

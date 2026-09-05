@@ -3952,6 +3952,20 @@ changes all eight retail `cmplwi` tests to `cmpwi`. Input-first collector
 arguments, an explicit state argument to the facing helper, and narrowing the
 unused fast-turn result's scope were byte-neutral and were not retained.
 
+Jump animation progress now has its own elapsed-time local, separate from the
+vertical arc calculation. This removes the last 12 floating-point operand
+differences in `trickyUpdateMovementState`, leaving 49 integer-register
+differences with all 2191 instructions structurally aligned. Only that function
+changes bytes; the diagnostic link drops from 189 to 177 differing text bytes
+and retains exact allocated non-text sections. Tricky text is 99.94662%.
+
+The linked-patch cache key at 0xD2 is now `linkedPatchGroup`, not a single walk
+group. Retail Hcurves packs the sorted group indices into low/high bytes at
+0x800DCA90-0x800DCAB0, and `getPatchGroup` returns this ID. Tricky nevertheless
+multiplies group indices at 0x8013B640 and 0x8013BB1C before comparing against
+those IDs. This inconsistency is preserved, not repaired into a packed ID.
+The field remains signed 16-bit storage with its own offset assertion.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
