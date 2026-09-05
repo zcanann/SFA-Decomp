@@ -28,7 +28,7 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
                      int region2FreeKb, int memoryState, int tickCount, int requestedSize, int largestFree0,
                      int largestFree1);
 void debugPrintDraw(void* context);
-void objAnimFreeChildren(GameObject* obj, TrickyState* state, GameObject** child);
+void trickyFreePromptChild(GameObject* obj, TrickyState* state, GameObject** childRef);
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
 void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);

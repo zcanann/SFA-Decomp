@@ -4128,6 +4128,25 @@ anonymous relocation names change in Tricky; all 2871 other source objects are
 byte-identical. The diagnostic link still has 130 differing text bytes and exact
 non-text sections, so these are source-recovery gains, not a new match claim.
 
+The repeated prompt-slot cascades now come from one `trickyFindFreePromptSlot`
+inline helper with a four-iteration loop. Its five source callers expand to nine
+retail sites: five in `Tricky_update`, two in the command-prompt handler, one in
+sleep and one in baddie alert. GC/1.3 unrolls the loop into the existing exact
+load/compare/branch sequences, with unchanged stack offsets. Ordinary automatic
+inlining leaves calls instead, so the explicit inline declaration is required
+for this recovered source shape. The helper preserves retail's three initialized
+bytes and four tested slots; it does not silently initialize the fourth byte.
+
+`trickyFreePromptChild` at `0x801389E0` replaces the misleading engine-style
+`objAnimFreeChildren` name. All eight callers belong to Tricky. It frees one
+referenced child, then fills only attachment slot zero if vacant, preferring
+exclamation, quest and food in that order. It is not a general child-list free
+or full slot compaction routine. Its locals now use `GameObject*`. The prompt
+handler also drops its mixed pointer/integer scratch and bit-result/slot-result
+temporary. Allocated object bytes and named layouts are unchanged apart from
+the helper rename; eight call relocations follow that name. The diagnostic link
+remains at 130 differing text bytes, with all allocated non-text sections exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

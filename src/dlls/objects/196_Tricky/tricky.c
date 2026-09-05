@@ -116,7 +116,7 @@
 
 void trickySetSoundSuppressed(GameObject* obj, int value);
 int trickyTryPlaySound(GameObject* obj, u16 sfxId, int mouthOpenAngle);
-void objAnimFreeChildren(GameObject* obj, TrickyState* state, GameObject** childRef);
+void trickyFreePromptChild(GameObject* obj, TrickyState* state, GameObject** childRef);
 void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state);
 void trickyUpdateColorVariant(GameObject* obj, TrickyState* state);
 static int trickyIsInDeepWater(TrickyState* state);
@@ -1540,37 +1540,39 @@ void Tricky_update(GameObject* obj) {
     }
 }
 
+static inline int trickyFindFreePromptSlot(TrickyState* state) {
+    s8 occupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
+    int slot;
+
+    /* Retail initializes three slots but searches all four packed slot values. */
+    occupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
+    occupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
+    occupiedSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
+    if (state->exclamationPromptChild != NULL) {
+        occupiedSlots[state->packedSlots.exclamationPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
+    }
+    if (state->questPromptChild != NULL) {
+        occupiedSlots[state->packedSlots.questPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
+    }
+    if (state->foodChild != NULL) {
+        occupiedSlots[state->packedSlots.foodChildSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
+    }
+    for (slot = 0; slot < TRICKY_PROMPT_CHILD_SLOT_COUNT; slot++) {
+        if (occupiedSlots[slot] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
+            return slot;
+        }
+    }
+    return TRICKY_PROMPT_CHILD_SLOT_FREE;
+}
+
 static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
     if (state->foodChild == NULL) {
         TrickyPromptChildSetup* setup;
-        s8 occupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
         int freeSlot;
         f32 childTimerReset;
 
         setup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(sizeof(*setup), TRICKY_SPAWN_ROMDEF_FOOD);
-        occupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        occupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        occupiedSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        if (state->exclamationPromptChild != NULL) {
-            occupiedSlots[state->packedSlots.exclamationPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-        }
-        if (state->questPromptChild != NULL) {
-            occupiedSlots[state->packedSlots.questPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-        }
-        if (state->foodChild != NULL) {
-            occupiedSlots[state->packedSlots.foodChildSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-        }
-        if (occupiedSlots[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 0;
-        } else if (occupiedSlots[1] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 1;
-        } else if (occupiedSlots[2] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 2;
-        } else if (occupiedSlots[3] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 3;
-        } else {
-            freeSlot = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        }
+        freeSlot = trickyFindFreePromptSlot(state);
         state->packedSlots.foodChildSlot = freeSlot;
         state->foodChild = objSetupObject(&setup->base, 4, -1, -1, obj->anim.parent);
         ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
@@ -1732,9 +1734,9 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren) {
         trickyStopFlameChildren(obj, state);
     }
     doNothing_onTrickyFree();
-    objAnimFreeChildren(obj, state, &state->exclamationPromptChild);
-    objAnimFreeChildren(obj, state, &state->questPromptChild);
-    objAnimFreeChildren(obj, state, &state->foodChild);
+    trickyFreePromptChild(obj, state, &state->exclamationPromptChild);
+    trickyFreePromptChild(obj, state, &state->questPromptChild);
+    trickyFreePromptChild(obj, state, &state->foodChild);
     if (state->spawnedChild != NULL) {
         ObjLink_DetachChild(obj, state->spawnedChild);
         Obj_FreeObject(state->spawnedChild);
@@ -1771,22 +1773,16 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     TrickyState* state = obj->extra;
     u32 commandMask;
     s8 commandKind;
-    u16 questPromptSfxId;
     u8 showQuestPrompt = false;
     u8 showExclamationPrompt = false;
     u8 showFoodVoicePrompt = false;
     u8 showBaddieVoicePrompt = false;
-    u32 promptValue;
-    int promptScratch;
     ObjPlacement* promptSetup;
     GameObject* promptObj;
     u8 commandIndex;
     u16 questPromptSfxIds[2] = {TRICKY_VOICE_SFX_THERES_SOMETHING_NEAR, TRICKY_VOICE_SFX_LOOK_AT_THIS};
-    char questPromptOccupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
-    char exclamationPromptOccupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
 
-    promptValue = mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands);
-    if (promptValue != 0) {
+    if (mainGetBit(GAMEBIT_Tricky_Unlocked_Sidekick_Commands) != 0) {
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             state->sideCommandPromptMask = 0;
         }
@@ -1815,10 +1811,9 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             }
         }
         if (((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) == 0) &&
-            (promptValue = mainGetBit(GAMEBIT_ITEM_TrickyBall_Usable), promptValue != 0)) {
-            promptScratch = (int)Obj_GetPlayerObject();
-            promptScratch = playerIsInNormalControlUndisguisedOnLand((GameObject*)(promptScratch));
-            if ((promptScratch != 0) && (promptValue = mainGetBit(GAMEBIT_NoBallsAllowed), promptValue == 0)) {
+            (mainGetBit(GAMEBIT_ITEM_TrickyBall_Usable) != 0)) {
+            GameObject* player = Obj_GetPlayerObject();
+            if ((playerIsInNormalControlUndisguisedOnLand(player) != 0) && (mainGetBit(GAMEBIT_NoBallsAllowed) == 0)) {
                 if (playerGetFlags3F0Bit5(state->playerObj) == 0) {
                     commandMask |= TRICKY_COMMAND_FLAG_PLAY_BALL;
                 }
@@ -1837,35 +1832,10 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         if ((showQuestPrompt) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->questPromptTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->questPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
-                promptValue = randomGetRange(0, 1);
-                questPromptSfxId = questPromptSfxIds[promptValue];
+                u16 questPromptSfxId = questPromptSfxIds[randomGetRange(0, 1)];
                 trickyTryPlaySound(obj, questPromptSfxId, TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
                 promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_QUEST);
-                questPromptOccupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                questPromptOccupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                questPromptOccupiedSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                if (state->exclamationPromptChild != NULL) {
-                    questPromptOccupiedSlots[state->packedSlots.exclamationPromptSlot] =
-                        TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                }
-                if (state->questPromptChild != NULL) {
-                    questPromptOccupiedSlots[state->packedSlots.questPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                }
-                if (state->foodChild != NULL) {
-                    questPromptOccupiedSlots[state->packedSlots.foodChildSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                }
-                if (questPromptOccupiedSlots[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 0;
-                } else if (questPromptOccupiedSlots[1] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 1;
-                } else if (questPromptOccupiedSlots[2] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 2;
-                } else if (questPromptOccupiedSlots[3] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 3;
-                } else {
-                    promptValue = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                }
-                state->packedSlots.questPromptSlot = promptValue;
+                state->packedSlots.questPromptSlot = trickyFindFreePromptSlot(state);
                 promptObj = objSetupObject(promptSetup, 4, -1, 0xffffffff, obj->anim.parent);
                 state->questPromptChild = promptObj;
                 ObjLink_AttachChild(obj, state->questPromptChild, state->packedSlots.questPromptSlot);
@@ -1873,7 +1843,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         } else if (state->questPromptChild != NULL) {
             state->questPromptTimer = state->questPromptTimer - timeDelta;
             if (state->questPromptTimer <= 0.0f) {
-                objAnimFreeChildren(obj, state, &state->questPromptChild);
+                trickyFreePromptChild(obj, state, &state->questPromptChild);
             }
         }
         if ((showExclamationPrompt) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
@@ -1887,33 +1857,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
                     }
                 }
                 promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_EXCLAMATION);
-                exclamationPromptOccupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                exclamationPromptOccupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                exclamationPromptOccupiedSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                if (state->exclamationPromptChild != NULL) {
-                    exclamationPromptOccupiedSlots[state->packedSlots.exclamationPromptSlot] =
-                        TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                }
-                if (state->questPromptChild != NULL) {
-                    exclamationPromptOccupiedSlots[state->packedSlots.questPromptSlot] =
-                        TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                }
-                if (state->foodChild != NULL) {
-                    exclamationPromptOccupiedSlots[state->packedSlots.foodChildSlot] =
-                        TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                }
-                if (exclamationPromptOccupiedSlots[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 0;
-                } else if (exclamationPromptOccupiedSlots[1] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 1;
-                } else if (exclamationPromptOccupiedSlots[2] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 2;
-                } else if (exclamationPromptOccupiedSlots[3] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                    promptValue = 3;
-                } else {
-                    promptValue = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                }
-                state->packedSlots.exclamationPromptSlot = promptValue;
+                state->packedSlots.exclamationPromptSlot = trickyFindFreePromptSlot(state);
                 promptObj = objSetupObject(promptSetup, 4, -1, 0xffffffff, obj->anim.parent);
                 state->exclamationPromptChild = promptObj;
                 ObjLink_AttachChild(obj, state->exclamationPromptChild, state->packedSlots.exclamationPromptSlot);
@@ -1921,7 +1865,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         } else if (state->exclamationPromptChild != NULL) {
             state->exclamationPromptTimer = state->exclamationPromptTimer - timeDelta;
             if (state->exclamationPromptTimer <= 0.0f) {
-                objAnimFreeChildren(obj, state, &state->exclamationPromptChild);
+                trickyFreePromptChild(obj, state, &state->exclamationPromptChild);
             }
         }
         return commandMask;
@@ -2107,9 +2051,9 @@ int tricky_SeqFn(GameObject* obj, int unused, ObjSeqState* sequence) {
         }
     }
 
-    objAnimFreeChildren(obj, state, &state->exclamationPromptChild);
-    objAnimFreeChildren(obj, state, &state->questPromptChild);
-    objAnimFreeChildren(obj, state, &state->foodChild);
+    trickyFreePromptChild(obj, state, &state->exclamationPromptChild);
+    trickyFreePromptChild(obj, state, &state->questPromptChild);
+    trickyFreePromptChild(obj, state, &state->foodChild);
     trickyUpdateColorVariant(obj, state);
     Tricky_updateBlendChannelWeight(obj, state);
     objAudioDispatchAnimEvents(obj, &sequence->animEvents, 1, state->footPoints, &state->curvesCollision, 1.0f, 1.0f);
@@ -2588,7 +2532,6 @@ u32 tricky_substateWaitQueuedMove(GameObject* obj, TrickyState* trickyState) {
 }
 
 int tricky_substateSleep(GameObject* obj, TrickyState* state) {
-    s8 occupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
     ObjPlacement* setup;
     int freeSlot;
     f32 childTimerReset;
@@ -2608,29 +2551,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
     }
     if (state->foodChild == NULL && (u8)Obj_CanSetupObject() != 0) {
         setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_FOOD);
-        occupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        occupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        occupiedSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        if (state->exclamationPromptChild != NULL) {
-            occupiedSlots[state->packedSlots.exclamationPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-        }
-        if (state->questPromptChild != NULL) {
-            occupiedSlots[state->packedSlots.questPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-        }
-        if (state->foodChild != NULL) {
-            occupiedSlots[state->packedSlots.foodChildSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-        }
-        if (occupiedSlots[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 0;
-        } else if (occupiedSlots[1] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 1;
-        } else if (occupiedSlots[2] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 2;
-        } else if (occupiedSlots[3] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-            freeSlot = 3;
-        } else {
-            freeSlot = TRICKY_PROMPT_CHILD_SLOT_FREE;
-        }
+        freeSlot = trickyFindFreePromptSlot(state);
         state->packedSlots.foodChildSlot = freeSlot;
         state->foodChild = objSetupObject(setup, 4, -1, -1, (obj)->anim.parent);
         ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
@@ -4166,34 +4087,8 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                         if (state->foodChild == NULL) {
                             TrickyPromptChildSetup* promptSetup = (TrickyPromptChildSetup*)Obj_AllocObjectSetup(
                                 sizeof(*promptSetup), TRICKY_SPAWN_ROMDEF_FOOD);
-                            s8 occupiedPromptSlots[4];
                             int freePromptSlot;
-                            occupiedPromptSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                            occupiedPromptSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                            occupiedPromptSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                            if (state->exclamationPromptChild != NULL) {
-                                occupiedPromptSlots[state->packedSlots.exclamationPromptSlot] =
-                                    TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                            }
-                            if (state->questPromptChild != NULL) {
-                                occupiedPromptSlots[state->packedSlots.questPromptSlot] =
-                                    TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                            }
-                            if (state->foodChild != NULL) {
-                                occupiedPromptSlots[state->packedSlots.foodChildSlot] =
-                                    TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
-                            }
-                            if (occupiedPromptSlots[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                                freePromptSlot = 0;
-                            } else if (occupiedPromptSlots[1] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                                freePromptSlot = 1;
-                            } else if (occupiedPromptSlots[2] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                                freePromptSlot = 2;
-                            } else if (occupiedPromptSlots[3] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
-                                freePromptSlot = 3;
-                            } else {
-                                freePromptSlot = TRICKY_PROMPT_CHILD_SLOT_FREE;
-                            }
+                            freePromptSlot = trickyFindFreePromptSlot(state);
                             state->packedSlots.foodChildSlot = freePromptSlot;
                             state->foodChild = objSetupObject(&promptSetup->base, 4, -1, -1, obj->anim.parent);
                             ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
@@ -6630,11 +6525,11 @@ void Tricky_updateBlendChannelWeight(GameObject* obj, TrickyState* state) {
     }
 }
 
-void objAnimFreeChildren(GameObject* obj, TrickyState* state, GameObject** childRef) {
-    char buf[TRICKY_PROMPT_CHILD_SLOT_COUNT];
-    void* exclamationPromptChild;
-    void* questPromptChild;
-    void* foodChild;
+void trickyFreePromptChild(GameObject* obj, TrickyState* state, GameObject** childRef) {
+    s8 occupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
+    GameObject* exclamationPromptChild;
+    GameObject* questPromptChild;
+    GameObject* foodChild;
 
     if (*childRef == NULL) {
         return;
@@ -6642,22 +6537,23 @@ void objAnimFreeChildren(GameObject* obj, TrickyState* state, GameObject** child
     ObjLink_DetachChild(obj, *childRef);
     Obj_FreeObject(*childRef);
     *childRef = NULL;
-    buf[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-    buf[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
-    buf[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
+    occupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
+    occupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
+    occupiedSlots[2] = TRICKY_PROMPT_CHILD_SLOT_FREE;
     exclamationPromptChild = state->exclamationPromptChild;
     if (exclamationPromptChild != NULL) {
-        buf[state->packedSlots.exclamationPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
+        occupiedSlots[state->packedSlots.exclamationPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
     }
     questPromptChild = state->questPromptChild;
     if (questPromptChild != NULL) {
-        buf[state->packedSlots.questPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
+        occupiedSlots[state->packedSlots.questPromptSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
     }
     foodChild = state->foodChild;
     if (foodChild != NULL) {
-        buf[state->packedSlots.foodChildSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
+        occupiedSlots[state->packedSlots.foodChildSlot] = TRICKY_PROMPT_CHILD_SLOT_OCCUPIED;
     }
-    if (buf[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
+    /* Keep one remaining prompt at the primary attachment point. */
+    if (occupiedSlots[0] == TRICKY_PROMPT_CHILD_SLOT_FREE) {
         if (exclamationPromptChild != NULL) {
             ObjLink_DetachChild(obj, exclamationPromptChild);
             ObjLink_AttachChild(obj, state->exclamationPromptChild, 0);
