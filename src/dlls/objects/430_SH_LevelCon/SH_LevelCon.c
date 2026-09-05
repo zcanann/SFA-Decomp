@@ -40,7 +40,7 @@
 #include "sys/objects.h"
 
 #define SH_LEVELCONTROL_FLAG_REFRESH_MAP                                                                               \
-    0x2 /* re-apply map music on next tick; cleared at substate/music transitions */
+    0x2u /* re-apply map music on next tick; cleared at substate/music transitions */
 #define SH_LEVELCONTROL_FLAG_THORNTAIL_TRIGGERED 0x40 /* ThornTail intro event already fired */
 #define SH_LEVELCONTROL_FLAG_EARLY_SCENE_STARTED 0x80 /* early cutscene sequence begun */
 
@@ -382,7 +382,7 @@ void SH_LevelControl_runBloopEvent(GameObject* obj, ShLevelControlState* state) 
         if ((state)->mapOverride != 0xcc) {                                                                            \
             (state)->mapOverride = 0xcc;                                                                               \
             mainSetBits(GAMEBIT_SH_Entered00C0, 1);                                                                    \
-            (state)->storyFlags &= ~SH_LEVELCONTROL_FLAG_REFRESH_MAP;                                                  \
+            (state)->flags &= ~SH_LEVELCONTROL_FLAG_REFRESH_MAP;                                                       \
         }                                                                                                              \
     } else if ((state)->mapOverride == 0xcc) {                                                                         \
         (state)->mapOverride = -1;                                                                                     \
