@@ -3851,6 +3851,25 @@ still has exact non-text sections and all retail function sizes, with 261 text
 bytes remaining different. These exposed register differences are preferable
 to retaining unsupported array storage purely for its allocation effect.
 
+Route ranking (688 bytes) is now exact with a normal target-Z product and direct
+`curve->x` accesses. Its former `curveX` cache made MWCC emit that load ahead of
+the target-Z square when the product was written normally. Removing the cache
+recovers the retail evaluation order without an in-place square or an artificial
+storage shape.
+
+Yaw turning (348 bytes) is also exact. The wrapped target bits now have their own
+local, and the subtraction captures the current yaw for the subsequent turn
+steps. This preserves the required snapshot across state-flag writes: replacing
+it with fresh member reads adds two loads. Keeping a separate current-yaw load
+statement moves that load before the target conversion; capturing it as part of
+the subtraction reproduces the retail order and registers.
+
+Only these two function byte ranges change. All retail lengths and linked
+non-text sections remain exact, with 230 text bytes different and overall text
+at 99.92039%. An explicit render-point iterator, a direct approach-radius square,
+and a shared fast/slow turn-delta local were not retained: they changed retail's
+offset placement, square/call order, or instruction count respectively.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

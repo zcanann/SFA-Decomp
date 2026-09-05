@@ -5874,7 +5874,6 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
     RomCurveDef** curveCursor;
     int curveIdx;
     RomCurveDef* linkedCurve;
-    f32 curveX;
     f32 targetXDistanceSquared;
     f32 targetZDistanceSquared;
     f32 curveZ;
@@ -5917,12 +5916,10 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
         curveZ = curve->z;
         targetPos = state->targetPosPtr;
         {
-            targetZDistanceSquared = targetPos[2] - curveZ;
-            targetZDistanceSquared *= targetZDistanceSquared;
-            curveX = curve->x;
-            targetXDistanceSquared = (targetPos[0] - curveX) * (targetPos[0] - curveX);
+            targetZDistanceSquared = (targetPos[2] - curveZ) * (targetPos[2] - curveZ);
+            targetXDistanceSquared = (targetPos[0] - curve->x) * (targetPos[0] - curve->x);
             {
-                f32 objectXDistanceSquared = (obj->anim.worldPosX - curveX) * (obj->anim.worldPosX - curveX);
+                f32 objectXDistanceSquared = (obj->anim.worldPosX - curve->x) * (obj->anim.worldPosX - curve->x);
                 f32 objectZDistanceSquared = (obj->anim.worldPosZ - curveZ) * (obj->anim.worldPosZ - curveZ);
                 score = targetZDistanceSquared +
                         (targetXDistanceSquared + (objectXDistanceSquared + objectZDistanceSquared));
@@ -6425,6 +6422,7 @@ static inline f32 trickyGetPathSpeedDelta(GameObject* obj) {
 
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     TrickyState* state;
+    int targetYawBits;
     int currentYaw;
     int delta;
     int step;
@@ -6432,9 +6430,8 @@ int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw) {
     state = obj->extra;
     state->targetYaw = targetYaw;
 
-    delta = (u16)(s16)targetYaw;
-    currentYaw = obj->anim.rotX;
-    delta = currentYaw - delta;
+    targetYawBits = (u16)(s16)targetYaw;
+    delta = (currentYaw = obj->anim.rotX) - targetYawBits;
     if (delta > TRICKY_YAW_HALF_TURN) {
         delta -= TRICKY_YAW_WRAP_RANGE;
     }
