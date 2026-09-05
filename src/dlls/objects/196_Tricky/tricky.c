@@ -1821,8 +1821,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
         if ((showQuestPrompt) && ((state->stateFlags & TRICKY_STATE_FLAG_SEQUENCE_LATCHED) == 0)) {
             state->questPromptTimer = TRICKY_FETCH_THROW_DELAY_FRAMES;
             if ((state->questPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
-                u16 questPromptSfxId = questPromptSfxIds[randomGetRange(0, 1)];
-                trickyTryPlaySound(obj, questPromptSfxId, TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
+                trickyTryPlaySound(obj, questPromptSfxIds[randomGetRange(0, 1)], TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
                 promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_QUEST);
                 state->packedSlots.questPromptSlot = trickyFindFreePromptSlot(state);
                 promptObj = objSetupObject(promptSetup, 4, -1, 0xffffffff, obj->anim.parent);
@@ -2814,7 +2813,6 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
 }
 
 int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
-    u16 sfxId;
     float pos[3];
 
     objGetJointWorldPosition(state->followObj, 0, pos);
@@ -2830,8 +2828,8 @@ int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
         tricky_startRandomIdleMove(obj, state);
     } else if ((u8)trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, state) != TRICKY_MOVEMENT_IN_PROGRESS) {
         state->thorntailIdleMovePending = 1;
-        sfxId = randomGetRange(TRICKY_VOICE_SFX_HELLO, TRICKY_VOICE_SFX_HI_FELLA);
-        trickyTryPlaySound(obj, sfxId, TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
+        trickyTryPlaySound(obj, randomGetRange(TRICKY_VOICE_SFX_HELLO, TRICKY_VOICE_SFX_HI_FELLA),
+                           TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
         return 0;
     }
     return 1;
@@ -3041,7 +3039,6 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
     int walkGroup;
-    u16 sfxId;
     f32 dirZ;
     f32 dirX;
     f32 digProgress;
@@ -3128,8 +3125,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             state->stats->energy -= 4;
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_1;
-            sfxId = sfxTable[randomGetRange(0, 1)];
-            trickyTryPlaySound(obj, sfxId, TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
+            trickyTryPlaySound(obj, sfxTable[randomGetRange(0, 1)], TRICKY_VOICE_MOUTH_ANGLE_NORMAL);
         }
         break;
     case TRICKY_DIG_TUNNEL_TO_EXIT_1:

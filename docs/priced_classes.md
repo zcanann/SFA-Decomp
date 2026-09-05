@@ -4491,6 +4491,29 @@ The diagnostic link retains exact non-text sections and 59 differing text bytes.
 Both build gates, formatting, and 72 tooling tests pass. No compiler settings,
 unit boundaries, or array capacities change.
 
+Direct quest-voice selection restores `Tricky_updateSideCommandPrompts` to an
+exact 412 instructions / 1648 bytes. Passing the array-selected `u16` directly
+to `trickyTryPlaySound`, rather than first binding `questPromptSfxId`, removes
+all six register differences in the later food/baddie voice expansions. The
+same direct-argument spelling removes the single-use Thorntail and tunnel
+sound-ID temporaries without changing either function's bytes. Random draws
+remain on their original paths and narrow at the existing `u16` API boundary.
+
+Only the prompt function's six bytes change. Tricky is now 86/89 exact and
+99.97430% fuzzy; the diagnostic link falls from 59 to 53 differing text bytes,
+with all allocated non-text sections exact. Named layouts are unchanged; 30
+anonymous relocation names change. Object SHA256:
+`c990f44d5a508b02c007f5ccd84628625ce98fa20f4bf87d70311830a5053e0a`.
+Both build gates, formatting, and 72 tooling tests pass.
+
+Nearby voice-allocation probes are not retained: widening the helper's move
+selector from `s16` to `int` is raw-object neutral; removing `moveTricky`'s
+facing-state local adds five operand differences. Moving its turn-magnitude
+local into the stationary branch adds one instruction and leaves 22 operand
+differences; replacing the magnitude local with direct signed-angle ternaries
+leaves 7 structural / 110 operand differences. The shared voice helper and the
+existing turn source are preserved, with no caller-specific helper copies.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
