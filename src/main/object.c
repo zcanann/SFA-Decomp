@@ -13,7 +13,7 @@
 #include "main/audio/stream_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll_000A_expgfx.h"

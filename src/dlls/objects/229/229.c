@@ -28,7 +28,7 @@
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_object_api.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/hud_visibility_api.h"
 
 #define SHIELD_NORMAL_WAVE_SCALE 0.5f

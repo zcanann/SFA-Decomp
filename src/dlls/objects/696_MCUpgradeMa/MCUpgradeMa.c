@@ -13,7 +13,7 @@
  * sequence event it forces the staff glow to a fixed level, restores it to
  * the object's configured level, or clears it.
  */
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/player_objects.h"
 #include "main/gamebits.h"

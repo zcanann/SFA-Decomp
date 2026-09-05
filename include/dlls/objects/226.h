@@ -1,8 +1,9 @@
-#ifndef MAIN_DLL_DLL_00E2_STAFF_API_H_
-#define MAIN_DLL_DLL_00E2_STAFF_API_H_
+#ifndef DLLS_OBJECTS_226_H_
+#define DLLS_OBJECTS_226_H_
 
 #include "game/objects/object.h"
 #include "dlls/object_descriptor.h"
+#include "main/dll/dll_005A_staffcollision.h"
 
 extern ObjectDescriptor23 gStaffObjDescriptor;
 
@@ -149,4 +150,29 @@ void staff_startSwipe(GameObject* obj, s16 index, f32 start, f32 lengthScale);
 void staff_update(GameObject* obj);
 void staffStartQuakeSpell(f32* position);
 
-#endif /* MAIN_DLL_DLL_00E2_STAFF_API_H_ */
+typedef struct StaffWeaponSample {
+    s16 endpointA[3];
+    s16 endpointB[3];
+} StaffWeaponSample;
+
+STATIC_ASSERT(sizeof(StaffWeaponSample) == 0x0C);
+
+typedef struct SwipeColorTable {
+    StaffCollisionColorArgs colors[4];
+} SwipeColorTable;
+typedef struct StaffEffectParams {
+    u16 id;
+    u16 a;
+    u16 b;
+    s16 count;
+    f32 scale;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+} StaffEffectParams;
+
+STATIC_ASSERT(sizeof(SwipeColorTable) == 0x40);
+
+void staffDrawSwipe(GameObject* obj, StaffState* swipe);
+
+#endif /* DLLS_OBJECTS_226_H_ */

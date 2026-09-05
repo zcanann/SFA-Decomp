@@ -10,7 +10,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/dll/objfx.h"
 #include "main/dll/player_objects.h"
 #include "main/frame_timing.h"

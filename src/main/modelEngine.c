@@ -1,3 +1,4 @@
+#include "dlls/objects/226.h"
 #include "dlls/objects/201_Baddie.h"
 #include "dlls/object_descriptor.h"
 #include "dlls/objects/198_AnimatedObj.h"
@@ -571,7 +572,7 @@ extern ResourceDescriptor gSPDrapeObjDescriptor, gSPitembeamObjDescriptor, gSeqP
 extern ResourceDescriptor gDFP_RotatePObjDescriptor, gShopItemObjDescriptor, gShopKeeperObjDescriptor,
     gShopObjDescriptor;
 extern ResourceDescriptor gSnowBikeObjDescriptor, gSnowClawObjDescriptor;
-extern ResourceDescriptor gSpellStoneObjDescriptor, gStaffObjDescriptor;
+extern ResourceDescriptor gSpellStoneObjDescriptor;
 extern ResourceDescriptor gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTrickyCurveObjDescriptor;
 extern ResourceDescriptor gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor, gVFP_Block1ObjDescriptor;
@@ -1430,7 +1431,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gHagabonObjDescriptor,
     (ResourceDescriptor*)&gSwarmBaddieObjDescriptor,
     (ResourceDescriptor*)&gWispBaddieObjDescriptor,
-    &gStaffObjDescriptor,
+    (ResourceDescriptor*)&gStaffObjDescriptor,
     (ResourceDescriptor*)&gFireballObjDescriptor,
     (ResourceDescriptor*)&gFlameThrowerspeObjDescriptor,
     (ResourceDescriptor*)&gShieldObjDescriptor,

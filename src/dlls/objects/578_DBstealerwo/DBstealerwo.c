@@ -45,7 +45,7 @@
 #include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/baddie_control_interface.h"
 
