@@ -3918,6 +3918,22 @@ and allocated non-text sections remain exact; the diagnostic game link has
 already-exact dig-tunnel advance helper retains the opcode stream but changes
 11 register operands, so that separate experiment was not retained.
 
+Movement's six identical current-route direction calculations now share
+`trickySetDirectionAlongRoute`; all six expansions are byte-neutral. Its route
+seed check reuses the existing validator used by the cached-path and selected
+entry paths (now named `trickyValidateRouteEntry`), recovering seven register
+operands. The quarter-speed part of jump preparation uses one local speed
+scale for animation sampling and X/Z movement; this restores the retail load
+and multiply operand order without reviving the old cross-state `v` temporary.
+
+The movement result now uses the established reached/in-progress constants
+through `moveTricky` and the state dispatcher. The product of two walk-group
+IDs has its own 16-bit patch-group local rather than overwriting a walk-group
+ID. Only movement-state code changes; other function bytes and non-text bytes
+are unchanged. Movement retains its 8764-byte retail length, with 61 operand
+differences remaining (down from 72). Full linked non-text sections remain
+exact, and differing text bytes fall from 212 to 189; Tricky text is 99.94300%.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
