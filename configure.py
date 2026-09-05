@@ -1730,7 +1730,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/554_DFP_ObjCrea/DFP_ObjCrea.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/555_DFP_Torch/DFP_Torch.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/objects/556/556.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/558/558.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/559_DFP_floorba/DFP_floorba.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/560_DFP_wallbar/DFP_wallbar.c"),

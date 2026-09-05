@@ -36,7 +36,7 @@ which now carries prose evidence notes, so they have been dropped.
 | name-conflicts (disambiguated) | 0 |
 | naming contradictions (appendix) | 0 |
 | naming contradictions arbitrated (appendix) | 25 |
-| unit-owned headers recorded (appendix) | 112 |
+| unit-owned headers recorded (appendix) | 113 |
 
 Expansion status over the 705 rows: NO-RETAIL-NAME 287, COMPLETE 263, CONFIRMED 81, RAW 62, GUESSED 7, DOL-RECOVERED 5
 
@@ -1068,6 +1068,7 @@ more as they are recovered.
 | 0x20D | dlls/objects/525_WM_seqpoint/WM_seqpoint.c | include/dlls/objects/525_WM_seqpoint.h |
 | 0x220 | dlls/objects/544/544.c | include/dlls/objects/544.h |
 | 0x223 | dlls/objects/547_VFP_corepla/VFP_corepla.c | include/dlls/objects/547_VFP_corepla.h |
+| 0x22D | dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c | include/dlls/objects/557_DFP_seqpoin.h |
 | 0x22F | dlls/objects/559_DFP_floorba/DFP_floorba.c | include/main/dll/baddie/dll_022F_dfpfloorbar.h |
 | 0x232 | dlls/objects/562_DFP_RotateP/DFP_RotateP.c | include/dlls/objects/562_DFP_RotateP.h |
 | 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/dlls/objects/565_DFP_TargetB.h |

@@ -443,7 +443,7 @@
 #include "main/dll/CF/laser.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_0126_trigger.h"
-#include "main/dll/DF/dll_022D_dfpseqpoint.h"
+#include "dlls/objects/557_DFP_seqpoin.h"
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "main/dll/DF/dll_0233_dfpstatue1.h"
 #include "main/dll/DF/dll_0234_dfperchwitch.h"

@@ -30,7 +30,6 @@
 #include "main/dll/dbeggstate_struct.h"
 #include "main/dll/drakorenergystate_struct.h"
 #include "main/dll/dbstealerwormcontrol_struct.h"
-#include "main/dll/dfp_types.h"
 #include "game/objects/object.h"
 #include "main/mapEventTypes.h"
 #include "sys/objects/lifecycle.h"
@@ -77,7 +76,6 @@ typedef struct {
 
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
@@ -87,7 +85,6 @@ STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 extern DbStealerwormScript gDbStealerwormScriptTable[];
