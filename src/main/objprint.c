@@ -241,8 +241,8 @@ void objSoundUpdateMouth(GameObject* obj, ObjSoundState* state) {
     timer = (s32)state->timer;
     found = objFindJointVecByKey(obj, 1);
 
-    if (state->active != 0) {
-        state->active = 0;
+    if (state->justStarted != 0) {
+        state->justStarted = 0;
     } else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
         if (timer != -1) {
             timer -= framesThisStep;
@@ -321,7 +321,7 @@ void objSoundStart(GameObject* obj, void* state, u16 sfxId) {
         Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
         ((ObjSoundState*)state)->timer = -1.0f;
         ((ObjSoundState*)state)->mouthAngle = -0x500;
-        ((ObjSoundState*)state)->active = 1;
+        ((ObjSoundState*)state)->justStarted = 1;
         ((ObjSoundState*)state)->blendWeight = 1.0f;
     }
 }
@@ -339,7 +339,7 @@ void objSoundStartFromDef(GameObject* obj, ObjSoundState* state, ObjSoundDef* so
         Sfx_PlayFromObjectChannel(obj, 0x10, sfx);
         state->timer = -1.0f;
         state->mouthAngle = (s16)(-mouthOpenAngle);
-        state->active = 1;
+        state->justStarted = 1;
         state->blendWeight = 1.0f;
     }
     count = soundDef->blendCount;
@@ -365,7 +365,7 @@ void objSoundStartTimed(GameObject* obj, ObjSoundState* state, u16 sfx, int mout
     Sfx_PlayFromObjectChannel(obj, 0x10, sfx);
     state->timer = duration;
     state->mouthAngle = (s16)(-mouthOpenAngle);
-    state->active = 1;
+    state->justStarted = 1;
     state->blendWeight = 1.0f;
 }
 

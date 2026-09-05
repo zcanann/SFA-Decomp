@@ -303,7 +303,7 @@ typedef struct TrickyState {
     u8 commandCount; /* number of queued Tricky commands (0..MAX_COMM_PRESENT); index into the command records at 0x748 (stride 8), bumped on enqueue / dropped on dequeue, used as the scan loop bound (tricky) */
     u8 pad799[0x79C - 0x799];
     f32 waterIdleTimer; /* countdown primed to TRICKY_WATER_COOLDOWN_FRAMES when water movement starts; Tricky_update clamps it toward zero, and idle behavior consumes a positive value to force TRICKY_ANIM_WATER_IDLE */
-    f32 voiceCooldown; /* f32 countdown: -= timeDelta, clamped to floor; while > floor a TRICKY_VOICE line is (re)issued (tricky/trickyfollow/skeetla) */
+    f32 movementBarkTimer; /* running/jumping primes 600 frames; positive time enables repeated barks */
     f32 sfxIntervalTimer; /* f32 countdown: -= timeDelta, on reaching zero fires an SFX and re-primes to a randomGetRange interval (skeetla 600..1200, weapone6 150..300) */
     GameObject* exclamationPromptChild;
     f32 exclamationPromptTimer;
@@ -407,6 +407,7 @@ STATIC_ASSERT(offsetof(TrickyState, hitType) == 0x368);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);
 STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, soundState.mouthAngle) == 0x3BC);
+STATIC_ASSERT(offsetof(TrickyState, movementBarkTimer) == 0x7A0);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);

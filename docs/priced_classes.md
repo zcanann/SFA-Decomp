@@ -4452,6 +4452,27 @@ Rejected type probes: native `int` versus `s32` tunnel indices and walk-group
 locals are byte-neutral; widening the four prompt flags removes four retail
 instructions and is not retained.
 
+The audio lifecycle audit corrects two inverted state interpretations. Tricky's
+`+0x7A0` field is `movementBarkTimer`, not a voice cooldown: running and jumping
+prime 600 frames, and the update retries the `0x29C` bark while time remains
+positive, subject to the ordinary voice guard. `ObjSoundState.justStarted` is
+a signed-byte startup latch, not playback status. The sound starters set it
+after dispatch; the next mouth update clears it and skips the channel/timer
+check, while still updating the mouth joint. Offset assertions cover both
+fields. All 2872 source objects remain byte-identical after rebuilding; the
+strict DOL checksum passes and Tricky still differs in 59 linked text bytes.
+
+Rejected shared-target-facing probes are restored. A local-Z helper reproduces
+approach-speed control exactly, but swaps movement's patch-info and displacement
+stack slots (`sp+0x1C` / `sp+0x28`), adding 17 byte/operand differences without
+changing instruction counts. Array versus `Vec` storage and narrowing the
+query/candidate arrays' lexical scopes are neutral. Ordinary auto-inlining has
+the same caller result plus a 120-byte helper body; a boolean-result helper adds
+three instructions at each site. Reusing `trickyWrapYawDelta` in the full-width
+turn routine preserves 87 instructions but changes 27 operands / 28 bytes.
+None of these hypotheses explains a remaining retail mismatch, so no extra
+helper, stack padding, or scope-only cleanup is retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

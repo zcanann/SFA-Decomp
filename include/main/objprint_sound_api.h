@@ -6,7 +6,7 @@
 
 typedef struct ObjSoundState
 {
-    s8 active;
+    s8 justStarted; /* skip the first mouth-update playback check after starting a sound */
     u8 pad01[3];
     f32 blendWeight;
     u8 pad08[4];
@@ -35,6 +35,7 @@ typedef struct ObjKfAnimState
 } ObjKfAnimState;
 
 STATIC_ASSERT(sizeof(ObjSoundState) == 0x30);
+STATIC_ASSERT(offsetof(ObjSoundState, justStarted) == 0);
 STATIC_ASSERT(offsetof(ObjSoundState, timer) == 0x0c);
 STATIC_ASSERT(offsetof(ObjSoundState, mouthAngle) == 0x14);
 STATIC_ASSERT(sizeof(ObjSoundDef) == 6);
