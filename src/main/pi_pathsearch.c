@@ -1,3 +1,4 @@
+#include "main/pi_dolphin_path_api.h"
 #include "dolphin/PPCArch.h"
 #include "dolphin/mtx.h"
 #include "main/dll/rom_curve_interface.h"
@@ -145,14 +146,49 @@ static inline int pathSearchFindPointNode(PathSearch* search, RomCurveDef* point
     return -1;
 }
 
+static inline void pathSearchHeapSiftUp(PathHeapEntry* heap, int heapIndex) {
+    PathHeapEntry* entry = &heap[heapIndex];
+    u32 priority = entry->priority;
+    u16 nodeIndex = entry->nodeIndex;
+    int parent;
+    heap[0].priority = -1;
+    while (parent = heapIndex >> 1, heap[(s32)parent].priority < priority) {
+        heap[heapIndex].nodeIndex = heap[parent].nodeIndex;
+        heap[heapIndex].priority = heap[parent].priority;
+        heapIndex = parent;
+    }
+    heap[heapIndex].priority = priority;
+    heap[heapIndex].nodeIndex = nodeIndex;
+}
+
+static inline void pathSearchHeapChangePriority(PathHeapEntry* heap, int heapSize, u16 targetNodeIndex,
+                                                u32 newPriority) {
+    int heapIndex;
+    int searchIndex;
+    PathHeapEntry* entry;
+    u32 oldPriority;
+    searchIndex = 0;
+    for (; searchIndex <= heapSize; searchIndex++) {
+        if (targetNodeIndex == heap[searchIndex].nodeIndex) {
+            heapIndex = searchIndex;
+            searchIndex = heapSize + 1;
+        }
+    }
+    entry = &heap[heapIndex];
+    oldPriority = entry->priority;
+    entry->priority = newPriority;
+    if (newPriority < oldPriority) {
+        pathSearchHeapSiftDown(heap, heapSize, heapIndex);
+    } else if (newPriority > oldPriority) {
+        pathSearchHeapSiftUp(heap, heapIndex);
+    }
+}
+
 void pathSearchAddNeighbor(PathSearch* search, PathSearchNode* previousNode, int previousNodeIndex, u32 routeDistance,
                            RomCurveDef* candidatePoint) {
-    int heapIndex;
-    u16* heapHalves;
     int pointCount;
     PathSearchNode* newNode;
-    u32* heap;
-    int foundNodeIndex[2];
+    int foundNodeIndex;
     PathSearchNode* addedNode;
     int visited;
     int pointIndex;
@@ -167,50 +203,17 @@ void pathSearchAddNeighbor(PathSearch* search, PathSearchNode* previousNode, int
         }
         pathSearchHeapInsert(search, pointIndex, 1);
     }
-    foundNodeIndex[0] = pathSearchFindPointNode(search, candidatePoint, &pointCount, &visited);
-    if (foundNodeIndex[0] >= 0 && visited == 0) {
-        PathSearchNode* existingNode = &search->nodes[foundNodeIndex[0]];
+    foundNodeIndex = pathSearchFindPointNode(search, candidatePoint, &pointCount, &visited);
+    if (foundNodeIndex >= 0 && visited == 0) {
+        PathSearchNode* existingNode = &search->nodes[foundNodeIndex];
         if (routeDistance < existingNode->routeDistance) {
-            int heapSize;
-            u16 targetNodeIndex;
-            int searchIndex;
             u32 newPriority;
-            u32* entry;
-            u32 oldPriority;
             existingNode->parentIndex = previousNodeIndex;
             existingNode->routeDistance = routeDistance;
             newPriority = existingNode->distanceToTarget + existingNode->routeDistance;
-            heapSize = search->heapSize;
-            heap = (u32*)search->heap;
-            heapHalves = (u16*)heap;
-            searchIndex = 0;
-            targetNodeIndex = foundNodeIndex[0];
-            for (; searchIndex <= heapSize; searchIndex++) {
-                if (targetNodeIndex == *(u16*)(heap + searchIndex * 2 + 1)) {
-                    heapIndex = searchIndex;
-                    searchIndex = heapSize + 1;
-                }
-            }
-            entry = heap + heapIndex * 2;
-            oldPriority = *entry;
-            *entry = newPriority;
-            if (newPriority < oldPriority) {
-                pathSearchHeapSiftDown((PathHeapEntry*)heap, heapSize, heapIndex);
-            } else if (newPriority > oldPriority) {
-                u32 priority = *entry;
-                int parent;
-                u16 nodeIndex = ((u16*)entry)[2];
-                *heap = -1;
-                while (parent = heapIndex >> 1, *(u32*)(heapHalves + parent * 4) < priority) {
-                    *(u16*)((int)heap + heapIndex * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
-                    *(u32*)((int)heap + heapIndex * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
-                    heapIndex = parent;
-                }
-                *(u32*)((int)heap + heapIndex * 8) = priority;
-                heapHalves[heapIndex * 4 + 2] = nodeIndex;
-            }
+            pathSearchHeapChangePriority(search->heap, search->heapSize, foundNodeIndex, newPriority);
         }
-    } else if (foundNodeIndex[0] < 0) {
+    } else if (foundNodeIndex < 0) {
         if (pointCount == 0xfe) {
             addedNode = NULL;
         } else {
@@ -218,8 +221,7 @@ void pathSearchAddNeighbor(PathSearch* search, PathSearchNode* previousNode, int
             addedNode->point = candidatePoint;
             addedNode->routeDistance = routeDistance;
             addedNode->parentIndex = (u16)previousNodeIndex;
-            addedNode->distanceToTarget =
-                (u32)vec3f_distanceSquared(&addedNode->point->x, search->targetPosition);
+            addedNode->distanceToTarget = (u32)vec3f_distanceSquared(&addedNode->point->x, search->targetPosition);
         }
         if (addedNode != NULL) {
             if (addedNode->distanceToTarget > search->closestDistance) {
@@ -270,8 +272,7 @@ void pathSearchExpandNode(PathSearch* search, PathSearchNode* node, int idx) {
                             if (!(linked->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A &&
                                   point->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
                                 f32 d = vec3f_distanceSquared(&point->x, &linked->x);
-                                pathSearchAddNeighbor(search, node, idx,
-                                                      (u32)((f32)node->routeDistance + d), linked);
+                                pathSearchAddNeighbor(search, node, idx, (u32)((f32)node->routeDistance + d), linked);
                             }
                         }
                     }
@@ -409,7 +410,8 @@ void freeAndNull(void** p) {
 }
 
 void pathSearchInit(PathSearch* search) {
-    search->nodes = (PathSearchNode*)mmAlloc(0xfe * sizeof(PathSearchNode) + 0xfe * sizeof(PathHeapEntry) + 100 * sizeof(RomCurveDef*), 0x10, 0);
+    search->nodes = (PathSearchNode*)mmAlloc(
+        0xfe * sizeof(PathSearchNode) + 0xfe * sizeof(PathHeapEntry) + 100 * sizeof(RomCurveDef*), 0x10, 0);
     search->heap = (PathHeapEntry*)&search->nodes[0xfe];
     search->path = (RomCurveDef**)&search->heap[0xfe];
 }
