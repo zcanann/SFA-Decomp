@@ -1147,7 +1147,7 @@ config.libs = [
             # GC/1.3 retains the retail loader's post-store pointer reloads.
             # See docs/engine_0_matching.md for the whole-TU comparison.
             Object(NonMatching, "dlls/engine/0/0.c", extra_cflags=["-inline", "noauto", "-char", "signed"]),
-            Object(NonMatching, "dlls/engine/1_camcontrol/camcontrol.c", mw_version="GC/2.0"),
+            Object(NonMatching, "dlls/engine/1_camcontrol/camcontrol.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/2/maketex.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/2/2.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(NonMatching, "dlls/engine/3/3.c", cflags=cflags_dll_noopt_noautoinline),
@@ -1916,7 +1916,7 @@ config.libs = [
             Object(NonMatching, "main/objhits.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "main/objlib.c"),
             Object(NonMatching, "main/objprint.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"], mw_version="GC/2.0"),
+            Object(NonMatching, "main/objprint_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_nolifetimes_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_dolphin.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
             Object(NonMatching, "main/pi_videoinit.c", cflags=[*cflags_dll_noopt_nocse_noloopinv_nolifetimes_noprop_zerodata, "-inline", "noauto"]),
             Object(MatchingFor("GSAE01"), "main/pi_pathsearch.c", cflags=[*cflags_dll_noopt_noloopinv_zerodata, "-inline", "noauto"]),
@@ -1928,7 +1928,7 @@ config.libs = [
             Object(NonMatching, "main/shader.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/tex_dolphin.c", cflags=cflags_dll_noopt_noautoinline, section_alignments={".data": 4}, mw_version="GC/2.0"),
             Object(NonMatching, "main/shadow_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/track_dolphin.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(NonMatching, "main/track_dolphin.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/newshadows.c", cflags=cflags_dll_noopt_nodead_noautoinline),
             Object(MatchingFor("GSAE01"), "track/intersect.c", cflags=cflags_dll_noopt_nocse_noautoinline, section_alignments={".data": 4}),
             Object(MatchingFor("GSAE01"), "track/intersect_screenmath.c", cflags=cflags_dll_noopt_noautoinline),
