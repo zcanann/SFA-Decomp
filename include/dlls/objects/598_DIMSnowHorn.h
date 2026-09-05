@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DIM_DLL_0256_DIMSNOWHORN1_H_
-#define MAIN_DLL_DIM_DLL_0256_DIMSNOWHORN1_H_
+#ifndef DLLS_OBJECTS_598_DIMSNOWHORN_H_
+#define DLLS_OBJECTS_598_DIMSNOWHORN_H_
 
 #include "game/objects/object.h"
 #include "global.h"
@@ -9,8 +9,7 @@
 #include "main/objseq.h"
 #include "dlls/object_descriptor.h"
 
-typedef struct SnowHornEntry
-{
+typedef struct SnowHornEntry {
     f32 posX;
     f32 posY;
     f32 posZ;
@@ -27,8 +26,7 @@ typedef struct SnowHornEntry
 
 STATIC_ASSERT(sizeof(SnowHornEntry) == 0x24);
 
-typedef struct DIMSnowHorn1Placement
-{
+typedef struct DIMSnowHorn1Placement {
     ObjPlacement base;
     s8 spawnRot;
     u8 spawnVariant;
@@ -37,11 +35,11 @@ typedef struct DIMSnowHorn1Placement
 STATIC_ASSERT(offsetof(DIMSnowHorn1Placement, spawnRot) == 0x18);
 
 /* Per-object extra state (getExtraSize == 0xD0C); BaddieState is the prefix. */
-typedef struct DIMSnowHorn1State
-{
+typedef struct DIMSnowHorn1State {
     BaddieState baddie;
     MoveLibState lookController; /* 0x35C: dll_2E look-controller block */
-    CharacterEyeAnimState eyeAnimState; /* 0x980: head-aim / eye-blink record (characterDoEyeAnims / characterHeadLookCalm / characterHeadLookRelax) */
+    CharacterEyeAnimState
+        eyeAnimState; /* 0x980: head-aim / eye-blink record (characterDoEyeAnims / characterHeadLookCalm / characterHeadLookRelax) */
     u8 pad9A8[0x9B0 - 0x9A8];
     f32 pathPointArray[12]; /* 0x9B0: ObjPath_GetPointWorldPositionArray(2,4) -> 4 XYZ points */
     u8 pad9E0[0x9E8 - 0x9E0];
@@ -56,7 +54,7 @@ typedef struct DIMSnowHorn1State
     u8 padA8B;
     u8 mode;
     u8 triggerMode;
-    u8 flags; /* 0xA8E: bit0x2 riding (GAMEBIT_SNOWHORN_RIDING), bit0x8 hitvol-priority, bit0x20 sequence-triggered */
+    u8 flags; /* 0xA8E: bit0x2 riding (GAMEBIT_NW_SnowHorn03E3), bit0x8 hitvol-priority, bit0x20 sequence-triggered */
     u8 dismountSide;   /* 0xA8F: nonzero = side 2; set cross-DLL */
     u8 mountSide;      /* 0xA90: nonzero = side 1; set cross-DLL */
     u8 proximityPhase; /* 0xA91: 0/1/2 phase toggling linked objects by player distance (stateHandler05) */
@@ -71,6 +69,12 @@ typedef struct DIMSnowHorn1State
 
 STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
+
+typedef struct DIMSnowHorn1PieceCounts {
+    u8 counts[4];
+} DIMSnowHorn1PieceCounts;
+
+STATIC_ASSERT(sizeof(DIMSnowHorn1PieceCounts) == 4);
 
 extern f32 gDIMSnowHorn1LocomotionSpeedRanges[];
 extern s16 gDIMSnowHorn1MoveIds[2];
@@ -118,6 +122,8 @@ int DIMSnowHorn1_getObjectTypeId(void);
 void DIMSnowHorn1_free(GameObject* obj);
 void DIMSnowHorn1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void DIMSnowHorn1_hitDetect(void);
+void DIMSnowHorn1_spawnFootstepEffects(void* obj, DIMSnowHorn1State* pointState, DIMSnowHorn1State* inputState);
+void DIMSnowHorn1_ridingUpdate(GameObject* obj, int frameStep, int slot);
 void DIMSnowHorn1_update(GameObject* obj);
 void DIMSnowHorn1_release(void);
 void DIMSnowHorn1_initialise(void);
@@ -125,4 +131,4 @@ void DIMSnowHorn1_init(GameObject* obj, DIMSnowHorn1Placement* p2, int p3);
 
 extern ObjectDescriptor24 gDIMSnowHorn1ObjDescriptor;
 
-#endif /* MAIN_DLL_DIM_DLL_0256_DIMSNOWHORN1_H_ */
+#endif /* DLLS_OBJECTS_598_DIMSNOWHORN_H_ */

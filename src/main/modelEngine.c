@@ -309,7 +309,7 @@
 #include "dlls/objects/684_LGTControlL.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
-#include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
+#include "dlls/objects/598_DIMSnowHorn.h"
 #include "main/dll/LGT/dll_02AA_lgtdirectionallight.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
