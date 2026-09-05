@@ -1352,7 +1352,7 @@ config.libs = [
             # Deferred emission puts local initializer templates before the function literal pool.
             Object(NonMatching, "dlls/objects/196_Tricky/tricky.c", mw_version="GC/1.3", cflags=cflags_dll_noopt, extra_cflags=["-char signed", "-inline deferred"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/197/197.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dlls/objects/199_DIM2RoofRub/DIM2RoofRub.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/objects/200_DepthOfFieldPoint/DepthOfFieldPoint.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/201_Baddie/Baddie.c", cflags=cflags_dll_noopt_noautoinline),
