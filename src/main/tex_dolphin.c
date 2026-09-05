@@ -43,7 +43,7 @@
 #include "main/pi_dolphin_api.h"
 #include "dolphin/mtx/vec.h"
 #define TRACK_BBOX_FLAGS_S8
-#define TRACK_BBOX_MASK_TYPE s8
+#define TRACK_BBOX_MASK_TYPE  s8
 #define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
 #undef TRACK_BBOX_ARG10_TYPE
@@ -76,7 +76,7 @@ GXColor gTexShaderAmbColor = {0xFF, 0xFF, 0xFF, 0xFF};
 GXColor gTexLightmapAmbColor = {0xff, 0xff, 0xff, 0xff};
 s8 gTexIndMtxScaleExp = -2;
 
-extern f32 lbl_803DEBCC;
+extern const f32 lbl_803DEBCC;
 extern const f32 lbl_803DEBFC;
 extern const f32 gTexIndMtxScale;
 extern f32 lbl_803DEC28;
@@ -87,11 +87,9 @@ WarpDestination gRcpPendingWarpDest;
 extern GXColor gTexShaderFogColor;
 extern GXColor gTexLightmapFogColor;
 
-
 extern LightSortEntry gLightmapDrawQueue[];
 
-static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, float* xform)
-{
+static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, float* xform) {
     Vec v;
     u32 i;
     f32 fbset;
@@ -100,11 +98,9 @@ static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, 
     i = 0;
     timing = gTrackPackedCoordScale;
     fbset = lbl_803DEC28;
-    while (1)
-    {
+    while (1) {
         {
-            switch (i)
-            {
+            switch (i) {
             case 0:
                 v.x = (f32)bounds->minX;
                 v.y = (f32)bounds->minY;
@@ -151,13 +147,11 @@ static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, 
         v.y = v.y * timing;
         v.z = v.z * timing;
         PSMTXMultVec((MtxPtr)xform, &v, &v);
-        if (v.z >= fbset)
-        {
+        if (v.z >= fbset) {
             return 1;
         }
         i = i + 1;
-        if ((int)i < 8)
-        {
+        if ((int)i < 8) {
             continue;
         }
         return 0;
@@ -167,8 +161,7 @@ static u8 mapBlockBounds_HasCornerPastDepthThreshold(MapBlockBoundsRec* bounds, 
 #define SHADER_FLAGS(s) ((s)->flags)
 
 void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, Shader* shader,
-                                               ModelRenderInstrsState* state, f32 (*viewMtx)[4])
-{
+                                               ModelRenderInstrsState* state, f32 (*viewMtx)[4]) {
     f32 passMtx[3][4];
     IndTexMtx23 indMtx;
     int noiseFrameCount;
@@ -195,25 +188,17 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
      * consumed within the byte, then mask the width) -> bounds-record index */
     bounds[0] = &blockData->displayLists[(bits >> (bitPos & 7)) & 0xff];
     flags = SHADER_FLAGS(shader);
-    if ((flags & 0x4000) != 0)
-    {
+    if ((flags & 0x4000) != 0) {
         passCount = 4;
-    }
-    else if ((flags & 0x8000) != 0)
-    {
+    } else if ((flags & 0x8000) != 0) {
         passCount = 8;
-    }
-    else if ((flags & 0x10000) != 0)
-    {
+    } else if ((flags & 0x10000) != 0) {
         passCount = 0x10;
-    }
-    else
-    {
+    } else {
         return;
     }
     i = 0;
-    for (; i < passCount; i = i + 1)
-    {
+    for (; i < passCount; i = i + 1) {
         PSMTXTrans(passMtx, 0.0f, 0.4f * (f32)(i + 1), 0.0f);
         PSMTXConcat(viewMtx, passMtx, passMtx);
         GXLoadPosMtxImm(passMtx, GX_PNMTX0);
@@ -230,8 +215,7 @@ void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, S
     }
 }
 
-Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRenderInstrsState* state)
-{
+Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRenderInstrsState* state) {
     Shader* shader;
     u32 shaderIdx;
     u8* byteBase;
@@ -255,29 +239,20 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
     selectTexture(((ShaderLayer*)Shader_getLayer(shader, 0))->texture, 0);
-    if ((SHADER_FLAGS(shader) & 4) != 0)
-    {
+    if ((SHADER_FLAGS(shader) & 4) != 0) {
         _gxSetFogParams();
-    }
-    else
-    {
+    } else {
         GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogColor);
     }
     if ((SHADER_FLAGS(shader) & 1) != 0 || (SHADER_FLAGS(shader) & 0x40000) != 0 ||
-        (SHADER_FLAGS(shader) & 0x800) != 0 || (SHADER_FLAGS(shader) & 0x1000) != 0)
-    {
+        (SHADER_FLAGS(shader) & 0x800) != 0 || (SHADER_FLAGS(shader) & 0x1000) != 0) {
         GXSetChanAmbColor(GX_COLOR0, gTexLightmapAmbColor);
-        if ((SHADER_FLAGS(shader) & 0x40000) != 0)
-        {
+        if ((SHADER_FLAGS(shader) & 0x40000) != 0) {
             GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-        }
-        else
-        {
+        } else {
             GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         }
-    }
-    else
-    {
+    } else {
         objGetSunColor(0, &ambColor[0], &ambColor[1], &ambColor[2]);
         GXSetChanCtrl(GX_COLOR0, GX_ENABLE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
         GXSetChanAmbColor(GX_COLOR0, *(GXColor*)&ambColor[0]);
@@ -285,8 +260,7 @@ Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRe
     return shader;
 }
 
-void mapBlockRender_drawDimmedAabbLights(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx)
-{
+void mapBlockRender_drawDimmedAabbLights(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
     ModelLightStruct** lightPtr;
     f32 posZ;
     f32 posY;
@@ -308,8 +282,8 @@ void mapBlockRender_drawDimmedAabbLights(MapBlockBoundsRec* bounds, MapBlockData
         f32 ax1 = (f32)(bounds->maxX >> 3) + fldX;
         f32 az1 = (f32)(bounds->maxZ >> 3) + fldZ;
         modelLightStruct_selectBrightestAabbLights(ax0 + fx, (f32)(bounds->minY >> 3) + fldY, az0 + fz, ax1 + fx,
-                                                   (f32)(bounds->maxY >> 3) + fldY, az1 + fz,
-                                                   gTexDimmedLightList, 2, &lightCount);
+                                                   (f32)(bounds->maxY >> 3) + fldY, az1 + fz, gTexDimmedLightList, 2,
+                                                   &lightCount);
     }
     Rcp_ResetTextureStageState();
     setupCausticBaseTevStages(viewMtx);
@@ -328,8 +302,7 @@ void mapBlockRender_drawDimmedAabbLights(MapBlockBoundsRec* bounds, MapBlockData
         pColorG = &colorG;
         pPosZ = &posZ;
         pPosY = &posY;
-        for (; i < lightCount; lightPtr = lightPtr + 1, i = i + 1)
-        {
+        for (; i < lightCount; lightPtr = lightPtr + 1, i = i + 1) {
             modelLightStruct_getDiffuseColor(*lightPtr, &colorR, pColorG, pColorB, pColorA);
             colorR = ((int)colorR >> 1) + ((int)colorR >> 2);
             colorG = ((int)colorG >> 1) + ((int)colorG >> 2);
@@ -348,8 +321,7 @@ void mapBlockRender_drawDimmedAabbLights(MapBlockBoundsRec* bounds, MapBlockData
     return;
 }
 
-u32 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ, f32 maxZ, f32* planeOffsets)
-{
+u32 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ, f32 maxZ, f32* planeOffsets) {
     FrustumPlane* plane;
     int cornerIndex;
     int i;
@@ -361,36 +333,26 @@ u32 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 
     float farZ;
 
     plane = gViewFrustumPlanes;
-    for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
-    {
+    for (i = 0; i < FRUSTUM_PLANE_COUNT; i++) {
         cornerIndex = plane[i].aabbCornerIndex;
-        if ((cornerIndex & 1) != 0)
-        {
+        if ((cornerIndex & 1) != 0) {
             nearX = maxX;
             farX = minX;
-        }
-        else
-        {
+        } else {
             nearX = minX;
             farX = maxX;
         }
-        if ((cornerIndex & 2) != 0)
-        {
+        if ((cornerIndex & 2) != 0) {
             nearY = maxY;
             farY = minY;
-        }
-        else
-        {
+        } else {
             nearY = minY;
             farY = maxY;
         }
-        if ((cornerIndex & 4) != 0)
-        {
+        if ((cornerIndex & 4) != 0) {
             nearZ = maxZ;
             farZ = minZ;
-        }
-        else
-        {
+        } else {
             nearZ = minZ;
             farZ = maxZ;
         }
@@ -399,16 +361,16 @@ u32 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 
              0.0f) &&
             (farX * plane[i].normalX + farY * plane[i].normalY + farZ * plane[i].normalZ + plane[i].distance +
                  planeOffsets[i] <
-             0.0f))
+             0.0f)) {
             return 0;
+        }
     }
     return 1;
 }
 
 static u8 mapBlockBounds_ComputeAndTestPlanes(MapBlockBoundsRec* bounds, struct MapBlockData* block,
                                               FrustumPlane* planes, int planeCount, f32* minX, f32* minY, f32* minZ,
-                                              f32* maxX, f32* maxY, f32* maxZ)
-{
+                                              f32* maxX, f32* maxY, f32* maxZ) {
     u8 cornerIndex;
     float nearX;
     float nearY;
@@ -423,44 +385,31 @@ static u8 mapBlockBounds_ComputeAndTestPlanes(MapBlockBoundsRec* bounds, struct 
     *minY = (f32)(bounds->minY >> 3) + block->transform[1][3];
     *maxZ = (f32)(bounds->maxZ >> 3) + block->transform[2][3];
     *minZ = (f32)(bounds->minZ >> 3) + block->transform[2][3];
-    for (i = 0; i < planeCount; i = i + 1)
-    {
+    for (i = 0; i < planeCount; i = i + 1) {
         cornerIndex = planes->aabbCornerIndex;
-        if ((cornerIndex & 1) != 0)
-        {
+        if ((cornerIndex & 1) != 0) {
             nearX = *maxX;
             farX = *minX;
-        }
-        else
-        {
+        } else {
             nearX = *minX;
             farX = *maxX;
         }
-        if ((cornerIndex & 2) != 0)
-        {
+        if ((cornerIndex & 2) != 0) {
             nearY = *maxY;
             farY = *minY;
-        }
-        else
-        {
+        } else {
             nearY = *minY;
             farY = *maxY;
         }
-        if ((cornerIndex & 4) != 0)
-        {
+        if ((cornerIndex & 4) != 0) {
             nearZ = *maxZ;
             farZ = *minZ;
-        }
-        else
-        {
+        } else {
             nearZ = *minZ;
             farZ = *maxZ;
         }
-        if ((planes->distance + (nearX * planes->normalX + nearY * planes->normalY + nearZ * planes->normalZ) <
-             0.0f) &&
-            (planes->distance + (farX * planes->normalX + farY * planes->normalY + farZ * planes->normalZ) <
-             0.0f))
-        {
+        if ((planes->distance + (nearX * planes->normalX + nearY * planes->normalY + nearZ * planes->normalZ) < 0.0f) &&
+            (planes->distance + (farX * planes->normalX + farY * planes->normalY + farZ * planes->normalZ) < 0.0f)) {
             return 0;
         }
         planes++;
@@ -469,8 +418,7 @@ static u8 mapBlockBounds_ComputeAndTestPlanes(MapBlockBoundsRec* bounds, struct 
 }
 
 void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Shader* shader,
-                             ModelRenderInstrsState* state, float* mtx)
-{
+                             ModelRenderInstrsState* state, float* mtx) {
     int lightPos[3];
     int count;
     float minX;
@@ -504,29 +452,23 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
         }
         state->bit = bitPos + 8;
         bounds[0] = &block->displayLists[(bits >> (bitPos & 7)) & 0xff];
-        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
-        {
+        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0)) {
             return;
         }
         if (mapBlockBounds_ComputeAndTestPlanes(bounds[0], block, (FrustumPlane*)((u8*)texGlobals + 0x987c),
-                                                FRUSTUM_PLANE_COUNT, &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
-        {
+                                                FRUSTUM_PLANE_COUNT, &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0) {
             return;
         }
-        if (passSelect == 0)
-        {
+        if (passSelect == 0) {
             flags = SHADER_FLAGS(shader);
-            if ((flags & 0x80000000) != 0)
-            {
+            if ((flags & 0x80000000) != 0) {
                 int shadowType;
 
                 lightmapQueueShadowRow(bounds[0], block, bounds[0]->selector);
                 shadowType = 5;
                 texGlobals[gLightmapDrawQueueCount].type = shadowType;
                 gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
-            }
-            else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
-            {
+            } else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0)) {
                 int shadowType;
 
                 lightmapQueueShadowRow(bounds[0], block, bounds[0]->selector);
@@ -534,111 +476,81 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
                 texGlobals[gLightmapDrawQueueCount].type = shadowType;
                 gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
             }
-        }
-        else
-        {
-            if (shader != NULL)
-            {
+        } else {
+            if (shader != NULL) {
                 flags = SHADER_FLAGS(shader);
-                if (((flags & 0x80000000) == 0) && ((flags & 0x20000) == 0))
-                {
-                    if ((shader != NULL) && ((flags & 0x80000) != 0))
-                    {
+                if (((flags & 0x80000000) == 0) && ((flags & 0x20000) == 0)) {
+                    if ((shader != NULL) && ((flags & 0x80000) != 0)) {
                         count = 0;
-                    }
-                    else
-                    {
+                    } else {
                         modelLightStruct_selectBrightestAabbLights(
                             minX + playerMapOffsetX, minY, minZ + playerMapOffsetZ, maxX + playerMapOffsetX, maxY,
                             maxZ + playerMapOffsetZ, gTexBlockLightList, 2, &count);
                     }
                     if ((shader != NULL) &&
-                        (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
-                    {
+                        (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0)))) {
                         ObjSeq_copyDefaultColor(&chanColor);
                         chanColor.a = 0;
                         chanColor.b = 0;
                         chanColor.g = 0;
                         chanColor.r = 0;
-                        if (count == 0)
-                        {
-                            if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
-                            {
+                        if (count == 0) {
+                            if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0)) {
                                 addLightColorModulateStage((int*)&chanColor);
-                            }
-                            else
-                            {
+                            } else {
                                 addVertexAlphaDimStage((u8*)&chanColor);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             modelLightStruct_getDiffuseColor(gTexBlockLightList[0], &lightColor[0], &lightColor[1],
                                                              &lightColor[2], &lightColor[3]);
-                            modelLightStruct_getPosition(gTexBlockLightList[0], (f32*)&lightPos[0],
-                                                         (f32*)&lightPos[1], (f32*)&lightPos[2]);
+                            modelLightStruct_getPosition(gTexBlockLightList[0], (f32*)&lightPos[0], (f32*)&lightPos[1],
+                                                         (f32*)&lightPos[2]);
                             addFirstPointLightStages(modelLightStruct_getRadius(gTexBlockLightList[0]),
-                                        (int*)lightColor, (f32*)&lightPos[0], (u8*)&chanColor);
-                            for (i = 1; i < count; i = i + 1)
-                            {
-                                modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0],
-                                                                 &lightColor[1], &lightColor[2], &lightColor[3]);
+                                                     (int*)lightColor, (f32*)&lightPos[0], (u8*)&chanColor);
+                            for (i = 1; i < count; i = i + 1) {
+                                modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0], &lightColor[1],
+                                                                 &lightColor[2], &lightColor[3]);
                                 modelLightStruct_getPosition(gTexBlockLightList[i], (f32*)&lightPos[0],
                                                              (f32*)&lightPos[1], (f32*)&lightPos[2]);
                                 addPointLightAccumStages(modelLightStruct_getRadius(gTexBlockLightList[i]),
-                                            (int*)lightColor, (f32*)&lightPos[0]);
+                                                         (int*)lightColor, (f32*)&lightPos[0]);
                             }
-                            if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
-                            {
+                            if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0)) {
                                 addAccumulatedLightModulateStage();
-                            }
-                            else
-                            {
+                            } else {
                                 addAccumulatedLightBlendStages();
                             }
                         }
-                    }
-                    else
-                    {
-                        for (i = 0; i < count; i = i + 1)
-                        {
-                            modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0],
-                                                             &lightColor[1], &lightColor[2], &lightColor[3]);
-                            modelLightStruct_getPosition(gTexBlockLightList[i], (f32*)&lightPos[0],
-                                                         (f32*)&lightPos[1], (f32*)&lightPos[2]);
+                    } else {
+                        for (i = 0; i < count; i = i + 1) {
+                            modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0], &lightColor[1],
+                                                             &lightColor[2], &lightColor[3]);
+                            modelLightStruct_getPosition(gTexBlockLightList[i], (f32*)&lightPos[0], (f32*)&lightPos[1],
+                                                         (f32*)&lightPos[2]);
                             addPointLightDirectStages(modelLightStruct_getRadius(gTexBlockLightList[i]),
-                                        (int*)lightColor, (f32*)&lightPos[0]);
+                                                      (int*)lightColor, (f32*)&lightPos[0]);
                         }
                     }
-                    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x2000) != 0))
-                    {
-                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x40000000) != 0))
-                        {
+                    if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x2000) != 0)) {
+                        if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x40000000) != 0)) {
                             visible = visArg;
-                        }
-                        else
-                        {
+                        } else {
                             u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(
-                                bounds[0], block, (FrustumPlane*)((u8*)texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX, &minY,
-                                &minZ, &maxX, &maxY, &maxZ);
-                            if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
-                            {
+                                bounds[0], block, (FrustumPlane*)((u8*)texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX,
+                                &minY, &minZ, &maxX, &maxY, &maxZ);
+                            if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0)) {
                                 visible = 1;
-                            }
-                            else
-                            {
+                            } else {
                                 visible = 0;
                             }
-                            if ((u8)visArg != 0)
-                            {
+                            if ((u8)visArg != 0) {
                                 GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
                                 gxSetZMode_(1, GX_LEQUAL, 0);
                                 gxSetPeControl_ZCompLoc_(1);
                                 GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                             }
                         }
-                        if ((u8)visible == 0)
-                        {
+                        if ((u8)visible == 0) {
                             return;
                         }
                         addShadowFalloffTevStages();
@@ -649,8 +561,7 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
             GXCallDisplayList(bounds[0]->dlist, bounds[0]->dlistSize);
             flags = SHADER_FLAGS(shader);
             if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
-                (mapBlockBounds_HasCornerPastDepthThreshold(bounds[0], mtx) != 0))
-            {
+                (mapBlockBounds_HasCornerPastDepthThreshold(bounds[0], mtx) != 0)) {
                 int shadowType;
 
                 lightmapQueueShadowRow(bounds[0], block, 0x17);
@@ -662,12 +573,11 @@ void mapBlockRender_callList(u8 passSelect, u32 visArg, MapBlockData* block, Sha
     }
 }
 
-static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
-{
+static void mapBlockRender_setupShaderTextures(Shader* shader, int mode) {
     int layerIdx;
     ShaderLayer* layer;
     Texture* texture;
-    f32 (*texMtx)[4];
+    f32(*texMtx)[4];
     int overrideIdx;
     int remain;
     MapTextureOverride* overrideEntry;
@@ -678,167 +588,118 @@ static void mapBlockRender_setupShaderTextures(Shader* shader, int mode)
 
     kColor = lbl_803DEBB0;
     if ((shader->layerCount == 2) &&
-        (texture = (Texture*)Shader_getLayer(shader, 1),
-         (((ShaderLayer*)texture)->typeBits & 0x7f) == 9u))
-    {
+        (texture = (Texture*)Shader_getLayer(shader, 1), (((ShaderLayer*)texture)->typeBits & 0x7f) == 9u)) {
         layer = Shader_getLayer(shader, 0);
         {
             u8 overrideType;
-            if ((overrideType = layer->materialId) != '\0')
-            {
+            if ((overrideType = layer->materialId) != '\0') {
                 Texture* layerTextureId = layer->texture;
                 MapTextureOverride* overrides;
                 overrideIdx = 0;
                 overrides = (MapTextureOverride*)(int)gMapTextureOverrides;
                 overrideEntry = overrides;
-                for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--)
-                {
-                    if (((overrideEntry->refCount > 0) &&
-                         (overrideEntry->texture == layerTextureId)) &&
-                        ((int)overrideType == overrideEntry->type))
-                    {
-                        texture = textureGetAnimationFrame(layerTextureId,
-                                                           overrides[overrideIdx].frame);
+                for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--) {
+                    if (((overrideEntry->refCount > 0) && (overrideEntry->texture == layerTextureId)) &&
+                        ((int)overrideType == overrideEntry->type)) {
+                        texture = textureGetAnimationFrame(layerTextureId, overrides[overrideIdx].frame);
                         break;
                     }
                     overrideEntry = overrideEntry + 1;
                     overrideIdx = overrideIdx + 1;
                 }
-            }
-            else
-            {
+            } else {
                 texture = layer->texture;
             }
         }
-        if (layer->scrollMtx != 0xff)
-        {
+        if (layer->scrollMtx != 0xff) {
             tx = gMapTextureScrolls[layer->scrollMtx].offsetX / 1048576.0f;
-            PSMTXTrans(texMatrix, tx,
-                       gMapTextureScrolls[layer->scrollMtx].offsetY /
-                           1048576.0f,
-                       0.0f);
+            PSMTXTrans(texMatrix, tx, gMapTextureScrolls[layer->scrollMtx].offsetY / 1048576.0f, 0.0f);
             texMtx = texMatrix;
-        }
-        else
-        {
+        } else {
             texMtx = NULL;
         }
         addTexLayerStageKColor(texture, texMtx, 0, (GXColor*)&kColor);
-        if ((SHADER_FLAGS(shader) & 0x100) != 0)
-        {
+        if ((SHADER_FLAGS(shader) & 0x100) != 0) {
             addSmallReflectionTevStage();
         }
         layer = Shader_getLayer(shader, 1);
         {
             u8 overrideType;
-            if ((overrideType = layer->materialId) != '\0')
-            {
+            if ((overrideType = layer->materialId) != '\0') {
                 Texture* layerTextureId = layer->texture;
                 MapTextureOverride* overrides;
                 overrideIdx = 0;
                 overrides = (MapTextureOverride*)(int)gMapTextureOverrides;
                 overrideEntry = overrides;
-                for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--)
-                {
-                    if (((overrideEntry->refCount > 0) &&
-                         (overrideEntry->texture == layerTextureId)) &&
-                        ((int)overrideType == overrideEntry->type))
-                    {
-                        texture = textureGetAnimationFrame(layerTextureId,
-                                                           overrides[overrideIdx].frame);
+                for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--) {
+                    if (((overrideEntry->refCount > 0) && (overrideEntry->texture == layerTextureId)) &&
+                        ((int)overrideType == overrideEntry->type)) {
+                        texture = textureGetAnimationFrame(layerTextureId, overrides[overrideIdx].frame);
                         break;
                     }
                     overrideEntry = overrideEntry + 1;
                     overrideIdx = overrideIdx + 1;
                 }
-            }
-            else
-            {
+            } else {
                 texture = layer->texture;
             }
         }
-        if (layer->scrollMtx != 0xff)
-        {
+        if (layer->scrollMtx != 0xff) {
             tx = gMapTextureScrolls[layer->scrollMtx].offsetX / 1048576.0f;
-            PSMTXTrans(texMatrix, tx,
-                       gMapTextureScrolls[layer->scrollMtx].offsetY /
-                           1048576.0f,
-                       0.0f);
+            PSMTXTrans(texMatrix, tx, gMapTextureScrolls[layer->scrollMtx].offsetY / 1048576.0f, 0.0f);
             texMtx = texMatrix;
-        }
-        else
-        {
+        } else {
             texMtx = NULL;
         }
         addTexLayerStage(texture, texMtx, 9);
         addVertexColorKAlphaStage((GXColor*)&kColor);
-    }
-    else
-    {
-        for (layerIdx = 0; layerIdx < (int)(u32)shader->layerCount; layerIdx = layerIdx + 1)
-        {
+    } else {
+        for (layerIdx = 0; layerIdx < (int)(u32)shader->layerCount; layerIdx = layerIdx + 1) {
             Texture* layerTextureId;
             layer = Shader_getLayer(shader, layerIdx);
             layerTextureId = layer->texture;
-            if (layerTextureId != NULL)
-            {
+            if (layerTextureId != NULL) {
                 u8 overrideType;
                 {
-                    if ((overrideType = layer->materialId) != '\0')
-                    {
+                    if ((overrideType = layer->materialId) != '\0') {
                         MapTextureOverride* overrides;
                         overrideIdx = 0;
                         overrides = (MapTextureOverride*)(int)gMapTextureOverrides;
                         overrideEntry = overrides;
-                        for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--)
-                        {
-                            if (((overrideEntry->refCount > 0) &&
-                                 (overrideEntry->texture == layerTextureId)) &&
-                                ((int)overrideType == overrideEntry->type))
-                            {
-                                texture = textureGetAnimationFrame(
-                                    layerTextureId, overrides[overrideIdx].frame);
+                        for (remain = 0x50; remain != 0 || (texture = layerTextureId, 0); remain--) {
+                            if (((overrideEntry->refCount > 0) && (overrideEntry->texture == layerTextureId)) &&
+                                ((int)overrideType == overrideEntry->type)) {
+                                texture = textureGetAnimationFrame(layerTextureId, overrides[overrideIdx].frame);
                                 break;
                             }
                             overrideEntry = overrideEntry + 1;
                             overrideIdx = overrideIdx + 1;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         texture = layerTextureId;
                     }
-                    if (layer->scrollMtx != 0xff)
-                    {
+                    if (layer->scrollMtx != 0xff) {
                         int scrollOffset = (u32)layer->scrollMtx * 0x10;
                         tx = ((MapTextureScroll*)((u8*)gMapTextureScrolls + scrollOffset))->offsetX / 1048576.0f;
                         PSMTXTrans(texMatrix, tx,
                                    ((MapTextureScroll*)((u8*)gMapTextureScrolls + scrollOffset))->offsetY / 1048576.0f,
                                    0.0f);
                         texMtx = texMatrix;
-                    }
-                    else
-                    {
+                    } else {
                         texMtx = NULL;
                     }
                     layerByte = layer->typeBits & 0x7f;
-                    if ((SHADER_FLAGS(shader) & 0x40000) != 0)
-                    {
+                    if ((SHADER_FLAGS(shader) & 0x40000) != 0) {
                         addTexLayerStagesLit((void*)texture, texMtx);
-                    }
-                    else
-                    {
+                    } else {
                         addTexLayerStage(texture, texMtx, layerByte);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 addVertexColorStage();
             }
         }
-        if ((SHADER_FLAGS(shader) & 0x100) != 0)
-        {
+        if ((SHADER_FLAGS(shader) & 0x100) != 0) {
             addSmallReflectionTevStage();
         }
     }
@@ -942,8 +803,7 @@ Shader* mapBlockRender_setShader(u8 doSetup, MapBlockData* blockData, ModelRende
     return shader;
 }
 
-typedef struct TrackP6Entry
-{
+typedef struct TrackP6Entry {
     f32 relX0;
     f32 relY0;
     f32 relZ0;
@@ -955,14 +815,12 @@ typedef struct TrackP6Entry
     f32 relZ2;
 } TrackP6Entry;
 
-
 /* TrackTriangle -- the 0x4c-byte collision triangle record packed into
  * gTrackTriangleBuffer.  Plane and edge-plane normals are prebaked f32;
  * vertex coordinates are stored as s16 triplets grouped by axis
  * (x0 x1 x2 / y0 y1 y2 / z0 z1 z2), which the hit-detect code reads both
  * by field and as an s16 index off the record base. */
-typedef struct TrackTriangle
-{
+typedef struct TrackTriangle {
     f32 planeD;     /* 0x00 plane equation constant */
     f32 planeN[3];  /* 0x04 plane normal xyz */
     s16 vx[3];      /* 0x10 vertex x coords */
@@ -978,31 +836,26 @@ typedef struct TrackTriangle
     u8 edgeOutBits; /* 0x4b per-edge outside bits from last query */
 } TrackTriangle;
 
-
 extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 extern int sSynthFadeUnit;
 extern int renderFlags;
-extern f32 lbl_803DEBDC;
+extern const f32 lbl_803DEBDC;
 extern f32 lbl_803DEC40;
 
-static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z)
-{
+static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z) {
     GXWGFifo.f32 = x;
     GXWGFifo.f32 = y;
     GXWGFifo.f32 = z;
 }
 
-static inline void GXTexCoord2f32(const f32 s, const f32 t)
-{
+static inline void GXTexCoord2f32(const f32 s, const f32 t) {
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
 
 void* trackGetBlockDescriptors(u32* outVal);
 
-void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader,
-                               ModelRenderInstrsState* state)
-{
+void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader, ModelRenderInstrsState* state) {
     int* stateWords;
     u32 val;
     int pos;
@@ -1022,8 +875,7 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader,
     int i;
 
     stateWords = (int*)state;
-    if (doSetup != 0)
-    {
+    if (doSetup != 0) {
         GXClearVtxDesc();
     }
     pos = state->bit;
@@ -1034,8 +886,7 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader,
     val |= p[2] << 16;
     state->bit = pos + 1;
     bit = (val >> (pos & 7)) & 1;
-    if (doSetup != 0)
-    {
+    if (doSetup != 0) {
         GXSetVtxDesc(GX_VA_POS, bit ? GX_INDEX16 : GX_INDEX8);
     }
     pos2 = state->bit;
@@ -1046,8 +897,7 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader,
     val2 |= q[2] << 16;
     state->bit = pos2 + 1;
     bit2 = (val2 >> (pos2 & 7)) & 1;
-    if (doSetup != 0)
-    {
+    if (doSetup != 0) {
         GXSetVtxDesc(GX_VA_CLR0, bit2 ? GX_INDEX16 : GX_INDEX8);
     }
     pos3 = state->bit;
@@ -1058,30 +908,23 @@ void mapBlockRender_setVtxDcrs(u8 doSetup, MapBlockData* block, Shader* shader,
     val3 |= r[2] << 16;
     state->bit = pos3 + 1;
     bit3 = (val3 >> (pos3 & 7)) & 1;
-    if (doSetup != 0)
-    {
-        if (shader != NULL && (shader->flags & 0x80000000) == 0)
-        {
-            for (i = 0; i < shader->layerCount; i++)
-            {
+    if (doSetup != 0) {
+        if (shader != NULL && (shader->flags & 0x80000000) == 0) {
+            for (i = 0; i < shader->layerCount; i++) {
                 GXSetVtxDesc(i + GX_VA_TEX0, bit3 ? GX_INDEX16 : GX_INDEX8);
             }
-        }
-        else
-        {
+        } else {
             GXSetVtxDesc(GX_VA_TEX0, bit3 ? GX_INDEX16 : GX_INDEX8);
         }
     }
 }
 
-
-void setupToRenderMapBlock(MapBlockData* block, void* posMtx)
-{
+void setupToRenderMapBlock(MapBlockData* block, void* posMtx) {
     Mtx out;
     Mtx tmp;
     f32 fc;
 
-    GXLoadPosMtxImm((const f32 (*)[4])posMtx, GX_PNMTX0);
+    GXLoadPosMtxImm((const f32(*)[4])posMtx, GX_PNMTX0);
     PSMTXCopy((MtxPtr)posMtx, tmp);
     fc = 0.0f;
     tmp[0][3] = fc;
@@ -1096,8 +939,7 @@ void setupToRenderMapBlock(MapBlockData* block, void* posMtx)
     GXSetArray(GX_VA_TEX1, block->vertexTexCoords, 4);
 }
 
-void renderMapBlock(MapBlockData* block, u8 type)
-{
+void renderMapBlock(MapBlockData* block, u8 type) {
     ModelRenderInstrsState state;
     f32 m[16];
     void* instructions;
@@ -1109,32 +951,28 @@ void renderMapBlock(MapBlockData* block, u8 type)
 
     shader = NULL;
     doSetup = FALSE;
-    if (type == 1)
-    {
+    if (type == 1) {
         instructions = block->renderInstrsTransp;
         instructionCount = block->nRenderInstrsTransp;
-    }
-    else if (type == 2)
-    {
+    } else if (type == 2) {
         instructions = block->renderInstrsWater;
         instructionCount = block->nRenderInstrsWater;
-    }
-    else
-    {
+    } else {
         instructions = block->renderInstrsMain;
         instructionCount = block->nRenderInstrsMain;
         doSetup = TRUE;
     }
-    if (instructionCount == 0)
+    if (instructionCount == 0) {
         return;
+    }
     viewMtx = Camera_GetViewMatrix();
     PSMTXConcat((MtxPtr)viewMtx, block->transform, (MtxPtr)m);
-    if (doSetup)
+    if (doSetup) {
         setupToRenderMapBlock(block, m);
+    }
     modelRenderInstrsState_init(&state, instructions, instructionCount << 3, instructionCount << 3);
     done = FALSE;
-    while (!done)
-    {
+    while (!done) {
         u32 word;
         int op;
         int pos;
@@ -1149,8 +987,7 @@ void renderMapBlock(MapBlockData* block, u8 type)
         word |= bp[2] << 16;
         state.bit = pos + 4;
         op = (word >> (pos & 7)) & 0xf;
-        switch (op)
-        {
+        switch (op) {
         case 3:
             mapBlockRender_setVtxDcrs(doSetup, block, shader, &state);
             break;
@@ -1160,8 +997,7 @@ void renderMapBlock(MapBlockData* block, u8 type)
         case 2:
             mapBlockRender_callList(doSetup, 0, block, shader, &state, m);
             break;
-        case 4:
-        {
+        case 4: {
             u32 word2;
             int cnt;
             int i;
@@ -1174,8 +1010,9 @@ void renderMapBlock(MapBlockData* block, u8 type)
             word2 |= bp2[2] << 16;
             state.bit = pos2 + 4;
             cnt = (word2 >> (pos2 & 7)) & 0xf;
-            for (i = 0; i < cnt; i++)
+            for (i = 0; i < cnt; i++) {
                 modelRenderInstrsState_advance(sp, 8);
+            }
             break;
         }
         case 5:
@@ -1185,8 +1022,7 @@ void renderMapBlock(MapBlockData* block, u8 type)
     }
 }
 
-void renderGlows(void)
-{
+void renderGlows(void) {
     f32 px, py, pz;
     s32 sx, sy, sz;
     u8 amb[3];
@@ -1216,16 +1052,14 @@ void renderGlows(void)
     gSunFlareScissorWidth = 0;
     gSunFlareScissorHeight = 0;
     sunAlpha = skyGetSunRenderAlpha(2);
-    if (sunAlpha != 0 && (renderFlags & 0x40))
-    {
+    if (sunAlpha != 0 && (renderFlags & 0x40)) {
         viewMtx = (MtxPtr)Camera_GetViewMatrix();
         skyGetSunLightDirection(0, &dir.x, &dir.y, &dir.z);
         cam.x = viewMtx[2][0];
         cam.y = viewMtx[2][1];
         cam.z = viewMtx[2][2];
         sunDot = PSVECDotProduct(&dir, &cam);
-        if (sunDot > 0.0f)
-        {
+        if (sunDot > 0.0f) {
             int occ;
             f32 fade;
             skyBuildSunModelMatrix(sunMtx);
@@ -1235,37 +1069,41 @@ void renderGlows(void)
             gSunFlareScissorWidth = 0x20;
             gSunFlareScissorY = sy - 0x10;
             gSunFlareScissorHeight = 0x20;
-            if ((int)gSunFlareScissorX < 0)
+            if ((int)gSunFlareScissorX < 0) {
                 gSunFlareScissorX = 0;
-            else if ((int)gSunFlareScissorX > 0x280)
+            } else if ((int)gSunFlareScissorX > 0x280) {
                 gSunFlareScissorX = 0x280;
-            if ((int)gSunFlareScissorY < 0)
+            }
+            if ((int)gSunFlareScissorY < 0) {
                 gSunFlareScissorY = 0;
-            else if ((int)gSunFlareScissorY > 0x1e0)
+            } else if ((int)gSunFlareScissorY > 0x1e0) {
                 gSunFlareScissorY = 0x1e0;
-            if ((int)gSunFlareScissorX + 0x20 > 0x280)
+            }
+            if ((int)gSunFlareScissorX + 0x20 > 0x280) {
                 gSunFlareScissorWidth = 0x280 - gSunFlareScissorX;
-            if ((int)gSunFlareScissorY + 0x20 > 0x1e0)
+            }
+            if ((int)gSunFlareScissorY + 0x20 > 0x1e0) {
                 gSunFlareScissorHeight = 0x1e0 - gSunFlareScissorY;
+            }
             occ = 0;
-            for (i = 0; i < 5; i++)
-            {
-                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i].x,
-                                             sy + gSunOcclusionSampleOffsets[i].y, (void*)i);
-                if (sz <= d && pauseMenuGetState() == 0)
+            for (i = 0; i < 5; i++) {
+                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i].x, sy + gSunOcclusionSampleOffsets[i].y,
+                                             (void*)i);
+                if (sz <= d && pauseMenuGetState() == 0) {
                     occ++;
+                }
             }
             fade = (f32)(u32)occ / 5.0f - gSunFlareFade;
-            if (fade > 0.0125f)
+            if (fade > 0.0125f) {
                 fade = 0.0125f;
-            else if (fade < -0.0125f)
+            } else if (fade < -0.0125f) {
                 fade = -0.0125f;
+            }
             gSunFlareFade = gSunFlareFade + fade;
             sunDot = sunDot * gSunFlareFade;
-            if (sunDot > 0.0f)
-            {
+            if (sunDot > 0.0f) {
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
-                GXLoadPosMtxImm((const f32 (*)[4])sunMtx, GX_PNMTX0);
+                GXLoadPosMtxImm((const f32(*)[4])sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(GX_PNMTX0);
                 selectTexture(skyGetSkyTexture(), 0);
                 skyGetSunColor(0, &amb[0], &amb[1], &amb[2]);
@@ -1287,29 +1125,26 @@ void renderGlows(void)
         }
     }
     colorScale = alpha;
-    if (gGlowLightCount != 0)
-    {
-        for (i = 0; i < gGlowLightCount; i++)
-        {
+    if (gGlowLightCount != 0) {
+        for (i = 0; i < gGlowLightCount; i++) {
             int d;
             e = gGlowLightList[i];
             Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
             Camera_ClipToScreen(px, py, pz, &sx, &sy, &sz);
             d = depthReadRequestPoll(sx, sy, e);
-            if (sz <= d && pauseMenuGetState() == 0)
+            if (sz <= d && pauseMenuGetState() == 0) {
                 e->glowAlphaStep = 0x10;
-            else
+            } else {
                 e->glowAlphaStep = -0x10;
+            }
         }
         GXSetCurrentMtx(GX_IDENTITY);
         gxTevColor1TexAlphaStage();
         gxSetAdditiveBlendNoZTest();
-        for (i = 0; i < gGlowLightCount; i++)
-        {
+        for (i = 0; i < gGlowLightCount; i++) {
             e = gGlowLightList[i];
-            if (e->glowAlpha != 0)
-            {
+            if (e->glowAlpha != 0) {
                 selectTexture((Texture*)e->glowTexture, 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
                                 (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
@@ -1330,16 +1165,14 @@ void renderGlows(void)
     }
 }
 
-void getSunFlareScissorRect(int* outX, int* outY, int* outWidth, int* outHeight)
-{
+void getSunFlareScissorRect(int* outX, int* outY, int* outWidth, int* outHeight) {
     *outX = gSunFlareScissorX;
     *outY = gSunFlareScissorY;
     *outWidth = gSunFlareScissorWidth;
     *outHeight = gSunFlareScissorHeight;
 }
 
-static inline int isGlowInFrustum(ModelLightStruct* light)
-{
+static inline int isGlowInFrustum(ModelLightStruct* light) {
     FrustumPlane* plane;
     u8 i;
     f32 offsetX;
@@ -1350,35 +1183,33 @@ static inline int isGlowInFrustum(ModelLightStruct* light)
     offsetZ = playerMapOffsetZ;
     offsetX = playerMapOffsetX;
     bias = lbl_803DEBCC;
-    for (; i < 5; i++)
-    {
+    for (; i < 5; i++) {
         f32 dot;
         plane = &gViewFrustumPlanes[i];
         dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
-                  plane->normalZ * (light->worldZ - offsetZ) + plane->distance + bias;
-        if (dot < bias)
-        {
+              plane->normalZ * (light->worldZ - offsetZ) + plane->distance + bias;
+        if (dot < bias) {
             return 0;
         }
     }
     return 1;
 }
 
-void queueGlowRender(ModelLightStruct* light)
-{
+void queueGlowRender(ModelLightStruct* light) {
     int visible;
     u8 idx;
 
-    if (gGlowLightCount >= 100)
+    if (gGlowLightCount >= 100) {
         return;
+    }
 
     visible = isGlowInFrustum(light);
     {
         u8 vis = visible;
-        if (vis == 0 && light->glowAlpha == 0)
+        if (vis == 0 && light->glowAlpha == 0) {
             return;
-        if (vis == 0)
-        {
+        }
+        if (vis == 0) {
             light->glowAlphaStep = -0x10;
         }
     }
@@ -1386,8 +1217,7 @@ void queueGlowRender(ModelLightStruct* light)
     gGlowLightList[idx] = light;
 }
 
-void trackPackVector(short* out, float* vec)
-{
+void trackPackVector(short* out, float* vec) {
     int yScaled;
     int zScaled;
 
@@ -1398,8 +1228,7 @@ void trackPackVector(short* out, float* vec)
     out[2] = zScaled;
 }
 
-void trackUnpackVector(s16* in, f32* out)
-{
+void trackUnpackVector(s16* in, f32* out) {
     out[0] = (f32)(s32)in[0] * gTrackPackedCoordScale;
     out[1] = (f32)(s32)in[1] * gTrackPackedCoordScale;
     out[2] = (f32)(s32)in[2] * gTrackPackedCoordScale;
@@ -1409,20 +1238,17 @@ void trackUnpackVector(s16* in, f32* out)
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
 
-u32 trackGetPackedSurfaceType(int* obj)
-{
+u32 trackGetPackedSurfaceType(int* obj) {
     u32 v = obj[4];
     v &= 0x00FF0000;
     return v >> 16;
 }
 
-int mapBlockGetPolygonGroupType(void* obj)
-{
+int mapBlockGetPolygonGroupType(void* obj) {
     return (((MapTriGroup*)obj)->flags & 0xff000000) >> 24;
 }
 
-int mapBlockCountTrianglesByType(MapBlockData* block, int type)
-{
+int mapBlockCountTrianglesByType(MapBlockData* block, int type) {
     MapTriGroup* entry;
     int offset;
     int total;
@@ -1431,11 +1257,9 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type)
     total = 0;
     offset = 0;
     count = block->polyGroupCount;
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         entry = (MapTriGroup*)((u8*)block->polygonGroups + offset);
-        if (type == (int)((entry->flags & 0xff000000) >> 24))
-        {
+        if (type == (int)((entry->flags & 0xff000000) >> 24)) {
             total += entry[1].firstTri - entry->firstTri;
         }
         offset += 0x14;
@@ -1443,101 +1267,90 @@ int mapBlockCountTrianglesByType(MapBlockData* block, int type)
     return total;
 }
 
-void* mapBlockGetPolygon(MapBlockData* obj, int idx)
-{
+void* mapBlockGetPolygon(MapBlockData* obj, int idx) {
     return (char*)obj->gcPolygons + idx * 8;
 }
 
-MapTriGroup* mapBlockGetPolygonGroup(MapBlockData* obj, int idx)
-{
+MapTriGroup* mapBlockGetPolygonGroup(MapBlockData* obj, int idx) {
     return (MapTriGroup*)obj->polygonGroups + idx;
 }
 
-MapBlockBoundsRec* mapBlockGetDisplayListBounds(MapBlockData* obj, int idx)
-{
+MapBlockBoundsRec* mapBlockGetDisplayListBounds(MapBlockData* obj, int idx) {
     return &obj->displayLists[idx];
 }
 
-Shader* mapBlockGetShader(MapBlockData* obj, int idx)
-{
+Shader* mapBlockGetShader(MapBlockData* obj, int idx) {
     return obj->shaders + idx;
 }
 
-void MapBlock_initShaders(MapBlockData* block)
-{
+void MapBlock_initShaders(MapBlockData* block) {
     int i;
     int j;
     int ref;
     Shader* sh;
-    for (i = 0; i < block->shaderCount; i++)
-    {
+    for (i = 0; i < block->shaderCount; i++) {
         sh = &block->shaders[i];
-        for (j = 0; j < sh->layerCount; j++)
-        {
+        for (j = 0; j < sh->layerCount; j++) {
             ref = sh->layers[j].textureIndex;
-            if (ref != -1)
-            {
+            if (ref != -1) {
                 sh->layers[j].texture = block->textures[ref].texture;
                 ref = sh->layers[j].materialId;
-                if ((u32)ref != 0u)
-                {
+                if ((u32)ref != 0u) {
                     mapTextureOverrideAcquire(sh->layers[j].texture, 0, ref);
                 }
-            }
-            else
-            {
+            } else {
                 sh->layers[j].texture = NULL;
             }
             sh->layers[j].scrollMtx = 0xff;
         }
         ref = sh->auxTextureIndex;
-        if (ref != -1)
-        {
+        if (ref != -1) {
             sh->auxTexture = block->textures[ref].texture;
-        }
-        else
-        {
+        } else {
             sh->auxTexture = NULL;
         }
     }
 }
 
-static inline void* mapBlockRelocatePointer(MapBlockData* block, void* offset)
-{
+static inline void* mapBlockRelocatePointer(MapBlockData* block, void* offset) {
     return (u8*)block + (u32)offset;
 }
 
-void MapBlock_init(MapBlockData* block)
-{
+void MapBlock_init(MapBlockData* block) {
     int i;
 
-    if (block->textures != NULL)
+    if (block->textures != NULL) {
         block->textures = mapBlockRelocatePointer(block, block->textures);
-    if (block->gcPolygons != NULL)
+    }
+    if (block->gcPolygons != NULL) {
         block->gcPolygons = mapBlockRelocatePointer(block, block->gcPolygons);
-    if (block->polygonGroups != NULL)
+    }
+    if (block->polygonGroups != NULL) {
         block->polygonGroups = mapBlockRelocatePointer(block, block->polygonGroups);
+    }
     block->vertices = mapBlockRelocatePointer(block, block->vertices);
     block->vertexColors = mapBlockRelocatePointer(block, block->vertexColors);
     block->vertexTexCoords = mapBlockRelocatePointer(block, block->vertexTexCoords);
-    if (block->renderInstrsMain != NULL)
+    if (block->renderInstrsMain != NULL) {
         block->renderInstrsMain = mapBlockRelocatePointer(block, block->renderInstrsMain);
-    if (block->renderInstrsTransp != NULL)
+    }
+    if (block->renderInstrsTransp != NULL) {
         block->renderInstrsTransp = mapBlockRelocatePointer(block, block->renderInstrsTransp);
-    if (block->renderInstrsWater != NULL)
+    }
+    if (block->renderInstrsWater != NULL) {
         block->renderInstrsWater = mapBlockRelocatePointer(block, block->renderInstrsWater);
+    }
     block->displayLists = mapBlockRelocatePointer(block, block->displayLists);
-    if (block->shaders != NULL)
+    if (block->shaders != NULL) {
         block->shaders = mapBlockRelocatePointer(block, block->shaders);
+    }
 
-    for (i = 0; i < block->displayListCount; i++)
-    {
+    for (i = 0; i < block->displayListCount; i++) {
         block->displayLists[i].dlist = mapBlockRelocatePointer(block, block->displayLists[i].dlist);
     }
 }
 
-void MapBlock_initHits(MapBlockData* block, int index)
-{
+void MapBlock_initHits(MapBlockData* block, int index) {
     int i;
     int* table = (int*)gHitsTab;
     int fileOff = table[index];
@@ -1545,23 +1358,19 @@ void MapBlock_initHits(MapBlockData* block, int index)
     MapHitLine* entry;
     s16 value;
 
-    if (size > 0)
-    {
+    if (size > 0) {
         block->hits = mmAlloc(size, 5, 0);
         fileLoadToBufferOffset(MLDF_FILEID_HITS_BIN, block->hits, fileOff, size);
     }
     block->hitCount = (u32)size / sizeof(MapHitLine);
     i = 0;
-    while (i < block->hitCount)
-    {
+    while (i < block->hitCount) {
         entry = &block->hits[i];
-        if (entry->x[0] < 0 || (value = entry->x[1]) < 0 || entry->x[0] > 0x280 || value > 0x280)
-        {
+        if (entry->x[0] < 0 || (value = entry->x[1]) < 0 || entry->x[0] > 0x280 || value > 0x280) {
             entry->kind = 0x40;
         }
         entry = &block->hits[i];
-        if (entry->z[0] < 0 || (value = entry->z[1]) < 0 || entry->z[0] > 0x280 || value > 0x280)
-        {
+        if (entry->z[0] < 0 || (value = entry->z[1]) < 0 || entry->z[0] > 0x280 || value > 0x280) {
             entry->kind = 0x40;
         }
         i++;
@@ -1571,91 +1380,71 @@ void MapBlock_initHits(MapBlockData* block, int index)
     block->flags4 &= ~0x40;
 }
 
-MapBlockData* MapBlock_loadFromFile(int blockId)
-{
+MapBlockData* MapBlock_loadFromFile(int blockId) {
     int compressedLen;
     int decompressedSize;
     void* buf;
     int blockOff = 0;
     int* table;
     int tableEntry;
-    if (blockId <= gMapBlockIndexCount)
-    {
+    if (blockId <= gMapBlockIndexCount) {
         table = gMapBlockIndexList;
-        if (table != 0)
-        {
+        if (table != 0) {
             tableEntry = table[blockId];
-            if (tableEntry != -1)
-            {
-                if (tableEntry != 0 || table[blockId + 1] != 0)
-                {
+            if (tableEntry != -1) {
+                if (tableEntry != 0 || table[blockId + 1] != 0) {
                     blockOff = tableEntry;
                     checkLoadBlock(tableEntry, &compressedLen, &decompressedSize);
-                }
-                else
-                {
+                } else {
                     return 0;
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         return 0;
     }
-    if (compressedLen <= 0)
-    {
+    if (compressedLen <= 0) {
         return 0;
     }
-    if (decompressedSize > 0x32000)
-    {
+    if (decompressedSize > 0x32000) {
         return 0;
     }
     buf = mmAlloc(decompressedSize, 5, 0);
-    if (buf == 0)
-    {
+    if (buf == 0) {
         return 0;
     }
     loadAndDecompressDataFile(MLDF_FILEID_BLOCKS_BIN_A, buf, blockOff, compressedLen, 0, 0, 0);
     return buf;
 }
 
-void mapBlockGpuRecoveryHook(void)
-{
+void mapBlockGpuRecoveryHook(void) {
     int n;
     int i;
 
     i = 0;
     n = gMapBlockCount;
-    for (; i < n; i++)
-    {
+    for (; i < n; i++) {
     }
 }
 
-void* mapBlockGetUnused00Value(MapBlockData* block)
-{
+void* mapBlockGetUnused00Value(MapBlockData* block) {
     return NULL;
 }
 
-void mapGetBlocks(void** outLayerTables, u32* outBlocks)
-{
+void mapGetBlocks(void** outLayerTables, u32* outBlocks) {
     *outLayerTables = gMapBlockLayerTables;
     *outBlocks = (u32)gMapBlocks;
 }
 
-void mapClearBlockEdgeFlags(void)
-{
+void mapClearBlockEdgeFlags(void) {
     int i;
     int j;
     MapBlockData* block;
 
-    for (i = 0; i < gMapBlockCount; i++)
-    {
+    for (i = 0; i < gMapBlockCount; i++) {
         block = gMapBlocks[i];
-        if (block != NULL)
-        {
-            for (j = 0; j < block->displayListCount; j++)
-            {
+        if (block != NULL) {
+            for (j = 0; j < block->displayListCount; j++) {
                 block->displayLists[j].flags = 0;
             }
         }
@@ -1663,8 +1452,7 @@ void mapClearBlockEdgeFlags(void)
 }
 
 int collectShadowTrackTriangles(GameObject* obj, int triBuf, void* planesOut, int vertsOut, int unusedTriangleCount,
-                                f32 offX, f32 offZ, int unusedRenderMode, int kindSelector)
-{
+                                f32 offX, f32 offZ, int unusedRenderMode, int kindSelector) {
     int j;
     f32 lm[12];
     u8* descBytes = trackGetBlockDescriptors((u32*)&j);
@@ -1678,26 +1466,21 @@ int collectShadowTrackTriangles(GameObject* obj, int triBuf, void* planesOut, in
     j = grp = 0;
     total = 0;
     triangleFlag = kindSelector ? 4 : 8;
-    for (; descBytes < end; descBytes += 0x18)
-    {
+    for (; descBytes < end; descBytes += 0x18) {
         u32 id = *(u32*)descBytes;
-        if (id == 0 || id == *(u32*)&obj->anim.parent)
-        {
+        if (id == 0 || id == *(u32*)&obj->anim.parent) {
             f32 fx = obj->anim.localPosX;
             f32 fz = obj->anim.localPosZ;
             TrackShadowTriangle* outA;
 
-            if (id == 0)
-            {
+            if (id == 0) {
                 fx -= offX;
                 fz -= offZ;
             }
             j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
             outA = (TrackShadowTriangle*)((char*)planesOut + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
-            {
-                if (triangleFlag & ((TrackTriangle*)triBuf + j)->flags)
-                {
+            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10) {
+                if (triangleFlag & ((TrackTriangle*)triBuf + j)->flags) {
                     ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]) - fx;
                     ((TrackP6Entry*)vertsOut)->relY0 =
                         __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]) - obj->anim.localPosY;
@@ -1722,9 +1505,7 @@ int collectShadowTrackTriangles(GameObject* obj, int triBuf, void* planesOut, in
                 }
                 j++;
             }
-        }
-        else
-        {
+        } else {
             f32* m = *(f32**)((char*)descBytes + 0xc);
             f32* p6start;
             int totalStart;
@@ -1746,10 +1527,8 @@ int collectShadowTrackTriangles(GameObject* obj, int triBuf, void* planesOut, in
             totalStart = total;
             j = (s16)((TrackBlockDescriptor*)descBytes)->firstTriangle;
             outA = (TrackShadowTriangle*)((char*)planesOut + outOff);
-            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10)
-            {
-                if (triangleFlag & ((TrackTriangle*)triBuf + j)->flags)
-                {
+            while (j < (s16)((TrackBlockDescriptor*)descBytes)[1].firstTriangle && grp < 0x4b0 && total < 0xe10) {
+                if (triangleFlag & ((TrackTriangle*)triBuf + j)->flags) {
                     ((TrackP6Entry*)vertsOut)->relX0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vx[0]);
                     ((TrackP6Entry*)vertsOut)->relY0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vy[0]);
                     ((TrackP6Entry*)vertsOut)->relZ0 = __OSs16tof32(&((TrackTriangle*)triBuf + j)->vz[0]);
@@ -1771,8 +1550,7 @@ int collectShadowTrackTriangles(GameObject* obj, int triBuf, void* planesOut, in
                 }
                 j++;
             }
-            if (totalStart < total)
-            {
+            if (totalStart < total) {
                 PSMTXMultVecArray((MtxPtr)lm, (Vec*)p6start, (Vec*)p6start, total - totalStart);
             }
         }
