@@ -1720,7 +1720,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/544/544.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/545/545.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/546_VFPDragHead/VFPDragHead.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/547_VFP_corepla/VFP_corepla.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/547_VFP_corepla/VFP_corepla.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/548/548.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/549_VFP_flamepo/VFP_flamepo.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/550_VFP_lavapoo/VFP_lavapoo.c"),
