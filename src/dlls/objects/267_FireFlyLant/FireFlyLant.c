@@ -121,7 +121,6 @@ void FireFlyLantern_render(GameObject* obj, int renderArg2, int renderArg3, int 
 }
 
 void FireFlyLantern_update(GameObject* obj) {
-    GameObject** childSlot;
     FireFlyLanternState* state;
     FireFlyLanternPlacement* placement;
     GameObject* child;
@@ -142,12 +141,8 @@ void FireFlyLantern_update(GameObject* obj) {
         }
         shouldFree = 1;
     } else if (state->flags.sequenceFinished != 0) {
-        childIndex = 0;
-        childSlot = state->fireflies;
-        while (childIndex < state->fireflyCount) {
-            Obj_FreeObject(*childSlot);
-            childSlot++;
-            childIndex++;
+        for (childIndex = 0; childIndex < state->fireflyCount; childIndex++) {
+            Obj_FreeObject(state->fireflies[childIndex]);
         }
         shouldFree = 1;
     }
@@ -159,7 +154,6 @@ void FireFlyLantern_update(GameObject* obj) {
 
 void FireFlyLantern_init(GameObject* obj, FireFlyLanternPlacement* placement) {
     GameObject* player;
-    GameObject** childSlot;
     FireFlyLanternState* state;
     int childIndex;
 
@@ -185,12 +179,8 @@ void FireFlyLantern_init(GameObject* obj, FireFlyLanternPlacement* placement) {
         state->fireflyCount = (state->remainingCount < FIREFLY_LANTERN_CHILD_CAPACITY) ? state->remainingCount
                                                                                        : FIREFLY_LANTERN_CHILD_CAPACITY;
 
-        childIndex = 0;
-        childSlot = state->fireflies;
-        while (childIndex < state->fireflyCount) {
-            *childSlot = FireFlyLantern_spawnFireFly(obj);
-            childSlot++;
-            childIndex++;
+        for (childIndex = 0; childIndex < state->fireflyCount; childIndex++) {
+            state->fireflies[childIndex] = FireFlyLantern_spawnFireFly(obj);
         }
     }
 }

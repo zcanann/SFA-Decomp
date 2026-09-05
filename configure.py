@@ -1438,7 +1438,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/264_EndObject/EndObject.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/265/265.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/266_Fall_Ladder/Fall_Ladder.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/267_FireFlyLant/FireFlyLant.c", cflags=cflags_dll_noopt_noinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/267_FireFlyLant/FireFlyLant.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/268_LanternFire/LanternFire.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/269_PortalSpell/PortalSpell.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/270/270.c"),
