@@ -138,7 +138,6 @@ int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 sp
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
 static inline f32 trickyGetPathSpeedDelta(GameObject* obj);
 static void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut);
-static inline void trickyPlayMovementVoice(GameObject* obj, u16 sfxId);
 int moveTricky(GameObject* obj, f32* targetPos);
 int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags);
 static inline RomCurveDef* trickyValidateRouteEntry(RomCurveDef* entry);
@@ -170,7 +169,6 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state);
 void tricky_trackTumbleweed(GameObject* obj, TrickyState* state);
 void tricky_moveToFollowTarget(GameObject* obj, TrickyState* state);
 static inline int trickyGuardIsBaddieTargetValid(GameObject* target);
-static inline void trickyPlayVoice(GameObject* obj, TrickyState* state, u16 sfxId, int pitch);
 static inline void trickyStopFlameChildren(GameObject* obj, TrickyState* state);
 static inline void trickySpawnFlameChildren(GameObject* obj, TrickyState* state);
 void trickyGuard(GameObject* obj, TrickyState* trickyState);
@@ -179,7 +177,6 @@ void trickyFlame(GameObject* obj, TrickyState* trickyState);
 void tricky_state06_nop(void);
 void tricky_updateBallRoll(GameObject* obj, TrickyState* state);
 void tricky_state04_nop(void);
-static inline void trickyPlayWhineSfx(u32 id, GameObject* obj);
 static inline void trickyAdvanceNode(TrickyState* state);
 void trickyDigTunnel(GameObject* obj, TrickyState* state);
 void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state);
@@ -223,7 +220,6 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren);
 void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender);
 void Tricky_hitDetect(GameObject* obj);
 static inline void trickyResetCommandState(TrickyState* state);
-static inline void trickyPlaySidekickVoice(GameObject* obj, u16 sfxId, int pitch);
 static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state);
 void Tricky_update(GameObject* obj);
 void Tricky_init(GameObject* obj);
@@ -1030,9 +1026,9 @@ void Tricky_update(GameObject* obj) {
         TrickyStats* stats = trickyState->stats;
 
         if (stats->energy == stats->maxEnergy) {
-            trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_IM_STUFFED, TRICKY_VOICE_PITCH_NORMAL);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_IM_STUFFED, TRICKY_VOICE_PITCH_NORMAL);
         } else {
-            trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_MMMM_TASTY, TRICKY_VOICE_PITCH_NORMAL);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_MMMM_TASTY, TRICKY_VOICE_PITCH_NORMAL);
         }
         trickyState->stateFlags &= ~TRICKY_STATE_FLAG_FEED_VOICE_PENDING;
     }
@@ -1126,7 +1122,7 @@ void Tricky_update(GameObject* obj) {
                 case TRICKY_COMMAND_TYPE_FIND_SECRET:
                     trickyState->commandPhase = TRICKY_COMMAND_PHASE_DIG;
                     trickySelectQueuedCommandTarget(trickyState, TRICKY_COMMAND_TYPE_FIND_SECRET);
-                    trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_FIND_SECRET_SNIFF, TRICKY_VOICE_PITCH_BASE);
+                    trickyTryPlaySound(obj, TRICKY_VOICE_SFX_FIND_SECRET_SNIFF, TRICKY_VOICE_PITCH_BASE);
                     switch (trickyState->followObj->anim.romDefNo) {
                     case SKEETLA_LINKED_SOURCE_ROMDEF_GROUND_ANIMA:
                         if (trickyState->stats->energy < 4) {
@@ -1454,14 +1450,14 @@ void Tricky_update(GameObject* obj) {
         trickyState->voiceCooldown = 0.0f;
     }
     if (trickyState->voiceCooldown > 0.0f) {
-        trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_TOY_BARK, TRICKY_VOICE_PITCH_LOW);
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_TOY_BARK, TRICKY_VOICE_PITCH_LOW);
     }
     trickyUpdateCollisionAndPathState(obj);
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_IMPRESS_PENDING) != 0) {
         trickyState->impressTimer -= timeDelta;
         if (trickyState->impressTimer <= 0.0f) {
             trickyState->stateFlags &= ~TRICKY_STATE_FLAG_IMPRESS_PENDING;
-            trickyPlaySidekickVoice(obj, impressSfxIds[randomGetRange(0, 1)], TRICKY_VOICE_PITCH_NORMAL);
+            trickyTryPlaySound(obj, impressSfxIds[randomGetRange(0, 1)], TRICKY_VOICE_PITCH_NORMAL);
         }
     }
     trickyUpdateColorVariant(obj, trickyState);
@@ -1526,9 +1522,9 @@ void Tricky_update(GameObject* obj) {
         }
         if (trickyState->foodVoiceTimer > TRICKY_CHILD_VOICE_PERIOD_FRAMES) {
             if (mainGetBit(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
-                trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_SCARED, TRICKY_VOICE_PITCH_NORMAL);
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_SCARED, TRICKY_VOICE_PITCH_NORMAL);
             } else {
-                trickyPlaySidekickVoice(obj, TRICKY_VOICE_SFX_TIRED, TRICKY_VOICE_PITCH_NORMAL);
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_TIRED, TRICKY_VOICE_PITCH_NORMAL);
             }
             trickyState->foodVoiceTimer -= TRICKY_CHILD_VOICE_PERIOD_FRAMES;
         }
@@ -1580,19 +1576,6 @@ static inline void trickySpawnFoodBubble(GameObject* obj, TrickyState* state) {
         state->foodVoiceTimer = childTimerReset;
         state->foodForceBlinkTimer = childTimerReset;
         state->foodBlinkTimer = childTimerReset;
-    }
-}
-
-static inline void trickyPlaySidekickVoice(GameObject* obj, u16 sfxId, int pitch) {
-    TrickyState* voiceState;
-
-    voiceState = obj->extra;
-    if (voiceState->soundSuppressed == 0) {
-        if (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
-            if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &voiceState->soundState, sfxId, pitch, 0xffffffff, 0);
-            }
-        }
     }
 }
 
@@ -1793,8 +1776,6 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
     u8 showBaddieVoicePrompt = false;
     u32 promptValue;
     int promptScratch;
-    TrickyState* foodVoiceState;
-    TrickyState* baddieVoiceState;
     ObjPlacement* promptSetup;
     GameObject* promptObj;
     u8 commandIndex;
@@ -1856,14 +1837,7 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             if ((state->questPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 promptValue = randomGetRange(0, 1);
                 questPromptSfxId = questPromptSfxIds[promptValue];
-                promptScratch = (int)obj->extra;
-                if ((((TrickyState*)promptScratch)->soundSuppressed == 0) &&
-                    (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                       (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
-                      !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
-                    objSoundStartTimed(obj, &((TrickyState*)promptScratch)->soundState, questPromptSfxId,
-                                       TRICKY_VOICE_PITCH_NORMAL, 0xffffffff, 0);
-                }
+                trickyTryPlaySound(obj, questPromptSfxId, TRICKY_VOICE_PITCH_NORMAL);
                 promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_QUEST);
                 questPromptOccupiedSlots[0] = TRICKY_PROMPT_CHILD_SLOT_FREE;
                 questPromptOccupiedSlots[1] = TRICKY_PROMPT_CHILD_SLOT_FREE;
@@ -1905,21 +1879,9 @@ int Tricky_updateSideCommandPrompts(GameObject* obj) {
             if ((state->exclamationPromptChild == NULL) && ((u8)Obj_CanSetupObject() != 0)) {
                 if (randomGetRange(0, 3) == 0) {
                     if (showFoodVoicePrompt) {
-                        foodVoiceState = obj->extra;
-                        if ((foodVoiceState->soundSuppressed == 0) &&
-                            (((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                               (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
-                              !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)))) {
-                            objSoundStartTimed(obj, &foodVoiceState->soundState, TRICKY_VOICE_SFX_FOOD,
-                                               TRICKY_VOICE_PITCH_NORMAL, 0xffffffff, 0);
-                        }
-                    } else if ((((showBaddieVoicePrompt) &&
-                                 (baddieVoiceState = obj->extra, baddieVoiceState->soundSuppressed == 0)) &&
-                                ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                                  (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)))) &&
-                               !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL)) {
-                        objSoundStartTimed(obj, &baddieVoiceState->soundState, TRICKY_VOICE_SFX_BAD_GUY,
-                                           TRICKY_VOICE_PITCH_NORMAL, 0xffffffff, 0);
+                        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_FOOD, TRICKY_VOICE_PITCH_NORMAL);
+                    } else if (showBaddieVoicePrompt) {
+                        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_BAD_GUY, TRICKY_VOICE_PITCH_NORMAL);
                     }
                 }
                 promptSetup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_EXCLAMATION);
@@ -2180,9 +2142,7 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
-    TrickyState* sfxState;
     int isInWater;
-    u32 sfxDisabled;
     u32 transitionFlag;
 
     if (tricky_handleFeedOrTalk(obj, state) == 0) {
@@ -2197,15 +2157,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
             if (state->idleSfxTimer <= 0.0f) {
                 state->idleSfxTimer =
                     (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
-                sfxState = obj->extra;
-                sfxDisabled = sfxState->soundSuppressed;
-                if ((sfxDisabled == 0) &&
-                    (((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END) ||
-                     ((obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
-                    (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0)) {
-                    objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM,
-                                       TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                }
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_DUM_DE_DUM, TRICKY_VOICE_PITCH_NORMAL);
             }
 
             isInWater = trickyIsInDeepWater(state);
@@ -2264,7 +2216,6 @@ GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state)
 
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
     GameObject* hit;
-    TrickyState* sfxState;
     f32 fv;
     int inWater;
 
@@ -2277,12 +2228,7 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
         fv = state->playerContactTimer;
         if (fv <= 0.0f) {
             state->playerContactTimer += TRICKY_FETCH_CARRY_DELAY_FRAMES;
-            sfxState = obj->extra;
-            if (sfxState->soundSuppressed == 0 &&
-                (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_HEY, TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-            }
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_HEY, TRICKY_VOICE_PITCH_NORMAL);
         } else {
             state->playerContactTimer += TRICKY_TIMER_600_FRAMES;
             if (state->substate != TRICKY_FOLLOW_SUBSTATE_FLAME_BREATH) {
@@ -2296,33 +2242,12 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
                                 return;
                             }
                         }
-                        sfxState = obj->extra;
-                        if (sfxState->soundSuppressed == 0 &&
-                            (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                             obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                            Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF,
-                                               TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                        }
+                        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GET_OFF, TRICKY_VOICE_PITCH_NORMAL);
                     } else {
-                        sfxState = obj->extra;
-                        if (sfxState->soundSuppressed == 0 &&
-                            (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                             obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                            Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF,
-                                               TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                        }
+                        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GET_OFF, TRICKY_VOICE_PITCH_NORMAL);
                     }
                 } else {
-                    sfxState = obj->extra;
-                    if (sfxState->soundSuppressed == 0 &&
-                        (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                         obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                        Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_GET_OFF,
-                                           TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                    }
+                    trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GET_OFF, TRICKY_VOICE_PITCH_NORMAL);
                     state->substate = TRICKY_FOLLOW_SUBSTATE_BEG_FOR_FOOD;
                     state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
                 }
@@ -2423,7 +2348,6 @@ int tricky_handleFeedOrTalk(GameObject* obj, TrickyState* state) {
 
 void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
     int idleChoice;
-    TrickyState* voiceState;
 
     idleChoice = randomGetRange(TRICKY_RANDOM_IDLE_LAND_IDLE, TRICKY_RANDOM_IDLE_WANDER);
     switch (idleChoice) {
@@ -2432,15 +2356,7 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_QUEUED_MOVE;
         break;
     case TRICKY_RANDOM_IDLE_PICK:
-        voiceState = obj->extra;
-        if (voiceState->soundSuppressed == 0U) {
-            if ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
-                if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                    objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE,
-                                       0xffffffff, 0);
-                }
-            }
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE);
         trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
         trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
         break;
@@ -2461,7 +2377,6 @@ void tricky_startRandomIdleMove(GameObject* obj, TrickyState* trickyState) {
 
 void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
     f32 searchRadius[2];
-    TrickyState* sfxState;
     u8 minActivity;
     u8 maxActivity;
     GameObject* found;
@@ -2503,12 +2418,7 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
         break;
     case TRICKY_AMBIENT_ACTIVITY_HOWL:
         trickyRequestMove(obj, TRICKY_ANIM_HOWL_START, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
-        sfxState = obj->extra;
-        if (sfxState->soundSuppressed == 0 &&
-            (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-            Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH, -1, 0);
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH);
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->substate = TRICKY_FOLLOW_SUBSTATE_HOWL_CALL;
         state->moveHoldTimer = (f32)(int)randomGetRange(TRICKY_HOWL_HOLD_MIN_FRAMES, TRICKY_HOWL_HOLD_MAX_FRAMES);
@@ -2518,7 +2428,6 @@ void tricky_pickAmbientActivity(GameObject* obj, TrickyState* state) {
 
 u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     int handled;
-    TrickyState* voiceState;
     u32 randomDelay;
 
     handled = tricky_handleFeedOrTalk(obj, trickyState);
@@ -2557,13 +2466,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
     handled = (*gSkyInterface)->getSunPosition(0);
     if ((handled != 0) && ((trickyState->stateFlags & TRICKY_STATE_FLAG_SUN_VOICE_PLAYED) == 0)) {
         trickyState->stateFlags |= TRICKY_STATE_FLAG_SUN_VOICE_PLAYED;
-        handled = (int)obj->extra;
-        if ((((TrickyState*)handled)->soundSuppressed == 0U) &&
-            ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
-             !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL))) {
-            objSoundStartTimed(obj, &((TrickyState*)handled)->soundState, TRICKY_VOICE_SFX_YAWN2,
-                               TRICKY_VOICE_PITCH_NORMAL, 0xffffffff, 0);
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_YAWN2, TRICKY_VOICE_PITCH_NORMAL);
         return 0;
     }
     if (trickyState->stats->energy <= 3) {
@@ -2586,14 +2489,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
             tricky_startRandomIdleMove(obj, trickyState);
         } else {
             if (trickyState->questPromptChild != NULL) {
-                voiceState = obj->extra;
-                if (((voiceState->soundSuppressed == 0U) &&
-                     (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                      (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
-                     !Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL))) {
-                    objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE,
-                                       0xffffffff, 0);
-                }
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE);
                 trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
                 trickyState->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
             } else {
@@ -2618,8 +2514,6 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
 }
 
 int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
-    TrickyState* voiceState;
-    short currentMove;
     u8 movementResult;
     int inWater;
     float stoppingRadius;
@@ -2644,16 +2538,7 @@ int tricky_substateFollowIdle(GameObject* obj, TrickyState* state) {
     if (movementResult != TRICKY_MOVEMENT_IN_PROGRESS) {
         if (movementResult == TRICKY_MOVEMENT_BLOCKED) {
             if ((state->stateFlags & TRICKY_STATE_FLAG_STUCK_VOICE_PENDING) != 0) {
-                voiceState = obj->extra;
-                if (voiceState->soundSuppressed == 0u) {
-                    currentMove = (obj)->anim.currentMove;
-                    if (currentMove >= TRICKY_VOICE_MOVE_END || currentMove < TRICKY_VOICE_MOVE_MIN) {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_IM_NOT_DOING_IT,
-                                               TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                        }
-                    }
-                }
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_IM_NOT_DOING_IT, TRICKY_VOICE_PITCH_NORMAL);
             }
         }
         inWater = trickyIsInDeepWater(state);
@@ -2701,7 +2586,6 @@ u32 tricky_substateWaitQueuedMove(GameObject* obj, TrickyState* trickyState) {
 
 int tricky_substateSleep(GameObject* obj, TrickyState* state) {
     s8 occupiedSlots[TRICKY_PROMPT_CHILD_SLOT_COUNT];
-    TrickyState* sfxState;
     ObjPlacement* setup;
     int freeSlot;
     f32 childTimerReset;
@@ -2716,13 +2600,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
     }
     state->sfxRepeatTimer -= timeDelta;
     if (state->sfxRepeatTimer < 0.0f) {
-        sfxState = (obj)->extra;
-        if (sfxState->soundSuppressed == 0 &&
-            ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-            Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_SLEEP_BREATH, TRICKY_VOICE_PITCH_LOW, -1,
-                               0);
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_SLEEP_BREATH, TRICKY_VOICE_PITCH_LOW);
         state->sfxRepeatTimer = TRICKY_TIMER_600_FRAMES;
     }
     if (state->foodChild == NULL && (u8)Obj_CanSetupObject() != 0) {
@@ -2761,12 +2639,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
     if ((*gSkyInterface)->getSunPosition(0) != 0 && state->cooldownA <= 0.0f &&
         mainGetBit(GAMEBIT_ITEM_TrickyCall_Got) != 0) {
         trickyRequestMove(obj, TRICKY_ANIM_HOWL_START, TRICKY_LAND_MOVE_BLEND_SPEED, 0);
-        sfxState = (obj)->extra;
-        if (sfxState->soundSuppressed == 0 &&
-            ((obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END || (obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-            Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH, -1, 0);
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_YAWN, TRICKY_VOICE_PITCH_HIGH);
         state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         state->substate = TRICKY_FOLLOW_SUBSTATE_HOWL_CALL;
         state->moveHoldTimer = (f32)(int)randomGetRange(TRICKY_HOWL_HOLD_MIN_FRAMES, TRICKY_HOWL_HOLD_MAX_FRAMES);
@@ -2842,7 +2715,6 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
 }
 
 u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
-    TrickyState* voiceState;
     int eventIndex;
 
     if (tricky_handleFeedOrTalk(obj, trickyState) != 0) {
@@ -2852,17 +2724,7 @@ u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
         if (trickyState->animEvents.triggeredIds[eventIndex] != 0) {
             continue;
         }
-        voiceState = obj->extra;
-        if (voiceState->soundSuppressed != 0U) {
-            continue;
-        }
-        if ((int)(obj)->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-            (int)(obj)->anim.currentMove < TRICKY_VOICE_MOVE_MIN) {
-            if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE,
-                                   0xffffffff, 0);
-            }
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE);
     }
     if (tricky_handleFeedOrTalk(obj, trickyState) != 0) {
         return 1;
@@ -2924,19 +2786,12 @@ u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState) {
 }
 
 int tricky_substateIdlePick(GameObject* obj, TrickyState* state) {
-    TrickyState* sfxState;
-
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
         return 1;
     }
     if ((u8)trickyUpdateMovementState(obj, TRICKY_MAX_DISTANCE, state) != TRICKY_MOVEMENT_IN_PROGRESS) {
         if (state->questPromptChild != NULL) {
-            sfxState = obj->extra;
-            if (sfxState->soundSuppressed == 0 &&
-                (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE, -1, 0);
-            }
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_SNIFF, TRICKY_VOICE_PITCH_BASE);
             trickyRequestMove(obj, TRICKY_ANIM_IDLE_PICK, TRICKY_IDLE_PICK_BLEND_SPEED, 0);
             state->substate = TRICKY_FOLLOW_SUBSTATE_WAIT_MOVE_END;
         } else {
@@ -2998,9 +2853,7 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
 }
 
 int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
-    TrickyState* voiceState;
     int result;
-    short move;
     TrickyCommandTypeList commandQuery;
 
     commandQuery = gTrickyFoodCommandQuery;
@@ -3017,16 +2870,7 @@ int tricky_substateBegForFood(GameObject* obj, TrickyState* state) {
     case 3:
     case 4:
     case 5:
-        voiceState = obj->extra;
-        if (voiceState->soundSuppressed == 0u) {
-            move = (obj)->anim.currentMove;
-            if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                    objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_IM_NOT_DOING_IT,
-                                       TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                }
-            }
-        }
+        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_IM_NOT_DOING_IT, TRICKY_VOICE_PITCH_NORMAL);
         break;
     }
     if (0.0f == state->playerContactTimer) {
@@ -3062,8 +2906,6 @@ int tricky_substateFlameBreath(GameObject* obj, TrickyState* state) {
 }
 
 int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
-    TrickyState* voiceState;
-    short move;
     u16 sfxId;
     float pos[3];
 
@@ -3081,15 +2923,7 @@ int tricky_substateApproachThorntail(GameObject* obj, TrickyState* state) {
     } else if ((u8)trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, state) != TRICKY_MOVEMENT_IN_PROGRESS) {
         state->thorntailIdleMovePending = 1;
         sfxId = randomGetRange(TRICKY_VOICE_SFX_HELLO, TRICKY_VOICE_SFX_HI_FELLA);
-        voiceState = obj->extra;
-        if (voiceState->soundSuppressed == 0) {
-            move = obj->anim.currentMove;
-            if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                    objSoundStartTimed(obj, &voiceState->soundState, sfxId, TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                }
-            }
-        }
+        trickyTryPlaySound(obj, sfxId, TRICKY_VOICE_PITCH_NORMAL);
         return 0;
     }
     return 1;
@@ -3099,7 +2933,6 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
     GameObject* found;
     TrickyState* followState;
     GameObject* target;
-    TrickyState* sfxState;
     int inWater;
     f32 resetValue;
 
@@ -3129,14 +2962,7 @@ void tricky_stateFollowPlayer(GameObject* obj, TrickyState* state) {
                     if (state->idleSfxTimer <= 0.0f) {
                         state->idleSfxTimer =
                             (f32)(int)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
-                        sfxState = obj->extra;
-                        if (sfxState->soundSuppressed == 0 &&
-                            (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END ||
-                             obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                            Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &sfxState->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM,
-                                               TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                        }
+                        trickyTryPlaySound(obj, TRICKY_VOICE_SFX_DUM_DE_DUM, TRICKY_VOICE_PITCH_NORMAL);
                     }
                     inWater = trickyIsInDeepWater(state);
                     if (inWater != 0) {
@@ -3285,7 +3111,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             state->secretDigWhineTimer =
                 (f32)(int)randomGetRange(TRICKY_SECRET_DIG_WHINE_MIN_FRAMES, TRICKY_SECRET_DIG_WHINE_MAX_FRAMES);
             state->secretDigWhineTimer *= 100.0f;
-            trickyPlayWhineSfx(TRICKY_VOICE_SFX_DUM_DE_DUM, obj);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_DUM_DE_DUM, TRICKY_VOICE_PITCH_NORMAL);
         }
         pressDistance = GROUND_ANIMATOR_INTERFACE(followObj)->applyPress(followObj, obj);
         obj->anim.localPosX = state->secretDigOriginX - state->dirX * pressDistance;
@@ -3294,7 +3120,7 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->stats->energy -= 4;
             trickyResetCommandState(state);
-            trickyPlayWhineSfx(sfxTable[randomGetRange(0, 1)], obj);
+            trickyTryPlaySound(obj, sfxTable[randomGetRange(0, 1)], TRICKY_VOICE_PITCH_NORMAL);
         }
         break;
     }
@@ -3303,7 +3129,6 @@ void tricky_stateFindSecretDig(GameObject* obj, TrickyState* state) {
 void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
-    TrickyState* voiceState;
     int walkGroup;
     u16 sfxId;
     f32 dirZ;
@@ -3360,13 +3185,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             state->digTunnelWhineTimer =
                 (f32)(int)randomGetRange(TRICKY_DIG_TUNNEL_WHINE_MIN_FRAMES, TRICKY_DIG_TUNNEL_WHINE_MAX_FRAMES);
             state->digTunnelWhineTimer *= 100.0f;
-            voiceState = obj->extra;
-            if (voiceState->soundSuppressed == 0 &&
-                (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &voiceState->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM, TRICKY_VOICE_PITCH_NORMAL,
-                                   -1, 0);
-            }
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_DUM_DE_DUM, TRICKY_VOICE_PITCH_NORMAL);
         }
         pressDistance = GROUND_ANIMATOR_INTERFACE(state->followObj)->applyPress(state->followObj, obj);
         obj->anim.localPosX = state->dirX * pressDistance + state->digTunnelStartNode->x;
@@ -3408,12 +3227,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
             Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
             state->substate = TRICKY_DIG_TUNNEL_TO_EXIT_1;
             sfxId = sfxTable[randomGetRange(0, 1)];
-            voiceState = obj->extra;
-            if (voiceState->soundSuppressed == 0 &&
-                (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-                Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                objSoundStartTimed(obj, &voiceState->soundState, sfxId, TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-            }
+            trickyTryPlaySound(obj, sfxId, TRICKY_VOICE_PITCH_NORMAL);
         }
         break;
     case TRICKY_DIG_TUNNEL_TO_EXIT_1:
@@ -3467,15 +3281,6 @@ static inline void trickyAdvanceNode(TrickyState* state) {
         }
         off += 4;
         idx++;
-    }
-}
-
-static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
-    TrickyState* sfxState = obj->extra;
-    if (sfxState->soundSuppressed == 0 &&
-        (obj->anim.currentMove >= TRICKY_VOICE_MOVE_END || obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN) &&
-        Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-        objSoundStartTimed(obj, &sfxState->soundState, id, TRICKY_VOICE_PITCH_NORMAL, -1, 0);
     }
 }
 
@@ -3575,7 +3380,7 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
         if (state->cannonballRollSfxTimer < 0.0f) {
             state->cannonballRollSfxTimer =
                 (f32)(int)randomGetRange(CANNONBALL_SFX_TIMER_MIN, CANNONBALL_SFX_TIMER_MAX);
-            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
         }
     } else {
         trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
@@ -3880,7 +3685,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
             trickyRequestMove(obj, TRICKY_ANIM_GROWL_WINDUP, TRICKY_LAND_MOVE_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             trickyState->guardTimer = 0.0f;
-            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
             trickyState->substate = TRICKY_GUARD_GROWL;
         } else if (trickyGuardIsBaddieTargetValid(trickyState->guardTarget) != 0) {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
@@ -3891,7 +3696,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState) {
     case TRICKY_GUARD_GROWL:
         trickyDebugPrint("GUARD_GROWL\n");
         if (randomGetRange(0, TRICKY_GUARD_GROWL_RANDOM_RATE) == 0) {
-            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
         }
         trickyState->guardTimer = trickyState->guardTimer + timeDelta;
         if ((trickyState->guardTimer >= TRICKY_GUARD_GROWL_MAX_SECONDS &&
@@ -3947,21 +3752,7 @@ static inline void trickyStopFlameChildren(GameObject* obj, TrickyState* state) 
         flameblast_requestFree(state->flameChildren[childIndex]);
     }
     Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
-    trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_FINISH_FLAME, TRICKY_VOICE_PITCH_BASE);
-}
-
-static inline void trickyPlayVoice(GameObject* obj, TrickyState* state, u16 sfxId, int pitch) {
-    s16 move;
-
-    if (state->soundSuppressed) {
-        return;
-    }
-    move = obj->anim.currentMove;
-    if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-        if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-            objSoundStartTimed(obj, &state->soundState, sfxId, pitch, -1, 0);
-        }
-    }
+    trickyTryPlaySound(obj, TRICKY_VOICE_SFX_FINISH_FLAME, TRICKY_VOICE_PITCH_BASE);
 }
 
 static inline int trickyGuardIsBaddieTargetValid(GameObject* target) {
@@ -4040,9 +3831,7 @@ void tricky_trackTumbleweed(GameObject* obj, TrickyState* state) {
 }
 
 void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
-    TrickyState* extra;
     int inWater;
-    s16 move;
 
     if (tricky_handleFeedOrTalk(obj, state) == 0) {
         if (trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state) == TRICKY_MOVEMENT_REACHED_TARGET) {
@@ -4050,16 +3839,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
             if (state->idleSfxTimer <= 0.0f) {
                 state->idleSfxTimer =
                     (f32)(s32)randomGetRange(TRICKY_IDLE_VOICE_MIN_FRAMES, TRICKY_IDLE_VOICE_MAX_FRAMES);
-                extra = obj->extra;
-                if (extra->soundSuppressed == 0) {
-                    move = obj->anim.currentMove;
-                    if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_DUM_DE_DUM,
-                                               TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                        }
-                    }
-                }
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_DUM_DE_DUM, TRICKY_VOICE_PITCH_NORMAL);
             }
             inWater = trickyIsInDeepWater(state);
             if (inWater != 0) {
@@ -4111,9 +3891,7 @@ void tricky_idleAndEat(GameObject* obj, TrickyState* state) {
 
 void tricky_fetchBall(GameObject* obj, TrickyState* state) {
     int status;
-    TrickyState* extra;
     int useSwimAnim;
-    s16 move;
     f32 bob;
 
     switch (state->substate) {
@@ -4140,16 +3918,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 state->substate = TRICKY_FETCH_BALL_PICKUP_START;
                 sidekickBall_setIdle(state->fetchBallObj, obj);
             } else if (status == TRICKY_MOVEMENT_BLOCKED) {
-                extra = obj->extra;
-                if (extra->soundSuppressed == 0) {
-                    move = (obj)->anim.currentMove;
-                    if (move >= TRICKY_VOICE_MOVE_END || move < TRICKY_VOICE_MOVE_MIN) {
-                        if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                            objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_IM_NOT_DOING_IT,
-                                               TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-                        }
-                    }
-                }
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_IM_NOT_DOING_IT, TRICKY_VOICE_PITCH_NORMAL);
                 trickyResetCommandState(state);
             }
         } else {
@@ -4179,20 +3948,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
                 if (state->sfxIntervalTimer <= 0.0f) {
                     state->sfxIntervalTimer =
                         (f32)(s32)randomGetRange(TRICKY_FETCH_VOICE_MIN_FRAMES, TRICKY_FETCH_VOICE_MAX_FRAMES);
-                    extra = obj->extra;
-                    if (extra->soundSuppressed != 0) {
-                        break;
-                    }
-                    move = (obj)->anim.currentMove;
-                    if (move < TRICKY_VOICE_MOVE_END) {
-                        if (move >= TRICKY_VOICE_MOVE_MIN) {
-                            break;
-                        }
-                    }
-                    if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
-                        objSoundStartTimed(obj, &extra->soundState, TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_PITCH_NORMAL,
-                                           -1, 0);
-                    }
+                    trickyTryPlaySound(obj, TRICKY_VOICE_SFX_LAUGH, TRICKY_VOICE_PITCH_NORMAL);
                 }
             } else {
                 trickyRequestIdleMove(obj, state);
@@ -4461,7 +4217,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
                 f32 rv;
                 rv = (s32)randomGetRange(0xc8, 0x258);
                 state->cooldownA = rv / 2.0f;
-                trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
             }
         }
         break;
@@ -4542,7 +4298,7 @@ void trickyUpdateBaddieAlert(GameObject* obj, TrickyState* state) {
             }
             if (bestDetourWarp != NULL) {
                 if (state->baddieAlertWarp == NULL) {
-                    trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GET_MFOX, TRICKY_VOICE_PITCH_NORMAL);
+                    trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GET_MFOX, TRICKY_VOICE_PITCH_NORMAL);
                 }
                 if (state->baddieAlertWarp == NULL || state->baddieAlertWarp != bestDetourWarp) {
                     state->baddieAlertWarp = bestDetourWarp;
@@ -4580,7 +4336,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
     case TRICKYGROWL_WINDUP:
         trickyDebugPrint("GROWLAT_GOTO\n");
         if (trickyUpdateMovementState(obj, TRICKY_TIMER_30_FRAMES, trickyState) == TRICKY_MOVEMENT_REACHED_TARGET) {
-            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
+            trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
             trickyState->substate = TRICKYGROWL_FACE_TARGET;
             trickyRequestMove(obj, TRICKY_ANIM_GROWL_WINDUP, TRICKY_LAND_MOVE_BLEND_SPEED,
                               TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
@@ -4595,7 +4351,7 @@ void trickyGrowl(GameObject* obj, TrickyState* trickyState) {
             f32* target = ((TrickyState*)obj->extra)->targetPosPtr;
             trickyTurnTowardYaw(obj, getAngle(-(target[0] - obj->anim.worldPosX), -(target[2] - obj->anim.worldPosZ)));
             if (randomGetRange(0, 10) == 0) {
-                trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
+                trickyTryPlaySound(obj, TRICKY_VOICE_SFX_GROWL, TRICKY_VOICE_PITCH_LOW);
             }
         }
         break;
@@ -6117,7 +5873,6 @@ int trickyRequestMove(GameObject* obj, int newState, f32 speed, u32 flags) {
 int moveTricky(GameObject* obj, f32* targetPos) {
     f32 desiredNextPos[3];
     f32 avoidanceNextPos[3];
-    u16 sfxId;
     TrickyState* state;
     f32 currentSpeed;
     f32 minMoveSpeed;
@@ -6185,8 +5940,9 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                             (f32)(int)randomGetRange(TRICKY_FOLLOW_VOICE_MIN_FRAMES, TRICKY_FOLLOW_VOICE_MAX_FRAMES);
                         if (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0) {
                             if (currentSpeed > TRICKY_FAST_FOLLOW_VOICE_THRESHOLD) {
-                                sfxId = randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME);
-                                trickyPlayMovementVoice(obj, sfxId);
+                                trickyTryPlaySound(
+                                    obj, randomGetRange(TRICKY_VOICE_SFX_WAIT_UP_FOX, TRICKY_VOICE_SFX_WAIT_FOR_ME),
+                                    TRICKY_VOICE_PITCH_NORMAL);
                             } else {
                                 u16 slowFollowVoiceSfxIds[3] = {TRICKY_VOICE_SFX_LAUGH,
                                                                 TRICKY_VOICE_SFX_WHERE_ARE_WE_GOING,
@@ -6196,8 +5952,8 @@ int moveTricky(GameObject* obj, f32* targetPos) {
                                 } else {
                                     randomGetRange(0, 1);
                                 }
-                                sfxId = slowFollowVoiceSfxIds[randomGetRange(0, 2)];
-                                trickyPlayMovementVoice(obj, sfxId);
+                                trickyTryPlaySound(obj, slowFollowVoiceSfxIds[randomGetRange(0, 2)],
+                                                   TRICKY_VOICE_PITCH_NORMAL);
                             }
                         }
                     }
@@ -6279,15 +6035,6 @@ int moveTricky(GameObject* obj, f32* targetPos) {
         }
     }
     return TRICKY_MOVEMENT_IN_PROGRESS;
-}
-
-static inline void trickyPlayMovementVoice(GameObject* obj, u16 sfxId) {
-    TrickyState* state = obj->extra;
-    if (((TrickyState*)obj->extra)->soundSuppressed == 0u &&
-        ((obj->anim.currentMove >= TRICKY_VOICE_MOVE_END) || (obj->anim.currentMove < TRICKY_VOICE_MOVE_MIN)) &&
-        (Sfx_IsPlayingFromObjectChannel(obj, TRICKY_VOICE_CHANNEL) == 0)) {
-        objSoundStartTimed(obj, &state->soundState, sfxId, TRICKY_VOICE_PITCH_NORMAL, -1, 0);
-    }
 }
 
 static void trickyUpdateFacingFromMoveVector(GameObject* obj, s16* turnDeltaOut) {

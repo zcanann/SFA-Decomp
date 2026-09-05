@@ -4009,6 +4009,23 @@ allocated non-text sections. The curve lookup callback now accepts `u32`, as
 its existing implementation and direct-call declaration do; this corrects the
 API used by Tricky without changing other source objects.
 
+The voice audit recovers `trickyTryPlaySound` reuse at all 45 guarded call
+sites. Four private copies and 25 open-coded guards are removed; the existing
+ordinary function automatically inlines with its return value discarded where
+appropriate. The tired-food caller still consumes its result. Random draws
+remain on their original control-flow paths, and the two unguarded animation
+event sounds remain direct calls. This replaces inferred helper boundaries with
+one retail-backed function, without new compiler flags or inline directives.
+
+All retail instruction counts and allocated non-text bytes remain exact.
+Only `moveTricky` and `Tricky_updateSideCommandPrompts` change function bytes:
+the former gains ten operand differences, the latter six. The diagnostic link
+temporarily rises from 127 to 145 differing text bytes; five functions remain
+non-exact. This regression is retained for the recovered shared operation,
+not hidden behind caller-specific helper copies. The remaining avoidance
+scalar also resisted all 288 planned swap/move/sample declaration orderings;
+the route-turn predicate and direct-angle-expression probes were neutral.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
