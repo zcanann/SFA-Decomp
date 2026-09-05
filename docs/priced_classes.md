@@ -3811,6 +3811,29 @@ normalized relocations and function lengths are preserved, and the complete
 linked `.sdata2` remains exact. Separate route-initialization and return-valued
 facing-helper experiments were not retained.
 
+The movement audit consolidates five route-turn magnitude calculations and two
+jump-facing updates, preserving their signed 16-bit and square-evaluation
+semantics. The update and circling handlers share full-width yaw wrapping and
+remain byte-exact. Cannonball candidate selection uses its actual indexed array,
+also byte-neutrally. Helper names are behavioral inferences, not source leaks.
+
+Jump preparation now updates the saved speed itself instead of merging that
+value into the unrelated `v` temporary used by the arc calculations. Together
+with the existing acceleration/deceleration helpers, this removes both extra
+floating-point moves. A separate speed-convergence helper is unnecessary and
+was removed. Movement update is now retail's 8,764 bytes with the same opcode
+stream and 68 register differences; its entire jump-prep speed block is exact.
+Only movement update's raw function bytes change, and all non-code object
+sections remain byte-identical to the preceding checkpoint.
+
+All 89 retail function lengths now agree. The full diagnostic game link has
+identical addresses, sizes and bytes for every allocated non-text section,
+including `.data` and its resolved jump tables. Only 234 bytes of `.text` differ;
+overall Tricky text is 99.92431%. The link probe now compares every allocated
+section, including size, address, missing sections and byte changes, with tests
+for these distinctions. This is still `NonMatching`: the remaining register
+differences must be resolved before substituting the C object in the strict DOL.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

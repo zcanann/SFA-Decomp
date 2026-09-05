@@ -54,6 +54,35 @@ def object_info(path):
     return functions, pool
 
 
+def allocated_sections(path):
+    with path.open("rb") as stream:
+        elf = ELFFile(stream)
+        return {
+            section.name: (section["sh_addr"], section.data())
+            for section in elf.iter_sections() if section["sh_flags"] & 2
+        }
+
+
+def section_differences(baseline, linked):
+    differences = {}
+    for name in sorted(baseline.keys() | linked.keys()):
+        if name not in baseline or name not in linked:
+            differences[name] = {"missing_from": "baseline" if name not in baseline else "linked"}
+            continue
+        base_address, base_data = baseline[name]
+        link_address, link_data = linked[name]
+        if base_address != link_address or base_data != link_data:
+            differences[name] = {
+                "baseline_address": hex(base_address),
+                "linked_address": hex(link_address),
+                "baseline_size": len(base_data),
+                "linked_size": len(link_data),
+                "changed_bytes": sum(a != b for a, b in zip(base_data, link_data))
+                + abs(len(base_data) - len(link_data)),
+            }
+    return differences
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--object", type=Path, default=ROOT / flag_probe.UNITS[UNIT]["base_path"])
@@ -97,6 +126,8 @@ def main():
         _, baseline_pool = object_info(args.baseline)
         print("Whole .sdata2 bytes equal baseline ELF:", final_pool == baseline_pool,
               f"({len(final_pool)}/{len(baseline_pool)} bytes)")
+        print("Allocated-section differences against baseline ELF:",
+              section_differences(allocated_sections(args.baseline), allocated_sections(linked)))
     else:
         print("Baseline ELF missing; whole-section comparison unavailable:", args.baseline)
     print("Linked ELF:", linked)

@@ -1020,6 +1020,16 @@ void Tricky_init(GameObject* obj) {
     state->commandPhase = TRICKY_COMMAND_PHASE_IDLE;
 }
 
+static inline int trickyWrapYawDelta(int delta) {
+    if (delta > TRICKY_YAW_HALF_TURN) {
+        delta -= TRICKY_YAW_WRAP_RANGE;
+    }
+    if (delta < -TRICKY_YAW_HALF_TURN) {
+        delta += TRICKY_YAW_WRAP_RANGE;
+    }
+    return delta;
+}
+
 void Tricky_update(GameObject* obj) {
     TrickyState* trickyState = obj->extra;
     int commandAlreadyQueued = 0;
@@ -1395,13 +1405,7 @@ void Tricky_update(GameObject* obj) {
         int rotationDiff;
         int rotationStep;
 
-        rotationDiff = trickyState->targetYaw - (u16)obj->anim.rotX;
-        if (rotationDiff > TRICKY_YAW_HALF_TURN) {
-            rotationDiff -= TRICKY_YAW_WRAP_RANGE;
-        }
-        if (rotationDiff < -TRICKY_YAW_HALF_TURN) {
-            rotationDiff += TRICKY_YAW_WRAP_RANGE;
-        }
+        rotationDiff = trickyWrapYawDelta(trickyState->targetYaw - (u16)obj->anim.rotX);
         rotationStep = (int)((f32)trickyState->animEvents.rootPitch * trickyState->rotStepScale);
         if ((rotationDiff >= 0 ? rotationDiff : -rotationDiff) >= 4) {
             if ((rotationStep > 0 && rotationDiff > 0) || (rotationStep < 0 && rotationDiff < 0)) {
@@ -3534,7 +3538,6 @@ static inline void trickyAppendRouteBranches(RomCurveDef* node, s32* nodeIds, in
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* blockedNode;
     u8 nodeCount = 0;
-    s32* branchLinkId;
     int i;
     RomCurveDef* segmentStartCurve;
     RomCurveDef* startCurve;
@@ -3559,14 +3562,13 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
             nextSegmentNode = (*gRomCurveInterface)->getById(nodeIds[0]);
             bestDistance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &nextSegmentNode->x);
 
-            for (i = 1, branchLinkId = &nodeIds[1]; i < nodeCount; i++) {
-                branchCandidateNode = (*gRomCurveInterface)->getById(*branchLinkId);
+            for (i = 1; i < nodeCount; i++) {
+                branchCandidateNode = (*gRomCurveInterface)->getById(nodeIds[i]);
                 distance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &branchCandidateNode->x);
                 if (distance < bestDistance) {
                     nextSegmentNode = branchCandidateNode;
                     bestDistance = distance;
                 }
-                branchLinkId++;
             }
 
             RomCurve_advanceToNextSegment(&ball->route, nextSegmentNode);
@@ -4313,13 +4315,7 @@ void trickyUpdateCirclingTargetPosition(GameObject* obj, TrickyState* state) {
         state->substate = TRICKY_CIRCLE_ACTIVE;
     }
 
-    angleDelta = targetAngle - (s32)(u16)state->circlingAngleBits;
-    if (angleDelta > TRICKY_YAW_HALF_TURN) {
-        angleDelta -= TRICKY_YAW_WRAP_RANGE;
-    }
-    if (angleDelta < -TRICKY_YAW_HALF_TURN) {
-        angleDelta += TRICKY_YAW_WRAP_RANGE;
-    }
+    angleDelta = trickyWrapYawDelta(targetAngle - (s32)(u16)state->circlingAngleBits);
 
     if (angleDelta >= 0) {
         absAngleDelta = angleDelta;
@@ -4850,6 +4846,40 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
     }
 }
 
+static inline int trickyGetRouteTurnMagnitude(GameObject* obj, TrickyState* state) {
+    s16 previousYaw = getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
+    s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
+    s16 yawDelta = previousYaw - (u16)routeYaw;
+    if (yawDelta > TRICKY_YAW_HALF_TURN) {
+        yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
+    }
+    if (yawDelta < -TRICKY_YAW_HALF_TURN) {
+        yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
+    }
+    if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
+        yawDelta -= TRICKY_YAW_HALF_TURN;
+    } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
+        yawDelta += TRICKY_YAW_HALF_TURN;
+    }
+    return (yawDelta >= 0) ? yawDelta : -yawDelta;
+}
+
+static inline void trickyTurnAlongMoveDirection(GameObject* obj) {
+    TrickyState* state = obj->extra;
+    f32 dx, dz;
+    f32 dxSq, dzSq;
+
+    dx = state->dirX;
+    dxSq = dx;
+    dxSq *= dxSq;
+    dz = state->dirZ;
+    dzSq = dz;
+    dzSq *= dzSq;
+    if (dxSq + dzSq > 0.01f) {
+        trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
+    }
+}
+
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
     int targetPatchGroup;
     RomCurveDef* routeNode;
@@ -4867,7 +4897,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     f32* patchTarget;
     u16 walkGroupLink;
     u8 patchMaskBit;
-    f32 previousSpeed;
+    f32 speed;
     f32 dist;
     f32 len;
     f32 v;
@@ -4921,9 +4951,9 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         trickyReportError("tricky last walk group is zero. Has he been loaded within a walk group? %f %f %f\n",
                           obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
     }
-    previousSpeed = state->speed;
+    speed = state->speed;
     trickyUpdateApproachSpeed(obj, stoppingRadius, state, target, 0);
-    trickyDebugPrint("velbefore %f, vel now %f\n", previousSpeed, state->speed);
+    trickyDebugPrint("velbefore %f, vel now %f\n", speed, state->speed);
     if (targetWalkGroup == state->activeWalkGroup) {
 
         state->stateFlags |= TRICKY_STATE_FLAG_PATH_PATCHES_VALID;
@@ -5144,7 +5174,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         RomCurveDef* node;
     case TRICKY_MOVE_WALK_WAIT:
         trickyDebugPrint("walk wait\n");
-        state->speed = trickyDecelerate(previousSpeed, 0.0f);
+        state->speed = trickyDecelerate(speed, 0.0f);
         if (0.0f == state->speed) {
             didMove = 0;
         } else {
@@ -5157,19 +5187,19 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_WALK_START_PATCH:
         trickyDebugPrint("walk start patch\n");
-        state->speed = previousSpeed;
+        state->speed = speed;
         trickyUpdateApproachSpeed(obj, 0.0f, state, patchTarget = &state->cachedPatchPositions[patchSlot].x, 1);
         didMove = moveTricky(obj, patchTarget);
         break;
     case TRICKY_MOVE_WALK_PATCH_EXIT:
         trickyDebugPrint("walk patch exit\n");
-        state->speed = previousSpeed;
+        state->speed = speed;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->patchExitPos.x, 1);
         didMove = moveTricky(obj, &state->patchExitPos.x);
         break;
     case TRICKY_MOVE_WALK_END_PATCH:
         trickyDebugPrint("walk end patch\n");
-        state->speed = previousSpeed;
+        state->speed = speed;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->linkedPatchPos.x, 1);
         didMove = moveTricky(obj, &state->linkedPatchPos.x);
         break;
@@ -5190,27 +5220,9 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 } else {
                     RomCurve_setupHermiteSegment(&state->route, prevNode, node, nextNode);
                     RomCurve_stepClamped(&state->route, 0.1f);
-                    {
-                        s16 previousYaw = getAngle(state->prevLocalPosX - obj->anim.localPosX,
-                                                   state->prevLocalPosZ - obj->anim.localPosZ);
-                        s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX,
-                                                state->prevLocalPosZ - state->route.posZ);
-                        s16 yawDelta = previousYaw - (u16)routeYaw;
-                        if (yawDelta > TRICKY_YAW_HALF_TURN) {
-                            yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
-                        }
-                        if (yawDelta < -TRICKY_YAW_HALF_TURN) {
-                            yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
-                        }
-                        if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
-                            yawDelta -= TRICKY_YAW_HALF_TURN;
-                        } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
-                            yawDelta += TRICKY_YAW_HALF_TURN;
-                        }
-                        if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
-                            state->speed = previousSpeed;
-                            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
-                        }
+                    if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+                        state->speed = speed;
+                        trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
                     }
                     trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
                     didMove = moveTricky(obj, &state->route.posX);
@@ -5294,7 +5306,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 node = NULL;
             }
             if ((node != 0) || (objectWalkGroup == 0)) {
-                state->speed = previousSpeed;
+                state->speed = speed;
                 trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->routeSeedNode->x, 1);
                 didMove = moveTricky(obj, &state->routeSeedNode->x);
             } else {
@@ -5307,12 +5319,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         trickyRankLinkedRouteCandidates(obj, routeFlags, (s16)objectWalkGroup, routePtrs);
         i = trickyFindReachableRouteIndex(state, routePtrs, routeFlags, state->walkGroup);
         if (i == -1) {
-            state->speed = previousSpeed;
+            state->speed = speed;
             return TRICKY_MOVEMENT_BLOCKED;
         }
         state->routeSeedDir = routeFlags[i];
         state->routeSeedNode = routePtrs[i];
-        state->speed = previousSpeed;
+        state->speed = speed;
         trickyUpdateApproachSpeed(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->routeSeedNode->x, 1);
         didMove = moveTricky(obj, &state->routeSeedNode->x);
         state->movementState = TRICKY_MOVE_WALK_TO_NODE;
@@ -5320,7 +5332,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_WALK_NODES:
         trickyDebugPrint("walk nodes\n");
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            state->speed = trickyDecelerate(previousSpeed, 0.0f);
+            state->speed = trickyDecelerate(speed, 0.0f);
         }
         routeNode = state->route.currentNode;
         if ((((RomCurveDef*)state->route.previousNode)->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) &&
@@ -5408,27 +5420,9 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             }
         }
         if ((state->savedWalkGroup == 0) || (objectWalkGroup != state->savedWalkGroup)) {
-            {
-                s16 previousYaw =
-                    getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
-                s16 routeYaw =
-                    getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
-                s16 yawDelta = previousYaw - (u16)routeYaw;
-                if (yawDelta > TRICKY_YAW_HALF_TURN) {
-                    yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
-                }
-                if (yawDelta < -TRICKY_YAW_HALF_TURN) {
-                    yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
-                }
-                if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
-                    yawDelta -= TRICKY_YAW_HALF_TURN;
-                } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
-                    yawDelta += TRICKY_YAW_HALF_TURN;
-                }
-                if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
-                    state->speed = previousSpeed;
-                    trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
-                }
+            if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+                state->speed = speed;
+                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
             }
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
@@ -5448,30 +5442,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMP_RUNUP:
         trickyDebugPrint("Jump run up\n");
-        state->speed = trickyAccelerate(previousSpeed, TRICKY_FOLLOW_MAX_SPEED);
+        state->speed = trickyAccelerate(speed, TRICKY_FOLLOW_MAX_SPEED);
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            state->speed = trickyDecelerate(previousSpeed, 0.0f);
+            state->speed = trickyDecelerate(speed, 0.0f);
         }
-        {
-            s16 previousYaw =
-                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
-            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
-            s16 yawDelta = previousYaw - (u16)routeYaw;
-            if (yawDelta > TRICKY_YAW_HALF_TURN) {
-                yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
-            }
-            if (yawDelta < -TRICKY_YAW_HALF_TURN) {
-                yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
-            }
-            if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
-                yawDelta -= TRICKY_YAW_HALF_TURN;
-            } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
-                yawDelta += TRICKY_YAW_HALF_TURN;
-            }
-            if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
-                state->speed = previousSpeed;
-                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
-            }
+        if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+            state->speed = speed;
+            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
@@ -5504,32 +5481,17 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     case TRICKY_MOVE_JUMP_PREP:
         trickyDebugPrint("Jump prep\n");
         if ((u8)(state->stateFlags & TRICKY_STATE_FLAG_TURNING)) {
-            v = -0.01f * timeDelta + previousSpeed;
-            if (v < 0.0f) {
-                v = 0.0f;
+            speed = -0.01f * timeDelta + speed;
+            if (speed < 0.0f) {
+                speed = 0.0f;
             }
-        } else if (previousSpeed > TRICKY_FOLLOW_ARC_SPEED) {
-            v = trickyDecelerate(previousSpeed, TRICKY_FOLLOW_ARC_SPEED);
+        } else if (speed > TRICKY_FOLLOW_ARC_SPEED) {
+            speed = trickyDecelerate(speed, TRICKY_FOLLOW_ARC_SPEED);
         } else {
-            v = trickyAccelerate(previousSpeed, TRICKY_FOLLOW_ARC_SPEED);
+            speed = trickyAccelerate(speed, TRICKY_FOLLOW_ARC_SPEED);
         }
-        state->speed = v;
-        {
-            f32 dz;
-            f32 dx;
-            f32 sqz;
-            f32 sqx;
-
-            dx = ((TrickyState*)obj->extra)->dirX;
-            sqx = dx;
-            sqx = sqx * sqx;
-            dz = ((TrickyState*)obj->extra)->dirZ;
-            sqz = dz;
-            sqz = sqz * sqz;
-            if (sqx + sqz > 0.01f) {
-                trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
-            }
-        }
+        state->speed = speed;
+        trickyTurnAlongMoveDirection(obj);
         if (obj->anim.currentMoveProgress < TRICKY_FOLLOW_ARC_HALF_PROGRESS) {
             ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed, &state->moveProgress);
             obj->anim.localPosX = timeDelta * (state->dirX * state->speed) + obj->anim.localPosX;
@@ -5606,30 +5568,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     }
     case TRICKY_MOVE_JUMPUP_RUNUP:
         trickyDebugPrint("Jump up run up\n");
-        state->speed = trickyAccelerate(previousSpeed, TRICKY_FOLLOW_MAX_SPEED);
+        state->speed = trickyAccelerate(speed, TRICKY_FOLLOW_MAX_SPEED);
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            state->speed = trickyDecelerate(previousSpeed, 0.0f);
+            state->speed = trickyDecelerate(speed, 0.0f);
         }
-        {
-            s16 previousYaw =
-                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
-            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
-            s16 yawDelta = previousYaw - (u16)routeYaw;
-            if (yawDelta > TRICKY_YAW_HALF_TURN) {
-                yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
-            }
-            if (yawDelta < -TRICKY_YAW_HALF_TURN) {
-                yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
-            }
-            if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
-                yawDelta -= TRICKY_YAW_HALF_TURN;
-            } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
-                yawDelta += TRICKY_YAW_HALF_TURN;
-            }
-            if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
-                state->speed = previousSpeed;
-                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
-            }
+        if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+            state->speed = speed;
+            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
@@ -5671,19 +5616,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         trickyDebugPrint("JUMPDOWN or JUMPUP\n");
         state->curvesCollision.subtype = CURVES_COLLISION_SUBTYPE_NONE;
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
-        {
-            f32 dz;
-            f32 dx;
-            dx = ((TrickyState*)obj->extra)->dirX;
-            sqz = dx;
-            sqz = sqz * sqz;
-            dz = ((TrickyState*)obj->extra)->dirZ;
-            sqx = dz;
-            sqx = sqx * sqx;
-            if (sqz + sqx > 0.01f) {
-                trickyTurnTowardYaw(obj, (s16)getAngle(-dx, -dz));
-            }
-        }
+        trickyTurnAlongMoveDirection(obj);
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
             state->speed = TRICKY_FOLLOW_JUMP_LAND_SPEED;
             moveTricky(obj, &state->route.posX);
@@ -5692,30 +5625,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMPDOWN_RUNUP:
         trickyDebugPrint("JUMPDOWN_RUNUP\n");
-        state->speed = trickyAccelerate(previousSpeed, TRICKY_FOLLOW_MAX_SPEED);
+        state->speed = trickyAccelerate(speed, TRICKY_FOLLOW_MAX_SPEED);
         if ((state->savedWalkGroup != 0) && (objectWalkGroup == state->savedWalkGroup)) {
-            state->speed = trickyDecelerate(previousSpeed, 0.0f);
+            state->speed = trickyDecelerate(speed, 0.0f);
         }
-        {
-            s16 previousYaw =
-                getAngle(state->prevLocalPosX - obj->anim.localPosX, state->prevLocalPosZ - obj->anim.localPosZ);
-            s16 routeYaw = getAngle(state->prevLocalPosX - state->route.posX, state->prevLocalPosZ - state->route.posZ);
-            s16 yawDelta = previousYaw - (u16)routeYaw;
-            if (yawDelta > TRICKY_YAW_HALF_TURN) {
-                yawDelta = yawDelta - TRICKY_YAW_WRAP_RANGE;
-            }
-            if (yawDelta < -TRICKY_YAW_HALF_TURN) {
-                yawDelta = yawDelta + TRICKY_YAW_WRAP_RANGE;
-            }
-            if (yawDelta > TRICKY_YAW_QUARTER_TURN) {
-                yawDelta -= TRICKY_YAW_HALF_TURN;
-            } else if (yawDelta < -TRICKY_YAW_QUARTER_TURN) {
-                yawDelta += TRICKY_YAW_HALF_TURN;
-            }
-            if (TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE < ((yawDelta >= 0) ? yawDelta : -yawDelta)) {
-                state->speed = previousSpeed;
-                trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
-            }
+        if (trickyGetRouteTurnMagnitude(obj, state) > TRICKY_ROUTE_TURN_SLOWDOWN_ANGLE) {
+            state->speed = speed;
+            trickyUpdateApproachSpeed(obj, TRICKY_RUN_MOVE_THRESHOLD, state, &state->route.posX, 1);
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         moveTricky(obj, &state->route.posX);
