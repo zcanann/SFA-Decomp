@@ -4686,6 +4686,21 @@ source-path audit pass. Tricky remains 87/89 exact with 41 diagnostic-link text
 bytes differing and every allocated non-text section exact. This is corrected
 storage ownership and API evidence, not a new matching gain.
 
+The same foot-contact path now uses a typed `SurfaceSfxTable` instead of a
+216-byte blob. EN data and all three consumers establish nine banks of ten
+`u16` triggers, followed by 35 surface-to-column bytes at `0xB4`; natural
+tail alignment accounts for the final byte. The definition asserts the
+`0x14` bank stride and `0xD8` total size. Trigger selection, animation-event
+dispatch, and record lookup now use these fields, with the typed lookup API
+owned by the audio header. Keeping a local table pointer preserves MWCC's
+shared base address without byte-offset casts. These functions remain exact
+at 42, 276, and 30 instructions; both complete owner objects and all 2,872
+source objects are byte-identical. Both build gates and 79 tooling tests pass.
+Tricky remains 87/89 exact with 41 diagnostic-link text bytes differing and
+all allocated non-text sections exact. This recovers shared data used by
+Tricky; it neither improves the remaining code mismatch nor settles compiler
+provenance.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

@@ -59,7 +59,7 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
                                 CurvesCollisionState* collision, f32 speed, f32 scale) {
     Vec v;
     SplashFxParams ps;
-    u8* tbl;
+    SurfaceSfxTable* tbl;
     u16* sfxTab;
     u8 flags;
     u8 i;
@@ -70,37 +70,37 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     int n;
     GameObject* desc;
 
-    tbl = gSurfaceSfxTable;
+    tbl = &gSurfaceSfxTable;
     switch (type) {
     case 1:
-        sfxTab = (u16*)tbl;
+        sfxTab = tbl->triggers[0];
         break;
     case 3:
-        sfxTab = (u16*)(tbl + 0x14);
+        sfxTab = tbl->triggers[1];
         break;
     case 4:
-        sfxTab = (u16*)(tbl + 0x3C);
+        sfxTab = tbl->triggers[3];
         break;
     case 5:
-        sfxTab = (u16*)(tbl + 0x64);
+        sfxTab = tbl->triggers[5];
         break;
     case 6:
-        sfxTab = (u16*)(tbl + 0x50);
+        sfxTab = tbl->triggers[4];
         break;
     case 8:
-        sfxTab = (u16*)(tbl + 0x78);
+        sfxTab = tbl->triggers[6];
         break;
     case 10:
-        sfxTab = (u16*)(tbl + 0x8C);
+        sfxTab = tbl->triggers[7];
         break;
     case 9:
-        sfxTab = (u16*)(tbl + 0xA0);
+        sfxTab = tbl->triggers[8];
         break;
     case 7:
-        sfxTab = (u16*)(tbl + 0x28);
+        sfxTab = tbl->triggers[2];
         break;
     default:
-        sfxTab = (u16*)(tbl + 0x28);
+        sfxTab = tbl->triggers[2];
         break;
     }
     flags = 0;
@@ -131,10 +131,10 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
         return;
     }
     n = collision->segmentHits.surfaceTypes[0];
-    if (n < 0 || n >= 0x23) {
+    if (n < 0 || n >= SURFACE_SFX_SURFACE_TYPE_COUNT) {
         n = 0;
     } else {
-        n = tbl[0xb4 + n];
+        n = tbl->surfaceColumns[n];
     }
     sfx = n;
     desc = collision->segmentHits.objects[0];
@@ -205,31 +205,29 @@ void objAudioDispatchAnimEvents(GameObject* obj, ObjAnimEventList* events, u8 ty
     }
 }
 
-void* surfaceSfxGetRecord(u32 i)
-{
-    u8* base = gSurfaceSfxTable;
-    switch (i)
-    {
+u16* surfaceSfxGetRecord(u32 soundId) {
+    SurfaceSfxTable* table = &gSurfaceSfxTable;
+    switch (soundId) {
     case 1:
-        return base;
+        return table->triggers[0];
     case 3:
-        return base + 0x14;
+        return table->triggers[1];
     case 4:
-        return base + 0x3C;
+        return table->triggers[3];
     case 5:
-        return base + 0x64;
+        return table->triggers[5];
     case 6:
-        return base + 0x50;
+        return table->triggers[4];
     case 8:
-        return base + 0x78;
+        return table->triggers[6];
     case 10:
-        return base + 0x8C;
+        return table->triggers[7];
     case 9:
-        return base + 0xA0;
+        return table->triggers[8];
     case 7:
-        return base + 0x28;
+        return table->triggers[2];
     default:
-        return base + 0x28;
+        return table->triggers[2];
     }
 }
 
