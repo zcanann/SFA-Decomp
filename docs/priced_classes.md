@@ -4398,6 +4398,36 @@ Objdiff's fuzzy score moves from 99.97648% to 99.97250% despite that byte gain;
 are unchanged. Both build gates, formatting, and 72 tooling tests pass. Object
 SHA256: `b5d20caf004e7b02443a3432ea0bb7952d799a15581bf7adf5272f629889e133`.
 
+Tricky's candidate/cache dependency `pi_pathsearch` now records the retail
+allocation contract: 254 node entries, 254 heap entries, and 100 output points
+in one `0x1960`-byte allocation. Named limits cover allocation, clearing,
+capacity checks, reconstruction, and the `0xFF` parent/child sentinel; layout
+assertions cover the node/heap fields and the embedded search counters.
+The target heuristic is `distanceToTargetSq`, the accumulated edge cost is
+`routeCost`, and the closest heuristic is `closestDistanceSq`: expansion adds
+squared 3D segment lengths and quantizes each extension to `u32`, rather than
+accumulating ordinary travel distance. The high-bit parent-index rejection is
+preserved, including indices other than the sentinel.
+
+Path reconstruction now writes `search->path[count]` without a duplicate byte
+offset counter. Curve access uses canonical field offsets instead of treating
+shifted pointers as whole curve records. The retained changes preserve every
+function/allocated-section byte and named layout in the already-exact unit;
+one anonymous relocation name changes. Its object SHA256 is
+`efb5bfcfef6dbeb9e1aa11389ce1411d33891439c89c3568bbef651b019b74ef`.
+All 122 other header consumers were rebuilt with both the original and recovered
+headers and remain raw-object identical. Naming the limits enum avoids anonymous
+type renumbering at those consumers. Both build gates, formatting, and 72 tooling
+tests pass; Tricky's diagnostic link still differs in 59 text bytes only.
+
+Rejected probes are not retained: direct typed heap indexing loses one
+instruction per insertion; the reference-style separate heap/length-pointer
+signature does not restore it. Indexed point lookup changes eight bytes in
+`pathSearchAddNeighbor`, and removing the integer pointer round-trip changes
+15 bytes in `pathSearchStep`. Those exact forms remain protected. A direct
+`linkWalkGroups[i]` spelling swaps the address-add operands; a signed canonical
+`offsetof` expression preserves them.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
