@@ -14,6 +14,7 @@
 #include "main/vecmath_distance_api.h"
 #include "sys/objects.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_state.h"
 #include "main/obj_message.h"
 #include "main/objhits.h"
 
@@ -31,15 +32,6 @@
 #define DUSTER_HIT_REACTION_TIMER          0xFA
 #define DUSTER_SETTLE_TIMER_MAX            0x32
 #define DUSTER_MESSAGE_QUEUE_SIZE          1
-
-typedef struct DusterCharacterState {
-    u8 pad00[9];
-    u8 collectedCount;
-    u8 maxCollectedCount;
-} DusterCharacterState;
-
-STATIC_ASSERT(offsetof(DusterCharacterState, collectedCount) == 0x9);
-STATIC_ASSERT(offsetof(DusterCharacterState, maxCollectedCount) == 0xA);
 
 int duster_SeqFn(GameObject* obj) {
     DusterObjectState* state = obj->extra;
@@ -64,8 +56,8 @@ void duster_hitDetect(GameObject* obj) {
     TrackLineIntersectResult hit;
     int hitResult;
     state = obj->extra;
-    hitResult = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 6.0f, 2,
-                                   &hit, obj, 8, -1, 255, 0);
+    hitResult =
+        trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 6.0f, 2, &hit, obj, 8, -1, 255, 0);
     if (hitResult != 0) {
         state->priorityHit = 1;
     }
@@ -79,7 +71,7 @@ void duster_update(GameObject* obj) {
     DusterPlacement* placement;
     GameObject* player;
     TrackGroundHit** floorHits;
-    int message;
+    u32 message;
     int nextCollectedCount;
     int floorHitCount;
     int floorIndex;
@@ -87,24 +79,24 @@ void duster_update(GameObject* obj) {
     f32 bestFloorDelta;
     f32 verticalDelta;
     MatrixTransform launch;
-    DusterCharacterState* characterState;
+    PlayerStatus* characterState;
 
     state = obj->extra;
     placement = (DusterPlacement*)obj->anim.placementData;
     player = Obj_GetPlayerObject();
 
-    while (ObjMsg_Pop(obj, (u32*)&message, 0, 0) != 0) {
+    while (ObjMsg_Pop(obj, &message, 0, 0) != 0) {
         switch (message) {
         case DUSTER_MESSAGE_DEPOSIT:
-            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_sc_cam90_c);
+            Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
             mainSetBits(state->completeGameBit, 1);
-            characterState = (DusterCharacterState*)(*gMapEventInterface)->getCurCharacterState();
-            characterState->collectedCount =
-                (characterState->maxCollectedCount < (nextCollectedCount = characterState->collectedCount + 1))
-                    ? characterState->maxCollectedCount
+            characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();
+            characterState->healCount =
+                (characterState->healCountMax < (nextCollectedCount = characterState->healCount + 1))
+                    ? characterState->healCountMax
                     : nextCollectedCount;
             state->complete = 1;
             break;
@@ -156,9 +148,8 @@ void duster_update(GameObject* obj) {
     }
 
     if (state->settleTimer == 0 && state->hitReactTimer == 0) {
-        if (ObjAnim_AdvanceCurrentMove(obj, state->moveStepScale, timeDelta, NULL) != 0 ||
-            state->priorityHit != 0) {
-            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_en_lflsh3_c);
+        if (ObjAnim_AdvanceCurrentMove(obj, state->moveStepScale, timeDelta, NULL) != 0 || state->priorityHit != 0) {
+            Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh3_c);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_BOUNCE, NULL, 2, -1, NULL);
             state->driftDirection = randomGetRange(0, DUSTER_DRIFT_DIRECTION_MAX);
@@ -183,7 +174,7 @@ void duster_update(GameObject* obj) {
 
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == DUSTER_HIT_REACTION_PRIORITY) {
             state->hitReactionActive = 1;
-            ((void (*)(void*, u16))Sfx_PlayFromObject)(obj, SFXTRIG_dn_boar1_c_4d);
+            Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_4d);
         }
     } else {
         if (state->settleTimer != 0) {
@@ -213,8 +204,7 @@ void duster_update(GameObject* obj) {
     if (verticalDelta < 0.0f) {
         verticalDelta = -verticalDelta;
     }
-    if (verticalDelta < 30.0f &&
-        Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < 20.0f &&
+    if (verticalDelta < 30.0f && Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < 20.0f &&
         Obj_IsParentSlackClear(player) != 0) {
         if (mainGetBit(GAMEBIT_SawBafomdad) == 0) {
             state->heldObjectId = DUSTER_HELD_OBJECT_NONE;
@@ -222,17 +212,17 @@ void duster_update(GameObject* obj) {
             ObjMsg_SendToObject(player, DUSTER_MESSAGE_IN_RANGE, obj, (u32)&state->heldObjectId);
             mainSetBits(GAMEBIT_SawBafomdad, 1);
         } else {
-            characterState = (DusterCharacterState*)(*gMapEventInterface)->getCurCharacterState();
-            if (characterState->collectedCount < characterState->maxCollectedCount) {
+            characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();
+            if (characterState->healCount < characterState->healCountMax) {
                 Sfx_PlayFromObject(obj, SFXTRIG_sc_cam90_c);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, DUSTER_PARTICLE_DEPOSIT, NULL, 1, -1, NULL);
                 mainSetBits(state->completeGameBit, 1);
-                characterState = (DusterCharacterState*)(*gMapEventInterface)->getCurCharacterState();
-                characterState->collectedCount =
-                    (characterState->maxCollectedCount < (nextCollectedCount = characterState->collectedCount + 1))
-                        ? characterState->maxCollectedCount
+                characterState = (PlayerStatus*)(*gMapEventInterface)->getCurCharacterState();
+                characterState->healCount =
+                    (characterState->healCountMax < (nextCollectedCount = characterState->healCount + 1))
+                        ? characterState->healCountMax
                         : nextCollectedCount;
                 state->complete = 1;
                 obj->anim.alpha = 1;
