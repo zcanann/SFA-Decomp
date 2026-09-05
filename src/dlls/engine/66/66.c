@@ -163,8 +163,8 @@ void CameraModeNormal_updateTargetAction(CameraObject* camera, GameObject* targe
             ((camera->targetFlags & CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT) != 0)) {
             Camera_setBlendCurveMode(1);
             (*gCameraInterface)
-                ->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, sizeof(camera->currentTarget),
-                          &camera->currentTarget, 0x3c, 0xff);
+                ->setMode(CAMERA_MODE_COMBAT_RESOURCE_ID, 1, 0, sizeof(camera->currentTarget), &camera->currentTarget,
+                          0x3c, 0xff);
         } else if ((((buttons & PAD_TRIGGER_Z) != 0) && (target->anim.classId == 1)) &&
                    (cond = playerIsInNormalControl(target), cond != 0)) {
             viewfinderSettings.radius = gCameraModeNormalState->minDistance;
@@ -558,7 +558,7 @@ void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int 
         *(s8*)(cameraAddr + (int)offsetof(CameraObject, anim.previousLocalPosY)) = -1;
         *(s8*)(cameraAddr + (int)offsetof(CameraObject, anim.previousLocalPosZ)) = collisionFlag;
         res = trackGetLineIntersect(&camera->probePosX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10, 0xffffffff,
-                                 0xff, 0);
+                                    0xff, 0);
         camera->cameraCollisionActive = res;
         pos[0] = camera->anim.worldPosX;
         pos[1] = camera->anim.worldPosY;
@@ -572,8 +572,8 @@ void CameraModeNormal_updateVerticalBounds(CameraObject* camera, int flags, int 
         camera->anim.worldPosZ = pos[2];
     }
     if ((flags & 2) != 0) {
-        count = trackGetHeight(camObj, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
-                                     &hits, 1, 0x40);
+        count = trackGetHeight(camObj, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ, &hits, 1,
+                               0x40);
         *upperBound = -100000.0f;
         *lowerBound = 100000.0f;
         bestUpper = 100000.0f;
@@ -1135,7 +1135,7 @@ void CameraModeNormal_update(CameraObject* camera) {
         0xffffu &
         getAngle(camera->anim.worldPosY - (target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight), dy);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
-    if (0x8000 < (int)angleDelta) {
+    if ((int)angleDelta > 0x8000) {
         angleDelta = angleDelta - 0xffff;
     }
     if ((int)angleDelta < -0x8000) {
