@@ -1966,6 +1966,12 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
 }
 
 char lbl_803A87F0[0x40];
+
+static inline int gameUiClampMagicWidth(int value, int capacity) {
+    value = capacity < value ? capacity : value;
+    return value > 0 ? value : 0;
+}
+
 void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     int total = lbl_803A9364[8];
     int middleCapacity = total - 0xd;
@@ -1974,10 +1980,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     int seg4;
     int rem4;
     int seg2;
-    int seg3;
     int rem1;
+    int seg3;
     int previewFirstWidth;
-    int endFilledWidth;
     int previousCurrent;
     Texture* tex;
     seg1 = (current > 7) ? 7 : current;
@@ -1985,18 +1990,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
         seg1++;
     }
     rem1 = 8 - seg1;
-    seg2 = (middleCapacity < current - 7) ? middleCapacity : current - 7;
-    seg2 = (seg2 > 0) ? seg2 : 0;
+    seg2 = gameUiClampMagicWidth(current - 7, middleCapacity);
     seg3 = middleCapacity - seg2;
-    endFilledWidth = (current - 7) - middleCapacity;
-    if (endFilledWidth > 5) {
-        endFilledWidth = 5;
-    }
-    if (endFilledWidth > 0) {
-        seg4 = endFilledWidth;
-    } else {
-        seg4 = 0;
-    }
+    seg4 = gameUiClampMagicWidth((current - 7) - middleCapacity, 5);
     if (current == total) {
         seg4 = 7;
     }
@@ -2072,17 +2068,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     }
     previewFirstWidth = (previousCurrent > 8) ? 8 : previousCurrent;
     seg1 = seg1 - previewFirstWidth;
-    rem1 = previousCurrent - 8;
-    if (middleCapacity < previousCurrent - 8) {
-        rem1 = middleCapacity;
-    }
-    rem1 = (rem1 > 0) ? rem1 : 0;
+    rem1 = gameUiClampMagicWidth(previousCurrent - 8, middleCapacity);
     seg2 = seg2 - rem1;
-    previousCurrent = (previousCurrent - 8) - middleCapacity;
-    if (previousCurrent > 8) {
-        previousCurrent = 8;
-    }
-    previousCurrent = (previousCurrent > 0) ? previousCurrent : 0;
+    previousCurrent = gameUiClampMagicWidth((previousCurrent - 8) - middleCapacity, 8);
     seg4 = seg4 - previousCurrent;
     if (seg1 != 0) {
         tex = hudTextures[0x31];
@@ -3885,6 +3873,7 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
     ArwingScoreText score = sArwingBlankScore;
     int req;
     int rings;
+    u32 ringSlot;
     u32 i;
     int partialFrame;
     int maxPips;
@@ -3933,11 +3922,11 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
         }
         if (arwing->anim.mapEventSlot != 0x26) {
             drawTexture(hudTextures[61], 6e+02f, 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
-            for (i = 0; (int)(i & 0xff) < rings; i++) {
-                drawTexture(hudTextures[60], (f32)(int)(0x244 - (i & 0xff) * 0x14), 30.0f, (int)arwingHudAlpha & 0xff,
-                            0x100);
+            for (ringSlot = 0; (int)(ringSlot & 0xff) < rings; ringSlot++) {
+                drawTexture(hudTextures[60], (f32)(int)(0x244 - (ringSlot & 0xff) * 0x14), 30.0f,
+                            (int)arwingHudAlpha & 0xff, 0x100);
             }
-            for (; (int)(pip = i & 0xff) < req; i++) {
+            for (; (int)(pip = ringSlot & 0xff) < req; ringSlot++) {
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), 30.0f, (int)arwingHudAlpha & 0xff, 0x100);
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
