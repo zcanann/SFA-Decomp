@@ -4345,6 +4345,8 @@ static inline void pauseMenuSetSpellStoneIcons(GridEntry* entries, u8 count) {
 void pauseMenuDrawStatusPage(GameObject* player) {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     s8 i8;
+    s32 hintCount;
+    s32 ty2;
     s32 ty1;
     s32 alpha;
     s32 ty;
@@ -4408,8 +4410,6 @@ void pauseMenuDrawStatusPage(GameObject* player) {
     } else {
         MapEventInterface* mapEvents = *gMapEventInterface;
         char buf[0x38];
-        s32 hintCount;
-        s32 ty2;
         s32 gbCount;
         s32 h24;
         s32 mins25;
