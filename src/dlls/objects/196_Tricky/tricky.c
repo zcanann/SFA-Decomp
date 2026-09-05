@@ -2066,7 +2066,7 @@ void tricky_attachToWalkGroup(GameObject* obj, TrickyState* state) {
     if (pathByte == 0) {
         int patchGroup = Objfsa_GetPatchGroupIdAtPoint(&obj->anim.worldPosX);
         if (patchGroup != 0) {
-            walkPath_writeU16LE(patchGroup & 0xffff, pathBytes);
+            walkPath_writeU16LE(patchGroup, pathBytes);
         }
     }
     if (pathBytes[0] != 0) {

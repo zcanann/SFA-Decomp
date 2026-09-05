@@ -4287,6 +4287,33 @@ linker-stripped body is retained; the pool provides independent evidence for
 that choice. Two single-local declaration sweeps (52 builds total) were also
 inert. Production Tricky remains byte-identical to `0ed4e2131c`.
 
+The two-byte walk-group writer used only by Tricky now accepts `u16 value`.
+An ordinary `int word = value` promotion explains the entry normalization and
+arithmetic right shift in retail `walkPath_writeU16LE` (`0x800DB224`), matching
+all seven instructions without the old `u32` mask and signed-cast workaround.
+Both Tricky call sites stay exact; the attachment caller no longer manually
+masks its argument. The complete Tricky object remains SHA256
+`073c1c86833f0fb6ff386489ac472d6698329492bae83e9399d43339ab70de40`.
+
+Tricky is also the sole consumer of `Objfsa_GetPatchGroupIdAtPoint`
+(`0x800DBECC`). Its two one-element counter arrays and redundant initialization
+are replaced with byte scalars. The patch type now exposes the evidenced flat
+normal-component view alongside its X/Z plane pairs: four iterations access
+component pairs 0/1 through 6/7. Layout assertions cover the 0x30-byte stride,
+normal views, plane offsets, height limits, and group ID. The query retains the
+strict Y bounds, half-plane expression/FMA ordering, and first-hit behavior.
+
+This cleanup accepts a measured query regression: 73 instructions remain, but
+one zero-copy instruction and ten register operands differ (100% to 98.356%).
+Only 18 bytes in that function change in the Hcurves object; all named layouts
+and non-text bytes are unchanged. A combined Tricky/Hcurves source-link A/B
+likewise differs only in those 18 text bytes. Hcurves already has other
+whole-link mismatches and remains `NonMatching`; this is not a combined retail
+match claim. TrickyWarp, engine slot 0, and Hcurves_romcurve remain raw-object
+identical under the corrected headers. Both build gates and 72 focused tests
+pass. A derived component index, changed local scope, and a register qualifier
+did not recover the original query allocation and were not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

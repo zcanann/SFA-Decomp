@@ -12,15 +12,20 @@
 extern int gObjfsaPatchCount;
 extern u8 gObjfsaWalkGroupActive[];
 
-typedef struct ObjfsaPatchPlane
-{
+typedef struct ObjfsaPatchPlane {
     s16 normalX;
     s16 normalZ;
 } ObjfsaPatchPlane;
 
-typedef struct ObjfsaPatch
-{
-    ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
+STATIC_ASSERT(sizeof(ObjfsaPatchPlane) == 4);
+STATIC_ASSERT(offsetof(ObjfsaPatchPlane, normalX) == 0);
+STATIC_ASSERT(offsetof(ObjfsaPatchPlane, normalZ) == 2);
+
+typedef struct ObjfsaPatch {
+    union {
+        ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
+        s16 normalComponents[OBJFSA_PATCHGROUP_PATCH_COUNT * 2];
+    };
     f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
     s16 maxY;
     s16 minY;
@@ -31,6 +36,14 @@ typedef struct ObjfsaPatch
     s16 exit1Z;
     u8 pad2E[2];
 } ObjfsaPatch;
+
+STATIC_ASSERT(sizeof(ObjfsaPatch) == 0x30);
+STATIC_ASSERT(offsetof(ObjfsaPatch, planes) == 0);
+STATIC_ASSERT(offsetof(ObjfsaPatch, normalComponents) == 0);
+STATIC_ASSERT(offsetof(ObjfsaPatch, planeOffsets) == 0x10);
+STATIC_ASSERT(offsetof(ObjfsaPatch, maxY) == 0x20);
+STATIC_ASSERT(offsetof(ObjfsaPatch, minY) == 0x22);
+STATIC_ASSERT(offsetof(ObjfsaPatch, groupId) == 0x24);
 
 typedef struct ObjfsaWalkGroup
 {

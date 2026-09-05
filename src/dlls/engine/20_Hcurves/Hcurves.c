@@ -618,11 +618,10 @@ RomCurveDef* Objfsa_FindNearestEnabledCurveType24(f32* pos, int walkGroupFilter,
     return bestHit;
 }
 
-void walkPath_writeU16LE(u32 v, u8* dst)
-{
-    v = v & 0xffff;
-    dst[0] = v;
-    dst[1] = (u8)((s32)v >> 8);
+void walkPath_writeU16LE(u16 value, u8* outBytes) {
+    int word = value;
+    outBytes[0] = word;
+    outBytes[1] = word >> 8;
 }
 
 #define WALKGROUP_TRY_RETURN(idx)                                                                                      \
@@ -1006,43 +1005,35 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
     }
     return wgi;
 }
-int Objfsa_GetPatchGroupIdAtPoint(float* point)
-{
-    int n;
+int Objfsa_GetPatchGroupIdAtPoint(float* point) {
+    int patchIndex;
     ObjfsaPatch* patch;
 
-    for (n = 0; n < gObjfsaPatchCount; n++)
-    {
+    for (patchIndex = 0; patchIndex < gObjfsaPatchCount; patchIndex++) {
         f32 y = point[1];
-        patch = &gObjfsaPatches[n];
-        if (y < patch->maxY && y > patch->minY)
-        {
+        patch = &gObjfsaPatches[patchIndex];
+        if (y < patch->maxY && y > patch->minY) {
             f32 x;
             f32 z;
-            u8 i[1];
-            u8 j[1];
+            u8 planeIndex;
+            u8 normalComponentIndex;
             z = point[2];
             x = point[0];
-            i[0] = (j[0] = 0);
-            j[0] = 0;
-            for (; i[0] < 4; i[0]++, j[0] += 2)
-            {
-                if (patch->planeOffsets[i[0]] + (x * (f32)((s16*)patch)[j[0]] + z * (f32)((s16*)patch)[j[0] + 1]) >
-                    0.0f)
-                {
+            for (normalComponentIndex = planeIndex = 0; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
+                 planeIndex++, normalComponentIndex += 2) {
+                if (patch->planeOffsets[planeIndex] + (x * (f32)patch->normalComponents[normalComponentIndex] +
+                                                       z * (f32)patch->normalComponents[normalComponentIndex + 1]) >
+                    0.0f) {
                     break;
                 }
             }
-            if (i[0] == 4)
-            {
+            if (planeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                 return patch->groupId;
             }
         }
     }
     return 0;
 }
-
-
 
 int Objfsa_FindWalkGroupIndexAtPoint(float* point)
 {
