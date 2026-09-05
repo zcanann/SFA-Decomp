@@ -2823,12 +2823,8 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
                 if (rowFade > gCMenuRowFadeOutThreshold) {
                     alpha = alpha - (rowFade - gCMenuRowFadeOutThreshold) * 8;
                 }
-                if (alpha < 0) {
-                    alpha = 0;
-                }
-                if (alpha > 0xFF) {
-                    alpha = 0xFF;
-                }
+                alpha = alpha < 0 ? 0 : alpha;
+                alpha = alpha > 0xFF ? (s16)0xFF : alpha;
                 fadedAlpha = alpha * gCMenuHighlightFade / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
                 sprintf(label.text, lbl_803DBB58, gCMenuItemIcons[i]);
@@ -3738,8 +3734,8 @@ void headDisplayDraw(void) {
         gGameUiShimmerFrame += 1;
         wavePhaseA = wavePhaseB = lineOffset = 0;
         for (; lineOffset < (int)height; lineOffset += 4) {
-            wave = 0.02f * fsin16Approx((u16)(wavePhaseB + gGameUiShimmerFrame * 0xfa0)) +
-                   0.02f * fsin16Approx((u16)(wavePhaseA + gGameUiShimmerFrame * 0x1838));
+            wave = 0.02f * fsin16Approx((int)(u16)(wavePhaseB + gGameUiShimmerFrame * 0xfa0)) +
+                   0.02f * fsin16Approx((int)(u16)(wavePhaseA + gGameUiShimmerFrame * 0x1838));
             waveAlpha = (int)((f32)(s16)panelAlpha * (0.4f + wave));
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
             noiseX = randomGetRange(0, 0x1e) << 1;

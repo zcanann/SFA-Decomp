@@ -243,3 +243,42 @@ Validation: strict checksum `ninja` and `ninja all_source` both exit 0
 within their 30-second limits. Formatting checks pass for the TU and
 `include/main/dll/dll_0000_gameui_api.h`. The TU remains `NonMatching`;
 the diagnostic source link does not yet reproduce the retail DOL.
+
+## September 5 button-HUD match
+
+`hudDrawButtons` now matches all **3,684 bytes / 921 instructions** under
+the same GC/1.3 profile. The count-label opacity clamp is two conditional
+expressions. The lower bound remains an `int` zero, while the upper bound
+is explicitly `(s16)0xFF`, preserving the signed-short result before the
+highlight-fade multiplication.
+
+The two conditional expressions resolve the register allocation across
+the function, including its long-lived HUD base, selected icon, and row
+offset. An untyped upper bound leaves just one reversed `mullw` operand
+order; the signed-short bound resolves it. The clamped value is unchanged
+for every input representable by `alpha`.
+
+Exact functions rise from **108 to 109 / 118**, and exact code rises from
+48,544 to **52,228 / 75,188 bytes**. Code fuzzy match is **99.88057%**.
+The other 117 function bodies are byte-identical to the preceding source
+object. All assigned data remains exact, and source exports, section
+layouts, and resolved relocations are unchanged.
+
+The staging rebase also brings in the corrected shared `fsin16Approx(u16)`
+declaration. Explicitly promoting the two wrapped head-display angles to
+`int` preserves the caller's previous expression types and restores the
+complete pre-rebase object byte for byte. The shared narrow API is retained;
+removing only the explicit angle casts does not restore the code generation.
+
+This pass also rechecks the whole-TU optimizer controls. Enabling peephole
+optimization or scheduling regresses the match substantially. Disabling
+lifetimes, dead-store elimination, propagation, loop-invariant motion,
+common-subexpression elimination, or strength reduction improves none of
+the remaining functions. No compiler-profile change is retained.
+
+Validation: the strict checksum build and `ninja all_source` both exit 0
+within their 30-second limits. Formatting checks pass for the TU and its
+public API header. Nine functions remain non-exact, so the TU remains
+`NonMatching` and the full-TU goal is not complete. A diagnostic source-object
+link succeeds with every linked data byte intact; 506 text bytes still
+differ from the strict-build baseline.
