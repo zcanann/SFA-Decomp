@@ -4264,6 +4264,29 @@ Both build gates and all 59 focused tests pass; the diagnostic link still has
 24 leading movement-dispatch declaration orders under the corrected patch API
 found no improvement over the existing 34 operand differences and was rejected.
 
+`python tools/tricky_debug_locations.py --differences` now builds a separate
+MWCC debug object and maps the remaining instruction differences to source
+lines. The default path first requires identical production function bytes,
+allocated sections, named layouts, and relocations; the debug sections and
+raw object digest may differ. The reader handles MWCC's DWARF 1 entries,
+relocations, repeated opaque vendor attributes, and interior zero-line markers.
+Without `--differences`, it prints the compiler's named local locations.
+These are advisory optimized-debug records, not retail symbols or live-range
+proof: an explicit integer sound-ID experiment reports its source local in
+register 0 even though the propagated call argument survives in register 28.
+Inlined helper temporaries are not exposed in the current Tricky records.
+
+The line table assigns all ten `moveTricky` mismatches to its two voice calls,
+all six prompt mismatches to the food/baddie voice calls, and the remaining
+34 to the movement result and current walk-group values. An explicit integer
+voice-selection local postpones narrowing and changes two instructions; a
+halfword local instead preserves instructions but still allocates incorrectly.
+Neither is retained. Explicitly inlining the facing helper leaves the three
+code residuals unchanged while permuting 53 constant-pool words. Its ordinary,
+linker-stripped body is retained; the pool provides independent evidence for
+that choice. Two single-local declaration sweeps (52 builds total) were also
+inert. Production Tricky remains byte-identical to `0ed4e2131c`.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
