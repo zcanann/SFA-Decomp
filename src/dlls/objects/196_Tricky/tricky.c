@@ -3217,13 +3217,14 @@ void tricky_state04_nop(void) {
 
 void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
     RomCurveDef* backwardNode;
+    RomCurveDef* startCurve;
     u8 nodeCount = 0;
     int branchCurveId;
     RomCurveDef* branchNode;
     u32 branchMask;
     int branchIndex;
     int i;
-    RomCurveDef* startCurve;
+    RomCurveDef* forwardNode;
     RomCurveDef* segmentNode;
     s32 nodeIds[ROMCURVE_LINK_COUNT];
     RomCurveDef* branchCandidateNode;
@@ -3316,15 +3317,16 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
             Objfsa_GetWalkGroupIndexAtPoint(&state->cannonballStartCurve->x, NULL)) {
             startCurve = state->cannonballStartCurve;
 
-            segmentNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(startCurve, 0));
+            forwardNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(startCurve, 0));
             backwardNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBackwardLink(startCurve, 0));
 
-            bestDistance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &segmentNode->x);
+            bestDistance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &forwardNode->x);
             distance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &backwardNode->x);
 
             if (bestDistance > distance) {
+                segmentNode = forwardNode;
                 nextSegmentNode =
-                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(segmentNode, 0));
+                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomForwardLink(forwardNode, 0));
                 state->route.reverse = 0;
             } else {
                 segmentNode = backwardNode;

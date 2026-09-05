@@ -4209,6 +4209,20 @@ the discarded-result sites. Automatic rather than explicit inlining of recovery
 position and route-turn helpers preserves caller bytes and only emits unused
 helper bodies. None improves the four remaining retail mismatches.
 
+The ball-roll initialization now distinguishes the forward candidate from the
+selected segment node. The earlier merged local unnecessarily tied candidate
+selection to the object's register lifetime. The older Tricky reconstruction
+suggested this distinction, but only the EN retail function and compiler output
+validate it here; its different distance origin and rolling-link policy were
+not imported. A bounded permutation of the five uninitialized curve-pointer
+declarations found an exact allocation after 31 builds. No statements, flags,
+compiler settings, or data declarations were reordered to obtain it.
+`tricky_updateBallRoll` now matches all 379 instructions (1516 bytes), removing
+52 operand differences. Only its 58 differing object bytes changed; symbol
+layout, relocations, and every other function remain unchanged. Tricky is now
+86/89 exact, 99.98492% fuzzy, with 55 linked text-byte differences rather than
+113. All linked non-text sections remain exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
