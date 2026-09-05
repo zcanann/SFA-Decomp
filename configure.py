@@ -1900,9 +1900,9 @@ config.libs = [
             Object(Matching, "main/textrender_drawbox.c"),
             Object(NonMatching, "main/textrender_boxtex.c", cflags=cflags_dll_noopt_nocse_nolifetimes_noloopinv_noprop_nostrength),
             Object(MatchingFor("GSAE01"), "main/modellight.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(MatchingFor("GSAE01"), "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"], mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "main/gameloop.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/gameloop_buttonobj.c", cflags=[*cflags_dll_nosched, "-inline", "noauto"]),
-            Object(MatchingFor("GSAE01"), "main/gameloop_main.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"], mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "main/gameloop_main.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
             Object(NonMatching, "main/vecmath.c", cflags=cflags_dll_noopt_nostrength),
             Object(MatchingFor("GSAE01"), "main/vecmath_vec3.c"),
             Object(NonMatching, "main/mm.c", cflags=[*cflags_dll_noopt, "-inline", "noauto"]),
@@ -1938,7 +1938,7 @@ config.libs = [
 
             # main/thp
             Object(Matching, "main/thp/dll_3b.c", cflags=cflags_dll_noopt_noinline),
-            Object(MatchingFor("GSAE01"), "main/thp/n_options.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "main/thp/n_options.c"),
             Object(MatchingFor("GSAE01"), "main/thp/dll_3e.c", section_alignments={".sbss": 4}),
             Object(MatchingFor("GSAE01"), "main/thp/attractmovie.c"),
             Object(MatchingFor("GSAE01"), "main/thp/picmenu.c", cflags=cflags_dll_noopt_noinline, section_alignments={".sdata2": 4}),

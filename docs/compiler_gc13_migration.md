@@ -38,6 +38,13 @@ Both `ninja` and `ninja all_source` pass with 30-second timeouts after
 
 ## Reproducing the audit
 
+Subsequent source fixes migrate `main/gameloop.c`, `main/gameloop_main.c`, and
+`main/thp/n_options.c`: unsigned mask literals restore the immediate mask/XOR
+instructions for cache alignment, game-bit inversion, and audio DMA buffer
+selection. The final source is exact under both compilers; formatted objects
+preserve the baseline sections, symbols, and relocations. This brings the
+migration to 746 GC/1.3 units and 42 temporary GC/2.0 overrides.
+
 `tools/compiler_impact.py --all-mwcc-game --compiler GC/1.3 --output <new-directory>`
 includes every game-category MWCC unit. Add `--extra-cflags '-char signed'` to
 probe the explicit character setting. Failed compilations have absent candidate

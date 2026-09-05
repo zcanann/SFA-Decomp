@@ -61,8 +61,7 @@ u16 gAttractMovieVolumeScale[128] = {
 };
 char gAttractMovieAudioDmaBuffer[ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES + 3 * sizeof(OSMessage)];
 
-void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u32 height)
-{
+void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u32 height) {
     int halfHeight;
     int halfWidth;
     GXTexObj yTexObj;
@@ -131,42 +130,33 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXLoadTexObj(&vTexObj, GX_TEXMAP2);
 }
 
-BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
-{
+BOOL Movie_SetVolumeFade(int volume, int fadeFrames) {
     BOOL interrupts;
     f32 targetVolume;
     int rampCount;
 
-    if ((gAttractMoviePlayer.isOpen != 0) && (gAttractMoviePlayer.audioExists != 0))
-    {
-        if (volume > MOVIE_VOLUME_MAX)
-        {
+    if ((gAttractMoviePlayer.isOpen != 0) && (gAttractMoviePlayer.audioExists != 0)) {
+        if (volume > MOVIE_VOLUME_MAX) {
             volume = MOVIE_VOLUME_MAX;
         }
-        if (volume < 0)
-        {
+        if (volume < 0) {
             volume = 0;
         }
-        if (fadeFrames > MOVIE_FADE_FRAMES_MAX)
-        {
+        if (fadeFrames > MOVIE_FADE_FRAMES_MAX) {
             fadeFrames = MOVIE_FADE_FRAMES_MAX;
         }
-        if (fadeFrames < 0)
-        {
+        if (fadeFrames < 0) {
             fadeFrames = 0;
         }
 
         interrupts = OSDisableInterrupts();
         targetVolume = volume;
         gAttractMoviePlayer.targetVolume = targetVolume;
-        if (fadeFrames != 0)
-        {
+        if (fadeFrames != 0) {
             rampCount = fadeFrames << 5;
             gAttractMoviePlayer.rampCount = rampCount;
             gAttractMoviePlayer.deltaVolume = (targetVolume - gAttractMoviePlayer.curVolume) / rampCount;
-        }
-        else
-        {
+        } else {
             gAttractMoviePlayer.rampCount = 0;
             gAttractMoviePlayer.curVolume = targetVolume;
         }
@@ -176,8 +166,7 @@ BOOL Movie_SetVolumeFade(int volume, int fadeFrames)
     return FALSE;
 }
 
-static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount)
-{
+static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount) {
     u16 volumeScale;
     u32 validSamples;
     u32 process;
@@ -188,22 +177,17 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
     s16* dst;
     s16* src;
 
-    if (source != NULL)
-    {
-        if ((gAttractMoviePlayer.isOpen != 0) && (gAttractMoviePlayer.internalState == 2) && (gAttractMoviePlayer.audioExists != 0))
-        {
+    if (source != NULL) {
+        if ((gAttractMoviePlayer.isOpen != 0) && (gAttractMoviePlayer.internalState == 2) &&
+            (gAttractMoviePlayer.audioExists != 0)) {
             cnt = sampleCount;
             dst = destination;
             src = source;
-            for (;;)
-            {
-                do
-                {
-                    if (gAttractMoviePlayer.curAudioBuffer == NULL)
-                    {
+            for (;;) {
+                do {
+                    if (gAttractMoviePlayer.curAudioBuffer == NULL) {
                         gAttractMoviePlayer.curAudioBuffer = (AttractMovieAudioBuffer*)PopDecodedAudioBuffer(0);
-                        if (gAttractMoviePlayer.curAudioBuffer == NULL)
-                        {
+                        if (gAttractMoviePlayer.curAudioBuffer == NULL) {
                             memcpy(dst, src, cnt << 2);
                             return;
                         }
@@ -211,44 +195,33 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                     }
                     validSamples = gAttractMoviePlayer.curAudioBuffer->validSample;
                 } while (validSamples == 0);
-                if (validSamples >= cnt)
-                {
+                if (validSamples >= cnt) {
                     process = cnt;
-                }
-                else
-                {
+                } else {
                     process = validSamples;
                 }
                 audioPtr = gAttractMoviePlayer.curAudioBuffer->curPtr;
-                for (remain = 0; remain < process; remain = remain + 1)
-                {
-                    if (gAttractMoviePlayer.rampCount != 0)
-                    {
+                for (remain = 0; remain < process; remain = remain + 1) {
+                    if (gAttractMoviePlayer.rampCount != 0) {
                         gAttractMoviePlayer.rampCount = gAttractMoviePlayer.rampCount + -1;
                         gAttractMoviePlayer.curVolume = gAttractMoviePlayer.curVolume + gAttractMoviePlayer.deltaVolume;
-                    }
-                    else
-                    {
+                    } else {
                         gAttractMoviePlayer.curVolume = gAttractMoviePlayer.targetVolume;
                     }
                     volumeScale = gAttractMovieVolumeScale[(int)gAttractMoviePlayer.curVolume];
                     mixed = (int)*src + ((int)((u32)volumeScale * (int)*audioPtr) >> 0xf);
-                    if (mixed < S16_MIN)
-                    {
+                    if (mixed < S16_MIN) {
                         mixed = S16_MIN;
                     }
-                    if (S16_MAX < mixed)
-                    {
+                    if (S16_MAX < mixed) {
                         mixed = S16_MAX;
                     }
                     *dst = mixed;
                     mixed = src[1] + ((int)((u32)volumeScale * audioPtr[1]) >> 0xf);
-                    if (mixed < S16_MIN)
-                    {
+                    if (mixed < S16_MIN) {
                         mixed = S16_MIN;
                     }
-                    if (S16_MAX < mixed)
-                    {
+                    if (S16_MAX < mixed) {
                         mixed = S16_MAX;
                     }
                     dst[1] = mixed;
@@ -257,37 +230,29 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                     audioPtr = audioPtr + 2;
                 }
                 cnt = cnt - process;
-                gAttractMoviePlayer.curAudioBuffer->validSample = gAttractMoviePlayer.curAudioBuffer->validSample - process;
+                gAttractMoviePlayer.curAudioBuffer->validSample =
+                    gAttractMoviePlayer.curAudioBuffer->validSample - process;
                 gAttractMoviePlayer.curAudioBuffer->curPtr = audioPtr;
-                if (gAttractMoviePlayer.curAudioBuffer->validSample == 0)
-                {
+                if (gAttractMoviePlayer.curAudioBuffer->validSample == 0) {
                     PushFreeAudioBuffer(gAttractMoviePlayer.curAudioBuffer);
                     gAttractMoviePlayer.curAudioBuffer = NULL;
                 }
-                if (cnt == 0)
-                {
+                if (cnt == 0) {
                     break;
                 }
             }
-        }
-        else
-        {
+        } else {
             memcpy(destination, source, sampleCount << 2);
         }
-    }
-    else if ((gAttractMoviePlayer.isOpen != 0) && (gAttractMoviePlayer.internalState == 2) && (gAttractMoviePlayer.audioExists != 0))
-    {
+    } else if ((gAttractMoviePlayer.isOpen != 0) && (gAttractMoviePlayer.internalState == 2) &&
+               (gAttractMoviePlayer.audioExists != 0)) {
         cnt = sampleCount;
         dst = destination;
-        for (;;)
-        {
-            do
-            {
-                if (gAttractMoviePlayer.curAudioBuffer == NULL)
-                {
+        for (;;) {
+            do {
+                if (gAttractMoviePlayer.curAudioBuffer == NULL) {
                     gAttractMoviePlayer.curAudioBuffer = (AttractMovieAudioBuffer*)PopDecodedAudioBuffer(0);
-                    if (gAttractMoviePlayer.curAudioBuffer == NULL)
-                    {
+                    if (gAttractMoviePlayer.curAudioBuffer == NULL) {
                         memset(dst, 0, cnt << 2);
                         return;
                     }
@@ -295,40 +260,31 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                 }
                 validSamples = gAttractMoviePlayer.curAudioBuffer->validSample;
             } while (validSamples == 0);
-            if (validSamples >= cnt)
-            {
+            if (validSamples >= cnt) {
                 validSamples = cnt;
             }
             audioPtr = gAttractMoviePlayer.curAudioBuffer->curPtr;
-            for (remain = 0; remain < validSamples; remain = remain + 1)
-            {
-                if (gAttractMoviePlayer.rampCount != 0)
-                {
+            for (remain = 0; remain < validSamples; remain = remain + 1) {
+                if (gAttractMoviePlayer.rampCount != 0) {
                     gAttractMoviePlayer.rampCount = gAttractMoviePlayer.rampCount + -1;
                     gAttractMoviePlayer.curVolume = gAttractMoviePlayer.curVolume + gAttractMoviePlayer.deltaVolume;
-                }
-                else
-                {
+                } else {
                     gAttractMoviePlayer.curVolume = gAttractMoviePlayer.targetVolume;
                 }
                 volumeScale = gAttractMovieVolumeScale[(int)gAttractMoviePlayer.curVolume];
                 mixed = (int)((u32)volumeScale * (int)*audioPtr) >> 0xf;
-                if (mixed < S16_MIN)
-                {
+                if (mixed < S16_MIN) {
                     mixed = S16_MIN;
                 }
-                if (S16_MAX < mixed)
-                {
+                if (S16_MAX < mixed) {
                     mixed = S16_MAX;
                 }
                 *dst = mixed;
                 mixed = (int)((u32)volumeScale * audioPtr[1]) >> 0xf;
-                if (mixed < S16_MIN)
-                {
+                if (mixed < S16_MIN) {
                     mixed = S16_MIN;
                 }
-                if (S16_MAX < mixed)
-                {
+                if (S16_MAX < mixed) {
                     mixed = S16_MAX;
                 }
                 dst[1] = mixed;
@@ -336,93 +292,80 @@ static void AttractMovieAudio_Mix(s16* destination, s16* source, u32 sampleCount
                 audioPtr = audioPtr + 2;
             }
             cnt = cnt - validSamples;
-            gAttractMoviePlayer.curAudioBuffer->validSample = gAttractMoviePlayer.curAudioBuffer->validSample - validSamples;
+            gAttractMoviePlayer.curAudioBuffer->validSample =
+                gAttractMoviePlayer.curAudioBuffer->validSample - validSamples;
             gAttractMoviePlayer.curAudioBuffer->curPtr = audioPtr;
-            if (gAttractMoviePlayer.curAudioBuffer->validSample == 0)
-            {
+            if (gAttractMoviePlayer.curAudioBuffer->validSample == 0) {
                 PushFreeAudioBuffer(gAttractMoviePlayer.curAudioBuffer);
                 gAttractMoviePlayer.curAudioBuffer = NULL;
             }
-            if (cnt == 0)
-            {
+            if (cnt == 0) {
                 break;
             }
         }
-    }
-    else
-    {
+    } else {
         memset(destination, 0, sampleCount << 2);
     }
 }
 
-void AttractMovieAudio_DmaCallback(void)
-{
+void AttractMovieAudio_DmaCallback(void) {
     BOOL interrupts;
 
-    if (gAttractMovieAudioMode == 0)
-    {
-        gAttractMovieAudioDmaBufferIndex ^= 1;
-        AIInitDMA((u32)(gAttractMovieAudioDmaBuffer + (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
+    if (gAttractMovieAudioMode == 0) {
+        gAttractMovieAudioDmaBufferIndex ^= 1u;
+        AIInitDMA((u32)(gAttractMovieAudioDmaBuffer +
+                        (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
                   ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         interrupts = OSEnableInterrupts();
-        AttractMovieAudio_Mix((s16*)(gAttractMovieAudioDmaBuffer + (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)), NULL,
-                              ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT);
-        DCFlushRange(gAttractMovieAudioDmaBuffer + (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
+        AttractMovieAudio_Mix((s16*)(gAttractMovieAudioDmaBuffer +
+                                     (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
+                              NULL, ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT);
+        DCFlushRange(gAttractMovieAudioDmaBuffer +
+                         (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
                      ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         OSRestoreInterrupts(interrupts);
-    }
-    else
-    {
-        if (gAttractMovieAudioMode == 1)
-        {
-            if (gAttractMovieAudioPendingSourceAddr != 0)
-            {
+    } else {
+        if (gAttractMovieAudioMode == 1) {
+            if (gAttractMovieAudioPendingSourceAddr != 0) {
                 gAttractMovieAudioMixSourceAddr = gAttractMovieAudioPendingSourceAddr;
             }
             gAttractMovieAudioPrevDmaCallback();
             gAttractMovieAudioPendingSourceAddr = AIGetDMAStartAddr() + 0x80000000 /* phys -> cached RAM */;
-        }
-        else
-        {
+        } else {
             gAttractMovieAudioPrevDmaCallback();
             gAttractMovieAudioMixSourceAddr = AIGetDMAStartAddr() + 0x80000000 /* phys -> cached RAM */;
         }
 
-        gAttractMovieAudioDmaBufferIndex ^= 1;
-        AIInitDMA((u32)(gAttractMovieAudioDmaBuffer + (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
+        gAttractMovieAudioDmaBufferIndex ^= 1u;
+        AIInitDMA((u32)(gAttractMovieAudioDmaBuffer +
+                        (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
                   ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         interrupts = OSEnableInterrupts();
-        if (gAttractMovieAudioMixSourceAddr != 0)
-        {
+        if (gAttractMovieAudioMixSourceAddr != 0) {
             DCInvalidateRange((void*)gAttractMovieAudioMixSourceAddr, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         }
-        AttractMovieAudio_Mix((s16*)(gAttractMovieAudioDmaBuffer + (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
+        AttractMovieAudio_Mix((s16*)(gAttractMovieAudioDmaBuffer +
+                                     (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
                               (s16*)gAttractMovieAudioMixSourceAddr, ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT);
-        DCFlushRange(gAttractMovieAudioDmaBuffer + (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
+        DCFlushRange(gAttractMovieAudioDmaBuffer +
+                         (gAttractMovieAudioDmaBufferIndex * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
                      ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
         OSRestoreInterrupts(interrupts);
     }
 }
 
-void THPPlayerPostDrawDone(void)
-{
+void THPPlayerPostDrawDone(void) {
     OSMessage msg;
     OSMessage textureSet;
 
-    if (gAttractMovieAudioActive != 0)
-    {
-        while (TRUE)
-        {
-            if (OSReceiveMessage(&gAttractMovieSpentTextureSetQueue, &msg, OS_MESSAGE_NOBLOCK) == TRUE)
-            {
+    if (gAttractMovieAudioActive != 0) {
+        while (TRUE) {
+            if (OSReceiveMessage(&gAttractMovieSpentTextureSetQueue, &msg, OS_MESSAGE_NOBLOCK) == TRUE) {
                 textureSet = msg;
-            }
-            else
-            {
+            } else {
                 textureSet = NULL;
             }
-            if (textureSet == NULL)
-            {
+            if (textureSet == NULL) {
                 break;
             }
             PushFreeTextureSet(textureSet);
@@ -430,44 +373,35 @@ void THPPlayerPostDrawDone(void)
     }
 }
 
-BOOL THPPlayerGetVideoInfo(void* dst)
-{
-    if (gAttractMoviePlayer.isOpen != 0)
-    {
+BOOL THPPlayerGetVideoInfo(void* dst) {
+    if (gAttractMoviePlayer.isOpen != 0) {
         memcpy(dst, &gAttractMoviePlayer.videoInfo, sizeof(gAttractMoviePlayer.videoInfo));
         return TRUE;
     }
     return FALSE;
 }
 
-void AttractMovie_AddVideoTevStages(void)
-{
+void AttractMovie_AddVideoTevStages(void) {
     AttractMovieTextureSet* textureSet;
 
-    if (gAttractMovieState == 2)
-    {
+    if (gAttractMovieState == 2) {
         textureSet = gAttractMoviePlayer.curTextureSet;
-        addYUVVideoTevStages(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture, gAttractMoviePlayer.videoInfo.xSize,
-                    gAttractMoviePlayer.videoInfo.ySize);
+        addYUVVideoTevStages(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
+                             gAttractMoviePlayer.videoInfo.xSize, gAttractMoviePlayer.videoInfo.ySize);
     }
 }
 
-BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx)
-{
+BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx) {
     AttractMovieTextureSet* textureSet;
     Shader* renderOp;
 
-    if (modelPtr != NULL)
-    {
+    if (modelPtr != NULL) {
         renderOp = ObjModel_GetRenderOp((ModelFileHeader*)*modelPtr, renderOpIdx);
-    }
-    else
-    {
+    } else {
         renderOp = NULL;
     }
 
-    if (((renderOp == NULL) || (renderOp->layers[0].materialId == 1)) && (gAttractMovieState == 2))
-    {
+    if (((renderOp == NULL) || (renderOp->layers[0].materialId == 1)) && (gAttractMovieState == 2)) {
         textureSet = gAttractMoviePlayer.curTextureSet;
         THPPlayerDrawCurrentFrame(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
                                   (s16)gAttractMoviePlayer.videoInfo.xSize, (s16)gAttractMoviePlayer.videoInfo.ySize);
@@ -476,44 +410,32 @@ BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx
     return FALSE;
 }
 
-int ProperTimingForGettingNextFrame(void)
-{
+int ProperTimingForGettingNextFrame(void) {
     int frame;
     s64 tick;
     u32 field;
 
-    if ((gAttractMoviePlayer.playFlags & 2) != 0)
-    {
+    if ((gAttractMoviePlayer.playFlags & 2) != 0) {
         field = VIGetNextField();
-        if (field == 0)
-        {
+        if (field == 0) {
             return TRUE;
         }
-    }
-    else if ((gAttractMoviePlayer.playFlags & 4) != 0)
-    {
+    } else if ((gAttractMoviePlayer.playFlags & 4) != 0) {
         field = VIGetNextField();
-        if (field == 1)
-        {
+        if (field == 1) {
             return TRUE;
         }
-    }
-    else
-    {
+    } else {
         frame = (int)(100.0f * gAttractMoviePlayer.header.mFrameRate);
-        if (VIGetTvFormat() == 1)
-        {
+        if (VIGetTvFormat() == 1) {
             tick = gAttractMoviePlayer.retraceCount * frame;
             gAttractMoviePlayer.curCount = tick / 5000;
-        }
-        else
-        {
+        } else {
             tick = gAttractMoviePlayer.retraceCount * frame;
             gAttractMoviePlayer.curCount = tick / 0x176a;
         }
 
-        if (gAttractMoviePlayer.prevCount != gAttractMoviePlayer.curCount)
-        {
+        if (gAttractMoviePlayer.prevCount != gAttractMoviePlayer.curCount) {
             gAttractMoviePlayer.prevCount = gAttractMoviePlayer.curCount;
             return TRUE;
         }
