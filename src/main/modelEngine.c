@@ -451,7 +451,7 @@
 #include "main/dll/dll_025B_msplantings.h"
 #include "main/dll/DR/dll_0254_ktfallingrocks.h"
 #include "main/dll/dll_0269_explodeplan.h"
-#include "main/dll/dll_0263_gmmazewell.h"
+#include "dlls/objects/611_GM_MazeWell.h"
 #include "main/dll/dll_0272_hightop.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/dll/dll_0282_barrelgener.h"

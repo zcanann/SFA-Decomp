@@ -14,9 +14,8 @@
  * is suppressed (INTERACT_FLAG_PROMPT_SUPPRESSED) whenever no watched
  * event is currently ready.
  */
-#include "main/dll/dll_0263_gmmazewell.h"
+#include "dlls/objects/611_GM_MazeWell.h"
 #include "main/audio/music_api.h"
-#include "main/dll/DR/dll_0250_ktrex.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
@@ -47,8 +46,7 @@
 
 /* Row indices into gQuestBitTable[]; rows 0-3 map 1:1 to enum CheatId, rows 4-7
  * grant no cheat, row 8 is the unused/dead 9th token. */
-enum QuestWellRow
-{
+enum QuestWellRow {
     QUESTWELL_CREDITS = 0,       /* ThornTail Shop      -> CHEAT_SHOW_CREDITS */
     QUESTWELL_SEPIA = 1,         /* Cape Claw           -> CHEAT_SEPIA_MODE */
     QUESTWELL_MUSIC_TEST = 2,    /* Ice Mountain        -> CHEAT_MUSIC_TEST */
@@ -60,14 +58,11 @@ enum QuestWellRow
     QUESTWELL_UNUSED = 8         /* Nowhere - dead 9th token */
 };
 
-int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
-{
+int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     GmmazewellState* state = obj->extra;
     int i;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        if (animUpdate->eventIds[i] == 1 && state->pendingDialogue != -1)
-        {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1 && state->pendingDialogue != -1) {
             (*gGameUIInterface)->showNpcDialogue(state->pendingDialogue, 0x14, 0x8c, 0);
             state->pendingDialogue = -1;
         }
@@ -75,24 +70,20 @@ int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     return 0;
 }
 
-int GM_MazeWell_getExtraSize(void)
-{
+int GM_MazeWell_getExtraSize(void) {
     return sizeof(GmmazewellState);
 }
 
-void GM_MazeWell_free(void)
-{
+void GM_MazeWell_free(void) {
     mainSetBits(GAMEBIT_MAZEWELL_ACTIVE, 0);
     Music_Trigger(MUSIC_MAZEWELL, 0);
 }
 
-void GM_MazeWell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
+void GM_MazeWell_render(void* obj, int p2, int p3, int p4, int p5, s8 visible) {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)1.0f);
 }
 
-void GM_MazeWell_update(GameObject* obj)
-{
+void GM_MazeWell_update(GameObject* obj) {
     GameObject* objId;
     s16* questBits = gGmMazeWellQuestBits;
     s32* questBits32 = (s32*)questBits;
@@ -102,108 +93,88 @@ void GM_MazeWell_update(GameObject* obj)
     s16* questBitPtr;
     enum QuestWellRow i;
 
-    if (state->savepointSet == 0)
-    {
+    if (state->savepointSet == 0) {
         player = Obj_GetPlayerObject();
-        if (player != 0)
-        {
-            (*gMapEventInterface)
-                ->savePoint(&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
+        if (player != 0) {
+            (*gMapEventInterface)->savePoint(&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
             state->savepointSet = 1;
         }
     }
 
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
 
-    for (i = 0, questBitPtr = questBits;;)
-    {
-        if (mainGetBit(*questBitPtr) != 0)
-        {
+    for (i = 0, questBitPtr = questBits;;) {
+        if (mainGetBit(*questBitPtr) != 0) {
             matchedBit = questBits[i];
             break;
         }
         questBitPtr++;
         i++;
-        if ((u32)i >= QUEST_BIT_COUNT)
-        {
+        if ((u32)i >= QUEST_BIT_COUNT) {
             matchedBit = 0;
             break;
         }
     }
 
-    if (matchedBit != 0)
-    {
+    if (matchedBit != 0) {
         obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
-    }
-    else
-    {
+    } else {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 
     objId = (GameObject*)((int)obj);
-    if ((objId->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
-    {
+    if ((objId->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) {
         int found;
-        for (i = 0, questBitPtr = questBits;;)
-        {
-            if ((*gGameUIInterface)->isItemBeingUsed(*questBitPtr) != 0)
-            {
-                if (gGameTextFontIsSjis != 0)
-                {
+        int itemIndex;
+        for (itemIndex = 0;;) {
+            if ((*gGameUIInterface)->isItemBeingUsed(questBits[itemIndex]) != 0) {
+                if (gGameTextFontIsSjis != 0) {
                     state = obj->extra;
-                    switch (i)
-                    {
+                    switch (itemIndex) {
                     case 0:
                     case 1:
                     case 2:
-                        mainSetBits(questBits[i + QUEST_REWARD_BASE], 1);
-                        saveFileStruct_unlockCheat((u8)i);
+                        mainSetBits(questBits[itemIndex + QUEST_REWARD_BASE], 1);
+                        saveFileStruct_unlockCheat((u8)itemIndex);
                         break;
                     }
-                    state->pendingDialogue = questBits32[i + QUEST_DIALOGUE_BASE32];
-                    mainSetBits(questBits[i + QUEST_FOLLOWUP_BASE], 1);
-                }
-                else
-                {
+                    state->pendingDialogue = questBits32[itemIndex + QUEST_DIALOGUE_BASE32];
+                    mainSetBits(questBits[itemIndex + QUEST_FOLLOWUP_BASE], 1);
+                } else {
                     state = obj->extra;
-                    state->pendingDialogue = questBits32[i + QUEST_DIALOGUE_BASE32];
-                    switch (i)
-                    {
+                    state->pendingDialogue = questBits32[itemIndex + QUEST_DIALOGUE_BASE32];
+                    switch (itemIndex) {
                     case 3:
                         state->pendingDialogue = MAZEWELL_DEFAULT_DIALOGUE;
                     case 0:
                     case 1:
                     case 2:
-                        mainSetBits(questBits[i + QUEST_REWARD_BASE], 1);
-                        saveFileStruct_unlockCheat((u8)i);
+                        mainSetBits(questBits[itemIndex + QUEST_REWARD_BASE], 1);
+                        saveFileStruct_unlockCheat((u8)itemIndex);
                         break;
                     }
-                    mainSetBits(questBits[i + QUEST_FOLLOWUP_BASE], 1);
+                    mainSetBits(questBits[itemIndex + QUEST_FOLLOWUP_BASE], 1);
                 }
                 found = 1;
                 break;
             }
-            questBitPtr++;
-            i++;
-            if ((u32)i >= QUEST_BIT_COUNT)
-            {
+            itemIndex++;
+            if ((u32)itemIndex >= QUEST_BIT_COUNT) {
                 found = 0;
                 break;
             }
         }
 
-        if (found != 0)
-        {
+        if (found != 0) {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
             buttonDisable(0, PAD_BUTTON_A);
         }
     }
 
-    ((void (*)(int))objUpdateHitVolumeTransforms)((int)obj);
+    objUpdateHitVolumeTransforms((GameObject*)(int)obj);
 }
 
-void GM_MazeWell_init(GameObject* obj)
-{
+void GM_MazeWell_init(GameObject* obj) {
     GmmazewellState* state = obj->extra;
     state->unk0 = 0;
     mainSetBits(GAMEBIT_MAZEWELL_ACTIVE, 1);
@@ -212,9 +183,9 @@ void GM_MazeWell_init(GameObject* obj)
 }
 
 s16 gGmMazeWellQuestBits[44] = {0x0ddc, 0x0de2, 0x0dde, 0x0ddd, 0x0de0, 0x0de3, 0x0ddf, 0x0de1, 0x0de4, 0x0000, 0x0de5,
-                        0x0deb, 0x0de7, 0x0de6, 0x0de9, 0x0dec, 0x0de8, 0x0dea, 0x0ded, 0x0000, 0x0f34, 0x0f3a,
-                        0x0f36, 0x0f35, 0x0f38, 0x0f3b, 0x0f37, 0x0f39, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000,
-                        0x0524, 0x0000, 0x0571, 0x0000, 0x056e, 0x0000, 0x056f, 0x0000, 0x0570, 0x0000, 0x0572};
+                                0x0deb, 0x0de7, 0x0de6, 0x0de9, 0x0dec, 0x0de8, 0x0dea, 0x0ded, 0x0000, 0x0f34, 0x0f3a,
+                                0x0f36, 0x0f35, 0x0f38, 0x0f3b, 0x0f37, 0x0f39, 0x0000, 0x0524, 0x0000, 0x0524, 0x0000,
+                                0x0524, 0x0000, 0x0571, 0x0000, 0x056e, 0x0000, 0x056f, 0x0000, 0x0570, 0x0000, 0x0572};
 ObjectDescriptor gGmMazeWellObjDescriptor = {
     0,
     0,

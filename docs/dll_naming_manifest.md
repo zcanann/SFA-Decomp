@@ -661,7 +661,7 @@ any of them is acted on.
 | 0x260 | — | NO-RETAIL-NAME | dlls/objects/608/608.c | = (canonical) | Complete ProximityMine-family TU including the formerly split leading expire helper |
 | 0x261 | DR_LaserCannon | CONFIRMED | dlls/objects/609_DR_LaserCan/DR_LaserCan.c | = (canonical) | Callback TU only; descriptor remains in DOL-confirmed DLL 592 pooled data |
 | 0x262 | — | NO-RETAIL-NAME | dlls/objects/610/610.c | = (canonical) | Complete exact DrakorMissile callback TU; descriptor remains in DOL-confirmed DLL 592 pooled data |
-| 0x263 | GM_MazeWell | CONFIRMED | dlls/objects/611_GM_MazeWell/GM_MazeWell.c | = (canonical) | Exact callback TU; descriptor and adjacent quest-bit table remain in DOL-confirmed DLL 592 pooled data |
+| 0x263 | GM_MazeWell | CONFIRMED | dlls/objects/611_GM_MazeWell/GM_MazeWell.c | = (canonical) | Exact callback/data TU on GC/1.3; canonical header owns the quest-bit table and descriptor declarations |
 | 0x264 | — | NO-RETAIL-NAME | dlls/objects/612/612.c | = (canonical) | Exact data-only DLL: two zero descriptor words in `.sdata` |
 | 0x265 | DR_Creator | COMPLETE | dlls/objects/613_DR_Creator/DR_Creator.c | = (canonical) | Exact callback/data TU; descriptor remains in DOL-confirmed DLL 614 pooled data |
 | 0x266 | KytesMum | COMPLETE | dlls/objects/614_KytesMum/KytesMum.c | = (canonical) | Exact TU including both SFX tables; retail data order ends with the diagnostic string and pooled DLL 613 descriptor |

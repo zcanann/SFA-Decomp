@@ -1782,7 +1782,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/608/608.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/609_DR_LaserCan/DR_LaserCan.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/610/610.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/611_GM_MazeWell/GM_MazeWell.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/611_GM_MazeWell/GM_MazeWell.c", mw_version="GC/1.3"),
             Object(MatchingFor("GSAE01"), "dlls/objects/612/612.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/613_DR_Creator/DR_Creator.c"),
             Object(Matching, "dlls/objects/614_KytesMum/KytesMum.c", cflags=cflags_dll_noopt_noautoinline),
