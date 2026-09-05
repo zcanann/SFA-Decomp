@@ -9,40 +9,35 @@
  * last-seen bit is cached so the sweep only runs on a transition; lastBit
  * starts at CONTROLLIGHT_LAST_BIT_INVALID to force the first update.
  */
+#include "dlls/objects/684_LGTControlL.h"
+
 #include "main/gamebits_api.h"
 #include "main/objtype.h"
 #include "main/vecmath.h"
-#include "main/dll/LGT/dll_02AC_lgtcontrollight.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 
 #define CONTROLLIGHT_MODE_DIRECT      0
 #define CONTROLLIGHT_MODE_INVERTED    1
 #define CONTROLLIGHT_LAST_BIT_INVALID 0xff
 
-int ControlLight_getExtraSize(void)
-{
+int ControlLight_getExtraSize(void) {
     return sizeof(ControlLightState);
 }
 
-int ControlLight_getObjectTypeId(void)
-{
+int ControlLight_getObjectTypeId(void) {
     return 0;
 }
 
-void ControlLight_free(void)
-{
+void ControlLight_free(void) {
 }
 
-void ControlLight_render(void)
-{
+void ControlLight_render(void) {
 }
 
-void ControlLight_hitDetect(void)
-{
+void ControlLight_hitDetect(void) {
 }
 
-void ControlLight_update(GameObject* obj)
-{
+void ControlLight_update(GameObject* obj) {
     u8 newBit;
     u32 bit;
     ControlLightState* state;
@@ -51,31 +46,25 @@ void ControlLight_update(GameObject* obj)
     newBit = mainGetBit(state->gameBit);
     bit = newBit;
 
-    if (bit != state->lastBit)
-    {
-        switch (state->invertMode)
-        {
-        case CONTROLLIGHT_MODE_DIRECT:
-        {
+    if (bit != state->lastBit) {
+        switch (state->invertMode) {
+        case CONTROLLIGHT_MODE_DIRECT: {
             f32 radius = state->radius;
             int count;
             int i;
             GameObject* lightObj;
             GameObject** objs = (GameObject**)objGetAllOfType(LGT_POINTLIGHT_GROUP, &count);
             GameObject** lightIter;
-            for (i = 0, lightIter = objs; i < count; i++)
-            {
+            for (i = 0, lightIter = objs; i < count; i++) {
                 lightObj = *lightIter;
-                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
-                {
+                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius) {
                     pointlight_setEffectState(lightObj, newBit);
                 }
                 lightIter++;
             }
             break;
         }
-        case CONTROLLIGHT_MODE_INVERTED:
-        {
+        case CONTROLLIGHT_MODE_INVERTED: {
             f32 radius = state->radius;
             int count;
             GameObject* lightObj;
@@ -85,11 +74,9 @@ void ControlLight_update(GameObject* obj)
             GameObject** lightIter;
             i = 0, lightIter = objs;
             invBit = bit == 0;
-            for (; i < count; i++)
-            {
+            for (; i < count; i++) {
                 lightObj = *lightIter;
-                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius)
-                {
+                if (Vec_distance(&self->anim.worldPosX, &lightObj->anim.worldPosX) < radius) {
                     pointlight_setEffectState(lightObj, invBit);
                 }
                 lightIter++;
@@ -102,8 +89,7 @@ void ControlLight_update(GameObject* obj)
     state->lastBit = newBit;
 }
 
-void ControlLight_init(GameObject* obj, ControlLightSetup* setup)
-{
+void ControlLight_init(GameObject* obj, ControlLightSetup* setup) {
     ControlLightState* state = obj->extra;
 
     state->gameBit = setup->gameBit;
@@ -112,12 +98,10 @@ void ControlLight_init(GameObject* obj, ControlLightSetup* setup)
     state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
 }
 
-void ControlLight_release(void)
-{
+void ControlLight_release(void) {
 }
 
-void ControlLight_initialise(void)
-{
+void ControlLight_initialise(void) {
 }
 
 ObjectDescriptor gControlLightObjDescriptor = {
@@ -134,5 +118,5 @@ ObjectDescriptor gControlLightObjDescriptor = {
     (ObjectDescriptorCallback)ControlLight_render,
     (ObjectDescriptorCallback)ControlLight_free,
     (ObjectDescriptorCallback)ControlLight_getObjectTypeId,
-    (ObjectDescriptorExtraSizeCallback)ControlLight_getExtraSize,
+    ControlLight_getExtraSize,
 };

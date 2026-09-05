@@ -1,13 +1,11 @@
-#ifndef MAIN_DLL_LGT_DLL_02AC_LGTCONTROLLIGHT_H_
-#define MAIN_DLL_LGT_DLL_02AC_LGTCONTROLLIGHT_H_
+#ifndef DLLS_OBJECTS_684_LGTCONTROLL_H_
+#define DLLS_OBJECTS_684_LGTCONTROLL_H_
 
-#include "game/objects/object.h"
-#include "main/dll/LGT/lgt_types.h"
 #include "dlls/object_descriptor.h"
+#include "game/objects/object_fwd.h"
 #include "game/objects/object_setup.h"
 
-typedef struct ControlLightSetup
-{
+typedef struct ControlLightSetup {
     ObjPlacement base;
     u8 reserved18;
     s8 invertMode;
@@ -16,8 +14,7 @@ typedef struct ControlLightSetup
     s16 gameBit;
 } ControlLightSetup;
 
-typedef struct ControlLightState
-{
+typedef struct ControlLightState {
     s16 gameBit;
     u8 reserved02[2];
     f32 radius;
@@ -48,4 +45,4 @@ void ControlLight_initialise(void);
 
 extern ObjectDescriptor gControlLightObjDescriptor;
 
-#endif /* MAIN_DLL_LGT_DLL_02AC_LGTCONTROLLIGHT_H_ */
+#endif /* DLLS_OBJECTS_684_LGTCONTROLL_H_ */

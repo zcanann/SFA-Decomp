@@ -300,6 +300,7 @@
 #include "dlls/objects/522_WM_GeneralS.h"
 #include "dlls/objects/599_DR_EarthWar.h"
 #include "dlls/objects/609_DR_LaserCan.h"
+#include "dlls/objects/684_LGTControlL.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
@@ -543,7 +544,7 @@ extern ResourceDescriptor gARWBlockerObjDescriptor, gARWBombCollObjDescriptor, g
 extern ResourceDescriptor gARWSpeedStrObjDescriptor, gARWSquadronObjDescriptor;
 extern ResourceDescriptor gBaddieObjDescriptor, gBossDrakorObjDescriptor;
 extern ResourceDescriptor gChukaObjDescriptor;
-extern ResourceDescriptor gControlLightObjDescriptor, gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor;
+extern ResourceDescriptor gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDBstealerwormObjDescriptor, gDFP_LevelControlObjDescriptor,
     gDFP_ObjCreatorObjDescriptor, gDFP_TorchObjDescriptor;
 extern ResourceDescriptor gDIM_trickyObjDescriptor, gDR_CloudRunnerObjDescriptor;
@@ -1882,7 +1883,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gPointLightObjDescriptor,
     (ResourceDescriptor*)&gDirectionalLightObjDescriptor,
     &gProjectedLightObjDescriptor,
-    &gControlLightObjDescriptor,
+    (ResourceDescriptor*)&gControlLightObjDescriptor,
     (ResourceDescriptor*)&gSoftBodyObjDescriptor,
     &gWaterFlowWeObjDescriptor,
     (ResourceDescriptor*)&gTreeObjDescriptor,

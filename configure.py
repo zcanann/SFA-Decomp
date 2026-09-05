@@ -1855,7 +1855,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/681/681.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/682_LGTDirectio/LGTDirectio.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/683_LGTProjecte/LGTProjecte.c", cflags=cflags_dll_noopt_nocse),
-            Object(MatchingFor("GSAE01"), "dlls/objects/684_LGTControlL/LGTControlL.c", cflags=cflags_dll_noopt_level1),
+            Object(MatchingFor("GSAE01"), "dlls/objects/684_LGTControlL/LGTControlL.c", mw_version="GC/1.3", cflags=cflags_dll_noopt_level1),
             Object(MatchingFor("GSAE01"), "dlls/objects/685/685.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/686_WaterFlowWe/WaterFlowWe.c", extra_cflags=["-opt", "nodeadstore"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/687/687.c", cflags=cflags_dll_noopt_nocse_noinline),
