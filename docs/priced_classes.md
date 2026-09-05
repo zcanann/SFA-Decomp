@@ -3893,6 +3893,31 @@ Movement's bytes are unchanged. Only reachable-route search changes code, all
 non-code bytes and retail lengths remain exact, and the diagnostic game link
 has 222 differing text bytes. Overall Tricky text is 99.92189%.
 
+`trickyUpdateApproachSpeed` is now exact (844 bytes). The stopping-radius input
+is added into the accumulated stopping distance, rather than overwritten and
+kept alive as the computed distance. The braking step and loop time step share
+the initial time snapshot, then only the braking step is scaled. Ordinary
+scalar assignments recover the retail registers and load order. A direct
+constant-times-global expression reverses the two loads; separately assigning
+the time snapshot before computing the braking step retains four register
+differences. Names now distinguish the braking step, squared stopping distance,
+and radius within which path-speed adjustment is considered.
+
+Tricky's shared `RomCurveWalker` now holds three `RomCurveDef*` nodes, with
+offset assertions at 0x9C/0xA0/0xA4. All stored nodes originate from the route
+table or the Hermite API's curve arguments; those APIs now carry the same
+types. Every rebuilt consumer object remains byte-identical. Tricky directly
+accesses its typed nodes and indexed branch links, drops a redundant segment
+start copy, and uses the common command-active/turning flags instead of the
+misleading cannonball hide/decay aliases. Its distance locals now agree with
+the distance API's `f32` return type. These changes are byte-neutral.
+
+Only approach-speed code changes in this batch. All retail function lengths
+and allocated non-text sections remain exact; the diagnostic game link has
+212 differing text bytes and Tricky text is 99.92521%. Direct indexing in the
+already-exact dig-tunnel advance helper retains the opcode stream but changes
+11 register operands, so that separate experiment was not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

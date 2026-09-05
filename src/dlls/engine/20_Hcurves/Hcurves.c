@@ -69,7 +69,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
     pl->normalZ = (s16)(32767.0f * dzn);                                                                \
     *(po) = -(pl->normalX * (XA) + pl->normalZ * (ZA))
 
-static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos);
+static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos);
 inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base);
 
 
@@ -333,7 +333,7 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
+int RomCurve_setSegmentEndNode(RomCurveWalker* walker, RomCurveDef* curve)
 {
     RomCurveDef* B = (RomCurveDef*)curve;
     if (walker->currentNode == NULL || walker->nextNode == NULL || curve == 0)
@@ -366,7 +366,7 @@ int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
     return 0;
 }
 
-static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos)
+static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos)
 {
     f32 angle;
     f32 trig;
@@ -384,7 +384,7 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     return 2.0f * trig;
 }
 
-int RomCurve_advanceToNextSegment(RomCurveWalker* state, void* targetCurve)
+int RomCurve_advanceToNextSegment(RomCurveWalker* state, RomCurveDef* targetCurve)
 {
     char* stateBytes;
 
@@ -478,7 +478,7 @@ void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
     Curve_AdvanceAlongPath(&state->curve, dt);
 }
 
-int RomCurve_setupHermiteSegment(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
+int RomCurve_setupHermiteSegment(RomCurveWalker* state, RomCurveDef* fromCurve, RomCurveDef* toCurve, RomCurveDef* targetCurve)
 {
     if (state->reverse != 0)
     {

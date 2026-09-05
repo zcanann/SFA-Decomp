@@ -177,7 +177,7 @@ void trickyGuard(GameObject* obj, TrickyState* trickyState);
 int trickyGuardFindBaddieTarget(TrickyState* trickyState);
 void trickyFlame(GameObject* obj, TrickyState* trickyState);
 void tricky_state06_nop(void);
-void tricky_updateBallRoll(GameObject* obj, TrickyState* ball);
+void tricky_updateBallRoll(GameObject* obj, TrickyState* state);
 void tricky_state04_nop(void);
 static inline void trickyPlayWhineSfx(u32 id, GameObject* obj);
 static inline void trickyAdvanceNode(TrickyState* state);
@@ -821,40 +821,12 @@ typedef enum TrickyFlameState {
     TRICKY_FLAME_TO_END = 8,
 } TrickyFlameState;
 
-/*
- * Tricky rom-curve route walker. tricky_updateBallRoll is the per-frame
- * update that rolls the object along its rom-curve route.
- *
- * Before init (init-done byte 0x0a == 0): the ball homes onto its curve
- * (CANNONBALL_CURVE). Once the owner and the ball share a walk group it
- * picks the route direction by comparing owner-to-endpoint distances,
- * binds the route walker to the chosen segment, steps it, seeds the sfx
- * timer and marks init done.
- *
- * After init: at each segment end it gathers the valid branch nodes
- * (gated by the node-set's per-branch mask byte), picks the nearest to
- * the current owner, retargets the walker, then accelerates/decays the
- * roll speed toward CANNONBALL_ROLL_SPEED_LIMIT, advances and moves the
- * ball. Off the walk grid it sets CANNONBALL_HIDE_FLAG. The sfx timer
- * periodically plays the rolling sound (TRICKY_VOICE_SFX_ROLLING) on object channel 0x10
- * when the current move is outside the 0x29..0x2f window.
- */
-
-/* The "ball" is the Tricky cannonball's TrickyState extra block: substate is
- * the init-done byte, speed the roll speed, stateFlags the flag word, route the
- * embedded RomCurveWalker, followObj/playerObj the owner links,
- * cannonballStartCurve the curve link, and cannonballRollSfxTimer the rolling
- * SFX countdown. */
-#define CANNONBALL_HIDE_FLAG        0x10
-#define CANNONBALL_SPEED_DECAY_FLAG 0x10000000
-#define CANNONBALL_BRANCH_COUNT     4
-#define CANNONBALL_ROLL_DECAY_STEP  -0.01f
-#define CANNONBALL_INIT_WALK_RADIUS TRICKY_DEFAULT_STOPPING_RADIUS
-#define CANNONBALL_ROUTE_FORESTEP   10.0f
-#define CANNONBALL_SFX_TIMER_MIN    200
-#define CANNONBALL_SFX_TIMER_MAX    600
-#define CANNONBALL_ROLL_SFX_ID      TRICKY_VOICE_SFX_ROLLING
-#define CANNONBALL_ROLL_SFX_PITCH   TRICKY_VOICE_PITCH_HIGH
+/* Cannonball route movement starts away from the player, then chooses branches
+ * nearest to followObj. Outside a walk group, the command remains active. */
+#define CANNONBALL_ROLL_DECAY_STEP -0.01f
+#define CANNONBALL_ROUTE_FORESTEP  10.0f
+#define CANNONBALL_SFX_TIMER_MIN   200
+#define CANNONBALL_SFX_TIMER_MAX   600
 
 #define CANNONBALL_ROLL_SPEED_LIMIT 1.2f
 #define CANNONBALL_ROUTE_BACKSTEP   -10.0f
@@ -3522,11 +3494,10 @@ void tricky_state04_nop(void) {
 
 static inline void trickyAppendRouteBranches(RomCurveDef* node, s32* nodeIds, int blocked, u8* nodeCount) {
     u32 branchMask = 1;
-    s32* link = node->linkIds;
     int branchIndex;
 
-    for (branchIndex = 0; branchIndex < CANNONBALL_BRANCH_COUNT; branchIndex++) {
-        int curveId = *link++;
+    for (branchIndex = 0; branchIndex < ROMCURVE_LINK_COUNT; branchIndex++) {
+        int curveId = node->linkIds[branchIndex];
         if (curveId > -1 && ((node->blockedLinkMask & branchMask) != 0) == blocked) {
             nodeIds[(*nodeCount)++] = curveId;
         }
@@ -3534,47 +3505,46 @@ static inline void trickyAppendRouteBranches(RomCurveDef* node, s32* nodeIds, in
     }
 }
 
-void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
+void tricky_updateBallRoll(GameObject* obj, TrickyState* state) {
     RomCurveDef* blockedNode;
     u8 nodeCount = 0;
     int i;
-    RomCurveDef* segmentStartCurve;
     RomCurveDef* startCurve;
-    RomCurveDef* unblockedNode;
-    s32 nodeIds[CANNONBALL_BRANCH_COUNT];
+    RomCurveDef* segmentNode;
+    s32 nodeIds[ROMCURVE_LINK_COUNT];
     RomCurveDef* branchCandidateNode;
     RomCurveDef* nextSegmentNode;
     f32 speed;
-    f64 distance;
-    f64 bestDistance;
+    f32 distance;
+    f32 bestDistance;
 
-    if (ball->substate != TRICKY_CANNONBALL_INIT) {
-        if (ball->route.reverse == 0) {
-            if (ball->route.atSegmentEnd != 0) {
-                trickyAppendRouteBranches(ball->route.nextNode, nodeIds, 0, &nodeCount);
+    if (state->substate != TRICKY_CANNONBALL_INIT) {
+        if (state->route.reverse == 0) {
+            if (state->route.atSegmentEnd != 0) {
+                trickyAppendRouteBranches(state->route.nextNode, nodeIds, 0, &nodeCount);
             }
-        } else if (ball->route.atSegmentEnd == 0) {
-            trickyAppendRouteBranches(ball->route.nextNode, nodeIds, 1, &nodeCount);
+        } else if (state->route.atSegmentEnd == 0) {
+            trickyAppendRouteBranches(state->route.nextNode, nodeIds, 1, &nodeCount);
         }
 
         if (nodeCount != 0) {
             nextSegmentNode = (*gRomCurveInterface)->getById(nodeIds[0]);
-            bestDistance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &nextSegmentNode->x);
+            bestDistance = getXZDistanceSquared(&state->followObj->anim.worldPosX, &nextSegmentNode->x);
 
             for (i = 1; i < nodeCount; i++) {
                 branchCandidateNode = (*gRomCurveInterface)->getById(nodeIds[i]);
-                distance = getXZDistanceSquared(&ball->followObj->anim.worldPosX, &branchCandidateNode->x);
+                distance = getXZDistanceSquared(&state->followObj->anim.worldPosX, &branchCandidateNode->x);
                 if (distance < bestDistance) {
                     nextSegmentNode = branchCandidateNode;
                     bestDistance = distance;
                 }
             }
 
-            RomCurve_advanceToNextSegment(&ball->route, nextSegmentNode);
+            RomCurve_advanceToNextSegment(&state->route, nextSegmentNode);
         }
 
-        speed = ball->speed;
-        if ((u8)(ball->stateFlags & CANNONBALL_SPEED_DECAY_FLAG) != 0) {
+        speed = state->speed;
+        if ((u8)(state->stateFlags & TRICKY_STATE_FLAG_TURNING) != 0) {
             speed += CANNONBALL_ROLL_DECAY_STEP * timeDelta;
             if (speed < 0.0f) {
                 speed = 0.0f;
@@ -3591,55 +3561,54 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
             }
         }
 
-        ball->speed = speed;
-        trickyAdvanceRouteTargetAhead(obj, &ball->route, ball->speed);
-        moveTricky(obj, &ball->route.posX);
+        state->speed = speed;
+        trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
+        moveTricky(obj, &state->route.posX);
 
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) != 0) {
-            ball->stateFlags &= ~CANNONBALL_HIDE_FLAG;
+            state->stateFlags &= ~TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         } else {
-            ball->stateFlags |= CANNONBALL_HIDE_FLAG;
+            state->stateFlags |= TRICKY_STATE_FLAG_COMMAND_ACTIVE;
         }
 
-        ball->cannonballRollSfxTimer -= timeDelta;
-        if (ball->cannonballRollSfxTimer < 0.0f) {
-            ball->cannonballRollSfxTimer = (f32)(int)randomGetRange(CANNONBALL_SFX_TIMER_MIN, CANNONBALL_SFX_TIMER_MAX);
-            trickyPlayVoice(obj, obj->extra, CANNONBALL_ROLL_SFX_ID, CANNONBALL_ROLL_SFX_PITCH);
+        state->cannonballRollSfxTimer -= timeDelta;
+        if (state->cannonballRollSfxTimer < 0.0f) {
+            state->cannonballRollSfxTimer =
+                (f32)(int)randomGetRange(CANNONBALL_SFX_TIMER_MIN, CANNONBALL_SFX_TIMER_MAX);
+            trickyPlayVoice(obj, obj->extra, TRICKY_VOICE_SFX_ROLLING, TRICKY_VOICE_PITCH_HIGH);
         }
     } else {
-        trickyUpdateMovementState(obj, CANNONBALL_INIT_WALK_RADIUS, ball);
+        trickyUpdateMovementState(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state);
         if (Objfsa_GetWalkGroupIndexAtPoint(&obj->anim.worldPosX, NULL) ==
-            Objfsa_GetWalkGroupIndexAtPoint(&ball->cannonballStartCurve->x, NULL)) {
-            startCurve = ball->cannonballStartCurve;
+            Objfsa_GetWalkGroupIndexAtPoint(&state->cannonballStartCurve->x, NULL)) {
+            startCurve = state->cannonballStartCurve;
 
-            unblockedNode =
-                (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(startCurve, 0));
+            segmentNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(startCurve, 0));
             blockedNode = (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(startCurve, 0));
 
-            bestDistance = getXZDistanceSquared(&ball->playerObj->anim.worldPosX, &unblockedNode->x);
-            distance = getXZDistanceSquared(&ball->playerObj->anim.worldPosX, &blockedNode->x);
+            bestDistance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &segmentNode->x);
+            distance = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &blockedNode->x);
 
-            segmentStartCurve = startCurve;
             if (bestDistance > distance) {
                 nextSegmentNode =
-                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(unblockedNode, 0));
-                ball->route.reverse = 0;
+                    (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomUnblockedLink(segmentNode, 0));
+                state->route.reverse = 0;
             } else {
-                unblockedNode = blockedNode;
+                segmentNode = blockedNode;
                 nextSegmentNode =
                     (*gRomCurveInterface)->getById((*gRomCurveInterface)->getRandomBlockedLink(blockedNode, 0));
-                ball->route.reverse = 1;
+                state->route.reverse = 1;
             }
 
-            RomCurve_setupHermiteSegment(&ball->route, segmentStartCurve, unblockedNode, nextSegmentNode);
-            if (ball->route.reverse != 0) {
-                RomCurve_stepClamped(&ball->route, CANNONBALL_ROUTE_BACKSTEP);
+            RomCurve_setupHermiteSegment(&state->route, startCurve, segmentNode, nextSegmentNode);
+            if (state->route.reverse != 0) {
+                RomCurve_stepClamped(&state->route, CANNONBALL_ROUTE_BACKSTEP);
             } else {
-                RomCurve_stepClamped(&ball->route, CANNONBALL_ROUTE_FORESTEP);
+                RomCurve_stepClamped(&state->route, CANNONBALL_ROUTE_FORESTEP);
             }
 
-            ball->cannonballRollSfxTimer = 0.0f;
-            ball->substate = TRICKY_CANNONBALL_ROLLING;
+            state->cannonballRollSfxTimer = 0.0f;
+            state->substate = TRICKY_CANNONBALL_ROLLING;
         }
     }
 }
@@ -4756,27 +4725,27 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
                                u8 slowWhenFacingAway) {
     S16Vec rotation;
     f32 targetDelta[3];
-    f32 deceleration;
+    f32 decelerationStep;
     f32 deltaTime;
     f32 projectedSpeed;
     f32 stoppingDistance;
-    f32 stoppingRadiusSq;
+    f32 stoppingDistanceSq;
     f32 targetDistanceSq;
     f32 candidateSpeed;
 
     stoppingDistance = TRICKY_SMALL_SPEED_STEP;
     projectedSpeed = state->speed;
-    deltaTime = timeDelta;
-    deceleration = TRICKY_SPEED_DECAY_STEP * deltaTime;
+    decelerationStep = deltaTime = timeDelta;
+    decelerationStep = TRICKY_SPEED_DECAY_STEP * decelerationStep;
     while (projectedSpeed > 0.0f) {
         stoppingDistance = projectedSpeed * deltaTime + stoppingDistance;
-        projectedSpeed = projectedSpeed + deceleration;
+        projectedSpeed = projectedSpeed + decelerationStep;
     }
-    stoppingRadius += stoppingDistance;
-    stoppingRadiusSq = stoppingRadius;
-    stoppingRadiusSq *= stoppingRadiusSq;
+    stoppingDistance = stoppingRadius + stoppingDistance;
+    stoppingDistanceSq = stoppingDistance;
+    stoppingDistanceSq *= stoppingDistanceSq;
     targetDistanceSq = getXZDistanceSquared(targetPos, &obj->anim.worldPosX);
-    if (targetDistanceSq < stoppingRadiusSq) {
+    if (targetDistanceSq < stoppingDistanceSq) {
         candidateSpeed = state->speed;
         candidateSpeed = candidateSpeed + TRICKY_SPEED_DECAY_STEP * timeDelta;
         state->speed = (candidateSpeed < 0.0f) ? 0.0f : candidateSpeed;
@@ -4805,10 +4774,10 @@ void trickyUpdateApproachSpeed(GameObject* obj, f32 stoppingRadius, TrickyState*
         return;
     }
     {
-        f32 deltaSpeed = TRICKY_DEFAULT_STOPPING_RADIUS + stoppingRadius;
-        f32 deltaSpeedSq = deltaSpeed * deltaSpeed;
+        f32 pathSpeedRadius = TRICKY_DEFAULT_STOPPING_RADIUS + stoppingDistance;
+        f32 pathSpeedRadiusSq = pathSpeedRadius * pathSpeedRadius;
         candidateSpeed = trickyGetPathSpeedDelta(obj);
-        if (targetDistanceSq < deltaSpeedSq) {
+        if (targetDistanceSq < pathSpeedRadiusSq) {
             if (candidateSpeed > 0.0f) {
                 f32 curSpeed = state->speed;
                 if (candidateSpeed < curSpeed) {
@@ -5259,8 +5228,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                             trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_SLOW,
                                               TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED, TRICKY_MOVE_FLAG_JUMP_ARC);
                         }
-                        state->verticalDelta = (((RomCurveDef*)state->route.currentNode)->y - obj->anim.worldPosY) /
-                                               TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
+                        state->verticalDelta =
+                            (state->route.currentNode->y - obj->anim.worldPosY) / TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPUP;
                         trickyAdvanceToSegmentEnd(&state->route);
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
@@ -5278,7 +5247,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         }
                         trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPDOWN, TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED,
                                           TRICKY_MOVE_FLAG_JUMP_ARC);
-                        state->verticalDelta = (obj->anim.worldPosY - ((RomCurveDef*)state->route.currentNode)->y) /
+                        state->verticalDelta = (obj->anim.worldPosY - state->route.currentNode->y) /
                                                TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPDOWN;
                         trickyAdvanceToSegmentEnd(&state->route);
@@ -5332,7 +5301,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             state->speed = trickyDecelerate(speed, 0.0f);
         }
         routeNode = state->route.currentNode;
-        if ((((RomCurveDef*)state->route.previousNode)->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) &&
+        if ((state->route.previousNode->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B) &&
             (routeNode->subtype != ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_B)) {
             int i;
             u8 step;
@@ -5353,10 +5322,10 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     }
                 }
                 if (step == 4) {
-                    pathSearchBegin(&state->pathSearches[0], (RomCurveDef*)state->route.nextNode, state->targetPosPtr,
+                    pathSearchBegin(&state->pathSearches[0], state->route.nextNode, state->targetPosPtr,
                                     state->walkGroup, state->route.reverse);
-                    pathSearchBegin(&state->pathSearches[1], (RomCurveDef*)state->route.previousNode,
-                                    state->targetPosPtr, state->walkGroup, state->route.reverse ^ 1);
+                    pathSearchBegin(&state->pathSearches[1], state->route.previousNode, state->targetPosPtr,
+                                    state->walkGroup, state->route.reverse ^ 1);
                     found = PATH_SEARCH_PENDING;
                     for (i = 0; (u8)(i = i + 1) < 100 && (found != PATH_SEARCH_REACHED_TARGET);) {
                         found = pathSearchStep(&state->pathSearches[0], 1);
@@ -5391,7 +5360,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             node = trickySelectRouteEntry(state, state->route.nextNode, routeDirection & 0xff);
             if (node != 0) {
                 RomCurve_advanceToNextSegment(&state->route, node);
-                routeNodeType = ((RomCurveDef*)state->route.previousNode)->subtype;
+                routeNodeType = state->route.previousNode->subtype;
                 switch (routeNodeType) {
                 case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
                 case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_B:
@@ -5425,7 +5394,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         }
         trickyAdvanceRouteTargetAhead(obj, &state->route, state->speed);
         didMove = moveTricky(obj, &state->route.posX);
-        routeNodeType = ((RomCurveDef*)state->route.currentNode)->subtype;
+        routeNodeType = state->route.currentNode->subtype;
         switch (routeNodeType) {
         case ROMCURVE_TRICKY_SUBTYPE_JUMP:
             state->movementState = TRICKY_MOVE_JUMP_RUNUP;
@@ -5536,7 +5505,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         trickyDebugPrint("Jumping\n");
         arc->time = arc->time + timeDelta;
         if (arc->time >= arc->duration) {
-            obj->anim.localPosY = ((RomCurveDef*)state->route.currentNode)->y;
+            obj->anim.localPosY = state->route.currentNode->y;
             state->arcMoveProgress = 1.0f;
             state->movementState = TRICKY_MOVE_WALK_NODES;
         } else {
@@ -5607,8 +5576,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_SLOW, TRICKY_FOLLOW_JUMPUP_SLOW_BLEND_SPEED,
                                       TRICKY_MOVE_FLAG_JUMP_ARC);
                 }
-                state->verticalDelta = (((RomCurveDef*)state->route.currentNode)->y - obj->anim.worldPosY) /
-                                       TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
+                state->verticalDelta =
+                    (state->route.currentNode->y - obj->anim.worldPosY) / TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPUP;
                 trickyAdvanceToSegmentEnd(&state->route);
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
@@ -5659,8 +5628,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 }
                 trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPDOWN, TRICKY_FOLLOW_JUMPDOWN_BLEND_SPEED,
                                   TRICKY_MOVE_FLAG_JUMP_ARC);
-                state->verticalDelta = (obj->anim.worldPosY - ((RomCurveDef*)state->route.currentNode)->y) /
-                                       TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
+                state->verticalDelta =
+                    (obj->anim.worldPosY - state->route.currentNode->y) / TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPDOWN;
                 trickyAdvanceToSegmentEnd(&state->route);
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;

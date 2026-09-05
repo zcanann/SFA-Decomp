@@ -5,7 +5,7 @@
 
 void RomCurve_swapEndpointNodes(RomCurveWalker* walker);
 void Objfsa_UpdateWalkGroupPatches(void);
-int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve);
+int RomCurve_setSegmentEndNode(RomCurveWalker* walker, struct RomCurveDef* curve);
 int Objfsa_GetWalkGroupIndexForMove(f32* prevPoint, f32* nextPoint, u32 currentWalkGroupIndex);
 #ifdef OBJFSA_PATCH_EXIT_U16
 int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id);
