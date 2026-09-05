@@ -3794,6 +3794,23 @@ other function bytes, all non-code section bytes, SDA global offsets, and all
 2,176 symbol-normalized relocations are unchanged. The linked `.sdata2` remains
 exact, and movement update is still eight bytes longer than retail.
 
+The attachment audit identifies ObjPath point 8 as Tricky's mouth position from
+its carried-ball, flame-origin and particle consumers. It is now a `Vec` at
+0x408, with asserted components; the joint-pose Y value at 0x414 is the mouth
+yaw offset added to the horizontal flame heading, not a pitch offset. These
+names are behavioral inferences, not leaked identifiers. Both public getters
+and the flameblast consumer use the corrected names; flameblast remains exact.
+
+The post-render attachment refresh is a private helper, and both ball-route
+directions share a blocked/unblocked branch appender with the caller-owned
+count. Render's register differences fall from 14 to 10; ball rolling retains
+the retail instruction stream but rises from 52 to 84 register differences.
+Overall text temporarily becomes 99.91707%. Only those two function byte ranges
+change after accounting for the getter renames. All non-code section bytes,
+normalized relocations and function lengths are preserved, and the complete
+linked `.sdata2` remains exact. Separate route-initialization and return-valued
+facing-helper experiments were not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

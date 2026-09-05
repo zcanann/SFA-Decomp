@@ -125,8 +125,8 @@ void trickyImpress(GameObject* obj);
 int Tricky_requestRecallAndCheckBusy(GameObject* obj);
 f32 trickyGetAnimSpeed(GameObject* obj);
 GameObject* trickyGetStayPoint(GameObject* obj);
-int trickyGetAimPitchOffset(GameObject* obj);
-f32* trickyGetQueuedPathParticlePos(GameObject* obj);
+int trickyGetMouthYawOffset(GameObject* obj);
+f32* trickyGetMouthPosition(GameObject* obj);
 GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int allowSpecialTypes);
 void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state);
 int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType commandType);
@@ -1708,33 +1708,34 @@ void Tricky_hitDetect(GameObject* obj) {
     return;
 }
 
-void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender) {
+static inline void trickyUpdateAttachmentPoints(GameObject* obj) {
     int pathPointIndex;
-    TrickyState* renderState;
-    s16* modelAnchorPose;
+    TrickyState* state = obj->extra;
+    s16* mouthPose;
+
+    for (pathPointIndex = 0; pathPointIndex < 4; pathPointIndex++) {
+        ObjPath_GetPointWorldPosition(obj, pathPointIndex + 4, &state->pathPointPositions[pathPointIndex].x,
+                                      &state->pathPointPositions[pathPointIndex].y,
+                                      &state->pathPointPositions[pathPointIndex].z, 0);
+    }
+    ObjPath_GetPointWorldPosition(obj, 8, &state->mouthPos.x, &state->mouthPos.y, &state->mouthPos.z, 0);
+    mouthPose = objFindJointPoseVector(obj, 0);
+    state->mouthYawOffset = mouthPose[1];
+}
+
+void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, char doRender) {
     TrickyState* state;
 
     if (doRender != '\0') {
         state = obj->extra;
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
-        renderState = obj->extra;
-        pathPointIndex = 0;
-        do {
-            ObjPath_GetPointWorldPosition(obj, pathPointIndex + 4, &renderState->pathPointPositions[pathPointIndex].x,
-                                          &renderState->pathPointPositions[pathPointIndex].y,
-                                          &renderState->pathPointPositions[pathPointIndex].z, 0);
-            pathPointIndex = pathPointIndex + 1;
-        } while (pathPointIndex < 4);
-        ObjPath_GetPointWorldPosition(obj, 8, &renderState->renderPosX, &renderState->renderPosY,
-                                      &renderState->renderPosZ, 0);
-        modelAnchorPose = objFindJointPoseVector(obj, 0);
-        renderState->modelAnchorRotY = modelAnchorPose[1];
+        trickyUpdateAttachmentPoints(obj);
         if ((state->stateFlags & TRICKY_STATE_FLAG_COMMAND_ACTIVE) != 0) {
             switch (state->stateIndex) {
-            case 2:
+            case TRICKY_STATE_FIND_SECRET_DIG:
                 skeetla_spawnLinkedSparks(obj);
                 break;
-            case 3:
+            case TRICKY_STATE_DIG_TUNNEL:
                 if (state->substate == TRICKY_DIG_TUNNEL_DIGGING) {
                     skeetla_spawnLinkedSparks(obj);
                 }
@@ -1744,9 +1745,9 @@ void Tricky_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
                  (state->stateIndex == TRICKY_STATE_FETCH_BALL)) &&
                 (state->substate >= TRICKY_FETCH_BALL_PICKUP_START)) {
                 if (state->substate != TRICKY_FETCH_BALL_PICKUP_START) {
-                    state->fetchBallObj->anim.localPosX = state->renderPosX;
-                    state->fetchBallObj->anim.localPosY = state->renderPosY;
-                    state->fetchBallObj->anim.localPosZ = state->renderPosZ;
+                    state->fetchBallObj->anim.localPosX = state->mouthPos.x;
+                    state->fetchBallObj->anim.localPosY = state->mouthPos.y;
+                    state->fetchBallObj->anim.localPosZ = state->mouthPos.z;
                 }
                 objRenderModelAndHitVolumes(state->fetchBallObj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
             }
@@ -2854,9 +2855,9 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         trickyState->howlSparkleTimer = sparkleTimer;
         if (sparkleTimer <= 0.0f) {
             if (((obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-                fxBuf.posX = trickyState->renderPosX;
-                fxBuf.posY = 2.0f + trickyState->renderPosY;
-                fxBuf.posZ = trickyState->renderPosZ;
+                fxBuf.posX = trickyState->mouthPos.x;
+                fxBuf.posY = 2.0f + trickyState->mouthPos.y;
+                fxBuf.posZ = trickyState->mouthPos.z;
                 (*gPartfxInterface)
                     ->spawnObject((void*)obj, TRICKY_PARTFX_HOWL_SPARKLE, &fxBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS,
                                   -1, NULL);
@@ -3516,19 +3517,29 @@ static inline void trickyPlayWhineSfx(u32 id, GameObject* obj) {
 void tricky_state04_nop(void) {
 }
 
+static inline void trickyAppendRouteBranches(RomCurveDef* node, s32* nodeIds, int blocked, u8* nodeCount) {
+    u32 branchMask = 1;
+    s32* link = node->linkIds;
+    int branchIndex;
+
+    for (branchIndex = 0; branchIndex < CANNONBALL_BRANCH_COUNT; branchIndex++) {
+        int curveId = *link++;
+        if (curveId > -1 && ((node->blockedLinkMask & branchMask) != 0) == blocked) {
+            nodeIds[(*nodeCount)++] = curveId;
+        }
+        branchMask <<= 1;
+    }
+}
+
 void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     RomCurveDef* blockedNode;
     u8 nodeCount = 0;
-    int branchCurveId;
-    RomCurveDef* branchNode;
     s32* branchLinkId;
-    u32 branchMask;
-    int branchIndex;
     int i;
     RomCurveDef* segmentStartCurve;
     RomCurveDef* startCurve;
     RomCurveDef* unblockedNode;
-    s32 nodeIds[4];
+    s32 nodeIds[CANNONBALL_BRANCH_COUNT];
     RomCurveDef* branchCandidateNode;
     RomCurveDef* nextSegmentNode;
     f32 speed;
@@ -3538,32 +3549,10 @@ void tricky_updateBallRoll(GameObject* obj, TrickyState* ball) {
     if (ball->substate != TRICKY_CANNONBALL_INIT) {
         if (ball->route.reverse == 0) {
             if (ball->route.atSegmentEnd != 0) {
-                branchNode = (RomCurveDef*)ball->route.nextNode;
-                branchMask = 1;
-                branchLinkId = branchNode->linkIds;
-                for (branchIndex = 0; branchIndex < CANNONBALL_BRANCH_COUNT; branchIndex++) {
-                    branchCurveId = *branchLinkId++;
-                    if (branchCurveId > -1 && ((branchNode->blockedLinkMask & branchMask) == 0)) {
-                        nodeIds[nodeCount++] = branchCurveId;
-                    }
-                    branchMask <<= 1;
-                }
+                trickyAppendRouteBranches(ball->route.nextNode, nodeIds, 0, &nodeCount);
             }
         } else if (ball->route.atSegmentEnd == 0) {
-            int reverseBranchCurveId;
-            RomCurveDef* reverseBranchNode;
-            s32* reverseBranchLinkId;
-            u32 reverseBranchMask;
-            reverseBranchNode = (RomCurveDef*)ball->route.nextNode;
-            reverseBranchMask = 1;
-            reverseBranchLinkId = reverseBranchNode->linkIds;
-            for (branchIndex = 0; branchIndex < CANNONBALL_BRANCH_COUNT; branchIndex++) {
-                reverseBranchCurveId = *reverseBranchLinkId++;
-                if (reverseBranchCurveId > -1 && ((reverseBranchNode->blockedLinkMask & reverseBranchMask) != 0)) {
-                    nodeIds[nodeCount++] = reverseBranchCurveId;
-                }
-                reverseBranchMask <<= 1;
-            }
+            trickyAppendRouteBranches(ball->route.nextNode, nodeIds, 1, &nodeCount);
         }
 
         if (nodeCount != 0) {
@@ -6811,9 +6800,9 @@ void Tricky_emitQueuedPathParticles(GameObject* obj, TrickyState* state) {
     if ((flags & TRICKY_STATE_CHILD_ACTIVITY_FLAGS) == 0) {
         return;
     }
-    particleParams.posX = state->renderPosX - obj->anim.worldPosX;
-    particleParams.posY = state->renderPosY - obj->anim.worldPosY;
-    particleParams.posZ = state->renderPosZ - obj->anim.worldPosZ;
+    particleParams.posX = state->mouthPos.x - obj->anim.worldPosX;
+    particleParams.posY = state->mouthPos.y - obj->anim.worldPosY;
+    particleParams.posZ = state->mouthPos.z - obj->anim.worldPosZ;
     particleParams.scale = 1.0f;
     particleParams.rotX = obj->anim.rotX;
     particleParams.rotY = obj->anim.rotY;
@@ -6893,14 +6882,14 @@ GameObject* trickyFindNearestUsableBaddie(GameObject* origin, f32 maxRadius, int
     return closestBaddie;
 }
 
-f32* trickyGetQueuedPathParticlePos(GameObject* obj) {
+f32* trickyGetMouthPosition(GameObject* obj) {
     TrickyState* state = obj->extra;
-    return &state->renderPosX;
+    return &state->mouthPos.x;
 }
 
-int trickyGetAimPitchOffset(GameObject* obj) {
+int trickyGetMouthYawOffset(GameObject* obj) {
     TrickyState* state = obj->extra;
-    return state->modelAnchorRotY;
+    return state->mouthYawOffset;
 }
 
 GameObject* trickyGetStayPoint(GameObject* obj) {

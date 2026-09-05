@@ -11,10 +11,10 @@
  * Public exports of dll_80136a40 (the Tricky behaviour DLL). Declared here so
  * consumers include this instead of hand-writing a local extern.
  */
-f32* trickyGetQueuedPathParticlePos(GameObject* obj);
+f32* trickyGetMouthPosition(GameObject* obj);
 f32 trickyGetAnimSpeed(GameObject* tricky);
 GameObject* trickyGetStayPoint(GameObject* tricky);
-int trickyGetAimPitchOffset(GameObject* tricky);
+int trickyGetMouthYawOffset(GameObject* tricky);
 int Tricky_requestRecallAndCheckBusy(GameObject* tricky);
 void trickyImpress(GameObject* obj);
 void trickySetSoundSuppressed(GameObject* obj, int value);

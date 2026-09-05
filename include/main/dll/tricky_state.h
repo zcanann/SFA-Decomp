@@ -182,10 +182,8 @@ typedef struct TrickyState {
     u8 pad3A0[0x3A8 - 0x3A0];
     ObjSoundState soundState;  /* 0x3A8: object-channel sound playback state */
     Vec pathPointPositions[4]; /* ObjPath points 4..7 refreshed by Tricky_render */
-    f32 renderPosX;            /* copied to a child object's localPos during Tricky_render */
-    f32 renderPosY;
-    f32 renderPosZ;
-    s16 modelAnchorRotY;
+    Vec mouthPos;              /* ObjPath point 8: carried ball, flame origin and mouth particles */
+    s16 mouthYawOffset;        /* joint-pose Y rotation added to the flame's horizontal heading */
     u8 pad416[0x418 - 0x416];
     struct RomCurveDef* routeSeedNode; /* candidate route node chosen before seeding route */
     u8 routeSeedDir;
@@ -386,6 +384,10 @@ STATIC_ASSERT(offsetof(TrickyState, soundState) == 0x3A8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions) == 0x3D8);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].y) == 0x3DC);
 STATIC_ASSERT(offsetof(TrickyState, pathPointPositions[0].z) == 0x3E0);
+STATIC_ASSERT(offsetof(TrickyState, mouthPos) == 0x408);
+STATIC_ASSERT(offsetof(TrickyState, mouthPos.y) == 0x40C);
+STATIC_ASSERT(offsetof(TrickyState, mouthPos.z) == 0x410);
+STATIC_ASSERT(offsetof(TrickyState, mouthYawOffset) == 0x414);
 STATIC_ASSERT(offsetof(TrickyState, previousPathPoint) == 0x6F0);
 STATIC_ASSERT(offsetof(TrickyState, flameChildren) == 0x700);
 STATIC_ASSERT(sizeof(((TrickyState*)0)->flameChildren) == 0x1C);

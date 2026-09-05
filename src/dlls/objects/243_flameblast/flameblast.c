@@ -51,10 +51,10 @@ int flameblast_seedVelocity(GameObject* obj, FlameblastState* state) {
     rotationArg.scale = 1.0f;
     rotationArg.rotZ = tricky->anim.rotZ;
     rotationArg.rotY = tricky->anim.rotY;
-    rotationArg.rotX = tricky->anim.rotX + trickyGetAimPitchOffset(tricky);
+    rotationArg.rotX = tricky->anim.rotX + trickyGetMouthYawOffset(tricky);
     vecRotateZXY(&rotationArg.rotX, &obj->anim.velocity.x);
     if ((tricky->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
-        origin = trickyGetQueuedPathParticlePos(tricky);
+        origin = trickyGetMouthPosition(tricky);
     } else {
         origin = &tricky->anim.localPosX;
     }
