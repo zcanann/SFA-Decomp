@@ -133,6 +133,7 @@ int trickySelectQueuedCommandTarget(TrickyState* state, enum TrickyCommandType c
 static f32 trickyDecelerate(f32 speed, f32 minSpeed);
 static f32 trickyAccelerate(f32 speed, f32 maxSpeed);
 void trickyUpdateCollisionAndPathState(GameObject* obj);
+static void trickyAdvanceToSegmentEnd(RomCurveWalker* route);
 static void trickyRequestIdleMove(GameObject* obj, TrickyState* state);
 int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 speed);
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
@@ -5978,15 +5979,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         state->verticalDelta = (((RomCurveDef*)state->route.currentNode)->y - obj->anim.worldPosY) /
                                                TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPUP;
-                        if (state->route.reverse != 0) {
-                            while (state->route.atSegmentEnd != 0) {
-                                RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
-                            }
-                        } else {
-                            while (state->route.atSegmentEnd == 0) {
-                                RomCurve_stepClamped(&state->route, 2.0f);
-                            }
-                        }
+                        trickyAdvanceToSegmentEnd(&state->route);
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_JUMPDOWN:
@@ -6005,15 +5998,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                         state->verticalDelta = (obj->anim.worldPosY - ((RomCurveDef*)state->route.currentNode)->y) /
                                                TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                         state->movementState = TRICKY_MOVE_JUMPDOWN;
-                        if (state->route.reverse != 0) {
-                            while (state->route.atSegmentEnd != 0) {
-                                RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
-                            }
-                        } else {
-                            while (state->route.atSegmentEnd == 0) {
-                                RomCurve_stepClamped(&state->route, 2.0f);
-                            }
-                        }
+                        trickyAdvanceToSegmentEnd(&state->route);
                         state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
@@ -6307,15 +6292,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             state->arcMoveProgress = arc->time / arc->duration;
             state->speed = TRICKY_FOLLOW_ARC_SPEED;
             state->movementState = TRICKY_MOVE_JUMPING;
-            if (state->route.reverse != 0) {
-                while (state->route.atSegmentEnd != 0) {
-                    RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
-                }
-            } else {
-                while (state->route.atSegmentEnd == 0) {
-                    RomCurve_stepClamped(&state->route, 2.0f);
-                }
-            }
+            trickyAdvanceToSegmentEnd(&state->route);
         }
         break;
     case TRICKY_MOVE_JUMPING: {
@@ -6412,15 +6389,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->verticalDelta = (((RomCurveDef*)state->route.currentNode)->y - obj->anim.worldPosY) /
                                        TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPUP;
-                if (state->route.reverse != 0) {
-                    while (state->route.atSegmentEnd != 0) {
-                        RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
-                    }
-                } else {
-                    while (state->route.atSegmentEnd == 0) {
-                        RomCurve_stepClamped(&state->route, 2.0f);
-                    }
-                }
+                trickyAdvanceToSegmentEnd(&state->route);
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
@@ -6501,15 +6470,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->verticalDelta = (obj->anim.worldPosY - ((RomCurveDef*)state->route.currentNode)->y) /
                                        TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
                 state->movementState = TRICKY_MOVE_JUMPDOWN;
-                if (state->route.reverse != 0) {
-                    while (state->route.atSegmentEnd != 0) {
-                        RomCurve_stepClamped(&state->route, TRICKY_ROUTE_REVERSE_STEP);
-                    }
-                } else {
-                    while (state->route.atSegmentEnd == 0) {
-                        RomCurve_stepClamped(&state->route, 2.0f);
-                    }
-                }
+                trickyAdvanceToSegmentEnd(&state->route);
                 state->voiceCooldown = TRICKY_TIMER_600_FRAMES;
             }
         }
@@ -7339,6 +7300,18 @@ int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 sp
         dist = getXZDistanceSquared(&route->posX, &obj->anim.worldPosX);
     }
     return 1;
+}
+
+static void trickyAdvanceToSegmentEnd(RomCurveWalker* route) {
+    if (route->reverse != 0) {
+        while (route->atSegmentEnd != 0) {
+            RomCurve_stepClamped(route, TRICKY_ROUTE_REVERSE_STEP);
+        }
+    } else {
+        while (route->atSegmentEnd == 0) {
+            RomCurve_stepClamped(route, 2.0f);
+        }
+    }
 }
 
 static void trickyRequestIdleMove(GameObject* obj, TrickyState* state) {

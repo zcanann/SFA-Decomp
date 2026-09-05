@@ -58,9 +58,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--object", type=Path, default=ROOT / flag_probe.UNITS[UNIT]["base_path"])
     parser.add_argument("--output", type=Path, default=ROOT / "build/flag_probe/tricky_link")
+    parser.add_argument("--baseline", type=Path, default=ROOT / "build/GSAE01/main.elf",
+                        help="Existing matching-build ELF for whole-section comparison")
     args = parser.parse_args()
     source = args.object.resolve()
     output = args.output.resolve()
+    linked = output / "main.elf"
+    if linked == args.baseline.resolve():
+        raise ValueError("diagnostic output must not overwrite the baseline ELF")
     output.mkdir(parents=True, exist_ok=True)
     query = subprocess.run(
         ["ninja", "-t", "query", "build/GSAE01/main.elf"], cwd=ROOT,
@@ -69,7 +74,6 @@ def main():
     inputs = replace_object(link_inputs(query.stdout), flag_probe.UNITS[UNIT]["target_path"], source)
     response = output / "link.rsp"
     response.write_text("\n".join(f'"{item}"' for item in inputs), encoding="ascii")
-    linked = output / "main.elf"
     result = subprocess.run(
         [str(ROOT / "build/compilers/GC/1.3.2/mwldeppc.exe"), "-fp", "hardware",
          "-nodefaults", "-lcf", "build/GSAE01/ldscript.lcf", "-o", str(linked), f"@{response}"],
@@ -89,6 +93,12 @@ def main():
         if name in final and size != final[name][1]
     })
     print("Complete object literal pool retained:", pool in final_pool, f"({len(pool)} bytes)")
+    if args.baseline.is_file():
+        _, baseline_pool = object_info(args.baseline)
+        print("Whole .sdata2 bytes equal baseline ELF:", final_pool == baseline_pool,
+              f"({len(final_pool)}/{len(baseline_pool)} bytes)")
+    else:
+        print("Baseline ELF missing; whole-section comparison unavailable:", args.baseline)
     print("Linked ELF:", linked)
     print("This is a diagnostic link, not a matching-DOL verdict.")
 

@@ -3731,6 +3731,16 @@ Text is temporarily 99.78016%: movement update gains two register moves, while
 the pre-existing extra zero load in `Tricky_update` remains. Neither the
 diagnostic link nor the strict matching build proves Tricky's C is fully exact.
 
+The remaining pair was resolved by recovering `trickyAdvanceToSegmentEnd` from
+five identical forward/reverse segment-drain loops in movement update. Its
+ordinary static body is automatically inlined and stripped, emitting the reverse
+step before the lookahead calculation's literals. Every retail function's code
+and score are unchanged by this extraction. All 404 source pool bytes now match
+retail; the normal linker supplies the final four alignment bytes. The complete
+40,744-byte `.sdata2` section of the diagnostic game link is byte-identical to
+the strict matching-build ELF. The link probe now reports that whole-section
+comparison, in addition to checking the fate of the six static helper bodies.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
