@@ -98,15 +98,25 @@ STATIC_ASSERT(offsetof(TrickyCommand, ttlFrames) == 6);
 STATIC_ASSERT(sizeof(TrickyCommand) == 8);
 
 typedef struct TrickyJumpArc {
-    f32 duration;  /* 0x00: horizontal distance / jump speed */
-    f32 time;      /* 0x04: elapsed arc time (init 0, += timeDelta) */
-    f32 riseCoeff; /* 0x08: linear vertical coefficient */
-    f32 baseY;     /* 0x0C: launch worldPosY */
-    f32 baseX;     /* 0x10: launch worldPosX */
-    f32 baseZ;     /* 0x14: launch worldPosZ */
-    f32 landX;     /* 0x18: landing node x */
-    f32 landZ;     /* 0x1C: landing node z */
+    f32 duration;         /* 0x00: horizontal distance / jump speed */
+    f32 time;             /* 0x04: elapsed arc time (init 0, += timeDelta) */
+    f32 initialVelocityY; /* 0x08: launch Y velocity in the quadratic trajectory */
+    f32 baseY;            /* 0x0C: launch worldPosY */
+    f32 baseX;            /* 0x10: launch worldPosX */
+    f32 baseZ;            /* 0x14: launch worldPosZ */
+    f32 landX;            /* 0x18: landing node x */
+    f32 landZ;            /* 0x1C: landing node z */
 } TrickyJumpArc;
+
+STATIC_ASSERT(sizeof(TrickyJumpArc) == 0x20);
+STATIC_ASSERT(offsetof(TrickyJumpArc, duration) == 0x00);
+STATIC_ASSERT(offsetof(TrickyJumpArc, time) == 0x04);
+STATIC_ASSERT(offsetof(TrickyJumpArc, initialVelocityY) == 0x08);
+STATIC_ASSERT(offsetof(TrickyJumpArc, baseY) == 0x0C);
+STATIC_ASSERT(offsetof(TrickyJumpArc, baseX) == 0x10);
+STATIC_ASSERT(offsetof(TrickyJumpArc, baseZ) == 0x14);
+STATIC_ASSERT(offsetof(TrickyJumpArc, landX) == 0x18);
+STATIC_ASSERT(offsetof(TrickyJumpArc, landZ) == 0x1C);
 
 struct RomCurveDef;
 
@@ -342,6 +352,7 @@ STATIC_ASSERT(sizeof(((TrickyState*)0)->moveVector) == 8);
 STATIC_ASSERT(offsetof(TrickyState, animRate) == 0x34);
 STATIC_ASSERT(offsetof(TrickyState, pendingAnimRate) == 0x38);
 STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
+STATIC_ASSERT(offsetof(TrickyState, jumpArc) == 0x64);
 STATIC_ASSERT(offsetof(TrickyState, prevLocalPos.x) == 0x8C);
 STATIC_ASSERT(offsetof(TrickyState, prevLocalPos.y) == 0x90);
 STATIC_ASSERT(offsetof(TrickyState, prevLocalPos.z) == 0x94);

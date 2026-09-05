@@ -140,6 +140,7 @@ int trickyAdvanceRouteTargetAhead(GameObject* obj, RomCurveWalker* route, f32 sp
 int trickyTurnTowardYaw(GameObject* obj, s16 targetYaw);
 static inline f32 trickyGetTargetDistanceRate(GameObject* obj);
 static void trickyUpdateFacingFromMoveVector(GameObject* obj, TrickyState* state, s16* turnDeltaOut);
+static inline void trickyTurnAlongMoveDirection(GameObject* obj);
 int moveTricky(GameObject* obj, f32* targetPos);
 static inline RomCurveDef* trickyValidateRouteEntry(RomCurveDef* entry);
 RomCurveDef* trickyFindNearestLinkedRouteEntry(TrickyState* state, RomCurveDef* routeDef, int targetWalkGroup,
@@ -3031,11 +3032,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
     int walkGroup;
-    f32 dirZ;
-    f32 dirX;
     f32 digProgress;
-    f32 dirXSq;
-    f32 dirZSq;
 
     switch (state->substate) {
     case TRICKY_DIG_TUNNEL_INIT:
@@ -3091,14 +3088,7 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         digProgress = WALL_ANIMATOR_INTERFACE(state->followObj)->applyImpact(state->followObj, obj);
         obj->anim.localPosX = state->moveVector.x * digProgress + state->digTunnelStartNode->x;
         obj->anim.localPosZ = state->moveVector.z * digProgress + state->digTunnelStartNode->z;
-        dirX = ((TrickyState*)obj->extra)->moveVector.x;
-        dirXSq = dirX;
-        dirXSq *= dirXSq;
-        dirZ = ((TrickyState*)obj->extra)->moveVector.z;
-        dirZSq = dirZ * dirZ;
-        if (dirXSq + dirZSq > 0.01f) {
-            trickyTurnTowardYaw(obj, getAngle(-dirX, -dirZ));
-        }
+        trickyTurnAlongMoveDirection(obj);
         if (WALL_ANIMATOR_INTERFACE(state->followObj)->isComplete(state->followObj) != 0) {
             s32 linkId;
             RomCurveDef* linkNode;
@@ -4485,6 +4475,40 @@ static inline void trickyInvalidatePatchCache(TrickyState* state) {
     }
 }
 
+static inline void trickyPrepareRouteJump(GameObject* obj, TrickyState* state) {
+    trickySetDirectionAlongRoute(obj, state);
+    state->speed = TRICKY_FOLLOW_MAX_SPEED;
+    trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMP_PREP, TRICKY_TINY_MOVE_ANIM_RATE,
+                      TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+    state->movementState = TRICKY_MOVE_JUMP_PREP;
+    state->movementBarkTimer = 600.0f;
+}
+
+static inline void trickyStartRouteJumpUp(GameObject* obj, TrickyState* state) {
+    trickySetDirectionAlongRoute(obj, state);
+    if ((int)randomGetRange(0, 1) != 0) {
+        trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_FAST, TRICKY_FOLLOW_JUMPUP_FAST_ANIM_RATE,
+                          TRICKY_MOVE_FLAG_JUMP_ARC);
+    } else {
+        trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_SLOW, TRICKY_FOLLOW_JUMPUP_SLOW_ANIM_RATE,
+                          TRICKY_MOVE_FLAG_JUMP_ARC);
+    }
+    state->verticalDelta = (state->route.currentNode->y - obj->anim.worldPosY) / TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
+    state->movementState = TRICKY_MOVE_JUMPUP;
+    trickyAdvanceToSegmentEnd(&state->route);
+    state->movementBarkTimer = 600.0f;
+}
+
+static inline void trickyStartRouteJumpDown(GameObject* obj, TrickyState* state) {
+    trickySetDirectionAlongRoute(obj, state);
+    trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPDOWN, TRICKY_FOLLOW_JUMPDOWN_ANIM_RATE, TRICKY_MOVE_FLAG_JUMP_ARC);
+    state->verticalDelta =
+        (obj->anim.worldPosY - state->route.currentNode->y) / TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
+    state->movementState = TRICKY_MOVE_JUMPDOWN;
+    trickyAdvanceToSegmentEnd(&state->route);
+    state->movementBarkTimer = 600.0f;
+}
+
 int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* state) {
     u16 targetPatchGroup;
     RomCurveDef* routeNode;
@@ -4813,37 +4837,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                     moveResult = moveTricky(obj, &state->route.posX);
                     switch (prevNode->subtype) {
                     case ROMCURVE_TRICKY_SUBTYPE_JUMP:
-                        trickySetDirectionAlongRoute(obj, state);
-                        state->speed = TRICKY_FOLLOW_MAX_SPEED;
-                        trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMP_PREP, TRICKY_TINY_MOVE_ANIM_RATE,
-                                          TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
-                        state->movementState = TRICKY_MOVE_JUMP_PREP;
-                        state->movementBarkTimer = 600.0f;
+                        trickyPrepareRouteJump(obj, state);
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_JUMPUP:
-                        trickySetDirectionAlongRoute(obj, state);
-                        if ((int)randomGetRange(0, 1) != 0) {
-                            trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_FAST, TRICKY_FOLLOW_JUMPUP_FAST_ANIM_RATE,
-                                              TRICKY_MOVE_FLAG_JUMP_ARC);
-                        } else {
-                            trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_SLOW, TRICKY_FOLLOW_JUMPUP_SLOW_ANIM_RATE,
-                                              TRICKY_MOVE_FLAG_JUMP_ARC);
-                        }
-                        state->verticalDelta =
-                            (state->route.currentNode->y - obj->anim.worldPosY) / TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
-                        state->movementState = TRICKY_MOVE_JUMPUP;
-                        trickyAdvanceToSegmentEnd(&state->route);
-                        state->movementBarkTimer = 600.0f;
+                        trickyStartRouteJumpUp(obj, state);
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_JUMPDOWN:
-                        trickySetDirectionAlongRoute(obj, state);
-                        trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPDOWN, TRICKY_FOLLOW_JUMPDOWN_ANIM_RATE,
-                                          TRICKY_MOVE_FLAG_JUMP_ARC);
-                        state->verticalDelta = (obj->anim.worldPosY - state->route.currentNode->y) /
-                                               TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
-                        state->movementState = TRICKY_MOVE_JUMPDOWN;
-                        trickyAdvanceToSegmentEnd(&state->route);
-                        state->movementBarkTimer = 600.0f;
+                        trickyStartRouteJumpDown(obj, state);
                         break;
                     case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_A:
                     case ROMCURVE_TRICKY_SUBTYPE_GROUND_SNAP_B:
@@ -5023,12 +5023,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
                 RomCurve_advanceToNextSegment(&state->route, nextRouteNode);
-                trickySetDirectionAlongRoute(obj, state);
-                state->speed = TRICKY_FOLLOW_MAX_SPEED;
-                trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMP_PREP, TRICKY_TINY_MOVE_ANIM_RATE,
-                                  TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
-                state->movementState = TRICKY_MOVE_JUMP_PREP;
-                state->movementBarkTimer = 600.0f;
+                trickyPrepareRouteJump(obj, state);
             }
         }
         break;
@@ -5076,7 +5071,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             arc->landX = landNode->x;
             arc->landZ = landNode->z;
             duration = arc->duration;
-            arc->riseCoeff =
+            arc->initialVelocityY =
                 -(TRICKY_FOLLOW_ARC_COEFFICIENT * duration * duration - (landNode->y - obj->anim.worldPosY)) / duration;
             trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMP, 0.0f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             state->arcMoveProgress = arc->time / arc->duration;
@@ -5100,8 +5095,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             f32 baseZ;
             obj->anim.localPosX = (arc->landX - baseX) * (arc->time / arc->duration) + baseX;
             elapsedTime = arc->time;
-            obj->anim.localPosY =
-                TRICKY_FOLLOW_ARC_COEFFICIENT * elapsedTime * elapsedTime + (arc->riseCoeff * elapsedTime + arc->baseY);
+            obj->anim.localPosY = TRICKY_FOLLOW_ARC_COEFFICIENT * elapsedTime * elapsedTime +
+                                  (arc->initialVelocityY * elapsedTime + arc->baseY);
             baseZ = arc->baseZ;
             obj->anim.localPosZ = (arc->landZ - baseZ) * (arc->time / arc->duration) + baseZ;
             duration = arc->duration;
@@ -5152,19 +5147,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
                 RomCurve_advanceToNextSegment(&state->route, nextRouteNode);
-                trickySetDirectionAlongRoute(obj, state);
-                if ((int)randomGetRange(0, 1) != 0) {
-                    trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_FAST, TRICKY_FOLLOW_JUMPUP_FAST_ANIM_RATE,
-                                      TRICKY_MOVE_FLAG_JUMP_ARC);
-                } else {
-                    trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPUP_SLOW, TRICKY_FOLLOW_JUMPUP_SLOW_ANIM_RATE,
-                                      TRICKY_MOVE_FLAG_JUMP_ARC);
-                }
-                state->verticalDelta =
-                    (state->route.currentNode->y - obj->anim.worldPosY) / TRICKY_FOLLOW_JUMPUP_VERTICAL_DIVISOR;
-                state->movementState = TRICKY_MOVE_JUMPUP;
-                trickyAdvanceToSegmentEnd(&state->route);
-                state->movementBarkTimer = 600.0f;
+                trickyStartRouteJumpUp(obj, state);
             }
         }
         break;
@@ -5206,14 +5189,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                 state->movementState = TRICKY_MOVE_WALK_WAIT;
             } else {
                 RomCurve_advanceToNextSegment(&state->route, nextRouteNode);
-                trickySetDirectionAlongRoute(obj, state);
-                trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMPDOWN, TRICKY_FOLLOW_JUMPDOWN_ANIM_RATE,
-                                  TRICKY_MOVE_FLAG_JUMP_ARC);
-                state->verticalDelta =
-                    (obj->anim.worldPosY - state->route.currentNode->y) / TRICKY_FOLLOW_JUMPDOWN_VERTICAL_DIVISOR;
-                state->movementState = TRICKY_MOVE_JUMPDOWN;
-                trickyAdvanceToSegmentEnd(&state->route);
-                state->movementBarkTimer = 600.0f;
+                trickyStartRouteJumpDown(obj, state);
             }
         }
         break;

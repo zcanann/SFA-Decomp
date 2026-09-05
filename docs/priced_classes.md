@@ -4623,6 +4623,24 @@ the diagnostic link falls from 53 to 41 text-byte differences, retaining the
 complete 404-byte literal pool and exact allocated non-text sections. Tunnel
 loop-local declarations and early-continue probes did not help and are restored.
 
+The route-entry and run-up branches now share their three matching jump actions:
+prepare the ballistic jump, start the upward root-motion jump, and start the
+downward root-motion jump. Each action preserves its animation choices, signed
+height scale, route advancement and bark timer. Tunnel facing also reuses the
+existing `trickyTurnAlongMoveDirection`, preserving its independent `obj->extra`
+reload. All function bytes and allocated data remain unchanged; only anonymous
+relocation names are renumbered. No additional helper bodies survive linking.
+
+Retail stores at state offsets `0x64..0x80` and the subsequent trajectory update
+confirm all eight `TrickyJumpArc` fields. Its `0x20` size, every field offset and
+the embedding offset are now asserted. The linear vertical coefficient is named
+`initialVelocityY`: initialization solves `(landingY - launchY - a*T*T) / T`,
+and the update uses `a*t*t + initialVelocityY*t + launchY`. The field rename and
+assertions preserve the raw object. Result-finalization extraction was codegen
+neutral; sharing turn-angle calculation still added ten register differences,
+and single-delta accumulation removed five target instructions. Those probes
+are not retained. Matching remains 87/89 functions and 41 linked text bytes.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
