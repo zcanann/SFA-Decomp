@@ -465,7 +465,7 @@
 #include "main/dll/WC/dll_0292_wctrexstatu.h"
 #include "main/dll/WC/dll_028F_wcpressures.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
-#include "main/dll/WC/dll_0296_wctempledia.h"
+#include "dlls/objects/662_WCTempleDia.h"
 #include "main/dll/WC/dll_0298_wcfloortile.h"
 #include "main/dll/WC/WCbeacon.h"
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"

@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_WC_DLL_0296_WCTEMPLEDIA_H
-#define MAIN_DLL_WC_DLL_0296_WCTEMPLEDIA_H
+#ifndef DLLS_OBJECTS_662_WCTEMPLEDIA_H_
+#define DLLS_OBJECTS_662_WCTEMPLEDIA_H_
 
 #include "global.h"
 #include "game/objects/object.h"
@@ -7,8 +7,7 @@
 #include "game/objects/object_setup.h"
 #include "main/objseq.h"
 
-typedef struct WCTempleDiaSetup
-{
+typedef struct WCTempleDiaSetup {
     ObjPlacement base;
     s8 type;
     u8 modelIndex;
@@ -17,8 +16,7 @@ typedef struct WCTempleDiaSetup
     u8 pad20[4];
 } WCTempleDiaSetup;
 
-typedef struct WCTempleDiaState
-{
+typedef struct WCTempleDiaState {
     f32 currentSpeed;
     f32 targetSpeed;
     u8 stageMask;
@@ -58,4 +56,4 @@ void wctempledia_init(GameObject* obj, WCTempleDiaSetup* setup);
 void wctempledia_release(void);
 void wctempledia_initialise(void);
 
-#endif /* MAIN_DLL_WC_DLL_0296_WCTEMPLEDIA_H */
+#endif /* DLLS_OBJECTS_662_WCTEMPLEDIA_H_ */

@@ -1835,7 +1835,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/659/659.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/660/660.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/661_WCApertureS/WCApertureS.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/662_WCTempleDia/WCTempleDia.c", cflags=cflags_dll_noopt_noinline, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/662_WCTempleDia/WCTempleDia.c", cflags=cflags_dll_noopt_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/663_WCTempleBri/WCTempleBri.c", cflags=cflags_dll_noopt, mw_version="GC/2.0"),
             Object(MatchingFor("GSAE01"), "dlls/objects/664_WCFloorTile/WCFloorTile.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/665/665.c"),
