@@ -2276,19 +2276,19 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
 
 GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state) {
     GameObject** objs;
-    int count[1];
+    int count;
     GameObject* result;
     f32 d;
     f32 bestD;
     int i;
 
     result = 0;
-    objs = objGetAllOfType(TRICKYWARP_OBJ_GROUP, count);
+    objs = objGetAllOfType(TRICKYWARP_OBJ_GROUP, &count);
     d = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &obj->anim.worldPosX);
     if ((d >= TRICKY_REMOTE_RECALL_DISTANCE_SQ) || (state->cooldownA > 0.0f)) {
         if (ViewFrustum_IsSphereVisible(&obj->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
             bestD = TRICKY_MAX_DISTANCE;
-            for (i = 0; i < count[0]; i++) {
+            for (i = 0; i < count; i++) {
                 f32 cd = getXZDistanceSquared(&state->playerObj->anim.worldPosX, &(*objs)->anim.worldPosX);
                 if (cd < d && cd < bestD) {
                     bestD = cd;
@@ -2302,7 +2302,7 @@ GameObject* Tricky_findNearestGroup4BObject(GameObject* obj, TrickyState* state)
 }
 
 void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
-    GameObject* hit[1];
+    GameObject* hit;
     TrickyState* sfxState;
     f32 fv;
     int inWater;
@@ -2311,8 +2311,8 @@ void tricky_handlePlayerContact(GameObject* obj, TrickyState* state) {
     if (state->playerContactTimer < 0.0f) {
         state->playerContactTimer = 0.0f;
     }
-    if (ObjHits_GetPriorityHit(obj, hit, 0, 0) != 0 && hit[0]->ownerObj != NULL &&
-        ((GameObject*)hit[0]->ownerObj)->anim.classId == 1) {
+    if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0 && hit->ownerObj != NULL &&
+        ((GameObject*)hit->ownerObj)->anim.classId == 1) {
         fv = state->playerContactTimer;
         if (fv <= 0.0f) {
             state->playerContactTimer += TRICKY_FETCH_CARRY_DELAY_FRAMES;
@@ -4900,8 +4900,6 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
     f32 speed;
     f32 dist;
     f32 len;
-    f32 v;
-    f32 k;
     f32 sqz;
     f32 sqx;
     u8 walkGroupPair[2];
@@ -5500,12 +5498,13 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             ObjAnim_SampleRootCurvePhase(&obj->anim, state->speed * TRICKY_FOLLOW_ARC_QUARTER_PROGRESS,
                                          &state->moveProgress);
             obj->anim.localPosX =
-                timeDelta * (state->dirX * (state->speed * (k = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS))) +
-                obj->anim.localPosX;
-            obj->anim.localPosZ = timeDelta * (state->dirZ * (state->speed * k)) + obj->anim.localPosZ;
+                timeDelta * (state->dirX * (state->speed * TRICKY_FOLLOW_ARC_QUARTER_PROGRESS)) + obj->anim.localPosX;
+            obj->anim.localPosZ =
+                timeDelta * (state->dirZ * (state->speed * TRICKY_FOLLOW_ARC_QUARTER_PROGRESS)) + obj->anim.localPosZ;
         }
         if ((state->stateFlags & TRICKY_STATE_FLAG_MOVE_ADVANCING) != 0) {
             f32 dx;
+            f32 duration;
             TrickyJumpArc* arc = &state->jumpArc;
             RomCurveDef* landNode = state->route.currentNode;
             dx = landNode->x - obj->anim.worldPosX;
@@ -5514,15 +5513,16 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             dx = dx * dx;
             len = sqrtf(sqx + dx);
             arc->duration = len / TRICKY_FOLLOW_ARC_SPEED;
-            arc->time = (v = 0.0f);
+            arc->time = 0.0f;
             arc->baseX = obj->anim.worldPosX;
             arc->baseY = obj->anim.worldPosY;
             arc->baseZ = obj->anim.worldPosZ;
             arc->landX = landNode->x;
             arc->landZ = landNode->z;
-            k = arc->duration;
-            arc->riseCoeff = -(TRICKY_FOLLOW_ARC_COEFFICIENT * k * k - (landNode->y - obj->anim.worldPosY)) / k;
-            trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMP, v, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
+            duration = arc->duration;
+            arc->riseCoeff =
+                -(TRICKY_FOLLOW_ARC_COEFFICIENT * duration * duration - (landNode->y - obj->anim.worldPosY)) / duration;
+            trickyRequestMove(obj, TRICKY_ANIM_FOLLOW_JUMP, 0.0f, TRICKY_MOVE_FLAG_IMMEDIATE_TRANSITION);
             state->arcMoveProgress = arc->time / arc->duration;
             state->speed = TRICKY_FOLLOW_ARC_SPEED;
             state->movementState = TRICKY_MOVE_JUMPING;
@@ -5531,6 +5531,8 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         break;
     case TRICKY_MOVE_JUMPING: {
         TrickyJumpArc* arc = &state->jumpArc;
+        f32 duration;
+        f32 elapsedTime;
         trickyDebugPrint("Jumping\n");
         arc->time = arc->time + timeDelta;
         if (arc->time >= arc->duration) {
@@ -5541,24 +5543,26 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
             f32 baseX = arc->baseX;
             f32 baseZ;
             obj->anim.localPosX = (arc->landX - baseX) * (arc->time / arc->duration) + baseX;
-            k = arc->time;
-            obj->anim.localPosY = TRICKY_FOLLOW_ARC_COEFFICIENT * k * k + (arc->riseCoeff * k + arc->baseY);
+            elapsedTime = arc->time;
+            obj->anim.localPosY =
+                TRICKY_FOLLOW_ARC_COEFFICIENT * elapsedTime * elapsedTime + (arc->riseCoeff * elapsedTime + arc->baseY);
             baseZ = arc->baseZ;
             obj->anim.localPosZ = (arc->landZ - baseZ) * (arc->time / arc->duration) + baseZ;
-            v = arc->duration;
-            if (v <= TRICKY_FOLLOW_ARC_PROGRESS_WINDOW) {
-                state->arcMoveProgress = arc->time / v;
+            duration = arc->duration;
+            if (duration <= TRICKY_FOLLOW_ARC_PROGRESS_WINDOW) {
+                state->arcMoveProgress = arc->time / duration;
             } else {
-                k = arc->time;
-                if (k <= TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
-                    state->arcMoveProgress = k / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
-                } else if (k >= v - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
-                    f32 adj;
-                    adj = TRICKY_FOLLOW_ARC_PROGRESS_WINDOW - v;
-                    state->arcMoveProgress = (adj + k) / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
+                elapsedTime = arc->time;
+                if (elapsedTime <= TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
+                    state->arcMoveProgress = elapsedTime / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
+                } else if (elapsedTime >= duration - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) {
+                    f32 landingTimeOffset;
+                    landingTimeOffset = TRICKY_FOLLOW_ARC_PROGRESS_WINDOW - duration;
+                    state->arcMoveProgress = (landingTimeOffset + elapsedTime) / TRICKY_FOLLOW_ARC_PROGRESS_WINDOW;
                 } else {
-                    k = (k - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) / (v - TRICKY_FOLLOW_ARC_MIDDLE_WINDOW);
-                    state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + k / 2.0f;
+                    f32 middleProgress = (elapsedTime - TRICKY_FOLLOW_ARC_ENDPOINT_WINDOW) /
+                                         (duration - TRICKY_FOLLOW_ARC_MIDDLE_WINDOW);
+                    state->arcMoveProgress = TRICKY_FOLLOW_ARC_QUARTER_PROGRESS + middleProgress / 2.0f;
                 }
             }
             Obj_SetParent(obj, NULL, 0);
@@ -5750,7 +5754,7 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
     f32 limitDistanceSq;
     f32 guardDistance;
     f32 startGuardDistance;
-    f32 slope[1];
+    f32 slope;
     f32 intercept;
     f32 perpSlope;
     f32 dz;
@@ -5787,11 +5791,11 @@ void trickyAdjustStepAroundPoint(f32* start, f32* end, f32* guardPoint, f32* cen
         return;
     }
 
-    slope[0] = (end[2] - start[2]) / (end[0] - start[0]);
-    intercept = start[2] - (slope[0] * start[0]);
+    slope = (end[2] - start[2]) / (end[0] - start[0]);
+    intercept = start[2] - (slope * start[0]);
     perpSlope = (start[0] - end[0]) / (end[2] - start[2]);
-    projection[0] = ((center[2] - (perpSlope * center[0])) - intercept) / (slope[0] - perpSlope);
-    projection[2] = (slope[0] * projection[0]) + intercept;
+    projection[0] = ((center[2] - (perpSlope * center[0])) - intercept) / (slope - perpSlope);
+    projection[2] = (slope * projection[0]) + intercept;
 
     if (!(getXZDistanceSquared(center, projection) < minDistanceSq)) {
         return;
@@ -5924,8 +5928,8 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
                         (targetXDistanceSquared + (objectXDistanceSquared + objectZDistanceSquared));
             }
         }
-        if (score < bestDistances[7]) {
-            for (routeSlot = 0; routeSlot < 4; routeSlot++) {
+        if (score < bestDistances[TRICKY_ROUTE_CANDIDATE_COUNT - 1]) {
+            for (routeSlot = 0; routeSlot < ROMCURVE_LINK_COUNT; routeSlot++) {
                 linkCurveId = curve->linkIds[routeSlot];
                 if ((linkCurveId > -1) && (curve->linkWalkGroups[routeSlot] == linkSelector)) {
                     if (curve->subtype == ROMCURVE_TRICKY_SUBTYPE_BLOCKED_PAIR_A) {
@@ -5940,13 +5944,13 @@ void trickyRankLinkedRouteCandidates(GameObject* obj, u8* outRouteFlags, s16 lin
                 }
             }
 
-            if (routeSlot == 4) {
+            if (routeSlot == ROMCURVE_LINK_COUNT) {
                 continue;
             }
 
             for (routeSlot = 0; routeSlot < TRICKY_ROUTE_CANDIDATE_COUNT; routeSlot++) {
                 if (score < bestDistances[routeSlot]) {
-                    for (shiftSlot = 7; shiftSlot > routeSlot; shiftSlot--) {
+                    for (shiftSlot = TRICKY_ROUTE_CANDIDATE_COUNT - 1; shiftSlot > routeSlot; shiftSlot--) {
                         outRouteFlags[shiftSlot] = outRouteFlags[shiftSlot - 1];
                         outRoutes[shiftSlot] = outRoutes[shiftSlot - 1];
                         bestDistances[shiftSlot] = bestDistances[shiftSlot - 1];

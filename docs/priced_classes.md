@@ -3834,6 +3834,23 @@ section, including size, address, missing sections and byte changes, with tests
 for these distinctions. This is still `NonMatching`: the remaining register
 differences must be resolved before substituting the C object in the strict DOL.
 
+The scalar audit removes one-element count and hit-pointer arrays byte-neutrally.
+It also removes `slope[1]`, introduced by `1e1d1c4deb` in place of a scalar despite
+having no array or address-taking consumer. The honest scalar projection leaves
+12 register differences in step adjustment, with retail's 512-byte instruction
+stream. A separate projection helper and explicit delta temporaries did not
+recover the retail registers and were not retained.
+
+Jump-arc duration, elapsed time, landing-time offset and middle animation progress
+now have their own meaningful locals. The dispatcher no longer couples these
+values to `k`/`v` assignments embedded in zero stores and quarter-speed movement.
+This preserves every instruction but changes movement's register difference
+count from 68 to 72. Route ranking uses the established link/candidate capacities
+without code changes. Overall text temporarily becomes 99.91013%; the full link
+still has exact non-text sections and all retail function sizes, with 261 text
+bytes remaining different. These exposed register differences are preferable
+to retaining unsupported array storage purely for its allocation effect.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

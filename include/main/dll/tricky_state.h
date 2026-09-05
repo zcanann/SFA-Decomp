@@ -94,7 +94,7 @@ STATIC_ASSERT(offsetof(TrickyCommand, ttlFrames) == 6);
 STATIC_ASSERT(sizeof(TrickyCommand) == 8);
 
 typedef struct TrickyJumpArc {
-    f32 duration;  /* 0x00: horizontal distance / Tricky follow vertical divisor */
+    f32 duration;  /* 0x00: horizontal distance / jump speed */
     f32 time;      /* 0x04: elapsed arc time (init 0, += timeDelta) */
     f32 riseCoeff; /* 0x08: linear vertical coefficient */
     f32 baseY;     /* 0x0C: launch worldPosY */
