@@ -1467,7 +1467,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/291_fuelCell/fuelCell.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/292/292.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/293_curve/curve.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/294/294.c", cflags=cflags_dll_noopt_noloopinv, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/294/294.c", cflags=cflags_dll_noopt_noloopinv),
             Object(MatchingFor("GSAE01"), "dlls/objects/295/295.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/296_KT_Torch/KT_Torch.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/297_CampFire/CampFire.c"),

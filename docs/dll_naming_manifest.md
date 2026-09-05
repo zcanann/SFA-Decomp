@@ -963,6 +963,7 @@ more as they are recovered.
 |---|---|---|
 | 0x0C9 | dlls/objects/201_Baddie/Baddie.c | include/dlls/objects/201_Baddie.h |
 | 0x0E2 | dlls/objects/226/226.c | include/dlls/objects/226.h |
+| 0x126 | dlls/objects/294/294.c | include/dlls/objects/294.h |
 | 0x17B | dlls/objects/379_DFSH_LaserB/DFSH_LaserB.c | include/dlls/objects/379_DFSH_LaserB.h |
 | 0x18C | dlls/objects/396_MMSH_Shrine/MMSH_Shrine.c | include/dlls/objects/396_MMSH_Shrine.h |
 | 0x198 | dlls/objects/408_NWSH_levcon/NWSH_levcon.c | include/dlls/objects/408_NWSH_levcon.h |
