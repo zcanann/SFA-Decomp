@@ -301,6 +301,7 @@
 #include "dlls/objects/521_WM_LevelCon.h"
 #include "dlls/objects/522_WM_GeneralS.h"
 #include "dlls/objects/525_WM_seqpoint.h"
+#include "dlls/objects/529.h"
 #include "dlls/objects/544.h"
 #include "dlls/objects/599_DR_EarthWar.h"
 #include "dlls/objects/609_DR_LaserCan.h"
@@ -585,7 +586,7 @@ extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor
 extern ResourceDescriptor gWCLevelContObjDescriptor,
     gWCPushBlockObjDescriptor,
     gWCTileObjDescriptor;
-extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_WallCrawlerObjDescriptor, gWM_newcrystalObjDescriptor;
+extern ResourceDescriptor gWM_SpiritSetObjDescriptor, gWM_newcrystalObjDescriptor;
 extern ResourceDescriptor gWM_spiritplaceObjDescriptor, gWM_sunObjDescriptor, gWaterFlowWeObjDescriptor;
 extern ResourceDescriptor ObjSeq_funcs;
 extern ResourceDescriptor sky_funcs, sky2_funcs, newclouds_funcs, Dummy08_funcs, cloudaction_funcs, waterfx_funcs,
@@ -1735,7 +1736,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gWM_sunObjDescriptor,
     &gWM_SpiritSetObjDescriptor,
     (ResourceDescriptor*)&gWM_PlanetsObjDescriptor,
-    &gWM_WallCrawlerObjDescriptor,
+    (ResourceDescriptor*)&gWM_WallCrawlerObjDescriptor,
     &gDll212NullResourceDescriptor,
     &gWM_VConsoleNullResourceDescriptor,
     &gWM_TransTopNullResourceDescriptor,

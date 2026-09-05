@@ -15,7 +15,7 @@
 #include "dlls/objects/504_WM_Galleon.h"
 
 #include "game/objects/object.h"
-#include "main/dll/WM/dll_0211_wmwallcrawler.h"
+#include "dlls/objects/529.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
@@ -39,14 +39,6 @@ typedef struct WMRockSpawnSetup {
 STATIC_ASSERT(offsetof(WMRockSpawnSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMRockSpawnSetup, unknown1E) == 0x1E);
 STATIC_ASSERT(sizeof(WMRockSpawnSetup) == 0x24);
-
-typedef struct WMWallCrawlerSpawnSetup {
-    WmwallcrawlerMapData base;
-    u8 unknown20[4];
-} WMWallCrawlerSpawnSetup;
-
-STATIC_ASSERT(offsetof(WMWallCrawlerSpawnSetup, base) == 0x00);
-STATIC_ASSERT(sizeof(WMWallCrawlerSpawnSetup) == 0x24);
 
 typedef struct HoodedZyckSpawnSetup {
     ObjPlacement base;

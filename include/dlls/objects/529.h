@@ -1,6 +1,7 @@
-#ifndef MAIN_DLL_WM_DLL_0211_WMWALLCRAWLER_H_
-#define MAIN_DLL_WM_DLL_0211_WMWALLCRAWLER_H_
+#ifndef DLLS_OBJECTS_529_H_
+#define DLLS_OBJECTS_529_H_
 
+#include "dlls/object_descriptor.h"
 #include "game/objects/object.h"
 #include "main/dll/curves_collision_state.h"
 #include "main/track_dolphin_api.h"
@@ -65,6 +66,15 @@ STATIC_ASSERT(offsetof(WmwallcrawlerMapData, heightOffset) == 0x1C);
 STATIC_ASSERT(offsetof(WmwallcrawlerMapData, counterGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmwallcrawlerMapData) == 0x20);
 
+/* WM_ObjCreat allocates this complete 0x24-byte spawn record. */
+typedef struct WMWallCrawlerSpawnSetup {
+    WmwallcrawlerMapData base;
+    u8 unknown20[4];
+} WMWallCrawlerSpawnSetup;
+
+STATIC_ASSERT(offsetof(WMWallCrawlerSpawnSetup, base) == 0x00);
+STATIC_ASSERT(sizeof(WMWallCrawlerSpawnSetup) == 0x24);
+
 int wmwallcrawler_animEventCallback(GameObject* obj);
 void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit);
 int wmwallcrawler_getExtraSize(void);
@@ -77,4 +87,11 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData);
 void wmwallcrawler_release(void);
 void wmwallcrawler_initialise(void);
 
-#endif
+extern f32 gWallCrawlerSpeedCap;
+extern u8 sWallCrawlerCollisionBone[3];
+extern u8 gWallCrawlerHitCount;
+extern u16 gWallCrawlerVariantFlags[8];
+extern f32 gWallCrawlerPointCollision[3];
+extern ObjectDescriptor10WithPadding gWM_WallCrawlerObjDescriptor;
+
+#endif /* DLLS_OBJECTS_529_H_ */

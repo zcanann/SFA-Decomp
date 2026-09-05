@@ -1702,7 +1702,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/526_WM_sun/WM_sun.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/527_WM_SpiritSe/WM_SpiritSe.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/528_WM_Planets/WM_Planets.c"),
-            Object(MatchingFor("GSAE01"), "dlls/objects/529/529.c", cflags=cflags_dll_noopt_nodead_noloopinv_noautoinline, mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/529/529.c", cflags=cflags_dll_noopt_nodead_noloopinv_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/530/530.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/531_WM_VConsole/WM_VConsole.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/532_WM_TransTop/WM_TransTop.c"),

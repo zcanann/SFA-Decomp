@@ -1068,6 +1068,7 @@ more as they are recovered.
 | 0x209 | dlls/objects/521_WM_LevelCon/WM_LevelCon.c | include/dlls/objects/521_WM_LevelCon.h |
 | 0x20A | dlls/objects/522_WM_GeneralS/WM_GeneralS.c | include/dlls/objects/522_WM_GeneralS.h |
 | 0x20D | dlls/objects/525_WM_seqpoint/WM_seqpoint.c | include/dlls/objects/525_WM_seqpoint.h |
+| 0x211 | dlls/objects/529/529.c | include/dlls/objects/529.h |
 | 0x220 | dlls/objects/544/544.c | include/dlls/objects/544.h |
 | 0x223 | dlls/objects/547_VFP_corepla/VFP_corepla.c | include/dlls/objects/547_VFP_corepla.h |
 | 0x22D | dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c | include/dlls/objects/557_DFP_seqpoin.h |
