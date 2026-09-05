@@ -2,6 +2,8 @@
 
 Measured against staging commit `ec46541f3cf42c3702ca99542cec55c581263e17` on 2026-09-05, EN v1.0 (`GSAE01`). This is a compiler-only migration-cost measurement for the current reconstructed source, not evidence of Rare's historical compiler.
 
+Later source cleanup and whole-TU migrations are tracked in [compiler_gc13_cleanup.md](compiler_gc13_cleanup.md). The measurements below retain their original source/config baseline.
+
 ## Scope and method
 
 - Recompiled 787 MWCC game units twice, using the configured compiler and then `GC/1.3`. The compiler changes in 777 units; 10 already use 1.3 and serve as controls.
