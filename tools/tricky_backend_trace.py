@@ -26,7 +26,9 @@ import tempfile
 import flag_probe
 import strucdiff
 from compiler_command import split_command_line
-from tricky_backend_ir import COMPILER_SHA256, describe, instruction_history, validate_alignment, validate_snapshot
+from tricky_backend_ir import (
+    COMPILER_SHA256, describe, immediate_commoning, instruction_history, validate_alignment, validate_snapshot,
+)
 from tricky_object_compare import read_object
 from tricky_source_order_probe import compile_command
 
@@ -138,8 +140,15 @@ def main():
             print(f"Instruction {index}, block {final['block_id']} (address lineage is provisional):")
             stages = [s for s in document["snapshots"] if s["name"] == name]
             previous = None
+            colored = False
             for row in instruction_history(stages, final):
+                colored |= row["stage"] == "AFTER REGISTER COLORING"
                 description = describe(row["record"])
+                bounds = stages[row["stage_index"]].get("immediate_commoning")
+                eligible = immediate_commoning(row["record"], bounds) if bounds and not colored else None
+                if eligible is not None:
+                    description += (f"; late-VN range [{bounds['first_register']}, {bounds['last_register']}] "
+                                    + ("includes" if eligible else "excludes") + " destination")
                 if description != previous:
                     print(f"  [{row['stage_index']}] {row['stage']}: {description}")
                 previous = description

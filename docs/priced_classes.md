@@ -4756,6 +4756,24 @@ Windows debugger handle/exit-continuation regressions. Live timeout and stopped
 child decode-failure checks leave no compiler process behind. The diagnostic
 link still differs by 41 text bytes only; all allocated non-text data is exact.
 
+The tunnel zero-copy discrepancy now has a compiler-side eligibility explanation.
+GC/1.3's test at compiler VA `0x5082E0` allows `li`/`lis` commoning only in its
+nonzero mode and for destination register IDs within an inclusive global range.
+The trace captures these bounds without changing compiler state. Baseline's
+range is `[43, 202]`: its second loop index is GPR 35, so that zero load cannot
+seed the common-expression table, while the generated offset GPR 46 is eligible.
+Reusing the earlier walk-group local gives range `[42, 202]` and index GPR 42;
+the subsequent offset initializer can then become a copy. Splitting the later
+player-group query into a separate local, including block scope, leaves all nine
+register differences in that candidate. None of these source changes is retained.
+Compiler operand register IDs are also corrected to signed 16-bit fields, as
+read by the actual value-numbering implementation, with the remaining bytes
+kept opaque. The range is an eligibility condition, not proof that any particular
+value will be commoned; it is not applied to physical registers after coloring.
+Both build gates and 104 tooling tests pass. Standard `register` storage hints
+on movement's result, object walk group, or both leave its 34 operand differences
+unchanged; those diagnostic variants are also not retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

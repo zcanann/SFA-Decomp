@@ -42,7 +42,7 @@ def operand(words):
     result = {"kind": raw[0], "raw": raw.hex()}
     if raw[0] == 0:
         result.update(register_class=raw[1], flags=int.from_bytes(raw[2:4], "little"),
-                      number=int.from_bytes(raw[4:8], "little"))
+                      number=int.from_bytes(raw[4:6], "little", signed=True))
     elif raw[0] == 2:
         result["value"] = int.from_bytes(raw[2:6], "little", signed=True)
     elif raw[0] == 4:
@@ -269,3 +269,22 @@ def describe(instruction):
         else:
             items.append(item["raw"])
     return f"op={instruction['opcode']:#x} line={instruction['line']} " + ", ".join(items)
+
+
+def immediate_commoning(instruction, bounds):
+    """Observed eligibility gate, not a promise that equivalent values are found.
+
+    GC/1.3 VA 0x5082E0 rejects li/lis in mode zero; in nonzero mode its
+    destination register must lie in this inclusive range. Bounds captured
+    outside the pass describe its globals, not whether that pass is running.
+    Only use this on virtual-register records before register coloring.
+    """
+    if instruction is None or instruction["opcode"] not in (0x89, 0x8A):
+        return None
+    args = instruction["operands"]
+    if not args or args[0]["kind"] != 0 or args[0]["register_class"] != 4:
+        raise ValueError("unrecognized immediate destination")
+    low, high = bounds["first_register"], bounds["last_register"]
+    if low > high:
+        raise ValueError("inverted immediate-commoning bounds")
+    return low <= args[0]["number"] <= high

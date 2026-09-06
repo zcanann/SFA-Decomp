@@ -3,7 +3,7 @@ import struct
 import unittest
 
 from tricky_backend_ir import (
-    capture_snapshot, decode, describe, emitted_instructions, instruction_history,
+    capture_snapshot, decode, describe, emitted_instructions, immediate_commoning, instruction_history,
     operand, validate_alignment, validate_snapshot,
 )
 
@@ -44,6 +44,31 @@ class BackendIRTests(unittest.TestCase):
     def test_register_flags_and_class(self):
         value = operand(struct.unpack("<3I", reg(74, 5, 3)))
         self.assertEqual((value["number"], value["flags"], value["register_class"]), (74, 5, 3))
+
+    def test_register_number_is_a_signed_short(self):
+        words = list(struct.unpack("<3I", reg(74)))
+        words[1] |= 0xABCD0000
+        self.assertEqual(operand(words)["number"], 74)
+        words[1] = 0xABCDFFFF
+        self.assertEqual(operand(words)["number"], -1)
+
+    def test_immediate_commoning_range_is_inclusive(self):
+        instruction = decode(fixture()["blocks"][0]["instructions"][0])
+        for number, eligible in [(42, False), (43, True), (202, True), (203, False)]:
+            instruction["operands"][0]["number"] = number
+            with self.subTest(number=number):
+                self.assertEqual(immediate_commoning(instruction, {"first_register": 43, "last_register": 202}), eligible)
+        self.assertIsNone(immediate_commoning(None, {}))
+        with self.assertRaisesRegex(ValueError, "inverted"):
+            immediate_commoning(instruction, {"first_register": 44, "last_register": 43})
+
+    def test_shifted_immediate_gate_and_invalid_destination(self):
+        instruction = decode(fixture()["blocks"][0]["instructions"][0])
+        instruction["opcode"] = 0x8A
+        self.assertTrue(immediate_commoning(instruction, {"first_register": 7, "last_register": 9}))
+        instruction["operands"][0]["register_class"] = 3
+        with self.assertRaisesRegex(ValueError, "unrecognized immediate destination"):
+            immediate_commoning(instruction, {"first_register": 7, "last_register": 9})
 
     def test_unknown_operand_remains_opaque(self):
         self.assertEqual(operand([3, 123, 0]), {"kind": 3, "raw": struct.pack("<3I", 3, 123, 0).hex()})

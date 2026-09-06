@@ -193,7 +193,14 @@ def capture(command, cwd, wanted, timeout=60):
                         stage = string(word(context.esp + 8))
                         names.add(name)
                         if name in wanted:
-                            snapshots.append(capture_snapshot(memory, name, stage, word(base + 0x1E67B0)))
+                            snapshot = capture_snapshot(memory, name, stage, word(base + 0x1E67B0))
+                            # The li/lis eligibility test at VA 0x5082E0 reads a
+                            # signed short lower bound and signed int upper bound.
+                            snapshot["immediate_commoning"] = {
+                                "first_register": int.from_bytes(memory(base + 0x1E7260, 2), "little", signed=True),
+                                "last_register": int.from_bytes(memory(base + 0x1E66B8, 4), "little", signed=True),
+                            }
+                            snapshots.append(snapshot)
                         # Emulate only the disabled dump hook's verified one-byte RET.
                         context.eip = word(context.esp)
                         context.esp += 4
