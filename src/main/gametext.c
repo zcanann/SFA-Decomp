@@ -780,15 +780,13 @@ void gameTextTickReveal(int textId, TextDisplayState* state) {
     s32 charCount;
     char* lineStr;
     int special;
-    u8* defAddress;
 
     if (gameTextFonts->status == 1) {
         return;
     }
     def = gameTextGet(textId);
-    defAddress = (u8*)def;
     special = 0;
-    if (defAddress >= sGameTextFallbackDefs && defAddress < sGameTextFallbackDefs + 0x60) {
+    if (def >= sGameTextFallbackDefs && def < sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT) {
         special = 1;
     }
     if (special) {
@@ -1113,7 +1111,6 @@ int gGameTextBoxColorB = 0xFF;
 int gGameTextBoxColorA = 0xFF;
 char lbl_803DB404[4] = {0};
 
-extern u32 sSubtitleCtrlCmdScratch[];
 
 static void translateToDinoLanguage(u8* str);
 
@@ -1941,6 +1938,7 @@ SubtitleCmd* subtitleParseControlCmds(char* str, int* count) {
 
     off = 0;
     n = 0;
+    /* Retail repeatedly overwrites the first record; the cursor never advances. */
     tbl = (u8*)sSubtitleCtrlCmdScratch;
     if ((u8*)str == NULL) {
         return NULL;
@@ -1953,7 +1951,7 @@ SubtitleCmd* subtitleParseControlCmds(char* str, int* count) {
             u16* q;
 
             n++;
-            if (n > 0x10) {
+            if (n > SUBTITLE_CONTROL_COMMAND_COUNT) {
                 break;
             }
             *(u32*)tbl = ch;
@@ -1973,9 +1971,10 @@ SubtitleCmd* subtitleParseControlCmds(char* str, int* count) {
         return NULL;
     }
     {
-        int size = n * 0xc;
+        int size = n * sizeof(SubtitleCmd);
         u8* buf = mmAlloc(size, 0x1a, 0);
-        memcpy(buf, sSubtitleCtrlCmdScratch, size);
+        /* The seventeenth command overreads 12 path-buffer bytes beyond scratch. */
+        memcpy(buf, (u8*)sSubtitleCtrlCmdScratch, size);
         *count = n;
         return (SubtitleCmd*)buf;
     }
@@ -2022,20 +2021,24 @@ int getControlCharLen(u32 c) {
     return 0;
 }
 
+static inline void gameTextSelectFallbackBuffer(void) {
+    gGameTextBufferIndex++;
+    if (gGameTextBufferIndex >= GAMETEXT_FALLBACK_COUNT) {
+        gGameTextBufferIndex = 0;
+    }
+    gGameTextLastEntry = &sGameTextFallbackDefs[gGameTextBufferIndex];
+    gCurTextBuffer = *gGameTextLastEntry->strings;
+    gGameTextLastEntry->identifier = 0xffff;
+    gGameTextFallbackRequestDelta = &sGameTextFallbackRequestDelta[gGameTextBufferIndex];
+}
+
 void* gameTextGetPhrase(int textId, int phraseIndex) {
     struct GameTextParserMessages* messages;
     GameTextDef* entry;
 
     messages = &sGameTextParserMessages;
     if (gameTextFonts->status != 2) {
-        gGameTextBufferIndex += 1;
-        if (gGameTextBufferIndex >= 8) {
-            gGameTextBufferIndex = 0;
-        }
-        gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
-        gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
-        *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gameTextSelectFallbackBuffer();
         switch (gameTextFonts->status) {
         case 0:
             sprintf(gCurTextBuffer, messages->uninitialised);
@@ -2055,27 +2058,13 @@ void* gameTextGetPhrase(int textId, int phraseIndex) {
 
     entry = gameTextGet(textId);
     if (entry->identifier == 0xffff) {
-        gGameTextBufferIndex += 1;
-        if (gGameTextBufferIndex >= 8) {
-            gGameTextBufferIndex = 0;
-        }
-        gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
-        gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
-        *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gameTextSelectFallbackBuffer();
         sprintf(gCurTextBuffer, messages->notInFile, textId, sMapDirectoryNameTable[curGameTextDir]);
         return gGameTextLastEntry;
     }
 
     if (phraseIndex >= entry->count) {
-        gGameTextBufferIndex += 1;
-        if (gGameTextBufferIndex >= 8) {
-            gGameTextBufferIndex = 0;
-        }
-        gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
-        gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
-        *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gameTextSelectFallbackBuffer();
         sprintf(gCurTextBuffer, messages->noPhrase, textId, phraseIndex);
         return gGameTextLastEntry;
     }
@@ -2089,14 +2078,7 @@ void* gameTextGetStr(int textId) {
 
     messages = &sGameTextParserMessages;
     if (gameTextFonts->status != 2) {
-        gGameTextBufferIndex += 1;
-        if (gGameTextBufferIndex >= 8) {
-            gGameTextBufferIndex = 0;
-        }
-        gGameTextLastEntry = sGameTextFallbackDefs + gGameTextBufferIndex * 0xc;
-        gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
-        *(u16*)gGameTextLastEntry = 0xffff;
-        gGameTextFallbackBuf = (f32*)(sGameTextFallbackBufSlots + gGameTextBufferIndex * 4);
+        gameTextSelectFallbackBuffer();
         switch (gameTextFonts->status) {
         case 0:
             sprintf(gCurTextBuffer, messages->uninitialised);
@@ -2119,31 +2101,19 @@ void* gameTextGetStr(int textId) {
 
 void* gameTextGet(int textId) {
     struct GameTextParserMessages* messages;
-    u8* gameTextBase;
     TextFont* fonts;
     GameTextDef* entry;
     int count;
     int slotIndex;
     GameTextDef* cachedEntry;
     f32 zero;
-    f32* cachedAlpha;
-    u8* p;
+    f32* cachedRequestDelta;
 
-    gameTextBase = gGameTextBase;
     messages = &sGameTextParserMessages;
     fonts = gameTextFonts;
 
     if (fonts->status != 2) {
-        gGameTextBufferIndex++;
-        if (gGameTextBufferIndex >= 8) {
-            gGameTextBufferIndex = 0;
-        }
-        p = gameTextBase + gGameTextBufferIndex * 0xc;
-        gGameTextLastEntry = p + 0x40;
-        gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
-        *(u16*)gGameTextLastEntry = 0xffff;
-        p = gameTextBase + gGameTextBufferIndex * 4;
-        gGameTextFallbackBuf = (f32*)(p + 0x20);
+        gameTextSelectFallbackBuffer();
 
         switch (gameTextFonts->status) {
         case 0:
@@ -2172,18 +2142,18 @@ void* gameTextGet(int textId) {
         count--;
     }
 
-    slotIndex = 8;
-    cachedEntry = (GameTextDef*)(gameTextBase + 0xa0);
+    slotIndex = GAMETEXT_FALLBACK_COUNT;
+    cachedEntry = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
     while (cachedEntry--, slotIndex-- != 0) {
         if (cachedEntry->identifier == textId) {
             zero = 0.0f;
-            *(f32*)(gameTextBase + slotIndex * 4) = zero;
-            cachedAlpha = (f32*)(gameTextBase + 0x20 + slotIndex * 4);
+            sGameTextFallbackElapsedFrames[slotIndex] = zero;
+            cachedRequestDelta = &sGameTextFallbackRequestDelta[slotIndex];
             if (zero < 120.0f) {
-                f32 av = zero + timeDelta;
-                *cachedAlpha = av;
-                if (av >= 120.0f) {
-                    sprintf((char*)*(int*)cachedEntry->strings, messages->notInFile, textId,
+                f32 requestDelta = zero + timeDelta;
+                *cachedRequestDelta = requestDelta;
+                if (requestDelta >= 120.0f) {
+                    sprintf(*cachedEntry->strings, messages->notInFile, textId,
                             sMapDirectoryNameTable[curGameTextDir]);
                 }
             }
@@ -2191,19 +2161,10 @@ void* gameTextGet(int textId) {
         }
     }
 
-    gGameTextBufferIndex++;
-    if (gGameTextBufferIndex >= 8) {
-        gGameTextBufferIndex = 0;
-    }
-    p = gameTextBase + gGameTextBufferIndex * 0xc;
-    gGameTextLastEntry = p + 0x40;
-    gCurTextBuffer = (char*)*(int*)*(int**)(gGameTextLastEntry + 8);
-    *(u16*)gGameTextLastEntry = 0xffff;
-    p = gameTextBase + gGameTextBufferIndex * 4;
-    gGameTextFallbackBuf = (f32*)(p + 0x20);
+    gameTextSelectFallbackBuffer();
     sprintf(gCurTextBuffer, sGameTextBlankFormat, textId, sMapDirectoryNameTable[curGameTextDir]);
-    *(u16*)gGameTextLastEntry = textId;
-    *gGameTextFallbackBuf = 0.0f;
+    gGameTextLastEntry->identifier = textId;
+    *gGameTextFallbackRequestDelta = 0.0f;
     return gGameTextLastEntry;
 }
 
@@ -2305,8 +2266,8 @@ int gGameTextShadowEnabled;
 u8 lbl_803DC980;
 int gGameTextBufferIndex;
 char* gCurTextBuffer;
-u8* gGameTextLastEntry;
-f32* gGameTextFallbackBuf;
+GameTextDef* gGameTextLastEntry;
+f32* gGameTextFallbackRequestDelta;
 GameTextDrawFunc gameTextDrawFunc;
 u8 gGameTextFontIsSjis;
 
@@ -2437,7 +2398,6 @@ int gameTextGetState(int i) {
 char sGameTextMapPathFormat[] = "gametext/%s/%s.bin";
 
 void gameTextRun(void) {
-    GameTextRuntime* runtime;
     GameTextLoadSlot* loadSlot;
     TextFont* pending;
     int sourceId;
@@ -2451,10 +2411,9 @@ void gameTextRun(void) {
     f32 fadeLimit;
     f32 zero;
 
-    runtime = (GameTextRuntime*)gGameTextBase;
-    cmd = runtime->commands;
+    cmd = gGameTextCommandSlots;
 
-    loadSlot = runtime->loadSlots;
+    loadSlot = curGameTexts;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if (loadSlot->state == 2) {
@@ -2464,10 +2423,10 @@ void gameTextRun(void) {
     } while (i-- != 0);
 
     sourceId = 0;
-    pending = runtime->fonts;
+    pending = gGameTextCharsets;
     do {
         if (pending->dirId != GAMETEXT_INVALID_DIR) {
-            loadSlot = runtime->loadSlots;
+            loadSlot = curGameTexts;
             dirId = pending->dirId;
             do {
                 if (loadSlot->active == 0) {
@@ -2520,11 +2479,11 @@ void gameTextRun(void) {
                 freeSlot->languageId = languageId;
                 freeSlot->active = 1;
                 freeSlot->sourceId = sourceId;
-                sprintf(runtime->path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
+                sprintf(sGameTextPath, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
                         sLanguageNameTable[languageId].name);
                 setFileInfo(&freeSlot->fileInfo);
                 freeSlot->loadHandle =
-                    loadFileByPathAsync(runtime->path, &freeSlot->loadedSize, 1, gameTextLoadCompleteCallback);
+                    loadFileByPathAsync(sGameTextPath, &freeSlot->loadedSize, 1, gameTextLoadCompleteCallback);
                 setFileInfo(NULL);
                 pending->dirId = GAMETEXT_INVALID_DIR;
                 pending->languageId = GAMETEXT_INVALID_LANGUAGE;
@@ -2534,7 +2493,7 @@ void gameTextRun(void) {
         sourceId++;
     } while (sourceId < GAMETEXT_PENDING_SOURCE_COUNT);
 
-    loadSlot = runtime->loadSlots;
+    loadSlot = curGameTexts;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if ((loadSlot->state == 5 || loadSlot->state == 6) && loadSlot->loadHandle != NULL) {
@@ -2546,22 +2505,22 @@ void gameTextRun(void) {
         loadSlot++;
     } while (i-- != 0);
 
-    i = GAMETEXT_LOAD_SLOT_COUNT;
+    i = GAMETEXT_FALLBACK_COUNT;
     {
-        f32* alpha;
+        f32* elapsed;
         GameTextDef* entry;
-        f32* timer;
-        timer = runtime->fadeTimers + 8;
-        alpha = runtime->fadeElapsed + 8;
-        entry = runtime->fallbackDefs + 8;
+        f32* requestDelta;
+        requestDelta = sGameTextFallbackRequestDelta + GAMETEXT_FALLBACK_COUNT;
+        elapsed = sGameTextFallbackElapsedFrames + GAMETEXT_FALLBACK_COUNT;
+        entry = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
         zero = 0.0f;
         fadeLimit = 120.0f;
-        while (timer--, alpha--, entry--, i-- != 0) {
-            if (*timer > zero) {
-                *alpha += timeDelta;
-                if (*alpha > fadeLimit) {
-                    *timer = zero;
-                    *alpha = zero;
+        while (requestDelta--, elapsed--, entry--, i-- != 0) {
+            if (*requestDelta > zero) {
+                *elapsed += timeDelta;
+                if (*elapsed > fadeLimit) {
+                    *requestDelta = zero;
+                    *elapsed = zero;
                     sprintf(*entry->strings, sGameTextBlankFormat);
                 }
             }
@@ -2669,8 +2628,7 @@ void gameTextRun(void) {
             break;
         }
         case GAMETEXT_COMMAND_SET_CHARSET:
-            gameTextFonts =
-                (TextFont*)((cmd->arg0 * sizeof(TextFont) + offsetof(GameTextRuntime, fonts)) + (int)runtime);
+            gameTextFonts = &gGameTextCharsets[cmd->arg0];
             gameTextCharset = cmd->arg0;
             if (cmd->arg0 == 2) {
                 color = gGameTextClearColor;
@@ -2686,7 +2644,7 @@ void gameTextRun(void) {
         Sfx_StopFromObject(0, SFXTRIG_clock_loop);
     }
     gGameTextCommandCount = 0;
-    gGameTextCommandStringCursor = runtime->commandStringBuffer;
+    gGameTextCommandStringCursor = sGameTextCommandStringBuffer;
 
     i = GAMETEXT_BOX_COUNT;
     textBox = &gTextBoxes[GAMETEXT_BOX_COUNT];
@@ -2718,50 +2676,48 @@ void gameTextInit(void) {
 }
 
 void gameTextInitRendererState(void) {
-    u8* clearPtr;
-    u8* glyphPage;
-    u8** glyphPagePtr;
+    Texture** texture;
+    char (*fallbackBuffer)[GAMETEXT_FALLBACK_BUFFER_SIZE];
+    char** fallbackString;
     GameTextDef* fallbackDef;
-    u8* textWindow;
-    u8* gameTextBase;
-    int glyphPageCount;
+    GameTextBox* textWindow;
+    int fallbackCount;
     TextFont* font;
     GameTextBox* p;
     f32 zero;
     int i;
     int j;
 
-    gameTextBase = gGameTextBase;
 
     i = GAMETEXT_BOX_COUNT;
-    p = (GameTextBox*)(textWindow = (u8*)&gTextBoxes[GAMETEXT_BOX_COUNT]);
+    p = textWindow = &gTextBoxes[GAMETEXT_BOX_COUNT];
     while (p--, i-- != 0) {
         p->width = p->maxWidth;
         p->height = p->maxHeight;
     }
 
-    glyphPageCount = GAMETEXT_LOAD_SLOT_COUNT;
-    glyphPage = gameTextBase + 0x2c0;
-    glyphPagePtr = (u8**)(gameTextBase + 0xc0);
-    fallbackDef = (GameTextDef*)(gameTextBase + 0xa0);
-    while (glyphPage -= 0x40, glyphPagePtr--, fallbackDef--, glyphPageCount-- != 0) {
-        *glyphPagePtr = glyphPage;
+    fallbackCount = GAMETEXT_FALLBACK_COUNT;
+    fallbackBuffer = sGameTextFallbackBuffers + GAMETEXT_FALLBACK_COUNT;
+    fallbackString = sGameTextFallbackStrings + GAMETEXT_FALLBACK_COUNT;
+    fallbackDef = sGameTextFallbackDefs + GAMETEXT_FALLBACK_COUNT;
+    while (fallbackBuffer--, fallbackString--, fallbackDef--, fallbackCount-- != 0) {
+        *fallbackString = *fallbackBuffer;
         fallbackDef->identifier = 0xffff;
         fallbackDef->count = 1;
         fallbackDef->boxId = 0xff;
         fallbackDef->alignH = 0;
         fallbackDef->alignV = 0;
         fallbackDef->language = 0;
-        fallbackDef->strings = (char**)glyphPagePtr;
+        fallbackDef->strings = fallbackString;
     }
 
     i = GAMETEXT_BOX_COUNT;
-    while (textWindow -= 0x20, i-- != 0) {
-        ((GameTextBox*)textWindow)->alpha = 0xff;
+    while (textWindow--, i-- != 0) {
+        textWindow->alpha = 0xff;
     }
 
-    j = 4;
-    font = (TextFont*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    j = GAMETEXT_PENDING_SOURCE_COUNT;
+    font = gGameTextCharsets + GAMETEXT_PENDING_SOURCE_COUNT;
     zero = 0.0f;
     while (font--, j-- != 0) {
         font->glyphCount = 0;
@@ -2773,14 +2729,14 @@ void gameTextInitRendererState(void) {
         font->dirId = GAMETEXT_INVALID_DIR;
         font->languageId = GAMETEXT_INVALID_LANGUAGE;
 
-        i = 3;
-        clearPtr = (u8*)font + 0xc;
-        while (clearPtr -= 4, i-- != 0) {
-            *(int*)(clearPtr + 0x10) = 0;
+        i = ARRAY_COUNT(font->textures);
+        texture = font->textures + ARRAY_COUNT(font->textures);
+        while (texture--, i-- != 0) {
+            *texture = NULL;
         }
     }
 
-    gameTextFonts = (TextFont*)(gameTextBase + GAMETEXT_FONT_SLOT_OFFSET);
+    gameTextFonts = &gGameTextCharsets[GAMETEXT_SLOT_ERROR];
     gameTextCharset = 2;
     curLanguage = -1;
     curGameTextDir = -1;
@@ -2793,11 +2749,11 @@ void gameTextInitRendererState(void) {
     gGameTextColorB = 0xff;
     gGameTextColorA = 0xff;
     gGameTextCommandCount = 0;
-    gGameTextCommandStringCursor = (char*)(gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET);
+    gGameTextCommandStringCursor = sGameTextCommandStringBuffer;
     gGameTextBufferIndex = 0;
-    fallbackDef = (GameTextDef*)(gameTextBase + 0x40);
-    gGameTextLastEntry = (u8*)fallbackDef;
-    gCurTextBuffer = (char*)*(int*)fallbackDef->strings;
+    fallbackDef = sGameTextFallbackDefs;
+    gGameTextLastEntry = fallbackDef;
+    gCurTextBuffer = *fallbackDef->strings;
     gGameTextShadowColorR = 0;
     gGameTextShadowColorG = 0;
     gGameTextShadowColorB = 0;
@@ -2813,12 +2769,10 @@ void gameTextInitRendererState(void) {
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     GameTextLoadSlot* slot;
     int oldHeap;
-    GameTextRuntime* gameTextBase;
     int languageTableOffset;
     u8* languageTable;
     int i;
 
-    gameTextBase = (GameTextRuntime*)gGameTextBase;
     languageTableOffset = curLanguage << 3;
     languageTable = (u8*)sLanguageNameTable;
     oldHeap = mmSetForceHeap3Only(0);
@@ -2833,7 +2787,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
         return;
     }
 
-    slot = gameTextBase->loadSlots;
+    slot = curGameTexts;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if (slot->sourceId == GAMETEXT_SEQUENCE_SOURCE_ID) {
@@ -2853,8 +2807,8 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
         slot++;
     } while (i-- != 0);
 
-    gameTextBase->fonts[GAMETEXT_SLOT_CUTSCENE].status = 1;
-    slot = gameTextBase->loadSlots;
+    gGameTextCharsets[GAMETEXT_SLOT_CUTSCENE].status = 1;
+    slot = curGameTexts;
     slot = (slot->active == 0)       ? slot
            : ((++slot)->active == 0) ? slot
            : ((++slot)->active == 0) ? slot
@@ -2870,10 +2824,10 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     slot->languageId = curLanguage;
     slot->active = 1;
     slot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
-    sprintf(gameTextBase->path, sGameTextSequencePathFormat, sequenceId,
+    sprintf(sGameTextPath, sGameTextSequencePathFormat, sequenceId,
             ((LanguageName*)(languageTable + languageTableOffset))->name);
     setFileInfo(&slot->fileInfo);
-    slot->loadHandle = loadFileByPathAsync(gameTextBase->path, &slot->loadedSize, 1, gameTextLoadCompleteCallback);
+    slot->loadHandle = loadFileByPathAsync(sGameTextPath, &slot->loadedSize, 1, gameTextLoadCompleteCallback);
     setFileInfo(NULL);
     mmSetForceHeap3Only(oldHeap);
 }
@@ -2886,12 +2840,8 @@ void gameTextLoadForCurMap(int sourceId) {
     int languageId;
     GameTextLoadSlot* slot;
     GameTextLoadSlot* freeSlot;
-    u8* gameTextBase;
-    GameTextRuntime* runtime;
     int i;
 
-    gameTextBase = gGameTextBase;
-    runtime = (GameTextRuntime*)gameTextBase;
     oldHeap = mmSetForceHeap3Only(0);
     if (getGameState() != 0 && getGameState() != 1) {
         mmSetForceHeap3Only(oldHeap);
@@ -2905,7 +2855,7 @@ void gameTextLoadForCurMap(int sourceId) {
         return;
     }
 
-    slot = runtime->loadSlots;
+    slot = curGameTexts;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if (slot->sourceId == sourceId) {
@@ -2927,11 +2877,11 @@ void gameTextLoadForCurMap(int sourceId) {
         slot++;
     } while (i-- != 0);
 
-    runtime->fonts[sourceId].status = 1;
-    *(dirPtr = &runtime->fonts[sourceId].dirId) = (u8)curGameTextDir;
-    *(langPtr = &runtime->fonts[sourceId].languageId) = curLanguage;
+    gGameTextCharsets[sourceId].status = 1;
+    *(dirPtr = &gGameTextCharsets[sourceId].dirId) = (u8)curGameTextDir;
+    *(langPtr = &gGameTextCharsets[sourceId].languageId) = curLanguage;
 
-    slot = runtime->loadSlots;
+    slot = curGameTexts;
     freeSlot = (slot->active == 0)       ? slot
                : ((++slot)->active == 0) ? slot
                : ((++slot)->active == 0) ? slot
@@ -2950,11 +2900,11 @@ void gameTextLoadForCurMap(int sourceId) {
         freeSlot->languageId = slotLang;
         freeSlot->active = 1;
         freeSlot->sourceId = sourceId;
-        sprintf(runtime->path, sGameTextMapPathFormat, sMapDirectoryNameTable[slotDir],
+        sprintf(sGameTextPath, sGameTextMapPathFormat, sMapDirectoryNameTable[slotDir],
                 sLanguageNameTable[slotLang].name);
         setFileInfo(&freeSlot->fileInfo);
         freeSlot->loadHandle =
-            loadFileByPathAsync(runtime->path, &freeSlot->loadedSize, 1, gameTextLoadCompleteCallback);
+            loadFileByPathAsync(sGameTextPath, &freeSlot->loadedSize, 1, gameTextLoadCompleteCallback);
         setFileInfo(NULL);
         *dirPtr = GAMETEXT_INVALID_DIR;
         *langPtr = GAMETEXT_INVALID_LANGUAGE;
@@ -3312,9 +3262,13 @@ int gameTextSaveDir(int x) {
     return 0;
 }
 GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
-TextFont gGameTextCharsets[0xA0 / sizeof(TextFont)];
+TextFont gGameTextCharsets[GAMETEXT_PENDING_SOURCE_COUNT];
 GameTextSlot gGameTextCommandSlots[0xA00 / sizeof(GameTextSlot)];
-u32 sSubtitleCtrlCmdScratch[0x240];
-u8 sGameTextFallbackDefs[0x280];
-u8 sGameTextFallbackBufSlots[0x20];
-u8 gGameTextBase[0x20];
+char sGameTextCommandStringBuffer[0x800];
+char sGameTextPath[0x40];
+SubtitleCmd sSubtitleCtrlCmdScratch[SUBTITLE_CONTROL_COMMAND_COUNT];
+char sGameTextFallbackBuffers[GAMETEXT_FALLBACK_COUNT][GAMETEXT_FALLBACK_BUFFER_SIZE];
+char* sGameTextFallbackStrings[GAMETEXT_FALLBACK_COUNT];
+GameTextDef sGameTextFallbackDefs[GAMETEXT_FALLBACK_COUNT];
+f32 sGameTextFallbackRequestDelta[GAMETEXT_FALLBACK_COUNT];
+f32 sGameTextFallbackElapsedFrames[GAMETEXT_FALLBACK_COUNT];

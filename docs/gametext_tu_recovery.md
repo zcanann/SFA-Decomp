@@ -44,7 +44,8 @@ Moving language names beside their table, after the map-directory table, restore
 the physical small-data order. BSS definitions remain in their original relative
 order after all functions. Defining them before their consumers instead changes
 MWCC's allocation to first-reference order. Current named storage addresses all
-agree with retail, including:
+agree with retail. The initial merger retained these coarse symbol extents;
+the native BSS recovery below replaces the oversized fallback/scratch records:
 
 | Object | BSS offset | Bytes |
 | --- | --- | --- |
@@ -170,3 +171,82 @@ successful-path output-pointer combinations, empty tables, unavailable fonts,
 absent IDs, mode transitions, and signed quarter-pixel conversion. The retail
 missing-ID path still requires all four output pointers. A wrong shift count
 fails 24 cases. Gametext now has 42/54 exact functions, with unchanged data credit.
+
+## Native runtime storage
+
+The 32-byte `gGameTextBase` is no longer used as a fictitious 6,336-byte object.
+`GameTextRuntime` and its raw-offset macros are removed. Getters, initialization,
+the command runner, and the two loaders address the actual arrays directly.
+`gGameTextLastEntry` is a `GameTextDef*`; the misleading fallback-buffer pointer
+is now a pointer to the selected request-frame delta. Retail assigns `timeDelta`
+on a cached lookup and uses positivity to enable elapsed accumulation; this is
+not a countdown. A shared inline
+helper selects the next fallback slot in all six former copies of that sequence,
+with identical generated function bytes to the expanded native-array spelling.
+
+The EN initializer at `8001A280..8001A2DC` runs eight iterations with 12-byte
+definition, four-byte pointer, and 64-byte string strides. Its stores establish
+both pointer indirections. The reveal updater independently tests the complete
+96-byte definition range. The resulting BSS partition is:
+
+| EN address | Object | Bytes |
+| --- | --- | --- |
+| `80339980` | `sGameTextFallbackElapsedFrames[8]` | 32 |
+| `803399A0` | `sGameTextFallbackRequestDelta[8]` | 32 |
+| `803399C0` | `sGameTextFallbackDefs[8]` | 96 |
+| `80339A20` | `sGameTextFallbackStrings[8]` | 32 |
+| `80339A40` | `sGameTextFallbackBuffers[8][64]` | 512 |
+| `80339C40` | `sSubtitleCtrlCmdScratch[16]` | 192 |
+| `80339D00` | `sGameTextPath` | 64 |
+| `80339D40` | `sGameTextCommandStringBuffer` | 2048 |
+| `8033A540` | command slots | 2560 |
+| `8033AF40` | `gGameTextCharsets[4]` | 160 |
+| `8033AFE0` | `curGameTexts[8]` | 608 |
+
+The path and command-string starts come from their consumers; their extents
+follow the next independently used buffer, not a recovered bounds check. Both
+remain unbounded as in retail. Standalone declarations versus original aggregate
+membership remains a source hypothesis, but no recovered consumer needs the
+giant runtime overlay or accesses these buffers as one aggregate.
+
+Two parser bugs are preserved explicitly. At `80018C1C..80018C28`, the command
+count increments before the greater-than-16 check. Encountering a seventeenth
+command therefore allocates and copies 204 bytes, overreading the first 12 path
+bytes after the 192-byte scratch array. The record pointer also never advances:
+accepted commands repeatedly overwrite record zero, leaving the other records
+and omitted argument fields stale. Neither an extra scratch element nor a cursor
+increment has been invented to conceal or fix this. The allocation/copy size now
+uses `sizeof(SubtitleCmd)` and retains the exact retail parser instructions.
+
+`python tools/test_gametext_runtime.py` checks all eleven BSS symbol offsets and
+extents in the MWCC object, then executes production initialization, fallback
+selection, getters, and parser bodies in a host harness. Its 160 host cases cover
+148 initialized windows, four font records and their texture pointers, all eight
+fallback entries and pointer chains, unavailable-font ring wrap, successful
+lookups, new/cached missing IDs, request-delta thresholds, and parser count/overwrite
+behavior. Decoder, formatting, allocation, font-atlas construction and memory
+store creation are mocked. The memcpy mock records the overread size without
+performing an out-of-bounds host read; retail adjacency is checked separately.
+Reducing the ring wrap threshold by one produces 12 failures and no harness
+errors. The loader/command-runner behavior is reviewed in the source/object diff,
+not executed by this harness.
+
+All eleven BSS objects have the offsets above; existing small-data/storage
+offsets and all non-text section bytes are unchanged. Only five functions change:
+`gameTextGet` (652 to 676 bytes), `gameTextRun` (1452 to 1524), renderer
+initialization (492 to 532), sequence loading (588 to 608), and map loading
+(680 to 700). All other source objects remain byte-identical. Gametext changes
+from 97.43063% to 96.3321% fuzzy, retaining 41/54 exact functions. The lost exact
+initializer accounts for 492 code-credit bytes; data credit is unchanged.
+
+Defining all native BSS arrays before their consumers makes GC/1.3 emit a real
+shared-base symbol and brings the initializer near exact, but allocates arrays
+in first-reference order at the wrong physical offsets. Reversing declarations
+does not fix that; explicit zero initialization moves them to initialized data.
+Neither experiment is retained. Definitions remain at the TU end, where the
+compiler emits the exact recovered storage order. Recovering the original
+declaration/compilation model is still open; restoring an invented base buffer
+or applying placement directives is not a solution.
+
+Both `ninja all_source` and the strict retail checksum gate pass. The TU remains
+`NonMatching`, so the strict link does not validate the changed source codegen.

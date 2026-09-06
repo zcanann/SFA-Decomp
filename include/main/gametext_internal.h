@@ -20,6 +20,22 @@ typedef struct GameTextDef {
     char** strings;
 } GameTextDef;
 
+STATIC_ASSERT(sizeof(GameTextDef) == 0xc);
+STATIC_ASSERT(offsetof(GameTextDef, strings) == 0x8);
+
+#define GAMETEXT_FALLBACK_COUNT 8
+#define GAMETEXT_FALLBACK_BUFFER_SIZE 0x40
+
+extern f32 sGameTextFallbackElapsedFrames[GAMETEXT_FALLBACK_COUNT];
+extern f32 sGameTextFallbackRequestDelta[GAMETEXT_FALLBACK_COUNT];
+extern GameTextDef sGameTextFallbackDefs[GAMETEXT_FALLBACK_COUNT];
+extern char* sGameTextFallbackStrings[GAMETEXT_FALLBACK_COUNT];
+extern char sGameTextFallbackBuffers[GAMETEXT_FALLBACK_COUNT][GAMETEXT_FALLBACK_BUFFER_SIZE];
+extern GameTextDef* gGameTextLastEntry;
+extern f32* gGameTextFallbackRequestDelta;
+extern char sGameTextPath[0x40];
+extern char sGameTextCommandStringBuffer[0x800];
+
 typedef struct TextGlyph {
     u32 key;
     u16 u;

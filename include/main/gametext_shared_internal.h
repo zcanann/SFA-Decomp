@@ -24,7 +24,6 @@ extern f32 gGameTextScale;
 extern u8 gGameTextShadowColorB;
 extern u8 gGameTextShadowColorG;
 extern u8 gGameTextShadowColorR;
-extern u8 sGameTextFallbackDefs[];
 extern f32 gGameTextRevealProgress;
 extern int gGameTextDrawnCharIndex;
 extern int gGameTextRevealActive;
@@ -37,6 +36,5 @@ void gameTextRenderStrs(char* str, int boxIdx);
 void gameTextTickReveal(int textId, struct TextDisplayState* state);
 void gameTextRenderById(int textId, int x, int y);
 
-extern f32* gGameTextFallbackBuf;
 
 #endif /* MAIN_GAMETEXT_SHARED_INTERNAL_H_ */
