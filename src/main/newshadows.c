@@ -1798,8 +1798,7 @@ void allocLotsOfTextures(void) {
 
     gNewShadowReflectionGradientTexture = textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
     fillReflectionGradientTexture();
-    DCFlushRange(gNewShadowReflectionGradientTexture + 1,
-                 gNewShadowReflectionGradientTexture->dataSize);
+    DCFlushRange(gNewShadowReflectionGradientTexture + 1, gNewShadowReflectionGradientTexture->dataSize);
 
     frameTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     memset(frameTexture + 1, 0, frameTexture->dataSize);
