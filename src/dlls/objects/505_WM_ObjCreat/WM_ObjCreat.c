@@ -112,9 +112,7 @@ void WM_ObjCreator_free(void) {
 }
 
 void WM_ObjCreator_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 visibleFlag = visible;
-
-    if (visibleFlag != 0) {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
     }
 }
@@ -137,7 +135,7 @@ void WM_ObjCreator_update(GameObject* obj) {
         switch (placement->spawnMode) {
         /* Spawn one WM_Galleon at the placement, unless one is already alive. */
         case WMOBJCREATOR_MODE_GALLEON: {
-            u32* groupObjects;
+            GameObject** groupObjects;
             int objectIndex;
             state = NULL;
             if (obj->userData2 == 0) {
@@ -145,14 +143,11 @@ void WM_ObjCreator_update(GameObject* obj) {
                 if (mainGetBit(GAMEBIT_WM_Galleon_despawn) != 0) {
                     state = NULL;
                 }
-                groupObjects = (u32*)objGetAllOfType(3, &objectCount);
-                objectIndex = 0;
-                while (objectIndex < objectCount && (s8)(int)state != 0) {
-                    if (((GameObject*)*groupObjects)->anim.romDefNo == WM_GALLEON_OBJECT_ID) {
+                groupObjects = objGetAllOfType(3, &objectCount);
+                for (objectIndex = 0; objectIndex < objectCount && (s8)(int)state != 0; objectIndex++) {
+                    if (groupObjects[objectIndex]->anim.romDefNo == WM_GALLEON_OBJECT_ID) {
                         state = NULL;
                     }
-                    groupObjects++;
-                    objectIndex++;
                 }
             }
             if ((s8)(int)state != 0) {
@@ -228,8 +223,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                 ((HoodedZyckSpawnSetup*)setup)->droppedItemId = 1;
                 spawned = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if (spawned != NULL) {
-                    (*gPartfxInterface)
-                        ->spawnObject((void*)obj, WMOBJCREATOR_PARTFX_HOODED_ZYCK_SPAWN, NULL, 2, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, WMOBJCREATOR_PARTFX_HOODED_ZYCK_SPAWN, NULL, 2, -1, NULL);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -289,8 +283,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                         particleArgs.posZ = spawned->anim.velocityZ;
                         particleArgs.posY = 0.0f;
                         (*gPartfxInterface)
-                            ->spawnObject((void*)spawned, WMOBJCREATOR_PARTFX_SCATTER_TRAIL, &particleArgs, 0x10000, -1,
-                                          NULL);
+                            ->spawnObject(spawned, WMOBJCREATOR_PARTFX_SCATTER_TRAIL, &particleArgs, 0x10000, -1, NULL);
                     }
                 } while (remainingCount != 0);
                 mainSetBits(state->gameBit, 0);
@@ -334,8 +327,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                     particleArgs.posX = (f32)randomGetRange(-200, 200);
                     particleArgs.posZ = (f32)randomGetRange(-0x14, 0x14);
                     particleArgs.posY = 200.0f;
-                    (*gPartfxInterface)
-                        ->spawnObject((void*)obj, WMOBJCREATOR_PARTFX_DEBRIS, &particleArgs, 0x10002, -1, NULL);
+                    (*gPartfxInterface)->spawnObject(obj, WMOBJCREATOR_PARTFX_DEBRIS, &particleArgs, 0x10002, -1, NULL);
                 }
                 mainSetBits(state->gameBit, 0);
             }
@@ -347,11 +339,11 @@ void WM_ObjCreator_update(GameObject* obj) {
 void WM_ObjCreator_init(GameObject* obj, const WMObjCreatorPlacementView* placement) {
     WMObjCreatorState* state = obj->extra;
 
-    obj->anim.rotX = (s16)((s32)placement->yaw << 8);
+    obj->anim.rotX = placement->yaw << 8;
     state->gameBit = placement->gameBit;
     state->spawnPeriod = placement->spawnPeriod;
     state->spawnTimer = state->spawnPeriod;
-    state->spawnJitter = (s16)(s32)placement->spawnJitter;
+    state->spawnJitter = placement->spawnJitter;
 }
 
 void WM_ObjCreator_release(void) {
