@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include "src/musyx/runtime/synth_internal.h"
 #include "musyx/synth_seq_dispatch.h"
 #include "musyx/synth_volume.h"
@@ -6,22 +7,6 @@
 #include "musyx/synth_queue.h"
 #include "musyx/synth_callback.h"
 #include "musyx/synth_channel_scale.h"
-
-typedef union SynthSeqRuntime
-{
-    struct
-    {
-        u8 callbackStorage[0x1400];
-        SynthVoice voices[SYNTH_MAX_VOICES];
-    } data;
-    u8 bytes[0x1400 + sizeof(SynthVoice) * SYNTH_MAX_VOICES];
-} SynthSeqRuntime;
-
-typedef struct SynthVoiceRuntimeView
-{
-    u8 callbackStorage[0x1400];
-    SynthVoice voice;
-} SynthVoiceRuntimeView;
 
 /* SynthVoice.state - which intrusive list the voice sits on */
 #define SYNTH_VOICE_STATE_FREE      0 /* unallocated */
@@ -407,13 +392,13 @@ void seqPause(u32 seqId)
 
 void seqStop(u32 seqId)
 {
-    SynthSeqRuntime* runtime;
+    SynthVoiceRuntime* runtime;
     SynthVoice* voice;
     u32 slot;
     u32 i;
-    SynthVoiceRuntimeView* runtimeView;
+    u8* slotBase;
 
-    runtime = (SynthSeqRuntime*)(void*)seqNote;
+    runtime = SYNTH_VOICE_RUNTIME();
 
     slot = seqGetPrivateIdInline(seqId);
 
@@ -424,9 +409,9 @@ void seqStop(u32 seqId)
 
     if ((slot & 0x80000000) == 0)
     {
-        runtimeView = (SynthVoiceRuntimeView*)(runtime->bytes + slot * 6248);
-        voice = &runtimeView->voice;
-        switch (runtimeView->voice.state)
+        slotBase = (u8*)runtime + slot * sizeof(SynthVoice);
+        voice = (SynthVoice*)(slotBase + offsetof(SynthVoiceRuntime, voices));
+        switch (((SynthVoice*)(slotBase + offsetof(SynthVoiceRuntime, voices)))->state)
         {
         case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
@@ -450,7 +435,7 @@ void seqStop(u32 seqId)
                 }
             }
             {
-                SynthCallbackLink* callback = runtime->data.voices[slot].callbackLists[2];
+                SynthCallbackLink* callback = runtime->voices[slot].callbackLists[2];
                 while (callback != 0)
                 {
                     voiceKillSound(callback->callbackId);
@@ -486,8 +471,8 @@ void seqStop(u32 seqId)
     }
     else
     {
-        if ((voice = &runtime->data.voices[slot & 0x7fffffffu],
-             runtime->data.voices[slot & 0x7fffffffu].state) != SYNTH_VOICE_STATE_FREE)
+        if ((voice = &runtime->voices[slot & 0x7fffffffu],
+             runtime->voices[slot & 0x7fffffffu].state) != SYNTH_VOICE_STATE_FREE)
         {
             voice->syncSeqIdPtr = 0;
         }
@@ -497,35 +482,23 @@ void seqStop(u32 seqId)
 void seqSpeed(u32 seqId, u16 speed)
 {
     u32 slot;
-    SynthSeqRuntime* runtime;
+    SynthVoiceRuntime* runtime;
 
-    runtime = (SynthSeqRuntime*)(void*)seqNote;
+    runtime = SYNTH_VOICE_RUNTIME();
     slot = seqGetPrivateIdInline(seqId);
 
     if ((slot & 0x80000000) == 0)
     {
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 0) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 1) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 2) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 3) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 4) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 5) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 6) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 7) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 8) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 9) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 10) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 11) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 12) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 13) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 14) = speed;
-        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, slot, 15) = speed;
+        u32 section;
+        for (section = 0; section < SYNTH_VOICE_NOTE_COUNT; section++) {
+            runtime->voices[slot].section[section].speed = speed;
+        }
     }
     else
     {
         u32 idx = slot & 0x7fffffffu;
-        SYNTH_RUNTIME_PENDING_FLAGS(runtime, idx) |= 0x20;
-        SYNTH_RUNTIME_PENDING_VALUE16(runtime, idx) = speed;
+        runtime->voices[idx].syncCrossInfo.flags |= SND_CROSSFADE_SPEED;
+        runtime->voices[idx].syncCrossInfo.speed2 = speed;
     }
 }
 

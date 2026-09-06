@@ -99,8 +99,6 @@ void seqCrossFade(SynthStartRequest* ci, u32* new_seqId, u8 irq_call)
 {
     SynthVoiceRuntime* runtime;
     SynthPlayParams params;
-    u32 deadSlot0;
-    u32 deadSlot1;
     u32 deadSlot2;
     u32 slot;
     u32 newHandle;
@@ -202,22 +200,10 @@ void seqCrossFade(SynthStartRequest* ci, u32* new_seqId, u8 irq_call)
                     newHandle = seqGetPrivateId(newHandle);
                     if ((newHandle & SYNTH_HANDLE_QUEUED_FLAG) == 0)
                     {
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 0) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 1) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 2) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 3) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 4) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 5) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 6) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 7) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 8) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 9) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 10) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 11) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 12) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 13) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 14) = speed;
-                        SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, newHandle, 15) = speed;
+                        u32 section;
+                        for (section = 0; section < SYNTH_VOICE_NOTE_COUNT; section++) {
+                            runtime->voices[newHandle].section[section].speed = speed;
+                        }
                     }
                     else
                     {

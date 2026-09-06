@@ -9,6 +9,7 @@
 #include "musyx/snd_core.h"
 #include "musyx/synth_queue.h"
 #include "musyx/synth_master_fader.h"
+#include "global.h"
 
 #define SYNTH_CALLBACK_COUNT 0x100
 #define SYNTH_SEQUENCE_TRACK_COUNT 0x40
@@ -140,6 +141,9 @@ typedef struct SynthSequenceQueue
     u8 unk37;
 } SynthSequenceQueue;
 
+STATIC_ASSERT(sizeof(SynthSequenceQueue) == 0x38);
+STATIC_ASSERT(offsetof(SynthSequenceQueue, speed) == 0x32);
+
 typedef struct SynthTrackCommand
 {
     u32 value0;
@@ -214,12 +218,11 @@ typedef struct SynthVoiceRuntime
     u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 } SynthVoiceRuntime;
 
-#define SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, voiceIndex, channel) \
-    (*(u16*)((u8*)(runtime) + 0x291A + ((voiceIndex) * sizeof(SynthVoice)) + ((channel) * 0x38)))
-#define SYNTH_RUNTIME_PENDING_VALUE16(runtime, voiceIndex) \
-    (*(u16*)((u8*)(runtime) + 0x22D8 + ((voiceIndex) * sizeof(SynthVoice))))
-#define SYNTH_RUNTIME_PENDING_FLAGS(runtime, voiceIndex) \
-    (*(u8*)((u8*)(runtime) + 0x22DA + ((voiceIndex) * sizeof(SynthVoice))))
+STATIC_ASSERT(sizeof(SynthVoice) == 0x1868);
+STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices) == 0x1400);
+STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].section[0].speed) == 0x291A);
+STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].syncCrossInfo.speed2) == 0x22D8);
+STATIC_ASSERT(offsetof(SynthVoiceRuntime, voices[0].syncCrossInfo.flags) == 0x22DA);
 
 extern SynthCallbackLink seqNote[SYNTH_CALLBACK_COUNT];
 extern u8 synthJobTableIndex;
