@@ -444,8 +444,8 @@ void worldplanet_update(GameObject* obj) {
                 pstate->effectState = 1;
             }
         }
-        mapObject = ObjList_FindObjectById(
-            sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+        mapObject =
+            ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0 && gWorldPlanetInputLockTimer == 0) {
             switch (state->selectionLocked) {
             case 0:
@@ -529,20 +529,25 @@ void worldplanet_update(GameObject* obj) {
                 int* angleOffsetEntry;
                 int tableOffsetBytes = planetIndex * sizeof(sWorldPlanetOrbitObjectIds[0]);
                 orbitObject = ObjList_FindObjectById(*(int*)((u8*)sWorldPlanetOrbitObjectIds + tableOffsetBytes));
-                if (*(int*)((u8*)sWorldPlanetOrbitObjectIds + tableOffsetBytes) == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID) {
-                    orbitObject->anim.rotX = orbitAngle + *(int*)((u8*)sWorldPlanetOrbitAngleOffsets + tableOffsetBytes) + 0x4000;
+                if (*(int*)((u8*)sWorldPlanetOrbitObjectIds + tableOffsetBytes) ==
+                    WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID) {
+                    orbitObject->anim.rotX =
+                        orbitAngle + *(int*)((u8*)sWorldPlanetOrbitAngleOffsets + tableOffsetBytes) + 0x4000;
                 } else {
                     orbitObject->anim.rotX += WORLDPLANET_ORBIT_ROT_STEP;
                 }
                 if (state->orbitSoundFrameCount > WORLDPLANET_ORBIT_SOUND_DELAY_FRAMES) {
                     Sfx_KeepAliveLoopedObjectSound(orbitObject, SFXTRIG_crf_babyambi2);
                 }
-                orbitObject->anim.localPosX = orbitRadius * fsin16Approx(orbitAngle + *(angleOffsetEntry = (int*)((u8*)sWorldPlanetOrbitAngleOffsets + tableOffsetBytes))) *
-                                                fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
-                                            (obj)->anim.localPosX;
+                orbitObject->anim.localPosX =
+                    orbitRadius *
+                        fsin16Approx(orbitAngle + *(angleOffsetEntry = (int*)((u8*)sWorldPlanetOrbitAngleOffsets +
+                                                                              tableOffsetBytes))) *
+                        fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
+                    (obj)->anim.localPosX;
                 orbitObject->anim.localPosY = orbitRadius * fsin16Approx(orbitAngle + *angleOffsetEntry) *
-                                                fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
-                                            (obj)->anim.localPosY;
+                                                  fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
+                                              (obj)->anim.localPosY;
                 orbitObject->anim.localPosZ =
                     orbitRadius * fcos16Approx(orbitAngle + *angleOffsetEntry) + (obj)->anim.localPosZ;
             }
