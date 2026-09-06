@@ -7,8 +7,7 @@
 
 extern ObjectDescriptor12 gDB_eggObjDescriptor;
 
-typedef struct DbeggPlacement
-{
+typedef struct DbeggPlacement {
     ObjPlacement base;    /* 0x00 */
     u8 pad18;             /* 0x18 */
     u8 forceRadiusByte;   /* 0x19 */
@@ -18,12 +17,12 @@ typedef struct DbeggPlacement
     s16 secondaryGameBit; /* 0x1E: set when the egg reaches its target */
     s16 unk20;            /* 0x20 */
     u8 pad22[0x24 - 0x22];
-    s16 activateGameBit;  /* 0x24: gates the launch mode */
-    u8 behaviorMode;      /* 0x26 */
+    s16 activateGameBit; /* 0x24: gates the launch mode */
+    u8 behaviorMode;     /* 0x26 */
     u8 pad27[0x2B - 0x27];
-    u8 unk2B;             /* 0x2B */
-    s16 counterGameBit;   /* 0x2C: bit incremented on delivery (>0 = active) */
-    s8 unk2E;             /* 0x2E */
+    u8 unk2B;           /* 0x2B */
+    s16 counterGameBit; /* 0x2C: bit incremented on delivery (>0 = active) */
+    s8 unk2E;           /* 0x2E */
 } DbeggPlacement;
 
 STATIC_ASSERT(offsetof(DbeggPlacement, base) == 0x00);
