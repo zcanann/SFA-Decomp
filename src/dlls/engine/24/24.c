@@ -216,12 +216,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                                           &transform.y, &transform.z);
                     transform.x = transform.x + playerMapOffsetX;
                     transform.z = transform.z + playerMapOffsetZ;
-                    (*updateBufferCursor)[cornerIndex + vertexBase].x =
-                        jointX + (transform.x - obj->anim.localPosX);
-                    (*updateBufferCursor)[cornerIndex + vertexBase].y =
-                        jointY + (transform.y - obj->anim.localPosY);
-                    (*updateBufferCursor)[cornerIndex + vertexBase].z =
-                        jointZ + (transform.z - obj->anim.localPosZ);
+                    (*updateBufferCursor)[cornerIndex + vertexBase].x = jointX + (transform.x - obj->anim.localPosX);
+                    (*updateBufferCursor)[cornerIndex + vertexBase].y = jointY + (transform.y - obj->anim.localPosY);
+                    (*updateBufferCursor)[cornerIndex + vertexBase].z = jointZ + (transform.z - obj->anim.localPosZ);
                     (*updateBufferCursor)[cornerIndex + vertexBase].a = 0x9b;
                     (*updateBufferCursor)[cornerIndex + vertexBase].t =
                         (s16)(gBoneParticleInitVertices[cornerIndex + vertexBase].t - (gBoneParticleScrollOffset << 2));
@@ -359,22 +356,14 @@ void boneParticleEffect_initialise(void) {
     gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     for (bufferIndex = 0; bufferIndex < BONE_PARTICLE_EFFECT_BUFFER_COUNT; bufferIndex++) {
         for (vertexIndex = 0; vertexIndex < BONE_PARTICLE_EFFECT_SLOT_COUNT; vertexIndex++) {
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].x =
-                gBoneParticleInitVertices[vertexIndex].x;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].y =
-                gBoneParticleInitVertices[vertexIndex].y;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].z =
-                gBoneParticleInitVertices[vertexIndex].z;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].s =
-                gBoneParticleInitVertices[vertexIndex].s;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].t =
-                gBoneParticleInitVertices[vertexIndex].t;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].r =
-                gBoneParticleInitVertices[vertexIndex].r;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].g =
-                gBoneParticleInitVertices[vertexIndex].g;
-            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].b =
-                gBoneParticleInitVertices[vertexIndex].b;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].x = gBoneParticleInitVertices[vertexIndex].x;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].y = gBoneParticleInitVertices[vertexIndex].y;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].z = gBoneParticleInitVertices[vertexIndex].z;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].s = gBoneParticleInitVertices[vertexIndex].s;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].t = gBoneParticleInitVertices[vertexIndex].t;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].r = gBoneParticleInitVertices[vertexIndex].r;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].g = gBoneParticleInitVertices[vertexIndex].g;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].b = gBoneParticleInitVertices[vertexIndex].b;
             gBoneParticleEffectBuffers[bufferIndex][vertexIndex].a = 0xff;
         }
     }

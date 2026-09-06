@@ -169,8 +169,7 @@ asm void PSVECCrossProduct(register const Vec* a, register const Vec* b, registe
 #endif // clang-format on
 }
 
-void C_VECReflect(const Vec* src, const Vec* normal, Vec* dst)
-{
+void C_VECReflect(const Vec* src, const Vec* normal, Vec* dst) {
     Vec a0;
     Vec b0;
     f32 dot;
