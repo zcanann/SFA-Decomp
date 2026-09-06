@@ -2946,6 +2946,9 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
     u16 sfxTable[2] = {TRICKY_VOICE_SFX_YEAH, TRICKY_VOICE_SFX_LAUGH};
     RomCurveDef* tunnelNode;
     int walkGroup;
+    s32 j;
+    RomCurveDef* linkNode;
+    s32 i;
     f32 digProgress;
 
     switch (state->substate) {
@@ -3004,17 +3007,13 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         obj->anim.localPosZ = state->moveVector.z * digProgress + state->digTunnelStartNode->z;
         trickyTurnAlongMoveDirection(obj);
         if (WALL_ANIMATOR_INTERFACE(state->followObj)->isComplete(state->followObj) != 0) {
-            s32 linkId;
-            RomCurveDef* linkNode;
-            s32 linkIndex;
-
-            for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
+            for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
                 linkNode = state->digTunnelExitNode.curve;
-                linkId = linkNode->linkIds[linkIndex];
-                if (linkId > -1 && linkId != state->digTunnelStartNode->id) {
+                j = linkNode->linkIds[i];
+                if (j > -1 && j != state->digTunnelStartNode->id) {
                     state->digTunnelStartNode = linkNode;
                     state->digTunnelExitNode.curve =
-                        (*gRomCurveInterface)->getById(state->digTunnelExitNode.curve->linkIds[linkIndex]);
+                        (*gRomCurveInterface)->getById(state->digTunnelExitNode.curve->linkIds[i]);
                     break;
                 }
             }
@@ -3028,17 +3027,13 @@ void trickyDigTunnel(GameObject* obj, TrickyState* state) {
         trickyDebugPrint("DIGTUNNEL_TOEND1 %f\n",
                          Vec_xzDistance(&obj->anim.worldPosX, &state->digTunnelExitNode.curve->x));
         if (trickyApproachTarget(obj, TRICKY_DEFAULT_STOPPING_RADIUS, state, &state->digTunnelExitNode.curve->x) == 0) {
-            s32 linkId;
-            RomCurveDef* linkNode;
-            s32 linkIndex;
-
-            for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
+            for (j = 0; j < ROMCURVE_LINK_COUNT; j++) {
                 linkNode = state->digTunnelExitNode.curve;
-                linkId = linkNode->linkIds[linkIndex];
-                if (linkId > -1 && linkId != state->digTunnelStartNode->id) {
+                i = linkNode->linkIds[j];
+                if (i > -1 && i != state->digTunnelStartNode->id) {
                     state->digTunnelStartNode = linkNode;
                     state->digTunnelExitNode.curve =
-                        (*gRomCurveInterface)->getById(state->digTunnelExitNode.curve->linkIds[linkIndex]);
+                        (*gRomCurveInterface)->getById(state->digTunnelExitNode.curve->linkIds[j]);
                     break;
                 }
             }

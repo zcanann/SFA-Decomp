@@ -30,6 +30,21 @@ class LinkInputsTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 replace_object(inputs, "b.o", "new.o")
 
+    def test_source_linked_unit_can_be_replaced_after_promotion(self):
+        inputs = ["a.o", "src/tricky.o", "c.o"]
+        self.assertEqual(replace_object(inputs, "obj/tricky.o", "probe.o", compiled="src\\tricky.o"),
+                         ["a.o", "probe.o", "c.o"])
+        self.assertEqual(inputs, ["a.o", "src/tricky.o", "c.o"])
+
+    def test_compiled_and_retail_inputs_cannot_both_be_present(self):
+        for inputs in [["obj/tricky.o", "src/tricky.o"], ["src/tricky.o", "src/tricky.o"], ["unrelated.o"]]:
+            with self.subTest(inputs=inputs), self.assertRaises(ValueError):
+                replace_object(inputs, "obj/tricky.o", "probe.o", compiled="src/tricky.o")
+
+    def test_retail_input_is_still_replaced_when_compiled_is_allowed(self):
+        self.assertEqual(replace_object(["obj/tricky.o"], "obj/tricky.o", "probe.o", compiled="src/tricky.o"),
+                         ["probe.o"])
+
 
 class SectionDifferencesTests(unittest.TestCase):
     def test_identical_sections(self):
