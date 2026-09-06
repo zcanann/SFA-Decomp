@@ -3450,7 +3450,7 @@ static inline void renderParticlesBody(void) {
                     queuePosition[1] = 0.5f * (poolBounds->minY + poolBounds->maxY);
                     queuePosition[2] = 0.5f * (poolBounds->minZ + poolBounds->maxZ) - playerMapOffsetZ;
                 }
-                PSMTXMultVec((float (*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
+                PSMTXMultVec((float(*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
                 if (*poolSourceIds != 0) {
                     queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
                 }
@@ -3781,8 +3781,7 @@ int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slot
             attachedSource = NULL;
         }
 
-        expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey,
-                                        config->textureId);
+        expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey, config->textureId);
         if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
             debugPrintf(sExpgfxInvalidTabIndex);
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
