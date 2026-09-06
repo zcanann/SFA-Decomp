@@ -417,3 +417,64 @@ not proven original variable names or compiler provenance.
 The backend/LLDB tests, formatting and generated-path audits, strict retail
 checksum, and `ninja all_source` pass. Controls, captures, and object audits are
 under `build/gc13_new_matches/player_round4*`.
+
+## September 6: Further native expressions, with separate formatting commits
+
+Seven more TUs gain cleaner source while preserving every GC/1.3 function
+and data match score. The six object TUs retain all **77 exact functions,
+34,012 code bytes, and 9,001 assigned data bytes**. Together they remove
+27 unnecessary 64-bit promotions. Existing TU profiles and boundaries remain
+unchanged; the ProDG decompressor is untouched.
+
+| Object TU | Original GC/2.0 | Clean GC/1.3 | Clean GC/2.0 | Source cleanup |
+| --- | ---: | ---: | ---: | --- |
+| HitAnimator | 100% | **100%** | 98.28125% | Native polygon/shader masks, direct initial state, redundant casts removed. |
+| DIMCannon | 100% | **100%** | 99.79885% | Ordinary indexed history initialization, canonical model flag, typed parent/player and timer accesses. |
+| CloudRunner | 100% | **100%** | 99.81897% | Indexed game-bit scan, canonical render flag, direct object members. |
+| Sharpclaw | 99.82822% | **100%** | 98.55544% | Native flags, existing animation/target fields, six typed row-speed accesses. |
+| Firecrawler | 100% | **100%** | 99.01527% | Typed state locals, native compound flag updates, direct rotation fields. |
+| Weevil | 100% | **100%** | 97.66414% | Typed state locals, native compound updates, direct tracked-object fields. |
+
+Sharpclaw provides a discriminator beyond flag literals. Replacing its three
+raw `state + 0x308` accesses with the existing `animPlaySpeed` field preserves
+GC/1.3's exact idle update, but independently lowers that function from 100%
+to 96.23989% under GC/2.0. Its previous GC/2.0 TU score already includes the
+earlier Wisp animation-event cleanup.
+
+Firecrawler's native mask expressions need the ordinary compound spelling:
+`flags &= ~mask`. Removing the wide mask while retaining `flags = flags &
+mask` changes GC/1.3 register allocation. Seven typed state locals then replace
+253 repeated casts without changing the generated code. Weevil likewise uses
+four typed locals instead of repeating its state casts at each access.
+
+In `lightmap.c`, `getVisibleObjects` indexes `opacity[i]` instead of maintaining
+another pointer cursor. Its function remains exact, and the complete TU stays
+at 99.7038%. This particular indexing change has identical before/after results
+under both compilers. DIMCannon's simpler initialization loop also matches both;
+its native model flag supplies the GC/1.3 distinction.
+
+Rejected simplifications remain unchanged: DIMCannon's rotation byte accesses,
+CloudRunner's move-ID walk, Firecrawler's hit-volume walks, Weevil's frozen-state
+conditions, two Sharpclaw row-speed accesses, and the other tested lightmap
+object/child, map-layer, ROM-list, and texture-array traversals. These still
+regress GC/1.3 when normalized.
+
+Source cleanup and clang-format changes are separate commits throughout this
+pass. Each formatting commit preserves the compiled object from its preceding
+source commit. The runbook now explicitly requires this separation. Headers
+shared by the slot-202 family keep their declarations and types unchanged;
+the Firecrawler row header receives only brace formatting in its format commit.
+
+The final audit preserves all 1,005 compiled objects' allocated contents,
+section sizes/alignment, named symbols, relocation targets, and every unit's
+match measures. Five cleaned TUs renumber anonymous literals at unchanged
+addresses; HitAnimator and DIMCannon remain raw-object identical to their
+starting versions. Generated paths and final clang-format checks pass. Each
+landing passes strict matching and `ninja all_source` within 30 seconds, with
+the retail DOL byte-identical: SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`.
+
+Local controls and delivery artifacts are under `build/gc13_indexed/nice_313/`,
+`dimcannon/`, `cloudrunner_cleanup/`, `sharpclaw/`, `nice_firecrawler/`,
+`weevil_cleanup/`, and `lightmap_indexed/`. The full object snapshot is under
+`build/gc13_migration/nicer_separate/`.
