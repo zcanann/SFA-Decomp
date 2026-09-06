@@ -369,3 +369,45 @@ skips; live capture with and without graphs and offline trace inspection pass.
 The strict build exits 0 in 15.72 seconds with the expected retail SHA1, and
 `ninja all_source` exits 0 in 16.26 seconds. The TU and API header pass the
 formatting check.
+
+## September 6: all residual functions traced
+
+All 5,740 instructions in the nine remaining functions now align with captured
+FINAL CODE records. Each GPR graph's simplification and physical coloring also
+replays against the live compiler. The complete instrumented objects retain
+the ordinary object's `5878b385...c0db61` SHA256 above.
+
+| Function | Instructions | Differing instruction words |
+| --- | ---: | ---: |
+| `drawViewFinderHud` | 1,245 | 105 |
+| `pauseMenuDrawStatus` | 516 | 34 |
+| `cMenuSetItems` | 302 | 60 |
+| `headDisplayDraw` | 480 | 40 |
+| `drawArwingHud` | 266 | 22 |
+| `pauseMenuDraw` | 1,141 | 8 |
+| `pauseMenuDrawStatusPage` | 673 | 3 |
+| `pauseMenuDrawGridCell` | 253 | 16 |
+| `mapScreenDrawHud` | 864 | 47 |
+
+This required seven additional observed instruction spellings and a register
+parser correction. A branch target printed as `f150`, or even `f0`, is a hex
+address rather than an FPR. Branch records still reject unexpected GPR/FPR
+operands, and symbol annotations are excluded from operand parsing. Regression
+tests cover both ambiguities and preserve rejection of actual register
+mismatches. The backend suite completes 72 tests with seven Windows-only skips.
+
+Every current residual GPR graph simplifies entirely through low-degree sweeps;
+none invokes the weighted high-degree choice. This describes the reconstructed
+source only. Register correspondences inferred from retail also need to account
+for commuted additions: the apparent two-color conflicts for the C-menu base
+and count come from swapped addition operands, not demonstrated value splitting.
+
+The status-page trace also confirms that reusing one local for the three alpha
+stages does not merge their backend lifetimes: later assignments already have
+distinct virtual registers before GLOBAL OPTIMIZATION. An inline fade-conversion
+helper, including a variant containing the repeated hologram setup, changes the
+initial alpha from r24 to r26 but increases its residual from three words to five.
+An opacity aggregate has the same problem. None is retained. Typed C-menu source
+cursors preserve all 302 instructions but worsen the residual from 60 to 68
+words. Separating the grid-cell pulse phase and changing its argument widths
+also fail to improve matching. Source and compiler settings remain unchanged.

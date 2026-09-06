@@ -124,6 +124,37 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "register alignment"):
             validate_alignment(fixture(), ["li r6,0", "mr r4,r7", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))
 
+    def test_branch_hex_addresses_are_not_float_registers(self):
+        data = fixture()
+        data["blocks"][0]["instructions"][1]["words"][8] = 0x05 | (1 << 16)
+        for address in ("f0", "f13", "f150"):
+            with self.subTest(address=address):
+                asm = ["li r7,0", f"bgt+ {address} <test+0x{address}>", "mr r4,r7", "blr"]
+                self.assertEqual(len(validate_alignment(data, asm, bytes.fromhex("38e00000 41a10008 7ce43b78 4e800020"))), 4)
+
+    def test_branch_cannot_hide_an_ir_float_operand(self):
+        data = fixture()
+        branch = data["blocks"][0]["instructions"][1]["words"]
+        branch[8] = 0x05 | (2 << 16)
+        branch.extend(struct.unpack("<3I", reg(7, 1, 3)))
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["li r7,0", "bgt+ f7", "mr r4,r7", "blr"],
+                               bytes.fromhex("38e00000 41a10008 7ce43b78 4e800020"))
+
+    def test_symbol_annotation_is_not_a_register_operand(self):
+        asm = ["li r7,0 <f0>", "mr r4,r7", "blr"]
+        self.assertEqual(len(validate_alignment(fixture(), asm, bytes.fromhex("38e00000 7ce43b78 4e800020"))), 3)
+
+    def test_clrrwi_alias_checks_register_operands(self):
+        data = fixture()
+        load = data["blocks"][0]["instructions"][0]["words"]
+        load[8] = 0x67 | (5 << 16)
+        load[9:] = struct.unpack("<15I", reg(7) + reg(8, 1) + immediate(0) + immediate(0) + immediate(27))
+        code = bytes.fromhex("55070036 7ce43b78 4e800020")
+        self.assertEqual(len(validate_alignment(data, ["clrrwi r7,r8,4", "mr r4,r7", "blr"], code)), 3)
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["clrrwi r7,r9,4", "mr r4,r7", "blr"], code)
+
     def test_malformed_immediate_cannot_bypass_encoding_check(self):
         data = fixture()
         data["blocks"][0]["instructions"][0]["words"][12] = 5
