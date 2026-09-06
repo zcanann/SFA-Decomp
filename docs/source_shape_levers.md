@@ -688,12 +688,17 @@ three `srwi`...). Written literally in C it forces all six components live simul
 MWCC spills the function apart: **0.000%**, 192 instructions against retail's 120. Retail can
 hold six live only because they sit in dedicated registers.
 
-**"Indexed, not walked" has a documented counter-site.** The law says respell a source cursor as
-in-loop indexing so strength reduction owns the IV. It went the **wrong way twice**:
-`subtitleStop` **97.717 -> 71.935** (retail genuinely wants the source-level pointer IV), and
-`worldplanet_update` **99.031 -> 98.871** with `tbl->flightPathObjectIds[i]` replacing pointer
-punning. At the latter site the residual is the **base** being held rather than the index, so no
-indexing spelling reaches it. Check which of base/index retail keeps before applying the law.
+**"Indexed, not walked" depends on the recovered storage model.** The law says respell a source
+cursor as in-loop indexing so strength reduction owns the IV. `subtitleStop` regressed
+**97.717 -> 71.935** (retail wants the source-level pointer IV). An earlier `worldplanet_update`
+probe also regressed **99.031 -> 98.871** when replacing pointer punning with
+`tbl->flightPathObjectIds[i]`, but the conclusion that no indexing spelling could work was too
+strong. **Correction, 2026-09-06:** the three member arrays were incorrectly grouped into one
+struct. Independent array definitions reproduce the indexed loads and later address computation,
+while MWCC still shares a common base register. The update improves **99.15179 -> 99.66199**
+with that storage correction and direct indexing, then **99.69388** with an inlined spawn helper.
+Check both the retained base/index and the source-level data boundaries before applying the law.
+See [WORLDplanet matching progress](WORLDplanet_matching.md) for the remaining register/spill diff.
 
 **Address *shape* is not a knob; address *position* is.** `we + 1` vs `&we[1]`, and `&vb[0]` vs
 `vb`, are **exactly inert**. But naming an address hoists its computation: `tp =

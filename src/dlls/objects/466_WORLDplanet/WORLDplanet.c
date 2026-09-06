@@ -164,28 +164,26 @@ WorldPlanetColorRGBA8 gWorldPlanetSkyColorTo = {0xC8, 0xE7, 0xFF, 0};
 WorldPlanetColorRGBA8 gWorldPlanetMoonFrom = {0x74, 0xA2, 0x85, 0};
 WorldPlanetPaddedColorRGBA8 gWorldPlanetMoonTo = {0x13, 0x23, 0x36, 0, {0, 0, 0, 0}};
 
-/* Per-WorldPlanetSlot parameter table. Columns are WorldPlanetSlot 0..4
+/* Per-WorldPlanetSlot parameter arrays. Entries are WorldPlanetSlot 0..4
  * (Walled City / CloudRunner / Dinosaur / Dragon Rock / DarkIce).
- *   orbitObjectIds: the orbiting island objects. Each frame they are placed on the orbit
- *          ring (localPos from orbit radius + the row-1 angle) and spun; they are
+ *   sWorldPlanetOrbitObjectIds: the orbiting island objects. Each frame they are placed on the orbit
+ *          ring (localPos from orbit radius + the angle offset) and spun; they are
  *          also the camera's focus/action target on select & confirm and carry
  *          the binary selection highlight (WorldObjState.effectState 0/1). Slot
  *          2's entry is WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID (special-cased in the
  *          orbit placement).
- *   orbitAngleOffsets: 0/0x4000/0x5FA0/0x8000/0xC000
+ *   sWorldPlanetOrbitAngleOffsets: 0/0x4000/0x5FA0/0x8000/0xC000
  *          (0/90/~135/180/270 deg) spacing the islands evenly around the ring.
- *   flightPathObjectIds: per-slot objects that rotate with the map and each hold the flight
+ *   sWorldPlanetFlightPathObjectIds: per-slot objects that rotate with the map and each hold the flight
  *          PATH for one destination. When a planet is selected the small ferry
  *          Arwing (WORLDPLANET_ARWING_OBJECT_ID) is interpolated along the
  *          selected slot's path each frame; effectState
  *          = locked(0) / available(1) / selected(2). Verified live that all five
  *          routes exist - the Arwing is just unlock-gated (the effectState-0 branch
  *          hides it), so in normal play only the reachable planet's is ever seen. */
-WorldPlanetObjectTables gWorldPlanetObjectIdTable = {
-    {0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB},
-    {0x00000000, 0x00004000, 0x00005FA0, 0x00008000, 0x0000C000},
-    {0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097},
-};
+static int sWorldPlanetOrbitObjectIds[WORLDPLANET_PLANET_COUNT] = {0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB};
+static int sWorldPlanetOrbitAngleOffsets[WORLDPLANET_PLANET_COUNT] = {0, 0x4000, 0x5FA0, 0x8000, 0xC000};
+static int sWorldPlanetFlightPathObjectIds[WORLDPLANET_PLANET_COUNT] = {0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097};
 
 /* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
  * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),
@@ -219,11 +217,28 @@ void worldplanet_hitDetect(void) {
     return;
 }
 
+static inline void worldplanet_spawnFox(GameObject* obj, WorldPlanetState* state) {
+    ObjPlacement* def;
+    state->foxSpawnTimer = randomGetRange(WORLDPLANET_FOX_SPAWN_MIN_FRAMES, WORLDPLANET_FOX_SPAWN_MAX_FRAMES);
+    def = (ObjPlacement*)(obj)->anim.placementData;
+    if ((u8)Obj_CanSetupObject() != 0) {
+        WorldPlanetFoxSpawnSetup* setup = (WorldPlanetFoxSpawnSetup*)Obj_AllocObjectSetup(
+            WORLDPLANET_FOX_SPAWN_SETUP_SIZE, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
+        setup->base.color[0] = def->color[0];
+        setup->base.color[2] = def->color[2];
+        setup->base.color[1] = def->color[1];
+        setup->base.color[3] = def->color[3];
+        setup->base.posX = (obj)->anim.localPosX;
+        setup->base.posY = (obj)->anim.localPosY;
+        setup->base.posZ = (obj)->anim.localPosZ;
+        objSetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, NULL);
+    }
+}
+
 void worldplanet_update(GameObject* obj) {
     u8 prevPlanet;
     GameObject* arwing;
     int buttons;
-    WorldPlanetObjectTables* tbl;
     WorldPlanetState* state;
     u8 done;
     u8 i;
@@ -235,26 +250,11 @@ void worldplanet_update(GameObject* obj) {
         s8 inX[3];
     } in;
 
-    tbl = &gWorldPlanetObjectIdTable;
     state = (obj)->extra;
     done = 0;
     state->foxSpawnTimer -= 1;
     if (state->foxSpawnTimer == 1) {
-        ObjPlacement* def;
-        state->foxSpawnTimer = randomGetRange(WORLDPLANET_FOX_SPAWN_MIN_FRAMES, WORLDPLANET_FOX_SPAWN_MAX_FRAMES);
-        def = (ObjPlacement*)(obj)->anim.placementData;
-        if ((u8)Obj_CanSetupObject() != 0) {
-            WorldPlanetFoxSpawnSetup* setup = (WorldPlanetFoxSpawnSetup*)Obj_AllocObjectSetup(
-                WORLDPLANET_FOX_SPAWN_SETUP_SIZE, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
-            setup->base.color[0] = def->color[0];
-            setup->base.color[2] = def->color[2];
-            setup->base.color[1] = def->color[1];
-            setup->base.color[3] = def->color[3];
-            setup->base.posX = (obj)->anim.localPosX;
-            setup->base.posY = (obj)->anim.localPosY;
-            setup->base.posZ = (obj)->anim.localPosZ;
-            objSetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, NULL);
-        }
+        worldplanet_spawnFox(obj, state);
     }
     if (state->foxSpawnTimer < 0) {
         state->foxSpawnTimer = 0;
@@ -278,7 +278,7 @@ void worldplanet_update(GameObject* obj) {
             (*gCameraInterface)->setFocus((void*)obj, 0);
             state->flags |= WORLDPLANET_STATE_FLAG_CAMERA_SET;
         } else if ((state->flags & WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED) == 0) {
-            objId = tbl->orbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
+            objId = sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
             (*gCameraInterface)->releaseAction(&objId, CAMERA_MODE_WORLD_MAP_ACTION_SET_FOCUS_IMMEDIATE);
             state->flags |= WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED;
             {
@@ -321,8 +321,7 @@ void worldplanet_update(GameObject* obj) {
             z[0] = 0;
             z[1] = z[0];
             z[2] = z[1];
-            /* The per-slot gamebit block immediately follows these object tables in retail data. */
-            ids = (int*)(tbl + 1);
+            ids = gWorldPlanetGameBitTable;
             hints = gWorldPlanetHintFlagTable;
             for (; z[2] < WORLDPLANET_PLANET_COUNT; z[2]++) {
                 if (mainGetBit(*ids) != 0) {
@@ -359,18 +358,18 @@ void worldplanet_update(GameObject* obj) {
              * latch so they fire only on genuine changes, not on the initial open. */
             if (prevPlanet != state->selectedPlanet || (obj)->userData1 == 0) {
                 if ((obj)->userData1 != 0) {
-                    objId = tbl->orbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
+                    objId = sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, CAMERA_MODE_WORLD_MAP_ACTION_SET_FOCUS);
                     Sfx_PlayFromObject(0, SFXTRIG_crf_babyambi3);
                 }
                 gWorldPlanetPathProgress = 0.0f;
                 {
                     WorldObjState* planetState =
-                        ObjList_FindObjectById(tbl->orbitObjectIds[gWorldPlanetSelectionToIndex[prevPlanet]])->extra;
+                        ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[prevPlanet]])->extra;
                     GameObject* planetObj;
                     planetState->effectState = 0;
                     planetObj = ObjList_FindObjectById(
-                        tbl->orbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+                        sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)planetObj->extra)->effectState = 1;
                 }
                 (obj)->userData1 = 1;
@@ -381,12 +380,9 @@ void worldplanet_update(GameObject* obj) {
             gWorldPlanetPathProgress = 0.0f;
         }
         for (i = 0; i < WORLDPLANET_PLANET_COUNT; i++) {
-            int* pathIds;
             GameObject* planet;
             WorldObjState* pstate;
-            pathIds = (int*)tbl;
-            pathIds = pathIds + i;
-            planet = ObjList_FindObjectById(pathIds[10]);
+            planet = ObjList_FindObjectById(sWorldPlanetFlightPathObjectIds[i]);
             pstate = planet->extra;
             planet->anim.rotY = (obj)->anim.rotY;
             planet->anim.rotX = (obj)->anim.rotX;
@@ -443,7 +439,7 @@ void worldplanet_update(GameObject* obj) {
                 pstate->effectState = 1;
             }
         }
-        objId = (int)ObjList_FindObjectById(tbl->orbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+        objId = (int)ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0 && gWorldPlanetInputLockTimer == 0) {
             switch (state->selectionLocked) {
             case 0:
@@ -522,18 +518,15 @@ void worldplanet_update(GameObject* obj) {
                 u8 spin = 0;
                 ang = -(obj)->anim.rotZ & 0xffff;
                 for (; spin < WORLDPLANET_PLANET_COUNT; spin++) {
-                    int* pathIds;
                     GameObject* planetObj;
-                    pathIds = (int*)tbl;
-                    pathIds = pathIds + spin;
-                    planetObj = ObjList_FindObjectById(pathIds[10]);
+                    planetObj = ObjList_FindObjectById(sWorldPlanetFlightPathObjectIds[spin]);
                     planetObj->anim.rotZ = -ang;
                 }
             }
             for (planetIdx = 0, orbitRadius = 220.0f; planetIdx < WORLDPLANET_PLANET_COUNT; planetIdx++) {
-                GameObject* planetObj = ObjList_FindObjectById(tbl->orbitObjectIds[planetIdx]);
-                if (tbl->orbitObjectIds[planetIdx] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID) {
-                    planetObj->anim.rotX = ang + tbl->orbitAngleOffsets[planetIdx] + 0x4000;
+                GameObject* planetObj = ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[planetIdx]);
+                if (sWorldPlanetOrbitObjectIds[planetIdx] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID) {
+                    planetObj->anim.rotX = ang + sWorldPlanetOrbitAngleOffsets[planetIdx] + 0x4000;
                 } else {
                     planetObj->anim.rotX += WORLDPLANET_ORBIT_ROT_STEP;
                 }
@@ -541,15 +534,15 @@ void worldplanet_update(GameObject* obj) {
                     Sfx_KeepAliveLoopedObjectSound(planetObj, SFXTRIG_crf_babyambi2);
                 }
                 planetObj->anim.localPosX = orbitRadius *
-                                                fsin16Approx(ang + tbl->orbitAngleOffsets[planetIdx]) *
+                                                fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
                                                 fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosX;
                 planetObj->anim.localPosY = orbitRadius *
-                                                fsin16Approx(ang + tbl->orbitAngleOffsets[planetIdx]) *
+                                                fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
                                                 fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosY;
                 planetObj->anim.localPosZ =
-                    orbitRadius * fcos16Approx(ang + tbl->orbitAngleOffsets[planetIdx]) +
+                    orbitRadius * fcos16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) +
                     (obj)->anim.localPosZ;
             }
         }

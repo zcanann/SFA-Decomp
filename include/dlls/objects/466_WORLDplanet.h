@@ -36,12 +36,6 @@ typedef struct WorldPlanetState {
     u32 orbitSoundFrameCount;
 } WorldPlanetState;
 
-typedef struct WorldPlanetObjectTables {
-    int orbitObjectIds[WORLDPLANET_PLANET_COUNT];
-    int orbitAngleOffsets[WORLDPLANET_PLANET_COUNT];
-    int flightPathObjectIds[WORLDPLANET_PLANET_COUNT];
-} WorldPlanetObjectTables;
-
 typedef struct WorldPlanetColorRGBA8 {
     u8 red;
     u8 green;
@@ -73,11 +67,6 @@ STATIC_ASSERT(offsetof(WorldPlanetState, unlockedPlanetMask) == 0x11);
 STATIC_ASSERT(offsetof(WorldPlanetState, orbitSoundFrameCount) == 0x14);
 STATIC_ASSERT(sizeof(WorldPlanetState) == 0x18);
 
-STATIC_ASSERT(offsetof(WorldPlanetObjectTables, orbitObjectIds) == 0x00);
-STATIC_ASSERT(offsetof(WorldPlanetObjectTables, orbitAngleOffsets) == 0x14);
-STATIC_ASSERT(offsetof(WorldPlanetObjectTables, flightPathObjectIds) == 0x28);
-STATIC_ASSERT(sizeof(WorldPlanetObjectTables) == 0x3C);
-
 STATIC_ASSERT(sizeof(WorldPlanetColorRGBA8) == 0x04);
 STATIC_ASSERT(offsetof(WorldPlanetPaddedColorRGBA8, unknown04) == 0x04);
 STATIC_ASSERT(sizeof(WorldPlanetPaddedColorRGBA8) == 0x08);
@@ -91,7 +80,6 @@ extern u8 gWorldPlanetLoadMapIndices[6];
 extern u8 gWorldPlanetBriefingSpeakerModel[8];
 extern int gWorldPlanetSavedSelection;
 extern int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT];
-extern WorldPlanetObjectTables gWorldPlanetObjectIdTable;
 
 extern WorldPlanetColorRGBA8 gWorldPlanetAmbientFrom;
 extern WorldPlanetColorRGBA8 gWorldPlanetAmbientTo;
