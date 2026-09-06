@@ -133,21 +133,18 @@ void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
         }
         else
         {
-            s16* p;
             s16 ang;
             int i;
             s16 diff;
             s16 step;
             ang = obj->anim.rotX;
             i = 0;
-            p = bits.a;
             do
             {
-                if (mainGetBit(*p) != 0)
+                if (mainGetBit(bits.a[i]) != 0)
                 {
                     break;
                 }
-                p += 1;
                 i += 1;
             } while (i < 4);
             if (i != 4 && dll_2E_getCurveActionTarget(curve.a[i], &target) != 0)
@@ -207,7 +204,7 @@ void DR_CloudRunner_fireProjectile(GameObject* obj)
         s16 angles[4];
         f32 mat[4];
     } s1;
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     GameObject* newObj;
     ObjPlacement* setup;
     f32 dist;
@@ -233,8 +230,8 @@ void DR_CloudRunner_fireProjectile(GameObject* obj)
     s1.mat[2] = 0.0f;
     s1.mat[3] = 0.0f;
     s1.mat[0] = 1.0f;
-    s1.angles[0] = (obj)->anim.rotX;
-    s1.angles[1] = (s16)(((obj)->anim.rotY - 0x190) >> 1);
+    s1.angles[0] = obj->anim.rotX;
+    s1.angles[1] = (s16)((obj->anim.rotY - 0x190) >> 1);
     s1.angles[2] = 0;
     dir[0] = 0.0f;
     dir[1] = 0.0f;
@@ -249,7 +246,7 @@ void DR_CloudRunner_fireProjectile(GameObject* obj)
     pos[0] = newObj->anim.localPosX + pos[0];
     pos[1] = newObj->anim.localPosY + pos[1];
     pos[2] = newObj->anim.localPosZ + pos[2];
-    voxmaps_worldToGrid((void*)&(obj)->anim.worldPosX, (s16*)gC);
+    voxmaps_worldToGrid((void*)&obj->anim.worldPosX, (s16*)gC);
     voxmaps_worldToGrid(pos, (s16*)gB);
     if (voxmaps_traceLine((VoxPos*)gC, (VoxPos*)gB, (VoxPos*)tr, NULL, 0) == 0)
     {
@@ -298,7 +295,7 @@ int DR_CloudRunner_stateHandler07(GameObject* obj)
 
 int DR_CloudRunner_stateHandler06(GameObject* obj, CloudRunnerState* baddie)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     baddie->baddie.flags0 |= 0x200000;
     if (baddie->baddie.moveJustStartedA != 0)
@@ -335,8 +332,8 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, CloudRunnerState* baddie)
             s1.mat[2] = 0.0f;
             s1.mat[3] = 0.0f;
             s1.mat[0] = 1.0f;
-            s1.angles[0] = (obj)->anim.rotX;
-            s1.angles[1] = (s16)(((obj)->anim.rotY - 0x190) >> 1);
+            s1.angles[0] = obj->anim.rotX;
+            s1.angles[1] = (s16)((obj->anim.rotY - 0x190) >> 1);
             s1.angles[2] = 0;
             dir[0] = 0.0f;
             dir[1] = 0.0f;
@@ -705,7 +702,7 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
 
 int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     baddie->baddie.flags0 |= 0x1204000;
     baddie->baddie.physicsActive = 0;
     if (baddie->baddie.moveJustStartedA != 0)
@@ -716,11 +713,11 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
         baddie->baddie.animSpeedC = fz;
         baddie->baddie.animSpeedB = fz;
         baddie->baddie.animSpeedA = fz;
-        (obj)->anim.velocityX = fz;
-        (obj)->anim.velocityY = fz;
-        (obj)->anim.velocityZ = fz;
-        inner2 = (obj)->extra;
-        placement = (DRCloudRunnerPlacement*)(obj)->anim.placementData;
+        obj->anim.velocityX = fz;
+        obj->anim.velocityY = fz;
+        obj->anim.velocityZ = fz;
+        inner2 = obj->extra;
+        placement = (DRCloudRunnerPlacement*)obj->anim.placementData;
         inner2->flagsBC0.b02 = 1;
         (*gGameUIInterface)
             ->initAirMeter(placement->airMeterCapacity, DRCLOUDRUNNER_AIRMETER_BGTEXTURE);
@@ -736,13 +733,13 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
         baddie->baddie.animSpeedC = fz;
         baddie->baddie.animSpeedB = fz;
         baddie->baddie.animSpeedA = fz;
-        (obj)->anim.velocityX = fz;
-        (obj)->anim.velocityY = fz;
-        (obj)->anim.velocityZ = fz;
+        obj->anim.velocityX = fz;
+        obj->anim.velocityY = fz;
+        obj->anim.velocityZ = fz;
     }
-    (obj)->anim.localPosX = inner->curveWalker.posX;
-    (obj)->anim.localPosY = inner->curveWalker.posY;
-    (obj)->anim.localPosZ = inner->curveWalker.posZ;
+    obj->anim.localPosX = inner->curveWalker.posX;
+    obj->anim.localPosY = inner->curveWalker.posY;
+    obj->anim.localPosZ = inner->curveWalker.posZ;
     {
         int a0;
         int a1;
@@ -750,7 +747,7 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
         a1 = getAngle(inner->curveWalker.tangentY,
                       sqrtf(inner->curveWalker.tangentX * inner->curveWalker.tangentX + inner->curveWalker.tangentZ * inner->curveWalker.tangentZ)) &
              0xffff;
-        a0 -= (u16)(obj)->anim.rotX;
+        a0 -= (u16)obj->anim.rotX;
         if (a0 > 0x8000)
         {
             a0 = a0 - 0xffff;
@@ -759,8 +756,8 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
         {
             a0 = a0 + 0xffff;
         }
-        (obj)->anim.rotX = (f32)(s32)(obj)->anim.rotX + interpolate((f32)(s32)a0, 0.03125f, timeDelta);
-        a1 -= (u16)(obj)->anim.rotY;
+        obj->anim.rotX = (f32)(s32)obj->anim.rotX + interpolate((f32)(s32)a0, 0.03125f, timeDelta);
+        a1 -= (u16)obj->anim.rotY;
         if (a1 > 0x8000)
         {
             a1 = a1 - 0xffff;
@@ -769,11 +766,11 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
         {
             a1 = a1 + 0xffff;
         }
-        (obj)->anim.rotY = (f32)(s32)(obj)->anim.rotY + interpolate((f32)(s32)a1, 0.03125f, timeDelta);
-        (obj)->anim.rotZ = (s16)(a0 >> 5);
+        obj->anim.rotY = (f32)(s32)obj->anim.rotY + interpolate((f32)(s32)a1, 0.03125f, timeDelta);
+        obj->anim.rotZ = (s16)(a0 >> 5);
     }
     {
-        int v = (obj)->anim.rotZ;
+        int v = obj->anim.rotZ;
         if (v < -0x1000)
         {
             v = -0x1000;
@@ -782,25 +779,25 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie)
         {
             v = 0x1000;
         }
-        (obj)->anim.rotZ = v;
+        obj->anim.rotZ = v;
     }
     return 0;
 }
 
 int DR_CloudRunner_stateHandler03(GameObject* obj, CloudRunnerState* baddie)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     if (baddie->baddie.moveJustStartedA != 0)
     {
         inner->flagsBC0.b10 = 0;
-        (obj)->anim.velocityY = 0.0f;
+        obj->anim.velocityY = 0.0f;
         if (inner->flagsBC0.b20)
         {
             inner->flagsBC0.b20 = 0;
             DR_CloudRunner_setupPath(obj, baddie, inner->flagsBC0.b20);
         }
     }
-    switch ((obj)->anim.currentMove)
+    switch (obj->anim.currentMove)
     {
     case 0x203:
         if (inner->airTimeRemaining != 0)
@@ -825,9 +822,9 @@ int DR_CloudRunner_stateHandler03(GameObject* obj, CloudRunnerState* baddie)
         baddie->baddie.animSpeedC = fz;
         baddie->baddie.animSpeedB = fz;
         baddie->baddie.animSpeedA = fz;
-        (obj)->anim.velocityX = fz;
-        (obj)->anim.velocityY = fz;
-        (obj)->anim.velocityZ = fz;
+        obj->anim.velocityX = fz;
+        obj->anim.velocityY = fz;
+        obj->anim.velocityZ = fz;
         baddie->baddie.moveSpeed = 0.01f;
         break;
     }
@@ -837,7 +834,7 @@ int DR_CloudRunner_stateHandler03(GameObject* obj, CloudRunnerState* baddie)
 
 int DR_CloudRunner_stateHandler02(GameObject* obj, CloudRunnerState* baddie)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     baddie->baddie.flags0 |= 0x200000;
     if (baddie->baddie.moveJustStartedA != 0)
     {
@@ -845,13 +842,13 @@ int DR_CloudRunner_stateHandler02(GameObject* obj, CloudRunnerState* baddie)
         baddie->baddie.animSpeedC = fz;
         baddie->baddie.animSpeedB = fz;
         baddie->baddie.animSpeedA = fz;
-        (obj)->anim.velocityX = fz;
-        (obj)->anim.velocityY = fz;
-        (obj)->anim.velocityZ = fz;
+        obj->anim.velocityX = fz;
+        obj->anim.velocityY = fz;
+        obj->anim.velocityZ = fz;
         baddie->baddie.controlTimer = 0;
         baddie->baddie.moveSpeed = 0.005f;
         baddie->baddie.velSmoothTime = 12.0f;
-        if ((obj)->anim.currentMove != 0)
+        if (obj->anim.currentMove != 0)
         {
             ObjAnim_SetCurrentMove(obj, 0, fz, 0);
         }
@@ -873,7 +870,7 @@ int DR_CloudRunner_stateHandler02(GameObject* obj, CloudRunnerState* baddie)
 int DR_CloudRunner_stateHandler01(GameObject* obj, CloudRunnerState* baddie)
 {
     CloudRunnerState* inner;
-    DRCloudRunnerPlacement* placement = (DRCloudRunnerPlacement*)(obj)->anim.placementData;
+    DRCloudRunnerPlacement* placement = (DRCloudRunnerPlacement*)obj->anim.placementData;
     baddie->baddie.flags0 |= 0x200000;
     if (baddie->baddie.moveJustStartedA != 0)
     {
@@ -885,24 +882,24 @@ int DR_CloudRunner_stateHandler01(GameObject* obj, CloudRunnerState* baddie)
         baddie->baddie.animSpeedC = fz;
         baddie->baddie.animSpeedB = fz;
         baddie->baddie.animSpeedA = fz;
-        (obj)->anim.velocityX = fz;
-        (obj)->anim.velocityY = fz;
-        (obj)->anim.velocityZ = fz;
+        obj->anim.velocityX = fz;
+        obj->anim.velocityY = fz;
+        obj->anim.velocityZ = fz;
         return 0;
     }
-    inner = (obj)->extra;
-    Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX);
+    inner = obj->extra;
+    Vec_distance(&obj->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX);
     if (RandomTimer_UpdateRangeTrigger(&inner->randomTimerB54, 12.0f, 18.0f))
     {
         Sfx_PlayFromObject(obj, SFXTRIG_lfoot_taunt);
     }
     if (mainGetBit(placement->enableGameBit) != 0)
     {
-        (obj)->userData1 = 0;
+        obj->userData1 = 0;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
         inner->flagsBC0.b10 = inner->airTimeRemaining > 0;
-        (obj)->anim.rotX = gDRCloudRunnerDefaultRotX;
+        obj->anim.rotX = gDRCloudRunnerDefaultRotX;
         return 3;
     }
     return 0;
@@ -910,7 +907,7 @@ int DR_CloudRunner_stateHandler01(GameObject* obj, CloudRunnerState* baddie)
 
 int DR_CloudRunner_stateHandler00(GameObject* obj)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     switch (inner->spawnVariant)
     {
     case 0:
@@ -1071,7 +1068,7 @@ int DR_CloudRunner_getObjectTypeId(void)
 
 void DR_CloudRunner_free(GameObject* obj)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     mainSetBits(0x7aa, inner->airTimeRemaining);
     objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
     objFreeObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
@@ -1080,8 +1077,8 @@ void DR_CloudRunner_free(GameObject* obj)
 
 void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    CloudRunnerState* inner = (obj)->extra;
-    if ((obj)->userData1 == 0)
+    CloudRunnerState* inner = obj->extra;
+    if (obj->userData1 == 0)
     {
         if (vis == -1)
         {
@@ -1098,15 +1095,15 @@ void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
 
 void DR_CloudRunner_hitDetect(GameObject* obj)
 {
-    CloudRunnerState* inner = (obj)->extra;
+    CloudRunnerState* inner = obj->extra;
     int hitResult;
     GameObject* hits[4];
     s16 diff;
-    if (inner->airTimeRemaining != 0 && (obj)->anim.currentMove != 0xf &&
+    if (inner->airTimeRemaining != 0 && obj->anim.currentMove != 0xf &&
         (hitResult = ObjHits_GetPriorityHit(obj, hits, 0, 0)) != 0 && hitResult != 0xf &&
         inner->mountState == VEHICLE_Mounted)
     {
-        diff = (obj)->anim.rotX - (u16)hits[0]->anim.rotX;
+        diff = obj->anim.rotX - (u16)hits[0]->anim.rotX;
         if (diff > 0x8000)
         {
             diff = diff - 0xffff;
@@ -1149,7 +1146,7 @@ void DR_CloudRunner_updateFlightControl(GameObject* obj, f32 f, int triggerFrame
         flag = 1;
     }
     slot = Camera_GetCurrent();
-    inner = (obj)->extra;
+    inner = obj->extra;
     inner->baddie.hitPoints = 0;
     inner->baddie.flags0 &= ~0x8000;
     inner->baddie.flags0 |= 0x200000;
@@ -1196,21 +1193,21 @@ void DR_CloudRunner_update(GameObject* obj)
 {
     CloudRunnerState* inner;
     Obj_GetPlayerObject();
-    inner = (obj)->extra;
+    inner = obj->extra;
     inner->unkBAE = 5;
     logPrintf(sOnCloudFormat, mainGetBit(CLOUDRUNNER_ONCLOUD_GAMEBIT));
-    (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if (inner->mountState == VEHICLE_Mounted)
     {
-        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         DR_CloudRunner_updateFlightControl(obj, timeDelta, -1);
-        (&obj->anim)->modelInstance->flags |= 0x200000LL;
+        obj->anim.modelInstance->flags |= OBJDEF_FLAG_RENDER_WHEN_INVISIBLE;
     }
     else
     {
         inner->baddie.physicsActive = 0;
         DR_CloudRunner_updateFlightControl(obj, timeDelta, -1);
-        (&obj->anim)->modelInstance->flags &= ~0x200000LL;
+        obj->anim.modelInstance->flags &= ~OBJDEF_FLAG_RENDER_WHEN_INVISIBLE;
     }
     if (inner->cooldownTimer != 0)
     {
@@ -1234,7 +1231,7 @@ void DR_CloudRunner_update(GameObject* obj)
     objSoundUpdateMouth(obj, &inner->modelSoundState);
     characterHeadLookCalm(obj, (s16*)&inner->eyeAnimState, 0.0f);
     characterDoEyeAnims(obj, &inner->eyeAnimState);
-    if ((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
+    if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->mountState == VEHICLE_NoRider)
         {
@@ -1275,8 +1272,8 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def)
     MoveLibTarget target;
     CloudRunnerState* inner;
     int savedSlot;
-    (obj)->anim.rotX = (s16)(def->spawnRot << 8);
-    (obj)->animEventCallback = DR_CloudRunner_SeqFn;
+    obj->anim.rotX = (s16)(def->spawnRot << 8);
+    obj->animEventCallback = DR_CloudRunner_SeqFn;
     objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     inner = obj->extra;
     inner->spawnVariant = def->spawnVariant;
@@ -1284,18 +1281,18 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def)
     inner->airTimeRemaining = def->airMeterCapacity;
     inner->sequenceIndex = -1;
     inner->pathFollowSpeed = (f32)def->pathSpeedTenths / 10.0f;
-    if ((obj)->anim.modelState != NULL)
+    if (obj->anim.modelState != NULL)
     {
-        (obj)->anim.modelState->flags |= 0xa10;
+        obj->anim.modelState->flags |= 0xa10;
     }
     savedSlot = mainGetBit(0x7a9);
     if (savedSlot != 0)
     {
         dll_2E_getCurveActionTarget(savedSlot + 0x13, &target);
-        (obj)->anim.localPosX = target.x;
-        (obj)->anim.localPosY = target.y;
-        (obj)->anim.localPosZ = target.z;
-        (obj)->anim.rotX = target.angle;
+        obj->anim.localPosX = target.x;
+        obj->anim.localPosY = target.y;
+        obj->anim.localPosZ = target.z;
+        obj->anim.rotX = target.angle;
     }
     (*gPlayerInterface)->init(obj, (void*)inner, 8, 1);
     inner->baddie.gravity = 0.17f;
