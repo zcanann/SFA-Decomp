@@ -50,10 +50,9 @@
 
 #define ABS_EXPR(value) ((value) >= 0.0f ? value : -value)
 
-const f32 gDrakorHoverpadSpeedStep = 2.0f;
 f32 gDrakorHoverpadMtx[16];
 
-#define DRAKORHOVERPAD_SPEED_STEP (*(f32*)&gDrakorHoverpadSpeedStep)
+#define DRAKORHOVERPAD_SPEED_STEP 2.0f
 
 f32 gDrakorHoverpadSteerMaxSpeed = 5.0f;
 s16 lbl_803DC2FC = 3;
@@ -141,11 +140,18 @@ void drakorhoverpad_getCameraPosition(GameObject* obj, f32* ox, f32* oy, f32* oz
     Matrix_TransformPoint(mtx, 0.0f, lbl_803DC300, lbl_803DC304, ox, oy, oz);
 }
 
-static inline f32 drakorhoverpad_nodeWobbleSin(RomCurveDef** slot, int angle) {
+static void drakorhoverpad_initPathCurve(GameObject* obj, DrakorHoverpadState* p) {
+    int curveArg = 0x2a;
+
+    (*gRomCurveInterface)->initCurve(&p->curve, (void*)obj, 300.0f, &curveArg, -1);
+    Curve_AdvanceAlongPath(&p->curve.curve, 0.01f);
+}
+
+static f32 drakorhoverpad_nodeWobbleSin(RomCurveDef** slot, int angle) {
     return DRAKORHOVERPAD_SPEED_STEP * ((f32)(u32)(*slot)->tangentMag * mathSinf(3.1415927f * (f32)angle / 32768.0f));
 }
 
-static inline f32 drakorhoverpad_nodeWobbleCos(RomCurveDef** slot, int angle) {
+static f32 drakorhoverpad_nodeWobbleCos(RomCurveDef** slot, int angle) {
     return DRAKORHOVERPAD_SPEED_STEP * ((f32)(u32)(*slot)->tangentMag * mathCosf(3.1415927f * (f32)angle / 32768.0f));
 }
 
@@ -544,12 +550,8 @@ int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCod
         mainSetBits(0x788, 1);
         break;
     case 16:
+        absP = ABS_EXPR(p->commandSpeed);
         cur = p->commandSpeed;
-        if (cur >= 0.0f) {
-            absP = cur;
-        } else {
-            absP = -cur;
-        }
         if (DRAKORHOVERPAD_SPEED_STEP == absP) {
             p->commandSpeed = cur * half;
         } else {
@@ -617,13 +619,6 @@ void drakorhoverpad_render(GameObject* obj, int p2, int p3, int p4, int p5, char
 }
 
 void drakorhoverpad_hitDetect(void) {
-}
-
-static inline void drakorhoverpad_initPathCurve(GameObject* obj, DrakorHoverpadState* p) {
-    int curveArg = 0x2a;
-
-    (*gRomCurveInterface)->initCurve(&p->curve, (void*)obj, 300.0f, &curveArg, -1);
-    Curve_AdvanceAlongPath(&p->curve.curve, 0.01f);
 }
 
 void drakorhoverpad_updateMain(GameObject* obj) {

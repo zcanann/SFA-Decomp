@@ -937,6 +937,12 @@ costs more in alignment than it recovers.
 
 **The axis is OPEN for `.sdata2` emission order.** The short form, each point measured:
 
+> **September 6, 2026 correction:** The reachability caps below are historical,
+> not stopping rules. [DLL 625 now matches and links completely](DrakorHoverpad_matching.md)
+> with ordinary static helpers and automatic inlining. Their compilation emits
+> constants before the first surviving call-site use; explicit `inline` helpers
+> behave differently. Retail first-use order alone cannot prove a pool unreachable.
+
 - **Anonymity does NO work.** `audio_sfx` `.sdata2` is entirely anonymous `@N` and locals on our
   side, retail's all named and global — retail even carries two symbols at `0x0c`/`0x0e` we never
   emit — and it scores **matched_data 3328/3328, 100%**. Roughly 600 units have an all-`@N`

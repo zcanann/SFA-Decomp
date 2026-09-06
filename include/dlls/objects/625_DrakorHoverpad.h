@@ -36,8 +36,6 @@ extern f32 lbl_803DC304;
 extern f32 gDrakorHoverpadSteerMaxSpeed;
 extern s16 lbl_803DC2FC;
 
-extern const f32 gDrakorHoverpadSpeedStep;
-
 typedef struct DrakorHoverpadUpdateMainPlacement {
     ObjPlacement base;
     s8 rotXByte;
