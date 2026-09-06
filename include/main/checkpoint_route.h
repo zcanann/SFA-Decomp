@@ -47,7 +47,7 @@ typedef struct CheckpointRouteEntry {
 
 typedef struct CheckpointSlot {
     u32 key;
-    CheckpointRouteEntry *entry;
+    CheckpointRouteEntry* entry;
 } CheckpointSlot;
 
 typedef struct CheckpointRouteState {
@@ -65,7 +65,7 @@ typedef struct CheckpointRouteState {
 extern CheckpointSlot gCheckpointRouteTable[];
 extern s32 gCheckpointRouteCount;
 
-CheckpointRouteEntry *Checkpoint_find(s32 key, s32 *idx_out);
+CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out);
 
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, posX) == 0x08);
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, checkpointId) == 0x14);
