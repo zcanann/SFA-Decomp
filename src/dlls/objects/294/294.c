@@ -1020,8 +1020,8 @@ void Trigger_render(void) {
 }
 
 void Trigger_hitDetect(GameObject* obj) {
-    u8* state = obj->extra;
-    u8* def = (u8*)obj->anim.placementData;
+    TriggerState* state = obj->extra;
+    TriggerPlacement* def = (TriggerPlacement*)obj->anim.placementData;
     GameObject* triggerObj;
     GameObject* trickyObj;
     GameObject* target;
@@ -1034,7 +1034,7 @@ void Trigger_hitDetect(GameObject* obj) {
     f32 dist[1];
 
     dist[0] = 200.0f;
-    if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->base.objectId == 0xf4) {
+    if (def->triggerId <= 0 || def->base.objectId == 0xf4) {
         triggerObj = Obj_GetPlayerObject();
         if (triggerObj != NULL) {
             inside = (int)playerGetFocusObject(triggerObj);
@@ -1046,13 +1046,13 @@ void Trigger_hitDetect(GameObject* obj) {
         }
         trickyObj = getTrickyObject();
         if (triggerObj != NULL || trickyObj != NULL) {
-            if ((*state & TRIGGER_SFLAG_DISABLED) != 0) {
+            if ((state->status & TRIGGER_SFLAG_DISABLED) != 0) {
                 objInterpretSeq(obj, triggerObj, 1, 0);
-                *state &= ~TRIGGER_SFLAG_DISABLED;
-                *state |= TRIGGER_SFLAG_ENTERED;
+                state->status &= ~TRIGGER_SFLAG_DISABLED;
+                state->status |= TRIGGER_SFLAG_ENTERED;
             } else {
                 ok = 1;
-                targetKind = ((TriggerPlacement*)def)->target;
+                targetKind = def->target;
                 if (targetKind > 2) {
                     target = objGetNearestTypeTo(targetKind - 1, obj, dist);
                     if (target == NULL) {
@@ -1078,47 +1078,47 @@ void Trigger_hitDetect(GameObject* obj) {
                     }
                 }
                 if (ok) {
-                    if ((*state & TRIGGER_SFLAG_SEED_TARGET) != 0) {
-                        switch (((TriggerPlacement*)def)->target) {
+                    if ((state->status & TRIGGER_SFLAG_SEED_TARGET) != 0) {
+                        switch (def->target) {
                         case 2:
-                            ((TriggerState*)state)->targetPosX = target->anim.worldPosX;
-                            ((TriggerState*)state)->targetPosY = target->anim.worldPosY;
-                            ((TriggerState*)state)->targetPosZ = target->anim.worldPosZ;
+                            state->targetPosX = target->anim.worldPosX;
+                            state->targetPosY = target->anim.worldPosY;
+                            state->targetPosZ = target->anim.worldPosZ;
                             break;
                         case 0:
                         case 1:
-                            ((TriggerState*)state)->targetPosX = target->anim.previousWorldPosX;
-                            ((TriggerState*)state)->targetPosY = target->anim.previousWorldPosY;
-                            ((TriggerState*)state)->targetPosZ = target->anim.previousWorldPosZ;
+                            state->targetPosX = target->anim.previousWorldPosX;
+                            state->targetPosY = target->anim.previousWorldPosY;
+                            state->targetPosZ = target->anim.previousWorldPosZ;
                             break;
                         default:
-                            ((TriggerState*)state)->targetPosX = target->anim.previousLocalPosX;
-                            ((TriggerState*)state)->targetPosY = target->anim.previousLocalPosY;
-                            ((TriggerState*)state)->targetPosZ = target->anim.previousLocalPosZ;
+                            state->targetPosX = target->anim.previousLocalPosX;
+                            state->targetPosY = target->anim.previousLocalPosY;
+                            state->targetPosZ = target->anim.previousLocalPosZ;
                             break;
                         }
-                        *state &= ~TRIGGER_SFLAG_SEED_TARGET;
+                        state->status &= ~TRIGGER_SFLAG_SEED_TARGET;
                     } else {
-                        ((TriggerState*)state)->targetPosX = ((TriggerState*)state)->prevTargetPosX;
-                        ((TriggerState*)state)->targetPosY = ((TriggerState*)state)->prevTargetPosY;
-                        ((TriggerState*)state)->targetPosZ = ((TriggerState*)state)->prevTargetPosZ;
+                        state->targetPosX = state->prevTargetPosX;
+                        state->targetPosY = state->prevTargetPosY;
+                        state->targetPosZ = state->prevTargetPosZ;
                     }
-                    switch (((TriggerPlacement*)def)->target) {
+                    switch (def->target) {
                     case 0:
                     case 1:
                     case 2:
-                        ((TriggerState*)state)->prevTargetPosX = target->anim.worldPosX;
-                        ((TriggerState*)state)->prevTargetPosY = target->anim.worldPosY;
-                        ((TriggerState*)state)->prevTargetPosZ = target->anim.worldPosZ;
+                        state->prevTargetPosX = target->anim.worldPosX;
+                        state->prevTargetPosY = target->anim.worldPosY;
+                        state->prevTargetPosZ = target->anim.worldPosZ;
                         break;
                     default:
-                        ((TriggerState*)state)->prevTargetPosX = target->anim.localPosX;
-                        ((TriggerState*)state)->prevTargetPosY = target->anim.localPosY;
-                        ((TriggerState*)state)->prevTargetPosZ = target->anim.localPosZ;
+                        state->prevTargetPosX = target->anim.localPosX;
+                        state->prevTargetPosY = target->anim.localPosY;
+                        state->prevTargetPosZ = target->anim.localPosZ;
                         break;
                     }
                 }
-                switch (((TriggerPlacement*)def)->base.objectId) {
+                switch (def->base.objectId) {
                 case 0x4b:
                     if (ok) {
                         triggerEvalEndpointSpheres(obj, target);
@@ -1131,8 +1131,8 @@ void Trigger_hitDetect(GameObject* obj) {
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (((TriggerState*)state)->gateBits[0] != -1 &&
-                        mainGetBit(((TriggerState*)state)->gateBits[0]) == 0u) {
+                    if (state->gateBits[0] != -1 &&
+                        mainGetBit(state->gateBits[0]) == 0u) {
                         ok2 = 0;
                     }
                     if (ok2 && ok) {
@@ -1140,8 +1140,8 @@ void Trigger_hitDetect(GameObject* obj) {
                     }
                     break;
                 case 0x4e:
-                    ((TriggerState*)state)->timer = *(int*)&((TriggerState*)state)->timer + framesThisStep;
-                    if (((TriggerState*)state)->timer >= (u32)((TriggerPlacement*)def)->triggerDelayFrames) {
+                    state->timer = *(int*)&state->timer + framesThisStep;
+                    if (state->timer >= (u32)def->triggerDelayFrames) {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
                     break;
@@ -1173,18 +1173,18 @@ void Trigger_hitDetect(GameObject* obj) {
                     ok = 1;
                     i = 0;
                     while (i < 4 && ok) {
-                        s16 gate = ((TriggerState*)state)->gateBits[i];
+                        s16 gate = state->gateBits[i];
                         if (gate != -1 && mainGetBit(gate) == 0u) {
                             ok = 0;
                         }
                         i++;
                     }
-                    if (ok && ((TriggerState*)state)->flags8A.bit7 == 0) {
-                        ((TriggerState*)state)->flags8A.bit7 = 1;
+                    if (ok && state->flags8A.bit7 == 0) {
+                        state->flags8A.bit7 = 1;
                         objInterpretSeq(obj, triggerObj, 1, 0);
                     }
                     if (!ok) {
-                        ((TriggerState*)state)->flags8A.bit7 = 0;
+                        state->flags8A.bit7 = 0;
                     }
                     break;
                 case 0xf4:
@@ -1201,41 +1201,41 @@ void Trigger_hitDetect(GameObject* obj) {
 void Trigger_update(void) {
 }
 
-void Trigger_init(GameObject* obj, u8* params) {
-    u8* state;
+void Trigger_init(GameObject* obj, TriggerPlacement* params) {
+    TriggerState* state;
     f32 range;
-    TriggerPlacement* placement = (TriggerPlacement*)params;
+    TriggerPlacement* placement = params;
 
     objSetSlot(obj, 0x28);
     state = obj->extra;
-    switch (((TriggerPlacement*)params)->base.objectId) {
+    switch (params->base.objectId) {
     case 0x4b:
-        range = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
-        ((TriggerState*)state)->rangeSq = range * range;
+        range = (f32)(s32)(params->size[0] * 2);
+        state->rangeSq = range * range;
         obj->anim.rotZ = 0;
         obj->anim.rotY = 0;
-        obj->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
+        obj->anim.rotX = (s16)(params->rot[0] << 8);
         obj->anim.rootMotionScale = triggerRangeToModelScale(range);
         break;
     case 0x4c:
-        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
+        state->gateBits[0] = params->gateBitSrc[0];
         MmpGyservent_setup(obj, (MMPTriggerGeyserPlacement*)params);
         break;
     case 0x230:
-        ((TriggerState*)state)->rangeSq = (f32)(s32)(((TriggerPlacement*)params)->size[0] * 2);
-        ((TriggerState*)state)->rangeSq = ((TriggerState*)state)->rangeSq * ((TriggerState*)state)->rangeSq;
+        state->rangeSq = (f32)(s32)(params->size[0] * 2);
+        state->rangeSq = state->rangeSq * state->rangeSq;
         break;
     case 0x4d:
-        obj->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
-        obj->anim.rotY = (s16)(((TriggerPlacement*)params)->rot[1] << 8);
+        obj->anim.rotX = (s16)(params->rot[0] << 8);
+        obj->anim.rotY = (s16)(params->rot[1] << 8);
         obj->anim.rotZ = 0;
         break;
     case 0x54:
-        ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
-        ((TriggerState*)state)->gateBits[1] = ((TriggerPlacement*)params)->gateBitSrc[1];
-        ((TriggerState*)state)->gateBits[2] = ((TriggerPlacement*)params)->gateBitSrc[2];
-        ((TriggerState*)state)->gateBits[3] = ((TriggerPlacement*)params)->gateBitSrc[3];
-        ((TriggerState*)state)->flags8A.bit7 = 0;
+        state->gateBits[0] = params->gateBitSrc[0];
+        state->gateBits[1] = params->gateBitSrc[1];
+        state->gateBits[2] = params->gateBitSrc[2];
+        state->gateBits[3] = params->gateBitSrc[3];
+        state->flags8A.bit7 = 0;
         break;
     case 0x4e:
     case 0x4f:
@@ -1246,11 +1246,11 @@ void Trigger_init(GameObject* obj, u8* params) {
     default:
         break;
     }
-    ((TriggerState*)state)->gameBit = ((TriggerPlacement*)params)->gameBitSrc;
-    if ((int)mainGetBit(((TriggerState*)state)->gameBit) == 1) {
-        state[0] = (u8)(state[0] | TRIGGER_SFLAG_DISABLED);
+    state->gameBit = params->gameBitSrc;
+    if ((int)mainGetBit(state->gameBit) == 1) {
+        state->status |= TRIGGER_SFLAG_DISABLED;
     }
-    state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
+    state->status |= TRIGGER_SFLAG_SEED_TARGET;
 }
 
 void Trigger_release(void) {
