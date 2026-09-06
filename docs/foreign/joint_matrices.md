@@ -9,6 +9,11 @@ or resumable C language construct. The original source language remains
 unresolved: authored assembly, assembly macros, mixed C/assembly and unusual
 compiler output have not been conclusively distinguished.
 
+The follow-up [actual compiler audit](joint_matrices_compiler.md) identifies a
+concrete obstruction in stock GC/1.3's ordinary C frame generator and verifies
+that function-level assembly can emit the observed shape. Original authorship
+remains unresolved.
+
 ## Dinosaur Planet supplies the corresponding implementation
 
 The sibling `../dinosaur-planet` checkout at
