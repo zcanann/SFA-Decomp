@@ -864,7 +864,7 @@ int pauseMenuHoloRenderFn(int* this, int* p2, int p3) {
     Mtx mtex;
     Mtx m3;
     GameUiIndirectMatrix indmtx;
-    int tex2;
+    Texture* tex2;
     GXColor chanCol = sPauseMenuHoloChanColor;
     void *op, *layer, *tex0;
     f32 sval;
@@ -934,8 +934,8 @@ int pauseMenuHoloRenderFn(int* this, int* p2, int p3) {
     mtex[2][3] = 1.0f;
     GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    newshadows_getDiskTexture((u32*)&tex2);
-    selectTexture((Texture*)((void*)tex2), 1);
+    newshadows_getDiskTexture(&tex2);
+    selectTexture(tex2, 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(GX_KCOLOR0, *(GXColor*)&gTrickyHudIconKColor);
     GXSetTevDirect(GX_TEVSTAGE2);

@@ -155,6 +155,36 @@ data are byte-identical; all 39 exact functions and 100% data matching remain.
 Fixed-count inner loops were tested for the blur's explicit tile copies, but
 change MWCC's outer unrolling substantially. Those experiments are not landed.
 
+## Native texture contracts
+
+All eleven remaining integer-backed texture globals are `Texture*`: their
+values come directly from `textureAlloc` or `textureLoadAsset`, and consumers
+use the canonical texture header, GX object, or inline payload. The bump fill
+now carries its tiled pixel address as `u8*` instead of truncating it through
+an integer. Global declaration order and storage widths remain unchanged.
+
+The five pointer-returning getters and five formerly `u32*` output getters
+now expose `Texture*` and `Texture**` in their owning headers. Their seven
+direct consumer TUs no longer cast texture pointers through these integer
+contracts. The pause-menu disk texture and projected-shadow comparison local
+also use `Texture*`; no unrelated consumer formatting or type cleanup is mixed
+into this change.
+
+All seven edited consumer objects remain byte-for-byte identical, including
+all 48 shader functions and all 65 intersection-render functions. In
+`newshadows`, the other 43 function bodies remain byte-identical and all 39
+exact functions remain exact. Allocation retains 1485 instructions against
+retail's 1487 and 16 structural differences; operand differences increase from
+330 to 342. Its fuzzy score changes from 97.24613% to 97.19906%, and the TU from
+98.65502% to 98.64202%. This is source-contract recovery, not a matching gain.
+
+All 16668 allocated data bytes and every named symbol's section, offset, size,
+and linkage remain unchanged. Relocations have identical targets and addends;
+only generated anonymous pool symbol names change. No compiler flags, sections,
+constant definitions, or inline assembly are introduced. Natural single-address
+and halfword-indexed bump expressions were also tested but add structural
+differences, so the existing byte-address sequence is retained.
+
 ## Checks
 
 `python -m unittest discover -s tools -p test_shadow_texture_blend.py` compiles

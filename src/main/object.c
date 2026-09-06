@@ -835,7 +835,7 @@ static void objFreeObjdef(u8* obj, int flag) {
             shadowVolumesSetDirty(1);
         }
         if (((ObjAnimComponent*)obj)->modelState->shadowTexture != NULL) {
-            curTex = (void*)newshadows_getSmallDiskTexture();
+            curTex = newshadows_getSmallDiskTexture();
             tex = ((ObjAnimComponent*)obj)->modelState->shadowTexture;
             if (tex != curTex) {
                 if (((ObjAnimComponent*)obj)->modelInstance->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) {

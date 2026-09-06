@@ -563,7 +563,7 @@ void showMemCardError(u8 err)
         timer += 0x3e8;
         waitNextFrame();
         saved = gSaveCardBackdropColor;
-        hudDrawColored((Texture*)newshadows_getReflectionColorTexture(), 0, 0, &saved, 0x200, 0);
+        hudDrawColored(newshadows_getReflectionColorTexture(), 0, 0, &saved, 0x200, 0);
         if (submenu != 0)
         {
             opts[0] = 6;
@@ -719,7 +719,7 @@ void cardShowLoadingMsg(u8 kind)
         else
         {
             saved = gSaveCardBackdropColor;
-            hudDrawColored((Texture*)newshadows_getReflectionColorTexture(), 0, 0, &saved, 0x200, 0);
+            hudDrawColored(newshadows_getReflectionColorTexture(), 0, 0, &saved, 0x200, 0);
         }
     gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1)

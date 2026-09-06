@@ -510,7 +510,7 @@ void setupCausticBaseTevStages(void* viewMtx)
     mtx40[1][3] = 0.0f;
     GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    newshadows_getCausticTexture((u32*)&obj7c);
+    newshadows_getCausticTexture(&obj7c);
     if (obj7c != NULL)
     {
         void* obj = obj7c->gxTexObj;
@@ -539,7 +539,7 @@ void setupCausticBaseTevStages(void* viewMtx)
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    newshadows_getRampTexture((u32*)&obj80);
+    newshadows_getRampTexture(&obj80);
     if (obj80 != NULL)
     {
         void* obj = obj80->gxTexObj;
@@ -591,7 +591,7 @@ void addShadowFalloffTevStages(void)
     f32 tmp;
     f32 t;
 
-    obj1 = (Texture*)newshadows_getFalloffTexture();
+    obj1 = newshadows_getFalloffTexture();
     C_MTXLightOrtho(mtx1, 25.0f, -25.0f, -25.0f, 25.0f, 0.5f, 0.5f, 0.5f, 0.5f);
     GXLoadTexMtxImm(mtx1, gRcpNextPostTexMtx, GX_MTX3x4);
     GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, gRcpNextPostTexMtx);
@@ -664,7 +664,7 @@ void addShadowFalloffTevStages(void)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    obj2 = (Texture*)newshadows_getInverseRampTexture();
+    obj2 = newshadows_getInverseRampTexture();
     id = gRcpNextTexMap;
     if (obj2 != NULL)
     {
@@ -734,7 +734,7 @@ void addWavyCausticTevStage(void)
     GXSetIndTexCoordScale(gRcpNextIndTexStage, GX_ITS_1, GX_ITS_1);
     GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
     GXSetTevIndirect(gRcpNextTevStage, gRcpNextIndTexStage, GX_ITF_8, GX_ITB_ST, GX_ITM_1, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
-    newshadows_getCausticTexture((u32*)&tex);
+    newshadows_getCausticTexture(&tex);
     id = gRcpNextTexMap + 1;
     if (tex != NULL)
     {
@@ -878,7 +878,7 @@ void setupHeatShimmerTevStages(char* p1)
     }
     GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
-    newshadows_getCausticTexture((u32*)&tex30);
+    newshadows_getCausticTexture(&tex30);
     if (tex30 != 0)
     {
         void* obj = textureGetGXTexObj(tex30);
@@ -1103,7 +1103,7 @@ void addWarpedRingTevStages(void)
     GXSetTevSwapMode(gRcpNextTevStage + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    newshadows_getCausticTexture((u32*)&tex18);
+    newshadows_getCausticTexture(&tex18);
     {
         int id2 = gRcpNextTexMap + 1;
         if (tex18 != 0)
@@ -1236,7 +1236,7 @@ void renderHeavyFog(void* fogColor)
         GXSetTevSwapMode(gRcpNextTevStage + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(gRcpNextTevStage + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        newshadows_getCausticTexture((u32*)&tex1c);
+        newshadows_getCausticTexture(&tex1c);
         {
             int id2 = gRcpNextTexMap + 1;
             if (tex1c != 0)
@@ -1738,7 +1738,7 @@ void addCastShadowTevStages(u8* objInst)
     GXSetTevSwapMode(gRcpNextTevStage + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(gRcpNextTevStage + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
     GXSetTevAlphaOp(gRcpNextTevStage + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    newshadows_getRampTexture((u32*)&src);
+    newshadows_getRampTexture(&src);
     id = gRcpNextTexMap;
     if (src != NULL)
     {

@@ -529,7 +529,7 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     s16 savedRotX;
     s16 savedRotZ;
     s16 savedRotY;
-    u32 diskTexture;
+    Texture* diskTexture;
     MtxPtr viewMtx;
     u32 i;
 
@@ -576,7 +576,7 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
             projectionScale = obj->anim.hitboxScale * obj->anim.rootMotionScale;
         if (modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED ||
             (diskTexture = newshadows_getSmallDiskTexture(),
-             (u32)modelState->shadowCastSlot->texture == diskTexture))
+             modelState->shadowCastSlot->texture == diskTexture))
         {
             GXColor color = *(GXColor*)shadowColor;
             objectShadow_setupProjectedTexture(modelState->shadowCastSlot, &color, worldMtx);
@@ -866,7 +866,7 @@ int shadowInit(GameObject* obj, u32 arena, int flags)
     }
     else
     {
-        modelState->shadowTexture = (void*)newshadows_getSmallDiskTexture();
+        modelState->shadowTexture = newshadows_getSmallDiskTexture();
     }
     if (obj->anim.modelInstance->shadowType == OBJ_SHADOW_TYPE_BIG_BOX)
     {
