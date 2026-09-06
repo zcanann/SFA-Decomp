@@ -620,3 +620,30 @@ The strict retail checksum, `ninja all_source`, and generated-path audit
 pass after rebasing onto current staging. Formatting is a separate commit
 and is checked against the complete pre-format object. Controls and audits
 are under `build/gc13_new_matches/player_round6*`.
+
+## September 6: Talk-camera roll smoothing
+
+Engine 69 (`dlls/engine/69/69.c`) reaches **100% for all six functions,
+1,316 code bytes, and 120 assigned data bytes**, and is now source-linked
+for EN v1.0. `CameraModeTalk_update` adds 1,076 exact code bytes, improving
+from 99.90707% to 100%; the complete TU improves from 99.92401% to 100%.
+
+The final roll update uses `(angleDelta * timeDelta) / 16.0f`, removing the
+separate roll-step and smoothing-factor temporaries. GC/1.3 folds the division
+into the existing multiply-add and assigns the intermediate product and the
+integer-conversion constant to retail's registers. The backend trace validates
+all 269 instructions, with ordinary and instrumented objects byte-identical.
+The same source also matches under GC/2.0; this recovery does not establish a
+compiler-version distinction.
+
+Only five instruction bytes change, all in the update function. Every other
+function, allocated data byte, section size/alignment, named symbol location,
+and relocation record is preserved. The TU keeps its existing GC/1.3 profile,
+boundaries, generated path, header, and shared consumers. Formatting is a
+separate commit and preserves the raw object.
+
+The generated-path audit and formatting checks pass. Both the strict retail
+checksum build and `ninja all_source` pass within their 30-second limits,
+with the source-linked DOL retaining SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls, traces,
+reports, and object audits are under `build/gc13_new_matches/camtalk/`.
