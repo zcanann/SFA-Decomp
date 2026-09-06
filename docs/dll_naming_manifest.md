@@ -1213,6 +1213,14 @@ worth knowing.
 
 ### Yield
 
+The gametext compiler-profile verdict below is superseded by
+[gametext TU recovery](gametext_tu_recovery.md). Rechecking physical retail
+references confirms one shared pool across the six current source fragments.
+They are now one GC/1.3 TU; regressions from removing fragment-specific
+optimization flags do not invalidate the retail boundary evidence. The older
+`MWTrace` entry was not a separate unit in the active EN split at recovery time.
+Historical measurements below are retained as experiments, not provenance.
+
 8690 distinct `.sdata2` addresses are referenced from `.text`; **18** are
 referenced from more than one object, forming **four** candidate groups,
 each of which is a *contiguous* run in `.text` order.  All four were

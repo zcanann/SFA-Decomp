@@ -19,8 +19,6 @@ extern int gGameTextRenderingById;
 extern u16 gGameTextCursorX;
 extern u16 gGameTextCursorY;
 extern void* gGameTextStringStore;
-extern f32 lbl_803DE704;
-extern f32 lbl_803DE708;
 extern int gGameTextShadowEnabled;
 extern f32 gGameTextScale;
 extern u8 gGameTextShadowColorB;

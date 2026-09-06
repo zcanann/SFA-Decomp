@@ -23,9 +23,7 @@
 #include "main/dll/cmenu.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/dll/dll_0000_gameui.h"
-#define GAMETEXT_COLOR_U8_ARGS
 #include "main/gametext_color_api.h"
-#undef GAMETEXT_COLOR_U8_ARGS
 #include "main/dll/cmenu_item_table.h"
 #include "dlls/objects/196_Tricky.h"
 #include "main/pause_menu_api.h"

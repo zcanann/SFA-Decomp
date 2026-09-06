@@ -89,32 +89,12 @@ main/fileio.c:
 	.sbss       start:0x803DD5D0 end:0x803DD5E8
 
 main/gametext.c:
-	.text       start:0x80015C00 end:0x800162C4
-	.data       start:0x802C7618 end:0x802C94C0
-	.sdata      start:0x803DBF10 end:0x803DBFD8
-	.sdata2     start:0x803DF370 end:0x803DF380
-
-main/gametext_measurebyid.c:
-	.text       start:0x800162C4 end:0x800163FC
-
-main/gametext_tail.c:
-	.text       start:0x800163FC end:0x8001741C
-
-dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
-	.text       start:0x8001741C end:0x8001746C
-
-main/textrender.c:
-	.text       start:0x8001746C end:0x800191FC
-	.data       start:0x802C94C0 end:0x802CAA68
+	.text       start:0x80015C00 end:0x8001B520
+	.data       start:0x802C7618 end:0x802CAA68
 	.bss        start:0x8033A5E0 end:0x8033BEA0
-	.sdata      start:0x803DBFD8 end:0x803DC068
-
-main/textrender_gettext.c:
-	.text       start:0x800191FC end:0x800199A8
-
-main/textrender_run.c:
-	.text       start:0x800199A8 end:0x8001B520
+	.sdata      start:0x803DBF10 end:0x803DC068
 	.sbss       start:0x803DD5E8 end:0x803DD670
+	.sdata2     start:0x803DF370 end:0x803DF3A0
 
 main/subtitle.c:
 	.text       start:0x8001B520 end:0x8001BC2C

@@ -89,30 +89,12 @@ main/fileio.c:
 	.sbss       start:0x803DE310 end:0x803DE328
 
 main/gametext.c:
-	.text       start:0x80015C00 end:0x800162C4
-	.data       start:0x802C7818 end:0x802C96C0
-	.sdata      start:0x803DCC10 end:0x803DCCD8
-	.sdata2     start:0x803E00B0 end:0x803E00C0
-
-main/gametext_measurebyid.c:
-	.text       start:0x800162C4 end:0x800163FC
-
-main/gametext_tail.c:
-	.text       start:0x800163FC end:0x8001741C
-
-main/textrender.c:
-	.text       start:0x8001741C end:0x800191FC
-	.data       start:0x802C96C0 end:0x802CB62C
+	.text       start:0x80015C00 end:0x8001B5D0
+	.data       start:0x802C7818 end:0x802CB6A0
 	.bss        start:0x8033B2E0 end:0x8033CBA0
-	.sdata      start:0x803DCCD8 end:0x803DCDC0
-
-main/textrender_gettext.c:
-	.text       start:0x800191FC end:0x800199A8
-
-main/textrender_run.c:
-	.text       start:0x800199A8 end:0x8001B5D0
-	.data       start:0x802CB62C end:0x802CB6A0
+	.sdata      start:0x803DCC10 end:0x803DCDC0
 	.sbss       start:0x803DE328 end:0x803DE3B0
+	.sdata2     start:0x803E00B0 end:0x803E00E0
 
 main/subtitle.c:
 	.text       start:0x8001B5D0 end:0x8001BCDC

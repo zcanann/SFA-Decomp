@@ -159,7 +159,6 @@ extern u8 gGameTextBase[];
 extern u8* gGameTextLastEntry;
 extern char* gCurTextBuffer;
 extern int gGameTextBufferIndex;
-extern const f32 gGameTextFadeLimit;
 extern char gGameTextFontData[];
 extern char sGameTextBlankFormat[5];
 extern char sGameTextSequencePathFormat[];

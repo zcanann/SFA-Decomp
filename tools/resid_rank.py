@@ -106,10 +106,10 @@ Both halves are required.  The screen used to test only the first and parked
 `dlls/engine/73` over 31 names nothing in the image consumed; intersecting the
 missing exports against the undefined references of the objects mwld is really
 given (`consumers`, read off the generated link rule) cleared it, and it
-flipped with the DOL byte-identical.  `main/gametext.c` is the genuine shape:
-`main/gametext_tail.c` and `main/textrender.c` are still NonMatching, so their
-retail objects are in the link and carry real undefined references to
-`lbl_803DE6F0`/`lbl_803DE6F8`.  Names that are missing but unconsumed are
+flipped with the DOL byte-identical. The former gametext fragments illustrated
+this shape: retail gametext_tail/textrender objects carried real undefined
+references to `lbl_803DE6F0`/`lbl_803DE6F8`. They are now reunited in gametext.c,
+with the compiler emitting their shared pool. Names missing but unconsumed are
 printed alongside the flip candidate as harmless, so the distinction stays
 visible rather than being silently dropped.
 

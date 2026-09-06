@@ -775,7 +775,6 @@ dolphin/vi/vi.c
 main/audio_sfx.c
 main/boot_logo.c
 main/curves.c
-main/gametext_measurebyid.c
 main/lightmap_initmapblocks.c
 main/modellight.c
 main/obj_movelib.c
