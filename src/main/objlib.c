@@ -532,8 +532,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
             obj = objects[objectIndex];
             if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 || (targetId == obj->anim.romDefNo))) &&
-                ((obj != 0x0 &&
-                  (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
+                ((obj != 0x0 && (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
                 count = queue->count;
                 if (count < queue->capacity) {
                     slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
@@ -552,8 +551,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
             obj = objects[objectIndex];
             if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 || (targetId == obj->anim.classId))) &&
-                ((obj != 0x0 &&
-                  (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
+                ((obj != 0x0 && (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
                 count = queue->count;
                 if (count < queue->capacity) {
                     slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
@@ -939,10 +937,10 @@ void ObjPath_GetPointLocalPosition(GameObject* obj, int pointIndex, float* xOut,
     *xOut = ((ObjPathPoint*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
                              pointIndex * sizeof(ObjPathPoint)))
                 ->x;
-    *yOut = *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 +
-                    pointIndex * sizeof(ObjPathPoint));
-    *zOut = *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 +
-                    pointIndex * sizeof(ObjPathPoint));
+    *yOut =
+        *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 + pointIndex * sizeof(ObjPathPoint));
+    *zOut =
+        *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 + pointIndex * sizeof(ObjPathPoint));
     return;
 }
 
