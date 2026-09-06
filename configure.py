@@ -147,9 +147,9 @@ parser.add_argument(
     dest="zlb_toolchain",
     type=str,
     choices=["prodg", "mwcc"],
-    default="mwcc",
-    help="compiler for src/main/zlb.c; defaults to the common MWCC profile "
-    "for the 1.3 experiment (retail is GCC-family)",
+    default="prodg",
+    help="compiler for src/main/zlb.c; mwcc is a diagnostic comparison path "
+    "only (retail is GCC-family)",
 )
 parser.add_argument(
     "--prodg-version",

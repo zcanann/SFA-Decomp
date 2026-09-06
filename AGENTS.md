@@ -1,7 +1,9 @@
 # AGENTS.md - SFA-Decomp Runbook
 
-> **Active compiler experiment:** All C/C++ units now inherit GC/1.3 from
-> `config.compiler_version`, with no library or per-unit compiler-version overrides.
+> **Active compiler experiment:** All MWCC C/C++ units now inherit GC/1.3 from
+> `config.compiler_version`, with no library or per-unit MWCC version overrides.
+> The user excluded the ProDG decompressor (`main/zlb.c`) from this migration;
+> keep its existing ProDG toolchain. The ten older GC/1.2.5 math units are included.
 > Existing optimization profiles remain; the linker independently stays GC/1.3.2.
 > Source matching may regress during this experiment, but both `ninja all_source`
 > and the strict retail checksum target must pass before pushing. Mark regressed
