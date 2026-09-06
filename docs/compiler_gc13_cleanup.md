@@ -882,3 +882,75 @@ the source-linked DOL retains SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
 reports, backend traces, and object audits are under
 `build/gc13_new_matches/viewfinder_match/`.
+
+## September 6: Game-loop, egg, stealer-worm and SnowBike source forms
+
+Four TUs retain **126/126 exact functions**, **45,916 code bytes** and
+**4,980 assigned data bytes**. Five pointer walks become indexing: the
+game-loop render list, DB_egg's ground-hit and sibling lists, and the
+stealer-worm's parallel avoidance-group and weight arrays. The worm's
+message stack also indexes its existing three-word records directly.
+
+| TU | GC/1.3 before/after | GC/2.0 before/after | Accepted source cleanup |
+| --- | ---: | ---: | --- |
+| gameloop_main | 100% | 100% | Direct object-list indexing for model and fuzz rendering. |
+| DB_egg, slot 575 | 100% | 100% | Indexed scans, typed setup state, named payload fields and compound updates. |
+| DBstealerwo, slot 578 | 100% | 95.730446% | Indexed avoidance/messages, typed target union views and direct control/animation fields. |
+| SnowBike, slot 597 | 100% | 96.4732% | Typed setup/placement access, direct bitfield tests, ordinary rank predicate and angle updates. |
+
+All compiler controls use the complete TU and its existing profile. This
+batch adds no new GC/1.3 discriminator: every accepted rewrite preserves
+its original GC/2.0 result as well. The worm's existing GC/2.0 differences
+remain in effect processing and update; SnowBike's remain in mount-state,
+update and initialization.
+
+DB_egg's setup uses one `DbEggState*` and `waterOffset`, and its pickup
+messages take the address of `msg11C` instead of adding 0x11C to an integer
+pointer. Existing mode and model-flag definitions replace numeric equivalents.
+Descriptor casts are removed only for the two void callbacks and extra-size
+callback whose prototypes exactly fit their slots. The source's descriptor
+and diagnostic declaration order is preserved.
+
+The worm uses the existing `linkedObject` and `savedTargetObject` union
+members at +0x18 and +0x3C in the unchanged 0x50 control record. Four
+control reads no longer alias `obj->extra` through a pointer-to-pointer.
+Required casts at integer message handles, void target fields and reused
+queue/object locals remain. Its documented scratch overruns are untouched.
+
+SnowBike's rank predicate becomes an ordinary subtraction/zero comparison
+instead of `__cntlzw`. Its typed setup pointer still occupies a one-element
+array: scalarizing either the old byte pointer or new typed pointer changes
+initialization codegen. `SnowBikePathSetup` remains 0x4C; the race-gamebit
+access still crosses separate symbols to the table at .data+0xA4. Direct
+table indexing regresses, so no field or enlarged setup record is invented.
+
+Other retained forms have explicit controls: DB_egg's homing scratch-vector
+access, ripple condition and hit-state macro; the worm's reverse/object/joint
+scans; SnowBike's trail walks and cached hit-state alternatives. Main-code
+probes also reject indexed matrix multiplication/copy, voxel occupancy and
+shadow-caster/slot access, scalar debug-text cursors, and simpler gamebit
+limit/decrement expressions. These experiments leave tracked code unchanged.
+
+Formatting lands separately for the three object sources. Every formatting
+commit preserves the raw object from its source commit. The game loop and
+the worm/SnowBike owning headers already pass clang-format without changes.
+DB_egg's two existing owning headers receive formatting only; their legacy
+header consolidation and unrelated assertion imports remain outstanding.
+No shared consumer code, compiler profile, symbol config, TU boundary,
+generated source path or ProDG source changes belong to this pass.
+
+The whole-build audit covers 1,005 objects and preserves all per-unit match
+measures. Game-loop and SnowBike objects are raw-identical to baseline.
+Egg and worm only renumber anonymous literals at fixed positions; allocated
+bytes, section sizes/alignment/flags, named symbols and normalized relocations
+are unchanged. Upstream viewfinder-camera commits `82b1014059` and
+`96d350266f` were rebased in, checked against their published source, and
+accounted for separately in the camera's baseline entry.
+
+Every source/format landing passes strict matching and `ninja all_source`
+with 30-second limits. The final DOL is byte-identical to retail, SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`; generated-path audits pass for
+slots 575, 578 and 597. Baselines and the final audit are under
+`build/gc13_migration/indexed_matrices/`. Controls and separate source/format
+packets are under `build/gc13_indexed/gameloop_main_index_cleanup/`,
+`dbegg_index_cleanup/`, `dbstealer_index_cleanup/` and `dll597_index_cleanup/`.
