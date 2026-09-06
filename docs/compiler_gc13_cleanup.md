@@ -1219,3 +1219,48 @@ changes in the isolated build audit. The source-linked DOL retains SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
 reports, backend traces, and object audits are under
 `build/gc13_new_matches/path_camera_match/`.
+
+## September 6: Mechanical cast, update and parameter-typing pass
+
+This pass removes cast and expression noise across the tree without changing
+any compiled object. Every accepted site was gated by compiling its TU before
+and after with the real build flags and comparing allocated contents,
+relocations and symbols, allowing only anonymous literal renumbering at
+unchanged pool positions. The full build and the per-unit report were
+re-checked after each landing, and again after rebasing onto the TitleScreen,
+Drakor hoverpad and shadow-normalization commits; the four files both sides
+touched compile identically to their upstream versions.
+
+| Pass | TUs | Sites | Kept as they were |
+| --- | ---: | ---: | --- |
+| `(f32)randomGetRange(...)` cast removed | 84 | 571 | A double product in engine 39 and a negated result in slot 470. |
+| `(obj)->x` written as `obj->x` | 101 | 1,286 | Call and macro tails such as `Player_GetObjHitsState(obj)->`. |
+| `x = x op y` written as `x op= y` | 245 | 1,865 | 88 sites where the compound form changes GC/1.3 code generation. |
+| `((T*)v)` removed where `v` is already a `T*` | 44 | 1,544 | 11 sites that permute scratch registers, including two in Player. |
+
+Typed parameters and locals replace repeated casts in ten TUs, each landed
+with its formatting in a separate commit and each object unchanged apart from
+anonymous literal numbering:
+
+| TU | Casts | Source change |
+| --- | ---: | --- |
+| sharpclaw, slot 202 | 266 | One `EnemyState` local per handler, matching the existing hit and event handlers. |
+| Kooshy, slot 202 | 55 | Same form. |
+| HoodedZyck, slot 202 | 52 | Same form. |
+| Engine 15 | 207 | `GameObject`/`BaddieState` parameters in the definitions and owning header; `flags0`, `curvesCollision`, no unsigned suffixes. |
+| Engine 25 | 108 | Typed parameters and header; embedded `baddie`, `routeNav.flag25`; the three weapon bytes at 0x407 are named with an offset assertion. |
+| Engine 2 | 289 | `ObjSeqState` parameters, prototypes and locals; `targetObj` and `conditionOpcodes` fields. |
+| Engine 7 | 192 | `NC_CLOUD` macros yield `NewCloud` pointers; typed slot cursor, run-loop local and flake-update parameter. |
+| Trigger, slot 294 | 62 | `TriggerState`/`TriggerPlacement` locals and init parameter, `status` compound updates. |
+| Engine 11 | 51 | `modgfx_stepVertexColor` takes the typed effect record and vertex command. |
+| texture | 14 | `Texture` locals for allocation and the frame chain. |
+
+Forms that regress and stay as they are: `ObjSeq_ExecuteActionCommand`'s
+byte-pointer local (the typed form changes the sound-timer addressing),
+engine 11's active-effect cursor (typing it permutes two scratch registers),
+and AppleOnTree's multi-role integer locals. Leads not yet taken: engine 5's
+`u8* gSkyState` and its duplicate `SkyTimeBlend` view, whose first two words
+are texture pointers that `SkyState` does not name; `hudTextures`, which is
+used both as an array and through the `HudTextures` record; `gSaveGameData`,
+a byte array addressed by offset from five TUs; and objprint's static render
+helpers, whose `u8*` parameters chain into the model API.
