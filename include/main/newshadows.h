@@ -4,6 +4,9 @@
 #include "types.h"
 #include "main/texture.h"
 
+void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst);
+void updateHeavyFogTexture(int intensity);
+
 void newshadows_captureReflectionTextures(void);
 void newshadows_loadReflectionColorTexture(int id);
 void* newshadows_allocTexture512(void);
