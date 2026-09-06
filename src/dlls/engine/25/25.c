@@ -176,8 +176,8 @@ void dll_19_releaseState(GameObject* obj, GroundBaddieState* state, u8 flag) {
     }
 }
 
-void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, GroundBaddieState* state, int moveArg0, int moveArg1,
-                             int pathFlags, u8 initFlags, f32 pathRadius) {
+void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, GroundBaddieState* state, int moveArg0,
+                             int moveArg1, int pathFlags, u8 initFlags, f32 pathRadius) {
     u8 flags;
     int b1;
     CurvesCollisionState* path;
@@ -279,9 +279,8 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
         if (state->path != NULL) {
             memset(state->path, 0, sizeof(RomCurveWalker));
         }
-        if ((*gRomCurveInterface)
-                ->initCurve(state->path, (void*)obj,
-                            (f32)(u32)state->aggroRange, &curveLocal, -1) == 0) {
+        if ((*gRomCurveInterface)->initCurve(state->path, (void*)obj, (f32)(u32)state->aggroRange, &curveLocal, -1) ==
+            0) {
             state->flags400 = state->flags400 | BADDIE_FLAG400_PATH_ACTIVE;
         }
     } else {
@@ -294,8 +293,8 @@ void dll_19_pollCameraTarget(GameObject* obj, void* state, u16* flags, int modeA
     (void)(*gCameraInterface)->getOverrideTarget();
 }
 
-int dll_19_processMessages(GameObject* obj, BaddieState* state, void* hitbox, s16 gameBit, u8* flagOut, s16 substateIdle,
-                           s16 substateActive, s16 moveMode) {
+int dll_19_processMessages(GameObject* obj, BaddieState* state, void* hitbox, s16 gameBit, u8* flagOut,
+                           s16 substateIdle, s16 substateActive, s16 moveMode) {
     u32 msgData;
     int msgType;
     int extra;
@@ -339,8 +338,8 @@ int dll_19_processMessages(GameObject* obj, BaddieState* state, void* hitbox, s1
     return 0;
 }
 
-int dll_19_updateHitReaction(GameObject* obj, BaddieState* baddieState, void* hitbox, s16 gameBit, int* tableA, u8* tableB,
-                             s16 substate, void* hitPosOut) {
+int dll_19_updateHitReaction(GameObject* obj, BaddieState* baddieState, void* hitbox, s16 gameBit, int* tableA,
+                             u8* tableB, s16 substate, void* hitPosOut) {
     GroundBaddieState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
     int hit;
@@ -724,8 +723,8 @@ void dll_19_updateGravity(GameObject* obj, BaddieState* state, f32 gravity, s8 f
     state->heldButtons = 0;
 }
 
-int dll_19_func10(GameObject* obj, GroundBaddieState* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX, f32* destZ,
-                  int* reachedOut) {
+int dll_19_func10(GameObject* obj, GroundBaddieState* state, int moveArg0, int moveArg1, s16 controlMode, f32* destX,
+                  f32* destZ, int* reachedOut) {
     f32 dx, dz, dist;
     f32 zero;
 
@@ -763,8 +762,8 @@ int dll_19_func10(GameObject* obj, GroundBaddieState* state, int moveArg0, int m
     return 0;
 }
 
-int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddieState* st, void* moveHandlers, void* stateHandlers,
-                                  s16 controlMode) {
+int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddieState* st, void* moveHandlers,
+                                  void* stateHandlers, s16 controlMode) {
     f32 dist;
     f32 nx;
     f32 nz;

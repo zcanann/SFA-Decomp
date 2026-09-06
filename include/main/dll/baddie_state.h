@@ -292,7 +292,7 @@ typedef struct GroundBaddieState {
     u8 subMode; /* sub-state-machine index 0/1/2 (switch/==-tested; &subMode handed to BaddieControlInterface.processMessages as the route-phase out-param) */
     u8 aggression; /* percent-ish; randomGetRange(0, x), > 50 compares */
     u8 initialWeaponId; /* 0x407: copied from GroundBaddiePlacement.initialWeaponId */
-    u8 unk408; /* copied from GroundBaddiePlacement.unk28; low three bits merge into objectFlags */
+    u8 unk408;          /* copied from GroundBaddiePlacement.unk28; low three bits merge into objectFlags */
     u8 spawnedWeaponId; /* 0x409: initialWeaponId once the weapon child has been spawned */
     s8 lastHitSphereIndex;
     u8 unk40B;
