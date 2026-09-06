@@ -13,22 +13,20 @@ typedef enum DRCloudRunnerObjectId {
 } DRCloudRunnerObjectId;
 
 /* placement record passed to init / read by the state handlers */
-typedef struct DRCloudRunnerPlacement
-{
+typedef struct DRCloudRunnerPlacement {
     ObjPlacement base;
-    s8 spawnRot; /* 0x18: initial facing, shifted left 8 into anim.rotX */
-    u8 spawnVariant; /* 0x19: -> CloudRunnerState.spawnVariant */
+    s8 spawnRot;          /* 0x18: initial facing, shifted left 8 into anim.rotX */
+    u8 spawnVariant;      /* 0x19: -> CloudRunnerState.spawnVariant */
     s16 airMeterCapacity; /* 0x1A: initial air meter capacity -> CloudRunnerState.airTimeRemaining */
-    s16 pathSpeedTenths; /* 0x1C: rom-curve follow speed in tenths -> CloudRunnerState.pathFollowSpeed */
-    s16 enableGameBit; /* 0x1E: game bit that enables the mount */
+    s16 pathSpeedTenths;  /* 0x1C: rom-curve follow speed in tenths -> CloudRunnerState.pathFollowSpeed */
+    s16 enableGameBit;    /* 0x1E: game bit that enables the mount */
 } DRCloudRunnerPlacement;
 
 STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, spawnRot) == 0x18);
 STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, airMeterCapacity) == 0x1A);
 STATIC_ASSERT(offsetof(DRCloudRunnerPlacement, enableGameBit) == 0x1E);
 
-typedef struct DRCloudRunnerMoveParams
-{
+typedef struct DRCloudRunnerMoveParams {
     u8 unk00[12];
     Vec3f pathPointsA;
     Vec3f pathCollisionA;
