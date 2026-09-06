@@ -716,3 +716,30 @@ Local baselines and whole-build audits are under
 separate formatting packets are under `build/gc13_indexed/maketex_cleanup/`,
 `baddie_native_cleanup/`, `invhit_cleanup/`, `explodable_cleanup/`,
 `dll417_cleanup/`, `swaplift_cleanup/`, and `dbhole_cleanup/`.
+
+
+## September 6: Player sequence callback exact
+
+`player_SeqFn` reaches **100%**, adding **7,416 exact code bytes**. Vehicle
+selection uses a loop-local `GameObject* candidate`; the existing integer
+scratch retains its later role as the selected mount. This fixes nine
+register operands without disturbing the callback's other allocation.
+
+The maximum-health read reuses the existing integer scratch for the status
+address and then its signed health value. The pointer-slot access uses
+`offsetof(PlayerState, playerStatus)`, and the value uses the canonical
+`PlayerStatus.maxHealth` field. Separate address/value temporaries produce
+the final two mismatching operands; this shared scratch reproduces retail.
+
+Player now has **231/233 exact functions**, **132,844/139,108 exact code
+bytes (95.497025%)**, and **99.990654% fuzzy agreement**. Only
+`playerStateMoving` and `playerState25` remain inexact. The sequence callback
+is the only changed function body; every relative relocation, allocated
+data section, section layout, and data-symbol position is preserved.
+Assigned data remains **10,168/10,168 bytes exact**. The TU retains GC/1.3
+and NonMatching status until the two remaining functions are recovered.
+
+Strict matching and `ninja all_source` pass with 30-second limits; the DOL
+SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`. The generated-path
+audit passes. Controls and before/after audits are under
+`build/gc13_new_matches/player_round7*`.

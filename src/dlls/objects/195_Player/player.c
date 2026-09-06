@@ -14708,12 +14708,12 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                 found = 0;
                 best = 10000.0f;
                 for (endFlag = 0, obj2 = (int)objs; endFlag < objCount; endFlag++) {
-                    va = *(int*)obj2;
-                    if ((u32)va != 0 && arrayIndexOf((int*)(tbl + 0x13c), 9, ((GameObject*)va)->anim.romDefNo) != -1) {
-                        f32 dsq = vec3f_distanceSquared((f32*)(va + 0x18), (f32*)(obj + 0x18));
+                    GameObject* candidate = *(GameObject**)obj2;
+                    if (candidate != NULL && arrayIndexOf((int*)(tbl + 0x13c), 9, candidate->anim.romDefNo) != -1) {
+                        f32 dsq = vec3f_distanceSquared(&candidate->anim.worldPosX, (f32*)(obj + 0x18));
                         if (dsq < best || found == 0) {
                             best = dsq;
-                            ((PlayerState*)inner)->focusObject = (GameObject*)va;
+                            ((PlayerState*)inner)->focusObject = candidate;
                             found = 1;
                         }
                     }
@@ -14997,7 +14997,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                     break;
                 }
                 h = (int)((GameObject*)obj)->extra;
-                if ((s8) * (s8*)(*(int*)(h + 0x35c) + 1) <= mapVal - 4) {
+                va = *(int*)(h + offsetof(PlayerState, playerStatus));
+                va = ((PlayerStatus*)va)->maxHealth;
+                if (va <= mapVal - 4) {
                     int vv = mapVal;
                     if (mapVal < 0) {
                         vv = 0;
