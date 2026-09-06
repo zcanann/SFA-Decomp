@@ -712,8 +712,7 @@ static void characterHeadLookIdle(GameObject* obj, CharacterEyeAnimState* curve,
         } else {
             int angle;
             int n;
-            angle = getAngle(obj->anim.localPosX - curve->lookAtPosX,
-                             obj->anim.localPosZ - curve->lookAtPosZ);
+            angle = getAngle(obj->anim.localPosX - curve->lookAtPosX, obj->anim.localPosZ - curve->lookAtPosZ);
             curve->headYaw = (s16)(angle - (u16)obj->anim.rotX);
             if (curve->headYaw > 0x8000) {
                 curve->headYaw = (s16)(curve->headYaw - 0xffff);
@@ -792,7 +791,8 @@ void characterUpdateHeadLook(GameObject* obj, CharacterEyeAnimState* state, f32 
         state->headTrackMode = (s16)(state->headTrackMode | (flag << 8));
     }
 }
-s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused, int basePitch);
+s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
+                              int basePitch);
 s16 objJointTracksAimAtTarget(GameObject* obj, GameObject* target, f32* pos, u8* p4, s16* spd, f32 yOff, int unused,
                               int basePitch) {
     s16 src[2];
@@ -1302,7 +1302,8 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
             if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
                 MtxPtr jm;
                 int joint;
-                joint = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                joint = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1]
+                            .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
                 jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
                 vp->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[0];
                 va[1] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[1];
@@ -1317,8 +1318,7 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
             if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
                 ObjAttachPoint* row = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off);
                 int idx2 = row->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr mtx2 =
-                    (MtxPtr)(idx2 * 0x40 + *(int*)((u8*)model + ((model->bufferFlags & 1) * 4) + 0xc));
+                MtxPtr mtx2 = (MtxPtr)(idx2 * 0x40 + *(int*)((u8*)model + ((model->bufferFlags & 1) * 4) + 0xc));
                 vb.x = row->pos[0];
                 vb.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[1];
                 vb.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[2];
@@ -1400,7 +1400,8 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     sub = (void*)obj->anim.dll;
     if (sub != NULL) {
         if ((obj->objectFlags & OBJECT_OBJFLAG_HIDDEN) == 0) {
-            vfn = (void (*)(GameObject*, int, int, int, int, int))((ObjectInterface*)*(ObjectInterfaceHandle)sub)->render;
+            vfn =
+                (void (*)(GameObject*, int, int, int, int, int))((ObjectInterface*)*(ObjectInterfaceHandle)sub)->render;
             if (vfn != NULL) {
                 vfn(obj, a, b, c, d, flag);
             }
