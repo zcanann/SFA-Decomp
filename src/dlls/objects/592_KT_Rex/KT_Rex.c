@@ -204,7 +204,7 @@ int ktrex_stateHandlerA10(GameObject* obj, GroundBaddieState* runtime) {
     u16 flags;
     int phase;
     int laneBit;
-    p = (obj)->anim.placementData;
+    p = obj->anim.placementData;
     flags = gKTRexState->timerFA;
     phase = (flags >> 1) & 3;
     laneBit = flags & 1;
@@ -373,7 +373,7 @@ int ktrex_stateHandlerA05(GameObject* obj, GroundBaddieState* runtime) {
     void* p;
     int pushLo;
     int pushHi;
-    p = (obj)->anim.placementData;
+    p = obj->anim.placementData;
     if ((s8)runtime->baddie.moveJustStartedB != 0) {
         (*gPlayerInterface)->setState(obj, runtime, 1);
         gKTRexState->laneIndex = 1;
@@ -603,7 +603,7 @@ int ktrex_stateHandlerB07(GameObject* obj, GroundBaddieState* runtime) {
     }
     if ((gKTRexRuntime->baddie.eventFlags & 0x80) != 0) {
         gKTRexRuntime->baddie.eventFlags &= ~0x80;
-        gKTRexState->phaseFlags |= 0x40000LL;
+        gKTRexState->phaseFlags |= 0x40000;
     }
     return 0;
 }
@@ -620,11 +620,11 @@ int ktrex_stateHandlerB06(GameObject* obj, GroundBaddieState* runtime) {
     }
     if ((gKTRexRuntime->baddie.eventFlags & 1) != 0) {
         gKTRexRuntime->baddie.eventFlags &= ~1;
-        gKTRexState->phaseFlags |= 0x80000LL;
+        gKTRexState->phaseFlags |= 0x80000;
     }
     if ((gKTRexRuntime->baddie.eventFlags & 0x80) != 0) {
         gKTRexRuntime->baddie.eventFlags &= ~0x80;
-        gKTRexState->phaseFlags |= 0x20000LL;
+        gKTRexState->phaseFlags |= 0x20000;
     }
     return 0;
 }
@@ -681,12 +681,12 @@ int ktrex_stateHandlerB03(GameObject* obj, GroundBaddieState* runtime) {
         z = 0.0f;
         runtime->baddie.animSpeedA = z;
         runtime->baddie.animSpeedB = z;
-        gKTRexState->homeYaw = (obj)->anim.rotX;
+        gKTRexState->homeYaw = obj->anim.rotX;
     }
     if (dir != 0) {
-        (obj)->anim.rotX = 32768.0f * (obj)->anim.currentMoveProgress + (f32)(int)gKTRexState->homeYaw;
+        obj->anim.rotX = 32768.0f * obj->anim.currentMoveProgress + (f32)(int)gKTRexState->homeYaw;
     } else {
-        (obj)->anim.rotX = (f32)(int)gKTRexState->homeYaw - 32768.0f * (obj)->anim.currentMoveProgress;
+        obj->anim.rotX = (f32)(int)gKTRexState->homeYaw - 32768.0f * obj->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -703,7 +703,7 @@ int ktrex_stateHandlerB02(GameObject* obj, GroundBaddieState* runtime) {
         lane = gKTRexState->laneIndex * 2;
         ObjAnim_SetCurrentMove(obj, gKTRexTurnMoveIdByLaneAndDir[lane + dir], 0.0f, 0);
         runtime->baddie.moveSpeed = gKTRexTurnCurvePhaseByLane[gKTRexState->laneIndex];
-        gKTRexState->homeYaw = (obj)->anim.rotX;
+        gKTRexState->homeYaw = obj->anim.rotX;
     }
     if ((gKTRexRuntime->baddie.eventFlags & 4) != 0) {
         gKTRexRuntime->baddie.eventFlags &= ~4;
@@ -719,7 +719,7 @@ int ktrex_stateHandlerB02(GameObject* obj, GroundBaddieState* runtime) {
     }
     if ((gKTRexRuntime->baddie.eventFlags & 0x80) != 0) {
         gKTRexRuntime->baddie.eventFlags &= ~0x80;
-        gKTRexState->phaseFlags |= 0x10000LL;
+        gKTRexState->phaseFlags |= 0x10000;
     }
     runtime->baddie.movementFlags |= 1;
     (*gPlayerInterface)->updateAnimRootMotion(obj, runtime, timeDelta, 3);
@@ -731,12 +731,12 @@ int ktrex_stateHandlerB02(GameObject* obj, GroundBaddieState* runtime) {
     pos.y = 0.0f;
     pos.z = 0.0f;
     setMatrixFromObjectPos(mtx, &pos);
-    Matrix_TransformPoint(mtx, runtime->baddie.animSpeedB, 0.0f, -runtime->baddie.animSpeedA, &(obj)->anim.velocityX,
-                          &tmpY, &(obj)->anim.velocityZ);
+    Matrix_TransformPoint(mtx, runtime->baddie.animSpeedB, 0.0f, -runtime->baddie.animSpeedA, &obj->anim.velocityX,
+                          &tmpY, &obj->anim.velocityZ);
     if (dir != 0) {
-        (obj)->anim.rotX = 16384.0f * (obj)->anim.currentMoveProgress + (f32)(int)gKTRexState->homeYaw;
+        obj->anim.rotX = 16384.0f * obj->anim.currentMoveProgress + (f32)(int)gKTRexState->homeYaw;
     } else {
-        (obj)->anim.rotX = (f32)(int)gKTRexState->homeYaw - 16384.0f * (obj)->anim.currentMoveProgress;
+        obj->anim.rotX = (f32)(int)gKTRexState->homeYaw - 16384.0f * obj->anim.currentMoveProgress;
     }
     return 0;
 }
@@ -773,11 +773,11 @@ int ktrex_stateHandlerB01(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexRuntime->baddie.eventFlags &= ~1;
         gKTRexState->phaseFlags |= maskI;
     }
-    dx = oneOverTimeDelta * (gKTRexState->posX - (obj)->anim.localPosX);
-    dz = oneOverTimeDelta * (gKTRexState->posZ - (obj)->anim.localPosZ);
+    dx = oneOverTimeDelta * (gKTRexState->posX - obj->anim.localPosX);
+    dz = oneOverTimeDelta * (gKTRexState->posZ - obj->anim.localPosZ);
     ObjAnim_SampleRootCurvePhase(&obj->anim, sqrtf(dx * dx + dz * dz), &runtime->baddie.moveSpeed);
-    (obj)->anim.localPosX = gKTRexState->posX;
-    (obj)->anim.localPosZ = gKTRexState->posZ;
+    obj->anim.localPosX = gKTRexState->posX;
+    obj->anim.localPosZ = gKTRexState->posZ;
     return 0;
 }
 
@@ -828,8 +828,8 @@ void ktrex_updateContactEffects(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexEffectSpawnWork.posZ = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x4b2, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
-        (*gPartfxInterface)->spawnObject((void*)obj, 0x4b3, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x4b2, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, 0x4b3, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         if (hit == 0xe) {
             runtime->baddie.hitPoints -= 1;
         } else {
@@ -847,7 +847,7 @@ void ktrex_updateContactEffects(GameObject* obj, GroundBaddieState* runtime) {
         gKTRexEffectSpawnWork.posX = contactPoints[hitType * 4 + 1] + playerMapOffsetX;
         gKTRexEffectSpawnWork.posY = contactPoints[hitType * 4 + 2];
         gKTRexEffectSpawnWork.posZ = contactPoints[hitType * 4 + 3] + playerMapOffsetZ;
-        (*gPartfxInterface)->spawnObject((void*)obj, KTREX_PARTFX_HIT, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
+        (*gPartfxInterface)->spawnObject(obj, KTREX_PARTFX_HIT, &gKTRexEffectSpawnWork, 0x200001, -1, NULL);
         gKTRexEffectSpawnWork.posX -= obj->anim.worldPosX;
         gKTRexEffectSpawnWork.posY -= obj->anim.worldPosY;
         gKTRexEffectSpawnWork.posZ -= obj->anim.worldPosZ;
@@ -901,7 +901,7 @@ void ktrex_updateAttackEffects(GameObject* obj) {
         Sfx_PlayFromObject(obj, SFXTRIG_dn_rexhurt12);
     }
     if ((gKTRexState->phaseFlags & 0x1000) != 0) {
-        gKTRexState->phaseFlags &= ~0x1800LL;
+        gKTRexState->phaseFlags &= ~0x1800;
     }
     if ((gKTRexState->phaseFlags & 0x20000) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_en_fireup_c);
@@ -951,63 +951,63 @@ void ktrex_updateAttackEffects(GameObject* obj) {
         }
     }
     if ((gKTRexState->phaseFlags & 0x100000) == 0) {
-        gKTRexState->phaseFlags &= 0x1800LL;
+        gKTRexState->phaseFlags &= 0x1800;
         return;
     }
     if ((gKTRexState->phaseFlags & 0x1) != 0) {
         gKTRexState->spawnWork[1].unk8 = 1.0f;
         for (i = 0; i < 10; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x2) != 0) {
         gKTRexState->spawnWork[2].unk8 = 1.0f;
         for (i = 0; i < 10; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x4) != 0) {
         gKTRexState->spawnWork[1].unk8 = 1.5f;
         for (i = 0; i < 13; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x8) != 0) {
         gKTRexState->spawnWork[2].unk8 = 1.5f;
         for (i = 0; i < 13; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x10) != 0) {
         gKTRexState->spawnWork[1].unk8 = 2.0f;
         for (i = 0; i < 16; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[1], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x20) != 0) {
         gKTRexState->spawnWork[2].unk8 = 2.0f;
         for (i = 0; i < 16; i++) {
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
-            (*gPartfxInterface)->spawnObject((void*)obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x483, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, 0x484, &gKTRexState->spawnWork[2], 0x200001, -1, NULL);
         }
     }
     if ((gKTRexState->phaseFlags & 0x800) != 0) {
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
+            ->spawnObject(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
     }
-    gKTRexState->phaseFlags &= 0x1800LL;
-    if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
+    gKTRexState->phaseFlags &= 0x1800;
+    if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
         Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_mv_bflconc1_2b9);
     }
 }
@@ -1030,7 +1030,7 @@ int ktrex_animEventCallback(GameObject* obj, int unused, ObjSeqState* animUpdate
             gKTRexState->phaseFlags |= 0x1000;
             break;
         case 5:
-            gKTRexState->phaseFlags |= 0x20000LL;
+            gKTRexState->phaseFlags |= 0x20000;
             break;
         case 6:
             if (gKTRexState->light != NULL) {
@@ -1041,10 +1041,10 @@ int ktrex_animEventCallback(GameObject* obj, int unused, ObjSeqState* animUpdate
         }
     }
     ktrex_updateAttackEffects(obj);
-    if ((obj)->userData2 == 0) {
-        (obj)->userData2 = 1;
-    } else if ((obj)->userData2 == 3) {
-        (obj)->userData2 = 4;
+    if (obj->userData2 == 0) {
+        obj->userData2 = 1;
+    } else if (obj->userData2 == 3) {
+        obj->userData2 = 4;
     }
     return 0;
 }
@@ -1175,11 +1175,11 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     void* e;
     int i;
 
-    gKTRexRuntime = (obj)->extra;
+    gKTRexRuntime = obj->extra;
     if (visible == 0) {
         return;
     }
-    switch ((obj)->userData1) {
+    switch (obj->userData1) {
     case 0:
         break;
     default:
@@ -1218,7 +1218,7 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     gKTRexState->vecY = 0.1f * (f32)randomGetRange(60, 120);
     gKTRexState->vecZ = -0.25f * (f32)randomGetRange(100, 150);
     PSMTXMultVecSR((MtxPtr)m, (Vec*)&gKTRexState->vecX, (Vec*)&gKTRexState->vecX);
-    gKTRexState->phaseFlags |= 0x100000LL;
+    gKTRexState->phaseFlags |= 0x100000;
 }
 
 void ktrex_hitDetect(GameObject* obj) {
@@ -1313,7 +1313,7 @@ void ktrex_update(GameObject* obj) {
     ktrex_updateAttackEffects(obj);
     (*gBaddieControlInterface)->updateGravity(obj, runtime, 0.0f, 0);
     ObjHits_SetHitVolumeMasks(&obj->anim, 24, 2, 0x1fffff);
-    (*gPlayerInterface)->update((void*)obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
+    (*gPlayerInterface)->update(obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     obj->anim.localPosY = gKTRexState->posY;
 }
 
@@ -1328,28 +1328,28 @@ void ktrex_init(GameObject* obj, char* arg, int flag) {
     RomCurveDef* cp;
     u8 spawnFlags;
     s16 yaw;
-    gKTRexRuntime = (obj)->extra;
+    gKTRexRuntime = obj->extra;
     spawnFlags = 0x10;
     if (flag != 0) {
         spawnFlags |= 1;
     }
     (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)arg, (u8*)gKTRexRuntime, 9, 0xc, 0x100, spawnFlags, 20.0f);
-    (obj)->animEventCallback = ktrex_animEventCallback;
+    obj->animEventCallback = ktrex_animEventCallback;
     rt = (GroundBaddieState*)gKTRexRuntime;
     (*gPlayerInterface)->setState(obj, rt, 0);
     rt->baddie.substate = 2;
     rt->baddie.targetObj = 0;
     rt->baddie.physicsActive = 0;
     rt->baddie.hasTarget = 0;
-    (obj)->anim.resetHitboxFlags |= 0x88;
+    obj->anim.resetHitboxFlags |= 0x88;
     ObjHits_EnableObject(obj);
-    if ((obj)->anim.modelState != NULL) {
-        (obj)->anim.modelState->flags |= 0x810;
+    if (obj->anim.modelState != NULL) {
+        obj->anim.modelState->flags |= 0x810;
     }
     gKTRexState = gKTRexRuntime->control;
     gKTRexState->stack = Queue_Alloc(4, 4);
     yaw = (s16)((s8)arg[0x2a] << 8);
-    (obj)->anim.rotX = yaw;
+    obj->anim.rotX = yaw;
     gKTRexState->homeYaw = yaw;
     i = 0;
     pA = base + 0x4c / 4;
@@ -1391,13 +1391,13 @@ void ktrex_init(GameObject* obj, char* arg, int flag) {
     gKTRexState->phaseCountdown = 4;
     rt->baddie.hitPoints = 3;
     gKTRexResource = Resource_Acquire(0x5a, 1);
-    (obj)->userData2 = 0;
+    obj->userData2 = 0;
     gKTRexMapBlock = mapGetCurrentRomList();
     gKTRexState->light = objCreateLight(0, 1);
     if (gKTRexState->light != 0) {
         modelLightStruct_setLightKind(gKTRexState->light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setPosition(gKTRexState->light, (obj)->anim.localPosX, (obj)->anim.localPosY,
-                                     (obj)->anim.localPosZ);
+        modelLightStruct_setPosition(gKTRexState->light, obj->anim.localPosX, obj->anim.localPosY,
+                                     obj->anim.localPosZ);
         modelLightStruct_setDiffuseColor(gKTRexState->light, 0xff, 0, 0, 0);
         modelLightStruct_setDistanceAttenuation(gKTRexState->light, 10.0f, 30.0f);
         modelLightStruct_setupGlow(gKTRexState->light, 0, 0xff, 0, 0, 0x50, 30.0f);
