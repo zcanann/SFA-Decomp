@@ -340,7 +340,8 @@ void NW_mammoth_updateGatekeeper(GameObject* obj, NwMammothState* state, NwMammo
                         enemy_setTrackedObj(rescueBush, state->playerObject);
                     } else {
                         tw = tumbleweedbush_findNearestActive(&rescueBush->anim.worldPosX);
-                        if (tw == NULL || vec3f_distanceSquared(&tw->anim.worldPosX, &rescueBush->anim.worldPosX) >= 250000.0f) {
+                        if (tw == NULL ||
+                            vec3f_distanceSquared(&tw->anim.worldPosX, &rescueBush->anim.worldPosX) >= 250000.0f) {
                             if (vec3f_distanceSquared(&state->playerObject->anim.worldPosX,
                                                       &rescueBush->anim.worldPosX) >= 250000.0f) {
                                 enemy_setTrackedObj(rescueBush, obj);
