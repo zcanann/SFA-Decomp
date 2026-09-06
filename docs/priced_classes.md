@@ -4725,6 +4725,37 @@ preserves both callers without a matching gain; narrowing the route-turn
 magnitude return to `s16` adds five instructions. Compiler settings remain
 unchanged and their provenance remains open.
 
+`tools/tricky_backend_trace.py` now exposes GC/1.3's optimizer records for the
+two Tricky residuals. A Windows debugger intercepts the compiler's disabled
+dump hook in a private child process; neither the executable on disk nor game
+source is patched. The compiler hash and one-byte return stub are checked,
+and every capture must produce a raw object identical to a fresh ordinary
+compile before its trace is published. Portable decoding validates linked
+blocks, variable-width instructions, labels, emitted mnemonic order and
+explicit GPR/FPR operands (excluding calls' implicit clobber lists). It also
+checks the actual `li`/`lis`/`mr` instruction encodings. The two final streams
+align at 475 and 2,191 instructions after removing eight and 43 fallthrough
+branches that the compiler retains internally but does not emit.
+
+The baseline tunnel instruction 330 is already `li` of zero into virtual
+GPR 46 at the first dump, before global optimization, and becomes physical
+GPR 4 at register coloring. The rejected reused-walk-group index variant
+instead acquires its zero `mr` at the second value-numbering dump, but still
+has nine register differences. That dump is conditional on the compiler's
+change flag, not on whether the pass ran: call sites at compiler VA `0x4FEF05`
+and `0x4FF24E` invoke the pass before testing `0x5E6620`. Missing dump stages
+must not be interpreted as missing optimizer passes. Movement's result and
+current-group definitions retain virtual GPRs 74 and 76 until coloring assigns
+28 and 29, opposite retail. Arena addresses provide provisional record history,
+not proof of source-variable identity. This adds visibility into the residuals;
+it does not establish compiler provenance or improve the 87/89 matching count.
+The instrumented and ordinary complete objects both hash to
+`fb1fbfe41a35bdc069d6d486597b8fce19d7359d3622af53c0f43fe3d49d1584`.
+Both build gates and 101 tooling tests pass, including malformed-record and
+Windows debugger handle/exit-continuation regressions. Live timeout and stopped
+child decode-failure checks leave no compiler process behind. The diagnostic
+link still differs by 41 text bytes only; all allocated non-text data is exact.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a
