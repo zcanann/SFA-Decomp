@@ -8860,6 +8860,7 @@ static inline int playerCanGuard(GameObject* obj, PlayerState* inner) {
 }
 
 int playerStateMoving(int obj, int state, f32 fv) {
+    f32* moveParams;
     PlayerState* inner;
     int dir;
     f32 t;
@@ -9094,8 +9095,10 @@ int playerStateMoving(int obj, int state, f32 fv) {
         u32 fl;
         u32 fl1 = inner->flagByte3F1;
         if ((fl1 >> 5 & 1) != 0) {
-            spd = inner->maxSpeed * (t * -mathSinf((3.1415927f * (f32)inner->inputHeading) / 32768.0f));
-            ya = inner->maxSpeed * (t * -mathCosf((3.1415927f * (f32)inner->inputHeading) / 32768.0f));
+            spd = t * -mathSinf((3.1415927f * (f32)inner->inputHeading) / 32768.0f);
+            spd = inner->maxSpeed * spd;
+            ya = t * -mathCosf((3.1415927f * (f32)inner->inputHeading) / 32768.0f);
+            ya = inner->maxSpeed * ya;
             t = interpolate(spd - inner->smoothVelX, inner->velSmoothRate, timeDelta);
             {
                 f32 dy = interpolate(ya - inner->smoothVelZ, inner->velSmoothRate, timeDelta);
@@ -9114,19 +9117,21 @@ int playerStateMoving(int obj, int state, f32 fv) {
             }
             t = mathSinf((3.1415927f * (f32)inner->targetYaw) / 32768.0f);
             {
+                f32 velocityZ;
                 f32 velocityX;
                 f32 cs = mathCosf((3.1415927f * (f32)inner->targetYaw) / 32768.0f);
-                ya = inner->smoothVelZ;
-                spd = -ya;
+                velocityZ = inner->smoothVelZ;
+                spd = -velocityZ;
                 velocityX = inner->smoothVelX;
                 spd = spd * cs - velocityX * t;
-                ya = velocityX * cs - ya * t;
+                velocityZ = velocityX * cs - velocityZ * t;
                 ((PlayerState*)state)->baddie.animSpeedA =
                     ((PlayerState*)state)->baddie.animSpeedA +
                     interpolate(spd - ((PlayerState*)state)->baddie.animSpeedA, inner->targetAnimSpeed, timeDelta);
                 ((PlayerState*)state)->baddie.animSpeedB =
                     ((PlayerState*)state)->baddie.animSpeedB +
-                    interpolate(ya - ((PlayerState*)state)->baddie.animSpeedB, inner->targetAnimSpeed, timeDelta);
+                    interpolate(velocityZ - ((PlayerState*)state)->baddie.animSpeedB, inner->targetAnimSpeed,
+                                timeDelta);
             }
             spd = ((PlayerState*)state)->baddie.animSpeedB;
             spd = (spd < 0.0f) ? -spd : spd;
@@ -9246,10 +9251,10 @@ int playerStateMoving(int obj, int state, f32 fv) {
             }
             {
                 f32 v = ((PlayerState*)state)->baddie.animSpeedC;
-                f32* tb = inner->moveParamValues;
-                if (v < tb[step]) {
+                moveParams = inner->moveParamValues;
+                if (v < moveParams[step]) {
                     if (inner->gaitLevel == 4) {
-                        if (((PlayerState*)state)->baddie.animSpeedA < tb[4] &&
+                        if (((PlayerState*)state)->baddie.animSpeedA < moveParams[4] &&
                             ((PlayerState*)state)->baddie.inputMagnitude < 0.2f) {
                             ((PlayerState*)state)->baddie.stateHandler = (int)playerStagedRestoreDefaultControl;
                             return 2;
@@ -9257,10 +9262,10 @@ int playerStateMoving(int obj, int state, f32 fv) {
                     } else {
                         *(u8*)&inner->gaitLevel -= 4;
                     }
-                } else if (v >= tb[step + 1]) {
-                    int cc = inner->gaitLevel;
-                    if (cc < 0x14) {
-                        if (cc == 0) {
+                } else if (v >= moveParams[step + 1]) {
+                    u8 gaitLevel = inner->gaitLevel;
+                    if ((s8)gaitLevel < 0x14) {
+                        if ((s8)gaitLevel == 0) {
                             ya = 0.0f;
                         }
                         if (v < inner->maxSpeed) {

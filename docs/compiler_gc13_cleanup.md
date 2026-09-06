@@ -862,6 +862,35 @@ audit pass. Formatting changes neither the source text nor the object.
 The DOL SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`.
 Controls, traces, and audits are under `build/gc13_new_matches/player_round12*`.
 
+## September 6: Player movement state exact
+
+`playerStateMoving` reaches **100%**, adding **4,880 exact code bytes**.
+Staging the two target-velocity products and keeping the cached Z component
+in a separate local gives the projected lateral velocity retail's `f29`.
+The gait-level cache retains its byte representation with explicit signed
+comparisons, and the movement-parameter pointer is declared at function scope.
+Together these changes give the restart flag retail's `r0` and resolve the
+remaining integer-register differences.
+
+The final GPR trace aligns all **1,220 instructions**, replays all **417**
+physical register choices, and has no retail instruction differences. The
+restart flag's initial graph degree increases from 28 to 29, keeping it out
+of the first low-degree removal sweep so it is colored before the surrounding
+temporary integers. The instrumented and ordinary objects are identical.
+
+Objdiff now reports **233/233 functions**, **139,108/139,108 code bytes**, and
+**10,168/10,168 assigned data bytes** exact. The object audit confirms unchanged
+data, symbol positions, and relative relocations; only the movement body changes.
+Formatting is a no-op and preserves the raw object. Both build gates pass.
+
+**The TU remains NonMatching.** A trial source link exposes three unresolved
+same-TU float-pool references in `playerUpdateSurfaceResponse`. They denote
+`0.0f`, `1.0f`, and `0.2f`; replacing them with literals changes that function's
+code generation. The report's normalized relocations therefore do not yet
+certify a source-linked Player object. The Player completion gate remains the
+retail checksum with the TU enabled, not the 100% instruction report alone.
+Controls and traces are under `build/gc13_new_matches/player_round13*`.
+
 ## September 6: World-map camera orbit smoothing
 
 Engine 78 (`dlls/engine/78/78.c`) reaches **100% for all six functions,
