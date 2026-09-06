@@ -28,7 +28,7 @@ void wmspiritset_free(void)
 
 void wmspiritset_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    WmSpiritSetState* state = (obj)->extra;
+    WmSpiritSetState* state = obj->extra;
     s16 visibilityGameBit = state->visibilityGameBit;
 
     if ((visibilityGameBit == -1 || mainGetBit(visibilityGameBit) != 0) && vis != 0)

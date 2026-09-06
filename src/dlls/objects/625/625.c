@@ -94,7 +94,7 @@ void drakorhoverpad_handleRiderScale(GameObject* obj, f32 scale) {
     pos.rotX = 0;
     pos.rotY = 0;
     pos.rotZ = 0;
-    pos.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
+    pos.scale = scale / obj->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(gDrakorHoverpadMtx, &pos);
     mtx44_mult(gDrakorHoverpadMtx, mtx, gDrakorHoverpadMtx);
     objSetModelMatrixOverride(gDrakorHoverpadMtx);
@@ -582,12 +582,12 @@ void drakorhoverpad_render(GameObject* obj, int p2, int p3, int p4, int p5, char
         p->frameCounter += framesThisStep;
         if (p->frameCounter == 0 || p->frameCounter > 10) {
             p->frameCounter = 0;
-            p->particleEmitAX = (obj)->anim.localPosX + randomGetRange(-30, 30);
-            p->particleEmitAY = (obj)->anim.localPosY;
-            p->particleEmitAZ = (obj)->anim.localPosZ + randomGetRange(-30, 30);
-            p->particleEmitBX = (obj)->anim.localPosX + randomGetRange(-120, 120);
-            p->particleEmitBY = (obj)->anim.localPosY - 40.0f;
-            p->particleEmitBZ = (obj)->anim.localPosZ + randomGetRange(-120, 120);
+            p->particleEmitAX = obj->anim.localPosX + randomGetRange(-30, 30);
+            p->particleEmitAY = obj->anim.localPosY;
+            p->particleEmitAZ = obj->anim.localPosZ + randomGetRange(-30, 30);
+            p->particleEmitBX = obj->anim.localPosX + randomGetRange(-120, 120);
+            p->particleEmitBY = obj->anim.localPosY - 40.0f;
+            p->particleEmitBZ = obj->anim.localPosZ + randomGetRange(-120, 120);
         }
     }
 }
@@ -596,9 +596,9 @@ void drakorhoverpad_hitDetect(void) {
 }
 
 void drakorhoverpad_updateMain(GameObject* obj) {
-    DrakorHoverpadState* p = (obj)->extra;
+    DrakorHoverpadState* p = obj->extra;
     RomCurveWalker* curve;
-    DrakorHoverpadPlacement* placement = (DrakorHoverpadPlacement*)(obj)->anim.placementData;
+    DrakorHoverpadPlacement* placement = (DrakorHoverpadPlacement*)obj->anim.placementData;
     DrakorHoverpadFlags* f = &p->flags;
     DrakorHoverpadPathFlags* g = &p->pathFlags;
     int evOut;
@@ -619,9 +619,9 @@ void drakorhoverpad_updateMain(GameObject* obj) {
         p->targetSpeed = 0.0f;
         if (f->bit20 != 0) {
             drakorhoverpad_initPathCurve(obj, p);
-            (obj)->anim.localPosX = p->curve.posX;
-            (obj)->anim.localPosY = p->curve.posY;
-            (obj)->anim.localPosZ = p->curve.posZ;
+            obj->anim.localPosX = p->curve.posX;
+            obj->anim.localPosY = p->curve.posY;
+            obj->anim.localPosZ = p->curve.posZ;
             p->commandSpeed = 2.0f;
             Sfx_PlayFromObject(obj, SFXTRIG_id_308);
             Sfx_PlayFromObject(obj, SFXTRIG_id_30a);
@@ -689,17 +689,17 @@ void drakorhoverpad_updateMain(GameObject* obj) {
             s16 yawDelta = Obj_GetYawDeltaToObject(obj, nearest, 0);
             yawDelta = (yawDelta < -0x200) ? -0x200 : ((yawDelta > 0x200) ? 0x200 : yawDelta);
             c = yawDelta;
-            (obj)->anim.rotX += (s16)c;
-            if ((obj)->anim.rotY != 0) {
-                yawDelta = (obj)->anim.rotY;
+            obj->anim.rotX += (s16)c;
+            if (obj->anim.rotY != 0) {
+                yawDelta = obj->anim.rotY;
                 if (yawDelta < -0x100) {
                     yawDelta = -0x100;
                 } else if (yawDelta > 0x100) {
                     yawDelta = 0x100;
                 }
-                (obj)->anim.rotY -= (s16)yawDelta;
+                obj->anim.rotY -= (s16)yawDelta;
             }
-            (obj)->anim.rotZ = (s16)(c * gDrakorHoverpadRollScale);
+            obj->anim.rotZ = (s16)(c * gDrakorHoverpadRollScale);
         }
     } else {
         s16 yawDelta;
@@ -738,7 +738,7 @@ void drakorhoverpad_initMain(GameObject* obj, void* desc) {
     DrakorHoverpadPlacement* placement = (DrakorHoverpadPlacement*)desc;
     f32 initialSpeed;
 
-    (obj)->anim.rotX = (s16)(placement->rotXByte << 8);
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
     p->unk118 = (f32)placement->unk1a;
     initialSpeed = 0.0f;
     p->speed = initialSpeed;

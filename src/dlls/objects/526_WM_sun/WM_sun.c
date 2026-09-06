@@ -220,7 +220,7 @@ void wmsun_free(GameObject* obj)
 
 void wmsun_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    WmSunState* state = (obj)->extra;
+    WmSunState* state = obj->extra;
     if (vis != 0 && state->renderEnabled != 0)
     {
         lightmapObjectRenderBegin(p2, 0x10000);
@@ -236,7 +236,7 @@ void wmsun_hitDetect(void)
 void wmsun_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim;
-    WmSunState* state = (obj)->extra;
+    WmSunState* state = obj->extra;
     s16 thresh;
     s16 mult;
     f32 spd;
@@ -249,7 +249,7 @@ void wmsun_update(GameObject* obj)
     thresh = 0;
     mult = 1;
     spd = 0.0f;
-    if ((obj)->anim.romDefNo == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
+    if (obj->anim.romDefNo == WMSUN_SEQID_CRYSTAL) /* WM_Crystal */
     {
         if (mainGetBit(0x38f) != 0)
         {
@@ -295,8 +295,8 @@ void wmsun_update(GameObject* obj)
             if (state->riseStep < thresh)
             {
                 state->riseStep = state->riseStep + framesThisStep * mult;
-                (obj)->anim.rootMotionScale = -(spd * timeDelta - (obj)->anim.rootMotionScale);
-                (obj)->anim.localPosY = 50.0f * (spd * timeDelta) + (obj)->anim.localPosY;
+                obj->anim.rootMotionScale = -(spd * timeDelta - obj->anim.rootMotionScale);
+                obj->anim.localPosY = 50.0f * (spd * timeDelta) + obj->anim.localPosY;
             }
             else if (mainGetBit(0x222) != 0 && mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0)
             {
@@ -310,7 +310,7 @@ void wmsun_update(GameObject* obj)
                 CameraShake_SetOffset(0.8f * ((f32)(state->riseStep - 0x960) / 2400.0f));
                 mainSetBits(0x370, 1);
             }
-            (obj)->anim.rotX += state->riseStep;
+            obj->anim.rotX += state->riseStep;
             if (state->renderEnabled == 0)
             {
                 Obj_FreeObject(obj);
@@ -318,7 +318,7 @@ void wmsun_update(GameObject* obj)
         }
         return;
     }
-    if ((obj)->anim.romDefNo == 0x2c2)
+    if (obj->anim.romDefNo == 0x2c2)
     {
         if (mainGetBit(0x38f) != 0)
         {
@@ -397,8 +397,8 @@ void wmsun_update(GameObject* obj)
     }
     else
     {
-        (obj)->anim.rotZ += state->spinStep;
-        (obj)->anim.rotX += state->riseStep;
+        obj->anim.rotZ += state->spinStep;
+        obj->anim.rotX += state->riseStep;
         if (mainGetBit(GAMEBIT_WM_FinaleQuakeActive) != 0 && objAnim->bankIndex == 0)
         {
             if (lbl_803DDCAA == 0)

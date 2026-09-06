@@ -129,11 +129,11 @@ void VFP_LevelControl_hitDetect(void)
 
 void VFP_LevelControl_update(GameObject* obj)
 {
-    VfpLevelControlState* state = (obj)->extra;
+    VfpLevelControlState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if ((obj)->userData1 == 0 && mainGetBit(GAMEBIT_VFP_EnvironmentRelated0EF6) == 0u)
+    if (obj->userData1 == 0 && mainGetBit(GAMEBIT_VFP_EnvironmentRelated0EF6) == 0u)
     {
         if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
@@ -143,11 +143,11 @@ void VFP_LevelControl_update(GameObject* obj)
             skySetLightIndex(1, 0.0f);
             mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }
-        (obj)->userData1 = 1;
+        obj->userData1 = 1;
     }
 
     coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
-    mapEventState = (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
+    mapEventState = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);
     switch (mapEventState)
     {
     case 0:

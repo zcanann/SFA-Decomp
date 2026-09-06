@@ -203,17 +203,17 @@ int moveLibAdvanceHermite(GameObject* obj, const MoveLibWaypointDef* def, MoveLi
         buf[1] = state->startTangent.x;
         buf[2] = state->end.x;
         buf[3] = state->endTangent.x;
-        (obj)->anim.localPosX = Curve_EvalHermite(buf, *phaseOut, 0);
+        obj->anim.localPosX = Curve_EvalHermite(buf, *phaseOut, 0);
         buf[0] = state->start.y;
         buf[1] = state->startTangent.y;
         buf[2] = state->end.y;
         buf[3] = state->endTangent.y;
-        (obj)->anim.localPosY = Curve_EvalHermite(buf, *phaseOut, 0);
+        obj->anim.localPosY = Curve_EvalHermite(buf, *phaseOut, 0);
         buf[0] = state->start.z;
         buf[1] = state->startTangent.z;
         buf[2] = state->end.z;
         buf[3] = state->endTangent.z;
-        (obj)->anim.localPosZ = Curve_EvalHermite(buf, *phaseOut, 0);
+        obj->anim.localPosZ = Curve_EvalHermite(buf, *phaseOut, 0);
     }
     return ret;
 }
@@ -253,9 +253,9 @@ int dll_2E_advanceAlongRoute(GameObject* obj, RomCurveWalker* route, f32 phase, 
         {
             hit = (*gRomCurveInterface)->goNextPoint(route);
         }
-        (obj)->anim.localPosX = route->posX;
-        (obj)->anim.localPosY = route->posY;
-        (obj)->anim.localPosZ = route->posZ;
+        obj->anim.localPosX = route->posX;
+        obj->anim.localPosY = route->posY;
+        obj->anim.localPosZ = route->posZ;
         if (hit != 0)
         {
             *flags |= MOVELIB_CURVE_WALK_DONE;
@@ -264,18 +264,18 @@ int dll_2E_advanceAlongRoute(GameObject* obj, RomCurveWalker* route, f32 phase, 
     ObjAnim_SampleRootCurvePhase(&obj->anim, phase, rootOut);
     if (*flags & 1)
     {
-        if (trackGetNearestGroundOffset(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &ground,
+        if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground,
                                  0) == 0)
         {
-            (obj)->anim.localPosY -= ground;
+            obj->anim.localPosY -= ground;
         }
     }
     if (moved != 0 && (*flags & 0x2) != 0)
     {
-        int targetAngle = (s16)(getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
-                                         (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ) +
+        int targetAngle = (s16)(getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
+                                         obj->anim.localPosZ - obj->anim.previousLocalPosZ) +
                                 0x8000);
-        (obj)->anim.rotX = (s16)((obj)->anim.rotX + ((targetAngle - (obj)->anim.rotX) >> 3));
+        obj->anim.rotX = (s16)(obj->anim.rotX + ((targetAngle - obj->anim.rotX) >> 3));
     }
     return hit;
 }
@@ -469,12 +469,12 @@ void dll_2E_setTargetFromPathPoint(GameObject* obj, MoveLibState* s, int point)
         s->startOffsetY = v.y0;
         cB = cA * v.z0 + v.z1;
         s->startOffsetZ = cB * cC;
-        s->startOffsetX -= (obj)->anim.localPosX;
-        s->startOffsetY -= (obj)->anim.localPosY;
-        s->startOffsetZ -= (obj)->anim.localPosZ;
-        v.ang[0] = (s16) - (obj)->anim.rotZ;
-        v.ang[1] = (s16) - (obj)->anim.rotY;
-        v.ang[2] = (s16) - (obj)->anim.rotX;
+        s->startOffsetX -= obj->anim.localPosX;
+        s->startOffsetY -= obj->anim.localPosY;
+        s->startOffsetZ -= obj->anim.localPosZ;
+        v.ang[0] = (s16) - obj->anim.rotZ;
+        v.ang[1] = (s16) - obj->anim.rotY;
+        v.ang[2] = (s16) - obj->anim.rotX;
         vecRotateZXY(v.ang, &s->startOffsetX);
         s->needsReinit = 0;
     }

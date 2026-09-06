@@ -176,16 +176,16 @@ int LandedArwing_UpdateRetreatChase(GameObject* obj, BaddieState* baddie)
          (playerObj->anim.worldPosY > state->boundsMaxY && playerObj->anim.worldPosZ < state->boundsMinZ) ||
          playerObj->anim.worldPosZ > state->boundsMaxZ))
     {
-        x = (obj)->anim.localPosX;
-        y = (obj)->anim.localPosY;
-        z = (obj)->anim.localPosZ;
+        x = obj->anim.localPosX;
+        y = obj->anim.localPosY;
+        z = obj->anim.localPosZ;
         scale = 0.0f;
     }
     else
     {
-        x = (obj)->anim.localPosX - 2.0f * (playerObj->anim.localPosX - (obj)->anim.localPosX);
-        y = (obj)->anim.localPosY - 2.0f * (playerObj->anim.localPosY - (obj)->anim.localPosY);
-        z = (obj)->anim.localPosZ - 2.0f * (playerObj->anim.localPosZ - (obj)->anim.localPosZ);
+        x = obj->anim.localPosX - 2.0f * (playerObj->anim.localPosX - obj->anim.localPosX);
+        y = obj->anim.localPosY - 2.0f * (playerObj->anim.localPosY - obj->anim.localPosY);
+        z = obj->anim.localPosZ - 2.0f * (playerObj->anim.localPosZ - obj->anim.localPosZ);
         scale = 1.0f;
     }
     landedarwing_updateConstrainedChaseVelocity(obj, x, y, z, scale);
@@ -474,16 +474,16 @@ void landedarwing_updateAirborneMotion(GameObject* obj, LandedArwingState* state
     int hitFound;
 
     radius = 100.0f;
-    (obj)->anim.velocityY = (obj)->anim.velocityY - 1.0f;
-    (obj)->anim.velocityX = (obj)->anim.velocityX * (damping = 0.97f);
-    (obj)->anim.velocityY = (obj)->anim.velocityY * damping;
-    (obj)->anim.velocityZ = (obj)->anim.velocityZ * damping;
-    start[0] = (obj)->anim.localPosX;
-    start[1] = (obj)->anim.localPosY;
-    start[2] = (obj)->anim.localPosZ;
-    end[0] = start[0] + (obj)->anim.velocityX;
-    end[1] = start[1] + (obj)->anim.velocityY;
-    end[2] = start[2] + (obj)->anim.velocityZ;
+    obj->anim.velocityY = obj->anim.velocityY - 1.0f;
+    obj->anim.velocityX = obj->anim.velocityX * (damping = 0.97f);
+    obj->anim.velocityY = obj->anim.velocityY * damping;
+    obj->anim.velocityZ = obj->anim.velocityZ * damping;
+    start[0] = obj->anim.localPosX;
+    start[1] = obj->anim.localPosY;
+    start[2] = obj->anim.localPosZ;
+    end[0] = start[0] + obj->anim.velocityX;
+    end[1] = start[1] + obj->anim.velocityY;
+    end[2] = start[2] + obj->anim.velocityZ;
     hitScratch.hitRadius = 0.0f;
     hitScratch.hitType = 3;
     hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
@@ -499,9 +499,9 @@ void landedarwing_updateAirborneMotion(GameObject* obj, LandedArwingState* state
     }
     else
     {
-        (obj)->anim.localPosX = end[0];
-        (obj)->anim.localPosY = end[1];
-        (obj)->anim.localPosZ = end[2];
+        obj->anim.localPosX = end[0];
+        obj->anim.localPosY = end[1];
+        obj->anim.localPosZ = end[2];
     }
 }
 
@@ -1011,9 +1011,9 @@ void landedarwing_updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f
     state = (LandedArwingState*)((GroundBaddieState*)obj->extra)->control;
     if (state->flags92.airborne == 0)
     {
-        vx = targetX - (obj)->anim.localPosX;
-        vy = targetY - (obj)->anim.localPosY;
-        vz = targetZ - (obj)->anim.localPosZ;
+        vx = targetX - obj->anim.localPosX;
+        vy = targetY - obj->anim.localPosY;
+        vz = targetZ - obj->anim.localPosZ;
         len = sqrtf(vz * vz + (vx * vx + vy * vy));
         if (len >= 0.0f)
         {
@@ -1022,9 +1022,9 @@ void landedarwing_updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f
             vy *= scale;
             vz *= scale;
         }
-        vx = blend * (vx - (obj)->anim.velocityX) + (obj)->anim.velocityX;
-        vy = blend * (vy - (obj)->anim.velocityY) + (obj)->anim.velocityY;
-        vz = blend * (vz - (obj)->anim.velocityZ) + (obj)->anim.velocityZ;
+        vx = blend * (vx - obj->anim.velocityX) + obj->anim.velocityX;
+        vy = blend * (vy - obj->anim.velocityY) + obj->anim.velocityY;
+        vz = blend * (vz - obj->anim.velocityZ) + obj->anim.velocityZ;
         mode = state->surfaceMode;
         switch (mode)
         {
@@ -1076,9 +1076,9 @@ void landedarwing_updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f
             }
             break;
         }
-        (obj)->anim.velocityX = vx;
-        (obj)->anim.velocityY = vy;
-        (obj)->anim.velocityZ = vz;
+        obj->anim.velocityX = vx;
+        obj->anim.velocityY = vy;
+        obj->anim.velocityZ = vz;
     }
 }
 
@@ -1115,7 +1115,7 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     slideMtx = state->surfaceOrientationMtx;
     if (visible != 0)
     {
-        switch ((obj)->userData1)
+        switch (obj->userData1)
         {
         case 0:
             if ((state->surfaceMode == 6) &&
@@ -1124,14 +1124,14 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 if (state->flags92.airborne == 0)
                 {
                     landedarwing_buildSurfaceOrientationMatrix(
-                        slideMtx, &(obj)->anim.velocityX, &state->surfaceNormalX);
+                        slideMtx, &obj->anim.velocityX, &state->surfaceNormalX);
                 }
-                scale = (obj)->anim.rootMotionScale;
+                scale = obj->anim.rootMotionScale;
                 initRotationMtx(mtx, scale, scale, scale);
                 mtx44_mult(mtx, slideMtx, mtx);
-                mtx[12] = (obj)->anim.localPosX - playerMapOffsetX;
-                mtx[13] = (obj)->anim.localPosY;
-                mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
+                mtx[12] = obj->anim.localPosX - playerMapOffsetX;
+                mtx[13] = obj->anim.localPosY;
+                mtx[14] = obj->anim.localPosZ - playerMapOffsetZ;
                 objSetModelMatrixOverride((f32*)mtx);
                 objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
                 objSetModelMatrixOverride(NULL);
@@ -1357,7 +1357,7 @@ void dll_D3_init(GameObject* obj, DllD3Placement* def, int flag)
     }
     (*gBaddieControlInterface)
         ->initGroundBaddie(obj, (u8*)def, (u8*)state, 5, 1, 0x108, setupFlags, 20.0f);
-    (obj)->animEventCallback = NULL;
+    obj->animEventCallback = NULL;
 
     extra = (LandedArwingState*)state->control;
     memset((void*)extra, 0, 0x94);
@@ -1367,10 +1367,10 @@ void dll_D3_init(GameObject* obj, DllD3Placement* def, int flag)
     extra->surfaceNormalX = fz;
     extra->surfaceNormalY = 1.0f;
     extra->surfaceNormalZ = fz;
-    extra->surfacePlaneD = -(obj)->anim.localPosY;
-    extra->scriptTargetX = (obj)->anim.localPosX;
-    extra->scriptTargetY = (obj)->anim.localPosY;
-    extra->scriptTargetZ = (obj)->anim.localPosZ;
+    extra->surfacePlaneD = -obj->anim.localPosY;
+    extra->scriptTargetX = obj->anim.localPosX;
+    extra->scriptTargetY = obj->anim.localPosY;
+    extra->scriptTargetZ = obj->anim.localPosZ;
 
     ObjAnim_SetCurrentMove(obj, 0, fz, 0);
     if (def->startControlMode == 0)

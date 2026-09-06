@@ -57,26 +57,26 @@ void timer_addDuration(GameObject* obj, int duration)
 
 void timer_clearManualFlags(GameObject* obj)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     state->flags.manual = 0;
     state->flags.expired = 0;
 }
 
 void timer_forceStart(GameObject* obj)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     state->flags.manual = 1;
 }
 
 int timer_isEffectMode(GameObject* obj)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     return state->mode == TIMER_MODE_EFFECT;
 }
 
 int timer_hasExpired(GameObject* obj)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     return state->flags.expired;
 }
 
@@ -87,7 +87,7 @@ int timer_getExtraSize(void)
 
 void timer_free(GameObject* obj)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     objFreeObjectType(obj, TIMER_OBJECT_GROUP);
     if (state->lightSlot != NULL)
     {
@@ -98,14 +98,14 @@ void timer_free(GameObject* obj)
 
 void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     ModelLight* light = state->lightSlot;
     if (light != NULL && *(u8*)((char*)light + LIGHT_FIELD_2F8_OFFSET) != 0 &&
         *(u8*)((char*)light + LIGHT_FIELD_4C_OFFSET) != 0)
     {
         queueGlowRender(light);
     }
-    if ((obj)->ownerObj == NULL)
+    if (obj->ownerObj == NULL)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
@@ -118,8 +118,8 @@ void timer_update(GameObject* obj)
     TimerFlags* flags;
     TimerState* state;
     TimerSetup* setup;
-    state = (obj)->extra;
-    setup = (TimerSetup*)(obj)->anim.placementData;
+    state = obj->extra;
+    setup = (TimerSetup*)obj->anim.placementData;
     flags = &state->flags;
 
     if (timerIsActive(&state->countdownTimer) != 0)
@@ -130,7 +130,7 @@ void timer_update(GameObject* obj)
             storeZeroToFloatParam(&state->countdownTimer);
             if (state->mode == TIMER_MODE_GLOBAL)
             {
-                switch (((TimerSetup*)(obj)->anim.placementData)->base.ident)
+                switch (((TimerSetup*)obj->anim.placementData)->base.ident)
                 {
                 case TIMER_MAP_NO_FOOTSTEP:
                     break;
@@ -234,7 +234,7 @@ void timer_update(GameObject* obj)
 
 void timer_init(GameObject* obj, TimerSetup* setup)
 {
-    TimerState* state = (obj)->extra;
+    TimerState* state = obj->extra;
     TimerSetup* setupData = setup;
 
     storeZeroToFloatParam(&state->countdownTimer);

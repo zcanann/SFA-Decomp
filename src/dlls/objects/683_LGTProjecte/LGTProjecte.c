@@ -69,13 +69,13 @@ void ProjectedLight_init(GameObject* obj, ProjectedLightSetup* setup)
 {
     Vec3f vec;
     ProjectedLightSetup* setupData = setup;
-    ProjectedLightState* state = (obj)->extra;
+    ProjectedLightState* state = obj->extra;
 
     vec = *(Vec3f*)gProjectedLightInitialDirection;
 
-    (obj)->anim.rotX = (s16)(setupData->rotXByte << 8);
-    (obj)->anim.rotY = (s16)(setupData->rotYByte << 8);
-    (obj)->anim.rotZ = (s16)(setupData->rotZByte << 8);
+    obj->anim.rotX = (s16)(setupData->rotXByte << 8);
+    obj->anim.rotY = (s16)(setupData->rotYByte << 8);
+    obj->anim.rotZ = (s16)(setupData->rotZByte << 8);
 
     if (state->light == NULL)
     {

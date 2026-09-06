@@ -733,14 +733,14 @@ int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, 
         if (maxDistance) {
             if (state->reverse != 0) {
                 distanceCurve = (RomCurveDef*)state->nextNode;
-                dx = distanceCurve->x - (obj)->anim.localPosX;
-                dy = distanceCurve->y - (obj)->anim.localPosY;
-                dz = distanceCurve->z - (obj)->anim.localPosZ;
+                dx = distanceCurve->x - obj->anim.localPosX;
+                dy = distanceCurve->y - obj->anim.localPosY;
+                dz = distanceCurve->z - obj->anim.localPosZ;
             } else {
                 distanceCurve = (RomCurveDef*)state->currentNode;
-                dx = distanceCurve->x - (obj)->anim.localPosX;
-                dy = distanceCurve->y - (obj)->anim.localPosY;
-                dz = distanceCurve->z - (obj)->anim.localPosZ;
+                dx = distanceCurve->x - obj->anim.localPosX;
+                dy = distanceCurve->y - obj->anim.localPosY;
+                dz = distanceCurve->z - obj->anim.localPosZ;
             }
             distance = sqrtf(dx * dx + dy * dy + dz * dz);
             if (distance > maxDistance) {
@@ -788,9 +788,9 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
 
-    curvePos[0] = (obj)->anim.localPosX;
-    curvePos[1] = ROMCURVE_VERTICAL_OFFSET + (obj)->anim.localPosY;
-    curvePos[2] = (obj)->anim.localPosZ;
+    curvePos[0] = obj->anim.localPosX;
+    curvePos[1] = ROMCURVE_VERTICAL_OFFSET + obj->anim.localPosY;
+    curvePos[2] = obj->anim.localPosZ;
     voxmaps_worldToGrid(curvePos, objGrid);
 
     for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++) {
@@ -798,9 +798,9 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
         typeIndex = 0;
         do {
             if ((curve->type == curveTypes[typeIndex]) || (typeCount <= 0)) {
-                dx = curve->x - (obj)->anim.localPosX;
-                dy = curve->y - (obj)->anim.localPosY;
-                dz = curve->z - (obj)->anim.localPosZ;
+                dx = curve->x - obj->anim.localPosX;
+                dy = curve->y - obj->anim.localPosY;
+                dz = curve->z - obj->anim.localPosZ;
                 distance = sqrtf(dz * dz + (dx * dx + dy * dy));
                 if (distance < bestDistance) {
                     curvePos[0] = curve->x;
@@ -809,7 +809,7 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (trackGetLineIntersect(&(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
+                        (trackGetLineIntersect(&obj->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
                                                (TrackLineIntersectResult*)bboxHit, obj, bboxMode, -1, 0, 0) == 0)) {
                         bestDistance = distance;
                         bestCurve = curve;
@@ -822,7 +822,7 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (trackGetLineIntersect(&(obj)->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
+                        (trackGetLineIntersect(&obj->anim.localPosX, curvePos, ROMCURVE_ONE, 0,
                                                (TrackLineIntersectResult*)bboxHit, obj, bboxMode, -1, 0, 0) == 0)) {
                         bestActionDistance = distance;
                         bestActionCurve = curve;
@@ -1467,11 +1467,11 @@ int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll) {
     nearestDistance = ROMCURVE_ZERO;
     for (i = 0; i < objectCount; i = i + 1) {
         obj = objects[i];
-        if ((((obj)->anim.classId == 0x2c) && ((obj)->anim.mapEventSlot != queryAll)) &&
+        if (((obj->anim.classId == 0x2c) && (obj->anim.mapEventSlot != queryAll)) &&
             (curve = (RomCurveDef*)obj->anim.placementData, curve != NULL) && curve->type == ROMCURVE_TYPE_16) {
-            dx = (obj)->anim.worldPosX - x;
-            dy = (obj)->anim.worldPosY - y;
-            dz = (obj)->anim.worldPosZ - z;
+            dx = obj->anim.worldPosX - x;
+            dy = obj->anim.worldPosY - y;
+            dz = obj->anim.worldPosZ - z;
             distance = sqrtf(dz * dz + (dx * dx + dy * dy));
             if (ROMCURVE_NEG_ONE == nearestCurveId || distance < nearestDistance) {
                 nearestDistance = distance;
@@ -1850,9 +1850,9 @@ f32 curves_distToObj(GameObject* obj, u32 curveId) {
 
     curve = RomCurve_FindByIdInline(curveId);
     if (curve != NULL && (void*)obj != NULL) {
-        dx = curve->x - (obj)->anim.localPosX;
-        dy = curve->y - (obj)->anim.localPosY;
-        dz = curve->z - (obj)->anim.localPosZ;
+        dx = curve->x - obj->anim.localPosX;
+        dy = curve->y - obj->anim.localPosY;
+        dz = curve->z - obj->anim.localPosZ;
         return sqrtf(dx * dx + dy * dy + dz * dz);
     }
 

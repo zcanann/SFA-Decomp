@@ -224,7 +224,7 @@ void worldplanet_hitDetect(void) {
 static inline void worldplanet_spawnFox(GameObject* obj, WorldPlanetState* state) {
     ObjPlacement* def;
     state->foxSpawnTimer = randomGetRange(WORLDPLANET_FOX_SPAWN_MIN_FRAMES, WORLDPLANET_FOX_SPAWN_MAX_FRAMES);
-    def = (ObjPlacement*)(obj)->anim.placementData;
+    def = (ObjPlacement*)obj->anim.placementData;
     if ((u8)Obj_CanSetupObject() != 0) {
         WorldPlanetFoxSpawnSetup* setup = (WorldPlanetFoxSpawnSetup*)Obj_AllocObjectSetup(
             WORLDPLANET_FOX_SPAWN_SETUP_SIZE, WORLDPLANET_FOX_SPAWN_OBJECT_ID);
@@ -232,10 +232,10 @@ static inline void worldplanet_spawnFox(GameObject* obj, WorldPlanetState* state
         setup->base.color[2] = def->color[2];
         setup->base.color[1] = def->color[1];
         setup->base.color[3] = def->color[3];
-        setup->base.posX = (obj)->anim.localPosX;
-        setup->base.posY = (obj)->anim.localPosY;
-        setup->base.posZ = (obj)->anim.localPosZ;
-        objSetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, NULL);
+        setup->base.posX = obj->anim.localPosX;
+        setup->base.posY = obj->anim.localPosY;
+        setup->base.posZ = obj->anim.localPosZ;
+        objSetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, NULL);
     }
 }
 
@@ -253,7 +253,7 @@ void worldplanet_update(GameObject* obj) {
     s8 inputX;
     s8 inputY;
 
-    state = (obj)->extra;
+    state = obj->extra;
     done = 0;
     state->foxSpawnTimer -= 1;
     if (state->foxSpawnTimer == 1) {
@@ -306,14 +306,14 @@ void worldplanet_update(GameObject* obj) {
             ->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &effectParams, WORLDPLANET_SELECTION_PFX_MODE, -1,
                           NULL);
         worldplanet_readMapInput(obj, &inputX, &inputY);
-        (obj)->anim.rotZ -= 10;
-        (obj)->anim.rotY = 0x3448;
-        (obj)->anim.rotX = 0x4000;
+        obj->anim.rotZ -= 10;
+        obj->anim.rotY = 0x3448;
+        obj->anim.rotX = 0x4000;
         {
             GameObject* fox = ObjList_FindObjectById(WORLDPLANET_FOX_OBJECT_ID);
-            fox->anim.rotZ = (obj)->anim.rotZ;
-            fox->anim.rotY = (obj)->anim.rotY;
-            fox->anim.rotX = (obj)->anim.rotX;
+            fox->anim.rotZ = obj->anim.rotZ;
+            fox->anim.rotY = obj->anim.rotY;
+            fox->anim.rotX = obj->anim.rotX;
         }
         mapObject = ObjList_FindObjectById(WORLDPLANET_ARWING_OBJECT_ID);
         ((WorldObjState*)mapObject->extra)->effectState = state->selectionLocked;
@@ -360,8 +360,8 @@ void worldplanet_update(GameObject* obj) {
              * block runs on a real selection change OR that first frame, but the
              * camera swoosh (releaseAction) + select SFX below are gated on the
              * latch so they fire only on genuine changes, not on the initial open. */
-            if (prevPlanet != state->selectedPlanet || (obj)->userData1 == 0) {
-                if ((obj)->userData1 != 0) {
+            if (prevPlanet != state->selectedPlanet || obj->userData1 == 0) {
+                if (obj->userData1 != 0) {
                     objId = sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, CAMERA_MODE_WORLD_MAP_ACTION_SET_FOCUS);
                     Sfx_PlayFromObject(0, SFXTRIG_crf_babyambi3);
@@ -377,7 +377,7 @@ void worldplanet_update(GameObject* obj) {
                         sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)planetObj->extra)->effectState = 1;
                 }
-                (obj)->userData1 = 1;
+                obj->userData1 = 1;
             }
         }
         gWorldPlanetPathProgress += 0.2f;
@@ -389,8 +389,8 @@ void worldplanet_update(GameObject* obj) {
             WorldObjState* pstate;
             planet = ObjList_FindObjectById(sWorldPlanetFlightPathObjectIds[i]);
             pstate = planet->extra;
-            planet->anim.rotY = (obj)->anim.rotY;
-            planet->anim.rotX = (obj)->anim.rotX;
+            planet->anim.rotY = obj->anim.rotY;
+            planet->anim.rotX = obj->anim.rotX;
             if (state->selectionLocked != 0 || (((int)(u32)state->unlockedPlanetMask >> i) & 1) == 0) {
                 pstate->effectState = 0;
                 if ((int)i == state->selectedPlanet) {
@@ -518,7 +518,7 @@ void worldplanet_update(GameObject* obj) {
             f32 orbitRadius;
             {
                 u8 spin = 0;
-                orbitAngle = -(obj)->anim.rotZ;
+                orbitAngle = -obj->anim.rotZ;
                 for (; spin < WORLDPLANET_PLANET_COUNT; spin++) {
                     GameObject* planetObj;
                     planetObj = ObjList_FindObjectById(sWorldPlanetFlightPathObjectIds[spin]);
@@ -544,12 +544,12 @@ void worldplanet_update(GameObject* obj) {
                         fsin16Approx(orbitAngle + *(angleOffsetEntry = (int*)((u8*)sWorldPlanetOrbitAngleOffsets +
                                                                               tableOffsetBytes))) *
                         fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
-                    (obj)->anim.localPosX;
+                    obj->anim.localPosX;
                 orbitObject->anim.localPosY = orbitRadius * fsin16Approx(orbitAngle + *angleOffsetEntry) *
                                                   fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
-                                              (obj)->anim.localPosY;
+                                              obj->anim.localPosY;
                 orbitObject->anim.localPosZ =
-                    orbitRadius * fcos16Approx(orbitAngle + *angleOffsetEntry) + (obj)->anim.localPosZ;
+                    orbitRadius * fcos16Approx(orbitAngle + *angleOffsetEntry) + obj->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;

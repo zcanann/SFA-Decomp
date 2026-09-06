@@ -255,7 +255,7 @@ void ring_free(GameObject* obj)
 
 void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    RingState* state = (obj)->extra;
+    RingState* state = obj->extra;
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
     {
         queueGlowRender(state->light);
@@ -484,10 +484,10 @@ void ring_update(GameObject* obj)
 
 void ring_init(GameObject* obj, RingPlacement* setup)
 {
-    RingState* state = (obj)->extra;
+    RingState* state = obj->extra;
     RingPlacement* p = setup;
     RingFlags* f = &state->flags;
-    s16 type = (obj)->anim.romDefNo;
+    s16 type = obj->anim.romDefNo;
     if (type == RING_OBJ_ARW_SILVER)
     {
         state->mode = RING_MODE_SILVER;
@@ -527,13 +527,13 @@ void ring_init(GameObject* obj, RingPlacement* setup)
     }
     state->linkId = p->linkId;
     state->pullHeight = p->pullHeight / 10.0f;
-    state->origX = (obj)->anim.localPosX;
-    state->origY = (obj)->anim.localPosY;
+    state->origX = obj->anim.localPosX;
+    state->origY = obj->anim.localPosY;
     if (p->modeFlag != 0)
         f->bit20 = 1;
     else
         f->bit20 = 0;
-    (obj)->anim.rotX = -32768;
+    obj->anim.rotX = -32768;
     if (state->mode == RING_MODE_WC_MOON || state->mode == RING_MODE_WC_SUN)
     {
         f->bit10 = 1;
@@ -541,8 +541,8 @@ void ring_init(GameObject* obj, RingPlacement* setup)
     }
     else
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        (obj)->anim.alpha = 0;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.alpha = 0;
     }
 }
 

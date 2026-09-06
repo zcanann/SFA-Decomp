@@ -120,7 +120,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         switch (eventId) {
         case 6:
             target = objGetNearestTypeTo(DBHOLE_CONTROL1_OBJECT_GROUP, obj, 0);
-            if (target != NULL && (obj)->childCount != 0) {
+            if (target != NULL && obj->childCount != 0) {
                 (*(BossDrakorSpellStoneInterface**)target->anim.dll)
                     ->setState(target, BOSSDRAKOR_SPELLSTONE_STATE_HELD);
                 ObjLink_DetachChild(obj, target);
@@ -280,7 +280,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
             break;
         case 1:
             player = Obj_GetPlayerObject();
-            if ((state)->flags198.b40) {
+            if (state->flags198.b40) {
                 if ((u8)Obj_CanSetupObject() != 0) {
                     setup = Obj_AllocObjectSetup(0x20, BOSSDRAKOR_CHILD_OBJ_MISSILE);
                     setup->posX = s->homePosX;
@@ -294,7 +294,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
                         missile = loadObjectAtObject(obj, setup);
                         if (missile != NULL) {
                             prod = gBossDrakorMissileTargetScatterFactor *
-                                   Vec_distance(&(obj)->anim.worldPosX, &player->anim.worldPosX);
+                                   Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX);
                             target.x =
                                 player->anim.localPosX + (f32)(s32)randomGetRange(lo = (int)-prod, hi = (int)prod);
                             target.y = player->anim.localPosY + (f32)(s32)randomGetRange(lo, hi);
@@ -323,7 +323,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, BossDrakorState* state, int 
             }
             break;
         case 2:
-            if (!(state)->flags198.b40) {
+            if (!state->flags198.b40) {
                 if ((u8)Obj_CanSetupObject() != 0) {
                     setup = Obj_AllocObjectSetup(0x24, BOSSDRAKOR_CHILD_OBJ_ATTACK);
                     setup->color[0] = 2;
@@ -381,13 +381,13 @@ void bossdrakor_handleActionEvent(GameObject* obj, BossDrakorState* state, int a
     }
     switch (action) {
     case 1:
-        if ((state)->flags198.b40) {
+        if (state->flags198.b40) {
             s->moveState = 0x12;
             if (s->lightObj != NULL) {
                 modelLightStruct_setEnabled(s->lightObj, 0, 1.0f);
             }
         } else {
-            (state)->flags198.b40 = 1;
+            state->flags198.b40 = 1;
             if (s->lightObj != NULL) {
                 modelLightStruct_setEnabled(s->lightObj, 1, 1.0f);
             }
@@ -432,7 +432,7 @@ void bossdrakor_handleActionEvent(GameObject* obj, BossDrakorState* state, int a
     case 7:
         s->moveState = 0x13;
         s->moveSpeed = 280.0f;
-        (state)->flags198.b08 = 0;
+        state->flags198.b08 = 0;
         break;
     case 25:
         s->moveState = 0x14;
@@ -484,10 +484,10 @@ int bossdrakor_getExtraSize(void) {
 }
 
 void bossdrakor_free(GameObject* obj) {
-    BossDrakorState* inner = (BossDrakorState*)(obj)->extra;
+    BossDrakorState* inner = (BossDrakorState*)obj->extra;
     BossDrakorState* s = inner;
     objFreeObjectType(obj, BOSSDRAKOR_OBJGROUP);
-    if ((obj)->childObjs[0] != NULL) {
+    if (obj->childObjs[0] != NULL) {
         ObjLink_DetachChild(obj, obj->childObjs[0]);
     }
     if (s->lightObj != NULL) {
@@ -534,7 +534,7 @@ void bossdrakor_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis) 
 
 void bossdrakor_hitDetect(GameObject* obj) {
     BossDrakorState* inner = obj->extra;
-    BossdrakorPlacement* setup = (BossdrakorPlacement*)(obj)->anim.placementData;
+    BossdrakorPlacement* setup = (BossdrakorPlacement*)obj->anim.placementData;
     f32 hz;
     f32 hy;
     f32 hx;
@@ -841,7 +841,7 @@ void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init) {
     storeZeroToFloatParam(&s->attackTimer);
     objAddObjectType(obj, BOSSDRAKOR_OBJGROUP);
     storeZeroToFloatParam(&s->jawAnimTimer);
-    (obj)->animEventCallback = bossdrakor_seqFn;
+    obj->animEventCallback = bossdrakor_seqFn;
     Music_Trigger(MUSICTRIG_LVF_Tracking, 1);
     Music_Trigger(MUSICTRIG_citytombs, 1);
     s->lightObj = 0;

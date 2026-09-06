@@ -435,7 +435,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, EarthWarriorState* controlle
         if ((skip != 0 || warrior->prevMoveTable != warrior->moveTable ||
              obj->anim.currentMove != warrior->moveTable[warrior->attackPhase]) &&
             (ObjAnim_GetCurrentEventCountdown(&obj->anim) == 0 || warrior->flags3F2.b10 != 0)) {
-            if ((obj)->anim.currentMove == 0x14) {
+            if (obj->anim.currentMove == 0x14) {
                 blend = 0.85f;
             }
             ObjAnim_SetCurrentMove(obj, warrior->moveTable[warrior->attackPhase], blend, 0);
@@ -504,7 +504,7 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, BaddieState* baddie) {
         baddie->velSmoothTime = 8.0f;
         baddie->moveSpeed = 0.005f;
     }
-    if ((obj)->anim.currentMove == warrior->moveTable[0x18] || obj->anim.currentMove == warrior->moveTable[0x19]) {
+    if (obj->anim.currentMove == warrior->moveTable[0x18] || obj->anim.currentMove == warrior->moveTable[0x19]) {
         if (baddie->moveDone != 0 && ObjAnim_GetCurrentEventCountdown(&obj->anim) == 0 && !state->sub.flags994.b01) {
             ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
             baddie->moveSpeed = 0.005f;
@@ -908,7 +908,7 @@ void DR_EarthWarrior_update(GameObject* obj) {
     characterDoEyeAnims(obj, &state->eyeAnimState);
     objSoundUpdateMouth(obj, &state->modelSoundState);
     dll_2E_updateLookAt(obj, &state->moveLib);
-    if ((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
+    if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
         state->sub.flags994.b10 = 1;
         if ((*gGameUIInterface)->isItemBeingUsed(GAMEBIT_ITEM_TrickyFood_Count) != 0) {
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);

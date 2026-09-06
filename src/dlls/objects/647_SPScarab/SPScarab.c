@@ -169,11 +169,11 @@ void SPScarab_init(GameObject* obj, SpscarabPlacement* def)
         paletteBytes.byteC = *paletteByte;
     }
 
-    (obj)->objectFlags = (obj)->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
-    (obj)->anim.rotX = (s16)((s32)def->rotXByte << 8);
+    obj->objectFlags = obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->anim.rotX = (s16)((s32)def->rotXByte << 8);
 
-    (obj)->anim.velocityX = -mathSinf(3.1415927f * (f32)(s32)(obj)->anim.rotX / 32768.0f);
-    (obj)->anim.velocityZ = -mathCosf(3.1415927f * (f32)(s32)(obj)->anim.rotX / 32768.0f);
+    obj->anim.velocityX = -mathSinf(3.1415927f * (f32)(s32)obj->anim.rotX / 32768.0f);
+    obj->anim.velocityZ = -mathCosf(3.1415927f * (f32)(s32)obj->anim.rotX / 32768.0f);
 
     objAnim->bankIndex = (s8)(1 - def->kind);
 

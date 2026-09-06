@@ -43,7 +43,7 @@ void WCBouncyCra_hitDetect(void)
 
 void WCBouncyCra_update(GameObject* obj)
 {
-    WCBouncyCrateState* state = (obj)->extra;
+    WCBouncyCrateState* state = obj->extra;
 
     if ((state->flags & WBOUNCY_FLAG_ACTIVE) == 0)
     {
@@ -77,26 +77,26 @@ void WCBouncyCra_update(GameObject* obj)
                     dist = dist * lbl_803E6D2C;
                 }
             }
-            (obj)->anim.velocityY = dist;
+            obj->anim.velocityY = dist;
             state->flags |= WBOUNCY_FLAG_ACTIVE;
             state->bounceCount = 0;
         }
     }
     else
     {
-        (obj)->anim.velocityY = gBouncyCrateGravity * timeDelta + (obj)->anim.velocityY;
-        (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.localPosY;
-        if ((obj)->anim.localPosY <= state->homeY)
+        obj->anim.velocityY = gBouncyCrateGravity * timeDelta + obj->anim.velocityY;
+        obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+        if (obj->anim.localPosY <= state->homeY)
         {
-            (obj)->anim.localPosY = (obj)->anim.localPosY + (state->homeY - (obj)->anim.localPosY);
-            (obj)->anim.velocityY = gBouncyCrateRestitution * -(obj)->anim.velocityY;
+            obj->anim.localPosY = obj->anim.localPosY + (state->homeY - obj->anim.localPosY);
+            obj->anim.velocityY = gBouncyCrateRestitution * -obj->anim.velocityY;
             state->bounceCount += 1;
             if (state->bounceCount > WBOUNCY_MAX_BOUNCES)
             {
                 state->flags &= ~WBOUNCY_FLAG_ACTIVE;
                 state->cooldown = WBOUNCY_RESET_COOLDOWN;
-                (obj)->anim.localPosY = state->homeY;
-                (obj)->anim.velocityY = lbl_803E6D24;
+                obj->anim.localPosY = state->homeY;
+                obj->anim.velocityY = lbl_803E6D24;
             }
         }
     }

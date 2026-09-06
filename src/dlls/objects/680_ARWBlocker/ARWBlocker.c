@@ -63,8 +63,8 @@ void ARWBlocker_hitDetect(void)
 
 void ARWBlocker_update(GameObject* obj)
 {
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    ARWBlockerState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    ARWBlockerState* state = obj->extra;
     GameObject* arwing = (GameObject*)getArwing();
 
     if (arwing == NULL)
@@ -75,9 +75,9 @@ void ARWBlocker_update(GameObject* obj)
         if (alpha > 0xff)
             alpha = 0xff;
         objAnim->alpha = alpha;
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
-        if ((obj)->userData1 == 0)
+        if (obj->userData1 == 0)
         {
             switch (state->sequenceMode)
             {
@@ -89,22 +89,22 @@ void ARWBlocker_update(GameObject* obj)
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 break;
             }
-            (obj)->userData1 = 1;
+            obj->userData1 = 1;
         }
     }
 }
 
 void ARWBlocker_init(GameObject* obj, ARWBlockerSetup* setup)
 {
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    ARWBlockerState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    ARWBlockerState* state = obj->extra;
     ARWBlockerSetup* mapData = setup;
 
-    (obj)->anim.rotX = -0x8000;
-    (obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
-    (obj)->animEventCallback = ARWBlocker_SeqFn;
+    obj->anim.rotX = -0x8000;
+    obj->anim.rotZ = (s16)(mapData->rotZ << 8);
+    obj->animEventCallback = ARWBlocker_SeqFn;
     state->sequenceMode = mapData->sequenceMode;
-    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
     ObjHits_DisableObject(obj);
 }

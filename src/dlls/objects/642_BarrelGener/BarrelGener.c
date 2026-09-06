@@ -36,13 +36,13 @@ int gBarrelGenerReleaseFrameOffset = 0x14;
 
 int barrelgener_getLinkId(GameObject* obj)
 {
-    BarrelGeneratorSetup* setup = (BarrelGeneratorSetup*)(obj)->anim.placementData;
+    BarrelGeneratorSetup* setup = (BarrelGeneratorSetup*)obj->anim.placementData;
     return setup->linkId;
 }
 
 void barrelgener_queueObjectRelease(GameObject* obj, GameObject* queuedObj, int releaseFrame)
 {
-    BarrelGeneratorState* state = (obj)->extra;
+    BarrelGeneratorState* state = obj->extra;
 
     state->queuedObject = queuedObj;
     state->releaseAnimPlaying = 0;
@@ -79,7 +79,7 @@ void barrelgener_hitDetect(void)
 
 void barrelgener_update(GameObject* obj)
 {
-    BarrelGeneratorState* state = (obj)->extra;
+    BarrelGeneratorState* state = obj->extra;
     GameObject* player = Obj_GetPlayerObject();
 
     if (mainGetBit(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
@@ -105,9 +105,9 @@ void barrelgener_update(GameObject* obj)
             {
                 GameObject* releasedBarrel = state->queuedObject;
                 f32 releaseVelocity;
-                releasedBarrel->anim.localPosX = (obj)->anim.localPosX;
-                releasedBarrel->anim.localPosY = (obj)->anim.localPosY;
-                releasedBarrel->anim.localPosZ = (obj)->anim.localPosZ;
+                releasedBarrel->anim.localPosX = obj->anim.localPosX;
+                releasedBarrel->anim.localPosY = obj->anim.localPosY;
+                releasedBarrel->anim.localPosZ = obj->anim.localPosZ;
                 releasedBarrel->anim.previousLocalPosX = releasedBarrel->anim.localPosX;
                 releasedBarrel->anim.previousLocalPosY = releasedBarrel->anim.localPosY;
                 releasedBarrel->anim.previousLocalPosZ = releasedBarrel->anim.localPosZ;
@@ -125,7 +125,7 @@ void barrelgener_update(GameObject* obj)
     }
     if (state->releaseAnimPlaying != 0)
     {
-        if ((obj)->anim.currentMoveProgress > 0.5f)
+        if (obj->anim.currentMoveProgress > 0.5f)
         {
             if (state->releaseBeepPlayed == 0)
             {
@@ -140,7 +140,7 @@ void barrelgener_update(GameObject* obj)
 
 void barrelgener_init(GameObject* obj)
 {
-    BarrelGeneratorState* state = (obj)->extra;
+    BarrelGeneratorState* state = obj->extra;
 
     objAddObjectType(obj, BARREL_GENERATOR_OBJECT_GROUP);
     state->releaseAnimPlaying = 0;

@@ -64,26 +64,26 @@ void VFP_MiniFire_hitDetect(void)
 void VFP_MiniFire_update(GameObject* obj)
 {
     /* The sampled offsets are intentionally signed. */
-    VfpMinifireState* state = (obj)->extra;
+    VfpMinifireState* state = obj->extra;
     PartFxSpawnParams args;
     ObjHitsPriorityState* linkedGfx;
     int i;
 
     if (state->baseY == 0.0f)
     {
-        trackGetNearestGroundOffset(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, (f32*)state,
+        trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, (f32*)state,
                              0);
-        state->baseY = (obj)->anim.localPosY - state->baseY;
+        state->baseY = obj->anim.localPosY - state->baseY;
     }
 
-    if ((obj)->anim.velocityY > -15.0f)
+    if (obj->anim.velocityY > -15.0f)
     {
-        (obj)->anim.velocityY += -0.03f;
+        obj->anim.velocityY += -0.03f;
     }
 
-    (obj)->anim.localPosX += (obj)->anim.velocityX * timeDelta;
-    (obj)->anim.localPosY += (obj)->anim.velocityY * timeDelta;
-    (obj)->anim.localPosZ += (obj)->anim.velocityZ * timeDelta;
+    obj->anim.localPosX += obj->anim.velocityX * timeDelta;
+    obj->anim.localPosY += obj->anim.velocityY * timeDelta;
+    obj->anim.localPosZ += obj->anim.velocityZ * timeDelta;
 
     args.posX = 0.0f;
     args.posY = 0.0f;
@@ -99,9 +99,9 @@ void VFP_MiniFire_update(GameObject* obj)
     }
 
     {
-        f32 dx = (obj)->anim.localPosX - (obj)->anim.previousLocalPosX;
-        f32 dy = (obj)->anim.localPosY - (obj)->anim.previousLocalPosY;
-        f32 dz = (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ;
+        f32 dx = obj->anim.localPosX - obj->anim.previousLocalPosX;
+        f32 dy = obj->anim.localPosY - obj->anim.previousLocalPosY;
+        f32 dz = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
         args.posX = dx / 3.0f;
         args.posY = dy / 3.0f;
         args.posZ = dz / 3.0f;
@@ -125,7 +125,7 @@ void VFP_MiniFire_update(GameObject* obj)
         (*gPartfxInterface)->spawnObject((void*)obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1, -1, NULL);
     }
 
-    linkedGfx = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+    linkedGfx = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if ((void*)linkedGfx != NULL)
     {
         linkedGfx->hitVolumePriority = 0xb;
@@ -134,7 +134,7 @@ void VFP_MiniFire_update(GameObject* obj)
         linkedGfx->skeletonHitMask = 0x10;
     }
     if (((void*)linkedGfx != NULL && linkedGfx->lastHitObject != 0) ||
-        ((obj)->anim.localPosY < state->baseY && state->burstStarted == 0))
+        (obj->anim.localPosY < state->baseY && state->burstStarted == 0))
     {
         state->burstStarted = 1;
         i = VFPMINIFIRE_BURST_COUNT;
@@ -147,15 +147,15 @@ void VFP_MiniFire_update(GameObject* obj)
 
     if (state->burstStarted != 0)
     {
-        s16 alpha = (obj)->anim.alpha - (s16)timeDelta;
+        s16 alpha = obj->anim.alpha - (s16)timeDelta;
         if (alpha < 0)
         {
             alpha = 0;
         }
-        (obj)->anim.alpha = alpha;
+        obj->anim.alpha = alpha;
     }
 
-    if ((obj)->anim.localPosY < state->baseY - 360.0f)
+    if (obj->anim.localPosY < state->baseY - 360.0f)
     {
         Obj_FreeObject(obj);
     }

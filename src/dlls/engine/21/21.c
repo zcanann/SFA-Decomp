@@ -192,9 +192,9 @@ void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
     startX = collision->points[1][0];
     startZ = collision->points[1][2];
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0) {
-        (obj)->anim.worldPosX = startX;
-        (obj)->anim.worldPosZ = startZ;
-        (obj)->anim.worldPosY = collision->points[0][1];
+        obj->anim.worldPosX = startX;
+        obj->anim.worldPosZ = startZ;
+        obj->anim.worldPosY = collision->points[0][1];
     }
 
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], (u32*)&hitCount, 0);
@@ -215,7 +215,7 @@ void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
         pointIndex++;
     }
 
-    if ((obj)->anim.classId == 1) {
+    if (obj->anim.classId == 1) {
         collision->traceStart[2][0] = collision->points[1][0];
         collision->traceStart[2][1] = collision->points[1][1];
         collision->traceStart[2][2] = collision->points[1][2];
@@ -423,12 +423,12 @@ void curves_snapToNearestSurface(GameObject* obj, CurvesCollisionState* collisio
 
     point = curves_getCurves(obj, collision->points[0][0], collision->points[0][2], &hitCount, 0);
     hitIndex = hitCount - 1;
-    currentY = (obj)->anim.worldPosY;
+    currentY = obj->anim.worldPosY;
     window = CURVES_DEFAULT_VERTICAL_WINDOW;
     while (hitIndex >= 0) {
         if ((s8)point[hitIndex].surfaceType != ROMCURVE_POINT_TYPE_WATER) {
             if ((currentY <= point[hitIndex].height) && (currentY >= (point[hitIndex].height - window))) {
-                (obj)->anim.worldPosY = point[hitIndex].height;
+                obj->anim.worldPosY = point[hitIndex].height;
                 collision->surfaceNormalX = point[hitIndex].normalX;
                 collision->surfaceNormalY = point[hitIndex].normalY;
                 collision->surfaceNormalZ = point[hitIndex].normalZ;
@@ -763,18 +763,18 @@ void curves_reset(GameObject* obj, CurvesCollisionState* collision) {
     flags = collision->flags;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
-        transform.rotX = (obj)->anim.rotX;
+        transform.rotX = obj->anim.rotX;
         if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
             transform.rotY = 0;
             transform.rotZ = 0;
         } else {
-            transform.rotY = (obj)->anim.rotY;
-            transform.rotZ = (obj)->anim.rotZ;
+            transform.rotY = obj->anim.rotY;
+            transform.rotZ = obj->anim.rotZ;
         }
         transform.scale = CURVES_ONE;
-        transform.x = (obj)->anim.localPosX;
-        transform.y = (obj)->anim.localPosY;
-        transform.z = (obj)->anim.localPosZ;
+        transform.x = obj->anim.localPosX;
+        transform.y = obj->anim.localPosY;
+        transform.z = obj->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         loopIdx[0] = 0;
         loopIdx[1] = loopIdx[0];

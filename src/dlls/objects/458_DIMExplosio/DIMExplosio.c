@@ -61,8 +61,8 @@ static const f32 sExplosionFadeOutExponent[] = {25.0f};
 static const f32 sExplosionSpawnDelay[] = {8.0f};
 
 void explosion_spawnFlame(GameObject* obj, f32 speed, u8 generation, f32 x, f32 y, f32 z) {
-    DimExplosionPlacement* placement = (DimExplosionPlacement*)(obj)->anim.placementData;
-    DimExplosionState* state = (obj)->extra;
+    DimExplosionPlacement* placement = (DimExplosionPlacement*)obj->anim.placementData;
+    DimExplosionState* state = obj->extra;
     DimExplosionFlame* flames = (DimExplosionFlame*)state->flames;
     int flameIndex = state->flameCount++;
     flames[flameIndex].posX = x;
@@ -91,7 +91,7 @@ void explosion_spawnFlame(GameObject* obj, f32 speed, u8 generation, f32 x, f32 
             } else if (sfxKind == 3) {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_sexpl2_c_4c2);
             } else {
-                s8 mapEventSlot = (obj)->anim.mapEventSlot;
+                s8 mapEventSlot = obj->anim.mapEventSlot;
                 switch (mapEventSlot) {
                 case 0x2c:
                 case 0x3a:
@@ -473,8 +473,8 @@ void explosion_update(GameObject* obj) {
             }
             {
                 f32 frac = (f32)state->frameCounter / (f32)state->lifeFrames;
-                (obj)->anim.rootMotionScale = 0.1f * (frac * state->scale);
-                (obj)->anim.alpha = sExplosionColorMax[0] - sExplosionColorMax[0] * frac;
+                obj->anim.rootMotionScale = 0.1f * (frac * state->scale);
+                obj->anim.alpha = sExplosionColorMax[0] - sExplosionColorMax[0] * frac;
             }
             if (state->halfLifeFired == 0 && state->frameCounter >= (state->lifeFrames >> 1)) {
                 u32 k;

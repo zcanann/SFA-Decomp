@@ -68,7 +68,7 @@ void drakormissile_abortStraightFlight(GameObject* obj)
 
 void drakormissile_requestFree(GameObject* obj)
 {
-    DrakorMissileState* state = (obj)->extra;
+    DrakorMissileState* state = obj->extra;
     state->flags |= 1;
     if (state->state == DRAKORMISSILE_STATE_FADEOUT)
     {
@@ -79,11 +79,11 @@ void drakormissile_requestFree(GameObject* obj)
 void drakormissile_startActiveLaunch(GameObject* obj)
 {
     ModelLightStruct* light;
-    DrakorMissileState* state = (obj)->extra;
+    DrakorMissileState* state = obj->extra;
 
     ObjHits_EnableObject(obj);
     state->state = DRAKORMISSILE_STATE_HOMING;
-    (obj)->anim.rotZ = 0;
+    obj->anim.rotZ = 0;
     light = objCreateLight(obj, 1);
     if (light != NULL)
     {
@@ -99,8 +99,8 @@ void drakormissile_startActiveLaunch(GameObject* obj)
     {
         modelLightStruct_setDistanceAttenuation(state->light, 150.0f, 180.0f);
     }
-    (obj)->anim.alpha = 255;
-    (obj)->anim.rootMotionScale = 0.5f * (obj)->anim.modelInstance->rootMotionScaleBase;
+    obj->anim.alpha = 255;
+    obj->anim.rootMotionScale = 0.5f * obj->anim.modelInstance->rootMotionScaleBase;
     state->timer = DRAKORMISSILE_ACTIVE_TIMER;
     ObjHits_SetTargetMask(obj, DRAKORMISSILE_TARGET_MASK);
     ObjHits_SetHitVolumeSlot(&obj->anim, DRAKORMISSILE_HIT_VOLUME_SLOT, 1, 0);
@@ -119,7 +119,7 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
     s16 hitGrid[3];
     f32 mag;
     f32 horizDist;
-    DrakorMissileState* state = (obj)->extra;
+    DrakorMissileState* state = obj->extra;
     f32 zero = 0.0f;
 
     dir[0] = target->anim.localPosX - from->anim.localPosX;
@@ -132,32 +132,32 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
         dir[1] = dir[1] / mag;
         *(f32*)&dir[2] = dir[2] / mag;
     }
-    (obj)->anim.localPosX = from->anim.localPosX;
-    (obj)->anim.localPosY = from->anim.localPosY;
-    (obj)->anim.localPosZ = from->anim.localPosZ;
-    (obj)->anim.velocityX = dir[0];
-    (obj)->anim.velocityY = dir[1];
-    (obj)->anim.velocityZ = dir[2];
-    horizDist = sqrtf((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityZ * (obj)->anim.velocityZ);
-    (obj)->anim.rotX = (s16)getAngle((obj)->anim.velocityX, (obj)->anim.velocityZ);
-    (obj)->anim.rotY = -getAngle((obj)->anim.velocityY, horizDist);
-    (obj)->anim.rotZ = 0;
+    obj->anim.localPosX = from->anim.localPosX;
+    obj->anim.localPosY = from->anim.localPosY;
+    obj->anim.localPosZ = from->anim.localPosZ;
+    obj->anim.velocityX = dir[0];
+    obj->anim.velocityY = dir[1];
+    obj->anim.velocityZ = dir[2];
+    horizDist = sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
+    obj->anim.rotX = (s16)getAngle(obj->anim.velocityX, obj->anim.velocityZ);
+    obj->anim.rotY = -getAngle(obj->anim.velocityY, horizDist);
+    obj->anim.rotZ = 0;
     ObjHits_EnableObject(obj);
     state->state = DRAKORMISSILE_STATE_STRAIGHT;
-    endPos[0] = 600.0f * (obj)->anim.velocityX;
-    endPos[1] = 600.0f * (obj)->anim.velocityY;
-    endPos[2] = 600.0f * (obj)->anim.velocityZ;
-    endPos[0] = (obj)->anim.localPosX + endPos[0];
-    endPos[1] = (obj)->anim.localPosY + endPos[1];
-    endPos[2] = (obj)->anim.localPosZ + endPos[2];
+    endPos[0] = 600.0f * obj->anim.velocityX;
+    endPos[1] = 600.0f * obj->anim.velocityY;
+    endPos[2] = 600.0f * obj->anim.velocityZ;
+    endPos[0] = obj->anim.localPosX + endPos[0];
+    endPos[1] = obj->anim.localPosY + endPos[1];
+    endPos[2] = obj->anim.localPosZ + endPos[2];
     voxmaps_worldToGrid(&obj->anim.localPosX, startGrid);
     voxmaps_worldToGrid(endPos, endGrid);
     if (voxmaps_traceLine((VoxPos*)startGrid, (VoxPos*)endGrid, (VoxPos*)hitGrid, NULL, 0) == 0)
     {
         voxmaps_gridToWorld(endPos, hitGrid);
-        hitDir[0] = endPos[0] - (obj)->anim.localPosX;
-        hitDir[1] = endPos[1] - (obj)->anim.localPosY;
-        *(f32*)&hitDir[2] = endPos[2] - (obj)->anim.localPosZ;
+        hitDir[0] = endPos[0] - obj->anim.localPosX;
+        hitDir[1] = endPos[1] - obj->anim.localPosY;
+        *(f32*)&hitDir[2] = endPos[2] - obj->anim.localPosZ;
         state->timer = (int)(sqrtf(hitDir[0] * hitDir[0] + hitDir[1] * hitDir[1] + hitDir[2] * hitDir[2]) / speed);
     }
     else
@@ -180,8 +180,8 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
         modelLightStruct_setGlowProjectionRadius(light, 10.0f);
     }
     state->light = light;
-    (obj)->anim.alpha = 255;
-    (obj)->anim.rootMotionScale = 0.5f * (obj)->anim.modelInstance->rootMotionScaleBase;
+    obj->anim.alpha = 255;
+    obj->anim.rootMotionScale = 0.5f * obj->anim.modelInstance->rootMotionScaleBase;
     Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_173);
 }
 
@@ -203,7 +203,7 @@ int drakormissile_getObjectTypeId(void)
 
 void drakormissile_free(GameObject* obj)
 {
-    DrakorMissileState* state = (obj)->extra;
+    DrakorMissileState* state = obj->extra;
     ModelLightStruct* light = state->light;
     if (light != NULL)
     {
@@ -219,15 +219,15 @@ void drakormissile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     s16 savedRotZ;
     s16 savedRotY;
     int i;
-    DrakorMissileState* state = (obj)->extra;
+    DrakorMissileState* state = obj->extra;
     ObjAnimComponent* objAnim = &obj->anim;
     if (visible != 0 && state->state != DRAKORMISSILE_STATE_FADEOUT)
     {
         f32 savedScale;
         ObjModel* model;
-        savedRotZ = (obj)->anim.rotZ;
-        savedRotY = (obj)->anim.rotY;
-        savedScale = (obj)->anim.rootMotionScale;
+        savedRotZ = obj->anim.rotZ;
+        savedRotY = obj->anim.rotY;
+        savedScale = obj->anim.rootMotionScale;
         objAnim->bankIndex = 1;
         model = Obj_GetActiveModel(obj);
         i = 0;
@@ -235,14 +235,14 @@ void drakormissile_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         {
             state->trailYaw[i] += state->trailYawStep[i];
             state->trailPitch[i] += state->trailPitchStep[i];
-            (obj)->anim.rotZ = state->trailYaw[i];
-            (obj)->anim.rotY = state->trailPitch[i];
+            obj->anim.rotZ = state->trailYaw[i];
+            obj->anim.rotY = state->trailPitch[i];
             model->bufferFlags &= ~8;
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, one);
         }
-        (obj)->anim.rotZ = savedRotZ;
-        (obj)->anim.rotY = savedRotY;
-        (obj)->anim.rootMotionScale = savedScale;
+        obj->anim.rotZ = savedRotZ;
+        obj->anim.rotY = savedRotY;
+        obj->anim.rootMotionScale = savedScale;
         objAnim->bankIndex = 0;
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, one);
         if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
@@ -399,20 +399,20 @@ void drakormissile_update(GameObject* o)
 
 void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup)
 {
-    DrakorMissileState* state = (obj)->extra;
+    DrakorMissileState* state = obj->extra;
     int i;
-    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0x13;
-    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 1;
-    ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->flags &= ~1;
-    (obj)->anim.localPosX = setup->base.posX;
-    (obj)->anim.localPosY = setup->base.posY;
-    (obj)->anim.localPosZ = setup->base.posZ;
-    (obj)->anim.velocityX = (f32)(u32)setup->velocityX;
-    (obj)->anim.velocityY = (f32)(u32)setup->velocityY;
-    (obj)->anim.velocityZ = (f32)(u32)setup->velocityZ;
-    if ((obj)->anim.hitReactState != NULL)
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 0x13;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~1;
+    obj->anim.localPosX = setup->base.posX;
+    obj->anim.localPosY = setup->base.posY;
+    obj->anim.localPosZ = setup->base.posZ;
+    obj->anim.velocityX = (f32)(u32)setup->velocityX;
+    obj->anim.velocityY = (f32)(u32)setup->velocityY;
+    obj->anim.velocityZ = (f32)(u32)setup->velocityZ;
+    if (obj->anim.hitReactState != NULL)
     {
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->trackContactMask = 1;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->trackContactMask = 1;
     }
     objAddObjectType(obj, DRAKORMISSILE_GROUP_ID);
     state->state = DRAKORMISSILE_STATE_IDLE;

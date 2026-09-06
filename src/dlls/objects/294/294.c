@@ -326,15 +326,15 @@ void triggerEvalEndpointCylinders(GameObject* obj, GameObject* seqObj) {
     s8 leg;
     MmpGyserventState* state;
 
-    state = (obj)->extra;
+    state = obj->extra;
     speed = (float)(s32)(((MMPTriggerGeyserPlacement*)obj->anim.placementData)->speed * 2);
-    t = state->reachAX - (obj)->anim.worldPosX;
-    dyA = state->reachAY - (obj)->anim.worldPosY;
-    distSqA = state->reachAZ - (obj)->anim.worldPosZ;
+    t = state->reachAX - obj->anim.worldPosX;
+    dyA = state->reachAY - obj->anim.worldPosY;
+    distSqA = state->reachAZ - obj->anim.worldPosZ;
     distSqA = t * t + distSqA * distSqA;
-    t = state->reachBX - (obj)->anim.worldPosX;
-    dyB = state->reachBY - (obj)->anim.worldPosY;
-    distSqB = state->reachBZ - (obj)->anim.worldPosZ;
+    t = state->reachBX - obj->anim.worldPosX;
+    dyB = state->reachBY - obj->anim.worldPosY;
+    distSqB = state->reachBZ - obj->anim.worldPosZ;
     distSqB = t * t + distSqB * distSqB;
     t = state->nearRadiusSq;
     if ((distSqB < t) && (((dyB < 0.0f) ? -dyB : dyB) < speed)) {
@@ -367,16 +367,16 @@ void triggerEvalEndpointSpheres(GameObject* obj, GameObject* seqObj) {
     s8 leg;
     int range;
 
-    state = (MmpGyserventState*)(obj)->extra;
+    state = (MmpGyserventState*)obj->extra;
 
-    dxA = state->reachAX - (obj)->anim.worldPosX;
-    dyA = state->reachAY - (obj)->anim.worldPosY;
-    dzA = state->reachAZ - (obj)->anim.worldPosZ;
+    dxA = state->reachAX - obj->anim.worldPosX;
+    dyA = state->reachAY - obj->anim.worldPosY;
+    dzA = state->reachAZ - obj->anim.worldPosZ;
     distSqA = dxA * dxA + dyA * dyA + dzA * dzA;
 
-    dxB = state->reachBX - (obj)->anim.worldPosX;
-    dyB = state->reachBY - (obj)->anim.worldPosY;
-    dzB = state->reachBZ - (obj)->anim.worldPosZ;
+    dxB = state->reachBX - obj->anim.worldPosX;
+    dyB = state->reachBY - obj->anim.worldPosY;
+    dzB = state->reachBZ - obj->anim.worldPosZ;
     distSqB = dxB * dxB + dyB * dyB + dzB * dzB;
 
     if (distSqB < state->nearRadiusSq) {
@@ -1020,8 +1020,8 @@ void Trigger_render(void) {
 }
 
 void Trigger_hitDetect(GameObject* obj) {
-    u8* state = (obj)->extra;
-    u8* def = (u8*)(obj)->anim.placementData;
+    u8* state = obj->extra;
+    u8* def = (u8*)obj->anim.placementData;
     GameObject* triggerObj;
     GameObject* trickyObj;
     GameObject* target;
@@ -1147,7 +1147,7 @@ void Trigger_hitDetect(GameObject* obj) {
                     break;
                 case 0x4d:
                     if (ok) {
-                        TriggerState* st = (TriggerState*)(obj)->extra;
+                        TriggerState* st = (TriggerState*)obj->extra;
                         inside = triggerPointInBox(obj, &st->prevTargetPosX);
                         wasInside = triggerPointInBox(obj, &st->targetPosX);
                         if (inside != 0) {

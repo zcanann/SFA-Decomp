@@ -247,19 +247,19 @@ void nwLevelControl_update(GameObject* obj) {
             }
             break;
         case NW_LEVEL_CONTROL_MODE_WAIT_PARENT_SLACK:
-            if (((player)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0) {
+            if ((player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0) {
                 state->mode = NW_LEVEL_CONTROL_MODE_TIMER_STEP;
             }
             break;
         case NW_LEVEL_CONTROL_MODE_TIMER_STEP:
-            if (((player)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
+            if ((player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0) {
                 stateFlags = state->flags;
                 if ((stateFlags & NW_LEVEL_CONTROL_FLAG_TIMER_START_PENDING) != 0) {
                     state->flags = stateFlags & ~NW_LEVEL_CONTROL_FLAG_TIMER_START_PENDING;
                     state->flags = state->flags | NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING;
                     gameTimerInit(NW_LEVEL_CONTROL_TIMER_ID, (u32)state->timerMinutes);
                     timerSetToCountUp();
-                    (*gMapEventInterface)->savePoint(&(player)->anim.localPosX, (int)(player)->anim.rotX, 0, 0);
+                    (*gMapEventInterface)->savePoint(&player->anim.localPosX, (int)player->anim.rotX, 0, 0);
                 } else if ((stateFlags & NW_LEVEL_CONTROL_FLAG_TIMER_COMPLETE) != 0) {
                     state->flags = stateFlags & ~NW_LEVEL_CONTROL_FLAG_TIMER_RUNNING;
                     state->flags = state->flags & ~NW_LEVEL_CONTROL_FLAG_TIMER_COMPLETE;

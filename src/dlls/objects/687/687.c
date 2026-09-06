@@ -50,7 +50,7 @@
 
 void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
 {
-    TreeSetup* setup = (TreeSetup*)(obj)->anim.placementData;
+    TreeSetup* setup = (TreeSetup*)obj->anim.placementData;
     TreeState* ts = state;
     TreeAmbientEffectSetup* effectSetup;
     int idx;
@@ -78,7 +78,7 @@ void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
         effectSetup->modelId = -1;
         effectSetup->sourceObject = 0;
         ts->ambientEffectHandles[idx] =
-            (int)objSetupObject(&effectSetup->base, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+            (int)objSetupObject(&effectSetup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
     }
 }
 
@@ -87,7 +87,7 @@ void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
     int i;
     TreeState* ts;
 
-    if ((obj)->userData2 != 0)
+    if (obj->userData2 != 0)
     {
         ts = state;
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)

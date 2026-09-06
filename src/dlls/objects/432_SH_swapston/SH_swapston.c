@@ -532,7 +532,7 @@ void warpstone_update(GameObject* obj) {
     s16 yawDelta;
     int moveId;
 
-    state = (obj)->extra;
+    state = obj->extra;
     child = *(int*)state;
     if ((void*)child != NULL) {
         ObjLink_DetachChild(obj, (GameObject*)child);

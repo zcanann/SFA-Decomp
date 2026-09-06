@@ -64,7 +64,7 @@ const f32 gARWProximitDetonateExplosionSize[] = {127.0f};
 
 void arwproximit_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    ARWProximitState* state = (obj)->extra;
+    ARWProximitState* state = obj->extra;
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
     {
         queueGlowRender(state->light);
@@ -78,8 +78,8 @@ void arwproximit_hitDetect(void)
 
 void arwproximit_update(GameObject* obj)
 {
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    ARWProximitState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    ARWProximitState* state = obj->extra;
 
     if (state->textVariant == 1)
     {
@@ -115,7 +115,7 @@ void arwproximit_update(GameObject* obj)
             }
             ObjHits_EnableObject(obj);
             ObjHits_MarkObjectPositionDirty(&obj->anim);
-            (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             state->phase = ARWPROXIMIT_PHASE_FADEIN;
         }
         return;
@@ -161,8 +161,8 @@ void arwproximit_update(GameObject* obj)
             modelLightStruct_setGlowColor(state->light, r, g, b, 0x64);
         }
         if (timerCountDown((void*)&state->warningTimer) != 0 ||
-            ((*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject != 0 &&
-             (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->lastHitObject == (u32)getArwing()))
+            ((*(ObjHitsPriorityState**)&obj->anim.hitReactState)->lastHitObject != 0 &&
+             (*(ObjHitsPriorityState**)&obj->anim.hitReactState)->lastHitObject == (u32)getArwing()))
         {
             storeZeroToFloatParam((void*)&state->warningTimer);
             s16toFloat((void*)&state->despawnTimer, 0x14);
@@ -171,7 +171,7 @@ void arwproximit_update(GameObject* obj)
             spawnExplosion((GameObject*)obj, gARWProximitDetonateExplosionSize[0], 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius(&obj->anim, 0x12c);
             ObjHits_SetHitVolumeSlot(&obj->anim, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
-            (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty(&obj->anim);
             state->phase = ARWPROXIMIT_PHASE_DETONATE;
         }
@@ -204,12 +204,12 @@ void arwproximit_update(GameObject* obj)
                 modelLightStruct_setEnabled(state->light, 0, gARWProximitZero[0]);
             spawnExplosion((GameObject*)obj, gARWProximitShotDownExplosionSize[0], 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject(obj);
-            (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty(&obj->anim);
             state->phase = ARWPROXIMIT_PHASE_DONE;
         }
-        (obj)->anim.rotZ = timeDelta * state->spinSpeed + (f32)(obj)->anim.rotZ;
-        (obj)->anim.rotY = timeDelta * state->spinSpeed + (f32)(obj)->anim.rotY;
+        obj->anim.rotZ = timeDelta * state->spinSpeed + (f32)obj->anim.rotZ;
+        obj->anim.rotY = timeDelta * state->spinSpeed + (f32)obj->anim.rotY;
     }
 
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
@@ -218,18 +218,18 @@ void arwproximit_update(GameObject* obj)
 
 void arwproximit_init(GameObject* obj, ARWProximitSetup* setup, int flag)
 {
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    ARWProximitState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    ARWProximitState* state = obj->extra;
     ARWProximitSetup* mapData = setup;
 
     state->spinSpeed = randomGetRange(0x64, 0x12c);
     state->textVariant = mapData->textVariant;
     if (flag == 0)
     {
-        (obj)->anim.rotY = randomGetRange(0, 0xffff);
-        (obj)->anim.rotZ = randomGetRange(0, 0xffff);
-        (obj)->anim.rotX = randomGetRange(0, 0xffff);
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.rotY = randomGetRange(0, 0xffff);
+        obj->anim.rotZ = randomGetRange(0, 0xffff);
+        obj->anim.rotX = randomGetRange(0, 0xffff);
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }
     storeZeroToFloatParam((void*)&state->warningTimer);

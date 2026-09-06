@@ -267,8 +267,8 @@ void arwsquadron_spawnProjectile(GameObject* obj, int pathIdx, int angle, int fl
     setup->base.posX = px;
     setup->base.posY = py;
     setup->base.posZ = pz;
-    setup->rotXByte = ((obj)->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
-    setup->rotYByte = -(obj)->anim.rotY >> 8;
+    setup->rotXByte = (obj->anim.rotX + 0x10000 + angle - 0x8000) >> 8;
+    setup->rotYByte = -obj->anim.rotY >> 8;
     setup->rotZByte = 0;
     setup->base.color[0] = 1;
     setup->base.color[1] = 1;
@@ -289,7 +289,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
     u32 hitVol;
     GameObject* arwing;
 
-    if ((obj)->anim.hitReactState == NULL)
+    if (obj->anim.hitReactState == NULL)
         return;
     if (squad->hitFlashActive != 0)
     {
@@ -303,7 +303,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->lastHitObject != 0)
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0)
     {
         if (flags->acceptsDamage)
         {
@@ -322,7 +322,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                 if (squad->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                 {
                     spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 1, 1, 0, 0, 0);
-                    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
                     squad->phase = ARW_SQUADRON_STATE_DISABLED;
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
@@ -332,7 +332,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                 else
                 {
                     spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
-                    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
                     squad->phase = ARW_SQUADRON_STATE_DEAD;
                 }

@@ -536,7 +536,7 @@ void objSetHintTextIdx(GameObject* obj, u16 idx) {
     if (idx > 4) {
         idx = 0;
     }
-    (obj)->hintTextIdx = idx;
+    obj->hintTextIdx = idx;
 }
 
 void Obj_ResetActiveHitVolumeBounds(GameObject* obj) {

@@ -585,13 +585,13 @@ void wispBaddiePlayMoveEventSfx(GameObject* obj, void* animState) {
         Sfx_PlayFromObject(obj, SFXTRIG_sml_trex_snap3);
         player = Obj_GetPlayerObject();
         if ((player->objectFlags & WISPBADDIE_OBJFLAG_PARENT_SLACK) == 0) {
-            distance = Vec_distance(&(obj)->anim.worldPosX, &player->anim.worldPosX);
+            distance = Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX);
             if (distance <= 640.0f) {
                 rumbleFalloff = 1.0f - distance / 640.0f;
                 rumbleFalloff = 3.0f * rumbleFalloff;
                 doRumble(rumbleFalloff);
             }
-            CameraShake_ApplyRadial((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, 640.0f, 4.0f);
+            CameraShake_ApplyRadial(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, 640.0f, 4.0f);
         }
     }
     if ((enemyState->animEventMask & 0x40) != 0) {
@@ -780,9 +780,9 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state) {
     if (enemyState->familyData.sharpClaw.idleRow != 0) {
         if (enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) {
             f32 z = 0.0f;
-            (obj)->anim.velocityZ = z;
-            (obj)->anim.velocityY = z;
-            (obj)->anim.velocityX = z;
+            obj->anim.velocityZ = z;
+            obj->anim.velocityY = z;
+            obj->anim.velocityX = z;
             {
                 IdleRow* idleRows = (IdleRow*)tbl4;
                 Baddie_SetMove(obj, state, idleRows[enemyState->familyData.sharpClaw.idleRow].anim,
@@ -807,8 +807,8 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state) {
         f32 delta;
 
         {
-            f32 dx = path->posX - (obj)->anim.localPosX;
-            f32 dz = path->posZ - (obj)->anim.localPosZ;
+            f32 dx = path->posX - obj->anim.localPosX;
+            f32 dz = path->posZ - obj->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
         }
         if (dist > 64.0f) {
@@ -827,7 +827,7 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state) {
                 sidekickToy_updateCurveTargetLatch(obj);
             }
         }
-        delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 - (u16)(obj)->anim.rotX);
+        delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 - (u16)obj->anim.rotX);
         if (delta > 32768.0f) {
             delta = -65535.0f + delta;
         }
@@ -887,7 +887,7 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state) {
             } else {
                 int off;
                 IdleRow* row;
-                if ((obj)->anim.currentMove != (r = (row = (IdleRow*)(tbl4 + (off = r * 12)))->anim) || r != 0) {
+                if (obj->anim.currentMove != (r = (row = (IdleRow*)(tbl4 + (off = r * 12)))->anim) || r != 0) {
                     enemyState->curveIndex = 0;
                     enemyState->curveParamA = 0;
                     enemyState->curveParamB = 0;
@@ -966,7 +966,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state) {
         }
     }
 
-    if ((s32)(obj)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c)) {
+    if ((s32)obj->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c)) {
         enemyState->animPlaySpeed =
             enemyState->pathStep * (((f32)(u32)enemyState->targetDist / enemyState->aggroRange / 60.0f) *
                                     ((f32*)(table + 0x1538))[enemyState->userData2]);
@@ -1033,7 +1033,7 @@ void groundBaddiePickNextMove(GameObject* obj, u8* state) {
             enemyState->turnOctant != 4) {
             d = getAngle(obj->anim.localPosX - gGroundBaddieTargetSearchResult[0].obj->anim.localPosX,
                          obj->anim.localPosZ - gGroundBaddieTargetSearchResult[0].obj->anim.localPosZ) -
-                (u16)(obj)->anim.rotX;
+                (u16)obj->anim.rotX;
             if (d > 0x8000) {
                 d = (d - 0x10000) + 1;
             }
@@ -1126,19 +1126,19 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state) {
                 }
             }
         }
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0;
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 0;
-        if ((obj)->anim.currentMove == p20[8]) {
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[9];
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 0;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 0;
+        if (obj->anim.currentMove == p20[8]) {
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = p20[9];
         }
-        if ((obj)->anim.currentMove == p20[0x14]) {
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[0x15];
+        if (obj->anim.currentMove == p20[0x14]) {
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = p20[0x15];
         }
-        if ((obj)->anim.currentMove == p20[0x20]) {
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[0x21];
+        if (obj->anim.currentMove == p20[0x20]) {
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = p20[0x21];
         }
         if ((enemyState->rootMotionFlags & 8) == 0) {
             baddieTurnTowardPoint(obj, state, enemyState->trackedObj->anim.localPosX,

@@ -158,7 +158,7 @@ void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
         state->rootMotionFlags = 1;
         ObjAnim_SetCurrentMove(obj, moveId, 0.0f, OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN);
         if (obj->anim.hitReactState != NULL) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
         state->flags2E8 |= 4;
@@ -170,7 +170,7 @@ void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
         state->rootMotionFlags = 0;
         ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
         if (obj->anim.hitReactState != NULL) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
         state->controlFlags &= 0xffffef7f;
@@ -213,8 +213,8 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
         state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale1);
         state->rootMotionFlags = 1;
         ObjAnim_SetCurrentMove(obj, moveId, 0.0f, 0);
-        if ((void*)(obj)->anim.hitReactState != NULL) {
-            hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+        if ((void*)obj->anim.hitReactState != NULL) {
+            hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
             hitState->suppressOutgoingHits = 0;
         }
         state->flags2E8 |= 1;
@@ -367,7 +367,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit) {
                 dp[0] = obj->anim.worldPosX - hitPos.x;
                 dp[1] = obj->anim.worldPosY - hitPos.y;
                 dp[2] = obj->anim.worldPosZ - hitPos.z;
-                diff = (u16)getAngle(-dp[0], -dp[2]) - (u16)(obj)->anim.rotX;
+                diff = (u16)getAngle(-dp[0], -dp[2]) - (u16)obj->anim.rotX;
                 if (diff > 0x8000) {
                     diff -= 0xffff;
                 }
@@ -1705,8 +1705,8 @@ void enemy_getCurveParams(GameObject* obj, int* outIdx, f32* outA, f32* outB) {
     if (obj != NULL) {
         state = obj->extra;
         if (state != NULL) {
-            *outA = (f32)(u32)(state)->curveParamA / 255.0f;
-            *outB = (f32)(u32)(state)->curveParamB;
+            *outA = (f32)(u32)state->curveParamA / 255.0f;
+            *outB = (f32)(u32)state->curveParamB;
             *outIdx = state->curveIndex;
             return;
         }
@@ -2004,7 +2004,7 @@ void baddieSetMove(GameObject* obj, void* state, u8 moveId, f32 rateScale, u8 mo
     enemyState->animPlaySpeed = 1.0f / (60.0f * rateScale);
     enemyState->rootMotionFlags = stateByte;
     ObjAnim_SetCurrentMove(obj, moveId, 0.0f, moveControlFlags);
-    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (hitState != NULL) {
         hitState->suppressOutgoingHits = 0;
     }

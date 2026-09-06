@@ -53,7 +53,7 @@ void DFP_Torch_free(GameObject* obj)
 void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
 
-    DfpTorchState* state = (obj)->extra;
+    DfpTorchState* state = obj->extra;
     Camera* cam;
     f32 dist;
     f32 scale;
@@ -84,9 +84,9 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         {
             state->visibleLatch = 1;
             cam = Camera_GetCurrent();
-            stk2.d[0] = cam->x - (obj)->anim.localPosX;
-            stk2.d[1] = cam->y - (obj)->anim.localPosY;
-            stk2.d[2] = cam->z - (obj)->anim.localPosZ;
+            stk2.d[0] = cam->x - obj->anim.localPosX;
+            stk2.d[1] = cam->y - obj->anim.localPosY;
+            stk2.d[2] = cam->z - obj->anim.localPosZ;
             {
                 f32 sqZ = stk2.d[2] * stk2.d[2];
                 f32 sqX = stk2.d[0] * stk2.d[0];
@@ -102,9 +102,9 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 stk2.a[0] = 32.0f * stk2.d[0];
                 stk2.a[1] = 32.0f * stk2.d[1];
                 stk2.a[2] = 32.0f * stk2.d[2];
-                stk2.a[0] = stk2.a[0] + (obj)->anim.localPosX;
-                stk2.a[1] = stk2.a[1] + (obj)->anim.localPosY;
-                stk2.a[2] = stk2.a[2] + (obj)->anim.localPosZ;
+                stk2.a[0] = stk2.a[0] + obj->anim.localPosX;
+                stk2.a[1] = stk2.a[1] + obj->anim.localPosY;
+                stk2.a[2] = stk2.a[2] + obj->anim.localPosZ;
                 stk2.b[0] = -20.0f * stk2.d[0];
                 stk2.b[1] = -20.0f * stk2.d[1];
                 stk2.b[2] = -20.0f * stk2.d[2];

@@ -142,16 +142,16 @@ void VFPDragHead_update(GameObject* obj)
 void VFPDragHead_init(GameObject* obj, VfpDragHeadPlacement* data)
 {
     VfpDragHeadPlacement* def = data;
-    VfpDragHeadState* state = (obj)->extra;
-    if ((obj)->anim.romDefNo == 0x3c5)
+    VfpDragHeadState* state = obj->extra;
+    if (obj->anim.romDefNo == 0x3c5)
     {
         state->despawnTimer = 0x78;
-        (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase / 2.0f;
+        obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase / 2.0f;
         ObjHits_SetHitVolumeSlot(&obj->anim, VFPDRAGHEAD_HIT_VOLUME_SLOT, 1, 0);
     }
     else
     {
-        (obj)->anim.rotX = (((s32)def->rotXByte) << 8);
+        obj->anim.rotX = (((s32)def->rotXByte) << 8);
     }
     state->gameBitA = def->gameBitA;
     state->gameBitB = def->gameBitB;
@@ -159,9 +159,9 @@ void VFPDragHead_init(GameObject* obj, VfpDragHeadPlacement* data)
     state->headIndex = def->headIndex;
     if (def->variant == 1)
     {
-        (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase / 2.0f;
+        obj->anim.rootMotionScale = obj->anim.modelInstance->rootMotionScaleBase / 2.0f;
     }
-    (obj)->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
     gVfpDragHeadResource = Resource_Acquire(VFPDRAGHEAD_RESOURCE_ID, 1);
 }
 

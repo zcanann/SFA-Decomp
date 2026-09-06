@@ -842,7 +842,7 @@ void Tricky_init(GameObject* obj) {
     if (mainGetBit(GAMEBIT_ITEM_TrickyBall_Bought) != 0) {
         mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
     }
-    (obj)->animEventCallback = tricky_SeqFn;
+    obj->animEventCallback = tricky_SeqFn;
     objAddObjectType(obj, TRICKY_OBJGROUP);
     pathSearchInit(&state->candidateSearches[0]);
     pathSearchInit(&state->candidateSearches[1]);
@@ -859,9 +859,9 @@ void Tricky_init(GameObject* obj) {
     state->sideCommandPromptMask = 0;
     state->previousTargetPosPtr = NULL;
     state->lastWalkGroup = 0;
-    state->recoveryPos.x = (obj)->anim.worldPosX;
-    state->recoveryPos.y = (obj)->anim.worldPosY;
-    state->recoveryPos.z = (obj)->anim.worldPosZ;
+    state->recoveryPos.x = obj->anim.worldPosX;
+    state->recoveryPos.y = obj->anim.worldPosY;
+    state->recoveryPos.z = obj->anim.worldPosZ;
     colorVariant = state->stats->ballReturnCount / TRICKY_BALL_RETURNS_PER_COLOR;
     state->colorVariant = colorVariant;
     model = Obj_GetActiveModel(obj);
@@ -1986,7 +1986,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
     if (tricky_handleFeedOrTalk(obj, state) == 0) {
         state->wanderTargetPos.x =
             obj->anim.worldPosX - mathSinf((TRICKY_PI * (f32)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
-        state->wanderTargetPos.y = (obj)->anim.worldPosY;
+        state->wanderTargetPos.y = obj->anim.worldPosY;
         state->wanderTargetPos.z =
             obj->anim.worldPosZ - mathCosf((TRICKY_PI * (f32)obj->anim.rotX) / TRICKY_ANGLE_HALF_TURN_UNITS);
 
@@ -2006,7 +2006,7 @@ void tricky_stateIdleWander(GameObject* obj, TrickyState* state) {
                 state->particleTimer = 0.0f;
                 trickyDebugPrint("in water\n");
             } else {
-                switch ((obj)->anim.currentMove) {
+                switch (obj->anim.currentMove) {
                 case TRICKY_ANIM_IDLE_FOOD_CHEW:
                     break;
                 case TRICKY_ANIM_IDLE_FOOD_WAIT:
@@ -2415,7 +2415,7 @@ u32 tricky_substateWaitQueuedMove(GameObject* obj, TrickyState* trickyState) {
         return 1;
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
-        if (trickyState->moveId == (int)(obj)->anim.currentMove) {
+        if (trickyState->moveId == (int)obj->anim.currentMove) {
             trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
     }
@@ -2444,7 +2444,7 @@ int tricky_substateSleep(GameObject* obj, TrickyState* state) {
         setup = Obj_AllocObjectSetup(sizeof(TrickyPromptChildSetup), TRICKY_SPAWN_ROMDEF_FOOD);
         freeSlot = trickyFindFreePromptSlot(state);
         state->packedSlots.foodChildSlot = freeSlot;
-        state->foodChild = objSetupObject(setup, 4, -1, -1, (obj)->anim.parent);
+        state->foodChild = objSetupObject(setup, 4, -1, -1, obj->anim.parent);
         ObjLink_AttachChild(obj, state->foodChild, state->packedSlots.foodChildSlot);
         childTimerReset = 0.0f;
         state->foodVoiceTimer = childTimerReset;
@@ -2472,8 +2472,8 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
     if (tricky_handleFeedOrTalk(obj, trickyState) != 0) {
         return 1;
     }
-    (obj)->anim.resetHitboxFlags = (obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED;
-    move = (obj)->anim.currentMove;
+    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED;
+    move = obj->anim.currentMove;
     switch (move) {
     case TRICKY_ANIM_HOWL_START:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
@@ -2507,7 +2507,7 @@ int tricky_substateHowlCall(GameObject* obj, TrickyState* trickyState) {
         sparkleTimer = trickyState->howlSparkleTimer - timeDelta;
         trickyState->howlSparkleTimer = sparkleTimer;
         if (sparkleTimer <= 0.0f) {
-            if (((obj)->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
+            if ((obj->objectFlags & OBJECT_OBJFLAG_RENDERED) != 0) {
                 fxBuf.posX = trickyState->mouthPos.x;
                 fxBuf.posY = 2.0f + trickyState->mouthPos.y;
                 fxBuf.posZ = trickyState->mouthPos.z;
@@ -2545,7 +2545,7 @@ u32 tricky_substateWaitMoveEnd(GameObject* obj, TrickyState* trickyState) {
         return 1;
     }
     if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
-        if (trickyState->moveId == (int)(obj)->anim.currentMove) {
+        if (trickyState->moveId == (int)obj->anim.currentMove) {
             trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;
         }
     }
@@ -2560,7 +2560,7 @@ u32 tricky_substateFidgetB(GameObject* obj, TrickyState* trickyState) {
     if (foodResult != 0) {
         return 1;
     }
-    move = (obj)->anim.currentMove;
+    move = obj->anim.currentMove;
     switch (move) {
     case TRICKY_ANIM_IDLE_FIDGET_B_START:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
@@ -2584,7 +2584,7 @@ u32 tricky_substateFidgetA(GameObject* obj, TrickyState* trickyState) {
     if (foodResult != 0) {
         return 1;
     }
-    move = (obj)->anim.currentMove;
+    move = obj->anim.currentMove;
     switch (move) {
     case TRICKY_ANIM_IDLE_FIDGET_A_START:
         if ((trickyState->stateFlags & TRICKY_STATE_FLAG_MOVE_ENDED) != 0) {
@@ -2634,8 +2634,8 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
     if (tricky_handleFeedOrTalk(obj, state) != 0) {
         return 1;
     }
-    (obj)->anim.resetHitboxFlags = (obj)->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED;
-    move = (obj)->anim.currentMove;
+    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED;
+    move = obj->anim.currentMove;
     switch (move) {
     case TRICKY_ANIM_DIG_FOOD_START_A:
     case TRICKY_ANIM_DIG_FOOD_START_B:
@@ -2649,9 +2649,9 @@ int tricky_substateDigForFood(GameObject* obj, TrickyState* state) {
              state->playerContactTimer > 0.0f)) {
             trickyRequestMove(obj, TRICKY_ANIM_DIG_FOOD_END, 0.01f, 0);
         }
-        spawnBuf.posX = (obj)->anim.worldPosX;
-        spawnBuf.posY = (obj)->anim.worldPosY;
-        spawnBuf.posZ = (obj)->anim.worldPosZ;
+        spawnBuf.posX = obj->anim.worldPosX;
+        spawnBuf.posY = obj->anim.worldPosY;
+        spawnBuf.posZ = obj->anim.worldPosZ;
         spawnBuf.scale = 0.7f;
         (*gPartfxInterface)->spawnObject((void*)obj, 2022, &spawnBuf, TRICKY_ATTACHED_PARTFX_SPAWN_FLAGS, -1, NULL);
         break;
@@ -3737,7 +3737,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         }
         break;
     case TRICKY_FETCH_BALL_LAUNCH:
-        if ((obj)->anim.currentMoveProgress >= TRICKY_FETCH_LAUNCH_PROGRESS) {
+        if (obj->anim.currentMoveProgress >= TRICKY_FETCH_LAUNCH_PROGRESS) {
             state->fetchBallObj->anim.localPosY += TRICKY_DEFAULT_STOPPING_RADIUS;
             launchDirZ = -mathCosf(TRICKY_PI * (f32)obj->anim.rotX / TRICKY_ANGLE_HALF_TURN_UNITS);
             sidekickBall_launch(state->fetchBallObj, obj,
@@ -3771,12 +3771,12 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         }
         break;
     case TRICKY_FETCH_BALL_PICKUP_START:
-        if ((obj)->anim.currentMoveProgress >= 0.5f) {
+        if (obj->anim.currentMoveProgress >= 0.5f) {
             state->substate = TRICKY_FETCH_BALL_CARRY_TO_PLAYER;
         }
         break;
     case TRICKY_FETCH_BALL_CARRY_TO_PLAYER:
-        if ((obj)->anim.currentMoveProgress >= TRICKY_FLAME_DONE_PROGRESS) {
+        if (obj->anim.currentMoveProgress >= TRICKY_FLAME_DONE_PROGRESS) {
             trickySetTargetPosition(state, &state->playerObj->anim.worldPosX);
             state->substate = TRICKY_FETCH_BALL_APPROACH_THROW_POINT;
         case TRICKY_FETCH_BALL_APPROACH_THROW_POINT:
@@ -3795,7 +3795,7 @@ void tricky_fetchBall(GameObject* obj, TrickyState* state) {
         break;
     }
     if (((state->stateFlags & TRICKY_STATE_FLAG_RECALL_REQUEST) != 0) &&
-        ViewFrustum_IsSphereVisible(&(obj)->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
+        ViewFrustum_IsSphereVisible(&obj->anim.localPosX, TRICKY_VISIBILITY_PROBE_RADIUS) == 0) {
         Obj_FreeObject(state->followObj);
     } else {
         sidekickBall_keepAlive(state->fetchBallObj);

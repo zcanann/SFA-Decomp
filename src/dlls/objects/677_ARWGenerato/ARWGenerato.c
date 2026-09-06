@@ -116,8 +116,8 @@ void arwgenerato_hitDetect(void)
 
 void arwgenerato_update(GameObject* obj)
 {
-    ARWGeneratorState* state = (obj)->extra;
-    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
+    ARWGeneratorState* state = obj->extra;
+    ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)obj->anim.placementData;
     f32 timer = state->spawnTimer;
     f32 thr = 0.0f;
 

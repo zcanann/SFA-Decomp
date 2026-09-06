@@ -72,7 +72,7 @@ void sc_cloudrunnera_update(GameObject* obj) {
     int objectIndex, objectCount;
     u8 canSetupObject;
 
-    placement = (ScCloudrunnerAPlacement*)(obj)->anim.placementData;
+    placement = (ScCloudrunnerAPlacement*)obj->anim.placementData;
     if (placement == NULL) {
         return;
     }
@@ -156,7 +156,7 @@ void sc_cloudrunnera_update(GameObject* obj) {
         }
         case SC_CLOUDRUNNER_A_EVENT_DEACTIVATE_CHILD: {
             if (obj->childObjs[0] != NULL) {
-                cmbsrc_setExternalActive((GameObject*)(obj)->childObjs[0], 0);
+                cmbsrc_setExternalActive((GameObject*)obj->childObjs[0], 0);
             }
             break;
         }
@@ -176,9 +176,9 @@ void sc_cloudrunnera_update(GameObject* obj) {
 
         if (child != NULL) {
             child->anim.rotZ = obj->anim.rotZ;
-            ((GameObject*)(obj)->childObjs[0])->anim.rotY =
+            ((GameObject*)obj->childObjs[0])->anim.rotY =
                 (s16)(obj->anim.rotY + SC_CLOUDRUNNER_A_CHILD_YAW_OFFSET);
-            ((GameObject*)(obj)->childObjs[0])->anim.rotX =
+            ((GameObject*)obj->childObjs[0])->anim.rotX =
                 (s16)(obj->anim.rotX + SC_CLOUDRUNNER_A_CHILD_PITCH_OFFSET);
         }
     }

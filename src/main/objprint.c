@@ -377,7 +377,7 @@ int* objGetLookAtJointKeys(void) {
 
 ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMaterialIndex) {
     ObjTextureRuntimeSlot* result = NULL;
-    ObjDef* modelDef = (obj)->anim.modelInstance;
+    ObjDef* modelDef = obj->anim.modelInstance;
     if (modelDef != NULL) {
         int count;
         ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
@@ -389,7 +389,7 @@ ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMat
             count = modelDef->textureSlotCount;
             for (i = 0; i < count; i++) {
                 if (target == entries[i].tag) {
-                    result = &(obj)->anim.textureSlots[i];
+                    result = &obj->anim.textureSlots[i];
                 }
             }
         }
@@ -405,7 +405,7 @@ void objGetJointWorldPosition(GameObject* obj, int key, f32* outPosition) {
     int joint;
     ObjModelJointMatrix* model;
 
-    table = (void*)(obj)->anim.modelInstance;
+    table = (void*)obj->anim.modelInstance;
     i = 0;
     n = (s32)(u32)table->jointCount;
     for (k = 0; k < n; k++) {
@@ -443,7 +443,7 @@ s16* objFindJointPoseVector(GameObject* obj, int key) {
             jointData = (u8*)modelDef->jointData;
             if ((int)*(u8*)(jointData + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
                 (s32) * (u8*)(jointData + entryIdx) == key) {
-                result = (s16*)((char*)(obj)->anim.jointPoseData + vecOffset);
+                result = (s16*)((char*)obj->anim.jointPoseData + vecOffset);
             }
             entryIdx += OBJPRINT_MODEL_COUNT(modelDef) + 1;
             vecOffset += 0x12;
@@ -1049,7 +1049,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
     void* m[1];
 
     found[0] = NULL;
-    m[0] = (void*)(obj)->anim.modelInstance;
+    m[0] = (void*)obj->anim.modelInstance;
     if (m[0] != NULL) {
         int iv[2];
         int n;
@@ -1061,7 +1061,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
             u8* entries = (u8*)((ObjDef*)m[0])->jointData;
             if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
                 (int)*(u8*)(entries + iv[0]) == 0) {
-                found[0] = (s16*)((char*)(obj)->anim.jointPoseData + iv[1]);
+                found[0] = (s16*)((char*)obj->anim.jointPoseData + iv[1]);
             }
             iv[0] += ((ObjDef*)m[0])->modelCount + 1;
             iv[1] += 0x12;
@@ -1072,9 +1072,9 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
             found[0][1] = found[0][1] >> 1;
             found[0][0] = found[0][0] >> 1;
         } else {
-            f32 dx = (obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
-            f32 dz = (obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
-            f32 dy = (obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
+            f32 dx = obj->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
+            f32 dz = obj->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
+            f32 dy = obj->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
             f32 dist = sqrtf(dx * dx + dz * dz);
             ObjJointTrackChannel* channel;
             s16* ap;
@@ -1083,7 +1083,7 @@ void characterAimHeadAtTarget(GameObject* obj, void* tgt, void* state, int limit
             int i;
             f32 prodB;
 
-            ang[0] = (s16)getAngle(dx, dz) - (u16)(obj)->anim.rotX;
+            ang[0] = (s16)getAngle(dx, dz) - (u16)obj->anim.rotX;
             if (ang[0] > 0x8000) {
                 ang[0] = (s16)(ang[0] - 0xffff);
             }
@@ -1148,9 +1148,9 @@ void characterSetHeadYawToTarget(GameObject* obj, GameObject* target, CharacterE
 
     found = objFindJointVecByKey(obj, 0);
     if (found != NULL) {
-        state->headYaw = (s16)((s16)getAngle((obj)->anim.localPosX - target->anim.localPosX,
-                                             (obj)->anim.localPosZ - target->anim.localPosZ) -
-                               (obj)->anim.rotX);
+        state->headYaw = (s16)((s16)getAngle(obj->anim.localPosX - target->anim.localPosX,
+                                             obj->anim.localPosZ - target->anim.localPosZ) -
+                               obj->anim.rotX);
         maxAngle = (s16)(182.04f * maxAngle);
         if (state->headYaw > maxAngle) {
             state->headYaw = maxAngle;

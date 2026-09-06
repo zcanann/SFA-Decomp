@@ -96,27 +96,27 @@ void vfplift23_updateState(GameObject* obj)
     VfpLiftState* state;
     f32 raisedOffset;
 
-    setup = (VfpLiftPlacement*)(obj)->anim.placementData;
-    state = (VfpLiftState*)(obj)->extra;
+    setup = (VfpLiftPlacement*)obj->anim.placementData;
+    state = (VfpLiftState*)obj->extra;
     raisedOffset = 0.0f;
-    if ((obj)->anim.romDefNo == VFPLIFT3_OBJTYPE)
+    if (obj->anim.romDefNo == VFPLIFT3_OBJTYPE)
     {
         raisedOffset = 310.0f;
     }
-    else if ((obj)->anim.romDefNo == VFPLIFT2_OBJTYPE)
+    else if (obj->anim.romDefNo == VFPLIFT2_OBJTYPE)
     {
         raisedOffset = 372.5f;
     }
     if (state->applyHeight != 0)
     {
-        (obj)->anim.localPosY = setup->base.posY + raisedOffset;
+        obj->anim.localPosY = setup->base.posY + raisedOffset;
         state->applyHeight = 0;
     }
     if (state->mode == VFPLIFT_STATE_RAISED || state->mode >= VFPLIFT_STATE_RAISED ||
         state->mode < VFPLIFT_STATE_LOWERED)
     {
         vfplift_setObjectHitEnabled(obj);
-        if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_LOWER, obj);
@@ -130,14 +130,14 @@ void vfplift23_updateState(GameObject* obj)
             if (mainGetBit(state->toggleGameBit) == 0)
             {
                 state->mode = VFPLIFT_STATE_LOWERED;
-                (obj)->anim.localPosY = setup->base.posY;
+                obj->anim.localPosY = setup->base.posY;
             }
         }
     }
     else
     {
         vfplift_setObjectHitEnabled(obj);
-        if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_RAISE, obj);
@@ -151,7 +151,7 @@ void vfplift23_updateState(GameObject* obj)
             if (mainGetBit(state->toggleGameBit) != 0)
             {
                 state->mode = VFPLIFT_STATE_RAISED;
-                (obj)->anim.localPosY = setup->base.posY + raisedOffset;
+                obj->anim.localPosY = setup->base.posY + raisedOffset;
             }
         }
     }
@@ -164,10 +164,10 @@ void vfplift1_updateState(GameObject* obj)
     void* player;
     s16 gate[4];
 
-    setup = (VfpLiftPlacement*)(obj)->anim.placementData;
-    state = (VfpLiftState*)(obj)->extra;
+    setup = (VfpLiftPlacement*)obj->anim.placementData;
+    state = (VfpLiftState*)obj->extra;
     player = Obj_GetPlayerObject();
-    (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     if (player == NULL)
     {
         return;
@@ -177,7 +177,7 @@ void vfplift1_updateState(GameObject* obj)
     gate[1] = mainGetBit(VFPLIFT1_GATE_GAMEBIT_1);
     gate[2] = mainGetBit(VFPLIFT1_GATE_GAMEBIT_2);
     gate[3] = mainGetBit(VFPLIFT1_GATE_GAMEBIT_3);
-    if ((*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot) == 2)
+    if ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot) == 2)
     {
         gate[0] = 1;
         gate[1] = gate[0];
@@ -192,7 +192,7 @@ void vfplift1_updateState(GameObject* obj)
     }
     if (state->applyHeight != 0 || (state->forceRaised != 0 && state->mode == VFPLIFT_STATE_IDLE))
     {
-        (obj)->anim.localPosY = setup->base.posY + *(f32*)&gVfpLift1RaisedHeight;
+        obj->anim.localPosY = setup->base.posY + *(f32*)&gVfpLift1RaisedHeight;
         state->applyHeight = 0;
         state->forceRaised = 0;
         state->mode = VFPLIFT_STATE_RAISED;
@@ -205,7 +205,7 @@ void vfplift1_updateState(GameObject* obj)
         state->mode < VFPLIFT_STATE_LOWERED)
     {
         vfplift_setObjectHitEnabled(obj);
-        if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_LOWER, obj);
@@ -219,14 +219,14 @@ void vfplift1_updateState(GameObject* obj)
             if (mainGetBit(state->toggleGameBit) != 0)
             {
                 state->mode = VFPLIFT_STATE_LOWERED;
-                (obj)->anim.localPosY = setup->base.posY;
+                obj->anim.localPosY = setup->base.posY;
             }
         }
     }
     else
     {
         vfplift_setObjectHitEnabled(obj);
-        if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
         {
             buttonDisable(0, VFPLIFT_INTERACT_BUTTON_MASK);
             vfplift_trigger(VFPLIFT_TRIGGER_RAISE, obj);
@@ -240,7 +240,7 @@ void vfplift1_updateState(GameObject* obj)
             if (mainGetBit(state->toggleGameBit) == 0)
             {
                 state->mode = VFPLIFT_STATE_RAISED;
-                (obj)->anim.localPosY = setup->base.posY + *(f32*)&gVfpLift1RaisedHeight;
+                obj->anim.localPosY = setup->base.posY + *(f32*)&gVfpLift1RaisedHeight;
             }
         }
     }
@@ -272,11 +272,11 @@ void VFPLift_hitDetect(GameObject* obj)
 
     if (state->hitDisableGameBit != -1 && mainGetBit(state->hitDisableGameBit) == 0)
     {
-        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
-    else if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_DISABLED) != 0)
+    else if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_DISABLED) != 0)
     {
-        (obj)->anim.resetHitboxFlags ^= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags ^= INTERACT_FLAG_DISABLED;
     }
 }
 
@@ -284,7 +284,7 @@ void VFPLift_update(GameObject* obj)
 {
     int romDefNo;
     Obj_GetPlayerObject();
-    romDefNo = (obj)->anim.romDefNo;
+    romDefNo = obj->anim.romDefNo;
     if (romDefNo == VFPLIFT1_OBJTYPE)
     {
         vfplift1_updateState(obj);

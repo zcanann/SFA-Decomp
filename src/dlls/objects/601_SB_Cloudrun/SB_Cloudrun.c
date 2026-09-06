@@ -412,7 +412,7 @@ void SB_CloudRunner_HandlePriorityHit(GameObject* obj, SBCloudRunnerState* state
                 if (mainGetBit(GAMEBIT_CLOUDRUNNER_HIT_SFX) != 0) {
                     Sfx_PlayFromObject(obj, SFX_CLOUDRUNNER_HIT);
                 }
-                (obj)->anim.rotY = COLORFADE_RUMBLE_PRESET;
+                obj->anim.rotY = COLORFADE_RUMBLE_PRESET;
                 state->rideSubState = RIDE_SUBSTATE_TILT;
                 args.scale = 1.0f;
                 args.v[0] = 0;

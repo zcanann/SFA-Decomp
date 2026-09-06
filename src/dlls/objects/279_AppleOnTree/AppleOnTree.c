@@ -272,10 +272,10 @@ int appleontree_bounceGroundStep(GameObject* obj, AppleOnTreeState* state, f32 p
                 state->flightTime = state->flightTime - r;
                 state->positionY = state->positionY - state->dropHeight;
                 state->dropHeight = 0.0f;
-                (obj)->anim.localPosY = state->positionY;
-                (obj)->anim.rotX = state->rotX;
-                (obj)->anim.rotY = state->rotY;
-                (obj)->anim.rotZ = state->rotZ;
+                obj->anim.localPosY = state->positionY;
+                obj->anim.rotX = state->rotX;
+                obj->anim.rotY = state->rotY;
+                obj->anim.rotZ = state->rotZ;
                 state->bounceVelocity = -state->waterAcceleration;
                 if ((state->flags & APPLE_ON_TREE_FLAG_LANDING_SFX_PLAYED) == 0) {
                     Sfx_PlayFromObject(obj, SFXTRIG_pk_fruit_lands);
@@ -283,7 +283,7 @@ int appleontree_bounceGroundStep(GameObject* obj, AppleOnTreeState* state, f32 p
                 }
                 return 1;
             } else if (b < 0.1f) {
-                (obj)->anim.localPosY = state->positionY;
+                obj->anim.localPosY = state->positionY;
                 state->gravity = zero;
                 state->bounceVelocity = zero;
                 return 1;
@@ -313,12 +313,12 @@ int appleontree_bounceGroundStep(GameObject* obj, AppleOnTreeState* state, f32 p
                     r = (r > 0.0f) ? r : r2;
                 }
                 state->flightTime = state->flightTime - r;
-                (obj)->anim.localPosY = state->positionY;
+                obj->anim.localPosY = state->positionY;
                 state->bounceVelocity *= 0.66667f;
                 return 0;
             }
         } else {
-            (obj)->anim.localPosY = positionY;
+            obj->anim.localPosY = positionY;
             return 1;
         }
     }

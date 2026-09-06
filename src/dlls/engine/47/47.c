@@ -209,7 +209,7 @@ void Carryable_init(GameObject* obj, CarryableState* state, int arg2) {
     state->carryState = CARRY_STATE_RESTING;
     state->unk04 = 0;
     state->isHeld = 0;
-    (obj)->userData2 = 0;
+    obj->userData2 = 0;
 }
 
 void Carryable_release(void) {

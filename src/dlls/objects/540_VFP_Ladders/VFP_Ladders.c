@@ -60,10 +60,10 @@ void VFP_Ladders_update(GameObject* obj)
     VfpLaddersState* state;
     VfpLaddersSetup* setup;
 
-    setup = (VfpLaddersSetup*)(obj)->anim.placementData;
-    state = (obj)->extra;
+    setup = (VfpLaddersSetup*)obj->anim.placementData;
+    state = obj->extra;
 
-    if ((obj)->anim.romDefNo == VFPLADDERS_TRIGGER_SEQID)
+    if (obj->anim.romDefNo == VFPLADDERS_TRIGGER_SEQID)
     {
         if (mainGetBit(state->triggerGameBit) != 0)
         {

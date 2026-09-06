@@ -145,7 +145,7 @@ void androsshand_setState(GameObject* obj, AndrossHandStateId newState, u8 force
     {
         return;
     }
-    state = (obj)->extra;
+    state = obj->extra;
     if (state->handState != ANDROSSHAND_STATE_DEAD || force != 0)
     {
         state->handState = newState;

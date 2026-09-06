@@ -82,9 +82,9 @@ void spdrape_update(GameObject* obj)
     SpdrapeState* state;
     GameObject* player;
 
-    state = (obj)->extra;
+    state = obj->extra;
     player = Obj_GetPlayerObject();
-    switch ((obj)->anim.currentMove)
+    switch (obj->anim.currentMove)
     {
     case 0: /* idle: rustle, and swing open when the player is near */
         if ((s16)(state->sfxTimer -= framesThisStep) <= 0)
@@ -92,7 +92,7 @@ void spdrape_update(GameObject* obj)
             Sfx_PlayFromObject(obj, SFXTRIG_propsp_6);
             state->sfxTimer = randomGetRange(0xb4, 0x12c);
         }
-        if (getXZDistanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) < SP_DRAPE_NEAR_RADIUS_SQ)
+        if (getXZDistanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < SP_DRAPE_NEAR_RADIUS_SQ)
         {
             if (player != 0)
             {
@@ -117,7 +117,7 @@ void spdrape_update(GameObject* obj)
     case 4:
         if (state->moveActive != 0)
         {
-            if (getXZDistanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) > SP_DRAPE_LEAVE_RADIUS)
+            if (getXZDistanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) > SP_DRAPE_LEAVE_RADIUS)
             {
                 ObjAnim_SetCurrentMove(obj, ((u8*)state->moveTable)[SPDRAPE_MOVE_CLOSE],
                                        gSpDrapeZero[0], 0);
@@ -135,7 +135,7 @@ void spdrape_update(GameObject* obj)
     case 2: /* held open: flutter, close when the player leaves */
     case 5:
         Sfx_PlayFromObject(obj, SFXTRIG_wickhit16);
-        if (getXZDistanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) > SP_DRAPE_LEAVE_RADIUS)
+        if (getXZDistanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) > SP_DRAPE_LEAVE_RADIUS)
         {
             ObjAnim_SetCurrentMove(obj, ((u8*)state->moveTable)[SPDRAPE_MOVE_CLOSE],
                                    gSpDrapeZero[0], 0);
@@ -146,8 +146,8 @@ void spdrape_update(GameObject* obj)
         break;
     case 3: /* closing: re-open if the player returns, else settle to idle */
     case 6:
-        if (((obj)->anim.currentMoveProgress > SP_DRAPE_REOPEN_PROGRESS) &&
-            (getXZDistanceSquared(&(obj)->anim.worldPosX, &player->anim.worldPosX) < SP_DRAPE_NEAR_RADIUS_SQ))
+        if ((obj->anim.currentMoveProgress > SP_DRAPE_REOPEN_PROGRESS) &&
+            (getXZDistanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < SP_DRAPE_NEAR_RADIUS_SQ))
         {
             if (player != 0)
             {

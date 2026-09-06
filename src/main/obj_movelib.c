@@ -112,18 +112,18 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, V
 
     if (obj != Obj_GetPlayerObject())
     {
-        PSVECSubtract((const Vec*)&(obj)->anim.localPosX, (const Vec*)&(obj)->anim.previousLocalPosX, (Vec*)vel);
+        PSVECSubtract((const Vec*)&obj->anim.localPosX, (const Vec*)&obj->anim.previousLocalPosX, (Vec*)vel);
     }
     else
     {
-        vel[0] = (obj)->anim.velocityX;
-        vel[1] = (obj)->anim.velocityY;
-        vel[2] = (obj)->anim.velocityZ;
+        vel[0] = obj->anim.velocityX;
+        vel[1] = obj->anim.velocityY;
+        vel[2] = obj->anim.velocityZ;
     }
     PSVECScale((const Vec*)vel, (Vec*)vel, oneOverTimeDelta);
-    pos[0] = (obj)->anim.localPosX;
-    pos[1] = 15.0f + (obj)->anim.localPosY;
-    pos[2] = (obj)->anim.localPosZ;
+    pos[0] = obj->anim.localPosX;
+    pos[1] = 15.0f + obj->anim.localPosY;
+    pos[2] = obj->anim.localPosZ;
     for (i = 0; i < 5; i++)
     {
         PSVECScale((const Vec*)vel, (Vec*)step,

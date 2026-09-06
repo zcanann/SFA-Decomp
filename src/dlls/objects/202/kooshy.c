@@ -105,9 +105,9 @@ void kooshy_spawnProjectile(GameObject* obj, void* state) {
 
     if ((u8)Obj_CanSetupObject() != 0) {
         fx = (ObjPlacement*)Obj_AllocObjectSetup(0x24, KALDACHOM_SPIT_OBJ);
-        fx->posX = (obj)->anim.localPosX;
-        fx->posY = 14.0f + (obj)->anim.localPosY;
-        fx->posZ = (obj)->anim.localPosZ;
+        fx->posX = obj->anim.localPosX;
+        fx->posY = 14.0f + obj->anim.localPosY;
+        fx->posZ = obj->anim.localPosZ;
         fx->color[0] = 1;
         fx->color[1] = 1;
         fx->color[2] = 0xff;
@@ -130,7 +130,7 @@ void kooshy_spawnProjectile(GameObject* obj, void* state) {
 void kooshy_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int msgFlag, int hitId, int damage,
                               Vec* wpad0, int wpad1) {
     EnemyState* enemyState = (EnemyState*)state;
-    if ((obj)->anim.currentMove == 1) {
+    if (obj->anim.currentMove == 1) {
         if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             return;
         }
@@ -164,14 +164,14 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
 
     enemyState->userData2 = enemyState->userData2 & 0x7f;
     losDetected = 0;
-    vec[0] = (obj)->anim.localPosX - ((GameObject*)enemyState->trackedObj)->anim.localPosX;
-    vec[1] = (obj)->anim.localPosY - ((GameObject*)enemyState->trackedObj)->anim.localPosY;
-    vec[2] = (obj)->anim.localPosZ - ((GameObject*)enemyState->trackedObj)->anim.localPosZ;
+    vec[0] = obj->anim.localPosX - ((GameObject*)enemyState->trackedObj)->anim.localPosX;
+    vec[1] = obj->anim.localPosY - ((GameObject*)enemyState->trackedObj)->anim.localPosY;
+    vec[2] = obj->anim.localPosZ - ((GameObject*)enemyState->trackedObj)->anim.localPosZ;
     if (PSVECMag((Vec*)vec) < 400.0f &&
         (((GameObject*)enemyState->trackedObj)->objectFlags & MAGICPLANT_OBJFLAG_PARENT_SLACK) == 0) {
-        worldPos[0] = (obj)->anim.localPosX;
-        worldPos[1] = 10.0f + (obj)->anim.localPosY;
-        worldPos[2] = (obj)->anim.localPosZ;
+        worldPos[0] = obj->anim.localPosX;
+        worldPos[1] = 10.0f + obj->anim.localPosY;
+        worldPos[2] = obj->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, (s16*)gridA);
         {
             GameObject* trackedObj = enemyState->trackedObj;
@@ -184,7 +184,7 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
         if (hit != 0) {
             GameObject* trackedObj = enemyState->trackedObj;
             baddieTurnTowardPoint(obj, state, trackedObj->anim.localPosX, trackedObj->anim.localPosZ, 0x14, 0);
-            angle = (s16)(getAngle(vec[0], vec[2]) - (u16)(obj)->anim.rotX);
+            angle = (s16)(getAngle(vec[0], vec[2]) - (u16)obj->anim.rotX);
             if (angle > 0x8000) {
                 angle = (angle - 0x10000) + 1;
             }
@@ -212,8 +212,8 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
         if ((u8)hit != 0) {
             if (enemyState->userData1 != 0) {
                 enemyState->userData1 -= 1;
-                mode = (u8)(obj)->anim.currentMove;
-            } else if ((obj)->anim.currentMove != 5 && losDetected) {
+                mode = (u8)obj->anim.currentMove;
+            } else if (obj->anim.currentMove != 5 && losDetected) {
                 mode = 5;
                 enemyState->userData1 = gMagicPlantSeqEntryTable[enemyState->userData2 & 3];
                 enemyState->userData2 = (u8)((*(s8*)&enemyState->userData2 + 1) & 0xc3);
@@ -233,8 +233,8 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
         }
         baddieSetMove(obj, state, mode, 1.5f, 0, 0);
     }
-    if ((obj)->anim.currentMove == 5 && (double)(obj)->anim.currentMoveProgress >= 0.7647 &&
-        (double)(obj)->anim.currentMoveProgress < 0.7647 + enemyState->animPlaySpeed * timeDelta) {
+    if (obj->anim.currentMove == 5 && (double)obj->anim.currentMoveProgress >= 0.7647 &&
+        (double)obj->anim.currentMoveProgress < 0.7647 + enemyState->animPlaySpeed * timeDelta) {
         kooshy_spawnProjectile(obj, state);
     } else {
         enemyState->kooshy.sfxTimer = enemyState->kooshy.sfxTimer - timeDelta;
@@ -250,7 +250,7 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
 void kooshy_updateEngaged(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
     enemyState->userData2 = enemyState->userData2 & 0xbf;
-    if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && (obj)->anim.currentMove != 1) {
+    if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && obj->anim.currentMove != 1) {
         Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         baddieSetMove(obj, state, 1, 1.0f, 0, 0);
     }

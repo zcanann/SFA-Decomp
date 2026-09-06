@@ -45,19 +45,19 @@ ObjectDescriptor gARWArwingGuObjDescriptor = {
 
 void arwarwinggu_setActiveVisible(GameObject* obj, u8 active, u8 visible)
 {
-    ObjAnimComponent* objAnim = &(obj)->anim;
-    ArwingGuState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = &obj->anim;
+    ArwingGuState* state = obj->extra;
 
     if (active != 0)
     {
         Obj_SetActiveModelIndex(obj, visible != 0 ? 1 : 0);
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0xff;
         state->visibleTimer = 5.0f;
     }
     else
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         objAnim->alpha = 0;
     }
 }
@@ -72,7 +72,7 @@ void arwarwinggu_applyTextureFrame(GameObject* obj)
 {
     ObjModel* model;
     ObjTextureRuntimeSlot* texture;
-    ArwingGuState* state = (obj)->extra;
+    ArwingGuState* state = obj->extra;
     Texture* anim;
     model = Obj_GetActiveModel(obj);
     texture = objFindTexture(obj, 0, 0);
@@ -118,13 +118,13 @@ static const f32 gArwingGuAlphaMax[] = {255.0f};
 
 void ARWArwingGu_update(GameObject* obj)
 {
-    ObjAnimComponent* objAnim = &(obj)->anim;
+    ObjAnimComponent* objAnim = &obj->anim;
 
-    switch ((obj)->anim.romDefNo)
+    switch (obj->anim.romDefNo)
     {
     case ARWGU_DEF_ENGINE:
     {
-        ArwingGuState* state = (obj)->extra;
+        ArwingGuState* state = obj->extra;
         ObjModel* model = Obj_GetActiveModel(obj);
         ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
         Texture* anim = ObjModel_GetTexture(model->file, 0);
@@ -135,7 +135,7 @@ void ARWArwingGu_update(GameObject* obj)
     case ARWGU_DEF_GUN_L:
     case ARWGU_DEF_GUN_R:
     {
-        ArwingGuState* state = (obj)->extra;
+        ArwingGuState* state = obj->extra;
         f32 minTimer;
         f32 vt = state->visibleTimer;
         if (vt > (minTimer = 0.0f))
@@ -151,7 +151,7 @@ void ARWArwingGu_update(GameObject* obj)
     }
     case ARWGU_DEF_BOMB:
     {
-        ArwingGuState* state = (obj)->extra;
+        ArwingGuState* state = obj->extra;
         f32 alpha;
         if (state->fadeIn != 0)
         {

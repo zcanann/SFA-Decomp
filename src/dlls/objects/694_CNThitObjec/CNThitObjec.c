@@ -63,8 +63,8 @@ void cnthitobjec_free(void)
 
 void cnthitobjec_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    CntHitObjectState* state = (obj)->extra;
-    CntHitObjectSetup* setup = (CntHitObjectSetup*)(obj)->anim.placementData;
+    CntHitObjectState* state = obj->extra;
+    CntHitObjectSetup* setup = (CntHitObjectSetup*)obj->anim.placementData;
     if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT && state->flags.disabled == 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
@@ -74,13 +74,13 @@ void cnthitobjec_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
 void cnthitobjec_hitDetect(GameObject* obj)
 {
     CntHitObjectState* state;
-    CntHitObjectSetup* setup = (CntHitObjectSetup*)(obj)->anim.placementData;
+    CntHitObjectSetup* setup = (CntHitObjectSetup*)obj->anim.placementData;
     int hit;
     u32 dmg;
     int amount;
     int model;
 
-    state = (obj)->extra;
+    state = obj->extra;
     if (state->remainingHealth == 0)
     {
         return;
@@ -106,7 +106,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
     }
     if (state->remainingHealth <= 0)
     {
-        CntHitObjectSetup* s = (CntHitObjectSetup*)(obj)->anim.placementData;
+        CntHitObjectSetup* s = (CntHitObjectSetup*)obj->anim.placementData;
         state->remainingHealth = 0;
         mainSetBits(s->doneGameBit, 1);
         if (s->mode != 0)
@@ -119,7 +119,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
             {
                 amount = s->explosionSize;
             }
-            model = ((CntHitObjectSetup*)(obj)->anim.placementData)->base.ident;
+            model = ((CntHitObjectSetup*)obj->anim.placementData)->base.ident;
             if (model != CNTHIT_MODEL_NO_EXPLOSION_A && model != CNTHIT_MODEL_NO_EXPLOSION_B &&
                 model != CNTHIT_MODEL_NO_EXPLOSION_C && model != CNTHIT_MODEL_NO_EXPLOSION_D)
             {
@@ -140,8 +140,8 @@ void cnthitobjec_hitDetect(GameObject* obj)
 void cnthitobjec_update(GameObject* obj)
 {
     CntHitObjectSetup* setup;
-    CntHitObjectState* state = (obj)->extra;
-    setup = (CntHitObjectSetup*)(obj)->anim.placementData;
+    CntHitObjectState* state = obj->extra;
+    setup = (CntHitObjectSetup*)obj->anim.placementData;
 
     if (state->flags.disabled == 0)
     {
@@ -165,7 +165,7 @@ void cnthitobjec_update(GameObject* obj)
 
 void cnthitobjec_init(GameObject* obj, CntHitObjectSetup* setup)
 {
-    CntHitObjectState* state = (obj)->extra;
+    CntHitObjectState* state = obj->extra;
     CntHitObjectSetup* setupData = setup;
 
     state->remainingHealth = 0;
@@ -178,18 +178,18 @@ void cnthitobjec_init(GameObject* obj, CntHitObjectSetup* setup)
     }
     if (setupData->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {
-        (obj)->anim.rotX = setupData->explosionSize;
+        obj->anim.rotX = setupData->explosionSize;
     }
     else
     {
-        (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     if (mainGetBit(setupData->doneGameBit) != 0)
     {
         state->flags.disabled = 1;
         ObjHits_DisableObject(obj);
     }
-    (obj)->animEventCallback = cnthitobjec_SeqFn;
+    obj->animEventCallback = cnthitobjec_SeqFn;
 }
 
 void cnthitobjec_release(void)

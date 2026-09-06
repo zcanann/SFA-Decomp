@@ -68,11 +68,11 @@ void VFP_DoorSwitch_hitDetect(void) {
 
 void VFP_DoorSwitch_update(GameObject* obj) {
     VfpDoorSwitchState* state;
-    if ((obj)->anim.romDefNo != VFP_DOORSWITCH_LIFTIND_OBJ) {
+    if (obj->anim.romDefNo != VFP_DOORSWITCH_LIFTIND_OBJ) {
         vfpdoorswitch_updateExplodingVariant(obj);
         return;
     }
-    state = (obj)->extra;
+    state = obj->extra;
     if (state->activated != 0) {
         return;
     }

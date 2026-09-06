@@ -55,7 +55,7 @@ int mclightning_getExtraSize(void)
 
 void mclightning_free(GameObject* obj)
 {
-    McLightningState* state = (obj)->extra;
+    McLightningState* state = obj->extra;
 
     objFreeObjectType(obj, MCLIGHTNING_OBJGROUP);
     if (state->boltHandle != NULL)
@@ -66,7 +66,7 @@ void mclightning_free(GameObject* obj)
 
 void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    McLightningState* state = (obj)->extra;
+    McLightningState* state = obj->extra;
     u32 mode = state->flags.phase;
     if (mode == MCLIGHTNING_PHASE_ARMED)
     {
@@ -127,7 +127,7 @@ void mclightning_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
                 mm_free(state->boltHandle);
                 state->boltHandle = NULL;
                 state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_A;
-                (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
     }
@@ -148,11 +148,11 @@ void mclightning_update(GameObject* obj)
 
 void mclightning_init(GameObject* obj, McLightningSetup* setup)
 {
-    McLightningState* state = (obj)->extra;
+    McLightningState* state = obj->extra;
     f32 effectScale;
 
-    (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    (obj)->animEventCallback = mclightning_SeqFn;
+    obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    obj->animEventCallback = mclightning_SeqFn;
     objAddObjectType(obj, MCLIGHTNING_OBJGROUP);
     state->flags.spawnFlags = setup->spawnFlags;
     effectScale = 1.0f;

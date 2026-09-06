@@ -194,13 +194,13 @@ void DIMCannon_updateAim(GameObject* obj, f32 targetX, f32 unusedTargetY, f32 ta
 
     placement = (DimCannonPlacement*)obj->anim.placementData;
     player = Obj_GetPlayerObject();
-    state = (obj)->extra;
+    state = obj->extra;
     if (state->shotCooldown <= 0) {
         f32 launchSpeed;
         modelRotation = objFindJointPoseVector(obj, 0);
         facingAngle = modelRotation[1] + ((s32)placement->rotationXByte << 8);
-        targetX -= (obj)->anim.localPosX;
-        targetZ -= (obj)->anim.localPosZ;
+        targetX -= obj->anim.localPosX;
+        targetZ -= obj->anim.localPosZ;
         angleDelta = ((u16)getAngle(targetX, targetZ) + 0x8000);
         angleDelta = angleDelta - (u16)facingAngle;
         if (angleDelta > 0x8000) {

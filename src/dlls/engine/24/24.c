@@ -296,9 +296,9 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
             params.unk0 = 0;
             jointMatrix = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndex);
             PSMTXMultVec(jointMatrix, &params.pos, &params.pos);
-            params.posX = params.posX - (obj)->anim.worldPosX;
-            params.posY = params.posY - (obj)->anim.worldPosY;
-            params.posZ = params.posZ - (obj)->anim.worldPosZ;
+            params.posX = params.posX - obj->anim.worldPosX;
+            params.posY = params.posY - obj->anim.worldPosY;
+            params.posZ = params.posZ - obj->anim.worldPosZ;
             params.posX = params.posX + playerMapOffsetX;
             params.posZ = params.posZ + playerMapOffsetZ;
             if (spawnParams != NULL) {

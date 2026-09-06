@@ -192,7 +192,7 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq) {
         ObjAnim_AdvanceCurrentMove(obj, 0.005f, timeDelta, NULL);
     }
 
-    switch ((obj)->anim.romDefNo) {
+    switch (obj->anim.romDefNo) {
     case SHOPITEM_SEQ_BSPLINE: {
         f32 splineT = s->flight.splineT;
         if (splineT > 1.0f) {
@@ -208,12 +208,12 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq) {
         }
     }
         {
-            (obj)->anim.localPosX = Curve_EvalBSpline(s->flight.splineX, s->flight.splineT, 0);
-            (obj)->anim.localPosY = Curve_EvalBSpline(s->flight.splineY, s->flight.splineT, 0);
-            (obj)->anim.localPosZ = Curve_EvalBSpline(s->flight.splineZ, s->flight.splineT, 0);
+            obj->anim.localPosX = Curve_EvalBSpline(s->flight.splineX, s->flight.splineT, 0);
+            obj->anim.localPosY = Curve_EvalBSpline(s->flight.splineY, s->flight.splineT, 0);
+            obj->anim.localPosZ = Curve_EvalBSpline(s->flight.splineZ, s->flight.splineT, 0);
             s->flight.splineT = s->flight.splineSpeed * timeDelta + s->flight.splineT;
-            (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
-                                        (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
+            obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
+                                        obj->anim.localPosZ - obj->anim.previousLocalPosZ);
             (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 416, NULL, 1, -1, NULL);
         }
@@ -231,7 +231,7 @@ int shopitem_getObjectTypeId(void) {
 
 void shopitem_free(GameObject* obj) {
     (*gExpgfxInterface)->freeSource((int)obj);
-    switch ((obj)->anim.romDefNo) {
+    switch (obj->anim.romDefNo) {
     case SHOPITEM_SEQ_SPARKLE:
         objFreeObjectType(obj, FUEL_CELL_OBJECT_GROUP);
         break;
@@ -240,7 +240,7 @@ void shopitem_free(GameObject* obj) {
 
 void shopitem_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
-        if ((obj)->anim.romDefNo == SHOPITEM_SEQ_SPARKLE) {
+        if (obj->anim.romDefNo == SHOPITEM_SEQ_SPARKLE) {
             shopitem_renderSparkle(obj, 0, 0, 0, 0);
         } else {
             objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
@@ -252,7 +252,7 @@ void shopitem_hitDetect(void) {
 }
 
 void shopitem_update(GameObject* obj) {
-    ShopItemDef* def = (ShopItemDef*)(obj)->anim.placementData;
+    ShopItemDef* def = (ShopItemDef*)obj->anim.placementData;
     void* player = Obj_GetPlayerObject();
     int state = (int)obj->extra;
     f32 range = 10000.0f;
@@ -261,9 +261,9 @@ void shopitem_update(GameObject* obj) {
     int price;
 
     if (s->flags97.flag_40) {
-        (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        (obj)->objectFlags = (u16)((obj)->objectFlags | OBJECT_OBJFLAG_UPDATE_DISABLED);
-        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+        obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_UPDATE_DISABLED);
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     } else if (s->flags97.flag_80) {
         s->msgParam = -1;
         ObjMsg_SendToObject(Obj_GetPlayerObject(), SHOPITEM_MSG_IN_RANGE, obj, state + 0x88);
@@ -278,25 +278,25 @@ void shopitem_update(GameObject* obj) {
                 if (SHOP_INTERFACE(item)->isItemAvailable((GameObject*)item, def->itemSlot) == 0 ||
                     SHOP_INTERFACE(s->vendorObj)->isItemBought((GameObject*)s->vendorObj, def->itemSlot) != 0) {
                     s->flags97.flag_40 = 1;
-                    (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-                    (obj)->objectFlags = (u16)((obj)->objectFlags | OBJECT_OBJFLAG_UPDATE_DISABLED);
-                    (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+                    obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+                    obj->objectFlags = (u16)(obj->objectFlags | OBJECT_OBJFLAG_UPDATE_DISABLED);
+                    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 }
                 s->helpTextId =
                     (s16)SHOP_INTERFACE(s->vendorObj)->getItemTextId((GameObject*)s->vendorObj, def->itemSlot);
             }
         } else {
-            if ((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) {
+            if (obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) {
                 forceAButtonIcon(0x12);
                 showHelpText(s->helpTextId);
             }
-            if ((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
+            if (obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) {
                 money = playerGetMoney(player);
                 price = SHOP_INTERFACE(s->vendorObj)->getItemPrice((GameObject*)s->vendorObj, def->itemSlot);
                 SHOP_INTERFACE(s->vendorObj)->setItemIndex((GameObject*)s->vendorObj, def->itemSlot);
-                switch ((obj)->anim.romDefNo) {
+                switch (obj->anim.romDefNo) {
                 case SHOPITEM_SEQ_BSPLINE:
-                    (obj)->anim.localPosY = 20.0f + ((ShopItemDef*)(obj)->anim.placementData)->splineYOffset;
+                    obj->anim.localPosY = 20.0f + ((ShopItemDef*)obj->anim.placementData)->splineYOffset;
                     break;
                 }
                 if (money >= price) {
@@ -307,7 +307,7 @@ void shopitem_update(GameObject* obj) {
                 }
                 buttonDisable(0, PAD_BUTTON_A);
             }
-            switch ((obj)->anim.romDefNo) {
+            switch (obj->anim.romDefNo) {
             case SHOPITEM_SEQ_BSPLINE: {
                 f32 splineT = s->flight.splineT;
                 if (splineT > 1.0f) {
@@ -321,22 +321,22 @@ void shopitem_update(GameObject* obj) {
                     }
                     firefly_shiftPathHistory(obj, (FireFlyFlightState*)state);
                 }
-                (obj)->anim.localPosX = Curve_EvalBSpline(s->flight.splineX, s->flight.splineT, 0);
-                (obj)->anim.localPosY = Curve_EvalBSpline(s->flight.splineY, s->flight.splineT, 0);
-                (obj)->anim.localPosZ = Curve_EvalBSpline(s->flight.splineZ, s->flight.splineT, 0);
+                obj->anim.localPosX = Curve_EvalBSpline(s->flight.splineX, s->flight.splineT, 0);
+                obj->anim.localPosY = Curve_EvalBSpline(s->flight.splineY, s->flight.splineT, 0);
+                obj->anim.localPosZ = Curve_EvalBSpline(s->flight.splineZ, s->flight.splineT, 0);
                 s->flight.splineT = s->flight.splineSpeed * timeDelta + s->flight.splineT;
-                (obj)->anim.rotX = getAngle((obj)->anim.localPosX - (obj)->anim.previousLocalPosX,
-                                            (obj)->anim.localPosZ - (obj)->anim.previousLocalPosZ);
+                obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
+                                            obj->anim.localPosZ - obj->anim.previousLocalPosZ);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x19F, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x1A0, NULL, 1, -1, NULL);
                 break;
             }
             }
         }
-        if ((obj)->anim.romDefNo != SHOPITEM_SEQ_STATIC && (obj)->anim.romDefNo != SHOPITEM_SEQ_BSPLINE) {
+        if (obj->anim.romDefNo != SHOPITEM_SEQ_STATIC && obj->anim.romDefNo != SHOPITEM_SEQ_BSPLINE) {
             ObjAnim_AdvanceCurrentMove(obj, 0.005f, timeDelta, NULL);
         }
-        if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_DISABLED) == 0) {
+        if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_DISABLED) == 0) {
             objUpdateHitVolumeTransforms(obj);
         }
     }
@@ -348,15 +348,15 @@ void shopitem_init(GameObject* obj, ShopItemDef* data) {
     ShopItemState* s = (ShopItemState*)state;
 
     objAnim = &obj->anim;
-    (obj)->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
-    (obj)->animEventCallback = shopitem_SeqFn;
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    obj->animEventCallback = shopitem_SeqFn;
     objAnim->bankIndex = (s8)data->bankIndex;
-    (obj)->anim.rotX = (s16)(data->rotXByte << 8);
-    (obj)->anim.rotY = (s16)(data->rotYByte << 8);
+    obj->anim.rotX = (s16)(data->rotXByte << 8);
+    obj->anim.rotY = (s16)(data->rotYByte << 8);
     if ((s32)objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
-    switch ((obj)->anim.romDefNo) {
+    switch (obj->anim.romDefNo) {
     case SHOPITEM_SEQ_BSPLINE:
         firefly_initFlightRec(obj, &s->flight);
         break;

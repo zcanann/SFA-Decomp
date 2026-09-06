@@ -71,7 +71,7 @@ void drakorenergy_free(void)
 
 void drakorenergy_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    DrakorEnergyState* state = (obj)->extra;
+    DrakorEnergyState* state = obj->extra;
     u32 mode = state->mode;
     if (mode != DRAKORENERGY_MODE_IDLE && mode != DRAKORENERGY_MODE_COLLECTED)
     {
@@ -85,7 +85,7 @@ void drakorenergy_hitDetect(void)
 
 void drakorenergy_update(GameObject* o)
 {
-    DrakorEnergyState* state = (DrakorEnergyState*)(o)->extra;
+    DrakorEnergyState* state = (DrakorEnergyState*)o->extra;
     DrakorenergyPlacement* placement;
     GameObject* player;
     f32 zeroF;

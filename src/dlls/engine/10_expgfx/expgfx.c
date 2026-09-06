@@ -289,9 +289,9 @@ void objfx_spawnCrystalOrbitEffects(GameObject* obj, s16* work, f32 period, f32 
             params.position[2] = 0.0f;
             *(u16*)work += 0x7fff;
             vecRotateZXY(work, params.position);
-            params.position[0] += (obj)->anim.localPosX;
-            params.position[1] += (obj)->anim.localPosY;
-            params.position[2] += (obj)->anim.localPosZ;
+            params.position[0] += obj->anim.localPosX;
+            params.position[1] += obj->anim.localPosY;
+            params.position[2] += obj->anim.localPosZ;
             params.scale = 1.0f;
             spawnFlags = 0x200001;
             if (flags != 0) {
@@ -763,7 +763,7 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
             break;
         case 4: {
             int flags = 2;
-            if (((obj)->anim.flags & 0x40080) != 0) {
+            if ((obj->anim.flags & 0x40080) != 0) {
                 flags |= 0x20000000;
             }
             params.effectParam = 0xc0e;
@@ -783,11 +783,11 @@ void objfx_spawnLightPulse(GameObject* obj, f32 scale, int type, int a3, int mod
             lightOffset[5] = ((GameObject*)light)->anim.localPosZ;
             vecRotateZXY((s16*)obj, &lightOffset[3]);
             Camera_ProjectWorldPointWithOffset(
-                (obj)->anim.worldPosX + lightOffset[3] - playerMapOffsetX, (obj)->anim.worldPosY + lightOffset[4],
-                (obj)->anim.worldPosZ + lightOffset[5] - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1], &ndc[0]);
+                obj->anim.worldPosX + lightOffset[3] - playerMapOffsetX, obj->anim.worldPosY + lightOffset[4],
+                obj->anim.worldPosZ + lightOffset[5] - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1], &ndc[0]);
         } else {
-            Camera_ProjectWorldPointWithOffset((obj)->anim.worldPosX - playerMapOffsetX, (obj)->anim.worldPosY,
-                                               (obj)->anim.worldPosZ - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1],
+            Camera_ProjectWorldPointWithOffset(obj->anim.worldPosX - playerMapOffsetX, obj->anim.worldPosY,
+                                               obj->anim.worldPosZ - playerMapOffsetZ, 10.0f, &ndc[2], &ndc[1],
                                                &ndc[0]);
         }
         Camera_ClipToScreen(ndc[2], ndc[1], ndc[0], &screenPos[2], &screenPos[1], &screenPos[0]);

@@ -55,7 +55,7 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* stateBytes) {
         }
     }
     DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), vertexCount * 6);
-    (obj)->anim.alpha = state->segmentGlow[1];
+    obj->anim.alpha = state->segmentGlow[1];
 }
 
 void dimmagicbridge_scrollTextureChannels(GameObject* obj, u8* stateBytes) {
@@ -92,7 +92,7 @@ void dimmagicbridge_scrollTextureChannels(GameObject* obj, u8* stateBytes) {
 int dimmagicbridge_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     int segmentIndex;
     int glowIndex;
-    u8* stateBytes = (obj)->extra;
+    u8* stateBytes = obj->extra;
     DimMagicBridgeState* state = (DimMagicBridgeState*)stateBytes;
     animUpdate->movementState = 0;
     animUpdate->flags &= ~OBJSEQ_FLAG_TEXTURE_ANIM_TRACKS;
@@ -152,7 +152,7 @@ void dimmagicbridge_update(GameObject* obj) {
     DimMagicBridgeState* state;
     void* player;
     player = Obj_GetPlayerObject();
-    state = (obj)->extra;
+    state = obj->extra;
     dimmagicbridge_scrollTextureChannels(obj, (u8*)state);
     dimmagicbridge_updateVertexWave(obj, (u8*)state);
     if (state->ignited == 0) {

@@ -51,7 +51,7 @@ int PointLight_getObjectTypeId(void)
 
 void PointLight_free(GameObject* obj)
 {
-    PointLightState* state = (obj)->extra;
+    PointLightState* state = obj->extra;
     if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
@@ -123,12 +123,12 @@ void PointLight_init(GameObject* obj, PointLightSetup* setup)
     u8 colorR, colorG, colorB;
     Vec3f vec;
     PointLightSetup* setupData = setup;
-    PointLightState* state = (obj)->extra;
+    PointLightState* state = obj->extra;
 
     vec = *(Vec3f*)gPointLightInitialDirection;
 
-    (obj)->anim.rotX = (s16)(setupData->rotXByte << 8);
-    (obj)->anim.rotY = (s16)(setupData->rotYByte << 8);
+    obj->anim.rotX = (s16)(setupData->rotXByte << 8);
+    obj->anim.rotY = (s16)(setupData->rotYByte << 8);
 
     if (state->light == NULL)
     {

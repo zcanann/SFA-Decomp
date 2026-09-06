@@ -143,46 +143,46 @@ void hoodedZyck_updateIdle(GameObject* obj, void* state) {
     hoodedZyck_tickPhaseTimer(enemyState);
     if (enemyState->duster.decoyTimer != 0.0f) {
         ObjHits_DisableObject(obj);
-        if ((obj)->anim.currentMove != 5) {
+        if (obj->anim.currentMove != 5) {
             baddieSetMove(obj, state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
         } else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             ObjHits_EnableObject(obj);
             enemyState->duster.decoyTimer = 0.0f;
         }
-        (obj)->anim.alpha = 0xff;
+        obj->anim.alpha = 0xff;
         resetting = true;
     } else {
         resetting = false;
     }
     if (!resetting) {
-        (obj)->anim.rotX = (short)((obj)->anim.rotX + enemyState->phaseAngle);
-        fromPos[0] = (obj)->anim.localPosX;
-        fromPos[1] = (obj)->anim.localPosY;
-        fromPos[2] = (obj)->anim.localPosZ;
-        angleToVec2Fast((u32)(u16)(obj)->anim.rotX, &sinYaw, &cosYaw);
-        toPos[0] = (obj)->anim.localPosX - 10.0f * sinYaw;
-        toPos[1] = 5.0f + (obj)->anim.localPosY;
-        toPos[2] = (obj)->anim.localPosZ - 10.0f * cosYaw;
+        obj->anim.rotX = (short)(obj->anim.rotX + enemyState->phaseAngle);
+        fromPos[0] = obj->anim.localPosX;
+        fromPos[1] = obj->anim.localPosY;
+        fromPos[2] = obj->anim.localPosZ;
+        angleToVec2Fast((u32)(u16)obj->anim.rotX, &sinYaw, &cosYaw);
+        toPos[0] = obj->anim.localPosX - 10.0f * sinYaw;
+        toPos[1] = 5.0f + obj->anim.localPosY;
+        toPos[2] = obj->anim.localPosZ - 10.0f * cosYaw;
         groundHit = trackGetLineIntersect(fromPos, toPos, 0.0f, 3, (TrackLineIntersectResult*)hitOut, obj,
                                           (u32)enemyState->bboxTraceFlags, 0xffffffff, 0xff, 0);
         noHit = !(groundHit & 0xff);
         if (!noHit || ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)) {
-            if (noHit && (obj)->anim.currentMove != 0) {
+            if (noHit && obj->anim.currentMove != 0) {
                 enemyState->phaseAngle = 0;
                 baddieSetMove(obj, state, 0, 1.0f, 0, 1);
             } else {
                 float fz;
                 baddieSetMove(obj, state, 1, 0.75f, 0, 0);
                 fz = 0.0f;
-                (obj)->anim.velocityX = fz;
-                (obj)->anim.velocityY = fz;
-                (obj)->anim.velocityZ = fz;
+                obj->anim.velocityX = fz;
+                obj->anim.velocityY = fz;
+                obj->anim.velocityZ = fz;
                 randBit = randomGetRange(0, 1);
                 enemyState->phaseAngle = (u16)((randBit - 1) * 0x12c);
             }
         }
-        (obj)->anim.rotY = enemyState->spawnRotY;
-        (obj)->anim.rotZ = enemyState->spawnRotZ;
+        obj->anim.rotY = enemyState->spawnRotY;
+        obj->anim.rotZ = enemyState->spawnRotZ;
     }
     return;
 }

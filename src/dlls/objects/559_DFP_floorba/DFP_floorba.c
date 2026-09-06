@@ -88,8 +88,8 @@ u8 gDFPFloorbarSafeFloorTiles[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
 
 void DFP_Floorbar_update(GameObject* obj)
 {
-    DfpfloorbarPlacement* placement = (DfpfloorbarPlacement*)(obj)->anim.placementData;
-    DfpFloorbarState* state = (obj)->extra;
+    DfpfloorbarPlacement* placement = (DfpfloorbarPlacement*)obj->anim.placementData;
+    DfpFloorbarState* state = obj->extra;
     s16 tileSteppedOn = -1;
     int mode;
     u8 lowered;
@@ -99,7 +99,7 @@ void DFP_Floorbar_update(GameObject* obj)
     f32 xMid;
     f32 zDelta;
 
-    mode = (obj)->anim.mapEventSlot;
+    mode = obj->anim.mapEventSlot;
     mode = (*gMapEventInterface)->getMapAct(mode);
 
     switch ((u8)mode)
@@ -109,14 +109,14 @@ void DFP_Floorbar_update(GameObject* obj)
             return;
         if (mainGetBit(GAMEBIT_OFP_ElectricFloorPuzzleAct1Complete) != 0)
         {
-            (obj)->anim.localPosY = placement->posY - 3.2f;
+            obj->anim.localPosY = placement->posY - 3.2f;
             return;
         }
         break;
     case 2:
         if (mainGetBit(GAMEBIT_OFP_ElectricFloorPuzzleAct2Complete) != 0)
         {
-            (obj)->anim.localPosY = placement->posY - 3.2f;
+            obj->anim.localPosY = placement->posY - 3.2f;
             return;
         }
         break;
@@ -158,13 +158,13 @@ void DFP_Floorbar_update(GameObject* obj)
     state->safeTileIndex = gDFPFloorbarSafeFloorTiles[state->rowIndex];
 
     lowered = state->lowered;
-    if (lowered != 0 && (obj)->anim.localPosY > placement->posY - 3.2f)
+    if (lowered != 0 && obj->anim.localPosY > placement->posY - 3.2f)
     {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_en_treedrum16_1c8);
-        (obj)->anim.localPosY = (obj)->anim.localPosY - timeDelta / 12.0f;
-        if ((obj)->anim.localPosY <= placement->posY - 3.2f)
+        obj->anim.localPosY = obj->anim.localPosY - timeDelta / 12.0f;
+        if (obj->anim.localPosY <= placement->posY - 3.2f)
         {
-            (obj)->anim.localPosY = placement->posY - 3.2f;
+            obj->anim.localPosY = placement->posY - 3.2f;
         }
         return;
     }
@@ -173,7 +173,7 @@ void DFP_Floorbar_update(GameObject* obj)
         return;
     if (lowered == 0)
     {
-        (obj)->anim.localPosY = placement->posY;
+        obj->anim.localPosY = placement->posY;
     }
     if (state->lowered != 0)
         return;

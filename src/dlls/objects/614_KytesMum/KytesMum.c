@@ -70,7 +70,7 @@ int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg
     KytesMumSetup* setup = (KytesMumSetup*)obj->anim.placementData;
     f32 dist;
     ObjHits_DisableObject(obj);
-    dist = Vec_xzDistance(&player->anim.worldPosX, &(obj)->anim.worldPosX);
+    dist = Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX);
     if (dist < setup->interactionRange)
     {
         arg[0x90] |= 4;
@@ -99,7 +99,7 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     *(KytesMumQuestTriple*)triggerIds = *(KytesMumQuestTriple*)gKytesMumTriggerIds;
     count = 0;
     Obj_GetPlayerObject();
-    runtime = (KytesMumRuntime*)(obj)->extra;
+    runtime = (KytesMumRuntime*)obj->extra;
     saveGame_saveObjectPos(obj);
     ObjHits_DisableObject(obj);
     for (; questBits[count] != -1 && mainGetBit(questBits[count]) != 0; count++)
@@ -114,12 +114,12 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     next = triggerIds[count];
     if (next == -1)
     {
-        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         return 1;
     }
     if (ObjTrigger_IsSet(obj) != 0)
     {
-        (obj)->animEventCallback = kytesmum_idleCallback;
+        obj->animEventCallback = kytesmum_idleCallback;
         (*gObjectTriggerInterface)->runSequence(next, (void*)obj, -1);
     }
     return 0;
@@ -202,21 +202,21 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
     {
         return 1;
     }
-    if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
         if ((*gGameUIInterface)->isAnyItemBeingUsed() == 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-            ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 0xb;
+            ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 4;
             (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 1), (void*)obj, -1);
         }
     }
-    if ((tricky != 0 && Vec_xzDistance(&(obj)->anim.worldPosX, &tricky->anim.worldPosX) < 40.0f) ||
+    if ((tricky != 0 && Vec_xzDistance(&obj->anim.worldPosX, &tricky->anim.worldPosX) < 40.0f) ||
         (player != 0 &&
-         Vec_xzDistance(&(obj)->anim.worldPosX, &player->anim.worldPosX) < 40.0f))
+         Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX) < 40.0f))
     {
-        if ((obj)->anim.currentMove != 9)
+        if (obj->anim.currentMove != 9)
         {
             ObjAnim_SetCurrentMove(obj, 9, 0.0f, 0);
             runtime->animSpeed = 0.006f;
@@ -226,10 +226,10 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
             }
         }
     }
-    if ((obj)->anim.currentMove == 9)
+    if (obj->anim.currentMove == 9)
     {
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0xb;
-        ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 4;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 0xb;
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 4;
         ObjHits_SetHitVolumeSlot(&obj->anim, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);
         ObjHits_RegisterActiveHitVolumeObject(obj);
     }
@@ -288,7 +288,7 @@ int kytesmum_getObjectTypeId(void)
 
 void kytesmum_free(GameObject* obj)
 {
-    KytesMumSetup* setup = (KytesMumSetup*)(obj)->anim.placementData;
+    KytesMumSetup* setup = (KytesMumSetup*)obj->anim.placementData;
     if (setup->mode != 0)
     {
         objFreeObjectType(obj, KYTESMUM_OBJGROUP);
@@ -405,7 +405,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
         if (runtime->questComplete != 0)
         {
             Obj_RemoveFromUpdateList(obj);
-            (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);
         obj->animEventCallback = kytesmum_animEventCallback;

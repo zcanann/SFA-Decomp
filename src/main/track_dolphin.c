@@ -1381,7 +1381,7 @@ void trackSetLinesEnabledByParam(int matchVal, GameObject* obj, int flag) {
     struct IntersectModLineObject* mod;
     IntersectLine* e;
     if (obj != NULL) {
-        mod = (struct IntersectModLineObject*)(obj)->anim.modelInstance;
+        mod = (struct IntersectModLineObject*)obj->anim.modelInstance;
         e = mod->lines;
         count = mod->sourceLineCount;
     } else {
