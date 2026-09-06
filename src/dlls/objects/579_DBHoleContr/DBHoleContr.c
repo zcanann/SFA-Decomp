@@ -69,7 +69,7 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
 
 int dbholecontrol1_getExtraSize(void)
 {
-    return 0xc;
+    return sizeof(DbHoleControl1State);
 }
 int dbholecontrol1_getObjectTypeId(void)
 {
@@ -83,8 +83,7 @@ void dbholecontrol1_free(GameObject* obj)
 
 void dbholecontrol1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    s32 enabled = visible;
-    if (enabled != 0)
+    if (visible != 0)
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (1.0f));
 }
 
@@ -100,7 +99,7 @@ void dbholecontrol1_update(GameObject* obj)
     if (mainGetBit(def->hideGameBit) != 0)
     {
         Obj_RemoveFromUpdateList(obj);
-        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
     else if (mainGetBit(def->triggerGameBit) != 0)
     {
@@ -111,11 +110,12 @@ void dbholecontrol1_update(GameObject* obj)
 void dbholecontrol1_init(GameObject* obj, u8* params)
 {
     DbHoleControl1State* state = obj->extra;
+    Dbholecontrol1Placement* placement = (Dbholecontrol1Placement*)params;
     objAddObjectType(obj, DBHOLE_CONTROL1_OBJECT_GROUP);
-    obj->anim.rotX = (s16)(((Dbholecontrol1Placement*)params)->rotXByte << 8);
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = dbholecontrol1_SeqFn;
-    state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
-    state->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
+    state->gameBitA = placement->gameBitA;
+    state->gameBitB = placement->gameBitB;
 }
 
 void dbholecontrol1_release(void)
