@@ -86,8 +86,7 @@
 
 int gPinPonCurveInitData[2] = {2, 3};
 
-void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state)
-{
+void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state) {
     f32 mtx[17];
     MatrixTransform stk;
     f32 tx;
@@ -95,8 +94,7 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state)
     f32 tz;
 
     state->fireflyLantern.rippleTimer -= timeDelta;
-    if (state->fireflyLantern.rippleTimer <= 0.0f)
-    {
+    if (state->fireflyLantern.rippleTimer <= 0.0f) {
         state->fireflyLantern.rippleTimer = (f32)randomGetRange(30, 60);
         stk.x = obj->anim.localPosX;
         stk.y = 0.0f;
@@ -110,34 +108,29 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state)
         tz = 2.0f + (f32)randomGetRange(-20, 20) / 10.0f;
         Matrix_TransformPoint(mtx, tx, 0.0f, tz, &tx, &ox, &tz);
         (*gWaterfxInterface)->spawnRipple(tx, state->fireflyLantern.anchorY, tz, 0, 0.0f, 3);
-        if (sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ) > 0.5f)
-        {
+        if (sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ) > 0.5f) {
             Sfx_PlayAtPositionFromObject(obj, stk.x, stk.y, stk.z, SFXstaff_proj_putaway);
         }
     }
 }
 
 void pinPon_updateWhileFrozen(GameObject* obj, EnemyState* state, GameObject* attacker, int cmd, int wpad0, int wpad1,
-                              Vec* wpad2, int wpad3)
-{
-    if (cmd == 17 || cmd == 16)
+                              Vec* wpad2, int wpad3) {
+    if (cmd == 17 || cmd == 16) {
         return;
-    if (obj->anim.currentMoveProgress > 0.5f)
-    {
+    }
+    if (obj->anim.currentMoveProgress > 0.5f) {
         state->flags2E8 |= 8;
         Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
         Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         state->current = 0;
         state->flags2E4 |= 32;
-    }
-    else
-    {
+    } else {
         state->flags2E8 |= 16;
     }
 }
 
-void pinPon_updateIdle(GameObject* obj, void* state)
-{
+void pinPon_updateIdle(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
@@ -148,14 +141,10 @@ void pinPon_updateIdle(GameObject* obj, void* state)
     enemyState->userData2 = 0;
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    if ((enemyState->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
-    {
-        if ((Curve_AdvanceAlongPath(&curve->curve, enemyState->pathStep) != 0 ||
-             curve->atSegmentEnd != 0) &&
+    if ((enemyState->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) {
+        if ((Curve_AdvanceAlongPath(&curve->curve, enemyState->pathStep) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint(curve) != 0 &&
-            (*gRomCurveInterface)
-                    ->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gPinPonCurveInitData, -1) != 0)
-        {
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gPinPonCurveInitData, -1) != 0) {
             enemyState->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
         }
         vec[0] = curve->posX - obj->anim.localPosX;
@@ -163,47 +152,35 @@ void pinPon_updateIdle(GameObject* obj, void* state)
         vec[2] = curve->posZ - obj->anim.localPosZ;
         enemy_steerVelocityToward(obj, state, vec, 2.0f, 0.1f, 0.1f, 1);
         enemyState->pinPon.idleTimer += timeDelta;
-        if (enemyState->pinPon.idleTimer > 360.0f)
-        {
+        if (enemyState->pinPon.idleTimer > 360.0f) {
             enemyState->flags2E4 &= ~0x10000;
             enemyState->pinPon.idleTimer = 0.0f;
         }
     }
-    obj->anim.rotY =
-        -(1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) - (f32)obj->anim.rotY);
+    obj->anim.rotY = -(1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) - (f32)obj->anim.rotY);
     baddieTurnTowardLookDir(obj, state, 0xf, 7.5f, 1.0f, 0);
-    if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        if (obj->anim.currentMoveProgress < 0.5)
-        {
+    if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
+        if (obj->anim.currentMoveProgress < 0.5) {
             rnd = randomGetRange(0, 200);
-        }
-        else
-        {
+        } else {
             rnd = randomGetRange(0, 0x3c);
         }
-        if (rnd == 0)
-        {
-            if (obj->anim.currentMoveProgress > 0.5)
-            {
+        if (rnd == 0) {
+            if (obj->anim.currentMoveProgress > 0.5) {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
                 enemyState->animPlaySpeed = -0.02f;
-            }
-            else
-            {
+            } else {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
                 enemyState->animPlaySpeed = 0.02f;
             }
         }
     }
     enemyState->userData1 += 1;
-    obj->anim.rotY =
-        1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) + (f32)obj->anim.rotY;
+    obj->anim.rotY = 1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) + (f32)obj->anim.rotY;
     baddieSpawnWaterRipple(obj, (EnemyState*)state);
 }
 
-void pinPon_updateEngaged(GameObject* obj, int* state)
-{
+void pinPon_updateEngaged(GameObject* obj, int* state) {
     EnemyState* enemyState = (EnemyState*)state;
     RomCurveWalker* curve;
     u8 flag;
@@ -211,16 +188,13 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     f32 fval;
 
     curve = *(RomCurveWalker**)state;
-    if (enemyState->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED)
-    {
+    if (enemyState->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) {
         Sfx_PlayFromObject(obj, SFXTRIG_windlift_loop);
     }
     if (((enemyState->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) &&
         ((Curve_AdvanceAlongPath(&curve->curve, 0.0f) != 0 || curve->atSegmentEnd != 0) &&
          ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gPinPonCurveInitData, -1) !=
-         0))
-    {
+        ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gPinPonCurveInitData, -1) != 0)) {
         enemyState->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
     }
     ObjHits_SetHitVolumeSlot(&obj->anim, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
@@ -228,68 +202,46 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
     dvec[0] = enemyState->trackedObj->anim.localPosX - obj->anim.localPosX;
     dvec[1] = 0.0f;
     dvec[2] = enemyState->trackedObj->anim.localPosZ - obj->anim.localPosZ;
-    if ((enemyState->lastHitObject != NULL) &&
-        (enemyState->lastHitObject == Obj_GetPlayerObject()))
-    {
+    if ((enemyState->lastHitObject != NULL) && (enemyState->lastHitObject == Obj_GetPlayerObject())) {
         enemyState->flags2E4 |= 0x10000;
         enemyState->fireflyLantern.trackTimer = 0.0f;
     }
-    obj->anim.rotY = -(1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) -
-                         (f32)obj->anim.rotY);
-    if (flag == 0)
-    {
+    obj->anim.rotY = -(1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) - (f32)obj->anim.rotY);
+    if (flag == 0) {
         fval = 0.0f;
         obj->anim.velocityX = fval;
         obj->anim.velocityZ = fval;
         baddieTurnTowardPoint(obj, state, enemyState->trackedObj->anim.localPosX,
                               enemyState->trackedObj->anim.localPosZ, 10, 0);
-    }
-    else
-    {
+    } else {
         enemy_steerVelocityToward(obj, state, dvec, 2.0f, 0.1f, 0.1f, 1);
         baddieTurnTowardLookDir(obj, state, 0xf, 7.5f, 1.0f, 0);
     }
-    if (enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
-    {
+    if (enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) {
         fval = 0.0f;
-        if (fval == enemyState->fireflyLantern.breathTimer)
-        {
-            if (flag == 0)
-            {
-                if (obj->anim.currentMoveProgress > 0.5f)
-                {
+        if (fval == enemyState->fireflyLantern.breathTimer) {
+            if (flag == 0) {
+                if (obj->anim.currentMoveProgress > 0.5f) {
                     enemyState->fireflyLantern.breathTimer = 300.0f;
                     enemyState->userData2 += 1;
-                }
-                else
-                {
+                } else {
                     enemyState->fireflyLantern.breathTimer = 120.0f;
                 }
-            }
-            else if (obj->anim.currentMoveProgress > 0.5)
-            {
+            } else if (obj->anim.currentMoveProgress > 0.5) {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
                 enemyState->animPlaySpeed = -0.02f;
-            }
-            else
-            {
+            } else {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
                 enemyState->animPlaySpeed = 0.02f;
             }
-        }
-        else
-        {
+        } else {
             enemyState->fireflyLantern.breathTimer -= timeDelta;
-            if (enemyState->fireflyLantern.breathTimer <= fval)
-            {
+            if (enemyState->fireflyLantern.breathTimer <= fval) {
                 enemyState->fireflyLantern.breathTimer = fval;
-                if (obj->anim.currentMoveProgress > 0.5)
-                {
+                if (obj->anim.currentMoveProgress > 0.5) {
                     Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
                     enemyState->animPlaySpeed = -0.02f;
-                }
-                else
-                {
+                } else {
                     Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
                     enemyState->animPlaySpeed = 0.1f;
                 }
@@ -297,13 +249,11 @@ void pinPon_updateEngaged(GameObject* obj, int* state)
         }
     }
     enemyState->userData1 += 1;
-    obj->anim.rotY = (1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) +
-                        (f32)obj->anim.rotY);
+    obj->anim.rotY = (1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) + (f32)obj->anim.rotY);
     baddieSpawnWaterRipple(obj, (EnemyState*)state);
 }
 
-void pinPon_init(GameObject* obj, void* state)
-{
+void pinPon_init(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
     float fval;
     u32 randVal;
