@@ -79,19 +79,21 @@ s32 Checkpoint_advanceRoute(CheckpointCursor* out, CheckpointNavState* o, f32 di
 s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkIndex, f32* outX, f32* outY, f32* outZ, u8 mode,
                  f32 lateralOffset, f32 verticalOffset)
 {
-    f32 prodA;
-    f32 prodB;
-    f32 prodC;
-    f32 sinB;
-    f32 prodD;
+    f32 startSideX;
+    f32 endSideX;
+    f32 startSideZ;
+    f32 endNegSin;
+    f32 endSideZ;
     s32 routeIndex;
     f32* zPoints;
-    f32 sinA;
-    f32 cosA;
+    f32* xPoints;
+    f32* yPoints;
+    f32 startNegSin;
+    f32 startNegCos;
     CheckpointRouteEntry* nextCheckpoint;
-    f32 cosB;
-    f32 sclA;
-    f32 sclB;
+    f32 endNegCos;
+    f32 startWidthScale;
+    f32 endWidthScale;
     s32 pointIndex;
     s32 result;
     s32 outputCount;
@@ -112,98 +114,101 @@ s32 Checkpoint_buildControlPoints(CheckpointRouteEntry* checkpoint, s32 linkInde
         return 0;
     }
 
-    sinA = -mathSinf(3.1415927f * (checkpoint->heading << 8) / 32768.0f);
-    cosA = -mathCosf(3.1415927f * (checkpoint->heading << 8) / 32768.0f);
-    sinB = -mathSinf(3.1415927f * (nextCheckpoint->heading << 8) / 32768.0f);
-    cosB = -mathCosf(3.1415927f * (nextCheckpoint->heading << 8) / 32768.0f);
-    sclA = 0.011111111f * checkpoint->width;
-    sclB = 0.011111111f * nextCheckpoint->width;
+    startNegSin = -mathSinf(3.1415927f * (checkpoint->heading << 8) / 32768.0f);
+    startNegCos = -mathCosf(3.1415927f * (checkpoint->heading << 8) / 32768.0f);
+    endNegSin = -mathSinf(3.1415927f * (nextCheckpoint->heading << 8) / 32768.0f);
+    endNegCos = -mathCosf(3.1415927f * (nextCheckpoint->heading << 8) / 32768.0f);
+    startWidthScale = 0.011111111f * checkpoint->width;
+    endWidthScale = 0.011111111f * nextCheckpoint->width;
 
+    /* Each axis stores two endpoints followed by their Hermite tangents. */
     if (mode == 1)
     {
         outputCount = 0;
         pointIndex = 0;
+        xPoints = outX;
+        yPoints = outY;
         zPoints = outZ;
-        prodA = sclA * cosA;
-        prodB = sclB * cosB;
-        prodC = sclA * -sinA;
-        prodD = sclB * -sinB;
-        do
+        startSideX = startWidthScale * startNegCos;
+        endSideX = endWidthScale * endNegCos;
+        startSideZ = startWidthScale * -startNegSin;
+        endSideZ = endWidthScale * -endNegSin;
+        while (outputCount < 0x10)
         {
-            outX[0] = checkpoint->sideOffsets[pointIndex] * prodA + checkpoint->posX;
-            outX[1] = nextCheckpoint->sideOffsets[pointIndex] * prodB + nextCheckpoint->posX;
-            outX[2] = 2.0f * (checkpoint->waveAmplitude *
-                              mathSinf(3.1415927f * (checkpoint->wavePhase << 8) / 32768.0f));
-            outX[3] = 2.0f * (nextCheckpoint->waveAmplitude *
-                              mathSinf(3.1415927f * (nextCheckpoint->wavePhase << 8) / 32768.0f));
-            outY[0] = sclA * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
-            outY[1] = sclB * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
-            outY[2] = 0.0f;
-            outY[3] = 0.0f;
-            zPoints[0] = checkpoint->sideOffsets[pointIndex] * prodC + checkpoint->posZ;
-            zPoints[1] = nextCheckpoint->sideOffsets[pointIndex] * prodD + nextCheckpoint->posZ;
-            zPoints[2] = 2.0f * (checkpoint->waveAmplitude *
-                                 mathCosf(3.1415927f * (checkpoint->wavePhase << 8) / 32768.0f));
-            zPoints[3] = 2.0f * (nextCheckpoint->waveAmplitude *
-                                 mathCosf(3.1415927f * (nextCheckpoint->wavePhase << 8) / 32768.0f));
+            xPoints[0] = checkpoint->sideOffsets[pointIndex] * startSideX + checkpoint->posX;
+            xPoints[1] = nextCheckpoint->sideOffsets[pointIndex] * endSideX + nextCheckpoint->posX;
+            xPoints[2] = 2.0f * (checkpoint->tangentScale *
+                              mathSinf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
+            xPoints[3] = 2.0f * (nextCheckpoint->tangentScale *
+                              mathSinf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
+            yPoints[0] = startWidthScale * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
+            yPoints[1] = endWidthScale * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
+            yPoints[2] = 0.0f;
+            yPoints[3] = 0.0f;
+            zPoints[0] = checkpoint->sideOffsets[pointIndex] * startSideZ + checkpoint->posZ;
+            zPoints[1] = nextCheckpoint->sideOffsets[pointIndex] * endSideZ + nextCheckpoint->posZ;
+            zPoints[2] = 2.0f * (checkpoint->tangentScale *
+                                 mathCosf(3.1415927f * (checkpoint->tangentHeading << 8) / 32768.0f));
+            zPoints[3] = 2.0f * (nextCheckpoint->tangentScale *
+                                 mathCosf(3.1415927f * (nextCheckpoint->tangentHeading << 8) / 32768.0f));
             pointIndex += 1;
-            outX += 4;
-            outY += 4;
+            xPoints += 4;
+            yPoints += 4;
             zPoints += 4;
             outputCount += 4;
-        } while (outputCount < 0x10);
+        }
     }
     else if (mode == 0)
     {
-        outX[0] = lateralOffset * (sclA * cosA) + checkpoint->posX;
-        outX[1] = lateralOffset * (sclB * cosB) + nextCheckpoint->posX;
-        outX[2] = 2.0f * (checkpoint->waveAmplitude *
-                                  mathSinf(3.1415927f * (checkpoint->wavePhase << 8) /
+        outX[0] = lateralOffset * (startWidthScale * startNegCos) + checkpoint->posX;
+        outX[1] = lateralOffset * (endWidthScale * endNegCos) + nextCheckpoint->posX;
+        outX[2] = 2.0f * (checkpoint->tangentScale *
+                                  mathSinf(3.1415927f * (checkpoint->tangentHeading << 8) /
                                            32768.0f));
-        outX[3] = 2.0f * (nextCheckpoint->waveAmplitude *
-                                  mathSinf(3.1415927f * (nextCheckpoint->wavePhase << 8) /
+        outX[3] = 2.0f * (nextCheckpoint->tangentScale *
+                                  mathSinf(3.1415927f * (nextCheckpoint->tangentHeading << 8) /
                                            32768.0f));
-        outY[0] = sclA * verticalOffset + checkpoint->posY;
-        outY[1] = sclB * verticalOffset + nextCheckpoint->posY;
+        outY[0] = startWidthScale * verticalOffset + checkpoint->posY;
+        outY[1] = endWidthScale * verticalOffset + nextCheckpoint->posY;
         {
             f32 zero = 0.0f;
             outY[2] = zero;
             outY[3] = zero;
         }
-        outZ[0] = lateralOffset * (sclA * -sinA) + checkpoint->posZ;
-        outZ[1] = lateralOffset * (sclB * -sinB) + nextCheckpoint->posZ;
-        outZ[2] = 2.0f * (checkpoint->waveAmplitude *
-                                  mathCosf(3.1415927f * (checkpoint->wavePhase << 8) /
+        outZ[0] = lateralOffset * (startWidthScale * -startNegSin) + checkpoint->posZ;
+        outZ[1] = lateralOffset * (endWidthScale * -endNegSin) + nextCheckpoint->posZ;
+        outZ[2] = 2.0f * (checkpoint->tangentScale *
+                                  mathCosf(3.1415927f * (checkpoint->tangentHeading << 8) /
                                            32768.0f));
-        outZ[3] = 2.0f * (nextCheckpoint->waveAmplitude *
-                                  mathCosf(3.1415927f * (nextCheckpoint->wavePhase << 8) /
+        outZ[3] = 2.0f * (nextCheckpoint->tangentScale *
+                                  mathCosf(3.1415927f * (nextCheckpoint->tangentHeading << 8) /
                                            32768.0f));
     }
     else
     {
         pointIndex = mode - 2;
-        outX[0] = checkpoint->sideOffsets[pointIndex] * (sclA * cosA) + checkpoint->posX;
-        outX[1] = nextCheckpoint->sideOffsets[pointIndex] * (sclB * cosB) + nextCheckpoint->posX;
-        outX[2] = 2.0f * (checkpoint->waveAmplitude *
-                                  mathSinf(3.1415927f * (checkpoint->wavePhase << 8) /
+        outX[0] = checkpoint->sideOffsets[pointIndex] * (startWidthScale * startNegCos) + checkpoint->posX;
+        outX[1] = nextCheckpoint->sideOffsets[pointIndex] * (endWidthScale * endNegCos) + nextCheckpoint->posX;
+        outX[2] = 2.0f * (checkpoint->tangentScale *
+                                  mathSinf(3.1415927f * (checkpoint->tangentHeading << 8) /
                                            32768.0f));
-        outX[3] = 2.0f * (nextCheckpoint->waveAmplitude *
-                                  mathSinf(3.1415927f * (nextCheckpoint->wavePhase << 8) /
+        outX[3] = 2.0f * (nextCheckpoint->tangentScale *
+                                  mathSinf(3.1415927f * (nextCheckpoint->tangentHeading << 8) /
                                            32768.0f));
-        outY[0] = sclA * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
-        outY[1] = sclB * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
+        outY[0] = startWidthScale * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
+        outY[1] = endWidthScale * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
         {
             f32 zero = 0.0f;
             outY[2] = zero;
             outY[3] = zero;
         }
-        outZ[0] = checkpoint->sideOffsets[pointIndex] * (sclA * -sinA) + checkpoint->posZ;
-        outZ[1] = nextCheckpoint->sideOffsets[pointIndex] * (sclB * -sinB) + nextCheckpoint->posZ;
-        outZ[2] = 2.0f * (checkpoint->waveAmplitude *
-                                  mathCosf(3.1415927f * (checkpoint->wavePhase << 8) /
+        outZ[0] = checkpoint->sideOffsets[pointIndex] * (startWidthScale * -startNegSin) + checkpoint->posZ;
+        outZ[1] = nextCheckpoint->sideOffsets[pointIndex] * (endWidthScale * -endNegSin) + nextCheckpoint->posZ;
+        outZ[2] = 2.0f * (checkpoint->tangentScale *
+                                  mathCosf(3.1415927f * (checkpoint->tangentHeading << 8) /
                                            32768.0f));
-        outZ[3] = 2.0f * (nextCheckpoint->waveAmplitude *
-                                  mathCosf(3.1415927f * (nextCheckpoint->wavePhase << 8) /
+        outZ[3] = 2.0f * (nextCheckpoint->tangentScale *
+                                  mathCosf(3.1415927f * (nextCheckpoint->tangentHeading << 8) /
                                            32768.0f));
     }
     return result;
