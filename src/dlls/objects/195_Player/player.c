@@ -3579,7 +3579,7 @@ int playerStateStaffLiftRock(GameObject* obj, PlayerState* state, f32 fv) {
             gPlayerStaffSfxTimer = gPlayerStaffSfxTimer - fv;
             if (gPlayerStaffSfxTimer < 0.0f) {
                 Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? SFXTRIG_impact3 : SFXTRIG_literun116));
-                gPlayerStaffSfxTimer = (f32)randomGetRange(0xa, 0x12);
+                gPlayerStaffSfxTimer = randomGetRange(0xa, 0x12);
             }
             switch (staffactivated_getPullRateMode(gPlayerInteractTarget)) {
             case 2:
@@ -3617,7 +3617,7 @@ int playerStateStaffLiftRock(GameObject* obj, PlayerState* state, f32 fv) {
             ObjAnim_SetCurrentMove(obj, 0xd0, 0.0f, 0);
             state->baddie.moveSpeed = 0.05f;
         } else {
-            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, prog + (f32)randomGetRange(-0x64, 0x64) / 20000.0f);
+            ObjAnim_SetMoveProgress((ObjAnimComponent*)obj, prog + randomGetRange(-0x64, 0x64) / 20000.0f);
         }
         staffactivated_setLiftHeight(gPlayerInteractTarget, count);
         break;
@@ -4109,7 +4109,7 @@ int playerStateFireLaser(GameObject* obj, PlayerState* state, f32 fv) {
     }
     if (30.0f == gPlayerFireLaserCountdown || 25.0f == gPlayerFireLaserCountdown ||
         20.0f == gPlayerFireLaserCountdown) {
-        playerSpawnRapidFireLaser(obj, state, inner->aimInputZ, (f32)randomGetRange(-0xc8, 0xc8) / 100.0f);
+        playerSpawnRapidFireLaser(obj, state, inner->aimInputZ, randomGetRange(-0xc8, 0xc8) / 100.0f);
     }
     gPlayerFireLaserCountdown -= 1.0f;
     if (gPlayerFireLaserCountdown < 0.0f) {
@@ -5720,7 +5720,7 @@ int playerState1D(int obj, PlayerState* state, f32 fv) {
                 if (self->anim.currentMove != (tblB = tbl->moveB)[inner->stickDirection] ||
                     self->anim.currentMoveProgress >= 0.985f) {
                     state->baddie.moveSpeed =
-                        0.005f * ((f32)randomGetRange(0, 100) / 100.0f) + tbl->spdE[inner->stickDirection];
+                        0.005f * (randomGetRange(0, 100) / 100.0f) + tbl->spdE[inner->stickDirection];
                 }
                 nextMove = tblB[inner->stickDirection];
             }
@@ -10048,11 +10048,11 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
                 if (((PlayerState*)state)->particleBurstCooldown <= 0.0f) {
                     for (k = 0; k < 0x4b; k++) {
                         lo = buf.lineStartX;
-                        pfx.x = lo + (buf.lineEndX - lo) * (f32)randomGetRange(0, 100) / 100.0f;
+                        pfx.x = lo + (buf.lineEndX - lo) * randomGetRange(0, 100) / 100.0f;
                         lo = buf.lineStartY;
-                        pfx.y = lo + (buf.upperY0 - lo) * (f32)randomGetRange(0, 100) / 100.0f;
+                        pfx.y = lo + (buf.upperY0 - lo) * randomGetRange(0, 100) / 100.0f;
                         lo = buf.lineStartZ;
-                        pfx.z = lo + (buf.lineEndZ - lo) * (f32)randomGetRange(0, 100) / 100.0f;
+                        pfx.z = lo + (buf.lineEndZ - lo) * randomGetRange(0, 100) / 100.0f;
                         pfx.scale = 1.0f;
                         pfx.mode = 0x3c;
                         (*gPartfxInterface)->spawnObject((void*)obj, 0x804, &pfx, 0x200001, -1, NULL);
@@ -11136,8 +11136,8 @@ void objDoTeleportAnim(GameObject* obj) {
     buf.y += obj->anim.localPosY;
     {
         for (i = 0; i < 10; i++) {
-            buf.x = obj->anim.localPosX + (f32)randomGetRange(-0x64, 0x64) / 10.0f;
-            buf.z = obj->anim.localPosZ + (f32)randomGetRange(-0x64, 0x64) / 10.0f;
+            buf.x = obj->anim.localPosX + randomGetRange(-0x64, 0x64) / 10.0f;
+            buf.z = obj->anim.localPosZ + randomGetRange(-0x64, 0x64) / 10.0f;
             (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f4, &buf, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, randomGetRange(0, 2) + 0x3f7, &buf, 1, -1, NULL);
         }
@@ -12413,8 +12413,8 @@ void playerUpdateWaterMotion(GameObject* obj, PlayerState* inner, PlayerState* s
                                          obj->anim.localPosZ, 0xe);
         }
         if (((PlayerState*)inner)->waterDepth < 25.0f && (((PlayerState*)state)->baddie.eventFlags & 0x200) != 0) {
-            t[0] = (f32)randomGetRange(-0x14, 0x14) / 10.0f;
-            t[2] = (f32)randomGetRange(-0x14, 0x14) / 10.0f;
+            t[0] = randomGetRange(-0x14, 0x14) / 10.0f;
+            t[2] = randomGetRange(-0x14, 0x14) / 10.0f;
             playEffect = 1;
         }
     } else {
@@ -12424,7 +12424,7 @@ void playerUpdateWaterMotion(GameObject* obj, PlayerState* inner, PlayerState* s
         }
         if (((PlayerState*)inner)->waterDepth < 25.0f && (((PlayerState*)state)->baddie.eventFlags & 0x200) != 0) {
             s8 c;
-            t[0] = (f32)randomGetRange(-0x14, 0x14) / 10.0f;
+            t[0] = randomGetRange(-0x14, 0x14) / 10.0f;
             c = ((PlayerState*)inner)->gaitLevel;
             if (c <= 8) {
                 t[2] = -15.0f;
@@ -12456,9 +12456,9 @@ void playerUpdateWaterMotion(GameObject* obj, PlayerState* inner, PlayerState* s
     ObjPath_GetPointWorldPosition(obj, 0x13, &v.x, &v.y, &v.z, 0);
     loopCount = (((PlayerState*)inner)->waterSurfaceY - v.y > 5.0f) ? 1 : 0;
     for (i = 0; i < loopCount; i++) {
-        pfx.x = v.x + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
-        pfx.y = v.y + (f32)randomGetRange(-0x64, 0x64) / 50.0f;
-        pfx.z = v.z + (f32)randomGetRange(-0x64, 0x64) / 20.0f;
+        pfx.x = v.x + randomGetRange(-0x64, 0x64) / 20.0f;
+        pfx.y = v.y + randomGetRange(-0x64, 0x64) / 50.0f;
+        pfx.z = v.z + randomGetRange(-0x64, 0x64) / 20.0f;
         pfx.scale = ((PlayerState*)inner)->waterSurfaceY - pfx.y;
         if (pfx.scale > 0.0f) {
             (*gPartfxInterface)->spawnObject((void*)obj, 0x202, &pfx, 0x200001, -1, NULL);
@@ -14048,7 +14048,7 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
                     gPlayerSinkSfxTimer = gPlayerSinkSfxTimer - dt;
                 } else {
                     Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_208);
-                    gPlayerSinkSfxTimer = (f32)randomGetRange(0x27, 0x3c);
+                    gPlayerSinkSfxTimer = randomGetRange(0x27, 0x3c);
                 }
             }
             iv = trackGetHeight(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &nearList, 0, 0x20);

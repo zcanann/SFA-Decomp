@@ -44,7 +44,7 @@ f32 WallAnimator_applyImpact(GameObject* obj, GameObject* target) {
     placement = (WallAnimatorPlacement*)obj->anim.placementData;
     burstCount = 6;
     do {
-        offset[0] = 0.13f * (f32)randomGetRange(-0x64, 0x64);
+        offset[0] = 0.13f * randomGetRange(-0x64, 0x64);
         offset[1] = 0.0f;
         offset[2] = 0.0f;
         spawn.rotZ = randomGetRange(-0x7FFF, 0x8000);

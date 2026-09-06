@@ -784,7 +784,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj) {
     if (state->baddie.flags0 & 0x800000) {
         if ((state->baddie.groundContact != 0 || state->baddie.surfaceFlags & 0xf0) &&
             state->sub.footstepCooldown <= 0.0f && state->baddie.animSpeedA > 3.408f) {
-            doRumble((f32)randomGetRange(2, 5));
+            doRumble(randomGetRange(2, 5));
             state->sub.footstepCooldown = 30.0f;
             Sfx_PlayFromObject(obj, SFXTRIG_foot_run_jingle4);
         }

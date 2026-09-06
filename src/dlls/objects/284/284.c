@@ -171,10 +171,10 @@ void staffactivated_spawnMapEventDebris(GameObject* obj) {
 
                 scarab->anim.velocityX =
                     scarab->anim.velocityX *
-                    (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
+                    (lbl_803E3BBC - (lbl_803E3BC4 * randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
                 scarab->anim.velocityZ =
                     scarab->anim.velocityZ *
-                    (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
+                    (lbl_803E3BBC - (lbl_803E3BC4 * randomGetRange(0, STAFF_ACTIVATED_SCARAB_RANDOM_RANGE)));
                 scarab->anim.velocityY = STAFF_ACTIVATED_SCARAB_Y_VELOCITY;
 
                 rotation.x = zero;

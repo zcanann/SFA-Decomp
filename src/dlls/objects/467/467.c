@@ -124,8 +124,8 @@ void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, 
 
     for (i = 0, base = 0.0f; i < count; i++) {
         vec[0] = base;
-        vec[1] = (f32)randomGetRange(xMin, xMax);
-        vec[2] = (f32)randomGetRange(yMin, yMax);
+        vec[1] = randomGetRange(xMin, xMax);
+        vec[2] = randomGetRange(yMin, yMax);
         rot[0] = 0;
         rot[1] = 0;
         rot[2] = randomGetRange(-0x7fff, 0x7fff);
@@ -509,19 +509,19 @@ void worldobj_init(GameObject* obj, const WorldObjSetup* setup) {
         objA = ObjList_FindObjectById(0x42fe7);
         objB = ObjList_FindObjectById(0x4305a);
         base = objB->anim.localPosY - objA->anim.localPosY;
-        state->orbitStartY = (objA->anim.localPosY - base) + (f32)randomGetRange(-0x3e8, 0x3e8);
-        state->orbitEndY = objB->anim.localPosY + (f32)randomGetRange(-5, 5);
-        state->scale = 0.5f * ((f32)randomGetRange(0, 0x64) / 100.0f) + 0.5f;
+        state->orbitStartY = (objA->anim.localPosY - base) + randomGetRange(-0x3e8, 0x3e8);
+        state->orbitEndY = objB->anim.localPosY + randomGetRange(-5, 5);
+        state->scale = 0.5f * (randomGetRange(0, 0x64) / 100.0f) + 0.5f;
         obj->anim.rootMotionScale = obj->anim.rootMotionScale * state->scale;
         state->spinXStep = randomGetRange(0xa, 0x19);
         if (randomGetRange(0, 1) != 0) {
             state->spinXStep = -state->spinXStep;
             state->orbitAngle = 0x8000;
         }
-        base = (f32)randomGetRange(0xc8, 0x190);
+        base = randomGetRange(0xc8, 0x190);
         dist = Vec_distance(&objB->anim.worldPosX, &objA->anim.worldPosX);
         state->orbitRadiusZ = 2.0f * dist + base;
-        state->orbitRadiusX = state->orbitRadiusZ * (0.3f * ((f32)randomGetRange(0, 0x64) / 100.0f) + 0.3f);
+        state->orbitRadiusX = state->orbitRadiusZ * (0.3f * (randomGetRange(0, 0x64) / 100.0f) + 0.3f);
         state->light = objCreateLight(obj, 1);
         if (state->light != NULL) {
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);

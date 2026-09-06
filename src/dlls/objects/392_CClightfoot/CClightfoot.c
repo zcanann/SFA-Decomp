@@ -352,7 +352,7 @@ void ccLightfoot_update(GameObject* obj) {
         state->idleSfxTimer -= timeDelta;
         if (state->idleSfxTimer < 0.0f) {
             state->idleSfxTimer =
-                (f32)randomGetRange(CC_LIGHTFOOT_IDLE_SFX_DELAY_MIN, CC_LIGHTFOOT_IDLE_SFX_DELAY_MAX);
+                randomGetRange(CC_LIGHTFOOT_IDLE_SFX_DELAY_MIN, CC_LIGHTFOOT_IDLE_SFX_DELAY_MAX);
             Sfx_PlayFromObject(obj, SFXTRIG_trwhin4);
         }
     }
@@ -372,7 +372,7 @@ void ccLightfoot_update(GameObject* obj) {
             state->targetActorB = ObjList_FindObjectById(CC_LIGHTFOOT_TARGET_ACTOR_B_ID);
             state->phase = CC_LIGHTFOOT_PHASE_INTRO;
             state->idleSfxTimer =
-                (f32)randomGetRange(CC_LIGHTFOOT_IDLE_SFX_DELAY_MIN, CC_LIGHTFOOT_IDLE_SFX_DELAY_MAX);
+                randomGetRange(CC_LIGHTFOOT_IDLE_SFX_DELAY_MIN, CC_LIGHTFOOT_IDLE_SFX_DELAY_MAX);
         }
         break;
     case CC_LIGHTFOOT_PHASE_INTRO:

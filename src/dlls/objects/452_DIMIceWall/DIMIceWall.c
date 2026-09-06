@@ -57,10 +57,10 @@ void dimicewall_update(GameObject* obj) {
             spawnParams.posZ = 0.0f;
             for (i = DIM_ICE_WALL_PRIMARY_PARTICLE_COUNT; i != 0; i--) {
                 spawnParams.posX = spawnParams.scale * (DIM_ICE_WALL_RANDOM_OFFSET_SCALE *
-                                                        (f32)randomGetRange(DIM_ICE_WALL_HORIZONTAL_RANDOM_MIN,
+                                                        randomGetRange(DIM_ICE_WALL_HORIZONTAL_RANDOM_MIN,
                                                                                  DIM_ICE_WALL_HORIZONTAL_RANDOM_MAX));
                 spawnParams.posY = spawnParams.scale * (DIM_ICE_WALL_RANDOM_OFFSET_SCALE *
-                                                        (f32)randomGetRange(DIM_ICE_WALL_VERTICAL_RANDOM_MIN,
+                                                        randomGetRange(DIM_ICE_WALL_VERTICAL_RANDOM_MIN,
                                                                                  DIM_ICE_WALL_VERTICAL_RANDOM_MAX));
                 (*gPartfxInterface)
                     ->spawnObject((int*)obj, DIM_ICE_WALL_PRIMARY_PARTICLE_ID, &spawnParams,
@@ -68,10 +68,10 @@ void dimicewall_update(GameObject* obj) {
             }
             for (i = DIM_ICE_WALL_SECONDARY_PARTICLE_COUNT; i != 0; i--) {
                 spawnParams.posX = spawnParams.scale * (DIM_ICE_WALL_RANDOM_OFFSET_SCALE *
-                                                        (f32)randomGetRange(DIM_ICE_WALL_HORIZONTAL_RANDOM_MIN,
+                                                        randomGetRange(DIM_ICE_WALL_HORIZONTAL_RANDOM_MIN,
                                                                                  DIM_ICE_WALL_HORIZONTAL_RANDOM_MAX));
                 spawnParams.posY = spawnParams.scale * (DIM_ICE_WALL_RANDOM_OFFSET_SCALE *
-                                                        (f32)randomGetRange(DIM_ICE_WALL_VERTICAL_RANDOM_MIN,
+                                                        randomGetRange(DIM_ICE_WALL_VERTICAL_RANDOM_MIN,
                                                                                  DIM_ICE_WALL_VERTICAL_RANDOM_MAX));
                 (*gPartfxInterface)
                     ->spawnObject((int*)obj, DIM_ICE_WALL_SECONDARY_PARTICLE_ID, &spawnParams,

@@ -169,7 +169,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
         state->wanderTimerA -= timeDelta;
         if (state->wanderTimerA <= 0.0f) {
             state->wanderFlagA ^= 1;
-            state->wanderTimerA = (f32)randomGetRange(0xB4, 300);
+            state->wanderTimerA = randomGetRange(0xB4, 300);
         }
         if (state->wanderFlagA != 0) {
             state->wanderA = 4.0f * timeDelta + state->wanderA;
@@ -179,7 +179,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
         state->wanderTimerB -= timeDelta;
         if (state->wanderTimerB <= 0.0f) {
             state->wanderFlagB ^= 1;
-            state->wanderTimerB = (f32)randomGetRange(0xB4, 300);
+            state->wanderTimerB = randomGetRange(0xB4, 300);
         }
         if (state->wanderFlagB != 0) {
             state->wanderB = 4.0f * timeDelta + state->wanderB;

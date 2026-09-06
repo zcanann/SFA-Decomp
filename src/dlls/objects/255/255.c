@@ -347,11 +347,11 @@ void MagicDust_init(GameObject* obj, CollectibleSetup* placement) {
     texturePickA[0] = sMagicGemGreenTexturePair[0];
     texturePickB[0] = sMagicGemRedTexturePair[0];
     randomValue = randomGetRange(0, 0xFFFF);
-    speed = (f32)randomGetRange(0x27, 0x2C) / MAGICGEM_RANDOM_SPEED_SCALE;
+    speed = randomGetRange(0x27, 0x2C) / MAGICGEM_RANDOM_SPEED_SCALE;
     angle = (MAGICGEM_PI * (f32)(int)randomValue) / MAGICGEM_ANGLE_RAND_SCALE;
     obj->anim.velocityX = speed * mathSinf(angle);
     obj->anim.velocityZ = speed * mathCosf(angle);
-    obj->anim.velocityY = (f32)randomGetRange(0x28, 0x32) / MAGICGEM_RANDOM_Y_SPEED_SCALE;
+    obj->anim.velocityY = randomGetRange(0x28, 0x32) / MAGICGEM_RANDOM_Y_SPEED_SCALE;
     mode = placement->spawnMode;
     if (mode == MAGICGEM_SPAWN_MODE_BURST) {
         state->flags |= MAGICGEM_FLAG_BURST1;
@@ -369,7 +369,7 @@ void MagicDust_init(GameObject* obj, CollectibleSetup* placement) {
     } else if (mode == MAGICGEM_SPAWN_MODE_DROP) {
         state->flags |= MAGICGEM_FLAG_BURST1;
         obj->anim.alpha = MAGICGEM_MIN_ALPHA;
-        obj->anim.velocityY = -((f32)randomGetRange(0x8C, 0x96) / MAGICGEM_RANDOM_Y_SPEED_SCALE);
+        obj->anim.velocityY = -(randomGetRange(0x8C, 0x96) / MAGICGEM_RANDOM_Y_SPEED_SCALE);
     }
     obj->anim.bankIndex = placement->modelIndex;
     if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount) {

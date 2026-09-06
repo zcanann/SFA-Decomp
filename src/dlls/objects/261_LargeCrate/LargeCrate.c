@@ -244,10 +244,10 @@ int LargeCrate_spawnDropContents(GameObject* obj, GameObject* player, LargeCrate
         }
         child->anim.velocityX =
             child->anim.velocityX *
-            -(0.01f * (f32)randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX) - 1.0f);
+            -(0.01f * randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX) - 1.0f);
         child->anim.velocityZ =
             child->anim.velocityZ *
-            (1.0f - 0.01f * (f32)randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX));
+            (1.0f - 0.01f * randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX));
         child->anim.velocityY = 2.2f;
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;
@@ -288,10 +288,10 @@ int LargeCrate_spawnDropContents(GameObject* obj, GameObject* player, LargeCrate
         }
         child->anim.velocityX =
             child->anim.velocityX *
-            -(0.01f * (f32)randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX) - 1.0f);
+            -(0.01f * randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX) - 1.0f);
         child->anim.velocityZ =
             child->anim.velocityZ *
-            (1.0f - 0.01f * (f32)randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX));
+            (1.0f - 0.01f * randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX));
         child->anim.velocityY = 2.2f;
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;
@@ -332,10 +332,10 @@ int LargeCrate_spawnDropContents(GameObject* obj, GameObject* player, LargeCrate
         }
         child->anim.velocityX =
             child->anim.velocityX *
-            -(0.01f * (f32)randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX) - 1.0f);
+            -(0.01f * randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX) - 1.0f);
         child->anim.velocityZ =
             child->anim.velocityZ *
-            (1.0f - 0.01f * (f32)randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX));
+            (1.0f - 0.01f * randomGetRange(0, LARGECRATE_CHILD_RANDOM_VELOCITY_MAX));
         child->anim.velocityY = 2.2f;
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;

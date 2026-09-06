@@ -785,7 +785,7 @@ void dll_CE_init(GameObject* obj, DllCEPlacement* placement, int flags) {
     (*gBaddieControlInterface)->initGroundBaddie(obj, (u8*)placement, (u8*)state, 7, 6, 0x102, mode, 20.0f);
     obj->animEventCallback = NULL;
     control = state->control;
-    control->soundTimer = (f32)randomGetRange(10, 300);
+    control->soundTimer = randomGetRange(10, 300);
     ObjAnim_SetCurrentMove(obj, 8, 0.0f, 0);
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     (*gPlayerInterface)->setState(obj, state, 0);

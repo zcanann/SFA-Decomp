@@ -1644,7 +1644,7 @@ void dbstealerworm_acquireTarget(GameObject* obj, GroundBaddieState* groundState
         }
         if (sub->countdown > sub->nextSfxTime && dist < 400.0f) {
             Sfx_PlayFromObject(obj, gDbStealerwormBurrowFootstepSfx[1]);
-            sub->nextSfxTime = sub->nextSfxTime + (f32)randomGetRange(0x32, 0xfa);
+            sub->nextSfxTime = sub->nextSfxTime + randomGetRange(0x32, 0xfa);
         }
         sub->countdown += timeDelta;
     }

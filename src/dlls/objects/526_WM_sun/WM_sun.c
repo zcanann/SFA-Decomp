@@ -154,7 +154,7 @@ void wmsun_updateGlare(GameObject* obj)
                 {
                     gWmSunGlareDamping = gWmSunGlareDamping - (gWmSunGlareIntensity - 0.2f) / 20.0f;
                 }
-                g.intensity = 0.0005f * (f32)randomGetRange(0, 0x1e) + g.intensity;
+                g.intensity = 0.0005f * randomGetRange(0, 0x1e) + g.intensity;
                 if (gWmSunGlareIntensity > 0.05f)
                 {
                     gWmSunGlareIntensity = gWmSunGlareIntensity - 0.0002f;

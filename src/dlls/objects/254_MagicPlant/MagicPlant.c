@@ -105,7 +105,7 @@ void magicPlantDropGem(GameObject* obj, MagicPlantPlacement* unusedPlacement, Ma
         state->childObject = NULL;
         ObjLink_DetachChild(obj, childObj);
 
-        launchSpeed = (f32)randomGetRange(0x27, 0x2C) / MAGICPLANT_LAUNCH_SPEED_DIVISOR;
+        launchSpeed = randomGetRange(0x27, 0x2C) / MAGICPLANT_LAUNCH_SPEED_DIVISOR;
         angle = getAngle(obj->anim.localPosX - player->anim.localPosX, obj->anim.localPosZ - player->anim.localPosZ);
         randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
 
@@ -183,7 +183,7 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantPlacement* unusedPlaceme
         } else if (obj->anim.currentMove != MAGICPLANT_MOVE_IDLE) {
             state->animStepScale = gMagicPlantIdleAnimStep;
             ObjAnim_SetCurrentMove(obj, MAGICPLANT_MOVE_IDLE,
-                                   MAGICPLANT_RANDOM_PROGRESS_SCALE * (f32)randomGetRange(0, 99), 0);
+                                   MAGICPLANT_RANDOM_PROGRESS_SCALE * randomGetRange(0, 99), 0);
         }
     }
 

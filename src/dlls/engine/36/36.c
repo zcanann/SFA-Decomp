@@ -99,13 +99,13 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        p.startPosX = 0.6f * (f32)randomGetRange(-10, 10);
+        p.startPosX = 0.6f * randomGetRange(-10, 10);
         p.startPosY = 0.0f;
         p.startPosZ = 15.0f;
-        p.velocityY = 0.1f * (f32)randomGetRange(1, 3);
+        p.velocityY = 0.1f * randomGetRange(1, 3);
         p.velocityX = 0.6f * src->posX;
         p.velocityZ = 0.6f * -src->posZ;
-        p.scale = 0.0016f * (f32)randomGetRange(1, 3);
+        p.scale = 0.0016f * randomGetRange(1, 3);
         p.lifetimeFrames = 0x19;
         p.initialAlpha = 0x55;
         p.behaviorFlags = 0x80118;
@@ -122,13 +122,13 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        p.startPosX = 0.6f * (f32)randomGetRange(-10, 10);
+        p.startPosX = 0.6f * randomGetRange(-10, 10);
         p.startPosY = 0.0f;
         p.startPosZ = 15.0f;
-        p.velocityY = 0.1f * (f32)randomGetRange(1, 3);
+        p.velocityY = 0.1f * randomGetRange(1, 3);
         p.velocityX = 0.4f * src->posX;
         p.velocityZ = 0.4f * -src->posZ;
-        p.scale = 0.0018f * (f32)randomGetRange(1, 3);
+        p.scale = 0.0018f * randomGetRange(1, 3);
         p.lifetimeFrames = 0x19;
         p.initialAlpha = 0x55;
         p.behaviorFlags = 0x80118;
@@ -145,23 +145,23 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        p.startPosX = 0.6f * (f32)randomGetRange(-10, 10);
+        p.startPosX = 0.6f * randomGetRange(-10, 10);
         p.startPosY = 0.0f;
         p.startPosZ = 15.0f;
-        p.velocityY = 0.1f * (f32)randomGetRange(1, 3);
+        p.velocityY = 0.1f * randomGetRange(1, 3);
         p.velocityX = 0.2f * src->posX;
         p.velocityZ = 0.2f * -src->posZ;
-        p.scale = 0.0022f * (f32)randomGetRange(1, 3);
+        p.scale = 0.0022f * randomGetRange(1, 3);
         p.lifetimeFrames = 0x19;
         p.initialAlpha = 0x55;
         p.behaviorFlags = 0x80118;
         p.textureId = 0x5f;
         break;
     case 0x131:
-        p.startPosX = 0.1f * (f32)randomGetRange(-0xc, 0xc);
-        p.startPosY = 0.1f * (f32)randomGetRange(-0xc, 0xc) + 6.0f;
+        p.startPosX = 0.1f * randomGetRange(-0xc, 0xc);
+        p.startPosY = 0.1f * randomGetRange(-0xc, 0xc) + 6.0f;
         p.startPosZ = 15.0f;
-        p.velocityZ = 0.0045f * (f32)randomGetRange(5, 10);
+        p.velocityZ = 0.0045f * randomGetRange(5, 10);
         p.scale = 0.00165f;
         p.lifetimeFrames = 100;
         p.initialAlpha = 0xff;
@@ -169,9 +169,9 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x33;
         break;
     case 0x132:
-        p.startPosX = 0.18f * (f32)randomGetRange(-10, 10);
-        p.startPosY = 0.18f * (f32)randomGetRange(-10, 10);
-        p.startPosZ = 0.18f * (f32)randomGetRange(-10, 10);
+        p.startPosX = 0.18f * randomGetRange(-10, 10);
+        p.startPosY = 0.18f * randomGetRange(-10, 10);
+        p.startPosZ = 0.18f * randomGetRange(-10, 10);
         p.scale = 0.02f;
         p.lifetimeFrames = randomGetRange(0x78, 0x96);
         p.linkGroup = 0x1e;
@@ -210,10 +210,10 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        p.startPosX = 0.001f * (f32)randomGetRange(-200, 200) + src->posX;
+        p.startPosX = 0.001f * randomGetRange(-200, 200) + src->posX;
         p.startPosY = src->posY;
-        p.startPosZ = 0.001f * (f32)randomGetRange(-200, 200) + src->posZ;
-        p.scale = 0.0001f * (f32)randomGetRange(5, 0xc);
+        p.startPosZ = 0.001f * randomGetRange(-200, 200) + src->posZ;
+        p.scale = 0.0001f * randomGetRange(5, 0xc);
         p.lifetimeFrames = 0xc;
         p.initialAlpha = randomGetRange(0x96, 0xfa);
         p.behaviorFlags |= 0x80210;
@@ -230,13 +230,13 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        p.startPosX = 0.18f * (f32)randomGetRange(-10, 10);
-        p.startPosY = 0.18f * (f32)randomGetRange(-0x1e, 0);
-        p.startPosZ = 0.18f * (f32)randomGetRange(-10, 10);
-        p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-        p.velocityY = 0.0015f * (f32)randomGetRange(0xf, 0x23);
-        p.velocityZ = 0.02f * (f32)randomGetRange(-0xf, 0xf);
-        p.scale = 0.00012f * (f32)randomGetRange(0x64, 0x96);
+        p.startPosX = 0.18f * randomGetRange(-10, 10);
+        p.startPosY = 0.18f * randomGetRange(-0x1e, 0);
+        p.startPosZ = 0.18f * randomGetRange(-10, 10);
+        p.velocityX = 0.02f * randomGetRange(-0xf, 0xf);
+        p.velocityY = 0.0015f * randomGetRange(0xf, 0x23);
+        p.velocityZ = 0.02f * randomGetRange(-0xf, 0xf);
+        p.scale = 0.00012f * randomGetRange(0x64, 0x96);
         p.lifetimeFrames = randomGetRange(0x32, 0x50);
         p.linkGroup = randomGetRange(0xa, 0x1e);
         p.behaviorFlags = 0x218;
@@ -253,9 +253,9 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        p.startPosX = (f32)randomGetRange(-src->rotY, src->rotY) / 10.0f;
-        p.startPosY = (f32)randomGetRange(-src->rotY, src->rotY) / 10.0f;
-        p.startPosZ = (f32)randomGetRange(-src->rotY, src->rotY) / 10.0f;
+        p.startPosX = randomGetRange(-src->rotY, src->rotY) / 10.0f;
+        p.startPosY = randomGetRange(-src->rotY, src->rotY) / 10.0f;
+        p.startPosZ = randomGetRange(-src->rotY, src->rotY) / 10.0f;
         p.scale = 0.005f;
         p.lifetimeFrames = randomGetRange(0x14, 0x1e);
         p.behaviorFlags = 0x100200;
@@ -275,11 +275,11 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         if (src == NULL) {
             return -1;
         }
-        p.velocityX = 0.003f * (f32)randomGetRange(0, 100) + 0.25f;
-        p.velocityY = 0.002f * (f32)randomGetRange(0, 100) + 0.02f;
-        p.velocityZ = 0.002f * (f32)randomGetRange(0, 100) + 0.02f;
+        p.velocityX = 0.003f * randomGetRange(0, 100) + 0.25f;
+        p.velocityY = 0.002f * randomGetRange(0, 100) + 0.02f;
+        p.velocityZ = 0.002f * randomGetRange(0, 100) + 0.02f;
         vecRotateZXY(&src->rotX, &p.velocityX);
-        p.scale = 0.00004f * (f32)randomGetRange(0x14, 0x1e);
+        p.scale = 0.00004f * randomGetRange(0x14, 0x1e);
         p.initialAlpha = 0xff;
         p.lifetimeFrames = 0xf0;
         p.linkGroup = 0x10;
@@ -289,7 +289,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x167;
         break;
     case 0x138:
-        p.scale = 0.0001f * (f32)randomGetRange(0x14, 0x1e);
+        p.scale = 0.0001f * randomGetRange(0x14, 0x1e);
         p.initialAlpha = 0x37;
         p.lifetimeFrames = 4;
         p.linkGroup = 0x10;

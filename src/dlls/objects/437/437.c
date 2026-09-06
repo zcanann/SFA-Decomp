@@ -281,7 +281,7 @@ int Lightfoot_UpdateWanderSteering(GameObject* obj, BaddieState* state, f32 fv)
     if (sub->wanderTimer <= 0.0f)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_htop_hurry1);
-        sub->wanderTimer = (f32)randomGetRange(0x78, 0xb4);
+        sub->wanderTimer = randomGetRange(0x78, 0xb4);
     }
     state->moveSpeed =
         0.04f * (1.0f - (f32)sub->targetDistance / (f32)inner->aggroRange);
@@ -522,7 +522,7 @@ int Lightfoot_UpdateAnimationCycle(GameObject* obj, BaddieState* state, f32 fv)
         }
         if (state->moveJustStartedA != 0)
         {
-            obj->anim.currentMoveProgress = (f32)randomGetRange(0, 0x63) / 100.0f;
+            obj->anim.currentMoveProgress = randomGetRange(0, 0x63) / 100.0f;
             ObjAnim_SetCurrentMove(obj, moves[control->moveIndex], obj->anim.currentMoveProgress,
                                    0);
         }

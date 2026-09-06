@@ -84,11 +84,11 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             gEffect12DefaultSrc.rotZ = 0;
             src = &gEffect12DefaultSrc;
         }
-        p.startPosX = (f32)randomGetRange(-10, 10);
-        p.startPosZ = (f32)randomGetRange(-10, 10);
-        p.velocityX = 0.02f * src->scale * (f32)randomGetRange(-100, 100);
-        p.velocityY = 0.02f * src->scale * (f32)randomGetRange(0x28, 0x50);
-        p.velocityZ = 0.02f * src->scale * (f32)randomGetRange(-100, 100);
+        p.startPosX = randomGetRange(-10, 10);
+        p.startPosZ = randomGetRange(-10, 10);
+        p.velocityX = 0.02f * src->scale * randomGetRange(-100, 100);
+        p.velocityY = 0.02f * src->scale * randomGetRange(0x28, 0x50);
+        p.velocityZ = 0.02f * src->scale * randomGetRange(-100, 100);
         p.scale = 0.03f;
         p.lifetimeFrames = 0x3c;
         p.behaviorFlags = 0x81080200;
@@ -107,9 +107,9 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             gEffect12DefaultSrc.rotZ = 0;
             src = &gEffect12DefaultSrc;
         }
-        p.velocityX = 0.03f * src->scale * (f32)randomGetRange(-100, 100);
-        p.velocityY = 0.03f * src->scale * (f32)randomGetRange(0x14, 0x50);
-        p.velocityZ = 0.03f * src->scale * (f32)randomGetRange(-100, 100);
+        p.velocityX = 0.03f * src->scale * randomGetRange(-100, 100);
+        p.velocityY = 0.03f * src->scale * randomGetRange(0x14, 0x50);
+        p.velocityZ = 0.03f * src->scale * randomGetRange(-100, 100);
         p.scale = 0.01f;
         p.lifetimeFrames = 0x3c;
         p.renderFlags = 0x200000;
@@ -128,11 +128,11 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             gEffect12DefaultSrc.rotZ = 0;
             src = &gEffect12DefaultSrc;
         }
-        p.startPosX = (f32)randomGetRange(-10, 10);
-        p.startPosZ = (f32)randomGetRange(-10, 10);
-        p.velocityX = 0.02f * src->scale * (f32)randomGetRange(-100, 100);
-        p.velocityY = 0.02f * src->scale * (f32)randomGetRange(0x28, 0x50);
-        p.velocityZ = 0.02f * src->scale * (f32)randomGetRange(-100, 100);
+        p.startPosX = randomGetRange(-10, 10);
+        p.startPosZ = randomGetRange(-10, 10);
+        p.velocityX = 0.02f * src->scale * randomGetRange(-100, 100);
+        p.velocityY = 0.02f * src->scale * randomGetRange(0x28, 0x50);
+        p.velocityZ = 0.02f * src->scale * randomGetRange(-100, 100);
         p.scale = 0.03f;
         p.lifetimeFrames = 0x3c;
         p.behaviorFlags = 0x81080200;
@@ -144,10 +144,10 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.startPosX = 27.5f;
         p.startPosY = 5.0f;
         p.startPosZ = 27.5f;
-        p.velocityX = 0.0015f * (f32)randomGetRange(-100, 100);
-        p.velocityY = 0.0019f * (f32)randomGetRange(-0x28, 0x140);
-        p.velocityZ = 0.0015f * (f32)randomGetRange(-100, 100);
-        p.scale = 0.000095f * (f32)randomGetRange(0xa, 0xf);
+        p.velocityX = 0.0015f * randomGetRange(-100, 100);
+        p.velocityY = 0.0019f * randomGetRange(-0x28, 0x140);
+        p.velocityZ = 0.0015f * randomGetRange(-100, 100);
+        p.scale = 0.000095f * randomGetRange(0xa, 0xf);
         p.lifetimeFrames = randomGetRange(0x2c, 0x2f);
         p.textureId = 0x156;
         p.initialAlpha = 0x7f;
@@ -169,12 +169,12 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.renderFlags = 0x200000;
         break;
     case 0x488:
-        p.startPosX = 27.5f + (f32)randomGetRange(-0x18, 0x18);
+        p.startPosX = 27.5f + randomGetRange(-0x18, 0x18);
         p.startPosY = 0.0f;
-        p.startPosZ = 27.5f + (f32)randomGetRange(-0x18, 0x18);
-        p.velocityX = 0.01f * (f32)randomGetRange(-5, 5);
-        p.velocityY = 0.01f * (f32)randomGetRange(2, 10);
-        p.velocityZ = 0.01f * (f32)randomGetRange(-5, 5);
+        p.startPosZ = 27.5f + randomGetRange(-0x18, 0x18);
+        p.velocityX = 0.01f * randomGetRange(-5, 5);
+        p.velocityY = 0.01f * randomGetRange(2, 10);
+        p.velocityZ = 0.01f * randomGetRange(-5, 5);
         p.scale = 0.02f;
         p.lifetimeFrames = 0x6e;
         p.behaviorFlags = 0x80180200;
@@ -191,9 +191,9 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.renderFlags = 0x4000000;
         break;
     case 0x48a:
-        p.velocityX = 0.02f * (f32)randomGetRange(-0x32, 0x32);
-        p.velocityY = 0.02f * (f32)randomGetRange(0x1e, 0x32);
-        p.velocityZ = 0.02f * (f32)randomGetRange(-0x32, 0x32);
+        p.velocityX = 0.02f * randomGetRange(-0x32, 0x32);
+        p.velocityY = 0.02f * randomGetRange(0x1e, 0x32);
+        p.velocityZ = 0.02f * randomGetRange(-0x32, 0x32);
         p.scale = 0.06f;
         p.lifetimeFrames = randomGetRange(0x32, 0x46);
         p.initialAlpha = 0x7f;
@@ -202,13 +202,13 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.textureId = 0x2b;
         break;
     case 0x48b:
-        p.startPosX = (f32)randomGetRange(-0x32, 0x32);
+        p.startPosX = randomGetRange(-0x32, 0x32);
         p.startPosY = 100.0f;
-        p.startPosZ = (f32)randomGetRange(-0x32, 0x32);
-        p.velocityX = 0.01f * (f32)randomGetRange(-0x14, 0x14);
-        p.velocityY = 0.03f * (f32)randomGetRange(-0x14, 0);
-        p.velocityZ = 0.01f * (f32)randomGetRange(-0x14, 0x14);
-        p.scale = 0.00015f * (f32)randomGetRange(0, 10) + 0.002945f;
+        p.startPosZ = randomGetRange(-0x32, 0x32);
+        p.velocityX = 0.01f * randomGetRange(-0x14, 0x14);
+        p.velocityY = 0.03f * randomGetRange(-0x14, 0);
+        p.velocityZ = 0.01f * randomGetRange(-0x14, 0x14);
+        p.scale = 0.00015f * randomGetRange(0, 10) + 0.002945f;
         p.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         p.behaviorFlags = 0x81088000;
         p.textureId = randomGetRange(0, 2) + 0x208;
@@ -235,24 +235,24 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             return -1;
         }
         if (*(int*)auxParam == 0) {
-            p.scale = 0.002f * (f32)randomGetRange(8, 0x11);
+            p.scale = 0.002f * randomGetRange(8, 0x11);
             p.lifetimeFrames = randomGetRange(5, 10);
             p.initialAlpha = 0x64;
             p.behaviorFlags = 0x80110;
             p.renderFlags = 0x4000800;
         } else if (*(int*)auxParam == 1) {
-            p.velocityX = 0.02f * (f32)randomGetRange(-0x32, 0x32);
-            p.velocityY = 0.02f * (f32)randomGetRange(-0x32, 0x32);
-            p.velocityZ = 0.02f * (f32)randomGetRange(0, 0x32);
-            p.scale = 0.00035f * (f32)randomGetRange(10, 0x14);
+            p.velocityX = 0.02f * randomGetRange(-0x32, 0x32);
+            p.velocityY = 0.02f * randomGetRange(-0x32, 0x32);
+            p.velocityZ = 0.02f * randomGetRange(0, 0x32);
+            p.scale = 0.00035f * randomGetRange(10, 0x14);
             p.lifetimeFrames = 0x2d;
             p.initialAlpha = 0;
             p.behaviorFlags = 0x880014;
             p.renderFlags = 0x4010808;
         } else {
-            p.velocityX = 0.02f * (f32)randomGetRange(-0x28, 0x28);
-            p.velocityY = 0.04f * (f32)randomGetRange(-10, 0x1e);
-            p.velocityZ = 0.04f * (f32)randomGetRange(0, 0x28);
+            p.velocityX = 0.02f * randomGetRange(-0x28, 0x28);
+            p.velocityY = 0.04f * randomGetRange(-10, 0x1e);
+            p.velocityZ = 0.04f * randomGetRange(0, 0x28);
             local.posX = 0.0f;
             local.posY = 0.0f;
             local.posZ = 0.0f;

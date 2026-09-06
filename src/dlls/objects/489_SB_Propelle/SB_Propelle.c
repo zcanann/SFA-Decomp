@@ -91,7 +91,7 @@ void SB_Propeller_update(GameObject* obj) {
                 spawnParams.scale = scale;
                 (*gPartfxInterface)->spawnObject(obj, SB_PROPELLER_PARTFX_SMOKE, &spawnParams, 0x200001, -1, NULL);
             }
-            state->smokeTimer = (f32)randomGetRange(0x5a, 0xf0);
+            state->smokeTimer = randomGetRange(0x5a, 0xf0);
         }
         if (galleonStage > 2 && obj->anim.bankIndex == 1) {
             spawnParams.scale = 2.5f;

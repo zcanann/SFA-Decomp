@@ -90,10 +90,10 @@ void cfforcefield_update(GameObject* obj) {
             phaseSpeedPtr = &emitter->spiralPhaseSpeed;
             angleStepPtr = &emitter->spiralAngleStep;
             for (; angle < 0x7fff; angle += *angleStepPtr) {
-                localPosition[0] = (f32)randomGetRange(-gCfForceFieldRingJitter, gCfForceFieldRingJitter) +
+                localPosition[0] = randomGetRange(-gCfForceFieldRingJitter, gCfForceFieldRingJitter) +
                                    10.0f * (collapseScale * gCfForceFieldRingRadiusScale) *
                                        mathCosf(3.1415927f * (f32)(angle + (int)(100.0f * *phaseSpeedPtr)) / 32768.0f);
-                localPosition[1] = (f32)randomGetRange(-gCfForceFieldRingJitter, gCfForceFieldRingJitter) +
+                localPosition[1] = randomGetRange(-gCfForceFieldRingJitter, gCfForceFieldRingJitter) +
                                    10.0f * (collapseScale * gCfForceFieldRingRadiusScale) *
                                        mathSinf(3.1415927f * (f32)(angle + (int)(100.0f * *phaseSpeedPtr)) / 32768.0f);
                 localPosition[2] = 0.0f;

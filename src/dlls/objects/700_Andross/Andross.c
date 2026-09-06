@@ -543,7 +543,7 @@ void andross_updateBombCollector(GameObject* obj, AndrossState* state) {
             andross_spawnBombCollector(obj, state);
         }
     } else if (mainGetBit(GAMEBIT_AndrossRelated0012) != 0) {
-        state->spawnCooldown = (f32)randomGetRange(1, 0x14);
+        state->spawnCooldown = randomGetRange(1, 0x14);
         mainSetBits(GAMEBIT_AndrossRelated0012, 0);
     }
 }
@@ -1400,9 +1400,9 @@ void andross_update(GameObject* boss) {
                 }
             } else {
                 state->actionTimer = randomGetRange(0x14, 0x1e);
-                state->targetPosX = (f32)randomGetRange((int)-gAndrossSpawnRandX, gAndrossSpawnRandX) + state->homePosX;
-                state->targetPosY = (f32)randomGetRange((int)-gAndrossSpawnRandY, gAndrossSpawnRandY) + state->homePosY;
-                state->targetPosZ = (f32)randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ) + state->homePosZ;
+                state->targetPosX = randomGetRange((int)-gAndrossSpawnRandX, gAndrossSpawnRandX) + state->homePosX;
+                state->targetPosY = randomGetRange((int)-gAndrossSpawnRandY, gAndrossSpawnRandY) + state->homePosY;
+                state->targetPosZ = randomGetRange((int)-gAndrossSpawnRandZ, gAndrossSpawnRandZ) + state->homePosZ;
             }
         }
         if ((state->signalFlags & ANDROSS_SIGNAL_BRAIN_DEFEATED) != 0) {

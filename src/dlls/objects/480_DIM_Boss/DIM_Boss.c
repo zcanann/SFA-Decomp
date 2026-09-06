@@ -953,9 +953,9 @@ void DIMboss_updateWarpAndEffects(GameObject* obj, DIMbossRuntime* runtime) {
         if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0040) {
             i = 0;
             do {
-                vec[0] = 0.1f * (f32)randomGetRange(-5, 5);
-                vec[1] = 0.1f * (f32)randomGetRange(-5, 5);
-                vec[2] = -0.25f * (f32)randomGetRange(2, 8);
+                vec[0] = 0.1f * randomGetRange(-5, 5);
+                vec[1] = 0.1f * randomGetRange(-5, 5);
+                vec[2] = -0.25f * randomGetRange(2, 8);
                 PSMTXMultVec((MtxPtr)topState->breathBurstMtx, (Vec*)vec, (Vec*)vec);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x4b5, &topState->breathBurstSource, 0x200001, -1, vec);
                 i++;
@@ -967,7 +967,7 @@ void DIMboss_updateWarpAndEffects(GameObject* obj, DIMbossRuntime* runtime) {
         if (gDIMbossSequenceFlags & DIMBOSS_SEQUENCE_FLAG_0100) {
             vec[0] = 0.1f;
             vec[1] = -0.2f;
-            vec[2] = -0.1f * (f32)randomGetRange(4, 8);
+            vec[2] = -0.1f * randomGetRange(4, 8);
             PSMTXMultVec((MtxPtr)topState->breathBurstMtx, (Vec*)vec, (Vec*)vec);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x4b6, &topState->blueWhiteEffectSource, 0x200001, -1, vec);
         }

@@ -59,7 +59,7 @@ s16 dll_96_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
     if (mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) != 0) {
         commands[1].x = 0.15f;
     } else {
-        commands[1].x = 0.03f * (f32)randomGetRange(5, 10);
+        commands[1].x = 0.03f * randomGetRange(5, 10);
     }
     commands[1].y = 10.5f;
     commands[1].z = commands[1].x;

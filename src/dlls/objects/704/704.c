@@ -625,7 +625,7 @@ void TitleScreen_update(GameObject* obj) {
             buf[0x1b] = 0;
             if (t == FRONT_SEQID_FOX && state->animPhase == 2) {
                 if (obj->anim.currentMoveProgress < 0.1f) {
-                    gTitleScreenFoxTypeMoveRate = progress = 0.0001f * (f32)randomGetRange(0x32, 0x96);
+                    gTitleScreenFoxTypeMoveRate = progress = 0.0001f * randomGetRange(0x32, 0x96);
                 } else {
                     progress = gTitleScreenFoxTypeMoveRate;
                 }

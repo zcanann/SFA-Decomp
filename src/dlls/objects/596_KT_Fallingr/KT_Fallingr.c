@@ -63,9 +63,9 @@ void ktfallingrocks_update(GameObject* obj)
     obj->anim.localPosZ = player->anim.localPosZ;
     for (i = 0; i < 10; i++)
     {
-        params.x = (obj)->anim.localPosX + (f32)randomGetRange(-200, 200);
+        params.x = (obj)->anim.localPosX + randomGetRange(-200, 200);
         params.y = (obj)->anim.localPosY;
-        params.z = (obj)->anim.localPosZ + (f32)randomGetRange(-200, 200);
+        params.z = (obj)->anim.localPosZ + randomGetRange(-200, 200);
         (*gPartfxInterface)
             ->spawnObject((void*)obj, placement->effectId, &params, 0x200001, -1, NULL);
     }

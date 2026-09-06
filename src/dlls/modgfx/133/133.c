@@ -58,7 +58,7 @@ void dll_85_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commands[2].flags = 4;
         commands[2].tex = gDll85IndexPair23;
         commands[2].mode = 0x80;
-        commands[2].x = (f32)randomGetRange(-0x7ff8, 0x7ff8);
+        commands[2].x = randomGetRange(-0x7ff8, 0x7ff8);
         commands[2].y = 0.0f;
         commands[2].z = 16383.0f;
         commandCursor = &commands[3];
@@ -80,7 +80,7 @@ void dll_85_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commands[1].y =
             6.0f * (scaledSource->anim.rootMotionScale / scaledSource->anim.modelInstance->rootMotionScaleBase);
         commands[1].z = 1.0f;
-        randomValue = (f32)randomGetRange(0, 0xfffe);
+        randomValue = randomGetRange(0, 0xfffe);
         commands[2].layer = 0;
         commands[2].flags = 0;
         commands[2].tex = NULL;
@@ -97,7 +97,7 @@ void dll_85_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[0].x = 0.0f;
     commandCursor[0].y = 0.0f;
     commandCursor[0].z = 0.0f;
-    randomValue = (f32)randomGetRange(0, 0xfffe);
+    randomValue = randomGetRange(0, 0xfffe);
     commandCursor[1].layer = 1;
     commandCursor[1].flags = 2;
     commandCursor[1].tex = gDll85IndexPair01;
@@ -124,7 +124,7 @@ void dll_85_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commandCursor[2].z = 0.0f;
         commandCursor += 3;
     }
-    randomValue = (f32)randomGetRange(0, 0xfffe);
+    randomValue = randomGetRange(0, 0xfffe);
     if (variant == DLL85_VARIANT_BURST) {
         commandCursor->layer = 2;
         commandCursor->flags = 0;

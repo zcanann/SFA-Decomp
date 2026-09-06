@@ -1213,9 +1213,9 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     ObjPath_GetPointWorldPosition(obj, 0, &gKTRexState->spawnWork[0].posX, &gKTRexState->spawnWork[0].posY,
                                   &gKTRexState->spawnWork[0].posZ, 0);
     memcpy(m, (void*)ObjPath_GetPointModelMtx(obj, 4), 48);
-    gKTRexState->vecX = 0.1f * (f32)randomGetRange(-50, 50);
-    gKTRexState->vecY = 0.1f * (f32)randomGetRange(60, 120);
-    gKTRexState->vecZ = -0.25f * (f32)randomGetRange(100, 150);
+    gKTRexState->vecX = 0.1f * randomGetRange(-50, 50);
+    gKTRexState->vecY = 0.1f * randomGetRange(60, 120);
+    gKTRexState->vecZ = -0.25f * randomGetRange(100, 150);
     PSMTXMultVecSR((MtxPtr)m, (Vec*)&gKTRexState->vecX, (Vec*)&gKTRexState->vecX);
     gKTRexState->phaseFlags |= 0x100000;
 }

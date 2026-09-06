@@ -61,7 +61,7 @@ void dll_7B_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commands[1].tex = &resourceData[offsetof(Dll7BEffectResourceView, allVertexIndices)];
         commands[1].mode = 2;
         commands[1].x = 1.0f;
-        commands[1].y = 0.7f * (f32)randomGetRange(3, 5);
+        commands[1].y = 0.7f * randomGetRange(3, 5);
         commands[1].z = 1.0f;
         commandCursor = &commands[2];
     }
@@ -100,9 +100,9 @@ void dll_7B_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commandCursor[1].flags = 0xe;
         commandCursor[1].tex = &resourceData[offsetof(Dll7BEffectResourceView, allVertexIndices)];
         commandCursor[1].mode = 0x400000;
-        commandCursor[1].x = 90.0f + (f32)randomGetRange(0, 0x14);
+        commandCursor[1].x = 90.0f + randomGetRange(0, 0x14);
         commandCursor[1].y = 75.0f;
-        commandCursor[1].z = (f32)randomGetRange(0, 0x1e);
+        commandCursor[1].z = randomGetRange(0, 0x1e);
         commandCursor += 2;
     }
     commandCursor[0].layer = 1;
@@ -125,7 +125,7 @@ void dll_7B_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commandCursor[0].flags = 0xe;
         commandCursor[0].tex = &resourceData[offsetof(Dll7BEffectResourceView, allVertexIndices)];
         commandCursor[0].mode = 0x400000;
-        commandCursor[0].x = -0.3f * (f32)randomGetRange(1, 0x28);
+        commandCursor[0].x = -0.3f * randomGetRange(1, 0x28);
         commandCursor[0].y = 0.0f;
         commandCursor[0].z = 0.0f;
         commandCursor += 1;
@@ -134,7 +134,7 @@ void dll_7B_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[0].flags = 0xe;
     commandCursor[0].tex = &resourceData[offsetof(Dll7BEffectResourceView, allVertexIndices)];
     commandCursor[0].mode = 0x4000;
-    commandCursor[0].x = 0.1f * (f32)randomGetRange(-3, 3);
+    commandCursor[0].x = 0.1f * randomGetRange(-3, 3);
     commandCursor[0].y = 0.0f;
     commandCursor[0].z = 0.0f;
     commandCursor[1].layer = 3;

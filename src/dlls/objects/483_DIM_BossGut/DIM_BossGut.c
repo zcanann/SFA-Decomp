@@ -291,7 +291,7 @@ void DIM_BossGut2_init(GameObject* obj, u8* placementAddress, int isAltVariant) 
         }
     }
     control->surfaceY += obj->anim.localPosY;
-    ObjAnim_SetCurrentMove(obj, DIMBOSSGUT2_IDLE_MOVE_ID, (f32)randomGetRange(0, 0x63) / 100.0f, 0);
+    ObjAnim_SetCurrentMove(obj, DIMBOSSGUT2_IDLE_MOVE_ID, randomGetRange(0, 0x63) / 100.0f, 0);
     ObjAnim_AdvanceCurrentMove(obj, 0.015f, timeDelta, NULL);
     control->light = objCreateLight(obj, 1);
     if (control->light != NULL) {

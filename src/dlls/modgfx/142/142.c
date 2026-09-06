@@ -58,8 +58,8 @@ void dll_8E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         command->z = (f32)(int)(randomGetRange(0, 0x41) + 0x78);
         command++;
     }
-    rz = (f32)randomGetRange(0, 0xfffe);
-    ry = (f32)randomGetRange(-0xbb8, -0x2ee0);
+    rz = randomGetRange(0, 0xfffe);
+    ry = randomGetRange(-0xbb8, -0x2ee0);
     command[0].layer = 0;
     command[0].flags = 0;
     command[0].tex = NULL;
@@ -79,16 +79,16 @@ void dll_8E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     command[2].tex = gDll8EEffectTexture;
     command[2].mode = 2;
     command[2].x = 1.0f;
-    command[2].y = 0.01f * (f32)randomGetRange(0, 0x32) + 0.5f;
-    command[2].z = 0.01f * (f32)randomGetRange(0, 0x14) + 0.8f;
+    command[2].y = 0.01f * randomGetRange(0, 0x32) + 0.5f;
+    command[2].z = 0.01f * randomGetRange(0, 0x14) + 0.8f;
     command[3].layer = 1;
     command[3].flags = 3;
     command[3].tex = gDll8EEffectTexture;
     command[3].mode = 4;
     if (randomGetRange(0, 0xa) == 0) {
-        command[3].x = 145.0f + (f32)randomGetRange(0, 0x1e);
+        command[3].x = 145.0f + randomGetRange(0, 0x1e);
     } else {
-        command[3].x = 25.0f + (f32)randomGetRange(0, 0xa);
+        command[3].x = 25.0f + randomGetRange(0, 0xa);
     }
     command[3].y = 0.0f;
     command[3].z = 0.0f;
@@ -98,7 +98,7 @@ void dll_8E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     command[4].mode = 0x80;
     command[4].x = 0.0f;
     command[4].y = 0.0f;
-    command[4].z = (f32)randomGetRange(0, 0xfffe);
+    command[4].z = randomGetRange(0, 0xfffe);
     command[5].layer = 1;
     command[5].flags = 3;
     command[5].tex = gDll8EEffectTexture;
@@ -112,7 +112,7 @@ void dll_8E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     command[6].mode = 0x80;
     command[6].x = 0.0f;
     command[6].y = 0.0f;
-    command[6].z = (f32)randomGetRange(0, 0xfffe);
+    command[6].z = randomGetRange(0, 0xfffe);
     command[7].layer = 2;
     command[7].flags = 3;
     command[7].tex = gDll8EEffectTexture;

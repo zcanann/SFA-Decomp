@@ -542,9 +542,9 @@ void Shield_update(GameObject* obj) {
         }
     }
     if (obj->anim.romDefNo == SHIELD_SEQID_OMNI_SHIELD) {
-        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * (f32)randomGetRange(96, 127));
+        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * randomGetRange(96, 127));
     } else {
-        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * (f32)randomGetRange(192, 255));
+        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * randomGetRange(192, 255));
     }
     Sfx_SetObjectSfxVolume(obj, SFXTRIG_lockon3_on, (SHIELD_SFX_VOLUME_MAX * (state->fadeValue / state->fadeMax)),
                            SHIELD_SFX_VOLUME_SCALE);

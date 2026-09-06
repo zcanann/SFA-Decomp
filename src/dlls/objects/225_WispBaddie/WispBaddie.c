@@ -202,7 +202,7 @@ void WispBaddie_update(GameObject* obj) {
         state->cryTimer -= timeDelta;
         if (state->cryTimer < 0.0f) {
             Sfx_PlayFromObject(obj, SFXTRIG_fball2_c);
-            state->cryTimer = (f32)randomGetRange(60, 120);
+            state->cryTimer = randomGetRange(60, 120);
         }
         state->particleId = 0x338;
     }

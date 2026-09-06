@@ -128,12 +128,12 @@ static void LanternFireFly_pickDriftOffset(GameObject* obj) {
 
     state = obj->extra;
     state->offsetX = 0.0f;
-    state->offsetY = (f32)randomGetRange(-state->wanderRange, state->wanderRange);
+    state->offsetY = randomGetRange(-state->wanderRange, state->wanderRange);
     if (state->driftRangeZ < 21.0f) {
         state->offsetZ = 0.0f;
     } else {
         state->offsetZ =
-            state->driftRangeZ - (f32)randomGetRange(LANTERN_FIREFLY_DRIFT_RANDOM_MIN_Z, (s16)(int)state->driftRangeZ);
+            state->driftRangeZ - randomGetRange(LANTERN_FIREFLY_DRIFT_RANDOM_MIN_Z, (s16)(int)state->driftRangeZ);
     }
     angleDelta = randomGetRange(LANTERN_FIREFLY_ANGLE_DELTA_MIN, LANTERN_FIREFLY_ANGLE_DELTA_MAX);
     state->randomAngle += angleDelta;

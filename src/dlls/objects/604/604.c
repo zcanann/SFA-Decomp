@@ -626,7 +626,7 @@ void snowclaw_hitDetect(GameObject* obj)
                 s->particleAlpha = 1.0f;
                 s->velX =
                     0.1f * mathSinf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
-                s->velY = 0.01f * (f32)randomGetRange(0x28, 0x64);
+                s->velY = 0.01f * randomGetRange(0x28, 0x64);
                 s->velZ =
                     0.1f * mathCosf(3.1415927f * (f32)obj->anim.rotX / 32768.0f);
                 player = playerGetFocusObject(Obj_GetPlayerObject());

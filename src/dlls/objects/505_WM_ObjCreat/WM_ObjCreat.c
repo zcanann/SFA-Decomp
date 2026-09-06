@@ -188,7 +188,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                 ((LFXEmitterPlacement*)setup)->spinYaw = randomGetRange(-500, 500) + 0x5dc;
                 spawned = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if (spawned != NULL) {
-                    spawned->anim.velocityX = 10.0f + (f32)randomGetRange(0, 10);
+                    spawned->anim.velocityX = 10.0f + randomGetRange(0, 10);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -198,9 +198,9 @@ void WM_ObjCreator_update(GameObject* obj) {
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0)) {
                 setup = Obj_AllocObjectSetup(sizeof(WMWallCrawlerSpawnSetup), WMOBJCREATOR_SPAWN_WM_WALLCRAWLER);
                 ((WMWallCrawlerSpawnSetup*)setup)->base.rotXByte = randomGetRange(-0x7f, 0x7e);
-                setup->posX = obj->anim.localPosX + (f32)randomGetRange(-100, 100);
+                setup->posX = obj->anim.localPosX + randomGetRange(-100, 100);
                 setup->posY = obj->anim.localPosY;
-                setup->posZ = obj->anim.localPosZ + (f32)randomGetRange(-100, 100);
+                setup->posZ = obj->anim.localPosZ + randomGetRange(-100, 100);
                 ((WMWallCrawlerSpawnSetup*)setup)->base.triggerRadius = 0x31;
                 ((WMWallCrawlerSpawnSetup*)setup)->base.heightOffset = 200;
                 spawned = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
@@ -235,8 +235,8 @@ void WM_ObjCreator_update(GameObject* obj) {
                 setup->color[0] = 4;
                 setup->color[1] = 2;
                 setup->posX = placement->base.posX;
-                setup->posY = placement->base.posY + (f32)randomGetRange(-0x28, 0x28);
-                setup->posZ = placement->base.posZ + (f32)randomGetRange(-0x28, 0x28);
+                setup->posY = placement->base.posY + randomGetRange(-0x28, 0x28);
+                setup->posZ = placement->base.posZ + randomGetRange(-0x28, 0x28);
                 ((LFXEmitterPlacement*)setup)->lifeTimer = 100;
                 ((LFXEmitterPlacement*)setup)->actionIndex = 0x10f;
                 ((LFXEmitterPlacement*)setup)->enableGameBit = 0xffff;
@@ -244,7 +244,7 @@ void WM_ObjCreator_update(GameObject* obj) {
                 ((LFXEmitterPlacement*)setup)->spinYaw = randomGetRange(-500, 500) + 0x5dc;
                 spawned = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if (spawned != NULL) {
-                    spawned->anim.velocityX = -30.0f - (f32)randomGetRange(0, 10);
+                    spawned->anim.velocityX = -30.0f - randomGetRange(0, 10);
                 }
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
@@ -272,8 +272,8 @@ void WM_ObjCreator_update(GameObject* obj) {
                     spawned = objSetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                     if (spawned != NULL) {
                         ((LFXEmitterState*)spawned->extra)->flags |= LFXEMITTER_FLAG_DAMP_Y_VELOCITY;
-                        spawned->anim.velocityX = 0.1f * (f32)randomGetRange(-0x23, 0x23);
-                        spawned->anim.velocityZ = 0.1f * (f32)randomGetRange(-0x23, 0x23);
+                        spawned->anim.velocityX = 0.1f * randomGetRange(-0x23, 0x23);
+                        spawned->anim.velocityZ = 0.1f * randomGetRange(-0x23, 0x23);
                         spawned->anim.velocityY = 0.0f;
                         particleArgs.scale = 1.0f;
                         particleArgs.rotX = 0;
@@ -295,9 +295,9 @@ void WM_ObjCreator_update(GameObject* obj) {
                 setup = Obj_AllocObjectSetup(sizeof(LFXEmitterPlacement), WMOBJCREATOR_SPAWN_LFX_EMITTER);
                 setup->color[0] = 4;
                 setup->color[1] = 2;
-                setup->posX = placement->base.posX + (f32)randomGetRange(-0x28, 0x28);
-                setup->posY = placement->base.posY + (f32)randomGetRange(0, 0x14);
-                setup->posZ = placement->base.posZ + (f32)randomGetRange(-0x28, 0x28);
+                setup->posX = placement->base.posX + randomGetRange(-0x28, 0x28);
+                setup->posY = placement->base.posY + randomGetRange(0, 0x14);
+                setup->posZ = placement->base.posZ + randomGetRange(-0x28, 0x28);
                 ((LFXEmitterPlacement*)setup)->lifeTimer = 0x1c2;
                 ((LFXEmitterPlacement*)setup)->actionIndex = randomGetRange(0, 2) + 0x1cc;
                 ((LFXEmitterPlacement*)setup)->enableGameBit = 0xffff;
@@ -310,9 +310,9 @@ void WM_ObjCreator_update(GameObject* obj) {
         case WMOBJCREATOR_MODE_FALLING_ROCK:
             if (mainGetBit(state->gameBit) != 0 || state->gameBit == -1) {
                 setup = Obj_AllocObjectSetup(sizeof(WMRockSpawnSetup), WMOBJCREATOR_SPAWN_WM_ROCK);
-                setup->posX = obj->anim.localPosX + (f32)randomGetRange(-0x104, 0x104);
+                setup->posX = obj->anim.localPosX + randomGetRange(-0x104, 0x104);
                 setup->posY = 200.0f + obj->anim.localPosY;
-                setup->posZ = obj->anim.localPosZ + (f32)randomGetRange(-0x50, 0x50);
+                setup->posZ = obj->anim.localPosZ + randomGetRange(-0x50, 0x50);
                 setup->color[0] = 0x20;
                 setup->color[1] = 2;
                 setup->color[3] = 0xff;
@@ -324,8 +324,8 @@ void WM_ObjCreator_update(GameObject* obj) {
                     particleArgs.rotX = 0;
                     particleArgs.rotY = 0;
                     particleArgs.rotZ = 0;
-                    particleArgs.posX = (f32)randomGetRange(-200, 200);
-                    particleArgs.posZ = (f32)randomGetRange(-0x14, 0x14);
+                    particleArgs.posX = randomGetRange(-200, 200);
+                    particleArgs.posZ = randomGetRange(-0x14, 0x14);
                     particleArgs.posY = 200.0f;
                     (*gPartfxInterface)->spawnObject(obj, WMOBJCREATOR_PARTFX_DEBRIS, &particleArgs, 0x10002, -1, NULL);
                 }

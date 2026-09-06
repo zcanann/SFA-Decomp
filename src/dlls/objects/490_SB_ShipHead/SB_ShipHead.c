@@ -223,8 +223,8 @@ void SB_ShipHead_update(GameObject* obj) {
         player = Obj_GetPlayerObject();
         placementBytes = (ObjPlacement*)Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJECT_ID);
         placementBytes->posX = 100.0f + player->anim.worldPosX;
-        placementBytes->posY = 50.0f + (player->anim.worldPosY + (f32)randomGetRange(-6, 6));
-        placementBytes->posZ = 45.0f + (player->anim.worldPosZ + (f32)randomGetRange(-6, 6));
+        placementBytes->posY = 50.0f + (player->anim.worldPosY + randomGetRange(-6, 6));
+        placementBytes->posZ = 45.0f + (player->anim.worldPosZ + randomGetRange(-6, 6));
         placementBytes->color[0] = 2;
         placementBytes->color[1] = 1;
         placementBytes->color[2] = 0xff;

@@ -237,7 +237,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
             GameObject* player;
             if (ex->flags & MSPLANTING_FLAG_BURST)
             {
-                obj->anim.localPosY = setup->posY + (f32)randomGetRange(-1, 1);
+                obj->anim.localPosY = setup->posY + randomGetRange(-1, 1);
                 (*gPartfxInterface)->spawnObject((void*)obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
             }
             ex->burstTimer = ex->burstTimer - timeDelta;
@@ -251,7 +251,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
                 }
                 else
                 {
-                    ex->burstTimer = (f32)randomGetRange(0x32, 200);
+                    ex->burstTimer = randomGetRange(0x32, 200);
                     ex->flags &= ~MSPLANTING_FLAG_BURST;
                 }
             }

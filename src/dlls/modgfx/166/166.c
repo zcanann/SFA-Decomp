@@ -66,8 +66,8 @@ void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
         commandCursor->z = (f32)(int)(randomGetRange(0, 0x1e) + 0xe1);
         commandCursor++;
     }
-    randomZ = (f32)randomGetRange(0, 0xfffe);
-    randomY = (f32)randomGetRange(-3000, -12000);
+    randomZ = randomGetRange(0, 0xfffe);
+    randomY = randomGetRange(-3000, -12000);
     commandCursor[0].layer = 0;
     commandCursor[0].flags = 0;
     commandCursor[0].tex = NULL;
@@ -87,16 +87,16 @@ void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[2].tex = gDllA6VertexIndices.indices;
     commandCursor[2].mode = 2;
     commandCursor[2].x = 1.0f;
-    commandCursor[2].y = 0.01f * (f32)randomGetRange(0, 0x19) + 0.25f;
-    commandCursor[2].z = 0.01f * (f32)randomGetRange(0, 10) + 0.4f;
+    commandCursor[2].y = 0.01f * randomGetRange(0, 0x19) + 0.25f;
+    commandCursor[2].z = 0.01f * randomGetRange(0, 10) + 0.4f;
     commandCursor[3].layer = 1;
     commandCursor[3].flags = 3;
     commandCursor[3].tex = gDllA6VertexIndices.indices;
     commandCursor[3].mode = 4;
     if (randomGetRange(0, 10) == 0) {
-        commandCursor[3].x = 145.0f + (f32)randomGetRange(0, 0x1e);
+        commandCursor[3].x = 145.0f + randomGetRange(0, 0x1e);
     } else {
-        commandCursor[3].x = 25.0f + (f32)randomGetRange(0, 10);
+        commandCursor[3].x = 25.0f + randomGetRange(0, 10);
     }
     commandCursor[3].y = 0.0f;
     commandCursor[3].z = 0.0f;
@@ -106,7 +106,7 @@ void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[4].mode = 0x80;
     commandCursor[4].x = 0.0f;
     commandCursor[4].y = 0.0f;
-    commandCursor[4].z = (f32)randomGetRange(0, 0xfffe);
+    commandCursor[4].z = randomGetRange(0, 0xfffe);
     commandCursor[5].layer = 1;
     commandCursor[5].flags = 3;
     commandCursor[5].tex = gDllA6VertexIndices.indices;
@@ -120,7 +120,7 @@ void dll_A6_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     commandCursor[6].mode = 0x80;
     commandCursor[6].x = 0.0f;
     commandCursor[6].y = 0.0f;
-    commandCursor[6].z = (f32)randomGetRange(0, 0xfffe);
+    commandCursor[6].z = randomGetRange(0, 0xfffe);
     commandCursor[7].layer = 2;
     commandCursor[7].flags = 3;
     commandCursor[7].tex = gDllA6VertexIndices.indices;

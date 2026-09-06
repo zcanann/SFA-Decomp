@@ -78,8 +78,8 @@ void dll_1D6_update(GameObject* obj) {
     if ((state->flags & DLL1D6_STATE_FLAG_DOWN_PHASE) != 0) {
         if ((state->flags & DLL1D6_STATE_FLAG_BOB_ACTIVE) == 0) {
             state->flags |= DLL1D6_STATE_FLAG_BOB_ACTIVE;
-            state->bobPhase = (f32)randomGetRange(20, 40);
-            state->bobRate = (f32)randomGetRange(6, 10) / 20.0f;
+            state->bobPhase = randomGetRange(20, 40);
+            state->bobRate = randomGetRange(6, 10) / 20.0f;
         }
         state->downTimer -= framesThisStep;
         state->dizzyTimer = state->dizzyTimer - framesThisStep;
@@ -178,7 +178,7 @@ void dll_1D6_update(GameObject* obj) {
             state->bobRate = -(f32)randomGetRange(6, 10) / 20.0f;
             state->bobPhase = 40.0f;
         } else if (state->bobPhase < 20.0f) {
-            state->bobRate = (f32)randomGetRange(6, 10) / 20.0f;
+            state->bobRate = randomGetRange(6, 10) / 20.0f;
             state->bobPhase = 20.0f;
         }
     }

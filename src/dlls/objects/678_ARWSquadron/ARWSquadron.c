@@ -682,6 +682,6 @@ void ARWSquadron_init(GameObject* obj, ArwSquadronSetup* setup)
     state->swayPhaseY = randomGetRange(0, 0xffff);
     state->swaySpeedX = randomGetRange(0xc8, 0x12c);
     state->swaySpeedY = randomGetRange(0xc8, 0x12c);
-    state->rollAmplitude = (f32)randomGetRange(0x3e8, 0x7d0);
+    state->rollAmplitude = randomGetRange(0x3e8, 0x7d0);
     state->dialogueVariant = setupData->dialogueVariant;
 }

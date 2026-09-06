@@ -351,7 +351,7 @@ int hightop_stateHandler04(GameObject* obj, HighTopRuntime* stateArg) {
     f32 dy;
     if (stateArg->baddie.moveJustStartedA != 0) {
         state->flagsC49.b1 = 1;
-        state->stateTimer = (f32)randomGetRange(0x1f4, 0x3e8);
+        state->stateTimer = randomGetRange(0x1f4, 0x3e8);
         state->substate = 0;
         if (obj->anim.currentMove != 2) {
             move = 2;

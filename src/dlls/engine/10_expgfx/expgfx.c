@@ -2512,14 +2512,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         gExpgfxFrameParityBit = 0;
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0 && randomGetRange(0, 4) == 1) {
-                        slot->velocityX += 0.045f - (f32)randomGetRange(0, 9) / 100.0f;
-                        slot->velocityZ += 0.045f - (f32)randomGetRange(0, 9) / 100.0f;
+                        slot->velocityX += 0.045f - randomGetRange(0, 9) / 100.0f;
+                        slot->velocityZ += 0.045f - randomGetRange(0, 9) / 100.0f;
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_RANDOM_VELOCITY_BURST) != 0 && randomGetRange(0, 10) == 1) {
                         if (slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame) {
-                            slot->velocityX += 0.0004f * (f32)randomGetRange(-800, 800) + 0.02f;
-                            slot->velocityY += 0.0004f * (f32)randomGetRange(-800, 800) + 0.02f;
-                            slot->velocityZ += 0.0004f * (f32)randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityX += 0.0004f * randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityY += 0.0004f * randomGetRange(-800, 800) + 0.02f;
+                            slot->velocityZ += 0.0004f * randomGetRange(-800, 800) + 0.02f;
                         }
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0) {
@@ -3236,7 +3236,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex) {
                 scaleSize = EXPGFX_U16_TO_UNIT_SCALE * (f32)(u32)slot->scaleCurrent;
                 if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && hudHiddenFrameCount == 0) {
                     f32 base = 0.5f * scaleSize;
-                    f32 rnd = (f32)randomGetRange(1, 10);
+                    f32 rnd = randomGetRange(1, 10);
                     scaleFactor = base + base / rnd;
                 } else {
                     scaleFactor = scaleSize;

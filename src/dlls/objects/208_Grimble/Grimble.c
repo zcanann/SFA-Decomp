@@ -439,7 +439,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
                                 &unusedAngle, &distance);
         controlData->reversed = 1 - *(u8*)&controlData->reversed;
         obj->anim.rotX = controlData->baseRotX + (!controlData->reversed << 15);
-        speed = (f32)randomGetRange(50, 100) / 100.0f;
+        speed = randomGetRange(50, 100) / 100.0f;
         pathVelocity = (f32)((controlData->reversed << 1) - 1) * speed;
         if (zone < 4 || zone > 11) {
             if (distance > 500) {
@@ -624,7 +624,7 @@ void grimble_attachNearestPath(GameObject* obj) {
             control->reversed = sameDirection;
             obj->anim.rotX = control->baseRotX + (!control->reversed << 15);
             targetProgress =
-                control->pathProgress - (f32)((control->reversed << 1) - 1) * ((f32)randomGetRange(10, 60) / 10.0f);
+                control->pathProgress - (f32)((control->reversed << 1) - 1) * (randomGetRange(10, 60) / 10.0f);
             control->targetProgress = targetProgress;
             targetProgress = control->targetProgress;
             targetProgress =

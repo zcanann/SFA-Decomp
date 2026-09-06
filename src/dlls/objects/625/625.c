@@ -582,12 +582,12 @@ void drakorhoverpad_render(GameObject* obj, int p2, int p3, int p4, int p5, char
         p->frameCounter += framesThisStep;
         if (p->frameCounter == 0 || p->frameCounter > 10) {
             p->frameCounter = 0;
-            p->particleEmitAX = (obj)->anim.localPosX + (f32)randomGetRange(-30, 30);
+            p->particleEmitAX = (obj)->anim.localPosX + randomGetRange(-30, 30);
             p->particleEmitAY = (obj)->anim.localPosY;
-            p->particleEmitAZ = (obj)->anim.localPosZ + (f32)randomGetRange(-30, 30);
-            p->particleEmitBX = (obj)->anim.localPosX + (f32)randomGetRange(-120, 120);
+            p->particleEmitAZ = (obj)->anim.localPosZ + randomGetRange(-30, 30);
+            p->particleEmitBX = (obj)->anim.localPosX + randomGetRange(-120, 120);
             p->particleEmitBY = (obj)->anim.localPosY - 40.0f;
-            p->particleEmitBZ = (obj)->anim.localPosZ + (f32)randomGetRange(-120, 120);
+            p->particleEmitBZ = (obj)->anim.localPosZ + randomGetRange(-120, 120);
         }
     }
 }

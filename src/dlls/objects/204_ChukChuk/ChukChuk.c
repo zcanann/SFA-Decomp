@@ -138,7 +138,7 @@ void ChukChuk_update(GameObject* obj) {
             phaseLimit = CHUKCHUK_GLOW_RAMP_COUNT;
             nextPhase = (state->glowPhase += 1.0f);
             if (phaseLimit == nextPhase) {
-                state->glowPhase = (f32)randomGetRange(CHUKCHUK_GLOW_RAMP_COUNT, 245);
+                state->glowPhase = randomGetRange(CHUKCHUK_GLOW_RAMP_COUNT, 245);
             }
         } else {
             if (255.0f - state->glowPhase >= timeDelta) {

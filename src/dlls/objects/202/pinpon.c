@@ -95,7 +95,7 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state) {
 
     state->fireflyLantern.rippleTimer -= timeDelta;
     if (state->fireflyLantern.rippleTimer <= 0.0f) {
-        state->fireflyLantern.rippleTimer = (f32)randomGetRange(30, 60);
+        state->fireflyLantern.rippleTimer = randomGetRange(30, 60);
         stk.x = obj->anim.localPosX;
         stk.y = 0.0f;
         stk.z = obj->anim.localPosZ;
@@ -104,8 +104,8 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state) {
         stk.rotZ = 0;
         stk.scale = 1.0f;
         setMatrixFromObjectPos(mtx, &stk);
-        tx = 5.0f + (f32)randomGetRange(-20, 20) / 10.0f;
-        tz = 2.0f + (f32)randomGetRange(-20, 20) / 10.0f;
+        tx = 5.0f + randomGetRange(-20, 20) / 10.0f;
+        tz = 2.0f + randomGetRange(-20, 20) / 10.0f;
         Matrix_TransformPoint(mtx, tx, 0.0f, tz, &tx, &ox, &tz);
         (*gWaterfxInterface)->spawnRipple(tx, state->fireflyLantern.anchorY, tz, 0, 0.0f, 3);
         if (sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ) > 0.5f) {

@@ -58,9 +58,9 @@ s16 dll_7A_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
     commands[1].flags = 8;
     commands[1].tex = &resourceData[offsetof(Dll7AEffectResourceView, allVertexIndices)];
     commands[1].mode = 2;
-    commands[1].x = 0.4f * (f32)randomGetRange(10, 15);
-    commands[1].y = 0.4f * (f32)randomGetRange(10, 15);
-    commands[1].z = 0.8f * (f32)randomGetRange(10, 15);
+    commands[1].x = 0.4f * randomGetRange(10, 15);
+    commands[1].y = 0.4f * randomGetRange(10, 15);
+    commands[1].z = 0.8f * randomGetRange(10, 15);
     commands[2].layer = 0;
     commands[2].flags = 9;
     commands[2].tex = &resourceData[offsetof(Dll7AEffectResourceView, allVertexIndices)];
@@ -79,9 +79,9 @@ s16 dll_7A_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* sp
     commands[4].flags = 0;
     commands[4].tex = NULL;
     commands[4].mode = 0x400000;
-    commands[4].x = (f32)randomGetRange(-2000, 200);
-    commands[4].y = (f32)randomGetRange(-200, 200);
-    commands[4].z = (f32)randomGetRange(-200, 200);
+    commands[4].x = randomGetRange(-2000, 200);
+    commands[4].y = randomGetRange(-200, 200);
+    commands[4].z = randomGetRange(-200, 200);
     commands[5].layer = 1;
     commands[5].flags = 9;
     commands[5].tex = &resourceData[offsetof(Dll7AEffectResourceView, allVertexIndices)];

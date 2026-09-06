@@ -48,15 +48,15 @@ void mmpTrenchFx_update(GameObject* obj) {
         state->burstCooldown -= timeDelta;
         if (state->burstCooldown < 0.0f) {
             state->burstSpawnParams.scale = 1.0f;
-            state->burstSpawnParams.posX = (f32)randomGetRange(-state->extentX, state->extentX);
-            state->burstSpawnParams.posY = (f32)randomGetRange(-state->extentY, state->extentY);
-            state->burstSpawnParams.posZ = (f32)randomGetRange(-state->extentZ, state->extentZ);
+            state->burstSpawnParams.posX = randomGetRange(-state->extentX, state->extentX);
+            state->burstSpawnParams.posY = randomGetRange(-state->extentY, state->extentY);
+            state->burstSpawnParams.posZ = randomGetRange(-state->extentZ, state->extentZ);
             vecRotateZXY(state->emitAngles, &state->burstSpawnParams.posX);
             state->burstSpawnParams.posX += obj->anim.localPosX;
             state->burstSpawnParams.posY += obj->anim.localPosY;
             state->burstSpawnParams.posZ += obj->anim.localPosZ;
-            state->burstCooldown = (f32)randomGetRange(0x64, 0xC8);
-            state->burstTimer = (f32)randomGetRange(0x32, 0x64);
+            state->burstCooldown = randomGetRange(0x64, 0xC8);
+            state->burstTimer = randomGetRange(0x32, 0x64);
         }
         state->burstTimer -= timeDelta;
         if (state->burstTimer > 0.0f) {
@@ -65,9 +65,9 @@ void mmpTrenchFx_update(GameObject* obj) {
                               MMP_TRENCH_FX_PARTICLE_SPAWN_MODE, MMP_TRENCH_FX_MODEL_NONE, NULL);
         }
         gMMPTrenchFxAmbientSpawnParams.scale = 1.0f;
-        gMMPTrenchFxAmbientSpawnParams.posX = (f32)randomGetRange(-state->extentX, state->extentX);
-        gMMPTrenchFxAmbientSpawnParams.posY = (f32)randomGetRange(-state->extentY, state->extentY);
-        gMMPTrenchFxAmbientSpawnParams.posZ = (f32)randomGetRange(-state->extentZ, state->extentZ);
+        gMMPTrenchFxAmbientSpawnParams.posX = randomGetRange(-state->extentX, state->extentX);
+        gMMPTrenchFxAmbientSpawnParams.posY = randomGetRange(-state->extentY, state->extentY);
+        gMMPTrenchFxAmbientSpawnParams.posZ = randomGetRange(-state->extentZ, state->extentZ);
         vecRotateZXY(state->emitAngles, &gMMPTrenchFxAmbientSpawnParams.posX);
         gMMPTrenchFxAmbientSpawnParams.posX += obj->anim.localPosX;
         gMMPTrenchFxAmbientSpawnParams.posY += obj->anim.localPosY;

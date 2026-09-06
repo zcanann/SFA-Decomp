@@ -84,15 +84,15 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         if (spawnParams == 0) {
             spawnParams = Effect3_getDefaultSpawnParams();
         }
-        cfg.startPosX = 0.1f * (f32)randomGetRange(-0x14, -0xa);
-        cfg.startPosY = 0.1f * (f32)randomGetRange(-0xa, 0xa);
-        cfg.startPosZ = 0.1f * (f32)randomGetRange(-0xa, 0);
+        cfg.startPosX = 0.1f * randomGetRange(-0x14, -0xa);
+        cfg.startPosY = 0.1f * randomGetRange(-0xa, 0xa);
+        cfg.startPosZ = 0.1f * randomGetRange(-0xa, 0);
         if (spawnParams != 0) {
             cfg.startPosX += spawnParams->posX;
             cfg.startPosY += spawnParams->posY;
             cfg.startPosZ += spawnParams->posZ;
         }
-        cfg.scale = 0.0007f * (f32)randomGetRange(0xd, 0x14);
+        cfg.scale = 0.0007f * randomGetRange(0xd, 0x14);
         cfg.lifetimeFrames = 0x19;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80200;
@@ -104,15 +104,15 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         if (spawnParams == 0) {
             spawnParams = Effect3_getDefaultSpawnParams();
         }
-        cfg.startPosX = 0.1f * (f32)randomGetRange(-0x14, -0xa);
-        cfg.startPosY = 0.1f * (f32)randomGetRange(-0xa, 0xa);
-        cfg.startPosZ = 0.1f * (f32)randomGetRange(-0xa, 0);
+        cfg.startPosX = 0.1f * randomGetRange(-0x14, -0xa);
+        cfg.startPosY = 0.1f * randomGetRange(-0xa, 0xa);
+        cfg.startPosZ = 0.1f * randomGetRange(-0xa, 0);
         if (spawnParams != 0) {
             cfg.startPosX += spawnParams->posX;
             cfg.startPosY += spawnParams->posY;
             cfg.startPosZ += spawnParams->posZ;
         }
-        cfg.scale = 0.003f * (f32)randomGetRange(1, 4);
+        cfg.scale = 0.003f * randomGetRange(1, 4);
         cfg.lifetimeFrames = 0x19;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80200;
@@ -120,7 +120,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.linkGroup = randomGetRange(0, 0x14) + 4;
         break;
     case 0x1f6:
-        cfg.scale = 0.00022f * (f32)randomGetRange(0xa, 0x14);
+        cfg.scale = 0.00022f * randomGetRange(0xa, 0x14);
         cfg.lifetimeFrames = 0x14;
         cfg.initialAlpha = 0x40;
         cfg.behaviorFlags = 0x80000;
@@ -179,11 +179,11 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         break;
     case 0x1fd:
         cfg.startPosX = 0.0f;
-        cfg.startPosY = (f32)randomGetRange(-3, 3);
-        cfg.startPosZ = (f32)randomGetRange(-3, 3);
-        cfg.velocityX = 0.002f * (f32)randomGetRange(-0x14, 0x14);
-        cfg.velocityY = 0.002f * (f32)randomGetRange(-0x14, 0x14);
-        cfg.velocityZ = 0.002f * (f32)randomGetRange(-0x14, 0x14);
+        cfg.startPosY = randomGetRange(-3, 3);
+        cfg.startPosZ = randomGetRange(-3, 3);
+        cfg.velocityX = 0.002f * randomGetRange(-0x14, 0x14);
+        cfg.velocityY = 0.002f * randomGetRange(-0x14, 0x14);
+        cfg.velocityZ = 0.002f * randomGetRange(-0x14, 0x14);
         cfg.scale = 0.02f;
         cfg.lifetimeFrames = 0x1e;
         cfg.initialAlpha = 0xc8;
@@ -208,10 +208,10 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         }
         if (extraArgs != 0) {
             cfg.velocityX = extraArgs[0];
-            cfg.velocityY = 0.03f * (f32)randomGetRange(0, 0x14);
+            cfg.velocityY = 0.03f * randomGetRange(0, 0x14);
             cfg.velocityZ = extraArgs[1];
         }
-        cfg.scale = 0.0002f * (f32)randomGetRange(0, 0xa) + 0.000945f;
+        cfg.scale = 0.0002f * randomGetRange(0, 0xa) + 0.000945f;
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         cfg.initialAlpha = 0x9b;
         cfg.behaviorFlags = 0x81088000;
@@ -234,10 +234,10 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.textureId = 0x56;
         break;
     case 0x201:
-        cfg.startPosX = (f32)randomGetRange(-0x64, 0x64) / 20.0f;
-        cfg.startPosY = (f32)randomGetRange(-0x32, 0x32) / 10.0f;
-        cfg.startPosZ = (f32)randomGetRange(-0x64, 0x64) / 20.0f;
-        cfg.velocityY = 0.03f * (f32)randomGetRange(1, 5);
+        cfg.startPosX = randomGetRange(-0x64, 0x64) / 20.0f;
+        cfg.startPosY = randomGetRange(-0x32, 0x32) / 10.0f;
+        cfg.startPosZ = randomGetRange(-0x64, 0x64) / 20.0f;
+        cfg.velocityY = 0.03f * randomGetRange(1, 5);
         cfg.scale = 0.001f;
         cfg.lifetimeFrames = 0x64;
         cfg.linkGroup = 0;
@@ -245,8 +245,8 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.textureId = 0x63;
         break;
     case 0x202:
-        cfg.velocityY = 0.1f * (f32)randomGetRange(0x96, 0xc8) / 100.0f;
-        cfg.scale = 0.0004f * ((f32)randomGetRange(0x32, 0x64) / 100.0f) + 0.00025f;
+        cfg.velocityY = 0.1f * randomGetRange(0x96, 0xc8) / 100.0f;
+        cfg.scale = 0.0004f * (randomGetRange(0x32, 0x64) / 100.0f) + 0.00025f;
         cfg.lifetimeFrames = (s32)(spawnParams->scale / cfg.velocityY);
         if (cfg.lifetimeFrames < 0xa) {
             cfg.lifetimeFrames = 0xa;
@@ -269,19 +269,19 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         switch (randomGetRange(0, 3)) {
         case 0:
             cfg.startPosX = spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 1:
             cfg.startPosX = -spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 2:
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         case 3:
             cfg.startPosZ = -spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         }
         cfg.scale = 0.01f;
@@ -299,23 +299,23 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         switch (randomGetRange(0, 3)) {
         case 0:
             cfg.startPosX = spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 1:
             cfg.startPosX = -spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 2:
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         case 3:
             cfg.startPosZ = -spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         }
-        cfg.velocityY = 0.0045f * (f32)randomGetRange(0x28, 0x50);
-        cfg.scale = 0.00002f * (f32)randomGetRange(0x28, 0x50);
+        cfg.velocityY = 0.0045f * randomGetRange(0x28, 0x50);
+        cfg.scale = 0.00002f * randomGetRange(0x28, 0x50);
         cfg.lifetimeFrames = 0x78;
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x80400110;
@@ -330,23 +330,23 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         switch (randomGetRange(0, 3)) {
         case 0:
             cfg.startPosX = spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 1:
             cfg.startPosX = -spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 2:
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         case 3:
             cfg.startPosZ = -spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         }
-        cfg.velocityY = 0.0045f * (f32)randomGetRange(0x28, 0x50);
-        cfg.scale = 0.0002f * (f32)randomGetRange(0x1e, 0x32);
+        cfg.velocityY = 0.0045f * randomGetRange(0x28, 0x50);
+        cfg.scale = 0.0002f * randomGetRange(0x1e, 0x32);
         cfg.lifetimeFrames = 0x96;
         cfg.initialAlpha = 0x9b;
         cfg.renderFlags = 0x20;
@@ -368,36 +368,36 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         switch (randomGetRange(0, 3)) {
         case 0:
             cfg.startPosX = spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 1:
             cfg.startPosX = -spawnParams->posX;
-            cfg.startPosZ = (f32)randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
+            cfg.startPosZ = randomGetRange((s16)(s32)-spawnParams->posZ, (s16)(s32)spawnParams->posZ);
             break;
         case 2:
             cfg.startPosZ = spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         case 3:
             cfg.startPosZ = -spawnParams->posZ;
-            cfg.startPosX = (f32)randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
+            cfg.startPosX = randomGetRange((s16)(s32)-spawnParams->posX, (s16)(s32)spawnParams->posX);
             break;
         }
-        cfg.velocityY = 0.0025f * (f32)randomGetRange(0x50, 0x64);
-        cfg.scale = 0.0004f * (f32)randomGetRange(0x1e, 0x32);
+        cfg.velocityY = 0.0025f * randomGetRange(0x50, 0x64);
+        cfg.scale = 0.0004f * randomGetRange(0x1e, 0x32);
         cfg.lifetimeFrames = 0x96;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80080110;
         cfg.textureId = 0x60;
         break;
     case 0x208:
-        cfg.startPosX = 0.1f * (f32)randomGetRange(-0xbb8, 0xbb8);
+        cfg.startPosX = 0.1f * randomGetRange(-0xbb8, 0xbb8);
         cfg.startPosY = 200.0f;
-        cfg.startPosZ = 0.1f * (f32)randomGetRange(-0xbb8, 0xbb8);
-        cfg.velocityY = -0.003f * (f32)randomGetRange(0x190, 0x258);
-        cfg.velocityX = 0.0003f * (f32)randomGetRange(-0x64, 0x64);
-        cfg.velocityZ = 0.0003f * (f32)randomGetRange(-0x64, 0x64);
-        cfg.scale = 0.0001f * (f32)randomGetRange(0, 0xa) + 0.0035f;
+        cfg.startPosZ = 0.1f * randomGetRange(-0xbb8, 0xbb8);
+        cfg.velocityY = -0.003f * randomGetRange(0x190, 0x258);
+        cfg.velocityX = 0.0003f * randomGetRange(-0x64, 0x64);
+        cfg.velocityZ = 0.0003f * randomGetRange(-0x64, 0x64);
+        cfg.scale = 0.0001f * randomGetRange(0, 0xa) + 0.0035f;
         cfg.lifetimeFrames = 0xb4;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80080000;
@@ -405,9 +405,9 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.textureId = 0xe7;
         break;
     case 0x209:
-        cfg.startPosY = (f32)randomGetRange(1, 5);
-        cfg.velocityY = 0.04f * (f32)randomGetRange(0xa, 0x14);
-        cfg.scale = 2.0f * (0.0002f * (f32)randomGetRange(0, 0xa) + 0.0004245f);
+        cfg.startPosY = randomGetRange(1, 5);
+        cfg.velocityY = 0.04f * randomGetRange(0xa, 0x14);
+        cfg.scale = 2.0f * (0.0002f * randomGetRange(0, 0xa) + 0.0004245f);
         cfg.lifetimeFrames = randomGetRange(0x73, 0x8c);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480200;
@@ -419,18 +419,18 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         if (spawnParams == 0) {
             spawnParams = Effect3_getDefaultSpawnParams();
         }
-        cfg.startPosX = (f32)randomGetRange(-5, 5);
-        cfg.startPosY = (f32)randomGetRange(1, 5);
-        cfg.startPosZ = (f32)randomGetRange(-5, 5);
-        speed = 0.003f * (f32)randomGetRange(0, 0x258) + 2.3f;
-        cfg.velocityY = 0.001f * (f32)randomGetRange(0, 0xc8) + 1.0f;
+        cfg.startPosX = randomGetRange(-5, 5);
+        cfg.startPosY = randomGetRange(1, 5);
+        cfg.startPosZ = randomGetRange(-5, 5);
+        speed = 0.003f * randomGetRange(0, 0x258) + 2.3f;
+        cfg.velocityY = 0.001f * randomGetRange(0, 0xc8) + 1.0f;
         cfg.velocityX = mathSinf(3.1415927f * (f32)sourceObject->anim.rotX / 32768.0f);
         cfg.velocityZ = mathCosf(3.1415927f * (f32)sourceObject->anim.rotX / 32768.0f);
-        horizSpeed = speed * (0.015f * (f32)randomGetRange(0, 0x14)) + 0.1f;
+        horizSpeed = speed * (0.015f * randomGetRange(0, 0x14)) + 0.1f;
         cfg.velocityX *= horizSpeed;
         cfg.velocityZ *= horizSpeed;
         cfg.velocityY *= speed;
-        cfg.scale = 0.00006f * (f32)randomGetRange(0, 0xa) + 0.0048f;
+        cfg.scale = 0.00006f * randomGetRange(0, 0xa) + 0.0048f;
         cfg.lifetimeFrames = randomGetRange(0xb4, 0xc8);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x3000120;
@@ -439,7 +439,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.quadVertex3Pad06 = 0x20b;
     } break;
     case 0x20b:
-        cfg.velocityY = 0.002f * (f32)randomGetRange(2, 0x14);
+        cfg.velocityY = 0.002f * randomGetRange(2, 0x14);
         cfg.scale = 0.008445f;
         cfg.lifetimeFrames = 0x1e;
         cfg.initialAlpha = 0x9b;
@@ -454,13 +454,13 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.renderFlags = 0x20;
         break;
     case 0x20c:
-        cfg.startPosX = (f32)randomGetRange(-0x37, 0x37);
-        cfg.startPosY = (f32)randomGetRange(0xa, 0xf);
-        cfg.startPosZ = (f32)randomGetRange(-0x37, 0x37);
-        cfg.velocityX = 0.01f * (f32)randomGetRange(-8, 8);
-        cfg.velocityY = 0.1f * (f32)randomGetRange(0xa, 0x14);
-        cfg.velocityZ = 0.01f * (f32)randomGetRange(-8, 8);
-        cfg.scale = 0.0002f * (f32)randomGetRange(0, 0xa) + 0.0028945f;
+        cfg.startPosX = randomGetRange(-0x37, 0x37);
+        cfg.startPosY = randomGetRange(0xa, 0xf);
+        cfg.startPosZ = randomGetRange(-0x37, 0x37);
+        cfg.velocityX = 0.01f * randomGetRange(-8, 8);
+        cfg.velocityY = 0.1f * randomGetRange(0xa, 0x14);
+        cfg.velocityZ = 0.01f * randomGetRange(-8, 8);
+        cfg.scale = 0.0002f * randomGetRange(0, 0xa) + 0.0028945f;
         cfg.lifetimeFrames = randomGetRange(0x78, 0x8c);
         cfg.initialAlpha = 0xff;
         cfg.quadVertex3Pad06 = 0x20b;
@@ -469,11 +469,11 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.textureId = 0xc0a;
         break;
     case 0x20d:
-        cfg.velocityX = 0.007f * (f32)randomGetRange(-0x32, 0x32);
-        cfg.velocityY = 0.0017f * (f32)randomGetRange(-0xa, 0xa);
-        cfg.velocityZ = 0.007f * (f32)randomGetRange(-0x32, 0x32);
-        cfg.startPosY = 0.1f * (f32)randomGetRange(0, 0x190);
-        cfg.scale = 0.0003f * (f32)randomGetRange(0xf, 0x19);
+        cfg.velocityX = 0.007f * randomGetRange(-0x32, 0x32);
+        cfg.velocityY = 0.0017f * randomGetRange(-0xa, 0xa);
+        cfg.velocityZ = 0.007f * randomGetRange(-0x32, 0x32);
+        cfg.startPosY = 0.1f * randomGetRange(0, 0x190);
+        cfg.scale = 0.0003f * randomGetRange(0xf, 0x19);
         cfg.lifetimeFrames = 0x64;
         cfg.behaviorFlags = 0x4a0104;
         cfg.renderFlags = 0x40008;

@@ -263,18 +263,18 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
         state->playerSfxTimer = state->playerSfxTimer - timeDelta;
         if (state->playerSfxTimer < 0.0f) {
             if (diff < 0.0f) {
-                state->playerSfxTimer = (f32)randomGetRange(0x28, 100);
+                state->playerSfxTimer = randomGetRange(0x28, 100);
             } else {
-                state->playerSfxTimer = (f32)randomGetRange(0x78, 0xf0);
+                state->playerSfxTimer = randomGetRange(0x78, 0xf0);
             }
             Sfx_PlayFromObject(playerObject, SFXTRIG_literun116_var);
         }
         state->platformSfxTimer = state->platformSfxTimer - timeDelta;
         if (state->platformSfxTimer < 0.0f) {
             if (diff > 0.0f) {
-                state->platformSfxTimer = (f32)randomGetRange(0x28, 100);
+                state->platformSfxTimer = randomGetRange(0x28, 100);
             } else {
-                state->platformSfxTimer = (f32)randomGetRange(0x78, 0xf0);
+                state->platformSfxTimer = randomGetRange(0x78, 0xf0);
             }
             Sfx_PlayFromObject(obj, SFXTRIG_spotfox03);
         }

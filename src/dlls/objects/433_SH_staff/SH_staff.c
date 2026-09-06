@@ -258,7 +258,7 @@ void sh_staff_render(GameObject* obj, int renderArg2, int renderArg3, int render
                 for (j = 0; j < SHSTAFF_HAZE_CHILD_COUNT; j++) {
                     if ((u32)state->hazeChildren[j] != 0) {
                         t = (1.0f / 9.0f) * j;
-                        t = t + (f32)randomGetRange(-0x32, 0x32) / 1000.0f;
+                        t = t + randomGetRange(-0x32, 0x32) / 1000.0f;
                         ((GameObject*)state->hazeChildren[j])->anim.localPosX = dx * t + x0;
                         ((GameObject*)state->hazeChildren[j])->anim.localPosY = dy * t + y0;
                         ((GameObject*)state->hazeChildren[j])->anim.localPosZ = dz * t + z0;
