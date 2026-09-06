@@ -1707,7 +1707,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/586/586.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/587/587.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/588_BossDrakor_/BossDrakor_.c"),
-            Object(NonMatching, "dlls/objects/589_BossDrakor/BossDrakor.c", cflags=cflags_dll_noopt_nocse_noprop_noinline),
+            Object(NonMatching, "dlls/objects/589_BossDrakor/BossDrakor.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(MatchingFor("GSAE01"), "dlls/objects/590/590.c", cflags=cflags_dll_noopt_nocse),
             Object(MatchingFor("GSAE01"), "dlls/objects/591_KT_RexLevel/KT_RexLevel.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/592_KT_Rex/KT_Rex.c", cflags=cflags_dll_noopt),

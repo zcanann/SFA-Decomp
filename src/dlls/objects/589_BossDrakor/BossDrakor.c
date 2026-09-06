@@ -153,26 +153,28 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     }
     return 0;
 }
+static inline void bossdrakor_resetNeck(s16* neck) { int neckDelta; int neckStep;
+        neckDelta = (s16)-neck[0];
+        if (neckDelta < -(framesThisStep << 8)) {
+            neckStep = -(framesThisStep << 8);
+        } else {
+            int upperStep = (neckDelta > (framesThisStep << 8)) ? (framesThisStep << 8) : neckDelta;
+            neckStep = upperStep;
+        }
+        neck[0] += (s16)neckStep;
+
+}
 void bossdrakor_updateHeadTracking(GameObject* obj, BossDrakorState* drakorState) {
     s16* neck;
     s16* upperJaw;
     s16* lowerJaw;
-    int neckDelta;
-    int neckStep;
     int jawStep;
     s16 jawDelta;
     PartFxSpawnParams partfxParams;
 
     neck = objFindJointPoseVector(obj, 0xe);
     if (neck != NULL) {
-        neckDelta = (s16)-neck[0];
-        if (neckDelta < -(framesThisStep << 8)) {
-            neckStep = -(framesThisStep << 8);
-        } else {
-            neckDelta = (neckDelta > (framesThisStep << 8)) ? (framesThisStep << 8) : neckDelta;
-            neckStep = neckDelta;
-        }
-        neck[0] += (s16)neckStep;
+        bossdrakor_resetNeck(neck);
         PSVECSubtract(&drakorState->homePos, &obj->anim.localPos, &partfxParams.pos);
         partfxParams.scale = 1.0f;
         if (timerIsActive(&drakorState->jawAnimTimer) != 0) {
@@ -575,23 +577,42 @@ void bossdrakor_hitDetect(GameObject* obj) {
     s->hitSfxCooldown -= timeDelta;
     s->hurtSfxCooldown -= timeDelta;
 }
+static inline void bossdrakor_applyJointShake(GameObject* obj, f32 shake, f32 shakeScaleZ) { int* jointKeyStart;
+int* jointKeys;
+int jointIndex;
+s16 shakeX;
+s16 shakeY;
+s16* jointRotation;
+        jointKeyStart = objGetLookAtJointKeys();
+        shakeX = (s16)(gBossDrakorDegToAngle[0] * shake);
+        shakeY = (s16)(gBossDrakorDegToAngle[0] * (shake * shakeScaleZ));
+        jointIndex = 0;
+        jointKeys = jointKeyStart;
+        do {
+            jointRotation = (s16*)objFindJointPoseVector(obj, jointKeys[0]);
+            if (jointRotation != NULL) {
+                jointRotation[1] = shakeY;
+                jointRotation[0] = shakeX;
+                jointRotation[2] = 0;
+            }
+            jointKeys++;
+            jointIndex++;
+        } while (jointIndex < 5);
+}
+static inline void bossdrakor_initAirMeter(GameObject* obj) { BossDrakorState* meterState;
+        meterState = (BossDrakorState*)obj->extra;
+        meterState->flags198.b20 = 1;
+        (*gGameUIInterface)->initAirMeter(meterState->airMeterHandle, BOSSDRAKOR_AIRMETER_BGTEXTURE);
+        (*gGameUIInterface)->runAirMeter(meterState->airMeterHandle);
+}
 void bossdrakor_update(GameObject* obj) {
     BossDrakorState* state;
-    BossDrakorState* meterState;
     int eventIndex;
-    s16 shakeY;
     int moveResult;
     int adv;
     GameObject* player;
     int moveId;
-    s16* jointRotation;
-    s16 shakeX;
-    int jointIndex;
     s8* eventCursor;
-    int* jointKeys;
-    int* jointKeyStart;
-    f32 shake;
-    f32 shakeScaleZ;
     f32 t;
     s16 d;
     int step;
@@ -620,10 +641,7 @@ void bossdrakor_update(GameObject* obj) {
         obj->anim.localPosY = drakorState->curveWalker.posY;
         state->flags198.b20 = 1;
         drakorState->repeatCount = 0;
-        meterState = (BossDrakorState*)obj->extra;
-        meterState->flags198.b20 = 1;
-        (*gGameUIInterface)->initAirMeter(meterState->airMeterHandle, BOSSDRAKOR_AIRMETER_BGTEXTURE);
-        (*gGameUIInterface)->runAirMeter(meterState->airMeterHandle);
+        bossdrakor_initAirMeter(obj);
         state->flags198.b10 = 0;
         drakorState->lightObj = objCreateLight(NULL, 1);
         if (drakorState->lightObj != NULL) {
@@ -756,23 +774,8 @@ void bossdrakor_update(GameObject* obj) {
         t = (drakorState->shakeAmount < t) ? t
                                            : ((drakorState->shakeAmount > 50.0f) ? 50.0f : drakorState->shakeAmount);
         drakorState->shakeAmount = t;
-        shakeScaleZ = drakorState->shakeScaleZ;
-        shake = drakorState->shakeAmount;
-        jointKeyStart = objGetLookAtJointKeys();
-        shakeX = (s16)(gBossDrakorDegToAngle[0] * shake);
-        shakeY = (s16)(gBossDrakorDegToAngle[0] * (shake * shakeScaleZ));
-        jointIndex = 0;
-        jointKeys = jointKeyStart;
-        do {
-            jointRotation = (s16*)objFindJointPoseVector(obj, jointKeys[0]);
-            if (jointRotation != NULL) {
-                jointRotation[1] = shakeY;
-                jointRotation[0] = shakeX;
-                jointRotation[2] = 0;
-            }
-            jointKeys++;
-            jointIndex++;
-        } while (jointIndex < 5);
+        bossdrakor_applyJointShake(obj, drakorState->shakeAmount, drakorState->shakeScaleZ);
+
     }
     if (randomChanceOneIn(200) != 0 && state->flags198.b40) {
         objSoundStart(obj, &drakorState->soundState, 0x2ff);
