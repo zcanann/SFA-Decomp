@@ -61,7 +61,6 @@
 #include "main/objprint_internal.h"
 #include "main/objprint_render_api.h"
 
-
 GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {NULL};
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
@@ -178,9 +177,8 @@ int ObjHits_CollectSkeletonHitsXZ(f32* point, f32 radius, ModelJointWork* jointD
                         if (0.0f == hit->signedSurfaceDistance) {
                             hit->signedSurfaceDistance = 1e-06f;
                         }
-                        distanceMagnitude = (hit->signedSurfaceDistance > 0.0f)
-                                                ? hit->signedSurfaceDistance
-                                                : -hit->signedSurfaceDistance;
+                        distanceMagnitude = (hit->signedSurfaceDistance > 0.0f) ? hit->signedSurfaceDistance
+                                                                                : -hit->signedSurfaceDistance;
                         hit->inverseDistance = 1.0f / distanceMagnitude;
                         *outAccum = *outAccum + hit->inverseDistance;
                         if (hit->signedSurfaceDistance < (*outBest)->signedSurfaceDistance) {
@@ -289,8 +287,7 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
             }
             broadPhaseLimit = diameter + (broadPhaseLimit + maxJointDiameter);
             broadPhaseLimit *= broadPhaseLimit;
-            if (doubledMidpointDeltaX * doubledMidpointDeltaX + 0.0f +
-                    doubledMidpointDeltaZ * doubledMidpointDeltaZ <
+            if (doubledMidpointDeltaX * doubledMidpointDeltaX + 0.0f + doubledMidpointDeltaZ * doubledMidpointDeltaZ <
                 broadPhaseLimit) {
                 axisDir.x = parentPos.x - jointPos.x;
                 axisDir.y = parentPos.y - jointPos.y;
@@ -308,8 +305,8 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
                     if (0.0f == hit->signedSurfaceDistance) {
                         hit->signedSurfaceDistance = 1e-06f;
                     }
-                    distanceMagnitude = (hit->signedSurfaceDistance > 0.0f) ? hit->signedSurfaceDistance
-                                                                                          : -hit->signedSurfaceDistance;
+                    distanceMagnitude =
+                        (hit->signedSurfaceDistance > 0.0f) ? hit->signedSurfaceDistance : -hit->signedSurfaceDistance;
                     hit->inverseDistance = 1.0f / distanceMagnitude;
                     *outAccum = *outAccum + hit->inverseDistance;
                     if (hit->signedSurfaceDistance < (*outBest)->signedSurfaceDistance) {
@@ -344,8 +341,8 @@ int ObjHits_CollectSkeletonHits3D(f32* point, f32 radius, ModelJointWork* jointD
 }
 
 int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
-                                   f32 t, f32 axial, f32* out) {
+                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   f32 axial, f32* out) {
     float moveLen;
     float zf;
     int idxA;
@@ -466,8 +463,8 @@ int ObjHits_CalcSkeletonResponseXZ(f32* pos, f32 radius, GameObject* obj, ObjHit
 }
 
 int ObjHits_CalcSkeletonResponse3D(f32* pos, f32 radius, GameObject* obj, ObjHitsSkeletonHit* hits,
-                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit,
-                                   f32 t, f32 axial, f32* out) {
+                                   ModelJointWork* jointPoints, int jointModel, ObjHitsSkeletonHit* bestHit, f32 t,
+                                   f32 axial, f32* out) {
     float moveLen;
     float zf;
     int idxA;
@@ -922,7 +919,8 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox* hitbox, int advanceMatrix) {
     return;
 }
 
-int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask, u32 volMask) {
+int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char checkA, char checkB, u32 mask,
+                            u32 volMask) {
     ObjHitsContactScratchEntry* contact;
     int countA;
     int countB;
@@ -1291,9 +1289,8 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                 if (checkA != 0) {
                     pb2 = &spheresB[hit * 4];
                     cx = pb2[1] + cr->contactOffsetX;
-                    ObjHits_RecordPositionHit(objB, objA, stateSrc->hitVolumePriority,
-                                              (u8)stateSrc->hitVolumeId, hit, cx,
-                                              (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr->contactOffsetY,
+                    ObjHits_RecordPositionHit(objB, objA, stateSrc->hitVolumePriority, (u8)stateSrc->hitVolumeId, hit,
+                                              cx, (modeB != 0) ? spheresA[idxA * 4 + 2] : pb2[2] + cr->contactOffsetY,
                                               pb2[3] + cr->contactOffsetZ);
                     result = 1;
                 } else if (checkB != 0) {
@@ -1329,10 +1326,8 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     if (checkB != 0) {
         if (bestDepth > 0.0f) {
             if (objA == srcObj) {
-                ObjHits_RecordObjectHit(objB, objA, stateSrc->objectPairPriority,
-                                        stateSrc->objectPairHitVolume, hit);
-                ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority,
-                                        stateB->objectPairHitVolume, idxA);
+                ObjHits_RecordObjectHit(objB, objA, stateSrc->objectPairPriority, stateSrc->objectPairHitVolume, hit);
+                ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority, stateB->objectPairHitVolume, idxA);
                 ObjHits_ApplyPairResponse(objA, objB, -bestX, 0.0f, -bestZ, 0);
                 return 1;
             }
@@ -1341,7 +1336,8 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
     return 0;
 }
 
-void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObject* attachment, void* state, void* attachmentState, f32 dt) {
+void ObjHits_OnPlayerHitVolumeMiss(GameObject* objA, GameObject* objB, GameObject* attachment, void* state,
+                                   void* attachmentState, f32 dt) {
 }
 
 void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObject* attA, GameObject* attB, f32 dt) {
@@ -1736,10 +1732,8 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
             }
         }
         if ((dist < sumRadius) && (dist > 0.0f)) {
-            ObjHits_RecordObjectHit(objB, objA, stateA->objectPairPriority,
-                                    stateA->objectPairHitVolume, 0);
-            ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority,
-                                    stateB->objectPairHitVolume, 0);
+            ObjHits_RecordObjectHit(objB, objA, stateA->objectPairPriority, stateA->objectPairHitVolume, 0);
+            ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority, stateB->objectPairHitVolume, 0);
             if (((stateB->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0) &&
                 ((stateA->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0)) {
                 nx = stateB->worldPosX - stateA->worldPosX;
@@ -1767,8 +1761,8 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
     }
 }
 
-void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, void* scratchB, void* scratchC, void* scratchD,
-                               void* scratchE, int depth) {
+void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, void* scratchB, void* scratchC,
+                               void* scratchD, void* scratchE, int depth) {
     int* hitboxBuf;
     f32 outAxial;
     ObjHitsPriorityState* objAState;
@@ -1798,9 +1792,8 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, v
         point.y = objB->anim.worldPosY;
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         point3D = point;
-        hitCount =
-            ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, (ModelJointWork*)hitboxBuf[5],
-                                          hitboxBuf, (ObjHitsSkeletonHit*)hits, &bestHit, &outAxial);
+        hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, objBState->primaryRadius, (ModelJointWork*)hitboxBuf[5],
+                                                 hitboxBuf, (ObjHitsSkeletonHit*)hits, &bestHit, &outAxial);
         if (hitCount != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objA->anim.rootMotionScale);
@@ -1814,10 +1807,8 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, v
                 int mf = *hitboxBuf;
                 ObjHitsSkeletonHit* bh = bestHit;
                 ObjHits_CalcSkeletonResponse3D(pos, rad, (GameObject*)ob, hh, jd, mf, bh,
-                                               (ratio < 0.0f)
-                                                   ? 0.0f
-                                                   : ((ratio > 1.0f) ? 1.0f : ratio),
-                                               outAxial, response);
+                                               (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial,
+                                               response);
             }
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
@@ -1831,10 +1822,10 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, v
         point.y = objB->anim.worldPosY;
         point.z = objB->anim.worldPosZ - playerMapOffsetZ;
         pointXZ = point;
-        hitCount = ObjHits_CollectSkeletonHitsXZ(
-            &pointXZ.x, objBState->primaryRadius, (ModelJointWork*)hitboxBuf[5], hitboxBuf,
-            (ObjHitsSkeletonHit*)hits, &bestHit, point.y + objBState->primaryCapsuleOffsetB,
-            point.y + objBState->primaryCapsuleOffsetA, &outAxial);
+        hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, objBState->primaryRadius, (ModelJointWork*)hitboxBuf[5],
+                                                 hitboxBuf, (ObjHitsSkeletonHit*)hits, &bestHit,
+                                                 point.y + objBState->primaryCapsuleOffsetB,
+                                                 point.y + objBState->primaryCapsuleOffsetA, &outAxial);
         if (hitCount != 0) {
             ratio = (objB->anim.hitboxScale * objB->anim.rootMotionScale) /
                     (objA->anim.hitboxScale * objB->anim.rootMotionScale);
@@ -1848,10 +1839,8 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, void* hits, v
                 int mf = *hitboxBuf;
                 ObjHitsSkeletonHit* bh = bestHit;
                 ObjHits_CalcSkeletonResponseXZ(pos, rad, (GameObject*)ob, hh, jd, mf, bh,
-                                               (ratio < 0.0f)
-                                                   ? 0.0f
-                                                   : ((ratio > 1.0f) ? 1.0f : ratio),
-                                               outAxial, response);
+                                               (ratio < 0.0f) ? 0.0f : ((ratio > 1.0f) ? 1.0f : ratio), outAxial,
+                                               response);
             }
             response[0] = ((responseX = response[0]) < -10.0f) ? -10.0f : ((responseX > 10.0f) ? 10.0f : responseX);
             responseY = response[1];
@@ -2042,8 +2031,7 @@ void ObjHits_Update(int objectCount) {
                     (*entrySlot)->minX = listObj->anim.worldPosX - listState->sweepRadiusX;
                     nextEntry++;
                     entrySlot++;
-                    gObjHitsSweepEntryPtrs[slotCount++]->maxX =
-                        listObj->anim.worldPosX + listState->sweepRadiusX;
+                    gObjHitsSweepEntryPtrs[slotCount++]->maxX = listObj->anim.worldPosX + listState->sweepRadiusX;
                 }
                 listState->flags &= ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
                 listState->contactFlags = 0;
@@ -2070,9 +2058,9 @@ void ObjHits_Update(int objectCount) {
         obj = entry->obj;
         objState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         attachedObj = obj->childObjs[0];
-        if ((attachedObj != 0) && ((ObjAnim_GetPriorityHitState(&attachedObj->anim) == NULL) ||
-                                   ((ObjAnim_GetPriorityHitState(&attachedObj->anim)->flags &
-                                     OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
+        if ((attachedObj != 0) &&
+            ((ObjAnim_GetPriorityHitState(&attachedObj->anim) == NULL) ||
+             ((ObjAnim_GetPriorityHitState(&attachedObj->anim)->flags & OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
             attachedObj = 0;
         }
         if ((objState->flags & 4) != 0) {
@@ -2103,10 +2091,8 @@ void ObjHits_Update(int objectCount) {
                                 ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                                 (((candState->flags & 4) == 0) || (slotIndex >= candidateIndex)) &&
-                                ((obj->anim.modelInstance->runtimeSourceHitMask &
-                                  candState->targetMask) != 0) &&
-                                ((candObj->anim.modelInstance->runtimeSourceHitMask &
-                                  objState->targetMask) != 0)) {
+                                ((obj->anim.modelInstance->runtimeSourceHitMask & candState->targetMask) != 0) &&
+                                ((candObj->anim.modelInstance->runtimeSourceHitMask & objState->targetMask) != 0)) {
                                 if ((candState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
                                     ObjHits_CheckSkeletonPair(candObj, obj, skeletonHits, skeletonScratchB,
                                                               skeletonScratchC, skeletonScratchD, skeletonScratchE, 0);
@@ -2126,11 +2112,9 @@ void ObjHits_Update(int objectCount) {
                             }
                         }
                         if (diff < objState->secondaryRadiusXZ + candState->secondaryRadiusXZ) {
-                            axisDiff =
-                                (obj->anim.worldPosY - candObj->anim.worldPosY >
-                                 0.0f)
-                                    ? obj->anim.worldPosY - candObj->anim.worldPosY
-                                    : -(obj->anim.worldPosY - candObj->anim.worldPosY);
+                            axisDiff = (obj->anim.worldPosY - candObj->anim.worldPosY > 0.0f)
+                                           ? obj->anim.worldPosY - candObj->anim.worldPosY
+                                           : -(obj->anim.worldPosY - candObj->anim.worldPosY);
                             if ((axisDiff < objState->secondaryRadiusY + candState->secondaryRadiusY) &&
                                 ((objState->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) == 0) &&
                                 ((candState->flags & OBJHITS_PRIORITY_STATE_HIT_EXCLUDED) == 0) &&
@@ -2155,8 +2139,7 @@ void ObjHits_Update(int objectCount) {
     }
     for (slotIndex = 1, entrySlot = entrySlotBase; slotIndex < slotCount; entrySlot++, slotIndex++) {
         obj = (*entrySlot)->obj;
-        if ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &
-             OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
+        if ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags & OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
             ObjHits_CheckTrackContact(obj, obj);
             attachedObj = obj->childObjs[0];
             if (attachedObj != 0) {
@@ -2184,10 +2167,8 @@ void ObjHits_Update(int objectCount) {
         if (((objState->priorityHitCount != 0) ||
              ((objState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) != 0)) &&
             ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) && ((objState->flags & 0x4000) == 0)) {
-            obj->anim.velocityX =
-                oneOverTimeDelta * (obj->anim.localPosX - obj->anim.previousLocalPosX);
-            obj->anim.velocityZ =
-                oneOverTimeDelta * (obj->anim.localPosZ - obj->anim.previousLocalPosZ);
+            obj->anim.velocityX = oneOverTimeDelta * (obj->anim.localPosX - obj->anim.previousLocalPosX);
+            obj->anim.velocityZ = oneOverTimeDelta * (obj->anim.localPosZ - obj->anim.previousLocalPosZ);
         }
     }
     ((int*)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex = 0] = 0;
@@ -2228,9 +2209,8 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
             reactionState = OBJHITREACT_REACTION_STATE_INACTIVE;
         }
     }
-    priorityHitType = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), 0, &hitSphereIndex, 0,
-                                                         &hitEffectParams.posX, &hitEffectParams.posY,
-                                                         &hitEffectParams.posZ);
+    priorityHitType = ObjHits_GetPriorityHitWithPosition(
+        (GameObject*)(obj), 0, &hitSphereIndex, 0, &hitEffectParams.posX, &hitEffectParams.posY, &hitEffectParams.posZ);
     if (priorityHitType != 0) {
         ObjAnimBank* bank = ObjAnim_GetActiveBank(objAnim);
         hitEffectParams.posX += playerMapOffsetX;
@@ -2249,13 +2229,11 @@ u32 ObjHitReact_Update(GameObject* obj, ObjHitReactEntry* reactionEntryTable, u3
         reactionEntry = &reactionEntryTable[hitSphereIndex];
         if (priorityHitType != OBJHITREACT_COLLISION_SKIP_REACTION) {
             if ((reactionEntry->primaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-                (isSfxPlaying = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId),
-                 !isSfxPlaying)) {
+                (isSfxPlaying = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->primaryHitSfxId), !isSfxPlaying)) {
                 Sfx_PlayFromObject(obj, reactionEntry->primaryHitSfxId);
             }
             if ((reactionEntry->secondaryHitSfxId > OBJHITREACT_NO_SFX_ID) &&
-                (isSfxPlaying = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId),
-                 !isSfxPlaying)) {
+                (isSfxPlaying = Sfx_IsPlayingFromObject(obj, (u16)reactionEntry->secondaryHitSfxId), !isSfxPlaying)) {
                 Sfx_PlayFromObject(obj, reactionEntry->secondaryHitSfxId);
             }
             if (reactionEntry->hitEffectMode == OBJHITREACT_HIT_FX_MODE_EFFECT) {
@@ -2401,8 +2379,7 @@ void ObjHitbox_SetStateIndex(GameObject* object, ObjHitReactState* hitStatePtr, 
     if (priorityState->stateIndex == stateIndex) {
         return;
     }
-    for (modelOrSlotIndex = 0; (s16)modelOrSlotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT;
-         modelOrSlotIndex++) {
+    for (modelOrSlotIndex = 0; (s16)modelOrSlotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; modelOrSlotIndex++) {
         workSlot = &gObjHitsPriorityHitStates[modelOrSlotIndex];
         if ((workSlot->active != 0) && (workSlot->object == object)) {
             workSlot->active = 0;
