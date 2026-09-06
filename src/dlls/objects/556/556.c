@@ -28,7 +28,6 @@
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
 #include "main/dll/dfptorchstate_struct.h"
-#include "main/dll/dbeggstate_struct.h"
 #include "main/dll/drakorenergystate_struct.h"
 #include "main/dll/blastflags4_types.h"
 #include "main/dll_000A_expgfx.h"
@@ -54,7 +53,6 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
 STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
-STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);

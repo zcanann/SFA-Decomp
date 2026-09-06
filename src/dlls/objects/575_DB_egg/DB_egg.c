@@ -20,6 +20,7 @@
  * triggerGameBit. Messages are pumped by dbegg_processMessages (ObjMsg type
  * 17; subtypes 16-20).
  */
+#include "dlls/objects/575_DB_egg.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/object_render.h"
@@ -27,19 +28,11 @@
 #include "sys/objects.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
-#include "main/dll/dll22cstate_struct.h"
-#include "main/dll/dfpobjcreatorstate_struct.h"
-#include "main/dll/dbholecontrol1state_struct.h"
-#include "main/dll/dfptorchstate_struct.h"
-#include "main/dll/dbeggstate_struct.h"
-#include "main/dll/objfsa.h"
-#include "main/dll/drakorenergystate_struct.h"
-#include "main/dll/blastflags4_types.h"
+#include "main/curve.h"
 #include "main/objtype.h"
 #include "main/obj_message.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/waterfx_interface.h"
-#include "main/dll/dll_023F_dbegg.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/pad.h"
@@ -48,7 +41,6 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/track_dolphin_api.h"
-#include "dlls/object_descriptor.h"
 #include "dolphin/mtx/vec.h"
 #include "dolphin/pad.h"
 #include "main/lightmap_api.h"
@@ -64,14 +56,6 @@
 #define DBEGG_PARTFX_RESPAWN_WAIT 0x3be
 /* speed-scaled trail spawned while homing to the target in DBEGG_MODE_HOMING */
 #define DBEGG_PARTFX_HOMING_TRAIL 0x345
-int dbegg_probeSurface(GameObject* obj, f32* out, f32 a, f32 b, int p3);
-STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
-STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
-STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
-STATIC_ASSERT(sizeof(GCRobotBlastState) == 0x8);
-STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
 typedef enum DbEggMode {
     DBEGG_MODE_SETTLED = 1,         /* settled / idle on the surface */
@@ -88,11 +72,6 @@ typedef enum DbEggMode {
     DBEGG_MODE_GATED_RESPAWN = 0xC, /* respawn gated on the activate game bit */
     DBEGG_MODE_HOMING = 0xD,        /* homing back to its target reposition point */
 } DbEggMode;
-
-typedef struct DbEggIntPair {
-    s32 a;
-    s32 b;
-} DbEggIntPair;
 
 static const DbEggIntPair sDbEggCurveIds = {1, 0};
 
@@ -111,9 +90,6 @@ int dbegg_isActive(GameObject* obj) {
     DbEggState* inner = obj->extra;
     return inner->mode != DBEGG_MODE_RELEASED;
 }
-
-void dbegg_processMessages(GameObject* obj);
-void dbegg_computeFlocking(GameObject* obj, f32* vel);
 
 void dbegg_processMessages(GameObject* obj) {
     DbEggState* eggState;
