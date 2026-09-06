@@ -1824,7 +1824,7 @@ config.libs = [
             Object(NonMatching, "dlls/objects/701/701.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/702_AndrossBrai/AndrossBrai.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/703_AndrossLigh/AndrossLigh.c"),
-            Object(NonMatching, "dlls/objects/704/704.c"),
+            Object(MatchingFor("GSAE01"), "dlls/objects/704/704.c"),
 
             Object(NonMatching, "main/render.c"),
             Object(Matching, "main/audio.c", cflags=cflags_dll_noopt_nostrength_noautoinline),

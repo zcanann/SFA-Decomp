@@ -140,6 +140,54 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 extern u8 gTitleScreenSfxFlagGrid[0x48];
 extern u8 gTitleScreenMtx[0x34];
 extern TitleAnimMoves gTitleScreenAnimMoves[];
+extern void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
+
+static void titleScreenDrawTexture(void* tex, int x, int y, int alpha, int scale)
+{
+    drawTexture(tex, (f32)x, (f32)y, alpha, scale);
+}
+
+static void titleScreenDrawScaledTexture(void* tex, int x, int y, int alpha, int scale, int width, int height, int flip)
+{
+    drawScaledTexture(tex, (f32)x, (f32)y, alpha, scale, width, height, flip);
+}
+
+static int titleScreenSlideX(int offset)
+{
+    return (int)(100.0f * gTitleScreenCursorX) + offset;
+}
+
+static int titleScreenSlideY(void)
+{
+    return (int)(-80.0f * gTitleScreenSlideProgressX) + 0x1e0;
+}
+
+static void titleScreenDrawFrameBottom(f32* mtx)
+{
+    int yb;
+    int a;
+    int xb;
+
+    xb = (int)mtx[3];
+    yb = (int)mtx[7];
+    if (gTitleScreenCursorY > 0.0f)
+    {
+        a = 0xff;
+    }
+    else
+    {
+        a = gTitleScreenPulseAlpha;
+    }
+    drawTexture(gTitleScreenTextures[2], (f32)(int)(xb - 0x18), -6.0f + (268.0f * gTitleScreenCursorY + (f32)yb), 0xff, 0xff);
+    drawTexture(((Texture**)gTitleScreenTextures)[7], (f32)(int)(xb + 0xa1), 16.0f + (268.0f * gTitleScreenCursorY + (f32)yb), a,
+                0xff);
+}
+
+static void titleScreenShowTitleText(void)
+{
+    gameTextSetColor(0xff, 0xff, 0xff, (int)((f64)gTitleScreenPulseAlpha * (1.0 - gTitleScreenCursorY)));
+    gameTextShow(0x3da);
+}
 
 void titleScreenPlayActorSfx(GameObject* obj, u8* arr)
 {
@@ -323,21 +371,22 @@ void titleScreenShowCopyright(u8 arg)
     }
 }
 
-extern void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
-
 void titleScreenDrawMenuFrame(int alpha, int hideHighlight, u32 showArrows)
 {
-    int i;
-    Texture* tex;
+    int yb;
     int xb;
+    int i;
+    int frameY;
+    int frameX;
+    int frameAlpha;
+    int glowX;
+    Texture* tex;
     f32* mtx;
     Texture** texs;
     Texture** texs2;
     f32 m;
-    f32 sc3;
     u16 boxIndex;
     int idx;
-    int yb;
     int r;
 
     m = (gTitleScreenPulseTimer = gTitleScreenPulseTimer + timeDelta);
@@ -350,66 +399,56 @@ void titleScreenDrawMenuFrame(int alpha, int hideHighlight, u32 showArrows)
     if (gTitleScreenCursorY > 0.0f)
     {
         f32 (*m2)[4] = (f32 (*)[4])gTitleScreenMtx;
-        Texture* tex;
-        int xb;
-        int yb;
-        int y;
+
         xb = (int)m2[0][3] - 0x32;
         yb = (int)m2[1][3];
         texs = (Texture**)gTitleScreenTextures;
         tex = texs[4];
         drawScaledTexture(tex, (f32)(int)(xb + 0x5a + (texs2 = (Texture**)gTitleScreenTextures)[6]->width),
-                          (f32)(y = yb - 0x10), alpha, 0x100, tex->width,
+                          (f32)(yb - 0x10), alpha, 0x100, tex->width,
                           (u32)(268.0f * gTitleScreenCursorY) + 0x10, 0);
         tex = texs2[6];
-        drawScaledTexture(tex, (f32)(int)(xb + 0x5a), (f32)(y = yb - 0x10), 0xff, 0x100, tex->width,
+        drawScaledTexture(tex, (f32)(int)(xb + 0x5a), (f32)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(268.0f * gTitleScreenCursorY) + 0x10, 0);
         tex = texs2[6];
-        drawScaledTexture(tex, (f32)(int)(xb + 0x57 + texs[4]->width + tex->width), (f32)(y = yb - 0x10), 0xff, 0x100,
+        drawScaledTexture(tex, (f32)(int)(xb + 0x57 + texs[4]->width + tex->width), (f32)(yb - 0x10), 0xff, 0x100,
                           tex->width, (u32)(268.0f * gTitleScreenCursorY) + 0x10, 1);
         tex = (Texture*)gTitleScreenTextures[0];
-        drawScaledTexture(tex, (f32)(int)(xb + 0x23), (f32)(y = yb - 0x10), 0xff, 0x100, tex->width,
+        drawScaledTexture(tex, (f32)(int)(xb + 0x23), (f32)(yb - 0x10), 0xff, 0x100, tex->width,
                           (u32)(268.0f * gTitleScreenCursorY) + 0x10, 0);
     }
     mtx = (f32*)gTitleScreenMtx;
+    frameX = (int)mtx[3];
+    frameY = (int)mtx[7];
+    if (gTitleScreenCursorY > 0.0f)
     {
-        int xb = (int)mtx[3];
-        int yb = (int)mtx[7];
-        int a = (gTitleScreenCursorY > 0.0f) ? 0xff : gTitleScreenPulseAlpha;
-        drawTexture(gTitleScreenTextures[1], (f32)(int)(xb - 0x18),
-                    (f32)(int)(yb - ((Texture*)gTitleScreenTextures[1])->height + 3), 0xff, 0xff);
-        texs2 = (Texture**)gTitleScreenTextures;
-        drawTexture(texs2[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
+        frameAlpha = 0xff;
     }
+    else
     {
-        int xb = (int)mtx[3];
-        int yb = (int)mtx[7];
-        f32 cy = gTitleScreenCursorY;
-        int a = (cy > 0.0f) ? 0xff : gTitleScreenPulseAlpha;
-        drawTexture(gTitleScreenTextures[2], (f32)(int)(xb - 0x18), -6.0f + (268.0f * cy + (f32)yb),
-                    0xff, 0xff);
-        drawTexture(texs2[7], (f32)(int)(xb + 0xa1), 16.0f + (268.0f * gTitleScreenCursorY + (f32)yb),
-                    a, 0xff);
+        frameAlpha = gTitleScreenPulseAlpha;
     }
-    gameTextSetColor(0xff, 0xff, 0xff, (int)((f64)gTitleScreenPulseAlpha * (1.0 - gTitleScreenCursorY)));
-    gameTextShow(0x3da);
+    titleScreenDrawTexture(gTitleScreenTextures[1], frameX - 0x18, frameY - ((Texture*)gTitleScreenTextures[1])->height + 3, 0xff,
+                           0xff);
+    texs2 = (Texture**)gTitleScreenTextures;
+    titleScreenDrawTexture(texs2[7], frameX + 0xa1, frameY - 0x2e, frameAlpha, 0xff);
+    titleScreenDrawFrameBottom(mtx);
+    titleScreenShowTitleText();
     drawTexture(gTitleScreenTextures[3], (f32)(int)((int)mtx[3] - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);
     if (gTitleScreenCursorY >= 0.99f && (hideHighlight & 0xff) == 0u)
     {
-        int xb = (int)mtx[3] - 0x32;
-        int yb = (int)mtx[7];
-        i = 0;
-        texs = (Texture**)gTitleScreenTextures;
-        sc3 = 268.0f;
-        do
+        int yb;
+
+        glowX = (int)mtx[3] - 0x32;
+        yb = (int)mtx[7];
+        for (i = 0; i < 4; i++)
         {
-            tex = texs[4];
-            drawScaledTexture(tex, (f32)(int)(xb + 0x5a + texs[6]->width - (i + 1) * 4),
+            Texture* tex = ((Texture**)gTitleScreenTextures)[4];
+            drawScaledTexture(tex, (f32)(int)(glowX + 0x5a + ((Texture**)gTitleScreenTextures)[6]->width - (i + 1) * 4),
                               (f32)(int)(yb - 0x10 - (i + 1) * 3), (int)(u32)gTitleScreenPulseAlpha >> (i + 3) & 0xff, 0x100,
-                              tex->width + (i + 1) * 8, (u32)(sc3 * gTitleScreenCursorY) + ((i + 1) * 6 + 0x10), 4);
-            i++;
-        } while (i < 4);
+                              tex->width + (i + 1) * 8, (u32)(268.0f * gTitleScreenCursorY) + 0x10 + (i + 1) * 6, 4);
+        }
     }
     if (gTitleScreenCursorY > 0.0f && (boxIndex = linkGetSelectedItemId()) != 0xFFFF)
     {
@@ -425,27 +464,25 @@ void titleScreenDrawMenuFrame(int alpha, int hideHighlight, u32 showArrows)
     texs = (Texture**)gTitleScreenTextures;
     {
         Texture* t = texs[18];
-        drawScaledTexture(t, (f32)(int)((int)(100.0f * gTitleScreenCursorX) - 0x50),
-                          (f32)(int)((int)(-80.0f * gTitleScreenSlideProgressX) + 0x1e0), 0xff, 0x100, t->width, t->height, 1);
-    }
-    texs2 = &((Texture**)(gTitleScreenTextures + 8))[idx];
-    {
-        Texture* t = *texs2;
-        drawScaledTexture(t, (f32)(int)((int)(100.0f * gTitleScreenCursorX) + ((tex = texs[18])->width - 0x4a)),
-                          (f32)(int)((int)(-80.0f * gTitleScreenSlideProgressX) + 0x1e0), 0xff, 0x100, t->width, t->height, 0);
+        titleScreenDrawScaledTexture(t, titleScreenSlideX(-0x50), titleScreenSlideY(), 0xff, 0x100, t->width, t->height, 1);
     }
     {
-        Texture* t = texs[18];
-        drawScaledTexture(t,
-                          (f32)(int)(0x280 - ((int)(100.0f * gTitleScreenCursorX) - 0x50) - texs[18]->width),
-                          (f32)(int)((int)(-80.0f * gTitleScreenSlideProgressX) + 0x1e0), 0xff, 0x100, t->width, t->height, 0);
-    }
-    {
-        Texture* t = *texs2;
-        drawScaledTexture(
-            t,
-            (f32)(int)(0x27a - ((int)(100.0f * gTitleScreenCursorX) - 0x50) - texs[18]->width - t->width),
-            (f32)(int)((int)(-80.0f * gTitleScreenSlideProgressX) + 0x1e0), 0xff, 0x100, t->width, t->height, 1);
+        Texture** texs2 = &((Texture**)(gTitleScreenTextures + 8))[idx];
+        {
+            Texture* t = *texs2;
+            int x = titleScreenSlideX(-0x4a);
+            titleScreenDrawScaledTexture(t, x + texs[18]->width, titleScreenSlideY(), 0xff, 0x100, t->width, t->height, 0);
+        }
+        {
+            Texture* t = texs[18];
+            titleScreenDrawScaledTexture(t, 0x280 - titleScreenSlideX(-0x50) - texs[18]->width, titleScreenSlideY(), 0xff, 0x100,
+                                         t->width, t->height, 0);
+        }
+        {
+            Texture* t = *texs2;
+            titleScreenDrawScaledTexture(t, 0x27a - titleScreenSlideX(-0x50) - texs[18]->width - t->width, titleScreenSlideY(), 0xff,
+                                         0x100, t->width, t->height, 1);
+        }
     }
     m = gTitleScreenSlideProgressX;
     if (gTitleScreenSlideProgressX > gTitleScreenCursorX)
@@ -459,6 +496,7 @@ void titleScreenDrawMenuFrame(int alpha, int hideHighlight, u32 showArrows)
     {
         int yb;
         int xb;
+
         xb = (int)mtx[3];
         yb = (int)mtx[7];
         drawTexture(gTitleScreenTextures[17], (f32)(r = xb + 0x2f), (f32)(int)(yb + 0x14), 0xff, 0xff);
@@ -1011,7 +1049,7 @@ extern s16 gTitleScreenTextureIds[];
 #define FRONT_MAIN_TEXTURE_ID_A 0x647
 #define FRONT_MAIN_TEXTURE_ID_B 0xC5
 
-/* Copyright/title text box shown by titleScreenShowCopyright (docblock: "push text box 0x3d9"). */
+/* Copyright/title text box shown frameY titleScreenShowCopyright (docblock: "push text box 0x3d9"). */
 
 /* Reset state bytes, load the main texture (asset 0x647 or 0xC5 depending on
  * gGameTextFontIsSjis), identity the matrix, then load the 19-entry texture table

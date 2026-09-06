@@ -278,7 +278,7 @@ Width >=5 saved band, identical mnemonic stream: the rotation-offset model — e
 | voxmaps_updateRoutePath | main/voxmaps | 1192 | 99.430 | 28 | 0 | 6G/0F | 3 | objseq-voxmaps-walls (rotation offset 2/3rd unreachable) |
 | Link_render | dlls/engine/60/60 | 1128 | 99.468 | 28 | 0 | 9G/1F | 1 | sole-straggler-frontier (clean saved-band swaps width 6-15) |
 | ObjModel_BlendVertexStream | main/model | 628 | 99.013 | 28 | 0 | 14G/0F | 8 | independent-match-ceiling (permsweep walls) |
-| titleScreenDrawMenuFrame | dlls/objects/704/704 | 2772 | 99.488 | 29 | 2 | 10G/2F | 1 | near100-band-census-2026-08-01 (16 dead ends) |
+| titleScreenDrawMenuFrame | dlls/objects/704/704 | 2772 | 100.000 | 0 | 0 | — | 0 | Resolved 2026-09-06: helper structure recovered from the retail pool order, and the last register from the compiler graph trace (see TitleScreen_matching.md) |
 | ObjModel_BlendNormalStream | main/model | 880 | 99.182 | 29 | 0 | 16G/0F | 8 | signature: struc 0, band >=5, no recorded lever site |
 | trackIntersect | main/track_dolphin | 2280 | 99.553 | 32 | 1 | 16G/7F | 7 | STRUC 0 reachable (sort loop reusing the block loop's sourceIndex/sourceOffset, carried on into the segment-type loop which otherwise loses ITS earlier definition) but costs 0.097 — residual is a uniform scratch rotation across all three sites, band 16G/7F. Pure derived-IV form worse (99.146) |
 | trickyUpdateMovementState | dlls/objects/196_Tricky/tricky | 8764 | 99.922 | 34 | 0 | 11G/2F | 6 | transposition pass 08-03: pure r28<->r29 swap, didMove K-init vs objectWalkGroup call-copy; probed decl swap, init-as-statement, embedded call assignment, s8/int retype (stream-rejected), init reposition (stream-rejected) — all inert; no source knob found |
