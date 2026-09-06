@@ -2,8 +2,10 @@
 
 The initial migration preserved EN v1.0's exact matched code/data/function counts
 and source linkage. Changes to already-nonmatching functions' fuzzy scores are
-recorded separately below. The later common-compiler experiment accepts source
+recorded separately below. The later common-compiler experiment accepts game-source
 regressions while retaining the strict retail checksum through NonMatching units.
+Its accidental expansion into SDK and middleware was corrected on September 6,
+2026; those libraries retain their pre-migration compiler profiles.
 The starting point is `6c4919813e`: 799 game-category units, 8,042 exact functions,
 2,214,856 matched code bytes (87.85165%), and 982,099 matched data bytes.
 
@@ -197,8 +199,9 @@ dispatch. Earlier counts in this document describe the staged cleanup before
 that broader experiment; they are not the common-compiler baseline's results.
 The user confirmed that the ten math units are included and the ProDG
 decompressor is excluded. Its existing ProDG default is therefore retained.
-No MWCC compiler-version overrides remain. Recovering source matches under
-GC/1.3 remains unfinished work.
+At that point no MWCC compiler-version overrides remained. Recovering game-source
+matches under GC/1.3 remains unfinished work. The SDK/middleware scope correction
+below supersedes the broader experiment.
 
 After those commits and restoration of the ProDG default, the generated build
 has 1,002 GC/1.3 compilation commands and one ProDG command. The game category
@@ -230,6 +233,29 @@ The local controls are in `build/gc13_migration/math_drop_functions/` and
 
 `configure.py`'s comments have been removed, retaining its executable shebang.
 Its Python AST and generated Ninja/objdiff configurations are byte-neutral.
+
+## SDK and middleware scope correction
+
+The user clarified on September 6, 2026 that the GC/1.3 migration was intended
+only for game code. The global compiler change in `03f9409456` had also removed
+the SDK, MSL, MusyX and runtime profiles; `e9c9955b16` then demoted their regressed
+units. The merge `162ffcd40c` brought those regressions to main.
+
+Restoring the library and per-unit compiler selections from before `03f9409456`
+recovers all 125 SDK units and the previous 78 of 81 linked middleware units.
+Dolphin's default is GC/1.2.5n; its established exceptions, MSL/runtime profiles,
+and MusyX's `hw_break.c` profile are preserved. The ten game-category math units
+remain on GC/1.3, including the four housed in the MSL library. The ProDG
+decompressor and GC/1.3.2 linker retain their existing settings.
+
+No source or optimization changes are needed. All 799 game units retain their
+previous report measures, including Player's 233 exact functions and source link.
+SDK code returns from 21.33% to 100% exact, with all 900 functions and 39,464
+data bytes matching. Middleware returns to 97.62% exact code and 78 linked
+units. Overall code matching rises from 81.85% to 91.46%; 129 additional
+units link from source. Both `ninja all_source` and the strict retail DOL checksum
+pass. The compiler-configuration tests now verify separate game, SDK, middleware,
+and ProDG profiles instead of forbidding all compiler overrides.
 
 ## Reproducing the audit
 

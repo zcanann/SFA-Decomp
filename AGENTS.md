@@ -1,15 +1,18 @@
 # AGENTS.md - SFA-Decomp Runbook
 
-> **Active compiler experiment:** All MWCC C/C++ units now inherit GC/1.3 from
-> `config.compiler_version`, with no library or per-unit MWCC version overrides.
-> The user excluded the ProDG decompressor (`main/zlb.c`) from this migration;
-> keep its existing ProDG toolchain. The ten older GC/1.2.5 math units are included.
-> Existing optimization profiles remain; the linker independently stays GC/1.3.2.
-> Source matching may regress during this experiment, but both `ninja all_source`
-> and the strict retail checksum target must pass before pushing. Mark regressed
-> units `NonMatching` so the matching link uses their retail objects while
-> `all_source` continues compiling their C/C++. Do not restore compiler exceptions,
-> change the expected checksum, or disable the check to make the build green.
+> **Active compiler experiment (scope corrected 2026-09-06):** Only game-category
+> MWCC C/C++ units use the common GC/1.3 `config.compiler_version`. The ten older
+> game math units are included, including the four under `dolphin/MSL_C/` that
+> explicitly select the game compiler. Keep `main/zlb.c` on its ProDG toolchain.
+> Dolphin SDK, MSL, MusyX, and compiler runtime retain their pre-migration compiler
+> profiles: GC/1.2.5n library defaults where applicable and their existing per-unit
+> exceptions. Their inclusion in the global migration was a scope mistake; do not
+> move them to GC/1.3 as part of game-code work. Optimization profiles remain;
+> the linker independently stays GC/1.3.2. Both `ninja all_source` and the strict
+> retail checksum target must pass before pushing. Mark regressed game units
+> `NonMatching` so the matching link uses retail objects while `all_source` still
+> compiles their C/C++. Do not restore game compiler exceptions, change the
+> expected checksum, or disable the check to make the build green.
 
 > **Integration workflow (effective 2026-07-29):** High-frequency decomp commits land on the
 > permanent `staging` branch, not directly on `main`. Fetch before starting, check out

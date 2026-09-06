@@ -1,7 +1,10 @@
 """The project compiler default is independent of the linker release."""
-import ast
+import os
 from pathlib import Path
+import runpy
+import sys
 import unittest
+from unittest.mock import patch
 
 from project import Object, ProjectConfig
 
@@ -32,15 +35,64 @@ class CompilerVersionTests(unittest.TestCase):
         )
         self.assertEqual(obj.options["mw_version"], "GC/1.2.5n")
 
-    def test_active_config_has_no_compiler_overrides(self):
-        source = Path(__file__).resolve().parents[1] / "configure.py"
-        tree = ast.parse(source.read_text(encoding="utf-8"))
-        for node in ast.walk(tree):
-            if isinstance(node, ast.keyword):
-                self.assertNotEqual(node.arg, "mw_version")
-            elif isinstance(node, ast.Dict):
-                self.assertFalse(any(isinstance(key, ast.Constant) and key.value == "mw_version"
-                                     for key in node.keys))
+
+class ActiveCompilerProfileTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        root = Path(__file__).resolve().parents[1]
+        previous_directory = Path.cwd()
+        try:
+            os.chdir(root)
+            with patch.object(sys, "argv", ["configure.py", "-v", "GSAE01", "--matching"]), \
+                    patch("tools.project.generate_build") as generate:
+                namespace = runpy.run_path(str(root / "configure.py"))
+                cls.config = namespace["config"]
+                generate.assert_called_once_with(cls.config)
+            cls.objects = {
+                obj.name: obj.resolve(cls.config, lib)
+                for lib in cls.config.libs for obj in lib["objects"]
+            }
+            cls.dolphin_lib = namespace["DolphinLib"]("test", [Object(False, "test.c")])
+        finally:
+            os.chdir(previous_directory)
+
+    def test_game_code_uses_gc13(self):
+        self.assertEqual(self.config.compiler_version, "GC/1.3")
+        for name, obj in self.objects.items():
+            if obj.options["progress_category"] == "game" and name != "main/zlb.c":
+                with self.subTest(source=name):
+                    self.assertEqual(obj.options["mw_version"], "GC/1.3")
+
+    def test_dolphin_library_default_is_gc125n(self):
+        obj = self.dolphin_lib["objects"][0].resolve(self.config, self.dolphin_lib)
+        self.assertEqual(obj.options["mw_version"], "GC/1.2.5n")
+        for name in ("dolphin/os/OS.c", "dolphin/gx/GXTexture.c", "dolphin/vi/vi.c"):
+            with self.subTest(source=name):
+                self.assertEqual(self.objects[name].options["mw_version"], "GC/1.2.5n")
+                self.assertTrue(self.objects[name].completed)
+
+    def test_sdk_and_middleware_keep_their_profiles(self):
+        expected = {
+            "dolphin/thp/THPDec.c": "GC/1.2.5",
+            "dolphin/OdemuExi2/DebuggerDriver.c": "GC/1.2.5",
+            "dolphin/TRK_MINNOW_DOLPHIN/mainloop.c": "GC/1.3",
+            "Runtime.PPCEABI.H/__start.c": "GC/1.2.5n",
+            "Runtime.PPCEABI.H/__mem.c": "GC/1.3",
+            "Runtime.PPCEABI.H/__va_arg.c": "GC/1.3.2",
+            "dolphin/MSL_C/PPCEABI/bare/H/floorf.c": "GC/1.2.5n",
+            "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c": "GC/1.3.2r",
+            "dolphin/MSL_C/PPCEABI/bare/H/mem.c": "GC/1.3",
+            "musyx/runtime/synth.c": "GC/1.2.5n",
+            "musyx/runtime/hw_break.c": "GC/2.0",
+        }
+        for name, compiler in expected.items():
+            with self.subTest(source=name):
+                self.assertEqual(self.objects[name].options["mw_version"], compiler)
+                self.assertTrue(self.objects[name].completed)
+
+    def test_prodg_and_linker_remain_independent(self):
+        self.assertEqual(self.objects["main/zlb.c"].options["custom_rule"], "prodg")
+        self.assertEqual(self.config.linker_version, "GC/1.3.2")
 
 
 if __name__ == "__main__":
