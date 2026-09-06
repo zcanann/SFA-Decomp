@@ -744,6 +744,38 @@ SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`. The generated-path
 audit passes. Controls and before/after audits are under
 `build/gc13_new_matches/player_round7*`.
 
+
+## September 6: Player floating-point allocation trace
+
+`playerStateMoving` advances from **99.766396% to 99.78278%**. Reusing
+its existing `ya` temporary for animation progress fixes four operands:
+the three progress loads and the argument to `ObjAnim_SetCurrentMove` now
+use retail's `f30`. The other instruction bytes, every relative relocation,
+allocated data, section layout, and data-symbol position are unchanged.
+Player remains **231/233 exact functions**, **132,844/139,108 exact code
+bytes**, and **10,168/10,168 exact data bytes**; fuzzy agreement is now
+**99.99123%**. The unit remains NonMatching under GC/1.3.
+
+`tools/tricky_backend_trace.py --graph --register-class fpr` now captures
+floating-point graphs using their independently identified count and bank
+tables. It replays physical color choices and checks surviving rewritten
+operands against those colors. GPR mode retains its simplification replay;
+FPR mode does not claim the still-unverified high-degree simplification or
+spill policy. Requested classes and missing FPR policies are checked.
+
+Live macOS captures reproduce all **104** FPR color choices in
+`playerState25` and **257** in `playerStateMoving`, with complete ordinary /
+instrumented object identity. The latter's animation-progress value changes
+from virtual FPR 57 / physical `f31` to virtual FPR 55 / physical `f30`,
+after the allocator enables `f30`. A fresh GPR capture also passes its
+existing replay. The backend tests pass (67 tests; seven Windows-only tests
+skipped on macOS).
+
+Strict matching, `ninja all_source`, formatting, and the generated-path
+audit pass. The DOL SHA-1 remains
+`e750e8e894707a52446118a4b84f1b58b677b269`. Controls and captures are under
+`build/gc13_new_matches/player_round8*`.
+
 ## September 6: World-map camera orbit smoothing
 
 Engine 78 (`dlls/engine/78/78.c`) reaches **100% for all six functions,

@@ -9222,9 +9222,9 @@ int playerStateMoving(int obj, int state, f32 fv) {
             locked = 0;
             if ((inner->flags3F1.b08) != 0) {
                 locked = 1;
-                spd = 0.0f;
+                ya = 0.0f;
             } else {
-                spd = ((GameObject*)obj)->anim.currentMoveProgress;
+                ya = ((GameObject*)obj)->anim.currentMoveProgress;
             }
             step = inner->gaitLevel / 4 * 2;
             inner->gaitStepLevel = (step >> 1) + 1;
@@ -9257,7 +9257,7 @@ int playerStateMoving(int obj, int state, f32 fv) {
                     int cc = inner->gaitLevel;
                     if (cc < 0x14) {
                         if (cc == 0) {
-                            spd = 0.0f;
+                            ya = 0.0f;
                         }
                         if (v < inner->maxSpeed) {
                             *(u8*)&inner->gaitLevel += 4;
@@ -9268,7 +9268,7 @@ int playerStateMoving(int obj, int state, f32 fv) {
             if (locked != 0 || inner->prevMoveAnimIds != inner->moveAnimIds ||
                 ((GameObject*)obj)->anim.currentMove != inner->moveAnimIds[inner->gaitLevel + dir]) {
                 if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 || inner->flags3F2.b10 != 0) {
-                    ObjAnim_SetCurrentMove((void*)obj, inner->moveAnimIds[inner->gaitLevel + dir], spd, 0);
+                    ObjAnim_SetCurrentMove((void*)obj, inner->moveAnimIds[inner->gaitLevel + dir], ya, 0);
                     if ((inner->flags3F1.b20) != 0 && ((PlayerState*)state)->baddie.moveJustStartedA == 0) {
                         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xc);
                     }
