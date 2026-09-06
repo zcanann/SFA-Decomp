@@ -16,7 +16,7 @@ import tempfile
 import time
 
 from tricky_backend_ir import COMPILER_SHA256, capture_snapshot
-from tricky_backend_graph import capture_graph
+from tricky_backend_graph import capture_color_policy, capture_graph
 
 if sys.platform != "win32" or C.sizeof(C.c_void_p) != 8:
     raise RuntimeError("IR capture requires 64-bit Windows Python and an x86 compiler")
@@ -210,6 +210,8 @@ def capture(command, cwd, wanted, timeout=60, graph=False):
                             snapshot["coloring_graph"] = capture_graph(memory, base, colored=snapshot["graph_colored"])
                             snapshot["available_gprs"] = [i for i, blocked in enumerate(memory(base + 0x1E2C70, 32)) if not blocked]
                             snapshot["original_gpr_count"] = int.from_bytes(memory(base + 0x1DD948, 2), "little", signed=True)
+                            if not snapshot["graph_colored"]:
+                                snapshot["color_policy"] = capture_color_policy(memory, base)
                             snapshots.append(snapshot)
                         # Execute the verified PUSH EBX's exact stack effect. At
                         # this point the graph is live, unlike post-pass dumps.

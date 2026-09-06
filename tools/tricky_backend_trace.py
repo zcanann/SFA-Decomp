@@ -30,7 +30,7 @@ from compiler_command import split_command_line
 from tricky_backend_ir import (
     COMPILER_SHA256, describe, immediate_commoning, instruction_history, validate_alignment, validate_snapshot,
 )
-from tricky_backend_graph import coloring_order, describe_node, replay_simplification, validate_graph, validate_rewrite
+from tricky_backend_graph import coloring_order, describe_node, replay_coloring, replay_simplification, validate_graph, validate_rewrite
 from tricky_object_compare import read_object
 from tricky_source_order_probe import compile_command
 
@@ -55,6 +55,7 @@ def inspect(snapshots, obj, functions, require_graph=False):
         paired_graphs = require_graph or any(not stage.get("graph_colored", True) for stage in graphs)
         initial_graph = None
         choices = []
+        colors = []
         for stage in stages:
             validate_snapshot(stage)
             if "coloring_graph" in stage:
@@ -68,6 +69,9 @@ def inspect(snapshots, obj, functions, require_graph=False):
                     if initial_graph is not None:
                         choices = replay_simplification(initial_graph["coloring_graph"], stage["coloring_graph"],
                                                         initial_graph["available_gprs"], initial_graph["original_gpr_count"])
+                        if "color_policy" in initial_graph:
+                            colors = replay_coloring(initial_graph["coloring_graph"], stage["coloring_graph"],
+                                                     initial_graph["color_policy"])
                         initial_graph = None
                 else:
                     if initial_graph is not None:
@@ -90,7 +94,7 @@ def inspect(snapshots, obj, functions, require_graph=False):
                 "history": instruction_history(stages, instructions[current_index]) if current_index is not None else [],
             })
         result[name] = {"stages": len(stages), "instructions": instructions, "differences": differences,
-                        "high_degree_removals": choices}
+                        "high_degree_removals": choices, "color_decisions": colors}
     return result
 
 
@@ -137,7 +141,7 @@ def main():
     parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--function", choices=FUNCTIONS, action="append")
     parser.add_argument("--instruction", type=int, action="append", help="Current ELF instruction index; repeat to inspect")
-    parser.add_argument("--graph", action="store_true", help="Capture and replay the live GPR simplification graph")
+    parser.add_argument("--graph", action="store_true", help="Capture and replay GPR simplification and physical coloring")
     parser.add_argument("--register", type=int, action="append", help="Virtual GPR graph index; requires --graph when capturing")
     parser.add_argument("--read", type=Path, help="Inspect a previous trace and its adjacent traced.o without compiling")
     args = parser.parse_args()
@@ -177,6 +181,12 @@ def main():
                 print("  " + describe_node(graph, register, colored=colored))
         if item["high_degree_removals"]:
             print("  Replayed high-degree removals:", item["high_degree_removals"])
+        if item["color_decisions"]:
+            print(f"  Replayed physical color choices: {len(item['color_decisions'])}")
+            for decision in item["color_decisions"]:
+                if decision["register"] in (args.register or []):
+                    print(f"  GPR {decision['register']} -> r{decision['color']}: "
+                          f"bank expanded={decision['expanded_bank']}; blocking neighbors={decision['blockers']}")
         for index in args.instruction or []:
             if not 0 <= index < len(item["instructions"]):
                 parser.error(f"instruction index out of range: {index}")

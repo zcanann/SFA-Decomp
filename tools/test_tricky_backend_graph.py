@@ -2,7 +2,8 @@ import copy
 import struct
 import unittest
 
-from tricky_backend_graph import capture_graph, coloring_order, describe_node, replay_simplification, validate_graph, validate_rewrite
+from tricky_backend_graph import (capture_color_policy, capture_graph, coloring_order, describe_node,
+                                 replay_coloring, replay_simplification, validate_graph, validate_rewrite)
 
 
 def fixture():
@@ -37,6 +38,88 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_capture_color_banks_and_saved_reset_state(self):
+        values = {
+            0x1E6584: struct.pack("<i", 3), 0x1E0DF0: struct.pack("<3i", 0, 3, 4),
+            0x1E67A4: struct.pack("<i", 2), 0x1E10F0: struct.pack("<2i", 31, 30),
+            0x1DCA90: struct.pack("<h", 1), 0x1DCA70: bytes([0, 1] + [0] * 30),
+        }
+        def memory(address, size):
+            return values[address - 0x400000][:size]
+        self.assertEqual(capture_color_policy(memory, 0x400000), {
+            "initial": [0, 3, 4], "reserve": [31, 30], "reserve_cursor": 1, "blocked": [1],
+        })
+        values[0x1E6584] = struct.pack("<i", 33)
+        with self.assertRaisesRegex(ValueError, "bank size"):
+            capture_color_policy(memory, 0x400000)
+        values[0x1E6584] = b""
+        with self.assertRaisesRegex(ValueError, "short GPR color policy"):
+            capture_color_policy(memory, 0x400000)
+
+    def test_color_replay_expands_bank_in_declared_order(self):
+        before, after = simplification_fixture([32, 33])
+        policy = {"initial": [], "reserve": [29, 28], "reserve_cursor": 0, "blocked": []}
+        decisions = replay_coloring(before, after, policy)
+        self.assertEqual([(d["register"], d["color"], d["expanded_bank"]) for d in decisions],
+                         [(33, 29, True), (32, 28, True)])
+        self.assertEqual(decisions[1]["blockers"], {29: [33]})
+        self.assertEqual(before[32]["prefix"][6], -1)
+        self.assertEqual(policy["reserve_cursor"], 0)
+
+    def test_color_replay_uses_lowest_enabled_color_not_bank_order(self):
+        before, after = simplification_fixture([32, 33])
+        after[33]["prefix"][6], after[32]["prefix"][6] = 28, 29
+        policy = {"initial": [29, 28], "reserve": [], "reserve_cursor": 0, "blocked": []}
+        self.assertFalse(any(d["expanded_bank"] for d in replay_coloring(before, after, policy)))
+
+    def test_color_replay_skips_blocked_registers_and_consumed_reserve(self):
+        before, after = simplification_fixture([32, 33])
+        policy = {"initial": [0], "reserve": [31, 30, 29, 28], "reserve_cursor": 1, "blocked": [0, 30]}
+        self.assertEqual([d["color"] for d in replay_coloring(before, after, policy)], [29, 28])
+
+    def test_excluded_color_slots_still_block_when_physical(self):
+        before, after = simplification_fixture([32, 33])
+        for graph in (before, after):
+            graph.append({"address": 0x1880, "prefix": [0, 0, 0, 0, 34, 1, 28, 4, 1], "neighbors": [33]})
+            graph[33]["neighbors"].append(34)
+            graph[33]["prefix"][8] += 1
+        policy = {"initial": [28, 29], "reserve": [], "reserve_cursor": 0, "blocked": []}
+        self.assertEqual(replay_coloring(before, after, policy)[0]["blockers"], {28: [34]})
+        before[34]["prefix"][6] = after[34]["prefix"][6] = 300
+        after[33]["prefix"][6], after[32]["prefix"][6] = 28, 29
+        self.assertEqual(replay_coloring(before, after, policy)[0]["blockers"], {})
+
+    def test_color_replay_rejects_a_legal_but_unreproduced_assignment(self):
+        before, after = simplification_fixture([32, 33])
+        after[32]["prefix"][6] = 30
+        policy = {"initial": [29], "reserve": [28], "reserve_cursor": 0, "blocked": []}
+        validate_graph(after)
+        with self.assertRaisesRegex(ValueError, "disagrees.*GPR 32"):
+            replay_coloring(before, after, policy)
+
+    def test_color_replay_does_not_invent_spill_behavior(self):
+        before, after = simplification_fixture([32, 33])
+        policy = {"initial": [29], "reserve": [], "reserve_cursor": 0, "blocked": []}
+        with self.assertRaisesRegex(ValueError, "uncaptured spill/retry"):
+            replay_coloring(before, after, policy)
+
+    def test_color_replay_rejects_negative_slots_other_than_unassigned(self):
+        before, after = simplification_fixture([32, 33])
+        for graph in (before, after):
+            graph.append({"address": 0x1880, "prefix": [0, 0, 0, 0, 34, 1, -2, 4, 1], "neighbors": [33]})
+            graph[33]["neighbors"].append(34)
+            graph[33]["prefix"][8] += 1
+        policy = {"initial": [29], "reserve": [28], "reserve_cursor": 0, "blocked": []}
+        with self.assertRaisesRegex(ValueError, "unsupported negative GPR color slot"):
+            replay_coloring(before, after, policy)
+
+    def test_color_replay_rejects_invalid_policy(self):
+        before, after = simplification_fixture([32, 33])
+        policy = {"initial": [29], "reserve": [28], "reserve_cursor": 0, "blocked": []}
+        for key, value in [("initial", [32]), ("reserve", [28, 28]), ("blocked", [-1]), ("reserve_cursor", 2)]:
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, "invalid GPR"):
+                replay_coloring(before, after, dict(policy, **{key: value}))
+
     def test_uncolored_graph_accepts_unassigned_colors(self):
         before, _ = simplification_fixture([32, 33])
         validate_graph(before, colored=False)

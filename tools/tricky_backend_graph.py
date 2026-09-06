@@ -11,6 +11,88 @@ from fractions import Fraction
 from tricky_backend_ir import decode
 
 
+def capture_color_policy(memory, base):
+    """Read the GPR banks/reset state consumed by VA 0x506F50.
+
+    VA 0x4CEDA0 restores the saved blocked mask and bank cursor; 0x4FCB20
+    builds the initial mask, and 0x4FCAC0 enables registers in bank order.
+    """
+    def read(offset, size):
+        data = memory(base + offset, size)
+        if len(data) != size:
+            raise ValueError("short GPR color policy read")
+        return data
+
+    def bank(count_offset, table_offset):
+        count = int.from_bytes(read(count_offset, 4), "little", signed=True)
+        if not 0 <= count <= 32:
+            raise ValueError("invalid GPR bank size")
+        return list(struct.unpack("<" + "i" * count, read(table_offset, count * 4)))
+
+    policy = {
+        "initial": bank(0x1E6584, 0x1E0DF0),
+        "reserve": bank(0x1E67A4, 0x1E10F0),
+        "reserve_cursor": int.from_bytes(read(0x1DCA90, 2), "little", signed=True),
+        "blocked": [i for i, flag in enumerate(read(0x1DCA70, 32)) if flag],
+    }
+    validate_color_policy(policy)
+    return policy
+
+
+def validate_color_policy(policy):
+    for key in ("initial", "reserve", "blocked"):
+        registers = policy[key]
+        if len(registers) != len(set(registers)) or any(not 0 <= r < 32 for r in registers):
+            raise ValueError("invalid GPR color policy registers")
+    if not 0 <= policy["reserve_cursor"] <= len(policy["reserve"]):
+        raise ValueError("invalid GPR reserve cursor")
+
+
+def replay_coloring(before, after, policy):
+    """Verify physical choices, including bank expansion, without compiler writes.
+
+    This intentionally rejects spill/retry traces rather than predicting their
+    uncaptured mutation. Excluded nodes still block an in-range raw color slot.
+    """
+    validate_graph(before, colored=False)
+    order = coloring_order(after)
+    validate_color_policy(policy)
+    if len(before) != len(after) or any(a["neighbors"] != b["neighbors"] for a, b in zip(before, after)):
+        raise ValueError("incompatible coloring snapshots")
+    colors = [node["prefix"][6] for node in before]
+    if any(color < -1 for color in colors):
+        raise ValueError("unsupported negative GPR color slot")
+    unavailable = set(policy["blocked"])
+    enabled = set(policy["initial"]) - unavailable
+    cursor = policy["reserve_cursor"]
+    decisions = []
+    for register in order:
+        blockers = {}
+        for neighbor in before[register]["neighbors"]:
+            color = colors[neighbor]
+            if 0 <= color < 32:
+                blockers.setdefault(color, []).append(neighbor)
+        free = enabled - blockers.keys()
+        expanded = False
+        if free:
+            selected = min(free)
+        else:
+            while cursor < len(policy["reserve"]) and policy["reserve"][cursor] in unavailable:
+                cursor += 1
+            if cursor == len(policy["reserve"]):
+                raise ValueError("color replay requires an uncaptured spill/retry")
+            selected = policy["reserve"][cursor]
+            cursor += 1
+            enabled.add(selected)
+            expanded = True
+        if selected in blockers or selected != after[register]["prefix"][6]:
+            raise ValueError(f"replayed color disagrees with the live compiler graph at GPR {register}")
+        colors[register] = selected
+        decisions.append({"register": register, "color": selected, "expanded_bank": expanded,
+                          "blockers": blockers})
+    return decisions
+
+
 def capture_graph(memory, base, colored=True):
     def read(address, size):
         data = memory(address, size)
