@@ -353,8 +353,7 @@ void windLift107_update(GameObject* obj) {
     } else if (throwState != WINDLIFT107_THROW_NONE) {
         state->flightTimer -= framesThisStep;
         if (state->throwState == WINDLIFT107_THROW_LAUNCHED) {
-            ObjHits_SetHitVolumeSlot(&obj->anim, WINDLIFT107_HIT_VOLUME_SLOT,
-                                     WINDLIFT107_HIT_VOLUME_THROW_STATE, 0);
+            ObjHits_SetHitVolumeSlot(&obj->anim, WINDLIFT107_HIT_VOLUME_SLOT, WINDLIFT107_HIT_VOLUME_THROW_STATE, 0);
             if (obj->anim.velocityY > WINDLIFT107_TERMINAL_VELOCITY) {
                 obj->anim.velocityY += gWindLift107LaunchGravity * timeDelta;
             }
