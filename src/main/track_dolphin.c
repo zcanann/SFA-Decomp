@@ -140,7 +140,9 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z);
 
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 
-u16 gIntersectSegmentTypeTable[0x212];
+u16 gIntersectSegmentTypeTable[40];
+TrackGroundHit* gTrackGroundHitOrder[35];
+TrackGroundHit gTrackGroundHits[35];
 
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
@@ -1612,24 +1614,22 @@ void trackCollectGroundHits(TrackTriangle* triStart, TrackTriangle* triEnd, Trac
 }
 
 int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int queryMask) {
-    u8* base = (u8*)gIntersectSegmentTypeTable;
-    TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
+    TrackBlockDescriptor* desc;
     TrackBlockDescriptor* end;
-    u8* ptr;
     TrackGroundHit* hit;
-    int i, j;
+    int j;
     int sorted;
-    int conv[6];
+    TrackQueryBounds bounds;
     f32 tx, ty, tz;
 
     if (mode >= 0) {
-        conv[0] = x;
-        conv[3] = x;
-        conv[1] = (int)(y - 10000.0f);
-        conv[4] = (int)(10000.0f + y);
-        conv[2] = z;
-        conv[5] = z;
-        trackIntersectBroadphase(obj, (TrackQueryBounds*)conv, queryMask, 1);
+        bounds.minX = x;
+        bounds.maxX = x;
+        bounds.minY = (int)(y - 10000.0f);
+        bounds.maxY = (int)(10000.0f + y);
+        bounds.minZ = z;
+        bounds.maxZ = z;
+        trackIntersectBroadphase(obj, &bounds, queryMask, 1);
     } else {
         if (mode == -1) {
             mode = 0;
@@ -1638,10 +1638,11 @@ int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsO
         }
     }
 
-    gTrackGroundHitWriteCursor = (TrackGroundHit*)(base + 0xdc);
-    gTrackGroundHitPtrs = (TrackGroundHit**)(base + 0x50);
+    gTrackGroundHitPtrs = gTrackGroundHitOrder;
+    gTrackGroundHitWriteCursor = gTrackGroundHits;
+    desc = gTrackBlockDescriptors;
     gTrackGroundHitCount = 0;
-    end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
+    end = gTrackBlockDescriptors + gActiveTrackBlockCount;
     for (; desc < end; desc++) {
         if (gTrackGroundHitCount >= 0x23) {
             break;
@@ -1656,10 +1657,8 @@ int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsO
         }
     }
 
-    for (j = 0, ptr = base + 0xdc, i = 0; j < gTrackGroundHitCount; j++) {
-        *(u8**)((u8*)gTrackGroundHitPtrs + i) = ptr;
-        ptr += 0x18;
-        i += 4;
+    for (j = 0; j < gTrackGroundHitCount; j++) {
+        gTrackGroundHitPtrs[j] = &gTrackGroundHits[j];
     }
 
     sorted = 0;
@@ -1675,7 +1674,7 @@ int trackGetHeight(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsO
         }
     }
 
-    *hitsOut = (TrackGroundHit**)(base + 0x50);
+    *hitsOut = gTrackGroundHitOrder;
     return gTrackGroundHitCount;
 }
 
