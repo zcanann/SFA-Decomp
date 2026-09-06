@@ -4701,6 +4701,30 @@ all allocated non-text sections exact. This recovers shared data used by
 Tricky; it neither improves the remaining code mismatch nor settles compiler
 provenance.
 
+The movement dependency `Objfsa_GetWalkGroupIndexAtPoint` at `0x800DBCFC`
+now owns its result layout in the query API header: a group byte, mask byte,
+and four `u16` patch IDs, with offsets and the `0x0A` size asserted. Tricky is
+the only recovered caller that supplies this record. Retail narrows the group
+result to a byte, then bypasses every output store when it is zero. Tricky's
+subsequent bridge lookup can change its target group without filling that
+record; the source now documents this conditional-output contract. The producer
+also retains its stale/uninitialized plane counter when a patch fails the
+height test. Role-named counters and typed normal-component accesses preserve
+all 116 instructions and the complete Hcurves object. All 2,872 source objects
+remain byte-identical; both build gates, 79 tooling tests and formatting pass.
+Tricky remains 87/89 exact, with 41 diagnostic-link text bytes differing and
+all allocated non-text sections exact.
+
+No residual-mismatch experiments from this pass are retained. Reusing the
+earlier walk-group scratch as the second tunnel index produces the zero copy
+but leaves seven to nine register differences. A local displacement `Vec`,
+explicit return `else` or ternary, shared destination braking, route-advance
+movement pairs and current-group producer extraction leave movement's 34
+operand differences unchanged. A shared narrow turning-flag getter likewise
+preserves both callers without a matching gain; narrowing the route-turn
+magnitude return to `s16` adds five instructions. Compiler settings remain
+unchanged and their provenance remains open.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

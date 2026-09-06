@@ -4457,6 +4457,7 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
         state->lastWalkGroup = objectWalkGroup;
         trickyInvalidatePatchCache(state);
     }
+    /* A zero query leaves patchInfo untouched, even if the bridge lookup below finds a group. */
     targetWalkGroup = Objfsa_GetWalkGroupIndexAtPoint(target, &patchInfo);
     if (((objectWalkGroup != 0) && (targetWalkGroup == 0)) &&
         ((walkGroupLink = getPatchGroup(target, objectWalkGroup)) != 0)) {
