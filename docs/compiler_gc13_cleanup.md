@@ -1019,3 +1019,53 @@ object changes in the isolated build audit. The source-linked DOL retains
 SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
 reports, backend traces, and object audits are under
 `build/gc13_new_matches/normal_camera_match/`.
+
+
+## September 6: Final source-form batch and stopping point
+
+The in-flight model-lighting, SmallBasket and Shield rewrites preserve every
+per-function match score under GC/1.3 and GC/2.0. No new compiler discriminator
+is claimed. The cleanup pass stops after this batch; rejected probes remain
+outside the tracked source.
+
+| TU | GC/1.3 before/after | Accepted cleanup |
+| --- | ---: | --- |
+| modellight | 100%, 58/58 functions | Ten array-backed vector locals become Vec values, nine integer-vector copies become vector assignments, and projection corners use direct indexing. |
+| SmallBasket, slot 260 | 100%, 9/9 functions | Direct collision endpoint/axis indexing, typed placement pointers, canonical object fields and collectible IDs, simpler casts and updates. |
+| Shield, slot 229 | 99.76328%, 9/11 functions | Four cursor offsets derive from canonical fields with offsetof/sizeof; redundant casts and fade addition simplify. |
+
+Shield_setMode remains 99.709175% and Shield_update remains 99.430695%.
+Their indexed state/table alternatives regress, so existing cursor lifetimes
+and the one-element table cursor remain. SmallBasket's chain-hit pointer walk
+and model lighting's one-element light-ID/view arrays also remain after failed
+controls. Separate audio-stream, subtitle and memory-allocation scalar/index
+probes produced no accepted changes.
+
+DB_egg's pending header consolidation is now complete. The unchanged state,
+placement and two-word helper layout, assertions and API live in
+`include/dlls/objects/575_DB_egg.h`. The state size is backed by the retail
+0x124-byte allocation; the existing 0x30 placement assertion is inherited,
+not a new asset-width claim. The old headers and unrelated assertion imports
+are removed. ModelEngine changes one owning include; slot 556 drops its unused
+state include/assertion. All three consumer objects remain raw-identical,
+with 60/60 exact functions. The canonical header compiles on its own.
+
+Model lighting, SmallBasket and Shield have separate formatting commits,
+each raw-object identical to its source commit. Their owning object headers
+need no formatting changes; DB_egg's source/header already pass clang-format.
+Shared consumer edits remain surgical. Compiler profiles, TU boundaries,
+generated DLL paths and ProDG source are unchanged by this batch.
+
+The final audit checks 1,005 compiled objects and every per-unit measure.
+Only 26, 10 and 2 anonymous literal names renumber in model lighting,
+SmallBasket and Shield respectively, all at unchanged positions. Allocated
+bytes and section metadata, named symbols and normalized relocations are
+preserved. Upstream normal-camera and player changes through `287110ae89`
+were rebased in and accounted for separately after source/object review.
+Every landing passes strict matching and `ninja all_source` with 30-second
+limits. The DOL is byte-identical to retail, SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`; path audits pass for slots 229,
+260, 556 and 575. Audit artifacts are in `build/gc13_migration/indexed_shield/`;
+source/compiler controls are in `build/gc13_indexed/` under
+`modellight_scalar_cleanup`, `smallbasket_index_cleanup`,
+`shield_index_cleanup` and `dbegg_header_cleanup`.
