@@ -44,9 +44,9 @@
 #include "main/objhits.h"
 
 /* placement subtype id (desc[0]) selecting the pad behaviour mode */
-#define DRAKORHOVERPAD_SUBTYPE_TRACKING   1812 /* tracks/yaws toward a nearby object */
-#define DRAKORHOVERPAD_SUBTYPE_FREE       1048 /* free curve-follow, no tracking */
-#define DRAKORHOVERPAD_HIT_VOLUME_SLOT    8
+#define DRAKORHOVERPAD_SUBTYPE_TRACKING 1812 /* tracks/yaws toward a nearby object */
+#define DRAKORHOVERPAD_SUBTYPE_FREE     1048 /* free curve-follow, no tracking */
+#define DRAKORHOVERPAD_HIT_VOLUME_SLOT  8
 
 #define ABS_EXPR(value) ((value) >= 0.0f ? value : -value)
 
