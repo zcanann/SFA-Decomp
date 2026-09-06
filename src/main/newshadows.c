@@ -79,7 +79,6 @@
 extern Texture* gNewShadowHeavyFogTexture;
 extern u8 gNewShadowHeavyFogIntensity;
 
-
 void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
     u32 format;
     u32 width;
@@ -219,16 +218,17 @@ void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst) {
                     destinationTile += rowInTile;
                     destinationRow = destinationTile + sizeof(Texture);
                     /* Retail writes the red byte with zero alpha. */
-                    *(u16*)(destinationRow + rowDataOffset) = (u8)(((int)(redA * weightA) >> 8) + ((int)(redB * weightB) >> 8));
-                    *(u16*)(destinationRow + src1->width * tileRow * 2 + 0x20) = ((u8)(((int)(greenA * weightA) >> 8) + ((int)(greenB * weightB) >> 8)) << 8) |
-                                          (u8)(((int)(weightA * (u8)pixelA) >> 8) + ((int)(weightB * (u8)pixelB) >> 8));
+                    *(u16*)(destinationRow + rowDataOffset) =
+                        (u8)(((int)(redA * weightA) >> 8) + ((int)(redB * weightB) >> 8));
+                    *(u16*)(destinationRow + src1->width * tileRow * 2 + 0x20) =
+                        ((u8)(((int)(greenA * weightA) >> 8) + ((int)(greenB * weightB) >> 8)) << 8) |
+                        (u8)(((int)(weightA * (u8)pixelA) >> 8) + ((int)(weightB * (u8)pixelB) >> 8));
                 }
             }
         }
         DCStoreRange((u8*)dst + sizeof(Texture), dst->dataSize);
     }
 }
-
 
 void updateHeavyFogTexture(int intensity) {
     u8* cache;
@@ -1188,7 +1188,8 @@ void newshadows_createDistortionTexture(void) {
 /* Sample the animated noise field built from gNewShadowNoiseData: sums the
    contribution of every active placement at texel (sampleX,sampleZ) for animation frame
    `frame`. outIntensity = sparkle intensity (0..1), outShift = accumulated shift term. */
-static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewShadowNoisePlacement* placements, int count, f32* outShift, f32* outIntensity) {
+static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewShadowNoisePlacement* placements,
+                                int count, f32* outShift, f32* outIntensity) {
     const NewShadowNoisePlacement* place;
     int i;
     f32 intensity;
@@ -1199,7 +1200,8 @@ static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewSh
     for (i = 0; i < count; i++, place++) {
         f32 verticalOffset = 0.0f;
         if (frame < place->frameCount) {
-            f32 distanceX, distanceZ, remainingLife, fade, wrappedDistance, wrappedZ, distance, phase, radiusProgress, radius;
+            f32 distanceX, distanceZ, remainingLife, fade, wrappedDistance, wrappedZ, distance, phase, radiusProgress,
+                radius;
             remainingLife = 0.25f + (place->frameCount - frame) / place->frameCount;
             if (remainingLife > 1.0f) {
                 remainingLife = 1.0f;
@@ -1349,8 +1351,8 @@ void newshadows_initProceduralTextures(void) {
                     texelAddress += (column >> 2) * 0x200;
                     rowCoord = row * lbl_803DEDE0;
                     columnCoord = column * lbl_803DEDE0;
-                    evalNoisePlacements(rowCoord, columnCoord, frame, gNewShadowNoiseData.placements, noisePlacementCount, &shift,
-                                        &intensity);
+                    evalNoisePlacements(rowCoord, columnCoord, frame, gNewShadowNoiseData.placements,
+                                        noisePlacementCount, &shift, &intensity);
                     highByte = 255.0f * intensity;
                     highByte = (highByte & 0xffff) << 8;
                     lowByte = 255.0f * shift;
