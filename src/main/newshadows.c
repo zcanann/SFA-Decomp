@@ -1613,7 +1613,8 @@ static inline void fillReflectionGradientTexture(void) {
             texel += (y & 3) * 8;
             texel += (y >> 2) * 0x20;
             packedHorizontal = ((int)(255.0f * horizontal + 128.0f) & 0xff) << 8;
-            *(u16*)(texel + sizeof(Texture)) = (u16)(packedHorizontal | ((int)(255.0f * (y / 3.0f - 0.5f) + 128.0f) & 0xff));
+            *(u16*)(texel + sizeof(Texture)) =
+                (u16)(packedHorizontal | ((int)(255.0f * (y / 3.0f - 0.5f) + 128.0f) & 0xff));
         }
     }
 }
