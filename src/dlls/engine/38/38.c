@@ -10,17 +10,17 @@
 
 WaterfxCfg gEffect13DefaultSplashParams;
 
-int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId)
-{
+int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId) {
     int spawnResult;
     PartFxSpawn cfg;
 
-    if (sourceObj == 0)
+    if (sourceObj == 0) {
         return -1;
-    if ((spawnFlags & 0x200000) != 0)
-    {
-        if (spawnParams == 0)
+    }
+    if ((spawnFlags & 0x200000) != 0) {
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.sourcePosX = spawnParams->posX;
         cfg.sourcePosY = spawnParams->posY;
         cfg.sourcePosZ = spawnParams->posZ;
@@ -52,8 +52,7 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     cfg.overrideColor0 = 0xffff;
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
-    switch (effectId)
-    {
+    switch (effectId) {
     case 0x44c:
         cfg.velocityX = 0.025f * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.velocityY = 0.02f * (f32)(s32)randomGetRange(0xa, 0x14);
@@ -95,8 +94,7 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.quadVertex3Pad06 = 0x44f;
         break;
     case 0x44f:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect13DefaultSplashParams.posX = 0.0f;
             gEffect13DefaultSplashParams.posY = 0.0f;
             gEffect13DefaultSplashParams.posZ = 0.0f;
@@ -106,8 +104,7 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             gEffect13DefaultSplashParams.rotZ = 0;
             spawnParams = (PartFxSpawnParams*)&gEffect13DefaultSplashParams;
         }
-        (*gWaterfxInterface)
-            ->spawnSplashBurst(NULL, spawnParams->posX, spawnParams->posY, spawnParams->posZ, 4.0f);
+        (*gWaterfxInterface)->spawnSplashBurst(NULL, spawnParams->posX, spawnParams->posY, spawnParams->posZ, 4.0f);
         Sfx_PlayFromObject(sourceObj, SFXTRIG_blkscrp6);
         cfg.lifetimeFrames = 1;
         cfg.scale = 0.0001f;
@@ -133,20 +130,16 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-        cfg.behaviorFlags ^= 2LL;
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+        cfg.behaviorFlags ^= 2;
+    }
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & 0x200000) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != 0)
-            {
+        } else {
+            if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -157,20 +150,16 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     return spawnResult;
 }
 
-void Effect13_func05_nop(void)
-{
+void Effect13_func05_nop(void) {
 }
 
-void Effect13_func03_nop(void)
-{
+void Effect13_func03_nop(void) {
 }
 
-void Effect13_release(void)
-{
+void Effect13_release(void) {
 }
 
-void Effect13_initialise(void)
-{
+void Effect13_initialise(void) {
 }
 
 ObjectDescriptor6 Effect13_funcs = {

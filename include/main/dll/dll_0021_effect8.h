@@ -9,6 +9,6 @@ void Effect8_release(void);
 void Effect8_initialise(void);
 void Effect8_updateFrameState(void);
 int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs);
+                        s16* extraArgs);
 
 #endif /* MAIN_DLL_DLL_0021_EFFECT8_H_ */

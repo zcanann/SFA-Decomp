@@ -19,37 +19,38 @@ f32 gEffect1AnimRampB = 0.3f;
 PartFxSpawnParams gEffect1DefaultSpawnParams;
 
 #define FILL320()                                                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        gEffect1DefaultSpawnParams.posX = 0.0f;                                                                                      \
-        gEffect1DefaultSpawnParams.posY = 0.0f;                                                                                      \
-        gEffect1DefaultSpawnParams.posZ = 0.0f;                                                                                      \
-        gEffect1DefaultSpawnParams.scale = 1.0f;                                                                                     \
-        gEffect1DefaultSpawnParams.unk0 = 0;                                                                                         \
-        gEffect1DefaultSpawnParams.unk2 = 0;                                                                                         \
-        gEffect1DefaultSpawnParams.unk4 = 0;                                                                                         \
-        spawnParams = &gEffect1DefaultSpawnParams;                                                               \
+    do {                                                                                                               \
+        gEffect1DefaultSpawnParams.posX = 0.0f;                                                                        \
+        gEffect1DefaultSpawnParams.posY = 0.0f;                                                                        \
+        gEffect1DefaultSpawnParams.posZ = 0.0f;                                                                        \
+        gEffect1DefaultSpawnParams.scale = 1.0f;                                                                       \
+        gEffect1DefaultSpawnParams.unk0 = 0;                                                                           \
+        gEffect1DefaultSpawnParams.unk2 = 0;                                                                           \
+        gEffect1DefaultSpawnParams.unk4 = 0;                                                                           \
+        spawnParams = &gEffect1DefaultSpawnParams;                                                                     \
     } while (0)
 
 int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs)
-{
+                        s16* extraArgs) {
     int spawnResult;
     MatrixTransform es;
     PartFxSpawn cfg;
 
     gEffect1AnimRampC += 0.001f;
-    if (gEffect1AnimRampC > 1.0f)
+    if (gEffect1AnimRampC > 1.0f) {
         gEffect1AnimRampC = 0.1f;
+    }
     gEffect1AnimRampD += 0.0003f;
-    if (gEffect1AnimRampD > 1.0f)
+    if (gEffect1AnimRampD > 1.0f) {
         gEffect1AnimRampD = 0.3f;
-    if (sourceObj == 0)
+    }
+    if (sourceObj == 0) {
         return -1;
-    if ((spawnFlags & 0x200000) != 0)
-    {
-        if (spawnParams == 0)
+    }
+    if ((spawnFlags & 0x200000) != 0) {
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.sourcePosX = spawnParams->posX;
         cfg.sourcePosY = spawnParams->posY;
         cfg.sourcePosZ = spawnParams->posZ;
@@ -82,8 +83,7 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
     cfg.textureSetupFlags = 0;
-    switch (effectId)
-    {
+    switch (effectId) {
     case 0x5fc:
         cfg.scale = 0.01f;
         cfg.lifetimeFrames = 0xa;
@@ -134,15 +134,13 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x73;
         break;
     case 0x3a5:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosZ = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
-        }
-        else
-        {
+        } else {
             cfg.startPosZ = 15.0f;
             cfg.startPosY = 1e+01f;
         }
@@ -156,15 +154,13 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.behaviorFlags = 0x40180100;
         break;
     case 0x3a6:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosZ = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
-        }
-        else
-        {
+        } else {
             cfg.startPosZ = 15.0f;
             cfg.startPosY = 1e+01f;
         }
@@ -209,10 +205,12 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         break;
     case 0x3a8:
     case 0x3a2:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.velocityX = spawnParams->scale * (0.003604f * (f32)(s32)randomGetRange(-0x64, 0x64));
         cfg.velocityY = spawnParams->scale * (0.013278f * (f32)(s32)randomGetRange(0x50, 0x8c));
         cfg.velocityZ = spawnParams->scale * (0.00414f * (f32)(s32)randomGetRange(-0x64, 0x64));
@@ -230,17 +228,18 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.overrideColor2 = 0x57a0;
         cfg.initialAlpha = randomGetRange(0x29, 0x64);
         cfg.behaviorFlags = 0x80080108;
-        if (effectId == 0x3a2)
-        {
-            cfg.behaviorFlags |= 0x20000000LL;
+        if (effectId == 0x3a2) {
+            cfg.behaviorFlags |= 0x20000000;
         }
         cfg.renderFlags = 0x8400820;
         break;
     case 0x3a1:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = 2e+01f + spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -263,10 +262,12 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.behaviorFlags = 0x2000110;
         break;
     case 0x3a0:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = 2e+01f + spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -344,16 +345,16 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x17c;
         break;
     case 0x399:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
+        }
         cfg.sourceVecY = 0;
         cfg.sourceVecX = 0;
         cfg.sourcePosX = 0.0f;
         cfg.sourcePosY = 0.0f;
         cfg.sourcePosZ = 0.0f;
         cfg.sourceScale = 1.0f;
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = 12.0f + spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -505,16 +506,16 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x33;
         break;
     case 0x5ed:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
+        }
         cfg.sourceVecY = 0;
         cfg.sourceVecX = 0;
         cfg.sourcePosX = 0.0f;
         cfg.sourcePosY = 0.0f;
         cfg.sourcePosZ = 0.0f;
         cfg.sourceScale = 1.0f;
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = 12.0f + spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -528,16 +529,16 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x5fe;
         break;
     case 0x5fd:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
+        }
         cfg.sourceVecY = 0;
         cfg.sourceVecX = 0;
         cfg.sourcePosX = 0.0f;
         cfg.sourcePosY = 0.0f;
         cfg.sourcePosZ = 0.0f;
         cfg.sourceScale = 1.0f;
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = 12.0f + spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -734,10 +735,10 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x159;
         break;
     case 0x394:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosZ = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosX = spawnParams->posZ;
@@ -755,10 +756,10 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0xc79;
         break;
     case 0x395:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosZ = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosX = spawnParams->posZ;
@@ -799,15 +800,13 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x23b;
         break;
     case 0x390:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosZ = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
-        }
-        else
-        {
+        } else {
             cfg.startPosZ = 15.0f;
             cfg.startPosY = 1e+01f;
         }
@@ -821,15 +820,13 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.behaviorFlags = 0x40180100;
         break;
     case 0x391:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosZ = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
-        }
-        else
-        {
+        } else {
             cfg.startPosZ = 15.0f;
             cfg.startPosY = 1e+01f;
         }
@@ -858,16 +855,16 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.behaviorFlags = 0x2000110;
         break;
     case 0x38a:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
+        }
         cfg.startPosX = 0.1f * (f32)(s32)randomGetRange(-0xa, -0xa);
         cfg.startPosY = 0.1f * (f32)(s32)randomGetRange(-0x14, -0xa);
         cfg.startPosZ = 0.1f * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.velocityX = 0.003f * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.velocityZ = 0.003f * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.initialAlpha = 0xff;
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = cfg.startPosX + spawnParams->posX;
             cfg.startPosY = cfg.startPosY + spawnParams->posY;
             cfg.startPosZ = cfg.startPosZ + spawnParams->posZ;
@@ -902,10 +899,10 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.initialAlpha = 0x9b;
         break;
     case 0x38d:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
-        if (spawnParams != 0)
-        {
+        }
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosZ = spawnParams->posZ;
         }
@@ -932,8 +929,9 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.initialAlpha = 0xff;
         break;
     case 0x389:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL320();
+        }
         cfg.startPosX = (f32)(s32)randomGetRange(-5, 5);
         cfg.startPosY = (f32)(s32)randomGetRange(1, 5);
         cfg.startPosZ = (f32)(s32)randomGetRange(-5, 5);
@@ -1020,20 +1018,16 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-        cfg.behaviorFlags ^= 2LL;
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+        cfg.behaviorFlags ^= 2;
+    }
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & 0x200000) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != 0)
-            {
+        } else {
+            if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -1045,47 +1039,38 @@ int Effect1_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
 }
 #undef FILL320
 
-
-void Effect1_updateFrameState(void)
-{
+void Effect1_updateFrameState(void) {
     f32 sum;
     f32 step;
     sum = gEffect1AnimRampA + (step = 0.001f * timeDelta);
     gEffect1AnimRampA = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect1AnimRampA = 0.1f;
     }
     sum = gEffect1AnimRampB + step;
     gEffect1AnimRampB = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect1AnimRampB = 0.3f;
     }
     gEffect1SineWaveAPhase = gEffect1SineWaveAPhase + framesThisStep * 0x64;
-    if (gEffect1SineWaveAPhase > 0x7fff)
-    {
+    if (gEffect1SineWaveAPhase > 0x7fff) {
         gEffect1SineWaveAPhase = 0;
     }
     gEffect1SineWaveA = mathSinf(3.1415927f * (f32)(s16)gEffect1SineWaveAPhase / 32768.0f);
     gEffect1SineWaveBPhase = gEffect1SineWaveBPhase + framesThisStep * 0x32;
-    if (gEffect1SineWaveBPhase > 0x7fff)
-    {
+    if (gEffect1SineWaveBPhase > 0x7fff) {
         gEffect1SineWaveBPhase = 0;
     }
     gEffect1SineWaveB = mathSinf(3.1415927f * (f32)(s16)gEffect1SineWaveBPhase / 32768.0f);
 }
 
-void Effect1_func03_nop(void)
-{
+void Effect1_func03_nop(void) {
 }
 
-void Effect1_release(void)
-{
+void Effect1_release(void) {
 }
 
-void Effect1_initialise(void)
-{
+void Effect1_initialise(void) {
 }
 
 ObjectDescriptor6 Effect1_funcs = {

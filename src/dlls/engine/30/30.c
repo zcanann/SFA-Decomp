@@ -31,24 +31,26 @@ ObjectDescriptor6 Effect5_funcs = {
 };
 
 int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs)
-{
+                        s16* extraArgs) {
     int spawnResult;
     MatrixTransform es;
     PartFxSpawn cfg;
 
     gEffect5AnimProgressA += 0.001f;
-    if (gEffect5AnimProgressA > 1.0f)
+    if (gEffect5AnimProgressA > 1.0f) {
         gEffect5AnimProgressA = 0.1f;
+    }
     gEffect5AnimProgressB += 0.0003f;
-    if (gEffect5AnimProgressB > 1.0f)
+    if (gEffect5AnimProgressB > 1.0f) {
         gEffect5AnimProgressB = 0.3f;
-    if (sourceObj == 0)
+    }
+    if (sourceObj == 0) {
         return -1;
-    if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
-    {
-        if (spawnParams == 0)
+    }
+    if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.sourcePosX = spawnParams->posX;
         cfg.sourcePosY = spawnParams->posY;
         cfg.sourcePosZ = spawnParams->posZ;
@@ -81,8 +83,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
     cfg.textureSetupFlags = 0;
-    switch (effectId)
-    {
+    switch (effectId) {
     case 0xc8:
         cfg.startPosX = (f32)(s32)randomGetRange(-6, 6);
         cfg.startPosY = (f32)(s32)randomGetRange(-6, 6);
@@ -94,8 +95,9 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0xc10;
         break;
     case PARTFX_DIG_DEBRIS:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             return 0;
+        }
         cfg.velocityX = 0.01f * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.velocityY = 0.01f * (f32)(s32)randomGetRange(0xa, 0x14);
         cfg.velocityZ = 0.02f * (f32)(s32)randomGetRange(0x14, 0x1e);
@@ -113,27 +115,21 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x180108;
         cfg.renderFlags = 0x5000000;
-        if (spawnParams->dig.variant == 0)
-        {
+        if (spawnParams->dig.variant == 0) {
             cfg.textureId = 0x2b;
-        }
-        else if (spawnParams->dig.variant == 1)
-        {
+        } else if (spawnParams->dig.variant == 1) {
             cfg.textureId = 0x1a1;
-        }
-        else if (spawnParams->dig.variant == 2)
-        {
+        } else if (spawnParams->dig.variant == 2) {
             cfg.textureId = 0xc10;
             cfg.renderFlags = cfg.renderFlags | 0x800;
-        }
-        else
-        {
+        } else {
             cfg.textureId = 0x2b;
         }
         break;
     case PARTFX_DIG_DUST:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             return 0;
+        }
         cfg.velocityX = 0.025f * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.velocityY = 0.045f * (f32)(s32)randomGetRange(0xa, 0x14);
         cfg.velocityZ = 0.025f * (f32)(s32)randomGetRange(0x14, 0x1e);
@@ -151,21 +147,14 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.linkGroup = 0;
         cfg.behaviorFlags = 0x1080100;
         cfg.renderFlags = 0x5000000;
-        if (spawnParams->dig.variant == 0)
-        {
+        if (spawnParams->dig.variant == 0) {
             cfg.textureId = 0x2b;
-        }
-        else if (spawnParams->dig.variant == 1)
-        {
+        } else if (spawnParams->dig.variant == 1) {
             cfg.textureId = 0x1a1;
-        }
-        else if (spawnParams->dig.variant == 2)
-        {
+        } else if (spawnParams->dig.variant == 2) {
             cfg.textureId = 0xc10;
             cfg.renderFlags = cfg.renderFlags | 0x800;
-        }
-        else
-        {
+        } else {
             cfg.textureId = 0x2b;
         }
         break;
@@ -297,20 +286,16 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-        cfg.behaviorFlags ^= 2LL;
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
-        {
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+        cfg.behaviorFlags ^= 2;
+    }
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != 0)
-            {
+        } else {
+            if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -321,44 +306,36 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     return spawnResult;
 }
 
-void Effect5_updateFrameState(void)
-{
+void Effect5_updateFrameState(void) {
     f32 sum;
     f32 step;
     sum = gEffect5AnimProgressC + (step = 0.001f * timeDelta);
     gEffect5AnimProgressC = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect5AnimProgressC = 0.1f;
     }
     sum = gEffect5AnimProgressD + step;
     gEffect5AnimProgressD = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect5AnimProgressD = 0.3f;
     }
     gEffect5SinPhaseA = gEffect5SinPhaseA + framesThisStep * 0x64;
-    if (gEffect5SinPhaseA > 0x7fff)
-    {
+    if (gEffect5SinPhaseA > 0x7fff) {
         gEffect5SinPhaseA = 0;
     }
     gEffect5SinValueA = mathSinf(3.14159274f * (f32)(s16)gEffect5SinPhaseA / 32768.0f);
     gEffect5SinPhaseB = gEffect5SinPhaseB + framesThisStep * 0x32;
-    if (gEffect5SinPhaseB > 0x7fff)
-    {
+    if (gEffect5SinPhaseB > 0x7fff) {
         gEffect5SinPhaseB = 0;
     }
     gEffect5SinValueB = mathSinf(3.14159274f * (f32)(s16)gEffect5SinPhaseB / 32768.0f);
 }
 
-void Effect5_func03_nop(void)
-{
+void Effect5_func03_nop(void) {
 }
 
-void Effect5_release(void)
-{
+void Effect5_release(void) {
 }
 
-void Effect5_initialise(void)
-{
+void Effect5_initialise(void) {
 }

@@ -33,23 +33,25 @@ ObjectDescriptor6 Effect16_funcs = {
 };
 
 int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                    s16* extraArgs)
-{
+                         s16* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 
     gEffect16ScrollPhaseA += 0.001f;
-    if (gEffect16ScrollPhaseA > 1.0f)
+    if (gEffect16ScrollPhaseA > 1.0f) {
         gEffect16ScrollPhaseA = 0.1f;
+    }
     gEffect16ScrollPhaseB += 0.0003f;
-    if (gEffect16ScrollPhaseB > 1.0f)
+    if (gEffect16ScrollPhaseB > 1.0f) {
         gEffect16ScrollPhaseB = 0.3f;
-    if (sourceObj == 0)
+    }
+    if (sourceObj == 0) {
         return -1;
-    if ((spawnFlags & 0x200000) != 0)
-    {
-        if (spawnParams == 0)
+    }
+    if ((spawnFlags & 0x200000) != 0) {
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.sourcePosX = spawnParams->posX;
         cfg.sourcePosY = spawnParams->posY;
         cfg.sourcePosZ = spawnParams->posZ;
@@ -81,11 +83,9 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     cfg.overrideColor0 = 0xffff;
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
-    switch (effectId)
-    {
+    switch (effectId) {
     case 0x6d7:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -104,8 +104,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x5c;
         break;
     case 0x6d8:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -142,8 +141,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0x9d;
         break;
     case 0x6db:
-        if (extraArgs != 0)
-        {
+        if (extraArgs != 0) {
             cfg.velocityX = 0.01f * (f32)(s32)randomGetRange(-0x96, 0x96);
             cfg.velocityZ = 0.01f * (f32)(s32)randomGetRange(-0x96, 0x96);
             cfg.velocityY = 0.01f * (f32)(s32)randomGetRange(0x64, 0x190);
@@ -157,9 +155,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.overrideColor2 = 0;
             cfg.behaviorFlags = 0x3000200;
             cfg.renderFlags = 0x200022;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.002f * (f32)(s32)randomGetRange(0xf, 0x14);
             cfg.lifetimeFrames = 1;
             cfg.behaviorFlags = 0x80000;
@@ -231,8 +227,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x72;
         break;
     case 0x6f2:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -256,8 +251,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0xc0d;
         break;
     case 0x6f3:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -278,8 +272,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x58f;
         break;
     case 0x6f4:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -300,8 +293,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x590;
         break;
     case 0x6f5:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -322,8 +314,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x403;
         break;
     case 0x6f6:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -344,8 +335,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x404;
         break;
     case 0x6f7:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -366,8 +356,7 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x405;
         break;
     case 0x6f8:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect16DefaultSpawnSource.posX = 0.0f;
             gEffect16DefaultSpawnSource.posY = 0.0f;
             gEffect16DefaultSpawnSource.posZ = 0.0f;
@@ -391,20 +380,16 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-        cfg.behaviorFlags ^= 2LL;
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+        cfg.behaviorFlags ^= 2;
+    }
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & 0x200000) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != 0)
-            {
+        } else {
+            if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -415,36 +400,36 @@ int Effect16_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     return spawnResult;
 }
 
-void Effect16_updateFrameState(void)
-{
+void Effect16_updateFrameState(void) {
     f32 sum;
     f32 step;
     sum = gEffect16TimedScrollPhaseA + (step = 0.001f * timeDelta);
     gEffect16TimedScrollPhaseA = sum;
-    if (sum > 1.0f)
+    if (sum > 1.0f) {
         gEffect16TimedScrollPhaseA = 0.1f;
+    }
     sum = gEffect16TimedScrollPhaseB + step;
     gEffect16TimedScrollPhaseB = sum;
-    if (sum > 1.0f)
+    if (sum > 1.0f) {
         gEffect16TimedScrollPhaseB = 0.3f;
+    }
     gEffect16SinPhaseCounterA = gEffect16SinPhaseCounterA + framesThisStep * 0x64;
-    if (gEffect16SinPhaseCounterA > 0x7fff)
+    if (gEffect16SinPhaseCounterA > 0x7fff) {
         gEffect16SinPhaseCounterA = 0;
+    }
     gEffect16SinValueA = mathSinf(3.1415927f * (f32)(s16)gEffect16SinPhaseCounterA / 32768.0f);
     gEffect16SinPhaseCounterB = gEffect16SinPhaseCounterB + framesThisStep * 0x32;
-    if (gEffect16SinPhaseCounterB > 0x7fff)
+    if (gEffect16SinPhaseCounterB > 0x7fff) {
         gEffect16SinPhaseCounterB = 0;
+    }
     gEffect16SinValueB = mathSinf(3.1415927f * (f32)(s16)gEffect16SinPhaseCounterB / 32768.0f);
 }
 
-void Effect16_func03_nop(void)
-{
+void Effect16_func03_nop(void) {
 }
 
-void Effect16_release(void)
-{
+void Effect16_release(void) {
 }
 
-void Effect16_initialise(void)
-{
+void Effect16_initialise(void) {
 }

@@ -8,7 +8,7 @@ void Effect9_func03_nop(void);
 void Effect9_release(void);
 void Effect9_initialise(void);
 int Effect9_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs);
+                        s16* extraArgs);
 void Effect9_updateFrameState(void);
 
 #endif /* MAIN_DLL_DLL_0022_EFFECT9_H_ */

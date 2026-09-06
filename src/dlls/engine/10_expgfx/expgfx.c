@@ -2302,18 +2302,18 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                     if (workB < 300.0f) {
                         if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0) {
-                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER | 0LL;
+                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
                         }
                         if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0) {
-                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY | 0LL;
+                            slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_TRICKY;
                         }
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED) != 0) {
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
                         }
                         slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
                         slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
                         slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
-                        slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
+                        slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
                         slot->velocityX = -workVec[0] * attractRatio;
                         slot->velocityZ = -workVec[2] * attractRatio;
                     }
@@ -2359,22 +2359,22 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->sourceVecY = 0;
                             slot->sourceVecZ = 0;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B | 0LL;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B;
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A | 0LL;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A;
                             }
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED | 0LL;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_IMPACT_POSITION_LOCKED;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE | 0LL;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_FAST_Y_RESPONSE;
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0) {
-                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY | 0LL;
+                                slot->behaviorFlags ^= EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY;
                             }
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER) != 0) {
                                 slot->behaviorFlags ^= EXPGFX_BEHAVIOR_RANDOM_XZ_JITTER;
                             }
-                            slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED | 0LL;
+                            slot->renderFlags ^= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
                         }
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_MASK) != 0 &&
@@ -2407,7 +2407,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             (slot->renderFlags & EXPGFX_RENDER_IMPACT_POSITION_LOCKED) == 0) {
                             slot->velocityX *= EXPGFX_SLOT_MOTION_STEP;
                             slot->velocityZ *= EXPGFX_SLOT_MOTION_STEP;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_PARTFX_ON_IMPACT;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
                                     ->spawnObject(srcObj, slot->impactEffectId, &rotParams, 0x200001, -1, 0);
@@ -2417,18 +2417,18 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
                             slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1 | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0) {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
                             slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2 | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3) != 0) {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
                             slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3 | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
@@ -2446,7 +2446,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                                 slot->velocityZ = v * (st - v);
                             }
                             slot->scaleCurrent *= 0.65f;
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4 | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->impactEffectId != -1) {
                                 (*gPartfxInterface)
@@ -2483,7 +2483,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                                 Sfx_PlayFromObject((GameObject*)srcObj, SFXTRIG_blkscrp6);
                             }
                             slot->impactEffectId = -1;
-                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT | 0LL;
+                            slot->behaviorFlags |= EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT;
                             slot->lifetimeFrame = 0;
                             gExpgfxFrameParityBit = 0;
                         }
@@ -2524,7 +2524,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH) != 0) {
                         if (0.25f * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame) {
-                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH | 0LL;
+                            slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH;
                             slot->velocityX *= -3.0f;
                             slot->velocityY *= -3.0f;
                             slot->velocityZ *= -3.0f;
@@ -3460,7 +3460,7 @@ static inline void renderParticlesBody(void) {
                     queuePosition[1] = 0.5f * (poolBounds->minY + poolBounds->maxY);
                     queuePosition[2] = 0.5f * (poolBounds->minZ + poolBounds->maxZ) - playerMapOffsetZ;
                 }
-                PSMTXMultVec((float(*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
+                PSMTXMultVec((float (*)[4])currentMatrix, (Vec*)queuePosition, (Vec*)queuePosition);
                 if (*poolSourceIds != 0) {
                     queuePosition[2] = queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
                 }
@@ -3847,7 +3847,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         slot->stateBits.bits.frameParity = gExpgfxFrameParityBit;
 
         if ((slot->renderFlags & EXPGFX_RENDER_BACKDATE_MOTION) != 0) {
-            slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_BACKDATE_MOTION + 0LL);
+            slot->renderFlags ^= EXPGFX_RENDER_BACKDATE_MOTION;
             slot->posX.value = slot->velocityX * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posX.value;
             slot->posY.value = slot->velocityY * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posY.value;
             slot->posZ.value = slot->velocityZ * (1.5f * (f32)(s32)slot->lifetimeFrame) + slot->posZ.value;
@@ -3861,7 +3861,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             f32 dz;
             f32 distSq;
             playerObj = (GameObject*)Obj_GetPlayerObject();
-            slot->renderFlags = slot->renderFlags ^ (EXPGFX_RENDER_AIM_AT_ACTOR + 0LL);
+            slot->renderFlags ^= EXPGFX_RENDER_AIM_AT_ACTOR;
             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
                 dx = playerObj->anim.worldPosX - slot->startPosX.value;
                 dz = playerObj->anim.worldPosZ - slot->startPosZ.value;

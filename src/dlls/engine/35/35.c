@@ -35,30 +35,24 @@ ObjectDescriptor6 Effect10_funcs = {
     (ObjectDescriptorCallback)Effect10_updateFrameState,
 };
 
-int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, f32* extraParam)
-{
+int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, f32* extraParam) {
     PartFxSpawn p;
     u32 hasSrc;
 
     gEffect10ScrollPhaseA += 0.001f;
-    if (gEffect10ScrollPhaseA > 1.0f)
-    {
+    if (gEffect10ScrollPhaseA > 1.0f) {
         gEffect10ScrollPhaseA = 0.1f;
     }
     gEffect10ScrollPhaseB += 0.0003f;
-    if (gEffect10ScrollPhaseB > 1.0f)
-    {
+    if (gEffect10ScrollPhaseB > 1.0f) {
         gEffect10ScrollPhaseB = 0.3f;
     }
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
         return -1;
     }
     hasSrc = flags & EFFECT10_FLAG_USE_SRC;
-    if (hasSrc != 0)
-    {
-        if (src == NULL)
-        {
+    if (hasSrc != 0) {
+        if (src == NULL) {
             return -1;
         }
         p.sourcePosX = src->posX;
@@ -93,8 +87,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     p.overrideColor1 = 0xffff;
     p.overrideColor2 = 0xffff;
     p.textureSetupFlags = 0;
-    if (src == NULL)
-    {
+    if (src == NULL) {
         gEffect10DefaultSrcParams.posX = 0.0f;
         gEffect10DefaultSrcParams.posY = 0.0f;
         gEffect10DefaultSrcParams.posZ = 0.0f;
@@ -104,8 +97,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         gEffect10DefaultSrcParams.rotZ = 0;
         src = &gEffect10DefaultSrcParams;
     }
-    switch (id)
-    {
+    switch (id) {
     case 0x32a:
         p.lifetimeFrames = (int)(50.0f * src->scale + 20.0f);
         p.scale = 0.0008f * (f32)(int)p.lifetimeFrames;
@@ -156,8 +148,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x60;
         p.initialAlpha = 0xff;
         break;
-    case 0x32e:
-    {
+    case 0x32e: {
         u16 color;
 
         p.velocityX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
@@ -218,16 +209,12 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.behaviorFlags = 0xa100100;
         p.textureId = 0x62;
         break;
-    case 0x336:
-    {
+    case 0x336: {
         f32 scale;
 
-        if (extraParam != NULL)
-        {
+        if (extraParam != NULL) {
             scale = *extraParam;
-        }
-        else
-        {
+        } else {
             scale = 1.0f;
         }
         p.startPosX = scale * (f32)randomGetRange(-10, 10);
@@ -249,33 +236,24 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0xc9d;
         break;
     }
-    case 0x337:
-    {
+    case 0x337: {
         int mode;
 
-        if (extraParam != NULL)
-        {
+        if (extraParam != NULL) {
             mode = *(int*)extraParam;
-        }
-        else
-        {
+        } else {
             mode = 0;
         }
-        if (mode == 0)
-        {
+        if (mode == 0) {
             p.scale = 0.02f;
             p.lifetimeFrames = 1;
             p.behaviorFlags = 0x480000;
-        }
-        else if (mode == 1)
-        {
+        } else if (mode == 1) {
             p.scale = 0.04f;
             p.lifetimeFrames = 1;
             p.behaviorFlags = 0x480000;
             p.initialAlpha = 0x32;
-        }
-        else if (mode == 2)
-        {
+        } else if (mode == 2) {
             p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
             p.velocityY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
             p.velocityZ = 0.02f * (f32)randomGetRange(-10, 10);
@@ -283,9 +261,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             p.lifetimeFrames = randomGetRange(0x1e, 0x28);
             p.behaviorFlags = 0x3000000;
             p.renderFlags = 0x600000;
-        }
-        else if (mode == 3)
-        {
+        } else if (mode == 3) {
             p.startPosX = (f32)randomGetRange(-10, 10);
             p.startPosY = (f32)randomGetRange(-10, 10);
             p.startPosZ = (f32)randomGetRange(-10, 10);
@@ -296,9 +272,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             p.lifetimeFrames = 0x1e;
             p.initialAlpha = 0xb4;
             p.behaviorFlags = 0x80480404;
-        }
-        else
-        {
+        } else {
             p.startPosX = (f32)randomGetRange(-3, 3);
             p.startPosY = (f32)randomGetRange(-3, 3);
             p.startPosZ = (f32)randomGetRange(-3, 3);
@@ -311,33 +285,24 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0xc7e;
         break;
     }
-    case 0x338:
-    {
+    case 0x338: {
         int mode;
 
-        if (extraParam != NULL)
-        {
+        if (extraParam != NULL) {
             mode = *(int*)extraParam;
-        }
-        else
-        {
+        } else {
             mode = 0;
         }
-        if (mode == 0)
-        {
+        if (mode == 0) {
             p.scale = 0.02f;
             p.lifetimeFrames = 1;
             p.behaviorFlags = 0x480000;
-        }
-        else if (mode == 1)
-        {
+        } else if (mode == 1) {
             p.scale = 0.04f;
             p.lifetimeFrames = 1;
             p.behaviorFlags = 0x480000;
             p.initialAlpha = 0x32;
-        }
-        else if (mode == 2)
-        {
+        } else if (mode == 2) {
             p.velocityX = 0.02f * (f32)randomGetRange(-0xf, 0xf);
             p.velocityY = 0.02f * (f32)randomGetRange(-0xf, 0xf);
             p.velocityZ = 0.02f * (f32)randomGetRange(-10, 10);
@@ -345,9 +310,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             p.lifetimeFrames = randomGetRange(0x1e, 0x28);
             p.behaviorFlags = 0x3000000;
             p.renderFlags = 0x600000;
-        }
-        else if (mode == 3)
-        {
+        } else if (mode == 3) {
             p.startPosX = (f32)randomGetRange(-10, 10);
             p.startPosY = (f32)randomGetRange(-10, 10);
             p.startPosZ = (f32)randomGetRange(-10, 10);
@@ -358,9 +321,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             p.lifetimeFrames = 0x1e;
             p.initialAlpha = 0xb4;
             p.behaviorFlags = 0x80480404;
-        }
-        else
-        {
+        } else {
             p.startPosX = (f32)randomGetRange(-3, 3);
             p.startPosY = (f32)randomGetRange(-3, 3);
             p.startPosZ = (f32)randomGetRange(-3, 3);
@@ -464,8 +425,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x2b;
         p.initialAlpha = 0x9d;
         break;
-    case 0x34d:
-    {
+    case 0x34d: {
         u16 color;
 
         p.velocityX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
@@ -493,8 +453,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x3a3;
         break;
     }
-    case 0x34e:
-    {
+    case 0x34e: {
         u16 color;
 
         p.velocityX = 0.004f * (f32)randomGetRange(-0x28, 0x28);
@@ -532,20 +491,15 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         return -1;
     }
     p.behaviorFlags = p.behaviorFlags | flags;
-    if (((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0) && ((p.behaviorFlags & EFFECT10_FLAGA_UNK2) != 0))
-    {
-        p.behaviorFlags ^= 2LL;
+    if (((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0) && ((p.behaviorFlags & EFFECT10_FLAGA_UNK2) != 0)) {
+        p.behaviorFlags ^= 2;
     }
-    if ((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0)
-    {
-        if (hasSrc != 0)
-        {
+    if ((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0) {
+        if (hasSrc != 0) {
             p.startPosX = p.startPosX + p.sourcePosX;
             p.startPosY = p.startPosY + p.sourcePosY;
             p.startPosZ = p.startPosZ + p.sourcePosZ;
-        }
-        else if (p.attachedSource != NULL)
-        {
+        } else if (p.attachedSource != NULL) {
             p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
             p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;
             p.startPosZ = p.startPosZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
@@ -554,44 +508,36 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-void Effect10_updateFrameState(void)
-{
+void Effect10_updateFrameState(void) {
     f32 sum;
     f32 step;
     sum = gEffect10TickScrollPhaseA + (step = 0.001f * timeDelta);
     gEffect10TickScrollPhaseA = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect10TickScrollPhaseA = 0.1f;
     }
     sum = gEffect10TickScrollPhaseB + step;
     gEffect10TickScrollPhaseB = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect10TickScrollPhaseB = 0.3f;
     }
     gEffect10SineAnglePhaseA = gEffect10SineAnglePhaseA + framesThisStep * 0x64;
-    if (gEffect10SineAnglePhaseA > 0x7fff)
-    {
+    if (gEffect10SineAnglePhaseA > 0x7fff) {
         gEffect10SineAnglePhaseA = 0;
     }
     gEffect10SineValueA = mathSinf(3.1415927f * (f32)(s16)gEffect10SineAnglePhaseA / 32768.0f);
     gEffect10SineAnglePhaseB = gEffect10SineAnglePhaseB + framesThisStep * 0x32;
-    if (gEffect10SineAnglePhaseB > 0x7fff)
-    {
+    if (gEffect10SineAnglePhaseB > 0x7fff) {
         gEffect10SineAnglePhaseB = 0;
     }
     gEffect10SineValueB = mathSinf(3.1415927f * (f32)(s16)gEffect10SineAnglePhaseB / 32768.0f);
 }
 
-void Effect10_func03_nop(void)
-{
+void Effect10_func03_nop(void) {
 }
 
-void Effect10_release(void)
-{
+void Effect10_release(void) {
 }
 
-void Effect10_initialise(void)
-{
+void Effect10_initialise(void) {
 }

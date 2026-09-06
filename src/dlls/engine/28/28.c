@@ -153,7 +153,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         }
         cfg.lifetimeFrames = randomGetRange(0, 0x1e) + 0x46;
         cfg.initialAlpha = 0x64;
-        cfg.behaviorFlags |= 0x80100LL;
+        cfg.behaviorFlags |= 0x80100;
         cfg.textureId = 0xc79;
         cfg.linkGroup = 0;
         cfg.colorWord0 = 0xe600;
@@ -500,7 +500,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
     }
     cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
-        cfg.behaviorFlags ^= 2LL;
+        cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if (hasAttachedSource != 0) {

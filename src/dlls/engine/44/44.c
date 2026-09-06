@@ -16,29 +16,26 @@ f32 gEffect19ScrollPhase1 = 0.3f;
 f32 gEffect19ScrollPhase2 = 0.1f;
 f32 gEffect19ScrollPhase3 = 0.3f;
 
-
 int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                    f32* extraArgs)
-{
+                         f32* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 
     gEffect19ScrollPhase0 += 0.001f;
-    if (gEffect19ScrollPhase0 > 1.0f)
+    if (gEffect19ScrollPhase0 > 1.0f) {
         gEffect19ScrollPhase0 = 0.1f;
-    gEffect19ScrollPhase1 += 0.0003f;
-    if (gEffect19ScrollPhase1 > 1.0f)
-        gEffect19ScrollPhase1 = 0.3f;
-    if (sourceObj == NULL)
-    {
-        spawnResult = -1;
     }
-    else
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
-            if (spawnParams == NULL)
+    gEffect19ScrollPhase1 += 0.0003f;
+    if (gEffect19ScrollPhase1 > 1.0f) {
+        gEffect19ScrollPhase1 = 0.3f;
+    }
+    if (sourceObj == NULL) {
+        spawnResult = -1;
+    } else {
+        if ((spawnFlags & 0x200000) != 0) {
+            if (spawnParams == NULL) {
                 return -1;
+            }
             cfg.sourcePosX = spawnParams->posX;
             cfg.sourcePosY = spawnParams->posY;
             cfg.sourcePosZ = spawnParams->posZ;
@@ -71,17 +68,18 @@ int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.overrideColor1 = 0xffff;
         cfg.overrideColor2 = 0xffff;
         cfg.textureSetupFlags = 0;
-        switch (effectId)
-        {
+        switch (effectId) {
         case 0x76c:
             cfg.velocityX = 0.002f * (f32)(s32)randomGetRange(0x1e, 0x64);
-            if (spawnParams->posX > 0.0f)
+            if (spawnParams->posX > 0.0f) {
                 cfg.velocityX = -cfg.velocityX;
+            }
             cfg.velocityY = 0.001f * (f32)(s32)randomGetRange(0, 0x64) + 0.1f;
             cfg.startPosZ = 0.1f * (f32)(s32)randomGetRange((s32)extraArgs[0], extraArgs[1]);
             cfg.startPosX = 5.0f;
-            if (spawnParams->posX > 0.0f)
+            if (spawnParams->posX > 0.0f) {
                 cfg.startPosX = -5.0f;
+            }
             cfg.scale = 3e-05f * (f32)(s32)randomGetRange(-0x64, 0x64) + extraArgs[2];
             cfg.lifetimeFrames = 0x23;
             cfg.behaviorFlags = 0x80108;
@@ -92,18 +90,15 @@ int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             return -1;
         }
         cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-        if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-            cfg.behaviorFlags ^= 2LL;
-        if ((cfg.behaviorFlags & 1) != 0)
-        {
-            if ((spawnFlags & 0x200000) != 0)
-            {
+        if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+            cfg.behaviorFlags ^= 2;
+        }
+        if ((cfg.behaviorFlags & 1) != 0) {
+            if ((spawnFlags & 0x200000) != 0) {
                 cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
                 cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
                 cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-            }
-            else if (cfg.attachedSource != NULL)
-            {
+            } else if (cfg.attachedSource != NULL) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -114,38 +109,38 @@ int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     return spawnResult;
 }
 
-void Effect19_updateFrameState(void)
-{
+void Effect19_updateFrameState(void) {
     f32 sum;
     f32 step;
     sum = gEffect19ScrollPhase2 + (step = 0.001f * timeDelta);
     gEffect19ScrollPhase2 = sum;
-    if (sum > 1.0f)
+    if (sum > 1.0f) {
         gEffect19ScrollPhase2 = 0.1f;
+    }
     sum = gEffect19ScrollPhase3 + step;
     gEffect19ScrollPhase3 = sum;
-    if (sum > 1.0f)
+    if (sum > 1.0f) {
         gEffect19ScrollPhase3 = 0.3f;
+    }
     gEffect19Osc0Angle = gEffect19Osc0Angle + framesThisStep * 0x64;
-    if (gEffect19Osc0Angle > 0x7fff)
+    if (gEffect19Osc0Angle > 0x7fff) {
         gEffect19Osc0Angle = 0;
+    }
     gEffect19Osc0Value = mathSinf(3.1415927f * (f32)(s16)gEffect19Osc0Angle / 32768.0f);
     gEffect19Osc1Angle = gEffect19Osc1Angle + framesThisStep * 0x32;
-    if (gEffect19Osc1Angle > 0x7fff)
+    if (gEffect19Osc1Angle > 0x7fff) {
         gEffect19Osc1Angle = 0;
+    }
     gEffect19Osc1Value = mathSinf(3.1415927f * (f32)(s16)gEffect19Osc1Angle / 32768.0f);
 }
 
-void Effect19_func03_nop(void)
-{
+void Effect19_func03_nop(void) {
 }
 
-void Effect19_release(void)
-{
+void Effect19_release(void) {
 }
 
-void Effect19_initialise(void)
-{
+void Effect19_initialise(void) {
 }
 
 ObjectDescriptor6 Effect19_funcs = {

@@ -20,21 +20,17 @@ ObjectDescriptor6 Effect12_funcs = {
     (ObjectDescriptorCallback)Effect12_func05_nop,
 };
 
-int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, f32* auxParam)
-{
+int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, f32* auxParam) {
     PartFxSpawnParams local;
     PartFxSpawn p;
     u32 hasOffset;
 
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
         return -1;
     }
     hasOffset = flags & EFFECT_FLAG_HAS_SRC;
-    if (hasOffset != 0)
-    {
-        if (src == NULL)
-        {
+    if (hasOffset != 0) {
+        if (src == NULL) {
             return -1;
         }
         p.sourcePosX = src->posX;
@@ -68,8 +64,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
     p.overrideColor0 = 0xffff;
     p.overrideColor1 = 0xffff;
     p.overrideColor2 = 0xffff;
-    switch (id)
-    {
+    switch (id) {
     case 0x47e:
         p.scale = 0.075f;
         p.lifetimeFrames = randomGetRange(0x32, 0x3c);
@@ -79,8 +74,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.textureId = 0x159;
         break;
     case 0x483:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect12DefaultSrc.posX = 0.0f;
             gEffect12DefaultSrc.posY = 0.0f;
             gEffect12DefaultSrc.posZ = 0.0f;
@@ -103,8 +97,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.initialAlpha = 0x3c;
         break;
     case 0x484:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect12DefaultSrc.posX = 0.0f;
             gEffect12DefaultSrc.posY = 0.0f;
             gEffect12DefaultSrc.posZ = 0.0f;
@@ -125,8 +118,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.initialAlpha = 0x7f;
         break;
     case 0x485:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect12DefaultSrc.posX = 0.0f;
             gEffect12DefaultSrc.posY = 0.0f;
             gEffect12DefaultSrc.posZ = 0.0f;
@@ -163,8 +155,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.renderFlags = 0x908;
         break;
     case 0x487:
-        if (auxParam == NULL)
-        {
+        if (auxParam == NULL) {
             return 0;
         }
         p.velocityX = *auxParam;
@@ -231,8 +222,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.initialAlpha = 0xd2;
         break;
     case 0x48c:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect12DefaultSrc.posX = 0.0f;
             gEffect12DefaultSrc.posY = 0.0f;
             gEffect12DefaultSrc.posZ = 0.0f;
@@ -241,20 +231,16 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             gEffect12DefaultSrc.rotY = 0;
             gEffect12DefaultSrc.rotZ = 0;
         }
-        if (auxParam == NULL)
-        {
+        if (auxParam == NULL) {
             return -1;
         }
-        if (*(int*)auxParam == 0)
-        {
+        if (*(int*)auxParam == 0) {
             p.scale = 0.002f * (f32)randomGetRange(8, 0x11);
             p.lifetimeFrames = randomGetRange(5, 10);
             p.initialAlpha = 0x64;
             p.behaviorFlags = 0x80110;
             p.renderFlags = 0x4000800;
-        }
-        else if (*(int*)auxParam == 1)
-        {
+        } else if (*(int*)auxParam == 1) {
             p.velocityX = 0.02f * (f32)randomGetRange(-0x32, 0x32);
             p.velocityY = 0.02f * (f32)randomGetRange(-0x32, 0x32);
             p.velocityZ = 0.02f * (f32)randomGetRange(0, 0x32);
@@ -263,9 +249,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
             p.initialAlpha = 0;
             p.behaviorFlags = 0x880014;
             p.renderFlags = 0x4010808;
-        }
-        else
-        {
+        } else {
             p.velocityX = 0.02f * (f32)randomGetRange(-0x28, 0x28);
             p.velocityY = 0.04f * (f32)randomGetRange(-10, 0x1e);
             p.velocityZ = 0.04f * (f32)randomGetRange(0, 0x28);
@@ -289,20 +273,15 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         return -1;
     }
     p.behaviorFlags = p.behaviorFlags | flags;
-    if (((p.behaviorFlags & 1) != 0) && ((p.behaviorFlags & 2) != 0))
-    {
-        p.behaviorFlags ^= 2LL;
+    if (((p.behaviorFlags & 1) != 0) && ((p.behaviorFlags & 2) != 0)) {
+        p.behaviorFlags ^= 2;
     }
-    if ((p.behaviorFlags & 1) != 0)
-    {
-        if (hasOffset != 0)
-        {
+    if ((p.behaviorFlags & 1) != 0) {
+        if (hasOffset != 0) {
             p.startPosX = p.startPosX + p.sourcePosX;
             p.startPosY = p.startPosY + p.sourcePosY;
             p.startPosZ = p.startPosZ + p.sourcePosZ;
-        }
-        else if (p.attachedSource != NULL)
-        {
+        } else if (p.attachedSource != NULL) {
             p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
             p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;
             p.startPosZ = p.startPosZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
@@ -311,18 +290,14 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-void Effect12_func05_nop(void)
-{
+void Effect12_func05_nop(void) {
 }
 
-void Effect12_func03_nop(void)
-{
+void Effect12_func03_nop(void) {
 }
 
-void Effect12_release(void)
-{
+void Effect12_release(void) {
 }
 
-void Effect12_initialise(void)
-{
+void Effect12_initialise(void) {
 }

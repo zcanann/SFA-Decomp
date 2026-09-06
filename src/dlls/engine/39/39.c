@@ -7,7 +7,6 @@
 
 PartFxSpawnParams gEffect14SharedSrcParams;
 
-
 ObjectDescriptor6 Effect14_funcs = {
     0,
     0,
@@ -21,21 +20,17 @@ ObjectDescriptor6 Effect14_funcs = {
     (ObjectDescriptorCallback)Effect14_func05_nop,
 };
 
-int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, u16* extraArgs)
-{
+int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte, u16* extraArgs) {
     PartFxSpawnParams rotCtx;
     PartFxSpawn p;
     u32 hasOffset;
 
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
         return -1;
     }
     hasOffset = flags & EFFECT_FLAG_HAS_SRC;
-    if (hasOffset != 0)
-    {
-        if (src == NULL)
-        {
+    if (hasOffset != 0) {
+        if (src == NULL) {
             return -1;
         }
         p.sourcePosX = src->posX;
@@ -69,11 +64,9 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
     p.overrideColor0 = 0xffff;
     p.overrideColor1 = 0xffff;
     p.overrideColor2 = 0xffff;
-    switch (id)
-    {
+    switch (id) {
     case 0x4b0:
-        if (extraArgs == NULL)
-        {
+        if (extraArgs == NULL) {
             return 0;
         }
         p.initialAlpha = *extraArgs >> 1;
@@ -143,8 +136,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.overrideColor2 = randomGetRange(0, 0xffff);
         break;
     case 0x4b5:
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             p.velocityX = *(f32*)extraArgs;
             p.velocityY = *((f32*)extraArgs + 1);
             p.velocityZ = *((f32*)extraArgs + 2);
@@ -162,8 +154,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.overrideColor2 = 0;
         break;
     case 0x4b6:
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             p.velocityX = *(f32*)extraArgs;
             p.velocityY = *((f32*)extraArgs + 1);
             p.velocityZ = *((f32*)extraArgs + 2);
@@ -189,8 +180,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.initialAlpha = 0x3f;
         break;
     case 0x4b8:
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             p.velocityX = *(f32*)extraArgs;
             p.velocityY = *((f32*)extraArgs + 1);
             p.velocityZ = *((f32*)extraArgs + 2);
@@ -199,12 +189,9 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.scale = 0.0035f;
         p.behaviorFlags = 0x80200;
         p.renderFlags = 0x4000800;
-        if (randomGetRange(0, 2) == 0)
-        {
+        if (randomGetRange(0, 2) == 0) {
             p.textureId = 0xc0e;
-        }
-        else
-        {
+        } else {
             p.textureId = randomGetRange(0x156, 0x157);
         }
         break;
@@ -242,8 +229,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.renderFlags = 0x4000820;
         break;
     case 0x4bc:
-        if (extraArgs == NULL)
-        {
+        if (extraArgs == NULL) {
             return 0;
         }
         p.startPosX = 0.003921f * ((f32)p.initialAlpha * (f32)randomGetRange(-10, 10));
@@ -365,8 +351,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.textureId = 0x62;
         break;
     case 0x4c5:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect14SharedSrcParams.posX = 0.0f;
             gEffect14SharedSrcParams.posY = 0.0f;
             gEffect14SharedSrcParams.posZ = 0.0f;
@@ -510,20 +495,15 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         return -1;
     }
     p.behaviorFlags = p.behaviorFlags | flags;
-    if (((p.behaviorFlags & 1) != 0) && ((p.behaviorFlags & 2) != 0))
-    {
-        p.behaviorFlags ^= 2LL;
+    if (((p.behaviorFlags & 1) != 0) && ((p.behaviorFlags & 2) != 0)) {
+        p.behaviorFlags ^= 2;
     }
-    if ((p.behaviorFlags & 1) != 0)
-    {
-        if (hasOffset != 0)
-        {
+    if ((p.behaviorFlags & 1) != 0) {
+        if (hasOffset != 0) {
             p.startPosX = p.startPosX + p.sourcePosX;
             p.startPosY = p.startPosY + p.sourcePosY;
             p.startPosZ = p.startPosZ + p.sourcePosZ;
-        }
-        else if (p.attachedSource != NULL)
-        {
+        } else if (p.attachedSource != NULL) {
             p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
             p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;
             p.startPosZ = p.startPosZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
@@ -532,18 +512,14 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-void Effect14_func05_nop(void)
-{
+void Effect14_func05_nop(void) {
 }
 
-void Effect14_func03_nop(void)
-{
+void Effect14_func03_nop(void) {
 }
 
-void Effect14_release(void)
-{
+void Effect14_release(void) {
 }
 
-void Effect14_initialise(void)
-{
+void Effect14_initialise(void) {
 }

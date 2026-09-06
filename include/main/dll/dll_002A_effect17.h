@@ -4,7 +4,7 @@
 #include "main/dll/partfx_interface.h"
 
 int Effect17_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                    s16* extraArgs);
+                         s16* extraArgs);
 void Effect17_updateFrameState(void);
 void Effect17_func03_nop(void);
 void Effect17_release(void);

@@ -110,9 +110,9 @@ void dll_0B_spawnSequence(void* a, void* b, void* c, void* d, void* e, int f, vo
     gModgfxSpawnContext.pendingSpawns = (ModgfxPendingSpawn*)gModgfxPendingSpawnQueue;
     gModgfxSpawnContext.pendingSpawnCount = gModgfxPendingSpawnWriteCursor - gModgfxPendingSpawnStartCursor;
     if (g == NULL && f == 0) {
-        gModgfxSpawnContext.flags |= 0x2000000LL;
+        gModgfxSpawnContext.flags |= 0x2000000;
     } else {
-        gModgfxSpawnContext.flags |= 0x4000000LL;
+        gModgfxSpawnContext.flags |= 0x4000000;
     }
     if (gModgfxSpawnContext.flags & 1) {
         if (gModgfxSpawnContext.attachedSource != NULL) {

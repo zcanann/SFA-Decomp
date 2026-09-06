@@ -8,6 +8,6 @@ void Effect7_release(void);
 void Effect7_initialise(void);
 void Effect7_updateFrameState(void);
 int Effect7_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs);
+                        s16* extraArgs);
 
 #endif /* MAIN_DLL_DLL_0020_EFFECT7_H_ */
