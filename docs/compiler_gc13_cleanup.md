@@ -743,3 +743,37 @@ Strict matching and `ninja all_source` pass with 30-second limits; the DOL
 SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`. The generated-path
 audit passes. Controls and before/after audits are under
 `build/gc13_new_matches/player_round7*`.
+
+## September 6: World-map camera orbit smoothing
+
+Engine 78 (`dlls/engine/78/78.c`) reaches **100% for all six functions,
+3,548 code bytes, and 164 assigned data bytes**, and is now source-linked
+for EN v1.0. `CameraModeWorldMap_update` adds 3,212 exact code bytes,
+improving from 99.92528% to 100%; the complete TU improves from 99.93236%
+to 100%.
+
+Both orbit calculations now keep their orbit offsets and camera-position
+errors in separate locals. The declarations pair each axis's offset and
+error, with the horizontal X/Z pairs preceding Y. This preserves the
+arithmetic order while giving GC/1.3 the retail FPR allocation. Reusing
+the offset locals for the errors swapped `f4` and `f6` in six instructions
+per calculation. The baseline backend trace aligns all 803 instructions
+and preserves the ordinary compile's raw object. The accepted source also
+matches under GC/2.0; this is source recovery, not a compiler discriminator.
+
+Only 12 instruction bytes change, all in the update function. Every other
+function, allocated data byte, section size/alignment, and named symbol
+location is preserved. Anonymous literal symbols are renumbered; all 57
+affected relocations retain their types, locations, and resolved targets.
+The TU keeps its common GC/1.3 compiler, existing optimization profile,
+boundaries, generated path, header, and shared consumers. Running
+`clang-format -i` leaves the source and header unchanged, and both pass
+`clang-format --dry-run --Werror`.
+
+The generated-path audit and both build gates pass on fresh staging. The strict
+matching build takes 20.04 seconds and `ninja all_source` takes 25.18 seconds, each
+within its 30-second timeout. Only this TU's source object changes, and
+the source-linked DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
+reports, traces, and object audits are under
+`build/gc13_new_matches/worldmap_match/`.

@@ -1148,7 +1148,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/engine/75/75.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/76/76.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/77/77.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/78/78.c", cflags=cflags_dll_noopt_nocse_noprop),
+            Object(MatchingFor("GSAE01"), "dlls/engine/78/78.c", cflags=cflags_dll_noopt_nocse_noprop),
             Object(MatchingFor("GSAE01"), "dlls/engine/79/79.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/80/80.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/81/81.c"),
