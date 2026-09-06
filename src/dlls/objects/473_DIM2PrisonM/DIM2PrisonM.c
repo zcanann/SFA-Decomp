@@ -28,7 +28,6 @@
 typedef int (*Dim2PrisonMammothStateHandler)(GameObject* obj, Dim2PrisonMammothState* state);
 typedef int (*Dim2PrisonMammothDefaultStateHandler)(void);
 
-
 Dim2PrisonMammothStateHandler gDim2PrisonMammothStateHandlers[4];
 Dim2PrisonMammothDefaultStateHandler gDim2PrisonMammothDefaultStateHandler[2];
 u8 gPrisonMammothStateFlagsTable[4] = {DIM2_PRISON_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT, 0, 0, 0};
@@ -191,8 +190,8 @@ void dim2prisonmammoth_update(GameObject* obj) {
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if ((gPrisonMammothStateFlagsTable[state->baddie.controlMode] & DIM2_PRISON_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT) ==
         0) {
-        state->hitReactState = ObjHitReact_Update(obj, gPrisonMammothHitReactEntry, 1, state->hitReactState,
-                                                  &state->hitReactStepScale);
+        state->hitReactState =
+            ObjHitReact_Update(obj, gPrisonMammothHitReactEntry, 1, state->hitReactState, &state->hitReactStepScale);
         if (state->hitReactState != 0) {
             characterHeadLookRelax(obj, &state->eyeAnim);
             characterDoEyeAnims(obj, &state->eyeAnim);
@@ -235,7 +234,8 @@ void dim2prisonmammoth_init(GameObject* obj, const Dim2PrisonMammothPlacement* p
     obj->animEventCallback = dim2prisonmammoth_SeqFn;
     state = obj->extra;
     if (obj->anim.modelState != NULL) {
-        obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_0010 | OBJ_MODEL_STATE_UNREAD_0200 | OBJ_MODEL_STATE_UNREAD_0800;
+        obj->anim.modelState->flags |=
+            OBJ_MODEL_STATE_UNREAD_0010 | OBJ_MODEL_STATE_UNREAD_0200 | OBJ_MODEL_STATE_UNREAD_0800;
         obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_8000 | OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE;
     }
     (*gPlayerInterface)->init(obj, state, 4, 1);
