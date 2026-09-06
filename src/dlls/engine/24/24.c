@@ -30,10 +30,10 @@ s32 gBoneParticleBufferFlip;
 
 #define BONE_PARTICLE_EFFECT_PARTFX       0x28c
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
-#define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
-#define BONE_PARTICLE_EFFECT_SLOT_COUNT   20
+#define BONE_PARTICLE_EFFECT_VERTEX_COUNT 20
+#define BONE_PARTICLE_EFFECT_BUFFER_BYTES (BONE_PARTICLE_EFFECT_VERTEX_COUNT * sizeof(LightmapVertex))
 
-LightmapVertex* gBoneParticleEffectBuffers[8];
+LightmapVertex* gBoneParticleEffectBuffers[BONE_PARTICLE_EFFECT_BUFFER_COUNT];
 f32 gBoneParticleDriftVelocity[2] = {10.0f, 0.0f};
 
 /* the two bone-particle texture assets loaded at init (gBoneParticleTextureA/B) */
@@ -107,13 +107,13 @@ static f32 gBoneParticleJointZScales[35] = {0.75f,  1.0f,   0.772f, 0.967f, 0.96
 /* Per-bone particle vertex update + draw. */
 void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
     MatrixTransform transform;
+    ObjModel* model;
     s16 jointSlot;
     s16 cornerIndex;
     int vertexBase;
-    ObjModel* model;
     u32 jointId;
     u32 plane;
-    u8* jointMatrix;
+    MtxPtr jointMatrix;
     const Vec3f* cornersYZ;
     const Vec3f* cornersXZ;
     const Vec3f* cornersXY;
@@ -172,13 +172,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                 transform.rotZ = 0;
                 transform.rotY = 0;
                 transform.rotX = 0;
-                jointMatrix = model->jointMatrices[model->bufferFlags & 1];
+                jointMatrix = (MtxPtr)model->jointMatrices[model->bufferFlags & 1];
                 jointId = gBoneParticleJointIds[gBoneParticleStageIndex][jointSlot];
                 /* Retail advances by 16 matrix rows per joint in this renderer. */
-                jointMatrix = (u8*)((MtxPtr)jointMatrix + (jointId << 4));
-                jointX = (*(Mtx44*)jointMatrix)[3][0] + playerMapOffsetX;
-                jointY = (*(Mtx44*)jointMatrix)[3][1];
-                jointZ = (*(Mtx44*)jointMatrix)[3][2] + playerMapOffsetZ;
+                jointMatrix += jointId << 4;
+                jointX = jointMatrix[3][0] + playerMapOffsetX;
+                jointY = jointMatrix[3][1];
+                jointZ = jointMatrix[3][2] + playerMapOffsetZ;
                 jointX -= obj->anim.localPosX;
                 jointY -= obj->anim.localPosY;
                 jointZ -= obj->anim.localPosZ;
@@ -355,7 +355,7 @@ void boneParticleEffect_initialise(void) {
     gBoneParticleEffectBuffers[5] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     for (bufferIndex = 0; bufferIndex < BONE_PARTICLE_EFFECT_BUFFER_COUNT; bufferIndex++) {
-        for (vertexIndex = 0; vertexIndex < BONE_PARTICLE_EFFECT_SLOT_COUNT; vertexIndex++) {
+        for (vertexIndex = 0; vertexIndex < BONE_PARTICLE_EFFECT_VERTEX_COUNT; vertexIndex++) {
             gBoneParticleEffectBuffers[bufferIndex][vertexIndex].x = gBoneParticleInitVertices[vertexIndex].x;
             gBoneParticleEffectBuffers[bufferIndex][vertexIndex].y = gBoneParticleInitVertices[vertexIndex].y;
             gBoneParticleEffectBuffers[bufferIndex][vertexIndex].z = gBoneParticleInitVertices[vertexIndex].z;

@@ -41,7 +41,7 @@ spawn-packet casts. The registry includes the owning header and casts only at it
 generic resource boundary; its complete object SHA256 is unchanged:
 `5f9b93e30cb97dd5972ca89a2c1c8183d30c53c4f5e85bca76fb49892bdd14fb`.
 
-The update function now has the retail 441-instruction structure, with only
+The initial table recovery produced the retail 441-instruction structure, with only
 register differences (61 operand rows). Previously it had 442 instructions,
 including an extra move, and 11 operand rows. TU fuzzy match changes from
 99.77438% to 99.49054%; the other seven retail functions remain exact. This is a
@@ -68,3 +68,26 @@ This loses the 32-byte `.sdata2` section's exact credit; it does not change the
 initialized configuration data. Keep the TU `NonMatching` while recovering the
 real source explanation. `ninja all_source` and the strict retail DOL checksum
 pass with these changes.
+
+## Matrix Rows And Buffer Capacity
+
+The follow-up uses `MtxPtr` for the renderer's matrix rows and reads translation
+as `jointMatrix[3][0..2]`. It retains the sixteen-row step per joint; replacing
+that with a conventional one-matrix step would change behavior. Declaring the
+model before the loop locals together with this typed row access reduces the
+update function's differing operands from 61 to 53. Its 441-instruction structure
+is unchanged, fuzzy match rises from 99.20635% to 99.29705%, and TU fuzzy match
+rises from 99.49054% to 99.54876%. The other seven functions remain byte-exact.
+
+The buffer array now contains seven pointers, matching the seven allocation
+calls, update/draw iterations, and release iterations. Each allocation holds
+twenty `LightmapVertex` records; its size is expressed through that type. The
+former eighth pointer was never accessed. The generated BSS is 28 bytes with
+eight-byte alignment, accounting for the entire 32-byte retail span once linked.
+The symbol config records the 28-byte array rather than including the four-byte
+alignment tail in its size. `bone_particle_data_audit.py` now checks this storage
+extent and padding explanation as well as the initialized tables.
+
+All initialized data and the literal pool are unchanged, and the unit retains
+1904/1936 matched data bytes. Both build gates pass. This is a partial source and
+codegen gain, not a newly exact function or a solution to the literal-pool gap.

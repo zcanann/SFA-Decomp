@@ -1,6 +1,7 @@
 """Check the recovered EN bone-particle tables against the retail object.
 
-This audits initialized data and topology, not renderer code or its literal pool.
+This audits initialized data, topology, and buffer storage, not renderer code or
+its literal pool.
 Run after configuring and building all_source for GSAE01.
 """
 
@@ -45,6 +46,17 @@ def audit(target, current):
         require(current.symbols[name][:3] == (".data", offset, size),
                 f"incorrect layout for {name}")
 
+    buffers = current.symbols["gBoneParticleEffectBuffers"]
+    require(buffers[:3] == (".bss", 0, 7 * 4), "expected seven buffer pointers")
+    bss = current.sections[".bss"]
+    retail_bss = target.sections[".bss"]
+    require(bss[0] == retail_bss[0] == "SHT_NOBITS", "buffer storage is not BSS")
+    require(bss[2] == retail_bss[2] == 8, "unexpected buffer-section alignment")
+    require(bss[3] == 28 and retail_bss[3] == 32, "unexpected buffer-section extent")
+    require((bss[3] + bss[2] - 1) & -bss[2] == retail_bss[3],
+            "buffer-section tail is not accounted for by alignment")
+    require(bss[4] + bytes(4) == retail_bss[4], "buffer-section bytes differ")
+
     indices = [tuple(data[i + 1:i + 4]) for i in range(0x2F0, 0x590, 16)]
     expected = []
     for ring in range(4):
@@ -69,7 +81,8 @@ def audit(target, current):
 
     return {"initialized_bytes_exact": len(data), "vertices": 20,
             "drawn_triangles": 32, "retained_cap_triangles": 10,
-            "joint_groups": len(joint_ids) // 5, "max_joint_id": max(joint_ids)}
+            "joint_groups": len(joint_ids) // 5, "max_joint_id": max(joint_ids),
+            "buffer_pointers": 7, "buffer_bytes": 20 * 16, "bss_alignment_bytes": 4}
 
 
 def main():
