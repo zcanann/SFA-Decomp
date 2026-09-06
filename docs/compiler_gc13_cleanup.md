@@ -849,3 +849,36 @@ under `build/gc13_migration/remaining_flags/`; source/compiler controls and
 separate formatting packets are under `build/gc13_indexed/objlib_cleanup/`,
 `objprint_cleanup/`, `dbsymbol_cleanup/`, `prisonm_cleanup/`,
 `ktrex_native_cleanup/`, `dll263_cleanup/`, and `lightning_cleanup/`.
+
+## September 6: Viewfinder camera transition state
+
+Engine 68 (`dlls/engine/68/68.c`) reaches **100% for all ten functions,
+5,944 code bytes, and 192 assigned data bytes**, and is now source-linked
+for EN v1.0. `CameraModeViewfinder_update` adds 1,452 exact code bytes,
+improving from 99.338844% to 100%; the complete TU improves from 99.83849%
+to 100%.
+
+The update uses separate locals for the curve-completion result and pitch
+delta, and for the fade brightness and exit-completion flag. Keeping the
+exit flag beside the brightness declaration reproduces retail's allocation:
+the camera stays in `r31`, the fading target in `r30`, and the completion
+flag in `r29`. Splitting only the pitch delta leaves three wrong flag
+operands; separating both roles resolves all 47 differing instructions.
+The accepted backend trace aligns all 363 instructions, replays all 117
+GPR color choices, and produces the same raw object as an ordinary compile.
+The source also matches under GC/2.0, so this is not a compiler discriminator.
+
+Only 53 instruction bytes change, all in the update function. Every other
+function, allocated data byte, section size/alignment, and named symbol
+location is preserved. Nine relocations rename anonymous literals while
+retaining their types, locations, and resolved targets. The common GC/1.3
+compiler, existing optimization profile, TU boundaries, generated path,
+header declarations, and shared consumers are unchanged. Formatting fixes
+two indentation lines in a separate commit and preserves the raw object.
+
+The strict matching build and `ninja all_source` pass with 30-second
+timeouts. Only this TU's source object changes in the isolated build audit;
+the source-linked DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
+reports, backend traces, and object audits are under
+`build/gc13_new_matches/viewfinder_match/`.
