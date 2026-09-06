@@ -1288,7 +1288,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/projgfx/193/193.c"),
             Object(MatchingFor("GSAE01"), "dlls/projgfx/194/194.c"),
 
-            Object(NonMatching, "dlls/objects/195_Player/player.c", cflags=cflags_dll_noopt_noautoinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/195_Player/player.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/196_Tricky/tricky.c", cflags=cflags_dll_noopt, extra_cflags=["-char signed", "-inline deferred"]),
             Object(MatchingFor("GSAE01"), "dlls/objects/197/197.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/198_AnimatedObj/AnimatedObj.c"),

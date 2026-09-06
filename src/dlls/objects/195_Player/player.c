@@ -5492,9 +5492,8 @@ f32 lbl_803DC680 = 2.3f;
 f32 lbl_803DC684 = 1.0f;
 int lbl_803DC688[2] = {210, 212};
 f32 lbl_803DC690[2] = {0.030000001f, 0.030000001f};
-s16 lbl_803DC698 = 102;
-s16 lbl_803DC69A = 103;
-s16 lbl_803DC69C[2] = {240, 241};
+s16 gPlayerClimbOntoWallMoves[2] = {102, 103};
+s16 gPlayerClimbOntoWallAltMoves[2] = {240, 241};
 s16 gPlayerCurrentMoveId = -1;
 s16 gPlayerPrevMoveId = -1;
 u8 lbl_803DC6A4[4] = {10, 8, 5, 0};
@@ -7011,9 +7010,9 @@ int playerStateClimbOntoWall(GameObject* obj, PlayerState* state) {
         obj->anim.localPosX = inner->climbStartPosX;
         obj->anim.localPosZ = inner->climbStartPosZ;
         if (flag549 != 0) {
-            tbl = lbl_803DC69C;
+            tbl = gPlayerClimbOntoWallAltMoves;
         } else {
-            tbl = &lbl_803DC698;
+            tbl = gPlayerClimbOntoWallMoves;
         }
         flags = 0x25;
         if (flag549 != 0) {
@@ -13956,10 +13955,6 @@ void playerUpdateVelocityFromMotion(GameObject* a, void* b, BaddieState* baddieS
     }
 }
 
-extern f32 lbl_803E7EA4;
-extern f32 lbl_803E7EE0;
-extern f32 lbl_803E7F14;
-
 void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerState* cfg, f32 dt) {
     u32 b;
     void* found;
@@ -13977,7 +13972,7 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
 
     found = 0;
     {
-        f32 z = lbl_803E7EE0;
+        f32 z = 1.0f;
         ((PlayerState*)state)->targetAnimSpeed = z;
         ((PlayerState*)state)->yawSmoothScale = z;
     }
@@ -13990,12 +13985,12 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
     if (-1e+05f != ((PlayerState*)state)->waterSurfaceY) {
         ((PlayerState*)state)->waterDepth = ((PlayerState*)state)->waterSurfaceY - obj->anim.worldPosY;
     } else {
-        ((PlayerState*)state)->waterDepth = lbl_803E7EA4;
+        ((PlayerState*)state)->waterDepth = 0.0f;
     }
     ((PlayerState*)state)->flags3F1.b01 = 0;
-    clamp = lbl_803E7EA4;
-    pushX = lbl_803E7EA4;
-    pushZ = lbl_803E7EA4;
+    clamp = 0.0f;
+    pushX = 0.0f;
+    pushZ = 0.0f;
     if ((((PlayerState*)cfg)->baddie.surfaceFlags & 0x10) != 0) {
         ((PlayerState*)state)->flags3F1.b01 = 1;
         ((PlayerState*)state)->surfaceType = ((PlayerState*)cfg)->baddie.paletteSlot;
@@ -14006,8 +14001,7 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
             state->velSmoothRateBase = 0.13f;
             break;
         case SURFACE_SNOW:
-            fv2 = lbl_803E7EE0;
-            ((PlayerState*)state)->targetAnimSpeed = fv2;
+            fv2 = ((PlayerState*)state)->targetAnimSpeed = 1.0f;
             ((PlayerState*)state)->yawSmoothScale = fv2;
             ((PlayerState*)state)->velSmoothRateBase = 0.05f;
             break;
@@ -14021,7 +14015,7 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
             queryParams[0] = 500.0f;
             found = (void*)objGetNearestTypeTo(CONVEYOR_SURFACE_OBJGROUP, obj, queryParams);
             if (found != 0) {
-                DIM2_CONVEYOR_INTERFACE(found)->getScrollVector((GameObject*)found, obj, lbl_803E7EE0, &pushX, &pushZ);
+                DIM2_CONVEYOR_INTERFACE(found)->getScrollVector((GameObject*)found, obj, 1.0f, &pushX, &pushZ);
             }
             break;
         case SURFACE_LAVA:
@@ -14083,7 +14077,7 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
             {
                 f32 zero;
                 f32 sink = state->sinkOffsetY;
-                zero = lbl_803E7EA4;
+                zero = 0.0f;
                 if (sink < zero) {
                     fv2 = 0.1f * cfg->baddie.animSpeedA + sink;
                     state->sinkOffsetY = (fv2 < zero) ? fv2 : zero;
@@ -14092,10 +14086,8 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
             }
             break;
         }
-        if (velMag != lbl_803E7EA4) {
-            damp = lbl_803E7F14;
-            r = -(0.05f * velMag - lbl_803E7EE0);
-            damp = (damp > r) ? damp : r;
+        if (velMag != (r = 0.0f)) {
+            damp = ((damp = 0.2f) > (r = -(0.05f * velMag - 1.0f))) ? damp : r;
             obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(damp, dt);
             obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(damp, dt);
         }
@@ -14109,10 +14101,10 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
         ((PlayerState*)state)->pushVelZ = ((PlayerState*)state)->pushVelZ * powfBitEstimate(0.9f, timeDelta);
     }
     if (((PlayerState*)state)->pushVelX > -0.01f && ((PlayerState*)state)->pushVelX < 0.01f) {
-        ((PlayerState*)state)->pushVelX = lbl_803E7EA4;
+        ((PlayerState*)state)->pushVelX = 0.0f;
     }
     if (((PlayerState*)state)->pushVelZ > -0.01f && ((PlayerState*)state)->pushVelZ < 0.01f) {
-        ((PlayerState*)state)->pushVelZ = lbl_803E7EA4;
+        ((PlayerState*)state)->pushVelZ = 0.0f;
     }
 }
 
