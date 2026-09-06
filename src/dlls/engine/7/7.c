@@ -87,15 +87,7 @@ typedef struct WindSource
 #define NEWCLOUD_WIND_SOURCE_COUNT 6
 extern NewCloud* gNewClouds[8];
 
-typedef struct NewCloudRuntimeStorageLayout {
-    Texture* layerTextures[4];
-    NewCloud* clouds[8];
-} NewCloudRuntimeStorageLayout;
-
-STATIC_ASSERT(offsetof(NewCloudRuntimeStorageLayout, clouds) == 0x10);
-
 #define NC_CLOUD (gNewClouds[((CloudSpawnParams*)params)->cloudIndex])
-#define D7_CLOUD (*cloudSlot)
 extern char sSnowPrintSnowCloudInvalidCloudId[];
 
 static inline void snowFifoTexCoord2s16(s16 s, s16 t)
@@ -966,7 +958,9 @@ int snowPrintSnowCloud(void* arg, int cloudId)
     return 0;
 }
 
-extern f32 lbl_8039A8F0[4];
+NewCloud* gNewClouds[8];
+WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
+f32 gNewCloudSnowFlashDirection[4];
 
 extern char sSnowCloudErrorMessageBlock[];
 
@@ -1531,47 +1525,43 @@ void newclouds_renderSnowClouds(void* renderPass)
     }
     if (gNewCloudSnowFlashAlpha != 0)
     {
-        drawSnowFlashOverlay(gNewCloudSnowFlashScroll, gNewCloudSnowFlashAlpha, lbl_8039A8F0, gNewCloudSnowFlashScale,
+        drawSnowFlashOverlay(gNewCloudSnowFlashScroll, gNewCloudSnowFlashAlpha, gNewCloudSnowFlashDirection, gNewCloudSnowFlashScale,
                         gNewCloudSnowFlashAlphaK0, gNewCloudSnowFlashAlphaK1, gNewCloudSnowFlashParallax);
     }
 }
 void newclouds_run(void)
 {
-    Camera* cam;
-    void** clouds;
+    Camera* camera;
     NewCloud** cloudSlot;
-    int i;
+    int cloudIndex;
     NewCloud* nearestCloud;
-    u8 activeCount;
-    int slotOffset;
-    NewCloud* p;
+    u8 movingBlizzardCount;
+    NewCloud* cloud;
     f32* viewRotationMatrix;
-    f32 mag;
-    f32 t;
-    f32 rot;
-    f32 nearest;
-    f32 inpos[3];
-    f32 wind[3];
-    f32 pos[3];
-    f32 vec[3];
-    f32 d[3];
-    MatrixTransform args;
-    Mtx mtx;
+    f32 distance;
+    f32 value;
+    f32 flashRotation;
+    f32 nearestDistance;
+    f32 windOrigin[3];
+    f32 windVelocity[3];
+    f32 cloudPosition[3];
+    f32 cameraOffset[3];
+    f32 cameraDelta[3];
+    MatrixTransform cameraTransform;
+    Mtx flashMatrix;
 
-    clouds = (void**)gNewCloudLayerTextures;
-    i = 0;
-    slotOffset = 0;
-    cam = Camera_GetCurrent();
-    activeCount = 0;
+    cloudIndex = 0;
+    camera = Camera_GetCurrent();
+    movingBlizzardCount = 0;
     nearestCloud = NULL;
-    nearest = 1e30f;
+    nearestDistance = 1e30f;
     if (gNewCloudInitialized == 0)
     {
         sNewCloudsTexture = textureLoadAsset(0x16a);
-        clouds[0] = textureLoadAsset(0x5da);
-        clouds[1] = textureLoadAsset(0x63f);
-        clouds[2] = textureLoadAsset(0x640);
-        clouds[3] = textureLoadAsset(0x641);
+        gNewCloudLayerTextures[0] = textureLoadAsset(0x5da);
+        gNewCloudLayerTextures[1] = textureLoadAsset(0x63f);
+        gNewCloudLayerTextures[2] = textureLoadAsset(0x640);
+        gNewCloudLayerTextures[3] = textureLoadAsset(0x641);
         gNewCloudType1Texture = textureLoadAsset(0x151);
         gNewCloudInitialized = 1;
     }
@@ -1581,136 +1571,133 @@ void newclouds_run(void)
     }
     gNewCloudBlizzardActivePrev = gNewCloudBlizzardActive;
     gNewCloudBlizzardActive = 0;
-    while (i < 8)
+    while (cloudIndex < 8)
     {
-        cloudSlot = (NewCloud**)((u8*)clouds + slotOffset);
-        cloudSlot = (NewCloud**)((u8*)cloudSlot + offsetof(NewCloudRuntimeStorageLayout, clouds));
-        p = *cloudSlot;
-        if (p != NULL &&
-            (*(u8**)p == NULL || (((GameObject*)*(u8**)p)->objectFlags & OBJECT_OBJFLAG_FREED)))
+        cloudSlot = &gNewClouds[cloudIndex];
+        cloud = *cloudSlot;
+        if (cloud != NULL &&
+            (cloud->owner == NULL || (((GameObject*)cloud->owner)->objectFlags & OBJECT_OBJFLAG_FREED)))
         {
-            snowFreeSnowCloud(p->cloudId);
-            i++;
-            slotOffset += 4;
+            snowFreeSnowCloud(cloud->cloudId);
+            cloudIndex++;
             continue;
         }
-        if (p != NULL && p->active != 0) {
-            snowCloudInitFlakes((f32*)p->unk0008, p->cloudHeight, p->scale, i);
-        } else if (p != NULL && p->finished == 0) {
-            if (p->cloudType == 4) {
+        if (cloud != NULL && cloud->active != 0) {
+            snowCloudInitFlakes((f32*)cloud->unk0008, cloud->cloudHeight, cloud->scale, cloudIndex);
+        } else if (cloud != NULL && cloud->finished == 0) {
+            if (cloud->cloudType == 4) {
                 gNewCloudBlizzardActive = 1;
             }
-            if (p->despawning != 0) {
-                p->activeFlakes = framesThisStep * p->flakeDrainRate + p->activeFlakes;
-                if (D7_CLOUD->activeFlakes <= 0.0f) {
-                    D7_CLOUD->finished = 1;
+            if (cloud->despawning != 0) {
+                cloud->activeFlakes = framesThisStep * cloud->flakeDrainRate + cloud->activeFlakes;
+                if ((*cloudSlot)->activeFlakes <= 0.0f) {
+                    (*cloudSlot)->finished = 1;
                 }
             } else {
-                if ((int)p->activeFlakes < p->flakeCount) {
-                    p->activeFlakes = framesThisStep * p->flakeFillRate + p->activeFlakes;
+                if ((int)cloud->activeFlakes < cloud->flakeCount) {
+                    cloud->activeFlakes = framesThisStep * cloud->flakeFillRate + cloud->activeFlakes;
                 }
             }
-            if ((int)D7_CLOUD->activeFlakes > D7_CLOUD->flakeCount) {
-                D7_CLOUD->activeFlakes = D7_CLOUD->flakeCount;
+            if ((int)(*cloudSlot)->activeFlakes > (*cloudSlot)->flakeCount) {
+                (*cloudSlot)->activeFlakes = (*cloudSlot)->flakeCount;
             }
-            if (D7_CLOUD->activeFlakes < 0.0f) {
-                D7_CLOUD->activeFlakes = 0.0f;
+            if ((*cloudSlot)->activeFlakes < 0.0f) {
+                (*cloudSlot)->activeFlakes = 0.0f;
             }
-            if (D7_CLOUD->owner != NULL) {
-                Obj_GetWorldPosition((GameObject*)D7_CLOUD->owner, &pos[0], &pos[1], &pos[2]);
+            if ((*cloudSlot)->owner != NULL) {
+                Obj_GetWorldPosition((GameObject*)(*cloudSlot)->owner, &cloudPosition[0], &cloudPosition[1], &cloudPosition[2]);
             }
-            if (D7_CLOUD->followCamera != 0 && cam != NULL) {
-                if (D7_CLOUD->cloudType == 4) {
-                    vec[0] = 0.0f;
-                    vec[1] = 0.0f;
-                    vec[2] = 100.0f;
-                    args.x = 0.0f;
-                    args.y = 0.0f;
-                    args.z = 0.0f;
-                    args.scale = 1.0f;
-                    args.rotZ = 0;
-                    args.rotY = 0;
-                    args.rotX = 0xffff - cam->yaw;
-                    vecRotateZXY(&args.rotX, vec);
-                    pos[0] = cam->worldX + vec[0];
-                    t = cam->worldY - 60.0f;
-                    pos[1] = t + vec[1];
-                    pos[2] = cam->worldZ + vec[2];
+            if ((*cloudSlot)->followCamera != 0 && camera != NULL) {
+                if ((*cloudSlot)->cloudType == 4) {
+                    cameraOffset[0] = 0.0f;
+                    cameraOffset[1] = 0.0f;
+                    cameraOffset[2] = 100.0f;
+                    cameraTransform.x = 0.0f;
+                    cameraTransform.y = 0.0f;
+                    cameraTransform.z = 0.0f;
+                    cameraTransform.scale = 1.0f;
+                    cameraTransform.rotZ = 0;
+                    cameraTransform.rotY = 0;
+                    cameraTransform.rotX = 0xffff - camera->yaw;
+                    vecRotateZXY(&cameraTransform.rotX, cameraOffset);
+                    cloudPosition[0] = camera->worldX + cameraOffset[0];
+                    value = camera->worldY - 60.0f;
+                    cloudPosition[1] = value + cameraOffset[1];
+                    cloudPosition[2] = camera->worldZ + cameraOffset[2];
                 } else {
-                    pos[0] = cam->worldX;
-                    pos[1] = cam->worldY - 60.0f;
-                    pos[2] = cam->worldZ;
+                    cloudPosition[0] = camera->worldX;
+                    cloudPosition[1] = camera->worldY - 60.0f;
+                    cloudPosition[2] = camera->worldZ;
                 }
             }
-            D7_CLOUD->driftOffset = framesThisStep * D7_CLOUD->driftRate + D7_CLOUD->driftOffset;
-            if (D7_CLOUD->driftScale != 0.0f) {
-                if (D7_CLOUD->driftOffset > D7_CLOUD->driftLimit) {
-                    D7_CLOUD->driftRate *= -1.0f;
-                    D7_CLOUD->driftOffset = D7_CLOUD->driftLimit;
-                } else if (D7_CLOUD->driftOffset < 0.0f) {
-                    D7_CLOUD->driftRate *= -1.0f;
-                    D7_CLOUD->driftLimit = (int)randomGetRange(1, (2.0f * D7_CLOUD->driftScale));
-                    D7_CLOUD->driftOffset = 0.0f;
+            (*cloudSlot)->driftOffset = framesThisStep * (*cloudSlot)->driftRate + (*cloudSlot)->driftOffset;
+            if ((*cloudSlot)->driftScale != 0.0f) {
+                if ((*cloudSlot)->driftOffset > (*cloudSlot)->driftLimit) {
+                    (*cloudSlot)->driftRate *= -1.0f;
+                    (*cloudSlot)->driftOffset = (*cloudSlot)->driftLimit;
+                } else if ((*cloudSlot)->driftOffset < 0.0f) {
+                    (*cloudSlot)->driftRate *= -1.0f;
+                    (*cloudSlot)->driftLimit = (int)randomGetRange(1, (2.0f * (*cloudSlot)->driftScale));
+                    (*cloudSlot)->driftOffset = 0.0f;
                 }
             }
-            if (D7_CLOUD->stationary == 0) {
-                inpos[0] = pos[0];
-                inpos[1] = pos[1];
-                inpos[2] = pos[2];
-                snowCloudComputeDrift(wind, inpos, D7_CLOUD->driftScale);
-                if (D7_CLOUD->cloudType == 0) {
-                    D7_CLOUD->windVelX = -wind[0];
-                    D7_CLOUD->windVelZ = -wind[2];
+            if ((*cloudSlot)->stationary == 0) {
+                windOrigin[0] = cloudPosition[0];
+                windOrigin[1] = cloudPosition[1];
+                windOrigin[2] = cloudPosition[2];
+                snowCloudComputeDrift(windVelocity, windOrigin, (*cloudSlot)->driftScale);
+                if ((*cloudSlot)->cloudType == 0) {
+                    (*cloudSlot)->windVelX = -windVelocity[0];
+                    (*cloudSlot)->windVelZ = -windVelocity[2];
                 } else {
-                    D7_CLOUD->windVelX = -(wind[0] + D7_CLOUD->driftOffset);
-                    D7_CLOUD->windVelZ = -(wind[2] + D7_CLOUD->driftOffset);
-                    D7_CLOUD->unk1428 = 0.0f;
+                    (*cloudSlot)->windVelX = -(windVelocity[0] + (*cloudSlot)->driftOffset);
+                    (*cloudSlot)->windVelZ = -(windVelocity[2] + (*cloudSlot)->driftOffset);
+                    (*cloudSlot)->unk1428 = 0.0f;
                 }
-                D7_CLOUD->worldPosX = pos[0];
-                D7_CLOUD->worldPosY = pos[1];
-                D7_CLOUD->worldPosZ = pos[2];
+                (*cloudSlot)->worldPosX = cloudPosition[0];
+                (*cloudSlot)->worldPosY = cloudPosition[1];
+                (*cloudSlot)->worldPosZ = cloudPosition[2];
             } else {
-                inpos[0] = D7_CLOUD->worldPosX;
-                inpos[1] = D7_CLOUD->worldPosY;
-                inpos[2] = D7_CLOUD->worldPosZ;
-                snowCloudComputeDrift(wind, inpos, D7_CLOUD->driftScale);
-                D7_CLOUD->windVelX = -wind[0] + D7_CLOUD->driftOffset;
-                D7_CLOUD->windVelZ = -wind[2] + D7_CLOUD->driftOffset;
-                D7_CLOUD->unk1428 = 0.0f;
+                windOrigin[0] = (*cloudSlot)->worldPosX;
+                windOrigin[1] = (*cloudSlot)->worldPosY;
+                windOrigin[2] = (*cloudSlot)->worldPosZ;
+                snowCloudComputeDrift(windVelocity, windOrigin, (*cloudSlot)->driftScale);
+                (*cloudSlot)->windVelX = -windVelocity[0] + (*cloudSlot)->driftOffset;
+                (*cloudSlot)->windVelZ = -windVelocity[2] + (*cloudSlot)->driftOffset;
+                (*cloudSlot)->unk1428 = 0.0f;
             }
-            if (D7_CLOUD->posInitialized != 0) {
-                D7_CLOUD->curPosX = D7_CLOUD->lastPosX;
-                D7_CLOUD->curPosY = D7_CLOUD->lastPosY;
-                D7_CLOUD->curPosZ = D7_CLOUD->lastPosZ;
+            if ((*cloudSlot)->posInitialized != 0) {
+                (*cloudSlot)->curPosX = (*cloudSlot)->lastPosX;
+                (*cloudSlot)->curPosY = (*cloudSlot)->lastPosY;
+                (*cloudSlot)->curPosZ = (*cloudSlot)->lastPosZ;
             } else {
-                D7_CLOUD->curPosX = pos[0];
-                D7_CLOUD->curPosY = pos[1];
-                D7_CLOUD->curPosZ = pos[2];
-                D7_CLOUD->posInitialized = 1;
+                (*cloudSlot)->curPosX = cloudPosition[0];
+                (*cloudSlot)->curPosY = cloudPosition[1];
+                (*cloudSlot)->curPosZ = cloudPosition[2];
+                (*cloudSlot)->posInitialized = 1;
             }
-            D7_CLOUD->lastPosX = pos[0];
-            D7_CLOUD->lastPosY = pos[1];
-            D7_CLOUD->lastPosZ = pos[2];
-            snowReposSnowCloud(D7_CLOUD->cloudId);
-            if (D7_CLOUD->activeFlakes > 0.0f) {
-                d[0] = D7_CLOUD->worldPosX - cam->x;
-                d[1] = D7_CLOUD->worldPosY - cam->y;
-                d[2] = D7_CLOUD->worldPosZ - cam->z;
-                mag = PSVECMag((Vec*)d);
-                if (mag < nearest)
+            (*cloudSlot)->lastPosX = cloudPosition[0];
+            (*cloudSlot)->lastPosY = cloudPosition[1];
+            (*cloudSlot)->lastPosZ = cloudPosition[2];
+            snowReposSnowCloud((*cloudSlot)->cloudId);
+            if ((*cloudSlot)->activeFlakes > 0.0f) {
+                cameraDelta[0] = (*cloudSlot)->worldPosX - camera->x;
+                cameraDelta[1] = (*cloudSlot)->worldPosY - camera->y;
+                cameraDelta[2] = (*cloudSlot)->worldPosZ - camera->z;
+                distance = PSVECMag((Vec*)cameraDelta);
+                if (distance < nearestDistance)
                 {
-                    nearest = mag;
-                    nearestCloud = D7_CLOUD;
+                    nearestDistance = distance;
+                    nearestCloud = (*cloudSlot);
                 }
             }
         }
-        if (D7_CLOUD != NULL && D7_CLOUD->cloudType == 4 && D7_CLOUD->stationary == 0) {
-            activeCount++;
+        if ((*cloudSlot) != NULL && (*cloudSlot)->cloudType == 4 && (*cloudSlot)->stationary == 0) {
+            movingBlizzardCount++;
         }
-        i++;
-        slotOffset += sizeof(void*);
+        cloudIndex++;
     }
-    if (activeCount != 0)
+    if (movingBlizzardCount != 0)
     {
         gNewCloudOvercastFadeRate = 0.01f;
     }
@@ -1727,31 +1714,31 @@ void newclouds_run(void)
             gActiveLightning = NULL;
         }
     }
-    t = gNewCloudScrollPhaseA + 0.02f * timeDelta;
-    gNewCloudScrollPhaseA = t;
-    if (t > 25.13274f)
+    value = gNewCloudScrollPhaseA + 0.02f * timeDelta;
+    gNewCloudScrollPhaseA = value;
+    if (value > 25.13274f)
     {
-        gNewCloudScrollPhaseA = t - 25.13274f;
+        gNewCloudScrollPhaseA = value - 25.13274f;
     }
-    t = gNewCloudScrollPhaseB + 0.015f * timeDelta;
-    gNewCloudScrollPhaseB = t;
-    if (t > 25.13274f)
+    value = gNewCloudScrollPhaseB + 0.015f * timeDelta;
+    gNewCloudScrollPhaseB = value;
+    if (value > 25.13274f)
     {
-        gNewCloudScrollPhaseB = t - 25.13274f;
+        gNewCloudScrollPhaseB = value - 25.13274f;
     }
-    t = gNewCloudScrollPhaseC - 0.025f * timeDelta;
-    gNewCloudScrollPhaseC = t;
-    if (t < -25.13274f)
+    value = gNewCloudScrollPhaseC - 0.025f * timeDelta;
+    gNewCloudScrollPhaseC = value;
+    if (value < -25.13274f)
     {
         gNewCloudScrollPhaseC += 25.13274f;
     }
-    t = gNewCloudOvercastFadeLevel + gNewCloudOvercastFadeRate;
-    gNewCloudOvercastFadeLevel = t;
-    if (t > 1.0f)
+    value = gNewCloudOvercastFadeLevel + gNewCloudOvercastFadeRate;
+    gNewCloudOvercastFadeLevel = value;
+    if (value > 1.0f)
     {
         gNewCloudOvercastFadeLevel = 1.0f;
     }
-    else if (t < 0.0f)
+    else if (value < 0.0f)
     {
         gNewCloudOvercastFadeLevel = 0.0f;
     }
@@ -1761,16 +1748,16 @@ void newclouds_run(void)
         gNewCloudSnowFlashAlpha = 255.0f * gNewCloudOvercastFadeLevel;
         if (gNewCloudSnowFlashAlpha != 0)
         {
-            rot = 3.142f *
+            flashRotation = 3.142f *
                 (2.0f *
                     -(6000.0f * (nearestCloud->driftOffset / 10.0f) +
                         3000.0f)) /
                 65536.0f;
             {
                 f32 zero = 0.0f;
-                ((f32*)clouds)[54] = zero;
-                ((f32*)clouds)[55] = -1.0f;
-                ((f32*)clouds)[56] = zero;
+                gNewCloudSnowFlashDirection[0] = zero;
+                gNewCloudSnowFlashDirection[1] = -1.0f;
+                gNewCloudSnowFlashDirection[2] = zero;
             }
             viewRotationMatrix = Camera_GetViewRotationMatrix();
             if (nearestCloud->cloudType == 0)
@@ -1780,7 +1767,7 @@ void newclouds_run(void)
                 gNewCloudSnowFlashAlphaK0 = 0xf9;
                 gNewCloudSnowFlashAlphaK1 = 0xfd;
                 gNewCloudSnowFlashParallax = 5.0f;
-                PSMTXIdentity(mtx);
+                PSMTXIdentity(flashMatrix);
             }
             else
             {
@@ -1789,13 +1776,10 @@ void newclouds_run(void)
                 gNewCloudSnowFlashAlphaK0 = 0xf8;
                 gNewCloudSnowFlashAlphaK1 = 0xfc;
                 gNewCloudSnowFlashParallax = 1.0f;
-                PSMTXRotRad(mtx, 'z', rot);
+                PSMTXRotRad(flashMatrix, 'z', flashRotation);
             }
-            PSMTXConcat((MtxPtr)viewRotationMatrix, mtx, mtx);
-            {
-                Vec* flashVector = (Vec*)((u32)clouds + 0xd8);
-                PSMTXMultVec(mtx, flashVector, flashVector);
-            }
+            PSMTXConcat((MtxPtr)viewRotationMatrix, flashMatrix, flashMatrix);
+            PSMTXMultVec(flashMatrix, (Vec*)gNewCloudSnowFlashDirection, (Vec*)gNewCloudSnowFlashDirection);
             if (gNewCloudSnowFlashScroll < -16.0f)
             {
                 gNewCloudSnowFlashScroll += 16.0f;
@@ -2194,7 +2178,3 @@ char sSnowCloudErrorMessageBlock[] =
     0x61, 0x76, 0x61, 0x69, 0x6C, 0x61, 0x62, 0x6C, 0x65, 0x0A, 0x00, 0x00,
 };
 char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n";
-
-f32 lbl_8039A8F0[4];
-WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
-NewCloud* gNewClouds[8];

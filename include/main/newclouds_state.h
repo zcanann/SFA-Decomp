@@ -4,8 +4,8 @@
 #include "global.h"
 
 /*
- * NewCloud - per-cloud working record (gNewClouds[i] / the NC_CLOUD and
- * D7_CLOUD macros in newclouds.c). The owner and separately allocated flake
+ * NewCloud - per-cloud working record (gNewClouds[i]).
+ * The owner and separately allocated flake
  * buffer head the record; the simulation body before 0x1378 remains untyped.
  */
 /*
