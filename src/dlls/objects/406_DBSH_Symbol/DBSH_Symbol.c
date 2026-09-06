@@ -91,7 +91,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
     if (state->partnerSymbol == NULL) {
         objectList = ObjList_GetObjects(&objectIndex, &objectCount);
         while (objectIndex < objectCount) {
-            state->partnerSymbol = (void*)objectList[objectIndex];
+            state->partnerSymbol = objectList[objectIndex];
             if (state->partnerSymbol->anim.romDefNo == DBSH_SYMBOL_PARTNER_SEQUENCE_ID) {
                 break;
             }
@@ -115,7 +115,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
         if (state->spinSpeed > DBSH_SYMBOL_MAX_FORWARD_SPEED) {
             state->spinSpeed = DBSH_SYMBOL_MAX_FORWARD_SPEED;
         }
-        state->spinProgress = (int)((f32)state->spinProgress + state->spinSpeed);
+        state->spinProgress += state->spinSpeed;
         if (state->spinProgress >= DBSH_SYMBOL_SPIN_COMPLETE) {
             gameTimerStop();
             Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16);
@@ -134,19 +134,19 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
             }
             state->previousSpinProgress = state->spinProgress;
             if (state->spinSpeed > DBSH_SYMBOL_MAX_REVERSE_SPEED) {
-                state->spinSpeed = state->spinSpeed - DBSH_SYMBOL_REVERSE_DECELERATION;
+                state->spinSpeed -= DBSH_SYMBOL_REVERSE_DECELERATION;
             }
             return 0;
         }
         if (state->spinSpeed > -DBSH_SYMBOL_MAX_FORWARD_SPEED) {
-            state->spinSpeed = state->spinSpeed - DBSH_SYMBOL_FORWARD_DECELERATION;
+            state->spinSpeed -= DBSH_SYMBOL_FORWARD_DECELERATION;
         }
         if (ObjAnim_AdvanceCurrentMove(
                 player, ((f32)state->spinProgress - state->previousSpinProgress) / DBSH_SYMBOL_ANIMATION_STEP_SCALE,
                 timeDelta, NULL) != 0) {
-            if (((GameObject*)player)->anim.currentMoveProgress < 0.0f) {
-                ((GameObject*)player)->anim.currentMoveProgress =
-                    1.0f + ((GameObject*)player)->anim.currentMoveProgress;
+            if (player->anim.currentMoveProgress < 0.0f) {
+                player->anim.currentMoveProgress =
+                    1.0f + player->anim.currentMoveProgress;
             }
         }
         if (state->partnerSymbol != NULL) {
@@ -162,7 +162,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
         }
         state->previousSpinProgress = state->spinProgress;
     }
-    state->playerSfxTimer = state->playerSfxTimer - timeDelta;
+    state->playerSfxTimer -= timeDelta;
     if (state->playerSfxTimer < 0.0f) {
         if (state->spinSpeed < 0.0f) {
             state->playerSfxTimer =
@@ -173,7 +173,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
         }
         Sfx_PlayFromObject(player, SFXTRIG_literun116_var);
     }
-    state->objectSfxTimer = state->objectSfxTimer - timeDelta;
+    state->objectSfxTimer -= timeDelta;
     if (state->objectSfxTimer < 0.0f) {
         if (state->spinSpeed > 0.0f) {
             state->objectSfxTimer =
@@ -225,7 +225,7 @@ void dbshSymbol_update(GameObject* obj) {
     } else {
         phase = state->phase;
         if (phase == DBSH_SYMBOL_PHASE_HIDE) {
-            obj->anim.modelState->flags &= ~(u64)OBJ_MODEL_STATE_SHADOW_VISIBLE;
+            obj->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
             state->phase = DBSH_SYMBOL_PHASE_PLAY_SCUFF;
         } else if (phase == DBSH_SYMBOL_PHASE_START_SEQUENCE) {
             state->phase = DBSH_SYMBOL_PHASE_RESOLVE;
@@ -238,7 +238,7 @@ void dbshSymbol_update(GameObject* obj) {
             state->phase = DBSH_SYMBOL_PHASE_START_SEQUENCE;
             gDBSHSymbolScuffSfxEnabled = 1;
         } else if (phase == DBSH_SYMBOL_PHASE_RESOLVE) {
-            obj->anim.modelState->flags &= ~(u64)OBJ_MODEL_STATE_SHADOW_VISIBLE;
+            obj->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
             if (state->flags.spinCompleted != 0) {
                 mainSetBits(DBSH_GAMEBIT_SYMBOL_SPIN_SUCCEEDED, 1);
             } else {
@@ -264,7 +264,7 @@ void dbshSymbol_init(GameObject* obj) {
     obj->anim.localPosY -= DBSH_SYMBOL_INITIAL_Y_OFFSET;
     obj->animEventCallback = dbshSymbol_processAnimEvents;
 
-    obj->anim.modelState->flags &= ~(u64)OBJ_MODEL_STATE_SHADOW_VISIBLE;
+    obj->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
 }
 
 ObjectDescriptor gDBSHSymbolObjDescriptor = {
