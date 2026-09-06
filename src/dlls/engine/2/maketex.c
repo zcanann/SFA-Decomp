@@ -44,18 +44,18 @@ static inline int maketex_indexOf(int* p, int n, int target)
 void loadMemCardImages(void);
 static inline u64 saveGame_checksum(u64* p, int count)
 {
-    u64 x[1];
+    u64 x;
     u16 i[1];
-    u64 acc[1];
+    u64 acc;
 
-    x[0] = 0;
-    acc[0] = 1;
-    for (i[0] = (int)x[0]; (int)i[0] < count; i[0]++)
+    x = 0;
+    acc = 1;
+    for (i[0] = (int)x; (int)i[0] < count; i[0]++)
     {
-        x[0] ^= p[i[0]];
-        acc[0] += p[i[0]];
+        x ^= p[i[0]];
+        acc += p[i[0]];
     }
-    return x[0] ^ (acc[0] + 13);
+    return x ^ (acc + 13);
 }
 
 int saveGameReadSlotCb(u8 idx, int unused, void* dst)
@@ -708,15 +708,15 @@ void seqPairTableSort(SeqSortPair* arr, int n)
 
 int seqPairTableLookup(void* entries, int count, int key)
 {
-    int (*arr)[2] = entries;
+    SeqSortPair* arr = entries;
     int lo, mid;
     int i;
     if (count <= 16)
     {
         for (i = 0; i != count; i++)
         {
-            if ((*arr)[0] == key)
-                return (*arr)[1];
+            if (arr->key == key)
+                return arr->val;
             arr++;
         }
         return 0;
@@ -725,13 +725,13 @@ int seqPairTableLookup(void* entries, int count, int key)
     do
     {
         mid = (count + lo) >> 1;
-        if (key > arr[mid][0])
+        if (key > arr[mid].key)
         {
             lo = mid;
         }
-        else if (key == arr[mid][0])
+        else if (key == arr[mid].key)
         {
-            return arr[mid][1];
+            return arr[mid].val;
         }
         else
         {
