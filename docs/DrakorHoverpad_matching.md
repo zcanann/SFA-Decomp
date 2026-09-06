@@ -32,3 +32,24 @@ The generated slot path and existing descriptor position are unchanged.
 `ninja all_source` and the strict matching `ninja` both pass with their
 30-second timeouts. The separate formatting commit is checked for object
 equality and with `clang-format --dry-run --Werror` on the TU and header.
+
+## Source recovery on the complete match
+
+The path-event handler's four copies of the bounce sequence (reverse the
+speed at 0.8, clear the commanded speed, shake the camera while the player
+is riding) now come from one static helper, as in the Dinosaur Planet mine
+cart (`734_DR_PushCart`, `dll_734_func_133C`). Automatic inlining
+reproduces all four copies; the helper sits between the direction poll and
+the event handler so its `0.8f` constant enters the pool after the direction
+poll's `-2.0f`, keeping the retail `.sdata2` order. A single sine/cosine
+tangent helper with a mode flag changes the walker function, so the two
+tangent helpers stay separate; the node-slot macros in the walker are
+replaced with direct calls.
+
+The three vehicle callback slots that had numeric names take the names of
+their `VehicleInterface` slots (getNormalizedSpeed, resetToRomListPosition,
+getLookTargetYaw); the direction poll and the segment advance are named
+updateDirection and advanceToNextSegment, and the three `.sdata` literals
+are the roll scale and the camera Y/Z offsets. The renames are applied to
+all five version symbol tables; `pairing_check.py` reports no retail-only
+symbols, and the unit stays at 100% code and data.

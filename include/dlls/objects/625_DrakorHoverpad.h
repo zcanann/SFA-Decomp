@@ -28,15 +28,15 @@ typedef struct DrakorHoverpadPathFlags {
 
 void drakorhoverpad_resetPendingMotion(GameObject* obj);
 int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCode, int* out);
-int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex);
+int drakorhoverpad_advanceToNextSegment(RomCurveWalker* curve, int maxIndex);
 
 extern f32 gDrakorHoverpadMtx[];
-extern f32 lbl_803DC300;
-extern f32 lbl_803DC304;
+extern f32 gDrakorHoverpadCameraOffsetY;
+extern f32 gDrakorHoverpadCameraOffsetZ;
 extern f32 gDrakorHoverpadSteerMaxSpeed;
-extern s16 lbl_803DC2FC;
+extern s16 gDrakorHoverpadRollScale;
 
-typedef struct DrakorHoverpadUpdateMainPlacement {
+typedef struct DrakorHoverpadPlacement {
     ObjPlacement base;
     s8 rotXByte;
     u8 pad19[0x1a - 0x19];
@@ -44,7 +44,7 @@ typedef struct DrakorHoverpadUpdateMainPlacement {
     u8 pad1c[0x20 - 0x1c];
     s16 activateGameBit;
     u8 pad22[0x28 - 0x22];
-} DrakorHoverpadUpdateMainPlacement;
+} DrakorHoverpadPlacement;
 
 typedef struct DrakorHoverpadState {
     f32 commandSpeed;
@@ -76,17 +76,17 @@ STATIC_ASSERT(offsetof(DrakorHoverpadState, curve) == 0x4);
 STATIC_ASSERT(offsetof(DrakorHoverpadState, speed) == 0x110);
 STATIC_ASSERT(offsetof(DrakorHoverpadState, flags) == 0x178);
 STATIC_ASSERT(offsetof(DrakorHoverpadState, pathFlags) == 0x179);
-STATIC_ASSERT(offsetof(DrakorHoverpadUpdateMainPlacement, rotXByte) == 0x18);
-STATIC_ASSERT(offsetof(DrakorHoverpadUpdateMainPlacement, unk1a) == 0x1A);
-STATIC_ASSERT(offsetof(DrakorHoverpadUpdateMainPlacement, activateGameBit) == 0x20);
+STATIC_ASSERT(offsetof(DrakorHoverpadPlacement, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(DrakorHoverpadPlacement, unk1a) == 0x1A);
+STATIC_ASSERT(offsetof(DrakorHoverpadPlacement, activateGameBit) == 0x20);
 
 int drakorhoverpad_canMount(GameObject* obj);
 int drakorhoverpad_canDismount(GameObject* obj);
 void drakorhoverpad_getPlayerAnim(int obj, f32* outFloat, int* outFlag);
 void drakorhoverpad_getRiderPosition(GameObject* obj, f32* ox, f32* oy, f32* oz);
-f32 drakorhoverpad_func13(int obj, f32* out);
+f32 drakorhoverpad_getNormalizedSpeed(int obj, f32* out);
 void drakorhoverpad_free(GameObject* obj);
-void drakorhoverpad_func17(GameObject* obj, int sel, int* out);
+void drakorhoverpad_getLookTargetYaw(GameObject* obj, int sel, int* out);
 void drakorhoverpad_getCameraPosition(GameObject* obj, f32* ox, f32* oy, f32* oz);
 void drakorhoverpad_handleRiderScale(GameObject* obj, f32 scale);
 int drakorhoverpad_getExtraSize(void);
@@ -97,11 +97,11 @@ void drakorhoverpad_updateMain(GameObject* obj);
 void drakorhoverpad_initMain(GameObject* obj, void* desc);
 void drakorhoverpad_release(void);
 void drakorhoverpad_initialise(void);
-int drakorhoverpad_init(GameObject* obj);
+int drakorhoverpad_updateDirection(GameObject* obj);
 
 #define DRAKORHOVERPAD_OBJGROUP 0x46
 
-void drakorhoverpad_func15(void);
+void drakorhoverpad_resetToRomListPosition(void);
 int drakorhoverpad_getRacePosition(void);
 void drakorhoverpad_setMountState(void);
 int drakorhoverpad_getMountState(void);
