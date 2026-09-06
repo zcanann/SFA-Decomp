@@ -9,15 +9,6 @@ struct RomCurveDef;
 #include "main/dll/curve_walker.h"
 #include "main/dll/objfsa_query_api.h"
 
-#define OBJFSA_PATCHGROUP_PATCH_COUNT 4
-
-struct ObjfsaWalkGroupPatchInfo
-{
-    u8 walkGroupIndex;
-    u8 patchMask;
-    u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
-};
-
 int RomCurve_setClosed(RomCurveWalker *state,int closed);
 u8 RomCurve_goNextPoint(RomCurveWalker *state);
 void RomCurve_stepClamped(RomCurveWalker *state,f32 step);

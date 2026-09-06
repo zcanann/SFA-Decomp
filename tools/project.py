@@ -104,7 +104,7 @@ class Object:
         set_default("asflags", config.asflags)
         set_default("asm_dir", config.asm_dir)
         set_default("extab_padding", None)
-        set_default("mw_version", config.linker_version)
+        set_default("mw_version", config.compiler_version or config.linker_version)
         set_default("scratch_preset_id", config.scratch_preset_id)
         set_default("shift_jis", config.shift_jis)
         set_default("src_dir", config.src_dir)
@@ -190,6 +190,7 @@ class ProjectConfig:
         self.precompiled_headers: Optional[List[PrecompiledHeader]] = (
             None  # List of precompiled headers
         )
+        self.compiler_version: Optional[str] = None  # Default mwcc version
         self.linker_version: Optional[str] = None  # mwld version
         self.version: Optional[str] = None  # Version name
         self.warn_missing_config: bool = False  # Warn on missing unit configuration

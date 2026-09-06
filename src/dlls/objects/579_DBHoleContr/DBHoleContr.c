@@ -15,14 +15,13 @@
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-#define DBEGG_OBJGROUP           0x24
+#define DBEGG_OBJGROUP                  0x24
 #define DBHOLECONTROL1_CHILD_OBJ        1337
 #define DBHOLECONTROL1_CHILD_SETUP_SIZE 56
 
 int lbl_803DDCE0;
 
-int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
-{
+int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     GroundBaddiePlacement* childPlacement;
     void* res;
     GameObject** objs;
@@ -30,19 +29,21 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     Dbholecontrol1Placement* data = (Dbholecontrol1Placement*)obj->anim.placementData;
     int i;
 
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        switch (animUpdate->eventIds[i])
-        {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
-            if (mainGetBit((s32)data->triggerSeqId + 2601) != 0)
+            if (mainGetBit((s32)data->triggerSeqId + 2601) != 0) {
                 continue;
-            if ((u8)Obj_CanSetupObject() == 0)
+            }
+            if ((u8)Obj_CanSetupObject() == 0) {
                 continue;
+            }
             res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
-            if (res == NULL)
+            if (res == NULL) {
                 continue;
-            childPlacement = (GroundBaddiePlacement*)Obj_AllocObjectSetup(DBHOLECONTROL1_CHILD_SETUP_SIZE, DBHOLECONTROL1_CHILD_OBJ);
+            }
+            childPlacement =
+                (GroundBaddiePlacement*)Obj_AllocObjectSetup(DBHOLECONTROL1_CHILD_SETUP_SIZE, DBHOLECONTROL1_CHILD_OBJ);
             memcpy(childPlacement, res, DBHOLECONTROL1_CHILD_SETUP_SIZE);
             childPlacement->base.posX = obj->anim.localPosX;
             childPlacement->base.posY = obj->anim.localPosY;
@@ -54,12 +55,10 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
         }
     }
 
-    if (mainGetBit(data->hideGameBit) != 0 || lbl_803DDCE0 != 0)
-    {
+    if (mainGetBit(data->hideGameBit) != 0 || lbl_803DDCE0 != 0) {
         objs = objGetAllOfType(DBEGG_OBJGROUP, &count);
         ObjMsg_SendToObjects(0, 3, obj, 17, 0);
-        while (count-- != 0)
-        {
+        while (count-- != 0) {
             objFreeObjectType(*objs++, DBEGG_OBJGROUP);
         }
         return 4;
@@ -67,63 +66,52 @@ int dbholecontrol1_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate)
     return 0;
 }
 
-int dbholecontrol1_getExtraSize(void)
-{
-    return 0xc;
+int dbholecontrol1_getExtraSize(void) {
+    return sizeof(DbHoleControl1State);
 }
-int dbholecontrol1_getObjectTypeId(void)
-{
+int dbholecontrol1_getObjectTypeId(void) {
     return 0x0;
 }
 
-void dbholecontrol1_free(GameObject* obj)
-{
+void dbholecontrol1_free(GameObject* obj) {
     objFreeObjectType(obj, DBHOLE_CONTROL1_OBJECT_GROUP);
 }
 
-void dbholecontrol1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 enabled = visible;
-    if (enabled != 0)
+void dbholecontrol1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (1.0f));
+    }
 }
 
-void dbholecontrol1_hitDetect(void)
-{
+void dbholecontrol1_hitDetect(void) {
 }
 
-void dbholecontrol1_update(GameObject* obj)
-{
+void dbholecontrol1_update(GameObject* obj) {
 
     Dbholecontrol1Placement* def;
     def = (Dbholecontrol1Placement*)obj->anim.placementData;
-    if (mainGetBit(def->hideGameBit) != 0)
-    {
+    if (mainGetBit(def->hideGameBit) != 0) {
         Obj_RemoveFromUpdateList(obj);
-        obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
-    }
-    else if (mainGetBit(def->triggerGameBit) != 0)
-    {
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
+    } else if (mainGetBit(def->triggerGameBit) != 0) {
         (*gObjectTriggerInterface)->runSequence(def->triggerSeqId, obj, -1);
     }
 }
 
-void dbholecontrol1_init(GameObject* obj, u8* params)
-{
+void dbholecontrol1_init(GameObject* obj, u8* params) {
     DbHoleControl1State* state = obj->extra;
+    Dbholecontrol1Placement* placement = (Dbholecontrol1Placement*)params;
     objAddObjectType(obj, DBHOLE_CONTROL1_OBJECT_GROUP);
-    obj->anim.rotX = (s16)(((Dbholecontrol1Placement*)params)->rotXByte << 8);
+    obj->anim.rotX = (s16)(placement->rotXByte << 8);
     obj->animEventCallback = dbholecontrol1_SeqFn;
-    state->gameBitA = ((Dbholecontrol1Placement*)params)->gameBitA;
-    state->gameBitB = ((Dbholecontrol1Placement*)params)->gameBitB;
+    state->gameBitA = placement->gameBitA;
+    state->gameBitB = placement->gameBitB;
 }
 
-void dbholecontrol1_release(void)
-{
+void dbholecontrol1_release(void) {
 }
 
-void dbholecontrol1_initialise(void)
-{
+void dbholecontrol1_initialise(void) {
 }
 
 ObjectDescriptor gDBHoleControl1ObjDescriptor = {

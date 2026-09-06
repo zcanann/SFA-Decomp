@@ -13,15 +13,15 @@
 #include "main/vecmath.h"
 #include "track/intersect_api.h"
 
-#define EXPLODABLE_FRAGMENT_SETUP_MODE           5
-#define EXPLODABLE_RECIPE_FLAG_HIDE_OBJECT       0x01
-#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_X        0x01
-#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_Z        0x02
-#define EXPLODABLE_LAUNCH_FLAG_SPIN_X            0x04
-#define EXPLODABLE_LAUNCH_FLAG_SPIN_Y            0x08
-#define EXPLODABLE_LAUNCH_FLAG_SPIN_Z            0x10
-#define EXPLODABLE_FRAGMENT_FULL_ALPHA           0xFF
-#define EXPLODABLE_DEFAULT_SCALE                 20
+#define EXPLODABLE_FRAGMENT_SETUP_MODE     5
+#define EXPLODABLE_RECIPE_FLAG_HIDE_OBJECT 0x01
+#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_X  0x01
+#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_Z  0x02
+#define EXPLODABLE_LAUNCH_FLAG_SPIN_X      0x04
+#define EXPLODABLE_LAUNCH_FLAG_SPIN_Y      0x08
+#define EXPLODABLE_LAUNCH_FLAG_SPIN_Z      0x10
+#define EXPLODABLE_FRAGMENT_FULL_ALPHA     0xFF
+#define EXPLODABLE_DEFAULT_SCALE           20
 
 GameObject* explodable_spawnFragmentObject(GameObject* obj, int fragmentObjectId, ExplodableChunk* chunk,
                                            int fragmentIndex) {
@@ -65,14 +65,12 @@ GameObject* explodable_spawnFragmentObject(GameObject* obj, int fragmentObjectId
         (s8)(int)(20.0f * (obj->anim.rootMotionScale / obj->anim.modelInstance->rootMotionScaleBase));
     fragmentPlacement->lifetimeFrames = chunk->launchDelayBase;
     fragmentPlacement->floorOffsetRaw = (int)chunk->height;
-    return objSetupObject((ObjPlacement*)fragmentPlacement, EXPLODABLE_FRAGMENT_SETUP_MODE, obj->anim.mapEventSlot, -1,
-                           NULL);
+    return objSetupObject(&fragmentPlacement->base, EXPLODABLE_FRAGMENT_SETUP_MODE, obj->anim.mapEventSlot, -1, NULL);
 }
 
-void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAddress, int skipCentroid, ExplodableState* state) {
+void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAddress, int skipCentroid,
+                               ExplodableState* state) {
     ExplodableChunk* chunk;
-    int modelBankOffset;
-    int childSlotAddress;
     int fragmentIndex;
     int fragmentObjectId;
     u8 spinScale;
@@ -91,10 +89,8 @@ void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAd
     spinScale = recipes[state->recipeIndex].spinScale;
     if (fragmentObjectId != -1) {
         fragmentIndex = 0;
-        chunk = (ExplodableChunk*)state;
-        modelBankOffset = 0;
-        childSlotAddress = (int)state;
         for (; fragmentIndex < state->fragmentCount; fragmentIndex++) {
+            chunk = &state->chunks[fragmentIndex];
             state->spawnedFlags[fragmentIndex] = 1;
             chunk->spinScale = spinScale;
             if (skipCentroid == 0) {
@@ -102,7 +98,7 @@ void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAd
                 chunk->centroidX = zero;
                 chunk->centroidY = zero;
                 chunk->centroidZ = zero;
-                model = (ModelFileHeader*)*(int*)(*(int*)((int)obj->anim.banks + modelBankOffset));
+                model = obj->anim.modelBanks[fragmentIndex]->file;
                 centroidScratch.sum[0] = zero;
                 centroidScratch.sum[1] = zero;
                 centroidScratch.sum[2] = zero;
@@ -122,15 +118,11 @@ void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAd
             explodable_computeFragmentLaunch(obj, chunk, placementAddress);
             chunk->unknown6B = EXPLODABLE_FRAGMENT_FULL_ALPHA;
             chunk->gameBitMode = mainGetBit(placementAddress->doneGameBit) != 0 ? 2 : 0;
-            ((ExplodableState*)childSlotAddress)->children[0] =
+            state->children[fragmentIndex] =
                 explodable_spawnFragmentObject(obj, fragmentObjectId, chunk, fragmentIndex);
-            chunk++;
-            modelBankOffset += 4;
-            childSlotAddress += 4;
         }
-        state->phase = (mainGetBit(placementAddress->doneGameBit) != 0)
-                           ? EXPLODABLE_PHASE_BREAKING
-                           : EXPLODABLE_PHASE_WAIT;
+        state->phase =
+            (mainGetBit(placementAddress->doneGameBit) != 0) ? EXPLODABLE_PHASE_BREAKING : EXPLODABLE_PHASE_WAIT;
     }
 }
 
@@ -145,7 +137,7 @@ void explodable_computeFragmentLaunch(GameObject* obj, ExplodableChunk* chunk, E
     ExplodablePlacement* placement = placementAddress;
     f32 zero = 0.0f;
 
-    vecRotateZXY((s16*)&placement->rotX, &chunk->offsetX);
+    vecRotateZXY(&placement->rotX, &chunk->offsetX);
     chunk->positionX = chunk->offsetX * obj->anim.rootMotionScale + placement->base.posX;
     chunk->positionY = chunk->offsetY * obj->anim.rootMotionScale + placement->base.posY;
     chunk->positionZ = chunk->offsetZ * obj->anim.rootMotionScale + placement->base.posZ;
@@ -215,7 +207,7 @@ void explodable_free(GameObject* obj, int keepChildren) {
     int fragmentIndex = -1;
     GameObject* child;
 
-    state = (ExplodableState*)obj->extra;
+    state = obj->extra;
     objFreeObjectType(obj, EXPLODABLE_OBJECT_GROUP);
     if (keepChildren == 0) {
         while (++fragmentIndex < EXPLODABLE_FRAGMENT_COUNT) {
@@ -231,12 +223,11 @@ void explodable_render(void) {
 }
 
 void explodable_update(GameObject* obj) {
-    int childSlotAddress;
     int placementAddress;
     int fragmentIndex;
     int stateAddress;
     int fragmentStatus;
-    int fragmentObject;
+    GameObject* fragmentObject;
     ExplodableState* state;
     ExplodablePlacement* placement;
 
@@ -247,7 +238,8 @@ void explodable_update(GameObject* obj) {
     if (state->phase != EXPLODABLE_PHASE_BROKEN) {
         if (state->phase == EXPLODABLE_PHASE_WAIT) {
             if (mainGetBit(placement->activateGameBit) != 0) {
-                explodable_buildFragments(obj, (ExplodablePlacement*)placementAddress, 0, (ExplodableState*)stateAddress);
+                explodable_buildFragments(obj, (ExplodablePlacement*)placementAddress, 0,
+                                          (ExplodableState*)stateAddress);
                 if (state->breakSfxId != 0) {
                     Sfx_PlayFromObject(obj, state->breakSfxId & 0xffff);
                 }
@@ -258,16 +250,15 @@ void explodable_update(GameObject* obj) {
             }
         } else {
             fragmentIndex = 0;
-            childSlotAddress = stateAddress;
             do {
-                fragmentObject = (int)((ExplodableState*)childSlotAddress)->children[0];
-                if ((void*)fragmentObject != NULL) {
-                    fragmentStatus = EXPLODED_INTERFACE(fragmentObject)->getPhase((GameObject*)fragmentObject);
+                fragmentObject = state->children[fragmentIndex];
+                if (fragmentObject != NULL) {
+                    fragmentStatus = EXPLODED_INTERFACE(fragmentObject)->getPhase(fragmentObject);
                     switch (fragmentStatus) {
                     case EXPLODED_PHASE_EXPIRED:
                         mainSetBits(placement->doneGameBit, TRUE);
-                        Obj_FreeObject(((ExplodableState*)childSlotAddress)->children[0]);
-                        ((ExplodableState*)childSlotAddress)->children[0] = NULL;
+                        Obj_FreeObject(state->children[fragmentIndex]);
+                        state->children[fragmentIndex] = NULL;
                         break;
                     case EXPLODED_PHASE_IDLE:
                         mainSetBits(placement->doneGameBit, TRUE);
@@ -277,7 +268,6 @@ void explodable_update(GameObject* obj) {
                         break;
                     }
                 }
-                childSlotAddress += 4;
                 fragmentIndex++;
             } while (fragmentIndex < EXPLODABLE_FRAGMENT_COUNT);
         }
@@ -292,7 +282,7 @@ void explodable_init(GameObject* obj, ExplodablePlacement* placementAddress) {
     ExplodablePlacement* placement = placementAddress;
 
     objAddObjectType(obj, EXPLODABLE_OBJECT_GROUP);
-    state = (ExplodableState*)obj->extra;
+    state = obj->extra;
     fragmentCount = placement->fragmentCount;
     if (fragmentCount == 0) {
         fragmentCount = 1;

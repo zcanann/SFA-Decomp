@@ -4701,6 +4701,128 @@ all allocated non-text sections exact. This recovers shared data used by
 Tricky; it neither improves the remaining code mismatch nor settles compiler
 provenance.
 
+The movement dependency `Objfsa_GetWalkGroupIndexAtPoint` at `0x800DBCFC`
+now owns its result layout in the query API header: a group byte, mask byte,
+and four `u16` patch IDs, with offsets and the `0x0A` size asserted. Tricky is
+the only recovered caller that supplies this record. Retail narrows the group
+result to a byte, then bypasses every output store when it is zero. Tricky's
+subsequent bridge lookup can change its target group without filling that
+record; the source now documents this conditional-output contract. The producer
+also retains its stale/uninitialized plane counter when a patch fails the
+height test. Role-named counters and typed normal-component accesses preserve
+all 116 instructions and the complete Hcurves object. All 2,872 source objects
+remain byte-identical; both build gates, 79 tooling tests and formatting pass.
+Tricky remains 87/89 exact, with 41 diagnostic-link text bytes differing and
+all allocated non-text sections exact.
+
+No residual-mismatch experiments from this pass are retained. Reusing the
+earlier walk-group scratch as the second tunnel index produces the zero copy
+but leaves seven to nine register differences. A local displacement `Vec`,
+explicit return `else` or ternary, shared destination braking, route-advance
+movement pairs and current-group producer extraction leave movement's 34
+operand differences unchanged. A shared narrow turning-flag getter likewise
+preserves both callers without a matching gain; narrowing the route-turn
+magnitude return to `s16` adds five instructions. Compiler settings remain
+unchanged and their provenance remains open.
+
+`tools/tricky_backend_trace.py` now exposes GC/1.3's optimizer records for the
+two Tricky residuals. A Windows debugger intercepts the compiler's disabled
+dump hook in a private child process; neither the executable on disk nor game
+source is patched. The compiler hash and one-byte return stub are checked,
+and every capture must produce a raw object identical to a fresh ordinary
+compile before its trace is published. Portable decoding validates linked
+blocks, variable-width instructions, labels, emitted mnemonic order and
+explicit GPR/FPR operands (excluding calls' implicit clobber lists). It also
+checks the actual `li`/`lis`/`mr` instruction encodings. The two final streams
+align at 475 and 2,191 instructions after removing eight and 43 fallthrough
+branches that the compiler retains internally but does not emit.
+
+The baseline tunnel instruction 330 is already `li` of zero into virtual
+GPR 46 at the first dump, before global optimization, and becomes physical
+GPR 4 at register coloring. The rejected reused-walk-group index variant
+instead acquires its zero `mr` at the second value-numbering dump, but still
+has nine register differences. That dump is conditional on the compiler's
+change flag, not on whether the pass ran: call sites at compiler VA `0x4FEF05`
+and `0x4FF24E` invoke the pass before testing `0x5E6620`. Missing dump stages
+must not be interpreted as missing optimizer passes. Movement's result and
+current-group definitions retain virtual GPRs 74 and 76 until coloring assigns
+28 and 29, opposite retail. Arena addresses provide provisional record history,
+not proof of source-variable identity. This adds visibility into the residuals;
+it does not establish compiler provenance or improve the 87/89 matching count.
+The instrumented and ordinary complete objects both hash to
+`fb1fbfe41a35bdc069d6d486597b8fce19d7359d3622af53c0f43fe3d49d1584`.
+Both build gates and 101 tooling tests pass, including malformed-record and
+Windows debugger handle/exit-continuation regressions. Live timeout and stopped
+child decode-failure checks leave no compiler process behind. The diagnostic
+link still differs by 41 text bytes only; all allocated non-text data is exact.
+
+The tunnel zero-copy discrepancy now has a compiler-side eligibility explanation.
+GC/1.3's test at compiler VA `0x5082E0` allows `li`/`lis` commoning only in its
+nonzero mode and for destination register IDs within an inclusive global range.
+The trace captures these bounds without changing compiler state. Baseline's
+range is `[43, 202]`: its second loop index is GPR 35, so that zero load cannot
+seed the common-expression table, while the generated offset GPR 46 is eligible.
+Reusing the earlier walk-group local gives range `[42, 202]` and index GPR 42;
+the subsequent offset initializer can then become a copy. Splitting the later
+player-group query into a separate local, including block scope, leaves all nine
+register differences in that candidate. None of these source changes is retained.
+Compiler operand register IDs are also corrected to signed 16-bit fields, as
+read by the actual value-numbering implementation, with the remaining bytes
+kept opaque. The range is an eligibility condition, not proof that any particular
+value will be commoned; it is not applied to physical registers after coloring.
+Both build gates and 104 tooling tests pass. Standard `register` storage hints
+on movement's result, object walk group, or both leave its 34 operand differences
+unchanged; those diagnostic variants are also not retained.
+
+The optional `--graph` trace now captures the live GPR graph before simplification
+and immediately before physical rewriting, at GC/1.3 compiler VAs `0x507070` and
+`0x506E20`. Post-coloring dump hooks are too late: the graph arena has been freed.
+Both private-process breakpoints replace a verified `PUSH EBX` and emulate its
+exact stack effect; whole-object equivalence remains mandatory. The decoder
+checks symmetric interference edges, valid colors, the actual linked coloring
+order, and surviving operand rewrites, including implicit call-clobber operands.
+Excluded nodes retain opaque color slots rather than falsely labeling them GPRs.
+Replaying low-degree sweeps and weighted high-degree choices reproduces every
+worklist entry and final degree counter for both residual functions.
+
+Movement's result (virtual 74) is the first high-degree removal, with weight 13
+and degree 44. This frees the object walk group (virtual 76) for simplification;
+reverse removal order puts that group before result during coloring, assigning
+`r29` and `r28` respectively. These are optimistic graph removals, not actual
+spills. The finding directs source experiments toward lifetimes and value
+partitioning; it is not proof of original source or compiler provenance. A
+rebuild of the historical pre-switch source/header state at `5a003457b8^` using
+its GC/2.0 profile reproduces the same 34 movement operand differences. Its exact
+tunnel instead uses an explicit byte-offset induction helper, which is not
+restored. No production source or compiler-profile changes accompany this tool.
+The ordinary/instrumented object hash remains `fb1fbfe...1584`, and Tricky remains
+87/89 exact with only 41 linked text bytes differing and allocated non-text exact.
+Sharing only the five route-yaw locals leaves movement unchanged; sharing both
+yaw locals adds ten operand differences. The latter's graph still removes result
+first at weight 13/degree 44. Neither source variant is retained. Both build gates
+and 126 tooling tests pass, including reordered/dangling graph-pair rejection and
+both breakpoint stack-effect checks.
+
+Movement's register mismatch is now resolved by passing the patch-membership
+query directly as the final `trickyReportError` argument. The reconstructed
+assignment through the unrelated loop counter `i` added an excluded copy node
+to the interference graph. With that copy present, object walk group stalled
+at degree 29, exactly the available GPR count; removing it allows the low-degree
+sweep to remove walk group before result. The captured graph shrinks from 567
+to 566 nodes and colors result to `r29`, walk group to `r28`, as retail does.
+This normal nested diagnostic call preserves all 2,191 instructions, including
+argument evaluation and all branch targets, without compiler-profile changes.
+Tricky reaches **88/89 exact functions, 99.98757% fuzzy**. The diagnostic link
+differs by only **four text bytes**, the remaining tunnel `li` versus `mr`;
+all allocated non-text sections remain exact, including the 404-byte literal
+pool. Instrumented and ordinary objects both hash to
+`31ec88d7f7f143344651290d8c7fb508186fcefc9252a884a35227a6ba00a1e6`.
+Both build gates, formatting and 126 tooling tests pass. Equivalent route-entry
+filter rewrites also explained the graph threshold but changed retail's branch
+shape, so none is retained. Narrowing `getPatchGroup` to `u16` introduces a
+default-argument-promotion mask absent from the retail diagnostic call and
+regresses movement; its existing `int` return contract is retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

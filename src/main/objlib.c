@@ -532,8 +532,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
             obj = objects[objectIndex];
             if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 || (targetId == obj->anim.romDefNo))) &&
-                ((obj != 0x0 &&
-                  (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
+                ((obj != 0x0 && (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
                 count = queue->count;
                 if (count < queue->capacity) {
                     slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
@@ -552,8 +551,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
             obj = objects[objectIndex];
             if (((obj != sender) || ((maskedFlags & OBJMSG_SEND_INCLUDE_SENDER) == 0)) &&
                 (((maskedFlags & OBJMSG_SEND_MATCH_ANY) != 0 || (targetId == obj->anim.classId))) &&
-                ((obj != 0x0 &&
-                  (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
+                ((obj != 0x0 && (queue = obj->msgQueue, queue != (ObjMsgQueue*)0x0)))) {
                 count = queue->count;
                 if (count < queue->capacity) {
                     slot = (ObjMsgQueueCursor*)((u8*)queue + ((count + count + count) << 2));
@@ -870,41 +868,35 @@ GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* 
     GameObject* otherObj;
     int objectIndex;
     GameObject** objects;
-    GameObject** walker;
     GameObject* foundObj;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
     foundObj = 0;
     *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
-    walker = objects + startIndex;
 
     if (defNo != -1) {
         objectIndex = startIndex;
-        walker = objects + startIndex;
 
         while (objectIndex < objectCount) {
-            otherObj = (GameObject*)*walker;
+            otherObj = objects[objectIndex];
             if (((defNo == otherObj->anim.romDefNo) && (obj != otherObj)) &&
-                (distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &otherObj->anim.worldPosX),
+                (distanceSq = vec3f_distanceSquared(&obj->anim.worldPosX, &otherObj->anim.worldPosX),
                  distanceSq < *maxDistanceSq)) {
                 *maxDistanceSq = distanceSq;
-                foundObj = (GameObject*)*walker;
+                foundObj = objects[objectIndex];
             }
-            walker++;
             objectIndex++;
         }
     } else {
         objectIndex = startIndex;
-        walker = objects + startIndex;
         invalidDistance = 0.0f;
 
         while (objectIndex < objectCount) {
-            distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)*walker)->anim.worldPosX);
+            distanceSq = vec3f_distanceSquared(&obj->anim.worldPosX, &objects[objectIndex]->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq)) {
                 *maxDistanceSq = distanceSq;
-                foundObj = (GameObject*)*walker;
+                foundObj = objects[objectIndex];
             }
-            walker++;
             objectIndex++;
         }
     }
@@ -920,10 +912,9 @@ int ObjList_ContainsObject(GameObject* obj) {
     entry = ObjList_GetObjects(&i, &count);
     i = 0;
     while (i < count) {
-        if (*entry == obj) {
+        if (entry[i] == obj) {
             return 1;
         }
-        entry = entry + 1;
         i = i + 1;
     }
     return 0;
@@ -946,10 +937,10 @@ void ObjPath_GetPointLocalPosition(GameObject* obj, int pointIndex, float* xOut,
     *xOut = ((ObjPathPoint*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) +
                              pointIndex * sizeof(ObjPathPoint)))
                 ->x;
-    *yOut = *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 +
-                    pointIndex * sizeof(ObjPathPoint));
-    *zOut = *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 +
-                    pointIndex * sizeof(ObjPathPoint));
+    *yOut =
+        *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 4 + pointIndex * sizeof(ObjPathPoint));
+    *zOut =
+        *(f32*)(*(int*)((int)obj->anim.modelInstance + OBJPATH_POINTS_OFFSET) + 8 + pointIndex * sizeof(ObjPathPoint));
     return;
 }
 

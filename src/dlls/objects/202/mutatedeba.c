@@ -95,49 +95,35 @@ u8 gDusterEbaMoveTable[] = {
     0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x05, 0x06, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-void mutatedEbaPlayMoveSfx(GameObject* obj, EnemyState* state)
-{
-    switch (((GameObject*)obj)->anim.currentMove)
-    {
+void mutatedEbaPlayMoveSfx(GameObject* obj, EnemyState* state) {
+    switch (obj->anim.currentMove) {
     case 5:
-        if (state->animEventMask != 0)
-        {
-            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_rach_bite);
+        if (state->animEventMask != 0) {
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
         }
         break;
     case 6:
-        if (state->animEventMask != 0)
-        {
-            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_rach_bite);
+        if (state->animEventMask != 0) {
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
         }
         break;
     case 7:
-        if (state->animEventMask != 0)
-        {
-            if (((GameObject*)obj)->anim.currentMoveProgress < 0.15f)
-            {
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_rach_bite);
-            }
-            else
-            {
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_kooshy_death);
+        if (state->animEventMask != 0) {
+            if (obj->anim.currentMoveProgress < 0.15f) {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite);
+            } else {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
             }
         }
         break;
     case 8:
-        if (state->animEventMask != 0)
-        {
-            if (((GameObject*)obj)->anim.currentMoveProgress < 0.25f)
-            {
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_kooshy_hit);
-            }
-            else if (((GameObject*)obj)->anim.currentMoveProgress < 0.75f)
-            {
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_rach_call1);
-            }
-            else
-            {
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_kooshy_death);
+        if (state->animEventMask != 0) {
+            if (obj->anim.currentMoveProgress < 0.25f) {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
+            } else if (obj->anim.currentMoveProgress < 0.75f) {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_call1);
+            } else {
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
             }
         }
         break;
@@ -146,112 +132,91 @@ void mutatedEbaPlayMoveSfx(GameObject* obj, EnemyState* state)
 }
 
 void mutatedEbaUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
-                                 Vec* wpad2, int wpad3)
-{
+                                 Vec* wpad2, int wpad3) {
+    EnemyState* enemy = (EnemyState*)state;
     int move;
 
-    if (eventKind != 0x11)
-    {
-        if (eventKind == 0x10)
-        {
-            ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 0x20;
-        }
-        else
-        {
-            if ((((move = ((GameObject*)obj)->anim.currentMove) == 0) || (move == 1)) || (move == 3) || (move == 4))
-            {
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_mv_ladderslide16_250);
-                ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 0x10;
-            }
-            else
-            {
-                baddieSetMove((GameObject*)obj, state, 4, 1.0f, 0, 0);
-                ((EnemyState*)state)->userData1 = 0;
-                Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_kooshy_call);
-                ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 8;
+    if (eventKind != 0x11) {
+        if (eventKind == 0x10) {
+            enemy->flags2E8 |= 0x20;
+        } else {
+            if ((((move = obj->anim.currentMove) == 0) || (move == 1)) || (move == 3) || (move == 4)) {
+                Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16_250);
+                enemy->flags2E8 |= 0x10;
+            } else {
+                baddieSetMove(obj, state, 4, 1.0f, 0, 0);
+                enemy->userData1 = 0;
+                Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_call);
+                enemy->flags2E8 |= 8;
             }
         }
     }
     return;
 }
 
-void mutatedEbaUpdateEngaged(GameObject* obj, void* state)
-{
+void mutatedEbaUpdateEngaged(GameObject* obj, void* state) {
+    EnemyState* enemy = (EnemyState*)state;
     int tblOff;
 
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-    if (((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0) &&
-        (((EnemyState*)state)->userData1 <= 1))
-    {
-        ((EnemyState*)state)->userData1 = 1;
-        ((EnemyState*)state)->controlFlags = ((EnemyState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 10;
+    ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 1;
+    if (((enemy->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0) && (enemy->userData1 <= 1)) {
+        enemy->userData1 = 1;
+        enemy->controlFlags |= BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        ((EnemyState*)state)->userData1 += 1;
-        if (((EnemyState*)state)->userData1 > 10)
-        {
-            ((EnemyState*)state)->userData1 = 3;
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
+        enemy->userData1++;
+        if (enemy->userData1 > 10) {
+            enemy->userData1 = 3;
         }
-        if (((EnemyState*)state)->turnOctant < 4)
-        {
-            tblOff = (u32)((EnemyState*)state)->userData1 * 0xc;
-            baddieSetMove((GameObject*)obj, state, gDusterEbaMoveTable[tblOff + 8],
-                        *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
-        }
-        else
-        {
-            tblOff = (u32)((EnemyState*)state)->userData1 * 0xc;
-            baddieSetMove((GameObject*)obj, state, gDusterEbaMoveTable[tblOff + 9],
-                        *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
+        if (enemy->turnOctant < 4) {
+            tblOff = enemy->userData1 * 0xc;
+            baddieSetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)&gDusterEbaMoveTable[tblOff], 0, 0);
+        } else {
+            tblOff = enemy->userData1 * 0xc;
+            baddieSetMove(obj, state, gDusterEbaMoveTable[tblOff + 9], *(float*)&gDusterEbaMoveTable[tblOff], 0, 0);
         }
     }
     mutatedEbaPlayMoveSfx(obj, (EnemyState*)state);
     return;
 }
 
-void mutatedEbaUpdateIdle(GameObject* obj, void* state)
-{
+void mutatedEbaUpdateIdle(GameObject* obj, void* state) {
+    EnemyState* enemy = (EnemyState*)state;
     int tblOff;
     u32 phase;
 
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        phase = ((EnemyState*)state)->userData1;
-        if (phase == 0)
-        {
-            ((EnemyState*)state)->userData1 += 1;
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
+        phase = enemy->userData1;
+        if (phase == 0) {
+            enemy->userData1++;
+        } else if (phase >= 2) {
+            enemy->userData1 = 0;
         }
-        else if (phase >= 2)
-        {
-            ((EnemyState*)state)->userData1 = 0;
-        }
-        tblOff = (u32)((EnemyState*)state)->userData1 * 0xc;
-        baddieSetMove((GameObject*)obj, state, gDusterEbaMoveTable[tblOff + 8],
-                    *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
+        tblOff = enemy->userData1 * 0xc;
+        baddieSetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)&gDusterEbaMoveTable[tblOff], 0, 0);
     }
     mutatedEbaPlayMoveSfx(obj, (EnemyState*)state);
     return;
 }
 
-void mutatedEbaInit(u32 unused, int state)
-{
+void mutatedEbaInit(u32 unused, int state) {
+    EnemyState* enemy = (EnemyState*)state;
     float fa;
 
-    ((EnemyState*)state)->sightRange = 60.0f;
-    ((EnemyState*)state)->flags2E4 = 0x46001;
-    ((EnemyState*)state)->animPlaySpeed = 0.01f;
-    ((EnemyState*)state)->gravity = 0.006f;
-    ((EnemyState*)state)->drag = 0.95f;
-    ((EnemyState*)state)->moveId0 = 0;
+    enemy->sightRange = 60.0f;
+    enemy->flags2E4 = 0x46001;
+    enemy->animPlaySpeed = 0.01f;
+    enemy->gravity = 0.006f;
+    enemy->drag = 0.95f;
+    enemy->moveId0 = 0;
     fa = 1.0f;
-    ((EnemyState*)state)->moveSpeedScale0 = 1.0f;
-    ((EnemyState*)state)->moveId1 = 4;
-    ((EnemyState*)state)->moveSpeedScale1 = fa;
-    ((EnemyState*)state)->moveId2 = 3;
-    ((EnemyState*)state)->moveSpeedScale2 = fa;
-    ((EnemyState*)state)->userData1 = 1;
-    ((EnemyState*)state)->current = 0xa;
+    enemy->moveSpeedScale0 = 1.0f;
+    enemy->moveId1 = 4;
+    enemy->moveSpeedScale1 = fa;
+    enemy->moveId2 = 3;
+    enemy->moveSpeedScale2 = fa;
+    enemy->userData1 = 1;
+    enemy->current = 0xa;
     return;
 }

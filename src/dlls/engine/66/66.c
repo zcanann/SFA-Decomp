@@ -384,8 +384,8 @@ void CameraModeNormal_updateWallAvoidance(CameraObject* camera, GameObject* targ
     float* p;
     int i;
     int j;
-    f32 dz;
     f32 dx;
+    f32 dz;
     f32 rad;
     f32 sinv;
     f32 cosv;
@@ -414,7 +414,7 @@ void CameraModeNormal_updateWallAvoidance(CameraObject* camera, GameObject* targ
     i = 1;
     ang = 0xaaa;
     p = path + 3;
-    do {
+    while (i <= 0xc) {
         rad = (3.1415927f * (f32)(s16)ang) / 32768.0f;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
@@ -436,7 +436,7 @@ void CameraModeNormal_updateWallAvoidance(CameraObject* camera, GameObject* targ
         ang = ang + 0x1554;
         p = p + 6;
         i = i + 2;
-    } while (i <= 0xc);
+    }
     for (j = 0; j <= 0xc; j++) {
         endPts[j][0] = prev[0];
         endPts[j][1] = prev[1];

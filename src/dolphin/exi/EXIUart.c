@@ -61,7 +61,7 @@ u32 WriteUARTN(const void* buf, u32 len) {
         return 0;
     }
 
-    for (ptr = buf; ptr - buf < len; ptr++) {
+    for (ptr = (char*)buf; ptr - (const char*)buf < len; ptr++) {
         if (*ptr == '\n') {
             *ptr = '\r';
         }
@@ -94,7 +94,7 @@ u32 WriteUARTN(const void* buf, u32 len) {
             }
 
             xLen = len < 4 ? (long)len : 4;
-            EXIImm(Chan, buf, xLen, EXI_WRITE, NULL);
+            EXIImm(Chan, (void*)buf, xLen, EXI_WRITE, NULL);
             buf = (u8*)buf + xLen;
             len -= xLen;
             qLen -= xLen;

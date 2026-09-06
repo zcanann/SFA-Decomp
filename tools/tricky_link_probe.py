@@ -35,11 +35,13 @@ def link_inputs(query):
     return inputs
 
 
-def replace_object(inputs, target, source):
-    target = str(target).replace("\\", "/")
-    if inputs.count(target) != 1:
-        raise ValueError("expected exactly one retail Tricky link input")
-    return [str(source).replace("\\", "/") if item == target else item for item in inputs]
+def replace_object(inputs, target, source, compiled=None):
+    candidates = {str(target).replace("\\", "/")}
+    if compiled is not None:
+        candidates.add(str(compiled).replace("\\", "/"))
+    if sum(item in candidates for item in inputs) != 1:
+        raise ValueError("expected exactly one Tricky link input")
+    return [str(source).replace("\\", "/") if item in candidates else item for item in inputs]
 
 
 def object_info(path):
@@ -100,7 +102,8 @@ def main():
         ["ninja", "-t", "query", "build/GSAE01/main.elf"], cwd=ROOT,
         capture_output=True, text=True, check=True, timeout=30,
     )
-    inputs = replace_object(link_inputs(query.stdout), flag_probe.UNITS[UNIT]["target_path"], source)
+    inputs = replace_object(link_inputs(query.stdout), flag_probe.UNITS[UNIT]["target_path"], source,
+                            compiled=flag_probe.UNITS[UNIT]["base_path"])
     response = output / "link.rsp"
     response.write_text("\n".join(f'"{item}"' for item in inputs), encoding="ascii")
     result = subprocess.run(

@@ -240,9 +240,9 @@ typedef struct PartfxEffectState {
     f32 velocityY;
     f32 velocityZ;
     void* vertexBuffers[3];
-    void* colorBuffers[3];
+    void* triangleBuffers[3]; /* LightmapTriangle records, expanded from s16 index triplets. */
     void* baseVertexBuffer;
-    void* baseColorBuffer;
+    void* baseTriangleBuffer;
     void* textureResource;
     void* emitterCommands;
     void* auxAllocation;
@@ -266,7 +266,7 @@ typedef struct PartfxEffectState {
     s16 soundHandle;
     u8 padE8[0xEA - 0xE8];
     s16 vertexCount;
-    s16 colorVertexCount;
+    s16 triangleCount;
     s16 stageDurations[PARTFX_STAGE_COUNT];
     s16 currentStage;
     s16 stageFrameCountdown;
@@ -306,5 +306,9 @@ typedef struct PartfxEffectState {
     u8 frameUpdated;
     u8 textureIsBorrowed;
 } PartfxEffectState;
+
+STATIC_ASSERT(offsetof(PartfxEffectState, triangleBuffers) == 0x84);
+STATIC_ASSERT(offsetof(PartfxEffectState, baseTriangleBuffer) == 0x94);
+STATIC_ASSERT(offsetof(PartfxEffectState, triangleCount) == 0xEC);
 
 #endif

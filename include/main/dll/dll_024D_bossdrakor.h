@@ -11,6 +11,8 @@
 #include "global.h"
 #include "game/objects/object_setup.h"
 
+#define BOSSDRAKOR_OBJGROUP 0x45
+
 typedef struct BossdrakorPlacement
 {
     ObjPlacement base;

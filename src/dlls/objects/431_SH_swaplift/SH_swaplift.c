@@ -34,9 +34,7 @@ void warpstonelift_free(void) {
 }
 
 void warpstonelift_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 visibleValue = visible;
-
-    if (visibleValue != 0) {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
     }
 }
@@ -54,7 +52,7 @@ void warpstonelift_update(GameObject* obj) {
     s16 item;
 
     contactState = (u8*)obj->anim.hitboxTransformState;
-    count = *(s8*)(contactState + offsetof(ObjHitboxTransformState, contactObjectCount));
+    count = ((ObjHitboxTransformState*)contactState)->contactObjectCount;
     if (count > 0) {
         objectOffset = 0;
         for (i = 0; i < count; i++) {
@@ -63,7 +61,7 @@ void warpstonelift_update(GameObject* obj) {
             if (other->anim.classId == WARP_STONE_LIFT_PLAYER_CLASS_ID) {
                 foundPlayer = 1;
             }
-            objectOffset += 4;
+            objectOffset += sizeof(GameObject*);
         }
     }
     if (foundPlayer != 0) {
@@ -102,11 +100,11 @@ void warpstonelift_init(GameObject* obj, const WarpStoneLiftPlacement* placement
     WarpStoneLiftState* stateStorage = obj->extra;
     int i;
 
-    obj->anim.rotX = (s16)((s32)placement->rotXByte << 8);
+    obj->anim.rotX = placement->rotXByte << 8;
     obj->userData1 = 0;
     for (i = 0; i < WARP_STONE_LIFT_STATE_GAMEBIT_COUNT; i++) {
         if (mainGetBit(gWarpStoneLiftStateGameBits[i]) != 0) {
-            stateStorage->stateId = (u8)(i + 1);
+            stateStorage->stateId = i + 1;
         }
     }
     switch (stateStorage->stateId) {

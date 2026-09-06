@@ -4,7 +4,7 @@
 #include "main/dll/partfx_interface.h"
 
 int Effect19_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                    f32* extraArgs);
+                         f32* extraArgs);
 void Effect19_updateFrameState(void);
 void Effect19_func03_nop(void);
 void Effect19_release(void);

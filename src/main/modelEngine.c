@@ -1,3 +1,4 @@
+#include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/226.h"
 #include "dlls/objects/201_Baddie.h"
@@ -457,7 +458,7 @@
 #include "dlls/objects/547_VFP_corepla.h"
 #include "dlls/objects/565_DFP_TargetB.h"
 #include "main/dll/baddie/dll_022F_dfpfloorbar.h"
-#include "main/dll/dll_023F_dbegg.h"
+#include "dlls/objects/575_DB_egg.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/dll_025B_msplantings.h"
 #include "main/dll/DR/dll_0254_ktfallingrocks.h"
@@ -566,7 +567,7 @@ extern ResourceDescriptor gDrCageControlObjDescriptor,
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
     gDrakorEnergyObjDescriptor;
-extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor;
+extern ResourceDescriptor gDrakorMissileObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
 extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
@@ -1835,7 +1836,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDrShackleObjDescriptor,
     &gDrGeneratorObjDescriptor,
     &gDR_RockNullResourceDescriptor,
-    &gDrakorHoverPadObjDescriptor,
+    (ResourceDescriptor*)&gDrakorHoverPadObjDescriptor,
     (ResourceDescriptor*)&gHighTopObjDescriptor,
     (ResourceDescriptor*)&gFirePipeObjDescriptor,
     &gDR_pulleyNullResourceDescriptor,

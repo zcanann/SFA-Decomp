@@ -36,14 +36,12 @@ u8 saveGameLoadStatus;
 s8 gSaveGameCurrentSlot = -1;
 char sGameplayFoxName[] = "FOX";
 
-typedef struct SaveGameTimeEntry
-{
+typedef struct SaveGameTimeEntry {
     int objId;
     f32 time;
 } SaveGameTimeEntry;
 
-typedef struct SaveGameData
-{
+typedef struct SaveGameData {
     PlayerStatus characterStatus[2];
     TrickyStats trickyStats;
     char playerName[4];
@@ -103,13 +101,11 @@ STATIC_ASSERT(sizeof(SaveGameData) == 0xF70);
 #define SAVEGAME_TRANSIENT_MAP_BIT_COUNT 20
 #define SAVEGAME_TRANSIENT_MAP_BIT_TTL   3
 
-enum
-{
+enum {
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-typedef struct SaveGameRomListPosition
-{
+typedef struct SaveGameRomListPosition {
     u8 pad0[0x8];
     f32 x;
     f32 y;
@@ -117,8 +113,7 @@ typedef struct SaveGameRomListPosition
     u32 objectId;
 } SaveGameRomListPosition;
 
-typedef struct SaveScoreFile
-{
+typedef struct SaveScoreFile {
     u8 pad0[SAVE_SCORE_TABLE_OFFSET];
     SaveScoreEntry entries[SAVE_SCORE_ENTRY_COUNT];
 } SaveScoreFile;
@@ -127,8 +122,7 @@ typedef struct SaveScoreFile
     (&((SaveGameCharacterPosition*)((save) +                                                                           \
                                     SAVEGAME_CHARACTER_POSITION_OFFSET))[(save)[SAVEGAME_CURRENT_CHARACTER_OFFSET]])
 
-typedef struct SaveSelectInfo
-{
+typedef struct SaveSelectInfo {
     u8 name[4];
     u8 percentComplete;
     u8 rankA;
@@ -141,8 +135,7 @@ typedef struct SaveSelectInfo
     u8 pad22[2];
 } SaveSelectInfo;
 
-typedef struct MapBitTransient
-{
+typedef struct MapBitTransient {
     s8 mapId;
     u8 shift;
     s8 timer;
@@ -150,8 +143,7 @@ typedef struct MapBitTransient
 
 extern u16 gSaveGameMapActBits[];
 extern u16 gSaveGameMapObjGroupBits[];
-const Vec3f gSaveGameDefaultPosition = {
-    570.6483764648438f, -82.0f, 15790.8203125f};
+const Vec3f gSaveGameDefaultPosition = {570.6483764648438f, -82.0f, 15790.8203125f};
 
 void loadMapForCurrentSaveGame(void);
 
@@ -160,8 +152,7 @@ extern u8 gExtendedMapActLookup[SAVEGAME_EXTENDED_MAP_COUNT];
 
 MapBitTransient gTransientMapBits[SAVEGAME_TRANSIENT_MAP_BIT_COUNT];
 
-typedef struct SaveGameRecord
-{
+typedef struct SaveGameRecord {
     MapBitTransient transientMapBits[SAVEGAME_TRANSIENT_MAP_BIT_COUNT];
     u32 mapObjGroupStatuses[SAVEGAME_MAP_COUNT];
     u8 extendedMapActLookup[SAVEGAME_EXTENDED_MAP_COUNT];
@@ -177,29 +168,23 @@ STATIC_ASSERT(sizeof(SaveGameRecord) == 0x1298);
 
 #define gSaveGameRecord (*(SaveGameRecord*)gTransientMapBits)
 
-static inline s8 saveGame_findTransientMapBit(int mapId, int shift, const SaveGameRecord* record)
-{
+static inline s8 saveGame_findTransientMapBit(int mapId, int shift, const SaveGameRecord* record) {
     int i;
 
-    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
-    {
-        if (mapId == record->transientMapBits[i].mapId && shift == record->transientMapBits[i].shift)
-        {
+    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
+        if (mapId == record->transientMapBits[i].mapId && shift == record->transientMapBits[i].shift) {
             return i;
         }
     }
     return -1;
 }
 
-static inline void saveGame_addTransientMapBit(int mapId, int shift, SaveGameRecord* record)
-{
+static inline void saveGame_addTransientMapBit(int mapId, int shift, SaveGameRecord* record) {
     int i;
     MapBitTransient* transient;
 
-    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
-    {
-        if (record->transientMapBits[i].mapId == -1)
-        {
+    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
+        if (record->transientMapBits[i].mapId == -1) {
             (transient = &record->transientMapBits[i])->mapId = mapId;
             transient->shift = shift;
             transient->timer = SAVEGAME_TRANSIENT_MAP_BIT_TTL;
@@ -208,16 +193,13 @@ static inline void saveGame_addTransientMapBit(int mapId, int shift, SaveGameRec
     }
 }
 
-int saveGame_restoreObjectPosToRomList(void* objectData)
-{
+int saveGame_restoreObjectPosToRomList(void* objectData) {
     SaveGameRomListPosition* object = objectData;
     u8* slot;
     int i;
 
-    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
-    {
-        if (object->objectId == ((SaveGameData*)gSaveGameData)->positions[i].objectId)
-        {
+    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
+        if (object->objectId == ((SaveGameData*)gSaveGameData)->positions[i].objectId) {
             slot = gSaveGameData;
             i = i * sizeof(SaveGameObjectPosition);
             slot += i;
@@ -231,33 +213,27 @@ int saveGame_restoreObjectPosToRomList(void* objectData)
     return 0;
 }
 
-void saveGame_unsaveObjectPos(GameObject* obj)
-{
+void saveGame_unsaveObjectPos(GameObject* obj) {
     int i;
     SaveGameObjectPosition* slot;
     u32 objectId;
 
-    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0)
-    {
+    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0) {
         return;
     }
 
-    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
-    {
+    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
         objectId = ((SaveGameRomListPosition*)obj->anim.placementData)->objectId;
-        if (objectId == ((SaveGameData*)gSaveGameData)->positions[i].objectId)
-        {
+        if (objectId == ((SaveGameData*)gSaveGameData)->positions[i].objectId) {
             break;
         }
     }
-    if (i == SAVEGAME_OBJECT_POSITION_COUNT)
-    {
+    if (i == SAVEGAME_OBJECT_POSITION_COUNT) {
         return;
     }
 
     slot = (SaveGameObjectPosition*)gSaveGameData + i;
-    for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++)
-    {
+    for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, slot++) {
         ((SaveGameData*)slot)->positions[0].objectId = ((SaveGameData*)slot)->positions[1].objectId;
         ((SaveGameData*)slot)->positions[0].x = ((SaveGameData*)slot)->positions[1].x;
         ((SaveGameData*)slot)->positions[0].y = ((SaveGameData*)slot)->positions[1].y;
@@ -266,56 +242,50 @@ void saveGame_unsaveObjectPos(GameObject* obj)
     *(u32*)(gSaveGameData + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
 }
 
-void saveGame_saveObjectPos(GameObject* obj)
-{
+void saveGame_saveObjectPos(GameObject* obj) {
     int objectId;
     int i;
-    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0)
-    {
+    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0) {
         return;
     }
-    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++)
-    {
+    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
         objectId = ((SaveGameData*)gSaveGameData)->positions[i].objectId;
-        if (objectId == 0)
+        if (objectId == 0) {
             break;
-        if (((SaveGameRomListPosition*)obj->anim.placementData)->objectId == objectId)
+        }
+        if (((SaveGameRomListPosition*)obj->anim.placementData)->objectId == objectId) {
             break;
+        }
     }
-    if (i == SAVEGAME_OBJECT_POSITION_COUNT)
+    if (i == SAVEGAME_OBJECT_POSITION_COUNT) {
         return;
+    }
     *(u32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + (i << 4)) =
         ((SaveGameRomListPosition*)obj->anim.placementData)->objectId;
     *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 4) + (i << 4)) = obj->anim.localPosX;
     *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 8) + (i << 4)) = obj->anim.localPosY;
-    *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 12) + (i << 4)) =
-        obj->anim.localPosZ;
+    *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 12) + (i << 4)) = obj->anim.localPosZ;
     ((SaveGameRomListPosition*)obj->anim.placementData)->x = obj->anim.localPosX;
     ((SaveGameRomListPosition*)obj->anim.placementData)->y = obj->anim.localPosY;
     ((SaveGameRomListPosition*)obj->anim.placementData)->z = obj->anim.localPosZ;
 }
 
-void SaveGame_setCamActionNo(s16 actionNo)
-{
+void SaveGame_setCamActionNo(s16 actionNo) {
     ((SaveGameData*)gSaveGameData)->camActionNo = actionNo;
 }
 
-s32 SaveGame_getCamActionNo(void)
-{
+s32 SaveGame_getCamActionNo(void) {
     return ((SaveGameData*)gSaveGameData)->camActionNo;
 }
-SaveGameEnvState* saveGameGetEnvState(void)
-{
+SaveGameEnvState* saveGameGetEnvState(void) {
     return (SaveGameEnvState*)(gSaveGameData + 0x6a8);
 }
 
-int loadGameOptions(void)
-{
+int loadGameOptions(void) {
     int loadResult;
 
     loadResult = maybeTryLoadSave(saveData);
-    if ((loadResult == 0) || (((SaveData*)saveData)->optionsValid == 0))
-    {
+    if ((loadResult == 0) || (((SaveData*)saveData)->optionsValid == 0)) {
         memset(saveData, 0, SAVE_DATA_SIZE);
         ((SaveData*)saveData)->widescreenEnabled = 0;
         ((SaveData*)saveData)->subtitlesEnabled = 1;
@@ -328,123 +298,97 @@ int loadGameOptions(void)
     return loadResult;
 }
 
-void gplaySaveGame(int param)
-{
+void gplaySaveGame(int param) {
     ((SaveGameData*)gSaveGameData)->newFileFlag = 0;
     gSaveGameCurrentSlot = param;
-    if (gSaveGameData[0x22] == 0)
-    {
+    if (gSaveGameData[0x22] == 0) {
         memcpy(gSaveGameWorkBuffer, gSaveGameData, 0x564);
-        if (pRestartPoint != 0)
-        {
+        if (pRestartPoint != 0) {
             memcpy((void*)pRestartPoint, gSaveGameData, 0x564);
         }
     }
-    if (gSaveGameCurrentSlot == -1)
-    {
+    if (gSaveGameCurrentSlot == -1) {
         gSaveGameCurrentSlot = 0;
     }
-    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health < 1)
-    {
+    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health < 1) {
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health = 1;
     }
-    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health < 1)
-    {
+    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health < 1) {
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health = 1;
     }
     _saveGame((u8)gSaveGameCurrentSlot, gSaveGameWorkBuffer, saveData);
 }
 
-void titleDoLoadSave(void)
-{
+void titleDoLoadSave(void) {
     OSSetSaveRegion(0, 0);
     gSaveGameCurrentSlot = (s8)((((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x60) >> 5);
     ((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag = ((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & ~0xE0;
     (*gMapEventInterface)->gotoSavegame();
 }
 
-void saveGame_save(void)
-{
-    if (gSaveGameData[0x22] == 0)
-    {
+void saveGame_save(void) {
+    if (gSaveGameData[0x22] == 0) {
         memcpy(gSaveGameWorkBuffer, gSaveGameData, 0x564);
-        if (pRestartPoint != 0)
-        {
+        if (pRestartPoint != 0) {
             memcpy((void*)pRestartPoint, gSaveGameData, 0x564);
         }
     }
-    if (gSaveGameCurrentSlot == -1)
-    {
+    if (gSaveGameCurrentSlot == -1) {
         gSaveGameCurrentSlot = 0;
     }
-    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health < 1)
-    {
+    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health < 1) {
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health = 1;
     }
-    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health < 1)
-    {
+    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health < 1) {
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health = 1;
     }
     _saveGame((u8)gSaveGameCurrentSlot, gSaveGameWorkBuffer, saveData);
 }
 
-void clearSaveGameLoadingFlag(void)
-{
+void clearSaveGameLoadingFlag(void) {
     saveGameLoadStatus = 0x0;
 }
 
-void setSaveGameLoadingFlag(void)
-{
-    if (saveGameLoadStatus == 2)
+void setSaveGameLoadingFlag(void) {
+    if (saveGameLoadStatus == 2) {
         saveGameLoadStatus = 1;
+    }
 }
-s32 isSaveGameLoading(void)
-{
+s32 isSaveGameLoading(void) {
     return saveGameLoadStatus == 2;
 }
 
-int getSaveGameLoadStatus(void)
-{
+int getSaveGameLoadStatus(void) {
     return saveGameLoadStatus;
 }
 
-int trySaveGame(int slot)
-{
+int trySaveGame(int slot) {
     int loaded;
 
     gSaveGameCurrentSlot = slot;
     memset(gSaveGameData, 0, SAVEGAME_LIVE_BUFFER_SIZE);
-    if ((((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80) == 0)
-    {
+    if ((((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80) == 0) {
         memset(gSaveGameWorkBuffer, 0, SAVEGAME_ACTIVE_SIZE);
     }
 
     loaded = loadSaveGame((u8)gSaveGameCurrentSlot, gSaveGameWorkBuffer);
-    if (loaded != 0)
-    {
-        if (((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag == 0)
-        {
+    if (loaded != 0) {
+        if (((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag == 0) {
             loaded = gplayNewGame(sGameplayFoxName, (u8)gSaveGameCurrentSlot);
-        }
-        else
-        {
+        } else {
             memcpy(gSaveGameData, gSaveGameWorkBuffer, SAVEGAME_ACTIVE_SIZE);
         }
-    }
-    else
-    {
+    } else {
         gplayNewGame(sGameplayFoxName, -1);
     }
     return loaded;
 }
 
-void* getHighScoreEntry(u8 fileIdx, u8 rank)
-{
+void* getHighScoreEntry(u8 fileIdx, u8 rank) {
     return &((SaveScoreFile*)(saveData + fileIdx * SAVE_SCORE_FILE_STRIDE))->entries[rank];
 }
 
-int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials)
-{
+int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials) {
     int rank;
     SaveScoreFile* file;
     int off;
@@ -453,25 +397,19 @@ int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials)
     rank = 0;
     off = slot * SAVE_SCORE_FILE_STRIDE;
     file = (SaveScoreFile*)(saveData + off);
-    for (; rank < SAVE_SCORE_ENTRY_COUNT; rank++)
-    {
-        if (score > file->entries[rank].score)
-        {
-            for (i = SAVE_SCORE_ENTRY_COUNT - 1; i > rank; i--)
-            {
+    for (; rank < SAVE_SCORE_ENTRY_COUNT; rank++) {
+        if (score > file->entries[rank].score) {
+            for (i = SAVE_SCORE_ENTRY_COUNT - 1; i > rank; i--) {
                 file->entries[i].score = file->entries[i - 1].score;
                 file->entries[i].flag = file->entries[i - 1].flag;
                 file->entries[i].initials[0] = file->entries[i - 1].initials[0];
-                ((SaveScoreFile*)(saveData + off))->entries[i].initials[1] =
-                    ((SaveScoreFile*)(saveData + off))->entries[i - 1].initials[1];
-                ((SaveScoreFile*)(saveData + off))->entries[i].initials[2] =
-                    ((SaveScoreFile*)(saveData + off))->entries[i - 1].initials[2];
-                ((SaveScoreFile*)(saveData + off))->entries[i].initials[3] =
-                    ((SaveScoreFile*)(saveData + off))->entries[i - 1].initials[3];
+                file->entries[i].initials[1] = file->entries[i - 1].initials[1];
+                file->entries[i].initials[2] = file->entries[i - 1].initials[2];
+                file->entries[i].initials[3] = file->entries[i - 1].initials[3];
             }
 
-            ((SaveScoreFile*)(saveData + off))->entries[rank].score = score;
-            ((SaveScoreFile*)(saveData + off))->entries[rank].flag = flag;
+            file->entries[rank].score = score;
+            file->entries[rank].flag = flag;
             ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[0] = initials[0];
             ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[1] = initials[1];
             ((SaveScoreFile*)((int)saveData + off))->entries[rank].initials[2] = initials[2];
@@ -482,8 +420,7 @@ int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials)
 
     return -1;
 }
-char* getSaveFileName(void)
-{
+char* getSaveFileName(void) {
     return ((SaveGameData*)gSaveGameData)->playerName;
 }
 
@@ -503,8 +440,7 @@ s8 slot;
     defaultPos = gSaveGameDefaultPosition;
 
     memset(gSaveGameData, 0, SAVEGAME_LIVE_BUFFER_SIZE);
-    if ((((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80) == 0)
-    {
+    if ((((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80) == 0) {
         memset(gSaveGameWorkBuffer, 0, SAVEGAME_ACTIVE_SIZE);
     }
 
@@ -539,10 +475,8 @@ s8 slot;
     save[0x23] = 0;
     save[SAVEGAME_NEW_FILE_FLAG_OFFSET] = 1;
 
-    for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
-    {
-        if (gSaveGameMapActBits[i] != 0)
-        {
+    for (i = 0; i < SAVEGAME_MAP_COUNT; i++) {
+        if (gSaveGameMapActBits[i] != 0) {
             (*gMapEventInterface)->setMapAct(i, 1);
         }
     }
@@ -567,18 +501,14 @@ s8 slot;
         .z = defaultPos.z;
     ((SaveGameData*)gSaveGameData)->completionScore = 1;
 
-    if (name != NULL)
-    {
+    if (name != NULL) {
         dst = (u8*)((SaveGameData*)gSaveGameData)->playerName;
-        do
-        {
+        do {
             ch = *(u8*)name;
             name++;
             *dst++ = ch;
         } while (ch != '\0');
-    }
-    else
-    {
+    } else {
         ((SaveGameData*)gSaveGameData)->playerName[0] = 'F';
         ((SaveGameData*)gSaveGameData)->playerName[1] = 'O';
         ((SaveGameData*)gSaveGameData)->playerName[2] = 'X';
@@ -586,19 +516,16 @@ s8 slot;
     }
 
     memcpy(gSaveGameWorkBuffer, gSaveGameData, SAVEGAME_ACTIVE_SIZE);
-    if (slot != -1)
-    {
+    if (slot != -1) {
         gSaveGameCurrentSlot = slot;
-        if (name != NULL)
-        {
+        if (name != NULL) {
             return _saveGame((u8)slot, gSaveGameWorkBuffer, saveData);
         }
     }
     return 0;
 }
 
-int saveSelect_getInfo(void* outPtr)
-{
+int saveSelect_getInfo(void* outPtr) {
     SaveSelectInfo* info;
     u8 save[SAVEGAME_ACTIVE_SIZE];
     int slot;
@@ -607,70 +534,47 @@ int saveSelect_getInfo(void* outPtr)
     u8 newFileFlag;
 
     slot = 0;
-    do
-    {
+    do {
         info = (SaveSelectInfo*)outPtr + slot;
-        if (loadSaveGame((u8)slot, save) != 0)
-        {
+        if (loadSaveGame((u8)slot, save) != 0) {
             newFileFlag = ((SaveGameData*)save)->newFileFlag;
             info->valid = newFileFlag;
-            if (newFileFlag != 0)
-            {
+            if (newFileFlag != 0) {
                 memcpy(info, ((SaveGameData*)save)->playerName, sizeof(info->name));
 
-                info->percentComplete = (u8)((((SaveGameData*)save)->completionScore * 100) / SAVEGAME_COMPLETION_SCORE_MAX);
-                if (((SaveGameData*)save)->completionScore > 0xb3)
-                {
+                info->percentComplete =
+                    (u8)((((SaveGameData*)save)->completionScore * 100) / SAVEGAME_COMPLETION_SCORE_MAX);
+                if (((SaveGameData*)save)->completionScore > 0xb3) {
                     info->rankA = 6;
                     info->rankB = 4;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0xb0)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0xb0) {
                     info->rankA = 5;
                     info->rankB = 4;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0xa1)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0xa1) {
                     info->rankA = 4;
                     info->rankB = 4;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0x8a)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0x8a) {
                     info->rankA = 4;
                     info->rankB = 3;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0x81)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0x81) {
                     info->rankA = 3;
                     info->rankB = 3;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0x71)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0x71) {
                     info->rankA = 3;
                     info->rankB = 2;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0x62)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0x62) {
                     info->rankA = 2;
                     info->rankB = 2;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0x48)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0x48) {
                     info->rankA = 2;
                     info->rankB = 1;
-                }
-                else if (((SaveGameData*)save)->completionScore > 0x3d)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 0x3d) {
                     info->rankA = 1;
                     info->rankB = 1;
-                }
-                else if (((SaveGameData*)save)->completionScore > 8)
-                {
+                } else if (((SaveGameData*)save)->completionScore > 8) {
                     info->rankA = 1;
                     info->rankB = 0;
-                }
-                else
-                {
+                } else {
                     info->rankA = 0;
                     info->rankB = 0;
                 }
@@ -682,20 +586,15 @@ int saveSelect_getInfo(void* outPtr)
                 info->taskTexts[3] = NULL;
                 info->taskTexts[4] = NULL;
                 taskIds = ((SaveGameData*)save)->taskHintIds;
-                for (i = 0; i < ((SaveGameData*)save)->taskCount; i++)
-                {
+                for (i = 0; i < ((SaveGameData*)save)->taskCount; i++) {
                     info->taskTexts[i] = gameTextGetPhrase(taskIds[i] + 0xf4, 0);
                 }
                 info->chaptersUnlocked = 0;
                 info->valid = ((SaveGameData*)save)->newFileFlag;
-            }
-            else
-            {
+            } else {
                 memset(info, 0, sizeof(SaveSelectInfo));
             }
-        }
-        else
-        {
+        } else {
             return 0;
         }
 
@@ -705,8 +604,7 @@ int saveSelect_getInfo(void* outPtr)
     return 1;
 }
 
-void SaveGame_gplaySetObjGroupStatus(int mapId, int groupBit, int enabled)
-{
+void SaveGame_gplaySetObjGroupStatus(int mapId, int groupBit, int enabled) {
     SaveGameRecord* s[1];
     u8 createTransient;
     u32 newStatus;
@@ -717,34 +615,27 @@ void SaveGame_gplaySetObjGroupStatus(int mapId, int groupBit, int enabled)
     s[0] = &gSaveGameRecord;
     createTransient = 0;
 
-    if (mapId >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
-    {
+    if (mapId >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         mapId = s[0]->extendedMapActLookup[mapId - SAVEGAME_EXTENDED_MAP_THRESHOLD];
     }
-    if (!(mapId < SAVEGAME_MAP_COUNT && gSaveGameMapObjGroupBits[mapId] != 0))
-    {
+    if (!(mapId < SAVEGAME_MAP_COUNT && gSaveGameMapObjGroupBits[mapId] != 0)) {
         return;
     }
     {
-        if (enabled == -1)
-        {
+        if (enabled == -1) {
             enabled = 1;
         }
-        if (enabled == -2)
-        {
+        if (enabled == -2) {
             enabled = 0;
             createTransient = 1;
         }
 
         newStatus = mainGetBit(gSaveGameMapObjGroupBits[mapId]);
         oldStatus = newStatus;
-        if (enabled != 0)
-        {
+        if (enabled != 0) {
             bit = 1 << groupBit;
             newStatus = newStatus | bit;
-        }
-        else
-        {
+        } else {
             bit = 1 << groupBit;
             bit = ~bit;
             newStatus = newStatus & bit;
@@ -754,35 +645,25 @@ void SaveGame_gplaySetObjGroupStatus(int mapId, int groupBit, int enabled)
         gSaveGameObjGroupCacheIdx[0] = mapId;
         gSaveGameObjGroupCacheIdx[1] = newStatus;
 
-        if (enabled != 0)
-        {
-            if ((oldStatus & (1 << groupBit)) == 0)
-            {
+        if (enabled != 0) {
+            if ((oldStatus & (1 << groupBit)) == 0) {
                 u32* gp = s[0]->mapObjGroupStatuses;
-                for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
-                {
-                    if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[mapId])
-                    {
+                for (i = 0; i < SAVEGAME_MAP_COUNT; i++) {
+                    if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[mapId]) {
                         gp[i] |= 1 << groupBit;
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             u32* gp = s[0]->mapObjGroupStatuses;
-            for (i = 0; i < SAVEGAME_MAP_COUNT; i++)
-            {
-                if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[mapId])
-                {
+            for (i = 0; i < SAVEGAME_MAP_COUNT; i++) {
+                if (gSaveGameMapObjGroupBits[i] == gSaveGameMapObjGroupBits[mapId]) {
                     gp[i] &= ~(1 << groupBit);
                 }
             }
 
-            if (!createTransient)
-            {
-                if (saveGame_findTransientMapBit(mapId, groupBit, s[0]) == -1)
-                {
+            if (!createTransient) {
+                if (saveGame_findTransientMapBit(mapId, groupBit, s[0]) == -1) {
                     saveGame_addTransientMapBit(mapId, groupBit, s[0]);
                 }
             }
@@ -790,132 +671,116 @@ void SaveGame_gplaySetObjGroupStatus(int mapId, int groupBit, int enabled)
     }
 }
 
-void SaveGame_updateTransientMapBits(void)
-{
+void SaveGame_updateTransientMapBits(void) {
     int i;
-    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++)
-    {
-        if (gTransientMapBits[i].mapId != -1)
-        {
+    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
+        if (gTransientMapBits[i].mapId != -1) {
             gTransientMapBits[i].timer--;
-            if (gTransientMapBits[i].timer <= 0)
-            {
+            if (gTransientMapBits[i].timer <= 0) {
                 gTransientMapBits[i].mapId = -1;
             }
         }
     }
 }
 
-s8 SaveGame_findTransientMapBit(int mapId, int shift)
-{
+s8 SaveGame_findTransientMapBit(int mapId, int shift) {
     return saveGame_findTransientMapBit(mapId, shift, &gSaveGameRecord);
 }
 
-void mapClearBit(int idx, int bit)
-{
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+void mapClearBit(int idx, int bit) {
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+    }
     gMapObjGroupStatuses[idx] &= ~(1 << bit);
 }
 
-void SaveGame_resetObjGroups(int idx)
-{
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+void SaveGame_resetObjGroups(int idx) {
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+    }
     gMapObjGroupStatuses[idx] = 0;
 }
 
-u32 SaveGame_mapGetObjGroups(int idx)
-{
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+u32 SaveGame_mapGetObjGroups(int idx) {
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+    }
     return gMapObjGroupStatuses[idx];
 }
 
-void SaveGame_mapUpdateObjGroups(int idx)
-{
+void SaveGame_mapUpdateObjGroups(int idx) {
     u16 bit;
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+    }
     bit = gSaveGameMapObjGroupBits[idx];
-    if (bit != 0)
-    {
+    if (bit != 0) {
         gMapObjGroupStatuses[idx] = mainGetBit(bit);
     }
 }
-u16 SaveGame_getMapObjGroupBit(int idx)
-{
+u16 SaveGame_getMapObjGroupBit(int idx) {
     return gSaveGameMapObjGroupBits[idx];
 }
 
-int SaveGame_gplayGetObjGroupStatus(int idx, int shift)
-{
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+int SaveGame_gplayGetObjGroupStatus(int idx, int shift) {
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
-    if (idx != gSaveGameObjGroupCacheIdx[0])
-    {
+    }
+    if (idx != gSaveGameObjGroupCacheIdx[0]) {
         gSaveGameObjGroupCacheIdx[0] = idx;
         gSaveGameObjGroupCacheIdx[1] = mainGetBit(gSaveGameMapObjGroupBits[idx]);
     }
     return (gSaveGameObjGroupCacheIdx[1] >> shift) & 1;
 }
 
-u8 SaveGame_getMapAct(int idx)
-{
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+u8 SaveGame_getMapAct(int idx) {
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
-    if (idx != gSaveGameMapActCacheIdx[0])
-    {
+    }
+    if (idx != gSaveGameMapActCacheIdx[0]) {
         gSaveGameMapActCacheIdx[0] = idx;
-        if (idx < 0 || idx >= SAVEGAME_MAP_COUNT || gSaveGameMapActBits[idx] == 0)
-        {
+        if (idx < 0 || idx >= SAVEGAME_MAP_COUNT || gSaveGameMapActBits[idx] == 0) {
             *((s8*)&gSaveGameMapActCacheIdx + 1) = 0;
-        }
-        else
-        {
+        } else {
             *((s8*)&gSaveGameMapActCacheIdx + 1) = mainGetBit(gSaveGameMapActBits[idx]);
         }
     }
     return *((u8*)&gSaveGameMapActCacheIdx + 1);
 }
 
-void SaveGame_gplaySetAct(int idx, int act)
-{
+void SaveGame_gplaySetAct(int idx, int act) {
     int j;
     u16 bit;
-    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+    if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         idx = gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+    }
     mainSetBits(gSaveGameMapActBits[idx], act);
     gSaveGameMapActCacheIdx[0] = idx;
     *((s8*)&gSaveGameMapActCacheIdx + 1) = act;
     j = idx;
-    if (j >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
+    if (j >= SAVEGAME_EXTENDED_MAP_THRESHOLD) {
         j = gExtendedMapActLookup[j - SAVEGAME_EXTENDED_MAP_THRESHOLD];
+    }
     bit = gSaveGameMapObjGroupBits[j];
-    if (bit != 0)
-    {
+    if (bit != 0) {
         gMapObjGroupStatuses[j] = mainGetBit(bit);
     }
 }
 
-void SaveGame_setMapActLut(int val, int idx)
-{
+void SaveGame_setMapActLut(int val, int idx) {
     gExtendedMapActLookup[idx - SAVEGAME_EXTENDED_MAP_THRESHOLD] = val;
 }
 
-void updateSavedHealth(void)
-{
+void updateSavedHealth(void) {
     int idx = ((SaveGameData*)gSaveGameData)->currentCharacter;
     ((SaveGameData*)gSaveGameData)->characterStatus[idx].health =
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[idx].health;
 }
-f32 SaveGame_getPlayTime(void)
-{
+f32 SaveGame_getPlayTime(void) {
     return ((SaveGameData*)gSaveGameData)->playTime;
 }
 
-void SaveGame_updateTimes(void)
-{
+void SaveGame_updateTimes(void) {
     u8* p;
     int i;
     u8* base;
@@ -924,40 +789,37 @@ void SaveGame_updateTimes(void)
     base = gSaveGameData;
     ((SaveGameData*)base)->playTime = ((SaveGameData*)base)->playTime + timeDelta;
     p = base;
-    while (i < ((SaveGameData*)base)->timeEntryCount)
-    {
-        if (((SaveGameData*)base)->playTime > ((SaveGameData*)p)->timeEntries[0].time)
-        {
+    while (i < ((SaveGameData*)base)->timeEntryCount) {
+        if (((SaveGameData*)base)->playTime > ((SaveGameData*)p)->timeEntries[0].time) {
             cnt = (((SaveGameData*)base)->timeEntryCount -= 1);
             ((SaveGameTimeEntry*)(p + 0x6f0))->objId = ((SaveGameTimeEntry*)(base + 0x6f0))[cnt].objId;
-            ((SaveGameTimeEntry*)(p + 0x6f0))->time = ((SaveGameTimeEntry*)(base + 0x6f0))[((SaveGameData*)base)->timeEntryCount].time;
-        }
-        else
-        {
+            ((SaveGameTimeEntry*)(p + 0x6f0))->time =
+                ((SaveGameTimeEntry*)(base + 0x6f0))[((SaveGameData*)base)->timeEntryCount].time;
+        } else {
             p += 8;
             i++;
         }
     }
-    if (((SaveGameData*)gSaveGameData)->taskCount > 5)
+    if (((SaveGameData*)gSaveGameData)->taskCount > 5) {
         *(u8*)0 = 0; /* assert: task count <= 5 */
-    if (((SaveGameData*)gSaveGameWorkBuffer)->taskCount > 5)
+    }
+    if (((SaveGameData*)gSaveGameWorkBuffer)->taskCount > 5) {
         *(u8*)0 = 0; /* assert: task count <= 5 */
+    }
 }
 
-f32 SaveGame_gplayGetTimeRemaining(int id)
-{
+f32 SaveGame_gplayGetTimeRemaining(int id) {
     s16 count;
     u8* p;
     int i;
-    if (id == -1)
+    if (id == -1) {
         return 0.0f;
+    }
     i = 0;
     p = gSaveGameData;
     count = ((SaveGameData*)p)->timeEntryCount;
-    for (; i < count; i++)
-    {
-        if (((SaveGameData*)p)->timeEntries[0].objId == id)
-        {
+    for (; i < count; i++) {
+        if (((SaveGameData*)p)->timeEntries[0].objId == id) {
             p = gSaveGameData;
             return ((SaveGameTimeEntry*)(p + 0x6f0))[i].time - ((SaveGameData*)p)->playTime;
         }
@@ -966,86 +828,79 @@ f32 SaveGame_gplayGetTimeRemaining(int id)
     return 0.0f;
 }
 
-int SaveGame_gplayDidTimeExpire(int id)
-{
+int SaveGame_gplayDidTimeExpire(int id) {
     u8* p;
     s16 count;
     int i;
-    if (id == -1)
+    if (id == -1) {
         return 1;
+    }
     p = gSaveGameData;
     count = ((SaveGameData*)p)->timeEntryCount;
-    for (i = 0; i < count; i++)
-    {
-        if (((SaveGameData*)p)->timeEntries[0].objId == id)
+    for (i = 0; i < count; i++) {
+        if (((SaveGameData*)p)->timeEntries[0].objId == id) {
             return 0;
+        }
         p += 8;
     }
     return 1;
 }
 
-void SaveGame_gplayAddTime(int id, f32 time)
-{
+void SaveGame_gplayAddTime(int id, f32 time) {
     SaveGameData* base;
     u8* p;
     s16 count;
     int i;
     f32 total;
-    if (id == -1)
+    if (id == -1) {
         return;
+    }
     base = (SaveGameData*)gSaveGameData;
     count = base->timeEntryCount;
-    if (count == 0x100)
+    if (count == 0x100) {
         return;
+    }
     total = 2e+01f * time;
     total += base->playTime;
     i = 0;
     p = (u8*)base;
-    for (; i < count; i++)
-    {
-        if (((SaveGameData*)p)->timeEntries[0].objId == id)
+    for (; i < count; i++) {
+        if (((SaveGameData*)p)->timeEntries[0].objId == id) {
             break;
+        }
         p += 8;
     }
-    if (i == count)
-    {
+    if (i == count) {
         base->timeEntryCount++;
     }
     *(int*)((int)gSaveGameData + 0x6f0 + (i << 3)) = id;
     *(f32*)((int)gSaveGameData + 0x6f4 + (i << 3)) = total;
 }
 
-TrickyStats* SaveGame_getTrickyStats(void)
-{
+TrickyStats* SaveGame_getTrickyStats(void) {
     return &((SaveGameData*)gSaveGameData)->trickyStats;
 }
 
-void* SaveGame_getCurCharPos(void)
-{
+void* SaveGame_getCurCharPos(void) {
     int idx = ((SaveGameData*)gSaveGameData)->currentCharacter;
     return &((SaveGameData*)gSaveGameData)->characterPositions[idx];
 }
 
-void* SaveGame_getPlayerStats(void)
-{
+void* SaveGame_getPlayerStats(void) {
     int idx = ((SaveGameData*)gSaveGameData)->currentCharacter;
     return gSaveGameData + idx * 12;
 }
-void SaveGame_setCharacter(u8 c)
-{
+void SaveGame_setCharacter(u8 c) {
     ((SaveGameData*)gSaveGameData)->currentCharacter = c;
 }
-u8 SaveGame_getCurChar(void)
-{
+u8 SaveGame_getCurChar(void) {
     return ((SaveGameData*)gSaveGameData)->currentCharacter;
 }
-void* SaveGame_getState(void)
-{
+void* SaveGame_getState(void) {
     return gSaveGameData;
 }
 
-void loadMapForCurrentSaveGame(void)
-{
+void loadMapForCurrentSaveGame(void) {
     SaveGameData* base;
     gSaveGameMapActCacheIdx[0] = -1;
     gSaveGameObjGroupCacheIdx[0] = -1;
@@ -1056,57 +911,46 @@ void loadMapForCurrentSaveGame(void)
     stopRumble2();
     resetYbutton();
     base = (SaveGameData*)((char*)gSaveGameData + ((SaveGameData*)gSaveGameData)->currentCharacter * 16);
-    mapLoadByCoords(base->characterPositions[0].x, base->characterPositions[0].y,
-                    base->characterPositions[0].z, base->characterPositions[0].mapLayer);
-    if (getCurUiDll() != 4)
-    {
+    mapLoadByCoords(base->characterPositions[0].x, base->characterPositions[0].y, base->characterPositions[0].z,
+                    base->characterPositions[0].mapLayer);
+    if (getCurUiDll() != 4) {
         loadUiDll(1);
     }
     screenTransition_holdThenFadeIn(0x1e, 1);
     saveGameLoadStatus = 2;
 }
 
-s32 SaveGame_gplayGetRestartGameNotCleared(void)
-{
+s32 SaveGame_gplayGetRestartGameNotCleared(void) {
     return pRestartPoint != 0;
 }
 
-void SaveGame_gplayClearRestartPoint(void)
-{
-    if (pRestartPoint != 0)
-    {
+void SaveGame_gplayClearRestartPoint(void) {
+    if (pRestartPoint != 0) {
         mm_free((void*)pRestartPoint);
         pRestartPoint = 0;
     }
 }
 
-void SaveGame_gplayGotoRestartPoint(void)
-{
-    if (pRestartPoint != 0)
-    {
+void SaveGame_gplayGotoRestartPoint(void) {
+    if (pRestartPoint != 0) {
         memcpy(gSaveGameData, (void*)pRestartPoint, SAVEGAME_ACTIVE_SIZE);
-    }
-    else
-    {
+    } else {
         memcpy(gSaveGameData, gSaveGameWorkBuffer, SAVEGAME_ACTIVE_SIZE);
     }
     loadMapForCurrentSaveGame();
 }
 
-void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int mapLayer, int bDazed)
-{
+void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int mapLayer, int bDazed) {
     int healed = 0;
-    if (pRestartPoint == 0)
-    {
+    if (pRestartPoint == 0) {
         pRestartPoint = (u32)mmAlloc(SAVEGAME_ACTIVE_SIZE, 0xffff00ff, 0);
-        if (pRestartPoint == 0)
+        if (pRestartPoint == 0) {
             return;
+        }
     }
-    if (bDazed != 0)
-    {
+    if (bDazed != 0) {
         mainSetBits(GAMEBIT_CF_DoStandUpAnim, 1);
-        if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1)
-        {
+        if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1) {
             playerAddHealth(Obj_GetPlayerObject(), -1);
             healed = 1;
         }
@@ -1120,78 +964,66 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int mapLayer, int bDazed)
                                   SAVEGAME_CHARACTER_POSITION_OFFSET))[gSaveGameData[SAVEGAME_CURRENT_CHARACTER_OFFSET]]
         .mapLayer = mapLayer;
     mainSetBits(GAMEBIT_CF_DoStandUpAnim, 0);
-    if (bDazed != 0 && healed != 0)
-    {
+    if (bDazed != 0 && healed != 0) {
         playerAddHealth(Obj_GetPlayerObject(), 1);
     }
 }
 
-void SaveGame_gplayGotoSavegame(void)
-{
-    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health < 1)
+void SaveGame_gplayGotoSavegame(void) {
+    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health < 1) {
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[0].health = 1;
-    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health < 1)
+    }
+    if (((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health < 1) {
         ((SaveGameData*)gSaveGameWorkBuffer)->characterStatus[1].health = 1;
+    }
     memcpy(gSaveGameData, gSaveGameWorkBuffer, SAVEGAME_ACTIVE_SIZE);
     loadMapForCurrentSaveGame();
 }
 
-void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapLayer)
-{
+void SaveGame_gplaySavePoint(f32* pos, s16 angle, int flags, int mapLayer) {
     u8* base;
-    if (flags & 4)
-    {
+    if (flags & 4) {
         gSaveGameData[0x22] = 0;
     }
     base = gSaveGameData;
-    if (base[0x22] == 0)
-    {
-        if (flags & 1)
-        {
+    if (base[0x22] == 0) {
+        if (flags & 1) {
             memcpy(gSaveGameWorkBuffer, base, 0x5d8);
-            if (pRestartPoint != 0)
-            {
+            if (pRestartPoint != 0) {
                 memcpy((void*)pRestartPoint, gSaveGameData, 0x5d8);
             }
-        }
-        else
-        {
+        } else {
             SAVEGAME_CHARACTER_POSITION(base)->x = pos[0];
             SAVEGAME_CHARACTER_POSITION(base)->y = pos[1];
             SAVEGAME_CHARACTER_POSITION(base)->z = pos[2];
             SAVEGAME_CHARACTER_POSITION(base)->angle = (s8)(angle >> 8);
             SAVEGAME_CHARACTER_POSITION(base)->mapLayer = mapLayer;
             memcpy(gSaveGameWorkBuffer, base, SAVEGAME_ACTIVE_SIZE);
-            if (pRestartPoint != 0)
-            {
+            if (pRestartPoint != 0) {
                 mm_free((void*)pRestartPoint);
                 pRestartPoint = 0;
             }
         }
-        if (flags & 2)
-        {
+        if (flags & 2) {
             base[0x22] = 1;
         }
     }
 }
 
-void SaveGame_func08_nop(void)
-{
+void SaveGame_func08_nop(void) {
 }
 
-void SaveGame_release(void)
-{
-    if (pRestartPoint != 0)
+void SaveGame_release(void) {
+    if (pRestartPoint != 0) {
         mm_free((void*)pRestartPoint);
+    }
 }
 
-void SaveGame_initialise(void)
-{
+void SaveGame_initialise(void) {
     SaveGameRecord* record = &gSaveGameRecord;
 
     memset(&record->game, 0, sizeof(record->game));
-    if (!(((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80))
-    {
+    if (!(((SaveGameData*)gSaveGameWorkBuffer)->newFileFlag & 0x80)) {
         memset(gSaveGameWorkBuffer, 0, SAVEGAME_ACTIVE_SIZE);
     }
     pRestartPoint = 0;

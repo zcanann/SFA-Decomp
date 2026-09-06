@@ -32,38 +32,38 @@ ObjectDescriptor6 Effect8_funcs = {
     (ObjectDescriptorCallback)Effect8_updateFrameState,
 };
 
-
 #define FILL8()                                                                                                        \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        gEffect8DefaultSpawnParams.posX = 0.0f;                                                                                      \
-        gEffect8DefaultSpawnParams.posY = 0.0f;                                                                                      \
-        gEffect8DefaultSpawnParams.posZ = 0.0f;                                                                                      \
-        gEffect8DefaultSpawnParams.scale = 1.0f;                                                                                     \
-        gEffect8DefaultSpawnParams.unk0 = 0;                                                                                         \
-        gEffect8DefaultSpawnParams.unk2 = 0;                                                                                         \
-        gEffect8DefaultSpawnParams.unk4 = 0;                                                                                         \
-        spawnParams = &gEffect8DefaultSpawnParams;                                                               \
+    do {                                                                                                               \
+        gEffect8DefaultSpawnParams.posX = 0.0f;                                                                        \
+        gEffect8DefaultSpawnParams.posY = 0.0f;                                                                        \
+        gEffect8DefaultSpawnParams.posZ = 0.0f;                                                                        \
+        gEffect8DefaultSpawnParams.scale = 1.0f;                                                                       \
+        gEffect8DefaultSpawnParams.unk0 = 0;                                                                           \
+        gEffect8DefaultSpawnParams.unk2 = 0;                                                                           \
+        gEffect8DefaultSpawnParams.unk4 = 0;                                                                           \
+        spawnParams = &gEffect8DefaultSpawnParams;                                                                     \
     } while (0)
 
 int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs)
-{
+                        s16* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 
     gEffect8SpawnPhaseA += 0.001f;
-    if (gEffect8SpawnPhaseA > 1.0f)
+    if (gEffect8SpawnPhaseA > 1.0f) {
         gEffect8SpawnPhaseA = 0.1f;
+    }
     gEffect8SpawnPhaseB += 0.0003f;
-    if (gEffect8SpawnPhaseB > 1.0f)
+    if (gEffect8SpawnPhaseB > 1.0f) {
         gEffect8SpawnPhaseB = 0.3f;
-    if (sourceObj == 0)
+    }
+    if (sourceObj == 0) {
         return -1;
-    if ((spawnFlags & 0x200000) != 0)
-    {
-        if (spawnParams == 0)
+    }
+    if ((spawnFlags & 0x200000) != 0) {
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.sourcePosX = spawnParams->posX;
         cfg.sourcePosY = spawnParams->posY;
         cfg.sourcePosZ = spawnParams->posZ;
@@ -96,8 +96,7 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
     cfg.textureSetupFlags = 0;
-    switch (effectId)
-    {
+    switch (effectId) {
     case 0x361:
         cfg.velocityX = 0.01f * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.velocityZ = 0.01f * (f32)(s32)randomGetRange(-0x14, 0x14);
@@ -152,10 +151,12 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x208;
         break;
     case 0x357:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL8();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.colorWord0 = (u16)((u8)spawnParams->unk4 << 8);
         cfg.colorWord1 = (u16)((u8)spawnParams->unk2 << 8);
         cfg.colorWord2 = (u16)((u8)spawnParams->unk0 << 8);
@@ -232,10 +233,12 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x62;
         break;
     case 0x35a:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL8();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -253,8 +256,9 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0x76;
         break;
     case 0x35b:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL8();
+        }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -265,10 +269,12 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0xc22;
         break;
     case 0x35c:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL8();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -285,10 +291,12 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0xc9d;
         break;
     case 0x35d:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL8();
-        if (spawnParams == 0)
+        }
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.startPosX = spawnParams->posX;
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
@@ -305,8 +313,9 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.textureId = 0xc9d;
         break;
     case 0x35e:
-        if (spawnParams == 0)
+        if (spawnParams == 0) {
             FILL8();
+        }
         cfg.scale = 0.06f;
         cfg.startPosY = 7.0f;
         cfg.lifetimeFrames = 0x46;
@@ -408,20 +417,16 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-        cfg.behaviorFlags ^= 2LL;
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+        cfg.behaviorFlags ^= 2;
+    }
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & 0x200000) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != 0)
-            {
+        } else {
+            if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -433,44 +438,36 @@ int Effect8_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
 }
 #undef FILL8
 
-void Effect8_updateFrameState(void)
-{
+void Effect8_updateFrameState(void) {
     f32 sum;
     f32 step;
     sum = gEffect8FramePhaseA + (step = 0.001f * timeDelta);
     gEffect8FramePhaseA = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect8FramePhaseA = 0.1f;
     }
     sum = gEffect8FramePhaseB + step;
     gEffect8FramePhaseB = sum;
-    if (sum > 1.0f)
-    {
+    if (sum > 1.0f) {
         gEffect8FramePhaseB = 0.3f;
     }
     gModgfxSinePhaseA = gModgfxSinePhaseA + framesThisStep * 0x64;
-    if (gModgfxSinePhaseA > 0x7fff)
-    {
+    if (gModgfxSinePhaseA > 0x7fff) {
         gModgfxSinePhaseA = 0;
     }
     gModgfxSineWaveA = mathSinf(3.1415927f * (f32)(s16)gModgfxSinePhaseA / 32768.0f);
     gModgfxSinePhaseB = gModgfxSinePhaseB + framesThisStep * 0x32;
-    if (gModgfxSinePhaseB > 0x7fff)
-    {
+    if (gModgfxSinePhaseB > 0x7fff) {
         gModgfxSinePhaseB = 0;
     }
     gModgfxSineWaveB = mathSinf(3.1415927f * (f32)(s16)gModgfxSinePhaseB / 32768.0f);
 }
 
-void Effect8_func03_nop(void)
-{
+void Effect8_func03_nop(void) {
 }
 
-void Effect8_release(void)
-{
+void Effect8_release(void) {
 }
 
-void Effect8_initialise(void)
-{
+void Effect8_initialise(void) {
 }

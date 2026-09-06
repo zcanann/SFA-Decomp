@@ -19,20 +19,16 @@ ObjectDescriptor6 Effect11_funcs = {
     (ObjectDescriptorCallback)Effect11_func05_nop,
 };
 
-int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte)
-{
+int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8 srcByte) {
     PartFxSpawn p;
     u32 hasOffset;
 
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
         return -1;
     }
     hasOffset = flags & 0x200000;
-    if (hasOffset != 0)
-    {
-        if (src == NULL)
-        {
+    if (hasOffset != 0) {
+        if (src == NULL) {
             return -1;
         }
         p.sourcePosX = src->posX;
@@ -67,8 +63,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     p.overrideColor1 = 0xffff;
     p.overrideColor2 = 0xffff;
     p.textureSetupFlags = 0;
-    switch (id)
-    {
+    switch (id) {
     case 0x12c:
         p.scale = 0.0016f;
         p.lifetimeFrames = 0xa;
@@ -77,8 +72,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0xdb;
         break;
     case 0x12d:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -95,8 +89,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = src->scale > 0.0f ? 0x7b : 0xdb;
         break;
     case 0x12e:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -119,8 +112,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x5f;
         break;
     case 0x12f:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -143,8 +135,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x5f;
         break;
     case 0x130:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -189,8 +180,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = 0x5f;
         break;
     case 0x133:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -206,12 +196,11 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.scale = 0.02f;
         p.lifetimeFrames = 5;
         p.initialAlpha = 0x80;
-        p.behaviorFlags |= 0x80210LL;
+        p.behaviorFlags |= 0x80210;
         p.textureId = 0x26d;
         break;
     case 0x134:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -227,12 +216,11 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.scale = 0.0001f * (f32)randomGetRange(5, 0xc);
         p.lifetimeFrames = 0xc;
         p.initialAlpha = randomGetRange(0x96, 0xfa);
-        p.behaviorFlags |= 0x80210LL;
+        p.behaviorFlags |= 0x80210;
         p.textureId = 0xe0;
         break;
     case 0x135:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -255,8 +243,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = src->rotZ;
         break;
     case 0x136:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -275,8 +262,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         p.textureId = src->rotZ;
         break;
     case 0x137:
-        if (src == NULL)
-        {
+        if (src == NULL) {
             gEffect11DefaultSrcParams.posX = 0.0f;
             gEffect11DefaultSrcParams.posY = 0.0f;
             gEffect11DefaultSrcParams.posZ = 0.0f;
@@ -286,8 +272,7 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
             gEffect11DefaultSrcParams.rotZ = 0;
             src = &gEffect11DefaultSrcParams;
         }
-        if (src == NULL)
-        {
+        if (src == NULL) {
             return -1;
         }
         p.velocityX = 0.003f * (f32)randomGetRange(0, 100) + 0.25f;
@@ -316,20 +301,15 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
         return -1;
     }
     p.behaviorFlags = p.behaviorFlags | flags;
-    if (((p.behaviorFlags & 1) != 0) && ((p.behaviorFlags & 2) != 0))
-    {
-        p.behaviorFlags ^= 2LL;
+    if (((p.behaviorFlags & 1) != 0) && ((p.behaviorFlags & 2) != 0)) {
+        p.behaviorFlags ^= 2;
     }
-    if ((p.behaviorFlags & 1) != 0)
-    {
-        if (hasOffset != 0)
-        {
+    if ((p.behaviorFlags & 1) != 0) {
+        if (hasOffset != 0) {
             p.startPosX = p.startPosX + p.sourcePosX;
             p.startPosY = p.startPosY + p.sourcePosY;
             p.startPosZ = p.startPosZ + p.sourcePosZ;
-        }
-        else if (p.attachedSource != NULL)
-        {
+        } else if (p.attachedSource != NULL) {
             p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
             p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;
             p.startPosZ = p.startPosZ + ((GameObject*)p.attachedSource)->anim.worldPosZ;
@@ -338,18 +318,14 @@ int Effect11_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-void Effect11_func05_nop(void)
-{
+void Effect11_func05_nop(void) {
 }
 
-void Effect11_func03_nop(void)
-{
+void Effect11_func03_nop(void) {
 }
 
-void Effect11_release(void)
-{
+void Effect11_release(void) {
 }
 
-void Effect11_initialise(void)
-{
+void Effect11_initialise(void) {
 }

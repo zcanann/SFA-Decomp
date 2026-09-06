@@ -12,7 +12,7 @@ void Effect5_func03_nop(void);
 void Effect5_release(void);
 void Effect5_initialise(void);
 int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                   s16* extraArgs);
+                        s16* extraArgs);
 void Effect5_updateFrameState(void);
 
 #endif /* MAIN_DLL_DLL_001E_EFFECT5_H_ */

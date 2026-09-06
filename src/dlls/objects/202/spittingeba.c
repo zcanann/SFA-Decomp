@@ -85,11 +85,12 @@
 #define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
 #define DUSTER_HIT_VOLUME_SLOT       10
 
-
-void spittingEbaSpawnPollen(GameObject* obj, int state)
-{
+void spittingEbaSpawnPollen(GameObject* obj, int state) {
+    EnemyState* enemy = (EnemyState*)state;
     u32 loadLocked;
-    int ref;
+    GameObject* target;
+    GameObject* projectile;
+    int angle;
     ObjPlacement* setup;
     f32 spd;
     f32 t;
@@ -103,32 +104,28 @@ void spittingEbaSpawnPollen(GameObject* obj, int state)
     float cosPitch;
 
     loadLocked = Obj_CanSetupObject();
-    if ((loadLocked & 0xff) != 0)
-    {
+    if ((loadLocked & 0xff) != 0) {
         a[0] = obj->anim.localPosX;
         a[1] = 15.0f + obj->anim.localPosY;
         a[2] = obj->anim.localPosZ;
-        ref = (int)((EnemyState*)state)->trackedObj;
-        b[0] = ((GameObject*)ref)->anim.localPosX;
-        b[1] = 30.0f + ((GameObject*)ref)->anim.localPosY;
-        b[2] = ((GameObject*)ref)->anim.localPosZ;
+        target = enemy->trackedObj;
+        b[0] = target->anim.localPosX;
+        b[1] = 30.0f + target->anim.localPosY;
+        b[2] = target->anim.localPosZ;
         spd = (3.25f) * ((0.02f) * (f32)(int)randomGetRange(-10, 10) + (1.0f));
-        ref = pinponspike_calculateLaunchAngle(a, b, spd, 1, (0.045f));
-        angleToVec2Precise(ref, &cosVal, &velXZ);
+        angle = pinponspike_calculateLaunchAngle(a, b, spd, 1, (0.045f));
+        angleToVec2Precise(angle, &cosVal, &velXZ);
         velXZ = velXZ * spd;
         cosVal = cosVal * spd;
         dx = b[0] - obj->anim.localPosX;
         dz = b[2] - obj->anim.localPosZ;
-        if (dz != 0.0f)
-        {
-            ref = getAngle(dx, dz);
-            angleToVec2Precise(ref, &cosPitch, &velY);
+        if (dz != 0.0f) {
+            angle = getAngle(dx, dz);
+            angleToVec2Precise(angle, &cosPitch, &velY);
             t = velXZ;
             velY = velY * t;
             velXZ = t * cosPitch;
-        }
-        else
-        {
+        } else {
             velY = 0.0f;
         }
         setup = Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
@@ -139,107 +136,82 @@ void spittingEbaSpawnPollen(GameObject* obj, int state)
         setup->color[1] = 1;
         setup->color[2] = 0xff;
         setup->color[3] = 0xff;
-        ref = (int)objSetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
-        if ((void*)ref != NULL)
-        {
-            ((GameObject*)ref)->anim.velocityX = velXZ;
-            ((GameObject*)ref)->anim.velocityY = cosVal;
-            ((GameObject*)ref)->anim.velocityZ = velY;
-            ((GameObject*)ref)->ownerObj = obj;
+        projectile = objSetupObject(setup, 5, -1, -1, 0);
+        if (projectile != NULL) {
+            projectile->anim.velocityX = velXZ;
+            projectile->anim.velocityY = cosVal;
+            projectile->anim.velocityZ = velY;
+            projectile->ownerObj = obj;
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_cackle);
         }
     }
     return;
 }
 
-void spittingEbaUpdateTimeOfDay(int obj, int state)
-{
+void spittingEbaUpdateTimeOfDay(int obj, int state) {
+    EnemyState* enemy = (EnemyState*)state;
     u8 isDaytime;
     float timeInfo[4];
 
     (*gSkyInterface)->getTimeOfDay(timeInfo);
-    if ((timeInfo[0] >= 21600.0f) && (timeInfo[0] <= 64800.0f))
-    {
+    if ((timeInfo[0] >= 21600.0f) && (timeInfo[0] <= 64800.0f)) {
         isDaytime = 1;
-    }
-    else
-    {
+    } else {
         isDaytime = 0;
     }
-    if ((isDaytime != 0) && (((EnemyState*)state)->userData1 == 0))
-    {
-        ((EnemyState*)state)->userData1 = 1;
-        ((EnemyState*)state)->flags2E4 = ((EnemyState*)state)->flags2E4 | 0x10000LL;
+    if ((isDaytime != 0) && (enemy->userData1 == 0)) {
+        enemy->userData1 = 1;
+        enemy->flags2E4 |= 0x10000;
         Baddie_SetMove(obj, state, 1, 2.0f, 0, 0);
-    }
-    else if ((isDaytime == 0) && (((EnemyState*)state)->userData1 == 2))
-    {
-        ((EnemyState*)state)->userData1 = 1;
-        ((EnemyState*)state)->flags2E4 = ((EnemyState*)state)->flags2E4 | 0x10000LL;
+    } else if ((isDaytime == 0) && (enemy->userData1 == 2)) {
+        enemy->userData1 = 1;
+        enemy->flags2E4 |= 0x10000;
         Baddie_SetMove(obj, state, 3, 2.0f, 0, 0);
     }
     return;
 }
 
-void spittingEbaUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int unused2, int damage,
-                                  Vec* wpad0, int wpad1)
-{
-    if (eventKind == 0x10)
-    {
-        ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 0x20;
-    }
-    else if (eventKind == 0x11)
-    {
-        if ((((EnemyState*)state)->userData1 == 2) && (((GameObject*)obj)->anim.currentMove != 5))
-        {
+void spittingEbaUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int unused2,
+                                  int damage, Vec* wpad0, int wpad1) {
+    EnemyState* enemy = (EnemyState*)state;
+    if (eventKind == 0x10) {
+        enemy->flags2E8 |= 0x20;
+    } else if (eventKind == 0x11) {
+        if ((enemy->userData1 == 2) && (obj->anim.currentMove != 5)) {
             Baddie_SetMove(obj, state, 5, 3.0f, 0, 0);
         }
-    }
-    else if ((((GameObject*)obj)->anim.currentMove == 5) || (((GameObject*)obj)->anim.currentMove == 4))
-    {
-        if (damage > (int)(u32)((EnemyState*)state)->current)
-        {
-            ((EnemyState*)state)->current = 0;
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_zyck_strike);
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_stftest);
+    } else if ((obj->anim.currentMove == 5) || (obj->anim.currentMove == 4)) {
+        if (damage > enemy->current) {
+            enemy->current = 0;
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_strike);
+            Sfx_PlayFromObject(obj, SFXTRIG_stftest);
+        } else {
+            enemy->current -= damage;
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_call);
+            Sfx_PlayFromObject(obj, SFXTRIG_stftest);
         }
-        else
-        {
-            ((EnemyState*)state)->current = ((EnemyState*)state)->current - damage;
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_baddie_kooshy_call);
-            Sfx_PlayFromObject((GameObject*)(u32)obj, SFXTRIG_stftest);
-        }
-        ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 8;
-    }
-    else
-    {
-        ((EnemyState*)state)->flags2E8 = ((EnemyState*)state)->flags2E8 | 0x10;
-        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_mv_ladderslide16_250);
+        enemy->flags2E8 |= 8;
+    } else {
+        enemy->flags2E8 |= 0x10;
+        Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16_250);
     }
     return;
 }
 
-void spittingEbaUpdateIdle(GameObject* obj, int state)
-{
-    ((EnemyState*)state)->duster.phaseTimer = 0.0f;
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        if (((EnemyState*)state)->userData1 == 1)
-        {
-            if ((obj)->anim.currentMove == 1)
-            {
-                ((EnemyState*)state)->userData1 = 2;
-                ((EnemyState*)state)->flags2E4 = ((EnemyState*)state)->flags2E4 & ~0x10000LL;
-            }
-            else if ((obj)->anim.currentMove == 3)
-            {
-                ((EnemyState*)state)->userData1 = 0;
-                ((EnemyState*)state)->flags2E4 = ((EnemyState*)state)->flags2E4 | 0x10000LL;
+void spittingEbaUpdateIdle(GameObject* obj, int state) {
+    EnemyState* enemy = (EnemyState*)state;
+    enemy->duster.phaseTimer = 0.0f;
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
+        if (enemy->userData1 == 1) {
+            if (obj->anim.currentMove == 1) {
+                enemy->userData1 = 2;
+                enemy->flags2E4 &= ~0x10000;
+            } else if (obj->anim.currentMove == 3) {
+                enemy->userData1 = 0;
+                enemy->flags2E4 |= 0x10000;
                 Baddie_SetMove(obj, state, 0, (1.0f), 0, 0);
             }
-        }
-        else if ((((EnemyState*)state)->userData1 == 2) && ((obj)->anim.currentMove != 2))
-        {
+        } else if ((enemy->userData1 == 2) && (obj->anim.currentMove != 2)) {
             Baddie_SetMove(obj, state, 2, (1.0f), 0, 0);
         }
     }
@@ -247,38 +219,28 @@ void spittingEbaUpdateIdle(GameObject* obj, int state)
     return;
 }
 
-void spittingEbaUpdateEngaged(GameObject* obj, int state)
-{
+void spittingEbaUpdateEngaged(GameObject* obj, int state) {
+    EnemyState* enemy = (EnemyState*)state;
     u8 timerExpired;
 
     timerExpired = 0;
-    ((EnemyState*)state)->duster.phaseTimer = ((EnemyState*)state)->duster.phaseTimer - timeDelta;
-    if (((EnemyState*)state)->duster.phaseTimer <= 0.0f)
-    {
+    enemy->duster.phaseTimer -= timeDelta;
+    if (enemy->duster.phaseTimer <= 0.0f) {
         timerExpired = 1;
-        ((EnemyState*)state)->duster.phaseTimer = 0.0f;
+        enemy->duster.phaseTimer = 0.0f;
     }
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        if (obj->anim.currentMove == 4)
-        {
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
+        if (obj->anim.currentMove == 4) {
             spittingEbaSpawnPollen(obj, state);
-            ((EnemyState*)state)->duster.phaseTimer = 180.0f;
+            enemy->duster.phaseTimer = 180.0f;
             Baddie_SetMove(obj, state, 5, (1.0f), 0, 0);
-        }
-        else if ((obj->anim.currentMove == 5) && (timerExpired))
-        {
+        } else if ((obj->anim.currentMove == 5) && (timerExpired)) {
             Baddie_SetMove(obj, state, 6, (1.0f), 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
-        }
-        else if (obj->anim.currentMove == 6)
-        {
+        } else if (obj->anim.currentMove == 6) {
             Baddie_SetMove(obj, state, 2, (1.0f), 0, 0);
-            ((EnemyState*)state)->duster.phaseTimer = 180.0f;
-        }
-        else if ((obj->anim.currentMove == 2) && (timerExpired) &&
-                 ((((EnemyState*)state)->controlFlags & 0x4000000) != 0))
-        {
+            enemy->duster.phaseTimer = 180.0f;
+        } else if ((obj->anim.currentMove == 2) && (timerExpired) && ((enemy->controlFlags & 0x4000000) != 0)) {
             Baddie_SetMove(obj, state, 4, (1.0f), 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
         }
@@ -287,26 +249,26 @@ void spittingEbaUpdateEngaged(GameObject* obj, int state)
     return;
 }
 
-void spittingEbaInit(u32 unused, int state)
-{
+void spittingEbaInit(u32 unused, int state) {
+    EnemyState* enemy = (EnemyState*)state;
     float fa;
     float fb;
 
-    ((EnemyState*)state)->sightRange = 40.0f;
-    ((EnemyState*)state)->flags2E4 = 1;
-    ((EnemyState*)state)->animPlaySpeed = (0.02f);
-    ((EnemyState*)state)->gravity = 0.1f;
-    ((EnemyState*)state)->drag = 0.97f;
-    ((EnemyState*)state)->moveId0 = 0;
+    enemy->sightRange = 40.0f;
+    enemy->flags2E4 = 1;
+    enemy->animPlaySpeed = (0.02f);
+    enemy->gravity = 0.1f;
+    enemy->drag = 0.97f;
+    enemy->moveId0 = 0;
     fb = 1.5f;
-    ((EnemyState*)state)->moveSpeedScale0 = 1.5f;
-    ((EnemyState*)state)->moveId1 = 7;
+    enemy->moveSpeedScale0 = 1.5f;
+    enemy->moveId1 = 7;
     fa = (1.0f);
-    ((EnemyState*)state)->moveSpeedScale1 = (1.0f);
-    ((EnemyState*)state)->moveId2 = 0;
-    ((EnemyState*)state)->moveSpeedScale2 = fb;
-    ((EnemyState*)state)->userData1 = 0;
-    ((EnemyState*)state)->duster.phaseTimer = 0.0f;
-    ((EnemyState*)state)->pathStep = fa;
+    enemy->moveSpeedScale1 = (1.0f);
+    enemy->moveId2 = 0;
+    enemy->moveSpeedScale2 = fb;
+    enemy->userData1 = 0;
+    enemy->duster.phaseTimer = 0.0f;
+    enemy->pathStep = fa;
     return;
 }

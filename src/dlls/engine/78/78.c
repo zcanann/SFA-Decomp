@@ -172,22 +172,25 @@ void CameraModeWorldMap_update(CameraObject* camera) {
                 }
                 {
                     f32 csYaw, snYaw, csPit, snPit;
-                    f32 r, x, y, z;
+                    f32 distance;
+                    f32 offsetX, errorX;
+                    f32 offsetZ, errorZ;
+                    f32 offsetY, errorY;
                     csYaw = -mathCosf(3.1415927f * camera->anim.rotX / 32768.0f);
                     snYaw = mathSinf(3.1415927f * camera->anim.rotX / 32768.0f);
                     csPit = mathCosf(3.1415927f * (f32)(camera->anim.rotY + 0x320) / 32768.0f);
                     snPit = mathSinf(3.1415927f * (f32)(camera->anim.rotY + 0x320) / 32768.0f);
-                    r = gCameraModeWorldMapState->distance;
-                    y = r * snPit;
-                    z = r * csPit;
-                    x = z * snYaw;
-                    z *= csYaw;
-                    x = camera->anim.worldPosX - (target->anim.worldPosX + x);
-                    y = camera->anim.worldPosY - ((-30.0f + target->anim.worldPosY) + y);
-                    z = camera->anim.worldPosZ - (target->anim.worldPosZ + z);
-                    camera->anim.worldPosX = camera->anim.worldPosX - x / gCameraModeWorldMapState->settleFrames;
-                    camera->anim.worldPosY = camera->anim.worldPosY - y / gCameraModeWorldMapState->settleFrames;
-                    camera->anim.worldPosZ = camera->anim.worldPosZ - z / gCameraModeWorldMapState->settleFrames;
+                    distance = gCameraModeWorldMapState->distance;
+                    offsetY = distance * snPit;
+                    offsetZ = distance * csPit;
+                    offsetX = offsetZ * snYaw;
+                    offsetZ *= csYaw;
+                    errorX = camera->anim.worldPosX - (target->anim.worldPosX + offsetX);
+                    errorY = camera->anim.worldPosY - ((-30.0f + target->anim.worldPosY) + offsetY);
+                    errorZ = camera->anim.worldPosZ - (target->anim.worldPosZ + offsetZ);
+                    camera->anim.worldPosX = camera->anim.worldPosX - errorX / gCameraModeWorldMapState->settleFrames;
+                    camera->anim.worldPosY = camera->anim.worldPosY - errorY / gCameraModeWorldMapState->settleFrames;
+                    camera->anim.worldPosZ = camera->anim.worldPosZ - errorZ / gCameraModeWorldMapState->settleFrames;
                 }
             }
         }
@@ -236,22 +239,24 @@ void CameraModeWorldMap_update(CameraObject* camera) {
                 camera->anim.rotY = camera->anim.rotY + angleDelta / gCameraModeWorldMapState->settleFrames;
                 {
                     f32 sinValue, fixedCosValue, fixedSinValue;
-                    f32 x, y, z;
+                    f32 offsetX, errorX;
+                    f32 offsetZ, errorZ;
+                    f32 offsetY, errorY;
                     orbitAngleRadians = 3.1415927f * (f32)(u16)(targetYaw - 0x39dc) / 32768.0f;
                     cosValue = -mathCosf(orbitAngleRadians);
                     sinValue = mathSinf(orbitAngleRadians);
                     fixedCosValue = mathCosf(0.1917476f);
                     fixedSinValue = mathSinf(0.1917476f);
-                    y = 70.0f * fixedSinValue;
-                    z = 70.0f * fixedCosValue;
-                    x = z * sinValue;
-                    z *= cosValue;
-                    x = camera->anim.worldPosX - (target->anim.worldPosX + x);
-                    y = camera->anim.worldPosY - (25.0f + (target->anim.worldPosY + y));
-                    z = camera->anim.worldPosZ - (target->anim.worldPosZ + z);
-                    camera->anim.worldPosX = camera->anim.worldPosX - x / gCameraModeWorldMapState->settleFrames;
-                    camera->anim.worldPosY = camera->anim.worldPosY - y / gCameraModeWorldMapState->settleFrames;
-                    camera->anim.worldPosZ = camera->anim.worldPosZ - z / gCameraModeWorldMapState->settleFrames;
+                    offsetY = 70.0f * fixedSinValue;
+                    offsetZ = 70.0f * fixedCosValue;
+                    offsetX = offsetZ * sinValue;
+                    offsetZ *= cosValue;
+                    errorX = camera->anim.worldPosX - (target->anim.worldPosX + offsetX);
+                    errorY = camera->anim.worldPosY - (25.0f + (target->anim.worldPosY + offsetY));
+                    errorZ = camera->anim.worldPosZ - (target->anim.worldPosZ + offsetZ);
+                    camera->anim.worldPosX = camera->anim.worldPosX - errorX / gCameraModeWorldMapState->settleFrames;
+                    camera->anim.worldPosY = camera->anim.worldPosY - errorY / gCameraModeWorldMapState->settleFrames;
+                    camera->anim.worldPosZ = camera->anim.worldPosZ - errorZ / gCameraModeWorldMapState->settleFrames;
                 }
                 portraitYaw = (u16)(camera->anim.rotX + 0x1388);
                 if (isWidescreen() != 0) {

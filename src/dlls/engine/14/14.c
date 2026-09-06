@@ -46,8 +46,7 @@ s16 gPartfxResourceTimeouts[20];
 PartFxSpawnParams gPartfxDefaultSpawnParams;
 
 int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams* spawnParams, u32 spawnFlags,
-                       u8 modelId, f32* extraArgs)
-{
+                       u8 modelId, f32* extraArgs) {
     PartFxSpawnContext state;
     s16 i;
     int variant;
@@ -56,244 +55,199 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
 
     state.effectId = effectValue;
 
-    if ((state.effectId > 899 && state.effectId < 0x3b5) || state.effectId > 0x5dc && state.effectId < 0x641)
-    {
+    if ((state.effectId > 899 && state.effectId < 0x3b5) || state.effectId > 0x5dc && state.effectId < 0x641) {
         gPartfxResourceTimeouts[0] = 2000;
-        if (gPartfxResourceModule00 == NULL)
-        {
+        if (gPartfxResourceModule00 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule00 = Resource_Acquire(0x1a, 2);
         }
-        return gPartfxResourceModule00->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                               modelId, extraArgs);
+        return gPartfxResourceModule00->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x257 && state.effectId < 0x2bc)
-    {
+    if (state.effectId > 0x257 && state.effectId < 0x2bc) {
         gPartfxResourceTimeouts[1] = 2000;
-        if (gPartfxResourceModule01 == NULL)
-        {
+        if (gPartfxResourceModule01 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule01 = Resource_Acquire(0x1b, 2);
         }
-        return gPartfxResourceModule01->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                               modelId, extraArgs);
+        return gPartfxResourceModule01->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x1f3 && state.effectId < 0x258)
-    {
+    if (state.effectId > 0x1f3 && state.effectId < 0x258) {
         gPartfxResourceTimeouts[2] = 2000;
-        if (gPartfxResourceModule02 == NULL)
-        {
+        if (gPartfxResourceModule02 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule02 = Resource_Acquire(0x1c, 2);
         }
-        return gPartfxResourceModule02->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule02->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x18f && state.effectId < 0x1f4)
-    {
+    if (state.effectId > 0x18f && state.effectId < 0x1f4) {
         gPartfxResourceTimeouts[3] = 2000;
-        if (gPartfxResourceModule03 == NULL)
-        {
+        if (gPartfxResourceModule03 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule03 = Resource_Acquire(0x1d, 2);
         }
-        return gPartfxResourceModule03->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule03->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0xc7 && state.effectId < 0x12c)
-    {
+    if (state.effectId > 0xc7 && state.effectId < 0x12c) {
         gPartfxResourceTimeouts[4] = 2000;
-        if (gPartfxResourceModule04 == NULL)
-        {
+        if (gPartfxResourceModule04 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule04 = Resource_Acquire(0x1e, 2);
         }
-        return gPartfxResourceModule04->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule04->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x419 && state.effectId < 0x44c)
-    {
+    if (state.effectId > 0x419 && state.effectId < 0x44c) {
         gPartfxResourceTimeouts[5] = 2000;
-        if (gPartfxResourceModule05 == NULL)
-        {
+        if (gPartfxResourceModule05 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule05 = Resource_Acquire(0x1f, 2);
         }
-        return gPartfxResourceModule05->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule05->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x739 && state.effectId < 0x76c)
-    {
+    if (state.effectId > 0x739 && state.effectId < 0x76c) {
         gPartfxResourceTimeouts[16] = 2000;
-        if (gPartfxResourceModule16 == NULL)
-        {
+        if (gPartfxResourceModule16 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule16 = Resource_Acquire(0x2a, 2);
         }
-        return gPartfxResourceModule16->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule16->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId - 0x84U <= 1 || state.effectId > 0x89 && state.effectId < 200)
-    {
+    if (state.effectId - 0x84U <= 1 || state.effectId > 0x89 && state.effectId < 200) {
         gPartfxResourceTimeouts[6] = 2000;
-        if (gPartfxResourceModule06 == NULL)
-        {
+        if (gPartfxResourceModule06 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule06 = Resource_Acquire(0x20, 2);
         }
-        return gPartfxResourceModule06->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule06->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x3b5 && state.effectId < 0x3de)
-    {
+    if (state.effectId > 0x3b5 && state.effectId < 0x3de) {
         gPartfxResourceTimeouts[8] = 2000;
-        if (gPartfxResourceModule08 == NULL)
-        {
+        if (gPartfxResourceModule08 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule08 = Resource_Acquire(0x22, 2);
         }
-        return gPartfxResourceModule08->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule08->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x351 && state.effectId < 0x384)
-    {
+    if (state.effectId > 0x351 && state.effectId < 0x384) {
         gPartfxResourceTimeouts[7] = 2000;
-        if (gPartfxResourceModule07 == NULL)
-        {
+        if (gPartfxResourceModule07 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule07 = Resource_Acquire(0x21, 2);
         }
-        return gPartfxResourceModule07->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule07->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x329 && state.effectId < 0x351)
-    {
+    if (state.effectId > 0x329 && state.effectId < 0x351) {
         gPartfxResourceTimeouts[9] = 2000;
-        if (gPartfxResourceModule09 == NULL)
-        {
+        if (gPartfxResourceModule09 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule09 = Resource_Acquire(0x23, 2);
         }
-        return gPartfxResourceModule09->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule09->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x12b && state.effectId < 0x190)
-    {
+    if (state.effectId > 0x12b && state.effectId < 0x190) {
         gPartfxResourceTimeouts[10] = 2000;
-        if (gPartfxResourceModule10 == NULL)
-        {
+        if (gPartfxResourceModule10 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule10 = Resource_Acquire(0x24, 2);
         }
-        return gPartfxResourceModule10->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule10->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x47d && state.effectId < 0x4b0)
-    {
+    if (state.effectId > 0x47d && state.effectId < 0x4b0) {
         gPartfxResourceTimeouts[11] = 2000;
-        if (gPartfxResourceModule11 == NULL)
-        {
+        if (gPartfxResourceModule11 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule11 = Resource_Acquire(0x25, 2);
         }
-        return gPartfxResourceModule11->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule11->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x4af && state.effectId < 0x4e2)
-    {
+    if (state.effectId > 0x4af && state.effectId < 0x4e2) {
         gPartfxResourceTimeouts[12] = 2000;
-        if (gPartfxResourceModule12 == NULL)
-        {
+        if (gPartfxResourceModule12 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule12 = Resource_Acquire(0x27, 2);
         }
-        return gPartfxResourceModule12->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule12->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId >= 0x3e8 && state.effectId <= 0x419)
-    {
+    if (state.effectId >= 0x3e8 && state.effectId <= 0x419) {
         gPartfxResourceTimeouts[13] = 2000;
-        if (gPartfxResourceModule13 == NULL)
-        {
+        if (gPartfxResourceModule13 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule13 = Resource_Acquire(0x28, 2);
         }
-        return gPartfxResourceModule13->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule13->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId > 0x44b && state.effectId < 0x47e)
-    {
+    if (state.effectId > 0x44b && state.effectId < 0x47e) {
         gPartfxResourceTimeouts[14] = 2000;
-        if (gPartfxResourceModule14 == NULL)
-        {
+        if (gPartfxResourceModule14 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule14 = Resource_Acquire(0x26, 2);
         }
-        return gPartfxResourceModule14->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule14->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId >= 0x6d7 && state.effectId <= 0x707)
-    {
+    if (state.effectId >= 0x6d7 && state.effectId <= 0x707) {
         gPartfxResourceTimeouts[15] = 2000;
-        if (gPartfxResourceModule15 == NULL)
-        {
+        if (gPartfxResourceModule15 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule15 = Resource_Acquire(0x29, 2);
         }
-        return gPartfxResourceModule15->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule15->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId >= 0x708 && state.effectId <= 0x739)
-    {
+    if (state.effectId >= 0x708 && state.effectId <= 0x739) {
         gPartfxResourceTimeouts[17] = 2000;
-        if (gPartfxResourceModule17 == NULL)
-        {
+        if (gPartfxResourceModule17 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule17 = Resource_Acquire(0x2b, 2);
         }
-        return gPartfxResourceModule17->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule17->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId >= 0x76c && state.effectId <= 0x79d)
-    {
+    if (state.effectId >= 0x76c && state.effectId <= 0x79d) {
         gPartfxResourceTimeouts[18] = 2000;
-        if (gPartfxResourceModule18 == NULL)
-        {
+        if (gPartfxResourceModule18 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule18 = Resource_Acquire(0x2c, 2);
         }
-        return gPartfxResourceModule18->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule18->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
-    if (state.effectId >= 0x79e && state.effectId <= 0x833)
-    {
+    if (state.effectId >= 0x79e && state.effectId <= 0x833) {
         gPartfxResourceTimeouts[19] = 2000;
-        if (gPartfxResourceModule19 == NULL)
-        {
+        if (gPartfxResourceModule19 == NULL) {
             gPartfxCachedResourceCount += 1;
             gPartfxResourceModule19 = Resource_Acquire(0x2d, 2);
         }
-        return gPartfxResourceModule19->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags,
-                                                                   modelId, extraArgs);
+        return gPartfxResourceModule19->vtable->spawnObject(sourceObj, state.effectId, spawnParams, spawnFlags, modelId,
+                                                            extraArgs);
     }
     gPartfxSpawnAnimPhase0 += 0.001f;
-    if (gPartfxSpawnAnimPhase0 > 1.0f)
-    {
+    if (gPartfxSpawnAnimPhase0 > 1.0f) {
         gPartfxSpawnAnimPhase0 = 0.1f;
     }
     gPartfxSpawnAnimPhase1 += 0.0003f;
-    if (gPartfxSpawnAnimPhase1 > 1.0f)
-    {
+    if (gPartfxSpawnAnimPhase1 > 1.0f) {
         gPartfxSpawnAnimPhase1 = 0.3f;
     }
-    if (sourceObj == NULL)
-    {
+    if (sourceObj == NULL) {
         return -1;
     }
-    if ((spawnFlags & 0x200000) != 0)
-    {
-        if (spawnParams == NULL)
-        {
+    if ((spawnFlags & 0x200000) != 0) {
+        if (spawnParams == NULL) {
             return -1;
         }
         cfg.sourcePosX = spawnParams->posX;
@@ -329,16 +283,14 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
     cfg.textureSetupFlags = 0;
-    switch (state.effectId)
-    {
+    switch (state.effectId) {
     case 0x5e:
 
         cfg.scale = 0.001f * (f32)(s32)randomGetRange(0x14, 0x1e);
         cfg.lifetimeFrames = 0x1e;
         cfg.behaviorFlags = 0x80180000;
         cfg.textureId = 0x60;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.colorWord0 = ((u16*)extraArgs)[3];
             cfg.colorWord1 = ((u16*)extraArgs)[4];
             cfg.colorWord2 = ((u16*)extraArgs)[5];
@@ -372,15 +324,12 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.001f * (f32)(s32)randomGetRange(0x32, 100);
         cfg.behaviorFlags = 0x80180202;
         cfg.textureId = 0x60;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.colorWord0 = ((u16*)extraArgs)[0];
             cfg.colorWord1 = ((u16*)extraArgs)[1];
             cfg.colorWord2 = ((u16*)extraArgs)[2];
             cfg.lifetimeFrames = (u32)((u16*)extraArgs)[3];
-        }
-        else
-        {
+        } else {
             cfg.colorWord0 = 0x2000;
             cfg.colorWord1 = 0x2000;
             cfg.colorWord2 = 0x2000;
@@ -481,13 +430,10 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.renderFlags = 0x20;
         break;
     case 0x68b:
-        if (spawnParams != NULL)
-        {
+        if (spawnParams != NULL) {
             cfg.startPosX = spawnParams->posX - sourceObj->anim.worldPosX;
             cfg.startPosZ = spawnParams->posZ - sourceObj->anim.worldPosZ;
-        }
-        else
-        {
+        } else {
             *state.startPos = (f32)(s32)randomGetRange(0xfffffff9, 7);
             cfg.startPosZ = (f32)(s32)randomGetRange(0xfffffff9, 7);
         }
@@ -497,12 +443,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityZ = 0.025f * (f32)(s32)randomGetRange(0xffffffce, 0x32);
         {
             f32 scale;
-            if (spawnParams != NULL)
-            {
+            if (spawnParams != NULL) {
                 scale = spawnParams->scale;
-            }
-            else
-            {
+            } else {
                 scale = 0.01f;
             }
             cfg.scale = scale;
@@ -551,12 +494,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         /* fall through */
     case 0x557:
         cfg.startPosY = 30.0f;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.velocityY = 0.2f;
-        }
-        else
-        {
+        } else {
             cfg.velocityY = -0.2f;
         }
         cfg.scale = 0.0042f;
@@ -569,12 +509,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         /* fall through */
     case 0x558:
         cfg.startPosY = 30.0f;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.velocityY = -0.2f;
-        }
-        else
-        {
+        } else {
             cfg.velocityY = 0.2f;
         }
         cfg.scale = 0.0042f;
@@ -587,12 +524,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         /* fall through */
     case 0x559:
         cfg.startPosY = 30.0f;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.velocityY = 0.2f;
-        }
-        else
-        {
+        } else {
             cfg.velocityY = -0.2f;
         }
         cfg.scale = 0.005f;
@@ -605,12 +539,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         /* fall through */
     case 0x55b:
         cfg.startPosY = 30.0f;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.velocityY = -0.2f;
-        }
-        else
-        {
+        } else {
             cfg.velocityY = 0.2f;
         }
         cfg.scale = 0.005f;
@@ -622,8 +553,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x55e:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -645,8 +575,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xe4;
         break;
     case 0x551:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -665,8 +594,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x552:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -684,8 +612,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x91;
         break;
     case 0x554:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -703,8 +630,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x73;
         break;
     case 0x553:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -742,9 +668,8 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = randomGetRange(100, 0x96);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480110;
-        if (extraArgs != NULL)
-        {
-            cfg.behaviorFlags |= 0x40000000LL;
+        if (extraArgs != NULL) {
+            cfg.behaviorFlags |= 0x40000000;
         }
         cfg.textureId = 0x85;
         break;
@@ -756,9 +681,8 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = randomGetRange(100, 0x96);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480110;
-        if (extraArgs != NULL)
-        {
-            cfg.behaviorFlags |= 0x40000000LL;
+        if (extraArgs != NULL) {
+            cfg.behaviorFlags |= 0x40000000;
         }
         cfg.textureId = 0x84;
         break;
@@ -770,9 +694,8 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = randomGetRange(100, 0x96);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480110;
-        if (extraArgs != NULL)
-        {
-            cfg.behaviorFlags |= 0x40000000LL;
+        if (extraArgs != NULL) {
+            cfg.behaviorFlags |= 0x40000000;
         }
         cfg.textureId = 0xc0f;
         break;
@@ -785,35 +708,26 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = randomGetRange(100, 0x96);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480110;
-        if (extraArgs != NULL)
-        {
-            cfg.behaviorFlags |= 0x40000000LL;
+        if (extraArgs != NULL) {
+            cfg.behaviorFlags |= 0x40000000;
         }
         cfg.textureId = 0x157;
         break;
     case 0x54d:
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             variant = *(u8*)extraArgs;
-        }
-        else
-        {
+        } else {
             variant = '\0';
         }
-        if (variant == '\x01')
-        {
+        if (variant == '\x01') {
             cfg.scale = 0.0001f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x202;
-        }
-        else if (variant == '\x02')
-        {
+        } else if (variant == '\x02') {
             cfg.scale = 0.00015f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x102;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.0006f * (f32)(s32)randomGetRange(0x12, 0x14);
             cfg.behaviorFlags = 0xc0800;
             cfg.renderFlags = 2;
@@ -823,24 +737,18 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x85;
         break;
     case 0x54e:
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             variant = *(u8*)extraArgs;
         }
-        if (variant == '\x01')
-        {
+        if (variant == '\x01') {
             cfg.scale = 0.0001f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x202;
-        }
-        else if (variant == '\x02')
-        {
+        } else if (variant == '\x02') {
             cfg.scale = 0.00015f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x102;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.0006f * (f32)(s32)randomGetRange(0x12, 0x14);
             cfg.behaviorFlags = 0xc0800;
             cfg.renderFlags = 2;
@@ -851,24 +759,18 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x54f:
 
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             variant = *(u8*)extraArgs;
         }
-        if (variant == '\x01')
-        {
+        if (variant == '\x01') {
             cfg.scale = 0.0001f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x202;
-        }
-        else if (variant == '\x02')
-        {
+        } else if (variant == '\x02') {
             cfg.scale = 0.00015f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x102;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.0006f * (f32)(s32)randomGetRange(0x12, 0x14);
             cfg.behaviorFlags = 0xc0800;
             cfg.renderFlags = 2;
@@ -878,24 +780,18 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xc0f;
         break;
     case 0x550:
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             variant = *(u8*)extraArgs;
         }
-        if (variant == '\x01')
-        {
+        if (variant == '\x01') {
             cfg.scale = 0.0001f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x202;
-        }
-        else if (variant == '\x02')
-        {
+        } else if (variant == '\x02') {
             cfg.scale = 0.00015f * (f32)(s32)randomGetRange(10, 0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x102;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.0006f * (f32)(s32)randomGetRange(0x12, 0x14);
             cfg.behaviorFlags = 0xc0800;
             cfg.renderFlags = 2;
@@ -905,8 +801,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x157;
         break;
     case 0x545:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -926,8 +821,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x546:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -949,8 +843,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.startPosX = 60.0f;
         cfg.startPosY = (f32)(s32)randomGetRange(0xffffffb0, 0x50);
         cfg.velocityY = 0.01f * (f32)(s32)randomGetRange(0xffffff9c, 100);
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -976,11 +869,10 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.sourceScale = 1.0f;
         cfg.lifetimeFrames = randomGetRange(0, 0x14) + 0x28;
         cfg.linkGroup = 0x10;
-        cfg.behaviorFlags |= 0x20000LL;
+        cfg.behaviorFlags |= 0x20000;
         break;
     case 0x548:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1000,8 +892,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     case 0x52b:
     case 0x52c:
     case 0x52d:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1012,8 +903,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams != NULL)
-        {
+        if (spawnParams != NULL) {
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -1021,12 +911,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
             cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
         }
-        if (randomGetRange(0, 0x28) == 0)
-        {
+        if (randomGetRange(0, 0x28) == 0) {
             cfg.scale = 0.0003f;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.0015f;
         }
         cfg.lifetimeFrames = 0x14;
@@ -1037,8 +924,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     case 0x52f:
     case 0x530:
     case 0x531:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1049,8 +935,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams != NULL)
-        {
+        if (spawnParams != NULL) {
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -1064,8 +949,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x53c:
 
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             int alpha = cfg.initialAlpha = (int)(255.0f * (1.0f - *extraArgs));
             logPrintf(sModgfxAlphaDebugFormat, alpha);
         }
@@ -1137,8 +1021,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x532:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1149,8 +1032,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1174,8 +1056,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x89;
         break;
     case 0x533:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1186,8 +1067,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1218,8 +1098,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.overrideColor2 = 0x3caf;
         break;
     case 0x535:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1230,8 +1109,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1278,8 +1156,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x52a:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1290,8 +1167,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1316,8 +1192,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x159;
         break;
     case 0x51e:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1328,8 +1203,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1379,8 +1253,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     case 0x2bc:
     case 0x2bd:
     case 0x2be:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1391,8 +1264,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams != NULL)
-        {
+        if (spawnParams != NULL) {
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -1442,20 +1314,16 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityY = 0.001f * (f32)(s32)randomGetRange(100, 200);
         cfg.velocityZ = 0.001f * (f32)(s32)randomGetRange(0xffffff9c, 100);
         cfg.behaviorFlags = 0x1081010;
-        if (randomGetRange(0, 3) == 0)
-        {
+        if (randomGetRange(0, 3) == 0) {
             cfg.scale = 0.000065f * (f32)(s32)randomGetRange(0x28, 0x50);
             cfg.initialAlpha = 0x8c;
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.00135f * (f32)(s32)randomGetRange(0x28, 0x50);
             cfg.initialAlpha = 10;
-            cfg.behaviorFlags |= 0x100000LL;
+            cfg.behaviorFlags |= 0x100000;
         }
-        if (randomGetRange(0, 10) == 0)
-        {
-            spawnFlags ^= 4LL;
+        if (randomGetRange(0, 10) == 0) {
+            spawnFlags ^= 4;
             spawnFlags |= 1;
         }
         cfg.lifetimeFrames = 0xdc;
@@ -1466,7 +1334,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.overrideColor1 = 0x30f7;
         cfg.overrideColor2 = 10000;
         cfg.renderFlags = 0x20;
-        cfg.renderFlags |= 0x100000LL;
+        cfg.renderFlags |= 0x100000;
         cfg.textureId = 0x60;
         break;
     case 0x3b9:
@@ -1518,8 +1386,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x47;
         break;
     case 0x3:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         cfg.startPosY = 0.3f * (f32)(s32)randomGetRange(0x14, 0x3c);
@@ -1533,8 +1400,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x5:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = 0.18f * (f32)(s32)randomGetRange(0xffffffe2, 0x1e);
@@ -1547,8 +1413,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags = 0x100218;
         cfg.renderFlags = 0x4000000;
         cfg.textureId = spawnParams->unk4;
-        if (cfg.textureId == 0x4c)
-        {
+        if (cfg.textureId == 0x4c) {
             cfg.colorWord0 = 0x6400;
             cfg.colorWord1 = 0x3200;
             cfg.colorWord2 = 0xa000;
@@ -1559,8 +1424,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         }
         break;
     case 0x7:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = 0.18f * (f32)(s32)randomGetRange(0xffffffe2, 0x1e);
@@ -1591,8 +1455,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = 100;
         cfg.initialAlpha = 0x37;
         cfg.behaviorFlags = 0x400100;
-        switch (cfg.sourceVecZ)
-        {
+        switch (cfg.sourceVecZ) {
         case 0:
             cfg.textureId = 0x15e;
             break;
@@ -1634,8 +1497,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityZ = 0.06f * (f32)(s32)randomGetRange(0xfffffffc, 4);
         cfg.velocityY = 0.006f * (f32)(s32)randomGetRange(0x28, 0x50);
         cfg.scale = 0.00013f * (f32)(s32)randomGetRange(0x28, 0x50);
-        switch (cfg.sourceVecZ)
-        {
+        switch (cfg.sourceVecZ) {
         case 0:
             cfg.textureId = 0xdd;
             break;
@@ -1659,8 +1521,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityZ = 0.03f * (f32)(s32)randomGetRange(0xfffffffc, 4);
         cfg.velocityY = 0.002f * (f32)(s32)randomGetRange(0x28, 0x50);
         cfg.scale = 0.00013f * (f32)(s32)randomGetRange(0x28, 0x50);
-        switch (cfg.sourceVecZ)
-        {
+        switch (cfg.sourceVecZ) {
         case 0:
             cfg.textureId = 0xdd;
             break;
@@ -1730,8 +1591,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x6d:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1742,8 +1602,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1753,15 +1612,13 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = 1;
         cfg.linkGroup = 0;
         cfg.initialAlpha = 0x19;
-        if (spawnParams->unk4 != 0)
-        {
+        if (spawnParams->unk4 != 0) {
             cfg.initialAlpha = 0x7d;
         }
         cfg.behaviorFlags = 0xc0012;
         cfg.textureId = 0x77;
         break;
-    case 0x6a:
-    {
+    case 0x6a: {
         f32 positionScale = 1.0f;
 
         *state.startPos = positionScale * (f32)(s32)randomGetRange(0xfffffff6, 10);
@@ -1805,8 +1662,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x65:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -1817,8 +1673,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -1974,8 +1829,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x5c;
         break;
     case 0x41:
-        for (i = 0; i < 0x1e; i++)
-        {
+        for (i = 0; i < 0x1e; i++) {
             state.effectId = (int)(u32)state.effectId;
             cfg.startPosY = -10.0f;
             cfg.velocityX = 1.6f * (f32)(s32)(2 - randomGetRange(0, 4));
@@ -1985,16 +1839,12 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.lifetimeFrames = 0x3c;
             cfg.behaviorFlags = 0x108;
             cfg.textureId = 0x5c;
-            if ((cfg.behaviorFlags & 1) != 0)
-            {
-                if (cfg.attachedSource != NULL)
-                {
+            if ((cfg.behaviorFlags & 1) != 0) {
+                if (cfg.attachedSource != NULL) {
                     cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.localPosX;
                     cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.localPosY;
                     cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.localPosZ;
-                }
-                else
-                {
+                } else {
                     cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
                     cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
                     cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
@@ -2011,76 +1861,61 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     case 0x4f:
         cfg.behaviorFlags = 0x20100100;
         cfg.lifetimeFrames = 400;
-        if (state.effectId == 0x3d)
-        {
+        if (state.effectId == 0x3d) {
             *state.startPos = 10.0f - (f32)(s32)randomGetRange(0, 0x14);
             cfg.startPosY = 35.0f;
             cfg.startPosZ = 10.0f - (f32)(s32)randomGetRange(0, 0x14);
             cfg.scale = 0.06f * (f32)(s32)randomGetRange(1, 3);
-            cfg.renderFlags |= 0x1000000LL;
-        }
-        else if (state.effectId == 0x3e)
-        {
+            cfg.renderFlags |= 0x1000000;
+        } else if (state.effectId == 0x3e) {
             *state.startPos = 10.0f - (f32)(s32)randomGetRange(0, 0x14);
             cfg.startPosY = 220.0f;
             cfg.startPosZ = 10.0f - (f32)(s32)randomGetRange(0, 0x14);
             cfg.scale = 0.04f * (f32)(s32)randomGetRange(1, 3);
-            cfg.renderFlags |= 0x1000000LL;
-        }
-        else if (state.effectId == 0x3f)
-        {
+            cfg.renderFlags |= 0x1000000;
+        } else if (state.effectId == 0x3f) {
             *state.startPos = 0.0f;
             cfg.startPosY = -18.0f;
             cfg.startPosZ = 0.0f;
             cfg.lifetimeFrames = 100;
             cfg.scale = 0.04f * (f32)(s32)randomGetRange(1, 3);
-            cfg.renderFlags |= 0x1000000LL;
-        }
-        else if (state.effectId == 0x43)
-        {
+            cfg.renderFlags |= 0x1000000;
+        } else if (state.effectId == 0x43) {
             *state.startPos = 110.0f;
             cfg.startPosY = 60.0f;
             cfg.startPosZ = -20.0f + (f32)(s32)randomGetRange(0, 0x78);
             cfg.scale = 0.01f * (f32)(s32)randomGetRange(1, 8);
             cfg.behaviorFlags = cfg.behaviorFlags | 8;
-            cfg.renderFlags |= 0x1000000LL;
-        }
-        else if (state.effectId == 0x44)
-        {
+            cfg.renderFlags |= 0x1000000;
+        } else if (state.effectId == 0x44) {
             *state.startPos = 110.0f;
             cfg.startPosY = 85.0f;
             cfg.startPosZ = (f32)(s32)randomGetRange(0, 0x78);
             cfg.velocityY = -0.26f;
             cfg.scale = 0.01f * (f32)(s32)randomGetRange(1, 8);
-            cfg.renderFlags |= 0x1000000LL;
+            cfg.renderFlags |= 0x1000000;
         }
         cfg.linkGroup = 0x20;
         cfg.textureId = 0x5f;
         cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-        if ((cfg.behaviorFlags & 1) != 0)
-        {
-            if (cfg.attachedSource != NULL)
-            {
+        if ((cfg.behaviorFlags & 1) != 0) {
+            if (cfg.attachedSource != NULL) {
                 *state.startPos = *state.startPos + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
-            }
-            else
-            {
+            } else {
                 *state.startPos = *state.startPos + cfg.sourcePosX;
                 cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
                 cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
             }
         }
-        if (state.effectId == 0x3e || state.effectId == 0x3f)
-        {
-            cfg.behaviorFlags |= 0x8000000LL;
+        if (state.effectId == 0x3e || state.effectId == 0x3f) {
+            cfg.behaviorFlags |= 0x8000000;
         }
         break;
     case 0x48:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2108,8 +1943,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x38:
         srand(0x4233d);
-        for (i = 0; i < 0x28; i++)
-        {
+        for (i = 0; i < 0x28; i++) {
             state.effectId = (int)(u32)state.effectId;
             cfg.startPosY = 35.0f;
             cfg.velocityX = 0.01f * (f32)(s32)(0x50 - randomGetRange(0, 0xa0));
@@ -2118,19 +1952,15 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             cfg.lifetimeFrames = (s32)(33.0f * (f32)(s32)randomGetRange(1, 4));
             cfg.behaviorFlags = 0x100011;
             cfg.textureId = 0x30;
-            if (cfg.behaviorFlags & 1)
-            {
-                if (cfg.attachedSource != NULL)
-                {
+            if (cfg.behaviorFlags & 1) {
+                if (cfg.attachedSource != NULL) {
                     *state.startPos += ((GameObject*)cfg.attachedSource)->anim.localPosX;
-                    cfg.startPosY += + ((GameObject*)cfg.attachedSource)->anim.localPosY;
+                    cfg.startPosY += +((GameObject*)cfg.attachedSource)->anim.localPosY;
                     cfg.startPosZ += ((GameObject*)cfg.attachedSource)->anim.localPosZ;
-                }
-                else
-                {
+                } else {
                     *state.startPos += cfg.sourcePosX;
-                    cfg.startPosY += + cfg.sourcePosY;
-                    cfg.startPosZ += + cfg.sourcePosZ;
+                    cfg.startPosY += +cfg.sourcePosY;
+                    cfg.startPosZ += +cfg.sourcePosZ;
                 }
             }
             (*gExpgfxInterface)->spawnEffect(&cfg, 0, state.effectId, 0);
@@ -2265,12 +2095,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x7c;
         break;
     case 0x39:
-        if (randomGetRange(0, 1) != 0)
-        {
+        if (randomGetRange(0, 1) != 0) {
             cfg.startPosZ = -400.0f;
-        }
-        else
-        {
+        } else {
             cfg.startPosZ = 200.0f;
         }
         cfg.scale = 0.55f * (f32)(s32)randomGetRange(1, 4);
@@ -2281,12 +2108,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x79:
 
-        if (randomGetRange(0, 1) != 0)
-        {
+        if (randomGetRange(0, 1) != 0) {
             *state.startPos = -18.0f;
-        }
-        else
-        {
+        } else {
             *state.startPos = 18.0f;
         }
         cfg.startPosY = (f32)(s32)randomGetRange(10, 0x3c);
@@ -2346,12 +2170,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.initialAlpha = 0x9b;
         cfg.linkGroup = 0xe;
         cfg.behaviorFlags = 0x100110;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.textureId = 0x78;
-        }
-        else
-        {
+        } else {
             cfg.textureId = 0x88;
         }
         break;
@@ -2368,8 +2189,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         f32 rotY;
         f32 rotZ;
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2431,8 +2251,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x25:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2443,8 +2262,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX + (f32)(s32)randomGetRange(0, 6);
@@ -2458,8 +2276,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x61;
         break;
     case 0x36:
-        if (extraArgs == NULL)
-        {
+        if (extraArgs == NULL) {
             return -1;
         }
         cfg.startPosZ = 0.0f;
@@ -2474,20 +2291,16 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x26:
         *state.startPos = (f32)(s32)randomGetRange(0xffffffff, 1);
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             *state.startPos = *state.startPos + extraArgs[1];
         }
         cfg.startPosY = 0.0f;
         cfg.startPosZ = (f32)(s32)randomGetRange(0xffffffff, 1);
         cfg.velocityY = 0.05f;
         cfg.scale = 0.005f;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.lifetimeFrames = (s32)*extraArgs;
-        }
-        else
-        {
+        } else {
             cfg.lifetimeFrames = 0x78;
         }
         cfg.linkGroup = 0;
@@ -2640,7 +2453,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.0025f;
         cfg.lifetimeFrames = 0xa0;
         cfg.behaviorFlags = 0x1000204;
-        cfg.behaviorFlags |= 0x10000000LL;
+        cfg.behaviorFlags |= 0x10000000;
         cfg.textureId = 0x151;
         break;
     case 0x74:
@@ -2760,8 +2573,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0x2c;
         break;
     case 0x6b:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2772,8 +2584,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (extraArgs == NULL)
-        {
+        if (extraArgs == NULL) {
             return -1;
         }
         *state.startPos = spawnParams->posX;
@@ -2805,8 +2616,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xdd;
         break;
     case 0x56:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2827,8 +2637,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags = 0x1080000;
         cfg.renderFlags = 0x1000000;
         cfg.initialAlpha = 0xa5;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.overrideColor0 = (u32)((u8*)extraArgs)[0] << 8;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
             cfg.overrideColor1 = (u32)((u8*)extraArgs)[1] << 8;
@@ -2841,8 +2650,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x57:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2863,8 +2671,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags = 0x1200000;
         cfg.renderFlags = 0x1000000;
         cfg.textureId = 0x77;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.overrideColor0 = (u32)((u8*)extraArgs)[0] << 8;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
             cfg.overrideColor1 = (u32)((u8*)extraArgs)[1] << 8;
@@ -2875,8 +2682,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         }
         break;
     case 0x58:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2895,8 +2701,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags = 0x1080000;
         cfg.renderFlags = 0x1000000;
         cfg.textureId = 0x77;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             cfg.overrideColor0 = (u32)((u8*)extraArgs)[0] << 8;
             cfg.colorWord0 = (u16)cfg.overrideColor0;
             cfg.overrideColor1 = (u32)((u8*)extraArgs)[1] << 8;
@@ -2908,8 +2713,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x323: {
         int lifetime;
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -2928,11 +2732,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xc9a;
         cfg.behaviorFlags = 0x100210;
         cfg.renderFlags = 0x4000800;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             u32 variantU = *(u8*)extraArgs;
-            if (variantU == '\x01')
-            {
+            if (variantU == '\x01') {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -2940,9 +2742,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord1 = 0x9f9;
                 cfg.colorWord2 = 0xffff;
                 cfg.renderFlags |= 0x20;
-            }
-            else if (variantU == '\x02')
-            {
+            } else if (variantU == '\x02') {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
                 cfg.overrideColor2 = 0x7fff;
@@ -2952,9 +2752,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.2f;
                 cfg.lifetimeFrames = lifetime + 7;
-            }
-            else if (variantU == '\x03')
-            {
+            } else if (variantU == '\x03') {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
                 cfg.overrideColor2 = 0xfd01;
@@ -2964,9 +2762,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
                 cfg.lifetimeFrames = lifetime + 0x14;
-            }
-            else if (variantU == '\x04')
-            {
+            } else if (variantU == '\x04') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -2975,9 +2771,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\x05')
-            {
+            } else if (variantU == '\x05') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -2986,9 +2780,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\x06')
-            {
+            } else if (variantU == '\x06') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -2997,9 +2789,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\a')
-            {
+            } else if (variantU == '\a') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3008,9 +2798,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags |= 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\b')
-            {
+            } else if (variantU == '\b') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3025,8 +2813,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     }
     case 0x325:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3052,11 +2839,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.lifetimeFrames = randomGetRange(7, 0x12) + 0xc;
         cfg.textureId = 0xc98;
         cfg.behaviorFlags = 0x480110;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             u32 variantU = *(u8*)extraArgs;
-            if (variantU == '\x01')
-            {
+            if (variantU == '\x01') {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3064,9 +2849,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord1 = 0x9f9;
                 cfg.colorWord2 = 0xffff;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
-            }
-            else if (variantU == '\x02')
-            {
+            } else if (variantU == '\x02') {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
                 cfg.overrideColor2 = 0x7fff;
@@ -3075,9 +2858,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0x2603;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 1.2f;
-            }
-            else if (variantU == '\x03')
-            {
+            } else if (variantU == '\x03') {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
                 cfg.overrideColor2 = 0xfd01;
@@ -3107,11 +2888,9 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xc99;
         cfg.behaviorFlags = 0x180210;
         cfg.initialAlpha = 0x7d;
-        if (extraArgs != NULL)
-        {
+        if (extraArgs != NULL) {
             u32 variantU = *(u8*)extraArgs;
-            if (variantU == '\x01')
-            {
+            if (variantU == '\x01') {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3120,9 +2899,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0xffff;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 0.7f;
-            }
-            else if (variantU == '\x02')
-            {
+            } else if (variantU == '\x02') {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
                 cfg.overrideColor2 = 0x7fff;
@@ -3130,9 +2907,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord1 = 0xdc81;
                 cfg.colorWord2 = 0x2603;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
-            }
-            else if (variantU == '\x03')
-            {
+            } else if (variantU == '\x03') {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
                 cfg.overrideColor2 = 0xfd01;
@@ -3141,9 +2916,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0x1f5;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 1.4f;
-            }
-            else if (variantU == '\x04')
-            {
+            } else if (variantU == '\x04') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3152,9 +2925,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\x05')
-            {
+            } else if (variantU == '\x05') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3163,9 +2934,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\x06')
-            {
+            } else if (variantU == '\x06') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3174,9 +2943,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\a')
-            {
+            } else if (variantU == '\a') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3185,9 +2952,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
                 cfg.colorWord2 = 0;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale *= 1.7f;
-            }
-            else if (variantU == '\b')
-            {
+            } else if (variantU == '\b') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -3211,8 +2976,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xc9d;
         break;
     case 0x3de:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3223,14 +2987,11 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
             gPartfxDefaultSpawnParams.effectParam = 0;
             spawnParams = &gPartfxDefaultSpawnParams;
         }
-        if (spawnParams != NULL)
-        {
+        if (spawnParams != NULL) {
             *state.startPos = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
-        }
-        else
-        {
+        } else {
             *state.startPos = 0.1f * (f32)(s32)randomGetRange(0xfffffff6, 10);
             cfg.startPosY = 0.1f * (f32)(s32)randomGetRange(0xfffffff6, 10);
             cfg.startPosZ = 0.1f * (f32)(s32)randomGetRange(0xfffffff6, 10);
@@ -3258,13 +3019,10 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.startPosY = 0.1f * (f32)(s32)randomGetRange(0xffffff9c, 100);
         cfg.startPosZ = 0.1f * (f32)(s32)randomGetRange(0xffffff9c, 100);
         cfg.velocityY = 0.05f * (f32)(s32)randomGetRange(8, 10);
-        if (randomGetRange(0, 0x28) != 0)
-        {
+        if (randomGetRange(0, 0x28) != 0) {
             cfg.scale = 0.001f * (f32)(s32)randomGetRange(8, 0x14);
             cfg.lifetimeFrames = randomGetRange(0x5a, 0x78);
-        }
-        else
-        {
+        } else {
             cfg.scale = 0.001f * (f32)(s32)randomGetRange(0x15, 0x29);
             cfg.lifetimeFrames = 0x1cc;
         }
@@ -3281,8 +3039,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x320:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3306,8 +3063,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.textureId = 0xc8f;
         break;
     case 0x321:
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3331,8 +3087,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x322:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3355,8 +3110,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x351:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3379,8 +3133,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         break;
     case 0x51d:
 
-        if (spawnParams == NULL)
-        {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3405,10 +3158,8 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.sourceVecZ = 0;
         cfg.sourceScale = 1.0f;
         break;
-    case 0x55a:
-    {
-        if (spawnParams == NULL)
-        {
+    case 0x55a: {
+        if (spawnParams == NULL) {
             gPartfxDefaultSpawnParams.posX = 0.0f;
             gPartfxDefaultSpawnParams.posY = 0.0f;
             gPartfxDefaultSpawnParams.posZ = 0.0f;
@@ -3467,22 +3218,16 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if ((cfg.behaviorFlags & 1) != 0 && (cfg.behaviorFlags & 2) != 0)
-    {
-        cfg.behaviorFlags ^= 2LL;
+    if ((cfg.behaviorFlags & 1) != 0 && (cfg.behaviorFlags & 2) != 0) {
+        cfg.behaviorFlags ^= 2;
     }
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & 0x200000) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != NULL)
-            {
+        } else {
+            if (cfg.attachedSource != NULL) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -3494,281 +3239,291 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
 
 /* Tick global effect phases and expire the 20 cached particle resource
  * slots. */
-void partfx_updateFrameState(void)
-{
+void partfx_updateFrameState(void) {
     gPartfxFrameAnimPhase0 = gPartfxFrameAnimPhase0 + 0.001f * timeDelta;
-    if (gPartfxFrameAnimPhase0 > 1.0f)
-    {
+    if (gPartfxFrameAnimPhase0 > 1.0f) {
         gPartfxFrameAnimPhase0 = 0.1f;
     }
     gPartfxFrameAnimPhase1 = gPartfxFrameAnimPhase1 + 0.001f * timeDelta;
-    if (gPartfxFrameAnimPhase1 > 1.0f)
-    {
+    if (gPartfxFrameAnimPhase1 > 1.0f) {
         gPartfxFrameAnimPhase1 = 0.3f;
     }
     gPartfxOscAngle0 = gPartfxOscAngle0 + framesThisStep * 100;
-    if (gPartfxOscAngle0 > 0x7fff)
-    {
+    if (gPartfxOscAngle0 > 0x7fff) {
         gPartfxOscAngle0 = 0;
     }
     gPartfxOscSine0 = mathSinf(3.1415927f * (f32)(s16)gPartfxOscAngle0 / 32768.0f);
     gPartfxOscAngle1 = gPartfxOscAngle1 + framesThisStep * 0x32;
-    if (gPartfxOscAngle1 > 0x7fff)
-    {
+    if (gPartfxOscAngle1 > 0x7fff) {
         gPartfxOscAngle1 = 0;
     }
     gPartfxOscSine1 = mathSinf(3.1415927f * (f32)(s16)gPartfxOscAngle1 / 32768.0f);
-    if (gPartfxResourceTimeouts[0] != 0 && (gPartfxResourceTimeouts[0] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule00 != NULL)
+    if (gPartfxResourceTimeouts[0] != 0 && (gPartfxResourceTimeouts[0] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule00 != NULL) {
             Resource_Release(gPartfxResourceModule00);
+        }
         gPartfxResourceModule00 = NULL;
         gPartfxResourceTimeouts[0] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[1] != 0 && (gPartfxResourceTimeouts[1] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule01 != NULL)
+    if (gPartfxResourceTimeouts[1] != 0 && (gPartfxResourceTimeouts[1] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule01 != NULL) {
             Resource_Release(gPartfxResourceModule01);
+        }
         gPartfxResourceModule01 = NULL;
         gPartfxResourceTimeouts[1] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[2] != 0 && (gPartfxResourceTimeouts[2] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule02 != NULL)
+    if (gPartfxResourceTimeouts[2] != 0 && (gPartfxResourceTimeouts[2] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule02 != NULL) {
             Resource_Release(gPartfxResourceModule02);
+        }
         gPartfxResourceModule02 = NULL;
         gPartfxResourceTimeouts[2] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[3] != 0 && (gPartfxResourceTimeouts[3] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule03 != NULL)
+    if (gPartfxResourceTimeouts[3] != 0 && (gPartfxResourceTimeouts[3] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule03 != NULL) {
             Resource_Release(gPartfxResourceModule03);
+        }
         gPartfxResourceModule03 = NULL;
         gPartfxResourceTimeouts[3] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[4] != 0 && (gPartfxResourceTimeouts[4] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule04 != NULL)
+    if (gPartfxResourceTimeouts[4] != 0 && (gPartfxResourceTimeouts[4] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule04 != NULL) {
             Resource_Release(gPartfxResourceModule04);
+        }
         gPartfxResourceModule04 = NULL;
         gPartfxResourceTimeouts[4] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[5] != 0 && (gPartfxResourceTimeouts[5] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule05 != NULL)
+    if (gPartfxResourceTimeouts[5] != 0 && (gPartfxResourceTimeouts[5] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule05 != NULL) {
             Resource_Release(gPartfxResourceModule05);
+        }
         gPartfxResourceModule05 = NULL;
         gPartfxResourceTimeouts[5] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[16] != 0 && (gPartfxResourceTimeouts[16] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule16 != NULL)
+    if (gPartfxResourceTimeouts[16] != 0 && (gPartfxResourceTimeouts[16] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule16 != NULL) {
             Resource_Release(gPartfxResourceModule16);
+        }
         gPartfxResourceModule16 = NULL;
         gPartfxResourceTimeouts[16] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[6] != 0 && (gPartfxResourceTimeouts[6] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule06 != NULL)
+    if (gPartfxResourceTimeouts[6] != 0 && (gPartfxResourceTimeouts[6] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule06 != NULL) {
             Resource_Release(gPartfxResourceModule06);
+        }
         gPartfxResourceModule06 = NULL;
         gPartfxResourceTimeouts[6] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[7] != 0 && (gPartfxResourceTimeouts[7] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule07 != NULL)
+    if (gPartfxResourceTimeouts[7] != 0 && (gPartfxResourceTimeouts[7] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule07 != NULL) {
             Resource_Release(gPartfxResourceModule07);
+        }
         gPartfxResourceModule07 = NULL;
         gPartfxResourceTimeouts[7] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[8] != 0 && (gPartfxResourceTimeouts[8] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule08 != NULL)
+    if (gPartfxResourceTimeouts[8] != 0 && (gPartfxResourceTimeouts[8] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule08 != NULL) {
             Resource_Release(gPartfxResourceModule08);
+        }
         gPartfxResourceModule08 = NULL;
         gPartfxResourceTimeouts[8] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[9] != 0 && (gPartfxResourceTimeouts[9] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule09 != NULL)
+    if (gPartfxResourceTimeouts[9] != 0 && (gPartfxResourceTimeouts[9] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule09 != NULL) {
             Resource_Release(gPartfxResourceModule09);
+        }
         gPartfxResourceModule09 = NULL;
         gPartfxResourceTimeouts[9] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[10] != 0 && (gPartfxResourceTimeouts[10] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule10 != NULL)
+    if (gPartfxResourceTimeouts[10] != 0 && (gPartfxResourceTimeouts[10] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule10 != NULL) {
             Resource_Release(gPartfxResourceModule10);
+        }
         gPartfxResourceModule10 = NULL;
         gPartfxResourceTimeouts[10] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[11] != 0 && (gPartfxResourceTimeouts[11] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule11 != NULL)
+    if (gPartfxResourceTimeouts[11] != 0 && (gPartfxResourceTimeouts[11] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule11 != NULL) {
             Resource_Release(gPartfxResourceModule11);
+        }
         gPartfxResourceModule11 = NULL;
         gPartfxResourceTimeouts[11] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[12] != 0 && (gPartfxResourceTimeouts[12] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule12 != NULL)
+    if (gPartfxResourceTimeouts[12] != 0 && (gPartfxResourceTimeouts[12] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule12 != NULL) {
             Resource_Release(gPartfxResourceModule12);
+        }
         gPartfxResourceModule12 = NULL;
         gPartfxResourceTimeouts[12] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[13] != 0 && (gPartfxResourceTimeouts[13] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule13 != NULL)
+    if (gPartfxResourceTimeouts[13] != 0 && (gPartfxResourceTimeouts[13] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule13 != NULL) {
             Resource_Release(gPartfxResourceModule13);
+        }
         gPartfxResourceModule13 = NULL;
         gPartfxResourceTimeouts[13] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[14] != 0 && (gPartfxResourceTimeouts[14] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule14 != NULL)
+    if (gPartfxResourceTimeouts[14] != 0 && (gPartfxResourceTimeouts[14] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule14 != NULL) {
             Resource_Release(gPartfxResourceModule14);
+        }
         gPartfxResourceModule14 = NULL;
         gPartfxResourceTimeouts[14] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[15] != 0 && (gPartfxResourceTimeouts[15] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule15 != NULL)
+    if (gPartfxResourceTimeouts[15] != 0 && (gPartfxResourceTimeouts[15] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule15 != NULL) {
             Resource_Release(gPartfxResourceModule15);
+        }
         gPartfxResourceModule15 = NULL;
         gPartfxResourceTimeouts[15] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[17] != 0 && (gPartfxResourceTimeouts[17] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule17 != NULL)
+    if (gPartfxResourceTimeouts[17] != 0 && (gPartfxResourceTimeouts[17] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule17 != NULL) {
             Resource_Release(gPartfxResourceModule17);
+        }
         gPartfxResourceModule17 = NULL;
         gPartfxResourceTimeouts[17] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[18] != 0 && (gPartfxResourceTimeouts[18] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule18 != NULL)
+    if (gPartfxResourceTimeouts[18] != 0 && (gPartfxResourceTimeouts[18] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule18 != NULL) {
             Resource_Release(gPartfxResourceModule18);
+        }
         gPartfxResourceModule18 = NULL;
         gPartfxResourceTimeouts[18] = 0;
         gPartfxCachedResourceCount -= 1;
     }
-    if (gPartfxResourceTimeouts[19] != 0 && (gPartfxResourceTimeouts[19] -= framesThisStep) <= 0)
-    {
-        if (gPartfxResourceModule19 != NULL)
+    if (gPartfxResourceTimeouts[19] != 0 && (gPartfxResourceTimeouts[19] -= framesThisStep) <= 0) {
+        if (gPartfxResourceModule19 != NULL) {
             Resource_Release(gPartfxResourceModule19);
+        }
         gPartfxResourceModule19 = NULL;
         gPartfxResourceTimeouts[19] = 0;
         gPartfxCachedResourceCount -= 1;
     }
 }
 
-void partfx_onMapSetup(void)
-{
+void partfx_onMapSetup(void) {
 }
 
 /* Clear the 20-slot effect-id table and free all 20 cached particle
  * resources. */
-void partfx_release(void)
-{
+void partfx_release(void) {
     s16* p;
     int i;
     i = 0x14;
     p = gPartfxResourceTimeouts + 0x14;
-    while ((s8)i != 0)
-    {
+    while ((s8)i != 0) {
         p = p - 1;
         i = i - 1;
         *p = 0;
     }
-    if (gPartfxResourceModule00 != NULL)
+    if (gPartfxResourceModule00 != NULL) {
         Resource_Release(gPartfxResourceModule00);
+    }
     gPartfxResourceModule00 = NULL;
-    if (gPartfxResourceModule01 != NULL)
+    if (gPartfxResourceModule01 != NULL) {
         Resource_Release(gPartfxResourceModule01);
+    }
     gPartfxResourceModule01 = NULL;
-    if (gPartfxResourceModule02 != NULL)
+    if (gPartfxResourceModule02 != NULL) {
         Resource_Release(gPartfxResourceModule02);
+    }
     gPartfxResourceModule02 = NULL;
-    if (gPartfxResourceModule03 != NULL)
+    if (gPartfxResourceModule03 != NULL) {
         Resource_Release(gPartfxResourceModule03);
+    }
     gPartfxResourceModule03 = NULL;
-    if (gPartfxResourceModule04 != NULL)
+    if (gPartfxResourceModule04 != NULL) {
         Resource_Release(gPartfxResourceModule04);
+    }
     gPartfxResourceModule04 = NULL;
-    if (gPartfxResourceModule05 != NULL)
+    if (gPartfxResourceModule05 != NULL) {
         Resource_Release(gPartfxResourceModule05);
+    }
     gPartfxResourceModule05 = NULL;
-    if (gPartfxResourceModule16 != NULL)
+    if (gPartfxResourceModule16 != NULL) {
         Resource_Release(gPartfxResourceModule16);
+    }
     gPartfxResourceModule16 = NULL;
-    if (gPartfxResourceModule06 != NULL)
+    if (gPartfxResourceModule06 != NULL) {
         Resource_Release(gPartfxResourceModule06);
+    }
     gPartfxResourceModule06 = NULL;
-    if (gPartfxResourceModule07 != NULL)
+    if (gPartfxResourceModule07 != NULL) {
         Resource_Release(gPartfxResourceModule07);
+    }
     gPartfxResourceModule07 = NULL;
-    if (gPartfxResourceModule08 != NULL)
+    if (gPartfxResourceModule08 != NULL) {
         Resource_Release(gPartfxResourceModule08);
+    }
     gPartfxResourceModule08 = NULL;
-    if (gPartfxResourceModule09 != NULL)
+    if (gPartfxResourceModule09 != NULL) {
         Resource_Release(gPartfxResourceModule09);
+    }
     gPartfxResourceModule09 = NULL;
-    if (gPartfxResourceModule10 != NULL)
+    if (gPartfxResourceModule10 != NULL) {
         Resource_Release(gPartfxResourceModule10);
+    }
     gPartfxResourceModule10 = NULL;
-    if (gPartfxResourceModule11 != NULL)
+    if (gPartfxResourceModule11 != NULL) {
         Resource_Release(gPartfxResourceModule11);
+    }
     gPartfxResourceModule11 = NULL;
-    if (gPartfxResourceModule12 != NULL)
+    if (gPartfxResourceModule12 != NULL) {
         Resource_Release(gPartfxResourceModule12);
+    }
     gPartfxResourceModule12 = NULL;
-    if (gPartfxResourceModule13 != NULL)
+    if (gPartfxResourceModule13 != NULL) {
         Resource_Release(gPartfxResourceModule13);
+    }
     gPartfxResourceModule13 = NULL;
-    if (gPartfxResourceModule14 != NULL)
+    if (gPartfxResourceModule14 != NULL) {
         Resource_Release(gPartfxResourceModule14);
+    }
     gPartfxResourceModule14 = NULL;
-    if (gPartfxResourceModule15 != NULL)
+    if (gPartfxResourceModule15 != NULL) {
         Resource_Release(gPartfxResourceModule15);
+    }
     gPartfxResourceModule15 = NULL;
-    if (gPartfxResourceModule17 != NULL)
+    if (gPartfxResourceModule17 != NULL) {
         Resource_Release(gPartfxResourceModule17);
+    }
     gPartfxResourceModule17 = NULL;
-    if (gPartfxResourceModule18 != NULL)
+    if (gPartfxResourceModule18 != NULL) {
         Resource_Release(gPartfxResourceModule18);
+    }
     gPartfxResourceModule18 = NULL;
-    if (gPartfxResourceModule19 != NULL)
+    if (gPartfxResourceModule19 != NULL) {
         Resource_Release(gPartfxResourceModule19);
+    }
     gPartfxResourceModule19 = NULL;
     gPartfxCachedResourceCount = 0;
 }
 
-void partfx_initialise(void)
-{
+void partfx_initialise(void) {
     s16* p;
     int i;
     i = 0x14;
     p = gPartfxResourceTimeouts + 0x14;
-    while ((s8)i != 0)
-    {
+    while ((s8)i != 0) {
         p = p - 1;
         i = i - 1;
         *p = 0;

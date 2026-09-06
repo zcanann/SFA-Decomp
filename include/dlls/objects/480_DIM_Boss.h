@@ -166,7 +166,7 @@ void DIMboss_updateSequenceEffects(GameObject* obj, DIMbossRuntime* runtime);
 void DIMboss_updateWarpAndEffects(GameObject* obj, DIMbossRuntime* runtime);
 void DIMboss_updateHitResponse(GameObject* obj, BaddieState* playerState);
 void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMbossRuntime* runtime,
-                                  DIMbossRuntime* updateRuntime);
+                               DIMbossRuntime* updateRuntime);
 
 int DIMboss_updateState(GameObject* obj, u32 state, ObjSeqState* animUpdate);
 void DIMboss_func0B(void);

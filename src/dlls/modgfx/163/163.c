@@ -12,7 +12,7 @@
 typedef struct DllA3EffectResourceView {
     ModgfxEffectVertex vertices[21];
     u8 padD2[2];
-    s16 colors[24][3];
+    s16 triangleIndices[24][3];
     s16 firstGroupIndices[8];
     s16 secondGroupIndices[8];
     s16 thirdGroupIndices[8];
@@ -23,7 +23,7 @@ typedef struct DllA3EffectResourceView {
 } DllA3EffectResourceView;
 
 STATIC_ASSERT(offsetof(DllA3EffectResourceView, vertices) == 0x000);
-STATIC_ASSERT(offsetof(DllA3EffectResourceView, colors) == 0x0D4);
+STATIC_ASSERT(offsetof(DllA3EffectResourceView, triangleIndices) == 0x0D4);
 STATIC_ASSERT(offsetof(DllA3EffectResourceView, firstGroupIndices) == 0x164);
 STATIC_ASSERT(offsetof(DllA3EffectResourceView, secondGroupIndices) == 0x174);
 STATIC_ASSERT(offsetof(DllA3EffectResourceView, thirdGroupIndices) == 0x184);
@@ -212,7 +212,7 @@ void dll_A3_spawnEffect(GameObject* sourceObj, int variant, void* spawnParams, u
     }
     (*gModgfxInterface)
         ->spawnEffect(&packet, 0, 0x15, (u8*)(int)gDllA3EffectResourceData, 0x18,
-                      &resourceData[offsetof(DllA3EffectResourceView, colors)], 0x5e0, 0);
+                      &resourceData[offsetof(DllA3EffectResourceView, triangleIndices)], 0x5e0, 0);
 }
 
 void dll_A3_release(void) {

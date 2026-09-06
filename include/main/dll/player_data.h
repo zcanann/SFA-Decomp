@@ -9,8 +9,7 @@
 #include "main/shader_api.h"
 #include "main/model.h"
 
-typedef struct PlayerModelChainEntry
-{
+typedef struct PlayerModelChainEntry {
     int* modelIds;
     int count;
 } PlayerModelChainEntry;
@@ -21,8 +20,7 @@ extern GameObject* gPlayerSpawnedObjects[];
 extern StaffCollisionInterface** gPlayerResource;
 extern int gPlayerPendingHealth;
 extern GameObject* gPlayerStaffObject;
-typedef struct PlayerLightfootMoveSpeeds
-{
+typedef struct PlayerLightfootMoveSpeeds {
     f32 speeds[7];
     u16 challengeGameBits[8];
     f32 challengeMeterScales[8];
@@ -46,7 +44,7 @@ extern int gPlayerStateHandlers[];
 extern void* gPlayerDefaultStateHandler;
 extern void* gPlayerChildObject;
 extern PlayerModelChainEntry* gPlayerModelChainConfig;
-extern int gPlayerHeldObject;
+extern Shader* gPlayerKrazoaShader;
 extern PartFxSpawnParams gPlayerPartFxParams;
 extern LightmapVertex gPlayerHudVtxBuf[8];
 extern s16 gPlayerStopMoves[4];
@@ -54,8 +52,7 @@ extern u8 gPlayerSurfacePfxModeTable[];
 extern u64 gPlayerLastSfxFrame;
 extern u64 gPlayerFrameCounter;
 
-typedef struct PlayerMoveSlot
-{
+typedef struct PlayerMoveSlot {
     u8 slotId;
     u8 unk01;
     s16 moveTableIndex;
@@ -72,8 +69,8 @@ typedef struct PlayerMoveSlot
     f32 transitionProgress;
     f32 hitWindowStart[3];
     f32 hitWindowEnd[3];
-    f32 unk48;
-    f32 unk4C;
+    f32 swipeStart;
+    f32 swipeLengthScale;
     f32 sfxProgressA;
     f32 sfxProgressB;
     f32 unk58;
@@ -93,8 +90,8 @@ typedef struct PlayerMoveSlot
     f32 hitWindowUnk94[3];
     f32 unkA0;
     f32 unkA4;
-    u8 hitInterval[3];  /* 0xA8: per-hit-window repeat-hit interval, copied into PlayerState.hitInterval */
-    u8 hitCountMax[3];  /* 0xAB: per-hit-window max hit count, copied into PlayerState.hitCountMax */
+    u8 hitInterval[3]; /* 0xA8: per-hit-window repeat-hit interval, copied into PlayerState.hitInterval */
+    u8 hitCountMax[3]; /* 0xAB: per-hit-window max hit count, copied into PlayerState.hitCountMax */
     u8 padAE[2];
 } PlayerMoveSlot;
 
@@ -112,7 +109,8 @@ STATIC_ASSERT(offsetof(PlayerMoveSlot, attackLandProgress) == 0x28);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, transitionProgress) == 0x2c);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowStart) == 0x30);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowEnd) == 0x3c);
-STATIC_ASSERT(offsetof(PlayerMoveSlot, unk48) == 0x48);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, swipeStart) == 0x48);
+STATIC_ASSERT(offsetof(PlayerMoveSlot, swipeLengthScale) == 0x4C);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, sfxProgressA) == 0x50);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, sfxProgressB) == 0x54);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, hitWindowType) == 0x5d);
@@ -127,8 +125,7 @@ STATIC_ASSERT(offsetof(PlayerMoveSlot, unkA0) == 0xa0);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, unkA4) == 0xa4);
 
 extern PlayerMoveSlot gPlayerMoveSlotData[28];
-typedef struct PlayerAnimSpeedTuning
-{
+typedef struct PlayerAnimSpeedTuning {
     f32 gaitSpeedThresholds[6];
     f32 bodyCollisionPoints[2][3];
     f32 groundCollisionPoint[3];
@@ -161,8 +158,7 @@ extern s16 lbl_80332F78[];
 extern s16 lbl_80332F88[];
 extern s16 lbl_80333110[];
 extern f32 gPlayerDefaultMoveParams[24];
-typedef struct PlayerMotionTuning
-{
+typedef struct PlayerMotionTuning {
     s16 moveSequences[4][12];
     f32 velSmoothRateCurve[41];
     f32 targetYawSmoothRateCurve[41];
@@ -190,8 +186,8 @@ extern f32 lbl_803DC680;
 extern f32 lbl_803DC684;
 extern int lbl_803DC688[2];
 extern f32 lbl_803DC690[2];
-extern s16 lbl_803DC698;
-extern s16 lbl_803DC69C[2];
+extern s16 gPlayerClimbOntoWallMoves[2];
+extern s16 gPlayerClimbOntoWallAltMoves[2];
 extern u8 lbl_803DC6A4[4];
 extern f32 lbl_803DC6B8[2];
 extern f32 lbl_803DC6C0;

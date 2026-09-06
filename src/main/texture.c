@@ -54,8 +54,7 @@
 #include "main/gx_scissor_api.h"
 #include "string.h"
 
-typedef struct LoadedTextureEntry
-{
+typedef struct LoadedTextureEntry {
     int key;
     u8* texture;
     u8 flag;
@@ -85,22 +84,21 @@ char sDebugIntLineFormat[] = "%d\n";
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter);
 void textureInitGXTexObj(void* textureData);
 
-void* textureIdxToPtr(int idx)
-{
+void* textureIdxToPtr(int idx) {
     int i;
-    if ((u32)idx & 0x80000000)
+    if ((u32)idx & 0x80000000) {
         return (void*)idx;
+    }
     i = idx - 1;
-    if (i < 0 || i >= gLoadedTextureCount)
+    if (i < 0 || i >= gLoadedTextureCount) {
         return NULL;
+    }
     return gLoadedTextures[i].texture;
 }
 
-
 extern char sRcpTexRestructStrings[];
 
-void texRestructRefs(int mode)
-{
+void texRestructRefs(int mode) {
     u8* na;
     int i;
     char* strs;
@@ -118,21 +116,15 @@ void texRestructRefs(int mode)
     printHeapStats(1);
     OSReport(strs + 0x1194);
     mmSetForceHeaps1and2Only(1);
-    for (i = 0; i < gLoadedTextureCount; i++)
-    {
+    for (i = 0; i < gLoadedTextureCount; i++) {
         tex = gLoadedTextures[i].texture;
-        if (tex != NULL && gLoadedTextures[i].flag != 0 &&
-            ((Texture*)tex)->cached == 0 && (int)gLoadedTextures[i].size != -1 &&
-            mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL)
-        {
+        if (tex != NULL && gLoadedTextures[i].flag != 0 && ((Texture*)tex)->cached == 0 &&
+            (int)gLoadedTextures[i].size != -1 && mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL) {
             size = gLoadedTextures[i].size;
             na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
-            if (na == NULL)
-            {
+            if (na == NULL) {
                 OSReport(strs + 0x11b4, tex, getHeapItemSize(tex));
-            }
-            else if (na != NULL)
-            {
+            } else if (na != NULL) {
                 OSReport(strs + 0x11f4, tex, na, getHeapItemSize(tex));
                 done = 0;
                 memcpy(na, tex, size);
@@ -149,39 +141,28 @@ void texRestructRefs(int mode)
     OSReport(strs + 0x1238);
     printHeapStats(1);
     defragMemory(2);
-    while (done == 0 && pass < 4)
-    {
+    while (done == 0 && pass < 4) {
         done = 1;
-        for (i = 0; i < gLoadedTextureCount; i++)
-        {
+        for (i = 0; i < gLoadedTextureCount; i++) {
             tex = gLoadedTextures[i].texture;
-            if (tex != NULL && gLoadedTextures[i].flag != 0 &&
-                ((Texture*)tex)->cached == 0 && (int)gLoadedTextures[i].size != -1)
-            {
-                if (mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL)
-                {
+            if (tex != NULL && gLoadedTextures[i].flag != 0 && ((Texture*)tex)->cached == 0 &&
+                (int)gLoadedTextures[i].size != -1) {
+                if (mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL) {
                     size = gLoadedTextures[i].size;
                     na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
-                    if (na == NULL)
-                    {
+                    if (na == NULL) {
                         OSReport(strs + 0x125c, tex, getHeapItemSize(tex));
-                    }
-                    else if (mmGetRegionForPtr(na) != 0)
-                    {
+                    } else if (mmGetRegionForPtr(na) != 0) {
                         OSReport(strs + 0x129c, tex, na, getHeapItemSize(tex));
                         d = mmSetFreeDelay(0);
                         mm_free(na);
                         mmSetFreeDelay(d);
-                    }
-                    else if (na < tex)
-                    {
+                    } else if (na < tex) {
                         OSReport(strs + 0x12d8, tex, na, getHeapItemSize(tex));
                         d = mmSetFreeDelay(0);
                         mm_free(na);
                         mmSetFreeDelay(d);
-                    }
-                    else if (na != NULL)
-                    {
+                    } else if (na != NULL) {
                         OSReport(strs + 0x1320, tex, na, getHeapItemSize(tex));
                         done = 0;
                         memcpy(na, tex, size);
@@ -192,28 +173,19 @@ void texRestructRefs(int mode)
                         mmSetFreeDelay(d);
                         gLoadedTextures[i].texture = na;
                     }
-                }
-                else if (mode == 0)
-                {
-                    if (mmGetRegionForPtr(tex) == 1 || mmGetRegionForPtr(tex) == 2)
-                    {
-                        if (*(void**)tex == NULL && getHeapItemSize(tex) >= 0x3000)
-                        {
+                } else if (mode == 0) {
+                    if (mmGetRegionForPtr(tex) == 1 || mmGetRegionForPtr(tex) == 2) {
+                        if (*(void**)tex == NULL && getHeapItemSize(tex) >= 0x3000) {
                             size = gLoadedTextures[i].size;
                             na = (u8*)mmAlloc(size, 0xa0a0a0a0, 0);
-                            if (na == NULL)
-                            {
+                            if (na == NULL) {
                                 OSReport(strs + 0x125c, tex, getHeapItemSize(tex));
-                            }
-                            else if (mmGetRegionForPtr(na) != 0)
-                            {
+                            } else if (mmGetRegionForPtr(na) != 0) {
                                 OSReport(strs + 0x1368, tex, na, getHeapItemSize(tex));
                                 d = mmSetFreeDelay(0);
                                 mm_free(na);
                                 mmSetFreeDelay(d);
-                            }
-                            else if (na != NULL)
-                            {
+                            } else if (na != NULL) {
                                 OSReport(strs + 0x13c8, tex, na, getHeapItemSize(tex));
                                 done = 0;
                                 memcpy(na, tex, size);
@@ -236,26 +208,19 @@ void texRestructRefs(int mode)
     mmSetTextureAllocationState(0);
 }
 
-void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj)
-{
+void textureInitSecondaryGXTexObj(Texture* tex, GXTexObj* obj) {
     u8 mipmap;
-    if ((int)tex->maxLod - (int)tex->minLod > 0)
-    {
+    if ((int)tex->maxLod - (int)tex->minLod > 0) {
         mipmap = 1;
-    }
-    else
-    {
+    } else {
         mipmap = 0;
     }
-    GXInitTexObj(obj, (u8*)tex + tex->imageOffset + sizeof(Texture), tex->width, tex->height,
-                 GX_TF_I4, tex->wrapS, tex->wrapT, mipmap);
-    if (mipmap != 0)
-    {
-        GXInitTexObjLOD(obj, tex->minFilter, tex->magFilter, (f32)(u32)tex->minLod,
-                        (f32)(s32)tex->maxLod, -2.0f, 0, 0, 0);
-    }
-    else
-    {
+    GXInitTexObj(obj, (u8*)tex + tex->imageOffset + sizeof(Texture), tex->width, tex->height, GX_TF_I4, tex->wrapS,
+                 tex->wrapT, mipmap);
+    if (mipmap != 0) {
+        GXInitTexObjLOD(obj, tex->minFilter, tex->magFilter, (f32)(u32)tex->minLod, (f32)(s32)tex->maxLod, -2.0f, 0, 0,
+                        0);
+    } else {
         GXInitTexObjLOD(obj, ((Texture*)tex)->minFilter, ((Texture*)tex)->magFilter, 0.0f, 0.0f, 0.0f, 0, 0, 0);
     }
 }
@@ -290,38 +255,29 @@ void textureInitGXTexObj(void* textureData) {
     }
 }
 
-
-void Rcp_ClearRenderFlags(u32 bits)
-{
+void Rcp_ClearRenderFlags(u32 bits) {
     gRcpRenderFlags &= ~(u64)bits;
 }
 
-
-void Rcp_SetRenderFlags(u32 bits)
-{
+void Rcp_SetRenderFlags(u32 bits) {
     gRcpRenderFlags = gRcpRenderFlags | bits;
 }
 
-
-void* getLoadedTexture(int key)
-{
+void* getLoadedTexture(int key) {
     LoadedTextureEntry* base;
     int i;
 
     i = 0;
     base = gLoadedTextures;
-    for (; i < gLoadedTextureCount; i++)
-    {
-        if (key == base[i].key)
-        {
+    for (; i < gLoadedTextureCount; i++) {
+        if (key == base[i].key) {
             return base[i].texture;
         }
     }
     return NULL;
 }
 
-void textureUpdateAnimationFrame(const Texture* texture, u32* node, s32* cnt)
-{
+void textureUpdateAnimationFrame(const Texture* texture, u32* node, s32* cnt) {
     u32 a, b, c;
     u32 flags;
     int roll;
@@ -331,90 +287,69 @@ void textureUpdateAnimationFrame(const Texture* texture, u32* node, s32* cnt)
     a = flags & 0x80000;
     b = flags & 0x40000;
     c = flags & 0x20000;
-    if (c != 0)
-    {
-        if (b == 0)
-        {
+    if (c != 0) {
+        if (b == 0) {
             roll = randomGetRange(0, 0x3e8);
-            if (roll > 0x3d9)
-            {
-                node[0] &= ~0x80000LL;
-                node[0] |= 0x40000LL;
+            if (roll > 0x3d9) {
+                node[0] &= ~0x80000;
+                node[0] |= 0x40000;
             }
-        }
-        else if (a == 0)
-        {
+        } else if (a == 0) {
             *cnt += texture->animationFrameStep * framesThisStep;
-            if (*cnt >= texture->animationFrameCount)
-            {
+            if (*cnt >= texture->animationFrameCount) {
                 *cnt = texture->animationFrameCount * 2 - 1 - *cnt;
-                if (*cnt < 0)
-                {
+                if (*cnt < 0) {
                     *cnt = 0;
-                    node[0] &= ~0xc0000LL;
-                }
-                else
-                {
-                    node[0] |= 0x80000LL;
+                    node[0] &= ~0xc0000;
+                } else {
+                    node[0] |= 0x80000;
                 }
             }
-        }
-        else
-        {
+        } else {
             *cnt -= texture->animationFrameStep * framesThisStep;
-            if (*cnt < 0)
-            {
+            if (*cnt < 0) {
                 *cnt = 0;
-                node[0] &= ~0xc0000LL;
+                node[0] &= ~0xc0000;
             }
         }
-    }
-    else if (b != 0)
-    {
-        if (a == 0)
+    } else if (b != 0) {
+        if (a == 0) {
             *cnt += texture->animationFrameStep * framesThisStep;
-        else
+        } else {
             *cnt -= texture->animationFrameStep * framesThisStep;
-        do
-        {
+        }
+        do {
             flag2 = 0;
-            if (*cnt < 0)
-            {
+            if (*cnt < 0) {
                 *cnt = -*cnt;
-                node[0] &= ~0x80000LL;
+                node[0] &= ~0x80000;
                 flag2 = 1;
             }
-            if (*cnt >= texture->animationFrameCount)
-            {
+            if (*cnt >= texture->animationFrameCount) {
                 *cnt = texture->animationFrameCount * 2 - 1 - *cnt;
-                node[0] |= 0x80000LL;
+                node[0] |= 0x80000;
                 flag2 = 1;
             }
         } while (flag2 != 0);
-    }
-    else if (a == 0)
-    {
+    } else if (a == 0) {
         *cnt += texture->animationFrameStep * framesThisStep;
-        while (*cnt >= texture->animationFrameCount)
+        while (*cnt >= texture->animationFrameCount) {
             *cnt -= texture->animationFrameCount;
-    }
-    else
-    {
+        }
+    } else {
         *cnt -= texture->animationFrameStep * framesThisStep;
-        while (*cnt < 0)
+        while (*cnt < 0) {
             *cnt += texture->animationFrameCount;
+        }
     }
 }
 
-
-void textureSetAnimationFrameStep(Texture* texture, u16 frameStep)
-{
+void textureSetAnimationFrameStep(Texture* texture, u16 frameStep) {
     texture->animationFrameStep = frameStep;
 }
 
 void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* forcedTexture, int flags, int packed,
-                                     int unused0, int unused1)
-{
+                                     int unused0, int unused1) {
     int i;
     int idx, count;
     Texture* node;
@@ -423,124 +358,122 @@ void textureSelectAnimationFramePair(void* context, Texture* texture, Texture* f
     Texture* walk;
     u16 animationFrameCount;
 
-    if (texture == NULL)
+    if (texture == NULL) {
         return;
+    }
     idx = packed >> 16;
     animationFrameCount = texture->animationFrameCount;
-    if (animationFrameCount != 0)
+    if (animationFrameCount != 0) {
         count = animationFrameCount >> 8;
-    else
+    } else {
         count = 0;
+    }
     current = texture;
     result = texture;
-    if (count > 1 && idx < count)
-    {
+    if (count > 1 && idx < count) {
         node = texture;
-        for (i = 0; i < idx && node != NULL; i++)
+        for (i = 0; i < idx && node != NULL; i++) {
             node = node->nextAnimationFrame;
-        if (node != NULL)
+        }
+        if (node != NULL) {
             current = node;
-        if (flags & 0x40)
-        {
-            if (flags & 0x80000)
-            {
+        }
+        if (flags & 0x40) {
+            if (flags & 0x80000) {
                 idx--;
-                if (idx < 0)
-                {
-                    if (flags & 0x40000)
+                if (idx < 0) {
+                    if (flags & 0x40000) {
                         idx += 2;
-                    else
+                    } else {
                         idx = 0;
+                    }
                 }
-            }
-            else
-            {
+            } else {
                 idx++;
-                if (idx >= count)
-                {
-                    if (flags & 0x40000)
+                if (idx >= count) {
+                    if (flags & 0x40000) {
                         idx -= 2;
-                    else
+                    } else {
                         idx = count - 1;
+                    }
                 }
             }
             walk = texture;
-            for (i = 0; i < idx && walk != NULL; i++)
+            for (i = 0; i < idx && walk != NULL; i++) {
                 walk = walk->nextAnimationFrame;
-            if (walk != NULL)
+            }
+            if (walk != NULL) {
                 result = walk;
-        }
-        else
-        {
+            }
+        } else {
             result = current;
         }
     }
-    if (forcedTexture != NULL)
+    if (forcedTexture != NULL) {
         result = forcedTexture;
+    }
     selectTexture(current, 0);
     selectTexture(result, 1);
 }
 
-void Rcp_ResetRenderState(void)
-{
+void Rcp_ResetRenderState(void) {
     gRcpRenderFlags = 0;
     lbl_803DCDB4 = 0;
     lbl_803DCDB0 = 0;
 }
 
-
-void textureFree(Texture* tex)
-{
+void textureFree(Texture* tex) {
     u8* iter;
     u8* next;
-    if ((u8*)tex == gLoadedTextures[0].texture)
+    if ((u8*)tex == gLoadedTextures[0].texture) {
         return;
-    if (tex == NULL)
-    {
+    }
+    if (tex == NULL) {
         ((Texture*)tex)->evictTimer = 10;
         return;
     }
-    if (((Texture*)tex)->refCount == 0)
-    {
+    if (((Texture*)tex)->refCount == 0) {
         ((Texture*)tex)->evictTimer = 10;
         return;
     }
-    if (((Texture*)tex)->cached != 0 && ((Texture*)tex)->refCount <= 1)
-    {
+    if (((Texture*)tex)->cached != 0 && ((Texture*)tex)->refCount <= 1) {
         ((Texture*)tex)->evictTimer = 10;
     }
     (((Texture*)tex)->refCount)--;
-    if (((Texture*)tex)->refCount != 0)
+    if (((Texture*)tex)->refCount != 0) {
         return;
+    }
     {
         int i;
-        for (i = 0; i < gLoadedTextureCount; i++)
-        {
-            if (gLoadedTextures[i].texture == (u8*)tex)
-            {
+        for (i = 0; i < gLoadedTextureCount; i++) {
+            if (gLoadedTextures[i].texture == (u8*)tex) {
                 iter = *(u8**)tex;
-                while (iter != NULL)
-                {
-                    if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000)
+                while (iter != NULL) {
+                    if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) {
                         iter = NULL;
-                    if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000)
-                    {
+                    }
+                    if ((u32)iter < 0x80000000 || (u32)iter >= 0xa0000000) {
                         iter = NULL;
                         continue;
                     }
-                    if (iter == NULL)
+                    if (iter == NULL) {
                         continue;
+                    }
                     next = *(u8**)iter;
-                    if (((Texture*)iter)->preloaded != 0)
+                    if (((Texture*)iter)->preloaded != 0) {
                         newshadows_releaseTextureEntry((void*)((Texture*)iter)->tmemAddr);
-                    if (((Texture*)iter)->cached == 0)
+                    }
+                    if (((Texture*)iter)->cached == 0) {
                         mm_free(iter);
+                    }
                     iter = next;
                 }
-                if (((Texture*)tex)->preloaded != 0)
+                if (((Texture*)tex)->preloaded != 0) {
                     newshadows_releaseTextureEntry((void*)((Texture*)tex)->tmemAddr);
-                if (((Texture*)tex)->cached == 0)
+                }
+                if (((Texture*)tex)->cached == 0) {
                     mm_free(tex);
+                }
                 gLoadedTextures[i].key = -1;
                 gLoadedTextures[i].texture = NULL;
                 return;
@@ -548,27 +481,23 @@ void textureFree(Texture* tex)
         }
     }
 }
-static inline void loadTextureBank(int bank, int fileId)
-{
+static inline void loadTextureBank(int bank, int fileId) {
     int* p;
     int n = 0;
 
     p = getCurrentDataFile(fileId);
     gRcpTexBankTable[bank] = p;
-    if (gRcpTexBankTable == NULL)
-    {
+    if (gRcpTexBankTable == NULL) {
         return;
     }
-    while (p[0] != -1)
-    {
+    while (p[0] != -1) {
         p++;
         n++;
     }
     gRcpTexBankCount[bank] = n - 1;
 }
 
-void* textureLoad(int texId, u8 flagIn)
-{
+void* textureLoad(int texId, u8 flagIn) {
     int file;
     int bank;
     int id16;
@@ -597,70 +526,52 @@ void* textureLoad(int texId, u8 flagIn)
 
     interruptState = TRUE;
     interruptsDisabled = FALSE;
-    if (texId < 0)
-    {
+    if (texId < 0) {
         n = -texId;
-        if (n & 0x8000)
-        {
+        if (n & 0x8000) {
             slot = n & 0x7fff;
-            if (slot == 0x82e)
-            {
+            if (slot == 0x82e) {
                 OSReport(sDebugIntLineFormat, slot);
             }
         }
     }
     n = 0;
     entry = gLoadedTextures;
-    for (; n < gLoadedTextureCount; entry++, n++)
-    {
-        if (texId == entry->key)
-        {
+    for (; n < gLoadedTextureCount; entry++, n++) {
+        if (texId == entry->key) {
             buf = (Texture*)gLoadedTextures[n].texture;
             buf->refCount += 1;
-            if (flagIn != 0 && gLoadedTextures[n].flag != 0)
-            {
+            if (flagIn != 0 && gLoadedTextures[n].flag != 0) {
                 return (void*)(n + 1);
             }
             return buf;
         }
     }
-    if (getLoadedFileFlags(0) != 0)
-    {
+    if (getLoadedFileFlags(0) != 0) {
         interruptState = OSDisableInterrupts();
         interruptsDisabled = TRUE;
     }
     origTexId = texId;
-    if (texId < 0)
-    {
+    if (texId < 0) {
         texId = -texId;
-    }
-    else if (texId >= 0xbb8 && (remapped = gRcpTexIdRemap[texId]) != 0)
-    {
+    } else if (texId >= 0xbb8 && (remapped = gRcpTexIdRemap[texId]) != 0) {
         texId = remapped + 1;
-    }
-    else
-    {
+    } else {
         texId = gRcpTexIdRemap[texId];
     }
     id16 = texId & 0xffff;
-    if (texId & 0x8000)
-    {
+    if (texId & 0x8000) {
         bank = 1;
         file = 0x20;
         id16 = id16 & 0x7fff;
-    }
-    else if (origTexId >= 0xbb8)
-    {
+    } else if (origTexId >= 0xbb8) {
         bank = 2;
         file = 0x4f;
-    }
-    else
-    {
+    } else {
         bank = 0;
         file = 0x23;
     }
-    if (id16 >= gRcpTexBankCount[bank] || id16 < 0)
-    {
+    if (id16 >= gRcpTexBankCount[bank] || id16 < 0) {
         id16 = 0;
     }
     loadTextureBank(0, MLDF_FILEID_TEX0_TAB_A);
@@ -668,41 +579,26 @@ void* textureLoad(int texId, u8 flagIn)
     bankWord = gRcpTexBankTable[bank][id16];
     mips = (bankWord >> TEX_TAB_MIP_COUNT_SHIFT) & TEX_TAB_MIP_COUNT_MASK;
     bankWordSaved = bankWord;
-    if (mips == 1)
-    {
-        if (bank == 0)
-        {
+    if (mips == 1) {
+        if (bank == 0) {
             tex0GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
-        }
-        else if (bank == 2)
-        {
+        } else if (bank == 2) {
             texPreGetMipmap(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
-        }
-        else
-        {
+        } else {
             tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, 0, 0);
         }
         gRcpTexHeaderBuffer[0] = 0;
         gRcpTexHeaderBuffer[1] = sizeOut;
-        if (frameOut == -1)
-        {
+        if (frameOut == -1) {
             gRcpTexHeaderBuffer[2] = sizeOut;
-        }
-        else
-        {
+        } else {
             gRcpTexHeaderBuffer[2] = frameOut;
         }
-    }
-    else if (bank == 0)
-    {
+    } else if (bank == 0) {
         tex0GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
-    }
-    else if (bank == 2)
-    {
+    } else if (bank == 2) {
         texPreGetMipmap(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
-    }
-    else
-    {
+    } else {
         tex1GetFrame(bankWord, id16, &sizeOut, &frameOut, mips, gRcpTexHeaderBuffer, 2);
     }
     firstTex = NULL;
@@ -711,111 +607,78 @@ void* textureLoad(int texId, u8 flagIn)
     bankWordHeld = bankWordSaved;
     mipChainWord = mips << 8;
     dataByteOffset = (bankWordSaved & 0xffffff) << 1;
-    for (; mipLevel < mips; mipLevel++)
-    {
-        if (mips > 1)
-        {
-            if (bank == 0)
-            {
+    for (; mipLevel < mips; mipLevel++) {
+        if (mips > 1) {
+            if (bank == 0) {
                 tex0GetFrame(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
-            }
-            else if (bank == 2)
-            {
+            } else if (bank == 2) {
                 texPreGetMipmap(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
-            }
-            else
-            {
+            } else {
                 tex1GetFrame(bankWordHeld, id16, &sizeOut, &frameOut, mipLevel, gRcpTexHeaderBuffer, 1);
             }
         }
         size = sizeOut;
-        if (frameOut == -1)
-        {
+        if (frameOut == -1) {
             frameSize = sizeOut;
-        }
-        else
-        {
+        } else {
             frameSize = frameOut;
             mmSetTextureAllocationState(1);
             buf = mmAlloc(size, gRcpTexAllocTag, 0);
             mmSetTextureAllocationState(0);
-            if (buf == NULL)
-            {
+            if (buf == NULL) {
                 gRcpTexAllocFailed = 1;
-                if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE)
-                {
+                if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
+                    OSRestoreInterrupts(interruptState);
+                } else if (interruptsDisabled == TRUE) {
                     OSRestoreInterrupts(interruptState);
                 }
-                else if (interruptsDisabled == TRUE)
-                {
-                    OSRestoreInterrupts(interruptState);
-                }
-                if (flagIn != 0)
-                {
+                if (flagIn != 0) {
                     return (void*)1;
                 }
                 return gLoadedTextures[0].texture;
             }
         }
-        if (frameOut != -1 && buf == NULL)
-        {
-            if (mipLevel == 0)
-            {
+        if (frameOut != -1 && buf == NULL) {
+            if (mipLevel == 0) {
                 gRcpTexAllocFailed = 1;
-                if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE)
-                {
+                if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
+                    OSRestoreInterrupts(interruptState);
+                } else if (interruptsDisabled == TRUE) {
                     OSRestoreInterrupts(interruptState);
                 }
-                else if (interruptsDisabled == TRUE)
-                {
-                    OSRestoreInterrupts(interruptState);
-                }
-                if (flagIn != 0)
-                {
+                if (flagIn != 0) {
                     return (void*)1;
                 }
                 return gLoadedTextures[0].texture;
-            }
-            else
-            {
+            } else {
                 firstTex->animationFrameCount = mipChainWord;
                 mipLevel = mips;
                 continue;
             }
         }
-        if (frameOut == -1)
-        {
-            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize,
-                                            0, id16, 0);
+        if (frameOut == -1) {
+            buf = loadAndDecompressDataFile(file, 0, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize, 0, id16,
+                                            0);
             buf->cached = 1;
-            if (flagIn != 0)
-            {
+            if (flagIn != 0) {
                 flagIn = 0;
             }
             buf->refCount = 1;
+        } else {
+            loadAndDecompressDataFile(file, buf, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize, 0, id16, 0);
         }
-        else
-        {
-            loadAndDecompressDataFile(file, buf, dataByteOffset + gRcpTexHeaderBuffer[mipLevel], frameSize, 0,
-                                      id16, 0);
-        }
-        if (frameOut != -1)
-        {
+        if (frameOut != -1) {
             DCStoreRange(buf, size);
         }
         buf->nextAnimationFrame = NULL;
-        if (prevTex != NULL)
-        {
+        if (prevTex != NULL) {
             prevTex->nextAnimationFrame = buf;
         }
         prevTex = buf;
-        if (mipLevel == 0)
-        {
+        if (mipLevel == 0) {
             firstTex = buf;
             buf->animationFrameCount = mipChainWord;
-        }
-        else
-        {
+        } else {
             buf->animationFrameCount = 1;
         }
     }
@@ -823,77 +686,63 @@ void* textureLoad(int texId, u8 flagIn)
     firstTex->loadedSize = size;
     slot = 0;
     entry = gLoadedTextures;
-    for (; slot < gLoadedTextureCount; entry++, slot++)
-    {
-        if (entry->key == -1)
-        {
+    for (; slot < gLoadedTextureCount; entry++, slot++) {
+        if (entry->key == -1) {
             break;
         }
     }
-    if (slot == gLoadedTextureCount)
-    {
+    if (slot == gLoadedTextureCount) {
         gLoadedTextureCount += 1;
     }
     gLoadedTextures[slot].key = origTexId;
     gLoadedTextures[slot].texture = (u8*)firstTex;
     gLoadedTextures[slot].flag = flagIn;
     gLoadedTextures[slot].size = getHeapItemSize(gLoadedTextures[slot].texture);
-    if (gLoadedTextureCount > LOADED_TEXTURE_CAPACITY)
-    {
-        if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE)
-        {
+    if (gLoadedTextureCount > LOADED_TEXTURE_CAPACITY) {
+        if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
+            OSRestoreInterrupts(interruptState);
+        } else if (interruptsDisabled == TRUE) {
             OSRestoreInterrupts(interruptState);
         }
-        else if (interruptsDisabled == TRUE)
-        {
-            OSRestoreInterrupts(interruptState);
-        }
-        if (flagIn != 0)
-        {
+        if (flagIn != 0) {
             return (void*)1;
         }
         return gLoadedTextures[0].texture;
     }
-    while (walk != NULL)
-    {
+    while (walk != NULL) {
         textureInitGXTexObj(walk);
         walk = walk->nextAnimationFrame;
     }
-    if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE)
-    {
+    if (getLoadedFileFlags(0) != 0 && interruptsDisabled == TRUE) {
+        OSRestoreInterrupts(interruptState);
+    } else if (interruptsDisabled == TRUE) {
         OSRestoreInterrupts(interruptState);
     }
-    else if (interruptsDisabled == TRUE)
-    {
-        OSRestoreInterrupts(interruptState);
-    }
-    if (flagIn != 0)
-    {
+    if (flagIn != 0) {
         return (void*)(slot + 1);
     }
     return firstTex;
 }
 
-Texture* textureGetAnimationFrame(Texture* texture, int n)
-{
+Texture* textureGetAnimationFrame(Texture* texture, int n) {
     int limit = texture->animationFrameCount;
     int i;
-    if (n >= limit)
+    if (n >= limit) {
         n = limit - 1;
+    }
     n >>= 8;
-    for (i = 0; i < n; i++)
-    {
+    for (i = 0; i < n; i++) {
         texture = *(Texture**)texture;
     }
     return texture;
 }
-void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter)
-{
+void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter) {
     u8* obj;
     u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + (u32)sizeof(Texture);
     obj = (u8*)mmAlloc(size, 6, 0);
-    if (obj == NULL)
+    if (obj == NULL) {
         return NULL;
+    }
     memset(obj, 0, sizeof(Texture) + 4);
     ((Texture*)obj)->format = fmt;
     ((Texture*)obj)->width = w;
@@ -909,17 +758,16 @@ void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
     return obj;
 }
 
-void* textureLoadAsset(int asset)
-{
+void* textureLoadAsset(int asset) {
     void* out = NULL;
-    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED)
+    if (getLoadedFileFlags(0) & LOADED_FILE_FLAG_PI_LOCKED) {
         return NULL;
+    }
     loadTextureFile(&out, asset);
     return out;
 }
 
-void loadTextureFiles(void)
-{
+void loadTextureFiles(void) {
     int* bankEntry;
     int** bankTable;
     int* bankCount;
@@ -932,8 +780,7 @@ void loadTextureFiles(void)
     count = 0;
     bankEntry = getCurrentDataFile(MLDF_FILEID_TEXPRE_TAB);
     gRcpTexBankTable[2] = bankEntry;
-    while (bankEntry[0] != -1)
-    {
+    while (bankEntry[0] != -1) {
         bankEntry++;
         count++;
     }
@@ -941,12 +788,10 @@ void loadTextureFiles(void)
     loadAssetFileById(&gRcpTexIdRemap, MLDF_FILEID_TEXTABLE_BIN);
     bankTable = gRcpTexBankTable;
     bankCount = gRcpTexBankCount;
-    for (count = 0; count < 2; count++)
-    {
+    for (count = 0; count < 2; count++) {
         int entryCount = 0;
         bankEntry = bankTable[0];
-        while (bankEntry[0] != -1)
-        {
+        while (bankEntry[0] != -1) {
             bankEntry++;
             entryCount++;
         }
@@ -957,8 +802,6 @@ void loadTextureFiles(void)
     gRcpTexHeaderBuffer = mmAlloc(0x120, 6, 0);
     textureLoad(0, 0);
 }
-
-
 
 char sRcpTexRestructStrings[] = {
     0xFC, 0x12, 0x16, 0x03, 0xFF, 0xFF, 0xFF, 0xF8, 0xFC, 0x12, 0x16, 0x03, 0xFF, 0xFF, 0xFF, 0xF8,
@@ -1074,86 +917,72 @@ u32 lbl_8030DC08[32] = {0xef182c00, 0x03024000, 0xef182c00, 0x00112008, 0xef182c
                         0xef182c00, 0x00104240, 0xef182c00, 0x001041c8, 0xef182c00, 0x00104a50, 0xef182c00, 0x001049d8};
 
 u32 lbl_8030DC88[208] = {(u32)sRcpTexRestructStrings, (u32)lbl_8030D068, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D1F8, (u32)lbl_8030D208, 0x00000007, 0x00000004,
-                         (u32)lbl_8030D318, (u32)lbl_8030D328, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D3B8, (u32)lbl_8030D3C8, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D4E8, (u32)lbl_8030D4F8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D578, (u32)lbl_8030D4F8, 0x00000007, 0x00000004,
-                         (u32)lbl_8030D588, (u32)lbl_8030D4F8, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D598, (u32)lbl_8030D4F8, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D858, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D858, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D858, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D858, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D4E8, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D578, (u32)lbl_8030D868, 0x0000000f, 0x00000006,
-                         (u32)lbl_8030D588, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D598, (u32)lbl_8030D868, 0x0000000f, 0x00000002,
-                         (u32)lbl_8030D8E8, (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D8E8, (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D8E8, (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D8E8, (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D4E8, (u32)lbl_8030D978, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D578, (u32)lbl_8030D978, 0x00000007, 0x00000004,
-                         (u32)lbl_8030D588, (u32)lbl_8030D978, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D598, (u32)lbl_8030D978, 0x00000007, 0x00000000,
-                         (u32)lbl_8030DAD8, (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D1F8, (u32)lbl_8030DAE8, 0x0000000f, 0x00000004,
-                         (u32)lbl_8030D318, (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D3B8, (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D4E8, (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D578, (u32)lbl_8030DAE8, 0x0000000f, 0x00000004,
-                         (u32)lbl_8030D588, (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D598, (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D458, (u32)lbl_8030D468, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030DB68, (u32)lbl_8030DB78, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D9B8, (u32)lbl_8030D9C8, 0x00000007, 0x00000002,
-                         (u32)lbl_8030DA48, (u32)lbl_8030DA58, 0x00000007, 0x00000002,
-                         (u32)lbl_8030DBF8, (u32)lbl_8030DC08, 0x0000000b, 0x00000000,
+                         (u32)lbl_8030D1F8,           (u32)lbl_8030D208, 0x00000007, 0x00000004,
+                         (u32)lbl_8030D318,           (u32)lbl_8030D328, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D3B8,           (u32)lbl_8030D3C8, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D4E8,           (u32)lbl_8030D4F8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D578,           (u32)lbl_8030D4F8, 0x00000007, 0x00000004,
+                         (u32)lbl_8030D588,           (u32)lbl_8030D4F8, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D598,           (u32)lbl_8030D4F8, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D858,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D858,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D858,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D858,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D4E8,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D578,           (u32)lbl_8030D868, 0x0000000f, 0x00000006,
+                         (u32)lbl_8030D588,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D598,           (u32)lbl_8030D868, 0x0000000f, 0x00000002,
+                         (u32)lbl_8030D8E8,           (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D8E8,           (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D8E8,           (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D8E8,           (u32)lbl_8030D8F8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D4E8,           (u32)lbl_8030D978, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D578,           (u32)lbl_8030D978, 0x00000007, 0x00000004,
+                         (u32)lbl_8030D588,           (u32)lbl_8030D978, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D598,           (u32)lbl_8030D978, 0x00000007, 0x00000000,
+                         (u32)lbl_8030DAD8,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D1F8,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000004,
+                         (u32)lbl_8030D318,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D3B8,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D4E8,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D578,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000004,
+                         (u32)lbl_8030D588,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D598,           (u32)lbl_8030DAE8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D458,           (u32)lbl_8030D468, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030DB68,           (u32)lbl_8030DB78, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D9B8,           (u32)lbl_8030D9C8, 0x00000007, 0x00000002,
+                         (u32)lbl_8030DA48,           (u32)lbl_8030DA58, 0x00000007, 0x00000002,
+                         (u32)lbl_8030DBF8,           (u32)lbl_8030DC08, 0x0000000b, 0x00000000,
                          (u32)sRcpTexRestructStrings, (u32)lbl_8030D0E8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D168, (u32)lbl_8030D178, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D288, (u32)lbl_8030D298, 0x00000007, 0x00000004,
-                         (u32)lbl_8030D368, (u32)lbl_8030D378, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D408, (u32)lbl_8030D418, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D168, (u32)lbl_8030D178, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D288, (u32)lbl_8030D298, 0x00000007, 0x00000004,
-                         (u32)lbl_8030D368, (u32)lbl_8030D378, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D408, (u32)lbl_8030D418, 0x00000007, 0x00000000,
-                         (u32)lbl_8030D5A8, (u32)lbl_8030D5C8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D748, (u32)lbl_8030D758, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D5A8, (u32)lbl_8030D648, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D748, (u32)lbl_8030D7D8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D5B8, (u32)lbl_8030D5C8, 0x0000000f, 0x00000000,
-                         (u32)lbl_8030D5B8, (u32)lbl_8030D6C8, 0x0000000f, 0x00000000};
+                         (u32)lbl_8030D168,           (u32)lbl_8030D178, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D288,           (u32)lbl_8030D298, 0x00000007, 0x00000004,
+                         (u32)lbl_8030D368,           (u32)lbl_8030D378, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D408,           (u32)lbl_8030D418, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D168,           (u32)lbl_8030D178, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D288,           (u32)lbl_8030D298, 0x00000007, 0x00000004,
+                         (u32)lbl_8030D368,           (u32)lbl_8030D378, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D408,           (u32)lbl_8030D418, 0x00000007, 0x00000000,
+                         (u32)lbl_8030D5A8,           (u32)lbl_8030D5C8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D748,           (u32)lbl_8030D758, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D5A8,           (u32)lbl_8030D648, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D748,           (u32)lbl_8030D7D8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D5B8,           (u32)lbl_8030D5C8, 0x0000000f, 0x00000000,
+                         (u32)lbl_8030D5B8,           (u32)lbl_8030D6C8, 0x0000000f, 0x00000000};
 
-u32 lbl_8030DFC8[112] = {0xf5101000, 0x00014050, 0xf2000000, 0x0007c07c,
-                         0xf5100900, 0x01010441, 0xf2000000, 0x0103c03c,
-                         0xf5100540, 0x0200c832, 0xf2000000, 0x0201c01c,
-                         0xf5100350, 0x03008c23, 0xf2000000, 0x0300c00c,
-                         0xf5101000, 0x00080050, 0xf2000000, 0x0007c07c,
-                         0xf5100900, 0x01080441, 0xf2000000, 0x0103c03c,
-                         0xf5100540, 0x02080832, 0xf2000000, 0x0201c01c,
-                         0xf5100350, 0x03080c23, 0xf2000000, 0x0300c00c,
-                         0xf5101000, 0x00014200, 0xf2000000, 0x0007c07c,
-                         0xf5100900, 0x01010601, 0xf2000000, 0x0103c03c,
-                         0xf5100540, 0x0200ca02, 0xf2000000, 0x0201c01c,
-                         0xf5100350, 0x03008e03, 0xf2000000, 0x0300c00c,
-                         0xf5100400, 0x00018050, 0xf2000000, 0x0007c07c,
-                         0xf5100280, 0x01414441, 0xf2000000, 0x0103c03c,
-                         0xf51002a0, 0x02810832, 0xf2000000, 0x0201c01c,
-                         0xf51002a8, 0x03c0cc23, 0xf2000000, 0x0300c00c,
-                         0xf5100400, 0x00080050, 0xf2000000, 0x0007c07c,
-                         0xf5100280, 0x01480441, 0xf2000000, 0x0103c03c,
-                         0xf51002a0, 0x02880832, 0xf2000000, 0x0201c01c,
-                         0xf51002a8, 0x03c80c23, 0xf2000000, 0x0300c00c,
-                         0xf5100400, 0x00018200, 0xf2000000, 0x0007c07c,
-                         0xf5100280, 0x01414601, 0xf2000000, 0x0103c03c,
-                         0xf51002a0, 0x02810a02, 0xf2000000, 0x0201c01c,
-                         0xf51002a8, 0x03c0ce03, 0xf2000000, 0x0300c00c,
-                         0xf5180800, 0x00010040, 0xf5180440, 0x0100c431,
-                         0xf5180250, 0x02008822, 0xf5180254, 0x03008822,
-                         0xf2000000, 0x0003c03c, 0xf2000000, 0x0001c01c,
-                         0xf2000000, 0x0000c00c, 0xf2000000, 0x0000c00c};
+u32 lbl_8030DFC8[112] = {
+    0xf5101000, 0x00014050, 0xf2000000, 0x0007c07c, 0xf5100900, 0x01010441, 0xf2000000, 0x0103c03c, 0xf5100540,
+    0x0200c832, 0xf2000000, 0x0201c01c, 0xf5100350, 0x03008c23, 0xf2000000, 0x0300c00c, 0xf5101000, 0x00080050,
+    0xf2000000, 0x0007c07c, 0xf5100900, 0x01080441, 0xf2000000, 0x0103c03c, 0xf5100540, 0x02080832, 0xf2000000,
+    0x0201c01c, 0xf5100350, 0x03080c23, 0xf2000000, 0x0300c00c, 0xf5101000, 0x00014200, 0xf2000000, 0x0007c07c,
+    0xf5100900, 0x01010601, 0xf2000000, 0x0103c03c, 0xf5100540, 0x0200ca02, 0xf2000000, 0x0201c01c, 0xf5100350,
+    0x03008e03, 0xf2000000, 0x0300c00c, 0xf5100400, 0x00018050, 0xf2000000, 0x0007c07c, 0xf5100280, 0x01414441,
+    0xf2000000, 0x0103c03c, 0xf51002a0, 0x02810832, 0xf2000000, 0x0201c01c, 0xf51002a8, 0x03c0cc23, 0xf2000000,
+    0x0300c00c, 0xf5100400, 0x00080050, 0xf2000000, 0x0007c07c, 0xf5100280, 0x01480441, 0xf2000000, 0x0103c03c,
+    0xf51002a0, 0x02880832, 0xf2000000, 0x0201c01c, 0xf51002a8, 0x03c80c23, 0xf2000000, 0x0300c00c, 0xf5100400,
+    0x00018200, 0xf2000000, 0x0007c07c, 0xf5100280, 0x01414601, 0xf2000000, 0x0103c03c, 0xf51002a0, 0x02810a02,
+    0xf2000000, 0x0201c01c, 0xf51002a8, 0x03c0ce03, 0xf2000000, 0x0300c00c, 0xf5180800, 0x00010040, 0xf5180440,
+    0x0100c431, 0xf5180250, 0x02008822, 0xf5180254, 0x03008822, 0xf2000000, 0x0003c03c, 0xf2000000, 0x0001c01c,
+    0xf2000000, 0x0000c00c, 0xf2000000, 0x0000c00c};
 
 char sTexRestructAllocFailedMessage[] = "Failed to allocate memory->forcing texture free\n";
 char sTexRestructRunningBanner[] = "^^^^^^^^^^^^^^^^  Restruct textures Running\n";
@@ -1165,6 +994,8 @@ char sTexRestructNoSpaceFormat[] = "texRestructRefs  No Space to Restructure fro
 char sTexRestructWrongRegionFormat[] = "texRestructRefs Wrong region from 0x%x to 0x%x size %d!!!!\n";
 char sTexRestructSubOptimalFormat[] = "texRestructRefs   SubOptimal Restructure from 0x%x to 0x%x size %d!!!!\n";
 char sTexRestructOptimalFormat[] = "texRestructRefs   Optimal Restructure from 0x%x to 0x%x size %d!!!!\n";
-char sTexRestructReRegionedStuckFormat[] = "texRestructRefs ReRegioned alloc can't get back into region 0 from 0x%x to 0x%x size %d!!!!\n";
-char sTexRestructReRegionedOptimalFormat[] = "texRestructRefs   ReRegioned alloc Optimal Restructure from 0x%x to 0x%x size %d!!!!\n";
+char sTexRestructReRegionedStuckFormat[] =
+    "texRestructRefs ReRegioned alloc can't get back into region 0 from 0x%x to 0x%x size %d!!!!\n";
+char sTexRestructReRegionedOptimalFormat[] =
+    "texRestructRefs   ReRegioned alloc Optimal Restructure from 0x%x to 0x%x size %d!!!!\n";
 char sTexRestructFinishedFormat[] = "^^^^^^^^^^^^^^^^  Restruct textures Finished passes %d\n";

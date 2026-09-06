@@ -32,8 +32,6 @@ static void CameraModeTalk_resetSmoothing(CameraModeTalkState* state) {
 }
 
 void CameraModeTalk_update(CameraObject* camera) {
-    f32 rollSmoothing;
-    f32 rollStep;
     int targetAngle;
     f32 followDist;
     f32 heightT;
@@ -93,8 +91,8 @@ void CameraModeTalk_update(CameraObject* camera) {
         heightT = -state->heightInput / 6.0f;
         followTermA = 0.2f;
         state->followDistance +=
-            followTermA * ((50.0f + 25.0f * ((heightT < 0.0f) ? 0.0f : ((heightT > 1.0f) ? 1.0f : heightT))) -
-                           state->followDistance);
+            followTermA *
+            ((50.0f + 25.0f * ((heightT < 0.0f) ? 0.0f : ((heightT > 1.0f) ? 1.0f : heightT))) - state->followDistance);
         followDist = gCameraModeTalkState->followDistance;
         followTermA = followDist * sinPitch;
         followTermB = followDist * cosPitch;
@@ -112,9 +110,7 @@ void CameraModeTalk_update(CameraObject* camera) {
         if (angleDelta < -0x8000) {
             angleDelta = angleDelta + 0xFFFF;
         }
-        rollStep = angleDelta * timeDelta;
-        rollSmoothing = 0.0625f;
-        camera->anim.rotZ += rollStep * rollSmoothing;
+        camera->anim.rotZ += (angleDelta * timeDelta) / 16.0f;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                        (GameObject*)camera->anim.parent);

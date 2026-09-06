@@ -9,48 +9,48 @@
 #include "main/gamebit_ids.h"
 #include "main/lightningeffect.h"
 
-#define DFPLIGHTNI_OBJECT_DEF_ID 0x0345
-#define DFPLIGHTNI_DLL_ID 0x023B
-#define DFPLIGHTNI_CLASS_ID 0x0030
+#define DFPLIGHTNI_OBJECT_DEF_ID   0x0345
+#define DFPLIGHTNI_DLL_ID          0x023B
+#define DFPLIGHTNI_CLASS_ID        0x0030
 #define DFPLIGHTNI_OBJECT_DEF_SIZE 0xA0
-#define DFPLIGHTNI_PLACEMENT_SIZE 0x24
+#define DFPLIGHTNI_PLACEMENT_SIZE  0x24
 
-#define DFPLIGHTNI_ZAPPED_PLAYER_GAMEBIT GAMEBIT_OFP_ZappedByFloorTiles
+#define DFPLIGHTNI_ZAPPED_PLAYER_GAMEBIT   GAMEBIT_OFP_ZappedByFloorTiles
 #define DFPLIGHTNI_PUZZLE_COMPLETE_GAMEBIT GAMEBIT_OFP_ElectricFloorPuzzleAct1Complete
-#define DFPLIGHTNI_SFX_ID 0x4c3
-#define DFPLIGHTNI_SFX_MAX_COUNT 2
+#define DFPLIGHTNI_SFX_ID                  0x4c3
+#define DFPLIGHTNI_SFX_MAX_COUNT           2
 
 #define DFPLIGHTNI_RANDOM_TIMER_MIN 0
 #define DFPLIGHTNI_RANDOM_TIMER_MAX 100
-#define DFPLIGHTNI_RANDOM_XZ_MIN -200
-#define DFPLIGHTNI_RANDOM_XZ_MAX 200
-#define DFPLIGHTNI_RANDOM_Y_MIN 100
-#define DFPLIGHTNI_RANDOM_Y_MAX 300
+#define DFPLIGHTNI_RANDOM_XZ_MIN    -200
+#define DFPLIGHTNI_RANDOM_XZ_MAX    200
+#define DFPLIGHTNI_RANDOM_Y_MIN     100
+#define DFPLIGHTNI_RANDOM_Y_MAX     300
 
 #define DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES 10
-#define DFPLIGHTNI_ANGLE_STEP 0xc
-#define DFPLIGHTNI_EFFECT_ANGLE_MASK 0xff
+#define DFPLIGHTNI_ANGLE_STEP                 0xc
+#define DFPLIGHTNI_EFFECT_ANGLE_MASK          0xff
 
 typedef struct DfpLightniMapData {
-  ObjPlacement base;
-  s8 angleIndex;
-  s8 delayTicks;
-  s16 radiusX;
-  s16 radiusY;
-  u8 pad1E[0x20 - 0x1E];
-  s16 eventId;
-  u8 pad22[0x24 - 0x22];
+    ObjPlacement base;
+    s8 angleIndex;
+    s8 delayTicks;
+    s16 radiusX;
+    s16 radiusY;
+    u8 pad1E[0x20 - 0x1E];
+    s16 eventId;
+    u8 pad22[0x24 - 0x22];
 } DfpLightniMapData;
 
 typedef struct DfpLightniState {
-  LightningEffect* effectHandle;
-  f32 timer;
-  f32 triggerTime;
-  f32 radiusX;
-  f32 radiusY;
-  s16 angleIndex;
-  s16 delayFrames;
-  s32 eventId;
+    LightningEffect* effectHandle;
+    f32 timer;
+    f32 triggerTime;
+    f32 radiusX;
+    f32 radiusY;
+    s16 angleIndex;
+    s16 delayFrames;
+    s32 eventId;
 } DfpLightniState;
 
 STATIC_ASSERT(offsetof(DfpLightniMapData, angleIndex) == 0x18);
@@ -72,8 +72,8 @@ STATIC_ASSERT(offsetof(DfpLightniState, eventId) == 0x18);
 extern ObjectDescriptor gDfplightniObjDescriptor;
 
 int DFP_Lightni_getExtraSize(void);
-void DFP_Lightni_free(GameObject *obj);
-void DFP_Lightni_render(GameObject *obj);
-void DFP_Lightni_update(GameObject *obj);
-void DFP_Lightni_init(GameObject *obj,DfpLightniMapData *mapData);
+void DFP_Lightni_free(GameObject* obj);
+void DFP_Lightni_render(GameObject* obj);
+void DFP_Lightni_update(GameObject* obj);
+void DFP_Lightni_init(GameObject* obj, DfpLightniMapData* mapData);
 #endif /* MAIN_DFPLIGHTNI_H_ */

@@ -7,6 +7,7 @@
  * that marks the cage already opened (openedGameBit).
  */
 #include "main/dll/DR/dll_0258_drcloudrunner.h"
+#include "dlls/objects/common/vehicle.h"
 #include "main/dll/DR/dll_026C_drcagewith.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
@@ -27,8 +28,6 @@
 #define DRCAGEWITH_CAGE_NOROPE_OBJ 2154
 #define DRCAGEWITH_CAGE_ROPE_OBJ 2155
 #define DRCAGEWITH_OBJGROUP 0x18
-
-#define DRCAGEWITH_TARGET_OBJGROUP 0xa /* nearest group-10 CloudRunner linked as the cage target */
 
 int DR_CageWith_func0A(GameObject* obj)
 {
@@ -161,7 +160,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
             ObjHits_DisableObject(obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
-            nearest = objGetNearestTypeTo(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
+            nearest = objGetNearestTypeTo(VEHICLE_OBJECT_GROUP, obj, &maxDist);
             if (nearest != NULL && nearest->anim.romDefNo == DR_CLOUDRUNNER_OBJECT_ID)
             {
                 nearest->userData1 = 0;
@@ -188,7 +187,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
         if (state->spawnedObject != NULL)
         {
             state->spawnedObject->anim.rotZ = (s16)state->angularVel;
-            nearest = objGetNearestTypeTo(DRCAGEWITH_TARGET_OBJGROUP, obj, &maxDist);
+            nearest = objGetNearestTypeTo(VEHICLE_OBJECT_GROUP, obj, &maxDist);
             if (nearest != NULL && nearest->anim.romDefNo == DR_CLOUDRUNNER_OBJECT_ID)
             {
                 nearest->userData1 = 1;

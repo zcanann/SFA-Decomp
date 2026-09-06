@@ -7,7 +7,7 @@
 
 typedef struct Dll5ESequenceResourceView {
     ModgfxEffectVertex vertices[36];
-    s16 colors[16][3];
+    s16 triangleIndices[16][3];
     s16 nineVertexIndices[4][10];
     u8 opaque218[0x48];
     s16 allVertexIndices[36];
@@ -17,7 +17,7 @@ typedef struct Dll5ESequenceResourceView {
 } Dll5ESequenceResourceView;
 
 STATIC_ASSERT(offsetof(Dll5ESequenceResourceView, vertices) == 0x000);
-STATIC_ASSERT(offsetof(Dll5ESequenceResourceView, colors) == 0x168);
+STATIC_ASSERT(offsetof(Dll5ESequenceResourceView, triangleIndices) == 0x168);
 STATIC_ASSERT(offsetof(Dll5ESequenceResourceView, nineVertexIndices) == 0x1C8);
 STATIC_ASSERT(offsetof(Dll5ESequenceResourceView, opaque218) == 0x218);
 STATIC_ASSERT(offsetof(Dll5ESequenceResourceView, allVertexIndices) == 0x260);
@@ -81,7 +81,7 @@ void dll_5E_spawnSequence(GameObject* sourceObj, int variant, PartFxSpawnParams*
                            &resourceData[offsetof(Dll5ESequenceResourceView, allVertexIndices)]);
     (*gModgfxInterface)
         ->spawnSequence(spawnParams, (u8*)(int)gDll5ESequenceResourceData, 0x24,
-                        &resourceData[offsetof(Dll5ESequenceResourceView, colors)], 0x10, 0x120, 0);
+                        &resourceData[offsetof(Dll5ESequenceResourceView, triangleIndices)], 0x10, 0x120, 0);
     (*gModgfxInterface)->getLastSpawnHandle();
 }
 

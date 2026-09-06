@@ -950,60 +950,52 @@ int isInWalkGroupOrPatch(float* point)
     }
     return 0;
 }
-int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo)
-{
-    u32 wgi;
-    ObjfsaWalkGroup* wg;
-    u8 k;
-    u8 mask;
-    u32 pidx;
-    u8 i;
-    u8 j;
+int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo) {
+    u32 walkGroupIndex;
+    ObjfsaWalkGroup* walkGroup;
+    u8 patchSlot;
+    u8 patchBit;
+    u32 patchIndex;
+    u8 planeIndex;
+    u8 normalComponentIndex;
     ObjfsaPatch* patch;
     f32 y;
 
-    wgi = (u8)Objfsa_FindWalkGroupIndexAtPoint(point);
-    if (patchInfo != NULL && wgi != 0)
-    {
-        patchInfo->walkGroupIndex = wgi;
+    walkGroupIndex = (u8)Objfsa_FindWalkGroupIndexAtPoint(point);
+    if (patchInfo != NULL && walkGroupIndex != 0) {
+        patchInfo->walkGroupIndex = walkGroupIndex;
         patchInfo->patchMask = 0;
-        k = 0;
-        mask = 1;
-        wg = &gObjfsaWalkGroups[wgi];
-        for (; k < 4; k++, mask <<= 1)
-        {
-            pidx = wg->patchIndices[k];
-            if (pidx != 0)
-            {
-                patch = &gObjfsaPatches[pidx];
-                patchInfo->patchGroupIds[k] = patch->groupId;
+        patchSlot = 0;
+        patchBit = 1;
+        walkGroup = &gObjfsaWalkGroups[walkGroupIndex];
+        for (; patchSlot < OBJFSA_PATCHGROUP_PATCH_COUNT; patchSlot++, patchBit <<= 1) {
+            patchIndex = walkGroup->patchIndices[patchSlot];
+            if (patchIndex != 0) {
+                patch = &gObjfsaPatches[patchIndex];
+                patchInfo->patchGroupIds[patchSlot] = patch->groupId;
                 y = point[1];
-                if (y < patch->maxY && y > patch->minY)
-                {
-                    i = 0;
-                    j = 0;
-                    for (; i < 4; i++, j += 2)
-                    {
-                        if (patch->planeOffsets[i] +
-                                (point[0] * (f32)((s16*)patch)[j] + point[2] * (f32)((s16*)patch)[j + 1]) >
-                            0.0f)
-                        {
+                if (y < patch->maxY && y > patch->minY) {
+                    planeIndex = 0;
+                    normalComponentIndex = 0;
+                    for (; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; planeIndex++, normalComponentIndex += 2) {
+                        if (patch->planeOffsets[planeIndex] +
+                                (point[0] * (f32)patch->normalComponents[normalComponentIndex] +
+                                 point[2] * (f32)patch->normalComponents[normalComponentIndex + 1]) >
+                            0.0f) {
                             break;
                         }
                     }
                 }
-                if (i == 4)
-                {
-                    patchInfo->patchMask |= mask;
+                /* Retail leaves planeIndex uninitialized or stale when Y is rejected. */
+                if (planeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+                    patchInfo->patchMask |= patchBit;
                 }
-            }
-            else
-            {
-                patchInfo->patchGroupIds[k] = 0;
+            } else {
+                patchInfo->patchGroupIds[patchSlot] = 0;
             }
         }
     }
-    return wgi;
+    return walkGroupIndex;
 }
 int Objfsa_GetPatchGroupIdAtPoint(float* point) {
     int patchIndex;

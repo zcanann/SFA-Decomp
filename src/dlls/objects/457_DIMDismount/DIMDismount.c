@@ -4,6 +4,7 @@
  * so the mount can determine which side of the dismount point the player is on.
  */
 #include "dlls/objects/457_DIMDismount.h"
+#include "dlls/objects/common/vehicle.h"
 
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/gamebit_ids.h"
@@ -13,8 +14,6 @@
 #include "main/objtype.h"
 #include "main/object_render.h"
 #include "sys/objects.h"
-
-#define DIM_DISMOUNT_MOUNT_OBJECT_GROUP 0xA
 
 typedef struct DimDismountNeighborVTable {
     void* unknown00[8];
@@ -77,7 +76,7 @@ void DIMDismountPoint_update(GameObject* obj) {
     f32 searchRadius;
 
     searchRadius = 500.0f;
-    nearestNeighbor = objGetNearestTypeTo(DIM_DISMOUNT_MOUNT_OBJECT_GROUP, obj, &searchRadius);
+    nearestNeighbor = objGetNearestTypeTo(VEHICLE_OBJECT_GROUP, obj, &searchRadius);
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if (mainGetBit(GAMEBIT_NW_SnowHorn03E3) != 0) {
         obj->hitVolumeIndex = 1;

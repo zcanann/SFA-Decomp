@@ -1,5 +1,16 @@
 # AGENTS.md - SFA-Decomp Runbook
 
+> **Active compiler experiment:** All MWCC C/C++ units now inherit GC/1.3 from
+> `config.compiler_version`, with no library or per-unit MWCC version overrides.
+> The user excluded the ProDG decompressor (`main/zlb.c`) from this migration;
+> keep its existing ProDG toolchain. The ten older GC/1.2.5 math units are included.
+> Existing optimization profiles remain; the linker independently stays GC/1.3.2.
+> Source matching may regress during this experiment, but both `ninja all_source`
+> and the strict retail checksum target must pass before pushing. Mark regressed
+> units `NonMatching` so the matching link uses their retail objects while
+> `all_source` continues compiling their C/C++. Do not restore compiler exceptions,
+> change the expected checksum, or disable the check to make the build green.
+
 > **Integration workflow (effective 2026-07-29):** High-frequency decomp commits land on the
 > permanent `staging` branch, not directly on `main`. Fetch before starting, check out
 > `origin/staging`, and rebase local unpushed work onto the fresh remote staging tip before every
@@ -170,7 +181,9 @@ This repo starts from very little. Expect to do naming, struct recovery, type cl
   when it contains one statement. Do not introduce Allman-style control-flow braces into a cleaned
   TU or preserve them merely because the surrounding imported decomp is inconsistent.
 - Run `clang-format -i` on the active cleaned TU and its unit-owned canonical header, then review the
-  formatting diff and require `clang-format --dry-run --Werror` to pass for both. Do not format a
+  formatting diff and require `clang-format --dry-run --Werror` to pass for both. Commit formatting
+  separately from source changes so compiler and code cleanup diffs remain easy to review. Verify
+  that the formatting-only commit preserves code generation. Do not format a
   shared consumer merely because the active TU adds one include or declaration there; keep those
   shared edits surgical unless that consumer is itself the cleanup target.
 - For the object-DLL housekeeping pass, assign each TU cleanup to a sub-agent and keep no more than
@@ -342,6 +355,12 @@ epilog reordering of `lwz r0` vs saved-reg restores) that we can't trivially
 force from C source.
 
 ## Inline assembly
+
+The optional joint-matrix analyzer experiment is documented in
+`docs/foreign/joint_matrices.md`: build with `python3 tools/dtk_nocfa.py --test`,
+then configure with `--matching --joint-matrices-nocfa`. Its local DTK patch trusts
+the evidenced outer function extent; it does not establish source-language
+provenance or change the assembly policy below. Default builds keep upstream DTK.
 
 Inline `asm{}` is banned outside `src/dolphin/`. Inside SDK code, the only
 exception is paired-single `psq_l` / `psq_st` when MWCC has no intrinsic and a

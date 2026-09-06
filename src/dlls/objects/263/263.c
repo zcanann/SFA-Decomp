@@ -119,14 +119,14 @@ static void windLift107_finishSpitBurst(GameObject* obj, f32 playerDistance) {
     obj->userData2 = 0;
     obj->userData1 = WINDLIFT107_BURST_ACTIVE_USER_STATE;
     ObjHits_EnableObject(obj);
-    ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
+    ObjHits_MarkObjectPositionDirty(&obj->anim);
     state->burstTimer = 0;
     if (playerDistance < state->radius) {
         ObjMsg_SendToObject(Obj_GetPlayerObject(), WINDLIFT107_MESSAGE_BURST, obj, 0);
     }
-    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, state->radius, WINDLIFT107_CAPSULE_VERTICAL_MIN,
+    ObjHitbox_SetCapsuleBounds(&obj->anim, state->radius, WINDLIFT107_CAPSULE_VERTICAL_MIN,
                                WINDLIFT107_CAPSULE_VERTICAL_MAX);
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, WINDLIFT107_HIT_VOLUME_SLOT, WINDLIFT107_HIT_VOLUME_IDLE_STATE, 0);
+    ObjHits_SetHitVolumeSlot(&obj->anim, WINDLIFT107_HIT_VOLUME_SLOT, WINDLIFT107_HIT_VOLUME_IDLE_STATE, 0);
     ObjHits_EnableObject(obj);
 }
 
@@ -353,10 +353,9 @@ void windLift107_update(GameObject* obj) {
     } else if (throwState != WINDLIFT107_THROW_NONE) {
         state->flightTimer -= framesThisStep;
         if (state->throwState == WINDLIFT107_THROW_LAUNCHED) {
-            ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, WINDLIFT107_HIT_VOLUME_SLOT,
-                                     WINDLIFT107_HIT_VOLUME_THROW_STATE, 0);
+            ObjHits_SetHitVolumeSlot(&obj->anim, WINDLIFT107_HIT_VOLUME_SLOT, WINDLIFT107_HIT_VOLUME_THROW_STATE, 0);
             if (obj->anim.velocityY > WINDLIFT107_TERMINAL_VELOCITY) {
-                obj->anim.velocityY = gWindLift107LaunchGravity * timeDelta + obj->anim.velocityY;
+                obj->anim.velocityY += gWindLift107LaunchGravity * timeDelta;
             }
             ObjHits_EnableObject(obj);
         }
@@ -382,9 +381,9 @@ void windLift107_update(GameObject* obj) {
             obj->anim.velocityY = 0.0f;
             return;
         }
-        obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
-        obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
-        obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
+        obj->anim.localPosX += obj->anim.velocityX * timeDelta;
+        obj->anim.localPosY += obj->anim.velocityY * timeDelta;
+        obj->anim.localPosZ += obj->anim.velocityZ * timeDelta;
     }
     obj->anim.worldPosX = obj->anim.localPosX;
     obj->anim.worldPosY = obj->anim.localPosY;
@@ -401,7 +400,7 @@ void windLift107_update(GameObject* obj) {
             obj->userData2 = 0;
             ObjHits_EnableObject(obj);
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-            ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
+            ObjHits_ClearHitVolumes(&obj->anim);
         }
     }
 }
@@ -442,13 +441,13 @@ void windLift107_init(GameObject* obj, WindLift107Placement* placement) {
     state->glowPulse = 0xFF;
     state->unk27 = 0;
     if (placement->radiusParam != 0) {
-        state->radius = gWindLift107RadiusScale * (f32)(s32)placement->radiusParam;
+        state->radius = gWindLift107RadiusScale * (f32)placement->radiusParam;
     } else {
         state->radius = gWindLift107DefaultRadius;
     }
     obj->userData1 = 0;
     if (obj->anim.modelState != NULL) {
-        obj->anim.modelState->flags |= 0x8000LL;
+        obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_8000;
     }
 }
 

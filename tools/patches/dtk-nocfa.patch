@@ -1,0 +1,224 @@
+diff --git a/src/analysis/cfa.rs b/src/analysis/cfa.rs
+index df167da..7651e9a 100644
+--- a/src/analysis/cfa.rs
++++ b/src/analysis/cfa.rs
+@@ -105,7 +105,7 @@ impl FunctionInfo {
+     pub fn is_analyzed(&self) -> bool { self.analyzed }
+ 
+     pub fn is_function(&self) -> bool {
+-        self.analyzed && self.end.is_some() && self.slices.is_some()
++        self.analyzed && self.end.is_some()
+     }
+ 
+     pub fn is_non_function(&self) -> bool {
+@@ -433,6 +433,20 @@ impl AnalyzerState {
+     }
+ 
+     pub fn process_function_at(&mut self, obj: &ObjInfo, addr: SectionAddress) -> Result<bool> {
++        if let Some((_, symbol)) = obj
++            .symbols
++            .at_section_address(addr.section, addr.address)
++            .find(|(_, symbol)| symbol.flags.is_no_cfa())
++        {
++            // Some code has local subroutines with private calling conventions.
++            // Trust only explicitly annotated bounds; relocation analysis still
++            // processes the contents independently.
++            let info = self.functions.entry(addr).or_default();
++            info.analyzed = true;
++            info.end = Some(addr + symbol.size as u32);
++            info.slices = None;
++            return Ok(true);
++        }
+         Ok(if let Some(mut slices) = self.process_function(obj, addr)? {
+             for address in slices.function_references.iter().cloned() {
+                 self.try_add_function(obj, address);
+@@ -561,6 +575,108 @@ impl AnalyzerState {
+     }
+ }
+ 
++#[cfg(test)]
++mod nocfa_tests {
++    use super::*;
++    use crate::{
++        analysis::tracker::Tracker,
++        obj::{ObjArchitecture, ObjKind, ObjRelocKind},
++        util::config::{parse_symbol_line, write_symbols},
++    };
++
++    // Synthetic code, not extracted game instructions: an outer function with
++    // an internal callable prologue, a data reference, and an outer epilogue.
++    fn fixture() -> ObjInfo {
++        let words: [u32; 23] = [
++            0x7C0802A6, 0x9421FFF0, 0x90010014, 0x48000015,
++            0x48000034, 0x60000000, 0x60000000, 0x60000000,
++            0x7C0802A6, 0x9421FFF0, 0x90010014, 0x3C608000,
++            0x38632000, 0x80010014, 0x7C0803A6, 0x38210010,
++            0x4E800020, 0x80010014, 0x7C0803A6, 0x38210010,
++            0x4E800020, 0x4E800020, 0x4E800020,
++        ];
++        let section = |name: &str, kind, address, data: Vec<u8>| ObjSection {
++            name: name.to_string(), kind, address, size: data.len() as u64, data,
++            align: 4, elf_index: 0, relocations: Default::default(),
++            virtual_address: None, file_offset: 0, section_known: true,
++            splits: Default::default(),
++        };
++        let mut obj = ObjInfo::new(
++            ObjKind::Executable, ObjArchitecture::PowerPc, "test".to_string(), vec![],
++            vec![
++                section(".text", ObjSectionKind::Code, 0x80001000,
++                    words.into_iter().flat_map(u32::to_be_bytes).collect()),
++                section(".data", ObjSectionKind::Data, 0x80002000, vec![0; 4]),
++            ],
++        );
++        obj.sda_base = Some(0x80008000);
++        obj.sda2_base = Some(0x80008000);
++        obj
++    }
++
++    fn add(obj: &mut ObjInfo, line: &str) {
++        let symbol = parse_symbol_line(line, obj).unwrap().unwrap();
++        obj.add_symbol(symbol, true).unwrap();
++    }
++
++    #[test]
++    fn nocfa_preserves_named_bounds_and_relocations() {
++        let mut obj = fixture();
++        add(&mut obj, "outer = .text:0x80001000; // type:function size:0x54 nocfa");
++        add(&mut obj, "neighbor = .text:0x80001054; // type:function size:0x4");
++        add(&mut obj, "next = .text:0x80001058; // type:function size:0x4");
++        let mut state = AnalyzerState::default();
++        state.detect_functions(&obj).unwrap();
++        assert_eq!(state.functions.len(), 3);
++        let info = &state.functions[&SectionAddress::new(0, 0x80001000)];
++        assert!(info.is_function());
++        assert_eq!(info.end, Some(SectionAddress::new(0, 0x80001054)));
++        assert!(info.slices.is_none());
++        assert!(state.functions[&SectionAddress::new(0, 0x80001054)].slices.is_some());
++        state.apply(&mut obj).unwrap();
++        let mut tracker = Tracker::new(&obj);
++        tracker.process(&obj).unwrap();
++        tracker.apply(&mut obj, false).unwrap();
++        let relocs: Vec<_> = obj.sections[0].relocations.iter().collect();
++        assert!(relocs.iter().any(|(addr, reloc)| *addr == 0x8000100C
++            && reloc.kind == ObjRelocKind::PpcRel24 && reloc.addend == 0x20));
++        assert!(relocs.iter().any(|(_, reloc)| reloc.kind == ObjRelocKind::PpcAddr16Ha));
++        assert!(relocs.iter().any(|(_, reloc)| reloc.kind == ObjRelocKind::PpcAddr16Lo));
++        let mut text = Vec::new();
++        write_symbols(&mut text, &obj).unwrap();
++        let text = String::from_utf8(text).unwrap();
++        let line = text.lines().find(|line| line.starts_with("outer =")).unwrap();
++        assert!(line.contains("nocfa"));
++        assert!(parse_symbol_line(line, &mut fixture()).unwrap().unwrap().flags.is_no_cfa());
++    }
++
++    #[test]
++    fn nocfa_does_not_disable_unannotated_prologue_checks() {
++        let mut obj = fixture();
++        add(&mut obj, "outer = .text:0x80001000; // type:function size:0x54");
++        let error = AnalyzerState::default().detect_functions(&obj).unwrap_err();
++        assert!(format!("{error:#}").contains("Found multiple functions inside a symbol"));
++    }
++
++    #[test]
++    fn nocfa_rejects_missing_invalid_or_out_of_section_bounds() {
++        for attrs in ["type:function nocfa", "type:function size:0 nocfa",
++            "type:label size:0x54 nocfa", "type:function size:0x100 nocfa",
++            "type:function size:3 nocfa"]
++        {
++            assert!(parse_symbol_line(&format!("outer = .text:0x80001000; // {attrs}"),
++                &mut fixture()).is_err());
++        }
++        assert!(parse_symbol_line("outer = .data:0x80002000; // type:function size:4 nocfa",
++            &mut fixture()).is_err());
++        assert!(parse_symbol_line("outer = .text:0x80001001; // type:function size:4 nocfa",
++            &mut fixture()).is_err());
++        // Attribute ordering must not affect validation.
++        assert!(parse_symbol_line("outer = .text:0x80001000; // nocfa size:0x54 type:function",
++            &mut fixture()).unwrap().unwrap().flags.is_no_cfa());
++    }
++}
++
+ /// Execute VM from entry point following branches and function calls
+ /// until SDA bases are initialized (__init_registers)
+ pub fn locate_sda_bases(obj: &mut ObjInfo) -> Result<bool> {
+diff --git a/src/obj/symbols.rs b/src/obj/symbols.rs
+index d9ba49d..7511146 100644
+--- a/src/obj/symbols.rs
++++ b/src/obj/symbols.rs
+@@ -51,6 +51,8 @@ flags! {
+         NoExport,
+         /// Symbol does not contain any relocations
+         NoReloc,
++        /// Trust explicit function bounds without control-flow analysis.
++        NoCfa,
+     }
+ }
+ 
+@@ -104,6 +106,9 @@ impl ObjSymbolFlagSet {
+     #[inline]
+     pub fn is_no_reloc(&self) -> bool { self.0.contains(ObjSymbolFlags::NoReloc) }
+ 
++    #[inline]
++    pub fn is_no_cfa(&self) -> bool { self.0.contains(ObjSymbolFlags::NoCfa) }
++
+     #[inline]
+     pub fn set_scope(&mut self, scope: ObjSymbolScope) {
+         match scope {
+@@ -143,7 +148,8 @@ impl ObjSymbolFlagSet {
+                 | ObjSymbolFlags::RelocationIgnore
+                 | ObjSymbolFlags::Stripped
+                 | ObjSymbolFlags::NoExport
+-                | ObjSymbolFlags::NoReloc)
++                | ObjSymbolFlags::NoReloc
++                | ObjSymbolFlags::NoCfa)
+     }
+ }
+ 
+diff --git a/src/util/config.rs b/src/util/config.rs
+index d34cfb9..e28fee2 100644
+--- a/src/util/config.rs
++++ b/src/util/config.rs
+@@ -177,6 +177,9 @@ pub fn parse_symbol_line(line: &str, obj: &mut ObjInfo) -> Result<Option<ObjSymb
+                         obj.blocked_relocation_sources.insert(addr, addr + symbol.size as u32);
+                         symbol.flags.0 |= ObjSymbolFlags::NoReloc;
+                     }
++                    "nocfa" => {
++                        symbol.flags.0 |= ObjSymbolFlags::NoCfa;
++                    }
+                     "noexport" => {
+                         symbol.flags.0 |= ObjSymbolFlags::NoExport;
+                     }
+@@ -184,6 +187,23 @@ pub fn parse_symbol_line(line: &str, obj: &mut ObjInfo) -> Result<Option<ObjSymb
+                 }
+             }
+         }
++        if symbol.flags.is_no_cfa() {
++            ensure!(
++                symbol.kind == ObjSymbolKind::Function && symbol.size_known && symbol.size > 0,
++                "Symbol {} requires type:function and a nonzero explicit size with nocfa",
++                symbol.name
++            );
++            let section = symbol.section.and_then(|index| obj.sections.get(index));
++            ensure!(
++                section.is_some_and(|section| {
++                    section.kind == ObjSectionKind::Code
++                        && symbol.address >= section.address
++                        && symbol.address + symbol.size <= section.address + section.size
++                }) && symbol.address % 4 == 0 && symbol.size % 4 == 0,
++                "Symbol {} requires aligned bounds within a code section with nocfa",
++                symbol.name
++            );
++        }
+         Ok(Some(symbol))
+     } else if line.is_empty() || COMMENT_LINE.is_match(line) {
+         Ok(None)
+@@ -330,6 +350,9 @@ where W: Write + ?Sized {
+     if symbol.flags.is_stripped() {
+         write!(w, " stripped")?;
+     }
++    if symbol.flags.is_no_cfa() {
++        write!(w, " nocfa")?;
++    }
+     if symbol.flags.is_no_reloc() {
+         write!(w, " noreloc")?;
+     }

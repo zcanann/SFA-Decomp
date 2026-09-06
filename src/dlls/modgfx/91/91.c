@@ -13,13 +13,13 @@
 
 typedef struct Dll5BEffectResourceView {
     ModgfxEffectVertex vertices[4];
-    s16 colors[4][3];
+    s16 triangleIndices[4][3];
     s16 sequenceParams[7];
     u8 pad4E[2];
 } Dll5BEffectResourceView;
 
 STATIC_ASSERT(offsetof(Dll5BEffectResourceView, vertices) == 0x00);
-STATIC_ASSERT(offsetof(Dll5BEffectResourceView, colors) == 0x28);
+STATIC_ASSERT(offsetof(Dll5BEffectResourceView, triangleIndices) == 0x28);
 STATIC_ASSERT(offsetof(Dll5BEffectResourceView, sequenceParams) == 0x40);
 STATIC_ASSERT(sizeof(Dll5BEffectResourceView) == 0x50);
 
@@ -256,7 +256,7 @@ s16 dll_5B_spawnModelEffects(GameObject* sourceObj, int effectId, PartFxSpawnPar
         packet.flags = 0x4000000;
         packet.flags |= spawnFlags;
         spawnHandle = (*gModgfxInterface)
-                          ->spawnEffect(&packet, 0, 4, resources[0]->vertices, 4, resources[0]->colors, 0, texture);
+                          ->spawnEffect(&packet, 0, 4, resources[0]->vertices, 4, resources[0]->triangleIndices, 0, texture);
     }
     partFxSpawnCount = randomGetRange(2, 6);
     if (effectId == 7) {

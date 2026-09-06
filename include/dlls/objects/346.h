@@ -161,7 +161,8 @@ STATIC_ASSERT(sizeof(ExplodableState) == 0x6E8);
 
 GameObject* explodable_spawnFragmentObject(GameObject* obj, int fragmentObjectId, ExplodableChunk* chunk,
                                            int fragmentIndex);
-void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAddress, int skipCentroid, ExplodableState* stateAddress);
+void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAddress, int skipCentroid,
+                               ExplodableState* stateAddress);
 void explodable_computeFragmentLaunch(GameObject* obj, ExplodableChunk* chunk, ExplodablePlacement* placementAddress);
 int explodable_getExtraSize(void);
 void explodable_free(GameObject* obj, int keepChildren);

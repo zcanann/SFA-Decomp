@@ -1,4 +1,4 @@
-#include "PowerPC_EABI_Support/Runtime/__va_arg.h"
+#include "Runtime.PPCEABI.H/__va_arg.h"
 
 #undef __va_arg
 

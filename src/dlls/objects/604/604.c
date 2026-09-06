@@ -1,6 +1,7 @@
 /* DLL 604: SnowClaw-family object callbacks. */
 
 #include "dlls/objects/364.h"
+#include "dlls/objects/common/vehicle.h"
 #include "main/audio/sfx.h"
 #include "main/dll/objfx_api.h"
 #include "dlls/object_descriptor.h"
@@ -35,8 +36,6 @@ f32 gSnowClawMoveStepScaleBase = 0.006f;
 
 /* object group queried to find this object's target */
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e
-/* object group scanned by romDefNo to find this object's linked mount object */
-#define SNOWCLAW_MOUNT_OBJGROUP 0xa
 /* drop-bomb child spawned by snowclaw_spawnDropBomb (obj id 0x5ff) */
 #define SNOWCLAW_CHILD_OBJ_DROP_BOMB 0x5ff
 
@@ -735,7 +734,7 @@ void snowclaw_update(GameObject* obj)
 
     if (s->mount == NULL)
     {
-        objects = objGetAllOfType(SNOWCLAW_MOUNT_OBJGROUP, &objectCount);
+        objects = objGetAllOfType(VEHICLE_OBJECT_GROUP, &objectCount);
         targetType = seqPairTableLookup(gSnowClawMoveTable, 6, obj->anim.romDefNo);
         for (i = 0; i < objectCount; i++)
         {

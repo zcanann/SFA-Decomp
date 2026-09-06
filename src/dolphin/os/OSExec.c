@@ -399,5 +399,5 @@ setarg:
     va_end(vl);
     ASSERTMSGLINE(LINE(787, 793, 794), i < 0x400U, "OSExecl(): Arguments too long");
 
-    ExecCommon(dolfile, argv);
+    ExecCommon(dolfile, (const char**)argv);
 }

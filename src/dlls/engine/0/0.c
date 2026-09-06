@@ -1605,8 +1605,9 @@ void drawViewFinderHud(void) {
             }
         }
         {
-            int minorLabelAlpha, headingIndex, heading;
             u32 majorLabelAlpha;
+            int minorLabelAlpha, headingIndex, heading;
+            f32 angleUnitsPerDegree;
             int t;
             f32 currentY, nextY, tickSpacing;
             f32 cosine;
@@ -1622,9 +1623,10 @@ void drawViewFinderHud(void) {
             majorLabelFadeScale = 170.0;
             t = (int)(fadeAmount * majorLabelFadeScale);
             majorLabelAlpha = (t < 0) ? 0 : ((t > 0xc8) ? 0xc8 : t);
-            headingIndex = (int)((f32)gViewFinderCamAngle / 182.04445f);
-            headingOffset = gViewFinderCamAngle - headingIndex * 182.04445f;
-            tickSpacing = viewScale * (182.04445f / lbl_803DBAE8);
+            angleUnitsPerDegree = 182.04445f;
+            headingIndex = (int)((f32)gViewFinderCamAngle / angleUnitsPerDegree);
+            headingOffset = gViewFinderCamAngle - headingIndex * angleUnitsPerDegree;
+            tickSpacing = viewScale * (angleUnitsPerDegree / lbl_803DBAE8);
             headingOffset = headingOffset / lbl_803DBAE8;
             tickX = (f32)(320.0 + headingOffset * viewScale);
             heading = -headingIndex;

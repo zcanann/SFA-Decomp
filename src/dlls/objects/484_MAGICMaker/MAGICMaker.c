@@ -37,7 +37,6 @@ u16 gMagicMakerSpawnObjectIds[MAGICMAKER_SPAWN_OBJECT_COUNT] = {
     COLLECTIBLE_ITEM_ENERGY_EGG, /* duplicate weighting */
 };
 
-
 int magicmaker_getExtraSize(void) {
     return 0;
 }
@@ -50,9 +49,7 @@ void magicmaker_free(void) {
 }
 
 void magicmaker_render(GameObject* obj, int renderArg2, int renderArg3, int renderArg4, int renderArg5, s8 visible) {
-    s32 isVisible = visible;
-
-    if (isVisible != 0) {
+    if (visible != 0) {
         objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
     }
 }
@@ -75,16 +72,15 @@ void magicmaker_update(GameObject* obj) {
     if ((u8)Obj_CanSetupObject() != 0) {
         if (mainGetBit(MAGICMAKER_SPAWN_GAMEBIT) != 0u) {
             mainSetBits(MAGICMAKER_SPAWN_GAMEBIT, 0);
-            groupObjects = (GameObject**)objGetAllOfType(COLLECTIBLE_OBJECT_GROUP, &groupObjectCount);
+            groupObjects = objGetAllOfType(COLLECTIBLE_OBJECT_GROUP, &groupObjectCount);
             matchingEntryCount = 0;
             for (i = 0; i < groupObjectCount; i++) {
-                groupObject = *groupObjects;
+                groupObject = groupObjects[i];
                 for (spawnObjectIndex = 0; spawnObjectIndex < MAGICMAKER_SPAWN_OBJECT_COUNT; spawnObjectIndex++) {
                     if (groupObject->anim.romDefNo == gMagicMakerSpawnObjectIds[spawnObjectIndex]) {
                         matchingEntryCount++;
                     }
                 }
-                groupObjects++;
             }
             if (matchingEntryCount < MAGICMAKER_MATCH_COUNT_LIMIT) {
                 spawnSetup = (CollectibleSetup*)Obj_AllocObjectSetup(
@@ -107,12 +103,12 @@ void magicmaker_update(GameObject* obj) {
                     spawnSetup->spawnMode = MAGICMAKER_COLLECTIBLE_SPAWN_MODE;
                     spawnedObject =
                         objSetupObject(&spawnSetup->base, MAGICMAKER_CHILD_SETUP_FLAGS, obj->anim.mapEventSlot,
-                                        MAGICMAKER_CHILD_OBJECT_INDEX, obj->anim.parent);
+                                       MAGICMAKER_CHILD_OBJECT_INDEX, obj->anim.parent);
                     if (spawnedObject != NULL) {
                         i = MAGICMAKER_HIT_BURST_COUNT;
                         do {
-                            objfx_spawnHitEffectBurst(spawnedObject, 1.0f,
-                                                      MAGICMAKER_HIT_EFFECT_ID, MAGICMAKER_HIT_EFFECT_VARIANT,
+                            objfx_spawnHitEffectBurst(spawnedObject, 1.0f, MAGICMAKER_HIT_EFFECT_ID,
+                                                      MAGICMAKER_HIT_EFFECT_VARIANT,
                                                       MAGICMAKER_HIT_EFFECT_PARTICLE_COUNT, NULL);
                             i--;
                         } while (i != 0);

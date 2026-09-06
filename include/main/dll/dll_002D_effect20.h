@@ -5,7 +5,7 @@
 #include "global.h"
 
 int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                    f32* extraArgs);
+                         f32* extraArgs);
 void Effect20_updateFrameState(void);
 void Effect20_func03_nop(void);
 void Effect20_release(void);

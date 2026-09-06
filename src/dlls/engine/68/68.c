@@ -330,9 +330,11 @@ void CameraModeViewfinder_free(CameraObject* camera) {
 void CameraModeViewfinder_update(CameraObject* camera) {
     GameObject* fadeTarget;
     int brightness;
+    int exitBlendFinished;
     GameObject* exitTarget;
     GameObject* focus;
-    int angleDiff;
+    int curveFinished;
+    int pitchDelta;
     f32 relativeX;
     f32 relativeY;
     f32 relativeZ;
@@ -371,10 +373,10 @@ void CameraModeViewfinder_update(CameraObject* camera) {
         camera->unk13E = 0;
         break;
     case CAMERA_MODE_VIEWFINDER_PHASE_EXIT_BLEND:
-        angleDiff = Curve_AdvanceAlongPath(&gCameraModeViewfinderState->transitionCurve, 1000.0f);
+        curveFinished = Curve_AdvanceAlongPath(&gCameraModeViewfinderState->transitionCurve, 1000.0f);
         camera->anim.rotX = gCameraModeViewfinderState->transitionCurve.sample[0];
         camera->anim.rotY = gCameraModeViewfinderState->transitionCurve.sample[1];
-        if (angleDiff != 0) {
+        if (curveFinished != 0) {
             gCameraModeViewfinderState->transitionCurve.px = &gCameraModeViewfinderState->positionXCurve.start;
             gCameraModeViewfinderState->transitionCurve.py = &gCameraModeViewfinderState->positionYCurve.start;
             gCameraModeViewfinderState->transitionCurve.pz = &gCameraModeViewfinderState->positionZCurve.start;
@@ -424,9 +426,9 @@ void CameraModeViewfinder_update(CameraObject* camera) {
                 }
             }
         }
-        brightness = 0;
+        exitBlendFinished = 0;
         if (camera->blendProgress <= 0.0f) {
-            brightness = 1;
+            exitBlendFinished = 1;
         }
         (*gCameraInterface)
             ->getRelativePosition(camera, &relativeX, &relativeY, &relativeZ, &relativeDistance, 0.0f, 0);
@@ -434,17 +436,17 @@ void CameraModeViewfinder_update(CameraObject* camera) {
             camera->anim.rotY = 0;
         } else {
             relativeY = camera->anim.worldPosY - (focus->anim.worldPosY + gCameraModeViewfinderTargetHeight[0]);
-            angleDiff = getAngle(relativeY, relativeDistance) & 0xffff;
-            angleDiff -= camera->anim.rotY & 0xffffU;
-            if (angleDiff > 0x8000) {
-                angleDiff = angleDiff - 0xffff;
+            pitchDelta = getAngle(relativeY, relativeDistance) & 0xffff;
+            pitchDelta -= camera->anim.rotY & 0xffffU;
+            if (pitchDelta > 0x8000) {
+                pitchDelta = pitchDelta - 0xffff;
             }
-            if (angleDiff < -0x8000) {
-                angleDiff = angleDiff + 0xffff;
+            if (pitchDelta < -0x8000) {
+                pitchDelta = pitchDelta + 0xffff;
             }
-            camera->anim.rotY = *(s16*)&camera->anim.rotY + (int)((f32)angleDiff * timeDelta) / 8;
+            camera->anim.rotY = *(s16*)&camera->anim.rotY + (int)((f32)pitchDelta * timeDelta) / 8;
         }
-        if (brightness != 0) {
+        if (exitBlendFinished != 0) {
             (*gCameraInterface)->setMode(CAMCONTROL_ACTION_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
             exitTarget = (GameObject*)camera->anim.targetObj;
             if (exitTarget != NULL) {
@@ -546,8 +548,8 @@ void CameraModeViewfinder_init(CameraObject* camera, int mode, CameraModeViewfin
     gCameraModeViewfinderState->positionZCurve.endTangent = zero;
     curvesMove(&gCameraModeViewfinderState->transitionCurve);
     yawDelta = camera->anim.rotX -
-         (u16)(0x8000 - getAngle(camera->anim.worldPosX - gCameraModeViewfinderState->positionXCurve.end,
-                                 camera->anim.worldPosZ - gCameraModeViewfinderState->positionZCurve.end));
+               (u16)(0x8000 - getAngle(camera->anim.worldPosX - gCameraModeViewfinderState->positionXCurve.end,
+                                       camera->anim.worldPosZ - gCameraModeViewfinderState->positionZCurve.end));
     if (yawDelta > 0x8000) {
         yawDelta = yawDelta - 0xffff;
     }

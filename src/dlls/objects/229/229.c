@@ -63,10 +63,10 @@
 #define SHIELD_OMNI_SCALE_TABLE_OFFSET 8
 #define SHIELD_OMNI_ALPHA_TABLE_OFFSET 12
 
-#define SHIELD_SEGMENT_ALPHA_F32_INDEX 5
-#define SHIELD_SEGMENT_SCALE_F32_INDEX 9
-#define SHIELD_SEGMENT_PHASE_S16_INDEX 0x1A
-#define SHIELD_SEGMENT_RATE_S16_INDEX  0x1E
+#define SHIELD_SEGMENT_ALPHA_F32_INDEX (offsetof(ShieldState, segmentAlpha) / sizeof(f32))
+#define SHIELD_SEGMENT_SCALE_F32_INDEX (offsetof(ShieldState, segmentScale) / sizeof(f32))
+#define SHIELD_SEGMENT_PHASE_S16_INDEX (offsetof(ShieldState, segmentPhase) / sizeof(s16))
+#define SHIELD_SEGMENT_RATE_S16_INDEX  (offsetof(ShieldState, segmentRate) / sizeof(s16))
 
 s16 gShieldRotXRates[SHIELD_SEGMENT_COUNT] = {-1024, -512, 512, 1024};
 s16 gOmniShieldRotXRates[SHIELD_SEGMENT_COUNT] = {-500, 50, 50, 200};
@@ -220,8 +220,8 @@ void Shield_setMode(GameObject* obj, u8 mode) {
                     valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *tableCursor[0] * wave;
                     valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
                     phaseCursor[SHIELD_SEGMENT_RATE_S16_INDEX] =
-                        (s16)((f32)(int)(i * randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN,
-                                                            SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
+                        (s16)((f32)(i *
+                                    randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
                               SHIELD_SEGMENT_RATE_BASE);
                     phaseCursor += 1;
                     tableCursor[0] += 1;
@@ -340,8 +340,7 @@ void Shield_setMode(GameObject* obj, u8 mode) {
                 valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *segmentScaleCursor * wave;
                 valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
                 phaseCursor[SHIELD_SEGMENT_RATE_S16_INDEX] =
-                    (s16)((f32)(int)(i *
-                                     randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
+                    (s16)((f32)(i * randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
                           SHIELD_SEGMENT_RATE_BASE);
                 phaseCursor += 1;
                 segmentScaleCursor += 1;
@@ -523,7 +522,7 @@ void Shield_update(GameObject* obj) {
     state = obj->extra;
 
     if (state->fadeValue != state->fadeTarget) {
-        state->fadeValue = state->fadeRate * timeDelta + state->fadeValue;
+        state->fadeValue += state->fadeRate * timeDelta;
         if (state->fadeRate > SHIELD_ZERO) {
             if (state->fadeValue >= state->fadeTarget) {
                 state->fadeValue = state->fadeTarget;
@@ -543,9 +542,9 @@ void Shield_update(GameObject* obj) {
         }
     }
     if (obj->anim.romDefNo == SHIELD_SEQID_OMNI_SHIELD) {
-        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * (f32)(s32)randomGetRange(96, 127));
+        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * (f32)randomGetRange(96, 127));
     } else {
-        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * (f32)(s32)randomGetRange(192, 255));
+        obj->anim.alpha = (u8)(state->fadeValue / state->fadeMax * (f32)randomGetRange(192, 255));
     }
     Sfx_SetObjectSfxVolume(obj, SFXTRIG_lockon3_on, (SHIELD_SFX_VOLUME_MAX * (state->fadeValue / state->fadeMax)),
                            SHIELD_SFX_VOLUME_SCALE);

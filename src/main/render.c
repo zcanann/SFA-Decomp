@@ -20,20 +20,16 @@ static void render_copyPackedU64Tail(u64* dst, u32 packed);
 static void render_copyPackedU64Head(u64* dst, u32 packed);
 
 const int gModelRenderAdpcmStepTable[89] = {
-    0x4, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE,
-    0x10, 0x11, 0x13, 0x15, 0x17, 0x19, 0x1C, 0x1F,
-    0x22, 0x25, 0x29, 0x2D, 0x32, 0x37, 0x3C, 0x42,
-    0x49, 0x50, 0x58, 0x61, 0x6B, 0x76, 0x82, 0x8F,
-    0x9D, 0xAD, 0xBE, 0xD1, 0xE6, 0xFD, 0x117, 0x133,
-    0x151, 0x173, 0x198, 0x1C1, 0x1EE, 0x220, 0x256, 0x292,
-    0x2D4, 0x31C, 0x36C, 0x3C3, 0x424, 0x48E, 0x502, 0x583,
-    0x610, 0x6AB, 0x756, 0x812, 0x8E0, 0x9C3, 0xABD, 0xBD0,
-    0xCFF, 0xE4C, 0xFBA, 0x114C, 0x1307, 0x14EE, 0x1706, 0x1954,
-    0x1BDC, 0x1EA5, 0x21B6, 0x2515, 0x28CA, 0x2CDF, 0x315B, 0x364B,
-    0x3BB9, 0x41B2, 0x4844, 0x4F7E, 0x5771, 0x602F, 0x69CE, 0x7462,
-    0x7FFF};
+    0x4,    0x8,    0x9,    0xA,    0xB,    0xC,    0xD,    0xE,    0x10,   0x11,   0x13,   0x15,   0x17,
+    0x19,   0x1C,   0x1F,   0x22,   0x25,   0x29,   0x2D,   0x32,   0x37,   0x3C,   0x42,   0x49,   0x50,
+    0x58,   0x61,   0x6B,   0x76,   0x82,   0x8F,   0x9D,   0xAD,   0xBE,   0xD1,   0xE6,   0xFD,   0x117,
+    0x133,  0x151,  0x173,  0x198,  0x1C1,  0x1EE,  0x220,  0x256,  0x292,  0x2D4,  0x31C,  0x36C,  0x3C3,
+    0x424,  0x48E,  0x502,  0x583,  0x610,  0x6AB,  0x756,  0x812,  0x8E0,  0x9C3,  0xABD,  0xBD0,  0xCFF,
+    0xE4C,  0xFBA,  0x114C, 0x1307, 0x14EE, 0x1706, 0x1954, 0x1BDC, 0x1EA5, 0x21B6, 0x2515, 0x28CA, 0x2CDF,
+    0x315B, 0x364B, 0x3BB9, 0x41B2, 0x4844, 0x4F7E, 0x5771, 0x602F, 0x69CE, 0x7462, 0x7FFF};
 const int gModelRenderAdpcmIndexDeltaTable[17] = {-4, -2, -1, -1, 2, 4, 6, 8, -4, -2, -1, -1, 2, 4, 6, 8, 0};
 
+// clang-format off
 f32 gRenderSinTable[513] = {
     0.0f, 0.003068000078201294f, 0.006136000156402588f, 0.009204000234603882f, 0.012272000312805176f, 0.015339000150561333f, 0.018407000228762627f, 0.021474000066518784f,
     0.02454099990427494f, 0.027607999742031097f, 0.030674999579787254f, 0.03374100103974342f, 0.03680700063705444f, 0.03987300023436546f, 0.042938001453876495f, 0.04600299894809723f,
@@ -100,6 +96,7 @@ f32 gRenderSinTable[513] = {
     0.9987949728965759f, 0.9989410042762756f, 0.9990779757499695f, 0.9992049932479858f, 0.9993219971656799f, 0.9994310140609741f, 0.9995290040969849f, 0.9996190071105957f,
     0.9996989965438843f, 0.9997689723968506f, 0.9998310208320618f, 0.9998819828033447f, 0.9999250173568726f, 0.9999579787254333f, 0.9999809861183167f, 0.9999949932098389f,
     1.0f};
+// clang-format on
 u8 lbl_802C3564[0x1964] = {0};
 
 typedef struct EnvfxActEntry {
@@ -110,8 +107,7 @@ typedef struct EnvfxActEntry {
     u8 pad2[3];
 } EnvfxActEntry;
 
-int getLActions(void* source, void* target, u16 index, s8 arg3, int arg4, int arg5)
-{
+int getLActions(void* source, void* target, u16 index, s8 arg3, int arg4, int arg5) {
     void* buf = mmAlloc(0x28, -1, 0);
     getTabEntry(buf, MLDF_FILEID_LACTIONS_BIN, index * 0x28, 0x28);
     mm_free(buf);
@@ -119,8 +115,7 @@ int getLActions(void* source, void* target, u16 index, s8 arg3, int arg4, int ar
 }
 
 u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsState* output, int bitStride,
-                          u8 encodedBitWidth)
-{
+                           u8 encodedBitWidth) {
     int predictor;
     int bitWidth = encodedBitWidth;
     int stepIndex;
@@ -138,8 +133,7 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
     u8* outputBytes;
     int packedShift;
 
-    if (headerShift < 0)
-    {
+    if (headerShift < 0) {
         headerShift = 0;
     }
     predictorHeader = predictorHeader << headerShift;
@@ -153,37 +147,29 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
     bitStride = bitStride - bitWidth;
     packedShift = 0x10 - bitWidth;
 
-    for (i = sampleCount / 2; i > 0; i--)
-    {
+    for (i = sampleCount / 2; i > 0; i--) {
         {
             code = *compressed & 0xf;
             step = gModelRenderAdpcmStepTable[stepIndex];
             difference = 0;
             codeValue = code;
-            if (codeValue & 1)
-            {
+            if (codeValue & 1) {
                 difference = step >> 2;
             }
-            if (codeValue & 2)
-            {
+            if (codeValue & 2) {
                 difference += step >> 1;
             }
-            if (codeValue & 4)
-            {
+            if (codeValue & 4) {
                 difference += step;
             }
-            if (codeValue & 8)
-            {
+            if (codeValue & 8) {
                 difference = -difference;
             }
             predictor += difference;
             stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
-            if (stepIndex < 0)
-            {
+            if (stepIndex < 0) {
                 stepIndex = 0;
-            }
-            else if (stepIndex > 0x58)
-            {
+            } else if (stepIndex > 0x58) {
                 stepIndex = 0x58;
             }
             packedSample = (u16)predictor;
@@ -209,30 +195,23 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
             step = gModelRenderAdpcmStepTable[stepIndex];
             difference = 0;
             codeValue = code;
-            if (codeValue & 1)
-            {
+            if (codeValue & 1) {
                 difference = step >> 2;
             }
-            if (codeValue & 2)
-            {
+            if (codeValue & 2) {
                 difference += step >> 1;
             }
-            if (codeValue & 4)
-            {
+            if (codeValue & 4) {
                 difference += step;
             }
-            if (codeValue & 8)
-            {
+            if (codeValue & 8) {
                 difference = -difference;
             }
             predictor += difference;
             stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
-            if (stepIndex < 0)
-            {
+            if (stepIndex < 0) {
                 stepIndex = 0;
-            }
-            else if (stepIndex > 0x58)
-            {
+            } else if (stepIndex > 0x58) {
                 stepIndex = 0x58;
             }
             {
@@ -254,8 +233,7 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
             }
         }
     }
-    if (sampleCount & 1)
-    {
+    if (sampleCount & 1) {
         int difference;
         int step;
         int codeValue;
@@ -264,30 +242,23 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
         step = gModelRenderAdpcmStepTable[stepIndex];
         difference = 0;
         codeValue = code;
-        if (codeValue & 1)
-        {
+        if (codeValue & 1) {
             difference = step >> 2;
         }
-        if (codeValue & 2)
-        {
+        if (codeValue & 2) {
             difference += step >> 1;
         }
-        if (codeValue & 4)
-        {
+        if (codeValue & 4) {
             difference += step;
         }
-        if (codeValue & 8)
-        {
+        if (codeValue & 8) {
             difference = -difference;
         }
         predictor += difference;
         stepIndex += gModelRenderAdpcmIndexDeltaTable[code];
-        if (stepIndex < 0)
-        {
+        if (stepIndex < 0) {
             stepIndex = 0;
-        }
-        else if (stepIndex > 0x58)
-        {
+        } else if (stepIndex > 0x58) {
             stepIndex = 0x58;
         }
         {
@@ -304,16 +275,14 @@ u8* modelRenderDecodeAdpcm(u8* compressed, int sampleCount, ModelRenderInstrsSta
             output->bit += bitWidth;
         }
     }
-    if (bitStride != 0)
-    {
+    if (bitStride != 0) {
         modelRenderInstrsState_setBit(output, initialOutputBit + bitWidth);
     }
     return compressed;
 }
 
 int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap,
-                                 u8 bitWidth)
-{
+                                 u8 bitWidth) {
     int startBit = modelRenderInstrsState_getBit(dst);
     u32 mask;
     int sh16;
@@ -322,8 +291,7 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
 
     mask = ~(-1 << bw);
     sh16 = 0x10 - bw;
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         int sByte;
         int sbit = src->bit;
         u32 val;
@@ -357,17 +325,478 @@ int modelRenderCopyPackedSamples(ModelRenderInstrsState* src, ModelRenderInstrsS
     }
 }
 
+typedef struct RenderJointQuaternion {
+    f32 w, x, y, z;
+} RenderJointQuaternion;
+
+/* The animation passes reuse each matrix slot for two interleaved poses. */
+typedef union RenderJointWork {
+    f32 matrix[4][4];
+    RenderJointQuaternion quaternion[2];
+    struct {
+        u8 pad00[0x1C];
+        s16 rotation[2][3];
+        u16 scale[2][3];
+        s16 translation[2][3];
+    } pose;
+} RenderJointWork;
+
+STATIC_ASSERT(sizeof(RenderJointWork) == 0x40);
+STATIC_ASSERT(offsetof(RenderJointWork, pose.rotation) == 0x1C);
+STATIC_ASSERT(offsetof(RenderJointWork, pose.scale) == 0x28);
+STATIC_ASSERT(offsetof(RenderJointWork, pose.translation) == 0x34);
+
+typedef struct RenderJointBitstream {
+    const u8* frame[2];
+    u32 bits[2];
+    int consumed;
+} RenderJointBitstream;
+
+extern s16 gModelRootRotX;
+extern s16 gModelRootRotY;
+extern s16 gModelRootRotZ;
+
+static inline u32 render_jointReadWord(const u8* data) {
+    return (u32)data[0] << 24 | (u32)data[1] << 16 | (u32)data[2] << 8 | data[3];
+}
+
+static inline void render_jointReadBits(RenderJointBitstream* stream, int width, int* first, int* second) {
+    int advance;
+    if (stream->consumed + width > 32) {
+        advance = stream->consumed >> 3;
+        stream->frame[0] += advance;
+        stream->frame[1] += advance;
+        stream->consumed &= 7;
+        stream->bits[0] = render_jointReadWord(stream->frame[0]) << stream->consumed;
+        stream->bits[1] = render_jointReadWord(stream->frame[1]) << stream->consumed;
+    }
+    *first = stream->bits[0] >> (32 - width);
+    *second = stream->bits[1] >> (32 - width);
+    stream->bits[0] <<= width;
+    stream->bits[1] <<= width;
+    stream->consumed += width;
+}
+
+static inline u16 render_jointPhase(f32 phase) {
+    /* GQR3 stores an unsigned halfword, saturating before truncation. */
+    if (phase <= 0.0f) {
+        return 0;
+    }
+    if (phase >= 65535.0f) {
+        return 65535;
+    }
+    return (u16)phase;
+}
+
+static inline int render_jointComponent(RenderJointBitstream* stream, u16 command, int shift, int fraction, int paired,
+                                        int* second) {
+    int firstDelta, secondDelta, difference;
+    int width = command & 0xF;
+    int base = command & (shift == 1 ? 0xFFC0 : 0xFFF0);
+    if (width == 0) {
+        /* The paired decoder retains the flag bits in constant scale words. */
+        *second = paired ? command : base;
+        return *second;
+    }
+    render_jointReadBits(stream, width, &firstDelta, &secondDelta);
+    if (paired) {
+        *second = base + (secondDelta << shift);
+        return base + (firstDelta << shift);
+    }
+    difference = secondDelta - firstDelta;
+    if (shift == 2) {
+        difference = (s16)((u32)difference << 2) >> 2;
+    } else if (shift == 0) {
+        difference = (s16)difference;
+    }
+    firstDelta += (difference * fraction) >> 14;
+    return base + firstDelta * (1 << shift);
+}
+
+static void render_jointDecode(RenderJointWork* work, int channel, const ObjAnimFrameCommand* header, const u8* frame,
+                               s16 stride, f32 phase, const s16* adjustments, int paired) {
+    RenderJointBitstream stream;
+    const u16* command = (const u16*)((const u8*)header + 4);
+    int fraction = render_jointPhase((phase - render_jointPhase(phase)) * 16384.0f);
+    int count = header->opcode;
+    int joint, axis, second;
+    u16 rotation, scale;
+    stream.frame[0] = frame;
+    stream.frame[1] = frame + stride;
+    stream.bits[0] = render_jointReadWord(stream.frame[0]);
+    stream.bits[1] = render_jointReadWord(stream.frame[1]);
+    stream.consumed = 0;
+    for (joint = 0; joint < count; joint++) {
+        for (axis = 0; axis < 3; axis++) {
+            rotation = *command++;
+            work[joint].pose.rotation[channel][axis] =
+                render_jointComponent(&stream, rotation, 2, fraction, paired, &second);
+            work[joint].pose.scale[channel][axis] = 0;
+            work[joint].pose.translation[channel][axis] = 0;
+            if (paired) {
+                work[joint].pose.rotation[1][axis] = second;
+                work[joint].pose.scale[1][axis] = 0;
+                work[joint].pose.translation[1][axis] = 0;
+            }
+            if (rotation & 0x10) {
+                scale = *command;
+                if (scale & 0x10) {
+                    command++;
+                    work[joint].pose.scale[channel][axis] =
+                        render_jointComponent(&stream, scale, 1, fraction, paired, &second);
+                    if (paired) {
+                        work[joint].pose.scale[1][axis] = second;
+                    }
+                    if (!(scale & 0x20)) {
+                        continue;
+                    }
+                }
+                work[joint].pose.translation[channel][axis] =
+                    render_jointComponent(&stream, *command++, 0, fraction, paired, &second);
+                if (paired) {
+                    work[joint].pose.translation[1][axis] = second;
+                }
+            }
+        }
+    }
+    while ((u16)adjustments[0] != 0x1000) {
+        s16* value = (s16*)((u8*)work + offsetof(RenderJointWork, pose.rotation) + channel * 6 + (u16)adjustments[0]);
+        *value += adjustments[2];
+        if (paired) {
+            value[3] += adjustments[2];
+        }
+        adjustments += 4;
+    }
+}
+
+static inline void render_jointSinCos(int angle, f32* sine, f32* cosine) {
+    f32 x = (s16)(angle * 4);
+    f32 square = x * x;
+    f32 s, c;
+    /* Coefficients in the retail pool at 803DE520..803DE540. */
+    s = square * -8.844400411022846e-37f + 6.590635807686931e-26f;
+    s = square * s + -2.2949214211376474e-15f;
+    s = square * s + 2.396844865870662e-05f;
+    s = x * s;
+    c = square * 2.6554605898955283e-42f + -2.6329110382853367e-31f;
+    c = square * c + 1.37514350128194e-20f;
+    c = square * c + -2.872432847134121e-10f;
+    c = square * c + 1.0f;
+    switch ((angle + 0x2000) & 0xC000) {
+    case 0:
+        *sine = s;
+        *cosine = c;
+        break;
+    case 0x4000:
+        *sine = c;
+        *cosine = -s;
+        break;
+    case 0x8000:
+        *sine = -s;
+        *cosine = -c;
+        break;
+    default:
+        *sine = -c;
+        *cosine = s;
+        break;
+    }
+}
+
+static inline void render_jointQuaternion(const s16* rotation, RenderJointQuaternion* result) {
+    f32 sx, cx, sy, cy, sz, cz;
+    f32 cc, cs, sc, ss;
+    render_jointSinCos(rotation[0] >> 1, &sx, &cx);
+    render_jointSinCos(rotation[1] >> 1, &sy, &cy);
+    render_jointSinCos(rotation[2] >> 1, &sz, &cz);
+    cc = cx * cy;
+    cs = cx * sy;
+    sc = sx * cy;
+    ss = sx * sy;
+    result->w = cc * cz + ss * sz;
+    result->x = sc * cz - cs * sz;
+    result->y = cs * cz + sc * sz;
+    result->z = cc * sz - ss * cz;
+}
+
+static inline void render_jointStoreMatrix(RenderJointWork* output, const ModelBone* bone, const RenderJointWork* pose,
+                                           int channel, f32 rotation[3][3], int blended) {
+    int axis, row;
+    u16 scale[3];
+    s16 translation[3];
+    /* Output may overlap the pose. Consume all packed components first. */
+    for (axis = 0; axis < 3; axis++) {
+        scale[axis] = pose->pose.scale[channel][axis];
+        translation[axis] = pose->pose.translation[channel][axis];
+    }
+    for (axis = 0; axis < 3; axis++) {
+        output->matrix[axis][3] = translation[axis] * (1.0f / 512.0f) + bone->head[axis];
+    }
+    for (axis = 0; axis < 3; axis++) {
+        if (scale[axis] != 0) {
+            f32 factor = scale[axis] * (1.0f / 1024.0f);
+            for (row = 0; row < 3; row++) {
+                output->matrix[row][axis] = rotation[row][axis] * factor;
+            }
+        } else if (blended && axis == 0) {
+            /* Retail 800071FC stores this unscaled column across the first row. */
+            output->matrix[0][0] = rotation[0][0];
+            output->matrix[0][1] = rotation[1][0];
+            output->matrix[0][2] = rotation[2][0];
+        } else {
+            for (row = 0; row < 3; row++) {
+                output->matrix[row][axis] = rotation[row][axis];
+            }
+        }
+    }
+}
+
+static inline void render_jointBlend(RenderJointWork* output, const ModelBone* bones, int count, RenderJointWork* first,
+                                     int firstChannel, RenderJointWork* second, int secondChannel, int fraction,
+                                     f32 weight, int flags, int mode) {
+    RenderJointWork* blended = first;
+    int blendedChannel = firstChannel;
+    int joint, axis, firstIndex, secondIndex, blendIndex, index;
+    int firstScale, secondScale, translation;
+    f32 inverseWeight = 1.0f - weight;
+    f32 dot, xx, xy, xz, yy, yz, zz, wx, wy, wz;
+    f32 rotation[3][3];
+    RenderJointQuaternion a, b, q;
+    if (mode & 0x20) {
+        second[0].pose.rotation[secondChannel][0] = gModelRootRotX;
+        second[0].pose.rotation[secondChannel][1] = gModelRootRotY;
+        second[0].pose.rotation[secondChannel][2] = gModelRootRotZ;
+    }
+    if (mode & 0xC) {
+        blended = output;
+        blendedChannel = (mode & 8) != 0;
+    }
+    for (joint = 0; joint < count; joint++) {
+        firstIndex = bones[joint].idx[1];
+        secondIndex = bones[joint].idx[2];
+        blendIndex = firstIndex;
+        if (mode & 0xF) {
+            blendIndex = bones[joint].idx[0] & 0x7F;
+            if (mode & 1) {
+                firstIndex = blendIndex;
+            } else if (mode & 2) {
+                secondIndex = blendIndex;
+            }
+        }
+        for (axis = 0; axis < 3; axis++) {
+            firstScale = first[firstIndex].pose.scale[firstChannel][axis];
+            secondScale = second[secondIndex].pose.scale[secondChannel][axis];
+            if (firstScale == 0) {
+                firstScale = 1024;
+            }
+            if (secondScale == 0) {
+                secondScale = 1024;
+            }
+            blended[blendIndex].pose.scale[blendedChannel][axis] =
+                firstScale + (((secondScale - firstScale) * fraction) >> 14);
+            translation = first[firstIndex].pose.translation[firstChannel][axis];
+            if (!(mode & 0x10)) {
+                translation +=
+                    ((second[secondIndex].pose.translation[secondChannel][axis] - translation) * fraction) >> 14;
+            }
+            blended[blendIndex].pose.translation[blendedChannel][axis] = translation;
+        }
+    }
+    for (joint = 0; joint < count; joint++) {
+        firstIndex = bones[joint].idx[1];
+        secondIndex = bones[joint].idx[2];
+        blendIndex = firstIndex;
+        index = bones[joint].idx[0] & 0x7F;
+        if (mode & 1) {
+            a = output[index].quaternion[0];
+            blendIndex = index;
+        } else {
+            render_jointQuaternion(first[firstIndex].pose.rotation[firstChannel], &a);
+        }
+        if (mode & 2) {
+            b = output[index].quaternion[1];
+        } else {
+            render_jointQuaternion(second[secondIndex].pose.rotation[secondChannel], &b);
+        }
+        dot = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
+        if (dot < 0.0f) {
+            b.w = -b.w;
+            b.x = -b.x;
+            b.y = -b.y;
+            b.z = -b.z;
+        }
+        if (((s8)bones[joint].idx[0] & flags) < 0) {
+            continue;
+        }
+        q.w = a.w * inverseWeight + b.w * weight;
+        q.x = a.x * inverseWeight + b.x * weight;
+        q.y = a.y * inverseWeight + b.y * weight;
+        q.z = a.z * inverseWeight + b.z * weight;
+        if (mode & 0xC) {
+            output[index].quaternion[(mode & 8) != 0] = q;
+            continue;
+        }
+        xx = q.x * (q.x * 2.0f);
+        xy = q.x * (q.y * 2.0f);
+        xz = q.x * (q.z * 2.0f);
+        yy = q.y * (q.y * 2.0f);
+        yz = q.y * (q.z * 2.0f);
+        zz = q.z * (q.z * 2.0f);
+        wx = q.w * (q.x * 2.0f);
+        wy = q.w * (q.y * 2.0f);
+        wz = q.w * (q.z * 2.0f);
+        rotation[0][0] = 1.0f - (yy + zz);
+        rotation[1][0] = xy + wz;
+        rotation[2][0] = xz - wy;
+        rotation[0][1] = xy - wz;
+        rotation[1][1] = 1.0f - (xx + zz);
+        rotation[2][1] = yz + wx;
+        rotation[0][2] = xz + wy;
+        rotation[1][2] = yz - wx;
+        rotation[2][2] = 1.0f - (xx + yy);
+        render_jointStoreMatrix(&output[index & flags], &bones[joint], &blended[blendIndex], blendedChannel, rotation,
+                                1);
+    }
+}
+
+static inline void render_jointSinglePose(RenderJointWork* output, const ModelBone* bones, int count,
+                                          const RenderJointWork* pose, int flags) {
+    int joint, index;
+    f32 sx, cx, sy, cy, sz, cz;
+    f32 cxsz, sxsz, sxcz, cxcz;
+    f32 rotation[3][3];
+    const s16* angles;
+    for (joint = 0; joint < count; joint++) {
+        index = (s8)bones[joint].idx[0] & flags;
+        if (index < 0) {
+            continue;
+        }
+        angles = pose[bones[joint].idx[1]].pose.rotation[0];
+        render_jointSinCos(angles[0], &sx, &cx);
+        render_jointSinCos(angles[1], &sy, &cy);
+        render_jointSinCos(angles[2], &sz, &cz);
+        cxsz = cx * sz;
+        sxsz = sx * sz;
+        sxcz = sx * cz;
+        cxcz = cx * cz;
+        rotation[0][0] = cy * cz;
+        rotation[1][0] = cy * sz;
+        rotation[2][0] = 0.0f - sy;
+        rotation[0][1] = sxcz * sy - cxsz;
+        rotation[1][1] = sxsz * sy + cxcz;
+        rotation[2][1] = sx * cy;
+        rotation[0][2] = cxcz * sy + sxsz;
+        rotation[1][2] = cxsz * sy - sxcz;
+        rotation[2][2] = cx * cy;
+        render_jointStoreMatrix(&output[index], &bones[joint], &pose[bones[joint].idx[1]], 0, rotation, 0);
+    }
+}
+
+static void render_jointHierarchy(RenderJointWork* output, const f32 root[4][4], const ModelBone* bones, int count,
+                                  int flags) {
+    f32 result[3][4];
+    f32 parent[3][4];
+    int joint, index, previous = -5, row, col;
+    const f32(*source)[4];
+    for (joint = 0; joint < count; joint++) {
+        index = (s8)bones[joint].idx[0] & flags;
+        if (index < 0) {
+            previous = joint == 0 ? -5 : -1;
+            continue;
+        }
+        if (joint == 0 || (u8)bones[joint].parent != previous) {
+            source = joint == 0 ? root : output[(u8)bones[joint].parent].matrix;
+            for (row = 0; row < 3; row++) {
+                for (col = 0; col < 4; col++) {
+                    parent[row][col] = source[row][col];
+                }
+            }
+        }
+        if (joint == 0) {
+            index = bones[joint].idx[0] & 0x7F;
+        }
+        previous = index;
+        for (row = 0; row < 3; row++) {
+            for (col = 0; col < 4; col++) {
+                f32 value = output[index].matrix[0][col] * parent[row][0];
+                value = output[index].matrix[1][col] * parent[row][1] + value;
+                value = output[index].matrix[2][col] * parent[row][2] + value;
+                if (col == 3) {
+                    value += parent[row][3];
+                }
+                result[row][col] = value;
+            }
+        }
+        for (row = 0; row < 3; row++) {
+            for (col = 0; col < 4; col++) {
+                output[index].matrix[row][col] = result[row][col];
+                parent[row][col] = result[row][col];
+            }
+        }
+    }
+}
+
+void modelAnimBuildJointMatrices(int* out, u8* dst, void* animState, u8* jointData, int jointCount, u8* jointScratch,
+                                 int flags, int mode) {
+    RenderJointWork* output = *(RenderJointWork**)out;
+    RenderJointWork* work = (RenderJointWork*)lbl_802C3564;
+    RenderJointWork* first = work;
+    RenderJointWork* second = work;
+    ObjAnimState* anim = animState;
+    const ModelBone* bones = (const ModelBone*)jointData;
+    const s16* adjustments = (const s16*)jointScratch;
+    int fraction = (s16)anim->eventCountdown;
+    f32 weight = fraction / 16384.0f;
+    if (mode & 0x40) {
+        render_jointDecode(work, 0, anim->frameData[0], anim->frameStreamCursors[0], anim->frameStreamStrides[0],
+                           anim->framePhases[0], adjustments, 1);
+        weight = anim->framePhases[0] - render_jointPhase(anim->framePhases[0]);
+        render_jointBlend(output, bones, jointCount, work, 0, work, 1, (s16)render_jointPhase(16384.0f * weight),
+                          weight, flags, 4);
+        /* A masked final joint exits the retail cache pass through the outer epilogue. */
+        if (((s8)bones[jointCount - 1].idx[0] & flags) < 0) {
+            return;
+        }
+        render_jointDecode(work, 1, anim->frameData[1], anim->frameStreamCursors[1], anim->frameStreamStrides[1],
+                           anim->framePhases[1], adjustments, 0);
+        weight = fraction / 16384.0f;
+        mode = 1;
+        first = output;
+    } else {
+        if (mode & 1) {
+            first = output;
+        } else {
+            render_jointDecode(work, 0, anim->frameData[0], anim->frameStreamCursors[0], anim->frameStreamStrides[0],
+                               anim->framePhases[0], adjustments, 0);
+            if (fraction <= 0) {
+                render_jointSinglePose(output, bones, jointCount, work, flags);
+                if (!(mode & 0xC)) {
+                    render_jointHierarchy(output, (const f32(*)[4])dst, bones, jointCount, flags);
+                }
+                return;
+            }
+        }
+        if (mode & 2) {
+            second = output;
+        } else {
+            render_jointDecode(work, 1, anim->frameData[1], anim->frameStreamCursors[1], anim->frameStreamStrides[1],
+                               anim->framePhases[1], adjustments + 1, 0);
+        }
+    }
+    render_jointBlend(output, bones, jointCount, first, 0, second, 1, fraction, weight, flags, mode);
+    if (!(mode & 0xC)) {
+        render_jointHierarchy(output, (const f32(*)[4])dst, bones, jointCount, flags);
+    }
+}
+
 typedef u64 RenderPackedAddress;
 
 #define RENDER_PACKED_ADDRESS(pointer) ((u32)(pointer))
 
-static inline u16 render_readPackedU16(RenderPackedAddress address)
-{
+static inline u16 render_readPackedU16(RenderPackedAddress address) {
     return *(u16*)(u32)address;
 }
 
-static inline void render_writePackedU16(RenderPackedAddress address, u16 value)
-{
+static inline void render_writePackedU16(RenderPackedAddress address, u16 value) {
     *(u16*)(u32)address = value;
 }
 
@@ -404,8 +833,7 @@ static inline void render_writePackedU16(RenderPackedAddress address, u16 value)
 
 const f32 gModelRenderSubframeScale[1] = {16384.0f};
 
-void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation)
-{
+void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s16* outRotation) {
     f32 framePhase;
     u64 tp;
     u64 bitpos;
@@ -444,19 +872,16 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
     render_copyPackedU64Tail(&bufB, addrB + 7);
     bitpos = 0;
 
-    do
-    {
+    do {
         s64 h = render_readPackedU16(tp);
         u64 nib = h & 0xf;
         u64 sample = 0;
         u32 hw = h;
         h = (u64)hw & maskConst;
 
-        if (nib != 0)
-        {
+        if (nib != 0) {
             bitpos += nib;
-            if ((s64)bitpos > 64)
-            {
+            if ((s64)bitpos > 64) {
                 RENDER_BITS_REFILL(nib)
             }
             tmp = 64 - nib;
@@ -464,13 +889,11 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
             tmp = bufB >> (tmp & 0xFFFFFFFF);
             tmp = tmp - vA;
             tmp = tmp << 50;
-            for (i = 50; i != 0; i--)
-            {
+            for (i = 50; i != 0; i--) {
                 *q /= 2;
             }
             tmp = tmp * frac;
-            for (i = 14; i != 0; i--)
-            {
+            for (i = 14; i != 0; i--) {
                 *q /= 2;
             }
             sample = h + ((vA + tmp) << 2);
@@ -481,32 +904,26 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
         render_writePackedU16(outPos, sample);
         outPos += 2;
 
-        do
-        {
+        do {
             u64 nib3;
 
-            if ((hw & 0x10) == 0)
-            {
+            if ((hw & 0x10) == 0) {
                 sample = 0;
                 break;
             }
             h = render_readPackedU16(tp);
-            if ((h & 0x10) != 0)
-            {
+            if ((h & 0x10) != 0) {
                 u64 nib2 = h & 0xf;
-                if (nib2 != 0)
-                {
+                if (nib2 != 0) {
                     bitpos += nib2;
-                    if ((s64)bitpos > 64)
-                    {
+                    if ((s64)bitpos > 64) {
                         RENDER_BITS_REFILL_NEXT(nib2)
                     }
                     bufA <<= (nib2 & 0xFFFFFFFF);
                     bufB <<= (nib2 & 0xFFFFFFFF);
                 }
                 tp += 2;
-                if (((u32)h & 0x20) == 0)
-                {
+                if (((u32)h & 0x20) == 0) {
                     sample = 0;
                     break;
                 }
@@ -514,12 +931,10 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
             }
             sample = 0;
             nib3 = h & 0xf;
-            if (nib3 != 0)
-            {
+            if (nib3 != 0) {
                 u64 masked2 = h & 0xFFF0;
                 bitpos += nib3;
-                if ((s64)bitpos > 64)
-                {
+                if ((s64)bitpos > 64) {
                     RENDER_BITS_REFILL_NEXT(nib3)
                 }
                 tmp = 64 - nib3;
@@ -527,8 +942,7 @@ void modelRenderInterpolateRootTransform(ObjAnimState* anim, s16* outPosition, s
                 tmp = bufB >> (tmp & 0xFFFFFFFF);
                 tmp = tmp - vA;
                 tmp = tmp * frac;
-                for (i = 14; i != 0; i--)
-                {
+                for (i = 14; i != 0; i--) {
                     *q /= 2;
                 }
                 sample = masked2 + (vA + tmp);
@@ -608,10 +1022,8 @@ static void render_copyPackedU64Head(u64* dst, u32 packed) {
     }
 }
 
-s16 renderModeSetOrGet(int mode)
-{
-    if (mode != -1)
-    {
+s16 renderModeSetOrGet(int mode) {
+    if (mode != -1) {
         gRenderMode = mode;
         return mode;
     }
@@ -619,63 +1031,44 @@ s16 renderModeSetOrGet(int mode)
 }
 
 int ObjSeq_defaultActionCallback(int unused0, int unused1, int unused2, int unused3, int unused4, int unused5,
-                                 int unused6)
-{
+                                 int unused6) {
     return -0x1;
 }
 
-int getEnvfxActImmediately(void* a, void* b, u16 idx, int d)
-{
+int getEnvfxActImmediately(void* a, void* b, u16 idx, int d) {
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
 
     getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
-    if (e != NULL)
-    {
-        if (e->kind <= 2 || e->kind == 4)
-        {
+    if (e != NULL) {
+        if (e->kind <= 2 || e->kind == 4) {
             (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 3)
-        {
+        } else if (e->kind == 3) {
             e->fadeDurationA = 0;
             (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
-        }
-        else if (e->kind == 5)
-        {
+        } else if (e->kind == 5) {
             e->fadeDurationA = 0;
             (*gSkyInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 6)
-        {
+        } else if (e->kind == 6) {
             (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
         }
     }
     return 0;
 }
 
-int getEnvfxAct(void* a, void* b, u16 idx, int d)
-{
+int getEnvfxAct(void* a, void* b, u16 idx, int d) {
     u8 raw[0x80];
     EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
 
     getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
-    if (e != NULL)
-    {
-        if (e->kind <= 2 || e->kind == 4)
-        {
+    if (e != NULL) {
+        if (e->kind <= 2 || e->kind == 4) {
             (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 3)
-        {
+        } else if (e->kind == 3) {
             (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
-        }
-        else if (e->kind == 5)
-        {
+        } else if (e->kind == 5) {
             (*gSkyInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 6)
-        {
+        } else if (e->kind == 6) {
             (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
         }
     }

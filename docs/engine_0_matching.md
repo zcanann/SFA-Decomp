@@ -282,3 +282,132 @@ public API header. Nine functions remain non-exact, so the TU remains
 `NonMatching` and the full-TU goal is not complete. A diagnostic source-object
 link succeeds with every linked data byte intact; 506 text bytes still
 differ from the strict-build baseline.
+
+## September 5 viewfinder heading recovery
+
+Declaring the major-label opacity before the minor-label and heading locals
+improves `drawViewFinderHud` from **99.36948% to 99.51004%**, removing 30
+differing instruction words. A typed `f32 angleUnitsPerDegree` local for
+the existing 182.04445f conversion fixes the heading offset's `fnmsubs`
+operand order, reaching **99.518074%**. Adding `const` to that local restores
+the previous operand order, so the non-const spelling is retained.
+The function retains all 1,245 instructions; 105 words still differ,
+predominantly in floating-point registers.
+
+The TU reaches **99.89041%** fuzzy match, with **109 / 118** exact functions,
+**52,228 / 75,188** exact code bytes, and all **9,952** assigned data bytes
+exact. The other 117 function bodies, data layouts, exports, and resolved
+relocations are unchanged from the button-HUD improvement.
+
+This follows checks of declarations in nested scopes as well as the leading
+function blocks. Further grouped-declaration permutations, separating
+initializers from declarations, and changes to the segment helper's local
+declarations do not improve the result. Nine functions remain non-exact, so
+the TU stays `NonMatching`. Declaration-order sensitivity is measured here,
+not evidence of the historical source spelling.
+
+Validation: the strict checksum and `ninja all_source` builds both exit 0,
+and formatting checks pass. After finishing the shared-header rebuild in
+30-second-limited invocations, the final strict and all-source runs take
+20.39 and 22.79 seconds. The staging rebase preserves the complete source
+object byte for byte. A diagnostic source-object link leaves every data
+byte intact and reduces the residual text differences from 506 to **465**
+bytes.
+
+## September 6: compiler traces on macOS
+
+The staging resync through `e0cff4c0f6` preserves the complete `0.c` object:
+109 / 118 functions remain exact, with 99.89041% code similarity and all
+9,952 assigned data bytes exact. The source object SHA256 is
+`5878b3855f71f6077a2ed61b222692bc49738ea00befd307a065acdc24c0db61`.
+
+`tools/tricky_backend_trace.py` now accepts `--unit` and infers that unit's
+configured source. Its new macOS provider uses LLDB with the repository's
+Wibo executable; the existing Windows provider remains available. For example:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+  --function headDisplayDraw --function pauseMenuDrawStatusPage --graph \
+  --output build/flag_probe/engine_0_backend
+python3 tools/tricky_backend_trace.py \
+  --read build/flag_probe/engine_0_backend/trace.json \
+  --function headDisplayDraw --instruction 229 --instruction 230
+```
+
+Capture requires the supported GC/1.3 compiler hash, LLDB, Wibo's
+`loadPEFromSource` symbols, and the Python dependencies used by the existing
+object-inspection tools. On the tested Apple Silicon host, Wibo runs under
+Rosetta. The provider verifies each intercepted instruction and emulates its
+32-bit `ret` or `push ebx`; letting LLDB step these guest instructions as
+host instructions can crash the compiler. Compiler files remain untouched.
+Captured and ordinary objects must have identical raw hashes before a trace
+is published. A timeout and a missing-function probe both fail without leaving
+a running compiler or debugger. Unsupported IR still fails validation.
+
+The live trace validates all 480 instructions and 21 snapshots for
+`headDisplayDraw`, and all 673 instructions and 20 snapshots for
+`pauseMenuDrawStatusPage`. GPR graph simplification and every physical color
+choice replay exactly. Decoder coverage now includes these functions' floating
+instructions, symbolic `li` operands, and fallthrough branches across empty
+blocks. Symbolic loads retain checks of the opcode, destination, and zero base;
+the relocation's low halfword remains opaque.
+
+The head-display trace explains why merely chaining the three zero assignments
+does not produce retail's two copies. Constant propagation turns the phase
+locals into immediate loads, but their virtual GPRs 35 and 44 fall below the
+late value-numbering range beginning at 46. Computing phases from the scanline
+instead creates eligible induction temporaries. Computing all three quantities
+from a row counter also produces two copies, but the current forms worsen
+register allocation, so none is retained. For the status page, the remaining
+three instructions concern one alpha value: virtual GPR 46 receives r24 even
+though retail's r28 is free. The already-expanded register bank chooses the
+lower free register. These are observations of the reconstructed source's
+compiler behavior, not proof of the original local declarations.
+
+Validation after the resync: 68 backend tests complete with seven Windows-only
+skips; live capture with and without graphs and offline trace inspection pass.
+The strict build exits 0 in 15.72 seconds with the expected retail SHA1, and
+`ninja all_source` exits 0 in 16.26 seconds. The TU and API header pass the
+formatting check.
+
+## September 6: all residual functions traced
+
+All 5,740 instructions in the nine remaining functions now align with captured
+FINAL CODE records. Each GPR graph's simplification and physical coloring also
+replays against the live compiler. The complete instrumented objects retain
+the ordinary object's `5878b385...c0db61` SHA256 above.
+
+| Function | Instructions | Differing instruction words |
+| --- | ---: | ---: |
+| `drawViewFinderHud` | 1,245 | 105 |
+| `pauseMenuDrawStatus` | 516 | 34 |
+| `cMenuSetItems` | 302 | 60 |
+| `headDisplayDraw` | 480 | 40 |
+| `drawArwingHud` | 266 | 22 |
+| `pauseMenuDraw` | 1,141 | 8 |
+| `pauseMenuDrawStatusPage` | 673 | 3 |
+| `pauseMenuDrawGridCell` | 253 | 16 |
+| `mapScreenDrawHud` | 864 | 47 |
+
+This required seven additional observed instruction spellings and a register
+parser correction. A branch target printed as `f150`, or even `f0`, is a hex
+address rather than an FPR. Branch records still reject unexpected GPR/FPR
+operands, and symbol annotations are excluded from operand parsing. Regression
+tests cover both ambiguities and preserve rejection of actual register
+mismatches. The backend suite completes 72 tests with seven Windows-only skips.
+
+Every current residual GPR graph simplifies entirely through low-degree sweeps;
+none invokes the weighted high-degree choice. This describes the reconstructed
+source only. Register correspondences inferred from retail also need to account
+for commuted additions: the apparent two-color conflicts for the C-menu base
+and count come from swapped addition operands, not demonstrated value splitting.
+
+The status-page trace also confirms that reusing one local for the three alpha
+stages does not merge their backend lifetimes: later assignments already have
+distinct virtual registers before GLOBAL OPTIMIZATION. An inline fade-conversion
+helper, including a variant containing the repeated hologram setup, changes the
+initial alpha from r24 to r26 but increases its residual from three words to five.
+An opacity aggregate has the same problem. None is retained. Typed C-menu source
+cursors preserve all 302 instructions but worsen the residual from 60 to 68
+words. Separating the grid-cell pulse phase and changing its argument widths
+also fail to improve matching. Source and compiler settings remain unchanged.

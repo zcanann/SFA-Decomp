@@ -21,17 +21,17 @@ ObjectDescriptor6 Effect15_funcs = {
 };
 
 int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
-                    f32* extraArgs)
-{
+                         f32* extraArgs) {
     int spawnResult;
     PartFxSpawn cfg;
 
-    if (sourceObj == 0)
+    if (sourceObj == 0) {
         return -1;
-    if ((spawnFlags & 0x200000) != 0)
-    {
-        if (spawnParams == 0)
+    }
+    if ((spawnFlags & 0x200000) != 0) {
+        if (spawnParams == 0) {
             return -1;
+        }
         cfg.sourcePosX = spawnParams->posX;
         cfg.sourcePosY = spawnParams->posY;
         cfg.sourcePosZ = spawnParams->posZ;
@@ -63,18 +63,16 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     cfg.overrideColor0 = 0xffff;
     cfg.overrideColor1 = 0xffff;
     cfg.overrideColor2 = 0xffff;
-    switch (effectId)
-    {
+    switch (effectId) {
     case 0x3e8:
         cfg.scale = 0.000015f * (f32)(s32)randomGetRange(0x5a, 0x64);
         cfg.velocityX = 0.005f * (f32)(s32)randomGetRange(-0x32, 0x32);
         cfg.velocityY = 0.0f;
         cfg.velocityZ = 0.005f * (f32)(s32)randomGetRange(-0x32, 0x32);
         cfg.lifetimeFrames = 0x28;
-        cfg.behaviorFlags |= 0x80218LL;
+        cfg.behaviorFlags |= 0x80218;
         cfg.renderFlags = 0x20;
-        switch (randomGetRange(0, 2))
-        {
+        switch (randomGetRange(0, 2)) {
         case 0:
             cfg.textureId = 0x156;
             break;
@@ -97,8 +95,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0xff;
         break;
     case 0x3e9:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect15DefaultSpawnParams.posX = 0.0f;
             gEffect15DefaultSpawnParams.posY = 0.0f;
             gEffect15DefaultSpawnParams.posZ = 0.0f;
@@ -112,7 +109,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.startPosY = spawnParams->posY;
         cfg.startPosZ = spawnParams->posZ;
         cfg.scale = 0.05f;
-        cfg.behaviorFlags |= 0x180110LL;
+        cfg.behaviorFlags |= 0x180110;
         cfg.renderFlags = 0x20;
         cfg.lifetimeFrames = 0x12;
         cfg.initialAlpha = 0xff;
@@ -125,8 +122,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.overrideColor2 = 0xffff;
         break;
     case 0x3ea:
-        if (spawnParams == 0)
-        {
+        if (spawnParams == 0) {
             gEffect15DefaultSpawnParams.posX = 0.0f;
             gEffect15DefaultSpawnParams.posY = 0.0f;
             gEffect15DefaultSpawnParams.posZ = 0.0f;
@@ -139,15 +135,14 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.startPosX = (f32)(s32)randomGetRange(-0x64, 0x64) / 50.0f;
         cfg.startPosY = (f32)(s32)(-randomGetRange(0x64, 0x96)) / 100.0f;
         cfg.startPosZ = (f32)(s32)randomGetRange(-0x64, 0x64) / 50.0f;
-        cfg.behaviorFlags |= 0x80208LL;
+        cfg.behaviorFlags |= 0x80208;
         cfg.renderFlags = 0x10000;
         cfg.velocityX = 0.001f * (f32)(s32)randomGetRange(-0x64, 0x64);
         cfg.velocityZ = 0.001f * (f32)(s32)randomGetRange(-0x64, 0x64);
         cfg.initialAlpha = 0xff;
         cfg.lifetimeFrames = 0x3c;
         cfg.textureId = 0x7b;
-        cfg.scale =
-            spawnParams->scale * (0.0003f * (0.01f * (f32)(s32)randomGetRange(0x32, 0x64))) + 0.001f;
+        cfg.scale = spawnParams->scale * (0.0003f * (0.01f * (f32)(s32)randomGetRange(0x32, 0x64))) + 0.001f;
         break;
     case 0x3eb:
         cfg.velocityX = 0.04f * (f32)(s32)randomGetRange(-0x1e, 0x1e);
@@ -227,10 +222,10 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.lifetimeFrames = 0x64;
         break;
     case 0x3f2:
-        if (extraArgs == 0)
+        if (extraArgs == 0) {
             return 0;
-        if (spawnParams == 0)
-        {
+        }
+        if (spawnParams == 0) {
             gEffect15DefaultSpawnParams.posX = 0.0f;
             gEffect15DefaultSpawnParams.posY = 0.0f;
             gEffect15DefaultSpawnParams.posZ = 0.0f;
@@ -240,14 +235,12 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             gEffect15DefaultSpawnParams.rotZ = 0;
             spawnParams = (PartFxSpawnParams*)&gEffect15DefaultSpawnParams;
         }
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
         }
-        if (extraArgs != 0)
-        {
+        if (extraArgs != 0) {
             cfg.velocityX = extraArgs[0];
             cfg.velocityY = 0.03f * (f32)(s32)randomGetRange(0, 0x14);
             cfg.velocityZ = extraArgs[1];
@@ -263,14 +256,17 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.startPosY = (f32)(s32)randomGetRange(-0x32, 0x32) / 100.0f;
         cfg.startPosZ = (f32)(s32)randomGetRange(-0x32, 0x32) / 100.0f;
         cfg.velocityX = 0.005f * (f32)(s32)randomGetRange(0x1e, 0x3c);
-        if (randomGetRange(0, 1) != 0)
+        if (randomGetRange(0, 1) != 0) {
             cfg.velocityX = -cfg.velocityX;
+        }
         cfg.velocityY = 0.005f * (f32)(s32)randomGetRange(0x1e, 0x3c);
-        if (randomGetRange(0, 1) != 0)
+        if (randomGetRange(0, 1) != 0) {
             cfg.velocityY = -cfg.velocityY;
+        }
         cfg.velocityZ = 0.005f * (f32)(s32)randomGetRange(0x1e, 0x3c);
-        if (randomGetRange(0, 1) != 0)
+        if (randomGetRange(0, 1) != 0) {
             cfg.velocityZ = -cfg.velocityZ;
+        }
         cfg.scale = 0.00012f * (f32)(s32)randomGetRange(0, 0xa) + 0.001f;
         cfg.lifetimeFrames = 0x46;
         cfg.behaviorFlags = 0x80208;
@@ -281,8 +277,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     case 0x3f4:
     case 0x3f5:
     case 0x3f6:
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -290,15 +285,15 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.startPosY = cfg.startPosY - ((GameObject*)cfg.attachedSource)->anim.worldPosY;
             cfg.startPosZ = cfg.startPosZ - ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
         }
-        if (randomGetRange(0, 0x28) == 0)
+        if (randomGetRange(0, 0x28) == 0) {
             cfg.scale = 0.0003f;
-        else
+        } else {
             cfg.scale = 0.0015f;
+        }
         cfg.lifetimeFrames = 0x14;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80210;
-        switch (effectId - 0x3f4)
-        {
+        switch (effectId - 0x3f4) {
         case 0:
             cfg.textureId = 0x156;
             break;
@@ -316,8 +311,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     case 0x3f7:
     case 0x3f8:
     case 0x3f9:
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -331,8 +325,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x480210;
         cfg.renderFlags = 0x100000;
-        switch (effectId - 0x3f7)
-        {
+        switch (effectId - 0x3f7) {
         case 0:
             cfg.textureId = 0x4fb;
             break;
@@ -348,8 +341,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         }
         break;
     case 0x3fa:
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -366,8 +358,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x4fb;
         break;
     case 0x3fb:
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -383,8 +374,7 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.textureId = 0x5ea;
         break;
     case 0x3fc:
-        if (spawnParams != 0)
-        {
+        if (spawnParams != 0) {
             cfg.startPosX = spawnParams->posX;
             cfg.startPosY = spawnParams->posY;
             cfg.startPosZ = spawnParams->posZ;
@@ -403,20 +393,16 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         return -1;
     }
     cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
-    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
-        cfg.behaviorFlags ^= 2LL;
-    if ((cfg.behaviorFlags & 1) != 0)
-    {
-        if ((spawnFlags & 0x200000) != 0)
-        {
+    if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
+        cfg.behaviorFlags ^= 2;
+    }
+    if ((cfg.behaviorFlags & 1) != 0) {
+        if ((spawnFlags & 0x200000) != 0) {
             cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
             cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
-        }
-        else
-        {
-            if (cfg.attachedSource != 0)
-            {
+        } else {
+            if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
                 cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
                 cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
@@ -427,18 +413,14 @@ int Effect15_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     return spawnResult;
 }
 
-void Effect15_func05_nop(void)
-{
+void Effect15_func05_nop(void) {
 }
 
-void Effect15_func03_nop(void)
-{
+void Effect15_func03_nop(void) {
 }
 
-void Effect15_release(void)
-{
+void Effect15_release(void) {
 }
 
-void Effect15_initialise(void)
-{
+void Effect15_initialise(void) {
 }

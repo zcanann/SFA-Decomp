@@ -4,6 +4,7 @@
  * reactions, sequence position override, and the EarthWarrior tail-chain hook.
  */
 #include "dlls/objects/473_DIM2PrisonM.h"
+#include "dlls/objects/599_DR_EarthWar.h"
 
 #include "dolphin/pad.h"
 #include "main/audio/sfx_play_api.h"
@@ -26,18 +27,6 @@
 
 typedef int (*Dim2PrisonMammothStateHandler)(GameObject* obj, Dim2PrisonMammothState* state);
 typedef int (*Dim2PrisonMammothDefaultStateHandler)(void);
-
-/*
- * The only proven consumer is DR_EarthWarrior. This callback reads that
- * object's 0x14FC-byte state, not this DLL's 0x604-byte allocation.
- */
-typedef struct EarthWarriorModelChainStateView {
-    u8 unknown00[0x14F8];
-    ObjModelChain* tailModelChain;
-} EarthWarriorModelChainStateView;
-
-STATIC_ASSERT(offsetof(EarthWarriorModelChainStateView, tailModelChain) == 0x14F8);
-STATIC_ASSERT(sizeof(EarthWarriorModelChainStateView) == 0x14FC);
 
 Dim2PrisonMammothStateHandler gDim2PrisonMammothStateHandlers[4];
 Dim2PrisonMammothDefaultStateHandler gDim2PrisonMammothDefaultStateHandler[2];
@@ -92,7 +81,7 @@ int dim2prisonmammoth_stateHandler02(GameObject* obj, Dim2PrisonMammothState* st
     objectState->stateTimer = randomGetRange(0x4B0, 0x960);
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) {
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         buttonDisable(0, PAD_BUTTON_A);
     }
 
@@ -133,12 +122,12 @@ int dim2prisonmammoth_stateHandler00(GameObject* obj) {
 
     switch (placement->spawnVariant) {
     case 0:
-        if ((u32)mainGetBit(DIM2_PRISON_MAMMOTH_VARIANT_ZERO_GAME_BIT) != 0) {
+        if (mainGetBit(DIM2_PRISON_MAMMOTH_VARIANT_ZERO_GAME_BIT) != 0) {
             return 3;
         }
         return 2;
     case 1:
-        if ((u32)mainGetBit(GAMEBIT_DIM_ReachedBottom) != 0) {
+        if (mainGetBit(GAMEBIT_DIM_ReachedBottom) != 0) {
             return 3;
         }
         return 3;
@@ -155,7 +144,7 @@ int dim2prisonmammoth_SeqFn(GameObject* obj, int unusedState, ObjSeqState* animU
     animUpdate->movementState = 0;
     animUpdate->flags = animUpdate->savedFlags;
     state = obj->extra;
-    (*gPlayerInterface)->setState((void*)obj, (void*)state, 2);
+    (*gPlayerInterface)->setState(obj, state, 2);
 
     transform.x = obj->anim.localPosX;
     transform.y = obj->anim.localPosY;
@@ -201,8 +190,8 @@ void dim2prisonmammoth_update(GameObject* obj) {
     obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if ((gPrisonMammothStateFlagsTable[state->baddie.controlMode] & DIM2_PRISON_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT) ==
         0) {
-        state->hitReactState = ObjHitReact_Update(obj, gPrisonMammothHitReactEntry, 1, state->hitReactState,
-                                                  &state->hitReactStepScale);
+        state->hitReactState =
+            ObjHitReact_Update(obj, gPrisonMammothHitReactEntry, 1, state->hitReactState, &state->hitReactStepScale);
         if (state->hitReactState != 0) {
             characterHeadLookRelax(obj, &state->eyeAnim);
             characterDoEyeAnims(obj, &state->eyeAnim);
@@ -233,7 +222,7 @@ void dim2prisonmammoth_update(GameObject* obj) {
     state->baddie.cameraYaw = 0;
     state->baddie.flags0 |= 0x400000;
     (*gPlayerInterface)
-        ->update((void*)obj, (void*)state, timeDelta, timeDelta, gDim2PrisonMammothStateHandlers,
+        ->update(obj, state, timeDelta, timeDelta, gDim2PrisonMammothStateHandlers,
                  gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }
@@ -241,14 +230,15 @@ void dim2prisonmammoth_update(GameObject* obj) {
 void dim2prisonmammoth_init(GameObject* obj, const Dim2PrisonMammothPlacement* placement) {
     Dim2PrisonMammothState* state;
 
-    obj->anim.rotX = (s16)(placement->rotationXByte << 8);
+    obj->anim.rotX = placement->rotationXByte << 8;
     obj->animEventCallback = dim2prisonmammoth_SeqFn;
     state = obj->extra;
     if (obj->anim.modelState != NULL) {
-        obj->anim.modelState->flags |= 0xA10;
-        obj->anim.modelState->flags |= 0x8020LL;
+        obj->anim.modelState->flags |=
+            OBJ_MODEL_STATE_UNREAD_0010 | OBJ_MODEL_STATE_UNREAD_0200 | OBJ_MODEL_STATE_UNREAD_0800;
+        obj->anim.modelState->flags |= OBJ_MODEL_STATE_UNREAD_8000 | OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE;
     }
-    (*gPlayerInterface)->init((void*)obj, (void*)state, 4, 1);
+    (*gPlayerInterface)->init(obj, state, 4, 1);
     state->baddie.physicsActive = 0;
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
@@ -264,10 +254,14 @@ void dim2prisonmammoth_initialise(void) {
     gDim2PrisonMammothDefaultStateHandler[0] = dim2prisonmammoth_defaultStateHandler;
 }
 
+/*
+ * The only proven consumer is DR_EarthWarrior. This callback reads that
+ * object's 0x14FC-byte state, not this DLL's 0x604-byte allocation.
+ */
 void dim2prisonmammoth_updateModelChain(GameObject* obj, ObjModel* model) {
-    EarthWarriorModelChainStateView* state = obj->extra;
+    EarthWarriorState* state = (EarthWarriorState*)obj->extra;
 
-    ObjModelChain_Update(model, model->file, state->tailModelChain, NULL);
+    ObjModelChain_Update(model, model->file, state->sub.modelChain, NULL);
 }
 
 ObjHitReactEntry gPrisonMammothHitReactEntry[] = {
@@ -280,14 +274,14 @@ ObjectDescriptor10WithPadding gDIM2PrisonMammothObjDescriptor = {
         0,
         0,
         OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)dim2prisonmammoth_initialise,
-        (ObjectDescriptorCallback)dim2prisonmammoth_release,
+        dim2prisonmammoth_initialise,
+        dim2prisonmammoth_release,
         0,
         (ObjectDescriptorCallback)dim2prisonmammoth_init,
         (ObjectDescriptorCallback)dim2prisonmammoth_update,
-        (ObjectDescriptorCallback)dim2prisonmammoth_hitDetect,
+        dim2prisonmammoth_hitDetect,
         (ObjectDescriptorCallback)dim2prisonmammoth_render,
-        (ObjectDescriptorCallback)dim2prisonmammoth_free,
+        dim2prisonmammoth_free,
         (ObjectDescriptorCallback)dim2prisonmammoth_getObjectTypeId,
         dim2prisonmammoth_getExtraSize,
     },

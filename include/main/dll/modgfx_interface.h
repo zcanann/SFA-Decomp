@@ -13,8 +13,8 @@ typedef void (*ModgfxReleaseAllFn)(void);
 typedef void (*ModgfxFreeSourceEffectsFn)(void* sourceObject);
 typedef int (*ModgfxRenderEffectsFn)(void* drawContext, int arg1, int arg2, u8 sourceOnly, void* sourceObject);
 typedef void (*ModgfxMarkSourceFrameUpdatedFn)(void* unused);
-typedef s16 (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCount, void* vertices, int colorCount,
-                                   void* colors, int textureAssetId, void* textureResource);
+typedef s16 (*ModgfxSpawnEffectFn)(void* spawnContext, int flags, int vertexCount, void* vertices, int triangleCount,
+                                  void* triangleIndices, int textureAssetId, void* textureResource);
 typedef void (*ModgfxReleaseHandleFn)(s16* handle);
 typedef void (*ModgfxNextSpawnGenerationFn)(void);
 typedef void (*ModgfxSetSourceByte13BFn)(void* sourceObject, char value);
@@ -26,8 +26,8 @@ typedef void (*ModgfxNextSequenceParamFn)(void);
 typedef void (*ModgfxSetSequenceParamIndexFn)(s16 index);
 typedef void (*ModgfxSetSequenceParamValueFn)(s16 value);
 typedef void (*ModgfxSetSequenceParamsFn)(void* params);
-typedef void (*ModgfxSpawnSequenceFn)(void* sourceObject, void* vertices, int vertexCount, void* colors, int colorCount,
-                                      int textureAssetId, void* textureResource);
+typedef void (*ModgfxSpawnSequenceFn)(void* sourceObject, void* vertices, int vertexCount, void* triangleIndices,
+                                     int triangleCount, int textureAssetId, void* textureResource);
 typedef void (*ModgfxAddSequenceFlagsFn)(u32 flags);
 typedef s16 (*ModgfxGetLastSpawnHandleFn)(void);
 
