@@ -17,7 +17,7 @@ COMPILER_SHA256 = "4e502c38465500d4fda8d966b268151a6c74c730508e3d9b7efd23d1a6083
 # instructions. Multiple spellings are PPC disassembler aliases/prediction bits.
 MNEMONICS = {
     0x00: "b", 0x01: "bl", 0x05: "beq+ beq- bgt+ bgt- blt+ blt-",
-    0x08: "bge+ bge- ble- bne+ bne-", 0x0B: "bdnz+ bdnz-",
+    0x08: "bge+ bge- ble+ ble- bne+ bne-", 0x0B: "bdnz+ bdnz-",
     0x11: "blr", 0x12: "bctr", 0x13: "bctrl", 0x15: "lbz",
     0x17: "lbzx", 0x19: "lhz", 0x1B: "lhzx", 0x1D: "lha", 0x1F: "lhax",
     0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2C: "sth",

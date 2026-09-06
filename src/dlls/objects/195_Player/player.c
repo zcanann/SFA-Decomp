@@ -8845,6 +8845,17 @@ void playerStagedRestoreDefaultControl(GameObject* obj, BaddieState* state) {
     gPlayerModelChainStyle = 1;
 }
 
+static inline int playerCanGuard(GameObject* obj, PlayerState* inner) {
+    if ((inner->flags3F4.b40) != 0 && inner->flags3F0.b20 == 0 && inner->flags3F0.b08 == 0 &&
+        inner->flags3F0.b04 == 0 && inner->curAnimId != 0x44 && inner->heldObj == NULL &&
+        inner->baddie.targetObj == NULL && (inner->flags3F6.b40) == 0 && inner->baddie.controlMode != 0x26 &&
+        (obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0 && !inner->idleDelayTimer) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 int playerStateMoving(int obj, int state, f32 fv) {
     PlayerState* inner;
     int dir;
@@ -8976,18 +8987,7 @@ int playerStateMoving(int obj, int state, f32 fv) {
                 }
             }
             {
-                u32 fl2;
-                int stay;
-                if ((padGetTriggers(0) & 0x20) != 0 && (inner->flags3F4.b40) != 0 &&
-                    ((fl2 = inner->flagByte3F0) >> 5 & 1) == 0 && (fl2 >> 3 & 1) == 0 && (fl2 >> 2 & 1) == 0 &&
-                    inner->curAnimId != 0x44 && inner->heldObj == NULL && inner->baddie.targetObj == NULL &&
-                    (inner->flags3F6.b40) == 0 && inner->baddie.controlMode != 0x26 &&
-                    (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0 && !inner->idleDelayTimer) {
-                    stay = 1;
-                } else {
-                    stay = 0;
-                }
-                if (!stay) {
+                if ((padGetTriggers(0) & PAD_TRIGGER_R) == 0 || !playerCanGuard((GameObject*)obj, inner)) {
                     if (gPlayerPathObject != 0 && (inner->flags3F4.b40) != 0) {
                         inner->staffActionRequest = 1;
                         inner->flags3F4.b08 = 1;
@@ -9111,10 +9111,11 @@ int playerStateMoving(int obj, int state, f32 fv) {
             }
             t = mathSinf((3.1415927f * (f32)inner->targetYaw) / 32768.0f);
             {
+                f32 velocityX;
                 f32 cs = mathCosf((3.1415927f * (f32)inner->targetYaw) / 32768.0f);
                 ya = inner->smoothVelZ;
-                spd = -ya * cs - inner->smoothVelX * t;
-                ya = inner->smoothVelX * cs - ya * t;
+                spd = -ya * cs - (velocityX = inner->smoothVelX) * t;
+                ya = velocityX * cs - ya * t;
                 ((PlayerState*)state)->baddie.animSpeedA =
                     ((PlayerState*)state)->baddie.animSpeedA +
                     interpolate(spd - ((PlayerState*)state)->baddie.animSpeedA, inner->targetAnimSpeed, timeDelta);
@@ -11948,17 +11949,7 @@ int playerCheckCommonTransitions(GameObject* obj, struct PlayerState* state, str
         {
             int btn = padGetTriggers(0);
             if ((btn & 0x20) != 0) {
-                if (((PlayerState*)inner)->flags3F4.b40 && !((PlayerState*)inner)->flags3F0.b20 &&
-                    !((PlayerState*)inner)->flags3F0.b08 && !((PlayerState*)inner)->flags3F0.b04 &&
-                    ((PlayerState*)inner)->curAnimId != 0x44 && ((PlayerState*)inner)->heldObj == NULL &&
-                    ((PlayerState*)inner)->baddie.targetObj == NULL && !((PlayerState*)inner)->flags3F6.b40 &&
-                    ((PlayerState*)inner)->baddie.controlMode != 0x26 &&
-                    (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0 &&
-                    ((PlayerState*)inner)->idleDelayTimer == idleZero) {
-                    ok = 1;
-                } else {
-                    ok = 0;
-                }
+                ok = playerCanGuard(obj, (PlayerState*)inner);
                 if (ok != 0 && !((PlayerState*)inner)->flags3F0.b02) {
                     Shield_setMode(gPlayerStaffObject, 1);
                     ObjAnim_SetCurrentMove(obj, 0x4f, obj->anim.currentMoveProgress, 0);
@@ -15840,9 +15831,9 @@ void playerUpdate(GameObject* obj) {
                 (*gMapEventInterface)->gotoRestartPoint();
             }
             if (((PlayerState*)inner)->flags3F3.b20 == 0 && (((PlayerState*)inner)->baddie.queuedBitMask & 1) != 0) {
-                GameObject* po = obj;
+                GameObject* const soundObject = obj;
                 if (Sfx_IsPlayingFromObject(
-                        (GameObject*)po,
+                        soundObject,
                         (u16)(((PlayerState*)inner)->characterId == 0 ? SFXTRIG_jump2 : SFXTRIG_sa_climb02)) == 0) {
                     Sfx_PlayFromObject(
                         0, (u16)(((PlayerState*)inner)->characterId == 0 ? SFXTRIG_jump2 : SFXTRIG_sa_climb02));

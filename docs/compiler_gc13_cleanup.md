@@ -478,3 +478,36 @@ Local controls and delivery artifacts are under `build/gc13_indexed/nice_313/`,
 `dimcannon/`, `cloudrunner_cleanup/`, `sharpclaw/`, `nice_firecrawler/`,
 `weevil_cleanup/`, and `lightmap_indexed/`. The full object snapshot is under
 `build/gc13_migration/nicer_separate/`.
+
+
+## September 6: Player update and shared guard eligibility
+
+`playerUpdate` becomes **100% exact**, adding **2,372 matched code bytes**.
+Its existing sound-owner temporary is now a typed `const` pointer. GC/1.3
+then moves the object into the argument register before selecting the sound
+ID, matching retail. The compiler profile and flags are unchanged.
+
+`playerStateMoving` improves from 99.7459% to **99.766396%**. The shared
+`playerCanGuard` inline predicate separates the trigger test from guard
+eligibility, reproducing retail's branch past the predicate when the trigger
+is released. The common-transition handler uses the same predicate and
+retains its exact instructions. Caching the sampled X velocity also fixes
+four floating-point register differences in the movement state.
+
+Player reaches **228/233 exact functions**, **99.91618% fuzzy agreement**,
+and **123,260/139,108 exact code bytes**. Only `playerUpdate` and
+`playerStateMoving` change their instructions. Every function's relative
+relocations, all allocated data bytes and section layouts, and data-symbol
+offsets are unchanged. Assigned data remains **10,168/10,168 bytes exact**;
+the TU remains NonMatching.
+
+The root-height-loop trace also verifies the `ble+` spelling of the
+previously supported conditional-branch opcode. Its cache-pointer offset
+is already folded before global optimization; the retail loop setup still
+has two additional instructions. The five remaining functions are the root
+height cache, wall-transition probe, sequence callback, moving state, and
+state 25. No compiler exception or source split is introduced.
+
+The backend tests, formatting and generated-path audits, strict retail
+checksum, and `ninja all_source` pass. Controls, captures, and object audits
+are under `build/gc13_new_matches/player_round5*`.
