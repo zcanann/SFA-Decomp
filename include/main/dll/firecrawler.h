@@ -17,8 +17,7 @@
 
 void crawler_playReactionEffects(struct GameObject* obj, int* st);
 
-typedef struct CrawlerSeq12
-{
+typedef struct CrawlerSeq12 {
     f32 spd;   /* 0x0 */
     u32 mask;  /* 0x4 */
     u8 moveId; /* 0x8 */
