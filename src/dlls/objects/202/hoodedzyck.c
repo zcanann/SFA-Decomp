@@ -82,7 +82,7 @@
 
 /* Baddie-family animation data shared with the sequence-driver TUs. */
 
-#define FIRECRAWLER_HIT_VOLUME_SLOT      9
+#define FIRECRAWLER_HIT_VOLUME_SLOT 9
 /* group owned by another DLL, queried here */
 
 #define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
@@ -95,41 +95,32 @@ extern f32 gHoodedZyckLargeTargetSpeedScale;
 
 extern f32 gHoodedZyckEmergeMoveSpeed;
 
-static void hoodedZyck_tickPhaseTimer(EnemyState* st)
-{
+static void hoodedZyck_tickPhaseTimer(EnemyState* st) {
     st->duster.phaseTimer = st->duster.phaseTimer - timeDelta;
-    if (st->duster.phaseTimer <= 0.0f)
-    {
+    if (st->duster.phaseTimer <= 0.0f) {
         st->duster.phaseTimer = (f32)(int)randomGetRange(0x3c, 0x78);
     }
 }
 
-static int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
-{
+static int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target) {
     f32 d = (f32)(int)((u16)getAngle(obj->anim.localPosX - target->anim.localPosX,
                                      obj->anim.localPosZ - target->anim.localPosZ) -
                        (u16)obj->anim.rotX);
-    if (d > 32768.0f)
-    {
+    if (d > 32768.0f) {
         d = -65535.0f + d;
     }
-    if (d < -32768.0f)
-    {
+    if (d < -32768.0f) {
         d = 65535.0f + d;
     }
     return d;
 }
 
 void hoodedZyckUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
-                                 Vec* wpad2, int wpad3)
-{
+                                 Vec* wpad2, int wpad3) {
     EnemyState* enemyState = (EnemyState*)state;
-    if (eventKind == 0x10)
-    {
+    if (eventKind == 0x10) {
         enemyState->flags2E8 = enemyState->flags2E8 | 0x20;
-    }
-    else
-    {
+    } else {
         enemyState->flags2E8 = enemyState->flags2E8 | 8;
         Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_dn_boar1_c_244);
         enemyState->current = 0;
@@ -137,8 +128,7 @@ void hoodedZyckUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacke
     return;
 }
 
-void hoodedZyck_updateIdle(GameObject* obj, void* state)
-{
+void hoodedZyck_updateIdle(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
     bool resetting;
     int groundHit;
@@ -151,27 +141,20 @@ void hoodedZyck_updateIdle(GameObject* obj, void* state)
     float hitOut[22];
 
     hoodedZyck_tickPhaseTimer(enemyState);
-    if (enemyState->duster.decoyTimer != 0.0f)
-    {
+    if (enemyState->duster.decoyTimer != 0.0f) {
         ObjHits_DisableObject(obj);
-        if ((obj)->anim.currentMove != 5)
-        {
+        if ((obj)->anim.currentMove != 5) {
             baddieSetMove(obj, state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
-        }
-        else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+        } else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             ObjHits_EnableObject(obj);
             enemyState->duster.decoyTimer = 0.0f;
         }
         (obj)->anim.alpha = 0xff;
         resetting = true;
-    }
-    else
-    {
+    } else {
         resetting = false;
     }
-    if (!resetting)
-    {
+    if (!resetting) {
         (obj)->anim.rotX = (short)((obj)->anim.rotX + enemyState->phaseAngle);
         fromPos[0] = (obj)->anim.localPosX;
         fromPos[1] = (obj)->anim.localPosY;
@@ -180,20 +163,14 @@ void hoodedZyck_updateIdle(GameObject* obj, void* state)
         toPos[0] = (obj)->anim.localPosX - 10.0f * sinYaw;
         toPos[1] = 5.0f + (obj)->anim.localPosY;
         toPos[2] = (obj)->anim.localPosZ - 10.0f * cosYaw;
-        groundHit = trackGetLineIntersect(fromPos, toPos, 0.0f, 3, (TrackLineIntersectResult*)hitOut,
-                                       obj,
-                                       (u32)enemyState->bboxTraceFlags,
-                                       0xffffffff, 0xff, 0);
+        groundHit = trackGetLineIntersect(fromPos, toPos, 0.0f, 3, (TrackLineIntersectResult*)hitOut, obj,
+                                          (u32)enemyState->bboxTraceFlags, 0xffffffff, 0xff, 0);
         noHit = !(groundHit & 0xff);
-        if (!noHit || ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0))
-        {
-            if (noHit && (obj)->anim.currentMove != 0)
-            {
+        if (!noHit || ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)) {
+            if (noHit && (obj)->anim.currentMove != 0) {
                 enemyState->phaseAngle = 0;
                 baddieSetMove(obj, state, 0, 1.0f, 0, 1);
-            }
-            else
-            {
+            } else {
                 float fz;
                 baddieSetMove(obj, state, 1, 0.75f, 0, 0);
                 fz = 0.0f;
@@ -210,8 +187,7 @@ void hoodedZyck_updateIdle(GameObject* obj, void* state)
     return;
 }
 
-void hoodedZyck_updateB(GameObject* obj, u8* state)
-{
+void hoodedZyck_updateB(GameObject* obj, u8* state) {
     EnemyState* enemyState = (EnemyState*)state;
     f32 scale;
     int moved;
@@ -233,8 +209,7 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
     {
         u8 n = ((GroundBaddiePlacement*)obj->anim.placementData)->aggression;
         scale = n;
-        if (n == 0.0f)
-        {
+        if (n == 0.0f) {
             scale = 10.0f;
         }
         scale = scale / 10.0f;
@@ -242,28 +217,21 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
 
     hoodedZyck_tickPhaseTimer(enemyState);
 
-    if (enemyState->crawler.emergeTimer != 0.0f)
-    {
+    if (enemyState->crawler.emergeTimer != 0.0f) {
         ObjHits_DisableObject(obj);
-        if (obj->anim.currentMove != 5)
-        {
+        if (obj->anim.currentMove != 5) {
             baddieSetMove(obj, state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
-        }
-        else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+        } else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             ObjHits_EnableObject(obj);
             enemyState->crawler.emergeTimer = 0.0f;
         }
         obj->anim.alpha = 0xff;
         moved = 1;
-    }
-    else
-    {
+    } else {
         moved = 0;
     }
 
-    if (moved == 0)
-    {
+    if (moved == 0) {
         u32 ang;
         f32 diff;
         GameObject* other;
@@ -276,20 +244,15 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
         tgtA[0] = -(10.0f * sinA - obj->anim.localPosX);
         tgtA[1] = 5.0f + obj->anim.localPosY;
         tgtA[2] = -(10.0f * cosA - obj->anim.localPosZ);
-        noHit = !(u8)trackGetLineIntersect(posA, tgtA, 0.0f, 3, &bufA, obj,
-                                        enemyState->bboxTraceFlags, -1, 0xff, 0);
-        ang =
-            getAngle(
-                obj->anim.localPosX - ((GameObject*)enemyState->trackedObj)->anim.localPosX,
-                obj->anim.localPosZ - ((GameObject*)enemyState->trackedObj)->anim.localPosZ) &
-            0xffff;
+        noHit = !(u8)trackGetLineIntersect(posA, tgtA, 0.0f, 3, &bufA, obj, enemyState->bboxTraceFlags, -1, 0xff, 0);
+        ang = getAngle(obj->anim.localPosX - ((GameObject*)enemyState->trackedObj)->anim.localPosX,
+                       obj->anim.localPosZ - ((GameObject*)enemyState->trackedObj)->anim.localPosZ) &
+              0xffff;
         diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
-        if (diff > 32768.0f)
-        {
+        if (diff > 32768.0f) {
             diff = -65535.0f + diff;
         }
-        if (diff < -32768.0f)
-        {
+        if (diff < -32768.0f) {
             diff = 65535.0f + diff;
         }
         turnRaw = diff;
@@ -297,20 +260,17 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
             s16 t = turnRaw;
             mag = (u16)(t >= 0 ? t : -t);
         }
-        if (playerFindNearestFirefly(Obj_GetPlayerObject()) != 0)
-        {
+        if (playerFindNearestFirefly(Obj_GetPlayerObject()) != 0) {
             range = 100.0f;
             other = (GameObject*)objGetNearestTypeTo(LANTERNFIREFLY_OBJGROUP, obj, &range);
-            if (other != NULL)
-            {
+            if (other != NULL) {
                 s16 yaw = Obj_GetYawDeltaToObject(obj, other, &range);
                 int t;
                 yaw = (yaw < -300) ? -300 : ((yaw > 300) ? 300 : yaw);
                 t = yaw;
                 enemyState->phaseAngle = t;
                 t = yaw >= 0 ? yaw : -yaw;
-                if (t < 0x4000)
-                {
+                if (t < 0x4000) {
                     *(s16*)obj = -*(s16*)obj;
                     posB[0] = obj->anim.localPosX;
                     posB[1] = obj->anim.localPosY;
@@ -319,11 +279,9 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
                     tgtB[0] = -(10.0f * sinB - obj->anim.localPosX);
                     tgtB[1] = 5.0f + obj->anim.localPosY;
                     tgtB[2] = -(10.0f * cosB - obj->anim.localPosZ);
-                    if ((u8)trackGetLineIntersect(posB, tgtB, 0.0f, 3, &bufB, obj,
-                                               enemyState->bboxTraceFlags, -1, 0xff, 0) == 0)
-                    {
-                        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-                        {
+                    if ((u8)trackGetLineIntersect(posB, tgtB, 0.0f, 3, &bufB, obj, enemyState->bboxTraceFlags, -1, 0xff,
+                                                  0) == 0) {
+                        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
                             baddieSetMove(obj, state, 7, 1.0f / (2.0f * scale), 0, 1);
                         }
                         obj->anim.rotY = enemyState->spawnRotY;
@@ -334,21 +292,15 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
                 return;
             }
         }
-        if (enemyState->trackedObj != NULL &&
-            ((GameObject*)enemyState->trackedObj)->anim.hitboxScale > 56.0f)
-        {
+        if (enemyState->trackedObj != NULL && ((GameObject*)enemyState->trackedObj)->anim.hitboxScale > 56.0f) {
             enemyState->sightRange = gHoodedZyckLargeTargetSpeedScale;
         }
         if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 || noHit == 0 ||
-            (mag < 3000 && noHit != 0 && obj->anim.currentMove != 0))
-        {
-            if (noHit != 0 && mag < 3000)
-            {
+            (mag < 3000 && noHit != 0 && obj->anim.currentMove != 0)) {
+            if (noHit != 0 && mag < 3000) {
                 enemyState->phaseAngle = 0;
                 baddieSetMove(obj, state, 0, 1.0f / scale, 0, 1);
-            }
-            else
-            {
+            } else {
                 baddieSetMove(obj, state, 1, 0.75f / scale, 0, 0);
                 {
                     f32 z = 0.0f;
@@ -356,16 +308,11 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
                     obj->anim.velocityY = z;
                     obj->anim.velocityZ = z;
                 }
-                if (mag < 3000)
-                {
+                if (mag < 3000) {
                     enemyState->phaseAngle = (randomGetRange(0, 1) - 1) * 300;
-                }
-                else if ((s16)turnRaw < 0)
-                {
+                } else if ((s16)turnRaw < 0) {
                     enemyState->phaseAngle = 0xfed4;
-                }
-                else
-                {
+                } else {
                     enemyState->phaseAngle = 300;
                 }
             }
@@ -375,8 +322,7 @@ void hoodedZyck_updateB(GameObject* obj, u8* state)
     }
 }
 
-void hoodedZyck_update(GameObject* obj, u8* state)
-{
+void hoodedZyck_update(GameObject* obj, u8* state) {
     EnemyState* enemyState = (EnemyState*)state;
     int moved;
     int turnRaw;
@@ -385,28 +331,21 @@ void hoodedZyck_update(GameObject* obj, u8* state)
 
     hoodedZyck_tickPhaseTimer(enemyState);
 
-    if (enemyState->crawler.emergeTimer != 0.0f)
-    {
+    if (enemyState->crawler.emergeTimer != 0.0f) {
         ObjHits_DisableObject(obj);
-        if (obj->anim.currentMove != 5)
-        {
+        if (obj->anim.currentMove != 5) {
             baddieSetMove(obj, state, 5, gHoodedZyckEmergeMoveSpeed, 0, 0);
-        }
-        else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+        } else if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             ObjHits_EnableObject(obj);
             enemyState->crawler.emergeTimer = 0.0f;
         }
         obj->anim.alpha = 0xff;
         moved = 1;
-    }
-    else
-    {
+    } else {
         moved = 0;
     }
 
-    if (moved == 0)
-    {
+    if (moved == 0) {
         f32 z;
         *(s16*)obj = (f32)enemyState->phaseAngle * timeDelta + (f32)(int)*(s16*)obj;
         z = 0.0f;
@@ -421,37 +360,23 @@ void hoodedZyck_update(GameObject* obj, u8* state)
         }
         ObjHits_EnableObject(obj);
         grabbed = enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN;
-        if (grabbed != 0 && obj->anim.currentMove == 6)
-        {
+        if (grabbed != 0 && obj->anim.currentMove == 6) {
             baddieSetMove(obj, state, 4, gHoodedZyckFollowUpMoveSpeed, 0, 1);
-        }
-        else
-        {
-            if (grabbed != 0 ||
-                (mag < 1000 && obj->anim.currentMove != 2 && obj->anim.currentMove != 4 &&
-                 obj->anim.currentMove != 6))
-            {
-                if (mag < 1000)
-                {
-                    if (enemyState->sightRange < 40.0f)
-                    {
+        } else {
+            if (grabbed != 0 || (mag < 1000 && obj->anim.currentMove != 2 && obj->anim.currentMove != 4 &&
+                                 obj->anim.currentMove != 6)) {
+                if (mag < 1000) {
+                    if (enemyState->sightRange < 40.0f) {
                         baddieSetMove(obj, state, 2, 0.75f, 0, 0);
-                    }
-                    else
-                    {
+                    } else {
                         baddieSetMove(obj, state, 6, gHoodedZyckLungeMoveSpeed, 0, 0);
                     }
                     enemyState->phaseAngle = 0;
-                }
-                else
-                {
+                } else {
                     baddieSetMove(obj, state, 1, 0.75f, 0, 0);
-                    if ((s16)turnRaw < 0)
-                    {
+                    if ((s16)turnRaw < 0) {
                         enemyState->phaseAngle = 0xfed4;
-                    }
-                    else
-                    {
+                    } else {
                         enemyState->phaseAngle = 300;
                     }
                 }
@@ -462,16 +387,14 @@ void hoodedZyck_update(GameObject* obj, u8* state)
     }
 }
 
-void hoodedZyck_init(GameObject* obj, EnemyState* st)
-{
+void hoodedZyck_init(GameObject* obj, EnemyState* st) {
     f32 ratio;
     f32 base_v;
     u32 flags;
     u32 amt;
     amt = ((GroundBaddiePlacement*)obj->anim.placementData)->aggression;
     ratio = amt;
-    if (amt == 0.0f)
-    {
+    if (amt == 0.0f) {
         ratio = 10.0f;
     }
     ratio = ratio / 10.0f;
