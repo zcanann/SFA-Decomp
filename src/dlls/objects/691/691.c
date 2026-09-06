@@ -291,19 +291,23 @@ void Vortex_update(GameObject* obj)
     }
 }
 
+static inline u32 Vortex_gameBitState(u32 value)
+{
+    return value;
+}
+
 void Vortex_init(GameObject* obj, VortexSetup* setup)
 {
-    GameObject* o = obj;
     f32(*base)[3] = gVortexScaleParams;
-    VortexState* state = o->extra;
+    VortexState* state = obj->extra;
     u8 i;
 
     state->flags.active = 0;
     if (setup->activeGameBit != -1)
     {
-        state->flags.active = mainGetBit(setup->activeGameBit);
+        state->flags.active = Vortex_gameBitState(mainGetBit(setup->activeGameBit));
     }
-    if (o->anim.romDefNo == VORTEX_OBJ_WNDLIFTS)
+    if (obj->anim.romDefNo == VORTEX_OBJ_WNDLIFTS)
     {
         for (i = 0; i < 2; i++)
         {
@@ -312,7 +316,7 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (o->anim.romDefNo == VORTEX_OBJ_WNDLIFTC)
+    else if (obj->anim.romDefNo == VORTEX_OBJ_WNDLIFTC)
     {
         for (i = 0; i < 2; i++)
         {
@@ -321,7 +325,7 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
             state->angles[i] = randomGetRange(-0x7fff, 0x7fff);
         }
     }
-    else if (o->anim.romDefNo == VORTEX_OBJ_DIMPIT)
+    else if (obj->anim.romDefNo == VORTEX_OBJ_DIMPIT)
     {
         for (i = 0; i < 3; i++)
         {
@@ -346,14 +350,14 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
             }
         }
     }
-    o->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(o), postRenderSetAlphaBlendState);
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     if (state->flags.active != 0)
         state->alpha = VORTEX_FULL_ALPHA;
     else
         state->alpha = VORTEX_ZERO;
     state->particleTimer = randomGetRange(0, 0x14);
-    o->anim.cullDistance2 *= VORTEX_CULL_DISTANCE_SCALE;
+    obj->anim.cullDistance2 *= VORTEX_CULL_DISTANCE_SCALE;
 }
 
 void Vortex_release(void)

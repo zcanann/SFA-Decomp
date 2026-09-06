@@ -1809,7 +1809,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/688_BrokenPipe/BrokenPipe.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/689_CmbSrc/CmbSrc.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/690_DustMoteSou/DustMoteSou.c"),
-            Object(NonMatching, "dlls/objects/691/691.c", cflags=cflags_dll_noopt_noprop),
+            Object(Matching, "dlls/objects/691/691.c", cflags=cflags_dll_noopt_noprop),
             Object(MatchingFor("GSAE01"), "dlls/objects/692_CNTcounter/CNTcounter.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/693_Timer/Timer.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/694_CNThitObjec/CNThitObjec.c"),
