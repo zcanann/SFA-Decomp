@@ -89,29 +89,24 @@
 #define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
 #define DUSTER_HIT_VOLUME_SLOT       10
 
-
 extern f32 gDusterWallProbeOffsets[];
 
 void rachnopFindWallPlane(GameObject* obj, void* state);
 
-static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
-{
+static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target) {
     f32 d = (f32)(int)((u16)getAngle(obj->anim.localPosX - target->anim.localPosX,
                                      obj->anim.localPosZ - target->anim.localPosZ) -
                        (u16)obj->anim.rotX);
-    if (d > 32768.0f)
-    {
+    if (d > 32768.0f) {
         d = -65535.0f + d;
     }
-    if (d < -32768.0f)
-    {
+    if (d < -32768.0f) {
         d = 65535.0f + d;
     }
     return d;
 }
 
-void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, void* state, u16* outAngle, float* outDistance)
-{
+void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, void* state, u16* outAngle, float* outDistance) {
     Vec targetPos;
     Vec tmpA;
     Vec vecA;
@@ -143,12 +138,9 @@ void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, void* state, u16* 
     axisA.z = 0.0f;
     PSVECCrossProduct(&axisA, (Vec*)fs->wallPlane.normal, &crossA);
     PSVECNormalize(&crossA, &crossA);
-    if (crossA.x != 0.0f)
-    {
+    if (crossA.x != 0.0f) {
         dxDiff = (obj->anim.localPosX - fs->wallPlane.anchorX) / crossA.x;
-    }
-    else
-    {
+    } else {
         dxDiff = (obj->anim.localPosZ - fs->wallPlane.anchorZ) / crossA.z;
     }
     targetObj = fs->trackedObj;
@@ -168,36 +160,29 @@ void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, void* state, u16* 
     axisB.z = 0.0f;
     PSVECCrossProduct(&axisB, (Vec*)fs->wallPlane.normal, &crossB);
     PSVECNormalize(&crossB, &crossB);
-    if (crossB.x != 0.0f)
-    {
+    if (crossB.x != 0.0f) {
         d = (targetPos.x - fs->wallPlane.anchorX) / crossB.x;
-    }
-    else
-    {
+    } else {
         d = (targetPos.z - fs->wallPlane.anchorZ) / crossB.z;
     }
     dxDiff = dxDiff - d;
     dy = objY - dy;
     angle = getAngle(-dy, dxDiff) & 0xffff;
     delta = angle - (obj->anim.rotY & 0xffff);
-    if (delta > 0x8000)
-    {
+    if (delta > 0x8000) {
         delta = delta - 0xffff;
     }
-    if (delta < -0x8000)
-    {
+    if (delta < -0x8000) {
         delta = delta + 0xffff;
     }
-    if (delta < 0)
-    {
+    if (delta < 0) {
         delta = -delta;
     }
     *outAngle = delta & 0xffff;
     *outDistance = sqrtf(dxDiff * dxDiff + dy * dy);
 }
 
-u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 maxDistance)
-{
+u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 maxDistance) {
     Vec moveTarget;
     Vec moveDelta;
     Vec targetPos;
@@ -237,12 +222,9 @@ u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 m
     axisA.z = 0.0f;
     PSVECCrossProduct(&axisA, (Vec*)fs->wallPlane.normal, &crossA);
     PSVECNormalize(&crossA, &crossA);
-    if (crossA.x != 0.0f)
-    {
+    if (crossA.x != 0.0f) {
         dxA = (o->anim.localPosX - fs->wallPlane.anchorX) / crossA.x;
-    }
-    else
-    {
+    } else {
         dxA = (o->anim.localPosZ - fs->wallPlane.anchorZ) / crossA.z;
     }
     targetObj = fs->trackedObj;
@@ -262,12 +244,9 @@ u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 m
     axisB.z = 0.0f;
     PSVECCrossProduct(&axisB, (Vec*)fs->wallPlane.normal, &crossB);
     PSVECNormalize(&crossB, &crossB);
-    if (crossB.x != 0.0f)
-    {
+    if (crossB.x != 0.0f) {
         d = (targetPos.x - fs->wallPlane.anchorX) / crossB.x;
-    }
-    else
-    {
+    } else {
         d = (targetPos.z - fs->wallPlane.anchorZ) / crossB.z;
     }
     dxDiff = dxA - d;
@@ -275,17 +254,14 @@ u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 m
     angle = getAngle(-dy, dxDiff) & 0xffff;
     rot = o->anim.rotY;
     delta = angle - (rot & 0xffff);
-    if (delta > 0x8000)
-    {
+    if (delta > 0x8000) {
         delta = delta - 0xffff;
     }
-    if (delta < -0x8000)
-    {
+    if (delta < -0x8000) {
         delta = delta + 0xffff;
     }
     turnStep = timeDelta / (f32)(turnTime & 0xffff);
-    if (turnStep > 1.0f)
-    {
+    if (turnStep > 1.0f) {
         turnStep = 1.0f;
     }
     angleStep = (int)((f32)delta * turnStep);
@@ -294,8 +270,7 @@ u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 m
     o->anim.rotY = o->anim.rotX;
     o->anim.rotX = getAngle(fs->wallPlane.normal[2], -fs->wallPlane.normal[0]);
     turnStep = sqrtf(dxDiff * dxDiff + dy * dy);
-    if (turnStep > maxDistance)
-    {
+    if (turnStep > maxDistance) {
         f32 ratio = 1.0f / turnStep;
         dxDiff = maxDistance * (dxDiff * ratio);
         dy = maxDistance * (dy * ratio);
@@ -309,15 +284,13 @@ u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 m
     o->anim.velocityX = turnStep;
     o->anim.velocityY = turnStep;
     o->anim.velocityZ = turnStep;
-    if (angleStep < 0)
-    {
+    if (angleStep < 0) {
         angleStep = -angleStep;
     }
     return angleStep & 0xffff;
 }
 
-void wallPlaneClampMoveTarget(float* outPos, WallPlaneState* plane, float lateral, float height)
-{
+void wallPlaneClampMoveTarget(float* outPos, WallPlaneState* plane, float lateral, float height) {
     float hi;
     float lo;
     Vec sideAxis;
@@ -326,36 +299,25 @@ void wallPlaneClampMoveTarget(float* outPos, WallPlaneState* plane, float latera
     float scale;
 
     hi = plane->boundMin - 15.0f;
-    if (height > hi)
-    {
+    if (height > hi) {
         height = hi;
-    }
-    else
-    {
+    } else {
         lo = (50.0f) + plane->anchorY;
-        if (height < lo)
-        {
+        if (height < lo) {
             height = lo;
         }
     }
-    if (plane->axisLimit > 0.0f)
-    {
+    if (plane->axisLimit > 0.0f) {
         hi = plane->axisLimit - 15.0f;
         lo = 15.0f;
-    }
-    else
-    {
+    } else {
         hi = -15.0f;
         lo = 15.0f + plane->axisLimit;
     }
-    if (lateral > hi)
-    {
+    if (lateral > hi) {
         lateral = hi;
-    }
-    else
-    {
-        if (lateral < lo)
-        {
+    } else {
+        if (lateral < lo) {
             lateral = lo;
         }
     }
@@ -374,8 +336,7 @@ void wallPlaneClampMoveTarget(float* outPos, WallPlaneState* plane, float latera
     outPos[2] = scale * plane->normal[2] + outPos[2];
 }
 
-void rachnopFindWallPlane(GameObject* obj, void* state)
-{
+void rachnopFindWallPlane(GameObject* obj, void* state) {
     u8 didHit;
     float* probeOffsets;
     int i;
@@ -394,19 +355,16 @@ void rachnopFindWallPlane(GameObject* obj, void* state)
 
     didHit = 0;
     probeOffsets = gDusterWallProbeOffsets;
-    for (i = 0; didHit == 0 && i < 4; i++)
-    {
+    for (i = 0; didHit == 0 && i < 4; i++) {
         maxv[0] = obj->anim.localPosX + probeOffsets[i * 2 + 0];
         maxv[1] = obj->anim.localPosY;
         maxv[2] = obj->anim.localPosZ + probeOffsets[i * 2 + 1];
         minv[0] = obj->anim.localPosX - probeOffsets[i * 2 + 0];
         minv[1] = obj->anim.localPosY;
         minv[2] = obj->anim.localPosZ - probeOffsets[i * 2 + 1];
-        didHit = trackGetLineIntersect(maxv, minv, 0.0f, 3, (TrackLineIntersectResult*)hit,
-                                    obj, 5, 3, 0xff, 0);
+        didHit = trackGetLineIntersect(maxv, minv, 0.0f, 3, (TrackLineIntersectResult*)hit, obj, 5, 3, 0xff, 0);
     }
-    if (didHit != 0)
-    {
+    if (didHit != 0) {
         obj->anim.localPosX = (hit[17] - (15.0f)) * ((minv[0] - maxv[0]) / (50.0f)) + maxv[0];
         obj->anim.localPosZ = (hit[17] - (15.0f)) * ((minv[2] - maxv[2]) / (50.0f)) + maxv[2];
         fs->wallPlane.normal[0] = hit[7];
@@ -437,15 +395,10 @@ void rachnopFindWallPlane(GameObject* obj, void* state)
         dv[2] = 0.0f;
         PSVECCrossProduct((Vec*)dv, (Vec*)fs->wallPlane.normal, (Vec*)sideAxis);
         PSVECNormalize((Vec*)sideAxis, (Vec*)sideAxis);
-        if (sideAxis[0] != 0.0f)
-        {
-            fs->wallPlane.axisLimit =
-                (cv[0] - fs->wallPlane.anchorX) / sideAxis[0];
-        }
-        else
-        {
-            fs->wallPlane.axisLimit =
-                (cv[2] - fs->wallPlane.anchorZ) / sideAxis[2];
+        if (sideAxis[0] != 0.0f) {
+            fs->wallPlane.axisLimit = (cv[0] - fs->wallPlane.anchorX) / sideAxis[0];
+        } else {
+            fs->wallPlane.axisLimit = (cv[2] - fs->wallPlane.anchorZ) / sideAxis[2];
         }
         fs->userData1 = 1;
     }
@@ -456,15 +409,11 @@ f32 gDusterWallProbeOffsets[] = {
 };
 
 void rachnopUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
-                              Vec* wpad2, int wpad3)
-{
+                              Vec* wpad2, int wpad3) {
     EnemyState* enemyState = (EnemyState*)state;
-    if (eventKind == 0x10)
-    {
+    if (eventKind == 0x10) {
         enemyState->flags2E8 |= 0x20;
-    }
-    else if (eventKind != 0x11)
-    {
+    } else if (eventKind != 0x11) {
         enemyState->flags2E8 |= 8;
         Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_lash_254);
         enemyState->current = 0;
@@ -472,23 +421,16 @@ void rachnopUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     return;
 }
 
-void rachnopUpdateIdle(GameObject* obj, void* state)
-{
+void rachnopUpdateIdle(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
 
-    if (enemyState->userData1 == 0)
-    {
+    if (enemyState->userData1 == 0) {
         rachnopFindWallPlane(obj, state);
-    }
-    else
-    {
-        if ((enemyState->trackedObj->anim.classId == 1) &&
-            playerIsClimbingWall(enemyState->trackedObj) != 0)
-        {
+    } else {
+        if ((enemyState->trackedObj->anim.classId == 1) && playerIsClimbingWall(enemyState->trackedObj) != 0) {
             enemyState->flags2E4 &= ~0x10000;
         }
-        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_id_253);
             Baddie_SetMove(obj, state, 2, 1.0f, 0, 0);
         }
@@ -496,79 +438,56 @@ void rachnopUpdateIdle(GameObject* obj, void* state)
     return;
 }
 
-void rachnopUpdateApproach(GameObject* obj, void* state)
-{
+void rachnopUpdateApproach(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
 
-    if (enemyState->userData1 == 0)
-    {
+    if (enemyState->userData1 == 0) {
         rachnopFindWallPlane(obj, state);
-    }
-    else if ((enemyState->trackedObj->anim.classId == 1) &&
-             playerIsClimbingWall(enemyState->trackedObj) != 0)
-    {
+    } else if ((enemyState->trackedObj->anim.classId == 1) && playerIsClimbingWall(enemyState->trackedObj) != 0) {
         fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, 0.5f);
-        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             Baddie_SetMove(obj, state, 0, (0.5f), 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_id_252);
         }
-    }
-    else
-    {
+    } else {
         enemyState->flags2E4 |= 0x10000;
     }
     return;
 }
 
-void rachnopUpdateAttack(GameObject* obj, void* state)
-{
+void rachnopUpdateAttack(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
     short move;
     u16 outIds[2];
     float outVec[3];
 
-    if (enemyState->userData1 == 0)
-    {
+    if (enemyState->userData1 == 0) {
         rachnopFindWallPlane(obj, state);
-    }
-    else if ((enemyState->trackedObj->anim.classId == 1) &&
-             playerIsClimbingWall(enemyState->trackedObj) != 0)
-    {
+    } else if ((enemyState->trackedObj->anim.classId == 1) && playerIsClimbingWall(enemyState->trackedObj) != 0) {
         ObjHits_SetHitVolumeSlot(&obj->anim, DUSTER_HIT_VOLUME_SLOT, 1, 0);
         move = obj->anim.currentMove;
-        if (move == 3)
-        {
+        if (move == 3) {
             fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, 0.0f);
-        }
-        else if ((move == 0) || (move == 1))
-        {
+        } else if ((move == 0) || (move == 1)) {
             fireflyLanternSteerTowardTarget((short*)obj, state, 0x19, 0.5f);
         }
         fireflyLanternGetTargetAngleAndDistance(obj, state, outIds, outVec);
         if (((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
-            ((outIds[0] < 0x5dc && (obj->anim.currentMove != 1))))
-        {
-            if (outIds[0] < 0x5dc)
-            {
+            ((outIds[0] < 0x5dc && (obj->anim.currentMove != 1)))) {
+            if (outIds[0] < 0x5dc) {
                 Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_251);
                 Baddie_SetMove(obj, state, 1, 0.5f, 0, 0);
-            }
-            else
-            {
+            } else {
                 Baddie_SetMove(obj, state, 3, 0.5f, 0, 0);
             }
         }
-    }
-    else
-    {
+    } else {
         enemyState->flags2E4 |= 0x10000;
     }
     return;
 }
 
-void rachnopInit(GameObject* unused, void* state)
-{
+void rachnopInit(GameObject* unused, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
     float fa;
     float fb;
