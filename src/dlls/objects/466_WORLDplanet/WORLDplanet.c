@@ -53,20 +53,20 @@
 #define WORLDPLANET_CONFIRM_BUTTON         0x100
 #define WORLDPLANET_CANCEL_BUTTON          0x200
 
-#define WORLDPLANET_CAMERA_FOCUS_FRAMES         0x50
+#define WORLDPLANET_CAMERA_FOCUS_FRAMES 0x50
 
 #define WORLDPLANET_STATE_FLAG_ENVFX_STARTED           0x01
 #define WORLDPLANET_STATE_FLAG_CAMERA_SET              0x04
 #define WORLDPLANET_STATE_FLAG_INITIAL_ACTION_RELEASED 0x08
 
-#define WORLDPLANET_FOX_OBJECT_ID               0x42FF5
-#define WORLDPLANET_ARWING_OBJECT_ID            0x4300C
-#define WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID     0x4300D
-#define WORLDPLANET_FOX_SPAWN_OBJECT_ID         0x80F
-#define WORLDPLANET_FOX_SPAWN_SETUP_SIZE        0x20
-#define WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES    0x78
-#define WORLDPLANET_FOX_SPAWN_MIN_FRAMES        0x708
-#define WORLDPLANET_FOX_SPAWN_MAX_FRAMES        3000
+#define WORLDPLANET_FOX_OBJECT_ID            0x42FF5
+#define WORLDPLANET_ARWING_OBJECT_ID         0x4300C
+#define WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID  0x4300D
+#define WORLDPLANET_FOX_SPAWN_OBJECT_ID      0x80F
+#define WORLDPLANET_FOX_SPAWN_SETUP_SIZE     0x20
+#define WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES 0x78
+#define WORLDPLANET_FOX_SPAWN_MIN_FRAMES     0x708
+#define WORLDPLANET_FOX_SPAWN_MAX_FRAMES     3000
 
 #define WORLDPLANET_BOOT_MUSIC_TRIGGER       0x8F
 #define WORLDPLANET_SELECT_TITLE_TEXT_ID     0x2A7
@@ -134,7 +134,7 @@ void worldplanet_updateMapLighting(GameObject* obj) {
     WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurAmbient, gWorldPlanetAmbientFrom, gWorldPlanetAmbientTo, blue,
                              gWorldPlanetLightingLerpT)
     skySetAmbientColor(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetCurAmbient.red, gWorldPlanetCurAmbient.green,
-                     gWorldPlanetCurAmbient.blue);
+                       gWorldPlanetCurAmbient.blue);
 
     WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurMoon, gWorldPlanetMoonFrom, gWorldPlanetMoonTo, red,
                              gWorldPlanetLightingLerpT)
@@ -143,7 +143,7 @@ void worldplanet_updateMapLighting(GameObject* obj) {
     WORLDPLANET_LERP_CHANNEL(gWorldPlanetCurMoon, gWorldPlanetMoonFrom, gWorldPlanetMoonTo, blue,
                              gWorldPlanetLightingLerpT)
     skySetMoonColor(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetCurMoon.red, gWorldPlanetCurMoon.green,
-                       gWorldPlanetCurMoon.blue);
+                    gWorldPlanetCurMoon.blue);
 
     gWorldPlanetCurIntensity = gWorldPlanetLightingLerpT * 128.0f + 32.0f;
     skySetLightDirection(WORLDPLANET_SKY_LIGHT_MASK, 0.739264f, 0.0f, 0.673415f);
@@ -181,9 +181,11 @@ WorldPlanetPaddedColorRGBA8 gWorldPlanetMoonTo = {0x13, 0x23, 0x36, 0, {0, 0, 0,
  *          = locked(0) / available(1) / selected(2). Verified live that all five
  *          routes exist - the Arwing is just unlock-gated (the effectState-0 branch
  *          hides it), so in normal play only the reachable planet's is ever seen. */
-static int sWorldPlanetOrbitObjectIds[WORLDPLANET_PLANET_COUNT] = {0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9, 0x00042FEB};
+static int sWorldPlanetOrbitObjectIds[WORLDPLANET_PLANET_COUNT] = {0x00042FEA, 0x00042FE8, 0x0004300D, 0x00042FE9,
+                                                                   0x00042FEB};
 static int sWorldPlanetOrbitAngleOffsets[WORLDPLANET_PLANET_COUNT] = {0, 0x4000, 0x5FA0, 0x8000, 0xC000};
-static int sWorldPlanetFlightPathObjectIds[WORLDPLANET_PLANET_COUNT] = {0x00043099, 0x00042FFF, 0x0004309A, 0x00043098, 0x00043097};
+static int sWorldPlanetFlightPathObjectIds[WORLDPLANET_PLANET_COUNT] = {0x00043099, 0x00042FFF, 0x0004309A, 0x00043098,
+                                                                        0x00043097};
 
 /* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
  * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),
@@ -300,7 +302,8 @@ void worldplanet_update(GameObject* obj) {
         effectParams.offsetY = 39.745197f;
         effectParams.offsetZ = -42.603f;
         (*gPartfxInterface)
-            ->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &effectParams, WORLDPLANET_SELECTION_PFX_MODE, -1, NULL);
+            ->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &effectParams, WORLDPLANET_SELECTION_PFX_MODE, -1,
+                          NULL);
         worldplanet_readMapInput(obj, in.inX, &in.inY);
         (obj)->anim.rotZ -= 10;
         (obj)->anim.rotY = 0x3448;
@@ -365,7 +368,8 @@ void worldplanet_update(GameObject* obj) {
                 gWorldPlanetPathProgress = 0.0f;
                 {
                     WorldObjState* planetState =
-                        ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[prevPlanet]])->extra;
+                        ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[prevPlanet]])
+                            ->extra;
                     GameObject* planetObj;
                     planetState->effectState = 0;
                     planetObj = ObjList_FindObjectById(
@@ -439,7 +443,8 @@ void worldplanet_update(GameObject* obj) {
                 pstate->effectState = 1;
             }
         }
-        objId = (int)ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
+        objId = (int)ObjList_FindObjectById(
+            sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0 && gWorldPlanetInputLockTimer == 0) {
             switch (state->selectionLocked) {
             case 0:
@@ -533,17 +538,14 @@ void worldplanet_update(GameObject* obj) {
                 if (state->orbitSoundFrameCount > WORLDPLANET_ORBIT_SOUND_DELAY_FRAMES) {
                     Sfx_KeepAliveLoopedObjectSound(planetObj, SFXTRIG_crf_babyambi2);
                 }
-                planetObj->anim.localPosX = orbitRadius *
-                                                fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
+                planetObj->anim.localPosX = orbitRadius * fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
                                                 fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosX;
-                planetObj->anim.localPosY = orbitRadius *
-                                                fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
+                planetObj->anim.localPosY = orbitRadius * fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
                                                 fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosY;
                 planetObj->anim.localPosZ =
-                    orbitRadius * fcos16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) +
-                    (obj)->anim.localPosZ;
+                    orbitRadius * fcos16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) + (obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;
