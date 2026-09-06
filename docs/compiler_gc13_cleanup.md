@@ -1264,3 +1264,21 @@ are texture pointers that `SkyState` does not name; `hudTextures`, which is
 used both as an array and through the `HudTextures` record; `gSaveGameData`,
 a byte array addressed by offset from five TUs; and objprint's static render
 helpers, whose `u8*` parameters chain into the model API.
+
+## September 6: Shared hit-state and shader contracts
+
+`ObjHitsPriorityState.stateIndex` now has one signed-byte definition at 0xB0.
+The hit-state setter and track model-bank lookup already compiled with that
+view; DIMGate's three reads explicitly reinterpreted the formerly unsigned
+default as `s8`. Those reads now use the member directly. The per-consumer
+`OBJHITS_STATE_INDEX_S8` switch is removed.
+
+`mapBlockRender_setShader` now has one `u8 doSetup` declaration, matching its
+definition and its same-TU variable argument. The only callers that previously
+saw the conflicting `int` declaration are two lightmap calls with literal `1`.
+The `TEX_SETSHADER_U8` switch is removed as well.
+
+The shared-header change rebuilt 668 objects. All 2,873 source-object SHA-256
+hashes remained identical, including symbols, relocations and data layout.
+This is contract recovery, not a matching-percentage gain. No compiler flags,
+matching classifications or section ownership changed.

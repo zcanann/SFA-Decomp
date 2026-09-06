@@ -1,5 +1,4 @@
 #define OBJHITS_SETTERS_S16
-#define OBJHITS_STATE_INDEX_S8
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/debug.h"

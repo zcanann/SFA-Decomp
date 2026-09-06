@@ -14,11 +14,7 @@ void mapBlockRender_drawDimmedAabbLights(struct MapBlockBoundsRec* bounds, struc
 void mapBlockRender_drawLightmapIndirectPasses(struct MapBlockData* blockData, struct Shader* shader,
                                                ModelRenderInstrsState* state, float (*viewMtx)[4]);
 struct Shader* mapBlockRender_setLightmapShader(struct MapBlockData* blockData, ModelRenderInstrsState* state);
-#ifdef TEX_SETSHADER_U8
 struct Shader* mapBlockRender_setShader(u8 doSetup, struct MapBlockData* blockData, ModelRenderInstrsState* state);
-#else
-struct Shader* mapBlockRender_setShader(int doSetup, struct MapBlockData* blockData, ModelRenderInstrsState* state);
-#endif
 void mapBlockRender_callList(u8 passSelect, u32 visArg, struct MapBlockData* block, struct Shader* shader,
                              ModelRenderInstrsState* state, float* mtx);
 

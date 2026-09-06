@@ -1,5 +1,3 @@
-#define OBJHITS_STATE_INDEX_S8
-#define TEX_SETSHADER_U8
 #include "main/newshadows.h"
 #include "main/map_block.h"
 #include "main/texture.h"
@@ -23,7 +21,6 @@
 #include "main/model_render_instrs_api.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
-#undef OBJHITS_STATE_INDEX_S8
 #include "main/objtype.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
