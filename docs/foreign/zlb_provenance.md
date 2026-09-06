@@ -1,9 +1,11 @@
 # zlbDecompress provenance investigation, 2026-09-06
 
-The leading hypothesis is **handwritten PowerPC assembly, possibly produced or
-maintained through macros or an assembly-porting tool**. No compiler has been
-identified. The old claim that `mcrxr` proves GCC/SN ProDG provenance is withdrawn.
-The live C reconstruction continues to use ProDG 3.5 and remains `NonMatching`.
+**Provenance remains unresolved.** Handwritten assembly, macro-generated code,
+mixed C/assembly, and an unavailable or modified compiler remain hypotheses.
+The evidence below weakens the specific stock-GCC attribution; it does not
+establish that the whole function was handwritten. The old claim that `mcrxr`
+proves GCC/SN ProDG provenance is withdrawn. The live reconstruction continues
+to use ProDG 3.5 and remains `NonMatching`.
 
 This investigation started at `e0cff4c0f6` and uses EN v1.0 retail, function
 `0x8004B658..0x8004BF88` (2,352 bytes / 588 instructions). The DOL SHA-256 is
@@ -49,8 +51,10 @@ This investigation started at `e0cff4c0f6` and uses EN v1.0 retail, function
    Sharing a macro or author is at least as plausible as sharing a C compiler.
 
 4. **The zlb register and instruction choices resemble authored assembly.**
-   Input remains in `r3`, output in `r5`; unused arguments `r4` and `r6` are never
-   repurposed. Bit position, literal lengths/table/maxbits, distance
+   Input remains in `r3`, output in `r5`; `r6` is unused. **Correction:** `r4` is
+   repurposed for the code-length alphabet's maximum length, starting with
+   `li r4,7` at `0x8004B91C`. The earlier claim that it stayed idle was wrong.
+   Bit position, literal lengths/table/maxbits, distance
    lengths/table/maxbits, and rotate count occupy `r7,r8,r9,r10,r11,r12,r14,r15`.
    `r16..r19` recur as scratch registers in the bit-reader sequences. A leaf
    function saves LR despite having no calls. The 84-byte frame consists of the
@@ -107,8 +111,9 @@ small-data controls in this period; see the target-option documentation above.
 
 That possibility does not explain the evidence by itself. A normal Linux/SysV
 build still aligns the stack; a Mac/AIX object also raises object-format and
-calling-convention issues. An assembly port or custom output pass fits the
-observed irregularities better than changing the advertised target platform.
+calling-convention issues. An assembly port or custom output pass is another
+explanation for the observed irregularities; changing the advertised target
+platform alone does not account for them.
 The DKR/JFG reference projects contain assembly inflate implementations, which
 supports investigating Rare's assembly lineage, but their bit-buffer/table
 organization differs. This investigation did not establish a direct donor.
@@ -125,8 +130,8 @@ explain **all** of the following, rather than force the two conspicuous opcodes:
   carry makes `addme.` subtract one. Ordinary `addic.` can implement that
   decrement/test without this two-instruction sequence.
 - The 84-byte frame and prologue/epilogue ordering, outside normal ABI rounding.
-- Allocation that leaves unused argument registers idle while consuming nearly
-  every nonvolatile GPR, and the recurring bit-reader scratch register choices.
+- Allocation that leaves `r6` idle while consuming nearly every nonvolatile
+  GPR, and the recurring bit-reader scratch register choices.
 - The exact mix of immediate masks, rotate masks, indexed loads, update forms,
   loop-address rematerialization, and a comparison whose result is dead.
 
@@ -158,6 +163,63 @@ all three. The pre-change object fails specifically by overwriting the stored
 copy's canary; its fixed and dynamic cases pass. This is a bounded semantic
 comparison, not an exhaustive stream test or a simulation of Gekko fault handling.
 `ninja all_source` and the strict retail checksum target also pass.
+
+## Partial inline assembly experiment
+
+With the user's explicit authorization to try partial inline assembly, a small
+retained change raises the function's objdiff score from **52.943880% to
+57.977890%**. It adds four assembly instructions to `ZADV`, expanded at fourteen
+call sites, plus local register bindings for the bit reader and table state.
+All loops, Huffman construction, symbol decoding, copies, and entry/exit code
+remain C/compiler generated. The arithmetic-only asm declares its inputs,
+outputs, early-clobber scratch register, and condition-code clobber; it does
+not access memory. The MWCC diagnostic path keeps the C macro.
+
+The code-length alphabet now has its own `codeLengthMaxBits` local, distinct
+from `literalMaxBits`, reflecting their separate retail registers (`r4` and
+`r10`). This also exposed the incorrect idle-`r4` claim above. Register bindings
+and the improved score are reconstruction choices, not compiler provenance.
+
+Selected ProDG 3.5 experiments, with the existing optimization flags:
+
+| Variant | Instructions | Frame | `mcrxr` | `andi.` | objdiff % |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Starting C | 577 | 80 | 0 | 1 | 52.943880 |
+| Bit-advance asm, free register allocation | 584 | 80 | 0 | 15 | 55.241497 |
+| Retained helper, register bindings, separate maximum lengths | 583 | 80 | 0 | 15 | 57.977890 |
+| Prototype with custom entry/exit and stored-copy asm | 584 | 84 | 1 | 15 | 58.556120 |
+| Retail | 588 | 84 | 2 | 24 | 100 |
+
+The custom-frame prototype uses ProDG's accepted `__attribute__((naked))`, a
+volatile final-block flag, and short assembly prologue/epilogue blocks. It can
+emit the 84-byte frame without converting the decoder body to assembly. It
+passes the same bounded emulation cases, but was not retained: C spills still
+depend on the compiler's frame layout, and the improvement over the smaller
+change is only 0.578230 percentage points. A future version would need an
+explicit audit of every stack access after each compiler/source change.
+
+Mask, rotate, and bit-peek asm helpers, other register subsets, and optimization
+flags did not produce a large advance. The remaining mismatch includes loop
+layout, pointer rematerialization, register allocation, and scheduling across
+macro boundaries. For example, retail places `cmpwi` between the position mask
+and shift-count update at `0x8004BA6C..0x8004BA74`; a four-instruction opaque
+`ZADV` block prevents that exact interleaving. Merely forcing the conspicuous
+opcodes and frame does not establish a full match. Further C restructuring may
+help, but an exact match with only small asm islands has not been demonstrated.
+
+All five installed ProDG releases compile the retained version to the same
+instruction fingerprint and 57.977890% score. All four data sections remain
+100%; the unit remains `NonMatching`. Formatting the source and owned header
+does not change the instruction fingerprint or score. The emulator now checks
+15 streams against both retail and source: stored, fixed, dynamic, empty,
+single-byte, overlapping-copy, full-byte-alphabet, longer-distance, and
+multi-block cases. Every run checks both output canaries, zero return value,
+stack restoration, `r2`, `r13..r31`, and CR2-CR4 preservation. These checks pass
+for both the retained version and the custom-frame prototype; they are not an
+exhaustive DEFLATE or hardware-fault model.
+
+The retained change also passes `ninja all_source`, the strict retail checksum
+target, and `clang-format --dry-run --Werror` for the source and owned header.
 
 ## Reproduction
 

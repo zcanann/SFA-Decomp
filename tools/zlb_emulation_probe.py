@@ -3,6 +3,7 @@
 
 Build build/GSAE01/src/main/zlb.o first. This executes the complete functions,
 including their own tables, on fixed/dynamic streams and a stored-copy witness.
+Checks also cover the stack pointer, nonvolatile GPRs, and CR2-CR4 on return.
 The stored witness deliberately preserves retail's overlapping-halfword LEN bug;
 it is not an RFC1951 conformance test. No source or build config is modified.
 """
@@ -43,6 +44,27 @@ def cases() -> list[tuple[str, bytes, bytes]]:
         if (compressed[2] >> 1) & 3 != block_type:
             raise RuntimeError(f"Host zlib did not generate a {name} block")
         result.append((name, compressed + bytes(8), payload))
+    # Exercise tiny streams, overlapping backreferences, wider alphabets,
+    # longer distances, and repeated block/table setup. Z_BLOCK avoids inserting
+    # an empty stored block, which would trigger a separate retail bug.
+    chunk = bytes(random.Random(91).choices(range(256), k=1024))
+    payloads = [("empty", b""), ("single", b"Q"), ("overlap", b"A" * 4096),
+                ("alphabet", bytes(range(256)) * 16), ("distance", chunk * 12)]
+    for name, payload in payloads:
+        for strategy_name, strategy in (("fixed", zlib.Z_FIXED), ("default", zlib.Z_DEFAULT_STRATEGY)):
+            compressor = zlib.compressobj(6, zlib.DEFLATED, zlib.MAX_WBITS, 8, strategy)
+            compressed = compressor.compress(payload) + compressor.flush()
+            if (compressed[2] >> 1) & 3 == 0:
+                raise RuntimeError(f"Host zlib generated an unsupported stored {name} case")
+            result.append((f"{name}-{strategy_name}", compressed + bytes(8), payload))
+    for strategy_name, strategy in (("fixed", zlib.Z_FIXED), ("default", zlib.Z_DEFAULT_STRATEGY)):
+        compressor = zlib.compressobj(6, zlib.DEFLATED, zlib.MAX_WBITS, 8, strategy)
+        blocks = [bytes(random.Random(seed).choices(range(8), k=4000)) for seed in (17, 29, 73)]
+        compressed = b""
+        for block in blocks[:-1]:
+            compressed += compressor.compress(block) + compressor.flush(zlib.Z_BLOCK)
+        compressed += compressor.compress(blocks[-1]) + compressor.flush()
+        result.append((f"multiblock-{strategy_name}", compressed + bytes(8), b"".join(blocks)))
     return result
 
 
@@ -91,7 +113,17 @@ def main() -> None:
                 if segment:
                     emulator.mem_write(address, segment)
             emulator.mem_write(SOURCE, compressed)
+            emulator.mem_write(DESTINATION - 16, b"\xcd" * 16)
             emulator.mem_write(DESTINATION, b"\xcd" * (len(expected) + 16))
+            saved_registers = {getattr(ppc, f"UC_PPC_REG_{index}"): 0xA1000000 + index * 0x10101
+                               for index in range(14, 32)}
+            saved_registers.update({ppc.UC_PPC_REG_1: STACK, ppc.UC_PPC_REG_2: sda2,
+                                    ppc.UC_PPC_REG_13: sda1})
+            for register, value in saved_registers.items():
+                emulator.reg_write(register, value)
+            initial_cr = 0xA5C39E71
+            emulator.reg_write(ppc.UC_PPC_REG_CR, initial_cr)
+            emulator.reg_write(ppc.UC_PPC_REG_XER, 0xE0000000)
             # Retail zlb uses absolute addresses. GNU ld may relax source ELF
             # accesses to its own small-data bases, so initialize those as well.
             for register, value in ((ppc.UC_PPC_REG_1, STACK), (ppc.UC_PPC_REG_3, SOURCE),
@@ -105,11 +137,16 @@ def main() -> None:
                    "returned": emulator.reg_read(ppc.UC_PPC_REG_PC) == RETURN,
                    "return_value": emulator.reg_read(ppc.UC_PPC_REG_3),
                    "output_correct": actual[:len(expected)] == expected,
-                   "canary_intact": actual[len(expected):] == b"\xcd" * 16}
+                   "canary_intact": actual[len(expected):] == b"\xcd" * 16
+                       and bytes(emulator.mem_read(DESTINATION - 16, 16)) == b"\xcd" * 16,
+                   "callee_saved_intact": all(emulator.reg_read(reg) == value
+                                               for reg, value in saved_registers.items())
+                       and emulator.reg_read(ppc.UC_PPC_REG_CR) & 0x00FFF000 == initial_cr & 0x00FFF000}
             results.append(row)
             print(json.dumps(row))
     (output / "results.json").write_text(json.dumps(results, indent=2) + "\n")
     if not all(r["returned"] and r["return_value"] == 0 and r["output_correct"] and r["canary_intact"]
+               and r["callee_saved_intact"]
                for r in results):
         raise SystemExit(1)
 
