@@ -23,7 +23,7 @@ typedef struct GameTextDef {
 STATIC_ASSERT(sizeof(GameTextDef) == 0xc);
 STATIC_ASSERT(offsetof(GameTextDef, strings) == 0x8);
 
-#define GAMETEXT_FALLBACK_COUNT 8
+#define GAMETEXT_FALLBACK_COUNT       8
 #define GAMETEXT_FALLBACK_BUFFER_SIZE 0x40
 
 extern f32 sGameTextFallbackElapsedFrames[GAMETEXT_FALLBACK_COUNT];

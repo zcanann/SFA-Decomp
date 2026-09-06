@@ -1111,7 +1111,6 @@ int gGameTextBoxColorB = 0xFF;
 int gGameTextBoxColorA = 0xFF;
 char lbl_803DB404[4] = {0};
 
-
 static void translateToDinoLanguage(u8* str);
 
 /*
@@ -2153,8 +2152,7 @@ void* gameTextGet(int textId) {
                 f32 requestDelta = zero + timeDelta;
                 *cachedRequestDelta = requestDelta;
                 if (requestDelta >= 120.0f) {
-                    sprintf(*cachedEntry->strings, messages->notInFile, textId,
-                            sMapDirectoryNameTable[curGameTextDir]);
+                    sprintf(*cachedEntry->strings, messages->notInFile, textId, sMapDirectoryNameTable[curGameTextDir]);
                 }
             }
             return cachedEntry;
@@ -2677,7 +2675,7 @@ void gameTextInit(void) {
 
 void gameTextInitRendererState(void) {
     Texture** texture;
-    char (*fallbackBuffer)[GAMETEXT_FALLBACK_BUFFER_SIZE];
+    char(*fallbackBuffer)[GAMETEXT_FALLBACK_BUFFER_SIZE];
     char** fallbackString;
     GameTextDef* fallbackDef;
     GameTextBox* textWindow;
@@ -2687,7 +2685,6 @@ void gameTextInitRendererState(void) {
     f32 zero;
     int i;
     int j;
-
 
     i = GAMETEXT_BOX_COUNT;
     p = textWindow = &gTextBoxes[GAMETEXT_BOX_COUNT];

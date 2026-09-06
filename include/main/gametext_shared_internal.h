@@ -36,5 +36,4 @@ void gameTextRenderStrs(char* str, int boxIdx);
 void gameTextTickReveal(int textId, struct TextDisplayState* state);
 void gameTextRenderById(int textId, int x, int y);
 
-
 #endif /* MAIN_GAMETEXT_SHARED_INTERNAL_H_ */
