@@ -4,6 +4,7 @@ The host fixture mirrors only the retail header fields used by this function.
 Pixel values, not serialized byte order, cross the host/PowerPC boundary.
 """
 import ctypes
+import math
 from pathlib import Path
 import random
 import shutil
@@ -100,6 +101,8 @@ class ShadowTextureBlendTests(unittest.TestCase):
         for helper in ("fillRampTexture", "fillInverseRampTexture", "fillReflectionGradientTexture"):
             first, last = find_function_body(source, helper)
             fills.append("static void " + helper + "(void) " + source[first:last + 1])
+        first, last = find_function_body(source, "newshadows_createDistortionTexture")
+        distortion = source[first:last + 1]
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-shadow-blend-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)
@@ -157,9 +160,29 @@ EXPORT void fillReflectionGradient(Texture* texture) {
     gNewShadowReflectionGradientTexture = texture;
     fillReflectionGradientTexture();
 }
+typedef struct NewShadowVectorTexel { u16 packedXY; } NewShadowVectorTexel;
+static Texture* gNewShadowDistortionTexture;
+static Texture* allocation;
+static int allocationValid;
+static Texture* textureAlloc(int width, int height, int format, int a, int b,
+                             int c, int d, int e, int f) {
+    allocationValid = width == 256 && height == 256 && format == 3 &&
+                      a == 0 && b == 0 && c == 0 && d == 0 && e == 1 && f == 1;
+    return allocation;
+}
+void DCFlushRange(void* address, unsigned int size) { DCStoreRange(address, size); }
+float sqrtf(float);
+static void newshadows_createDistortionTexture(void)
+''' + distortion + r'''
+EXPORT int fillDistortion(Texture* texture) {
+    allocation = texture;
+    allocationValid = 0;
+    newshadows_createDistortionTexture();
+    return allocationValid && gNewShadowDistortionTexture == texture;
+}
 ''')
         library = directory / ("blend.dll" if sys.platform == "win32" else "blend.so")
-        command = [compiler, "-shared", "-O2", "-ffp-contract=off", str(fixture), "-o", str(library)]
+        command = [compiler, "-shared", "-O2", "-ffp-contract=off", "-fno-math-errno", str(fixture), "-o", str(library)]
         if sys.platform == "win32":
             command += ["-fuse-ld=lld", "-nostdlib", "-Wl,/noentry"]
         else:
@@ -180,6 +203,40 @@ EXPORT void fillReflectionGradient(Texture* texture) {
             function = getattr(cls.library, name)
             function.argtypes = [ctypes.c_void_p]
             function.restype = None
+        cls.library.fillDistortion.argtypes = [ctypes.c_void_p]
+        cls.library.fillDistortion.restype = ctypes.c_int
+
+    def test_distortion_field(self):
+        payload_size = 256 * 256 * 2
+        storage = (ctypes.c_ubyte * (HEADER_SIZE + payload_size + 32))()
+        ctypes.memset(storage, 0xCD, len(storage))
+        header = TextureHeader.from_buffer(storage)
+        header.dataSize = payload_size
+        original_header = bytes(storage[:HEADER_SIZE])
+        self.library.resetFlush()
+        self.assertEqual(self.library.fillDistortion(ctypes.addressof(storage)), 1)
+        self.assertEqual(bytes(storage[:HEADER_SIZE]), original_header)
+        self.assertEqual(bytes(storage[-32:]), bytes([0xCD]) * 32)
+        self.assertEqual(self.library.getFlushCount(), 1)
+        self.assertEqual(self.library.getFlushAddress(), ctypes.addressof(storage) + HEADER_SIZE)
+        self.assertEqual(self.library.getFlushSize(), payload_size)
+        pixels = (ctypes.c_ushort * (256 * 256)).from_buffer(storage, HEADER_SIZE)
+
+        def f32(value):
+            return ctypes.c_float(value).value
+
+        slope = f32(0.9)
+        intercept = f32(slope * 112.0)
+        for y in range(256):
+            for x in range(256):
+                dx, dy = x - 127.5, y - 127.5
+                radius = f32(math.sqrt(dx * dx + dy * dy))
+                strength = f32(2.0 * f32(intercept - f32(slope * radius))) / 256.0 if radius <= 112.0 else 0.0
+                horizontal = int(f32(f32(127.0 * f32(f32(dx / radius) * strength)) + 128.0))
+                vertical = int(f32(f32(127.0 * f32(f32(dy / radius) * strength)) + 128.0))
+                tile = (y // 4) * 64 + x // 4
+                pixel = (y % 4) * 4 + x % 4
+                self.assertEqual(pixels[tile * 16 + pixel], (horizontal << 8) | vertical, (x, y))
 
     def test_procedural_ramps_and_gradient(self):
         for name, width, bytes_per_pixel in (

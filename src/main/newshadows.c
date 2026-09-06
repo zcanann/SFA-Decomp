@@ -330,13 +330,6 @@ extern inline float sqrtf(float x) {
     return x;
 }
 
-extern const f32 lbl_803DED40;
-extern const f32 lbl_803DEDC0;
-extern const f32 lbl_803DEDD0;
-extern const f32 lbl_803DEDE0;
-extern const f32 lbl_803DEDF0;
-extern const f32 lbl_803DEDF4;
-extern const f32 lbl_803DEDFC;
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window) {
     u32 sum;
@@ -1139,44 +1132,38 @@ void newshadows_freeDistortionTexture(void) {
 }
 
 void newshadows_createDistortionTexture(void) {
-    int yhi;
-    int ylo;
-    int y, x;
-    f32 dirX, dirY;
-    f32 dist;
-    f32 s;
-    f32 t;
-    f32 normY;
+    int tileColumnOffset;
+    int columnPixelOffset;
+    int x, y;
+    f32 directionY, directionX;
+    f32 radius;
+    f32 strength;
+    f32 normalizedX;
     gNewShadowDistortionTexture = textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
-    for (y = 0; y < 0x100; y++) {
-        x = 0;
-        yhi = (y >> 2) * 0x20;
-        ylo = (y & 3) * 2;
-        for (; x < 0x100; x++) {
-            u8* rowBase;
-            u8* tileRow;
+    for (x = 0; x < 0x100; x++) {
+        y = 0;
+        tileColumnOffset = (x >> 2) * 0x20;
+        columnPixelOffset = (x & 3) * 2;
+        for (; y < 0x100; y++) {
+            u8* columnBase;
+            u8* tileBase;
             u8* texel;
-            rowBase = (u8*)gNewShadowDistortionTexture;
-            rowBase += ylo;
-            tileRow = rowBase + yhi;
-            tileRow += (x & 3) * 8;
-            texel = tileRow + (x >> 2) * 0x800;
-            dirY = y - 127.5f;
-            dirX = x - 127.5f;
-            dist = sqrtf(dirY * dirY + dirX * dirX);
-            normY = dirY / dist;
-            dirX /= dist;
-            if (dist <= 112.0f) {
-                t = 2.0f * (100.799995f - 0.9f * dist);
-                s = t * 0.00390625f;
-            } else {
-                s = 0.0f;
-            }
-            normY *= s;
-            dirX *= s;
-            normY = lbl_803DEDC0 * normY + 128.0f;
-            dirX = lbl_803DEDC0 * dirX + 128.0f;
-            ((NewShadowVectorTexel*)(texel + 0x60))->packedXY = (u16)((int)dirX | (((int)normY & 0xffff) << 8));
+            columnBase = (u8*)gNewShadowDistortionTexture;
+            columnBase += columnPixelOffset;
+            tileBase = columnBase + tileColumnOffset;
+            tileBase += (y & 3) * 8;
+            texel = tileBase + (y >> 2) * 0x800;
+            directionX = x - 127.5f;
+            directionY = y - 127.5f;
+            radius = sqrtf(directionX * directionX + directionY * directionY);
+            normalizedX = directionX / radius;
+            directionY /= radius;
+            strength = radius <= 112.0f ? (2.0f * (0.9f * 112.0f - 0.9f * radius)) / 256.0f : 0.0f;
+            normalizedX *= strength;
+            directionY *= strength;
+            normalizedX = 127.0f * normalizedX + 128.0f;
+            directionY = 127.0f * directionY + 128.0f;
+            ((NewShadowVectorTexel*)(texel + sizeof(Texture)))->packedXY = (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
         }
     }
     DCFlushRange(gNewShadowDistortionTexture + 1, gNewShadowDistortionTexture->dataSize);
@@ -1245,7 +1232,7 @@ static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewSh
                 intensity = fade * falloff + intensity;
                 verticalOffset = verticalOffset / radius;
                 shift = shift + verticalOffset;
-                shift = 0.5f * (1.0f - frame * lbl_803DEDD0) + shift;
+                shift = 0.5f * (1.0f - frame / 16.0f) + shift;
             }
         }
     }
@@ -1255,7 +1242,7 @@ static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewSh
     if (shift > 1.0f) {
         shift = 1.0f;
     }
-    *outShift = lbl_803DED40 * shift + 0.4375f;
+    *outShift = 0.125f * shift + 0.4375f;
     *outIntensity = intensity;
 }
 /* Scatter periodic noise placements, render their animation, then the caustic texture. */
@@ -1345,8 +1332,8 @@ void newshadows_initProceduralTextures(void) {
                     f32 rowCoord, columnCoord;
                     texelAddress += (column & 3) * 8;
                     texelAddress += (column >> 2) * 0x200;
-                    rowCoord = row * lbl_803DEDE0;
-                    columnCoord = column * lbl_803DEDE0;
+                    rowCoord = row / 64.0f;
+                    columnCoord = column / 64.0f;
                     evalNoisePlacements(rowCoord, columnCoord, frame, gNewShadowNoiseData.placements,
                                         noisePlacementCount, &shift, &intensity);
                     highByte = 255.0f * intensity;
@@ -1422,11 +1409,11 @@ static inline void fillDiskTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x80;
             off2 = off + sizeof(Texture);
-            dx = cy * lbl_803DEDD0;
+            dx = cy / 16.0f;
             dz = (f32)j - 16.0f;
-            dz = dz * lbl_803DEDD0;
-            dx = dx * lbl_803DEDF0;
-            dz = dz * lbl_803DEDF0;
+            dz = dz / 16.0f;
+            dx = dx * 1.1f;
+            dz = dz * 1.1f;
             d2 = dx * dx + dz * dz;
             base[off2] = 255.0f * ((d2 > 1.0f) ? 0.0f : (1.0f - d2));
         }
@@ -1454,11 +1441,11 @@ static inline void fillSmallDiskTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x40;
             off2 = off + sizeof(Texture);
-            dx = cy * lbl_803DED40;
+            dx = cy / 8.0f;
             dz = (f32)j - 8.0f;
-            dz = dz * lbl_803DED40;
-            dx = dx * lbl_803DEDF4;
-            dz = dz * lbl_803DEDF4;
+            dz = dz / 8.0f;
+            dx = dx * 1.2f;
+            dz = dz * 1.2f;
             d2 = dx * dx + dz * dz;
             if (d2 > 1.0f) {
                 d2 = 0.0f;
@@ -1505,8 +1492,8 @@ static inline void fillFalloffTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
-            dy = cy * lbl_803DEDE0;
-            cx = ((f32)j - 64.0f) * lbl_803DEDE0;
+            dy = cy / 64.0f;
+            cx = ((f32)j - 64.0f) / 64.0f;
             d2 = sqrtf(dy * dy + cx * cx);
             if (d2 < 0.5f) {
                 val = 0xa0;
@@ -1541,7 +1528,7 @@ static inline void fillLightningTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x80;
             off2 = off + sizeof(Texture);
-            v = sqrtf(__fabsf(c0 * lbl_803DEDD0));
+            v = sqrtf(__fabsf(c0 / 16.0f));
             v = sqrtf(v);
             base[off2] = 255.0f * (1.0f - v);
         }
@@ -1557,7 +1544,7 @@ static inline void fillRingTexture(void) {
         int rowoff;
         int lowoff;
         f32 cy2;
-        cy = ((f32)i - 64.0f) * lbl_803DEDE0;
+        cy = ((f32)i - 64.0f) / 64.0f;
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
@@ -1571,7 +1558,7 @@ static inline void fillRingTexture(void) {
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
-            cx = ((f32)j - 64.0f) * lbl_803DEDE0;
+            cx = ((f32)j - 64.0f) / 64.0f;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f) {
                 d2 = 0.0f;
@@ -1673,16 +1660,16 @@ void allocLotsOfTextures(void) {
                 f32 d1, d2, cc2, d3, n1, b;
                 f64 n2, n3;
                 f32 a;
-                rc = fi * lbl_803DEDFC;
-                rc2 = fi2 * lbl_803DEDFC;
-                cc = ((f32)j - 32.0f) * lbl_803DEDFC;
+                rc = fi / 32.0f;
+                rc2 = fi2 / 32.0f;
+                cc = ((f32)j - 32.0f) / 32.0f;
                 cc = cc * cc;
                 d1 = sqrtf(rc * rc + cc);
                 d2 = sqrtf(rc2 * rc2 + cc);
                 cc2 = (f32)(j + 1) - 32.0f;
-                cc2 = cc2 * lbl_803DEDFC;
+                cc2 = cc2 / 32.0f;
                 cc2 = cc2 * cc2;
-                rc = fi * lbl_803DEDFC;
+                rc = fi / 32.0f;
                 d3 = sqrtf(rc * rc + cc2);
                 n1 = -mathCosfHighPrecision(18.852f * d1);
                 n2 = __fabs(mathCosfHighPrecision(18.852f * d2));
@@ -1712,26 +1699,26 @@ void allocLotsOfTextures(void) {
                     f32 cc, d1, d2, cc2, d3, n1, n2, n3, a, b, rowCoord;
                     f32 c;
                     int bi, ci, ai;
-                    rowCoord = fj * lbl_803DEDFC;
-                    rc2 = fj2 * lbl_803DEDFC;
+                    rowCoord = fj / 32.0f;
+                    rc2 = fj2 / 32.0f;
                     dst += bumpRowOff;
                     dst += (i & 3) * 8;
                     dst += (i >> 2) * 0x200;
                     cc = (f32)i - 32.0f;
-                    cc = cc * lbl_803DEDFC;
+                    cc = cc / 32.0f;
                     cc = cc * cc;
                     d1 = sqrtf(rowCoord * rowCoord + cc);
                     d2 = sqrtf(rc2 * rc2 + cc);
                     cc2 = (f32)(i + 1) - 32.0f;
-                    cc2 = cc2 * lbl_803DEDFC;
+                    cc2 = cc2 / 32.0f;
                     cc2 = cc2 * cc2;
-                    rowCoord = fj * lbl_803DEDFC;
+                    rowCoord = fj / 32.0f;
                     d3 = sqrtf(rowCoord * rowCoord + cc2);
                     n1 = -mathCosfHighPrecision(18.852f * d1);
                     n2 = -mathCosfHighPrecision(18.852f * d2);
                     n3 = -mathCosfHighPrecision(18.852f * d3);
-                    a = inv * (lbl_803DEDC0 * (n1 - n2)) + lbl_803DEDC0;
-                    b = inv * (lbl_803DEDC0 * (n1 - n3)) + lbl_803DEDC0;
+                    a = inv * (127.0f * (n1 - n2)) + 127.0f;
+                    b = inv * (127.0f * (n1 - n3)) + 127.0f;
                     if (d1 < 1.0f) {
                         d1 = sqrtf(1.0f - d1);
                     } else {
@@ -1741,8 +1728,8 @@ void allocLotsOfTextures(void) {
                     if (c > 15.0f) {
                         c = 15.0f;
                     }
-                    a = a * lbl_803DEDFC;
-                    b = b * lbl_803DEDD0;
+                    a = a / 32.0f;
+                    b = b / 16.0f;
                     bi = (int)b & 0xf;
                     ci = ((u16)(int)c & 0xf) << 4;
                     ai = ((u16)(int)a & 7) << 12;
@@ -1781,11 +1768,11 @@ void allocLotsOfTextures(void) {
         for (; j < 0x80; j++) {
             u8* base = (u8*)gNewShadowRadialTexture;
             int off2;
-            f32 cyScaled = cy * lbl_803DEDE0;
+            f32 cyScaled = cy / 64.0f;
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
-            cx = __fabsf(((f32)j - 64.0f) * lbl_803DEDE0);
+            cx = __fabsf(((f32)j - 64.0f) / 64.0f);
             cx = cx * cx;
             d2 = sqrtf(__fabsf(cyScaled) * __fabsf(cyScaled) + cx);
             v = 1.0f - d2;

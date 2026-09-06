@@ -78,6 +78,53 @@ radius clamp reproduces the complete retail pool but worsens that function's
 code. These experiments identify adjacent source-shape questions; they do not
 establish the original compiler settings or justify forced data declarations.
 
+## Normalization and complete literal pool
+
+The reciprocal words are generated from coordinate divisions by 8, 16, 32,
+and 64. Spelling them as divisions matters: MWCC lowers these operations late,
+after transformations which move or combine literal multiplications. For
+example, `frame / 16.0f` preserves the exact noise sampler; replacing the old
+external reciprocal with `frame * 0.0625f` hoists its contribution out of the
+placement loop. The final output scale remains `0.125f * shift`, which emits
+the evidenced multiply-add operand order.
+
+Distortion strength is a radius-limited conditional expression:
+
+```c
+strength = radius <= 112.0f
+               ? (2.0f * (0.9f * 112.0f - 0.9f * radius)) / 256.0f
+               : 0.0f;
+```
+
+This produces both the exact 116-instruction function and the retail pool
+order: the folded 100.799995 intercept, the generated 1/256 reciprocal, then
+112. The center is (127.5, 127.5); normalized direction is scaled by the
+falloff and encoded with a gain of 127 and a bias of 128. Tiled addressing
+establishes that the outer coordinate is X, not the old decompiler's Y;
+the high byte encodes X and the low byte Y. Local names now follow that view.
+
+Together with the literal disk scales 1.1 and 1.2, these expressions eliminate
+the last seven external float declarations. The complete 280-byte `.sdata2`
+section is byte-identical to retail, with no named literal definitions or
+section placement directives. All other allocated data and named data symbol
+offsets are unchanged. The earlier before-the-clamp experiment is superseded
+by the exact conditional expression above.
+
+Relative to the row-loop checkpoint, distortion improves from 96.206894% to
+100%, adding 464 matched code bytes. Noise generation improves from 98.66216%
+to 98.75676%. Allocation changes from 97.93544% to 97.24613%: literal disk
+scales allow loop-invariant motion, leaving 1485 instructions against retail's
+1487. The other 41 function bodies are byte-identical, including all 38
+previously exact functions. The TU now has 39/44 exact functions, 5160 matched
+code bytes, and all 16668 data bytes matched; its fuzzy score is 98.644806%.
+
+A separate BSS experiment removes the synthetic `NewShadowData` overlay in
+favor of the existing arrays. MWCC then forms its own `...bss.0` base, but
+reorders the arrays. Definitions placed before all functions allocate in
+first-use order; changing declaration order alone does not restore retail.
+That experiment is not landed. Retaining zero-filled section equality without
+checking the named offsets would conceal a real layout regression.
+
 ## Checks
 
 `python -m unittest discover -s tools -p test_shadow_texture_blend.py` compiles
@@ -92,6 +139,14 @@ The same harness compiles the three recovered fill bodies and checks every
 texel: 2048 I8 ramp pixels and 16 gradient halfwords, plus unchanged headers
 and trailing canaries. The fixture widens texture storage to host pointers;
 PowerPC object comparisons separately check the actual target representation.
+
+The distortion test compiles the actual recovered function and checks all
+65536 texels against an independent radial-field oracle with single-precision
+rounding. It also checks allocation arguments, the returned texture, exactly
+one cache flush over the payload, unchanged header bytes, and trailing canaries.
+The host uses a native square root and non-fused arithmetic; the separate exact
+PowerPC comparison establishes the retail square-root and fused instruction
+sequence, rather than assuming host execution emulates those instructions.
 
 `ninja all_source` and the strict retail DOL checksum pass. Because this TU is
 NonMatching, the DOL gate protects integration; the object comparison is the
