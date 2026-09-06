@@ -776,6 +776,39 @@ audit pass. The DOL SHA-1 remains
 `e750e8e894707a52446118a4b84f1b58b677b269`. Controls and captures are under
 `build/gc13_new_matches/player_round8*`.
 
+## September 6: Player state 25 animation progress
+
+`playerState25` advances from **99.88439% to 99.9422%**, reducing its
+remaining instruction differences from seven to three. Declaring the
+smoothed Z velocity and absolute Z animation speed at function scope gives
+the animation-progress value retail's `f31`. Both progress loads and both
+`ObjAnim_SetCurrentMove` argument copies are now exact. The remaining
+differences are two target-X velocity register operands and one multiply's
+operand order.
+
+Only those four instruction words change. Every other function body,
+relative relocation, allocated data section, section layout, and data-symbol
+position is preserved. Player remains **231/233 exact functions**,
+**132,844/139,108 exact code bytes**, and **10,168/10,168 exact data bytes**;
+whole-unit fuzzy agreement is **99.991806%**. The TU remains NonMatching
+under its existing GC/1.3 profile.
+
+The live FPR trace aligns all 346 instructions and replays all 104 color
+choices. Animation progress moves from virtual FPR 43 to 41, placing it
+first in the observed coloring worklist and assigning `f31`. The ordinary
+and instrumented objects are byte-identical.
+
+A GC/1.3.2 control emits both remaining functions byte-identically to the
+GC/1.3 baseline while regressing 18 already-exact functions. It does not
+resolve these residuals. Rejected pointer, helper, expression, and scope
+variants remain outside the source tree.
+
+Strict matching and `ninja all_source` pass within 30-second limits. The
+retail DOL SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`.
+Formatting changes no source text or object bytes, and the generated-path
+audit passes. Controls and object audits are under
+`build/gc13_new_matches/player_round10*`.
+
 ## September 6: World-map camera orbit smoothing
 
 Engine 78 (`dlls/engine/78/78.c`) reaches **100% for all six functions,
