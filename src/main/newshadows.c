@@ -1162,8 +1162,7 @@ void newshadows_createDistortionTexture(void) {
             directionY *= strength;
             normalizedX = 127.0f * normalizedX + 128.0f;
             directionY = 127.0f * directionY + 128.0f;
-            *(u16*)(texel + sizeof(Texture)) =
-                (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
+            *(u16*)(texel + sizeof(Texture)) = (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
         }
     }
     DCFlushRange(gNewShadowDistortionTexture + 1, gNewShadowDistortionTexture->dataSize);
@@ -1334,8 +1333,8 @@ void newshadows_initProceduralTextures(void) {
                     texel = tileBase + (y >> 2) * 0x200;
                     sampleX = x / 64.0f;
                     sampleZ = y / 64.0f;
-                    evalNoisePlacements(sampleX, sampleZ, frame, gNewShadowNoiseData.placements,
-                                        noisePlacementCount, &shift, &intensity);
+                    evalNoisePlacements(sampleX, sampleZ, frame, gNewShadowNoiseData.placements, noisePlacementCount,
+                                        &shift, &intensity);
                     intensityByte = 255.0f * intensity;
                     intensityByte = (intensityByte & 0xffff) << 8;
                     shiftByte = 255.0f * shift;
