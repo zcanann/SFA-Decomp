@@ -106,6 +106,14 @@ class ActiveCompilerProfileTests(unittest.TestCase):
         self.assertEqual(obj.options["mw_version"], "GC/1.2.5")
         self.assertEqual(obj.options["extra_cflags"], ["-DGEKKO", "-fp_contract", "off"])
 
+    def test_float_math_uses_native_cpp_linkage_and_initialization(self):
+        for name, compiler in (("trigf", "GC/1.2.5"), ("hyperbolicsf", "GC/1.2.5n")):
+            with self.subTest(source=name):
+                obj = self.objects[f"dolphin/MSL_C/PPCEABI/bare/H/{name}.c"]
+                self.assertEqual(obj.options["mw_version"], compiler)
+                self.assertEqual(obj.options["extra_cflags"], ["-lang=c++"])
+                self.assertTrue(obj.completed)
+
 
 if __name__ == "__main__":
     unittest.main()

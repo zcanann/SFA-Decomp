@@ -1,33 +1,29 @@
-#include "dolphin.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trigf.h"
+#include "dolphin/types.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 #define __epsilon 3.45266983e-4f
 #define __HI(x) (((s32*)&x)[0])
 
 
-extern const float __sincos_on_quadrant[];
-extern const float __sincos_poly[];
-
 static const float tmp_float[] = { 0.25f, 0.0232393741608f, 1.70555722434e-7f, 1.86736494323e-11f };
-static float __four_over_pi_m1[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-__declspec(section ".ctors") static void* const __sinit_trigf_c_reference = __sinit_trigf_c;
+static float __four_over_pi_m1[] = { tmp_float[0], tmp_float[1], tmp_float[2], tmp_float[3] };
 
 
 float tanf(float angle)
 {
-    float cosine = cos__Ff(angle);
-    return sin__Ff(angle) / cosine;
+    float cosine = cos(angle);
+    return sin(angle) / cosine;
 }
 
 
-float cos__Ff(float angle)
+float cos(float angle)
 {
     return cosf(angle);
 }
 
-float sin__Ff(float angle)
+float sin(float angle)
 {
     return sinf(angle);
 }
@@ -48,7 +44,7 @@ float cosf(float angle)
                  + __four_over_pi_m1[2] * angle + __four_over_pi_m1[3] * angle;
     quadrant &= 3;
 
-    if (fabsf__Ff(reducedAngle) < __epsilon) {
+    if (fabsf(reducedAngle) < __epsilon) {
         quadrant <<= 1;
         return __sincos_on_quadrant[quadrant + 1] - reducedAngle * __sincos_on_quadrant[quadrant];
     }
@@ -71,7 +67,6 @@ float cosf(float angle)
              + __sincos_poly[8];
     return result * __sincos_on_quadrant[quadrant + 1];
 }
-
 float sinf(float angle)
 {
     int quadrant;
@@ -87,7 +82,7 @@ float sinf(float angle)
                  + __four_over_pi_m1[2] * angle + __four_over_pi_m1[3] * angle;
     quadrant &= 3;
 
-    if (fabsf__Ff(reducedAngle) < __epsilon) {
+    if (fabsf(reducedAngle) < __epsilon) {
         quadrant <<= 1;
         return __sincos_on_quadrant[quadrant]
              + (__sincos_on_quadrant[quadrant + 1] * reducedAngle * __sincos_poly[9]);
@@ -112,10 +107,3 @@ float sinf(float angle)
     return result * __sincos_on_quadrant[quadrant + 1];
 }
 
-void __sinit_trigf_c(void)
-{
-    __four_over_pi_m1[0] = tmp_float[0];
-    __four_over_pi_m1[1] = tmp_float[1];
-    __four_over_pi_m1[2] = tmp_float[2];
-    __four_over_pi_m1[3] = tmp_float[3];
-}

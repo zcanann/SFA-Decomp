@@ -1,6 +1,6 @@
 #include "dolphin/types.h"
 
-extern const float __one_over_F[];
+#include "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.h"
 
 extern float lbl_803DC648;
 extern float lbl_803DC64C;

@@ -3,6 +3,8 @@
 
 
 
-float fabsf__Ff(float x);
+#ifdef __cplusplus
+float fabsf(float x);
+#endif
 
 #endif
