@@ -145,8 +145,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
                 player, ((f32)state->spinProgress - state->previousSpinProgress) / DBSH_SYMBOL_ANIMATION_STEP_SCALE,
                 timeDelta, NULL) != 0) {
             if (player->anim.currentMoveProgress < 0.0f) {
-                player->anim.currentMoveProgress =
-                    1.0f + player->anim.currentMoveProgress;
+                player->anim.currentMoveProgress = 1.0f + player->anim.currentMoveProgress;
             }
         }
         if (state->partnerSymbol != NULL) {
@@ -168,8 +167,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
             state->playerSfxTimer =
                 (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_SHORT_MIN, DBSH_SYMBOL_SFX_TIMER_SHORT_MAX);
         } else {
-            state->playerSfxTimer =
-                (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
+            state->playerSfxTimer = (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
         }
         Sfx_PlayFromObject(player, SFXTRIG_literun116_var);
     }
@@ -179,8 +177,7 @@ int dbshSymbol_processAnimEvents(GameObject* obj, int unused, ObjSeqState* animU
             state->objectSfxTimer =
                 (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_SHORT_MIN, DBSH_SYMBOL_SFX_TIMER_SHORT_MAX);
         } else {
-            state->objectSfxTimer =
-                (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
+            state->objectSfxTimer = (f32)randomGetRange(DBSH_SYMBOL_SFX_TIMER_LONG_MIN, DBSH_SYMBOL_SFX_TIMER_LONG_MAX);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_spotfox03);
     }
