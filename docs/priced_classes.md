@@ -4803,6 +4803,26 @@ first at weight 13/degree 44. Neither source variant is retained. Both build gat
 and 126 tooling tests pass, including reordered/dangling graph-pair rejection and
 both breakpoint stack-effect checks.
 
+Movement's register mismatch is now resolved by passing the patch-membership
+query directly as the final `trickyReportError` argument. The reconstructed
+assignment through the unrelated loop counter `i` added an excluded copy node
+to the interference graph. With that copy present, object walk group stalled
+at degree 29, exactly the available GPR count; removing it allows the low-degree
+sweep to remove walk group before result. The captured graph shrinks from 567
+to 566 nodes and colors result to `r29`, walk group to `r28`, as retail does.
+This normal nested diagnostic call preserves all 2,191 instructions, including
+argument evaluation and all branch targets, without compiler-profile changes.
+Tricky reaches **88/89 exact functions, 99.98757% fuzzy**. The diagnostic link
+differs by only **four text bytes**, the remaining tunnel `li` versus `mr`;
+all allocated non-text sections remain exact, including the 404-byte literal
+pool. Instrumented and ordinary objects both hash to
+`31ec88d7f7f143344651290d8c7fb508186fcefc9252a884a35227a6ba00a1e6`.
+Both build gates, formatting and 126 tooling tests pass. Equivalent route-entry
+filter rewrites also explained the graph threshold but changed retail's branch
+shape, so none is retained. Narrowing `getPatchGroup` to `u16` introduces a
+default-argument-promotion mask absent from the retail diagnostic call and
+regresses movement; its existing `int` return contract is retained.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

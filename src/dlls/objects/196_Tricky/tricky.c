@@ -4609,12 +4609,12 @@ int trickyUpdateMovementState(GameObject* obj, f32 stoppingRadius, TrickyState* 
                                 }
                             } else {
                                 patchGroupForCheck = targetPatchGroup;
-                                i = isPointWithinPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup,
-                                                            patchGroupForCheck);
                                 trickyReportError("tricky error, target patch %d, targetWalkGroup %d, trickyWalkGroup "
                                                   "%d, tricky last walkGroup %d, tricky in patch %d\n",
                                                   patchGroupForCheck, targetWalkGroup, objectWalkGroup,
-                                                  state->lastWalkGroup, i);
+                                                  state->lastWalkGroup,
+                                                  isPointWithinPatchGroup(&obj->anim.worldPosX, state->lastWalkGroup,
+                                                                          patchGroupForCheck));
                                 state->movementState = TRICKY_MOVE_WALK_WAIT;
                             }
                         }
