@@ -106,7 +106,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     int i;
     GameObject* target;
     int eventId;
-    BossDrakorState* s = (BossDrakorState*)inner;
+    BossDrakorState* s = inner;
     inner->flags198.b10 = 1;
     if (s->textTimer > 0.0f) {
         gameTextShow(0x569);
@@ -539,7 +539,7 @@ void bossdrakor_hitDetect(GameObject* obj) {
     f32 hy;
     f32 hx;
     f32 shakeInit;
-    BossDrakorState* s = (BossDrakorState*)inner;
+    BossDrakorState* s = inner;
     int hit = ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &hx, &hy, &hz);
     if (hit == 0xf || hit == 0xe) {
         if (inner->flags198.b40) {
@@ -815,7 +815,7 @@ void bossdrakor_update(GameObject* obj) {
 void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init) {
     BossDrakorState* inner = obj->extra;
     f32 fz;
-    BossDrakorState* s = (BossDrakorState*)inner;
+    BossDrakorState* s = inner;
     if (init->curveAdvanceStep == 0) {
         init->curveAdvanceStep = 0xa;
     }

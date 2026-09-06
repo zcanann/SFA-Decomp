@@ -321,7 +321,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                 s16toFloat(&squad->deathTimer, 0x78);
                 if (squad->variant == ARW_SQUADRON_VARIANT_FIGHTER)
                 {
-                    spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 1, 1, 0, 0, 0);
+                    spawnExplosion(obj, 100.0f, 1, 0, 1, 1, 0, 0, 0);
                     obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
                     squad->phase = ARW_SQUADRON_STATE_DISABLED;
@@ -331,7 +331,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
                 }
                 else
                 {
-                    spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
+                    spawnExplosion(obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
                     obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
                     squad->phase = ARW_SQUADRON_STATE_DEAD;

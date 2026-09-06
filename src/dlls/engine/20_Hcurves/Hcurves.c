@@ -334,7 +334,7 @@ static inline int RomCurve_CollectBackwardLinks(RomCurveDef* curve, int* ids)
 
 int RomCurve_setSegmentEndNode(RomCurveWalker* walker, RomCurveDef* curve)
 {
-    RomCurveDef* B = (RomCurveDef*)curve;
+    RomCurveDef* B = curve;
     if (walker->currentNode == NULL || walker->nextNode == NULL || curve == 0)
         return 1;
     walker->nextNode = curve;

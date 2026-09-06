@@ -549,7 +549,7 @@ void mtx44_multSafe(f32* a, f32* b, f32* out)
         for (; j < 4; j++)
         {
             tp[t] = zero;
-            tp[t] += ((f32*)a)[row] * ((f32*)b)[j];
+            tp[t] += (a)[row] * (b)[j];
             tp[t] += *(f32*)((int)a + o1) * *(f32*)((int)b + (j + 4) * 4);
             tp[t] += *(f32*)((int)a + o2) * *(f32*)((int)b + (j + 8) * 4);
             tp[t] += *(f32*)((int)a + o3) * *(f32*)((int)b + (j + 12) * 4);

@@ -128,7 +128,7 @@ void pollenfragment_hitDetect(GameObject* obj)
         {
             if ((extra->def)->explodeSfxId != -1)
             {
-                spawnExplosion((GameObject*)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosion(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(
                     obj, (u16)(extra->def)->explodeSfxId, 3);
             }
@@ -140,7 +140,7 @@ void pollenfragment_hitDetect(GameObject* obj)
             extra->timer = 0.0f;
             if ((extra->def)->explodeSfxId != -1)
             {
-                spawnExplosion((GameObject*)obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosion(obj, 30.0f, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(
                     obj, (u16)(extra->def)->explodeSfxId, 3);
             }

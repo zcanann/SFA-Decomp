@@ -796,7 +796,7 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
         switch (seq->eventIds[i])
         {
         case 1:
-            ShopKeeper_spawnScarabs(obj, (ShopkeeperState*)state, state->amount);
+            ShopKeeper_spawnScarabs(obj, state, state->amount);
             state->flags9D4 |= SHOPKEEPER_FLAG_PURCHASED;
             break;
         case 2:

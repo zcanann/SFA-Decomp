@@ -2419,11 +2419,11 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     s16 rot[3];
 
     ObjModel_BuildAnimBlendTable((u8*)obj, (u8*)model->animStateA, (u8*)blend);
-    ((ObjModel*)model)->bufferFlags ^= 1;
-    ch = ((ObjModel*)model)->animStateA;
+    model->bufferFlags ^= 1;
+    ch = model->animStateA;
     if (ch->moveControlFlags & 4)
     {
-        ObjModel_SampleJointTransform((ObjModel*)model, 0, 0, obj->anim.currentMoveProgress,
+        ObjModel_SampleJointTransform(model, 0, 0, obj->anim.currentMoveProgress,
                                       obj->anim.rootMotionScale, pos, rot);
         gModelRootRotX = rot[0];
         gModelRootRotY = rot[1];
@@ -2434,9 +2434,9 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA,
                               obj->anim.currentMoveProgress, 0x7f);
     }
-    else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
+    else if (((ObjAnimState*)model->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
     {
-        ch2 = ((ObjModel*)model)->animStateB;
+        ch2 = model->animStateB;
         modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                              (s16)ch->eventState);
         modelAnimEvalSlotPair((u8*)dst, model, ch2, obj->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
@@ -2450,7 +2450,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     {
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA,
                               obj->anim.currentMoveProgress, 0x7f);
-        ch2 = ((ObjModel*)model)->animStateB;
+        ch2 = model->animStateB;
         if (ch2 != NULL && obj->anim.activeMove > -1)
         {
             ObjModel_BuildAnimBlendTable((u8*)obj, (u8*)model->animStateB, (u8*)blend);
@@ -2809,7 +2809,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     }
     else
     {
-        (*(u8*)header)++;
+        (*header)++;
     }
     *outSize = modelLoad_calcSizes(header, loadFlag, sizes, 0);
     return header;

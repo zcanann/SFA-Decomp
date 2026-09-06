@@ -2572,7 +2572,7 @@ int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f3
             tMinZ = tMinX;
             tMaxZ = tMaxX;
             for (j = 0, tw = twn, vout = (u8*)cur; j < 3; j++) {
-                s16* v = ObjModel_GetBaseVertexCoords((ModelFileHeader*)hdr, *tw);
+                s16* v = ObjModel_GetBaseVertexCoords(hdr, *tw);
                 f32 fx, fy, fz;
                 if (hdr->flags & 0x800) {
                     fx = v[0] * scale;
@@ -3199,7 +3199,7 @@ void trackIntersectBroadphase(GameObject* obj, TrackQueryBounds* ranges, u32 que
                 if (hdr->collisionBlockCount == 0) {
                     continue;
                 }
-                r = (f32)(u32)modelFileHeaderGetCullDistance((ModelFileHeader*)hdr);
+                r = (f32)(u32)modelFileHeaderGetCullDistance(hdr);
                 c = resetObj->worldPosX;
                 if (x1 < c - r) {
                     continue;

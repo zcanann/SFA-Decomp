@@ -526,7 +526,7 @@ void gunpowderBarrel_render(GameObject* obj, int renderArg2, int renderArg3, int
     linkedTimer = state->linkedTimerObject;
     if (linkedTimer != 0) {
         (*(GunpowderBarrelTimerInterface**)linkedTimer->anim.dll)
-            ->render((GameObject*)linkedTimer, renderArg2, renderArg3, renderArg4, renderArg5, visible);
+            ->render(linkedTimer, renderArg2, renderArg3, renderArg4, renderArg5, visible);
     }
 }
 

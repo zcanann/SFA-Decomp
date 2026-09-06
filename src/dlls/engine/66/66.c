@@ -236,7 +236,7 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
     pathB[1] = pathA[1];
     pathB[2] = pathA[2];
     if (tgt0->anim.classId == 1) {
-        cameraGetPrevPos2((GameObject*)tgt0, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2(tgt0, &prev[0], &prev[1], &prev[2]);
     } else {
         prev[0] = tgt0->anim.worldPosX;
         prev[1] = tgt0->anim.worldPosY + gCameraModeNormalState->targetHeight;

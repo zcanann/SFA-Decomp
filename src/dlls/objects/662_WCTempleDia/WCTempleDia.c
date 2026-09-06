@@ -91,7 +91,7 @@ void wctempledia_update(GameObject* obj) {
     int i;
     WCTempleDiaState* state;
     WCTempleDiaSetup* setup;
-    GameObject* go = (GameObject*)obj;
+    GameObject* go = obj;
     int j;
     int k;
 

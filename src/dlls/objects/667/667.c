@@ -163,7 +163,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
 
         if (ObjHits_GetPriorityHit(obj, &hit, 0, &vol) != 0)
         {
-            spawnExplosion((GameObject*)obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
+            spawnExplosion(obj, 100.0f, 1, 0, 0, 1, 0, 0, 3);
             objAnim->flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
             state->despawnTimer = 40.0f;

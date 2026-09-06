@@ -231,14 +231,14 @@ void ccLightfoot_update(GameObject* obj) {
     targetActorAHandle = state->targetActorA;
     if (targetActorAHandle != 0) {
         do {
-            if (!(enemy_getHealthFraction((GameObject*)targetActorAHandle) > 0.0f)) {
+            if (!(enemy_getHealthFraction(targetActorAHandle) > 0.0f)) {
                 targetValid = 0;
             } else {
                 targetValid = mainGetBit(targetActorAHandle->anim.placementData[0xC]) != 0 ? 0 : 1;
             }
             if (targetValid != 0) {
                 candidateTarget = state->targetActorB;
-                if (!(enemy_getHealthFraction((GameObject*)candidateTarget) > 0.0f)) {
+                if (!(enemy_getHealthFraction(candidateTarget) > 0.0f)) {
                     targetValid = 0;
                 } else {
                     targetValid = mainGetBit(candidateTarget->anim.placementData[0xC]) != 0 ? 0 : 1;
@@ -295,7 +295,7 @@ void ccLightfoot_update(GameObject* obj) {
                 }
             }
             candidateTarget = state->targetActorA;
-            if (!(enemy_getHealthFraction((GameObject*)candidateTarget) > 0.0f)) {
+            if (!(enemy_getHealthFraction(candidateTarget) > 0.0f)) {
                 targetValid = 0;
             } else {
                 targetValid = mainGetBit(candidateTarget->anim.placementData[0xC]) != 0 ? 0 : 1;
@@ -304,7 +304,7 @@ void ccLightfoot_update(GameObject* obj) {
                 singleTarget = (u32)state->targetActorA;
             }
             candidateTarget = state->targetActorB;
-            if (!(enemy_getHealthFraction((GameObject*)candidateTarget) > 0.0f)) {
+            if (!(enemy_getHealthFraction(candidateTarget) > 0.0f)) {
                 targetValid = 0;
             } else {
                 targetValid = mainGetBit(candidateTarget->anim.placementData[0xC]) != 0 ? 0 : 1;

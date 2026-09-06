@@ -1111,11 +1111,11 @@ void addWarpedRingTevStages(void)
             void* obj = textureGetGXTexObj(tex18);
             if (tex18->preloaded != 0)
             {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex18), id2);
+                GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(tex18), id2);
             }
             else
             {
-                GXLoadTexObj((GXTexObj*)obj, id2);
+                GXLoadTexObj(obj, id2);
             }
         }
     }
@@ -1244,11 +1244,11 @@ void renderHeavyFog(void* fogColor)
                 void* obj = textureGetGXTexObj(tex1c);
                 if (tex1c->preloaded != 0)
                 {
-                    GXLoadTexObjPreLoaded((GXTexObj*)obj, textureGetGXTexRegion(tex1c), id2);
+                    GXLoadTexObjPreLoaded(obj, textureGetGXTexRegion(tex1c), id2);
                 }
                 else
                 {
-                    GXLoadTexObj((GXTexObj*)obj, id2);
+                    GXLoadTexObj(obj, id2);
                 }
             }
         }
@@ -2160,11 +2160,11 @@ void addSphereMapTexStage(void* p1, u8 intensity)
         GXTexObj* tex = textureGetGXTexObj((Texture*)p1);
         if (((Texture*)p1)->preloaded != 0)
         {
-        GXLoadTexObjPreLoaded((GXTexObj*)tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
+        GXLoadTexObjPreLoaded(tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
         }
         else
         {
-        GXLoadTexObj((GXTexObj*)tex, texmap);
+        GXLoadTexObj(tex, texmap);
         }
     }
     gRcpNextPostTexMtx += 3;

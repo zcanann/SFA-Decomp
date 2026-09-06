@@ -226,7 +226,7 @@ void DR_LaserCannon_hitDetect(GameObject* obj) {
         if (state->health <= 0) {
             tricky = (int*)getTrickyObject();
             Sfx_PlayFromObject(obj, SFXTRIG_en_barrelblow11_4b6);
-            spawnExplosion((GameObject*)obj, 50.0f, 0, 1, 1, 1, 0, 1, 0);
+            spawnExplosion(obj, 50.0f, 0, 1, 1, 1, 0, 1, 0);
             state->flags.b0 = 1;
             mainSetBits(setup->destroyedGameBit, 1);
             if (tricky != 0) {
@@ -303,7 +303,7 @@ void DR_LaserCannon_update(GameObject* obj) {
         hit = 1;
         dist = Vec_xzDistance(&target->anim.worldPosX, &obj->anim.worldPosX);
         if (dist < setup->targetRange) {
-            hit = drlasercannon_aimAtTarget(obj, (GameObject*)target, state->aim, 0x168, &state->muzzleX);
+            hit = drlasercannon_aimAtTarget(obj, target, state->aim, 0x168, &state->muzzleX);
             if (hit != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_id_1ad);
             }
@@ -321,7 +321,7 @@ void DR_LaserCannon_update(GameObject* obj) {
             case 0:
                 state->hitExcludeType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
                 if (timerCountDown(&state->reloadTimer) != 0) {
-                    if (Obj_PredictInterceptPoint((GameObject*)target, setup->beamSpeed / 10.0f,
+                    if (Obj_PredictInterceptPoint(target, setup->beamSpeed / 10.0f,
                                                   (const Vec3f*)&state->muzzleX, (Vec3f*)hitPos) != 0) {
                         cannonState = obj->extra;
                         if ((u8)Obj_CanSetupObject() == 0) {

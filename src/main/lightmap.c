@@ -486,7 +486,7 @@ static void renderObjects(s8* opacity) {
             if ((flags & OBJDEF_FLAG_RUNTIME_BATCHABLE) == 0) {
                 (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
             }
-            objRender(0, 0, 0, 0, (GameObject*)obj, 1);
+            objRender(0, 0, 0, 0, obj, 1);
             p = (int*)obj->anim.modelState;
             if (p != NULL && obj->anim.modelState->shadowCastSlot != NULL) {
                 LightSortEntry* qe;

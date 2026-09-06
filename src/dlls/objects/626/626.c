@@ -916,7 +916,7 @@ void HighTop_update(GameObject* obj) {
     HighTopRuntime* state;
     register int self = (int)obj;
     state = ((GameObject*)self)->extra;
-    runtime = (HighTopRuntime*)state;
+    runtime = state;
     runtime->turnRateThreshold = 5;
     ((GameObject*)self)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     runtime->baddie.physicsActive = !runtime->flagsC49.b4;

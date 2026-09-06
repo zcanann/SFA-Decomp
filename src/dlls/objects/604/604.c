@@ -369,7 +369,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         if (animFlags & OBJANIM_FLAG_HIDDEN)
         {
             sub->anim.flags = animFlags & ~OBJANIM_FLAG_HIDDEN;
-            SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 2);
+            SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode(sub, 2);
         }
     }
     if (seq->runState == 2)
@@ -403,7 +403,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
                 s->prevPosX = s->posX;
                 s->prevPosY = s->posY;
                 s->prevPosZ = s->posZ;
-                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 2);
+                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode(sub, 2);
                 ObjAnim_SetCurrentMove(obj, s->moveIdBase, 0.0f, 1);
                 {
                     ObjModelState* gx = obj->anim.modelState;
@@ -419,7 +419,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
             sub = s->mount;
             if (sub != 0)
             {
-                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode((GameObject*)sub, 0);
+                SNOWCLAW_MOUNT_INTERFACE(sub)->setRiderMode(sub, 0);
                 seq->flags |= 4;
             }
             break;
@@ -465,7 +465,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         }
         s->dropIndexApplied = s->dropIndex;
     }
-    if (sub != 0 && SNOWCLAW_MOUNT_INTERFACE(sub)->getRiderMode((GameObject*)sub) == 2)
+    if (sub != 0 && SNOWCLAW_MOUNT_INTERFACE(sub)->getRiderMode(sub) == 2)
     {
         seq->flags &= ~3;
     }

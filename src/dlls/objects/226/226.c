@@ -360,7 +360,7 @@ void staffStartQuakeSpell(f32* pos) {
         setup->posY = gStaffQuakeSpellState.posY;
         setup->posZ = gStaffQuakeSpellState.posZ;
         gStaffQuakeSpellState.object =
-            (GameObject*)objSetupObject((ObjPlacement*)setup, 5, player->anim.mapEventSlot, -1, player->anim.parent);
+            (GameObject*)objSetupObject(setup, 5, player->anim.mapEventSlot, -1, player->anim.parent);
         if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0) {
             gStaffQuakeSpellState.object->anim.bankIndex = 1;
         }

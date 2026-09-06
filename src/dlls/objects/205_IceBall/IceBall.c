@@ -142,7 +142,7 @@ void IceBall_update(GameObject* obj) {
     objAddress = obj;
     objAddress->userData1 = (s32)((f32)objAddress->userData1 - timeDelta);
     if (objAddress->userData1 < 0) {
-        Obj_FreeObject((GameObject*)objAddress);
+        Obj_FreeObject(objAddress);
         return;
     }
     if (objAddress->anim.alpha == 0) {
@@ -153,24 +153,24 @@ void IceBall_update(GameObject* obj) {
     objAddress->anim.rotX += ICEBALL_SPIN_STEP;
     objAddress->anim.rotZ += ICEBALL_SPIN_STEP;
     objAddress->anim.rotY += ICEBALL_SPIN_STEP;
-    objMove((GameObject*)objAddress, objAddress->anim.velocityX * timeDelta,
+    objMove(objAddress, objAddress->anim.velocityX * timeDelta,
             objAddress->anim.velocityY * timeDelta,
             objAddress->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)objAddress, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)objAddress, ICEBALL_HIT_RADIUS);
-    ObjHits_EnableObject((GameObject*)objAddress);
+    ObjHits_EnableObject(objAddress);
     if (((ObjHitsPriorityState*)objAddress->anim.hitReactState)->lastHitObject != 0 &&
         (((ObjHitsPriorityState*)objAddress->anim.hitReactState)->lastHitObject ==
              (u32)Obj_GetPlayerObject() ||
          ((ObjHitsPriorityState*)objAddress->anim.hitReactState)->lastHitObject ==
              (u32)getTrickyObject())) {
-        iceBall_handleCharacterImpact((GameObject*)objAddress);
+        iceBall_handleCharacterImpact(objAddress);
         objAddress->anim.alpha = 0;
         objAddress->userData1 = ICEBALL_IMPACT_FRAMES;
         ((ObjHitsPriorityState*)objAddress->anim.hitReactState)->flags &=
             ~OBJHITS_PRIORITY_STATE_ENABLED;
     } else if (((ObjHitsPriorityState*)objAddress->anim.hitReactState)->contactFlags != 0) {
-        iceBall_handleSurfaceImpact((GameObject*)objAddress);
+        iceBall_handleSurfaceImpact(objAddress);
         objAddress->anim.alpha = 0;
         objAddress->userData1 = ICEBALL_IMPACT_FRAMES;
         ((ObjHitsPriorityState*)objAddress->anim.hitReactState)->flags &=

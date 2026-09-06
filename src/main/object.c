@@ -711,7 +711,7 @@ void mapSetupPlayer(void) {
             } else {
                 obj = loadCharacter((s16*)&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0) {
-                    Obj_RegisterObject((GameObject*)obj, 1);
+                    Obj_RegisterObject(obj, 1);
                     OSReport((char*)(base + 0x5c), obj->anim.modelInstance->name);
                 }
             }

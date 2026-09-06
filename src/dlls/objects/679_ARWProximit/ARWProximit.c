@@ -167,7 +167,7 @@ void arwproximit_update(GameObject* obj)
             s16toFloat((void*)&state->despawnTimer, 0x14);
             if (state->light != NULL)
                 modelLightStruct_setEnabled(state->light, 0, gARWProximitZero[0]);
-            spawnExplosion((GameObject*)obj, gARWProximitDetonateExplosionSize[0], 1, 0, 1, 1, 0, 0, 1);
+            spawnExplosion(obj, gARWProximitDetonateExplosionSize[0], 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius(&obj->anim, 0x12c);
             ObjHits_SetHitVolumeSlot(&obj->anim, ARWPROXIMIT_HIT_VOLUME_SLOT, 1, 0);
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -201,7 +201,7 @@ void arwproximit_update(GameObject* obj)
                 headDisplayOpen(0xe);
             if (state->light != NULL)
                 modelLightStruct_setEnabled(state->light, 0, gARWProximitZero[0]);
-            spawnExplosion((GameObject*)obj, gARWProximitShotDownExplosionSize[0], 1, 0, 0, 0, 0, 0, 1);
+            spawnExplosion(obj, gARWProximitShotDownExplosionSize[0], 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject(obj);
             obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_MarkObjectPositionDirty(&obj->anim);

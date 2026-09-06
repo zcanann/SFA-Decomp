@@ -2919,7 +2919,7 @@ void ObjSeq_UpdateCurvePosition(GameObject* obj, ObjSeqState* seq) {
     f32 angleSin;
 
     object = obj;
-    state = (ObjSeqState*)seq;
+    state = seq;
     placement = (ObjSeqPlacement*)object->anim.placementData;
     if (placement == NULL) {
         return;
@@ -3387,7 +3387,7 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
             *(s8*)((int)entry + 0x3caa) = (s8)((cmd->param >> 12) & 0xf);
             if (*(s8*)((int)entry + 0x3caa) == 0xb || *(s8*)((int)entry + 0x3caa) == 0xc) {
                 u8* entry2;
-                val = ((ObjSeqCommand*)cmd)[1].param;
+                val = (cmd)[1].param;
                 entry2 = base + (s8)(gObjSeqDeferredCmdCount++) * 8;
                 *(s16*)(entry2 + 0x3ca8) = val;
             } else {
@@ -3557,7 +3557,7 @@ void ObjSeq_SetupInitialPlaybackState(GameObject* obj, GameObject** seqObj, ObjS
 
     obj->anim.rotX += seq->heading;
     if (*seqObj != obj && (s8)gObjSeqFnDispatched == 0) {
-        objCallSeqFn(*seqObj, obj, (ObjSeqState*)seq, ((u8*)(historyBase + 0x3c4c))[(s8)seq->slot]);
+        objCallSeqFn(*seqObj, obj, seq, ((u8*)(historyBase + 0x3c4c))[(s8)seq->slot]);
     }
 
     ObjSeq_ApplyLinkedObjectTransform(obj, *seqObj, seq);
@@ -3717,7 +3717,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
     int opcode;
     ObjSeqBgCmd* entry;
 
-    ObjSeqState* state = (ObjSeqState*)seq;
+    ObjSeqState* state = seq;
 
     if (state->cmds == NULL) {
         return;
@@ -3865,7 +3865,7 @@ void ObjSeq_RebuildCurveStateToFrame(GameObject* obj, GameObject* seqObj, ObjSeq
                         state->retriggerFrame += ((u8*)cmd)[1];
                     }
                     state->cmdCursor += 1;
-                    if (ObjSeq_ExecuteActionCommand(obj, (u8*)action, (u8**)&cmd, flags, out) != 0) {
+                    if (ObjSeq_ExecuteActionCommand(obj, action, (u8**)&cmd, flags, out) != 0) {
                         return;
                     }
                     {
@@ -4369,7 +4369,7 @@ int ObjSeq_update(GameObject* obj, f32 t) {
     }
 
     seq = obj->extra;
-    state = (ObjSeqState*)seq;
+    state = seq;
     if ((state->stateFlags & 2) != 0) {
         setJoypadDisabled();
     }

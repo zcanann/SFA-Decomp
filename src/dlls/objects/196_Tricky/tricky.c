@@ -2341,7 +2341,7 @@ u32 tricky_updateIdleBehavior(GameObject* obj, TrickyState* trickyState) {
                     tricky_startRandomIdleMove(obj, trickyState);
                     break;
                 default:
-                    tricky_pickAmbientActivity(obj, (TrickyState*)trickyState);
+                    tricky_pickAmbientActivity(obj, trickyState);
                     break;
                 }
             }
@@ -2396,7 +2396,7 @@ u32 tricky_substateReturnToHeel(GameObject* obj, TrickyState* trickyState) {
     if (result != 0) {
         return 1;
     }
-    result = trickyUpdateMovementState(obj, 20.0f, (TrickyState*)trickyState);
+    result = trickyUpdateMovementState(obj, 20.0f, trickyState);
     if (result == 1) {
         if (0.0f == trickyState->followHeelTimer) {
             trickyState->substate = TRICKY_FOLLOW_SUBSTATE_IDLE;

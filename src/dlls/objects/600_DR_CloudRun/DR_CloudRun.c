@@ -1091,7 +1091,7 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def) {
     }
     (*gPlayerInterface)->init(obj, (void*)inner, 8, 1);
     inner->baddie.gravity = 0.17f;
-    DR_CloudRunner_setupPath(obj, (CloudRunnerState*)inner, inner->flagsBC0.b20);
+    DR_CloudRunner_setupPath(obj, inner, inner->flagsBC0.b20);
     dll_2E_initState(obj, &inner->moveLib, -0x11c7, 0x1555, 1);
     dll_2E_setReattackDelay(&inner->moveLib, 0x12c, 0x78);
     objAddObjectType(obj, PLAYER_VEHICLE_OBJGROUP);

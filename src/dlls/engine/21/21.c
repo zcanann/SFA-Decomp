@@ -616,40 +616,40 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
     f32 matrix[16];
 
     if ((s32)(collision->flags & CURVES_COLLISION_STATE_ACTIVE) != 0) {
-        if ((void*)((GameObject*)obj)->anim.parent != NULL) {
-            if ((((GameObject*)obj)->anim.parentAnim->hitboxTransformState != NULL) &&
-                (ObjHits_IsObjectEnabled((ObjAnimComponent*)((GameObject*)obj)->anim.parent) != 0)) {
-                matrixSource = ((GameObject*)obj)->anim.parentAnim->hitboxTransformState;
+        if ((void*)obj->anim.parent != NULL) {
+            if ((obj->anim.parentAnim->hitboxTransformState != NULL) &&
+                (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj->anim.parent) != 0)) {
+                matrixSource = obj->anim.parentAnim->hitboxTransformState;
                 matrixOffset = (matrixSource->activeMatrixIndex + 2) * 0x10;
-                Matrix_TransformPoint((f32*)matrixSource + matrixOffset, ((GameObject*)obj)->anim.localPosX,
-                                      ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
-                                      &((GameObject*)obj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosY,
-                                      &((GameObject*)obj)->anim.worldPosZ);
+                Matrix_TransformPoint((f32*)matrixSource + matrixOffset, obj->anim.localPosX,
+                                      obj->anim.localPosY, obj->anim.localPosZ,
+                                      &obj->anim.worldPosX, &obj->anim.worldPosY,
+                                      &obj->anim.worldPosZ);
             } else {
-                Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                               ((GameObject*)obj)->anim.localPosZ, &((GameObject*)obj)->anim.worldPosX,
-                                               &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ,
-                                               (GameObject*)((GameObject*)obj)->anim.parent);
+                Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY,
+                                               obj->anim.localPosZ, &obj->anim.worldPosX,
+                                               &obj->anim.worldPosY, &obj->anim.worldPosZ,
+                                               (GameObject*)obj->anim.parent);
             }
         } else {
-            ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
-            ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
+            obj->anim.worldPosX = obj->anim.localPosX;
+            obj->anim.worldPosY = obj->anim.localPosY;
+            obj->anim.worldPosZ = obj->anim.localPosZ;
         }
         flags = collision->flags;
         if ((s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0) {
-            transform.rotX = ((GameObject*)obj)->anim.rotX;
+            transform.rotX = obj->anim.rotX;
             if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
                 transform.rotY = 0;
                 transform.rotZ = 0;
             } else {
-                transform.rotY = ((GameObject*)obj)->anim.rotY;
-                transform.rotZ = ((GameObject*)obj)->anim.rotZ;
+                transform.rotY = obj->anim.rotY;
+                transform.rotZ = obj->anim.rotZ;
             }
             transform.scale = CURVES_ONE;
-            transform.x = ((GameObject*)obj)->anim.worldPosX;
-            transform.y = ((GameObject*)obj)->anim.worldPosY;
-            transform.z = ((GameObject*)obj)->anim.worldPosZ;
+            transform.x = obj->anim.worldPosX;
+            transform.y = obj->anim.worldPosY;
+            transform.z = obj->anim.worldPosZ;
             setMatrixFromObjectPos(matrix, &transform);
             iv[0] = 0;
             iv[1] = iv[0];
@@ -673,11 +673,11 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
                 collision->traceStart[iv[1]][2] = collision->points[iv[1]][2];
             }
         }
-        if (((GameObject*)obj)->anim.classId == 1) {
-            collision->traceStart[2][0] = collision->points[2][0] = ((GameObject*)obj)->anim.worldPosX;
+        if (obj->anim.classId == 1) {
+            collision->traceStart[2][0] = collision->points[2][0] = obj->anim.worldPosX;
             collision->traceStart[2][1] = collision->points[2][1] =
-                CURVES_FALLBACK_TRACE_HEIGHT + ((GameObject*)obj)->anim.worldPosY;
-            collision->traceStart[2][2] = collision->points[2][2] = ((GameObject*)obj)->anim.worldPosZ;
+                CURVES_FALLBACK_TRACE_HEIGHT + obj->anim.worldPosY;
+            collision->traceStart[2][2] = collision->points[2][2] = obj->anim.worldPosZ;
         }
         collision->surfaceFlags = 0;
         collision->surfaceHitMask = 0;
@@ -711,18 +711,18 @@ void curves_updateLocalPointTransforms(GameObject* obj, CurvesCollisionState* co
     flags = collision->flags;
     if (((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
         ((s32)(flags & CURVES_COLLISION_STATE_LOCAL_POINTS) != 0)) {
-        transform.rotX = ((GameObject*)obj)->anim.rotX;
+        transform.rotX = obj->anim.rotX;
         if ((s32)(flags & CURVES_COLLISION_STATE_X_ROTATION_ONLY) != 0) {
             transform.rotY = 0;
             transform.rotZ = 0;
         } else {
-            transform.rotY = ((GameObject*)obj)->anim.rotY;
-            transform.rotZ = ((GameObject*)obj)->anim.rotZ;
+            transform.rotY = obj->anim.rotY;
+            transform.rotZ = obj->anim.rotZ;
         }
         transform.scale = CURVES_ONE;
-        transform.x = ((GameObject*)obj)->anim.localPosX;
-        transform.y = ((GameObject*)obj)->anim.localPosY;
-        transform.z = ((GameObject*)obj)->anim.localPosZ;
+        transform.x = obj->anim.localPosX;
+        transform.y = obj->anim.localPosY;
+        transform.z = obj->anim.localPosZ;
         setMatrixFromObjectPos(matrix, &transform);
         iv[0] = 0;
         iv[1] = iv[0];
@@ -744,7 +744,7 @@ void curves_updateLocalPointTransforms(GameObject* obj, CurvesCollisionState* co
             collision->localPointTarget[iv[0]][1] = CURVES_ONE + collision->localPointWorld[iv[0]][1];
             collision->localPointTarget[iv[0]][2] = collision->localPointWorld[iv[0]][2];
         }
-        trackInvalidateDynamicSlotsForObject((GameObject*)obj);
+        trackInvalidateDynamicSlotsForObject(obj);
     }
 }
 

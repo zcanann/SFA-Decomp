@@ -210,7 +210,7 @@ void sc_totempuzzle_update(GameObject* obj) {
             objects = ObjList_GetObjects(&startA, &countA);
             while (startA < countA) {
                 other = objects[startA];
-                if ((other->anim.romDefNo == SC_TOTEM_PUZZLE_SEQUENCE_ID) && ((GameObject*)other != obj)) {
+                if ((other->anim.romDefNo == SC_TOTEM_PUZZLE_SEQUENCE_ID) && (other != obj)) {
                     ((ScTotemPuzzleState*)other->extra)->peerPhaseOffset += 0.65f;
                 }
                 startA++;
@@ -219,7 +219,7 @@ void sc_totempuzzle_update(GameObject* obj) {
             objects = ObjList_GetObjects(&startB, &countB);
             while (startB < countB) {
                 other = objects[startB];
-                if ((other->anim.romDefNo == SC_TOTEM_PUZZLE_SEQUENCE_ID) && ((GameObject*)other != obj)) {
+                if ((other->anim.romDefNo == SC_TOTEM_PUZZLE_SEQUENCE_ID) && (other != obj)) {
                     ((ScTotemPuzzleState*)other->extra)->peerPhaseOffset += -0.65f;
                 }
                 startB++;

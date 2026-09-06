@@ -384,7 +384,7 @@ int dll_19_updateHitReaction(GameObject* obj, BaddieState* baddieState, void* hi
         return 0;
     }
     hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObject, &sphereIndex, (u32*)&v24, &posX, &posY, &posZ);
-    ((GroundBaddieState*)state)->lastHitSphereIndex = sphereIndex;
+    state->lastHitSphereIndex = sphereIndex;
     if (hit != 0) {
         if (hitPosOut != NULL) {
             ((PartFxSpawnParams*)hitPosOut)->posX = posX + playerMapOffsetX;

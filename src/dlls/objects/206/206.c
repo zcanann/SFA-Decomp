@@ -324,7 +324,7 @@ int dll_CE_updateAlertState(GameObject* obj, GroundBaddieState* state) {
         playerChild = ((GameObject*)Obj_GetPlayerObject())->childObjs[0];
         player = Obj_GetPlayerObject();
         childState = (*(DllCEStaffInterface**)playerChild->anim.dll)
-                         ->getHitReactValue((GameObject*)playerChild);
+                         ->getHitReactValue(playerChild);
         if (childState != 0) {
             if (player->anim.romDefNo != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
@@ -366,7 +366,7 @@ int dll_CE_updateSpitState(GameObject* obj, GroundBaddieState* state) {
             if ((void*)siblingAddress != (void*)obj &&
                 siblingAddress->anim.romDefNo == DLL_CE_SIBLING_SEQ_ID) {
                 (*(DllCESiblingInterface**)siblingAddress->anim.dll)
-                    ->handleMessage((GameObject*)siblingAddress, DLL_CE_MESSAGE_RELEASE, 0);
+                    ->handleMessage(siblingAddress, DLL_CE_MESSAGE_RELEASE, 0);
             }
             objectIndex++;
         }

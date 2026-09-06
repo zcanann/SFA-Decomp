@@ -234,7 +234,7 @@ void XyzAnimator_update(GameObject* obj) {
             value = mapBlockGetPolygonGroupType(polygonGroup);
             if (placement->blockLayer == value) {
                 state->polygonGroupCount++;
-                state->vertexCount += ((MapTriGroup*)polygonGroup)[1].firstTri - polygonGroup->firstTri;
+                state->vertexCount += (polygonGroup)[1].firstTri - polygonGroup->firstTri;
             }
         }
         if (state->vertexCount == 0) {
@@ -286,11 +286,11 @@ void XyzAnimator_update(GameObject* obj) {
         state->minZBuffer = bufferAddress;
         bufferAddress += streamSize;
         state->maxZBuffer = bufferAddress;
-        XyzAnimator_captureGeometry(placement, state, (MapBlockData*)blockAddress);
+        XyzAnimator_captureGeometry(placement, state, blockAddress);
         if (placement->mode != XYZ_ANIMATOR_MODE_DEFERRED_ONESHOT) {
-            XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
+            XyzAnimator_applyToMapBlock(placement, state, blockAddress);
             blockAddress->flags4 ^= 1;
-            XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
+            XyzAnimator_applyToMapBlock(placement, state, blockAddress);
             blockAddress->flags4 ^= 1;
         }
     }
@@ -504,7 +504,7 @@ void XyzAnimator_update(GameObject* obj) {
         }
         break;
     }
-    XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
+    XyzAnimator_applyToMapBlock(placement, state, blockAddress);
     return;
 }
 

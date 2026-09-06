@@ -558,7 +558,7 @@ void worldobj_init(GameObject* obj, const WorldObjSetup* setup) {
                 childPlacement->posX = obj->anim.localPosX;
                 childPlacement->posY = obj->anim.localPosY;
                 childPlacement->posZ = obj->anim.localPosZ;
-                objSetupObject((ObjPlacement*)childPlacement, 5, obj->anim.mapEventSlot, -1, NULL);
+                objSetupObject(childPlacement, 5, obj->anim.mapEventSlot, -1, NULL);
             }
         }
         break;
