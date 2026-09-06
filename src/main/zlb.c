@@ -166,7 +166,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
     do {
         final = ZROT1(src[0]);
         ZADV(1);
-        type = (ZROT8(src[0]) | (pos > 6 ? (u32)src[1] << (8 - pos) : 0)) & 3;
+        type = ZGB8() & 3;
         ZADV(2);
         if (type == 0) {
             u32 len;
@@ -174,6 +174,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                 src += 1;
                 pos = 0;
             }
+            /* Retail uses overlapping halfword loads, including the unaligned second load. */
             len = *(u16 *)src;
             src += 1;
             len |= (u32)*(u16 *)src << 8;
@@ -182,7 +183,7 @@ int zlbDecompress(u8 *compressedData, int compressedSize, u8 *destination, void 
                 u8 v = *src;
                 src += 1;
                 *++dst = v;
-            } while (len-- != 0);
+            } while (--len != 0);
         } else {
             if (type == 1) {
                 literalCodeLengths = gInflateFixedLiteralCodeLengths;

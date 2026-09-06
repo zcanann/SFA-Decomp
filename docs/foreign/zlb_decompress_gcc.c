@@ -1,19 +1,17 @@
 /*
  * zlbDecompress -- reconstructed GCC reference implementation.
  *
- * STATUS: integrated. The live unit is src/main/zlb.c (own TU, compiled with
- * ProDG 3.5 cc1 at -O1 via the "prodg" custom rule in configure.py); this
- * file is the annotated reference copy carrying the probe rationale that the
- * comment-free unit source cannot. Keep the two in sync.
- * The retail object is a foreign GCC compile (SN ProDG family), NOT MWCC --
- * the mcrxr/addme idiom is the decisive detection signature.
- * Our bundled ProDG 3.5-3.9.3 (GCC 2.95.2/3 SN builds)
- * reproduce this source's structure against the retail fn (all loop/table/
- * macro shapes aligned; report.json fuzzy 41.87 on .text, all data sections
- * 100); the residual divergence classes are pure compiler vintage (andi.
- * isel for contiguous masks, mcrxr/addme. decrement loops, no lbzux/lhzu
- * fusion, no loop-invariant lis hoisting) and point at a GCC 2.7/2.8-era SN
- * or Cygnus toolchain. Sourcing such a compiler is the remaining step.
+ * HISTORICAL RECONSTRUCTION: the live source is src/main/zlb.c. This older
+ * copy records experiments; its spellings and symbols are not synchronized.
+ *
+ * The previous claim that mcrxr/addme proves GCC/ProDG provenance was wrong.
+ * Audited GCC 2.7.2.3--3.0 PowerPC backends have no mcrxr emission, nor do the
+ * five bundled ProDG cc1 binaries contain that mnemonic. Retail also shares
+ * unusual stack frames and instruction idioms with a rendering assembly
+ * island. Handwritten or mechanically translated assembly is now the leading
+ * hypothesis, not an identified compiler. See zlb_provenance.md for evidence,
+ * limitations, reproducible probes, and the corrected stored-copy semantics.
+ * ProDG remains the project's build choice, not established source provenance.
  *
  * Probe-verified GCC spellings (do not "clean up"):
  * - The rotate must be spelled (b << m) | (b >> (32 - m)) with m a NAMED

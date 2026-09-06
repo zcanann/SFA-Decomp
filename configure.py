@@ -149,7 +149,7 @@ parser.add_argument(
     choices=["prodg", "mwcc"],
     default="prodg",
     help="compiler for src/main/zlb.c; mwcc is a diagnostic comparison path "
-    "only (retail is GCC-family)",
+    "only (retail compiler provenance is unresolved)",
 )
 parser.add_argument(
     "--prodg-version",
