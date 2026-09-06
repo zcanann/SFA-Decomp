@@ -809,6 +809,32 @@ Formatting changes no source text or object bytes, and the generated-path
 audit passes. Controls and object audits are under
 `build/gc13_new_matches/player_round10*`.
 
+## September 6: Player forward-velocity projection
+
+Both remaining Player functions now reproduce the multiply operand order
+in their forward-velocity projection. The projection temporary first holds
+the negated Z velocity; after caching X, the same temporary receives the
+projected result. This replaces an assignment embedded in the multiply
+without changing the arithmetic or load order.
+
+`playerState25` advances from **99.9422% to 99.9711%**, leaving only the
+two target-X velocity register operands. `playerStateMoving` advances from
+**99.78278% to 99.790985%**. Exactly one instruction word changes in each
+function. Every other instruction, relative relocation, allocated data
+section, section layout, and data-symbol position is preserved.
+
+Player reaches **99.99238% fuzzy agreement**, retaining **231/233 exact
+functions**, **132,844/139,108 exact code bytes**, and **10,168/10,168 exact
+data bytes**. The TU remains NonMatching with its existing GC/1.3 profile.
+The rejected inline-helper experiments are absent from the final source.
+
+Strict matching, `ninja all_source`, and the generated-path audit pass.
+The DOL SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`.
+Formatting is separate from the source change and preserves the raw object;
+the final source and owned headers pass clang-format checks. Controls,
+backend captures, and object audits are under
+`build/gc13_new_matches/player_round11*`.
+
 ## September 6: World-map camera orbit smoothing
 
 Engine 78 (`dlls/engine/78/78.c`) reaches **100% for all six functions,

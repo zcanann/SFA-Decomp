@@ -5126,10 +5126,13 @@ int playerState25(GameObject* obj, PlayerState* state, f32 updateRate) {
     }
     {
         f32 smoothVelX;
+        f32 forwardVelocity;
         smoothVelZ = inner->smoothVelZ;
+        forwardVelocity = -smoothVelZ;
+        smoothVelX = inner->smoothVelX;
+        forwardVelocity = forwardVelocity * cosYaw - smoothVelX * sinYaw;
         ((PlayerState*)state)->baddie.animSpeedA += interpolate(
-            -smoothVelZ * cosYaw - (smoothVelX = inner->smoothVelX) * sinYaw - ((PlayerState*)state)->baddie.animSpeedA,
-            inner->targetAnimSpeed, timeDelta);
+            forwardVelocity - ((PlayerState*)state)->baddie.animSpeedA, inner->targetAnimSpeed, timeDelta);
         ((PlayerState*)state)->baddie.animSpeedB +=
             interpolate(smoothVelX * cosYaw - smoothVelZ * sinYaw - ((PlayerState*)state)->baddie.animSpeedB,
                         inner->targetAnimSpeed, timeDelta);
@@ -9116,7 +9119,9 @@ int playerStateMoving(int obj, int state, f32 fv) {
                 f32 velocityX;
                 f32 cs = mathCosf((3.1415927f * (f32)inner->targetYaw) / 32768.0f);
                 ya = inner->smoothVelZ;
-                spd = -ya * cs - (velocityX = inner->smoothVelX) * t;
+                spd = -ya;
+                velocityX = inner->smoothVelX;
+                spd = spd * cs - velocityX * t;
                 ya = velocityX * cs - ya * t;
                 ((PlayerState*)state)->baddie.animSpeedA =
                     ((PlayerState*)state)->baddie.animSpeedA +
