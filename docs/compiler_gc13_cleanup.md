@@ -212,3 +212,48 @@ in the comparison against the starting tree. After rebasing onto current
 staging, the strict matching build and `ninja all_source` both pass, with the
 retail DOL byte-identical. The TU and type header pass clang-format. Local
 source/compiler controls are under `build/gc13_indexed/sky2/`.
+
+## September 6: Player projectile, render, and hit-detection recovery
+
+A second player pass adds six exact functions, totaling **6,740 code bytes**:
+
+| Function | Bytes | Before | After |
+| --- | ---: | ---: | ---: |
+| `playerStopRidingObject` | 356 | 97.34831% | **100%** |
+| `playerFireCloudRunnerProjectile` | 668 | 99.041916% | **100%** |
+| `playerSpawnRapidFireLaser` | 512 | 98.75% | **100%** |
+| `staffShootFireball` | 1,056 | 99.393936% | **100%** |
+| `playerRender` | 1,904 | 99.5063% | **100%** |
+| `playerDoHitDetection` | 2,244 | 99.82175% | **100%** |
+
+The three projectile spawners consume the low byte of `Obj_CanSetupObject`,
+as shown by retail's `clrlwi; cmplwi` and already expressed by other callers
+in this TU. The engine helper returns a boolean comparison, so the explicit
+`u8` conversion preserves its result. These are call-site recovery wins;
+they do not independently distinguish compiler versions.
+
+The other three functions use native compound flag updates. Dismounting clears
+`OBJ_MODEL_STATE_SHADOW_FADE_OUT` instead of a widened hexadecimal mask.
+Hit detection clears the 32-bit `PLAYER_FLAG_WORLDPOS_OVERRIDE` without the
+previous signed/64-bit conversions; its shared constant now has native integer
+type. The two macro uses are both in this function. Rendering sets and clears
+`SHADER_FLAG_DECAL_LAYER` through the canonical shader field.
+
+The cached shader was misleadingly named `gPlayerHeldObject` and stored as an
+integer. Its only producer stores the `Shader*` found in the Krazoa-spirit
+render path; its consumer clears that shader's decal flag. It is now
+`Shader* gPlayerKrazoaShader`, including the owning declaration and EN symbol
+config. Its four-byte `.sbss` slot, neighboring symbol offsets, and declaration
+order are preserved. The initialization function's body is unchanged.
+
+The complete TU advances from 99.82937% to **99.85959%**, with **218/233 exact
+functions**. Only the six listed function bodies change. All data bytes and
+data-symbol offsets remain unchanged; all other function relocations are
+preserved after normalizing the shader rename and anonymous literal numbering.
+Anonymous symbols are renumbered at unchanged pool locations. Every assigned section remains
+exact except `.text`. The TU stays NonMatching with its existing GC/1.3 flags.
+
+Formatting, generated-path and stale-symbol audits, the strict retail checksum,
+and `ninja all_source` pass. Local controls are under
+`build/gc13_new_matches/player_continue_first/`, `player_continue_second/`,
+`player_hit_flags/`, `player_render_shader/`, and `player_six/`.

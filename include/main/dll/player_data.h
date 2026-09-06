@@ -9,8 +9,7 @@
 #include "main/shader_api.h"
 #include "main/model.h"
 
-typedef struct PlayerModelChainEntry
-{
+typedef struct PlayerModelChainEntry {
     int* modelIds;
     int count;
 } PlayerModelChainEntry;
@@ -21,8 +20,7 @@ extern GameObject* gPlayerSpawnedObjects[];
 extern StaffCollisionInterface** gPlayerResource;
 extern int gPlayerPendingHealth;
 extern GameObject* gPlayerStaffObject;
-typedef struct PlayerLightfootMoveSpeeds
-{
+typedef struct PlayerLightfootMoveSpeeds {
     f32 speeds[7];
     u16 challengeGameBits[8];
     f32 challengeMeterScales[8];
@@ -46,7 +44,7 @@ extern int gPlayerStateHandlers[];
 extern void* gPlayerDefaultStateHandler;
 extern void* gPlayerChildObject;
 extern PlayerModelChainEntry* gPlayerModelChainConfig;
-extern int gPlayerHeldObject;
+extern Shader* gPlayerKrazoaShader;
 extern PartFxSpawnParams gPlayerPartFxParams;
 extern LightmapVertex gPlayerHudVtxBuf[8];
 extern s16 gPlayerStopMoves[4];
@@ -54,8 +52,7 @@ extern u8 gPlayerSurfacePfxModeTable[];
 extern u64 gPlayerLastSfxFrame;
 extern u64 gPlayerFrameCounter;
 
-typedef struct PlayerMoveSlot
-{
+typedef struct PlayerMoveSlot {
     u8 slotId;
     u8 unk01;
     s16 moveTableIndex;
@@ -93,8 +90,8 @@ typedef struct PlayerMoveSlot
     f32 hitWindowUnk94[3];
     f32 unkA0;
     f32 unkA4;
-    u8 hitInterval[3];  /* 0xA8: per-hit-window repeat-hit interval, copied into PlayerState.hitInterval */
-    u8 hitCountMax[3];  /* 0xAB: per-hit-window max hit count, copied into PlayerState.hitCountMax */
+    u8 hitInterval[3]; /* 0xA8: per-hit-window repeat-hit interval, copied into PlayerState.hitInterval */
+    u8 hitCountMax[3]; /* 0xAB: per-hit-window max hit count, copied into PlayerState.hitCountMax */
     u8 padAE[2];
 } PlayerMoveSlot;
 
@@ -127,8 +124,7 @@ STATIC_ASSERT(offsetof(PlayerMoveSlot, unkA0) == 0xa0);
 STATIC_ASSERT(offsetof(PlayerMoveSlot, unkA4) == 0xa4);
 
 extern PlayerMoveSlot gPlayerMoveSlotData[28];
-typedef struct PlayerAnimSpeedTuning
-{
+typedef struct PlayerAnimSpeedTuning {
     f32 gaitSpeedThresholds[6];
     f32 bodyCollisionPoints[2][3];
     f32 groundCollisionPoint[3];
@@ -161,8 +157,7 @@ extern s16 lbl_80332F78[];
 extern s16 lbl_80332F88[];
 extern s16 lbl_80333110[];
 extern f32 gPlayerDefaultMoveParams[24];
-typedef struct PlayerMotionTuning
-{
+typedef struct PlayerMotionTuning {
     s16 moveSequences[4][12];
     f32 velSmoothRateCurve[41];
     f32 targetYawSmoothRateCurve[41];

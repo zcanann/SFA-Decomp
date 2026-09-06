@@ -40,7 +40,7 @@ STATIC_ASSERT(sizeof(PlayerStatus) == 12);
 #define PLAYER_FLAG_WATER_SPLASH_PENDING                                                                               \
     0x20000LL /* queued water-entry FX: set on water-entry, gates spawnSplashBurst/spawnRipple then self-clears */
 #define PLAYER_FLAG_WORLDPOS_OVERRIDE                                                                                  \
-    0x8000000LL /* anim.modelState overrideWorldPos active: gates the localPos<->overrideWorldPos swap during render */
+    0x8000000 /* anim.modelState overrideWorldPos active: gates the localPos<->overrideWorldPos swap during render */
 #define PLAYER_FLAG_LOCKED                                                                                             \
     0x200000LL /* player controls locked (set/cleared by playerLock; gates pad-input processing) */
 #define PLAYER_FLAG_HITDETECT                                                                                          \

@@ -577,7 +577,7 @@ int playerStopRidingObject(GameObject* obj) {
         VEHICLE_INTERFACE(sub)->setMountState(sub, VEHICLE_NoRider);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         obj->anim.flags &= ~8;
-        obj->anim.modelState->flags = obj->anim.modelState->flags & 0xFFFFFEFFFLL;
+        obj->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         inner->focusObject = NULL;
         obj->anim.activeMove = -1;
         (*gPlayerInterface)->setState(obj, inner, 1);
@@ -5615,7 +5615,7 @@ f32 gPlayerClimbStartY;
 GameObject* gPlayerInteractTarget;
 f32 lbl_803DE430;
 u8 gPlayerIceSpellSustaining;
-int gPlayerHeldObject;
+Shader* gPlayerKrazoaShader;
 int gPlayerPendingHealth;
 int gPlayerModelChain;
 
@@ -10980,7 +10980,7 @@ void playerFireCloudRunnerProjectile(GameObject* obj, PlayerState* state, f32 ai
 
     inner = obj->extra;
     slot = Camera_GetCurrent();
-    if (Obj_CanSetupObject()) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         setup = Obj_AllocObjectSetup(0x24, 0x14b);
         setup->color[0] = 2;
         setup->color[1] = 1;
@@ -11038,7 +11038,7 @@ void playerSpawnRapidFireLaser(GameObject* unusedObj, PlayerState* unusedState, 
 
     linkEffect = PLAYER_LINK_EFFECT_ENABLED;
     Camera_GetCurrent();
-    if (Obj_CanSetupObject() != 0) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         Sfx_PlayFromObject(0, SFXTRIG_staff_rocket_hitdirt);
         setup = Obj_AllocObjectSetup(0x24, ARW_SEQID_RAPIDFIRE_LASER);
         setup->color[0] = 2;
@@ -11083,7 +11083,7 @@ void staffShootFireball(GameObject* obj, PlayerState* state, f32 unused) {
     f32 mtx[16];
 
     slot = Camera_GetCurrent();
-    if (Obj_CanSetupObject()) {
+    if ((u8)Obj_CanSetupObject() != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_wp_hitpos_6_20a);
         setup = Obj_AllocObjectSetup(0x24, 0x14b);
         setup->color[0] = 2;
@@ -15404,25 +15404,22 @@ void playerRender(int obj, int a, int b, int c, int d, int flag) {
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0xb, (f32*)((char*)inner + 0x768), (f32*)((char*)inner + 0x76c),
                                       (f32*)((char*)inner + 0x770), 0);
         if (playerHasKrazoaSpirit(1, 0) != 0) {
-            if ((void*)gPlayerHeldObject == NULL) {
+            if (gPlayerKrazoaShader == NULL) {
                 int i;
                 ModelFileHeader* m = Obj_GetActiveModel((GameObject*)obj)->file;
                 for (i = 0; i < m->renderOpCount; i++) {
                     Shader* op = ObjModel_GetRenderOp(m, i);
                     if (op->layerCount == 2) {
                         Shader_getLayer(op, 1);
-                        gPlayerHeldObject = (int)op;
-                        op->flags |= 0x100000LL;
+                        gPlayerKrazoaShader = op;
+                        op->flags |= SHADER_FLAG_DECAL_LAYER;
                         break;
                     }
                 }
             }
-        } else if ((void*)gPlayerHeldObject != NULL) {
-            *(u32*)((char*)gPlayerHeldObject + 0x3c) = *(u32*)((char*)gPlayerHeldObject + 0x3c) & ~0x100000LL;
-            {
-                int zero = 0;
-                gPlayerHeldObject = zero;
-            }
+        } else if (gPlayerKrazoaShader != NULL) {
+            gPlayerKrazoaShader->flags &= ~SHADER_FLAG_DECAL_LAYER;
+            gPlayerKrazoaShader = NULL;
         }
         {
             in2 = ((GameObject*)obj)->extra;
@@ -15516,7 +15513,7 @@ void playerDoHitDetection(struct GameObject* obj) {
     f32 y;
     f32 z;
 
-    ((PlayerState*)inner)->flags360 = (s32)((PlayerState*)inner)->flags360 & ~PLAYER_FLAG_WORLDPOS_OVERRIDE;
+    ((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_WORLDPOS_OVERRIDE;
     if (((PlayerState*)inner)->flags3F2.b20 != 0 &&
         (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0) {
         ((PlayerState*)inner)->baddie.physicsActive = 0;
@@ -16082,7 +16079,7 @@ void objLoadPlayerFromSave(GameObject* obj) {
         (in2->playerStatus)->health = (s8)v;
         gPlayerPendingHealth = 0;
     }
-    gPlayerHeldObject = 0;
+    gPlayerKrazoaShader = NULL;
 }
 
 void playerInitFuncPtrsEntry(void) {
