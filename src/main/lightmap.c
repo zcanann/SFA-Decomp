@@ -342,7 +342,6 @@ void getVisibleObjects(s8* opacity) {
     int i;
     u32 key;
     int depthInt;
-    s8* cur;
     u8* sub;
     GameObject* att;
     int j;
@@ -360,8 +359,7 @@ void getVisibleObjects(s8* opacity) {
     part = ObjList_PartitionForRender(&count);
     i = 0;
     p = objects;
-    cur = opacity;
-    for (; i < count; i++, cur++) {
+    for (; i < count; i++) {
         o = (GameObject*)*p;
 
         o->objectFlags &= ~OBJECT_OBJFLAG_RENDERED;
@@ -375,8 +373,8 @@ void getVisibleObjects(s8* opacity) {
             sub += 4;
         }
         if (i >= part) {
-            *cur = objUpdateOpacity(o);
-            if (*cur != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0) {
+            opacity[i] = objUpdateOpacity(o);
+            if (opacity[i] != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0) {
                 if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0) {
                     *(f32*)&o->anim.targetObj = (f32)(o->anim.modelInstance->fixedSortDepth * 100);
                     depthInt = (int)*(f32*)&o->anim.targetObj;
