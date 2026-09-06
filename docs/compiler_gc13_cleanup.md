@@ -132,3 +132,24 @@ consumers are unchanged. Artifacts are under `build/gc13_new_matches/lava/`.
 Formatting and the generated-path audit for slots 454-456 pass. The strict
 checksum build and `ninja all_source` both exit 0 within their 30-second limits;
 the final DOL remains byte-identical to retail with slot 455 linked from source.
+
+## September 6: Wisp animation-event flags
+
+`wispBaddieProcessAnimEvent` (1,000 bytes) reaches 100% by using ordinary
+compound updates on its `u32 controlFlags`: `&= ~0x40` and
+`|= BADDIE_CONTROL_SEQUENCE_DRIVEN`. The previous expressions unnecessarily
+widened the operations to 64 bits. The stored flags are identical for every input.
+
+| Source | GC/1.3 function / TU fuzzy | GC/2.0 function / TU fuzzy |
+| --- | ---: | ---: |
+| Previous widened expressions | 99.156% / 99.89016% | 99.156% / 99.89016% |
+| Native compound updates | **100% / 100%** | 98.68% / 99.82822% |
+
+All 11 functions, 7,684 code bytes, and 5,780 assigned data bytes in
+`dlls/objects/202/sharpclaw.c` now match, allowing EN source linkage. The other
+ten function bodies, data, named symbol offsets, and relocations are preserved.
+The existing compiler profile and TU boundaries are unchanged. Formatting was
+checked against the intended C tokens and the unformatted candidate object;
+the canonical header is unchanged. The generated-path audit, strict retail
+checksum build, and `ninja all_source` pass. Artifacts are under
+`build/gc13_new_matches/wisp/` and `wisp_gc20/`.

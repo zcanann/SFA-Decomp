@@ -83,8 +83,7 @@
 
 /* Baddie-family animation data shared with the sequence-driver TUs. */
 
-typedef struct FamilyTable
-{
+typedef struct FamilyTable {
     u8* tbl0;
     u8* tbl4;
     u8* tbl8;
@@ -99,9 +98,7 @@ typedef struct FamilyTable
 
 #define WISPBADDIE_OBJFLAG_PARENT_SLACK 0x1000
 
-
-typedef struct WispEventRow
-{
+typedef struct WispEventRow {
     f32 blend; /* +0x0 */
     u32 flags; /* +0x4 (low byte = move flags) */
     u8 moveId; /* +0x8 */
@@ -120,8 +117,7 @@ STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
 /* per-family anim-table row: speed + flags + anim ids and chain links */
 
-typedef struct
-{
+typedef struct {
     f32 speed; /* 0x0 */
     u32 flags; /* 0x4 */
     u8 anim;   /* 0x8 */
@@ -131,8 +127,7 @@ typedef struct
     u32 extra; /* 0xc */
 } SeqRow16;
 
-typedef struct
-{
+typedef struct {
     f32 speed; /* 0x0 */
     u32 flags; /* 0x4 */
     u8 anim;   /* 0x8 */
@@ -146,16 +141,14 @@ typedef struct
 /* sidekick-toy anim-chain advance: timer-driven 16-stride SeqRow16 chain +
  * curve-follow speed shaping, called from the sharpClawUpdateIdle update path. */
 
-typedef struct GroundBaddieModelChainDescriptor
-{
+typedef struct GroundBaddieModelChainDescriptor {
     void* entries;
     s32 count;
 } GroundBaddieModelChainDescriptor;
 
 STATIC_ASSERT(sizeof(GroundBaddieModelChainDescriptor) == 8);
 
-typedef struct
-{
+typedef struct {
     f32 speed;
     u32 mask;
     u8 anim;
@@ -166,8 +159,7 @@ typedef struct
     u8 pad13[3];
 } SeqEntry;
 
-typedef struct
-{
+typedef struct {
     u8 pad00[0x14];
     u8* hitEntries;
     u8 pad18[4];
@@ -185,17 +177,14 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state);
 
 void sharpClawInit(GameObject* obj, u8* state);
 
-static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target)
-{
+static inline int hoodedZyck_getAngleDelta(GameObject* obj, GameObject* target) {
     f32 d = (f32)(int)((u16)getAngle(obj->anim.localPosX - target->anim.localPosX,
                                      obj->anim.localPosZ - target->anim.localPosZ) -
                        (u16)obj->anim.rotX);
-    if (d > 32768.0f)
-    {
+    if (d > 32768.0f) {
         d = -65535.0f + d;
     }
-    if (d < -32768.0f)
-    {
+    if (d < -32768.0f) {
         d = 65535.0f + d;
     }
     return d;
@@ -215,7 +204,7 @@ u8 gBaddieMoveProgressTable[288] = {
     0,   0,   0,  0,   0,   0,   0,  0,   0,   0,   0,  0,  0,  0,   0,  0, 0, 0};
 
 u8 gSharpClawLocomotionMoves[48] = {60, 35, 215, 10, 0, 0, 0, 0, 0,  0, 0, 0, 60, 35, 215, 10, 0, 0, 0, 0, 11, 0, 0, 0,
-                       60, 35, 215, 10, 0, 0, 0, 0, 15, 0, 0, 0, 60, 35, 215, 10, 0, 0, 0, 0, 12, 0, 0, 0};
+                                    60, 35, 215, 10, 0, 0, 0, 0, 15, 0, 0, 0, 60, 35, 215, 10, 0, 0, 0, 0, 12, 0, 0, 0};
 
 u8 gSharpClawIdleMoveTable[324] = {
     0,  0,  0,  0,  0, 0, 0,  0,  13, 0,  0, 0, 64, 64,  0,  0,  0, 0, 0,  0,  0,  0,  0, 0, 64, 64,  0,  0,  0, 0,
@@ -242,41 +231,42 @@ u8 gSharpClawAnimEventMoves[300] = {
     63, 128, 0,  0, 0, 0, 0,  11,  62, 0, 0, 0, 63, 128, 0,  0, 0, 0, 0,  11,  62, 0, 0, 0, 0,  0,   0,  0, 0, 0,
     0,  11,  0,  0, 0, 0, 0,  0,   0,  0, 0, 0, 0,  0,   0,  0, 0, 0, 63, 128, 0,  0, 0, 0, 0,  11,  64, 0, 0, 0};
 
-u8 gSharpClawBlockReactionMoves[300] = {62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 2, 0, 62, 148, 122, 225, 0, 0, 0, 11, 65, 2, 2, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 2, 0, 62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 2, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 2, 0, 62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 2, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 68, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 65, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 0, 0};
+u8 gSharpClawBlockReactionMoves[300] = {
+    62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 2, 0, 62, 148, 122, 225, 0, 0, 0, 11, 65, 2, 2, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 2, 0, 62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 2, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 2, 0, 62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 2, 0,
+    0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 68, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 65, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 66, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 67, 2, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 69, 2, 0, 0};
 
 u8 gSharpClawAttackHitVolumes[36] = {0, 0,  0,  0, 0, 0, 0, 11, 24, 1, 0, 0, 0, 0,  0,  0, 0, 0,
-                       0, 12, 25, 1, 0, 0, 0, 0,  0,  0, 0, 0, 0, 10, 16, 1, 0, 0};
+                                     0, 12, 25, 1, 0, 0, 0, 0,  0,  0, 0, 0, 0, 10, 16, 1, 0, 0};
 
 u8 gSharpClawModeIdleMoves[96] = {63, 128, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 63, 128, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0,
-                       63, 0,   0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0,  0,   0, 0, 0, 0, 0, 0, 0,  0, 0, 0,
-                       0,  0,   0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 63, 0,   0, 0, 0, 0, 0, 0, 21, 0, 0, 0,
-                       63, 128, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 63, 128, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0};
+                                  63, 0,   0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0,  0,   0, 0, 0, 0, 0, 0, 0,  0, 0, 0,
+                                  0,  0,   0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 63, 0,   0, 0, 0, 0, 0, 0, 21, 0, 0, 0,
+                                  63, 128, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 63, 128, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0};
 
-u8 gSharpClawHitReactionMoves[300] = {63, 0,   0,   0,   0, 0, 0, 0,  40, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 38, 0, 0, 0,
-                        63, 76,  204, 205, 0, 0, 0, 1,  53, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 47, 0, 0, 0,
-                        63, 76,  204, 205, 0, 0, 0, 1,  54, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 48, 0, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0,
-                        63, 192, 0,   0,   0, 0, 0, 0,  57, 7, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 38, 9, 0, 0,
-                        64, 0,   0,   0,   0, 0, 0, 1,  32, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 49, 9, 0, 0,
-                        63, 0,   0,   0,   0, 0, 0, 0,  57, 7, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 50, 9, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0,
-                        63, 76,  204, 205, 0, 0, 0, 0,  39, 3, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 57, 7, 0, 0,
-                        63, 153, 153, 154, 0, 0, 0, 0,  42, 1, 0, 0, 63, 153, 153, 154, 0, 0, 0, 0, 42, 1, 0, 0,
-                        63, 153, 153, 154, 0, 0, 0, 0,  41, 2, 0, 0, 63, 153, 153, 154, 0, 0, 0, 0, 41, 2, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0,
-                        63, 192, 0,   0,   0, 0, 0, 11, 28, 3, 0, 0};
+u8 gSharpClawHitReactionMoves[300] = {
+    63,  0,   0,   0,   0,   0,   0,   0,  40, 0, 0,  0,  63, 0,  0,   0,  0,   0,   0,   0,   38,  0,  0,   0,  63,
+    76,  204, 205, 0,   0,   0,   1,   53, 0,  0, 0,  63, 0,  0,  0,   0,  0,   0,   0,   47,  0,   0,  0,   63, 76,
+    204, 205, 0,   0,   0,   1,   54,  0,  0,  0, 63, 0,  0,  0,  0,   0,  0,   0,   48,  0,   0,   0,  0,   0,  0,
+    0,   0,   0,   0,   0,   0,   0,   0,  0,  0, 0,  0,  0,  0,  0,   0,  0,   0,   0,   0,   0,   63, 192, 0,  0,
+    0,   0,   0,   0,   57,  7,   0,   0,  63, 0, 0,  0,  0,  0,  0,   0,  38,  9,   0,   0,   64,  0,  0,   0,  0,
+    0,   0,   1,   32,  0,   0,   0,   63, 0,  0, 0,  0,  0,  0,  0,   49, 9,   0,   0,   63,  0,   0,  0,   0,  0,
+    0,   0,   57,  7,   0,   0,   63,  0,  0,  0, 0,  0,  0,  0,  50,  9,  0,   0,   0,   0,   0,   0,  0,   0,  0,
+    0,   0,   0,   0,   0,   0,   0,   0,  0,  0, 0,  0,  0,  0,  0,   0,  0,   63,  76,  204, 205, 0,  0,   0,  0,
+    39,  3,   0,   0,   63,  0,   0,   0,  0,  0, 0,  0,  57, 7,  0,   0,  63,  153, 153, 154, 0,   0,  0,   0,  42,
+    1,   0,   0,   63,  153, 153, 154, 0,  0,  0, 0,  42, 1,  0,  0,   63, 153, 153, 154, 0,   0,   0,  0,   41, 2,
+    0,   0,   63,  153, 153, 154, 0,   0,  0,  0, 41, 2,  0,  0,  0,   0,  0,   0,   0,   0,   0,   0,  0,   0,  0,
+    0,   0,   0,   0,   0,   0,   0,   0,  0,  0, 0,  0,  0,  63, 192, 0,  0,   0,   0,   0,   11,  28, 3,   0,  0};
 
 u8 gSharpClawReactionMoveChain[208] = {
     0,  0,   0,  0,  0, 0, 0, 0,  0,  0, 0, 0,  0, 0, 0, 0,  63, 192, 0,  0,  0, 0, 0, 11, 56, 1, 5, 10, 0, 0, 0, 64,
@@ -305,76 +295,79 @@ u8 gSharpClawMoveSelectTable[432] = {
 
 u8 gSharpClawDeflectHitboxFlags[24] = {0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
 
-u8 gSharpClawSoMoveSelectTable[432] = {0,  0,   0,   0,   0, 0, 0, 0, 21, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
-                        36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
-                        63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0,
-                        16, 0,   33,  230, 2, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
-                        63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
-                        36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
-                        63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
-                        17, 0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
-                        63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
-                        2,  0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
-                        63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
-                        19, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
-                        63, 38,  102, 102, 0, 8, 0, 0, 19, 0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0,
-                        25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
-                        63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
-                        17, 0,   0,   0,   0, 0, 0, 0, 63, 140, 204, 205, 0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
-                        63, 12,  204, 205, 0, 1, 0, 0, 12, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
-                        19, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0};
+u8 gSharpClawSoMoveSelectTable[432] = {
+    0,  0,   0,   0,   0, 0, 0, 0, 21, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
+    36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
+    63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0,
+    16, 0,   33,  230, 2, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
+    63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
+    36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
+    63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
+    17, 0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
+    63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
+    2,  0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
+    63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
+    19, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
+    63, 38,  102, 102, 0, 8, 0, 0, 19, 0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0, 0, 0, 0,
+    25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
+    63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
+    17, 0,   0,   0,   0, 0, 0, 0, 63, 140, 204, 205, 0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
+    63, 12,  204, 205, 0, 1, 0, 0, 12, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
+    19, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0};
 
 u8 gSharpClawSoDeflectHitboxFlags[24] = {0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
 
 u8 gSharpClawCoAttackHitVolumes[36] = {0, 0,  0,  0, 0, 0, 0, 11, 24, 2, 0, 0, 0, 0,  0,  0, 0, 0,
-                       0, 10, 25, 2, 0, 0, 0, 0,  0,  0, 0, 0, 0, 24, 16, 4, 0, 0};
+                                       0, 10, 25, 2, 0, 0, 0, 0,  0,  0, 0, 0, 0, 24, 16, 4, 0, 0};
 
-u8 gSharpClawCoMoveSelectTable[432] = {0,  0,   0,   0,   0, 0, 0, 0, 21, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
-                        36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
-                        63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0,
-                        16, 0,   33,  230, 2, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
-                        63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
-                        36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
-                        63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
-                        17, 0,   0,   0,   0, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
-                        63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
-                        2,  0,   0,   0,   0, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
-                        63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
-                        19, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
-                        63, 38,  102, 102, 0, 8, 0, 0, 19, 0,   0,   0,   0, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0,
-                        25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
-                        63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
-                        17, 0,   0,   0,   0, 0, 0, 0, 63, 140, 204, 205, 0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
-                        63, 12,  204, 205, 0, 1, 0, 0, 12, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
-                        19, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0};
+u8 gSharpClawCoMoveSelectTable[432] = {
+    0,  0,   0,   0,   0, 0, 0, 0, 21, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
+    36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
+    63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0,
+    16, 0,   33,  230, 2, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
+    63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
+    36, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
+    63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
+    17, 0,   0,   0,   0, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
+    63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0,
+    2,  0,   0,   0,   0, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1, 0, 0, 0,
+    63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
+    19, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
+    63, 38,  102, 102, 0, 8, 0, 0, 19, 0,   0,   0,   0, 0, 0, 0, 63, 102, 102, 102, 0, 0, 0, 0,
+    25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1, 0, 0, 0,
+    63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 4, 0, 0,
+    17, 0,   0,   0,   0, 0, 0, 0, 63, 140, 204, 205, 0, 1, 0, 0, 16, 0,   33,  230, 2, 0, 0, 0,
+    63, 12,  204, 205, 0, 1, 0, 0, 12, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 8, 0, 0,
+    19, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0, 0, 0, 0};
 
 u8 gSharpClawCoDeflectHitboxFlags[24] = {1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0};
 
-u8 gSharpClawAsMoveSelectTable[468] = {0,  0,   0,   0,   0, 0, 0, 0,  21, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0,  0, 0, 0,
-                        36, 0,   0,   0,   0, 0, 0, 0,  63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1,  0, 0, 0,
-                        63, 166, 102, 102, 0, 0, 0, 0,  25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0,  1, 0, 0,
-                        16, 0,   33,  230, 2, 0, 0, 0,  63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1,  0, 0, 0,
-                        63, 128, 0,   0,   0, 1, 0, 0,  16, 0,   33,  230, 2, 0, 0, 0, 63, 38,  102, 102, 0,  8, 0, 0,
-                        19, 0,   0,   0,   0, 0, 0, 0,  63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1,  0, 0, 0,
-                        63, 128, 0,   0,   0, 0, 0, 0,  24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0,  4, 0, 0,
-                        17, 0,   0,   0,   0, 0, 0, 0,  63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1,  0, 0, 0,
-                        63, 38,  102, 102, 0, 2, 0, 0,  18, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0,  0, 0, 0,
-                        2,  0,   0,   0,   0, 0, 0, 0,  63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1,  0, 0, 0,
-                        63, 128, 0,   0,   0, 1, 0, 0,  16, 0,   33,  230, 2, 0, 0, 0, 63, 128, 0,   0,   0,  0, 0, 0,
-                        24, 0,   5,   230, 1, 0, 0, 0,  63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2,  0, 0, 0,
-                        63, 38,  102, 102, 0, 8, 0, 0,  19, 0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0,  0, 0, 0,
-                        25, 0,   9,   230, 1, 0, 0, 0,  63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1,  0, 0, 0,
-                        63, 38,  102, 102, 0, 2, 0, 0,  18, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0,  4, 0, 0,
-                        17, 0,   0,   0,   0, 0, 0, 0,  63, 140, 204, 205, 0, 1, 0, 0, 16, 0,   33,  230, 2,  0, 0, 0,
-                        63, 12,  204, 205, 0, 1, 0, 0,  12, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0,  8, 0, 0,
-                        19, 0,   0,   0,   0, 0, 0, 0,  63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0,  0, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 11, 24, 1,   0,   0,   0, 0, 0, 0, 0,  0,   0,   12,  25, 1, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 10, 16, 2,   0,   0};
+u8 gSharpClawAsMoveSelectTable[468] = {
+    0,  0,   0,   0,   0, 0, 0, 0,  21, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0,  0, 0, 0,
+    36, 0,   0,   0,   0, 0, 0, 0,  63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1,  0, 0, 0,
+    63, 166, 102, 102, 0, 0, 0, 0,  25, 0,   9,   230, 1, 0, 0, 0, 63, 128, 0,   0,   0,  1, 0, 0,
+    16, 0,   33,  230, 2, 0, 0, 0,  63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1,  0, 0, 0,
+    63, 128, 0,   0,   0, 1, 0, 0,  16, 0,   33,  230, 2, 0, 0, 0, 63, 38,  102, 102, 0,  8, 0, 0,
+    19, 0,   0,   0,   0, 0, 0, 0,  63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1,  0, 0, 0,
+    63, 128, 0,   0,   0, 0, 0, 0,  24, 0,   5,   230, 1, 0, 0, 0, 63, 38,  102, 102, 0,  4, 0, 0,
+    17, 0,   0,   0,   0, 0, 0, 0,  63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1,  0, 0, 0,
+    63, 38,  102, 102, 0, 2, 0, 0,  18, 0,   0,   0,   0, 0, 0, 0, 63, 128, 0,   0,   0,  0, 0, 0,
+    2,  0,   0,   0,   0, 0, 0, 0,  63, 166, 102, 102, 0, 0, 0, 0, 25, 0,   9,   230, 1,  0, 0, 0,
+    63, 128, 0,   0,   0, 1, 0, 0,  16, 0,   33,  230, 2, 0, 0, 0, 63, 128, 0,   0,   0,  0, 0, 0,
+    24, 0,   5,   230, 1, 0, 0, 0,  63, 128, 0,   0,   0, 1, 0, 0, 16, 0,   33,  230, 2,  0, 0, 0,
+    63, 38,  102, 102, 0, 8, 0, 0,  19, 0,   0,   0,   0, 0, 0, 0, 63, 166, 102, 102, 0,  0, 0, 0,
+    25, 0,   9,   230, 1, 0, 0, 0,  63, 128, 0,   0,   0, 0, 0, 0, 24, 0,   5,   230, 1,  0, 0, 0,
+    63, 38,  102, 102, 0, 2, 0, 0,  18, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0,  4, 0, 0,
+    17, 0,   0,   0,   0, 0, 0, 0,  63, 140, 204, 205, 0, 1, 0, 0, 16, 0,   33,  230, 2,  0, 0, 0,
+    63, 12,  204, 205, 0, 1, 0, 0,  12, 0,   0,   0,   0, 0, 0, 0, 63, 38,  102, 102, 0,  8, 0, 0,
+    19, 0,   0,   0,   0, 0, 0, 0,  63, 38,  102, 102, 0, 2, 0, 0, 18, 0,   0,   0,   0,  0, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 11, 24, 1,   0,   0,   0, 0, 0, 0, 0,  0,   0,   12,  25, 1, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 10, 16, 2,   0,   0};
 
 u8 gSharpClawAsDeflectHitboxFlags[24] = {0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
 
 u8 gBossGeneralLocomotionMoves[48] = {60, 35, 215, 10, 0, 0, 0, 0, 0, 0, 0, 0, 60, 35, 215, 10, 0, 0, 0, 0, 1, 0, 0, 0,
-                       60, 35, 215, 10, 0, 0, 0, 0, 2, 0, 0, 0, 60, 35, 215, 10, 0, 0, 0, 0, 1, 0, 0, 0};
+                                      60, 35, 215, 10, 0, 0, 0, 0, 2, 0, 0, 0, 60, 35, 215, 10, 0, 0, 0, 0, 1, 0, 0, 0};
 
 u8 gBossGeneralIdleMoveTable[24] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -390,41 +383,42 @@ u8 gBossGeneralAnimEventMoves[300] = {
     63, 128, 0,  0, 0, 0, 0,  11,  19, 0, 0, 0, 63, 128, 0,  0, 0, 0, 0,  11,  19, 0, 0, 0, 0,  0,   0,  0, 0, 0,
     0,  11,  0,  0, 0, 0, 0,  0,   0,  0, 0, 0, 0,  0,   0,  0, 0, 0, 63, 128, 0,  0, 0, 0, 0,  11,  20, 0, 0, 0};
 
-u8 gBossGeneralBlockReactionMoves[300] = {62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 16, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 17, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 16, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
-                        62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0};
+u8 gBossGeneralBlockReactionMoves[300] = {
+    62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 16, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 17, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 16, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 18, 2, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0, 62, 148, 122, 225, 0, 0, 0, 11, 19, 2, 0, 0,
+    0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0,  0,  0, 0, 0,
+    62, 148, 122, 225, 0, 0, 0, 11, 20, 2, 0, 0};
 
 u8 gBossGeneralAttackHitVolumes[36] = {0, 0,  0, 0, 0, 0, 0, 11, 0, 1, 0, 0, 0, 0,  0, 0, 0, 0,
-                       0, 12, 0, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 10, 0, 1, 0, 0};
+                                       0, 12, 0, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 10, 0, 1, 0, 0};
 
 u8 gBossGeneralModeIdleMoves[96] = {63, 128, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 63, 128, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0,
-                       63, 0,   0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,  0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                       0,  0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0,   0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
-                       63, 128, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 63, 128, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0};
+                                    63, 0,   0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,  0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                    0,  0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0,   0, 0, 0, 0, 0, 0, 7, 0, 0, 0,
+                                    63, 128, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 63, 128, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0};
 
-u8 gBossGeneralHitReactionMoves[300] = {63, 0,   0,   0,   0, 0, 0, 0, 15, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 12, 0, 0, 0,
-                        63, 76,  204, 205, 0, 0, 0, 0, 14, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 14, 0, 0, 0,
-                        63, 76,  204, 205, 0, 0, 0, 0, 13, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 13, 0, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0,
-                        63, 192, 0,   0,   0, 0, 0, 0, 15, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 12, 0, 0, 0,
-                        64, 0,   0,   0,   0, 0, 0, 0, 14, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 14, 0, 0, 0,
-                        63, 0,   0,   0,   0, 0, 0, 0, 13, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 13, 0, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0,
-                        63, 76,  204, 205, 0, 0, 0, 0, 15, 0, 0, 0, 63, 0,   0,   0,   0, 0, 0, 0, 12, 0, 0, 0,
-                        63, 153, 153, 154, 0, 0, 0, 0, 14, 0, 0, 0, 63, 153, 153, 154, 0, 0, 0, 0, 14, 0, 0, 0,
-                        63, 153, 153, 154, 0, 0, 0, 0, 13, 0, 0, 0, 63, 153, 153, 154, 0, 0, 0, 0, 13, 0, 0, 0,
-                        0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0, 0,  0,   0,   0,   0, 0, 0, 0, 0,  0, 0, 0,
-                        63, 192, 0,   0,   0, 0, 0, 0, 15, 0, 0, 0};
+u8 gBossGeneralHitReactionMoves[300] = {
+    63,  0,   0,   0,   0,   0,   0,   0,  15, 0, 0,  0,  63, 0,  0,   0,  0,   0,   0,   0,   12,  0,  0,   0,  63,
+    76,  204, 205, 0,   0,   0,   0,   14, 0,  0, 0,  63, 0,  0,  0,   0,  0,   0,   0,   14,  0,   0,  0,   63, 76,
+    204, 205, 0,   0,   0,   0,   13,  0,  0,  0, 63, 0,  0,  0,  0,   0,  0,   0,   13,  0,   0,   0,  0,   0,  0,
+    0,   0,   0,   0,   0,   0,   0,   0,  0,  0, 0,  0,  0,  0,  0,   0,  0,   0,   0,   0,   0,   63, 192, 0,  0,
+    0,   0,   0,   0,   15,  0,   0,   0,  63, 0, 0,  0,  0,  0,  0,   0,  12,  0,   0,   0,   64,  0,  0,   0,  0,
+    0,   0,   0,   14,  0,   0,   0,   63, 0,  0, 0,  0,  0,  0,  0,   14, 0,   0,   0,   63,  0,   0,  0,   0,  0,
+    0,   0,   13,  0,   0,   0,   63,  0,  0,  0, 0,  0,  0,  0,  13,  0,  0,   0,   0,   0,   0,   0,  0,   0,  0,
+    0,   0,   0,   0,   0,   0,   0,   0,  0,  0, 0,  0,  0,  0,  0,   0,  0,   63,  76,  204, 205, 0,  0,   0,  0,
+    15,  0,   0,   0,   63,  0,   0,   0,  0,  0, 0,  0,  12, 0,  0,   0,  63,  153, 153, 154, 0,   0,  0,   0,  14,
+    0,   0,   0,   63,  153, 153, 154, 0,  0,  0, 0,  14, 0,  0,  0,   63, 153, 153, 154, 0,   0,   0,  0,   13, 0,
+    0,   0,   63,  153, 153, 154, 0,   0,  0,  0, 13, 0,  0,  0,  0,   0,  0,   0,   0,   0,   0,   0,  0,   0,  0,
+    0,   0,   0,   0,   0,   0,   0,   0,  0,  0, 0,  0,  0,  63, 192, 0,  0,   0,   0,   0,   0,   15, 0,   0,  0};
 
 u8 gBossGeneralNullMoveChain[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -441,17 +435,23 @@ u8 gBossGeneralMoveSelectTable[240] = {
 u8 gBossGeneralDeflectHitboxFlags[24] = {0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
 
 FamilyTable gBaddieFamilyTables[6] = {
-    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawMoveSelectTable, gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
+    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawMoveSelectTable,
+     gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
      gSharpClawDeflectHitboxFlags, gSharpClawBlockReactionMoves},
-    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawMoveSelectTable, gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
+    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawMoveSelectTable,
+     gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
      gSharpClawDeflectHitboxFlags, gSharpClawBlockReactionMoves},
-    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawSoMoveSelectTable, gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
+    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawSoMoveSelectTable,
+     gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
      gSharpClawSoDeflectHitboxFlags, gSharpClawBlockReactionMoves},
-    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawCoMoveSelectTable, gSharpClawHitReactionMoves, gSharpClawCoAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
+    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawCoMoveSelectTable,
+     gSharpClawHitReactionMoves, gSharpClawCoAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
      gSharpClawCoDeflectHitboxFlags, gSharpClawBlockReactionMoves},
-    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawAsMoveSelectTable, gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
+    {gSharpClawLocomotionMoves, gSharpClawIdleMoveTable, gSharpClawAnimEventMoves, gSharpClawAsMoveSelectTable,
+     gSharpClawHitReactionMoves, gSharpClawAttackHitVolumes, gSharpClawModeIdleMoves, gSharpClawReactionMoveChain,
      gSharpClawAsDeflectHitboxFlags, gSharpClawBlockReactionMoves},
-    {gBossGeneralLocomotionMoves, gBossGeneralIdleMoveTable, gBossGeneralAnimEventMoves, gBossGeneralMoveSelectTable, gBossGeneralHitReactionMoves, gBossGeneralAttackHitVolumes, gBossGeneralModeIdleMoves, gBossGeneralNullMoveChain,
+    {gBossGeneralLocomotionMoves, gBossGeneralIdleMoveTable, gBossGeneralAnimEventMoves, gBossGeneralMoveSelectTable,
+     gBossGeneralHitReactionMoves, gBossGeneralAttackHitVolumes, gBossGeneralModeIdleMoves, gBossGeneralNullMoveChain,
      gBossGeneralDeflectHitboxFlags, gBossGeneralBlockReactionMoves},
 };
 
@@ -461,8 +461,7 @@ f32 gBaddieFamilySpeedScales[6] = {0.5f, 0.5f, 0.7f, 0.6f, 1.5f, 1.5f};
 
 u32 gGroundBaddieModelChainIds[4] = {6, 7, 8, 9};
 
-u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
-{
+u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent) {
     EnemyState* enemyState = (EnemyState*)state;
     u8* base = gBaddieMoveProgressTable;
     u8* sequenceBase;
@@ -483,58 +482,42 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
     sequenceBase = base + sequenceIndex * 0x28;
     eventRows = *(WispEventRow**)(sequenceBase + 0x1444);
     stateFlags = enemyState->controlFlags;
-    if ((stateFlags & 0x4000) != 0)
-    {
+    if ((stateFlags & 0x4000) != 0) {
         return 0;
     }
-    if (enemyState->sharpClaw.seqTimer && enemyState->phaseAngle != 0)
-    {
+    if (enemyState->sharpClaw.seqTimer && enemyState->phaseAngle != 0) {
         return 0;
     }
     eventFlags = enemyState->flags2F1;
     ei = eventFlags & 0x1f;
     eventIndex = ei;
-    if ((ei & 0x10) != 0)
-    {
+    if ((ei & 0x10) != 0) {
         eventIndex = ei & ~0x8;
     }
-    if (eventIndex > 0x18)
-    {
+    if (eventIndex > 0x18) {
         eventIndex = 0;
     }
     flag20 = eventFlags & 0x20;
-    if (flag20 != 0)
-    {
+    if (flag20 != 0) {
         blendScale = 3.0f;
         eventIndex = 0;
-    }
-    else
-    {
+    } else {
         blendScale = 1.0f;
     }
-    if ((u8)allowNewEvent != 0)
-    {
-        if ((eventFlags != 0 || enemyState->sharpClaw.eventDelayTimer) &&
-            (stateFlags & 0x40) == 0 && flag20 == 0)
-        {
-            if (enemyState->sharpClaw.eventDelayTimer)
-            {
+    if ((u8)allowNewEvent != 0) {
+        if ((eventFlags != 0 || enemyState->sharpClaw.eventDelayTimer) && (stateFlags & 0x40) == 0 && flag20 == 0) {
+            if (enemyState->sharpClaw.eventDelayTimer) {
                 enemyState->sharpClaw.eventDelayTimer = enemyState->sharpClaw.eventDelayTimer - timeDelta;
-                if (enemyState->sharpClaw.eventDelayTimer <= 0.0f)
-                {
+                if (enemyState->sharpClaw.eventDelayTimer <= 0.0f) {
                     enemyState->sharpClaw.eventDelayTimer = 0.0f;
-                }
-                else
-                {
+                } else {
                     return 0;
                 }
-            }
-            else
-            {
+            } else {
                 eventTableIndex = sequenceIndex * 2;
                 enemyState->sharpClaw.eventDelayTimer =
-                    enemyState->intervalTimer + (f32)(int)randomGetRange(base[eventTableIndex + 0x152c],
-                                                                         base[eventTableIndex + 0x152d]);
+                    enemyState->intervalTimer +
+                    (f32)(int)randomGetRange(base[eventTableIndex + 0x152c], base[eventTableIndex + 0x152d]);
                 enemyState->intervalTimer = 0.0f;
                 return 0;
             }
@@ -542,11 +525,10 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
     }
     if ((((u8)allowNewEvent != 0 && enemyState->flags2F1 != 0 && eventRows[eventIndex].moveId != 0) ||
          (enemyState->flags2F1 & 0x20) != 0) &&
-        !(enemyState->familyData.sharpClaw.activeEventIndex == eventIndex && enemyState->sharpClaw.moveHoldTimer != 0.0f))
-    {
+        !(enemyState->familyData.sharpClaw.activeEventIndex == eventIndex &&
+          enemyState->sharpClaw.moveHoldTimer != 0.0f)) {
         sf2 = enemyState->controlFlags;
-        if ((sf2 & 0x800080) != 0 || (enemyState->flags2F1 & 0x20) != 0)
-        {
+        if ((sf2 & 0x800080) != 0 || (enemyState->flags2F1 & 0x20) != 0) {
             blendTimer = 60.0f * (blendScale * (row = &eventRows[eventIndex])->blend);
             enemyState->sharpClaw.moveHoldDuration = blendTimer;
             enemyState->sharpClaw.moveHoldTimer = blendTimer;
@@ -559,22 +541,18 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
             enemyState->familyData.sharpClaw.activeEventIndex = eventIndex;
             return 1;
         }
-        if ((sf2 & 0x40000000) != 0)
-        {
+        if ((sf2 & 0x40000000) != 0) {
             groundBaddiePickNextMove(obj, state);
         }
         return 0;
     }
-    if (enemyState->sharpClaw.moveHoldTimer)
-    {
+    if (enemyState->sharpClaw.moveHoldTimer) {
         GameObject* pos = (GameObject*)enemyState->trackedObj;
         baddieTurnTowardPoint(obj, state, pos->anim.localPosX, pos->anim.localPosZ, 0xf, 0);
-        if (enemyState->animPlaySpeed > 0.0166f)
-        {
+        if (enemyState->animPlaySpeed > 0.0166f) {
             enemyState->animPlaySpeed = enemyState->animPlaySpeed - 0.005f;
         }
-        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+        if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             eventTableIndex = enemyState->familyData.sharpClaw.activeEventIndex;
             Baddie_SetMove(obj, state, eventRows[eventTableIndex].moveId,
                            eventRows[enemyState->familyData.sharpClaw.activeEventIndex].blend, 0,
@@ -583,66 +561,53 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent)
                 &obj->anim, *(f32*)(base + eventRows[enemyState->familyData.sharpClaw.activeEventIndex].moveId * 4));
         }
         enemyState->sharpClaw.moveHoldTimer = enemyState->sharpClaw.moveHoldTimer - timeDelta;
-        if (enemyState->sharpClaw.moveHoldTimer <= 0.0f)
-        {
+        if (enemyState->sharpClaw.moveHoldTimer <= 0.0f) {
             enemyState->sharpClaw.moveHoldTimer = 0.0f;
-            enemyState->controlFlags = enemyState->controlFlags & ~0x40LL;
-            enemyState->controlFlags = enemyState->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
+            enemyState->controlFlags &= ~0x40;
+            enemyState->controlFlags |= BADDIE_CONTROL_SEQUENCE_DRIVEN;
             enemyState->curveIndex = enemyState->curveIndex & ~0x80;
             enemyState->familyData.sharpClaw.activeEventIndex = 0;
             return 0;
-        }
-        else
-        {
+        } else {
             return 1;
         }
     }
     return 0;
 }
 
-void wispBaddiePlayMoveEventSfx(GameObject* obj, void* animState)
-{
+void wispBaddiePlayMoveEventSfx(GameObject* obj, void* animState) {
     GameObject* player;
     f32 distance;
     f32 rumbleFalloff;
 
-    if ((((EnemyState*)animState)->animEventMask & 0x200) != 0)
-    {
+    if ((((EnemyState*)animState)->animEventMask & 0x200) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_sml_trex_snap3);
         player = Obj_GetPlayerObject();
-        if ((player->objectFlags & WISPBADDIE_OBJFLAG_PARENT_SLACK) == 0)
-        {
+        if ((player->objectFlags & WISPBADDIE_OBJFLAG_PARENT_SLACK) == 0) {
             distance = Vec_distance(&(obj)->anim.worldPosX, &player->anim.worldPosX);
-            if (distance <= 640.0f)
-            {
+            if (distance <= 640.0f) {
                 rumbleFalloff = 1.0f - distance / 640.0f;
                 rumbleFalloff = 3.0f * rumbleFalloff;
                 doRumble(rumbleFalloff);
             }
-            CameraShake_ApplyRadial((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, 640.0f,
-                                    4.0f);
+            CameraShake_ApplyRadial((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, 640.0f, 4.0f);
         }
     }
-    if ((((EnemyState*)animState)->animEventMask & 0x40) != 0)
-    {
+    if ((((EnemyState*)animState)->animEventMask & 0x40) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_spotfox01);
     }
-    if ((((EnemyState*)animState)->animEventMask & 0x1000) != 0)
-    {
+    if ((((EnemyState*)animState)->animEventMask & 0x1000) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_scream1);
     }
-    if ((((EnemyState*)animState)->animEventMask & 1) != 0)
-    {
+    if ((((EnemyState*)animState)->animEventMask & 1) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_pullup2);
     }
-    if ((((EnemyState*)animState)->animEventMask & 0x80) != 0)
-    {
+    if ((((EnemyState*)animState)->animEventMask & 0x80) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_death01);
     }
 }
 
-void wispBaddieQueueNextEvent(GameObject* obj, int delta)
-{
+void wispBaddieQueueNextEvent(GameObject* obj, int delta) {
     EnemyState* state = (EnemyState*)obj->extra;
     u8* ptr = gBaddieFamilyTables[state->userData2].tbl4;
     state->familyData.sharpClaw.queuedEventIndex = (u8)(delta + (u32)ptr[8] + 1);
@@ -650,8 +615,7 @@ void wispBaddieQueueNextEvent(GameObject* obj, int delta)
 }
 
 u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, int msgId, int arrIdx, int damage,
-                                Vec* hitPos, int sector, f32 hDist, f32 vDist)
-{
+                             Vec* hitPos, int sector, f32 hDist, f32 vDist) {
     EnemyState* enemyState = (EnemyState*)state;
     u8* animRows;
     u8* rowsC;
@@ -665,32 +629,25 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
     trig = gBaddieFamilyTables[enemyState->userData2].tbl20;
     ret = 0;
 
-    if (enemyState->userData2 == 5)
-    {
+    if (enemyState->userData2 == 5) {
         enemyState->flags2E8 |= 0x10;
         return 0;
     }
-    if (msgId == 0xe)
-    {
+    if (msgId == 0xe) {
         damage = damage * 0xa;
     }
-    if (obj->anim.currentMove == animRows[0x128])
-    {
+    if (obj->anim.currentMove == animRows[0x128]) {
         return 0;
     }
-    if (msgId == 0x10)
-    {
+    if (msgId == 0x10) {
         enemyState->flags2E8 |= 0x28;
         return 0;
     }
-    if ((enemyState->controlFlags & 0x40) != 0 ||
-        (trig[arrIdx] != 0 && ((u32)(msgId - 0xe) <= 1 || msgId == 0x13)))
-    {
-        if (msgId != 0x11)
-        {
+    if ((enemyState->controlFlags & 0x40) != 0 || (trig[arrIdx] != 0 && ((u32)(msgId - 0xe) <= 1 || msgId == 0x13))) {
+        if (msgId != 0x11) {
             f32 z;
-            if (msgId != 0x1a && attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL && attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_METALBARREL)
-            {
+            if (msgId != 0x1a && attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL &&
+                attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_METALBARREL) {
                 Sfx_PlayFromObject(obj, SFXTRIG_swdout1);
                 Sfx_PlayFromObject(obj, SFXTRIG_gethit02);
             }
@@ -702,9 +659,9 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
                                (u8)rows[enemyState->familyData.sharpClaw.activeEventIndex].flags);
             }
             ObjAnim_SetMoveProgress(&obj->anim,
-                                    *(f32*)(gBaddieMoveProgressTable + rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 8] * 4));
-            if (rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 0xa] != 0)
-            {
+                                    *(f32*)(gBaddieMoveProgressTable +
+                                            rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 8] * 4));
+            if (rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 0xa] != 0) {
                 enemyState->userData1 = rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 0xa];
             }
             ret = rowsC[enemyState->familyData.sharpClaw.activeEventIndex * 12 + 9];
@@ -713,112 +670,83 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
             enemyState->sharpClaw.eventDelayTimer = z;
             enemyState->intervalTimer = z;
         }
-    }
-    else
-    {
+    } else {
         u32 amount;
         f32 z;
 
-        if (msgId == 0x11)
-        {
+        if (msgId == 0x11) {
             amount = 0x18;
-        }
-        else
-        {
+        } else {
             amount = enemyState->flags2F1 & 0x1f;
-            if ((u32)(enemyState->flags2F1 & 0x1f) > 0x18)
-            {
+            if ((u32)(enemyState->flags2F1 & 0x1f) > 0x18) {
                 amount = 0;
             }
         }
         z = 0.0f;
         enemyState->sharpClaw.eventDelayTimer = z;
-        if (enemyState->flags2F1 & 0x18)
-        {
-            if (enemyState->flags2F1 & 1)
-            {
+        if (enemyState->flags2F1 & 0x18) {
+            if (enemyState->flags2F1 & 1) {
                 enemyState->intervalTimer = 50.0f;
-            }
-            else
-            {
+            } else {
                 enemyState->intervalTimer = 30.0f;
             }
-        }
-        else
-        {
+        } else {
             enemyState->intervalTimer = z;
         }
-        if (((EnemyState*)state)->sharpClaw.seqTimer && ((EnemyState*)state)->phaseAngle != 0)
-        {
+        if (((EnemyState*)state)->sharpClaw.seqTimer && ((EnemyState*)state)->phaseAngle != 0) {
             {
                 SeqRow16* rows = (SeqRow16*)rowsB;
                 Baddie_SetMove(obj, state, rows[rowsB[((EnemyState*)state)->phaseAngle * 16 + 0xb]].anim,
                                *(f32*)(rowsB + rowsB[((EnemyState*)state)->phaseAngle * 16 + 0xb] * 16), 0,
                                (u8)rows[rowsB[((EnemyState*)state)->phaseAngle * 16 + 0xb]].flags);
             }
-            ObjAnim_SetMoveProgress(
-                &obj->anim,
-                *(f32*)(gBaddieMoveProgressTable +
-                        rowsB[rowsB[((EnemyState*)state)->phaseAngle * 16 + 0xb] * 16 + 8] * 4));
-        }
-        else
-        {
+            ObjAnim_SetMoveProgress(&obj->anim,
+                                    *(f32*)(gBaddieMoveProgressTable +
+                                            rowsB[rowsB[((EnemyState*)state)->phaseAngle * 16 + 0xb] * 16 + 8] * 4));
+        } else {
             int off = (u8)amount * 12;
             IdleRow* rows = (IdleRow*)animRows;
 
             Baddie_SetMove(obj, state, rows[(u8)amount].anim, *(f32*)(animRows + (u8)amount * 12), 0,
                            (u8)rows[(u8)amount].flags);
-            ObjAnim_SetMoveProgress(&obj->anim,
-                                    *(f32*)(gBaddieMoveProgressTable + rows[(u8)amount].anim * 4));
+            ObjAnim_SetMoveProgress(&obj->anim, *(f32*)(gBaddieMoveProgressTable + rows[(u8)amount].anim * 4));
             ((EnemyState*)state)->phaseAngle = animRows[off + 9];
             ((EnemyState*)state)->sharpClaw.seqTimer = (f32)(u32)((EnemyState*)state)->hitStunFrames;
         }
         ((EnemyState*)state)->flags2E8 |= 8;
-        if (attacker->anim.classId == 0x1c)
-        {
+        if (attacker->anim.classId == 0x1c) {
             return 0;
         }
         {
             GameObject* other = attacker->ownerObj;
-            if (other != 0 && other->anim.classId == 0x1c)
-            {
+            if (other != 0 && other->anim.classId == 0x1c) {
                 return 0;
             }
         }
-        if (((EnemyState*)state)->flags2F1 & 0x10)
-        {
+        if (((EnemyState*)state)->flags2F1 & 0x10) {
             damage = 0x14;
-        }
-        else
-        {
+        } else {
             ((EnemyState*)state)->spawnBits = 0;
         }
-        if (damage > ((EnemyState*)state)->current)
-        {
+        if (damage > ((EnemyState*)state)->current) {
             ((EnemyState*)state)->current = 0;
-        }
-        else
-        {
+        } else {
             ((EnemyState*)state)->current = ((EnemyState*)state)->current - damage;
         }
-        if (((EnemyState*)state)->current == 0)
-        {
+        if (((EnemyState*)state)->current == 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_land);
-        }
-        else
-        {
+        } else {
             Sfx_PlayFromObject(obj, SFXTRIG_attack);
         }
-        if (msgId != 0x1a && msgId != 0x1f && attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL && attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_METALBARREL)
-        {
+        if (msgId != 0x1a && msgId != 0x1f && attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_GUNPOWDERBARREL &&
+            attacker->anim.romDefNo != NEWSEQOBJ_ATTACKER_METALBARREL) {
             Sfx_PlayFromObject(obj, SFXTRIG_stftest);
         }
     }
     return ret;
 }
 
-void sharpClawUpdateIdle(GameObject* obj, u8* state)
-{
+void sharpClawUpdateIdle(GameObject* obj, u8* state) {
     RomCurveWalker* path = *(RomCurveWalker**)state;
     u8* tbl4;
     u8* tbl0;
@@ -829,59 +757,54 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
     tbl0 = gBaddieFamilyTables[((EnemyState*)state)->userData2].tbl0;
     tbl1c = gBaddieFamilyTables[((EnemyState*)state)->userData2].tbl1c;
 
-    if (((EnemyState*)state)->userData2 == 5 && (((EnemyState*)state)->controlFlags & 0x800000))
-    {
+    if (((EnemyState*)state)->userData2 == 5 && (((EnemyState*)state)->controlFlags & 0x800000)) {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
     wispBaddiePlayMoveEventSfx(obj, state);
     {
         f32 t = ((EnemyState*)state)->sharpClaw.seqTimer;
         f32 z = 0.0f;
-        if (t != z && ((EnemyState*)state)->phaseAngle != 0)
-        {
+        if (t != z && ((EnemyState*)state)->phaseAngle != 0) {
             ((EnemyState*)state)->sharpClaw.seqTimer = t - timeDelta;
-            if (((EnemyState*)state)->sharpClaw.seqTimer <= z)
-            {
+            if (((EnemyState*)state)->sharpClaw.seqTimer <= z) {
                 ((EnemyState*)state)->sharpClaw.seqTimer = z;
                 ((EnemyState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
                 ((EnemyState*)state)->phaseAngle = tbl1c[((EnemyState*)state)->phaseAngle * 16 + 0xa];
             }
         }
     }
-    if ((u8)wispBaddieProcessAnimEvent(obj, state, 0) != 0)
-    {
+    if ((u8)wispBaddieProcessAnimEvent(obj, state, 0) != 0) {
         return;
     }
-    if (((EnemyState*)state)->familyData.sharpClaw.idleRow != 0)
-    {
-        if (((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
-        {
+    if (((EnemyState*)state)->familyData.sharpClaw.idleRow != 0) {
+        if (((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) {
             f32 z = 0.0f;
             (obj)->anim.velocityZ = z;
             (obj)->anim.velocityY = z;
             (obj)->anim.velocityX = z;
             {
                 IdleRow* idleRows = (IdleRow*)tbl4;
-                Baddie_SetMove(obj, state, idleRows[((EnemyState*)state)->familyData.sharpClaw.idleRow].anim, *(f32*)(tbl4 + ((EnemyState*)state)->familyData.sharpClaw.idleRow * 12), 0,
+                Baddie_SetMove(obj, state, idleRows[((EnemyState*)state)->familyData.sharpClaw.idleRow].anim,
+                               *(f32*)(tbl4 + ((EnemyState*)state)->familyData.sharpClaw.idleRow * 12), 0,
                                (u8)idleRows[((EnemyState*)state)->familyData.sharpClaw.idleRow].flags);
             }
             ObjAnim_SetMoveProgress(&obj->anim,
-                                    *(f32*)(gBaddieMoveProgressTable + tbl4[((EnemyState*)state)->familyData.sharpClaw.idleRow * 12 + 8] * 4));
-            ((EnemyState*)state)->familyData.sharpClaw.idleRow = tbl4[((EnemyState*)state)->familyData.sharpClaw.idleRow * 12 + 9];
+                                    *(f32*)(gBaddieMoveProgressTable +
+                                            tbl4[((EnemyState*)state)->familyData.sharpClaw.idleRow * 12 + 8] * 4));
+            ((EnemyState*)state)->familyData.sharpClaw.idleRow =
+                tbl4[((EnemyState*)state)->familyData.sharpClaw.idleRow * 12 + 9];
             ((EnemyState*)state)->familyData.sharpClaw.idleRowStarted = 0;
         }
-        if (((EnemyState*)state)->familyData.sharpClaw.idleRowStarted == 0)
-        {
+        if (((EnemyState*)state)->familyData.sharpClaw.idleRowStarted == 0) {
             return;
         }
     }
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) && ((EnemyState*)state)->familyData.sharpClaw.idleRow == 0)
-    {
+    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) &&
+        ((EnemyState*)state)->familyData.sharpClaw.idleRow == 0) {
         sidekickToy_updateCurveTargetLatch(obj);
     }
     flags = ((EnemyState*)state)->controlFlags;
-    if (flags & BADDIE_CONTROL_PATH_FOLLOW)
-    {
+    if (flags & BADDIE_CONTROL_PATH_FOLLOW) {
         f32 dist;
         f32 delta;
 
@@ -890,8 +813,7 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
             f32 dz = path->posZ - (obj)->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
         }
-        if (dist > 64.0f)
-        {
+        if (dist > 64.0f) {
             dist = 64.0f;
         }
         {
@@ -899,64 +821,48 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
             f32 spd = diff / 64.0f;
             ((EnemyState*)state)->pathSpeed = spd * ((EnemyState*)state)->pathStep;
         }
-        if (((EnemyState*)state)->pathSpeed < 0.25f)
-        {
+        if (((EnemyState*)state)->pathSpeed < 0.25f) {
             ((EnemyState*)state)->pathSpeed = 0.25f;
         }
-        if (Curve_AdvanceAlongPath(&path->curve, ((EnemyState*)state)->pathSpeed) != 0 || path->atSegmentEnd != 0)
-        {
-            if ((*gRomCurveInterface)->goNextPoint(path) != 0)
-            {
+        if (Curve_AdvanceAlongPath(&path->curve, ((EnemyState*)state)->pathSpeed) != 0 || path->atSegmentEnd != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(path) != 0) {
                 sidekickToy_updateCurveTargetLatch(obj);
             }
         }
         delta = (f32)(int)((u16)getAngle(path->tangentX, path->tangentZ) + 0x8000 - (u16)(obj)->anim.rotX);
-        if (delta > 32768.0f)
-        {
+        if (delta > 32768.0f) {
             delta = -65535.0f + delta;
         }
-        if (delta < -32768.0f)
-        {
+        if (delta < -32768.0f) {
             delta = 65535.0f + delta;
         }
-        ((EnemyState*)state)->animPlaySpeed =
-            (((EnemyState*)state)->pathStep - ((EnemyState*)state)->pathSpeed) / 60.0f *
-            (1.0f - ((delta >= 0.0f) ? delta : -delta) / 65535.0f);
-        if (*(f32*)(state + 0x308) < 0.005f)
-        {
+        ((EnemyState*)state)->animPlaySpeed = (((EnemyState*)state)->pathStep - ((EnemyState*)state)->pathSpeed) /
+                                              60.0f * (1.0f - ((delta >= 0.0f) ? delta : -delta) / 65535.0f);
+        if (*(f32*)(state + 0x308) < 0.005f) {
             *(f32*)(state + 0x308) = 0.005f;
         }
-        if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) && ((EnemyState*)state)->familyData.sharpClaw.idleRow == 0)
-        {
-            if (((EnemyState*)state)->phaseAngle != 0)
-            {
+        if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) &&
+            ((EnemyState*)state)->familyData.sharpClaw.idleRow == 0) {
+            if (((EnemyState*)state)->phaseAngle != 0) {
                 SeqRow16* seqRow16 = (SeqRow16*)tbl1c;
                 Baddie_SetMove(obj, state, seqRow16[((EnemyState*)state)->phaseAngle].anim,
                                *(f32*)(tbl1c + ((EnemyState*)state)->phaseAngle * 16), 0,
                                (u8)seqRow16[((EnemyState*)state)->phaseAngle].flags);
-                ObjAnim_SetMoveProgress(
-                    &obj->anim,
-                    *(f32*)(gBaddieMoveProgressTable + tbl1c[((EnemyState*)state)->phaseAngle * 16 + 8] * 4));
+                ObjAnim_SetMoveProgress(&obj->anim, *(f32*)(gBaddieMoveProgressTable +
+                                                            tbl1c[((EnemyState*)state)->phaseAngle * 16 + 8] * 4));
                 ((EnemyState*)state)->phaseAngle = tbl1c[((EnemyState*)state)->phaseAngle * 16 + 9];
-            }
-            else if (((EnemyState*)state)->pathSpeed > 0.0001f)
-            {
+            } else if (((EnemyState*)state)->pathSpeed > 0.0001f) {
                 ((EnemyState*)state)->curveIndex = 0;
                 ((EnemyState*)state)->curveParamA = 0;
                 ((EnemyState*)state)->curveParamB = 0;
-                if (((EnemyState*)state)->pathSpeed > 1.2f)
-                {
+                if (((EnemyState*)state)->pathSpeed > 1.2f) {
                     ((EnemyState*)state)->rootMotionFlags = 1;
                     ObjAnim_SetCurrentMove(obj, tbl0[0x20], 0.0f, 0);
-                }
-                else
-                {
+                } else {
                     ((EnemyState*)state)->rootMotionFlags = 1;
                     ObjAnim_SetCurrentMove(obj, tbl0[0x14], 0.0f, 0);
                 }
-            }
-            else
-            {
+            } else {
                 ((EnemyState*)state)->curveIndex = 0;
                 ((EnemyState*)state)->curveParamA = 0;
                 ((EnemyState*)state)->curveParamB = 0;
@@ -967,14 +873,10 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
             }
         }
         baddieTurnTowardPoint(obj, state, path->posX, path->posZ, 0xf, 0);
-    }
-    else
-    {
-        if (((EnemyState*)state)->familyData.sharpClaw.idleRow == 0 && (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN))
-        {
+    } else {
+        if (((EnemyState*)state)->familyData.sharpClaw.idleRow == 0 && (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN)) {
             u8 r = randomGetRange(1, tbl4[8]);
-            if (((EnemyState*)state)->phaseAngle != 0)
-            {
+            if (((EnemyState*)state)->phaseAngle != 0) {
                 {
                     SeqRow16* seqRow16 = (SeqRow16*)tbl1c;
                     ((EnemyState*)state)->curveIndex = (u8)seqRow16[((EnemyState*)state)->phaseAngle].extra;
@@ -982,58 +884,47 @@ void sharpClawUpdateIdle(GameObject* obj, u8* state)
                                    *(f32*)(tbl1c + ((EnemyState*)state)->phaseAngle * 16), 0,
                                    (u8)seqRow16[((EnemyState*)state)->phaseAngle].flags);
                 }
-                ObjAnim_SetMoveProgress(
-                    &obj->anim,
-                    *(f32*)(gBaddieMoveProgressTable + tbl1c[((EnemyState*)state)->phaseAngle * 16 + 8] * 4));
+                ObjAnim_SetMoveProgress(&obj->anim, *(f32*)(gBaddieMoveProgressTable +
+                                                            tbl1c[((EnemyState*)state)->phaseAngle * 16 + 8] * 4));
                 ((EnemyState*)state)->phaseAngle = tbl1c[((EnemyState*)state)->phaseAngle * 16 + 9];
-            }
-            else
-            {
+            } else {
                 int off;
                 IdleRow* row;
-                if ((obj)->anim.currentMove != (r = (row = (IdleRow*)(tbl4 + (off = r * 12)))->anim) ||
-                    r != 0)
-                {
+                if ((obj)->anim.currentMove != (r = (row = (IdleRow*)(tbl4 + (off = r * 12)))->anim) || r != 0) {
                     ((EnemyState*)state)->curveIndex = 0;
                     ((EnemyState*)state)->curveParamA = 0;
                     ((EnemyState*)state)->curveParamB = 0;
                     Baddie_SetMove(obj, state, row->anim, *(f32*)(tbl4 + off), 0, 3);
-                    ObjAnim_SetMoveProgress(&obj->anim,
-                                            *(f32*)(gBaddieMoveProgressTable + row->anim * 4));
+                    ObjAnim_SetMoveProgress(&obj->anim, *(f32*)(gBaddieMoveProgressTable + row->anim * 4));
                 }
             }
         }
     }
 }
 
-void sharpClawUpdateApproach(GameObject* obj, void* state)
-{
+void sharpClawUpdateApproach(GameObject* obj, void* state) {
     u8* table = gBaddieMoveProgressTable;
     u8 idx = ((EnemyState*)state)->userData2;
     void* animCtrl = *(void**)(table + idx * 0x28 + 0x143c);
     IdleRow* idleSrc = (IdleRow*)(*(void**)(table + idx * 0x28 + 0x1454));
     u8* seqRows = *(u8**)(table + idx * 0x28 + 0x1458);
 
-    if (idx == 5 && (((EnemyState*)state)->controlFlags & 0x800000) != 0)
-    {
+    if (idx == 5 && (((EnemyState*)state)->controlFlags & 0x800000) != 0) {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
 
     if (((EnemyState*)state)->trackedObj != NULL &&
-        ((GameObject*)((EnemyState*)state)->trackedObj)->anim.classId == 1)
-    {
+        ((GameObject*)((EnemyState*)state)->trackedObj)->anim.classId == 1) {
         requestKrazoaShrineMusic();
     }
 
     wispBaddiePlayMoveEventSfx(obj, state);
 
     {
-        if (((EnemyState*)state)->sharpClaw.seqTimer && ((EnemyState*)state)->phaseAngle != 0)
-        {
+        if (((EnemyState*)state)->sharpClaw.seqTimer && ((EnemyState*)state)->phaseAngle != 0) {
             f32 zero = 0.0f;
             ((EnemyState*)state)->sharpClaw.seqTimer = ((EnemyState*)state)->sharpClaw.seqTimer - timeDelta;
-            if (((EnemyState*)state)->sharpClaw.seqTimer <= zero)
-            {
+            if (((EnemyState*)state)->sharpClaw.seqTimer <= zero) {
                 ((EnemyState*)state)->sharpClaw.seqTimer = zero;
                 ((EnemyState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
                 {
@@ -1044,69 +935,57 @@ void sharpClawUpdateApproach(GameObject* obj, void* state)
         }
     }
 
-    if ((u8)wispBaddieProcessAnimEvent(obj, state, 0) != 0)
-    {
+    if ((u8)wispBaddieProcessAnimEvent(obj, state, 0) != 0) {
         return;
     }
 
-    if ((((EnemyState*)state)->controlFlags & 0x20000000) != 0 && (((EnemyState*)state)->prevControlFlags & 0x20000000) == 0)
-    {
+    if ((((EnemyState*)state)->controlFlags & 0x20000000) != 0 &&
+        (((EnemyState*)state)->prevControlFlags & 0x20000000) == 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_sc_mumble02);
         ((EnemyState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
 
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
+    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
         SeqRow16* seqRow16 = (SeqRow16*)seqRows;
-        if (((EnemyState*)state)->phaseAngle != 0)
-        {
+        if (((EnemyState*)state)->phaseAngle != 0) {
             ((EnemyState*)state)->curveIndex = seqRow16[((EnemyState*)state)->phaseAngle].extra;
             Baddie_SetMove(obj, state, seqRow16[((EnemyState*)state)->phaseAngle].anim,
                            *(f32*)(seqRows + (((EnemyState*)state)->phaseAngle << 4)), 0,
                            (u8)seqRow16[((EnemyState*)state)->phaseAngle].flags);
-            ObjAnim_SetMoveProgress(
-                &obj->anim, *(f32*)(table + (seqRow16[((EnemyState*)state)->phaseAngle].anim << 2)));
+            ObjAnim_SetMoveProgress(&obj->anim,
+                                    *(f32*)(table + (seqRow16[((EnemyState*)state)->phaseAngle].anim << 2)));
             ((EnemyState*)state)->phaseAngle = seqRow16[((EnemyState*)state)->phaseAngle].next;
-        }
-        else
-        {
+        } else {
             IdleRow* idleRows = idleSrc;
             u8 idleAnim;
             ((EnemyState*)state)->curveIndex = 0;
             ((EnemyState*)state)->curveParamA = 0;
             ((EnemyState*)state)->curveParamB = 0;
             idleAnim = idleRows[((EnemyState*)state)->turnOctant].anim;
-            if (idleAnim == 0)
-            {
+            if (idleAnim == 0) {
                 ((EnemyState*)state)->rootMotionFlags = 3;
                 ObjAnim_SetCurrentMove(obj, *(u8*)((u8*)animCtrl + 0x2c), 0.0f, 0);
-            }
-            else
-            {
+            } else {
                 Baddie_SetMove(obj, state, idleAnim, idleRows[((EnemyState*)state)->turnOctant].speed, 0, 0xb);
-                ObjAnim_SetMoveProgress(
-                    &obj->anim, *(f32*)(table + (idleRows[((EnemyState*)state)->turnOctant].anim << 2)));
+                ObjAnim_SetMoveProgress(&obj->anim,
+                                        *(f32*)(table + (idleRows[((EnemyState*)state)->turnOctant].anim << 2)));
             }
         }
     }
 
-    if ((s32)(obj)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c))
-    {
+    if ((s32)(obj)->anim.currentMove == *(u8*)((u8*)animCtrl + 0x2c)) {
         ((EnemyState*)state)->animPlaySpeed =
             ((EnemyState*)state)->pathStep *
             (((f32)(u32)((EnemyState*)state)->targetDist / ((EnemyState*)state)->aggroRange / 60.0f) *
              ((f32*)(table + 0x1538))[((EnemyState*)state)->userData2]);
-        if (((EnemyState*)state)->animPlaySpeed < 0.03f)
-        {
+        if (((EnemyState*)state)->animPlaySpeed < 0.03f) {
             ((EnemyState*)state)->animPlaySpeed = 0.03f;
         }
     }
 
-    if ((((EnemyState*)state)->rootMotionFlags & 8) == 0)
-    {
+    if ((((EnemyState*)state)->rootMotionFlags & 8) == 0) {
         GameObject* tracked = (GameObject*)(((EnemyState*)state)->trackedObj);
-        baddieTurnTowardPoint(obj, state, tracked->anim.localPosX,
-                    tracked->anim.localPosZ, 0xf, 0);
+        baddieTurnTowardPoint(obj, state, tracked->anim.localPosX, tracked->anim.localPosZ, 0xf, 0);
     }
 }
 
@@ -1120,111 +999,91 @@ u16 gGroundBaddieTriggerResponseSeq[4] = {0x4FD, 0x4FE, 0x4FF, 0};
 
 EnemyTargetSearchResult gGroundBaddieTargetSearchResult[16];
 
-void groundBaddiePickIdleMove(GameObject* obj, u8* state)
-{
+void groundBaddiePickIdleMove(GameObject* obj, u8* state) {
     SeqEntry* entry;
     u32 idx;
     u8 wrapIdx;
     entry = (SeqEntry*)gBaddieFamilyTables[((EnemyState*)state)->userData2].tblC;
-    if ((f32)((EnemyState*)state)->targetDist > 0.6f * ((EnemyState*)state)->sightRange)
-    {
-        if ((f32)((EnemyState*)state)->targetDist > 0.8f * ((EnemyState*)state)->sightRange)
-        {
+    if ((f32)((EnemyState*)state)->targetDist > 0.6f * ((EnemyState*)state)->sightRange) {
+        if ((f32)((EnemyState*)state)->targetDist > 0.8f * ((EnemyState*)state)->sightRange) {
             ((EnemyState*)state)->userData1 = (u8)(entry[0].anim + 2);
-        }
-        else
-        {
+        } else {
             ((EnemyState*)state)->userData1 = (u8)(entry[0].anim + 3);
         }
     }
     wrapIdx = 1;
     while (entry[idx = ((EnemyState*)state)->userData1].mask != 0 &&
-           (((EnemyState*)state)->controlFlags & entry[idx].mask) == 0)
-    {
+           (((EnemyState*)state)->controlFlags & entry[idx].mask) == 0) {
         (((EnemyState*)state)->userData1)++;
-        if (((EnemyState*)state)->userData1 > entry[0].anim)
-        {
+        if (((EnemyState*)state)->userData1 > entry[0].anim) {
             ((EnemyState*)state)->userData1 = wrapIdx;
         }
     }
     ((EnemyState*)state)->curveIndex = entry[((EnemyState*)state)->userData1].r;
     ((EnemyState*)state)->curveParamA = entry[((EnemyState*)state)->userData1].g;
     ((EnemyState*)state)->curveParamB = entry[((EnemyState*)state)->userData1].b;
-    baddieSetMove(obj, state, entry[((EnemyState*)state)->userData1].anim, entry[((EnemyState*)state)->userData1].speed, 0, 3);
+    baddieSetMove(obj, state, entry[((EnemyState*)state)->userData1].anim, entry[((EnemyState*)state)->userData1].speed,
+                  0, 3);
     ObjAnim_SetMoveProgress(&obj->anim,
                             *(f32*)(gBaddieMoveProgressTable + entry[((EnemyState*)state)->userData1].anim * 4));
     (((EnemyState*)state)->userData1)++;
-    if (((EnemyState*)state)->userData1 > entry[0].anim)
-    {
+    if (((EnemyState*)state)->userData1 > entry[0].anim) {
         ((EnemyState*)state)->userData1 = 1;
     }
 }
 
-void groundBaddiePickNextMove(GameObject* obj, u8* state)
-{
+void groundBaddiePickNextMove(GameObject* obj, u8* state) {
     SeqEntry* entry;
     u32 idx;
     s16 d;
     entry = (SeqEntry*)gBaddieFamilyTables[((EnemyState*)state)->userData2].tblC;
-    if (enemy_findNearbyEnemies(obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
-    {
+    if (enemy_findNearbyEnemies(obj, 100.0f, 1, 16, gGroundBaddieTargetSearchResult) >= 1) {
         if (gGroundBaddieTargetSearchResult[0].dist <= 40 && ((EnemyState*)state)->turnOctant != 3 &&
-            ((EnemyState*)state)->turnOctant != 4)
-        {
+            ((EnemyState*)state)->turnOctant != 4) {
             d = getAngle(obj->anim.localPosX - gGroundBaddieTargetSearchResult[0].obj->anim.localPosX,
                          obj->anim.localPosZ - gGroundBaddieTargetSearchResult[0].obj->anim.localPosZ) -
                 (u16)(obj)->anim.rotX;
-            if (d > 0x8000)
-            {
+            if (d > 0x8000) {
                 d = (d - 0x10000) + 1;
             }
-            if (d < -0x8000)
-            {
+            if (d < -0x8000) {
                 d = (d + 0x10000) - 1;
             }
             d = (s16)((u32)(u16)d >> 13);
             ((EnemyState*)state)->userData1 = (u8)(entry[0].anim + gGroundBaddieAngleSectorOffsets[d]);
-        }
-        else if (gGroundBaddieTargetSearchResult[0].dist <= 70)
-        {
-            while ((entry[((EnemyState*)state)->userData1].r & 1) != 0)
-            {
+        } else if (gGroundBaddieTargetSearchResult[0].dist <= 70) {
+            while ((entry[((EnemyState*)state)->userData1].r & 1) != 0) {
                 (((EnemyState*)state)->userData1)++;
-                if (((EnemyState*)state)->userData1 > entry[0].anim)
-                {
+                if (((EnemyState*)state)->userData1 > entry[0].anim) {
                     ((EnemyState*)state)->userData1 = 1;
                 }
             }
         }
     }
-    if ((f32)((EnemyState*)state)->targetDist < 0.8f * ((EnemyState*)state)->sightRange)
-    {
+    if ((f32)((EnemyState*)state)->targetDist < 0.8f * ((EnemyState*)state)->sightRange) {
         ((EnemyState*)state)->userData1 = (u8)(entry[0].anim + 1);
     }
     while (entry[idx = ((EnemyState*)state)->userData1].mask != 0 &&
-           (((EnemyState*)state)->controlFlags & entry[idx].mask) == 0)
-    {
+           (((EnemyState*)state)->controlFlags & entry[idx].mask) == 0) {
         (((EnemyState*)state)->userData1)++;
-        if (((EnemyState*)state)->userData1 > entry[0].anim)
-        {
+        if (((EnemyState*)state)->userData1 > entry[0].anim) {
             ((EnemyState*)state)->userData1 = 1;
         }
     }
     ((EnemyState*)state)->curveIndex = entry[((EnemyState*)state)->userData1].r;
     ((EnemyState*)state)->curveParamA = entry[((EnemyState*)state)->userData1].g;
     ((EnemyState*)state)->curveParamB = entry[((EnemyState*)state)->userData1].b;
-    baddieSetMove(obj, state, entry[((EnemyState*)state)->userData1].anim, entry[((EnemyState*)state)->userData1].speed, 0, 3);
+    baddieSetMove(obj, state, entry[((EnemyState*)state)->userData1].anim, entry[((EnemyState*)state)->userData1].speed,
+                  0, 3);
     ObjAnim_SetMoveProgress(&obj->anim,
                             *(f32*)(gBaddieMoveProgressTable + entry[((EnemyState*)state)->userData1].anim * 4));
     (((EnemyState*)state)->userData1)++;
-    if (((EnemyState*)state)->userData1 > entry[0].anim)
-    {
+    if (((EnemyState*)state)->userData1 > entry[0].anim) {
         ((EnemyState*)state)->userData1 = 1;
     }
 }
 
-void sharpClawUpdateAttack(GameObject* obj, u8* state)
-{
+void sharpClawUpdateAttack(GameObject* obj, u8* state) {
     GameObject* player;
     u8* p20;
     u8* p28;
@@ -1237,89 +1096,70 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state)
     tableIdx = ((EnemyState*)state)->userData2;
     p20 = table[tableIdx].hitEntries;
     p28 = table[tableIdx].sequenceEntries;
-    if (tableIdx == 5 && (((EnemyState*)state)->controlFlags & 0x800000) != 0)
-    {
+    if (tableIdx == 5 && (((EnemyState*)state)->controlFlags & 0x800000) != 0) {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
     if (((EnemyState*)state)->trackedObj != NULL &&
-        ((GameObject*)((EnemyState*)state)->trackedObj)->anim.classId == 1)
-    {
+        ((GameObject*)((EnemyState*)state)->trackedObj)->anim.classId == 1) {
         requestKrazoaShrineMusic();
     }
     wispBaddiePlayMoveEventSfx(obj, state);
     tv = ((EnemyState*)state)->sharpClaw.seqTimer;
     fz = 0.0f;
-    if (tv != fz && ((EnemyState*)state)->phaseAngle != 0)
-    {
+    if (tv != fz && ((EnemyState*)state)->phaseAngle != 0) {
         ((EnemyState*)state)->sharpClaw.seqTimer = tv - timeDelta;
-        if (((EnemyState*)state)->sharpClaw.seqTimer <= fz)
-        {
+        if (((EnemyState*)state)->sharpClaw.seqTimer <= fz) {
             ((EnemyState*)state)->sharpClaw.seqTimer = fz;
             ((EnemyState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             ((EnemyState*)state)->phaseAngle = (p28 + ((EnemyState*)state)->phaseAngle * 16)[10];
         }
     }
-    if ((u8)wispBaddieProcessAnimEvent(obj, state, 1) == 0)
-    {
-        if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-        {
+    if ((u8)wispBaddieProcessAnimEvent(obj, state, 1) == 0) {
+        if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             player = Obj_GetPlayerObject();
             enemy_findNearbyEnemies(obj, 100.0f, 3, 16, gGroundBaddieTargetSearchResult);
-            if (((EnemyState*)state)->phaseAngle != 0)
-            {
+            if (((EnemyState*)state)->phaseAngle != 0) {
                 {
                     u8* p28c = p28 + 12;
                     ((EnemyState*)state)->curveIndex = (u8) * (u32*)(p28c + ((EnemyState*)state)->phaseAngle * 16);
                 }
                 baddieSetMove(obj, state, (p28 + ((EnemyState*)state)->phaseAngle * 16)[8],
-                            ((SeqEntry*)(p28 + ((EnemyState*)state)->phaseAngle * 16))->speed, 0,
-                            (u8) * (u32*)(&p28[((EnemyState*)state)->phaseAngle * 16 + 4]));
-                ObjAnim_SetMoveProgress(
-                    &obj->anim,
-                    *(f32*)(gBaddieMoveProgressTable + (p28 + ((EnemyState*)state)->phaseAngle * 16)[8] * 4));
+                              ((SeqEntry*)(p28 + ((EnemyState*)state)->phaseAngle * 16))->speed, 0,
+                              (u8) * (u32*)(&p28[((EnemyState*)state)->phaseAngle * 16 + 4]));
+                ObjAnim_SetMoveProgress(&obj->anim, *(f32*)(gBaddieMoveProgressTable +
+                                                            (p28 + ((EnemyState*)state)->phaseAngle * 16)[8] * 4));
                 ((EnemyState*)state)->phaseAngle = (p28 + ((EnemyState*)state)->phaseAngle * 16)[9];
-            }
-            else
-            {
+            } else {
                 if (player != NULL && ((((EnemyState*)state)->controlFlags & 0x800080) != 0 ||
-                                       (void*)Player_GetTargetObject((int)player) == NULL))
-                {
+                                       (void*)Player_GetTargetObject((int)player) == NULL)) {
                     groundBaddiePickIdleMove(obj, state);
-                }
-                else
-                {
+                } else {
                     groundBaddiePickNextMove(obj, state);
                 }
             }
         }
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0;
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 0;
-        if ((obj)->anim.currentMove == p20[8])
-        {
+        if ((obj)->anim.currentMove == p20[8]) {
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 4);
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[9];
         }
-        if ((obj)->anim.currentMove == p20[0x14])
-        {
+        if ((obj)->anim.currentMove == p20[0x14]) {
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x10);
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[0x15];
         }
-        if ((obj)->anim.currentMove == p20[0x20])
-        {
+        if ((obj)->anim.currentMove == p20[0x20]) {
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = (s8) * (int*)(p20 + 0x1c);
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = p20[0x21];
         }
-        if ((((EnemyState*)state)->rootMotionFlags & 8) == 0)
-        {
-            baddieTurnTowardPoint(obj, state,
-                        ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosX,
-                        ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosZ, 10, 0);
+        if ((((EnemyState*)state)->rootMotionFlags & 8) == 0) {
+            baddieTurnTowardPoint(obj, state, ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosX,
+                                  ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosZ, 10, 0);
         }
     }
 }
 
-void sharpClawInit(GameObject* obj, u8* state)
-{
+void sharpClawInit(GameObject* obj, u8* state) {
     GroundBaddiePlacement* setup = (GroundBaddiePlacement*)((GameObject*)obj)->anim.placementData;
     f32 fz;
     f32 fz2;
@@ -1341,11 +1181,9 @@ void sharpClawInit(GameObject* obj, u8* state)
     ((EnemyState*)state)->moveId2 = 6;
     ((EnemyState*)state)->moveSpeedScale2 = fz;
     ((EnemyState*)state)->pathStep *= 10.0f;
-    switch (((GameObject*)obj)->anim.romDefNo)
-    {
+    switch (((GameObject*)obj)->anim.romDefNo) {
     case 314:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 51;
         }
         ((EnemyState*)state)->sightRange = 110.0f;
@@ -1353,8 +1191,7 @@ void sharpClawInit(GameObject* obj, u8* state)
         ((EnemyState*)state)->userData2 = 0;
         break;
     case 17:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 51;
         }
         ((EnemyState*)state)->sightRange = 110.0f;
@@ -1362,8 +1199,7 @@ void sharpClawInit(GameObject* obj, u8* state)
         ((EnemyState*)state)->userData2 = 1;
         break;
     case 1505:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 1529;
         }
         ((EnemyState*)state)->sightRange = 110.0f;
@@ -1371,8 +1207,7 @@ void sharpClawInit(GameObject* obj, u8* state)
         ((EnemyState*)state)->userData2 = 2;
         break;
     case 1463:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 1530;
         }
         ((EnemyState*)state)->sightRange = 120.0f;
@@ -1380,8 +1215,7 @@ void sharpClawInit(GameObject* obj, u8* state)
         ((EnemyState*)state)->userData2 = 3;
         break;
     case 1464:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 1534;
         }
         ((EnemyState*)state)->sightRange = 110.0f;
@@ -1389,8 +1223,7 @@ void sharpClawInit(GameObject* obj, u8* state)
         ((EnemyState*)state)->userData2 = 4;
         break;
     case 1465:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 51;
         }
         ((EnemyState*)state)->sightRange = 110.0f;
@@ -1398,8 +1231,7 @@ void sharpClawInit(GameObject* obj, u8* state)
         ((EnemyState*)state)->userData2 = 1;
         break;
     case 1958:
-        if ((s8)setup->initialWeaponId != 0)
-        {
+        if ((s8)setup->initialWeaponId != 0) {
             ((EnemyState*)state)->weaponRomDefNo = 1957;
         }
         ((EnemyState*)state)->sightRange = 110.0f;
@@ -1419,39 +1251,31 @@ void sharpClawInit(GameObject* obj, u8* state)
         ObjModelChain_SetEnabled(((EnemyState*)state)->tailSimHandle, 1);
         break;
     }
-    if (setup->sequenceId != -1)
-    {
+    if (setup->sequenceId != -1) {
         ((EnemyState*)state)->controlFlags |= 1;
     }
 }
 
-void groundBaddieHandlePaidTrigger(GameObject* obj, u8* state)
-{
+void groundBaddieHandlePaidTrigger(GameObject* obj, u8* state) {
     GameObject* player;
     GroundBaddiePlacement* setup;
 
     player = Obj_GetPlayerObject();
     setup = (GroundBaddiePlacement*)((GameObject*)obj)->anim.placementData;
-    if ((*gGameUIInterface)->isItemBeingUsed(446) != 0)
-    {
-        if (player != NULL && playerGetMoney(player) >= 25)
-        {
+    if ((*gGameUIInterface)->isItemBeingUsed(446) != 0) {
+        if (player != NULL && playerGetMoney(player) >= 25) {
             playerAddMoney(player, -25);
             mainSetBits(setup->gameBitD, 1);
             ((EnemyState*)state)->phaseAngle = gGroundBaddieTriggerResponseSeq[2];
             ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             setHudForceShowMask(2);
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-        }
-        else
-        {
+        } else {
             setHudForceShowMask(2);
             ((EnemyState*)state)->phaseAngle = gGroundBaddieTriggerResponseSeq[1];
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
         }
-    }
-    else
-    {
+    } else {
         setHudForceShowMask(2);
         ((EnemyState*)state)->phaseAngle = gGroundBaddieTriggerResponseSeq[0];
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
