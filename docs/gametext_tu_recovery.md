@@ -98,3 +98,54 @@ merged TU remains `NonMatching`, so that checksum does not validate its C code.
 EN rev1, JP, and both PAL split projections were refreshed for this span only.
 Obsolete fragment matching entries were removed; unrelated projection changes
 were excluded.
+
+## Native disc-font resources
+
+The next pass replaces the `char[1360]` font buffer with 85 mutable `TextGlyph`
+records. The old Japanese resource aggregate incorrectly grouped the English
+glyph table with Japanese message text. Both artificial resource aggregates are
+now separate loading strings, seven-entry `GameTextDef` arrays, and the English
+43-entry glyph array:
+
+| Native object | Retail address | Bytes |
+| --- | --- | --- |
+| `sJpDiscStatusGlyphs` | `802C8F40` | `550` |
+| `sJpDiscLoadingMessage` | `802C981C` | `10` |
+| `sJpDiscStatusMessageTable` | `802C982C` | `54` |
+| `sDiscStatusGlyphs` | `802C9880` | `2B0` |
+| `sDiscLoadingMessage` | `802C9D58` | `B` |
+| `sDiscStatusMessageTable` | `802C9D64` | `54` |
+
+Addresses and sizes in this table are hexadecimal. Retail atlas setup explicitly
+selects 85/43 glyphs and seven messages, and advances each glyph by 16 bytes.
+Independently, the glyph keys in each language exactly follow first occurrence
+order across its seven messages: 85 distinct Japanese-message characters and 43
+English-message characters, with no extras. This also disproves the previous
+comment describing the English glyph table as part of the Japanese font.
+
+Standalone arrays are a plausible declaration model, not proven original source
+syntax. All resource bytes and normalized storage-pointer destinations remain
+unchanged. The English loading string is naturally 11 bytes; compiler alignment
+supplies the next byte before its message table, without a padded string type.
+The atlas builder now selects these native arrays directly. The three lookup
+functions use a typed parser-message pointer instead of reaching up to `0xF10`
+bytes beyond the former 1,360-byte glyph array.
+
+Atlas locals distinguish compressed ROM data, decoded font data, glyph pixels,
+and tile/pixel coordinates. Known SDK encoding/ROM-size definitions and the
+system-font ID replace raw values. Those naming and API changes preserve the raw
+object hash. The overlapping-word SJIS lookup and the oversized final flush are
+unchanged; this pass does not silently repair either behavior.
+
+`python tools/test_gametext_font_resources.py` checks the built source object's
+symbol extents, relocated resource bytes, loading-string termination, and exact
+first-occurrence glyph order against the retail DOL. Three tests pass; corrupting
+one glyph key makes both byte comparison and character coverage fail. These are
+resource tests, not execution tests of the atlas drawing loop.
+
+The resulting TU is 97.423584% fuzzy, 41/54 functions exact, versus 97.59281% and
+43/54 before this pass. Only the three getters and atlas builder change function
+bytes; all other source objects remain identical. The two lost exact functions
+account for 940 bytes of code credit. Data credit and the exact 48-byte constant
+pool are unchanged. Both source compilation and the strict checksum gate pass;
+gametext remains `NonMatching`.

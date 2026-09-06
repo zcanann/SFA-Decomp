@@ -34,6 +34,12 @@ typedef struct TextGlyph {
     u8 page;
 } TextGlyph;
 
+STATIC_ASSERT(sizeof(TextGlyph) == 0x10);
+STATIC_ASSERT(offsetof(TextGlyph, u) == 0x4);
+STATIC_ASSERT(offsetof(TextGlyph, offsetX) == 0x8);
+STATIC_ASSERT(offsetof(TextGlyph, width) == 0xc);
+STATIC_ASSERT(offsetof(TextGlyph, font) == 0xe);
+
 struct Texture;
 
 typedef struct TextFont {

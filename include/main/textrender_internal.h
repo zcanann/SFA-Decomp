@@ -83,12 +83,13 @@ typedef struct
 #define TEXT_ALIGN_JUSTIFY 3
 
 
-/* Per-glyph font id stored in TextGlyph.lang (characterStruct.font). Id 1 is unused. */
+/* Per-glyph font id stored in TextGlyph.font. Id 1 is unused. */
 #define GAMETEXT_FONT_JAPANESE 0
 #define GAMETEXT_FONT_ICON     2
 #define GAMETEXT_FONT_FLAG     3
 #define GAMETEXT_FONT_LATIN    4
 #define GAMETEXT_FONT_FACE     5
+#define GAMETEXT_FONT_SYSTEM   6
 
 /* Loaded font slot: gGameTextCharsets[] index, one per load purpose/directory. */
 #define GAMETEXT_SLOT_DIALOGUE 0 /* various directories */
@@ -159,7 +160,6 @@ extern u8 gGameTextBase[];
 extern u8* gGameTextLastEntry;
 extern char* gCurTextBuffer;
 extern int gGameTextBufferIndex;
-extern char gGameTextFontData[];
 extern char sGameTextBlankFormat[5];
 extern char sGameTextSequencePathFormat[];
 extern GameTextLoadSlot curGameTexts[GAMETEXT_LOAD_SLOT_COUNT];
