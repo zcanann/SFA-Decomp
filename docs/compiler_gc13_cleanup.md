@@ -835,6 +835,33 @@ the final source and owned headers pass clang-format checks. Controls,
 backend captures, and object audits are under
 `build/gc13_new_matches/player_round11*`.
 
+## September 6: Player state 25 exact
+
+`playerState25` reaches **100%**, adding **1,384 exact code bytes**.
+The target X velocity is computed in one expression, and its smoothed X
+cache is declared at function scope after the two Z temporaries. Together
+these changes give the target velocity retail's `f28`; the two remaining
+register operands become exact.
+
+Controls establish why both edits are needed. The staged product uses
+virtual FPR 49 / physical `f31`. Combining the product alone gives virtual
+FPR 43 / `f29`. With the X cache also hoisted, the cache is colored as
+virtual FPR 45 / `f28` before target X, virtual FPR 42, reuses that register.
+The final backend trace aligns all **346 instructions**, replays all
+**104** FPR color choices, and preserves ordinary/instrumented object identity.
+
+Player now has **232/233 exact functions**, **134,228/139,108 exact code
+bytes (96.491936%)**, and **99.99267% fuzzy agreement**. Only
+`playerStateMoving` remains inexact. All allocated data, section layouts,
+data-symbol positions, other function bodies, and relative relocations
+are unchanged. Assigned data remains **10,168/10,168 bytes exact**; the TU
+retains GC/1.3 and NonMatching status until the movement state is recovered.
+
+Strict matching, `ninja all_source`, formatting, and the generated-path
+audit pass. Formatting changes neither the source text nor the object.
+The DOL SHA-1 remains `e750e8e894707a52446118a4b84f1b58b677b269`.
+Controls, traces, and audits are under `build/gc13_new_matches/player_round12*`.
+
 ## September 6: World-map camera orbit smoothing
 
 Engine 78 (`dlls/engine/78/78.c`) reaches **100% for all six functions,

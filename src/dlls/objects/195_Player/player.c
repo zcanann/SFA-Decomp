@@ -5076,7 +5076,7 @@ void playerStagedEndIceSpellAndSettleHeading(GameObject* obj, BaddieState* p2) {
 }
 
 int playerState25(GameObject* obj, PlayerState* state, f32 updateRate) {
-    f32 smoothVelZ, absAnimSpeedZ;
+    f32 smoothVelZ, absAnimSpeedZ, smoothVelX;
     PlayerState* inner = ((GameObject*)obj)->extra;
     f32 inputScale, sinYaw, cosYaw, targetVelX, moveProgress, moveSpeed;
     f32 targetVelZ;
@@ -5095,8 +5095,7 @@ int playerState25(GameObject* obj, PlayerState* state, f32 updateRate) {
     }
     {
         f32 ang = 3.1415927f * (f32)inner->inputHeading / 32768.0f;
-        targetVelX = inputScale * -mathSinf(ang);
-        targetVelX = inner->maxSpeed * targetVelX;
+        targetVelX = inner->maxSpeed * (inputScale * -mathSinf(ang));
     }
     {
         f32 ang = 3.1415927f * (f32)inner->inputHeading / 32768.0f;
@@ -5125,7 +5124,6 @@ int playerState25(GameObject* obj, PlayerState* state, f32 updateRate) {
         cosYaw = mathCosf(ang);
     }
     {
-        f32 smoothVelX;
         f32 forwardVelocity;
         smoothVelZ = inner->smoothVelZ;
         forwardVelocity = -smoothVelZ;
