@@ -39,7 +39,6 @@
 #include "sys/objects/lifecycle.h"
 #include "main/mapEventTypes.h"
 
-
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xE
 
 #define SMALLBASKET_OBJECT_GROUP    0x10
@@ -84,7 +83,6 @@ typedef struct SmallBasketResource {
     void* pad00;
     SmallBasketBreakEffectFn spawnBreakEffect; /* 0x04 */
 } SmallBasketResource;
-
 
 STATIC_ASSERT(offsetof(SmallBasketCollisionResults, hitInfo) == 0x0);
 STATIC_ASSERT(offsetof(SmallBasketCollisionResults, radii) == 0x40);
@@ -149,8 +147,7 @@ void SmallBasket_handleHit(GameObject* obj, GameObject* player, SmallBasketState
                         if (candidateY > sourceY && candidateY < sourceY + gSmallBasketChainHitHeight) {
                             if (Vec_xzDistance(&(*objectCursor)->anim.worldPosX, &obj->anim.worldPosX) <
                                 gSmallBasketChainHitRadius) {
-                                ObjHits_RecordObjectHit(*objectCursor, hitInfo.hitObject, 5, 1,
-                                                        0);
+                                ObjHits_RecordObjectHit(*objectCursor, hitInfo.hitObject, 5, 1, 0);
                             }
                         }
                     }
@@ -263,12 +260,8 @@ int SmallBasket_spawnContents(GameObject* obj, GameObject* player, SmallBasketSt
             child->anim.velocityX /= horizontalMagnitude;
             child->anim.velocityZ /= horizontalMagnitude;
         }
-        child->anim.velocityX =
-            child->anim.velocityX *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
-        child->anim.velocityZ =
-            child->anim.velocityZ *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityX = child->anim.velocityX * (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityZ = child->anim.velocityZ * (1.0f - 0.01f * randomGetRange(0, 0x19));
         child->anim.velocityY = 2.2f;
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;
@@ -312,12 +305,8 @@ int SmallBasket_spawnContents(GameObject* obj, GameObject* player, SmallBasketSt
             child->anim.velocityX /= horizontalMagnitude;
             child->anim.velocityZ /= horizontalMagnitude;
         }
-        child->anim.velocityX =
-            child->anim.velocityX *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
-        child->anim.velocityZ =
-            child->anim.velocityZ *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityX = child->anim.velocityX * (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityZ = child->anim.velocityZ * (1.0f - 0.01f * randomGetRange(0, 0x19));
         child->anim.velocityY = 2.2f;
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;
@@ -361,12 +350,8 @@ int SmallBasket_spawnContents(GameObject* obj, GameObject* player, SmallBasketSt
             child->anim.velocityX /= horizontalMagnitude;
             child->anim.velocityZ /= horizontalMagnitude;
         }
-        child->anim.velocityX =
-            child->anim.velocityX *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
-        child->anim.velocityZ =
-            child->anim.velocityZ *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityX = child->anim.velocityX * (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityZ = child->anim.velocityZ * (1.0f - 0.01f * randomGetRange(0, 0x19));
         child->anim.velocityY = 2.2f;
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;
@@ -417,20 +402,14 @@ int SmallBasket_spawnContents(GameObject* obj, GameObject* player, SmallBasketSt
         horizontalMagnitude += child->anim.velocityZ * child->anim.velocityZ;
         if (horizontalMagnitude) {
             horizontalMagnitude = sqrtf(horizontalMagnitude);
-            child->anim.velocityX =
-                child->anim.velocityX / (horizontalMagnitude = (2.0f) * horizontalMagnitude);
+            child->anim.velocityX = child->anim.velocityX / (horizontalMagnitude = (2.0f) * horizontalMagnitude);
             child->anim.velocityZ /= horizontalMagnitude;
         }
-        child->anim.velocityX =
-            child->anim.velocityX *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
-        child->anim.velocityZ =
-            child->anim.velocityZ *
-            (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityX = child->anim.velocityX * (1.0f - 0.01f * randomGetRange(0, 0x19));
+        child->anim.velocityZ = child->anim.velocityZ * (1.0f - 0.01f * randomGetRange(0, 0x19));
         child->anim.velocityY = 2.2f;
         (*(CollectibleInterface**)child->anim.dll)
-            ->startBounceMotion(child, child->anim.velocityX,
-                                child->anim.velocityY, child->anim.velocityZ);
+            ->startBounceMotion(child, child->anim.velocityX, child->anim.velocityY, child->anim.velocityZ);
         rotation.posX = 0.0f;
         rotation.posY = 0.0f;
         rotation.posZ = 0.0f;
@@ -465,7 +444,7 @@ int SmallBasket_resolveCollision(GameObject* obj) {
 
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, (0.1f), 1, NULL, obj, 1, -1,
-                           SMALLBASKET_TRACK_MASK, 0) != 0) {
+                              SMALLBASKET_TRACK_MASK, 0) != 0) {
         hitState->contactFlags |= OBJHITS_CONTACT_FLAG_KIND0;
         hitState->localPosX = obj->anim.previousLocalPosX;
         hitState->localPosY = obj->anim.previousLocalPosY;
@@ -731,8 +710,7 @@ void SmallBasket_update(GameObject* obj) {
                     if (playerIsThrowing(player) != 0) {
                         state->carryState = SMALLBASKET_CARRY_IDLE;
                         state->throwState = SMALLBASKET_THROW_LAUNCHED;
-                        obj->anim.velocityY =
-                            (0.75f) * playerState->baddie.inputMagnitude + 2.2f;
+                        obj->anim.velocityY = (0.75f) * playerState->baddie.inputMagnitude + 2.2f;
                         obj->anim.velocityZ = (-0.75f) * playerState->baddie.inputMagnitude + (-2.2f);
                         effectParams.posX = 0.0f;
                         effectParams.posY = 0.0f;
