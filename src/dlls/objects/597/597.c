@@ -1548,7 +1548,8 @@ void SnowBike_hitDetect(GameObject* obj) {
         state->localVel.y = obj->anim.velocityY;
     }
     if (state->pathState.localPointHitMask != 0 ||
-        ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) != 0 &&
+        ((((ObjHitsPriorityState*)obj->anim.hitReactState)->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) !=
+             0 &&
          arrayIndexOf(gSnowBikeRiderObjectIds, 10, other->anim.romDefNo) == -1) ||
         (state->collidedObject != NULL && state->impactVelScale <= 1.0f)) {
         mag = PSVECMag(&obj->anim.velocity);
@@ -1952,12 +1953,11 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag) {
     (*gPathControlInterface)
         ->setup(pathState, 4, pathSetup[0]->terrainPoints, pathSetup[0]->terrainRadii, &segmentTypes);
     if (state->flags.cpuDriven && state->collisionHitType != -1) {
-        curves_setLocalPointCollisionEx(pathState, 1, &pathSetup[0]->collisionPoint.x,
-                                        &gSnowBikeCollisionRadius, 8, state->collisionHitType);
+        curves_setLocalPointCollisionEx(pathState, 1, &pathSetup[0]->collisionPoint.x, &gSnowBikeCollisionRadius, 8,
+                                        state->collisionHitType);
     } else {
         (*gPathControlInterface)
-            ->setLocalPointCollision(pathState, 1, &pathSetup[0]->collisionPoint,
-                                     &gSnowBikeCollisionRadius, 8);
+            ->setLocalPointCollision(pathState, 1, &pathSetup[0]->collisionPoint, &gSnowBikeCollisionRadius, 8);
     }
     pathState->activeTimer = 10.0f + gSnowBikeCollisionRadius;
     (*gPathControlInterface)->attachObject(obj, pathState);
