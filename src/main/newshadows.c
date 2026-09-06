@@ -330,7 +330,6 @@ extern inline float sqrtf(float x) {
     return x;
 }
 
-extern const f32 lbl_803DED38;
 extern const f32 lbl_803DED40;
 extern const f32 lbl_803DEDC0;
 extern const f32 lbl_803DEDD0;
@@ -338,9 +337,6 @@ extern const f32 lbl_803DEDE0;
 extern const f32 lbl_803DEDF0;
 extern const f32 lbl_803DEDF4;
 extern const f32 lbl_803DEDFC;
-extern const f32 lbl_803DEE14;
-extern const f32 lbl_803DEE18;
-extern const f32 lbl_803DEE1C;
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window) {
     u32 sum;
@@ -1249,7 +1245,7 @@ static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewSh
                 intensity = fade * falloff + intensity;
                 verticalOffset = verticalOffset / radius;
                 shift = shift + verticalOffset;
-                shift = lbl_803DED38 * (1.0f - frame * lbl_803DEDD0) + shift;
+                shift = 0.5f * (1.0f - frame * lbl_803DEDD0) + shift;
             }
         }
     }
@@ -1475,21 +1471,15 @@ static inline void fillSmallDiskTexture(void) {
 }
 
 static inline void fillRampTexture(void) {
-    int i;
-    for (i = 0; i < 0x100; i++) {
-        u8* t;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture)] = i;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 8] = i;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x10] = i;
-        t = (u8*)gNewShadowRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x18] = i;
+    int x, y;
+    for (x = 0; x < 256; x++) {
+        for (y = 0; y < 4; y++) {
+            u8* texel = (u8*)gNewShadowRampTexture + (x & 7);
+            texel += (x >> 3) * 32;
+            texel += (y & 3) * 8;
+            texel += (y >> 2) * 1024;
+            texel[sizeof(Texture)] = x;
+        }
     }
 }
 
@@ -1518,12 +1508,12 @@ static inline void fillFalloffTexture(void) {
             dy = cy * lbl_803DEDE0;
             cx = ((f32)j - 64.0f) * lbl_803DEDE0;
             d2 = sqrtf(dy * dy + cx * cx);
-            if (d2 < lbl_803DED38) {
+            if (d2 < 0.5f) {
                 val = 0xa0;
             } else if (d2 > 1.0f) {
                 val = 0;
             } else {
-                val = 160.0f * (1.0f - (d2 - lbl_803DED38) / lbl_803DED38);
+                val = 160.0f * (1.0f - (d2 - 0.5f) / 0.5f);
             }
             base[off2] = val;
         }
@@ -1587,10 +1577,10 @@ static inline void fillRingTexture(void) {
                 d2 = 0.0f;
             } else {
                 f32 t = 2.0f * (d2 - 0.25f);
-                if (t > lbl_803DED38) {
-                    d2 = -(2.0f * (t - lbl_803DED38) - 1.0f);
+                if (t > 0.5f) {
+                    d2 = -(2.0f * (t - 0.5f) - 1.0f);
                 } else {
-                    d2 = -(2.0f * (lbl_803DED38 - t) - 1.0f);
+                    d2 = -(2.0f * (0.5f - t) - 1.0f);
                 }
                 d2 = sqrtf(d2);
             }
@@ -1600,21 +1590,31 @@ static inline void fillRingTexture(void) {
 }
 
 static inline void fillInverseRampTexture(void) {
-    int i;
-    for (i = 0; i < 0x100; i++) {
-        u8* t;
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture)] = (u8)(255 - i);
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 8] = (u8)(255 - i);
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x10] = (u8)(255 - i);
-        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
-        t += (i >> 3) * 0x20;
-        t[sizeof(Texture) + 0x18] = (u8)(255 - i);
+    int x, y;
+    for (x = 0; x < 256; x++) {
+        for (y = 0; y < 4; y++) {
+            u8* texel = (u8*)gNewShadowInverseRampTexture + (x & 7);
+            texel += (x >> 3) * 32;
+            texel += (y & 3) * 8;
+            texel += (y >> 2) * 1024;
+            texel[sizeof(Texture)] = 255 - x;
+        }
+    }
+}
+
+static inline void fillReflectionGradientTexture(void) {
+    int x, y;
+    for (x = 0; x < 4; x++) {
+        f32 horizontal = x / 3.0f - 0.5f;
+        for (y = 0; y < 4; y++) {
+            u8* texel = (u8*)gNewShadowReflectionGradientTexture + (x & 3) * 2;
+            int packedHorizontal;
+            texel += (x >> 2) * 0x20;
+            texel += (y & 3) * 8;
+            texel += (y >> 2) * 0x20;
+            packedHorizontal = ((int)(255.0f * horizontal + 128.0f) & 0xff) << 8;
+            *(u16*)(texel + sizeof(Texture)) = (u16)(packedHorizontal | ((int)(255.0f * (y / 3.0f - 0.5f) + 128.0f) & 0xff));
+        }
     }
 }
 
@@ -1809,27 +1809,7 @@ void allocLotsOfTextures(void) {
     DCFlushRange((u8*)gNewShadowRingTexture + sizeof(Texture), gNewShadowRingTexture->dataSize);
 
     gNewShadowReflectionGradientTexture = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
-    for (i = 0; i < 4; i++) {
-        f32 x = i / 3.0f;
-        int hi;
-        int t;
-        u16 v;
-        x -= lbl_803DED38;
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        hi = ((int)(255.0f * x + 128.0f) & 0xff) << 8;
-        *(u16*)(t + sizeof(Texture)) = (u16)(hi | ((int)lbl_803DED38 & 0xff));
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        *(u16*)(t + sizeof(Texture) + 8) = (u16)(hi | ((int)lbl_803DEE14 & 0xff));
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        *(u16*)(t + sizeof(Texture) + 0x10) = (u16)(hi | ((int)lbl_803DEE18 & 0xff));
-        v = (u16)(hi | ((int)lbl_803DEE1C & 0xff));
-        t = gNewShadowReflectionGradientTexture + (i & 3) * 2;
-        t += (i >> 2) * 0x20;
-        *(u16*)(t + sizeof(Texture) + 0x18) = v;
-    }
+    fillReflectionGradientTexture();
     DCFlushRange((Texture*)gNewShadowReflectionGradientTexture + 1,
                  ((Texture*)gNewShadowReflectionGradientTexture)->dataSize);
 

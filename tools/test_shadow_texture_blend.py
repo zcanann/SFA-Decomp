@@ -1,4 +1,4 @@
-"""Exercise the actual blendTextures body on host-native tiled halfwords.
+"""Exercise shadow blend and procedural fill bodies on host-native pixels.
 
 The host fixture mirrors only the retail header fields used by this function.
 Pixel values, not serialized byte order, cross the host/PowerPC boundary.
@@ -96,6 +96,10 @@ class ShadowTextureBlendTests(unittest.TestCase):
         assert ctypes.sizeof(TextureHeader) == HEADER_SIZE
         source = (ROOT / "src/main/newshadows.c").read_text()
         start, end = find_function_body(source, "blendTextures")
+        fills = []
+        for helper in ("fillRampTexture", "fillInverseRampTexture", "fillReflectionGradientTexture"):
+            first, last = find_function_body(source, helper)
+            fills.append("static void " + helper + "(void) " + source[first:last + 1])
         cls.temporary = tempfile.TemporaryDirectory(prefix="sfa-shadow-blend-")
         cls.addClassCleanup(cls.temporary.cleanup)
         directory = Path(cls.temporary.name)
@@ -136,7 +140,24 @@ EXPORT unsigned int getFlushCount(void) { return flushCount; }
 EXPORT unsigned int getFlushSize(void) { return flushSize; }
 EXPORT void* getFlushAddress(void) { return flushAddress; }
 EXPORT void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
-''' + source[start:end + 1] + "\n")
+''' + source[start:end + 1] + r'''
+static Texture* gNewShadowRampTexture;
+static Texture* gNewShadowInverseRampTexture;
+static Texture* gNewShadowReflectionGradientTexture;
+''' + "\n".join(fills) + r'''
+EXPORT void fillRamp(Texture* texture) {
+    gNewShadowRampTexture = texture;
+    fillRampTexture();
+}
+EXPORT void fillInverseRamp(Texture* texture) {
+    gNewShadowInverseRampTexture = texture;
+    fillInverseRampTexture();
+}
+EXPORT void fillReflectionGradient(Texture* texture) {
+    gNewShadowReflectionGradientTexture = texture;
+    fillReflectionGradientTexture();
+}
+''')
         library = directory / ("blend.dll" if sys.platform == "win32" else "blend.so")
         command = [compiler, "-shared", "-O2", "-ffp-contract=off", str(fixture), "-o", str(library)]
         if sys.platform == "win32":
@@ -155,6 +176,36 @@ EXPORT void blendTextures(Texture* src1, Texture* src2, f32 blend, Texture* dst)
         cls.library.blendTextures.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_float, ctypes.c_void_p]
         cls.library.blendTextures.restype = None
         cls.library.getFlushAddress.restype = ctypes.c_void_p
+        for name in ("fillRamp", "fillInverseRamp", "fillReflectionGradient"):
+            function = getattr(cls.library, name)
+            function.argtypes = [ctypes.c_void_p]
+            function.restype = None
+
+    def test_procedural_ramps_and_gradient(self):
+        for name, width, bytes_per_pixel in (
+            ("fillRamp", 256, 1),
+            ("fillInverseRamp", 256, 1),
+            ("fillReflectionGradient", 4, 2),
+        ):
+            with self.subTest(fill=name):
+                payload_size = width * 4 * bytes_per_pixel
+                storage = (ctypes.c_ubyte * (HEADER_SIZE + payload_size + 32))()
+                ctypes.memset(storage, 0xCD, len(storage))
+                getattr(self.library, name)(ctypes.addressof(storage))
+                self.assertEqual(bytes(storage[:HEADER_SIZE]), bytes([0xCD]) * HEADER_SIZE)
+                self.assertEqual(bytes(storage[-32:]), bytes([0xCD]) * 32)
+                if bytes_per_pixel == 1:
+                    pixels = (ctypes.c_ubyte * payload_size).from_buffer(storage, HEADER_SIZE)
+                    for y in range(4):
+                        for x in range(width):
+                            offset = (x // 8) * 32 + y * 8 + x % 8
+                            expected = 255 - x if name == "fillInverseRamp" else x
+                            self.assertEqual(pixels[offset], expected)
+                else:
+                    pixels = (ctypes.c_ushort * 16).from_buffer(storage, HEADER_SIZE)
+                    for y in range(4):
+                        for x in range(width):
+                            self.assertEqual(pixels[y * 4 + x], ((85 * x) << 8) | (85 * y))
 
     def test_tiled_formats_and_in_place_destinations(self):
         rng = random.Random(0x80069B1C)
