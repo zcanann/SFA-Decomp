@@ -1,3 +1,4 @@
+#include "main/track_line.h"
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -39,11 +40,7 @@
 #include "main/track_dolphin_shadow_api.h"
 #include "main/newshadows_shadow_api.h"
 #define TRACK_BBOX_FLAGS_S8
-#define TRACK_BBOX_MASK_TYPE  s8
-#define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_ARG10_TYPE
-#undef TRACK_BBOX_MASK_TYPE
 #undef TRACK_BBOX_FLAGS_S8
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
@@ -122,31 +119,6 @@ STATIC_ASSERT(sizeof(MapDynamicSlot) == 0x18);
 STATIC_ASSERT(offsetof(MapDynamicSlot, cachedLocalEnd) == 0x08);
 STATIC_ASSERT(offsetof(MapDynamicSlot, cooldown) == 0x14);
 STATIC_ASSERT(offsetof(MapDynamicSlot, querySlot) == 0x15);
-
-/* IntersectLine -- 0x10-byte water/track intersection line record built into
- * the scratch pool at gIntersectLinePool (cap 0x5dc) and later compacted into the
- * owning object's sorted table.  kind's low 6 bits are the sort/group key;
- * a kind of 0x14 marks a consumed scratch entry. */
-typedef struct IntersectLine {
-    u8 end0;     /* 0x0 per-endpoint byte from the source segment */
-    u8 end1;     /* 0x1 */
-    u8 flags;    /* 0x2 bit 0x10 is toggled on import */
-    s8 kind;     /* 0x3 low 6 bits group key; 0x14 = consumed */
-    s16 pt[2];   /* 0x4 indices into the shared point pool */
-    s16 adj[2];  /* 0x8 neighbour line ids sharing pt[0]/pt[1] */
-    s16 param;   /* 0xc s16 payload from the source segment */
-    u8 pad0E[2]; /* 0xe */
-} IntersectLine;
-
-struct IntersectModLineObject {
-    u8 pad00[0x30];
-    MapHitLine* sourceLines; /* 0x30 */
-    IntersectLine* lines;    /* 0x34 */
-    u8 (*groupRanges)[2];    /* 0x38 */
-    f32* points;             /* 0x3c */
-    u8 pad40[0x1c];
-    u8 sourceLineCount; /* 0x5c */
-};
 
 #define MAP_DYNAMIC_SLOT_COUNT 64
 
@@ -408,9 +380,9 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
 
     if (target != NULL) {
         if (segment != -1) {
-            u8* tbl = target->anim.modelInstance->intersectionSegmentRanges;
-            start = tbl[segment * 2];
-            end = tbl[segment * 2 + 1];
+            TrackModelLineRange* ranges = target->anim.modelInstance->intersectionSegmentRanges;
+            start = ranges[segment].first;
+            end = ranges[segment].end;
         } else {
             start = 0;
             end = target->anim.modelInstance->modLineCount;
@@ -1025,7 +997,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
     return gTrackSweepHitCount;
 }
 
-void intersectModLineBuild(IntersectModLineObject* obj) {
+void intersectModLineBuild(ObjDef* definition) {
     s16 pointLinks[0xd48];
     IntersectLine* line;
     int lineIndex;
@@ -1038,8 +1010,8 @@ void intersectModLineBuild(IntersectModLineObject* obj) {
     mapBlockFlag = 1;
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
-    sourceLineCount = obj->sourceLineCount;
-    for (lineIndex = 0, sourceLine = obj->sourceLines; lineIndex < sourceLineCount; sourceLine++, lineIndex++) {
+    sourceLineCount = definition->modLineCount;
+    for (lineIndex = 0, sourceLine = definition->modLines; lineIndex < sourceLineCount; sourceLine++, lineIndex++) {
         int i;
         if (gIntersectLineCount < 0x5dc) {
             line = (IntersectLine*)((u8*)gIntersectLinePool + gIntersectLineCount * 0x10);
@@ -1097,13 +1069,13 @@ void intersectModLineBuild(IntersectModLineObject* obj) {
     if (gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28 == 0) {
         return;
     }
-    obj->lines = mmAlloc(gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28, 0xffff00ff, 0);
-    obj->points = (f32*)((u8*)obj->lines + gIntersectLineCount * 0x10);
-    obj->groupRanges = (u8(*)[2])((u8*)obj->points + gIntersectPointCount * 0xc);
+    definition->intersectionLines = mmAlloc(gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28, 0xffff00ff, 0);
+    definition->intersectionPoints = (f32*)((u8*)definition->intersectionLines + gIntersectLineCount * 0x10);
+    definition->intersectionSegmentRanges = (TrackModelLineRange*)((u8*)definition->intersectionPoints + gIntersectPointCount * 0xc);
     {
         int k;
         for (k = 0; k < 40; k++) {
-            (*(u8**)&obj->groupRanges)[k] = 0xff;
+            ((u8*)definition->intersectionSegmentRanges)[k] = 0xff;
         }
     }
     previousGroup = -1;
@@ -1124,9 +1096,9 @@ void intersectModLineBuild(IntersectModLineObject* obj) {
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
         if (grp != previousGroup) {
-            obj->groupRanges[grp][0] = outputLineIndex;
+            definition->intersectionSegmentRanges[grp].first = outputLineIndex;
             if (previousGroup != -1) {
-                obj->groupRanges[previousGroup][1] = outputLineIndex;
+                definition->intersectionSegmentRanges[previousGroup].end = outputLineIndex;
             }
             previousGroup = grp;
         }
@@ -1135,11 +1107,11 @@ void intersectModLineBuild(IntersectModLineObject* obj) {
             s16 bestLine;
             bestLine = best;
             for (m = 0; m < outputLineIndex; m++) {
-                if (obj->lines[m].adj[0] == bestLine) {
-                    obj->lines[m].adj[0] = outputLineIndex;
+                if (definition->intersectionLines[m].adj[0] == bestLine) {
+                    definition->intersectionLines[m].adj[0] = outputLineIndex;
                 }
-                if (obj->lines[m].adj[1] == bestLine) {
-                    obj->lines[m].adj[1] = outputLineIndex;
+                if (definition->intersectionLines[m].adj[1] == bestLine) {
+                    definition->intersectionLines[m].adj[1] = outputLineIndex;
                 }
             }
         }
@@ -1158,13 +1130,13 @@ void intersectModLineBuild(IntersectModLineObject* obj) {
                 }
             }
         }
-        memcpy(&obj->lines[outputLineIndex], (char*)gIntersectLinePool + best * 0x10, 0x10);
+        memcpy(&definition->intersectionLines[outputLineIndex], (char*)gIntersectLinePool + best * 0x10, 0x10);
         *(u8*)(gIntersectLinePool + best * 0x10 + 3) = 0x14;
     }
     if (previousGroup != -1) {
-        obj->groupRanges[previousGroup][1] = gIntersectLineCount;
+        definition->intersectionSegmentRanges[previousGroup].end = gIntersectLineCount;
     }
-    memcpy(obj->points, gIntersectPoints, gIntersectPointCount * 0xc);
+    memcpy(definition->intersectionPoints, gIntersectPoints, gIntersectPointCount * 0xc);
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
 }
@@ -1375,12 +1347,12 @@ void trackIntersect(void) {
 void trackSetLinesEnabledByParam(int matchVal, GameObject* obj, int flag) {
     int count;
     int i;
-    struct IntersectModLineObject* mod;
+    ObjDef* mod;
     IntersectLine* e;
     if (obj != NULL) {
-        mod = (struct IntersectModLineObject*)obj->anim.modelInstance;
-        e = mod->lines;
-        count = mod->sourceLineCount;
+        mod = obj->anim.modelInstance;
+        e = mod->intersectionLines;
+        count = mod->modLineCount;
     } else {
         e = (IntersectLine*)gIntersectLinePool;
         count = gIntersectLineCount;

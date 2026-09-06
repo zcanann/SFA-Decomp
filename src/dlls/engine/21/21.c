@@ -11,7 +11,6 @@
 #include "main/objhits.h"
 #include "game/objects/object.h"
 #include "string.h"
-#define TRACK_BBOX_ARG10_TYPE int
 #include "main/track_bbox_api.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"

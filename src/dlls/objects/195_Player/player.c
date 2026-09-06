@@ -47,9 +47,7 @@
 #include "main/dll/dll_02AE_waterflowwe.h"
 #include "track/intersect_api.h"
 #include "main/track_dolphin_api.h"
-#define TRACK_BBOX_MASK_TYPE s8
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_MASK_TYPE
 #include "main/vecmath_distance_api.h"
 
 #include "sys/objects.h"

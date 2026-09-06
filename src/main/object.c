@@ -1003,7 +1003,7 @@ u8* loadObjectFile(int id) {
         if (n > -1) {
             buf->modLines = (struct MapHitLine*)loadModLines(n, &modLine);
             buf->modLineCount = modLine;
-            intersectModLineBuild((IntersectModLineObject*)buf);
+            intersectModLineBuild(buf);
         }
         gObjFileBufferTable[id] = (u8*)buf;
         gObjFileRefCount[id] = 1;

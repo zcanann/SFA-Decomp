@@ -14,6 +14,9 @@ typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
 typedef struct ProjectedShadowTexture ProjectedShadowTexture;
 typedef struct Texture Texture;
 
+struct IntersectLine;
+struct TrackModelLineRange;
+
 typedef struct ObjAnimFrameCommand {
   u8 opcode;
   u8 frameLength;
@@ -328,8 +331,8 @@ typedef struct ObjDef {
   s16 *weaponDaTable;
   ObjAttachPoint *attachPoints;
   struct MapHitLine *modLines;
-  void *intersectionLines;
-  u8 *intersectionSegmentRanges;
+  struct IntersectLine *intersectionLines;
+  struct TrackModelLineRange *intersectionSegmentRanges;
   f32 *intersectionPoints;
   ObjDefHitVolume *hitVolumes;
   u32 flags;
@@ -640,6 +643,9 @@ STATIC_ASSERT(offsetof(ObjDef, weaponDaTable) == 0x28);
 STATIC_ASSERT(offsetof(ObjDef, attachPoints) == 0x2C);
 STATIC_ASSERT(offsetof(ObjDef, attachPointCount) == 0x58);
 STATIC_ASSERT(offsetof(ObjDef, modLines) == 0x30);
+STATIC_ASSERT(offsetof(ObjDef, intersectionLines) == 0x34);
+STATIC_ASSERT(offsetof(ObjDef, intersectionSegmentRanges) == 0x38);
+STATIC_ASSERT(offsetof(ObjDef, intersectionPoints) == 0x3C);
 STATIC_ASSERT(offsetof(ObjDef, modLineCount) == 0x5C);
 STATIC_ASSERT(offsetof(ObjDef, modLineIndex) == 0x5D);
 STATIC_ASSERT(sizeof(ObjAttachPoint) == 0x18);

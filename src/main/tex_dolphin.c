@@ -40,11 +40,7 @@
 #include "main/pi_dolphin_api.h"
 #include "dolphin/mtx/vec.h"
 #define TRACK_BBOX_FLAGS_S8
-#define TRACK_BBOX_MASK_TYPE  s8
-#define TRACK_BBOX_ARG10_TYPE s8
 #include "main/track_bbox_api.h"
-#undef TRACK_BBOX_ARG10_TYPE
-#undef TRACK_BBOX_MASK_TYPE
 #undef TRACK_BBOX_FLAGS_S8
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
