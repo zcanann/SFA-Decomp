@@ -97,7 +97,7 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state)
     state->fireflyLantern.rippleTimer -= timeDelta;
     if (state->fireflyLantern.rippleTimer <= 0.0f)
     {
-        state->fireflyLantern.rippleTimer = (f32)(s32)randomGetRange(30, 60);
+        state->fireflyLantern.rippleTimer = (f32)randomGetRange(30, 60);
         stk.x = obj->anim.localPosX;
         stk.y = 0.0f;
         stk.z = obj->anim.localPosZ;
@@ -106,8 +106,8 @@ void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state)
         stk.rotZ = 0;
         stk.scale = 1.0f;
         setMatrixFromObjectPos(mtx, &stk);
-        tx = 5.0f + (f32)(s32)randomGetRange(-20, 20) / 10.0f;
-        tz = 2.0f + (f32)(s32)randomGetRange(-20, 20) / 10.0f;
+        tx = 5.0f + (f32)randomGetRange(-20, 20) / 10.0f;
+        tz = 2.0f + (f32)randomGetRange(-20, 20) / 10.0f;
         Matrix_TransformPoint(mtx, tx, 0.0f, tz, &tx, &ox, &tz);
         (*gWaterfxInterface)->spawnRipple(tx, state->fireflyLantern.anchorY, tz, 0, 0.0f, 3);
         if (sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ) > 0.5f)
@@ -122,11 +122,11 @@ void pinPon_updateWhileFrozen(GameObject* obj, EnemyState* state, GameObject* at
 {
     if (cmd == 17 || cmd == 16)
         return;
-    if (((GameObject*)obj)->anim.currentMoveProgress > 0.5f)
+    if (obj->anim.currentMoveProgress > 0.5f)
     {
         state->flags2E8 |= 8;
-        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_en_rfall5_c);
-        Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_wp_iceywindlp16_233);
+        Sfx_PlayFromObject(obj, SFXTRIG_en_rfall5_c);
+        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
         state->current = 0;
         state->flags2E4 |= 32;
     }
@@ -138,42 +138,43 @@ void pinPon_updateWhileFrozen(GameObject* obj, EnemyState* state, GameObject* at
 
 void pinPon_updateIdle(GameObject* obj, void* state)
 {
+    EnemyState* enemyState = (EnemyState*)state;
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
     u8 rnd;
     f32 vec[3];
 
     curve = *(RomCurveWalker**)state;
-    ((EnemyState*)state)->userData2 = 0;
-    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+    enemyState->userData2 = 0;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
+    if ((enemyState->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
-        if ((Curve_AdvanceAlongPath(&curve->curve, ((EnemyState*)state)->pathStep) != 0 ||
+        if ((Curve_AdvanceAlongPath(&curve->curve, enemyState->pathStep) != 0 ||
              curve->atSegmentEnd != 0) &&
-            (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
+            (*gRomCurveInterface)->goNextPoint(curve) != 0 &&
             (*gRomCurveInterface)
-                    ->initCurve(*(RomCurveWalker**)state, (void*)obj, 700.0f, gPinPonCurveInitData, -1) != 0)
+                    ->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gPinPonCurveInitData, -1) != 0)
         {
-            ((EnemyState*)state)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+            enemyState->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
         }
-        vec[0] = curve->posX - (obj)->anim.localPosX;
+        vec[0] = curve->posX - obj->anim.localPosX;
         vec[1] = 0.0f;
-        vec[2] = curve->posZ - (obj)->anim.localPosZ;
-        enemy_steerVelocityToward(obj, (void*)state, vec, 2.0f, 0.1f, 0.1f, 1);
-        ((EnemyState*)state)->pinPon.idleTimer += timeDelta;
-        if (((EnemyState*)state)->pinPon.idleTimer > 360.0f)
+        vec[2] = curve->posZ - obj->anim.localPosZ;
+        enemy_steerVelocityToward(obj, state, vec, 2.0f, 0.1f, 0.1f, 1);
+        enemyState->pinPon.idleTimer += timeDelta;
+        if (enemyState->pinPon.idleTimer > 360.0f)
         {
-            ((EnemyState*)state)->flags2E4 &= ~(u64)0x10000;
-            ((EnemyState*)state)->pinPon.idleTimer = 0.0f;
+            enemyState->flags2E4 &= ~0x10000;
+            enemyState->pinPon.idleTimer = 0.0f;
         }
     }
-    (obj)->anim.rotY =
-        -(1024.0f * mathSinfFast(0.19634955f * (f32)(u32)((EnemyState*)state)->userData1) - (f32)(obj)->anim.rotY);
-    baddieTurnTowardLookDir(obj, (void*)state, 0xf, 7.5f, 1.0f, 0);
-    if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
+    obj->anim.rotY =
+        -(1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) - (f32)obj->anim.rotY);
+    baddieTurnTowardLookDir(obj, state, 0xf, 7.5f, 1.0f, 0);
+    if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        if ((obj)->anim.currentMoveProgress < 0.5)
+        if (obj->anim.currentMoveProgress < 0.5)
         {
             rnd = randomGetRange(0, 200);
         }
@@ -183,150 +184,152 @@ void pinPon_updateIdle(GameObject* obj, void* state)
         }
         if (rnd == 0)
         {
-            if ((obj)->anim.currentMoveProgress > 0.5)
+            if (obj->anim.currentMoveProgress > 0.5)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
-                ((EnemyState*)state)->animPlaySpeed = -0.02f;
+                enemyState->animPlaySpeed = -0.02f;
             }
             else
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
-                ((EnemyState*)state)->animPlaySpeed = 0.02f;
+                enemyState->animPlaySpeed = 0.02f;
             }
         }
     }
-    ((EnemyState*)state)->userData1 += 1;
-    (obj)->anim.rotY =
-        1024.0f * mathSinfFast(0.19634955f * (f32)(u32)((EnemyState*)state)->userData1) + (f32)(obj)->anim.rotY;
+    enemyState->userData1 += 1;
+    obj->anim.rotY =
+        1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) + (f32)obj->anim.rotY;
     baddieSpawnWaterRipple(obj, (EnemyState*)state);
 }
 
 void pinPon_updateEngaged(GameObject* obj, int* state)
 {
+    EnemyState* enemyState = (EnemyState*)state;
     RomCurveWalker* curve;
     u8 flag;
     f32 dvec[3];
     f32 fval;
 
     curve = *(RomCurveWalker**)state;
-    if (((EnemyState*)state)->controlFlags & 0x80000000U)
+    if (enemyState->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_windlift_loop);
     }
-    if (((((EnemyState*)state)->controlFlags & 0x2000U) != 0) &&
+    if (((enemyState->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) &&
         ((Curve_AdvanceAlongPath(&curve->curve, 0.0f) != 0 || curve->atSegmentEnd != 0) &&
          ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, (void*)obj, 700.0f, (int*)&gPinPonCurveInitData, -1) !=
+        ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gPinPonCurveInitData, -1) !=
          0))
     {
-        ((EnemyState*)state)->controlFlags &= ~0x2000LL;
+        enemyState->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
     }
     ObjHits_SetHitVolumeSlot(&obj->anim, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
-    flag = playerGetFlags3F0Bit5((GameObject*)(Obj_GetPlayerObject()));
-    dvec[0] = ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosX - (obj)->anim.localPosX;
+    flag = playerGetFlags3F0Bit5(Obj_GetPlayerObject());
+    dvec[0] = enemyState->trackedObj->anim.localPosX - obj->anim.localPosX;
     dvec[1] = 0.0f;
-    dvec[2] = ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosZ - (obj)->anim.localPosZ;
-    if ((((EnemyState*)state)->lastHitObject != NULL) &&
-        (((EnemyState*)state)->lastHitObject == Obj_GetPlayerObject()))
+    dvec[2] = enemyState->trackedObj->anim.localPosZ - obj->anim.localPosZ;
+    if ((enemyState->lastHitObject != NULL) &&
+        (enemyState->lastHitObject == Obj_GetPlayerObject()))
     {
-        ((EnemyState*)state)->flags2E4 |= 0x10000LL;
-        ((EnemyState*)state)->fireflyLantern.trackTimer = 0.0f;
+        enemyState->flags2E4 |= 0x10000;
+        enemyState->fireflyLantern.trackTimer = 0.0f;
     }
-    (obj)->anim.rotY = -(1024.0f * mathSinfFast(0.19634955f * (f32)(u32)((EnemyState*)state)->userData1) -
-                         (f32)(obj)->anim.rotY);
+    obj->anim.rotY = -(1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) -
+                         (f32)obj->anim.rotY);
     if (flag == 0)
     {
         fval = 0.0f;
-        (obj)->anim.velocityX = fval;
-        (obj)->anim.velocityZ = fval;
-        baddieTurnTowardPoint(obj, state, ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosX,
-                              ((GameObject*)((EnemyState*)state)->trackedObj)->anim.localPosZ, 10, 0);
+        obj->anim.velocityX = fval;
+        obj->anim.velocityZ = fval;
+        baddieTurnTowardPoint(obj, state, enemyState->trackedObj->anim.localPosX,
+                              enemyState->trackedObj->anim.localPosZ, 10, 0);
     }
     else
     {
         enemy_steerVelocityToward(obj, state, dvec, 2.0f, 0.1f, 0.1f, 1);
         baddieTurnTowardLookDir(obj, state, 0xf, 7.5f, 1.0f, 0);
     }
-    if (((EnemyState*)state)->controlFlags & 0x40000000U)
+    if (enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
     {
         fval = 0.0f;
-        if (fval == ((EnemyState*)state)->fireflyLantern.breathTimer)
+        if (fval == enemyState->fireflyLantern.breathTimer)
         {
             if (flag == 0)
             {
-                if ((obj)->anim.currentMoveProgress > 0.5f)
+                if (obj->anim.currentMoveProgress > 0.5f)
                 {
-                    ((EnemyState*)state)->fireflyLantern.breathTimer = 300.0f;
-                    ((EnemyState*)state)->userData2 += 1;
+                    enemyState->fireflyLantern.breathTimer = 300.0f;
+                    enemyState->userData2 += 1;
                 }
                 else
                 {
-                    ((EnemyState*)state)->fireflyLantern.breathTimer = 120.0f;
+                    enemyState->fireflyLantern.breathTimer = 120.0f;
                 }
             }
-            else if ((obj)->anim.currentMoveProgress > 0.5)
+            else if (obj->anim.currentMoveProgress > 0.5)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
-                ((EnemyState*)state)->animPlaySpeed = -0.02f;
+                enemyState->animPlaySpeed = -0.02f;
             }
             else
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
-                ((EnemyState*)state)->animPlaySpeed = 0.02f;
+                enemyState->animPlaySpeed = 0.02f;
             }
         }
         else
         {
-            ((EnemyState*)state)->fireflyLantern.breathTimer -= timeDelta;
-            if (((EnemyState*)state)->fireflyLantern.breathTimer <= fval)
+            enemyState->fireflyLantern.breathTimer -= timeDelta;
+            if (enemyState->fireflyLantern.breathTimer <= fval)
             {
-                ((EnemyState*)state)->fireflyLantern.breathTimer = fval;
-                if ((obj)->anim.currentMoveProgress > 0.5)
+                enemyState->fireflyLantern.breathTimer = fval;
+                if (obj->anim.currentMoveProgress > 0.5)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
-                    ((EnemyState*)state)->animPlaySpeed = -0.02f;
+                    enemyState->animPlaySpeed = -0.02f;
                 }
                 else
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
-                    ((EnemyState*)state)->animPlaySpeed = 0.1f;
+                    enemyState->animPlaySpeed = 0.1f;
                 }
             }
         }
     }
-    ((EnemyState*)state)->userData1 += 1;
-    (obj)->anim.rotY = (1024.0f * mathSinfFast(0.19634955f * (f32)(u32)((EnemyState*)state)->userData1) +
-                        (f32)(obj)->anim.rotY);
+    enemyState->userData1 += 1;
+    obj->anim.rotY = (1024.0f * mathSinfFast(0.19634955f * (f32)enemyState->userData1) +
+                        (f32)obj->anim.rotY);
     baddieSpawnWaterRipple(obj, (EnemyState*)state);
 }
 
 void pinPon_init(GameObject* obj, void* state)
 {
+    EnemyState* enemyState = (EnemyState*)state;
     float fval;
     u32 randVal;
 
-    ((EnemyState*)state)->sightRange = 40.0f;
-    ((EnemyState*)state)->flags2E4 = 0x8000009;
-    ((EnemyState*)state)->animPlaySpeed = -0.02f;
-    ((EnemyState*)state)->gravity = 0.1f;
-    ((EnemyState*)state)->drag = 0.97f;
-    ((EnemyState*)state)->moveId0 = 0;
+    enemyState->sightRange = 40.0f;
+    enemyState->flags2E4 = 0x8000009;
+    enemyState->animPlaySpeed = -0.02f;
+    enemyState->gravity = 0.1f;
+    enemyState->drag = 0.97f;
+    enemyState->moveId0 = 0;
     fval = 1.5f;
-    ((EnemyState*)state)->moveSpeedScale0 = 1.5f;
-    ((EnemyState*)state)->moveId1 = 1;
-    ((EnemyState*)state)->moveSpeedScale1 = 1.0f;
-    ((EnemyState*)state)->moveId2 = 0;
-    ((EnemyState*)state)->moveSpeedScale2 = fval;
+    enemyState->moveSpeedScale0 = 1.5f;
+    enemyState->moveId1 = 1;
+    enemyState->moveSpeedScale1 = 1.0f;
+    enemyState->moveId2 = 0;
+    enemyState->moveSpeedScale2 = fval;
     fval = 0.0f;
-    ((EnemyState*)state)->fireflyLantern.trackTimer = fval;
-    ((EnemyState*)state)->fireflyLantern.breathTimer = fval;
-    ((EnemyState*)state)->fireflyLantern.anchorY = obj->anim.localPosY;
+    enemyState->fireflyLantern.trackTimer = fval;
+    enemyState->fireflyLantern.breathTimer = fval;
+    enemyState->fireflyLantern.anchorY = obj->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
-    ((EnemyState*)state)->userData1 = randVal;
-    ((EnemyState*)state)->userData2 = 0;
-    ((EnemyState*)state)->fireflyLantern.rippleTimer = 30.0f;
+    enemyState->userData1 = randVal;
+    enemyState->userData2 = 0;
+    enemyState->fireflyLantern.rippleTimer = 30.0f;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;
     fval = 0.01f * fval;
-    ((EnemyState*)state)->pathStep = fval;
+    enemyState->pathStep = fval;
 }
