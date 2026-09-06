@@ -1131,8 +1131,7 @@ void Trigger_hitDetect(GameObject* obj) {
                     break;
                 case 0x4c:
                     ok2 = 1;
-                    if (state->gateBits[0] != -1 &&
-                        mainGetBit(state->gateBits[0]) == 0u) {
+                    if (state->gateBits[0] != -1 && mainGetBit(state->gateBits[0]) == 0u) {
                         ok2 = 0;
                     }
                     if (ok2 && ok) {
