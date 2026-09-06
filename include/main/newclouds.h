@@ -17,7 +17,7 @@ typedef void (*NewCloudsFunc09Fn)(void);
 typedef void (*NewCloudsFunc0ANopFn)(int unused);
 
 typedef struct NewCloudsInterface {
-    void *unused00;
+    void* unused00;
     NewCloudsUpdateEnvfxActFn updateEnvfxAct;
     NewCloudsOnMapSetupFn onMapSetup;
     NewCloudsKillSnowCloudFn killSnowCloud;
@@ -37,13 +37,12 @@ STATIC_ASSERT(offsetof(NewCloudsInterface, isBlizzardActive) == 0x18);
 STATIC_ASSERT(offsetof(NewCloudsInterface, func09) == 0x1C);
 STATIC_ASSERT(offsetof(NewCloudsInterface, func0ANop) == 0x20);
 
-extern NewCloudsInterface **gNewCloudsInterface;
-
+extern NewCloudsInterface** gNewCloudsInterface;
 
 /* extern-cleanup: defining-file public prototypes */
 void mm_free_(void* ptr);
-LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime,
-                                 u8 width, u8 flags);
+LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, u16 lifetime, u8 width,
+                                 u8 flags);
 void lightningRender(LightningEffect* effect);
 void initSkyStars(void);
 void drawSkyStars(void);

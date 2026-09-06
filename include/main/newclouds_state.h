@@ -115,22 +115,22 @@ STATIC_ASSERT(sizeof(NewCloud) == 0x1454);
  * newclouds.c are named; the rest of the record is padded.
  */
 typedef struct CloudSpawnParams {
-    f32 driftBase;      /* 0x00 */
-    f32 heightBase;     /* 0x04 */
-    f32 driftMax;       /* 0x08: read and written (clamped up to driftMin) */
+    f32 driftBase;  /* 0x00 */
+    f32 heightBase; /* 0x04 */
+    f32 driftMax;   /* 0x08: read and written (clamped up to driftMin) */
     u8 unk0C[0x18];
-    u16 envfxActId;     /* 0x24: 1-based ENVFXACT record id; (id-1) saved into the savegame env-state cloud slot (+0xE/0x10/0x12) and replayed via getEnvfxActImmediately on map setup */
-    u16 cloudIndex;     /* 0x26: index into gNewClouds[] */
-    u16 flakeCount;     /* 0x28 */
-    u16 fillDivisor;    /* 0x2A */
-    u16 drainDivisor;   /* 0x2C */
+    u16 envfxActId; /* 0x24: 1-based ENVFXACT record id; (id-1) saved into the savegame env-state cloud slot (+0xE/0x10/0x12) and replayed via getEnvfxActImmediately on map setup */
+    u16 cloudIndex; /* 0x26: index into gNewClouds[] */
+    u16 flakeCount; /* 0x28 */
+    u16 fillDivisor;  /* 0x2A */
+    u16 drainDivisor; /* 0x2C */
     u8 unk2E[0x2A];
-    u8 flags58;         /* 0x58 */
-    u8 flags59;         /* 0x59 */
-    u8 sizeClass;           /* 0x5A */
-    u8 spinClass;           /* 0x5B */
-    u8 cloudType;       /* 0x5C */
-    u8 stationaryInit;     /* 0x5D */
+    u8 flags58;        /* 0x58 */
+    u8 flags59;        /* 0x59 */
+    u8 sizeClass;      /* 0x5A */
+    u8 spinClass;      /* 0x5B */
+    u8 cloudType;      /* 0x5C */
+    u8 stationaryInit; /* 0x5D */
 } CloudSpawnParams;
 
 STATIC_ASSERT(offsetof(CloudSpawnParams, envfxActId) == 0x24);
