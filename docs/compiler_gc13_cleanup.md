@@ -99,3 +99,36 @@ logs are retained under `build/gc13_indexed/`. The source/config changes are
 recorded as individual TU commits on `staging`. The broader migration tool can
 recheck current clean source against the former compiler with
 `python3 tools/compiler_impact.py --compiler GC/2.0 --output build/compiler_impact/<new-directory> --jobs 6`.
+
+## September 6: DIMLavaSmas mask recovery
+
+Object slot 455 gains its last exact function, `dimlavasmash_setBlockSurfaceFlags`
+(276 bytes), by applying the shader clear mask at its use instead of keeping a
+manually hoisted `u32 clearMask` across the loop. Its triangle-group masks also
+use ordinary `~2` and `~1` instead of unnecessary 64-bit literals. Both owning
+fields are `u32`; the stored values are unchanged for every input.
+
+The same source change has different results under the two compilers, with the
+complete existing TU profile held constant:
+
+| Source | GC/1.3 function / TU fuzzy | GC/2.0 function / TU fuzzy |
+| --- | ---: | ---: |
+| Previous masks and hoisted local | 98.840576% / 99.69811% | 98.840576% / 99.69811% |
+| Native masks at their use | **100% / 100%** | 91.159424% / 97.69811% |
+
+This is a new match under GC/1.3, rather than a compiler-only gain on unchanged
+source. Removing the 64-bit suffixes alone is byte-neutral in the function
+under 1.3; removing the hoisted shader mask resolves the register assignments.
+Unsigned mask literals were also tested and regress, consistent with the
+compiler's sensitivity to literal types.
+
+All **11 functions, 1,060 code bytes, and 60 assigned data bytes** now match.
+The other ten function bodies remain unchanged. Allocated data, named symbol
+offsets, and relocations are preserved; two anonymous literal symbols are
+renumbered at unchanged locations. Slot 455 is now source-linked for EN v1.0.
+Its TU boundary, generated path, compiler flags, canonical header, and shared
+consumers are unchanged. Artifacts are under `build/gc13_new_matches/lava/`.
+
+Formatting and the generated-path audit for slots 454-456 pass. The strict
+checksum build and `ninja all_source` both exit 0 within their 30-second limits;
+the final DOL remains byte-identical to retail with slot 455 linked from source.

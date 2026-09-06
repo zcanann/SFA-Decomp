@@ -28,7 +28,6 @@ enum DimLavaSmashPhase {
 #define DIM_LAVA_SMASH_ANIM_COMMAND_COMPLETE 1
 
 void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfaceType) {
-    u32 clearMask;
     int i;
     int j;
 
@@ -36,19 +35,19 @@ void dimlavasmash_setBlockSurfaceFlags(MapBlockData* map, int disable, int surfa
         MapTriGroup* polygonGroup = mapBlockGetPolygonGroup(map, j);
         if (surfaceType == mapBlockGetPolygonGroupType(polygonGroup)) {
             if (disable != 0) {
-                polygonGroup->flags &= ~2LL;
-                polygonGroup->flags &= ~1LL;
+                polygonGroup->flags &= ~2;
+                polygonGroup->flags &= ~1;
             } else {
                 polygonGroup->flags |= 2;
                 polygonGroup->flags |= 1;
             }
         }
     }
-    for (i = 0, clearMask = ~2; i < (int)map->shaderCount; i++) {
+    for (i = 0; i < (int)map->shaderCount; i++) {
         Shader* shader = mapBlockGetShader(map, i);
         if (surfaceType == ((ShaderLayer*)Shader_getLayer(shader, 0))->materialId) {
             if (disable != 0) {
-                shader->flags &= clearMask;
+                shader->flags &= ~2;
             } else {
                 shader->flags |= 2;
             }

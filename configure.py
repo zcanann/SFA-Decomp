@@ -1545,7 +1545,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/452_DIMIceWall/DIMIceWall.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/453_DIMBarrier/DIMBarrier.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/454_DIMCannon/DIMCannon.c"),
-            Object(NonMatching, "dlls/objects/455_DIMLavaSmas/DIMLavaSmas.c", cflags=cflags_dll_noopt_noprop_noinline),
+            Object(MatchingFor("GSAE01"), "dlls/objects/455_DIMLavaSmas/DIMLavaSmas.c", cflags=cflags_dll_noopt_noprop_noinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/456_DIMBridgeCo/DIMBridgeCo.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/457_DIMDismount/DIMDismount.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/458_DIMExplosio/DIMExplosio.c", cflags=cflags_dll_noopt_noinline),
