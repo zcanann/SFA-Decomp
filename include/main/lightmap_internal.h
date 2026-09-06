@@ -4,8 +4,7 @@
 #include "main/dll/ppcwgpipe_struct.h"
 #include "types.h"
 
-typedef struct EnvironmentUpdateInterface
-{
+typedef struct EnvironmentUpdateInterface {
     void (*create)(void);
     void (*destroy)(void);
     void (*update)(void);
@@ -20,24 +19,21 @@ extern EnvironmentUpdateInterface** gEnvironmentUpdateInterface;
  * 6 = indirect lightmap) into the row it queues, and lightmap.c writes the
  * object-shadow kinds 0..3 and 7 into the same field.
  */
-typedef struct
-{
+typedef struct {
     u32 a;
     u32 b;
     u32 key;
     u32 type;
 } LightSortEntry;
 
-typedef struct MapLayerBuffers
-{
+typedef struct MapLayerBuffers {
     u8 reserved[0x41cc];
     u8* cellStates[5];
     u8* blockDescriptors[5];
     u8* blockIndices[5];
 } MapLayerBuffers;
 
-typedef struct
-{
+typedef struct {
     u8 pad[0x4114];
     u32 deferred[20];
 } LightmapDrawQueue;
