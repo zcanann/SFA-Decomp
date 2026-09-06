@@ -86,12 +86,10 @@
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-
 /* The Firebat variant of the shared Vambat/Firebat family (retail
    OBJECTS.bin name "Firebat", DLL 0xC9); it alone runs with userData2 set. */
 
 #define MAGICPLANT_FIREBAT_SEQID 0x7c6
-
 
 static const f32 gVambatZero[] = {0.0f};
 
@@ -99,28 +97,20 @@ static const f32 gVambatHeartbeatPeriod[] = {60.0f};
 
 int gVambatCurveInitData[2] = {2, 3};
 
-void vambat_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int msgFlag, int wpad0, int wpad1, Vec* wpad2,
-                              int wpad3)
-{
+void vambat_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int msgFlag, int wpad0, int wpad1,
+                              Vec* wpad2, int wpad3) {
     EnemyState* bs = (EnemyState*)state;
 
-    if (bs->userData2 != 0)
-    {
-        if (msgFlag == 16)
-        {
+    if (bs->userData2 != 0) {
+        if (msgFlag == 16) {
             bs->flags2E8 |= 0x28;
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap);
             bs->current = 0;
         }
-    }
-    else if (msgFlag != 17)
-    {
-        if (msgFlag == 16)
-        {
+    } else if (msgFlag != 17) {
+        if (msgFlag == 16) {
             bs->flags2E8 |= 0x20;
-        }
-        else
-        {
+        } else {
             bs->flags2E8 |= 0x8;
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap);
             bs->current = 0;
@@ -128,33 +118,25 @@ void vambat_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     }
 }
 
-void vambat_updateIdle(GameObject* obj, void* state)
-{
+void vambat_updateIdle(GameObject* obj, void* state) {
     ObjHitsPriorityState* hitState;
     RomCurveWalker* curve;
     f32 vec[3];
     EnemyState* bs = (EnemyState*)state;
 
     curve = *(RomCurveWalker**)state;
-    if (obj->anim.hitReactState != NULL)
-    {
+    if (obj->anim.hitReactState != NULL) {
         hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitState->suppressOutgoingHits = 0;
     }
-    if (bs->userData2 != 0)
-    {
+    if (bs->userData2 != 0) {
         bs->flags2E8 |= 0x80;
     }
-    if ((bs->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
-    {
-        if (Curve_AdvanceAlongPath(&curve->curve, bs->pathStep) != 0 ||
-            curve->atSegmentEnd != 0)
-        {
-            if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
-            {
-                if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, obj, 7e+02f, gVambatCurveInitData, -1) != 0)
-                {
+    if ((bs->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) {
+        if (Curve_AdvanceAlongPath(&curve->curve, bs->pathStep) != 0 || curve->atSegmentEnd != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(curve) != 0) {
+                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 7e+02f, gVambatCurveInitData, -1) !=
+                    0) {
                     bs->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
@@ -168,8 +150,7 @@ void vambat_updateIdle(GameObject* obj, void* state)
         enemy_steerVelocityToward(obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
 
         bs->vambat.idleTimer += timeDelta;
-        if (bs->vambat.idleTimer > 3.6e+02f)
-        {
+        if (bs->vambat.idleTimer > 3.6e+02f) {
             bs->flags2E4 &= ~0x10000;
             bs->vambat.idleTimer = gVambatZero[0];
         }
@@ -178,16 +159,14 @@ void vambat_updateIdle(GameObject* obj, void* state)
     baddieTurnTowardLookDir(obj, state, 0xf, 1e+01f, 1.0f, 0);
 
     bs->vambat.heartbeatSfxTimer -= timeDelta;
-    if (bs->vambat.heartbeatSfxTimer <= gVambatZero[0])
-    {
+    if (bs->vambat.heartbeatSfxTimer <= gVambatZero[0]) {
         bs->vambat.heartbeatSfxTimer = gVambatHeartbeatPeriod[0];
         Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c);
     }
     bs->vambat.engagedTimer = gVambatZero[0];
 }
 
-void vambat_updateEngaged(GameObject* obj, void* state)
-{
+void vambat_updateEngaged(GameObject* obj, void* state) {
     RomCurveWalker* curve;
     f32 vec[3];
     f32 worldPos[3];
@@ -198,24 +177,17 @@ void vambat_updateEngaged(GameObject* obj, void* state)
     EnemyState* bs = (EnemyState*)state;
 
     curve = *(RomCurveWalker**)state;
-    if (bs->userData2 != 0)
-    {
+    if (bs->userData2 != 0) {
         bs->flags2E8 |= 0x80;
     }
-    if ((bs->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
-    {
+    if ((bs->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_bombwhistle);
     }
-    if ((bs->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
-    {
-        if (Curve_AdvanceAlongPath(&curve->curve, 2.0f * bs->pathStep) != 0 ||
-            curve->atSegmentEnd != 0)
-        {
-            if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
-            {
-                if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, obj, 7e+02f, gVambatCurveInitData, -1) != 0)
-                {
+    if ((bs->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) {
+        if (Curve_AdvanceAlongPath(&curve->curve, 2.0f * bs->pathStep) != 0 || curve->atSegmentEnd != 0) {
+            if ((*gRomCurveInterface)->goNextPoint(curve) != 0) {
+                if ((*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 7e+02f, gVambatCurveInitData, -1) !=
+                    0) {
                     bs->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
@@ -228,14 +200,11 @@ void vambat_updateEngaged(GameObject* obj, void* state)
     vec[2] = trackedObj->anim.localPosZ - obj->anim.localPosZ;
     PSVECMag((Vec*)vec);
     bs->vambat.engagedTimer += timeDelta;
-    if (bs->lastHitObject != NULL || bs->vambat.engagedTimer > 3.6e+02f)
-    {
+    if (bs->lastHitObject != NULL || bs->vambat.engagedTimer > 3.6e+02f) {
         bs->flags2E4 |= 0x10000;
         bs->vambat.idleTimer = gVambatZero[0];
         bs->vambat.engagedTimer = gVambatZero[0];
-    }
-    else
-    {
+    } else {
         worldPos[0] = obj->anim.localPosX;
         worldPos[1] = obj->anim.localPosY;
         worldPos[2] = obj->anim.localPosZ;
@@ -247,10 +216,8 @@ void vambat_updateEngaged(GameObject* obj, void* state)
         /* BUG: precedence - `!` binds before `&`, so this is (controlFlags == 0) & 0x01000000,
          * which is always false; the line-of-sight abort below can never fire. The author
          * almost certainly meant !(controlFlags & 0x01000000). */
-        if (!bs->controlFlags & 0x01000000)
-        {
-            if (voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &hitOut, 0) == 0)
-            {
+        if (!bs->controlFlags & 0x01000000) {
+            if (voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &hitOut, 0) == 0) {
                 bs->flags2E4 |= 0x10000;
                 bs->vambat.idleTimer = gVambatZero[0];
                 bs->vambat.engagedTimer = gVambatZero[0];
@@ -261,8 +228,7 @@ void vambat_updateEngaged(GameObject* obj, void* state)
     baddieTurnTowardLookDir(obj, state, 0xf, 1e+01f, 1.0f, 0);
 }
 
-void vambat_init(GameObject* obj, void* state)
-{
+void vambat_init(GameObject* obj, void* state) {
     f32 pathStepInit;
     f32 initSpeed;
     EnemyState* bs = (EnemyState*)state;
@@ -284,8 +250,7 @@ void vambat_init(GameObject* obj, void* state)
     bs->vambat.heartbeatSfxTimer = gVambatZero[0];
     bs->vambat.engagedTimer = gVambatZero[0];
     bs->pathStep = pathStepInit;
-    switch (obj->anim.romDefNo)
-    {
+    switch (obj->anim.romDefNo) {
     case MAGICPLANT_FIREBAT_SEQID:
         bs->userData2 = 1;
         break;
@@ -295,12 +260,10 @@ void vambat_init(GameObject* obj, void* state)
     }
 }
 
-void magicplantSpawnMovePuffs(GameObject* obj, void* state)
-{
+void magicplantSpawnMovePuffs(GameObject* obj, void* state) {
     u8 count = 0;
     EnemyState* bs = (EnemyState*)state;
-    switch (obj->anim.currentMove)
-    {
+    switch (obj->anim.currentMove) {
     case 1:
         count = 1;
         break;
@@ -311,19 +274,16 @@ void magicplantSpawnMovePuffs(GameObject* obj, void* state)
         count = 1;
         break;
     case 5:
-        if ((bs->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
-        {
+        if ((bs->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0) {
             count = 0xa;
         }
         break;
     case 7:
         break;
     }
-    if (count != 0 && (bs->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) == 0)
-    {
+    if (count != 0 && (bs->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) == 0) {
         u8 spawn = count;
-        while (spawn != 0)
-        {
+        while (spawn != 0) {
             (*gPartfxInterface)->spawnObject(obj, MAGICPLANT_PARTFX, NULL, 2, -1, NULL);
             spawn--;
         }
