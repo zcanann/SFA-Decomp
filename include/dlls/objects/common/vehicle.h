@@ -3,6 +3,8 @@
 
 #include "game/objects/object.h"
 
+#define VEHICLE_OBJECT_GROUP 10
+
 enum VehicleMountState {
     VEHICLE_NoRider = 0,
     VEHICLE_Mounting = 1,

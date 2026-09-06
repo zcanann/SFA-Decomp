@@ -1,4 +1,5 @@
 #include "dlls/objects/529.h"
+#include "dlls/objects/common/vehicle.h"
 
 /*
  * DLL 0x0211 - wall crawler enemy logic.
@@ -33,7 +34,6 @@ u8 sWallCrawlerCollisionBone[3] = {0x41, 0x20, 0};
 
 #define WMWALLCRAWLER_OBJGROUP        3
 #define WMWALLCRAWLER_PARTFX          0x1a3
-#define WMWALLCRAWLER_TARGET_OBJGROUP 0xa /* nearest group-10 object targeted by the TARGET_NEAREST variant */
 
 /* state->flags, from the per-variant table gWallCrawlerVariantFlags */
 #define WMWALLCRAWLER_FLAG_START_ACTIVE   0x1   /* spawn already diving (rotZ 0) */
@@ -137,7 +137,7 @@ void wmwallcrawler_hitDetect(GameObject* obj) {
         if ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0) {
             target = (GameObject*)Obj_GetPlayerObject();
         } else {
-            target = objGetNearestTypeTo(WMWALLCRAWLER_TARGET_OBJGROUP, obj, &stk);
+            target = objGetNearestTypeTo(VEHICLE_OBJECT_GROUP, obj, &stk);
         }
         ObjHits_RecordObjectHit(target, obj, 0xb, 1, 0);
         state->mode = WMWALLCRAWLER_MODE_DIE;
@@ -174,7 +174,7 @@ void wmwallcrawler_update(GameObject* obj) {
     best = 10000.0f;
     player = (state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0
                  ? Obj_GetPlayerObject()
-                 : objGetNearestTypeTo(WMWALLCRAWLER_TARGET_OBJGROUP, ob, &best);
+                 : objGetNearestTypeTo(VEHICLE_OBJECT_GROUP, ob, &best);
     if (player != 0) {
         sq = mainGetBit(0x789);
         gWallCrawlerSpeedCap = 0.1f * sq + 0.1f;

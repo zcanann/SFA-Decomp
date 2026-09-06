@@ -19,6 +19,7 @@
  * shared struct does not yet name.
  */
 #include "main/audio/sfx_play_api.h"
+#include "dlls/objects/common/vehicle.h"
 #include "main/camera.h"
 #include "main/dll/partfx_interface.h"
 #include "main/debug.h"
@@ -270,7 +271,6 @@ void DR_CloudRunner_fireProjectile(GameObject* obj)
     (*gPartfxInterface)->spawnObject(newObj, DRCLOUDRUNNER_PARTFX, NULL, 2, -1, NULL);
 }
 
-#define DRCLOUDRUNNER_OBJGROUP           0xa
 #define PLAYER_VEHICLE_OBJGROUP               0x26
 #define DRCLOUDRUNNER_AIRMETER_BGTEXTURE 0x5de /* HUD air-meter background texture id */
 
@@ -1073,7 +1073,7 @@ void DR_CloudRunner_free(GameObject* obj)
 {
     CloudRunnerState* inner = (obj)->extra;
     mainSetBits(0x7aa, inner->airTimeRemaining);
-    objFreeObjectType(obj, DRCLOUDRUNNER_OBJGROUP);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
     objFreeObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
     (*gGameUIInterface)->airMeterShutdown();
 }
@@ -1277,7 +1277,7 @@ void DR_CloudRunner_init(GameObject* obj, DRCloudRunnerPlacement* def)
     int savedSlot;
     (obj)->anim.rotX = (s16)(def->spawnRot << 8);
     (obj)->animEventCallback = DR_CloudRunner_SeqFn;
-    objAddObjectType(obj, DRCLOUDRUNNER_OBJGROUP);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     inner = obj->extra;
     inner->spawnVariant = def->spawnVariant;
     inner->unkBAE = 5;

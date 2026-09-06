@@ -1,4 +1,5 @@
 #include "dlls/objects/364.h"
+#include "dlls/objects/common/vehicle.h"
 
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
@@ -18,7 +19,6 @@
 #define IM_SNOW_CLAW_2_MOUNT_SEQ_ID     0x16F
 #define IM_SNOW_CLAW_RENDER_GATE_SEQ_ID 0x373
 
-#define IM_SNOW_CLAW_MOUNT_OBJECT_GROUP 10
 #define IM_SNOW_CLAW_CHILD_SETUP_SIZE   0x18
 #define IM_SNOW_CLAW_MOVE_ID            0x100
 #define IM_SNOW_CLAW_FULL_ALPHA         0xFF
@@ -244,7 +244,7 @@ void imSnowClaw_update(GameObject* obj) {
         int objectIndex;
         int mountSeqId;
 
-        objects = (GameObject**)objGetAllOfType(IM_SNOW_CLAW_MOUNT_OBJECT_GROUP, &objectCount);
+        objects = (GameObject**)objGetAllOfType(VEHICLE_OBJECT_GROUP, &objectCount);
         switch (obj->anim.romDefNo) {
         case IM_SNOW_CLAW_SEQ_ID:
         case IM_SNOW_CLAW_RENDER_GATE_SEQ_ID:

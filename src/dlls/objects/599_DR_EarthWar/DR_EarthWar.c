@@ -1,4 +1,5 @@
 #include "dlls/objects/599_DR_EarthWar.h"
+#include "dlls/objects/common/vehicle.h"
 
 #include "main/dll/partfx_interface.h"
 #include "sys/objects.h"
@@ -47,7 +48,6 @@
 
 #define PAD_BUTTON_A 0x100
 
-#define DREARTHWARRIOR_OBJGROUP           0xa
 #define DREARTHWARRIOR_PARTFX             0x7e6
 #define DREARTHWARRIOR_AIRMETER_BGTEXTURE 0x5cf /* HUD air-meter background texture id */
 
@@ -802,7 +802,7 @@ void DR_EarthWarrior_free(GameObject* obj)
     {
         ObjModelChain_Free(state->sub.modelChain);
     }
-    objFreeObjectType(obj, DREARTHWARRIOR_OBJGROUP);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
     if (state->sub.flags994.b02)
     {
         (*gGameUIInterface)->airMeterShutdown();
@@ -1106,7 +1106,7 @@ void DR_EarthWarrior_init(GameObject* obj, DREarthWarriorPlacement* def)
     u8* pathState;
     obj->anim.rotX = (s16)(def->spawnYaw << 8);
     obj->animEventCallback = DR_EarthWarrior_SeqFn;
-    objAddObjectType(obj, DREARTHWARRIOR_OBJGROUP);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     state->sub.setupVariant = def->setupVariant;
     state->sub.turnThreshold = 5;
     state->sub.talkSequenceId = -1;

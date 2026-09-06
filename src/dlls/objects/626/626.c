@@ -17,6 +17,7 @@
  * quartet, and the 0x3F0.. counters).
  */
 #include "dlls/objects/626.h"
+#include "dlls/objects/common/vehicle.h"
 
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -87,7 +88,6 @@ static const HighTopPathParams sHighTopPathParams = {{1, 1, 1, 1}};
 #define HIGHTOP_FLAG_CURVE_FOLLOW 0x40 /* running Obj_UpdateRomCurveFollowVelocity */
 
 #define HIGHTOP_OBJECT_TYPE_ID  0x43
-#define HIGHTOP_OBJGROUP        0xa
 #define PLAYER_VEHICLE_OBJGROUP 0x26
 
 int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg) {
@@ -297,7 +297,7 @@ int hightop_stateHandler07(GameObject* obj, HighTopRuntime* stateArg) {
         rt->substate = 5;
         stateArg->baddie.moveSpeed = 0.004f;
         rt->lookController.modeBits &= ~1;
-        objFreeObjectType(obj, HIGHTOP_OBJGROUP);
+        objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
     }
     if (stateArg->baddie.moveDone != 0) {
         if ((obj)->anim.currentMove != 0) {
@@ -821,7 +821,7 @@ int HighTop_getObjectTypeId(void) {
 
 void HighTop_free(GameObject* obj) {
     objFreeObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
-    objFreeObjectType(obj, HIGHTOP_OBJGROUP);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
     (*gGameUIInterface)->airMeterShutdown();
 }
 
@@ -996,7 +996,7 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement) {
         node->flags |= 0xa10;
     }
     objAddObjectType(obj, PLAYER_VEHICLE_OBJGROUP);
-    objAddObjectType(obj, HIGHTOP_OBJGROUP);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     (*gPlayerInterface)->init(obj, runtime, 11, 1);
     runtime->baddie.gravity = 0.17f;
     pathState = (u8*)&runtime->baddie + 4;

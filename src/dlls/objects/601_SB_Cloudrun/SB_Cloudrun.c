@@ -1,4 +1,5 @@
 #include "dlls/objects/601_SB_Cloudrun.h"
+#include "dlls/objects/common/vehicle.h"
 
 /*
  * SB_Cloudrun (DLL 0x259) - the rideable Cloudrunner Krystal flies in the
@@ -238,8 +239,6 @@ void SB_CloudRunner_UpdateRideTilt(GameObject* obj, SBCloudRunnerRideState* stat
 
     obj->userData1 = 1;
 }
-
-#define SBCLOUDRUNNER_OBJGROUP 0xa
 
 /* object type ids (anim.romDefNo at obj+0x46) */
 #define SBCLOUDRUNNER_OBJ_TYPE  0x43 /* SB_CloudRunner_getObjectTypeId */
@@ -530,7 +529,7 @@ void SB_CloudRunner_free(GameObject* obj) {
     }
     Resource_Release(state->resource);
     state->resource = NULL;
-    objFreeObjectType(obj, SBCLOUDRUNNER_OBJGROUP);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
 }
 
 void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
@@ -636,7 +635,7 @@ void SB_CloudRunner_init(GameObject* obj) {
     state->texture1 = textureLoadAsset(3085);
     state->resource = Resource_Acquire(121, 1);
     ObjHits_SetTargetMask(obj, 1);
-    objAddObjectType(obj, SBCLOUDRUNNER_OBJGROUP);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
 }
 
 void SB_CloudRunner_release(void) {

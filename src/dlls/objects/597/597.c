@@ -1,4 +1,5 @@
 #include "dlls/objects/597_SnowBike.h"
+#include "dlls/objects/common/vehicle.h"
 #include "dlls/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXCull.h"
@@ -55,7 +56,6 @@
 #include "track/intersect_geom_api.h"
 #include "track/intersect_render_setup_api.h"
 
-#define SNOWBIKE_OBJGROUP           0xa
 #define SNOWBIKE_AIRMETER_BGTEXTURE 0x5cd
 #define SNOWBIKE_TRAIL_TEXTURE      0x186
 
@@ -1499,7 +1499,7 @@ void SnowBike_free(GameObject* obj) {
     SnowBikeState* state;
 
     state = obj->extra;
-    objFreeObjectType(obj, SNOWBIKE_OBJGROUP);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
     for (i = 0; i < SNOWBIKE_TRAIL_COUNT; i++) {
         mm_free(state->trails[i].points);
     }
@@ -1855,7 +1855,7 @@ void SnowBike_init(GameObject* obj, SnowBikePlacement* params, int flag) {
     state->routeCursor.y = obj->anim.localPosY;
     state->routeCursor.z = obj->anim.localPosZ;
     obj->animEventCallback = SnowBike_SeqFn;
-    objAddObjectType(obj, SNOWBIKE_OBJGROUP);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     if (flag == 0) {
         for (i = 0; i < SNOWBIKE_TRAIL_COUNT; i++) {
             state->trails[i].points = mmAlloc(SNOWBIKE_TRAIL_POINT_CAPACITY * sizeof(SnowBikeTrailPoint), 26, 0);

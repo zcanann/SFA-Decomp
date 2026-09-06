@@ -1,5 +1,6 @@
 /* DR_EarthCal (DLL 641) */
 #include "main/dll/player_api.h"
+#include "dlls/objects/common/vehicle.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/dll/tricky_api.h"
 #include "main/obj_trigger.h"
@@ -7,9 +8,6 @@
 #include "main/objtype.h"
 #include "sys/objects.h"
 #include "main/objseq.h"
-
-/* Mount object group: query nearest mount to gate the interact prompt. */
-#define DREARTHCAL_MOUNT_OBJGROUP 0xa
 
 int drearthcal_func0A(void)
 {
@@ -77,7 +75,7 @@ void drearthcal_update(GameObject* obj)
                     }
                 }
             }
-        if ((u32)objGetNearestTypeTo(DREARTHCAL_MOUNT_OBJGROUP, obj, &searchDist) == 0)
+        if ((u32)objGetNearestTypeTo(VEHICLE_OBJECT_GROUP, obj, &searchDist) == 0)
         {
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }

@@ -19,6 +19,7 @@
  * carry the ride and path-event bits.
  */
 #include "dlls/objects/625_DrakorHoverpad.h"
+#include "dlls/objects/common/vehicle.h"
 #include "dolphin/mtx/vec.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/curve.h"
@@ -45,7 +46,6 @@
 /* placement subtype id (desc[0]) selecting the pad behaviour mode */
 #define DRAKORHOVERPAD_SUBTYPE_TRACKING   1812 /* tracks/yaws toward a nearby object */
 #define DRAKORHOVERPAD_SUBTYPE_FREE       1048 /* free curve-follow, no tracking */
-#define DRAKORHOVERPAD_OBJGROUP_SECONDARY 0xa
 #define DRAKORHOVERPAD_HIT_VOLUME_SLOT    8
 
 #define ABS_EXPR(value) ((value) >= 0.0f ? value : -value)
@@ -596,7 +596,7 @@ int drakorhoverpad_getObjectTypeId(void) {
 
 void drakorhoverpad_free(GameObject* obj) {
     objFreeObjectType(obj, DRAKORHOVERPAD_OBJGROUP);
-    objFreeObjectType(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
 }
 
 void drakorhoverpad_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible) {
@@ -792,7 +792,7 @@ void drakorhoverpad_initMain(GameObject* obj, void* desc) {
         break;
     }
     objAddObjectType(obj, DRAKORHOVERPAD_OBJGROUP);
-    objAddObjectType(obj, DRAKORHOVERPAD_OBJGROUP_SECONDARY);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
 }
 
 void drakorhoverpad_release(void) {

@@ -10834,7 +10834,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
         int* focusCandidateList;
         int candidateIndex;
 
-        focusCandidateList = (int*)objGetAllOfType(10, &focusCandidateCount);
+        focusCandidateList = (int*)objGetAllOfType(VEHICLE_OBJECT_GROUP, &focusCandidateCount);
         candidateIndex = 0;
         focusCandidates = focusCandidateList;
         for (; candidateIndex < focusCandidateCount; candidateIndex++)
@@ -16387,7 +16387,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             {
                 f32 best;
                 u8 found;
-                void* objs = objGetAllOfType(10, &objCount);
+                void* objs = objGetAllOfType(VEHICLE_OBJECT_GROUP, &objCount);
                 found = 0;
                 best = 10000.0f;
                 for (endFlag = 0, obj2 = (int)objs; endFlag < objCount; endFlag++)

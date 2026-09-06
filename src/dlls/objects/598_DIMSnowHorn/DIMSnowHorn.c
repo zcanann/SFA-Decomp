@@ -7,6 +7,7 @@
  * the full per-frame tick.
  */
 #include "dlls/objects/598_DIMSnowHorn.h"
+#include "dlls/objects/common/vehicle.h"
 #include "dlls/objects/457_DIMDismount.h"
 #include "main/dll/partfx_interface.h"
 #include "main/obj_path.h"
@@ -54,7 +55,6 @@ s16 gDIMSnowHorn1MoveIds[2] = {0x103, 0xB};
 f32 gDIMSnowHorn1MoveSpeeds[2] = {0.0031f, 0.005f};
 s16 gDIMSnowHorn1LocomotionMoveIds[4] = {0, 3, 0, 0};
 
-#define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */
 #define DIMSNOWHORN1_AIRMETER_BGTEXTURE 0x5d0 /* HUD air-meter background texture id */
 
 /* DIMSnowHorn1State.flags bits */
@@ -942,7 +942,7 @@ int DIMSnowHorn1_getObjectTypeId(void) {
 }
 
 void DIMSnowHorn1_free(GameObject* obj) {
-    objFreeObjectType(obj, DIMSNOWHORN1_OBJGROUP);
+    objFreeObjectType(obj, VEHICLE_OBJECT_GROUP);
 }
 
 void DIMSnowHorn1_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible) {
@@ -1216,7 +1216,7 @@ void DIMSnowHorn1_init(GameObject* obj, DIMSnowHorn1Placement* def, int spawnFla
     s8 idx;
     (obj)->anim.rotX = (s16)(def->spawnRot << 8);
     (obj)->animEventCallback = (void*)DIMSnowHorn1_animEventCallback;
-    objAddObjectType(obj, DIMSNOWHORN1_OBJGROUP);
+    objAddObjectType(obj, VEHICLE_OBJECT_GROUP);
     inner = (obj)->extra;
     inner->mode = def->spawnVariant;
     inner->advanceCountThreshold = 5;
