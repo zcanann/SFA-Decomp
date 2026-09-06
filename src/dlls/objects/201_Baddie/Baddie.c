@@ -862,7 +862,8 @@ void enemy_applyFloorResponse(GameObject* obj, EnemyState* state) {
     }
     if ((state->flags2E4 & 0x00200000) != 0) {
         ObjPath_GetPointWorldPositionArray(obj, 2, 2, points);
-        objAudioDispatchEventMask(obj, state->animEventMask, 7, points, &state->curvesCollision, state->pathSpeed, 1.0f);
+        objAudioDispatchEventMask(obj, state->animEventMask, 7, points, &state->curvesCollision, state->pathSpeed,
+                                  1.0f);
     }
 }
 
@@ -2462,8 +2463,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag) {
             memset(*(void**)state, 0, sizeof(RomCurveWalker));
         }
         if ((*gRomCurveInterface)
-                ->initCurve(*(void**)state, (void*)obj, enemyState->sightRange, (int*)&lbl_803DBC58, -1) ==
-            0) {
+                ->initCurve(*(void**)state, (void*)obj, enemyState->sightRange, (int*)&lbl_803DBC58, -1) == 0) {
             enemyState->controlFlags |= BADDIE_CONTROL_PATH_FOLLOW;
         }
         (*gPathControlInterface)->init(state + 4, 0, 422, 1);
