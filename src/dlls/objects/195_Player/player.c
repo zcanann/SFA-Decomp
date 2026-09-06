@@ -316,7 +316,7 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
 void playerUpdateTargetSelection(GameObject* obj, PlayerState* inner, PlayerState* inner2);
 void playerAnimate(GameObject* obj, PlayerState* state, f32 fv);
 void playerInitFuncPtrs(void);
-int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb);
+int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hit, f32* out, f32* vec, f32 distance, f32 updateRate);
 int player_probeClimbable(GameObject* obj, int p4, TrackLineIntersectResult* src, int dst, int flag);
 int playerStateClimbLedge(int obj, int state, f32 fv);
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag);
@@ -9984,7 +9984,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             if (!(hd < 15.0f)) {
                 continue;
             }
-            switch (playerBuildWallTransitionProbe((GameObject*)obj, (char*)&buf, (f32*)(state + 0x5a8), end, hd, fv)) {
+            switch (playerBuildWallTransitionProbe((GameObject*)obj, &buf, (f32*)(state + 0x5a8), end, hd, fv)) {
             case 4:
                 return 8;
             case 5:
@@ -10248,9 +10248,10 @@ int playerBuildWallPlaneProbe(int p1, int p2, TrackLineIntersectResult* src, f32
     return 0;
 }
 
-int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb) {
+int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hit, f32* out, f32* vec, f32 distance, f32 updateRate) {
+    EmitPlane* plane;
     f32* dp;
-    char* cp;
+    char* hitCursor;
     f32* px2;
     f32* py2;
     f32* pz2;
@@ -10260,8 +10261,7 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
     int wallHit;
     int tris;
     int verts;
-    ObjAnimComponent* parent;
-    f32* pl;
+    GameObject* parent;
 
     f32 x2;
     f32 x1;
@@ -10270,7 +10270,7 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
     f32 y2;
     f32 y1;
     TrackGroundHit** list;
-    f32 planes[8];
+    EmitPlane planes[2];
     struct {
         f32 x;
         f32 y;
@@ -10280,8 +10280,8 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
 
     mode = 0;
     inner = obj->extra;
-    if (fa <= inner->baddie.animSpeedA * fb || fa <= 3.5f) {
-        s8 st = *(s8*)(cam + 0x50);
+    if (distance <= inner->baddie.animSpeedA * updateRate || distance <= 3.5f) {
+        s8 st = hit->surfaceType;
         if (st == 2 || st == 0x11) {
             mode = 4;
         } else if (inner->baddie.animSpeedA >= 1.2530199f) {
@@ -10290,54 +10290,54 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
             mode = 4;
         }
     }
-    out[7] = ((GameObject*)cam)->anim.worldPosY;
-    out[8] = ((GameObject*)cam)->anim.worldPosZ;
-    out[9] = ((GameObject*)cam)->anim.velocityX;
+    out[7] = hit->normalX;
+    out[8] = hit->normalY;
+    out[9] = hit->normalZ;
     out[7] = -out[7];
     out[8] = -out[8];
     out[9] = -out[9];
-    out[10] = -((GameObject*)cam)->anim.velocityY;
+    out[10] = -hit->normalW;
     out[0xb] = vec[0];
     out[0xc] = vec[1];
     out[0xd] = vec[2];
-    parent = *(void**)cam;
+    parent = hit->object;
     if (mode == 4) {
         f32 thresh;
         int i;
         int j;
         wallHit = 0;
         if (parent != NULL) {
-            tris = (int)parent->modelInstance->intersectionLines;
-            verts = (int)parent->modelInstance->intersectionPoints;
+            tris = (int)parent->anim.modelInstance->intersectionLines;
+            verts = (int)parent->anim.modelInstance->intersectionPoints;
         } else {
             tris = gIntersectLinePool;
             verts = (int)gIntersectPoints;
         }
-        planes[0] = out[9];
-        planes[1] = 0.0f;
-        planes[2] = -out[7];
-        planes[3] = -(planes[0] * *(f32*)(cam + 0x4) + planes[2] * ((GameObject*)cam)->anim.localPosZ);
-        planes[4] = -planes[0];
-        planes[5] = 0.0f;
-        planes[6] = -planes[2];
-        planes[7] =
-            -(planes[4] * ((GameObject*)cam)->anim.rootMotionScale + planes[6] * ((GameObject*)cam)->anim.worldPosX);
+        planes[0].nx = out[9];
+        planes[0].ny = 0.0f;
+        planes[0].nz = -out[7];
+        planes[0].d = -(planes[0].nx * hit->lineStartX + planes[0].nz * hit->lineStartZ);
+        planes[1].nx = -planes[0].nx;
+        planes[1].ny = 0.0f;
+        planes[1].nz = -planes[0].nz;
+        planes[1].d =
+            -(planes[1].nx * hit->lineEndX + planes[1].nz * hit->lineEndZ);
         i = 0;
-        pl = planes;
+        plane = planes;
         dp = dists;
-        cp = cam;
+        hitCursor = (char*)hit;
         b6b8 = lbl_803DC6B8;
         px2 = &x2;
         py2 = &y2;
         pz2 = &z2;
         thresh = 0.5f;
         do {
-            f32 dot = PSVECDotProduct((Vec*)pl, (Vec*)vec);
-            *dp = pl[3] + dot;
+            f32 dot = PSVECDotProduct((Vec*)plane, (Vec*)vec);
+            *dp = plane->d + dot;
             if (*dp < thresh + b6b8[1]) {
                 int tri;
-                if (*(s16*)(cp + 0x4c) > -1) {
-                    tri = tris + *(s16*)(cp + 0x4c) * 0x10;
+                if (*(s16*)(hitCursor + offsetof(TrackLineIntersectResult, adjacentLine0)) > -1) {
+                    tri = tris + *(s16*)(hitCursor + offsetof(TrackLineIntersectResult, adjacentLine0)) * 0x10;
                 } else {
                     tri = 0;
                 }
@@ -10351,8 +10351,8 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
                     y2 = 0.0f;
                     z2 = ((f32*)verts)[j * 3 + 2];
                     if (parent != NULL) {
-                        Obj_TransformLocalPointToWorld(x1, y1, z1, &x1, &y1, &z1, (void*)parent);
-                        Obj_TransformLocalPointToWorld(x2, y2, z2, px2, py2, pz2, (void*)parent);
+                        Obj_TransformLocalPointToWorld(x1, y1, z1, &x1, &y1, &z1, parent);
+                        Obj_TransformLocalPointToWorld(x2, y2, z2, px2, py2, pz2, parent);
                     }
                     {
                         f32 dz = z2 - z1;
@@ -10368,9 +10368,9 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
                     wallHit = 1;
                 }
             }
-            pl += 4;
+            plane++;
             dp++;
-            cp += 2;
+            hitCursor += 2;
             i++;
         } while (i < 2);
         if (dists[0] < dists[1]) {
@@ -10380,9 +10380,9 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
         }
         if (wallHit != 0) {
             out[0xb] = out[0xb] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
-                                      planes[(u32) * (u8*)((char*)out + 0x5f) * 4];
+                                      planes[*(u8*)((char*)out + 0x5f)].nx;
             out[0xd] = out[0xd] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
-                                      planes[(u32) * (u8*)((char*)out + 0x5f) * 4 + 2];
+                                      planes[*(u8*)((char*)out + 0x5f)].nz;
         }
         out[0x11] = -(out[7] * (0.5f + lbl_803DC6C0) - out[0xb]);
         out[0x13] = -(out[9] * (0.5f + lbl_803DC6C0) - out[0xd]);
@@ -10391,8 +10391,8 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
             out[0x14] = f * out[7] + out[0xb];
             out[0x16] = f * out[9] + out[0xd];
         }
-        out[1] = ((GameObject*)cam)->anim.localPosX +
-                 *(f32*)(cam + 0x48) * (((GameObject*)cam)->anim.localPosY - ((GameObject*)cam)->anim.localPosX);
+        out[1] = hit->lineStartY +
+                 hit->interpolation * (hit->lineEndY - hit->lineStartY);
         probe.x = out[0x14];
         probe.y = out[1];
         probe.z = out[0x16];
@@ -10400,23 +10400,20 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
         {
             int cnt = trackGetHeight(obj, probe.x, probe.y, probe.z, &list, 0, 0x201);
             if (cnt != 0) {
-                TrackGroundHit** pp;
                 f32 best = 10000.0f;
                 f32 dy;
                 f32 best2 = best;
                 int bi = -1;
                 int i2 = 0;
-                pp = list;
                 for (; cnt > 0; cnt--) {
-                    dy = probe.y - (*pp)->height;
+                    dy = probe.y - list[i2]->height;
                     if (dy >= 0.0f && (best < 0.0f || dy < best)) {
                         best = dy;
                         bi = i2;
                     }
-                    if ((*pp)->normalY > 0.707f && dy >= 0.0f && (best2 < 0.0f || dy < best2)) {
+                    if (list[i2]->normalY > 0.707f && dy >= 0.0f && (best2 < 0.0f || dy < best2)) {
                         best2 = dy;
                     }
-                    pp++;
                     i2++;
                 }
                 if (best < 40.0f && bi != -1 && list[bi]->normalY <= 0.707f && list[bi]->normalY > 0.175f) {
@@ -10436,10 +10433,10 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
         } else {
             out[0x12] = out[1];
         }
-        out[2] = ((GameObject*)cam)->anim.localPosX;
+        out[2] = hit->lineStartY;
         out[0] = out[1] - out[2];
-        *(u8*)((char*)out + 0x5e) = *(u8*)(cam + 0x50);
-        *(u8*)((char*)out + 0x60) = *(u8*)(cam + 0x53);
+        *(u8*)((char*)out + 0x5e) = hit->surfaceType;
+        *(u8*)((char*)out + 0x60) = hit->pad53;
         if (obj->anim.parent != NULL) {
             Obj_TransformLocalPointToWorld(out[0xb], out[0xc], out[0xd], out + 0xb, out + 0xc, out + 0xd,
                                            obj->anim.parent);
@@ -10451,8 +10448,8 @@ int playerBuildWallTransitionProbe(GameObject* obj, char* cam, f32* out, f32* ve
             inner->leapBaseY = inner->leapBaseY + *(f32*)((char*)obj->anim.parent + 0x10);
         }
         *(u8*)((char*)out + 0x61) = 1;
-        if (parent != NULL && (parent->modelInstance->flags & 0x8000) == 0) {
-            inner->groundObject = (void*)parent;
+        if (parent != NULL && (parent->anim.modelInstance->flags & 0x8000) == 0) {
+            inner->groundObject = parent;
         } else {
             inner->groundObject = NULL;
         }
@@ -11185,7 +11182,7 @@ void playerCacheMoveRootHeights(GameObject* obj) {
     GameObject* object;
     PlayerState* player;
     s16* moveTable;
-    s16 moveIndex;
+    s16 cacheIndex;
     s16 moveTableIndex;
     s16 jointRotation[3];
     f32 jointPosition[3];
@@ -11199,18 +11196,20 @@ void playerCacheMoveRootHeights(GameObject* obj) {
     ObjModel_SampleJointTransform(model, 0, 0, 0.0f, object->anim.rootMotionScale, jointPosition, jointRotation);
     gPlayerMoveRootHeights[0] = jointPosition[1];
 
+    cacheIndex = 1;
     ObjAnim_SetCurrentMove(obj, lbl_80332F2C[0], 0.0f, 0);
     ObjModel_SampleJointTransform(model, 0, 0, 0.0f, object->anim.rootMotionScale, jointPosition, jointRotation);
-    gPlayerMoveRootHeights[1] = jointPosition[1];
+    gPlayerMoveRootHeights[cacheIndex] = jointPosition[1];
 
-    moveIndex = 12;
+    /* Skip cache slots 2 through 11. */
+    cacheIndex += 11;
     moveTableIndex = 17;
-    while (moveIndex <= 15) {
+    while (cacheIndex <= 15) {
         ObjAnim_SetCurrentMove(obj, lbl_80332F48[moveTableIndex], 0.0f, 0);
         ObjModel_SampleJointTransform(model, 0, 0, 0.0f, object->anim.rootMotionScale, jointPosition, jointRotation);
-        gPlayerMoveRootHeights[moveIndex] = jointPosition[1];
+        gPlayerMoveRootHeights[cacheIndex] = jointPosition[1];
         moveTableIndex++;
-        moveIndex++;
+        cacheIndex++;
     }
     ObjAnim_WriteStateWord(&object->anim, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
@@ -14325,6 +14324,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
     char* tbl = (char*)lbl_80332EC0;
     PlayerSeqPlacement* placement = (PlayerSeqPlacement*)((GameObject*)obj2)->anim.placementData;
     int inner = (int)((GameObject*)obj)->extra;
+    BaddieState* controller = &((PlayerState*)inner)->baddie;
     int result = 0;
     int va;
     int vb;
@@ -14539,7 +14539,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                     (*gPlayerInterface)->setState((void*)obj, (void*)inner, 1);
                     *(void (**)(int, int))((char*)inner + 0x304) =
                         (void (*)(int, int))playerStagedRestoreDefaultControl;
-                    ((PlayerState*)inner)->baddie.prevControlMode = 1;
+                    controller->prevControlMode = 1;
                 }
             } else {
                 f32 prev = seq->posOffsetScale;
@@ -14639,17 +14639,17 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                     result = 0;
                 } else {
                     f32 fz3 = 0.0f;
-                    ((PlayerState*)inner)->baddie.moveInputX = fz3;
-                    ((PlayerState*)inner)->baddie.moveInputZ = fz3;
+                    controller->moveInputX = fz3;
+                    controller->moveInputZ = fz3;
                     (*gPlayerInterface)->setOverride((void*)obj2);
-                    ((PlayerState*)inner)->baddie.pressedButtons = 0;
-                    *(int*)&((PlayerState*)inner)->baddie.heldButtons = 0;
+                    controller->pressedButtons = 0;
+                    *(int*)&controller->heldButtons = 0;
                     ((GameObject*)obj)->userData1 = 0;
-                    ((PlayerState*)inner)->baddie.cameraYaw = 0;
-                    ((PlayerState*)inner)->baddie.physicsActive = 1;
-                    ((PlayerState*)inner)->baddie.flags4 = ((PlayerState*)inner)->baddie.flags4 & ~0x100000;
+                    controller->cameraYaw = 0;
+                    controller->physicsActive = 1;
+                    controller->flags4 = controller->flags4 & ~0x100000;
                     ((PlayerState*)inner)->emissionState = 0;
-                    playerUpdateMotionState((GameObject*)obj, (void*)inner, &((PlayerState*)inner)->baddie);
+                    playerUpdateMotionState((GameObject*)obj, (void*)inner, controller);
                     (*gPlayerInterface)
                         ->update((void*)obj, (void*)inner, timeDelta, timeDelta, gPlayerStateHandlers,
                                  &gPlayerDefaultStateHandler);
@@ -14659,20 +14659,20 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                 dz2 = dz2 / d2;
                 {
                     f32 k = 40.0f;
-                    ((PlayerState*)inner)->baddie.moveInputX = k * -dx2;
-                    ((PlayerState*)inner)->baddie.moveInputZ = k * dz2;
+                    controller->moveInputX = k * -dx2;
+                    controller->moveInputZ = k * dz2;
                 }
                 ((GameObject*)obj)->anim.localPosX = dist * dx2 + seq->posOffsetX;
                 ((GameObject*)obj)->anim.localPosZ = dist * dz2 + seq->posOffsetZ;
                 (*gPlayerInterface)->setOverride((void*)obj2);
-                ((PlayerState*)inner)->baddie.pressedButtons = 0;
-                *(int*)&((PlayerState*)inner)->baddie.heldButtons = 0;
+                controller->pressedButtons = 0;
+                *(int*)&controller->heldButtons = 0;
                 ((GameObject*)obj)->userData1 = 0;
-                ((PlayerState*)inner)->baddie.cameraYaw = 0;
-                ((PlayerState*)inner)->baddie.physicsActive = 1;
-                ((PlayerState*)inner)->baddie.flags4 = ((PlayerState*)inner)->baddie.flags4 & ~0x100000;
+                controller->cameraYaw = 0;
+                controller->physicsActive = 1;
+                controller->flags4 = controller->flags4 & ~0x100000;
                 ((PlayerState*)inner)->emissionState = 0;
-                playerUpdateMotionState((GameObject*)obj, (void*)inner, &((PlayerState*)inner)->baddie);
+                playerUpdateMotionState((GameObject*)obj, (void*)inner, controller);
                 (*gPlayerInterface)
                     ->update((void*)obj, (void*)inner, timeDelta, timeDelta, gPlayerStateHandlers,
                              &gPlayerDefaultStateHandler);
@@ -14682,22 +14682,22 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
         if ((s8)seq->movementState == 0) {
             (*gPlayerInterface)->setState((void*)obj, (void*)inner, 1);
             *(void (**)(int, int))((char*)inner + 0x304) = (void (*)(int, int))playerStagedRestoreDefaultControl;
-            ((PlayerState*)inner)->baddie.prevControlMode = 1;
+            controller->prevControlMode = 1;
         }
     } else {
         seq->flags |= seq->savedFlags & ~0x400;
-        ((PlayerState*)inner)->baddie.movementFlags = 0;
+        controller->movementFlags = 0;
         {
             f32 fz2 = 0.0f;
-            ((PlayerState*)inner)->baddie.moveInputX = fz2;
-            ((PlayerState*)inner)->baddie.moveInputZ = fz2;
+            controller->moveInputX = fz2;
+            controller->moveInputZ = fz2;
         }
-        ((PlayerState*)inner)->baddie.cameraYaw = 0;
-        ((PlayerState*)inner)->baddie.pressedButtons = 0;
-        *(int*)&((PlayerState*)inner)->baddie.heldButtons = 0;
+        controller->cameraYaw = 0;
+        controller->pressedButtons = 0;
+        *(int*)&controller->heldButtons = 0;
         if (seq->flags & 1) {
-            ((PlayerState*)inner)->baddie.flags4 |= 0x100000;
-            ((PlayerState*)inner)->baddie.physicsActive = 0;
+            controller->flags4 |= 0x100000;
+            controller->physicsActive = 0;
         }
         for (vb = 0; vb < seq->eventCount; vb++) {
             switch (seq->eventIds[vb]) {
@@ -14795,7 +14795,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                 ((PlayerState*)inner)->moveSequence = 0;
                 if ((u32)obj2 != 0 && ((GameObject*)obj2)->anim.romDefNo == 0x22) {
                     (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x16);
-                    ((PlayerState*)inner)->baddie.stateExitFn = NULL;
+                    controller->stateExitFn = NULL;
                 } else {
                     (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x18);
                     *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))playerStagedClearActiveMove;
@@ -14818,7 +14818,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
             case 6:
                 (*gObjectTriggerInterface)->setCamVars(CAMERA_MODE_VIEWFINDER_RESOURCE_ID, 0, 0, 0);
                 (*gPlayerInterface)->setState((void*)obj, (void*)inner, 0x17);
-                ((PlayerState*)inner)->baddie.stateExitFn = NULL;
+                controller->stateExitFn = NULL;
                 break;
             case 7:
                 seq->flags &= ~3;
@@ -15010,9 +15010,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
                     if (mapVal < 0) {
                         vv = 0;
                     } else {
-                        s8 cur2 = *(s8*)(*(int*)(h + 0x35c) + 1);
-                        if (mapVal > cur2) {
-                            vv = cur2;
+                        int maxHealth = *(s8*)(*(int*)(h + 0x35c) + 1);
+                        if (mapVal > maxHealth) {
+                            vv = maxHealth;
                         }
                     }
                     ((PlayerState*)h)->playerStatus->health = vv;
@@ -15090,8 +15090,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
     }
     ((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     objAudioDispatchAnimEvents((GameObject*)obj, &seq->animEvents, ((PlayerState*)inner)->animSoundId,
-                               (void*)((char*)inner + 0x3c4), &((PlayerState*)inner)->baddie.curvesCollision,
-                               ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
+                               (void*)((char*)inner + 0x3c4), &controller->curvesCollision,
+                               controller->animSpeedA, 1.0f);
     return result;
 }
 

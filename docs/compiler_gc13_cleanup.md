@@ -575,3 +575,48 @@ checks pass. Every landing passes strict matching and `ninja all_source` with
 Local before/after objects, source/format commit packets, and aggregate counts
 are under `build/gc13_migration/native_family/`; full compiler controls are
 under the corresponding `build/gc13_indexed/` TU directories.
+
+
+## September 6: Player wall probe, root cache, and sequence prefix
+
+Two more functions become exact, adding **2,168 matched code bytes**:
+
+| Function | Bytes | Before | After |
+| --- | ---: | ---: | ---: |
+| `playerBuildWallTransitionProbe` | 1,816 | 98.57929% | **100%** |
+| `playerCacheMoveRootHeights` | 352 | 97.045456% | **100%** |
+
+The wall probe consumes the existing `TrackLineIntersectResult` and uses
+its real collision object, normals, endpoints, interpolation fraction,
+surface type, and trailing byte. Two `EmitPlane` records replace the flat
+eight-float plane buffer. Declaring the plane cursor first and indexing the
+ground-hit list reproduce the retail registers. The two-byte line cursor
+retains its byte-pointer storage shape with the canonical `offsetof` at
+each adjacent-line read. Its caller remains exact.
+
+The root-height helper uses one cache index for slot 1 and the later
+slots 12–15. Advancing the index across the skipped slots preserves GC/1.3's
+retail `li`/`slwi` loop setup. The sampled move IDs and cache stores are
+unchanged. A direct constant assignment folds this setup two instructions
+short; the incremented-index controls established that difference before
+retaining the reused cache cursor.
+
+`player_SeqFn` advances from 99.091156% to **99.97034%**. A typed pointer
+to the common `BaddieState` prefix fixes its broad allocation differences,
+and promoting the signed-byte health limit to `int` fixes seven remaining
+register operands. Eleven differences remain: nine operands in vehicle
+selection and two in the initial maximum-health read.
+
+Player reaches **230/233 exact functions**, **99.989075% fuzzy agreement**,
+and **125,428/139,108 exact code bytes**. The remaining functions are
+`playerStateMoving`, `playerState25`, and `player_SeqFn`. Only the three
+functions changed in this pass alter their instructions. All allocated
+data, section layouts, and data-symbol offsets are unchanged. Relative
+relocations are unchanged outside the root-height helper, whose added
+setup instructions move its later call relocations. Assigned data remains
+**10,168/10,168 bytes exact**; the TU retains GC/1.3 and NonMatching status.
+
+The strict retail checksum, `ninja all_source`, and generated-path audit
+pass after rebasing onto current staging. Formatting is a separate commit
+and is checked against the complete pre-format object. Controls and audits
+are under `build/gc13_new_matches/player_round6*`.
