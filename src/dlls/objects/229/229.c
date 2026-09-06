@@ -220,8 +220,8 @@ void Shield_setMode(GameObject* obj, u8 mode) {
                     valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *tableCursor[0] * wave;
                     valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
                     phaseCursor[SHIELD_SEGMENT_RATE_S16_INDEX] =
-                        (s16)((f32)(i * randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN,
-                                                            SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
+                        (s16)((f32)(i *
+                                    randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
                               SHIELD_SEGMENT_RATE_BASE);
                     phaseCursor += 1;
                     tableCursor[0] += 1;
@@ -340,8 +340,7 @@ void Shield_setMode(GameObject* obj, u8 mode) {
                 valueCursor[SHIELD_SEGMENT_SCALE_F32_INDEX] = *segmentScaleCursor * wave;
                 valueCursor[SHIELD_SEGMENT_ALPHA_F32_INDEX] = *segmentAlphaCursor;
                 phaseCursor[SHIELD_SEGMENT_RATE_S16_INDEX] =
-                    (s16)((f32)(i *
-                                     randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
+                    (s16)((f32)(i * randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
                           SHIELD_SEGMENT_RATE_BASE);
                 phaseCursor += 1;
                 segmentScaleCursor += 1;
