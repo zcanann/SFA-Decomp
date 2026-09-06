@@ -3,14 +3,6 @@
 
 static f32 Unit01[] = {0.0f, 1.0f};
 
-__declspec(section ".sdata2") const f32 lbl_803E7618 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") const f32 lbl_803E761C = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") const f32 lbl_803E7620 = 2.0f;
-__declspec(section ".sdata2") const f32 lbl_803E7624 = -1.0f;
-__declspec(section ".sdata2") const f32 lbl_803E7628 = 0.5f;
-__declspec(section ".sdata2") const f32 lbl_803E762C = 0.017453292f;
 
 #define Mtx_00                  0x0
 #define Mtx_01                  0x4
@@ -25,12 +17,29 @@ __declspec(section ".sdata2") const f32 lbl_803E762C = 0.017453292f;
 #define Mtx_22                  0x28
 #define Mtx_23                  0x2c
 #define qr0                     0
-#define LOAD_SDATA2_FLOAT(name) (*(const volatile f32*)&(name))
+
+void C_MTXIdentity(Mtx m)
+{
+  m[0][0] = 1.0f;
+  m[0][1] = 0.0f;
+  m[0][2] = 0.0f;
+  m[0][3] = 0.0f;
+
+  m[1][0] = 0.0f;
+  m[1][1] = 1.0f;
+  m[1][2] = 0.0f;
+  m[1][3] = 0.0f;
+
+  m[2][0] = 0.0f;
+  m[2][1] = 0.0f;
+  m[2][2] = 1.0f;
+  m[2][3] = 0.0f;
+}
 
 #ifdef GEKKO
 void PSMTXIdentity(register Mtx m) {
-    register f32 c_zero = LOAD_SDATA2_FLOAT(lbl_803E761C);
-    register f32 c_one = LOAD_SDATA2_FLOAT(lbl_803E7618);
+    register f32 c_zero = 0.0f;
+    register f32 c_one = 1.0f;
     register f32 c_01;
     register f32 c_10;
 
@@ -125,7 +134,7 @@ asm void PSMTXConcat(const register Mtx mA, const register Mtx mB, register Mtx 
 // clang-format on
 
 void PSMTXTranspose(const register Mtx src, register Mtx xPose) {
-    register f32 c_zero = LOAD_SDATA2_FLOAT(lbl_803E761C);
+    register f32 c_zero = 0.0f;
     register f32 row0a;
     register f32 row1a;
     register f32 row0b;
@@ -225,43 +234,20 @@ _regular:
     blr
 }
 
-asm void PSMTXRotRad(Mtx m, char axis, f32 rad)
+void PSMTXRotRad(Mtx m, char axis, f32 rad)
 {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x28(r1)
-    stfd f31, 0x20(r1)
-    stw r31, 0x1c(r1)
-    stw r30, 0x18(r1)
-    fmr f31, f1
-    mr r30, r3
-    mr r31, r4
-    fmr f1, f31
-    bl sinf
-    fmr f0, f1
-    fmr f1, f31
-    fmr f31, f0
-    bl cosf
-    fmr f0, f1
-    mr r3, r30
-    fmr f1, f31
-    mr r4, r31
-    fmr f2, f0
-    bl PSMTXRotTrig
-    lwz r0, 0x2c(r1)
-    lfd f31, 0x20(r1)
-    lwz r31, 0x1c(r1)
-    mtlr r0
-    lwz r30, 0x18(r1)
-    addi r1, r1, 0x28
-    blr
+    f32 sinA, cosA;
+
+    sinA = sinf(rad);
+    cosA = cosf(rad);
+
+    PSMTXRotTrig(m, axis, sinA, cosA);
 }
 // clang-format on
 
 void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, register f32 cosA) {
-    register f32 fc0 = LOAD_SDATA2_FLOAT(lbl_803E761C);
-    register f32 fc1 = LOAD_SDATA2_FLOAT(lbl_803E7618);
+    register f32 fc0 = 0.0f;
+    register f32 fc1 = 1.0f;
     register f32 nsinA;
     register f32 fw0;
     register f32 fw1;
@@ -316,80 +302,62 @@ void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, registe
 }
 
 // clang-format off
-asm void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
+void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
 {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x58(r1)
-    stfd f31, 0x50(r1)
-    stfd f30, 0x48(r1)
-    stfd f29, 0x40(r1)
-    stfd f28, 0x38(r1)
-    stfd f27, 0x30(r1)
-    stw r31, 0x2c(r1)
-    stw r30, 0x28(r1)
-    stw r29, 0x24(r1)
-    fmr f27, f1
-    mr r29, r3
-    mr r30, r4
-    fmr f1, f27
-    lfs f28, lbl_803E761C(r2)
-    addi r31, r1, 0x14
-    bl sinf
-    fmr f30, f1
-    fmr f1, f27
-    bl cosf
-    fmr f31, f1
-    lfs f0, lbl_803E7618(r2)
-    mr r3, r30
-    mr r4, r31
-    fsubs f29, f0, f31
-    bl PSVECNormalize
-    psq_l f27, 0x0(r31), 0, 0
-    lfs f1, 0x1c(r1)
-    ps_merge00 f0, f31, f31
-    ps_muls0 f4, f27, f29
-    ps_muls0 f5, f1, f29
-    ps_muls1 f3, f4, f27
-    ps_muls0 f2, f4, f27
-    ps_muls0 f27, f27, f30
-    ps_muls0 f4, f4, f1
-    fnmsubs f6, f1, f30, f3
-    fmadds f7, f1, f30, f3
-    ps_neg f9, f27
-    ps_sum0 f8, f4, f28, f27
-    ps_sum0 f2, f2, f6, f0
-    ps_sum1 f3, f0, f7, f3
-    ps_sum0 f6, f9, f28, f4
-    ps_sum0 f9, f4, f4, f9
-    psq_st f8, 0x8(r29), 0, 0
-    ps_muls0 f5, f5, f1
-    psq_st f2, 0x0(r29), 0, 0
-    ps_sum1 f4, f27, f9, f4
-    psq_st f3, 0x10(r29), 0, 0
-    ps_sum0 f5, f5, f28, f0
-    psq_st f6, 0x18(r29), 0, 0
-    psq_st f4, 0x20(r29), 0, 0
-    psq_st f5, 0x28(r29), 0, 0
-    lwz r0, 0x5c(r1)
-    lfd f31, 0x50(r1)
-    lfd f30, 0x48(r1)
-    mtlr r0
-    lfd f29, 0x40(r1)
-    lfd f28, 0x38(r1)
-    lfd f27, 0x30(r1)
-    lwz r31, 0x2c(r1)
-    lwz r30, 0x28(r1)
-    lwz r29, 0x24(r1)
-    addi r1, r1, 0x58
-    blr
+    register f32 tmp0, tmp1, tmp2, tmp3, tmp4;
+    register f32 tmp5, tmp6, tmp7, tmp8, tmp9;
+
+    register f32 sT;
+    register f32 cT;
+    register f32 oneMinusCosT;
+    register f32 zero;
+    Vec axisNormalized;
+    register Vec *axisNormalizedPtr;
+
+    zero = 0.0f;
+    axisNormalizedPtr = &axisNormalized;
+    sT = sinf(rad);
+    cT = cosf(rad);
+    oneMinusCosT = 1.0f - cT;
+
+    PSVECNormalize(axis, axisNormalizedPtr);
+
+#ifdef __MWERKS__ // clang-format off
+  asm {
+		psq_l rad, 0x0(axisNormalizedPtr), 0, qr0
+		lfs tmp1, 0x8(axisNormalizedPtr)
+		ps_merge00 tmp0, cT, cT
+		ps_muls0   tmp4, rad, oneMinusCosT
+		ps_muls0   tmp5, tmp1, oneMinusCosT
+		ps_muls1   tmp3, tmp4, rad
+		ps_muls0   tmp2, tmp4, rad
+		ps_muls0   rad, rad, sT
+		ps_muls0   tmp4, tmp4, tmp1
+		fnmsubs    tmp6, tmp1, sT, tmp3
+		fmadds     tmp7, tmp1, sT, tmp3
+		ps_neg     tmp9, rad
+		ps_sum0    tmp8, tmp4, zero, rad
+		ps_sum0    tmp2, tmp2, tmp6, tmp0
+		ps_sum1    tmp3, tmp0, tmp7, tmp3
+		ps_sum0    tmp6, tmp9, zero, tmp4
+		ps_sum0    tmp9, tmp4, tmp4, tmp9
+		psq_st     tmp8, 0x8(m), 0, qr0
+		ps_muls0   tmp5, tmp5, tmp1
+		psq_st     tmp2, 0x0(m), 0, qr0
+		ps_sum1    tmp4, rad, tmp9, tmp4
+		psq_st     tmp3, 0x10(m), 0, qr0
+		ps_sum0    tmp5, tmp5, zero, tmp0
+		psq_st     tmp6, 0x18(m), 0, qr0
+		psq_st     tmp4, 0x20(m), 0, qr0
+		psq_st     tmp5, 0x28(m), 0, qr0
+  }
+#endif // clang-format on
 }
 // clang-format on
 
 void PSMTXTrans(register Mtx m, register f32 xT, register f32 yT, register f32 zT) {
-    register f32 c0 = LOAD_SDATA2_FLOAT(lbl_803E761C);
-    register f32 c1 = LOAD_SDATA2_FLOAT(lbl_803E7618);
+    register f32 c0 = 0.0f;
+    register f32 c1 = 1.0f;
 
     asm {
         stfs xT, Mtx_03(m)
@@ -406,7 +374,7 @@ void PSMTXTrans(register Mtx m, register f32 xT, register f32 yT, register f32 z
 }
 
 void PSMTXScale(register Mtx m, register f32 xS, register f32 yS, register f32 zS) {
-    register f32 c0 = LOAD_SDATA2_FLOAT(lbl_803E761C);
+    register f32 c0 = 0.0f;
 
     asm {
         stfs xS, Mtx_00(m)
@@ -421,99 +389,73 @@ void PSMTXScale(register Mtx m, register f32 xS, register f32 yS, register f32 z
 }
 
 // clang-format off
-asm void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT)
+void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS, f32 scaleT, f32 transS, f32 transT)
 {
-    nofralloc
-    mflr r0
-    stw r0, 0x4(r1)
-    stwu r1, -0x58(r1)
-    stfd f31, 0x50(r1)
-    stfd f30, 0x48(r1)
-    stfd f29, 0x40(r1)
-    stfd f28, 0x38(r1)
-    stfd f27, 0x30(r1)
-    stw r31, 0x2c(r1)
-    fmr f27, f2
-    mr r31, r3
-    fmr f28, f3
-    fmr f29, f4
-    fmr f30, f5
-    fmr f31, f6
-    lfs f2, lbl_803E7628(r2)
-    lfs f0, lbl_803E762C(r2)
-    fmuls f1, f2, f1
-    fmuls f1, f0, f1
-    bl tanf
-    lfs f3, lbl_803E7618(r2)
-    fneg f2, f30
-    fneg f0, f31
-    fdivs f4, f3, f1
-    fdivs f1, f4, f27
-    fmuls f3, f28, f1
-    fmuls f1, f4, f29
-    stfs f3, 0x0(r31)
-    lfs f3, lbl_803E761C(r2)
-    stfs f3, 0x4(r31)
-    stfs f2, 0x8(r31)
-    stfs f3, 0xc(r31)
-    stfs f3, 0x10(r31)
-    stfs f1, 0x14(r31)
-    stfs f0, 0x18(r31)
-    stfs f3, 0x1c(r31)
-    stfs f3, 0x20(r31)
-    stfs f3, 0x24(r31)
-    lfs f0, lbl_803E7624(r2)
-    stfs f0, 0x28(r31)
-    stfs f3, 0x2c(r31)
-    lwz r0, 0x5c(r1)
-    lfd f31, 0x50(r1)
-    lfd f30, 0x48(r1)
-    mtlr r0
-    lfd f29, 0x40(r1)
-    lfd f28, 0x38(r1)
-    lfd f27, 0x30(r1)
-    lwz r31, 0x2c(r1)
-    addi r1, r1, 0x58
-    blr
+    f32 tmp;
+
+    tmp = 1.0f / (r - l);
+    m[0][0] = ((2.0f * n) * tmp) * scaleS;
+    m[0][1] = 0.0f;
+    m[0][2] = (((r + l) * tmp) * scaleS) - transS;
+    m[0][3] = 0.0f;
+
+    tmp = 1.0f / (t - b);
+    m[1][0] = 0.0f;
+    m[1][1] = ((2.0f * n) * tmp) * scaleT;
+    m[1][2] = (((t + b) * tmp) * scaleT) - transT;
+    m[1][3] = 0.0f;
+
+    m[2][0] = 0.0f;
+    m[2][1] = 0.0f;
+    m[2][2] = -1.0f;
+    m[2][3] = 0.0f;
 }
 
-asm void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)
+void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT)
 {
-    nofralloc
-    fsubs f10, f4, f3
-    lfs f11, lbl_803E7618(r2)
-    fsubs f0, f1, f2
-    lfs f9, lbl_803E7620(r2)
-    fadds f3, f4, f3
-    fdivs f12, f11, f10
-    fdivs f10, f11, f0
-    fmuls f4, f9, f12
-    fneg f3, f3
-    fadds f0, f1, f2
-    fmuls f1, f4, f5
-    fmuls f2, f12, f3
-    fneg f0, f0
-    stfs f1, 0x0(r3)
-    fmuls f1, f9, f10
-    fmuls f2, f5, f2
-    lfs f3, lbl_803E761C(r2)
-    fmuls f0, f10, f0
-    stfs f3, 0x4(r3)
-    fadds f2, f7, f2
-    fmuls f1, f1, f6
-    stfs f3, 0x8(r3)
-    fmuls f0, f6, f0
-    stfs f2, 0xc(r3)
-    stfs f3, 0x10(r3)
-    fadds f0, f8, f0
-    stfs f1, 0x14(r3)
-    stfs f3, 0x18(r3)
-    stfs f0, 0x1c(r3)
-    stfs f3, 0x20(r3)
-    stfs f3, 0x24(r3)
-    stfs f3, 0x28(r3)
-    stfs f11, 0x2c(r3)
-    blr
+    f32 angle;
+    f32 cot;
+
+    angle = fovY * 0.5f;
+    angle = MTXDegToRad(angle);
+
+    cot = 1.0f / tanf(angle);
+
+    m[0][0] = (cot / aspect) * scaleS;
+    m[0][1] = 0.0f;
+    m[0][2] = -transS;
+    m[0][3] = 0.0f;
+
+    m[1][0] = 0.0f;
+    m[1][1] = cot * scaleT;
+    m[1][2] = -transT;
+    m[1][3] = 0.0f;
+
+    m[2][0] = 0.0f;
+    m[2][1] = 0.0f;
+    m[2][2] = -1.0f;
+    m[2][3] = 0.0f;
+}
+
+void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)
+{
+    f32 tmp;
+    tmp = 1.0f / (r - l);
+    m[0][0] = (2.0f * tmp * scaleS);
+    m[0][1] = 0.0f;
+    m[0][2] = 0.0f;
+    m[0][3] = ((-(r + l) * tmp) * scaleS) + transS;
+
+    tmp = 1.0f / (t - b);
+    m[1][0] = 0.0f;
+    m[1][1] = (2.0f * tmp) * scaleT;
+    m[1][2] = 0.0f;
+    m[1][3] = ((-(t + b) * tmp) * scaleT) + transT;
+
+    m[2][0] = 0.0f;
+    m[2][1] = 0.0f;
+    m[2][2] = 0.0f;
+    m[2][3] = 1.0f;
 }
 // clang-format on
 

@@ -73,6 +73,7 @@ class ActiveCompilerProfileTests(unittest.TestCase):
 
     def test_sdk_and_middleware_keep_their_profiles(self):
         expected = {
+            "dolphin/mtx/mtx.c": "GC/1.2.5",
             "dolphin/mtx/vec.c": "GC/1.2.5",
             "dolphin/thp/THPDec.c": "GC/1.2.5",
             "dolphin/OdemuExi2/DebuggerDriver.c": "GC/1.2.5",
@@ -99,6 +100,11 @@ class ActiveCompilerProfileTests(unittest.TestCase):
         obj = self.objects["dolphin/mtx/vec.c"]
         self.assertEqual(obj.options["mw_version"], "GC/1.2.5")
         self.assertEqual(obj.options["extra_cflags"], ["-fp_contract", "off"])
+
+    def test_matrix_projection_preserves_separate_rounding(self):
+        obj = self.objects["dolphin/mtx/mtx.c"]
+        self.assertEqual(obj.options["mw_version"], "GC/1.2.5")
+        self.assertEqual(obj.options["extra_cflags"], ["-DGEKKO", "-fp_contract", "off"])
 
 
 if __name__ == "__main__":
