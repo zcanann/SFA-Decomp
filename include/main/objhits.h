@@ -94,10 +94,6 @@ extern GameObject* gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJE
 extern ObjHitsContactScratchEntry gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT];
 extern void* gObjHitsPrimaryHitboxBufferScratch0;
 extern void* gObjHitsSecondaryHitboxBufferScratch0;
-extern const f32 gObjHitsScalarZero[1];
-extern const f32 gObjHitsScalarTwo[1];
-extern const f32 gObjHitsScalarTenth[1];
-extern const f32 gObjHitsScalarOne[1];
 extern char sObjHitsTooManyHitSpheresWarning[];
 
 void ObjHitbox_SetStateIndex(GameObject* obj, ObjHitReactState* hitState, int stateIndex);
