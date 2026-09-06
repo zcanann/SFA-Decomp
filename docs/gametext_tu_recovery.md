@@ -149,3 +149,24 @@ bytes; all other source objects remain identical. The two lost exact functions
 account for 940 bytes of code credit. Data credit and the exact 48-byte constant
 pool are unchanged. Both source compilation and the strict checksum gate pass;
 gametext remains `NonMatching`.
+
+## Measurement helper
+
+Calling the existing `gameTextIdExists` inline helper from `gameTextMeasureById`
+replaces the fragment's duplicated search and synthetic `(found = 0, 0)` loop
+condition. This reproduces the complete 312-byte retail function with the common
+TU profile: 99.48718% becomes 100%. No other function bytes or data sections
+change. Normalized relocation destinations also remain identical.
+
+Cursor arguments now carry their meaning through the measurement, renderer, and
+display wrappers. The renderer's former `maxX/maxY/minX/minY` local names were
+misleading: its measurement outputs are actually min X, max X, min Y, max Y in
+that order. Naming them correctly makes the vertical-alignment calculation read
+as window height minus measured height, without changing allocation or codegen.
+
+`python tools/test_gametext_measure.py` executes the production helper and bounds
+function with a mocked renderer. Its 54 cases cover first/middle/last IDs, all
+successful-path output-pointer combinations, empty tables, unavailable fonts,
+absent IDs, mode transitions, and signed quarter-pixel conversion. The retail
+missing-ID path still requires all four output pointers. A wrong shift count
+fails 24 cases. Gametext now has 42/54 exact functions, with unchanged data credit.

@@ -536,28 +536,8 @@ TaskTextEntry gTaskTextTable[208] = {
     {0xFFFF, 0xFFFF, 0xFFFF}, {0xFFFF, 0xFFFF, 0xFFFF}, {0xFFFF, 0xFFFF, 0xFFFF}, {0x0000, 0x0000, 0x0000},
 };
 
-void gameTextMeasureById(int id, int a, int b, int* outMinX, int* outMaxX, int* outMinY, int* outMaxY) {
-    GameTextDef* e;
-    TextFont* fonts;
-    int count;
-    int i;
-    int found;
-
-    fonts = gameTextFonts;
-    if (fonts->status != 2) {
-        found = 0;
-    } else {
-        e = fonts->entries;
-        count = fonts->entryCount;
-        for (i = 0; i != count || (found = 0, 0); i++) {
-            if (e->identifier == id) {
-                found = 1;
-                break;
-            }
-            e++;
-        }
-    }
-    if (!found) {
+void gameTextMeasureById(int textId, int cursorX, int cursorY, int* outMinX, int* outMaxX, int* outMinY, int* outMaxY) {
+    if (!gameTextIdExists(textId)) {
         *outMinX = 0;
         *outMaxX = 0;
         *outMinY = 0;
@@ -569,7 +549,7 @@ void gameTextMeasureById(int id, int a, int b, int* outMinX, int* outMaxX, int* 
     gGameTextBoundsMaxX = 0;
     gGameTextBoundsMinY = 0x7FFFFFFF;
     gGameTextBoundsMaxY = 0;
-    gameTextRenderById(id, a, b);
+    gameTextRenderById(textId, cursorX, cursorY);
     gGameTextMeasureOnly = 0;
     if (outMinY != NULL) {
         *outMinY = gGameTextBoundsMinY >> 2;
@@ -648,14 +628,14 @@ void gameTextMeasureStringBounds(char* str, int boxIdx, int* outMinX, int* outMa
     box->cursorY = savedY;
 }
 
-void gameTextRenderById(int a, int b, int c) {
-    GameTextDef* def = (GameTextDef*)gameTextGet(a);
+void gameTextRenderById(int textId, int cursorX, int cursorY) {
+    GameTextDef* def = (GameTextDef*)gameTextGet(textId);
     TextSlot* slot;
-    u8 save7 = gGameTextColorR;
-    u8 save6 = gGameTextColorG;
-    u8 save5 = gGameTextColorB;
-    u8 save4 = gGameTextColorA;
-    int i;
+    u8 savedRed = gGameTextColorR;
+    u8 savedGreen = gGameTextColorG;
+    u8 savedBlue = gGameTextColorB;
+    u8 savedAlpha = gGameTextColorA;
+    int phraseIndex;
 
     gGameTextRenderingById = 1;
     if (gCurTextBox != NULL) {
@@ -676,25 +656,25 @@ void gameTextRenderById(int a, int b, int c) {
     if (def->alignH == 0) {
         slot->alignment = slot->alignH;
     }
-    slot->cursorX = b;
-    slot->cursorY = c;
+    slot->cursorX = cursorX;
+    slot->cursorY = cursorY;
 
     if (gGameTextMeasureOnly == 0) {
-        int mode;
+        int verticalAlignment;
         if (def->alignV == 0) {
-            mode = slot->alignV;
+            verticalAlignment = slot->alignV;
         } else {
-            mode = def->alignV;
+            verticalAlignment = def->alignV;
         }
-        if (mode == 2 || mode == 3) {
-            int maxX, maxY, minX, minY;
-            int v;
-            gameTextMeasureById(a, b, c, &maxX, &maxY, &minX, &minY);
-            v = slot->height - (minY - minX);
-            if (mode == 2) {
-                slot->cursorY = (s16)(v / 2);
+        if (verticalAlignment == 2 || verticalAlignment == 3) {
+            int minX, maxX, minY, maxY;
+            int remainingHeight;
+            gameTextMeasureById(textId, cursorX, cursorY, &minX, &maxX, &minY, &maxY);
+            remainingHeight = slot->height - (maxY - minY);
+            if (verticalAlignment == 2) {
+                slot->cursorY = (s16)(remainingHeight / 2);
             } else {
-                slot->cursorY = v;
+                slot->cursorY = remainingHeight;
             }
         }
     }
@@ -716,48 +696,48 @@ void gameTextRenderById(int a, int b, int c) {
         }
     }
 
-    i = 0;
-    for (; i < def->count; i++) {
-        gameTextRenderStrs(def->strings[i], slot - (TextSlot*)gTextBoxes);
+    phraseIndex = 0;
+    for (; phraseIndex < def->count; phraseIndex++) {
+        gameTextRenderStrs(def->strings[phraseIndex], slot - (TextSlot*)gTextBoxes);
     }
 
     gGameTextRenderingById = 0;
     if (gGameTextMeasureOnly == 0) {
         Camera_ApplyCurrentViewport(0);
     }
-    gGameTextColorR = save7;
-    gGameTextColorG = save6;
-    gGameTextColorB = save5;
-    gGameTextColorA = save4;
+    gGameTextColorR = savedRed;
+    gGameTextColorG = savedGreen;
+    gGameTextColorB = savedBlue;
+    gGameTextColorA = savedAlpha;
 }
 
-void gameTextShowAt(int a, int b, int c) {
-    int i;
-    GameTextSlot* e;
+void gameTextShowAt(int textId, int cursorX, int cursorY) {
+    int commandIndex;
+    GameTextSlot* command;
     if (gameTextDrawFunc != NULL) {
-        gameTextRenderById(a, b, c);
+        gameTextRenderById(textId, cursorX, cursorY);
     } else {
-        i = gGameTextCommandCount++;
-        e = &gGameTextCommandSlots[i];
-        e->opcode = 2;
-        e->arg0 = a;
-        e->arg1 = b;
-        e->arg2 = c;
+        commandIndex = gGameTextCommandCount++;
+        command = &gGameTextCommandSlots[commandIndex];
+        command->opcode = GAMETEXT_COMMAND_RENDER_BY_ID;
+        command->arg0 = textId;
+        command->arg1 = cursorX;
+        command->arg2 = cursorY;
     }
 }
 
-void gameTextShow(int a) {
-    int i;
-    GameTextSlot* e;
+void gameTextShow(int textId) {
+    int commandIndex;
+    GameTextSlot* command;
     if (gameTextDrawFunc != NULL) {
-        gameTextRenderById(a, 0, 0);
+        gameTextRenderById(textId, 0, 0);
     } else {
-        i = gGameTextCommandCount++;
-        e = &gGameTextCommandSlots[i];
-        e->opcode = 2;
-        e->arg0 = a;
-        e->arg1 = 0;
-        e->arg2 = 0;
+        commandIndex = gGameTextCommandCount++;
+        command = &gGameTextCommandSlots[commandIndex];
+        command->opcode = GAMETEXT_COMMAND_RENDER_BY_ID;
+        command->arg0 = textId;
+        command->arg1 = 0;
+        command->arg2 = 0;
     }
 }
 
