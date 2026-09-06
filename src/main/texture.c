@@ -423,8 +423,8 @@ void Rcp_ResetRenderState(void) {
 }
 
 void textureFree(Texture* tex) {
-    u8* iter;
-    u8* next;
+    Texture* iter;
+    Texture* next;
     if ((u8*)tex == gLoadedTextures[0].texture) {
         return;
     }
@@ -447,7 +447,7 @@ void textureFree(Texture* tex) {
         int i;
         for (i = 0; i < gLoadedTextureCount; i++) {
             if (gLoadedTextures[i].texture == (u8*)tex) {
-                iter = *(u8**)tex;
+                iter = tex->nextAnimationFrame;
                 while (iter != NULL) {
                     if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) {
                         iter = NULL;
@@ -459,11 +459,11 @@ void textureFree(Texture* tex) {
                     if (iter == NULL) {
                         continue;
                     }
-                    next = *(u8**)iter;
-                    if (((Texture*)iter)->preloaded != 0) {
-                        newshadows_releaseTextureEntry((void*)((Texture*)iter)->tmemAddr);
+                    next = iter->nextAnimationFrame;
+                    if (iter->preloaded != 0) {
+                        newshadows_releaseTextureEntry((void*)iter->tmemAddr);
                     }
-                    if (((Texture*)iter)->cached == 0) {
+                    if (iter->cached == 0) {
                         mm_free(iter);
                     }
                     iter = next;
@@ -737,24 +737,24 @@ Texture* textureGetAnimationFrame(Texture* texture, int n) {
     return texture;
 }
 void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT, u8 minFilter, u8 magFilter) {
-    u8* obj;
+    Texture* obj;
     u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + (u32)sizeof(Texture);
-    obj = (u8*)mmAlloc(size, 6, 0);
+    obj = mmAlloc(size, 6, 0);
     if (obj == NULL) {
         return NULL;
     }
     memset(obj, 0, sizeof(Texture) + 4);
-    ((Texture*)obj)->format = fmt;
-    ((Texture*)obj)->width = w;
-    ((Texture*)obj)->height = h;
-    ((Texture*)obj)->animationFrameCount = 1;
-    ((Texture*)obj)->refCount = 0;
-    ((Texture*)obj)->wrapS = wrapS;
-    ((Texture*)obj)->wrapT = wrapT;
-    ((Texture*)obj)->minFilter = minFilter;
-    ((Texture*)obj)->magFilter = magFilter;
-    ((Texture*)obj)->imageOffset = 0;
-    textureInitGXTexObj((Texture*)obj);
+    obj->format = fmt;
+    obj->width = w;
+    obj->height = h;
+    obj->animationFrameCount = 1;
+    obj->refCount = 0;
+    obj->wrapS = wrapS;
+    obj->wrapT = wrapT;
+    obj->minFilter = minFilter;
+    obj->magFilter = magFilter;
+    obj->imageOffset = 0;
+    textureInitGXTexObj(obj);
     return obj;
 }
 
