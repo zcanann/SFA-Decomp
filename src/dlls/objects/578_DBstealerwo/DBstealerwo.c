@@ -412,8 +412,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, BaddieState* baddie, f32 t) {
         sub->advanceMessage = 1;
         return 0;
     }
-    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA,
-                                 &baddie->moveSpeed);
+    ObjAnim_SampleRootCurvePhase(&obj->anim, baddie->animSpeedA, &baddie->moveSpeed);
     return 0;
 }
 
