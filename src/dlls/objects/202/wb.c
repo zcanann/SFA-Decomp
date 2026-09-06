@@ -85,20 +85,15 @@
 #define DUSTER_CHILD_OBJ_POLLEN_SPIT 0x47b
 #define DUSTER_HIT_VOLUME_SLOT       10
 
-
 int gWbCurveInitData[2] = {2, 3};
 
-void wbUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1, Vec* wpad2, int wpad3)
-{
+void wbUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int eventKind, int wpad0, int wpad1,
+                         Vec* wpad2, int wpad3) {
     EnemyState* enemy = (EnemyState*)state;
-    if (eventKind != 0x11)
-    {
-        if (eventKind == 0x10)
-        {
+    if (eventKind != 0x11) {
+        if (eventKind == 0x10) {
             enemy->flags2E8 |= 0x20;
-        }
-        else
-        {
+        } else {
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap_260);
             enemy->current = 0;
             enemy->flags2E4 |= 0x20;
@@ -108,20 +103,15 @@ void wbUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, int e
     return;
 }
 
-static void wbTickDecoyTimer(GameObject* obj, EnemyState* state)
-{
+static void wbTickDecoyTimer(GameObject* obj, EnemyState* state) {
     u32 randVal;
 
     state->duster.decoyTimer -= timeDelta;
-    if (state->duster.decoyTimer <= 0.0f)
-    {
-        if ((state->controlFlags & 0x600) != 0)
-        {
+    if (state->duster.decoyTimer <= 0.0f) {
+        if ((state->controlFlags & 0x600) != 0) {
             randVal = randomGetRange(0x96, 0xfa);
             state->duster.decoyTimer = (float)(int)randVal;
-        }
-        else
-        {
+        } else {
             randVal = randomGetRange(600, 0x352);
             state->duster.decoyTimer = (float)(int)randVal;
         }
@@ -129,87 +119,64 @@ static void wbTickDecoyTimer(GameObject* obj, EnemyState* state)
     }
 }
 
-void wbUpdateEngaged(GameObject* obj, int state)
-{
+void wbUpdateEngaged(GameObject* obj, int state) {
     EnemyState* enemy = (EnemyState*)state;
     GameObject* tracked;
     f32 moveSpeed;
     ObjHitsPriorityState* hitState;
 
-    if (enemy->duster.decoyTimer > 250.0f)
-    {
+    if (enemy->duster.decoyTimer > 250.0f) {
         enemy->duster.decoyTimer = 150.0f;
     }
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(&obj->anim, DUSTER_HIT_VOLUME_SLOT, 1, 0);
-    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c_261);
     }
     wbTickDecoyTimer(obj, enemy);
-    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
         ObjAnim_SetCurrentMove(obj, 3, 0.0f, enemy->rootMotionFlags);
     }
-    if (enemy->duster.phaseTimer > 0.0f)
-    {
+    if (enemy->duster.phaseTimer > 0.0f) {
         enemy->duster.phaseTimer -= timeDelta;
-        if (enemy->duster.phaseTimer <= 0.0f)
-        {
+        if (enemy->duster.phaseTimer <= 0.0f) {
             enemy->duster.phaseTimer = 600.0f;
             enemy->flags2E4 |= 0x10000;
         }
-    }
-    else if ((enemy->controlFlags & 0x400) != 0)
-    {
+    } else if ((enemy->controlFlags & 0x400) != 0) {
         enemy->duster.phaseTimer = 600.0f;
     }
-    if ((enemy->controlFlags & 0x8000000) != 0)
-    {
+    if ((enemy->controlFlags & 0x8000000) != 0) {
         moveSpeed = 20.0f;
-    }
-    else
-    {
+    } else {
         tracked = enemy->trackedObj;
-        moveSpeed = sidekickToy_accelerateTowardTargetXZ(
-            obj, tracked->anim.worldPosX, 50.0f + tracked->anim.worldPosY,
-            tracked->anim.worldPosZ, 30.0f, 0.2f, 5.0f, enemy->drag);
+        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, tracked->anim.worldPosX, 50.0f + tracked->anim.worldPosY,
+                                                         tracked->anim.worldPosZ, 30.0f, 0.2f, 5.0f, enemy->drag);
     }
-    if (((moveSpeed > 0.0f) && (obj->anim.velocityY < -0.5f)) ||
-        ((enemy->controlFlags & 0x8000000) != 0))
-    {
+    if (((moveSpeed > 0.0f) && (obj->anim.velocityY < -0.5f)) || ((enemy->controlFlags & 0x8000000) != 0)) {
         enemy->userData1 = 1;
     }
-    if ((enemy->userData1 != 0) && (moveSpeed > 0.0f))
-    {
+    if ((enemy->userData1 != 0) && (moveSpeed > 0.0f)) {
         enemy->animPlaySpeed = 0.05f;
-        if (enemy->current != 0)
-        {
+        if (enemy->current != 0) {
             obj->anim.velocityY += 0.02f;
         }
-        if (obj->anim.velocityY < -0.7f)
-        {
+        if (obj->anim.velocityY < -0.7f) {
             obj->anim.velocityY = -0.7f;
-        }
-        else if (obj->anim.velocityY > 0.5f)
-        {
+        } else if (obj->anim.velocityY > 0.5f) {
             obj->anim.velocityY = 0.5f;
         }
-    }
-    else
-    {
+    } else {
         enemy->userData1 = 0;
-        if (enemy->animPlaySpeed > 0.025f)
-        {
+        if (enemy->animPlaySpeed > 0.025f) {
             enemy->animPlaySpeed -= 0.005f * timeDelta;
         }
     }
     baddieTurnTowardLookDir(obj, (void*)state, 0x2d, 0.0f, 0.0f, 0);
 }
 
-void wbUpdateIdle(GameObject* obj, int state)
-{
+void wbUpdateIdle(GameObject* obj, int state) {
     EnemyState* enemy = (EnemyState*)state;
     RomCurveWalker* route;
     ObjPlacement* placement;
@@ -221,92 +188,62 @@ void wbUpdateIdle(GameObject* obj, int state)
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hitState->suppressOutgoingHits = 0;
     ObjHits_SetHitVolumeSlot(&obj->anim, DUSTER_HIT_VOLUME_SLOT, 1, 0);
-    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
         Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c_261);
     }
     wbTickDecoyTimer(obj, enemy);
-    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
+    if ((enemy->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
         ObjAnim_SetCurrentMove(obj, 0, 0.0f, enemy->rootMotionFlags);
     }
-    if (enemy->duster.phaseTimer > 0.0f)
-    {
+    if (enemy->duster.phaseTimer > 0.0f) {
         enemy->duster.phaseTimer -= timeDelta;
-        if (enemy->duster.phaseTimer <= 0.0f)
-        {
+        if (enemy->duster.phaseTimer <= 0.0f) {
             enemy->duster.phaseTimer = 0.0f;
         }
-    }
-    else
-    {
+    } else {
         enemy->flags2E4 &= ~0x10000;
     }
-    if ((enemy->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
-    {
-        if (((Curve_AdvanceAlongPath(&route->curve, enemy->pathStep) != 0 ||
-              route->atSegmentEnd != 0) &&
+    if ((enemy->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0) {
+        if (((Curve_AdvanceAlongPath(&route->curve, enemy->pathStep) != 0 || route->atSegmentEnd != 0) &&
              (*gRomCurveInterface)->goNextPoint(route) != 0) &&
-            (*gRomCurveInterface)
-                    ->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gWbCurveInitData, -1) != 0)
-        {
+            (*gRomCurveInterface)->initCurve(*(RomCurveWalker**)state, obj, 700.0f, gWbCurveInitData, -1) != 0) {
             enemy->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
         }
-        if ((enemy->controlFlags & 0x8000000) != 0)
-        {
+        if ((enemy->controlFlags & 0x8000000) != 0) {
             moveSpeed = 30.0f;
+        } else {
+            moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, route->posX, route->posY, route->posZ, 30.0f, 0.2f,
+                                                             5.0f, enemy->drag);
         }
-        else
-        {
-            moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, route->posX, route->posY, route->posZ,
-                                                             30.0f, 0.2f, 5.0f,
-                                                             enemy->drag);
-        }
-    }
-    else if ((enemy->controlFlags & 0x8000000) != 0)
-    {
+    } else if ((enemy->controlFlags & 0x8000000) != 0) {
         moveSpeed = 30.0f;
+    } else {
+        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, placement->posX, placement->posY, placement->posZ, 30.0f,
+                                                         0.2f, 5.0f, enemy->drag);
     }
-    else
-    {
-        moveSpeed = sidekickToy_accelerateTowardTargetXZ(obj, placement->posX, placement->posY,
-                                                         placement->posZ, 30.0f, 0.2f, 5.0f,
-                                                         enemy->drag);
-    }
-    if (((moveSpeed > 0.0f) && (obj->anim.velocityY < -0.5f)) ||
-        ((enemy->controlFlags & 0x8000000) != 0))
-    {
+    if (((moveSpeed > 0.0f) && (obj->anim.velocityY < -0.5f)) || ((enemy->controlFlags & 0x8000000) != 0)) {
         enemy->userData1 = 1;
     }
-    if ((enemy->userData1 != 0) && (moveSpeed > 0.0f))
-    {
+    if ((enemy->userData1 != 0) && (moveSpeed > 0.0f)) {
         enemy->animPlaySpeed = 0.05f;
-        if (enemy->current != 0)
-        {
+        if (enemy->current != 0) {
             obj->anim.velocityY += 0.02f;
         }
-        if (obj->anim.velocityY < -0.7f)
-        {
+        if (obj->anim.velocityY < -0.7f) {
             obj->anim.velocityY = -0.7f;
-        }
-        else if (obj->anim.velocityY > 0.5f)
-        {
+        } else if (obj->anim.velocityY > 0.5f) {
             obj->anim.velocityY = 0.5f;
         }
-    }
-    else
-    {
+    } else {
         enemy->userData1 = 0;
-        if (enemy->animPlaySpeed > 0.025f)
-        {
+        if (enemy->animPlaySpeed > 0.025f) {
             enemy->animPlaySpeed -= 0.005f * timeDelta;
         }
     }
     baddieTurnTowardLookDir(obj, (void*)state, 0x2d, 0.0f, 0.0f, 0);
 }
 
-void wbInit(u32 unused, int state)
-{
+void wbInit(u32 unused, int state) {
     EnemyState* enemy = (EnemyState*)state;
     float fa;
     u32 ua;
