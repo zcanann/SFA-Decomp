@@ -1,6 +1,5 @@
 #include "dolphin/mtx.h"
 #include "main/shader_api.h"
-#include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
 #include "main/modellight_internal.h"
 #include "main/mm.h"
@@ -148,14 +147,13 @@ ModelLightStruct* modelLightStruct_createPointLight(void* owner, u8 red, u8 gree
 
 static u8 modelLightStruct_projectedLightIntersectsObject(ModelLightStruct* light, GameObject* obj)
 {
-    f32 localPos[3];
-    f32 projected[3];
-    f32 worldPos[3];
+    Vec localPos;
+    Vec projected;
+    Vec worldPos;
     ModelLightCornerBlock cornerBlock;
     f32 extent;
     f32 scaledExtent;
     u8 clipMask;
-    f32* cv;
     int i;
     u8 combinedClipMask;
     f32 zero;
@@ -163,67 +161,66 @@ static u8 modelLightStruct_projectedLightIntersectsObject(ModelLightStruct* ligh
     scaledExtent = obj->anim.rootMotionScale * obj->anim.hitboxScale;
     cornerBlock = gModelLightCornerBlock;
 
-    worldPos[0] = obj->anim.localPosX - playerMapOffsetX;
-    worldPos[1] = obj->anim.localPosY;
-    worldPos[2] = obj->anim.localPosZ - playerMapOffsetZ;
-    PSMTXMultVec((MtxPtr)light->inverseWorldProjectionMtx, (Vec*)worldPos, (Vec*)localPos);
+    worldPos.x = obj->anim.localPosX - playerMapOffsetX;
+    worldPos.y = obj->anim.localPosY;
+    worldPos.z = obj->anim.localPosZ - playerMapOffsetZ;
+    PSMTXMultVec((MtxPtr)light->inverseWorldProjectionMtx, &worldPos, &localPos);
 
     if (light->projectionType == 0)
     {
-        if (localPos[0] - (extent = obj->anim.hitboxScale) > light->projectionRight ||
-            localPos[0] + scaledExtent < light->projectionLeft || localPos[1] - extent > light->projectionTop ||
-            localPos[1] + scaledExtent < light->projectionBottom || localPos[2] - extent > light->projectionFarZ ||
-            localPos[2] + scaledExtent < light->projectionNearZ)
+        if (localPos.x - (extent = obj->anim.hitboxScale) > light->projectionRight ||
+            localPos.x + scaledExtent < light->projectionLeft || localPos.y - extent > light->projectionTop ||
+            localPos.y + scaledExtent < light->projectionBottom || localPos.z - extent > light->projectionFarZ ||
+            localPos.z + scaledExtent < light->projectionNearZ)
         {
             return 0;
         }
     }
     else
     {
-        if (localPos[2] - obj->anim.hitboxScale > light->projectionFarZ ||
-            localPos[2] + scaledExtent < light->projectionNearZ)
+        if (localPos.z - obj->anim.hitboxScale > light->projectionFarZ ||
+            localPos.z + scaledExtent < light->projectionNearZ)
         {
             return 0;
         }
 
         combinedClipMask = 0x3f;
         i = 0;
-        cv = cornerBlock.v;
         zero = 0.0f;
         for (; i < 8; i++)
         {
-            worldPos[0] = localPos[0] + scaledExtent * cv[0];
-            worldPos[1] = localPos[1] + scaledExtent * cv[1];
-            worldPos[2] = localPos[2] + scaledExtent * cv[2];
-            PSMTXMultVec((MtxPtr)light->lightProjectionClipMtx, (Vec*)worldPos, (Vec*)projected);
-            if (zero != projected[2])
+            worldPos.x = localPos.x + scaledExtent * cornerBlock.v[i * 3 + 0];
+            worldPos.y = localPos.y + scaledExtent * cornerBlock.v[i * 3 + 1];
+            worldPos.z = localPos.z + scaledExtent * cornerBlock.v[i * 3 + 2];
+            PSMTXMultVec((MtxPtr)light->lightProjectionClipMtx, &worldPos, &projected);
+            if (zero != projected.z)
             {
-                projected[0] /= projected[2];
-                projected[1] /= projected[2];
+                projected.x /= projected.z;
+                projected.y /= projected.z;
             }
 
             clipMask = 0;
-            if (worldPos[2] < light->projectionNearZ)
+            if (worldPos.z < light->projectionNearZ)
             {
                 clipMask |= LIGHTCLIP_NEAR;
             }
-            if (worldPos[2] > light->projectionFarZ)
+            if (worldPos.z > light->projectionFarZ)
             {
                 clipMask |= LIGHTCLIP_FAR;
             }
-            if (projected[0] < zero)
+            if (projected.x < zero)
             {
                 clipMask |= LIGHTCLIP_LEFT;
             }
-            else if (projected[0] > 1.0f)
+            else if (projected.x > 1.0f)
             {
                 clipMask |= LIGHTCLIP_RIGHT;
             }
-            if (projected[1] < zero)
+            if (projected.y < zero)
             {
                 clipMask |= LIGHTCLIP_BOTTOM;
             }
-            else if (projected[1] > 1.0f)
+            else if (projected.y > 1.0f)
             {
                 clipMask |= LIGHTCLIP_TOP;
             }
@@ -236,7 +233,6 @@ static u8 modelLightStruct_projectedLightIntersectsObject(ModelLightStruct* ligh
             {
                 return 1;
             }
-            cv += 3;
         }
 
         return 0;
@@ -738,7 +734,7 @@ void modelLightStruct_setDirection(ModelLightStruct* s, f32 x, f32 y, f32 z)
     {
         {
 
-            *(IVec3*)&s->viewDirX = *(IVec3*)&s->worldDirX;
+            s->viewDirection = s->worldDirection;
         }
     }
 }
@@ -771,7 +767,7 @@ void modelLightStruct_getWorldPosition(ModelLightStruct* p, f32* x, f32* y, f32*
 
 void modelLightStruct_setPosition(ModelLightStruct* s, f32 x, f32 y, f32 z)
 {
-    f32 tmp[3];
+    Vec tmp;
     f32* view;
     if (s->owner != NULL)
     {
@@ -789,23 +785,23 @@ void modelLightStruct_setPosition(ModelLightStruct* s, f32 x, f32 y, f32 z)
     view = Camera_GetViewMatrix();
     if (s->transformMode == 0)
     {
-        tmp[0] = s->worldX - playerMapOffsetX;
-        tmp[1] = s->worldY;
-        tmp[2] = s->worldZ - playerMapOffsetZ;
-        PSMTXMultVec((MtxPtr)view, (Vec*)tmp, &s->viewPos);
+        tmp.x = s->worldX - playerMapOffsetX;
+        tmp.y = s->worldY;
+        tmp.z = s->worldZ - playerMapOffsetZ;
+        PSMTXMultVec((MtxPtr)view, &tmp, &s->viewPos);
     }
     else
     {
         {
 
-            *(IVec3*)&s->viewX = *(IVec3*)&s->worldX;
+            s->viewPos = s->worldPos;
         }
     }
 }
 ModelLightStruct* objAllocLight(void* owner)
 {
     ModelLightStruct* light;
-    f32 tmp[3];
+    Vec tmp;
     f32* view;
     f32 zero;
     f32 atten;
@@ -838,14 +834,14 @@ ModelLightStruct* objAllocLight(void* owner)
     view = Camera_GetViewMatrix();
     if (light->transformMode == 0)
     {
-        tmp[0] = light->worldX - playerMapOffsetX;
-        tmp[1] = light->worldY;
-        tmp[2] = light->worldZ - playerMapOffsetZ;
-        PSMTXMultVec((MtxPtr)view, (Vec*)tmp, &light->viewPos);
+        tmp.x = light->worldX - playerMapOffsetX;
+        tmp.y = light->worldY;
+        tmp.z = light->worldZ - playerMapOffsetZ;
+        PSMTXMultVec((MtxPtr)view, &tmp, &light->viewPos);
     }
     else
     {
-        *(IVec3*)&light->viewX = *(IVec3*)&light->worldX;
+        light->viewPos = light->worldPos;
     }
 
     if (light->owner != NULL)
@@ -873,7 +869,7 @@ ModelLightStruct* objAllocLight(void* owner)
     }
     else
     {
-        *(IVec3*)&light->viewDirX = *(IVec3*)&light->worldDirX;
+        light->viewDirection = light->worldDirection;
     }
 
     modelLightStruct_setEnabled(light, 1, 0.0f);
@@ -939,7 +935,7 @@ ModelLightStruct* objAllocLight(void* owner)
 
 static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObject* obj, GXLightID lightId)
 {
-    f32 viewPos[3];
+    Vec viewPos;
     f32* view;
     int lightType;
 
@@ -951,20 +947,20 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
     case 8:
         if (gModelLightUseModelRelativePositions != 0)
         {
-            f32 worldPos[3];
+            Vec worldPos;
             if (light->transformMode == 0)
             {
-                worldPos[0] = obj->anim.localPosX - playerMapOffsetX;
-                worldPos[1] = obj->anim.localPosY;
-                worldPos[2] = obj->anim.localPosZ - playerMapOffsetZ;
-                PSMTXMultVec((MtxPtr)view, (Vec*)worldPos, (Vec*)viewPos);
+                worldPos.x = obj->anim.localPosX - playerMapOffsetX;
+                worldPos.y = obj->anim.localPosY;
+                worldPos.z = obj->anim.localPosZ - playerMapOffsetZ;
+                PSMTXMultVec((MtxPtr)view, &worldPos, &viewPos);
             }
             else
             {
-                *(IVec3*)viewPos = *(IVec3*)&obj->anim.localPosX;
+                viewPos = obj->anim.localPos;
             }
-            PSVECSubtract(&light->viewPos, (Vec*)viewPos, (Vec*)viewPos);
-            GXInitLightPos(&light->diffuseLightObj, viewPos[0], viewPos[1], viewPos[2]);
+            PSVECSubtract(&light->viewPos, &viewPos, &viewPos);
+            GXInitLightPos(&light->diffuseLightObj, viewPos.x, viewPos.y, viewPos.z);
         }
         else
         {
@@ -993,31 +989,31 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
         break;
     case 4:
     {
-        f32 worldPos[3];
+        Vec worldPos;
         GXColor color;
         if (obj != NULL)
         {
             if (light->transformMode == 0)
             {
-                worldPos[0] = obj->anim.localPosX - playerMapOffsetX;
-                worldPos[1] = obj->anim.localPosY;
-                worldPos[2] = obj->anim.localPosZ - playerMapOffsetZ;
-                PSMTXMultVec((MtxPtr)view, (Vec*)worldPos, (Vec*)viewPos);
+                worldPos.x = obj->anim.localPosX - playerMapOffsetX;
+                worldPos.y = obj->anim.localPosY;
+                worldPos.z = obj->anim.localPosZ - playerMapOffsetZ;
+                PSMTXMultVec((MtxPtr)view, &worldPos, &viewPos);
             }
             else
             {
-                *(IVec3*)viewPos = *(IVec3*)&obj->anim.localPosX;
+                viewPos = obj->anim.localPos;
             }
         }
         else
         {
-            viewPos[0] = 0.0f;
-            viewPos[1] = 0.0f;
-            viewPos[2] = 0.0f;
+            viewPos.x = 0.0f;
+            viewPos.y = 0.0f;
+            viewPos.z = 0.0f;
         }
         PSVECScale(&light->viewDirection, &light->viewPos, -100000.0f);
-        PSVECAdd(&light->viewPos, (Vec*)viewPos, (Vec*)viewPos);
-        GXInitLightPos(&light->diffuseLightObj, viewPos[0], viewPos[1], viewPos[2]);
+        PSVECAdd(&light->viewPos, &viewPos, &viewPos);
+        GXInitLightPos(&light->diffuseLightObj, viewPos.x, viewPos.y, viewPos.z);
         color = *(GXColor*)light->diffuseColor;
         GXInitLightColor(&light->diffuseLightObj, color);
         GXInitLightAttnK(&light->diffuseLightObj, 1.0f, 0.0f, 0.0f);
@@ -1029,8 +1025,8 @@ static void modelLightStruct_loadDiffuseGXLight(ModelLightStruct* light, GameObj
 
 void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, GameObject* obj)
 {
-    f32 viewDir[3];
-    f32 localDir[3];
+    Vec viewDir;
+    Vec localDir;
     GXColor color;
     int lightId[1];
     f32* view[1];
@@ -1050,18 +1046,18 @@ void modelLightStruct_loadChannelLight(int channel, ModelLightStruct* light, Gam
         switch (lightType)
         {
         case 2:
-            PSVECSubtract(&obj->anim.localPos, &light->worldPos, (Vec*)localDir);
-            PSVECNormalize((Vec*)localDir, (Vec*)localDir);
+            PSVECSubtract(&obj->anim.localPos, &light->worldPos, &localDir);
+            PSVECNormalize(&localDir, &localDir);
             if (light->transformMode == 0)
             {
-                PSMTXMultVecSR((MtxPtr)view[0], (Vec*)localDir, (Vec*)viewDir);
+                PSMTXMultVecSR((MtxPtr)view[0], &localDir, &viewDir);
             }
             else
             {
 
-                *(IVec3*)viewDir = *(IVec3*)localDir;
+                viewDir = localDir;
             }
-            GXInitSpecularDir(&light->specularLightObj, viewDir[0], viewDir[1], viewDir[2]);
+            GXInitSpecularDir(&light->specularLightObj, viewDir.x, viewDir.y, viewDir.z);
             break;
         case 3:
             break;
@@ -1419,7 +1415,7 @@ void updateLights(void)
                 }
                 else
                 {
-                    *(IVec3*)&light->viewX = *(IVec3*)&light->worldX;
+                    light->viewPos = light->worldPos;
                 }
             }
 
@@ -1433,7 +1429,7 @@ void updateLights(void)
             }
             else
             {
-                *(IVec3*)&light->viewDirX = *(IVec3*)&light->worldDirX;
+                light->viewDirection = light->worldDirection;
             }
 
             if (light->colorFadeMode != 0)
