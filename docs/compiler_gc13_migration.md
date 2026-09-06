@@ -184,6 +184,11 @@ both compilers and is not retained.
 
 ## Remaining runtime investigation
 
+The [GC/1.3 versus GC/1.3.2/2.0 comparison](compiler_gc_versions.md) records
+executable identities, controlled expression differences, normalized backend
+comparisons, and same-source objdiff results. New source matches derived from
+those findings are in [the cleanup log](compiler_gc13_cleanup.md).
+
 Staging commit `03f9409456` subsequently moved all MWCC source units, including
 SDK, runtime and the ten GC/1.2.5 math units, to the common GC/1.3 default.
 Commit `e9c9955b16` marked regressed units NonMatching to preserve the retail
