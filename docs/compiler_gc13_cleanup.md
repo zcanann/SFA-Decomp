@@ -1069,3 +1069,38 @@ limits. The DOL is byte-identical to retail, SHA-1
 source/compiler controls are in `build/gc13_indexed/` under
 `modellight_scalar_cleanup`, `smallbasket_index_cleanup`,
 `shield_index_cleanup` and `dbegg_header_cleanup`.
+
+## September 6: Path-camera sample indexing
+
+Engine 71 (`dlls/engine/71/71.c`) reaches **100% for all thirteen functions,
+7,684 code bytes, and 160 assigned data bytes**, and is now source-linked
+for EN v1.0. `pathcam_buildWindowSamples` adds 1,220 exact code bytes,
+improving from 98.81967% to 100%; the complete TU improves from 99.8126%
+to 100%.
+
+The sample-loading pass indexes the existing node and output arrays directly,
+removing nine pointer cursors. The endpoint-filling pass reuses the node index
+for the window traversal and keeps its separate fill index, advancing the
+window before the output cursors. Together these reproduce retail's integer
+to float conversion registers and cursor-increment order without changing
+shared node types or the extrapolation arithmetic.
+
+The accepted backend capture aligns all 305 instructions, replays 131 GPR
+color choices, and preserves the ordinary compile's raw object. Both endpoint
+conversion constants now receive retail's `r0`. The accepted complete TU also
+matches under GC/2.0, so this recovery does not distinguish compiler versions.
+
+Only 90 bytes change, all in `pathcam_buildWindowSamples`. Every other function,
+allocated data byte, section size/alignment, and named symbol location is
+preserved. Twenty-nine relocations rename anonymous literals at unchanged
+locations and retain their resolved targets. The common GC/1.3 compiler,
+existing optimization profile, TU boundaries, generated path, header, and
+shared consumers are unchanged. Formatting only wraps the sample-builder's
+forward declaration and lands separately with an identical raw object.
+
+The generated-path audit, strict matching build, and `ninja all_source` pass,
+with both builds bounded by 30-second timeouts. Only this TU's source object
+changes in the isolated build audit. The source-linked DOL retains SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
+reports, backend traces, and object audits are under
+`build/gc13_new_matches/path_camera_match/`.

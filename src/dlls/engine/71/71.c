@@ -141,13 +141,9 @@ u32 CameraModePath_updateTransition(CameraObject* camera, u32 flagsIn);
 void pathcam_buildWindowSamples(int* nodeIds, f32* outX, f32* outY, f32* outZ, f32* outRotationX, f32* outRotationY,
                                 f32* outRotationZ, f32* outFov) {
     f32* angleCursor;
-    int* nodeIdCursor;
     f32 *writeX, *writeY, *writeZ, *writeRotationX, *writeRotationY, *writeRotationZ, *writeFov;
-    RomCurvePathNode** nodeCursor;
-    f32 *sampleX, *sampleY, *sampleZ, *sampleRotationX, *sampleRotationY, *sampleRotationZ, *sampleFov;
     RomCurvePathNode* node;
     int fillIndex;
-    RomCurvePathNode** fillNodeCursor;
     int nodeIndex;
     int segmentIndex;
     f32* rotationSamples;
@@ -156,37 +152,18 @@ void pathcam_buildWindowSamples(int* nodeIds, f32* outX, f32* outY, f32* outZ, f
     RomCurvePathNode* windowNodes[4];
 
     nodeIndex = 0;
-    nodeIdCursor = nodeIds;
-    fillNodeCursor = windowNodes;
-    nodeCursor = fillNodeCursor;
-    sampleX = outX;
-    sampleY = outY;
-    sampleZ = outZ;
-    sampleRotationX = outRotationX;
-    sampleRotationY = outRotationY;
-    sampleRotationZ = outRotationZ;
-    sampleFov = outFov;
     for (; nodeIndex < 4; nodeIndex++) {
-        *nodeCursor = (RomCurvePathNode*)(*gRomCurveInterface)->getById(*nodeIdCursor);
-        node = *nodeCursor;
+        windowNodes[nodeIndex] = (RomCurvePathNode*)(*gRomCurveInterface)->getById(nodeIds[nodeIndex]);
+        node = windowNodes[nodeIndex];
         if (node != NULL) {
-            *sampleX = node->x;
-            *sampleY = node->y;
-            *sampleZ = node->z;
-            *sampleRotationX = (f32)node->sampleA;
-            *sampleRotationY = (f32)node->sampleB;
-            *sampleRotationZ = (f32)node->sampleC;
-            *sampleFov = (f32)node->sampleD;
+            outX[nodeIndex] = node->x;
+            outY[nodeIndex] = node->y;
+            outZ[nodeIndex] = node->z;
+            outRotationX[nodeIndex] = (f32)node->sampleA;
+            outRotationY[nodeIndex] = (f32)node->sampleB;
+            outRotationZ[nodeIndex] = (f32)node->sampleC;
+            outFov[nodeIndex] = (f32)node->sampleD;
         }
-        nodeIdCursor++;
-        nodeCursor++;
-        sampleX++;
-        sampleY++;
-        sampleZ++;
-        sampleRotationX++;
-        sampleRotationY++;
-        sampleRotationZ++;
-        sampleFov++;
     }
 
     if (windowNodes[1] == NULL || windowNodes[2] == NULL) {
@@ -194,6 +171,7 @@ void pathcam_buildWindowSamples(int* nodeIds, f32* outX, f32* outY, f32* outZ, f
     }
     {
         fillIndex = 0;
+        nodeIndex = 0;
         writeX = outX;
         writeY = outY;
         writeZ = outZ;
@@ -202,7 +180,7 @@ void pathcam_buildWindowSamples(int* nodeIds, f32* outX, f32* outY, f32* outZ, f
         writeRotationZ = outRotationZ;
         writeFov = outFov;
         for (; fillIndex < 4; fillIndex++) {
-            if (*fillNodeCursor == NULL) {
+            if (windowNodes[nodeIndex] == NULL) {
                 if (fillIndex == 0) {
                     node = windowNodes[1];
                     *writeX = node->x + (node->x - windowNodes[2]->x);
@@ -223,7 +201,7 @@ void pathcam_buildWindowSamples(int* nodeIds, f32* outX, f32* outY, f32* outZ, f
                     *writeFov = (f32)node->sampleD + ((f32)node->sampleD - (f32)windowNodes[1]->sampleD);
                 }
             }
-            fillNodeCursor++;
+            nodeIndex++;
             writeX++;
             writeY++;
             writeZ++;
