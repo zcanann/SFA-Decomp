@@ -67,16 +67,6 @@ typedef union ExpgfxWGPipe {
     f64 f64;
 } ExpgfxWGPipe;
 
-typedef struct ExpgfxRotateParams {
-    s16 angleX;
-    s16 angleY;
-    s16 angleZ;
-    f32 scale;
-    f32 x;
-    f32 y;
-    f32 z;
-} ExpgfxRotateParams;
-
 typedef struct ExpgfxBillboardAngles {
     s16 pitch;
     s16 yaw;
@@ -2057,7 +2047,7 @@ void expgfx_initSlotQuad(void* slotPtr) {
         }
     }
 
-    quad = (ExpgfxQuadVertex*)slot;
+    quad = slot->quad;
     quad[0].x = quadTemplate[0].x;
     quad[0].y = quadTemplate[0].y;
     quad[0].z = quadTemplate[0].z;
@@ -2115,7 +2105,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ExpgfxSlot* curCacheBuf;
     void* cache;
     u8 ambientScaled[3]; /* BGR order: [2]=R, [1]=G, [0]=B */
-    ExpgfxRotateParams rotParams;
+    MatrixTransform rotParams;
     f32 workVec[3];
     f32 skyLightDir[3];
     f32 rotatedPos[3];
@@ -2275,10 +2265,10 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     rotParams.y = 0.0f;
                     rotParams.z = 0.0f;
                     rotParams.scale = 1.0f;
-                    rotParams.angleZ = (f32)slot->sourceVecZ * timeDelta;
-                    rotParams.angleY = (f32)slot->sourceVecY * timeDelta;
-                    rotParams.angleX = (f32)slot->sourceVecX * timeDelta;
-                    vecRotateZXY(&rotParams.angleX, &slot->posX.value);
+                    rotParams.rotZ = (f32)slot->sourceVecZ * timeDelta;
+                    rotParams.rotY = (f32)slot->sourceVecY * timeDelta;
+                    rotParams.rotX = (f32)slot->sourceVecX * timeDelta;
+                    vecRotateZXY(&rotParams.rotX, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0) {
                     workB = 1000000.0f;
@@ -2390,9 +2380,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             slot->velocityY = 0.3f;
                         }
                         rotParams.scale = 1.0f;
-                        rotParams.angleZ = 0;
-                        rotParams.angleY = 0;
-                        rotParams.angleX = 0;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = 0;
                         if (srcObj != NULL) {
                             rotParams.x = slot->posX.value + srcObj->localPosX;
                             rotParams.y = slot->posY.value + srcObj->localPosY;
@@ -2458,9 +2448,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                                slot->velocityY * timeDelta + slot->posY.value < 0.0f) {
                         if (slot->impactEffectId != -1) {
                             rotParams.scale = 1.0f;
-                            rotParams.angleZ = 0;
-                            rotParams.angleY = 0;
-                            rotParams.angleX = 0;
+                            rotParams.rotZ = 0;
+                            rotParams.rotY = 0;
+                            rotParams.rotX = 0;
                             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
                                 rotParams.x = slot->posX.value;
                                 rotParams.y = 0.0f;
@@ -2491,9 +2481,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                                (slot->behaviorFlags & EXPGFX_BEHAVIOR_WATER_RIPPLE_ON_IMPACT) == 0 &&
                                slot->impactEffectId != -1) {
                         rotParams.scale = 1.0f;
-                        rotParams.angleZ = 0;
-                        rotParams.angleY = 0;
-                        rotParams.angleX = 0;
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = 0;
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) != 0) {
                             rotParams.x = slot->posX.value;
                             rotParams.y = slot->posY.value;
@@ -2544,7 +2534,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         slot->scaleCurrent = slot->scaleCurrent - slot->scaleStep * framesThisStep;
                     }
                 }
-                quad = (ExpgfxQuadVertex*)slot;
+                quad = slot->quad;
                 if (poolOrResource == 0) {
                     debugPrintf(staticData->noTextureString);
                 } else {
@@ -2573,9 +2563,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         f32 ratio;
 
                         ratio = (f32)slot->lifetimeFrame / slot->lifetimeFrameLimit;
-                        colR = (int)(ratio * (f32)(quad[1].alpha - slot->colorByte0) + slot->colorByte0);
-                        colG = (int)(ratio * (f32)(quad[2].alpha - slot->colorByte1) + slot->colorByte1);
-                        colB = (int)(ratio * (f32)(quad[3].alpha - slot->colorByte2) + slot->colorByte2);
+                        colR = (int)(ratio * (f32)(slot->startColorR - slot->endColorR) + slot->endColorR);
+                        colG = (int)(ratio * (f32)(slot->startColorG - slot->endColorG) + slot->endColorG);
+                        colB = (int)(ratio * (f32)(slot->startColorB - slot->endColorB) + slot->endColorB);
                         if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
                             quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
                             quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
@@ -2676,14 +2666,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         workVec[0] = (f32)quadTemplate[0].x;
                         workVec[1] = (f32)quadTemplate[0].y;
                         workVec[2] = (f32)quadTemplate[0].z;
-                        rotParams.angleZ = 0;
-                        rotParams.angleY = 0;
-                        rotParams.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.angleX, workVec);
-                        rotParams.angleZ = slot->sourceVecY;
-                        rotParams.angleY = slot->sourceVecZ;
-                        rotParams.angleX = 0;
-                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
                         quad[0].x = workVec[0];
                         quad[0].y = workVec[1];
                         quad[0].z = workVec[2];
@@ -2692,14 +2682,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         workVec[0] = (f32)quadTemplate[1].x;
                         workVec[1] = (f32)quadTemplate[1].y;
                         workVec[2] = (f32)quadTemplate[1].z;
-                        rotParams.angleZ = 0;
-                        rotParams.angleY = 0;
-                        rotParams.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.angleX, workVec);
-                        rotParams.angleZ = slot->sourceVecY;
-                        rotParams.angleY = slot->sourceVecZ;
-                        rotParams.angleX = 0;
-                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
                         quad[1].x = workVec[0];
                         quad[1].y = workVec[1];
                         quad[1].z = workVec[2];
@@ -2708,14 +2698,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         workVec[0] = (f32)quadTemplate[2].x;
                         workVec[1] = (f32)quadTemplate[2].y;
                         workVec[2] = (f32)quadTemplate[2].z;
-                        rotParams.angleZ = 0;
-                        rotParams.angleY = 0;
-                        rotParams.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.angleX, workVec);
-                        rotParams.angleZ = slot->sourceVecY;
-                        rotParams.angleY = slot->sourceVecZ;
-                        rotParams.angleX = 0;
-                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
                         quad[2].x = workVec[0];
                         quad[2].y = workVec[1];
                         quad[2].z = workVec[2];
@@ -2724,14 +2714,14 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         workVec[0] = (f32)quadTemplate[3].x;
                         workVec[1] = (f32)quadTemplate[3].y;
                         workVec[2] = (f32)quadTemplate[3].z;
-                        rotParams.angleZ = 0;
-                        rotParams.angleY = 0;
-                        rotParams.angleX = slot->sourceVecX;
-                        vecRotateZXY(&rotParams.angleX, workVec);
-                        rotParams.angleZ = slot->sourceVecY;
-                        rotParams.angleY = slot->sourceVecZ;
-                        rotParams.angleX = 0;
-                        vecRotateZXY(&rotParams.angleX, workVec);
+                        rotParams.rotZ = 0;
+                        rotParams.rotY = 0;
+                        rotParams.rotX = slot->sourceVecX;
+                        vecRotateZXY(&rotParams.rotX, workVec);
+                        rotParams.rotZ = slot->sourceVecY;
+                        rotParams.rotY = slot->sourceVecZ;
+                        rotParams.rotX = 0;
+                        vecRotateZXY(&rotParams.rotX, workVec);
                         quad[3].x = workVec[0];
                         quad[3].y = workVec[1];
                         quad[3].z = workVec[2];
@@ -2870,26 +2860,26 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         rotParams.y = slot->posY.value;
                         rotParams.z = slot->posZ.value;
                     }
-                    rotParams.angleZ = 0;
-                    rotParams.angleY = 0;
-                    rotParams.angleX = 0;
+                    rotParams.rotZ = 0;
+                    rotParams.rotY = 0;
+                    rotParams.rotX = 0;
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
                         (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
                         if (srcObj != NULL) {
-                            rotParams.angleX = srcObj->rotX;
-                            rotParams.angleY = srcObj->rotY;
-                            rotParams.angleZ = srcObj->rotZ;
+                            rotParams.rotX = srcObj->rotX;
+                            rotParams.rotY = srcObj->rotY;
+                            rotParams.rotZ = srcObj->rotZ;
                         } else {
-                            rotParams.angleX = slot->sourceVecX;
-                            rotParams.angleY = slot->sourceVecY;
-                            rotParams.angleZ = slot->sourceVecZ;
+                            rotParams.rotX = slot->sourceVecX;
+                            rotParams.rotY = slot->sourceVecY;
+                            rotParams.rotZ = slot->sourceVecZ;
                         }
                     }
                     rotatedPos[0] = slot->posX.value;
                     rotatedPos[1] = slot->posY.value;
                     rotatedPos[2] = slot->posZ.value;
-                    if ((rotParams.angleX | rotParams.angleY | rotParams.angleZ) != 0) {
-                        vecRotateZXY(&rotParams.angleX, rotatedPos);
+                    if ((rotParams.rotX | rotParams.rotY | rotParams.rotZ) != 0) {
+                        vecRotateZXY(&rotParams.rotX, rotatedPos);
                     }
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
                         if (srcObj != NULL) {
@@ -2910,9 +2900,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         srcWorldPos[1] = 0.0f;
                         srcWorldPos[2] = 0.0f;
                     }
-                    rotParams.angleZ = 0;
-                    rotParams.angleY = 0;
-                    rotParams.angleX = 0;
+                    rotParams.rotZ = 0;
+                    rotParams.rotY = 0;
+                    rotParams.rotX = 0;
                     rotParams.x = srcWorldPos[0] + rotatedPos[0];
                     rotParams.y = srcWorldPos[1] + rotatedPos[1];
                     rotParams.z = srcWorldPos[2] + rotatedPos[2];
@@ -3358,7 +3348,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex) {
 
                 centerX -= playerMapOffsetX;
                 centerZ -= playerMapOffsetZ;
-                quad = (ExpgfxQuadVertex*)slot;
+                quad = slot->quad;
                 vertexStream = quad;
                 GXBegin(GX_QUADS, GX_VTXFMT4, 4);
                 for (vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
@@ -3674,7 +3664,7 @@ void expgfx_updateFrameState(int sourceMode, int sourceId) {
     return;
 }
 
-int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId) {
+int expgfx_addremove(EffectSpawnConfig* config, int preferredPoolIndex, int slotType, int planeOffsetSetId) {
     u32 behaviorFlags;
     ExpgfxSlot* slot;
     ObjAnimComponent* attachedSource;
@@ -3722,7 +3712,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
         slot = (ExpgfxSlot*)runtime->slotPoolBases[poolIdx];
         slot += slotIndex;
-        quadVertices = (ExpgfxQuadVertex*)slot;
+        quadVertices = slot->quad;
         gExpgfxSequenceCounter++;
         if (gExpgfxSequenceCounter > EXPGFX_SEQUENCE_COUNTER_MAX) {
             gExpgfxSequenceCounter = 0;
@@ -3732,7 +3722,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         slot->renderFlags = config->renderFlags;
         slot->stateBits.bits.initPhase = 0;
 
-        resourceTableIndex = expgfx_acquireResourceEntry(config->texture.parts.textureId);
+        resourceTableIndex = expgfx_acquireResourceEntry(config->textureId);
         if (resourceTableIndex < 0) {
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
             return EXPGFX_INVALID_POOL_INDEX;
@@ -3763,10 +3753,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         attachedSource = (ObjAnimComponent*)config->attachedSource;
         attachedTableKey = 0;
         if (attachedSource == NULL) {
-            slot->sourcePosX.value = config->sourcePosX.value;
-            slot->sourcePosY.value = config->sourcePosY.value;
-            slot->sourcePosZ.value = config->sourcePosZ.value;
-            slot->sourceScale.value = config->sourceScale.value;
+            slot->sourcePosX.value = config->sourcePosX;
+            slot->sourcePosY.value = config->sourcePosY;
+            slot->sourcePosZ.value = config->sourcePosZ;
+            slot->sourceScale.value = config->sourceScale;
             slot->sourceVecZ = config->sourceVecZ;
             slot->sourceVecY = config->sourceVecY;
             slot->sourceVecX = config->sourceVecX;
@@ -3792,7 +3782,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
 
         expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey,
-                                        config->texture.parts.textureId);
+                                        config->textureId);
         if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
             debugPrintf(sExpgfxInvalidTabIndex);
             expgfxRemove(runtime->slotPoolBases[poolIndex], poolIndex, slotIndex, 1, 1);
@@ -3804,14 +3794,14 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
          }*)&slot->encodedTableIndex)
             ->tableIndex = (u8)expTabIndex;
 
-        slot->posX.value = slot->startPosX.value = config->startPosX.value;
-        slot->posY.value = slot->startPosY.value = config->startPosY.value;
-        slot->posZ.value = slot->startPosZ.value = config->startPosZ.value;
+        slot->posX.value = slot->startPosX.value = config->startPosX;
+        slot->posY.value = slot->startPosY.value = config->startPosY;
+        slot->posZ.value = slot->startPosZ.value = config->startPosZ;
         slot->velocityX = config->velocityX;
         slot->velocityY = config->velocityY;
         slot->velocityZ = config->velocityZ;
         slot->initialAlpha = config->initialAlpha;
-        quadVertices[3].pad06 = config->quadVertex3Pad06;
+        slot->impactEffectId = config->impactEffectId;
         slot->lifetimeFrame = config->lifetimeFrames;
         slot->lifetimeFrameLimit = config->lifetimeFrames;
 
@@ -3836,10 +3826,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
 
         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 ||
             (slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_B) != 0) {
-            slot->sourcePosX.value = config->sourcePosX.value;
-            slot->sourcePosY.value = config->sourcePosY.value;
-            slot->sourcePosZ.value = config->sourcePosZ.value;
-            slot->sourceScale.value = config->sourceScale.value;
+            slot->sourcePosX.value = config->sourcePosX;
+            slot->sourcePosY.value = config->sourcePosY;
+            slot->sourcePosZ.value = config->sourcePosZ;
+            slot->sourceScale.value = config->sourceScale;
             slot->sourceVecZ = config->sourceVecZ;
             slot->sourceVecY = config->sourceVecY;
             slot->sourceVecX = config->sourceVecX;
@@ -3894,14 +3884,14 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             gExpgfxSlotType1Average = gExpgfxSlotType1Sum / gExpgfxSlotType1Count;
         }
 
-        slot->colorByte0 = (u8)((int)*(u16*)&config->colorByte0 >> 8);
-        slot->colorByte1 = (u8)((int)*(u16*)&config->colorByte1 >> 8);
-        slot->colorByte2 = (u8)((int)*(u16*)&config->colorByte2 >> 8);
+        slot->endColorR = (u8)((int)config->colorWord0 >> 8);
+        slot->endColorG = (u8)((int)config->colorWord1 >> 8);
+        slot->endColorB = (u8)((int)config->colorWord2 >> 8);
 
         if ((config->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS) != 0) {
-            quadVertices[1].alpha = (u8)((int)config->overrideColor0 >> 8);
-            quadVertices[2].alpha = (u8)((int)config->overrideColor1 >> 8);
-            quadVertices[3].alpha = (u8)((int)config->overrideColor2 >> 8);
+            slot->startColorR = (u8)((int)config->overrideColor0 >> 8);
+            slot->startColorG = (u8)((int)config->overrideColor1 >> 8);
+            slot->startColorB = (u8)((int)config->overrideColor2 >> 8);
         }
 
         quadVertices[0].colorR = 0xff;

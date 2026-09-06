@@ -217,83 +217,6 @@ typedef struct ExpgfxAttachedSourceState {
   int attachedTableKey;
 } ExpgfxAttachedSourceState;
 
-typedef union ExpgfxSpawnTextureWord {
-  u32 word;
-  struct {
-    u16 setupFlags;
-    s16 textureId;
-  } parts;
-} ExpgfxSpawnTextureWord;
-
-typedef struct ExpgfxSpawnColorPair {
-  u8 value;
-  u8 lowByte;
-} ExpgfxSpawnColorPair;
-
-/*
- * Spawn requests are sourced from the current expgfx context. Not every word
- * is understood yet, but the stable fields are worth naming directly.
- */
-typedef struct ExpgfxSpawnConfig {
-  void *attachedSource;
-  s32 quadVertex3Pad06;
-  s32 lifetimeFrames;
-  union {
-    struct {
-      s16 sourceVecX;
-      s16 sourceVecY;
-      s16 sourceVecZ;
-      u8 pad12[0x14 - 0x12];
-      ExpgfxFloatWord sourceScale;
-      ExpgfxFloatWord sourcePosX;
-      ExpgfxFloatWord sourcePosY;
-      ExpgfxFloatWord sourcePosZ;
-    };
-    struct {
-      f32 localOffsetX;
-      f32 localOffsetY;
-      f32 localOffsetZ;
-      u8 padLocalOffset18[0x24 - 0x18];
-    } actorAimOffset;
-  };
-  float velocityX;
-  float velocityY;
-  float velocityZ;
-  ExpgfxFloatWord startPosX;
-  ExpgfxFloatWord startPosY;
-  ExpgfxFloatWord startPosZ;
-  float scale;
-  ExpgfxSpawnTextureWord texture;
-  u32 behaviorFlags;
-  u32 renderFlags;
-  u32 overrideColor0;
-  u32 overrideColor1;
-  u32 overrideColor2;
-  ExpgfxSpawnColorPair colorByte0;
-  ExpgfxSpawnColorPair colorByte1;
-  ExpgfxSpawnColorPair colorByte2;
-  u8 pad5E[0x60 - 0x5E];
-  u8 initialAlpha;
-  u8 linkGroup;
-} ExpgfxSpawnConfig;
-
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, attachedSource) == 0x00);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, quadVertex3Pad06) == 0x04);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourceVecX) == 0x0C);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, actorAimOffset.localOffsetX) == 0x0C);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, actorAimOffset.localOffsetY) == 0x10);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, actorAimOffset.localOffsetZ) == 0x14);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourceScale) == 0x14);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourcePosZ) == 0x20);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, velocityX) == 0x24);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, startPosX) == 0x30);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, scale) == 0x3C);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, texture) == 0x40);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, texture.parts.textureId) == 0x42);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, behaviorFlags) == 0x44);
-STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, colorByte0) == 0x58);
-STATIC_ASSERT(sizeof(ExpgfxSpawnConfig) == 0x64);
-
 typedef struct ExpgfxResourceEntry {
   void *resource;
   s32 evictionScore;
@@ -387,7 +310,8 @@ typedef union ExpgfxSlotStateBits {
 /*
  * The first 0x40 bytes of each slot double as the cached quad stream rendered
  * by drawGlow. Several lifetime fields below intentionally alias otherwise
- * unused or alpha bytes in this stream.
+ * unused or alpha bytes in this stream. Only vertex 0 supplies the rendered
+ * color; the other alpha bytes hold the start RGB for the lifetime countdown.
  */
 typedef struct ExpgfxQuadVertex {
   s16 x;
@@ -403,17 +327,27 @@ typedef struct ExpgfxQuadVertex {
 } ExpgfxQuadVertex;
 
 typedef struct ExpgfxSlot {
-  u8 pad00[0x06];
-  s16 lifetimeFrame;
-  u8 pad08[0x0F - 0x08];
-  u8 initialAlpha;
-  u8 pad10[0x16 - 0x10];
-  s16 lifetimeFrameLimit;
-  u8 pad18[0x26 - 0x18];
-  s16 sequenceId;
-  u8 pad28[0x36 - 0x28];
-  s16 impactEffectId;
-  u8 pad38[0x40 - 0x38];
+  union {
+    ExpgfxQuadVertex quad[4];
+    struct {
+      u8 pad00[0x06];
+      s16 lifetimeFrame;
+      u8 pad08[0x0F - 0x08];
+      u8 initialAlpha;
+      u8 pad10[0x16 - 0x10];
+      s16 lifetimeFrameLimit;
+      u8 pad18[0x1F - 0x18];
+      u8 startColorR;
+      u8 pad20[0x26 - 0x20];
+      s16 sequenceId;
+      u8 pad28[0x2F - 0x28];
+      u8 startColorG;
+      u8 pad30[0x36 - 0x30];
+      s16 impactEffectId;
+      u8 pad38[0x3F - 0x38];
+      u8 startColorB;
+    };
+  };
   s16 sourceVecX;
   s16 sourceVecY;
   s16 sourceVecZ;
@@ -438,9 +372,9 @@ typedef struct ExpgfxSlot {
   u16 scaleStep;
   u8 encodedTableIndex;
   ExpgfxSlotStateBits stateBits;
-  u8 colorByte0;
-  u8 colorByte1;
-  u8 colorByte2;
+  u8 endColorR;
+  u8 endColorG;
+  u8 endColorB;
   u8 pad8F[0x90 - 0x8F];
   f32 renderX;
   f32 renderY;
@@ -449,6 +383,14 @@ typedef struct ExpgfxSlot {
 } ExpgfxSlot;
 
 STATIC_ASSERT(sizeof(ExpgfxSlot) == EXPGFX_SLOT_SIZE);
+STATIC_ASSERT(sizeof(ExpgfxQuadVertex) == 0x10);
+STATIC_ASSERT(offsetof(ExpgfxQuadVertex, texS) == 0x08);
+STATIC_ASSERT(offsetof(ExpgfxQuadVertex, colorR) == 0x0C);
+STATIC_ASSERT(offsetof(ExpgfxQuadVertex, alpha) == 0x0F);
+STATIC_ASSERT(offsetof(ExpgfxSlot, quad) == 0x00);
+STATIC_ASSERT(offsetof(ExpgfxSlot, startColorR) == 0x1F);
+STATIC_ASSERT(offsetof(ExpgfxSlot, startColorG) == 0x2F);
+STATIC_ASSERT(offsetof(ExpgfxSlot, startColorB) == 0x3F);
 STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrame) == 0x06);
 STATIC_ASSERT(offsetof(ExpgfxSlot, initialAlpha) == 0x0F);
 STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrameLimit) == 0x16);
@@ -467,7 +409,9 @@ STATIC_ASSERT(offsetof(ExpgfxSlot, scaleTarget) == 0x86);
 STATIC_ASSERT(offsetof(ExpgfxSlot, scaleStep) == 0x88);
 STATIC_ASSERT(offsetof(ExpgfxSlot, encodedTableIndex) == 0x8A);
 STATIC_ASSERT(offsetof(ExpgfxSlot, stateBits) == 0x8B);
-STATIC_ASSERT(offsetof(ExpgfxSlot, colorByte0) == 0x8C);
+STATIC_ASSERT(offsetof(ExpgfxSlot, endColorR) == 0x8C);
+STATIC_ASSERT(offsetof(ExpgfxSlot, endColorG) == 0x8D);
+STATIC_ASSERT(offsetof(ExpgfxSlot, endColorB) == 0x8E);
 STATIC_ASSERT(offsetof(ExpgfxSlot, renderX) == 0x90);
 
 #define EXPGFX_STATIC_DATA ((ExpgfxStaticDataLayout *)gExpgfxStaticData)

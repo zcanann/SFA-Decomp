@@ -54,7 +54,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
     p.velocityZ = 0.0f;
     p.scale = 0.0f;
     p.lifetimeFrames = 0;
-    p.quadVertex3Pad06 = -1;
+    p.impactEffectId = -1;
     p.initialAlpha = 0xff;
     p.linkGroup = 0;
     p.textureId = 0;
@@ -293,7 +293,7 @@ int Effect14_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
         p.overrideColor0 = 0x4000;
         p.overrideColor1 = 0xc800;
         p.overrideColor2 = 0;
-        p.quadVertex3Pad06 = 0x4c0;
+        p.impactEffectId = 0x4c0;
         p.renderFlags = 0x20;
         break;
     case 0x4c0:

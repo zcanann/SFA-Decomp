@@ -76,7 +76,7 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     p.velocityZ = 0.0f;
     p.scale = 0.0f;
     p.lifetimeFrames = 0;
-    p.quadVertex3Pad06 = -1;
+    p.impactEffectId = -1;
     p.initialAlpha = 0xff;
     p.linkGroup = 0;
     p.textureId = 0;

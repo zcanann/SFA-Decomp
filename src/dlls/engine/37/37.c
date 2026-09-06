@@ -54,7 +54,7 @@ int Effect12_spawnObject(GameObject* obj, int id, PartFxSpawnParams* src, u32 fl
     p.velocityZ = 0.0f;
     p.scale = 0.0f;
     p.lifetimeFrames = 0;
-    p.quadVertex3Pad06 = -1;
+    p.impactEffectId = -1;
     p.initialAlpha = 0xff;
     p.linkGroup = 0;
     p.textureId = 0;

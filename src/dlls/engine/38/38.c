@@ -42,7 +42,7 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -91,7 +91,7 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.lifetimeFrames = 0xc8;
         cfg.behaviorFlags = 0x11000004;
         cfg.textureId = 0x151;
-        cfg.quadVertex3Pad06 = 0x44f;
+        cfg.impactEffectId = 0x44f;
         break;
     case 0x44f:
         if (spawnParams == 0) {
@@ -117,7 +117,7 @@ int Effect13_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         cfg.lifetimeFrames = 0xc8;
         cfg.behaviorFlags = 0x11000004;
         cfg.textureId = 0x151;
-        cfg.quadVertex3Pad06 = 0x451;
+        cfg.impactEffectId = 0x451;
         break;
     case 0x451:
         Sfx_PlayFromObject(sourceObj, SFXTRIG_blkscrp6);

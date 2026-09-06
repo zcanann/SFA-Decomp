@@ -68,7 +68,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -224,7 +224,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.lifetimeFrames = 0xc8;
         cfg.behaviorFlags = 0x11000004;
         cfg.textureId = 0x151;
-        cfg.quadVertex3Pad06 = 0x200;
+        cfg.impactEffectId = 0x200;
         break;
     case 0x200:
         Sfx_PlayFromObject(sourceObject, SFXTRIG_blkscrp6);
@@ -436,7 +436,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.behaviorFlags = 0x3000120;
         cfg.renderFlags = 0x200000;
         cfg.textureId = 0xc0a;
-        cfg.quadVertex3Pad06 = 0x20b;
+        cfg.impactEffectId = 0x20b;
     } break;
     case 0x20b:
         cfg.velocityY = 0.002f * randomGetRange(2, 0x14);
@@ -463,7 +463,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.scale = 0.0002f * randomGetRange(0, 0xa) + 0.0028945f;
         cfg.lifetimeFrames = randomGetRange(0x78, 0x8c);
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x20b;
+        cfg.impactEffectId = 0x20b;
         cfg.renderFlags = 0x200000;
         cfg.behaviorFlags = 0x1001100;
         cfg.textureId = 0xc0a;
@@ -493,7 +493,7 @@ int Effect3_spawnObject(GameObject* sourceObject, int effectId, PartFxSpawnParam
         cfg.behaviorFlags = 0x11800004;
         cfg.initialAlpha = 0xa0;
         cfg.textureId = 0x151;
-        cfg.quadVertex3Pad06 = 0x200;
+        cfg.impactEffectId = 0x200;
         break;
     default:
         return -1;

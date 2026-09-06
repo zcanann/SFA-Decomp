@@ -272,7 +272,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = 0xffffffff;
+    cfg.impactEffectId = 0xffffffff;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -859,7 +859,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.renderFlags = 0x2000000;
         cfg.textureId = 0xc0e;
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x548;
+        cfg.impactEffectId = 0x548;
         cfg.sourceVecX = 200;
         cfg.sourceVecY = 0;
         cfg.sourceVecX = 0;
@@ -1374,7 +1374,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.behaviorFlags = 0x588008;
         cfg.renderFlags = 0x10000;
         cfg.textureId = 0x23b;
-        cfg.quadVertex3Pad06 = 4;
+        cfg.impactEffectId = 4;
         break;
     case 0x4:
         cfg.velocityY = 0.004f * (f32)(s32)randomGetRange(10, 0x14);
@@ -1639,7 +1639,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.linkGroup = 0x20;
         cfg.scale = 0.016f;
         cfg.lifetimeFrames = 0x50;
-        cfg.quadVertex3Pad06 = 0x67;
+        cfg.impactEffectId = 0x67;
         cfg.behaviorFlags = 0x400000;
         cfg.textureId = 0x156;
         break;
@@ -1746,7 +1746,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.04f;
         cfg.lifetimeFrames = 400;
         cfg.linkGroup = 0;
-        cfg.quadVertex3Pad06 = 0x4e;
+        cfg.impactEffectId = 0x4e;
         cfg.behaviorFlags = 0x20100;
         cfg.textureId = 0xdf;
         cfg.sourcePosX = 0.0f;
@@ -1772,7 +1772,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.012f;
         cfg.lifetimeFrames = 0x78;
         cfg.linkGroup = 0;
-        cfg.quadVertex3Pad06 = 0x4b;
+        cfg.impactEffectId = 0x4b;
         cfg.behaviorFlags = 0x70000;
         cfg.textureId = randomGetRange(0, 3) + 0xdd;
         cfg.sourcePosX = 0.0f;
@@ -2031,7 +2031,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.velocityY = 0.07f * (f32)(s32)randomGetRange(4, 10);
         cfg.scale = 0.00005f * (f32)(s32)randomGetRange(0x28, 0x50);
         cfg.lifetimeFrames = 0x15e;
-        cfg.quadVertex3Pad06 = 0x85;
+        cfg.impactEffectId = 0x85;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80400201;
         cfg.textureId = 0xdf;
@@ -2445,7 +2445,7 @@ int partfx_spawnObject(GameObject* sourceObj, int effectValue, PartFxSpawnParams
         cfg.scale = 0.0011f;
         cfg.lifetimeFrames = 0x104;
         cfg.behaviorFlags = 0x1000202;
-        cfg.quadVertex3Pad06 = 0x1e;
+        cfg.impactEffectId = 0x1e;
         *state.startPos = 0.0f;
         cfg.startPosY = 100.0f;
         cfg.startPosZ = 0.0f;

@@ -77,7 +77,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;

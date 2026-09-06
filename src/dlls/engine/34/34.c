@@ -84,7 +84,7 @@ int Effect9_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -133,7 +133,7 @@ int Effect9_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.lifetimeFrames = randomGetRange(0, 0x118) + 0xb4;
         cfg.initialAlpha = 0xfe;
         cfg.behaviorFlags = 0x81008000;
-        cfg.quadVertex3Pad06 = 0x284;
+        cfg.impactEffectId = 0x284;
         cfg.textureId = 0x208;
         break;
     case 955:

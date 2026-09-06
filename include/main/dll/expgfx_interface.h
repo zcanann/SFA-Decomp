@@ -4,8 +4,8 @@
 #include "global.h"
 
 typedef void (*ExpgfxOnMapSetupFn)(void);
-typedef int (*ExpgfxSpawnEffectFn)(void* config, int preferredPoolIndex, int sourceId,
-                                   int flags);
+typedef int (*ExpgfxSpawnEffectFn)(void* config, int preferredPoolIndex, int slotType,
+                                   int planeOffsetSetId);
 typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int sourceId, int unused0,
                                          int unused1);
 typedef void (*ExpgfxResetAllPoolsFn)(void);

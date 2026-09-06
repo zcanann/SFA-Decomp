@@ -72,7 +72,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -258,7 +258,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         break;
     case 0xd5:
         cfg.scale = 0.004f;
-        cfg.quadVertex3Pad06 = 0xd6;
+        cfg.impactEffectId = 0xd6;
         cfg.lifetimeFrames = 0x64;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80000;

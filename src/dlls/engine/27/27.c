@@ -88,7 +88,7 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     cfg.velocityZ = 0.0f;
     cfg.scale = 0.0f;
     cfg.lifetimeFrames = 0;
-    cfg.quadVertex3Pad06 = -1;
+    cfg.impactEffectId = -1;
     cfg.initialAlpha = 0xff;
     cfg.linkGroup = 0;
     cfg.textureId = 0;
@@ -477,16 +477,16 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.renderFlags = 0x400;
         if (effectId == 0x25c) {
             cfg.textureId = 0x7a;
-            cfg.quadVertex3Pad06 = 0x25d;
+            cfg.impactEffectId = 0x25d;
         } else if (effectId == 0x272) {
             cfg.textureId = 0x202;
-            cfg.quadVertex3Pad06 = 0x273;
+            cfg.impactEffectId = 0x273;
         } else if (effectId == 0x27d) {
             cfg.textureId = 0x7a;
-            cfg.quadVertex3Pad06 = 0x27e;
+            cfg.impactEffectId = 0x27e;
         } else {
             cfg.textureId = 0x1fe;
-            cfg.quadVertex3Pad06 = 0x26a;
+            cfg.impactEffectId = 0x26a;
         }
         break;
     case 0x25d:
@@ -520,21 +520,21 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 0.0011f;
         cfg.lifetimeFrames = randomGetRange(0x28, 0x50);
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x25f;
+        cfg.impactEffectId = 0x25f;
         cfg.behaviorFlags = 0x2000104;
         cfg.renderFlags = 0x400;
         if (effectId == 0x25e) {
             cfg.textureId = 0x79;
-            cfg.quadVertex3Pad06 = 0x25d;
+            cfg.impactEffectId = 0x25d;
         } else if (effectId == 0x27b) {
             cfg.textureId = 0x1fb;
-            cfg.quadVertex3Pad06 = 0x27c;
+            cfg.impactEffectId = 0x27c;
         } else if (effectId == 0x274) {
             cfg.textureId = 0x202;
-            cfg.quadVertex3Pad06 = 0x275;
+            cfg.impactEffectId = 0x275;
         } else {
             cfg.textureId = 0x1ff;
-            cfg.quadVertex3Pad06 = 0x26c;
+            cfg.impactEffectId = 0x26c;
         }
         break;
     case 0x25f:
@@ -715,7 +715,7 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 0.0004f * (f32)(s32)randomGetRange(0, 0xa) + 0.000945f;
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
         cfg.initialAlpha = 0x9b;
-        cfg.quadVertex3Pad06 = 0x281;
+        cfg.impactEffectId = 0x281;
         cfg.behaviorFlags = 0x81488000;
         cfg.textureId = randomGetRange(0, 2) + 0x208;
         break;
@@ -753,7 +753,7 @@ int Effect2_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.scale = 0.0002f * (f32)(s32)randomGetRange(0, 0xa) + 0.0002945f;
         cfg.lifetimeFrames = randomGetRange(0xe6, 0x118);
         cfg.initialAlpha = 0xff;
-        cfg.quadVertex3Pad06 = 0x284;
+        cfg.impactEffectId = 0x284;
         cfg.behaviorFlags = 0x81488200;
         cfg.textureId = 0xc0a;
         break;

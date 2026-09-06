@@ -9,7 +9,7 @@ typedef struct EffectSpawnConfig {
         s16* model;
     };
     union {
-        s32 quadVertex3Pad06;
+        s32 impactEffectId;
         int unk04;
     };
     union {
@@ -135,6 +135,7 @@ typedef struct EffectSpawnConfig {
 
 STATIC_ASSERT(sizeof(EffectSpawnConfig) == 0x64);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, attachedSource) == 0x00);
+STATIC_ASSERT(offsetof(EffectSpawnConfig, impactEffectId) == 0x04);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, lifetimeFrames) == 0x08);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, sourceVecX) == 0x0C);
 STATIC_ASSERT(offsetof(EffectSpawnConfig, sourceScale) == 0x14);
