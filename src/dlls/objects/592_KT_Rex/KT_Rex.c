@@ -1003,8 +1003,7 @@ void ktrex_updateAttackEffects(GameObject* obj) {
         }
     }
     if ((gKTRexState->phaseFlags & 0x800) != 0) {
-        (*gPartfxInterface)
-            ->spawnObject(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
+        (*gPartfxInterface)->spawnObject(obj, 0x487, &gKTRexState->spawnWork[0], 0x200001, -1, &gKTRexState->vecX);
     }
     gKTRexState->phaseFlags &= 0x1800;
     if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject == (int)Obj_GetPlayerObject()) {
@@ -1396,8 +1395,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag) {
     gKTRexState->light = objCreateLight(0, 1);
     if (gKTRexState->light != 0) {
         modelLightStruct_setLightKind(gKTRexState->light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setPosition(gKTRexState->light, obj->anim.localPosX, obj->anim.localPosY,
-                                     obj->anim.localPosZ);
+        modelLightStruct_setPosition(gKTRexState->light, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ);
         modelLightStruct_setDiffuseColor(gKTRexState->light, 0xff, 0, 0, 0);
         modelLightStruct_setDistanceAttenuation(gKTRexState->light, 10.0f, 30.0f);
         modelLightStruct_setupGlow(gKTRexState->light, 0, 0xff, 0, 0, 0x50, 30.0f);
