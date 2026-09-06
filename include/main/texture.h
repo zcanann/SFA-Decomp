@@ -45,7 +45,7 @@ typedef struct Texture {
     u8 maxLod;
     u8 unk1E[2];
     u32 gxTexObj[sizeof(GXTexObj) / sizeof(u32)];
-    u32 *tmemAddr;
+    u32* tmemAddr;
     u32 dataSize;
     u8 preloaded;
     u8 cached;
@@ -68,24 +68,21 @@ STATIC_ASSERT(offsetof(Texture, loadedSize) == 0x4C);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
-static inline GXTexObj* textureGetGXTexObj(Texture* texture)
-{
+static inline GXTexObj* textureGetGXTexObj(Texture* texture) {
     return (GXTexObj*)texture->gxTexObj;
 }
 
-static inline void* textureGetImageData(Texture* texture)
-{
+static inline void* textureGetImageData(Texture* texture) {
     return (u8*)texture + sizeof(Texture);
 }
 
-static inline GXTexRegion* textureGetGXTexRegion(Texture* texture)
-{
+static inline GXTexRegion* textureGetGXTexRegion(Texture* texture) {
     return (GXTexRegion*)texture->tmemAddr;
 }
 
-void *textureLoadAsset(int asset);
-void textureFree(Texture *texture);
-void selectTextureWithSecondary(Texture *texture, int mapId);
-void selectTexture(Texture *texture, int mapId);
+void* textureLoadAsset(int asset);
+void textureFree(Texture* texture);
+void selectTextureWithSecondary(Texture* texture, int mapId);
+void selectTexture(Texture* texture, int mapId);
 
 #endif

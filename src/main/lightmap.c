@@ -58,37 +58,31 @@ u8 colorScale = 0xFF;
 void sceneDraw(void);
 void sceneDrawTransparentPolys(void);
 
-
-
 extern f32 gLightmapDegToBamScale;
-
-
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 void renderShadowType3(GameObject* obj, u32 b, s32 offset);
-static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z)
-{
+static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z) {
     GXWGFifo.s16 = x;
     GXWGFifo.s16 = y;
     GXWGFifo.s16 = z;
 }
-static inline void GXColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
-{
+static inline void GXColor4u8(const u8 r, const u8 g, const u8 b, const u8 a) {
     GXWGFifo.u8 = r;
     GXWGFifo.u8 = g;
     GXWGFifo.u8 = b;
     GXWGFifo.u8 = a;
 }
-static inline void GXTexCoord2s16(const s16 s, const s16 t)
-{
+static inline void GXTexCoord2s16(const s16 s, const s16 t) {
     GXWGFifo.s16 = s;
     GXWGFifo.s16 = t;
 }
-static inline void GXPosition1x8(const u8 x) { GXWGFifo.u8 = x; }
+static inline void GXPosition1x8(const u8 x) {
+    GXWGFifo.u8 = x;
+}
 
-static void updateVisibleGeometry(void)
-{
+static void updateVisibleGeometry(void) {
     Camera* cam;
     int n;
     int i;
@@ -104,12 +98,9 @@ static void updateVisibleGeometry(void)
     f32 m[17];
 
     cam = Camera_GetCurrent();
-    if ((renderFlags & RENDERFLAG_WIDESCREEN) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
-    {
+    if ((renderFlags & RENDERFLAG_WIDESCREEN) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0) {
         scale = Camera_GetFovY() / 1.5f;
-    }
-    else
-    {
+    } else {
         scale = Camera_GetFovY();
         scale *= 0.5f;
     }
@@ -164,49 +155,51 @@ static void updateVisibleGeometry(void)
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 
-MapBlockData* mapGetBlock(int i)
-{
-    if (i < 0 || i >= gMapBlockCount) return 0;
+MapBlockData* mapGetBlock(int i) {
+    if (i < 0 || i >= gMapBlockCount) {
+        return 0;
+    }
     return gMapBlocks[i];
 }
 
 extern LightSortEntry gLightmapDrawQueue[];
 
-s8* mapGetBlockIdx(int layer)
-{
+s8* mapGetBlockIdx(int layer) {
     return gMapBlockLayerTables[layer];
 }
 
-MapBlockData* mapGetBlockAtPos(int x, int y, int layer)
-{
+MapBlockData* mapGetBlockAtPos(int x, int y, int layer) {
     s8* table = gMapBlockLayerTables[layer];
     s32 idx;
-    if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) return 0;
+    if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) {
+        return 0;
+    }
     idx = table[x + (y << 4)];
-    if (idx < 0 || idx >= gMapBlockCount) return 0;
+    if (idx < 0 || idx >= gMapBlockCount) {
+        return 0;
+    }
     return gMapBlocks[idx];
 }
 
-void* RomList_GetLoadedPages(void)
-{
+void* RomList_GetLoadedPages(void) {
     return gLoadedRomListPages;
 }
 
 u32 gVisibleObjectSortKeys[0x400];
 
-
-
-int coordsToMapCell(f32 x, f32 z)
-{
+int coordsToMapCell(f32 x, f32 z) {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
-    if (ix < 0 || ix >= 16) return -1;
-    if (iz < 0 || iz >= 16) return -1;
+    if (ix < 0 || ix >= 16) {
+        return -1;
+    }
+    if (iz < 0 || iz >= 16) {
+        return -1;
+    }
     return *(s16*)((char*)gMapBlockCellEntryTables[0] + (ix + iz * 16) * 12);
 }
 
-void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ)
-{
+void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ) {
     s32 ix, iz;
     f32 s;
     ix = fastFloorf(x / gMapBlockWorldSize);
@@ -218,47 +211,49 @@ void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ)
 
 #define MAP_BLOCK_LAYER_COUNT 5
 
-int isInBounds(f32 x, f32 z)
-{
+int isInBounds(f32 x, f32 z) {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
     int linear;
     s8** p;
-    if (ix < 0 || ix >= 16) return -1;
-    if (iz < 0 || iz >= 16) return -1;
+    if (ix < 0 || ix >= 16) {
+        return -1;
+    }
+    if (iz < 0 || iz >= 16) {
+        return -1;
+    }
     linear = ix + (iz << 4);
     {
         int i;
         p = gMapBlockLayerTables;
-        for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++)
-        {
-            if ((*p)[linear] > -1) return 1;
+        for (i = 0; i < MAP_BLOCK_LAYER_COUNT; i++) {
+            if ((*p)[linear] > -1) {
+                return 1;
+            }
             p++;
         }
     }
     return 0;
 }
 
-
-int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
-{
+int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
     s8** tp[1];
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)gMapBlockOriginX);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)gMapBlockOriginZ);
     int i;
-    if (ix < 0 || ix >= 16) return -1;
-    if (iz < 0 || iz >= 16) return -1;
+    if (ix < 0 || ix >= 16) {
+        return -1;
+    }
+    if (iz < 0 || iz >= 16) {
+        return -1;
+    }
     ix = ix + (iz << 4);
-    for (tp[0] = gMapBlockLayerTables, i = 0; i < MAP_BLOCK_LAYER_COUNT; tp[0]++, i++)
-    {
+    for (tp[0] = gMapBlockLayerTables, i = 0; i < MAP_BLOCK_LAYER_COUNT; tp[0]++, i++) {
         s8* table = *tp[0];
         int idx = table[ix];
-        if (idx > -1)
-        {
+        if (idx > -1) {
             MapBlockData* block = gMapBlocks[idx];
-            if (y > (f32)(block->minY - 50) &&
-                y < (f32)(block->maxY + 50))
-            {
+            if (y > (f32)(block->minY - 50) && y < (f32)(block->maxY + 50)) {
                 return table[ix];
             }
         }
@@ -266,8 +261,7 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z)
     return -1;
 }
 
-int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
-{
+int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage) {
     MapRomListPage* page;
     MapRomListPage** pageCursor[1];
     int itemIndex;
@@ -278,10 +272,11 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     int itemSize;
 
     for (pageIndex = 0, pageCursor[0] = gLoadedRomListPages; pageIndex < ROM_LIST_PAGE_COUNT;
-         pageCursor[0]++, pageIndex++)
-    {
+         pageCursor[0]++, pageIndex++) {
         page = *pageCursor[0];
-        if (page == NULL) continue;
+        if (page == NULL) {
+            continue;
+        }
 
         gCurRomListPage = page;
         item = page->objects;
@@ -289,18 +284,18 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
         pageOffset = 0;
         pageDataSize = page->objectDataSize;
 
-        while (pageOffset < pageDataSize)
-        {
-            if ((u32)item->ident == (u32)needle)
-            {
-                if (out_idx != NULL) *out_idx = itemIndex;
-                if (out_outer != NULL) *out_outer = pageIndex;
-                if (out_type != NULL)
-                {
+        while (pageOffset < pageDataSize) {
+            if ((u32)item->ident == (u32)needle) {
+                if (out_idx != NULL) {
+                    *out_idx = itemIndex;
+                }
+                if (out_outer != NULL) {
+                    *out_outer = pageIndex;
+                }
+                if (out_type != NULL) {
                     *out_type = (int)(s8)((MapRomListPage*)gCurRomListPage)->mapLayer;
                 }
-                if (out_lastpage != NULL)
-                {
+                if (out_lastpage != NULL) {
                     *out_lastpage = (pageIndex >= 0x50) ? 1 : 0;
                 }
                 return (int*)item;
@@ -318,21 +313,18 @@ void sortVisibleObjectKeysDescending(u32* arr, int n);
 void getVisibleObjects(s8* opacity);
 void renderSceneGeometry(u8 renderType, s8* order);
 
-void sortVisibleObjectKeysDescending(u32* arr, int n)
-{
+void sortVisibleObjectKeysDescending(u32* arr, int n) {
     int i, j;
     int gap = 1;
     u32 tmp;
-    while (gap <= n / 9)
+    while (gap <= n / 9) {
         gap = gap * 3 + 1;
-    while (gap > 0)
-    {
-        for (i = gap + 1; i <= n; i++)
-        {
+    }
+    while (gap > 0) {
+        for (i = gap + 1; i <= n; i++) {
             tmp = arr[i - 1];
             j = i;
-            while (j > gap && arr[j - gap - 1] < tmp)
-            {
+            while (j > gap && arr[j - gap - 1] < tmp) {
                 arr[j - 1] = arr[j - gap - 1];
                 j -= gap;
             }
@@ -342,8 +334,7 @@ void sortVisibleObjectKeysDescending(u32* arr, int n)
     }
 }
 
-void getVisibleObjects(s8* opacity)
-{
+void getVisibleObjects(s8* opacity) {
     int part;
     GameObject** objects;
     GameObject** p;
@@ -370,77 +361,56 @@ void getVisibleObjects(s8* opacity)
     i = 0;
     p = objects;
     cur = opacity;
-    for (; i < count; i++, cur++)
-    {
+    for (; i < count; i++, cur++) {
         o = (GameObject*)*p;
 
         o->objectFlags &= ~OBJECT_OBJFLAG_RENDERED;
         j = 0;
         sub = (u8*)o;
-        for (; j < o->childCount; j++)
-        {
+        for (; j < o->childCount; j++) {
             att = ((GameObject*)sub)->childObjs[0];
-            if (att != NULL)
-            {
+            if (att != NULL) {
                 att->objectFlags &= ~OBJECT_OBJFLAG_RENDERED;
             }
             sub += 4;
         }
-        if (i >= part)
-        {
+        if (i >= part) {
             *cur = objUpdateOpacity(o);
-            if (*cur != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0)
-            {
-                if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0)
-                {
-                    *(f32*)&o->anim.targetObj =
-                        (f32)(o->anim.modelInstance->fixedSortDepth * 100);
+            if (*cur != 0 || (o->anim.modelInstance->flags & OBJDEF_FLAG_RENDER_WHEN_INVISIBLE) != 0) {
+                if ((o->anim.modelInstance->flags & OBJDEF_FLAG_FIXED_SORT_DEPTH) != 0) {
+                    *(f32*)&o->anim.targetObj = (f32)(o->anim.modelInstance->fixedSortDepth * 100);
                     depthInt = (int)*(f32*)&o->anim.targetObj;
-                }
-                else
-                {
-                    if (o->anim.parent != NULL)
-                    {
-                        Camera_ProjectWorldPoint(o->anim.worldPosX, o->anim.worldPosY,
-                                                 o->anim.worldPosZ, &a, &b, &depth,
-                                                 (f32*)&o->anim.targetObj);
-                    }
-                    else
-                    {
-                        Camera_ProjectWorldPoint(o->anim.localPosX - playerMapOffsetX,
-                                                 o->anim.localPosY,
-                                                 o->anim.localPosZ - playerMapOffsetZ, &a, &b,
+                } else {
+                    if (o->anim.parent != NULL) {
+                        Camera_ProjectWorldPoint(o->anim.worldPosX, o->anim.worldPosY, o->anim.worldPosZ, &a, &b,
                                                  &depth, (f32*)&o->anim.targetObj);
+                    } else {
+                        Camera_ProjectWorldPoint(o->anim.localPosX - playerMapOffsetX, o->anim.localPosY,
+                                                 o->anim.localPosZ - playerMapOffsetZ, &a, &b, &depth,
+                                                 (f32*)&o->anim.targetObj);
                     }
                     depthInt = (int)(1e+03f * (1.0f + depth));
                 }
-                if ((o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 &&
-                    o->anim.modelState != NULL &&
-                    (o->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE) != 0)
-                {
+                if ((o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0 && o->anim.modelState != NULL &&
+                    (o->anim.modelState->flags & OBJ_MODEL_STATE_SHADOW_VISIBLE) != 0) {
                     t = o->anim.modelInstance->shadowType;
-                    if (t == 2 || t == 1)
-                    {
+                    if (t == 2 || t == 1) {
                         queueObjectShadow(o);
-                    }
-                    else if (t == 4)
-                    {
+                    } else if (t == 4) {
                         renderObjectShadowTexture(o);
                     }
                 }
-                if (gVisibleObjectSortKeyCount < 1000)
-                {
+                if (gVisibleObjectSortKeyCount < 1000) {
                     key = 0;
                     model = Obj_GetActiveModel(o);
                     if (o->anim.renderAlpha == 0xff && (o->anim.flags & 0x80) == 0 &&
                         ((tf = o->anim.modelInstance->flags) & OBJDEF_FLAG_FORCE_ALPHA_SORT) == 0 &&
-                        model->renderAttachment == NULL)
-                    {
+                        model->renderAttachment == NULL) {
                         key |= 0x80000000;
                         sortDepth = 1000 - (depthInt & 0xffff);
-                        if ((tf & OBJDEF_FLAG_RUNTIME_BATCHABLE) != 0 && (o->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) == 0)
-                        {
-                            key |= 0x40000000LL;
+                        if ((tf & OBJDEF_FLAG_RUNTIME_BATCHABLE) != 0 &&
+                            (o->colorFadeFlags & OBJ_COLOR_FADE_FLAG_ACTIVE) == 0) {
+                            key |= 0x40000000;
                             key |= (o->anim.romDefNo & 0x3ff) << 20;
                         }
                         gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
@@ -448,50 +418,39 @@ void getVisibleObjects(s8* opacity)
                         gVisibleObjectSortKeyCount++;
                         if ((o->anim.modelInstance->renderFlags & 0x20) != 0 &&
                             (o->objectFlags & OBJECT_OBJFLAG_SHADOW_DISABLED) == 0 &&
-                            (o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0)
-                        {
+                            (o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0) {
                             renderShadowType3(o, 7, 0x50);
                             gLightmapDrawQueue[gLightmapDrawQueueCount].type = 1;
                             gLightmapDrawQueueCount++;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         if ((o->anim.modelInstance->flags & OBJDEF_FLAG_DEFERRED_RENDER) != 0 ||
-                            (o->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0)
-                        {
+                            (o->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0) {
                             mode = 0x1f;
-                        }
-                        else
-                        {
+                        } else {
                             mode = 7;
                         }
                         renderShadowType3(o, mode, 0);
                         gLightmapDrawQueue[gLightmapDrawQueueCount].type = 0;
                         gLightmapDrawQueueCount++;
                         if ((o->anim.modelInstance->renderFlags & 0x20) != 0 &&
-                            (o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0)
-                        {
+                            (o->anim.flags & OBJANIM_FLAG_HIDDEN) == 0) {
                             renderShadowType3(o, 7, 0x50);
                             gLightmapDrawQueue[gLightmapDrawQueueCount].type = 1;
                             gLightmapDrawQueueCount++;
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)o->anim.hitReactState;
-                if (hitState != NULL && (hitState->shapeFlags & 0x30) != 0)
-                {
+                if (hitState != NULL && (hitState->shapeFlags & 0x30) != 0) {
                     hitState->resetHitboxMode = 2;
                 }
             }
         }
         p++;
     }
-    if (gVisibleObjectSortKeyCount > 1)
-    {
+    if (gVisibleObjectSortKeyCount > 1) {
         sortVisibleObjectKeysDescending(gVisibleObjectSortKeys, gVisibleObjectSortKeyCount);
     }
     renderShadows(0, 0, 0);
@@ -574,8 +533,7 @@ static inline void fillBoxRows(u8* map, int* box) {
     }
 }
 
-void renderSceneGeometry(u8 renderType, s8* order)
-{
+void renderSceneGeometry(u8 renderType, s8* order) {
     u8 cellMask[256];
     int box0[4];
     int box1[4];
@@ -599,15 +557,13 @@ void renderSceneGeometry(u8 renderType, s8* order)
     layerTablePtr = &gMapBlockLayerTables[4];
     layerFlagPtr = &gMapBlockCellStateTables[4];
     worldSize = gMapBlockWorldSize;
-    do
-    {
+    do {
         table = *layerTablePtr;
         gMapLayerCellStates = *layerFlagPtr;
         mapGetBlockGridRects(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, box0, box1, box2, box3, layer, 1,
-                       gMapCurRomListSlot);
+                             gMapCurRomListSlot);
         cellMaskPtr = cellMask;
-        for (k = 0; k != ARRAY_COUNT(cellMask); k += 4)
-        {
+        for (k = 0; k != ARRAY_COUNT(cellMask); k += 4) {
             cellMaskPtr[0] = 0;
             cellMaskPtr[1] = 0;
             cellMaskPtr[2] = 0;
@@ -619,31 +575,24 @@ void renderSceneGeometry(u8 renderType, s8* order)
         fillBoxRows(cellMaskPtr, box1);
         fillBoxRows(cellMaskPtr, box2);
         fillBoxRows(cellMaskPtr, box3);
-        for (oi = 0; oi < 16; oi++)
-        {
+        for (oi = 0; oi < 16; oi++) {
             row = order[oi];
             ii = 0;
             rowF = worldSize * (f32)row;
-            for (; ii < 16; ii++)
-            {
+            for (; ii < 16; ii++) {
                 col = order[ii];
                 cellIndex = row + col * 0x10;
                 idx = table[cellIndex];
-                if (idx < 0)
-                {
+                if (idx < 0) {
                     block = NULL;
-                }
-                else
-                {
+                } else {
                     block = gMapBlocks[idx];
                     block->flags4 ^= 1;
-                    if (cellMask[cellIndex] == 0)
-                    {
+                    if (cellMask[cellIndex] == 0) {
                         continue;
                     }
                 }
-                if (idx > -1 && mapBlockIsInViewFrustum(row, col, block) != 0)
-                {
+                if (idx > -1 && mapBlockIsInViewFrustum(row, col, block) != 0) {
                     lbl_803DCE58 = rowF;
                     colF = gMapBlockWorldSize * (f32)col;
                     lbl_803DCE54 = colF;
@@ -655,12 +604,10 @@ void renderSceneGeometry(u8 renderType, s8* order)
         layerTablePtr--;
         layerFlagPtr--;
         layer--;
-    }
-    while (layer >= 0);
+    } while (layer >= 0);
 }
 
-void sceneDraw(void)
-{
+void sceneDraw(void) {
     char* q;
     int i;
     u8* cursor;
@@ -675,8 +622,7 @@ void sceneDraw(void)
 
     q = (char*)gLightmapDrawQueue;
     gCloudLayerTexture = cloudGetLayerTexture(&skyA, &skyB);
-    if (gCloudLayerTexture != 0)
-    {
+    if (gCloudLayerTexture != 0) {
         *(f32*)(q + 0x3f48) = 0.0005f;
         *(f32*)(q + 0x3f4c) = 0.0f;
         *(f32*)(q + 0x3f50) = 0.0f;
@@ -689,8 +635,7 @@ void sceneDraw(void)
         *(f32*)(q + 0x3f6c) = 0.0f;
         *(f32*)(q + 0x3f70) = 0.0f;
         *(f32*)(q + 0x3f74) = 1.0f;
-        PSMTXConcat((MtxPtr)(q + 0x3f48), (MtxPtr)Camera_GetInverseViewMatrix(),
-                    (MtxPtr)(q + 0x3f48));
+        PSMTXConcat((MtxPtr)(q + 0x3f48), (MtxPtr)Camera_GetInverseViewMatrix(), (MtxPtr)(q + 0x3f48));
     }
     mapDebugRender((int*)(q + 0x4164));
     shadowBeginFrame();
@@ -708,32 +653,25 @@ void sceneDraw(void)
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     t = 0;
-    if ((renderFlags & 0x40) != 0 && (renderFlags & RENDERFLAG_HIDE_STARS) == 0)
-    {
+    if ((renderFlags & 0x40) != 0 && (renderFlags & RENDERFLAG_HIDE_STARS) == 0) {
         t = 1;
     }
     flag = t;
-    if ((renderFlags & RENDERFLAG_OVERCAST) != 0)
-    {
+    if ((renderFlags & RENDERFLAG_OVERCAST) != 0) {
         (*gSkyInterface)->renderTimeOfDayBackdrop(0, 0);
-        if (flag != 0)
-        {
+        if (flag != 0) {
             drawSkyStars();
         }
         (*gSkyInterface)->render(0, 0, 0, 0, flag);
-        if ((renderFlags & RENDERFLAG_DRAW_CLOUDS) != 0)
-        {
+        if ((renderFlags & RENDERFLAG_DRAW_CLOUDS) != 0) {
             (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         }
-    }
-    else
-    {
+    } else {
         (*gSkyInterface)->render(0, 0, 0, 0, flag);
         (*gCloudActionInterface)->renderClouds(0, 0, 0, 0);
         drawSkyStars();
     }
-    if (gLightmapScreenImageEnabled != 0)
-    {
+    if (gLightmapScreenImageEnabled != 0) {
         screenImageDraw(gLightmapScreenImageEnabled);
     }
     lightningRenderActive();
@@ -748,27 +686,21 @@ void sceneDraw(void)
     renderSceneGeometry(0, gMapBlockDrawOrderFrontToBack);
     objRenderInvalidateStateCache();
     renderObjects(buf);
-    if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0)
-    {
+    if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0) {
         renderMotionBlur(gMotionBlurAmount);
     }
-    if (getHudHiddenFrameCount() == 0)
-    {
+    if (getHudHiddenFrameCount() == 0) {
         newshadows_captureReflectionTextures();
     }
-    if (bEnableBlurFilter != 0)
-    {
-        doBlurFilter(blurFilterX, blurFilterY, blurFilterZ, bBlurFilterUseArea,
-                     bBiggerBlurFilter);
+    if (bEnableBlurFilter != 0) {
+        doBlurFilter(blurFilterX, blurFilterY, blurFilterZ, bBlurFilterUseArea, bBiggerBlurFilter);
     }
-    if (heatEffectIntensity != 0)
-    {
+    if (heatEffectIntensity != 0) {
         doHeatEffect(heatEffectIntensity & 0xff);
     }
     i = 0;
     deferred = (GameObject**)(q + 0x4114);
-    for (; i < gLightmapDeferredObjectCount; i++)
-    {
+    for (; i < gLightmapDeferredObjectCount; i++) {
         (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, *deferred);
         objRender(0, 0, 0, 0, *deferred, 1);
         deferred++;
@@ -776,16 +708,14 @@ void sceneDraw(void)
     renderParticles();
     renderSceneGeometry(1, gMapBlockDrawOrderBackToFront);
     renderSceneGeometry(2, gMapBlockDrawOrderBackToFront);
-    if (gLightmapDrawQueueCount == 1000)
-    {
+    if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
     *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x78000000;
     *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 8;
     gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
-    if (gLightmapDrawQueueCount == 1000)
-    {
+    if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
@@ -796,15 +726,12 @@ void sceneDraw(void)
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);
     player = Obj_GetPlayerObject();
-    if (player != NULL)
-    {
+    if (player != NULL) {
         i = 0;
         cursor = (u8*)player;
-        for (; i < player->childCount; i++)
-        {
+        for (; i < player->childCount; i++) {
             GameObject* child = ((GameObject*)cursor)->childObjs[0];
-            if (child->anim.classId == 45)
-            {
+            if (child->anim.classId == 45) {
                 ((void (*)(GameObject*))(*child->anim.dll)[11])(child);
             }
             cursor += 4;
@@ -812,40 +739,30 @@ void sceneDraw(void)
     }
     staffDrawQuakeSpellRing();
     (*gNewCloudsInterface)->renderSnowClouds(0);
-    if (bEnableDistortionFilter != 0)
-    {
+    if (bEnableDistortionFilter != 0) {
         newshadows_captureReflectionTextures();
-        doDistortionFilter((f32*)(q + 0x4108), distortionFilterAngle2,
-                           distortionFilterColor, distortionFilterAngle1);
+        doDistortionFilter((f32*)(q + 0x4108), distortionFilterAngle2, distortionFilterColor, distortionFilterAngle1);
     }
     renderGlows();
     (*gCameraInterface)->minimapShowHelpTextForTarget(0, 0, 0, 0);
-    if (bEnableMonochromeFilter != 0)
-    {
+    if (bEnableMonochromeFilter != 0) {
         doColorFilter(colorFilterColor);
-    }
-    else if (bEnableSpiritVision != 0)
-    {
+    } else if (bEnableSpiritVision != 0) {
         doSpiritVisionFilter();
     }
-    if (bEnableViewFinderHud != 0)
-    {
+    if (bEnableViewFinderHud != 0) {
         drawViewFinderAperture(3.1e+02f, 2.3e+02f, 0x40, 0);
     }
-    if (bEnableColorFilter == 1)
-    {
+    if (bEnableColorFilter == 1) {
         doColorFilter(colorFilterColor);
     }
     shadowVolumesSetDirty(0);
 }
 
-
-void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5)
-{
+void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5) {
     renderFlags |= 0x21;
-    if (curMapType == MAPTYPE_SUBMAP || curMapType == MAPTYPE_SUBMAP_UNUSED)
-    {
-        renderFlags &= ~1LL;
+    if (curMapType == MAPTYPE_SUBMAP || curMapType == MAPTYPE_SUBMAP_UNUSED) {
+        renderFlags &= ~1;
     }
     Camera_UpdateProjection(NULL, 0);
     updateVisibleGeometry();
@@ -857,16 +774,13 @@ void sceneRender(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad
     gSceneCamera = Camera_GetCurrent();
     sceneDraw();
     Camera_SetupFullscreenViewport(NULL);
-    renderFlags &= ~2LL;
+    renderFlags &= ~2;
 }
 
-void doNothing_beforeTitleScreen(void)
-{
+void doNothing_beforeTitleScreen(void) {
 }
-void updateEnvironment(int mode)
-{
-    if (mode == 0)
-    {
+void updateEnvironment(int mode) {
+    if (mode == 0) {
         MapTextureOverride* textureOverride;
         MapTextureScroll* textureScroll;
         Texture* texture;
@@ -885,12 +799,10 @@ void updateEnvironment(int mode)
 
         i = 0;
         byteOffset = 0;
-        for (; i < 80; i++)
-        {
+        for (; i < 80; i++) {
             textureOverride = (MapTextureOverride*)((u8*)gMapTextureOverrides + byteOffset);
             if (textureOverride->refCount != 0 && (texture = textureOverride->texture) != NULL &&
-                texture->animationFrameCount != 0x100 && texture->animationFrameStep != 0)
-            {
+                texture->animationFrameCount != 0x100 && texture->animationFrameStep != 0) {
                 textureUpdateAnimationFrame(texture, &textureOverride->flags, &textureOverride->frame);
             }
             byteOffset += sizeof(MapTextureOverride);
@@ -898,11 +810,9 @@ void updateEnvironment(int mode)
 
         i = 0;
         byteOffset = 0;
-        for (; i < 58; i++)
-        {
+        for (; i < 58; i++) {
             textureScroll = (MapTextureScroll*)((u8*)gMapTextureScrolls + byteOffset);
-            if (textureScroll->refCount != 0)
-            {
+            if (textureScroll->refCount != 0) {
                 deltaY = textureScroll->yStep * (deltaTime = timeDelta);
                 offsetX = textureScroll->offsetX;
                 deltaX = textureScroll->xStep * deltaTime;
@@ -913,22 +823,17 @@ void updateEnvironment(int mode)
         }
 
         loadNextMap();
-        if (gEnvironmentUpdateInterface != NULL)
-        {
+        if (gEnvironmentUpdateInterface != NULL) {
             (*gEnvironmentUpdateInterface)->update();
         }
         gMinimapInterface->vtable->frameStart();
 
-        if (gHeatEffectFadeDirection != 0)
-        {
+        if (gHeatEffectFadeDirection != 0) {
             heatEffectIntensity += gHeatEffectFadeDirection;
-            if (heatEffectIntensity < 0)
-            {
+            if (heatEffectIntensity < 0) {
                 heatEffectIntensity = 0;
                 gHeatEffectFadeDirection = 0;
-            }
-            else if (heatEffectIntensity > 255)
-            {
+            } else if (heatEffectIntensity > 255) {
                 heatEffectIntensity = 255;
                 gHeatEffectFadeDirection = 0;
             }
@@ -936,27 +841,20 @@ void updateEnvironment(int mode)
     }
 }
 
-
-
-
 void lightmapDrawQueuedObject(GameObject* obj);
 void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx);
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx);
 void mapBlockRenderTransparent(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx);
 void lightmap_sortTransparentDrawQueue(void);
-
 
 void renderShadowType3(GameObject* obj, u32 b, s32 offset);
 
 void lightmap_sortTransparentDrawQueue(void);
 
-
 void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx);
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx);
 void mapBlockRenderTransparent(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx);
 
-
 void lightmapDrawQueuedObject(GameObject* obj);
 
 void sceneDrawTransparentPolys(void);
-

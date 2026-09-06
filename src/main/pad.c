@@ -18,12 +18,11 @@ u8 gPadMenuStickRepeatDelay = 5;
 #define PAD_ANALOG_TRIGGER_R 0x20
 #define PAD_ANALOG_TRIGGER_L 0x40
 
-typedef struct PadStateBlock
-{
-    u32 previousButtons[4];       /* 0x00 */
-    u32 currentButtons[4];        /* 0x10 */
-    u32 releasedButtons[4];       /* 0x20 */
-    u32 pressedButtons[4];        /* 0x30 */
+typedef struct PadStateBlock {
+    u32 previousButtons[4];        /* 0x00 */
+    u32 currentButtons[4];         /* 0x10 */
+    u32 releasedButtons[4];        /* 0x20 */
+    u32 pressedButtons[4];         /* 0x30 */
     PADStatus statusBuffers[2][4]; /* 0x40, two 0x30-byte PADRead buffers */
 } PadStateBlock;
 
@@ -52,19 +51,15 @@ f32 gRumbleTimer;
 u8 rumbleEnabled;
 u8 joypadDisabled;
 
-void stopRumble2(void)
-{
-    if (rumbleEnabled != 0)
-    {
+void stopRumble2(void) {
+    if (rumbleEnabled != 0) {
         PADControlMotor(0, PAD_MOTOR_STOP_HARD);
         gRumbleTimer = 0.0f;
     }
 }
 
-void stopRumble(void)
-{
-    if (rumbleEnabled != 0)
-    {
+void stopRumble(void) {
+    if (rumbleEnabled != 0) {
         PADControlMotor(0, PAD_MOTOR_STOP);
         gRumbleTimer = 0.0f;
     }
@@ -80,40 +75,32 @@ void doRumble(f32 duration) {
     }
 }
 
-void setJoypadDisabled(void)
-{
+void setJoypadDisabled(void) {
     joypadDisabled = 1;
 }
 
-void padSetStickRepeatDelay(int delay)
-{
+void padSetStickRepeatDelay(int delay) {
     gPadMenuStickRepeatDelay = delay;
 }
 
-u32 buttonGetDisabled(int port)
-{
+u32 buttonGetDisabled(int port) {
     return ~gPadButtonMask[port];
 }
 
-void buttonDisable(int port, u32 mask)
-{
+void buttonDisable(int port, u32 mask) {
     gPadButtonMask[port] &= ~mask;
 }
 
-void padClearAnalogInputY(int port)
-{
+void padClearAnalogInputY(int port) {
     gPadMenuStickYSign[port] = 0;
 }
 
-void padClearAnalogInputX(int port)
-{
+void padClearAnalogInputX(int port) {
     gPadMenuStickXSign[port] = 0;
 }
 
-void padGetAnalogInput(int port, s8* x, s8* y)
-{
-    if (joypadDisabled != 0 || port > 0 || gDvdErrorPauseActive != 0)
-    {
+void padGetAnalogInput(int port, s8* x, s8* y) {
+    if (joypadDisabled != 0 || port > 0 || gDvdErrorPauseActive != 0) {
         *x = 0;
         *y = 0;
         return;
@@ -122,177 +109,141 @@ void padGetAnalogInput(int port, s8* x, s8* y)
     *y = gPadMenuStickYSign[port];
 }
 
-s8 padGetCY(int port)
-{
+s8 padGetCY(int port) {
     PADStatus* statuses;
 
-    if (port > 0)
-    {
+    if (port > 0) {
         return 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = gPadStatuses[0];
     return statuses[gPadStatusBufferIndex * 4 + port].substickY;
 }
 
-s8 padGetCX(int port)
-{
+s8 padGetCX(int port) {
     PADStatus* statuses;
 
-    if (port > 0)
-    {
+    if (port > 0) {
         return 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = gPadStatuses[0];
     return statuses[gPadStatusBufferIndex * 4 + port].substickX;
 }
 
-s8 padGetStickY(int port)
-{
+s8 padGetStickY(int port) {
     PADStatus* statuses;
 
-    if (port > 0)
-    {
+    if (port > 0) {
         return 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = gPadStatuses[0];
     return statuses[gPadStatusBufferIndex * 4 + port].stickY;
 }
 
-s8 padGetStickX(int port)
-{
+s8 padGetStickX(int port) {
     PADStatus* statuses;
 
-    if (port > 0)
-    {
+    if (port > 0) {
         return 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = gPadStatuses[0];
     return statuses[gPadStatusBufferIndex * 4 + port].stickX;
 }
 
-u8 padGetLTrigger(int port)
-{
+u8 padGetLTrigger(int port) {
     PADStatus* statuses;
 
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = gPadStatuses[0];
     return statuses[gPadStatusBufferIndex * 4 + port].triggerLeft;
 }
 
-u8 padGetRTrigger(int port)
-{
+u8 padGetRTrigger(int port) {
     PADStatus* statuses;
 
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = gPadStatuses[0];
     return statuses[gPadStatusBufferIndex * 4 + port].triggerRight;
 }
 
-u16 padGetTriggersPressed(int port)
-{
-    if (port > 0)
-    {
+u16 padGetTriggersPressed(int port) {
+    if (port > 0) {
         port = 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return gPadTriggersPressed[port];
 }
 
-u16 padGetTriggers(int port)
-{
-    if (port > 0)
-    {
+u16 padGetTriggers(int port) {
+    if (port > 0) {
         port = 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return gPadTriggers[port];
 }
 
-u32 getButtonsJustPressedIfNotBusy(int port)
-{
-    if (port > 0)
-    {
+u32 getButtonsJustPressedIfNotBusy(int port) {
+    if (port > 0) {
         return 0;
     }
-    if (gDvdErrorPauseActive != 0)
-    {
+    if (gDvdErrorPauseActive != 0) {
         return 0;
     }
-    if (joypadDisabled != 0)
-    {
+    if (joypadDisabled != 0) {
         return -1;
     }
     return gPadButtonsReleased[port] & gPadButtonMask[port];
 }
 
-u32 getButtonsJustPressed(int port)
-{
-    if (port > 0)
-    {
+u32 getButtonsJustPressed(int port) {
+    if (port > 0) {
         return 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return gPadButtonsJustPressed[port] & gPadButtonMask[port];
 }
 
-u32 getNewInputs(int port)
-{
-    if (port > 0)
-    {
+u32 getNewInputs(int port) {
+    if (port > 0) {
         return 0;
     }
     return gPadButtonsHeld[port];
 }
 
-u32 getButtonsHeld(int port)
-{
-    if (port > 0)
-    {
+u32 getButtonsHeld(int port) {
+    if (port > 0) {
         return 0;
     }
-    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0)
-    {
+    if (joypadDisabled != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return gPadButtonsHeld[port] & gPadButtonMask[port];
 }
 
-void doNothing_endOfFrame(void)
-{
+void doNothing_endOfFrame(void) {
 }
-void padUpdate(void)
-{
+void padUpdate(void) {
     u32* padStateBlock[1];
     PADStatus* currentStatus;
     s8* prevStickY;
@@ -321,20 +272,15 @@ void padUpdate(void)
     prevPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + gPadStatusBufferIndex * 0x30);
     gPadStatusBufferIndex ^= 1;
     readPad = (PADStatus*)((u8*)(padStateBlock[0] + 0x10) + gPadStatusBufferIndex * 0x30);
-    if (PADRead(readPad) == PAD_ERR_TRANSFER)
-    {
+    if (PADRead(readPad) == PAD_ERR_TRANSFER) {
         return;
     }
     PADClamp(readPad);
-    if (rumbleEnabled != 0)
-    {
-        if (gRumbleTimer > 0.0f)
-        {
+    if (rumbleEnabled != 0) {
+        if (gRumbleTimer > 0.0f) {
             gRumbleTimer = gRumbleTimer - timeDelta;
-            if (gRumbleTimer <= 0.0f)
-            {
-                if (rumbleEnabled != 0)
-                {
+            if (gRumbleTimer <= 0.0f) {
+                if (rumbleEnabled != 0) {
                     PADControlMotor(0, PAD_MOTOR_STOP);
                     gRumbleTimer = 0.0f;
                 }
@@ -362,10 +308,8 @@ void padUpdate(void)
     triggersPressed = gPadTriggersPressed;
     statuses = (PADStatus*)((u8*)padStateBlock[0] + 0x40);
 
-    for (; i < 4; i++)
-    {
-        if (currentStatus->err == PAD_ERR_NO_CONTROLLER)
-        {
+    for (; i < 4; i++) {
+        if (currentStatus->err == PAD_ERR_NO_CONTROLLER) {
             *prevStickY = 0;
             *prevStickX = 0;
             *repeatY = 0;
@@ -384,42 +328,32 @@ void padUpdate(void)
             memset((u8*)(padStateBlock[0] + 0x10) + (i + 4) * 0xc, 0, sizeof(PADStatus));
             gPadResetMask |= PAD_CHAN0_BIT >> i;
             currentStatus->err = PAD_ERR_NO_CONTROLLER;
-        }
-        else if ((u8)(currentStatus->err + 3) <= 1 || gPadReadReady == 0)
-        {
+        } else if ((u8)(currentStatus->err + 3) <= 1 || gPadReadReady == 0) {
             memcpy(currentStatus, prevPad, sizeof(PADStatus));
             useprev = 1;
-        }
-        else
-        {
+        } else {
             *currentButtons = currentStatus->button;
-            if (currentStatus->substickY < -40)
-            {
-                *currentButtons |= (u64)PAD_BUTTON_CSTICK_DOWN;
+            if (currentStatus->substickY < -40) {
+                *currentButtons |= PAD_BUTTON_CSTICK_DOWN;
             }
-            if (currentStatus->substickY > 40)
-            {
-                *currentButtons |= (u64)PAD_BUTTON_CSTICK_UP;
+            if (currentStatus->substickY > 40) {
+                *currentButtons |= PAD_BUTTON_CSTICK_UP;
             }
-            if (currentStatus->substickX < -40)
-            {
-                *currentButtons |= (u64)PAD_BUTTON_CSTICK_LEFT;
+            if (currentStatus->substickX < -40) {
+                *currentButtons |= PAD_BUTTON_CSTICK_LEFT;
             }
-            if (currentStatus->substickX > 40)
-            {
-                *currentButtons |= (u64)PAD_BUTTON_CSTICK_RIGHT;
+            if (currentStatus->substickX > 40) {
+                *currentButtons |= PAD_BUTTON_CSTICK_RIGHT;
             }
             *pressedButtons = *currentButtons & (*currentButtons ^ *previousButtons);
             *releasedButtons = *previousButtons & (*currentButtons ^ *previousButtons);
             *previousButtons = *currentButtons;
 
             *triggers = 0;
-            if (currentStatus->triggerRight > 10)
-            {
+            if (currentStatus->triggerRight > 10) {
                 *triggers |= PAD_ANALOG_TRIGGER_R;
             }
-            if (currentStatus->triggerLeft > 10)
-            {
+            if (currentStatus->triggerLeft > 10) {
                 *triggers |= PAD_ANALOG_TRIGGER_L;
             }
             *triggersPressed = *triggers & (*triggers ^ *prevTriggers);
@@ -430,61 +364,45 @@ void padUpdate(void)
             sy = currentStatus->stickY;
             *analogX = 0;
             *analogY = 0;
-            if (sx < -35 && *prevStickX >= -35)
-            {
+            if (sx < -35 && *prevStickX >= -35) {
                 *analogX = -1;
                 *repeatX = 0;
             }
-            if (sx > 35 && *prevStickX <= 35)
-            {
+            if (sx > 35 && *prevStickX <= 35) {
                 *analogX = 1;
                 *repeatX = 0;
             }
-            if (sy < -35 && *prevStickY >= -35)
-            {
+            if (sy < -35 && *prevStickY >= -35) {
                 *analogY = -1;
                 *repeatY = 0;
             }
-            if (sy > 35 && *prevStickY <= 35)
-            {
+            if (sy > 35 && *prevStickY <= 35) {
                 *analogY = 1;
                 *repeatY = 0;
             }
             *prevStickY = sy;
             sy = *prevStickY;
-            if (sy < -35)
-            {
+            if (sy < -35) {
                 (*repeatY)++;
-            }
-            else if (sy > 35)
-            {
+            } else if (sy > 35) {
                 (*repeatY)++;
-            }
-            else
-            {
+            } else {
                 *repeatY = 0;
             }
-            if (*repeatY > gPadMenuStickRepeatDelay)
-            {
+            if (*repeatY > gPadMenuStickRepeatDelay) {
                 *prevStickY = 0;
                 *repeatY = 0;
             }
             *prevStickX = sx;
             sx = *prevStickX;
-            if (sx < -35)
-            {
+            if (sx < -35) {
                 (*repeatX)++;
-            }
-            else if (sx > 35)
-            {
+            } else if (sx > 35) {
                 (*repeatX)++;
-            }
-            else
-            {
+            } else {
                 *repeatX = 0;
             }
-            if (*repeatX > gPadMenuStickRepeatDelay)
-            {
+            if (*repeatX > gPadMenuStickRepeatDelay) {
                 *prevStickX = 0;
                 *repeatX = 0;
             }
@@ -510,27 +428,22 @@ void padUpdate(void)
         prevPad++;
     }
 
-    if (gPadResetMask != 0)
-    {
-        if (PADReset(gPadResetMask) != 0)
-        {
+    if (gPadResetMask != 0) {
+        if (PADReset(gPadResetMask) != 0) {
             gPadResetMask = 0;
         }
     }
-    if (useprev != 0)
-    {
+    if (useprev != 0) {
         gPadStatusBufferIndex ^= 1;
     }
     gPadReadReady = 0;
 }
 
-void setRumbleEnabled(u8 enabled)
-{
+void setRumbleEnabled(u8 enabled) {
     rumbleEnabled = enabled;
 }
 
-int initControllers(void)
-{
+int initControllers(void) {
     PadStateBlock* base[1];
     s8* prevStickY;
     s8* prevStickX;
@@ -554,8 +467,7 @@ int initControllers(void)
     gPadResetMask = 0xF0000000;
     PADInit();
     PADRecalibrate(gPadResetMask);
-    if (PADReset(gPadResetMask) != 0)
-    {
+    if (PADReset(gPadResetMask) != 0) {
         gPadResetMask = 0;
     }
 
@@ -576,8 +488,7 @@ int initControllers(void)
     triggersPressed = gPadTriggersPressed;
     statuses = base[0]->statusBuffers[0];
 
-    for (; i < 4; i++)
-    {
+    for (; i < 4; i++) {
         *prevStickY = 0;
         *prevStickX = 0;
         *repeatY = 0;
