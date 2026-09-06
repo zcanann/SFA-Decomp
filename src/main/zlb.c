@@ -152,7 +152,7 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
     register u8* dst ZLB_REG(r5);
     register int pos ZLB_REG(r7);
     register u8* literalCodeLengths ZLB_REG(r8);
-    register u8* literalDecodeTable ZLB_REG(r9);
+    register u16* literalDecodeTable ZLB_REG(r9);
     register int literalMaxBits ZLB_REG(r10);
     register u8* distanceCodeLengths ZLB_REG(r11);
     register u8* distanceDecodeTable ZLB_REG(r12);
@@ -175,7 +175,7 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
     u8* p8;
     u16* p16;
     u8* activeCodeLengths;
-    u8* activeLengthCounts;
+    u16* activeLengthCounts;
 
     dst = destination - 1;
     pos = 0;
@@ -205,14 +205,14 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
         } else {
             if (type == 1) {
                 literalCodeLengths = gInflateFixedLiteralCodeLengths;
-                literalDecodeTable = (u8*)gInflateFixedLiteralDecodeTable;
+                literalDecodeTable = gInflateFixedLiteralDecodeTable;
                 literalMaxBits = 9;
                 distanceCodeLengths = gInflateFixedDistanceCodeLengths;
                 distanceDecodeTable = gInflateFixedDistanceDecodeTable;
                 distanceMaxBits = 5;
             } else {
                 literalCodeLengths = gInflateLiteralCodeLengths;
-                literalDecodeTable = (u8*)gInflateLiteralDecodeTable;
+                literalDecodeTable = gInflateLiteralDecodeTable;
                 distanceCodeLengths = gInflateDistanceCodeLengths;
                 distanceDecodeTable = gInflateDistanceDecodeTable;
                 val = 0;
@@ -285,14 +285,12 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
                     u32 len = gInflateCodeLengthCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (codeLengthMaxBits - len); k++) {
-                            int c = gInflateCodeLengthNextCode[len] + 1;
-                            gInflateCodeLengthNextCode[len] = c;
-                            (gInflateCodeLengthDecodeTable - 1)[c] = i;
+                            gInflateCodeLengthDecodeTable[gInflateCodeLengthNextCode[len]++] = i;
                         }
                     }
                 }
                 activeCodeLengths = literalCodeLengths;
-                activeLengthCounts = (u8*)gInflateLiteralLengthCounts;
+                activeLengthCounts = gInflateLiteralLengthCounts;
                 n = 0;
                 do {
                     u32 extra;
@@ -303,8 +301,7 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
                         extra = (u32)src[1] << (8 - pos);
                     }
                     v = (ZROT8(src[0]) | extra) & ((1 << codeLengthMaxBits) - 1);
-                    m = codeLengthMaxBits + 0x18;
-                    sym = gInflateCodeLengthDecodeTable[ZROTL(gInflateBitReverseTable[v], m) & 0xff];
+                    sym = gInflateCodeLengthDecodeTable[gInflateBitReverseTable[v] >> (8 - codeLengthMaxBits)];
                     ZADV(gInflateCodeLengthCodeLengths[sym]);
                     if (sym == 0x10) {
                         rep = (ZGB8() & 3) + 3;
@@ -324,9 +321,9 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
                     do {
                         activeCodeLengths[n] = val;
                         n += 1;
-                        *(u16*)(activeLengthCounts + val + val) += 1;
+                        activeLengthCounts[val] += 1;
                         if (activeCodeLengths == literalCodeLengths && n == literalCodeCount) {
-                            activeLengthCounts = (u8*)gInflateDistanceLengthCounts;
+                            activeLengthCounts = gInflateDistanceLengthCounts;
                             n = 0;
                             activeCodeLengths = distanceCodeLengths;
                         }
@@ -347,9 +344,7 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
                     u32 len = literalCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (literalMaxBits - len); k++) {
-                            int c = gInflateLiteralNextCode[len] + 1;
-                            gInflateLiteralNextCode[len] = c;
-                            *(u16*)(literalDecodeTable + (c - 1) + (c - 1)) = i;
+                            literalDecodeTable[gInflateLiteralNextCode[len]++] = i;
                         }
                     }
                 }
@@ -368,9 +363,7 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
                     u32 len = distanceCodeLengths[i];
                     if (len != 0) {
                         for (k = 0; k < 1 << (distanceMaxBits - len); k++) {
-                            int c = gInflateDistanceNextCode[len] + 1;
-                            gInflateDistanceNextCode[len] = c;
-                            distanceDecodeTable[c - 1] = i;
+                            distanceDecodeTable[gInflateDistanceNextCode[len]++] = i;
                         }
                     }
                 }
@@ -383,7 +376,7 @@ int zlbDecompress(u8* compressedData, int compressedSize, u8* destination, void*
                 code2 = ZROTL(gInflateBitReverseTable[t & 0xff], m) & 0xffff;
                 m = literalMaxBits + 0x10;
                 code2 |= ZROTL(gInflateBitReverseTable[t >> 8], m) & 0xff;
-                sym = *(u16*)(literalDecodeTable + code2 + code2);
+                sym = literalDecodeTable[code2];
                 ZADV(literalCodeLengths[sym]);
                 if ((int)sym < 0x100) {
                     *++dst = sym;
