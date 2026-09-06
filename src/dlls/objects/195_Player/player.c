@@ -316,7 +316,8 @@ void playerUpdateSurfaceResponse(GameObject* obj, PlayerState* state, PlayerStat
 void playerUpdateTargetSelection(GameObject* obj, PlayerState* inner, PlayerState* inner2);
 void playerAnimate(GameObject* obj, PlayerState* state, f32 fv);
 void playerInitFuncPtrs(void);
-int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hit, f32* out, f32* vec, f32 distance, f32 updateRate);
+int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hit, f32* out, f32* vec, f32 distance,
+                                   f32 updateRate);
 int player_probeClimbable(GameObject* obj, int p4, TrackLineIntersectResult* src, int dst, int flag);
 int playerStateClimbLedge(int obj, int state, f32 fv);
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag);
@@ -10248,7 +10249,8 @@ int playerBuildWallPlaneProbe(int p1, int p2, TrackLineIntersectResult* src, f32
     return 0;
 }
 
-int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hit, f32* out, f32* vec, f32 distance, f32 updateRate) {
+int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hit, f32* out, f32* vec, f32 distance,
+                                   f32 updateRate) {
     EmitPlane* plane;
     f32* dp;
     char* hitCursor;
@@ -10320,8 +10322,7 @@ int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hi
         planes[1].nx = -planes[0].nx;
         planes[1].ny = 0.0f;
         planes[1].nz = -planes[0].nz;
-        planes[1].d =
-            -(planes[1].nx * hit->lineEndX + planes[1].nz * hit->lineEndZ);
+        planes[1].d = -(planes[1].nx * hit->lineEndX + planes[1].nz * hit->lineEndZ);
         i = 0;
         plane = planes;
         dp = dists;
@@ -10379,10 +10380,10 @@ int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hi
             *(u8*)((char*)out + 0x5f) = 1;
         }
         if (wallHit != 0) {
-            out[0xb] = out[0xb] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
-                                      planes[*(u8*)((char*)out + 0x5f)].nx;
-            out[0xd] = out[0xd] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) *
-                                      planes[*(u8*)((char*)out + 0x5f)].nz;
+            out[0xb] =
+                out[0xb] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) * planes[*(u8*)((char*)out + 0x5f)].nx;
+            out[0xd] =
+                out[0xd] + ((0.5f + b6b8[1]) - dists[*(u8*)((char*)out + 0x5f)]) * planes[*(u8*)((char*)out + 0x5f)].nz;
         }
         out[0x11] = -(out[7] * (0.5f + lbl_803DC6C0) - out[0xb]);
         out[0x13] = -(out[9] * (0.5f + lbl_803DC6C0) - out[0xd]);
@@ -10391,8 +10392,7 @@ int playerBuildWallTransitionProbe(GameObject* obj, TrackLineIntersectResult* hi
             out[0x14] = f * out[7] + out[0xb];
             out[0x16] = f * out[9] + out[0xd];
         }
-        out[1] = hit->lineStartY +
-                 hit->interpolation * (hit->lineEndY - hit->lineStartY);
+        out[1] = hit->lineStartY + hit->interpolation * (hit->lineEndY - hit->lineStartY);
         probe.x = out[0x14];
         probe.y = out[1];
         probe.z = out[0x16];
@@ -15090,8 +15090,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag) {
     }
     ((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     objAudioDispatchAnimEvents((GameObject*)obj, &seq->animEvents, ((PlayerState*)inner)->animSoundId,
-                               (void*)((char*)inner + 0x3c4), &controller->curvesCollision,
-                               controller->animSpeedA, 1.0f);
+                               (void*)((char*)inner + 0x3c4), &controller->curvesCollision, controller->animSpeedA,
+                               1.0f);
     return result;
 }
 
