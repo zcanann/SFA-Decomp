@@ -291,7 +291,9 @@ typedef struct GroundBaddieState {
     u8 configFlags; /* bits 1/2/0x10 */
     u8 subMode; /* sub-state-machine index 0/1/2 (switch/==-tested; &subMode handed to BaddieControlInterface.processMessages as the route-phase out-param) */
     u8 aggression; /* percent-ish; randomGetRange(0, x), > 50 compares */
-    u8 unk407[0x40A - 0x407];
+    u8 initialWeaponId; /* 0x407: copied from GroundBaddiePlacement.initialWeaponId */
+    u8 unk408; /* copied from GroundBaddiePlacement.unk28; low three bits merge into objectFlags */
+    u8 spawnedWeaponId; /* 0x409: initialWeaponId once the weapon child has been spawned */
     s8 lastHitSphereIndex;
     u8 unk40B;
     void *control; /* per-family control/extra record (engine-allocated; treasurechest casts its slot to LandedArwingState*) */
@@ -302,6 +304,7 @@ STATIC_ASSERT(offsetof(GroundBaddieState, routeNav) == 0x35C);
 STATIC_ASSERT(offsetof(GroundBaddieState, routeState) == 0x384);
 STATIC_ASSERT(offsetof(GroundBaddieState, eyeAnimState) == 0x3AC);
 STATIC_ASSERT(offsetof(GroundBaddieState, pathRadius) == 0x3E4);
+STATIC_ASSERT(offsetof(GroundBaddieState, initialWeaponId) == 0x407);
 STATIC_ASSERT(offsetof(GroundBaddieState, targetState) == 0x402);
 STATIC_ASSERT(offsetof(GroundBaddieState, lastHitSphereIndex) == 0x40A);
 STATIC_ASSERT(offsetof(GroundBaddieState, control) == 0x40C);
