@@ -94,10 +94,8 @@ ObjectDescriptor gInvHitObjDescriptor = {
 };
 
 void InvHit_update(GameObject* obj) {
-    InvHitState* state;
+    InvHitState* state = obj->extra;
     GameObject* target;
-
-    state = obj->extra;
     obj->anim.previousLocalPosX = obj->anim.localPosX;
     obj->anim.previousLocalPosY = obj->anim.localPosY;
     obj->anim.previousLocalPosZ = obj->anim.localPosZ;
@@ -110,10 +108,10 @@ void InvHit_update(GameObject* obj) {
             f32 deltaZ = obj->anim.localPosZ - victim->anim.localPosZ;
             f32 distance = sqrtf(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
             if (distance < (f32)obj->userData2) {
-                ObjHitsPriorityState* victimHits = *(ObjHitsPriorityState**)&victim->anim.hitReactState;
+                ObjHitsPriorityState* victimHits = (ObjHitsPriorityState*)victim->anim.hitReactState;
                 victimHits->priorityHitCount += 1;
-                victimHits->flags = victimHits->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
-                (*(ObjHitsPriorityState**)&obj->anim.hitReactState)->priorityHitCount += 1;
+                victimHits->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
+                ((ObjHitsPriorityState*)obj->anim.hitReactState)->priorityHitCount += 1;
             }
             if (victim->anim.classId == INVHIT_PLAYER_CLASS_ID) {
                 victim = getTrickyObject();
@@ -131,7 +129,7 @@ void InvHit_update(GameObject* obj) {
         }
         break;
     case INVHIT_MODE_LOCKON_GATE: {
-        void* player = Obj_GetPlayerObject();
+        GameObject* player = Obj_GetPlayerObject();
         u32 targetAddress = Player_GetTargetObject((int)player);
         if (player != NULL && targetAddress != 0) {
             gInvHitPublishedPos[0] = obj->anim.worldPosX;
@@ -144,24 +142,20 @@ void InvHit_update(GameObject* obj) {
         ObjList_ContainsObject((GameObject*)obj->userData1);
         break;
     case INVHIT_MODE_SELF_FREE: {
-        ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&obj->anim.hitReactState;
-        char* ownerHitSlot;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         ObjHitsPriorityState* ownerHitState = (ObjHitsPriorityState*)((GameObject*)obj->userData1)->anim.hitReactState;
         int ownerHitIndex;
 
-        ownerHitIndex = 0;
-        ownerHitSlot = (char*)ownerHitState;
-        for (; ownerHitIndex < ownerHitState->priorityHitCount; ownerHitIndex++) {
-            if (*(GameObject**)(ownerHitSlot + offsetof(ObjHitsPriorityState, hitObjects)) == obj) {
-                hitState->flags = hitState->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
+        for (ownerHitIndex = 0; ownerHitIndex < ownerHitState->priorityHitCount; ownerHitIndex++) {
+            if ((GameObject*)ownerHitState->hitObjects[ownerHitIndex] == obj) {
+                hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
                 Obj_FreeObject(obj);
             }
-            ownerHitSlot += 4;
         }
         break;
     }
     case INVHIT_MODE_HOMING_PROJECTILE: {
-        ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&obj->anim.hitReactState;
+        ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         TrackGroundHit** hits[2];
         f32 anchorDeltaX;
         f32 anchorDeltaZ;
@@ -171,10 +165,10 @@ void InvHit_update(GameObject* obj) {
         int groundHitIndex;
 
         obj->userData2 -= framesThisStep;
-        if ((void*)hitState->lastHitObject != NULL) {
+        if (hitState->lastHitObject != 0) {
             hitState->flags = 0;
         }
-        target = *(GameObject**)&obj->userData1;
+        target = (GameObject*)obj->userData1;
         if (target != NULL) {
             f32 targetDeltaX;
             f32 targetDeltaZ;
@@ -233,8 +227,8 @@ void InvHit_init(GameObject* obj, InvHitObjectDef* setup) {
     ObjHitsPriorityState* hitState;
 
     state->mode = setup->mode;
-    hitState = *(ObjHitsPriorityState**)&obj->anim.hitReactState;
-    hitState->flags = hitState->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
+    hitState->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
     switch (state->mode) {
     case INVHIT_MODE_PROXIMITY_DAMAGE:
         obj->userData2 = setup->radius;
@@ -242,7 +236,7 @@ void InvHit_init(GameObject* obj, InvHitObjectDef* setup) {
     case INVHIT_MODE_FIXED_RADIUS:
         hitState->shapeFlags = OBJHITS_SHAPE_SPHERE;
         hitState->primaryRadius = INVHIT_FIXED_RADIUS;
-        hitState->flags = hitState->flags | INVHIT_STANDARD_HIT_FLAGS;
+        hitState->flags |= INVHIT_STANDARD_HIT_FLAGS;
         hitState->hitVolumePriority = INVHIT_FIXED_HIT_PRIORITY;
         hitState->hitVolumeId = INVHIT_DEFAULT_HIT_VOLUME_ID;
         hitState->activeHitboxMode = 0;
@@ -263,7 +257,7 @@ void InvHit_init(GameObject* obj, InvHitObjectDef* setup) {
     case INVHIT_MODE_SELF_FREE:
         hitState->shapeFlags = OBJHITS_SHAPE_SPHERE;
         hitState->primaryRadius = setup->radius;
-        hitState->flags = hitState->flags | INVHIT_STANDARD_HIT_FLAGS;
+        hitState->flags |= INVHIT_STANDARD_HIT_FLAGS;
         hitState->activeHitboxMode = 0;
         hitState->hitVolumePriority = INVHIT_SELF_FREE_HIT_PRIORITY;
         hitState->hitVolumeId = 0;
@@ -276,7 +270,7 @@ void InvHit_init(GameObject* obj, InvHitObjectDef* setup) {
     case INVHIT_MODE_ATTACH:
         hitState->shapeFlags = OBJHITS_SHAPE_SPHERE;
         hitState->primaryRadius = setup->radius;
-        hitState->flags = hitState->flags | INVHIT_STANDARD_HIT_FLAGS;
+        hitState->flags |= INVHIT_STANDARD_HIT_FLAGS;
         hitState->activeHitboxMode = 0;
         hitState->hitVolumePriority = INVHIT_FIXED_HIT_PRIORITY;
         hitState->hitVolumeId = INVHIT_DEFAULT_HIT_VOLUME_ID;
