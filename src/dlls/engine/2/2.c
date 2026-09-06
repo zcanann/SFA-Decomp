@@ -627,8 +627,8 @@ int objSeqFindLabel(ObjSeqState* seq, int label);
 int objSeqFindConditional(ObjSeqState* seq, GameObject* seqState);
 void objCallSeqFn(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, int action);
 void objSeqDoBgCmds0D(ObjSeqState* seq, GameObject* obj, int skipSpawns);
-void ObjSeq_SetupInitialPlaybackState(GameObject* obj, GameObject** seqObj, ObjSeqState* seq, ObjSeqPlacement* placement,
-                                      void** outAction);
+void ObjSeq_SetupInitialPlaybackState(GameObject* obj, GameObject** seqObj, ObjSeqState* seq,
+                                      ObjSeqPlacement* placement, void** outAction);
 void ObjSeq_setXrot(int index, int xrot);
 int ObjSeq_getBool(int index);
 void ObjSeq_setBool(int index, int value);
@@ -1553,9 +1553,8 @@ static inline f32 ObjSeq_SampleTrackCurve(ObjSeqState* seq, int track, int frame
     }
     val = 0.0f;
     if (seq->trackRunLength[track] != 0) {
-        val = objCurveInterpolate(
-            (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[track] * 8),
-            seq->trackRunLength[track] & 0xfff, frame);
+        val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[track] * 8),
+                                  seq->trackRunLength[track] & 0xfff, frame);
     }
     return val;
 }
@@ -2126,9 +2125,8 @@ int objSeqExecCmd06(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, in
         pair[0] = 0x19;
         pair[1] = 0x15;
         if (seq->curveId < 0) {
-            seq->curveId =
-                (*gRomCurveInterface)
-                    ->find(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, pair, 2, cmdArg);
+            seq->curveId = (*gRomCurveInterface)
+                               ->find(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, pair, 2, cmdArg);
             if (seq->curveId > -1) {
                 if (seq->curveInterp != NULL) {
                     mm_free(seq->curveInterp);
@@ -2392,8 +2390,8 @@ void ObjSeq_setCamVars(int camA, int camB, int camC, int camD) {
     gObjSeqCamModeArgD = camD;
 }
 
-int seqDoSubCmd0B(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, u8* cmdsArg, s16 xrot, s16 countArg, s8 flag1,
-                  s8 flag2) {
+int seqDoSubCmd0B(GameObject* obj, GameObject* sourceObj, ObjSeqState* seq, u8* cmdsArg, s16 xrot, s16 countArg,
+                  s8 flag1, s8 flag2) {
     u8* cmds;
     int count;
     int opcode;
@@ -3524,8 +3522,8 @@ int ObjSeq_ExecuteActionCommand(GameObject* obj, u8* action, u8** cmdPtr, s8 fla
     return 0;
 }
 
-void ObjSeq_SetupInitialPlaybackState(GameObject* obj, GameObject** seqObj, ObjSeqState* seq, ObjSeqPlacement* placement,
-                                      void** outAction) {
+void ObjSeq_SetupInitialPlaybackState(GameObject* obj, GameObject** seqObj, ObjSeqState* seq,
+                                      ObjSeqPlacement* placement, void** outAction) {
     GameObject* activeObj;
     s16* modelVec;
     f32 groundY[2];
@@ -3552,9 +3550,8 @@ void ObjSeq_SetupInitialPlaybackState(GameObject* obj, GameObject** seqObj, ObjS
     *seqObj = activeObj;
 
     ObjSeq_UpdateCurvePosition(obj, seq);
-    if ((s8)seq->groundSnapEnabled == 1 &&
-        trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, groundY, 0) ==
-            0) {
+    if ((s8)seq->groundSnapEnabled == 1 && trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY,
+                                                                       obj->anim.localPosZ, groundY, 0) == 0) {
         obj->anim.localPosY = obj->anim.localPosY + ((obj->anim.localPosY - groundY[0]) - placement->groundOffset);
     }
 
@@ -3952,9 +3949,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
         } else {
             val = 0.0f;
             if (seq->trackRunLength[7] != 0) {
-                val = objCurveInterpolate(
-                    (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[7] * 8),
-                    seq->trackRunLength[7] & 0xfff, frame);
+                val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[7] * 8),
+                                          seq->trackRunLength[7] & 0xfff, frame);
             }
         }
         obj->anim.rotX = 182.044f * val;
@@ -3964,9 +3960,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
         } else {
             val = 0.0f;
             if (seq->trackRunLength[8] != 0) {
-                val = objCurveInterpolate(
-                    (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[8] * 8),
-                    seq->trackRunLength[8] & 0xfff, frame);
+                val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[8] * 8),
+                                          seq->trackRunLength[8] & 0xfff, frame);
             }
         }
         obj->anim.rotY = 182.044f * val;
@@ -3976,9 +3971,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
         } else {
             val = 0.0f;
             if (seq->trackRunLength[6] != 0) {
-                val = objCurveInterpolate(
-                    (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[6] * 8),
-                    seq->trackRunLength[6] & 0xfff, frame);
+                val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[6] * 8),
+                                          seq->trackRunLength[6] & 0xfff, frame);
             }
         }
         obj->anim.rotZ = 182.044f * val;
@@ -3988,9 +3982,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
         } else {
             val = 0.0f;
             if (seq->trackRunLength[13] != 0) {
-                val = objCurveInterpolate(
-                    (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[13] * 8),
-                    seq->trackRunLength[13] & 0xfff, frame);
+                val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[13] * 8),
+                                          seq->trackRunLength[13] & 0xfff, frame);
             }
         }
         gObjSeqCurvePosOffsetX = val;
@@ -4000,9 +3993,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
         } else {
             val = 0.0f;
             if (seq->trackRunLength[12] != 0) {
-                val = objCurveInterpolate(
-                    (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[12] * 8),
-                    seq->trackRunLength[12] & 0xfff, frame);
+                val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[12] * 8),
+                                          seq->trackRunLength[12] & 0xfff, frame);
             }
         }
         gObjSeqCurvePosOffsetY = val;
@@ -4012,9 +4004,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
         } else {
             val = 0.0f;
             if (seq->trackRunLength[11] != 0) {
-                val = objCurveInterpolate(
-                    (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[11] * 8),
-                    seq->trackRunLength[11] & 0xfff, frame);
+                val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[11] * 8),
+                                          seq->trackRunLength[11] & 0xfff, frame);
             }
         }
         gObjSeqCurvePosOffsetZ = val;
@@ -4034,9 +4025,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
             } else {
                 val = 0.0f;
                 if (seq->trackRunLength[14] != 0) {
-                    val = objCurveInterpolate(
-                        (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[14] * 8),
-                        seq->trackRunLength[14] & 0xfff, frame);
+                    val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[14] * 8),
+                                              seq->trackRunLength[14] & 0xfff, frame);
                 }
             }
             if ((s8)seq->isCameraSeq != 0) {
@@ -4059,9 +4049,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
             } else {
                 val = 0.0f;
                 if (seq->trackRunLength[3] != 0) {
-                    val = objCurveInterpolate(
-                        (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[3] * 8),
-                        seq->trackRunLength[3] & 0xfff, frame);
+                    val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[3] * 8),
+                                              seq->trackRunLength[3] & 0xfff, frame);
                 }
             }
             if (val < 0.0f) {
@@ -4079,9 +4068,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
             } else {
                 val = 0.0f;
                 if (seq->trackRunLength[4] != 0) {
-                    val = objCurveInterpolate(
-                        (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[4] * 8),
-                        seq->trackRunLength[4] & 0xfff, frame);
+                    val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[4] * 8),
+                                              seq->trackRunLength[4] & 0xfff, frame);
                 }
             }
             (*gSkyInterface)->setTimeOfDay(60.0f * val);
@@ -4093,9 +4081,8 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
             } else {
                 val = 0.0f;
                 if (seq->trackRunLength[5] != 0) {
-                    val = objCurveInterpolate(
-                        (ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[5] * 8),
-                        seq->trackRunLength[5] & 0xfff, frame);
+                    val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[5] * 8),
+                                              seq->trackRunLength[5] & 0xfff, frame);
                 }
             }
             seqObj->anim.rootMotionScale = val * seqObj->anim.modelInstance->rootMotionScaleBase;
@@ -4110,8 +4097,7 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
                     } else {
                         val = 0.0f;
                         if (seq->trackRunLength[1] != 0) {
-                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries +
-                                                                     seq->trackAnimStart[1] * 8),
+                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[1] * 8),
                                                       seq->trackRunLength[1] & 0xfff, frame);
                         }
                     }
@@ -4126,8 +4112,7 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
                     } else {
                         val = 0.0f;
                         if (seq->trackRunLength[2] != 0) {
-                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries +
-                                                                     seq->trackAnimStart[2] * 8),
+                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[2] * 8),
                                                       seq->trackRunLength[2] & 0xfff, frame);
                         }
                     }
@@ -4142,8 +4127,7 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
                     } else {
                         val = 0.0f;
                         if (seq->trackRunLength[0] != 0) {
-                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries +
-                                                                     seq->trackAnimStart[0] * 8),
+                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[0] * 8),
                                                       seq->trackRunLength[0] & 0xfff, frame);
                         }
                     }
@@ -4181,8 +4165,7 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
                     } else {
                         val = 0.0f;
                         if (seq->trackRunLength[17] != 0) {
-                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries +
-                                                                     seq->trackAnimStart[17] * 8),
+                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[17] * 8),
                                                       seq->trackRunLength[17] & 0xfff, frame);
                         }
                     }
@@ -4203,8 +4186,7 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
                     } else {
                         val = 0.0f;
                         if (seq->trackRunLength[15] != 0) {
-                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries +
-                                                                     seq->trackAnimStart[15] * 8),
+                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[15] * 8),
                                                       seq->trackRunLength[15] & 0xfff, frame);
                         }
                     }
@@ -4225,8 +4207,7 @@ void ObjSeq_ApplyFrameCurves(GameObject* obj, GameObject* seqObj, ObjSeqState* s
                     } else {
                         val = 0.0f;
                         if (seq->trackRunLength[16] != 0) {
-                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries +
-                                                                     seq->trackAnimStart[16] * 8),
+                            val = objCurveInterpolate((ObjCurveKey*)(seq->animEntries + seq->trackAnimStart[16] * 8),
                                                       seq->trackRunLength[16] & 0xfff, frame);
                         }
                     }
@@ -4296,12 +4277,9 @@ void ObjSeq_ApplyLinkedObjectTransform(GameObject* obj, GameObject* seqObj, ObjS
         }
         if ((seq->flags & 2) != 0) {
             if ((s8)seq->movementState == 2) {
-                seqObj->anim.rotX = (s16)((s32)basePitch + (s32)((f32)seq->rotOffsetX *
-                                                                 seq->posOffsetScale));
-                seqObj->anim.rotY =
-                    (s16)(baseYaw + (s32)((f32)seq->rotOffsetY * seq->posOffsetScale));
-                seqObj->anim.rotZ =
-                    (s16)(baseRoll + (s32)((f32)seq->rotOffsetZ * seq->posOffsetScale));
+                seqObj->anim.rotX = (s16)((s32)basePitch + (s32)((f32)seq->rotOffsetX * seq->posOffsetScale));
+                seqObj->anim.rotY = (s16)(baseYaw + (s32)((f32)seq->rotOffsetY * seq->posOffsetScale));
+                seqObj->anim.rotZ = (s16)(baseRoll + (s32)((f32)seq->rotOffsetZ * seq->posOffsetScale));
             } else {
                 seqObj->anim.rotX = basePitch;
                 seqObj->anim.rotY = baseYaw;
