@@ -870,41 +870,35 @@ GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* 
     GameObject* otherObj;
     int objectIndex;
     GameObject** objects;
-    GameObject** walker;
     GameObject* foundObj;
 
     objects = ObjList_GetObjects(&startIndex, &objectCount);
     foundObj = 0;
     *maxDistanceSq = *maxDistanceSq * *maxDistanceSq;
-    walker = objects + startIndex;
 
     if (defNo != -1) {
         objectIndex = startIndex;
-        walker = objects + startIndex;
 
         while (objectIndex < objectCount) {
-            otherObj = (GameObject*)*walker;
+            otherObj = objects[objectIndex];
             if (((defNo == otherObj->anim.romDefNo) && (obj != otherObj)) &&
-                (distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &otherObj->anim.worldPosX),
+                (distanceSq = vec3f_distanceSquared(&obj->anim.worldPosX, &otherObj->anim.worldPosX),
                  distanceSq < *maxDistanceSq)) {
                 *maxDistanceSq = distanceSq;
-                foundObj = (GameObject*)*walker;
+                foundObj = objects[objectIndex];
             }
-            walker++;
             objectIndex++;
         }
     } else {
         objectIndex = startIndex;
-        walker = objects + startIndex;
         invalidDistance = 0.0f;
 
         while (objectIndex < objectCount) {
-            distanceSq = vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)*walker)->anim.worldPosX);
+            distanceSq = vec3f_distanceSquared(&obj->anim.worldPosX, &objects[objectIndex]->anim.worldPosX);
             if ((distanceSq != invalidDistance) && (distanceSq < *maxDistanceSq)) {
                 *maxDistanceSq = distanceSq;
-                foundObj = (GameObject*)*walker;
+                foundObj = objects[objectIndex];
             }
-            walker++;
             objectIndex++;
         }
     }
@@ -920,10 +914,9 @@ int ObjList_ContainsObject(GameObject* obj) {
     entry = ObjList_GetObjects(&i, &count);
     i = 0;
     while (i < count) {
-        if (*entry == obj) {
+        if (entry[i] == obj) {
             return 1;
         }
-        entry = entry + 1;
         i = i + 1;
     }
     return 0;
