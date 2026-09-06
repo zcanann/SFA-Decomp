@@ -203,8 +203,8 @@ void InvHit_update(GameObject* obj) {
             (*gPartfxInterface)->spawnObject(obj, INVHIT_HOMING_SECONDARY_EFFECT_ID, NULL, 0, -1, NULL);
         }
         {
-            s8 hitCount = (s8)trackGetHeight(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
-                                                   hits, 0, 0);
+            s8 hitCount =
+                (s8)trackGetHeight(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, hits, 0, 0);
             groundHitIndex = 0;
             groundHitCount = hitCount;
         }
