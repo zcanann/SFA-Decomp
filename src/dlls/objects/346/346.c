@@ -13,15 +13,15 @@
 #include "main/vecmath.h"
 #include "track/intersect_api.h"
 
-#define EXPLODABLE_FRAGMENT_SETUP_MODE           5
-#define EXPLODABLE_RECIPE_FLAG_HIDE_OBJECT       0x01
-#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_X        0x01
-#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_Z        0x02
-#define EXPLODABLE_LAUNCH_FLAG_SPIN_X            0x04
-#define EXPLODABLE_LAUNCH_FLAG_SPIN_Y            0x08
-#define EXPLODABLE_LAUNCH_FLAG_SPIN_Z            0x10
-#define EXPLODABLE_FRAGMENT_FULL_ALPHA           0xFF
-#define EXPLODABLE_DEFAULT_SCALE                 20
+#define EXPLODABLE_FRAGMENT_SETUP_MODE     5
+#define EXPLODABLE_RECIPE_FLAG_HIDE_OBJECT 0x01
+#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_X  0x01
+#define EXPLODABLE_LAUNCH_FLAG_VELOCITY_Z  0x02
+#define EXPLODABLE_LAUNCH_FLAG_SPIN_X      0x04
+#define EXPLODABLE_LAUNCH_FLAG_SPIN_Y      0x08
+#define EXPLODABLE_LAUNCH_FLAG_SPIN_Z      0x10
+#define EXPLODABLE_FRAGMENT_FULL_ALPHA     0xFF
+#define EXPLODABLE_DEFAULT_SCALE           20
 
 GameObject* explodable_spawnFragmentObject(GameObject* obj, int fragmentObjectId, ExplodableChunk* chunk,
                                            int fragmentIndex) {
@@ -65,11 +65,11 @@ GameObject* explodable_spawnFragmentObject(GameObject* obj, int fragmentObjectId
         (s8)(int)(20.0f * (obj->anim.rootMotionScale / obj->anim.modelInstance->rootMotionScaleBase));
     fragmentPlacement->lifetimeFrames = chunk->launchDelayBase;
     fragmentPlacement->floorOffsetRaw = (int)chunk->height;
-    return objSetupObject(&fragmentPlacement->base, EXPLODABLE_FRAGMENT_SETUP_MODE, obj->anim.mapEventSlot, -1,
-                           NULL);
+    return objSetupObject(&fragmentPlacement->base, EXPLODABLE_FRAGMENT_SETUP_MODE, obj->anim.mapEventSlot, -1, NULL);
 }
 
-void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAddress, int skipCentroid, ExplodableState* state) {
+void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAddress, int skipCentroid,
+                               ExplodableState* state) {
     ExplodableChunk* chunk;
     int fragmentIndex;
     int fragmentObjectId;
@@ -121,9 +121,8 @@ void explodable_buildFragments(GameObject* obj, ExplodablePlacement* placementAd
             state->children[fragmentIndex] =
                 explodable_spawnFragmentObject(obj, fragmentObjectId, chunk, fragmentIndex);
         }
-        state->phase = (mainGetBit(placementAddress->doneGameBit) != 0)
-                           ? EXPLODABLE_PHASE_BREAKING
-                           : EXPLODABLE_PHASE_WAIT;
+        state->phase =
+            (mainGetBit(placementAddress->doneGameBit) != 0) ? EXPLODABLE_PHASE_BREAKING : EXPLODABLE_PHASE_WAIT;
     }
 }
 
@@ -239,7 +238,8 @@ void explodable_update(GameObject* obj) {
     if (state->phase != EXPLODABLE_PHASE_BROKEN) {
         if (state->phase == EXPLODABLE_PHASE_WAIT) {
             if (mainGetBit(placement->activateGameBit) != 0) {
-                explodable_buildFragments(obj, (ExplodablePlacement*)placementAddress, 0, (ExplodableState*)stateAddress);
+                explodable_buildFragments(obj, (ExplodablePlacement*)placementAddress, 0,
+                                          (ExplodableState*)stateAddress);
                 if (state->breakSfxId != 0) {
                     Sfx_PlayFromObject(obj, state->breakSfxId & 0xffff);
                 }
