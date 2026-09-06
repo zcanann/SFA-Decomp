@@ -913,8 +913,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state) {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
 
-    if (((EnemyState*)state)->trackedObj != NULL &&
-        ((EnemyState*)state)->trackedObj->anim.classId == 1) {
+    if (((EnemyState*)state)->trackedObj != NULL && ((EnemyState*)state)->trackedObj->anim.classId == 1) {
         requestKrazoaShrineMusic();
     }
 
@@ -1099,8 +1098,7 @@ void sharpClawUpdateAttack(GameObject* obj, u8* state) {
     if (tableIdx == 5 && (((EnemyState*)state)->controlFlags & 0x800000) != 0) {
         mainSetBits(GAMEBIT_BaddieRelated1C8, 1);
     }
-    if (((EnemyState*)state)->trackedObj != NULL &&
-        ((EnemyState*)state)->trackedObj->anim.classId == 1) {
+    if (((EnemyState*)state)->trackedObj != NULL && ((EnemyState*)state)->trackedObj->anim.classId == 1) {
         requestKrazoaShrineMusic();
     }
     wispBaddiePlayMoveEventSfx(obj, state);
