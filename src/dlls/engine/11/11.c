@@ -292,21 +292,12 @@ void modgfx_stepVertexColor(PartfxEffectState* state, ModgfxVertexGroupCmd* p, i
         f32 tg = p->valueY;
         f32 tb = p->valueZ;
         if (state->stageFrameCountdown != 0) {
-            state->blendColorR =
-                (f32)(u32)buf[(p->indices)[0] * 16 + 0xc];
-            state->blendColorG =
-                (f32)(u32)buf[(p->indices)[0] * 16 + 0xd];
-            state->blendColorB =
-                (f32)(u32)buf[(p->indices)[0] * 16 + 0xe];
-            state->blendColorStepR =
-                (tr - (f32)(u32)buf[(p->indices)[0] * 16 + 0xc]) /
-                (f32)state->stageFrameCountdown;
-            state->blendColorStepG =
-                (tg - (f32)(u32)buf[(p->indices)[0] * 16 + 0xd]) /
-                (f32)state->stageFrameCountdown;
-            state->blendColorStepB =
-                (tb - (f32)(u32)buf[(p->indices)[0] * 16 + 0xe]) /
-                (f32)state->stageFrameCountdown;
+            state->blendColorR = (f32)(u32)buf[(p->indices)[0] * 16 + 0xc];
+            state->blendColorG = (f32)(u32)buf[(p->indices)[0] * 16 + 0xd];
+            state->blendColorB = (f32)(u32)buf[(p->indices)[0] * 16 + 0xe];
+            state->blendColorStepR = (tr - (f32)(u32)buf[(p->indices)[0] * 16 + 0xc]) / (f32)state->stageFrameCountdown;
+            state->blendColorStepG = (tg - (f32)(u32)buf[(p->indices)[0] * 16 + 0xd]) / (f32)state->stageFrameCountdown;
+            state->blendColorStepB = (tb - (f32)(u32)buf[(p->indices)[0] * 16 + 0xe]) / (f32)state->stageFrameCountdown;
         } else {
             state->blendColorR = tr;
             state->blendColorG = tg;
@@ -1149,7 +1140,8 @@ void dll_0B_updateActiveEffects(void) {
                     alphaGroupIndex++;
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8) {
-                    modgfx_stepVertexColor((PartfxEffectState*)eff, (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff), active, 0);
+                    modgfx_stepVertexColor((PartfxEffectState*)eff, (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff),
+                                           active, 0);
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100) {
                     ModgfxPendingSpawn* em = (ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff);
