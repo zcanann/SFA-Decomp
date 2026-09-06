@@ -356,6 +356,12 @@ force from C source.
 
 ## Inline assembly
 
+The optional joint-matrix analyzer experiment is documented in
+`docs/foreign/joint_matrices.md`: build with `python3 tools/dtk_nocfa.py --test`,
+then configure with `--matching --joint-matrices-nocfa`. Its local DTK patch trusts
+the evidenced outer function extent; it does not establish source-language
+provenance or change the assembly policy below. Default builds keep upstream DTK.
+
 Inline `asm{}` is banned outside `src/dolphin/`. Inside SDK code, the only
 exception is paired-single `psq_l` / `psq_st` when MWCC has no intrinsic and a
 known-good donor or original binary proves the sequence. Do not trade plausible

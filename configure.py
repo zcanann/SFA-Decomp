@@ -158,6 +158,11 @@ parser.add_argument(
     default="3.5",
     help="ProDG release under build/compilers/ProDG when --zlb-toolchain=prodg",
 )
+parser.add_argument(
+    "--joint-matrices-nocfa",
+    action="store_true",
+    help="experimental EN joint-matrix function bounds (run tools/dtk_nocfa.py first)",
+)
 parser.set_defaults(non_matching=True)
 args = parser.parse_args()
 
@@ -220,6 +225,21 @@ config.split_deps = [
     Path("config") / config.version / "splits.txt",
     Path("config") / config.version / "symbols.txt",
 ]
+if args.joint_matrices_nocfa:
+    from tools.dtk_nocfa import PATCH, binary_path, write_overlay
+
+    if config.version != "GSAE01" or args.dtk is not None:
+        sys.exit("--joint-matrices-nocfa requires GSAE01 and supplies its own patched DTK")
+    config.dtk_path = binary_path(config.build_dir)
+    if not config.dtk_path.is_file():
+        sys.exit("Build the prototype first: python3 tools/dtk_nocfa.py --test")
+    canonical_config = config.config_path
+    config.config_path, overlay_symbols = write_overlay(config.build_dir)
+    config.reconfig_deps.extend([
+        Path("tools/dtk_nocfa.py"), PATCH, canonical_config,
+        Path("config/GSAE01/symbols.txt"),
+    ])
+    config.split_deps.append(overlay_symbols)
 symbol_mappings_path = Path("config") / config.version / "symbol_mappings.json"
 if symbol_mappings_path.is_file():
     config.symbol_mappings = json.loads(symbol_mappings_path.read_text(encoding="utf-8"))
