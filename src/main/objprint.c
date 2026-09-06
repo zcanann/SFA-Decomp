@@ -1357,17 +1357,17 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
 }
 
 void objRenderShadowIfVisible(GameObject* obj, int wpad0, int wpad1, int wpad2, int wpad3, int wpad4) {
-    void** arr = (void*)(obj)->anim.banks;
-    s8 idx = (obj)->anim.bankIndex;
+    ObjModel** arr = obj->anim.modelBanks;
+    s8 idx = obj->anim.bankIndex;
     if (arr[idx] != NULL) {
         objRenderShadow(obj);
     }
 }
 
 void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale) {
-    int** table = OBJPRINT_BANK_TABLE((int*)obj);
+    ObjModel** table = obj->anim.modelBanks;
     (void)scale;
-    if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL) {
+    if (table[obj->anim.bankIndex] != NULL) {
         objRenderModel(obj);
         if (obj->anim.hitVolumeTransforms != NULL) {
             objUpdateHitVolumeTransforms(obj);
@@ -1381,7 +1381,6 @@ void objSetModelMatrixOverride(f32* matrix) {
 
 void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     void* sub;
-    int walk;
     int i;
     void (*vfn)(GameObject*, int, int, int, int, int);
 
@@ -1405,7 +1404,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
             if (vfn != NULL) {
                 vfn(obj, a, b, c, d, flag);
             }
-        } else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL) {
+        } else if ((s8)flag != 0 && obj->anim.modelBanks[obj->anim.bankIndex] != NULL) {
             objRenderModel(obj);
             if (obj->anim.hitVolumeTransforms != NULL) {
                 objUpdateHitVolumeTransforms(obj);
@@ -1418,7 +1417,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
             playerRender((int)obj, a, b, c, d, flag);
             break;
         default:
-            if (OBJPRINT_ACTIVE_BANK(obj) != NULL) {
+            if (obj->anim.modelBanks[obj->anim.bankIndex] != NULL) {
                 objRenderModel(obj);
                 if (obj->anim.hitVolumeTransforms != NULL) {
                     objUpdateHitVolumeTransforms(obj);
@@ -1428,12 +1427,11 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = (int)obj; i < (s32)(u32)obj->childCount; i++) {
-        int staff = (int)((GameObject*)walk)->childObjs[0];
-        if (((GameObject*)staff)->anim.classId == 0x2d) {
-            staffUpdateSegmentTransforms(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
+    for (i = 0; i < obj->childCount; i++) {
+        GameObject* staff = obj->childObjs[i];
+        if (staff->anim.classId == 0x2d) {
+            staffUpdateSegmentTransforms((int)staff, obj, (int)staff->anim.modelBanks[staff->anim.bankIndex], a, b, c);
         }
-        walk += 4;
     }
 }
 
