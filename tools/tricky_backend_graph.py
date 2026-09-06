@@ -1,4 +1,4 @@
-"""GC/1.3 GPR interference graph captured before simplification and rewriting.
+"""GC/1.3 register interference graph captured before simplification and rewriting.
 
 The compiler's simplify/color routines (VA 0x507070/0x506F50) establish
 the node widths, edge list, linked coloring order and selected physical color.
@@ -8,15 +8,24 @@ Other flags and pointers remain opaque; weights are not runtime measurements.
 import struct
 from fractions import Fraction
 
-from tricky_backend_ir import decode
+from tricky_backend_ir import capture_snapshot, decode
 
 
-def capture_color_policy(memory, base):
-    """Read the GPR banks/reset state consumed by VA 0x506F50.
+def register_kind(register_class):
+    if register_class not in (3, 4):
+        raise ValueError("only GC/1.3 FPR and GPR graphs are supported")
+    return ("FPR", "f") if register_class == 3 else ("GPR", "r")
+
+
+def capture_color_policy(memory, base, register_class=4):
+    """Read the selected class's banks/reset state consumed by VA 0x506F50.
 
     VA 0x4CEDA0 restores the saved blocked mask and bank cursor; 0x4FCB20
     builds the initial mask, and 0x4FCAC0 enables registers in bank order.
+    Both bank tables have 32 four-byte entries per class. The saved mask and
+    cursor are shared by classes and must be read at the active class's hook.
     """
+    register_kind(register_class)
     def read(offset, size):
         data = memory(base + offset, size)
         if len(data) != size:
@@ -30,8 +39,8 @@ def capture_color_policy(memory, base):
         return list(struct.unpack("<" + "i" * count, read(table_offset, count * 4)))
 
     policy = {
-        "initial": bank(0x1E6584, 0x1E0DF0),
-        "reserve": bank(0x1E67A4, 0x1E10F0),
+        "initial": bank(0x1E6574 + 4 * register_class, 0x1E0BF0 + 128 * register_class),
+        "reserve": bank(0x1E6794 + 4 * register_class, 0x1E0EF0 + 128 * register_class),
         "reserve_cursor": int.from_bytes(read(0x1DCA90, 2), "little", signed=True),
         "blocked": [i for i, flag in enumerate(read(0x1DCA70, 32)) if flag],
     }
@@ -93,7 +102,8 @@ def replay_coloring(before, after, policy):
     return decisions
 
 
-def capture_graph(memory, base, colored=True):
+def capture_graph(memory, base, colored=True, register_class=4):
+    register_kind(register_class)
     def read(address, size):
         data = memory(address, size)
         if len(data) != size:
@@ -104,7 +114,7 @@ def capture_graph(memory, base, colored=True):
         return int.from_bytes(read(address, 4), "little")
 
     table = word(base + 0x1E67D0)
-    count = word(base + 0x1E6A8C)
+    count = word(base + 0x1E6A7C + 4 * register_class)
     if not 32 <= count <= 4096:
         raise ValueError("invalid GPR graph size")
     nodes = []
@@ -117,6 +127,25 @@ def capture_graph(memory, base, colored=True):
         nodes.append({"address": address, "prefix": list(prefix), "neighbors": neighbors})
     validate_graph(nodes, colored=colored)
     return nodes
+
+
+def capture_graph_snapshot(memory, base, name, colored, register_class=4):
+    kind, _ = register_kind(register_class)
+    word = lambda address: int.from_bytes(memory(address, 4), "little")
+    stage = f"BEFORE {kind} " + ("REWRITE" if colored else "SIMPLIFICATION")
+    snapshot = capture_snapshot(memory, name, stage, word(base + 0x1E67B0))
+    snapshot["graph_colored"] = colored
+    snapshot["register_class"] = register_class
+    snapshot["coloring_graph"] = capture_graph(memory, base, colored, register_class)
+    # The original-count slot is independently established only for GPRs.
+    # FPR captures validate physical coloring and rewrite, without claiming
+    # to replay the high-degree simplification/spill policy.
+    if register_class == 4:
+        snapshot["available_gprs"] = [i for i, blocked in enumerate(memory(base + 0x1E2C70, 32)) if not blocked]
+        snapshot["original_gpr_count"] = int.from_bytes(memory(base + 0x1DD948, 2), "little", signed=True)
+    if not colored:
+        snapshot["color_policy"] = capture_color_policy(memory, base, register_class)
+    return snapshot
 
 
 def validate_graph(nodes, colored=True):
@@ -170,16 +199,17 @@ def coloring_order(nodes):
     return order
 
 
-def describe_node(nodes, register, colored=True):
+def describe_node(nodes, register, colored=True, register_class=4):
+    kind, prefix = register_kind(register_class)
     if not 0 <= register < len(nodes):
         raise ValueError(f"GPR graph index out of range: {register}")
     order = coloring_order(nodes) if colored else []
     p = nodes[register]["prefix"]
     if p[7] & 4:
-        return f"virtual GPR {register}: excluded node; raw color slot={p[6]}; flags={p[7]:#x}"
+        return f"virtual {kind} {register}: excluded node; raw color slot={p[6]}; flags={p[7]:#x}"
     position = order.index(register) if register in order else None
-    assignment = f" -> r{p[6]}; color order={position}" if colored else " (before simplification)"
-    return (f"virtual GPR {register}{assignment}; "
+    assignment = f" -> {prefix}{p[6]}; color order={position}" if colored else " (before simplification)"
+    return (f"virtual {kind} {register}{assignment}; "
             f"weight={p[3]}; neighbors={p[8]}; degree counter={p[5]}; flags={p[7]:#x}")
 
 
@@ -190,6 +220,8 @@ def validate_rewrite(before, final):
     This checks the observed mapping, not uninterrupted source-variable identity.
     """
     nodes = before["coloring_graph"]
+    register_class = before.get("register_class", 4)
+    kind, _ = register_kind(register_class)
     coloring_order(nodes)
     after = {i["address"]: decode(i) for b in final["blocks"] for i in b["instructions"]}
     checked = 0
@@ -202,17 +234,17 @@ def validate_rewrite(before, final):
             if len(old["operands"]) != len(new["operands"]):
                 continue
             for source, emitted in zip(old["operands"], new["operands"]):
-                if source["kind"] != 0 or source["register_class"] != 4:
+                if source["kind"] != 0 or source["register_class"] != register_class:
                     continue
                 register = source["number"]
                 if not 0 <= register < len(nodes) or nodes[register]["prefix"][7] & 4:
                     raise ValueError("rewritten operand references an absent/excluded graph node")
-                if (emitted["kind"] != 0 or emitted["register_class"] != 4
+                if (emitted["kind"] != 0 or emitted["register_class"] != register_class
                         or emitted["number"] != nodes[register]["prefix"][6]):
-                    raise ValueError("graph color disagrees with rewritten GPR operand")
+                    raise ValueError(f"graph color disagrees with rewritten {kind} operand")
                 checked += 1
     if not checked:
-        raise ValueError("no surviving GPR operands to validate graph colors")
+        raise ValueError(f"no surviving {kind} operands to validate graph colors")
     return checked
 
 

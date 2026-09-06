@@ -38,6 +38,22 @@ def simplification_fixture(removal_order, weights=(10, 5)):
 
 
 class BackendGraphTests(unittest.TestCase):
+    def test_fpr_capture_uses_its_own_banks_and_shared_saved_state(self):
+        values = {
+            0x1E6580: struct.pack("<i", 2), 0x1E0D70: struct.pack("<2i", 0, 1),
+            0x1E67A0: struct.pack("<i", 2), 0x1E1070: struct.pack("<2i", 31, 30),
+            0x1DCA90: struct.pack("<h", 0), 0x1DCA70: bytes(32),
+        }
+        reads = []
+        def memory(address, size):
+            reads.append(address - 0x400000)
+            return values[address - 0x400000][:size]
+        policy = capture_color_policy(memory, 0x400000, register_class=3)
+        self.assertEqual(policy, {"initial": [0, 1], "reserve": [31, 30], "reserve_cursor": 0, "blocked": []})
+        self.assertNotIn(0x1E6584, reads)
+        with self.assertRaisesRegex(ValueError, "only GC/1.3"):
+            capture_color_policy(memory, 0x400000, register_class=2)
+
     def test_capture_color_banks_and_saved_reset_state(self):
         values = {
             0x1E6584: struct.pack("<i", 3), 0x1E0DF0: struct.pack("<3i", 0, 3, 4),
@@ -171,6 +187,17 @@ class BackendGraphTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "disagrees"):
             validate_rewrite(before, self.rewrite_fixture(27))
 
+    def test_fpr_rewrite_checks_fprs_and_rejects_a_gpr_operand(self):
+        before, final = self.rewrite_fixture(32), self.rewrite_fixture(29)
+        for snapshot in (before, final):
+            snapshot["blocks"][0]["instructions"][0]["words"][9] = 0x00020300
+        before["coloring_graph"] = fixture()
+        before["register_class"] = 3
+        self.assertEqual(validate_rewrite(before, final), 1)
+        self.assertIn("FPR 32 -> f29", describe_node(fixture(), 32, register_class=3))
+        with self.assertRaisesRegex(ValueError, "rewritten FPR"):
+            validate_rewrite(before, self.rewrite_fixture(29))
+
     def test_rewrite_cannot_claim_absent_or_reused_record(self):
         before = self.rewrite_fixture(32)
         before["coloring_graph"] = fixture()
@@ -242,6 +269,10 @@ class BackendGraphTests(unittest.TestCase):
             put(0x200 + 4 * index, struct.pack("<I", node["address"]))
             put(node["address"], struct.pack("<3Ii3hHh", *node["prefix"]) + struct.pack("<" + "h" * len(node["neighbors"]), *node["neighbors"]))
         self.assertEqual(capture_graph(lambda a, n: bytes(memory[a + i] for i in range(n)), 0), nodes)
+        put(0x1E6A88, struct.pack("<I", len(nodes)))
+        put(0x1E6A8C, struct.pack("<I", 4097))
+        self.assertEqual(capture_graph(lambda a, n: bytes(memory[a + i] for i in range(n)), 0,
+                                       register_class=3), nodes)
 
     def test_capture_rejects_short_global_read(self):
         with self.assertRaisesRegex(ValueError, "short GPR graph read"):

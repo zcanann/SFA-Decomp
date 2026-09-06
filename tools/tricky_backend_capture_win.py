@@ -16,7 +16,7 @@ import tempfile
 import time
 
 from tricky_backend_ir import COMPILER_SHA256, capture_snapshot
-from tricky_backend_graph import capture_color_policy, capture_graph
+from tricky_backend_graph import capture_graph_snapshot, register_kind
 
 if sys.platform != "win32" or C.sizeof(C.c_void_p) != 8:
     raise RuntimeError("IR capture requires 64-bit Windows Python and an x86 compiler")
@@ -98,7 +98,8 @@ def require(ok):
     if not ok:
         raise C.WinError(C.get_last_error())
 
-def capture(command, cwd, wanted, timeout=60, graph=False):
+def capture(command, cwd, wanted, timeout=60, graph=False, register_class=4):
+    register_kind(register_class)
     executable = (Path(cwd) / command[0]).resolve()
     digest = hashlib.sha256(executable.read_bytes()).hexdigest()
     if digest != COMPILER_SHA256:
@@ -203,15 +204,10 @@ def capture(command, cwd, wanted, timeout=60, graph=False):
                         require(getcontext(threads[event.tid], C.byref(context)))
                         if context.eip != exception.address + 1:
                             raise ValueError("unexpected instruction pointer at graph breakpoint")
-                        if current_name in wanted and memory(base + 0x1E7317, 1) == b"\x04":
-                            stage = graph_breakpoints[exception.address]
-                            snapshot = capture_snapshot(memory, current_name, stage, word(base + 0x1E67B0))
-                            snapshot["graph_colored"] = stage == "BEFORE GPR REWRITE"
-                            snapshot["coloring_graph"] = capture_graph(memory, base, colored=snapshot["graph_colored"])
-                            snapshot["available_gprs"] = [i for i, blocked in enumerate(memory(base + 0x1E2C70, 32)) if not blocked]
-                            snapshot["original_gpr_count"] = int.from_bytes(memory(base + 0x1DD948, 2), "little", signed=True)
-                            if not snapshot["graph_colored"]:
-                                snapshot["color_policy"] = capture_color_policy(memory, base)
+                        if current_name in wanted and memory(base + 0x1E7317, 1) == bytes([register_class]):
+                            snapshot = capture_graph_snapshot(memory, base, current_name,
+                                                              exception.address == base + 0x106E20,
+                                                              register_class)
                             snapshots.append(snapshot)
                         # Execute the verified PUSH EBX's exact stack effect. At
                         # this point the graph is live, unlike post-pass dumps.

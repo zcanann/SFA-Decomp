@@ -38,8 +38,22 @@ class BackendTraceTests(unittest.TestCase):
             stack.enter_context(patch.object(trace.strucdiff, "analyse", return_value=([], [], [], 0, 0)))
             result = trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
             self.assertEqual(len(result["trickyDigTunnel"]["color_decisions"]), 2)
+            for snapshot in (initial, colored):
+                snapshot["register_class"] = 3
+            del initial["available_gprs"], initial["original_gpr_count"]
+            result = trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"],
+                                   require_graph=True, required_register_class=3)
+            self.assertEqual(result["trickyDigTunnel"]["register_class"], 3)
+            self.assertEqual(result["trickyDigTunnel"]["high_degree_removals"], [])
+            self.assertEqual(len(result["trickyDigTunnel"]["color_decisions"]), 2)
+            with self.assertRaisesRegex(ValueError, "missing requested register class"):
+                trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"],
+                              require_graph=True, required_register_class=4)
             initial["color_policy"]["initial"] = [28, 29]
             with self.assertRaisesRegex(ValueError, "replayed color disagrees"):
+                trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
+            del initial["color_policy"]
+            with self.assertRaisesRegex(ValueError, "missing FPR coloring policy"):
                 trace.inspect([initial, colored, final], Path("unused.o"), ["trickyDigTunnel"], require_graph=True)
 
     def test_reordered_duplicate_and_dangling_graph_pairs_are_rejected(self):

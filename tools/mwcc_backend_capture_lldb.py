@@ -19,7 +19,7 @@ import tempfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tricky_backend_ir import COMPILER_SHA256, capture_snapshot
-from tricky_backend_graph import capture_color_policy, capture_graph
+from tricky_backend_graph import capture_graph_snapshot, register_kind
 
 
 BASE = 0x400000
@@ -127,16 +127,10 @@ class CaptureState:
                     "last_register": int.from_bytes(memory(BASE + 0x1E66B8, 4), "little", signed=True),
                 }
                 self.snapshots.append(snapshot)
-        elif self.current_name in self.wanted and memory(BASE + 0x1E7317, 1) == b"\x04":
-            stage = GRAPH[pc]
-            colored = pc == BASE + 0x106E20
-            snapshot = capture_snapshot(memory, self.current_name, stage, word(BASE + 0x1E67B0))
-            snapshot["graph_colored"] = colored
-            snapshot["coloring_graph"] = capture_graph(memory, BASE, colored=colored)
-            snapshot["available_gprs"] = [i for i, blocked in enumerate(memory(BASE + 0x1E2C70, 32)) if not blocked]
-            snapshot["original_gpr_count"] = int.from_bytes(memory(BASE + 0x1DD948, 2), "little", signed=True)
-            if not colored:
-                snapshot["color_policy"] = capture_color_policy(memory, BASE)
+        elif (self.current_name in self.wanted
+              and memory(BASE + 0x1E7317, 1) == bytes([self.job.get("register_class", 4)])):
+            snapshot = capture_graph_snapshot(memory, BASE, self.current_name,
+                                              pc == BASE + 0x106E20, self.job.get("register_class", 4))
             self.snapshots.append(snapshot)
         sp, pc = emulate_hook(pc, sp, frame.FindRegister("rbx").GetValueAsUnsigned(), word, self.write_word)
         if not frame.FindRegister("rsp").SetValueFromCString(str(sp)) or not frame.SetPC(pc):
@@ -193,7 +187,8 @@ def _stop_timed_out_capture(process, pid_file, command):
     process.wait()
 
 
-def capture(command, cwd, wanted, graph=False, timeout=30):
+def capture(command, cwd, wanted, graph=False, timeout=60, register_class=4):
+    register_kind(register_class)
     if sys.platform != "darwin":
         raise RuntimeError("LLDB capture requires macOS and Wibo")
     cwd = Path(cwd).resolve()
@@ -206,7 +201,7 @@ def capture(command, cwd, wanted, graph=False, timeout=30):
     with tempfile.TemporaryDirectory(prefix="mwcc-lldb-") as scratch:
         scratch = Path(scratch)
         result, pid, job_path = scratch / "snapshots.json", scratch / "pid", scratch / "job.json"
-        job_path.write_text(json.dumps({"functions": sorted(wanted), "graph": graph,
+        job_path.write_text(json.dumps({"functions": sorted(wanted), "graph": graph, "register_class": register_class,
                                         "result": str(result), "pid": str(pid)}))
         # Install guest breakpoints only after Wibo has mapped the PE image.
         commands = ["settings set target.disable-aslr false", "breakpoint set --func-regex loadPEFromSource",
