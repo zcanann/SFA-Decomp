@@ -124,10 +124,11 @@ ninja all_source
 ninja
 ```
 
-The experiment adds no C stub or assembly body and does not mark `render.c`
-matching. It makes the missing implementation visible and measurable. Finding
-an IDO-generated C counterpart would require recovering a C body and comparing
-its emitted MIPS code; the generated DP assembly alone cannot establish that.
+The analyzer experiment does not mark `render.c` matching. The subsequent C
+recovery described below supplies the implementation for this named target.
+Finding an IDO-generated C counterpart would require recovering a C body and
+comparing its emitted MIPS code; the generated DP assembly alone cannot
+establish that.
 
 ## Validation
 
@@ -147,3 +148,84 @@ its emitted MIPS code; the generated DP assembly alone cannot establish that.
   matching gain.
 - A second `ninja all_source` is clean (`no work to do`). Default configuration
   also passes both build gates.
+
+## First C matching attempt
+
+`src/main/render.c` now implements the complete entry in ordinary C, within the
+existing TU and under its existing GC/1.3 settings. The private helpers decode
+packed frame pairs, evaluate the retail sine/cosine polynomials, blend
+quaternions and scale/translation components, construct local matrices, and
+apply the joint hierarchy. No inline assembly, compiler exception or split
+change was added.
+
+The recovered 64-byte work-slot union makes the storage reuse explicit:
+rotation pairs begin at `+0x1C`, scale pairs at `+0x28`, and translation pairs
+at `+0x34`. Cached quaternions occupy `+0x00` and `+0x10`; the matrix view
+overwrites these fields in later passes. Adjustment records use separate
+offsets for the two animation channels and a `0x1000` terminator. The paired
+decoder keeps flag bits in constant scale words, whereas the interpolated
+decoder masks them out.
+
+Two unusual retail paths are preserved:
+
+- The blended matrix's zero-X-scale path at `0x800071FC` writes its first
+  column across the first row; later column stores overwrite two of those
+  writes. Zero scales ordinarily become 1024 during blending, but the store
+  path itself is retained.
+- If the last joint is masked, the blend loop branches to the shared outer
+  epilogue instead of returning to its internal caller. In mode `0x40`, this
+  ends the first cache pass before decoding or blending the second animation.
+  Expanding the execution probe to masked final joints exposed this difference
+  in the first C draft.
+
+Final objdiff similarity for the function is **15.515177%**, compared with a
+missing source body before this attempt. The first separate-helper draft was
+8.708777%; ordinary `static inline` choices improved it, but inlining every
+stage reduced the score. The correctly preserved early return lowered an
+intermediate 16.893354% result. These are fuzzy instruction comparisons, not
+percentages of verified functionality. The nine already-exact functions and
+all existing data matches in `render.c` retain their previous results. No
+additional bytes are yet counted as exactly matched.
+
+The remaining codegen gap is substantial: MWCC emits normal helper boundaries,
+integer/float conversions and scalar matrix arithmetic, while retail has
+internal private calling conventions, quantized loads/stores and paired-single
+matrix arithmetic. This attempt does not prove which language produced retail.
+`render.c` remains `NonMatching`.
+
+### Execution probe
+
+`tools/joint_matrices_emulation_probe.py` links the compiled render object into
+an isolated test ELF and executes both that code and the original EN DOL with
+Unicorn. A small instruction hook implements the retail Gekko paired-single
+subset, including GQR3/GQR5 conversions. The probe needs Python 3.13+ and the
+optional `unicorn` package; it does not affect normal build dependencies.
+
+```sh
+python3 -m venv build/joint-matrices-probe-venv
+build/joint-matrices-probe-venv/bin/pip install unicorn==2.1.4
+build/joint-matrices-probe-venv/bin/python tools/joint_matrices_emulation_probe.py
+```
+
+The default 228 synthetic comparisons cover constant and variable-width
+streams, fields crossing loaded-word boundaries, fractional and saturated
+phases, angle wrapping, scale/translation adjustments, extrapolated blend
+weights, cached quaternion inputs/outputs, root rotation overrides, remapped
+joints, skipped joints and branched hierarchies. Packed output words compare
+exactly; matrix/quaternion floats use relative and absolute tolerances of
+`2e-5`. The probe also checks return, stack restoration, nonvolatile GPR/FPR
+restoration and output guards. All 228 pass.
+
+Coverage reaches 1,212 of 1,219 retail instructions. The seven unvisited
+instructions are the branch at `0x80006E30`, after a helper path that exits via
+the outer epilogue, and three two-instruction `0x8000` quadrant cases in the
+half-angle helper. A signed 16-bit angle shifted right once cannot select that
+quadrant. Coverage is useful evidence, not a proof for arbitrary inputs. This
+software probe does not establish bit-exact Gekko floating-point behavior or
+in-game correctness; hardware rounding/denormal behavior and the remaining
+instruction mismatches still need investigation.
+
+Generated results and the test ELF go under `build/joint-matrices-emulation/`.
+Both default and experimental configurations pass `ninja all_source` and a
+fresh strict checksum check after this recovery; the retail DOL SHA-1 remains
+`e750e8e894707a52446118a4b84f1b58b677b269`.
