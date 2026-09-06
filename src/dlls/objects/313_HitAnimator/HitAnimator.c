@@ -56,8 +56,7 @@ void HitAnimator_update(GameObject* obj) {
     HitAnimatorState* state = obj->extra;
     MapBlockData* block;
 
-    block = mapGetBlock(
-        objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
+    block = mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
     if (block == NULL) {
         state->flags &= ~HIT_ANIMATOR_STATE_TOGGLE_PENDING;
         state->flags |= HIT_ANIMATOR_STATE_BLOCK_UPDATE_PENDING;
@@ -111,8 +110,7 @@ void HitAnimator_init(GameObject* obj, HitAnimatorPlacement* placement) {
             state->flags |= HIT_ANIMATOR_STATE_TOGGLE_PENDING;
         }
     }
-    block = mapGetBlock(
-        objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
+    block = mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
     if (block != NULL) {
         if ((placement->setupFlags & HIT_ANIMATOR_SETUP_BLOCK_UPDATE) != 0 && placement->blockEffectId != 0) {
             HitAnimator_applyBlockState(block, obj, state, placement);
