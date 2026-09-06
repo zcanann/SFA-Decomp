@@ -32,7 +32,7 @@ typedef struct RomCurveDef
     s8 action;
     s8 type;
     s8 subtype; /* secondary curve classifier: HCurves p5_filter, plus Tricky path-search gates */
-    s8 blockedLinkMask;
+    s8 backwardLinkMask; /* bit i: linkIds[i] follows the curve backward; clear follows forward */
     s32 linkIds[ROMCURVE_LINK_COUNT];
     s8 yaw;
     s8 pitch;
@@ -56,7 +56,7 @@ STATIC_ASSERT(offsetof(RomCurveDef, id) == 0x14);
 STATIC_ASSERT(offsetof(RomCurveDef, action) == 0x18);
 STATIC_ASSERT(offsetof(RomCurveDef, type) == 0x19);
 STATIC_ASSERT(offsetof(RomCurveDef, subtype) == 0x1A);
-STATIC_ASSERT(offsetof(RomCurveDef, blockedLinkMask) == 0x1B);
+STATIC_ASSERT(offsetof(RomCurveDef, backwardLinkMask) == 0x1B);
 STATIC_ASSERT(offsetof(RomCurveDef, linkIds) == 0x1C);
 STATIC_ASSERT(offsetof(RomCurveDef, yaw) == 0x2C);
 STATIC_ASSERT(offsetof(RomCurveDef, pitch) == 0x2D);

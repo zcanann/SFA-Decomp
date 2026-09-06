@@ -1,9 +1,6 @@
 #include "dolphin.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/fcos16_approx_api.h"
-#include "main/trig.h"
-#include "main/fsin16_approx_api.h"
 
 extern const float sTrigApproxCosBias;
 extern const float sTrigApproxCosLinear;
@@ -40,7 +37,7 @@ extern const double sTrigHighPrecisionCosCoeff8;
 extern const double sTrigHighPrecisionCosCoeff10;
 extern const double sTrigHighPrecisionCosCoeff12;
 
-float fsin16Approx(int angle) {
+float fsin16Approx(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float x = fastCastS16ToFloat(&scaledAngleBits);
     float x2 = x * x;
@@ -60,7 +57,7 @@ float fsin16Approx(int angle) {
     }
 }
 
-float fsin16(int angle) {
+float fsin16(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float x = fastCastS16ToFloat(&scaledAngleBits);
     float x2 = x * x;
@@ -80,7 +77,7 @@ float fsin16(int angle) {
     }
 }
 
-float fsin16Precise(int angle) {
+float fsin16Precise(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -106,7 +103,7 @@ float fsin16Precise(int angle) {
     }
 }
 
-float fsin16HighPrecision(int angle) {
+float fsin16HighPrecision(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
     double reducedAngle = sTrigHighPrecisionAngleScale * reducedFloat;
@@ -161,7 +158,7 @@ float fsin16HighPrecision(int angle) {
     }
 }
 
-float fcos16Approx(int angle) {
+float fcos16Approx(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -181,7 +178,7 @@ float fcos16Approx(int angle) {
     }
 }
 
-float fcos16(int angle) {
+float fcos16(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -201,7 +198,7 @@ float fcos16(int angle) {
     }
 }
 
-float fcos16Precise(int angle) {
+float fcos16Precise(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float y = fastCastS16ToFloat(&scaledAngleBits);
     float y2 = y * y;
@@ -227,7 +224,7 @@ float fcos16Precise(int angle) {
     }
 }
 
-float fcos16HighPrecision(int angle) {
+float fcos16HighPrecision(u16 angle) {
     s16 scaledAngleBits = (s16)(int)((angle << 2) & 0x3FFFC);
     float reducedFloat = fastCastS16ToFloat(&scaledAngleBits);
     double reducedAngle = sTrigHighPrecisionAngleScale * reducedFloat;

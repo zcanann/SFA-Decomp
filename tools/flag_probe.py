@@ -11,7 +11,9 @@ project.  No config edit, no tree mutation.
 An empty extra-flag string is the baseline.  Use `-opt display` in the extra
 flags to have MWCC print the resolved optimizer state (live-token oracle).
 """
-import json, os, shlex, subprocess, sys, hashlib
+import json, os, subprocess, sys, hashlib
+
+from compiler_command import split_command_line
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRATCH = os.environ.get("FLAG_PROBE_DIR",
@@ -41,10 +43,10 @@ def base_cmd(unitname):
 
 def compile_probe(unitname, extra, tag):
     """extra: string of additional flags appended before -c.  Returns (obj, err)."""
-    toks = shlex.split(base_cmd(unitname))
+    toks = split_command_line(base_cmd(unitname))
     toks = [t for t in toks if t != "-MMD"]
     ci = toks.index("-c")
-    toks[ci:ci] = shlex.split(extra or "")
+    toks[ci:ci] = split_command_line(extra or "")
     outdir = os.path.join(SCRATCH, tag)
     os.makedirs(outdir, exist_ok=True)
     toks[toks.index("-o") + 1] = outdir

@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_BADDIEWHIRLPOOL_H_
 #define MAIN_DLL_BADDIEWHIRLPOOL_H_
 
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 
 typedef struct GameObject GameObject;
 

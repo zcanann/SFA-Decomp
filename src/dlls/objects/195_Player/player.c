@@ -14,7 +14,7 @@
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "sys/objects/lifecycle.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/debug.h"
 #include "main/render_envfx_api.h"
 #include "game/objects/object.h"
@@ -39,7 +39,7 @@
 #include "dlls/objects/common/vehicle.h"
 #include "main/dll/dll_000D_playershadow.h"
 #include "main/dll/dll_01B5_lightfoot.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/dll/viewfinder.h"
 #include "main/sky_api.h"
 #include "main/object_render.h"
@@ -112,7 +112,7 @@
 #define FEAR_TEST_METER_POSITION_INT
 #include "main/dll/dll_0000_gameui.h"
 #undef FEAR_TEST_METER_POSITION_INT
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/objtype.h"
 #include "main/obj_link.h"
 #include "main/obj_message.h"
@@ -5996,9 +5996,9 @@ int playerState1B(GameObject* obj, PlayerState* state, f32 fv) {
             inner->yaw = inner->targetYaw;
             sqrtf(inner->hitNormalX * inner->hitNormalX + inner->hitNormalZ * inner->hitNormalZ);
             obj->anim.rotY = 0;
-            found = (*gRomCurveInterface)->getRandomUnblockedLink(pt, -1);
+            found = (*gRomCurveInterface)->getRandomForwardLink(pt, -1);
             if (found == -1) {
-                found = (*gRomCurveInterface)->getRandomBlockedLink(pt, -1);
+                found = (*gRomCurveInterface)->getRandomBackwardLink(pt, -1);
             }
             pt2 = (*gRomCurveInterface)->getById(found);
             inner->curveEndX = pt2->x;
@@ -16836,7 +16836,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     ((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
     objAudioDispatchAnimEvents((GameObject*)obj, &seq->animEvents, ((PlayerState*)inner)->animSoundId,
-                               (void*)((char*)inner + 0x3c4), (void*)((char*)inner + 4),
+                               (void*)((char*)inner + 0x3c4), &((PlayerState*)inner)->baddie.curvesCollision,
                                ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
     return result;
 }
@@ -17806,7 +17806,8 @@ void playerUpdate(GameObject* obj)
             ((GameObject*)obj)->anim.rotX = ((PlayerState*)inner)->targetYaw;
             objAudioDispatchEventMask(obj, ((PlayerState*)inner)->baddie.eventFlags,
                                       ((PlayerState*)inner)->animSoundId, (void*)(inner + 0x3c4),
-                                      (void*)(inner + 4), ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
+                                      &((PlayerState*)inner)->baddie.curvesCollision,
+                                      ((PlayerState*)inner)->baddie.animSpeedA, 1.0f);
         }
     }
 }

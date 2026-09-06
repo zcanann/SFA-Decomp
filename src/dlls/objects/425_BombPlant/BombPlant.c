@@ -23,7 +23,7 @@
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/objhits.h"
 
 #define BOMB_PLANT_HIT_VOLUME_SLOT 5

@@ -21,8 +21,9 @@ struct ObjfsaWalkGroupPatchInfo
 int RomCurve_setClosed(RomCurveWalker *state,int closed);
 u8 RomCurve_goNextPoint(RomCurveWalker *state);
 void RomCurve_stepClamped(RomCurveWalker *state,f32 step);
-int RomCurve_advanceToNextSegment(RomCurveWalker *state,void *targetCurve);
-int RomCurve_setupHermiteSegment(RomCurveWalker *state,void *fromCurve,void *toCurve,void *targetCurve);
+int RomCurve_advanceToNextSegment(RomCurveWalker *state, struct RomCurveDef *targetCurve);
+int RomCurve_setupHermiteSegment(RomCurveWalker *state, struct RomCurveDef *fromCurve,
+                                struct RomCurveDef *toCurve, struct RomCurveDef *targetCurve);
 int curves_findNearObj(struct GameObject* obj,int *curveTypes,int typeCount,int action,int bboxMode);
 f32 curves_getPathLength(struct RomCurveDef *a, struct RomCurveDef *b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(struct RomCurveDef* curve,float *outX,float *outY,float *outZ,f32 phase);

@@ -2,7 +2,7 @@
 #define MAIN_DLL_DLL_10A_H_
 
 #include "types.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "game/objects/object.h"
 
 void baddieSpawnWaterRipple(GameObject* obj, EnemyState* state);

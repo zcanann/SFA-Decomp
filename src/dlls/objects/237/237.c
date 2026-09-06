@@ -41,7 +41,7 @@
 #define COLLECTIBLE_PICKUP_CATEGORY_ITEM   1
 #define COLLECTIBLE_PICKUP_CATEGORY_HEALTH 4
 
-#define COLLECTIBLE_OBJECT_TYPE_ID   0x13
+#define COLLECTIBLE_OBJECT_TYPE_ID 0x13
 
 #define COLLECTIBLE_NO_GAME_BIT              -1
 #define COLLECTIBLE_HIT_REGION_UNRESOLVED    -2
@@ -415,8 +415,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
         switch (obj->anim.romDefNo) {
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             if (mainGetBit(GAMEBIT_SawBigHealth) == 0) {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj,
-                                    (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
                 mainSetBits(GAMEBIT_SawBigHealth, 1);
             } else {
                 collectible_applyPickup(obj);
@@ -431,8 +430,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
         case 0x2da:
         case COLLECTIBLE_ITEM_APPLE:
             if (mainGetBit(GAMEBIT_SawApple) == 0) {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj,
-                                    (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
                 mainSetBits(GAMEBIT_SawApple, 1);
             } else {
                 collectible_applyPickup(obj);
@@ -441,8 +439,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
             break;
         case COLLECTIBLE_SEQ_ID_MOON_SEED:
             if (mainGetBit(GAMEBIT_CollectedFlag09A8) == 0) {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj,
-                                    (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
                 mainSetBits(GAMEBIT_CollectedFlag09A8, 1);
             } else {
                 collectible_applyPickup(obj);
@@ -453,8 +450,7 @@ void collectible_checkProximityPickup(GameObject* obj, CollectibleState* state) 
             if (ObjTrigger_IsSet(obj) != 0) {
                 mainSetBits(GAMEBIT_EnableCMenu, 1);
                 state->pickupMsgValue = placement->collectGameBit;
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj,
-                                    (u32)&state->pickupMsgValue);
+                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, (void*)obj, (u32)&state->pickupMsgValue);
                 state->pickupLatch |= COLLECTIBLE_PICKUP_LATCHED;
                 if (obj->anim.modelState != NULL) {
                     obj->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -486,8 +482,7 @@ void collectible_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, 
     if (visible != 0 && state->despawnTimer == zero && obj->userData1 == 0 &&
         (obj->anim.romDefNo == COLLECTIBLE_SEQ_ID_TRUTH_HORN || state->visibilityBitClear == 0)) {
         if ((obj->anim.modelInstance->flags & OBJDEF_FLAG_COLLECTIBLE_TINTED) != 0 && state->useColor != 0) {
-            objSetColorFilter(state->colorR, state->colorG,
-                        state->colorB);
+            objSetColorFilter(state->colorR, state->colorG, state->colorB);
         }
         objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, 1.0f);
         if (obj->anim.romDefNo == COLLECTIBLE_SEQ_ID_FIRE_CRYSTAL) {
@@ -578,7 +573,7 @@ void collectible_update(GameObject* obj) {
         }
     } else {
         obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-        ((void (*)(GameObject*))collectible_updateIdleMotion)(obj);
+        collectible_updateIdleMotion(obj);
         if (state->bounceTimer != 0) {
             collectible_updateLooseMotion(obj);
         }

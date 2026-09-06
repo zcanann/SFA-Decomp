@@ -4,7 +4,7 @@
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/texture.h"
 #include "main/camera_interface.h"
-#include "main/dll/tricky_state.h"
+#include "dlls/objects/196_Tricky.h"
 #include "game/objects/object.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/objseq.h"

@@ -12,7 +12,7 @@
  * MoonSeedPlantingSpot_cutOrHarvest is the trigger-volume callback that cuts/harvests.
  */
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object_render.h"

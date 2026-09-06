@@ -9,7 +9,7 @@
 #include "main/dll/dll_0049_cameramodecombat.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/dll/savegame.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/obj_query.h"
@@ -757,7 +757,7 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
         OSReport(sCamcontrolBlendDebugFormat, blendFactor);
         if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_YAW) != 0) {
             camera->blendDeltaYaw = camera->blendStartYaw - (u16)view->yaw;
-            if (0x8000 < camera->blendDeltaYaw) {
+            if (camera->blendDeltaYaw > 0x8000) {
                 camera->blendDeltaYaw = (camera->blendDeltaYaw - 0x10000) + 1;
             }
             if (camera->blendDeltaYaw < -0x8000) {
@@ -768,7 +768,7 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
         }
         if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_PITCH) != 0) {
             camera->blendDeltaPitch = camera->blendStartPitch - (u16)view->pitch;
-            if (0x8000 < camera->blendDeltaPitch) {
+            if (camera->blendDeltaPitch > 0x8000) {
                 camera->blendDeltaPitch = (camera->blendDeltaPitch - 0x10000) + 1;
             }
             if (camera->blendDeltaPitch < -0x8000) {
@@ -779,7 +779,7 @@ void camcontrol_applyState(CamcontrolCameraState* camera) {
         }
         if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_ROLL) != 0) {
             camera->blendDeltaRoll = camera->blendStartRoll - (u16)view->roll;
-            if (0x8000 < camera->blendDeltaRoll) {
+            if (camera->blendDeltaRoll > 0x8000) {
                 camera->blendDeltaRoll = (camera->blendDeltaRoll - 0x10000) + 1;
             }
             if (camera->blendDeltaRoll < -0x8000) {
@@ -862,9 +862,11 @@ void Camera_applyTargetFlags(int targetFlagMode) {
 
 void Camera_setTargetFlag2(int enable) {
     if (enable != 0) {
-        gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags | CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT);
+        gCamcontrolCamera->targetFlags =
+            (u8)(gCamcontrolCamera->targetFlags | CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT);
     } else {
-        gCamcontrolCamera->targetFlags = (u8)(gCamcontrolCamera->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT);
+        gCamcontrolCamera->targetFlags =
+            (u8)(gCamcontrolCamera->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_FORCE_COMBAT);
     }
 }
 
@@ -988,8 +990,7 @@ void camcontrol_updateTargetFeedback(void) {
             } else {
                 ObjAnim_AdvanceCurrentMove(reticle, -0.04f, timeDelta, NULL);
             }
-        } else if ((gCamcontrolCamera->targetReticleFocus != target) &&
-                   (reticle->currentMoveProgress >= 1.0f)) {
+        } else if ((gCamcontrolCamera->targetReticleFocus != target) && (reticle->currentMoveProgress >= 1.0f)) {
             gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
             if (target != NULL) {
                 ObjAnim_SetMoveProgress(reticle, 0.0f);

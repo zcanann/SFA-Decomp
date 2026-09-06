@@ -7,6 +7,8 @@
 #include "main/dll/DR/dr_types.h"
 #include "main/objseq.h"
 
+#define DRSHACKLE_OBJGROUP 0x37
+
 typedef struct DrshacklePlacement
 {
     ObjPlacement base;

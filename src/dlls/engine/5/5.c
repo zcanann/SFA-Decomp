@@ -414,7 +414,7 @@ void skySetSlotFlag80(int flags, u8 mode)
     }
 }
 
-int skyGetSlotFlag80(int slot)
+u8 skyGetSlotFlag80(int slot)
 {
     SkyState* sky;
 

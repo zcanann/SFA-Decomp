@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DUSTER_H_
 #define MAIN_DLL_DUSTER_H_
 
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "game/objects/object.h"
 #include "main/dll/duster_api.h"
 

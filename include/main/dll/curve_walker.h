@@ -4,12 +4,9 @@
 #include "global.h"
 #include "main/curve_types.h"
 
-/* rom-curve walker record (the f32* "state" the RomCurve_* family walks) -
- * sits at the head of curve-following extra blocks (objfsa.c census, lifted
- * per the deref-cleanup wave). Kept in its own header so TUs with legacy
- * arity-0 externs (objfsa.c drift bodies) can take the typedef without
- * curves.h's prototype namespace; curves.h includes this, so its consumers
- * see RomCurveWalker as before. */
+struct RomCurveDef;
+
+/* Curve interpolation state and the three route nodes spanning its segments. */
 typedef struct RomCurveWalker {
     union {
         Curve curve;
@@ -33,9 +30,9 @@ typedef struct RomCurveWalker {
             CurveCoeffFn coeffFn; /* 0x98: coefficient callback */
         };
     };
-    void *previousNode; /* previous route node */
-    void *currentNode; /* current route node */
-    void *nextNode; /* next route node */
+    struct RomCurveDef *previousNode;
+    struct RomCurveDef *currentNode;
+    struct RomCurveDef *nextNode;
     f32 hermX[4]; /* 0xA8: hermite endpoints+tangents, X */
     f32 hermX2[4]; /* 0xB8: previous-segment X set */
     f32 hermY[4]; /* 0xC8 */
@@ -49,6 +46,9 @@ STATIC_ASSERT(offsetof(RomCurveWalker, curve) == 0x00);
 STATIC_ASSERT(offsetof(RomCurveWalker, posX) == 0x68);
 STATIC_ASSERT(offsetof(RomCurveWalker, tangentX) == 0x74);
 STATIC_ASSERT(offsetof(RomCurveWalker, reverse) == 0x80);
+STATIC_ASSERT(offsetof(RomCurveWalker, previousNode) == 0x9C);
+STATIC_ASSERT(offsetof(RomCurveWalker, currentNode) == 0xA0);
+STATIC_ASSERT(offsetof(RomCurveWalker, nextNode) == 0xA4);
 STATIC_ASSERT(offsetof(RomCurveWalker, hermX) == 0xA8);
 STATIC_ASSERT(sizeof(RomCurveWalker) == 0x108);
 

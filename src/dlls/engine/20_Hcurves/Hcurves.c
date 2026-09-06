@@ -1,4 +1,3 @@
-#define OBJFSA_PATCH_EXIT_U16
 #define TRACK_BBOX_FLAGS_S8
 #include "dolphin/os/OSReport.h"
 #include "main/dll/rom_curve_def.h"
@@ -69,7 +68,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
     pl->normalZ = (s16)(32767.0f * dzn);                                                                \
     *(po) = -(pl->normalX * (XA) + pl->normalZ * (ZA))
 
-static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos);
+static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos);
 inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base);
 
 
@@ -273,13 +272,13 @@ static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
     return NULL;
 }
 
-static inline int Objfsa_RomCurveIsBlocked(RomCurveDef* c)
+static inline int Objfsa_RomCurveIsForwardEnd(RomCurveDef* c)
 {
     int slot;
 
     for (slot = 0; slot < 4; slot++)
     {
-        if (c->linkIds[slot] != -1 && (c->blockedLinkMask & (1 << slot)) == 0)
+        if (c->linkIds[slot] != -1 && (c->backwardLinkMask & (1 << slot)) == 0)
         {
             return 0;
         }
@@ -287,7 +286,7 @@ static inline int Objfsa_RomCurveIsBlocked(RomCurveDef* c)
     return 1;
 }
 
-static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
+static inline int RomCurve_CollectForwardLinks(RomCurveDef* curve, int* ids)
 {
     int link;
     int count;
@@ -301,7 +300,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         link = *lp++;
-        if ((link > -1) && ((curve->blockedLinkMask & mask) == 0) && (link != 0))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) == 0) && (link != 0))
         {
             ids[count++] = link;
         }
@@ -310,7 +309,7 @@ static inline int RomCurve_CollectUnblockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
+static inline int RomCurve_CollectBackwardLinks(RomCurveDef* curve, int* ids)
 {
     int link;
     int count;
@@ -324,7 +323,7 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
         link = *lp++;
-        if ((link > -1) && ((curve->blockedLinkMask & mask) != 0) && (link != 0))
+        if ((link > -1) && ((curve->backwardLinkMask & mask) != 0) && (link != 0))
         {
             ids[count++] = link;
         }
@@ -333,7 +332,7 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     return count;
 }
 
-int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
+int RomCurve_setSegmentEndNode(RomCurveWalker* walker, RomCurveDef* curve)
 {
     RomCurveDef* B = (RomCurveDef*)curve;
     if (walker->currentNode == NULL || walker->nextNode == NULL || curve == 0)
@@ -366,7 +365,7 @@ int RomCurve_setSegmentEndNode(RomCurveWalker* walker, void* curve)
     return 0;
 }
 
-static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos)
+static inline f32 RomCurveNode_GetHermiteTangent(RomCurveDef** nodePtr, int angleOffset, int useCos)
 {
     f32 angle;
     f32 trig;
@@ -384,7 +383,7 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     return 2.0f * trig;
 }
 
-int RomCurve_advanceToNextSegment(RomCurveWalker* state, void* targetCurve)
+int RomCurve_advanceToNextSegment(RomCurveWalker* state, RomCurveDef* targetCurve)
 {
     char* stateBytes;
 
@@ -478,7 +477,7 @@ void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
     Curve_AdvanceAlongPath(&state->curve, dt);
 }
 
-int RomCurve_setupHermiteSegment(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
+int RomCurve_setupHermiteSegment(RomCurveWalker* state, RomCurveDef* fromCurve, RomCurveDef* toCurve, RomCurveDef* targetCurve)
 {
     if (state->reverse != 0)
     {
@@ -619,11 +618,10 @@ RomCurveDef* Objfsa_FindNearestEnabledCurveType24(f32* pos, int walkGroupFilter,
     return bestHit;
 }
 
-void walkPath_writeU16LE(u32 v, u8* dst)
-{
-    v = v & 0xffff;
-    dst[0] = v;
-    dst[1] = (u8)((s32)v >> 8);
+void walkPath_writeU16LE(u16 value, u8* outBytes) {
+    int word = value;
+    outBytes[0] = word;
+    outBytes[1] = word >> 8;
 }
 
 #define WALKGROUP_TRY_RETURN(idx)                                                                                      \
@@ -652,14 +650,14 @@ void walkPath_writeU16LE(u32 v, u8* dst)
         }                                                                                                              \
     }
 
-int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 id)
+int Objfsa_GetNearestPatchExit(f32* point, f32* outVec, u16 patchGroupId)
 {
     u8 i;
     f32 d1;
 
     for (i = 0; i < 256; i++)
     {
-        if (gObjfsaPatches[i].groupId == id)
+        if (gObjfsaPatches[i].groupId == patchGroupId)
             break;
     }
 
@@ -1007,43 +1005,35 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
     }
     return wgi;
 }
-int Objfsa_GetPatchGroupIdAtPoint(float* point)
-{
-    int n;
+int Objfsa_GetPatchGroupIdAtPoint(float* point) {
+    int patchIndex;
     ObjfsaPatch* patch;
 
-    for (n = 0; n < gObjfsaPatchCount; n++)
-    {
+    for (patchIndex = 0; patchIndex < gObjfsaPatchCount; patchIndex++) {
         f32 y = point[1];
-        patch = &gObjfsaPatches[n];
-        if (y < patch->maxY && y > patch->minY)
-        {
+        patch = &gObjfsaPatches[patchIndex];
+        if (y < patch->maxY && y > patch->minY) {
             f32 x;
             f32 z;
-            u8 i[1];
-            u8 j[1];
+            u8 planeIndex;
+            u8 normalComponentIndex;
             z = point[2];
             x = point[0];
-            i[0] = (j[0] = 0);
-            j[0] = 0;
-            for (; i[0] < 4; i[0]++, j[0] += 2)
-            {
-                if (patch->planeOffsets[i[0]] + (x * (f32)((s16*)patch)[j[0]] + z * (f32)((s16*)patch)[j[0] + 1]) >
-                    0.0f)
-                {
+            for (normalComponentIndex = planeIndex = 0; planeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
+                 planeIndex++, normalComponentIndex += 2) {
+                if (patch->planeOffsets[planeIndex] + (x * (f32)patch->normalComponents[normalComponentIndex] +
+                                                       z * (f32)patch->normalComponents[normalComponentIndex + 1]) >
+                    0.0f) {
                     break;
                 }
             }
-            if (i[0] == 4)
-            {
+            if (planeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
                 return patch->groupId;
             }
         }
     }
     return 0;
 }
-
-
 
 int Objfsa_FindWalkGroupIndexAtPoint(float* point)
 {

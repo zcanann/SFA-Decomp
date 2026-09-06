@@ -58,7 +58,7 @@ STATIC_ASSERT(sizeof(ObjHitboxTransformState) == 0x110);
 #define OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED 0x2000
 
 typedef struct ObjHitsPriorityState {
-  struct GameObject* hitObject;
+  struct GameObject* hitObject; /* partner from the applied object-pair response */
   u8 pad04[0x08];
   f32 primaryRadiusSquared;
   f32 localPosX;
@@ -121,6 +121,7 @@ typedef struct ObjHitsPriorityState {
   u8 secondaryShapeFlags;
 } ObjHitsPriorityState;
 
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, hitObject) == 0x00);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, resetHitboxMode) == 0xAF);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, stateIndex) == 0xB0);

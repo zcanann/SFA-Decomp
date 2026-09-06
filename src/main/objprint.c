@@ -20,7 +20,7 @@
 #include "main/objfx.h"
 #include "main/objHitReact_types.h"
 #include "main/dll/dll_005A_staffcollision.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/resource.h"
 #include "dolphin/mtx.h"
 #include "main/dll/objpathtransform_struct.h"
@@ -241,21 +241,21 @@ void objSoundUpdateMouth(GameObject* obj, ObjSoundState* state) {
     timer = (s32)state->timer;
     found = objFindJointVecByKey(obj, 1);
 
-    if (state->active != 0) {
-        state->active = 0;
+    if (state->justStarted != 0) {
+        state->justStarted = 0;
     } else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
         if (timer != -1) {
             timer -= framesThisStep;
             if (timer < 0) {
                 Sfx_StopObjectChannel(obj, 0x10);
                 state->blendWeight = 0.0f;
-                state->pitch = 0;
+                state->mouthAngle = 0;
             }
             state->timer = timer;
         }
     } else {
         state->timer = -1.0f;
-        state->pitch = 0;
+        state->mouthAngle = 0;
         if (state->blendWeight > 0.0f) {
             ObjModel* pi;
             state->blendWeight = 0.0f;
@@ -268,7 +268,7 @@ void objSoundUpdateMouth(GameObject* obj, ObjSoundState* state) {
     }
 
     if (found != NULL) {
-        found[0] = (s16)((found[0] + state->pitch) >> 1);
+        found[0] = (s16)((found[0] + state->mouthAngle) >> 1);
     }
 }
 
@@ -320,26 +320,26 @@ void objSoundStart(GameObject* obj, void* state, u16 sfxId) {
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
         Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
         ((ObjSoundState*)state)->timer = -1.0f;
-        ((ObjSoundState*)state)->pitch = -0x500;
-        ((ObjSoundState*)state)->active = 1;
+        ((ObjSoundState*)state)->mouthAngle = -0x500;
+        ((ObjSoundState*)state)->justStarted = 1;
         ((ObjSoundState*)state)->blendWeight = 1.0f;
     }
 }
 
 void objSoundStartFromDef(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force) {
     u16 sfx;
-    s16 pitch;
+    s16 mouthOpenAngle;
     u32 count;
     ObjModel* model;
     int did;
 
-    pitch = soundDef->pitch;
+    mouthOpenAngle = soundDef->mouthOpenAngle;
     sfx = (u16)soundDef->sfxId;
     if (force != 0 || Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
         Sfx_PlayFromObjectChannel(obj, 0x10, sfx);
         state->timer = -1.0f;
-        state->pitch = (s16)(-pitch);
-        state->active = 1;
+        state->mouthAngle = (s16)(-mouthOpenAngle);
+        state->justStarted = 1;
         state->blendWeight = 1.0f;
     }
     count = soundDef->blendCount;
@@ -353,19 +353,19 @@ void objSoundStartFromDef(GameObject* obj, ObjSoundState* state, ObjSoundDef* so
             did = 0;
         }
         if (did != 0) {
-            soundDef->pitch = 0;
+            soundDef->mouthOpenAngle = 0;
         }
     }
 }
 
-void objSoundStartTimed(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int duration, u8 force) {
+void objSoundStartTimed(GameObject* obj, ObjSoundState* state, u16 sfx, int mouthOpenAngle, int duration, u8 force) {
     if (force == 0 && Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
         return;
     }
     Sfx_PlayFromObjectChannel(obj, 0x10, sfx);
     state->timer = duration;
-    state->pitch = (s16)(-pitch);
-    state->active = 1;
+    state->mouthAngle = (s16)(-mouthOpenAngle);
+    state->justStarted = 1;
     state->blendWeight = 1.0f;
 }
 
@@ -1437,7 +1437,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     }
 }
 
-int objGetAlphaCompareThreshold(void) {
+u8 objGetAlphaCompareThreshold(void) {
     return gObjAlphaCompareThreshold;
 }
 

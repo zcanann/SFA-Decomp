@@ -186,7 +186,7 @@ void dll414_update(GameObject* obj) {
     state = obj->extra;
     effectParams = gDll19EEffectParamsTemplate;
 
-    ((void (*)(void*, int))Sfx_PlayFromObject)(obj, SFXmn_eggylaugh216);
+    Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     objUpdateOpacity(obj);
     if (state->settleTimer > 0) {
         state->settleTimer -= framesThisStep;
@@ -221,7 +221,7 @@ void dll414_update(GameObject* obj) {
 
         if ((state->active != 0) && (state->delayTimer <= 0) && (state->needsOpenSfx != 0)) {
             state->needsOpenSfx = 0;
-            ((void (*)(void*, int))Sfx_PlayFromObject)(obj, SFXmn_sml_trex_snap1);
+            Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap1);
         }
 
         if (state->active != state->previousActive) {

@@ -36,7 +36,7 @@ which now carries prose evidence notes, so they have been dropped.
 | name-conflicts (disambiguated) | 0 |
 | naming contradictions (appendix) | 0 |
 | naming contradictions arbitrated (appendix) | 25 |
-| unit-owned headers recorded (appendix) | 109 |
+| unit-owned headers recorded (appendix) | 113 |
 
 Expansion status over the 705 rows: NO-RETAIL-NAME 287, COMPLETE 263, CONFIRMED 81, RAW 62, GUESSED 7, DOL-RECOVERED 5
 
@@ -661,7 +661,7 @@ any of them is acted on.
 | 0x260 | — | NO-RETAIL-NAME | dlls/objects/608/608.c | = (canonical) | Complete ProximityMine-family TU including the formerly split leading expire helper |
 | 0x261 | DR_LaserCannon | CONFIRMED | dlls/objects/609_DR_LaserCan/DR_LaserCan.c | = (canonical) | Callback TU only; descriptor remains in DOL-confirmed DLL 592 pooled data |
 | 0x262 | — | NO-RETAIL-NAME | dlls/objects/610/610.c | = (canonical) | Complete exact DrakorMissile callback TU; descriptor remains in DOL-confirmed DLL 592 pooled data |
-| 0x263 | GM_MazeWell | CONFIRMED | dlls/objects/611_GM_MazeWell/GM_MazeWell.c | = (canonical) | Exact callback TU; descriptor and adjacent quest-bit table remain in DOL-confirmed DLL 592 pooled data |
+| 0x263 | GM_MazeWell | CONFIRMED | dlls/objects/611_GM_MazeWell/GM_MazeWell.c | = (canonical) | Exact callback/data TU on GC/1.3; canonical header owns the quest-bit table and descriptor declarations |
 | 0x264 | — | NO-RETAIL-NAME | dlls/objects/612/612.c | = (canonical) | Exact data-only DLL: two zero descriptor words in `.sdata` |
 | 0x265 | DR_Creator | COMPLETE | dlls/objects/613_DR_Creator/DR_Creator.c | = (canonical) | Exact callback/data TU; descriptor remains in DOL-confirmed DLL 614 pooled data |
 | 0x266 | KytesMum | COMPLETE | dlls/objects/614_KytesMum/KytesMum.c | = (canonical) | Exact TU including both SFX tables; retail data order ends with the diagnostic string and pooled DLL 613 descriptor |
@@ -961,6 +961,9 @@ more as they are recovered.
 
 | dll | current unit | header |
 |---|---|---|
+| 0x0C9 | dlls/objects/201_Baddie/Baddie.c | include/dlls/objects/201_Baddie.h |
+| 0x0E2 | dlls/objects/226/226.c | include/dlls/objects/226.h |
+| 0x126 | dlls/objects/294/294.c | include/dlls/objects/294.h |
 | 0x17B | dlls/objects/379_DFSH_LaserB/DFSH_LaserB.c | include/dlls/objects/379_DFSH_LaserB.h |
 | 0x18C | dlls/objects/396_MMSH_Shrine/MMSH_Shrine.c | include/dlls/objects/396_MMSH_Shrine.h |
 | 0x198 | dlls/objects/408_NWSH_levcon/NWSH_levcon.c | include/dlls/objects/408_NWSH_levcon.h |
@@ -1065,11 +1068,26 @@ more as they are recovered.
 | 0x207 | dlls/objects/519_WM_Worm/WM_Worm.c | include/dlls/objects/519_WM_Worm.h |
 | 0x209 | dlls/objects/521_WM_LevelCon/WM_LevelCon.c | include/dlls/objects/521_WM_LevelCon.h |
 | 0x20A | dlls/objects/522_WM_GeneralS/WM_GeneralS.c | include/dlls/objects/522_WM_GeneralS.h |
+| 0x20D | dlls/objects/525_WM_seqpoint/WM_seqpoint.c | include/dlls/objects/525_WM_seqpoint.h |
+| 0x211 | dlls/objects/529/529.c | include/dlls/objects/529.h |
+| 0x220 | dlls/objects/544/544.c | include/dlls/objects/544.h |
+| 0x223 | dlls/objects/547_VFP_corepla/VFP_corepla.c | include/dlls/objects/547_VFP_corepla.h |
+| 0x22D | dlls/objects/557_DFP_seqpoin/DFP_seqpoin.c | include/dlls/objects/557_DFP_seqpoin.h |
 | 0x22F | dlls/objects/559_DFP_floorba/DFP_floorba.c | include/main/dll/baddie/dll_022F_dfpfloorbar.h |
 | 0x232 | dlls/objects/562_DFP_RotateP/DFP_RotateP.c | include/dlls/objects/562_DFP_RotateP.h |
-| 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/main/dll/dll_0235_dfptargetblock.h |
-| 0x259 | dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c | include/main/dll/WC/dll_0259_sbcloudrunner.h |
+| 0x235 | dlls/objects/565_DFP_TargetB/DFP_TargetB.c | include/dlls/objects/565_DFP_TargetB.h |
+| 0x242 | dlls/objects/578_DBstealerwo/DBstealerwo.c | include/dlls/objects/578_DBstealerwo.h |
+| 0x250 | dlls/objects/592_KT_Rex/KT_Rex.c | include/dlls/objects/592_KT_Rex.h |
+| 0x255 | dlls/objects/597/597.c | include/dlls/objects/597_SnowBike.h |
+| 0x256 | dlls/objects/598_DIMSnowHorn/DIMSnowHorn.c | include/dlls/objects/598_DIMSnowHorn.h |
+| 0x259 | dlls/objects/601_SB_Cloudrun/SB_Cloudrun.c | include/dlls/objects/601_SB_Cloudrun.h |
+| 0x263 | dlls/objects/611_GM_MazeWell/GM_MazeWell.c | include/dlls/objects/611_GM_MazeWell.h |
+| 0x272 | dlls/objects/626/626.c | include/dlls/objects/626.h |
+| 0x283 | dlls/objects/643_DR_BarrelGr/DR_BarrelGr.c | include/dlls/objects/643_DR_BarrelGr.h |
 | 0x287 | dlls/objects/647_SPScarab/SPScarab.c | include/main/dll/SP/dll_0287_spscarab.h |
+| 0x296 | dlls/objects/662_WCTempleDia/WCTempleDia.c | include/dlls/objects/662_WCTempleDia.h |
+| 0x297 | dlls/objects/663_WCTempleBri/WCTempleBri.c | include/dlls/objects/663_WCTempleBri.h |
+| 0x2AC | dlls/objects/684_LGTControlL/LGTControlL.c | include/dlls/objects/684_LGTControlL.h |
 
 ## Deciding file identity: the oracles and the rename gate
 

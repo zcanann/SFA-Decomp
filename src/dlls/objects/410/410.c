@@ -2,7 +2,7 @@
 #include "dlls/objects/410.h"
 
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/baddie_placement.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll_0082_modgfx.h"
 #include "main/frame_timing.h"

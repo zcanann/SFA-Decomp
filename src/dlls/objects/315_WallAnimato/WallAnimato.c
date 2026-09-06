@@ -3,8 +3,9 @@
 
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
+#include "main/dll/dll_001E_effect5.h"
 #include "main/gamebits.h"
 #include "main/object_render.h"
 #include "main/objprint_render_api.h"
@@ -15,14 +16,12 @@
 #define WALL_ANIMATOR_DONE_TIMER      3000
 #define WALL_ANIMATOR_GROUP_SECONDARY 0x31
 #define WALL_ANIMATOR_NEARBY_GROUP    5
-#define WALL_ANIMATOR_PARTFX_DEBRIS   0xCA
-#define WALL_ANIMATOR_PARTFX_DUST     0xCB
 #define WALL_ANIMATOR_PARTFX_FLAGS    0x200001
 
-u8 WallAnimator_getEnergyCost(GameObject* obj) {
+u8 WallAnimator_getDigParticleVariant(GameObject* obj) {
     WallAnimatorPlacement* placement = (WallAnimatorPlacement*)obj->anim.placementData;
 
-    return (u8)placement->spawnRotZ;
+    return (u8)placement->digParticleVariant;
 }
 
 u8 WallAnimator_isComplete(GameObject* obj) {
@@ -54,15 +53,13 @@ f32 WallAnimator_applyImpact(GameObject* obj, GameObject* target) {
         vecRotateZXY(&spawn.rotX, offset);
         offset[2] -= 25.0f;
         vecRotateZXY((void*)obj, offset);
-        spawn.rotZ = placement->spawnRotZ;
-        spawn.rotX = obj->anim.rotX;
+        spawn.dig.variant = placement->digParticleVariant;
+        spawn.dig.yaw = obj->anim.rotX;
         spawn.posX = obj->anim.worldPosX + offset[0];
         spawn.posY = 15.0f + (obj->anim.worldPosY + offset[1]);
         spawn.posZ = obj->anim.worldPosZ + offset[2];
-        (*gPartfxInterface)
-            ->spawnObject((void*)obj, WALL_ANIMATOR_PARTFX_DEBRIS, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
-        (*gPartfxInterface)
-            ->spawnObject((void*)obj, WALL_ANIMATOR_PARTFX_DUST, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_DIG_DEBRIS, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
+        (*gPartfxInterface)->spawnObject((void*)obj, PARTFX_DIG_DUST, &spawn, WALL_ANIMATOR_PARTFX_FLAGS, -1, NULL);
         burstCount--;
     } while (burstCount != 0);
 
@@ -170,6 +167,6 @@ ObjectDescriptor14 gWallAnimatorObjDescriptor = {
     WallAnimator_getExtraSize,
     (ObjectDescriptorCallback)WallAnimator_applyImpact,
     (ObjectDescriptorCallback)WallAnimator_isComplete,
-    (ObjectDescriptorCallback)WallAnimator_getEnergyCost,
+    (ObjectDescriptorCallback)WallAnimator_getDigParticleVariant,
     0,
 };

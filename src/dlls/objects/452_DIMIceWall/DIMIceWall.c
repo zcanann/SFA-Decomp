@@ -8,7 +8,7 @@
 
 #include "dlls/objects/288_TrickyGuard.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_play_api.h"

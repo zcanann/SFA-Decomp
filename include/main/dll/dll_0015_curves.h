@@ -70,9 +70,9 @@ int RomCurve_buildAdjacentWindowPoints(u32* curveIds, float* outX, float* outY, 
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds);
 int RomCurve_getFarthestAdjacentLink(RomCurveDef* curve, int excludeLinkId, f32 x, f32 y, f32 z);
 f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment);
-int RomCurve_getRandomBlockedLink(RomCurveDef* curve, int excludeLinkId);
+int RomCurve_getRandomBackwardLink(RomCurveDef* curve, int excludeLinkId);
 int RomCurve_getLinkIds(RomCurveDef* curve, int excludeLinkId, int* outIds);
-int RomCurve_getRandomUnblockedLink(RomCurveDef* curve, int excludeLinkId);
+int RomCurve_getRandomForwardLink(RomCurveDef* curve, int excludeLinkId);
 RomCurveDef* RomCurve_getById(u32 curveId);
 int RomCurve_find(f32 x, f32 y, f32 z, int* types, int typeCount, int action);
 void RomCurve_remove(RomCurveDef* curve);

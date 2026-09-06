@@ -16,7 +16,6 @@
 CameraModeStaticState* gCameraModeStaticState;
 
 GameObject* camStaticFindNearestAnchor(f32 x, f32 y, f32 z, int anchorId, int classId) {
-    GameObject** cursor;
     int i;
     GameObject* nearest;
     f32 nearestDistance;
@@ -32,8 +31,8 @@ GameObject* camStaticFindNearestAnchor(f32 x, f32 y, f32 z, int anchorId, int cl
     nearestDistance = 100000.0f;
     nearest = NULL;
     objects = (GameObject**)objGetAllOfType(STATIC_CAMERA_OBJECT_GROUP, &count);
-    for (i = 0, cursor = objects; i < count; i++) {
-        candidate = *cursor;
+    for (i = 0; i < count; i++) {
+        candidate = objects[i];
         if (candidate->anim.classId == classId &&
             ((StaticCameraPlacement*)candidate->anim.placementData)->anchorId == anchorId) {
             dx = x - candidate->anim.worldPosX;
@@ -46,7 +45,6 @@ GameObject* camStaticFindNearestAnchor(f32 x, f32 y, f32 z, int anchorId, int cl
                 nearest = candidate;
             }
         }
-        cursor++;
     }
     return nearest;
 }

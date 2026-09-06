@@ -37,7 +37,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_0031_minimap.h"
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/dll/savegame_env_api.h"
 #include "main/sky.h"
 #include "track/intersect_api.h"

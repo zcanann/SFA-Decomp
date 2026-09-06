@@ -32,7 +32,7 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dll_80136a40.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/savegame_object_api.h"
 
 #define GUNPOWDER_BARREL_HIT_VOLUME_SLOT_BLAST     5

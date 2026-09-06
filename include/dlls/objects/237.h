@@ -20,41 +20,41 @@ struct ObjSeqState;
  * owns the opaque region beginning at pathState.
  */
 typedef struct CollectibleState {
-    f32 playerDistance;           /* 0x00: most recent horizontal distance to the player */
-    f32 pickupRadius;             /* 0x04 */
-    f32 despawnTimer;             /* 0x08: post-collect fade-out countdown */
-    u8 unk0C;                     /* 0x0C */
-    u8 unk0D;                     /* 0x0D */
-    u8 pad0E;                     /* 0x0E */
-    u8 disabled;                  /* 0x0F */
-    s16 hideGameBit;              /* 0x10: set on collection; -1 = none */
-    u8 pad12[2];                  /* 0x12 */
-    s16 visibilityGameBit;        /* 0x14: active while set; -1 = none */
-    u8 pad16[2];                  /* 0x16 */
-    s32 hitRegionId;              /* 0x18: -2 until resolved */
-    u8 pad1C;                     /* 0x1C */
-    u8 bounceTimer;               /* 0x1D */
-    u8 visibilityBitClear;        /* 0x1E */
-    u8 pad1F;                     /* 0x1F */
-    s32 mapId;                    /* 0x20 */
-    f32 basePosX;                 /* 0x24 */
-    f32 basePosY;                 /* 0x28 */
-    f32 basePosZ;                 /* 0x2C */
-    f32 spinSpeed;                /* 0x30 */
-    s16 spinTimer;                /* 0x34 */
-    u8 useColor;                  /* 0x36 */
-    u8 pickupLatch;               /* 0x37: bit 0 prevents duplicate pickup */
-    u8 colorR;                    /* 0x38 */
-    u8 colorG;                    /* 0x39 */
-    u8 colorB;                    /* 0x3A */
-    u8 pad3B;                     /* 0x3B */
-    s16 hideFrames;               /* 0x3C */
-    u8 delayedMsgTimer;           /* 0x3E */
-    u8 pad3F;                     /* 0x3F */
-    f32 unk40;                    /* 0x40 */
-    f32 lifetimeTimer;            /* 0x44 */
-    s16 pickupMsgValue;           /* 0x48 */
-    u8 pad4A[6];                  /* 0x4A */
+    f32 playerDistance;             /* 0x00: most recent horizontal distance to the player */
+    f32 pickupRadius;               /* 0x04 */
+    f32 despawnTimer;               /* 0x08: post-collect fade-out countdown */
+    u8 unk0C;                       /* 0x0C */
+    u8 unk0D;                       /* 0x0D */
+    u8 pad0E;                       /* 0x0E */
+    u8 disabled;                    /* 0x0F */
+    s16 hideGameBit;                /* 0x10: set on collection; -1 = none */
+    u8 pad12[2];                    /* 0x12 */
+    s16 visibilityGameBit;          /* 0x14: active while set; -1 = none */
+    u8 pad16[2];                    /* 0x16 */
+    s32 hitRegionId;                /* 0x18: -2 until resolved */
+    u8 pad1C;                       /* 0x1C */
+    u8 bounceTimer;                 /* 0x1D */
+    u8 visibilityBitClear;          /* 0x1E */
+    u8 pad1F;                       /* 0x1F */
+    s32 mapId;                      /* 0x20 */
+    f32 basePosX;                   /* 0x24 */
+    f32 basePosY;                   /* 0x28 */
+    f32 basePosZ;                   /* 0x2C */
+    f32 spinSpeed;                  /* 0x30 */
+    s16 spinTimer;                  /* 0x34 */
+    u8 useColor;                    /* 0x36 */
+    u8 pickupLatch;                 /* 0x37: bit 0 prevents duplicate pickup */
+    u8 colorR;                      /* 0x38 */
+    u8 colorG;                      /* 0x39 */
+    u8 colorB;                      /* 0x3A */
+    u8 pad3B;                       /* 0x3B */
+    s16 hideFrames;                 /* 0x3C */
+    u8 delayedMsgTimer;             /* 0x3E */
+    u8 pad3F;                       /* 0x3F */
+    f32 unk40;                      /* 0x40 */
+    f32 lifetimeTimer;              /* 0x44 */
+    s16 pickupMsgValue;             /* 0x48 */
+    u8 pad4A[6];                    /* 0x4A */
     CurvesCollisionState pathState; /* 0x50 */
 } CollectibleState;
 

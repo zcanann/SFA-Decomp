@@ -111,6 +111,7 @@ void dll_115_update(GameObject* obj) {
         break;
     }
 
+    /* Retail also walks into activeGameBits for the FINISH and DONE states. */
     previousStep = state->step - 1;
     placementCursor = (s16*)placement + previousStep;
     while (previousStep >= 0) {
@@ -128,7 +129,6 @@ void dll_115_update(GameObject* obj) {
 }
 
 void dll_115_init(GameObject* obj, Dll115Placement* placement) {
-    s16* placementCursor;
     Dll115State* state;
     int step;
 
@@ -139,15 +139,13 @@ void dll_115_init(GameObject* obj, Dll115Placement* placement) {
     objAddObjectType(obj, DLL_115_GROUP);
 
     step = 0;
-    placementCursor = (s16*)placement;
     do {
-        if (placementCursor[DLL_115_COMPLETION_GAME_BIT_HALFWORD_INDEX] == DLL_115_GAME_BIT_NONE) {
+        if (placement->completionGameBits[step] == DLL_115_GAME_BIT_NONE) {
             break;
         }
-        if (mainGetBit(placementCursor[DLL_115_COMPLETION_GAME_BIT_HALFWORD_INDEX]) == 0) {
+        if (mainGetBit(placement->completionGameBits[step]) == 0) {
             break;
         }
-        placementCursor++;
         step++;
     } while (step < DLL_115_STEP_COUNT);
 

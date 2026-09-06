@@ -27,7 +27,7 @@
 #include "main/gametext_color_api.h"
 #undef GAMETEXT_COLOR_U8_ARGS
 #include "main/dll/cmenu_item_table.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"
@@ -321,16 +321,9 @@ extern GameObject* gGameUiHudAnimObjects[6];
 extern s16 gHudIncomingCommTimer;
 extern s8 pauseMenuFrameCounter;
 extern CMenuSection gCMenuSections[];
-extern const f32 hudElementOpacity;
 extern int gGameUiScreenHeightOffset;
 extern f32 gTrickyHudIconPosX, gTrickyHudIconPosY, gTrickyHudIconPosZ, gTrickyHudIconScale;
 extern f32 gTrickyHudIconRotZ, gTrickyHudIconRotX, gTrickyHudIconRotY, gPauseMenuSavedFovY;
-extern const double gPauseMenuGridCursorScale;
-extern const double lbl_803E2128;
-extern const f32 lbl_803E204C;
-extern const f32 lbl_803E2010;
-extern const f32 lbl_803E20B8;
-extern const f32 gGameUiAngleDivisor;
 extern Texture* hudTextures[102];
 extern s16 gFearTestMeterAlpha;
 extern s8 lbl_803DD7F8;
@@ -350,11 +343,7 @@ extern f32 gPauseMenuMapSwivelCos;
 extern s16 cMenuFadeCounter;
 extern f32 gHudStatusFadeOpacity;
 extern f32 gHudStatusAlpha;
-extern const f32 lbl_803E1EC4;
-extern const f32 gGameUiPi;
 extern f32 gViewFinderBaseY;
-extern const f32 lbl_803E1F30;
-extern const f32 lbl_803E1F34;
 extern u16 gViewFinderCamAngle;
 extern char sTrickyDebugXCoordFormat[];
 
@@ -544,22 +533,19 @@ static inline void drawViewFinderSegment(f32 startX, f32 startY, f32 endX, f32 e
     f32 radians;
     f32 sine;
     f32 cosine;
-    f32 yOffset;
-    f32 xOffset;
 
     extern GXColor gViewFinderLineColor;
 
     color = gViewFinderLineColor;
     color.a = alpha;
     angle = getAngle(directionX, directionY);
-    radians = gGameUiPi * angle / gGameUiAngleDivisor;
+    radians = 3.1415927f * angle / 32768.0f;
     sine = mathSinf(radians);
     cosine = mathCosf(radians);
     lineColor = color;
-    yOffset = thickness * sine;
-    xOffset = thickness * cosine;
-    drawViewFinderLine(startX + xOffset, startY - yOffset, startX - xOffset, startY + yOffset, endX - xOffset,
-                       endY + yOffset, endX + xOffset, endY - yOffset, &lineColor);
+    drawViewFinderLine(startX + (thickness * cosine), startY - (thickness * sine), startX - (thickness * cosine),
+                       startY + (thickness * sine), endX - (thickness * cosine), endY + (thickness * sine),
+                       endX + (thickness * cosine), endY - (thickness * sine), &lineColor);
 }
 
 static inline void drawViewFinderHorizontal(f32 directionX, f32 y, f32 startX, f32 endX, f32 fade) {
@@ -584,7 +570,7 @@ static inline void drawViewFinderHorizontal(f32 directionX, f32 y, f32 startX, f
     color = gViewFinderLineColor;
     color.a = 255.0f * fade;
     angle = getAngle(directionX, 0.0f);
-    radians = gGameUiPi * angle / gGameUiAngleDivisor;
+    radians = 3.1415927f * angle / 32768.0f;
     sine = mathSinf(radians);
     cosine = mathCosf(radians);
     lineColor = color;
@@ -622,7 +608,7 @@ static inline void drawViewFinderVertical(f32 directionY, f32 x, f32 startY, f32
     color = gViewFinderLineColor;
     color.a = 255.0f * fade;
     angle = getAngle(0.0f, directionY);
-    radians = gGameUiPi * angle / gGameUiAngleDivisor;
+    radians = 3.1415927f * angle / 32768.0f;
     sine = mathSinf(radians);
     cosine = mathCosf(radians);
     lineColor = color;
@@ -1563,21 +1549,21 @@ void drawViewFinderHud(void) {
         f32 reticleTopY = -(310.0f * gViewFinderFadeLevel) + 410.0f;
         f32 viewScale;
         drawViewFinderSegment(580.0f, reticleTopY, 580.0f, 410.0f, 0.0f, 410.0f - reticleTopY, 1.0f,
-                              hudElementOpacity * gViewFinderFadeLevel);
+                              255.0f * gViewFinderFadeLevel);
         drawViewFinderSegment(580.0f, reticleY, 580.0f, 8.0f + reticleY, 0.0f, (8.0f + reticleY) - reticleY, 6.0f,
-                              hudElementOpacity * gViewFinderFadeLevel);
-        viewScale = 0.57735 / mathTanf((f32)(gGameUiPi * fovY / 360.0));
+                              255.0f * gViewFinderFadeLevel);
+        viewScale = 0.57735 / mathTanf((f32)(3.1415927f * fovY / 360.0));
         sprintf(buf, sTrickyDebugXCoordFormat, viewScale);
-        gameTextSetColor(0, 0xff, 0, hudElementOpacity * gViewFinderFadeLevel);
+        gameTextSetColor(0, 0xff, 0, 255.0f * gViewFinderFadeLevel);
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
             gridX = 0.0f;
-            gridAlpha = lbl_803E1F30;
-            angleScale = gGameUiPi;
-            waveCenterX = lbl_803E1F34;
-            gridSpacing = lbl_803E1EC4;
-            angleDivisor = gGameUiAngleDivisor;
+            gridAlpha = 80.0f;
+            angleScale = 3.1415927f;
+            waveCenterX = 320.0f;
+            gridSpacing = 10.0f;
+            angleDivisor = 32768.0f;
             waveBaseOffset = 479.5;
             for (; gridX < 640.0f; gridX += gridSpacing) {
                 {
@@ -1607,7 +1593,7 @@ void drawViewFinderHud(void) {
                 }
                 {
                     f32 cosine;
-                    u8 alpha = (f32)(f64)hudElementOpacity * gViewFinderFadeLevel;
+                    u8 alpha = (f32)(f64)255.0f * gViewFinderFadeLevel;
                     f32 currentY, nextY;
                     cosine = lbl_803DBAE4 * mathCosf(angleScale * (nextWavePhase * lbl_803DBAE0) / angleDivisor);
                     nextY = gViewFinderBaseY + (480.0f + cosine);
@@ -1705,18 +1691,18 @@ void drawViewFinderHud(void) {
                     f32 phase;
                     f32 scale;
                     gameTextSetColor(0, 0xff, 0, (f32)textAlpha * gViewFinderFadeLevel);
-                    scale = gGameUiPi;
-                    phase = lbl_803E1F34 - tickX;
-                    sn = lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / gGameUiAngleDivisor);
+                    scale = 3.1415927f;
+                    phase = 320.0f - tickX;
+                    sn = lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / 32768.0f);
                     gameTextShowStr(buf, 0x93, (int)(0.98 * (tickX - 320.0) + 320.0),
                                     (int)(gViewFinderBaseY + (495.0f + sn)));
                 }
                 {
                     u8 alpha = (f32)(u8)tickAlpha * gViewFinderFadeLevel;
-                    f32 phase = lbl_803E1F34 - tickX;
-                    cosine = lbl_803DBAE4 * mathCosf(gGameUiPi * (phase * lbl_803DBAE0) / gGameUiAngleDivisor);
+                    f32 phase = 320.0f - tickX;
+                    cosine = lbl_803DBAE4 * mathCosf(3.1415927f * (phase * lbl_803DBAE0) / 32768.0f);
                     nextY = gViewFinderBaseY + ((f32)((u8)tickHeight + 0x1e0) + cosine);
-                    cosine = lbl_803DBAE4 * mathCosf(gGameUiPi * (phase * lbl_803DBAE0) / gGameUiAngleDivisor);
+                    cosine = lbl_803DBAE4 * mathCosf(3.1415927f * (phase * lbl_803DBAE0) / 32768.0f);
                     currentY = gViewFinderBaseY + (480.0f + cosine);
                     drawViewFinderSegment(tickX, currentY, (f32)(0.98 * (tickX - 320.0) + 320.0), nextY,
                                           (f32)(0.98 * (tickX - 320.0) + 320.0) - tickX, nextY - currentY, 1.0f, alpha);
@@ -1729,8 +1715,8 @@ void drawViewFinderHud(void) {
             int depth = depthReadRequestPoll(0x140, 0xf0, drawViewFinderHud);
             f32 dist = (-farP * nearP) / (((f32)(u32)depth / 16777215.0f - 1.0f) * (farP - nearP) - nearP);
             if (dist > 0.0f && dist < 10000.0f) {
-                sprintf(buf, lbl_803DBB40, dist / lbl_803E1EC4);
-                gameTextSetColor(0, 0xff, 0, hudElementOpacity * gViewFinderFadeLevel);
+                sprintf(buf, lbl_803DBB40, dist / 10.0f);
+                gameTextSetColor(0, 0xff, 0, 255.0f * gViewFinderFadeLevel);
                 gameTextShowStr(buf, 0x93, 0x32, 0x46);
             }
         }
@@ -1752,11 +1738,11 @@ void hudDrawTimedElement(int unused, void* element) {
         return;
     }
     if ((f32)e->framesLeft < 30.0f) {
-        e->alpha = hudElementOpacity * (f32)e->framesLeft / 30.0f;
+        e->alpha = 255.0f * (f32)e->framesLeft / 30.0f;
     } else {
-        f32 op = hudElementOpacity;
+        f32 op = 255.0f;
         if (op != e->alpha) {
-            e->alpha = 8.5f * (f32)(u32)framesThisStep + e->alpha;
+            e->alpha += 8.5f * (f32)(u32)framesThisStep;
             if (e->alpha > op) {
                 e->alpha = op;
             }
@@ -1830,15 +1816,15 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (base->statusOpacity[HUD_STATUS_HEALTH] >= 0.0f || base->statusOpacity[HUD_STATUS_MAX_HEALTH] >= 0.0f ||
         base->statusOpacity[HUD_STATUS_UNKNOWN_5] >= 0.0f || cMenuFadeCounter != 0) {
-        op = hudElementOpacity;
+        op = 255.0f;
     } else {
         op = 0.0f;
     }
     if (op > gHudStatusFadeOpacity) {
         f32 t = 8.5f * timeDelta + gHudStatusFadeOpacity;
         gHudStatusFadeOpacity = t;
-        if (t > hudElementOpacity) {
-            gHudStatusFadeOpacity = hudElementOpacity;
+        if (t > 255.0f) {
+            gHudStatusFadeOpacity = 255.0f;
         }
     } else if (op < gHudStatusFadeOpacity) {
         f32 t = gHudStatusFadeOpacity - 8.5f * timeDelta;
@@ -1966,6 +1952,16 @@ void hudDrawStatusBarsAndCounters(int unused1, int unused2, int unused3) {
 }
 
 char lbl_803A87F0[0x40];
+
+static inline int gameUiClampMagicWidth(int value, int capacity) {
+    value = capacity < value ? capacity : value;
+    return value > 0 ? value : 0;
+}
+
+static inline int gameUiMagicPreviewWidth(s32 value) {
+    return value > 8 ? 8 : value;
+}
+
 void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     int total = lbl_803A9364[8];
     int middleCapacity = total - 0xd;
@@ -1974,10 +1970,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     int seg4;
     int rem4;
     int seg2;
-    int seg3;
     int rem1;
+    int seg3;
     int previewFirstWidth;
-    int endFilledWidth;
     int previousCurrent;
     Texture* tex;
     seg1 = (current > 7) ? 7 : current;
@@ -1985,18 +1980,9 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
         seg1++;
     }
     rem1 = 8 - seg1;
-    seg2 = (middleCapacity < current - 7) ? middleCapacity : current - 7;
-    seg2 = (seg2 > 0) ? seg2 : 0;
+    seg2 = gameUiClampMagicWidth(current - 7, middleCapacity);
     seg3 = middleCapacity - seg2;
-    endFilledWidth = (current - 7) - middleCapacity;
-    if (endFilledWidth > 5) {
-        endFilledWidth = 5;
-    }
-    if (endFilledWidth > 0) {
-        seg4 = endFilledWidth;
-    } else {
-        seg4 = 0;
-    }
+    seg4 = gameUiClampMagicWidth((current - 7) - middleCapacity, 5);
     if (current == total) {
         seg4 = 7;
     }
@@ -2053,10 +2039,10 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     if (rem4 != 0) {
         tex = hudTextures[0x2D];
         if (flags) {
-            pauseMenuDrawTextureRegion(tex, middleCapacity + (seg4 + 0x24) + lbl_803DBAD0, lbl_803DBAD4, elemAlpha,
-                                       alpha, rem4, 0x12, seg4, 0);
+            pauseMenuDrawTextureRegion(tex, middleCapacity + 0x24 + seg4 + lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha,
+                                       rem4, 0x12, seg4, 0);
         } else {
-            drawPartialTexture(tex, middleCapacity + (seg4 + 0x24) + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, rem4,
+            drawPartialTexture(tex, middleCapacity + 0x24 + seg4 + gHudMagicBarX, gHudMagicBarY, alpha, 0x100, rem4,
                                0x12, seg4, 0);
         }
     }
@@ -2070,19 +2056,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     if (previousCurrent == total) {
         previousCurrent++;
     }
-    previewFirstWidth = (previousCurrent > 8) ? 8 : previousCurrent;
+    previewFirstWidth = gameUiMagicPreviewWidth(previousCurrent);
     seg1 = seg1 - previewFirstWidth;
-    rem1 = previousCurrent - 8;
-    if (middleCapacity < previousCurrent - 8) {
-        rem1 = middleCapacity;
-    }
-    rem1 = (rem1 > 0) ? rem1 : 0;
+    rem1 = gameUiClampMagicWidth(previousCurrent - 8, middleCapacity);
     seg2 = seg2 - rem1;
-    previousCurrent = (previousCurrent - 8) - middleCapacity;
-    if (previousCurrent > 8) {
-        previousCurrent = 8;
-    }
-    previousCurrent = (previousCurrent > 0) ? previousCurrent : 0;
+    previousCurrent = gameUiClampMagicWidth((previousCurrent - 8) - middleCapacity, 8);
     seg4 = seg4 - previousCurrent;
     if (seg1 != 0) {
         tex = hudTextures[0x31];
@@ -2106,11 +2084,11 @@ void hudDrawMagicBar(u8 alpha, int elemAlpha, u8 flags) {
     if (seg4 != 0) {
         tex = hudTextures[0x33];
         if (flags) {
-            gameUiDrawTextureRegion(tex, middleCapacity + (previousCurrent + 0x24) + lbl_803DBAD0, lbl_803DBAD4,
+            gameUiDrawTextureRegion(tex, middleCapacity + 0x24 + previousCurrent + lbl_803DBAD0, lbl_803DBAD4,
                                     elemAlpha, alpha, 0x100, seg4, 0x12, 0);
         } else {
-            drawScaledTexture(tex, middleCapacity + (previousCurrent + 0x24) + gHudMagicBarX, gHudMagicBarY, alpha,
-                              0x100, seg4, 0x12, 0);
+            drawScaledTexture(tex, middleCapacity + 0x24 + previousCurrent + gHudMagicBarX, gHudMagicBarY, alpha, 0x100,
+                              seg4, 0x12, 0);
         }
     }
 }
@@ -2547,8 +2525,8 @@ void pauseMenuDrawStatus(void) {
                                             (getHudHiddenFrameCount() == 0) && (gTimeListPromptSelection == 0))) &&
         (pauseMenuState == 0)) {
         gHudStatusAlpha = 8.5f * timeDelta + gHudStatusAlpha;
-        if (gHudStatusAlpha > *(f32*)&hudElementOpacity) {
-            gHudStatusAlpha = hudElementOpacity;
+        if (gHudStatusAlpha > 255.0f) {
+            gHudStatusAlpha = 255.0f;
         }
     } else {
         gHudStatusAlpha = -(8.5f * timeDelta - gHudStatusAlpha);
@@ -2576,8 +2554,8 @@ void pauseMenuDrawStatus(void) {
                     ((animationSlot == HUD_STATUS_SCARABS) && ((gHudForceShowMask & 2) != 0))) {
                     flashThreshold = 8.5f * timeDelta + ((f32*)(base + 0xAC8))[animationSlot];
                     ((f32*)(base + 0xAC8))[animationSlot] = flashThreshold;
-                    if (flashThreshold > hudElementOpacity) {
-                        ((f32*)(base + 0xAC8))[animationSlot] = hudElementOpacity;
+                    if (flashThreshold > 255.0f) {
+                        ((f32*)(base + 0xAC8))[animationSlot] = 255.0f;
                     }
                 } else {
                     flashThreshold = -(8.5f * timeDelta - ((f32*)(base + 0xAC8))[animationSlot]);
@@ -2835,30 +2813,25 @@ void hudDrawButtons(int cMenuArg0, int cMenuArg1, int cMenuArg2) {
         GXSetScissor(0, 0, 0x280, 0x1E0);
         hudDrawCMenu(cMenuArg0, cMenuArg1, cMenuArg2);
         i = 0;
-        k = 0;
-        for (; i < GCMENU_ITEM_ICON_COUNT; i++, k += 0x32) {
+        for (; i < GCMENU_ITEM_ICON_COUNT; i++) {
             if (gCMenuItemIcons[i] > 1) {
                 alpha = fade;
-                rowFade = gCMenuScrollTimer + k;
+                rowFade = gCMenuScrollTimer + (i * 50);
                 if (rowFade < gCMenuRowFadeInThreshold) {
                     alpha = fade + (rowFade - gCMenuRowFadeInThreshold) * 8;
                 }
                 if (rowFade > gCMenuRowFadeOutThreshold) {
                     alpha = alpha - (rowFade - gCMenuRowFadeOutThreshold) * 8;
                 }
-                if (alpha < 0) {
-                    alpha = 0;
-                }
-                if (alpha > 0xFF) {
-                    alpha = 0xFF;
-                }
+                alpha = alpha < 0 ? 0 : alpha;
+                alpha = alpha > 0xFF ? (s16)0xFF : alpha;
                 fadedAlpha = alpha * gCMenuHighlightFade / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
                 sprintf(label.text, lbl_803DBB58, gCMenuItemIcons[i]);
                 gameTextSetColor(0, 0, 0, fadedAlpha & 0xFF);
-                gameTextShowStr(label.text, 0x93, 0x247, 0x2B + (gCMenuScrollTimer + k));
+                gameTextShowStr(label.text, 0x93, 0x247, 0x2B + (gCMenuScrollTimer + (i * 50)));
                 gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)fadedAlpha);
-                gameTextShowStr(label.text, 0x93, 0x246, 0x2A + (gCMenuScrollTimer + k));
+                gameTextShowStr(label.text, 0x93, 0x246, 0x2A + (gCMenuScrollTimer + (i * 50)));
             }
         }
         drawTexture(((CMenuHud*)base)->hudTextures[0x21], 537.0f, 175.0f, (u8)(fade * gCMenuHighlightFade / 0xFF),
@@ -3411,18 +3384,18 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(sx - lbl_803E1F34, sy - 240.0f, (f32)(u32)gRenderModeObj->fbWidth,
-                  (f32)(u32)gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(sx - 320.0f, sy - 240.0f, (f32)(u32)gRenderModeObj->fbWidth, (f32)(u32)gRenderModeObj->xfbHeight,
+                  0.0f, 1.0f);
     zero = 0;
     i = zero;
     do {
         used[i] = 0;
-        vals[i] = mathCosf(gGameUiPi * (f32)gCMenuRingObjs[i]->anim.rotX / gGameUiAngleDivisor);
+        vals[i] = mathCosf(3.1415927f * (f32)gCMenuRingObjs[i]->anim.rotX / 32768.0f);
         i++;
     } while (i < 3);
     j = 0;
     do {
-        f32 best = lbl_803E1EC4;
+        f32 best = 10.0f;
         sel = -1;
         if (used[zero] == 0 && vals[zero] < best) {
             best = vals[zero];
@@ -3761,16 +3734,14 @@ void headDisplayDraw(void) {
         gGameUiShimmerFrame += 1;
         wavePhaseA = wavePhaseB = lineOffset = 0;
         for (; lineOffset < (int)height; lineOffset += 4) {
-            wave = 0.02f * fsin16Approx((u16)(wavePhaseA + gGameUiShimmerFrame * 0x1838));
-            wave = 0.02f * fsin16Approx((u16)(wavePhaseB + gGameUiShimmerFrame * 0xfa0)) + wave;
+            wave = 0.02f * fsin16Approx((int)(u16)(wavePhaseB + gGameUiShimmerFrame * 0xfa0)) +
+                   0.02f * fsin16Approx((int)(u16)(wavePhaseA + gGameUiShimmerFrame * 0x1838));
             waveAlpha = (int)((f32)(s16)panelAlpha * (0.4f + wave));
             clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
             noiseX = randomGetRange(0, 0x1e) << 1;
             noiseY = randomGetRange(0, 0x1e) << 1;
-            drawY = width;
-            drawY += lineOffset;
-            drawPartialTexture(hudTextures[84], 490.0f, (f32)drawY, clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100,
-                               0x78, 2, noiseY, noiseX);
+            drawPartialTexture(hudTextures[84], 490.0f, (f32)(drawY = width + lineOffset),
+                               clampedAlpha > 0xff ? 0xff : clampedAlpha, 0x100, 0x78, 2, noiseY, noiseX);
             clampedAlpha = (int)((f32)(s16)panelAlpha * (0.3f + wave));
             if (clampedAlpha < 0) {
                 clampedAlpha = 0;
@@ -3885,6 +3856,7 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
     ArwingScoreText score = sArwingBlankScore;
     int req;
     int rings;
+    u32 ringSlot;
     u32 i;
     int partialFrame;
     int maxPips;
@@ -3933,11 +3905,11 @@ void drawArwingHud(int unused1, int unused2, int unused3) {
         }
         if (arwing->anim.mapEventSlot != 0x26) {
             drawTexture(hudTextures[61], 6e+02f, 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
-            for (i = 0; (int)(i & 0xff) < rings; i++) {
-                drawTexture(hudTextures[60], (f32)(int)(0x244 - (i & 0xff) * 0x14), 30.0f, (int)arwingHudAlpha & 0xff,
-                            0x100);
+            for (ringSlot = 0; (int)(ringSlot & 0xff) < rings; ringSlot++) {
+                drawTexture(hudTextures[60], (f32)(int)(0x244 - (ringSlot & 0xff) * 0x14), 30.0f,
+                            (int)arwingHudAlpha & 0xff, 0x100);
             }
-            for (; (int)(pip = i & 0xff) < req; i++) {
+            for (; (int)(pip = ringSlot & 0xff) < req; ringSlot++) {
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), 30.0f, (int)arwingHudAlpha & 0xff, 0x100);
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), 31.0f, (int)arwingHudAlpha & 0xff, 0x100);
@@ -3995,8 +3967,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         break;
     case 3:
         pauseMenuDoSave();
-        alpha = hudElementOpacity * gPauseMenuOpenAmount;
-        gPauseMenuMapSwivelCos = mathCosf(gGameUiPi * gPauseMenuMapSwivelAngle / gGameUiAngleDivisor);
+        alpha = 255.0f * gPauseMenuOpenAmount;
+        gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
         gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
@@ -4062,8 +4034,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         break;
     case 4:
         pauseMenuDoSave();
-        alpha = hudElementOpacity * gPauseMenuOpenAmount;
-        gPauseMenuMapSwivelCos = mathCosf(gGameUiPi * gPauseMenuMapSwivelAngle / gGameUiAngleDivisor);
+        alpha = 255.0f * gPauseMenuOpenAmount;
+        gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
         gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
@@ -4141,8 +4113,8 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
     case 9:
     case 10:
         pauseMenuDoSave();
-        alpha = hudElementOpacity * gPauseMenuOpenAmount;
-        gPauseMenuMapSwivelCos = mathCosf(gGameUiPi * gPauseMenuMapSwivelAngle / gGameUiAngleDivisor);
+        alpha = 255.0f * gPauseMenuOpenAmount;
+        gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
         gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
@@ -4211,15 +4183,14 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
                 textHeight = boundsRight - boundsLeft;
                 gPauseMenuActiveGrid[0].trailX = textHeight;
                 gPauseMenuActiveGrid[0].x =
-                    gPauseMenuTextScale * (f32)(s32)(textBox->x + textBox->width - (textHeight >> 1) - 0x140) +
-                    lbl_803E1F34;
+                    gPauseMenuTextScale * (f32)(s32)(textBox->x + textBox->width - (textHeight >> 1) - 0x140) + 320.0f;
 
                 textBox = gameTextGetBox(0x80);
                 gameTextMeasureById(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
                 textHeight = boundsRight - boundsLeft;
                 gPauseMenuActiveGrid[1].trailX = textHeight;
                 x = textBox->x + (textHeight >> 1) - 0x140;
-                gPauseMenuActiveGrid[1].x = gPauseMenuTextScale * (f32)x + lbl_803E1F34;
+                gPauseMenuActiveGrid[1].x = gPauseMenuTextScale * (f32)x + 320.0f;
 
                 if (gPauseMenuGridCursor != 0) {
                     gameTextSetColor(0x96, 0x96, 0x96, 0xff);
@@ -4246,7 +4217,7 @@ void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC) {
         }
         break;
     case 11:
-        gPauseMenuMapSwivelCos = mathCosf(gGameUiPi * gPauseMenuMapSwivelAngle / gGameUiAngleDivisor);
+        gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
         gPauseMenuHoloTime = gPauseMenuHoloTime + timeDelta;
         gPauseMenuHoloRotZ =
             (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
@@ -4345,17 +4316,20 @@ static inline void pauseMenuSetSpellStoneIcons(GridEntry* entries, u8 count) {
 void pauseMenuDrawStatusPage(GameObject* player) {
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     s8 i8;
+    s32 hintCount;
+    s32 ty2;
     s32 ty1;
     s32 alpha;
     s32 ty;
     ObjModel* model;
     PauseMenuCharacterState* info;
+    f32 iconScale = 256.0f;
     f32 timer;
     f32 zero = 0.0f;
 
     pauseMenuDoSave();
-    alpha = hudElementOpacity * gPauseMenuOpenAmount;
-    gPauseMenuMapSwivelCos = mathCosf(gGameUiPi * gPauseMenuMapSwivelAngle / gGameUiAngleDivisor);
+    alpha = 255.0f * gPauseMenuOpenAmount;
+    gPauseMenuMapSwivelCos = mathCosf(3.1415927f * gPauseMenuMapSwivelAngle / 32768.0f);
     gPauseMenuHoloTime += timeDelta;
     gPauseMenuHoloRotZ =
         (u16)(gPauseMenuHoloRotZAmp * mathCosfHighPrecision(gPauseMenuHoloTime * gPauseMenuHoloWobbleFreqZ));
@@ -4408,8 +4382,6 @@ void pauseMenuDrawStatusPage(GameObject* player) {
     } else {
         MapEventInterface* mapEvents = *gMapEventInterface;
         char buf[0x38];
-        s32 hintCount;
-        s32 ty2;
         s32 gbCount;
         s32 h24;
         s32 mins25;
@@ -4461,8 +4433,8 @@ void pauseMenuDrawStatusPage(GameObject* player) {
             s16 px = (s16)(0xe6 - gPauseMenuSlideOut);
             u16 ii;
             for (ii = 0; ii < 7; ii++) {
-                f32 fy = 31.0f * (f32)(u32)ii + lbl_803E1F30;
-                pauseMenuDrawElement((int*)((HudTextures*)hudTextures)->tex5C, fy, 436.0f, px, ty, lbl_803E20B8, 0);
+                f32 fy = 31.0f * (f32)(u32)ii + 80.0f;
+                pauseMenuDrawElement((int*)((HudTextures*)hudTextures)->tex5C, fy, 436.0f, px, ty, iconScale, 0);
             }
         }
         {
@@ -4479,10 +4451,10 @@ void pauseMenuDrawStatusPage(GameObject* player) {
                     tex = (v & 3) + 0x12;
                 }
                 i8 = 0x14;
-                fyj = 31.0f * (f32)(u32)(jj & 0xffff) + lbl_803E1F30;
+                fyj = 31.0f * (f32)(u32)(jj & 0xffff) + 80.0f;
                 for (; i8 >= 0; i8 -= 4) {
                     s16 px = (s16)((0xff - i8) - gPauseMenuSlideOut);
-                    pauseMenuDrawElement((int*)hudTextures[tex], fyj, 436.0f, px, ty, lbl_803E20B8, 0);
+                    pauseMenuDrawElement((int*)hudTextures[tex], fyj, 436.0f, px, ty, iconScale, 0);
                 }
             }
         }
@@ -4516,7 +4488,7 @@ void pauseMenuDrawSideRails(s32 alpha) {
     s8 i;
     f32 brightnessStep = 3.0f;
 
-    phase = 6.0f * mathSinf(gGameUiPi * (gPauseMenuHoloTime * 1000.0f) / gGameUiAngleDivisor);
+    phase = 6.0f * mathSinf(3.1415927f * (gPauseMenuHoloTime * 1000.0f) / 32768.0f);
 
     for (i = 10; i >= 0; i -= 2) {
         pauseMenuDrawElement(((HudTextures*)hudTextures)->tex11C, 20.0f, 280.0f,
@@ -4554,28 +4526,24 @@ void gameUiUpdateNpcDialogue(void);
  * lit-segment count scales with the current task-hint text level. `alpha` is
  * the fade level threaded through every draw call. */
 void pauseMenuDrawTaskHintPanel(void* unused, u8 alpha) {
+    f32 panelScale = 320.0f;
     s16 yPos = 0xc8 - gPauseMenuSlideOut;
     int hintText;
     u8 litSegments;
     s8 i;
 
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex38, 115.0f, 252.5f, yPos, alpha, lbl_803E1F34, 0);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 150.0f, 252.5f, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e,
-                            1);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 115.0f, 290.0f, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e,
-                            2);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 150.0f, 290.0f, yPos, alpha, lbl_803E1F34, 0x1c, 0x1e,
-                            3);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex3C, 145.0f, 212.5f, yPos, alpha, lbl_803E1F34, 0x8, 0x20,
-                            0);
-    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex3C, 145.0f, 327.5f, yPos, alpha, lbl_803E1F34, 0x8, 0x20,
-                            0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 126.25f, 175.0f, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 81.25f, 225.0f, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 171.25f, 225.0f, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 81.25f, 318.75f, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 171.25f, 318.75f, yPos, alpha, lbl_803E1F34, 0);
-    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 126.25f, 367.5f, yPos, alpha, lbl_803E1F34, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex38, 115.0f, 252.5f, yPos, alpha, panelScale, 0);
+    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 150.0f, 252.5f, yPos, alpha, panelScale, 0x1c, 0x1e, 1);
+    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 115.0f, 290.0f, yPos, alpha, panelScale, 0x1c, 0x1e, 2);
+    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex38, 150.0f, 290.0f, yPos, alpha, panelScale, 0x1c, 0x1e, 3);
+    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex3C, 145.0f, 212.5f, yPos, alpha, panelScale, 0x8, 0x20, 0);
+    gameUiDrawTextureRegion(((HudTextures*)hudTextures)->tex3C, 145.0f, 327.5f, yPos, alpha, panelScale, 0x8, 0x20, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 126.25f, 175.0f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 81.25f, 225.0f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 171.25f, 225.0f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 81.25f, 318.75f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 171.25f, 318.75f, yPos, alpha, panelScale, 0);
+    pauseMenuDrawElement(((HudTextures*)hudTextures)->tex40, 126.25f, 367.5f, yPos, alpha, panelScale, 0);
 
     hintText = (u16)getNextTaskHintText();
     if (hintText > 0xb3) {
@@ -4607,6 +4575,7 @@ void pauseMenuDrawTaskHintPanel(void* unused, u8 alpha) {
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
 void pauseMenuDrawGrid(int alpha) {
+    f32 cursorScale = 320.0f;
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     gPauseMenuTextScale = 1.5f;
 
@@ -4640,7 +4609,7 @@ void pauseMenuDrawGrid(int alpha) {
         f32 base = lbl_803DBAC0;
         pauseMenuDrawGridCell(
             (u8)gPauseMenuGridCursor,
-            (s16)alpha * (base + base * mathSinf(gGameUiPi * (500.0f * gPauseMenuHoloTime) / gGameUiAngleDivisor)), 4);
+            (s16)alpha * (base + base * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f)), 4);
     }
     {
         int n = (s16)alpha * (0x200 - gPauseMenuSlideOut);
@@ -4676,7 +4645,7 @@ void pauseMenuDrawGrid(int alpha) {
         HudTextures* tex;
         GridEntry* e;
         f32 scale = (f32)(0.5 * (e = &gPauseMenuActiveGrid[gPauseMenuGridCursor])->f10);
-        int w = lbl_803E1F34;
+        int w = cursorScale;
         int cw = (int)(scale * (f32)e->trailX);
         int ch = (int)(scale * (f32)e->trailY);
         int vx = e->x + e->xOffset;
@@ -4728,7 +4697,7 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
     }
     cnt = gPauseMenuActiveGrid[i].count;
     div15 = (s16)scaled / 15;
-    quarter = lbl_803E20B8;
+    quarter = 256.0f;
     for (; cnt >= 0; cnt -= 4) {
         spd = quarter * gPauseMenuActiveGrid[i].f10;
         x = gPauseMenuActiveGrid[i].x;
@@ -4749,8 +4718,8 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
             f32 pr;
             v = alpha;
             spd = (f32)(spd * (1.0 + gPauseMenuSlideOut / 800.0));
-            spd += 20.0f * mathSinf(gGameUiPi * (500.0f * gPauseMenuHoloTime) / gGameUiAngleDivisor) + 40.0f;
-            dx = lbl_803E1F34 - x;
+            spd += 20.0f * mathSinf(3.1415927f * (500.0f * gPauseMenuHoloTime) / 32768.0f) + 40.0f;
+            dx = 320.0f - x;
             pr = dx * gPauseMenuSlideOut;
             x = (f32)(pr / 512.0 + x);
             dy = 220.0f - y;
@@ -4759,8 +4728,8 @@ void pauseMenuDrawGridCell(u8 i, int alpha, int flag) {
         }
         {
             f32 prod;
-            k2108 = gPauseMenuGridCursorScale;
-            k2128 = lbl_803E2128;
+            k2108 = 0.5;
+            k2128 = 0.00390625;
             prod = spd * gPauseMenuActiveGrid[i].trailX;
             x -= k2108 * (prod * k2128);
             prod = spd * gPauseMenuActiveGrid[i].trailY;
@@ -5017,7 +4986,7 @@ void pauseMenuDoSave(void) {
             if (gPauseMenuPodiumRamp > 0x1f4) {
                 getObjectShadowDrawParams(gGameUiHudAnimObjects[i], &texture, &scale, &x, &y);
                 colorA = colorB;
-                hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
+                hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(256.0f * scale), 1);
             }
         }
     }
@@ -5075,7 +5044,7 @@ void gameUiBeginOverlayView(f32 fov, f32 x, f32 y) {
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
-    GXSetViewport(x - lbl_803E1F34, y - 240.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
+    GXSetViewport(x - 320.0f, y - 240.0f, (f32)gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, 0.0f, 1.0f);
 }
 
 /* Conditional render setup gated on
@@ -5783,7 +5752,7 @@ int pauseMenuUpdateMapScroll(void) {
         gPauseMenuMapSwivelAngle = prev + gPauseMenuMapSwivelVel;
         if (gPauseMenuMapSwivelAngle >= 16384.0f) {
             gPauseMenuMapBackSide ^= 1;
-            gPauseMenuMapSwivelAngle -= gGameUiAngleDivisor;
+            gPauseMenuMapSwivelAngle -= 32768.0f;
         }
         if (gPauseMenuMapSwivelAngle > 0.0f && prev < 0.0f) {
             gPauseMenuMapSwivelAngle = 0.0f;
@@ -5797,7 +5766,7 @@ int pauseMenuUpdateMapScroll(void) {
         gPauseMenuMapSwivelAngle = prev + gPauseMenuMapSwivelVel;
         if (gPauseMenuMapSwivelAngle < -16384.0f) {
             gPauseMenuMapBackSide ^= 1;
-            gPauseMenuMapSwivelAngle += gGameUiAngleDivisor;
+            gPauseMenuMapSwivelAngle += 32768.0f;
         }
         if (gPauseMenuMapSwivelAngle < 0.0f && prev > 0.0f) {
             gPauseMenuMapSwivelAngle = 0.0f;
@@ -6069,6 +6038,7 @@ void timeListPromptUpdate(void) {
  * podium objects (gGameUiCommunicatorObjects), then bobs/sways each character model in
  * gGameUiHudAnimObjects with phase-shifted sine waves around the podium centre. */
 void pauseMenuAnimateCarousel(void) {
+    f32 characterBaseY = 0.3f;
     f32 podiumBaseY = -2.1f;
     u8 flag;
     u8 k;
@@ -6119,9 +6089,9 @@ void pauseMenuAnimateCarousel(void) {
     gPauseMenuPodiumSpinFrame += framesThisStep;
     gGameUiCommunicatorObjects[0]->anim.rotX = (s16)(gPauseMenuPodiumSpinFrame << 9);
     gGameUiCommunicatorObjects[0]->anim.rotZ =
-        400.0f * mathSinf(gGameUiPi * (f32)(gPauseMenuPodiumSpinFrame * 1000) / gGameUiAngleDivisor);
+        400.0f * mathSinf(3.1415927f * (f32)(gPauseMenuPodiumSpinFrame * 1000) / 32768.0f);
     gGameUiCommunicatorObjects[0]->anim.localPosY =
-        (f32)(0.05 * mathSinf(gGameUiPi * (f32)(gPauseMenuPodiumSpinFrame * 400) / gGameUiAngleDivisor) + podiumBaseY);
+        (f32)(0.05 * mathSinf(3.1415927f * (f32)(gPauseMenuPodiumSpinFrame * 400) / 32768.0f) + podiumBaseY);
     {
         int d = 0x400 - gPauseMenuPodiumRamp;
         GameObject* podium = gGameUiCommunicatorObjects[0];
@@ -6150,15 +6120,15 @@ void pauseMenuAnimateCarousel(void) {
         gGameUiHudAnimObjects[k]->anim.rootMotionScale = sel / 1024.0f;
         gGameUiHudAnimObjects[k]->anim.renderAlpha = 0xff;
         ObjAnim_AdvanceCurrentMove(gGameUiHudAnimObjects[k], gPauseMenuPanelAnims.speeds[k], timeDelta, &animEvents);
-        a = 2.0f * mathSinf(gGameUiPi * (f32)(gPauseMenuSwivelAngle + k * step) / gGameUiAngleDivisor);
+        a = 2.0f * mathSinf(3.1415927f * (f32)(gPauseMenuSwivelAngle + k * step) / 32768.0f);
         a = gPauseMenuRingExpand * a;
         gGameUiHudAnimObjects[k]->anim.localPosX = a / 1024.0f + gGameUiCommunicatorObjects[0]->anim.localPosX;
-        base = 0.4f * mathSinf(gGameUiPi * (f32)(gPauseMenuSwivelAngle + k * step) / gGameUiAngleDivisor) +
-               (gGameUiCommunicatorObjects[0]->anim.localPosY + lbl_803E2010);
-        a = 2.0f - mathCosf(gGameUiPi * (f32)(gPauseMenuSwivelAngle + k * step) / gGameUiAngleDivisor);
+        base = 0.4f * mathSinf(3.1415927f * (f32)(gPauseMenuSwivelAngle + k * step) / 32768.0f) +
+               (gGameUiCommunicatorObjects[0]->anim.localPosY + characterBaseY);
+        a = 2.0f - mathCosf(3.1415927f * (f32)(gPauseMenuSwivelAngle + k * step) / 32768.0f);
         a = gPauseMenuRingExpand * a;
         gGameUiHudAnimObjects[k]->anim.localPosY = a / 1024.0f + base;
-        a = 2.0f * mathCosf(gGameUiPi * (f32)(gPauseMenuSwivelAngle + k * step) / gGameUiAngleDivisor);
+        a = 2.0f * mathCosf(3.1415927f * (f32)(gPauseMenuSwivelAngle + k * step) / 32768.0f);
         a = gPauseMenuRingExpand * a;
         gGameUiHudAnimObjects[k]->anim.localPosZ = a / 1024.0f + gGameUiCommunicatorObjects[0]->anim.localPosZ;
     }
@@ -6372,11 +6342,11 @@ void mapScreenDrawHud(int unused1, int unused2, int unused3) {
             phaseA = 0;
             phaseB = 0;
             textures = (HudTextures*)hudTextures;
-            shimmerScale = lbl_803E204C;
+            shimmerScale = 0.02f;
             for (; row < 0x96; row += 4) {
                 int alpha0, alpha1, jitter1, jitter0, rawAlpha;
-                shimmer = shimmerScale * fsin16Approx((u16)(gGameUiShimmerFrame * 0x1838 + phaseA));
-                shimmer = shimmerScale * fsin16Approx((u16)(gGameUiShimmerFrame * 0xfa0 + phaseB)) + shimmer;
+                shimmer = shimmerScale * fsin16Approx((u16)(gGameUiShimmerFrame * 0xfa0 + phaseB)) +
+                          shimmerScale * fsin16Approx((u16)(gGameUiShimmerFrame * 0x1838 + phaseA));
                 rawAlpha = (int)(panelAlpha * (0.4f + shimmer));
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
@@ -7677,27 +7647,6 @@ static inline void gameUiClearItemSlots(CMenuHud* gameUi) {
     }
 }
 
-static inline void gameUiClearItemSlotsSecondPass(CMenuHud* gameUi) {
-    u8 slot;
-    int index;
-    Texture** itemTexture;
-    s16* itemSlot;
-    u8* itemFlag;
-
-    for (slot = 0; slot < 64; slot++) {
-        index = slot;
-        itemTexture = (Texture**)((u8*)&gameUi->itemTextures + index * sizeof(Texture*));
-        if (*itemTexture != NULL) {
-            textureFree(*itemTexture);
-            *itemTexture = NULL;
-        }
-        itemSlot = (s16*)((u8*)&gameUi->itemSlots + index * sizeof(s16));
-        *itemSlot = -1;
-        itemFlag = (u8*)&gameUi->itemFlags + index;
-        *itemFlag = 1;
-    }
-}
-
 static inline void gameUiReleaseMenuResources(CMenuHud* gameUi) {
     gameUiResetMenuState();
     gameUiClearItemSlots(gameUi);
@@ -7713,20 +7662,39 @@ static inline void gameUiReleaseMenuResources(CMenuHud* gameUi) {
     gTrickyHudCachedIconTexture = NULL;
 }
 
-void GameUI_release(void) {
+static inline void gameUiFreeResources(void) {
     CMenuHud* gameUi;
-    int i;
-    Texture** texture;
+    int textureIndex;
+    int finalItemIndex;
+    Texture** finalItemTexture;
+    int itemIndex;
+    Texture** itemTexture;
+    Texture** hudTexture;
+    u8 slot;
+    s16* itemSlot;
+    u8* itemFlag;
 
     gameUi = (CMenuHud*)lbl_803A87F0;
-    for (i = 0, texture = gameUi->hudTextures; i < ARRAY_COUNT(gameUi->hudTextures); texture++, i++) {
-        if (*texture != NULL) {
-            textureFree(*texture);
+    for (textureIndex = 0, hudTexture = gameUi->hudTextures; textureIndex < ARRAY_COUNT(gameUi->hudTextures);
+         hudTexture++, textureIndex++) {
+        if (*hudTexture != NULL) {
+            textureFree(*hudTexture);
         }
     }
 
     gameUiResetMenuState();
-    gameUiClearItemSlots(gameUi);
+    for (slot = 0; slot < 64; slot++) {
+        itemIndex = slot;
+        itemTexture = (Texture**)((u8*)&gameUi->itemTextures + itemIndex * sizeof(Texture*));
+        if (*itemTexture != NULL) {
+            textureFree(*itemTexture);
+            *itemTexture = NULL;
+        }
+        itemSlot = (s16*)((u8*)&gameUi->itemSlots + itemIndex * sizeof(s16));
+        *itemSlot = -1;
+        itemFlag = (u8*)&gameUi->itemFlags + itemIndex;
+        *itemFlag = 1;
+    }
 
     if (gPauseMenuGridBackdropTexture != NULL) {
         textureFree(gPauseMenuGridBackdropTexture);
@@ -7738,9 +7706,24 @@ void GameUI_release(void) {
     gTrickyHudCachedIconIndex = -1;
     gTrickyHudCachedIconTexture = NULL;
 
-    gameUiClearItemSlotsSecondPass(gameUi);
+    for (slot = 0; slot < 64; slot++) {
+        finalItemIndex = slot;
+        finalItemTexture = (Texture**)((u8*)&gameUi->itemTextures + finalItemIndex * sizeof(Texture*));
+        if (*finalItemTexture != NULL) {
+            textureFree(*finalItemTexture);
+            *finalItemTexture = NULL;
+        }
+        itemSlot = (s16*)((u8*)&gameUi->itemSlots + finalItemIndex * sizeof(s16));
+        *itemSlot = -1;
+        itemFlag = (u8*)&gameUi->itemFlags + finalItemIndex;
+        *itemFlag = 1;
+    }
 
     textureFree(gGameUiBlinkTexture);
+}
+
+void GameUI_release(void) {
+    gameUiFreeResources();
 }
 
 /* Lifecycle setters and initialization. */

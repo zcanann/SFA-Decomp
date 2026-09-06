@@ -13,7 +13,6 @@
 #include "main/projected_shadow.h"
 #include "types.h"
 
-void* surfaceSfxGetRecord(u32 i);
 void waterFxUpdate(f32 step);
 void waterFxDraw(void);
 void waterFxSpawnContactEffect(u8* obj, f32* pos, u8 flip, u8 type);

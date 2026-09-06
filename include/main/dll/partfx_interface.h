@@ -50,6 +50,12 @@ typedef struct PartFxSpawnParams {
             s16 arg2;
             s16 arg3;
         };
+        struct {
+            s16 yaw; /* Effects 0xCA/0xCB rotate debris velocity by this heading. */
+            s16 unused02;
+            s16 variant;
+            s16 unused06;
+        } dig;
     };
     f32 scale;
     union {
@@ -63,6 +69,8 @@ typedef struct PartFxSpawnParams {
 } PartFxSpawnParams;
 
 STATIC_ASSERT(sizeof(PartFxSpawnParams) == 0x18);
+STATIC_ASSERT(offsetof(PartFxSpawnParams, dig.yaw) == 0x00);
+STATIC_ASSERT(offsetof(PartFxSpawnParams, dig.variant) == 0x04);
 STATIC_ASSERT(offsetof(PartFxSpawnParams, scale) == 0x08);
 STATIC_ASSERT(offsetof(PartFxSpawnParams, posX) == 0x0C);
 STATIC_ASSERT(offsetof(PartFxSpawnParams, posY) == 0x10);

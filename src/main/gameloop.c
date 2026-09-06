@@ -129,9 +129,7 @@ s8 hudHiddenFrameCount;
 u8 gGameLoopReloadRequested;
 u8 lbl_803DCA38;
 
-
-typedef struct
-{
+typedef struct {
     u8 pending;
     u8 type;
     u8 _2[2];
@@ -146,12 +144,10 @@ typedef struct
     int arg24;
     int arg28;
 } AssetReq;
-static void loadAsset(AssetReq* req)
-{
+static void loadAsset(AssetReq* req) {
     u8 tmp[0x10];
 
-    switch (req->type)
-    {
+    switch (req->type) {
     case 0:
         *(void**)req->dest = fileLoad(req->resourceId, 0);
         break;
@@ -175,21 +171,19 @@ static void loadAsset(AssetReq* req)
         *(void**)req->dest = loadModelInstance(req->resourceId, req->argC, tmp);
         break;
     case 7:
-        *(void**)req->dest = loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
+        *(void**)req->dest =
+            loadAnimation((ModelFileHeader*)req->arg24, req->resourceId, (s16)req->argC, (u8*)req->arg20);
         break;
     }
 }
 
-void nop_onUnloadMap(int wpad0, int wpad1)
-{
+void nop_onUnloadMap(int wpad0, int wpad1) {
 }
-void doNothing_startOfFrame(void)
-{
+void doNothing_startOfFrame(void) {
 }
 extern AssetReq gGameLoopAssetReq;
 
-void animationLoad(void** out, int animId, int moveIndex, u8* cache, ObjAnimDef* animDef)
-{
+void animationLoad(void** out, int animId, int moveIndex, u8* cache, ObjAnimDef* animDef) {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 7;
     gGameLoopAssetReq.resourceId = (s16)animId;
@@ -200,8 +194,7 @@ void animationLoad(void** out, int animId, int moveIndex, u8* cache, ObjAnimDef*
     loadAsset(&gGameLoopAssetReq);
 }
 
-void loadTextureFile(void** out, int assetId)
-{
+void loadTextureFile(void** out, int assetId) {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 3;
     gGameLoopAssetReq.resourceId = assetId;
@@ -209,8 +202,7 @@ void loadTextureFile(void** out, int assetId)
     loadAsset(&gGameLoopAssetReq);
 }
 
-void getTabEntry(void* dst, int fileId, int offset, int size)
-{
+void getTabEntry(void* dst, int fileId, int offset, int size) {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 2;
     gGameLoopAssetReq.resourceId = fileId;
@@ -220,8 +212,7 @@ void getTabEntry(void* dst, int fileId, int offset, int size)
     loadAsset(&gGameLoopAssetReq);
 }
 
-void loadAssetFileById(void* out, int fileId)
-{
+void loadAssetFileById(void* out, int fileId) {
     gGameLoopAssetReq.pending = 1;
     gGameLoopAssetReq.type = 0;
     gGameLoopAssetReq.resourceId = fileId;
@@ -229,33 +220,26 @@ void loadAssetFileById(void* out, int fileId)
     loadAsset(&gGameLoopAssetReq);
 }
 
-void crash(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5, int wpad6, int wpad7)
-{
+void crash(int wpad0, int wpad1, int wpad2, int wpad3, int wpad4, int wpad5, int wpad6, int wpad7) {
     *(u8*)0 = 0;
 }
 
 char sGameLoopResetMessages[0x50] =
     "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
 
-
-
-void cardShowMessage(void)
-{
+void cardShowMessage(void) {
     u32 held;
     int st;
     u8 ok;
 
     st = saveGameGetStatus();
     ok = 0;
-    if (st < 0xc)
-    {
+    if (st < 0xc) {
         cutsceneEnterExit(1, 1);
         timeStop = 0xff;
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        if (lbl_803DCACC == 0)
-        {
-            switch (st)
-            {
+        if (lbl_803DCACC == 0) {
+            switch (st) {
             case 1:
                 gameTextShow(0x325);
                 break;
@@ -286,30 +270,23 @@ void cardShowMessage(void)
             }
         }
         held = getButtonsHeld(0);
-        if (ok)
-        {
+        if (ok) {
             gameTextShowAt(0x495, 0, 0xc8);
-        }
-        else
-        {
+        } else {
             gameTextShowAt(0x493, 0, 0xc8);
         }
-        if (held & PAD_BUTTON_A)
-        {
+        if (held & PAD_BUTTON_A) {
             buttonDisable(0, PAD_BUTTON_A);
             cardSetStatusNeedInit();
             hudHiddenFrameCount = 0;
             timeStop = 0;
             Sfx_SetObjectSoundsPaused(0);
-            if (st == 0xa)
-            {
+            if (st == 0xa) {
                 cardDeleteSaveFile();
                 return;
             }
             return;
-        }
-        else if (ok && (held & PAD_BUTTON_B))
-        {
+        } else if (ok && (held & PAD_BUTTON_B)) {
             buttonDisable(0, PAD_BUTTON_B);
             gSaveGameEnabled = 0;
             hudHiddenFrameCount = 0;
@@ -320,13 +297,7 @@ void cardShowMessage(void)
     }
 }
 
-
-
-
-
-
-int cacheAllocAndCopy(u8* srcAddress, u32 size, u32* cacheCursor, u32* outEnd, u32 limit)
-{
+int cacheAllocAndCopy(u8* srcAddress, u32 size, u32* cacheCursor, u32* outEnd, u32 limit) {
     u8* dst;
     u32 alignOffset;
 
@@ -334,23 +305,20 @@ int cacheAllocAndCopy(u8* srcAddress, u32 size, u32* cacheCursor, u32* outEnd, u
     alignOffset = (u32)srcAddress & 0x1f;
     size += alignOffset;
     size += 0x1f;
-    size &= ~0x1f;
-    if (*cacheCursor + size <= limit)
-    {
+    size &= ~0x1fu;
+    if (*cacheCursor + size <= limit) {
         srcAddress -= alignOffset;
         *outEnd = *cacheCursor + size;
         dst += *cacheCursor;
         *cacheCursor = (u32)(dst + alignOffset);
         size >>= 5;
-        while (size > 0x7f)
-        {
+        while (size > 0x7f) {
             copyToCache(dst, srcAddress, 0);
             dst += 0x1000;
             srcAddress += 0x1000;
             size -= 0x80;
         }
-        if (size != 0)
-        {
+        if (size != 0) {
             copyToCache(dst, srcAddress, size);
         }
         return 1;
@@ -359,8 +327,7 @@ int cacheAllocAndCopy(u8* srcAddress, u32 size, u32* cacheCursor, u32* outEnd, u
     *cacheCursor = (u32)srcAddress;
     return 0;
 }
-void askProgressiveScanMode(void)
-{
+void askProgressiveScanMode(void) {
     int showId;
     u32 counter;
     int sel;
@@ -375,8 +342,7 @@ void askProgressiveScanMode(void)
     box = gameTextGetBox(0);
     savedByte = box[0x10];
     box[0x10] = 0;
-    do
-    {
+    do {
         counter++;
         padUpdate();
         checkReset();
@@ -384,21 +350,15 @@ void askProgressiveScanMode(void)
         waitNextFrame();
         gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
         gameTextShow(0x33f);
-        if ((u8)sel == 1)
-        {
+        if ((u8)sel == 1) {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        }
-        else
-        {
+        } else {
             gameTextSetColor(0x80, 0x80, 0x80, 0x80);
         }
         gameTextShowStr(gameTextGetStr(0x3cd), 0, gAskProgressiveScanYesX, 0x64);
-        if ((u8)sel == 1)
-        {
+        if ((u8)sel == 1) {
             gameTextSetColor(0x80, 0x80, 0x80, 0x80);
-        }
-        else
-        {
+        } else {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         }
         gameTextShowStr(gameTextGetStr(0x3cc), 0, gAskProgressiveScanNoX, 0x64);
@@ -406,12 +366,9 @@ void askProgressiveScanMode(void)
         dvdCheckError();
         doNothing_endOfFrame();
         GXFlush_(0, 0);
-        if (padGetStickX(0) < 0 || padGetCX(0) < 0)
-        {
+        if (padGetStickX(0) < 0 || padGetCX(0) < 0) {
             sel = 1;
-        }
-        else if (padGetStickX(0) > 0 || padGetCX(0) > 0)
-        {
+        } else if (padGetStickX(0) > 0 || padGetCX(0) > 0) {
             sel = 0;
         }
     } while ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0 && counter < 600);
@@ -426,8 +383,7 @@ void askProgressiveScanMode(void)
     VIWaitForRetrace();
     VIWaitForRetrace();
     VIWaitForRetrace();
-    if ((u8)sel != 0)
-    {
+    if ((u8)sel != 0) {
         gRenderModeObj = &GXNtsc480Prog;
         OSSetProgressiveMode(1);
         GXSetCopyFilter(gRenderModeObj->aa, gRenderModeObj->sample_pattern, GX_FALSE, gRenderModeObj->vfilter);
@@ -435,9 +391,7 @@ void askProgressiveScanMode(void)
         VISetBlack(1);
         VIFlush();
         textId = 0x340;
-    }
-    else
-    {
+    } else {
         gRenderModeObj = &GXNtsc480IntDf;
         OSSetProgressiveMode(0);
         GXSetCopyFilter(gRenderModeObj->aa, gRenderModeObj->sample_pattern, GX_TRUE, gRenderModeObj->vfilter);
@@ -447,8 +401,7 @@ void askProgressiveScanMode(void)
         textId = 0x341;
     }
     i = 0;
-    do
-    {
+    do {
         VIWaitForRetrace();
         i++;
     } while (i < 100);
@@ -458,19 +411,15 @@ void askProgressiveScanMode(void)
     VIWaitForRetrace();
     j = 0;
     showId = textId;
-    do
-    {
+    do {
         j++;
         padUpdate();
         checkReset();
         mmFreeTick(0);
         waitNextFrame();
-        if (j < 0xff)
-        {
+        if (j < 0xff) {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        }
-        else
-        {
+        } else {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         }
         gameTextShow(showId);
@@ -480,6 +429,5 @@ void askProgressiveScanMode(void)
         GXFlush_(0, 0);
     } while (j < 0xf0);
 }
-
 
 AssetReq gGameLoopAssetReq;

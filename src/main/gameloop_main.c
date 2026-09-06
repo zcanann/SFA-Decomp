@@ -91,79 +91,64 @@
 extern char sGameBitSetDuringSaveLoadWarning[];
 
 /* Top-level boot / soft-reset state machine (the global gameState). */
-typedef enum GameLoopState
-{
-    GAME_STATE_BOOTING = 0,          /* loading; the gameUpdate frame is skipped */
-    GAME_STATE_RUNNING = 1,          /* normal per-frame game update */
-    GAME_STATE_RESETPRESSED = 2,     /* soft reset: stop audio/rumble, begin transition */
-    GAME_STATE_RESETFADEOUT = 3,     /* fade-out timer countdown */
-    GAME_STATE_RESETNOW = 4,         /* DVD/audio/VI teardown then OSResetSystem */
-    GAME_STATE_RESETDONE = 5,        /* terminal, after OSResetSystem */
-    GAME_STATE_HARDRESETPRESSED = 6  /* like GAME_STATE_RESETPRESSED but flags a hard reset */
+typedef enum GameLoopState {
+    GAME_STATE_BOOTING = 0,         /* loading; the gameUpdate frame is skipped */
+    GAME_STATE_RUNNING = 1,         /* normal per-frame game update */
+    GAME_STATE_RESETPRESSED = 2,    /* soft reset: stop audio/rumble, begin transition */
+    GAME_STATE_RESETFADEOUT = 3,    /* fade-out timer countdown */
+    GAME_STATE_RESETNOW = 4,        /* DVD/audio/VI teardown then OSResetSystem */
+    GAME_STATE_RESETDONE = 5,       /* terminal, after OSResetSystem */
+    GAME_STATE_HARDRESETPRESSED = 6 /* like GAME_STATE_RESETPRESSED but flags a hard reset */
 } GameLoopState;
-void addButtonObject(GameObject* obj)
-{
+void addButtonObject(GameObject* obj) {
     gGameLoopButtonObjects[gGameLoopButtonObjectCount++] = obj;
 }
 
-void requestGalleonBattleMusic(void)
-{
+void requestGalleonBattleMusic(void) {
     gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xd0;
 }
 
-void requestKrazoaShrineMusic(void)
-{
+void requestKrazoaShrineMusic(void) {
     gGameLoopMusicRequestCount++;
     gGameLoopPendingMusicId = 0xc9;
 }
 
-void blankScreen(int frames)
-{
+void blankScreen(int frames) {
     s16 count = frames;
     screenBlankFrameCount = count;
-    if (count < 0)
-    {
+    if (count < 0) {
         screenBlankFrameCount = 0;
     }
 }
 
-int getScreenBlankFrameCount(void)
-{
+int getScreenBlankFrameCount(void) {
     return screenBlankFrameCount;
 }
-void doNothing_onSaveSelectScreenExit(void)
-{
+void doNothing_onSaveSelectScreenExit(void) {
 }
 
-int gameBitDecrement(int bit)
-{
+int gameBitDecrement(int bit) {
     int val = mainGetBit(bit);
-    if (val != 0)
-    {
+    if (val != 0) {
         mainSetBits(bit, val = val - 1);
         return val;
     }
     return 0;
 }
 
-int gameBitIncrement(int bit)
-{
+int gameBitIncrement(int bit) {
     int val = mainGetBit(bit) + 1;
     int max = 1 << ((gGameBitTable[bit].flags & GAMEBIT_FLAG_WIDTH_MASK) + 1);
-    if (val < max)
-    {
+    if (val < max) {
         mainSetBits(bit, val);
-    }
-    else
-    {
+    } else {
         val--;
     }
     return val;
 }
 
-u32 mainGetBit(int gameBit)
-{
+u32 mainGetBit(int gameBit) {
     s16 id = (s16)gameBit & 0xfff;
     u8 flags;
     u8* base;
@@ -174,25 +159,20 @@ u32 mainGetBit(int gameBit)
     u32 bit;
     u32 result;
 
-    if (id == 0x95)
-    {
+    if (id == 0x95) {
         return 1;
     }
-    if (id == 0x96)
-    {
+    if (id == 0x96) {
         return 0;
     }
-    if (gameBit == -1)
-    {
+    if (gameBit == -1) {
         return 0;
     }
-    if (id < 0 || id >= gGameBitCount)
-    {
+    if (id < 0 || id >= gGameBitCount) {
         return 0;
     }
     flags = gGameBitTable[id].flags;
-    switch (flags >> GAMEBIT_FLAG_BANK_SHIFT)
-    {
+    switch (flags >> GAMEBIT_FLAG_BANK_SHIFT) {
     case 0:
         base = gGameBitSaveData + 0xef0;
         break;
@@ -211,24 +191,20 @@ u32 mainGetBit(int gameBit)
     bit = 1;
     endPtr = &end;
     end = (flags & GAMEBIT_FLAG_WIDTH_MASK) + start;
-    for (i = start; i < *endPtr + 1; i++)
-    {
-        if ((1 << (i & 7)) & base[i >> 3])
-        {
+    for (i = start; i < *endPtr + 1; i++) {
+        if ((1 << (i & 7)) & base[i >> 3]) {
             result |= bit;
         }
         bit <<= 1;
     }
-    if (gameBit & 0x8000)
-    {
-        result &= 1;
-        result ^= 1;
+    if (gameBit & 0x8000) {
+        result &= 1u;
+        result ^= 1u;
     }
     return result;
 }
 
-void mainSetBits(int gameBit, int value)
-{
+void mainSetBits(int gameBit, int value) {
     s16 id;
     u8* base;
     int limit;
@@ -237,35 +213,28 @@ void mainSetBits(int gameBit, int value)
     int i;
     u32 bit;
 
-    if (isSaveGameLoading())
-    {
+    if (isSaveGameLoading()) {
         OSReport(sGameBitSetDuringSaveLoadWarning, gameBit, value);
         return;
     }
-    if (gameBit & 0x8000)
-    {
+    if (gameBit & 0x8000) {
         value = (u32)value & 1LL;
         value = (u32)value ^ 1LL;
     }
     id = (s16)gameBit & 0xfff;
-    if (id == 0x95)
-    {
+    if (id == 0x95) {
         return;
     }
-    if (id == 0x96)
-    {
+    if (id == 0x96) {
         return;
     }
-    if (gameBit == -1)
-    {
+    if (gameBit == -1) {
         return;
     }
-    if (id < 0 || id >= gGameBitCount)
-    {
+    if (id < 0 || id >= gGameBitCount) {
         return;
     }
-    switch (gGameBitTable[id].flags >> GAMEBIT_FLAG_BANK_SHIFT)
-    {
+    switch (gGameBitTable[id].flags >> GAMEBIT_FLAG_BANK_SHIFT) {
     case 0:
         base = gGameBitSaveData + 0xef0;
         limit = 0x80;
@@ -283,42 +252,34 @@ void mainSetBits(int gameBit, int value)
         limit = 0xac;
         break;
     }
-    if (gGameBitTable[id].flags & GAMEBIT_FLAG_SYNC)
-    {
+    if (gGameBitTable[id].flags & GAMEBIT_FLAG_SYNC) {
         taskHintRecordCompletedTask(gGameBitTable[id].taskHintId);
     }
     start = gGameBitTable[id].firstBit;
     bit = 1;
     end = ((gGameBitTable[id].flags & GAMEBIT_FLAG_WIDTH_MASK) + 1) + start;
-    for (i = start; i < end; i++)
-    {
+    for (i = start; i < end; i++) {
         int shift = i & 7;
         int byteIdx = i >> 3;
         int mask;
-        if (byteIdx >= limit)
-        {
+        if (byteIdx >= limit) {
             break;
         }
         mask = 1 << shift;
-        if (value & bit)
-        {
+        if (value & bit) {
             base[byteIdx] |= mask;
-        }
-        else
-        {
+        } else {
             base[byteIdx] &= ~mask;
         }
         bit <<= 1;
     }
 }
 
-int TriggSetpShouldUnload(void)
-{
+int TriggSetpShouldUnload(void) {
     return 0x1;
 }
 
-void setFrameCountdown(s8 count)
-{
+void setFrameCountdown(s8 count) {
     frameCountdown = count;
 }
 
@@ -327,66 +288,50 @@ char sGameBitSetDuringSaveLoadWarning[204] =
     "loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit "
     "passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
 
-void checkReset(void)
-{
+void checkReset(void) {
     char* msg;
     u8 pressed;
     f32 t;
     int status;
 
     msg = sGameLoopResetMessages;
-    if (gVideoRetracePending == 0 || gDvdCoverOpenErrorActive != 0)
-    {
+    if (gVideoRetracePending == 0 || gDvdCoverOpenErrorActive != 0) {
         return;
     }
     gVideoRetracePending = 0;
-    switch (gameState)
-    {
+    switch (gameState) {
     case GAME_STATE_BOOTING:
     case GAME_STATE_RUNNING:
-        if (shouldResetNextFrame != 0)
-        {
+        if (shouldResetNextFrame != 0) {
             gameState = GAME_STATE_RESETPRESSED;
         }
         if ((getNewInputs(0) & PAD_BUTTON_B) != 0 && (getNewInputs(0) & PAD_BUTTON_X) != 0 &&
-            (getNewInputs(0) & PAD_BUTTON_START) != 0)
-        {
+            (getNewInputs(0) & PAD_BUTTON_START) != 0) {
             pressed = 1;
-        }
-        else
-        {
+        } else {
             pressed = 0;
-            if (gGameLoopResetComboDebounce != 0)
-            {
+            if (gGameLoopResetComboDebounce != 0) {
                 gGameLoopResetComboDebounce--;
             }
         }
-        if (pressed != 0 && gGameLoopResetComboDebounce == 0)
-        {
+        if (pressed != 0 && gGameLoopResetComboDebounce == 0) {
             gGameLoopResetHoldTimer += 1.0f;
-            if (gGameLoopResetHoldTimer >= 3e+01f)
-            {
+            if (gGameLoopResetHoldTimer >= 3e+01f) {
                 gameState = GAME_STATE_RESETPRESSED;
             }
-        }
-        else
-        {
+        } else {
             gGameLoopResetHoldTimer = 0.0f;
         }
         break;
     case GAME_STATE_RESETPRESSED:
     case GAME_STATE_HARDRESETPRESSED:
         OSReport(msg + 0xd0);
-        if (gGameLoopInitComplete != 0)
-        {
+        if (gGameLoopInitComplete != 0) {
             (*gScreenTransitionInterface)->start(0x1e, SCREEN_TRANSITION_BLACK);
         }
-        if (gameState == GAME_STATE_HARDRESETPRESSED)
-        {
+        if (gameState == GAME_STATE_HARDRESETPRESSED) {
             gGameLoopHardReset = 1;
-        }
-        else
-        {
+        } else {
             gGameLoopHardReset = 0;
         }
         stopRumble2();
@@ -399,19 +344,16 @@ void checkReset(void)
     case GAME_STATE_RESETFADEOUT:
         t = gGameLoopResetFadeOutTimer - 1.0f;
         gGameLoopResetFadeOutTimer = t;
-        if (t <= 0.0f)
-        {
+        if (t <= 0.0f) {
             gameState = GAME_STATE_RESETNOW;
         }
         break;
     case GAME_STATE_RESETNOW:
         OSReport(msg + 0xec);
-        while (gDvdErrorPauseActive == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0))
-        {
+        while (gDvdErrorPauseActive == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
             status = DVDGetDriveStatus();
             gDvdLastDriveStatus = status;
-            switch (status)
-            {
+            switch (status) {
             case DVD_STATE_FATAL_ERROR:
                 gDvdErrorPauseActive = 1;
                 break;
@@ -445,12 +387,9 @@ void checkReset(void)
         VIWaitForRetrace();
         OSReport(msg + 0x12c);
         gameState = GAME_STATE_RESETDONE;
-        if (gGameLoopHardReset != 0)
-        {
+        if (gGameLoopHardReset != 0) {
             OSResetSystem(1, 0x80000000, 1);
-        }
-        else
-        {
+        } else {
             OSResetSystem(0, 0x80000000, 0);
         }
         break;
@@ -460,58 +399,45 @@ void checkReset(void)
     }
 }
 
-void setShouldResetNextFrame(int reset)
-{
+void setShouldResetNextFrame(int reset) {
     shouldResetNextFrame = (u8)reset;
 }
 
-void setGameState(int state)
-{
+void setGameState(int state) {
     gameState = (u8)state;
 }
 
 /* GameBit descriptor flags byte (gGameBitTable[id].flags). */
 
-int getGameState(void)
-{
+int getGameState(void) {
     return gameState;
 }
 
-void setTimeStop(int stop)
-{
+void setTimeStop(int stop) {
     timeStop = (u8)stop;
 }
 
-void cutsceneEnterExit(int entering, int affectSounds)
-{
-    if (entering != 0)
-    {
+void cutsceneEnterExit(int entering, int affectSounds) {
+    if (entering != 0) {
         stopRumble2();
-        if (hudHiddenFrameCount == 0 && affectSounds != 0)
-        {
+        if (hudHiddenFrameCount == 0 && affectSounds != 0) {
             Sfx_SetObjectSoundsPaused(1);
         }
-        if ((s8)(u8)++hudHiddenFrameCount > 2)
-        {
+        if ((s8)(u8)++hudHiddenFrameCount > 2) {
             hudHiddenFrameCount = 2;
         }
-    }
-    else
-    {
-        if ((s8)(u8)--hudHiddenFrameCount <= 0)
-        {
+    } else {
+        if ((s8)(u8)--hudHiddenFrameCount <= 0) {
             timeStop = 0;
             hudHiddenFrameCount = 0;
-            if (affectSounds != 0)
-            {
+            if (affectSounds != 0) {
                 Sfx_SetObjectSoundsPaused(0);
             }
         }
     }
 }
 
-typedef struct PlayerTrailRecord
-{
+typedef struct PlayerTrailRecord {
     f32 posX;
     f32 posY;
     f32 posZ;
@@ -519,14 +445,12 @@ typedef struct PlayerTrailRecord
 } PlayerTrailRecord;
 
 PlayerTrailRecord gGameLoopPlayerTrailBuffer[0x3C0 / sizeof(PlayerTrailRecord)];
-void cutsceneFadeInOut(int enter)
-{
+void cutsceneFadeInOut(int enter) {
     cutsceneEnterExit(enter, 1);
 }
 
 extern u8 lbl_8033C3B8[0x3E8];
-typedef struct GameLoopRenderModeStorage
-{
+typedef struct GameLoopRenderModeStorage {
     GXRenderModeObj mode;
     u8 reserved[4];
 } GameLoopRenderModeStorage;
@@ -536,25 +460,21 @@ STATIC_ASSERT(sizeof(GameLoopRenderModeStorage) == 0x40);
 GameLoopRenderModeStorage gGameLoopRenderModeCopy;
 extern char sMainFinishedInitMessage[];
 
-void cutsceneExit(void)
-{
+void cutsceneExit(void) {
     hudHiddenFrameCount = 0;
     timeStop = 0;
     Sfx_SetObjectSoundsPaused(0);
 }
 
-int getHudHiddenFrameCount(void)
-{
+int getHudHiddenFrameCount(void) {
     return hudHiddenFrameCount;
 }
-void mapReload(void)
-{
+void mapReload(void) {
     mapReloadWithFadeout();
     gGameLoopReloadRequested = 1;
 }
 
-void mapLoadByCoords(f32 x, f32 y, f32 z, int layer)
-{
+void mapLoadByCoords(f32 x, f32 y, f32 z, int layer) {
     lbl_803DCA38 = 0;
     mapSetup(layer, x, &gGameLoopPendingMapId, &gGameLoopPendingMapDataFileId, y, z);
     gGameLoopFullMapUnloadPending = 1;
@@ -568,10 +488,8 @@ void mapLoadByCoords(f32 x, f32 y, f32 z, int layer)
     gGameLoopMusicFadeTimer = -3e+01f;
 }
 
-static void doQueuedLoads(void)
-{
-    if ((s8)gGameLoopReloadRequested != 0)
-    {
+static void doQueuedLoads(void) {
+    if ((s8)gGameLoopReloadRequested != 0) {
         int old;
 
         waitNextFrame();
@@ -581,12 +499,10 @@ static void doQueuedLoads(void)
         waitNextFrame();
         GXFlush_(1, 0);
         mmSetFreeDelay(0);
-        if (gGameLoopMapLoaded != 0)
-        {
+        if (gGameLoopMapLoaded != 0) {
             videoSetEfbCopyClearColor(0, 0, 0);
             unloadMap();
-            if (gGameLoopFullMapUnloadPending != 0)
-            {
+            if (gGameLoopFullMapUnloadPending != 0) {
                 mapUnload(0, 0x80000000);
                 gGameLoopFullMapUnloadPending = 0;
             }
@@ -595,27 +511,23 @@ static void doQueuedLoads(void)
         gGameLoopReloadRequested = 0;
         Camera_InitState();
         debugPrintReset();
-        if (gGameLoopPendingUiDllId > -1)
-        {
+        if (gGameLoopPendingUiDllId > -1) {
             loadUiDll(gGameLoopPendingUiDllId);
             gGameLoopPendingUiDllId = -1;
         }
         mmFreeTick(1);
         mmFreeTick(1);
-        if (gGameLoopMapLoadPending != 0 && gGameLoopPendingMapId != -1)
-        {
+        if (gGameLoopMapLoadPending != 0 && gGameLoopPendingMapId != -1) {
             setForceLoadImmediately();
             loadMapAndParent(gGameLoopPendingMapId);
-            if (gGameLoopPendingMapDataFileId != -1)
-            {
+            if (gGameLoopPendingMapDataFileId != -1) {
                 mapLoadDataFiles(gGameLoopPendingMapDataFileId);
             }
             clearForceLoadImmediately();
             gGameLoopMapLoadPending = 0;
         }
         beginLoadingMap();
-        if (gDll12Interface != 0)
-        {
+        if (gDll12Interface != 0) {
             (*(void (**)(int))(*(void***)gDll12Interface + 3))(1);
         }
         mmSetFreeDelay(old);
@@ -623,21 +535,18 @@ static void doQueuedLoads(void)
     }
 }
 
-static void gameUpdate(void)
-{
+static void gameUpdate(void) {
     Obj_GetPlayerObject();
     gGameLoopMusicRequestCount = 0;
     mainLoopDoGameText();
-    if (hudHiddenFrameCount == 0)
-    {
+    if (hudHiddenFrameCount == 0) {
         (*gCameraInterface)->updateTargetFeedback();
     }
     uiDll_runFrameStartAndLoadNext();
     camcontrol_setAButtonIconForTarget();
     getButtonsJustPressed(0);
     Obj_UpdateAllObjects(timeStop);
-    if (hudHiddenFrameCount == 0)
-    {
+    if (hudHiddenFrameCount == 0) {
         GameObject* player;
         int idx;
         PlayerTrailRecord* rec;
@@ -650,15 +559,13 @@ static void gameUpdate(void)
         rec = &gGameLoopPlayerTrailBuffer[idx];
         trailTime = gGameLoopPlayerTrailTime + framesThisStep;
         gGameLoopPlayerTrailTime = trailTime;
-        if (player != 0)
-        {
+        if (player != 0) {
             rec->posX = player->anim.localPosX;
             rec->posY = player->anim.localPosY;
             rec->posZ = player->anim.localPosZ;
             rec->time = trailTime;
             gGameLoopPlayerTrailIndex = idx + 1;
-            if (gGameLoopPlayerTrailIndex >= 0x3c)
-            {
+            if (gGameLoopPlayerTrailIndex >= 0x3c) {
                 gGameLoopPlayerTrailIndex = 0;
             }
         }
@@ -671,59 +578,44 @@ static void gameUpdate(void)
     Obj_ApplyPendingParentLinks();
     (*gCheckpointInterface)->onGameLoop();
     resetSomeGxFlags();
-    if (screenBlankFrameCount == 0)
-    {
+    if (screenBlankFrameCount == 0) {
         sceneRender(0, 0, 0, 0, 0, 0);
         gScreensInterface->vtable->run(0);
-        if (gGameLoopButtonObjectCount == 0)
-        {
+        if (gGameLoopButtonObjectCount == 0) {
             curUiDllDraw(0, 0, 0, 0);
         }
         gMinimapInterface->vtable->update();
-        if (gGameLoopButtonObjectCount == 0)
-        {
+        if (gGameLoopButtonObjectCount == 0) {
             dvdCheckError();
         }
         gameTextRun();
-    }
-    else
-    {
+    } else {
         screenBlankFrameCount = screenBlankFrameCount - 1;
-        if (screenBlankFrameCount < 0)
-        {
+        if (screenBlankFrameCount < 0) {
             screenBlankFrameCount = 0;
         }
     }
-    if (gGameLoopMusicRequestCount != 0)
-    {
-        if (gGameLoopMusicActive == 0)
-        {
+    if (gGameLoopMusicRequestCount != 0) {
+        if (gGameLoopMusicActive == 0) {
             gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer + timeDelta;
-            if (gGameLoopMusicFadeTimer >= 0.0f)
-            {
+            if (gGameLoopMusicFadeTimer >= 0.0f) {
                 Music_Trigger(gGameLoopPendingMusicId, 1);
                 gGameLoopMusicActive = 1;
             }
         }
-        if (gGameLoopMusicFadeTimer >= 0.0f)
-        {
+        if (gGameLoopMusicFadeTimer >= 0.0f) {
             gGameLoopMusicFadeTimer = 1.8e+02f;
         }
-    }
-    else
-    {
-        if (gGameLoopMusicActive != 0)
-        {
+    } else {
+        if (gGameLoopMusicActive != 0) {
             gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer - timeDelta;
-            if (gGameLoopMusicFadeTimer <= 0.0f)
-            {
+            if (gGameLoopMusicFadeTimer <= 0.0f) {
                 Music_Trigger(MUSICTRIG_Krazoa_Shrine, 0);
                 Music_Trigger(MUSICTRIG_galleon_battle, 0);
                 gGameLoopMusicActive = 0;
             }
         }
-        if (gGameLoopMusicFadeTimer <= 0.0f)
-        {
+        if (gGameLoopMusicFadeTimer <= 0.0f) {
             gGameLoopMusicFadeTimer = -3e+01f;
         }
     }
@@ -731,8 +623,7 @@ static void gameUpdate(void)
     {
         s8 t = frameCountdown - framesThisStep;
         frameCountdown = t;
-        if (t < 0)
-        {
+        if (t < 0) {
             frameCountdown = 0;
         }
     }
@@ -789,8 +680,7 @@ static void gameLoop(void) {
     doQueuedLoads();
 }
 
-void init(void)
-{
+void init(void) {
 
     int audioDone;
     u8 filesDone;
@@ -809,13 +699,10 @@ void init(void)
     OSInitFastCast();
     gRenderModeObj = &GXNtsc480IntDf;
     gGameLoopProgressiveMode = OSGetProgressiveMode();
-    if (OSGetResetCode() != 0 && gGameLoopProgressiveMode == 1)
-    {
+    if (OSGetResetCode() != 0 && gGameLoopProgressiveMode == 1) {
         gRenderModeObj = &GXNtsc480Prog;
         OSSetProgressiveMode(1);
-    }
-    else
-    {
+    } else {
         OSSetProgressiveMode(0);
     }
     videoInit(lbl_8033C3B8, 0);
@@ -833,28 +720,23 @@ void init(void)
     mmSetForceHeap3Only(1);
     initControllers();
     delay = mmSetFreeDelay(0);
-    do
-    {
+    do {
         mmFreeTick(0);
         padUpdate();
         checkReset();
         waitNextFrame();
-        if ((u8)audioDone == 0)
-        {
+        if ((u8)audioDone == 0) {
             audioDone = audioInit();
         }
-        if (once == 0)
-        {
+        if (once == 0) {
             mmSetForceHeap3Only(1);
             allocSomething32bytes();
         }
-        if ((u8)audioDone != 0 && filesDone == 0)
-        {
+        if ((u8)audioDone != 0 && filesDone == 0) {
             mmSetForceHeap3Only(1);
             filesDone = initLoadFiles();
         }
-        if (once == 0)
-        {
+        if (once == 0) {
             mmSetForceHeap3Only(1);
             newshadows_initProceduralTextures();
         }
@@ -862,17 +744,14 @@ void init(void)
         runLoadingScreens();
         dvdCheckError();
         gameTextRun();
-        if (*gAskProgressiveScanFlag == 0)
-        {
+        if (*gAskProgressiveScanFlag == 0) {
             dtv = 0;
-            if (VIGetDTVStatus() != 0)
-            {
-                if (OSGetResetCode() != 0 && gGameLoopProgressiveMode != 1 && (getButtonsHeld(0) & PAD_BUTTON_B) != 0)
-                {
+            if (VIGetDTVStatus() != 0) {
+                if (OSGetResetCode() != 0 && gGameLoopProgressiveMode != 1 && (getButtonsHeld(0) & PAD_BUTTON_B) != 0) {
                     dtv = 1;
                 }
-                if (OSGetResetCode() == 0 && (gGameLoopProgressiveMode == 1 || (getButtonsHeld(0) & PAD_BUTTON_B) != 0))
-                {
+                if (OSGetResetCode() == 0 &&
+                    (gGameLoopProgressiveMode == 1 || (getButtonsHeld(0) & PAD_BUTTON_B) != 0)) {
                     dtv = 1;
                 }
             }
@@ -880,8 +759,7 @@ void init(void)
         }
         GXFlush_(1, 0);
     } while ((filesDone == 0 || (u8)audioDone == 0) && gameState == GAME_STATE_BOOTING);
-    while (gameState != GAME_STATE_BOOTING)
-    {
+    while (gameState != GAME_STATE_BOOTING) {
         mmFreeTick(0);
         padUpdate();
         checkReset();
@@ -950,8 +828,7 @@ void init(void)
     doNothing_beforeTitleScreen();
     doQueuedLoads();
     setDrawCloudsAndLights(0);
-    if (*gAskProgressiveScanFlag != 0)
-    {
+    if (*gAskProgressiveScanFlag != 0) {
         OSSetSaveRegion(gAskProgressiveScanFlag, (u8*)gAskProgressiveScanFlag + 1);
         VISetBlack(0);
         VIFlush();
@@ -966,15 +843,13 @@ void init(void)
     OSReport(sMainFinishedInitMessage);
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     gameState = GAME_STATE_BOOTING;
     gGameLoopInitComplete = 0;
     init();
     gGameLoopInitComplete = 1;
     gameState = GAME_STATE_RUNNING;
-    do
-    {
+    do {
         checkReset();
         gameLoop();
     } while (1);

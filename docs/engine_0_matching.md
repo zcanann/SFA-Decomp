@@ -1,9 +1,10 @@
 # Engine 0: HUD declaration and source-shape recovery
 
 EN v1.0, 2026-09-04. The unit is `src/dlls/engine/0/0.c`, containing the
-command menu, HUD, communicator, and pause menus. It remains `NonMatching`:
-106 of 118 functions match exactly. All 118 now have the retail instruction
-count. The whole TU uses GC/1.3, `-inline noauto`, and signed `char`.
+command menu, HUD, communicator, and pause menus. It remains `NonMatching`.
+The September 4 pass reached 106 of 118 exact functions; the September 5
+follow-up below starts with 108. All 118 have the retail instruction count.
+The whole TU uses GC/1.3, `-inline noauto`, and signed `char`.
 
 ## Color declarations and the compiler fingerprint
 
@@ -138,7 +139,7 @@ constants or explicit section placement are needed.
   Appending named definitions puts them in `.sdata`. Their source ownership
   remains unresolved; do not force sections or duplicate literals.
 
-## Validation
+## September 4 validation
 
 | Measure | Before communicator fix | After communicator fix | Current |
 | --- | ---: | ---: | ---: |
@@ -160,3 +161,124 @@ The strict EN checksum build and `ninja all_source` both pass within their
 30-second limits (about 16 seconds each). Formatting checks also pass.
 The strict build still uses retail code for this `NonMatching` TU and is
 not proof that the remaining twelve functions match.
+
+## September 5 follow-up
+
+A fresh build at `4d84859649` already uses GC/1.3 and has 108 exact
+functions, including the subsequently matched `GameUI_release` and
+`hudDrawMagicBar`. This pass preserves that compiler profile and TU boundary.
+
+The C-menu count-label loop now derives its row offset from `i * 50`.
+MWCC generates the induction variable itself, bringing `hudDrawButtons`
+from 99.666664% to 99.68513%. The head-display scanline computes and saves
+its Y coordinate in the first draw call, matching retail's placement of
+the calculation after loading the texture and X coordinate.
+`headDisplayDraw` improves from 98.802086% to 99.21875%.
+
+The TU code fuzzy score rises from **99.85679% to 99.86833%**. Exact code
+remains 48,544 / 75,188 bytes across **108 / 118 functions**. All 118
+functions retain the retail instruction count, and no function's score
+regresses. Only the two edited functions change instruction bytes.
+
+All six data sections retain their source-object bytes, sizes, alignment,
+and resolved data relocations. Every named symbol retains its size and
+offset. MWCC renumbers anonymous pool and switch-table symbols after the
+head-display edit; their layouts and contents remain unchanged.
+
+The TU is still `NonMatching`: ten functions have residual differences,
+and `.sdata2` still emits 948 of the retail pool's 980 bytes. Direct literal
+substitutions for the five missing constants change code generation; they
+were not retained. Declaration and scope probes also failed to eliminate
+the remaining differences. No partial compiler profile, forced section, or
+additional TU split is used.
+
+Validation: `python3 configure.py --matching`, strict default `ninja`, and
+`ninja all_source` pass within the required 30-second timeout per build.
+Formatting checks pass for the TU and its public API header. The strict
+checksum still links retail code for this `NonMatching` TU.
+
+## September 5 complete constant-pool recovery
+
+The next pass starts at `0cd820cb40` and resolves the pool ownership left
+open above. All eleven references to TU-owned compiler literals now use
+their correctly typed values. Five values were missing from the source
+pool: float pi, 80.0f, 320.0f, 256.0f, and double 1/256. Six others were
+already emitted anonymously but still had external references in the C.
+The source now emits the complete **980-byte `.sdata2`**, including the
+retail alignment, with no duplicate named constants or forced sections.
+
+Float locals for the status icons, hint panel, grid cursor, and carousel
+retain retail's conversion precision and operand order. The timed HUD
+element uses a compound alpha update. These spellings preserve the exact
+functions that direct literal substitutions initially changed.
+
+The map and head-display shimmer calculations combine their two sine
+waves in one expression. This preserves the retail call order and restores
+the floating-point registers. The viewfinder line helper computes its
+corner offsets in the draw-call arguments, improving the grid's temporary
+registers. `headDisplayDraw` rises to 99.302086%; the viewfinder remains
+below its previous score at 99.36948% after the literal recovery.
+
+| Measure | Previous | Current |
+| --- | ---: | ---: |
+| Exact functions | 108 / 118 | 108 / 118 |
+| Exact code bytes | 48,544 / 75,188 | 48,544 / 75,188 |
+| Code fuzzy match | 99.86833% | 99.865135% |
+| Exact assigned data bytes | 8,972 / 9,952 | **9,952 / 9,952** |
+
+All 118 functions retain their retail instruction counts. Existing
+exports, non-pool data layouts, and resolved data relocations are
+unchanged. An undefined-symbol audit of the 1,042 active target objects
+finds no other TU consuming the eleven former literal symbols. Old build
+objects outside the active config are excluded from this audit.
+
+A diagnostic link replaces only engine 0's retail object with the rebuilt
+GC/1.3 object. It succeeds with no missing symbols, preserves every linked
+section address and size, and reproduces every linked data section byte
+for byte. Only `.text` differs: 563 bytes across the ten remaining
+non-exact functions. Thus the small code-fuzzy regression accompanies a
+complete, independently linked data recovery.
+
+Validation: strict checksum `ninja` and `ninja all_source` both exit 0
+within their 30-second limits. Formatting checks pass for the TU and
+`include/main/dll/dll_0000_gameui_api.h`. The TU remains `NonMatching`;
+the diagnostic source link does not yet reproduce the retail DOL.
+
+## September 5 button-HUD match
+
+`hudDrawButtons` now matches all **3,684 bytes / 921 instructions** under
+the same GC/1.3 profile. The count-label opacity clamp is two conditional
+expressions. The lower bound remains an `int` zero, while the upper bound
+is explicitly `(s16)0xFF`, preserving the signed-short result before the
+highlight-fade multiplication.
+
+The two conditional expressions resolve the register allocation across
+the function, including its long-lived HUD base, selected icon, and row
+offset. An untyped upper bound leaves just one reversed `mullw` operand
+order; the signed-short bound resolves it. The clamped value is unchanged
+for every input representable by `alpha`.
+
+Exact functions rise from **108 to 109 / 118**, and exact code rises from
+48,544 to **52,228 / 75,188 bytes**. Code fuzzy match is **99.88057%**.
+The other 117 function bodies are byte-identical to the preceding source
+object. All assigned data remains exact, and source exports, section
+layouts, and resolved relocations are unchanged.
+
+The staging rebase also brings in the corrected shared `fsin16Approx(u16)`
+declaration. Explicitly promoting the two wrapped head-display angles to
+`int` preserves the caller's previous expression types and restores the
+complete pre-rebase object byte for byte. The shared narrow API is retained;
+removing only the explicit angle casts does not restore the code generation.
+
+This pass also rechecks the whole-TU optimizer controls. Enabling peephole
+optimization or scheduling regresses the match substantially. Disabling
+lifetimes, dead-store elimination, propagation, loop-invariant motion,
+common-subexpression elimination, or strength reduction improves none of
+the remaining functions. No compiler-profile change is retained.
+
+Validation: the strict checksum build and `ninja all_source` both exit 0
+within their 30-second limits. Formatting checks pass for the TU and its
+public API header. Nine functions remain non-exact, so the TU remains
+`NonMatching` and the full-TU goal is not complete. A diagnostic source-object
+link succeeds with every linked data byte intact; 506 text bytes still
+differ from the strict-build baseline.

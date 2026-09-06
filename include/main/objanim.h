@@ -35,6 +35,7 @@ int ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount);
 int ObjAnim_SampleRootCurvePhase(ObjAnimComponent *objAnim,f32 distance,float *phaseOut);
+/* Returns nonzero when updated progress is >= 1 or < 0, before wrapping or clamping. */
 int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 deltaTime, ObjAnimEventList* events);
 int ObjAnim_SetMoveProgress(ObjAnimComponent *objAnim,f32 moveProgress);
 int ObjAnim_SetCurrentMove(void *objAnimHandle,int moveId,f32 moveProgress,u8 moveControlFlags);

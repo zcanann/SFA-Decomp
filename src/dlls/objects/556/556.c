@@ -30,9 +30,7 @@
 #include "main/dll/dfptorchstate_struct.h"
 #include "main/dll/dbeggstate_struct.h"
 #include "main/dll/drakorenergystate_struct.h"
-#include "main/dll/dbstealerwormcontrol_struct.h"
 #include "main/dll/blastflags4_types.h"
-#include "main/dll/dfp_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -47,16 +45,8 @@
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/render_lactions_api.h"
 
-/*
- * DbStealerwormControl - the per-family control record hung off
- * GroundBaddieState.control (state+0x40C) for dbstealerworm
- * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
- * the control record itself is memset(0x50) in dbstealerworm_init).
- */
 
-STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 
-STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
 
@@ -66,7 +56,6 @@ STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
 
 STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
 
-STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 

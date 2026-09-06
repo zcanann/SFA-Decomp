@@ -52,21 +52,20 @@ void WaveAnimator_setScale(GameObject* obj, f32 scale) {
 }
 
 static void WaveAnimator_buildSharedTables(WaveAnimatorState* config) {
-    int rowOffset;
-    int heightOffset;
-    int i;
-    int j;
-    int x;
+    int heightIndex;
+    int rowIndex;
+    int columnIndex;
+    int phaseX;
     int phaseStepX;
     int phaseY;
-    int phaseOffset;
+    int phaseIndex;
     int phaseStepY;
     f32 zeroHeight;
 
     gWaveAnimatorHeightTable = mmAlloc(sizeof(f32) * config->period * config->period, 0xFFFFFF, 0);
     gWaveAnimatorColorTable = mmAlloc(sizeof(WaveAnimatorColor) * config->period * config->period, 0xFFFFFF, 0);
 
-    x = config->originX;
+    phaseX = config->originX;
     phaseStepX = (s32)((65536.0f * config->spanX) / config->period);
     phaseY = config->originY;
     phaseStepY = (s32)((65536.0f * config->spanY) / config->period);
@@ -75,65 +74,53 @@ static void WaveAnimator_buildSharedTables(WaveAnimatorState* config) {
     config->maxHeight = zeroHeight;
     config->minHeight = zeroHeight;
 
-    i = 0;
-    heightOffset = 0;
-    for (; i < config->period; i++) {
-        f32 xRadians;
-        j = 0;
-        rowOffset = heightOffset;
-        xRadians = 3.1415927f * x;
-        for (; j < config->period; j++) {
-            *(f32*)((u8*)gWaveAnimatorHeightTable + rowOffset) =
-                config->ampX * mathSinf(xRadians / 32768.0f) +
-                config->ampY * mathSinf((3.1415927f * phaseY) / 32768.0f);
-            if (*(f32*)((u8*)gWaveAnimatorHeightTable + rowOffset) < config->minHeight) {
-                config->minHeight = *(f32*)((u8*)gWaveAnimatorHeightTable + rowOffset);
+    heightIndex = 0;
+    for (rowIndex = 0; rowIndex < config->period; rowIndex++) {
+        for (columnIndex = 0; columnIndex < config->period; columnIndex++) {
+            gWaveAnimatorHeightTable[heightIndex] = config->ampX * mathSinf((3.1415927f * phaseX) / 32768.0f) +
+                                                    config->ampY * mathSinf((3.1415927f * phaseY) / 32768.0f);
+            if (gWaveAnimatorHeightTable[heightIndex] < config->minHeight) {
+                config->minHeight = gWaveAnimatorHeightTable[heightIndex];
             }
-            if (*(f32*)((u8*)gWaveAnimatorHeightTable + rowOffset) > config->maxHeight) {
-                config->maxHeight = *(f32*)((u8*)gWaveAnimatorHeightTable + rowOffset);
+            if (gWaveAnimatorHeightTable[heightIndex] > config->maxHeight) {
+                config->maxHeight = gWaveAnimatorHeightTable[heightIndex];
             }
             phaseY += phaseStepY;
-            rowOffset += 4;
-            heightOffset += 4;
+            heightIndex++;
         }
-        x += phaseStepX;
+        phaseX += phaseStepX;
     }
 
     {
         f32 colorSplitZero;
         f32 t;
         f32 negMin = -config->minHeight;
-        heightOffset = 0;
-        x = heightOffset;
-        i = heightOffset;
+        heightIndex = 0;
         colorSplitZero = 0.0f;
-        for (; heightOffset < config->period; heightOffset++) {
-            int heightCursor[1];
-            int colorCursor[1];
-            for (j = 0, heightCursor[0] = x, colorCursor[0] = i; j < config->period;
-                 heightCursor[0] += 4, colorCursor[0] += 3, x += 4, i += 3, j++) {
-                f32 v = *(f32*)((u8*)gWaveAnimatorHeightTable + heightCursor[0]);
+        for (rowIndex = 0; rowIndex < config->period; rowIndex++) {
+            for (columnIndex = 0; columnIndex < config->period; heightIndex++, columnIndex++) {
+                f32 v = gWaveAnimatorHeightTable[heightIndex];
                 if (v < colorSplitZero) {
                     t = (v - config->minHeight) / negMin;
-                    ((WaveAnimatorColor*)((u8*)gWaveAnimatorColorTable + colorCursor[0]))->red = 65.0f * t + 190.0f;
-                    ((WaveAnimatorColor*)((u8*)gWaveAnimatorColorTable + colorCursor[0]))->green = 165.0f * t + 90.0f;
-                    ((WaveAnimatorColor*)((u8*)gWaveAnimatorColorTable + colorCursor[0]))->blue = 235.0f * t + 20.0f;
+                    gWaveAnimatorColorTable[heightIndex].red = 65.0f * t + 190.0f;
+                    gWaveAnimatorColorTable[heightIndex].green = 165.0f * t + 90.0f;
+                    gWaveAnimatorColorTable[heightIndex].blue = 235.0f * t + 20.0f;
                 } else {
-                    ((WaveAnimatorColor*)((u8*)gWaveAnimatorColorTable + colorCursor[0]))->red = 255;
-                    ((WaveAnimatorColor*)((u8*)gWaveAnimatorColorTable + colorCursor[0]))->green = 255;
-                    ((WaveAnimatorColor*)((u8*)gWaveAnimatorColorTable + colorCursor[0]))->blue = 255;
+                    gWaveAnimatorColorTable[heightIndex].red = 255;
+                    gWaveAnimatorColorTable[heightIndex].green = 255;
+                    gWaveAnimatorColorTable[heightIndex].blue = 255;
                 }
             }
         }
     }
 
     gWaveAnimatorPhaseTable = mmAlloc(2 * sizeof(s16) * config->gridN * config->gridN, 0xFFFFFF, 0);
-    phaseOffset = 0;
-    for (i = 0; i < config->gridN; i++) {
-        for (j = 0; j < config->gridN; j++) {
-            gWaveAnimatorPhaseTable[phaseOffset] = (s16)(i * 10);
-            gWaveAnimatorPhaseTable[phaseOffset + 1] = (s16)(j * 10);
-            phaseOffset += 2;
+    phaseIndex = 0;
+    for (rowIndex = 0; rowIndex < config->gridN; rowIndex++) {
+        for (columnIndex = 0; columnIndex < config->gridN; columnIndex++) {
+            gWaveAnimatorPhaseTable[phaseIndex] = (s16)(rowIndex * 10);
+            gWaveAnimatorPhaseTable[phaseIndex + 1] = (s16)(columnIndex * 10);
+            phaseIndex += 2;
         }
     }
 }

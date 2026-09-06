@@ -70,13 +70,12 @@ void XyzAnimator_captureGeometry(XyzAnimatorPlacement* placement, XyzAnimatorSta
             for (; triangle < triangleEnd; triangle++) {
                 mapEntry = mapBlockGetPolygon(blockAddress, triangle);
                 dataOffset = vertexDataOffset[0];
-                for (index = 3; index != 0; index--) {
-                    vertex = (Vec3s*)(blockData->vertices + (u32)*mapEntry * 6);
+                for (index = 0; index != 3; index++) {
+                    vertex = &((Vec3s*)blockData->vertices)[mapEntry[index]];
                     ((Vec3s*)(state->geometryBuffer + dataOffset))->x = vertex->x;
                     ((Vec3s*)(state->geometryBuffer + dataOffset))->y = vertex->y;
                     ((Vec3s*)(state->geometryBuffer + dataOffset))->z = vertex->z;
                     dataOffset += 6;
-                    mapEntry++;
                 }
                 vertexDataOffset[0] += 0x12;
                 triangleDataOffset[0] += 0x12;
@@ -170,15 +169,14 @@ void XyzAnimator_applyToMapBlock(XyzAnimatorPlacement* placement, XyzAnimatorSta
             for (; triangle < triangleEnd; triangle++) {
                 mapEntry = mapBlockGetPolygon(blockAddress, triangle);
                 dataOffset = vertexIndex;
-                for (index = 3; index != 0; index--) {
-                    vertex = (Vec3s*)(blockData->vertices + (u32)*mapEntry * 6);
+                for (index = 0; index != 3; index++) {
+                    vertex = &((Vec3s*)blockData->vertices)[mapEntry[index]];
                     vertex->x = (s16)(scale * state->offsetX + (f32)((Vec3s*)(state->geometryBuffer + dataOffset))->x);
                     vertex->y = (s16)(scale * state->offsetY + (f32)((Vec3s*)(state->geometryBuffer + dataOffset))->y);
                     vertex->z = (s16)(scale * state->offsetZ + (f32)((Vec3s*)(state->geometryBuffer + dataOffset))->z);
                     dataOffset += 6;
                     vertexIndex += 6;
                     vertexOffset[0] += 6;
-                    mapEntry++;
                 }
             }
         }
@@ -221,7 +219,8 @@ void XyzAnimator_update(GameObject* obj) {
     int streamSize;
     int value;
 
-    blockAddress = (MapBlockData*)mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
+    blockAddress =
+        (MapBlockData*)mapGetBlock(objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ));
     if (blockAddress == NULL) {
         state->passCount = 0;
         return;
@@ -230,8 +229,7 @@ void XyzAnimator_update(GameObject* obj) {
         return;
     }
     if (state->vertexCount == 0) {
-        for (polygonGroupIndex = 0; polygonGroupIndex < blockAddress->polyGroupCount;
-             polygonGroupIndex++) {
+        for (polygonGroupIndex = 0; polygonGroupIndex < blockAddress->polyGroupCount; polygonGroupIndex++) {
             polygonGroup = mapBlockGetPolygonGroup((void*)blockAddress, polygonGroupIndex);
             value = mapBlockGetPolygonGroupType(polygonGroup);
             if (placement->blockLayer == value) {

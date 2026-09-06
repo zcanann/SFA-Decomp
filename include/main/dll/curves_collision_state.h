@@ -11,7 +11,7 @@
 #define CURVES_COLLISION_STATE_ACTIVE                 0x04000000
 #define CURVES_COLLISION_STATE_LOCAL_POINTS           0x00000008
 #define CURVES_COLLISION_STATE_HIT_SEGMENTS           0x00002000
-#define CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS 0x02000000
+#define CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS 0x02000000u
 #define CURVES_COLLISION_STATE_X_ROTATION_ONLY        0x00000020
 #define CURVES_COLLISION_STATE_KEEP_POSITION          0x00100000
 #define CURVES_POINT_COUNT_LOCAL_MASK                 0x0f
@@ -89,6 +89,7 @@ STATIC_ASSERT(offsetof(CurvesCollisionState, localHit) == 0x144);
 STATIC_ASSERT(offsetof(CurvesCollisionState, tiltPitch) == 0x198);
 STATIC_ASSERT(offsetof(CurvesCollisionState, surfaceNormalX) == 0x1A0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, resultFloorGap) == 0x1AC);
+STATIC_ASSERT(offsetof(CurvesCollisionState, resultWaterDepth) == 0x1B4);
 STATIC_ASSERT(offsetof(CurvesCollisionState, floorGap) == 0x1C0);
 STATIC_ASSERT(offsetof(CurvesCollisionState, waterY) == 0x200);
 STATIC_ASSERT(offsetof(CurvesCollisionState, waterNormalZ) == 0x230);

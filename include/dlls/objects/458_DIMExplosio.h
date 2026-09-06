@@ -148,7 +148,40 @@ STATIC_ASSERT(offsetof(DimExplosionState, modelKind) == 0xA5D);
 STATIC_ASSERT(offsetof(DimExplosionState, unknownA5E) == 0xA5E);
 STATIC_ASSERT(sizeof(DimExplosionState) == 0xA60);
 
-void explosion_spawnFlame(GameObject* obj, u8 generation, f32 speed, f32 x, f32 y, f32 z);
+typedef struct DimExplosionPartfxSource {
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    s16 flags;
+    f32 rootMotionScale;
+    f32 localPosX;
+    f32 localPosY;
+    f32 localPosZ;
+    f32 worldPosX;
+    f32 worldPosY;
+    f32 worldPosZ;
+    f32 velocityX;
+    f32 velocityY;
+    f32 velocityZ;
+    void* parent;
+    u8 hostedMapSlot;
+    s8 transformMatrixIndex;
+    u8 alpha;
+    u8 renderAlpha;
+} DimExplosionPartfxSource;
+
+typedef struct DimExplosionTextureTable {
+    int assetIds[4];
+} DimExplosionTextureTable;
+
+STATIC_ASSERT(sizeof(DimExplosionPartfxSource) == 0x38);
+STATIC_ASSERT(offsetof(DimExplosionPartfxSource, rootMotionScale) == 0x08);
+STATIC_ASSERT(offsetof(DimExplosionPartfxSource, localPosX) == 0x0C);
+STATIC_ASSERT(offsetof(DimExplosionPartfxSource, worldPosX) == 0x18);
+STATIC_ASSERT(offsetof(DimExplosionPartfxSource, velocityX) == 0x24);
+STATIC_ASSERT(sizeof(DimExplosionTextureTable) == 0x10);
+
+void explosion_spawnFlame(GameObject* obj, f32 speed, u8 generation, f32 x, f32 y, f32 z);
 void explosion_computeColor(f32 age, f32 lifetime, u8 colorMode, u8* outputColor);
 int explosion_getExtraSize(void);
 int explosion_getObjectTypeId(GameObject* obj);

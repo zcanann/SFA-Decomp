@@ -2,10 +2,11 @@
 #define MAIN_DLL_WATERFX_INTERFACE_H_
 
 #include "global.h"
+#include "main/dll/curves_collision_state.h"
 
 typedef void (*WaterfxRunFrameFn)(int frames);
 typedef void (*WaterfxImpactSurfaceFn)(u8* objHeader, u16 limbMask, f32* impactPositions,
-                                       u8* surface, f32 speed);
+                                       CurvesCollisionState* collision, f32 speed);
 typedef void (*WaterfxRenderFn)(int renderPass, int flags);
 typedef void (*WaterfxSpawnSplashBurstFn)(void* sourceObject, f32 x, f32 y, f32 z,
                                           f32 radius);

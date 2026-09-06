@@ -13,7 +13,7 @@
  * in staffDoGrowShrinkAnim.
  *
  */
-#include "main/dll/dll_00E2_staff_api.h"
+#include "dlls/objects/226.h"
 #include "main/model.h"
 #include "dolphin/mtx.h"
 #include "main/texture.h"
@@ -97,27 +97,7 @@ s16 sStaffSwipeTextureIdTable[4] = {0xC7F, 0x3EC, 0, 0};
 #define STAFF_SWIPE_FLAG_START       1
 #define STAFF_SWIPE_FLAG_ACTIVE      2
 
-typedef struct StaffWeaponSample {
-    s16 endpointA[3];
-    s16 endpointB[3];
-} StaffWeaponSample;
-
-STATIC_ASSERT(sizeof(StaffWeaponSample) == 0x0C);
-
 extern StaffQuakeSpellState gStaffQuakeSpellState;
-typedef struct SwipeColorTable {
-    StaffCollisionColorArgs colors[4];
-} SwipeColorTable;
-typedef struct StaffEffectParams {
-    u16 id;
-    u16 a;
-    u16 b;
-    s16 count;
-    f32 scale;
-    f32 posX;
-    f32 posY;
-    f32 posZ;
-} StaffEffectParams;
 
 #define GXWGFifo (*(volatile PPCWGPipe*)0xCC008000)
 
@@ -326,15 +306,13 @@ static void staffUpdateQuakeSpell(void) {
     StaffQuakeSpellState* q = &gStaffQuakeSpellState;
 
     if (q->active != 0) {
-        f32 fade;
         q->scale += 5.5f;
         ObjHitbox_SetSphereRadius(&q->object->anim, q->scale);
         ObjHits_SetHitVolumeSlot(&q->object->anim, STAFF_QUAKE_HIT_VOLUME_SLOT, 5, 0);
         gStaffQuakeSpellState.fade += -4.0f;
-        fade = gStaffQuakeSpellState.fade;
         gStaffQuakeSpellState.radius *= 0.97f;
         gStaffQuakeSpellState.heightScale *= 1.01f;
-        q->object->anim.alpha = fade;
+        q->object->anim.alpha = gStaffQuakeSpellState.fade;
         q->object->anim.rootMotionScale += 0.07f;
         if (gStaffQuakeSpellState.fade < 1.0f) {
             q->active = 0;
@@ -864,23 +842,17 @@ int staff_getObjectTypeId(void) {
 }
 
 void staff_free(GameObject* obj) {
-    StaffSwipeSlot* slot;
+    StaffState* state = obj->extra;
     int i;
     i = 0;
-    slot = ((StaffState*)obj->extra)->slots;
     for (; i < STAFF_SWIPE_SLOT_COUNT; i++) {
-        mm_free(slot->vertexData);
-        slot++;
+        mm_free(state->slots[i].vertexData);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void staff_render(void) {
 }
-
-STATIC_ASSERT(sizeof(SwipeColorTable) == 0x40);
-
-void staffDrawSwipe(GameObject* obj, StaffState* swipe);
 
 void staff_hitDetect(void) {
 }

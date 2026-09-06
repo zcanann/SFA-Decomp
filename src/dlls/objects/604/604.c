@@ -25,7 +25,7 @@
 #include "main/vecmath.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
-#include "main/dll/dll_0255_snowbike.h"
+#include "dlls/objects/597_SnowBike.h"
 #include "main/audio/sfx_play_api.h"
 
 f32 gSnowClawPulseScale = 1.0f;

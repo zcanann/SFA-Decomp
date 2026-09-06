@@ -186,7 +186,7 @@ u32 warpstone_advanceAnimEvents(GameObject* lantern, f32 moveStepScale) {
     gWarpStoneObjAnimEvents.list.rootCurveValid = 0;
     advanceResult = ObjAnim_AdvanceCurrentMove(lantern, moveStepScale, timeDelta, &gWarpStoneObjAnimEvents.list);
     if (gWarpStoneObjAnimEvents.list.rootCurveValid != 0) {
-        lantern->anim.rotX += gWarpStoneObjAnimEvents.list.rootPitch;
+        lantern->anim.rotX += gWarpStoneObjAnimEvents.list.rootRotation[OBJANIM_ROOT_ROTATION_YAW];
     }
     i = 0;
     while (i < gWarpStoneObjAnimEvents.list.triggerCount) {

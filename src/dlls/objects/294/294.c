@@ -51,12 +51,10 @@
 #include "main/render_lactions_api.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
-#include "main/dll/dll_00C4_tricky.h"
-#include "main/dll/dll_0126_trigger.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/dll/headdisplay.h"
 #include "main/sky.h"
-#include "main/dll/dll_0126_trigger_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/vecmath.h"
 #include "dolphin/mtx.h"
@@ -91,25 +89,6 @@ char sTriggerDebugTextBlock[] = "initialise\n\0"
                                 "^^^^^^^^\n^^^^^^^^\nFREE %d\n\0\0"
                                 "^^^^^^^^\n^^^^^^^^\nLEVELLOCKED level %d  bucket %d\n\0\0"
                                 "^^^^^^^^\n^^^^^^^^\nLEVELUNLOCKED level %d  bucket %d\n\0\0\0";
-
-typedef struct MmpTriggerPlaneState {
-    u8 header[0xC];     /* 0x00 */
-    f32 normalX;        /* 0x0C plane normal */
-    f32 normalY;        /* 0x10 */
-    f32 normalZ;        /* 0x14 */
-    f32 planeD;         /* 0x18 plane constant */
-    f32 ptA[3];         /* 0x1C near segment endpoint */
-    f32 ptB[3];         /* 0x28 far segment endpoint */
-    f32 clipHalfExtent; /* 0x34 trigger-local half size */
-    f32 mtx[3][4];      /* 0x38 world->trigger-local transform */
-} MmpTriggerPlaneState;
-
-STATIC_ASSERT(offsetof(MmpTriggerPlaneState, normalX) == 0x0C);
-STATIC_ASSERT(offsetof(MmpTriggerPlaneState, planeD) == 0x18);
-STATIC_ASSERT(offsetof(MmpTriggerPlaneState, ptA) == 0x1C);
-STATIC_ASSERT(offsetof(MmpTriggerPlaneState, ptB) == 0x28);
-STATIC_ASSERT(offsetof(MmpTriggerPlaneState, clipHalfExtent) == 0x34);
-STATIC_ASSERT(offsetof(MmpTriggerPlaneState, mtx) == 0x38);
 
 #define MOONROCK_ANGLE_TO_RADIANS(angle) ((3.1415927f * (f32)(s32)(-(angle))) / 32768.0f)
 
@@ -383,28 +362,30 @@ void triggerEvalEndpointCylinders(GameObject* obj, GameObject* seqObj) {
 /* Classify the target against the two endpoint spheres used by trigger type 0x4B. */
 void triggerEvalEndpointSpheres(GameObject* obj, GameObject* seqObj) {
     MmpGyserventState* state;
-    f32 dx0, dy0, dz0, d0;
-    f32 dx1, dy1, dz1, d1;
-    s8 cat;
+    f32 dxA, dyA, dzA, distSqA;
+    f32 dxB, dyB, dzB, distSqB;
+    s8 leg;
+    int range;
 
     state = (MmpGyserventState*)(obj)->extra;
 
-    dx0 = state->reachAX - (obj)->anim.worldPosX;
-    dy0 = state->reachAY - (obj)->anim.worldPosY;
-    dz0 = state->reachAZ - (obj)->anim.worldPosZ;
-    d0 = dx0 * dx0 + dy0 * dy0 + dz0 * dz0;
+    dxA = state->reachAX - (obj)->anim.worldPosX;
+    dyA = state->reachAY - (obj)->anim.worldPosY;
+    dzA = state->reachAZ - (obj)->anim.worldPosZ;
+    distSqA = dxA * dxA + dyA * dyA + dzA * dzA;
 
-    dx1 = state->reachBX - (obj)->anim.worldPosX;
-    dy1 = state->reachBY - (obj)->anim.worldPosY;
-    dz1 = state->reachBZ - (obj)->anim.worldPosZ;
-    d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
+    dxB = state->reachBX - (obj)->anim.worldPosX;
+    dyB = state->reachBY - (obj)->anim.worldPosY;
+    dzB = state->reachBZ - (obj)->anim.worldPosZ;
+    distSqB = dxB * dxB + dyB * dyB + dzB * dzB;
 
-    if (d1 < state->nearRadiusSq) {
-        cat = (d0 < state->nearRadiusSq) ? 2 : 1;
+    if (distSqB < state->nearRadiusSq) {
+        leg = (distSqA < state->nearRadiusSq) ? 2 : 1;
     } else {
-        cat = (d0 < state->nearRadiusSq) ? -1 : -2;
+        leg = (distSqA < state->nearRadiusSq) ? -1 : -2;
     }
-    objInterpretSeq(obj, seqObj, cat, d1);
+    range = distSqB;
+    objInterpretSeq(obj, seqObj, leg, range);
 }
 
 #define TARGET_OBJGROUP                 0xf  /* player-target group; nearest object gets the trigger's sequence */
@@ -1140,12 +1121,12 @@ void Trigger_hitDetect(GameObject* obj) {
                 switch (((TriggerPlacement*)def)->base.objectId) {
                 case 0x4b:
                     if (ok) {
-                        ((void (*)(GameObject*, GameObject*))triggerEvalEndpointSpheres)(obj, target);
+                        triggerEvalEndpointSpheres(obj, target);
                     }
                     break;
                 case 0x230:
                     if (ok) {
-                        ((void (*)(GameObject*, GameObject*))triggerEvalEndpointCylinders)(obj, target);
+                        triggerEvalEndpointCylinders(obj, target);
                     }
                     break;
                 case 0x4c:
@@ -1167,8 +1148,8 @@ void Trigger_hitDetect(GameObject* obj) {
                 case 0x4d:
                     if (ok) {
                         TriggerState* st = (TriggerState*)(obj)->extra;
-                        inside = ((int (*)(GameObject*, f32*))triggerPointInBox)(obj, &st->prevTargetPosX);
-                        wasInside = ((int (*)(GameObject*, f32*))triggerPointInBox)(obj, &st->targetPosX);
+                        inside = triggerPointInBox(obj, &st->prevTargetPosX);
+                        wasInside = triggerPointInBox(obj, &st->targetPosX);
                         if (inside != 0) {
                             if (wasInside == 0) {
                                 objInterpretSeq(obj, target, 1, 0);
@@ -1208,7 +1189,7 @@ void Trigger_hitDetect(GameObject* obj) {
                     break;
                 case 0xf4:
                     if (ok) {
-                        ((void (*)(GameObject*, GameObject*))triggerEvalCurveLoop)(obj, target);
+                        triggerEvalCurveLoop(obj, target);
                     }
                     break;
                 }

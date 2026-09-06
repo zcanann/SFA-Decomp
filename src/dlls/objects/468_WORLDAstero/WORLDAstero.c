@@ -22,8 +22,6 @@ extern f32 gWorldAsteroidsRenderScale;
 extern f32 gWorldAsteroidsOrbitRadiusVariation;
 extern f32 gWorldAsteroidsOrbitRadiusBase;
 
-typedef f32 (*WorldAsteroidsTrigFn)(u16 angle);
-
 static inline f32 worldasteroids_s32AsFloat(s32 value) {
     return (f32)value;
 }
@@ -91,18 +89,18 @@ void worldasteroids_init(GameObject* obj) {
 
     state = (WorldAsteroidsState*)obj->extra;
     baseAngle = randomGetRange(-0x7fff, 0x7fff);
-    orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
+    orbitShape = fsin16Approx(baseAngle);
     if (orbitShape < 0.0f) {
-        orbitShape = -((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
+        orbitShape = -fsin16Approx(baseAngle);
     } else {
-        orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
+        orbitShape = fsin16Approx(baseAngle);
     }
     randomGetRange(0, (int)(33.0f * orbitShape + 7.0f));
-    orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
+    orbitShape = fsin16Approx(baseAngle);
     if (orbitShape < 0.0f) {
-        orbitShape = -((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
+        orbitShape = -fsin16Approx(baseAngle);
     } else {
-        orbitShape = ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle);
+        orbitShape = fsin16Approx(baseAngle);
     }
     radiusVariation = (int)(gWorldAsteroidsOrbitRadiusVariation * orbitShape);
     randomValue = randomGetRange(WORLD_ASTEROIDS_ROTATION_SPEED_MIN, WORLD_ASTEROIDS_ROTATION_SPEED_MAX);
@@ -113,9 +111,9 @@ void worldasteroids_init(GameObject* obj) {
     state->rotStepX = randomValue;
     randomValue = randomGetRange(-0x7fff, 0x7fff);
     state->orbitAngle = randomValue;
-    state->orbitRadius = worldasteroids_s32AsFloat(radiusVariation) * ((WorldAsteroidsTrigFn)fsin16Approx)(baseAngle) +
-                         gWorldAsteroidsOrbitRadiusBase;
-    state->heightOffset = worldasteroids_s32AsFloat(radiusVariation) * ((WorldAsteroidsTrigFn)fcos16Approx)(baseAngle);
+    state->orbitRadius =
+        worldasteroids_s32AsFloat(radiusVariation) * fsin16Approx(baseAngle) + gWorldAsteroidsOrbitRadiusBase;
+    state->heightOffset = worldasteroids_s32AsFloat(radiusVariation) * fcos16Approx(baseAngle);
 }
 
 void worldasteroids_release(void) {

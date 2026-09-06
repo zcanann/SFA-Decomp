@@ -3,6 +3,11 @@
 
 #include "main/dll/partfx_interface.h"
 
+enum {
+    PARTFX_DIG_DEBRIS = 0xCA,
+    PARTFX_DIG_DUST = 0xCB,
+};
+
 void Effect5_func03_nop(void);
 void Effect5_release(void);
 void Effect5_initialise(void);

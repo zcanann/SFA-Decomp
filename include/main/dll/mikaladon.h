@@ -1,7 +1,7 @@
 #ifndef H_MAIN_DLL_MIKALADON_H
 #define H_MAIN_DLL_MIKALADON_H
 
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "game/objects/object.h"
 #include "game/objects/object_setup.h"
 

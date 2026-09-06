@@ -22,7 +22,7 @@
 #include "sys/objects.h"
 #include "sys/objects/lifecycle.h"
 #include "main/audio/sfx_play_api.h"
-#include "main/dll/dll_00C9_enemy.h"
+#include "dlls/objects/201_Baddie.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"

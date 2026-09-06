@@ -7,7 +7,7 @@
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
 #include "main/mm.h"
@@ -33,9 +33,9 @@ static inline MapTriIndex* GroundAnimator_getPolygon(MapBlockData* block, int po
 
 u16 gGroundAnimatorSfxIds[4] = {SFXTRIG_menuups16k, SFXTRIG_mpick1_b, 0, 0};
 
-u8 GroundAnimator_getMagicCaveIndex(GameObject* obj) {
+u8 GroundAnimator_getDigParticleVariant(GameObject* obj) {
     GroundAnimatorState* state = obj->extra;
-    return state->magicCaveId;
+    return state->digParticleVariant;
 }
 
 u8 GroundAnimator_isFullySunk(GameObject* obj) {
@@ -371,7 +371,7 @@ void GroundAnimator_update(GameObject* obj) {
 
 void GroundAnimator_init(GameObject* obj, GroundAnimatorPlacement* placement) {
     GroundAnimatorState* state = obj->extra;
-    state->magicCaveId = placement->magicCaveId;
+    state->digParticleVariant = placement->digParticleVariant;
     state->collectibleDepth = placement->collectibleDepth;
     state->previousSinkDepth = -1.0f;
     state->falloffRadius = placement->falloffRadius;
@@ -405,6 +405,6 @@ ObjectDescriptor14 gGroundAnimatorObjDescriptor = {
     GroundAnimator_getExtraSize,
     (ObjectDescriptorCallback)GroundAnimator_applyPress,
     (ObjectDescriptorCallback)GroundAnimator_isFullySunk,
-    (ObjectDescriptorCallback)GroundAnimator_getMagicCaveIndex,
+    (ObjectDescriptorCallback)GroundAnimator_getDigParticleVariant,
     0,
 };

@@ -28,7 +28,6 @@ void NW_ice_render(void) {
 }
 
 void NW_ice_update(GameObject* obj) {
-    GameObject** candidatePtr;
     int objectIndex;
     NwIcePlacement* placement;
     NwIceState* state;
@@ -62,8 +61,8 @@ void NW_ice_update(GameObject* obj) {
     } else {
         pairedObjects = (GameObject**)objGetAllOfType(DLL1A3_OBJECT_GROUP_ID, &objectCount);
         placement = (NwIcePlacement*)obj->anim.placementData;
-        for (objectIndex = 0, candidatePtr = pairedObjects; objectIndex < objectCount; candidatePtr++, objectIndex++) {
-            candidateObject = *candidatePtr;
+        for (objectIndex = 0; objectIndex < objectCount; objectIndex++) {
+            candidateObject = pairedObjects[objectIndex];
             if (obj != candidateObject &&
                 placement->pairId == ((NwIcePlacement*)candidateObject->anim.placementData)->pairId) {
                 state->pairedIceObject = pairedObjects[objectIndex];

@@ -16,7 +16,7 @@
 #include "dolphin/mtx.h"
 #include "main/camera.h"
 #include "main/object_transform.h"
-#include "main/dll/dll_80136a40.h"
+#include "game/objects/object.h"
 #include "main/dll/savegame_env_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/gameloop_api.h"

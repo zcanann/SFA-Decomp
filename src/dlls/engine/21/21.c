@@ -79,22 +79,22 @@ static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId) {
     return NULL;
 }
 
-static inline int RomCurve_noUnblockedLinks(RomCurveDef* curve) {
+static inline int RomCurve_noForwardLinks(RomCurveDef* curve) {
     int bit;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++) {
-        if ((s32)curve->linkIds[bit] != -1 && (curve->blockedLinkMask & (1 << bit)) == 0) {
+        if ((s32)curve->linkIds[bit] != -1 && (curve->backwardLinkMask & (1 << bit)) == 0) {
             return 0;
         }
     }
     return 1;
 }
 
-static inline int RomCurve_noBlockedLinks(RomCurveDef* curve) {
+static inline int RomCurve_noBackwardLinks(RomCurveDef* curve) {
     int bit;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++) {
-        if ((s32)curve->linkIds[bit] != -1 && (curve->blockedLinkMask & (1 << bit)) != 0) {
+        if ((s32)curve->linkIds[bit] != -1 && (curve->backwardLinkMask & (1 << bit)) != 0) {
             return 0;
         }
     }
@@ -178,8 +178,7 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision) 
     }
 }
 
-void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
-{
+void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision) {
     TrackGroundHit* point;
     TrackGroundHit* points;
     int hitCount;
@@ -192,35 +191,31 @@ void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
 
     startX = collision->points[1][0];
     startZ = collision->points[1][2];
-    if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0)
-    {
+    if ((s32)(collision->flags & CURVES_COLLISION_STATE_KEEP_POSITION) == 0) {
         (obj)->anim.worldPosX = startX;
         (obj)->anim.worldPosZ = startZ;
         (obj)->anim.worldPosY = collision->points[0][1];
     }
 
     points = curves_getCurves(obj, collision->points[1][0], collision->points[1][2], (u32*)&hitCount, 0);
-    for (pointIndex = 0, point = points, count = hitCount; pointIndex < count;)
-    {
-        if (((s8)point->surfaceType != ROMCURVE_POINT_TYPE_WATER) && (point->normalY > CURVES_SURFACE_NORMAL_Z_THRESHOLD) &&
-            (point->height <= collision->points[1][1]) && (point->height > collision->points[0][1]))
-        {
+    for (pointIndex = 0, point = points, count = hitCount; pointIndex < count;) {
+        if (((s8)point->surfaceType != ROMCURVE_POINT_TYPE_WATER) &&
+            (point->normalY > CURVES_SURFACE_NORMAL_Z_THRESHOLD) && (point->height <= collision->points[1][1]) &&
+            (point->height > collision->points[0][1])) {
             collision->traceStart[0][0] = collision->points[1][0];
             collision->traceStart[0][1] = collision->points[1][1];
             collision->traceStart[0][2] = collision->points[1][2];
             collision->points[0][0] = collision->points[1][0];
             collision->points[0][1] = points[pointIndex].height;
             collision->points[0][2] = collision->points[1][2];
-            trackGetIntersect(obj, collision->traceStart[0], collision->points[0], 1,
-                                 collision->segmentHits.planes, 0);
+            trackGetIntersect(obj, collision->traceStart[0], collision->points[0], 1, collision->segmentHits.planes, 0);
             break;
         }
         point++;
         pointIndex++;
     }
 
-    if ((obj)->anim.classId == 1)
-    {
+    if ((obj)->anim.classId == 1) {
         collision->traceStart[2][0] = collision->points[1][0];
         collision->traceStart[2][1] = collision->points[1][1];
         collision->traceStart[2][2] = collision->points[1][2];
@@ -233,31 +228,26 @@ void curves_resolveSingleTrace(GameObject* obj, CurvesCollisionState* collision)
     }
 
     PSVECSubtract((Vec*)collision->points[0], (Vec*)collision->points[1], &delta);
-    if (((s32)(collision->flags & 0x8000000) != 0) || (PSVECMag(&delta) > CURVES_MAX_SEGMENT_DISTANCE))
-    {
+    if (((s32)(collision->flags & 0x8000000) != 0) || (PSVECMag(&delta) > CURVES_MAX_SEGMENT_DISTANCE)) {
         collision->traceStart[0][0] = collision->points[1][0];
         collision->traceStart[0][1] = collision->points[1][1];
         collision->traceStart[0][2] = collision->points[1][2];
         collision->points[0][0] = collision->points[1][0];
         collision->points[0][1] = collision->points[1][1] - CURVES_VERTICAL_TRACE_DISTANCE;
         collision->points[0][2] = collision->points[1][2];
-        trackGetIntersect(obj, collision->traceStart[0], collision->points[0], 1,
-                            collision->segmentHits.planes,
-                             0);
+        trackGetIntersect(obj, collision->traceStart[0], collision->points[0], 1, collision->segmentHits.planes, 0);
     }
 
     collision->surfaceNormalX = collision->segmentHits.planes[0][0];
     collision->surfaceNormalY = collision->segmentHits.planes[0][1];
     collision->surfaceNormalZ = collision->segmentHits.planes[0][2];
     collision->contactObj = collision->segmentHits.objects[0];
-    if (collision->contactObj != 0)
-    {
+    if (collision->contactObj != 0) {
         ObjHits_AddContactObject(collision->contactObj, obj);
     }
 }
 
-void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* collision)
-{
+void curves_resolveAveragedSegments(GameObject* obj, CurvesCollisionState* collision) {
     f32 sum;
     MatrixTransform transform;
     f32 localX[4];
@@ -551,9 +541,8 @@ void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* col
         }
         collision->localPointHitMask |=
             trackGetLineIntersect(&collision->localPointTarget[0][zoff], &collision->localPointWorld[0][zoff],
-                                  collision->localPointRadii[pointIndex], mode,
-                                  &collision->localHit, obj, (u8)collision->primaryHitType, -1, 0,
-                                  (s8)collision->activeTimer)
+                                  collision->localPointRadii[pointIndex], mode, &collision->localHit, obj,
+                                  (u8)collision->primaryHitType, -1, 0, (s8)collision->activeTimer)
             << pointIndex;
         flags = collision->flags;
         if ((s32)(flags & 0x2000000) != 0) {
@@ -563,9 +552,8 @@ void curves_updateLocalPointCollision(GameObject* obj, CurvesCollisionState* col
                 mode = 4;
             }
             trackGetLineIntersect(&collision->localPointTarget[0][zoff], &collision->localPointWorld[0][zoff],
-                                  collision->localPointRadii[pointIndex], mode,
-                                  &collision->localHit, obj, (u8)collision->secondaryHitType, -1, 0,
-                                  (s8)collision->activeTimer);
+                                  collision->localPointRadii[pointIndex], mode, &collision->localHit, obj,
+                                  (u8)collision->secondaryHitType, -1, 0, (s8)collision->activeTimer);
         }
         pointIndex++;
         zoff += 3;

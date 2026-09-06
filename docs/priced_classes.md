@@ -3705,6 +3705,1002 @@ inline definitions does not explain them. Independent GC/1.3 fixtures also show
 global `const float` scalars producing duplicate named/anonymous pool entries;
 static and local const scalars retain use order, not declaration order.
 
+The next Tricky pool audit distinguishes explicit inlining from ordinary static
+functions that are automatically inlined and then dead-stripped by the linker.
+GC/1.3 emits their bodies and constants; the game's GC/1.3.2 link removes the
+unreferenced bodies while retaining constants used by their inlined callers.
+`python tools/tricky_link_probe.py` reproduces this against the complete game,
+substituting only Tricky's C object into the normal matching link inputs.
+
+Reverse source order with deferred emission reproduces the six leading local
+initializer templates without named data substitutes. Ordinary deep-water,
+idle-move and facing helpers explain early water/angle constants and both water
+diagnostics. The repeated acceleration/deceleration operations now use two
+ordinary static helpers at eight actual call sites. All five helper bodies are
+absent from the diagnostic linked ELF; all 89 retail functions remain. The
+descriptor ends the TU, and water/circling messages are direct string literals.
+
+The complete generated `.sdata2` is 404 bytes versus retail's 408: all bytes match
+except the swapped `-2.0f`/`1.5f` pair at offsets 0x88/0x8c and four trailing zero
+bytes. Objdiff reports 99.504944% for that pool, up from 82.04489%. All 58 retail
+constant-load sequences remain equal. `.data` bytes match through 0x8eb, leaving
+only five trailing zero bytes; its much lower anonymous-symbol fuzzy score is
+not a byte-equality verdict. Relocated jump-table entries still depend on the
+remaining text differences. The diagnostic link preserves the whole pool.
+Text is temporarily 99.78016%: movement update gains two register moves, while
+the pre-existing extra zero load in `Tricky_update` remains. Neither the
+diagnostic link nor the strict matching build proves Tricky's C is fully exact.
+
+The remaining pair was resolved by recovering `trickyAdvanceToSegmentEnd` from
+five identical forward/reverse segment-drain loops in movement update. Its
+ordinary static body is automatically inlined and stripped, emitting the reverse
+step before the lookahead calculation's literals. Every retail function's code
+and score are unchanged by this extraction. All 404 source pool bytes now match
+retail; the normal linker supplies the final four alignment bytes. The complete
+40,744-byte `.sdata2` section of the diagnostic game link is byte-identical to
+the strict matching-build ELF. The link probe now reports that whole-section
+comparison, in addition to checking the fate of the six static helper bodies.
+
+Flame lifecycle consolidation replaces ten retirement copies and seven spawn
+copies with the existing Tricky helpers, using canonical indexed child access.
+The former movement-state/loop-index coupling in `Tricky_update` is removed:
+the state is reset to `TRICKY_MOVE_WALK_WAIT`, and the retirement helper owns its
+index. This removes the extra zero load without a counter struct or other
+storage coercion. `Tricky_free` (480 bytes), `tricky_SeqFn` (1,168 bytes), and
+`tricky_substateFlameBreath` (448 bytes) are now exact. Growl, guard and flame
+also improve; `Tricky_update` has retail's length and only five register
+differences. Overall text rises from 99.78016% to 99.83353%.
+
+The approach-speed caller now reuses `trickyGetPathSpeedDelta`, and jump
+preparation uses the recovered acceleration/deceleration helpers. The former
+retains the retail opcode sequence with eight register differences, versus four
+before extraction; the latter is byte-neutral. Broader speed-clamp substitutions
+were not retained where they changed retail's conditional-assignment/ternary
+branch structure. The only remaining instruction-count difference is movement
+update's two additional register moves. The diagnostic link still has the exact
+40,744-byte `.sdata2` section.
+
+Shared voice and action recovery makes four more Tricky functions exact:
+`Tricky_update` (8,672 bytes), `trickyGuard` (2,276), `trickyGrowl` (1,096),
+and `trickyFlame` (2,224). Six guard/growl/alert gates now use the existing
+voice helper. The tired-food warning reuses `trickyTryPlaySound`, including its
+success result; its differently named animation exclusions are aliases for the
+same IDs. Passing the selected impress sound directly removes the last update
+register differences.
+
+Seven identical approach-speed/movement pairs in flame and tunnel digging now
+share `trickyApproachTarget`; tunnel digging remains exact. The two flame-action
+updates share their allocation gate, callback result, animation threshold and
+retirement through `trickyUpdateFlameAction`. These real call-site extractions
+remove the remaining flame register differences without storage tricks. Overall
+text rises to 99.84319%, with no new function-size differences and the complete
+linked `.sdata2` still exact. Movement update still has two extra instructions;
+the TU remains `NonMatching`.
+
+The next target/command audit recovers `trickySetTargetPosition` across all 27
+copies of its pointer-change, patch-invalidation and linked-group reset contract.
+The tumbleweed caller retains its additional tracked-object-change condition.
+`trickyResetCommandState` now has a normal `void` API instead of returning a
+constant float zero, and 16 more command-exit copies reuse it. The old flame
+exit stores through `guardPoint[0/1]` are the same union storage as the follow
+state's two timers; after switching to Follow Player, the timer view is the
+appropriate one. Unused pointer/reset temporaries are removed.
+
+Target acquisition now returns success/failure directly after calling those
+helpers. This resolves all 277 register differences in `trickyUpdateBaddieAlert`
+(3,508 bytes), raising Tricky text to 99.92732%. A same-profile compilation of
+the previous checkpoint confirms that only this function's bytes change. All
+other function bytes, all non-code section bytes, SDA global offsets, and all
+2,176 symbol-normalized relocations are unchanged. The linked `.sdata2` remains
+exact, and movement update is still eight bytes longer than retail.
+
+The attachment audit identifies ObjPath point 8 as Tricky's mouth position from
+its carried-ball, flame-origin and particle consumers. It is now a `Vec` at
+0x408, with asserted components; the joint-pose Y value at 0x414 is the mouth
+yaw offset added to the horizontal flame heading, not a pitch offset. These
+names are behavioral inferences, not leaked identifiers. Both public getters
+and the flameblast consumer use the corrected names; flameblast remains exact.
+
+The post-render attachment refresh is a private helper, and both ball-route
+directions share a blocked/unblocked branch appender with the caller-owned
+count. Render's register differences fall from 14 to 10; ball rolling retains
+the retail instruction stream but rises from 52 to 84 register differences.
+Overall text temporarily becomes 99.91707%. Only those two function byte ranges
+change after accounting for the getter renames. All non-code section bytes,
+normalized relocations and function lengths are preserved, and the complete
+linked `.sdata2` remains exact. Separate route-initialization and return-valued
+facing-helper experiments were not retained.
+
+The movement audit consolidates five route-turn magnitude calculations and two
+jump-facing updates, preserving their signed 16-bit and square-evaluation
+semantics. The update and circling handlers share full-width yaw wrapping and
+remain byte-exact. Cannonball candidate selection uses its actual indexed array,
+also byte-neutrally. Helper names are behavioral inferences, not source leaks.
+
+Jump preparation now updates the saved speed itself instead of merging that
+value into the unrelated `v` temporary used by the arc calculations. Together
+with the existing acceleration/deceleration helpers, this removes both extra
+floating-point moves. A separate speed-convergence helper is unnecessary and
+was removed. Movement update is now retail's 8,764 bytes with the same opcode
+stream and 68 register differences; its entire jump-prep speed block is exact.
+Only movement update's raw function bytes change, and all non-code object
+sections remain byte-identical to the preceding checkpoint.
+
+All 89 retail function lengths now agree. The full diagnostic game link has
+identical addresses, sizes and bytes for every allocated non-text section,
+including `.data` and its resolved jump tables. Only 234 bytes of `.text` differ;
+overall Tricky text is 99.92431%. The link probe now compares every allocated
+section, including size, address, missing sections and byte changes, with tests
+for these distinctions. This is still `NonMatching`: the remaining register
+differences must be resolved before substituting the C object in the strict DOL.
+
+The scalar audit removes one-element count and hit-pointer arrays byte-neutrally.
+It also removes `slope[1]`, introduced by `1e1d1c4deb` in place of a scalar despite
+having no array or address-taking consumer. The honest scalar projection leaves
+12 register differences in step adjustment, with retail's 512-byte instruction
+stream. A separate projection helper and explicit delta temporaries did not
+recover the retail registers and were not retained.
+
+Jump-arc duration, elapsed time, landing-time offset and middle animation progress
+now have their own meaningful locals. The dispatcher no longer couples these
+values to `k`/`v` assignments embedded in zero stores and quarter-speed movement.
+This preserves every instruction but changes movement's register difference
+count from 68 to 72. Route ranking uses the established link/candidate capacities
+without code changes. Overall text temporarily becomes 99.91013%; the full link
+still has exact non-text sections and all retail function sizes, with 261 text
+bytes remaining different. These exposed register differences are preferable
+to retaining unsupported array storage purely for its allocation effect.
+
+Route ranking (688 bytes) is now exact with a normal target-Z product and direct
+`curve->x` accesses. Its former `curveX` cache made MWCC emit that load ahead of
+the target-Z square when the product was written normally. Removing the cache
+recovers the retail evaluation order without an in-place square or an artificial
+storage shape.
+
+Yaw turning (348 bytes) is also exact. The wrapped target bits now have their own
+local, and the subtraction captures the current yaw for the subsequent turn
+steps. This preserves the required snapshot across state-flag writes: replacing
+it with fresh member reads adds two loads. Keeping a separate current-yaw load
+statement moves that load before the target conversion; capturing it as part of
+the subtraction reproduces the retail order and registers.
+
+Only these two function byte ranges change. All retail lengths and linked
+non-text sections remain exact, with 230 text bytes different and overall text
+at 99.92039%. An explicit render-point iterator, a direct approach-radius square,
+and a shared fast/slow turn-delta local were not retained: they changed retail's
+offset placement, square/call order, or instruction count respectively.
+
+The path-search dependency now exposes its evidenced pending/reached/exhausted
+results and names the step argument `maxSteps`: it limits queue iterations, not
+elapsed time. Every direct consumer is in Tricky. The engine implementation's
+object remains byte-identical. Tricky's eight competing route searches and ninth
+cached-path workspace now share their capacities with the owning state layout.
+The direction probe's existing exhaustion-as-stop behavior is documented rather
+than mistaken for successful path discovery.
+
+With the status contract explicit, reusing the outer search counter to select
+the final surviving candidate makes `trickyFindReachableRouteIndex` exact (468
+bytes). That branch always returns, so the pass count is no longer needed. The
+same counter-reuse probes before status recovery retained all four register
+differences; the final code has none.
+
+Retail's "tricky last walk group" diagnostics and the field's nonzero updates
+identify the former `activeWalkGroup` as `lastWalkGroup` at 0xD0. It persists
+through off-group movement. Both updates now share patch-cache invalidation,
+while their full-width/16-bit comparisons remain at the call sites; forcing
+those through one integer setter added a conversion and changed signedness.
+Movement's bytes are unchanged. Only reachable-route search changes code, all
+non-code bytes and retail lengths remain exact, and the diagnostic game link
+has 222 differing text bytes. Overall Tricky text is 99.92189%.
+
+`trickyUpdateApproachSpeed` is now exact (844 bytes). The stopping-radius input
+is added into the accumulated stopping distance, rather than overwritten and
+kept alive as the computed distance. The braking step and loop time step share
+the initial time snapshot, then only the braking step is scaled. Ordinary
+scalar assignments recover the retail registers and load order. A direct
+constant-times-global expression reverses the two loads; separately assigning
+the time snapshot before computing the braking step retains four register
+differences. Names now distinguish the braking step, squared stopping distance,
+and radius within which path-speed adjustment is considered.
+
+Tricky's shared `RomCurveWalker` now holds three `RomCurveDef*` nodes, with
+offset assertions at 0x9C/0xA0/0xA4. All stored nodes originate from the route
+table or the Hermite API's curve arguments; those APIs now carry the same
+types. Every rebuilt consumer object remains byte-identical. Tricky directly
+accesses its typed nodes and indexed branch links, drops a redundant segment
+start copy, and uses the common command-active/turning flags instead of the
+misleading cannonball hide/decay aliases. Its distance locals now agree with
+the distance API's `f32` return type. These changes are byte-neutral.
+
+Only approach-speed code changes in this batch. All retail function lengths
+and allocated non-text sections remain exact; the diagnostic game link has
+212 differing text bytes and Tricky text is 99.92521%. Direct indexing in the
+already-exact dig-tunnel advance helper retains the opcode stream but changes
+11 register operands, so that separate experiment was not retained.
+
+Movement's six identical current-route direction calculations now share
+`trickySetDirectionAlongRoute`; all six expansions are byte-neutral. Its route
+seed check reuses the existing validator used by the cached-path and selected
+entry paths (now named `trickyValidateRouteEntry`), recovering seven register
+operands. The quarter-speed part of jump preparation uses one local speed
+scale for animation sampling and X/Z movement; this restores the retail load
+and multiply operand order without reviving the old cross-state `v` temporary.
+
+The movement result now uses the established reached/in-progress constants
+through `moveTricky` and the state dispatcher. The product of two walk-group
+IDs has its own 16-bit patch-group local rather than overwriting a walk-group
+ID. Only movement-state code changes; other function bytes and non-text bytes
+are unchanged. Movement retains its 8764-byte retail length, with 61 operand
+differences remaining (down from 72). Full linked non-text sections remain
+exact, and differing text bytes fall from 212 to 189; Tricky text is 99.94300%.
+
+The avoidance audit corrects `ObjDef` offsets 0x84/0x86: these are minimum
+clearance and radial movement distances, not the X/Z axes of an ellipse.
+Tricky passes them to the same arguments as `SideRepelPlacement::minDistance`
+and `moveDistance`. The first bounds the perpendicular projection's distance
+from the obstacle; the second bounds the endpoint distance and determines the
+redirected endpoint radius. When the start is already inside that radius, the
+step's radial advance is reduced to one eighth instead. The fields are now
+`avoidMinDistance`/`avoidMoveDistance`, preserving their `u16` widths and offsets.
+The third point argument is the movement target, not the guard-post position;
+squared-distance locals and the projected `Vec` now express those roles.
+All 668 rebuilt consumers, including the complete Tricky object, are
+byte-identical. This is a semantic correction, not a matching gain.
+
+The remaining branch collector requires an unsigned mask: a signed mask
+changes all eight retail `cmplwi` tests to `cmpwi`. Input-first collector
+arguments, an explicit state argument to the facing helper, and narrowing the
+unused fast-turn result's scope were byte-neutral and were not retained.
+
+Jump animation progress now has its own elapsed-time local, separate from the
+vertical arc calculation. This removes the last 12 floating-point operand
+differences in `trickyUpdateMovementState`, leaving 49 integer-register
+differences with all 2191 instructions structurally aligned. Only that function
+changes bytes; the diagnostic link drops from 189 to 177 differing text bytes
+and retains exact allocated non-text sections. Tricky text is 99.94662%.
+
+The linked-patch cache key at 0xD2 is now `linkedPatchGroup`, not a single walk
+group. Retail Hcurves packs the sorted group indices into low/high bytes at
+0x800DCA90-0x800DCAB0, and `getPatchGroup` returns this ID. Tricky nevertheless
+multiplies group indices at 0x8013B640 and 0x8013BB1C before comparing against
+those IDs. This inconsistency is preserved, not repaired into a packed ID.
+The field remains signed 16-bit storage with its own offset assertion.
+
+The second patch lookup now stores its explicitly truncated product in an
+`int` local. This lets MWCC reuse the dead target-walk-group register, as retail
+does, without conflating the two source values. Movement loses five further
+operand differences (44 remain). A wider temporary for the signed previous
+yaw was byte-neutral and was not retained.
+
+`Tricky_render` is exact (464 bytes) with the freshly loaded `obj->extra` passed
+into `trickyUpdateAttachmentPoints` explicitly. The render callback still keeps
+its pre-render state pointer for later effects; the attachment helper receives
+the post-render state. This recovers all ten remaining register operands while
+preserving the two distinct loads. Only rendering and movement change bytes;
+all retail function sizes, named symbol layouts, and allocated non-text bytes
+are unchanged. The diagnostic link has 159 differing text bytes, and Tricky
+text is 99.95145% with four functions still non-exact.
+
+The former `homePosX/Y/Z` at 0xE0-0xE8 are a recovery point, not a fixed home.
+Initialization, sequence completion, and warp relocation seed the point;
+ordinary movement refreshes it while inside a walk group or patch. Leaving
+that area, or losing an active command's target, restores local and world
+position from it and synchronizes collision position. The fields now form
+`Vec recoveryPos`, with all three offsets asserted. The three identical restore
+paths share `trickyRestoreRecoveryPosition`. Every allocated Tricky section,
+named symbol layout, and all 2871 other source objects remain byte-identical.
+
+Further focused probes did not improve matching: a byte-sized branch-scan
+index prevents the retail four-way unroll; optional facing output retains a
+null check and stack traffic; widening the movement voice ID delays retail's
+16-bit truncation until the final call. Facing-helper linkage, explicit inline,
+word-counter signedness, a three-point route-turn API, and typed avoidance
+point inputs were neutral. These experiments were not retained.
+
+Rechecking the ball-roll scan extraction removes the inferred branch-appender
+helper. Direct forward/reverse indexed loops recover all 32 scan-register
+differences, leaving 52 operand differences in the handler. No cursor arrays,
+storage overlays, compiler changes, or extra instructions are needed. Moving
+the helper's curve ID out of its loop body worsens allocation; returning the
+count adds instructions. A bounded probe built 208 declaration orderings for
+the direct-loop version without improving it; this did not exhaust the space.
+The diagnostic link drops from 159 to 127 differing text bytes, retaining exact
+allocated non-text sections. The curve lookup callback now accepts `u32`, as
+its existing implementation and direct-call declaration do; this corrects the
+API used by Tricky without changing other source objects.
+
+The voice audit recovers `trickyTryPlaySound` reuse at all 45 guarded call
+sites. Four private copies and 25 open-coded guards are removed; the existing
+ordinary function automatically inlines with its return value discarded where
+appropriate. The tired-food caller still consumes its result. Random draws
+remain on their original control-flow paths, and the two unguarded animation
+event sounds remain direct calls. This replaces inferred helper boundaries with
+one retail-backed function, without new compiler flags or inline directives.
+
+All retail instruction counts and allocated non-text bytes remain exact.
+Only `moveTricky` and `Tricky_updateSideCommandPrompts` change function bytes:
+the former gains ten operand differences, the latter six. The diagnostic link
+temporarily rises from 127 to 145 differing text bytes; five functions remain
+non-exact. This regression is retained for the recovered shared operation,
+not hidden behind caller-specific helper copies. The remaining avoidance
+scalar also resisted all 288 planned swap/move/sample declaration orderings;
+the route-turn predicate and direct-angle-expression probes were neutral.
+
+The route-turn helper now accepts two signed headings rather than loading the
+object and route positions itself. Each slowdown check samples both headings
+in its own local scope. This recovers retail's `r21` for the first angle at all
+five sites, removing ten operand differences from `trickyUpdateMovementState`.
+Function-wide heading locals only move that value to `r22`; the fuzzy score
+alone does not distinguish that unsuccessful variation from the earlier `r23`.
+The remaining 34 movement differences swap the walk-group and movement-result
+registers. Only ten object text bytes change; named layouts and allocated
+non-text bytes are unchanged. The diagnostic link drops from 145 to 135
+differing text bytes, with all 89 retail function sizes still exact.
+
+The facing helper likewise receives the freshly loaded `TrickyState*` from
+its caller. The moving branch owns a local state pointer; the stationary
+branch passes its fresh load directly after saving the old yaw and clearing
+the turn delta. This removes the five remaining facing operand differences
+from `moveTricky`, leaving ten differences in its two voice guards. Only
+`moveTricky` and the linker-stripped facing helper change object bytes; named
+layouts and allocated non-text bytes are unchanged. The diagnostic link now
+has 130 differing text bytes and Tricky text is 99.96321%.
+
+For source experiments, `tools/tricky_probe.py --baseline-object <object>` now
+compares raw function bytes, allocated section bytes and layouts, defined
+allocated named-symbol layouts, and relocation records separately. The baseline
+is read before compilation, so it may be the current output object. Raw SHA256
+identity is reported independently; `--object-details` expands the comparison.
+This is an A/B check, not a substitute for retail objdiff or the diagnostic link.
+A direct-switch voice probe preserved function and section bytes but renumbered
+anonymous relocation symbols, demonstrating why equal fuzzy scores alone cannot
+establish object identity. Ignoring those names is reported separately, not
+treated as complete linker-semantic normalization.
+
+The state words at `0x71C..0x727` now have coherent follow, baddie-alert, guard,
+and flame views. Follow's heel timer holds the closer stopping radius, inhibits
+ambient activities, and permits offscreen recall; baddie bark uses the same word
+for its separately reset voice interval. The flame callback belongs beside its
+two curve-node references, not inside the follow timer view. Retail loads and
+stores establish each offset, and the layout assertions cover all three words
+of each recovered view. `trickyFindRecallWarp` at `0x80144E40` replaces the old
+group-number name: it chooses the nearest warp to the player that improves on
+Tricky's current distance, only while Tricky is offscreen. All function and
+allocated-section bytes remain unchanged; only that function's symbol name and
+call relocation change. All 2871 other source objects are byte-identical.
+
+The voice wrapper's third argument is a mouth-opening angle, not sound pitch or
+volume. Retail `objSoundStartTimed` (`0x800393F8`) negates it into the signed
+halfword at sound-state `+0x14`; `objSoundUpdateMouth` (`0x80038F38`) averages
+that target with mouth-joint rotation. The audio call receives only the object,
+channel and sound ID. Tricky's four voice constants, its public argument name,
+the shared sound definition/state fields, and NW Tricky's direct caller now
+express that contract. The wrapper keeps an `int` argument: narrowing it to
+`s16` changes retail's `mr r6,r30` into `extsh r6,r30`, without improving any
+inlined caller. The retained semantic correction leaves all 2872 source objects
+byte-identical, including Tricky and the shared mouth-update implementation.
+
+Curve byte `+0x1B` is now `backwardLinkMask`, not a blocked-edge mask. Tricky's
+forward ball scan accepts clear bits and its reverse scan accepts set bits;
+path-search expansion uses the same direction selector. The engine's adjacent
+window places a set-bit neighbor before the current point and a clear-bit
+neighbor after it. The public random-link selectors, forward control-point
+selector, and shared directional collectors now use forward/backward names.
+The mask remains signed, and all allocation, casts, widths and loop forms stay
+unchanged. Tricky's initial `backwardNode` is a valid route candidate, not a
+blocked destination.
+
+`python tools/orig/tricky_curve_links.py --files-root <EN-files>` provides the
+retail graph cross-check. EN has 5480 curve placements, including 1940 Tricky
+nodes with 4448 directed link references: 4439 have opposite-bit reciprocals,
+eight have same-bit reciprocals, and one has no reciprocal. Forty links resolve
+across romlists. The report preserves each exception with file, offset and ID;
+same-bit pairs are not rewritten or assumed impossible. It walks the encoded
+record widths (52, 56, 60 and 68 bytes), not `sizeof(RomCurveDef)`. Ten tests
+cover record boundaries, signed sentinels, reciprocal anomalies and ambiguous
+cross-map IDs. All 2871 other source objects are byte-identical; the curve
+engine changes only the three public symbol names and their relocations.
+
+The direction contract now reaches Tricky's ranked candidates, route seed,
+selection cache and `PathSearch.reverse`. The search initializer retains only
+the low direction bit; expansion chooses backward-mask bits for one and their
+complement for zero. Candidate ranking reverses the link toward Tricky's current
+walk group to obtain the outbound search direction. The cached path's integer
+key is a target walk group, not a path ID; its cached entry is solely a node
+pointer, so the unused integer union view is removed. Layout assertions cover
+the seed, both caches and the direction byte.
+
+The target snapshot at 0x6F0-0x6FC is now `previousTargetPosPtr` plus a `Vec`.
+`Tricky_update` captures the identity and coordinates of `targetPosPtr` at the
+end of its update. The renamed `trickyGetTargetDistanceRate` compares both old
+and new coordinates against Tricky's current position, scales each distance by
+`oneOverTimeDelta`, then subtracts. This isolates target radial motion rather
+than Tricky's own speed; the original evaluation and rounding order remain.
+The result drives approach-speed matching and the moving-target voice gate.
+
+Movement's reverse direction and ground-snap flag snapshot no longer share the
+misleading `prod` temporary. Keeping the direction declaration at function scope
+preserves its allocation; making both locals block-scoped adds twelve register
+differences. The nearest-entry scan's compacted-candidate index into
+`linkWalkGroups` is verified in retail and preserved, not repaired to `linkSlot`.
+All function bytes, allocated data and named layouts are unchanged. Only
+anonymous relocation names change in Tricky; all 2871 other source objects are
+byte-identical. The diagnostic link still has 130 differing text bytes and exact
+non-text sections, so these are source-recovery gains, not a new match claim.
+
+The repeated prompt-slot cascades now come from one `trickyFindFreePromptSlot`
+inline helper with a four-iteration loop. Its five source callers expand to nine
+retail sites: five in `Tricky_update`, two in the command-prompt handler, one in
+sleep and one in baddie alert. GC/1.3 unrolls the loop into the existing exact
+load/compare/branch sequences, with unchanged stack offsets. Ordinary automatic
+inlining leaves calls instead, so the explicit inline declaration is required
+for this recovered source shape. The helper preserves retail's three initialized
+bytes and four tested slots; it does not silently initialize the fourth byte.
+
+`trickyFreePromptChild` at `0x801389E0` replaces the misleading engine-style
+`objAnimFreeChildren` name. All eight callers belong to Tricky. It frees one
+referenced child, then fills only attachment slot zero if vacant, preferring
+exclamation, quest and food in that order. It is not a general child-list free
+or full slot compaction routine. Its locals now use `GameObject*`. The prompt
+handler also drops its mixed pointer/integer scratch and bit-result/slot-result
+temporary. Allocated object bytes and named layouts are unchanged apart from
+the helper rename; eight call relocations follow that name. The diagnostic link
+remains at 130 differing text bytes, with all allocated non-text sections exact.
+
+The avoidance projection is now exact. Keeping the step line's slope and
+intercept together in a two-float local record reproduces retail's `f2`/`f3`
+coefficient allocation, eliminating all twelve operand differences in
+`trickyAdjustStepAroundPoint` (128 instructions, 512 bytes). Neither arithmetic
+order nor precision changes. This is evidence for a grouped coefficient
+representation, not proof of an original type name or a shared math-library API.
+Only that function's seventeen differing object bytes change; all other function
+bytes, allocated data and named symbol layouts remain unchanged from the
+prompt-slot checkpoint. There are 162 renamed anonymous relocation targets,
+with no other relocation changes. The diagnostic link falls from 130 to 113
+differing text bytes, and every allocated non-text section is still exact.
+
+Tricky's digging path now uses the actual producer/consumer contract. The
+`0x1CA` command target is GroundAnima; `0x160` is WallAnimato. Tunnel digging
+calls the wall's `applyImpact` and `isComplete` slots, not the layout-compatible
+ground interface. The ground callback returns a press radius; the wall returns
+`timer / 3000.0f`. Consequently state `+0x2C/+0x30` is a planar `moveVector`,
+normalized for movement/ground digging but a full start-to-exit displacement
+for tunnel interpolation. Three matching normalization expansions share one
+inline helper; route traversal retains its separately rounded products.
+
+`Tricky_emitDigParticles` (`0x8013ADFC`) replaces the unrelated Skeetla/sparks
+name and duplicate packet overlay with `PartFxSpawnParams.dig`. Effect5's
+`0xCA/0xCB` cases read yaw at `+0` and a signed variant halfword at `+4`.
+Retail loads at `0x800BC5D8` and `0x800BC770` select textures `0x2B`, `0x1A1`,
+or `0xC10`; variant 2 also sets render flag `0x800`. No material names are
+inferred. Ground's getter (`0x80193100`) returns state byte `+0x2B`, initialized
+from placement halfword `+0x1E`. Wall's getter (`0x80194408`) narrows placement
+halfword `+0x1C` to `u8`. Both are `getDigParticleVariant`, not a cave index or
+energy cost, and the wall interface now agrees with its concrete return type.
+Effect IDs are defined once by Effect5 and used by both producers.
+
+All four affected units preserve function and allocated-section bytes, with
+only the three public symbol renames and anonymous relocation renumbering.
+Tricky remains at 85/89 exact functions and 113 linked text-byte differences;
+all linked non-text sections remain exact. This is source recovery, not a new
+match claim. Both the all-source build and strict DOL checksum pass.
+
+The animation request's float is a playback rate, not blend speed or the
+current pose phase. Retail `trickyRequestMove` stores it at state `+0x34`
+(`0x8013A40C`) for an already-current move or `+0x38` (`0x8013A43C`) for a
+pending move. The update installs the pending value, optionally derives the
+rate from root-motion travel, and passes it to `ObjAnim_AdvanceCurrentMove`.
+That consumer multiplies the clamped rate by animation length at `0x8002FAC8`
+before advancing phase with `deltaTime`. A zero rate instead lets Tricky set
+the pose explicitly from `arcMoveProgress`. The fields are now `animRate` and
+`pendingAnimRate`, with both offsets asserted. The request arguments, thirteen
+private rate constants, and twelve retail pool labels follow the same contract.
+The separate `0.02f` physical acceleration no longer uses an animation alias.
+The redundant request prototype is removed in favor of the included API header.
+Tricky's complete object remains SHA256
+`4e87352bf3cd0dcc776b1242f9a98db1f5613ee3cda2ff249e27be8b07799f57`.
+
+Further allocation hypotheses were rejected, not retained: grouping the two
+walk-group locals removes a branch and copy and leaves 149 operand differences;
+sharing ball scan/selection indices leaves 55 instead of 52, while sharing the
+forward/reverse scan locals leaves 76. A byte return from `trickyTryPlaySound`
+adds a truncation in its result-consuming `Tricky_update` caller without helping
+the discarded-result sites. Automatic rather than explicit inlining of recovery
+position and route-turn helpers preserves caller bytes and only emits unused
+helper bodies. None improves the four remaining retail mismatches.
+
+The ball-roll initialization now distinguishes the forward candidate from the
+selected segment node. The earlier merged local unnecessarily tied candidate
+selection to the object's register lifetime. The older Tricky reconstruction
+suggested this distinction, but only the EN retail function and compiler output
+validate it here; its different distance origin and rolling-link policy were
+not imported. A bounded permutation of the five uninitialized curve-pointer
+declarations found an exact allocation after 31 builds. No statements, flags,
+compiler settings, or data declarations were reordered to obtain it.
+`tricky_updateBallRoll` now matches all 379 instructions (1516 bytes), removing
+52 operand differences. Only its 58 differing object bytes changed; symbol
+layout, relocations, and every other function remain unchanged. Tricky is now
+86/89 exact, 99.98492% fuzzy, with 55 linked text-byte differences rather than
+113. All linked non-text sections remain exact.
+
+The patch-exit API no longer changes its third parameter between `int` and
+`u16` using `OBJFSA_PATCH_EXIT_U16`. The shared declaration now agrees with the
+Hcurves implementation's `u16 patchGroupId`; retail normalizes this argument at
+`0x800DB268`. Tricky's two patch-query temporaries and its patch-group product
+are also `u16`. Ordinary widening of the diagnostic copy preserves the retail
+copy/call order where masking an already-narrow value did not. All four call
+sites retain their exact instruction sequences, including the known wrong-slot
+write in the cached-patch branch. Both Hcurves objects remain byte-identical.
+
+The direction search likewise uses a byte pass counter, signed-byte result,
+and byte reversal temporary. `while (++searchPass < 100)` preserves its 99-pass
+limit and exhaustion-as-stop behavior without the imported casted assignment
+condition. The link scan keeps a separate counter and the canonical curve-link
+capacity. Typed arguments and locals eliminate sixteen manual width masks;
+two fixed-position patch approaches also reuse the existing approach helper.
+The indexed approach stays direct because extraction reorders argument setup.
+Every Tricky function and allocated-section byte is unchanged, as are all
+2,871 other source objects; only Tricky's anonymous relocation names change.
+Both build gates, 59 focused tests, and the diagnostic link pass. There remain
+three non-exact functions and 55 linked text-byte differences, with exact linked
+non-text sections. This removes source/prototype workarounds, not a new match.
+
+The companion export table now embeds the engine's `ObjectInterface` instead
+of eight opaque pointers, with its complete `0x4C` size and callback offsets
+asserted. The guard and ball getters return `u8`, agreeing with that table and
+the retail guard consumer's byte normalization at `0x801802A4`. Direct switch
+returns in the ball getter preserve its nine-instruction body without a new
+truncation; the guard getter remains ten instructions. The physical-speed
+getter at `0x80138F78` is now `trickyGetSpeed`: it reads state `+0x14`, not the
+animation rate at `+0x34`. Its sole direct consumer scales particle attraction
+velocity, and its local now reflects that role. Its existing denominator is
+preserved, not corrected based on the recovered name.
+
+All Tricky and particle-system function and allocated-section bytes are
+unchanged; only the getter symbol, its consumer relocation, and Tricky's
+anonymous names differ. The other 2,870 source objects remain byte-identical.
+Both build gates and all 59 focused tests pass; the diagnostic link still has
+55 differing text bytes and exact non-text sections. A separate sweep of all
+24 leading movement-dispatch declaration orders under the corrected patch API
+found no improvement over the existing 34 operand differences and was rejected.
+
+`python tools/tricky_debug_locations.py --differences` now builds a separate
+MWCC debug object and maps the remaining instruction differences to source
+lines. The default path first requires identical production function bytes,
+allocated sections, named layouts, and relocations; the debug sections and
+raw object digest may differ. The reader handles MWCC's DWARF 1 entries,
+relocations, repeated opaque vendor attributes, and interior zero-line markers.
+Without `--differences`, it prints the compiler's named local locations.
+These are advisory optimized-debug records, not retail symbols or live-range
+proof: an explicit integer sound-ID experiment reports its source local in
+register 0 even though the propagated call argument survives in register 28.
+Inlined helper temporaries are not exposed in the current Tricky records.
+
+The line table assigns all ten `moveTricky` mismatches to its two voice calls,
+all six prompt mismatches to the food/baddie voice calls, and the remaining
+34 to the movement result and current walk-group values. An explicit integer
+voice-selection local postpones narrowing and changes two instructions; a
+halfword local instead preserves instructions but still allocates incorrectly.
+Neither is retained. Explicitly inlining the facing helper leaves the three
+code residuals unchanged while permuting 53 constant-pool words. Its ordinary,
+linker-stripped body is retained; the pool provides independent evidence for
+that choice. Two single-local declaration sweeps (52 builds total) were also
+inert. Production Tricky remains byte-identical to `0ed4e2131c`.
+
+The two-byte walk-group writer used only by Tricky now accepts `u16 value`.
+An ordinary `int word = value` promotion explains the entry normalization and
+arithmetic right shift in retail `walkPath_writeU16LE` (`0x800DB224`), matching
+all seven instructions without the old `u32` mask and signed-cast workaround.
+Both Tricky call sites stay exact; the attachment caller no longer manually
+masks its argument. The complete Tricky object remains SHA256
+`073c1c86833f0fb6ff386489ac472d6698329492bae83e9399d43339ab70de40`.
+
+Tricky is also the sole consumer of `Objfsa_GetPatchGroupIdAtPoint`
+(`0x800DBECC`). Its two one-element counter arrays and redundant initialization
+are replaced with byte scalars. The patch type now exposes the evidenced flat
+normal-component view alongside its X/Z plane pairs: four iterations access
+component pairs 0/1 through 6/7. Layout assertions cover the 0x30-byte stride,
+normal views, plane offsets, height limits, and group ID. The query retains the
+strict Y bounds, half-plane expression/FMA ordering, and first-hit behavior.
+
+This cleanup accepts a measured query regression: 73 instructions remain, but
+one zero-copy instruction and ten register operands differ (100% to 98.356%).
+Only 18 bytes in that function change in the Hcurves object; all named layouts
+and non-text bytes are unchanged. A combined Tricky/Hcurves source-link A/B
+likewise differs only in those 18 text bytes. Hcurves already has other
+whole-link mismatches and remains `NonMatching`; this is not a combined retail
+match claim. TrickyWarp, engine slot 0, and Hcurves_romcurve remain raw-object
+identical under the corrected headers. Both build gates and 72 focused tests
+pass. A derived component index, changed local scope, and a register qualifier
+did not recover the original query allocation and were not retained.
+
+Tricky's hit-response stack now contains one `PartFxSpawnParams`, not separate
+`lightArgs[3]` and `hitPos[3]` arrays. Retail passes `sp+0x20` to the position
+query at `0x80139690` and `sp+0x14` to the particle helper at `0x801396CC`:
+the 12-byte difference is the packet's canonical position offset. Its prefix
+remains uninitialized, as in retail. State `+0x368` is the current
+cooldown-filtered priority `hitType`, not a light pointer; `lastContactObj` is
+a `GameObject*`. The target-filter placement view also uses `ObjPlacement`'s
+common header and `base.ident`, retaining the two signed game-bit gates.
+
+Four inflated stack declarations are corrected from the actual query contracts:
+one animator count, one ambient-search radius, one signed Y-button item ID,
+and a two-byte walk-group pair. The count, nearest-object, cooldown-hit, and
+Y-button query implementations match retail exactly. All these source changes
+preserve the complete Tricky object, including every stack-frame instruction.
+
+The synthetic four-byte `.sdata` tail is removed. MWCC emits 20 bytes with
+eight-byte section alignment; the next unit still begins at `0x803DBC58`.
+The diagnostic link retains exact allocated non-text sections and the same
+55 text-byte differences. Only the unused tail symbol and its four object
+bytes disappear; function bytes, other named layouts, and relocation records
+are unchanged. Tricky's resulting object SHA256 is
+`91ca38aff29f32a8c7e6677afb3d6b0c4de6eb7c3165b258f1e820ba431a63e7`.
+Both build gates pass, and all 2871 other source objects remain byte-identical.
+
+Tunnel-exit advancement now uses one `trickyAdvanceTunnelExit` helper at both
+retail search sites. The search selects the first nonnegative link other than
+the previous tunnel node, then advances the previous/exit pair. It leaves the
+pair unchanged when no link qualifies and preserves the post-store link reload
+used for the curve lookup. The completion-only energy debit and sound removal
+remain in the caller. Both searches now index `RomCurveDef.linkIds` directly;
+the duplicate byte-offset loop and separate offset/count induction variables
+are removed.
+
+This accepts a measured source-recovery regression: `trickyDigTunnel` retains
+475 instructions but has eleven operand differences plus one zero-copy
+difference (100% to 99.705%). The diagnostic link rises from 55 to 71 differing
+text bytes, with every allocated non-text section still exact. No other
+function bytes or named symbol layouts change. All six declaration orders were
+tested; a separate remaining-link counter and a local link-array pointer were
+code-neutral, while narrow indices worsened the instruction shape. Those extra
+locals and narrow forms are not retained. The ordinary signed word index and
+link ID agree with the retail full-word accesses; no compiler settings change.
+
+The route-search storage now separates eight `candidateSearches` records from
+one `cachedPathSearch`, rather than treating the cache as a ninth candidate.
+The retail candidate loops stop at eight and index records from `+0x538` with
+stride `0x30`; the two-direction movement probe reuses the first two records.
+`trickyFindPathRouteEntry` instead always accesses `+0x6B8`, retaining its own
+returned entry and target walk-group key at `+0x6E8` and `+0x6EC`. Assertions
+cover the candidate array's `0x180` bytes and the separate cache offset. The
+older Tricky layout has the same array/separate-record distinction, but its
+different candidate count is not used as EN sizing evidence.
+
+Ordinary eight-iteration initialization and cleanup loops were tested and
+rejected: MWCC leaves loops, reducing the retail 134/120 instruction counts
+to 128/109. The explicit calls remain. The retained field recovery preserves
+the complete Tricky object SHA256
+`52c8d8303d16663c1127575598bbf19dc7b349c5f39edc2926fae5aa759a8333`;
+all 2871 other source objects also remain byte-identical after rebuilding the
+shared-header consumers. Both build gates, formatting checks, and 72 tooling
+tests pass. The diagnostic link still has 71 differing text bytes and exact
+allocated non-text sections; this is layout recovery, not a matching gain.
+
+A follow-up revisits the inferred tunnel helper: keeping the two searches as
+ordinary indexed loops with block-local traversal variables removes all eleven
+register-operand differences. The first search is exact. The second differs
+only at instruction 330: retail copies the zero index with `mr r4,r7`, while
+MWCC emits `li r4,0` for its generated byte-offset induction value. No explicit
+offset variable, synthetic array, or duplicated per-call helper is introduced.
+The generic helper was a deduplication hypothesis, not a recovered symbol;
+the local-scope result is stronger codegen evidence and supersedes it.
+
+Sharing function-local traversal variables instead removes the instruction
+substitution but leaves at least seven operand differences across the six
+declaration orders. Direct link reads, early return, while loops, initializer
+placement, and widening the second scope to its switch case do not resolve
+the remaining zero copy. The retained ordinary `for` loops preserve all 475
+instructions and change only tunnel function bytes. The diagnostic link improves
+from 71 to 59 differing text bytes, with all allocated non-text sections exact.
+Objdiff's fuzzy score moves from 99.97648% to 99.97250% despite that byte gain;
+85/89 functions remain exact. Named layouts and symbol-normalized relocations
+are unchanged. Both build gates, formatting, and 72 tooling tests pass. Object
+SHA256: `b5d20caf004e7b02443a3432ea0bb7952d799a15581bf7adf5272f629889e133`.
+
+Tricky's candidate/cache dependency `pi_pathsearch` now records the retail
+allocation contract: 254 node entries, 254 heap entries, and 100 output points
+in one `0x1960`-byte allocation. Named limits cover allocation, clearing,
+capacity checks, reconstruction, and the `0xFF` parent/child sentinel; layout
+assertions cover the node/heap fields and the embedded search counters.
+The target heuristic is `distanceToTargetSq`, the accumulated edge cost is
+`routeCost`, and the closest heuristic is `closestDistanceSq`: expansion adds
+squared 3D segment lengths and quantizes each extension to `u32`, rather than
+accumulating ordinary travel distance. The high-bit parent-index rejection is
+preserved, including indices other than the sentinel.
+
+Path reconstruction now writes `search->path[count]` without a duplicate byte
+offset counter. Curve access uses canonical field offsets instead of treating
+shifted pointers as whole curve records. The retained changes preserve every
+function/allocated-section byte and named layout in the already-exact unit;
+one anonymous relocation name changes. Its object SHA256 is
+`efb5bfcfef6dbeb9e1aa11389ce1411d33891439c89c3568bbef651b019b74ef`.
+All 122 other header consumers were rebuilt with both the original and recovered
+headers and remain raw-object identical. Naming the limits enum avoids anonymous
+type renumbering at those consumers. Both build gates, formatting, and 72 tooling
+tests pass; Tricky's diagnostic link still differs in 59 text bytes only.
+
+Rejected probes are not retained: direct typed heap indexing loses one
+instruction per insertion; the reference-style separate heap/length-pointer
+signature does not restore it. Indexed point lookup changes eight bytes in
+`pathSearchAddNeighbor`, and removing the integer pointer round-trip changes
+15 bytes in `pathSearchStep`. Those exact forms remain protected. A direct
+`linkWalkGroups[i]` spelling swaps the address-add operands; a signed canonical
+`offsetof` expression preserves them.
+
+Tricky's fetch launch now accesses the ball directly instead of temporarily
+storing its pointer in the integer movement-status local. That local and the
+negative-cosine launch component are named `movementStatus` and `launchDirZ`.
+Circling/alert selection calls the canonical typed player-target API, and the
+alert detour scan uses the object query's `GameObject**` result throughout.
+Obsolete void casts no longer hide the animation-event and attachment types.
+
+The contact pointer is tied to its engine writer: `ObjHits_ApplyPairResponse`
+stores each partner in `ObjHitsPriorityState.hitObject` at offset zero and sets
+`OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED`. Tricky reads that same typed
+field/flag instead of laundering the reaction overlay's integer `activeHit`.
+The existing state views and allocation sizes are unchanged. The engine writer
+remains 380/380 exact, and its complete object is byte-identical. The shared
+header rebuild changes none of the other source objects.
+
+All Tricky function/section bytes and named layouts remain unchanged; bypassing
+the integer target wrapper only renumbers anonymous relocations. Object SHA256:
+`9368502a060182b128ca59b7279ed8d8d3f84dc364259129809b4bd1f2436855`.
+Both build gates, formatting, and 72 tooling tests pass; the diagnostic link
+still has 59 differing text bytes and exact allocated non-text sections.
+Rejected type probes: native `int` versus `s32` tunnel indices and walk-group
+locals are byte-neutral; widening the four prompt flags removes four retail
+instructions and is not retained.
+
+The audio lifecycle audit corrects two inverted state interpretations. Tricky's
+`+0x7A0` field is `movementBarkTimer`, not a voice cooldown: running and jumping
+prime 600 frames, and the update retries the `0x29C` bark while time remains
+positive, subject to the ordinary voice guard. `ObjSoundState.justStarted` is
+a signed-byte startup latch, not playback status. The sound starters set it
+after dispatch; the next mouth update clears it and skips the channel/timer
+check, while still updating the mouth joint. Offset assertions cover both
+fields. All 2872 source objects remain byte-identical after rebuilding; the
+strict DOL checksum passes and Tricky still differs in 59 linked text bytes.
+
+Rejected shared-target-facing probes are restored. A local-Z helper reproduces
+approach-speed control exactly, but swaps movement's patch-info and displacement
+stack slots (`sp+0x1C` / `sp+0x28`), adding 17 byte/operand differences without
+changing instruction counts. Array versus `Vec` storage and narrowing the
+query/candidate arrays' lexical scopes are neutral. Ordinary auto-inlining has
+the same caller result plus a 120-byte helper body; a boolean-result helper adds
+three instructions at each site. Reusing `trickyWrapYawDelta` in the full-width
+turn routine preserves 87 instructions but changes 27 operands / 28 bytes.
+None of these hypotheses explains a remaining retail mismatch, so no extra
+helper, stack padding, or scope-only cleanup is retained.
+
+An indexed-scan audit removes redundant pointer induction from eleven loops in
+nine Tricky functions: XYZ height tracking, recall-warp selection, circling
+membership, alert detours, warp approach, linked-patch caching, both avoidance
+lists, route-candidate initialization/curve scanning, and nearest-baddie search.
+Array bases stay fixed, callback-dependent entries are still reloaded, and
+scoring/filter order is unchanged. The two guard scans with signed 16-bit
+counters retain independent pointer progression; this pass does not assume
+that a wrapped counter is an equivalent array index. The route-type filter
+uses the canonical `ROMCURVE_TYPE_TRICKY` definition.
+
+Every function byte, allocated-section byte, and named layout remains unchanged
+under the existing whole-TU GC/1.3 profile. Only anonymous relocation names
+change (460 records); object SHA256 is
+`1a2aed10ac1a16b7a556ffcff66da709b169302a6f8fad25c1306e9d4b553293`.
+The diagnostic link retains exact non-text sections and 59 differing text bytes.
+Both build gates, formatting, and 72 tooling tests pass. No compiler settings,
+unit boundaries, or array capacities change.
+
+Direct quest-voice selection restores `Tricky_updateSideCommandPrompts` to an
+exact 412 instructions / 1648 bytes. Passing the array-selected `u16` directly
+to `trickyTryPlaySound`, rather than first binding `questPromptSfxId`, removes
+all six register differences in the later food/baddie voice expansions. The
+same direct-argument spelling removes the single-use Thorntail and tunnel
+sound-ID temporaries without changing either function's bytes. Random draws
+remain on their original paths and narrow at the existing `u16` API boundary.
+
+Only the prompt function's six bytes change. Tricky is now 86/89 exact and
+99.97430% fuzzy; the diagnostic link falls from 59 to 53 differing text bytes,
+with all allocated non-text sections exact. Named layouts are unchanged; 30
+anonymous relocation names change. Object SHA256:
+`c990f44d5a508b02c007f5ccd84628625ce98fa20f4bf87d70311830a5053e0a`.
+Both build gates, formatting, and 72 tooling tests pass.
+
+Nearby voice-allocation probes are not retained: widening the helper's move
+selector from `s16` to `int` is raw-object neutral; removing `moveTricky`'s
+facing-state local adds five operand differences. Moving its turn-magnitude
+local into the stationary branch adds one instruction and leaves 22 operand
+differences; replacing the magnitude local with direct signed-angle ternaries
+leaves 7 structural / 110 operand differences. The shared voice helper and the
+existing turn source are preserved, with no caller-specific helper copies.
+
+The movement-state audit corrects `TRICKY_STATE_FLAG_MOVE_ADVANCING` to
+`TRICKY_STATE_FLAG_MOVE_ENDED`. The producer at `ObjAnim_AdvanceCurrentMove`
+(`0x8002FA48`, exact 559 instructions) returns nonzero when updated progress
+is >= 1 or < 0, for both wrapping and clamped animations. It does not report
+ordinary advancement. `Tricky_update` dispatches behavior before refreshing
+the flag, so the howl, fidget, food, fetch, flame and jump-preparation handlers
+consume the previous animation tick's endpoint result. All 21 flag uses and
+the idle-wander snapshot now express that contract; the shared API documents
+the return condition without changing its prototype.
+
+Three evidenced XYZ records are now `Vec` members: `prevLocalPos` at `0x8C`,
+`tumbleweedTargetPos` at `0x704`, and `wanderTargetPos` at `0x72C`. The first
+captures the object's previous local position; the latter two feed the common
+target pointer, with wander also receiving `objGetJointWorldPosition` output.
+Every component offset and the allocation-backed `0x83C` state size are
+asserted. The four cached patch IDs are cleared by one capacity-bounded loop;
+both inlined expansions reproduce retail's four stores. Direct low-speed
+expressions and flag reads remove redundant snapshots, and jump-only distance
+scratch is scoped and named for the arc setup. Arithmetic order is preserved.
+
+All Tricky function bytes, allocated data and named layouts remain unchanged
+from the direct-voice checkpoint; 781 anonymous relocation names change.
+After integrating the upstream game compiler default, all 2,871 other source
+objects remain byte-identical across this header cleanup. Tricky stays at
+86/89 exact, 99.97430% fuzzy and 53 diagnostic-link text-byte differences,
+with exact allocated non-text sections. Object SHA256:
+`c5bcbd424c631584c8b617d9f08fe3f821b50f32d870cf81116039dd3c908304`.
+
+Rejected probes are restored: direct compound-square replacements reorder
+loads; removing the patch diagnostic copy changes argument setup; delaying
+the movement-result initialization adds 2 structural / 179 operand differences;
+an inner walk-group scope leaves 65 operands instead of 34. The tunnel's `!=`
+loop bound is inert. A bounded `moveTricky` declaration-order sweep built 73
+legal single-block variants plus a nested-scope cross-check without a gain.
+Returning the facing delta instead of writing through its output pointer
+keeps 601 instructions with `s16` but leaves 40 operand differences; `int`
+adds a narrowing instruction. None justifies changing the existing helper API.
+
+Tricky's literal-use audit removes false relationships inherited from the old
+named constant pool. Stopping/search radii no longer use frame-timer names,
+guard distances no longer alias animation-transition duration, and route
+stopping distance no longer aliases the running-speed threshold. Unrelated
+contact, prompt, dig and flame timers no longer borrow fetch timing names.
+Animation progress, minimum movement speed and stopping-distance bias are
+separated from acceleration constants. Four numeric-only timer macros are
+expanded to ordinary float literals, preserving their C types. The guard's
+150-unit limit is named in frames, not seconds: `pi_videoinit` computes
+`timeDelta = 60.0f * (0.001f * gFrameElapsedMs)`.
+
+The complete Tricky object remains raw-byte identical to the SHA256 above,
+including symbols and relocations. Both build gates, formatting and 72 tool
+tests pass; the diagnostic link still differs in 53 text bytes only.
+Rejected structural probes are restored: extracting the five route-turn
+slowdowns adds ten register differences, and expanding the facing helper into
+both `moveTricky` branches adds twenty. A whole-TU GC/1.3.2 scratch build also
+changes retail call/inlining topology substantially; no build settings change.
+Narrowing the directly consumed Hcurves patch-query return to `u16` breaks
+the exact attachment caller, so its `int` API is retained.
+
+Compiler choice remains open: the whole-TU regression above uses source
+already shaped under GC/1.3, not an independent reconstruction for each
+compiler. Tricky previously stalled under GC/2.0; reaching code parity and
+better data under GC/1.3 does not establish the original compiler either.
+`python tools/tricky_compiler_probe.py --whole-tu --versions 1.3 1.3.2 2.0 --link`
+now makes the same-source comparison reproducible without modifying production
+objects or flags. It reports function scores and structural differences, then
+uses the existing diagnostic linker to check retained functions, sizes, literal
+pool contents and allocated sections. `--functions` selects focused whole-TU
+rows; the default fixture mode remains available for independent C hypotheses.
+Ignored compiler options and failed builds/reports are errors, not scores.
+
+Direct retail cross-check: all 45 current mismatch instruction sites (1 tunnel,
+10 movement/voice, 34 movement-state) have identical raw words in EN v1.0,
+EN rev1, JP, PAL v1.0 and PAL rev1. Both tunnel zero-initialization pairs also
+agree byte-for-byte. This corroborates the target, not compiler provenance.
+
+Tricky's root-motion turn consumes rotation channel 1 at event-list offset
+`0x0E`, formerly mislabeled `rootPitch`. Thorntail's planar root-motion update
+and WarpStone's animation update likewise add that channel to object yaw.
+`ObjAnim_AdvanceCurrentMove` writes three consecutive rotation halfwords after
+its three translation channels; the exact 559-instruction producer now indexes
+an actual `rootRotation[3]` array instead of indexing across separate scalar
+members. Only the evidenced yaw index is named; the unused pitch/roll axis
+labels are removed rather than guessed. Assertions cover the six-byte array,
+its `0x0C` start, the yaw offset and the unchanged event-list size.
+
+Seven Tricky composite flag aliases are also removed in favor of the existing
+named bits at sequence completion, recall, animation replacement, tunnel entry
+and exit, and turn selection. The turn-clear expression retains the old
+unsigned mask type explicitly. Every one of the 2,872 source objects remains
+raw-byte identical after rebuilding the shared-header consumers. Tricky retains
+86/89 exact functions, exact allocated non-text sections, and 53 diagnostic-link
+text-byte differences. Both build gates and 79 tooling tests pass.
+
+The follow-voice selection now has one inline helper, `trickyPlayFollowVoice`,
+which owns the fast-follow range and slow-follow table while leaving timing and
+eligibility in `moveTricky`. This removes all ten remaining register differences
+in its two nested `trickyTryPlaySound` expansions: `moveTricky` is exact at 601
+instructions. The discarded ball-dependent random draw and subsequent table
+selection draw remain unchanged. This is matching evidence for a coherent
+helper boundary, not proof of its original name or compiler provenance.
+
+Only `moveTricky` changes (12 bytes); allocated data and named symbol layouts
+are unchanged. Anonymous relocation labels are renumbered, with no normalized
+relocation changes. Tricky reaches 87/89 exact functions and 99.97732% fuzzy;
+the diagnostic link falls from 53 to 41 text-byte differences, retaining the
+complete 404-byte literal pool and exact allocated non-text sections. Tunnel
+loop-local declarations and early-continue probes did not help and are restored.
+
+The route-entry and run-up branches now share their three matching jump actions:
+prepare the ballistic jump, start the upward root-motion jump, and start the
+downward root-motion jump. Each action preserves its animation choices, signed
+height scale, route advancement and bark timer. Tunnel facing also reuses the
+existing `trickyTurnAlongMoveDirection`, preserving its independent `obj->extra`
+reload. All function bytes and allocated data remain unchanged; only anonymous
+relocation names are renumbered. No additional helper bodies survive linking.
+
+Retail stores at state offsets `0x64..0x80` and the subsequent trajectory update
+confirm all eight `TrickyJumpArc` fields. Its `0x20` size, every field offset and
+the embedding offset are now asserted. The linear vertical coefficient is named
+`initialVelocityY`: initialization solves `(landingY - launchY - a*T*T) / T`,
+and the update uses `a*t*t + initialVelocityY*t + launchY`. The field rename and
+assertions preserve the raw object. Result-finalization extraction was codegen
+neutral; sharing turn-angle calculation still added ten register differences,
+and single-delta accumulation removed five target instructions. Those probes
+are not retained. Matching remains 87/89 functions and 41 linked text bytes.
+
+Tricky now has one canonical owner header, `include/dlls/objects/196_Tricky.h`.
+It contains the state, layout assertions, descriptor interface, query records
+and 76 signature-checked APIs formerly spread across ten Tricky-only headers,
+including misattributed Skeetla and MMP fragments. Direct consumers include the
+canonical owner. The mixed `dll_80136a40.h` now declares only its actual debug
+and fatal-error services; the unrelated game-UI `tricky_api.h` is untouched.
+Private implementation declarations and foreign placement views remain local.
+Movement API arguments now say stopping radius and slow-when-facing-away.
+
+All 119 Tricky function bodies, the state definitions/assertions and descriptor
+interface are preserved verbatim. Tricky's raw object is unchanged; 2,866 of
+2,872 source objects are raw-identical. The remaining six (`engine/7`, error
+display, gameloop_main, objprint_dolphin, pi_dolphin and pi_videoinit) only
+renumber anonymous symbols, with exact code, allocated data, named layouts and
+normalized relocations. Standalone-header compilation, source-path audit, both
+build gates, formatting and 79 tooling tests pass.
+
+Mixed-argument order probes retain the existing `(obj, radius, state)` API:
+float-first and float-last forms change argument setup in 18 functions without
+fixing the movement-state register swap. In an isolated tunnel context,
+reusing the approach result as the second loop's index emits the target `li` /
+`mr` initialization, but leaves seven to nine register differences across all
+six declaration orders. A separate result temporary returns to the existing
+one-instruction residual. None of these probes is retained in production.
+
+Tricky's foot-contact audio and water-impact path now takes the canonical
+`CurvesCollisionState`, not a miscast `BaddieState`. Retail audio loads at
+collision-relative `0xB8`, `0xC4`, `0x1B4`, `0x25B`, and `0x260` select the
+first segment's surface type and hit object, water depth, collision subtype,
+and surface flags. The Baddie collision record begins at `+4`; interpreting
+the incoming collision pointer as the enclosing actor had created five false
+overlay fields. Those unused aliases are removed, and direct actor consumers
+now pass their actual collision member. The water helper preserves its local-Y
+plus query-depth calculation and its speed argument through the typed interface.
+
+Both Tricky attachment arrays retain their independent storage and refresh
+order. `footPoints` is now `Vec[4]`, with a direct first-coordinate argument;
+both arrays assert their `0x30` size and `0x0C` stride. The audio dispatcher
+and water-impact helper remain exact at 276 and 79 instructions respectively.
+All 2,872 source objects are raw-byte identical after rebuilding the shared
+headers. Both build gates, 79 tooling tests, focused formatting and the Tricky
+source-path audit pass. Tricky remains 87/89 exact with 41 diagnostic-link text
+bytes differing and every allocated non-text section exact. This is corrected
+storage ownership and API evidence, not a new matching gain.
+
+The same foot-contact path now uses a typed `SurfaceSfxTable` instead of a
+216-byte blob. EN data and all three consumers establish nine banks of ten
+`u16` triggers, followed by 35 surface-to-column bytes at `0xB4`; natural
+tail alignment accounts for the final byte. The definition asserts the
+`0x14` bank stride and `0xD8` total size. Trigger selection, animation-event
+dispatch, and record lookup now use these fields, with the typed lookup API
+owned by the audio header. Keeping a local table pointer preserves MWCC's
+shared base address without byte-offset casts. These functions remain exact
+at 42, 276, and 30 instructions; both complete owner objects and all 2,872
+source objects are byte-identical. Both build gates and 79 tooling tests pass.
+Tricky remains 87/89 exact with 41 diagnostic-link text bytes differing and
+all allocated non-text sections exact. This recovers shared data used by
+Tricky; it neither improves the remaining code mismatch nor settles compiler
+provenance.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

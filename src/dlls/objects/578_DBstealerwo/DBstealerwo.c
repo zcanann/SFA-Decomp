@@ -18,19 +18,14 @@
  * and adds map time (dbstealerworm_stateHandlerA06). chuka is the linked
  * thrown sub-object.
  */
+#include "dlls/objects/578_DBstealerwo.h"
+
 #include "main/dll/partfx_interface.h"
 #include "main/dll/objfx_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/object_render.h"
 #include "main/debug.h"
-#include "main/dll/dll22cstate_struct.h"
-#include "main/dll/dfpobjcreatorstate_struct.h"
-#include "main/dll/dfptorchstate_struct.h"
-#include "main/dll/dbeggstate_struct.h"
-#include "main/dll/drakorenergystate_struct.h"
-#include "main/dll/dbstealerwormcontrol_struct.h"
-#include "main/dll/dfp_types.h"
 #include "game/objects/object.h"
 #include "main/mapEventTypes.h"
 #include "sys/objects/lifecycle.h"
@@ -50,53 +45,21 @@
 #include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/dll_00E2_staff_api.h"
-#include "main/dll/dll_0242_dbstealerworm.h"
+#include "dlls/objects/226.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/baddie_control_interface.h"
-
-extern int gDbStealerwormRunToAvoidGroups[];
-extern f32 gDbStealerwormRunToAvoidWeights[];
-extern int gDbStealerwormWaitAvoidGroups[];
-extern f32 gDbStealerwormWaitAvoidWeights[];
-extern int gDbStealerwormKillAvoidGroups[];
-extern f32 gDbStealerwormKillAvoidWeights[];
-
-typedef struct {
-    int* msgs; /* 0x00 */
-    s16 count; /* 0x04 */
-    u8 pad06[0x08 - 0x06];
-} DbWormMsgGroup;
-
-/*
- * DbStealerwormControl - the per-family control record hung off
- * GroundBaddieState.control (state+0x40C) for dbstealerworm
- * (extraSize 0x460 = GroundBaddieState 0x410 + a 0x50 private tail;
- * the control record itself is memset(0x50) in dbstealerworm_init).
- */
-
-STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
-
-STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
-
-STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
-
-STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
-
-STATIC_ASSERT(sizeof(Dll22CState) == 0x10);
-
-STATIC_ASSERT(offsetof(DbEggState, mode) == 0x118);
-
-STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
-
-STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
-extern DbStealerwormScript gDbStealerwormScriptTable[];
 
 int dbstealerworm_turnToFaceObject(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused,
                                    f32 range);
 int dbstealerworm_turnToFaceObjectVertical(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused,
                                            f32 range);
 int dbstealerworm_avoidObjects(GameObject* obj, int* objs, f32* weights, int n, f32 limit);
+
+/* DbStealerwormControl.flags14: per-frame effect-request bits, consumed and
+ * cleared each tick by the fx dispatcher (dbstealerworm_processEffectFlags). */
+#define DBWORM_FLAG14_ATTACK   0x1 /* strike the current target this frame */
+#define DBWORM_FLAG14_FX_DUST  0x2 /* emit the small dust burst (partfx 0x345) */
+#define DBWORM_FLAG14_FX_SPRAY 0x4 /* emit the large spray burst (partfx 0x343 x10) */
 
 static void dbstealerworm_restartMove(GameObject* obj, BaddieState* baddie) {
     if (baddie->moveJustStartedA != 0) {
@@ -289,26 +252,9 @@ static inline void dbstealerworm_updateTurnSpeed(BaddieState* state, s16 yaw, f3
 /* fx-spawn work record: a fake ObjAnimComponent head handed to
  * objDoHitParticleFx / the partfx interface (same family as ktrex's
  * gKTRexEffectSpawnWork). */
-typedef struct DbWormEffectSpawnWork {
-    s16 rotX; /* 0x00 */
-    s16 rotY;
-    s16 rotZ;
-    u8 pad6[2];
-    f32 scale; /* 0x08 */
-    f32 posX;  /* 0x0C: fx spawn position */
-    f32 posY;
-    f32 posZ;
-} DbWormEffectSpawnWork;
-
-STATIC_ASSERT(sizeof(DbWormEffectSpawnWork) == 0x18);
 
 DbWormEffectSpawnWork gDbWormEffectSpawnWork;
 void* gDBStealerWormStateHandlersB[7];
-
-extern int gDbStealerwormDeathFootstepSfx[];
-extern int gDbStealerwormBurrowFootstepSfx[];
-extern int gDbStealerwormSfxIds[];
-extern DbStealerwormScriptStep gDbStealerwormScriptStealEggThrowToWorm[];
 
 int dbstealerworm_stateHandlerB04(GameObject* obj, BaddieState* baddie) {
     float fz;
@@ -1113,7 +1059,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
 
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
     sub->flags15 &= ~4;
-    ((void (*)(GameObject*, int))Sfx_KeepAliveLoopedObjectSound)(obj, SFXTRIG_baddie_vambat_death);
+    Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_vambat_death);
     if (baddie->moveJustStartedA != 0) {
         ObjHits_EnableObject(obj);
     }
@@ -1650,7 +1596,7 @@ void dbstealerworm_processEffectFlags(GameObject* obj, GroundBaddieState* baddie
     int i;
     DbStealerwormControl* state = (DbStealerwormControl*)baddie->control;
     if ((state->flags14 & DBWORM_FLAG14_ATTACK) && baddie->baddie.targetObj != 0) {
-        ((void (*)(GameObject*, int))dbstealerworm_launchIceBall)(obj, (int)baddie);
+        dbstealerworm_launchIceBall(obj, &baddie->baddie);
     }
     if (state->flags14 & DBWORM_FLAG14_FX_DUST) {
         (*gPartfxInterface)->spawnObject((void*)obj, DBSTEALERWORM_PARTFX_DUST, NULL, 2, -1, NULL);
@@ -1747,7 +1693,7 @@ int dbstealerworm_handleMessage(GameObject* obj, u8 msg, int* out) {
     return result;
 }
 
-s16 dbstealerworm_getControlMode(GameObject* obj) {
+int dbstealerworm_getControlMode(GameObject* obj) {
     return ((BaddieState*)obj->extra)->controlMode;
 }
 
@@ -1899,7 +1845,7 @@ void dbstealerworm_update(GameObject* obj) {
                     dbstealerworm_acquireTarget(obj, blob, (int)blob);
                 } else {
                     sub3 = blob->control;
-                    ((void (*)(GameObject*, int))dbstealerworm_processEffectFlags)(obj, (int)blob);
+                    dbstealerworm_processEffectFlags(obj, blob);
                     (*gBaddieControlInterface)->updateGravity(obj, (void*)blob, gDbStealerwormGravity[0], -1);
                     if ((sub3->flags15 & 4) == 0) {
                         (*gPlayerInterface)->rotateTowardTarget((void*)obj, (void*)blob, timeDelta, 4);
@@ -2068,14 +2014,6 @@ int gDbStealerwormWaitAvoidGroups[4] = {3, 0, 1, 10};
 f32 gDbStealerwormWaitAvoidWeights[4] = {8.0f, 3.0f, 2.0f, 4.0f};
 int gDbStealerwormKillAvoidGroups[4] = {3, 1, 0, 10};
 f32 gDbStealerwormKillAvoidWeights[10] = {2.0f, 0.8f, 0.4f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-typedef struct DbStealerwormObjDescriptorLayout {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    void (*callbacks[12])(void);
-    char debugStrings[0x5C];
-} DbStealerwormObjDescriptorLayout;
 
 void* gDBStealerWormStateHandlersA[17];
 

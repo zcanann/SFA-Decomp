@@ -116,7 +116,7 @@ void EffectBox_update(GameObject* obj) {
         negativeExtentX = -extentX;
         negativeExtentZ = -extentZ;
         for (; targetIndex < targetCount; targetIndex++) {
-            target = *targets;
+            target = targets[targetIndex];
             offsetX = target->anim.localPosX;
             offsetY = target->anim.localPosY;
             offsetZ = target->anim.localPosZ;
@@ -143,7 +143,6 @@ void EffectBox_update(GameObject* obj) {
                     }
                 }
             }
-            targets++;
         }
     }
 }

@@ -124,9 +124,9 @@ void animatedobj_update(GameObject* obj) {
             result = 0;
             slot = (s8)sequenceIndex;
             while (result < objectCount) {
-                other = *objects;
+                other = objects[result];
                 if (other->seqIndex == sequenceIndex) {
-                    sequenceOwner = *objects;
+                    sequenceOwner = other;
                 }
                 if (other->seqIndex == -2 && other->anim.classId == ANIMATEDOBJ_CLASS_ID) {
                     sequence = &((AnimatedObjState*)other->extra)->sequence;
@@ -134,7 +134,6 @@ void animatedobj_update(GameObject* obj) {
                         siblingCount++;
                     }
                 }
-                objects++;
                 result++;
             }
             if (siblingCount <= 1 && sequenceOwner != NULL && sequenceOwner->seqIndex != -1) {
@@ -153,7 +152,7 @@ void animatedobj_update(GameObject* obj) {
                     canSetupObject = Obj_CanSetupObject();
                     if (canSetupObject > 0) {
                         child = objSetupObject(Obj_AllocObjectSetup(sizeof(ObjPlacement), ANIMATEDOBJ_CHILD_OBJ_STAFF),
-                                                4, -1, -1, NULL);
+                                               4, -1, -1, NULL);
                         ObjLink_AttachChild(obj, child, 0);
                         ObjAnim_SetCurrentMove(child, 0, 0.0f, 0);
                         ObjAnim_AdvanceCurrentMove(child, 1.0f, timeDelta, NULL);

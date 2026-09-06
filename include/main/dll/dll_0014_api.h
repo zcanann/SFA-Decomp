@@ -4,6 +4,6 @@
 #include "types.h"
 
 int getPatchGroup(f32* pos, int patchGroup);
-void walkPath_writeU16LE(u32 pathId, u8* out);
+void walkPath_writeU16LE(u16 value, u8* outBytes);
 
 #endif /* MAIN_DLL_DLL_0014_API_H_ */

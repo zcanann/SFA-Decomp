@@ -5,12 +5,11 @@
  * position within this object's engagement radius.
  */
 #include "dlls/objects/258_StayPoint.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/gamebits.h"
 #include "main/vecmath_distance_api.h"
 #include "sys/objects/lifecycle.h"
 #include "main/dll/dll_0000_gameui_api.h"
-#include "main/dll/dll_80136a40.h"
 #include "main/objprint_render_api.h"
 
 #define STAYPOINT_ENGAGE_RADIUS_SQ 1e+02f

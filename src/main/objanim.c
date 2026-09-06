@@ -984,7 +984,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
                 }
                 else
                 {
-                    (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = value;
+                    events->rootRotation[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = value;
                 }
 
                 axis += segmentCount + 1;
@@ -1006,7 +1006,7 @@ int ObjAnim_AdvanceCurrentMove(void* objAnimHandle, f32 moveStepScale, f32 delta
                 }
                 else
                 {
-                    (&events->rootYaw)[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = 0;
+                    events->rootRotation[axisIndex - OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT] = 0;
                 }
             }
             axisIndex++;

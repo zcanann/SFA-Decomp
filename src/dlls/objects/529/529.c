@@ -1,3 +1,5 @@
+#include "dlls/objects/529.h"
+
 /*
  * DLL 0x0211 - wall crawler enemy logic.
  *
@@ -7,8 +9,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dlls/object_descriptor.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/WM/dll_0211_wmwallcrawler.h"
-#include "main/dll/dll_00C4_tricky.h"
+#include "dlls/objects/196_Tricky.h"
 #include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
@@ -61,8 +62,6 @@ enum {
 };
 
 u8 gWallCrawlerHitCount;
-extern u16 gWallCrawlerVariantFlags[];
-extern f32 gWallCrawlerPointCollision[];
 
 int wmwallcrawler_animEventCallback(GameObject* obj) {
     ((WmwallcrawlerState*)obj->extra)->mode = WMWALLCRAWLER_MODE_DESCEND;
@@ -154,7 +153,6 @@ void wmwallcrawler_update(GameObject* obj) {
     f32 speed;
     int k;
     int hitCount;
-    int idx;
     GameObject* tricky;
     u8 sum;
     int ang;
@@ -305,17 +303,15 @@ void wmwallcrawler_update(GameObject* obj) {
                             best = 10000.0f;
                             hitCount = trackGetHeight((GameObject*)ob, ob->anim.localPosX, ob->anim.localPosY,
                                                       ob->anim.localPosZ, &list, 0, 0);
-                            idx = 0;
                             for (k = 0; k < hitCount; k++) {
-                                d = list[idx]->height - ob->anim.localPosY;
+                                d = list[k]->height - ob->anim.localPosY;
                                 if (d < 0.0f) {
                                     d *= -1.0f;
                                 }
                                 if (d < best) {
-                                    bestIdx = idx;
+                                    bestIdx = k;
                                     best = d;
                                 }
-                                idx++;
                             }
                             if (list != 0) {
                                 ob->anim.localPosY = list[bestIdx]->height;
@@ -372,17 +368,15 @@ void wmwallcrawler_update(GameObject* obj) {
                                     best = 10000.0f;
                                     hitCount = trackGetHeight((GameObject*)ob, ob->anim.localPosX, ob->anim.localPosY,
                                                               ob->anim.localPosZ, &list, 0, 0);
-                                    idx = 0;
                                     for (k = 0; k < hitCount; k++) {
-                                        d = list[idx]->height - ob->anim.localPosY;
+                                        d = list[k]->height - ob->anim.localPosY;
                                         if (d < 0.0f) {
                                             d *= -1.0f;
                                         }
                                         if (d < best) {
-                                            bestIdx = idx;
+                                            bestIdx = k;
                                             best = d;
                                         }
-                                        idx++;
                                     }
                                     if (list != 0) {
                                         ob->anim.localPosY = list[bestIdx]->height;
@@ -547,7 +541,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData) {
         (*gPathControlInterface)
             ->setLocalPointCollision((void*)state, 1, gWallCrawlerPointCollision, sWallCrawlerCollisionBone, 4);
         (*gPathControlInterface)->attachObject((void*)obj, state);
-        *(u32*)state |= 0x40008;
+        state->pathState.flags |= 0x40000u | CURVES_COLLISION_STATE_LOCAL_POINTS;
     }
     (obj)->animEventCallback = wmwallcrawler_animEventCallback;
     ObjHits_EnableObject(obj);
@@ -578,7 +572,7 @@ ObjectDescriptor10WithPadding gWM_WallCrawlerObjDescriptor = {
         (ObjectDescriptorCallback)wmwallcrawler_render,
         (ObjectDescriptorCallback)wmwallcrawler_free,
         (ObjectDescriptorCallback)wmwallcrawler_getObjectTypeId,
-        (ObjectDescriptorExtraSizeCallback)wmwallcrawler_getExtraSize,
+        wmwallcrawler_getExtraSize,
     },
     0,
 };

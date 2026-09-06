@@ -31,7 +31,6 @@
 int lbl_803DDD70;
 int gDrShackleRotZOffset = -32768;
 
-#define DRSHACKLE_OBJGROUP  0x37
 
 static inline int* DrShackle_GetActiveModel(void* obj)
 {
