@@ -257,3 +257,51 @@ Formatting, generated-path and stale-symbol audits, the strict retail checksum,
 and `ninja all_source` pass. Local controls are under
 `build/gc13_new_matches/player_continue_first/`, `player_continue_second/`,
 `player_hit_flags/`, `player_render_shader/`, and `player_six/`.
+
+
+## September 6: Player attack, climbing, and shared ice-spell helpers
+
+The next player pass adds **six exact functions, totaling 11,604 code bytes**:
+
+| Function | Bytes | Before | After |
+| --- | ---: | ---: | ---: |
+| `playerStateAttack` | 2,836 | 99.908325% | **100%** |
+| `playerCheckIfClimbingOntoWall` | 3,348 | 99.64038% | **100%** |
+| `playerState30` | 1,500 | 99.96% | **100%** |
+| `playerStateTryCastSpell` | 964 | 99.93776% | **100%** |
+| `playerStateAimStaff` | 1,824 | 99.9671% | **100%** |
+| `playerStateShootFireball` | 1,132 | 99.78799% | **100%** |
+
+The attack state's raw staff call omitted an integer argument. Retail preserves
+`moveSlotIndex` in r4 while loading its two floating-point arguments, and the
+existing staff interface identifies slot 0x4C as `startSwipe`. Calling that
+interface with the index fixes the call and agrees with `staff_startSwipe`,
+which stores the supplied index in its selected swipe slot. The two move-table
+floats are now `swipeStart` and `swipeLengthScale`, with layout assertions.
+Offset-based accesses preserve the table's existing integer storage and the
+retail address calculations, including the hit-window type lookup.
+
+The climbing probe now masks its input heading and subtracts camera yaw in
+separate compound operations. Its ledge flag uses native integer width and a
+compound clear, eliminating the imported 64-bit mask without changing semantics.
+Both uses of the shared flag constant are inside this probe.
+
+Four spell states share the same particle setup and two spawn calls. Extracting
+`playerSpawnIceSpellParticles` as a static inline helper reproduces retail's
+cached flag register in all four callers. They use the canonical
+`PartFxSpawnParams` packet. A simple indexed `playerFreeSpawnedObjects` helper
+also matches the fireball state's cleanup, and replaces the artificial counter
+and cursor arrays in the other three callers without changing their code.
+This is evidence for a shared inline source structure; the original helper
+names and compiler provenance are not established by the match alone.
+
+The full TU advances from **99.85959% to 99.87313%**, and from **218/233 to
+224/233 exact functions**. Only these six function bodies change. All
+function-relative relocations, allocated data bytes, section sizes/alignment,
+and data-symbol offsets are preserved; compiler-numbered anonymous literals
+are normalized by their pool locations. All assigned data remains exact.
+The TU retains its existing GC/1.3 profile and NonMatching status.
+
+Formatting and generated-path audits, the strict retail checksum, and
+`ninja all_source` pass. Local controls and the before/after object audit are
+under `build/gc13_new_matches/player_round3*`.

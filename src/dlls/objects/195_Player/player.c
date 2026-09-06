@@ -479,15 +479,14 @@ typedef struct {
     u8 pad5;
 } WallHit;
 
-static inline void playerFreeSpawnedObjects(GameObject** p, int i, GameObject* hi) {
-    do {
-        if (*p != NULL) {
-            Obj_FreeObject(*p);
-            *p = hi;
+static inline void playerFreeSpawnedObjects(GameObject** objects) {
+    int i;
+    for (i = 0; i < 7; i++) {
+        if (objects[i] != NULL) {
+            Obj_FreeObject(objects[i]);
+            objects[i] = NULL;
         }
-        p++;
-        i++;
-    } while (i < 7);
+    }
 }
 
 typedef struct {
@@ -3909,17 +3908,20 @@ int playerState31(GameObject* obj, PlayerState* p2) {
     return 0x27;
 }
 
+static inline void playerSpawnIceSpellParticles(PartFxSpawnParams* pfx) {
+    PartfxFlags spawnFlags;
+    ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx->posX, &pfx->posY, &pfx->posZ, 0);
+    pfx->scale = 2.5f;
+    spawnFlags = PARTFXFLAG_200000;
+    pfx->arg3 = 0;
+    (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+    pfx->arg3 = 1;
+    (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+}
+
 int playerState30(GameObject* obj, PlayerState* state, f32 fv) {
     PlayerState* inner = obj->extra;
-    PartfxFlags spawnFlags;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx;
+    PartFxSpawnParams pfx;
     f32 timer;
 
     if (gPlayerIceSpellSustaining != 0) {
@@ -3937,29 +3939,11 @@ int playerState30(GameObject* obj, PlayerState* state, f32 fv) {
             sub->magic = v;
             inner->stateTimer = 15.0f;
         }
-        ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
-        pfx.scale = 2.5f;
-        spawnFlags = PARTFXFLAG_200000;
-        pfx.mode = 0;
-        (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
-        pfx.mode = 1;
-        (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+        playerSpawnIceSpellParticles(&pfx);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             (((PlayerState*)obj->extra)->playerStatus)->magic == 0 || getCurSeqNo() != 0) {
-            int z[2];
-            GameObject** p[1];
-            z[0] = 0;
-            gPlayerIceSpellSustaining = z[0];
-            z[1] = gPlayerIceSpellSustaining;
-            p[0] = gPlayerSpawnedObjects;
-            do {
-                if (*p[0] != NULL) {
-                    Obj_FreeObject((GameObject*)*p[0]);
-                    *p[0] = NULL;
-                }
-                p[0]++;
-                z[1]++;
-            } while (z[1] < 7);
+            gPlayerIceSpellSustaining = 0;
+            playerFreeSpawnedObjects(gPlayerSpawnedObjects);
             if (gPlayerResource != NULL) {
                 Resource_Release(gPlayerResource);
                 gPlayerResource = NULL;
@@ -4142,7 +4126,6 @@ int playerStateFireLaser(GameObject* obj, PlayerState* state, f32 fv) {
 
 int playerStateShootFireball(GameObject* obj, PlayerState* state, f32 fv) {
     PlayerState* inner = obj->extra;
-    PartfxFlags spawnFlags;
     int r;
     f32 timer;
     struct {
@@ -4153,14 +4136,7 @@ int playerStateShootFireball(GameObject* obj, PlayerState* state, f32 fv) {
         f32 y;
         f32 z;
     } pfx2;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx;
+    PartFxSpawnParams pfx;
 
     if (((PlayerState*)state)->baddie.targetObj == NULL) {
         f32 z = 0.0f;
@@ -4192,17 +4168,11 @@ int playerStateShootFireball(GameObject* obj, PlayerState* state, f32 fv) {
             sub->magic = v;
             inner->stateTimer = 15.0f;
         }
-        ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
-        pfx.scale = 2.5f;
-        spawnFlags = PARTFXFLAG_200000;
-        pfx.mode = 0;
-        (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
-        pfx.mode = 1;
-        (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+        playerSpawnIceSpellParticles(&pfx);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             (((PlayerState*)obj->extra)->playerStatus)->magic == 0 || getCurSeqNo() != 0) {
             gPlayerIceSpellSustaining = 0;
-            playerFreeSpawnedObjects(gPlayerSpawnedObjects, 0, 0);
+            playerFreeSpawnedObjects(gPlayerSpawnedObjects);
             if (gPlayerResource != NULL) {
                 Resource_Release(gPlayerResource);
                 gPlayerResource = NULL;
@@ -4275,17 +4245,9 @@ int playerStateShootFireball(GameObject* obj, PlayerState* state, f32 fv) {
 
 int playerStateTryCastSpell(GameObject* obj, PlayerState* state, f32 fv) {
     PlayerState* inner = obj->extra;
-    PartfxFlags spawnFlags;
     s16 deferredCmd;
     f32 timer;
-    struct {
-        u8 pad[6];
-        u16 mode;
-        f32 scale;
-        f32 x;
-        f32 y;
-        f32 z;
-    } pfx;
+    PartFxSpawnParams pfx;
 
     if (gPlayerIceSpellSustaining != 0) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_whit3_c);
@@ -4302,30 +4264,12 @@ int playerStateTryCastSpell(GameObject* obj, PlayerState* state, f32 fv) {
             sub->magic = v;
             inner->stateTimer = 15.0f;
         }
-        ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.x, &pfx.y, &pfx.z, 0);
-        pfx.scale = 2.5f;
-        spawnFlags = PARTFXFLAG_200000;
-        pfx.mode = 0;
-        (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
-        pfx.mode = 1;
-        (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+        playerSpawnIceSpellParticles(&pfx);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
             (((PlayerState*)obj->extra)->playerStatus)->magic == 0 || getCurSeqNo() != 0) {
-            int cleanupCounters[2];
-            GameObject** spawnedObjectCursors[1];
             inner->animState = -1;
-            cleanupCounters[1] = 0;
             gPlayerIceSpellSustaining = 0;
-            cleanupCounters[0] = 0;
-            spawnedObjectCursors[0] = gPlayerSpawnedObjects;
-            do {
-                if (*spawnedObjectCursors[0] != NULL) {
-                    Obj_FreeObject((*spawnedObjectCursors[0]));
-                    *spawnedObjectCursors[0] = NULL;
-                }
-                spawnedObjectCursors[0]++;
-                cleanupCounters[0]++;
-            } while (cleanupCounters[0] < 7);
+            playerFreeSpawnedObjects(gPlayerSpawnedObjects);
             if (gPlayerResource != NULL) {
                 Resource_Release(gPlayerResource);
                 gPlayerResource = NULL;
@@ -4410,7 +4354,6 @@ int playerStateTryCastSpell(GameObject* obj, PlayerState* state, f32 fv) {
 
 int playerStateAimStaff(GameObject* obj, PlayerState* state, f32 fv) {
     PlayerState* inner = obj->extra;
-    PartfxFlags spawnFlags;
     int r;
     f32 spin;
     PartFxSpawnParams pfx;
@@ -4500,28 +4443,12 @@ int playerStateAimStaff(GameObject* obj, PlayerState* state, f32 fv) {
                 sub->magic = v;
                 inner->stateTimer = 15.0f;
             }
-            ObjPath_GetPointWorldPosition(gPlayerPathObject, 5, &pfx.posX, &pfx.posY, &pfx.posZ, 0);
-            pfx.scale = 2.5f;
-            spawnFlags = PARTFXFLAG_200000;
-            pfx.arg3 = 0;
-            (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
-            pfx.arg3 = 1;
-            (*gPartfxInterface)->spawnObject(gPlayerPathObject, 0x7f5, &pfx, spawnFlags + PARTFXFLAG_1, -1, NULL);
+            playerSpawnIceSpellParticles(&pfx);
             if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
                 *(s16*)((char*)*(int*)((char*)(int)((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
                 getCurSeqNo() != 0) {
-                int z[2];
-                GameObject** p[1];
-                z[1] = gPlayerIceSpellSustaining = z[0] = 0;
-                p[0] = gPlayerSpawnedObjects;
-                do {
-                    if (*p[0] != NULL) {
-                        Obj_FreeObject((GameObject*)*p[0]);
-                        *p[0] = NULL;
-                    }
-                    p[0]++;
-                    z[1]++;
-                } while (z[1] < 7);
+                gPlayerIceSpellSustaining = 0;
+                playerFreeSpawnedObjects(gPlayerSpawnedObjects);
                 if (gPlayerResource != NULL) {
                     Resource_Release(gPlayerResource);
                     gPlayerResource = NULL;
@@ -4977,9 +4904,11 @@ int playerStateAttack(GameObject* obj, struct PlayerState* state, f32 fv) {
             objSetAnimField48to0((GameObject*)path);
             STAFF_INTERFACE(path)->func10((GameObject*)path,
                                           *(u8*)((inner->moveSlots + 0x5c) + (u32)inner->moveSlotIndex * 0xb0));
-            (*(void (*)(int, f32, f32)) * (int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x4c))(
-                (int)path, *(f32*)((inner->moveSlots + 0x48) + (u32)inner->moveSlotIndex * 0xb0),
-                *(f32*)((inner->moveSlots + 0x4c) + (u32)inner->moveSlotIndex * 0xb0));
+            STAFF_INTERFACE(path)->startSwipe((GameObject*)path, inner->moveSlotIndex,
+                                              *(f32*)(inner->moveSlots + offsetof(PlayerMoveSlot, swipeStart) +
+                                                      (u32)inner->moveSlotIndex * sizeof(PlayerMoveSlot)),
+                                              *(f32*)(inner->moveSlots + offsetof(PlayerMoveSlot, swipeLengthScale) +
+                                                      (u32)inner->moveSlotIndex * sizeof(PlayerMoveSlot)));
         }
         {
             f32 z = 0.0f;
@@ -5033,8 +4962,8 @@ int playerStateAttack(GameObject* obj, struct PlayerState* state, f32 fv) {
                     ((PlayerMoveSlot*)inner->moveSlots + (u32)inner->moveSlotIndex)->hitWindowEnd[i]) {
                 if ((s8)Player_GetObjHitsState(obj)->suppressOutgoingHits == 0) {
                     int bits;
-                    switch (
-                        ((PlayerMoveSlot*)(inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0))->hitWindowType[i]) {
+                    switch (*(s8*)(inner->moveSlots + offsetof(PlayerMoveSlot, hitWindowType) +
+                                   (u32)inner->moveSlotIndex * sizeof(PlayerMoveSlot) + i)) {
                     case -1:
                         bits = 0;
                         break;
@@ -9765,13 +9694,14 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
     s8 flagB;
     s8 flagA;
     u8 hit;
-    int ai;
+    int inputYawDelta;
 
-    ai = (u16)getAngle(((PlayerState*)state2)->baddie.moveInputX, -((PlayerState*)state2)->baddie.moveInputZ) -
-         ((PlayerState*)state2)->baddie.cameraYaw;
-    rot[0] = -mathSinf((3.1415927f * (f32)ai) / 32768.0f);
+    inputYawDelta = getAngle(((PlayerState*)state2)->baddie.moveInputX, -((PlayerState*)state2)->baddie.moveInputZ);
+    inputYawDelta &= 0xffff;
+    inputYawDelta -= ((PlayerState*)state2)->baddie.cameraYaw;
+    rot[0] = -mathSinf((3.1415927f * (f32)inputYawDelta) / 32768.0f);
     rot[1] = 0.0f;
-    rot[2] = -mathCosf((3.1415927f * (f32)ai) / 32768.0f);
+    rot[2] = -mathCosf((3.1415927f * (f32)inputYawDelta) / 32768.0f);
     playerGetMovementOrFacingDirection((GameObject*)(obj), state, vec);
     sc1p[0] = 50.0f * rot[0];
     sc1p[1] = 50.0f * rot[1];
@@ -9779,7 +9709,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
     sc0p[0] = 50.0f * vec[0];
     sc0p[1] = 50.0f * vec[1];
     sc0p[2] = 50.0f * vec[2];
-    ((PlayerState*)state)->flags360 = ((PlayerState*)state)->flags360 & ~PLAYER_FLAG_LEDGE_DETECTED;
+    ((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_LEDGE_DETECTED;
     for (i = 0; i < 13; i++) {
         if ((probeMask & dirMasks[i]) == 0) {
             continue;
@@ -9982,7 +9912,7 @@ int playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32
             if (target->anim.resetHitboxFlags & 8) {
                 continue;
             }
-            ((PlayerState*)state)->flags360 |= (u32)PLAYER_FLAG_LEDGE_DETECTED;
+            ((PlayerState*)state)->flags360 |= PLAYER_FLAG_LEDGE_DETECTED;
             if ((((PlayerState*)state2)->baddie.pressedButtons & 0x100) == 0) {
                 continue;
             }
