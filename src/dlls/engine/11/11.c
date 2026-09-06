@@ -40,7 +40,7 @@ typedef union Dll0BDescriptorTable {
 
 void modgfx_scrollTexCoords(PartfxEffectState* state, f32* in, int unusedReinit, int unusedChannel);
 void modgfx_captureFrameBaseVertices(PartfxEffectState* state, int unused);
-void modgfx_stepVertexColor(void* state, void* p, int reinit, int unusedChannel);
+void modgfx_stepVertexColor(PartfxEffectState* state, ModgfxVertexGroupCmd* p, int reinit, int unusedChannel);
 void modgfx_stepPosition(PartfxEffectState* state, ModgfxVertexGroupCmd* cmd, int reinit, int unusedChannel);
 void modgfx_stepS16VectorLerp(PartfxEffectState* state, f32* params, int reinit, int unusedChannel);
 void modgfx_stepVertexAlpha(PartfxEffectState* state, ModgfxVertexGroupCmd* command, int reinit, u8 channelIndex);
@@ -283,64 +283,64 @@ void modgfx_captureFrameBaseVertices(PartfxEffectState* state, int unused) {
     state->scaleVectors[3].z = zero;
 }
 
-void modgfx_stepVertexColor(void* state, void* p, int reinit, int unusedChannel) {
-    u8* buf = ((u8**)((char*)state + 0x78))[((PartfxEffectState*)state)->activeVertexBufferIndex];
+void modgfx_stepVertexColor(PartfxEffectState* state, ModgfxVertexGroupCmd* p, int reinit, int unusedChannel) {
+    u8* buf = ((u8**)((char*)state + 0x78))[state->activeVertexBufferIndex];
     int j;
 
     if (reinit == 1) {
-        f32 tr = ((ModgfxVertexGroupCmd*)p)->valueX;
-        f32 tg = ((ModgfxVertexGroupCmd*)p)->valueY;
-        f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
-        if (((PartfxEffectState*)state)->stageFrameCountdown != 0) {
-            ((PartfxEffectState*)state)->blendColorR =
-                (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc];
-            ((PartfxEffectState*)state)->blendColorG =
-                (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd];
-            ((PartfxEffectState*)state)->blendColorB =
-                (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe];
-            ((PartfxEffectState*)state)->blendColorStepR =
-                (tr - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xc]) /
-                (f32)((PartfxEffectState*)state)->stageFrameCountdown;
-            ((PartfxEffectState*)state)->blendColorStepG =
-                (tg - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xd]) /
-                (f32)((PartfxEffectState*)state)->stageFrameCountdown;
-            ((PartfxEffectState*)state)->blendColorStepB =
-                (tb - (f32)(u32)buf[(((ModgfxVertexGroupCmd*)p)->indices)[0] * 16 + 0xe]) /
-                (f32)((PartfxEffectState*)state)->stageFrameCountdown;
+        f32 tr = p->valueX;
+        f32 tg = p->valueY;
+        f32 tb = p->valueZ;
+        if (state->stageFrameCountdown != 0) {
+            state->blendColorR =
+                (f32)(u32)buf[(p->indices)[0] * 16 + 0xc];
+            state->blendColorG =
+                (f32)(u32)buf[(p->indices)[0] * 16 + 0xd];
+            state->blendColorB =
+                (f32)(u32)buf[(p->indices)[0] * 16 + 0xe];
+            state->blendColorStepR =
+                (tr - (f32)(u32)buf[(p->indices)[0] * 16 + 0xc]) /
+                (f32)state->stageFrameCountdown;
+            state->blendColorStepG =
+                (tg - (f32)(u32)buf[(p->indices)[0] * 16 + 0xd]) /
+                (f32)state->stageFrameCountdown;
+            state->blendColorStepB =
+                (tb - (f32)(u32)buf[(p->indices)[0] * 16 + 0xe]) /
+                (f32)state->stageFrameCountdown;
         } else {
-            ((PartfxEffectState*)state)->blendColorR = tr;
-            ((PartfxEffectState*)state)->blendColorG = tg;
-            ((PartfxEffectState*)state)->blendColorB = tb;
+            state->blendColorR = tr;
+            state->blendColorG = tg;
+            state->blendColorB = tb;
             {
                 f32 z = MODGFX_ZERO;
-                ((PartfxEffectState*)state)->blendColorStepR = z;
-                ((PartfxEffectState*)state)->blendColorStepG = z;
-                ((PartfxEffectState*)state)->blendColorStepB = z;
+                state->blendColorStepR = z;
+                state->blendColorStepG = z;
+                state->blendColorStepB = z;
             }
         }
     }
-    ((PartfxEffectState*)state)->blendColorR += ((PartfxEffectState*)state)->blendColorStepR;
-    ((PartfxEffectState*)state)->blendColorG += ((PartfxEffectState*)state)->blendColorStepG;
-    ((PartfxEffectState*)state)->blendColorB += ((PartfxEffectState*)state)->blendColorStepB;
-    if (((PartfxEffectState*)state)->blendColorR < MODGFX_ZERO) {
-        ((PartfxEffectState*)state)->blendColorR = MODGFX_ZERO;
-    } else if (((PartfxEffectState*)state)->blendColorR > 255.0f) {
-        ((PartfxEffectState*)state)->blendColorR = 255.0f;
+    state->blendColorR += state->blendColorStepR;
+    state->blendColorG += state->blendColorStepG;
+    state->blendColorB += state->blendColorStepB;
+    if (state->blendColorR < MODGFX_ZERO) {
+        state->blendColorR = MODGFX_ZERO;
+    } else if (state->blendColorR > 255.0f) {
+        state->blendColorR = 255.0f;
     }
-    if (((PartfxEffectState*)state)->blendColorG < MODGFX_ZERO) {
-        ((PartfxEffectState*)state)->blendColorG = MODGFX_ZERO;
-    } else if (((PartfxEffectState*)state)->blendColorG > 255.0f) {
-        ((PartfxEffectState*)state)->blendColorG = 255.0f;
+    if (state->blendColorG < MODGFX_ZERO) {
+        state->blendColorG = MODGFX_ZERO;
+    } else if (state->blendColorG > 255.0f) {
+        state->blendColorG = 255.0f;
     }
-    if (((PartfxEffectState*)state)->blendColorB < MODGFX_ZERO) {
-        ((PartfxEffectState*)state)->blendColorB = MODGFX_ZERO;
-    } else if (((PartfxEffectState*)state)->blendColorB > 255.0f) {
-        ((PartfxEffectState*)state)->blendColorB = 255.0f;
+    if (state->blendColorB < MODGFX_ZERO) {
+        state->blendColorB = MODGFX_ZERO;
+    } else if (state->blendColorB > 255.0f) {
+        state->blendColorB = 255.0f;
     }
-    for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++) {
-        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xc] = (int)((PartfxEffectState*)state)->blendColorR;
-        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xd] = (int)((PartfxEffectState*)state)->blendColorG;
-        buf[(((ModgfxVertexGroupCmd*)p)->indices)[j] * 16 + 0xe] = (int)((PartfxEffectState*)state)->blendColorB;
+    for (j = 0; j < p->indexCount; j++) {
+        buf[(p->indices)[j] * 16 + 0xc] = (int)state->blendColorR;
+        buf[(p->indices)[j] * 16 + 0xd] = (int)state->blendColorG;
+        buf[(p->indices)[j] * 16 + 0xe] = (int)state->blendColorB;
     }
 }
 
@@ -1149,7 +1149,7 @@ void dll_0B_updateActiveEffects(void) {
                     alphaGroupIndex++;
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x8) {
-                    modgfx_stepVertexColor(eff, PENDING_SPAWNS + emOff, active, 0);
+                    modgfx_stepVertexColor((PartfxEffectState*)eff, (ModgfxVertexGroupCmd*)(PENDING_SPAWNS + emOff), active, 0);
                 }
                 if (((ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff))->modelOrResource & 0x100) {
                     ModgfxPendingSpawn* em = (ModgfxPendingSpawn*)(PENDING_SPAWNS + emOff);
