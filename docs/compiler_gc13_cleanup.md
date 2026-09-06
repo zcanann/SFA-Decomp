@@ -305,3 +305,69 @@ The TU retains its existing GC/1.3 profile and NonMatching status.
 Formatting and generated-path audits, the strict retail checksum, and
 `ninja all_source` pass. Local controls and the before/after object audit are
 under `build/gc13_new_matches/player_round3*`.
+
+## September 6: Native flags and indexed object loops
+
+This pass cleans 35 TUs and removes 113 unnecessary 64-bit promotions without
+changing any of their GC/1.3 function or data match scores. The complete TU
+profiles are unchanged. Ordinary integer literals are intentional: replacing
+them with unsigned literals can change GC/1.3 code generation too.
+
+| Area | TUs | Removed promotions | Cleaner form |
+| --- | ---: | ---: | --- |
+| expgfx, modgfx, partfx, and engine slots 26–45 | 23 | 70 | Direct flag constants; remove `0LL` additions/ORs and use compound updates. |
+| lightmap, lightmap_draw, pad, shader, texture, object | 6 | 24 | Native flag masks for rendering, C-stick buttons, animation, and model loading. |
+| MikaBombShadow, DIM_Boss, EarthWarrior | 3 | 19 | Native masks, direct visibility checks, and simpler sequence-event handling. |
+| DoorF4, MAGICMaker, WM_ObjCreator | 3 | 0 | Typed object arrays and `objects[index]` loops; remove redundant casts and visibility temporaries. |
+
+For example, these replace `slot->renderFlags ^= FLAG | 0LL`, a widened
+C-stick mask, and a walking object pointer:
+
+```c
+slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
+*currentButtons |= PAD_BUTTON_CSTICK_DOWN;
+groupObject = groupObjects[i];
+```
+
+EarthWarrior also uses the existing `CurvesCollisionState` definition:
+`&state->baddie.curvesCollision` replaces a byte pointer plus four, and
+`pathState->activeTimer` replaces `pathState[0x264]`. Both offsets already
+have canonical layout assertions. DoorF4's message IDs now use the `u32`
+type required by the message API, eliminating pointer casts.
+
+All 29 engine/main before-and-after controls score lower under GC/2.0 when
+the widened expressions are removed. The three object flag cleanups show
+the same distinction:
+
+| Object TU | Original GC/2.0 | Clean GC/1.3 | Clean GC/2.0 |
+| --- | ---: | ---: | ---: |
+| MikaBombShadow | 100% | **100%** | 97.95918% |
+| DIM_Boss | 100% | **100%** | 99.2901% |
+| EarthWarrior | 100% | **100%** | 99.748665% |
+
+MikaBombShadow provides a small instruction-level control: without the
+widening cast, GC/2.0 folds retail's `lis`/`or` into `oris`; GC/1.3 preserves
+the retail instructions. The three indexed object loops also match GC/2.0,
+so they are cleanup opportunities rather than compiler discriminators.
+
+Measured exceptions remain. Removing the widening in `Rcp_ClearRenderFlags`,
+the pending-map-load `0x800` mask, or `mainSetBits` still regresses GC/1.3.
+DoorF4 retains its one-element angle temporary and XOR narrowing casts.
+MAGICMaker retains its loaded `groupObject`, and WM_ObjCreator retains the
+local reused for state and the spawn condition. Splitting or eliminating
+those locals changes code generation.
+
+Allocated section contents, named data-symbol offsets, and normalized
+relocations are unchanged in all 35 TUs. Only expgfx and the three indexed
+object TUs renumber anonymous literals at preserved pool offsets; the other
+31 complete objects remain byte-identical. Other source consumers retain
+their objects. Independent Player changes arriving through staging are
+excluded from this pass's comparison and match totals.
+
+The object changes land one slot per commit; the mechanical engine and main
+audits are separate commits. Active sources and their owning headers pass
+clang-format, and the six object paths pass the generated-path audit.
+Every landing passes the strict matching build and `ninja all_source` within
+30 seconds; the final retail DOL remains byte-identical. Controls and
+before/after artifacts are under `build/gc13_indexed/nicer_*`, with the
+object packets beside them.
