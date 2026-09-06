@@ -954,3 +954,36 @@ slots 575, 578 and 597. Baselines and the final audit are under
 `build/gc13_migration/indexed_matrices/`. Controls and separate source/format
 packets are under `build/gc13_indexed/gameloop_main_index_cleanup/`,
 `dbegg_index_cleanup/`, `dbstealer_index_cleanup/` and `dll597_index_cleanup/`.
+
+## September 6: Normal-camera wall-avoidance loop
+
+Engine 66 (`dlls/engine/66/66.c`) reaches **100% for all nineteen functions,
+12,592 code bytes, and 260 assigned data bytes**, and is now source-linked
+for EN v1.0. `CameraModeNormal_updateWallAvoidance` adds 1,280 exact code
+bytes, improving from 99.59375% to 100%; the complete TU improves from
+99.9587% to 100%.
+
+The paired probe loop uses `while (i <= 0xc)` instead of a bottom-tested
+loop, retaining the existing initialization and increments. Declaring `dx`
+before `dz` then gives retail's FPR allocation. The top-tested loop puts
+the hoisted constants ahead of the long-lived offsets in the compiler's
+coloring order; the declaration order selects `f28` for X and `f27` for Z.
+Both backend captures align all 320 instructions and preserve their ordinary
+compile's raw object. The accepted source also matches under GC/2.0, so
+this recovery does not distinguish the compiler versions.
+
+Only 30 bytes across 24 instructions change, all in wall avoidance. Every
+other function, allocated data byte, section size/alignment, and named
+symbol location is preserved. Sixty-two relocations rename anonymous
+literals at unchanged locations and retain their resolved targets. The
+common GC/1.3 compiler, existing optimization profile, TU boundaries,
+generated path, header, and shared consumers are unchanged. Running
+`clang-format -i` leaves the source and header unchanged; both pass the
+formatting check.
+
+The generated-path audit, strict matching build, and `ninja all_source`
+pass, with both builds bounded by 30-second timeouts. Only this TU's source
+object changes in the isolated build audit. The source-linked DOL retains
+SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
+reports, backend traces, and object audits are under
+`build/gc13_new_matches/normal_camera_match/`.
