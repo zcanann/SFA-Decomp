@@ -307,6 +307,7 @@ elif args.warn == "error":
 
 cflags_runtime = [
     *cflags_base,
+    "-char signed",
     "-use_lmw_stmw on",
     "-str reuse,pool,readonly",
     "-gccinc",
@@ -666,7 +667,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/__exception.s"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__va_arg.c"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__va_arg.c"),
             Object(Matching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/runtime.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
