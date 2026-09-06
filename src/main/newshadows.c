@@ -330,7 +330,6 @@ extern inline float sqrtf(float x) {
     return x;
 }
 
-
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window) {
     u32 sum;
     int k;
@@ -1163,7 +1162,8 @@ void newshadows_createDistortionTexture(void) {
             directionY *= strength;
             normalizedX = 127.0f * normalizedX + 128.0f;
             directionY = 127.0f * directionY + 128.0f;
-            ((NewShadowVectorTexel*)(texel + sizeof(Texture)))->packedXY = (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
+            ((NewShadowVectorTexel*)(texel + sizeof(Texture)))->packedXY =
+                (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
         }
     }
     DCFlushRange(gNewShadowDistortionTexture + 1, gNewShadowDistortionTexture->dataSize);
