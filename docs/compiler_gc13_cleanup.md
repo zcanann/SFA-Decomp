@@ -153,3 +153,30 @@ checked against the intended C tokens and the unformatted candidate object;
 the canonical header is unchanged. The generated-path audit, strict retail
 checksum build, and `ninja all_source` pass. Artifacts are under
 `build/gc13_new_matches/wisp/` and `wisp_gc20/`.
+
+## September 6: Player state-entry flags
+
+Three more functions become exact with native compound updates of the
+32-bit player flag word. They clear `PLAYER_FLAG_HITDETECT` and set
+`PLAYER_FLAG_NO_POS_VELOCITY` on entry. The two shared definitions now use
+ordinary integer literals; all existing macro uses are in this TU and access
+the same `u32 flags360` field. The stored values are unchanged for every input.
+
+| Function | Bytes | Previous GC/1.3 | Native updates GC/1.3 | Native updates GC/2.0 |
+| --- | ---: | ---: | ---: | ---: |
+| `playerState1B` | 1,636 | 99.39854% | **100%** | 99.53545% |
+| `playerState19` | 1,396 | 99.29513% | **100%** | 99.45559% |
+| `playerStateMountBike` | 1,452 | 99.40496% | **100%** | 99.545456% |
+
+Together these add **4,484 exact code bytes** and improve the complete player
+TU from 99.80901% to 99.82937%. All other function bodies, data, symbol offsets,
+and relocation targets remain unchanged, including the other consumers of the
+shared flag macros. Each changed function moves one existing float-literal
+load by one instruction. The TU retains its existing compiler profile and remains
+NonMatching because other functions still differ.
+
+The formatted source emits the same object as the independently compiled
+candidate. Formatting checks, the generated-path audit, the strict checksum
+build, and `ninja all_source` pass. Local source/compiler controls are under
+`build/gc13_new_matches/player_batch/`, `player_batch_gc20/`, and
+`player_macro_batch/`.
