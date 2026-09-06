@@ -845,8 +845,7 @@ int curves_findNearObj(GameObject* obj, int* curveTypes, int typeCount, int acti
 #define OBJFSA_WG(GRP) ((ObjfsaWalkGroup*)((char*)patchBase[0] + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
 
 int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unused2, int* previousCurveId) {
-    f32* scanBase;
-    int top;
+    f32* queueDistanceBase;
     RomCurveDef* queueCurve;
     int directIndex;
     int directSlot;
@@ -858,17 +857,16 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
     int linkId;
     RomCurveDef* linkCurve;
     int insertIndex;
-    int sel[2];
     int found;
     int i;
     int j;
     int linkSlot;
     f32 distance;
     f32 linkDistance;
-    int candidateIds[4];
-    f32 candidateDistances[4];
-    int queueIndices[40];
-    f32 queueDistances[40];
+    int candidateIds[ROMCURVE_LINK_SEARCH_RESULT_COUNT];
+    f32 candidateDistances[ROMCURVE_LINK_SEARCH_RESULT_COUNT];
+    int queueIndices[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
+    f32 queueDistances[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
     u8 visited[ROMCURVE_MAX_CURVES];
 
     if (startCurve == 0) {
@@ -880,8 +878,8 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
 
     candidateCount = 0;
     directSlot = 0;
-    for (; directSlot < 4; directSlot++) {
-        scanBase = queueDistances;
+    for (; directSlot < ROMCURVE_LINK_COUNT; directSlot++) {
+        queueDistanceBase = queueDistances;
         directLinkId = startCurve->linkIds[directSlot];
         if (directLinkId <= -1) {
             continue;
@@ -892,7 +890,7 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
         }
         visited[startIndex] = 1;
 
-        directCurve = (RomCurveDef*)RomCurve_findByIdWithIndex(startCurve->linkIds[directSlot], &directIndex);
+        directCurve = RomCurve_findByIdWithIndex(startCurve->linkIds[directSlot], &directIndex);
         if (directCurve == 0) {
             continue;
         }
@@ -908,11 +906,9 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
         do {
             if (queueCount > 0) {
                 queueCount--;
-                top = queueCount;
-                directIndex = queueIndices[top];
+                directIndex = queueIndices[queueCount];
                 queueCurve = romCurves[directIndex];
-                distance = queueDistances[top];
-                sel[0] = 0;
+                distance = queueDistances[queueCount];
 
                 if (queueCurve->unk34 == 1) {
                     found = 1;
@@ -921,7 +917,7 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
                     continue;
                 }
 
-                for (linkSlot = 0; linkSlot < 4; linkSlot++) {
+                for (linkSlot = 0; linkSlot < ROMCURVE_LINK_COUNT; linkSlot++) {
                     linkId = queueCurve->linkIds[linkSlot];
                     if (linkId <= -1) {
                         continue;
@@ -938,7 +934,7 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
                                     (queueCurve->y - linkCurve->y) * (queueCurve->y - linkCurve->y));
 
                     insertIndex = 0;
-                    while (insertIndex < queueCount && scanBase[insertIndex] > linkDistance) {
+                    while (insertIndex < queueCount && queueDistanceBase[insertIndex] > linkDistance) {
                         insertIndex++;
                     }
                     for (j = queueCount; j > insertIndex; j--) {
@@ -946,7 +942,6 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
                         queueDistances[j] = queueDistances[j - 1];
                     }
                     queueCount++;
-                    top++;
                     queueDistances[insertIndex] = linkDistance;
                     queueIndices[insertIndex] = directIndex;
                     visited[directIndex] = 1;
@@ -976,14 +971,14 @@ int RomCurve_findShortestPathLink(RomCurveDef* startCurve, int unused1, int unus
         }
 
         *previousCurveId = startCurve->id;
-        sel[1] = 0;
-        sel[0] = sel[1];
-        for (; sel[0] < candidateCount; sel[0]++) {
-            if (candidateDistances[sel[0]] < candidateDistances[sel[1]]) {
-                sel[1] = sel[0];
+        j = 0;
+        i = j;
+        for (; i < candidateCount; i++) {
+            if (candidateDistances[i] < candidateDistances[j]) {
+                j = i;
             }
         }
-        return candidateIds[sel[1]];
+        return candidateIds[j];
     }
     return -1;
 }
