@@ -9,8 +9,7 @@ typedef int (*PlayerSubstateFn)(GameObject* obj, BaddieState* state, f32 dt);
 typedef int (*PlayerStateFn)(GameObject* obj, BaddieState* state, f32 dt);
 typedef BaddieStateExitFn PlayerStateExitFn;
 
-typedef struct PlayerMoveBuf
-{
+typedef struct PlayerMoveBuf {
     f32 a;
     f32 b;
     f32 c;
