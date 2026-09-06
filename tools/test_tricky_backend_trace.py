@@ -9,6 +9,17 @@ from test_tricky_backend_graph import simplification_fixture
 
 
 class BackendTraceTests(unittest.TestCase):
+    def test_inspection_uses_selected_unit(self):
+        final = {"name": "headDisplayDraw", "stage": "FINAL CODE"}
+        with ExitStack() as stack:
+            stack.enter_context(patch.object(trace, "read_object", return_value=SimpleNamespace(functions={"headDisplayDraw": b""})))
+            stack.enter_context(patch.object(trace, "validate_snapshot"))
+            stack.enter_context(patch.object(trace, "validate_alignment", return_value=[]))
+            stack.enter_context(patch.object(trace.strucdiff, "text_lines", return_value=[]))
+            analyse = stack.enter_context(patch.object(trace.strucdiff, "analyse", return_value=([], [], [], 0, 0)))
+            trace.inspect([final], Path("unused.o"), ["headDisplayDraw"], unit="main/dlls/engine/0/0")
+            analyse.assert_called_once_with("main/dlls/engine/0/0", "headDisplayDraw", "unused.o")
+
     def test_paired_graph_color_policy_is_replayed(self):
         before, after = simplification_fixture([32, 33])
         initial = {"name": "trickyDigTunnel", "stage": "BEFORE GPR SIMPLIFICATION",

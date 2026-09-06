@@ -17,12 +17,12 @@ COMPILER_SHA256 = "4e502c38465500d4fda8d966b268151a6c74c730508e3d9b7efd23d1a6083
 # instructions. Multiple spellings are PPC disassembler aliases/prediction bits.
 MNEMONICS = {
     0x00: "b", 0x01: "bl", 0x05: "beq+ beq- bgt- blt+ blt-",
-    0x08: "bge- ble- bne+ bne-", 0x0B: "bdnz+ bdnz-",
+    0x08: "bge+ bge- ble- bne+ bne-", 0x0B: "bdnz+ bdnz-",
     0x11: "blr", 0x12: "bctr", 0x13: "bctrl", 0x15: "lbz",
     0x17: "lbzx", 0x19: "lhz", 0x1B: "lhzx", 0x1D: "lha",
     0x22: "lwz", 0x24: "lwzx", 0x28: "stb", 0x2C: "sth",
     0x31: "stw", 0x32: "stwu", 0x3C: "add", 0x3F: "addi",
-    0x42: "addis", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
+    0x42: "addis", 0x47: "mulhw", 0x49: "mulli", 0x4A: "mullw", 0x4B: "neg",
     0x4C: "subf", 0x4F: "subfic", 0x52: "cmpwi", 0x53: "cmpw",
     0x54: "cmplwi", 0x55: "cmplw", 0x58: "ori", 0x5A: "xori",
     0x5B: "xoris", 0x5C: "and", 0x5E: "xor", 0x64: "extsb",
@@ -30,9 +30,9 @@ MNEMONICS = {
     0x6A: "slw", 0x6C: "srawi", 0x70: "crset", 0x73: "cror",
     0x75: "crclr", 0x78: "mtctr", 0x79: "mtlr", 0x81: "mflr",
     0x89: "li", 0x8A: "lis", 0x8B: "mr", 0x8E: "lfs",
-    0x92: "lfd", 0x96: "stfs", 0x9A: "stfd", 0x9E: "fmr",
-    0xA0: "fneg", 0xA3: "fadds", 0xA5: "fsubs", 0xA7: "fmuls",
-    0xA9: "fdivs", 0xAB: "fmadds", 0xB1: "fnmsubs", 0xB7: "fctiwz",
+    0x90: "lfsx", 0x92: "lfd", 0x96: "stfs", 0x9A: "stfd", 0x9E: "fmr",
+    0xA0: "fneg", 0xA3: "fadds", 0xA4: "fsub", 0xA5: "fsubs", 0xA6: "fmul", 0xA7: "fmuls",
+    0xA9: "fdivs", 0xAB: "fmadds", 0xB0: "fnmsub", 0xB1: "fnmsubs", 0xB5: "frsp", 0xB7: "fctiwz",
     0xB8: "fcmpu", 0xB9: "fcmpo", 0x193: "psq_l", 0x197: "psq_st",
 }
 
@@ -175,7 +175,7 @@ def emitted_instructions(snapshot):
     if snapshot["stage"] != "FINAL CODE":
         raise ValueError("only FINAL CODE can be aligned to emitted instructions")
     result = []
-    blocks = {b["address"] for b in snapshot["blocks"]}
+    blocks = {b["address"]: b for b in snapshot["blocks"]}
     for block in snapshot["blocks"]:
         for instruction in block["instructions"]:
             decoded = decode(instruction)
@@ -189,7 +189,10 @@ def emitted_instructions(snapshot):
                 target = snapshot["labels"][str(first["label"])][1]
                 if target not in blocks:
                     raise ValueError("final branch targets an absent basic block")
-                if target == block["words"][0]:
+                following = block["words"][0]
+                while following and following != target and not blocks[following]["instructions"]:
+                    following = blocks[following]["words"][0]
+                if target == following:
                     continue
             result.append(decoded)
     return result
@@ -221,20 +224,26 @@ def validate_alignment(snapshot, assembly, code):
         expected = None
         if op in (0x89, 0x8A, 0x8B) and len(args) < 2:
             raise ValueError("missing load/move operands")
-        if op == 0x89 and (args[0]["kind"] != 0 or args[1]["kind"] != 2):
+        if op == 0x89 and (args[0]["kind"] != 0 or args[1]["kind"] not in (2, 3)):
             raise ValueError("invalid immediate load operands")
         if op == 0x8A and (args[0]["kind"] != 0 or args[1]["kind"] not in (2, 3)):
             raise ValueError("invalid shifted load operands")
-        if op in (0x89, 0x8A) and args[0]["kind"] == 0 and args[1]["kind"] == 2:
+        actual = int.from_bytes(code[index * 4:index * 4 + 4], "big")
+        if op in (0x89, 0x8A):
             if args[0]["register_class"] != 4 or not 0 <= args[0]["number"] < 32:
                 raise ValueError("invalid emitted GPR")
-            expected = ((14 if op == 0x89 else 15) << 26) | (args[0]["number"] << 21) | (args[1]["value"] & 0xFFFF)
+            expected = ((14 if op == 0x89 else 15) << 26) | (args[0]["number"] << 21)
+            if args[1]["kind"] == 2:
+                expected |= args[1]["value"] & 0xFFFF
+            else:
+                # Symbol operands remain opaque; relocations own the low halfword.
+                actual &= 0xFFFF0000
         elif op == 0x8B:
             dest, source = args[:2]
             if any(a["kind"] != 0 or a["register_class"] != 4 or not 0 <= a["number"] < 32 for a in (dest, source)):
                 raise ValueError("invalid emitted move registers")
             expected = (31 << 26) | (source["number"] << 21) | (dest["number"] << 16) | (source["number"] << 11) | (444 << 1)
-        if expected is not None and expected != int.from_bytes(code[index * 4:index * 4 + 4], "big"):
+        if expected is not None and expected != actual:
             raise ValueError(f"operand encoding failed at {index}: {asm}")
     return instructions
 

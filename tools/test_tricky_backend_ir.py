@@ -83,6 +83,24 @@ class BackendIRTests(unittest.TestCase):
         data["labels"]["768"][1] = 0x100
         self.assertEqual(len(emitted_instructions(data)), 4)
 
+    def test_branch_over_empty_blocks_is_fallthrough(self):
+        data = fixture()
+        data["blocks"][0]["words"][0] = 0x180
+        data["blocks"][1]["words"][1] = 0x190
+        data["blocks"][1:1] = [
+            {"address": 0x180, "words": [0x190, 0x100, 0, 0, 0, 0, 0, 3, 0, 0, 0], "instructions": []},
+            {"address": 0x190, "words": [0x200, 0x180, 0, 0, 0, 0, 0, 4, 0, 0, 0], "instructions": []},
+        ]
+        self.assertEqual([r["opcode"] for r in emitted_instructions(data)], [0x89, 0x8B, 0x11])
+
+    def test_branch_over_nonempty_block_is_retained(self):
+        data = fixture()
+        data["blocks"][1]["words"][0] = 0x300
+        data["blocks"].append({"address": 0x300,
+                               "words": [0, 0x200, 0, 0, 0, 0, 0, 3, 0, 0, 0], "instructions": []})
+        data["labels"]["768"][1] = 0x300
+        self.assertEqual(len(emitted_instructions(data)), 4)
+
     def test_missing_final_target_is_rejected(self):
         data = fixture()
         data["labels"]["768"][1] = 0
@@ -108,9 +126,28 @@ class BackendIRTests(unittest.TestCase):
 
     def test_malformed_immediate_cannot_bypass_encoding_check(self):
         data = fixture()
-        data["blocks"][0]["instructions"][0]["words"][12] = 3
+        data["blocks"][0]["instructions"][0]["words"][12] = 5
         with self.assertRaisesRegex(ValueError, "invalid immediate"):
             validate_alignment(data, ["li r7,0", "mr r4,r7", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))
+
+    def test_symbolic_load_still_checks_opcode_base_and_destination(self):
+        for opcode, mnemonic, encoding in [(0x89, "li", 0x38E01234), (0x8A, "lis", 0x3CE01234)]:
+            data = fixture()
+            load = data["blocks"][0]["instructions"][0]["words"]
+            load[8] = opcode | (2 << 16)
+            load[12:15] = [0x203, 0x12345678, 0]
+            asm = [f"{mnemonic} r7,4660", "mr r4,r7", "blr"]
+            for corruption in (0, 0x10000, 0x200000, 0x4000000):
+                code = struct.pack(">3I", encoding ^ corruption, 0x7CE43B78, 0x4E800020)
+                with self.subTest(opcode=opcode, corruption=corruption):
+                    if corruption:
+                        with self.assertRaisesRegex(ValueError, "operand encoding"):
+                            validate_alignment(data, asm, code)
+                    else:
+                        self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+            load[10] = 39
+            with self.assertRaisesRegex(ValueError, "invalid emitted GPR"):
+                validate_alignment(data, [f"{mnemonic} r39,4660", *asm[1:]], struct.pack(">3I", encoding, 0x7CE43B78, 0x4E800020))
 
     def test_missing_block_head_label(self):
         data = fixture()

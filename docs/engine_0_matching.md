@@ -313,3 +313,59 @@ and formatting checks pass. After finishing the shared-header rebuild in
 object byte for byte. A diagnostic source-object link leaves every data
 byte intact and reduces the residual text differences from 506 to **465**
 bytes.
+
+## September 6: compiler traces on macOS
+
+The staging resync through `e0cff4c0f6` preserves the complete `0.c` object:
+109 / 118 functions remain exact, with 99.89041% code similarity and all
+9,952 assigned data bytes exact. The source object SHA256 is
+`5878b3855f71f6077a2ed61b222692bc49738ea00befd307a065acdc24c0db61`.
+
+`tools/tricky_backend_trace.py` now accepts `--unit` and infers that unit's
+configured source. Its new macOS provider uses LLDB with the repository's
+Wibo executable; the existing Windows provider remains available. For example:
+
+```sh
+python3 tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 \
+  --function headDisplayDraw --function pauseMenuDrawStatusPage --graph \
+  --output build/flag_probe/engine_0_backend
+python3 tools/tricky_backend_trace.py \
+  --read build/flag_probe/engine_0_backend/trace.json \
+  --function headDisplayDraw --instruction 229 --instruction 230
+```
+
+Capture requires the supported GC/1.3 compiler hash, LLDB, Wibo's
+`loadPEFromSource` symbols, and the Python dependencies used by the existing
+object-inspection tools. On the tested Apple Silicon host, Wibo runs under
+Rosetta. The provider verifies each intercepted instruction and emulates its
+32-bit `ret` or `push ebx`; letting LLDB step these guest instructions as
+host instructions can crash the compiler. Compiler files remain untouched.
+Captured and ordinary objects must have identical raw hashes before a trace
+is published. A timeout and a missing-function probe both fail without leaving
+a running compiler or debugger. Unsupported IR still fails validation.
+
+The live trace validates all 480 instructions and 21 snapshots for
+`headDisplayDraw`, and all 673 instructions and 20 snapshots for
+`pauseMenuDrawStatusPage`. GPR graph simplification and every physical color
+choice replay exactly. Decoder coverage now includes these functions' floating
+instructions, symbolic `li` operands, and fallthrough branches across empty
+blocks. Symbolic loads retain checks of the opcode, destination, and zero base;
+the relocation's low halfword remains opaque.
+
+The head-display trace explains why merely chaining the three zero assignments
+does not produce retail's two copies. Constant propagation turns the phase
+locals into immediate loads, but their virtual GPRs 35 and 44 fall below the
+late value-numbering range beginning at 46. Computing phases from the scanline
+instead creates eligible induction temporaries. Computing all three quantities
+from a row counter also produces two copies, but the current forms worsen
+register allocation, so none is retained. For the status page, the remaining
+three instructions concern one alpha value: virtual GPR 46 receives r24 even
+though retail's r28 is free. The already-expanded register bank chooses the
+lower free register. These are observations of the reconstructed source's
+compiler behavior, not proof of the original local declarations.
+
+Validation after the resync: 68 backend tests complete with seven Windows-only
+skips; live capture with and without graphs and offline trace inspection pass.
+The strict build exits 0 in 15.72 seconds with the expected retail SHA1, and
+`ninja all_source` exits 0 in 16.26 seconds. The TU and API header pass the
+formatting check.

@@ -1,4 +1,4 @@
-"""Trace Tricky's residual instructions through GC/1.3's optimizer on Windows.
+"""Trace residual instructions through GC/1.3's optimizer on Windows or macOS.
 
 The capture is diagnostic only: a private compiler process's disabled dump hook
 is intercepted, and its complete output object must equal an ordinary compile.
@@ -7,6 +7,7 @@ No compiler file, game source, or production build flags are modified.
     python tools/tricky_backend_trace.py --function trickyDigTunnel --instruction 330
     python tools/tricky_backend_trace.py --graph --function trickyUpdateMovementState --register 74 --register 76
     python tools/tricky_backend_trace.py --read build/flag_probe/tricky_backend/trace.json
+    python tools/tricky_backend_trace.py --unit main/dlls/engine/0/0 --function pauseMenuDrawStatusPage --graph
 
 IR addresses identify observed arena records, not proven source-variable lineage.
 This diagnoses the reconstructed source; it does not establish retail provenance.
@@ -42,7 +43,7 @@ FUNCTIONS = ("trickyDigTunnel", "trickyUpdateMovementState")
 OUTPUT = ROOT / "build/flag_probe/tricky_backend"
 
 
-def inspect(snapshots, obj, functions, require_graph=False):
+def inspect(snapshots, obj, functions, require_graph=False, unit=UNIT):
     result = {}
     object_snapshot = read_object(obj)
     for name in functions:
@@ -82,7 +83,7 @@ def inspect(snapshots, obj, functions, require_graph=False):
         assembly = strucdiff.text_lines(str(obj), name)
         code = object_snapshot.functions[name]
         instructions = validate_alignment(stages[-1], assembly, code)
-        rows, retail, current, _, _ = strucdiff.analyse(UNIT, name, str(obj))
+        rows, retail, current, _, _ = strucdiff.analyse(unit, name, str(obj))
         differences = []
         for marker, target_index, current_index in rows:
             if marker == " ":
@@ -98,11 +99,14 @@ def inspect(snapshots, obj, functions, require_graph=False):
     return result
 
 
-def run_capture(source, directory, functions, graph=False):
-    from tricky_backend_capture_win import capture
+def run_capture(source, directory, functions, graph=False, unit=UNIT):
+    if sys.platform == "darwin":
+        from mwcc_backend_capture_lldb import capture
+    else:
+        from tricky_backend_capture_win import capture
 
     directory.mkdir(parents=True, exist_ok=True)
-    base = split_command_line(flag_probe.base_cmd(UNIT))
+    base = split_command_line(flag_probe.base_cmd(unit))
     # Fresh directories prevent stale objects from satisfying the equivalence gate.
     with tempfile.TemporaryDirectory(prefix="capture-", dir=directory) as scratch:
         scratch = Path(scratch)
@@ -120,9 +124,9 @@ def run_capture(source, directory, functions, graph=False):
         normal_hash, traced_hash = read_object(normal_obj).digest, read_object(traced_obj).digest
         if normal_hash != traced_hash:
             raise ValueError(f"instrumentation changed the output object: {normal_hash} != {traced_hash}")
-        report = inspect(snapshots, traced_obj, functions, require_graph=graph)
+        report = inspect(snapshots, traced_obj, functions, require_graph=graph, unit=unit)
         document = {
-            "schema": 1, "compiler_sha256": hashlib.sha256(compiler.read_bytes()).hexdigest(),
+            "schema": 1, "unit": unit, "compiler_sha256": hashlib.sha256(compiler.read_bytes()).hexdigest(),
             "object_sha256": traced_hash, "source": str(source),
             "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
             "command": command[compiler_index:] + ["-pragma", "debug_listing on"],
@@ -137,9 +141,10 @@ def run_capture(source, directory, functions, graph=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--unit", help="Objdiff unit; defaults to Tricky or the recorded trace unit")
+    parser.add_argument("--source", type=Path, help="Source override; defaults to the unit's configured source")
     parser.add_argument("--output", type=Path, default=OUTPUT)
-    parser.add_argument("--function", choices=FUNCTIONS, action="append")
+    parser.add_argument("--function", action="append")
     parser.add_argument("--instruction", type=int, action="append", help="Current ELF instruction index; repeat to inspect")
     parser.add_argument("--graph", action="store_true", help="Capture and replay GPR simplification and physical coloring")
     parser.add_argument("--register", type=int, action="append", help="Virtual GPR graph index; requires --graph when capturing")
@@ -159,11 +164,19 @@ def main():
         if read_object(obj).digest != document["object_sha256"]:
             raise ValueError("trace object hash does not match captured provenance")
         functions = args.function or sorted({s["name"] for s in document["snapshots"]})
-        report = inspect(document["snapshots"], obj, functions, require_graph=args.graph)
+        unit = document.get("unit", UNIT)
+        if args.unit and args.unit != unit:
+            parser.error("requested unit differs from the recorded trace unit")
+        report = inspect(document["snapshots"], obj, functions, require_graph=args.graph, unit=unit)
     else:
-        if sys.platform != "win32":
-            parser.error("capture requires Windows; --read works without the Windows debugger")
-        document, report = run_capture(args.source.resolve(), args.output.resolve(), args.function or FUNCTIONS, args.graph)
+        if sys.platform not in ("win32", "darwin"):
+            parser.error("capture requires Windows or macOS; --read works without a debugger")
+        unit = args.unit or UNIT
+        if unit != UNIT and not args.function:
+            parser.error("other units require at least one --function")
+        base = split_command_line(flag_probe.base_cmd(unit))
+        source = args.source or (ROOT / base[base.index("-c") + 1])
+        document, report = run_capture(source.resolve(), args.output.resolve(), args.function or FUNCTIONS, args.graph, unit)
     print("Instrumented/ordinary raw object SHA256:", document["object_sha256"])
     for name, item in report.items():
         print(f"{name}: {len(item['instructions'])} aligned instructions; {item['stages']} captured stages; {len(item['differences'])} retail differences")
