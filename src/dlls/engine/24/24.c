@@ -33,7 +33,7 @@ s32 gBoneParticleBufferFlip;
 #define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140
 #define BONE_PARTICLE_EFFECT_SLOT_COUNT   20
 
-void* gBoneParticleEffectBuffers[8];
+LightmapVertex* gBoneParticleEffectBuffers[8];
 f32 gBoneParticleDriftVelocity[2] = {10.0f, 0.0f};
 
 /* the two bone-particle texture assets loaded at init (gBoneParticleTextureA/B) */
@@ -117,8 +117,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
     const Vec3f* cornersYZ;
     const Vec3f* cornersXZ;
     const Vec3f* cornersXY;
-    void** updateBufferCursor;
-    void** drawBufferCursor;
+    LightmapVertex** updateBufferCursor;
+    LightmapVertex** drawBufferCursor;
     int bufferIndex;
     f32 jointPositionScale;
     f32 one;
@@ -216,14 +216,14 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                                           &transform.y, &transform.z);
                     transform.x = transform.x + playerMapOffsetX;
                     transform.z = transform.z + playerMapOffsetZ;
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].x =
+                    (*updateBufferCursor)[cornerIndex + vertexBase].x =
                         jointX + (transform.x - obj->anim.localPosX);
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].y =
+                    (*updateBufferCursor)[cornerIndex + vertexBase].y =
                         jointY + (transform.y - obj->anim.localPosY);
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].z =
+                    (*updateBufferCursor)[cornerIndex + vertexBase].z =
                         jointZ + (transform.z - obj->anim.localPosZ);
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].a = 0x9b;
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].t =
+                    (*updateBufferCursor)[cornerIndex + vertexBase].a = 0x9b;
+                    (*updateBufferCursor)[cornerIndex + vertexBase].t =
                         (s16)(gBoneParticleInitVertices[cornerIndex + vertexBase].t - (gBoneParticleScrollOffset << 2));
                     cornersYZ++;
                     cornersXZ++;
@@ -359,23 +359,23 @@ void boneParticleEffect_initialise(void) {
     gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     for (bufferIndex = 0; bufferIndex < BONE_PARTICLE_EFFECT_BUFFER_COUNT; bufferIndex++) {
         for (vertexIndex = 0; vertexIndex < BONE_PARTICLE_EFFECT_SLOT_COUNT; vertexIndex++) {
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].x =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].x =
                 gBoneParticleInitVertices[vertexIndex].x;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].y =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].y =
                 gBoneParticleInitVertices[vertexIndex].y;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].z =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].z =
                 gBoneParticleInitVertices[vertexIndex].z;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].s =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].s =
                 gBoneParticleInitVertices[vertexIndex].s;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].t =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].t =
                 gBoneParticleInitVertices[vertexIndex].t;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].r =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].r =
                 gBoneParticleInitVertices[vertexIndex].r;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].g =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].g =
                 gBoneParticleInitVertices[vertexIndex].g;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].b =
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].b =
                 gBoneParticleInitVertices[vertexIndex].b;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].a = 0xff;
+            gBoneParticleEffectBuffers[bufferIndex][vertexIndex].a = 0xff;
         }
     }
 }
