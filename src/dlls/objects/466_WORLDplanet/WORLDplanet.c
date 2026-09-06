@@ -114,6 +114,7 @@ int gWorldPlanetSelectConfirmTimer;
 f32 lbl_803DDD00;
 
 void worldplanet_updateMapLighting(GameObject* obj) {
+    f32 intensityScale;
     skySetLightsEnabled(WORLDPLANET_SKY_LIGHT_MASK, 1, 0);
 
     gWorldPlanetLightingLerpT = 0.0f;
@@ -145,7 +146,8 @@ void worldplanet_updateMapLighting(GameObject* obj) {
     skySetMoonColor(WORLDPLANET_SKY_LIGHT_MASK, gWorldPlanetCurMoon.red, gWorldPlanetCurMoon.green,
                     gWorldPlanetCurMoon.blue);
 
-    gWorldPlanetCurIntensity = gWorldPlanetLightingLerpT * 128.0f + 32.0f;
+    intensityScale = 128.0f;
+    gWorldPlanetCurIntensity = gWorldPlanetLightingLerpT * intensityScale + 32.0f;
     skySetLightDirection(WORLDPLANET_SKY_LIGHT_MASK, 0.739264f, 0.0f, 0.673415f);
 }
 
@@ -238,19 +240,18 @@ static inline void worldplanet_spawnFox(GameObject* obj, WorldPlanetState* state
 }
 
 void worldplanet_update(GameObject* obj) {
+    GameObject* orbitObject;
+    u8 planetIndex;
     u8 prevPlanet;
-    GameObject* arwing;
+    GameObject* mapObject;
     int buttons;
     WorldPlanetState* state;
     u8 done;
     u8 i;
-    u8 planetIdx;
     int objId;
     WorldObjEffectParams effectParams;
-    struct {
-        s8 inY;
-        s8 inX[3];
-    } in;
+    s8 inputX;
+    s8 inputY;
 
     state = (obj)->extra;
     done = 0;
@@ -304,7 +305,7 @@ void worldplanet_update(GameObject* obj) {
         (*gPartfxInterface)
             ->spawnObject((void*)obj, WORLDPLANET_SELECTION_PFX_ID, &effectParams, WORLDPLANET_SELECTION_PFX_MODE, -1,
                           NULL);
-        worldplanet_readMapInput(obj, in.inX, &in.inY);
+        worldplanet_readMapInput(obj, &inputX, &inputY);
         (obj)->anim.rotZ -= 10;
         (obj)->anim.rotY = 0x3448;
         (obj)->anim.rotX = 0x4000;
@@ -314,8 +315,8 @@ void worldplanet_update(GameObject* obj) {
             fox->anim.rotY = (obj)->anim.rotY;
             fox->anim.rotX = (obj)->anim.rotX;
         }
-        arwing = ObjList_FindObjectById(WORLDPLANET_ARWING_OBJECT_ID);
-        ((WorldObjState*)arwing->extra)->effectState = state->selectionLocked;
+        mapObject = ObjList_FindObjectById(WORLDPLANET_ARWING_OBJECT_ID);
+        ((WorldObjState*)mapObject->extra)->effectState = state->selectionLocked;
         prevPlanet = state->selectedPlanet;
         {
             int z[3];
@@ -343,7 +344,7 @@ void worldplanet_update(GameObject* obj) {
         }
         if (gWorldPlanetSelectConfirmTimer == 0 && state->selectionLocked == 0) {
             while (!done) {
-                state->selectedPlanet = state->selectedPlanet + in.inX[0];
+                state->selectedPlanet = state->selectedPlanet + inputX;
                 if (state->selectedPlanet < 0) {
                     state->selectedPlanet = 4;
                 } else if (state->selectedPlanet >= WORLDPLANET_PLANET_COUNT) {
@@ -393,7 +394,7 @@ void worldplanet_update(GameObject* obj) {
             if (state->selectionLocked != 0 || (((int)(u32)state->unlockedPlanetMask >> i) & 1) == 0) {
                 pstate->effectState = 0;
                 if ((int)i == state->selectedPlanet) {
-                    arwing->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    mapObject->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 }
             } else if ((int)i == state->selectedPlanet) {
                 u32 fi;
@@ -431,19 +432,19 @@ void worldplanet_update(GameObject* obj) {
                     dyaw = (s16)(dyaw + 0xffff);
                 }
                 if (getWorldMapVoiceoverTimer() != 0) {
-                    arwing->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                    mapObject->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 } else {
-                    arwing->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                    mapObject->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
                 }
-                arwing->anim.rotX = (frac * dyaw + yaw);
-                arwing->anim.localPosX = frac * (x1 - x0) + x0;
-                arwing->anim.localPosY = frac * (y1 - y0) + y0;
-                arwing->anim.localPosZ = frac * (z1 - z0) + z0;
+                mapObject->anim.rotX = (frac * dyaw + yaw);
+                mapObject->anim.localPosX = frac * (x1 - x0) + x0;
+                mapObject->anim.localPosY = frac * (y1 - y0) + y0;
+                mapObject->anim.localPosZ = frac * (z1 - z0) + z0;
             } else {
                 pstate->effectState = 1;
             }
         }
-        objId = (int)ObjList_FindObjectById(
+        mapObject = ObjList_FindObjectById(
             sWorldPlanetOrbitObjectIds[gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
         if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0 && gWorldPlanetInputLockTimer == 0) {
             switch (state->selectionLocked) {
@@ -462,7 +463,7 @@ void worldplanet_update(GameObject* obj) {
                     if (gWorldPlanetSelectConfirmTimer <= 1) {
                         gWorldPlanetSelectConfirmTimer = 0;
                         Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
-                        (*gCameraInterface)->setFocus((void*)objId, WORLDPLANET_CAMERA_FOCUS_FRAMES);
+                        (*gCameraInterface)->setFocus(mapObject, WORLDPLANET_CAMERA_FOCUS_FRAMES);
                         state->selectionLocked = 1;
                         (*gCameraInterface)
                             ->releaseAction(&state->selectionLocked, CAMERA_MODE_WORLD_MAP_ACTION_SET_MODE);
@@ -483,12 +484,8 @@ void worldplanet_update(GameObject* obj) {
                 break;
             case 1:
                 Pause_ResetMenuFrameCounter();
-                {
-                    int neq = lbl_803DDD00 != 0.0f;
-                    neq = !neq;
-                    if (neq) {
-                        lbl_803DDD00 = 1.0f;
-                    }
+                if (!lbl_803DDD00) {
+                    lbl_803DDD00 = 1.0f;
                 }
                 if ((buttons & WORLDPLANET_CANCEL_BUTTON) != 0) {
                     AudioStream_StopCurrent();
@@ -517,35 +514,37 @@ void worldplanet_update(GameObject* obj) {
             Pause_ResetMenuFrameCounter();
         }
         {
-            u32 ang;
+            u16 orbitAngle;
             f32 orbitRadius;
             {
                 u8 spin = 0;
-                ang = -(obj)->anim.rotZ & 0xffff;
+                orbitAngle = -(obj)->anim.rotZ;
                 for (; spin < WORLDPLANET_PLANET_COUNT; spin++) {
                     GameObject* planetObj;
                     planetObj = ObjList_FindObjectById(sWorldPlanetFlightPathObjectIds[spin]);
-                    planetObj->anim.rotZ = -ang;
+                    planetObj->anim.rotZ = -orbitAngle;
                 }
             }
-            for (planetIdx = 0, orbitRadius = 220.0f; planetIdx < WORLDPLANET_PLANET_COUNT; planetIdx++) {
-                GameObject* planetObj = ObjList_FindObjectById(sWorldPlanetOrbitObjectIds[planetIdx]);
-                if (sWorldPlanetOrbitObjectIds[planetIdx] == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID) {
-                    planetObj->anim.rotX = ang + sWorldPlanetOrbitAngleOffsets[planetIdx] + 0x4000;
+            for (planetIndex = 0, orbitRadius = 220.0f; planetIndex < WORLDPLANET_PLANET_COUNT; planetIndex++) {
+                int* angleOffsetEntry;
+                int tableOffsetBytes = planetIndex * sizeof(sWorldPlanetOrbitObjectIds[0]);
+                orbitObject = ObjList_FindObjectById(*(int*)((u8*)sWorldPlanetOrbitObjectIds + tableOffsetBytes));
+                if (*(int*)((u8*)sWorldPlanetOrbitObjectIds + tableOffsetBytes) == WORLDPLANET_SPECIAL_ORBIT_OBJECT_ID) {
+                    orbitObject->anim.rotX = orbitAngle + *(int*)((u8*)sWorldPlanetOrbitAngleOffsets + tableOffsetBytes) + 0x4000;
                 } else {
-                    planetObj->anim.rotX += WORLDPLANET_ORBIT_ROT_STEP;
+                    orbitObject->anim.rotX += WORLDPLANET_ORBIT_ROT_STEP;
                 }
                 if (state->orbitSoundFrameCount > WORLDPLANET_ORBIT_SOUND_DELAY_FRAMES) {
-                    Sfx_KeepAliveLoopedObjectSound(planetObj, SFXTRIG_crf_babyambi2);
+                    Sfx_KeepAliveLoopedObjectSound(orbitObject, SFXTRIG_crf_babyambi2);
                 }
-                planetObj->anim.localPosX = orbitRadius * fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
+                orbitObject->anim.localPosX = orbitRadius * fsin16Approx(orbitAngle + *(angleOffsetEntry = (int*)((u8*)sWorldPlanetOrbitAngleOffsets + tableOffsetBytes))) *
                                                 fcos16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosX;
-                planetObj->anim.localPosY = orbitRadius * fsin16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) *
+                orbitObject->anim.localPosY = orbitRadius * fsin16Approx(orbitAngle + *angleOffsetEntry) *
                                                 fsin16Approx(WORLDPLANET_ORBIT_TILT_ANGLE) +
                                             (obj)->anim.localPosY;
-                planetObj->anim.localPosZ =
-                    orbitRadius * fcos16Approx(ang + sWorldPlanetOrbitAngleOffsets[planetIdx]) + (obj)->anim.localPosZ;
+                orbitObject->anim.localPosZ =
+                    orbitRadius * fcos16Approx(orbitAngle + *angleOffsetEntry) + (obj)->anim.localPosZ;
             }
         }
         state->orbitSoundFrameCount += 1;

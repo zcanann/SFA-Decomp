@@ -698,7 +698,13 @@ struct. Independent array definitions reproduce the indexed loads and later addr
 while MWCC still shares a common base register. The update improves **99.15179 -> 99.66199**
 with that storage correction and direct indexing, then **99.69388** with an inlined spawn helper.
 Check both the retained base/index and the source-level data boundaries before applying the law.
-See [WORLDplanet matching progress](WORLDplanet_matching.md) for the remaining register/spill diff.
+The completed match also replaces packed input storage with scalar bytes, reuses one object
+pointer across disjoint lifetimes, restores the orbit angle's 16-bit type, and names the shared
+byte offset and angle-entry pointer. These changes resolve the spill and register assignments
+without a compiler-profile change. Two floating-point operand swaps still passed objdiff's
+100% report because the raw instructions held identical relocation placeholders; resolved
+relocations and the source-linked retail checksum caught them. See
+[WORLDplanet matching evidence](WORLDplanet_matching.md) for the complete result.
 
 **Address *shape* is not a knob; address *position* is.** `we + 1` vs `&we[1]`, and `&vb[0]` vs
 `vb`, are **exactly inert**. But naming an address hoists its computation: `tp =
