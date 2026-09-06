@@ -1,3 +1,4 @@
+#include "main/dll/dll_0018_boneparticleeffect.h"
 #include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/589_BossDrakor.h"
@@ -549,7 +550,7 @@ char sModelEngineTimerDotText[] = ".";
 #define MODELENGINE_TIMER_DISABLED  2
 #define MODELENGINE_TIMER_RUNNING   4
 
-extern ResourceDescriptor Carryable_funcs, boneParticleEffect_funcs, dll_19;
+extern ResourceDescriptor Carryable_funcs, dll_19;
 extern ResourceDescriptor gDll219ObjDescriptor, gDll21BObjDescriptor, gDll224ObjDescriptor, gDll28BObjDescriptor;
 extern ResourceDescriptor gDll2A3ObjDescriptor;
 extern ResourceDescriptor gDll2A4ObjDescriptor, dll_2E, gDllD3ObjDescriptor, expgfx_funcs;
@@ -1235,7 +1236,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &dll_15_funcs,
     &screenTransition_funcs,
     &SaveGame_funcs,
-    &boneParticleEffect_funcs,
+    (ResourceDescriptor*)&boneParticleEffect_funcs,
     &dll_19,
     &Effect1_funcs,
     &Effect2_funcs,
