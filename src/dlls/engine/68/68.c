@@ -548,8 +548,8 @@ void CameraModeViewfinder_init(CameraObject* camera, int mode, CameraModeViewfin
     gCameraModeViewfinderState->positionZCurve.endTangent = zero;
     curvesMove(&gCameraModeViewfinderState->transitionCurve);
     yawDelta = camera->anim.rotX -
-         (u16)(0x8000 - getAngle(camera->anim.worldPosX - gCameraModeViewfinderState->positionXCurve.end,
-                                 camera->anim.worldPosZ - gCameraModeViewfinderState->positionZCurve.end));
+               (u16)(0x8000 - getAngle(camera->anim.worldPosX - gCameraModeViewfinderState->positionXCurve.end,
+                                       camera->anim.worldPosZ - gCameraModeViewfinderState->positionZCurve.end));
     if (yawDelta > 0x8000) {
         yawDelta = yawDelta - 0xffff;
     }
