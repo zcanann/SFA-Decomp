@@ -87,8 +87,7 @@ void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
     int i;
     TreeState* ts;
 
-    if (obj->userData2 != 0)
-    {
+    if (obj->userData2 != 0) {
         ts = state;
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
         {

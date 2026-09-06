@@ -133,8 +133,7 @@ void VFP_LevelControl_update(GameObject* obj)
     GameObject* player = Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if (obj->userData1 == 0 && mainGetBit(GAMEBIT_VFP_EnvironmentRelated0EF6) == 0u)
-    {
+    if (obj->userData1 == 0 && mainGetBit(GAMEBIT_VFP_EnvironmentRelated0EF6) == 0u) {
         if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
             getEnvfxActImmediately(obj, obj, VFP_ENVFX_INTRO_0, 0);

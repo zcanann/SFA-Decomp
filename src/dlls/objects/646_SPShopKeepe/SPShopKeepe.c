@@ -295,8 +295,7 @@ int ShopKeeper_updateScarabGame(GameObject* obj)
     int limit;
 
     state = obj->extra;
-    obj->anim.resetHitboxFlags =
-        (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
+    obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
     state->opacity = 0;
     ObjHits_DisableObject(obj);
 
@@ -754,8 +753,7 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     {
         ObjAnim_AdvanceCurrentMove(obj, speed, timeDelta, NULL);
     }
-    if (obj->seqIndex == -1)
-    {
+    if (obj->seqIndex == -1) {
         if (seq->movementState != 0)
         {
             slot = SHOP_INTERFACE(state->vendorObj)
@@ -936,8 +934,7 @@ void ShopKeeper_spawnScarabs(GameObject* obj, ShopkeeperState* state, int count)
 
     (*gMapEventInterface)->setObjGroupStatus((s32)obj->anim.mapEventSlot, 6, 1);
 
-    trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &groundHeight,
-                         0);
+    trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &groundHeight, 0);
 
     for (i = 0; i < count; i++)
     {

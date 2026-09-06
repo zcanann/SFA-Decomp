@@ -1115,16 +1115,14 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     slideMtx = state->surfaceOrientationMtx;
     if (visible != 0)
     {
-        switch (obj->userData1)
-        {
+        switch (obj->userData1) {
         case 0:
             if ((state->surfaceMode == 6) &&
                 (state->flags92.surfaceOrientationReady != 0))
             {
                 if (state->flags92.airborne == 0)
                 {
-                    landedarwing_buildSurfaceOrientationMatrix(
-                        slideMtx, &obj->anim.velocityX, &state->surfaceNormalX);
+                    landedarwing_buildSurfaceOrientationMatrix(slideMtx, &obj->anim.velocityX, &state->surfaceNormalX);
                 }
                 scale = obj->anim.rootMotionScale;
                 initRotationMtx(mtx, scale, scale, scale);

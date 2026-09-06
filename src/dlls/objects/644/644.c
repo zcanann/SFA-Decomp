@@ -213,7 +213,7 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq) {
             obj->anim.localPosZ = Curve_EvalBSpline(s->flight.splineZ, s->flight.splineT, 0);
             s->flight.splineT = s->flight.splineSpeed * timeDelta + s->flight.splineT;
             obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
-                                        obj->anim.localPosZ - obj->anim.previousLocalPosZ);
+                                      obj->anim.localPosZ - obj->anim.previousLocalPosZ);
             (*gPartfxInterface)->spawnObject((void*)obj, 415, NULL, 1, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 416, NULL, 1, -1, NULL);
         }
@@ -326,7 +326,7 @@ void shopitem_update(GameObject* obj) {
                 obj->anim.localPosZ = Curve_EvalBSpline(s->flight.splineZ, s->flight.splineT, 0);
                 s->flight.splineT = s->flight.splineSpeed * timeDelta + s->flight.splineT;
                 obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
-                                            obj->anim.localPosZ - obj->anim.previousLocalPosZ);
+                                          obj->anim.localPosZ - obj->anim.previousLocalPosZ);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x19F, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, 0x1A0, NULL, 1, -1, NULL);
                 break;

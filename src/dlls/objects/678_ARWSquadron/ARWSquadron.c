@@ -289,8 +289,9 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
     u32 hitVol;
     GameObject* arwing;
 
-    if (obj->anim.hitReactState == NULL)
+    if (obj->anim.hitReactState == NULL) {
         return;
+    }
     if (squad->hitFlashActive != 0)
     {
         squad->hitFlashTimer -= timeDelta;
@@ -303,8 +304,7 @@ void arwsquadron_handleDamage(GameObject* obj, ArwSquadronState* squad)
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
-        ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0)
-    {
+        ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0) {
         if (flags->acceptsDamage)
         {
             if (squad->hitFlashActive == 0)

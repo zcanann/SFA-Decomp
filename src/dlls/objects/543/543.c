@@ -205,12 +205,9 @@ void VFP_Platform_update(GameObject* obj)
         tyi = params->posZ;
         if (s3 != 99)
         {
-            if (obj->anim.romDefNo == VFP_PLATFORM_LAVABLOCK_OBJ)
-            {
+            if (obj->anim.romDefNo == VFP_PLATFORM_LAVABLOCK_OBJ) {
                 VFP_Platform_updateLavaBlock(obj);
-            }
-            else
-            {
+            } else {
                 switch (state->state)
                 {
                 case 0:
@@ -275,8 +272,7 @@ void VFP_Platform_update(GameObject* obj)
                     if (s3 == 3 && xi < txi)
                     {
                         obj->anim.localPosX = obj->anim.localPosX + timeDelta;
-                        if ((int)obj->anim.localPosX >= txi)
-                        {
+                        if ((int)obj->anim.localPosX >= txi) {
                             obj->anim.localPosX = txi;
                             state->state = 1;
                         }
@@ -284,8 +280,7 @@ void VFP_Platform_update(GameObject* obj)
                     else if (yi < tyi)
                     {
                         obj->anim.localPosZ += timeDelta;
-                        if ((int)obj->anim.localPosZ >= tyi)
-                        {
+                        if ((int)obj->anim.localPosZ >= tyi) {
                             obj->anim.localPosZ = tyi;
                             state->state = 1;
                         }
@@ -295,8 +290,7 @@ void VFP_Platform_update(GameObject* obj)
                     if (s3 == 3 && xi > txi - 60)
                     {
                         obj->anim.localPosX = obj->anim.localPosX - timeDelta;
-                        if ((int)obj->anim.localPosX <= txi - 60)
-                        {
+                        if ((int)obj->anim.localPosX <= txi - 60) {
                             obj->anim.localPosX = (txi - 60);
                             state->state = 1;
                             state->timer = 200;
@@ -305,8 +299,7 @@ void VFP_Platform_update(GameObject* obj)
                     else if (yi > tyi - 60)
                     {
                         obj->anim.localPosZ -= timeDelta;
-                        if ((int)obj->anim.localPosZ <= tyi - 60)
-                        {
+                        if ((int)obj->anim.localPosZ <= tyi - 60) {
                             obj->anim.localPosZ = (tyi - 60);
                             state->state = 1;
                             state->timer = 200;
@@ -317,8 +310,7 @@ void VFP_Platform_update(GameObject* obj)
                     if (s3 == 3 && xi > txi)
                     {
                         obj->anim.localPosX = obj->anim.localPosX - timeDelta;
-                        if ((int)obj->anim.localPosX <= txi)
-                        {
+                        if ((int)obj->anim.localPosX <= txi) {
                             obj->anim.localPosX = txi;
                             state->state = 1;
                         }
@@ -326,8 +318,7 @@ void VFP_Platform_update(GameObject* obj)
                     else if (yi > tyi)
                     {
                         obj->anim.localPosZ -= timeDelta;
-                        if ((int)obj->anim.localPosZ <= tyi)
-                        {
+                        if ((int)obj->anim.localPosZ <= tyi) {
                             obj->anim.localPosZ = tyi;
                             state->state = 1;
                         }
@@ -337,8 +328,7 @@ void VFP_Platform_update(GameObject* obj)
                     if (s3 == 3 && xi < txi + 60)
                     {
                         obj->anim.localPosX = obj->anim.localPosX + timeDelta;
-                        if ((int)obj->anim.localPosX >= txi + 60)
-                        {
+                        if ((int)obj->anim.localPosX >= txi + 60) {
                             obj->anim.localPosX = (txi + 60);
                             state->state = 1;
                             state->timer = 200;
@@ -347,8 +337,7 @@ void VFP_Platform_update(GameObject* obj)
                     else if (yi < tyi + 60)
                     {
                         obj->anim.localPosZ += timeDelta;
-                        if ((int)obj->anim.localPosZ >= tyi + 60)
-                        {
+                        if ((int)obj->anim.localPosZ >= tyi + 60) {
                             obj->anim.localPosZ = (tyi + 60);
                             state->state = 1;
                             state->timer = 200;

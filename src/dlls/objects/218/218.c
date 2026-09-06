@@ -135,8 +135,7 @@ void pollenfragment_hitDetect(GameObject* obj)
             ObjHits_DisableObject(obj);
             s16toFloat(&extra->deathTimer, 0x78);
         }
-        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0)
-        {
+        if (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0) {
             ObjHits_DisableObject(obj);
             extra->timer = 0.0f;
             if ((extra->def)->explodeSfxId != -1)

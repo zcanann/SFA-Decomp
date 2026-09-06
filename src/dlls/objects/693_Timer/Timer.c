@@ -105,8 +105,7 @@ void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     {
         queueGlowRender(light);
     }
-    if (obj->ownerObj == NULL)
-    {
+    if (obj->ownerObj == NULL) {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
@@ -130,8 +129,7 @@ void timer_update(GameObject* obj)
             storeZeroToFloatParam(&state->countdownTimer);
             if (state->mode == TIMER_MODE_GLOBAL)
             {
-                switch (((TimerSetup*)obj->anim.placementData)->base.ident)
-                {
+                switch (((TimerSetup*)obj->anim.placementData)->base.ident) {
                 case TIMER_MAP_NO_FOOTSTEP:
                     break;
                 default:

@@ -291,7 +291,7 @@ void playerShadow_renderObject(GameObject* obj)
     hitTableValue = (PlayerShadowTriHit*)hitTable;
     trackGetGridOrigin(&tileInfo);
     playerShadow_scatterFootfallEffects(hitTableValue, hitCount, obj->anim.localPosX - tileInfo[0],
-                obj->anim.localPosZ - tileInfo[2], obj);
+                                        obj->anim.localPosZ - tileInfo[2], obj);
 }
 
 void playerShadow_func03_nop(void)

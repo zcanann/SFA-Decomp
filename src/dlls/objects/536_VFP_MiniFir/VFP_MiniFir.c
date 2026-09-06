@@ -71,13 +71,11 @@ void VFP_MiniFire_update(GameObject* obj)
 
     if (state->baseY == 0.0f)
     {
-        trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, (f32*)state,
-                             0);
+        trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, (f32*)state, 0);
         state->baseY = obj->anim.localPosY - state->baseY;
     }
 
-    if (obj->anim.velocityY > -15.0f)
-    {
+    if (obj->anim.velocityY > -15.0f) {
         obj->anim.velocityY += -0.03f;
     }
 
@@ -134,8 +132,7 @@ void VFP_MiniFire_update(GameObject* obj)
         linkedGfx->skeletonHitMask = 0x10;
     }
     if (((void*)linkedGfx != NULL && linkedGfx->lastHitObject != 0) ||
-        (obj->anim.localPosY < state->baseY && state->burstStarted == 0))
-    {
+        (obj->anim.localPosY < state->baseY && state->burstStarted == 0)) {
         state->burstStarted = 1;
         i = VFPMINIFIRE_BURST_COUNT;
         Sfx_StopObjectChannel(obj, 0x7f);
@@ -155,8 +152,7 @@ void VFP_MiniFire_update(GameObject* obj)
         obj->anim.alpha = alpha;
     }
 
-    if (obj->anim.localPosY < state->baseY - 360.0f)
-    {
+    if (obj->anim.localPosY < state->baseY - 360.0f) {
         Obj_FreeObject(obj);
     }
 }

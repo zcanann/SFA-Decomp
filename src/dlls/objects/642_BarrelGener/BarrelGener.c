@@ -125,8 +125,7 @@ void barrelgener_update(GameObject* obj)
     }
     if (state->releaseAnimPlaying != 0)
     {
-        if (obj->anim.currentMoveProgress > 0.5f)
-        {
+        if (obj->anim.currentMoveProgress > 0.5f) {
             if (state->releaseBeepPlayed == 0)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_mzap2_c);

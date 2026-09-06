@@ -771,9 +771,7 @@ void arwarwing_handlePathDamage(GameObject* obj, ArwingState* state)
             state->modeTimer = 80.0f;
             Sfx_PlayFromObject(obj, SFXTRIG_barrelblow11);
             Music_Trigger(MUSICTRIG_dark_ice_boss_1, 1);
-        }
-        else if ((s8)((ArwingState*)obj->extra)->health <= 3)
-        {
+        } else if ((s8)((ArwingState*)obj->extra)->health <= 3) {
             Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_bomb_pickup);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_wmap_select);

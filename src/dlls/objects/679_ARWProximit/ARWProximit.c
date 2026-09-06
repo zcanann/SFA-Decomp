@@ -162,8 +162,7 @@ void arwproximit_update(GameObject* obj)
         }
         if (timerCountDown((void*)&state->warningTimer) != 0 ||
             ((*(ObjHitsPriorityState**)&obj->anim.hitReactState)->lastHitObject != 0 &&
-             (*(ObjHitsPriorityState**)&obj->anim.hitReactState)->lastHitObject == (u32)getArwing()))
-        {
+             (*(ObjHitsPriorityState**)&obj->anim.hitReactState)->lastHitObject == (u32)getArwing())) {
             storeZeroToFloatParam((void*)&state->warningTimer);
             s16toFloat((void*)&state->despawnTimer, 0x14);
             if (state->light != NULL)

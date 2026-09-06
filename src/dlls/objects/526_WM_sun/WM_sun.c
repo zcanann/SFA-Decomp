@@ -318,8 +318,7 @@ void wmsun_update(GameObject* obj)
         }
         return;
     }
-    if (obj->anim.romDefNo == 0x2c2)
-    {
+    if (obj->anim.romDefNo == 0x2c2) {
         if (mainGetBit(0x38f) != 0)
         {
             curAlpha = objAnim->alpha;

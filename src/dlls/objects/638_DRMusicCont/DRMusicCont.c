@@ -84,8 +84,7 @@ void drmusiccont_update(GameObject* obj)
 
     cloudSetOverridePosition(DRMUSICCONT_CLOUD_OVERRIDE_POS_X, DRMUSICCONT_CLOUD_OVERRIDE_POS_Y,
                              DRMUSICCONT_CLOUD_OVERRIDE_POS_Z);
-    if (obj->userData1 == 0)
-    {
+    if (obj->userData1 == 0) {
         if (mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
             getEnvfxActImmediately(obj, obj, DRMUSICCONT_ENVFX_A, 0);

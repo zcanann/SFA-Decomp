@@ -76,24 +76,16 @@ void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
     modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
     modelLightStruct_setPosition(state->light, 0.0f, 0.0f, 0.0f);
     modelLightStruct_setFieldBC(state->light, 1);
-    if (obj->anim.romDefNo == ARW_SEQID_INVINCIBLE)
-    {
+    if (obj->anim.romDefNo == ARW_SEQID_INVINCIBLE) {
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x14, 0x50, 0);
-    }
-    else if ((&obj->anim)->bankIndex == 0)
-    {
+    } else if ((&obj->anim)->bankIndex == 0) {
         modelLightStruct_setDiffuseColor(state->light, 0x3c, 0xff, 0x5a, 0);
-    }
-    else
-    {
+    } else {
         modelLightStruct_setDiffuseColor(state->light, 0x3c, 0x5a, 0xff, 0);
     }
-    if (obj->anim.romDefNo == ARW_SEQID_RAPIDFIRE_LASER)
-    {
+    if (obj->anim.romDefNo == ARW_SEQID_RAPIDFIRE_LASER) {
         modelLightStruct_setDistanceAttenuation(state->light, 60.0f, 80.0f);
-    }
-    else
-    {
+    } else {
         modelLightStruct_setDistanceAttenuation(state->light, 100.0f, 120.0f);
     }
     modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
@@ -306,8 +298,7 @@ void arwingandrossstuff_init(GameObject* obj, ArwProjectileSetup* setup)
     obj->anim.rotX = (s16)(setup->rotXByte << 8);
     obj->anim.rotY = (s16)(setup->rotYByte << 8);
     obj->anim.alpha = 1;
-    switch (obj->anim.romDefNo)
-    {
+    switch (obj->anim.romDefNo) {
     case ARW_SEQID_ANDROSS_ASTEROID:
         state->rotZSpeed = randomGetRange(-0x1f4, 0x1f4);
         state->rotYSpeed = randomGetRange(-0x1f4, 0x1f4);

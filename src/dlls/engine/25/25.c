@@ -698,8 +698,8 @@ int dll_19_isObjectValid(GameObject* obj, void* state, u8 checkDead) {
         return 0;
     }
     if (obj->anim.parent == NULL) {
-        if (objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY,
-                                (double)obj->anim.localPosZ) < 0) {
+        if (objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY, (double)obj->anim.localPosZ) <
+            0) {
             return 0;
         }
     }

@@ -122,8 +122,7 @@ void chuka_update(GameObject* obj)
         {
             obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (obj->anim.rotZ != 0)
-        {
+        if (obj->anim.rotZ != 0) {
             obj->anim.rotZ = 0;
         }
         break;
@@ -137,8 +136,7 @@ void chuka_update(GameObject* obj)
         {
             obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (obj->anim.rotZ != 0)
-        {
+        if (obj->anim.rotZ != 0) {
             obj->anim.rotZ = 0;
         }
         break;
@@ -152,8 +150,7 @@ void chuka_update(GameObject* obj)
         {
             obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (obj->anim.rotZ != 0x3fff)
-        {
+        if (obj->anim.rotZ != 0x3fff) {
             obj->anim.rotZ = 0x7fff;
         }
         break;
@@ -167,8 +164,7 @@ void chuka_update(GameObject* obj)
         {
             obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (obj->anim.rotZ != 0x3fff)
-        {
+        if (obj->anim.rotZ != 0x3fff) {
             obj->anim.rotZ = 0x7fff;
         }
         break;
@@ -182,8 +178,7 @@ void chuka_update(GameObject* obj)
         {
             obj->anim.rootMotionScale = 1.0f / ((f32)height / 1000.0f);
         }
-        if (obj->anim.rotZ != 0)
-        {
+        if (obj->anim.rotZ != 0) {
             obj->anim.rotZ = 0;
         }
         break;

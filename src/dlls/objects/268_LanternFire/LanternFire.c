@@ -37,7 +37,7 @@
 #define LANTERN_FIREFLY_RANDOM_ANGLE_MAX          0xFDE8
 #define LANTERN_FIREFLY_DEFAULT_WANDER_RANGE      4
 #define LANTERN_FIREFLY_LIGHT_ANGLE_SHIFT         11
-#define LANTERN_FIREFLY_IS_FOLLOWING_PLAYER(state)                                                          \
+#define LANTERN_FIREFLY_IS_FOLLOWING_PLAYER(state)                                                                     \
     (state->modeFlags.motionMode == LANTERN_FIREFLY_PLAYER_FOLLOW_MOTION_MODE)
 
 static f32 sLanternFireFlyEffectSpawnTimerThreshold = 60.0f;

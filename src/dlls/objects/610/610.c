@@ -410,8 +410,7 @@ void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup)
     obj->anim.velocityX = (f32)(u32)setup->velocityX;
     obj->anim.velocityY = (f32)(u32)setup->velocityY;
     obj->anim.velocityZ = (f32)(u32)setup->velocityZ;
-    if (obj->anim.hitReactState != NULL)
-    {
+    if (obj->anim.hitReactState != NULL) {
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->trackContactMask = 1;
     }
     objAddObjectType(obj, DRAKORMISSILE_GROUP_ID);

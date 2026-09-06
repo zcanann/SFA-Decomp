@@ -667,8 +667,7 @@ static int objShadowGetFadedAlpha(GameObject* obj, u8 param) {
         lo = 400;
         hi = 500;
     }
-    inv = (Camera_DistanceToCurrentViewPosition(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) -
-           lo) /
+    inv = (Camera_DistanceToCurrentViewPosition(obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ) - lo) /
           (f32)(hi - lo);
     if (inv < 0.0f) {
         inv = 0.0f;

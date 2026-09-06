@@ -113,8 +113,8 @@ void XyzAnimator_free(GameObject* obj, int flags) {
     state->offsetY = zeroOffset;
     state->offsetZ = zeroOffset;
     if (flags == 0) {
-        blockAddress = objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY,
-                                           (double)obj->anim.localPosZ);
+        blockAddress =
+            objPosToMapBlockIdx((double)obj->anim.localPosX, (double)obj->anim.localPosY, (double)obj->anim.localPosZ);
         blockAddress = (int)mapGetBlock(blockAddress);
         if (((void*)blockAddress != NULL) && (state->vertexCount != 0)) {
             XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);

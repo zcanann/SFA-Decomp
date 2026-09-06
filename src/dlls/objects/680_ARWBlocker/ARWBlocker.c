@@ -77,8 +77,7 @@ void ARWBlocker_update(GameObject* obj)
         objAnim->alpha = alpha;
         obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
-        if (obj->userData1 == 0)
-        {
+        if (obj->userData1 == 0) {
             switch (state->sequenceMode)
             {
             case ARWBLOCKER_SEQMODE_ARMED:

@@ -127,8 +127,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
         objDoParticleFx(obj, 1.5f, 6, 1.0f, NULL);
     }
 
-    if (obj->anim.romDefNo == DRCAGEWITH_CAGE_NOROPE_OBJ || obj->anim.romDefNo == DRCAGEWITH_CAGE_ROPE_OBJ)
-    {
+    if (obj->anim.romDefNo == DRCAGEWITH_CAGE_NOROPE_OBJ || obj->anim.romDefNo == DRCAGEWITH_CAGE_ROPE_OBJ) {
         if (mainGetBit(GAMEBIT_DR_RescuedCloudRunner) != 0)
         {
             obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;

@@ -120,8 +120,7 @@ void ARWArwingGu_update(GameObject* obj)
 {
     ObjAnimComponent* objAnim = &obj->anim;
 
-    switch (obj->anim.romDefNo)
-    {
+    switch (obj->anim.romDefNo) {
     case ARWGU_DEF_ENGINE:
     {
         ArwingGuState* state = obj->extra;

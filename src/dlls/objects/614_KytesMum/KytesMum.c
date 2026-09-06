@@ -202,8 +202,7 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
     {
         return 1;
     }
-    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
-    {
+    if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0) {
         if ((*gGameUIInterface)->isAnyItemBeingUsed() == 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
@@ -213,11 +212,8 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
         }
     }
     if ((tricky != 0 && Vec_xzDistance(&obj->anim.worldPosX, &tricky->anim.worldPosX) < 40.0f) ||
-        (player != 0 &&
-         Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX) < 40.0f))
-    {
-        if (obj->anim.currentMove != 9)
-        {
+        (player != 0 && Vec_xzDistance(&obj->anim.worldPosX, &player->anim.worldPosX) < 40.0f)) {
+        if (obj->anim.currentMove != 9) {
             ObjAnim_SetCurrentMove(obj, 9, 0.0f, 0);
             runtime->animSpeed = 0.006f;
             if (tricky != 0)
@@ -226,8 +222,7 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
             }
         }
     }
-    if (obj->anim.currentMove == 9)
-    {
+    if (obj->anim.currentMove == 9) {
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumePriority = 0xb;
         ((ObjHitsPriorityState*)obj->anim.hitReactState)->hitVolumeId = 4;
         ObjHits_SetHitVolumeSlot(&obj->anim, KYTESMUM_HIT_VOLUME_SLOT, 4, 7);

@@ -265,8 +265,7 @@ int dll_2E_advanceAlongRoute(GameObject* obj, RomCurveWalker* route, f32 phase, 
     if (*flags & 1)
     {
         if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground,
-                                 0) == 0)
-        {
+                                        0) == 0) {
             obj->anim.localPosY -= ground;
         }
     }
@@ -472,9 +471,9 @@ void dll_2E_setTargetFromPathPoint(GameObject* obj, MoveLibState* s, int point)
         s->startOffsetX -= obj->anim.localPosX;
         s->startOffsetY -= obj->anim.localPosY;
         s->startOffsetZ -= obj->anim.localPosZ;
-        v.ang[0] = (s16) - obj->anim.rotZ;
-        v.ang[1] = (s16) - obj->anim.rotY;
-        v.ang[2] = (s16) - obj->anim.rotX;
+        v.ang[0] = (s16)-obj->anim.rotZ;
+        v.ang[1] = (s16)-obj->anim.rotY;
+        v.ang[2] = (s16)-obj->anim.rotX;
         vecRotateZXY(v.ang, &s->startOffsetX);
         s->needsReinit = 0;
     }

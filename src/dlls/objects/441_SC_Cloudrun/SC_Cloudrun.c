@@ -176,10 +176,8 @@ void sc_cloudrunnera_update(GameObject* obj) {
 
         if (child != NULL) {
             child->anim.rotZ = obj->anim.rotZ;
-            ((GameObject*)obj->childObjs[0])->anim.rotY =
-                (s16)(obj->anim.rotY + SC_CLOUDRUNNER_A_CHILD_YAW_OFFSET);
-            ((GameObject*)obj->childObjs[0])->anim.rotX =
-                (s16)(obj->anim.rotX + SC_CLOUDRUNNER_A_CHILD_PITCH_OFFSET);
+            ((GameObject*)obj->childObjs[0])->anim.rotY = (s16)(obj->anim.rotY + SC_CLOUDRUNNER_A_CHILD_YAW_OFFSET);
+            ((GameObject*)obj->childObjs[0])->anim.rotX = (s16)(obj->anim.rotX + SC_CLOUDRUNNER_A_CHILD_PITCH_OFFSET);
         }
     }
 }

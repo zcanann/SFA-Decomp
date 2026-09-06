@@ -63,8 +63,7 @@ void VFP_Ladders_update(GameObject* obj)
     setup = (VfpLaddersSetup*)obj->anim.placementData;
     state = obj->extra;
 
-    if (obj->anim.romDefNo == VFPLADDERS_TRIGGER_SEQID)
-    {
+    if (obj->anim.romDefNo == VFPLADDERS_TRIGGER_SEQID) {
         if (mainGetBit(state->triggerGameBit) != 0)
         {
             if (mainGetBit(state->baseGameBit) == 0)
@@ -79,9 +78,7 @@ void VFP_Ladders_update(GameObject* obj)
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             }
         }
-    }
-    else
-    {
+    } else {
         if (state->delayTimer != 0)
         {
             state->delayTimer -= (s16)timeDelta;

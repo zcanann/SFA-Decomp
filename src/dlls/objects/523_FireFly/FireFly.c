@@ -192,8 +192,8 @@ void firefly_activeTick(GameObject* obj) {
     obj->anim.localPosY = Curve_EvalBSpline(state->flight.splineY, state->flight.splineT, 0);
     obj->anim.localPosZ = Curve_EvalBSpline(state->flight.splineZ, state->flight.splineT, 0);
     state->flight.splineT = state->flight.splineSpeed * timeDelta + state->flight.splineT;
-    obj->anim.rotX = getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
-                                obj->anim.localPosZ - obj->anim.previousLocalPosZ);
+    obj->anim.rotX =
+        getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX, obj->anim.localPosZ - obj->anim.previousLocalPosZ);
     if (state->flight.kind == FIREFLY_KIND_BLUE_MAIN || state->flight.kind == FIREFLY_KIND_BLUE_NEAR) {
         (*gPartfxInterface)
             ->spawnObject((void*)obj, FIREFLY_PARTFX_BLUE_TRAIL, NULL, FIREFLY_PARTFX_KIND,
