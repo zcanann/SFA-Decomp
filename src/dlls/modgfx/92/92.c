@@ -9,7 +9,7 @@
 typedef struct Dll5CEffectResourceView {
     ModgfxEffectVertex vertices[21];
     u8 padD2[2];
-    s16 colors[24][3];
+    s16 triangleIndices[24][3];
     u8 opaque164[0x10];
     s16 partialIndices[30];
     s16 fullIndices[22];
@@ -18,7 +18,7 @@ typedef struct Dll5CEffectResourceView {
 } Dll5CEffectResourceView;
 
 STATIC_ASSERT(offsetof(Dll5CEffectResourceView, vertices) == 0x000);
-STATIC_ASSERT(offsetof(Dll5CEffectResourceView, colors) == 0x0D4);
+STATIC_ASSERT(offsetof(Dll5CEffectResourceView, triangleIndices) == 0x0D4);
 STATIC_ASSERT(offsetof(Dll5CEffectResourceView, partialIndices) == 0x174);
 STATIC_ASSERT(offsetof(Dll5CEffectResourceView, fullIndices) == 0x1B0);
 STATIC_ASSERT(offsetof(Dll5CEffectResourceView, sequenceParams) == 0x1DC);
@@ -170,7 +170,7 @@ void dll_5C_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     }
     (*gModgfxInterface)
         ->spawnEffect(&packet, 0, 0x15, (u8*)(int)gDll5CEffectResourceData, 0x18,
-                      &resourceData[offsetof(Dll5CEffectResourceView, colors)], 0x20B, 0);
+                      &resourceData[offsetof(Dll5CEffectResourceView, triangleIndices)], 0x20B, 0);
 }
 
 void dll_5C_release(void) {

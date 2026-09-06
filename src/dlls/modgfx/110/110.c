@@ -8,15 +8,15 @@
 typedef struct Dll6EEffectResourceView {
     ModgfxEffectVertex vertices[5];
     u8 pad32[2];
-    s16 colors[5][3];
-    u8 pad52[2];
+    s16 triangleIndices[4][3];
+    u8 opaque4C[8];
     s16 allVertexIndices[6];
     s16 sequenceParams[7];
     u8 pad6E[2];
 } Dll6EEffectResourceView;
 
 STATIC_ASSERT(offsetof(Dll6EEffectResourceView, vertices) == 0x00);
-STATIC_ASSERT(offsetof(Dll6EEffectResourceView, colors) == 0x34);
+STATIC_ASSERT(offsetof(Dll6EEffectResourceView, triangleIndices) == 0x34);
 STATIC_ASSERT(offsetof(Dll6EEffectResourceView, allVertexIndices) == 0x54);
 STATIC_ASSERT(offsetof(Dll6EEffectResourceView, sequenceParams) == 0x60);
 STATIC_ASSERT(sizeof(Dll6EEffectResourceView) == 0x70);
@@ -119,7 +119,7 @@ void dll_6E_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     }
     (*gModgfxInterface)
         ->spawnEffect(&packet, 0, 5, (u8*)(int)gDll6EEffectResourceData, 4,
-                      &resourceData[offsetof(Dll6EEffectResourceView, colors)], 0x5e, 0);
+                      &resourceData[offsetof(Dll6EEffectResourceView, triangleIndices)], 0x5e, 0);
 }
 
 void dll_6E_release(void) {

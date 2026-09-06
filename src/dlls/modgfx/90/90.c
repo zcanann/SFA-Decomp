@@ -7,26 +7,19 @@
 #include "main/dll/modgfx_types.h"
 #include "main/vecmath.h"
 
-typedef struct StaffCollisionEffectResourceView {
+typedef struct StaffCollisionEffectResource {
     ModgfxEffectVertex defaultVertices[3];
     u8 pad1E[2];
     ModgfxEffectVertex alternateVertices[4];
-    s16 alternateColors[6];
+    s16 alternateTriangleIndices[6];
     s16 sequenceParams[7];
     u8 pad62[2];
-} StaffCollisionEffectResourceView;
-
-STATIC_ASSERT(offsetof(StaffCollisionEffectResourceView, defaultVertices) == 0x00);
-STATIC_ASSERT(offsetof(StaffCollisionEffectResourceView, alternateVertices) == 0x20);
-STATIC_ASSERT(offsetof(StaffCollisionEffectResourceView, alternateColors) == 0x48);
-STATIC_ASSERT(offsetof(StaffCollisionEffectResourceView, sequenceParams) == 0x54);
-STATIC_ASSERT(sizeof(StaffCollisionEffectResourceView) == 0x64);
-
-typedef union StaffCollisionEffectResource {
-    u8 bytes[0x64];
-    StaffCollisionEffectResourceView view;
 } StaffCollisionEffectResource;
 
+STATIC_ASSERT(offsetof(StaffCollisionEffectResource, defaultVertices) == 0x00);
+STATIC_ASSERT(offsetof(StaffCollisionEffectResource, alternateVertices) == 0x20);
+STATIC_ASSERT(offsetof(StaffCollisionEffectResource, alternateTriangleIndices) == 0x48);
+STATIC_ASSERT(offsetof(StaffCollisionEffectResource, sequenceParams) == 0x54);
 STATIC_ASSERT(sizeof(StaffCollisionEffectResource) == 0x64);
 
 typedef struct StaffCollisionSpawnPacket {
@@ -63,15 +56,18 @@ STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, flags) == 0x54);
 STATIC_ASSERT(offsetof(StaffCollisionSpawnPacket, commandCount) == 0x5D);
 STATIC_ASSERT(sizeof(StaffCollisionSpawnPacket) == 0x60);
 
-u8 gStaffCollisionDefaultColorData[8] = {0, 0, 0, 1, 0, 2, 0, 0};
+u8 gStaffCollisionDefaultTriangles[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gStaffCollisionDefaultIndices[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gStaffCollisionAlternateIndices[8] = {0, 0, 0, 1, 0, 2, 0, 3};
 
 StaffCollisionEffectResource gStaffCollisionEffectResourceData = {
-    {0,   30, 0, 0,  0, 0, 0, 0,   0,  31, 255, 226, 0,   0,   0, 0, 0,  15,  0,   31, 0, 0, 0, 0, 3,
-     232, 0,  8, 0,  0, 0, 0, 0,   15, 0,  0,   0,   0,   0,   0, 0, 31, 255, 241, 0,  0, 0, 0, 0, 15,
-     0,   31, 0, 15, 0, 0, 7, 208, 0,  8,  0,   0,   255, 241, 0, 0, 7,  208, 0,   8,  0, 0, 0, 0, 0,
-     1,   0,  2, 0,  1, 0, 3, 0,   2,  0,  0,   0,   80,  0,   0, 0, 0,  0,   0,   0,  0, 0, 0, 0, 0}};
+    {{30, 0, 0, 0, 31}, {-30, 0, 0, 15, 31}, {0, 0, 1000, 8, 0}},
+    {0, 0},
+    {{15, 0, 0, 0, 31}, {-15, 0, 0, 15, 31}, {15, 0, 2000, 8, 0}, {-15, 0, 2000, 8, 0}},
+    {0, 1, 2, 1, 3, 2},
+    {0, 80, 0, 0, 0, 0, 0},
+    {0, 0},
+};
 
 void StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* spawnParams, u32 spawnFlags,
                           int unusedModelId, const StaffCollisionColorArgs* colorArgs) {
@@ -80,7 +76,7 @@ void StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* sp
     GfxCmd commandStorage[32];
     GfxCmd* commands = commandStorage;
     int spawnCount;
-    StaffCollisionEffectResourceView* resource = &gStaffCollisionEffectResourceData.view;
+    StaffCollisionEffectResource* resource = &gStaffCollisionEffectResourceData;
     s16 colorR, colorG, colorB;
     int spawnIndex;
     colorR = 0xff;
@@ -195,10 +191,10 @@ void StaffCollision_spawn(GameObject* sourceObj, int mode, PartFxSpawnParams* sp
             }
         }
         (*gModgfxInterface)
-            ->spawnEffect(&packet, 0, mode != 0 ? 4 : 3,
-                          mode != 0 ? (void*)resource->alternateVertices : (void*)resource->defaultVertices,
-                          mode != 0 ? 2 : 1,
-                          mode != 0 ? (void*)resource->alternateColors : (void*)gStaffCollisionDefaultColorData, 0, 0);
+            ->spawnEffect(
+                &packet, 0, mode != 0 ? 4 : 3,
+                mode != 0 ? (void*)resource->alternateVertices : (void*)resource->defaultVertices, mode != 0 ? 2 : 1,
+                mode != 0 ? (void*)resource->alternateTriangleIndices : (void*)gStaffCollisionDefaultTriangles, 0, 0);
     }
 }
 

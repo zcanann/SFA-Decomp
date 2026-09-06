@@ -9,16 +9,17 @@
 #define DLL59_EFFECT_ID 0xC0D
 
 typedef struct Dll59EffectResourceView {
-    u8 vertexData[0xAC];
-    u8 colorData[0x30];
+    ModgfxEffectVertex vertices[17];
+    u8 padAA[2];
+    s16 triangleIndices[8][3];
     s16 indicesWithVertexZero[18];
     s16 indicesWithoutVertexZero[16];
     s16 sequenceParams[7];
     u8 pad12E[2];
 } Dll59EffectResourceView;
 
-STATIC_ASSERT(offsetof(Dll59EffectResourceView, vertexData) == 0x00);
-STATIC_ASSERT(offsetof(Dll59EffectResourceView, colorData) == 0xAC);
+STATIC_ASSERT(offsetof(Dll59EffectResourceView, vertices) == 0x00);
+STATIC_ASSERT(offsetof(Dll59EffectResourceView, triangleIndices) == 0xAC);
 STATIC_ASSERT(offsetof(Dll59EffectResourceView, indicesWithVertexZero) == 0xDC);
 STATIC_ASSERT(offsetof(Dll59EffectResourceView, indicesWithoutVertexZero) == 0x100);
 STATIC_ASSERT(offsetof(Dll59EffectResourceView, sequenceParams) == 0x120);
@@ -134,7 +135,7 @@ void dll_59_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     }
     (*gModgfxInterface)
         ->spawnEffect(&packet, 0, 0x11, (u8*)(int)gDll59EffectResourceData, 8,
-                      &resource[offsetof(Dll59EffectResourceView, colorData)], DLL59_EFFECT_ID, 0);
+                      &resource[offsetof(Dll59EffectResourceView, triangleIndices)], DLL59_EFFECT_ID, 0);
 }
 
 void dll_59_release(void) {

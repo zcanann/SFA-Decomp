@@ -80,7 +80,6 @@ STATIC_ASSERT(offsetof(PartfxEffectState, alphaValues) == 0xAC);
 STATIC_ASSERT(offsetof(PartfxEffectState, blendColorR) == 0xBC);
 STATIC_ASSERT(offsetof(PartfxEffectState, renderScale) == 0xD4);
 STATIC_ASSERT(offsetof(PartfxEffectState, vertexCount) == 0xEA);
-STATIC_ASSERT(offsetof(PartfxEffectState, colorVertexCount) == 0xEC);
 STATIC_ASSERT(offsetof(PartfxEffectState, stageDurations) == 0xEE);
 STATIC_ASSERT(offsetof(PartfxEffectState, rotStepZ) == 0x100);
 STATIC_ASSERT(offsetof(PartfxEffectState, rotOffsetZ) == 0x106);
@@ -96,8 +95,8 @@ void partfx_freeEffectsBySequence(s16 a, int b);
 #define MODGFX_ZERO 0.0f
 #define MODGFX_ONE  1.0f
 
-s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int colorCount,
-                       s16* colorData, int textureAssetId, void* textureResource);
+s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int triangleCount,
+                       s16* triangleIndices, int textureAssetId, void* textureResource);
 
 s16 dll_0B_getLastSpawnHandle(void) {
     return gModgfxLastSpawnHandle;
@@ -614,8 +613,8 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
     int slot;
     Camera* view;
     u8 textureFrameCount;
-    void* buf1;
-    void* buf2;
+    void* vertexBuffer;
+    void* triangleBuffer;
     u8 aligned;
     Texture* texture;
     int nextTextureFrame;
@@ -664,8 +663,10 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             ((PartfxEffectState*)p[slot])->frameUpdated = 0;
         }
         aligned = 0;
-        buf1 = ((PartfxEffectState*)p[slot])->vertexBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
-        buf2 = ((PartfxEffectState*)p[slot])->colorBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
+        vertexBuffer =
+            ((PartfxEffectState*)p[slot])->vertexBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
+        triangleBuffer =
+            ((PartfxEffectState*)p[slot])->triangleBuffers[((PartfxEffectState*)p[slot])->activeVertexBufferIndex];
         xf.x = MODGFX_ZERO;
         xf.y = MODGFX_ZERO;
         xf.z = MODGFX_ZERO;
@@ -851,17 +852,19 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
             int di;
             for (di = 0; di < ((PartfxEffectState*)p[slot])->drawGroupCount; di++) {
                 if ((int)((PartfxEffectState*)p[slot])->flags & 0x8000000) {
-                    lightmapDrawTriangleList(buf1, (u8*)buf2,
-                                             ((PartfxEffectState*)p[slot])->colorVertexCount /
+                    lightmapDrawTriangleList(vertexBuffer, (u8*)triangleBuffer,
+                                             ((PartfxEffectState*)p[slot])->triangleCount /
                                                  ((PartfxEffectState*)p[slot])->drawGroupCount);
                 } else {
-                    lightmapDrawTriangleList(buf1, (u8*)buf2, ((PartfxEffectState*)p[slot])->colorVertexCount);
+                    lightmapDrawTriangleList(vertexBuffer, (u8*)triangleBuffer,
+                                             ((PartfxEffectState*)p[slot])->triangleCount);
                 }
-                buf1 = (char*)buf1 + (((PartfxEffectState*)p[slot])->drawGroupStride << 4);
+                vertexBuffer = (char*)vertexBuffer + (((PartfxEffectState*)p[slot])->drawGroupStride << 4);
                 if ((int)((PartfxEffectState*)p[slot])->flags & 0x8000000) {
-                    buf2 = (char*)buf2 + ((((PartfxEffectState*)p[slot])->colorVertexCount /
-                                           ((PartfxEffectState*)p[slot])->drawGroupCount)
-                                          << 4);
+                    triangleBuffer =
+                        (char*)triangleBuffer +
+                        ((((PartfxEffectState*)p[slot])->triangleCount / ((PartfxEffectState*)p[slot])->drawGroupCount)
+                         << 4);
                 }
             }
         }
@@ -1305,8 +1308,8 @@ void dll_0B_updateActiveEffects(void) {
     }
 }
 
-s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int colorCount,
-                       s16* colorData, int textureAssetId, void* textureResource) {
+s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount, s16* vertexData, int triangleCount,
+                       s16* triangleIndices, int textureAssetId, void* textureResource) {
     int off;
     int i;
     int spawnCount;
@@ -1339,7 +1342,7 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
 
     base0 = 0;
     if ((context->flags & 0x800) == 0) {
-        base0 = (int)(long)((colorCount * 3) << 4) + ((vertexCount * 3) << 4);
+        base0 = (int)(long)((triangleCount * 3) << 4) + ((vertexCount * 3) << 4);
     }
 
     arr = (PartfxEffectState**)gPartfxActiveEffects;
@@ -1354,12 +1357,12 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     {
         u8* bufp = arr[slot]->inlineData;
         if ((context->flags & 0x800) == 0) {
-            arr[slot]->colorBuffers[0] = bufp;
-            bufp += colorCount * 16;
-            arr[slot]->colorBuffers[1] = bufp;
-            bufp += colorCount * 16;
-            arr[slot]->colorBuffers[2] = bufp;
-            bufp += colorCount * 16;
+            arr[slot]->triangleBuffers[0] = bufp;
+            bufp += triangleCount * 16;
+            arr[slot]->triangleBuffers[1] = bufp;
+            bufp += triangleCount * 16;
+            arr[slot]->triangleBuffers[2] = bufp;
+            bufp += triangleCount * 16;
             arr[slot]->vertexBuffers[0] = bufp;
             bufp += vertexCount * 16;
             arr[slot]->vertexBuffers[1] = bufp;
@@ -1368,33 +1371,33 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
             bufp += vertexCount * 16;
         }
         arr[slot]->baseVertexBuffer = bufp;
-        arr[slot]->baseColorBuffer = bufp + 0x80;
+        arr[slot]->baseTriangleBuffer = bufp + 0x80;
     }
 
     if (context->drawGroupCount != 0) {
-        divThresh = colorCount / context->drawGroupCount;
+        divThresh = triangleCount / context->drawGroupCount;
     } else {
-        divThresh = colorCount;
+        divThresh = triangleCount;
     }
     if ((context->flags & 0x800) == 0) {
         for (i = 0, off = i; i < 3; off += 4, i++) {
             s16* sd;
             int j;
             int bias;
-            u8* dstc;
+            LightmapTriangle* triangle;
 
-            dstc = (u8*)((PartfxEffectState*)((u8*)arr[slot] + off))->colorBuffers[0];
+            triangle = (LightmapTriangle*)((PartfxEffectState*)((u8*)arr[slot] + off))->triangleBuffers[0];
             bias = 0;
             j = 0;
-            sd = colorData;
-            for (; j < colorCount; j++) {
+            sd = triangleIndices;
+            for (; j < triangleCount; j++) {
                 if ((context->flags & 0x8000000) && j == divThresh) {
                     bias = context->drawGroupStride;
                 }
-                dstc[1] = sd[0] - bias;
-                dstc[2] = sd[1] - bias;
-                dstc[3] = sd[2] - bias;
-                dstc += 0x10;
+                triangle->vertexIndices[0] = sd[0] - bias;
+                triangle->vertexIndices[1] = sd[1] - bias;
+                triangle->vertexIndices[2] = sd[2] - bias;
+                triangle++;
                 sd += 3;
             }
         }
@@ -1547,7 +1550,7 @@ s16 dll_0B_spawnEffect(ModgfxSpawnContext* context, int unused, int vertexCount,
     arr[slot]->sequenceId = gPartfxSequenceIdCounter;
     arr[slot]->spawnGeneration = gModgfxSpawnGeneration;
     arr[slot]->vertexCount = vertexCount;
-    arr[slot]->colorVertexCount = colorCount;
+    arr[slot]->triangleCount = triangleCount;
     arr[slot]->sourceObject = context->attachedSource;
     arr[slot]->instanceObject = NULL;
     *(u8*)&arr[slot]->sourceYawIndex = context->sourceYawIndex;
