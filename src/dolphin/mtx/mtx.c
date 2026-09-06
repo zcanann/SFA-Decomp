@@ -3,37 +3,35 @@
 
 static f32 Unit01[] = {0.0f, 1.0f};
 
+#define Mtx_00 0x0
+#define Mtx_01 0x4
+#define Mtx_02 0x8
+#define Mtx_03 0xc
+#define Mtx_10 0x10
+#define Mtx_11 0x14
+#define Mtx_12 0x18
+#define Mtx_13 0x1c
+#define Mtx_20 0x20
+#define Mtx_21 0x24
+#define Mtx_22 0x28
+#define Mtx_23 0x2c
+#define qr0    0
 
-#define Mtx_00                  0x0
-#define Mtx_01                  0x4
-#define Mtx_02                  0x8
-#define Mtx_03                  0xc
-#define Mtx_10                  0x10
-#define Mtx_11                  0x14
-#define Mtx_12                  0x18
-#define Mtx_13                  0x1c
-#define Mtx_20                  0x20
-#define Mtx_21                  0x24
-#define Mtx_22                  0x28
-#define Mtx_23                  0x2c
-#define qr0                     0
+void C_MTXIdentity(Mtx m) {
+    m[0][0] = 1.0f;
+    m[0][1] = 0.0f;
+    m[0][2] = 0.0f;
+    m[0][3] = 0.0f;
 
-void C_MTXIdentity(Mtx m)
-{
-  m[0][0] = 1.0f;
-  m[0][1] = 0.0f;
-  m[0][2] = 0.0f;
-  m[0][3] = 0.0f;
+    m[1][0] = 0.0f;
+    m[1][1] = 1.0f;
+    m[1][2] = 0.0f;
+    m[1][3] = 0.0f;
 
-  m[1][0] = 0.0f;
-  m[1][1] = 1.0f;
-  m[1][2] = 0.0f;
-  m[1][3] = 0.0f;
-
-  m[2][0] = 0.0f;
-  m[2][1] = 0.0f;
-  m[2][2] = 1.0f;
-  m[2][3] = 0.0f;
+    m[2][0] = 0.0f;
+    m[2][1] = 0.0f;
+    m[2][2] = 1.0f;
+    m[2][3] = 0.0f;
 }
 
 #ifdef GEKKO
@@ -234,8 +232,8 @@ _regular:
     blr
 }
 
-void PSMTXRotRad(Mtx m, char axis, f32 rad)
-{
+// clang-format on
+void PSMTXRotRad(Mtx m, char axis, f32 rad) {
     f32 sinA, cosA;
 
     sinA = sinf(rad);
@@ -243,7 +241,6 @@ void PSMTXRotRad(Mtx m, char axis, f32 rad)
 
     PSMTXRotTrig(m, axis, sinA, cosA);
 }
-// clang-format on
 
 void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, register f32 cosA) {
     register f32 fc0 = 0.0f;
@@ -301,9 +298,7 @@ void PSMTXRotTrig(register Mtx m, register char axis, register f32 sinA, registe
     }
 }
 
-// clang-format off
-void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
-{
+void PSMTXRotAxisRad(register Mtx m, const Vec* axis, register f32 rad) {
     register f32 tmp0, tmp1, tmp2, tmp3, tmp4;
     register f32 tmp5, tmp6, tmp7, tmp8, tmp9;
 
@@ -312,7 +307,7 @@ void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
     register f32 oneMinusCosT;
     register f32 zero;
     Vec axisNormalized;
-    register Vec *axisNormalizedPtr;
+    register Vec* axisNormalizedPtr;
 
     zero = 0.0f;
     axisNormalizedPtr = &axisNormalized;
@@ -353,7 +348,6 @@ void PSMTXRotAxisRad(register Mtx m, const Vec *axis, register f32 rad)
   }
 #endif // clang-format on
 }
-// clang-format on
 
 void PSMTXTrans(register Mtx m, register f32 xT, register f32 yT, register f32 zT) {
     register f32 c0 = 0.0f;
@@ -388,9 +382,7 @@ void PSMTXScale(register Mtx m, register f32 xS, register f32 yS, register f32 z
     }
 }
 
-// clang-format off
-void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS, f32 scaleT, f32 transS, f32 transT)
-{
+void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS, f32 scaleT, f32 transS, f32 transT) {
     f32 tmp;
 
     tmp = 1.0f / (r - l);
@@ -411,8 +403,7 @@ void C_MTXLightFrustum(Mtx m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 scaleS, f32
     m[2][3] = 0.0f;
 }
 
-void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT)
-{
+void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scaleT, float transS, float transT) {
     f32 angle;
     f32 cot;
 
@@ -437,8 +428,7 @@ void C_MTXLightPerspective(Mtx m, f32 fovY, f32 aspect, float scaleS, float scal
     m[2][3] = 0.0f;
 }
 
-void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT)
-{
+void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scaleT, float transS, float transT) {
     f32 tmp;
     tmp = 1.0f / (r - l);
     m[0][0] = (2.0f * tmp * scaleS);
@@ -457,6 +447,5 @@ void C_MTXLightOrtho(Mtx m, f32 t, f32 b, f32 l, f32 r, float scaleS, float scal
     m[2][2] = 0.0f;
     m[2][3] = 1.0f;
 }
-// clang-format on
 
 #endif
