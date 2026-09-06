@@ -147,9 +147,9 @@ parser.add_argument(
     dest="zlb_toolchain",
     type=str,
     choices=["prodg", "mwcc"],
-    default="prodg",
-    help="compiler for src/main/zlb.c; mwcc is a diagnostic comparison path "
-    "only (retail is GCC-family)",
+    default="mwcc",
+    help="compiler for src/main/zlb.c; defaults to the common MWCC profile "
+    "for the 1.3 experiment (retail is GCC-family)",
 )
 parser.add_argument(
     "--prodg-version",
@@ -608,13 +608,13 @@ cflags_trk = [
     "-common off",
 ]
 
+config.compiler_version = "GC/1.3"
 config.linker_version = "GC/1.3.2"
 
 
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
-        "mw_version": "GC/1.2.5n",
         "cflags": cflags_base,
         "progress_category": "sdk",
         "objects": objects,
@@ -624,7 +624,6 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 def MSLLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
-        "mw_version": "GC/1.2.5n",
         "cflags": cflags_base,
         "progress_category": "third_party",
         "objects": objects,
@@ -634,7 +633,6 @@ def MSLLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
-        "mw_version": "GC/1.3.2",
         "cflags": cflags_rel,
         "progress_category": "game",
         "objects": objects,
@@ -661,12 +659,11 @@ config.warn_missing_source = False
 config.libs = [
     {
         "lib": "Runtime.PPCEABI.H",
-        "mw_version": config.linker_version,
         "cflags": cflags_runtime,
         "progress_category": "sdk",
         "objects": [
-            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__start.c", mw_version="GC/1.2.5n", cflags=cflags_runtime_125),
-            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__start.c", cflags=cflags_runtime_125),
+            Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__mem.c"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/mem_TRK.c"),
             Object(MatchingFor("GSAE01"), "dolphin/TRK_MINNOW_DOLPHIN/__exception.s"),
             Object(MatchingFor("GSAE01"), "Runtime.PPCEABI.H/__va_arg.c"),
@@ -877,7 +874,6 @@ config.libs = [
     ),
     {
         "lib": "vi",
-        "mw_version": "GC/1.2.5n",
         "cflags": [
             *cflags_base,
             "-use_lmw_stmw on",
@@ -893,13 +889,12 @@ config.libs = [
     DolphinLib(
         "thp",
         [
-            Object(MatchingFor("GSAE01"), "dolphin/thp/THPDec.c", mw_version="GC/1.2.5"),
+            Object(MatchingFor("GSAE01"), "dolphin/thp/THPDec.c"),
             Object(MatchingFor("GSAE01"), "dolphin/thp/THPAudio.c"),
         ],
     ),
     {
         "lib": "OdemuExi2",
-        "mw_version": "GC/1.2.5",
         "cflags": cflags_base,
         "progress_category": "sdk",
         "objects": [
@@ -914,7 +909,6 @@ config.libs = [
     ),
     {
         "lib": "amcstubs",
-        "mw_version": "GC/1.3",
         "cflags": cflags_trk,
         "progress_category": "sdk",
         "objects": [
@@ -923,7 +917,6 @@ config.libs = [
     },
     {
         "lib": "TRK_MINNOW_DOLPHIN",
-        "mw_version": "GC/1.3",
         "cflags": cflags_trk,
         "progress_category": "sdk",
         "objects": [
@@ -959,29 +952,29 @@ config.libs = [
     MSLLib(
         "MSL_C",
         [
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/alloc.c", mw_version="GC/1.3", cflags=cflags_msl, extra_cflags=["-common", "off", "-inline", "auto,deferred"]),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c", mw_version="GC/1.3", extra_cflags=["-inline", "all", "-inline", "auto,deferred", "-use_lmw_stmw", "on", "-char", "signed", "-str", "pool,readonly"]),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/direct_io.c", mw_version="GC/1.3", extra_cflags=["-use_lmw_stmw", "on"]),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/file_io.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c", mw_version="GC/1.3.2r", cflags=cflags_msl),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/abort_exit.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/alloc.c", cflags=cflags_msl, extra_cflags=["-common", "off", "-inline", "auto,deferred"]),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_files.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ansi_fp.c", extra_cflags=["-inline", "all", "-inline", "auto,deferred", "-use_lmw_stmw", "on", "-char", "signed", "-str", "pool,readonly"]),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/buffer_io.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/direct_io.c", extra_cflags=["-use_lmw_stmw", "on"]),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/file_io.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/FILE_POS.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mbstring.c", cflags=cflags_msl),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/mem_funcs.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/misc_io.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/printf.c", mw_version="GC/1.3", extra_cflags=["-use_lmw_stmw", "on", "-char", "signed"]),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/string.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/printf.c", extra_cflags=["-use_lmw_stmw", "on", "-char", "signed"]),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/string.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/wchar_io.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ctype.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_copysign.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c", mw_version="GC/1.3"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_modf.c", mw_version="GC/1.3"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_copysign.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_frexp.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_ldexp.c"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/s_modf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/base/PPCArch_weak.c", progress_category="sdk"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c", mw_version="GC/1.2.5"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/floorf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_ppc.c"),
@@ -998,16 +991,15 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_pow.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/w_sqrt.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c", mw_version="GC/1.2.5"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/trigf.c"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c", extra_cflags=["-inline", "off", *msl_math_extra], progress_category="game"),
             Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_802927a4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-use_lmw_stmw", "on", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_8029454c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_80293da4.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "dolphin/MSL_C/PPCEABI/bare/H/math_8029454c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
         ],
     ),
     {
         "lib": "musyx",
-        "mw_version": "GC/1.2.5n",
         "cflags": [
             *cflags_base,
             "-Cpp_exceptions", "on",
@@ -1049,7 +1041,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd_midictrl.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/snd_service.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/hw_init.c"),
-            Object(MatchingFor("GSAE01"), "musyx/runtime/hw_break.c", mw_version="GC/2.0"),
+            Object(MatchingFor("GSAE01"), "musyx/runtime/hw_break.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/hw_adsr.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/hw_sample.c"),
             Object(MatchingFor("GSAE01"), "musyx/runtime/hw_voice_start.c"),
@@ -1072,7 +1064,6 @@ config.libs = [
     },
     {
         "lib": "main",
-        "mw_version": "GC/1.3",
         "cflags": cflags_dll_noopt,
         "progress_category": "game",
             "objects": [
@@ -1101,7 +1092,7 @@ config.libs = [
             Object(NonMatching, "dlls/engine/20_Hcurves/Hcurves_romcurve.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/21/21.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/22/22.c", cflags=cflags_dll_noopt_noautoinline_level3),
-            Object(NonMatching, "dlls/engine/23/23.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(NonMatching, "dlls/engine/23/23.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "dlls/engine/24/24.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/25/25.c"),
             Object(MatchingFor("GSAE01"), "dlls/engine/26/26.c"),
@@ -1723,7 +1714,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "dlls/objects/622/622.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/623/623.c"),
             Object(MatchingFor("GSAE01"), "dlls/objects/624_DR_Rock/DR_Rock.c"),
-            Object(NonMatching, "dlls/objects/625/625.c", cflags=cflags_dll_noopt_noautoinline, mw_version="GC/2.0"),
+            Object(NonMatching, "dlls/objects/625/625.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "dlls/objects/626/626.c", cflags=cflags_dll_noopt_noautoinline),
             Object(Matching, "dlls/objects/627_FirePipe/FirePipe.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/objects/628_DR_pulley/DR_pulley.c"),
@@ -1871,12 +1862,12 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/obj_movelib.c", cflags=cflags_dll_noopt_nocse),
 
             Object(MatchingFor("GSAE01"), "main/rand.c", cflags=cflags_game, extra_cflags=["-O0"], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "main/math_80292d3c.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "main/trig_float_helpers.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "main/math_8029312c.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "main/acosf.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole,functions", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "main/trig.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
-            Object(MatchingFor("GSAE01"), "main/sincosf.c", mw_version="GC/1.2.5n", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "functions,peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/math_80292d3c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/trig_float_helpers.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/math_8029312c.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-inline", "auto", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/acosf.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/trig.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
+            Object(MatchingFor("GSAE01"), "main/sincosf.c", cflags=msl_math_o0_cflags, extra_cflags=["-O0", "-opt", "peephole", "-inline", "auto", "-sym", "on", *msl_math_extra], progress_category="game"),
         ],
     },
 ]

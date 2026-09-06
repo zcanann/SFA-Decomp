@@ -1,5 +1,13 @@
 # AGENTS.md - SFA-Decomp Runbook
 
+> **Active compiler experiment:** All C/C++ units now inherit GC/1.3 from
+> `config.compiler_version`, with no library or per-unit compiler-version overrides.
+> Existing optimization profiles remain; the linker independently stays GC/1.3.2.
+> The user explicitly accepts matching regressions for this staging baseline.
+> Require `ninja all_source` to pass and still run the strict checksum target, but
+> its mismatch is currently expected. Do not restore compiler exceptions, change
+> the expected checksum, or disable the check to make this experiment green.
+
 > **Integration workflow (effective 2026-07-29):** High-frequency decomp commits land on the
 > permanent `staging` branch, not directly on `main`. Fetch before starting, check out
 > `origin/staging`, and rebase local unpushed work onto the fresh remote staging tip before every

@@ -436,7 +436,7 @@ char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* 
 
     code = *(u8*)string;
     if (code == 0) {
-        return string;
+        return (char*)string;
     }
 
     string++;
@@ -482,7 +482,7 @@ char* OSGetFontTexel(const char* string, void* image, s32 pos, s32 stride, s32* 
         *width = WidthTable[fontCode];
     }
 
-    return string;
+    return (char*)string;
 }
 
 char* OSGetFontWidth(const char* string, s32* width) {
@@ -490,7 +490,7 @@ char* OSGetFontWidth(const char* string, s32* width) {
 
     code = *(u8*)string;
     if (code == 0) {
-        return  string;
+        return (char*)string;
     }
 
     string++;
@@ -504,5 +504,5 @@ char* OSGetFontWidth(const char* string, s32* width) {
         *width = WidthTable[GetFontCode(code)];
     }
 
-    return  string;
+    return (char*)string;
 }

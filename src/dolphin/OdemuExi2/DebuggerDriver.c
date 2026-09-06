@@ -138,9 +138,9 @@ static BOOL DBGRead(u32 count, u32* buffer, s32 param3) {
     return !error;
 }
 
-static BOOL DBGWrite(u32 count, void* buffer, s32 param3) {
+static BOOL DBGWrite(u32 count, const void* buffer, s32 param3) {
     BOOL total;
-    u32* buf_p;
+    const u32* buf_p;
     u32 v1;
     u32 v;
 
