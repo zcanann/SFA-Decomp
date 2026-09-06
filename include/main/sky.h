@@ -8,22 +8,19 @@
 
 typedef struct Texture Texture;
 
-typedef struct SkyRotQ
-{
+typedef struct SkyRotQ {
     s16 rx, ry, rz;
     f32 w;
     f32 x, y, z;
 } SkyRotQ;
 
-typedef struct SkyBestIdx
-{
+typedef struct SkyBestIdx {
     u8 best;
     u8 second;
     u8 pad;
 } SkyBestIdx;
 
-typedef struct SkySlotAnim
-{
+typedef struct SkySlotAnim {
     s32 unk00;         /* 0x00 */
     u16 flags4;        /* 0x04 */
     u16 flags6;        /* 0x06 */
@@ -71,10 +68,10 @@ STATIC_ASSERT(offsetof(SkySlotAnim, fogNear) == 0x14);
 STATIC_ASSERT(offsetof(SkySlotAnim, colorR) == 0x24);
 STATIC_ASSERT(offsetof(SkySlotAnim, wobbleOffset) == 0x6C);
 STATIC_ASSERT(offsetof(SkySlotAnim, cur) == 0x70);
+STATIC_ASSERT(offsetof(SkySlotAnim, cur2) == 0x1FC);
 STATIC_ASSERT(sizeof(SkySlotAnim) == 0x318);
 
-typedef struct SkyTimeBlend
-{
+typedef struct SkyTimeBlend {
     void* texA;       /* 0x00 */
     void* texB;       /* 0x04 */
     void* texList[3]; /* 0x08 */
@@ -159,7 +156,7 @@ void sky2StepSlotAnim(int slot);
 void skyResetState(void);
 void skyUpdateLightingFromTimeOfDay(void);
 void skySetLightSlot(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, int moonIntensity,
-                 int ambientIntensity, u8 blendAlpha);
+                     int ambientIntensity, u8 blendAlpha);
 void renderSunAndMoon(int a, int b, int c, int d, int visible);
 void skyRenderTimeOfDayBackdrop(void);
 void skyUpdateEnvfxAct(int a, int b, u8* cfg);

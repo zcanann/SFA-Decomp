@@ -180,3 +180,35 @@ candidate. Formatting checks, the generated-path audit, the strict checksum
 build, and `ninja all_source` pass. Local source/compiler controls are under
 `build/gc13_new_matches/player_batch/`, `player_batch_gc20/`, and
 `player_macro_batch/`.
+
+## September 6: Sky animation and state arrays
+
+Engine 6 (`dlls/engine/6/6.c`) now matches all **18 functions, 9,236 code
+bytes, and 380 assigned data bytes**. In `sky2_run`, keeping the selected
+sample offset in float elements resolves the last register mismatch. The fog
+sample access uses `offsetof(SkySlotAnim, cur2)` instead of the literal byte
+offset; its layout assertion is beside the owning type.
+
+The source also recovers `gSky2States[2]`. The allocation loop visits two
+slots, and initialization frees and clears both. These accesses establish the
+eight-byte array at `0x803DD184`; the old scalar declaration accessed its
+second slot out of bounds. Two unused filler globals are removed. Leaving
+the scalar and fillers in place gave an exact objdiff report but failed the
+retail checksum because the linker discarded the unreferenced storage.
+
+| Final source | GC/1.3 | GC/2.0 |
+| --- | ---: | ---: |
+| `sky2_run` fuzzy | **100%** | 99.84277% |
+| Whole TU fuzzy | **100%** | 99.95193% |
+
+The complete TU uses identical existing flags for both controls. With the
+real array declaration, GC/2.0 removes a pointer reload after clearing the
+pending environment-update flag; GC/1.3 retains retail's `lwz r3,0(r31)`.
+The float-offset change alone, before recovering the state array, matched
+both compilers. The discriminator therefore applies to the final source.
+
+Only this TU's compiled object changes; the other 1,004 objects are preserved
+in the comparison against the starting tree. After rebasing onto current
+staging, the strict matching build and `ninja all_source` both pass, with the
+retail DOL byte-identical. The TU and type header pass clang-format. Local
+source/compiler controls are under `build/gc13_indexed/sky2/`.

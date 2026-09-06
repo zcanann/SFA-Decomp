@@ -1075,7 +1075,7 @@ config.libs = [
             Object(NonMatching, "dlls/engine/3/3.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/4/4.c"),
             Object(NonMatching, "dlls/engine/5/5.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "dlls/engine/6/6.c"),
+            Object(MatchingFor("GSAE01"), "dlls/engine/6/6.c"),
             Object(NonMatching, "dlls/engine/7/7.c", cflags=cflags_dll_noopt_noautoinline),
             Object(MatchingFor("GSAE01"), "dlls/engine/8/8.c"),
             Object(NonMatching, "dlls/engine/9/9.c"),
