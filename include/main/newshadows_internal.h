@@ -20,10 +20,6 @@ typedef struct {
 } NewShadowCaster;
 
 typedef struct {
-    u16 packedXY;
-} NewShadowVectorTexel;
-
-typedef struct {
     f32 x;
     f32 y;
 } NewShadowVector2;

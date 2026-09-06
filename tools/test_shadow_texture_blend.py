@@ -160,7 +160,6 @@ EXPORT void fillReflectionGradient(Texture* texture) {
     gNewShadowReflectionGradientTexture = texture;
     fillReflectionGradientTexture();
 }
-typedef struct NewShadowVectorTexel { u16 packedXY; } NewShadowVectorTexel;
 static Texture* gNewShadowDistortionTexture;
 static Texture* allocation;
 static int allocationValid;

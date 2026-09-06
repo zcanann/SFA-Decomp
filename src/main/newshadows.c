@@ -1162,7 +1162,7 @@ void newshadows_createDistortionTexture(void) {
             directionY *= strength;
             normalizedX = 127.0f * normalizedX + 128.0f;
             directionY = 127.0f * directionY + 128.0f;
-            ((NewShadowVectorTexel*)(texel + sizeof(Texture)))->packedXY =
+            *(u16*)(texel + sizeof(Texture)) =
                 (u16)((int)directionY | (((int)normalizedX & 0xffff) << 8));
         }
     }
@@ -1249,7 +1249,7 @@ static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewSh
 void newshadows_initProceduralTextures(void) {
     u8 savedHeap;
     int placementAttempts;
-    int row;
+    int x;
     f32* placementZ;
     NewShadowNoisePlacement* otherPlacement;
     f32* placementRadius;
@@ -1279,7 +1279,7 @@ void newshadows_initProceduralTextures(void) {
             otherIndex = 0;
             otherPlacement = gNewShadowNoiseData.placements;
             while (otherIndex < placedCount && !overlaps) {
-                f32 xDistance, zDistance, wrappedDistance;
+                f32 xDistance, zDistance, wrappedDistance, distance;
                 xDistance = __fabsf(*placementX - otherPlacement->x);
                 wrappedDistance = __fabsf((1.0f + *placementX) - otherPlacement->x);
                 if (wrappedDistance < xDistance) {
@@ -1298,10 +1298,8 @@ void newshadows_initProceduralTextures(void) {
                 if (wrappedDistance < zDistance) {
                     zDistance = wrappedDistance;
                 }
-                wrappedDistance = zDistance * zDistance;
-                zDistance = xDistance * xDistance + wrappedDistance;
-                zDistance = sqrtf(zDistance);
-                if (zDistance < *placementRadius + otherPlacement->startRadius) {
+                distance = sqrtf(xDistance * xDistance + zDistance * zDistance);
+                if (distance < *placementRadius + otherPlacement->startRadius) {
                     overlaps = 1;
                 }
                 otherPlacement++;
@@ -1319,27 +1317,29 @@ void newshadows_initProceduralTextures(void) {
         frame = 0;
         for (; frame < NEW_SHADOW_NOISE_FRAME_COUNT; frame++) {
             gNewShadowNoiseTexFrames[frame] = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
-            for (row = 0; row < 0x40; row++) {
-                int rowPixelOffset;
-                int column, h;
-                column = 0;
-                h = (row >> 2) * 0x20;
-                rowPixelOffset = (row & 3) * 2;
-                for (; column < 0x40; column++) {
-                    int highByte, lowByte;
-                    int texelAddress = (int)gNewShadowNoiseTexFrames[frame] + h + rowPixelOffset;
+            for (x = 0; x < 0x40; x++) {
+                int pixelInRowOffset;
+                int y, tileColumnOffset;
+                y = 0;
+                tileColumnOffset = (x >> 2) * 0x20;
+                pixelInRowOffset = (x & 3) * 2;
+                for (; y < 0x40; y++) {
+                    int intensityByte, shiftByte;
+                    u8* pixelBase = (u8*)gNewShadowNoiseTexFrames[frame] + pixelInRowOffset;
+                    u8* tileBase = pixelBase + tileColumnOffset;
+                    u8* texel;
                     f32 shift, intensity;
-                    f32 rowCoord, columnCoord;
-                    texelAddress += (column & 3) * 8;
-                    texelAddress += (column >> 2) * 0x200;
-                    rowCoord = row / 64.0f;
-                    columnCoord = column / 64.0f;
-                    evalNoisePlacements(rowCoord, columnCoord, frame, gNewShadowNoiseData.placements,
+                    f32 sampleX, sampleZ;
+                    tileBase += (y & 3) * 8;
+                    texel = tileBase + (y >> 2) * 0x200;
+                    sampleX = x / 64.0f;
+                    sampleZ = y / 64.0f;
+                    evalNoisePlacements(sampleX, sampleZ, frame, gNewShadowNoiseData.placements,
                                         noisePlacementCount, &shift, &intensity);
-                    highByte = 255.0f * intensity;
-                    highByte = (highByte & 0xffff) << 8;
-                    lowByte = 255.0f * shift;
-                    ((NewShadowVectorTexel*)(texelAddress + 0x60))->packedXY = highByte | lowByte;
+                    intensityByte = 255.0f * intensity;
+                    intensityByte = (intensityByte & 0xffff) << 8;
+                    shiftByte = 255.0f * shift;
+                    *(u16*)(texel + sizeof(Texture)) = intensityByte | shiftByte;
                 }
             }
             DCFlushRange(gNewShadowNoiseTexFrames[frame] + 1, gNewShadowNoiseTexFrames[frame]->dataSize);
@@ -1347,30 +1347,31 @@ void newshadows_initProceduralTextures(void) {
     }
 
     gNewShadowCausticTexture = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
-    for (row = 0; row < 0x40; row++) {
-        int column;
-        int h, rowPixelOffset;
-        f32 rowPhase;
-        column = 0;
-        h = (row >> 2) * 0x20;
-        rowPixelOffset = (row & 3) * 2;
-        rowPhase = 0.0981875f * row;
-        for (; column < 0x40; column++) {
-            f32 columnPhase, wave, carrier, productValue, waveValue;
-            int highByte, lowByte;
-            u8* texel = (u8*)gNewShadowCausticTexture + rowPixelOffset;
-            texel += h;
-            texel += (column & 3) * 8;
-            texel += (column >> 2) * 0x200;
-            columnPhase = 0.39275f * column;
-            wave = mathCosfHighPrecision(0.5f * mathSinfHighPrecision(columnPhase) + rowPhase);
-            carrier = mathCosfHighPrecision(columnPhase);
+    for (x = 0; x < 0x40; x++) {
+        int y;
+        int tileColumnOffset, pixelInRowOffset;
+        f32 xPhase;
+        y = 0;
+        tileColumnOffset = (x >> 2) * 0x20;
+        pixelInRowOffset = (x & 3) * 2;
+        xPhase = (6.284f / 64.0f) * x;
+        for (; y < 0x40; y++) {
+            f32 yPhase, wave, carrier, productValue, waveValue;
+            int productByte, waveByte;
+            u8* pixelBase = (u8*)gNewShadowCausticTexture + pixelInRowOffset;
+            u8* tileBase = pixelBase + tileColumnOffset;
+            u8* texel;
+            tileBase += (y & 3) * 8;
+            texel = tileBase + (y >> 2) * 0x200;
+            yPhase = (6.284f / 16.0f) * y;
+            wave = mathCosfHighPrecision(0.5f * mathSinfHighPrecision(yPhase) + xPhase);
+            carrier = mathCosfHighPrecision(yPhase);
             productValue = wave * carrier;
             productValue = 127.0f * productValue + 127.0f;
             waveValue = 127.0f * wave + 127.0f;
-            lowByte = waveValue;
-            highByte = productValue;
-            ((NewShadowVectorTexel*)(texel + 0x60))->packedXY = lowByte | ((highByte & 0xffff) << 8);
+            waveByte = waveValue;
+            productByte = productValue;
+            *(u16*)(texel + sizeof(Texture)) = waveByte | ((productByte & 0xffff) << 8);
         }
     }
     DCFlushRange(gNewShadowCausticTexture + 1, gNewShadowCausticTexture->dataSize);

@@ -125,6 +125,36 @@ first-use order; changing declaration order alone does not restore retail.
 That experiment is not landed. Retaining zero-filled section equality without
 checking the named offsets would conceal a real layout regression.
 
+## Noise and caustic channels
+
+Noise and caustic texels use the same 4x4 halfword tiling, but do not share an
+XY record layout. Noise writes intensity in the high byte and shift in the
+low byte; caustics write the modulated product and the wave respectively.
+Replace the one-field `NewShadowVectorTexel` wrapper with ordinary halfword
+stores and name those channel values. Distortion's independent X/Y encoding
+keeps its exact instruction bytes after the same wrapper removal.
+
+Recover real byte pointers for both generated texture address chains. Their
+successive values identify pixel-in-row, tile-column, row-in-tile, and tile-row
+contributions. The old noise expression added the column offset first and
+carried its address in an integer. Both generated images now use texture X/Y
+coordinates consistently, with texture Y supplied as the noise field's Z.
+Use `sizeof(Texture)` at the payload boundary instead of literal 0x60.
+
+The caustic phase steps factor as `6.284f / 64.0f` and `6.284f / 16.0f`.
+These preserve the exact pool words while exposing the intended approximately
+one-cycle and four-cycle phase ranges across the image. Keep the evidenced
+6.284 approximation rather than substituting a more accurate pi constant.
+The overlap check also keeps X/Z distances separate from the radial distance.
+
+These changes improve noise generation from 98.75676% to 98.9054%, retaining
+370 instructions and the complete retail mnemonic sequence. Its operand
+differences decrease from 74 to 70. Every other function and all allocated
+data are byte-identical; all 39 exact functions and 100% data matching remain.
+
+Fixed-count inner loops were tested for the blur's explicit tile copies, but
+change MWCC's outer unrolling substantially. Those experiments are not landed.
+
 ## Checks
 
 `python -m unittest discover -s tools -p test_shadow_texture_blend.py` compiles
@@ -147,6 +177,17 @@ one cache flush over the payload, unchanged header bytes, and trailing canaries.
 The host uses a native square root and non-fused arithmetic; the separate exact
 PowerPC comparison establishes the retail square-root and fused instruction
 sequence, rather than assuming host execution emulates those instructions.
+
+`python -m unittest discover -s tools -p test_shadow_noise_generation.py`
+compiles the actual generator with controlled sampler, trigonometry, allocator,
+random, cache, and heap dependencies. It checks all 69632 halfwords across the
+16 noise frames and caustic image, headers and canaries, phase arguments,
+allocation/flush order, texture publication, scroll resets, and heap restoration.
+Identical candidate centers exercise the 10000-attempt retry boundary: retail
+still counts the final overlapping placement, yielding two sampled records.
+Unused placement records and the opaque BSS tail must remain untouched.
+The controlled numerical dependencies isolate addressing and lifecycle; this
+test does not claim to validate the real noise sampler or trig approximation.
 
 `ninja all_source` and the strict retail DOL checksum pass. Because this TU is
 NonMatching, the DOL gate protects integration; the object comparison is the
