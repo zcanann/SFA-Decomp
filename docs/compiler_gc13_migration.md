@@ -202,6 +202,15 @@ matched data bytes. Both build gates pass and the final DOL is byte-identical
 to retail. These source-match counts include concurrent staging improvements;
 they are not an isolated unchanged-source compiler comparison.
 
+The subsequent engine-23 cleanup reuses its score-array pointer for shifting
+initials and inserting score/flag fields. `insertHighScore` improves from
+94.10317% to 99.36508% under GC/1.3 and shrinks from 524 to the retail 504 bytes;
+the remaining diff is register allocation. All other function bodies and their
+relative relocations, all data and data-symbol positions, and every other
+compiled object are unchanged. Full removal of the remaining integer-based
+initials accesses regresses the loop and is not retained. The TU remains
+NonMatching; this cleanup recovers fuzzy agreement, not another exact function.
+
 Removing the unsupported legacy `-opt functions` option allows all ten older
 math candidates to compile on GC/1.3, but none preserves its exact match. The
 option's GC/1.2.5n help describes function prologue/epilogue optimization. A
