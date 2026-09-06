@@ -205,7 +205,7 @@ void arwingandrossstuff_hitDetect(GameObject* obj)
                 d.y = objAnim->localPosY - arwingAnim->localPosY;
                 d.z = objAnim->localPosZ - arwingAnim->localPosZ;
                 PSVECNormalize((const Vec*)&d, (Vec*)&d);
-                C_VECHalfAngle((const Vec*)&objAnim->velocityX, (const Vec*)&d, (Vec*)&objAnim->velocityX);
+                C_VECReflect((const Vec*)&objAnim->velocityX, (const Vec*)&d, (Vec*)&objAnim->velocityX);
                 objAnim->velocityX *= state->deflectSpeedScale;
                 objAnim->velocityY *= state->deflectSpeedScale;
                 objAnim->velocityZ *= state->deflectSpeedScale;

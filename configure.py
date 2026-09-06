@@ -744,7 +744,8 @@ config.libs = [
         [
             Object(MatchingFor("GSAE01"), "dolphin/mtx/mtx.c", source="dolphin/mtx/mtx.c", extra_cflags=["-DGEKKO"]),
             Object(MatchingFor("GSAE01"), "dolphin/mtx/mtxvec.c", source="dolphin/mtx/mtxvec.c"),
-            Object(MatchingFor("GSAE01"), "dolphin/mtx/vec.c"),
+            # Unpatched SDK lineage: C_VECReflect arithmetic and epilogue match MP4's profile.
+            Object(MatchingFor("GSAE01"), "dolphin/mtx/vec.c", mw_version="GC/1.2.5", extra_cflags=["-fp_contract", "off"]),
             Object(MatchingFor("GSAE01"), "dolphin/mtx/mtx44.c"),
             Object(NonMatching, "dolphin/mtx/mtx44vec.c"),
             Object(MatchingFor("GSAE01"), "dolphin/mtx/psmtx.c"),
