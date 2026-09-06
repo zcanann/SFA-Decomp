@@ -1,6 +1,7 @@
-#ifndef MAIN_DLL_DLL_024D_BOSSDRAKOR_H_
-#define MAIN_DLL_DLL_024D_BOSSDRAKOR_H_
+#ifndef DLLS_OBJECTS_589_BOSSDRAKOR_H_
+#define DLLS_OBJECTS_589_BOSSDRAKOR_H_
 
+#include "dlls/object_descriptor.h"
 #include "types.h"
 #include "game/objects/object.h"
 #include "main/byte_flags.h"
@@ -94,6 +95,7 @@ STATIC_ASSERT(offsetof(BossDrakorTuning, missileLeadFactors) == 0x68);
 STATIC_ASSERT(offsetof(BossDrakorTuning, airMeterThresholds) == 0x74);
 
 extern BossDrakorTuning gBossDrakorTurnMoveStates;
+extern ObjectDescriptor gBossDrakorObjDescriptor;
 
 void bossdrakor_release(void);
 void bossdrakor_initialise(void);

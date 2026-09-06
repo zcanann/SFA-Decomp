@@ -18,6 +18,7 @@
  * map-act 0x1d=3 and game bit 0x83c, and grants the defeat bit stored in the
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
+#include "dlls/objects/589_BossDrakor.h"
 #include "main/dll/partfx_interface.h"
 #include "main/objtype.h"
 #include "main/obj_link.h"
@@ -65,7 +66,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/dll/dll_024D_bossdrakor.h"
 #include "main/dll/dll_024E_drakordthornbush.h"
 #include "dlls/object_descriptor.h"
 #include "main/audio/sfx_play_api.h"
@@ -169,7 +169,6 @@ void bossdrakor_updateHeadTracking(GameObject* obj, BossDrakorState* drakorState
     s16* lowerJaw;
     int neckDelta;
     int neckStep;
-    int limitedNeckStep[1];
     int jawStep;
     s16 jawDelta;
     PartFxSpawnParams partfxParams;
@@ -181,8 +180,8 @@ void bossdrakor_updateHeadTracking(GameObject* obj, BossDrakorState* drakorState
         if (neckDelta < -(framesThisStep << 8)) {
             neckStep = -(framesThisStep << 8);
         } else {
-            limitedNeckStep[0] = (neckDelta > (framesThisStep << 8)) ? (framesThisStep << 8) : neckDelta;
-            neckStep = limitedNeckStep[0];
+            neckDelta = (neckDelta > (framesThisStep << 8)) ? (framesThisStep << 8) : neckDelta;
+            neckStep = neckDelta;
         }
         neck[0] += (s16)neckStep;
         PSVECSubtract(&drakorState->homePos, &obj->anim.localPos, &partfxParams.pos);
@@ -417,7 +416,7 @@ ObjectDescriptor gBossDrakorObjDescriptor = {
     (ObjectDescriptorCallback)bossdrakor_render,
     (ObjectDescriptorCallback)bossdrakor_free,
     0,
-    (ObjectDescriptorExtraSizeCallback)bossdrakor_getExtraSize,
+    bossdrakor_getExtraSize,
 };
 
 void bossdrakor_handleActionEvent(GameObject* obj, BossDrakorState* state, int action)
@@ -665,25 +664,26 @@ void bossdrakor_hitDetect(GameObject* obj)
 void bossdrakor_update(GameObject* obj)
 {
     BossDrakorState* state;
-    s8* p;
-    int i;
     BossDrakorState* meterState;
+    int eventIndex;
+    s16 shakeY;
     int moveResult;
     int adv;
     GameObject* player;
     int moveId;
-    s16* uvec;
+    s16* jointRotation;
     s16 shakeX;
-    s16 shakeY;
-    int* tbl;
-    int* tblRes;
+    int jointIndex;
+    s8* eventCursor;
+    int* jointKeys;
+    int* jointKeyStart;
     f32 shake;
     f32 shakeScaleZ;
     f32 t;
     s16 d;
     int step;
     s16* vec;
-    s8 buf[0x1c];
+    ObjAnimEventList animEvents;
     f32 hz;
     f32 hy;
     f32 hx;
@@ -784,7 +784,7 @@ void bossdrakor_update(GameObject* obj)
     }
     t = PSVECMag(&obj->anim.velocity) / drakorState->moveSpeed;
     t += 0.001f;
-    adv = ObjAnim_AdvanceCurrentMove(obj, t, timeDelta, (ObjAnimEventList*)buf);
+    adv = ObjAnim_AdvanceCurrentMove(obj, t, timeDelta, &animEvents);
     if (adv != 0)
     {
         if (drakorState->moveState == 0)
@@ -844,9 +844,9 @@ void bossdrakor_update(GameObject* obj)
             }
         }
     }
-    for (i = 0, p = buf; i < buf[0x1b]; i++)
+    for (eventIndex = 0, eventCursor = (s8*)&animEvents; eventIndex < animEvents.triggerCount; eventIndex++)
     {
-        switch (p[0x13])
+        switch (eventCursor[offsetof(ObjAnimEventList, triggeredIds)])
         {
         case 0:
             Sfx_PlayFromObject(obj, SFXTRIG_mv_sliftloop11);
@@ -855,7 +855,7 @@ void bossdrakor_update(GameObject* obj)
             Sfx_PlayFromObject(obj, SFXTRIG_mv_sliftloop11);
             break;
         }
-        p++;
+        eventCursor++;
     }
     if (timerCountDown(&drakorState->attackTimer) != 0)
     {
@@ -891,23 +891,23 @@ void bossdrakor_update(GameObject* obj)
         drakorState->shakeAmount = t;
         shakeScaleZ = drakorState->shakeScaleZ;
         shake = drakorState->shakeAmount;
-        tblRes = objGetLookAtJointKeys();
+        jointKeyStart = objGetLookAtJointKeys();
         shakeX = (s16)(gBossDrakorDegToAngle[0] * shake);
         shakeY = (s16)(gBossDrakorDegToAngle[0] * (shake * shakeScaleZ));
-        i = 0;
-        tbl = tblRes;
+        jointIndex = 0;
+        jointKeys = jointKeyStart;
         do
         {
-            uvec = (s16*)objFindJointPoseVector(obj, tbl[0]);
-            if (uvec != NULL)
+            jointRotation = (s16*)objFindJointPoseVector(obj, jointKeys[0]);
+            if (jointRotation != NULL)
             {
-                uvec[1] = shakeY;
-                uvec[0] = shakeX;
-                uvec[2] = 0;
+                jointRotation[1] = shakeY;
+                jointRotation[0] = shakeX;
+                jointRotation[2] = 0;
             }
-            tbl++;
-            i++;
-        } while (i < 5);
+            jointKeys++;
+            jointIndex++;
+        } while (jointIndex < 5);
     }
     if (randomChanceOneIn(200) != 0 && state->flags198.b40)
     {

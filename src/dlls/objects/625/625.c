@@ -37,7 +37,7 @@
 #include "game/objects/object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "dlls/object_descriptor.h"
-#include "main/dll/dll_024D_bossdrakor.h"
+#include "dlls/objects/589_BossDrakor.h"
 #include "main/camera_shake_api.h"
 #include "main/obj_path.h"
 #include "main/obj_query.h"
