@@ -129,8 +129,7 @@ void drakord_thornbush_hitDetect(GameObject* obj)
             switch (obj->anim.romDefNo)
             {
             case THORNBUSH_SEQ_THORN:
-                spawnExplosion(obj, (f32)(s32)setup->baseRadius, 1, 0, 0,
-                                     0, 0, 1, 1);
+                spawnExplosion(obj, (f32)(s32)setup->baseRadius, 1, 0, 0, 0, 0, 1, 1);
                 break;
             case THORNBUSH_SEQ_LIGHTNING:
                 Sfx_PlayFromObject(obj, SFXTRIG_awghitobj16);
@@ -140,19 +139,13 @@ void drakord_thornbush_hitDetect(GameObject* obj)
                                            0.0f, &inner->light);
                 break;
             }
-            if (setup->regrowDelay != 0)
-            {
-                s16toFloat(&inner->growth,
-                           setup->regrowDelay);
+            if (setup->regrowDelay != 0) {
+                s16toFloat(&inner->growth, setup->regrowDelay);
                 obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
-            }
-            else if (*(u32*)&((ObjPlacement*)setup)->ident == 0xffffffff)
-            {
+            } else if (*(u32*)&((ObjPlacement*)setup)->ident == 0xffffffff) {
                 Obj_FreeObject(obj);
-            }
-            else
-            {
+            } else {
                 Obj_RemoveFromUpdateList(obj);
                 ObjHits_DisableObject(obj);
                 obj->anim.flags |= OBJANIM_FLAG_HIDDEN;

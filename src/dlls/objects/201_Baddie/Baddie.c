@@ -260,8 +260,7 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
             Obj_FreeObject(obj);
         } else {
             if (setup->respawnDelay != 0) {
-                (*gMapEventInterface)
-                    ->addTime(((ObjPlacement*)setup)->ident, 60.0f * (f32)setup->respawnDelay);
+                (*gMapEventInterface)->addTime(((ObjPlacement*)setup)->ident, 60.0f * (f32)setup->respawnDelay);
             }
             state->controlFlags &= ~0x800;
             state->flags2E8 &= ~3;

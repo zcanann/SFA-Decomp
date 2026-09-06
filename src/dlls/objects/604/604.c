@@ -465,8 +465,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         }
         s->dropIndexApplied = s->dropIndex;
     }
-    if (sub != 0 && SNOWCLAW_MOUNT_INTERFACE(sub)->getRiderMode(sub) == 2)
-    {
+    if (sub != 0 && SNOWCLAW_MOUNT_INTERFACE(sub)->getRiderMode(sub) == 2) {
         seq->flags &= ~3;
     }
     return 0;

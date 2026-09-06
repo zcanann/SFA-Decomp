@@ -321,8 +321,8 @@ void DR_LaserCannon_update(GameObject* obj) {
             case 0:
                 state->hitExcludeType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
                 if (timerCountDown(&state->reloadTimer) != 0) {
-                    if (Obj_PredictInterceptPoint(target, setup->beamSpeed / 10.0f,
-                                                  (const Vec3f*)&state->muzzleX, (Vec3f*)hitPos) != 0) {
+                    if (Obj_PredictInterceptPoint(target, setup->beamSpeed / 10.0f, (const Vec3f*)&state->muzzleX,
+                                                  (Vec3f*)hitPos) != 0) {
                         cannonState = obj->extra;
                         if ((u8)Obj_CanSetupObject() == 0) {
                             spawned = NULL;

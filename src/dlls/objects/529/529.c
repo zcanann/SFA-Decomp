@@ -301,8 +301,8 @@ void wmwallcrawler_update(GameObject* obj) {
                         state->lifeTimer -= framesThisStep;
                         if ((state->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0) {
                             best = 10000.0f;
-                            hitCount = trackGetHeight(ob, ob->anim.localPosX, ob->anim.localPosY,
-                                                      ob->anim.localPosZ, &list, 0, 0);
+                            hitCount = trackGetHeight(ob, ob->anim.localPosX, ob->anim.localPosY, ob->anim.localPosZ,
+                                                      &list, 0, 0);
                             for (k = 0; k < hitCount; k++) {
                                 d = list[k]->height - ob->anim.localPosY;
                                 if (d < 0.0f) {

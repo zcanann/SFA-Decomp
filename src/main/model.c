@@ -2423,8 +2423,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     ch = model->animStateA;
     if (ch->moveControlFlags & 4)
     {
-        ObjModel_SampleJointTransform(model, 0, 0, obj->anim.currentMoveProgress,
-                                      obj->anim.rootMotionScale, pos, rot);
+        ObjModel_SampleJointTransform(model, 0, 0, obj->anim.currentMoveProgress, obj->anim.rootMotionScale, pos, rot);
         gModelRootRotX = rot[0];
         gModelRootRotY = rot[1];
         gModelRootRotZ = rot[2];
@@ -2433,9 +2432,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
     {
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA,
                               obj->anim.currentMoveProgress, 0x7f);
-    }
-    else if (((ObjAnimState*)model->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
-    {
+    } else if (((ObjAnimState*)model->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) {
         ch2 = model->animStateB;
         modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                              (s16)ch->eventState);
@@ -2445,9 +2442,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
                              (s16)ch2->eventCountdown);
         modelAnimEvalSlotPair((u8*)dst, model, ch, obj->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
                              (s16)ch->eventCountdown);
-    }
-    else
-    {
+    } else {
         modelAnimEvalChannels((u8*)dst, model, (ObjAnimState*)model->animStateA,
                               obj->anim.currentMoveProgress, 0x7f);
         ch2 = model->animStateB;

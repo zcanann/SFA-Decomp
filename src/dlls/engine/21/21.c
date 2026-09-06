@@ -621,14 +621,12 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
                 (ObjHits_IsObjectEnabled((ObjAnimComponent*)obj->anim.parent) != 0)) {
                 matrixSource = obj->anim.parentAnim->hitboxTransformState;
                 matrixOffset = (matrixSource->activeMatrixIndex + 2) * 0x10;
-                Matrix_TransformPoint((f32*)matrixSource + matrixOffset, obj->anim.localPosX,
-                                      obj->anim.localPosY, obj->anim.localPosZ,
-                                      &obj->anim.worldPosX, &obj->anim.worldPosY,
+                Matrix_TransformPoint((f32*)matrixSource + matrixOffset, obj->anim.localPosX, obj->anim.localPosY,
+                                      obj->anim.localPosZ, &obj->anim.worldPosX, &obj->anim.worldPosY,
                                       &obj->anim.worldPosZ);
             } else {
-                Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY,
-                                               obj->anim.localPosZ, &obj->anim.worldPosX,
-                                               &obj->anim.worldPosY, &obj->anim.worldPosZ,
+                Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+                                               &obj->anim.worldPosX, &obj->anim.worldPosY, &obj->anim.worldPosZ,
                                                (GameObject*)obj->anim.parent);
             }
         } else {
@@ -675,8 +673,7 @@ void curves_preparePointCollisionFrame(GameObject* obj, CurvesCollisionState* co
         }
         if (obj->anim.classId == 1) {
             collision->traceStart[2][0] = collision->points[2][0] = obj->anim.worldPosX;
-            collision->traceStart[2][1] = collision->points[2][1] =
-                CURVES_FALLBACK_TRACE_HEIGHT + obj->anim.worldPosY;
+            collision->traceStart[2][1] = collision->points[2][1] = CURVES_FALLBACK_TRACE_HEIGHT + obj->anim.worldPosY;
             collision->traceStart[2][2] = collision->points[2][2] = obj->anim.worldPosZ;
         }
         collision->surfaceFlags = 0;

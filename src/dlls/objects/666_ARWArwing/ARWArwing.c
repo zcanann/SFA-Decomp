@@ -811,8 +811,7 @@ void arwarwing_handleObjectDamage(GameObject* obj, ArwingState* state)
         }
         else
         {
-            if (hitObj->anim.romDefNo == 0x6ae && state->mode == ARWING_MODE_BARRELROLL)
-            {
+            if (hitObj->anim.romDefNo == 0x6ae && state->mode == ARWING_MODE_BARRELROLL) {
                 Sfx_PlayFromObject(obj, SFXTRIG_ar_blaunch16);
                 return;
             }
@@ -1724,8 +1723,7 @@ void arwarwing_update(GameObject* obj)
         state->rotZCur = lbl_803E6F6C * timeDelta + (f32)state->rotZCur;
         obj->anim.rotZ = (s16)state->rotZCur;
         state->velY = state->velY - 0.1f * timeDelta;
-        objMove(obj, state->velX * timeDelta, state->velY * timeDelta,
-                state->velZ * timeDelta);
+        objMove(obj, state->velX * timeDelta, state->velY * timeDelta, state->velZ * timeDelta);
         arwarwing_clampToFlightBounds(obj, state);
         state->thrusterL->anim.flags |= OBJANIM_FLAG_HIDDEN;
         state->thrusterR->anim.flags |= OBJANIM_FLAG_HIDDEN;

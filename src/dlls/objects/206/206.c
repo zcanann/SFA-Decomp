@@ -323,8 +323,7 @@ int dll_CE_updateAlertState(GameObject* obj, GroundBaddieState* state) {
         }
         playerChild = ((GameObject*)Obj_GetPlayerObject())->childObjs[0];
         player = Obj_GetPlayerObject();
-        childState = (*(DllCEStaffInterface**)playerChild->anim.dll)
-                         ->getHitReactValue(playerChild);
+        childState = (*(DllCEStaffInterface**)playerChild->anim.dll)->getHitReactValue(playerChild);
         if (childState != 0) {
             if (player->anim.romDefNo != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);

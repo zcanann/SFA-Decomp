@@ -2160,11 +2160,11 @@ void addSphereMapTexStage(void* p1, u8 intensity)
         GXTexObj* tex = textureGetGXTexObj((Texture*)p1);
         if (((Texture*)p1)->preloaded != 0)
         {
-        GXLoadTexObjPreLoaded(tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
+            GXLoadTexObjPreLoaded(tex, (GXTexRegion*)((Texture*)p1)->tmemAddr, texmap);
         }
         else
         {
-        GXLoadTexObj(tex, texmap);
+            GXLoadTexObj(tex, texmap);
         }
     }
     gRcpNextPostTexMtx += 3;

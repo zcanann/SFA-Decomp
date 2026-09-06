@@ -153,8 +153,7 @@ void IceBall_update(GameObject* obj) {
     objAddress->anim.rotX += ICEBALL_SPIN_STEP;
     objAddress->anim.rotZ += ICEBALL_SPIN_STEP;
     objAddress->anim.rotY += ICEBALL_SPIN_STEP;
-    objMove(objAddress, objAddress->anim.velocityX * timeDelta,
-            objAddress->anim.velocityY * timeDelta,
+    objMove(objAddress, objAddress->anim.velocityX * timeDelta, objAddress->anim.velocityY * timeDelta,
             objAddress->anim.velocityZ * timeDelta);
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)objAddress, ICEBALL_HIT_VOLUME_SLOT, 1, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)objAddress, ICEBALL_HIT_RADIUS);

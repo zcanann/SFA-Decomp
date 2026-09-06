@@ -95,8 +95,7 @@ void gf_levelcon_findLinkedObjects(GameObject* obj)
     for (; objectIndex < objectCount; objectIndex++)
     {
         linkedObj = (GameObject*)objects[objectIndex];
-        if (linkedObj != obj && linkedObj->anim.placementData != NULL)
-        {
+        if (linkedObj != obj && linkedObj->anim.placementData != NULL) {
             switch (linkedObj->anim.placement->ident)
             {
             case GFLEVELCON_LINK_LIGHT:
