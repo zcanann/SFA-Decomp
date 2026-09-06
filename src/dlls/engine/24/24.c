@@ -40,139 +40,69 @@ f32 gBoneParticleDriftVelocity[2] = {10.0f, 0.0f};
 #define BONE_PARTICLE_TEXTURE_A_ID 0x16b
 #define BONE_PARTICLE_TEXTURE_B_ID 0x201
 
-
-
 void boneParticleEffect_func08_nop(void) {
 }
 
 static Vec3f gBoneParticleCornersXZ[12] = {
-    {-1500.0f, 0.0f, -1500.0f},
-    {-1500.0f, 0.0f, 1500.0f},
-    {1500.0f, 0.0f, 1500.0f},
-    {1500.0f, 0.0f, -1500.0f},
-    {-1500.0f, 0.0f, -1500.0f},
-    {-1500.0f, 0.0f, 1500.0f},
-    {1500.0f, 0.0f, 1500.0f},
-    {1500.0f, 0.0f, -1500.0f},
-    {-1500.0f, 0.0f, -1500.0f},
-    {-1500.0f, 0.0f, 1500.0f},
-    {1500.0f, 0.0f, 1500.0f},
-    {1500.0f, 0.0f, -1500.0f}
-};
+    {-1500.0f, 0.0f, -1500.0f}, {-1500.0f, 0.0f, 1500.0f}, {1500.0f, 0.0f, 1500.0f}, {1500.0f, 0.0f, -1500.0f},
+    {-1500.0f, 0.0f, -1500.0f}, {-1500.0f, 0.0f, 1500.0f}, {1500.0f, 0.0f, 1500.0f}, {1500.0f, 0.0f, -1500.0f},
+    {-1500.0f, 0.0f, -1500.0f}, {-1500.0f, 0.0f, 1500.0f}, {1500.0f, 0.0f, 1500.0f}, {1500.0f, 0.0f, -1500.0f}};
 static Vec3f gBoneParticleCornersYZ[12] = {
-    {0.0f, -1500.0f, -1500.0f},
-    {0.0f, -1500.0f, 1500.0f},
-    {0.0f, 1500.0f, 1500.0f},
-    {0.0f, 1500.0f, -1500.0f},
-    {0.0f, -1500.0f, -1500.0f},
-    {0.0f, -1500.0f, 1500.0f},
-    {0.0f, 1500.0f, 1500.0f},
-    {0.0f, 1500.0f, -1500.0f},
-    {0.0f, -1500.0f, -1500.0f},
-    {0.0f, -1500.0f, 1500.0f},
-    {0.0f, 1500.0f, 1500.0f},
-    {0.0f, 1500.0f, -1500.0f}
-};
+    {0.0f, -1500.0f, -1500.0f}, {0.0f, -1500.0f, 1500.0f}, {0.0f, 1500.0f, 1500.0f}, {0.0f, 1500.0f, -1500.0f},
+    {0.0f, -1500.0f, -1500.0f}, {0.0f, -1500.0f, 1500.0f}, {0.0f, 1500.0f, 1500.0f}, {0.0f, 1500.0f, -1500.0f},
+    {0.0f, -1500.0f, -1500.0f}, {0.0f, -1500.0f, 1500.0f}, {0.0f, 1500.0f, 1500.0f}, {0.0f, 1500.0f, -1500.0f}};
 static Vec3f gBoneParticleCornersXY[12] = {
-    {-1500.0f, -1500.0f, 0.0f},
-    {1500.0f, -1500.0f, 0.0f},
-    {1500.0f, 1500.0f, 0.0f},
-    {-1500.0f, 1500.0f, 0.0f},
-    {-1500.0f, -1500.0f, 0.0f},
-    {1500.0f, -1500.0f, 0.0f},
-    {1500.0f, 1500.0f, 0.0f},
-    {-1500.0f, 1500.0f, 0.0f},
-    {-1500.0f, -1500.0f, 0.0f},
-    {1500.0f, -1500.0f, 0.0f},
-    {1500.0f, 1500.0f, 0.0f},
-    {-1500.0f, 1500.0f, 0.0f}
-};
+    {-1500.0f, -1500.0f, 0.0f}, {1500.0f, -1500.0f, 0.0f}, {1500.0f, 1500.0f, 0.0f}, {-1500.0f, 1500.0f, 0.0f},
+    {-1500.0f, -1500.0f, 0.0f}, {1500.0f, -1500.0f, 0.0f}, {1500.0f, 1500.0f, 0.0f}, {-1500.0f, 1500.0f, 0.0f},
+    {-1500.0f, -1500.0f, 0.0f}, {1500.0f, -1500.0f, 0.0f}, {1500.0f, 1500.0f, 0.0f}, {-1500.0f, 1500.0f, 0.0f}};
 static LightmapVertex gBoneParticleInitVertices[20] = {
-{-500, -900, -500, 0, 0, 0, 255, 255, 255, 255},
-    {500, -900, -500, 0, 63, 0, 255, 255, 255, 255},
-    {500, -900, 500, 0, 127, 0, 255, 255, 255, 255},
-    {-500, -900, 500, 0, 191, 0, 255, 255, 255, 255},
-    {-500, -900, -500, 0, 0, 127, 255, 255, 255, 255},
-    {500, -900, -500, 0, 63, 127, 255, 255, 255, 255},
-    {500, -900, 500, 0, 127, 127, 255, 255, 255, 255},
-    {-500, -900, 500, 0, 191, 127, 255, 255, 255, 255},
-    {-500, -900, -500, 0, 0, 255, 255, 255, 255, 255},
-    {500, -900, -500, 0, 63, 255, 255, 255, 255, 255},
-    {500, -900, 500, 0, 127, 255, 255, 255, 255, 255},
-    {-500, -900, 500, 0, 191, 255, 255, 255, 255, 255},
-    {-500, -900, -500, 0, 0, 383, 255, 255, 255, 255},
-    {500, -900, -500, 0, 63, 383, 255, 255, 255, 255},
-    {500, -900, 500, 0, 127, 383, 255, 255, 255, 255},
-    {-500, -900, 500, 0, 191, 383, 255, 255, 255, 255},
-    {-500, -900, -500, 0, 0, 511, 255, 255, 255, 255},
-    {500, -900, -500, 0, 63, 511, 255, 255, 255, 255},
-    {500, -900, 500, 0, 127, 511, 255, 255, 255, 255},
-    {-500, -900, 500, 0, 191, 511, 255, 255, 255, 255},
+    {-500, -900, -500, 0, 0, 0, 255, 255, 255, 255},   {500, -900, -500, 0, 63, 0, 255, 255, 255, 255},
+    {500, -900, 500, 0, 127, 0, 255, 255, 255, 255},   {-500, -900, 500, 0, 191, 0, 255, 255, 255, 255},
+    {-500, -900, -500, 0, 0, 127, 255, 255, 255, 255}, {500, -900, -500, 0, 63, 127, 255, 255, 255, 255},
+    {500, -900, 500, 0, 127, 127, 255, 255, 255, 255}, {-500, -900, 500, 0, 191, 127, 255, 255, 255, 255},
+    {-500, -900, -500, 0, 0, 255, 255, 255, 255, 255}, {500, -900, -500, 0, 63, 255, 255, 255, 255, 255},
+    {500, -900, 500, 0, 127, 255, 255, 255, 255, 255}, {-500, -900, 500, 0, 191, 255, 255, 255, 255, 255},
+    {-500, -900, -500, 0, 0, 383, 255, 255, 255, 255}, {500, -900, -500, 0, 63, 383, 255, 255, 255, 255},
+    {500, -900, 500, 0, 127, 383, 255, 255, 255, 255}, {-500, -900, 500, 0, 191, 383, 255, 255, 255, 255},
+    {-500, -900, -500, 0, 0, 511, 255, 255, 255, 255}, {500, -900, -500, 0, 63, 511, 255, 255, 255, 255},
+    {500, -900, 500, 0, 127, 511, 255, 255, 255, 255}, {-500, -900, 500, 0, 191, 511, 255, 255, 255, 255},
 };
 /* The final ten records cap the five rings; update draws only the 32 side triangles. */
 static LightmapTriangle gBoneParticleTriangles[42] = {
-    {0, {0, 4, 5}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {0, 5, 1}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {1, 5, 6}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {1, 6, 2}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {2, 6, 7}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {2, 7, 3}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {3, 7, 4}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {3, 4, 0}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {4, 8, 9}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {4, 9, 5}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {5, 9, 10}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {5, 10, 6}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {6, 10, 11}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {6, 11, 7}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {7, 11, 8}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {7, 8, 4}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {8, 12, 13}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {8, 13, 9}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {9, 13, 14}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {9, 14, 10}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {10, 14, 15}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {10, 15, 11}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {11, 15, 12}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {11, 12, 8}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {12, 16, 17}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {12, 17, 13}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {13, 17, 18}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {13, 18, 14}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {14, 18, 19}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {14, 19, 15}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {15, 19, 16}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {15, 16, 12}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {0, 2, 1}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {0, 2, 3}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {4, 6, 5}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {4, 6, 7}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {8, 10, 9}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {8, 10, 11}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {12, 14, 13}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {12, 14, 15}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {16, 18, 17}, {{0, 0}, {0, 0}, {0, 0}}},
-    {0, {16, 18, 19}, {{0, 0}, {0, 0}, {0, 0}}}
-};
-static u8 gBoneParticleJointPlanes[34] = {
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1
-};
-static u8 gBoneParticleJointIds[7][5] = {
-    {0, 1, 2, 3, 4},
-    {0, 5, 6, 7, 8},
-    {9, 10, 11, 13, 13},
-    {16, 17, 18, 19, 20},
-    {22, 23, 24, 25, 26},
-    {15, 29, 32, 15, 15},
-    {28, 28, 33, 0, 0}
-};
-static f32 gBoneParticleJointXYScales[35] = {
-    0.94f, 0.66f, 0.493f, 0.568f, 0.518f, 0.5f, 0.463f, 0.618f, 0.518f, 0.45f, 0.638f, 0.842f, 0.6f, 0.413f, 0.9f, 0.862f, 0.518f, 0.585f, 0.285f, 0.465f, 0.375f, 0.75f, 0.54f, 0.615f, 0.15f, 0.458f, 0.397f, 0.75f, 0.937f, 0.945f, 0.75f, 0.75f, 0.862f, 0.947f, 0.75f
-};
-static f32 gBoneParticleJointZScales[35] = {
-    0.75f, 1.0f, 0.772f, 0.967f, 0.967f, 1.13f, 0.712f, 1.037f, 0.757f, 0.45f, 0.178f, 0.463f, 0.6f, 0.413f, 0.9f, 0.862f, 0.518f, 0.585f, 0.555f, 0.465f, 0.375f, 0.75f, 0.54f, 0.615f, 0.51f, 0.458f, 0.397f, 0.75f, 0.488f, 0.945f, 0.75f, 0.75f, 0.862f, 0.558f, 0.75f
-};
-
+    {0, {0, 4, 5}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {0, 5, 1}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {1, 5, 6}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {1, 6, 2}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {2, 6, 7}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {2, 7, 3}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {3, 7, 4}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {3, 4, 0}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {4, 8, 9}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {4, 9, 5}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {5, 9, 10}, {{0, 0}, {0, 0}, {0, 0}}},   {0, {5, 10, 6}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {6, 10, 11}, {{0, 0}, {0, 0}, {0, 0}}},  {0, {6, 11, 7}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {7, 11, 8}, {{0, 0}, {0, 0}, {0, 0}}},   {0, {7, 8, 4}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {8, 12, 13}, {{0, 0}, {0, 0}, {0, 0}}},  {0, {8, 13, 9}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {9, 13, 14}, {{0, 0}, {0, 0}, {0, 0}}},  {0, {9, 14, 10}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {10, 14, 15}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {10, 15, 11}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {11, 15, 12}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {11, 12, 8}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {12, 16, 17}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {12, 17, 13}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {13, 17, 18}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {13, 18, 14}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {14, 18, 19}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {14, 19, 15}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {15, 19, 16}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {15, 16, 12}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {0, 2, 1}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {0, 2, 3}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {4, 6, 5}, {{0, 0}, {0, 0}, {0, 0}}},    {0, {4, 6, 7}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {8, 10, 9}, {{0, 0}, {0, 0}, {0, 0}}},   {0, {8, 10, 11}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {12, 14, 13}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {12, 14, 15}, {{0, 0}, {0, 0}, {0, 0}}},
+    {0, {16, 18, 17}, {{0, 0}, {0, 0}, {0, 0}}}, {0, {16, 18, 19}, {{0, 0}, {0, 0}, {0, 0}}}};
+static u8 gBoneParticleJointPlanes[34] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 0,
+                                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
+static u8 gBoneParticleJointIds[7][5] = {{0, 1, 2, 3, 4},      {0, 5, 6, 7, 8},      {9, 10, 11, 13, 13},
+                                         {16, 17, 18, 19, 20}, {22, 23, 24, 25, 26}, {15, 29, 32, 15, 15},
+                                         {28, 28, 33, 0, 0}};
+static f32 gBoneParticleJointXYScales[35] = {0.94f,  0.66f,  0.493f, 0.568f, 0.518f, 0.5f,   0.463f, 0.618f, 0.518f,
+                                             0.45f,  0.638f, 0.842f, 0.6f,   0.413f, 0.9f,   0.862f, 0.518f, 0.585f,
+                                             0.285f, 0.465f, 0.375f, 0.75f,  0.54f,  0.615f, 0.15f,  0.458f, 0.397f,
+                                             0.75f,  0.937f, 0.945f, 0.75f,  0.75f,  0.862f, 0.947f, 0.75f};
+static f32 gBoneParticleJointZScales[35] = {0.75f,  1.0f,   0.772f, 0.967f, 0.967f, 1.13f,  0.712f, 1.037f, 0.757f,
+                                            0.45f,  0.178f, 0.463f, 0.6f,   0.413f, 0.9f,   0.862f, 0.518f, 0.585f,
+                                            0.555f, 0.465f, 0.375f, 0.75f,  0.54f,  0.615f, 0.51f,  0.458f, 0.397f,
+                                            0.75f,  0.488f, 0.945f, 0.75f,  0.75f,  0.862f, 0.558f, 0.75f};
 
 /* Per-bone particle vertex update + draw. */
 void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
@@ -259,7 +189,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                     jointY = jointY * jointPositionScale;
                 }
                 jointZ = jointZ * jointPositionScale;
-                Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x, &transform.y, &transform.z);
+                Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x,
+                                      &transform.y, &transform.z);
                 cornerIndex = 0;
                 cornersYZ = gBoneParticleCornersYZ;
                 cornersXZ = gBoneParticleCornersXZ;
@@ -281,16 +212,19 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                         transform.y = cornersXY->y * xyScale;
                         transform.z = cornersXY->z * gBoneParticleJointZScales[jointId];
                     }
-                    Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x, &transform.y, &transform.z);
+                    Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x,
+                                          &transform.y, &transform.z);
                     transform.x = transform.x + playerMapOffsetX;
                     transform.z = transform.z + playerMapOffsetZ;
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].x = jointX + (transform.x - obj->anim.localPosX);
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].y = jointY + (transform.y - obj->anim.localPosY);
-                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].z = jointZ + (transform.z - obj->anim.localPosZ);
+                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].x =
+                        jointX + (transform.x - obj->anim.localPosX);
+                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].y =
+                        jointY + (transform.y - obj->anim.localPosY);
+                    ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].z =
+                        jointZ + (transform.z - obj->anim.localPosZ);
                     ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].a = 0x9b;
                     ((LightmapVertex*)*updateBufferCursor)[cornerIndex + vertexBase].t =
-                        (s16)(gBoneParticleInitVertices[cornerIndex + vertexBase].t -
-                              (gBoneParticleScrollOffset << 2));
+                        (s16)(gBoneParticleInitVertices[cornerIndex + vertexBase].t - (gBoneParticleScrollOffset << 2));
                     cornersYZ++;
                     cornersXZ++;
                     cornersXY++;
@@ -346,13 +280,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
 void boneParticleEffect_func06_nop(void) {
 }
 
-
-
-
-
-
-
-void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraArg, u8 probability, const PartFxSpawnParams* spawnParams) {
+void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraArg, u8 probability,
+                                     const PartFxSpawnParams* spawnParams) {
     ObjModel* model;
     int jointIndex;
     PartFxSpawnParams params;
@@ -430,19 +359,26 @@ void boneParticleEffect_initialise(void) {
     gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
     for (bufferIndex = 0; bufferIndex < BONE_PARTICLE_EFFECT_BUFFER_COUNT; bufferIndex++) {
         for (vertexIndex = 0; vertexIndex < BONE_PARTICLE_EFFECT_SLOT_COUNT; vertexIndex++) {
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].x = gBoneParticleInitVertices[vertexIndex].x;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].y = gBoneParticleInitVertices[vertexIndex].y;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].z = gBoneParticleInitVertices[vertexIndex].z;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].s = gBoneParticleInitVertices[vertexIndex].s;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].t = gBoneParticleInitVertices[vertexIndex].t;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].r = gBoneParticleInitVertices[vertexIndex].r;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].g = gBoneParticleInitVertices[vertexIndex].g;
-            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].b = gBoneParticleInitVertices[vertexIndex].b;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].x =
+                gBoneParticleInitVertices[vertexIndex].x;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].y =
+                gBoneParticleInitVertices[vertexIndex].y;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].z =
+                gBoneParticleInitVertices[vertexIndex].z;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].s =
+                gBoneParticleInitVertices[vertexIndex].s;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].t =
+                gBoneParticleInitVertices[vertexIndex].t;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].r =
+                gBoneParticleInitVertices[vertexIndex].r;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].g =
+                gBoneParticleInitVertices[vertexIndex].g;
+            ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].b =
+                gBoneParticleInitVertices[vertexIndex].b;
             ((LightmapVertex*)gBoneParticleEffectBuffers[bufferIndex])[vertexIndex].a = 0xff;
         }
     }
 }
-
 
 BoneParticleEffectDllInterface boneParticleEffect_funcs = {
     0,
