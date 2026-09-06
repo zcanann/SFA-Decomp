@@ -16,6 +16,7 @@ import tempfile
 import time
 
 from tricky_backend_ir import COMPILER_SHA256, capture_snapshot
+from tricky_backend_graph import capture_graph
 
 if sys.platform != "win32" or C.sizeof(C.c_void_p) != 8:
     raise RuntimeError("IR capture requires 64-bit Windows Python and an x86 compiler")
@@ -97,7 +98,7 @@ def require(ok):
     if not ok:
         raise C.WinError(C.get_last_error())
 
-def capture(command, cwd, wanted, timeout=60):
+def capture(command, cwd, wanted, timeout=60, graph=False):
     executable = (Path(cwd) / command[0]).resolve()
     digest = hashlib.sha256(executable.read_bytes()).hexdigest()
     if digest != COMPILER_SHA256:
@@ -110,6 +111,8 @@ def capture(command, cwd, wanted, timeout=60):
     exit_code = None
     exit_continued = False
     breakpoint = None
+    graph_breakpoints = {}
+    current_name = None
     base = None
 
     def memory(address, size):
@@ -173,6 +176,16 @@ def capture(command, cwd, wanted, timeout=60):
                     if count.value != 1:
                         raise ValueError("short breakpoint write")
                     require(flush(pi.process, breakpoint, 1))
+                    if graph:
+                        graph_breakpoints = {base + 0x107070: "BEFORE GPR SIMPLIFICATION",
+                                             base + 0x106E20: "BEFORE GPR REWRITE"}
+                        for address in graph_breakpoints:
+                            if memory(address, 1) != b"\x53":
+                                raise ValueError("unexpected GPR graph entry prologue")
+                            require(write(pi.process, address, b"\xcc", 1, C.byref(count)))
+                            if count.value != 1:
+                                raise ValueError("short GPR graph breakpoint write")
+                            require(flush(pi.process, address, 1))
                 elif event.code == 2:
                     threads[event.tid] = event.info.thread.thread
                 elif event.code == 4:
@@ -184,7 +197,29 @@ def capture(command, cwd, wanted, timeout=60):
                     exit_code = event.info.exitCode
                 elif event.code == 1:
                     exception = event.info.exception.record
-                    if exception.address == breakpoint and exception.code in (0x80000003, 0x4000001F):
+                    if (exception.address in graph_breakpoints
+                            and exception.code in (0x80000003, 0x4000001F)):
+                        context = Context(flags=0x10007)
+                        require(getcontext(threads[event.tid], C.byref(context)))
+                        if context.eip != exception.address + 1:
+                            raise ValueError("unexpected instruction pointer at graph breakpoint")
+                        if current_name in wanted and memory(base + 0x1E7317, 1) == b"\x04":
+                            stage = graph_breakpoints[exception.address]
+                            snapshot = capture_snapshot(memory, current_name, stage, word(base + 0x1E67B0))
+                            snapshot["graph_colored"] = stage == "BEFORE GPR REWRITE"
+                            snapshot["coloring_graph"] = capture_graph(memory, base, colored=snapshot["graph_colored"])
+                            snapshot["available_gprs"] = [i for i, blocked in enumerate(memory(base + 0x1E2C70, 32)) if not blocked]
+                            snapshot["original_gpr_count"] = int.from_bytes(memory(base + 0x1DD948, 2), "little", signed=True)
+                            snapshots.append(snapshot)
+                        # Execute the verified PUSH EBX's exact stack effect. At
+                        # this point the graph is live, unlike post-pass dumps.
+                        context.esp -= 4
+                        count = SIZE()
+                        require(write(pi.process, context.esp, struct.pack("<I", context.ebx), 4, C.byref(count)))
+                        if count.value != 4:
+                            raise ValueError("short emulated stack push")
+                        require(setcontext(threads[event.tid], C.byref(context)))
+                    elif exception.address == breakpoint and exception.code in (0x80000003, 0x4000001F):
                         context = Context(flags=0x10007)
                         require(getcontext(threads[event.tid], C.byref(context)))
                         if context.eip != breakpoint + 1:
@@ -192,6 +227,7 @@ def capture(command, cwd, wanted, timeout=60):
                         name = string(word(context.esp + 4))
                         stage = string(word(context.esp + 8))
                         names.add(name)
+                        current_name = name
                         if name in wanted:
                             snapshot = capture_snapshot(memory, name, stage, word(base + 0x1E67B0))
                             # The li/lis eligibility test at VA 0x5082E0 reads a

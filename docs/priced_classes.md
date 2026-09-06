@@ -4774,6 +4774,35 @@ Both build gates and 104 tooling tests pass. Standard `register` storage hints
 on movement's result, object walk group, or both leave its 34 operand differences
 unchanged; those diagnostic variants are also not retained.
 
+The optional `--graph` trace now captures the live GPR graph before simplification
+and immediately before physical rewriting, at GC/1.3 compiler VAs `0x507070` and
+`0x506E20`. Post-coloring dump hooks are too late: the graph arena has been freed.
+Both private-process breakpoints replace a verified `PUSH EBX` and emulate its
+exact stack effect; whole-object equivalence remains mandatory. The decoder
+checks symmetric interference edges, valid colors, the actual linked coloring
+order, and surviving operand rewrites, including implicit call-clobber operands.
+Excluded nodes retain opaque color slots rather than falsely labeling them GPRs.
+Replaying low-degree sweeps and weighted high-degree choices reproduces every
+worklist entry and final degree counter for both residual functions.
+
+Movement's result (virtual 74) is the first high-degree removal, with weight 13
+and degree 44. This frees the object walk group (virtual 76) for simplification;
+reverse removal order puts that group before result during coloring, assigning
+`r29` and `r28` respectively. These are optimistic graph removals, not actual
+spills. The finding directs source experiments toward lifetimes and value
+partitioning; it is not proof of original source or compiler provenance. A
+rebuild of the historical pre-switch source/header state at `5a003457b8^` using
+its GC/2.0 profile reproduces the same 34 movement operand differences. Its exact
+tunnel instead uses an explicit byte-offset induction helper, which is not
+restored. No production source or compiler-profile changes accompany this tool.
+The ordinary/instrumented object hash remains `fb1fbfe...1584`, and Tricky remains
+87/89 exact with only 41 linked text bytes differing and allocated non-text exact.
+Sharing only the five route-yaw locals leaves movement unchanged; sharing both
+yaw locals adds ten operand differences. The latter's graph still removes result
+first at weight 13/degree 44. Neither source variant is retained. Both build gates
+and 126 tooling tests pass, including reordered/dangling graph-pair rejection and
+both breakpoint stack-effect checks.
+
 **Const-zero placement — `playerState19`/`1B`/`MountBike`/`ClimbWall` (player.c).** NOT a surplus
 instruction: counts are identical (349/349, 409/409, 677/677). `flags360 & ~2LL` promotes a `u32` to
 `long long`; the high word's zero-extension emits a dead `li rX,0`. Retail DCEs it and materialises a

@@ -4,6 +4,7 @@ from collections import Counter
 from contextlib import ExitStack
 import hashlib
 from pathlib import Path
+import struct
 import sys
 import unittest
 from unittest.mock import patch
@@ -11,7 +12,8 @@ from unittest.mock import patch
 
 @unittest.skipUnless(sys.platform == "win32" and sys.maxsize > 2**32, "requires 64-bit Windows ctypes")
 class BackendCaptureWindowsTests(unittest.TestCase):
-    def exercise(self, fail_exit_once=False, timeout=60, persistent_failure=False):
+    def exercise(self, fail_exit_once=False, timeout=60, persistent_failure=False,
+                 graph=False, short_push=False, rewrite_byte=b"\x53"):
         import tricky_backend_capture_win as win
 
         created = win.Event(code=3, pid=20, tid=10)
@@ -24,9 +26,16 @@ class BackendCaptureWindowsTests(unittest.TestCase):
         thread_exit = win.Event(code=4, pid=20, tid=30)
         process_exit = win.Event(code=5, pid=20, tid=10)
         events = [created, thread, thread_exit, process_exit]
+        if graph:
+            for address in (0x506E20, 0x507070):
+                rewrite = win.Event(code=1, pid=20, tid=10)
+                rewrite.info.exception.record.code = 0x80000003
+                rewrite.info.exception.record.address = address
+                events.insert(1, rewrite)
         closed, continued = Counter(), Counter()
         terminated = []
         current = None
+        self.rewrite_contexts = []
 
         def create(*args):
             pi = args[-1]._obj
@@ -55,14 +64,36 @@ class BackendCaptureWindowsTests(unittest.TestCase):
             return True
 
         def read(process, address, buffer, size, count):
-            self.assertEqual((address, size), (0x4FF2D0, 1))
-            win.C.memmove(buffer, b"\xc3", 1)
+            self.assertEqual(size, 1)
+            expected = {0x4FF2D0: b"\xc3"}
+            if graph:
+                expected[0x506E20] = rewrite_byte
+                expected[0x507070] = b"\x53"
+            win.C.memmove(buffer, expected[address], 1)
             count._obj.value = 1
             return True
 
         def write(process, address, data, size, count):
-            self.assertEqual((address, data, size), (0x4FF2D0, b"\xcc", 1))
-            count._obj.value = 1
+            if address == 0xFFC and graph:
+                self.assertEqual((data, size), (struct.pack("<I", 0x12345678), 4))
+                count._obj.value = 3 if short_push else 4
+            else:
+                self.assertIn(address, (0x4FF2D0, 0x506E20, 0x507070) if graph else (0x4FF2D0,))
+                self.assertEqual((data, size), (b"\xcc", 1))
+                count._obj.value = 1
+            return True
+
+        def getcontext(thread, context):
+            self.assertEqual(thread, 22)
+            context._obj.eip = current.info.exception.record.address + 1
+            context._obj.esp = 0x1000
+            context._obj.ebx = 0x12345678
+            context._obj.eflags = 0x202
+            return True
+
+        def setcontext(thread, context):
+            c = context._obj
+            self.rewrite_contexts.append((c.eip, c.esp, c.ebx, c.eflags))
             return True
 
         def close(handle):
@@ -78,6 +109,7 @@ class BackendCaptureWindowsTests(unittest.TestCase):
                 "terminate": lambda *a: terminated.append(a) or not persistent_failure,
                 "waitprocess": lambda *a: 258 if persistent_failure else 0,
                 "detach": lambda *a: False,
+                "getcontext": getcontext, "setcontext": setcontext,
             }.items():
                 stack.enter_context(patch.object(win, name, side_effect=callback))
             if persistent_failure:
@@ -86,8 +118,10 @@ class BackendCaptureWindowsTests(unittest.TestCase):
                 stack.enter_context(patch.object(win.time, "monotonic", side_effect=lambda: next(ticks)))
                 stack.enter_context(patch.object(win.time, "sleep"))
             error = RuntimeError if persistent_failure else TimeoutError if timeout == 0 else OSError if fail_exit_once else RuntimeError
+            if short_push or rewrite_byte != b"\x53":
+                error = ValueError
             with self.assertRaises(error) as raised:
-                win.capture(["mock-compiler.exe"], Path.cwd(), {"missing"}, timeout=timeout)
+                win.capture(["mock-compiler.exe"], Path.cwd(), {"missing"}, timeout=timeout, graph=graph)
             if persistent_failure:
                 self.assertIn("incomplete compiler teardown", str(raised.exception))
         return closed, continued, terminated
@@ -114,6 +148,23 @@ class BackendCaptureWindowsTests(unittest.TestCase):
         closed, continued, terminated = self.exercise(persistent_failure=True)
         self.assertGreater(continued[5], 1)
         self.assertEqual(closed, Counter({1: 1, 2: 1, 11: 1, 23: 1}))
+        self.assertEqual(len(terminated), 1)
+
+    def test_graph_breakpoints_execute_only_push_ebx_stack_effect(self):
+        closed, _, terminated = self.exercise(graph=True)
+        self.assertEqual(self.rewrite_contexts, [(0x507071, 0xFFC, 0x12345678, 0x202),
+                                               (0x506E21, 0xFFC, 0x12345678, 0x202)])
+        self.assertTrue(all(count == 1 for count in closed.values()))
+        self.assertFalse(terminated)
+
+    def test_short_stack_push_terminates_without_resuming_bad_context(self):
+        _, _, terminated = self.exercise(graph=True, short_push=True)
+        self.assertFalse(self.rewrite_contexts)
+        self.assertEqual(len(terminated), 1)
+
+    def test_changed_rewrite_prologue_is_rejected(self):
+        _, _, terminated = self.exercise(graph=True, rewrite_byte=b"\x56")
+        self.assertFalse(self.rewrite_contexts)
         self.assertEqual(len(terminated), 1)
 
 
