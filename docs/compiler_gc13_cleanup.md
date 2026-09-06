@@ -511,3 +511,67 @@ state 25. No compiler exception or source split is introduced.
 The backend tests, formatting and generated-path audits, strict retail
 checksum, and `ninja all_source` pass. Controls, captures, and object audits
 are under `build/gc13_new_matches/player_round5*`.
+
+## September 6: Remaining slot-202 native flag expressions
+
+Ten more complete enemy TUs retain all **54 exact functions, 21,320 code
+bytes, and 1,696 assigned data bytes** while removing 30 flag widenings and
+479 repeated `EnemyState` casts. A scan of every C source in slot 202 now
+finds no remaining 64-bit type or literal expressions. The TUs keep their
+existing GC/1.3 profiles, source linkage, boundaries, and generated paths.
+
+Each original TU scores 100% under GC/2.0. The final sources give these
+results with the complete TU flags held constant:
+
+| TU | Clean GC/1.3 | Clean GC/2.0 | Additional source cleanup |
+| --- | ---: | ---: | --- |
+| PinPon | **100%** | 98.29384% | Typed state locals and direct curve-init arrays; redundant pointer/conversion casts removed. |
+| Vambat | **100%** | 97.80806% | Existing state pointers replace repeated casts; compound flag and timer updates. |
+| Hagabon MK2 | **100%** | 98.88285% | Typed matrix/state locals, canonical rotation and render flag, redundant object alias removed. |
+| WB | **100%** | 98.74207% | Canonical animation fields and straightforward animation-speed decay. |
+| GC robot patrol | **100%** | 99.0% | Scalar placement pointer and existing typed child-setup fields with the asserted allocation size. |
+| Mutated Eba | **100%** | 99.347824% | Typed state/object access and simpler byte-table addressing. |
+| Rachnop | **100%** | 99.33668% | Typed vectors in the angle/steering helpers and direct climbing predicates. |
+| GuardClaw | **100%** | 99.56284% | Direct placement casts and indexed animation-table fields. |
+| Spitting Eba | **100%** | 98.26879% | Separate target/projectile pointers and angle local; direct health-field comparisons. |
+| Snowworm | **100%** | 99.68511% | Separate setup/projectile pointers, canonical rotation/hitbox fields, native counter increment. |
+
+GuardClaw's old `flags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN` expression
+becomes `enemyState->controlFlags |= BADDIE_CONTROL_SEQUENCE_DRIVEN`.
+Simply removing the widening while retaining the expression based on the
+cached `flags` local regresses GC/1.3. The local remains for the surrounding
+control-flow reads. Its table access now uses `gSeq11EStateTable[index].anim`
+and `.animSpeed` instead of byte offsets and an artificial table pointer.
+Independent controls show that the table, placement, and state cleanups
+also match GC/2.0; the native compound flag update distinguishes this TU.
+
+Spitting Eba and Snowworm demonstrate that some deliberately reused integer
+locals can now become separate typed pointers without changing allocation.
+Other boundaries still need their existing spelling: PinPon's final ripple
+calls, WB's look-direction call, Mutated Eba's final SFX calls, and Rachnop's
+movement call regress when their retained casts are replaced with the typed
+aliases. Hagabon keeps two array temporaries whose removal changes registers.
+
+Vambat and Hagabon retain their one-element constant arrays. Scalar forms
+can leave every function exact while moving or enlarging `.sdata2` and
+changing relocations. Their existing pools and Vambat's documented precedence
+bug are preserved. Snowworm's counter increment was tested independently and
+matches both compilers without the previous signed-char pointer view.
+
+Every source cleanup and clang-format pass lands in a separate commit.
+Formatting, including configured control-brace insertion, preserves the raw
+object from the preceding source commit. No shared headers, symbols, splits,
+compiler settings, or ProDG decompressor source change in this pass.
+
+All 1,005 compiled objects were audited. The ten cleaned TUs change only
+anonymous literal names at unchanged pool locations; allocated contents,
+section sizes/alignment, named symbols, relocation targets, and all unit match
+measures are preserved. The independent Player improvement in `da68038d3a`
+was rebased in and excluded from this cleanup's totals. Path and formatting
+checks pass. Every landing passes strict matching and `ninja all_source` with
+30-second limits; the final DOL remains byte-identical to retail, SHA-1
+`e750e8e894707a52446118a4b84f1b58b677b269`.
+
+Local before/after objects, source/format commit packets, and aggregate counts
+are under `build/gc13_migration/native_family/`; full compiler controls are
+under the corresponding `build/gc13_indexed/` TU directories.
