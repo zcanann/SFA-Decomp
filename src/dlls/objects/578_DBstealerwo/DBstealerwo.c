@@ -368,7 +368,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, BaddieState* baddie, f32 t) {
     d = Vec_xzDistance(&obj->anim.worldPosX, &((GameObject*)baddie->targetObj)->anim.worldPosX);
     baddie->stateTag = 1;
     if (d < 30.0f) {
-        baddie->animSpeedA = baddie->animSpeedA * (k = 0.5f);
+        baddie->animSpeedA *= (k = 0.5f);
         baddie->animSpeedB *= k;
         obj = (GameObject*)baddie->targetObj;
         tmpA = sub->messageObjGroup;
@@ -818,7 +818,7 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, BaddieState* state) {
                 horizontalDistance = sqrtf(squaredX + squaredZ);
             }
             targetOffset[1] *= 0.015625f;
-            horizontalDistance = horizontalDistance / 140.0f;
+            horizontalDistance /= 140.0f;
             launchVelocity[1] =
                 -(horizontalDistance * (-1.7f * horizontalDistance) - targetOffset[1]) / horizontalDistance;
             launchVelocity[1] *= 1.0666667f;
@@ -1019,7 +1019,7 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, BaddieState* baddie, f32 t) {
         sb = fv;
         p3 = objGetLookAtJointKeys();
         i3 = 1;
-        p3 = p3 + 1;
+        p3 += 1;
         for (; i3 < 9; i3++) {
             jointRotation = (Vec3s*)objFindJointPoseVector(obj, *p3);
             if (jointRotation != NULL) {
@@ -1158,7 +1158,7 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, BaddieState* baddie, f32 t) {
         sb = fv;
         p3 = objGetLookAtJointKeys();
         i3 = 1;
-        p3 = p3 + 1;
+        p3 += 1;
         for (; i3 < 9; i3++) {
             jointRotation = (Vec3s*)objFindJointPoseVector(obj, *p3);
             if (jointRotation != NULL) {
@@ -1421,7 +1421,7 @@ int dbstealerworm_stateHandlerA00(GameObject* obj, BaddieState* baddie) {
     }
 
     if ((bs->eventFlags & BADDIE_EVENT_LANDING) != 0) {
-        bs->eventFlags = bs->eventFlags & ~BADDIE_EVENT_LANDING;
+        bs->eventFlags &= ~BADDIE_EVENT_LANDING;
         control->flags14 |= DBWORM_FLAG14_FX_SPRAY;
     }
 
@@ -1644,7 +1644,7 @@ void dbstealerworm_acquireTarget(GameObject* obj, GroundBaddieState* groundState
         }
         if (sub->countdown > sub->nextSfxTime && dist < 400.0f) {
             Sfx_PlayFromObject(obj, gDbStealerwormBurrowFootstepSfx[1]);
-            sub->nextSfxTime = sub->nextSfxTime + randomGetRange(0x32, 0xfa);
+            sub->nextSfxTime += randomGetRange(0x32, 0xfa);
         }
         sub->countdown += timeDelta;
     }

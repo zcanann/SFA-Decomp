@@ -388,7 +388,7 @@ int SHthorntail_HasNearbyPendingEventObject(GameObject* obj) {
 void SHthorntail_updateSnoring(GameObject* obj, SHthorntailState* runtime) {
     switch (runtime->snoreState) {
     case SHTHORNTAIL_SNORE_DELAY:
-        runtime->snoreTimer = runtime->snoreTimer - timeDelta;
+        runtime->snoreTimer -= timeDelta;
         if (runtime->snoreTimer <= 0.0f) {
             Sfx_PlayFromObject(obj, SHTHORNTAIL_SFX_SNORE_INHALE);
             runtime->snoreState = SHTHORNTAIL_SNORE_INHALE;
@@ -396,7 +396,7 @@ void SHthorntail_updateSnoring(GameObject* obj, SHthorntailState* runtime) {
         }
         break;
     case SHTHORNTAIL_SNORE_INHALE:
-        runtime->snoreTimer = runtime->snoreTimer - timeDelta;
+        runtime->snoreTimer -= timeDelta;
         if (runtime->snoreTimer <= 0.0f) {
             Sfx_PlayFromObject(obj, SHTHORNTAIL_SFX_SNORE_EXHALE);
             runtime->snoreState = SHTHORNTAIL_SNORE_EXHALE;
@@ -444,7 +444,7 @@ u32 SHthorntail_chooseNextState(GameObject* obj, SHthorntailState* runtime, SHth
                 yawDelta = yawDelta - 0xFFFF;
             }
             if (yawDelta < -0x8000) {
-                yawDelta = yawDelta + 0xFFFF;
+                yawDelta += 0xFFFF;
             }
             yawDeltaAbs = yawDelta;
             yawDeltaAbs = (yawDeltaAbs >= 0) ? yawDeltaAbs : -yawDeltaAbs;
@@ -488,13 +488,13 @@ void SHthorntail_updateState(GameObject* obj, SHthorntailState* runtime) {
         if (alertTriggered != 0) {
             Sfx_PlayFromObject(obj, SHTHORNTAIL_SFX_ALERT);
         }
-        runtime->idleTimer = runtime->idleTimer - timeDelta;
+        runtime->idleTimer -= timeDelta;
         if (runtime->idleTimer <= SHTHORNTAIL_IDLE_COUNTDOWN_TIME) {
             runtime->behaviorState = SHTHORNTAIL_STATE_IDLE_COUNTDOWN;
         }
         break;
     case SHTHORNTAIL_STATE_IDLE_COUNTDOWN:
-        runtime->idleTimer = runtime->idleTimer - timeDelta;
+        runtime->idleTimer -= timeDelta;
         if (runtime->idleTimer <= 0.0f) {
             isNight = (*gSkyInterface)->getSunPosition(NULL);
             if (isNight != 0) {
@@ -698,7 +698,7 @@ void SHthorntail_updateTriggerVariant(GameObject* obj, SHthorntailState* runtime
         } else {
             triggerIsSet = mainGetBit(GAMEBIT_SH_ThornTailRelated01A0);
             if ((triggerIsSet == 0) && (objectTriggerIsSet = ObjTrigger_IsSet(obj), objectTriggerIsSet != 0)) {
-                runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGERED;
+                runtime->behaviorFlags |= SHTHORNTAIL_FLAG_TRIGGERED;
                 runtime->behaviorState = SHTHORNTAIL_STATE_TRIGGERED_EVENT;
                 (*gMapEventInterface)->setObjGroupStatus(obj->anim.mapEventSlot, SHTHORNTAIL_TRIGGER_ACT7_GROUP_BIT, 1);
                 mainSetBits(SHTHORNTAIL_TRIGGER_ACT7_GAMEBIT, 1);
@@ -728,20 +728,20 @@ void SHthorntail_updateSleepyVariant(GameObject* obj, SHthorntailState* runtime,
         if (gameBit != 0) {
             gameBit = mainGetBit(GAMEBIT_SH_ThornTailRelated0168);
             if (gameBit != 0) {
-                runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_FREEZE_MOTION;
+                runtime->behaviorFlags |= SHTHORNTAIL_FLAG_FREEZE_MOTION;
                 runtime->freezeFrameCounter = 0;
                 playerNear = FALSE;
             } else {
                 triggerIsSet = ObjTrigger_IsSet(obj);
                 if (triggerIsSet != 0) {
-                    runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGERED;
+                    runtime->behaviorFlags |= SHTHORNTAIL_FLAG_TRIGGERED;
                     mainSetBits(GAMEBIT_SH_ThornTailRelated0CD6, 1);
                 }
             }
         } else {
             triggerIsSet = ObjTrigger_IsSet(obj);
             if (triggerIsSet != 0) {
-                runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGERED;
+                runtime->behaviorFlags |= SHTHORNTAIL_FLAG_TRIGGERED;
                 mainSetBits(GAMEBIT_SH_ThornTailRelated0CD5, 1);
             }
         }
@@ -762,7 +762,7 @@ void SHthorntail_updateSleepyVariant(GameObject* obj, SHthorntailState* runtime,
         if (playerNear) {
             runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
         } else {
-            runtime->idleTimer = runtime->idleTimer - timeDelta;
+            runtime->idleTimer -= timeDelta;
             if (runtime->idleTimer <= 0.0f) {
                 runtime->behaviorState = SHTHORNTAIL_STATE_FALLING_ASLEEP;
             }
@@ -872,11 +872,11 @@ u32 SHthorntail_animEventCallback(GameObject* obj, int unused, ObjSeqState* seq)
         runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
         randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
         runtime->idleTimer = (f32)randomIdleWait;
-        runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_TRIGGERED;
+        runtime->behaviorFlags &= ~SHTHORNTAIL_FLAG_TRIGGERED;
         runtime->behaviorFlags =
             runtime->behaviorFlags | (SHTHORNTAIL_FLAG_IN_SEQUENCE | SHTHORNTAIL_FLAG_FREEZE_MOTION);
         runtime->freezeFrameCounter = 0;
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | SHTHORNTAIL_HITBOX_FLAG_FREEZE_FRAME;
+        obj->anim.resetHitboxFlags |= SHTHORNTAIL_HITBOX_FLAG_FREEZE_FRAME;
     }
     talkSeqStarted = runtime->behaviorFlags & SHTHORNTAIL_FLAG_TALK_SEQ_STARTED;
     if (talkSeqStarted != 0) {
@@ -921,7 +921,7 @@ void SHthorntail_render(GameObject* obj, int renderArg2, int renderArg3, int ren
         ObjPath_GetPointWorldPosition(obj, pointIndex, &runtime->renderPathPoints[pointIndex].x,
                                       &runtime->renderPathPoints[pointIndex].y,
                                       &runtime->renderPathPoints[pointIndex].z, 0);
-        pointIndex = pointIndex + 1;
+        pointIndex += 1;
     } while (pointIndex < SHTHORNTAIL_PATH_POINT_COUNT);
 }
 
@@ -966,9 +966,9 @@ void SHthorntail_update(GameObject* obj) {
             }
             runtime->sleepEffectTimer = SHTHORNTAIL_SLEEP_EFFECT_TIME;
         }
-        runtime->sleepEffectTimer = runtime->sleepEffectTimer - timeDelta;
+        runtime->sleepEffectTimer -= timeDelta;
     }
-    runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_IN_SEQUENCE;
+    runtime->behaviorFlags &= ~SHTHORNTAIL_FLAG_IN_SEQUENCE;
     if ((SHTHORNTAIL_STATE_ENTRY(u8, tables->stateFlags, runtime->behaviorState) & SHTHORNTAIL_STATE_FLAG_ASLEEP) !=
         0) {
         hitReactEntries = tables->asleepHitReactEntries;
@@ -1003,7 +1003,7 @@ void SHthorntail_update(GameObject* obj) {
         }
         if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_FREEZE_MOTION) != 0) {
             if (++runtime->freezeFrameCounter > SHTHORNTAIL_FREEZE_FRAME_COUNT) {
-                runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
+                runtime->behaviorFlags &= ~SHTHORNTAIL_FLAG_FREEZE_MOTION;
             } else {
                 obj->anim.resetHitboxFlags |= SHTHORNTAIL_HITBOX_FLAG_FREEZE_FRAME;
             }
@@ -1017,9 +1017,9 @@ void SHthorntail_update(GameObject* obj) {
             obj, SHTHORNTAIL_STATE_ENTRY(f32, tables->stateMoveStepScales, runtime->behaviorState), timeDelta,
             &animEvents);
         if (moveComplete != 0) {
-            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags |= SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         } else {
-            runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
+            runtime->behaviorFlags &= ~SHTHORNTAIL_FLAG_MOVE_COMPLETE;
         }
         if ((SHTHORNTAIL_STATE_ENTRY(u8, tables->stateFlags, runtime->behaviorState) &
              SHTHORNTAIL_STATE_FLAG_ROOT_MOTION) != 0) {
@@ -1050,9 +1050,9 @@ void SHthorntail_update(GameObject* obj) {
                                    &runtime->pathState, 1.0f, 1.0f);
         if ((SHTHORNTAIL_STATE_ENTRY(u8, tables->stateFlags, runtime->behaviorState) &
              SHTHORNTAIL_STATE_FLAG_NO_LOOK_AT) != 0) {
-            runtime->moveLib.modeBits = runtime->moveLib.modeBits & ~SHTHORNTAIL_LOOK_AT_ENABLED;
+            runtime->moveLib.modeBits &= ~SHTHORNTAIL_LOOK_AT_ENABLED;
         } else {
-            runtime->moveLib.modeBits = runtime->moveLib.modeBits | SHTHORNTAIL_LOOK_AT_ENABLED;
+            runtime->moveLib.modeBits |= SHTHORNTAIL_LOOK_AT_ENABLED;
         }
         dll_2E_updateLookAt(obj, &runtime->moveLib);
         if ((SHTHORNTAIL_STATE_ENTRY(u8, tables->stateFlags, runtime->behaviorState) & SHTHORNTAIL_STATE_FLAG_ASLEEP) !=
@@ -1061,11 +1061,11 @@ void SHthorntail_update(GameObject* obj) {
         } else {
             characterDoEyeAnims(obj, &runtime->eyeAnimState);
         }
-        runtime->behaviorFlags = runtime->behaviorFlags & ~SHTHORNTAIL_FLAG_TALK_SEQ_STARTED;
+        runtime->behaviorFlags &= ~SHTHORNTAIL_FLAG_TALK_SEQ_STARTED;
         if (((runtime->behaviorFlags & SHTHORNTAIL_FLAG_TRIGGERED) == 0) &&
             (triggered = ObjTrigger_IsSet(obj), triggered != 0)) {
             talkSeqIndex = randomGetRange(1, runtime->talkSeqs[0]);
-            runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TALK_SEQ_STARTED;
+            runtime->behaviorFlags |= SHTHORNTAIL_FLAG_TALK_SEQ_STARTED;
             (*gObjectTriggerInterface)->runSequence(runtime->talkSeqs[talkSeqIndex], obj, -1);
         }
         if (placement->leashRadius != 0) {

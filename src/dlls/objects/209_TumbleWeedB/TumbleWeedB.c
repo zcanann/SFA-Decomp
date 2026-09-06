@@ -805,7 +805,7 @@ void tumbleweed_updateTargetedStateMachine(GameObject* obj) {
             state->distToTarget = targetDistance;
             if (state->distToTarget < state->triggerRange) {
                 state->phase = TUMBLEWEED_PHASE_ROLLING;
-                obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+                obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_EnableObject(obj);
             }
         }

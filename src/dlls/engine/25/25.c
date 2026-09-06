@@ -241,7 +241,7 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
     state->pathRadius = pathRadius;
     obj->anim.rotX = (s16)((s8)config->rotX << 8);
     obj->anim.alpha = 255;
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     state->gameBitA = config->gameBitA;
     if (state->gameBitA != -1) {
         if (obj->anim.romDefNo == 636) {
@@ -257,10 +257,10 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
     }
     if (obj->userData1 != 0) {
         ObjHits_DisableObject(obj);
-        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         return;
     }
-    obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+    obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     ObjHits_EnableObject(obj);
     if (config->sequenceId == -1) {
         obj->userData2 = 1;
@@ -281,7 +281,7 @@ void dll_19_initGroundBaddie(GameObject* obj, GroundBaddiePlacement* config, Gro
         }
         if ((*gRomCurveInterface)->initCurve(state->path, (void*)obj, (f32)(u32)state->aggroRange, &curveLocal, -1) ==
             0) {
-            state->flags400 = state->flags400 | BADDIE_FLAG400_PATH_ACTIVE;
+            state->flags400 |= BADDIE_FLAG400_PATH_ACTIVE;
         }
     } else {
         state->path = NULL;
@@ -367,7 +367,7 @@ int dll_19_updateHitReaction(GameObject* obj, BaddieState* baddieState, void* hi
                 baddieState->hitPoints = 0;
                 obj->anim.alpha = 0;
                 obj->userData1 = 1;
-                obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 (*gMapEventInterface)->addTime(other->base.ident, (f32)(s32)(other->respawnDelay * 60));
             }
         } else {
@@ -399,7 +399,7 @@ int dll_19_updateHitReaction(GameObject* obj, BaddieState* baddieState, void* hi
         } else {
             v24 = 0;
         }
-        baddieState->hitPoints = baddieState->hitPoints - v24;
+        baddieState->hitPoints -= v24;
         if (baddieState->hitPoints < 1) {
             ((Dll19State*)state)->flags = ((Dll19State*)state)->flags | DLL19_FLAG_OSC_RISING;
             ((Dll19State*)state)->oscValue = 1.0f;
@@ -808,7 +808,7 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
             step = 15.0f;
         }
         if (dist <= gDll19SeqMinDist) {
-            gDll19SeqStallCount = gDll19SeqStallCount + 1;
+            gDll19SeqStallCount += 1;
         }
         if (dist >= total || gDll19SeqStallCount > 9) {
             GameObject* t2 = st->baddie.targetObj;
@@ -837,8 +837,8 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
                 (*gPlayerInterface)->update(obj, st, td, td, moveHandlers, stateHandlers);
             }
         } else {
-            nx = nx / total;
-            nz = nz / total;
+            nx /= total;
+            nz /= total;
             st->baddie.moveInputX = -nx * step;
             st->baddie.moveInputZ = nz * step;
             obj->anim.localPosX = dist * nx + seq->posOffsetX;
@@ -853,7 +853,7 @@ int dll_19_updateSequenceMovement(GameObject* obj, ObjSeqState* seq, GroundBaddi
         st->baddie.controlMode = controlMode;
         st->baddie.targetObj = 0;
         seq->flags = -1;
-        seq->flags = seq->flags & ~0x40;
+        seq->flags &= ~0x40;
         st->baddie.physicsActive = 0;
         mainSetBits(st->gameBitB, 0);
     }

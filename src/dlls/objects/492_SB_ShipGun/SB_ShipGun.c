@@ -292,9 +292,9 @@ void SB_ShipGun_update(GameObject* obj) {
             spawnArgs.scale = 2.0f;
             spawnArgs.arg3 = SB_SHIPGUN_SMOKE_SPAWN_ARG3;
             ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
-            spawnArgs.posX = spawnArgs.posX - obj->anim.worldPosX;
-            spawnArgs.posY = spawnArgs.posY - obj->anim.worldPosY;
-            spawnArgs.posZ = spawnArgs.posZ - obj->anim.worldPosZ;
+            spawnArgs.posX -= obj->anim.worldPosX;
+            spawnArgs.posY -= obj->anim.worldPosY;
+            spawnArgs.posZ -= obj->anim.worldPosZ;
             for (i = 0; i < (int)(u32)framesThisStep; i = i + 1) {
                 (*gPartfxInterface)
                     ->spawnObject((void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, &spawnArgs, SB_SHIPGUN_SMOKE_PARTICLE_MODE,
@@ -318,9 +318,9 @@ void SB_ShipGun_update(GameObject* obj) {
             spawnArgs.scale = 2.0f;
             spawnArgs.arg3 = SB_SHIPGUN_SMOKE_SPAWN_ARG3;
             ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
-            spawnArgs.posX = spawnArgs.posX - obj->anim.worldPosX;
-            spawnArgs.posY = spawnArgs.posY - obj->anim.worldPosY;
-            spawnArgs.posZ = spawnArgs.posZ - obj->anim.worldPosZ;
+            spawnArgs.posX -= obj->anim.worldPosX;
+            spawnArgs.posY -= obj->anim.worldPosY;
+            spawnArgs.posZ -= obj->anim.worldPosZ;
             for (i = 0; i < (int)(u32)framesThisStep; i = i + 1) {
                 (*gPartfxInterface)
                     ->spawnObject((void*)obj, SB_SHIPGUN_SMOKE_PARTICLE_ID, &spawnArgs, SB_SHIPGUN_SMOKE_PARTICLE_MODE,

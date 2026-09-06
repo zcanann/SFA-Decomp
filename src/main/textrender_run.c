@@ -1117,7 +1117,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot)
             u32 area = w * h;
             p += (int)(area * bpp) >> 4;
         }
-        textureSlot = textureSlot + 1;
+        textureSlot += 1;
     }
     size = (u32)((u8*)texStart - (u8*)loadSlot->loadHandle);
     newBuf = mmAlloc(size, 0x1a, 0);

@@ -141,7 +141,7 @@ void slidingDoor_init(GameObject* obj, SlidingDoorPlacement* placement) {
     obj->animEventCallback = slidingDoor_sequenceCallback;
     scale = (f32)(u32)placement->scaleByte / SLIDING_DOOR_SCALE_DIVISOR;
     obj->anim.rootMotionScale = scale;
-    obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+    obj->anim.rootMotionScale *= obj->anim.modelInstance->rootMotionScaleBase;
     state = obj->extra;
     state->mode = doorState;
 }

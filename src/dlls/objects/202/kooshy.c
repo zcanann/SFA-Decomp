@@ -136,9 +136,9 @@ void kooshy_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
         }
     }
     if (msgFlag == 0x10) {
-        enemyState->flags2E8 = enemyState->flags2E8 | 0x20;
+        enemyState->flags2E8 |= 0x20;
     } else {
-        enemyState->flags2E8 = enemyState->flags2E8 | 0x8;
+        enemyState->flags2E8 |= 0x8;
         if (damage > (s32)enemyState->current) {
             Sfx_PlayFromObject(obj, SFXTRIG_sc_walkstep);
             enemyState->current = 0;
@@ -162,7 +162,7 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
     u32 rnd;
     s16 angle;
 
-    enemyState->userData2 = enemyState->userData2 & 0x7f;
+    enemyState->userData2 &= 0x7f;
     losDetected = 0;
     vec[0] = obj->anim.localPosX - ((GameObject*)enemyState->trackedObj)->anim.localPosX;
     vec[1] = obj->anim.localPosY - ((GameObject*)enemyState->trackedObj)->anim.localPosY;
@@ -237,7 +237,7 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
         (double)obj->anim.currentMoveProgress < 0.7647 + enemyState->animPlaySpeed * timeDelta) {
         kooshy_spawnProjectile(obj, state);
     } else {
-        enemyState->kooshy.sfxTimer = enemyState->kooshy.sfxTimer - timeDelta;
+        enemyState->kooshy.sfxTimer -= timeDelta;
         if (enemyState->kooshy.sfxTimer <= 0.0f) {
             rnd = randomGetRange(0x96, 0x12c);
             enemyState->kooshy.sfxTimer = (f32)(s32)rnd;
@@ -249,7 +249,7 @@ void kooshy_updateIdle(GameObject* obj, void* state) {
 
 void kooshy_updateEngaged(GameObject* obj, void* state) {
     EnemyState* enemyState = (EnemyState*)state;
-    enemyState->userData2 = enemyState->userData2 & 0xbf;
+    enemyState->userData2 &= 0xbf;
     if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && obj->anim.currentMove != 1) {
         Sfx_PlayFromObjectLimited(obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
         baddieSetMove(obj, state, 1, 1.0f, 0, 0);

@@ -165,8 +165,8 @@ void staffactivated_spawnMapEventDebris(GameObject* obj) {
                                (scarab->anim.velocityZ * scarab->anim.velocityZ);
                 if (speedSquared != zero) {
                     speed = sqrtf(speedSquared);
-                    scarab->anim.velocityX = scarab->anim.velocityX / speed;
-                    scarab->anim.velocityZ = scarab->anim.velocityZ / speed;
+                    scarab->anim.velocityX /= speed;
+                    scarab->anim.velocityZ /= speed;
                 }
 
                 scarab->anim.velocityX =

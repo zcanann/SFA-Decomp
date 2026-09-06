@@ -301,7 +301,7 @@ int ShopKeeper_updateScarabGame(GameObject* obj)
 
     SHOP_INTERFACE(state->vendorObj)->func17(state->vendorObj, &elapsed, &now, &limit);
 
-    now = now - elapsed;
+    now -= elapsed;
 
     if (isGameTimerDisabled() != 0 || now >= limit || elapsed != 0)
     {
@@ -412,7 +412,7 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
     {
         rng = randomGetRange(0x1f4, 0x3e8);
         state->actionTimer = rng;
-        state->flags9D4 = state->flags9D4 & ~SHOPKEEPER_FLAG_IDLE_ANIM;
+        state->flags9D4 &= ~SHOPKEEPER_FLAG_IDLE_ANIM;
     }
     if ((state->flags9D4 & SHOPKEEPER_FLAG_IDLE_ANIM) != 0)
     {
@@ -427,7 +427,7 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
                 ObjAnim_SetCurrentMove(obj, SHOPKEEPER_ANIM_IDLE, 0.0f, 0);
             }
             baddie->moveSpeed = 0.007f;
-            state->flags9D4 = state->flags9D4 & ~SHOPKEEPER_FLAG_IDLE_ANIM;
+            state->flags9D4 &= ~SHOPKEEPER_FLAG_IDLE_ANIM;
             rng = randomGetRange(0x1f4, 0x3e8);
             state->actionTimer = rng;
         }
@@ -440,7 +440,7 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
             baddie->moveSpeed = 0.007f;
         }
     }
-    state->actionTimer = state->actionTimer - timeDelta;
+    state->actionTimer -= timeDelta;
     if (state->actionTimer <= 0.0f && (state->flags9D4 & SHOPKEEPER_FLAG_IDLE_ANIM) == 0)
     {
         Sfx_PlayFromObject(obj, SHOPKEEPER_SFX_IDLE_ANIM);
@@ -455,7 +455,7 @@ int ShopKeeper_updateTracking(GameObject* obj, BaddieState* baddie)
             ObjAnim_SetCurrentMove(obj, gShopKeeperIdleAnimMoves[rng], 0.0f, 0);
             baddie->moveSpeed = gShopKeeperIdleAnimStepScales[rng];
         }
-        state->flags9D4 = state->flags9D4 | SHOPKEEPER_FLAG_IDLE_ANIM;
+        state->flags9D4 |= SHOPKEEPER_FLAG_IDLE_ANIM;
     }
     if (mainGetBit(GAMEBIT_SHOP_Unk0617) == 0)
     {
@@ -580,7 +580,7 @@ int ShopKeeper_handlePromptChoice(GameObject* obj, void* param2, int dispatch)
         texture->textureId = (cv % 10) << SHOPKEEPER_DIGIT_TEXTURE_SHIFT;
         texture = objFindTexture((GameObject*)(obj), SHOPKEEPER_TENS_TEXTURE_SLOT, 0);
         texture->textureId = ((cv / 10) % 10) << SHOPKEEPER_DIGIT_TEXTURE_SHIFT;
-        cv = cv / 100;
+        cv /= 100;
         if (cv > SHOPKEEPER_MAX_DIGIT)
             cv = SHOPKEEPER_MAX_DIGIT;
         texture = objFindTexture((GameObject*)(obj), SHOPKEEPER_HUNDREDS_TEXTURE_SLOT, 0);
@@ -617,7 +617,7 @@ int ShopKeeper_handlePromptChoice(GameObject* obj, void* param2, int dispatch)
             texture->textureId = (cv % 10) << SHOPKEEPER_DIGIT_TEXTURE_SHIFT;
             texture = objFindTexture((GameObject*)(obj), SHOPKEEPER_TENS_TEXTURE_SLOT, 0);
             texture->textureId = ((cv / 10) % 10) << SHOPKEEPER_DIGIT_TEXTURE_SHIFT;
-            cv = cv / 100;
+            cv /= 100;
             if (cv > SHOPKEEPER_MAX_DIGIT)
                 cv = SHOPKEEPER_MAX_DIGIT;
             texture = objFindTexture((GameObject*)(obj), SHOPKEEPER_HUNDREDS_TEXTURE_SLOT, 0);
@@ -626,7 +626,7 @@ int ShopKeeper_handlePromptChoice(GameObject* obj, void* param2, int dispatch)
         btn = getButtonsJustPressed(0);
         if ((btn & SHOPKEEPER_BUTTON_CANCEL) != 0u)
         {
-            state->flags9D4 = state->flags9D4 | SHOPKEEPER_FLAG_LEAVING;
+            state->flags9D4 |= SHOPKEEPER_FLAG_LEAVING;
             (*gScreenTransitionInterface)->start(0x1e, SCREEN_TRANSITION_BLACK);
             return 1;
         }
@@ -856,7 +856,7 @@ int ShopKeeper_SeqFn(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
             tex->textureId = (digit % 10) * 0x100;
             tex = objFindTexture(obj, 7, 0);
             tex->textureId = ((digit / 10) % 10) * 0x100;
-            digit = digit / 100;
+            digit /= 100;
             if (digit > 9)
             {
                 digit = 9;
@@ -1018,7 +1018,7 @@ void ShopKeeper_update(GameObject* obj)
     if (state->textTimer > 0.0f)
     {
         gameTextShow(0x433);
-        state->textTimer = state->textTimer - timeDelta;
+        state->textTimer -= timeDelta;
         if (state->textTimer < 0.0f)
         {
             state->textTimer = 0.0f;

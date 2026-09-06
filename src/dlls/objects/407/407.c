@@ -93,22 +93,22 @@ void dll407_render(GameObject* obj, int renderArg2, int renderArg3, int renderAr
     dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
     if (dist > DLL197_VISIBILITY_TRACE_DISTANCE) {
         scale = 1.0f / dist;
-        dir[0] = dir[0] * scale;
-        dir[1] = dir[1] * scale;
-        dir[2] = dir[2] * scale;
+        dir[0] *= scale;
+        dir[1] *= scale;
+        dir[2] *= scale;
 
         objTrace[0] = 32.0f * dir[0];
         objTrace[1] = 32.0f * dir[1];
         objTrace[2] = 32.0f * dir[2];
-        objTrace[0] = objTrace[0] + obj->anim.localPosX;
-        objTrace[1] = objTrace[1] + obj->anim.localPosY;
-        objTrace[2] = objTrace[2] + obj->anim.localPosZ;
+        objTrace[0] += obj->anim.localPosX;
+        objTrace[1] += obj->anim.localPosY;
+        objTrace[2] += obj->anim.localPosZ;
         cameraTrace[0] = -20.0f * dir[0];
         cameraTrace[1] = -20.0f * dir[1];
         cameraTrace[2] = -20.0f * dir[2];
-        cameraTrace[0] = cameraTrace[0] + camera->x;
-        cameraTrace[1] = cameraTrace[1] + camera->y;
-        cameraTrace[2] = cameraTrace[2] + camera->z;
+        cameraTrace[0] += camera->x;
+        cameraTrace[1] += camera->y;
+        cameraTrace[2] += camera->z;
 
         voxmaps_worldToGrid(objTrace, startGrid);
         voxmaps_worldToGrid(cameraTrace, endGrid);

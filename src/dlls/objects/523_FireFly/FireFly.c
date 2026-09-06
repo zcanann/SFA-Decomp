@@ -168,7 +168,7 @@ void firefly_activeTick(GameObject* obj) {
         objAnim->alpha = newAlpha;
     }
     if (state->flight.splineT > 1.0f) {
-        state->flight.splineT = state->flight.splineT - 1.0f;
+        state->flight.splineT -= 1.0f;
         if (state->flight.pathAge >= 4) {
             state->flight.pathAge += 1;
         } else {

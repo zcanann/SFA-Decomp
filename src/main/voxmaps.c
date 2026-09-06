@@ -168,7 +168,7 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, VoxBoxArg* srcBox, int
     for (; i < 3; i++)
     {
         ySlot = i + box[1];
-        ySlot = ySlot - 1;
+        ySlot -= 1;
         if (ySlot < map->minY)
         {
             ySlot = 0;
@@ -179,7 +179,7 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, VoxBoxArg* srcBox, int
         }
         else
         {
-            ySlot = ySlot - map->minY;
+            ySlot -= map->minY;
         }
         if (((map->bitmap[(ySlot << 5) | bitmapCol] >> shift) & 1) != 0u)
         {

@@ -254,7 +254,7 @@ void AndrossHand_update(GameObject* o)
         prevVel = state->zSpringVelocity;
         state->zSpringVelocity =
             prevVel + ((-state->zSpringOffset / gAndrossHandSpringOffsetDivisor - prevVel) / gAndrossHandSpringDivisor);
-        state->zSpringOffset = state->zSpringOffset + state->zSpringVelocity;
+        state->zSpringOffset += state->zSpringVelocity;
 
         angle = 3.1415927f * (f32)(s16)(int)((f32)state->androssObj->anim.rotX + fScale) /
                 32768.0f;

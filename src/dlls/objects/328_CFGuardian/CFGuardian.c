@@ -308,7 +308,7 @@ int cfguardian_flyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 speed, 
         }
         if (trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
                                         &groundDistance, 0) == 0) {
-            obj->anim.localPosY = obj->anim.localPosY - groundDistance;
+            obj->anim.localPosY -= groundDistance;
         }
     }
     ObjAnim_SampleRootCurvePhase(&obj->anim, speed, outPhase);
@@ -321,9 +321,9 @@ int cfguardian_flyAlongPath(GameObject* obj, RomCurveWalker* walker, f32 speed, 
             yawDelta = yawDelta - 0xffff;
         }
         if (yawDelta < -0x8000) {
-            yawDelta = yawDelta + 0xffff;
+            yawDelta += 0xffff;
         }
-        obj->anim.rotX = obj->anim.rotX + (yawDelta >> 3);
+        obj->anim.rotX += (yawDelta >> 3);
     }
     if (obj->anim.currentMove != CFGUARDIAN_MOVE_FLY) {
         ObjAnim_SetCurrentMove(obj, CFGUARDIAN_MOVE_FLY, 0.0f, 0);
@@ -365,7 +365,7 @@ int cfguardian_steerToward(GameObject* obj, MoveLibTarget* target, f32 speed, f3
         yawDelta = yawDelta - 0xffff;
     }
     if (yawDelta < -0x8000) {
-        yawDelta = yawDelta + 0xffff;
+        yawDelta += 0xffff;
     }
     obj->anim.rotX = (f32)obj->anim.rotX + ((0.5f + yawDelta) * (speed * timeDelta)) / dist;
     objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
@@ -525,7 +525,7 @@ int cfguardian_updateMain(GameObject* obj) {
                 rotationDelta = (400.0f * obj->anim.velocityY >= 0.0f) ? 400.0f * obj->anim.velocityY
                                                                        : -(400.0f * obj->anim.velocityY);
                 rotation = (f32)obj->anim.rotX;
-                rotation = rotation + rotationDelta;
+                rotation += rotationDelta;
                 obj->anim.rotX = rotation;
                 state->moveSpeed = 0.04f;
                 if (mainGetBit(GAMEBIT_CFGUARDIAN_LANDED) != 0) {
@@ -565,9 +565,9 @@ int cfguardian_updateMain(GameObject* obj) {
                     deltaZ = obj->anim.localPosZ - obj->anim.previousLocalPosZ;
                     scratch.velocityDelta[2] = deltaZ;
                     velocityScale = 0.95f * oneOverTimeDelta;
-                    deltaX = deltaX * velocityScale;
+                    deltaX *= velocityScale;
                     scratch.velocityDelta[0] = deltaX;
-                    deltaY = deltaY * velocityScale;
+                    deltaY *= velocityScale;
                     scratch.velocityDelta[1] = deltaY;
                     scaledDeltaZ = deltaZ * velocityScale;
                     scratch.velocityDelta[2] = scaledDeltaZ;
@@ -878,7 +878,7 @@ void cfguardian_init(GameObject* obj, CfGuardianPlacement* placement) {
     state->moveSpeed = 0.0f;
     state->unknownA90 = 6;
     state->stateFlags = 0;
-    state->moveLib.modeBits = state->moveLib.modeBits | 0x28;
+    state->moveLib.modeBits |= 0x28;
     state->chatterState = CFGUARDIAN_CHATTER_READY;
     state->chatterAlt = 0;
     state->chatterPick = 0;
@@ -897,7 +897,7 @@ void cfguardian_init(GameObject* obj, CfGuardianPlacement* placement) {
     dll_2E_setReattackDelay(&state->moveLib, 0x12c, 0x64);
     dll_2E_setMoveTables(&state->moveLib, &hitboxTemplateB, &hitboxTemplateA, 4);
     seqPairTablePrepare(gCfGuardianSeqStreamTable, CFGUARDIAN_SEQUENCE_TABLE_ENTRY_COUNT);
-    state->moveLib.modeBits = state->moveLib.modeBits | 0x2;
+    state->moveLib.modeBits |= 0x2;
 }
 
 void cfguardian_release(void) {

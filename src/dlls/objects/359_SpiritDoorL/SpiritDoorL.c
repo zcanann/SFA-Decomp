@@ -168,10 +168,10 @@ void SpiritDoorLock_update(GameObject* obj) {
             texture->offsetT = texture->offsetT + gSpiritDoorLockTexScrollSpeed * framesThisStep;
             texture->offsetS = texture->offsetS + gSpiritDoorLockTexScrollSpeed * framesThisStep;
             if ((s32)texture->offsetT > (s32)(gSpiritDoorLockTexScrollWrap << 8)) {
-                texture->offsetT = texture->offsetT - (gSpiritDoorLockTexScrollWrap << 8);
+                texture->offsetT -= (gSpiritDoorLockTexScrollWrap << 8);
             }
             if ((s32)texture->offsetS > (s32)(gSpiritDoorLockTexScrollWrap << 8)) {
-                texture->offsetS = texture->offsetS - (gSpiritDoorLockTexScrollWrap << 8);
+                texture->offsetS -= (gSpiritDoorLockTexScrollWrap << 8);
             }
         }
         if (obj->anim.alpha < 0xff) {

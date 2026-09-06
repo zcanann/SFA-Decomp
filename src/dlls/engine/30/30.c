@@ -121,7 +121,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.textureId = 0x1a1;
         } else if (spawnParams->dig.variant == 2) {
             cfg.textureId = 0xc10;
-            cfg.renderFlags = cfg.renderFlags | 0x800;
+            cfg.renderFlags |= 0x800;
         } else {
             cfg.textureId = 0x2b;
         }
@@ -153,7 +153,7 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
             cfg.textureId = 0x1a1;
         } else if (spawnParams->dig.variant == 2) {
             cfg.textureId = 0xc10;
-            cfg.renderFlags = cfg.renderFlags | 0x800;
+            cfg.renderFlags |= 0x800;
         } else {
             cfg.textureId = 0x2b;
         }
@@ -285,15 +285,15 @@ int Effect5_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;

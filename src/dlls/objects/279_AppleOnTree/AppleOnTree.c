@@ -269,8 +269,8 @@ int appleontree_bounceGroundStep(GameObject* obj, AppleOnTreeState* state, f32 p
                     r2 = (nb + q) / t;
                     r = (r > 0.0f) ? r : r2;
                 }
-                state->flightTime = state->flightTime - r;
-                state->positionY = state->positionY - state->dropHeight;
+                state->flightTime -= r;
+                state->positionY -= state->dropHeight;
                 state->dropHeight = 0.0f;
                 obj->anim.localPosY = state->positionY;
                 obj->anim.rotX = state->rotX;
@@ -292,7 +292,7 @@ int appleontree_bounceGroundStep(GameObject* obj, AppleOnTreeState* state, f32 p
                 f32 q;
                 f32 t;
                 f32 r;
-                m = m + state->extraAcceleration;
+                m += state->extraAcceleration;
                 g = 4.0f * m;
                 q = sqrtf(b * b - g * state->dropHeight);
                 t = 2.0f * m;
@@ -312,7 +312,7 @@ int appleontree_bounceGroundStep(GameObject* obj, AppleOnTreeState* state, f32 p
                     r2 = (nb + q) / t;
                     r = (r > 0.0f) ? r : r2;
                 }
-                state->flightTime = state->flightTime - r;
+                state->flightTime -= r;
                 obj->anim.localPosY = state->positionY;
                 state->bounceVelocity *= 0.66667f;
                 return 0;
@@ -356,8 +356,8 @@ int appleontree_bounceWaterStep(GameObject* obj, AppleOnTreeState* state, f32 po
                 r2 = (nb + q) / t;
                 r = (r > 0.0f) ? r : r2;
             }
-            state->flightTime = state->flightTime - r;
-            state->positionY = state->positionY - state->dropHeight;
+            state->flightTime -= r;
+            state->positionY -= state->dropHeight;
             rad = 0.0f;
             state->dropHeight = rad;
             obj->anim.localPosY = state->positionY;
@@ -403,7 +403,7 @@ int appleontree_bounceWaterStep(GameObject* obj, AppleOnTreeState* state, f32 po
             r2 = (nb + q) / t;
             r = (r > 0.0f) ? r : r2;
         }
-        state->flightTime = state->flightTime - r;
+        state->flightTime -= r;
         obj->anim.localPosY = state->positionY;
         state->extraAcceleration = 0.0401f;
         state->bounceVelocity = -0.02f;
@@ -473,7 +473,7 @@ void AppleOnTree_update(GameObject* obj) {
                 burstIndex = 0;
                 do {
                     (*gPartfxInterface)->spawnObject(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
-                    burstIndex = burstIndex + 1;
+                    burstIndex += 1;
                 } while (burstIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 if (obj->anim.hitReactState != NULL) {
                     ObjHits_DisableObject(obj);
@@ -499,7 +499,7 @@ void AppleOnTree_update(GameObject* obj) {
                 particleIndex = 0;
                 do {
                     (*gPartfxInterface)->spawnObject(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
-                    particleIndex = particleIndex + 1;
+                    particleIndex += 1;
                 } while (particleIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 if (obj->anim.hitReactState != NULL) {
                     ObjHits_DisableObject(obj);
@@ -511,7 +511,7 @@ void AppleOnTree_update(GameObject* obj) {
                 particleIndex = 0;
                 do {
                     (*gPartfxInterface)->spawnObject(obj, APPLE_ON_TREE_PARTICLE_BURST, NULL, 2, -1, NULL);
-                    particleIndex = particleIndex + 1;
+                    particleIndex += 1;
                 } while (particleIndex < APPLE_ON_TREE_PARTICLE_BURST_COUNT);
                 ((AppleOnTreeState*)state)->animState = APPLE_ON_TREE_STATE_FALLING;
             } else if ((*gSkyInterface)->getSunPosition(&sunTime) != 0) {
@@ -538,7 +538,7 @@ void AppleOnTree_update(GameObject* obj) {
                                 (((AppleOnTreeState*)val)->fallEnd - ((AppleOnTreeState*)val)->ripeEnd));
                 fa = ((AppleOnTreeState*)val)->elapsedTime;
                 fc = fa * fa;
-                fc = fc * fc;
+                fc *= fc;
                 state = 0x100 - (int)((fc * fc) / ((AppleOnTreeState*)val)->fallBlendDivisor);
                 texture = objFindTexture(obj, 0, 0);
                 texture->textureId = state;
@@ -587,7 +587,7 @@ void AppleOnTree_update(GameObject* obj) {
                     } else {
                         placement = appleontree_bounceGroundStep(obj, (AppleOnTreeState*)state, fc);
                     }
-                    iteration = iteration + 1;
+                    iteration += 1;
                     if (!((iteration == 100) || (iteration != 0x66)))
                         break;
                 }

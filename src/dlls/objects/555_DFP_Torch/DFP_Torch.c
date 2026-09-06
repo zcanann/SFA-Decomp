@@ -102,15 +102,15 @@ void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
                 stk2.a[0] = 32.0f * stk2.d[0];
                 stk2.a[1] = 32.0f * stk2.d[1];
                 stk2.a[2] = 32.0f * stk2.d[2];
-                stk2.a[0] = stk2.a[0] + obj->anim.localPosX;
-                stk2.a[1] = stk2.a[1] + obj->anim.localPosY;
-                stk2.a[2] = stk2.a[2] + obj->anim.localPosZ;
+                stk2.a[0] += obj->anim.localPosX;
+                stk2.a[1] += obj->anim.localPosY;
+                stk2.a[2] += obj->anim.localPosZ;
                 stk2.b[0] = -20.0f * stk2.d[0];
                 stk2.b[1] = -20.0f * stk2.d[1];
                 stk2.b[2] = -20.0f * stk2.d[2];
-                stk2.b[0] = stk2.b[0] + cam->x;
-                stk2.b[1] = stk2.b[1] + cam->y;
-                stk2.b[2] = stk2.b[2] + cam->z;
+                stk2.b[0] += cam->x;
+                stk2.b[1] += cam->y;
+                stk2.b[2] += cam->z;
                 voxmaps_worldToGrid(stk2.a, stk2.gridStart);
                 voxmaps_worldToGrid(stk2.b, stk2.gridEnd);
                 if (voxmaps_traceLine((VoxPos*)stk2.gridStart, (VoxPos*)stk2.gridEnd, (VoxPos*)stk2.out, NULL, 0) == 0)
@@ -280,7 +280,7 @@ void DFP_Torch_init(GameObject* obj, DfpTorchPlacement* def)
         break;
     }
     state->colorIdx = (u8)place->colorIdx;
-    obj->objectFlags = obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void DFP_Torch_release(void)

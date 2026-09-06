@@ -187,7 +187,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
             push = push * wob2 + 1.0f;
             buttons = getButtonsJustPressedIfNotBusy(0);
             if ((buttons & PAD_BUTTON_A) != 0 && isGameTimerDisabled() == 0) {
-                state->offsetVelocity = state->offsetVelocity - 2.7f;
+                state->offsetVelocity -= 2.7f;
             }
             if (state->offsetVelocity < -40.0f) {
                 state->offsetVelocity = -40.0f;
@@ -260,7 +260,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
             }
             state->prevTrackOffset = state->currentTrackOffset;
         }
-        state->playerSfxTimer = state->playerSfxTimer - timeDelta;
+        state->playerSfxTimer -= timeDelta;
         if (state->playerSfxTimer < 0.0f) {
             if (diff < 0.0f) {
                 state->playerSfxTimer = randomGetRange(0x28, 100);
@@ -269,7 +269,7 @@ int sc_totemstrength_animEventCallback(GameObject* obj, int unused, ObjSeqState*
             }
             Sfx_PlayFromObject(playerObject, SFXTRIG_literun116_var);
         }
-        state->platformSfxTimer = state->platformSfxTimer - timeDelta;
+        state->platformSfxTimer -= timeDelta;
         if (state->platformSfxTimer < 0.0f) {
             if (diff > 0.0f) {
                 state->platformSfxTimer = randomGetRange(0x28, 100);

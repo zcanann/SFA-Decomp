@@ -267,7 +267,7 @@ void BombPlant_update(GameObject* obj) {
             ObjHits_RefreshObjectState(obj);
         }
         if (obj->anim.rootMotionScale > state->growStartScale) {
-            state->growRate = state->growRate / 1.1f;
+            state->growRate /= 1.1f;
         }
         if (state->growRate < BOMB_PLANT_MIN_GROW_SCALE) {
             state->growRate = 0.0f;

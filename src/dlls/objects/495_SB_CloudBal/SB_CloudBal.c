@@ -146,7 +146,7 @@ void SB_CloudBall_update(GameObject* obj) {
         obj->anim.localPosX = state->positionX;
         obj->anim.localPosY = state->positionY;
         obj->anim.localPosZ = state->positionZ;
-        obj->userData1 = obj->userData1 - framesThisStep;
+        obj->userData1 -= framesThisStep;
         if (obj->userData1 < 0 || (player != NULL && (player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)) {
             if (state->fadeTimer == zero) {
                 obj->anim.alpha = 0;

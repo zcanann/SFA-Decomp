@@ -121,7 +121,7 @@ void dimbossfire_update(GameObject* obj) {
                     } else {
                         (*gPartfxInterface)->spawnObject(obj, DIMBOSSFIRE_PARTFX_BURST_GREEN, NULL, 2, -1, NULL);
                     }
-                    burstIndex = burstIndex + 1;
+                    burstIndex += 1;
                 } while (burstIndex < DIMBOSSFIRE_BURST_COUNT);
             }
             player = Obj_GetPlayerObject();

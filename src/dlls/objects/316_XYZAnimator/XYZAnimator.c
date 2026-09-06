@@ -263,35 +263,35 @@ void XyzAnimator_update(GameObject* obj) {
         streamSize = state->polygonGroupCount * 2;
         bufferAddress = bufferAddress + state->vertexCount * 6;
         state->polygonBuffer0 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->polygonBuffer1 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->posABuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->posBBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->polygonBuffer4 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->polygonBuffer5 = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         streamSize = state->displayListCount * 2;
         state->minXBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->maxXBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->minYBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->maxYBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->minZBuffer = bufferAddress;
-        bufferAddress = bufferAddress + streamSize;
+        bufferAddress += streamSize;
         state->maxZBuffer = bufferAddress;
         XyzAnimator_captureGeometry(placement, state, (MapBlockData*)blockAddress);
         if (placement->mode != XYZ_ANIMATOR_MODE_DEFERRED_ONESHOT) {
             XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
-            blockAddress->flags4 = blockAddress->flags4 ^ 1;
+            blockAddress->flags4 ^= 1;
             XyzAnimator_applyToMapBlock(placement, state, (MapBlockData*)blockAddress);
-            blockAddress->flags4 = blockAddress->flags4 ^ 1;
+            blockAddress->flags4 ^= 1;
         }
     }
     if (placement->mode == XYZ_ANIMATOR_MODE_GATED) {

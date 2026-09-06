@@ -62,10 +62,10 @@ void dfptargetblock_resolveCollisionPoints(GameObject* obj, DfpTargetBlockState*
             deltaX = probe[0] - originalX;
             deltaZ = probe[2] - originalZ;
             if (obj->anim.velocityX != 0.0f) {
-                obj->anim.localPosX = obj->anim.localPosX + deltaX;
+                obj->anim.localPosX += deltaX;
             }
             if (obj->anim.velocityZ != 0.0f) {
-                obj->anim.localPosZ = obj->anim.localPosZ + deltaZ;
+                obj->anim.localPosZ += deltaZ;
             }
             {
                 f32 zero = 0.0f;
@@ -277,7 +277,7 @@ void dfptargetblock_update(GameObject* obj) {
         }
         if ((mode == DFPTARGETBLOCK_MODE_RAISING) || (mode == DFPTARGETBLOCK_MODE_RESETTING)) {
             if (obj->anim.localPosY <= home->posY) {
-                obj->anim.localPosY = obj->anim.localPosY + timeDelta;
+                obj->anim.localPosY += timeDelta;
                 if (obj->anim.localPosY >= home->posY) {
                     obj->anim.localPosY = home->posY;
                     state->mode = DFPTARGETBLOCK_MODE_ACTIVE;
@@ -313,7 +313,7 @@ void dfptargetblock_init(GameObject* obj, DfpTargetBlockPlacement* placement) {
 
     state = obj->extra;
     model = obj->anim.modelBanks[obj->anim.bankIndex]->file;
-    obj->objectFlags = obj->objectFlags | OBJECT_OBJFLAG_HIDDEN;
+    obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
     if (obj->anim.romDefNo == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
         gTargetBlockHomePos[0] = obj->anim.localPosX;
         gTargetBlockHomePos[1] = obj->anim.localPosY;
@@ -345,7 +345,7 @@ void dfptargetblock_init(GameObject* obj, DfpTargetBlockPlacement* placement) {
             }
         }
         state->mode = DFPTARGETBLOCK_MODE_RAISING;
-        obj->anim.localPosY = obj->anim.localPosY - (80.0f);
+        obj->anim.localPosY -= (80.0f);
         state->completionSfxId = placement->completionSfxId;
         state->stateSfxId = placement->stateSfxId;
         bitVal = mainGetBit((int)state->completionSfxId);

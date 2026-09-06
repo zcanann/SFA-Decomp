@@ -755,7 +755,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         total = sizes[4] + (int)sizeof(ObjModel);
         total = (sizes[3] + sizes[6] + sizes[1] + 8) + total;
     }
-    total = total + sizes[0];
+    total += sizes[0];
     if (((ModelFileHeader*)hdr)->jointData != 0 && ((ModelFileHeader*)hdr)->jointCount != 0 && ((ModelFileHeader*)hdr)->
         unk18 != 0)
     {
@@ -765,12 +765,12 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
     {
         total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4, va + total);
-        total = total + 4;
+        total += 4;
     }
     if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
     {
         total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
-        total = total + 4;
+        total += 4;
     }
     total += (u32)((ModelFileHeader*)hdr)->renderOpCount * (int)sizeof(ModelRenderOpTextureRefs);
     if ((flags & 0x8000) != 0)

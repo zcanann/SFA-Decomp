@@ -1576,13 +1576,13 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     tmpl.anim.rootMotionScale = modelDef->rootMotionScaleBase;
     tmpl.anim.flags = 2;
     if (modelDef->flags & OBJDEF_FLAG_TRANSLUCENT) {
-        tmpl.anim.flags = tmpl.anim.flags | 0x80;
+        tmpl.anim.flags |= 0x80;
     }
     if (modelDef->flags & OBJDEF_FLAG_FORCE_ALPHA_SORT) {
-        tmpl.objectFlags = tmpl.objectFlags | 0x80;
+        tmpl.objectFlags |= 0x80;
     }
     if (flags & 4) {
-        tmpl.anim.flags = tmpl.anim.flags | 0x2000;
+        tmpl.anim.flags |= 0x2000;
     }
     tmpl.anim.localPosX = ((ObjPlacement*)data)->posX;
     tmpl.anim.localPosY = ((ObjPlacement*)data)->posY;

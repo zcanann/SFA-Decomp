@@ -249,10 +249,10 @@ void CameraModeCombat_update(CameraObject* camera) {
                             binAngleDelta = (ang & 0xffff) + 0x8000;
                             diff = (int)camera->anim.rotX - ((0x8000 - binAngleDelta) & 0xffff);
                             if (diff > 0x8000) {
-                                diff = diff - 0xffff;
+                                diff -= 0xffff;
                             }
                             if (diff < -0x8000) {
-                                diff = diff + 0xffff;
+                                diff += 0xffff;
                             }
                             if (diff > 9000) {
                                 step = interpolate((f32)(s32)(diff - 9000), 1.0f / 12.0f, timeDelta);
@@ -290,11 +290,11 @@ void CameraModeCombat_update(CameraObject* camera) {
                             step = (f32)(s32)(9000 - diff);
                             zoom = step / 9000.0f;
                             step = interpolate(35.0f - gCameraModeCombatState->heightOffset, 0.04f, timeDelta);
-                            gCameraModeCombatState->heightOffset = gCameraModeCombatState->heightOffset + step;
+                            gCameraModeCombatState->heightOffset += step;
                             fb = 1.0f - zoom;
                             fb = 0.8f + fb;
                             step = interpolate(fb / 1.8f - gCameraModeCombatState->zoomOffset, 0.1f, timeDelta);
-                            gCameraModeCombatState->zoomOffset = gCameraModeCombatState->zoomOffset + step;
+                            gCameraModeCombatState->zoomOffset += step;
                             sinAngle = mathSinf((3.1415927f * (f32)(s32)camera->anim.rotX) / 32768.0f);
                             cosAngle = mathCosf((3.1415927f * (f32)(s32)camera->anim.rotX) / 32768.0f);
                             t = gCameraModeCombatState->followDistance * sinAngle;
@@ -303,7 +303,7 @@ void CameraModeCombat_update(CameraObject* camera) {
                             desiredPosition.z = pz - t;
                             dy *= 0.6f;
                             dy = ty - dy;
-                            dy = dy + gCameraModeCombatState->heightOffset;
+                            dy += gCameraModeCombatState->heightOffset;
                             step = interpolate(camera->anim.worldPosY - dy, 0.05f, timeDelta);
                             desiredPosition.y = camera->anim.worldPosY - step;
                             PSVECSubtract(&desiredPosition, &camera->anim.worldPos, &movement);
@@ -336,10 +336,10 @@ void CameraModeCombat_update(CameraObject* camera) {
                             ang = getAngle(dy, t) & 0xffff;
                             binAngleDelta = ang - ((int)camera->anim.rotY & 0xffffU);
                             if ((int)binAngleDelta > 0x8000) {
-                                binAngleDelta = binAngleDelta - 0xffff;
+                                binAngleDelta -= 0xffff;
                             }
                             if ((int)binAngleDelta < -0x8000) {
-                                binAngleDelta = binAngleDelta + 0xffff;
+                                binAngleDelta += 0xffff;
                             }
                             step = interpolate((f32)(s32)binAngleDelta, 0.125f, timeDelta);
                             camera->anim.rotY = (s16)((f32)(s32)camera->anim.rotY + step);
@@ -350,15 +350,15 @@ void CameraModeCombat_update(CameraObject* camera) {
                             if (fa > 150.0f) {
                                 fa = 150.0f;
                             }
-                            fa = fa - gCameraModeCombatState->followDistance;
+                            fa -= gCameraModeCombatState->followDistance;
                             step = powfBitEstimate(0.04f, timeDelta);
-                            fa = fa * step;
+                            fa *= step;
                             if (fa > 5.0f * timeDelta) {
                                 fa = 5.0f * timeDelta;
                             } else if (fa < -5.0f * timeDelta) {
                                 fa = -5.0f * timeDelta;
                             }
-                            gCameraModeCombatState->followDistance = gCameraModeCombatState->followDistance + fa;
+                            gCameraModeCombatState->followDistance += fa;
                             turnOnBlurFilter(target->anim.worldPosX, target->anim.worldPosY, target->anim.worldPosZ, 1,
                                              0);
                             if (camera->blendProgress == 0.0f) {

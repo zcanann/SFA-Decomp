@@ -273,8 +273,8 @@ void dll_22C_init(GameObject* obj, char* def)
     state->gameBit2 = md->gameBit2;
     state->raiseHeight = md->raiseHeight;
     state->raiseMode = md->raiseMode;
-    obj->anim.localPosY = obj->anim.localPosY - 1228.0f;
-    obj->objectFlags = obj->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED;
+    obj->anim.localPosY -= 1228.0f;
+    obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }
 
 void dll_22C_release_nop(void)

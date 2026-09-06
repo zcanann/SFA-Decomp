@@ -72,7 +72,7 @@ int n_rareware_frameStart(void)
     }
     if (gNrarewareExitDelay > 0)
     {
-        gNrarewareExitDelay = gNrarewareExitDelay - frameStep;
+        gNrarewareExitDelay -= frameStep;
     }
     if ((s8)gNrarewareTransitionStarted != 0)
     {

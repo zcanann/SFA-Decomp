@@ -41,11 +41,11 @@ void DFPSpPl_update(GameObject* obj)
     if ((((LaserState*)obj->extra)->completionLatched == '\0') &&
         (activationGameBitSet = mainGetBit((int)((LaserState*)obj->extra)->activationGameBit), activationGameBitSet != 0))
     {
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     }
     else
     {
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
     objUpdateHitVolumeTransforms(obj);
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
@@ -61,7 +61,7 @@ void DFPSpPl_update(GameObject* obj)
                 mainSetBits((int)state->completionGameBit, 1);
                 mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
-                obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+                obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             }
             break;
         case LASEROBJ_MODE_SEQUENCE_B:
@@ -72,7 +72,7 @@ void DFPSpPl_update(GameObject* obj)
                 mainSetBits((int)state->completionGameBit, 1);
                 mainSetBits((int)state->activationGameBit, 0);
                 state->completionLatched = 1;
-                obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+                obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
                 (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_A, LASEROBJ_SEQUENCE_B_MODE_A);
                 (*gMapEventInterface)->setMapAct(LASEROBJ_SEQUENCE_B_MODE_MAP_B, LASEROBJ_SEQUENCE_B_MODE_B);
             }
@@ -96,7 +96,7 @@ void DFPSpPl_init(GameObject* obj, LaserObjectMapData* mapData)
     if (completionGameBitSet != 0)
     {
         state->completionLatched = 1;
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
     obj->objectFlags = (u16)(obj->objectFlags | (OBJECT_OBJFLAG_HITDETECT_DISABLED | OBJECT_OBJFLAG_HIDDEN));
     return;

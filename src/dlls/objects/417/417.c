@@ -704,9 +704,9 @@ void NW_mammoth_update(GameObject* obj, int unusedArg) {
         break;
     }
     if ((tables[0]->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_PATH_CONTROL) != 0) {
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     } else {
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
         if (((tables[0]->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_MENU_ACTION) != 0) &&
             (cMenuGetSelectedItem() != -1)) {
             Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);

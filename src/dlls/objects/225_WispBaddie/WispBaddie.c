@@ -71,7 +71,7 @@ void WispBaddie_updateMovement(GameObject* obj, WispBaddieState* state) {
         obj->anim.velocityZ = 0.006f * (curve->posZ - obj->anim.localPosZ) + obj->anim.velocityZ;
     }
 
-    obj->anim.velocityX = obj->anim.velocityX * (step = 0.9f);
+    obj->anim.velocityX *= (step = 0.9f);
     obj->anim.velocityY *= step;
     obj->anim.velocityZ *= step;
 

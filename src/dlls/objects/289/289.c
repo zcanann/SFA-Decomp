@@ -29,7 +29,7 @@ void infotext_update(GameObject* obj) {
         if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) == 0) {
             state->displayTimer = 0.0f;
         } else {
-            state->displayTimer = state->displayTimer - timeDelta;
+            state->displayTimer -= timeDelta;
             showHelpText(
                 obj->anim.modelInstance->helpTextIds[((InfoTextPlacement*)obj->anim.placementData)->hintTextIndex]);
         }

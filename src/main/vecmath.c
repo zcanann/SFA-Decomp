@@ -261,9 +261,9 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     s = (f32)(int)(65536.0f * fcos16((u16)xf->rotY));
     cy = s * gVecMathAngleScaleInv[0];
     sz = (f32)(int)(65536.0f * fsin16((u16)xf->rotZ));
-    sz = sz * gVecMathAngleScaleInv[0];
+    sz *= gVecMathAngleScaleInv[0];
     cz = (f32)(int)(65536.0f * fcos16((u16)xf->rotZ));
-    cz = cz * gVecMathAngleScaleInv[0];
+    cz *= gVecMathAngleScaleInv[0];
 
     t1 = sy * sz;
     s = t1 * sx;
@@ -274,7 +274,7 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     v = t2 * sx;
     {
         f32 p = cx * sz;
-        v = v + p;
+        v += p;
     }
     mtx[1] = v;
     mtx[2] = -(sx * cy);
@@ -288,7 +288,7 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
         f32 p = sx * cz;
         mtx[8] = v + p;
     }
-    t2 = t2 * cx;
+    t2 *= cx;
     {
         f32 p = sx * sz;
         mtx[9] = p - t2;
@@ -299,31 +299,31 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     x = xf->x;
     y = xf->y;
     s = mtx[0];
-    s = s * x;
+    s *= x;
     t = mtx[4];
-    t = t * y;
-    t = t + s;
+    t *= y;
+    t += s;
     s = mtx[8];
-    s = s * z;
-    t = t + s;
+    s *= z;
+    t += s;
     mtx[12] = t;
     s = mtx[1];
-    s = s * x;
+    s *= x;
     t = mtx[5];
-    t = t * y;
-    t = t + s;
+    t *= y;
+    t += s;
     s = mtx[9];
-    s = s * z;
-    t = t + s;
+    s *= z;
+    t += s;
     mtx[13] = t;
     s = mtx[2];
-    s = s * x;
+    s *= x;
     t1 = mtx[6];
-    t1 = t1 * y;
-    t1 = t1 + s;
+    t1 *= y;
+    t1 += s;
     s = mtx[10];
-    s = s * z;
-    t1 = t1 + s;
+    s *= z;
+    t1 += s;
     mtx[14] = t1;
     mtx[15] = 1.0f;
 }
@@ -395,9 +395,9 @@ int RandomTimer_UpdateRangeTrigger(void* timerp, f32 lo, f32 hi)
                 rv = rand();
                 {
                     f32 acc = rv;
-                    acc = acc / 4294967296.0f;
+                    acc /= 4294967296.0f;
                     acc = acc * ((1.0f + range) - (t = gVecMathZero[0]));
-                    acc = acc + t;
+                    acc += t;
                     val = acc;
                 }
             }
@@ -420,9 +420,9 @@ int randomGetRange(int lo, int hi)
         return lo;
     }
     v = (f32)(u32)rand();
-    v = v / 4294967296.0f;
-    v = v * (1.0f + hi - lo);
-    v = v + lo;
+    v /= 4294967296.0f;
+    v *= (1.0f + hi - lo);
+    v += lo;
     return v;
 }
 
@@ -599,7 +599,7 @@ void Matrix_TransformVector(const f32* matrix, const f32* vector, f32* out)
     out[1] = t;
     m1 = vy * m1;
     m2 = vz * m2;
-    m0 = m0 + m1;
+    m0 += m1;
     out[2] = m0 + m2;
 }
 

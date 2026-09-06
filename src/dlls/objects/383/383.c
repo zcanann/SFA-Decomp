@@ -111,7 +111,7 @@ void moonSeedBush_init(GameObject* obj, const MoonSeedBushPlacement* placement) 
     if (!obj->anim.rootMotionScale) {
         obj->anim.rootMotionScale = 1.0f;
     }
-    obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+    obj->anim.rootMotionScale *= obj->anim.modelInstance->rootMotionScaleBase;
     if (placement->plantedGameBit != -1) {
         state->seedState = mainGetBit(placement->plantedGameBit);
     } else {

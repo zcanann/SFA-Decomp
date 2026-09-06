@@ -186,7 +186,7 @@ void collectible_applyPickup(GameObject* obj) {
         case COLLECTIBLE_SEQ_ID_MOON_SEED: {
             s8 count = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
             if (count < 7) {
-                count = count + 1;
+                count += 1;
             }
             mainSetBits(GAMEBIT_ITEM_MoonSeed_Count, count);
             itemPickupDoParticleFx(obj, 1.0f, 6, 40);
@@ -258,9 +258,9 @@ void collectible_updateLooseMotion(GameObject* obj) {
                           inverseVelocityZ * inverseVelocityZ);
         if (speed != 0.0f) {
             f32 inverseSpeed = 1.0f / speed;
-            inverseVelocityX = inverseVelocityX * inverseSpeed;
-            inverseVelocityY = inverseVelocityY * inverseSpeed;
-            inverseVelocityZ = inverseVelocityZ * inverseSpeed;
+            inverseVelocityX *= inverseSpeed;
+            inverseVelocityY *= inverseSpeed;
+            inverseVelocityZ *= inverseSpeed;
         }
         {
             f32 normalX = state->pathState.segmentHits.planes[0][0];
@@ -290,7 +290,7 @@ void collectible_updateLooseMotion(GameObject* obj) {
         }
     } else {
         f32 airFriction = 0.99f;
-        obj->anim.velocityY = obj->anim.velocityY * airFriction;
+        obj->anim.velocityY *= airFriction;
         obj->anim.velocityY = -(0.07f * timeDelta - obj->anim.velocityY);
     }
 }

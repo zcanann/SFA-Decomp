@@ -441,7 +441,7 @@ void Checkpoint_rewindRoute(CheckpointRouteState* o) {
     } else {
         while ((nxt = ret->backLink0) > -1) {
             ret = Checkpoint_find(nxt, &local_idx);
-            o->linkDepth = o->linkDepth + 1;
+            o->linkDepth += 1;
         }
         o->currentCheckpointId = o->startCheckpointId;
         o->routeProgress = 0.0f;
@@ -491,7 +491,7 @@ int Checkpoint_getRouteHeading(GameObject* obj, CheckpointRouteState* state) {
     if (cp->backLink0 > -1 && dist >= 0.0f) {
         state->currentCheckpointId = cp->backLink0;
         state->routeProgress = 0.99f;
-        state->linkDepth = state->linkDepth - 1;
+        state->linkDepth -= 1;
         return cp->heading;
     }
     if (cp->forwardLink0 < 0) {
@@ -507,7 +507,7 @@ int Checkpoint_getRouteHeading(GameObject* obj, CheckpointRouteState* state) {
     if (dist2 < zero) {
         state->currentCheckpointId = cp->forwardLink0;
         state->routeProgress = zero;
-        state->linkDepth = state->linkDepth + 1;
+        state->linkDepth += 1;
         return ang;
     }
     cp2Z = cp2->posZ;
@@ -701,7 +701,7 @@ void Checkpoint_Remove(CheckpointRouteEntry* obj) {
     if (i >= count) {
         return;
     }
-    gCheckpointRouteCount = gCheckpointRouteCount - 1;
+    gCheckpointRouteCount -= 1;
     count = gCheckpointRouteCount;
     e = &gCheckpointRouteTable[i];
     while (i < count) {
@@ -730,7 +730,7 @@ void Checkpoint_Add(CheckpointRouteEntry* entry) {
             count--;
         }
     }
-    gCheckpointRouteCount = gCheckpointRouteCount + 1;
+    gCheckpointRouteCount += 1;
     gCheckpointRouteTable[i].entry = entry;
     gCheckpointRouteTable[i].key = entry->sortKey;
 }

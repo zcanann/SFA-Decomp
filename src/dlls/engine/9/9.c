@@ -250,11 +250,11 @@ void renderClouds(int a, int b, int c, int d)
         {
             GXGetScissor(&savedClipX, &savedClipY, &savedClipW, &savedClipH);
             GXSetScissor(clipX, clipY, clipW, clipH);
-            model->file->flags = model->file->flags | 0x2000;
+            model->file->flags |= 0x2000;
             objSetAlphaCompareThreshold(0x80);
             GXSetColorUpdate(GX_FALSE);
             objRender(a, b, c, d, gCloudActionRuntime.mainCloudObj, 1);
-            model->file->flags = model->file->flags & ~0x2000;
+            model->file->flags &= ~0x2000;
             objSetAlphaCompareThreshold(0);
             GXSetColorUpdate(GX_TRUE);
             GXSetScissor(savedClipX, savedClipY, savedClipW, savedClipH);

@@ -565,7 +565,7 @@ void EdibleMushroom_init(GameObject* obj, EdibleMushroomPlacement* placement) {
     if (state->lungeRange < 0.0f) {
         state->lungeRange = -state->lungeRange;
     }
-    state->lungeRange = state->lungeRange * state->lungeRootSpeedScale;
+    state->lungeRange *= state->lungeRootSpeedScale;
     state->lungeRange += 20.0f;
 
     ObjAnim_SetCurrentMove(obj, 4, 0.0f, 0);

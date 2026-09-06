@@ -74,7 +74,7 @@ void CameraModeCloudRunner_update(CameraObject* camera) {
         targetYaw = targetYaw - 0xffff;
     }
     if (targetYaw < -0x8000) {
-        targetYaw = targetYaw + 0xffff;
+        targetYaw += 0xffff;
     }
     camera->anim.rotX += targetYaw;
 
@@ -83,7 +83,7 @@ void CameraModeCloudRunner_update(CameraObject* camera) {
         targetPitch = targetPitch - 0xffff;
     }
     if (targetPitch < -0x8000) {
-        targetPitch = targetPitch + 0xffff;
+        targetPitch += 0xffff;
     }
     camera->anim.rotY += targetPitch;
 
@@ -97,7 +97,7 @@ void CameraModeCloudRunner_update(CameraObject* camera) {
     yOffset = radius * pitchVerticalScale;
     horizontalRadius = radius * pitchHorizontalScale;
     xOffset = horizontalRadius * yawZ;
-    horizontalRadius = horizontalRadius * yawX;
+    horizontalRadius *= yawX;
     camera->anim.worldPosX = focusX + xOffset;
     camera->anim.worldPosY = focusY + yOffset;
     camera->anim.worldPosZ = focusZ + horizontalRadius;

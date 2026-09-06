@@ -149,14 +149,14 @@ void ktrex_spawnRandomEnergyArc(GameObject* obj, int angle, f32 arcLen, int slot
 
     PSMTXMultVec((MtxPtr)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*model + 0xf3) - 1)), &localPoint,
                  &point1);
-    point1.x = point1.x + playerMapOffsetX;
+    point1.x += playerMapOffsetX;
     point1.y += 50.0f;
-    point1.z = point1.z + playerMapOffsetZ;
+    point1.z += playerMapOffsetZ;
 
     PSMTXMultVec((MtxPtr)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*model + 0xf3) - 1)), &localPoint,
                  &point2);
-    point2.x = point2.x + playerMapOffsetX;
-    point2.z = point2.z + playerMapOffsetZ;
+    point2.x += playerMapOffsetX;
+    point2.z += playerMapOffsetZ;
 
     gKTRexState->lightning[slot] = lightningCreate(&point1, &point2, 0.1f, 0.3f, angle, 96, 0);
 }
@@ -1078,8 +1078,8 @@ int ktrex_updateArenaPathProgress(GroundBaddieState* runtime) {
                 phase = 0;
             }
         }
-        gKTRexState->timerFA = gKTRexState->timerFA & ~6;
-        gKTRexState->timerFA = gKTRexState->timerFA | (phase << 1);
+        gKTRexState->timerFA &= ~6;
+        gKTRexState->timerFA |= (phase << 1);
         if (gKTRexState->laneLerpT > gKTRexLaneTuning.speedMax[gKTRexState->laneIndex]) {
             gKTRexState->laneLerpT = gKTRexLaneTuning.speedMax[gKTRexState->laneIndex];
         } else if (gKTRexState->laneLerpT < gKTRexLaneSpeedMin[gKTRexState->laneIndex]) {

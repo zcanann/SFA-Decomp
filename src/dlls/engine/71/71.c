@@ -347,8 +347,8 @@ f32 pathcam_segmentParam(f32 x, f32 unusedY, f32 z, int* nodeIds) {
     nz = 0.5f * (sz + dz1);
     len = sqrtf(nx * nx + nz * nz);
     if (len != 0.0f) {
-        nx = nx / len;
-        nz = nz / len;
+        nx /= len;
+        nz /= len;
     }
     p1x = windowNodes[1]->x;
     p1z = windowNodes[1]->z;
@@ -371,8 +371,8 @@ f32 pathcam_segmentParam(f32 x, f32 unusedY, f32 z, int* nodeIds) {
     nz = 0.5f * (nsz + sz);
     len = sqrtf(nx * nx + nz * nz);
     if (len != 0.0f) {
-        nx = nx / len;
-        nz = nz / len;
+        nx /= len;
+        nz /= len;
     }
     negdot = nx * windowNodes[2]->x + nz * windowNodes[2]->z;
     negdot = -negdot;

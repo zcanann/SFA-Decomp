@@ -251,7 +251,7 @@ void CFCrate_update(GameObject* obj) {
     case CFCRATE_OBJ_DFP_BLOCK_WA:
         if ((obj->anim.localPosY < CFCRATE_BLOCK_WALL_RISE_HEIGHT + placement->base.posY) &&
             (mainGetBit(state->gameBitA) != 0)) {
-            obj->anim.localPosY = obj->anim.localPosY + timeDelta;
+            obj->anim.localPosY += timeDelta;
         }
         break;
     case CFCRATE_OBJ_DFPSP_SG:
@@ -285,7 +285,7 @@ void CFCrate_update(GameObject* obj) {
             Sfx_PlayFromObject(obj, *(u16*)(sfxTable + tableOffset));
             state->sfxTimer = state->sfxPeriod;
             tableOffset = randomGetRange(0, state->sfxPeriod);
-            state->sfxTimer = state->sfxTimer + tableOffset;
+            state->sfxTimer += tableOffset;
         }
         break;
     case CFCRATE_OBJ_SB_LAMP: {

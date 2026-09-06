@@ -1162,7 +1162,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
                 dx = posB[0] - startNode->x;
                 dy = posB[1] - startNode->y;
                 dz = posB[2] - startNode->z;
-                total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+                total += sqrtf(dx * dx + dy * dy + dz * dz);
             } else {
                 count = RomCurve_CollectForwardLinks(startNode, cand3);
                 if (count != 0) {
@@ -1174,7 +1174,7 @@ f32 curves_getPathLength(RomCurveDef* startNode, RomCurveDef* endNode, f32* posA
                 dx = next->x - startNode->x;
                 dy = next->y - startNode->y;
                 dz = next->z - startNode->z;
-                total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+                total += sqrtf(dx * dx + dy * dy + dz * dz);
                 startNode = next;
             }
         }
@@ -1311,8 +1311,8 @@ int RomCurve_projectPointToAdjacentWindow(int* curveIds, f32 x, f32 y, f32 z, f3
     tangentDz = ROMCURVE_HALF * (tdz + dz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
     if (ROMCURVE_ZERO != tangentLen) {
-        tangentDx = tangentDx / tangentLen;
-        tangentDz = tangentDz / tangentLen;
+        tangentDx /= tangentLen;
+        tangentDz /= tangentLen;
     }
 
     x1 = curves[1]->x;
@@ -1337,8 +1337,8 @@ int RomCurve_projectPointToAdjacentWindow(int* curveIds, f32 x, f32 y, f32 z, f3
     tangentDz = ROMCURVE_HALF * (tdz + dz);
     tangentLen = sqrtf(tangentDx * tangentDx + tangentDz * tangentDz);
     if (ROMCURVE_ZERO != tangentLen) {
-        tangentDx = tangentDx / tangentLen;
-        tangentDz = tangentDz / tangentLen;
+        tangentDx /= tangentLen;
+        tangentDz /= tangentLen;
     }
 
     numer = -((tangentDx * curves[2]->x) + (tangentDz * curves[2]->z));
@@ -2099,7 +2099,7 @@ int RomCurve_buildAdjacentWindowPoints(u32* curveIds, float* outX, float* outY, 
             outX[i] = windowCurves[i]->x;
             outY[i] = windowCurves[i]->y;
             outZ[i] = windowCurves[i]->z;
-            foundCount = foundCount + 1;
+            foundCount += 1;
         }
     }
 
@@ -2119,11 +2119,11 @@ int RomCurve_buildAdjacentWindowPoints(u32* curveIds, float* outX, float* outY, 
                 *outZ = windowCurves[2]->z + (windowCurves[2]->z - windowCurves[1]->z);
             }
         }
-        resolveCursor = resolveCursor + 1;
-        outXStart = outXStart + 1;
-        outY = outY + 1;
-        outZ = outZ + 1;
-        foundCount = foundCount + 1;
+        resolveCursor += 1;
+        outXStart += 1;
+        outY += 1;
+        outZ += 1;
+        foundCount += 1;
     }
     return 1;
 }
@@ -2430,7 +2430,7 @@ void RomCurve_remove(RomCurveDef* curve) {
 
     removeIndex = 0;
     while ((removeIndex < nRomCurves) && (curve->id != romCurves[removeIndex]->id)) {
-        removeIndex = removeIndex + 1;
+        removeIndex += 1;
     }
 
     sortedCurveCount = nRomCurves;
@@ -2438,12 +2438,12 @@ void RomCurve_remove(RomCurveDef* curve) {
         return;
     }
 
-    nRomCurves = nRomCurves - 1;
+    nRomCurves -= 1;
     sortedCurveCount = nRomCurves;
     tableSlot = romCurves + removeIndex;
     for (; removeIndex < sortedCurveCount; removeIndex++) {
         tableSlot[0] = tableSlot[1];
-        tableSlot = tableSlot + 1;
+        tableSlot += 1;
     }
 }
 

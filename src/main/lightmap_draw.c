@@ -221,7 +221,7 @@ void lightmapDrawTriangleList(const void* vertexBase, u8* triList, int triCount)
             vertex = &vertices[list[vtx + 1]];
             GXTexCoord2s16(vertex->s, vertex->t);
         }
-        triList = triList + 0x10;
+        triList += 0x10;
     }
 }
 

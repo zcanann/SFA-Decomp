@@ -45,7 +45,7 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* stateBytes) {
         s16* currentVertex = ObjModel_GetCurrentVertexCoords(model, vertexIndex);
         s16* baseVertex = ObjModel_GetBaseVertexCoords(modelFile, vertexIndex);
         int wavePosition = (u16)(int)(phaseScale * ((f32)(int)currentVertex[2] / state->minVertexY));
-        wavePosition = wavePosition + state->wavePhase;
+        wavePosition += state->wavePhase;
         if (*baseVertex > 0) {
             *currentVertex =
                 256.0f * mathSinf((3.1415927f * (f32)wavePosition) / 32768.0f) + (f32)(int)*baseVertex;
@@ -79,12 +79,12 @@ void dimmagicbridge_scrollTextureChannels(GameObject* obj, u8* stateBytes) {
     }
     phase = (s32)state->wavePhase + framesThisStep * 0x100;
     if (phase > 0xffff) {
-        phase = phase - 0xffff;
+        phase -= 0xffff;
     }
     state->wavePhase = phase;
     phase = (s32)state->wavePhaseB + framesThisStep * 0x80;
     if (phase > 0xffff) {
-        phase = phase - 0xffff;
+        phase -= 0xffff;
     }
     state->wavePhaseB = phase;
 }

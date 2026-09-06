@@ -90,7 +90,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
                 if (distance < radius)
                 {
                     strength = (radius - distance) / radius;
-                    strength = strength * (WATERFLOWWE_STRENGTH_SCALE * other->anim.rootMotionScale);
+                    strength *= (WATERFLOWWE_STRENGTH_SCALE * other->anim.rootMotionScale);
                     currentX +=
                         strength * mathSinf((WATERFLOWWE_PI * other->anim.rotX) / WATERFLOWWE_ANGLE_FULL_SCALE);
                     currentZ +=
@@ -123,7 +123,7 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
             if (distance < radius)
             {
                 strength = (radius - distance) / radius;
-                strength = strength * objectStrength;
+                strength *= objectStrength;
                 angle = (WATERFLOWWE_PI * currentAngle) / WATERFLOWWE_ANGLE_FULL_SCALE;
                 currentX += strength * mathSinf(angle);
                 currentZ += strength * mathCosf(angle);
@@ -133,8 +133,8 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 
     if (hasCurrent != 0)
     {
-        currentX = currentX / hasCurrent;
-        currentZ = currentZ / hasCurrent;
+        currentX /= hasCurrent;
+        currentZ /= hasCurrent;
         {
             f32 filterCoeff = WATERFLOWWE_FILTER_COEFF;
             current->currentX = current->currentX - filterCoeff * currentX;
@@ -146,8 +146,8 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
         if (distance > WATERFLOWWE_MAX_MAGNITUDE)
         {
             strength = WATERFLOWWE_MAX_MAGNITUDE / distance;
-            current->currentX = current->currentX * strength;
-            current->currentZ = current->currentZ * strength;
+            current->currentX *= strength;
+            current->currentZ *= strength;
         }
         *vx = current->currentX * timeDelta;
         *vz = current->currentZ * timeDelta;
@@ -246,7 +246,7 @@ void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup)
         {
             object->anim.rootMotionScale = WATERFLOWWE_ONE;
         }
-        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
+        object->anim.rootMotionScale *= object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags = (u16)(object->objectFlags | OBJECT_OBJFLAG_HITDETECT_DISABLED);
     ObjAnim_SetCurrentMove(obj, 0, WATERFLOWWE_ZERO, 0);

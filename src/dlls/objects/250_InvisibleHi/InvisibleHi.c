@@ -65,7 +65,7 @@ void InvisibleHitSwitch_update(GameObject* obj) {
     }
 
     if (state->delayedTriggerTimer != zeroTimer) {
-        state->delayedTriggerTimer = state->delayedTriggerTimer - timeDelta;
+        state->delayedTriggerTimer -= timeDelta;
         if (state->delayedTriggerTimer < INVISIBLE_HIT_SWITCH_DELAY_WINDOW) {
             hitPriority = ObjHits_GetPriorityHit(obj, NULL, NULL, NULL);
             if (state->hitPriority == hitPriority) {

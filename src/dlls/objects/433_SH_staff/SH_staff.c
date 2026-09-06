@@ -201,15 +201,15 @@ void sh_staff_render(GameObject* obj, int renderArg2, int renderArg3, int render
                     }
                 }
                 if ((state->hazeFlags & SHSTAFF_HAZE_FLAG_FADE_OUT) != 0) {
-                    state->hazeFadeTimer = state->hazeFadeTimer - timeDelta;
+                    state->hazeFadeTimer -= timeDelta;
                     if (state->hazeFadeTimer <= 0.0f) {
                         foldScale = 0.01f;
                     } else {
-                        state->hazeFadeTimer = state->hazeFadeTimer - timeDelta;
+                        state->hazeFadeTimer -= timeDelta;
                         foldScale = (1.0f / 3000.0f) * state->hazeFadeTimer;
                     }
                 } else {
-                    state->hazeFadeTimer = state->hazeFadeTimer + timeDelta;
+                    state->hazeFadeTimer += timeDelta;
                     if (state->hazeFadeTimer >= 60.0f) {
                         state->hazeFadeTimer = 60.0f;
                     }
@@ -248,7 +248,7 @@ void sh_staff_render(GameObject* obj, int renderArg2, int renderArg3, int render
             } else {
                 scatterScale = 0.01f;
                 if ((state->hazeFlags & SHSTAFF_HAZE_FLAG_FADE_OUT) != 0) {
-                    state->hazeFadeTimer = state->hazeFadeTimer - timeDelta;
+                    state->hazeFadeTimer -= timeDelta;
                     if (state->hazeFadeTimer <= 0.0f) {
                         state->hazeFlags &= ~SHSTAFF_HAZE_FLAG_FADE_OUT;
                     } else {
@@ -378,7 +378,7 @@ void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int clearChildren
     player = (int)Obj_GetPlayerObject();
     ObjHits_DisableObject(obj);
     obj->anim.flags = (s16)(obj->anim.flags | OBJANIM_FLAG_HIDDEN);
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
 
     if (clearChildren != 0) {
         staffToggle((GameObject*)player, 1);

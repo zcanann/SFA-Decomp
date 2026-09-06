@@ -165,15 +165,15 @@ void fireflyLanternGetTargetAngleAndDistance(GameObject* obj, void* state, u16* 
     } else {
         d = (targetPos.z - fs->wallPlane.anchorZ) / crossB.z;
     }
-    dxDiff = dxDiff - d;
+    dxDiff -= d;
     dy = objY - dy;
     angle = getAngle(-dy, dxDiff) & 0xffff;
     delta = angle - (obj->anim.rotY & 0xffff);
     if (delta > 0x8000) {
-        delta = delta - 0xffff;
+        delta -= 0xffff;
     }
     if (delta < -0x8000) {
-        delta = delta + 0xffff;
+        delta += 0xffff;
     }
     if (delta < 0) {
         delta = -delta;
@@ -255,10 +255,10 @@ u32 fireflyLanternSteerTowardTarget(short* obj, void* state, u32 turnTime, f32 m
     rot = o->anim.rotY;
     delta = angle - (rot & 0xffff);
     if (delta > 0x8000) {
-        delta = delta - 0xffff;
+        delta -= 0xffff;
     }
     if (delta < -0x8000) {
-        delta = delta + 0xffff;
+        delta += 0xffff;
     }
     turnStep = timeDelta / (f32)(turnTime & 0xffff);
     if (turnStep > 1.0f) {

@@ -78,15 +78,15 @@ int mmpAsteroidRe_processAnimEvents(GameObject* obj, int unusedArg2, ObjSeqState
             obj->anim.alpha = 0xFF;
             break;
         case MMP_ASTEROID_RE_ANIM_EVENT_SWITCH_MODEL:
-            state->eventFlags = state->eventFlags & ~(MMP_ASTEROID_RE_FX_SMOKE | MMP_ASTEROID_RE_FX_DEBRIS);
-            state->eventFlags = state->eventFlags | (MMP_ASTEROID_RE_FX_EXPLODE | MMP_ASTEROID_RE_FX_IMPACT);
+            state->eventFlags &= ~(MMP_ASTEROID_RE_FX_SMOKE | MMP_ASTEROID_RE_FX_DEBRIS);
+            state->eventFlags |= (MMP_ASTEROID_RE_FX_EXPLODE | MMP_ASTEROID_RE_FX_IMPACT);
             ((ObjAnimComponent*)obj)->bankIndex = 1;
             break;
         case MMP_ASTEROID_RE_ANIM_EVENT_ARM_PERIODIC_FX: {
             int timer;
 
-            state->eventFlags = state->eventFlags & ~MMP_ASTEROID_RE_FX_IMPACT;
-            state->eventFlags = state->eventFlags | (MMP_ASTEROID_RE_FX_EXPLODE | MMP_ASTEROID_RE_FX_PERIODIC);
+            state->eventFlags &= ~MMP_ASTEROID_RE_FX_IMPACT;
+            state->eventFlags |= (MMP_ASTEROID_RE_FX_EXPLODE | MMP_ASTEROID_RE_FX_PERIODIC);
             timer = randomGetRange(10, 60);
             state->periodicFxTimer = timer;
             state->phase = MMP_ASTEROID_RE_PHASE_RISING;

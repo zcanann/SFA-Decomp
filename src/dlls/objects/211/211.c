@@ -99,12 +99,12 @@ int LandedArwing_UpdateBounceFade(GameObject* obj, BaddieState* baddie)
     }
     hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     hitState->objectPairHitVolume = 0;
-    baddie->flags0 = baddie->flags0 | LANDED_ARWING_FLAG_BOUNCE;
+    baddie->flags0 |= LANDED_ARWING_FLAG_BOUNCE;
     obj->anim.velocityX =
         obj->anim.velocityX * (horizontalDamping = 0.985f);
     obj->anim.velocityY =
         0.945f * (obj->anim.velocityY - 0.4f);
-    obj->anim.velocityZ = obj->anim.velocityZ * horizontalDamping;
+    obj->anim.velocityZ *= horizontalDamping;
     objMove(obj, obj->anim.velocityX, obj->anim.velocityY,
             obj->anim.velocityZ);
     if (obj->anim.localPosX < state->boundsMinX)
@@ -474,10 +474,10 @@ void landedarwing_updateAirborneMotion(GameObject* obj, LandedArwingState* state
     int hitFound;
 
     radius = 100.0f;
-    obj->anim.velocityY = obj->anim.velocityY - 1.0f;
-    obj->anim.velocityX = obj->anim.velocityX * (damping = 0.97f);
-    obj->anim.velocityY = obj->anim.velocityY * damping;
-    obj->anim.velocityZ = obj->anim.velocityZ * damping;
+    obj->anim.velocityY -= 1.0f;
+    obj->anim.velocityX *= (damping = 0.97f);
+    obj->anim.velocityY *= damping;
+    obj->anim.velocityZ *= damping;
     start[0] = obj->anim.localPosX;
     start[1] = obj->anim.localPosY;
     start[2] = obj->anim.localPosZ;

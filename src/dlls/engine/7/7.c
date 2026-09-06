@@ -901,8 +901,8 @@ int snowPrintSnowCloud(void* arg, int cloudId)
         {
             if (p->stationary == 0)
             {
-                part->x = part->x + stepX;
-                part->z = part->z + stepZ;
+                part->x += stepX;
+                part->z += stepZ;
             }
             part->x = p->windVelX * timeDelta + part->x;
             part->z = p->windVelZ * timeDelta + part->z;
@@ -1229,7 +1229,7 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
         delta = gNewCloudWindSources[i].x - pos[0];
         dxSq = delta * delta;
         delta = gNewCloudWindSources[i].z - pos[2];
-        delta = delta * delta;
+        delta *= delta;
         dSq = dxSq + delta;
         if (dSq)
         {
@@ -1257,9 +1257,9 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
     out[2] = -accZ;
     out[1] = 0.0f;
     normalize(out, out + 1, out + 2);
-    out[0] = out[0] * scale;
+    out[0] *= scale;
     out[1] = 0.0f;
-    out[2] = out[2] * scale;
+    out[2] *= scale;
 }
 
 u8 lbl_8030F500[160] = {255, 206, 0,   0,   255, 206, 255, 206, 0, 100, 255, 206, 0, 50,  0, 100, 255, 206, 0, 50,

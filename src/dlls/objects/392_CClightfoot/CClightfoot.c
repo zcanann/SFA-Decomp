@@ -264,7 +264,7 @@ void ccLightfoot_update(GameObject* obj) {
                         playerIsDisguised((GameObject*)state->playerObject) == 0) {
                         if ((void*)playerGetTargetObject((GameObject*)state->playerObject) == (void*)farTarget) {
                             u32 tmp = farTarget ^ nearTarget;
-                            nearTarget = nearTarget ^ tmp;
+                            nearTarget ^= tmp;
                             farTarget = tmp ^ nearTarget;
                         }
                         enemy_setTrackedObj((GameObject*)nearTarget, (GameObject*)state->playerObject);

@@ -96,7 +96,7 @@ extern f32 gHoodedZyckLargeTargetSpeedScale;
 extern f32 gHoodedZyckEmergeMoveSpeed;
 
 static void hoodedZyck_tickPhaseTimer(EnemyState* st) {
-    st->duster.phaseTimer = st->duster.phaseTimer - timeDelta;
+    st->duster.phaseTimer -= timeDelta;
     if (st->duster.phaseTimer <= 0.0f) {
         st->duster.phaseTimer = (f32)(int)randomGetRange(0x3c, 0x78);
     }
@@ -119,9 +119,9 @@ void hoodedZyckUpdateWhileFrozen(GameObject* obj, u8* state, GameObject* attacke
                                  Vec* wpad2, int wpad3) {
     EnemyState* enemyState = (EnemyState*)state;
     if (eventKind == 0x10) {
-        enemyState->flags2E8 = enemyState->flags2E8 | 0x20;
+        enemyState->flags2E8 |= 0x20;
     } else {
-        enemyState->flags2E8 = enemyState->flags2E8 | 8;
+        enemyState->flags2E8 |= 8;
         Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_dn_boar1_c_244);
         enemyState->current = 0;
     }
@@ -212,7 +212,7 @@ void hoodedZyck_updateB(GameObject* obj, u8* state) {
         if (n == 0.0f) {
             scale = 10.0f;
         }
-        scale = scale / 10.0f;
+        scale /= 10.0f;
     }
 
     hoodedZyck_tickPhaseTimer(enemyState);
@@ -397,7 +397,7 @@ void hoodedZyck_init(GameObject* obj, EnemyState* st) {
     if (amt == 0.0f) {
         ratio = 10.0f;
     }
-    ratio = ratio / 10.0f;
+    ratio /= 10.0f;
     st->sightRange = 30.0f;
     st->flags2E4 = 0x8b;
     flags = st->flags2E4;

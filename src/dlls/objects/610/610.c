@@ -128,8 +128,8 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
     mag = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]) / speed;
     if (mag != zero)
     {
-        dir[0] = dir[0] / mag;
-        dir[1] = dir[1] / mag;
+        dir[0] /= mag;
+        dir[1] /= mag;
         *(f32*)&dir[2] = dir[2] / mag;
     }
     obj->anim.localPosX = from->anim.localPosX;

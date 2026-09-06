@@ -86,8 +86,8 @@ void AlphaAnimator_update(GameObject* obj) {
             state->vertexAlphaBuffer = mmAlloc(state->vertexCount << 2, 5, 0);
         }
         /* double-toggle of bit 0 - a real no-op present in retail */
-        block->flags4 = block->flags4 ^ 1;
-        block->flags4 = block->flags4 ^ 1;
+        block->flags4 ^= 1;
+        block->flags4 ^= 1;
     }
     if ((s8)state->active == 0) {
         return;

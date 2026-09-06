@@ -597,7 +597,7 @@ static void gameUpdate(void) {
     }
     if (gGameLoopMusicRequestCount != 0) {
         if (gGameLoopMusicActive == 0) {
-            gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer + timeDelta;
+            gGameLoopMusicFadeTimer += timeDelta;
             if (gGameLoopMusicFadeTimer >= 0.0f) {
                 Music_Trigger(gGameLoopPendingMusicId, 1);
                 gGameLoopMusicActive = 1;
@@ -608,7 +608,7 @@ static void gameUpdate(void) {
         }
     } else {
         if (gGameLoopMusicActive != 0) {
-            gGameLoopMusicFadeTimer = gGameLoopMusicFadeTimer - timeDelta;
+            gGameLoopMusicFadeTimer -= timeDelta;
             if (gGameLoopMusicFadeTimer <= 0.0f) {
                 Music_Trigger(MUSICTRIG_Krazoa_Shrine, 0);
                 Music_Trigger(MUSICTRIG_galleon_battle, 0);

@@ -302,7 +302,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeX;
         if (deltaX < bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
 
@@ -311,7 +311,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeZ;
         if (deltaZ > -bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
     if (deltaZ > 0.0f)
@@ -319,7 +319,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeZ;
         if (deltaZ < bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
 
@@ -328,7 +328,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeY;
         if (deltaY > -bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
     if (deltaY > 0.0f)
@@ -336,7 +336,7 @@ void TrickyCurve_updateCooldownTrigger(GameObject* obj)
         bound = state->rangeY;
         if (deltaY < bound)
         {
-            axisCount = axisCount + 1;
+            axisCount += 1;
         }
     }
 

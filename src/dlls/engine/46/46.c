@@ -331,7 +331,7 @@ int dll_2E_moveToTarget(GameObject* obj, const MoveLibTarget* target, f32 speed,
         }
         if (delta < -0x8000)
         {
-            delta = delta + 0xffff;
+            delta += 0xffff;
         }
         obj->anim.rotX = (f32) * (s16*)obj + (0.5f + delta) * (speed * timeDelta) / dist;
     }
@@ -349,9 +349,9 @@ int dll_2E_moveToTarget(GameObject* obj, const MoveLibTarget* target, f32 speed,
         }
         if (delta < -0x8000)
         {
-            delta = delta + 0xffff;
+            delta += 0xffff;
         }
-        speed = speed * -mathCosf(3.1415927f * delta / 32768.0f);
+        speed *= -mathCosf(3.1415927f * delta / 32768.0f);
         ObjAnim_SampleRootCurvePhase(&obj->anim, speed, out);
     }
     return 0;
@@ -387,13 +387,13 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
     if (mode == 4)
     {
         s->setupFlag = 0x50;
-        seq->flags = seq->flags & ~8;
-        seq->flags = seq->flags & ~2;
+        seq->flags &= ~8;
+        seq->flags &= ~2;
         s->phase = MOVELIB_PHASE_SETUP;
         seq->movementState = 5;
         if ((s->modeBits & 2) == 0)
         {
-            seq->flags = seq->flags & ~4;
+            seq->flags &= ~4;
         }
         seq->freeCallback = (ObjAnimSequenceFreeCallback)moveLibSeqFreeCallback;
         return 0;
@@ -427,7 +427,7 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
             if (s->phase == MOVELIB_PHASE_FINISH)
             {
                 s16* v;
-                seq->flags = seq->flags | 8;
+                seq->flags |= 8;
                 v = objFindJointPoseVector(obj, 0);
                 if (v != NULL)
                 {
@@ -436,7 +436,7 @@ int dll_2E_updateSequenceTurn(GameObject* obj, ObjSeqState* seq, MoveLibState* s
                 }
                 s->phase = MOVELIB_PHASE_IDLE;
                 seq->movementState = 0;
-                seq->flags = seq->flags | 4;
+                seq->flags |= 4;
                 return 0;
             }
             return 0;
@@ -795,11 +795,11 @@ int moveLibTurnToFaceTarget(GameObject* obj, GameObject* targetObj, int* turning
             turnAmount = yawDelta;
             if (turnAmount > 0)
             {
-                turnAmount = turnAmount / 0x14;
+                turnAmount /= 0x14;
             }
             else
             {
-                turnAmount = turnAmount / 0x14;
+                turnAmount /= 0x14;
             }
             turnDelta = turnAmount;
         }

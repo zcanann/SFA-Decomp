@@ -58,8 +58,8 @@ void player_moveTowardPoint(GameObject* obj, BaddieState* state, f32 px, f32 pz,
     mag = sqrtf(dx * dx + dz * dz);
     state->moveTargetDistance = mag;
     if (PLAYER_MOVE_ZERO != mag) {
-        dx = dx / mag;
-        dz = dz / mag;
+        dx /= mag;
+        dz /= mag;
     }
     if (state->moveTargetDistance > lo + hi) {
         state->moveInputX = dx * spd;
@@ -97,13 +97,13 @@ void player_followCurve(GameObject* obj, BaddieState* state, f32 cx, f32 cz, f32
     }
     if (dist > max) {
         f32 q = dist / max;
-        dx = dx / q;
-        dz = dz / q;
+        dx /= q;
+        dz /= q;
     }
     state->moveInputX = dx;
     state->moveInputZ = -dz;
-    state->moveInputX = state->moveInputX * t;
-    state->moveInputZ = state->moveInputZ * t;
+    state->moveInputX *= t;
+    state->moveInputZ *= t;
     if (state->moveInputX > PLAYER_MOVE_INPUT_MAX) {
         state->moveInputX = PLAYER_MOVE_INPUT_MAX;
     }
@@ -169,7 +169,7 @@ void player_steerFromInput(GameObject* obj, BaddieState* state) {
     if (state->inputMagnitude > PLAYER_MOVE_INPUT_MAX) {
         state->inputMagnitude = PLAYER_MOVE_INPUT_MAX;
     }
-    state->inputMagnitude = state->inputMagnitude / PLAYER_MOVE_INPUT_MAX;
+    state->inputMagnitude /= PLAYER_MOVE_INPUT_MAX;
     gPlayerMoveTargetYaw = getAngle(state->moveInputX, -state->moveInputZ);
     gPlayerMoveTargetYaw -= state->cameraYaw;
     diff = gPlayerMoveTargetYaw;
@@ -805,8 +805,8 @@ void player_update(GameObject* obj, BaddieState* state, float dt, float pathDt, 
                 if (limit > dist) {
                     limit = dist;
                 }
-                dx = dx / dist;
-                dz = dz / dist;
+                dx /= dist;
+                dz /= dist;
                 obj->anim.localPosX = dx * limit + gPlayerMoveOverridePosX;
                 obj->anim.localPosZ = dz * limit + gPlayerMoveOverridePosZ;
             }

@@ -142,7 +142,7 @@ void ChukChuk_update(GameObject* obj) {
             }
         } else {
             if (255.0f - state->glowPhase >= timeDelta) {
-                state->glowPhase = state->glowPhase + timeDelta;
+                state->glowPhase += timeDelta;
             } else {
                 state->glowPhase = 0.0f;
             }

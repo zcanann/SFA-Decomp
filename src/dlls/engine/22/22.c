@@ -288,7 +288,7 @@ void screenTransition_update(int p1, int p2, int p3)
             gScreenTransitionDone = 1;
             if (screenTransitionPause == 0)
             {
-                gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
+                gScreenTransitionHoldTimer += timeDelta;
             }
             if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
             {

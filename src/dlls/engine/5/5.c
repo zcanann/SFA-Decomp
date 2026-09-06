@@ -1277,8 +1277,8 @@ void skyUpdateShadowLightDirection(void)
             len = 1.0f;
         }
         *gSkySunDirection = *gSkySunDirection / len;
-        gSkySunDirection[1] = gSkySunDirection[1] / len;
-        gSkySunDirection[2] = gSkySunDirection[2] / len;
+        gSkySunDirection[1] /= len;
+        gSkySunDirection[2] /= len;
         dot = gSkyMoonDirection[2] * gSkyMoonDirection[2] +
               (gSkyMoonDirection[0] * gSkyMoonDirection[0] + gSkyMoonDirection[1] * gSkyMoonDirection[1]);
         if (dot != 0.0f)
@@ -1290,8 +1290,8 @@ void skyUpdateShadowLightDirection(void)
             len = 1.0f;
         }
         *gSkyMoonDirection = *gSkyMoonDirection / len;
-        gSkyMoonDirection[1] = gSkyMoonDirection[1] / len;
-        gSkyMoonDirection[2] = gSkyMoonDirection[2] / len;
+        gSkyMoonDirection[1] /= len;
+        gSkyMoonDirection[2] /= len;
         time = ((SkyState*)gSkyState)->timeOfDay;
         if (time >= 18000.0f && time <= 75600.0f)
         {
@@ -1701,7 +1701,7 @@ void skyRenderTimeOfDayBackdrop(void)
         texC = (Texture*)sky[((SkyTimeBlend*)sky)->texSel + 2];
         cam = Camera_GetCurrent();
         frac = Camera_GetFovY();
-        frac = frac / 2.0f;
+        frac /= 2.0f;
         texHeightF = (f32)(u32)texC->height;
         sinProd = texHeightF * frac / 180.0f;
         sinProd *= 3.0f;

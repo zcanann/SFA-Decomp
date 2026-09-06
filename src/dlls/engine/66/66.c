@@ -136,10 +136,10 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     angleDelta = ang & 0xffff;
     angleDelta -= (u16)camera->anim.rotY;
     if (angleDelta > 0x8000) {
-        angleDelta = angleDelta - 0xffff;
+        angleDelta -= 0xffff;
     }
     if (angleDelta < -0x8000) {
-        angleDelta = angleDelta + 0xffff;
+        angleDelta += 0xffff;
     }
     if (outRotY != NULL) {
         *outRotY = camera->anim.rotY + angleDelta;
@@ -262,9 +262,9 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
             sinv = mathCosf(rad);
             t = dz * sinv - dx * cosv;
             v = t * cosv + dx * sinv;
-            t = t + tgt->anim.worldPosX;
+            t += tgt->anim.worldPosX;
             probe[0] = t;
-            v = v + tgt->anim.worldPosZ;
+            v += tgt->anim.worldPosZ;
             probe[2] = v;
             pA[3] = probe[0];
             pA[4] = probe[1];
@@ -282,9 +282,9 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
             sinv = mathCosf(rad);
             t = dz * sinv - dx * cosv;
             v = t * cosv + dx * sinv;
-            t = t + tgt->anim.worldPosX;
+            t += tgt->anim.worldPosX;
             probe[0] = t;
-            v = v + tgt->anim.worldPosZ;
+            v += tgt->anim.worldPosZ;
             probe[2] = v;
             pB[3] = probe[0];
             pB[4] = probe[1];
@@ -293,11 +293,11 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
                 found2 = i;
             }
         }
-        pA = pA + 3;
-        pB = pB + 3;
+        pA += 3;
+        pB += 3;
         i++;
-        ang = ang + 0xaaa;
-        s = s + 0xf;
+        ang += 0xaaa;
+        s += 0xf;
     }
     if (found1 == -1) {
         found1 = 6;
@@ -307,7 +307,7 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
                 found1 = 6;
                 break;
             }
-            pA0 = pA0 + 3;
+            pA0 += 3;
         }
     }
     if (found2 == -1) {
@@ -318,7 +318,7 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
                 found2 = 6;
                 break;
             }
-            pB0 = pB0 + 3;
+            pB0 += 3;
         }
     }
     dir = 0;
@@ -334,10 +334,10 @@ int CameraModeNormal_chooseWallAvoidanceDirection(CameraObject* cam, f32* outA, 
         f32 g;
         d = (0x8000 - cam->anim.rotX) - (angle & 0xffff);
         if (d > 0x8000) {
-            d = d - 0xffff;
+            d -= 0xffff;
         }
         if (d < -0x8000) {
-            d = d + 0xffff;
+            d += 0xffff;
         }
         if (d < 0) {
             d = -d;
@@ -420,7 +420,7 @@ void CameraModeNormal_updateWallAvoidance(CameraObject* camera, GameObject* targ
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
         z = t * cosv + dz * sinv;
-        z = z + target->anim.worldPosZ;
+        z += target->anim.worldPosZ;
         p[0] = t + target->anim.worldPosX;
         p[1] = camera->anim.worldPosY;
         p[2] = z;
@@ -429,13 +429,13 @@ void CameraModeNormal_updateWallAvoidance(CameraObject* camera, GameObject* targ
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
         z = t * cosv + dz * sinv;
-        z = z + target->anim.worldPosZ;
+        z += target->anim.worldPosZ;
         p[3] = t + target->anim.worldPosX;
         p[4] = camera->anim.worldPosY;
         p[5] = z;
-        ang = ang + 0x1554;
-        p = p + 6;
-        i = i + 2;
+        ang += 0x1554;
+        p += 6;
+        i += 2;
     }
     for (j = 0; j <= 0xc; j++) {
         endPts[j][0] = prev[0];
@@ -710,7 +710,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
             if (step > 10.0f) {
                 step = 10.0f;
             }
-            gCameraModeNormalState->lowerHeightOffset = gCameraModeNormalState->lowerHeightOffset + step;
+            gCameraModeNormalState->lowerHeightOffset += step;
             if (gCameraModeNormalState->lowerHeightOffset > gCameraModeNormalState->maxDistance) {
                 gCameraModeNormalState->lowerHeightOffset = gCameraModeNormalState->maxDistance;
             }
@@ -719,7 +719,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
             if (step > 10.0f) {
                 step = 10.0f;
             }
-            gCameraModeNormalState->upperHeightOffset = gCameraModeNormalState->upperHeightOffset + step;
+            gCameraModeNormalState->upperHeightOffset += step;
             if (gCameraModeNormalState->upperHeightOffset > gCameraModeNormalState->maxDistance) {
                 gCameraModeNormalState->upperHeightOffset = gCameraModeNormalState->maxDistance;
             }
@@ -732,7 +732,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
             if (step < -10.0f) {
                 step = -10.0f;
             }
-            gCameraModeNormalState->lowerHeightOffset = gCameraModeNormalState->lowerHeightOffset + step;
+            gCameraModeNormalState->lowerHeightOffset += step;
             if (gCameraModeNormalState->lowerHeightOffset < gCameraModeNormalState->baseLowerHeightOffset) {
                 gCameraModeNormalState->lowerHeightOffset = gCameraModeNormalState->baseLowerHeightOffset;
             }
@@ -744,7 +744,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
             if (step < -10.0f) {
                 step = -10.0f;
             }
-            gCameraModeNormalState->upperHeightOffset = gCameraModeNormalState->upperHeightOffset + step;
+            gCameraModeNormalState->upperHeightOffset += step;
             if (gCameraModeNormalState->upperHeightOffset < gCameraModeNormalState->baseUpperHeightOffset) {
                 gCameraModeNormalState->upperHeightOffset = gCameraModeNormalState->baseUpperHeightOffset;
             }
@@ -785,7 +785,7 @@ void CameraModeNormal_updateSlide(CameraObject* camera, GameObject* target, f32 
     if ((f32)approach > -0.1f && (f32)approach < 0.1f) {
         step = 0.0f;
     }
-    camera->anim.worldPosY = camera->anim.worldPosY + step;
+    camera->anim.worldPosY += step;
     if (camera->anim.worldPosY > 100.0f + upperY) {
         camera->anim.worldPosY = 100.0f + upperY;
     }
@@ -888,8 +888,8 @@ void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target) {
     dy = targetZ - camera->anim.localPosZ;
     dist = sqrtf(dx * dx + dy * dy);
     if (dist > 0.0f) {
-        dx = dx / dist;
-        dy = dy / dist;
+        dx /= dist;
+        dy /= dist;
     }
     ratio = PSVECMag(&target->velocity);
     speed = 1.5f * timeDelta;
@@ -908,8 +908,8 @@ void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target) {
         dist = sqrtf(dx * dx + dy * dy);
         if (dist < 0.25f * gCameraModeNormalState->minDistance) {
             if (dist > 0.0f) {
-                dx = dx / dist;
-                dy = dy / dist;
+                dx /= dist;
+                dy /= dist;
             }
             dist = 0.25f * gCameraModeNormalState->minDistance;
             camera->anim.localPosX = dist * dx + target->localPosX;
@@ -1136,16 +1136,16 @@ void CameraModeNormal_update(CameraObject* camera) {
         getAngle(camera->anim.worldPosY - (target[0]->anim.worldPosY + gCameraModeNormalState->targetHeight), dy);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if ((int)angleDelta > 0x8000) {
-        angleDelta = angleDelta - 0xffff;
+        angleDelta -= 0xffff;
     }
     if ((int)angleDelta < -0x8000) {
-        angleDelta = angleDelta + 0xffff;
+        angleDelta += 0xffff;
     }
     val = interpolate((f32)(int)angleDelta, 1.0f / (f32)(u32)gCameraModeNormalState->yawResponseFrames, timeDelta);
-    camera->anim.rotY = camera->anim.rotY + val;
+    camera->anim.rotY += val;
     CameraModeNormal_updateTargetAction(camera, target[0]);
     val = interpolate((f32)camera->anim.rotZ, 0.125f, timeDelta);
-    camera->anim.rotZ = camera->anim.rotZ - val;
+    camera->anim.rotZ -= val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    camera->anim.parent);

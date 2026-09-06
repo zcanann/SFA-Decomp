@@ -95,7 +95,7 @@ void dll_1FF_update(GameObject* obj) {
         }
         if (obj->userData2 == 0) {
             ObjHits_EnableObject(obj);
-            obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             obj->anim.velocityY = -(DLL1FF_GRAVITY * timeDelta - obj->anim.velocityY);
             obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
             surfaceCount = trackGetHeight(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
@@ -122,7 +122,7 @@ void dll_1FF_update(GameObject* obj) {
         }
     } else {
         ObjHits_DisableObject(obj);
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0) {
             state->messagePending = 0;
             buttonDisable(0, PAD_BUTTON_A);

@@ -1035,7 +1035,7 @@ static inline s16 DIMSnowHorn1_angleTo(GameObject* obj, GameObject* found) {
         angleDelta = angleDelta - 0xffff;
     }
     if (angleDelta < -0x8000) {
-        angleDelta = angleDelta + 0xffff;
+        angleDelta += 0xffff;
     }
     return angleDelta;
 }

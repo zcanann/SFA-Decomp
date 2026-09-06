@@ -81,7 +81,7 @@ void SB_Propeller_update(GameObject* obj) {
     }
     cameraState = SB_Galleon_getCameraState((GameObject*)obj->anim.parent);
     if (cameraState < 2 && state->health <= 0) {
-        state->smokeTimer = state->smokeTimer - timeDelta;
+        state->smokeTimer -= timeDelta;
         if (state->smokeTimer <= 0.0f) {
             f32 scale;
             for (smokeCount = randomGetRange(10, 0x19), scale = 1.0f; smokeCount != 0; smokeCount--) {
@@ -97,9 +97,9 @@ void SB_Propeller_update(GameObject* obj) {
             spawnParams.scale = 2.5f;
             spawnParams.arg3 = 0xc0a;
             ObjPath_GetPointWorldPosition(obj, 0, &spawnParams.posX, &spawnParams.posY, &spawnParams.posZ, 0);
-            spawnParams.posX = spawnParams.posX - obj->anim.worldPosX;
-            spawnParams.posY = spawnParams.posY - obj->anim.worldPosY;
-            spawnParams.posZ = spawnParams.posZ - obj->anim.worldPosZ;
+            spawnParams.posX -= obj->anim.worldPosX;
+            spawnParams.posY -= obj->anim.worldPosY;
+            spawnParams.posZ -= obj->anim.worldPosZ;
             for (frameIndex = 0; frameIndex < framesThisStep; frameIndex++) {
                 (*gPartfxInterface)->spawnObject(obj, SB_PROPELLER_PARTFX_DEBRIS, &spawnParams, 2, -1, NULL);
             }
@@ -116,7 +116,7 @@ void SB_Propeller_update(GameObject* obj) {
                 state->spinBlend = 0.2f;
             }
         }
-        obj->userData1 = obj->userData1 - framesThisStep;
+        obj->userData1 -= framesThisStep;
         if (obj->userData1 < 0) {
             obj->userData1 = 0;
         }
@@ -133,7 +133,7 @@ void SB_Propeller_update(GameObject* obj) {
                 state->health = 0;
                 SB_GALLEON_VTBL(obj->anim.parent)->onPartDestroyed(obj->anim.parent);
                 ObjHits_DisableObject(obj);
-                obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+                obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 spawnExplosion(obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
                 Sfx_PlayFromObject(obj, SB_PROPELLER_SFX_DESTROYED);
             }

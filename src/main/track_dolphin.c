@@ -309,7 +309,7 @@ int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 r
     startDeltaZ = startZ - centerZ;
     {
         f32 deltaZSq = startDeltaZ * startDeltaZ;
-        startDistanceSq = startDistanceSq + deltaZSq;
+        startDistanceSq += deltaZSq;
     }
     quadraticC = startDistanceSq - radius * radius;
     if (quadraticC < 0.0f) {
@@ -332,7 +332,7 @@ int trackSweepCircleAgainstPoint(f32* x, f32* z, f32 centerX, f32 centerZ, f32 r
             negB = -quadraticB;
             timeA = negB + sqrtDiscriminant;
             denominator = 2.0f * motionLengthSq;
-            timeA = timeA / denominator;
+            timeA /= denominator;
             timeB = (negB - sqrtDiscriminant) / denominator;
             if (timeA < 0.0f) {
                 timeA = 10.0f;
@@ -465,14 +465,14 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
         minZ = posZ[1];
         maxZ = posZ[0];
     }
-    minX = minX - radius;
-    maxX = maxX + radius;
-    minZ = minZ - radius;
-    maxZ = maxZ + radius;
-    minX = minX - margin;
-    maxX = maxX + margin;
-    minZ = minZ - margin;
-    maxZ = maxZ + margin;
+    minX -= radius;
+    maxX += radius;
+    minZ -= radius;
+    maxZ += radius;
+    minX -= margin;
+    maxX += margin;
+    minZ -= margin;
+    maxZ += margin;
 
     count = 0;
     found = 1;
@@ -570,8 +570,8 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                 }
                 len = sqrtf(dd);
             }
-            dx = dx / len;
-            dz = dz / len;
+            dx /= len;
+            dz /= len;
             lb[0] = dx;
             la[0] = dz;
             ld[0] = -(dx * ax2 + dz * az2);
@@ -646,8 +646,8 @@ int trackSweepCircleAgainstLines(f32* startPos, f32* endPos, f32 radius, int fla
                         found = trackSweepCircleAgainstPoint(posX, posZ, bx2, bz2, radius, lineType);
                         dist = 1.0f;
                     } else if (lineType != 0) {
-                        posX[1] = posX[1] + gTrackResolvePushX;
-                        posZ[1] = posZ[1] + gTrackResolvePushZ;
+                        posX[1] += gTrackResolvePushX;
+                        posZ[1] += gTrackResolvePushZ;
                     }
                 } else if (mx & 0xc) {
                     if (ma & 1) {
@@ -929,7 +929,7 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
         dz = target->anim.localPosZ - worldStart[2];
         modelHeader = target->anim.modelBanks[priorityState->stateIndex]->file;
         cullRadiusSq = (f32)(modelFileHeaderGetCullDistance(modelHeader) + 0x32);
-        cullRadiusSq = cullRadiusSq * cullRadiusSq;
+        cullRadiusSq *= cullRadiusSq;
         hit = 0;
         {
             f32 ddy = dy * dy;
@@ -988,8 +988,8 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
             f32 sqB = out->sourceNormalZ * out->sourceNormalZ;
             len = 1.0f / sqrtf(sqA + sqB);
         }
-        out->sourceNormalX = out->sourceNormalX * len;
-        out->sourceNormalZ = out->sourceNormalZ * len;
+        out->sourceNormalX *= len;
+        out->sourceNormalZ *= len;
         out->sourceNormalW = -(out->sourceNormalX * out->lineStartX + out->sourceNormalZ * out->lineStartZ);
         if (out->object != NULL) {
             Obj_TransformLocalPointToWorld(out->lineStartX, out->lineStartY, out->lineStartZ, &out->lineStartX,
@@ -1011,8 +1011,8 @@ int trackGetLineIntersect(f32* startPos, f32* endPos, f32 radius, int flags, Tra
             f32 sqB = out->normalZ * out->normalZ;
             len = 1.0f / sqrtf(sqA + sqB);
         }
-        out->normalX = out->normalX * len;
-        out->normalZ = out->normalZ * len;
+        out->normalX *= len;
+        out->normalZ *= len;
         out->upperY0 = out->lineStartY + upperDeltaStart;
         out->upperY1 = out->lineEndY + upperDeltaEnd;
         out->normalW = -(out->normalX * out->lineStartX + out->normalZ * out->lineStartZ);
@@ -1735,9 +1735,9 @@ int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 
         b[0] = displacement[0] * scale;
         b[1] = displacement[1] * scale;
         b[2] = displacement[2] * scale;
-        b[0] = b[0] + a[0];
-        b[1] = b[1] + a[1];
-        b[2] = b[2] + a[2];
+        b[0] += a[0];
+        b[1] += a[1];
+        b[2] += a[2];
         return 1;
     }
     {
@@ -1758,7 +1758,7 @@ int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 
                     f32 pz = normalZ * normalZ;
                     f32 d = mathCosfHighPrecision(atan2fHighPrecision(p[1], sqrtf(px + pz)));
                     if (0.0f != d) {
-                        y = y / d;
+                        y /= d;
                     }
                     horizontalNormal[0] = p[0];
                     horizontalNormal[1] = 0.0f;
@@ -1810,7 +1810,7 @@ int trackResolveSurfacePenetration(f32* a, f32* b, f32* c, f32* p, f32 f1p, f32 
                     f32 pz = normalZ * normalZ;
                     f32 d = mathSinfHighPrecision(atan2fHighPrecision(p[1], sqrtf(px + pz)));
                     d = y / d;
-                    b[1] = b[1] + d;
+                    b[1] += d;
                 }
                 break;
             }
@@ -1841,7 +1841,7 @@ int trackSweepSphereAgainstEdge(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, 
         f32 d0 = nrm[1] * e[1];
         f29 = d0 + nrm[0] * e[0] + nrm[2] * e[2];
     }
-    f29 = f29 * f29;
+    f29 *= f29;
     if (f29 <= T[10]) {
         Vec3_Cross(e, T + 6, tmp14);
         {
@@ -1858,7 +1858,7 @@ int trackSweepSphereAgainstEdge(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, 
             if (r < 0.0f) {
                 r = -r;
             }
-            len = len - r;
+            len -= r;
         }
         zero = 0.0f;
         if (len >= zero) {
@@ -2181,9 +2181,9 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                                 } else {
                                     root = sqrtf(rr - disc);
                                     if (sq > rr) {
-                                        dotv = dotv - root;
+                                        dotv -= root;
                                     } else {
-                                        dotv = dotv + root;
+                                        dotv += root;
                                     }
                                     if (dotv >= 0.0f && dotv <= mag) {
                                         PSVECScale((Vec*)dir, (Vec*)hitpt, dotv);
@@ -2296,18 +2296,18 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
                         Matrix_TransformPoint(descSave->currentMatrix, cur[0], cur[1], cur[2], &cur[0], &cur[1],
                                               &cur[2]);
                     } else {
-                        cur[0] = cur[0] - offX;
-                        cur[2] = cur[2] - offZ;
+                        cur[0] -= offX;
+                        cur[2] -= offZ;
                     }
                     pen = norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]));
-                    pen = pen - radius;
+                    pen -= radius;
                     trackResolveSurfacePenetration(svWorld, cur, svHit, norm4, pen, maxStep, type);
                     if (objmtx != 0) {
                         Matrix_TransformPoint(descSave->currentCollisionMatrix, cur[0], cur[1], cur[2], &cur[0],
                                               &cur[1], &cur[2]);
                     } else {
-                        cur[0] = cur[0] + offX;
-                        cur[2] = cur[2] + offZ;
+                        cur[0] += offX;
+                        cur[2] += offZ;
                     }
                     outp[0] = norm4[0];
                     outp[1] = norm4[1];
@@ -2767,10 +2767,10 @@ u8 doEdges;
     MapBlockData** p2;
     int* q2;
 
-    x0 = x0 - gMapBlockOriginWorldX;
-    z0 = z0 - gMapBlockOriginWorldZ;
-    x1 = x1 - gMapBlockOriginWorldX;
-    z1 = z1 - gMapBlockOriginWorldZ;
+    x0 -= gMapBlockOriginWorldX;
+    z0 -= gMapBlockOriginWorldZ;
+    x1 -= gMapBlockOriginWorldX;
+    z1 -= gMapBlockOriginWorldZ;
     if (x0 > x1) {
         x0 ^= x1;
         x1 ^= x0;
@@ -2869,8 +2869,8 @@ u8 doEdges;
         relx1 = x1 - descp[0];
         relz0 = z0 - descp[2];
         relz1 = z1 - descp[2];
-        descp[0] = descp[0] + gMapBlockOriginWorldX;
-        descp[2] = descp[2] + gMapBlockOriginWorldZ;
+        descp[0] += gMapBlockOriginWorldX;
+        descp[2] += gMapBlockOriginWorldZ;
         if (relx0 < 0) {
             relx0 = 0;
         }

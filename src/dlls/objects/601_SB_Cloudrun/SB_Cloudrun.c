@@ -165,10 +165,10 @@ void SB_CloudRunner_UpdateCloudAction(GameObject* obj, SBCloudRunnerRideState* s
     state->bankAmount = state->liftAmount;
     state->liftBase = baseLift;
 
-    moveZ = moveZ * timeDelta;
-    moveX = moveX * timeDelta;
-    moveZ = moveZ / 3.0f;
-    moveX = moveX / 3.0f;
+    moveZ *= timeDelta;
+    moveX *= timeDelta;
+    moveZ /= 3.0f;
+    moveX /= 3.0f;
     (*gCloudActionInterface)->func12Nop(moveZ, moveX);
 }
 
@@ -540,8 +540,8 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         ObjPath_GetPointWorldPosition(obj, 3, &state->riderPosition[0], &state->riderPosition[1],
                                       &state->riderPosition[2], 0);
         if (obj->anim.parent != NULL) {
-            state->riderPosition[0] = state->riderPosition[0] - playerMapOffsetX;
-            state->riderPosition[2] = state->riderPosition[2] - playerMapOffsetZ;
+            state->riderPosition[0] -= playerMapOffsetX;
+            state->riderPosition[2] -= playerMapOffsetZ;
             Obj_BuildInverseWorldTransformMatrix(obj->anim.parent, mtx);
             PSMTXMultVec((MtxPtr)mtx, (Vec*)state->riderPosition, (Vec*)state->riderPosition);
         }
@@ -550,8 +550,8 @@ void SB_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
         ObjPath_GetPointWorldPosition(obj, 3, &state->riderPosition[0], &state->riderPosition[1],
                                       &state->riderPosition[2], 0);
         if (obj->anim.parent != NULL) {
-            state->riderPosition[0] = state->riderPosition[0] - playerMapOffsetX;
-            state->riderPosition[2] = state->riderPosition[2] - playerMapOffsetZ;
+            state->riderPosition[0] -= playerMapOffsetX;
+            state->riderPosition[2] -= playerMapOffsetZ;
             Obj_BuildInverseWorldTransformMatrix(obj->anim.parent, mtx);
             PSMTXMultVec((MtxPtr)mtx, (Vec*)state->riderPosition, (Vec*)state->riderPosition);
         }

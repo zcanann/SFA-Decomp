@@ -106,7 +106,7 @@ void WallAnimator_update(GameObject* obj) {
 
     state = obj->extra;
     placement = (WallAnimatorPlacement*)obj->anim.placementData;
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
 
     if (state->complete != 0) {
         return;
@@ -124,8 +124,8 @@ void WallAnimator_update(GameObject* obj) {
         nearestDistance[0] = 35.0f;
         nearbyObject = objGetNearestTypeTo(WALL_ANIMATOR_NEARBY_GROUP, obj, nearestDistance);
         if (nearbyObject == NULL) {
-            obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_PROMPT_SUPPRESSED;
-            obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
+            obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0) {
                 TRICKY_INTERFACE(tricky)->sideCommandEnable(tricky, obj, TRICKY_COMMAND_KIND_PRIORITY,
                                                             TRICKY_COMMAND_TYPE_FIND_SECRET);
@@ -133,7 +133,7 @@ void WallAnimator_update(GameObject* obj) {
             objUpdateHitVolumeTransforms(obj);
         }
     } else {
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
     }
 }
 

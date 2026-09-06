@@ -247,7 +247,7 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
     if (iz < 0 || iz >= 16) {
         return -1;
     }
-    ix = ix + (iz << 4);
+    ix += (iz << 4);
     for (tp[0] = gMapBlockLayerTables, i = 0; i < MAP_BLOCK_LAYER_COUNT; tp[0]++, i++) {
         s8* table = *tp[0];
         int idx = table[ix];
@@ -712,14 +712,14 @@ void sceneDraw(void) {
     }
     *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x78000000;
     *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 8;
-    gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
+    gLightmapDrawQueueCount += 1;
     if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
     *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x50000000;
     *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 9;
-    gLightmapDrawQueueCount = gLightmapDrawQueueCount + 1;
+    gLightmapDrawQueueCount += 1;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);
@@ -815,7 +815,7 @@ void updateEnvironment(int mode) {
                 offsetX = textureScroll->offsetX;
                 deltaX = textureScroll->xStep * deltaTime;
                 textureScroll->offsetX = offsetX + deltaX;
-                textureScroll->offsetY = textureScroll->offsetY + deltaY;
+                textureScroll->offsetY += deltaY;
             }
             byteOffset += sizeof(MapTextureScroll);
         }

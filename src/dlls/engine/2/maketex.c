@@ -456,7 +456,7 @@ int saveGame(int writeImages) {
                 stat.iconSpeed = (stat.iconSpeed & ~0x30) | 0x30;
                 stat.iconFormat = (stat.iconFormat & ~0xc0) | 0x40;
                 stat.iconSpeed = (stat.iconSpeed & ~0xc0) | 0xc0;
-                stat.iconSpeed = stat.iconSpeed & ~0x300;
+                stat.iconSpeed &= ~0x300;
                 result = CARDSetStatus(0, gSaveCardFileInfo.fileInfo.fileNo, &stat);
                 if (result == CARD_RESULT_READY) {
                     *(u64*)&gSaveCardChecksumHi = *(u64*)(gSaveCardImageBuffer + 0x3ff8);

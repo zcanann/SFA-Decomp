@@ -526,7 +526,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 2:
-            angularT = angularT * (angularT * angularT);
+            angularT *= (angularT * angularT);
             params.position[0] = 1.0f - radialT * radialT;
             break;
         case 3:
@@ -553,7 +553,7 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, int c
             break;
         }
         range = angBase - lo;
-        params.position[0] = params.position[0] * (angularT * range + lo);
+        params.position[0] *= (angularT * range + lo);
         vecRotateZXY((s16*)rvec, params.position);
         {
             f32 t = angularT - 0.5f;
@@ -632,9 +632,9 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 scale, u8 kind, u8 mode, u8 chan
             params.position[2] -= 0.5f;
             break;
         }
-        params.position[0] = params.position[0] * mulX;
-        params.position[1] = params.position[1] * mulY;
-        params.position[2] = params.position[2] * mulZ;
+        params.position[0] *= mulX;
+        params.position[1] *= mulY;
+        params.position[2] *= mulZ;
         if (origin != NULL) {
             params.position[0] += ((GameObject*)origin)->anim.localPosX;
             params.position[1] += ((GameObject*)origin)->anim.localPosY;
@@ -1612,7 +1612,7 @@ void expgfx_updateResourceEntries(int unused) {
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         entry = &EXPGFX_RUNTIME_DATA->resourceTable[i];
         if (entry->resourceId != 0) {
-            entry->evictionScore = entry->evictionScore - framesThisStep;
+            entry->evictionScore -= framesThisStep;
             if (entry->evictionScore <= 0) {
                 entry->resourceId = 0;
                 entry->evictionScore = 0;
@@ -2919,9 +2919,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 &&
                         (slot->behaviorFlags & EXPGFX_BEHAVIOR_BILLBOARD_LOCK_B) == 0 &&
                         (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) == 0) {
-                        rotParams.x = rotParams.x + slot->sourcePosX.value;
-                        rotParams.y = rotParams.y + slot->sourcePosY.value;
-                        rotParams.z = rotParams.z + slot->sourcePosZ.value;
+                        rotParams.x += slot->sourcePosX.value;
+                        rotParams.y += slot->sourcePosY.value;
+                        rotParams.z += slot->sourcePosZ.value;
                     }
                     slot->renderX = rotParams.x;
                     slot->renderY = rotParams.y;
@@ -3467,14 +3467,14 @@ static inline void renderParticlesBody(void) {
                 lightmap_queueExternalRenderEntry(*slotPoolBases, poolIndex, queuePosition);
             }
         }
-        poolActiveCounts = poolActiveCounts + 1;
-        poolSourceModes = poolSourceModes + 1;
-        poolPlaneOffsetSetIds = poolPlaneOffsetSetIds + 1;
-        poolBounds = poolBounds + 1;
-        poolSourceIds = poolSourceIds + 1;
-        poolSlotTypeIds = poolSlotTypeIds + 1;
-        slotPoolBases = slotPoolBases + 1;
-        poolIndex = poolIndex + 1;
+        poolActiveCounts += 1;
+        poolSourceModes += 1;
+        poolPlaneOffsetSetIds += 1;
+        poolBounds += 1;
+        poolSourceIds += 1;
+        poolSlotTypeIds += 1;
+        slotPoolBases += 1;
+        poolIndex += 1;
     } while (poolIndex < EXPGFX_POOL_COUNT);
     return;
 }
@@ -3780,9 +3780,9 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             slot->sourceVecX = attachedSource->rotX;
             if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_A) != 0 ||
                 (slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_ATTACHED_VELOCITY_B) != 0) {
-                config->velocityX = config->velocityX + attachedSource->velocityX;
-                config->velocityY = config->velocityY + attachedSource->velocityY;
-                config->velocityZ = config->velocityZ + attachedSource->velocityZ;
+                config->velocityX += attachedSource->velocityX;
+                config->velocityY += attachedSource->velocityY;
+                config->velocityZ += attachedSource->velocityZ;
             }
 
             if (attachedSource != NULL) {
@@ -3890,7 +3890,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
 
         if (resourceTableIndex == 1) {
-            gExpgfxSlotType1Count = gExpgfxSlotType1Count + 1;
+            gExpgfxSlotType1Count += 1;
             gExpgfxSlotType1Average = gExpgfxSlotType1Sum / gExpgfxSlotType1Count;
         }
 
@@ -4011,7 +4011,7 @@ void expgfx_release(void) {
     poolIndex = 0;
     do {
         mm_free((void*)gExpgfxSlotPoolBases[poolIndex]);
-        poolIndex = poolIndex + 1;
+        poolIndex += 1;
     } while (poolIndex < EXPGFX_POOL_COUNT);
     return;
 }

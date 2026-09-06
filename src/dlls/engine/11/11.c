@@ -373,9 +373,9 @@ void modgfx_stepPosition(PartfxEffectState* state, ModgfxVertexGroupCmd* cmd, in
             state->posStepY = cmd->valueY / (f32)(s32)state->stageFrameCountdown;
             state->posStepZ = cmd->valueZ / (f32)(s32)state->stageFrameCountdown;
         }
-        state->drawPosX = state->drawPosX + state->posStepX;
-        state->drawPosY = state->drawPosY + state->posStepY;
-        state->drawPosZ = state->drawPosZ + state->posStepZ;
+        state->drawPosX += state->posStepX;
+        state->drawPosY += state->posStepY;
+        state->drawPosZ += state->posStepZ;
     } else {
         state->drawPosX = state->posStepX * gModgfxMotionStep + state->drawPosX;
         state->drawPosY = state->posStepY * gModgfxMotionStep + state->drawPosY;
@@ -751,15 +751,15 @@ int dll_0B_renderEffects(void* drawContext, int unused1, int unused2, u8 sourceO
                 dirZ = view->worldZ - ((GameObject*)((PartfxEffectState*)p[slot])->sourceObject)->anim.worldPosZ;
                 dscale = sqrtf(dirX * dirX + dirZ * dirZ);
                 if (dscale) {
-                    dirX = dirX / dscale;
-                    dirZ = dirZ / dscale;
+                    dirX /= dscale;
+                    dirZ /= dscale;
                 }
                 dscale = (u16)getAngle(dirX, dirZ);
                 xf.rotX += (s16)dscale;
             }
         }
-        xf.x = xf.x - playerMapOffsetX;
-        xf.z = xf.z - playerMapOffsetZ;
+        xf.x -= playerMapOffsetX;
+        xf.z -= playerMapOffsetZ;
         setMatrixFromObjectPos(mtxB[0], &xf);
         mtx44Transpose(mtxB[0], mtxA[0]);
         PSMTXConcat((MtxPtr)Camera_GetViewMatrix(), mtxA, mtxA);

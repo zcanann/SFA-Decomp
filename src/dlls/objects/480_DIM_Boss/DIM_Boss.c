@@ -341,8 +341,8 @@ int DIMbossAnim_finishDefeat(GameObject* obj, BaddieState* p2) {
         p2->physicsActive = 0;
         p2->hasTarget = 0;
         ObjHits_DisableObject(obj);
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~0x80;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~0x80;
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xE0000, obj, 0);
         mainSetBits(state->gameBitB, 0);
         mainSetBits(state->gameBitA, 1);
@@ -1047,7 +1047,7 @@ void DIMboss_updateHitResponse(GameObject* obj, BaddieState* playerState) {
     hit = 0;
     desc = gDIMbossHitDescTemplate;
     if (gDIMbossHitCooldown != 0) {
-        gDIMbossHitCooldown = gDIMbossHitCooldown - 1;
+        gDIMbossHitCooldown -= 1;
     }
     hitResult = ObjHits_GetPriorityHit(obj, &hitId, &hitType, &hitVolume);
     if (hitResult != 0) {
@@ -1069,9 +1069,9 @@ void DIMboss_updateHitResponse(GameObject* obj, BaddieState* playerState) {
                 gDIMbossHitFxBuffer.y = hitEntries[hitType].positionY;
                 gDIMbossHitFxBuffer.z = playerMapOffsetZ + hitEntries[hitType].positionZ;
                 (*gPartfxInterface)->spawnObject(obj, DIMBOSS_PARTFX_HIT, &gDIMbossHitFxBuffer, 0x200001, -1, NULL);
-                gDIMbossHitFxBuffer.x = gDIMbossHitFxBuffer.x - obj->anim.worldPosX;
-                gDIMbossHitFxBuffer.y = gDIMbossHitFxBuffer.y - obj->anim.worldPosY;
-                gDIMbossHitFxBuffer.z = gDIMbossHitFxBuffer.z - obj->anim.worldPosZ;
+                gDIMbossHitFxBuffer.x -= obj->anim.worldPosX;
+                gDIMbossHitFxBuffer.y -= obj->anim.worldPosY;
+                gDIMbossHitFxBuffer.z -= obj->anim.worldPosZ;
                 gDIMbossHitFxBuffer.scale = 1.0f;
                 gDIMbossHitFxBuffer.rotX = 0;
                 gDIMbossHitFxBuffer.rotY = 0;
@@ -1154,7 +1154,7 @@ void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMboss
         topState->icicle.meltTimer =
             -(timeDelta * (5.0f * obj->anim.currentMoveProgress + 1.0f) - topState->icicle.meltTimer);
     } else {
-        topState->icicle.meltTimer = topState->icicle.meltTimer - timeDelta;
+        topState->icicle.meltTimer -= timeDelta;
     }
     if (topState->icicle.meltTimer <= 0.0f) {
         DimBossMeltEntry* entry = gDIMbossMeltEntries;
@@ -1177,7 +1177,7 @@ void DIMboss_updateCombatState(GameObject* obj, ObjSeqState* animUpdate, DIMboss
             }
         }
         if (topState->icicle.fadeTimer > (timer = 0.0f)) {
-            topState->icicle.fadeTimer = topState->icicle.fadeTimer + timeDelta;
+            topState->icicle.fadeTimer += timeDelta;
             if (topState->icicle.fadeTimer >= 780.0f) {
                 runtime->groundBaddie.flags400 &= ~DIMBOSS_STATE_FLAG_TARGET_TRICKY;
                 topState->icicle.fadeTimer = timer;

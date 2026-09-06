@@ -89,8 +89,8 @@ void gunpowderBarrel_clearHeldState(GameObject* obj) {
     state->throwVelocity.y = zero;
     state->throwVelocity.x = zero;
     state->throwVelocity.z = zero;
-    state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+    state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
+    obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     state->accumulatedFallVelocity = zero;
     state->heldFlags.held = 0;
 }
@@ -98,8 +98,8 @@ void gunpowderBarrel_clearHeldState(GameObject* obj) {
 void gunpowderBarrel_setHeldState(GameObject* obj) {
     GunpowderBarrelState* state = obj->extra;
     state->heldFlags.held = 1;
-    obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
-    state->motionFlags = state->motionFlags & ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
+    obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+    state->motionFlags &= ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
 }
 
 void gunpowderBarrel_launchAtTarget(GameObject* obj, u8 usePlayerStrength) {
@@ -133,9 +133,9 @@ void gunpowderBarrel_launchAtTarget(GameObject* obj, u8 usePlayerStrength) {
     transform.rotY = 0;
     transform.rotX = state->launchYaw;
     vecRotateZXY(&transform.rotX, &state->throwVelocity.x);
-    state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
+    state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     Sfx_PlayFromObject(obj, SFXTRIG_barrel_throw_d3);
-    state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
+    state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
     if (state->configFlags.returnHome != 0) {
         placement = (GunpowderBarrelPlacement*)obj->anim.placement;
         generator = NULL;
@@ -179,7 +179,7 @@ void gunpowderBarrel_setPlayerHeldState(GameObject* obj, u8 heldByPlayer) {
         hitState->axialResponseWeight = 1;
         objectAddress->anim.resetHitboxFlags = (u8)(objectAddress->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         state->heldFlags.playerHeld = 1;
-        state->motionFlags = state->motionFlags & ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
+        state->motionFlags &= ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
         ObjHits_SetFlags((ObjAnimComponent*)objectAddress, OBJHITS_PRIORITY_STATE_IMMOVABLE | 0x80);
         ObjHits_ClearSourceMask((ObjAnimComponent*)objectAddress, 1);
         ObjHits_EnableObject(objectAddress);
@@ -190,7 +190,7 @@ void gunpowderBarrel_setPlayerHeldState(GameObject* obj, u8 heldByPlayer) {
         state->heldFlags.playerHeld = 0;
         objectAddress->anim.resetHitboxFlags = (u8)(objectAddress->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         ObjHits_ClearFlags((ObjAnimComponent*)objectAddress, OBJHITS_PRIORITY_STATE_IMMOVABLE);
-        state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
+        state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     }
 }
 
@@ -202,10 +202,10 @@ void gunpowderBarrel_addThrowVelocity(GameObject* obj, f32* velocity) {
     if (state->fuseFrames != 0) {
         return;
     }
-    state->throwVelocity.y = state->throwVelocity.y + velocity[1];
-    state->throwVelocity.x = state->throwVelocity.x + velocity[0];
-    state->throwVelocity.z = state->throwVelocity.z + velocity[2];
-    state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
+    state->throwVelocity.y += velocity[1];
+    state->throwVelocity.x += velocity[0];
+    state->throwVelocity.z += velocity[2];
+    state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
 }
 
 void gunpowderBarrel_homeOnTarget(GameObject* obj, s16 rotYModeArg, s16 rotZModeArg) {
@@ -280,7 +280,7 @@ void gunpowderBarrel_homeOnTarget(GameObject* obj, s16 rotYModeArg, s16 rotZMode
             t = 0.0f;
         } else {
             t = (f32)(u16)obj->anim.rotZ;
-            t = t * (approachRate * rotZMode);
+            t *= (approachRate * rotZMode);
         }
         obj->anim.rotZ = (f32)obj->anim.rotZ + t;
     }
@@ -298,7 +298,7 @@ void gunpowderBarrel_triggerExplosion(GameObject* obj) {
         (((ObjHitsPriorityState*)obj->anim.hitReactState)->contactFlags != 0 &&
          (state->motionFlags & GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT) != 0)) {
         state->detonationTrigger += 1;
-        state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
+        state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     }
     if (state->detonationTrigger != 0) {
         if (state->configFlags.returnHome) {
@@ -361,7 +361,7 @@ void gunpowderBarrel_triggerExplosion(GameObject* obj) {
         if (tricky != 0) {
             trickyImpress((GameObject*)tricky);
         }
-        state->motionFlags = state->motionFlags & ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
+        state->motionFlags &= ~GUNPOWDER_BARREL_MOTION_FLAG_IN_FLIGHT;
         timerObject = (int*)state->linkedTimerObject;
         if (timerObject != 0) {
             timer_clearManualFlags((GameObject*)(timerObject));
@@ -570,9 +570,9 @@ void gunpowderBarrel_hitDetect(GameObject* barrel) {
         capturedVelocity[2] = barrel->anim.localPosZ - barrel->anim.previousLocalPosZ;
         {
             f32 inverseDeltaTime = 0.99f * oneOverTimeDelta;
-            capturedVelocity[0] = capturedVelocity[0] * inverseDeltaTime;
-            capturedVelocity[1] = capturedVelocity[1] * inverseDeltaTime;
-            capturedVelocity[2] = capturedVelocity[2] * inverseDeltaTime;
+            capturedVelocity[0] *= inverseDeltaTime;
+            capturedVelocity[1] *= inverseDeltaTime;
+            capturedVelocity[2] *= inverseDeltaTime;
         }
         state->throwVelocity.x = ((f32*)capturedVelocity)[0] + state->throwVelocity.x;
         state->throwVelocity.y = ((f32*)capturedVelocity)[1] + state->throwVelocity.y;
@@ -585,7 +585,7 @@ void gunpowderBarrel_hitDetect(GameObject* barrel) {
             state->throwVelocity.z = 0.5f * state->throwVelocity.z;
             state->throwVelocity.y = zero;
         }
-        state->motionFlags = state->motionFlags | GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
+        state->motionFlags |= GUNPOWDER_BARREL_MOTION_FLAG_SLEEPING;
     }
 
     if (state->heldByCarryInterface == 0 &&

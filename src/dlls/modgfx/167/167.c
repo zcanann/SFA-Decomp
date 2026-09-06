@@ -164,12 +164,12 @@ void dll_A7_spawnEffect(GameObject* sourceObj, int variant, PartFxSpawnParams* s
     if (fl & 1) {
         GameObject* object = packet.sourceObj;
         if (object != NULL) {
-            packet.position[0] = packet.position[0] + object->anim.worldPosX;
-            packet.position[1] = packet.position[1] + object->anim.worldPosY;
+            packet.position[0] += object->anim.worldPosX;
+            packet.position[1] += object->anim.worldPosY;
             packet.position[2] += object->anim.worldPosZ;
         } else {
-            packet.position[0] = packet.position[0] + spawnParams->posX;
-            packet.position[1] = packet.position[1] + spawnParams->posY;
+            packet.position[0] += spawnParams->posX;
+            packet.position[1] += spawnParams->posY;
             packet.position[2] += spawnParams->posZ;
         }
     }

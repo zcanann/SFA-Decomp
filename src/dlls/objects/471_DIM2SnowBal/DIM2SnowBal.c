@@ -108,16 +108,16 @@ void dim2snowball_update(GameObject* obj) {
 
     if ((state->flags & DIM2_SNOWBALL_FLAG_BALLISTIC) != 0) {
         if (obj->anim.localPosY < state->floorHeight) {
-            obj->anim.velocityX = obj->anim.velocityX * (damping = 0.9f);
+            obj->anim.velocityX *= (damping = 0.9f);
             obj->anim.velocityY = -0.1f;
-            obj->anim.velocityZ = obj->anim.velocityZ * damping;
+            obj->anim.velocityZ *= damping;
 
             if ((state->flags & DIM2_SNOWBALL_FLAG_IMPACTED) == 0) {
                 GameObject** objects;
                 GameObject* sharpClaw;
 
-                obj->anim.velocityX = obj->anim.velocityX * (damping = 0.05f);
-                obj->anim.velocityZ = obj->anim.velocityZ * damping;
+                obj->anim.velocityX *= (damping = 0.05f);
+                obj->anim.velocityZ *= damping;
                 state->flags |= DIM2_SNOWBALL_FLAG_FADING_OUT | DIM2_SNOWBALL_FLAG_IMPACTED;
                 objects = ObjList_GetObjects(&objectIndex, &objectCount);
                 sharpClaw = dim2snowball_findSharpClaw(objects, &objectIndex, &objectCount);
@@ -140,9 +140,9 @@ void dim2snowball_update(GameObject* obj) {
         } else {
             int collided;
 
-            obj->anim.velocityX = obj->anim.velocityX * (damping = 0.98f);
+            obj->anim.velocityX *= (damping = 0.98f);
             obj->anim.velocityY = obj->anim.velocityY - 0.1f * timeDelta;
-            obj->anim.velocityZ = obj->anim.velocityZ * damping;
+            obj->anim.velocityZ *= damping;
             objMove(obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
                     obj->anim.velocityZ * timeDelta);
             collided = trackGetLineIntersect(&obj->anim.previousLocalPosX, &obj->anim.localPosX, 36.0f, 0, NULL, obj,
@@ -150,8 +150,8 @@ void dim2snowball_update(GameObject* obj) {
             if (collided != 0) {
                 obj->anim.velocityX = -obj->anim.velocityX;
                 obj->anim.velocityZ = -obj->anim.velocityZ;
-                obj->anim.velocityX = obj->anim.velocityX * (damping = 0.75f);
-                obj->anim.velocityZ = obj->anim.velocityZ * damping;
+                obj->anim.velocityX *= (damping = 0.75f);
+                obj->anim.velocityZ *= damping;
             }
         }
     } else {
@@ -192,8 +192,8 @@ void dim2snowball_update(GameObject* obj) {
                         }
                     }
                 }
-                obj->anim.velocityX = obj->anim.velocityX * (damping = 0.75f);
-                obj->anim.velocityZ = obj->anim.velocityZ * damping;
+                obj->anim.velocityX *= (damping = 0.75f);
+                obj->anim.velocityZ *= damping;
             }
         }
     }

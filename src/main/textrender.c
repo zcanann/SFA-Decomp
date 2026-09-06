@@ -543,8 +543,8 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
         gxSetAlphaBlendNoZTest();
     }
 
-    x = x + win->x;
-    y = y + win->y;
+    x += win->x;
+    y += win->y;
     winBase = gTextBoxes;
 
     while (p = (u8*)str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
@@ -678,13 +678,13 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
         if (ch == 0xa)
         {
             x = 0.0f;
-            y = y + lineH;
+            y += lineH;
             continue;
         }
         if (ch == 0x20)
         {
             x = gGameTextScale * (f32)(g->advanceX + (g->width + g->offsetX)) + x;
-            x = x + spaceExtra;
+            x += spaceExtra;
             continue;
         }
 
@@ -734,8 +734,8 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
             if (g->font == GAMETEXT_FONT_FLAG)
             {
                 int shift = gGameTextFlagGlyphRaise << 2;
-                fy0 = fy0 - shift;
-                fy1 = fy1 - shift;
+                fy0 -= shift;
+                fy1 -= shift;
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 GXSetScissor(scisX, (scisY >= gGameTextFlagGlyphRaise) ? scisY - gGameTextFlagGlyphRaise : 0, scisW, scisH);
             }
@@ -750,20 +750,20 @@ void textRenderStr(char* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mod
                 fx1 = fx0 + iw;
                 fy0 = (f32)(winBase[126].y + ((winBase[126].height - ih) >> 1));
                 fy1 = fy0 + ih;
-                fx0 = fx0 * lbl_803DE710;
-                fx1 = fx1 * lbl_803DE710;
-                fy0 = fy0 * lbl_803DE710;
-                fy1 = fy1 * lbl_803DE710;
+                fx0 *= lbl_803DE710;
+                fx1 *= lbl_803DE710;
+                fy0 *= lbl_803DE710;
+                fy1 *= lbl_803DE710;
             }
 
             if (mode != 0)
             {
                 int ox = gGameTextShadowOffsetX;
                 int oy = gGameTextShadowOffsetY;
-                fx0 = fx0 + ox;
-                fx1 = fx1 + ox;
-                fy0 = fy0 + oy;
-                fy1 = fy1 + oy;
+                fx0 += ox;
+                fx1 += ox;
+                fy0 += oy;
+                fy1 += oy;
             }
 
             if (gGameTextMeasureOnly == 0)

@@ -50,7 +50,7 @@ int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
     }
     switch (animUpdate->curEventId) {
     case DIM_LOG_FIRE_ANIM_COMMAND_TOGGLE_SMOKE:
-        state->smokeEnabled = state->smokeEnabled ^ 1;
+        state->smokeEnabled ^= 1;
         break;
     case DIM_LOG_FIRE_ANIM_COMMAND_SET_GAMEBIT:
         mainSetBits(DIM_LOG_FIRE_ANIM_GAMEBIT, 1);
@@ -72,7 +72,7 @@ int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
 int dimlogfire_countdownCallback(GameObject* obj, int delta) {
     DimLogFireState* state = obj->extra;
 
-    state->remainingStrength = state->remainingStrength - delta;
+    state->remainingStrength -= delta;
     return state->remainingStrength <= 0;
 }
 
@@ -142,14 +142,14 @@ void DIMLogFire_update(GameObject* obj) {
             modelLightStruct_setEnabled(state->light, 1, 2.0f);
         }
         Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
-        state->flickerTimerA = state->flickerTimerA - timeDelta;
+        state->flickerTimerA -= timeDelta;
         if (state->flickerTimerA <= 0.0f) {
             flickerFlagA = 7;
             state->flickerTimerA += 10.0f;
         } else {
             flickerFlagA = 0;
         }
-        state->flickerTimerB = state->flickerTimerB - timeDelta;
+        state->flickerTimerB -= timeDelta;
         if (state->flickerTimerB <= 0.0f) {
             flickerFlagB = 1;
             state->flickerTimerB += 1.0f;

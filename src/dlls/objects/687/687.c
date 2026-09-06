@@ -305,7 +305,7 @@ void tree_init(GameObject* obj, TreeSetup* setup)
         {
             obj->anim.rootMotionScale = 1.0f;
         }
-        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale *= obj->anim.modelInstance->rootMotionScaleBase;
     }
     else
     {

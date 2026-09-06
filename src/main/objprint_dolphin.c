@@ -143,7 +143,7 @@ int objMatrixToRotation(f32* m, s16* outA, s16* outB, s16* outC) {
     } else {
         y = atan2f_fast(buf[1], buf[0]);
         z = 0.0f;
-        y = y - z;
+        y -= z;
     }
     *outC = (s16)(s32)(65536.0f * z / 6.2831855f);
     *outB = (s16)(s32)(65536.0f * x / 6.2831855f);
@@ -312,8 +312,8 @@ int objFuzzShellRenderCb(GameObject* obj, int* model, int ropIdx) {
     gObjFuzzPassActive = 1;
     newshadows_getNoiseTextureFrames(&noiseTextures, &noiseFrameCount);
     fz = (f32)gObjFuzzLayerIndex / (f32)(s32)noiseFrameCount;
-    fz = fz * fz;
-    fz = fz / 2.0f;
+    fz *= fz;
+    fz /= 2.0f;
     selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(GX_TEVSTAGE0);
@@ -489,7 +489,7 @@ int objFuzzRenderCb(GameObject* obj, ObjModel* model, int ropIdx) {
         fz = 0.0f;
     } else {
         fz = (f32)gObjFuzzLayerIndex / (f32)(s32)noiseFrameCount;
-        fz = fz / 2.0f;
+        fz /= 2.0f;
     }
     selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);

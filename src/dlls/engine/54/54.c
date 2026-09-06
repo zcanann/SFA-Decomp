@@ -57,7 +57,7 @@ void EnterSaveNameScreen_render(void)
         gameTextShowStr((char*)buf, i + 0x2a, 0, 0);
     }
 
-    gEnterSaveNameColorAnimTime = gEnterSaveNameColorAnimTime + timeDelta;
+    gEnterSaveNameColorAnimTime += timeDelta;
 
     gameTextSetColor((int)(mathSinf(0.17259522f * gEnterSaveNameColorAnimTime) * 128.0f + 127.0f),
                         (int)(mathSinf(0.14382935f * gEnterSaveNameColorAnimTime) * 128.0f + 127.0f),
@@ -125,10 +125,10 @@ u32 EnterSaveNameScreen_run(void)
     moved = 0;
     if (gEnterSaveNameScrollVelocity < 0.0f)
     {
-        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameScrollVelocity;
+        gEnterSaveNameScrollPos += gEnterSaveNameScrollVelocity;
         if (gEnterSaveNameScrollPos <= (f32)(-gEnterSaveNameCharWidths[ENTER_SAVE_NAME_DONE_INDEX] / 2))
         {
-            gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameTotalWidth;
+            gEnterSaveNameScrollPos += gEnterSaveNameTotalWidth;
             moved = 1;
         }
         if ((gEnterSaveNameSelectedIndex > 0) &&
@@ -143,10 +143,10 @@ u32 EnterSaveNameScreen_run(void)
             {
                 gEnterSaveNameScrollVelocity = 0.0f;
             }
-            gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex - 1;
+            gEnterSaveNameSelectedIndex -= 1;
             if (gEnterSaveNameSelectedIndex < 0)
             {
-                gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex + ENTER_SAVE_NAME_CHAR_COUNT;
+                gEnterSaveNameSelectedIndex += ENTER_SAVE_NAME_CHAR_COUNT;
             }
             if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX) && (gEnterSaveNameAutoScrolling != 0))
             {
@@ -158,10 +158,10 @@ u32 EnterSaveNameScreen_run(void)
     }
     else if (gEnterSaveNameScrollVelocity > 0.0f)
     {
-        gEnterSaveNameScrollPos = gEnterSaveNameScrollPos + gEnterSaveNameScrollVelocity;
+        gEnterSaveNameScrollPos += gEnterSaveNameScrollVelocity;
         if (gEnterSaveNameScrollPos >= (f32)(gEnterSaveNameTotalWidth + gEnterSaveNameCharWidths[0] / 2))
         {
-            gEnterSaveNameScrollPos = gEnterSaveNameScrollPos - gEnterSaveNameTotalWidth;
+            gEnterSaveNameScrollPos -= gEnterSaveNameTotalWidth;
             moved = 1;
         }
         if ((gEnterSaveNameSelectedIndex < ENTER_SAVE_NAME_DONE_INDEX) &&
@@ -176,10 +176,10 @@ u32 EnterSaveNameScreen_run(void)
             {
                 gEnterSaveNameScrollVelocity = 0.0f;
             }
-            gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex + 1;
+            gEnterSaveNameSelectedIndex += 1;
             if (gEnterSaveNameSelectedIndex >= ENTER_SAVE_NAME_CHAR_COUNT)
             {
-                gEnterSaveNameSelectedIndex = gEnterSaveNameSelectedIndex - ENTER_SAVE_NAME_CHAR_COUNT;
+                gEnterSaveNameSelectedIndex -= ENTER_SAVE_NAME_CHAR_COUNT;
             }
             if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DONE_INDEX) && (gEnterSaveNameAutoScrolling != 0))
             {

@@ -72,7 +72,7 @@ void CameraModeTalk_update(CameraObject* camera) {
         yawSmoothing = 0.1f;
         yawTarget = 12.0f * state->turnInput;
         state->smoothedYawOffset += yawSmoothing * (yawTarget - state->smoothedYawOffset);
-        camera->anim.rotX = camera->anim.rotX + gCameraModeTalkState->smoothedYawOffset;
+        camera->anim.rotX += gCameraModeTalkState->smoothedYawOffset;
         targetAngle = 3072.0f - gCameraModeTalkState->pitchTarget;
         cameraAngle = camera->anim.rotY;
         angleDelta = targetAngle - cameraAngle;
@@ -80,7 +80,7 @@ void CameraModeTalk_update(CameraObject* camera) {
             angleDelta = angleDelta - 0xFFFF;
         }
         if (angleDelta < -0x8000) {
-            angleDelta = angleDelta + 0xFFFF;
+            angleDelta += 0xFFFF;
         }
         camera->anim.rotY += (angleDelta >> 3);
         sinYaw = mathSinf(3.14159274f * (camera->anim.rotX - 0x4000) / 32768.0f);
@@ -97,7 +97,7 @@ void CameraModeTalk_update(CameraObject* camera) {
         followTermA = followDist * sinPitch;
         followTermB = followDist * cosPitch;
         cosYaw = followTermB * cosYaw;
-        followTermB = followTermB * sinYaw;
+        followTermB *= sinYaw;
         camera->anim.worldPosX = pivotX + cosYaw;
         camera->anim.worldPosY = pivotY + followTermA;
         camera->anim.worldPosZ = pivotZ + followTermB;
@@ -108,7 +108,7 @@ void CameraModeTalk_update(CameraObject* camera) {
             angleDelta = angleDelta - 0xFFFF;
         }
         if (angleDelta < -0x8000) {
-            angleDelta = angleDelta + 0xFFFF;
+            angleDelta += 0xFFFF;
         }
         camera->anim.rotZ += (angleDelta * timeDelta) / 16.0f;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,

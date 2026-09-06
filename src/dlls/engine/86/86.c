@@ -52,14 +52,14 @@ void CameraModeArwing_update(CameraObject* camera) {
     int angleDelta;
 
     camera->anim.worldPosX = gCameraModeArwingState.offsetX * gCameraModeArwingState.xScale;
-    camera->anim.worldPosX = camera->anim.worldPosX + gCameraModeArwingState.basePosX;
+    camera->anim.worldPosX += gCameraModeArwingState.basePosX;
     camera->anim.worldPosY = gCameraModeArwingState.offsetY * gCameraModeArwingState.yScale;
-    camera->anim.worldPosY = camera->anim.worldPosY + gCameraModeArwingState.basePosY;
+    camera->anim.worldPosY += gCameraModeArwingState.basePosY;
     camera->anim.worldPosZ = target->anim.worldPosZ + gCameraModeArwingState.posZOffset;
 
     if (target->anim.mapEventSlot != CAMERA_MODE_ARWING_NO_Z_EASE_MAP_EVENT_SLOT) {
         f32 zEase = gCameraModeArwingState.zEaseNumerator / gCameraModeArwingState.zEaseDenominator;
-        zEase = zEase - 1.0f;
+        zEase -= 1.0f;
         if (zEase < 0.0f) {
             camera->anim.worldPosZ = (f32) - (s32)gCameraModeArwingState.zScaleNear * zEase + camera->anim.worldPosZ;
         } else {
@@ -85,7 +85,7 @@ void CameraModeArwing_update(CameraObject* camera) {
             angleDelta = angleDelta - 0xffff;
         }
         if (angleDelta < -0x8000) {
-            angleDelta = angleDelta + 0xffff;
+            angleDelta += 0xffff;
         }
         rotationStep = (s32)((f32)angleDelta * timeDelta);
         camera->anim.rotX = rotationStep / 16.0f + (f32) * (s16*)camera;
@@ -94,7 +94,7 @@ void CameraModeArwing_update(CameraObject* camera) {
             angleDelta = angleDelta - 0xffff;
         }
         if (angleDelta < -0x8000) {
-            angleDelta = angleDelta + 0xffff;
+            angleDelta += 0xffff;
         }
         rotationStep = (s32)((f32)angleDelta * timeDelta);
         camera->anim.rotY = rotationStep / 16.0f + (f32)camera->anim.rotY;
@@ -108,7 +108,7 @@ void CameraModeArwing_update(CameraObject* camera) {
             targetRoll = targetRoll - 0xffff;
         }
         if (targetRoll < -0x8000) {
-            targetRoll = targetRoll + 0xffff;
+            targetRoll += 0xffff;
         }
         camera->anim.rotZ = ((f32)targetRoll * timeDelta) / 16.0f + (f32)camera->anim.rotZ;
         targetYaw = targetYaw - (u16)camera->anim.rotX;
@@ -116,7 +116,7 @@ void CameraModeArwing_update(CameraObject* camera) {
             targetYaw = targetYaw - 0xffff;
         }
         if (targetYaw < -0x8000) {
-            targetYaw = targetYaw + 0xffff;
+            targetYaw += 0xffff;
         }
         camera->anim.rotX = ((f32)targetYaw * timeDelta) / 16.0f + (f32) * (s16*)camera;
         targetPitch = targetPitch - (u16)camera->anim.rotY;
@@ -124,7 +124,7 @@ void CameraModeArwing_update(CameraObject* camera) {
             targetPitch = targetPitch - 0xffff;
         }
         if (targetPitch < -0x8000) {
-            targetPitch = targetPitch + 0xffff;
+            targetPitch += 0xffff;
         }
         camera->anim.rotY = ((f32)targetPitch * timeDelta) / 16.0f + (f32)camera->anim.rotY;
     }

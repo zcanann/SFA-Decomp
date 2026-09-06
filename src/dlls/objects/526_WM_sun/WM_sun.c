@@ -87,9 +87,9 @@ void wmsun_updateGlare(GameObject* obj)
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (len != 0.0f)
         {
-            dx = dx / len;
-            dy = dy / len;
-            dz = dz / len;
+            dx /= len;
+            dy /= len;
+            dz /= len;
         }
         dot = dz * sun.z + (dx * sun.x + dy * sun.y);
         prod = (dz * dz + (dx * dx + dy * dy)) * (denom = sun.z * sun.z + (sun.x * sun.x + sun.y * sun.y));
@@ -114,9 +114,9 @@ void wmsun_updateGlare(GameObject* obj)
             hlen = sqrtf(hz * hz + (dot * dot + hy));
             if (hlen != 0.0f)
             {
-                dot = dot / hlen;
-                hy = hy / hlen;
-                hz = hz / hlen;
+                dot /= hlen;
+                hy /= hlen;
+                hz /= hlen;
             }
             len = dir.y;
             f = dir.z;
@@ -157,7 +157,7 @@ void wmsun_updateGlare(GameObject* obj)
                 g.intensity = 0.0005f * randomGetRange(0, 0x1e) + g.intensity;
                 if (gWmSunGlareIntensity > 0.05f)
                 {
-                    gWmSunGlareIntensity = gWmSunGlareIntensity - 0.0002f;
+                    gWmSunGlareIntensity -= 0.0002f;
                 }
                 g.ang[2] = 0;
                 g.ang[1] = 0;

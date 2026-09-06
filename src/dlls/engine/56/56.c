@@ -168,7 +168,7 @@ int WeirdUnusedMenu_run(void)
         }
     }
 
-    gWeirdMenuScrollOffset = gWeirdMenuScrollOffset + (framesThisStep << 3);
+    gWeirdMenuScrollOffset += (framesThisStep << 3);
     if (gWeirdMenuScrollOffset > 0x8c)
     {
         gWeirdMenuScrollOffset = 0x8c;

@@ -66,7 +66,7 @@ void SB_CageKyte_update(GameObject* obj) {
     GameObject* player;
 
     if (obj->userData1 > 0) {
-        obj->userData1 = obj->userData1 - 1;
+        obj->userData1 -= 1;
     }
 
     obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;

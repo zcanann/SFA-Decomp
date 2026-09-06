@@ -383,7 +383,7 @@ int dll_CE_updateSpitState(GameObject* obj, GroundBaddieState* state) {
     if ((state->baddie.eventFlags & BADDIE_EVENT_FOOTSTEP) != 0U) {
         DllCEControl* control = objectState->control;
 
-        state->baddie.eventFlags = state->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
+        state->baddie.eventFlags &= ~BADDIE_EVENT_FOOTSTEP;
         control->effectFlags |= DLL_CE_EFFECT_PROJECTILE;
         Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite_266);
     }

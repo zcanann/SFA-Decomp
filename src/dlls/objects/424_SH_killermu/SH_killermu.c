@@ -223,7 +223,7 @@ void EnemyMushroom_update(GameObject* obj) {
                 newAlpha = 0;
             }
             obj->anim.alpha = newAlpha;
-            state->timer = state->timer + timeDelta;
+            state->timer += timeDelta;
             if (state->timer > (f32)state->respawnFrameLimit) {
                 EnemyMushroom_resetToSpawn(obj, state, 1);
                 state->stateId = ENEMY_MUSHROOM_STATE_REGROWING;
@@ -231,14 +231,14 @@ void EnemyMushroom_update(GameObject* obj) {
         }
         break;
     case ENEMY_MUSHROOM_STATE_STARTLED:
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_id_9c);
         if (state->stateFlags & ENEMY_MUSHROOM_STATE_FLAG_ANIM_DONE) {
             state->stateId = ENEMY_MUSHROOM_STATE_POISONING;
         }
         break;
     case ENEMY_MUSHROOM_STATE_POISONING:
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         state->hitRadius = ENEMY_MUSHROOM_POISON_RADIUS_RATE * timeDelta + state->hitRadius;
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_diallp_c);
         if (!(state->stateFlags & ENEMY_MUSHROOM_STATE_FLAG_HIT_PLAYER)) {
@@ -252,7 +252,7 @@ void EnemyMushroom_update(GameObject* obj) {
         if (state->hitRadius > ENEMY_MUSHROOM_MAX_HIT_RADIUS) {
             state->hitRadius = ENEMY_MUSHROOM_MAX_HIT_RADIUS;
         }
-        state->timer = state->timer + timeDelta;
+        state->timer += timeDelta;
         if (state->timer > ENEMY_MUSHROOM_POISON_DURATION) {
             state->timer = 0.0f;
             state->stateId = ENEMY_MUSHROOM_STATE_SETTLING;
@@ -271,8 +271,8 @@ void EnemyMushroom_update(GameObject* obj) {
         }
         break;
     case ENEMY_MUSHROOM_STATE_SETTLING:
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
-        state->timer = state->timer + timeDelta;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+        state->timer += timeDelta;
         if (state->timer > (f32)placement->regrowDelay) {
             if (state->stateFlags & ENEMY_MUSHROOM_STATE_FLAG_ANIM_DONE) {
                 state->stateId = ENEMY_MUSHROOM_STATE_IDLE;
@@ -284,12 +284,12 @@ void EnemyMushroom_update(GameObject* obj) {
     case ENEMY_MUSHROOM_STATE_REGROWING:
         state->stateFlags = (u8)(state->stateFlags & ~ENEMY_MUSHROOM_STATE_FLAG_ACTIVE);
         if (obj->anim.rootMotionScale > state->heightTarget) {
-            state->riseStep = state->riseStep / ENEMY_MUSHROOM_RISE_STEP_DECAY;
+            state->riseStep /= ENEMY_MUSHROOM_RISE_STEP_DECAY;
         }
         if (state->riseStep < ENEMY_MUSHROOM_RISE_STEP_EPSILON) {
             state->riseStep = 0.0f;
         }
-        state->timer = state->timer + timeDelta;
+        state->timer += timeDelta;
         obj->anim.rootMotionScale = state->riseStep * timeDelta + obj->anim.rootMotionScale;
         if (state->timer > state->riseDuration) {
             state->stateId = ENEMY_MUSHROOM_STATE_IDLE;
@@ -319,13 +319,13 @@ void EnemyMushroom_update(GameObject* obj) {
                     (*gPartfxInterface)->spawnObject(obj, ENEMY_MUSHROOM_PARTICLE_EFFECT_STUN, &hitInfo, 2, -1, NULL);
                     state->effectTimer = ENEMY_MUSHROOM_STUN_EFFECT_INTERVAL;
                 }
-                obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+                obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
             }
         }
         break;
     case ENEMY_MUSHROOM_STATE_RESPAWN_WAIT:
         ObjHits_DisableObject(obj);
-        state->timer = state->timer + timeDelta;
+        state->timer += timeDelta;
         if (state->timer > (f32)state->respawnFrameLimit) {
             EnemyMushroom_resetToSpawn(obj, state, 1);
             state->stateId = ENEMY_MUSHROOM_STATE_REGROWING;
@@ -333,7 +333,7 @@ void EnemyMushroom_update(GameObject* obj) {
         }
         break;
     default:
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         {
             f32 dx = player->anim.localPosX - obj->anim.localPosX;
             f32 dy = player->anim.localPosY - obj->anim.localPosY;

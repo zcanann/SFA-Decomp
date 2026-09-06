@@ -40,7 +40,7 @@ void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
         ObjHitbox_SetSphereRadius(&obj->anim,
                                   (int)((f32)((ObjHitsPriorityState*)obj->anim.hitReactState)->primaryRadius *
                                         obj->anim.rootMotionScale));
-        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale *= obj->anim.modelInstance->rootMotionScaleBase;
     }
     obj->objectFlags |= OBJECT_OBJFLAG_HIDDEN;
 }

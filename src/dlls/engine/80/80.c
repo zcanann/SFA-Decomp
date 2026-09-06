@@ -93,7 +93,7 @@ void CameraModeCrawl_update(CameraObject* camera) {
             yawDelta = yawDelta - 0xffff;
         }
         if (yawDelta < -0x8000) {
-            yawDelta = yawDelta + 0xffff;
+            yawDelta += 0xffff;
         }
         camera->anim.rotX = (s16)((f32)(s32)camera->anim.rotX + interpolate((f32)(s32)yawDelta, 0.125f, timeDelta));
         camera->anim.rotX = (s16)(0x8000 - getAngle(relativeX, relativeZ));
@@ -107,10 +107,10 @@ void CameraModeCrawl_update(CameraObject* camera) {
             yawDelta = targetYaw - (u16)camera->anim.rotX;
         }
         if (yawDelta > 0x8000) {
-            yawDelta = yawDelta - 0xffff;
+            yawDelta -= 0xffff;
         }
         if (yawDelta < -0x8000) {
-            yawDelta = yawDelta + 0xffff;
+            yawDelta += 0xffff;
         }
         camera->anim.rotX += yawDelta;
         defaultHandler->handler->vtable->updatePitch(camera, target->anim.worldPosY, relativeDistanceXZ);

@@ -278,7 +278,7 @@ void padUpdate(void) {
     PADClamp(readPad);
     if (rumbleEnabled != 0) {
         if (gRumbleTimer > 0.0f) {
-            gRumbleTimer = gRumbleTimer - timeDelta;
+            gRumbleTimer -= timeDelta;
             if (gRumbleTimer <= 0.0f) {
                 if (rumbleEnabled != 0) {
                     PADControlMotor(0, PAD_MOTOR_STOP);

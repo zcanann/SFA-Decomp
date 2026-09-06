@@ -237,12 +237,12 @@ void ecshShrine_updateHoverMotion(GameObject* obj) {
 
     trigA = mathSinf((ECSH_SHRINE_ORBIT_PI * state->orbitPhaseB) / ECSH_SHRINE_ORBIT_ANGLE_SCALE);
     trigB = mathSinf((ECSH_SHRINE_ORBIT_PI * state->orbitPhaseA) / ECSH_SHRINE_ORBIT_ANGLE_SCALE);
-    trigB = trigB + trigA;
+    trigB += trigA;
     obj->anim.rotZ = ECSH_SHRINE_ORBIT_ROTATION_SCALE * trigB;
 
     trigA = mathSinf((ECSH_SHRINE_ORBIT_PI * state->orbitPhaseC) / ECSH_SHRINE_ORBIT_ANGLE_SCALE);
     trigB = mathSinf((ECSH_SHRINE_ORBIT_PI * state->orbitPhaseA) / ECSH_SHRINE_ORBIT_ANGLE_SCALE);
-    trigB = trigB + trigA;
+    trigB += trigA;
     obj->anim.rotY = ECSH_SHRINE_ORBIT_ROTATION_SCALE * trigB;
 
     ObjAnim_AdvanceCurrentMove(obj, ECSH_SHRINE_ANIMATION_STEP, timeDelta, &animEvents);
@@ -475,7 +475,7 @@ void ecshShrine_update(GameObject* obj) {
         }
     }
     if (obj->userData1 != 0) {
-        obj->userData1 = obj->userData1 - 1;
+        obj->userData1 -= 1;
         if (obj->userData1 == 0) {
             skySetSlotFlag80(ECSH_SHRINE_SKY_FLAGS, 1);
             getEnvfxAct(obj, player, ECSH_SHRINE_ENVFX_A, ECSH_SHRINE_ENVFX_FLAGS);
@@ -497,7 +497,7 @@ void ecshShrine_update(GameObject* obj) {
     GameBitLatch_Update(&state->gameBitLatch, ECSH_SHRINE_STATE_FLAG_MUSIC_LATCH_10, ECSH_SHRINE_NO_GAMEBIT,
                         ECSH_SHRINE_NO_GAMEBIT, GAMEBIT_SHRINE_MUSIC_LOCK, MUSICTRIG_PU3_Adventure_c4);
     if (state->cooldownTimer > (zero = 0.0f)) {
-        state->cooldownTimer = state->cooldownTimer - timeDelta;
+        state->cooldownTimer -= timeDelta;
         if (state->cooldownTimer <= zero) {
             state->cooldownTimer = zero;
         }
@@ -574,7 +574,7 @@ void ecshShrine_update(GameObject* obj) {
                     }
                     state->shuffleSfxPlayed = 1;
                 }
-                state->animTimer = state->animTimer - timeDelta;
+                state->animTimer -= timeDelta;
                 if (state->animTimer < 0.0f) {
                     state->animTimer = 0.0f;
                 }
@@ -738,7 +738,7 @@ void ecshShrine_update(GameObject* obj) {
                             Sfx_PlayFromObject(obj, SFXTRIG_iceywindlp16);
                         }
                     } else {
-                        state->guessTimer = state->guessTimer - timeDelta;
+                        state->guessTimer -= timeDelta;
                         if (state->guessTimer <= 0.0f) {
                             state->testPhase = ECSH_SHRINE_PHASE_FAIL;
                             (*gScreenTransitionInterface)

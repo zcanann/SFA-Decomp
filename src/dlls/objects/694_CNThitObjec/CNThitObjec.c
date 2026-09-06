@@ -98,7 +98,7 @@ void cnthitobjec_hitDetect(GameObject* obj)
     {
         return;
     }
-    state->remainingHealth = state->remainingHealth - dmg;
+    state->remainingHealth -= dmg;
     if (setup->mode == CNTHIT_MODE_VISIBLE_OBJECT)
     {
         Obj_SetModelColorFadeRecursive(obj, 30, 200, 0, 0, 1);

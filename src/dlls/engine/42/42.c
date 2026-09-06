@@ -224,15 +224,15 @@ int Effect17_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & 0x200000) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;

@@ -86,12 +86,12 @@ void dfshShrine_updateHoverMotion(int objArg) {
 
     trigA = mathSinf((3.1415927f * state->rollPhase) / 32768.0f);
     trigB = mathSinf((3.1415927f * state->hoverPhase) / 32768.0f);
-    trigB = trigB + trigA;
+    trigB += trigA;
     obj->anim.rotZ = 600.0f * trigB;
 
     trigA = mathSinf((3.1415927f * state->yawPhase) / 32768.0f);
     trigB = mathSinf((3.1415927f * state->hoverPhase) / 32768.0f);
-    trigB = trigB + trigA;
+    trigB += trigA;
     obj->anim.rotY = 600.0f * trigB;
 
     ObjAnim_AdvanceCurrentMove(obj, 0.005f, timeDelta, (ObjAnimEventList*)animEvents);
@@ -239,7 +239,7 @@ void dfshShrine_update(GameObject* obj) {
     state = obj->extra;
     player = Obj_GetPlayerObject();
     if (obj->userData1 != 0) {
-        obj->userData1 = obj->userData1 - 1;
+        obj->userData1 -= 1;
         if (obj->userData1 == 0) {
             skySetSlotFlag80(7, 1);
             getEnvfxAct(obj, player, DFSH_SHRINE_ENVFX_A, 0);

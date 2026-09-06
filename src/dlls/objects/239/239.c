@@ -393,7 +393,7 @@ void pushable_initMagicGem(GameObject* obj, PushableState* state) {
     mainSetBits(state->gameBit, 0);
     texture = objFindTexture(obj, 0, 0);
 
-    state->eyePosX = state->eyePosX + state->eyeDriftSpeedX;
+    state->eyePosX += state->eyeDriftSpeedX;
     eyePosition = state->eyePosX;
     limit = PUSHABLE_MAGIC_GEM_EYE_POSITION_MAX;
     if (eyePosition > limit) {
@@ -402,7 +402,7 @@ void pushable_initMagicGem(GameObject* obj, PushableState* state) {
         state->eyePosX = limit;
     }
 
-    state->eyePosY = state->eyePosY + state->eyeDriftSpeedY;
+    state->eyePosY += state->eyeDriftSpeedY;
     eyePosition = state->eyePosY;
     limit = PUSHABLE_MAGIC_GEM_EYE_POSITION_MAX;
     if (eyePosition > limit) {
@@ -442,7 +442,7 @@ void pushable_resolveCollisions(GameObject* obj, PushableState* state) {
     scale = PUSHABLE_UNIT_SCALE;
     while (unresolvedMask != 0) {
         unresolvedMask = PUSHABLE_POINT_MASK;
-        iteration = iteration + 1;
+        iteration += 1;
         if (iteration > PUSHABLE_MAX_POINTS) {
             obj->anim.localPosX = savedX;
             obj->anim.localPosY = savedY;
@@ -521,7 +521,7 @@ void pushable_resolveCollisions(GameObject* obj, PushableState* state) {
                     if (angleDelta < -PUSHABLE_ANGLE_HALF_TURN) {
                         angleDelta += PUSHABLE_ANGLE_FULL_TURN;
                     }
-                    angleDelta = angleDelta / PUSHABLE_ANGLE_UNITS_PER_DEGREE;
+                    angleDelta /= PUSHABLE_ANGLE_UNITS_PER_DEGREE;
                     if (angleDelta > -PUSHABLE_ANGLE_30_DEGREES && angleDelta < PUSHABLE_ANGLE_30_DEGREES) {
                         state->flags |= PUSHABLE_FLAG_PUSH_NEG_X;
                         state->pushAmountX = PUSHABLE_ZERO;
@@ -615,8 +615,8 @@ u32 pushable_SeqFn(GameObject* obj, MatrixTransform* referenceTransform, ObjSeqS
             deltaZ = obj->anim.localPosZ - player->anim.localPosZ;
             distance = sqrtf(deltaX * deltaX + deltaZ * deltaZ);
             if (distance) {
-                deltaX = deltaX / distance;
-                deltaZ = deltaZ / distance;
+                deltaX /= distance;
+                deltaZ /= distance;
             }
             knockbackSpeed = PUSHABLE_KNOCKBACK_SPEED;
             state->knockbackVelX = knockbackSpeed * deltaX;
@@ -741,7 +741,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         }
         if (blocked != 0) {
             f32 pushAmount;
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_X;
+            state->flags |= PUSHABLE_FLAG_PUSH_POS_X;
             pushAmount = PUSHABLE_ZERO;
             state->pushAmountX = pushAmount;
             state->pushAmountZ = pushAmount;
@@ -763,7 +763,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         }
         if (blocked != 0) {
             f32 pushAmount;
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_Z;
+            state->flags |= PUSHABLE_FLAG_PUSH_POS_Z;
             pushAmount = PUSHABLE_ZERO;
             state->pushAmountX = pushAmount;
             state->pushAmountZ = pushAmount;
@@ -785,7 +785,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         }
         if (blocked != 0) {
             f32 pushAmount;
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_Z;
+            state->flags |= PUSHABLE_FLAG_PUSH_NEG_Z;
             pushAmount = PUSHABLE_ZERO;
             state->pushAmountX = pushAmount;
             state->pushAmountZ = pushAmount;
@@ -794,13 +794,13 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
     if (playerIsDisguised(player) == 0 && state->moveFlags.pushPromptEnabled == 0) {
         blocked = 1;
         if (pushX > PUSHABLE_ZERO) {
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_X;
+            state->flags |= PUSHABLE_FLAG_PUSH_POS_X;
         } else if (pushX < PUSHABLE_ZERO) {
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_X;
+            state->flags |= PUSHABLE_FLAG_PUSH_NEG_X;
         } else if (pushZ > PUSHABLE_ZERO) {
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_POS_Z;
+            state->flags |= PUSHABLE_FLAG_PUSH_POS_Z;
         } else {
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_NEG_Z;
+            state->flags |= PUSHABLE_FLAG_PUSH_NEG_Z;
         }
         {
             f32 zero = PUSHABLE_ZERO;
@@ -809,11 +809,11 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
         }
     }
     if (active != 0 && (state->flags & PUSHABLE_FLAG_NO_GROUND_CONTACT) == 0) {
-        state->flags = state->flags | PUSHABLE_FLAG_MOVED;
+        state->flags |= PUSHABLE_FLAG_MOVED;
         state->pushSfxTimer -= 1;
         if (state->pushSfxTimer <= 0) {
             state->pushSfxTimer = randomGetRange(0x28, 0x3c);
-            state->flags = state->flags | PUSHABLE_FLAG_PUSH_SFX_DUE;
+            state->flags |= PUSHABLE_FLAG_PUSH_SFX_DUE;
         }
         if ((state->flags & PUSHABLE_FLAG_PUSH_LOCKED) != 0) {
             f32 zero = PUSHABLE_ZERO;
@@ -892,7 +892,7 @@ int pushable_push(GameObject* obj, GameObject* target, int active, f32 pushX, f3
             if (travelX * travelX + travelZ * travelZ > PUSHABLE_UNIT_SCALE &&
                 (state->flags & PUSHABLE_FLAG_PUSH_SFX_DUE) != 0) {
                 Sfx_PlayFromObject(obj, SFXTRIG_birdymornin11);
-                state->flags = state->flags & ~PUSHABLE_FLAG_PUSH_SFX_DUE;
+                state->flags &= ~PUSHABLE_FLAG_PUSH_SFX_DUE;
             }
         }
     } else {
@@ -993,7 +993,7 @@ void pushable_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int
         }
         {
             ObjAnimBank* activeModelSlot = obj->anim.banks[obj->anim.bankIndex];
-            activeModelSlot->animDef->flags = activeModelSlot->animDef->flags | 2;
+            activeModelSlot->animDef->flags |= 2;
         }
         objRenderModelAndHitVolumes(obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, PUSHABLE_UNIT_SCALE);
     }
@@ -1169,10 +1169,10 @@ void pushable_update(GameObject* obj) {
 
     placement = obj->anim.placement;
     state = obj->extra;
-    state->flags = state->flags & ~PUSHABLE_FLAG_MOVED;
+    state->flags &= ~PUSHABLE_FLAG_MOVED;
     state->moveFlags.activelyPushed = 0;
     if (PUSHABLE_ZERO != obj->anim.velocityY) {
-        state->flags = state->flags | PUSHABLE_FLAG_MOVED;
+        state->flags |= PUSHABLE_FLAG_MOVED;
     }
     if (state->moveFlags.pushPromptEnabled == 0 && playerIsDisguised(Obj_GetPlayerObject()) == 0) {
         obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
@@ -1220,7 +1220,7 @@ void pushable_update(GameObject* obj) {
         if (mainGetBit(GAMEBIT_PushableRelated0272) != 0) {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
-            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         break;
     }
@@ -1258,7 +1258,7 @@ void pushable_init(GameObject* obj, PushableObjectDef* setup) {
     model = (ModelFileHeader*)*activeModelSlot;
     state->unkB0 = setup->unk1C;
     state->scale = (f32) * &setup->scaleRaw / PUSHABLE_SCALE_DENOM;
-    state->scale = state->scale * obj->anim.modelInstance->rootMotionScaleBase;
+    state->scale *= obj->anim.modelInstance->rootMotionScaleBase;
     state->cullDistance = state->scale * (f32)modelFileHeaderGetCullDistance((ModelFileHeader*)*activeModelSlot) +
                           PUSHABLE_MIN_GROUND_CLEARANCE;
     {
@@ -1369,7 +1369,7 @@ void pushable_init(GameObject* obj, PushableObjectDef* setup) {
         break;
     case PUSHABLE_SEQ_ID_DIM_PUSH_BLOCK:
         if (setup->gameBit > PUSHABLE_NO_GAME_BIT && mainGetBit(setup->gameBit) != 0) {
-            state->flags = state->flags | (PUSHABLE_FLAG_RESTORED | PUSHABLE_FLAG_PUSH_LOCKED);
+            state->flags |= (PUSHABLE_FLAG_RESTORED | PUSHABLE_FLAG_PUSH_LOCKED);
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             pushable_savePos(obj);
         }
@@ -1377,21 +1377,21 @@ void pushable_init(GameObject* obj, PushableObjectDef* setup) {
         break;
     default:
         if (setup->gameBit > PUSHABLE_NO_GAME_BIT && mainGetBit(setup->gameBit) != 0) {
-            state->flags = state->flags | PUSHABLE_FLAG_RESTORED;
+            state->flags |= PUSHABLE_FLAG_RESTORED;
         }
         break;
     }
     {
         ObjModelState* modelState = obj->anim.modelState;
         if (modelState != NULL) {
-            modelState->flags = modelState->flags | 0xA10;
+            modelState->flags |= 0xA10;
             obj->anim.modelState->shadowTintA = 0x60;
             obj->anim.modelState->shadowTintB = 0x40;
         }
     }
-    state->flags = state->flags | PUSHABLE_FLAG_INITIALIZED;
+    state->flags |= PUSHABLE_FLAG_INITIALIZED;
     if (arrayIndexOf(gPushableSavedIdents, gPushableSavedIdentCount, setup->base.ident) != -1) {
-        state->flags = state->flags | PUSHABLE_FLAG_RESTORED;
+        state->flags |= PUSHABLE_FLAG_RESTORED;
         arrayRemoveUnordered(gPushableSavedIdents, &gPushableSavedIdentCount, setup->base.ident);
     }
 }

@@ -188,7 +188,7 @@ void worldobj_render(GameObject* obj, int renderArg2, int renderArg3, int render
         if (state->effectState != 0 && getWorldMapVoiceoverTimer() == 0 &&
             (*gScreenTransitionInterface)->isFinished() != 0) {
             if (gWorldObjEffectRenderDelay != 0) {
-                gWorldObjEffectRenderDelay = gWorldObjEffectRenderDelay - 1;
+                gWorldObjEffectRenderDelay -= 1;
             } else {
                 objRenderModelAndHitVolumes(obj, renderArg2, renderArg3, renderArg4, renderArg5, 1.0f);
             }
@@ -512,7 +512,7 @@ void worldobj_init(GameObject* obj, const WorldObjSetup* setup) {
         state->orbitStartY = (objA->anim.localPosY - base) + randomGetRange(-0x3e8, 0x3e8);
         state->orbitEndY = objB->anim.localPosY + randomGetRange(-5, 5);
         state->scale = 0.5f * (randomGetRange(0, 0x64) / 100.0f) + 0.5f;
-        obj->anim.rootMotionScale = obj->anim.rootMotionScale * state->scale;
+        obj->anim.rootMotionScale *= state->scale;
         state->spinXStep = randomGetRange(0xa, 0x19);
         if (randomGetRange(0, 1) != 0) {
             state->spinXStep = -state->spinXStep;

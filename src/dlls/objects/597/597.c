@@ -618,7 +618,7 @@ int SnowBike_UpdateAttachedPosition(GameObject* obj, SnowBikeState* state) {
             if (state->bikeType == 0) {
                 trackGetNearestGroundOffset(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
                                             &floorOffset, 0);
-                obj->anim.localPosY = obj->anim.localPosY - floorOffset;
+                obj->anim.localPosY -= floorOffset;
                 obj->anim.localPosY += 2.0f;
             }
             flags->routeAnchored = 1;
@@ -681,7 +681,7 @@ void SnowBike_UpdateRouteFollowing(GameObject* obj, SnowBikeState* state) {
                 headingDelta = headingDelta - 0xffff;
             }
             if (headingDelta < -0x8000) {
-                headingDelta = headingDelta + 0xffff;
+                headingDelta += 0xffff;
             }
             absHeadingDelta = ((int)headingDelta >= 0) ? headingDelta : -headingDelta;
             gameBitSet = (int)absHeadingDelta > gSnowBikeWrongWayAngleThreshold;
@@ -835,7 +835,7 @@ int SnowBike_SeqFn(GameObject* obj, int unused, ObjSeqState* seq) {
         mtxRotateByVec3s(matrix, &transform);
         Matrix_TransformPoint(matrix, velX, velY, velZ, &state->localVel.x, &state->localVel.y, &state->localVel.z);
 
-        state->stickY = state->stickY + (framesThisStep << 3);
+        state->stickY += (framesThisStep << 3);
         if (state->stickY > 0x46) {
             state->stickY = 0x46;
         }
@@ -939,7 +939,7 @@ void SnowBike_UpdateSteering(GameObject* obj, SnowBikeState* state) {
     (*gPathControlInterface)->advance(obj, pathState, timeDelta);
     tiltShift = 2;
     if (state->pathState.surfaceCounter == 0) {
-        state->airTime = state->airTime + timeDelta;
+        state->airTime += timeDelta;
         fa = state->airTime;
         state->airTime = CLAMP_EXPR(fa, 0.0f, 120.0f);
         if (state->airTime >= 5.0f) {
@@ -972,8 +972,8 @@ void SnowBike_UpdateSteering(GameObject* obj, SnowBikeState* state) {
     fa = 16384.0f;
     state->wobblePhaseY = fa * timeDelta + state->wobblePhaseY;
     state->wobblePhaseZ = fa * timeDelta + state->wobblePhaseZ;
-    state->wobbleAmpY = state->wobbleAmpY * powfBitEstimate(0.8f, timeDelta);
-    state->wobbleAmpZ = state->wobbleAmpZ * powfBitEstimate(0.8f, timeDelta);
+    state->wobbleAmpY *= powfBitEstimate(0.8f, timeDelta);
+    state->wobbleAmpZ *= powfBitEstimate(0.8f, timeDelta);
     state->wobbleY = state->wobbleAmpY * mathSinf((3.1415927f * state->wobblePhaseY) / 32768.0f);
     state->wobbleZ = state->wobbleAmpZ * mathSinf((3.1415927f * state->wobblePhaseZ) / 32768.0f);
     yawDelta = obj->anim.rotX - (state->yaw & 0xffff);
@@ -984,9 +984,9 @@ void SnowBike_UpdateSteering(GameObject* obj, SnowBikeState* state) {
         yawDelta += 0xffff;
     }
     state->yaw += yawDelta;
-    state->velYaw = state->velYaw + yawDelta;
+    state->velYaw += yawDelta;
     obj->anim.rotY += (state->pathState.tiltPitch >> tiltShift);
-    obj->anim.rotZ = obj->anim.rotZ + (state->pathState.tiltRoll >> tiltShift);
+    obj->anim.rotZ += (state->pathState.tiltRoll >> tiltShift);
     rotClamped = obj->anim.rotY;
     if (rotClamped < -0x2000) {
         rotClamped = -0x2000;
@@ -1189,7 +1189,7 @@ void SnowBike_UpdateLiftSway(GameObject* obj, SnowBikeState* state) {
         delta = delta - 0xffff;
     }
     if (delta < -0x8000) {
-        delta = delta + 0xffff;
+        delta += 0xffff;
     }
     state->rollOffset += delta * state->rollGain;
 
@@ -1198,7 +1198,7 @@ void SnowBike_UpdateLiftSway(GameObject* obj, SnowBikeState* state) {
         delta = delta - 0xffff;
     }
     if (delta < -0x8000) {
-        delta = delta + 0xffff;
+        delta += 0xffff;
     }
     state->velYaw += delta * state->yawFollowGain;
 
@@ -1723,7 +1723,7 @@ void SnowBike_update(GameObject* obj) {
                 mtxRotateByVec3s(cpuMatrix, &cpuTransform);
                 Matrix_TransformPoint(cpuMatrix, 0.0f, state->gravity * state->turnForceGain, 0.0f, &cpuForce.x,
                                       &dummy1, &cpuForce.z);
-                cpuForce.x = cpuForce.x * state->turnVelScale;
+                cpuForce.x *= state->turnVelScale;
                 cpuForce.y = 0.0f;
                 PSVECScale(&cpuForce, &cpuForce, timeDelta);
                 PSVECAdd(&state->localVel, &cpuForce, &state->localVel);
@@ -1746,7 +1746,7 @@ void SnowBike_update(GameObject* obj) {
             state->buttonsJustPressed = getButtonsJustPressed(0);
             state->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);
             state->steerAngleDeg = SnowBike_GetStickAngleDeg(state->stickX, -state->stickY);
-            state->stickX = state->stickX / 56.0f;
+            state->stickX /= 56.0f;
             value = state->stickX;
             if (value < -1.0f) {
                 clamped = -1.0f;
@@ -1784,7 +1784,7 @@ void SnowBike_update(GameObject* obj) {
             mtxRotateByVec3s(playerMatrix, &playerTransform);
             Matrix_TransformPoint(playerMatrix, 0.0f, state->gravity * state->turnForceGain, 0.0f, &playerForce.x,
                                   &dummy2, &playerForce.z);
-            playerForce.x = playerForce.x * state->turnVelScale;
+            playerForce.x *= state->turnVelScale;
             playerForce.y = 0.0f;
             PSVECScale(&playerForce, &playerForce, timeDelta);
             PSVECAdd(&state->localVel, &playerForce, &state->localVel);

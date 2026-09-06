@@ -16,7 +16,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
     strings = gGameTextFontData;
     if (gameTextFonts->status != 2)
     {
-        gGameTextBufferIndex = gGameTextBufferIndex + 1;
+        gGameTextBufferIndex += 1;
         if (gGameTextBufferIndex >= 8)
         {
             gGameTextBufferIndex = 0;
@@ -46,7 +46,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
     entry = gameTextGet(textId);
     if (entry->identifier == 0xffff)
     {
-        gGameTextBufferIndex = gGameTextBufferIndex + 1;
+        gGameTextBufferIndex += 1;
         if (gGameTextBufferIndex >= 8)
         {
             gGameTextBufferIndex = 0;
@@ -62,7 +62,7 @@ void* gameTextGetPhrase(int textId, int phraseIndex)
 
     if (phraseIndex >= entry->count)
     {
-        gGameTextBufferIndex = gGameTextBufferIndex + 1;
+        gGameTextBufferIndex += 1;
         if (gGameTextBufferIndex >= 8)
         {
             gGameTextBufferIndex = 0;
@@ -86,7 +86,7 @@ void* gameTextGetStr(int textId)
     strings = gGameTextFontData;
     if (gameTextFonts->status != 2)
     {
-        gGameTextBufferIndex = gGameTextBufferIndex + 1;
+        gGameTextBufferIndex += 1;
         if (gGameTextBufferIndex >= 8)
         {
             gGameTextBufferIndex = 0;

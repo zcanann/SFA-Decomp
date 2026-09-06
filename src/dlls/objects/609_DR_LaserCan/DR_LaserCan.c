@@ -117,7 +117,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, ObjJointTrac
         wrapDelta = wrapDelta - 0xFFFF;
     }
     if (wrapDelta < -0x8000) {
-        wrapDelta = wrapDelta + 0xFFFF;
+        wrapDelta += 0xFFFF;
     }
     /* Limit the step to the max aim rate, then interpolate current yaw toward the target. */
     wrapDelta = (wrapDelta < -gLaserCannonMaxAimStep)
@@ -131,7 +131,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, ObjJointTrac
             wrapDelta = wrapDelta - 0xFFFF;
         }
         if (wrapDelta < -0x8000) {
-            wrapDelta = wrapDelta + 0xFFFF;
+            wrapDelta += 0xFFFF;
         }
         wrapDelta = (wrapDelta < -gLaserCannonMaxAimStep)
                         ? -gLaserCannonMaxAimStep
@@ -194,7 +194,7 @@ void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char
     if (visible != 0) {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)1.0f);
         ObjPath_GetPointWorldPosition(obj, 0, &state->muzzleX, &state->muzzleY, &state->muzzleZ, 0);
-        state->muzzleY = state->muzzleY - 5.0f;
+        state->muzzleY -= 5.0f;
     }
 }
 

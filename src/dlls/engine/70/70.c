@@ -52,7 +52,7 @@ void CameraModeDebug_update(CameraObject* camera) {
         factor = (absVel > absMove) ? 0.3f : 0.08f;
         state->radiusVelocity = factor * (move - vel) + state->radiusVelocity;
     }
-    gCameraModeDebugState->orbitRadius = gCameraModeDebugState->orbitRadius + gCameraModeDebugState->radiusVelocity;
+    gCameraModeDebugState->orbitRadius += gCameraModeDebugState->radiusVelocity;
     if (gCameraModeDebugState->orbitRadius < 20.0f) {
         gCameraModeDebugState->orbitRadius = 20.0f;
     }
@@ -75,7 +75,7 @@ void CameraModeDebug_update(CameraObject* camera) {
         vy = radius * sinPitch;
         h = radius * cosPitch;
         px = h * sinYaw;
-        h = h * cosYaw;
+        h *= cosYaw;
         camera->anim.worldPosX = target->anim.worldPosX + px;
         {
             f32 base28 = 20.0f + target->anim.worldPosY;

@@ -260,8 +260,8 @@ void pollenfragment_update(GameObject* obj)
                                                          210.0f;
         }
     }
-    obj->anim.velocityX = obj->anim.velocityX * (horizDamping = 0.97f);
-    obj->anim.velocityZ = obj->anim.velocityZ * horizDamping;
+    obj->anim.velocityX *= (horizDamping = 0.97f);
+    obj->anim.velocityZ *= horizDamping;
     obj->anim.velocityY *= 0.95f;
     if ((extra->def)->noVertical)
     {

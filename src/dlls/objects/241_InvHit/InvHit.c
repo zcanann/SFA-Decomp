@@ -194,8 +194,8 @@ void InvHit_update(GameObject* obj) {
             anchorDistance = sqrtf(anchorDeltaX * anchorDeltaX + anchorDeltaZ * anchorDeltaZ);
             if (anchorDistance > maxReach) {
                 f32 reachScale = maxReach / anchorDistance;
-                anchorDeltaX = anchorDeltaX * reachScale;
-                anchorDeltaZ = anchorDeltaZ * reachScale;
+                anchorDeltaX *= reachScale;
+                anchorDeltaZ *= reachScale;
                 obj->anim.localPosX = state->anchorX + anchorDeltaX;
                 obj->anim.localPosZ = state->anchorZ + anchorDeltaZ;
             }
@@ -285,7 +285,7 @@ void InvHit_init(GameObject* obj, InvHitObjectDef* setup) {
     case INVHIT_MODE_PASSIVE_VOLUME:
         hitState->shapeFlags = setup->shapeFlags;
         hitState->primaryRadius = setup->radius;
-        hitState->flags = hitState->flags | OBJHITS_PRIORITY_STATE_ENABLED;
+        hitState->flags |= OBJHITS_PRIORITY_STATE_ENABLED;
         hitState->activeHitboxMode = 0;
         hitState->resetHitboxMode = 0;
         hitState->lateralResponseWeight = 0;
@@ -306,7 +306,7 @@ void InvHit_init(GameObject* obj, InvHitObjectDef* setup) {
         }
         break;
     }
-    obj->objectFlags = obj->objectFlags | (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
+    obj->objectFlags |= (OBJECT_OBJFLAG_HIDDEN | OBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
 
 void InvHit_release(void) {

@@ -130,7 +130,7 @@ void wmwallcrawler_hitDetect(GameObject* obj) {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             objFreeObjectType(obj, WMWALLCRAWLER_OBJGROUP);
-            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+            obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     } else if (state->hitBits.hit != 0) {
         GameObject* target;
@@ -400,9 +400,9 @@ void wmwallcrawler_update(GameObject* obj) {
                                           (ob->anim.velocityX * ob->anim.velocityX +
                                            ob->anim.velocityY * ob->anim.velocityY)) > gWallCrawlerSpeedCap) {
                                     Vec3_Normalize(&ob->anim.velocityX);
-                                    ob->anim.velocityX = ob->anim.velocityX * (timeDelta * gWallCrawlerSpeedCap);
-                                    ob->anim.velocityY = ob->anim.velocityY * (timeDelta * gWallCrawlerSpeedCap);
-                                    ob->anim.velocityZ = ob->anim.velocityZ * (timeDelta * gWallCrawlerSpeedCap);
+                                    ob->anim.velocityX *= (timeDelta * gWallCrawlerSpeedCap);
+                                    ob->anim.velocityY *= (timeDelta * gWallCrawlerSpeedCap);
+                                    ob->anim.velocityZ *= (timeDelta * gWallCrawlerSpeedCap);
                                 }
                                 if (ob->anim.currentMove == 0 && (state->flags & WMWALLCRAWLER_FLAG_ATTACK_MOVE) != 0 &&
                                     dist < 15.0f) {

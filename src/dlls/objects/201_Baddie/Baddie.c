@@ -152,7 +152,7 @@ void Tricky_resumeAfterCommand(GameObject* obj, EnemyState* state) {
 
     state->actionId = 1;
     if (((state->controlFlags & 0x1000) != 0) && ((state->prevControlFlags & 0x1000) == 0)) {
-        obj->anim.flags = obj->anim.flags & ~OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         moveId = state->moveId0;
         state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale0);
         state->rootMotionFlags = 1;
@@ -208,7 +208,7 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
         }
         state->trackedObj = NULL;
         ObjHits_DisableObject(obj);
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
         moveId = state->moveId1;
         state->animPlaySpeed = 1.0f / (60.0f * state->moveSpeedScale1);
         state->rootMotionFlags = 1;
@@ -253,7 +253,7 @@ void tricky_handleDefeat(GameObject* obj, EnemyState* state) {
         }
         state->particleScale = 0.0f;
         state->controlFlags = 0;
-        obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+        obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         obj->anim.alpha = 0;
         obj->userData1 = 1;
         if ((u32)((ObjPlacement*)setup)->ident == 0xFFFFFFFF) {
@@ -1197,7 +1197,7 @@ void enemyObjAnimUpdate(short* obj, EnemyState* state) {
         }
     }
     if (state->actionId != state->prevActionId) {
-        state->controlFlags = state->controlFlags | BADDIE_CONTROL_JUST_TRIGGERED;
+        state->controlFlags |= BADDIE_CONTROL_JUST_TRIGGERED;
     } else {
         state->controlFlags = state->controlFlags & 0x7fffffff;
     }
@@ -1615,10 +1615,10 @@ int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int max, Enem
                 }
                 diff = diff - ((int)ang & 0xffffU);
                 if ((int)diff > 0x8000) {
-                    diff = diff - 0xffff;
+                    diff -= 0xffff;
                 }
                 if ((int)diff < -0x8000) {
-                    diff = diff + 0xffff;
+                    diff += 0xffff;
                 }
                 ang = (short)((diff & 0xffff) >> 0xd);
                 state->controlFlags &= ~gEnemySelfAngleFlagClearMask[ang];
@@ -1628,7 +1628,7 @@ int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int max, Enem
             }
         }
     } else {
-        radius = radius * radius;
+        radius *= radius;
         arr = (GameObject**)objGetAllOfType(ENEMY_OBJGROUP, &count);
         if (count != 0) {
             i = 0;
@@ -1655,10 +1655,10 @@ int enemy_findNearbyEnemies(GameObject* obj, f32 radius, u8 flags, int max, Enem
                         }
                         diff = diff - ((int)ang & 0xffffU);
                         if ((int)diff > 0x8000) {
-                            diff = diff - 0xffff;
+                            diff -= 0xffff;
                         }
                         if ((int)diff < -0x8000) {
-                            diff = diff + 0xffff;
+                            diff += 0xffff;
                         }
                         ang = (short)((diff & 0xffff) >> 0xd);
                         state->controlFlags &= ~gEnemySelfAngleFlagClearMask[ang];
@@ -1870,9 +1870,9 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
         obj->anim.velocityZ = maxVel;
     }
     if (drag != 0.0f) {
-        obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(drag, timeDelta);
-        obj->anim.velocityY = obj->anim.velocityY * powfBitEstimate(drag, timeDelta);
-        obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityX *= powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityY *= powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityZ *= powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }
@@ -1905,8 +1905,8 @@ f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz
         obj->anim.velocityZ = maxVel;
     }
     if (drag != 0.0f) {
-        obj->anim.velocityX = obj->anim.velocityX * powfBitEstimate(drag, timeDelta);
-        obj->anim.velocityZ = obj->anim.velocityZ * powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityX *= powfBitEstimate(drag, timeDelta);
+        obj->anim.velocityZ *= powfBitEstimate(drag, timeDelta);
     }
     return dy;
 }

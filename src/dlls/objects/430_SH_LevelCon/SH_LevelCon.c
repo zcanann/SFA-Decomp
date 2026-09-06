@@ -192,7 +192,7 @@ void GameBitLatch_Update(GameBitLatchState* state, int mask, s16 clearIfSetBit, 
         if (musicId != -1) {
             Music_Trigger(musicId, 0);
         }
-        state->activeMask = state->activeMask & ~mask;
+        state->activeMask &= ~mask;
     } else {
         if (clearIfClearBitValid == 0 || mainGetBit(clearIfClearBit) == 0) {
             if (mainGetBit(latchBit) == 0) {
@@ -209,7 +209,7 @@ void GameBitLatch_Update(GameBitLatchState* state, int mask, s16 clearIfSetBit, 
         if (musicId != -1) {
             Music_Trigger(musicId, 1);
         }
-        state->activeMask = state->activeMask | mask;
+        state->activeMask |= mask;
     }
 }
 
@@ -512,7 +512,7 @@ void SH_LevelControl_update(GameObject* obj) {
     state = obj->extra;
     if (state->hudTextTimer > 0.0f) {
         gameTextShow(0x3f6);
-        state->hudTextTimer = state->hudTextTimer - timeDelta;
+        state->hudTextTimer -= timeDelta;
         if (state->hudTextTimer < 0.0f) {
             state->hudTextTimer = 0.0f;
         }

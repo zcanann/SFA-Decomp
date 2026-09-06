@@ -262,9 +262,9 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* state, f32 speed
     control->pathObj->pathInterface->callbacks->sample(control->pathObj,
                                                        GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
                                                        &aheadSample.x, &aheadSample.y, &aheadSample.z);
-    pathDelta.x = pathDelta.x - aheadSample.x;
-    pathDelta.y = pathDelta.y - aheadSample.y;
-    pathDelta.z = pathDelta.z - aheadSample.z;
+    pathDelta.x -= aheadSample.x;
+    pathDelta.y -= aheadSample.y;
+    pathDelta.z -= aheadSample.z;
     horizontalRun = sqrtf(pathDelta.x * pathDelta.x + pathDelta.z * pathDelta.z);
     horizontalRunDouble = horizontalRun;
     pathDelta.x = horizontalRun;
@@ -301,9 +301,9 @@ int grimble_stateHandlerA05(GameObject* obj, GroundBaddieState* state) {
     control->pathObj->pathInterface->callbacks->sample(control->pathObj,
                                                        GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
                                                        &aheadSample.x, &aheadSample.y, &aheadSample.z);
-    pathDelta.x = pathDelta.x - aheadSample.x;
-    pathDelta.y = pathDelta.y - aheadSample.y;
-    pathDelta.z = pathDelta.z - aheadSample.z;
+    pathDelta.x -= aheadSample.x;
+    pathDelta.y -= aheadSample.y;
+    pathDelta.z -= aheadSample.z;
     horizontalRun = sqrtf(pathDelta.x * pathDelta.x + pathDelta.z * pathDelta.z);
     horizontalRunDouble = horizontalRun;
     pathDelta.x = horizontalRun;
@@ -337,9 +337,9 @@ int grimble_stateHandlerA04(GameObject* obj, GroundBaddieState* state) {
     control->pathObj->pathInterface->callbacks->sample(control->pathObj,
                                                        GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
                                                        &aheadSample.x, &aheadSample.y, &aheadSample.z);
-    pathDelta.x = pathDelta.x - aheadSample.x;
-    pathDelta.y = pathDelta.y - aheadSample.y;
-    pathDelta.z = pathDelta.z - aheadSample.z;
+    pathDelta.x -= aheadSample.x;
+    pathDelta.y -= aheadSample.y;
+    pathDelta.z -= aheadSample.z;
     horizontalRun = sqrtf(pathDelta.x * pathDelta.x + pathDelta.z * pathDelta.z);
     horizontalRunDouble = horizontalRun;
     pathDelta.x = horizontalRun;
@@ -376,9 +376,9 @@ int grimble_stateHandlerA03(GameObject* obj, GroundBaddieState* state) {
     control->pathObj->pathInterface->callbacks->sample(control->pathObj,
                                                        GRIMBLE_PATH_SAMPLE_OFFSET + control->pathProgress,
                                                        &aheadSample.x, &aheadSample.y, &aheadSample.z);
-    pathDelta.x = pathDelta.x - aheadSample.x;
-    pathDelta.y = pathDelta.y - aheadSample.y;
-    pathDelta.z = pathDelta.z - aheadSample.z;
+    pathDelta.x -= aheadSample.x;
+    pathDelta.y -= aheadSample.y;
+    pathDelta.z -= aheadSample.z;
     horizontalRun = sqrtf(pathDelta.x * pathDelta.x + pathDelta.z * pathDelta.z);
     horizontalRunDouble = horizontalRun;
     pathDelta.x = horizontalRun;
@@ -424,9 +424,9 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 timeStep) {
         controlData->pathObj, controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &deltaX, &deltaY, &deltaZ);
     controlData->pathObj->pathInterface->callbacks->sample(
         controlData->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress, &aheadX, &aheadY, &aheadZ);
-    deltaX = deltaX - aheadX;
-    deltaY = deltaY - aheadY;
-    deltaZ = deltaZ - aheadZ;
+    deltaX -= aheadX;
+    deltaY -= aheadY;
+    deltaZ -= aheadZ;
     horizontalRun = sqrtf(deltaX * deltaX + deltaZ * deltaZ);
     horizontalRunDouble = horizontalRun;
     deltaX = horizontalRun;
@@ -498,9 +498,9 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 timeStep) {
         controlData->pathObj, controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &deltaX, &deltaY, &deltaZ);
     controlData->pathObj->pathInterface->callbacks->sample(
         controlData->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress, &aheadX, &aheadY, &aheadZ);
-    deltaX = deltaX - aheadX;
-    deltaY = deltaY - aheadY;
-    deltaZ = deltaZ - aheadZ;
+    deltaX -= aheadX;
+    deltaY -= aheadY;
+    deltaZ -= aheadZ;
     horizontalRun = sqrtf(deltaX * deltaX + deltaZ * deltaZ);
     horizontalRunDouble = horizontalRun;
     deltaX = horizontalRun;
@@ -554,9 +554,9 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 timeStep) {
         controlData->pathObj, controlData->pathProgress - GRIMBLE_PATH_SAMPLE_OFFSET, &deltaX, &deltaY, &deltaZ);
     controlData->pathObj->pathInterface->callbacks->sample(
         controlData->pathObj, GRIMBLE_PATH_SAMPLE_OFFSET + controlData->pathProgress, &aheadX, &aheadY, &aheadZ);
-    deltaX = deltaX - aheadX;
-    deltaY = deltaY - aheadY;
-    deltaZ = deltaZ - aheadZ;
+    deltaX -= aheadX;
+    deltaY -= aheadY;
+    deltaZ -= aheadZ;
     horizontalRun = sqrtf(deltaX * deltaX + deltaZ * deltaZ);
     horizontalRunDouble = horizontalRun;
     deltaX = horizontalRun;

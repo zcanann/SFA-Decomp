@@ -186,7 +186,7 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
         f32 zero = 0.0f;
         knockX = -aw->knockVelX;
         knockY = -aw->knockVelZ;
-        aw->damageFlashTimer = aw->damageFlashTimer - timeDelta;
+        aw->damageFlashTimer -= timeDelta;
         knockBlend = sDamageStickBlendRamp[(int)aw->damageFlashTimer];
         if (aw->damageFlashTimer <= zero)
         {
@@ -218,8 +218,8 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
             aw->barrelRollAngle = obj->anim.rotZ;
             aw->barrelRollDirection = aw->barrelRollSpeed;
             aw->barrelRollSpeedScale = 1.0f;
-            aw->maxSpeedX = aw->maxSpeedX * aw->barrelRollMaxSpeedScale;
-            aw->accelX = aw->accelX * aw->barrelRollAccelScale;
+            aw->maxSpeedX *= aw->barrelRollMaxSpeedScale;
+            aw->accelX *= aw->barrelRollAccelScale;
             arwarwingbo_setActiveVisible((GameObject*)(aw->bombObj), 1, 0);
         }
         else if ((btn & PAD_TRIGGER_L) != 0)
@@ -229,8 +229,8 @@ void arwarwing_readControls(GameObject* obj, ArwingState* state)
             aw->barrelRollAngle = obj->anim.rotZ;
             aw->barrelRollDirection = -aw->barrelRollSpeed;
             aw->barrelRollSpeedScale = 1.0f;
-            aw->maxSpeedX = aw->maxSpeedX * aw->barrelRollMaxSpeedScale;
-            aw->accelX = aw->accelX * aw->barrelRollAccelScale;
+            aw->maxSpeedX *= aw->barrelRollMaxSpeedScale;
+            aw->accelX *= aw->barrelRollAccelScale;
             arwarwingbo_setActiveVisible((GameObject*)(aw->bombObj), 1, 1);
         }
     }
@@ -409,9 +409,9 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
         arwing->velTargetZ = 0.0f;
     }
     PSVECSubtract((const Vec*)&arwing->velTargetX, (const Vec*)&arwing->velX, (Vec*)accel);
-    accel[0] = accel[0] * arwing->accelX;
-    accel[1] = accel[1] * arwing->accelY;
-    accel[2] = accel[2] * arwing->accelZ;
+    accel[0] *= arwing->accelX;
+    accel[1] *= arwing->accelY;
+    accel[2] *= arwing->accelZ;
     accel[2] = accel[2] < arwing->minAccelZ ? arwing->minAccelZ : (accel[2] > arwing->maxAccelZ ? arwing->maxAccelZ : accel[2]);
     PSVECScale((const Vec*)accel, (Vec*)accel, timeDelta);
     PSVECAdd((const Vec*)&arwing->velX, (const Vec*)accel, (Vec*)&arwing->velX);
@@ -419,9 +419,9 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
 
     angDelta = arwing->rotXTarget - (u16)arwing->rotXCur;
     if (angDelta > 0x8000)
-        angDelta = angDelta - 0xffff;
+        angDelta -= 0xffff;
     if (angDelta < -0x8000)
-        angDelta = angDelta + 0xffff;
+        angDelta += 0xffff;
     rateStep = (int)(f32)((int)((f32)angDelta * arwing->rotXGain) - arwing->rotXRate);
     rateStep = (rateStep < -0x32) ? -0x32 : ((rateStep > 0x32) ? 0x32 : rateStep);
     arwing->rotXRate = (int)((f32)rateStep * timeDelta + (f32)((ArwingState*)arwing)->rotXRate);
@@ -431,7 +431,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     if (angDelta > 0x8000)
         angDelta = angDelta - 0xffff;
     if (angDelta < -0x8000)
-        angDelta = angDelta + 0xffff;
+        angDelta += 0xffff;
     rateStep = (int)(f32)((int)((f32)angDelta * arwing->rotYGain) - arwing->rotYRate);
     rateStep = (rateStep < -0x32) ? -0x32 : ((rateStep > 0x32) ? 0x32 : rateStep);
     arwing->rotYRate = (int)((f32)rateStep * timeDelta + (f32)((ArwingState*)arwing)->rotYRate);
@@ -441,7 +441,7 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     if (angDelta > 0x8000)
         angDelta = angDelta - 0xffff;
     if (angDelta < -0x8000)
-        angDelta = angDelta + 0xffff;
+        angDelta += 0xffff;
     rateStep = (int)((f32)(int)((f32)angDelta * arwing->rotZGain) - arwing->rotZRate);
     rateStep = (rateStep < -0x64) ? -0x64 : ((rateStep > 0x64) ? 0x64 : rateStep);
     arwing->rotZRate = rateStep * timeDelta + ((ArwingState*)arwing)->rotZRate;
@@ -451,9 +451,9 @@ void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
     {
         angDelta = arwing->rotZTrimTarget - (u16)arwing->rotZTrimCur;
         if (angDelta > 0x8000)
-            angDelta = angDelta - 0xffff;
+            angDelta -= 0xffff;
         if (angDelta < -0x8000)
-            angDelta = angDelta + 0xffff;
+            angDelta += 0xffff;
         arwing->rotZTrimCur =
             (int)(timeDelta * ((f32)angDelta * arwing->rotZTrimGain) + (f32)((ArwingState*)arwing)->rotZTrimCur);
         if ((f32)arwing->rotZTrimCur > arwing->rotZBlendThreshold || arwing->rotZTrimCur < -arwing->rotZBlendThreshold)

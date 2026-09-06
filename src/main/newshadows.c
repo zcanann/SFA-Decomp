@@ -1080,10 +1080,10 @@ void newshadows_beginFrame(void) {
         gNewShadowReflectionScrollX = 0.0084f * timeDelta + gNewShadowReflectionScrollX;
         gNewShadowReflectionScrollY = 0.003f * timeDelta + gNewShadowReflectionScrollY;
         if (gNewShadowReflectionScrollX > 256.0f) {
-            gNewShadowReflectionScrollX = gNewShadowReflectionScrollX - 256.0f;
+            gNewShadowReflectionScrollX -= 256.0f;
         }
         if (gNewShadowReflectionScrollY > 256.0f) {
-            gNewShadowReflectionScrollY = gNewShadowReflectionScrollY - 256.0f;
+            gNewShadowReflectionScrollY -= 256.0f;
         }
     }
     gNewShadowCasterCount = 0;
@@ -1229,8 +1229,8 @@ static void evalNoisePlacements(f32 sampleX, f32 sampleZ, f32 frame, const NewSh
                 radialWeight = 1.0f - radialWeight;
                 falloff = sqrtf(radialWeight);
                 intensity = fade * falloff + intensity;
-                verticalOffset = verticalOffset / radius;
-                shift = shift + verticalOffset;
+                verticalOffset /= radius;
+                shift += verticalOffset;
                 shift = 0.5f * (1.0f - frame / 16.0f) + shift;
             }
         }
@@ -1411,7 +1411,7 @@ static inline void fillDiskTexture(void) {
             off2 = off + sizeof(Texture);
             dx = cy / 16.0f;
             dz = (f32)j - 16.0f;
-            dz = dz / 16.0f;
+            dz /= 16.0f;
             dx = dx * 1.1f;
             dz = dz * 1.1f;
             d2 = dx * dx + dz * dz;
@@ -1443,7 +1443,7 @@ static inline void fillSmallDiskTexture(void) {
             off2 = off + sizeof(Texture);
             dx = cy / 8.0f;
             dz = (f32)j - 8.0f;
-            dz = dz / 8.0f;
+            dz /= 8.0f;
             dx = dx * 1.2f;
             dz = dz * 1.2f;
             d2 = dx * dx + dz * dz;
@@ -1663,12 +1663,12 @@ void allocLotsOfTextures(void) {
                 rc = fi / 32.0f;
                 rc2 = fi2 / 32.0f;
                 cc = ((f32)j - 32.0f) / 32.0f;
-                cc = cc * cc;
+                cc *= cc;
                 d1 = sqrtf(rc * rc + cc);
                 d2 = sqrtf(rc2 * rc2 + cc);
                 cc2 = (f32)(j + 1) - 32.0f;
-                cc2 = cc2 / 32.0f;
-                cc2 = cc2 * cc2;
+                cc2 /= 32.0f;
+                cc2 *= cc2;
                 rc = fi / 32.0f;
                 d3 = sqrtf(rc * rc + cc2);
                 n1 = -mathCosfHighPrecision(18.852f * d1);
@@ -1705,13 +1705,13 @@ void allocLotsOfTextures(void) {
                     dst += (i & 3) * 8;
                     dst += (i >> 2) * 0x200;
                     cc = (f32)i - 32.0f;
-                    cc = cc / 32.0f;
-                    cc = cc * cc;
+                    cc /= 32.0f;
+                    cc *= cc;
                     d1 = sqrtf(rowCoord * rowCoord + cc);
                     d2 = sqrtf(rc2 * rc2 + cc);
                     cc2 = (f32)(i + 1) - 32.0f;
-                    cc2 = cc2 / 32.0f;
-                    cc2 = cc2 * cc2;
+                    cc2 /= 32.0f;
+                    cc2 *= cc2;
                     rowCoord = fj / 32.0f;
                     d3 = sqrtf(rowCoord * rowCoord + cc2);
                     n1 = -mathCosfHighPrecision(18.852f * d1);
@@ -1728,8 +1728,8 @@ void allocLotsOfTextures(void) {
                     if (c > 15.0f) {
                         c = 15.0f;
                     }
-                    a = a / 32.0f;
-                    b = b / 16.0f;
+                    a /= 32.0f;
+                    b /= 16.0f;
                     bi = (int)b & 0xf;
                     ci = ((u16)(int)c & 0xf) << 4;
                     ai = ((u16)(int)a & 7) << 12;
@@ -1773,7 +1773,7 @@ void allocLotsOfTextures(void) {
             off += (j >> 2) * 0x200;
             off2 = off + sizeof(Texture);
             cx = __fabsf(((f32)j - 64.0f) / 64.0f);
-            cx = cx * cx;
+            cx *= cx;
             d2 = sqrtf(__fabsf(cyScaled) * __fabsf(cyScaled) + cx);
             v = 1.0f - d2;
             if (v < 0.0f) {

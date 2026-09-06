@@ -94,7 +94,7 @@ void DIMCannon_updateBall(GameObject* obj) {
     case DIM_CANNON_BALL_MODE_EXPLODED:
         break;
     }
-    obj->userData1 = obj->userData1 + framesThisStep;
+    obj->userData1 += framesThisStep;
     if (obj->userData1 > 1200) {
         Obj_FreeObject(obj);
     } else if (state->clearLatch != 0) {
@@ -326,8 +326,8 @@ int DIMCannon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                                        ? -1
                                        : (*(s16*)((char*)modelRotation + 0x2) > 0 ? 1 : 0);
                     if (rotationSign == deltaSign) {
-                        aimDelta = aimDelta * (lbl_803DBF02 - angleMagnitude);
-                        aimDelta = aimDelta / lbl_803DBF04;
+                        aimDelta *= (lbl_803DBF02 - angleMagnitude);
+                        aimDelta /= lbl_803DBF04;
                     }
                 }
                 modelRotation[1] = (s16)(modelRotation[1] + aimDelta);
@@ -393,7 +393,7 @@ int DIMCannon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
                 state->mode = DIM_CANNON_MODE_WAIT_FOR_RESET;
                 state->chargeTimer = 0x3c;
                 animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
-                obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+                obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) != 0) {
                     Sfx_IsPlayingFromObjectChannel(obj, 0);
                 }
@@ -471,7 +471,7 @@ void DIMCannon_update(GameObject* obj) {
     }
 
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_DISABLED) && mainGetBit(placement->resetGameBit)) {
-        obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED;
+        obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     }
 
     state = obj->extra;

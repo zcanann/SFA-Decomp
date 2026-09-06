@@ -140,15 +140,15 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision) 
                         if ((pointY < 50.0f + object->anim.worldPosY) &&
                             ((s8)point->surfaceType != ROMCURVE_POINT_TYPE_WATER)) {
                             heights[i] = point->height;
-                            sum1 = sum1 + point->normalX;
-                            sum2 = sum2 + point->normalY;
-                            sum3 = sum3 + point->normalZ;
-                            sum0 = sum0 + pointY;
+                            sum1 += point->normalX;
+                            sum2 += point->normalY;
+                            sum3 += point->normalZ;
+                            sum0 += pointY;
                             count++;
                             found1 = 1;
                         }
                     }
-                    list = list + 1;
+                    list += 1;
                 }
             }
             collision->points[i][1] = heights[i];
@@ -164,15 +164,15 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision) 
         }
         dx = heights[3];
         dz = collision->segmentLocalPoints[11];
-        dz = dz - collision->segmentLocalPoints[2];
-        dx = dx - heights[0];
+        dz -= collision->segmentLocalPoints[2];
+        dx -= heights[0];
         getAngle(dx, dz);
         ang = getAngle(dx, dz);
         object->anim.rotY = -ang;
         if (((int)collision->flags & 0x400) != 0) {
             dx = heights[1];
             dz = collision->segmentLocalPoints[3] - collision->segmentLocalPoints[0];
-            dx = dx - heights[0];
+            dx -= heights[0];
             object->anim.rotZ = getAngle(dx, dz);
         }
     }
@@ -1276,11 +1276,11 @@ void curves_updateQueryBounds(GameObject* obj, CurvesCollisionState* state, f32 
             *radDst = radSrc->segmentHits.radii[0];
             rr = radiusScale * *radDst;
             *radDst = sqrtf(rr * *radDst);
-            ptsWalk = ptsWalk + 3;
-            byteOff = byteOff + 0xc;
-            idx3 = idx3 + 3;
+            ptsWalk += 3;
+            byteOff += 0xc;
+            idx3 += 3;
             radSrc = (CurvesCollisionState*)((u8*)radSrc + 4);
-            radDst = radDst + 1;
+            radDst += 1;
         }
         maxX = CURVES_BOUNDS_MAX_SEED;
         minX = CURVES_BOUNDS_MIN_SEED;
@@ -1338,9 +1338,9 @@ void curves_updateQueryBounds(GameObject* obj, CurvesCollisionState* state, f32 
             if (bound < minZ) {
                 minZ = bound;
             }
-            ptsRead = ptsRead + 3;
+            ptsRead += 3;
             traceSrc = (CurvesCollisionState*)((u8*)traceSrc + 12);
-            radWrite = radWrite + 1;
+            radWrite += 1;
         }
         state->hitBounds.minX = minX;
         state->hitBounds.maxX = maxX;
@@ -1424,7 +1424,7 @@ void saveFileStruct_setCheatActive(u8 optionIndex, u8 active) {
     if (active != 0) {
         save->enabledCheats |= 1 << optionIndex;
     } else {
-        save->enabledCheats = save->enabledCheats & ~(1 << optionIndex);
+        save->enabledCheats &= ~(1 << optionIndex);
     }
 }
 

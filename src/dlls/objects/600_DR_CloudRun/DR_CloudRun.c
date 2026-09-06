@@ -135,7 +135,7 @@ void DR_CloudRunner_func23(GameObject* obj, int mode, int* out) {
                 diff = diff - 0xffff;
             }
             if (diff < -0x8000) {
-                diff = diff + 0xffff;
+                diff += 0xffff;
             }
             step = diff / 16;
             if (step < -0x50) {
@@ -265,7 +265,7 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, CloudRunnerState* baddie) {
         GameObject* newObj;
         ObjPlacement* setup;
         inner->flagsBB6 &= ~8;
-        hitState->flags = hitState->flags | 0x200;
+        hitState->flags |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0xd, 0.0f, 0);
         baddie->baddie.moveSpeed = 0.011f;
         if ((u8)Obj_CanSetupObject() == 0) {
@@ -396,7 +396,7 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
     mag = sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
     spd = (mag < 0.0f) ? 0.0f : ((mag > 4.7f) ? 4.7f : mag);
     obj->anim.velocityY = obj->anim.velocityY + (accel = ((grav = 0.02f) * spd) / 4.7f);
-    obj->anim.velocityY = obj->anim.velocityY - grav;
+    obj->anim.velocityY -= grav;
     if (spd > 0.0f) {
         if ((int)idx >= 4) {
             s1.angles[2] = obj->anim.rotZ;
@@ -409,11 +409,11 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
             vecD.z = -1.0f;
             vecRotateZXY(s1.angles, &vecC.x);
             vecRotateZXY(s1.angles, &vecD.x);
-            vecC.x = vecC.x * accel;
-            vecC.y = vecC.y * accel;
-            vecC.z = vecC.z * accel;
-            obj->anim.velocityX = obj->anim.velocityX + vecC.x;
-            obj->anim.velocityZ = obj->anim.velocityZ + vecC.z;
+            vecC.x *= accel;
+            vecC.y *= accel;
+            vecC.z *= accel;
+            obj->anim.velocityX += vecC.x;
+            obj->anim.velocityZ += vecC.z;
         } else {
             s1.angles[2] = obj->anim.rotZ;
             s1.angles[1] = inner->pitchAngle;
@@ -432,9 +432,9 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
             vecN.x = vecN.x * (0.001f * adot + 0.02f * ((0.35f * adot) / 4.7f));
             vecN.y = vecN.y * (0.001f * adot + 0.02f * ((0.35f * adot) / 4.7f));
             vecN.z = vecN.z * (0.001f * adot + 0.02f * ((0.35f * adot) / 4.7f));
-            obj->anim.velocityX = obj->anim.velocityX + vecN.x;
-            obj->anim.velocityY = obj->anim.velocityY + vecN.y;
-            obj->anim.velocityZ = obj->anim.velocityZ + vecN.z;
+            obj->anim.velocityX += vecN.x;
+            obj->anim.velocityY += vecN.y;
+            obj->anim.velocityZ += vecN.z;
         }
     }
     if (baddie->baddie.inputMagnitude > 0.05f) {
@@ -449,9 +449,9 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
         vecC.y = -baddie->baddie.moveInputZ / 64.0f * base->inputScaleZ[(int)idx >> 1];
         vecC.z = 0.0f;
         vecRotateZXY(s1.angles, &vecC.x);
-        obj->anim.velocityX = obj->anim.velocityX + vecC.x;
-        obj->anim.velocityY = obj->anim.velocityY + vecC.y;
-        obj->anim.velocityZ = obj->anim.velocityZ + vecC.z;
+        obj->anim.velocityX += vecC.x;
+        obj->anim.velocityY += vecC.y;
+        obj->anim.velocityZ += vecC.z;
     }
     if (inner->flagsBC0.b80 & (obj->anim.currentMoveProgress < 0.5f)) {
         s1.angles[2] = obj->anim.rotZ;
@@ -462,9 +462,9 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
         s1.mat[3] = 0.0f;
         s1.mat[0] = 1.0f;
         vecRotateZXY(s1.angles, &vecB.x);
-        obj->anim.velocityX = obj->anim.velocityX + vecB.x;
-        obj->anim.velocityY = obj->anim.velocityY + vecB.y;
-        obj->anim.velocityZ = obj->anim.velocityZ + vecB.z;
+        obj->anim.velocityX += vecB.x;
+        obj->anim.velocityY += vecB.y;
+        obj->anim.velocityZ += vecB.z;
     }
     mag = sqrtf(obj->anim.velocityZ * obj->anim.velocityZ +
                 (obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityY * obj->anim.velocityY));
@@ -501,7 +501,7 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
             diff = diff - 0xffff;
         }
         if (diff < -0x8000) {
-            diff = diff + 0xffff;
+            diff += 0xffff;
         }
         inner->headingAngle += diff / 64;
         inner->rollAngle += diff / 128;
@@ -541,9 +541,9 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
         Vec3_Normalize(&vecE.x);
         {
             f32 scale = (t / 30.0f) * (0.3f + (mag / 4.7f) * (mag / 4.7f));
-            vecE.x = vecE.x * (scale / f);
-            vecE.y = vecE.y * (scale / f);
-            vecE.z = vecE.z * (scale / f);
+            vecE.x *= (scale / f);
+            vecE.y *= (scale / f);
+            vecE.z *= (scale / f);
         }
         if (vecE.y < 0.0f) {
             vecE.y = 0.0f;
@@ -554,9 +554,9 @@ int DR_CloudRunner_stateHandler05(GameObject* obj, CloudRunnerState* baddie, f32
         if (t < 0.0f) {
             t = 0.0f;
         }
-        vecE.x = vecE.x * t;
-        vecE.y = vecE.y * t;
-        vecE.z = vecE.z * t;
+        vecE.x *= t;
+        vecE.y *= t;
+        vecE.z *= t;
         obj->anim.velocityX = vecE.x + obj->anim.velocityX;
         obj->anim.velocityY = vecE.y + obj->anim.velocityY;
         obj->anim.velocityZ = vecE.z + obj->anim.velocityZ;
@@ -642,10 +642,10 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie) {
              0xffff;
         a0 -= (u16)obj->anim.rotX;
         if (a0 > 0x8000) {
-            a0 = a0 - 0xffff;
+            a0 -= 0xffff;
         }
         if (a0 < -0x8000) {
-            a0 = a0 + 0xffff;
+            a0 += 0xffff;
         }
         obj->anim.rotX = (f32)(s32)obj->anim.rotX + interpolate((f32)(s32)a0, 0.03125f, timeDelta);
         a1 -= (u16)obj->anim.rotY;
@@ -653,7 +653,7 @@ int DR_CloudRunner_stateHandler04(GameObject* obj, CloudRunnerState* baddie) {
             a1 = a1 - 0xffff;
         }
         if (a1 < -0x8000) {
-            a1 = a1 + 0xffff;
+            a1 += 0xffff;
         }
         obj->anim.rotY = (f32)(s32)obj->anim.rotY + interpolate((f32)(s32)a1, 0.03125f, timeDelta);
         obj->anim.rotZ = (s16)(a0 >> 5);

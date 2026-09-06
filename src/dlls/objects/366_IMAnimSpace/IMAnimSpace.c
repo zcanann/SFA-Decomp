@@ -102,7 +102,7 @@ int imAnimSpace_sequenceCallback(GameObject* obj, int unusedArg2, ObjSeqState* a
             state->submodelMask = state->submodelMask ^ (1 << (eventId - 1));
             break;
         case 5:
-            state->submodelMask = state->submodelMask ^ IM_ANIM_SPACE_MASK_GROUP;
+            state->submodelMask ^= IM_ANIM_SPACE_MASK_GROUP;
             break;
         case 6:
             state->eventFlags = (u8)(state->eventFlags ^ IM_ANIM_SPACE_FLAG_TOGGLE_8);

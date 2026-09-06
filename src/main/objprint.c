@@ -307,7 +307,7 @@ void objKfAnimUpdate(GameObject* obj, ObjKfAnimState* state) {
                 ObjModel_SetBlendChannelTargets(model, 2, model->blendChannels[2].morphTargetB, kfval - 1,
                                                 1.0f / gObjMouthBlendFrames, 0);
             }
-            state->timer = state->timer + state->timerStep;
+            state->timer += state->timerStep;
         }
     }
 }
@@ -1309,8 +1309,8 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
                 va[1] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[1];
                 va[2] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[2];
                 PSMTXMultVec(jm, vp, vp);
-                vp->x = vp->x + playerMapOffsetX;
-                va[2] = va[2] + playerMapOffsetZ;
+                vp->x += playerMapOffsetX;
+                va[2] += playerMapOffsetZ;
                 *(f32*)(q + 0x6c) = vp->x;
                 *(f32*)(q + 0x74) = va[1];
                 *(f32*)(q + 0x7c) = va[2];
@@ -1323,8 +1323,8 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
                 vb.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[1];
                 vb.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[2];
                 PSMTXMultVec(mtx2, &vb, &vb);
-                vb.x = vb.x + playerMapOffsetX;
-                vb.z = vb.z + playerMapOffsetZ;
+                vb.x += playerMapOffsetX;
+                vb.z += playerMapOffsetZ;
                 *(f32*)(q + 0x54) = vb.x;
                 *(f32*)(q + 0x5c) = vb.y;
                 *(f32*)(q + 0x64) = vb.z;
@@ -1342,9 +1342,9 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
             va[1] = *(f32*)(r + 0x74);
             va[2] = *(f32*)(r + 0x7c);
             STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)obj, &vb);
-            va[0] = va[0] - vb.x;
-            va[1] = va[1] - vb.y;
-            va[2] = va[2] - vb.z;
+            va[0] -= vb.x;
+            va[1] -= vb.y;
+            va[2] -= vb.z;
             staff->anim.rotX = getAngle(va[0], va[2]);
             {
                 f32 dx = va[0] * va[0];

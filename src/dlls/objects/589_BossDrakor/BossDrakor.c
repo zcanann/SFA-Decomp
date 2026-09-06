@@ -626,7 +626,7 @@ static inline void bossdrakor_updateEffects(GameObject* obj, BossDrakorState* dr
     t = 0.0f;
     if (t != drakorState->shakeAmount) {
         drakorState->shakeVel = -(0.07f * timeDelta - drakorState->shakeVel);
-        drakorState->shakeAmount = drakorState->shakeAmount + drakorState->shakeVel;
+        drakorState->shakeAmount += drakorState->shakeVel;
         t = (drakorState->shakeAmount < t) ? t
                                            : ((drakorState->shakeAmount > 50.0f) ? 50.0f : drakorState->shakeAmount);
         drakorState->shakeAmount = t;

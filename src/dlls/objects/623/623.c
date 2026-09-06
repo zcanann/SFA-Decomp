@@ -185,7 +185,7 @@ void drgenerator_init(GameObject* obj, DrgeneratorPlacement* placement)
         }
         state->timerDuration = duration;
     }
-    state->timerDuration = state->timerDuration * 0x3c;
+    state->timerDuration *= 0x3c;
     state->unk124 = 0.018f;
     if (mainGetBit(0x9b9) != 0)
     {

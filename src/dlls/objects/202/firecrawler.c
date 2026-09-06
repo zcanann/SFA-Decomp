@@ -492,7 +492,7 @@ void crawlerPlayMoveEventFx(GameObject* obj, u8* state) {
     CrawlerSubDesc* entry = d[enemyState->userData2].p;
     u8 i;
 
-    gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
+    gCrawlerHitSfxTimer -= timeDelta;
 
     for (i = 0; i <= 12; i++) {
         if ((enemyState->animEventMask & (1 << i)) != 0) {
@@ -760,10 +760,10 @@ void crawler_updateC(GameObject* obj, u8* state) {
                 dp[2] = obj->anim.worldPosZ - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosZ;
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)obj->anim.rotX & 0xffffu);
                 if (rel > 0x8000) {
-                    rel = rel - 0xffff;
+                    rel -= 0xffff;
                 }
                 if (rel < -0x8000) {
-                    rel = rel + 0xffff;
+                    rel += 0xffff;
                 }
                 oct = ((u32)rel & 0xffff) >> 13;
                 if (oct == 3 || oct == 4) {
@@ -835,10 +835,10 @@ void crawler_updateC(GameObject* obj, u8* state) {
                     dp2[2] = obj->anim.worldPosZ - base->posZ;
                     rel2 = (getAngle(-dp2[0], -dp2[2]) & 0xffff) - ((int)obj->anim.rotX & 0xffffu);
                     if (rel2 > 0x8000) {
-                        rel2 = rel2 - 0xffff;
+                        rel2 -= 0xffff;
                     }
                     if (rel2 < -0x8000) {
-                        rel2 = rel2 + 0xffff;
+                        rel2 += 0xffff;
                     }
                     oct2 = ((u32)rel2 & 0xffff) >> 13;
                     i = oct2;
@@ -945,10 +945,10 @@ void crawler_updateB(GameObject* obj, u8* state) {
                 dp[2] = obj->anim.worldPosZ - gCrawlerNearbyObjectBuffer[0].obj->anim.worldPosZ;
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)obj->anim.rotX & 0xffffu);
                 if (rel > 0x8000) {
-                    rel = rel - 0xffff;
+                    rel -= 0xffff;
                 }
                 if (rel < -0x8000) {
-                    rel = rel + 0xffff;
+                    rel += 0xffff;
                 }
                 oct = ((u32)rel & 0xffff) >> 13;
                 if (oct != 0 && oct < 7) {

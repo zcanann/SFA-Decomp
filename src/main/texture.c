@@ -260,7 +260,7 @@ void Rcp_ClearRenderFlags(u32 bits) {
 }
 
 void Rcp_SetRenderFlags(u32 bits) {
-    gRcpRenderFlags = gRcpRenderFlags | bits;
+    gRcpRenderFlags |= bits;
 }
 
 void* getLoadedTexture(int key) {
@@ -563,7 +563,7 @@ void* textureLoad(int texId, u8 flagIn) {
     if (texId & 0x8000) {
         bank = 1;
         file = 0x20;
-        id16 = id16 & 0x7fff;
+        id16 &= 0x7fff;
     } else if (origTexId >= 0xbb8) {
         bank = 2;
         file = 0x4f;

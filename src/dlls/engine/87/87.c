@@ -98,7 +98,7 @@ void CameraModeTitle_update(CameraObject* camera) {
             ease = 0.5f * ((2.0f * gCameraModeTitleProgress) * (2.0f * gCameraModeTitleProgress));
         } else {
             f32 inverseEase = -(2.0f * (gCameraModeTitleProgress - 0.5f) - 1.0f);
-            inverseEase = inverseEase * inverseEase;
+            inverseEase *= inverseEase;
             ease = (1.0f - inverseEase) * 0.5f + 0.5f;
         }
         ease = (0.5f * ease + (1.5f * ease) * ease) + ease * ((-1.0f * ease) * ease);

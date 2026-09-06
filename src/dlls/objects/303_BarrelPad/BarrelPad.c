@@ -58,7 +58,7 @@ void BarrelPad_init(GameObject* obj, BarrelPadPlacement* placement) {
         if (!obj->anim.rootMotionScale) {
             obj->anim.rootMotionScale = BARRELPAD_DEFAULT_SCALE;
         }
-        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+        obj->anim.rootMotionScale *= obj->anim.modelInstance->rootMotionScaleBase;
     }
     obj->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
 }

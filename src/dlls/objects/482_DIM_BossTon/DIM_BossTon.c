@@ -205,13 +205,13 @@ void dimBossTonsil_newState_hitFightMain(GameObject* obj, ObjSeqState* animUpdat
                           0, 0);
 
     if (gDIMbosstonsilFightTimer != 0.0f) {
-        gDIMbosstonsilFightTimer = gDIMbosstonsilFightTimer - timeDelta;
+        gDIMbosstonsilFightTimer -= timeDelta;
         timer = gDIMbosstonsilFightTimer / 8.0f;
         if (gDIMbosstonsilFightTimer <= 1.0f) {
             gDIMbosstonsilFightTimer = 0.0f;
             updateState->baddie.hasTarget = 0;
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
-            obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+            obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             mainSetBits(DIMBOSS_GAMEBIT_ICICLE_DEFEATED, 0);
             if (gDIMbosstonsilRoutePhase >= DIMBOSSTONSIL_ROUTE_HIGH_THRESHOLD) {
                 mainSetBits(DIMBOSSTONSIL_GAMEBIT_ROUTE_HIGH, 1);
@@ -231,20 +231,20 @@ void dimBossTonsil_newState_hitFightMain(GameObject* obj, ObjSeqState* animUpdat
         if (timer < gDIMbosstonsilThirty[0]) {
             timer = gDIMbosstonsilThirty[0];
         }
-        gDIMbosstonsilNextRumbleTime = gDIMbosstonsilNextRumbleTime + timer;
+        gDIMbosstonsilNextRumbleTime += timer;
         doRumble(8.0f);
     }
 
-    gDIMbosstonsilRumbleElapsed = gDIMbosstonsilRumbleElapsed + timeDelta;
+    gDIMbosstonsilRumbleElapsed += timeDelta;
     DIMbosstonsil_checkHit(obj, updateState);
 
     if (gDIMbosstonsilRouteDelayTimer != 0.0f) {
-        gDIMbosstonsilRouteDelayTimer = gDIMbosstonsilRouteDelayTimer - timeDelta;
+        gDIMbosstonsilRouteDelayTimer -= timeDelta;
         if (gDIMbosstonsilRouteDelayTimer <= 0.0f) {
             gDIMbosstonsilRouteDelayTimer = 0.0f;
             updateState->baddie.hasTarget = 0;
             ((ObjHitsPriorityState*)obj->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
-            obj->anim.resetHitboxFlags = obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED;
+            obj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
             mainSetBits(DIMBOSS_GAMEBIT_ICICLE_DEFEATED, 0);
             if (gDIMbosstonsilRoutePhase == DIMBOSSTONSIL_ROUTE_SPLIT_THRESHOLD) {
                 mainSetBits(DIMBOSSTONSIL_GAMEBIT_ROUTE_LOW, 1);
@@ -300,7 +300,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animUpdate) {
                 lightValue = 0;
                 gDIMbosstonsilLight->glowAlphaStep = 0;
             } else if (lightValue > 0xc) {
-                lightValue = lightValue + randomGetRange(-0xc, 0xc);
+                lightValue += randomGetRange(-0xc, 0xc);
                 if (lightValue > 0xff) {
                     lightValue = 0xff;
                     gDIMbosstonsilLight->glowAlphaStep = 0;
@@ -538,7 +538,7 @@ void DIMbosstonsil_init(GameObject* obj, u8* placementAddress, int isAltVariant)
     state = obj->extra;
     variant = 6;
     if (isAltVariant != 0) {
-        variant = variant | 1;
+        variant |= 1;
     }
     (*gBaddieControlInterface)->initGroundBaddie(obj, placementAddress, (u8*)state, 2, 2, 0x102, variant, 20.0f);
     obj->animEventCallback = DIMbosstonsil_SeqFn;

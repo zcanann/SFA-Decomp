@@ -125,7 +125,7 @@ void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             }
         }
 
-        state->particleTimer = state->particleTimer - dt;
+        state->particleTimer -= dt;
         if (state->particleTimer <= VORTEX_ZERO && hudHidden == 0)
         {
             state->particleTimer = VORTEX_PARTICLE_INTERVAL;

@@ -352,7 +352,7 @@ void explosion_update(GameObject* obj) {
                             childOffset.y += state->flames[i].posY;
                             childOffset.z += state->flames[i].posZ;
                             childSpeed = parentSpeed * randomGetRange(0xc0, 0x100);
-                            childSpeed = childSpeed * sExplosionSpeedScale[0];
+                            childSpeed *= sExplosionSpeedScale[0];
                             if (spawnState->flameCount < DIM_EXPLOSION_FLAME_CAPACITY) {
                                 explosion_spawnFlame(obj, childSpeed, (u8)(parentGeneration + 1), childOffset.x,
                                                      childOffset.y, childOffset.z);

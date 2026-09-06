@@ -133,13 +133,13 @@ void warpstone_updateDustEffects(GameObject* obj) {
             effectParams.flags = 0;
             effectParams.scale = 0.0009f * ((state->dustEffectTimer - 120.0f) / 240.0f);
             (*gPartfxInterface)->spawnObject(playerObj, DUST_CLOUD_EFFECT_ID, &effectParams, 2, -1, NULL);
-            state->dustEffectFlags = state->dustEffectFlags | WARPSTONE_DUST_FLAG_BURST_READY;
+            state->dustEffectFlags |= WARPSTONE_DUST_FLAG_BURST_READY;
         } else if (state->dustEffectTimer < 420.0f) {
             if ((f32)(s32)randomGetRange(0, DUST_SPAWN_CHANCE_RANGE) < state->dustEffectTimer / 2.0f) {
                 (*gPartfxInterface)->spawnObject(playerObj, DUST_PUFF_EFFECT_ID, &effectParams, 2, -1, NULL);
             }
             if ((state->dustEffectFlags & WARPSTONE_DUST_FLAG_BURST_READY) != 0) {
-                state->dustEffectFlags = state->dustEffectFlags & ~WARPSTONE_DUST_FLAG_BURST_READY;
+                state->dustEffectFlags &= ~WARPSTONE_DUST_FLAG_BURST_READY;
                 effectParams.radius = 0x46;
                 effectParams.scale = 0.00036f;
                 for (burstCount = DUST_BURST_PUFF_COUNT; (u8)burstCount != 0; burstCount--) {
@@ -148,7 +148,7 @@ void warpstone_updateDustEffects(GameObject* obj) {
             }
         } else if (!(state->dustEffectTimer < 480.0f)) {
             state->dustEffectTimer = 0.0f;
-            state->dustEffectFlags = state->dustEffectFlags & ~WARPSTONE_DUST_FLAG_ACTIVE;
+            state->dustEffectFlags &= ~WARPSTONE_DUST_FLAG_ACTIVE;
         }
 
         state->dustEffectTimer += timeDelta;
@@ -358,7 +358,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animObj) {
                 hit = 0;
             }
             if (hit) {
-                state->sequenceFlags = state->sequenceFlags | 2;
+                state->sequenceFlags |= 2;
             }
         }
         animUpdate->movementState = 0;
@@ -376,7 +376,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animObj) {
         command = animUpdate->eventIds[i];
         switch (command) {
         case 0x17:
-            state->dustEffectFlags = state->dustEffectFlags | 4;
+            state->dustEffectFlags |= 4;
             Sfx_PlayFromObject(0, SFXTRIG_id_420);
             break;
 
@@ -402,7 +402,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, ObjSeqState* animObj) {
             break;
 
         case 0xa:
-            state->sequenceToggle = state->sequenceToggle ^ 1;
+            state->sequenceToggle ^= 1;
             break;
 
         case 9:

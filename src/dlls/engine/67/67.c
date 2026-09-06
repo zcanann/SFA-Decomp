@@ -236,7 +236,7 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
             ->handler->vtable->updateVerticalBounds(camera, 1, 3, &gCameraModeStaffAnimState->curveMin,
                                                     &gCameraModeStaffAnimState->curveMax);
         if ((camera->anim.currentMove != 0) || (camera->cameraCollisionActive != 0)) {
-            gCameraModeStaffAnimState->initialiseCurve[4] = gCameraModeStaffAnimState->initialiseCurve[4] + timeDelta;
+            gCameraModeStaffAnimState->initialiseCurve[4] += timeDelta;
         }
         if (gCameraModeStaffAnimState->initialiseCurve[4] > 0.0f) {
             needsReset =
@@ -254,10 +254,10 @@ void CameraModeStaffAnim_update(CameraObject* camera) {
         yawDelta = 0x8000 - (angle & 0xffff);
         yawDelta = yawDelta - (u32)(u16)camera->anim.rotX;
         if (yawDelta > 0x8000) {
-            yawDelta = yawDelta + -0xffff;
+            yawDelta += -0xffff;
         }
         if (yawDelta < -0x8000) {
-            yawDelta = yawDelta + 0xffff;
+            yawDelta += 0xffff;
         }
         camera->anim.rotX += yawDelta;
         ((CamcontrolDefaultHandlerEntry*)defaultHandler)
@@ -336,7 +336,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
         approachAngle = approachAngle - 0xffff;
     }
     if (approachAngle < -0x8000) {
-        approachAngle = approachAngle + 0xffff;
+        approachAngle += 0xffff;
     }
     if (approachAngle < 0) {
         approachAngle = -approachAngle;
@@ -380,7 +380,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, CameraModeStaffA
             turnAmount = turnAmount - 0xffff;
         }
         if (turnAmount < -0x8000) {
-            turnAmount = turnAmount + 0xffff;
+            turnAmount += 0xffff;
         }
 
         pathAngle = turnAmount;

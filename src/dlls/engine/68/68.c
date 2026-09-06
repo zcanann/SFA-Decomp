@@ -161,7 +161,7 @@ void firstPersonDoControls(CameraObject* camera) {
     zoom = (t < 0.0f) ? 0.0f : ((t > 1.0f) ? 1.0f : t);
     spin = stickX * (6.0f - 4.0f * zoom);
     spin = interpolate(spin - gCameraModeViewfinderState->yawSpeed, 0.12f, timeDelta);
-    gCameraModeViewfinderState->yawSpeed = gCameraModeViewfinderState->yawSpeed + spin;
+    gCameraModeViewfinderState->yawSpeed += spin;
     if ((gCameraModeViewfinderState->yawSpeed > -5.0f) && (gCameraModeViewfinderState->yawSpeed < 5.0f)) {
         gCameraModeViewfinderState->yawSpeed = 0.0f;
     }
@@ -173,10 +173,10 @@ void firstPersonDoControls(CameraObject* camera) {
         pitchDelta = pitchDelta - 0xffff;
     }
     if (pitchDelta < -0x8000) {
-        pitchDelta = pitchDelta + 0xffff;
+        pitchDelta += 0xffff;
     }
     spin = interpolate((f32)pitchDelta, 1.0f / (32.0f * zoom + 16.0f), timeDelta);
-    camera->anim.rotY = camera->anim.rotY + spin;
+    camera->anim.rotY += spin;
     if (camera->anim.rotY > 0x3c00) {
         camera->anim.rotY = 0x3c00;
     }
@@ -439,10 +439,10 @@ void CameraModeViewfinder_update(CameraObject* camera) {
             pitchDelta = getAngle(relativeY, relativeDistance) & 0xffff;
             pitchDelta -= camera->anim.rotY & 0xffffU;
             if (pitchDelta > 0x8000) {
-                pitchDelta = pitchDelta - 0xffff;
+                pitchDelta -= 0xffff;
             }
             if (pitchDelta < -0x8000) {
-                pitchDelta = pitchDelta + 0xffff;
+                pitchDelta += 0xffff;
             }
             camera->anim.rotY = *(s16*)&camera->anim.rotY + (int)((f32)pitchDelta * timeDelta) / 8;
         }
@@ -521,8 +521,8 @@ void CameraModeViewfinder_init(CameraObject* camera, int mode, CameraModeViewfin
     dz = camera->anim.worldPosZ - focus->anim.worldPosZ;
     dist = sqrtf(dx * dx + dz * dz);
     if (dist != 0.0f) {
-        dx = dx / dist;
-        dz = dz / dist;
+        dx /= dist;
+        dz /= dist;
     }
     firstPersonPlaceCamera(focus, 1);
     cosv = -mathSinf((3.1415927f * focus->anim.rotX) / 32768.0f);
@@ -554,7 +554,7 @@ void CameraModeViewfinder_init(CameraObject* camera, int mode, CameraModeViewfin
         yawDelta = yawDelta - 0xffff;
     }
     if (yawDelta < -0x8000) {
-        yawDelta = yawDelta + 0xffff;
+        yawDelta += 0xffff;
     }
     gCameraModeViewfinderState->yawCurve.start = yawDelta;
     zero = 0.0f;

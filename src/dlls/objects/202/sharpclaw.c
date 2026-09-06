@@ -507,7 +507,7 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent) {
     if ((u8)allowNewEvent != 0) {
         if ((eventFlags != 0 || enemyState->sharpClaw.eventDelayTimer) && (stateFlags & 0x40) == 0 && flag20 == 0) {
             if (enemyState->sharpClaw.eventDelayTimer) {
-                enemyState->sharpClaw.eventDelayTimer = enemyState->sharpClaw.eventDelayTimer - timeDelta;
+                enemyState->sharpClaw.eventDelayTimer -= timeDelta;
                 if (enemyState->sharpClaw.eventDelayTimer <= 0.0f) {
                     enemyState->sharpClaw.eventDelayTimer = 0.0f;
                 } else {
@@ -532,8 +532,8 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent) {
             blendTimer = 60.0f * (blendScale * (row = &eventRows[eventIndex])->blend);
             enemyState->sharpClaw.moveHoldDuration = blendTimer;
             enemyState->sharpClaw.moveHoldTimer = blendTimer;
-            enemyState->controlFlags = enemyState->controlFlags | 0x40;
-            enemyState->curveIndex = enemyState->curveIndex | 0x80;
+            enemyState->controlFlags |= 0x40;
+            enemyState->curveIndex |= 0x80;
             enemyState->curveParamA = 0;
             enemyState->curveParamB = 0;
             Baddie_SetMove(obj, state, row->moveId, blendScale * row->blend, 0, row->flags & 0xff);
@@ -550,7 +550,7 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent) {
         GameObject* pos = enemyState->trackedObj;
         baddieTurnTowardPoint(obj, state, pos->anim.localPosX, pos->anim.localPosZ, 0xf, 0);
         if (enemyState->animPlaySpeed > 0.0166f) {
-            enemyState->animPlaySpeed = enemyState->animPlaySpeed - 0.005f;
+            enemyState->animPlaySpeed -= 0.005f;
         }
         if ((enemyState->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) {
             eventTableIndex = enemyState->familyData.sharpClaw.activeEventIndex;
@@ -560,12 +560,12 @@ u32 wispBaddieProcessAnimEvent(GameObject* obj, u8* state, u32 allowNewEvent) {
             ObjAnim_SetMoveProgress(
                 &obj->anim, *(f32*)(base + eventRows[enemyState->familyData.sharpClaw.activeEventIndex].moveId * 4));
         }
-        enemyState->sharpClaw.moveHoldTimer = enemyState->sharpClaw.moveHoldTimer - timeDelta;
+        enemyState->sharpClaw.moveHoldTimer -= timeDelta;
         if (enemyState->sharpClaw.moveHoldTimer <= 0.0f) {
             enemyState->sharpClaw.moveHoldTimer = 0.0f;
             enemyState->controlFlags &= ~0x40;
             enemyState->controlFlags |= BADDIE_CONTROL_SEQUENCE_DRIVEN;
-            enemyState->curveIndex = enemyState->curveIndex & ~0x80;
+            enemyState->curveIndex &= ~0x80;
             enemyState->familyData.sharpClaw.activeEventIndex = 0;
             return 0;
         } else {
@@ -635,7 +635,7 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
         return 0;
     }
     if (msgId == 0xe) {
-        damage = damage * 0xa;
+        damage *= 0xa;
     }
     if (obj->anim.currentMove == animRows[0x128]) {
         return 0;
@@ -731,7 +731,7 @@ u8 sharpClawHandleHitMessage(GameObject* obj, u8* state, GameObject* attacker, i
         if (damage > enemyState->current) {
             enemyState->current = 0;
         } else {
-            enemyState->current = enemyState->current - damage;
+            enemyState->current -= damage;
         }
         if (enemyState->current == 0) {
             Sfx_PlayFromObject(obj, SFXTRIG_land);
@@ -920,7 +920,7 @@ void sharpClawUpdateApproach(GameObject* obj, void* state) {
     {
         if (enemyState->sharpClaw.seqTimer && enemyState->phaseAngle != 0) {
             f32 zero = 0.0f;
-            enemyState->sharpClaw.seqTimer = enemyState->sharpClaw.seqTimer - timeDelta;
+            enemyState->sharpClaw.seqTimer -= timeDelta;
             if (enemyState->sharpClaw.seqTimer <= zero) {
                 enemyState->sharpClaw.seqTimer = zero;
                 enemyState->controlFlags |= BADDIE_CONTROL_SEQUENCE_DRIVEN;

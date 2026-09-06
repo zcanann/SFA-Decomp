@@ -56,7 +56,7 @@ void dimwooddoor2_update(GameObject* obj) {
     ObjHitsPriorityState* hitState;
 
     ObjAnim_AdvanceCurrentMove(obj, state->animationSpeed, timeDelta, 0);
-    obj->anim.localPosZ = obj->anim.localPosZ + state->riseSpeed;
+    obj->anim.localPosZ += state->riseSpeed;
     {
         f32 riseSpeed = state->riseSpeed;
         f32 restSpeed = DIM_WOOD_DOOR_REST_SPEED;

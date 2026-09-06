@@ -214,7 +214,7 @@ void hagabonMK2_updateB(GameObject* obj, u8* state) {
 
     if (enemyState->crawler.warpTimer) {
         cap = 0.0f;
-        enemyState->crawler.warpTimer = enemyState->crawler.warpTimer - timeDelta;
+        enemyState->crawler.warpTimer -= timeDelta;
         if (enemyState->crawler.warpTimer <= cap) {
             enemyState->crawler.warpTimer = cap;
         }

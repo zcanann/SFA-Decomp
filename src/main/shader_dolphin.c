@@ -193,9 +193,9 @@ static void chooseTevKonstSelectors(void* params, u8 colorEnabled, u8 alphaEnabl
     }
     if (haveColorSel == 0 || haveAlphaSel == 0) {
         GXSetTevKColor(gRcpNextKColor, *(GXColor*)params);
-        gRcpNextKColor = gRcpNextKColor + 1;
-        gRcpNextKColorSel = gRcpNextKColorSel + 1;
-        gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
+        gRcpNextKColor += 1;
+        gRcpNextKColorSel += 1;
+        gRcpNextKAlphaSel += 1;
     }
 }
 
@@ -340,7 +340,7 @@ void addWarpedNoiseTevStages(void* p1, void* mtx)
     {
         GXLoadTexMtxImm(mtx, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, gRcpNextTexCoordSource, GX_IDENTITY, GX_FALSE, gRcpNextPostTexMtx);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextPostTexMtx += 3;
     }
     else
     {
@@ -393,10 +393,10 @@ void addWarpedNoiseTevStages(void* p1, void* mtx)
             }
         }
     }
-    gRcpNextTexCoordSource = gRcpNextTexCoordSource + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 2;
-    gRcpNextTexMap = gRcpNextTexMap + 2;
+    gRcpNextTexCoordSource += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 2;
+    gRcpNextTexMap += 2;
     gRcpNumTevStages += 2;
     gRcpNumTexGens += 1;
     gRcpNumIndStages += 1;
@@ -472,12 +472,12 @@ void addYUVVideoTevStages(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
         GXInitTexObj((GXTexObj*)buf1c, tex2, w2, h2, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
         GXInitTexObjLOD((GXTexObj*)buf1c, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, 0, 0, GX_ANISO_1);
         GXLoadTexObj((GXTexObj*)buf1c, gRcpNextTexMap + 2);
-        gRcpNextTevStage = gRcpNextTevStage + 5;
-        gRcpNextTexCoord = gRcpNextTexCoord + 2;
-        gRcpNextTexMap = gRcpNextTexMap + 3;
-        gRcpNextKColor = gRcpNextKColor + 3;
-        gRcpNextKColorSel = gRcpNextKColorSel + 3;
-        gRcpNextKAlphaSel = gRcpNextKAlphaSel + 3;
+        gRcpNextTevStage += 5;
+        gRcpNextTexCoord += 2;
+        gRcpNextTexMap += 3;
+        gRcpNextKColor += 3;
+        gRcpNextKColorSel += 3;
+        gRcpNextKAlphaSel += 3;
         gRcpNumTevStages += 5;
         gRcpNumTexGens += 2;
     }
@@ -624,10 +624,10 @@ void addShadowFalloffTevStages(void)
             GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextPostTexMtx += 3;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     player = Obj_GetPlayerObject();
     if (player != NULL)
     {
@@ -678,10 +678,10 @@ void addShadowFalloffTevStages(void)
             GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextPostTexMtx += 3;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpTevPrevAlphaValid = 1;
     gRcpNumTevStages += 2;
     gRcpNumTexGens += 2;
@@ -704,10 +704,10 @@ void addRenderOpFadeStage(void* p1)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextKColor = gRcpNextKColor + 1;
-    gRcpNextKColorSel = gRcpNextKColorSel + 1;
-    gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextKColor += 1;
+    gRcpNextKColorSel += 1;
+    gRcpNextKAlphaSel += 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -757,11 +757,11 @@ void addWavyCausticTevStage(void)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     newshadows_loadReflectionColorTexture(gRcpNextTexMap);
-    gRcpNextIndTexStage = gRcpNextIndTexStage + 1;
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 2;
+    gRcpNextIndTexStage += 1;
+    gRcpNextPostTexMtx += 3;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 2;
     gRcpNumTevStages++;
     gRcpNumTexGens++;
     gRcpNumIndStages++;
@@ -833,9 +833,9 @@ void setupHeatShimmerTevStages(char* p1)
     mathSinCosf(3.142f * rx, &sv, &cv);
     c = mathCosf(3.142f * ry);
     k = 0.125f * c + 0.75f;
-    k = k * gHeatEffectScale;
-    cv = cv * k;
-    sv = sv * k;
+    k *= gHeatEffectScale;
+    cv *= k;
+    sv *= k;
     m1.m[0][0] = cv;
     m1.m[0][1] = sv;
     m1.m[1][0] = -sv;
@@ -844,9 +844,9 @@ void setupHeatShimmerTevStages(char* p1)
     c = mathCosf(3.142f * rx);
     f31v = 0.5f * c + 0.5f;
     k = 0.125f * c + 0.75f;
-    k = k * gHeatEffectScale;
-    cv = cv * k;
-    sv = sv * k;
+    k *= gHeatEffectScale;
+    cv *= k;
+    sv *= k;
     m2.m[0][0] = cv;
     m2.m[0][1] = sv;
     m2.m[1][0] = -sv;
@@ -1119,11 +1119,11 @@ void addWarpedRingTevStages(void)
             }
         }
     }
-    gRcpNextTexCoord = gRcpNextTexCoord + 4;
-    gRcpNextTevStage = gRcpNextTevStage + 2;
-    gRcpNextTexMap = gRcpNextTexMap + 2;
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 0xc;
-    gRcpNextIndTexStage = gRcpNextIndTexStage + 2;
+    gRcpNextTexCoord += 4;
+    gRcpNextTevStage += 2;
+    gRcpNextTexMap += 2;
+    gRcpNextPostTexMtx += 0xc;
+    gRcpNextIndTexStage += 2;
     gRcpNumTevStages += 2;
     gRcpNumTexGens += 4;
     gRcpNumIndStages += 2;
@@ -1253,11 +1253,11 @@ void renderHeavyFog(void* fogColor)
             }
         }
         GXSetTevKColorSel(gRcpNextTevStage + 1, gRcpNextKColorSel);
-        gRcpNextTexCoord = gRcpNextTexCoord + 3;
-        gRcpNextTevStage = gRcpNextTevStage + 2;
-        gRcpNextTexMap = gRcpNextTexMap + 2;
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 9;
-        gRcpNextIndTexStage = gRcpNextIndTexStage + 2;
+        gRcpNextTexCoord += 3;
+        gRcpNextTevStage += 2;
+        gRcpNextTexMap += 2;
+        gRcpNextPostTexMtx += 9;
+        gRcpNextIndTexStage += 2;
         gRcpNumTevStages += 2;
         gRcpNumTexGens += 3;
         gRcpNumIndStages += 2;
@@ -1273,16 +1273,16 @@ void renderHeavyFog(void* fogColor)
         GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         gRcpTevPrevColorValid = 1;
         GXSetTevKColorSel(gRcpNextTevStage, gRcpNextKColorSel);
-        gRcpNextTexCoord = gRcpNextTexCoord + 1;
-        gRcpNextTevStage = gRcpNextTevStage + 1;
-        gRcpNextTexMap = gRcpNextTexMap + 1;
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextTexCoord += 1;
+        gRcpNextTevStage += 1;
+        gRcpNextTexMap += 1;
+        gRcpNextPostTexMtx += 3;
         gRcpNumTevStages += 1;
         gRcpNumTexGens += 1;
     }
-    gRcpNextKColor = gRcpNextKColor + 1;
-    gRcpNextKColorSel = gRcpNextKColorSel + 1;
-    gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
+    gRcpNextKColor += 1;
+    gRcpNextKColorSel += 1;
+    gRcpNextKAlphaSel += 1;
 }
 void addVertexAlphaDimStage(u8* color)
 {
@@ -1294,7 +1294,7 @@ void addVertexAlphaDimStage(u8* color)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -1310,7 +1310,7 @@ void addLightColorModulateStage(int* param)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -1338,7 +1338,7 @@ void addAccumulatedLightBlendStages(void)
     GXSetTevColorOp(gRcpNextTevStage + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 3;
+    gRcpNextTevStage += 3;
     gRcpNumTevStages += 3;
 }
 
@@ -1352,7 +1352,7 @@ void addAccumulatedLightModulateStage(void)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 int lbl_8030CEE0[9] = {
@@ -1432,13 +1432,13 @@ void addPointLightAccumStages(f32 scale, int* colorIn, f32* pos)
                 GXLoadTexObj(obj, id);
             }
         }
-        gRcpNextTevStage = gRcpNextTevStage + 2;
-        gRcpNextTexCoord = gRcpNextTexCoord + 2;
-        gRcpNextTexMap = gRcpNextTexMap + 1;
-        gRcpNextKColor = gRcpNextKColor + 1;
-        gRcpNextKColorSel = gRcpNextKColorSel + 1;
-        gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 6;
+        gRcpNextTevStage += 2;
+        gRcpNextTexCoord += 2;
+        gRcpNextTexMap += 1;
+        gRcpNextKColor += 1;
+        gRcpNextKColorSel += 1;
+        gRcpNextKAlphaSel += 1;
+        gRcpNextPostTexMtx += 6;
         gRcpNumTexGens += 2;
         gRcpNumTevStages += 2;
     }
@@ -1515,13 +1515,13 @@ void addFirstPointLightStages(f32 scale, int* colorIn, f32* pos, u8* chanColor)
                 GXLoadTexObj(obj, id);
             }
         }
-        gRcpNextTevStage = gRcpNextTevStage + 2;
-        gRcpNextTexCoord = gRcpNextTexCoord + 2;
-        gRcpNextTexMap = gRcpNextTexMap + 1;
-        gRcpNextKColor = gRcpNextKColor + 1;
-        gRcpNextKColorSel = gRcpNextKColorSel + 1;
-        gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 6;
+        gRcpNextTevStage += 2;
+        gRcpNextTexCoord += 2;
+        gRcpNextTexMap += 1;
+        gRcpNextKColor += 1;
+        gRcpNextKColorSel += 1;
+        gRcpNextKAlphaSel += 1;
+        gRcpNextPostTexMtx += 6;
         gRcpNumTexGens += 2;
         gRcpNumTevStages += 2;
     }
@@ -1604,13 +1604,13 @@ void addPointLightDirectStages(f32 scale, int* colorIn, f32* pos)
                 GXLoadTexObj(obj, id);
             }
         }
-        gRcpNextTevStage = gRcpNextTevStage + 2;
-        gRcpNextTexCoord = gRcpNextTexCoord + 2;
-        gRcpNextTexMap = gRcpNextTexMap + 1;
-        gRcpNextKColor = gRcpNextKColor + 1;
-        gRcpNextKColorSel = gRcpNextKColorSel + 1;
-        gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 6;
+        gRcpNextTevStage += 2;
+        gRcpNextTexCoord += 2;
+        gRcpNextTexMap += 1;
+        gRcpNextKColor += 1;
+        gRcpNextKColorSel += 1;
+        gRcpNextKAlphaSel += 1;
+        gRcpNextPostTexMtx += 6;
         gRcpNumTexGens += 2;
         gRcpNumTevStages += 2;
     }
@@ -1680,9 +1680,9 @@ void addSphereMapLitStages(void* p1, f32* wpad0, void* wpad1, int wpad2)
                 }
             }
         }
-        gRcpNextTexCoord = gRcpNextTexCoord + 1;
-        gRcpNextTevStage = gRcpNextTevStage + 1;
-        gRcpNextTexMap = gRcpNextTexMap + 1;
+        gRcpNextTexCoord += 1;
+        gRcpNextTevStage += 1;
+        gRcpNextTexMap += 1;
         gRcpNumTexGens += 1;
         gRcpNumTevStages += 1;
         GXSetTevDirect(gRcpNextTevStage);
@@ -1692,7 +1692,7 @@ void addSphereMapLitStages(void* p1, f32* wpad0, void* wpad1, int wpad2)
         GXSetTevSwapMode(gRcpNextTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        gRcpNextTevStage = gRcpNextTevStage + 1;
+        gRcpNextTevStage += 1;
         gRcpNumTevStages += 1;
     }
 }
@@ -1766,12 +1766,12 @@ void addCastShadowTevStages(u8* objInst)
             GXLoadTexObj((GXTexObj*)obj, id);
         }
     }
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 6;
-    gRcpNextTexCoord = gRcpNextTexCoord + 2;
-    gRcpNextTexMap = gRcpNextTexMap + 2;
+    gRcpNextPostTexMtx += 6;
+    gRcpNextTexCoord += 2;
+    gRcpNextTexMap += 2;
     gRcpNumTexGens += 2;
     gRcpNumTevStages += 4;
-    gRcpNextTevStage = gRcpNextTevStage + 4;
+    gRcpNextTevStage += 4;
 }
 
 
@@ -1900,10 +1900,10 @@ void addProjectedLightTevStage(u8* texSrc, void* texMtx, int stageMode, int comp
             GXLoadTexObj(tex, texmap);
         }
     }
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextPostTexMtx += 3;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages++;
     gRcpNumTexGens++;
 }
@@ -1987,11 +1987,11 @@ int addEnvMapBumpStages(void* p1, int p2, u8 p3, u32 p4)
             GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-    gRcpNextIndTexStage = gRcpNextIndTexStage + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 2;
-    gRcpNextTevStage = gRcpNextTevStage + 2;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextPostTexMtx += 3;
+    gRcpNextIndTexStage += 1;
+    gRcpNextTexCoord += 2;
+    gRcpNextTevStage += 2;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages += 2;
     gRcpNumIndStages += 1;
     gRcpNumTexGens += 2;
@@ -2019,7 +2019,7 @@ void addLitColorStage(u8 mode)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -2032,7 +2032,7 @@ void addTexModulateReg2Stage(void)
     GXSetTevAlphaIn(gRcpNextTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -2053,7 +2053,7 @@ void addAlphaLitColorReg2Stage(u8 mode)
     GXSetTevAlphaIn(gRcpNextTevStage, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -2079,8 +2079,8 @@ void addLightTexReg2Stage(void* p1, u8 flag2, u8 flag3)
         GXLoadTexMtxImm(mtxA, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, gRcpNextPostTexMtx);
         GXSetTevOrder(gRcpNextTevStage, gRcpNextTexCoord, gRcpNextTexMap, GX_COLOR0A0);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-        gRcpNextTexCoord = gRcpNextTexCoord + 1;
+        gRcpNextPostTexMtx += 3;
+        gRcpNextTexCoord += 1;
         gRcpNumTexGens += 1;
     }
     GXSetTevAlphaIn(gRcpNextTevStage, GX_CA_ZERO, GX_CA_TEXA, GX_CA_A2, GX_CA_ZERO);
@@ -2116,8 +2116,8 @@ void addLightTexReg2Stage(void* p1, u8 flag2, u8 flag3)
         GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages += 1;
 }
 
@@ -2167,10 +2167,10 @@ void addSphereMapTexStage(void* p1, u8 intensity)
         GXLoadTexObj((GXTexObj*)tex, texmap);
         }
     }
-    gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextPostTexMtx += 3;
+    gRcpNextTevStage += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages += 1;
     gRcpNumTexGens += 1;
 }
@@ -2187,7 +2187,7 @@ void addTexLayerStagesLit(void* p1, void* mtx)
     {
         GXLoadTexMtxImm(mtx, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, gRcpNextTexCoordSource, GX_IDENTITY, GX_FALSE, gRcpNextPostTexMtx);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextPostTexMtx += 3;
     }
     else
     {
@@ -2232,10 +2232,10 @@ void addTexLayerStagesLit(void* p1, void* mtx)
             }
         }
     }
-    gRcpNextTexCoordSource = gRcpNextTexCoordSource + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 3;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextTexCoordSource += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 3;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages += 3;
     gRcpNumTexGens += 1;
 }
@@ -2253,7 +2253,7 @@ void addTexLayerStage(Texture* tex, MtxPtr mtx, int mode)
     {
         GXLoadTexMtxImm(mtx, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, gRcpNextTexCoordSource, GX_IDENTITY, GX_FALSE, gRcpNextPostTexMtx);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextPostTexMtx += 3;
     }
     else
     {
@@ -2308,10 +2308,10 @@ void addTexLayerStage(Texture* tex, MtxPtr mtx, int mode)
             GXLoadTexObj(to, map);
         }
     }
-    gRcpNextTexCoordSource = gRcpNextTexCoordSource + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextTexCoordSource += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages++;
     gRcpNumTexGens++;
 }
@@ -2328,7 +2328,7 @@ void addTexLayerStageKColor(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam)
     {
         GXLoadTexMtxImm(mtx, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, gRcpNextTexCoordSource, GX_IDENTITY, GX_FALSE, gRcpNextPostTexMtx);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextPostTexMtx += 3;
     }
     else
     {
@@ -2373,10 +2373,10 @@ void addTexLayerStageKColor(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam)
             GXLoadTexObj(to, map);
         }
     }
-    gRcpNextTexCoordSource = gRcpNextTexCoordSource + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextTexCoordSource += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages++;
     gRcpNumTexGens++;
 }
@@ -2393,7 +2393,7 @@ void addTexLayerStageKAlpha(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam)
     {
         GXLoadTexMtxImm(mtx, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, gRcpNextTexCoordSource, GX_IDENTITY, GX_FALSE, gRcpNextPostTexMtx);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextPostTexMtx += 3;
     }
     else
     {
@@ -2438,10 +2438,10 @@ void addTexLayerStageKAlpha(Texture* tex, MtxPtr mtx, int mode, GXColor* kparam)
             GXLoadTexObj(to, map);
         }
     }
-    gRcpNextTexCoordSource = gRcpNextTexCoordSource + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextTexCoordSource += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages++;
     gRcpNumTexGens++;
 }
@@ -2473,7 +2473,7 @@ void addTexLayerStageSwizzled(Texture* tex, MtxPtr mtx, int mode, GXColor* kpara
     {
         GXLoadTexMtxImm(mtx, gRcpNextPostTexMtx, GX_MTX3x4);
         GXSetTexCoordGen2(gRcpNextTexCoord, GX_TG_MTX2x4, gRcpNextTexCoordSource, GX_IDENTITY, GX_FALSE, gRcpNextPostTexMtx);
-        gRcpNextPostTexMtx = gRcpNextPostTexMtx + 3;
+        gRcpNextPostTexMtx += 3;
     }
     else
     {
@@ -2504,9 +2504,9 @@ void addTexLayerStageSwizzled(Texture* tex, MtxPtr mtx, int mode, GXColor* kpara
         {
             GXSetTevKAlphaSel(gRcpNextTevStage, gRcpNextKAlphaSel);
         }
-        gRcpNextKColor = gRcpNextKColor + 1;
-        gRcpNextKColorSel = gRcpNextKColorSel + 1;
-        gRcpNextKAlphaSel = gRcpNextKAlphaSel + 1;
+        gRcpNextKColor += 1;
+        gRcpNextKColorSel += 1;
+        gRcpNextKAlphaSel += 1;
     }
     if (mode == 0)
     {
@@ -2552,8 +2552,8 @@ void addTexLayerStageSwizzled(Texture* tex, MtxPtr mtx, int mode, GXColor* kpara
     if ((void*)tex->imageOffset != NULL)
     {
         gRcpNumTevStages++;
-        gRcpNextTevStage = gRcpNextTevStage + 1;
-        gRcpNextTexMap = gRcpNextTexMap + 1;
+        gRcpNextTevStage += 1;
+        gRcpNextTexMap += 1;
         GXSetTevDirect(gRcpNextTevStage);
         GXSetTevOrder(gRcpNextTevStage, gRcpNextTexCoord, gRcpNextTexMap, GX_COLOR_NULL);
         GXSetTevSwapMode(gRcpNextTevStage, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -2563,10 +2563,10 @@ void addTexLayerStageSwizzled(Texture* tex, MtxPtr mtx, int mode, GXColor* kpara
         GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     }
     gRcpTevPrevAlphaValid = 1;
-    gRcpNextTexCoordSource = gRcpNextTexCoordSource + 1;
-    gRcpNextTexCoord = gRcpNextTexCoord + 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
-    gRcpNextTexMap = gRcpNextTexMap + 1;
+    gRcpNextTexCoordSource += 1;
+    gRcpNextTexCoord += 1;
+    gRcpNextTevStage += 1;
+    gRcpNextTexMap += 1;
     gRcpNumTevStages++;
     gRcpNumTexGens++;
 }
@@ -2590,7 +2590,7 @@ void addVertexColorStage(void)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -2616,7 +2616,7 @@ void addVertexColorKAlphaStage(GXColor* param)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 void addColorFadeStage(GXColor* param)
@@ -2637,7 +2637,7 @@ void addColorFadeStage(GXColor* param)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 
@@ -2664,7 +2664,7 @@ void addKColorModulateStage(GXColor* param)
     GXSetTevColorOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(gRcpNextTevStage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     gRcpTevPrevColorValid = 1;
-    gRcpNextTevStage = gRcpNextTevStage + 1;
+    gRcpNextTevStage += 1;
     gRcpNumTevStages++;
 }
 

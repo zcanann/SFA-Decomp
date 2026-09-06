@@ -114,7 +114,7 @@ void SoftBody_init(GameObject* obj, SoftBodySetup* setup)
         {
             object->anim.rootMotionScale = 1.0f;
         }
-        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
+        object->anim.rootMotionScale *= object->anim.modelInstance->rootMotionScaleBase;
     }
     object->objectFlags |= OBJECT_OBJFLAG_HITDETECT_DISABLED;
     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);

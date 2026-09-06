@@ -78,20 +78,20 @@ void SB_ShipHead_render(GameObject* obj, int renderArg2, int renderArg3, int ren
         if ((((void*)parentObj != NULL && (parentObj->anim.romDefNo == SB_GALLEON_FIRING_SEQUENCE_ID)) &&
              (damagePhase = SB_GALLEON_VTBL(parentObj)->getDamagePhase(parentObj), damagePhase != 0)) &&
             (damagePhase != 2)) {
-            state->swayA = state->swayA - timeDelta;
+            state->swayA -= timeDelta;
             if (state->swayA <= 0.0f) {
                 state->swayA += 10.0f;
             }
-            state->swayB = state->swayB - timeDelta;
+            state->swayB -= timeDelta;
             if (state->swayB <= 0.0f) {
                 state->swayB += 1.0f;
             }
             effectParams.scale = 3.0f;
             effectParams.arg3 = 0xC0A;
             ObjPath_GetPointWorldPosition(obj, 0xD, &effectParams.posX, &effectParams.posY, &effectParams.posZ, 0);
-            effectParams.posX = effectParams.posX - object->anim.worldPosX;
-            effectParams.posY = effectParams.posY - object->anim.worldPosY;
-            effectParams.posZ = effectParams.posZ - object->anim.worldPosZ;
+            effectParams.posX -= object->anim.worldPosX;
+            effectParams.posY -= object->anim.worldPosY;
+            effectParams.posZ -= object->anim.worldPosZ;
             for (particleIndex = 0; particleIndex < framesThisStep; particleIndex++) {
                 (*gPartfxInterface)->spawnObject((void*)obj, SB_SHIP_HEAD_PARTICLE_EFFECT, &effectParams, 2, -1, NULL);
             }
@@ -176,10 +176,10 @@ void SB_ShipHead_update(GameObject* obj) {
         }
     }
     if (object->userData2 > 0) {
-        object->userData2 = object->userData2 - framesThisStep;
+        object->userData2 -= framesThisStep;
     }
     if (galleonPhase == 8) {
-        object->userData1 = object->userData1 + 1;
+        object->userData1 += 1;
         if (object->userData1 > 10) {
             object->userData1 = 0;
         }
@@ -192,12 +192,12 @@ void SB_ShipHead_update(GameObject* obj) {
          (gSbShipHeadHasFiredFireball == 0)) &&
         ((u8)Obj_CanSetupObject() != 0)) {
         gSbShipHeadHasFiredFireball = 1;
-        object->userData1 = object->userData1 + framesThisStep;
+        object->userData1 += framesThisStep;
         Sfx_PlayFromObject(obj, SFXTRIG_gcexp1_c);
         object->anim.localPosY += 50.0f;
-        object->anim.localPosZ = object->anim.localPosZ - 300.0f;
+        object->anim.localPosZ -= 300.0f;
         Obj_GetWorldPosition(obj, &spawnX, &spawnY, &spawnZ);
-        object->anim.localPosY = object->anim.localPosY - 50.0f;
+        object->anim.localPosY -= 50.0f;
         object->anim.localPosZ += 300.0f;
         placementBytes = (ObjPlacement*)Obj_AllocObjectSetup(0x18, SB_FIREBALL_OBJECT_ID);
         placementBytes->color[2] = 0xff;

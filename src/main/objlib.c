@@ -189,7 +189,7 @@ int objIsObjectType(GameObject* obj, int group) {
     }
     limitXorIndex = limit ^ index;
     halfDiff = (int)limitXorIndex >> 1;
-    limitXorIndex = limitXorIndex & limit;
+    limitXorIndex &= limit;
     return (u32)(halfDiff - limitXorIndex) >> 0x1f;
 }
 
@@ -453,7 +453,7 @@ int ObjMsg_Pop(GameObject* obj, u32* outMessage, u32* outSender, u32* outParam) 
     }
     queue = obj->msgQueue;
     if ((queue != (ObjMsgQueue*)0x0) && (queue->count != 0)) {
-        queue->count = queue->count - 1;
+        queue->count -= 1;
         if (outMessage != 0x0) {
             *outMessage = queue->entries[0].message;
         }
@@ -505,7 +505,7 @@ void ObjMsg_SendToNearbyObjects(int targetId, float radius, u32 flags, void* sen
                 slot->entry.message = message;
                 slot->entry.sender = (u32)sender;
                 slot->entry.param = param;
-                queue->count = queue->count + 1;
+                queue->count += 1;
             } else {
                 debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId, (int)obj->anim.romDefNo,
                             (int)senderObj->anim.romDefNo);
@@ -539,7 +539,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                     slot->entry.message = message;
                     slot->entry.sender = (u32)sender;
                     slot->entry.param = param;
-                    queue->count = queue->count + 1;
+                    queue->count += 1;
                 } else {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId,
                                 (int)obj->anim.romDefNo, (int)((GameObject*)sender)->anim.romDefNo);
@@ -558,7 +558,7 @@ void ObjMsg_SendToObjects(int targetId, u32 flags, void* sender, u32 message, u3
                     slot->entry.message = message;
                     slot->entry.sender = (u32)sender;
                     slot->entry.param = param;
-                    queue->count = queue->count + 1;
+                    queue->count += 1;
                 } else {
                     debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId,
                                 (int)obj->anim.romDefNo, (int)((GameObject*)sender)->anim.romDefNo);
@@ -587,7 +587,7 @@ u32 ObjMsg_SendToObject(GameObject* obj, u32 message, void* sender, u32 param) {
             slot->entry.message = message;
             slot->entry.sender = (u32)senderObj;
             slot->entry.param = param;
-            queue->count = queue->count + 1;
+            queue->count += 1;
             return queue->count;
         }
         debugPrintf(sObjMsgOverflowInObjectWarning, message, (int)obj->anim.classId, (int)obj->anim.romDefNo,
@@ -673,8 +673,8 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
     if ((*cooldown <= 0.0f) && (collisionType != 0)) {
         *cooldown = 45.0f;
         if ((collisionType != 0x1a) && (collisionType != 5)) {
-            effectParams.posX = effectParams.posX + playerMapOffsetX;
-            effectParams.posZ = effectParams.posZ + playerMapOffsetZ;
+            effectParams.posX += playerMapOffsetX;
+            effectParams.posZ += playerMapOffsetZ;
             effectParams.scale = 1.0f;
             effectParams.rotZ = 0;
             effectParams.rotY = 0;
@@ -748,11 +748,11 @@ void ObjContact_DispatchCallbacks(GameObject* objA, GameObject* objB) {
     count = gObjContactCallbackCount;
     while ((objARefCount != 0) && (objBRefCount != 0) && (count-- != 0)) {
         if ((entry->objA == objA) && (entry->objB == objB)) {
-            objARefCount = objARefCount - 1;
+            objARefCount -= 1;
             entry->callback(objA, objB);
         }
         if ((entry->objA == objB) && (entry->objB == objA)) {
-            objBRefCount = objBRefCount - 1;
+            objBRefCount -= 1;
             entry->callback(objB, objA);
         }
         entry++;
@@ -806,7 +806,7 @@ int ObjContact_AddCallback(GameObject* obj, GameObject* otherObj, ObjContactCall
     entry->callback = callback;
     obj->contactRefCount += 1;
     otherObj->contactRefCount += 1;
-    gObjContactCallbackCount = gObjContactCallbackCount + 1;
+    gObjContactCallbackCount += 1;
     return 1;
 }
 
@@ -915,7 +915,7 @@ int ObjList_ContainsObject(GameObject* obj) {
         if (entry[i] == obj) {
             return 1;
         }
-        i = i + 1;
+        i += 1;
     }
     return 0;
 }
@@ -928,7 +928,7 @@ void ObjPath_GetPointWorldPositionArray(GameObject* obj, int pointIndex, int cou
     position = positions;
     while (i < count) {
         ObjPath_GetPointWorldPosition(obj, pointIndex + i, position, position + 1, position + 2, 0);
-        position = position + 3;
+        position += 3;
         i++;
     }
 }
@@ -1053,10 +1053,10 @@ s16 Obj_GetYawDeltaToObject(GameObject* obj, GameObject* target, float* distOut)
     }
     yawDelta = (int)(short)yawDelta - (u32)(u16) * (s16*)obj;
     if (yawDelta > 0x8000) {
-        yawDelta = yawDelta + -0xffff;
+        yawDelta += -0xffff;
     }
     if (yawDelta < -0x8000) {
-        yawDelta = yawDelta + 0xffff;
+        yawDelta += 0xffff;
     }
     return (int)(short)yawDelta;
 }

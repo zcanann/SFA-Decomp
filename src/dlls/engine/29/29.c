@@ -119,9 +119,9 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
         cfg.initialAlpha = 0xe1;
         cfg.behaviorFlags = 0x400110;
         if (randomGetRange(0, 2) == 0) {
-            cfg.renderFlags = cfg.renderFlags | 0x100;
+            cfg.renderFlags |= 0x100;
         } else {
-            cfg.renderFlags = cfg.renderFlags | 0x400;
+            cfg.renderFlags |= 0x400;
         }
         cfg.textureId = 0x4f9;
         break;
@@ -865,15 +865,15 @@ int Effect4_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawnP
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & 0x200000) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;

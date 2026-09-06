@@ -90,9 +90,9 @@ void LanternFireFly_releaseFromLantern(GameObject* obj) {
         targetState->anchorY = anchorY;
         targetState->anchorZ = targetPositionPtr[2];
         targetState = obj->extra;
-        targetPositionPtr[0] = targetPositionPtr[0] - targetState->anchorX;
-        targetPositionPtr[1] = targetPositionPtr[1] - targetState->anchorY;
-        targetPositionPtr[2] = targetPositionPtr[2] - targetState->anchorZ;
+        targetPositionPtr[0] -= targetState->anchorX;
+        targetPositionPtr[1] -= targetState->anchorY;
+        targetPositionPtr[2] -= targetState->anchorZ;
         targetState->offsetX = targetPositionPtr[0];
         targetState->offsetY = targetPositionPtr[1];
         targetState->offsetZ = targetPositionPtr[2];
@@ -111,9 +111,9 @@ void LanternFireFly_releaseFromLantern(GameObject* obj) {
 
 void LanternFireFly_setTargetPosition(GameObject* obj, f32* vec) {
     LanternFireFlyState* state = obj->extra;
-    vec[0] = vec[0] - state->anchorX;
-    vec[1] = vec[1] - state->anchorY;
-    vec[2] = vec[2] - state->anchorZ;
+    vec[0] -= state->anchorX;
+    vec[1] -= state->anchorY;
+    vec[2] -= state->anchorZ;
     state->offsetX = vec[0];
     state->offsetY = vec[1];
     state->offsetZ = vec[2];
@@ -277,8 +277,8 @@ void LanternFireFly_update(GameObject* obj) {
     squaredY = velocityPtr[1] * velocityPtr[1];
     stepScale = sqrtf(squaredZ + (squaredX + squaredY));
     velocityPtr[0] = velocityPtr[0] * (stepScale = gLanternFireFlyUnitValue / (f32)((s32)(stepScale / 2.5f) + 1));
-    velocityPtr[1] = velocityPtr[1] * stepScale;
-    velocityPtr[2] = velocityPtr[2] * stepScale;
+    velocityPtr[1] *= stepScale;
+    velocityPtr[2] *= stepScale;
 
     if (LANTERN_FIREFLY_IS_FOLLOWING_PLAYER(state)) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_pk_lightcritter_lp);

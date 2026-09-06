@@ -74,7 +74,7 @@ void WCBouncyCra_update(GameObject* obj)
                 {
                     dist = (vv - dist) / lbl_803E6D34;
                     dist = lbl_803E6D38 - dist;
-                    dist = dist * lbl_803E6D2C;
+                    dist *= lbl_803E6D2C;
                 }
             }
             obj->anim.velocityY = dist;
@@ -87,7 +87,7 @@ void WCBouncyCra_update(GameObject* obj)
         obj->anim.velocityY = gBouncyCrateGravity * timeDelta + obj->anim.velocityY;
         obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
         if (obj->anim.localPosY <= state->homeY) {
-            obj->anim.localPosY = obj->anim.localPosY + (state->homeY - obj->anim.localPosY);
+            obj->anim.localPosY += (state->homeY - obj->anim.localPosY);
             obj->anim.velocityY = gBouncyCrateRestitution * -obj->anim.velocityY;
             state->bounceCount += 1;
             if (state->bounceCount > WBOUNCY_MAX_BOUNCES)

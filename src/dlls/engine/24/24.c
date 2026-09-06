@@ -139,9 +139,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
     if (gBoneParticleJointIndex > model->file->jointCount - 1) {
         gBoneParticleJointIndex = 0;
     }
-    gBoneParticleScrollOffset = gBoneParticleScrollOffset + framesThisStep;
+    gBoneParticleScrollOffset += framesThisStep;
     if (gBoneParticleScrollOffset > 0x1f) {
-        gBoneParticleScrollOffset = gBoneParticleScrollOffset - 0x1f;
+        gBoneParticleScrollOffset -= 0x1f;
     }
     gBoneParticleDrift = gBoneParticleDriftVelocity[0] * timeDelta + gBoneParticleDrift;
     if (gBoneParticleDrift > 500.0f) {
@@ -179,16 +179,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                 jointX = (*(Mtx44*)jointMatrix)[3][0] + playerMapOffsetX;
                 jointY = (*(Mtx44*)jointMatrix)[3][1];
                 jointZ = (*(Mtx44*)jointMatrix)[3][2] + playerMapOffsetZ;
-                jointX = jointX - obj->anim.localPosX;
-                jointY = jointY - obj->anim.localPosY;
-                jointZ = jointZ - obj->anim.localPosZ;
-                jointX = jointX * jointPositionScale;
+                jointX -= obj->anim.localPosX;
+                jointY -= obj->anim.localPosY;
+                jointZ -= obj->anim.localPosZ;
+                jointX *= jointPositionScale;
                 if (jointId == 0x1d || jointId == 0x1d) {
                     jointY = 20.02f * (8.0f + jointY);
                 } else {
-                    jointY = jointY * jointPositionScale;
+                    jointY *= jointPositionScale;
                 }
-                jointZ = jointZ * jointPositionScale;
+                jointZ *= jointPositionScale;
                 Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x,
                                       &transform.y, &transform.z);
                 cornerIndex = 0;
@@ -214,8 +214,8 @@ void boneParticleEffect_update(void* ctx, int renderParam, GameObject* obj) {
                     }
                     Matrix_TransformPoint((f32*)jointMatrix, transform.x, transform.y, transform.z, &transform.x,
                                           &transform.y, &transform.z);
-                    transform.x = transform.x + playerMapOffsetX;
-                    transform.z = transform.z + playerMapOffsetZ;
+                    transform.x += playerMapOffsetX;
+                    transform.z += playerMapOffsetZ;
                     (*updateBufferCursor)[cornerIndex + vertexBase].x = jointX + (transform.x - obj->anim.localPosX);
                     (*updateBufferCursor)[cornerIndex + vertexBase].y = jointY + (transform.y - obj->anim.localPosY);
                     (*updateBufferCursor)[cornerIndex + vertexBase].z = jointZ + (transform.z - obj->anim.localPosZ);
@@ -296,11 +296,11 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
             params.unk0 = 0;
             jointMatrix = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndex);
             PSMTXMultVec(jointMatrix, &params.pos, &params.pos);
-            params.posX = params.posX - obj->anim.worldPosX;
-            params.posY = params.posY - obj->anim.worldPosY;
-            params.posZ = params.posZ - obj->anim.worldPosZ;
-            params.posX = params.posX + playerMapOffsetX;
-            params.posZ = params.posZ + playerMapOffsetZ;
+            params.posX -= obj->anim.worldPosX;
+            params.posY -= obj->anim.worldPosY;
+            params.posZ -= obj->anim.worldPosZ;
+            params.posX += playerMapOffsetX;
+            params.posZ += playerMapOffsetZ;
             if (spawnParams != NULL) {
                 params.scale = spawnParams->scale;
                 params.unk0 = spawnParams->unk0;

@@ -141,13 +141,13 @@ static inline void DR_EarthWarrior_updateAim(EarthWarriorSub* warrior, BaddieSta
     f32 responseScale;
 
     angleDelta = CLAMP_EXPR(targetAngle, -0x41, 0x41);
-    angleDelta = angleDelta * 0xb6;
+    angleDelta *= 0xb6;
     angleDelta -= (u16)warrior->aimAccumY;
     if (angleDelta > 0x8000) {
-        angleDelta = angleDelta - 0xffff;
+        angleDelta -= 0xffff;
     }
     if (angleDelta < -0x8000) {
-        angleDelta = angleDelta + 0xffff;
+        angleDelta += 0xffff;
     }
     responseScale = 0.15f;
     angleDelta *= responseScale;
@@ -166,10 +166,10 @@ static inline void DR_EarthWarrior_updateAim(EarthWarriorSub* warrior, BaddieSta
         horizontalDelta -= (u16)warrior->aimAccumX;
     }
     if (horizontalDelta > 0x8000) {
-        horizontalDelta = horizontalDelta - 0xffff;
+        horizontalDelta -= 0xffff;
     }
     if (horizontalDelta < -0x8000) {
-        horizontalDelta = horizontalDelta + 0xffff;
+        horizontalDelta += 0xffff;
     }
     warrior->aimAccumX += horizontalDelta;
 }

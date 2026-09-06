@@ -146,7 +146,7 @@ void dim_levelcontrol_update(GameObject* obj) {
     if (state->messageTimer > 0.0f) {
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(DIM_LEVEL_CONTROL_MESSAGE_TEXT_ID);
-        state->messageTimer = state->messageTimer - timeDelta;
+        state->messageTimer -= timeDelta;
         if (state->messageTimer < 0.0f) {
             state->messageTimer = 0.0f;
         }

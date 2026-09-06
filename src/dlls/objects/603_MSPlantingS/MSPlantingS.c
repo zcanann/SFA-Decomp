@@ -171,7 +171,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
     {
         ex->phase = MSPLANTING_PHASE_GROWN;
         mainSetBits(ex->plantedGameBit, 1);
-        ex->flags = ex->flags & ~MSPLANTING_FLAG_PLANTED;
+        ex->flags &= ~MSPLANTING_FLAG_PLANTED;
         obj->anim.alpha = 0xff;
     }
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) &&
@@ -240,7 +240,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
                 obj->anim.localPosY = setup->posY + randomGetRange(-1, 1);
                 (*gPartfxInterface)->spawnObject((void*)obj, MSPLANTING_PARTFX, NULL, 2, -1, NULL);
             }
-            ex->burstTimer = ex->burstTimer - timeDelta;
+            ex->burstTimer -= timeDelta;
             if (ex->burstTimer <= 0.0f)
             {
                 if (randomGetRange(0, 1) != 0)
@@ -305,7 +305,7 @@ void MoonSeedPlantingSpot_update(GameObject* obj)
                 obj->anim.localPosY = setup2->posY;
             }
         }
-        ex->growthTimer = ex->growthTimer - timeDelta;
+        ex->growthTimer -= timeDelta;
         if (ex->growthTimer < 0.0f)
         {
             ex->growthTimer = 0.0f;

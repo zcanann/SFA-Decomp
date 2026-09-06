@@ -464,7 +464,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.velocityZ = 0.1f * (spawnParams->scale * (0.12f * (f32)(s32)randomGetRange(100, 0x96)));
             vecRotateZXY(sourceObj, &cfg.velocityX);
             cfg.textureId = 0xc0a;
-            cfg.renderFlags = cfg.renderFlags | 0x20;
+            cfg.renderFlags |= 0x20;
             cfg.overrideColor0 = 0xffff;
             cfg.overrideColor1 = 0xffff;
             cfg.overrideColor2 = randomGetRange(0, 0xffff);
@@ -1310,8 +1310,8 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
         if (spawnParams != NULL) {
             cfg.velocityZ = spawnParams->scale;
             vecRotateZXY(&spawnParams->rotX, &cfg.velocityX);
-            cfg.startPosX = cfg.startPosX + cfg.velocityX;
-            cfg.startPosZ = cfg.startPosZ + cfg.velocityZ;
+            cfg.startPosX += cfg.velocityX;
+            cfg.startPosZ += cfg.velocityZ;
             cfg.velocityX = 0.0f;
             cfg.velocityY = spawnParams->scale * (0.00167f * (f32)(s32)randomGetRange(0x32, 100));
             cfg.velocityZ = spawnParams->scale * (0.001f * (f32)(s32)randomGetRange(0x4b, 100));
@@ -1368,7 +1368,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
                 cfg.overrideColor1 = cfg.colorWord1;
                 cfg.colorWord2 = (u16)(randomGetRange(0x159f, 0x3caf) & 0xffff);
                 cfg.overrideColor2 = cfg.colorWord2;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
             } else if (spawnParams->unk2 == 2) {
                 cfg.colorWord0 = (u16)(randomGetRange(0x3caf, 0x7fff) & 0xffff);
                 cfg.overrideColor0 = cfg.colorWord0;
@@ -1376,7 +1376,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
                 cfg.overrideColor1 = cfg.colorWord1;
                 cfg.colorWord2 = (u16)(randomGetRange(0x159f, 0x3caf) & 0xffff);
                 cfg.overrideColor2 = cfg.colorWord2;
-                cfg.renderFlags = cfg.renderFlags | 0x20;
+                cfg.renderFlags |= 0x20;
             }
             if (spawnParams->unk4 != 0) {
                 cfg.behaviorFlags |= 0x800000;
@@ -1456,7 +1456,7 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
             cfg.renderFlags = 0x5080000;
             if (spawnParams->arg0 == 3) {
                 cfg.initialAlpha = randomGetRange(0x26, 0x2b);
-                cfg.renderFlags = cfg.renderFlags | 0x800;
+                cfg.renderFlags |= 0x800;
             } else {
                 cfg.initialAlpha = randomGetRange(0x26, 0x2b);
             }
@@ -2141,21 +2141,21 @@ int Effect20_spawnObject(void* sourceObj, int effectId, PartFxSpawnParams* spawn
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
         cfg.behaviorFlags ^= 2;
     }
     if ((cfg.behaviorFlags & 1) != 0) {
         if ((spawnFlags & 0x200000) != 0) {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosX;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosY;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosZ;
+            cfg.startPosX += cfg.sourcePosX;
+            cfg.startPosY += cfg.sourcePosY;
+            cfg.startPosZ += cfg.sourcePosZ;
         } else {
             if (cfg.attachedSource != 0) {
                 GameObject* source = (GameObject*)cfg.attachedSource;
-                cfg.startPosX = cfg.startPosX + source->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + source->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + source->anim.worldPosZ;
+                cfg.startPosX += source->anim.worldPosX;
+                cfg.startPosY += source->anim.worldPosY;
+                cfg.startPosZ += source->anim.worldPosZ;
             }
         }
     }

@@ -64,7 +64,7 @@ void dimbossgut2_updateBobAndSway(GameObject* obj, DimBossGut2State* state) {
 
     control->verticalVelocity = timeDelta * (heightDelta / 50.0f - control->turnHeightBias) + control->verticalVelocity;
 
-    obj->anim.localPosY = obj->anim.localPosY + control->verticalVelocity;
+    obj->anim.localPosY += control->verticalVelocity;
 
     obj->anim.rotY = (s16)(2048.0f * control->verticalVelocity);
 
@@ -79,8 +79,8 @@ void dimbossgut2_updateBobAndSway(GameObject* obj, DimBossGut2State* state) {
     control->swayVelocity = control->swayVelocity + (f32)((int)(rollDelta / 16) * framesThisStep);
     obj->anim.rotZ = (s16)((f32)(int)obj->anim.rotZ + control->swayVelocity);
 
-    control->verticalVelocity = control->verticalVelocity / 1.07f;
-    control->swayVelocity = control->swayVelocity / 1.04f;
+    control->verticalVelocity /= 1.07f;
+    control->swayVelocity /= 1.04f;
 }
 
 void dimbossgut2_updateTracking(GameObject* obj, DimBossGut2State* state) {
@@ -121,11 +121,11 @@ void dimbossgut2_updateTracking(GameObject* obj, DimBossGut2State* state) {
         angleScale = (f32)(s32)angleMag;
         angleScale *= 0.25f;
         if (angleScale > 1.0f) {
-            control->pathSpeed = control->pathSpeed / angleScale;
+            control->pathSpeed /= angleScale;
             control->turnHeightBias += 0.01f;
         }
         if (control->turnHeightBias > 0.0f) {
-            control->turnHeightBias = control->turnHeightBias / 1.04f;
+            control->turnHeightBias /= 1.04f;
         }
         obj->anim.localPosX = pathWalker->posX;
         obj->anim.localPosZ = pathWalker->posZ;
@@ -135,10 +135,10 @@ void dimbossgut2_updateTracking(GameObject* obj, DimBossGut2State* state) {
                                  -(player->anim.worldPosZ - obj->anim.worldPosZ)) -
               (int)(u16)obj->anim.rotX;
         if (rel > 0x8000) {
-            rel = rel - 0xffff;
+            rel -= 0xffff;
         }
         if (rel < -0x8000) {
-            rel = rel + 0xffff;
+            rel += 0xffff;
         }
         obj->anim.rotX = (s16)(*(s16*)(long)obj + rel * framesThisStep / 3);
     }

@@ -490,15 +490,15 @@ int Effect10_spawnObject(s16* obj, int id, PartFxSpawnParams* src, u32 flags, u8
     default:
         return -1;
     }
-    p.behaviorFlags = p.behaviorFlags | flags;
+    p.behaviorFlags |= flags;
     if (((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0) && ((p.behaviorFlags & EFFECT10_FLAGA_UNK2) != 0)) {
         p.behaviorFlags ^= 2;
     }
     if ((p.behaviorFlags & EFFECT10_FLAGA_POS_RELATIVE) != 0) {
         if (hasSrc != 0) {
-            p.startPosX = p.startPosX + p.sourcePosX;
-            p.startPosY = p.startPosY + p.sourcePosY;
-            p.startPosZ = p.startPosZ + p.sourcePosZ;
+            p.startPosX += p.sourcePosX;
+            p.startPosY += p.sourcePosY;
+            p.startPosZ += p.sourcePosZ;
         } else if (p.attachedSource != NULL) {
             p.startPosX = p.startPosX + ((GameObject*)p.attachedSource)->anim.worldPosX;
             p.startPosY = p.startPosY + ((GameObject*)p.attachedSource)->anim.worldPosY;

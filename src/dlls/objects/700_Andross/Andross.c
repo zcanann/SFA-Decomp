@@ -1453,7 +1453,7 @@ void andross_update(GameObject* boss) {
             rotationError = rotationError - 0xffff;
         }
         if (rotationError < -0x8000) {
-            rotationError = rotationError + 0xffff;
+            rotationError += 0xffff;
         }
         rotationDelta = rotationError;
         if (rotationDelta < 0) {
@@ -1626,7 +1626,7 @@ void andross_update(GameObject* boss) {
     }
 
     if (rotationError < -0x8000) {
-        rotationError = rotationError + 0xffff;
+        rotationError += 0xffff;
     }
 
     state->rotXSpeed +=

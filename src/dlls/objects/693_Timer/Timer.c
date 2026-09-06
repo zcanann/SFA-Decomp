@@ -46,7 +46,7 @@ void timer_addDuration(GameObject* obj, int duration)
     TimerState* state = obj->extra;
     if (timerIsActive(&state->countdownTimer) != 0)
     {
-        state->countdownTimer = state->countdownTimer + duration;
+        state->countdownTimer += duration;
         if (state->mode == TIMER_MODE_GLOBAL)
         {
             gameTimerInit(GAME_TIMER_ID, (int)(state->countdownTimer / 60.0f));

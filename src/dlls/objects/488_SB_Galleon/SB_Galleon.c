@@ -324,7 +324,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             tx = tricky->anim.localPosX - 535.0f;
             tz = 220.0f + state->homeZ;
             ty = 250.0f + tricky->anim.localPosY;
-            tz = tz + (tricky->anim.localPosZ - state->posZ);
+            tz += (tricky->anim.localPosZ - state->posZ);
             state->unk7B = 0;
             break;
         case 4:
@@ -337,7 +337,7 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             tx = tricky->anim.localPosX - 535.0f;
             tz = state->homeZ - 220.0f;
             ty = 250.0f + tricky->anim.localPosY;
-            tz = tz + (tricky->anim.localPosZ - state->posZ);
+            tz += (tricky->anim.localPosZ - state->posZ);
             state->unk7B = 0;
             break;
         default:
@@ -347,9 +347,9 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             ty = 260.0f + tricky->anim.localPosY;
             break;
         }
-        tx = tx - obj->anim.localPosX;
+        tx -= obj->anim.localPosX;
         dy = ty - obj->anim.localPosY;
-        tz = tz - obj->anim.localPosZ;
+        tz -= obj->anim.localPosZ;
         state->speed = 3.0f;
         dist = sqrtf(tz * tz + (tx * tx + dy * dy));
         tx *= 0.0625f;
@@ -548,10 +548,10 @@ void SB_Galleon_updateFlight(GameObject* obj) {
         angY = getAngle(dy, dist) & 0xFFFF;
         diff = wrap - (obj->anim.rotX & 0xFFFF);
         if (diff > 0x8000) {
-            diff = diff - 0xFFFF;
+            diff -= 0xFFFF;
         }
         if (diff < -0x8000) {
-            diff = diff + 0xFFFF;
+            diff += 0xFFFF;
         }
         state->turnRate =
             state->turnRate + ((framesThisStep * (diff - state->turnRate)) >> 4);
@@ -565,10 +565,10 @@ void SB_Galleon_updateFlight(GameObject* obj) {
         }
         wrap = angY - (((GameObject*)obj)->anim.rotY & 0xFFFF);
         if (wrap > 0x8000) {
-            wrap = wrap - 0xFFFF;
+            wrap -= 0xFFFF;
         }
         if (wrap < -0x8000) {
-            wrap = wrap + 0xFFFF;
+            wrap += 0xFFFF;
         }
         obj->anim.rotY = obj->anim.rotY + ((wrap * framesThisStep) >> 6);
         dx = state->homeX - obj->anim.localPosX;
@@ -603,9 +603,9 @@ void SB_Galleon_updateFlight(GameObject* obj) {
             state->swayY = zero;
             state->swayZ = zero;
         } else {
-            state->posX = state->posX + state->driftX;
-            state->posY = state->posY + state->driftY;
-            state->posZ = state->posZ + state->driftZ;
+            state->posX += state->driftX;
+            state->posY += state->driftY;
+            state->posZ += state->driftZ;
         }
         ambB = 0.17f;
         obj->anim.localPosX = state->posX + state->swayX;
@@ -725,7 +725,7 @@ void SB_Galleon_updateEnvfxGameBits(SBGalleonState* state) {
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_A_DONE) != 0) {
         if (state->envfxCycle != DBPROTECTION_GAMEBIT_CYCLE_A_DONE) {
-            state->envfxIndex = state->envfxIndex ^ 1;
+            state->envfxIndex ^= 1;
         }
         getEnvfxAct(player, player, state->envfxActs[state->envfxIndex ^ 1], 0);
         getEnvfxAct(player, player, state->envfxActs[state->envfxIndex + 4], 0);
@@ -735,7 +735,7 @@ void SB_Galleon_updateEnvfxGameBits(SBGalleonState* state) {
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_CYCLE_B_DONE) != 0) {
         if (state->envfxCycle != DBPROTECTION_GAMEBIT_CYCLE_B_DONE) {
-            state->envfxIndex = state->envfxIndex ^ 1;
+            state->envfxIndex ^= 1;
         }
         getEnvfxAct(player, player, state->envfxActs[state->envfxIndex ^ 1], 0);
         getEnvfxAct(player, player, state->envfxActs[state->envfxIndex + 4], 0);
@@ -1028,7 +1028,7 @@ int SB_Galleon_SeqFn(GameObject* obj, int unused, ObjSeqState* animUpdate) {
         }
     }
     if (state->textTimer >= 0.0f) {
-        state->textTimer = state->textTimer - timeDelta;
+        state->textTimer -= timeDelta;
         if (state->textTimer < 0.0f) {
             state->textTimer = 0.0f;
             state->textRising = 0;
