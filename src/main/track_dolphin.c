@@ -1069,9 +1069,11 @@ void intersectModLineBuild(ObjDef* definition) {
     if (gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28 == 0) {
         return;
     }
-    definition->intersectionLines = mmAlloc(gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28, 0xffff00ff, 0);
+    definition->intersectionLines =
+        mmAlloc(gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28, 0xffff00ff, 0);
     definition->intersectionPoints = (f32*)((u8*)definition->intersectionLines + gIntersectLineCount * 0x10);
-    definition->intersectionSegmentRanges = (TrackModelLineRange*)((u8*)definition->intersectionPoints + gIntersectPointCount * 0xc);
+    definition->intersectionSegmentRanges =
+        (TrackModelLineRange*)((u8*)definition->intersectionPoints + gIntersectPointCount * 0xc);
     {
         int k;
         for (k = 0; k < 40; k++) {
