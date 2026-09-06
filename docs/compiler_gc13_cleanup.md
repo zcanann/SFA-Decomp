@@ -647,3 +647,72 @@ checksum build and `ninja all_source` pass within their 30-second limits,
 with the source-linked DOL retaining SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls, traces,
 reports, and object audits are under `build/gc13_new_matches/camtalk/`.
+
+## September 6: Indexed fragments and shared Baddie native flags
+
+Seven more TUs preserve **102 exact functions, 40,872 matched code bytes,
+and 1,852 assigned data bytes**. InvHit's ninth function remains just short
+of matching; no existing match regresses. This pass removes 46 flag
+widenings, including all 45 remaining in the shared Baddie TU, and replaces
+139 repeated Baddie state casts with six typed locals.
+
+| TU | Clean GC/1.3 | Clean GC/2.0 | Source improvement |
+| --- | ---: | ---: | --- |
+| maketex | 100% | 100% | Scalar checksum accumulators and the existing typed sequence-pair fields. |
+| Baddie, slot 201 | 100% | 98.65094% | Native flags, typed state locals, canonical look-direction/velocity and placement fields. |
+| InvHit, slot 241 | 99.90453% | 99.90453% | Indexed owner hit list and ordinary pointer conversions. |
+| Explodable, slot 346 | 100% | 100% | Indexed chunks, model banks and child slots; typed fragment objects. |
+| NW mammoth, slot 417 | 100% | 99.88799% | Native shadow mask, typed rescue-bush positions and direct animation-audio arguments. |
+| WarpStone lift, slot 431 | 100% | 100% | Canonical contact count, pointer-sized stride and simpler visibility/placement expressions. |
+| DBHoleContr, slot 579 | 100% | 100% | Typed placement, asserted state size, direct visibility and compound animation flags. |
+
+Explodable's build loop now derives the chunk, child slot and model bank from
+one fragment index. Changing those three walks together is exact; changing
+each independently regresses. Its update loop also indexes children directly.
+The existing separate state/placement address locals remain because deleting
+them changes register allocation.
+
+Baddie's 42 `LL` literals (including three local macro definitions) and three
+`u64` casts become native expressions. Several require ordinary compound
+updates. The two action-change assignments in `enemyObjAnimUpdate` retain
+their full-assignment form because making those compound regresses GC/1.3.
+The sequence callback copies named look-direction and velocity fields and
+reads `EnemyPlacement.triggerSequenceId`; steering uses the named direction
+instead of an integer address plus `0x2B8`. Shared flag definitions replace
+their literal equivalents without introducing aliases.
+
+Original Baddie and mammoth sources both score 100% under GC/2.0. Independent
+controls show that their non-flag cleanups still match that compiler; the
+native flags supply the differences in the table. Baddie's GC/2.0 regression
+spans 12 functions. Mammoth's single shadow-mask control reproduces its final
+GC/2.0 score. These are source/codegen controls, not compiler provenance.
+
+InvHit's indexed owner scan preserves its existing instructions, but the
+long-lived state pointer still occupies `r30` instead of retail's `r28` in
+`InvHit_update` (99.84375%). WarpStone's contact-loop indexing and DBHoleContr's
+indexed free loop still regress, so their walks remain. Mammoth retains its
+one-element table-pointer array. The checksum helper's two accumulators can
+be scalars, but its index still changes codegen, and scalarizing the
+remaining save-routine accumulator arrays also regresses. Indexed maketex search loops also regress.
+
+Source and formatting changes land separately. Swaplift needs no formatting
+change; each of the other six formatting commits preserves the raw compiled
+object from its source commit. Only owning headers receive formatting, with
+no declaration or layout changes. No source boundary, generated path, compiler
+profile, symbol config or ProDG source changes are part of this pass.
+
+The audit checks all 1,005 compiled objects. Five cleaned TUs only renumber
+anonymous literals at unchanged locations; Swaplift and DBHoleContr remain
+raw-object identical to baseline. All allocated contents and section metadata,
+named symbols, normalized relocations and per-unit match measures are
+preserved. Independent Player changes through `ee51eddb36` and talk-camera
+changes through `c03c2e64b7` were rebased in and excluded from these totals.
+Every source/format landing passes the strict matching build and
+`ninja all_source` with 30-second limits. The final DOL remains byte-identical
+to retail, SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`.
+
+Local baselines and whole-build audits are under
+`build/gc13_migration/indexed_followup/`. Full source/compiler controls and
+separate formatting packets are under `build/gc13_indexed/maketex_cleanup/`,
+`baddie_native_cleanup/`, `invhit_cleanup/`, `explodable_cleanup/`,
+`dll417_cleanup/`, `swaplift_cleanup/`, and `dbhole_cleanup/`.
