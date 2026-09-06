@@ -108,8 +108,8 @@ void vambat_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     {
         if (msgFlag == 16)
         {
-            bs->flags2E8 = bs->flags2E8 | 0x28;
-            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_mika_wingflap);
+            bs->flags2E8 |= 0x28;
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap);
             bs->current = 0;
         }
     }
@@ -117,12 +117,12 @@ void vambat_updateWhileFrozen(GameObject* obj, u8* state, GameObject* attacker, 
     {
         if (msgFlag == 16)
         {
-            bs->flags2E8 = bs->flags2E8 | 0x20;
+            bs->flags2E8 |= 0x20;
         }
         else
         {
-            bs->flags2E8 = bs->flags2E8 | 0x8;
-            Sfx_PlayFromObject((GameObject*)obj, SFXTRIG_baddie_mika_wingflap);
+            bs->flags2E8 |= 0x8;
+            Sfx_PlayFromObject(obj, SFXTRIG_baddie_mika_wingflap);
             bs->current = 0;
         }
     }
@@ -136,14 +136,14 @@ void vambat_updateIdle(GameObject* obj, void* state)
     EnemyState* bs = (EnemyState*)state;
 
     curve = *(RomCurveWalker**)state;
-    if ((obj)->anim.hitReactState != NULL)
+    if (obj->anim.hitReactState != NULL)
     {
-        hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+        hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitState->suppressOutgoingHits = 0;
     }
     if (bs->userData2 != 0)
     {
-        bs->flags2E8 = bs->flags2E8 | 0x80;
+        bs->flags2E8 |= 0x80;
     }
     if ((bs->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
@@ -153,37 +153,37 @@ void vambat_updateIdle(GameObject* obj, void* state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, 7e+02f, gVambatCurveInitData, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, obj, 7e+02f, gVambatCurveInitData, -1) != 0)
                 {
-                    bs->controlFlags = bs->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+                    bs->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
 
         baddieTurnTowardPoint(obj, state, curve->posX, curve->posZ, 0xf, 0);
 
-        vec[0] = curve->posX - (obj)->anim.localPosX;
-        vec[1] = curve->posY - (obj)->anim.localPosY;
-        vec[2] = curve->posZ - (obj)->anim.localPosZ;
-        enemy_steerVelocityToward(obj, (void*)state, vec, 1.5f, 0.75f, 0.15f, 1);
+        vec[0] = curve->posX - obj->anim.localPosX;
+        vec[1] = curve->posY - obj->anim.localPosY;
+        vec[2] = curve->posZ - obj->anim.localPosZ;
+        enemy_steerVelocityToward(obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
 
-        ((EnemyState*)state)->vambat.idleTimer = ((EnemyState*)state)->vambat.idleTimer + timeDelta;
-        if (((EnemyState*)state)->vambat.idleTimer > 3.6e+02f)
+        bs->vambat.idleTimer += timeDelta;
+        if (bs->vambat.idleTimer > 3.6e+02f)
         {
-            bs->flags2E4 = bs->flags2E4 & ~(u64)0x10000;
-            ((EnemyState*)state)->vambat.idleTimer = gVambatZero[0];
+            bs->flags2E4 &= ~0x10000;
+            bs->vambat.idleTimer = gVambatZero[0];
         }
     }
 
-    baddieTurnTowardLookDir(obj, (void*)state, 0xf, 1e+01f, 1.0f, 0);
+    baddieTurnTowardLookDir(obj, state, 0xf, 1e+01f, 1.0f, 0);
 
-    ((EnemyState*)state)->vambat.heartbeatSfxTimer = ((EnemyState*)state)->vambat.heartbeatSfxTimer - timeDelta;
-    if (((EnemyState*)state)->vambat.heartbeatSfxTimer <= gVambatZero[0])
+    bs->vambat.heartbeatSfxTimer -= timeDelta;
+    if (bs->vambat.heartbeatSfxTimer <= gVambatZero[0])
     {
-        ((EnemyState*)state)->vambat.heartbeatSfxTimer = gVambatHeartbeatPeriod[0];
+        bs->vambat.heartbeatSfxTimer = gVambatHeartbeatPeriod[0];
         Sfx_PlayFromObject(obj, SFXTRIG_mn_heart1_c);
     }
-    ((EnemyState*)state)->vambat.engagedTimer = gVambatZero[0];
+    bs->vambat.engagedTimer = gVambatZero[0];
 }
 
 void vambat_updateEngaged(GameObject* obj, void* state)
@@ -200,7 +200,7 @@ void vambat_updateEngaged(GameObject* obj, void* state)
     curve = *(RomCurveWalker**)state;
     if (bs->userData2 != 0)
     {
-        bs->flags2E8 = bs->flags2E8 | 0x80;
+        bs->flags2E8 |= 0x80;
     }
     if ((bs->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
@@ -214,31 +214,31 @@ void vambat_updateEngaged(GameObject* obj, void* state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, 7e+02f, gVambatCurveInitData, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, obj, 7e+02f, gVambatCurveInitData, -1) != 0)
                 {
-                    bs->controlFlags = bs->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
+                    bs->controlFlags &= ~BADDIE_CONTROL_PATH_FOLLOW;
                 }
             }
         }
     }
     ObjHits_SetHitVolumeSlot(&obj->anim, MAGICPLANT_HIT_VOLUME_SLOT, 1, 0);
     trackedObj = bs->trackedObj;
-    vec[0] = trackedObj->anim.localPosX - (obj)->anim.localPosX;
-    vec[1] = (25.0f + trackedObj->anim.localPosY) - (obj)->anim.localPosY;
-    vec[2] = trackedObj->anim.localPosZ - (obj)->anim.localPosZ;
+    vec[0] = trackedObj->anim.localPosX - obj->anim.localPosX;
+    vec[1] = (25.0f + trackedObj->anim.localPosY) - obj->anim.localPosY;
+    vec[2] = trackedObj->anim.localPosZ - obj->anim.localPosZ;
     PSVECMag((Vec*)vec);
-    ((EnemyState*)state)->vambat.engagedTimer = ((EnemyState*)state)->vambat.engagedTimer + timeDelta;
-    if ((void*)((EnemyState*)state)->lastHitObject != NULL || ((EnemyState*)state)->vambat.engagedTimer > 3.6e+02f)
+    bs->vambat.engagedTimer += timeDelta;
+    if (bs->lastHitObject != NULL || bs->vambat.engagedTimer > 3.6e+02f)
     {
-        bs->flags2E4 = bs->flags2E4 | 0x10000LL;
-        ((EnemyState*)state)->vambat.idleTimer = gVambatZero[0];
-        ((EnemyState*)state)->vambat.engagedTimer = gVambatZero[0];
+        bs->flags2E4 |= 0x10000;
+        bs->vambat.idleTimer = gVambatZero[0];
+        bs->vambat.engagedTimer = gVambatZero[0];
     }
     else
     {
-        worldPos[0] = (obj)->anim.localPosX;
-        worldPos[1] = (obj)->anim.localPosY;
-        worldPos[2] = (obj)->anim.localPosZ;
+        worldPos[0] = obj->anim.localPosX;
+        worldPos[1] = obj->anim.localPosY;
+        worldPos[2] = obj->anim.localPosZ;
         voxmaps_worldToGrid(worldPos, (s16*)gridA);
         worldPos[0] = curve->posX;
         worldPos[1] = curve->posY;
@@ -251,14 +251,14 @@ void vambat_updateEngaged(GameObject* obj, void* state)
         {
             if (voxmaps_traceLine((VoxPos*)gridB, (VoxPos*)gridA, NULL, &hitOut, 0) == 0)
             {
-                bs->flags2E4 = bs->flags2E4 | 0x10000LL;
-                ((EnemyState*)state)->vambat.idleTimer = gVambatZero[0];
-                ((EnemyState*)state)->vambat.engagedTimer = gVambatZero[0];
+                bs->flags2E4 |= 0x10000;
+                bs->vambat.idleTimer = gVambatZero[0];
+                bs->vambat.engagedTimer = gVambatZero[0];
             }
         }
     }
-    enemy_steerVelocityToward(obj, (void*)state, vec, 1.5f, 0.75f, 0.15f, 1);
-    baddieTurnTowardLookDir(obj, (void*)state, 0xf, 1e+01f, 1.0f, 0);
+    enemy_steerVelocityToward(obj, state, vec, 1.5f, 0.75f, 0.15f, 1);
+    baddieTurnTowardLookDir(obj, state, 0xf, 1e+01f, 1.0f, 0);
 }
 
 void vambat_init(GameObject* obj, void* state)
@@ -280,9 +280,9 @@ void vambat_init(GameObject* obj, void* state)
     bs->moveSpeedScale1 = pathStepInit;
     bs->moveId2 = 0;
     bs->moveSpeedScale2 = initSpeed;
-    ((EnemyState*)state)->vambat.idleTimer = gVambatZero[0];
-    ((EnemyState*)state)->vambat.heartbeatSfxTimer = gVambatZero[0];
-    ((EnemyState*)state)->vambat.engagedTimer = gVambatZero[0];
+    bs->vambat.idleTimer = gVambatZero[0];
+    bs->vambat.heartbeatSfxTimer = gVambatZero[0];
+    bs->vambat.engagedTimer = gVambatZero[0];
     bs->pathStep = pathStepInit;
     switch (obj->anim.romDefNo)
     {
@@ -324,7 +324,7 @@ void magicplantSpawnMovePuffs(GameObject* obj, void* state)
         u8 spawn = count;
         while (spawn != 0)
         {
-            (*gPartfxInterface)->spawnObject((void*)obj, MAGICPLANT_PARTFX, NULL, 2, -1, NULL);
+            (*gPartfxInterface)->spawnObject(obj, MAGICPLANT_PARTFX, NULL, 2, -1, NULL);
             spawn--;
         }
     }
