@@ -2,12 +2,12 @@
 #define DOLPHIN_MSL_C_PPCEABI_BARE_H_MATH_API_H_
 
 #include "types.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 
 double __fabs(double);
 double __frsqrte(double x);
 f32 asinf(f32 x);
-f32 powf(f32 x, f32 y);
 f32 powfCoreFast(f32 x, f32 y);
 f32 powfCoreHighPrecision(f32 x, f32 y);
 float __fabsf(float x);

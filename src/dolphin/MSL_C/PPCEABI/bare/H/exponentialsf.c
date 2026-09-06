@@ -1,32 +1,14 @@
+#include "dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.h"
 #include "dolphin/types.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h"
 
 #include "dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.h"
 
-extern float lbl_803DC648;
-extern float lbl_803DC64C;
-__declspec(section ".sdata") extern float lbl_803DC650[];
+static float sLog2EMinusOne[2] = {0.41015625f, 0.0325387903f};
 
-u32 lbl_80332C78[] = {
-    0xBEC00000, 0xBEBA406C, 0xBEB48C35, 0xBEAEE32E, 0xBEA9452D, 0xBEA3B205, 0xBE9E298F, 0xBE98ABA0,
-    0xBE933812, 0xBE8DCEBD, 0xBE886F7B, 0xBE831A28, 0xBE7B9D3C, 0xBE711973, 0xBE66A8B1, 0xBE5C4AB0,
-    0xBE51FF2E, 0xBE47C5E9, 0xBE3D9EA1, 0xBE338918, 0xBE29850F, 0xBE1F924A, 0xBE15B08E, 0xBE0BDFA1,
-    0xBE021F4A, 0xBDF0DEA4, 0xBDDD9F05, 0xBDCA7F4A, 0xBDB77F0B, 0xBDA49DE0, 0xBD91DB66, 0xBD7E6E71,
-    0xBD5961ED, 0xBD349081, 0xBD0FF971, 0xBCD7380E, 0xBC8EEF19, 0xBC0E2D45, 0x38256316, 0x3C0E9C73,
-    0x3C8DDD45, 0x3CD4011D, 0x3D0CDD83, 0x3D2F861E, 0x3D51FAFE, 0x3D743CBA, 0x3D8B25F6, 0x3D9C1492,
-    0x3DACEA7C, 0x3DBDA7FB, 0x3DCE4D54, 0x3DDEDACE, 0x3DEF50AD, 0x3DFFAF33, 0x3E07FB51, 0x3E10139E,
-    0x3E1820A0, 0x3E202276, 0x3E28193F, 0x3E30051A, 0x3E37E624, 0x3E3FBC7A, 0x3E47883A, 0x3E4F4981,
-    0x3E570069, 0x3E5EAD0F, 0x3E664F8D, 0x3E6DE7FF, 0x3E75767F, 0x3E7CFB27, 0x3E823B08, 0x3E85F3AA,
-    0x3E89A785, 0x3E8D56A6, 0x3E910118, 0x3E94A6E9, 0x3E984822, 0x3E9BE4D1, 0x3E9F7CFF, 0x3EA310B9,
-    0x3EA6A009, 0x3EAA2AFA, 0x3EADB197, 0x3EB133EA, 0x3EB4B1FD, 0x3EB82BDC, 0x3EBBA190, 0x3EBF1322,
-    0x3EC2809D, 0x3EC5EA0B, 0x3EC94F75, 0x3ECCB0E4, 0x3ED00E61, 0x3ED367F7, 0x3ED6BDAD, 0x3EDA0F8D,
-    0x3EDD5DA0, 0x3EE0A7EE, 0x3EE3EE7F, 0x3EE7315D, 0x3EEA708F, 0x3EEDAC1E, 0x3EF0E412, 0x3EF41873,
-    0x3EF74949, 0x3EFA769B, 0x3EFDA072, 0x3F00636A, 0x3F01F4E5, 0x3F0384AD, 0x3F0512C7, 0x3F069F35,
-    0x3F0829FB, 0x3F09B31E, 0x3F0B3A9F, 0x3F0CC083, 0x3F0E44CD, 0x3F0FC781, 0x3F1148A1, 0x3F12C832,
-    0x3F144636, 0x3F15C2B0, 0x3F173DA4, 0x3F18B714, 0x3F1A2F04, 0x3F1BA578, 0x3F1D1A71, 0x3F1E8DF2,
-    0x3F200000, 0x3F317218, 0x3E75FDF0, 0x3D635854, 0x3C1D9561, 0x3AAEBE2F, 0x3921805E, 0x3781E214,
-    0x35B3C15F, 0x33DD30D7, 0x3F7FFFFE, 0x3EFFFFFF, 0x3E2AAB03, 0x3D2AAAE6, 0x3C0874AA, 0x3AB5F6D0,
-    0x3956A4B8, 0x37D5E715,
-};
+static float sLog2MantissaTable[129] = {-0.375f, -0.36377275f, -0.352632195f, -0.341576993f, -0.330605894f, -0.319717556f, -0.308910817f, -0.298184395f, -0.287537158f, -0.276967913f, -0.266475528f, -0.256058931f, -0.245716989f, -0.235448644f, -0.225252882f, -0.21512866f, -0.205074996f, -0.195090905f, -0.185175434f, -0.175327659f, -0.165546641f, -0.155831486f, -0.146181315f, -0.136595264f, -0.127072483f, -0.117612153f, -0.108213462f, -0.0988755971f, -0.089597784f, -0.0803792477f, -0.0712192506f, -0.0621170439f, -0.0530719049f, -0.0440831222f, -0.0351499952f, -0.0262718461f, -0.017447995f, -0.00867778528f, 3.94313465e-05f, 0.00870429259f, 0.0173174236f, 0.0258794371f, 0.0343909375f, 0.0428525135f, 0.0512647554f, 0.0596282259f, 0.0679434985f, 0.0762111098f, 0.0844316185f, 0.0926055536f, 0.100733429f, 0.108815774f, 0.116853096f, 0.124845885f, 0.132794634f, 0.140699834f, 0.148561954f, 0.156381458f, 0.164158806f, 0.171894461f, 0.179588854f, 0.187242419f, 0.194855601f, 0.202428833f, 0.209962502f, 0.217457041f, 0.224912837f, 0.232330307f, 0.239709839f, 0.24705182f, 0.254356623f, 0.261624634f, 0.268856198f, 0.2760517f, 0.28321147f, 0.290335923f, 0.29742533f, 0.304480106f, 0.31150052f, 0.318486959f, 0.325439721f, 0.332359135f, 0.339245528f, 0.346099198f, 0.352920443f, 0.35970962f, 0.366466999f, 0.373192847f, 0.379887491f, 0.386551231f, 0.393184334f, 0.399787068f, 0.406359702f, 0.412902564f, 0.419415861f, 0.425899893f, 0.432354927f, 0.438781202f, 0.445178956f, 0.451548487f, 0.457890004f, 0.464203775f, 0.470490038f, 0.476749033f, 0.482980996f, 0.489186138f, 0.495364726f, 0.501516938f, 0.507643044f, 0.513743222f, 0.51981777f, 0.525866807f, 0.531890571f, 0.537889361f, 0.543863237f, 0.549812496f, 0.555737317f, 0.561637938f, 0.567514479f, 0.573367238f, 0.579196334f, 0.585001945f, 0.590784311f, 0.59654355f, 0.602279902f, 0.607993603f, 0.613684714f, 0.619353414f, 0.625f};
+static float sExp2Polynomial[9] = {0.693147182f, 0.240226507f, 0.0555041581f, 0.00961813424f, 0.00133318256f, 0.00015401977f, 1.54832742e-05f, 1.33928177e-06f, 1.02999984e-07f};
+static u32 sUnusedMathData[8] = {0x3F7FFFFE, 0x3EFFFFFF, 0x3E2AAB03, 0x3D2AAAE6, 0x3C0874AA, 0x3AB5F6D0, 0x3956A4B8, 0x37D5E715};
 
 static inline u32 float_bits(float value)
 {
@@ -73,8 +55,7 @@ typedef union {
 
 #pragma push
 #pragma section sconst_type ".sdata"
-#pragma cplusplus on
-static inline float log2_kernel(float value, const float* table)
+static inline float log2_kernel(float value)
 {
     u32 bits;
     int exponent;
@@ -108,20 +89,19 @@ static inline float log2_kernel(float value, const float* table)
         delta *= __one_over_F[tableIndex];
         exponentValue = (float)exponent;
         return (exponentValue + 1.375f)
-             + (table[tableIndex]
+             + (sLog2MantissaTable[tableIndex]
                 + (delta
-                   + (lbl_803DC650[0] * delta
-                      + (lbl_803DC650[1] * delta
+                   + (sLog2EMinusOne[0] * delta
+                      + (sLog2EMinusOne[1] * delta
                          + (delta * delta) * (delta * coefficients[1] + coefficients[0])))));
     }
 
     exponentValue = (float)exponent;
-    return (exponentValue + 1.375f) + table[tableIndex];
+    return (exponentValue + 1.375f) + sLog2MantissaTable[tableIndex];
 }
-#pragma cplusplus off
 #pragma pop
 
-static inline float exp2_kernel(float value, const float* table)
+static inline float exp2_kernel(float value)
 {
     float_word exponentScale;
     float_word scaleCopy;
@@ -134,7 +114,7 @@ static inline float exp2_kernel(float value, const float* table)
     fraction = value - (float)exponentScale.i;
 
     if (exponentScale.i > 128) {
-        return lbl_803DC64C;
+        return HUGE_VALF;
     }
 
     if (exponentScale.i < -127) {
@@ -150,13 +130,13 @@ static inline float exp2_kernel(float value, const float* table)
                 * (fraction
                        * (fraction
                               * (fraction
-                                     * (fraction * (fraction * (fraction * table[137] + table[136]) + table[135])
-                                            + table[134])
-                                     + table[133])
-                              + table[132])
-                       + table[131])
-                + table[130])
-         + table[129];
+                                     * (fraction * (fraction * (fraction * sExp2Polynomial[8] + sExp2Polynomial[7]) + sExp2Polynomial[6])
+                                            + sExp2Polynomial[5])
+                                     + sExp2Polynomial[4])
+                              + sExp2Polynomial[3])
+                       + sExp2Polynomial[2])
+                + sExp2Polynomial[1])
+         + sExp2Polynomial[0];
     polynomial = fraction * polynomial;
 
     return scaleFactor * (polynomial + 1.0f);
@@ -168,31 +148,29 @@ static inline float exp2_kernel(float value, const float* table)
 #pragma opt_propagation off
 float powf(float base, float power)
 {
-    const float* table;
     int integerPower;
     float fractionalPower;
 
-    table = (const float*)lbl_80332C78;
 
     if (base > 0.0f) {
-        power *= log2_kernel(base, table);
-        return exp2_kernel(power, table);
+        power *= log2_kernel(base);
+        return exp2_kernel(power);
     }
 
     if (base < 0.0f) {
         integerPower = power;
         fractionalPower = power - (int)power;
         if (fractionalPower) {
-            return lbl_803DC648;
+            return NAN;
         }
 
         if (integerPower % 2 != 0) {
-            power *= log2_kernel(-base, table);
-            return -exp2_kernel(power, table);
+            power *= log2_kernel(-base);
+            return -exp2_kernel(power);
         }
 
-        power *= log2_kernel(-base, table);
-        return exp2_kernel(power, table);
+        power *= log2_kernel(-base);
+        return exp2_kernel(power);
     }
 
     if (classify_float(base) == FLOAT_CLASS_NAN) {
@@ -204,11 +182,11 @@ float powf(float base, float power)
         return 1.0f;
     case FLOAT_CLASS_NAN:
     case FLOAT_CLASS_INFINITY:
-        return lbl_803DC648;
+        return NAN;
     case FLOAT_CLASS_NORMAL:
     case FLOAT_CLASS_SUBNORMAL:
         if ((float_bits(base) & 0x80000000) != 0) {
-            return lbl_803DC64C;
+            return HUGE_VALF;
         }
         return base;
     }
@@ -216,4 +194,3 @@ float powf(float base, float power)
     return 0.0f;
 }
 #pragma opt_propagation reset
-

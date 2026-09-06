@@ -5187,8 +5187,11 @@ dolphin/MSL_C/PPCEABI/bare/H/common_float_tables.c:
 dolphin/MSL_C/PPCEABI/bare/H/exponentialsf.c:
 	.text       start:0x80295318 end:0x80295A94
 	.data       start:0x803338D8 end:0x80333B20
-	.sdata      start:0x803DD2C0 end:0x803DD2C8
+	.sdata      start:0x803DD2B8 end:0x803DD2C8
 	.sdata2     start:0x803E8AE8 end:0x803E8B00
+
+dolphin/MSL_C/PPCEABI/bare/H/float.c:
+	.sdata      start:0x803DD2B0 end:0x803DD2B8
 
 dlls/objects/195_Player/player.c:
 	.text       start:0x80295A94 end:0x802B79F8

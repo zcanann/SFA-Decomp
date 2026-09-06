@@ -114,6 +114,15 @@ class ActiveCompilerProfileTests(unittest.TestCase):
                 self.assertEqual(obj.options["extra_cflags"], ["-lang=c++"])
                 self.assertTrue(obj.completed)
 
+    def test_exponential_tables_use_normal_small_data_rules(self):
+        prefix = "dolphin/MSL_C/PPCEABI/bare/H/"
+        constants = self.objects[prefix + "float.c"]
+        self.assertEqual(constants.options["mw_version"], "GC/1.2.5n")
+        self.assertTrue(constants.completed)
+        exponentials = self.objects[prefix + "exponentialsf.c"]
+        self.assertEqual(exponentials.options["mw_version"], "GC/1.2.5n")
+        self.assertEqual(exponentials.options["extra_cflags"], ["-O3,p", "-opt", "nopeephole"])
+
 
 if __name__ == "__main__":
     unittest.main()
