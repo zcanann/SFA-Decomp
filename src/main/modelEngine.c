@@ -1,3 +1,4 @@
+#include "dlls/objects/625_DrakorHoverpad.h"
 #include "dlls/objects/597_SnowBike.h"
 #include "dlls/objects/226.h"
 #include "dlls/objects/201_Baddie.h"
@@ -566,7 +567,7 @@ extern ResourceDescriptor gDrCageControlObjDescriptor,
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor,
     gDrLightBeaObjDescriptor, gDrMusicContObjDescriptor, gDrShackleObjDescriptor, gDrakorDThornBushObjDescriptor,
     gDrakorEnergyObjDescriptor;
-extern ResourceDescriptor gDrakorHoverPadObjDescriptor, gDrakorMissileObjDescriptor;
+extern ResourceDescriptor gDrakorMissileObjDescriptor;
 extern ResourceDescriptor gEarthWalkerObjDescriptor;
 extern ResourceDescriptor gFireFlyObjDescriptor, gFireObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
@@ -1835,7 +1836,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDrShackleObjDescriptor,
     &gDrGeneratorObjDescriptor,
     &gDR_RockNullResourceDescriptor,
-    &gDrakorHoverPadObjDescriptor,
+    (ResourceDescriptor*)&gDrakorHoverPadObjDescriptor,
     (ResourceDescriptor*)&gHighTopObjDescriptor,
     (ResourceDescriptor*)&gFirePipeObjDescriptor,
     &gDR_pulleyNullResourceDescriptor,

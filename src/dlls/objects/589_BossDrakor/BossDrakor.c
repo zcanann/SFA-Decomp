@@ -46,7 +46,7 @@
 #include "main/maketex_timer_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0262_drakormissile.h"
-#include "main/dll/dll_0271_drakorhoverpad.h"
+#include "dlls/objects/625_DrakorHoverpad.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/render_envfx_api.h"
 #include "sys/objects/lifecycle.h"
@@ -81,11 +81,9 @@ s16 gBossDrakorJawAnglePerTick = 0x2D8;
 int lbl_803DC19C[1] = {0};
 
 #define BOSSDRAKOR_MAP_ARENA          0x1d /* map-event id set to act 3 on boss defeat */
-#define BOSSDRAKOR_OBJGROUP           0x45
 #define BOSSDRAKOR_PARTFX             0x7ad
 #define BOSSDRAKOR_HIT_VOLUME_SLOT    5
 #define BOSSDRAKOR_AIRMETER_BGTEXTURE 0x63e /* HUD air-meter background texture id */
-#define DRAKORHOVERPAD_OBJGROUP 0x46 /* DLL 0x271 drakorhoverpad */
 #define BOSSDRAKOR_CHILD_OBJ_MISSILE 0x70f /* drakormissile (drakormissile_startActiveLaunch) */
 
 #define BOSSDRAKOR_SPELLSTONE_STATE_HELD 2
