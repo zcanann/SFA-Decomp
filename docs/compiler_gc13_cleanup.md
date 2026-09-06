@@ -371,3 +371,49 @@ Every landing passes the strict matching build and `ninja all_source` within
 30 seconds; the final retail DOL remains byte-identical. Controls and
 before/after artifacts are under `build/gc13_indexed/nicer_*`, with the
 object packets beside them.
+
+
+## September 6: Player climbing and backend allocation recovery
+
+Three more functions become exact, adding **4,712 code bytes**:
+
+| Function | Bytes | Before | After |
+| --- | ---: | ---: | ---: |
+| `playerSetMoveBlendFromPlane` | 708 | 99.66102% | **100%** |
+| `playerBuildLedgeClimbProbe` | 1,296 | 99.69136% | **100%** |
+| `playerStateClimbWall` | 2,708 | 98.69867% | **100%** |
+
+The blend weight is a signed halfword converted directly from the scaled
+floating-point blend factor. Removing the intermediate `int` conversion
+matches the helper while preserving its signed-halfword return type and both
+already-exact callers. Changing only its return type to `int` would match the
+helper but introduce unnecessary extensions in those callers.
+
+The ledge probe now uses `GameObject*` for the hit object, avoiding the previous
+pointer-to-integer-to-pointer conversion at its transform calls. Declaring the
+plane cursor first also reproduces the retail allocation. The wall-climbing
+state similarly declares its player-state pointer first, and uses the existing
+native-width hit-detection and position-velocity flags. Its player-state load
+remains before the position-dirty call.
+
+`player_SeqFn` also improves from 98.96656% to **99.091156%** after removing
+unnecessary 64-bit flag promotions. It remains unfinished. The complete TU
+advances from **99.87313% to 99.90971%**, reaching **227/233 exact functions**.
+Only these four function bodies change. All allocated data bytes, section
+sizes/alignment, and data-symbol offsets remain unchanged. Other functions'
+relative relocations are preserved; the changed wall-climbing and sequence
+bodies move some relocations along with their instructions. Assigned data
+remains 100% exact, and the TU keeps its GC/1.3 profile and NonMatching status.
+
+GC/1.3 backend traces now cover the ledge probe, wall-transition probe,
+wall-climbing state, and sequence callback. The decoder recognizes five
+additional observed opcodes: `addze`, `oris`, `or`, `rlwimi`, and `fnmadds`.
+Each trace passes full instruction/register alignment, GPR graph replay, and
+ordinary-versus-instrumented raw object equality. The ledge trace exposed an
+extra integer-conversion register lifetime; source controls then verified the
+cast and declaration changes. These traces describe this reconstructed source,
+not proven original variable names or compiler provenance.
+
+The backend/LLDB tests, formatting and generated-path audits, strict retail
+checksum, and `ninja all_source` pass. Controls, captures, and object audits are
+under `build/gc13_new_matches/player_round4*`.
