@@ -777,3 +777,75 @@ the source-linked DOL retains SHA-1
 `e750e8e894707a52446118a4b84f1b58b677b269`. Source/compiler controls,
 reports, traces, and object audits are under
 `build/gc13_new_matches/worldmap_match/`.
+
+## September 6: Indexed object access and remaining object flag widenings
+
+Seven more TUs retain all **150 existing exact functions out of 152**, across
+43,840 code bytes and 2,712 assigned data bytes. Four pointer walks now use
+ordinary indexing: the two nearest-object searches, object-list membership,
+and child rendering. Fourteen artificial 64-bit flag widenings are removed:
+three in DBSH_Symbol, one in DIM2PrisonM, nine in KT_Rex, and one in slot 263.
+
+| TU | GC/1.3 after | GC/2.0 before | GC/2.0 after | Accepted source cleanup |
+| --- | ---: | ---: | ---: | --- |
+| objlib | 100% | 100% | 100% | Indexed nearest-object and membership scans. |
+| objprint | 99.82651% | 99.82651% | 99.82651% | Typed model banks and child objects; indexed child rendering. |
+| DBSH_Symbol, slot 406 | 100% | 100% | 98.939095% | Native shadow flags, direct object fields and compound spin updates. |
+| DIM2PrisonM, slot 473 | 100% | 100% | 99.36937% | Native model flags and the canonical EarthWarrior state at the reused callback. |
+| KT_Rex, slot 592 | 100% | 98.03416% | 97.62033% | Native phase flags and direct object arguments. |
+| DLL 263 | 100% | 100% | 99.62939% | Native model flag, embedded animation fields and compound movement updates. |
+| DFP_Lightni, slot 571 | 100% | 100% | 100% | Typed effect endpoints and an ordinary biased-double expression. |
+
+The compiler comparisons hold the TU boundaries and other build settings
+fixed. Rex's non-flag control retains its original GC/2.0 score; the native
+flags account for its regression. The prison mammoth's native-mask-only
+control also reproduces its final GC/2.0 score. These are source/codegen
+comparisons, not proof of the original compiler version.
+
+The prison mammoth's after-bones helper is installed only by DR_EarthWar.
+It now explicitly casts the reused object's extra storage to the existing
+`EarthWarriorState` and uses `sub.modelChain`, replacing a local padded
+view. The canonical assertions place that field at 0x14F8 in the 0x14FC
+EarthWarrior allocation; the mammoth's own 0x604 state remains separate.
+Four descriptor casts are removed only where their prototypes exactly
+match the callback typedef.
+
+Lightning's endpoints become `Vec3f` values with typed pointer aliases.
+Its unused conversion helper retains the exact 2^52 bias while replacing
+64-bit construction and type-punning with double arithmetic. Deleting the
+helper renumbers anonymous literals, so a compact explanation records why
+it remains. No helper body is emitted, and its private rename has no callers.
+
+The existing objprint mismatches in `objJointTracksAimAtTarget` and
+`staffUpdateSegmentTransforms` remain unchanged. Indexed path-search heap,
+node and link variants still regress, as do Rex's indexed lane/gamebit
+walks and several longer-lived typed locals; those experiments are not
+retained. The object-source scan now finds no `u64`/`s64` spellings or
+`LL`/`ULL` integer literals outside Player, which remains a separate lane.
+This does not claim that the remaining main-code conversions or genuine
+64-bit arithmetic can be removed.
+
+Each TU's source change and clang-format output land in separate commits.
+All seven formatting commits preserve their source commit's raw object.
+Only the existing owning lightning header needs a formatting change; the
+other owning object headers already pass the formatter, and shared main
+headers are untouched. No compiler override, TU boundary, generated source
+path, symbol config or ProDG change belongs to this pass.
+
+The complete 1,005-object audit preserves every unit's match measures.
+Five cleaned objects are raw-identical to baseline; objlib and DBSH_Symbol
+only renumber anonymous literals at fixed positions. Allocated section
+contents, sizes, alignment and flags, named symbols and normalized
+relocations are unchanged. Independent upstream Player `d51abdf78c` and
+world-map camera `f10a37f854` changes were rebased in and excluded from
+these cleanup totals. Their source was checked against the upstream
+commits before updating only their baseline entries.
+
+Strict matching and `ninja all_source` pass with 30-second limits for every
+source and formatting landing. The final DOL remains byte-identical to
+retail, SHA-1 `e750e8e894707a52446118a4b84f1b58b677b269`. The generated-path
+audit passes for all five object slots. Baselines and the final audit are
+under `build/gc13_migration/remaining_flags/`; source/compiler controls and
+separate formatting packets are under `build/gc13_indexed/objlib_cleanup/`,
+`objprint_cleanup/`, `dbsymbol_cleanup/`, `prisonm_cleanup/`,
+`ktrex_native_cleanup/`, `dll263_cleanup/`, and `lightning_cleanup/`.
