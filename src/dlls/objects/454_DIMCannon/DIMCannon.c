@@ -513,13 +513,11 @@ void DIMCannon_update(GameObject* obj) {
         break;
     }
     case DIM_CANNON_MODE_ARMED:
-        DIMCannon_updateAim(obj, state->aimTargetX, state->aimTargetY, state->aimTargetZ,
-                            state->targetDistance);
+        DIMCannon_updateAim(obj, state->aimTargetX, state->aimTargetY, state->aimTargetZ, state->targetDistance);
         if (mainGetBit(placement->resetGameBit)) {
             state->mode = DIM_CANNON_MODE_WAIT_FOR_RESET;
         } else if (state->targetPlayer != 0 && !mainGetBit(placement->holdGameBit)) {
-            f32 playerDistance =
-                getXZDistanceSquared(&obj->anim.worldPosX, &state->targetPlayer->anim.worldPosX);
+            f32 playerDistance = getXZDistanceSquared(&obj->anim.worldPosX, &state->targetPlayer->anim.worldPosX);
             int triggerDistance = placement->triggerRange * lbl_803DBF10;
             if (playerDistance < triggerDistance / 100.0f) {
                 state->mode = DIM_CANNON_MODE_AUTO_FIRE;
@@ -563,10 +561,8 @@ void DIMCannon_update(GameObject* obj) {
             if (state->shotCooldown > 0) {
                 state->shotCooldown -= framesThisStep;
             }
-            state->targetDistance =
-                getXZDistanceSquared(&obj->anim.worldPosX, &state->targetPlayer->anim.worldPosX);
-            DIMCannon_updateAim(obj, state->aimTargetX, state->aimTargetY, state->aimTargetZ,
-                                state->targetDistance);
+            state->targetDistance = getXZDistanceSquared(&obj->anim.worldPosX, &state->targetPlayer->anim.worldPosX);
+            DIMCannon_updateAim(obj, state->aimTargetX, state->aimTargetY, state->aimTargetZ, state->targetDistance);
             DIMCannon_spawnBall(obj, 0);
             {
                 f32 playerDistance = state->targetDistance;
