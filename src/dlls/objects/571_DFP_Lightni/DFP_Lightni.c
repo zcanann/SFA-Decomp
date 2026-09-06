@@ -22,10 +22,11 @@ static inline DfpLightniState* dfplightni_getState(GameObject* obj)
     return obj->extra;
 }
 
-static inline f64 dfplightni_u32AsDouble(u32 value)
+/* Unused conversion helper retained as a literal-pool anchor. */
+static inline f64 dfplightni_u32AsBiasedDouble(u32 value)
 {
-    u64 bits = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(value)));
-    return *(f64*)&bits;
+    /* The 2^52 bias reproduces the integer-conversion bit pattern. */
+    return (f64)value + 4503599627370496.0;
 }
 
 int DFP_Lightni_getExtraSize(void)
@@ -88,10 +89,10 @@ void DFP_Lightni_update(GameObject* obj)
     DfpLightniState* state;
     f32 radiusX;
     f32 radiusY;
-    float* effectStart;
-    float* effectEnd;
-    float start[3];
-    float end[3];
+    const Vec3f* effectStart;
+    const Vec3f* effectEnd;
+    Vec3f start;
+    Vec3f end;
 
     if (obj != 0)
     {
@@ -107,32 +108,32 @@ void DFP_Lightni_update(GameObject* obj)
             }
             if ((state->timer > state->triggerTime) && (state->timer < DFPLIGHTNI_TIMER_MAX))
             {
-                start[0] = obj->anim.localPosX;
-                start[1] = obj->anim.localPosY;
-                start[2] = obj->anim.localPosZ;
+                start.x = obj->anim.localPosX;
+                start.y = obj->anim.localPosY;
+                start.z = obj->anim.localPosZ;
                 if (eventActive != 0)
                 {
-                    end[0] =
+                    end.x =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
                         playerObj->anim.localPosX;
-                    end[1] =
+                    end.y =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX) +
                         playerObj->anim.localPosY;
-                    end[2] =
+                    end.z =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
                         playerObj->anim.localPosZ;
                 }
                 else
                 {
-                    end[0] =
+                    end.x =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
-                        start[0];
-                    end[1] =
+                        start.x;
+                    end.y =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX) +
                         obj->anim.localPosY;
-                    end[2] =
+                    end.z =
                         DFPLIGHTNI_OFFSET_SCALE * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
-                        start[2];
+                        start.z;
                 }
                 if (state->effectHandle != 0)
                 {
@@ -152,13 +153,13 @@ void DFP_Lightni_update(GameObject* obj)
                         clampY = (radiusY < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
                                  : (radiusY > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
                                                                      : radiusY;
-                        effectStart = start;
-                        effectEnd = end;
+                        effectStart = &start;
+                        effectEnd = &end;
                         clampX = (radiusX < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
                                  : (radiusX > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
                                                                      : radiusX;
                         state->effectHandle = lightningCreate(
-                            (const Vec3f*)effectStart, (const Vec3f*)effectEnd, clampX, clampY,
+                            effectStart, effectEnd, clampX, clampY,
                             DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
                     }
@@ -167,13 +168,13 @@ void DFP_Lightni_update(GameObject* obj)
                         clampY = (radiusY < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
                                  : (radiusY > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
                                                                      : radiusY;
-                        effectStart = start;
-                        effectEnd = end;
+                        effectStart = &start;
+                        effectEnd = &end;
                         clampX = (radiusX < DFPLIGHTNI_RADIUS_MIN)   ? DFPLIGHTNI_RADIUS_MIN
                                  : (radiusX > DFPLIGHTNI_RADIUS_MAX) ? DFPLIGHTNI_RADIUS_MAX
                                                                      : radiusX;
                         state->effectHandle = lightningCreate(
-                            (const Vec3f*)effectStart, (const Vec3f*)effectEnd, clampX, clampY,
+                            effectStart, effectEnd, clampX, clampY,
                             state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
                     }
