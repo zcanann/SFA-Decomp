@@ -3152,7 +3152,6 @@ static inline void GXPosition1x8(const u8 x) {
 static void updateVisibleGeometry(void) {
     Camera* cam;
     int n;
-    int i;
     f32 tt, ff, ss;
     f32 scale;
     f32 xx, yy, zz;
@@ -3162,7 +3161,7 @@ static void updateVisibleGeometry(void) {
     f32 dd;
     f32* pw;
     MatrixTransform st;
-    f32 m[17];
+    f32 m[16];
 
     cam = Camera_GetCurrent();
     if ((renderFlags & RENDERFLAG_WIDESCREEN) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0) {
@@ -3183,13 +3182,13 @@ static void updateVisibleGeometry(void) {
     st.rotZ = cam->worldRoll;
     setMatrixFromObjectPos(m, &st);
     Matrix_TransformPoint(m, 0.0f, 0.0f, -1.0f, &ox, &oy, &oz);
-    gViewFrustumPlanes[0].normalX = ox;
-    gViewFrustumPlanes[n = 0].normalY = oy;
-    gViewFrustumPlanes[n = 0].normalZ = oz;
+    n = 0;
+    gViewFrustumPlanes[n].normalX = ox;
+    gViewFrustumPlanes[n].normalY = oy;
+    gViewFrustumPlanes[n].normalZ = oz;
     dd = -(zz * oz + (xx * ox + yy * oy));
     pw = &gViewFrustumPlanes[0].distance;
-    i = 0;
-    pw[i * 5] = dd;
+    pw[n * 5] = dd;
     fov = (int)(182.05f * scale) & 0xffff;
     tt = fcos16HighPrecision(fov);
     ratio = fsin16HighPrecision(fov) / tt;
@@ -3200,22 +3199,26 @@ static void updateVisibleGeometry(void) {
     ff = mathSinfHighPrecision(tt);
     ss = mathCosfHighPrecision(tt);
     Matrix_TransformPoint(m, ss, 0.0f, -ff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n = 1].normalX = ox;
+    n++;
+    gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, -ss, 0.0f, -ff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n = 2].normalX = ox;
+    n++;
+    gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, 0.0f, -ss, -ff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n = 3].normalX = ox;
+    n++;
+    gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, 0.0f, ss, -ff, &ox, &oy, &oz);
-    gViewFrustumPlanes[n = 4].normalX = ox;
+    n++;
+    gViewFrustumPlanes[n].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
     pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));

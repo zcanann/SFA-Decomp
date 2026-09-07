@@ -207,6 +207,15 @@ object produced by the equivalent local records. Only `mapProcessRomList` and
 `doPendingMapLoads` change function bytes in this pass; every previously exact
 function remains exact.
 
+The frustum builder now reserves sixteen matrix floats, matching the complete
+`setMatrixFromObjectPos` write contract (`m[0]` through `m[15]`). It also uses one
+sequential plane index instead of repeatedly assigning literal indices and
+introducing a second zero-valued index for the first distance store. The
+Dinosaur Planet frustum routine supports this sequential structure, but its
+signed-short index is not adopted as EN type evidence. Both corrections preserve
+the entire raw object, including anonymous symbols and relocations; they do not
+change the remaining `updateVisibleGeometry` instruction differences.
+
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /
 `-inline noauto` profile and the required common game compiler. No compiler
