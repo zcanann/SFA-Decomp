@@ -1275,84 +1275,84 @@ void objSetColorFilter(s16 red, s16 green, s16 blue) {
 #define OBJPRINT_ATTACH_POINTS(staff) ((char*)OBJPRINT_MODEL_INSTANCE(staff)->attachPoints)
 
 void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjModel* modelArg, int a, int b, int c) {
-    f32 va[3];
-    Vec vb;
-    int k;
-    char* q;
-    Vec* vp;
-    Vec* vp0;
-    int i;
-    char* base;
+    Vec pointB;
+    Vec pointA;
+    int attachmentIndex;
+    char* segmentBytes;
+    Vec* pointBPtr;
+    Vec* pointBStorage;
+    int segmentIndex;
+    char* stateBytes;
     ObjModel* model;
-    int obj;
+    int ownerAddress;
     GameObject* staff;
 
     staff = (GameObject*)staffArg;
-    obj = (int)objArg;
+    ownerAddress = (int)objArg;
     model = (ObjModel*)modelArg;
 
     if (OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount >= 2 && staff->anim.classId == 0x2d) {
-        int off;
-        base = (char*)staff->extra;
-        i = 0;
-        k = 1;
-        off = 0x18;
-        q = base;
-        vp0 = (Vec*)va;
-        vp = vp0;
+        int attachmentOffset;
+        stateBytes = (char*)staff->extra;
+        segmentIndex = 0;
+        attachmentIndex = 1;
+        attachmentOffset = sizeof(ObjAttachPoint);
+        segmentBytes = stateBytes;
+        pointBStorage = &pointB;
+        pointBPtr = pointBStorage;
 
-        while (i < ((StaffState*)base)->geometrySegmentCount) {
-            if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
-                MtxPtr jm;
-                int joint;
-                joint = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1]
+        while (segmentIndex < ((StaffState*)stateBytes)->geometrySegmentCount) {
+            if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
+                MtxPtr jointMatrixB;
+                int jointIndexB;
+                jointIndexB = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1]
                             .joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                jm = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, joint);
-                vp->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[0];
-                va[1] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[1];
-                va[2] = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))[1].pos[2];
-                PSMTXMultVec(jm, vp, vp);
-                vp->x += playerMapOffsetX;
-                va[2] += playerMapOffsetZ;
-                *(f32*)(q + 0x6c) = vp->x;
-                *(f32*)(q + 0x74) = va[1];
-                *(f32*)(q + 0x7c) = va[2];
+                jointMatrixB = (MtxPtr)ObjModel_GetJointMatrix((u8*)model, jointIndexB);
+                pointBPtr->x = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[0];
+                pointB.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[1];
+                pointB.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))[1].pos[2];
+                PSMTXMultVec(jointMatrixB, pointBPtr, pointBPtr);
+                pointBPtr->x += playerMapOffsetX;
+                pointB.z += playerMapOffsetZ;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBX)) = pointBPtr->x;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBY)) = pointB.y;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointBZ)) = pointB.z;
             }
-            if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
-                ObjAttachPoint* row = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off);
-                int idx2 = row->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
-                MtxPtr mtx2 = (MtxPtr)(idx2 * 0x40 + *(int*)((u8*)model + ((model->bufferFlags & 1) * 4) + 0xc));
-                vb.x = row->pos[0];
-                vb.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[1];
-                vb.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + off))->pos[2];
-                PSMTXMultVec(mtx2, &vb, &vb);
-                vb.x += playerMapOffsetX;
-                vb.z += playerMapOffsetZ;
-                *(f32*)(q + 0x54) = vb.x;
-                *(f32*)(q + 0x5c) = vb.y;
-                *(f32*)(q + 0x64) = vb.z;
+            if (attachmentIndex < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
+                ObjAttachPoint* attachmentA = (ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset);
+                int jointIndexA = attachmentA->joints[OBJPRINT_ACTIVE_BANK_INDEX(staff)];
+                MtxPtr jointMatrixA = (MtxPtr)(jointIndexA * (int)sizeof(ObjModelJointMatrix) + *(int*)((u8*)model + ((model->bufferFlags & 1) * sizeof(model->jointMatrices[0])) + offsetof(ObjModel, jointMatrices)));
+                pointA.x = attachmentA->pos[0];
+                pointA.y = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[1];
+                pointA.z = ((ObjAttachPoint*)(OBJPRINT_ATTACH_POINTS(staff) + attachmentOffset))->pos[2];
+                PSMTXMultVec(jointMatrixA, &pointA, &pointA);
+                pointA.x += playerMapOffsetX;
+                pointA.z += playerMapOffsetZ;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAX)) = pointA.x;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAY)) = pointA.y;
+                *(f32*)(segmentBytes + offsetof(StaffState, geometryPointAZ)) = pointA.z;
             }
-            k += 2;
-            off += 0x30;
-            q += 4;
-            i++;
-            vp = vp0;
+            attachmentIndex += 2;
+            attachmentOffset += 2 * sizeof(ObjAttachPoint);
+            segmentBytes += sizeof(f32);
+            segmentIndex++;
+            pointBPtr = pointBStorage;
         }
 
-        if (((StaffState*)base)->geometrySegmentCount != 0) {
-            char* r = base + ((StaffState*)base)->orientationSegmentIndex * 4;
-            va[0] = *(f32*)(r + 0x6c);
-            va[1] = *(f32*)(r + 0x74);
-            va[2] = *(f32*)(r + 0x7c);
-            STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)obj, &vb);
-            va[0] -= vb.x;
-            va[1] -= vb.y;
-            va[2] -= vb.z;
-            staff->anim.rotX = getAngle(va[0], va[2]);
+        if (((StaffState*)stateBytes)->geometrySegmentCount != 0) {
+            char* orientationBytes = stateBytes + ((StaffState*)stateBytes)->orientationSegmentIndex * (int)sizeof(f32);
+            pointB.x = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBX));
+            pointB.y = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBY));
+            pointB.z = *(f32*)(orientationBytes + offsetof(StaffState, geometryPointBZ));
+            STAFF_INTERFACE(staff)->updateSwipe(staff, (GameObject*)ownerAddress, &pointA);
+            pointB.x -= pointA.x;
+            pointB.y -= pointA.y;
+            pointB.z -= pointA.z;
+            staff->anim.rotX = getAngle(pointB.x, pointB.z);
             {
-                f32 dx = va[0] * va[0];
-                f32 dz = va[2] * va[2];
-                staff->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
+                f32 dx = pointB.x * pointB.x;
+                f32 dz = pointB.z * pointB.z;
+                staff->anim.rotY = (s16)(-getAngle(pointB.y, sqrtf(dx + dz)) + 0x4000);
             }
             staff->anim.rotZ = 0;
         }

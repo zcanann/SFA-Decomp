@@ -48,3 +48,28 @@ This is type and field recovery; it does not claim an increase in match score.
 `python3 configure.py --matching`, the 30-second-bounded `ninja all_source`,
 and the strict `ninja` target pass (`main.dol: OK`). Objdiff retains the existing
 matching status of both units; the complete player object also remains unchanged.
+
+## Canonical geometry fields and vector storage
+
+The engine producer now names all six A/B coordinate arrays through canonical
+`StaffState` offsets, with assertions beside their definitions at 0x54, 0x5C,
+0x64, 0x6C, 0x74, and 0x7C. Its B endpoint uses the native `Vec` type already
+required by `PSMTXMultVec`; the segment cursor, attachment cursor, joint indices,
+and A/B matrices carry their roles through the transform and orientation steps.
+Attachment and matrix strides use their defined record sizes.
+
+The byte cursors and raw matrix-buffer read retain measured compiler behavior.
+Direct `StaffState` array indexing changes the transform function from four to
+six structural differences and from fifteen to twenty-seven operand differences.
+Direct typed matrix indexing changes it to twelve structural differences.
+Canonical `offsetof` expressions keep the existing instruction sequence while
+making the accessed fields explicit. B still uses the bounds-checked
+`ObjModel_GetJointMatrix` call; A still reads the selected matrix buffer directly.
+The shared endpoint test and unchecked orientation selector remain as described
+above.
+
+The complete engine object remains byte-for-byte identical, including its
+symbol table, relocation records, and non-text sections. Objdiff remains
+97.018074% for the 664-byte transform function. Formatting is separate and
+preserves the raw object. Rebuilding the header leaves all 1,002 source object
+hashes unchanged. This is source recovery with no matching regression.
