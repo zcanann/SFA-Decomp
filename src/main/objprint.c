@@ -1,4 +1,5 @@
 #define OBJHITS_SETTERS_S16
+#include "main/objprint_api.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -1253,7 +1254,10 @@ void characterHeadLookCalm(GameObject* obj, s16* state, f32 value) {
     }
 }
 
-void objSetGlowColor(int red, int green, int blue, u8 alpha) {
+/* The byte alpha parameter retains the public int API through default promotion. */
+void objSetGlowColor(red, green, blue, alpha) int red, green, blue;
+u8 alpha;
+{
     gObjGlowColorRed = red;
     gObjGlowColorGreen = green;
     gObjGlowColorBlue = blue;
@@ -1270,7 +1274,7 @@ void objSetColorFilter(s16 red, s16 green, s16 blue) {
 
 #define OBJPRINT_ATTACH_POINTS(staff) ((char*)OBJPRINT_MODEL_INSTANCE(staff)->attachPoints)
 
-void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg, int a, int b, int c) {
+void staffUpdateSegmentTransforms(GameObject* staffArg, GameObject* objArg, ObjModel* modelArg, int a, int b, int c) {
     f32 va[3];
     Vec vb;
     int k;
@@ -1297,7 +1301,7 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
         vp0 = (Vec*)va;
         vp = vp0;
 
-        while (i < *(s16*)(base + 0xb0)) {
+        while (i < ((StaffState*)base)->geometrySegmentCount) {
             if (k < OBJPRINT_MODEL_INSTANCE(staff)->attachPointCount) {
                 MtxPtr jm;
                 int joint;
@@ -1335,8 +1339,8 @@ void staffUpdateSegmentTransforms(int staffArg, GameObject* objArg, int modelArg
             vp = vp0;
         }
 
-        if (*(s16*)(base + 0xb0) != 0) {
-            char* r = base + *(s16*)(base + 0xb2) * 4;
+        if (((StaffState*)base)->geometrySegmentCount != 0) {
+            char* r = base + ((StaffState*)base)->orientationSegmentIndex * 4;
             va[0] = *(f32*)(r + 0x6c);
             va[1] = *(f32*)(r + 0x74);
             va[2] = *(f32*)(r + 0x7c);
@@ -1430,7 +1434,7 @@ void objRender(int a, int b, int c, int d, GameObject* obj, int flag) {
     for (i = 0; i < obj->childCount; i++) {
         GameObject* staff = obj->childObjs[i];
         if (staff->anim.classId == 0x2d) {
-            staffUpdateSegmentTransforms((int)staff, obj, (int)staff->anim.modelBanks[staff->anim.bankIndex], a, b, c);
+            staffUpdateSegmentTransforms(staff, obj, staff->anim.modelBanks[staff->anim.bankIndex], a, b, c);
         }
     }
 }
