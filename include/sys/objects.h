@@ -2,11 +2,12 @@
 #define SYS_OBJECTS_H_
 
 #include "game/objects/object.h"
+#include "game/objects/object_setup.h"
 
 typedef struct ObjModel ObjModel;
 
 GameObject* Obj_GetPlayerObject(void);
-void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
+GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objectIndex, GameObject* parent, int unused);
 void Obj_InitObjectSystem(void);
 void Obj_ResetObjectSystem(void);
 void Obj_ApplyPendingParentLinks(void);

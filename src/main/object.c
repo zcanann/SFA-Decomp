@@ -529,7 +529,7 @@ GameObject* loadObjectAtObject(GameObject* src, ObjPlacement* setup) {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;
     } else {
-        obj = loadCharacter((s16*)setup, 5, type, -1, objF30, 0);
+        obj = loadCharacter(setup, 5, type, -1, objF30, 0);
         if (obj != NULL) {
             Obj_RegisterObject(obj, 5);
             OSReport(sObjDebugStrings, obj->anim.modelInstance->name);
@@ -714,7 +714,7 @@ void mapSetupPlayer(void) {
                 OSReport((char*)(base + 0x20), -1);
                 obj = 0;
             } else {
-                obj = loadCharacter((s16*)&spawn, 1, -1, -1, 0, 0);
+                obj = loadCharacter((ObjPlacement*)&spawn, 1, -1, -1, 0, 0);
                 if (obj != 0) {
                     Obj_RegisterObject(obj, 1);
                     OSReport((char*)(base + 0x5c), obj->anim.modelInstance->name);
@@ -1549,7 +1549,7 @@ void Obj_RegisterObject(GameObject* obj, int flags) {
     }
 }
 
-void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused) {
+GameObject* loadCharacter(ObjPlacement* data, int flags, int mapLayer, int objectIndex, GameObject* parent, int unused) {
     int id;
     int offsets[20];
     void* models[20];
@@ -1557,9 +1557,9 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     GameObject* tp;
     s16 seq;
     u8* def;
-    int fnFlags;
-    int (*fp)(void*);
-    int (*fp2)(void*, int);
+    int callbackFlags;
+    int (*getModelLoadFlags)(GameObject*);
+    int (*getExtraSize)(GameObject*, int);
     int loadFlags;
     int idx;
     int i;
@@ -1579,7 +1579,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     int alignedCursor;
     int j;
 
-    seq = *data;
+    seq = data->objectId;
     if (flags & 2) {
         id = seq;
     } else {
@@ -1593,7 +1593,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     def = loadObjectFile(id);
     tmpl.anim.modelInstance = (ObjModelInstance*)def;
     if (def == NULL || (int)def == -1) {
-        debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, *data, tmpl.anim.romDefNo);
+        debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, data->objectId, tmpl.anim.romDefNo);
         return NULL;
     }
     modelDef = (ObjModelInstance*)def;
@@ -1609,22 +1609,22 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     if (flags & 4) {
         tmpl.anim.flags |= 0x2000;
     }
-    tmpl.anim.localPosX = ((ObjPlacement*)data)->posX;
-    tmpl.anim.localPosY = ((ObjPlacement*)data)->posY;
-    tmpl.anim.localPosZ = ((ObjPlacement*)data)->posZ;
+    tmpl.anim.localPosX = data->posX;
+    tmpl.anim.localPosY = data->posY;
+    tmpl.anim.localPosZ = data->posZ;
     tmpl.anim.defId = id;
-    tmpl.anim.placementData = data;
+    tmpl.anim.placementData = (s16*)data;
     tmpl.anim.romDefNo = seq;
-    tmpl.romListBit = arg3;
-    tmpl.anim.mapEventSlot = arg2;
+    tmpl.romListBit = objectIndex;
+    tmpl.anim.mapEventSlot = mapLayer;
     tmpl.anim.activeMove = -1;
     tmpl.seqIndex = -1;
     tmpl.anim.alpha = 0xff;
     tmpl.msgQueue = NULL;
     tmpl.sphereMapIntensity = 0xff;
-    tmpl.anim.loadDistance = objPlacementRangeToWorld(((ObjPlacement*)data)->loadRange);
-    tmpl.anim.cullDistance2 = objPlacementRangeToWorld(((ObjPlacement*)data)->unk07);
-    n = (((ObjPlacement*)data)->mapActFlagsHi & 0x18) >> 3;
+    tmpl.anim.loadDistance = objPlacementRangeToWorld(data->loadRange);
+    tmpl.anim.cullDistance2 = objPlacementRangeToWorld(data->unk07);
+    n = (data->mapActFlagsHi & 0x18) >> 3;
     tmpl.lightColorSlot = n;
     if (n == 0) {
         tmpl.lightColorSlot = tmpl.anim.modelInstance->defaultModelVariant;
@@ -1639,20 +1639,20 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     switch (tmpl.anim.romDefNo) {
     case OBJECT_SEQID_SABRE:
     case OBJECT_SEQID_KRYSTAL:
-        fnFlags = 0x1cb;
+        callbackFlags = 0x1cb;
         break;
     default:
-        if (tmpl.anim.dll != NULL && (int)(fp = *(int (**)(void*))((char*)*tmpl.anim.dll + 0x18)) != -1 && fp != NULL) {
-            fnFlags = fp(tp);
+        if (tmpl.anim.dll != NULL && (int)(getModelLoadFlags = (int (*)(GameObject*))((ObjectInterface*)*tmpl.anim.dll)->getObjectTypeId) != -1 && getModelLoadFlags != NULL) {
+            callbackFlags = getModelLoadFlags(tp);
         } else {
-            fnFlags = 0;
+            callbackFlags = 0;
         }
         break;
     }
     if (modelDef->flags & OBJDEF_FLAG_RELATED_TO_MODELS) {
-        loadFlags = fnFlags & ~1;
+        loadFlags = callbackFlags & ~1;
     } else {
-        loadFlags = fnFlags | 1;
+        loadFlags = callbackFlags | 1;
     }
     if (modelDef->shadowType != OBJ_SHADOW_TYPE_NONE) {
         loadFlags |= OBJLOAD_FLAG_HAS_SHADOW;
@@ -1682,7 +1682,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
             total += size;
         }
     }
-    base = objGetTotalDataSize(tp, def, data, loadFlags);
+    base = objGetTotalDataSize(tp, def, (s16*)data, loadFlags);
     allocSize = base + total;
     obj = mmAlloc(allocSize, 0xe, 0);
     memcpy(obj, &tmpl, sizeof(GameObject));
@@ -1741,8 +1741,8 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
         dllStateSize = 0x8e0;
         break;
     default:
-        if (obj->anim.dll != NULL && (fp2 = *(int (**)(void*, int))((char*)*obj->anim.dll + 0x1c)) != NULL) {
-            dllStateSize = fp2(obj, cursor);
+        if (obj->anim.dll != NULL && (getExtraSize = (int (*)(GameObject*, int))((ObjectInterface*)*obj->anim.dll)->getExtraSize) != NULL) {
+            dllStateSize = getExtraSize(obj, cursor);
         } else {
             dllStateSize = 0;
         }
@@ -1824,7 +1824,7 @@ GameObject* objSetupObject(ObjPlacement* data, int flags, int mapLayer, int objI
         OSReport(sObjSetupObjectLoadingLockedWarning, objIndex);
         return NULL;
     }
-    obj = loadCharacter((s16*)data, flags, mapLayer, objIndex, parent, 0);
+    obj = loadCharacter(data, flags, mapLayer, objIndex, parent, 0);
     if (obj != NULL) {
         Obj_RegisterObject(obj, flags);
         OSReport(sObjDebugStrings, obj->anim.modelInstance->name);

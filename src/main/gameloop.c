@@ -159,7 +159,7 @@ static void loadAsset(AssetReq* req) {
         break;
     case 4:
         *(void**)req->dest =
-            loadCharacter((s16*)req->arg18, req->arg1c, req->arg24, req->arg20, (void*)req->arg14, req->arg28);
+            loadCharacter((ObjPlacement*)req->arg18, req->arg1c, req->arg24, req->arg20, (GameObject*)req->arg14, req->arg28);
         break;
     case 3:
         *(void**)req->dest = (void*)textureLoad(req->resourceId, 0);

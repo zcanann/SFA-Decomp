@@ -83,3 +83,30 @@ exchange. Local lifetime reuse, declaration order, and equivalent callback
 access forms also did not improve the baseline. Regressing experiments were
 removed. Isolated compiler-version comparisons likewise did not supply a
 match; the active game compiler remains GC/1.3.
+
+## Typed loader interface
+
+`loadCharacter` now accepts the canonical `ObjPlacement` record and `GameObject`
+parent and returns `GameObject*`. The record's first signed halfword supplies
+the sequence/object ID; its position, range, and map-act fields supply the
+remaining placement reads. The map-layer and object-index parameter names
+follow their existing callers and stores. Keep the explicit `s16*` conversions
+at `ObjAnimComponent.placementData` and the legacy sizing API: this recovery
+does not change that shared storage contract.
+
+The loader reads its callbacks through `ObjectInterface` instead of anonymous
+byte offsets. The local `getModelLoadFlags` name describes how this loader uses
+the legacy `getObjectTypeId` slot. Its cast preserves the object argument; the
+extra-size call retains both object and cursor arguments, matching the retail
+call site rather than narrowing it to the generic table's no-argument typedef.
+All direct callers were audited, including the queued request in `gameloop.c`.
+
+A new LLDB capture of this recovery produces the same raw object hash recorded
+above. Direct comparison of both initial and colored graphs finds all 331
+nodes' neighbor lists, weights, degrees, colors, and flags unchanged. The
+instruction-role comparator independently maps 267 registers with no partition
+conflicts or mapped edge differences; its 48 unmapped graph neighbors are
+covered by that complete node comparison. Thus the typed interface improves
+source recovery but does not explain or resolve the remaining allocation
+exchange. Further tests of return paths, model-call temporaries, loop indices,
+allocation signedness, and flag-expression forms produced no code-match gain.
