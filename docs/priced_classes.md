@@ -1389,6 +1389,10 @@ optimiser will propagate away:
   the loop preamble to the top of the function changes **nothing** - not one pool byte, not one
   `.text` byte - because the assignment is propagated and the load is re-materialised at the
   three `vtx.x = zero;` uses.
+  **Resolved 2026-09-07:** a called translation-reset helper, automatically
+  inlined under the unchanged profile, owns the first zero literal. Native
+  indexed traversal and shared corner scaling complete the code match.
+  See [bone-particle matching](bone_particle_matching.md).
 - `main/vecmath` wants `interpolate`'s `0.0f` ahead of its `1.0f`, with retail's code an exact
   match for the `if (t <= 1.0f) { ... } return 0.0f;` shape we already have. `f32 result = 0.0f;`
   plus a single exit reaches the pool order but costs the function 100 -> 87.08; `f32 result =
