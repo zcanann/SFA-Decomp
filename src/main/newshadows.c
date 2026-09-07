@@ -1,3 +1,4 @@
+#include "main/shadow_volume.h"
 #include "main/newshadows.h"
 #include "main/map_block.h"
 #include "main/texture.h"
@@ -638,7 +639,7 @@ void renderShadows(int unused0, int unused1, int unused2) {
     direction.x = 0.0f;
     direction.y = 1.0f;
     direction.z = 0.0f;
-    buildShadowVolumeBox(&direction.x, om100, 2.0f);
+    buildShadowVolumeBox(&direction, (Vec3f*)om100, 2.0f);
     mapGetBlocks(&layerTables, &blocks);
     texIdx = 0;
     slotIdx = 0;

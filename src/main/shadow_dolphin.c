@@ -1,4 +1,5 @@
 #include "main/ground_shadow.h"
+#include "main/shadow_volume.h"
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
@@ -97,12 +98,12 @@ int gSunDirChanged = 1;
 
 extern volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-static void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
+static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f* corners, ShadowVolumePlane* planes);
 
 /* Begin a new shadow-volume frame: clear the per-frame
  * counts, flip the three double-buffer selectors, and rotate the current
  * write pointers to the buffer picked by this frame's flip index. */
-static void vecGetRanges(f32* pts, f32* base, f32 scale, int* out);
+static void vecGetRanges(Vec3f* points, Vec3f* origin, f32 scale, TrackQueryBounds* bounds);
 
 static int objShadowGetFadedAlpha(GameObject* obj, u8 param);
 
@@ -139,7 +140,7 @@ static f32 shadowGetSunMagnitude(void) {
     return magnitude;
 }
 
-void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale) {
+void buildShadowVolumeBox(Vec3f* direction, Vec3f* corners, f32 lowerScale) {
     MatrixTransform xf;
     f32 ax;
     f32 az;
@@ -151,62 +152,62 @@ void buildShadowVolumeBox(f32* direction, f32* out, f32 lowerScale) {
     xf.z = 0.0f;
     xf.scale = 1.0f;
     xf.rotZ = 0;
-    ax = __fabsf(direction[0]);
-    az = __fabsf(direction[2]);
+    ax = __fabsf(direction->x);
+    az = __fabsf(direction->z);
     if (ax > az) {
-        rotY = (u16)getAngle(ax, direction[1]);
+        rotY = (u16)getAngle(ax, direction->y);
     } else {
-        rotY = (u16)getAngle(az, direction[1]);
+        rotY = (u16)getAngle(az, direction->y);
     }
     xf.rotY = rotY;
     if (xf.rotY > 0x2000) {
         xf.rotY = 0x2000;
     }
-    xf.rotX = (s16)getAngle(direction[0], direction[2]);
+    xf.rotX = (s16)getAngle(direction->x, direction->z);
     for (i = 0; i < 8; i++) {
-        out[i * 3 + 0] = gShadowVolumeBoxCorners[i * 3 + 0];
+        corners[i].x = gShadowVolumeBoxCorners[i * 3 + 0];
         if (gShadowVolumeBoxCorners[i * 3 + 1] > 0.0f) {
-            out[i * 3 + 1] = gShadowVolumeBoxCorners[i * 3 + 1];
+            corners[i].y = gShadowVolumeBoxCorners[i * 3 + 1];
         } else {
-            out[i * 3 + 1] = lowerScale * gShadowVolumeBoxCorners[i * 3 + 1];
+            corners[i].y = lowerScale * gShadowVolumeBoxCorners[i * 3 + 1];
         }
-        out[i * 3 + 2] = gShadowVolumeBoxCorners[i * 3 + 2];
-        vecRotateZXY(&xf.rotX, &out[i * 3]);
+        corners[i].z = gShadowVolumeBoxCorners[i * 3 + 2];
+        vecRotateZXY(&xf.rotX, (f32*)&corners[i]);
     }
 }
 
-static void vecGetRanges(f32* pts, f32* base, f32 scale, int* out) {
+static void vecGetRanges(Vec3f* points, Vec3f* origin, f32 scale, TrackQueryBounds* bounds) {
     int i;
 
-    out[0] = 0x7fffffff;
-    out[3] = 0x80000000;
-    out[1] = 0x7fffffff;
-    out[4] = 0x80000000;
-    out[2] = 0x7fffffff;
-    out[5] = 0x80000000;
+    bounds->minX = 0x7fffffff;
+    bounds->maxX = 0x80000000;
+    bounds->minY = 0x7fffffff;
+    bounds->maxY = 0x80000000;
+    bounds->minZ = 0x7fffffff;
+    bounds->maxZ = 0x80000000;
     for (i = 0; i < 8; i++) {
-        f32 x = scale * pts[0] + base[0];
-        f32 y = scale * pts[1] + base[1];
-        f32 z = scale * pts[2] + base[2];
-        if (x < out[0]) {
-            out[0] = x;
+        f32 x = scale * points->x + origin->x;
+        f32 y = scale * points->y + origin->y;
+        f32 z = scale * points->z + origin->z;
+        if (x < bounds->minX) {
+            bounds->minX = x;
         }
-        if (x > out[3]) {
-            out[3] = x;
+        if (x > bounds->maxX) {
+            bounds->maxX = x;
         }
-        if (y < out[1]) {
-            out[1] = y;
+        if (y < bounds->minY) {
+            bounds->minY = y;
         }
-        if (y > out[4]) {
-            out[4] = y;
+        if (y > bounds->maxY) {
+            bounds->maxY = y;
         }
-        if (z < out[2]) {
-            out[2] = z;
+        if (z < bounds->minZ) {
+            bounds->minZ = z;
         }
-        if (z > out[5]) {
-            out[5] = z;
+        if (z > bounds->maxZ) {
+            bounds->maxZ = z;
         }
-        pts += 3;
+        points++;
     }
 }
 
@@ -326,133 +327,131 @@ void objDrawGroundShadow(GameObject* obj, ObjModel* model) {
     }
 }
 
-static void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8) {
-    f32* verts = buf48;
-    f32* planes = bufA8;
+static void trackDolphin_buildShadowVolumePlanes(GameObject* unusedObject, Vec3f* corners, ShadowVolumePlane* planes) {
     Vec nrm;
 
     {
         Vec3f edge1;
         Vec3f edge2;
 
-        edge1.x = verts[6] - verts[9];
-        edge1.y = verts[7] - verts[10];
-        edge1.z = verts[8] - verts[0xb];
-        edge2.x = verts[0x15] - verts[9];
-        edge2.y = verts[0x16] - verts[10];
-        edge2.z = verts[0x17] - verts[0xb];
+        edge1.x = corners[2].x - corners[3].x;
+        edge1.y = corners[2].y - corners[3].y;
+        edge1.z = corners[2].z - corners[3].z;
+        edge2.x = corners[7].x - corners[3].x;
+        edge2.y = corners[7].y - corners[3].y;
+        edge2.z = corners[7].z - corners[3].z;
         nrm.x = edge2.y * edge1.z - edge2.z * edge1.y;
         nrm.y = -(edge2.x * edge1.z - edge2.z * edge1.x);
         nrm.z = edge2.x * edge1.y - edge2.y * edge1.x;
         PSVECNormalize(&nrm, &nrm);
-        planes[0] = -nrm.x;
-        planes[1] = -nrm.y;
-        planes[2] = -nrm.z;
-        planes[3] = -(planes[0] * verts[9] + planes[1] * verts[10] + planes[2] * verts[0xb]);
+        planes[0].normal.x = -nrm.x;
+        planes[0].normal.y = -nrm.y;
+        planes[0].normal.z = -nrm.z;
+        planes[0].distance = -(planes[0].normal.x * corners[3].x + planes[0].normal.y * corners[3].y + planes[0].normal.z * corners[3].z);
     }
 
     {
         Vec3f edge1;
         Vec3f edge2;
 
-        edge1.x = verts[0x12] - verts[0xf];
-        edge1.y = verts[0x13] - verts[0x10];
-        edge1.z = verts[0x14] - verts[0x11];
-        edge2.x = verts[3] - verts[0xf];
-        edge2.y = verts[4] - verts[0x10];
-        edge2.z = verts[5] - verts[0x11];
+        edge1.x = corners[6].x - corners[5].x;
+        edge1.y = corners[6].y - corners[5].y;
+        edge1.z = corners[6].z - corners[5].z;
+        edge2.x = corners[1].x - corners[5].x;
+        edge2.y = corners[1].y - corners[5].y;
+        edge2.z = corners[1].z - corners[5].z;
         nrm.x = edge2.y * edge1.z - edge2.z * edge1.y;
         nrm.y = -(edge2.x * edge1.z - edge2.z * edge1.x);
         nrm.z = edge2.x * edge1.y - edge2.y * edge1.x;
         PSVECNormalize(&nrm, &nrm);
-        planes[5] = -nrm.x;
-        planes[6] = -nrm.y;
-        planes[7] = -nrm.z;
-        planes[8] = -(planes[5] * verts[0xf] + planes[6] * verts[0x10] + planes[7] * verts[0x11]);
+        planes[1].normal.x = -nrm.x;
+        planes[1].normal.y = -nrm.y;
+        planes[1].normal.z = -nrm.z;
+        planes[1].distance = -(planes[1].normal.x * corners[5].x + planes[1].normal.y * corners[5].y + planes[1].normal.z * corners[5].z);
     }
 
     {
         Vec3f edge1;
         Vec3f edge2;
 
-        edge1.x = verts[0xf] - verts[0xc];
-        edge1.y = verts[0x10] - verts[0xd];
-        edge1.z = verts[0x11] - verts[0xe];
-        edge2.x = verts[0] - verts[0xc];
-        edge2.y = verts[1] - verts[0xd];
-        edge2.z = verts[2] - verts[0xe];
+        edge1.x = corners[5].x - corners[4].x;
+        edge1.y = corners[5].y - corners[4].y;
+        edge1.z = corners[5].z - corners[4].z;
+        edge2.x = corners[0].x - corners[4].x;
+        edge2.y = corners[0].y - corners[4].y;
+        edge2.z = corners[0].z - corners[4].z;
         nrm.x = edge2.y * edge1.z - edge2.z * edge1.y;
         nrm.y = -(edge2.x * edge1.z - edge2.z * edge1.x);
         nrm.z = edge2.x * edge1.y - edge2.y * edge1.x;
         PSVECNormalize(&nrm, &nrm);
-        planes[10] = -nrm.x;
-        planes[0xb] = -nrm.y;
-        planes[0xc] = -nrm.z;
-        planes[0xd] = -(planes[10] * verts[0xc] + planes[0xb] * verts[0xd] + planes[0xc] * verts[0xe]);
+        planes[2].normal.x = -nrm.x;
+        planes[2].normal.y = -nrm.y;
+        planes[2].normal.z = -nrm.z;
+        planes[2].distance = -(planes[2].normal.x * corners[4].x + planes[2].normal.y * corners[4].y + planes[2].normal.z * corners[4].z);
     }
 
     {
         Vec3f edge1;
         Vec3f edge2;
 
-        edge1.x = verts[9] - verts[0];
-        edge1.y = verts[10] - verts[1];
-        edge1.z = verts[0xb] - verts[2];
-        edge2.x = verts[0xc] - verts[0];
-        edge2.y = verts[0xd] - verts[1];
-        edge2.z = verts[0xe] - verts[2];
+        edge1.x = corners[3].x - corners[0].x;
+        edge1.y = corners[3].y - corners[0].y;
+        edge1.z = corners[3].z - corners[0].z;
+        edge2.x = corners[4].x - corners[0].x;
+        edge2.y = corners[4].y - corners[0].y;
+        edge2.z = corners[4].z - corners[0].z;
         nrm.x = edge2.y * edge1.z - edge2.z * edge1.y;
         nrm.y = -(edge2.x * edge1.z - edge2.z * edge1.x);
         nrm.z = edge2.x * edge1.y - edge2.y * edge1.x;
         PSVECNormalize(&nrm, &nrm);
-        planes[0xf] = -nrm.x;
-        planes[0x10] = -nrm.y;
-        planes[0x11] = -nrm.z;
-        planes[0x12] = -(planes[0xf] * verts[0] + planes[0x10] * verts[1] + planes[0x11] * verts[2]);
+        planes[3].normal.x = -nrm.x;
+        planes[3].normal.y = -nrm.y;
+        planes[3].normal.z = -nrm.z;
+        planes[3].distance = -(planes[3].normal.x * corners[0].x + planes[3].normal.y * corners[0].y + planes[3].normal.z * corners[0].z);
     }
 
     {
         Vec3f edge1;
         Vec3f edge2;
 
-        edge1.x = verts[0x12] - verts[0x15];
-        edge1.y = verts[0x13] - verts[0x16];
-        edge1.z = verts[0x14] - verts[0x17];
-        edge2.x = verts[0xc] - verts[0x15];
-        edge2.y = verts[0xd] - verts[0x16];
-        edge2.z = verts[0xe] - verts[0x17];
+        edge1.x = corners[6].x - corners[7].x;
+        edge1.y = corners[6].y - corners[7].y;
+        edge1.z = corners[6].z - corners[7].z;
+        edge2.x = corners[4].x - corners[7].x;
+        edge2.y = corners[4].y - corners[7].y;
+        edge2.z = corners[4].z - corners[7].z;
         nrm.x = edge2.y * edge1.z - edge2.z * edge1.y;
         nrm.y = -(edge2.x * edge1.z - edge2.z * edge1.x);
         nrm.z = edge2.x * edge1.y - edge2.y * edge1.x;
         PSVECNormalize(&nrm, &nrm);
-        planes[0x14] = -nrm.x;
-        planes[0x15] = -nrm.y;
-        planes[0x16] = -nrm.z;
-        planes[0x17] = -(planes[0x14] * verts[0x15] + planes[0x15] * verts[0x16] + planes[0x16] * verts[0x17]);
+        planes[4].normal.x = -nrm.x;
+        planes[4].normal.y = -nrm.y;
+        planes[4].normal.z = -nrm.z;
+        planes[4].distance = -(planes[4].normal.x * corners[7].x + planes[4].normal.y * corners[7].y + planes[4].normal.z * corners[7].z);
     }
 
     {
         Vec3f edge1;
         Vec3f edge2;
 
-        edge1.x = verts[3] - verts[0];
-        edge1.y = verts[4] - verts[1];
-        edge1.z = verts[5] - verts[2];
-        edge2.x = verts[9] - verts[0];
-        edge2.y = verts[10] - verts[1];
-        edge2.z = verts[0xb] - verts[2];
+        edge1.x = corners[1].x - corners[0].x;
+        edge1.y = corners[1].y - corners[0].y;
+        edge1.z = corners[1].z - corners[0].z;
+        edge2.x = corners[3].x - corners[0].x;
+        edge2.y = corners[3].y - corners[0].y;
+        edge2.z = corners[3].z - corners[0].z;
         nrm.x = edge2.y * edge1.z - edge2.z * edge1.y;
         nrm.y = -(edge2.x * edge1.z - edge2.z * edge1.x);
         nrm.z = edge2.x * edge1.y - edge2.y * edge1.x;
         PSVECNormalize(&nrm, &nrm);
-        planes[0x19] = -nrm.x;
-        planes[0x1a] = -nrm.y;
-        planes[0x1b] = -nrm.z;
-        planes[0x1c] = -(planes[0x19] * verts[0] + planes[0x1a] * verts[1] + planes[0x1b] * verts[2]);
+        planes[5].normal.x = -nrm.x;
+        planes[5].normal.y = -nrm.y;
+        planes[5].normal.z = -nrm.z;
+        planes[5].distance = -(planes[5].normal.x * corners[0].x + planes[5].normal.y * corners[0].y + planes[5].normal.z * corners[0].z);
     }
 }
 
-static int cullVisibleShadowTriangles(GameObject* obj, void* u1, void* u2, int count, Vec3f* vertices,
+static int cullVisibleShadowTriangles(GameObject* obj, Vec3f* unusedCorners, ShadowVolumePlane* unusedPlanes, int count, Vec3f* vertices,
                                       Vec3f* outVertices, TrackShadowTriangle* triangles, int limit) {
     int vertexIndex = 0;
     int outCount = 0;
@@ -647,11 +646,11 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
     int triangleTable = 0;
     int triangleBuffer;
     ObjectShadowMesh* shadowMesh;
-    f32 vec[3];
-    f32 base[3];
+    Vec3f direction;
+    Vec3f queryOrigin;
     TrackQueryBounds ranges;
-    u8 buf48[96];
-    u8 bufA8[304];
+    Vec3f boxCorners[8];
+    u8 planeWorkspace[304];
 
     cache = (Vec3f*)(getCache());
     modelState = obj->anim.modelState;
@@ -662,10 +661,10 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
 
     shadowMesh = modelState->shadowRenderResource;
     if (shadowMesh == NULL || shadowMesh == OBJECT_SHADOW_MESH_UNCACHED) {
-        vec[0] = modelState->shadowOffsetX;
-        vec[1] = modelState->shadowOffsetY;
-        vec[2] = modelState->shadowOffsetZ;
-        buildShadowVolumeBox(vec, (f32*)buf48, modelState->shadowModelScale);
+        direction.x = modelState->shadowOffsetX;
+        direction.y = modelState->shadowOffsetY;
+        direction.z = modelState->shadowOffsetZ;
+        buildShadowVolumeBox(&direction, boxCorners, modelState->shadowModelScale);
 
         {
             ObjHitsPriorityState* p54 = (ObjHitsPriorityState*)(obj->anim.hitReactState);
@@ -676,10 +675,10 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
             }
         }
 
-        base[0] = obj->anim.worldPosX;
-        base[1] = obj->anim.worldPosY + yOff;
-        base[2] = obj->anim.worldPosZ;
-        vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
+        queryOrigin.x = obj->anim.worldPosX;
+        queryOrigin.y = obj->anim.worldPosY + yOff;
+        queryOrigin.z = obj->anim.worldPosZ;
+        vecGetRanges(boxCorners, &queryOrigin, modelState->shadowScale, &ranges);
 
         trackIntersectBroadphase(obj, &ranges, 0x81, 0);
         trackGetGridOrigin((int**)&vtx);
@@ -693,11 +692,11 @@ int objShadowRender(GameObject* obj, int renderMode, int unused, int frameCount)
         gShadowTrackTriangleBuffer = triangleBuffer;
         gShadowTrackTriangleCount = idxOut;
         gShadowTrackGridOrigin = (int)vtx;
-        trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
-        cullVisibleShadowTriangles(obj, buf48, bufA8, idxOut, gShadowVolumeBuffer, cache,
+        trackDolphin_buildShadowVolumePlanes(obj, boxCorners, (ShadowVolumePlane*)planeWorkspace);
+        cullVisibleShadowTriangles(obj, boxCorners, (ShadowVolumePlane*)planeWorkspace, idxOut, gShadowVolumeBuffer, cache,
                                    (TrackShadowTriangle*)gShadowDrawScratch, 0x555);
     }
-    objDrawShadowCasterMesh(cache, modelState, obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
+    objDrawShadowCasterMesh(cache, modelState, obj, gShadowVisibleCount, &drawScratch, boxCorners, yOff);
     return 0;
 }
 
