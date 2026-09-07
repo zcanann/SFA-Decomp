@@ -441,3 +441,22 @@ the three adds. The retained source remains 139/145 exact, with `renderObjects`
 at 99.73684% and the TU at 99.62221%. Fresh-staging all-source compilation and
 the strict retail checksum gate pass with 30-second bounds; shader still links
 its retail object.
+
+## Map-cell neighbourhood ID view (2026-09-07)
+
+`mapLoadUnloadObjects` reads three contiguous signed halfwords at byte offset
+`0x594` in each of five map-cell layers. With the proven twelve-byte
+`MapCellEntry`, that is entry 119, or cell `(7, 7)` in the sixteen-wide grid.
+The halfwords are the owning map ID and its two adjacent map IDs.
+
+`MapCellEntry` now exposes their existing named fields and a three-element
+`mapIds` array as union views, with size and offset assertions. The loader uses
+`MapCellEntry**`, the canonical layer-table offset, and the cell's array view.
+Its existing eight-entry unique-ID buffer and signed count retain their storage
+and traversal. The variable-length object walk keeps its proven integer-address
+form; byte-pointer alternatives regress code generation.
+
+The formatted source and header reproduce the complete pre-change shader
+object byte-for-byte. All-source compilation, the strict retail checksum,
+formatting, and the data audit pass. This recovers structure without changing
+the retained 139/145 exact functions or the TU's 99.62221% score.

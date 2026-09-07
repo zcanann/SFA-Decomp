@@ -777,50 +777,51 @@ void mapLoadUnloadObjects(int flag) {
     u8 mask;
     u8* bp;
     u32 bits;
-    int slot;
+    int mapIdIndex;
     int i;
     int objCount;
-    s16 list[8];
-    s16* idPtr;
+    s16 nearbyMapIds[8];
+    s16* mapIdCursor;
     char* base;
     ObjPlacement* fp;
-    int* tp;
+    MapCellEntry** layerEntries;
     u32 cur;
     u32 end;
-    s16 count;
+    s16 nearbyMapCount;
     int vis;
     int idx;
 
     base = (char*)gLightmapDrawQueue.entries;
-    count = 0;
+    nearbyMapCount = 0;
     i = 0;
-    tp = (int*)(base + 0x41E0);
-    for (; i < 5; i++) {
-        slot = 0;
-        idPtr = (s16*)((char*)*tp + 0x594);
-        for (; slot < 3; slot++) {
-            s16 id = *idPtr;
+    layerEntries = (MapCellEntry**)(base + (int)offsetof(MapLayerBuffers, cellEntries));
+    for (; i < MAP_BLOCK_LAYER_COUNT; i++) {
+        mapIdIndex = 0;
+        /* The active neighbourhood comes from cell (7, 7) in each 16-by-16 layer. */
+        mapIdCursor = (*layerEntries)[7 + 7 * 16].mapIds;
+        for (; mapIdIndex < 3; mapIdIndex++) {
+            s16 id = *mapIdCursor;
             if (id >= 0 && id < 80 && *(void**)(base + (0x83A8 + id * 4)) != 0) {
                 s16* w;
                 s16 dup;
                 int j2;
 
                 dup = 0;
-                w = list;
-                for (j2 = 0; j2 < count; j2++) {
-                    if (*w == *(s16*)(void*)idPtr) {
+                w = nearbyMapIds;
+                for (j2 = 0; j2 < nearbyMapCount; j2++) {
+                    if (*w == *(s16*)(void*)mapIdCursor) {
                         dup = 1;
                         break;
                     }
                     w++;
                 }
                 if (dup == 0) {
-                    list[count++] = id;
+                    nearbyMapIds[nearbyMapCount++] = id;
                 }
             }
-            idPtr++;
+            mapIdCursor++;
         }
-        tp++;
+        layerEntries++;
     }
     {
         GameObject** objs = ObjList_GetObjects(&i, &objCount);
@@ -864,8 +865,8 @@ void mapLoadUnloadObjects(int flag) {
 
                     slotId = obj->anim.mapEventSlot;
                     j3 = 0;
-                    w2 = list;
-                    for (; j3 < count; j3++) {
+                    w2 = nearbyMapIds;
+                    for (; j3 < nearbyMapCount; j3++) {
                         if (slotId == *w2) {
                             break;
                         }
@@ -895,19 +896,19 @@ void mapLoadUnloadObjects(int flag) {
                 }
             }
         }
-        for (i = 0; i < count; i++) {
-            if (gShaderCurMapEventId == list[i]) {
-                MapRomListPage* page = *(MapRomListPage**)(base + (0x83A8 + list[i] * 4));
+        for (i = 0; i < nearbyMapCount; i++) {
+            if (gShaderCurMapEventId == nearbyMapIds[i]) {
+                MapRomListPage* page = *(MapRomListPage**)(base + (0x83A8 + nearbyMapIds[i] * 4));
                 if (page != 0) {
                     mask = 1;
                     bit = 0;
                     cur = (u32)page->objects;
                     bp = page->loadedObjectBits;
-                    end = cur + *(int*)(base + (0x4290 + list[i] * 0x8C));
+                    end = cur + *(int*)(base + (0x4290 + nearbyMapIds[i] * 0x8C));
                     while (cur < end) {
                         objStart = cur;
-                        if ((*bp & mask) == 0 && objShouldLoad((ObjPlacement*)cur, 0, list[i]) != 0) {
-                            s16 lid = list[i];
+                        if ((*bp & mask) == 0 && objShouldLoad((ObjPlacement*)cur, 0, nearbyMapIds[i]) != 0) {
+                            s16 lid = nearbyMapIds[i];
                             if (bit >= 0) {
                                 int msk;
                                 int ix2;
@@ -919,7 +920,7 @@ void mapLoadUnloadObjects(int flag) {
                                 *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] & ~msk;
                                 *(s8*)&pg->loadedObjectBits[ix2] = pg->loadedObjectBits[ix2] | msk;
                             }
-                            objSetupObject((ObjPlacement*)objStart, 1, list[i], bit, NULL);
+                            objSetupObject((ObjPlacement*)objStart, 1, nearbyMapIds[i], bit, NULL);
                         }
                         bit++;
                         mask <<= 1;

@@ -20,9 +20,14 @@ extern MapRomListPage* gLoadedRomListPages[ROM_LIST_PAGE_COUNT];
 typedef MapRomListPage MapRomList;
 
 typedef struct MapCellEntry {
-    s16 mapId;
-    s16 adjacentMapId1;
-    s16 adjacentMapId2;
+    union {
+        struct {
+            s16 mapId;
+            s16 adjacentMapId1;
+            s16 adjacentMapId2;
+        };
+        s16 mapIds[3];
+    };
     s16 blockId;
     s8 cellIndex;
     s8 romListIndex;
@@ -30,6 +35,11 @@ typedef struct MapCellEntry {
 } MapCellEntry;
 
 STATIC_ASSERT(sizeof(MapCellEntry) == 0xC);
+STATIC_ASSERT(offsetof(MapCellEntry, mapIds) == 0x00);
+STATIC_ASSERT(sizeof(((MapCellEntry*)0)->mapIds) == 0x06);
+STATIC_ASSERT(offsetof(MapCellEntry, mapId) == 0x00);
+STATIC_ASSERT(offsetof(MapCellEntry, adjacentMapId1) == 0x02);
+STATIC_ASSERT(offsetof(MapCellEntry, adjacentMapId2) == 0x04);
 STATIC_ASSERT(offsetof(MapCellEntry, romListIndex) == 0x09);
 
 /* MAPINFO.bin per-record map type (curMapType / getCurMapType()). */
