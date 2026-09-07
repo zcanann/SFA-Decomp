@@ -2082,17 +2082,18 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->renderOps = (Shader*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
     }
     for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++) {
-        ((ModelFileHeader*)m)->displayLists[i].dlist =
-            m + *(u32*)&((ModelFileHeader*)m)->displayLists[i].dlist;
+        ((ModelFileHeader*)m)->displayLists[i].dlist = m + *(u32*)&((ModelFileHeader*)m)->displayLists[i].dlist;
     }
     for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++) {
         ((ModelFileHeader*)m)->morphTargetPtrs[i] = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i];
     }
     if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles) {
-        ((ModelFileHeader*)m)->collisionTriangles = (ModelCollisionTriangle*)(m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles);
+        ((ModelFileHeader*)m)->collisionTriangles =
+            (ModelCollisionTriangle*)(m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles);
     }
     if (*(u32*)&((ModelFileHeader*)m)->collisionBlocks) {
-        ((ModelFileHeader*)m)->collisionBlocks = (CollisionPolygonGroup*)(m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks);
+        ((ModelFileHeader*)m)->collisionBlocks =
+            (CollisionPolygonGroup*)(m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks);
     }
 }
 
