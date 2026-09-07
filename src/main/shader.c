@@ -309,6 +309,8 @@ void Rcp_DisableDistortionFilter(void) {
 }
 
 extern f32 distortionFilterVector[];
+extern GameObject* gLightmapDeferredObjects[];
+extern ModelRenderInstrsState gMapCellRenderState;
 
 void turnOnDistortionFilter(f32* vec, f32 angle2, u32* color, f32 angle1) {
     u8* colorBytes = (u8*)color;
@@ -2871,7 +2873,7 @@ int objUpdateOpacity(GameObject* obj) {
     }
     return 1;
 }
-void mapDebugRender(int* state) {
+void mapDebugRender(ModelRenderInstrsState* state) {
     int y1;
     int y0;
     int sz;
@@ -2945,7 +2947,7 @@ void mapDebugRender(int* state) {
             if (v & 7) {
                 n += 1;
             }
-            modelRenderInstrsState_init((ModelRenderInstrsState*)state, (void*)(gMapCellRenderInstrsTable + n * cell),
+            modelRenderInstrsState_init(state, (void*)(gMapCellRenderInstrsTable + n * cell),
                                         v, v);
         }
     }
@@ -3110,7 +3112,7 @@ extern MapCellEntry* gMapBlockCellEntryTables[5];
 extern s8* gMapBlockCellStateTables[5];
 extern ShaderRomListSlot gShaderRomListSlots[8];
 extern int gShaderMapRomBuffers[0x5];
-extern f32 distortionFilterVector[0x1c];
+extern f32 distortionFilterVector[];
 extern ModelLightStruct* gGlowLightList[100];
 extern u8 gCloudLayerTexMatrix[0x30];
 extern MapRenderQueueStorage gLightmapDrawQueue;
@@ -3684,7 +3686,7 @@ void sceneDraw(void) {
         *(f32*)(q + 0x3f74) = 1.0f;
         PSMTXConcat((MtxPtr)(q + 0x3f48), (MtxPtr)Camera_GetInverseViewMatrix(), (MtxPtr)(q + 0x3f48));
     }
-    mapDebugRender((int*)(q + 0x4164));
+    mapDebugRender((ModelRenderInstrsState*)(q + 0x4164));
     shadowBeginFrame();
     shadowVolumeBeginFrame();
     gVisibleObjectSortKeyCount = 1;
@@ -4228,7 +4230,7 @@ void lightmapQueueShadowRow(MapBlockBoundsRec* bounds, MapBlockData* block, s32 
 void sortVisibleObjectKeysDescending(u32* arr, int n);
 
 void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
-    int state[5];
+    ModelRenderInstrsState state;
     int countShifted;
     int bitCursor;
     u32 instructionBits;
@@ -4239,31 +4241,31 @@ void mapBlockRenderMain(MapBlockBoundsRec* bounds, MapBlockData* block, float* v
     u8* instructionBytes;
 
     countShifted = block->nRenderInstrsMain << 3;
-    modelRenderInstrsState_init((ModelRenderInstrsState*)state, block->renderInstrsMain, countShifted, countShifted);
-    modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, bounds->renderBitOffset);
-    state[4] += 4;
+    modelRenderInstrsState_init(&state, block->renderInstrsMain, countShifted, countShifted);
+    modelRenderInstrsState_setBit(&state, bounds->renderBitOffset);
+    state.bit += 4;
     mapBlockRender_drawDimmedAabbLights(bounds, block, viewMtx);
-    shader = mapBlockRender_setLightmapShader(block, (ModelRenderInstrsState*)state);
-    state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, block, shader, (ModelRenderInstrsState*)state);
-    bitCursor = state[4] + 4;
-    state[4] = bitCursor;
+    shader = mapBlockRender_setLightmapShader(block, &state);
+    state.bit += 4;
+    mapBlockRender_setVtxDcrs(1, block, shader, &state);
+    bitCursor = state.bit + 4;
+    state.bit = bitCursor;
     countShifted = bitCursor >> 3;
-    instructionBytes = (u8*)state[0];
+    instructionBytes = state.instrs;
     instructionBits = instructionBytes[countShifted];
-    instructionCursor = (u8*)(state[0] + countShifted);
+    instructionCursor = (u8*)((int)state.instrs + countShifted);
     instructionBits = instructionBits | ((u32)instructionCursor[1] << 8);
     instructionBits = instructionBits | ((u32)instructionCursor[2] << 16);
-    state[4] += 4;
+    state.bit += 4;
     entryCount = (instructionBits >> (bitCursor & 7)) & 0xf;
     for (i = 0; i < entryCount; i++) {
-        *(int*)&state[4] = state[4] + 8;
+        *(int*)&state.bit = state.bit + 8;
     }
-    state[4] += 4;
-    mapBlockRender_drawLightmapIndirectPasses(block, shader, (ModelRenderInstrsState*)state, (float (*)[4])viewMtx);
+    state.bit += 4;
+    mapBlockRender_drawLightmapIndirectPasses(block, shader, &state, (float (*)[4])viewMtx);
 }
 void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
-    int state[5];
+    ModelRenderInstrsState state;
     Mtx m;
     int countShifted;
     struct Shader* shader;
@@ -4280,30 +4282,30 @@ void mapBlockRenderWater(MapBlockBoundsRec* bounds, MapBlockData* block, float* 
     GXLoadTexMtxImm(m, GX_TEXMTX1, GX_MTX3x4);
     setupWaterCausticTev();
     countShifted = block->nRenderInstrsWater << 3;
-    modelRenderInstrsState_init((ModelRenderInstrsState*)state, block->renderInstrsWater, countShifted, countShifted);
-    modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, bounds->renderBitOffset);
-    state[4] += 4;
-    shader = mapBlockRender_setShader(1, block, (ModelRenderInstrsState*)state);
-    state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, block, shader, (ModelRenderInstrsState*)state);
-    bitCursor = state[4] + 4;
-    state[4] = bitCursor;
+    modelRenderInstrsState_init(&state, block->renderInstrsWater, countShifted, countShifted);
+    modelRenderInstrsState_setBit(&state, bounds->renderBitOffset);
+    state.bit += 4;
+    shader = mapBlockRender_setShader(1, block, &state);
+    state.bit += 4;
+    mapBlockRender_setVtxDcrs(1, block, shader, &state);
+    bitCursor = state.bit + 4;
+    state.bit = bitCursor;
     countShifted = bitCursor >> 3;
-    instructionBytes = (u8*)state[0];
+    instructionBytes = state.instrs;
     instructionBits = instructionBytes[countShifted];
-    instructionCursor = (u8*)(state[0] + countShifted);
+    instructionCursor = (u8*)((int)state.instrs + countShifted);
     instructionBits = instructionBits | ((u32)instructionCursor[1] << 8);
     instructionBits = instructionBits | ((u32)instructionCursor[2] << 16);
-    state[4] += 4;
+    state.bit += 4;
     entryCount = (instructionBits >> (bitCursor & 7)) & 0xf;
     for (i = 0; i < entryCount; i++) {
-        *(int*)&state[4] = state[4] + 8;
+        *(int*)&state.bit = state.bit + 8;
     }
-    state[4] += 4;
-    mapBlockRender_callList(1, 1, block, shader, (ModelRenderInstrsState*)state, viewMtx);
+    state.bit += 4;
+    mapBlockRender_callList(1, 1, block, shader, &state, viewMtx);
 }
 void mapBlockRenderTransparent(MapBlockBoundsRec* bounds, MapBlockData* block, float* viewMtx) {
-    int state[5];
+    ModelRenderInstrsState state;
     int countShifted;
     struct Shader* shader;
     int bitCursor;
@@ -4315,27 +4317,27 @@ void mapBlockRenderTransparent(MapBlockBoundsRec* bounds, MapBlockData* block, f
 
     Camera_ApplyTransparentViewport();
     countShifted = block->nRenderInstrsTransp << 3;
-    modelRenderInstrsState_init((ModelRenderInstrsState*)state, block->renderInstrsTransp, countShifted, countShifted);
-    modelRenderInstrsState_setBit((ModelRenderInstrsState*)state, bounds->renderBitOffset);
-    state[4] += 4;
-    shader = mapBlockRender_setShader(1, block, (ModelRenderInstrsState*)state);
-    state[4] += 4;
-    mapBlockRender_setVtxDcrs(1, block, shader, (ModelRenderInstrsState*)state);
-    bitCursor = state[4] + 4;
-    state[4] = bitCursor;
+    modelRenderInstrsState_init(&state, block->renderInstrsTransp, countShifted, countShifted);
+    modelRenderInstrsState_setBit(&state, bounds->renderBitOffset);
+    state.bit += 4;
+    shader = mapBlockRender_setShader(1, block, &state);
+    state.bit += 4;
+    mapBlockRender_setVtxDcrs(1, block, shader, &state);
+    bitCursor = state.bit + 4;
+    state.bit = bitCursor;
     countShifted = bitCursor >> 3;
-    instructionBytes = (u8*)state[0];
+    instructionBytes = state.instrs;
     instructionBits = instructionBytes[countShifted];
-    instructionCursor = (u8*)(state[0] + countShifted);
+    instructionCursor = (u8*)((int)state.instrs + countShifted);
     instructionBits = instructionBits | ((u32)instructionCursor[1] << 8);
     instructionBits = instructionBits | ((u32)instructionCursor[2] << 16);
-    state[4] += 4;
+    state.bit += 4;
     entryCount = (instructionBits >> (bitCursor & 7)) & 0xf;
     for (i = 0; i < entryCount; i++) {
-        *(int*)&state[4] = state[4] + 8;
+        *(int*)&state.bit = state.bit + 8;
     }
-    state[4] += 4;
-    mapBlockRender_callList(1, 1, block, shader, (ModelRenderInstrsState*)state, viewMtx);
+    state.bit += 4;
+    mapBlockRender_callList(1, 1, block, shader, &state, viewMtx);
     Camera_ApplyFullViewport();
 }
 
@@ -5916,7 +5918,9 @@ MapCellEntry* gMapBlockCellEntryTables[5];
 s8* gMapBlockCellStateTables[5];
 ShaderRomListSlot gShaderRomListSlots[8];
 int gShaderMapRomBuffers[0x5];
-f32 distortionFilterVector[0x1c];
+ModelRenderInstrsState gMapCellRenderState;
+GameObject* gLightmapDeferredObjects[20];
+f32 distortionFilterVector[3];
 ModelLightStruct* gGlowLightList[100];
 u8 gCloudLayerTexMatrix[0x30];
 MapRenderQueueStorage gLightmapDrawQueue;

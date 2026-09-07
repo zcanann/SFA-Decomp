@@ -202,3 +202,52 @@ still links this TU's retail object and is not a claim that its source-linked
 DOL is exact. Formatting is committed separately and checked to preserve the
 complete generated object; the TU and its internal header pass
 `clang-format --dry-run --Werror`.
+
+
+## Distortion, deferred objects, and cell-render state (2026-09-07)
+
+The previous `distortionFilterVector[28]` declaration covered three independently
+used objects. EN consumers establish this complete, nonoverlapping decomposition:
+
+| EN address | Size | Recovered storage | Evidence |
+| --- | --- | --- | --- |
+| `0x803821C8` | `0x0C` | `distortionFilterVector[3]` | `turnOnDistortionFilter` writes three floats; `sceneDraw` passes that vector to the distortion renderer. |
+| `0x803821D4` | `0x50` | `gLightmapDeferredObjects[20]` | `renderObjects` checks the count against twenty and stores object pointers; `sceneDraw` walks the same pointer list. |
+| `0x80382224` | `0x14` | `gMapCellRenderState` | `sceneDraw` passes this address to `mapDebugRender`, which initializes the canonical five-field `ModelRenderInstrsState`. |
+
+The final state ends exactly at the existing `gShaderMapRomBuffers` boundary.
+The twenty-entry list comes from its runtime bound, not from filling a gap.
+The EN symbol config now records these objects separately. Reverse source
+declaration order preserves their existing BSS addresses and every neighbor.
+Other regions retain their conservative previous labels.
+
+`mapDebugRender` now accepts `ModelRenderInstrsState*` in its public declaration
+and definition. The canonical state header asserts its size and all five field
+offsets. The main, water, and transparent block renderers also use that type
+instead of `int state[5]`, with named instruction-pointer and bit-cursor fields.
+
+Two existing source shapes remain necessary in those already-exact renderers:
+the instruction cursor adds its byte offset through an integer address, and
+the skipped-entry loop writes the bit cursor through an explicit int cast.
+Removing the latter lets MWCC combine the eight unrolled cursor stores; changing
+the former to pointer addition changes the load sequence. Keeping those narrow
+casts allows the real state type without changing a single function byte.
+
+The scene-level queue-base accesses remain pending recovery. Direct references
+to the newly named globals change `sceneDraw` or `renderObjects` code generation;
+this pass establishes the storage ownership without substituting those probes.
+All shader function bytes, allocated section bytes, and relocation records
+remain identical to the prior source object. Only the old oversized symbol and
+the two newly recovered symbol definitions change in its named storage layout.
+
+
+The data audit passes with 40,656 assigned bytes, 120 native symbol layouts,
+40 data relocations, and 151 direct retail pool loads. `mapDebugRender` and
+all three typed block renderers remain 100% matched. Rebuilding shared-header
+consumers changes only anonymous symbol numbering in `TexFrameAni.o` and
+`camcontrol.o`; their function bytes, section bytes, named layouts, and every
+relocation location, kind, addend, and target offset remain unchanged.
+Both 30-second-bounded build gates pass after matching configuration
+(`main.dol: OK`). Formatting is recorded separately and preserves generated
+objects. The shader unit still links its retail object while its remaining
+mismatched functions are recovered.

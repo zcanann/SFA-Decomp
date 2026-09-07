@@ -2,6 +2,7 @@
 #define MAIN_MODEL_RENDER_INSTRS_API_H_
 
 #include "types.h"
+#include "global.h"
 
 typedef struct ModelRenderInstrsState {
     u8* instrs;
@@ -10,6 +11,13 @@ typedef struct ModelRenderInstrsState {
     s32 fieldC;
     s32 bit;
 } ModelRenderInstrsState;
+
+STATIC_ASSERT(sizeof(ModelRenderInstrsState) == 0x14);
+STATIC_ASSERT(offsetof(ModelRenderInstrsState, instrs) == 0x00);
+STATIC_ASSERT(offsetof(ModelRenderInstrsState, byteCount) == 0x04);
+STATIC_ASSERT(offsetof(ModelRenderInstrsState, bitCount) == 0x08);
+STATIC_ASSERT(offsetof(ModelRenderInstrsState, fieldC) == 0x0C);
+STATIC_ASSERT(offsetof(ModelRenderInstrsState, bit) == 0x10);
 
 static inline void modelRenderInstrsState_advance(ModelRenderInstrsState* state, s32 bitCount)
 {
