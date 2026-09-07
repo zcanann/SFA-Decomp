@@ -136,6 +136,22 @@ class BackendIRTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "register alignment"):
             validate_alignment(fixture(), ["li r6,0", "mr r4,r7", "blr"], bytes.fromhex("38e00000 7ce43b78 4e800020"))
 
+    def test_effect3_signed_division_encoding(self):
+        data = fixture()
+        division = data["blocks"][0]["instructions"][0]["words"]
+        division[8:] = [0x45 | (3 << 16)] + list(struct.unpack("<9I", reg(0) + reg(0, 1) + reg(3, 1)))
+        asm = ["divw r0,r0,r3", "mr r4,r7", "blr"]
+        code = bytes.fromhex("7c001bd6 7ce43b78 4e800020")
+        self.assertEqual(len(validate_alignment(data, asm, code)), 3)
+        for bit in (0, 6, 10, 11, 16, 21, 26):
+            corrupt = struct.pack(">I", 0x7C001BD6 ^ (1 << bit)) + code[4:]
+            with self.subTest(bit=bit), self.assertRaisesRegex(ValueError, "operand encoding"):
+                validate_alignment(data, asm, corrupt)
+        with self.assertRaisesRegex(ValueError, "opcode alignment"):
+            validate_alignment(data, ["divwu r0,r0,r3", *asm[1:]], code)
+        with self.assertRaisesRegex(ValueError, "register alignment"):
+            validate_alignment(data, ["divw r0,r3,r0", *asm[1:]], code)
+
     def test_savegame_mask_and_complement_encodings(self):
         data = fixture()
         mask = data["blocks"][0]["instructions"][0]["words"]
