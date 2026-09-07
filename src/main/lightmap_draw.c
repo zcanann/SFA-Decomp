@@ -322,7 +322,7 @@ void lightmapQueueShadowRow(MapBlockBoundsRec* bounds, MapBlockData* block, s32 
     OSs16tof32(&bounds->minZ, &packedMin.z);
     half = 0.5f;
     center.x = half * ((packedMin.x * gTrackPackedCoordScale + block->transform[0][3]) +
-                    (packedMax.x * gTrackPackedCoordScale + block->transform[0][3]));
+                       (packedMax.x * gTrackPackedCoordScale + block->transform[0][3]));
     worldMinY = packedMin.y * gTrackPackedCoordScale + block->transform[1][3];
     center.y = half * (worldMinY + worldMaxY);
     worldMinZ = packedMin.z * gTrackPackedCoordScale + block->transform[2][3];
