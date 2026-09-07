@@ -1384,12 +1384,14 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
                 if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
                     memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex], gObjHitsSecondaryHitboxScratchBuffers[0],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
-                    memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1], gObjHitsSecondaryHitboxScratchBuffers[1],
+                    memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1],
+                           gObjHitsSecondaryHitboxScratchBuffers[1],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
                 } else {
                     memcpy(gObjHitsSecondaryHitboxScratchBuffers[0], model->hitVolumeSphereBuffers[sphereBufferIndex],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
-                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[1], model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1],
+                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[1],
+                           model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
                     stateA->flags |= OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
                 }
@@ -1428,12 +1430,14 @@ void ObjHits_CheckObjectHitVolumes(GameObject* objA, GameObject* objB, GameObjec
                 if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
                     memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex], gObjHitsSecondaryHitboxScratchBuffers[0],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
-                    memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1], gObjHitsSecondaryHitboxScratchBuffers[1],
+                    memcpy(model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1],
+                           gObjHitsSecondaryHitboxScratchBuffers[1],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
                 } else {
                     memcpy(gObjHitsSecondaryHitboxScratchBuffers[0], model->hitVolumeSphereBuffers[sphereBufferIndex],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
-                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[1], model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1],
+                    memcpy(gObjHitsSecondaryHitboxScratchBuffers[1],
+                           model->hitVolumeSphereBuffers[sphereBufferIndex ^ 1],
                            model->file->hitVolumeCount * sizeof(ObjModelHitSphere));
                     stateB->flags |= OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
                 }
