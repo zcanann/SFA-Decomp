@@ -1367,8 +1367,8 @@ void renderShadows(int unused0, int unused1, int unused2) {
             C_MTXOrtho(mOrtho, vAx, shadowScale, vAx, shadowScale, 1.0f, 1025.0f);
             GXSetProjection(mOrtho, GX_ORTHOGRAPHIC);
             Camera_UpdateViewMatrices();
-            C_MTXLightOrtho((MtxPtr)castSlot->textureMtx, shadowScale, vAx, vAx, shadowScale, orthoHalf, orthoHalf, orthoHalf,
-                            orthoHalf);
+            C_MTXLightOrtho((MtxPtr)castSlot->textureMtx, shadowScale, vAx, vAx, shadowScale, orthoHalf, orthoHalf,
+                            orthoHalf, orthoHalf);
             {
                 viewMtx = (MtxPtr)Camera_GetViewMatrix();
                 PSMTXCopy(viewMtx, (MtxPtr)castSlot->depthMtx);
