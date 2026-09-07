@@ -32,6 +32,8 @@ STATIC_ASSERT(offsetof(VoxRouteWork, queue) == 0xaf0);
 STATIC_ASSERT(offsetof(VoxRouteWork, pathPoints) == 0xe10);
 STATIC_ASSERT(sizeof(VoxRouteWork) == 0xe88);
 
+VoxMaps gVoxMaps;
+
 int lbl_803DC8E4;
 int* gVoxMapsMapList;
 u8* gVoxMapsScratchBuffer;
@@ -128,15 +130,15 @@ void voxmaps_visitRouteNeighbor(struct RouteState* state, RouteNode* parentNode,
         heapSiftUp(q, state->queueCount);
     }
 
-    vs = &gVoxMapsRouteState;
-    dx = box[0] - vs->originX;
-    dz = box[2] - vs->originZ;
+    vs = &gVoxMaps.activeState;
+    dx = box[0] - vs->blockOriginGrid[0];
+    dz = box[2] - vs->blockOriginGrid[1];
     if ((dx >> 6) != 0 || (dz >> 6) != 0) {
         voxmaps_updateActiveMap((VoxPos*)box);
-        dx = box[0] - vs->originX;
-        dz = box[2] - vs->originZ;
+        dx = box[0] - vs->blockOriginGrid[0];
+        dz = box[2] - vs->blockOriginGrid[1];
     }
-    map = gVoxMapsRouteState.activeMap;
+    map = gVoxMaps.activeState.activeMap;
     if (map == NULL) {
         return;
     }
@@ -402,10 +404,10 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut) 
 
     voxmaps_updateActiveMap(&cur);
 
-    st = &gVoxMapsRouteState;
-    voxX6 = (cur.x - st->originX) & 0x3f;
+    st = &gVoxMaps.activeState;
+    voxX6 = (cur.x - st->blockOriginGrid[0]) & 0x3f;
     voxX = voxX6 >> 2;
-    voxZ6 = (cur.z - st->originZ) & 0x3f;
+    voxZ6 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
     voxZ = voxZ6 >> 2;
     voxXand7 = voxX & 7;
     shiftLo = (voxX6 & 3) << 1;
@@ -507,10 +509,10 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut) 
             found.x = cur.x;
             cur.x = (s16)(cur.x + xstep);
             err += dz2;
-            if (((cur.x - st->originX) >> 6) != 0) {
+            if (((cur.x - st->blockOriginGrid[0]) >> 6) != 0) {
                 voxmaps_updateActiveMap(&cur);
             }
-            voxX6 = (cur.x - st->originZ) & 0x3f;
+            voxX6 = (cur.x - st->blockOriginGrid[1]) & 0x3f;
             voxX = voxX6 >> 2;
             voxXand7 = voxX & 7;
             shiftLo = (voxX6 & 3) << 1;
@@ -519,10 +521,10 @@ int voxmaps_traceTraversableRoute(s16* dest, s16* start, s16* lastReachableOut) 
             found.z = cur.z;
             cur.z = (s16)(cur.z + zstep);
             err -= dx2;
-            if (((cur.z - st->originZ) >> 6) != 0) {
+            if (((cur.z - st->blockOriginGrid[1]) >> 6) != 0) {
                 voxmaps_updateActiveMap(&cur);
             }
-            voxZ6 = (cur.z - st->originZ) & 0x3f;
+            voxZ6 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
             voxZ = voxZ6 >> 2;
         }
     }
@@ -827,10 +829,10 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
 
     voxmaps_updateActiveMap(&cur);
 
-    st = &gVoxMapsRouteState;
-    localX64 = (cur.x - st->originX) & 0x3f;
+    st = &gVoxMaps.activeState;
+    localX64 = (cur.x - st->blockOriginGrid[0]) & 0x3f;
     tileX = localX64 >> 2;
-    localZ64 = (cur.z - st->originZ) & 0x3f;
+    localZ64 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
     tileZ = localZ64 >> 2;
     found = cur;
     cachedMap = NULL;
@@ -888,11 +890,11 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
                 errXY += twiceDy;
                 errXZ += twiceDz;
                 oldTile = tileX;
-                if (((cur.x - st->originX) >> 6) != 0) {
+                if (((cur.x - st->blockOriginGrid[0]) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                localX64 = (cur.x - st->originX) & 0x3f;
+                localX64 = (cur.x - st->blockOriginGrid[0]) & 0x3f;
                 tileX = localX64 >> 2;
                 if (tileX != oldTile) {
                     routeNodeDirty = 1;
@@ -903,11 +905,11 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
                 errXZ -= twiceDx;
                 errYZ += twiceDy;
                 oldTile = tileZ;
-                if (((cur.z - st->originZ) >> 6) != 0) {
+                if (((cur.z - st->blockOriginGrid[1]) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                localZ64 = (cur.z - st->originZ) & 0x3f;
+                localZ64 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
                 tileZ = localZ64 >> 2;
                 if (tileZ != oldTile) {
                     routeNodeDirty = 1;
@@ -920,11 +922,11 @@ int voxmaps_traceLine(VoxPos* start, VoxPos* end, VoxPos* coordOut, u8* occOut, 
                 errXZ -= twiceDx;
                 errYZ += twiceDy;
                 oldTile = tileZ;
-                if (((cur.z - st->originZ) >> 6) != 0) {
+                if (((cur.z - st->blockOriginGrid[1]) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                localZ64 = (cur.z - st->originZ) & 0x3f;
+                localZ64 = (cur.z - st->blockOriginGrid[1]) & 0x3f;
                 tileZ = localZ64 >> 2;
                 if (tileZ != oldTile) {
                     routeNodeDirty = 1;
@@ -1039,7 +1041,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
     MapCellEntry* cell;
     VoxMapSlotOrigin* origin;
 
-    worldOrigins = vm->blockOriginWorld;
+    worldOrigins = vm->activeState.blockOriginWorld;
     zWorldOffset = obj->z * 10 + 5 - gMapBlockOriginWorldZ;
 
     gridX = fastFloorf((f32)(obj->x * 10 + 5 - gMapBlockOriginWorldX) / 6.4e+02f);
@@ -1048,7 +1050,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
     worldOrigins[0] = gMapBlockOriginWorldX + gridX * 640;
     worldOrigins[1] = gMapBlockOriginWorldZ + gridZ * 640;
     for (slot = 0; slot < 2; slot++) {
-        vm->blockOriginGrid[slot] = vm->blockOriginWorld[slot] / 10;
+        vm->activeState.blockOriginGrid[slot] = vm->activeState.blockOriginWorld[slot] / 10;
     }
 
     blockId = -1;
@@ -1066,7 +1068,7 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
         }
         if (foundSlot != -1) {
             vm->timer[foundSlot] = 0;
-            vm->activeMap = NULL;
+            vm->activeState.activeMap = NULL;
         } else {
             bestSlot = -1;
             bestTimer = -1;
@@ -1088,14 +1090,14 @@ int* voxmaps_updateActiveMap(VoxPos* obj) {
             vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
             origin = &vm->slotOrigin[bestSlot];
-            origin->gridX = vm->blockOriginGrid[0];
-            origin->gridZ = vm->blockOriginGrid[1];
-            vm->activeMap = NULL;
+            origin->gridX = vm->activeState.blockOriginGrid[0];
+            origin->gridZ = vm->activeState.blockOriginGrid[1];
+            vm->activeState.activeMap = NULL;
         }
     } else {
-        vm->activeMap = NULL;
+        vm->activeState.activeMap = NULL;
     }
-    return vm->blockOriginWorld;
+    return vm->activeState.blockOriginWorld;
 }
 
 VoxMapFile* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8) {
@@ -1141,7 +1143,7 @@ VoxMapFile* voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8) {
 }
 
 void voxmaps_updateTimers(void) {
-    int* p = gVoxMapsSlotTimers;
+    int* p = gVoxMaps.timer;
     int i;
     for (i = 0; i < VOXMAP_SLOT_COUNT; i++) {
         if (*p < VOXMAPS_MAX_SLOT_AGE) {

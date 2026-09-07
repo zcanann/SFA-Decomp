@@ -63,6 +63,7 @@ main/curves.c:
 main/voxmaps.c:
 	.text       start:0x80010FF4 end:0x800139E8
 	.data       start:0x802C6160 end:0x802C6300
+	.bss        start:0x803387A0 end:0x80338814
 	.sbss       start:0x803DC8B8 end:0x803DC8E8
 	.sdata2     start:0x803DE6A0 end:0x803DE6B8
 

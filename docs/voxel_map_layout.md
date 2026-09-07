@@ -69,3 +69,47 @@ Both paths set `useDirectSteering`, so that flag must not be interpreted as
 “goal reached” or “route found.” Engine slot 25 initializes the iteration limit
 to four and the per-update node budget to twenty, and also consumes the movement
 flag. All three consumers use the same canonical names.
+
+## Cache storage ownership
+
+The subsequent ownership pass defines `VoxMaps gVoxMaps` in `voxmaps.c`, replacing
+the overlapping external aliases described above. EN references to the cache,
+timer base, and route-state base all come from this TU. The BSS span starts at
+0x803387a0, immediately after `curves.c`; `modelEngine.c` follows at 0x80338818.
+The same TU order occurs in text, data, and small BSS.
+
+| Cache offset | Storage | Size |
+| --- | --- | --- |
+| 0x00 | Six slot grid-origin pairs | 0x18 |
+| 0x18 | Six slot ages | 0x18 |
+| 0x30 | Six block IDs | 0x18 |
+| 0x48 | Active block world origin | 0x08 |
+| 0x50 | Active block grid origin | 0x08 |
+| 0x58 | Active map pointer | 0x04 |
+| 0x5c | Six loaded-map buffer pointers | 0x18 |
+
+The existing cache view covers 0x74 bytes. `VoxState` is now its actual embedded
+0x14-byte member at +0x48, and timers are selected through the six-element array.
+The original declaration spelling is unknown; the aggregate models the evidenced
+contiguous accesses without conflicting definitions at interior addresses.
+The four bytes before the next TU are left to natural eight-byte section
+alignment, rather than added as an unsupported field. The compiler emits one
+116-byte BSS symbol with eight-byte section alignment, and objdiff matches the
+complete 604-byte data allocation for this unit.
+
+Under GC/1.3, selecting the embedded members changes four functions' address
+formation. For example, `voxmaps_updateTimers` starts from the cache base and
+uses a +0x18 first access, whereas retail starts from the timer address and uses
+a zero displacement. The following accesses reach the same six elements.
+`voxmaps_visitRouteNeighbor`, `voxmaps_traceTraversableRoute`, and
+`voxmaps_traceLine` similarly fold route-state offsets into loads. Across these
+four functions, 24 instruction bytes change, with no size changes. The unit
+score moves from 99.53371% to 99.524765%, and exact functions from 25/28 to 22/28.
+This tradeoff removes unresolved, overlapping storage aliases. Other existing
+allocated sections and named symbol positions are unchanged, and all 1,001
+other source objects remain byte-identical.
+
+The strict retail checksum and `ninja all_source` pass. These checks establish
+buildability and layout, not runtime coverage of the walkers. The retail NULL
+stores to the active map and the traversable-route X step's use of the Z origin
+are preserved.

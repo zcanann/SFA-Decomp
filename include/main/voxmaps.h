@@ -40,22 +40,28 @@ STATIC_ASSERT(offsetof(VoxMapFile, rowCounts) == 0x1c);
 STATIC_ASSERT(offsetof(VoxMapFile, bitmap) == 0x24);
 STATIC_ASSERT(sizeof(VoxMapFile) == 0x2c);
 
+typedef struct VoxState {
+    int blockOriginWorld[2];
+    int blockOriginGrid[2];
+    VoxMapFile* activeMap;
+} VoxState;
+
+STATIC_ASSERT(sizeof(VoxState) == 0x14);
+STATIC_ASSERT(offsetof(VoxState, blockOriginGrid) == 0x08);
+STATIC_ASSERT(offsetof(VoxState, activeMap) == 0x10);
+
 typedef struct VoxMaps {
     VoxMapSlotOrigin slotOrigin[VOXMAP_SLOT_COUNT];
     int timer[VOXMAP_SLOT_COUNT];
     int blockId[VOXMAP_SLOT_COUNT];
-    int blockOriginWorld[2];
-    int blockOriginGrid[2];
-    VoxMapFile* activeMap;
+    VoxState activeState;
     VoxMapFile* mapBuffer[VOXMAP_SLOT_COUNT];
 } VoxMaps;
 
 STATIC_ASSERT(offsetof(VoxMaps, slotOrigin) == 0);
 STATIC_ASSERT(offsetof(VoxMaps, timer) == 0x18);
 STATIC_ASSERT(offsetof(VoxMaps, blockId) == 0x30);
-STATIC_ASSERT(offsetof(VoxMaps, blockOriginWorld) == 0x48);
-STATIC_ASSERT(offsetof(VoxMaps, blockOriginGrid) == 0x50);
-STATIC_ASSERT(offsetof(VoxMaps, activeMap) == 0x58);
+STATIC_ASSERT(offsetof(VoxMaps, activeState) == 0x48);
 STATIC_ASSERT(offsetof(VoxMaps, mapBuffer) == 0x5c);
 STATIC_ASSERT(sizeof(VoxMaps) == 0x74);
 
@@ -65,13 +71,7 @@ typedef struct VoxPos {
     s16 z;
 } VoxPos;
 
-typedef struct VoxState {
-    int blockOriginWorldX;
-    int blockOriginWorldZ;
-    int originX;
-    int originZ;
-    VoxMapFile* activeMap;
-} VoxState;
+
 
 typedef struct RouteNode {
     s16 x;
@@ -135,7 +135,6 @@ STATIC_ASSERT(offsetof(RouteNav, maxSearchIterations) == 0x26);
 STATIC_ASSERT(offsetof(RouteNav, nodesPerUpdate) == 0x27);
 STATIC_ASSERT(sizeof(RouteNav) == 0x28);
 
-extern int gVoxMapsSlotTimers[];
 extern struct GameObject* gVoxMapsTransformObj;
 extern VoxMaps gVoxMaps;
 extern u8 gVoxMapsSlotInUse[8];
@@ -147,7 +146,6 @@ extern Texture* gVoxMapsLargeTextures[2];
 extern Texture* gVoxMapsSmallTextures[2];
 extern int gMapBlockOriginWorldX;
 extern int gMapBlockOriginWorldZ;
-extern VoxState gVoxMapsRouteState;
 extern char sVoxmapsRouteNodesListOverflow[];
 extern char sVoxMapsDebugStrings[];
 
