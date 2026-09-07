@@ -69,6 +69,32 @@ typedef struct SynthChannelState {
     u8 unk31[0x38 - 0x31];
 } SynthChannelState;
 
+typedef struct SynthTrackEntry {
+    u32 time;
+    u8 programChange;
+    u8 volume;
+    u8 reserved[2];
+    union {
+        u16 command;
+        u16 patternIndex;
+    } kind;
+    union {
+        u16 jumpIndex;
+        struct {
+            s8 transpose;
+            s8 velocityAdd;
+        } pattern;
+    } argument;
+} SynthTrackEntry;
+
+STATIC_ASSERT(sizeof(SynthTrackEntry) == 0xc);
+STATIC_ASSERT(offsetof(SynthTrackEntry, programChange) == 0x4);
+STATIC_ASSERT(offsetof(SynthTrackEntry, volume) == 0x5);
+STATIC_ASSERT(offsetof(SynthTrackEntry, kind) == 0x8);
+STATIC_ASSERT(offsetof(SynthTrackEntry, argument) == 0xa);
+STATIC_ASSERT(offsetof(SynthTrackEntry, argument.pattern.transpose) == 0xa);
+STATIC_ASSERT(offsetof(SynthTrackEntry, argument.pattern.velocityAdd) == 0xb);
+
 typedef struct SynthTrackCursor {
     u8* base;
     void* current;
@@ -98,7 +124,7 @@ struct SynthSequenceState {
     u32 lastTime;
     u32 baseTime;
     u8* noteData;
-    void* patternInfo;
+    SynthTrackEntry* patternInfo;
     SynthSequenceStream pitchBend;
     SynthSequenceStream modulation;
     u8 midi;
@@ -133,12 +159,6 @@ typedef struct SynthSequenceQueue {
 STATIC_ASSERT(sizeof(SynthSequenceQueue) == 0x38);
 STATIC_ASSERT(offsetof(SynthSequenceQueue, speed) == 0x32);
 
-typedef struct SynthTrackCommand {
-    u32 value0;
-    u32 value1;
-    u16 command;
-    u16 arg;
-} SynthTrackCommand;
 
 typedef struct SynthStartRequest {
     u32 seqId1;

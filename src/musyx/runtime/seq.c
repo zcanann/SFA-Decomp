@@ -948,7 +948,13 @@ u8* GetStreamValue(u8* p, u16* tagOut, s16* valueOut) {
 #define SYNTH_TRACK_COMMAND_END  0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
 
-#define TRACK_CMD(cursor) ((SynthTrackCommand*)(cursor)->current)
+#define SYNTH_SEQ_EVENT_NOTE       0
+#define SYNTH_SEQ_EVENT_MODULATION 1
+#define SYNTH_SEQ_EVENT_PITCH_BEND 2
+#define SYNTH_SEQ_EVENT_LOOP       3
+#define SYNTH_SEQ_EVENT_PATTERN    4
+
+#define TRACK_ENTRY(cursor) ((SynthTrackEntry*)(cursor)->current)
 
 SynthSequenceEvent* GenerateNextTrackEvent(u8 channel) {
     u32 trackId;
@@ -971,12 +977,12 @@ SynthSequenceEvent* GenerateNextTrackEvent(u8 channel) {
         for (;;) {
             if (pattern->noteData == 0) {
             process_track_command:
-                if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END) {
+                if (TRACK_ENTRY(track)->kind.command == SYNTH_TRACK_COMMAND_END) {
                     track->current = 0;
                     return 0;
                 }
 
-                if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_JUMP) {
+                if (TRACK_ENTRY(track)->kind.command == SYNTH_TRACK_COMMAND_JUMP) {
                     if (cseq->keyGroupMap == 0) {
                         if (cseq->section[0].loopDisable) {
                             track->current = 0;
@@ -987,16 +993,16 @@ SynthSequenceEvent* GenerateNextTrackEvent(u8 channel) {
                         return 0;
                     }
 
-                    ev->type = 3;
-                    ev->time = TRACK_CMD(track)->value0;
-                    track->current = track->base + TRACK_CMD(track)->arg * sizeof(SynthTrackCommand);
+                    ev->type = SYNTH_SEQ_EVENT_LOOP;
+                    ev->time = TRACK_ENTRY(track)->time;
+                    track->current = track->base + TRACK_ENTRY(track)->argument.jumpIndex * sizeof(SynthTrackEntry);
                     return ev;
                 }
 
-                ev->type = 4;
-                ev->time = TRACK_CMD(track)->value0;
+                ev->type = SYNTH_SEQ_EVENT_PATTERN;
+                ev->time = TRACK_ENTRY(track)->time;
                 ev->data = track->current;
-                track->current = TRACK_CMD(track) + 1;
+                track->current = TRACK_ENTRY(track) + 1;
                 return ev;
             }
 
@@ -1025,15 +1031,15 @@ SynthSequenceEvent* GenerateNextTrackEvent(u8 channel) {
                     } else {
                         pattern->noteData += 6;
                     }
-                    ev->type = 0;
+                    ev->type = SYNTH_SEQ_EVENT_NOTE;
                     ev->time = patternTime + pattern->baseTime;
                 } else if (pitchTime < modTime) {
                     ev->time = pitchTime + pattern->baseTime;
-                    ev->type = 2;
+                    ev->type = SYNTH_SEQ_EVENT_PITCH_BEND;
                 } else {
                 modulation_event:
                     ev->time = modTime + pattern->baseTime;
-                    ev->type = 1;
+                    ev->type = SYNTH_SEQ_EVENT_MODULATION;
                 }
                 return ev;
             }
@@ -1077,16 +1083,6 @@ void InsertGlobalEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event) {
     }
     event->next = 0;
 }
-
-typedef struct {
-    u32 time;       // 0x0
-    u8 prgChange;   // 0x4
-    u8 velocity;    // 0x5
-    u8 res[2];      // 0x6
-    u16 pattern;    // 0x8
-    s8 transpose;   // 0xa
-    s8 velocityAdd; // 0xb
-} SeqTrackEntry;    // size 0xc
 
 typedef struct {
     u16 time;    // 0x0
@@ -1181,22 +1177,22 @@ SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 voice, u32* flag) 
     u32 midi;
     u16 macId;
     SynthCallbackLink* note;
-    SeqTrackEntry* tEntry;
+    SynthTrackEntry* tEntry;
     SynthSequenceState* pattern;
 
     switch (event->type) {
-    case 4: {
+    case SYNTH_SEQ_EVENT_PATTERN: {
         SynthVoice* sv;
         u8* seq;
         SynthSeqPattern* pat;
         u8 prog;
 
-        tEntry = (SeqTrackEntry*)event->data;
+        tEntry = (SynthTrackEntry*)event->data;
         sv = cseq;
         seq = sv->arrbase;
         pattern = &sv->pattern[event->trackId];
         pat =
-            (SynthSeqPattern*)(*(u32*)(((SynthArrangement*)seq)->patternTableOffset + (u32)seq + tEntry->pattern * 4) +
+            (SynthSeqPattern*)(*(u32*)(((SynthArrangement*)seq)->patternTableOffset + (u32)seq + tEntry->kind.patternIndex * 4) +
                                (u32)seq);
         pattern->noteData = (u8*)(pat + 1);
         pattern->lastTime = 0;
@@ -1208,16 +1204,16 @@ SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 voice, u32* flag) 
         pattern->modulation.value = 0;
         pattern->midi =
             *(u8*)(((SynthArrangement*)cseq->arrbase)->trackMidiTableOffset + (u32)cseq->arrbase + event->trackId);
-        prog = tEntry->prgChange;
+        prog = tEntry->programChange;
         if (prog != 0xff) {
             DoPrgChange(cseq, prog, pattern->midi);
         }
-        if (tEntry->velocity != 0xff) {
-            inpSetMidiCtrl(MCMD_CTRL_VOLUME, pattern->midi, curSeqId & 0xff, tEntry->velocity);
+        if (tEntry->volume != 0xff) {
+            inpSetMidiCtrl(MCMD_CTRL_VOLUME, pattern->midi, curSeqId & 0xff, tEntry->volume);
         }
         break;
     }
-    case 0:
+    case SYNTH_SEQ_EVENT_NOTE:
         pe = (SeqNoteData*)event->data;
         pa = event->state;
         key = pe->key;
@@ -1264,9 +1260,9 @@ SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 voice, u32* flag) 
             SynthVoice* sv = cseq;
             if (sv->trackMute[event->trackId / 32] & (1 << (event->trackId & 0x1f))) {
                 if ((macId = sv->prgState[midi].macId) != 0xFFFF) {
-                    key += ((SeqTrackEntry*)pa->patternInfo)->transpose;
+                    key += pa->patternInfo->argument.pattern.transpose;
                     key = key > 0x7f ? 0x7f : key < 0 ? 0 : key;
-                    velocity += ((SeqTrackEntry*)pa->patternInfo)->velocityAdd;
+                    velocity += pa->patternInfo->argument.pattern.velocityAdd;
                     velocity = velocity > 0x7f ? 0x7f : velocity < 0 ? 0 : velocity;
                     if ((note = AllocateNote(event->time + pe->length, voice)) != NULL) {
                         SynthVoice* sv2;
@@ -1301,15 +1297,15 @@ SynthSequenceEvent* HandleEvent(SynthSequenceEvent* event, u8 voice, u32* flag) 
             }
         }
         break;
-    case 2:
+    case SYNTH_SEQ_EVENT_PITCH_BEND:
         pa = event->state;
         inpSetMidiCtrl14(MCMD_CTRL_PITCH_BEND, pa->midi, curSeqId & 0xff, HandleStream(&pa->pitchBend));
         break;
-    case 1:
+    case SYNTH_SEQ_EVENT_MODULATION:
         pa = event->state;
         inpSetMidiCtrl14(MCMD_CTRL_MODULATION, pa->midi, curSeqId & 0xff, HandleStream(&pa->modulation));
         break;
-    case 3:
+    case SYNTH_SEQ_EVENT_LOOP:
         *flag |= 1;
         return 0;
     }

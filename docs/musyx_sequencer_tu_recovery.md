@@ -91,3 +91,33 @@ and a broken master-track cursor reset, with no compilation errors.
 
 Only the new sequencer object differs from the prior all-source object
 snapshot; shared-header consumers retain byte-identical objects.
+
+## Track Entry Views
+
+`GenerateNextTrackEvent` and `HandleEvent` now share `SynthTrackEntry`, replacing
+`SynthTrackCommand` and the local `SeqTrackEntry` overlay. Both consumers advance
+through the same twelve-byte records. EN reads the discriminator at +0x08:
+`0xffff` ends a track, `0xfffe` jumps to another record, and other values select
+a pattern. For a jump, the unsigned halfword at +0x0a is multiplied by twelve
+and added to the track base. For a pattern, the same bytes are signed transpose
+and note-velocity adjustments at +0x0a and +0x0b.
+
+The shared type expresses these alternatives as named union views and asserts
+their offsets and record size. `SynthSequenceState.patternInfo` holds this
+canonical pointer, so note dispatch no longer recasts a `void*` to a competing
+record. The byte at +0x05 is named `volume`: pattern setup sends it to MIDI CC
+volume, whereas the signed byte at +0x0b adjusts each note's velocity. The two
+controls are distinct.
+
+The generated-event tags also share names between producer and dispatcher:
+0 is note/meta data, 1 modulation, 2 pitch bend, 3 a section-loop request, and
+4 pattern setup. Their values and the byte-sized event tag remain unchanged.
+This does not change track termination, loop restart, note timing, or the
+previously documented inlining mismatch in `HandleTrackEvents`.
+
+For this record recovery, all 1,002 compiled source object hashes and the full
+objdiff report remain unchanged. Sequencer agreement stays at 95.13594%, with
+21 of 26 functions exact. The seven existing runtime/layout tests, strict DOL
+checksum, and `ninja all_source` pass. The runtime tests cover the lifecycle
+scenarios described above; instruction and object identity establish that the
+record-view changes preserve the generated event decoder.
