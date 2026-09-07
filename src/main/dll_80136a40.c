@@ -7,13 +7,15 @@
  *     exception type, DSISR/SRR0, the stack trace and a full GPR/SPR
  *     register window straight into the external framebuffers, flipping
  *     them forever in a hang loop.
- *   - The debug text subsystem: an in-memory record log (debugPrintf /
- *     debugPrintfxy / debugPrintSetColor write tagged records into
- *     debugLogBuffer) replayed by debugPrintDraw, which lays the log out
+ *   - The debug text subsystem: an in-memory record log (debugPrintf and
+ *     debugPrintSetColor write tagged records into debugLogBuffer) replayed
+ *     by debugPrintDraw, which lays the log out
  *     twice (measure then draw) and rasterizes glyphs through
  *     debugPrintDrawGlyph (per-glyph texture select + textRenderChar) and
  *     debugPrintDrawRecord (record interpreter: color/tab/newline/position tags).
+ *     debugPrintfxy instead draws the bitmap font into both external framebuffers.
  */
+#include "main/dll/dll_80136a40.h"
 #include "main/texture.h"
 #include "track/intersect_api.h"
 #include "main/frame_timing.h"
@@ -30,7 +32,6 @@
 #include "dolphin/gx/GXTev.h"
 #include "stdarg.h"
 #include "dolphin/gx/GXCull.h"
-#include "main/dll/dll_80136a40.h"
 #include "dlls/objects/201_Baddie.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSCache.h"
@@ -108,7 +109,45 @@ u8 gDebugGlyphMetricsTable[192] = {
     0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 0x94, 0x99, 0x9B, 0xA0,
     0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
 };
-u8 gDebugFontGlyphs[580] = {
+/* View of the existing packed font/diagnostic block. String extents include
+ * their trailing alignment bytes; the unused glyph-tail bytes stay opaque. */
+typedef struct DebugFontErrorDataView {
+    u8 glyphRows[0x5a - 0x21 + 1][5];
+    u8 unknownGlyphTail[0x1e];
+    char threadFormat[0x14];
+    char exceptionLabel[0xc];
+    char systemReset[0x10];
+    char machineCheck[0x10];
+    char alignment[0xc];
+    char performanceMonitor[0x14];
+    char systemManagementInterrupt[0x1c];
+    char memoryProtection[0x18];
+    char unknownError[0x10];
+    char stackTraceLabel[0xc];
+    char stackDepthFormat[0x14];
+    char stackWordsFormat[0xc];
+    char registersLabel[0x1c];
+    char registerWordsFormat[0x18];
+} DebugFontErrorDataView;
+
+STATIC_ASSERT(sizeof(DebugFontErrorDataView) == 0x244);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, unknownGlyphTail) == 0x122);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, threadFormat) == 0x140);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, exceptionLabel) == 0x154);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, systemReset) == 0x160);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, machineCheck) == 0x170);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, alignment) == 0x180);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, performanceMonitor) == 0x18c);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, systemManagementInterrupt) == 0x1a0);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, memoryProtection) == 0x1bc);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, unknownError) == 0x1d4);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, stackTraceLabel) == 0x1e4);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, stackDepthFormat) == 0x1f0);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, stackWordsFormat) == 0x204);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, registersLabel) == 0x210);
+STATIC_ASSERT(offsetof(DebugFontErrorDataView, registerWordsFormat) == 0x22c);
+
+u8 gDebugFontAndErrorData[0x244] = {
     12,  12,  12,  0,   12,  51,  51,  0,   0,   0,   38,  63,  38,  63,  38,  44,  14,  46,  44,  14,  51,  40,  29,
     10,  51,  29,  51,  45,  51,  62,  12,  12,  0,   0,   0,   14,  3,   3,   3,   14,  28,  48,  48,  48,  28,  0,
     12,  63,  29,  55,  0,   12,  63,  12,  0,   0,   0,   0,   13,  3,   0,   0,   63,  0,   0,   0,   0,   0,   0,
@@ -615,9 +654,7 @@ void debugPrintInit(void)
     debugLogEnd = debugLogBuffer;
 }
 
-/* Title-screen system init. Calls getScreenResolution, primes the two float counters, clears
- * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
- * debugLogEnd cursor to the start of the 0x1100-byte arena. */
+/* Draw five glyph rows into paired framebuffer scanlines. */
 void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
 {
     int c1;
@@ -706,7 +743,7 @@ void debugPrintfxy(int x, int y, char* fmt, ...) {
                 }
                 if (*character[0] >= 0x21 && *character[0] <= 0x5a) {
                     debugDrawFrameBuffer = externalFrameBuffer0;
-                    debugTextDrawToFrameBuffer(drawX, drawY, glyphRows = gDebugFontGlyphs + (*character[0] - 0x21) * 5,
+                    debugTextDrawToFrameBuffer(drawX, drawY, glyphRows = ((DebugFontErrorDataView*)gDebugFontAndErrorData)->glyphRows[*character[0] - 0x21],
                                                -1);
                     debugDrawFrameBuffer = externalFrameBuffer1;
                     debugTextDrawToFrameBuffer(drawX, drawY, glyphRows, -1);
@@ -740,7 +777,7 @@ void reportAllocFail(int region0SizeKb, int region0FreeKb, int region1SizeKb, in
 }
 void* errorThreadFunc(void* unused)
 {
-    char* strs = (char*)gDebugFontGlyphs;
+    DebugFontErrorDataView* messages = (DebugFontErrorDataView*)gDebugFontAndErrorData;
     void* (*self[1])(void*);
     int y;
     u32* sp;
@@ -774,15 +811,15 @@ void* errorThreadFunc(void* unused)
             {
                 errDisplayFillBackdrop();
             }
-            debugPrintfxy(0x10, 0x15, strs + 0x140, self[0]);
-            debugPrintfxy(0x10, 0x2a, strs + 0x154);
+            debugPrintfxy(0x10, 0x15, messages->threadFormat, self[0]);
+            debugPrintfxy(0x10, 0x2a, messages->exceptionLabel);
             switch (gErrExceptionType)
             {
             case 0:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x160);
+                debugPrintfxy(0xa0, 0x2a, messages->systemReset);
                 break;
             case 1:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x170);
+                debugPrintfxy(0xa0, 0x2a, messages->machineCheck);
                 break;
             case 2:
                 debugPrintfxy(0xa0, 0x2a, sErrDSI);
@@ -791,19 +828,19 @@ void* errorThreadFunc(void* unused)
                 debugPrintfxy(0xa0, 0x2a, sErrISI);
                 break;
             case 5:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x180);
+                debugPrintfxy(0xa0, 0x2a, messages->alignment);
                 break;
             case 0xb:
-                debugPrintfxy(0x9b, 0x2a, strs + 0x18c);
+                debugPrintfxy(0x9b, 0x2a, messages->performanceMonitor);
                 break;
             case 0xd:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x1a0);
+                debugPrintfxy(0xa0, 0x2a, messages->systemManagementInterrupt);
                 break;
             case 0xf:
-                debugPrintfxy(0xa0, 0x2a, strs + 0x1bc);
+                debugPrintfxy(0xa0, 0x2a, messages->memoryProtection);
                 break;
             default:
-                debugPrintfxy(0x9b, 0x2a, strs + 0x1d4);
+                debugPrintfxy(0x9b, 0x2a, messages->unknownError);
                 break;
             }
             if (enableDebugText != 0)
@@ -832,7 +869,7 @@ void* errorThreadFunc(void* unused)
                     h2++;
                 }
             }
-            debugPrintfxy(0x10, 0x60, strs + 0x1e4);
+            debugPrintfxy(0x10, 0x60, messages->stackTraceLabel);
             y = 0x6c;
             frame = ((ErrStackFrame*)gErrContext->gpr[1])->previous;
             stackLines = 0;
@@ -892,34 +929,34 @@ void* errorThreadFunc(void* unused)
                     depth = 0;
                 }
             }
-            debugPrintfxy(0x100, 0x3f, strs + 0x1f0, sp, depth);
-            debugPrintfxy(0x100, 0x4b, strs + 0x204, sp[-1], sp[-2]);
-            debugPrintfxy(0x100, 0x57, strs + 0x204, sp[-3], sp[-4]);
-            debugPrintfxy(0x100, 0x63, strs + 0x204, sp[-5], sp[-6]);
-            debugPrintfxy(0x100, 0x6f, strs + 0x204, sp[-7], sp[-8]);
-            debugPrintfxy(0x100, 0x7b, strs + 0x204, sp[-9], sp[-10]);
-            debugPrintfxy(0x100, 0x87, strs + 0x204, sp[-0xb], sp[-0xc]);
-            debugPrintfxy(0x100, 0x93, strs + 0x204, sp[-0xd], sp[-0xe]);
-            debugPrintfxy(0x100, 0x9f, strs + 0x204, sp[-0xf], sp[-0x10]);
-            debugPrintfxy(0x100, 0xab, strs + 0x204, sp[-0x11], sp[-0x12]);
-            debugPrintfxy(0x100, 0xb7, strs + 0x204, sp[-0x13], sp[-0x14]);
-            debugPrintfxy(0x100, 0xc3, strs + 0x204, sp[-0x15], sp[-0x16]);
-            debugPrintfxy(0x100, 0xcf, strs + 0x204, sp[-0x17], sp[-0x18]);
-            debugPrintfxy(0x100, 0xdb, strs + 0x204, sp[-0x19], sp[-0x1a]);
-            debugPrintfxy(0x100, 0xe7, strs + 0x204, sp[-0x1b], sp[-0x1c]);
-            debugPrintfxy(0x100, 0xf3, strs + 0x204, sp[-0x1d], sp[-0x1e]);
-            debugPrintfxy(0x100, 0xff, strs + 0x204, sp[-0x1f], sp[-0x20]);
-            debugPrintfxy(0x10, y, strs + 0x210);
+            debugPrintfxy(0x100, 0x3f, messages->stackDepthFormat, sp, depth);
+            debugPrintfxy(0x100, 0x4b, messages->stackWordsFormat, sp[-1], sp[-2]);
+            debugPrintfxy(0x100, 0x57, messages->stackWordsFormat, sp[-3], sp[-4]);
+            debugPrintfxy(0x100, 0x63, messages->stackWordsFormat, sp[-5], sp[-6]);
+            debugPrintfxy(0x100, 0x6f, messages->stackWordsFormat, sp[-7], sp[-8]);
+            debugPrintfxy(0x100, 0x7b, messages->stackWordsFormat, sp[-9], sp[-10]);
+            debugPrintfxy(0x100, 0x87, messages->stackWordsFormat, sp[-0xb], sp[-0xc]);
+            debugPrintfxy(0x100, 0x93, messages->stackWordsFormat, sp[-0xd], sp[-0xe]);
+            debugPrintfxy(0x100, 0x9f, messages->stackWordsFormat, sp[-0xf], sp[-0x10]);
+            debugPrintfxy(0x100, 0xab, messages->stackWordsFormat, sp[-0x11], sp[-0x12]);
+            debugPrintfxy(0x100, 0xb7, messages->stackWordsFormat, sp[-0x13], sp[-0x14]);
+            debugPrintfxy(0x100, 0xc3, messages->stackWordsFormat, sp[-0x15], sp[-0x16]);
+            debugPrintfxy(0x100, 0xcf, messages->stackWordsFormat, sp[-0x17], sp[-0x18]);
+            debugPrintfxy(0x100, 0xdb, messages->stackWordsFormat, sp[-0x19], sp[-0x1a]);
+            debugPrintfxy(0x100, 0xe7, messages->stackWordsFormat, sp[-0x1b], sp[-0x1c]);
+            debugPrintfxy(0x100, 0xf3, messages->stackWordsFormat, sp[-0x1d], sp[-0x1e]);
+            debugPrintfxy(0x100, 0xff, messages->stackWordsFormat, sp[-0x1f], sp[-0x20]);
+            debugPrintfxy(0x10, y, messages->registersLabel);
             for (r = 0; (u8)r < 0x20; r += 8)
             {
                 rr = r & 0xff;
                 debugPrintfxy(0xc, y + 0xc, sErrFmtRegisterRange, rr, rr + 7);
                 rp = &gErrContext->gpr[rr];
-                debugPrintfxy(0x10, y + 0x18, strs + 0x22c, gErrContext->gpr[(u8)r], rp[1],
+                debugPrintfxy(0x10, y + 0x18, messages->registerWordsFormat, gErrContext->gpr[(u8)r], rp[1],
                               rp[2], rp[3]);
                 y += 0x24;
                 rp = &gErrContext->gpr[rr];
-                debugPrintfxy(0x10, y, strs + 0x22c, rp[4], rp[5], rp[6], rp[7]);
+                debugPrintfxy(0x10, y, messages->registerWordsFormat, rp[4], rp[5], rp[6], rp[7]);
             }
             if (enableDebugText != 0)
             {
