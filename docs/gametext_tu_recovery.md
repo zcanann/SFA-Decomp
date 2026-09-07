@@ -519,3 +519,36 @@ the complete object. `ninja all_source` and strict `ninja` pass after matching
 configuration with 30-second timeouts, and the matching DOL is byte-identical
 to retail. The unit remains `NonMatching`, so its retail object supplies the
 matching link while the remaining source differences are recovered.
+
+
+## System-font glyph-count lifetime (2026-09-07)
+
+`gameTextBuildSystemFontAtlas` captures the selected charset's glyph count once,
+uses that value to initialize the system-font metrics, and then copies it into
+the independent countdown variable. These two locals describe different roles:
+the original count stays fixed while the loop consumes the remaining count.
+The capture follows texture allocation, preserving the original callback order.
+
+Retail keeps the initial count in `r3` across the metric stores and copies it
+to `r22` afterward. The previous source instead reloaded `charset->glyphCount`.
+Capturing directly into the countdown variable removed that reload but moved
+the register copy too early. A separate `glyphCount` local retains the retail
+lifetime and reproduces the load, narrowing operation, and final register copy.
+The intervening stores belong to the separate font-metrics array and do not
+change the charset's count.
+
+The function rises from 96.123634% to 96.90909%; the unit rises from 97.78159%
+to 97.81967%. Exactly three instruction words change, with the existing
+1,088-byte source function size retained against 1,100 retail bytes. Every
+other function, all allocated non-text sections, named-symbol layouts, and
+relocation records are unchanged. This does not add an exact function.
+
+The 16 existing gametext tests pass, covering neighboring text behavior and
+storage layout; they do not execute the atlas builder. The atlas change is
+verified directly against the retail instructions and the complete object
+diff. Formatting the active TU and canonical API header produces no changes
+and preserves the whole object. The unit remains `NonMatching`.
+
+Matching configuration, `ninja all_source`, and strict `ninja` pass with
+30-second timeouts (`main.dol: OK`). The matching link continues to use this
+unit's retail object.

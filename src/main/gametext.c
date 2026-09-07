@@ -983,6 +983,7 @@ void gameTextFinalizeLoad(GameTextLoadSlot* loadSlot) {
 
 void gameTextBuildSystemFontAtlas(void) {
     int glyphWidthTiles;
+    int glyphCount;
     FontMetrics* fontMetrics;
     TextFont* charset;
     u8* glyphImage;
@@ -1033,12 +1034,13 @@ void gameTextBuildSystemFontAtlas(void) {
         }
     }
     charset->textures[0] = textureAlloc(0x200, 0x60, GX_TF_I4, 0, 0, 0, 0, 1, 1);
-    fontMetrics[GAMETEXT_FONT_SYSTEM].glyphCount = charset->glyphCount;
+    glyphCount = charset->glyphCount;
+    fontMetrics[GAMETEXT_FONT_SYSTEM].glyphCount = glyphCount;
     fontMetrics[GAMETEXT_FONT_SYSTEM].unk04 = 0x30;
     fontMetrics[GAMETEXT_FONT_SYSTEM].unk05 = 0x20;
     fontMetrics[GAMETEXT_FONT_SYSTEM].maxWidth = 0;
     fontMetrics[GAMETEXT_FONT_SYSTEM].lineHeight = 0x18;
-    remainingGlyphs = charset->glyphCount;
+    remainingGlyphs = glyphCount;
     glyph = charset->glyphs;
     atlasX = 0;
     atlasY = 0;
