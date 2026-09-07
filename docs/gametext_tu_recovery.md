@@ -250,3 +250,54 @@ or applying placement directives is not a solution.
 
 Both `ninja all_source` and the strict retail checksum gate pass. The TU remains
 `NonMatching`, so the strict link does not validate the changed source codegen.
+
+## Shared load-slot search
+
+The three manually expanded eight-slot searches in `gameTextRun`,
+`loadGameTextSequence`, and `gameTextLoadForCurMap` now call one private inline
+helper. It walks `curGameTexts` in ascending address order, returns the first
+record whose `active` byte is zero, and returns null after eight occupied records.
+GC/1.3 expands the ordinary countdown loop into the retail eight-test shape. In
+the sequence loader, replacing only the expanded expression with this helper
+preserves every function byte. A separate typed `LanguageName*` local replaces
+its manually shifted byte offset and keeps the language selection before the
+heap/state calls, as in retail.
+
+The EN sequence search at `8001A540..8001A5E0` tests byte `0x4A` and advances by
+`0x4C` seven times; its final fallthrough supplies a null pointer. The subsequent
+store at `8001A5E4` is unconditional. The sequence loader therefore still requires
+a free slot, while the map loader leaves its directory/language request pending
+when all slots are occupied. Cancellation does not immediately make an active
+slot reusable, even when the cancellation callback runs synchronously. Existing
+completed allocations can be freed and reused by the same request. These
+differences remain explicit at the callers; the search does not reserve or clear
+the selected slot.
+
+| Function | Before fuzzy | After fuzzy | Source bytes before / after |
+| --- | --- | --- | --- |
+| `gameTextRun` | 85.86702% | 88.14096% | 1524 / 1516 |
+| `loadGameTextSequence` | 91.82993% | 92.03401% | 608 / 608 |
+| `gameTextLoadForCurMap` | 89.66082% | 91.47369% | 700 / 700 |
+
+The TU rises from 96.3321% to 96.54275%, retaining 41/54 exact functions and the
+same exact code/data credit. Only these three functions change instruction
+bytes. All non-text section bytes and named storage offsets remain unchanged.
+The command runner's sixteen jump-table relocations keep the same destination
+function and move their case offsets back eight bytes with the shortened search.
+The 51 other functions keep their instruction bytes. Formatting is recorded
+separately and preserves the complete generated object.
+
+`python3 tools/test_gametext_load_slots.py` executes the production helper, both
+loaders, and both DVD callbacks, with allocation and file-I/O mocks. At each of
+`-O0` and `-O2`, 402 scenarios cover all 256 occupancy masks (including non-boolean
+active bytes), each free-slot position in both loaders and all six languages,
+pending map requests, completed-buffer reuse, both cancellation timings, DVD
+success/failure and unknown callback records, and rejected state/language/map
+requests. A seven-slot mutation fails the suite. The sequence-loader null access
+is reviewed in retail assembly rather than executed on the host; the complete
+command runner is not executed by this harness. The existing runtime, font,
+measurement, and color suites also pass.
+
+Both `ninja all_source` and the strict retail checksum gate pass. Gametext remains
+`NonMatching`; these gates establish buildability, not runtime equivalence of
+its reconstructed C.

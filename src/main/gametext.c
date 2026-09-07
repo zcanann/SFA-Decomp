@@ -2395,6 +2395,18 @@ int gameTextGetState(int i) {
 
 char sGameTextMapPathFormat[] = "gametext/%s/%s.bin";
 
+static inline GameTextLoadSlot* gameTextFindFreeLoadSlot(void) {
+    GameTextLoadSlot* slot = curGameTexts;
+    int i;
+
+    for (i = GAMETEXT_LOAD_SLOT_COUNT; i-- != 0; slot++) {
+        if (slot->active == 0) {
+            return slot;
+        }
+    }
+    return NULL;
+}
+
 void gameTextRun(void) {
     GameTextLoadSlot* loadSlot;
     TextFont* pending;
@@ -2424,53 +2436,10 @@ void gameTextRun(void) {
     pending = gGameTextCharsets;
     do {
         if (pending->dirId != GAMETEXT_INVALID_DIR) {
-            loadSlot = curGameTexts;
-            dirId = pending->dirId;
-            do {
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                ++loadSlot;
-                if (loadSlot->active == 0) {
-                    dirId = pending->dirId;
-                    break;
-                }
-                loadSlot = NULL;
-            } while (0);
-            freeSlot = loadSlot;
+            freeSlot = gameTextFindFreeLoadSlot();
 
             if (freeSlot != NULL) {
+                dirId = pending->dirId;
                 languageId = pending->languageId;
                 freeSlot->state = 1;
                 freeSlot->dirId = (u8)dirId;
@@ -2766,12 +2735,10 @@ void gameTextInitRendererState(void) {
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     GameTextLoadSlot* slot;
     int oldHeap;
-    int languageTableOffset;
-    u8* languageTable;
+    LanguageName* language;
     int i;
 
-    languageTableOffset = curLanguage << 3;
-    languageTable = (u8*)sLanguageNameTable;
+    language = &sLanguageNameTable[curLanguage];
     oldHeap = mmSetForceHeap3Only(0);
     if (getGameState() != 0 && getGameState() != 1) {
         mmSetForceHeap3Only(oldHeap);
@@ -2805,16 +2772,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     } while (i-- != 0);
 
     gGameTextCharsets[GAMETEXT_SLOT_CUTSCENE].status = 1;
-    slot = curGameTexts;
-    slot = (slot->active == 0)       ? slot
-           : ((++slot)->active == 0) ? slot
-           : ((++slot)->active == 0) ? slot
-           : ((++slot)->active == 0) ? slot
-           : ((++slot)->active == 0) ? slot
-           : ((++slot)->active == 0) ? slot
-           : ((++slot)->active == 0) ? slot
-           : ((++slot)->active == 0) ? slot
-                                     : NULL;
+    slot = gameTextFindFreeLoadSlot();
 
     slot->state = 1;
     slot->dirId = sequenceSlotDir;
@@ -2822,7 +2780,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     slot->active = 1;
     slot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
     sprintf(sGameTextPath, sGameTextSequencePathFormat, sequenceId,
-            ((LanguageName*)(languageTable + languageTableOffset))->name);
+            language->name);
     setFileInfo(&slot->fileInfo);
     slot->loadHandle = loadFileByPathAsync(sGameTextPath, &slot->loadedSize, 1, gameTextLoadCompleteCallback);
     setFileInfo(NULL);
@@ -2878,16 +2836,7 @@ void gameTextLoadForCurMap(int sourceId) {
     *(dirPtr = &gGameTextCharsets[sourceId].dirId) = (u8)curGameTextDir;
     *(langPtr = &gGameTextCharsets[sourceId].languageId) = curLanguage;
 
-    slot = curGameTexts;
-    freeSlot = (slot->active == 0)       ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-                                         : NULL;
+    freeSlot = gameTextFindFreeLoadSlot();
 
     if (freeSlot != NULL) {
         int slotDir = *dirPtr;
