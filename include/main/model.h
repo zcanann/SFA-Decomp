@@ -188,12 +188,12 @@ typedef struct ModelFileHeader {
     u8 unk86[2];
     ModelVtxAnimJob vertexAnimJob;
     u8 unk98[0xC];
-    u8* vertexAnimEntries; /* 0x74-stride entries */
+    ModelVtxAnimChunk* vertexAnimEntries;
     u8* vertexAnimBase;
     ModelVtxAnimJob normalAnimJob;
     u8 unkBC[0xC];
-    u8* blendAnimEntries; /* 0x74-stride entries */
-    u8* blendAnimBase;
+    ModelVtxAnimChunk* normalAnimEntries;
+    u8* normalAnimBase;
     u8* displayLists; /* 0x1c-stride entries, displayListCount + shadowDisplayListCount */
     u8* instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
@@ -254,7 +254,7 @@ STATIC_ASSERT(offsetof(ModelFileHeader, cachedAnimIds) == 0x6C);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveGroupBaseIndices) == 0x70);
 STATIC_ASSERT(offsetof(ModelFileHeader, moveCount) == 0xEC);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
-STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
+STATIC_ASSERT(offsetof(ModelFileHeader, normalAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, collisionBlockCount) == 0xF0);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
 STATIC_ASSERT(offsetof(ModelFileHeader, jointCount) == 0xF3);
@@ -391,10 +391,8 @@ typedef struct ObjModel {
     ModelRenderOpTextureRefs* textureRefs;
     void* renderCallback;
     void* postRenderCallback;
-    s32*
-        vertexAnimData; /* 0x40: per-entry s32 array (file->vertexAnimJob.chunkCount), filled from vertexAnimEntries[i]+0x60 */
-    s32*
-        blendAnimData; /* 0x44: per-entry s32 array (file->normalAnimJob.chunkCount), filled from normalBuf + blendAnimEntries[i]+0x60 */
+    s32* vertexAnimOffsets; /* 0x40: byte offset for each vertex animation chunk */
+    u8** normalAnimOutputs; /* 0x44: one destination in normalBuf per normal animation chunk */
     u8* hitVolumeSphereBuffers[2]; /* 0x48: double-buffered runtime hit spheres */
     u8* activeHitVolumeSpheres;    /* 0x50: current hit-sphere buffer */
     u8* groundShadowVerts; /* 0x54: ground-shadow quad buffer (s16 verts; status byte at +0x18: 0 = rebuild via buildGroundShadowQuad, 0xff = skip draw); allocated only with load flag 0x8000 */
@@ -419,6 +417,8 @@ ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int r
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(sizeof(ObjModel) == 0x64);
+STATIC_ASSERT(offsetof(ObjModel, vertexAnimOffsets) == 0x40);
+STATIC_ASSERT(offsetof(ObjModel, normalAnimOutputs) == 0x44);
 STATIC_ASSERT(offsetof(ObjModel, animDef) == 0x00);
 STATIC_ASSERT(offsetof(ObjModel, currentState) == 0x2C);
 STATIC_ASSERT(offsetof(ObjModel, activeState) == 0x30);

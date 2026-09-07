@@ -239,9 +239,9 @@ All offsets below were cross-checked against `include/main/model.h` (`ModelFileH
 | 0x6c pModAnim | `animationHeaderBuffer` ("per-joint s16 table") | offset match |
 | 0x70 animIdxs (ushort[8]) | `unk70[0x10]` | exact size match (16 bytes) |
 | 0x80 amapTabEntry | `animationDataFileOffset` | offset match |
-| 0xae "word ? maybe #normals" | `blendAnimCount` (u16) | offset match — and see the 0xc8 pairing below |
-| 0xc8 bCopyNormalsOnLoad, "field AE = how many" | `blendAnimEntries` (`STATIC_ASSERT(... == 0xC8)`) | **the wiki's own cross-reference ("field AE = how many") matches this repo's independent pairing of `blendAnimCount`@0xAE with `blendAnimEntries`@0xC8** — strong confirmation the two efforts found the same count/pointer relationship, even though the semantic name differs (wiki guesses normals-copy-on-load; we call it a blend-anim table) |
-| 0xcc "pointer ?" | `blendAnimBase` | offset match |
+| 0xae "word ? maybe #normals" | `normalAnimJob.chunkCount` (u16) | offset match — and see the 0xc8 pairing below |
+| 0xc8 bCopyNormalsOnLoad, "field AE = how many" | `normalAnimEntries` (`STATIC_ASSERT(... == 0xC8)`) | The wiki count/pointer pairing agrees with the retail relocation loop: `normalAnimJob.chunkCount` at 0xAE counts 0x74-byte chunks at `normalAnimEntries`. The normal stream consumes those chunks and writes to the instance normal buffer. |
+| 0xcc "pointer ?" | `normalAnimBase` | offset match |
 | 0xd0 dlists | `displayLists` | exact; `GXCallDisplayList(*(void**)dl, *(u16*)(dl+4))` (`objprint_dolphin.c:1878` etc.) reads only `offset`(0x00)+`size`(0x04) — matches the wiki's "only offset and size seem to be actually used" note precisely |
 | 0xd4 renderInstrs | `instrs` | exact; see Render Instructions section below |
 | 0xd8 nRenderInstrs (# bytes) | `unkD8[4]`, used as `*(u16*)(m+0xd8) << 3` (bit length) | matches "# bytes" (× 8 = bits) |
@@ -288,7 +288,7 @@ This matches the wiki's opcode table op-for-op (opcode 1 = select texture/shader
 
 **ModelVtxGroup.** Present at the correct header offset (`unk54`) but not deeply exercised in the code paths reviewed here — no bone0/bone1/weight field usage found (`not found`).
 
-**astruct_54 / fine-skinning region (wiki 0x88-0xc8).** This repo's independent reconstruction of the same byte range names it as vertex/blend animation tables (`vertexAnimCount`, `vertexAnimEntriesRaw`, `vertexAnimEntries`, `vertexAnimBase`, `blendAnimCount`, `blendAnimEntriesRaw`, `blendAnimEntries`, `blendAnimBase`) rather than the wiki's "fine skinning config/pieces/weights" theory. Both describe animated-vertex-blending machinery in the same region; the two interpretations haven't been reconciled field-by-field here.
+**astruct_54 / fine-skinning region (wiki 0x88-0xc8).** Retail relocation and renderer calls establish two embedded jobs (`vertexAnimJob`, `normalAnimJob`), their native chunk arrays (`vertexAnimEntries`, `normalAnimEntries`), and weight-stream bases (`vertexAnimBase`, `normalAnimBase`). See [cached model animation jobs](../model_cached_stream_jobs.md) for the field offsets and output-table contract. These cover the region described by the wiki's "fine skinning config/pieces/weights"; unknown bytes have not been reconciled field-by-field.
 
 ## Ready-to-adopt code
 

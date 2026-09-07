@@ -585,7 +585,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     } else {
         sizes[0] = 0;
     }
-    if (((ModelFileHeader*)hdr)->blendAnimEntries != 0) {
+    if (((ModelFileHeader*)hdr)->normalAnimEntries != 0) {
         int normalStride;
         if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
             normalStride = 9;
@@ -629,7 +629,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimJob.chunkCount * 4, va + total);
         total += 4;
     }
-    if (((ModelFileHeader*)hdr)->blendAnimEntries != 0) {
+    if (((ModelFileHeader*)hdr)->normalAnimEntries != 0) {
         total = (va = (u32)((ModelFileHeader*)hdr)->normalAnimJob.chunkCount * 4, va + total);
         total += 4;
     }
@@ -701,7 +701,7 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
         *(int*)&((ObjModel*)out)->vtxBuf[1] = end;
         *(int*)&((ObjModel*)out2)->vtxBuf[0] = end;
     }
-    if (((ModelFileHeader*)p)->blendAnimEntries != NULL) {
+    if (((ModelFileHeader*)p)->normalAnimEntries != NULL) {
         if (((ModelFileHeader*)p)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE) {
             normalStride = 9;
         } else {
@@ -802,12 +802,12 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, u8* c) {
     }
     if (((ModelFileHeader*)p)->vertexAnimEntries != NULL) {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->vertexAnimData = pos;
+        *(int*)&((ObjModel*)out2)->vertexAnimOffsets = pos;
         pos += ((ModelFileHeader*)p)->vertexAnimJob.chunkCount * 4;
     }
-    if (((ModelFileHeader*)p)->blendAnimEntries != NULL) {
+    if (((ModelFileHeader*)p)->normalAnimEntries != NULL) {
         pos = roundUpTo4(pos);
-        *(int*)&((ObjModel*)out2)->blendAnimData = pos;
+        *(int*)&((ObjModel*)out2)->normalAnimOutputs = pos;
         pos += ((ModelFileHeader*)p)->normalAnimJob.chunkCount * 4;
     }
     pos = roundUpTo4(pos);
@@ -1953,7 +1953,7 @@ void ObjModel_UpdateAnimMatrices(ObjModel* model, ModelFileHeader* blend, GameOb
         }
     }
 }
-void ObjModel_RelocateAnimData(u8* m, u8* dst);
+void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model);
 
 void ObjModel_ResolveRenderOpTextures(u8* m) {
     int j, k;
@@ -2003,29 +2003,29 @@ void ObjModel_ResolveRenderOpTextures(u8* m) {
 
 void* ObjModel_LoadModelData(int id);
 
-void ObjModel_RelocateAnimData(u8* m, u8* dst) {
+void ObjModel_RelocateAnimData(ModelFileHeader* file, ObjModel* model) {
     int i;
-    ((ModelFileHeader*)m)->vertexAnimJob.chunks = (ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries;
-    for (i = 0; i < ((ModelFileHeader*)m)->vertexAnimJob.chunkCount; i++) {
-        ((ObjModel*)dst)->vertexAnimData[i] =
-            ((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].srcDataOffset;
-        if (((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].weightStream <
-            ((ModelFileHeader*)m)->vertexAnimBase) {
-            ((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].weightStream =
-                ((ModelFileHeader*)m)->vertexAnimBase +
-                (u32)((ModelVtxAnimChunk*)((ModelFileHeader*)m)->vertexAnimEntries)[i].weightStream;
+    file->vertexAnimJob.chunks = file->vertexAnimEntries;
+    for (i = 0; i < file->vertexAnimJob.chunkCount; i++) {
+        model->vertexAnimOffsets[i] =
+            file->vertexAnimEntries[i].srcDataOffset;
+        if (file->vertexAnimEntries[i].weightStream <
+            file->vertexAnimBase) {
+            file->vertexAnimEntries[i].weightStream =
+                file->vertexAnimBase +
+                (u32)file->vertexAnimEntries[i].weightStream;
         }
     }
-    ((ModelFileHeader*)m)->normalAnimJob.chunks = (ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries;
-    for (i = 0; i < ((ModelFileHeader*)m)->normalAnimJob.chunkCount; i++) {
-        ((ObjModel*)dst)->blendAnimData[i] =
-            *(int*)&((ObjModel*)dst)->normalBuf +
-            ((ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries)[i].srcDataOffset;
-        if (((ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries)[i].weightStream <
-            ((ModelFileHeader*)m)->blendAnimBase) {
-            ((ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries)[i].weightStream =
-                ((ModelFileHeader*)m)->blendAnimBase +
-                (u32)((ModelVtxAnimChunk*)((ModelFileHeader*)m)->blendAnimEntries)[i].weightStream;
+    file->normalAnimJob.chunks = file->normalAnimEntries;
+    for (i = 0; i < file->normalAnimJob.chunkCount; i++) {
+        model->normalAnimOutputs[i] =
+            model->normalBuf +
+            file->normalAnimEntries[i].srcDataOffset;
+        if (file->normalAnimEntries[i].weightStream <
+            file->normalAnimBase) {
+            file->normalAnimEntries[i].weightStream =
+                file->normalAnimBase +
+                (u32)file->normalAnimEntries[i].weightStream;
         }
     }
 }
@@ -2073,16 +2073,16 @@ void ObjModel_RelocateModelData(u8* m) {
         ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
     }
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries) {
-        ((ModelFileHeader*)m)->vertexAnimEntries = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries;
+        ((ModelFileHeader*)m)->vertexAnimEntries = (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries);
     }
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimBase) {
         ((ModelFileHeader*)m)->vertexAnimBase = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimBase;
     }
-    if (*(u32*)&((ModelFileHeader*)m)->blendAnimEntries) {
-        ((ModelFileHeader*)m)->blendAnimEntries = m + *(u32*)&((ModelFileHeader*)m)->blendAnimEntries;
+    if (*(u32*)&((ModelFileHeader*)m)->normalAnimEntries) {
+        ((ModelFileHeader*)m)->normalAnimEntries = (ModelVtxAnimChunk*)(m + *(u32*)&((ModelFileHeader*)m)->normalAnimEntries);
     }
-    if (*(u32*)&((ModelFileHeader*)m)->blendAnimBase) {
-        ((ModelFileHeader*)m)->blendAnimBase = m + *(u32*)&((ModelFileHeader*)m)->blendAnimBase;
+    if (*(u32*)&((ModelFileHeader*)m)->normalAnimBase) {
+        ((ModelFileHeader*)m)->normalAnimBase = m + *(u32*)&((ModelFileHeader*)m)->normalAnimBase;
     }
     if (*(u32*)&((ModelFileHeader*)m)->renderOps) {
         ((ModelFileHeader*)m)->renderOps = (Shader*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
@@ -2185,7 +2185,7 @@ void* ObjModel_LoadAnimData(u8* p, int b, u8* c) {
     if (((ObjModel*)m)->animStateB != NULL) {
         modelAnimResetState(m, ((ObjModel*)m)->animStateB);
     }
-    ObjModel_RelocateAnimData(p, m);
+    ObjModel_RelocateAnimData((ModelFileHeader*)p, (ObjModel*)m);
     *(int*)(p + 8) = 0;
     DCStoreRange(p, ((ModelFileHeader*)p)->dataSize);
     return m;
@@ -2362,7 +2362,7 @@ void ObjModel_BlendNormalStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, u8
     }
 }
 
-void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, int* dstOffsets, u8* dstBase) {
+void ObjModel_BlendVertexStream(u8* mtxs, ModelVtxAnimJob* job, u8* animData, s32* dstOffsets, u8* dstBase) {
     u16 chunkBlocks[2];
 
     setGQR7Packed(job->quantShift, 7, job->quantShift, 7);

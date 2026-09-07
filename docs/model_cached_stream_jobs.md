@@ -15,6 +15,22 @@ corresponding loaded entry array, then fixes up weight-stream offsets. The old
 flat count and pointer aliases are removed. All other model-header offsets
 remain unchanged.
 
+Both loaded entry arrays now have the canonical `ModelVtxAnimChunk*` type.
+The relocation loop at EN `0x80028ec0` also establishes two different instance
+output tables: `vertexAnimOffsets` at `ObjModel + 0x40` stores each chunk's
+signed 32-bit byte offset, while `normalAnimOutputs` at `+0x44` stores
+`normalBuf + chunk.srcDataOffset` pointers. The vertex stream adds its selected
+output-buffer base to each offset; the normal stream uses the pointers directly.
+The renderer now passes these fields without the old unrelated model-header
+overlay or integer-to-pointer casts. The normal entry array and weight-stream
+base are named consistently with their proven normal-stream consumer.
+
+The renderer retains its integer storage view when selecting a double-buffered
+vertex pointer, using `offsetof(ObjModel, vtxBuf)` in place of the literal offset.
+Native pointer-array indexing changes the addressing sequence and regresses the
+otherwise exact shadow-render function; the canonical output-table accesses
+preserve the complete renderer object.
+
 A chunk occupies 0x74 bytes. Its recovered tail contains the source-data offset,
 weight-stream pointer, two reordered-matrix indices, transfer counts, element
 count, and byte offset within the cached data. The loaders now use native chunk
