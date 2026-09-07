@@ -72,6 +72,18 @@ void videoSwapFrameBuffers(u32 retraceCount);
 void gpuErrorHandler(u32 retraceCount);
 void videoBreakPointCallback(void);
 
+static inline void videoConfigureProcessor(void) {
+    register u32 control;
+    asm {
+        mfmsr control
+        ori control, control, MSR_PM
+        mtmsr control
+        mfspr control, HID0
+        ori control, control, HID0_SPD
+        mtspr HID0, control
+    }
+}
+
 void initViewport(void) {
     C_MTXOrtho(hudMatrix, 0.0f, 480.0f, 0.0f, 640.0f, 1.0f, 100.0f);
 }
@@ -202,8 +214,7 @@ void videoInit(void* unusedRenderMode, int unusedArg) {
     C_MTXOrtho(hudMatrix, -23.0f, 502.0f, 0.0f, 640.0f, 1.0f, 100.0f);
     GXSetMisc(GX_MT_XF_FLUSH, 8);
     /* Mark performance-monitor events and disable speculative cache access. */
-    PPCMtmsr(PPCMfmsr() | MSR_PM);
-    PPCMthid0(PPCMfhid0() | HID0_SPD);
+    videoConfigureProcessor();
 }
 
 void videoSetEfbCopyClearColor(u8 r, u8 g, u8 b) {
