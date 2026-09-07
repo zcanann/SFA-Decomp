@@ -9,23 +9,22 @@ typedef void (*SkyUpdateEnvfxActFn)(void* sourceObj, void* targetObj, void* entr
 typedef void (*SkyLoadLightsFn)(void);
 typedef void (*SkyUpdateTimeOfDayFn)(void);
 typedef void (*SkyRenderFn)(int a, int b, int c, int d, int e);
-typedef void (*SkyGetTimeOfDayFn)(f32 *outTime);
-typedef void (*SkyGetClockTimeFn)(f32 *outTime);
-typedef void (*SkyGetTransitionTimerFn)(int *outTimer);
-typedef int (*SkyGetSunPositionFn)(f32 *outTime);
+typedef void (*SkyGetTimeOfDayFn)(f32* outTime);
+typedef void (*SkyGetClockTimeFn)(f32* outTime);
+typedef void (*SkyGetTransitionTimerFn)(int* outTimer);
+typedef int (*SkyGetSunPositionFn)(f32* outTime);
 typedef void (*SkySetTimeOfDayFn)(f32 time);
-typedef void (*SkyTimeToDayHourMinuteFn)(f32 time, s16 *days, s16 *hours, s16 *minutes);
+typedef void (*SkyTimeToDayHourMinuteFn)(f32 time, s16* days, s16* hours, s16* minutes);
 typedef int (*SkyGetVisibilityFn)(int slot);
 typedef void (*SkyRenderTimeOfDayBackdropFn)(int unused0, int unused1);
-typedef void (*SkyGetCurrentTextureColorFn)(u8 *red, u8 *green, u8 *blue);
-typedef void (*SkyGetCurrentAmbientAndLightColorsFn)(u8 *ambientRed, u8 *ambientGreen,
-                                                     u8 *ambientBlue, u8 *lightRed,
-                                                     u8 *lightGreen, u8 *lightBlue);
+typedef void (*SkyGetCurrentTextureColorFn)(u8* red, u8* green, u8* blue);
+typedef void (*SkyGetCurrentAmbientAndLightColorsFn)(u8* ambientRed, u8* ambientGreen, u8* ambientBlue, u8* lightRed,
+                                                     u8* lightGreen, u8* lightBlue);
 typedef void (*SkySetDayNoFn)(int value);
 typedef int (*SkyGetDayNoFn)(void);
 
 typedef struct SkyInterface {
-    void *unused00;
+    void* unused00;
     SkyUpdateEnvfxActFn updateEnvfxAct;
     SkyLoadLightsFn loadLights;
     SkyUpdateTimeOfDayFn updateTimeOfDay;
@@ -71,7 +70,7 @@ STATIC_ASSERT(offsetof(SkyInterface, setDayNo) == 0x4C);
 STATIC_ASSERT(offsetof(SkyInterface, getDayNo) == 0x50);
 STATIC_ASSERT(offsetof(SkyInterface, reservedReturnZeroB) == 0x54);
 
-extern SkyInterface **gSkyInterface;
+extern SkyInterface** gSkyInterface;
 
 typedef void (*Sky2UpdateEnvfxActFn)(void* source, void* target, void* entry, int flags, u16 idx);
 typedef void (*Sky2OnMapSetupFn)(void);

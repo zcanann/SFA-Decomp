@@ -10,8 +10,7 @@
  * moon direction and colour plus the ambient colour. Only fields with
  * read/write evidence in sky.c are named; everything else is padded.
  */
-typedef struct SkyBlendStateFlags
-{
+typedef struct SkyBlendStateFlags {
     u8 unused80 : 1;
     u8 active : 1;
     u8 visibility : 1;
@@ -88,10 +87,10 @@ typedef struct SkyState {
     u8 unk00;
     u8 unk01;
     u8 unk02[2];
-    u8 *handle;
-    u8 *texture0;
+    u8* handle;
+    u8* texture0;
     u8 unk0C[4];
-    u8 *texture1;
+    u8* texture1;
     s32 textureId0;
     s32 textureId1;
     f32 sunYaw; /* 0x1C: yaw applied (as quaternion rz) to the sun direction each frame */
@@ -101,8 +100,8 @@ typedef struct SkyState {
     f32 timeOfDayRate;
     s32 timer;
     s32 skyTextureIds[8]; /* 0x21C: texture asset ids (id + 0xc38 -> textureLoadAsset) */
-    f32 fadeFactor; /* 0x23C: sky transition fade, 1.0->0.0 over fadeRate, clamped [0,1] */
-    f32 fadeRate;   /* 0x240: 1/duration; fadeFactor -= fadeRate * dt */
+    f32 fadeFactor;       /* 0x23C: sky transition fade, 1.0->0.0 over fadeRate, clamped [0,1] */
+    f32 fadeRate;         /* 0x240: 1/duration; fadeFactor -= fadeRate * dt */
     f32 lightBlendFactor;
     f32 lightBlendRate;
     u8 currentLightIndex;
@@ -135,15 +134,15 @@ typedef struct Sky2Config {
     u16 fadeDurationB; /* 0x2C: clamped to >=1; state+0x40=this, rate at +0x58/+0x60 = k/this */
     union {
         struct {
-            u16 skyTexId0;   /* sky texture id slot 0 (+0xc38); also staged to slot+8 */
-            u16 skyTexId1;   /* sky texture id slot 1 (+0xc38) */
-            u16 skyTexId2;   /* sky texture id slot 2 (+0xc38) */
-            u16 skyTexId3;   /* sky texture id slot 3 (+0xc38) */
+            u16 skyTexId0; /* sky texture id slot 0 (+0xc38); also staged to slot+8 */
+            u16 skyTexId1; /* sky texture id slot 1 (+0xc38) */
+            u16 skyTexId2; /* sky texture id slot 2 (+0xc38) */
+            u16 skyTexId3; /* sky texture id slot 3 (+0xc38) */
             u8 unk36[8];
-            u16 skyTexId4;   /* sky texture id slot 4 (+0xc38) */
-            u16 skyTexId5;   /* sky texture id slot 5 (+0xc38) */
-            u16 skyTexId6;   /* sky texture id slot 6 (+0xc38) */
-            u16 skyTexId7;   /* sky texture id slot 7 (+0xc38) */
+            u16 skyTexId4; /* sky texture id slot 4 (+0xc38) */
+            u16 skyTexId5; /* sky texture id slot 5 (+0xc38) */
+            u16 skyTexId6; /* sky texture id slot 6 (+0xc38) */
+            u16 skyTexId7; /* sky texture id slot 7 (+0xc38) */
         };
         struct {
             u16 fogFarKeys[8];
@@ -152,7 +151,7 @@ typedef struct Sky2Config {
     };
     u8 unk4E[0x6];
     u16 cloudMode;
-    u16 visibility;  /* 0x56: drives the sky blend-state bit20 visibility flag */
+    u16 visibility; /* 0x56: drives the sky blend-state bit20 visibility flag */
     u8 flags;
     u8 flags2;
     u8 unk5A[3];
