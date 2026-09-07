@@ -254,3 +254,31 @@ functions and its literal-pool ordering. Full source compilation, the strict
 retail checksum, and the formatter checks pass. Formatting produces no further
 source changes and preserves the final semantic object byte for byte. Rebuilding
 the header's consumers changes no other source object.
+
+## Hit-volume cache dispatcher partial match
+
+`ObjHits_CheckObjectHitVolumes` now obtains object A's priority state through
+the existing `ObjAnim_GetPriorityHitState` accessor. This recovers the retail
+model register throughout the repeated sphere-cache copies. The 348-instruction
+stream retains its exact mnemonic sequence; operand differences fall from 73
+to 28, improving the function from 98.95115% to 99.583336%. Remaining differences
+are state-pointer register assignments and the two initial state loads. Using
+the accessor for both objects regresses this caller, so object B retains its
+direct cast. Extracting the full cache operation into a helper also performs
+worse than the retained change.
+
+The model local and selected sphere-buffer index now describe their actual
+roles. All sixteen copy lengths use `hitVolumeCount * sizeof(ObjModelHitSphere)`
+instead of a raw four-bit shift. The canonical model header already proves the
+16-byte sphere record and byte-sized count. These size expressions and local
+renames preserve the accessor-only object's generated code. The primary and
+attachment scratch-buffer pairs, copy directions, and cache-flag behavior are
+unchanged; the flag is still set only in the attachment save branch.
+
+Against `e99d77cabe`, the TU's fuzzy score rises from 99.770355% to 99.804214%.
+It remains `NonMatching`, with 49/54 exact functions. All other 53 function
+bodies, allocated non-text sections, named symbol layouts, and relocation
+destinations are unchanged. Nine anonymous literal names are renumbered without
+moving their storage. Full source compilation and the strict retail checksum
+pass. Formatting is a separate commit and preserves the complete object bytes;
+the active source and canonical header pass the formatter check.
