@@ -3663,7 +3663,6 @@ void renderSceneGeometry(u8 renderType, s8* order) {
 void sceneDraw(void) {
     char* q;
     int i;
-    u8* cursor;
     GameObject** deferred;
     GameObject* player;
     u8 flag;
@@ -3787,13 +3786,11 @@ void sceneDraw(void) {
     player = Obj_GetPlayerObject();
     if (player != NULL) {
         i = 0;
-        cursor = (u8*)player;
         for (; i < player->childCount; i++) {
-            GameObject* child = ((GameObject*)cursor)->childObjs[0];
+            GameObject* child = player->childObjs[i];
             if (child->anim.classId == 45) {
                 ((void (*)(GameObject*))(*child->anim.dll)[11])(child);
             }
-            cursor += 4;
         }
     }
     staffDrawQuakeSpellRing();

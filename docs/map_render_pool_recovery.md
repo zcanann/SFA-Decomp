@@ -168,6 +168,15 @@ objects exactly, align all 375 instructions, and replay GPR coloring with no
 high-degree removals. An ordinary signed local index and a pre-scaled byte offset
 do not reproduce the same code; no alternative compiler settings are involved.
 
+The child-object pass now indexes the canonical `player->childObjs[i]` array.
+GC/1.3 produces the same pointer-walking instructions as the previous byte cursor
+and repeated `GameObject*` casts. All function and data-section bytes, named
+symbol layouts, and relocation targets remain unchanged. Anonymous compiler
+labels are renumbered, so raw object identity changes despite identical emitted
+code and data. The deferred-loop counter still differs in three instructions:
+retail uses `r28` (also used later for the player pointer), while the child-loop
+counter correctly uses `r29`.
+
 The ROM-list position fixup now uses `ObjPlacement.posX` and `posZ` instead of
 unrelated `GameObject` animation fields at the same offsets. Its function bytes
 are unchanged. Only `sceneDraw` changes compiled code in this pass; all other
