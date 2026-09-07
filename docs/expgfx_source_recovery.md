@@ -60,3 +60,48 @@ the retail offsets but lose shared-base addressing and regress codegen. A single
 typed aggregate preserves byte offsets but also regresses several exact functions.
 None of those storage probes is retained. Zero-filled section equality alone
 misses the first-use layout problem; compare named symbol offsets as well.
+
+## Active Pool Update Matching (2026-09-07)
+
+`expgfx_updateActivePools` improves from 99.65975% to 99.86511%. The complete
+unit improves from 99.83384% to 99.883194%, with 44 of 46 functions exact.
+The unit remains NonMatching.
+
+The stretched-trail calculation now uses `Vec` records for the previous
+position, source position, source-relative direction, backwards displacement,
+and cross-product normal. The attraction distances have their own names and
+no longer share locals with the cross-product lanes. `motionScale` retains
+the existing shared lifetime for the attraction ratio and inverse trail scale.
+Its declaration precedes `ambientScale`: the verified FPR graph shows why
+that order allows the two values to use retail's f22 and f23, respectively.
+
+Direct compound assignments recover the two damped velocity components.
+Explicitly narrowing each interpolated color before multiplying by ambient
+intensity recovers all six retail integer-product operand orders. These
+changes preserve the existing calculations and the slot layout.
+
+### Verification and Remaining Differences
+
+- Only `expgfx_updateActivePools` changes function bytes. All 45 other function
+  bodies, allocated non-text sections, named-symbol offsets, and relocation
+  destinations are unchanged. Anonymous literal names are normalized only for
+  the relocation comparison; their section offsets are compared.
+- The reconstructed update still has 2,311 instructions against retail's
+  2,313. Mnemonic-aligned comparison falls from two missing instructions plus
+  98 operand differences to two missing instructions plus 30 operand
+  differences. All floating-point instructions now agree.
+- The remaining update differences concern the active-pool scan, spilled
+  pointer/index locations, the intermediate mask-pointer store and copy, and
+  three integer products that advance source rotation.
+- `expgfxGetSlot` stays at 95.89899%. Dinosaur Planet's
+  `src/dlls/engine/13_expgfx/expgfx.c` confirms the broad allocation logic,
+  but its platform-specific implementation does not resolve the EN register
+  allocation. Native search loops and alternate mask snapshots regressed the
+  current match and are not retained.
+- LLDB captures reproduce the ordinary raw object before inspecting IR and
+  replaying register coloring. The slot capture required support for backend
+  opcode `0x2E` (`sthx`); validation checks all three registers and the exact
+  emitted instruction, with corrupted-encoding regression cases.
+- Both `ninja all_source` and the strict EN retail checksum pass. The checksum
+  continues to use the retail Expgfx object. The two slot-layout tests and all
+  33 backend-IR tests pass.

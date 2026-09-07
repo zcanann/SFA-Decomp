@@ -2113,23 +2113,18 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     u8 ambB8;
     u8 ambG8;
     u8 ambR8;
+    Vec trailPrev;
     f32 boundsMax;
     f32 boundsMin;
-    f32 trailPrevX;
-    f32 trailPrevY;
-    f32 trailPrevZ;
-    f32 workB; /* player dist-sq; reused as cross-product lane in the trail block */
-    f32 workA; /* tricky dist-sq; reused as cross-product lane in the trail block */
+    f32 nearestDistanceSq;
+    f32 trickyDistanceSq;
+    f32 motionScale; /* attraction speed ratio, then inverse trail scale */
     f32 ambientScale;
-    f32 attractRatio; /* attract speed ratio; reused as cross-product Z lane and trail inv-scale */
     f32 trickySpeed;
     f32 playerRange;
-    f32 dirX;
-    f32 dirY;
-    f32 dirZ;
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
-    attractRatio = 1.0f;
+    motionScale = 1.0f;
     trickySpeed = 0.0f;
     playerRange = trickySpeed;
     player = Obj_GetPlayerObject();
@@ -2271,26 +2266,26 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                     vecRotateZXY(&rotParams.rotX, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0) {
-                    workB = 1000000.0f;
-                    workA = workB;
+                    nearestDistanceSq = 1000000.0f;
+                    trickyDistanceSq = nearestDistanceSq;
                     if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0 && player != NULL &&
                         srcObj != NULL && playerRange > 0.2f) {
                         workVec[0] = player->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
                         workVec[2] = player->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
-                        workB = workVec[0] * workVec[0] + workVec[2] * workVec[2];
-                        attractRatio = playerRange / workB;
+                        nearestDistanceSq = workVec[0] * workVec[0] + workVec[2] * workVec[2];
+                        motionScale = playerRange / nearestDistanceSq;
                     }
-                    if (workB > 300.0f && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
+                    if (nearestDistanceSq > 300.0f && (slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_TRICKY) != 0 &&
                         tricky != NULL && srcObj != NULL && trickySpeed > 0.2f) {
                         workVec[0] = tricky->anim.worldPosX - (slot->startPosX.value + srcObj->localPosX);
                         workVec[2] = tricky->anim.worldPosZ - (slot->startPosZ.value + srcObj->localPosZ);
-                        workA = workVec[0] * workVec[0] + workVec[2] * workVec[2];
-                        attractRatio = trickySpeed / workB;
+                        trickyDistanceSq = workVec[0] * workVec[0] + workVec[2] * workVec[2];
+                        motionScale = trickySpeed / nearestDistanceSq;
                     }
-                    if (workA < workB) {
-                        workB = workA;
+                    if (trickyDistanceSq < nearestDistanceSq) {
+                        nearestDistanceSq = trickyDistanceSq;
                     }
-                    if (workB < 300.0f) {
+                    if (nearestDistanceSq < 300.0f) {
                         if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TO_PLAYER) != 0) {
                             slot->renderFlags ^= EXPGFX_RENDER_ATTRACT_TO_PLAYER;
                         }
@@ -2304,8 +2299,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
                         slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         slot->renderFlags |= EXPGFX_RENDER_IMPACT_POSITION_LOCKED;
-                        slot->velocityX = -workVec[0] * attractRatio;
-                        slot->velocityZ = -workVec[2] * attractRatio;
+                        slot->velocityX = -workVec[0] * motionScale;
+                        slot->velocityZ = -workVec[2] * motionScale;
                     }
                 } else {
                     if ((slot->renderFlags & EXPGFX_RENDER_VELOCITY_BOOST_A) != 0) {
@@ -2426,15 +2421,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                             }
                             slot->impactEffectId = -1;
                         } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
-                            {
-                                f32 v;
-                                f32 st;
-                                v = slot->velocityX;
-                                st = EXPGFX_SLOT_MOTION_STEP;
-                                slot->velocityX = v * (st - v);
-                                v = slot->velocityZ;
-                                slot->velocityZ = v * (st - v);
-                            }
+                            slot->velocityX *= EXPGFX_SLOT_MOTION_STEP - slot->velocityX;
+                            slot->velocityZ *= EXPGFX_SLOT_MOTION_STEP - slot->velocityZ;
                             slot->scaleCurrent *= 0.65f;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
@@ -2521,9 +2509,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         }
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
-                        trailPrevX = slot->posX.value;
-                        trailPrevY = slot->posY.value;
-                        trailPrevZ = slot->posZ.value;
+                        trailPrev.x = slot->posX.value;
+                        trailPrev.y = slot->posY.value;
+                        trailPrev.z = slot->posZ.value;
                     }
                     slot->posX.value += slot->velocityX * timeDelta;
                     slot->posY.value += slot->velocityY * timeDelta;
@@ -2567,13 +2555,19 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         colG = (int)(ratio * (f32)(slot->startColorG - slot->endColorG) + slot->endColorG);
                         colB = (int)(ratio * (f32)(slot->startColorB - slot->endColorB) + slot->endColorB);
                         if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_DIRECT) != 0) {
-                            quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
-                            quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
-                            quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
+                            colR = (s16)colR;
+                            quad[0].colorR = colR * (ambR8 + 1) >> 8;
+                            colG = (s16)colG;
+                            quad[0].colorG = colG * (ambG8 + 1) >> 8;
+                            colB = (s16)colB;
+                            quad[0].colorB = colB * (ambB8 + 1) >> 8;
                         } else if ((slot->renderFlags & EXPGFX_RENDER_AMBIENT_COLOR_SCALED) != 0) {
-                            quad[0].colorR = (s16)colR * ambRPlus1 >> 8;
-                            quad[0].colorG = (s16)colG * ambGPlus1 >> 8;
-                            quad[0].colorB = (s16)colB * ambBPlus1 >> 8;
+                            colR = (s16)colR;
+                            quad[0].colorR = colR * ambRPlus1 >> 8;
+                            colG = (s16)colG;
+                            quad[0].colorG = colG * ambGPlus1 >> 8;
+                            colB = (s16)colB;
+                            quad[0].colorB = colB * ambBPlus1 >> 8;
                         } else {
                             quad[0].colorR = colR;
                             quad[0].colorG = colG;
@@ -2589,64 +2583,62 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
                         quad[0].colorB = ambientScaled[0];
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0) {
-                        f32 sx;
-                        f32 sy;
-                        f32 sz;
-                        f32 prevDX;
-                        f32 prevDY;
-                        f32 prevDZ;
+                        Vec trailNormal;
+                        Vec trailDelta;
+                        Vec trailDirection;
+                        Vec trailSource;
                         f32 normSq;
                         f32 norm;
                         f32 axisX;
                         f32 axisY;
                         f32 axisZ;
 
-                        sx = 0.0f;
-                        sy = sx;
-                        sz = sx;
+                        trailSource.x = 0.0f;
+                        trailSource.y = trailSource.x;
+                        trailSource.z = trailSource.x;
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_AIM_VELOCITY_TOWARD_PLAYER) == 0) {
                             if (srcObj != NULL) {
-                                sx = srcObj->worldPosX;
-                                sy = srcObj->worldPosY;
-                                sz = srcObj->worldPosZ;
+                                trailSource.x = srcObj->worldPosX;
+                                trailSource.y = srcObj->worldPosY;
+                                trailSource.z = srcObj->worldPosZ;
                             } else {
-                                sx = slot->sourcePosX.value;
-                                sy = slot->sourcePosY.value;
-                                sz = slot->sourcePosZ.value;
+                                trailSource.x = slot->sourcePosX.value;
+                                trailSource.y = slot->sourcePosY.value;
+                                trailSource.z = slot->sourcePosZ.value;
                             }
                         }
-                        dirX = sx - slot->posX.value;
-                        dirY = sy - slot->posY.value;
-                        dirZ = sz - slot->posZ.value;
-                        prevDX = trailPrevX - slot->posX.value;
-                        prevDY = trailPrevY - slot->posY.value;
-                        prevDZ = trailPrevZ - slot->posZ.value;
-                        workA = dirZ * prevDY - prevDZ * dirY;
-                        workB = -(prevDX * dirZ - prevDZ * dirX);
-                        attractRatio = dirY * prevDX - prevDY * dirX;
-                        normSq = attractRatio * attractRatio + (workA * workA + workB * workB);
+                        trailDirection.x = trailSource.x - slot->posX.value;
+                        trailDirection.y = trailSource.y - slot->posY.value;
+                        trailDirection.z = trailSource.z - slot->posZ.value;
+                        trailDelta.x = trailPrev.x - slot->posX.value;
+                        trailDelta.y = trailPrev.y - slot->posY.value;
+                        trailDelta.z = trailPrev.z - slot->posZ.value;
+                        trailNormal.x = trailDelta.y * trailDirection.z - trailDelta.z * trailDirection.y;
+                        trailNormal.y = -(trailDelta.x * trailDirection.z - trailDelta.z * trailDirection.x);
+                        trailNormal.z = trailDelta.x * trailDirection.y - trailDelta.y * trailDirection.x;
+                        normSq = trailNormal.z * trailNormal.z + (trailNormal.x * trailNormal.x + trailNormal.y * trailNormal.y);
                         if (normSq != 0.0f) {
                             norm = sqrtf(normSq);
                         } else {
                             norm = 1.0f;
                         }
-                        axisX = 250.0f * (workA / norm);
-                        axisY = 250.0f * (workB / norm);
-                        axisZ = 250.0f * (attractRatio / norm);
-                        attractRatio = 2.0f / (EXPGFX_U16_TO_UNIT_SCALE * (f32)slot->scaleTarget);
+                        axisX = 250.0f * (trailNormal.x / norm);
+                        axisY = 250.0f * (trailNormal.y / norm);
+                        axisZ = 250.0f * (trailNormal.z / norm);
+                        motionScale = 2.0f / (EXPGFX_U16_TO_UNIT_SCALE * (f32)slot->scaleTarget);
                         quad[0].x = (s16)axisX;
                         quad[0].y = (s16)axisY;
                         quad[0].z = (s16)axisZ;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        quad[1].x = attractRatio * (slot->posX.value - trailPrevX) + axisX;
-                        quad[1].y = attractRatio * (slot->posY.value - trailPrevY) + axisY;
-                        quad[1].z = attractRatio * (slot->posZ.value - trailPrevZ) + axisZ;
+                        quad[1].x = motionScale * (slot->posX.value - trailPrev.x) + axisX;
+                        quad[1].y = motionScale * (slot->posY.value - trailPrev.y) + axisY;
+                        quad[1].z = motionScale * (slot->posZ.value - trailPrev.z) + axisZ;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        quad[2].x = attractRatio * (slot->posX.value - trailPrevX) - axisX;
-                        quad[2].y = attractRatio * (slot->posY.value - trailPrevY) - axisY;
-                        quad[2].z = attractRatio * (slot->posZ.value - trailPrevZ) - axisZ;
+                        quad[2].x = motionScale * (slot->posX.value - trailPrev.x) - axisX;
+                        quad[2].y = motionScale * (slot->posY.value - trailPrev.y) - axisY;
+                        quad[2].z = motionScale * (slot->posZ.value - trailPrev.z) - axisZ;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
                         quad[3].x = -(s16)axisX;
