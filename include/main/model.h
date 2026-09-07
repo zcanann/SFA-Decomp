@@ -248,6 +248,9 @@ typedef struct ModelHitSphereDef {
 } ModelHitSphereDef;   /* 0x18 */
 
 STATIC_ASSERT(sizeof(ModelHitSphereDef) == 0x18);
+STATIC_ASSERT(offsetof(ModelHitSphereDef, jointIdx) == 0x00);
+STATIC_ASSERT(offsetof(ModelHitSphereDef, radius) == 0x04);
+STATIC_ASSERT(offsetof(ModelHitSphereDef, center) == 0x08);
 STATIC_ASSERT(offsetof(ModelHitSphereDef, linkedSpheres) == 0x14);
 STATIC_ASSERT(offsetof(ModelHitSphereDef, sphereIndex) == 0x16);
 STATIC_ASSERT(offsetof(ModelHitSphereDef, maskBit) == 0x17);
@@ -259,6 +262,8 @@ typedef struct ObjModelHitSphere {
 } ObjModelHitSphere; /* 0x10 */
 
 STATIC_ASSERT(sizeof(ObjModelHitSphere) == 0x10);
+STATIC_ASSERT(offsetof(ObjModelHitSphere, radius) == 0x00);
+STATIC_ASSERT(offsetof(ObjModelHitSphere, pos) == 0x04);
 
 /* Vertex-anim job header + chunk records consumed by ObjModel_Blend{Vertex,
  * Normal}Stream (the raw .c spells chunkCount as ((ModelFileHeader*)hdr)->flags;

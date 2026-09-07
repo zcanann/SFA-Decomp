@@ -85,11 +85,6 @@ extern s16 gModelJointScratchBuffer[0xa0];
     }
 extern char sModelAnimationBufferOverflowWarning[];
 extern Vec gModelJitterAxis;
-typedef struct ObjHitBufs {
-    u8 pad00[0x48];
-    u8* bufs[2];
-    u8* cur;
-} ObjHitBufs;
 
 void setGQR7Packed(int a, int b, int c, int d);
 u8* modelBoneTransforms_next(u8* stream, int* dx, int* dy, int* dz);
@@ -1517,99 +1512,99 @@ void ObjModel_ClearBlendChannels(ObjModel* model) {
     }
 }
 
-void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj) {
+void objUpdateHitSpheres(ObjModel* model, ModelFileHeader* file, GameObject* targetObj, u8* boneMtx, GameObject* sourceObj) {
     int off[2];
-    u8* prevSphere;
+    ObjModelHitSphere* prevSphere;
     int i;
     u8* mtx;
-    u8* hitReact;
-    u8* samples;
+    ObjHitReactState* hitReact;
+    u32 maskWord;
     Vec vec;
     f32 zero;
     f32 motionScale;
     u32 bufSel;
     int idx;
-    int sampleCount;
-    void* hitSample;
+    int maskCount;
+    u32 hitMask;
     u32 cnt;
     int lim;
-    ObjHitBufs* st;
+    ObjModel* st;
 
-    hitSample = NULL;
-    hitReact = (u8*)((GameObject*)obj)->anim.hitReactState;
+    hitMask = 0;
+    hitReact = sourceObj->anim.hitReactState;
     if (hitReact != NULL) {
-        if (((GameObject*)obj)->anim.modelInstance->hitReactStateCount != 0) {
-            sampleCount = (int)*(s16*)(hitReact + 4) >> 2;
-            if (sampleCount > 0) {
-                samples = *(u8**)(hitReact + 8);
-                idx = (int)(((GameObject*)obj)->anim.currentMoveProgress * sampleCount);
-                if (idx >= sampleCount) {
-                    idx = sampleCount - 1;
+        if (sourceObj->anim.modelInstance->hitReactStateCount != 0) {
+            maskCount = (int)hitReact->activeEntryByteCount >> 2;
+            if (maskCount > 0) {
+                maskWord = (u32)hitReact->entries;
+                idx = (int)(sourceObj->anim.currentMoveProgress * maskCount);
+                if (idx >= maskCount) {
+                    idx = maskCount - 1;
                 }
-                samples = *(u8**)(samples + idx * 4);
-                hitSample = samples;
+                maskWord = ((u32*)maskWord)[idx];
+                hitMask = maskWord;
             }
         } else {
-            hitSample = *(void**)(hitReact + 0x48);
+            hitMask = ((ObjHitsPriorityState*)hitReact)->objectHitMask;
         }
     }
 
-    if (((GameObject*)prevObj)->anim.hitReactState != NULL) {
-        *(u8*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0xaf) -= 1;
-        if (*(s8*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0xaf) < 0) {
-            *(u8*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0xaf) = 0;
+    if (targetObj->anim.hitReactState != NULL) {
+        targetObj->anim.hitReactState->resetHitboxMode -= 1;
+        if ((s8)targetObj->anim.hitReactState->resetHitboxMode < 0) {
+            targetObj->anim.hitReactState->resetHitboxMode = 0;
         }
-        *(u32*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0x4c) =
-            *(u32*)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0x48);
-        *(void**)((u8*)((GameObject*)prevObj)->anim.hitReactState + 0x48) = hitSample;
+        ((ObjHitsPriorityState*)targetObj->anim.hitReactState)->skeletonHitMask =
+            ((ObjHitsPriorityState*)targetObj->anim.hitReactState)->objectHitMask;
+        ((ObjHitsPriorityState*)targetObj->anim.hitReactState)->objectHitMask = hitMask;
     }
 
-    st = (ObjHitBufs*)hitState;
-    ((ObjModel*)hitState)->bufferFlags ^= 4;
-    bufSel = (((ObjModel*)hitState)->bufferFlags >> 2) & 1;
-    st->cur = st->bufs[bufSel];
+    st = model;
+    model->bufferFlags ^= OBJMODEL_BUFFER_FLAG_HITSPHERE_SELECT;
+    bufSel = (model->bufferFlags >> 2) & 1;
+    st->activeHitVolumeSpheres = st->hitVolumeSphereBuffers[bufSel];
     mtx = boneMtx;
     i = 0;
     off[0] = 0;
     off[1] = off[0];
-    prevSphere = st->bufs[bufSel ^ 1];
-    for (; i < *(u8*)(hdrOwner + 0xf7); i++) {
+    prevSphere = (ObjModelHitSphere*)st->hitVolumeSphereBuffers[bufSel ^ 1];
+    for (; i < file->hitVolumeCount; i++) {
         if (boneMtx == NULL) {
-            idx = *(s16*)(((ModelFileHeader*)hdrOwner)->hitVolumes + off[0]);
-            cnt = ((ObjModel*)hitState)->file->jointCount;
+            idx = ((ModelHitSphereDef*)(file->hitVolumes + off[0]))->jointIdx;
+            cnt = model->file->jointCount;
             if (cnt != 0) {
-                lim = cnt + ((ObjModel*)hitState)->file->extraJointCount;
+                lim = cnt + model->file->extraJointCount;
             } else {
                 lim = 1;
             }
             if (idx >= lim) {
                 idx = 0;
             }
-            mtx = ((ObjModel*)hitState)->jointMatrices[((ObjModel*)hitState)->bufferFlags & 1] + idx * 0x40;
+            mtx = model->jointMatrices[model->bufferFlags & 1] + idx * sizeof(ObjModelJointMatrix);
         }
-        if (i == 0 && obj != prevObj) {
+        if (i == 0 && sourceObj != targetObj) {
             zero = 0.0f;
             vec.x = zero;
             vec.y = zero;
             vec.z = zero;
             PSMTXMultVec((MtxPtr)mtx, &vec, &vec);
-            ((GameObject*)prevObj)->anim.localPosX = vec.x + playerMapOffsetX;
-            ((GameObject*)prevObj)->anim.localPosY = vec.y;
-            ((GameObject*)prevObj)->anim.localPosZ = vec.z + playerMapOffsetZ;
-            Obj_GetWorldPosition((GameObject*)prevObj, (f32*)(prevObj + 0x18), (f32*)(prevObj + 0x1c),
-                                 (f32*)(prevObj + 0x20));
+            targetObj->anim.localPosX = vec.x + playerMapOffsetX;
+            targetObj->anim.localPosY = vec.y;
+            targetObj->anim.localPosZ = vec.z + playerMapOffsetZ;
+            Obj_GetWorldPosition(targetObj, &targetObj->anim.worldPosX, &targetObj->anim.worldPosY,
+                                 &targetObj->anim.worldPosZ);
         }
-        vec.x = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 8);
-        vec.y = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0xc);
-        vec.z = *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 0x10);
-        *(f32*)(st->cur + off[1]) =
-            *(f32*)(*(u8**)(hdrOwner + 0x58) + off[0] + 4) * (motionScale = ((GameObject*)obj)->anim.rootMotionScale);
-        PSMTXMultVec((MtxPtr)mtx, &vec, (Vec*)((st->cur + 4) + off[1]));
-        *(f32*)(prevSphere + 4) = (gMapSavedPlayerOffsetX + *(f32*)(prevSphere + 4)) - playerMapOffsetX;
-        *(f32*)(prevSphere + 0xc) = (gMapSavedPlayerOffsetZ + *(f32*)(prevSphere + 0xc)) - playerMapOffsetZ;
-        off[0] += 0x18;
-        off[1] += 0x10;
-        prevSphere += 0x10;
+        vec.x = ((ModelHitSphereDef*)(file->hitVolumes + off[0]))->center[0];
+        vec.y = ((ModelHitSphereDef*)(file->hitVolumes + off[0]))->center[1];
+        vec.z = ((ModelHitSphereDef*)(file->hitVolumes + off[0]))->center[2];
+        ((ObjModelHitSphere*)(st->activeHitVolumeSpheres + off[1]))->radius =
+            ((ModelHitSphereDef*)(file->hitVolumes + off[0]))->radius * (motionScale = sourceObj->anim.rootMotionScale);
+        PSMTXMultVec((MtxPtr)mtx, &vec, (Vec*)((ObjModelHitSphere*)(st->activeHitVolumeSpheres + off[1]))->pos);
+        prevSphere->pos[0] = (gMapSavedPlayerOffsetX + prevSphere->pos[0]) - playerMapOffsetX;
+        prevSphere->pos[2] = (gMapSavedPlayerOffsetZ + prevSphere->pos[2]) - playerMapOffsetZ;
+        off[0] += sizeof(ModelHitSphereDef);
+        off[1] += sizeof(ObjModelHitSphere);
+        prevSphere++;
     }
 }
 

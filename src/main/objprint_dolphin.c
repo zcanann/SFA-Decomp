@@ -1986,7 +1986,7 @@ static void objRenderShadowModel(GameObject* obj, GameObject* obj2, u8* m, int p
                                        (u8**)((ObjModel*)am)->blendAnimData, ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitVolumeCount != 0) {
-            objUpdateHitSpheres((u8*)am, m, (u8*)obj, NULL, (u8*)obj2);
+            objUpdateHitSpheres((ObjModel*)am, (ModelFileHeader*)m, obj, NULL, obj2);
         } else {
             u8* att = (u8*)obj->anim.hitReactState;
             if (att != NULL) {
@@ -2251,7 +2251,7 @@ static void modelDoRenderInstrs(GameObject* obj, GameObject* obj2, u8* m, u8 pas
             }
         }
         if (((ModelFileHeader*)m)->hitVolumeCount != 0) {
-            objUpdateHitSpheres((u8*)am, m, (u8*)obj, NULL, (u8*)obj2);
+            objUpdateHitSpheres((ObjModel*)am, (ModelFileHeader*)m, obj, NULL, obj2);
         } else {
             u8* att = (u8*)obj->anim.hitReactState;
             if (att != NULL) {
