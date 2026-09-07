@@ -3759,16 +3759,22 @@ void sceneDraw(void) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
-    *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x78000000;
-    *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 8;
-    gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
+    {
+        const int queueIndex = gLightmapDrawQueueCount;
+        *(u32*)(((int)q + 8) + queueIndex * 16) = 0x78000000;
+        *(u32*)(((int)q + 12) + queueIndex * 16) = 8;
+        gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
+    }
     if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
-    *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x50000000;
-    *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 9;
-    gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
+    {
+        const int queueIndex = gLightmapDrawQueueCount;
+        *(u32*)(((int)q + 8) + queueIndex * 16) = 0x50000000;
+        *(u32*)(((int)q + 12) + queueIndex * 16) = 9;
+        gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
+    }
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);

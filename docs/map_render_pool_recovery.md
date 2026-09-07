@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-137/145 exact functions and a 99.555725% instruction fuzzy score; the TU remains
+137/145 exact functions and a 99.55977% instruction fuzzy score; the TU remains
 `NonMatching` because eight functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -143,6 +143,15 @@ from 99.2% to 99.81333% and its size from 1,492 to the retail 1,500 bytes.
 Eleven instructions still differ in register operands. This is a source-spelling
 reconstruction, not evidence that the original used this exact cast; it adds no
 volatile accesses and leaves the stored count type unchanged.
+
+A follow-up captures a `const int queueIndex` for each pass entry and uses it
+for both stores. This preserves the shared entry index and recovers the retail
+registers for the sort key and scaled index. `sceneDraw` reaches 99.94666%:
+only the deferred-object loop counter's initialization, increment, and comparison
+differ (`r29` instead of `r28`). The two compiler traces reproduce their ordinary
+objects exactly, align all 375 instructions, and replay GPR coloring with no
+high-degree removals. An ordinary signed local index and a pre-scaled byte offset
+do not reproduce the same code; no alternative compiler settings are involved.
 
 The ROM-list position fixup now uses `ObjPlacement.posX` and `posZ` instead of
 unrelated `GameObject` animation fields at the same offsets. Its function bytes
