@@ -2514,6 +2514,14 @@ The one construct that does defeat the fold is an *aggregate* source — `pointI
 pointIndices[0]` gets `mr` because the operand is an array element — and that is precisely the
 4-byte-aggregate respelling `docs/HACK_AUDIT.md` bans by shape. So the family has no legal lever.
 
+**2026-09-07 correction for `Scarab_update`:** a GC/1.3 LLDB trace observes the
+collision flag's `li` before global optimization. Its virtual register is outside
+the late value-numbering pass's immediate-commoning range. Reusing a collision
+result lifetime reaches `mr`, but coalescing removes it and regresses the rest of
+the function. The earlier source-inaccessibility conclusion is too strong; see
+[the Scarab capture and source recovery](Scarab_matching.md). The instruction
+remains unmatched.
+
 **PRICED, and it is a re-classification, not a new class.** These 17 rows belong with #108/#110, not
 with the operation bucket. The rule §14 should be read with: **a multiset delta made entirely of `li`
 against `mr` (either direction) is rematerialisation, and rematerialisation is an allocator decision
