@@ -5545,7 +5545,6 @@ void getSunFlareScissorRect(int* outX, int* outY, int* outWidth, int* outHeight)
 }
 
 static inline int isGlowInFrustum(ModelLightStruct* light) {
-    FrustumPlane* plane;
     u8 i;
     f32 offsetX;
     f32 offsetZ;
@@ -5557,9 +5556,8 @@ static inline int isGlowInFrustum(ModelLightStruct* light) {
     bias = 0.0f;
     for (; i < 5; i++) {
         f32 dot;
-        plane = &gViewFrustumPlanes[i];
-        dot = light->worldY * plane->normalY + plane->normalX * (light->worldX - offsetX) +
-              plane->normalZ * (light->worldZ - offsetZ) + plane->distance + bias;
+        dot = light->worldY * gViewFrustumPlanes[i].normalY + gViewFrustumPlanes[i].normalX * (light->worldX - offsetX) +
+              gViewFrustumPlanes[i].normalZ * (light->worldZ - offsetZ) + gViewFrustumPlanes[i].distance + bias;
         if (dot < bias) {
             return 0;
         }

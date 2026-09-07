@@ -4,8 +4,8 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-136/145 exact functions and a 99.488594% instruction fuzzy score; the TU remains
-`NonMatching` because nine functions still differ.
+137/145 exact functions and a 99.50477% instruction fuzzy score; the TU remains
+`NonMatching` because eight functions still differ.
 
 This supersedes the constant-pool blocker in
 [lightmap_draw_recovery.md](lightmap_draw_recovery.md) and the historical
@@ -113,6 +113,13 @@ A second code pass restores three more functions:
   page cursor is typed, and the existing two-part base-address expression is
   retained because collapsing it changes the address temporary's register.
 
+The next pass restores `queueGlowRender` by directly indexing the frustum plane
+array in its distance expression. The early local plane-pointer assignment made
+MWCC place the plane-table address before the zero literal. The direct accesses
+let the constant load precede that address, reproducing the complete function.
+The GC/1.3 trace decoder also recognizes the observed `beqlr-` and `bgelr-`
+conditional returns, so this function can pass its instruction-alignment audit.
+
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /
 `-inline noauto` profile and the required common game compiler. No compiler
@@ -121,7 +128,7 @@ The initial merge exposed six formerly exact functions: `updateVisibleGeometry`,
 `renderObjects`, `renderSceneGeometry`, `initMapBlocks`, `renderGlows`, and
 `queueGlowRender`. Three other functions became exact, so that merge changed the
 combined exact function count from 132 to 129. The follow-up passes bring it to
-136. All nine remaining code differences must be recovered before
+137. All eight remaining code differences must be recovered before
 `MatchingFor` is justified.
 
 All forty functions that directly consume this pool now have matching literal
