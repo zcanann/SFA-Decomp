@@ -516,7 +516,7 @@ void SaveSelectScreen_render(int param) {
     titleScreenDrawMenuFrame(alpha, (u8)(gSaveSelectPanelIndex == SAVE_SELECT_PANEL_CONFIRM_ERASE), 0);
     switch (gSaveSelectPanelIndex) {
     case SAVE_SELECT_PANEL_OPEN_FILE: {
-        u8* infoTextIds;
+        u8 firstInfoTextIndex;
         int taskTextCount;
         int taskTextIndex;
         FrontendSaveSlot* slot;
@@ -529,11 +529,10 @@ void SaveSelectScreen_render(int param) {
             taskTextCount++;
         }
         taskTextIndex = 0;
-        infoTextIds = gSaveSelectInfoTextIds + (u8)(SAVE_SELECT_VISIBLE_TASK_TEXT_COUNT - taskTextCount);
+        firstInfoTextIndex = SAVE_SELECT_VISIBLE_TASK_TEXT_COUNT - taskTextCount;
         while (taskTextIndex < taskTextCount) {
             gameTextAppendStr(saveFileSelect_saveSlots[saveFileSelect_currentSlotIndex].taskTexts[taskTextIndex],
-                              *infoTextIds);
-            infoTextIds++;
+                              gSaveSelectInfoTextIds[firstInfoTextIndex + taskTextIndex]);
             taskTextIndex++;
         }
         if (gSaveSelectMenuItem != NULL) {

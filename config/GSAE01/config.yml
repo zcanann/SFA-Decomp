@@ -131,6 +131,10 @@ force_active:
   - lbl_803DB1EC
   - sAudioUnused0
   - sAudioUnused1
+  # dlls/engine/53/53.c: retain the unreferenced .sdata word between the
+  # info-start slot and texture IDs; retail keeps it and the following
+  # texture IDs and format strings depend on its four-byte footprint.
+  - lbl_803DBA00
   # Placeholders for retail objects the carve leaves unnamed, in units that are
   # still NonMatching. Nothing references them, so mwld would dead-strip them
   # the moment their unit is linked from our object, shortening .sbss/.sdata and
