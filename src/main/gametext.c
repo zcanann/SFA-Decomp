@@ -1670,8 +1670,7 @@ void gameTextLoadDir(int dirId) {
 }
 
 /* Byte parameters retain the public int prototype through default argument promotion. */
-void gameTextSetColor(r, g, b, a)
-u8 r, g, b, a;
+void gameTextSetColor(r, g, b, a) u8 r, g, b, a;
 {
     if (gameTextDrawFunc != NULL) {
         gGameTextColorR = r;
