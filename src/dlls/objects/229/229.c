@@ -215,10 +215,9 @@ void Shield_setMode(GameObject* obj, u8 mode) {
                     baseScale = tableCursor[0][i];
                     state->segmentScale[i] = baseScale * wave;
                     state->segmentAlpha[i] = segmentAlphas[i];
-                    state->segmentRate[i] =
-                        (s16)((f32)(i *
-                                    randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN, SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
-                              SHIELD_SEGMENT_RATE_BASE);
+                    state->segmentRate[i] = (s16)((f32)(i * randomGetRange(SHIELD_SEGMENT_RATE_RANDOM_MIN,
+                                                                           SHIELD_SEGMENT_RATE_RANDOM_MAX)) +
+                                                  SHIELD_SEGMENT_RATE_BASE);
                 }
             }
             Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
