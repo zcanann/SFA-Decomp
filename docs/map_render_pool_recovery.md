@@ -413,3 +413,31 @@ the shared headers leaves all 1,002 source object hashes unchanged.
 
 Formatting is separate. Data and literal-load audits, `ninja all_source`, and
 the strict retail checksum gate pass, with each Ninja run bounded to 30 seconds.
+
+## Native-array pool allocation diagnostic (2026-09-07)
+
+The three remaining commuted `add` operands in `renderObjects` can be reproduced
+in retail order with native accesses to the queue, deferred list, and sort keys.
+The deciding factor is when MWCC learns the BSS definitions, not private linkage:
+moving the complete public definitions before the functions enables automatic
+pool-relative addressing too. Those uninitialized objects are then allocated in
+compiled use order, which changes their offsets. Reversing their declaration
+order does not restore the retail layout in that configuration.
+
+A separate scratch test defines the eighteen objects before the functions in
+retail address order with explicit `{0}` initializers. This preserves their
+relative offsets and makes native-array `renderObjects` 100% under the current
+compiler and optimization flags. It is **not a valid matching change**: MWCC
+moves all 39,152 bytes from `SHT_NOBITS` `.bss` into `SHT_PROGBITS` `.data`, growing
+`.data` from 948 to 40,100 bytes. It also reduces `sceneDraw` to 99.44%. The
+`explicit_zero_data off` diagnostic does not change that aggregate emission.
+No initializer, linkage, definition-placement, or compiler-option changes from
+these tests are retained.
+
+This distinguishes an instruction-generation solution from an ownership
+solution. A usable native-array recovery must preserve the BSS section, every
+native symbol offset, and the already-exact functions as well as reproducing
+the three adds. The retained source remains 139/145 exact, with `renderObjects`
+at 99.73684% and the TU at 99.62221%. Fresh-staging all-source compilation and
+the strict retail checksum gate pass with 30-second bounds; shader still links
+its retail object.
