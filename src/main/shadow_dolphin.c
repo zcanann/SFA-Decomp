@@ -504,7 +504,9 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
     s16 savedRotY;
     Texture* diskTexture;
     MtxPtr viewMtx;
-    u32 i;
+    u32 vertexIndex;
+    /* Counts s16 components in the cache, or Vec3f entries in the uncached stream. */
+    u32 streamIndex;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -568,44 +570,40 @@ void objDrawShadowCasterMesh(Vec3f* vertices, ObjModelState* modelState, GameObj
         if (modelState->shadowRenderResource == NULL) {
             return;
         }
-        modelState->shadowRenderResource->vertices =
-            (Vec3s*)((u8*)modelState->shadowRenderResource + sizeof(ObjectShadowMesh));
+        modelState->shadowRenderResource->coordinates =
+            (s16*)((u8*)modelState->shadowRenderResource + sizeof(ObjectShadowMesh));
         modelState->shadowRenderResource->vertexCount = triangleCount * 3;
-        i = 0;
+        vertexIndex = 0;
         meshVertexScale = 20.0f;
-        for (; i < modelState->shadowRenderResource->vertexCount; i++) {
-            modelState->shadowRenderResource->vertices[i].x = meshVertexScale * vertices[i].x;
-            modelState->shadowRenderResource->vertices[i].y = meshVertexScale * vertices[i].y;
-            modelState->shadowRenderResource->vertices[i].z = meshVertexScale * vertices[i].z;
+        for (streamIndex = 0; vertexIndex < modelState->shadowRenderResource->vertexCount; vertexIndex++, streamIndex += 3) {
+            modelState->shadowRenderResource->coordinates[streamIndex + 0] = meshVertexScale * vertices[vertexIndex].x;
+            modelState->shadowRenderResource->coordinates[streamIndex + 1] = meshVertexScale * vertices[vertexIndex].y;
+            modelState->shadowRenderResource->coordinates[streamIndex + 2] = meshVertexScale * vertices[vertexIndex].z;
         }
     }
     if (modelState->shadowRenderResource != OBJECT_SHADOW_MESH_UNCACHED) {
-        Vec3s* vertex;
         GXBegin(GX_TRIANGLES, GX_VTXFMT0, modelState->shadowRenderResource->vertexCount & 0xffff);
-        for (i = 0; i < modelState->shadowRenderResource->vertexCount; i++) {
-            vertex = &modelState->shadowRenderResource->vertices[i];
-            GXPosition3s16(vertex->x, vertex->y, vertex->z);
+        for (vertexIndex = 0, streamIndex = 0; vertexIndex < modelState->shadowRenderResource->vertexCount; vertexIndex++, streamIndex += 3) {
+            GXPosition3s16(modelState->shadowRenderResource->coordinates[streamIndex + 0], modelState->shadowRenderResource->coordinates[streamIndex + 1], modelState->shadowRenderResource->coordinates[streamIndex + 2]);
         }
     } else {
-        int i;
-        int w0;
+        int triangleIndex;
         GXBegin(GX_TRIANGLES, GX_VTXFMT2, (triangleCount * 3) & 0xffff);
-        w0 = 0;
-        for (i = 0; i < triangleCount; i++) {
+        streamIndex = 0;
+        for (triangleIndex = 0; triangleIndex < triangleCount; triangleIndex++) {
             int k;
             for (k = 0; k < 3; k++) {
-                Vec3f* v1 = &vertices[w0 + k];
-                f32 b1;
-                f32 b2;
-                f32 b0;
-                b2 = v1->z;
-                b1 = v1->y;
-                b0 = v1->x;
-                GXWGFifo.f32 = b0;
-                GXWGFifo.f32 = b1;
-                GXWGFifo.f32 = b2;
+                f32 y;
+                f32 z;
+                f32 x;
+                z = vertices[streamIndex + k].z;
+                y = vertices[streamIndex + k].y;
+                x = vertices[streamIndex + k].x;
+                GXWGFifo.f32 = x;
+                GXWGFifo.f32 = y;
+                GXWGFifo.f32 = z;
             }
-            w0 += 3;
+            streamIndex += 3;
         }
     }
     if (modelState->flags & OBJ_MODEL_STATE_SHADOW_POS_OVERRIDE) {

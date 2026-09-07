@@ -416,9 +416,13 @@ STATIC_ASSERT(offsetof(ObjAnimCachedMove, moveData) == 0x80);
 typedef ObjModel ObjAnimBank;
 
 typedef struct ObjectShadowMesh {
-    Vec3s* vertices;
+    s16* coordinates; /* Packed XYZ components, three per vertex. */
     u32 vertexCount;
 } ObjectShadowMesh;
+
+STATIC_ASSERT(sizeof(ObjectShadowMesh) == 0x08);
+STATIC_ASSERT(offsetof(ObjectShadowMesh, coordinates) == 0x00);
+STATIC_ASSERT(offsetof(ObjectShadowMesh, vertexCount) == 0x04);
 
 #define OBJECT_SHADOW_MESH_UNCACHED ((ObjectShadowMesh*)-1)
 
