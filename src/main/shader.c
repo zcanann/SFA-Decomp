@@ -2718,8 +2718,8 @@ int mapProcessRomList(int slot) {
         obj = (char*)cur->objects;
         for (j = 0; j < cur->objectDataSize;) {
             if (saveGame_restoreObjectPosToRomList(obj) == 0) {
-                ((GameObject*)obj)->anim.rootMotionScale += dx;
-                ((GameObject*)obj)->anim.localPosY += dz;
+                ((ObjPlacement*)obj)->posX += dx;
+                ((ObjPlacement*)obj)->posZ += dz;
             }
             step = ((ObjPlacement*)obj)->size * 4;
             j += step;
@@ -3761,14 +3761,14 @@ void sceneDraw(void) {
     }
     *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x78000000;
     *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 8;
-    gLightmapDrawQueueCount += 1;
+    gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
     if (gLightmapDrawQueueCount == 1000) {
         sceneDrawTransparentPolys();
         gLightmapDrawQueueCount = 0;
     }
     *(u32*)(((int)q + 8) + gLightmapDrawQueueCount * 16) = 0x50000000;
     *(u32*)(((int)q + 12) + gLightmapDrawQueueCount * 16) = 9;
-    gLightmapDrawQueueCount += 1;
+    gLightmapDrawQueueCount = *(const int*)&gLightmapDrawQueueCount + 1;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);

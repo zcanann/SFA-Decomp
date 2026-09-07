@@ -4,7 +4,7 @@ The shared map-rendering `.sdata2` pool is now exact. The five artificial
 fragments `shader`, `lightmap`, `lightmap_initmapblocks`, `lightmap_draw`, and
 `tex_dolphin` have been reunited in `src/main/shader.c`, in retail function order.
 All 40,656 assigned data bytes match. The common GC/1.3 invocation produces
-137/145 exact functions and a 99.537125% instruction fuzzy score; the TU remains
+137/145 exact functions and a 99.555725% instruction fuzzy score; the TU remains
 `NonMatching` because eight functions still differ.
 
 This supersedes the constant-pool blocker in
@@ -134,6 +134,20 @@ instructions to twelve register-operand differences. `doPendingMapLoads` rises
 from 98.458015% to 98.65522%. The two callers preserve the existing release order,
 including clearing the slot before callbacks and freeing the block last. All
 other function bytes and the assigned data remain unchanged.
+
+`sceneDraw` now reads the queue count through an explicit `const int*` view
+when advancing it after each render-pass entry. As in the cloud renderer's
+const-qualified extent reads, this spelling preserves loads that GC/1.3 would
+otherwise merge. Both missing `lwz` instructions return, bringing the function
+from 99.2% to 99.81333% and its size from 1,492 to the retail 1,500 bytes.
+Eleven instructions still differ in register operands. This is a source-spelling
+reconstruction, not evidence that the original used this exact cast; it adds no
+volatile accesses and leaves the stored count type unchanged.
+
+The ROM-list position fixup now uses `ObjPlacement.posX` and `posZ` instead of
+unrelated `GameObject` animation fields at the same offsets. Its function bytes
+are unchanged. Only `sceneDraw` changes compiled code in this pass; all other
+144 functions, including both unload paths, retain their previous bytes.
 
 The old `lightmap` and initializer fragments depended on extra `noprop` and
 `nocse` flags. They now share shader's existing `nopeephole,noschedule` /
