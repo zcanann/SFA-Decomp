@@ -2295,109 +2295,39 @@ int trackGetIntersect2(int mode, void* tri1, void* tri2, f32* startPos, f32* end
     return retLo | (retHi << 4);
 }
 
-int trackGetIntersect(GameObject* contactSrc, f32* startPos, f32* endPos, int count, void* results, int flags) {
-    int lim;
-    f32* fp;
-    void** pp;
-    s16 i;
-    u8 hitCount;
-    TrackBlockDescriptor* tbl = gTrackBlockDescriptors;
+int trackGetIntersect(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* resultStorage, int unusedFlags) {
+    TrackHitResults* results = resultStorage;
+    s16 pointIndex;
+    u8 hitMask;
+    TrackBlockDescriptor* blocks = gTrackBlockDescriptors;
 
-    if (count > 4) {
-        count = 4;
+    if (pointCount > TRACK_HIT_MAX_POINTS) {
+        pointCount = TRACK_HIT_MAX_POINTS;
     }
-    ((TrackHitResults*)results)->hitCount = 0;
+    results->hitCount = 0;
 
-    i = 0;
-    if (count > 0) {
-        lim = count - 8;
-        if (count > 8) {
-            f32 b, a;
-            fp = results;
-            pp = results;
-            a = 0.0f;
-            b = 1.0f;
-            while (i < lim) {
-                fp[0] = a;
-                fp[1] = b;
-                fp[2] = a;
-                fp[3] = a;
-                pp[0x17] = NULL;
-                fp[4] = a;
-                fp[5] = b;
-                fp[6] = a;
-                fp[7] = a;
-                pp[0x18] = NULL;
-                fp[8] = a;
-                fp[9] = b;
-                fp[10] = a;
-                fp[11] = a;
-                pp[0x19] = NULL;
-                fp[12] = a;
-                fp[13] = b;
-                fp[14] = a;
-                fp[15] = a;
-                pp[0x1a] = NULL;
-                fp[16] = a;
-                fp[17] = b;
-                fp[18] = a;
-                fp[19] = a;
-                pp[0x1b] = NULL;
-                fp[20] = a;
-                fp[21] = b;
-                fp[22] = a;
-                fp[23] = a;
-                pp[0x1c] = NULL;
-                fp[24] = a;
-                fp[25] = b;
-                fp[26] = a;
-                fp[27] = a;
-                pp[0x1d] = NULL;
-                fp[28] = a;
-                fp[29] = b;
-                fp[30] = a;
-                fp[31] = a;
-                pp[0x1e] = NULL;
-                fp += 32;
-                pp += 8;
-                i += 8;
-            }
-        }
-        {
-            f32 b, a;
-            fp = (f32*)results + i * 4;
-            pp = (void**)results + i;
-            a = 0.0f;
-            b = 1.0f;
-            while (i < count) {
-                fp[0] = a;
-                fp[1] = b;
-                fp[2] = a;
-                fp[3] = a;
-                pp[0x17] = NULL;
-                fp += 4;
-                pp += 1;
-                i++;
+    for (pointIndex = 0; pointIndex < pointCount; pointIndex++) {
+        results->planes[pointIndex][0] = 0.0f;
+        results->planes[pointIndex][1] = 1.0f;
+        results->planes[pointIndex][2] = 0.0f;
+        results->planes[pointIndex][3] = 0.0f;
+        results->objects[pointIndex] = NULL;
+    }
+
+    hitMask = trackGetIntersect2(0, gTrackTriangleBuffer + blocks->firstTriangle,
+                                  gTrackTriangleBuffer + blocks[1].firstTriangle, startPoints, endPoints, pointCount, results, 0);
+
+    for (pointIndex = 0; pointIndex < pointCount; pointIndex++) {
+        if (results->objects[pointIndex] != NULL) {
+            Obj_TransformLocalVectorByWorldMatrix(results->objects[pointIndex], results->planes[pointIndex], results->planes[pointIndex]);
+            if (contactSource != NULL) {
+                ObjHits_AddContactObject(results->objects[pointIndex], contactSource);
             }
         }
     }
 
-    hitCount = trackGetIntersect2(0, gTrackTriangleBuffer + tbl->firstTriangle,
-                                  gTrackTriangleBuffer + tbl[1].firstTriangle, startPos, endPos, count, results, 0);
-
-    fp = results;
-    pp = results;
-    for (i = 0; i < count; i++) {
-        if (pp[i + 0x17] != NULL) {
-            Obj_TransformLocalVectorByWorldMatrix(pp[i + 0x17], &fp[i * 4], &fp[i * 4]);
-            if (contactSrc != NULL) {
-                ObjHits_AddContactObject(pp[i + 0x17], contactSrc);
-            }
-        }
-    }
-
-    ((TrackHitResults*)results)->hitMask = hitCount;
-    return hitCount;
+    results->hitMask = hitMask;
+    return hitMask;
 }
 
 int trackBuildModelTriangles(int cur, TrackBlockDescriptor* desc, int* model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,

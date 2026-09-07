@@ -28,13 +28,15 @@ typedef struct TrackQueryBounds {
 
 STATIC_ASSERT(sizeof(TrackQueryBounds) == 0x18);
 
+#define TRACK_HIT_MAX_POINTS 4
+
 typedef struct TrackHitResults {
-    f32 planes[4][4];
-    f32 radii[4];
-    s8 surfaceTypes[4];
-    s8 queryTypes[4];
-    u8 triangleFlags[4];
-    GameObject* objects[4];
+    f32 planes[TRACK_HIT_MAX_POINTS][4];
+    f32 radii[TRACK_HIT_MAX_POINTS];
+    s8 surfaceTypes[TRACK_HIT_MAX_POINTS];
+    s8 queryTypes[TRACK_HIT_MAX_POINTS];
+    u8 triangleFlags[TRACK_HIT_MAX_POINTS];
+    GameObject* objects[TRACK_HIT_MAX_POINTS];
     s16 hitCount;
     u8 hitMask;
     u8 pad6F;
@@ -44,5 +46,10 @@ STATIC_ASSERT(sizeof(TrackHitResults) == 0x70);
 STATIC_ASSERT(offsetof(TrackHitResults, radii) == 0x40);
 STATIC_ASSERT(offsetof(TrackHitResults, surfaceTypes) == 0x50);
 STATIC_ASSERT(offsetof(TrackHitResults, queryTypes) == 0x54);
+
+STATIC_ASSERT(offsetof(TrackHitResults, triangleFlags) == 0x58);
+STATIC_ASSERT(offsetof(TrackHitResults, objects) == 0x5C);
+STATIC_ASSERT(offsetof(TrackHitResults, hitCount) == 0x6C);
+STATIC_ASSERT(offsetof(TrackHitResults, hitMask) == 0x6E);
 
 #endif /* MAIN_TRACK_HIT_RESULTS_H_ */
