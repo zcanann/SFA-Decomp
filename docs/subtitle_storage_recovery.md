@@ -1,5 +1,9 @@
 # Subtitle storage recovery
 
+The current source uses three native arrays and an exact line-table builder; see
+[Native arrays and deferred emission](#native-arrays-and-deferred-emission-2026-09-07).
+The earlier aggregate experiment below records the evidence leading to that model.
+
 ## Layout and source model
 
 The old definition allocated `void* gSubtitleLineTable[256]` and accessed the
@@ -112,3 +116,59 @@ by SHA-1 `c1a6ccdc61c7e719e20ea7cc59c8de09fd183e66`, matching
 `config/GSAP01_rev1/build.sha1`. Its subtitle base is `8033CBA0`, so it was
 not treated as evidence for the PAL rev0 addresses. The artifact was left in
 place. This audit does not claim successful builds of the secondary versions.
+
+## Native arrays and deferred emission (2026-09-07)
+
+The combined `SubtitleLineTable` definition is replaced by three arrays, each
+with its existing 256-entry capacity:
+
+| Array | EN address | BSS offset | Bytes |
+| --- | --- | --- | ---: |
+| `gSubtitleBlocks` | `8033B240` | `000` | 1024 |
+| `gSubtitleLines` | `8033B640` | `400` | 1024 |
+| `gSubtitleTimes` | `8033BA40` | `800` | 1024 |
+
+Definitions precede the function bodies in reverse emitted storage order.
+The complete TU uses deferred emission, with ordinary function definitions in
+reverse retail order. GC/1.3, level 1, and the existing optimization switches
+remain unchanged. MWCC supplies its own shared BSS base for the builder's
+indexed accesses; no source overlay, alias, or section directive is needed.
+No whole-record consumer requires the former aggregate.
+
+Three controls distinguish the storage and emission changes. Deferred emission
+alone leaves the aggregate builder at 241 instructions. Native arrays without
+deferred emission produce 243. Together they reproduce all 240 retail
+instructions and the full 960-byte function. These controls support the native
+array model without claiming it uniquely proves the original source spelling.
+
+| Function | Previous fuzzy | Current fuzzy | Current C bytes |
+| --- | ---: | ---: | ---: |
+| `subtitleBuildLineTable` | 99.1875% | **100%** | 960 |
+| `subtitleUpdateAndDraw` | 94.13433% | 97.01492% | 548 |
+| `subtitleStop` | 96.847824% | 96.847824% | 188 |
+| `mainLoopDoGameText` | 100% | 100% | 124 |
+
+The latter two bodies are byte-identical. The unit gains 960 matched code
+bytes and reaches 2/4 exact functions, improving aggregate fuzzy match from
+97.50333% to 98.79157%. All 3,104 data bytes retain their contents, layout and
+exact credit. The compiler adds only its local zero-size BSS base symbol;
+the three named allocations replace the combined symbol at unchanged offsets.
+
+The shared initializer in `textrender_drawbox.c` now clears `gSubtitleBlocks`
+directly. Its complete object's function bytes, allocated sections and named
+symbol layouts are unchanged; resolving relocations and accounting for the
+renamed external base preserves every destination. All five regional symbol
+configs describe the same three 0x400-byte spans inside their existing subtitle
+BSS windows. No regional addresses or split boundaries move; only EN is built
+and matched in this pass.
+
+`tools/test_subtitle_runtime.py` checks the three PPC symbol extents and still
+runs the same 139 scenarios at O0 and O2 (278 host calls). All seven tests pass.
+The fixture uses the native definitions; target pointer-storage size assertions
+are checked in the PPC build rather than imposed on wider host pointers.
+Previously documented timing, allocation and stale-input quirks remain.
+
+Both `ninja all_source` and the strict checksum gate pass, and the linked EN
+DOL is byte-identical to retail. Subtitle remains `NonMatching` because its
+update and stop bodies still differ; the builder's exact credit comes from
+objdiff, with the DOL gate checking integration separately.

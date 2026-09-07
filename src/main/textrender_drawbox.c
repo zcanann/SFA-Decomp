@@ -179,7 +179,7 @@ void subtitleInit(void) {
     gGameTextSavedDir = -1;
 
     for (i = 0; i < SUBTITLE_LINE_COUNT; i++) {
-        gSubtitleLineTable.blocks[i] = NULL;
+        gSubtitleBlocks[i] = NULL;
     }
 }
 

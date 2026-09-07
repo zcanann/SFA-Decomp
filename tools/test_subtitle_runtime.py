@@ -21,9 +21,9 @@ class SubtitleLayoutTests(unittest.TestCase):
             self.skipTest('build the subtitle source object first')
         obj = read_object(path)
         self.assertEqual(obj.sections['.bss'][3], 0xc00)
-        self.assertEqual(obj.symbols['gSubtitleLineTable'][:3], ('.bss', 0, 0xc00))
-        self.assertNotIn('gSubtitleLineStrs', obj.symbols)
-        self.assertNotIn('gSubtitleLineTimes', obj.symbols)
+        for name, offset in (('gSubtitleBlocks', 0), ('gSubtitleLines', 0x400), ('gSubtitleTimes', 0x800)):
+            self.assertEqual(obj.symbols[name][:3], ('.bss', offset, 0x400))
+        self.assertNotIn('gSubtitleLineTable', obj.symbols)
 
 
 class SubtitleHostTests(unittest.TestCase):
@@ -34,12 +34,14 @@ class SubtitleHostTests(unittest.TestCase):
             raise unittest.SkipTest('clang is required for source-body tests')
         source = (ROOT / 'src/main/subtitle.c').read_text()
         source = re.sub(r'^#include.*\n', '', source, flags=re.M)
+        # Host pointers are wider; the target storage test checks these extents.
+        source = re.sub(r'^STATIC_ASSERT\(.*\);\n', '', source, flags=re.M)
         header = '\n'.join((ROOT / path).read_text() for path in (
             'include/main/subtitle.h', 'include/main/gametext_internal.h',
             'include/main/gametext_box_api.h', 'include/main/textrender_internal.h'))
         records = '\n'.join(re.search(r'typedef struct(?: ' + name + r')?\s*\{[^}]*\} '
                                       + name + ';', header).group()
-                            for name in ('SubtitleLineTable', 'SubtitleCmd', 'GameTextDef', 'GameTextBox'))
+                            for name in ('SubtitleCmd', 'GameTextDef', 'GameTextBox'))
         constants = '\n'.join(line for line in header.splitlines()
                               if re.match(r'#define (SUBTITLE_LINE_COUNT|TEXT_CTRL_(SEQ_TIME|COLOR))\s', line))
         drawing = (ROOT / 'src/main/textrender_drawbox.c').read_text()
@@ -184,9 +186,9 @@ static void reset(void) {
     wrapFailure = -1; text.count = 3; text.strings = sourcePointers;
     gTextBoxes[10].maxWidth = 321; gTextBoxes[10].scale = 0.75f;
     for (i = 0; i < 256; i++) {
-        gSubtitleLineTable.blocks[i] = &oldBlocks[i % 4];
-        gSubtitleLineTable.lines[i] = lineStorage[i % 4];
-        gSubtitleLineTable.times[i] = (float)i + 50.0f;
+        gSubtitleBlocks[i] = &oldBlocks[i % 4];
+        gSubtitleLines[i] = lineStorage[i % 4];
+        gSubtitleTimes[i] = (float)i + 50.0f;
     }
     for (i = 0; i < 3; i++) {
         timeCodes[i][0] = 1; timeCodes[i][1] = 2 + i * 10; timeCodes[i][2] = 119;
@@ -204,8 +206,8 @@ static int delaysCorrect(void) {
 EXPORT int checkInit(int unused) {
     int i; reset(); subtitleInit();
     for (i = 0; i < 256; i++) {
-        if (gSubtitleLineTable.blocks[i]) return 1;
-        if (gSubtitleLineTable.lines[i] != lineStorage[i % 4] || gSubtitleLineTable.times[i] != i + 50.0f) return 2;
+        if (gSubtitleBlocks[i]) return 1;
+        if (gSubtitleLines[i] != lineStorage[i % 4] || gSubtitleTimes[i] != i + 50.0f) return 2;
     }
     if (gSubtitleActive || gSubtitlesEnabled != 1 || gGameTextSavedDir != -1) return 3;
     if (gSubtitleLineCount != 123 || gSubtitleBlockCount != 99 || gSubtitleElapsedFrames != 77 || gSubtitleLineIndex != 2) return 4;
@@ -214,20 +216,20 @@ EXPORT int checkInit(int unused) {
 EXPORT int checkStop(int mode) {
     int i, active = mode % 3; reset(); gSubtitleActive = active;
     gGameTextSavedDir = mode / 3 ? 7 : -1;
-    gSubtitleBlockCount = 3; gSubtitleLineTable.blocks[1] = NULL;
+    gSubtitleBlockCount = 3; gSubtitleBlocks[1] = NULL;
     subtitleStop();
     if (!active) {
-        if (freeCalls || delayCalls || loadedDir != -99 || gSubtitleLineTable.blocks[0] != &oldBlocks[0]) return 1;
+        if (freeCalls || delayCalls || loadedDir != -99 || gSubtitleBlocks[0] != &oldBlocks[0]) return 1;
         if (gGameTextSavedDir != (mode / 3 ? 7 : -1)) return 2;
     } else {
         if (gSubtitleActive || freeCalls != 2 || freed[0] != &oldBlocks[0] || freed[1] != &oldBlocks[2]) return 3;
         if (!delaysCorrect() || activeAtFree[0] || activeAtFree[1]) return 4;
-        for (i = 0; i < 3; i++) if (gSubtitleLineTable.blocks[i]) return 5;
+        for (i = 0; i < 3; i++) if (gSubtitleBlocks[i]) return 5;
         if (loadedDir != (mode / 3 ? 7 : -99) || gGameTextSavedDir != -1) return 6;
     }
-    if (gSubtitleLineTable.blocks[3] != &oldBlocks[3] || gSubtitleBlockCount != 3 || gSubtitleLineCount != 123) return 7;
+    if (gSubtitleBlocks[3] != &oldBlocks[3] || gSubtitleBlockCount != 3 || gSubtitleLineCount != 123) return 7;
     for (i = 0; i < 256; i++)
-        if (gSubtitleLineTable.lines[i] != lineStorage[i % 4] || gSubtitleLineTable.times[i] != i + 50.0f) return 8;
+        if (gSubtitleLines[i] != lineStorage[i % 4] || gSubtitleTimes[i] != i + 50.0f) return 8;
     return 0;
 }
 EXPORT int checkBuild(int mode) {
@@ -243,18 +245,18 @@ EXPORT int checkBuild(int mode) {
     if (freeCalls != expectedBlocks || !delaysCorrect() || wrapCalls != 3 || getCalls != 1) return 3;
     if (wrapWidth != 321.0f || wrapScale != 0.75f) return 4;
     for (i = 0; i < expectedBlocks; i++) if (freed[i] != &oldBlocks[i] || activeAtFree[i] != 1) return 5;
-    if (gSubtitleLineTable.blocks[expectedBlocks] != &oldBlocks[expectedBlocks]) return 6;
+    if (gSubtitleBlocks[expectedBlocks] != &oldBlocks[expectedBlocks]) return 6;
     if (charset != 7 || charsetCalls != (mode & 1 ? 2 : 0)) return 7;
     if (charsetCalls && (charsetValues[0] != 1 || charsetValues[1] != 7 || charsetFlags[0] != 1 || charsetFlags[1] != 1)) return 8;
     for (i = 0; i < 3; i++) {
         int j;
         if (i == wrapFailure) continue;
-        if (gSubtitleLineTable.blocks[block++] != wrapped[i]) return 9;
+        if (gSubtitleBlocks[block++] != wrapped[i]) return 9;
         for (j = 0; j < (i == 0 ? 2 : 1); j++)
-            if (gSubtitleLineTable.lines[line++] != wrapped[i][j]) return 10;
+            if (gSubtitleLines[line++] != wrapped[i][j]) return 10;
     }
     for (i = expectedLines; i < 256; i++)
-        if (gSubtitleLineTable.lines[i] != lineStorage[i % 4]) return 11;
+        if (gSubtitleLines[i] != lineStorage[i % 4]) return 11;
     expectedTimes[0] = 63.0f; expectedTimes[1] = 67.0f; expectedTimes[2] = 73.0f; expectedTimes[3] = 83.0f;
     if (wrapFailure == 0) {
         expectedTimes[0] = 73.0f; expectedTimes[1] = 83.0f;
@@ -262,8 +264,8 @@ EXPORT int checkBuild(int mode) {
     } else if (wrapFailure == 1) {
         expectedTimes[1] = 71.0f; expectedTimes[2] = 83.0f; expectedTimes[3] = SUBTITLE_TIME_NONE;
     }
-    for (i = 0; i < 4; i++) if (gSubtitleLineTable.times[i] != expectedTimes[i]) return 12;
-    for (i = 4; i < 256; i++) if (gSubtitleLineTable.times[i] != SUBTITLE_TIME_NONE) return 13;
+    for (i = 0; i < 4; i++) if (gSubtitleTimes[i] != expectedTimes[i]) return 12;
+    for (i = 4; i < 256; i++) if (gSubtitleTimes[i] != SUBTITLE_TIME_NONE) return 13;
     return 0;
 }
 EXPORT int checkUpdate(int mode) {
@@ -273,7 +275,7 @@ EXPORT int checkUpdate(int mode) {
     if (mode & 32) { commands[1].code = TEXT_CTRL_COLOR; commands[2].code = 0; }
     gSubtitleElapsedFrames = (mode & 8) ? 120 : 0;
     gSubtitleLineCount = 4; gSubtitleLineIndex = ending ? 2 : 0; gSubtitleBlockCount = 0;
-    for (i = 0; i < 4; i++) gSubtitleLineTable.times[i] = (float)i;
+    for (i = 0; i < 4; i++) gSubtitleTimes[i] = (float)i;
     advance = gSubtitleElapsedFrames + (hidden ? 0 : 60) >= (ending ? 180 : 60);
     subtitleUpdateAndDraw(0);
     if (parseCalls != advance || (advance && parsed != lineStorage[ending ? 2 : 0])) return 1;
