@@ -11,6 +11,10 @@ deferred emission, and recovered pointer lifetimes bring `mmFreeTick` and
 See [memory manager matching](mm_matching.md). Their old classifications below
 are historical and do not constrain further source recovery.
 
+Update 2026-09-07: `padUpdate` is also resolved at 100%. Native controller
+arrays and fully indexed loops replace the synthetic layout and explicit
+cursors. See [controller input matching](pad_matching.md).
+
 ## Rotation class CLOSED WITH MECHANISM (2026-08-03 corpus mining)
 
 The saved-band rotation offset is set by the inline-boundary value count, dose-saturating at one,

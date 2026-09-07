@@ -1832,7 +1832,7 @@ config.libs = [
             Object(Matching, "main/curves.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/voxmaps.c"),
             Object(Matching, "main/modelEngine.c", cflags=cflags_dll_noopt_noautoinline),
-            Object(NonMatching, "main/pad.c", cflags=cflags_dll_noopt_nocse),
+            Object(MatchingFor("GSAE01"), "main/pad.c", cflags=[*cflags_dll_noopt_nocse, "-inline", "deferred"]),
             Object(Matching, "main/fileio.c", cflags=cflags_dll_noopt_noloopinv_noautoinline),
             Object(NonMatching, "main/gametext.c", cflags=cflags_dll_noopt_noautoinline),
             Object(NonMatching, "main/subtitle.c", cflags=cflags_dll_noopt_level1),
