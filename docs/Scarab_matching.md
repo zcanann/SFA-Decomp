@@ -139,7 +139,13 @@ input source into the diagnostic output directory and compares ordinary
 and instrumented objects byte for byte. A successful manifest records the
 source, compiler, object, and listing hashes alongside the actual command.
 The default debugger deadline is 60 seconds; incomplete captures publish
-no success manifest.
+no success manifest. Timeout cleanup inspects LLDB's live descendant tree before
+terminating its process group. Rosetta's `debugserver --setsid` has a separate
+session and otherwise survives a timeout before the guest PID is recorded.
+Only descendant debug servers whose parent and executable still match the
+snapshot are signaled; unrelated or already reparented servers are left alone.
+A native macOS integration test checks cleanup of a child in a separate session,
+without launching or modifying the compiler.
 
 The pre-initializer-recovery source at `fa8042be9c` produces 79 stage dumps.
 Its initial `collisionDetected = bestGroundHitIndex` is an `EASS` from an
