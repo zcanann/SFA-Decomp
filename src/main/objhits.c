@@ -920,8 +920,8 @@ void ObjHitbox_UpdateRotatedBounds(ObjAnimComponent* objAnim, int advanceMatrix)
     return;
 }
 
-int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char recordHits, char applyResponse, u32 hitMask,
-                            u32 sweepMask) {
+int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcObj, char recordHits, char applyResponse,
+                            u32 hitMask, u32 sweepMask) {
     ObjHitsContactScratchEntry* nextContact;
     int sphereCountA;
     int sphereCountB;
@@ -1291,7 +1291,9 @@ int ObjHits_CheckHitVolumes(GameObject* objA, GameObject* objB, GameObject* srcO
                     contactSphereB = &activeSpheresB[hit];
                     cx = contactSphereB->pos[0] + readContact->contactOffsetX;
                     ObjHits_RecordPositionHit(objB, objA, stateSrc->hitVolumePriority, (u8)stateSrc->hitVolumeId, hit,
-                                              cx, (isCapsuleB != 0) ? activeSpheresA[idxA].pos[1] : contactSphereB->pos[1] + readContact->contactOffsetY,
+                                              cx,
+                                              (isCapsuleB != 0) ? activeSpheresA[idxA].pos[1]
+                                                                : contactSphereB->pos[1] + readContact->contactOffsetY,
                                               contactSphereB->pos[2] + readContact->contactOffsetZ);
                     result = 1;
                 } else if (applyResponse != 0) {
