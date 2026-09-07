@@ -1616,6 +1616,22 @@ void ObjHits_ApplyPairResponse(GameObject* objA, GameObject* objB, f32 x, f32 y,
     }
 }
 
+static inline f32 ObjHits_SweepPointDistance(GameObject* otherObject, ObjHitsPriorityState* sweepState,
+                                 f32 moveX, f32 moveY, f32 moveZ, f32 fraction) {
+    f32 delta;
+    f32 squaredZ;
+    f32 squaredX;
+    f32 squaredY;
+
+    delta = (fraction * moveZ + sweepState->worldPosZ) - otherObject->anim.worldPosZ;
+    squaredZ = delta * delta;
+    delta = (fraction * moveX + sweepState->worldPosX) - otherObject->anim.worldPosX;
+    squaredX = delta * delta;
+    delta = (fraction * moveY + sweepState->worldPosY) - otherObject->anim.worldPosY;
+    squaredY = delta * delta;
+    return sqrtf(squaredZ + (squaredX + squaredY));
+}
+
 void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
     ObjHitsPriorityState* stateA;
     f32 cy;
@@ -1723,17 +1739,7 @@ void ObjHits_DetectObjectPair(GameObject* objA, GameObject* objB) {
             cy = objB->anim.worldPosY - stateA->worldPosY;
             segSq = (sx * cx + sy * cy + sz * cz) / segSq;
             if ((segSq >= 0.0f) && (segSq <= 1.0f)) {
-                f32 oz;
-                f32 ox;
-                f32 oy;
-
-                tmp = (segSq * sz + stateA->worldPosZ) - objB->anim.worldPosZ;
-                oz = tmp * tmp;
-                tmp = (segSq * sx + stateA->worldPosX) - objB->anim.worldPosX;
-                ox = tmp * tmp;
-                tmp = (segSq * sy + stateA->worldPosY) - objB->anim.worldPosY;
-                oy = tmp * tmp;
-                dist = sqrtf(oz + (ox + oy));
+                dist = ObjHits_SweepPointDistance(objB, stateA, sx, sy, sz, segSq);
             }
         }
         if ((dist < sumRadius) && (dist > 0.0f)) {
@@ -1841,104 +1847,105 @@ void ObjHits_CheckSkeletonPair(GameObject* objA, GameObject* objB, ObjHitsSkelet
 }
 
 void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
-    u32 sphereIdx;
-    int mask2;
+    int hitMask;
     u8 contact;
     ObjHitsPriorityState* stateA;
-    u32 bits;
-    ObjModel* modelBank;
-    int i;
-    ModelFileHeader* modelFile;
-    ModelHitSphereDef* hitVolume;
-    int hitVolumeOffset;
-    float* curSpheres;
-    float* prevSpheres;
-    float* curSphere;
-    float* prevSphere;
     ObjHitsPriorityState* stateB;
     int pointCount;
     TrackQueryBounds bounds;
-    TrackHitResults hb;
-    float endPoints[18];
-    float startPoints[18];
-    f32 fConv;
+    TrackHitResults hitResults;
+    Vec endPoints[6];
+    Vec startPoints[6];
+    f32 fallbackRadius;
 
     stateA = (ObjHitsPriorityState*)objA->anim.hitReactState;
-    mask2 = objB == objA ? stateA->objectHitMask >> 4 : stateA->objectHitMask & 0xf;
-    if ((mask2 != 0) && (stateA->suppressOutgoingHits == 0)) {
+    hitMask = objB == objA ? stateA->objectHitMask >> 4 : stateA->objectHitMask & 0xf;
+    if ((hitMask != 0) && (stateA->suppressOutgoingHits == 0)) {
         stateB = (ObjHitsPriorityState*)objB->anim.hitReactState;
         if ((stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) {
-            modelBank = ObjHits_GetActiveModel(objB);
-            modelFile = modelBank->file;
-            bits = modelBank->bufferFlags >> 2 & 1;
-            curSpheres = (f32*)modelBank->hitVolumeSphereBuffers[bits];
-            prevSpheres = (f32*)modelBank->hitVolumeSphereBuffers[bits ^ 1];
+            u32 linkedSphereIndex;
+            u32 sphereBits;
+            ObjModel* model;
+            int volumeIndex;
+            ModelFileHeader* modelFile;
+            ModelHitSphereDef* hitVolume;
+            int definitionOffset;
+            ObjModelHitSphere* currentSpheres;
+            ObjModelHitSphere* previousSpheres;
+            ObjModelHitSphere* currentSphereCursor;
+            ObjModelHitSphere* previousSphereCursor;
+
+            model = ObjHits_GetActiveModel(objB);
+            modelFile = model->file;
+            sphereBits = model->bufferFlags >> 2 & 1;
+            currentSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits];
+            previousSpheres = (ObjModelHitSphere*)model->hitVolumeSphereBuffers[sphereBits ^ 1];
             pointCount = 0;
-            hitVolumeOffset = 0;
-            curSphere = curSpheres;
-            prevSphere = prevSpheres;
-            for (i = 0; i < (int)(u32)modelFile->hitVolumeCount;
-                 hitVolumeOffset += sizeof(ModelHitSphereDef), curSphere += 4, prevSphere += 4, i = i + 1) {
-                hitVolume = (ModelHitSphereDef*)(modelFile->hitVolumes + hitVolumeOffset);
-                if ((i == hitVolume->sphereIndex) && ((mask2 & 1 << hitVolume->maskBit) != 0)) {
-                    bits = hitVolume->linkedSpheres;
-                    if (bits != 0) {
-                        for (; (u16)bits != 0; bits = (u16)((bits & 0xffff) << 4)) {
-                            sphereIdx = (((u16)bits & 0xf000) >> 0xc) + i & 0xffff;
+            definitionOffset = 0;
+            currentSphereCursor = currentSpheres;
+            previousSphereCursor = previousSpheres;
+            for (volumeIndex = 0; volumeIndex < (int)(u32)modelFile->hitVolumeCount;
+                 definitionOffset += sizeof(ModelHitSphereDef), currentSphereCursor++, previousSphereCursor++, volumeIndex = volumeIndex + 1) {
+                hitVolume = (ModelHitSphereDef*)(modelFile->hitVolumes + definitionOffset);
+                if ((volumeIndex == hitVolume->sphereIndex) && ((hitMask & 1 << hitVolume->maskBit) != 0)) {
+                    sphereBits = hitVolume->linkedSpheres;
+                    if (sphereBits != 0) {
+                        for (; (u16)sphereBits != 0; sphereBits = (u16)((sphereBits & 0xffff) << 4)) {
+                            linkedSphereIndex = (((u16)sphereBits & 0xf000) >> 0xc) + volumeIndex & 0xffff;
                             if (pointCount < 4) {
-                                float* curEntry;
-                                float* prevEntry;
-                                int sphereOff = sphereIdx * 0x10;
-                                curEntry = (float*)((u8*)curSpheres + sphereOff);
-                                endPoints[pointCount * 3] = playerMapOffsetX + curEntry[1];
-                                endPoints[pointCount * 3 + 1] = curEntry[2];
-                                endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curEntry[3];
-                                prevEntry = (float*)((u8*)prevSpheres + sphereOff);
-                                startPoints[pointCount * 3] = playerMapOffsetX + prevEntry[1];
-                                startPoints[pointCount * 3 + 1] = prevEntry[2];
-                                startPoints[pointCount * 3 + 2] = playerMapOffsetZ + prevEntry[3];
-                                hb.radii[pointCount] = *curEntry;
-                                hb.surfaceTypes[pointCount] = -1;
-                                hb.queryTypes[pointCount] = 7;
+                                ObjModelHitSphere* currentSphere;
+                                ObjModelHitSphere* previousSphere;
+                                int sphereOffset = linkedSphereIndex * sizeof(ObjModelHitSphere);
+                                currentSphere = (ObjModelHitSphere*)((u8*)currentSpheres + sphereOffset);
+                                endPoints[pointCount].x = playerMapOffsetX + currentSphere->pos[0];
+                                endPoints[pointCount].y = currentSphere->pos[1];
+                                endPoints[pointCount].z = playerMapOffsetZ + currentSphere->pos[2];
+                                previousSphere = (ObjModelHitSphere*)((u8*)previousSpheres + sphereOffset);
+                                startPoints[pointCount].x = playerMapOffsetX + previousSphere->pos[0];
+                                startPoints[pointCount].y = previousSphere->pos[1];
+                                startPoints[pointCount].z = playerMapOffsetZ + previousSphere->pos[2];
+                                hitResults.radii[pointCount] = currentSphere->radius;
+                                hitResults.surfaceTypes[pointCount] = -1;
+                                hitResults.queryTypes[pointCount] = 7;
                                 pointCount += 1;
                             }
                         }
                     } else {
                         if (pointCount < 4) {
-                            endPoints[pointCount * 3] = playerMapOffsetX + curSphere[1];
-                            endPoints[pointCount * 3 + 1] = curSphere[2];
-                            endPoints[pointCount * 3 + 2] = playerMapOffsetZ + curSphere[3];
-                            startPoints[pointCount * 3] = playerMapOffsetX + prevSphere[1];
-                            startPoints[pointCount * 3 + 1] = prevSphere[2];
-                            startPoints[pointCount * 3 + 2] = playerMapOffsetZ + prevSphere[3];
-                            hb.radii[pointCount] = curSphere[0];
-                            hb.surfaceTypes[pointCount] = -1;
-                            hb.queryTypes[pointCount] = 7;
+                            endPoints[pointCount].x = playerMapOffsetX + currentSphereCursor->pos[0];
+                            endPoints[pointCount].y = currentSphereCursor->pos[1];
+                            endPoints[pointCount].z = playerMapOffsetZ + currentSphereCursor->pos[2];
+                            startPoints[pointCount].x = playerMapOffsetX + previousSphereCursor->pos[0];
+                            startPoints[pointCount].y = previousSphereCursor->pos[1];
+                            startPoints[pointCount].z = playerMapOffsetZ + previousSphereCursor->pos[2];
+                            hitResults.radii[pointCount] = currentSphereCursor->radius;
+                            hitResults.surfaceTypes[pointCount] = -1;
+                            hitResults.queryTypes[pointCount] = 7;
                             pointCount += 1;
                         }
                     }
                 }
             }
         } else {
-            endPoints[0] = objA->anim.worldPosX;
-            endPoints[1] = objA->anim.worldPosY;
-            endPoints[2] = objA->anim.worldPosZ;
-            startPoints[0] = objA->anim.previousWorldPosX;
-            startPoints[1] = objA->anim.previousWorldPosY;
-            startPoints[2] = objA->anim.previousWorldPosZ;
-            fConv = (f32)(u32)(objA)->anim.modelInstance->fallbackHitSphereRadius;
-            if (fConv < 0.1f) {
-                fConv = 0.1f;
+            endPoints[0].x = objA->anim.worldPosX;
+            endPoints[0].y = objA->anim.worldPosY;
+            endPoints[0].z = objA->anim.worldPosZ;
+            startPoints[0].x = objA->anim.previousWorldPosX;
+            startPoints[0].y = objA->anim.previousWorldPosY;
+            startPoints[0].z = objA->anim.previousWorldPosZ;
+            fallbackRadius = (f32)(u32)(objA)->anim.modelInstance->fallbackHitSphereRadius;
+            if (fallbackRadius < 0.1f) {
+                fallbackRadius = 0.1f;
             }
-            hb.radii[0] = fConv;
-            hb.surfaceTypes[0] = -1;
-            hb.queryTypes[0] = 7;
+            hitResults.radii[0] = fallbackRadius;
+            hitResults.surfaceTypes[0] = -1;
+            hitResults.queryTypes[0] = 7;
             pointCount = 1;
         }
         if (pointCount != 0) {
-            hitDetect_calcSweptSphereBounds(&bounds, startPoints, endPoints, hb.radii, pointCount);
+            hitDetect_calcSweptSphereBounds(&bounds, &startPoints[0].x, &endPoints[0].x, hitResults.radii, pointCount);
             trackIntersectBroadphase(objB, &bounds, stateB->trackContactMask, 1);
-            contact = trackGetIntersect(objB, startPoints, endPoints, pointCount, &hb, 0);
+            contact = trackGetIntersect(objB, &startPoints[0].x, &endPoints[0].x, pointCount, &hitResults, 0);
             if (contact != 0) {
                 if ((contact & 1) != 0) {
                     pointCount = 0;
@@ -1949,11 +1956,11 @@ void ObjHits_CheckTrackContact(GameObject* objA, GameObject* objB) {
                 } else {
                     pointCount = 3;
                 }
-                stateB->contactHitVolume = hb.surfaceTypes[pointCount];
-                stateB->contactPosX = endPoints[pointCount * 3];
-                stateB->contactPosY = endPoints[pointCount * 3 + 1];
-                stateB->contactPosZ = endPoints[pointCount * 3 + 2];
-                if (hb.objects[pointCount] != NULL) {
+                stateB->contactHitVolume = hitResults.surfaceTypes[pointCount];
+                stateB->contactPosX = endPoints[pointCount].x;
+                stateB->contactPosY = endPoints[pointCount].y;
+                stateB->contactPosZ = endPoints[pointCount].z;
+                if (hitResults.objects[pointCount] != NULL) {
                     stateB->contactFlags |= OBJHITS_CONTACT_FLAG_KIND_NONZERO;
                 } else {
                     stateB->contactFlags |= OBJHITS_CONTACT_FLAG_KIND0;

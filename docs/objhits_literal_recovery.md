@@ -282,3 +282,45 @@ destinations are unchanged. Nine anonymous literal names are renumbered without
 moving their storage. Full source compilation and the strict retail checksum
 pass. Formatting is a separate commit and preserves the complete object bytes;
 the active source and canonical header pass the formatter check.
+
+## Swept-pair distance and typed track-contact points
+
+`ObjHits_SweepPointDistance` isolates the distance from object B to a projected
+point on object A's movement segment. The caller still checks the squared
+movement threshold and the projection's inclusive `[0, 1]` bounds before using
+the helper. Its arithmetic retains the Z, X, Y component evaluation order,
+separate squared terms, and `squaredZ + (squaredX + squaredY)` sum. The vertical
+shape handling, fallback distance, and separation response are unchanged.
+
+This inline boundary recovers retail's projection-fraction register and one
+squared-component register. `ObjHits_DetectObjectPair` improves from 99.77273%
+to 99.902596%, retaining all 308 instruction mnemonics. Six operand differences
+remain: the other object's Y/Z values occupy the opposite FPRs. Extracting the
+whole sweep-refinement operation, replacing the squared-length expressions,
+and splitting the helper's reused component local do not improve this result.
+
+`ObjHits_CheckTrackContact` now uses `ObjModelHitSphere` for both runtime sphere
+banks, their walking cursors, and linked-sphere entries. Radius and position
+accesses use the canonical fields; cursor increments and linked-entry byte
+offsets use the recovered 16-byte record size. The start/end point buffers use
+`Vec` records with the same storage extent as the former eighteen-float arrays.
+The query still accepts at most four points; the retained buffer extent does
+not establish a six-point query contract. X/Z map offsets, linked-sphere nibble
+decoding, and first-contact selection are preserved.
+
+Model-only locals now live inside the model-volume branch, and the mask,
+definition offset, hit results, and fallback radius have semantic names. The
+sphere-selection bits retain their shared buffer-index/linked-mask lifetime.
+Splitting that local changes code generation. Native linked-sphere indexing
+also changes allocation, so its byte offset remains explicit while every
+dereference uses the canonical sphere type. The entire object is byte-identical
+before and after the track-contact cleanup alone.
+
+Against `4baa238dfa`, the combined change raises ObjHits from 99.804214% to
+99.81037% fuzzy match. The TU remains `NonMatching`, with 49/54 exact functions.
+Only the pair detector's function bytes change. All other 53 bodies, allocated
+non-text sections, named symbol layouts, and normalized relocation destinations
+are unchanged. The helper renumbers later anonymous literal names without
+moving their storage. Full source compilation and the strict retail checksum
+pass. Formatting is a separate commit and preserves the semantic object byte
+for byte; the active source and canonical header pass the formatter check.
