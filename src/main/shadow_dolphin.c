@@ -746,26 +746,23 @@ u8 objShadowUpdateAlpha(GameObject* obj, int delta) {
 }
 
 void shadowVolumeBeginFrame(void) {
-    void* selectedBuffer;
-    s16 zero;
     if ((s8)gShadowVolumesDirty == 0) {
         return;
     }
-    zero = 0;
-    lbl_803DCEF8 = zero;
-    lbl_803DCEFC = zero;
-    lbl_803DCEF4 = zero;
+    lbl_803DCEF8 = 0;
+    lbl_803DCEFC = 0;
+    lbl_803DCEF4 = 0;
     gShadowVolumeBufferSelect = 1 - gShadowVolumeBufferSelect;
     lbl_803DCEED = 1 - lbl_803DCEED;
     lbl_803DCEEE = 1 - lbl_803DCEEE;
-    selectedBuffer = gShadowVolumeBuffers[gShadowVolumeBufferSelect];
-    lbl_803DCF08 = selectedBuffer;
-    lbl_803DCEF4 = zero;
-    lbl_803DCF10 = lbl_803DCF20;
-    lbl_803DCF18 = lbl_803DCF1C;
-    lbl_803DCF04 = selectedBuffer;
-    lbl_803DCF14 = lbl_803DCF1C;
-    lbl_803DCF0C = lbl_803DCF20;
+    lbl_803DCF08 = gShadowVolumeBuffers[gShadowVolumeBufferSelect];
+    lbl_803DCEF4 = 0;
+    /* Keep address-based reads here: scalar reads change MWCC register allocation. */
+    lbl_803DCF10 = *(const int*)&lbl_803DCF20;
+    lbl_803DCF18 = *(const int*)&lbl_803DCF1C;
+    lbl_803DCF04 = lbl_803DCF08;
+    lbl_803DCF14 = lbl_803DCF18;
+    lbl_803DCF0C = lbl_803DCF10;
 }
 
 void shadowBeginFrame(void) {

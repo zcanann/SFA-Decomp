@@ -1,17 +1,46 @@
-# Shadow mesh matching
+# Shadow renderer matching
 
-EN v1.0, GC/1.3, 2026-09-07. `objDrawShadowCasterMesh` now matches all
-1,132 text bytes with the existing TU compiler and optimization profile.
-`shadow_dolphin.c` advances from 17/19 to 18/19 exact functions and from
-99.90288% to 99.978294% fuzzy match. All 24,400 assigned data bytes match.
-The TU remains `NonMatching`.
+EN v1.0, GC/1.3, 2026-09-08. All 19 functions (7,372 text bytes) and all
+24,400 assigned data bytes match. `shadow_dolphin.c` is
+`MatchingFor("GSAE01")` and links from C. The TU boundary, compiler version,
+optimization flags, global storage layout, and expected DOL checksum are
+unchanged.
+
+## Frame setup
+
+`shadowVolumeBeginFrame` resets the three counts, flips three selectors,
+selects the volume buffer, and copies the three current buffer values to
+their companion slots. The temporary selected-buffer pointer and named
+zero are unnecessary. The companion slots now copy their current values
+directly, preserving the retail store order.
+
+Two explicit `const int` lvalue reads preserve the final register allocation:
+`*(const int*)&lbl_803DCF20` and `*(const int*)&lbl_803DCF1C`. These access
+existing `int` objects through the same type with const qualification;
+they do not reinterpret bits, change signedness or width, or introduce
+volatile accesses. They are a deliberate compiler workaround, not evidence
+of the original source spelling. Replacing them with direct scalar reads
+changes register allocation. No new arrays, data structures, dummy locals,
+assembly, or pragmas are used to obtain the match.
+
+An ordinary/instrumented GC/1.3 comparison gives identical objects. The
+backend trace has 35 aligned final instructions, ten stages, no retail
+differences, and 26 replayed physical color decisions. Before global
+optimization the reset zero is virtual GPR 35, the selected buffer is GPR
+51, and the two base-word loads are GPR 53 and GPR 54. Physical allocation
+maps these to r5, r4, r3, and r0 respectively, reproducing retail.
+
+Against the previous 18/19 object, only this function changes: eight bytes
+in eight instructions, with its 140-byte size unchanged. All other function
+bytes, allocated data, named symbol layouts, and resolved relocation
+destinations are unchanged.
 
 ## Packed vertex streams
 
 `ObjectShadowMesh` contains a pointer to packed signed 16-bit XYZ components
 and a vertex count. Its allocation is an eight-byte header followed by
-18 bytes per triangle. The recovered definition names the pointer
-`coordinates` and asserts the header size and both field offsets.
+18 bytes per triangle. The definition names the pointer `coordinates` and
+asserts the header size and both field offsets.
 
 The cache conversion and cached draw track a component index advancing by
 three alongside the vertex counter. Direct component accesses preserve the
@@ -21,26 +50,11 @@ coordinates directly. Together, these lifetimes preserve the retail zero
 copy as well. Separate pointer temporaries or a separate uncached index
 change code generation; the index therefore keeps a neutral name.
 
-## Remaining frame setup
-
-`shadowVolumeBeginFrame` still differs at eight instructions: the zero used
-for four count resets occupies r4 instead of r5, while the selected volume
-buffer occupies r5 instead of r4. Both versions have 35 instructions.
-A GC/1.3 backend capture reproduces the ordinary object exactly and observes
-the zero in virtual GPR 38 and the selected pointer in GPR 32 before global
-optimization. Physical allocation maps them to r4 and r5. Declaration,
-initializer, aggregate, selector, and inline-helper variants tested in this
-session do not resolve the swap. This is an unresolved source reconstruction,
-not evidence that a different per-function compiler profile is justified.
-
 ## Validation
 
-- Compared with the starting source object, only `objDrawShadowCasterMesh`
-  changes: 24 instruction bytes, with its size unchanged. All other function
-  bytes, allocated data, named symbol layouts, and resolved relocation
-  destinations are unchanged.
-- A diagnostic link substituting this C object for its retail object differs
-  only at the eight frame-setup instructions, at 0x80062818, 0x8006281C,
-  0x80062820, 0x80062824, 0x80062868, 0x8006286C, 0x80062870, and 0x80062884.
-  All allocated section addresses and lengths, and every other byte, match.
-- `ninja all_source` and the strict matching DOL checksum build pass.
+- Objdiff reports 19/19 functions, 7,372/7,372 text bytes, and
+  24,400/24,400 data bytes matched.
+- `ninja all_source` passes.
+- `python3 configure.py --matching` followed by `ninja` passes the strict
+  retail DOL checksum with this unit's C object selected.
+- `clang-format --dry-run --Werror` passes for the source.
